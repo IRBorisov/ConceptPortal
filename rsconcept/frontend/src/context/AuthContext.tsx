@@ -1,17 +1,15 @@
-import axios from 'axios';
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
-
-import { config } from '../constants';
 import { ICurrentUser, IUserSignupData } from '../models';
 import { ErrorInfo } from '../components/BackendError';
 import useLocalStorage from '../hooks/useLocalStorage';
+import { getAuth, postLogin, postLogout, postSignup } from '../backendAPI';
 
 
 interface IAuthContext {
   user: ICurrentUser | undefined
-  login: (username: string, password: string, onSuccess?: Function) => void
-  logout: (onSuccess?: Function) => void
-  signup: (data: IUserSignupData, onSuccess?: Function) => void
+  login: (username: string, password: string, onSuccess?: () => void) => void
+  logout: (onSuccess?: () => void) => void
+  signup: (data: IUserSignupData, onSuccess?: () => void) => void
   loading: boolean
   error: ErrorInfo
   setError: (error: ErrorInfo) => void
@@ -38,74 +36,55 @@ export const AuthState = ({ children }: AuthStateProps) => {
 
   const loadCurrentUser = useCallback(
     async () => {
-      setError(undefined);
-      setLoading(true);
-      console.log('Current user requested');
-      axios.get<ICurrentUser>(`${config.url.AUTH}auth`)
-      .then(function (response) {
-        setLoading(false);
-        if (response.data.id) {
-          setUser(response.data);
-        } else {
-          setUser(undefined)
+      getAuth({
+        onError: error => setUser(undefined),
+        onSucccess: response => {
+          if (response.data.id) {
+            setUser(response.data);
+          } else {
+            setUser(undefined)
+          }
         }
-      })
-      .catch(function (error) {
-        setLoading(false);
-        setUser(undefined);
-        setError(error);
       });
     }, [setUser]
   );
   
-  async function login(uname: string, pw: string, onSuccess?: Function) {
-    setLoading(true);
+  async function login(uname: string, pw: string, onSuccess?: () => void) {
     setError(undefined);
-    axios.post(`${config.url.AUTH}login`, {username: uname, password: pw})
-    .then(function (response) {
-      setLoading(false);
-      loadCurrentUser();
-      if(onSuccess) {
-        onSuccess();
+    postLogin({
+      data: {username: uname, password: pw},
+      showError: true,
+      setLoading: setLoading,
+      onError: error => setError(error),
+      onSucccess: response => {
+        loadCurrentUser();
+        if(onSuccess) onSuccess();
       }
-    })
-    .catch(function (error) {
-      setLoading(false);
-      setError(error);
     });
   }
 
-  async function logout(onSuccess?: Function) {
-    setLoading(true);
+  async function logout(onSuccess?: () => void) {
     setError(undefined);
-    axios.post(`${config.url.AUTH}logout`)
-    .then(function (response) {
-      setLoading(false);
-      loadCurrentUser();
-      if(onSuccess) {
-        onSuccess();
+    postLogout({
+      showError: true,
+      onSucccess: response => {
+        loadCurrentUser();
+        if(onSuccess) onSuccess();
       }
-    })
-    .catch(function (error) {
-      setLoading(false);
-      setError(error);
     });
   }
 
-  async function signup(data: IUserSignupData, onSuccess?: Function) {
-    setLoading(true);
+  async function signup(data: IUserSignupData, onSuccess?: () => void) {
     setError(undefined);
-    axios.post(`${config.url.AUTH}signup`, data)
-    .then(function (response) {
-      setLoading(false);
-      loadCurrentUser();
-      if(onSuccess) {
-        onSuccess();
+    postSignup({
+      data: data,
+      showError: true,
+      setLoading: setLoading,
+      onError: error => setError(error),
+      onSucccess: response => {
+        loadCurrentUser();
+        if(onSuccess) onSuccess();
       }
-    })
-    .catch(function (error) {
-      setLoading(false);
-      setError(error);
     });
   }
 

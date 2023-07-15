@@ -1,22 +1,16 @@
-import axios from 'axios'
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { IUserInfo } from '../models'
-import { config } from '../constants'
-import { ErrorInfo } from '../components/BackendError'
+import { getActiveUsers } from '../backendAPI'
 
 
 interface IUsersContext {
   users: IUserInfo[]
-  error: ErrorInfo
-  loading: boolean
   reload: () => void
   getUserLabel: (userID?: number) => string
 }
 
 export const UsersContext = createContext<IUsersContext>({
   users: [],
-  error: undefined,
-  loading: false,
   reload: () => {},
   getUserLabel: () => ''
 })
@@ -27,8 +21,6 @@ interface UsersStateProps {
 
 export const UsersState = ({ children }: UsersStateProps) => {
   const [users, setUsers] = useState<IUserInfo[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<ErrorInfo>(undefined);
 
   const getUserLabel = (userID?: number) => {
     const user = users.find(({id}) => id === userID);
@@ -49,18 +41,12 @@ export const UsersState = ({ children }: UsersStateProps) => {
   
   const reload = useCallback(
     async () => {
-      setError(undefined);
-      setLoading(true);
-      console.log('Profile requested');
-      axios.get<IUserInfo[]>(`${config.url.AUTH}active-users`)
-      .then(function (response) {
-        setLoading(false);
-        setUsers(response.data);
-      })
-      .catch(function (error) {
-        setLoading(false);
-        setUsers([]);
-        setError(error);
+      getActiveUsers({
+        showError: true,
+        onError: error => setUsers([]),
+        onSucccess: response => {
+          setUsers(response ? response.data : []);
+        }
       });
     }, [setUsers]
   );
@@ -72,7 +58,6 @@ export const UsersState = ({ children }: UsersStateProps) => {
   return (
     <UsersContext.Provider value={{
       users,
-      error, loading,
       reload, getUserLabel
     }}>
       { children }

@@ -2,9 +2,10 @@
 
 import React from 'react';
 import axios from 'axios';
+import './index.css';
+import 'react-toastify/dist/ReactToastify.css';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import './index.css';
 import App from './App';
 import { AuthState } from './context/AuthContext';
 import { ThemeState } from './context/ThemeContext';

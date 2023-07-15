@@ -6,10 +6,10 @@ import TextInput from '../../components/Common/TextInput';
 import { useRSForm } from '../../context/RSFormContext';
 import { useCallback, useEffect, useState } from 'react';
 import Button from '../../components/Common/Button';
-import { CrownIcon, DownloadIcon, DumpBinIcon, UploadIcon } from '../../components/Icons';
+import { CrownIcon, DownloadIcon, DumpBinIcon } from '../../components/Icons';
 import { useUsers } from '../../context/UsersContext';
 import { useNavigate } from 'react-router-dom';
-import FileInput from '../../components/Common/FileInput';
+import { toast } from 'react-toastify';
 
 function RSFormCard() {
   const navigate = useNavigate();
@@ -21,8 +21,6 @@ function RSFormCard() {
   const [alias, setAlias] = useState('');
   const [comment, setComment] = useState('');
   const [common, setCommon] = useState(false);
-  
-  const onSuccess = (data: any) => reload();
 
   useEffect(() => {
     setTitle(schema!.title)
@@ -40,28 +38,34 @@ function RSFormCard() {
         'comment': comment,
         'is_common': common,
       };
-      upload(data, onSuccess);
+      upload(data, () => {
+        toast.success('Изменения сохранены');
+        reload();
+      });
     }
   };
 
   const handleDelete = useCallback(() => {
     if (window.confirm('Вы уверены, что хотите удалить данную схему?')) {
-      destroy(() => navigate('/rsforms?filter=owned'))
+      destroy(() => {
+        toast.success('Схема удалена');
+        navigate('/rsforms?filter=owned');
+      });
     }
   }, [destroy, navigate]);
 
   const handleClaimOwner = useCallback(() => {
     if (window.confirm('Вы уверены, что хотите стать владельцем данной схемы?')) {
-      claim(() => reload());
+      claim(() => {
+        toast.success('Вы стали владельцем схемы');
+        reload();
+      });
     }
   }, [claim, reload]);
 
-  const handleUpload = useCallback(() => {
-    
-  }, []);
-
   const handleDownload = useCallback(() => {
-    
+    // TODO: implement file download
+    toast.info('Загрузка в разработке');
   }, []);
 
   return (

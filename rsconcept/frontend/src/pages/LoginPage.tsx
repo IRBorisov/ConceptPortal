@@ -20,6 +20,7 @@ function LoginPage() {
   useEffect(() => {
     const name = new URLSearchParams(search).get('username');
     setUsername(name || '');
+    setPassword('');
   }, [search]);
 
   useEffect(() => {
@@ -37,7 +38,7 @@ function LoginPage() {
     <div className='container py-2'> { user ? 
       <InfoMessage message={`Вы вошли в систему как ${user.username}`} /> 
       :
-      <Form title='Ввод данных пользователя' onSubmit={handleSubmit} widthClass='max-w-sm'>
+      <Form title='Ввод данных пользователя' onSubmit={handleSubmit} widthClass='w-[20rem]'>
         <TextInput id='username'
           label='Имя пользователя'
           required
@@ -49,10 +50,11 @@ function LoginPage() {
           label='Пароль'
           required
           type='password'
+          value={password}
           onChange={event => setPassword(event.target.value)}
         />
 
-        <div className='flex items-center justify-between mt-4 mb-2'>
+        <div className='flex items-center justify-between mt-4'>
           <SubmitButton text='Вход' loading={loading}/>
           <TextURL text='Восстановить пароль...' href='restore-password' />
         </div>

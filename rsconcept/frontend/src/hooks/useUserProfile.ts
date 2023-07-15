@@ -1,8 +1,7 @@
-import axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
 import { IUserProfile } from '../models'
-import { config } from '../constants'
 import { ErrorInfo } from '../components/BackendError'
+import { getProfile } from '../backendAPI'
 
 
 export function useUserProfile() {
@@ -13,17 +12,12 @@ export function useUserProfile() {
   const fetchUser = useCallback(
     async () => {
       setError(undefined);
-      setLoading(true);
-      console.log('Profile requested');
-      axios.get<IUserProfile>(`${config.url.AUTH}profile`)
-      .then(function (response) {
-        setLoading(false);
-        setUser(response.data);
-      })
-      .catch(function (error) {
-        setLoading(false);
-        setUser(undefined);
-        setError(error);
+      setUser(undefined);
+      getProfile({
+        showError: true,
+        setLoading: setLoading,
+        onError: error => setError(error),
+        onSucccess: response => setUser(response.data)
       });
     }, [setUser]
   )

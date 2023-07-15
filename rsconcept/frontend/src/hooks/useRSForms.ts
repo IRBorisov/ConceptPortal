@@ -1,32 +1,25 @@
-import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { IRSForm } from '../models'
-import { config } from '../constants'
 import { ErrorInfo } from '../components/BackendError';
+import { getRSForms } from '../backendAPI';
 
 export function useRSForms() {
   const [rsforms, setRSForms] = useState<IRSForm[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ErrorInfo>(undefined);
-  
-  async function fetchRSForms() {
-    setError(undefined);
-    setLoading(true);
-    console.log('RSForms requested');
-    axios.get<IRSForm[]>(`${config.url.BASE}rsforms/`)
-    .then(function (response) {
-      setLoading(false);
-      setRSForms(response.data);
-    })
-    .catch(function (error) {
-      setLoading(false);
-      setError(error);
+
+  const fetchData = useCallback(async () => {
+    getRSForms({
+      showError: true,
+      setLoading: setLoading,
+      onError: error => setError(error),
+      onSucccess: response => setRSForms(response.data)
     });
-  }
+  }, []);
 
   useEffect(() => {
-    fetchRSForms();
-  }, [])
+    fetchData();
+  }, [fetchData])
 
   return { rsforms, error, loading };
 }

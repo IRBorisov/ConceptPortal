@@ -3,8 +3,7 @@ import { IConstituenta, IRSForm } from '../models';
 import { useRSFormDetails } from '../hooks/useRSFormDetails';
 import { ErrorInfo } from '../components/BackendError';
 import { useAuth } from './AuthContext';
-import axios from 'axios';
-import { config } from '../constants';
+import { BackendCallback, deleteRSForm, patchRSForm, postClaimRSForm } from '../backendAPI';
 
 interface IRSFormContext {
   schema?: IRSForm
@@ -17,9 +16,9 @@ interface IRSFormContext {
   
   setActive: (cst: IConstituenta) => void
   reload: () => void
-  upload: (data: any, callback: Function) => void
-  destroy: (callback: Function) => void
-  claim: (callback: Function) => void
+  upload: (data: any, callback?: BackendCallback) => void
+  destroy: (callback: BackendCallback) => void
+  claim: (callback: BackendCallback) => void
 }
 
 export const RSFormContext = createContext<IRSFormContext>({
@@ -58,49 +57,34 @@ export const RSFormState = ({ id, children }: RSFormStateProps) => {
     }
   }, [schema])
 
-  async function upload(data: any, callback?: Function) {
-    console.log(`Update rsform with ${data}`);
-    data['id'] = {id}
+  async function upload(data: any, callback?: BackendCallback) {
     setError(undefined);
-    setProcessing(true);
-    axios.patch(`${config.url.BASE}rsforms/${id}/`, data)
-    .then(function (response) {
-      setProcessing(false);
-      if (callback) callback(response.data);
-    })
-    .catch(function (error) {
-      setProcessing(false);
-      setError(error);
+    patchRSForm(id, {
+      data: data,
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => setError(error),
+      onSucccess: callback
     });
   }
 
-  async function destroy(callback?: Function) {
-    console.log(`Deleting rsform ${id}`);
+  async function destroy(callback: BackendCallback) {
     setError(undefined);
-    setProcessing(true);
-    axios.delete(`${config.url.BASE}rsforms/${id}/`)
-    .then(function (response) {
-      setProcessing(false);
-      if (callback) callback();
-    })
-    .catch(function (error) {
-      setProcessing(false);
-      setError(error);
+    deleteRSForm(id, {
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => setError(error),
+      onSucccess: callback
     });
   }
 
-  async function claim(callback?: Function) {
-    console.log(`Claiming rsform ${id}`);
+  async function claim(callback: BackendCallback) {
     setError(undefined);
-    setProcessing(true);
-    axios.post(`${config.url.BASE}rsforms/${id}/claim/`)
-    .then(function (response) {
-      setProcessing(false);
-      if (callback) callback();
-    })
-    .catch(function (error) {
-      setProcessing(false);
-      setError(error);
+    postClaimRSForm(id, {
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => setError(error),
+      onSucccess: callback
     });
   }
 

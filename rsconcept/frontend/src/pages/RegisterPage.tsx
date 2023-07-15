@@ -40,11 +40,11 @@ function RegisterPage() {
   };
 
   return (
-    <> 
+    <div className='container py-2'> 
     { success && 
       <div className='flex flex-col items-center'>
         <InfoMessage message={`Вы успешно зарегистрировали пользователя ${username}`}/>
-        <TextURL text='Войти в аккаунт' href={`login?username=${username}`}/>
+        <TextURL text='Войти в аккаунт' href={`/login?username=${username}`}/>
       </div>}
     { !success && user &&
       <InfoMessage message={`Вы вошли в систему как ${user.username}. Если хотите зарегистрировать нового пользователя, выйдите из системы (меню в правом верхнем углу экрана)`} /> }
@@ -90,7 +90,7 @@ function RegisterPage() {
         { error && <BackendError error={error} />}
       </Form>
     }
-    </>
+    </div>
   );
 }
 

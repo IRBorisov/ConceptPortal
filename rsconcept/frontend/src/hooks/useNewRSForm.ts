@@ -1,33 +1,30 @@
-import axios from 'axios'
 import { useState } from 'react'
-import { config } from '../constants'
 import { ErrorInfo } from '../components/BackendError';
+import { postNewRSForm } from '../backendAPI';
 
-function useNewRSForm({callback}: {callback: (newID: string) => void}) {
+function useNewRSForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ErrorInfo>(undefined);
   
-  async function createNew({data, file}: {data: any, file?: File}) {
+  async function createSchema({data, file, onSuccess}: { 
+    data: any, file?: File, 
+    onSuccess: (newID: string) => void
+  }) {
     setError(undefined);
-    setLoading(true);
     if (file) {
-      data['file']=file;
-      data['fileName']=file.name;
+      data['file'] = file;
+      data['fileName'] = file.name;
     }
-    axios.post(`${config.url.BASE}rsforms/create-detailed/`, data)
-    .then(function (response) {
-      setLoading(false);
-      if(callback) {
-        callback(response.data.id);
-      }
-    })
-    .catch(function (error) {
-      setLoading(false);
-      setError(error);
+    postNewRSForm({
+      data: data,
+      showError: true,
+      setLoading: setLoading,
+      onError: error => setError(error),
+      onSucccess: response => onSuccess(response.data.id)
     });
   }
 
-  return { createNew, error, setError, loading };
+  return { createSchema, error, setError, loading };
 }
 
 export default useNewRSForm;

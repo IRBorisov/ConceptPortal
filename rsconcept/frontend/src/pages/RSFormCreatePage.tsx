@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import TextArea from '../components/Common/TextArea';
 import Checkbox from '../components/Common/Checkbox';
 import FileInput from '../components/Common/FileInput';
+import { toast } from 'react-toastify';
 
 function RSFormCreatePage() {
   const navigate = useNavigate();
@@ -29,8 +30,11 @@ function RSFormCreatePage() {
     }
   }
   
-  const onSuccess = (newID: string) => navigate(`/rsforms/${newID}`);
-  const { createNew, error, setError, loading } = useNewRSForm({callback: onSuccess})
+  const onSuccess = (newID: string) => {
+    toast.success('Схема успешно создана');
+    navigate(`/rsforms/${newID}`);
+  }
+  const { createSchema, error, setError, loading } = useNewRSForm()
 
   useEffect(() => {
     setError(undefined)
@@ -45,7 +49,11 @@ function RSFormCreatePage() {
         'comment': comment,
         'is_common': common,
       };
-      createNew({data: data, file: file});
+      createSchema({
+        data: data,
+        file: file,
+        onSuccess: onSuccess
+      });
     }
   };
 
