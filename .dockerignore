@@ -1,0 +1,62 @@
+# Git
+.git
+.gitignore
+
+
+# Windows specific
+*.ps1
+
+# Environment variables
+.env.*
+*/.env.*
+
+
+# Local build/utility folders
+**/venv
+**/build
+
+
+# Byte-compiled / optimized / DLL files
+**/__pycache__/
+*.py[cod]
+*$py.class
+
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+
+# Django
+rsconcept/frontend/static
+rsconcept/frontend/media
+*.log
+db.sqlite3
+db.sqlite3-journal
+
+# React
+.DS_*
+*.log
+logs
+**/*.backup.*
+**/*.back.*
+
+node_modules
+bower_components
+
+*.sublime*
+
+
+# Specific items
+docker-compose.yml

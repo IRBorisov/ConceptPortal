@@ -1,0 +1,7 @@
+tzdata
+django
+djangorestframework
+django-cors-headers
+django-filter
+coverage
+coreapi

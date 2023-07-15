@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.rdt_TableCell{
+  font-size: 14px;
+}
+
+@layer components {
+  .border {
+    @apply border-gray-300 rounded dark:border-gray-400
+  }
+
+  .dark {
+    @apply text-zinc-200 bg-gray-900
+  }
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="32px" height="32px" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 8.24 8.24"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .fil3 {fill:none}
+    .fil2 {fill:#E31E24}
+    .fil1 {fill:#17A7E3}
+    .fil0 {fill:#02AD02}
+   ]]>
+  </style>
+ </defs>
+ <g id="Layer_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <path class="fil0" d="M4.19 7.09l-2.03 -3.12 -2.03 3.12 4.06 0zm-3.05 -0.54l1.02 -1.56 1.01 1.56 -2.03 0z"/>
+  <path class="fil1" d="M4.19 7.09l2.02 -3.12 2.03 3.12 -4.05 0zm1.01 -0.54l1.01 -1.56 1.02 1.56 -2.03 0z"/>
+  <path class="fil2" d="M2.16 3.97l2.03 -3.12 2.02 3.12 -4.05 0zm1.01 -0.52l1.02 -1.56 1.01 1.56 -2.03 0z"/>
+  <rect class="fil3" width="8.24" height="8.24"/>
+ </g>
+</svg>

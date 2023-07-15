@@ -1,0 +1,57 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "${workspaceFolder}/rsconcept/RunServer.ps1",
+            "args": []
+        },
+        {
+            "name": "Test",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "${workspaceFolder}/rsconcept/RunTests.ps1",
+            "args": []
+        },
+        {
+            "name": "BE-Coverage",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "${workspaceFolder}/rsconcept/RunCoverage.ps1",
+            "args": []
+        },
+        {
+            "name": "BE-DebugTest",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/rsconcept/backend",
+            "program": "${workspaceFolder}/rsconcept/backend/manage.py",
+            "args": [
+                "test"
+            ],
+            "django": true
+        },
+        {
+            "name": "BE-Debug",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/rsconcept/backend/manage.py",
+            "args": [
+                "runserver"
+            ],
+            "django": true
+        },
+        {
+            "name": "Restart",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "${workspaceFolder}/rsconcept/RunServer.ps1",
+            "args": ["-freshStart"]
+        }
+    ]
+}

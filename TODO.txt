@@ -1,0 +1,7 @@
+!! This is not complete list of todos !!
+This list only contains global tech refactorings and tech debt
+For more specific TODOs see comments in code
+
+- Use migtation/fixtures to provide initial data for testing
+- USe migtation/fixtures to load example common data
+- Add HTTPS for deployment

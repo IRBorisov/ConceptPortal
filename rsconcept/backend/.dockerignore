@@ -1,0 +1,36 @@
+# Windows specific
+*.ps1
+
+# Dev specific
+requirements_dev.txt
+.gitignore
+
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+
+# Django
+static/
+media/
+*.log
+db.sqlite3
+db.sqlite3-journal
+
+
+# Byte-compiled / optimized / DLL files
+**/__pycache__/
+*.py[cod]
+*$py.class

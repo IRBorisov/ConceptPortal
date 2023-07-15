@@ -1,0 +1,91 @@
+import { useEffect, useState } from 'react';
+
+import TextInput from '../components/Common/TextInput';
+import Form from '../components/Common/Form';
+import SubmitButton from '../components/Common/SubmitButton';
+import BackendError from '../components/BackendError';
+import { IRSFormCreateData } from '../models';
+import RequireAuth from '../components/RequireAuth';
+import useNewRSForm from '../hooks/useNewRSForm';
+import { useNavigate } from 'react-router-dom';
+import TextArea from '../components/Common/TextArea';
+import Checkbox from '../components/Common/Checkbox';
+import FileInput from '../components/Common/FileInput';
+
+function RSFormCreatePage() {
+  const navigate = useNavigate();
+
+  const [title, setTitle] = useState('');
+  const [alias, setAlias] = useState('');
+  const [comment, setComment] = useState('');
+  const [common, setCommon] = useState(false);
+  const [file, setFile] = useState<File | undefined>()
+
+  const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setFile(event.target.files[0]);
+    } else {
+      setFile(undefined)
+    }
+  }
+  
+  const onSuccess = (newID: string) => navigate(`/rsforms/${newID}`);
+  const { createNew, error, setError, loading } = useNewRSForm({callback: onSuccess})
+
+  useEffect(() => {
+    setError(undefined)
+  }, [title, alias, setError]);
+  
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!loading) {
+      const data: IRSFormCreateData  = {
+        'title': title,
+        'alias': alias,
+        'comment': comment,
+        'is_common': common,
+      };
+      createNew({data: data, file: file});
+    }
+  };
+
+  return (
+    <RequireAuth> 
+      <Form title='Создание концептуальной схемы' onSubmit={handleSubmit} widthClass='max-w-lg mt-4'>
+        <TextInput id='title' label='Полное название' type='text'
+          required={!file}
+          placeholder={file && 'Загрузить из файла'}
+          value={title}
+          onChange={event => setTitle(event.target.value)}
+        />
+        <TextInput id='alias' label='Сокращение' type='text'
+          required={!file}
+          value={alias}
+          placeholder={file && 'Загрузить из файла'}
+          widthClass='max-w-sm'
+          onChange={event => setAlias(event.target.value)}
+        />
+        <TextArea id='comment' label='Комментарий'
+          value={comment}
+          placeholder={file && 'Загрузить из файла'}
+          onChange={event => setComment(event.target.value)}
+        />
+        <Checkbox id='common' label='Общедоступная схема'
+          value={common}
+          onChange={event => setCommon(event.target.value === 'true')}
+        />
+        <FileInput id='trs' label='Загрузить *.trs'
+          acceptType='.trs'
+          onChange={handleFile}
+        />
+        
+        <div className='flex items-center justify-center py-2 mt-4'>
+          <SubmitButton text='Создать схему' loading={loading} />
+        </div>
+        { error && <BackendError error={error} />}
+      </Form>
+    </RequireAuth>
+  );
+}
+
+export default RSFormCreatePage;

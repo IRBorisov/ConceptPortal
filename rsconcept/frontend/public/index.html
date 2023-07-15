@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Веб-приложение для работы с концептуальными схемами" />
+
+    <link rel="manifest" id="manifest-placeholder" href="%PUBLIC_URL%/manifest.json"  />
+
+    <title>Концепт Портал</title>
+    
+    <script>
+      if (
+        localStorage.getItem('darkMode') === 'true' ||
+        localStorage.getItem('color-theme') === 'dark' ||
+        (!('color-theme' in localStorage) &&
+          window.matchMedia('(prefers-color-scheme: dark)').matches)
+      ) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+  </head>
+  <body>
+    <noscript>Включите использование JavaScript для работы с данным веб-приложением.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
