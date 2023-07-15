@@ -18,13 +18,13 @@ function App() {
   return (
     <div className='antialiased bg-gray-50 dark:bg-gray-800'>
       <Navigation />
-      <main className='min-h-[calc(100vh-107px)] px-2 h-fit'>
-        <ToasterThemed
-          className='mt-[4rem]'
-          autoClose={3000}
-          draggable={false}
-          limit={5}
-        />
+      <ToasterThemed
+        className='mt-[4rem] text-sm'
+        autoClose={3000}
+        draggable={false}
+        limit={5}
+      />
+      <main className='min-h-[calc(100vh-6.8rem)] px-2 h-fit'>
         <Routes>
           <Route path='/' element={ <HomePage/>} />
 

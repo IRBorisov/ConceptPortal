@@ -58,7 +58,9 @@ function LoginPage() {
           <SubmitButton text='Вход' loading={loading}/>
           <TextURL text='Восстановить пароль...' href='restore-password' />
         </div>
-        <TextURL text='Нет аккаунта? Зарегистрируйтесь...' href='/signup' />
+        <div className='mt-2'>
+          <TextURL text='Нет аккаунта? Зарегистрируйтесь...' href='/signup' />
+        </div>
         { error && <BackendError error={error} />}
       </Form>
   }</div>
