@@ -1,9 +1,9 @@
-import { createContext, useState, useContext, useMemo, useEffect } from 'react';
+import { createContext, useState, useContext, useMemo } from 'react';
 import { IConstituenta, IRSForm } from '../models';
 import { useRSFormDetails } from '../hooks/useRSFormDetails';
 import { ErrorInfo } from '../components/BackendError';
 import { useAuth } from './AuthContext';
-import { BackendCallback, deleteRSForm, patchRSForm, postClaimRSForm } from '../backendAPI';
+import { BackendCallback, deleteRSForm, getTRSFile, patchRSForm, postClaimRSForm } from '../backendAPI';
 
 interface IRSFormContext {
   schema?: IRSForm
@@ -16,9 +16,10 @@ interface IRSFormContext {
   
   setActive: (cst: IConstituenta | undefined) => void
   reload: () => void
-  upload: (data: any, callback?: BackendCallback) => void
+  update: (data: any, callback?: BackendCallback) => void
   destroy: (callback: BackendCallback) => void
   claim: (callback: BackendCallback) => void
+  download: (callback: BackendCallback) => void
 }
 
 export const RSFormContext = createContext<IRSFormContext>({
@@ -32,9 +33,10 @@ export const RSFormContext = createContext<IRSFormContext>({
   
   setActive: () => {},
   reload: () => {},
-  upload: () => {},
+  update: () => {},
   destroy: () => {},
   claim: () => {},
+  download: () => {},
 })
 
 interface RSFormStateProps {
@@ -51,7 +53,7 @@ export const RSFormState = ({ id, children }: RSFormStateProps) => {
   const isEditable = useMemo(() => (user?.id === schema?.owner || user?.is_staff || false), [user, schema]);
   const isClaimable = useMemo(() => (user?.id !== schema?.owner || false), [user, schema]);
 
-  async function upload(data: any, callback?: BackendCallback) {
+  async function update(data: any, callback?: BackendCallback) {
     setError(undefined);
     patchRSForm(id, {
       data: data,
@@ -82,12 +84,22 @@ export const RSFormState = ({ id, children }: RSFormStateProps) => {
     });
   }
 
+  async function download(callback: BackendCallback) {
+    setError(undefined);
+    getTRSFile(id, {
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => setError(error),
+      onSucccess: callback
+    });
+  }
+
   return (
     <RSFormContext.Provider value={{
       schema, error, loading, processing,
       active, setActive,
       isEditable, isClaimable,
-      reload, upload, destroy, claim
+      reload, update, download, destroy, claim
     }}>
       { children }
     </RSFormContext.Provider>

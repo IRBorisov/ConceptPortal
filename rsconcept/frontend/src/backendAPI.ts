@@ -117,6 +117,14 @@ export async function deleteRSForm(target: string, request?: IFrontRequest) {
   });
 }
 
+export async function getTRSFile(target: string, request?: IFrontRequest) {
+  AxiosGetBlob({
+    title: `RSForm TRS file for id=${target}`,
+    endpoint: `${config.url.BASE}rsforms/${target}/export-trs/`,
+    request: request
+  });
+}
+
 export async function postClaimRSForm(target: string, request?: IFrontRequest) {
   AxiosPost({
     title: `Claim on RSForm id=${target}`,
@@ -130,6 +138,21 @@ function AxiosGet<ReturnType>({endpoint, request, title}: IAxiosRequest) {
   if (title) console.log(`[[${title}]] requested`);
   if (request?.setLoading) request?.setLoading(true);
   axios.get<ReturnType>(endpoint)
+  .then(function (response) {
+    if (request?.setLoading) request?.setLoading(false);
+    if (request?.onSucccess) request.onSucccess(response);
+  })
+  .catch(function (error) {
+    if (request?.setLoading) request?.setLoading(false);
+    if (request?.showError) toast.error(error.message);
+    if (request?.onError) request.onError(error);
+  });
+}
+
+function AxiosGetBlob({endpoint, request, title}: IAxiosRequest) {
+  if (title) console.log(`[[${title}]] requested`);
+  if (request?.setLoading) request?.setLoading(true);
+  axios.get(endpoint, {responseType: 'blob'})
   .then(function (response) {
     if (request?.setLoading) request?.setLoading(false);
     if (request?.onSucccess) request.onSucccess(response);
