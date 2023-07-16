@@ -10,7 +10,7 @@ function UserTools() {
   };
 
   const navigateMyWork = () => {
-    navigate('/rsforms?filter=owned');
+    navigate('/rsforms?filter=personal');
   };
   
   return (

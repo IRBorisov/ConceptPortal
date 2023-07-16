@@ -3,6 +3,7 @@ import { config } from './constants'
 import { ErrorInfo } from './components/BackendError'
 import { toast } from 'react-toastify'
 import { ICurrentUser, IRSForm, IUserInfo, IUserProfile } from './models'
+import { FilterType, RSFormsFilter } from './hooks/useRSForms'
 
 export type BackendCallback = (response: AxiosResponse) => void;
 
@@ -69,10 +70,17 @@ export async function getActiveUsers(request?: IFrontRequest) {
   });
 }
 
-export async function getRSForms(request?: IFrontRequest) {
+export async function getRSForms(filter: RSFormsFilter, request?: IFrontRequest) {
+  let endpoint: string = ''
+  if (filter.type === FilterType.PERSONAL) {
+    endpoint = `${config.url.BASE}rsforms?owner=${filter.data!}`
+  } else {
+    endpoint = `${config.url.BASE}rsforms?is_common=true`
+  }
+
   AxiosGet<IRSForm[]>({
     title: `RSForms list`,
-    endpoint: `${config.url.BASE}rsforms/`,
+    endpoint: endpoint,
     request: request
   });
 }

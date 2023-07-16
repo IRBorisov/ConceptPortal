@@ -14,7 +14,7 @@ interface IRSFormContext {
   isEditable: boolean
   isClaimable: boolean
   
-  setActive: (cst: IConstituenta) => void
+  setActive: (cst: IConstituenta | undefined) => void
   reload: () => void
   upload: (data: any, callback?: BackendCallback) => void
   destroy: (callback: BackendCallback) => void
@@ -50,12 +50,6 @@ export const RSFormState = ({ id, children }: RSFormStateProps) => {
 
   const isEditable = useMemo(() => (user?.id === schema?.owner || user?.is_staff || false), [user, schema]);
   const isClaimable = useMemo(() => (user?.id !== schema?.owner || false), [user, schema]);
-
-  useEffect(() => {
-    if (schema?.items && schema?.items.length > 0) {
-      setActive(schema?.items[0]);
-    }
-  }, [schema])
 
   async function upload(data: any, callback?: BackendCallback) {
     setError(undefined);

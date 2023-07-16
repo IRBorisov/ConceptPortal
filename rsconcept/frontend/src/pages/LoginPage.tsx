@@ -30,7 +30,7 @@ function LoginPage() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!loading) {
-      login(username, password, () => { navigate('/rsforms?filter=owned'); });
+      login(username, password, () => { navigate('/rsforms?filter=personal'); });
     }
   };
 
@@ -56,7 +56,7 @@ function LoginPage() {
 
         <div className='flex items-center justify-between mt-4'>
           <SubmitButton text='Вход' loading={loading}/>
-          <TextURL text='Восстановить пароль...' href='restore-password' />
+          <TextURL text='Восстановить пароль...' href='/restore-password' />
         </div>
         <div className='mt-2'>
           <TextURL text='Нет аккаунта? Зарегистрируйтесь...' href='/signup' />

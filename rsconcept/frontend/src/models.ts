@@ -68,7 +68,7 @@ export enum ParsingStatus {
 // Constituenta data
 export interface IConstituenta {
     entityUID: number
-    alias: boolean
+    alias: string
     cstType: CstType
     convention?: string
     term?: {
@@ -139,4 +139,17 @@ export function GetErrLabel(cst: IConstituenta) {
         return 'св-во';
     }
     return 'ОК';
+}
+
+export function GetCstTypeLabel(type: CstType) {
+    switch(type) {
+    case CstType.BASE: return 'Базисное множество';
+    case CstType.CONSTANT: return 'Константное множество';
+    case CstType.STRUCTURED: return 'Родовая структура';
+    case CstType.AXIOM: return 'Аксиома';
+    case CstType.TERM: return 'Терм';
+    case CstType.FUNCTION: return 'Терм-функция';
+    case CstType.PREDICATE: return 'Предикат-функция';
+    case CstType.THEOREM: return 'Теорема';
+    }
 }

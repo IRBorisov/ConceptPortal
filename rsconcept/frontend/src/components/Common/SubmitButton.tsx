@@ -1,6 +1,6 @@
 interface SubmitButtonProps {
   text: string
-  loading: boolean
+  loading?: boolean
   disabled?: boolean
 }
 

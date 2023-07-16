@@ -49,7 +49,7 @@ function RSFormCard() {
     if (window.confirm('Вы уверены, что хотите удалить данную схему?')) {
       destroy(() => {
         toast.success('Схема удалена');
-        navigate('/rsforms?filter=owned');
+        navigate('/rsforms?filter=personal');
       });
     }
   }, [destroy, navigate]);
@@ -91,7 +91,7 @@ function RSFormCard() {
       <Checkbox id='common' label='Общедоступная схема'
         value={common}
         disabled={!isEditable}
-        onChange={event => setCommon(event.target.value === 'true')}
+        onChange={event => setCommon(event.target.checked)}
       />
       
       <div className='flex items-center justify-between gap-1 py-2 mt-2'>

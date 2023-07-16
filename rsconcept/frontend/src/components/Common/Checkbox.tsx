@@ -6,7 +6,7 @@ interface CheckboxProps {
   required?: boolean
   disabled?: boolean
   widthClass?: string
-  value?: any
+  value?: boolean
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -17,7 +17,7 @@ function Checkbox({id, required, disabled, label, widthClass='w-full', value, on
         className='relative cursor-pointer peer w-4 h-4 shrink-0 mt-0.5 bg-white border rounded-sm appearance-none dark:bg-gray-900 checked:bg-blue-700 dark:checked:bg-orange-500'
         required={required}
         disabled={disabled}
-        value={value}
+        checked={value}
         onChange={onChange}
       />
       <Label 

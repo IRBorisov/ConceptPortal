@@ -3,7 +3,6 @@ import { IUserProfile } from '../models'
 import { ErrorInfo } from '../components/BackendError'
 import { getProfile } from '../backendAPI'
 
-
 export function useUserProfile() {
   const [user, setUser] = useState<IUserProfile | undefined>(undefined);
   const [loading, setLoading] = useState(false);

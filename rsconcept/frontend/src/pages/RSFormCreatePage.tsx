@@ -80,7 +80,7 @@ function RSFormCreatePage() {
         />
         <Checkbox id='common' label='Общедоступная схема'
           value={common}
-          onChange={event => setCommon(event.target.value === 'true')}
+          onChange={event => setCommon(event.target.checked)}
         />
         <FileInput id='trs' label='Загрузить *.trs'
           acceptType='.trs'
