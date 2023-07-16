@@ -5,7 +5,7 @@ interface NavigationTextItemProps {
   bold?: boolean
 }
 
-function NavigationTextItem({text='', description='', onClick, bold=true}: NavigationTextItemProps) {
+function NavigationTextItem({text='', description='', onClick, bold}: NavigationTextItemProps) {
   return (
     <button 
       title={description}

@@ -21,19 +21,25 @@ function UserDropdown({hideDropdown}: UserDropdownProps) {
     hideDropdown()
     logout(() => {navigate('/login/');})
   };
-  
+
+  const navigateMyWork = () => {
+    hideDropdown()
+    navigate('/rsforms?filter=personal');
+  };
+
   return (
     <div className='relative'>
       <div className='absolute right-0 z-10 flex flex-col items-stretch justify-start p-2 mt-4 text-sm origin-top-right bg-white border border-gray-100 divide-y rounded-md shadow-lg dark:border-gray-500 dark:bg-gray-900 w-36'>
-        <NavigationTextItem description='Профиль пользователя' bold={false}
+        <NavigationTextItem description='Профиль пользователя'
           text={user?.username}
           onClick={navigateProfile}
         />
-        <NavigationTextItem description='Переключение темы оформления' bold={false}
+        <NavigationTextItem description='Переключение темы оформления'
           text={darkMode ? 'Светлая тема' : 'Темная тема'} 
           onClick={toggleDarkMode}
         />
-        <NavigationTextItem text={'Выйти...'} onClick={logoutAndRedirect} />
+        <NavigationTextItem text={'Мои схемы'} onClick={navigateMyWork} />
+        <NavigationTextItem text={'Выйти...'} bold onClick={logoutAndRedirect} />
       </div>
     </div>
   );

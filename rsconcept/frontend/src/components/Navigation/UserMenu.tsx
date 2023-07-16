@@ -26,7 +26,12 @@ function UserMenu() {
   return (
     <div ref={dropdownRef}>
       { !user && <LoginRef />}
-      { user && <NavigationButton icon={<UserIcon />} description='Пользователь' onClick={toggleUserDropdown} /> }
+      { user && 
+      <NavigationButton
+        icon={<UserIcon />}
+        description={`Пользователь ${user?.username}`}
+        onClick={toggleUserDropdown} 
+      />}
       { user && showUserDropdown && <UserDropdown hideDropdown={hideDropdown} /> }
     </div>
   );

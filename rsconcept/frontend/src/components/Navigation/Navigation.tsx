@@ -3,7 +3,6 @@ import TopSearch from './TopSearch';
 import { EducationIcon, LibraryIcon } from '../Icons';
 import NavigationButton from './NavigationButton';
 import UserMenu from './UserMenu';
-import ThemeSwitcher from './ThemeSwitcher';
 import { useAuth } from '../../context/AuthContext';
 import UserTools from './UserTools';
 import Logo from './Logo';
@@ -26,9 +25,8 @@ function Navigation() {
         <div className='flex items-center'>
           {user && <UserTools/>}
           <div className='flex items-center pl-2'>
-            <NavigationButton icon={<LibraryIcon />} description='Библиотека конструктов' onClick={navigateCommon} />
+            <NavigationButton icon={<LibraryIcon />} description='Общие схемы' onClick={navigateCommon} />
             <NavigationButton icon={<EducationIcon />} description='Справка' onClick={navigateHelp} />
-            <ThemeSwitcher />
             <UserMenu />
           </div>
         </div>
