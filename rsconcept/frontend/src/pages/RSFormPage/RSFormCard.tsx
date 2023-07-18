@@ -10,6 +10,7 @@ import { CrownIcon, DownloadIcon, DumpBinIcon, ShareIcon } from '../../component
 import { useUsers } from '../../context/UsersContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import fileDownload from 'js-file-download';
 import { AxiosResponse } from 'axios';
 
 function RSFormCard() {
@@ -22,10 +23,6 @@ function RSFormCard() {
   const [alias, setAlias] = useState('');
   const [comment, setComment] = useState('');
   const [common, setCommon] = useState(false);
-
-  const fileRef = useRef<HTMLAnchorElement | null>(null);
-  const [fileURL, setFileUrl] = useState<string>();
-  const [fileName, setFileName] = useState<string>();
 
   useEffect(() => {
     setTitle(schema!.title)
@@ -69,15 +66,13 @@ function RSFormCard() {
   const handleDownload = useCallback(() => {
     download((response: AxiosResponse) => {
       try {
-        setFileName((schema?.alias || 'Schema') + '.trs')
-        setFileUrl(URL.createObjectURL(new Blob([response.data])));
-        fileRef.current?.click();
-        if (fileURL) URL.revokeObjectURL(fileURL);
+        const fileName = (schema?.alias || 'Schema') + '.trs';
+        fileDownload(response.data, fileName);
       } catch (error: any) {
         toast.error(error.message);
       }
     });
-  }, [download, schema?.alias, fileURL]);
+  }, [download, schema?.alias]);
   
   const handleShare = useCallback(() => {
     const url = window.location.href + '&share';
@@ -86,7 +81,7 @@ function RSFormCard() {
   }, []);
 
   return (
-    <form onSubmit={handleSubmit} className='flex-grow max-w-xl px-4 py-2 border'>
+    <form onSubmit={handleSubmit} className='flex-grow max-w-xl px-4 py-2 border min-w-fit'>
       <TextInput id='title' label='Полное название' type='text'
         required
         value={title}
@@ -126,9 +121,6 @@ function RSFormCard() {
             loading={processing}
             onClick={handleDownload}
           />
-          <a href={fileURL} download={fileName} className='hidden' ref={fileRef}>
-            <i aria-hidden="true"/>
-          </a>
           <Button 
             tooltip={isClaimable ? 'Стать владельцем' : 'Вы уже являетесь владельцем' }
             disabled={!isClaimable || processing}
@@ -160,7 +152,7 @@ function RSFormCard() {
       <div className='flex justify-start mt-2'>
         <label className='font-semibold'>Дата создания:</label>
         <span className='ml-8'>{new Date(schema!.time_create).toLocaleString(intl.locale)}</span>
-      </div>      
+      </div>
     </form>
   );
 }

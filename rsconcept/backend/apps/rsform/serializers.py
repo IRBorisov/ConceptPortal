@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import RSForm
+from .models import Constituenta, RSForm
 
 
 class FileSerializer(serializers.Serializer):
@@ -16,3 +16,14 @@ class RSFormSerializer(serializers.ModelSerializer):
         model = RSForm
         fields = '__all__'
         read_only_fields = ('owner', 'id')
+
+
+class ConstituentaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Constituenta
+        fields = '__all__'
+        read_only_fields = ('id', 'order', 'alias', 'csttype')
+
+    def update(self, instance: Constituenta, validated_data):
+        instance.schema.save()
+        return super().update(instance, validated_data)

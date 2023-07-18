@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { IRSForm } from '../models'
+import { CalculateStats, IRSForm } from '../models'
 import { ErrorInfo } from '../components/BackendError';
 import { getRSFormDetails } from '../backendAPI';
 
@@ -18,7 +18,10 @@ export function useRSFormDetails({target}: {target?: string}) {
       showError: true,
       setLoading: setLoading,
       onError: error => setError(error),
-      onSucccess: response => setSchema(response.data)
+      onSucccess: (response) => {
+        CalculateStats(response.data)
+        setSchema(response.data);
+      }
     });
   }, [target]);
 

@@ -8,7 +8,9 @@ import ExpressionEditor from './ExpressionEditor';
 import SubmitButton from '../../components/Common/SubmitButton';
 
 function ConstituentEditor() {
-  const { active, schema, setActive, isEditable } = useRSForm();
+  const { 
+    active, schema, setActive, processing, cstUpdate, isEditable, reload
+  } = useRSForm();
 
   const [alias, setAlias] = useState('');
   const [type, setType] = useState('');
@@ -27,6 +29,7 @@ function ConstituentEditor() {
     if (active) {
       setAlias(active.alias);
       setType(GetCstTypeLabel(active.cstType));
+      setConvention(active.convention || '');
       setTerm(active.term?.raw || '');
       setTextDefinition(active.definition?.text?.raw || '');
       setExpression(active.definition?.formal || '');
@@ -35,18 +38,27 @@ function ConstituentEditor() {
   
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // if (!processing) {
-    //   const data = {
-    //     'title': title,
-    //     'alias': alias,
-    //     'comment': comment,
-    //     'is_common': common,
-    //   };
-    //   upload(data, () => {
-    //     toast.success('Изменения сохранены');
-    //     reload();
-    //   });
-    // }
+    if (!processing) {
+      const data = {
+        'alias': alias,
+        'convention': convention,
+        'definition_formal': expression,
+        'definition_text': {
+          'raw': textDefinition,
+          'resolved': '',
+        },
+        'term': {
+          'raw': term,
+          'resolved': '',
+          'forms': active?.term?.forms || [],
+        }
+      };
+      cstUpdate(data, (response) => {
+        console.log(response);
+        toast.success('Изменения сохранены');
+        reload();
+      });
+    }
   };
 
   const handleRename = useCallback(() => {

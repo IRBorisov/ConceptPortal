@@ -11,6 +11,12 @@ class ObjectOwnerOrAdmin(BasePermission):
         return request.user == obj.owner or request.user.is_staff
 
 
+class SchemaOwnerOrAdmin(BasePermission):
+    ''' Permission for object ownership restriction '''
+    def has_object_permission(self, request, view, obj):
+        return request.user == obj.schema.owner or request.user.is_staff
+
+
 def read_trs(file) -> dict:
     ''' Read JSON from TRS file '''
     # TODO: deal with different versions

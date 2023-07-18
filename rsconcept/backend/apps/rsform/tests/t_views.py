@@ -7,12 +7,59 @@ from rest_framework.test import APITestCase, APIRequestFactory, APIClient
 from rest_framework.exceptions import ErrorDetail
 
 from apps.users.models import User
-from apps.rsform.models import Syntax, RSForm, CstType
+from apps.rsform.models import Syntax, RSForm, Constituenta, CstType
 from apps.rsform.views import (
     convert_to_ascii,
     convert_to_math,
     parse_expression
 )
+
+
+class TestConstituentaAPI(APITestCase):
+    def setUp(self):
+        self.factory = APIRequestFactory()
+        self.user = User.objects.create(username='UserTest')
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+        self.rsform_owned: RSForm = RSForm.objects.create(title='Test', alias='T1', owner=self.user)
+        self.rsform_unowned: RSForm = RSForm.objects.create(title='Test2', alias='T2')
+        self.cst1 = Constituenta.objects.create(
+            alias='X1', schema=self.rsform_owned, order=1, convention='Test')
+        self.cst2 = Constituenta.objects.create(
+            alias='X2', schema=self.rsform_unowned, order=1, convention='Test1')
+
+    def test_retrieve(self):
+        response = self.client.get(f'/api/constituents/{self.cst1.id}/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['alias'], self.cst1.alias)
+        self.assertEqual(response.data['convention'], self.cst1.convention)
+
+    def test_partial_update(self):
+        data = json.dumps({'convention': 'tt'})
+        response = self.client.patch(f'/api/constituents/{self.cst2.id}/', data, content_type='application/json')
+        self.assertEqual(response.status_code, 403)
+
+        self.client.logout()
+        response = self.client.patch(f'/api/constituents/{self.cst1.id}/', data, content_type='application/json')
+        self.assertEqual(response.status_code, 403)
+
+        self.client.force_authenticate(user=self.user)
+        response = self.client.patch(f'/api/constituents/{self.cst1.id}/', data, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.cst1.refresh_from_db()
+        self.assertEqual(response.data['convention'], 'tt')
+        self.assertEqual(self.cst1.convention, 'tt')
+
+        response = self.client.patch(f'/api/constituents/{self.cst1.id}/', data, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+    def test_readonly_cst_fields(self):
+        data = json.dumps({'alias': 'X33', 'order': 10})
+        response = self.client.patch(f'/api/constituents/{self.cst1.id}/', data, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['alias'], 'X1')
+        self.assertEqual(response.data['alias'], self.cst1.alias)
+        self.assertEqual(response.data['order'], self.cst1.order)
 
 
 class TestRSFormViewset(APITestCase):

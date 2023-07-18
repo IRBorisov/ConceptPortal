@@ -3,7 +3,7 @@ import { IConstituenta, IRSForm } from '../models';
 import { useRSFormDetails } from '../hooks/useRSFormDetails';
 import { ErrorInfo } from '../components/BackendError';
 import { useAuth } from './AuthContext';
-import { BackendCallback, deleteRSForm, getTRSFile, patchRSForm, postClaimRSForm } from '../backendAPI';
+import { BackendCallback, deleteRSForm, getTRSFile, patchConstituenta, patchRSForm, postClaimRSForm } from '../backendAPI';
 
 interface IRSFormContext {
   schema?: IRSForm
@@ -20,6 +20,8 @@ interface IRSFormContext {
   destroy: (callback: BackendCallback) => void
   claim: (callback: BackendCallback) => void
   download: (callback: BackendCallback) => void
+
+  cstUpdate: (data: any, callback: BackendCallback) => void
 }
 
 export const RSFormContext = createContext<IRSFormContext>({
@@ -37,6 +39,8 @@ export const RSFormContext = createContext<IRSFormContext>({
   destroy: () => {},
   claim: () => {},
   download: () => {},
+
+  cstUpdate: () => {},
 })
 
 interface RSFormStateProps {
@@ -94,11 +98,23 @@ export const RSFormState = ({ id, children }: RSFormStateProps) => {
     });
   }
 
+  async function cstUpdate(data: any, callback?: BackendCallback) {
+    setError(undefined);
+    patchConstituenta(String(active!.entityUID), {
+      data: data,
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => setError(error),
+      onSucccess: callback
+    });
+  }
+
   return (
     <RSFormContext.Provider value={{
       schema, error, loading, processing,
       active, setActive,
       isEditable, isClaimable,
+      cstUpdate, 
       reload, update, download, destroy, claim
     }}>
       { children }

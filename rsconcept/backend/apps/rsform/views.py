@@ -1,16 +1,28 @@
 import json
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import views, viewsets, filters, generics, permissions
 from rest_framework.decorators import action
-from rest_framework import views, viewsets, filters
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework import permissions
 
 import pyconcept
 from . import models
 from . import serializers
 from . import utils
+
+
+class ConstituentAPIView(generics.RetrieveUpdateAPIView):
+    queryset = models.Constituenta.objects.all()
+    serializer_class = serializers.ConstituentaSerializer
+
+    def get_permissions(self):
+        result = super().get_permissions()
+        if self.request.method.lower() == 'get':
+            result.append(permissions.AllowAny())
+        else:
+            result.append(utils.SchemaOwnerOrAdmin())
+        return result
 
 
 class RSFormViewSet(viewsets.ModelViewSet):

@@ -10,7 +10,6 @@ import BackendError from '../../components/BackendError';
 import ConstituentEditor from './ConstituentEditor';
 import RSFormStats from './RSFormStats';
 import useLocalStorage from '../../hooks/useLocalStorage';
-import { useLocation } from 'react-router-dom';
 
 enum TabsList {
   CARD = 0,
@@ -21,7 +20,6 @@ enum TabsList {
 function RSFormTabs() {
   const { setActive, active, error, schema, loading } = useRSForm();
   const [tabIndex, setTabIndex] = useLocalStorage('rsform_edit_tab', TabsList.CARD);
-  const search = useLocation().search;
 
   const onEditCst = (cst: IConstituenta) => {
     console.log(`Set active cst: ${cst.alias}`);
@@ -34,22 +32,28 @@ function RSFormTabs() {
   };
 
   useEffect(() => {
-    const tabQuery = new URLSearchParams(search).get('tab');
-    const activeQuery = new URLSearchParams(search).get('active');
+    const url = new URL(window.location.href);
+    const activeQuery = url.searchParams.get('active');
     const activeCst = schema?.items?.find((cst) => cst.entityUID === Number(activeQuery)) || undefined;
-    setTabIndex(Number(tabQuery) || TabsList.CARD);
     setActive(activeCst);
-  }, [search, setTabIndex, setActive, schema?.items]);
+  }, [setActive, schema?.items]);
 
   useEffect(() => {
-    if (schema) {
-      let url = `/rsforms/${schema.id}?tab=${tabIndex}`
-      if (active) {
-        url = url + `&active=${active.entityUID}`
-      }
-      window.history.replaceState(null, '', url);
+    const url = new URL(window.location.href);
+    const tabQuery = url.searchParams.get('tab');
+    setTabIndex(Number(tabQuery) || TabsList.CARD);
+  }, [setTabIndex]);
+
+  useEffect(() => {
+    let url = new URL(window.location.href);
+    url.searchParams.set('tab', String(tabIndex));
+    if (active) {
+      url.searchParams.set('active', String(active.entityUID));
+    } else {
+      url.searchParams.delete('active');
     }
-  }, [tabIndex, active, schema]);
+    window.history.replaceState(null, '', url.toString());    
+  }, [tabIndex, active]);
 
   return (
   <div className='container w-full'>
@@ -70,7 +74,7 @@ function RSFormTabs() {
 
         <TabPanel className='flex items-start w-full gap-2'>
           <RSFormCard />
-          <RSFormStats />
+          {schema.stats && <RSFormStats stats={schema.stats}/>}
         </TabPanel>
 
         <TabPanel className='w-fit'>

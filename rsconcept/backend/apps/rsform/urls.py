@@ -7,6 +7,7 @@ rsform_router = routers.SimpleRouter()
 rsform_router.register(r'rsforms', views.RSFormViewSet)
 
 urlpatterns = [
+    path('constituents/<int:pk>/', views.ConstituentAPIView.as_view()),
     path('rsforms/import-trs/', views.TrsImportView.as_view()),
     path('rsforms/create-detailed/', views.create_rsform),
     path('func/parse-expression/', views.parse_expression),

@@ -109,6 +109,15 @@ export async function patchRSForm(target: string, request?: IFrontRequest) {
   });
 }
 
+export async function patchConstituenta(target: string, request?: IFrontRequest) {
+  AxiosPatch({
+    title: `Constituenta id=${target}`,
+    endpoint: `${config.url.BASE}constituents/${target}/`,
+    request: request
+  });
+}
+
+
 export async function deleteRSForm(target: string, request?: IFrontRequest) {
   AxiosDelete({
     title: `RSForm id=${target}`,
