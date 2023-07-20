@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { ErrorInfo } from '../components/BackendError';
-import { postNewRSForm } from '../backendAPI';
+import { postNewRSForm } from '../utils/backendAPI';
 
 function useNewRSForm() {
   const [loading, setLoading] = useState(false);

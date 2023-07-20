@@ -1,8 +1,8 @@
 import Label from './Label';
 
-interface CheckboxProps {
-  id: string
-  label: string
+export interface CheckboxProps {
+  id?: string
+  label?: string
   required?: boolean
   disabled?: boolean
   widthClass?: string
@@ -20,11 +20,11 @@ function Checkbox({id, required, disabled, label, widthClass='w-full', value, on
         checked={value}
         onChange={onChange}
       />
-      <Label 
+      { label && <Label 
         text={label}
         required={required}
         htmlFor={id}
-      />
+      />}
       <svg
         className='absolute hidden w-3 h-3 mt-1 ml-0.5 text-white pointer-events-none peer-checked:block'
         viewBox='0 0 512 512'

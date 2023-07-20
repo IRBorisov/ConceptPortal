@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
-import { IUserProfile } from '../models'
+import { IUserProfile } from '../utils/models'
 import { ErrorInfo } from '../components/BackendError'
-import { getProfile } from '../backendAPI'
+import { getProfile } from '../utils/backendAPI'
 
 export function useUserProfile() {
   const [user, setUser] = useState<IUserProfile | undefined>(undefined);

@@ -26,6 +26,7 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
     } else {
       root.classList.remove('dark');
     }
+    root.setAttribute('data-color-scheme', !isDark ? 'light' : 'dark');
   };
   
   const toggleDarkMode = () => {

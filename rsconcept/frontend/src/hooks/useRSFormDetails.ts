@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
-import { CalculateStats, IRSForm } from '../models'
+import { CalculateStats, IRSForm } from '../utils/models'
 import { ErrorInfo } from '../components/BackendError';
-import { getRSFormDetails } from '../backendAPI';
+import { getRSFormDetails } from '../utils/backendAPI';
 
 export function useRSFormDetails({target}: {target?: string}) {
   const [schema, setSchema] = useState<IRSForm | undefined>();

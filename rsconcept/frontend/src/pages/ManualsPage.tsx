@@ -1,4 +1,4 @@
-import { urls } from '../constants';
+import { urls } from '../utils/constants';
 
 function ManualsPage() {
   return (

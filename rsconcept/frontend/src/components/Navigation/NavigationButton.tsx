@@ -12,7 +12,7 @@ function NavigationButton({icon, description, colorClass=defaultColors, onClick}
     <button title={description}
       type='button'
       onClick={onClick}
-      className={'p-2 mr-1 focus:ring-4 rounded-lg focus:ring-gray-300 dark:focus:ring-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 ' + colorClass}
+      className={'min-w-fit p-2 mr-1 focus:ring-4 rounded-lg focus:ring-gray-300 dark:focus:ring-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 ' + colorClass}
     >
       {icon}
     </button>

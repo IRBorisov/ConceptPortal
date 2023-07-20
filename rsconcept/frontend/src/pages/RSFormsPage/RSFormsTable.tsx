@@ -1,4 +1,4 @@
-import { IRSForm } from '../../models'
+import { IRSForm } from '../../utils/models'
 import { useNavigate } from 'react-router-dom';
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';

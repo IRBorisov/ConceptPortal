@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import { assertIsNode } from '../utils';
+import { assertIsNode } from '../utils/utils';
 
-export function useClickedOutside({ref, callback}: {ref: React.RefObject<HTMLElement>, callback: Function}) {
+function useClickedOutside({ref, callback}: {ref: React.RefObject<HTMLElement>, callback: Function}) {
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       assertIsNode(event.target);
@@ -15,3 +15,5 @@ export function useClickedOutside({ref, callback}: {ref: React.RefObject<HTMLEle
     };
   }, [ref, callback]);
 };
+
+export default useClickedOutside;

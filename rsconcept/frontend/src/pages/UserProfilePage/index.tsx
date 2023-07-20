@@ -7,7 +7,7 @@ function UserProfilePage() {
   const { user, error, loading } = useUserProfile();
 
   return (
-    <div className='container'>
+    <div className='w-full'>
       { loading && <Loader /> }
       { error && <BackendError error={error} />}
       { user && <UserProfile profile={user} /> }

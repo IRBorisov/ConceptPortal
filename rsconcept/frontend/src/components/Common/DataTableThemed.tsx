@@ -1,5 +1,4 @@
-import DataTable, { createTheme } from 'react-data-table-component';
-import { TableProps } from 'react-data-table-component';
+import DataTable, { createTheme, TableProps } from 'react-data-table-component';
 import { useTheme } from '../../context/ThemeContext';
 
 export interface SelectionInfo<T> {
@@ -18,14 +17,22 @@ createTheme('customDark', {
     default: '#002b36',
   },
   context: {
-    background: '#cb4b16',
+    background: '#3e014d',
     text: 'rgba(228, 228, 231, 0.87)',
+  },
+  highlightOnHover: {
+    default: '#3e014d',
+		text: 'rgba(228, 228, 231, 1)',
   },
   divider: {
     default: '#6b6b6b',
   },
   striped: {
 		default: '#004859',
+		text: 'rgba(228, 228, 231, 1)',
+	},
+  selected: {
+		default: '#4b015c',
 		text: 'rgba(228, 228, 231, 1)',
 	},
 }, 'dark');

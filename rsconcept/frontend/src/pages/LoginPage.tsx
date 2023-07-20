@@ -35,7 +35,7 @@ function LoginPage() {
   };
 
   return (
-    <div className='container py-2'> { user ? 
+    <div className='w-full py-2'> { user ? 
       <InfoMessage message={`Вы вошли в систему как ${user.username}`} /> 
       :
       <Form title='Ввод данных пользователя' onSubmit={handleSubmit} widthClass='w-[20rem]'>

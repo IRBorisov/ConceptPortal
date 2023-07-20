@@ -1,9 +1,9 @@
 import axios, { AxiosResponse } from 'axios'
 import { config } from './constants'
-import { ErrorInfo } from './components/BackendError'
+import { ErrorInfo } from '../components/BackendError'
 import { toast } from 'react-toastify'
 import { ICurrentUser, IRSForm, IUserInfo, IUserProfile } from './models'
-import { FilterType, RSFormsFilter } from './hooks/useRSForms'
+import { FilterType, RSFormsFilter } from '../hooks/useRSForms'
 
 export type BackendCallback = (response: AxiosResponse) => void;
 
@@ -141,6 +141,15 @@ export async function postClaimRSForm(target: string, request?: IFrontRequest) {
     request: request
   });
 }
+
+export async function postCheckExpression(schema: string, request?: IFrontRequest) {
+  AxiosPost({
+    title: `Check expression for RSForm id=${schema}: ${request?.data['expression']}`,
+    endpoint: `${config.url.BASE}rsforms/${schema}/check/`,
+    request: request
+  });
+}
+
 
 // ====== Helper functions ===========
 function AxiosGet<ReturnType>({endpoint, request, title}: IAxiosRequest) {

@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
-import { IUserInfo } from '../models'
-import { getActiveUsers } from '../backendAPI'
+import { IUserInfo } from '../utils/models'
+import { getActiveUsers } from '../utils/backendAPI'
 
 
 interface IUsersContext {

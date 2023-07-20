@@ -4,7 +4,7 @@ import SubmitButton from '../../components/Common/SubmitButton';
 import TextArea from '../../components/Common/TextArea';
 import TextInput from '../../components/Common/TextInput';
 import { useRSForm } from '../../context/RSFormContext';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Button from '../../components/Common/Button';
 import { CrownIcon, DownloadIcon, DumpBinIcon, ShareIcon } from '../../components/Icons';
 import { useUsers } from '../../context/UsersContext';
@@ -125,14 +125,14 @@ function RSFormCard() {
             tooltip={isClaimable ? 'Стать владельцем' : 'Вы уже являетесь владельцем' }
             disabled={!isClaimable || processing}
             icon={<CrownIcon />}
-            colorClass='text-green-400 dark:text-green-500'
+            colorClass='text-green'
             onClick={handleClaimOwner}
           />
           <Button 
             tooltip={ isEditable ? 'Удалить схему' : 'Вы не можете редактировать данную схему'}
             disabled={!isEditable || processing}
             icon={<DumpBinIcon />}
-            colorClass='text-red-400 dark:text-red-600'
+            colorClass='text-red'
             loading={processing}
             onClick={handleDelete}
           />

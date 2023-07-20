@@ -1,6 +1,6 @@
 import { Tabs, TabList, TabPanel } from 'react-tabs';
 import ConstituentsTable from './ConstituentsTable';
-import { IConstituenta } from '../../models';
+import { IConstituenta } from '../../utils/models';
 import { useRSForm } from '../../context/RSFormContext';
 import { useEffect } from 'react';
 import ConceptTab from '../../components/Common/ConceptTab';
@@ -10,6 +10,7 @@ import BackendError from '../../components/BackendError';
 import ConstituentEditor from './ConstituentEditor';
 import RSFormStats from './RSFormStats';
 import useLocalStorage from '../../hooks/useLocalStorage';
+import TablistTools from './TablistTools';
 
 enum TabsList {
   CARD = 0,
@@ -56,35 +57,39 @@ function RSFormTabs() {
   }, [tabIndex, active]);
 
   return (
-  <div className='container w-full'>
+  <div className='w-full'>
     { loading && <Loader /> }
     { error && <BackendError error={error} />}
     { schema && !loading &&
-      <Tabs 
-        selectedIndex={tabIndex}
-        onSelect={onSelectTab}
-        defaultFocus={true}
-        selectedTabClassName='font-bold'
-      >
-        <TabList className='flex items-start w-fit'>
-          <ConceptTab>Паспорт схемы</ConceptTab>
-          <ConceptTab className='border-gray-300 border-x-2 dark:border-gray-400'>Конституенты</ConceptTab>
-          <ConceptTab>Редактор</ConceptTab>
-        </TabList>
+    <Tabs 
+      selectedIndex={tabIndex}
+      onSelect={onSelectTab}
+      defaultFocus={true}
+      selectedTabClassName='font-bold'
+    >
+      <TabList className='flex items-start bg-gray-100 w-fit dark:bg-gray-600'>
+        <TablistTools />
+        <ConceptTab>Паспорт схемы</ConceptTab>
+        <ConceptTab className='border-gray-300 border-x-2 dark:border-gray-400 min-w-[10rem] flex justify-between gap-2'>
+          <span>Конституенты</span>
+          <span>{`${schema.stats?.count_errors} | ${schema.stats?.count_all}`}</span> 
+        </ConceptTab>
+        <ConceptTab>Редактор</ConceptTab>
+      </TabList>
 
-        <TabPanel className='flex items-start w-full gap-2'>
-          <RSFormCard />
-          {schema.stats && <RSFormStats stats={schema.stats}/>}
-        </TabPanel>
+      <TabPanel className='flex items-start w-full gap-2'>
+        <RSFormCard />
+        {schema.stats && <RSFormStats stats={schema.stats}/>}
+      </TabPanel>
 
-        <TabPanel className='w-fit'>
-          <ConstituentsTable onOpenEdit={onEditCst} />
-        </TabPanel>
+      <TabPanel className='w-full'>
+        <ConstituentsTable onOpenEdit={onEditCst} />
+      </TabPanel>
 
-        <TabPanel>
-          <ConstituentEditor />
-        </TabPanel>
-      </Tabs>
+      <TabPanel>
+        <ConstituentEditor />
+      </TabPanel>
+    </Tabs>
     }
   </div>);
 }

@@ -1,8 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { ICurrentUser, IUserSignupData } from '../models';
+import { ICurrentUser, IUserSignupData } from '../utils/models';
 import { ErrorInfo } from '../components/BackendError';
 import useLocalStorage from '../hooks/useLocalStorage';
-import { getAuth, postLogin, postLogout, postSignup } from '../backendAPI';
+import { getAuth, postLogin, postLogout, postSignup } from '../utils/backendAPI';
 
 
 interface IAuthContext {

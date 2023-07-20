@@ -22,7 +22,7 @@ function RSFormsPage() {
   }, [search, user, loadList]);
   
   return (
-    <div className='container'>
+    <div className='w-full'>
       { loading && <Loader /> }
       { error && <BackendError error={error} />}
       { !loading && rsforms && <RSFormsTable schemas={rsforms} /> }

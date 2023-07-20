@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
-import { IRSForm } from '../models'
+import { IRSForm } from '../utils/models'
 import { ErrorInfo } from '../components/BackendError';
-import { getRSForms } from '../backendAPI';
+import { getRSForms } from '../utils/backendAPI';
 
 export enum FilterType {
   PERSONAL = 'personal',

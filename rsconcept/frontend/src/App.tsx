@@ -22,6 +22,7 @@ function App() {
         className='mt-[4rem] text-sm'
         autoClose={3000}
         draggable={false}
+        pauseOnFocusLoss={false}
         limit={5}
       />
       <main className='min-h-[calc(100vh-6.8rem)] px-2 h-fit'>

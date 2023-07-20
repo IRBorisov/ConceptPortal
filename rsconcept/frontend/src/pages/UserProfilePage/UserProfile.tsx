@@ -1,4 +1,4 @@
-import { IUserProfile } from '../../models';
+import { IUserProfile } from '../../utils/models';
 
 interface UserProfileProps {
   profile: IUserProfile

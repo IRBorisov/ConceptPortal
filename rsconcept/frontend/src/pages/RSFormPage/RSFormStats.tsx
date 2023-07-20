@@ -1,7 +1,7 @@
 import Card from '../../components/Common/Card';
 import Divider from '../../components/Common/Divider';
 import LabeledText from '../../components/Common/LabeledText';
-import { IRSFormStats } from '../../models';
+import { IRSFormStats } from '../../utils/models';
 
 interface RSFormStatsProps {
   stats: IRSFormStats

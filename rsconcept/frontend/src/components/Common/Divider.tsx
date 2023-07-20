@@ -1,9 +1,14 @@
-function Divider() {
+interface DividerProps {
+  vertical?: boolean
+  margins?: string
+}
+
+function Divider({vertical, margins='2'}: DividerProps) {
   return (
-    <div 
-      className='my-2 border-b'
-      
-    />
+    <>
+    {vertical && <div className={`mx-${margins} border-x-2`} />}
+    {!vertical && <div className={`my-${margins} border-y-2`} />}
+    </>
   );
 }
 

@@ -4,7 +4,7 @@ import TextInput from '../components/Common/TextInput';
 import Form from '../components/Common/Form';
 import SubmitButton from '../components/Common/SubmitButton';
 import BackendError from '../components/BackendError';
-import { IRSFormCreateData } from '../models';
+import { IRSFormCreateData } from '../utils/models';
 import RequireAuth from '../components/RequireAuth';
 import useNewRSForm from '../hooks/useNewRSForm';
 import { useNavigate } from 'react-router-dom';

@@ -5,7 +5,7 @@ import Form from '../components/Common/Form';
 import { useAuth } from '../context/AuthContext';
 import SubmitButton from '../components/Common/SubmitButton';
 import BackendError from '../components/BackendError';
-import { IUserSignupData } from '../models';
+import { IUserSignupData } from '../utils/models';
 import InfoMessage from '../components/InfoMessage';
 import TextURL from '../components/Common/TextURL';
 
@@ -40,7 +40,7 @@ function RegisterPage() {
   };
 
   return (
-    <div className='container py-2'> 
+    <div className='w-full py-2'> 
     { success && 
       <div className='flex flex-col items-center'>
         <InfoMessage message={`Вы успешно зарегистрировали пользователя ${username}`}/>

@@ -1,24 +1,24 @@
 import { Link } from 'react-router-dom';
-import { urls } from '../constants';
+import { urls } from '../utils/constants';
 
 function Footer() {
   return (
     <footer className='z-50 px-4 py-4 text-gray-600 bg-white border-t-2 border-gray-400 dark:bg-gray-700 dark:border-gray-300 dark:text-gray-300'>
       <div className='flex items-stretch justify-center w-full mx-auto'>
         <div className='px-4 underline'>
-          <Link to='manuals'>Справка</Link> <br/>
-          <Link to='rsforms?filter=common'>Библиотека КС</Link> <br/>
+          <Link to='manuals' tabIndex={-1}>Справка</Link> <br/>
+          <Link to='rsforms?filter=common' tabIndex={-1}>Библиотека КС</Link> <br/>
         </div>
         <div className='px-4 underline border-gray-400 border-x dark:border-gray-300'>
           <ul>
             <li>
-              <a href={urls.concept}>Центр Концепт</a>
+              <a href={urls.concept} tabIndex={-1}>Центр Концепт</a>
             </li>
             <li>
-              <a href={urls.exteor64}>Exteor64bit</a>
+              <a href={urls.exteor64} tabIndex={-1}>Exteor64bit</a>
             </li>
             <li>
-              <a href={urls.exteor32}>Exteor32bit</a>
+              <a href={urls.exteor32} tabIndex={-1}>Exteor32bit</a>
             </li>
           </ul>
         </div>

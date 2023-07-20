@@ -10,9 +10,13 @@ interface TextInputProps {
   widthClass?: string
   value?: any
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onFocus?: () => void
 }
 
-function TextInput({id, type, required, label, disabled, placeholder, widthClass='w-full', value, onChange}: TextInputProps) {
+function TextInput({
+  id, type, required, label, disabled, placeholder, widthClass='w-full', value,
+  onChange, onFocus
+}: TextInputProps) {
   return (
     <div className='flex flex-col items-start [&:not(:first-child)]:mt-3'>
       <Label 
@@ -27,6 +31,7 @@ function TextInput({id, type, required, label, disabled, placeholder, widthClass
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        onFocus={onFocus}
         disabled={disabled}
       />
     </div>

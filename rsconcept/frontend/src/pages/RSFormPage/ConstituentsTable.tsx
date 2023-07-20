@@ -1,39 +1,54 @@
-import { GetErrLabel, GetTypeLabel, IConstituenta, ParsingStatus, ValueClass } from '../../models'
+import { CstType, IConstituenta, ParsingStatus, ValueClass, inferStatus } from '../../utils/models'
 import { useCallback, useMemo, useState } from 'react';
 import DataTableThemed, { SelectionInfo } from '../../components/Common/DataTableThemed';
-import Button from '../../components/Common/Button';
 import { useRSForm } from '../../context/RSFormContext';
-
+import Button from '../../components/Common/Button';
+import { ArrowDownIcon, ArrowUpIcon, ArrowsRotateIcon, DumpBinIcon, SmallPlusIcon } from '../../components/Icons';
+import { toast } from 'react-toastify';
+import Divider from '../../components/Common/Divider';
+import { getCstTypeLabel, getCstTypePrefix, getStatusInfo, getTypeLabel } from '../../utils/staticUI';
 
 interface ConstituentsTableProps {
   onOpenEdit: (cst: IConstituenta) => void
 }
 
 function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
-  const { schema } = useRSForm();
+  const { schema, isEditable } = useRSForm();
   const [selectedRows, setSelectedRows] = useState<IConstituenta[]>([]);
-  const [toggleCleared, setToggleCleared] = useState(false);
+  const nothingSelected = useMemo(() => selectedRows.length === 0, [selectedRows]);
 
   const handleRowSelected = useCallback(
     ({selectedRows} : SelectionInfo<IConstituenta>) => {
+    console.log('on selection change')
 		setSelectedRows(selectedRows);
 	}, []);
 
-  // const handleClearRows = () => setToggleCleared(!toggleCleared);
+  const handleRowClicked = useCallback(
+    (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
+		if (event.ctrlKey) {
+      console.log('ctrl + click');
+    }
+	}, []);
 
-  const contextActions = useMemo(() => {
-		const handleDelete = () => {
-			
-			if (window.confirm(`Are you sure you want to delete:\r ${selectedRows.map((cst: IConstituenta) => cst.alias)}?`)) {
-				setToggleCleared(!toggleCleared);
-				// setData(differenceBy(data, selectedRows, 'title'));
-			}
-		};
+  const handleDelete = useCallback(() => {
+    toast.info('Удаление конституент');
+  }, []);
 
-		return (
-			<Button text='Удалить' key='delete' onClick={handleDelete} />
-		);
-	}, [selectedRows, toggleCleared]);
+  const handleMoveUp = useCallback(() => {
+    toast.info('Перемещение вверх');
+  }, []);
+
+  const handleMoveDown = useCallback(() => {
+    toast.info('Перемещение вниз');
+  }, []);
+
+  const handleReindex = useCallback(() => {
+    toast.info('Переиндексация');
+  }, []);
+  
+  const handleAddNew = useCallback((cstType?: CstType) => {
+    toast.info(`Новая конституента ${cstType || 'NEW'}`);
+  }, []);
   
   const columns = useMemo(() => 
     [
@@ -46,7 +61,10 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
       {
         name: 'Статус',
         id: 'status',
-        cell: (cst: IConstituenta) => <div style={{fontSize: 12}}>{GetErrLabel(cst)}</div>,
+        cell: (cst: IConstituenta) => 
+          <div style={{fontSize: 12}}>
+            {getStatusInfo(inferStatus(cst.parse?.status, cst.parse?.valueClass)).text}
+          </div>,
         width: '80px',
         maxWidth: '80px',
         reorder: true,
@@ -76,11 +94,11 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
         conditionalCellStyles: [
           {
             when: (cst: IConstituenta) => cst.parse?.status !== ParsingStatus.VERIFIED,
-            classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
+            classNames: ['bg-[#ff8080]', 'dark:bg-[#800000]']
           },
           {
             when: (cst: IConstituenta) => cst.parse?.status === ParsingStatus.VERIFIED && cst.parse?.valueClass === ValueClass.INVALID,
-            classNames: ['bg-[#beeefa]', 'dark:bg-[#286675]']
+            classNames: ['bg-[#ffbb80]', 'dark:bg-[#964600]']
           },
           {
             when: (cst: IConstituenta) => cst.parse?.status === ParsingStatus.VERIFIED && cst.parse?.valueClass === ValueClass.PROPERTY,
@@ -91,7 +109,7 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
       {
         name: 'Тип',
         id: 'type',
-        cell: (cst: IConstituenta) => <div style={{fontSize: 12}}>{GetTypeLabel(cst)}</div>,
+        cell: (cst: IConstituenta) => <div style={{fontSize: 12}}>{getTypeLabel(cst)}</div>,
         width: '140px',
         minWidth: '100px',
         maxWidth: '140px',
@@ -113,9 +131,9 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
         name: 'Формальное определение',
         id: 'expression',
         selector: (cst: IConstituenta) => cst.definition?.formal || '',
-        width: '500px',
-        minWidth: '200px',
+        minWidth: '300px',
         maxWidth: '500px',
+        grow: 2,
         wrap: true,
         reorder: true,
       },
@@ -127,9 +145,8 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
             {cst.definition?.text.resolved || cst.definition?.text.raw || ''}
           </div>
         ),
-        width: '450px',
         minWidth: '200px',
-        maxWidth: '450px',
+        grow: 2,
         wrap: true,
         reorder: true,
       },
@@ -137,8 +154,7 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
         name: 'Конвенция / Комментарий',
         id: 'convention',
         cell: (cst: IConstituenta) => <div style={{fontSize: 12}}>{cst.convention || ''}</div>,
-        width: '250px',
-        minWidth: '0px',
+        minWidth: '100px',
         wrap: true,
         reorder: true,
         hide: 1800,
@@ -147,27 +163,78 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
   );
 
   return (
-    <DataTableThemed
-      data={schema!.items!}
-      columns={columns}
-      keyField='id'
+    <div className='w-full'>
+      <div className='flex justify-start w-full gap-1 px-2 py-1 border-y'>
+        <div className='mr-3'>Выбраны <span className='ml-2'><b>{selectedRows.length}</b> из {schema?.stats?.count_all || 0}</span></div>
+        <Button
+          tooltip='Переместить вверх'
+          icon={<ArrowUpIcon size={5}/>}
+          disabled={nothingSelected || !isEditable}
+          dense
+          onClick={handleMoveUp}
+        />
+        <Button
+          tooltip='Переместить вниз'
+          icon={<ArrowDownIcon size={5}/>}
+          disabled={nothingSelected || !isEditable}
+          dense
+          onClick={handleMoveDown}
+        />
+        <Button
+          colorClass='text-red'
+          tooltip='Удалить выбранные'
+          icon={<DumpBinIcon size={5}/>}
+          disabled={nothingSelected || !isEditable}
+          dense
+          onClick={handleDelete}
+        />
+        <Divider vertical margins='1' />
+        <Button
+          tooltip='Переиндексировать имена'
+          icon={<ArrowsRotateIcon size={5}/>}
+          disabled={!isEditable}
+          dense
+          onClick={handleReindex}
+        />
+        <Button
+          colorClass='text-green'
+          tooltip='Новая конституента'
+          icon={<SmallPlusIcon size={5}/>}
+          disabled={!isEditable}
+          dense
+          onClick={() => handleAddNew()}
+        />
+        {(Object.values(CstType)).map(
+          (typeStr) => {
+            const type = typeStr as CstType;
+            return <Button
+              text={`${getCstTypePrefix(type)}`}
+              tooltip={getCstTypeLabel(type)}
+              disabled={!isEditable}
+              dense
+              onClick={() =>handleAddNew(type)}
+            />;
+        })
+        }
+      </div>
+      <DataTableThemed
+        data={schema!.items!}
+        columns={columns}
+        keyField='id'
 
-      striped
-      highlightOnHover
-      pointerOnHover
-      selectableRows
-      selectableRowsNoSelectAll
-      
-      pagination
-      paginationPerPage={100}
-      paginationRowsPerPageOptions={[10, 20, 30, 50, 100, 200]}
+        striped
+        highlightOnHover
+        pointerOnHover
 
-      clearSelectedRows={toggleCleared}
-      contextActions={contextActions}
-      onSelectedRowsChange={handleRowSelected}
-      onRowDoubleClicked={onOpenEdit}
-      dense
-    />
+        selectableRows
+        // selectableRowSelected={(cst) => selectedRows.indexOf(cst) < -1}
+        selectableRowsHighlight
+        onSelectedRowsChange={handleRowSelected}
+        onRowDoubleClicked={onOpenEdit}
+        onRowClicked={handleRowClicked}
+        dense
+      />
+    </div>
 );
 }
 

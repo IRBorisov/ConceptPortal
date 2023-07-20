@@ -1,9 +1,10 @@
-import { createContext, useState, useContext, useMemo } from 'react';
-import { IConstituenta, IRSForm } from '../models';
+import { createContext, useState, useContext, useMemo, useCallback } from 'react';
+import { IConstituenta, IRSForm } from '../utils/models';
 import { useRSFormDetails } from '../hooks/useRSFormDetails';
 import { ErrorInfo } from '../components/BackendError';
 import { useAuth } from './AuthContext';
-import { BackendCallback, deleteRSForm, getTRSFile, patchConstituenta, patchRSForm, postClaimRSForm } from '../backendAPI';
+import { BackendCallback, deleteRSForm, getTRSFile, patchConstituenta, patchRSForm, postClaimRSForm } from '../utils/backendAPI';
+import { toast } from 'react-toastify';
 
 interface IRSFormContext {
   schema?: IRSForm
@@ -13,8 +14,14 @@ interface IRSFormContext {
   processing: boolean
   isEditable: boolean
   isClaimable: boolean
+  forceAdmin: boolean
+  readonly: boolean
+  isTracking: boolean
   
   setActive: (cst: IConstituenta | undefined) => void
+  setForceAdmin: (value: boolean) => void
+  setReadonly: (value: boolean) => void
+  toggleTracking: () => void
   reload: () => void
   update: (data: any, callback?: BackendCallback) => void
   destroy: (callback: BackendCallback) => void
@@ -32,8 +39,14 @@ export const RSFormContext = createContext<IRSFormContext>({
   processing: false,
   isEditable: false,
   isClaimable: false,
+  forceAdmin: false,
+  readonly: false,
+  isTracking: true,
   
   setActive: () => {},
+  setForceAdmin: () => {},
+  setReadonly: () => {},
+  toggleTracking: () => {},
   reload: () => {},
   update: () => {},
   destroy: () => {},
@@ -54,7 +67,24 @@ export const RSFormState = ({ id, children }: RSFormStateProps) => {
   const [processing, setProcessing] = useState(false)
   const [active, setActive] = useState<IConstituenta | undefined>(undefined);
 
-  const isEditable = useMemo(() => (user?.id === schema?.owner || user?.is_staff || false), [user, schema]);
+  const [forceAdmin, setForceAdmin] = useState(false);
+  const [readonly, setReadonly] = useState(false);
+
+  const isEditable = useMemo(() => {
+    return (
+      !readonly && 
+      (user?.id === schema?.owner || (forceAdmin && user?.is_staff) || false)
+    )
+  }, [user, schema, readonly, forceAdmin]);
+  
+  const isTracking = useMemo(() => {
+    return true;
+  }, []);
+  const toggleTracking = useCallback(() => {
+    toast('not implemented yet');
+  }, []);
+
+
   const isClaimable = useMemo(() => (user?.id !== schema?.owner || false), [user, schema]);
 
   async function update(data: any, callback?: BackendCallback) {
@@ -113,7 +143,10 @@ export const RSFormState = ({ id, children }: RSFormStateProps) => {
     <RSFormContext.Provider value={{
       schema, error, loading, processing,
       active, setActive,
+      forceAdmin, setForceAdmin,
+      readonly, setReadonly,
       isEditable, isClaimable,
+      isTracking, toggleTracking,
       cstUpdate, 
       reload, update, download, destroy, claim
     }}>
