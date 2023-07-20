@@ -32,13 +32,12 @@ function ConstituentsSideList({expression}: ConstituentsSideListProps) {
   const handleRowClicked = useCallback(
     (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
 		if (event.ctrlKey) {
-      console.log('ctrl + click');
+      setActive(cst);
     }
-	}, []);
+	}, [setActive]);
 
   const handleDoubleClick = useCallback(
     (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
-    console.log('activating')
 		setActive(cst);
 	}, [setActive]);
 

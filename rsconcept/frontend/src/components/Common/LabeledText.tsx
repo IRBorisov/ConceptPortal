@@ -7,7 +7,7 @@ interface LabeledTextProps {
 
 function LabeledText({id, label, text, tooltip}: LabeledTextProps) {
   return (
-    <div className='flex justify-between gap-2'>
+    <div className='flex justify-between gap-4'>
       <label 
         className='font-semibold'
         title={tooltip}

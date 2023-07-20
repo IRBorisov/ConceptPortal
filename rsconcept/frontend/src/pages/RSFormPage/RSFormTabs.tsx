@@ -2,7 +2,7 @@ import { Tabs, TabList, TabPanel } from 'react-tabs';
 import ConstituentsTable from './ConstituentsTable';
 import { IConstituenta } from '../../utils/models';
 import { useRSForm } from '../../context/RSFormContext';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import ConceptTab from '../../components/Common/ConceptTab';
 import RSFormCard from './RSFormCard';
 import { Loader } from '../../components/Common/Loader';
@@ -21,6 +21,7 @@ enum TabsList {
 function RSFormTabs() {
   const { setActive, active, error, schema, loading } = useRSForm();
   const [tabIndex, setTabIndex] = useLocalStorage('rsform_edit_tab', TabsList.CARD);
+  const [init, setInit] = useState(false);
 
   const onEditCst = (cst: IConstituenta) => {
     console.log(`Set active cst: ${cst.alias}`);
@@ -33,11 +34,14 @@ function RSFormTabs() {
   };
 
   useEffect(() => {
-    const url = new URL(window.location.href);
-    const activeQuery = url.searchParams.get('active');
-    const activeCst = schema?.items?.find((cst) => cst.entityUID === Number(activeQuery)) || undefined;
-    setActive(activeCst);
-  }, [setActive, schema?.items]);
+    if (schema) {
+      const url = new URL(window.location.href);
+      const activeQuery = url.searchParams.get('active');
+      const activeCst = schema?.items?.find((cst) => cst.entityUID === Number(activeQuery)) || undefined;
+      setActive(activeCst);
+      setInit(true);
+    }
+  }, [setActive, schema, setInit]);
 
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -46,15 +50,17 @@ function RSFormTabs() {
   }, [setTabIndex]);
 
   useEffect(() => {
-    let url = new URL(window.location.href);
-    url.searchParams.set('tab', String(tabIndex));
-    if (active) {
-      url.searchParams.set('active', String(active.entityUID));
-    } else {
-      url.searchParams.delete('active');
+    if (init) {
+      let url = new URL(window.location.href);
+      url.searchParams.set('tab', String(tabIndex));
+      if (active) {
+        url.searchParams.set('active', String(active.entityUID));
+      } else {
+        url.searchParams.delete('active');
+      }
+      window.history.pushState(null, '', url.toString());
     }
-    window.history.replaceState(null, '', url.toString());    
-  }, [tabIndex, active]);
+  }, [tabIndex, active, init]);
 
   return (
   <div className='w-full'>

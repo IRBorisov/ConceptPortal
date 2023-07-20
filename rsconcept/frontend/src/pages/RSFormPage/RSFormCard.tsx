@@ -12,12 +12,15 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 import { AxiosResponse } from 'axios';
+import { useAuth } from '../../context/AuthContext';
+import { claimOwnershipProc, deleteRSFormProc, shareCurrentURLProc } from '../../utils/procedures';
 
 function RSFormCard() {
   const navigate = useNavigate();
   const intl = useIntl();
   const { getUserLabel } = useUsers();
   const { schema, update, download, reload, isEditable, isClaimable, processing, destroy, claim } = useRSForm();
+  const { user } = useAuth();
 
   const [title, setTitle] = useState('');
   const [alias, setAlias] = useState('');
@@ -45,23 +48,8 @@ function RSFormCard() {
     });
   };
 
-  const handleDelete = useCallback(() => {
-    if (window.confirm('Вы уверены, что хотите удалить данную схему?')) {
-      destroy(() => {
-        toast.success('Схема удалена');
-        navigate('/rsforms?filter=personal');
-      });
-    }
-  }, [destroy, navigate]);
-
-  const handleClaimOwner = useCallback(() => {
-    if (window.confirm('Вы уверены, что хотите стать владельцем данной схемы?')) {
-      claim(() => {
-        toast.success('Вы стали владельцем схемы');
-        reload();
-      });
-    }
-  }, [claim, reload]);
+  const handleDelete = 
+    useCallback(() => deleteRSFormProc(destroy, navigate), [destroy, navigate]);
 
   const handleDownload = useCallback(() => {
     download((response: AxiosResponse) => {
@@ -73,12 +61,6 @@ function RSFormCard() {
       }
     });
   }, [download, schema?.alias]);
-  
-  const handleShare = useCallback(() => {
-    const url = window.location.href + '&share';
-    navigator.clipboard.writeText(url);
-    toast.success(`Ссылка скопирована: ${url}`);
-  }, []);
 
   return (
     <form onSubmit={handleSubmit} className='flex-grow max-w-xl px-4 py-2 border min-w-fit'>
@@ -112,21 +94,23 @@ function RSFormCard() {
           <Button 
             tooltip='Поделиться схемой'
             icon={<ShareIcon />}
-            onClick={handleShare}
+            colorClass='text-primary'
+            onClick={shareCurrentURLProc}
           />
           <Button 
             disabled={processing}
             tooltip='Скачать TRS файл'
             icon={<DownloadIcon />}
+            colorClass='text-primary'
             loading={processing}
             onClick={handleDownload}
           />
           <Button 
             tooltip={isClaimable ? 'Стать владельцем' : 'Вы уже являетесь владельцем' }
-            disabled={!isClaimable || processing}
+            disabled={!isClaimable || processing || !user}
             icon={<CrownIcon />}
             colorClass='text-green'
-            onClick={handleClaimOwner}
+            onClick={() => claimOwnershipProc(claim, reload)}
           />
           <Button 
             tooltip={ isEditable ? 'Удалить схему' : 'Вы не можете редактировать данную схему'}

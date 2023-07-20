@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import NavigationTextItem from './NavigationTextItem';
+import DropdownButton from '../Common/DropdownButton';
 import { useTheme } from '../../context/ThemeContext';
 import Dropdown from '../Common/Dropdown';
 
@@ -29,17 +29,19 @@ function UserDropdown({hideDropdown}: UserDropdownProps) {
   };
 
   return (
-    <Dropdown widthClass='w-36' stretchLeft >
-      <NavigationTextItem description='Профиль пользователя'
-        text={user?.username}
-        onClick={navigateProfile}
-      />
-      <NavigationTextItem description='Переключение темы оформления'
-        text={darkMode ? 'Светлая тема' : 'Темная тема'} 
-        onClick={toggleDarkMode}
-      />
-      <NavigationTextItem text={'Мои схемы'} onClick={navigateMyWork} />
-      <NavigationTextItem text={'Выйти...'} bold onClick={logoutAndRedirect} />
+    <Dropdown widthClass='w-36' stretchLeft>
+      <DropdownButton description='Профиль пользователя' onClick={navigateProfile}>
+        {user?.username}
+      </DropdownButton>
+      <DropdownButton description='Переключение темы оформления' onClick={toggleDarkMode}>
+        {darkMode ? 'Светлая тема' : 'Темная тема'} 
+      </DropdownButton>
+      <DropdownButton onClick={navigateMyWork}>
+        Мои схемы
+      </DropdownButton>
+      <DropdownButton onClick={logoutAndRedirect}>
+        <b>Выйти...</b>
+      </DropdownButton>
     </Dropdown>
   );
 }

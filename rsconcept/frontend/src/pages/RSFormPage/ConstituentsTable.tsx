@@ -19,7 +19,6 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
 
   const handleRowSelected = useCallback(
     ({selectedRows} : SelectionInfo<IConstituenta>) => {
-    console.log('on selection change')
 		setSelectedRows(selectedRows);
 	}, []);
 

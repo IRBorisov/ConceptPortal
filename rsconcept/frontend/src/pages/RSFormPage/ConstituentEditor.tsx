@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useRSForm } from '../../context/RSFormContext';
-import { EditMode } from '../../utils/models';
+import { EditMode, IConstituenta } from '../../utils/models';
 import { toast } from 'react-toastify';
 import TextArea from '../../components/Common/TextArea';
 import ExpressionEditor from './ExpressionEditor';
@@ -24,10 +24,10 @@ function ConstituentEditor() {
   const [typification, setTypification] = useState('N/A');
 
   useEffect(() => {
-    if (!active && schema?.items && schema?.items.length > 0) {
-      setActive(schema?.items[0]);
+    if (schema?.items && schema?.items.length > 0) {
+      setActive((prev) => (prev || schema?.items![0]));
     }
-  }, [schema, setActive, active])
+  }, [schema, setActive])
 
   useEffect(() => {
     if (active) {
