@@ -78,7 +78,7 @@ function ConstituentEditor() {
   return (
     <div className='flex items-start w-full gap-2'>
       <form onSubmit={handleSubmit} className='flex-grow min-w-[50rem] max-w-min px-4 py-2 border'>
-        <div className='flex items-center justify-between gap-1'>
+        <div className='flex items-start justify-between gap-1'>
           <span className='mr-12'>
             <label 
               title='Переименовать конституенту' 
@@ -89,6 +89,9 @@ function ConstituentEditor() {
             </label>
             <b className='ml-2'>{alias}</b>
           </span>
+          <div className='mt-2 h-[1rem]'>
+            <SubmitButton text='Сохранить изменения' disabled={!isEditable} />
+          </div>
           <span>
             <label 
               title='Изменить тип конституенты'
@@ -141,9 +144,7 @@ function ConstituentEditor() {
           onChange={event => setConvention(event.target.value)}
           onFocus={() => setEditMode(EditMode.TEXT)}
         />
-        <div className='flex items-center justify-between gap-1 py-2 mt-2'>
-          <SubmitButton text='Сохранить изменения' disabled={!isEditable} />
-        </div>
+        
       </form>
       <ConstituentsSideList expression={expression}/>
     </div>

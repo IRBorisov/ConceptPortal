@@ -13,7 +13,7 @@ interface ConstituentsTableProps {
 }
 
 function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
-  const { schema, isEditable } = useRSForm();
+  const { schema, isEditable, } = useRSForm();
   const [selectedRows, setSelectedRows] = useState<IConstituenta[]>([]);
   const nothingSelected = useMemo(() => selectedRows.length === 0, [selectedRows]);
 
@@ -25,9 +25,9 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
   const handleRowClicked = useCallback(
     (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
 		if (event.ctrlKey) {
-      console.log('ctrl + click');
+      onOpenEdit(cst);
     }
-	}, []);
+	}, [onOpenEdit]);
 
   const handleDelete = useCallback(() => {
     toast.info('Удаление конституент');

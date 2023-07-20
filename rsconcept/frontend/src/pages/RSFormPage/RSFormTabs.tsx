@@ -43,6 +43,31 @@ function RSFormTabs() {
     }
   }, [setActive, schema, setInit]);
 
+//   const [ locationKeys, setLocationKeys ] = useState([])
+// const history = useHistory()
+
+// useEffect(() => {
+//   return history.listen(location => {
+//     if (history.action === 'PUSH') {
+//       setLocationKeys([ location.key ])
+//     }
+
+//     if (history.action === 'POP') {
+//       if (locationKeys[1] === location.key) {
+//         setLocationKeys(([ _, ...keys ]) => keys)
+
+//         // Handle forward event
+
+//       } else {
+//         setLocationKeys((keys) => [ location.key, ...keys ])
+
+//         // Handle back event
+
+//       }
+//     }
+//   })
+// }, [ locationKeys, ])
+
   useEffect(() => {
     const url = new URL(window.location.href);
     const tabQuery = url.searchParams.get('tab');
@@ -51,14 +76,25 @@ function RSFormTabs() {
 
   useEffect(() => {
     if (init) {
-      let url = new URL(window.location.href);
-      url.searchParams.set('tab', String(tabIndex));
+      const url = new URL(window.location.href);
+      let currentActive = url.searchParams.get('active');
+      const currentTab = url.searchParams.get('tab');
+      const saveHistory = tabIndex === TabsList.CST_EDIT && currentActive !== String(active?.entityUID);
+      if (currentTab !== String(tabIndex)) {
+        url.searchParams.set('tab', String(tabIndex));
+      }
       if (active) {
-        url.searchParams.set('active', String(active.entityUID));
+        if (currentActive !== String(active.entityUID)) {
+          url.searchParams.set('active', String(active.entityUID));
+        }
       } else {
         url.searchParams.delete('active');
       }
-      window.history.pushState(null, '', url.toString());
+      if (saveHistory) {
+        window.history.pushState(null, '', url.toString());
+      } else {
+        window.history.replaceState(null, '', url.toString());
+      }
     }
   }, [tabIndex, active, init]);
 

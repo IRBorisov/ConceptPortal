@@ -42,9 +42,9 @@ function TablistTools() {
         <Dropdown>
           <p>клонировать</p>
           <p>поделиться</p>
-          <DropdownButton disabled={isEditable} onClick={handleDelete}>
+          <DropdownButton disabled={!isEditable} onClick={handleDelete}>
             <div className='inline-flex items-center gap-1 justify-normal'>
-              <span className={isOwned ? 'text-red' : ''}><DumpBinIcon size={4} /></span>
+              <span className={isEditable ? 'text-red' : ''}><DumpBinIcon size={4} /></span>
               <p>Удалить схему</p>
             </div>
           </DropdownButton>

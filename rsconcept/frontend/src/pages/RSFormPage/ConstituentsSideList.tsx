@@ -76,7 +76,7 @@ function ConstituentsSideList({expression}: ConstituentsSideListProps) {
 
   return (
     <div className='max-h-[80vh] overflow-y-scroll border flex-grow w-full'>
-      <div className='sticky top-0 left-0 right-0 z-40 flex items-center justify-between w-full gap-1 px-2 py-1 bg-white border-b-2 border-gray-400 rounded dark:bg-gray-700 dark:border-gray-300'>
+      <div className='sticky top-0 left-0 right-0 z-10 flex items-center justify-between w-full gap-1 px-2 py-1 bg-white border-b-2 border-gray-400 rounded dark:bg-gray-700 dark:border-gray-300'>
         <div className='w-full'>
           <input type='text'
             className='w-full px-2 outline-none dark:bg-gray-700 hover:text-clip'

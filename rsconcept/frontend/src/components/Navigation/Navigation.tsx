@@ -6,22 +6,40 @@ import UserMenu from './UserMenu';
 import { useAuth } from '../../context/AuthContext';
 import UserTools from './UserTools';
 import Logo from './Logo';
+import { useState } from 'react';
 
 function Navigation() {
   const {user} = useAuth();
   const navigate = useNavigate();
+  const [isActive, setActive] = useState(true);
 
   const navigateCommon = () => navigate('/rsforms?filter=common');
   const navigateHelp = () => navigate('/manuals');
   
   return (
-    <nav className='bg-white dark:bg-gray-700 border-b-2 border-gray-400 rounded dark:border-gray-300 px-4 py-2.5 sticky top-0 left-0 right-0 z-50 h-[4rem]'>
-      <div className='flex items-center justify-between '>
+    <nav className='sticky top-0 left-0 right-0 z-50'>
+      {isActive && 
+      <button
+        title='Скрыть навигацию'
+        className='absolute top-0 right-0 z-[60] border-b-2 border-l-2 clr-nav w-[1.2rem] h-[4rem] '
+        onClick={() => setActive(!isActive)}
+      >
+        <p>{'>'}</p><p>{'>'}</p>
+      </button>}
+      {!isActive && 
+      <button
+        title='Показать навигацию'
+        className='absolute top-0 right-0 z-[60] border-b-2 border-l-2 clr-nav w-[4rem] h-[1.6rem]'
+        onClick={() => setActive(!isActive)}
+      >
+        {'∨∨∨'}
+      </button>}
+      {isActive && 
+      <div className='border-b-2 clr-nav pr-6 pl-2 py-2.5 h-[4rem] flex items-center justify-between '>
         <div className='flex items-start justify-start '>
           <Logo title='КонцептПортал' />
           <TopSearch placeholder='Поиск схемы...' />
         </div>
-        
         <div className='flex items-center'>
           {user && <UserTools/>}
           <div className='flex items-center pl-2'>
@@ -30,7 +48,7 @@ function Navigation() {
             <UserMenu />
           </div>
         </div>
-      </div>
+      </div>}
     </nav>
   );
 }

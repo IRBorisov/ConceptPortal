@@ -23,8 +23,16 @@
     @apply text-zinc-200 bg-gray-900
   }
 
+  .clr-nav {
+    @apply border-gray-400 dark:border-gray-300 bg-white dark:bg-gray-700 rounded-none
+  }
+
   .clr-hover {
     @apply hover:bg-gray-50 hover:text-gray-700 dark:hover:text-white dark:hover:bg-gray-500
+  }
+
+  .clr-btn-primary {
+    @apply bg-blue-400 hover:bg-blue-600 dark:bg-orange-600 dark:hover:bg-orange-400 disabled:bg-gray-400 dark:disabled:bg-gray-400
   }
 
   .text-red {

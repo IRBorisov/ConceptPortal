@@ -3,7 +3,7 @@ import { urls } from '../utils/constants';
 
 function Footer() {
   return (
-    <footer className='z-50 px-4 py-4 text-gray-600 bg-white border-t-2 border-gray-400 dark:bg-gray-700 dark:border-gray-300 dark:text-gray-300'>
+    <footer className='z-50 px-4 pt-2 pb-4 text-gray-600 bg-white border-t-2 border-gray-400 dark:bg-gray-700 dark:border-gray-300 dark:text-gray-300'>
       <div className='flex items-stretch justify-center w-full mx-auto'>
         <div className='px-4 underline'>
           <Link to='manuals' tabIndex={-1}>Справка</Link> <br/>

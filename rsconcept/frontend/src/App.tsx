@@ -25,7 +25,7 @@ function App() {
         pauseOnFocusLoss={false}
         limit={5}
       />
-      <main className='min-h-[calc(100vh-6.8rem)] px-2 h-fit'>
+      <main className='min-h-[calc(100vh-7.5rem)] px-2 h-fit'>
         <Routes>
           <Route path='/' element={ <HomePage/>} />
 
