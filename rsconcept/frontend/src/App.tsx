@@ -16,7 +16,7 @@ import ToasterThemed from './components/ToasterThemed';
 
 function App() {
   return (
-    <div className='antialiased bg-gray-50 dark:bg-gray-800'>
+    <div className='antialiased clr-app'>
       <Navigation />
       <ToasterThemed
         className='mt-[4rem] text-sm'

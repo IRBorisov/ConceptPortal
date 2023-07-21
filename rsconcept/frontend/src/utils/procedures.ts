@@ -1,5 +1,6 @@
 import { toast } from 'react-toastify';
 import { BackendCallback } from './backendAPI';
+import fileDownload from 'js-file-download';
 
 export function shareCurrentURLProc() {
   const url = window.location.href + '&share';
@@ -30,5 +31,18 @@ export function deleteRSFormProc(
   destroy(() => {
     toast.success('Схема удалена');
     navigate('/rsforms?filter=personal');
+  });
+}
+
+export function downloadRSFormProc(
+  download: (callback: BackendCallback) => void, 
+  fileName: string
+) {
+  download((response) => {
+    try {
+      fileDownload(response.data, fileName);
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   });
 }

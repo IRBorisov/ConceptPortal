@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useRSForm } from '../../context/RSFormContext';
-import { EditMode, IConstituenta } from '../../utils/models';
+import { EditMode } from '../../utils/models';
 import { toast } from 'react-toastify';
 import TextArea from '../../components/Common/TextArea';
 import ExpressionEditor from './ExpressionEditor';
@@ -89,9 +89,6 @@ function ConstituentEditor() {
             </label>
             <b className='ml-2'>{alias}</b>
           </span>
-          <div className='mt-2 h-[1rem]'>
-            <SubmitButton text='Сохранить изменения' disabled={!isEditable} />
-          </div>
           <span>
             <label 
               title='Изменить тип конституенты'
@@ -124,6 +121,7 @@ function ConstituentEditor() {
           isActive={editMode==='rslang'}
           toggleEditMode={() => setEditMode(EditMode.RSLANG)}
           onChange={event => setExpression(event.target.value)}
+          setValue={setExpression}
           setTypification={setTypification}
         />
         <TextArea id='definition' label='Текстовое определение'
@@ -144,7 +142,9 @@ function ConstituentEditor() {
           onChange={event => setConvention(event.target.value)}
           onFocus={() => setEditMode(EditMode.TEXT)}
         />
-        
+        <div className='mt-2 w-full flex justify-center'>
+          <SubmitButton text='Сохранить изменения' disabled={!isEditable} />
+        </div>
       </form>
       <ConstituentsSideList expression={expression}/>
     </div>

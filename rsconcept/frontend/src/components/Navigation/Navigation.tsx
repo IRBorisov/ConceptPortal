@@ -21,7 +21,7 @@ function Navigation() {
       {isActive && 
       <button
         title='Скрыть навигацию'
-        className='absolute top-0 right-0 z-[60] border-b-2 border-l-2 clr-nav w-[1.2rem] h-[4rem] '
+        className='absolute top-0 right-0 z-[60] w-[1.2rem] h-[4rem] border-b-2 border-l-2 clr-nav rounded-none'
         onClick={() => setActive(!isActive)}
       >
         <p>{'>'}</p><p>{'>'}</p>
@@ -29,13 +29,13 @@ function Navigation() {
       {!isActive && 
       <button
         title='Показать навигацию'
-        className='absolute top-0 right-0 z-[60] border-b-2 border-l-2 clr-nav w-[4rem] h-[1.6rem]'
+        className='absolute top-0 right-0 z-[60] w-[4rem] h-[1.6rem] border-b-2 border-l-2 clr-nav  rounded-none'
         onClick={() => setActive(!isActive)}
       >
         {'∨∨∨'}
       </button>}
       {isActive && 
-      <div className='border-b-2 clr-nav pr-6 pl-2 py-2.5 h-[4rem] flex items-center justify-between '>
+      <div className='pr-6 pl-2 py-2.5 h-[4rem] flex items-center justify-between border-b-2 clr-nav rounded-none'>
         <div className='flex items-start justify-start '>
           <Logo title='КонцептПортал' />
           <TopSearch placeholder='Поиск схемы...' />

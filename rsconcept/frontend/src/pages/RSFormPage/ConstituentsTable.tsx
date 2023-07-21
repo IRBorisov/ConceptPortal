@@ -163,58 +163,54 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
 
   return (
     <div className='w-full'>
-      <div className='flex justify-start w-full gap-1 px-2 py-1 border-y'>
-        <div className='mr-3'>Выбраны <span className='ml-2'><b>{selectedRows.length}</b> из {schema?.stats?.count_all || 0}</span></div>
-        <Button
-          tooltip='Переместить вверх'
-          icon={<ArrowUpIcon size={5}/>}
-          disabled={nothingSelected || !isEditable}
-          dense
-          onClick={handleMoveUp}
-        />
-        <Button
-          tooltip='Переместить вниз'
-          icon={<ArrowDownIcon size={5}/>}
-          disabled={nothingSelected || !isEditable}
-          dense
-          onClick={handleMoveDown}
-        />
-        <Button
-          colorClass='text-red'
-          tooltip='Удалить выбранные'
-          icon={<DumpBinIcon size={5}/>}
-          disabled={nothingSelected || !isEditable}
-          dense
-          onClick={handleDelete}
-        />
-        <Divider vertical margins='1' />
-        <Button
-          tooltip='Переиндексировать имена'
-          icon={<ArrowsRotateIcon size={5}/>}
-          disabled={!isEditable}
-          dense
-          onClick={handleReindex}
-        />
-        <Button
-          colorClass='text-green'
-          tooltip='Новая конституента'
-          icon={<SmallPlusIcon size={5}/>}
-          disabled={!isEditable}
-          dense
-          onClick={() => handleAddNew()}
-        />
-        {(Object.values(CstType)).map(
-          (typeStr) => {
-            const type = typeStr as CstType;
-            return <Button
-              text={`${getCstTypePrefix(type)}`}
-              tooltip={getCstTypeLabel(type)}
-              disabled={!isEditable}
-              dense
-              onClick={() =>handleAddNew(type)}
-            />;
-        })
-        }
+      <div className='flex justify-start w-full gap-1 px-2 py-1 border-y items-center h-[2.2rem]'>
+        <div className='mr-3 whitespace-nowrap'>Выбраны <span className='ml-2'><b>{selectedRows.length}</b> из {schema?.stats?.count_all || 0}</span></div>
+        {isEditable && <div className='flex justify-start w-full gap-1'>
+          <Button
+            tooltip='Переместить вверх'
+            icon={<ArrowUpIcon size={6}/>}
+            disabled={nothingSelected}
+            dense
+            onClick={handleMoveUp}
+          />
+          <Button
+            tooltip='Переместить вниз'
+            icon={<ArrowDownIcon size={6}/>}
+            disabled={nothingSelected}
+            dense
+            onClick={handleMoveDown}
+          />
+          <Button
+            tooltip='Удалить выбранные'
+            icon={<DumpBinIcon color={!nothingSelected ? 'text-red': ''} size={6}/>}
+            disabled={nothingSelected}
+            dense
+            onClick={handleDelete}
+          />
+          <Divider vertical margins='1' />
+          <Button
+            tooltip='Переиндексировать имена'
+            icon={<ArrowsRotateIcon color='text-primary' size={6}/>}
+            dense
+            onClick={handleReindex}
+          />
+          <Button
+            tooltip='Новая конституента'
+            icon={<SmallPlusIcon color='text-green' size={6}/>}
+            dense
+            onClick={() => handleAddNew()}
+          />
+          {(Object.values(CstType)).map(
+            (typeStr) => {
+              const type = typeStr as CstType;
+              return <Button
+                text={`${getCstTypePrefix(type)}`}
+                tooltip={getCstTypeLabel(type)}
+                dense
+                onClick={() =>handleAddNew(type)}
+              />;
+          })}
+        </div>}
       </div>
       <DataTableThemed
         data={schema!.items!}

@@ -1,32 +1,60 @@
 import { useCallback } from 'react';
 import Button from '../../components/Common/Button';
 import Dropdown from '../../components/Common/Dropdown';
-import { CrownIcon, DumpBinIcon, EyeIcon, EyeOffIcon, MenuIcon, PenIcon } from '../../components/Icons';
+import { CloneIcon, CrownIcon, DownloadIcon, DumpBinIcon, EyeIcon, EyeOffIcon, MenuIcon, PenIcon, ShareIcon, UploadIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import useDropdown from '../../hooks/useDropdown';
 import DropdownButton from '../../components/Common/DropdownButton';
 import Checkbox from '../../components/Common/Checkbox';
 import { useAuth } from '../../context/AuthContext';
-import { claimOwnershipProc, deleteRSFormProc } from '../../utils/procedures';
+import { claimOwnershipProc, deleteRSFormProc, downloadRSFormProc, shareCurrentURLProc } from '../../utils/procedures';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function TablistTools() {
   const navigate = useNavigate();
   const {user} = useAuth();
-  const { 
+  const { schema,
     isOwned, isEditable, isTracking, readonly, forceAdmin,
     toggleTracking, toggleForceAdmin, toggleReadonly,
-    claim, reload, destroy
+    claim, reload, destroy, download
   } = useRSForm();
   const schemaMenu = useDropdown();
   const editMenu = useDropdown();
 
   const handleClaimOwner = useCallback(() => {
-    claimOwnershipProc(claim, reload)
-  }, [claim, reload]);
+    editMenu.hide();
+    claimOwnershipProc(claim, reload);
+  }, [claim, reload, editMenu]);
 
-  const handleDelete = 
-    useCallback(() => deleteRSFormProc(destroy, navigate), [destroy, navigate]);
+  const handleDelete = useCallback(() => {
+    schemaMenu.hide();
+    deleteRSFormProc(destroy, navigate);
+  }, [destroy, navigate, schemaMenu]);
+
+  const handleDownload = useCallback(() => {
+    schemaMenu.hide();
+    const fileName = (schema?.alias || 'Schema') + '.trs';
+    downloadRSFormProc(download, fileName);
+  }, [schemaMenu, download, schema?.alias]);
+
+  const handleUpload = useCallback(() => {
+    // TODO: implement
+    schemaMenu.hide();
+    toast.info('Замена содержимого на файл Экстеора');
+  }, [schemaMenu]);
+
+
+  const handleClone = useCallback(() => {
+    // TODO: implement
+    schemaMenu.hide();
+    toast.info('Клонирование РС-формы');
+  }, [schemaMenu]);
+
+  const handleShare = useCallback(() => {
+    schemaMenu.hide();
+    shareCurrentURLProc();
+  }, [schemaMenu]);
   
   return (
     <div className='flex items-center w-fit'>
@@ -40,22 +68,43 @@ function TablistTools() {
         />
         { schemaMenu.isActive &&
         <Dropdown>
-          <p>клонировать</p>
-          <p>поделиться</p>
-          <DropdownButton disabled={!isEditable} onClick={handleDelete}>
-            <div className='inline-flex items-center gap-1 justify-normal'>
-              <span className={isEditable ? 'text-red' : ''}><DumpBinIcon size={4} /></span>
-              <p>Удалить схему</p>
+          <DropdownButton  onClick={handleShare}>
+            <div className='inline-flex items-center gap-2 justify-start'>
+              <ShareIcon color='text-primary' size={4}/>
+              <p>Поделиться</p>
             </div>
+          </DropdownButton>
+          <DropdownButton  onClick={handleClone}>
+            <div className='inline-flex items-center gap-2 justify-start'>
+              <CloneIcon color='text-primary' size={4}/>
+              <p>Клонировать</p>
+            </div>
+          </DropdownButton>
+          <DropdownButton  onClick={handleDownload}>
+            <div className='inline-flex items-center gap-2 justify-start'>
+              <DownloadIcon color='text-primary' size={4}/>
+              <p>Выгрузить файл Экстеор</p>
+            </div>
+          </DropdownButton>
+          <DropdownButton disabled={!isEditable} onClick={handleUpload}>
+            <div className='inline-flex items-center gap-2 justify-start'>
+              <UploadIcon color={isEditable ? 'text-red' : ''} size={4}/>
+              <p>Загрузить из Экстеора</p>
+            </div>
+          </DropdownButton>
+          <DropdownButton disabled={!isEditable} onClick={handleDelete}>
+            <span className='inline-flex items-center gap-2 justify-start'>
+              <DumpBinIcon color={isEditable ? 'text-red' : ''} size={4} />
+              <p>Удалить схему</p>
+            </span>
           </DropdownButton>
         </Dropdown>}
       </div>
       <div ref={editMenu.ref}>
         <Button
           tooltip={'измнение ' + (isEditable ? 'доступно': 'запрещено')}
-          colorClass={ isEditable ? 'text-green': 'text-red'}
           borderClass=''
-          icon={<PenIcon size={5}/>}
+          icon={<PenIcon size={5} color={isEditable ? 'text-green': 'text-red'}/>}
           dense
           onClick={editMenu.toggle} 
         />
@@ -82,9 +131,11 @@ function TablistTools() {
       <div>
         <Button
           tooltip={'отслеживание: ' + (isTracking ? 'включено': 'выключено')}
-          icon={isTracking ? <EyeIcon size={5}/> : <EyeOffIcon size={5}/>}
+          icon={isTracking ? 
+            <EyeIcon color='text-primary' size={5}/> 
+            : <EyeOffIcon size={5}/>
+          }
           borderClass=''
-          colorClass={isTracking ? 'text-primary': ''}
           dense
           onClick={toggleTracking} 
           />
@@ -94,4 +145,3 @@ function TablistTools() {
 }
 
 export default TablistTools
-
