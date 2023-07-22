@@ -67,6 +67,12 @@ function RSFormsTable({schemas}: RSFormsTableProps) {
       striped
       highlightOnHover
       pointerOnHover
+
+      noDataComponent={<span className='p-2 flex flex-col justify-center text-center'>
+        <p>Список схем пуст</p>
+        <p>Измените фильтр</p>
+      </span>}
+
       pagination
       paginationPerPage={50}
       paginationRowsPerPageOptions={[10, 20, 30, 50, 100]}

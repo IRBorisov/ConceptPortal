@@ -8,13 +8,15 @@ interface ButtonProps {
   disabled?: boolean
   dense?: boolean
   loading?: boolean
+  widthClass?: string
   borderClass?: string
+  colorClass?: string
   onClick?: MouseEventHandler<HTMLButtonElement> | undefined
 }
 
 function Button({id, text, icon, tooltip,
   dense, disabled,
-  borderClass='border rounded',
+  borderClass='border rounded', colorClass='clr-btn-default', widthClass='w-fit h-fit',
   loading, onClick,
   ...props
 }: ButtonProps) {
@@ -26,9 +28,7 @@ function Button({id, text, icon, tooltip,
       disabled={disabled}
       onClick={onClick}
       title={tooltip}
-      className={padding + ' ' + borderClass + ' ' +
-        'inline-flex items-center gap-2 align-middle justify-center w-fit h-fit clr-btn-default ' + cursor
-      }
+      className={`inline-flex items-center gap-2 align-middle justify-center ${padding} ${borderClass} ${colorClass} ${widthClass} ${cursor}`}
       {...props}
     >
       {icon && <span>{icon}</span>}

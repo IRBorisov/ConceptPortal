@@ -129,6 +129,10 @@ function ConstituentsSideList({expression}: ConstituentsSideListProps) {
         columns={columns}
         keyField='id'
         noContextMenu
+        noDataComponent={<span className='p-2 flex flex-col justify-center text-center'>
+          <p>Список конституент пуст</p>
+          <p>Измените параметры фильтра</p>
+        </span>}
 
         striped
         highlightOnHover

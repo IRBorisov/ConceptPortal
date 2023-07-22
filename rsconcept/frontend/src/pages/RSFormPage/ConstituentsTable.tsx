@@ -7,6 +7,7 @@ import { ArrowDownIcon, ArrowUpIcon, ArrowsRotateIcon, DumpBinIcon, SmallPlusIco
 import { toast } from 'react-toastify';
 import Divider from '../../components/Common/Divider';
 import { getCstTypeLabel, getCstTypePrefix, getStatusInfo, getTypeLabel } from '../../utils/staticUI';
+import CreateCstModal from './CreateCstModal';
 
 interface ConstituentsTableProps {
   onOpenEdit: (cst: IConstituenta) => void
@@ -16,6 +17,8 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
   const { schema, isEditable, } = useRSForm();
   const [selectedRows, setSelectedRows] = useState<IConstituenta[]>([]);
   const nothingSelected = useMemo(() => selectedRows.length === 0, [selectedRows]);
+
+  const [showCstModal, setShowCstModal] = useState(true);
 
   const handleRowSelected = useCallback(
     ({selectedRows} : SelectionInfo<IConstituenta>) => {
@@ -46,7 +49,11 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
   }, []);
   
   const handleAddNew = useCallback((cstType?: CstType) => {
-    toast.info(`Новая конституента ${cstType || 'NEW'}`);
+    if (!cstType) {
+      setShowCstModal(true);
+    } else {
+      toast.info(`Новая конституента ${cstType || 'NEW'}`);
+    }
   }, []);
   
   const columns = useMemo(() => 
@@ -161,9 +168,14 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
     ], []
   );
 
-  return (
+  return (<>
+    <CreateCstModal
+      show={showCstModal}
+      toggle={() => setShowCstModal(!showCstModal)}
+      onCreate={handleAddNew}
+    />
     <div className='w-full'>
-      <div className='flex justify-start w-full gap-1 px-2 py-1 border-y items-center h-[2.2rem]'>
+      <div className='sticky top-[4rem] z-10 flex justify-start w-full gap-1 px-2 py-1 border-y items-center h-[2.2rem] clr-app'>
         <div className='mr-3 whitespace-nowrap'>Выбраны <span className='ml-2'><b>{selectedRows.length}</b> из {schema?.stats?.count_all || 0}</span></div>
         {isEditable && <div className='flex justify-start w-full gap-1'>
           <Button
@@ -216,6 +228,10 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
         data={schema!.items!}
         columns={columns}
         keyField='id'
+        noDataComponent={<span className='p-2 flex flex-col justify-center text-center'>
+          <p>Список пуст</p>
+          <p>Создайте новую конституенту</p>
+        </span>}
 
         striped
         highlightOnHover
@@ -230,7 +246,7 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
         dense
       />
     </div>
-);
+  </>);
 }
 
 export default ConstituentsTable;

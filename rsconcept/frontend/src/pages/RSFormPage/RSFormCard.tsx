@@ -10,8 +10,6 @@ import { CrownIcon, DownloadIcon, DumpBinIcon, SaveIcon, ShareIcon } from '../..
 import { useUsers } from '../../context/UsersContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import fileDownload from 'js-file-download';
-import { AxiosResponse } from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import { claimOwnershipProc, deleteRSFormProc, downloadRSFormProc, shareCurrentURLProc } from '../../utils/procedures';
 
