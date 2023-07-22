@@ -1,6 +1,6 @@
 import { useCallback, useState, useMemo, useEffect } from 'react';
 import { useRSForm } from '../../context/RSFormContext';
-import { IConstituenta, matchConstituenta } from '../../utils/models';
+import { CstType, IConstituenta, matchConstituenta } from '../../utils/models';
 import Checkbox from '../../components/Common/Checkbox';
 import DataTableThemed from '../../components/Common/DataTableThemed';
 import useLocalStorage from '../../hooks/useLocalStorage';
@@ -20,8 +20,20 @@ function ConstituentsSideList({expression}: ConstituentsSideListProps) {
     if (!schema?.items) {
       setFilteredData([]);
     } else if (onlyExpression) {
-      const aliases: string[] = extractGlobals(expression);
-      setFilteredData(schema?.items.filter((cst) => aliases.includes(cst.alias)));
+      const aliases = extractGlobals(expression);
+      let filtered = schema?.items.filter((cst) => aliases.has(cst.alias));
+      const names = filtered.map(cst => cst.alias)
+      const diff =  Array.from(aliases).filter(name => names.indexOf(name) < 0);
+      if (diff.length > 0) {
+        diff.forEach(
+          (alias, i) => filtered.push({
+          entityUID: -i,
+          alias: alias,
+          convention: 'Конституента отсутствует',
+          cstType: CstType.BASE
+        }));
+      }
+      setFilteredData(filtered);
     } else if (!filterText) {
       setFilteredData(schema?.items);
     } else {
@@ -31,14 +43,14 @@ function ConstituentsSideList({expression}: ConstituentsSideListProps) {
 
   const handleRowClicked = useCallback(
     (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
-		if (event.ctrlKey) {
+		if (event.altKey && cst.entityUID > 0) {
       setActive(cst);
     }
 	}, [setActive]);
 
   const handleDoubleClick = useCallback(
     (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
-		setActive(cst);
+		if (cst.entityUID > 0) setActive(cst);
 	}, [setActive]);
 
   const columns = useMemo(() => 
@@ -54,13 +66,25 @@ function ConstituentsSideList({expression}: ConstituentsSideListProps) {
         selector: (cst: IConstituenta) => cst.alias,
         width: '62px',
         maxWidth: '62px',
+        conditionalCellStyles: [
+          {
+            when: (cst: IConstituenta) => cst.entityUID <= 0,
+            classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
+          },
+        ],
       },
       {
         name: 'Описание',
         id: 'description',
-        selector: (cst: IConstituenta) => cst.term?.resolved || cst.definition?.text.resolved || cst.definition?.formal || '',
+        selector: (cst: IConstituenta) => cst.term?.resolved || cst.definition?.text.resolved || cst.definition?.formal || cst.convention || '',
         minWidth: '350px',
         wrap: true,
+        conditionalCellStyles: [
+          {
+            when: (cst: IConstituenta) => cst.entityUID <= 0,
+            classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
+          },
+        ],
       },
       {
         name: 'Выражение',
@@ -70,6 +94,12 @@ function ConstituentsSideList({expression}: ConstituentsSideListProps) {
         hide: 1600,
         grow: 2,
         wrap: true,
+        conditionalCellStyles: [
+          {
+            when: (cst: IConstituenta) => cst.entityUID <= 0,
+            classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
+          },
+        ],
       }
     ], []
   );

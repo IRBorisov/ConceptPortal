@@ -6,7 +6,7 @@ import TextInput from '../../components/Common/TextInput';
 import { useRSForm } from '../../context/RSFormContext';
 import { useCallback, useEffect, useState } from 'react';
 import Button from '../../components/Common/Button';
-import { CrownIcon, DownloadIcon, DumpBinIcon, ShareIcon } from '../../components/Icons';
+import { CrownIcon, DownloadIcon, DumpBinIcon, SaveIcon, ShareIcon } from '../../components/Icons';
 import { useUsers } from '../../context/UsersContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -86,7 +86,12 @@ function RSFormCard() {
       />
       
       <div className='flex items-center justify-between gap-1 py-2 mt-2'>
-        <SubmitButton text='Сохранить изменения' loading={processing} disabled={!isEditable || processing} />
+        <SubmitButton
+          text='Сохранить изменения' 
+          loading={processing}
+          disabled={!isEditable || processing}
+          icon={<SaveIcon size={6} />}
+        />
         <div className='flex justify-end gap-1'>
           <Button 
             tooltip='Поделиться схемой'

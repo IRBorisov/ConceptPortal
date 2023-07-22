@@ -24,7 +24,7 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
 
   const handleRowClicked = useCallback(
     (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
-		if (event.ctrlKey) {
+		if (event.altKey) {
       onOpenEdit(cst);
     }
 	}, [onOpenEdit]);

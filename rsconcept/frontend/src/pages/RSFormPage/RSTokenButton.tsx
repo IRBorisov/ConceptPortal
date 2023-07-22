@@ -1,13 +1,13 @@
 import { TokenID } from '../../utils/models'
 import { getRSButtonData } from '../../utils/staticUI'
 
-interface RSEditButtonProps {
+interface  RSTokenButtonProps {
   id: TokenID
   disabled?: boolean
-  onInsert: (token: TokenID) => void
+  onInsert: (token: TokenID, key?: string) => void
 }
 
-function RSEditButton({id, disabled, onInsert}: RSEditButtonProps) {
+function RSTokenButton({id, disabled, onInsert}: RSTokenButtonProps) {
   const data = getRSButtonData(id);
   const width = data.text.length > 3 ? 'w-[4rem]' : 'w-[2rem]';
   return (
@@ -21,7 +21,7 @@ function RSEditButton({id, disabled, onInsert}: RSEditButtonProps) {
     >
       {data.text && <span className='whitespace-nowrap'>{data.text}</span>}
     </button>
-  )
+  );
 }
 
-export default RSEditButton;
+export default RSTokenButton;

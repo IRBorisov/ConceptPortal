@@ -24,8 +24,8 @@ export function getTypeLabel(cst: IConstituenta) {
 export function getRSButtonData(id: TokenID): IRSButtonData {
   switch(id) {
   case TokenID.BOOLEAN: return {
-    text: 'ℬ',
-    tooltip: 'Булеан [Shift + B]',
+    text: 'ℬ()',
+    tooltip: 'Булеан [Alt + E]',
   };
   case TokenID.DECART: return {
     text: '×',
@@ -33,11 +33,11 @@ export function getRSButtonData(id: TokenID): IRSButtonData {
   };
   case TokenID.PUNC_PL: return {
     text: '( )',
-    tooltip: 'Скобки вокруг выражения',
+    tooltip: 'Скобки вокруг выражения [ Alt + Shift + 9 ]',
   };
   case TokenID.PUNC_SL: return {
     text: '[ ]',
-    tooltip: 'Скобки вокруг выражения',
+    tooltip: 'Скобки вокруг выражения [ Alt + [ ]',
   };
   case TokenID.FORALL: return {
     text: '∀',
@@ -49,31 +49,31 @@ export function getRSButtonData(id: TokenID): IRSButtonData {
   };
   case TokenID.NOT: return {
     text: '¬',
-    tooltip: 'Отрицание [Alt + Shift + -]',
+    tooltip: 'Отрицание [Alt + `]',
   };
   case TokenID.AND: return {
     text: '&',
-    tooltip: 'Конъюнкция [Shift + 7]',
+    tooltip: 'Конъюнкция [Alt + 3 ~ Shift + 7]',
   };
   case TokenID.OR: return {
     text: '∨',
-    tooltip: 'дизъюнкция [Alt + Shift + 7]',
+    tooltip: 'дизъюнкция [Alt + Shift + 3]',
   };
   case TokenID.IMPLICATION: return {
     text: '⇒',
-    tooltip: 'импликация [Alt + Shift + ]]',
+    tooltip: 'импликация [Alt + 4]',
   };
   case TokenID.EQUIVALENT: return {
     text: '⇔',
-    tooltip: 'эквивалентность [Alt + Shift + []',
+    tooltip: 'эквивалентность [Alt + Shift + 4]',
   };
   case TokenID.LIT_EMPTYSET: return {
     text: '∅',
-    tooltip: 'пустое множество [Alt + Shift + 0]',
+    tooltip: 'пустое множество [Alt + X]',
   };
   case TokenID.LIT_INTSET: return {
     text: 'Z',
-    tooltip: 'целые числа',
+    tooltip: 'целые числа [Alt + Z]',
   };
   case TokenID.EQUAL: return {
     text: '=',
@@ -81,7 +81,7 @@ export function getRSButtonData(id: TokenID): IRSButtonData {
   };
   case TokenID.NOTEQUAL: return {
     text: '≠',
-    tooltip: 'неравенство [Alt + Shift + =]',
+    tooltip: 'неравенство [Alt + Shift + `]',
   };
   case TokenID.GREATER_OR_EQ: return {
     text: '≥',
@@ -93,7 +93,7 @@ export function getRSButtonData(id: TokenID): IRSButtonData {
   };
   case TokenID.IN: return {
     text: '∈',
-    tooltip: 'принадлежит [Alt + \']',
+    tooltip: 'быть элементом (принадлежит) [Alt + \']',
   };
   case TokenID.NOTIN: return {
     text: '∉',
@@ -101,7 +101,7 @@ export function getRSButtonData(id: TokenID): IRSButtonData {
   };
   case TokenID.SUBSET_OR_EQ: return {
     text: '⊆',
-    tooltip: 'быть частью (нестрогое подмножество) [Alt + Shift + L]',
+    tooltip: 'быть частью (нестрогое подмножество) [Alt + 2]',
   };
   case TokenID.SUBSET: return {
     text: '⊂',
@@ -109,7 +109,7 @@ export function getRSButtonData(id: TokenID): IRSButtonData {
   };
   case TokenID.NOTSUBSET: return {
     text: '⊄',
-    tooltip: 'не подмножество [Alt + Shift + ;]',
+    tooltip: 'не подмножество [Alt + Shift + 2]',
   };
   case TokenID.INTERSECTION: return {
     text: '∩',
@@ -119,36 +119,36 @@ export function getRSButtonData(id: TokenID): IRSButtonData {
     text: '∪',
     tooltip: 'объединение [Alt + U]',
   };
-  case TokenID.MINUS: return {
+  case TokenID.SET_MINUS: return {
     text: '\\',
-    tooltip: 'Разность множеств',
+    tooltip: 'Разность множеств [Alt + 5]',
   };
   case TokenID.SYMMINUS: return {
     text: '∆',
-    tooltip: 'Симметрическая разность',
+    tooltip: 'Симметрическая разность [Alt + Shift + 5]',
   };
   case TokenID.NT_DECLARATIVE_EXPR: return {
     text: 'D{}',
-    tooltip: 'Декларативная форма определения терма',
+    tooltip: 'Декларативная форма определения терма [Alt + D]',
   };
   case TokenID.NT_IMPERATIVE_EXPR: return {
     text: 'I{}',
-    tooltip: 'императивная форма определения терма',
+    tooltip: 'императивная форма определения терма [Alt + G]',
   };
   case TokenID.NT_RECURSIVE_FULL: return {
     text: 'R{}',
-    tooltip: 'рекурсивная (цикличная) форма определения терма',
+    tooltip: 'рекурсивная (цикличная) форма определения терма [Alt + T]',
   };
   case TokenID.BIGPR: return {
     text: 'Pr1()',
-    tooltip: 'большая проекция [Alt + W]',
+    tooltip: 'большая проекция [Alt + Q]',
   };
   case TokenID.SMALLPR: return {
     text: 'pr1()',
-    tooltip: 'малая проекция [Alt + Q]',
+    tooltip: 'малая проекция [Alt + W]',
   };
   case TokenID.FILTER: return {
-    text: 'Fi[]()',
+    text: 'Fi1[]()',
     tooltip: 'фильтр [Alt + F]',
   };
   case TokenID.REDUCE: return {
@@ -165,7 +165,7 @@ export function getRSButtonData(id: TokenID): IRSButtonData {
   };
   case TokenID.DEBOOL: return {
     text: 'debool()',
-    tooltip: 'десинглетон [Alt + D]',
+    tooltip: 'десинглетон [Alt + V]',
   };
   case TokenID.PUNC_ASSIGN: return {
     text: ':=',
@@ -248,6 +248,6 @@ export function getStatusInfo(status?: ExpressionStatus): IStatusInfo {
   };
 }
 
-export function extractGlobals(expression: string) {
-  return expression.match(/[XCSADFPT]\d+/g) || [];
+export function extractGlobals(expression: string): Set<string> {
+  return new Set(expression.match(/[XCSADFPT]\d+/g) || []);
 }

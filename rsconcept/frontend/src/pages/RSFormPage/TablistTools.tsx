@@ -102,7 +102,7 @@ function TablistTools() {
       </div>
       <div ref={editMenu.ref}>
         <Button
-          tooltip={'измнение ' + (isEditable ? 'доступно': 'запрещено')}
+          tooltip={'измнение: ' + (isEditable ? '[доступно]': '[запрещено]')}
           borderClass=''
           icon={<PenIcon size={5} color={isEditable ? 'text-green': 'text-red'}/>}
           dense
@@ -130,7 +130,7 @@ function TablistTools() {
       </div>
       <div>
         <Button
-          tooltip={'отслеживание: ' + (isTracking ? 'включено': 'выключено')}
+          tooltip={'отслеживание: ' + (isTracking ? '[включено]': '[выключено]')}
           icon={isTracking ? 
             <EyeIcon color='text-primary' size={5}/> 
             : <EyeOffIcon size={5}/>

@@ -7,6 +7,7 @@ import ExpressionEditor from './ExpressionEditor';
 import SubmitButton from '../../components/Common/SubmitButton';
 import { getCstTypeLabel } from '../../utils/staticUI';
 import ConstituentsSideList from './ConstituentsSideList';
+import { SaveIcon } from '../../components/Icons';
 
 function ConstituentEditor() {
   const { 
@@ -78,27 +79,38 @@ function ConstituentEditor() {
   return (
     <div className='flex items-start w-full gap-2'>
       <form onSubmit={handleSubmit} className='flex-grow min-w-[50rem] max-w-min px-4 py-2 border'>
-        <div className='flex items-start justify-between gap-1'>
-          <span className='mr-12'>
-            <label 
-              title='Переименовать конституенту' 
-              className='font-semibold underline cursor-pointer'
-              onClick={handleRename}
-            >
-              ID
-            </label>
-            <b className='ml-2'>{alias}</b>
-          </span>
-          <span>
-            <label 
-              title='Изменить тип конституенты'
-              className='font-semibold underline cursor-pointer'
-              onClick={handleChangeType}
-            >
-              Тип
-            </label>
-            <span className='ml-2'>{type}</span>
-          </span>
+        <div className='flex items-start justify-between'>
+          <div className='flex items-start justify-center w-full gap-4'>
+            <span className='mr-12'>
+              <label 
+                title='Переименовать конституенту' 
+                className='font-semibold underline cursor-pointer'
+                onClick={handleRename}
+              >
+                ID
+              </label>
+              <b className='ml-2'>{alias}</b>
+            </span>
+            <span>
+              <label 
+                title='Изменить тип конституенты'
+                className='font-semibold underline cursor-pointer'
+                onClick={handleChangeType}
+              >
+                Тип
+              </label>
+              <span className='ml-2'>{type}</span>
+            </span>
+          </div>
+          <div className='flex justify-end'>
+          <button type='submit'
+            title='Сохранить изменения'
+            className={'px-1 py-1 whitespace-nowrap font-bold disabled:cursor-not-allowed rounded clr-btn-primary'}
+            disabled={!isEditable}
+          >
+            <SaveIcon size={5} />
+          </button>
+          </div>
         </div>
         <TextArea id='term' label='Термин'
           placeholder='Схемный или предметный термин, обозначающий данное понятие или утверждение'
@@ -134,7 +146,7 @@ function ConstituentEditor() {
           onFocus={() => setEditMode(EditMode.TEXT)}
         />
         <TextArea id='convention' label='Конвенция / Комментарий'
-          placeholder='Договоренность об интерпретации неопределяемых понятий или комментарий к производному понятию'
+          placeholder='Договоренность об интерпретации неопределяемого понятия&#x000D;&#x000A;Комментарий к производному понятию'
           rows={4}
           value={convention}
           disabled={!isEditable}
@@ -142,8 +154,12 @@ function ConstituentEditor() {
           onChange={event => setConvention(event.target.value)}
           onFocus={() => setEditMode(EditMode.TEXT)}
         />
-        <div className='mt-2 w-full flex justify-center'>
-          <SubmitButton text='Сохранить изменения' disabled={!isEditable} />
+        <div className='flex justify-center w-full mt-2'>
+          <SubmitButton
+            text='Сохранить изменения'
+            disabled={!isEditable}
+            icon={<SaveIcon size={6} />}
+          />
         </div>
       </form>
       <ConstituentsSideList expression={expression}/>
