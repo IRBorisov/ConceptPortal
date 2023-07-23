@@ -41,13 +41,29 @@ class RSFormViewSet(viewsets.ModelViewSet):
             return serializer.save()
 
     def get_permissions(self):
-        if self.action in ['update', 'destroy', 'partial_update']:
+        if self.action in ['update', 'destroy', 'partial_update',
+                           'new_constituenta']:
             permission_classes = [utils.ObjectOwnerOrAdmin]
         elif self.action in ['create', 'claim']:
             permission_classes = [permissions.IsAuthenticated]
         else:
             permission_classes = [permissions.AllowAny]
         return [permission() for permission in permission_classes]
+
+    @action(detail=True, methods=['post'], url_path='new-constituenta')
+    def new_constituenta(self, request, pk):
+        ''' View schema contents (including constituents) '''
+        schema: models.RSForm = self.get_object()
+        serializer = serializers.NewConstituentaSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        if ('insert_after' in serializer.validated_data):
+            cstafter = models.Constituenta.objects.get(pk=serializer.validated_data['insert_after'])
+            constituenta = schema.insert_at(cstafter.order + 1,
+                                            serializer.validated_data['alias'],
+                                            serializer.validated_data['csttype'])
+        else:
+            constituenta = schema.insert_last(serializer.validated_data['alias'], serializer.validated_data['csttype'])
+        return Response(status=201, data=constituenta.to_json())
 
     @action(detail=True, methods=['post'])
     def claim(self, request, pk=None):

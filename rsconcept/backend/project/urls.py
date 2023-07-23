@@ -8,9 +8,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', lambda request: redirect('docs/', permanent=True)),
-    path('docs/', include_docs_urls(title='ConceptPortal API'),
-         name='docs'),
     path('api/', include('apps.rsform.urls')),
     path('users/', include('apps.users.urls')),
+    path('docs/', include_docs_urls(title='ConceptPortal API'), name='docs'),
+    path('', lambda request: redirect('docs/', permanent=True)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -1,7 +1,8 @@
-import { toast } from 'react-toastify';
 import Modal from '../../components/Common/Modal';
 import { CstType } from '../../utils/models';
-import { useState } from 'react';
+import Select from 'react-select';
+import { CstTypeSelector } from '../../utils/staticUI';
+import { useEffect, useState } from 'react';
 
 interface CreateCstModalProps {
   show: boolean
@@ -11,10 +12,16 @@ interface CreateCstModalProps {
 
 function CreateCstModal({show, toggle, onCreate}: CreateCstModalProps) {
   const [validated, setValidated] = useState(false);
+  const [selectedType, setSelectedType] = useState<CstType|undefined>(undefined);
 
   const handleSubmit = () => {
-    toast.info('Создание конституент');
+    if (selectedType) onCreate(selectedType);
   };
+
+  useEffect(() => {
+    setValidated(selectedType !== undefined);
+  }, [selectedType]
+  );
 
   return (
     <Modal 
@@ -24,8 +31,11 @@ function CreateCstModal({show, toggle, onCreate}: CreateCstModalProps) {
       canSubmit={validated}
       onSubmit={handleSubmit}
     >
-      <p>Выбор типа конституенты</p>
-      <p>Добавить после выбранной или в конец</p>
+      <Select 
+        options={CstTypeSelector}
+        placeholder='Выберите тип'
+        onChange={(data) => setSelectedType(data?.value)}
+      />
     </Modal>
   )
 }

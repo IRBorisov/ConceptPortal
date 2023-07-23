@@ -150,6 +150,14 @@ export async function postCheckExpression(schema: string, request?: IFrontReques
   });
 }
 
+export async function postNewConstituenta(schema: string, request?: IFrontRequest) {
+  AxiosPost({
+    title: `New Constituenta for RSForm id=${schema}: ${request?.data['alias']}`,
+    endpoint: `${config.url.BASE}rsforms/${schema}/new-constituenta/`,
+    request: request
+  });
+}
+
 
 // ====== Helper functions ===========
 function AxiosGet<ReturnType>({endpoint, request, title}: IAxiosRequest) {

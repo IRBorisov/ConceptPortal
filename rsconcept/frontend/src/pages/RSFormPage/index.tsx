@@ -5,7 +5,7 @@ import RSFormTabs from './RSFormTabs';
 function RSFormPage() {
   const { id } = useParams();
   return (
-    <RSFormState id={id || ''}>
+    <RSFormState schemaID={id || ''}>
       <RSFormTabs />
     </RSFormState>
   );

@@ -44,6 +44,7 @@ function LoginPage() {
           required
           type='text'
           value={username}
+          autoFocus
           onChange={event => setUsername(event.target.value)} 
         />
         <TextInput id='password'

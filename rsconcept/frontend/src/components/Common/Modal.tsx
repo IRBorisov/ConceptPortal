@@ -26,6 +26,11 @@ function Modal({title, show, toggle, onSubmit, onCancel, canSubmit, children, su
     if(onCancel) onCancel();
   };
 
+  const handleSubmit = () => {
+    toggle();
+    onSubmit();
+  };
+
   return (
     <>
     <div className='fixed top-0 left-0 w-full h-full clr-modal opacity-50 z-50'>
@@ -41,7 +46,7 @@ function Modal({title, show, toggle, onSubmit, onCancel, canSubmit, children, su
           widthClass='min-w-[6rem] w-fit h-fit'
           colorClass='clr-btn-primary'
           disabled={!canSubmit}
-          onClick={onSubmit}
+          onClick={handleSubmit}
         />
         <Button 
           text='Отмена'

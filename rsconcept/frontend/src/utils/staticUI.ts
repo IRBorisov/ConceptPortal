@@ -1,4 +1,4 @@
-import { CstType, ExpressionStatus, IConstituenta, ParsingStatus, TokenID } from './models';
+import { CstType, ExpressionStatus, IConstituenta, IRSForm, ParsingStatus, TokenID } from './models';
 
 export interface IRSButtonData {
   text: string
@@ -195,6 +195,12 @@ export function getCstTypeLabel(type: CstType) {
   }
 }
 
+export const CstTypeSelector = (Object.values(CstType)).map(
+  (typeStr) => {
+    const type = typeStr as CstType;
+    return {value: type, label: getCstTypeLabel(type)};
+});
+
 export function getCstTypePrefix(type: CstType) {
   switch(type) {
   case CstType.BASE: return 'X';
@@ -250,4 +256,20 @@ export function getStatusInfo(status?: ExpressionStatus): IStatusInfo {
 
 export function extractGlobals(expression: string): Set<string> {
   return new Set(expression.match(/[XCSADFPT]\d+/g) || []);
+}
+
+export function createAliasFor(type: CstType, schema: IRSForm): string {
+  let index = 1;
+  let prefix = getCstTypePrefix(type);
+  let name = prefix + index;
+  if (schema.items && schema.items.length > 0) {
+    for (let i = 0; i < schema.items.length; ++i) {
+      if (schema.items[i].alias === name) {
+        ++index;
+        name = prefix + index;
+        i = 0;
+      }
+    }
+  }
+  return name;
 }

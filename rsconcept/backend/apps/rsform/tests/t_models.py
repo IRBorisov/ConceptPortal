@@ -40,28 +40,6 @@ class TestConstituenta(TestCase):
         with self.assertRaises(IntegrityError):
             Constituenta.objects.create(alias='X1', order=1)
 
-    def test_alias_unique(self):
-        alias = 'X1'
-
-        original = Constituenta.objects.create(alias=alias, order=1, schema=self.schema1)
-        self.assertIsNotNone(original)
-
-        clone = Constituenta.objects.create(alias=alias, order=2, schema=self.schema2)
-        self.assertNotEqual(clone, original)
-
-        with self.assertRaises(IntegrityError):
-            Constituenta.objects.create(alias=alias, order=1, schema=self.schema1)
-
-    def test_order_unique(self):
-        original = Constituenta.objects.create(alias='X1', order=1, schema=self.schema1)
-        self.assertIsNotNone(original)
-
-        clone = Constituenta.objects.create(alias='X2', order=1, schema=self.schema2)
-        self.assertNotEqual(clone, original)
-
-        with self.assertRaises(IntegrityError):
-            Constituenta.objects.create(alias='X2', order=1, schema=self.schema1)
-
     def test_create_default(self):
         cst = Constituenta.objects.create(
             alias='X1',
@@ -158,7 +136,7 @@ class TestRSForm(TestCase):
         cst3 = schema.insert_at(4, 'X3', CstType.BASE)
         cst2.refresh_from_db()
         cst1.refresh_from_db()
-        self.assertEqual(cst3.order, 4)
+        self.assertEqual(cst3.order, 3)
         self.assertEqual(cst3.schema, schema)
         self.assertEqual(cst2.order, 1)
         self.assertEqual(cst1.order, 2)
@@ -169,12 +147,24 @@ class TestRSForm(TestCase):
         cst1.refresh_from_db()
         self.assertEqual(cst4.order, 3)
         self.assertEqual(cst4.schema, schema)
-        self.assertEqual(cst3.order, 5)
+        self.assertEqual(cst3.order, 4)
         self.assertEqual(cst2.order, 1)
         self.assertEqual(cst1.order, 2)
 
         with self.assertRaises(ValidationError):
             schema.insert_at(0, 'X5', CstType.BASE)
+
+    def test_insert_at_reorder(self):
+        schema = RSForm.objects.create(title='Test')
+        schema.insert_at(1, 'X1', CstType.BASE)
+        d1 = schema.insert_at(2, 'D1', CstType.TERM)
+        d2 = schema.insert_at(1, 'D2', CstType.TERM)
+        d1.refresh_from_db()
+        self.assertEqual(d1.order, 3)
+        self.assertEqual(d2.order, 2)
+
+        x2 = schema.insert_at(4, 'X2', CstType.BASE)
+        self.assertEqual(x2.order, 2)
 
     def test_insert_last(self):
         schema = RSForm.objects.create(title='Test')

@@ -27,3 +27,9 @@ class ConstituentaSerializer(serializers.ModelSerializer):
     def update(self, instance: Constituenta, validated_data):
         instance.schema.save()
         return super().update(instance, validated_data)
+
+
+class NewConstituentaSerializer(serializers.Serializer):
+    alias = serializers.CharField(max_length=8)
+    csttype = serializers.CharField(max_length=10)
+    insert_after = serializers.IntegerField(required=False)

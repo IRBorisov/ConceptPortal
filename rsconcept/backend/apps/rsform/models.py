@@ -1,7 +1,10 @@
+import json
 from django.db import models, transaction
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 from apps.users.models import User
+
+import pyconcept
 
 
 class CstType(models.TextChoices):
@@ -77,29 +80,34 @@ class RSForm(models.Model):
         ''' Insert new constituenta at given position. All following constituents order is shifted by 1 position '''
         if position <= 0:
             raise ValidationError('Invalid position: should be positive integer')
-        update_list = Constituenta.objects.filter(schema=self, order__gte=position)
+        update_list = Constituenta.objects.only('id', 'order', 'schema').filter(schema=self, order__gte=position)
         for cst in update_list:
             cst.order += 1
-            cst.save()
-        return Constituenta.objects.create(
+        Constituenta.objects.bulk_update(update_list, ['order'])
+
+        result = Constituenta.objects.create(
             schema=self,
             order=position,
             alias=alias,
             csttype=type
         )
+        self._recreate_order()
+        return Constituenta.objects.get(pk=result.pk)
 
     @transaction.atomic
     def insert_last(self, alias: str, type: CstType) -> 'Constituenta':
         ''' Insert new constituenta at last position '''
         position = 1
         if self.constituents().exists():
-            position += self.constituents().aggregate(models.Max('order'))['order__max']
-        return Constituenta.objects.create(
+            position += self.constituents().only('order').aggregate(models.Max('order'))['order__max']
+        result = Constituenta.objects.create(
             schema=self,
             order=position,
             alias=alias,
             csttype=type
         )
+        self._recreate_order()
+        return Constituenta.objects.get(pk=result.pk)
 
     @staticmethod
     @transaction.atomic
@@ -111,21 +119,7 @@ class RSForm(models.Model):
             comment=data.get('comment', ''),
             is_common=is_common
         )
-        order = 1
-        for cst in data['items']:
-            # TODO: get rid of empty_term etc. Use None instead
-            Constituenta.objects.create(
-                alias=cst['alias'],
-                schema=schema,
-                order=order,
-                csttype=cst['cstType'],
-                convention=cst.get('convention', 'Без названия'),
-                definition_formal=cst['definition'].get('formal', '') if 'definition' in cst else '',
-                term=cst.get('term', _empty_term()),
-                definition_text=cst['definition']['text'] \
-                if 'definition' in cst and 'text' in cst['definition'] else _empty_definition()  # noqa: E502
-            )
-            order += 1
+        schema._create_cst_from_json(data['items'])
         return schema
 
     def to_json(self) -> str:
@@ -133,7 +127,7 @@ class RSForm(models.Model):
         result = self._prepare_json_rsform()
         items = self.constituents().order_by('order')
         for cst in items:
-            result['items'].append(self._prepare_json_cst(cst))
+            result['items'].append(cst.to_json())
         return result
 
     def __str__(self):
@@ -148,20 +142,37 @@ class RSForm(models.Model):
             'items': []
         }
 
-    @staticmethod
-    def _prepare_json_cst(cst: 'Constituenta') -> dict:
-        return {
-            'entityUID': cst.id,
-            'type': 'constituenta',
-            'cstType': cst.csttype,
-            'alias': cst.alias,
-            'convention': cst.convention,
-            'term': cst.term,
-            'definition': {
-                'formal': cst.definition_formal,
-                'text': cst.definition_text
-            }
-        }
+    def _recreate_order(self):
+        checked = json.loads(pyconcept.check_schema(json.dumps(self.to_json())))
+        update_list = self.constituents().only('id', 'order')
+        if (len(checked['items']) != update_list.count()):
+            raise ValidationError
+        order = 1
+        for cst in checked['items']:
+            id = cst['entityUID']
+            for oldCst in update_list:
+                if oldCst.id == id:
+                    oldCst.order = order
+                    order += 1
+                    break
+        Constituenta.objects.bulk_update(update_list, ['order'])
+
+    def _create_cst_from_json(self, items):
+        order = 1
+        for cst in items:
+            # TODO: get rid of empty_term etc. Use None instead
+            Constituenta.objects.create(
+                alias=cst['alias'],
+                schema=self,
+                order=order,
+                csttype=cst['cstType'],
+                convention=cst.get('convention', 'Без названия'),
+                definition_formal=cst['definition'].get('formal', '') if 'definition' in cst else '',
+                term=cst.get('term', _empty_term()),
+                definition_text=cst['definition']['text'] \
+                if 'definition' in cst and 'text' in cst['definition'] else _empty_definition()  # noqa: E502
+            )
+            order += 1
 
 
 class Constituenta(models.Model):
@@ -208,7 +219,20 @@ class Constituenta(models.Model):
     class Meta:
         verbose_name = 'Конституета'
         verbose_name_plural = 'Конституенты'
-        unique_together = (('schema', 'alias'), ('schema', 'order'))
 
     def __str__(self):
         return self.alias
+
+    def to_json(self) -> str:
+        return {
+            'entityUID': self.id,
+            'type': 'constituenta',
+            'cstType': self.csttype,
+            'alias': self.alias,
+            'convention': self.convention,
+            'term': self.term,
+            'definition': {
+                'formal': self.definition_formal,
+                'text': self.definition_text
+            }
+        }

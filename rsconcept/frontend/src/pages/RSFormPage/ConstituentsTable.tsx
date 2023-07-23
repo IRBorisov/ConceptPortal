@@ -1,29 +1,25 @@
-import { CstType, IConstituenta, ParsingStatus, ValueClass, inferStatus } from '../../utils/models'
+import { CstType, IConstituenta, INewCstData, ParsingStatus, ValueClass, inferStatus } from '../../utils/models'
 import { useCallback, useMemo, useState } from 'react';
-import DataTableThemed, { SelectionInfo } from '../../components/Common/DataTableThemed';
+import DataTableThemed from '../../components/Common/DataTableThemed';
 import { useRSForm } from '../../context/RSFormContext';
 import Button from '../../components/Common/Button';
 import { ArrowDownIcon, ArrowUpIcon, ArrowsRotateIcon, DumpBinIcon, SmallPlusIcon } from '../../components/Icons';
 import { toast } from 'react-toastify';
 import Divider from '../../components/Common/Divider';
-import { getCstTypeLabel, getCstTypePrefix, getStatusInfo, getTypeLabel } from '../../utils/staticUI';
+import { createAliasFor, getCstTypeLabel, getCstTypePrefix, getStatusInfo, getTypeLabel } from '../../utils/staticUI';
 import CreateCstModal from './CreateCstModal';
+import { AxiosResponse } from 'axios';
 
 interface ConstituentsTableProps {
   onOpenEdit: (cst: IConstituenta) => void
 }
 
 function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
-  const { schema, isEditable, } = useRSForm();
+  const { schema, isEditable, cstCreate, reload } = useRSForm();
   const [selectedRows, setSelectedRows] = useState<IConstituenta[]>([]);
   const nothingSelected = useMemo(() => selectedRows.length === 0, [selectedRows]);
 
-  const [showCstModal, setShowCstModal] = useState(true);
-
-  const handleRowSelected = useCallback(
-    ({selectedRows} : SelectionInfo<IConstituenta>) => {
-		setSelectedRows(selectedRows);
-	}, []);
+  const [showCstModal, setShowCstModal] = useState(false);
 
   const handleRowClicked = useCallback(
     (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
@@ -48,13 +44,23 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
     toast.info('Переиндексация');
   }, []);
   
-  const handleAddNew = useCallback((cstType?: CstType) => {
-    if (!cstType) {
+  const handleAddNew = useCallback((csttype?: CstType) => {
+    if (!csttype) {
       setShowCstModal(true);
     } else {
-      toast.info(`Новая конституента ${cstType || 'NEW'}`);
+      let data: INewCstData = { 
+        csttype: csttype,
+        alias: createAliasFor(csttype, schema!)
+      }
+      if (selectedRows.length > 0) {
+        data['insert_after'] = selectedRows[selectedRows.length - 1].entityUID
+      }
+      cstCreate(data, (response: AxiosResponse) => {
+        reload();
+        toast.info(`Добавлена конституента ${response.data['alias']}`);
+      });      
     }
-  }, []);
+  }, [schema, selectedRows, reload, cstCreate]);
   
   const columns = useMemo(() => 
     [
@@ -228,19 +234,20 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
         data={schema!.items!}
         columns={columns}
         keyField='id'
-        noDataComponent={<span className='p-2 flex flex-col justify-center text-center'>
-          <p>Список пуст</p>
-          <p>Создайте новую конституенту</p>
-        </span>}
+        noDataComponent={
+          <span className='flex flex-col justify-center p-2 text-center'>
+            <p>Список пуст</p>
+            <p>Создайте новую конституенту</p>
+          </span>
+        }
 
         striped
         highlightOnHover
         pointerOnHover
 
         selectableRows
-        // selectableRowSelected={(cst) => selectedRows.indexOf(cst) < -1}
         selectableRowsHighlight
-        onSelectedRowsChange={handleRowSelected}
+        onSelectedRowsChange={({selectedRows}) => setSelectedRows(selectedRows)}
         onRowDoubleClicked={onOpenEdit}
         onRowClicked={handleRowClicked}
         dense

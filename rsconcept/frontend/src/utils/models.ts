@@ -32,6 +32,13 @@ export interface IUserSignupData {
     password2: string
 }
 
+// User data for signup
+export interface INewCstData {
+    alias: string
+    csttype: CstType
+    insert_after?: number
+}
+
 // Constituenta type
 export enum CstType {
     BASE = 'basic',
