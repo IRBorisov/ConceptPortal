@@ -15,9 +15,9 @@ interface ConstituentsTableProps {
 }
 
 function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
-  const { schema, isEditable, cstCreate, reload } = useRSForm();
-  const [selectedRows, setSelectedRows] = useState<IConstituenta[]>([]);
-  const nothingSelected = useMemo(() => selectedRows.length === 0, [selectedRows]);
+  const { schema, isEditable, cstCreate, cstDelete, reload } = useRSForm();
+  const [selected, setSelected] = useState<IConstituenta[]>([]);
+  const nothingSelected = useMemo(() => selected.length === 0, [selected]);
 
   const [showCstModal, setShowCstModal] = useState(false);
 
@@ -29,11 +29,21 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
 	}, [onOpenEdit]);
 
   const handleDelete = useCallback(() => {
-    toast.info('Удаление конституент');
-  }, []);
+    if (!window.confirm('Вы уверены, что хотите удалить выбранные конституенты?')) {
+      return;
+    }
+    const data = { 
+      'items': selected.map(cst => cst.entityUID)
+    }
+    const deletedNamed = selected.map(cst => cst.alias)
+    cstDelete(data, (response: AxiosResponse) => {
+      reload().then(() => toast.success(`Конституенты удалены: ${deletedNamed}`));
+    });
+  }, [selected, cstDelete, reload]);
 
   const handleMoveUp = useCallback(() => {
     toast.info('Перемещение вверх');
+    
   }, []);
 
   const handleMoveDown = useCallback(() => {
@@ -49,18 +59,17 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
       setShowCstModal(true);
     } else {
       let data: INewCstData = { 
-        csttype: csttype,
-        alias: createAliasFor(csttype, schema!)
+        'csttype': csttype,
+        'alias': createAliasFor(csttype, schema!)
       }
-      if (selectedRows.length > 0) {
-        data['insert_after'] = selectedRows[selectedRows.length - 1].entityUID
+      if (selected.length > 0) {
+        data['insert_after'] = selected[selected.length - 1].entityUID
       }
       cstCreate(data, (response: AxiosResponse) => {
-        reload();
-        toast.info(`Добавлена конституента ${response.data['alias']}`);
+        reload().then(() => toast.success(`Добавлена конституента ${response.data['alias']}`));
       });      
     }
-  }, [schema, selectedRows, reload, cstCreate]);
+  }, [schema, selected, reload, cstCreate]);
   
   const columns = useMemo(() => 
     [
@@ -182,7 +191,7 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
     />
     <div className='w-full'>
       <div className='sticky top-[4rem] z-10 flex justify-start w-full gap-1 px-2 py-1 border-y items-center h-[2.2rem] clr-app'>
-        <div className='mr-3 whitespace-nowrap'>Выбраны <span className='ml-2'><b>{selectedRows.length}</b> из {schema?.stats?.count_all || 0}</span></div>
+        <div className='mr-3 whitespace-nowrap'>Выбраны <span className='ml-2'><b>{selected.length}</b> из {schema?.stats?.count_all || 0}</span></div>
         {isEditable && <div className='flex justify-start w-full gap-1'>
           <Button
             tooltip='Переместить вверх'
@@ -247,7 +256,7 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
 
         selectableRows
         selectableRowsHighlight
-        onSelectedRowsChange={({selectedRows}) => setSelectedRows(selectedRows)}
+        onSelectedRowsChange={({selectedRows}) => setSelected(selectedRows)}
         onRowDoubleClicked={onOpenEdit}
         onRowClicked={handleRowClicked}
         dense

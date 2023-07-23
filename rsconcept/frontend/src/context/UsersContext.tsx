@@ -5,13 +5,13 @@ import { getActiveUsers } from '../utils/backendAPI'
 
 interface IUsersContext {
   users: IUserInfo[]
-  reload: () => void
+  reload: () => Promise<void>
   getUserLabel: (userID?: number) => string
 }
 
 export const UsersContext = createContext<IUsersContext>({
   users: [],
-  reload: () => {},
+  reload: async () => {},
   getUserLabel: () => ''
 })
 

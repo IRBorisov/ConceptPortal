@@ -173,14 +173,14 @@ class TestRSFormViewset(APITestCase):
 
     def test_create_constituenta(self):
         data = json.dumps({'alias': 'X3', 'csttype': 'basic'})
-        response = self.client.post(f'/api/rsforms/{self.rsform_unowned.id}/new-constituenta/',
+        response = self.client.post(f'/api/rsforms/{self.rsform_unowned.id}/cst-create/',
                                     data=data, content_type='application/json')
         self.assertEqual(response.status_code, 403)
 
         schema = self.rsform_owned
         Constituenta.objects.create(schema=schema, alias='X1', csttype='basic', order=1)
         x2 = Constituenta.objects.create(schema=schema, alias='X2', csttype='basic', order=2)
-        response = self.client.post(f'/api/rsforms/{schema.id}/new-constituenta/',
+        response = self.client.post(f'/api/rsforms/{schema.id}/cst-create/',
                                     data=data, content_type='application/json')
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data['alias'], 'X3')
@@ -188,12 +188,37 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(x3.order, 3)
 
         data = json.dumps({'alias': 'X4', 'csttype': 'basic', 'insert_after': x2.id})
-        response = self.client.post(f'/api/rsforms/{schema.id}/new-constituenta/',
+        response = self.client.post(f'/api/rsforms/{schema.id}/cst-create/',
                                     data=data, content_type='application/json')
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data['alias'], 'X4')
         x4 = Constituenta.objects.get(alias=response.data['alias'])
         self.assertEqual(x4.order, 3)
+
+    def test_delete_constituenta(self):
+        schema = self.rsform_owned
+        data = json.dumps({'items': [1337]})
+        response = self.client.post(f'/api/rsforms/{schema.id}/cst-multidelete/',
+                                    data=data, content_type='application/json')
+        self.assertEqual(response.status_code, 404)
+
+        x1 = Constituenta.objects.create(schema=schema, alias='X1', csttype='basic', order=1)
+        x2 = Constituenta.objects.create(schema=schema, alias='X2', csttype='basic', order=2)
+        data = json.dumps({'items': [x1.id]})
+        response = self.client.post(f'/api/rsforms/{schema.id}/cst-multidelete/',
+                                    data=data, content_type='application/json')
+        x2.refresh_from_db()
+        schema.refresh_from_db()
+        self.assertEqual(response.status_code, 202)
+        self.assertEqual(schema.constituents().count(), 1)
+        self.assertEqual(x2.alias, 'X2')
+        self.assertEqual(x2.order, 1)
+
+        x3 = Constituenta.objects.create(schema=self.rsform_unowned, alias='X1', csttype='basic', order=1)
+        data = json.dumps({'items': [x3.id]})
+        response = self.client.post(f'/api/rsforms/{schema.id}/cst-multidelete/',
+                                    data=data, content_type='application/json')
+        self.assertEqual(response.status_code, 400)
 
 
 class TestFunctionalViews(APITestCase):

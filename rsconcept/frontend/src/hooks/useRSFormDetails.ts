@@ -8,7 +8,8 @@ export function useRSFormDetails({target}: {target?: string}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ErrorInfo>(undefined);
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(
+  async () => {
     setError(undefined);
     setSchema(undefined);
     if (!target) {
@@ -20,17 +21,18 @@ export function useRSFormDetails({target}: {target?: string}) {
       onError: error => setError(error),
       onSucccess: (response) => {
         CalculateStats(response.data)
+        console.log(response.data);
         setSchema(response.data);
       }
     });
   }, [target]);
 
   async function reload() {
-    fetchData()
+    fetchData();
   }
 
   useEffect(() => {
-    fetchData()
+    fetchData();
   }, [fetchData])
 
   return { schema, reload, error, setError, loading };

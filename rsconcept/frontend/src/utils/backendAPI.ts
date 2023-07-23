@@ -143,7 +143,7 @@ export async function postClaimRSForm(target: string, request?: IFrontRequest) {
 }
 
 export async function postCheckExpression(schema: string, request?: IFrontRequest) {
-  AxiosPost({
+  return AxiosPost({
     title: `Check expression for RSForm id=${schema}: ${request?.data['expression']}`,
     endpoint: `${config.url.BASE}rsforms/${schema}/check/`,
     request: request
@@ -151,84 +151,92 @@ export async function postCheckExpression(schema: string, request?: IFrontReques
 }
 
 export async function postNewConstituenta(schema: string, request?: IFrontRequest) {
-  AxiosPost({
+  return AxiosPost({
     title: `New Constituenta for RSForm id=${schema}: ${request?.data['alias']}`,
-    endpoint: `${config.url.BASE}rsforms/${schema}/new-constituenta/`,
+    endpoint: `${config.url.BASE}rsforms/${schema}/cst-create/`,
+    request: request
+  });
+}
+
+export async function postDeleteConstituenta(schema: string, request?: IFrontRequest) {
+  return AxiosPost({
+    title: `Delete Constituents for RSForm id=${schema}: ${request?.data['items'].toString()}`,
+    endpoint: `${config.url.BASE}rsforms/${schema}/cst-multidelete/`,
     request: request
   });
 }
 
 
 // ====== Helper functions ===========
-function AxiosGet<ReturnType>({endpoint, request, title}: IAxiosRequest) {
+async function AxiosGet<ReturnType>({endpoint, request, title}: IAxiosRequest) {
   if (title) console.log(`[[${title}]] requested`);
   if (request?.setLoading) request?.setLoading(true);
   axios.get<ReturnType>(endpoint)
-  .then(function (response) {
+  .then((response) => {
     if (request?.setLoading) request?.setLoading(false);
     if (request?.onSucccess) request.onSucccess(response);
   })
-  .catch(function (error) {
+  .catch((error) => {
     if (request?.setLoading) request?.setLoading(false);
     if (request?.showError) toast.error(error.message);
     if (request?.onError) request.onError(error);
   });
 }
 
-function AxiosGetBlob({endpoint, request, title}: IAxiosRequest) {
+async function AxiosGetBlob({endpoint, request, title}: IAxiosRequest) {
   if (title) console.log(`[[${title}]] requested`);
   if (request?.setLoading) request?.setLoading(true);
   axios.get(endpoint, {responseType: 'blob'})
-  .then(function (response) {
+  .then((response) => {
     if (request?.setLoading) request?.setLoading(false);
     if (request?.onSucccess) request.onSucccess(response);
   })
-  .catch(function (error) {
+  .catch((error) => {
     if (request?.setLoading) request?.setLoading(false);
     if (request?.showError) toast.error(error.message);
     if (request?.onError) request.onError(error);
   });
 }
 
-function AxiosPost({endpoint, request, title}: IAxiosRequest) {
+async function AxiosPost({endpoint, request, title}: IAxiosRequest) {
   if (title) console.log(`[[${title}]] posted`);
   if (request?.setLoading) request?.setLoading(true);
   axios.post(endpoint, request?.data)
-  .then(function (response) {
+  .then((response) => {
     if (request?.setLoading) request?.setLoading(false);
     if (request?.onSucccess) request.onSucccess(response);
   })
-  .catch(function (error) {
+  .catch((error) => {
     if (request?.setLoading) request?.setLoading(false);
     if (request?.showError) toast.error(error.message);
     if (request?.onError) request.onError(error);
   });
 }
 
-function AxiosDelete({endpoint, request, title}: IAxiosRequest) {
+async function AxiosDelete({endpoint, request, title}: IAxiosRequest) {
   if (title) console.log(`[[${title}]] is being deleted`);
   if (request?.setLoading) request?.setLoading(true);
   axios.delete(endpoint)
-  .then(function (response) {
+  .then((response) => {
     if (request?.setLoading) request?.setLoading(false);
     if (request?.onSucccess) request.onSucccess(response);
   })
-  .catch(function (error) {
+  .catch((error) => {
     if (request?.setLoading) request?.setLoading(false);
     if (request?.showError) toast.error(error.message);
     if (request?.onError) request.onError(error);
   });
 }
 
-function AxiosPatch({endpoint, request, title}: IAxiosRequest) {
+async function AxiosPatch({endpoint, request, title}: IAxiosRequest) {
   if (title) console.log(`[[${title}]] is being patrially updated`);
   if (request?.setLoading) request?.setLoading(true);
   axios.patch(endpoint, request?.data)
-  .then(function (response) {
+  .then((response) => {
     if (request?.setLoading) request?.setLoading(false);
     if (request?.onSucccess) request.onSucccess(response);
   })
-  .catch(function (error) {
+  .catch((error) => {
     if (request?.setLoading) request?.setLoading(false);
     if (request?.showError) toast.error(error.message);
     if (request?.onError) request.onError(error);

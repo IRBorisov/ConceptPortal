@@ -12,7 +12,7 @@ import RSFormStats from './RSFormStats';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import TablistTools from './TablistTools';
 
-enum TabsList {
+export enum RSFormTabsList {
   CARD = 0,
   CST_LIST = 1,
   CST_EDIT = 2
@@ -20,13 +20,13 @@ enum TabsList {
 
 function RSFormTabs() {
   const { setActive, active, error, schema, loading } = useRSForm();
-  const [tabIndex, setTabIndex] = useLocalStorage('rsform_edit_tab', TabsList.CARD);
+  const [tabIndex, setTabIndex] = useLocalStorage('rsform_edit_tab', RSFormTabsList.CARD);
   const [init, setInit] = useState(false);
 
   const onEditCst = (cst: IConstituenta) => {
     console.log(`Set active cst: ${cst.alias}`);
     setActive(cst);
-    setTabIndex(TabsList.CST_EDIT)
+    setTabIndex(RSFormTabsList.CST_EDIT)
   };
 
   const onSelectTab = (index: number) => {
@@ -46,7 +46,7 @@ function RSFormTabs() {
   useEffect(() => {
     const url = new URL(window.location.href);
     const tabQuery = url.searchParams.get('tab');
-    setTabIndex(Number(tabQuery) || TabsList.CARD);
+    setTabIndex(Number(tabQuery) || RSFormTabsList.CARD);
   }, [setTabIndex]);
 
   useEffect(() => {
@@ -54,7 +54,7 @@ function RSFormTabs() {
       const url = new URL(window.location.href);
       let currentActive = url.searchParams.get('active');
       const currentTab = url.searchParams.get('tab');
-      const saveHistory = tabIndex === TabsList.CST_EDIT && currentActive !== String(active?.entityUID);
+      const saveHistory = tabIndex === RSFormTabsList.CST_EDIT && currentActive !== String(active?.entityUID);
       if (currentTab !== String(tabIndex)) {
         url.searchParams.set('tab', String(tabIndex));
       }

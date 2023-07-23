@@ -7,6 +7,12 @@ class FileSerializer(serializers.Serializer):
     file = serializers.FileField(allow_empty_file=False)
 
 
+class ItemsListSerlializer(serializers.Serializer):
+    items = serializers.ListField(
+        child=serializers.IntegerField()
+    )
+
+
 class ExpressionSerializer(serializers.Serializer):
     expression = serializers.CharField()
 

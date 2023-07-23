@@ -30,7 +30,8 @@ function LoginPage() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!loading) {
-      login(username, password, () => { navigate('/rsforms?filter=personal'); });
+      login(username, password)
+      .then(() => navigate('/rsforms?filter=personal'));
     }
   };
 

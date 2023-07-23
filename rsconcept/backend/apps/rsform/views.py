@@ -42,7 +42,7 @@ class RSFormViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action in ['update', 'destroy', 'partial_update',
-                           'new_constituenta']:
+                           'cst_create', 'cst_multidelete']:
             permission_classes = [utils.ObjectOwnerOrAdmin]
         elif self.action in ['create', 'claim']:
             permission_classes = [permissions.IsAuthenticated]
@@ -50,9 +50,9 @@ class RSFormViewSet(viewsets.ModelViewSet):
             permission_classes = [permissions.AllowAny]
         return [permission() for permission in permission_classes]
 
-    @action(detail=True, methods=['post'], url_path='new-constituenta')
-    def new_constituenta(self, request, pk):
-        ''' View schema contents (including constituents) '''
+    @action(detail=True, methods=['post'], url_path='cst-create')
+    def cst_create(self, request, pk):
+        ''' Create new constituenta '''
         schema: models.RSForm = self.get_object()
         serializer = serializers.NewConstituentaSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -64,6 +64,26 @@ class RSFormViewSet(viewsets.ModelViewSet):
         else:
             constituenta = schema.insert_last(serializer.validated_data['alias'], serializer.validated_data['csttype'])
         return Response(status=201, data=constituenta.to_json())
+
+    @action(detail=True, methods=['post'], url_path='cst-multidelete')
+    def cst_multidelete(self, request, pk):
+        ''' Delete multiple constituents '''
+        schema: models.RSForm = self.get_object()
+        serializer = serializers.ItemsListSerlializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        listCst = []
+        # TODO: consider moving validation to serializer
+        try:
+            for id in serializer.validated_data['items']:
+                cst = models.Constituenta.objects.get(pk=id)
+                if (cst.schema != schema):
+                    return Response({'error', 'Конституенты должны относиться к данной схеме'}, status=400)
+                listCst.append(cst)
+        except models.Constituenta.DoesNotExist:
+            return Response(status=404)
+
+        schema.delete_cst(listCst)
+        return Response(status=202)
 
     @action(detail=True, methods=['post'])
     def claim(self, request, pk=None):

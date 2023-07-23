@@ -177,6 +177,20 @@ class TestRSForm(TestCase):
         self.assertEqual(cst2.schema, schema)
         self.assertEqual(cst1.order, 1)
 
+    def test_delete_cst(self):
+        schema = RSForm.objects.create(title='Test')
+        x1 = schema.insert_last('X1', CstType.BASE)
+        x2 = schema.insert_last('X2', CstType.BASE)
+        d1 = schema.insert_last('D1', CstType.TERM)
+        d2 = schema.insert_last('D2', CstType.TERM)
+        schema.delete_cst([x2, d1])
+        x1.refresh_from_db()
+        d2.refresh_from_db()
+        schema.refresh_from_db()
+        self.assertEqual(schema.constituents().count(), 2)
+        self.assertEqual(x1.order, 1)
+        self.assertEqual(d2.order, 2)
+
     def test_to_json(self):
         schema = RSForm.objects.create(title='Test', alias='KS1', comment='Test')
         x1 = schema.insert_at(4, 'X1', CstType.BASE)

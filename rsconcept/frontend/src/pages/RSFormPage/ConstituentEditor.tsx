@@ -1,19 +1,26 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useRSForm } from '../../context/RSFormContext';
-import { EditMode } from '../../utils/models';
+import { CstType, EditMode, INewCstData } from '../../utils/models';
 import { toast } from 'react-toastify';
 import TextArea from '../../components/Common/TextArea';
 import ExpressionEditor from './ExpressionEditor';
 import SubmitButton from '../../components/Common/SubmitButton';
-import { getCstTypeLabel } from '../../utils/staticUI';
+import { createAliasFor, getCstTypeLabel } from '../../utils/staticUI';
 import ConstituentsSideList from './ConstituentsSideList';
-import { SaveIcon } from '../../components/Icons';
+import { DumpBinIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
+import CreateCstModal from './CreateCstModal';
+import { AxiosResponse } from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { RSFormTabsList } from './RSFormTabs';
 
 function ConstituentEditor() {
+  const navigate = useNavigate();
   const { 
-    active, schema, setActive, processing, cstUpdate, isEditable, reload
+    active, schema, setActive, processing, isEditable, reload,
+    cstDelete, cstUpdate, cstCreate
   } = useRSForm();
 
+  const [showCstModal, setShowCstModal] = useState(false);
   const [editMode, setEditMode] = useState(EditMode.TEXT);
 
   const [alias, setAlias] = useState('');
@@ -42,7 +49,8 @@ function ConstituentEditor() {
     }
   }, [active]);
   
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = 
+  async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!processing) {
       const data = {
@@ -59,13 +67,50 @@ function ConstituentEditor() {
           'forms': active?.term?.forms || [],
         }
       };
-      cstUpdate(data, (response) => {
-        console.log(response);
+      cstUpdate(data)
+      .then(() => {
         toast.success('Изменения сохранены');
         reload();
       });
     }
   };
+
+  const handleDelete = useCallback(
+  async () => {
+    if (!active || !window.confirm('Вы уверены, что хотите удалить конституенту?')) {
+      return;
+    }
+    const data = { 
+      'items': [active.entityUID]
+    }
+    const index = schema?.items?.indexOf(active)
+    await cstDelete(data);
+    if (schema?.items && index && index + 1 < schema?.items?.length) {
+      setActive(schema?.items[index + 1]);
+    }
+    toast.success(`Конституента удалена: ${active.alias}`);
+    reload();
+  }, [active, schema, setActive, cstDelete, reload]);
+
+  const handleAddNew = useCallback(
+  async (csttype?: CstType) => {
+    if (!active || !schema) {
+      return;
+    }
+    if (!csttype) {
+      setShowCstModal(true);
+    } else {
+      const data: INewCstData = { 
+        'csttype': csttype,
+        'alias': createAliasFor(csttype, schema!),
+        'insert_after': active.entityUID
+      }
+      cstCreate(data, (response: AxiosResponse) => {
+        navigate(`/rsforms/${schema.id}?tab=${RSFormTabsList.CST_EDIT}&active=${response.data['entityUID']}`);
+        window.location.reload();
+      });      
+    }
+  }, [active, schema, cstCreate, navigate]);
 
   const handleRename = useCallback(() => {
     toast.info('Переименование в разработке');
@@ -78,8 +123,21 @@ function ConstituentEditor() {
 
   return (
     <div className='flex items-start w-full gap-2'>
+      <CreateCstModal
+        show={showCstModal}
+        toggle={() => setShowCstModal(!showCstModal)}
+        onCreate={handleAddNew}
+        defaultType={active?.cstType as CstType}
+      />
       <form onSubmit={handleSubmit} className='flex-grow min-w-[50rem] max-w-min px-4 py-2 border'>
         <div className='flex items-start justify-between'>
+            <button type='submit'
+              title='Сохранить изменения'
+              className='px-1 py-1 font-bold rounded whitespace-nowrap disabled:cursor-not-allowed clr-btn-primary'
+              disabled={!isEditable}
+            >
+              <SaveIcon size={5} />
+            </button>
           <div className='flex items-start justify-center w-full gap-4'>
             <span className='mr-12'>
               <label 
@@ -103,13 +161,22 @@ function ConstituentEditor() {
             </span>
           </div>
           <div className='flex justify-end'>
-          <button type='submit'
-            title='Сохранить изменения'
-            className={'px-1 py-1 whitespace-nowrap font-bold disabled:cursor-not-allowed rounded clr-btn-primary'}
-            disabled={!isEditable}
-          >
-            <SaveIcon size={5} />
-          </button>
+            <button type='button'
+              title='Создать конституенты после данной'
+              className='px-1 py-1 font-bold rounded-full whitespace-nowrap disabled:cursor-not-allowed clr-btn-clear'
+              disabled={!isEditable}
+              onClick={() => handleAddNew()}
+            >
+              <SmallPlusIcon size={5} color={isEditable ? 'text-green': ''} />
+            </button>
+            <button type='button'
+              title='Удалить редактируемую конституенту'
+              className='px-1 py-1 font-bold rounded-full whitespace-nowrap disabled:cursor-not-allowed clr-btn-clear'
+              disabled={!isEditable}
+              onClick={handleDelete}
+            >
+              <DumpBinIcon size={5} color={isEditable ? 'text-red': ''} />
+            </button>
           </div>
         </div>
         <TextArea id='term' label='Термин'

@@ -92,6 +92,7 @@ class RSForm(models.Model):
             csttype=type
         )
         self._recreate_order()
+        self.save()
         return Constituenta.objects.get(pk=result.pk)
 
     @transaction.atomic
@@ -107,7 +108,16 @@ class RSForm(models.Model):
             csttype=type
         )
         self._recreate_order()
+        self.save()
         return Constituenta.objects.get(pk=result.pk)
+
+    @transaction.atomic
+    def delete_cst(self, listCst):
+        ''' Delete multiple constituents. Do not check if listCst are from this schema '''
+        for cst in listCst:
+            cst.delete()
+        self._recreate_order()
+        self.save()
 
     @staticmethod
     @transaction.atomic

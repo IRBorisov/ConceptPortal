@@ -15,8 +15,8 @@ function RSFormsTable({schemas}: RSFormsTableProps) {
   const intl = useIntl();
   const { getUserLabel } = useUsers();
 
-  const openRSForm = (row: IRSForm, event: React.MouseEvent<Element, MouseEvent>) => {
-    navigate(`/rsforms/${row.id}`);
+  const openRSForm = (schema: IRSForm, event: React.MouseEvent<Element, MouseEvent>) => {
+    navigate(`/rsforms/${schema.id}`);
   };
 
   const columns = useMemo(() => 
@@ -68,7 +68,7 @@ function RSFormsTable({schemas}: RSFormsTableProps) {
       highlightOnHover
       pointerOnHover
 
-      noDataComponent={<span className='p-2 flex flex-col justify-center text-center'>
+      noDataComponent={<span className='flex flex-col justify-center p-2 text-center'>
         <p>Список схем пуст</p>
         <p>Измените фильтр</p>
       </span>}

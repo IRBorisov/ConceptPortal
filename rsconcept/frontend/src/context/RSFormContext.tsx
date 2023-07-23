@@ -3,7 +3,7 @@ import { IConstituenta, IRSForm } from '../utils/models';
 import { useRSFormDetails } from '../hooks/useRSFormDetails';
 import { ErrorInfo } from '../components/BackendError';
 import { useAuth } from './AuthContext';
-import { BackendCallback, deleteRSForm, getTRSFile, patchConstituenta, patchRSForm, postClaimRSForm, postNewConstituenta } from '../utils/backendAPI';
+import { BackendCallback, deleteRSForm, getTRSFile, patchConstituenta, patchRSForm, postClaimRSForm, postDeleteConstituenta, postNewConstituenta } from '../utils/backendAPI';
 import { toast } from 'react-toastify';
 
 interface IRSFormContext {
@@ -23,14 +23,16 @@ interface IRSFormContext {
   toggleForceAdmin: () => void
   toggleReadonly: () => void
   toggleTracking: () => void
-  reload: () => void
-  update: (data: any, callback?: BackendCallback) => void
-  destroy: (callback: BackendCallback) => void
-  claim: (callback: BackendCallback) => void
-  download: (callback: BackendCallback) => void
 
-  cstUpdate: (data: any, callback: BackendCallback) => void
-  cstCreate: (data: any, callback: BackendCallback) => void
+  reload: () => Promise<void>
+  update: (data: any, callback?: BackendCallback) => Promise<void>
+  destroy: (callback?: BackendCallback) => Promise<void>
+  claim: (callback?: BackendCallback) => Promise<void>
+  download: (callback: BackendCallback) => Promise<void>
+
+  cstUpdate: (data: any, callback?: BackendCallback) => Promise<void>
+  cstCreate: (data: any, callback?: BackendCallback) => Promise<void>
+  cstDelete: (data: any, callback?: BackendCallback) => Promise<void>
 }
 
 export const RSFormContext = createContext<IRSFormContext>({
@@ -50,14 +52,16 @@ export const RSFormContext = createContext<IRSFormContext>({
   toggleForceAdmin: () => {},
   toggleReadonly: () => {},
   toggleTracking: () => {},
-  reload: () => {},
-  update: () => {},
-  destroy: () => {},
-  claim: () => {},
-  download: () => {},
 
-  cstUpdate: () => {},
-  cstCreate: () => {},
+  reload: async () => {},
+  update: async () => {},
+  destroy: async () => {},
+  claim: async () => {},
+  download: async () => {},
+
+  cstUpdate: async () => {},
+  cstCreate: async () => {},
+  cstDelete: async () => {},
 })
 
 interface RSFormStateProps {
@@ -76,22 +80,26 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
 
   const isOwned = useMemo(() => user?.id === schema?.owner || false, [user, schema]);
   const isClaimable = useMemo(() => (user?.id !== schema?.owner || false), [user, schema]);
-  const isEditable = useMemo(() => {
+  const isEditable = useMemo(
+  () => {
     return (
-      !readonly && 
+      !loading && !readonly && 
       (isOwned || (forceAdmin && user?.is_staff) || false)
     )
-  }, [user, readonly, forceAdmin, isOwned]);
+  }, [user, readonly, forceAdmin, isOwned, loading]);
   
-  const isTracking = useMemo(() => {
+  const isTracking = useMemo(
+  () => {
     return true;
   }, []);
 
-  const toggleTracking = useCallback(() => {
+  const toggleTracking = useCallback(
+  () => {
     toast('not implemented yet');
   }, []);
 
-  async function update(data: any, callback?: BackendCallback) {
+  const update = useCallback(
+  async (data: any, callback?: BackendCallback) => {
     setError(undefined);
     patchRSForm(schemaID, {
       data: data,
@@ -100,9 +108,10 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       onError: error => setError(error),
       onSucccess: callback
     });
-  }
+  }, [schemaID, setError]);
 
-  async function destroy(callback: BackendCallback) {
+  const destroy = useCallback(
+  async (callback?: BackendCallback) => {
     setError(undefined);
     deleteRSForm(schemaID, {
       showError: true,
@@ -110,9 +119,10 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       onError: error => setError(error),
       onSucccess: callback
     });
-  }
+  }, [schemaID, setError]);
 
-  async function claim(callback: BackendCallback) {
+  const claim = useCallback(
+  async (callback?: BackendCallback) => {
     setError(undefined);
     postClaimRSForm(schemaID, {
       showError: true,
@@ -120,9 +130,10 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       onError: error => setError(error),
       onSucccess: callback
     });
-  }
+  }, [schemaID, setError]);
 
-  async function download(callback: BackendCallback) {
+  const download = useCallback(
+  async (callback: BackendCallback) => {
     setError(undefined);
     getTRSFile(schemaID, {
       showError: true,
@@ -130,9 +141,10 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       onError: error => setError(error),
       onSucccess: callback
     });
-  }
+  }, [schemaID, setError]);
 
-  async function cstUpdate(data: any, callback?: BackendCallback) {
+  const cstUpdate = useCallback(
+  async (data: any, callback?: BackendCallback) => {
     setError(undefined);
     patchConstituenta(String(active!.entityUID), {
       data: data,
@@ -141,9 +153,10 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       onError: error => setError(error),
       onSucccess: callback
     });
-  }
+  }, [active, setError]);
 
-  async function cstCreate(data: any, callback?: BackendCallback) {
+  const cstCreate = useCallback(
+  async (data: any, callback?: BackendCallback) => {
     setError(undefined);
     postNewConstituenta(schemaID, {
       data: data,
@@ -152,7 +165,19 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       onError: error => setError(error),
       onSucccess: callback
     });
-  }
+  }, [schemaID, setError]);
+
+  const cstDelete = useCallback(
+    async (data: any, callback?: BackendCallback) => {
+      setError(undefined);
+      postDeleteConstituenta(schemaID, {
+        data: data,
+        showError: true,
+        setLoading: setProcessing,
+        onError: error => setError(error),
+        onSucccess: callback
+      });
+    }, [schemaID, setError]);
 
   return (
     <RSFormContext.Provider value={{
@@ -164,7 +189,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       isOwned, isEditable, isClaimable,
       isTracking, toggleTracking,
       reload, update, download, destroy, claim,
-      cstUpdate, cstCreate
+      cstUpdate, cstCreate, cstDelete,
     }}>
       { children }
     </RSFormContext.Provider>

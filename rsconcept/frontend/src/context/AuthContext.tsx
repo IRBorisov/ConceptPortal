@@ -7,9 +7,9 @@ import { getAuth, postLogin, postLogout, postSignup } from '../utils/backendAPI'
 
 interface IAuthContext {
   user: ICurrentUser | undefined
-  login: (username: string, password: string, onSuccess?: () => void) => void
-  logout: (onSuccess?: () => void) => void
-  signup: (data: IUserSignupData, onSuccess?: () => void) => void
+  login: (username: string, password: string) => Promise<void>
+  logout: (onSuccess?: () => void) => Promise<void>
+  signup: (data: IUserSignupData) => Promise<void>
   loading: boolean
   error: ErrorInfo
   setError: (error: ErrorInfo) => void
@@ -17,9 +17,9 @@ interface IAuthContext {
 
 export const AuthContext = createContext<IAuthContext>({
   user: undefined,
-  login: () => {},
-  logout: () => {},
-  signup: () => {},
+  login: async () => {},
+  logout: async () => {},
+  signup: async () => {},
   loading: false,
   error: '',
   setError: () => {}
@@ -63,18 +63,17 @@ export const AuthState = ({ children }: AuthStateProps) => {
     });
   }
 
-  async function logout(onSuccess?: () => void) {
+  async function logout() {
     setError(undefined);
     postLogout({
       showError: true,
       onSucccess: response => {
         loadCurrentUser();
-        if(onSuccess) onSuccess();
       }
     });
   }
 
-  async function signup(data: IUserSignupData, onSuccess?: () => void) {
+  async function signup(data: IUserSignupData) {
     setError(undefined);
     postSignup({
       data: data,
@@ -83,7 +82,6 @@ export const AuthState = ({ children }: AuthStateProps) => {
       onError: error => setError(error),
       onSucccess: response => {
         loadCurrentUser();
-        if(onSuccess) onSuccess();
       }
     });
   }

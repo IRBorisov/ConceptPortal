@@ -8,8 +8,8 @@ export function shareCurrentURLProc() {
   toast.success(`Ссылка скопирована: ${url}`);
 }
 
-export function claimOwnershipProc(
-  claim: (callback: BackendCallback) => void, 
+export async function claimOwnershipProc(
+  claim: (callback: BackendCallback) => Promise<void>, 
   reload: Function
 ) {
   if (!window.confirm('Вы уверены, что хотите стать владельцем данной схемы?')) {
@@ -21,8 +21,8 @@ export function claimOwnershipProc(
   });
 }
 
-export function deleteRSFormProc(
-  destroy: (callback: BackendCallback) => void, 
+export async function deleteRSFormProc(
+  destroy: (callback: BackendCallback) => Promise<void>, 
   navigate: Function
 ) {
   if (!window.confirm('Вы уверены, что хотите удалить данную схему?')) {
@@ -34,8 +34,8 @@ export function deleteRSFormProc(
   });
 }
 
-export function downloadRSFormProc(
-  download: (callback: BackendCallback) => void, 
+export async function downloadRSFormProc(
+  download: (callback: BackendCallback) => Promise<void>, 
   fileName: string
 ) {
   download((response) => {
