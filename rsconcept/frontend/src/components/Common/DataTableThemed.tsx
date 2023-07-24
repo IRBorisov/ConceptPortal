@@ -1,5 +1,5 @@
 import DataTable, { createTheme, TableProps } from 'react-data-table-component';
-import { useTheme } from '../../context/ThemeContext';
+import { useConceptTheme } from '../../context/ThemeContext';
 
 export interface SelectionInfo<T> {
   allSelected: boolean;
@@ -38,7 +38,7 @@ createTheme('customDark', {
 }, 'dark');
 
 function DataTableThemed<T>({theme, ...props}: TableProps<T>) {
-  const { darkMode } = useTheme();
+  const { darkMode } = useConceptTheme();
 
   return (
     <DataTable<T>

@@ -200,26 +200,27 @@ class TestRSFormViewset(APITestCase):
     def test_delete_constituenta(self):
         schema = self.rsform_owned
         data = json.dumps({'items': [{'id': 1337}]})
-        response = self.client.post(f'/api/rsforms/{schema.id}/cst-multidelete/',
-                                    data=data, content_type='application/json')
+        response = self.client.patch(f'/api/rsforms/{schema.id}/cst-multidelete/',
+                                     data=data, content_type='application/json')
         self.assertEqual(response.status_code, 400)
 
         x1 = Constituenta.objects.create(schema=schema, alias='X1', csttype='basic', order=1)
         x2 = Constituenta.objects.create(schema=schema, alias='X2', csttype='basic', order=2)
         data = json.dumps({'items': [{'id': x1.id}]})
-        response = self.client.post(f'/api/rsforms/{schema.id}/cst-multidelete/',
-                                    data=data, content_type='application/json')
+        response = self.client.patch(f'/api/rsforms/{schema.id}/cst-multidelete/',
+                                     data=data, content_type='application/json')
         x2.refresh_from_db()
         schema.refresh_from_db()
         self.assertEqual(response.status_code, 202)
+        self.assertEqual(len(response.data['items']), 1)
         self.assertEqual(schema.constituents().count(), 1)
         self.assertEqual(x2.alias, 'X2')
         self.assertEqual(x2.order, 1)
 
         x3 = Constituenta.objects.create(schema=self.rsform_unowned, alias='X1', csttype='basic', order=1)
         data = json.dumps({'items': [{'id': x3.id}]})
-        response = self.client.post(f'/api/rsforms/{schema.id}/cst-multidelete/',
-                                    data=data, content_type='application/json')
+        response = self.client.patch(f'/api/rsforms/{schema.id}/cst-multidelete/',
+                                     data=data, content_type='application/json')
         self.assertEqual(response.status_code, 400)
 
     def test_move_constituenta(self):

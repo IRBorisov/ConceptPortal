@@ -6,35 +6,35 @@ import UserMenu from './UserMenu';
 import { useAuth } from '../../context/AuthContext';
 import UserTools from './UserTools';
 import Logo from './Logo';
-import { useState } from 'react';
+import { useConceptTheme } from '../../context/ThemeContext';
 
 function Navigation() {
   const {user} = useAuth();
   const navigate = useNavigate();
-  const [isActive, setActive] = useState(true);
+  const { noNavigation, toggleNoNavigation } = useConceptTheme();
 
   const navigateCommon = () => navigate('/rsforms?filter=common');
   const navigateHelp = () => navigate('/manuals');
   
   return (
     <nav className='sticky top-0 left-0 right-0 z-50'>
-      {isActive && 
+      {!noNavigation && 
       <button
         title='Скрыть навигацию'
         className='absolute top-0 right-0 z-[60] w-[1.2rem] h-[4rem] border-b-2 border-l-2 clr-nav rounded-none'
-        onClick={() => setActive(!isActive)}
+        onClick={toggleNoNavigation}
       >
         <p>{'>'}</p><p>{'>'}</p>
       </button>}
-      {!isActive && 
+      {noNavigation && 
       <button
         title='Показать навигацию'
         className='absolute top-0 right-0 z-[60] w-[4rem] h-[1.6rem] border-b-2 border-l-2 clr-nav  rounded-none'
-        onClick={() => setActive(!isActive)}
+        onClick={toggleNoNavigation}
       >
         {'∨∨∨'}
       </button>}
-      {isActive && 
+      {!noNavigation && 
       <div className='pr-6 pl-2 py-2.5 h-[4rem] flex items-center justify-between border-b-2 clr-nav rounded-none'>
         <div className='flex items-start justify-start '>
           <Logo title='КонцептПортал' />

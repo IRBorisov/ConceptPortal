@@ -9,6 +9,7 @@ import Divider from '../../components/Common/Divider';
 import { createAliasFor, getCstTypeLabel, getCstTypePrefix, getStatusInfo, getTypeLabel } from '../../utils/staticUI';
 import CreateCstModal from './CreateCstModal';
 import { AxiosResponse } from 'axios';
+import { useConceptTheme } from '../../context/ThemeContext';
 
 interface ConstituentsTableProps {
   onOpenEdit: (cst: IConstituenta) => void
@@ -19,6 +20,7 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
     schema, isEditable,
     cstCreate, cstDelete, cstMoveTo
   } = useRSForm();
+  const { noNavigation } = useConceptTheme();
   const [selected, setSelected] = useState<number[]>([]);
   const nothingSelected = useMemo(() => selected.length === 0, [selected]);
 
@@ -71,7 +73,7 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
       'items': selected.map(id => { return {'id': id }; }),
       'move_to': insertIndex
     }
-    cstMoveTo(data).then(() => toast.info('Перемещение вверх ' + insertIndex));    
+    cstMoveTo(data);    
   }, [selected, schema?.items, cstMoveTo]);
 
   
@@ -81,20 +83,24 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
     if (!schema?.items || selected.length === 0) {
       return;
     }
+    let count = 0;
     const currentIndex = schema.items.reduce((prev, cst, index) => {
       if (selected.indexOf(cst.id) < 0) {
         return prev;
-      } else if (prev === -1) {
-        return index;
+      } else {
+        count += 1;
+        if (prev === -1) {
+          return index;
+        }
+        return Math.max(prev, index);
       }
-      return Math.max(prev, index);
     }, -1);
-    const insertIndex = Math.min(schema.items.length - 1, currentIndex + 1) + 1
+    const insertIndex = Math.min(schema.items.length - 1, currentIndex - count + 2) + 1
     const data = { 
       'items': selected.map(id => { return {'id': id }; }),
       'move_to': insertIndex
     }
-    cstMoveTo(data).then(() => toast.info('Перемещение вниз ' + insertIndex));    
+    cstMoveTo(data);    
   }, [selected, schema?.items, cstMoveTo]);
 
   // Generate new names for all constituents
@@ -131,7 +137,6 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
     case 'ArrowUp': handleMoveUp(); return;
     case 'ArrowDown': handleMoveDown(); return;
     }
-    console.log(event);
   }, [isEditable, selected, handleMoveUp, handleMoveDown]);
   
   const columns = useMemo(() => 
@@ -253,7 +258,10 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
       onCreate={handleAddNew}
     />
     <div className='w-full'>
-      <div className='sticky top-[4rem] z-10 flex justify-start w-full gap-1 px-2 py-1 border-y items-center h-[2.2rem] clr-app'>
+      <div 
+        className={'flex justify-start w-full gap-1 px-2 py-1 border-y items-center h-[2.2rem] clr-app' 
+          + (!noNavigation ? ' sticky z-10 top-[4rem]' : ' sticky z-10 top-[0rem]')}
+      >
         <div className='mr-3 whitespace-nowrap'>Выбраны <span className='ml-2'><b>{selected.length}</b> из {schema?.stats?.count_all || 0}</span></div>
         {isEditable && <div className='flex justify-start w-full gap-1'>
           <Button

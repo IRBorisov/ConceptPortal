@@ -9,11 +9,16 @@ interface IUsersContext {
   getUserLabel: (userID?: number) => string
 }
 
-export const UsersContext = createContext<IUsersContext>({
-  users: [],
-  reload: async () => {},
-  getUserLabel: () => ''
-})
+const UsersContext = createContext<IUsersContext | null>(null);
+export const useUsers = () => {
+  const context = useContext(UsersContext);
+  if (!context) {
+    throw new Error(
+      'useUsers has to be used within <UsersState.Provider>'
+    );
+  }
+  return context;
+}
 
 interface UsersStateProps {
   children: React.ReactNode
@@ -64,5 +69,3 @@ export const UsersState = ({ children }: UsersStateProps) => {
     </UsersContext.Provider>
     );
 }
-
-export const useUsers = () => useContext(UsersContext);

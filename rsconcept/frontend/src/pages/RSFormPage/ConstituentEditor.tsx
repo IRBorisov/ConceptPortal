@@ -64,7 +64,7 @@ function ConstituentEditor() {
           'forms': activeCst?.term?.forms || [],
         }
       };
-      cstUpdate(data).then(() =>  toast.success('Изменения сохранены'));
+      cstUpdate(data, () =>  toast.success('Изменения сохранены'));
     }
   };
 
@@ -74,13 +74,13 @@ function ConstituentEditor() {
       return;
     }
     const data = { 
-      'items': [activeID]
+      'items': [{'id': activeID}]
     }
     const index = schema.items.findIndex((cst) => cst.id === activeID);
     if (index !== -1 && index + 1 < schema.items.length) {
       setActiveID(schema.items[index + 1].id);
     }
-    cstDelete(data).then(() => toast.success('Конституента удалена'));
+    cstDelete(data, () => toast.success('Конституента удалена'));
   }, [activeID, schema, setActiveID, cstDelete]);
 
   const handleAddNew = useCallback(

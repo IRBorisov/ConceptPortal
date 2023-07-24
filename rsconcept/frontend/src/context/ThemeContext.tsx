@@ -1,16 +1,24 @@
-import { createContext, useContext, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
 
 
 interface IThemeContext {
   darkMode: boolean
+  noNavigation: boolean
   toggleDarkMode: () => void
+  toggleNoNavigation: () => void
 }
 
-export const ThemeContext = createContext<IThemeContext>({
-  darkMode: true,
-  toggleDarkMode: () => {}
-})
+const ThemeContext = createContext<IThemeContext | null>(null);
+export const useConceptTheme = () => {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error(
+      'useConceptTheme has to be used within <ThemeState.Provider>'
+    );
+  }
+  return context;
+}
 
 interface ThemeStateProps {
   children: React.ReactNode
@@ -18,6 +26,7 @@ interface ThemeStateProps {
 
 export const ThemeState = ({ children }: ThemeStateProps) => {
   const [darkMode, setDarkMode] = useLocalStorage('darkMode', false);
+  const [noNavigation, setNoNavigation] = useState(false);
 
   const setDarkClass = (isDark: boolean) => {
     const root = window.document.documentElement;
@@ -28,10 +37,6 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
     }
     root.setAttribute('data-color-scheme', !isDark ? 'light' : 'dark');
   };
-  
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode)
-  };
 
   useEffect(() => {
     setDarkClass(darkMode)
@@ -39,11 +44,10 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
 
   return (
     <ThemeContext.Provider value={{
-      darkMode, toggleDarkMode
+      darkMode, toggleDarkMode: () => setDarkMode(prev => !prev),
+      noNavigation, toggleNoNavigation: () => setNoNavigation(prev => !prev),
     }}>
       {children}
     </ThemeContext.Provider>
   );
 }
-
-export const useTheme = () => useContext(ThemeContext);

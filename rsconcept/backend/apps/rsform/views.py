@@ -69,14 +69,16 @@ class RSFormViewSet(viewsets.ModelViewSet):
         response['Location'] = constituenta.get_absolute_url()
         return response
 
-    @action(detail=True, methods=['post'], url_path='cst-multidelete')
+    @action(detail=True, methods=['patch'], url_path='cst-multidelete')
     def cst_multidelete(self, request, pk):
         ''' Delete multiple constituents '''
         schema: models.RSForm = self.get_object()
         serializer = serializers.CstListSerlializer(data=request.data, context={'schema': schema})
         serializer.is_valid(raise_exception=True)
         schema.delete_cst(serializer.validated_data['constituents'])
-        return Response(status=202)
+        schema.refresh_from_db()
+        outSerializer = serializers.RSFormDetailsSerlializer(schema)
+        return Response(status=202, data=outSerializer.data)
 
     @action(detail=True, methods=['patch'], url_path='cst-moveto')
     def cst_moveto(self, request, pk):

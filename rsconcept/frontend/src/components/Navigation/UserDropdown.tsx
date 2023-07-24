@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import DropdownButton from '../Common/DropdownButton';
-import { useTheme } from '../../context/ThemeContext';
+import { useConceptTheme } from '../../context/ThemeContext';
 import Dropdown from '../Common/Dropdown';
 
 interface UserDropdownProps {
@@ -9,7 +9,7 @@ interface UserDropdownProps {
 }
 
 function UserDropdown({hideDropdown}: UserDropdownProps) {
-  const {darkMode, toggleDarkMode} = useTheme();
+  const {darkMode, toggleDarkMode} = useConceptTheme();
   const navigate = useNavigate();
   const {user, logout} = useAuth();
 

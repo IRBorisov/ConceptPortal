@@ -207,7 +207,7 @@ export function getCstTypePrefix(type: CstType) {
   case CstType.CONSTANT: return 'C';
   case CstType.STRUCTURED: return 'S';
   case CstType.AXIOM: return 'A';
-  case CstType.TERM: return 'T';
+  case CstType.TERM: return 'D';
   case CstType.FUNCTION: return 'F';
   case CstType.PREDICATE: return 'P';
   case CstType.THEOREM: return 'T';
@@ -259,17 +259,16 @@ export function extractGlobals(expression: string): Set<string> {
 }
 
 export function createAliasFor(type: CstType, schema: IRSForm): string {
-  let index = 1;
   let prefix = getCstTypePrefix(type);
-  let name = prefix + index;
-  if (schema.items && schema.items.length > 0) {
-    for (let i = 0; i < schema.items.length; ++i) {
-      if (schema.items[i].alias === name) {
-        ++index;
-        name = prefix + index;
-        i = 0;
-      }
-    }
+  if (!schema.items || schema.items.length <= 0) {
+    return `${prefix}1`;
   }
-  return name;
+  const index = schema.items.reduce((prev, cst, index) => {
+    if (cst.cstType !== type) {
+      return prev;
+    }
+    index = Number(cst.alias.slice(1 - cst.alias.length)) + 1;
+    return Math.max(prev, index);
+  }, 1);
+  return `${prefix}${index}`;
 }

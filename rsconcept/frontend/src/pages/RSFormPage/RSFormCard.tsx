@@ -43,7 +43,7 @@ function RSFormCard() {
       'comment': comment,
       'is_common': common,
     };
-    update(data).then(() => toast.success('Изменения сохранены'));
+    update(data, () => toast.success('Изменения сохранены'));
   };
 
   const handleDelete = 

@@ -6,7 +6,7 @@ import { useAuth } from './AuthContext';
 import { 
   BackendCallback, deleteRSForm, getTRSFile, 
   patchConstituenta, patchMoveConstituenta, patchRSForm, 
-  postClaimRSForm, postDeleteConstituenta, postNewConstituenta 
+  postClaimRSForm, patchDeleteConstituenta, postNewConstituenta 
 } from '../utils/backendAPI';
 import { toast } from 'react-toastify';
 
@@ -175,17 +175,17 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
   const cstDelete = useCallback(
     async (data: any, callback?: BackendCallback) => {
       setError(undefined);
-      postDeleteConstituenta(schemaID, {
+      patchDeleteConstituenta(schemaID, {
         data: data,
         showError: true,
         setLoading: setProcessing,
         onError: error => setError(error),
         onSucccess: async (response) => {
-          await reload();
+          setSchema(response.data);
           if (callback) callback(response);
         }
       });
-    }, [schemaID, setError, reload]);
+    }, [schemaID, setError, setSchema]);
 
     const cstMoveTo = useCallback(
       async (data: any, callback?: BackendCallback) => {

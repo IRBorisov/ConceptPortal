@@ -106,7 +106,8 @@ class RSForm(models.Model):
         )
         self._update_from_core()
         self.save()
-        return Constituenta.objects.get(pk=result.pk)
+        result.refresh_from_db()
+        return result
 
     @transaction.atomic
     def move_cst(self, listCst: list['Constituenta'], target: int):

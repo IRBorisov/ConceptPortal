@@ -35,7 +35,7 @@ function RegisterPage() {
         'first_name': firstName,
         'last_name': lastName,
       };
-      signup(data).then(() => setSuccess(true));
+      signup(data, () => setSuccess(true));
     }
   };
 

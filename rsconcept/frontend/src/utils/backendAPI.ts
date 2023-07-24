@@ -158,8 +158,8 @@ export async function postNewConstituenta(schema: string, request?: IFrontReques
   });
 }
 
-export async function postDeleteConstituenta(schema: string, request?: IFrontRequest) {
-  AxiosPost({
+export async function patchDeleteConstituenta(schema: string, request?: IFrontRequest) {
+  AxiosPatch<IRSForm>({
     title: `Delete Constituents for RSForm id=${schema}: ${request?.data['items'].toString()}`,
     endpoint: `${config.url.BASE}rsforms/${schema}/cst-multidelete/`,
     request: request
