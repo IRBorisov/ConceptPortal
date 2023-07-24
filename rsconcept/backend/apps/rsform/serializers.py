@@ -1,16 +1,12 @@
+import json
 from rest_framework import serializers
 
+import pyconcept
 from .models import Constituenta, RSForm
 
 
 class FileSerializer(serializers.Serializer):
     file = serializers.FileField(allow_empty_file=False)
-
-
-class ItemsListSerlializer(serializers.Serializer):
-    items = serializers.ListField(
-        child=serializers.IntegerField()
-    )
 
 
 class ExpressionSerializer(serializers.Serializer):
@@ -35,7 +31,60 @@ class ConstituentaSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
-class NewConstituentaSerializer(serializers.Serializer):
+class StandaloneCstSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+
+    class Meta:
+        model = Constituenta
+        exclude = ('schema', )
+
+    def validate(self, attrs):
+        try:
+            attrs['object'] = Constituenta.objects.get(pk=attrs['id'])
+        except Constituenta.DoesNotExist:
+            raise serializers.ValidationError({f"{attrs['id']}": 'Конституента не существует'})
+        return attrs
+
+
+class CstCreateSerializer(serializers.Serializer):
     alias = serializers.CharField(max_length=8)
     csttype = serializers.CharField(max_length=10)
     insert_after = serializers.IntegerField(required=False)
+
+
+class CstListSerlializer(serializers.Serializer):
+    items = serializers.ListField(
+        child=StandaloneCstSerializer()
+    )
+
+    def validate(self, attrs):
+        schema = self.context['schema']
+        cstList = []
+        for item in attrs['items']:
+            cst = item['object']
+            if (cst.schema != schema):
+                raise serializers.ValidationError(
+                    {'items': f'Конституенты должны относиться к данной схеме: {item}'})
+            cstList.append(cst)
+        attrs['constituents'] = cstList
+        return attrs
+
+
+class CstMoveSerlializer(CstListSerlializer):
+    move_to = serializers.IntegerField()
+
+
+class RSFormDetailsSerlializer(serializers.BaseSerializer):
+    class Meta:
+        model = RSForm
+
+    def to_representation(self, instance: RSForm):
+        trs = pyconcept.check_schema(json.dumps(instance.to_json()))
+        trs = trs.replace('entityUID', 'id')
+        result = json.loads(trs)
+        result['id'] = instance.id
+        result['time_update'] = instance.time_update
+        result['time_create'] = instance.time_create
+        result['is_common'] = instance.is_common
+        result['owner'] = (instance.owner.pk if instance.owner is not None else None)
+        return result

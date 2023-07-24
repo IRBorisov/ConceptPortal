@@ -143,7 +143,7 @@ export async function postClaimRSForm(target: string, request?: IFrontRequest) {
 }
 
 export async function postCheckExpression(schema: string, request?: IFrontRequest) {
-  return AxiosPost({
+  AxiosPost({
     title: `Check expression for RSForm id=${schema}: ${request?.data['expression']}`,
     endpoint: `${config.url.BASE}rsforms/${schema}/check/`,
     request: request
@@ -151,7 +151,7 @@ export async function postCheckExpression(schema: string, request?: IFrontReques
 }
 
 export async function postNewConstituenta(schema: string, request?: IFrontRequest) {
-  return AxiosPost({
+  AxiosPost({
     title: `New Constituenta for RSForm id=${schema}: ${request?.data['alias']}`,
     endpoint: `${config.url.BASE}rsforms/${schema}/cst-create/`,
     request: request
@@ -159,9 +159,17 @@ export async function postNewConstituenta(schema: string, request?: IFrontReques
 }
 
 export async function postDeleteConstituenta(schema: string, request?: IFrontRequest) {
-  return AxiosPost({
+  AxiosPost({
     title: `Delete Constituents for RSForm id=${schema}: ${request?.data['items'].toString()}`,
     endpoint: `${config.url.BASE}rsforms/${schema}/cst-multidelete/`,
+    request: request
+  });
+}
+
+export async function patchMoveConstituenta(schema: string, request?: IFrontRequest) {
+  AxiosPatch<IRSForm>({
+    title: `Moving Constituents for RSForm id=${schema}: ${JSON.stringify(request?.data['items'])} to ${request?.data['move_to']}`,
+    endpoint: `${config.url.BASE}rsforms/${schema}/cst-moveto/`,
     request: request
   });
 }
@@ -228,13 +236,14 @@ async function AxiosDelete({endpoint, request, title}: IAxiosRequest) {
   });
 }
 
-async function AxiosPatch({endpoint, request, title}: IAxiosRequest) {
+async function AxiosPatch<ReturnType>({endpoint, request, title}: IAxiosRequest) {
   if (title) console.log(`[[${title}]] is being patrially updated`);
   if (request?.setLoading) request?.setLoading(true);
-  axios.patch(endpoint, request?.data)
+  axios.patch<ReturnType>(endpoint, request?.data)
   .then((response) => {
     if (request?.setLoading) request?.setLoading(false);
     if (request?.onSucccess) request.onSucccess(response);
+    return response.data;
   })
   .catch((error) => {
     if (request?.setLoading) request?.setLoading(false);

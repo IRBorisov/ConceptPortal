@@ -74,7 +74,7 @@ export enum ParsingStatus {
 
 // Constituenta data
 export interface IConstituenta {
-    entityUID: number
+    id: number
     alias: string
     cstType: CstType
     convention?: string

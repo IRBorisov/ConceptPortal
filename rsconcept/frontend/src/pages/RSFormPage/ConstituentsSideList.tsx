@@ -11,7 +11,7 @@ interface ConstituentsSideListProps {
 }
 
 function ConstituentsSideList({expression}: ConstituentsSideListProps) {
-  const { schema, setActive } = useRSForm();
+  const { schema, setActiveID } = useRSForm();
   const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema?.items || []);
   const [filterText, setFilterText] = useLocalStorage('side-filter-text', '')
   const [onlyExpression, setOnlyExpression] = useLocalStorage('side-filter-flag', false);
@@ -27,7 +27,7 @@ function ConstituentsSideList({expression}: ConstituentsSideListProps) {
       if (diff.length > 0) {
         diff.forEach(
           (alias, i) => filtered.push({
-          entityUID: -i,
+          id: -i,
           alias: alias,
           convention: 'Конституента отсутствует',
           cstType: CstType.BASE
@@ -43,21 +43,21 @@ function ConstituentsSideList({expression}: ConstituentsSideListProps) {
 
   const handleRowClicked = useCallback(
     (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
-		if (event.altKey && cst.entityUID > 0) {
-      setActive(cst);
+		if (event.altKey && cst.id > 0) {
+      setActiveID(cst.id);
     }
-	}, [setActive]);
+	}, [setActiveID]);
 
   const handleDoubleClick = useCallback(
     (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
-		if (cst.entityUID > 0) setActive(cst);
-	}, [setActive]);
+		if (cst.id > 0) setActiveID(cst.id);
+	}, [setActiveID]);
 
   const columns = useMemo(() => 
     [
       {
         id: 'id',
-        selector: (cst: IConstituenta) => cst.entityUID,
+        selector: (cst: IConstituenta) => cst.id,
         omit: true,
       },
       {
@@ -68,7 +68,7 @@ function ConstituentsSideList({expression}: ConstituentsSideListProps) {
         maxWidth: '62px',
         conditionalCellStyles: [
           {
-            when: (cst: IConstituenta) => cst.entityUID <= 0,
+            when: (cst: IConstituenta) => cst.id <= 0,
             classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
           },
         ],
@@ -81,7 +81,7 @@ function ConstituentsSideList({expression}: ConstituentsSideListProps) {
         wrap: true,
         conditionalCellStyles: [
           {
-            when: (cst: IConstituenta) => cst.entityUID <= 0,
+            when: (cst: IConstituenta) => cst.id <= 0,
             classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
           },
         ],
@@ -96,7 +96,7 @@ function ConstituentsSideList({expression}: ConstituentsSideListProps) {
         wrap: true,
         conditionalCellStyles: [
           {
-            when: (cst: IConstituenta) => cst.entityUID <= 0,
+            when: (cst: IConstituenta) => cst.id <= 0,
             classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
           },
         ],

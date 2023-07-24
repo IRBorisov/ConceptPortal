@@ -3,28 +3,34 @@ import { IConstituenta, IRSForm } from '../utils/models';
 import { useRSFormDetails } from '../hooks/useRSFormDetails';
 import { ErrorInfo } from '../components/BackendError';
 import { useAuth } from './AuthContext';
-import { BackendCallback, deleteRSForm, getTRSFile, patchConstituenta, patchRSForm, postClaimRSForm, postDeleteConstituenta, postNewConstituenta } from '../utils/backendAPI';
+import { 
+  BackendCallback, deleteRSForm, getTRSFile, 
+  patchConstituenta, patchMoveConstituenta, patchRSForm, 
+  postClaimRSForm, postDeleteConstituenta, postNewConstituenta 
+} from '../utils/backendAPI';
 import { toast } from 'react-toastify';
 
 interface IRSFormContext {
   schema?: IRSForm
-  active?: IConstituenta
+  activeCst?: IConstituenta
+  activeID?: number
+
   error: ErrorInfo
   loading: boolean
   processing: boolean
+
   isOwned: boolean
   isEditable: boolean
   isClaimable: boolean
-  forceAdmin: boolean
-  readonly: boolean
+  isReadonly: boolean
   isTracking: boolean
+  isForceAdmin: boolean
   
-  setActive: React.Dispatch<React.SetStateAction<IConstituenta | undefined>>
+  setActiveID: React.Dispatch<React.SetStateAction<number | undefined>>
   toggleForceAdmin: () => void
   toggleReadonly: () => void
   toggleTracking: () => void
 
-  reload: () => Promise<void>
   update: (data: any, callback?: BackendCallback) => Promise<void>
   destroy: (callback?: BackendCallback) => Promise<void>
   claim: (callback?: BackendCallback) => Promise<void>
@@ -33,36 +39,19 @@ interface IRSFormContext {
   cstUpdate: (data: any, callback?: BackendCallback) => Promise<void>
   cstCreate: (data: any, callback?: BackendCallback) => Promise<void>
   cstDelete: (data: any, callback?: BackendCallback) => Promise<void>
+  cstMoveTo: (data: any, callback?: BackendCallback) => Promise<void>
 }
 
-export const RSFormContext = createContext<IRSFormContext>({
-  schema: undefined,
-  active: undefined,
-  error: undefined,
-  loading: false,
-  processing: false,
-  isOwned: false,
-  isEditable: false,
-  isClaimable: false,
-  forceAdmin: false,
-  readonly: false,
-  isTracking: true,
-  
-  setActive: () => {},
-  toggleForceAdmin: () => {},
-  toggleReadonly: () => {},
-  toggleTracking: () => {},
-
-  reload: async () => {},
-  update: async () => {},
-  destroy: async () => {},
-  claim: async () => {},
-  download: async () => {},
-
-  cstUpdate: async () => {},
-  cstCreate: async () => {},
-  cstDelete: async () => {},
-})
+const RSFormContext = createContext<IRSFormContext | null>(null);
+export const useRSForm = () => {
+  const context = useContext(RSFormContext);
+  if (!context) {
+    throw new Error(
+      'useRSForm has to be used within <RSFormState.Provider>'
+    );
+  }
+  return context;
+}
 
 interface RSFormStateProps {
   schemaID: string
@@ -71,22 +60,27 @@ interface RSFormStateProps {
 
 export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
   const { user } = useAuth();
-  const { schema, reload, error, setError, loading } = useRSFormDetails({target: schemaID});
+  const { schema, reload, error, setError, setSchema, loading } = useRSFormDetails({target: schemaID});
   const [processing, setProcessing] = useState(false)
-  const [active, setActive] = useState<IConstituenta | undefined>(undefined);
+  const [activeID, setActiveID] = useState<number | undefined>(undefined);
 
-  const [forceAdmin, setForceAdmin] = useState(false);
-  const [readonly, setReadonly] = useState(false);
+  const [isForceAdmin, setIsForceAdmin] = useState(false);
+  const [isReadonly, setIsReadonly] = useState(false);
 
-  const isOwned = useMemo(() => user?.id === schema?.owner || false, [user, schema]);
-  const isClaimable = useMemo(() => (user?.id !== schema?.owner || false), [user, schema]);
+  const isOwned = useMemo(() => user?.id === schema?.owner || false, [user, schema?.owner]);
+  const isClaimable = useMemo(() => user?.id !== schema?.owner || false, [user, schema?.owner]);
   const isEditable = useMemo(
   () => {
     return (
-      !loading && !readonly && 
-      (isOwned || (forceAdmin && user?.is_staff) || false)
+      !loading && !isReadonly && 
+      (isOwned || (isForceAdmin && user?.is_staff) || false)
     )
-  }, [user, readonly, forceAdmin, isOwned, loading]);
+  }, [user, isReadonly, isForceAdmin, isOwned, loading]);
+
+  const activeCst = useMemo(
+  () => {
+    return schema?.items && schema?.items.find((cst) => cst.id === activeID);
+  }, [schema?.items, activeID]);
   
   const isTracking = useMemo(
   () => {
@@ -106,9 +100,12 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       showError: true,
       setLoading: setProcessing,
       onError: error => setError(error),
-      onSucccess: callback
+      onSucccess: async (response) => {
+        await reload();
+        if (callback) callback(response);
+      }
     });
-  }, [schemaID, setError]);
+  }, [schemaID, setError, reload]);
 
   const destroy = useCallback(
   async (callback?: BackendCallback) => {
@@ -128,9 +125,14 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       showError: true,
       setLoading: setProcessing,
       onError: error => setError(error),
-      onSucccess: callback
+      onSucccess: async (response) => {
+        schema!.owner = user!.id
+        schema!.time_update = response.data['time_update']
+        setSchema(schema)
+        if (callback) callback(response);
+      }
     });
-  }, [schemaID, setError]);
+  }, [schemaID, setError, schema, user, setSchema]);
 
   const download = useCallback(
   async (callback: BackendCallback) => {
@@ -146,14 +148,14 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
   const cstUpdate = useCallback(
   async (data: any, callback?: BackendCallback) => {
     setError(undefined);
-    patchConstituenta(String(active!.entityUID), {
+    patchConstituenta(String(activeID), {
       data: data,
       showError: true,
       setLoading: setProcessing,
       onError: error => setError(error),
       onSucccess: callback
     });
-  }, [active, setError]);
+  }, [activeID, setError]);
 
   const cstCreate = useCallback(
   async (data: any, callback?: BackendCallback) => {
@@ -163,9 +165,12 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       showError: true,
       setLoading: setProcessing,
       onError: error => setError(error),
-      onSucccess: callback
+      onSucccess: async (response) => {
+        setSchema(response.data['schema']);
+        if (callback) callback(response);
+      }
     });
-  }, [schemaID, setError]);
+  }, [schemaID, setError, setSchema]);
 
   const cstDelete = useCallback(
     async (data: any, callback?: BackendCallback) => {
@@ -175,25 +180,42 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         showError: true,
         setLoading: setProcessing,
         onError: error => setError(error),
-        onSucccess: callback
+        onSucccess: async (response) => {
+          await reload();
+          if (callback) callback(response);
+        }
       });
-    }, [schemaID, setError]);
+    }, [schemaID, setError, reload]);
+
+    const cstMoveTo = useCallback(
+      async (data: any, callback?: BackendCallback) => {
+        setError(undefined);
+        patchMoveConstituenta(schemaID, {
+          data: data,
+          showError: true,
+          setLoading: setProcessing,
+          onError: error => setError(error),
+          onSucccess: (response) => {
+            setSchema(response.data);
+            if (callback) callback(response);
+          }
+        });
+      }, [schemaID, setError, setSchema]);
 
   return (
     <RSFormContext.Provider value={{
       schema, error, loading, processing,
-      active, setActive,
-      forceAdmin, readonly,
-      toggleForceAdmin: () => setForceAdmin(prev => !prev),
-      toggleReadonly: () => setReadonly(prev => !prev),
+      activeID, activeCst,
+      setActiveID,
+      isForceAdmin, isReadonly,
+      toggleForceAdmin: () => setIsForceAdmin(prev => !prev),
+      toggleReadonly: () => setIsReadonly(prev => !prev),
       isOwned, isEditable, isClaimable,
       isTracking, toggleTracking,
-      reload, update, download, destroy, claim,
-      cstUpdate, cstCreate, cstDelete,
+      update, download, destroy, claim,
+      cstUpdate, cstCreate, cstDelete, cstMoveTo,
     }}>
       { children }
     </RSFormContext.Provider>
   );
 }
-
-export const useRSForm = () => useContext(RSFormContext);

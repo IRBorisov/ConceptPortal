@@ -2,7 +2,7 @@ import { Tabs, TabList, TabPanel } from 'react-tabs';
 import ConstituentsTable from './ConstituentsTable';
 import { IConstituenta } from '../../utils/models';
 import { useRSForm } from '../../context/RSFormContext';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import ConceptTab from '../../components/Common/ConceptTab';
 import RSFormCard from './RSFormCard';
 import { Loader } from '../../components/Common/Loader';
@@ -19,13 +19,13 @@ export enum RSFormTabsList {
 }
 
 function RSFormTabs() {
-  const { setActive, active, error, schema, loading } = useRSForm();
+  const { setActiveID, activeCst, activeID, error, schema, loading } = useRSForm();
   const [tabIndex, setTabIndex] = useLocalStorage('rsform_edit_tab', RSFormTabsList.CARD);
   const [init, setInit] = useState(false);
 
   const onEditCst = (cst: IConstituenta) => {
     console.log(`Set active cst: ${cst.alias}`);
-    setActive(cst);
+    setActiveID(cst.id);
     setTabIndex(RSFormTabsList.CST_EDIT)
   };
 
@@ -33,15 +33,15 @@ function RSFormTabs() {
     setTabIndex(index);
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (schema) {
       const url = new URL(window.location.href);
       const activeQuery = url.searchParams.get('active');
-      const activeCst = schema?.items?.find((cst) => cst.entityUID === Number(activeQuery)) || undefined;
-      setActive(activeCst);
+      const activeCst = schema?.items?.find((cst) => cst.id === Number(activeQuery)) || undefined;
+      setActiveID(activeCst?.id);
       setInit(true);
     }
-  }, [setActive, schema, setInit]);
+  }, [setActiveID, schema, setInit]);
 
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -54,13 +54,13 @@ function RSFormTabs() {
       const url = new URL(window.location.href);
       let currentActive = url.searchParams.get('active');
       const currentTab = url.searchParams.get('tab');
-      const saveHistory = tabIndex === RSFormTabsList.CST_EDIT && currentActive !== String(active?.entityUID);
+      const saveHistory = tabIndex === RSFormTabsList.CST_EDIT && currentActive !== String(activeID);
       if (currentTab !== String(tabIndex)) {
         url.searchParams.set('tab', String(tabIndex));
       }
-      if (active) {
-        if (currentActive !== String(active.entityUID)) {
-          url.searchParams.set('active', String(active.entityUID));
+      if (activeID) {
+        if (currentActive !== String(activeID)) {
+          url.searchParams.set('active', String(activeID));
         }
       } else {
         url.searchParams.delete('active');
@@ -71,7 +71,7 @@ function RSFormTabs() {
         window.history.replaceState(null, '', url.toString());
       }
     }
-  }, [tabIndex, active, init]);
+  }, [tabIndex, activeID, init]);
 
   return (
   <div className='w-full'>

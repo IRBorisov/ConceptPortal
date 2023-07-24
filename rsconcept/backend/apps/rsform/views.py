@@ -54,7 +54,7 @@ class RSFormViewSet(viewsets.ModelViewSet):
     def cst_create(self, request, pk):
         ''' Create new constituenta '''
         schema: models.RSForm = self.get_object()
-        serializer = serializers.NewConstituentaSerializer(data=request.data)
+        serializer = serializers.CstCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         if ('insert_after' in serializer.validated_data):
             cstafter = models.Constituenta.objects.get(pk=serializer.validated_data['insert_after'])
@@ -63,27 +63,31 @@ class RSFormViewSet(viewsets.ModelViewSet):
                                             serializer.validated_data['csttype'])
         else:
             constituenta = schema.insert_last(serializer.validated_data['alias'], serializer.validated_data['csttype'])
-        return Response(status=201, data=constituenta.to_json())
+        schema.refresh_from_db()
+        outSerializer = serializers.RSFormDetailsSerlializer(schema)
+        response = Response(status=201, data={'new_cst': constituenta.to_json(), 'schema': outSerializer.data})
+        response['Location'] = constituenta.get_absolute_url()
+        return response
 
     @action(detail=True, methods=['post'], url_path='cst-multidelete')
     def cst_multidelete(self, request, pk):
         ''' Delete multiple constituents '''
         schema: models.RSForm = self.get_object()
-        serializer = serializers.ItemsListSerlializer(data=request.data)
+        serializer = serializers.CstListSerlializer(data=request.data, context={'schema': schema})
         serializer.is_valid(raise_exception=True)
-        listCst = []
-        # TODO: consider moving validation to serializer
-        try:
-            for id in serializer.validated_data['items']:
-                cst = models.Constituenta.objects.get(pk=id)
-                if (cst.schema != schema):
-                    return Response({'error', 'Конституенты должны относиться к данной схеме'}, status=400)
-                listCst.append(cst)
-        except models.Constituenta.DoesNotExist:
-            return Response(status=404)
-
-        schema.delete_cst(listCst)
+        schema.delete_cst(serializer.validated_data['constituents'])
         return Response(status=202)
+
+    @action(detail=True, methods=['patch'], url_path='cst-moveto')
+    def cst_moveto(self, request, pk):
+        ''' Delete multiple constituents '''
+        schema: models.RSForm = self.get_object()
+        serializer = serializers.CstMoveSerlializer(data=request.data, context={'schema': schema})
+        serializer.is_valid(raise_exception=True)
+        schema.move_cst(serializer.validated_data['constituents'], serializer.validated_data['move_to'])
+        schema.refresh_from_db()
+        outSerializer = serializers.RSFormDetailsSerlializer(schema)
+        return Response(status=200, data=outSerializer.data)
 
     @action(detail=True, methods=['post'])
     def claim(self, request, pk=None):
@@ -93,7 +97,7 @@ class RSFormViewSet(viewsets.ModelViewSet):
         else:
             schema.owner = self.request.user
             schema.save()
-            return Response(status=200)
+            return Response(status=200, data=serializers.RSFormSerializer(schema).data)
 
     @action(detail=True, methods=['get'])
     def contents(self, request, pk):
@@ -105,14 +109,8 @@ class RSFormViewSet(viewsets.ModelViewSet):
     def details(self, request, pk):
         ''' Detailed schema view including statuses '''
         schema: models.RSForm = self.get_object()
-        result = pyconcept.check_schema(json.dumps(schema.to_json()))
-        output_data = json.loads(result)
-        output_data['id'] = schema.id
-        output_data['time_update'] = schema.time_update
-        output_data['time_create'] = schema.time_create
-        output_data['is_common'] = schema.is_common
-        output_data['owner'] = (schema.owner.pk if schema.owner is not None else None)
-        return Response(output_data)
+        serializer = serializers.RSFormDetailsSerlializer(schema)
+        return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
     def check(self, request, pk):

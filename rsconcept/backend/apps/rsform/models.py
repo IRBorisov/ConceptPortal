@@ -2,6 +2,7 @@ import json
 from django.db import models, transaction
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
+from django.urls import reverse
 from apps.users.models import User
 
 import pyconcept
@@ -26,12 +27,8 @@ class Syntax(models.TextChoices):
     MATH = 'math'
 
 
-def _empty_term():
-    return {'raw': '', 'resolved': '', 'forms': []}
-
-
-def _empty_definition():
-    return {'raw': '', 'resolved': ''}
+def _empty_forms():
+    return []
 
 
 class RSForm(models.Model):
@@ -91,7 +88,7 @@ class RSForm(models.Model):
             alias=alias,
             csttype=type
         )
-        self._recreate_order()
+        self._update_from_core()
         self.save()
         return Constituenta.objects.get(pk=result.pk)
 
@@ -107,16 +104,40 @@ class RSForm(models.Model):
             alias=alias,
             csttype=type
         )
-        self._recreate_order()
+        self._update_from_core()
         self.save()
         return Constituenta.objects.get(pk=result.pk)
+
+    @transaction.atomic
+    def move_cst(self, listCst: list['Constituenta'], target: int):
+        ''' Move list of constituents to specific position '''
+        count_moved = 0
+        count_top = 0
+        count_bot = 0
+        size = len(listCst)
+        update_list = []
+        for cst in self.constituents():
+            if cst not in listCst:
+                if count_top + 1 < target:
+                    cst.order = count_top + 1
+                    count_top += 1
+                else:
+                    cst.order = target + size + count_bot
+                    count_bot += 1
+            else:
+                cst.order = target + count_moved
+                count_moved += 1
+            update_list.append(cst)
+        Constituenta.objects.bulk_update(update_list, ['order'])
+        self._update_from_core()
+        self.save()
 
     @transaction.atomic
     def delete_cst(self, listCst):
         ''' Delete multiple constituents. Do not check if listCst are from this schema '''
         for cst in listCst:
             cst.delete()
-        self._recreate_order()
+        self._update_from_core()
         self.save()
 
     @staticmethod
@@ -143,6 +164,9 @@ class RSForm(models.Model):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        return reverse('rsform-detail', kwargs={'pk': self.pk})
+
     def _prepare_json_rsform(self: 'Constituenta') -> dict:
         return {
             'type': 'rsform',
@@ -152,7 +176,7 @@ class RSForm(models.Model):
             'items': []
         }
 
-    def _recreate_order(self):
+    def _update_from_core(self) -> dict:
         checked = json.loads(pyconcept.check_schema(json.dumps(self.to_json())))
         update_list = self.constituents().only('id', 'order')
         if (len(checked['items']) != update_list.count()):
@@ -166,22 +190,12 @@ class RSForm(models.Model):
                     order += 1
                     break
         Constituenta.objects.bulk_update(update_list, ['order'])
+        return checked
 
     def _create_cst_from_json(self, items):
         order = 1
         for cst in items:
-            # TODO: get rid of empty_term etc. Use None instead
-            Constituenta.objects.create(
-                alias=cst['alias'],
-                schema=self,
-                order=order,
-                csttype=cst['cstType'],
-                convention=cst.get('convention', 'Без названия'),
-                definition_formal=cst['definition'].get('formal', '') if 'definition' in cst else '',
-                term=cst.get('term', _empty_term()),
-                definition_text=cst['definition']['text'] \
-                if 'definition' in cst and 'text' in cst['definition'] else _empty_definition()  # noqa: E502
-            )
+            Constituenta.import_json(cst, self, order)
             order += 1
 
 
@@ -194,11 +208,13 @@ class Constituenta(models.Model):
     )
     order = models.PositiveIntegerField(
         verbose_name='Позиция',
-        validators=[MinValueValidator(1)]
+        validators=[MinValueValidator(1)],
+        default=-1,
     )
     alias = models.CharField(
         verbose_name='Имя',
-        max_length=8
+        max_length=8,
+        default='undefined'
     )
     csttype = models.CharField(
         verbose_name='Тип',
@@ -211,18 +227,33 @@ class Constituenta(models.Model):
         default='',
         blank=True
     )
-    term = models.JSONField(
+    term_raw = models.TextField(
+        verbose_name='Термин (с отсылками)',
+        default='',
+        blank=True
+    )
+    term_resolved = models.TextField(
         verbose_name='Термин',
-        default=_empty_term
+        default='',
+        blank=True
+    )
+    term_forms = models.JSONField(
+        verbose_name='Словоформы',
+        default=_empty_forms
     )
     definition_formal = models.TextField(
         verbose_name='Родоструктурное определение',
         default='',
         blank=True
     )
-    definition_text = models.JSONField(
+    definition_raw = models.TextField(
+        verbose_name='Текстовое определние (с отсылками)',
+        default='',
+        blank=True
+    )
+    definition_resolved = models.TextField(
         verbose_name='Текстовое определние',
-        default=_empty_definition,
+        default='',
         blank=True
     )
 
@@ -230,8 +261,33 @@ class Constituenta(models.Model):
         verbose_name = 'Конституета'
         verbose_name_plural = 'Конституенты'
 
+    def get_absolute_url(self):
+        return reverse('constituenta-detail', kwargs={'pk': self.pk})
+
     def __str__(self):
         return self.alias
+
+    @staticmethod
+    def import_json(data: dict, schema: RSForm, order: int) -> 'Constituenta':
+        cst = Constituenta(
+            alias=data['alias'],
+            schema=schema,
+            order=order,
+            csttype=data['cstType'],
+            convention=data.get('convention', 'Без названия')
+        )
+        if 'definition' in data:
+            if 'formal' in data['definition']:
+                cst.definition_formal = data['definition']['formal']
+            if 'text' in data['definition']:
+                cst.definition_raw = data['definition']['text'].get('raw', '')
+                cst.definition_resolved = data['definition']['text'].get('resolved', '')
+        if 'term' in data:
+            cst.term_raw = data['definition']['text'].get('raw', '')
+            cst.term_resolved = data['definition']['text'].get('resolved', '')
+            cst.term_forms = data['definition']['text'].get('forms', [])
+        cst.save()
+        return cst
 
     def to_json(self) -> str:
         return {
@@ -240,9 +296,16 @@ class Constituenta(models.Model):
             'cstType': self.csttype,
             'alias': self.alias,
             'convention': self.convention,
-            'term': self.term,
+            'term': {
+                'raw': self.term_raw,
+                'resolved': self.term_resolved,
+                'forms': self.term_forms,
+            },
             'definition': {
                 'formal': self.definition_formal,
-                'text': self.definition_text
-            }
+                'text': {
+                    'raw': self.definition_raw,
+                    'resolved': self.definition_resolved,
+                },
+            },
         }

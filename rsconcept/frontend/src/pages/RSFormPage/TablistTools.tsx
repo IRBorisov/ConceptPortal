@@ -15,17 +15,17 @@ function TablistTools() {
   const navigate = useNavigate();
   const {user} = useAuth();
   const { schema,
-    isOwned, isEditable, isTracking, readonly, forceAdmin,
+    isOwned, isEditable, isTracking, isReadonly: readonly, isForceAdmin: forceAdmin,
     toggleTracking, toggleForceAdmin, toggleReadonly,
-    claim, reload, destroy, download
+    claim, destroy, download
   } = useRSForm();
   const schemaMenu = useDropdown();
   const editMenu = useDropdown();
 
   const handleClaimOwner = useCallback(() => {
     editMenu.hide();
-    claimOwnershipProc(claim, reload);
-  }, [claim, reload, editMenu]);
+    claimOwnershipProc(claim);
+  }, [claim, editMenu]);
 
   const handleDelete = useCallback(() => {
     schemaMenu.hide();
@@ -69,31 +69,31 @@ function TablistTools() {
         { schemaMenu.isActive &&
         <Dropdown>
           <DropdownButton  onClick={handleShare}>
-            <div className='inline-flex items-center gap-2 justify-start'>
+            <div className='inline-flex items-center justify-start gap-2'>
               <ShareIcon color='text-primary' size={4}/>
               <p>Поделиться</p>
             </div>
           </DropdownButton>
           <DropdownButton  onClick={handleClone}>
-            <div className='inline-flex items-center gap-2 justify-start'>
+            <div className='inline-flex items-center justify-start gap-2'>
               <CloneIcon color='text-primary' size={4}/>
               <p>Клонировать</p>
             </div>
           </DropdownButton>
           <DropdownButton  onClick={handleDownload}>
-            <div className='inline-flex items-center gap-2 justify-start'>
+            <div className='inline-flex items-center justify-start gap-2'>
               <DownloadIcon color='text-primary' size={4}/>
               <p>Выгрузить файл Экстеор</p>
             </div>
           </DropdownButton>
           <DropdownButton disabled={!isEditable} onClick={handleUpload}>
-            <div className='inline-flex items-center gap-2 justify-start'>
+            <div className='inline-flex items-center justify-start gap-2'>
               <UploadIcon color={isEditable ? 'text-red' : ''} size={4}/>
               <p>Загрузить из Экстеора</p>
             </div>
           </DropdownButton>
           <DropdownButton disabled={!isEditable} onClick={handleDelete}>
-            <span className='inline-flex items-center gap-2 justify-start'>
+            <span className='inline-flex items-center justify-start gap-2'>
               <DumpBinIcon color={isEditable ? 'text-red' : ''} size={4} />
               <p>Удалить схему</p>
             </span>

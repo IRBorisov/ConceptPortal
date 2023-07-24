@@ -8,8 +8,7 @@ from apps.rsform.models import (
     RSForm,
     Constituenta,
     CstType,
-    User,
-    _empty_term, _empty_definition
+    User
 )
 
 
@@ -22,6 +21,11 @@ class TestConstituenta(TestCase):
         testStr = 'X1'
         cst = Constituenta.objects.create(alias=testStr, schema=self.schema1, order=1, convention='Test')
         self.assertEqual(str(cst), testStr)
+
+    def test_url(self):
+        testStr = 'X1'
+        cst = Constituenta.objects.create(alias=testStr, schema=self.schema1, order=1, convention='Test')
+        self.assertEqual(cst.get_absolute_url(), f'/api/constituents/{cst.id}/')
 
     def test_order_not_null(self):
         with self.assertRaises(IntegrityError):
@@ -52,28 +56,11 @@ class TestConstituenta(TestCase):
         self.assertEqual(cst.csttype, CstType.BASE)
         self.assertEqual(cst.convention, '')
         self.assertEqual(cst.definition_formal, '')
-        self.assertEqual(cst.term, _empty_term())
-        self.assertEqual(cst.definition_text, _empty_definition())
-
-    def test_create(self):
-        cst = Constituenta.objects.create(
-            alias='S1',
-            schema=self.schema1,
-            order=1,
-            csttype=CstType.STRUCTURED,
-            convention='Test convention',
-            definition_formal='X1=X1',
-            term={'raw': 'Текст @{12|3}', 'resolved': 'Текст тест', 'forms': []},
-            definition_text={'raw': 'Текст1 @{12|3}', 'resolved': 'Текст1 тест'},
-        )
-        self.assertEqual(cst.schema, self.schema1)
-        self.assertEqual(cst.order, 1)
-        self.assertEqual(cst.alias, 'S1')
-        self.assertEqual(cst.csttype, CstType.STRUCTURED)
-        self.assertEqual(cst.convention, 'Test convention')
-        self.assertEqual(cst.definition_formal, 'X1=X1')
-        self.assertEqual(cst.term, {'raw': 'Текст @{12|3}', 'resolved': 'Текст тест', 'forms': []})
-        self.assertEqual(cst.definition_text, {'raw': 'Текст1 @{12|3}', 'resolved': 'Текст1 тест'})
+        self.assertEqual(cst.term_raw, '')
+        self.assertEqual(cst.term_resolved, '')
+        self.assertEqual(cst.term_forms, [])
+        self.assertEqual(cst.definition_resolved, '')
+        self.assertEqual(cst.definition_raw, '')
 
 
 class TestRSForm(TestCase):
@@ -86,6 +73,11 @@ class TestRSForm(TestCase):
         testStr = 'Test123'
         schema = RSForm.objects.create(title=testStr, owner=self.user1, alias='КС1')
         self.assertEqual(str(schema), testStr)
+
+    def test_url(self):
+        testStr = 'Test123'
+        schema = RSForm.objects.create(title=testStr, owner=self.user1, alias='КС1')
+        self.assertEqual(schema.get_absolute_url(), f'/api/rsforms/{schema.id}/')
 
     def test_create_default(self):
         schema = RSForm.objects.create(title='Test')
@@ -190,6 +182,32 @@ class TestRSForm(TestCase):
         self.assertEqual(schema.constituents().count(), 2)
         self.assertEqual(x1.order, 1)
         self.assertEqual(d2.order, 2)
+
+    def test_move_cst(self):
+        schema = RSForm.objects.create(title='Test')
+        x1 = schema.insert_last('X1', CstType.BASE)
+        x2 = schema.insert_last('X2', CstType.BASE)
+        d1 = schema.insert_last('D1', CstType.TERM)
+        d2 = schema.insert_last('D2', CstType.TERM)
+        schema.move_cst([x2, d2], 1)
+        x1.refresh_from_db()
+        x2.refresh_from_db()
+        d1.refresh_from_db()
+        d2.refresh_from_db()
+        self.assertEqual(x1.order, 2)
+        self.assertEqual(x2.order, 1)
+        self.assertEqual(d1.order, 4)
+        self.assertEqual(d2.order, 3)
+
+    def test_move_cst_down(self):
+        schema = RSForm.objects.create(title='Test')
+        x1 = schema.insert_last('X1', CstType.BASE)
+        x2 = schema.insert_last('X2', CstType.BASE)
+        schema.move_cst([x1], 2)
+        x1.refresh_from_db()
+        x2.refresh_from_db()
+        self.assertEqual(x1.order, 2)
+        self.assertEqual(x2.order, 1)
 
     def test_to_json(self):
         schema = RSForm.objects.create(title='Test', alias='KS1', comment='Test')

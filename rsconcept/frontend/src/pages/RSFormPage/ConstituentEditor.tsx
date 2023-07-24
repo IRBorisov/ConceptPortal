@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 import { useRSForm } from '../../context/RSFormContext';
 import { CstType, EditMode, INewCstData } from '../../utils/models';
 import { toast } from 'react-toastify';
@@ -10,13 +10,10 @@ import ConstituentsSideList from './ConstituentsSideList';
 import { DumpBinIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import CreateCstModal from './CreateCstModal';
 import { AxiosResponse } from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { RSFormTabsList } from './RSFormTabs';
 
 function ConstituentEditor() {
-  const navigate = useNavigate();
   const { 
-    active, schema, setActive, processing, isEditable, reload,
+    activeCst, activeID, schema, setActiveID, processing, isEditable,
     cstDelete, cstUpdate, cstCreate
   } = useRSForm();
 
@@ -31,23 +28,23 @@ function ConstituentEditor() {
   const [convention, setConvention] = useState('');
   const [typification, setTypification] = useState('N/A');
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (schema?.items && schema?.items.length > 0) {
-      setActive((prev) => (prev || schema?.items![0]));
+      setActiveID((prev) => (prev || schema?.items![0].id));
     }
-  }, [schema, setActive])
+  }, [schema, setActiveID])
 
-  useEffect(() => {
-    if (active) {
-      setAlias(active.alias);
-      setType(getCstTypeLabel(active.cstType));
-      setConvention(active.convention || '');
-      setTerm(active.term?.raw || '');
-      setTextDefinition(active.definition?.text?.raw || '');
-      setExpression(active.definition?.formal || '');
-      setTypification(active?.parse?.typification || 'N/A');
+  useLayoutEffect(() => {
+    if (activeCst) {
+      setAlias(activeCst.alias);
+      setType(getCstTypeLabel(activeCst.cstType));
+      setConvention(activeCst.convention || '');
+      setTerm(activeCst.term?.raw || '');
+      setTextDefinition(activeCst.definition?.text?.raw || '');
+      setExpression(activeCst.definition?.formal || '');
+      setTypification(activeCst?.parse?.typification || 'N/A');
     }
-  }, [active]);
+  }, [activeCst]);
   
   const handleSubmit = 
   async (event: React.FormEvent<HTMLFormElement>) => {
@@ -64,37 +61,31 @@ function ConstituentEditor() {
         'term': {
           'raw': term,
           'resolved': '',
-          'forms': active?.term?.forms || [],
+          'forms': activeCst?.term?.forms || [],
         }
       };
-      cstUpdate(data)
-      .then(() => {
-        toast.success('Изменения сохранены');
-        reload();
-      });
+      cstUpdate(data).then(() =>  toast.success('Изменения сохранены'));
     }
   };
 
   const handleDelete = useCallback(
   async () => {
-    if (!active || !window.confirm('Вы уверены, что хотите удалить конституенту?')) {
+    if (!activeID || !schema?.items || !window.confirm('Вы уверены, что хотите удалить конституенту?')) {
       return;
     }
     const data = { 
-      'items': [active.entityUID]
+      'items': [activeID]
     }
-    const index = schema?.items?.indexOf(active)
-    await cstDelete(data);
-    if (schema?.items && index && index + 1 < schema?.items?.length) {
-      setActive(schema?.items[index + 1]);
+    const index = schema.items.findIndex((cst) => cst.id === activeID);
+    if (index !== -1 && index + 1 < schema.items.length) {
+      setActiveID(schema.items[index + 1].id);
     }
-    toast.success(`Конституента удалена: ${active.alias}`);
-    reload();
-  }, [active, schema, setActive, cstDelete, reload]);
+    cstDelete(data).then(() => toast.success('Конституента удалена'));
+  }, [activeID, schema, setActiveID, cstDelete]);
 
   const handleAddNew = useCallback(
   async (csttype?: CstType) => {
-    if (!active || !schema) {
+    if (!activeID || !schema?.items) {
       return;
     }
     if (!csttype) {
@@ -103,14 +94,16 @@ function ConstituentEditor() {
       const data: INewCstData = { 
         'csttype': csttype,
         'alias': createAliasFor(csttype, schema!),
-        'insert_after': active.entityUID
+        'insert_after': activeID
       }
-      cstCreate(data, (response: AxiosResponse) => {
-        navigate(`/rsforms/${schema.id}?tab=${RSFormTabsList.CST_EDIT}&active=${response.data['entityUID']}`);
-        window.location.reload();
+      cstCreate(data, 
+      async (response: AxiosResponse) => {
+       // navigate(`/rsforms/${schema.id}?tab=${RSFormTabsList.CST_EDIT}&active=${response.data['new_cst']['id']}`);
+        setActiveID(response.data['new_cst']['id']);
+        toast.success(`Конституента добавлена: ${response.data['new_cst']['alias']}`);
       });      
     }
-  }, [active, schema, cstCreate, navigate]);
+  }, [activeID, schema, cstCreate, setActiveID]);
 
   const handleRename = useCallback(() => {
     toast.info('Переименование в разработке');
@@ -127,7 +120,7 @@ function ConstituentEditor() {
         show={showCstModal}
         toggle={() => setShowCstModal(!showCstModal)}
         onCreate={handleAddNew}
-        defaultType={active?.cstType as CstType}
+        defaultType={activeCst?.cstType as CstType}
       />
       <form onSubmit={handleSubmit} className='flex-grow min-w-[50rem] max-w-min px-4 py-2 border'>
         <div className='flex items-start justify-between'>

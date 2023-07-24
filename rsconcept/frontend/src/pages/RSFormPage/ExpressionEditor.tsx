@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import Button from '../../components/Common/Button';
 import Label from '../../components/Common/Label';
 import { useRSForm } from '../../context/RSFormContext';
@@ -30,18 +30,18 @@ function ExpressionEditor({
   id, label, disabled, isActive, placeholder, value, setValue,
   toggleEditMode, setTypification, onChange
 }: ExpressionEditorProps) {
-  const { schema, active } = useRSForm();
+  const { schema, activeCst } = useRSForm();
   const [isModified, setIsModified] = useState(false);
   const { parseData, checkExpression, resetParse, loading } = useCheckExpression({schema: schema});
   const expressionCtrl = useRef<HTMLTextAreaElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setIsModified(false);
     resetParse();
-  }, [active, resetParse]);
+  }, [activeCst, resetParse]);
 
   const handleCheckExpression = useCallback(() => {
-    const prefix = active?.alias + (active?.cstType === CstType.STRUCTURED ? '::=' : ':==');
+    const prefix = activeCst?.alias + (activeCst?.cstType === CstType.STRUCTURED ? '::=' : ':==');
     const expression = prefix + value;
     checkExpression(expression, (response: AxiosResponse) => {
       // TODO: update cursor position
@@ -49,7 +49,7 @@ function ExpressionEditor({
       setTypification(response.data['typification']);
       toast.success('проверка завершена');
     });
-  }, [value, checkExpression, active, setTypification]);
+  }, [value, checkExpression, activeCst, setTypification]);
 
   const handleEdit = useCallback((id: TokenID, key?: string) => {
     if (!expressionCtrl.current) {
@@ -198,7 +198,7 @@ function ExpressionEditor({
         <div className='flex flex-col gap-2'>
           {isActive && <StatusBar
             isModified={isModified}
-            constituenta={active}
+            constituenta={activeCst}
             parseData={parseData}
           />}
           <Button
@@ -210,7 +210,7 @@ function ExpressionEditor({
         {isActive && EditButtons}
         {!isActive && <StatusBar
             isModified={isModified}
-            constituenta={active}
+            constituenta={activeCst}
             parseData={parseData}
         />}
       </div>

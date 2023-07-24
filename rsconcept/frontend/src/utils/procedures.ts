@@ -9,16 +9,12 @@ export function shareCurrentURLProc() {
 }
 
 export async function claimOwnershipProc(
-  claim: (callback: BackendCallback) => Promise<void>, 
-  reload: Function
+  claim: (callback: BackendCallback) => Promise<void>,
 ) {
   if (!window.confirm('Вы уверены, что хотите стать владельцем данной схемы?')) {
     return;
   }
-  claim(() => {
-    toast.success('Вы стали владельцем схемы');
-    reload();
-  });
+  claim(() => toast.success('Вы стали владельцем схемы'));
 }
 
 export async function deleteRSFormProc(

@@ -15,8 +15,11 @@ interface ConstituentsTableProps {
 }
 
 function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
-  const { schema, isEditable, cstCreate, cstDelete, reload } = useRSForm();
-  const [selected, setSelected] = useState<IConstituenta[]>([]);
+  const { 
+    schema, isEditable,
+    cstCreate, cstDelete, cstMoveTo
+  } = useRSForm();
+  const [selected, setSelected] = useState<number[]>([]);
   const nothingSelected = useMemo(() => selected.length === 0, [selected]);
 
   const [showCstModal, setShowCstModal] = useState(false);
@@ -28,32 +31,78 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
     }
 	}, [onOpenEdit]);
 
+  const handleSelectionChange = useCallback(
+    ({selectedRows}: {
+      allSelected: boolean;
+      selectedCount: number;
+      selectedRows: IConstituenta[];
+    }) => {
+    setSelected(selectedRows.map((cst) => cst.id));
+  }, [setSelected]);
+  
+  // Delete selected constituents
   const handleDelete = useCallback(() => {
-    if (!window.confirm('Вы уверены, что хотите удалить выбранные конституенты?')) {
+    if (!schema?.items || !window.confirm('Вы уверены, что хотите удалить выбранные конституенты?')) {
       return;
     }
     const data = { 
-      'items': selected.map(cst => cst.entityUID)
+      'items': selected.map(id => { return {'id': id }; }),
     }
-    const deletedNamed = selected.map(cst => cst.alias)
-    cstDelete(data, (response: AxiosResponse) => {
-      reload().then(() => toast.success(`Конституенты удалены: ${deletedNamed}`));
-    });
-  }, [selected, cstDelete, reload]);
+    const deletedNamed = selected.map(id => schema.items?.find((cst) => cst.id === id)?.alias);
+    cstDelete(data, () => toast.success(`Конституенты удалены: ${deletedNamed}`));
+  }, [selected, schema?.items, cstDelete]);
 
-  const handleMoveUp = useCallback(() => {
-    toast.info('Перемещение вверх');
-    
-  }, []);
+  // Move selected cst up
+  const handleMoveUp = useCallback(
+    () => {
+    if (!schema?.items || selected.length === 0) {
+      return;
+    }
+    const currentIndex = schema.items.reduce((prev, cst, index) => {
+      if (selected.indexOf(cst.id) < 0) {
+        return prev;
+      } else if (prev === -1) {
+        return index;
+      }
+      return Math.min(prev, index);
+    }, -1);
+    const insertIndex = Math.max(0, currentIndex - 1) + 1
+    const data = { 
+      'items': selected.map(id => { return {'id': id }; }),
+      'move_to': insertIndex
+    }
+    cstMoveTo(data).then(() => toast.info('Перемещение вверх ' + insertIndex));    
+  }, [selected, schema?.items, cstMoveTo]);
 
-  const handleMoveDown = useCallback(() => {
-    toast.info('Перемещение вниз');
-  }, []);
+  
+  // Move selected cst down
+  const handleMoveDown = useCallback(
+    async () => {
+    if (!schema?.items || selected.length === 0) {
+      return;
+    }
+    const currentIndex = schema.items.reduce((prev, cst, index) => {
+      if (selected.indexOf(cst.id) < 0) {
+        return prev;
+      } else if (prev === -1) {
+        return index;
+      }
+      return Math.max(prev, index);
+    }, -1);
+    const insertIndex = Math.min(schema.items.length - 1, currentIndex + 1) + 1
+    const data = { 
+      'items': selected.map(id => { return {'id': id }; }),
+      'move_to': insertIndex
+    }
+    cstMoveTo(data).then(() => toast.info('Перемещение вниз ' + insertIndex));    
+  }, [selected, schema?.items, cstMoveTo]);
 
+  // Generate new names for all constituents
   const handleReindex = useCallback(() => {
     toast.info('Переиндексация');
   }, []);
   
+  // Add new constituent
   const handleAddNew = useCallback((csttype?: CstType) => {
     if (!csttype) {
       setShowCstModal(true);
@@ -63,20 +112,34 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
         'alias': createAliasFor(csttype, schema!)
       }
       if (selected.length > 0) {
-        data['insert_after'] = selected[selected.length - 1].entityUID
+        data['insert_after'] = selected[selected.length - 1]
       }
-      cstCreate(data, (response: AxiosResponse) => {
-        reload().then(() => toast.success(`Добавлена конституента ${response.data['alias']}`));
-      });      
+      cstCreate(data, (response: AxiosResponse) =>
+        toast.success(`Добавлена конституента ${response.data['new_cst']['alias']}`));      
     }
-  }, [schema, selected, reload, cstCreate]);
+  }, [schema, selected, cstCreate]);
+
+  // Implement hotkeys for working with constituents table
+  const handleTableKey = useCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!event.altKey) {
+      return;
+    }
+    if (!isEditable || selected.length === 0) {
+      return;
+    }
+    switch(event.key) {
+    case 'ArrowUp': handleMoveUp(); return;
+    case 'ArrowDown': handleMoveDown(); return;
+    }
+    console.log(event);
+  }, [isEditable, selected, handleMoveUp, handleMoveDown]);
   
   const columns = useMemo(() => 
     [
       {
         name: 'ID',
         id: 'id',
-        selector: (cst: IConstituenta) => cst.entityUID,
+        selector: (cst: IConstituenta) => cst.id,
         omit: true,
       },
       {
@@ -239,6 +302,7 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
           })}
         </div>}
       </div>
+      <div className='w-full h-full' onKeyDown={handleTableKey} tabIndex={0}>
       <DataTableThemed
         data={schema!.items!}
         columns={columns}
@@ -256,11 +320,12 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
 
         selectableRows
         selectableRowsHighlight
-        onSelectedRowsChange={({selectedRows}) => setSelected(selectedRows)}
+        onSelectedRowsChange={handleSelectionChange}
         onRowDoubleClicked={onOpenEdit}
         onRowClicked={handleRowClicked}
         dense
       />
+      </div>
     </div>
   </>);
 }

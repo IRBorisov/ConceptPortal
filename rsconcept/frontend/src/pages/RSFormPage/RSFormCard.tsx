@@ -18,7 +18,7 @@ function RSFormCard() {
   const intl = useIntl();
   const { getUserLabel } = useUsers();
   const { 
-    schema, update, download, reload, 
+    schema, update, download, 
     isEditable, isOwned, isClaimable, processing, destroy, claim 
   } = useRSForm();
   const { user } = useAuth();
@@ -43,10 +43,7 @@ function RSFormCard() {
       'comment': comment,
       'is_common': common,
     };
-    update(data, () => {
-      toast.success('Изменения сохранены');
-      reload();
-    });
+    update(data).then(() => toast.success('Изменения сохранены'));
   };
 
   const handleDelete = 
@@ -107,7 +104,7 @@ function RSFormCard() {
             tooltip={isClaimable ? 'Стать владельцем' : 'Вы уже являетесь владельцем' }
             disabled={!isClaimable || processing || !user}
             icon={<CrownIcon color={isOwned ? '' : 'text-green'}/>}
-            onClick={() => claimOwnershipProc(claim, reload)}
+            onClick={() => claimOwnershipProc(claim)}
           />
           <Button 
             tooltip={ isEditable ? 'Удалить схему' : 'Вы не можете редактировать данную схему'}
