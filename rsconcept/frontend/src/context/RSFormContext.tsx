@@ -37,7 +37,7 @@ interface IRSFormContext {
   claim: (callback?: BackendCallback) => void
   download: (callback: BackendCallback) => void
 
-  cstUpdate: (data: any, callback?: BackendCallback) => void
+  cstUpdate: (cstdID: string, data: any, callback?: BackendCallback) => void
   cstCreate: (data: any, callback?: BackendCallback) => void
   cstDelete: (data: any, callback?: BackendCallback) => void
   cstMoveTo: (data: any, callback?: BackendCallback) => void
@@ -102,7 +102,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         setLoading: setProcessing,
         onError: error => { setError(error) },
         onSucccess: (response) => {
-          reload()
+          reload(setProcessing)
           .then(() => { if (callback != null) callback(response); })
           .catch(console.error);
         }
@@ -131,10 +131,10 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         setLoading: setProcessing,
         onError: error => { setError(error) },
         onSucccess: (response) => {
-          schema.owner = user.id
-          schema.time_update = response.data.time_update
-          setSchema(schema)
-          if (callback != null) callback(response)
+          schema.owner = user.id;
+          schema.time_update = response.data.time_update;
+          setSchema(schema);
+          if (callback != null) callback(response);
         }
       }).catch(console.error);
     }, [schemaID, setError, schema, user, setSchema])
@@ -151,16 +151,20 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
     }, [schemaID, setError])
 
   const cstUpdate = useCallback(
-    (data: any, callback?: BackendCallback) => {
+    (cstID: string, data: any, callback?: BackendCallback) => {
       setError(undefined)
-      patchConstituenta(String(activeID), {
+      patchConstituenta(cstID, {
         data,
         showError: true,
         setLoading: setProcessing,
         onError: error => { setError(error) },
-        onSucccess: callback
+        onSucccess: (response) => {
+          reload(setProcessing)
+          .then(() => { if (callback != null) callback(response); })
+          .catch(console.error);
+        }
       }).catch(console.error);
-    }, [activeID, setError])
+    }, [setError])
 
   const cstCreate = useCallback(
     (data: any, callback?: BackendCallback) => {
@@ -171,11 +175,11 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         setLoading: setProcessing,
         onError: error => { setError(error) },
         onSucccess: (response) => {
-          setSchema(response.data.schema)
-          if (callback != null) callback(response)
+          setSchema(response.data.schema);
+          if (callback != null) callback(response);
         }
       }).catch(console.error);
-    }, [schemaID, setError, setSchema])
+    }, [schemaID, setError, setSchema]);
 
   const cstDelete = useCallback(
     (data: any, callback?: BackendCallback) => {
@@ -190,7 +194,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
           if (callback != null) callback(response)
         }
       }).catch(console.error);
-    }, [schemaID, setError, setSchema])
+    }, [schemaID, setError, setSchema]);
 
   const cstMoveTo = useCallback(
     (data: any, callback?: BackendCallback) => {
@@ -201,11 +205,11 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         setLoading: setProcessing,
         onError: error => { setError(error) },
         onSucccess: (response) => {
-          setSchema(response.data)
-          if (callback != null) callback(response)
+          setSchema(response.data);
+          if (callback != null) callback(response);
         }
       }).catch(console.error);
-    }, [schemaID, setError, setSchema])
+    }, [schemaID, setError, setSchema]);
 
   return (
     <RSFormContext.Provider value={{

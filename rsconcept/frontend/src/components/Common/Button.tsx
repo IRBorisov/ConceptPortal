@@ -1,17 +1,13 @@
-import { type MouseEventHandler } from 'react';
-
-interface ButtonProps {
-  id?: string
+interface ButtonProps
+extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'children'> {
   text?: string
   icon?: React.ReactNode
   tooltip?: string
-  disabled?: boolean
   dense?: boolean
   loading?: boolean
   widthClass?: string
   borderClass?: string
   colorClass?: string
-  onClick?: MouseEventHandler<HTMLButtonElement> | undefined
 }
 
 function Button({
@@ -26,7 +22,7 @@ function Button({
   return (
     <button id={id}
       type='button'
-      disabled={disabled}
+      disabled={disabled ?? loading}
       onClick={onClick}
       title={tooltip}
       className={`inline-flex items-center gap-2 align-middle justify-center ${padding} ${borderClass} ${colorClass} ${widthClass} ${cursor}`}

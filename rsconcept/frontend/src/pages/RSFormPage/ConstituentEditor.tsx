@@ -1,5 +1,5 @@
 import { type AxiosResponse } from 'axios';
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import SubmitButton from '../../components/Common/SubmitButton';
@@ -19,6 +19,7 @@ function ConstituentEditor() {
   } = useRSForm();
 
   const [showCstModal, setShowCstModal] = useState(false);
+  const [isModified, setIsModified] = useState(false);
   const [editMode, setEditMode] = useState(EditMode.TEXT);
 
   const [alias, setAlias] = useState('');
@@ -29,13 +30,28 @@ function ConstituentEditor() {
   const [convention, setConvention] = useState('');
   const [typification, setTypification] = useState('N/A');
 
+  const isEnabled = useMemo(() => activeCst && isEditable, [activeCst, isEditable]);
+
   useLayoutEffect(() => {
     if (schema?.items && schema?.items.length > 0) {
       // TODO: figure out why schema.items could be undef?
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       setActiveID((prev) => (prev ?? schema?.items![0].id ?? undefined));
     }
-  }, [schema, setActiveID])
+  }, [schema, setActiveID]);
+
+  useLayoutEffect(() => {
+    if (!activeCst) {
+      setIsModified(false);
+      return;
+    }
+    setIsModified(
+      activeCst.term?.raw !== term ||
+      activeCst.definition?.text?.raw !== textDefinition ||
+      activeCst.convention !== convention ||
+      activeCst.definition?.formal !== expression
+    );
+  }, [activeCst, term, textDefinition, expression, convention]);
 
   useLayoutEffect(() => {
     if (activeCst) {
@@ -57,17 +73,12 @@ function ConstituentEditor() {
         alias: alias,
         convention: convention,
         definition_formal: expression,
-        definition_text: {
-          raw: textDefinition,
-          resolved: ''
-        },
-        term: {
-          raw: term,
-          resolved: '',
-          forms: activeCst?.term?.forms ?? []
-        }
+        definition_raw: textDefinition,
+        term_raw: term
       };
-      cstUpdate(data, () => toast.success('Изменения сохранены'));
+      cstUpdate(String(activeID), data, () => {
+        toast.success('Изменения сохранены');
+      });
     }
   };
 
@@ -119,7 +130,7 @@ function ConstituentEditor() {
     <div className='flex items-start w-full gap-2'>
       <CreateCstModal
         show={showCstModal}
-        toggle={() => { setShowCstModal(!showCstModal); }}
+        hideWindow={() => { setShowCstModal(false); }}
         onCreate={handleAddNew}
         defaultType={activeCst?.cstType as CstType}
       />
@@ -128,7 +139,7 @@ function ConstituentEditor() {
             <button type='submit'
               title='Сохранить изменения'
               className='px-1 py-1 font-bold rounded whitespace-nowrap disabled:cursor-not-allowed clr-btn-primary'
-              disabled={!isEditable}
+              disabled={!isModified || !isEnabled}
             >
               <SaveIcon size={5} />
             </button>
@@ -158,18 +169,18 @@ function ConstituentEditor() {
             <button type='button'
               title='Создать конституенты после данной'
               className='px-1 py-1 font-bold rounded-full whitespace-nowrap disabled:cursor-not-allowed clr-btn-clear'
-              disabled={!isEditable}
+              disabled={!isEnabled}
               onClick={() => { handleAddNew(); }}
             >
-              <SmallPlusIcon size={5} color={isEditable ? 'text-green' : ''} />
+              <SmallPlusIcon size={5} color={isEnabled ? 'text-green' : ''} />
             </button>
             <button type='button'
               title='Удалить редактируемую конституенту'
               className='px-1 py-1 font-bold rounded-full whitespace-nowrap disabled:cursor-not-allowed clr-btn-clear'
-              disabled={!isEditable}
+              disabled={!isEnabled}
               onClick={handleDelete}
             >
-              <DumpBinIcon size={5} color={isEditable ? 'text-red' : ''} />
+              <DumpBinIcon size={5} color={isEnabled ? 'text-red' : ''} />
             </button>
           </div>
         </div>
@@ -177,7 +188,7 @@ function ConstituentEditor() {
           placeholder='Схемный или предметный термин, обозначающий данное понятие или утверждение'
           rows={2}
           value={term}
-          disabled={!isEditable}
+          disabled={!isEnabled}
           spellCheck
           onChange={event => { setTerm(event.target.value); }}
           onFocus={() => { setEditMode(EditMode.TEXT); }}
@@ -190,7 +201,7 @@ function ConstituentEditor() {
         <ExpressionEditor id='expression' label='Формальное выражение'
           placeholder='Родоструктурное выражение, задающее формальное определение'
           value={expression}
-          disabled={!isEditable}
+          disabled={!isEnabled}
           isActive={editMode === 'rslang'}
           toggleEditMode={() => { setEditMode(EditMode.RSLANG); }}
           onChange={event => { setExpression(event.target.value); }}
@@ -201,7 +212,7 @@ function ConstituentEditor() {
           placeholder='Лингвистическая интерпретация формального выражения'
           rows={4}
           value={textDefinition}
-          disabled={!isEditable}
+          disabled={!isEnabled}
           spellCheck
           onChange={event => { setTextDefinition(event.target.value); }}
           onFocus={() => { setEditMode(EditMode.TEXT); }}
@@ -210,7 +221,7 @@ function ConstituentEditor() {
           placeholder='Договоренность об интерпретации неопределяемого понятия&#x000D;&#x000A;Комментарий к производному понятию'
           rows={4}
           value={convention}
-          disabled={!isEditable}
+          disabled={!isEnabled}
           spellCheck
           onChange={event => { setConvention(event.target.value); }}
           onFocus={() => { setEditMode(EditMode.TEXT); }}
@@ -218,7 +229,7 @@ function ConstituentEditor() {
         <div className='flex justify-center w-full mt-2'>
           <SubmitButton
             text='Сохранить изменения'
-            disabled={!isEditable}
+            disabled={!isModified || !isEnabled}
             icon={<SaveIcon size={6} />}
           />
         </div>

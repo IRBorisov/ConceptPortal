@@ -12,26 +12,25 @@ export function useRSFormDetails({ target }: { target?: string }) {
   function setSchema(schema?: IRSForm) {
     if (schema) CalculateStats(schema);
     setInnerSchema(schema);
-    console.log(schema);
+    console.log('Loaded schema: ', schema);
   }
 
   const fetchData = useCallback(
-    async () => {
+    async (setCustomLoading?: typeof setLoading) => {
       setError(undefined);
-      setInnerSchema(undefined);
       if (!target) {
         return;
       }
       await getRSFormDetails(target, {
         showError: true,
-        setLoading,
-        onError: error => { setError(error); },
+        setLoading: setCustomLoading ?? setLoading,
+        onError: error => { setInnerSchema(undefined); setError(error); },
         onSucccess: (response) => { setSchema(response.data); }
       });
     }, [target]);
 
-  async function reload() {
-    await fetchData();
+  async function reload(setCustomLoading?: typeof setLoading) {
+    await fetchData(setCustomLoading);
   }
 
   useEffect(() => {

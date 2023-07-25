@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -29,11 +29,28 @@ function RSFormCard() {
   const [comment, setComment] = useState('');
   const [common, setCommon] = useState(false);
 
-  useEffect(() => {
-    setTitle(schema?.title ?? '');
-    setAlias(schema?.alias ?? '');
-    setComment(schema?.comment ?? '');
-    setCommon(schema?.is_common ?? false);
+  const [isModified, setIsModified] = useState(true);
+
+  useLayoutEffect(() => {
+    if (!schema) {
+      setIsModified(false);
+      return;
+    }
+    setIsModified(
+      schema.title !== title ||
+      schema.alias !== alias ||
+      schema.comment !== comment ||
+      schema.is_common !== common
+    );
+  }, [schema, title, alias, comment, common]);
+
+  useLayoutEffect(() => {
+    if (schema) {
+      setTitle(schema.title);
+      setAlias(schema.alias);
+      setComment(schema.comment);
+      setCommon(schema.is_common);
+    }
   }, [schema]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -87,7 +104,7 @@ function RSFormCard() {
         <SubmitButton
           text='Сохранить изменения'
           loading={processing}
-          disabled={!isEditable || processing}
+          disabled={!isModified || !isEditable}
           icon={<SaveIcon size={6} />}
         />
         <div className='flex justify-end gap-1'>
@@ -97,7 +114,6 @@ function RSFormCard() {
             onClick={shareCurrentURLProc}
           />
           <Button
-            disabled={processing}
             tooltip='Скачать TRS файл'
             icon={<DownloadIcon color='text-primary'/>}
             loading={processing}
@@ -105,15 +121,16 @@ function RSFormCard() {
           />
           <Button
             tooltip={isClaimable ? 'Стать владельцем' : 'Вы уже являетесь владельцем' }
-            disabled={!isClaimable || processing || !user}
             icon={<CrownIcon color={isOwned ? '' : 'text-green'}/>}
+            loading={processing}
+            disabled={!isClaimable || !user}
             onClick={() => { claimOwnershipProc(claim); }}
           />
           <Button
             tooltip={ isEditable ? 'Удалить схему' : 'Вы не можете редактировать данную схему'}
-            disabled={!isEditable || processing}
             icon={<DumpBinIcon color={isEditable ? 'text-red' : ''} />}
             loading={processing}
+            disabled={!isEditable}
             onClick={handleDelete}
           />
         </div>

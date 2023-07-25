@@ -17,7 +17,10 @@
         "react", "simple-import-sort"
     ],
     "rules": {
-        "simple-import-sort/imports": "error",
+        "simple-import-sort/imports": "warn",
+        "@typescript-eslint/no-unused-vars": "warn",
+        "no-trailing-spaces": "warn",
+        "no-multiple-empty-lines": "warn",
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/semi": "off",
         "@typescript-eslint/strict-boolean-expressions": "off",

@@ -9,7 +9,7 @@ function SubmitButton({ text = 'ОК', icon, disabled, loading = false }: Submit
   return (
     <button type='submit'
       className={`px-4 py-2 inline-flex items-center gap-2 align-middle justify-center font-bold disabled:cursor-not-allowed rounded clr-btn-primary ${loading ? ' cursor-progress' : ''}`}
-      disabled={disabled}
+      disabled={disabled ?? loading}
     >
       {icon && <span>{icon}</span>}
       {text && <span>{text}</span>}

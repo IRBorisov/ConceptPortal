@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 
 import useClickedOutside from '../../hooks/useClickedOutside';
+import useEscapeKey from '../../hooks/useEscapeKey';
 import Button from './Button';
 
 interface ModalProps {
@@ -8,27 +9,28 @@ interface ModalProps {
   submitText?: string
   show: boolean
   canSubmit: boolean
-  toggle: () => void
+  hideWindow: () => void
   onSubmit: () => void
   onCancel?: () => void
   children: React.ReactNode
 }
 
-function Modal({ title, show, toggle, onSubmit, onCancel, canSubmit, children, submitText = 'Продолжить' }: ModalProps) {
+function Modal({ title, show, hideWindow, onSubmit, onCancel, canSubmit, children, submitText = 'Продолжить' }: ModalProps) {
   const ref = useRef(null);
-  useClickedOutside({ ref, callback: toggle })
+  useClickedOutside({ ref, callback: hideWindow });
+  useEscapeKey(hideWindow);
 
   if (!show) {
     return null;
   }
 
   const handleCancel = () => {
-    toggle();
+    hideWindow();
     if (onCancel) onCancel();
   };
 
   const handleSubmit = () => {
-    toggle();
+    hideWindow();
     onSubmit();
   };
 
@@ -48,6 +50,7 @@ function Modal({ title, show, toggle, onSubmit, onCancel, canSubmit, children, s
           colorClass='clr-btn-primary'
           disabled={!canSubmit}
           onClick={handleSubmit}
+          autoFocus
         />
         <Button
           text='Отмена'

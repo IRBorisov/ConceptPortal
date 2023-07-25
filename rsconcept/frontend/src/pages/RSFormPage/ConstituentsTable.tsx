@@ -257,7 +257,7 @@ function ConstituentsTable({ onOpenEdit }: ConstituentsTableProps) {
   return (<>
     <CreateCstModal
       show={showCstModal}
-      toggle={() => { setShowCstModal(!showCstModal); }}
+      hideWindow={() => { setShowCstModal(false); }}
       onCreate={handleAddNew}
     />
     <div className='w-full'>

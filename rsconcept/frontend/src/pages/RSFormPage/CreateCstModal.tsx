@@ -7,12 +7,12 @@ import { CstTypeSelector, getCstTypeLabel } from '../../utils/staticUI';
 
 interface CreateCstModalProps {
   show: boolean
-  toggle: () => void
+  hideWindow: () => void
   defaultType?: CstType
   onCreate: (type: CstType) => void
 }
 
-function CreateCstModal({ show, toggle, defaultType, onCreate }: CreateCstModalProps) {
+function CreateCstModal({ show, hideWindow, defaultType, onCreate }: CreateCstModalProps) {
   const [validated, setValidated] = useState(false);
   const [selectedType, setSelectedType] = useState<CstType | undefined>(undefined);
 
@@ -33,7 +33,7 @@ function CreateCstModal({ show, toggle, defaultType, onCreate }: CreateCstModalP
     <Modal
       title='Создание конституенты'
       show={show}
-      toggle={toggle}
+      hideWindow={hideWindow}
       canSubmit={validated}
       onSubmit={handleSubmit}
     >
