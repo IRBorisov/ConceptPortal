@@ -1,16 +1,16 @@
-import { IRSForm } from '../../utils/models'
-import { useNavigate } from 'react-router-dom';
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
+import { useNavigate } from 'react-router-dom';
+
 import DataTableThemed from '../../components/Common/DataTableThemed';
 import { useUsers } from '../../context/UsersContext';
-
+import { type IRSForm } from '../../utils/models'
 
 interface RSFormsTableProps {
   schemas: IRSForm[]
 }
 
-function RSFormsTable({schemas}: RSFormsTableProps) {
+function RSFormsTable({ schemas }: RSFormsTableProps) {
   const navigate = useNavigate();
   const intl = useIntl();
   const { getUserLabel } = useUsers();
@@ -19,7 +19,7 @@ function RSFormsTable({schemas}: RSFormsTableProps) {
     navigate(`/rsforms/${schema.id}`);
   };
 
-  const columns = useMemo(() => 
+  const columns = useMemo(() =>
     [
       {
         name: 'Шифр',
@@ -40,7 +40,7 @@ function RSFormsTable({schemas}: RSFormsTableProps) {
       {
         name: 'Владелец',
         id: 'owner',
-        selector: (schema: IRSForm) => schema.owner || 0,
+        selector: (schema: IRSForm) => schema.owner ?? 0,
         format: (schema: IRSForm) => {
           return getUserLabel(schema.owner);
         },
