@@ -1,13 +1,13 @@
 import Card from '../../components/Common/Card';
 import Divider from '../../components/Common/Divider';
 import LabeledText from '../../components/Common/LabeledText';
-import { IRSFormStats } from '../../utils/models';
+import { type IRSFormStats } from '../../utils/models';
 
 interface RSFormStatsProps {
   stats: IRSFormStats
 }
 
-function RSFormStats({stats}: RSFormStatsProps) {  
+function RSFormStats({ stats }: RSFormStatsProps) {
   return (
     <Card>
       <LabeledText id='count_all'

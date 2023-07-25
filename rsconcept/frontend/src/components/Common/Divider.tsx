@@ -3,7 +3,7 @@ interface DividerProps {
   margins?: string
 }
 
-function Divider({vertical, margins='2'}: DividerProps) {
+function Divider({ vertical, margins = '2' }: DividerProps) {
   return (
     <>
     {vertical && <div className={`mx-${margins} border-x-2`} />}

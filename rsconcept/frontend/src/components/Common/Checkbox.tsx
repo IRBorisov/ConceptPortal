@@ -10,7 +10,7 @@ export interface CheckboxProps {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-function Checkbox({id, required, disabled, label, widthClass='w-full', value, onChange}: CheckboxProps) {
+function Checkbox({ id, required, disabled, label, widthClass = 'w-full', value, onChange }: CheckboxProps) {
   return (
     <div className={'flex gap-2 [&:not(:first-child)]:mt-3 ' + widthClass}>
       <input id={id} type='checkbox'
@@ -20,7 +20,7 @@ function Checkbox({id, required, disabled, label, widthClass='w-full', value, on
         checked={value}
         onChange={onChange}
       />
-      { label && <Label 
+      { label && <Label
         text={label}
         required={required}
         htmlFor={id}

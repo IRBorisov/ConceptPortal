@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { ExpressionStatus, IConstituenta, ParsingStatus, inferStatus } from '../../utils/models';
+
+import { ExpressionStatus, type IConstituenta, inferStatus, ParsingStatus } from '../../utils/models';
 import { getStatusInfo } from '../../utils/staticUI';
 
 interface StatusBarProps {
@@ -8,14 +9,14 @@ interface StatusBarProps {
   constituenta?: IConstituenta
 }
 
-function StatusBar({isModified, constituenta, parseData}: StatusBarProps) {
+function StatusBar({ isModified, constituenta, parseData }: StatusBarProps) {
   const status = useMemo(() => {
     if (isModified) {
       return ExpressionStatus.UNKNOWN;
     }
     if (parseData) {
-      const parse = parseData['parseResult'] ? ParsingStatus.VERIFIED : ParsingStatus.INCORRECT;
-      return inferStatus(parse, parseData['valueClass']);
+      const parse = parseData.parseResult ? ParsingStatus.VERIFIED : ParsingStatus.INCORRECT;
+      return inferStatus(parse, parseData.valueClass);
     }
     return inferStatus(constituenta?.parse?.status, constituenta?.parse?.valueClass);
   }, [isModified, constituenta, parseData]);

@@ -16,19 +16,19 @@ interface TextAreaProps {
 
 function TextArea({
   id, label, placeholder,
-  required, spellCheck, disabled, 
-  widthClass='w-full', rows=4, value,
+  required, spellCheck, disabled,
+  widthClass = 'w-full', rows = 4, value,
   onChange, onFocus
 }: TextAreaProps) {
   return (
     <div className='flex flex-col items-start [&:not(:first-child)]:mt-3'>
-      <Label 
+      <Label
         text={label}
         required={required}
         htmlFor={id}
       />
       <textarea id={id}
-          className={'px-3 py-2 mt-2 leading-tight border shadow dark:bg-gray-800 '+ widthClass}
+          className={'px-3 py-2 mt-2 leading-tight border shadow dark:bg-gray-800 ' + widthClass}
           rows={rows}
           placeholder={placeholder}
           required={required}

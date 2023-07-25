@@ -5,10 +5,10 @@ interface NavigationTextItemProps {
   children: React.ReactNode
 }
 
-function DropdownButton({description='', onClick, disabled, children}: NavigationTextItemProps) {
-  const behavior = (onClick ? 'cursor-pointer clr-hover': 'cursor-default') + ' disabled:cursor-not-allowed';
+function DropdownButton({ description = '', onClick, disabled, children }: NavigationTextItemProps) {
+  const behavior = (onClick ? 'cursor-pointer clr-hover' : 'cursor-default') + ' disabled:cursor-not-allowed';
   return (
-    <button 
+    <button
       disabled={disabled}
       title={description}
       onClick={onClick}

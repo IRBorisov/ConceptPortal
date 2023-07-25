@@ -3,7 +3,7 @@ import { DarkThemeIcon, LightThemeIcon } from '../Icons';
 import NavigationButton from './NavigationButton';
 
 function ThemeSwitcher() {
-  const {darkMode, toggleDarkMode} = useConceptTheme();
+  const { darkMode, toggleDarkMode } = useConceptTheme();
   return (
     <>
       {darkMode && <NavigationButton icon={<LightThemeIcon />} description='Светлая тема' onClick={toggleDarkMode} />}

@@ -1,4 +1,4 @@
-import { MouseEventHandler } from 'react'
+import { type MouseEventHandler } from 'react';
 
 interface ButtonProps {
   id?: string
@@ -14,14 +14,15 @@ interface ButtonProps {
   onClick?: MouseEventHandler<HTMLButtonElement> | undefined
 }
 
-function Button({id, text, icon, tooltip,
+function Button({
+  id, text, icon, tooltip,
   dense, disabled,
-  borderClass='border rounded', colorClass='clr-btn-default', widthClass='w-fit h-fit',
+  borderClass = 'border rounded', colorClass = 'clr-btn-default', widthClass = 'w-fit h-fit',
   loading, onClick,
   ...props
 }: ButtonProps) {
-  const padding = dense ? 'px-1' : 'px-3 py-2'
-  const cursor = 'disabled:cursor-not-allowed ' + (loading ? 'cursor-progress ': 'cursor-pointer ')
+  const padding = dense ? 'px-1' : 'px-3 py-2';
+  const cursor = 'disabled:cursor-not-allowed ' + (loading ? 'cursor-progress ' : 'cursor-pointer ');
   return (
     <button id={id}
       type='button'
@@ -34,7 +35,7 @@ function Button({id, text, icon, tooltip,
       {icon && <span>{icon}</span>}
       {text && <span className={'font-semibold'}>{text}</span>}
     </button>
-  )
+  );
 }
 
 export default Button;

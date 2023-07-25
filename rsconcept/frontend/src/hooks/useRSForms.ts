@@ -1,7 +1,8 @@
 import { useCallback, useState } from 'react'
-import { IRSForm } from '../utils/models'
-import { ErrorInfo } from '../components/BackendError';
+
+import { type ErrorInfo } from '../components/BackendError';
 import { getRSForms } from '../utils/backendAPI';
+import { type IRSForm } from '../utils/models'
 
 export enum FilterType {
   PERSONAL = 'personal',
@@ -19,11 +20,11 @@ export function useRSForms() {
   const [error, setError] = useState<ErrorInfo>(undefined);
 
   const loadList = useCallback(async (filter: RSFormsFilter) => {
-    getRSForms(filter, {
+    await getRSForms(filter, {
       showError: true,
-      setLoading: setLoading,
-      onError: error => setError(error),
-      onSucccess: response => setRSForms(response.data)
+      setLoading,
+      onError: error => { setError(error); },
+      onSucccess: response => { setRSForms(response.data); }
     });
   }, []);
 

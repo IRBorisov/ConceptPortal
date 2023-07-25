@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+
 import { UploadIcon } from '../Icons';
 import Button from './Button';
 import Label from './Label';
@@ -12,16 +13,16 @@ interface FileInputProps {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-function FileInput({id, required, label, acceptType, widthClass='w-full', onChange}: FileInputProps) {
+function FileInput({ id, required, label, acceptType, widthClass = 'w-full', onChange }: FileInputProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [labelText, setLabelText] = useState('Файл не выбран');
-  
+
   const handleUploadClick = () => {
     inputRef.current?.click();
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if(event.target.files && event.target.files.length > 0) {
+    if (event.target.files && event.target.files.length > 0) {
       setLabelText(event.target.files[0].name)
     } else {
       setLabelText('Файл не выбран')
@@ -30,9 +31,9 @@ function FileInput({id, required, label, acceptType, widthClass='w-full', onChan
       onChange(event);
     }
   };
-  
+
   return (
-    <div className={'flex gap-2 py-2 mt-3 items-center '+ widthClass}>
+    <div className={'flex gap-2 py-2 mt-3 items-center ' + widthClass}>
       <input id={id} type='file'
         ref={inputRef}
         required={required}
@@ -40,12 +41,12 @@ function FileInput({id, required, label, acceptType, widthClass='w-full', onChan
         accept={acceptType}
         onChange={handleFileChange}
       />
-      <Button 
+      <Button
         text={label}
         icon={<UploadIcon/>}
         onClick={handleUploadClick}
       />
-      <Label 
+      <Label
         text={labelText}
       />
     </div>

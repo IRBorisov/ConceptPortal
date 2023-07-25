@@ -1,24 +1,25 @@
+import { type AxiosResponse } from 'axios';
 import { useCallback, useState } from 'react'
-import { ErrorInfo } from '../components/BackendError';
-import { postCheckExpression } from '../utils/backendAPI';
-import { IRSForm } from '../utils/models';
-import { AxiosResponse } from 'axios';
 
-function useCheckExpression({schema}: {schema?: IRSForm}) {
+import { type ErrorInfo } from '../components/BackendError';
+import { postCheckExpression } from '../utils/backendAPI';
+import { type IRSForm } from '../utils/models';
+
+function useCheckExpression({ schema }: { schema?: IRSForm }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ErrorInfo>(undefined);
   const [parseData, setParseData] = useState<any | undefined>(undefined);
 
-  const resetParse = useCallback(() => setParseData(undefined), []);
-  
+  const resetParse = useCallback(() => { setParseData(undefined); }, []);
+
   async function checkExpression(expression: string, onSuccess?: (response: AxiosResponse) => void) {
     setError(undefined);
     setParseData(undefined);
-    postCheckExpression(String(schema!.id), {
-      data: {'expression': expression},
+    await postCheckExpression(String(schema?.id), {
+      data: { expression },
       showError: true,
-      setLoading: setLoading,
-      onError: error => setError(error),
+      setLoading,
+      onError: error => { setError(error); },
       onSucccess: (response) => {
         setParseData(response.data);
         if (onSuccess) onSuccess(response);

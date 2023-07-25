@@ -1,17 +1,19 @@
 'use client';
 
-import React from 'react';
-import axios from 'axios';
 import './index.css';
 import 'react-toastify/dist/ReactToastify.css';
+
+import axios from 'axios';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { ErrorBoundary } from 'react-error-boundary';
+import { IntlProvider } from 'react-intl';
 import { BrowserRouter } from 'react-router-dom';
+
 import App from './App';
+import ErrorFallback from './components/ErrorFallback';
 import { AuthState } from './context/AuthContext';
 import { ThemeState } from './context/ThemeContext';
-import { IntlProvider } from 'react-intl';
-import { ErrorBoundary } from 'react-error-boundary';
-import ErrorFallback from './components/ErrorFallback';
 import { UsersState } from './context/UsersContext';
 
 axios.defaults.withCredentials = true
@@ -28,13 +30,13 @@ const resetState = () => {
 
 const logError = (error: Error, info: { componentStack: string }) => {
   console.log('Error fallback: ' + error.message)
-  console.log('Component stack: ' + info)
+  console.log('Component stack: ' + info.componentStack)
 };
 
 root.render(
   <React.StrictMode>
   <BrowserRouter>
-  <ErrorBoundary 
+  <ErrorBoundary
     FallbackComponent={ErrorFallback}
     onReset={resetState}
     onError={logError}

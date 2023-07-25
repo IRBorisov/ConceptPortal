@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
-
-import TextInput from '../components/Common/TextInput';
-import Form from '../components/Common/Form';
-import SubmitButton from '../components/Common/SubmitButton';
-import BackendError from '../components/BackendError';
-import { IRSFormCreateData } from '../utils/models';
-import RequireAuth from '../components/RequireAuth';
-import useNewRSForm from '../hooks/useNewRSForm';
 import { useNavigate } from 'react-router-dom';
-import TextArea from '../components/Common/TextArea';
+import { toast } from 'react-toastify';
+
+import BackendError from '../components/BackendError';
 import Checkbox from '../components/Common/Checkbox';
 import FileInput from '../components/Common/FileInput';
-import { toast } from 'react-toastify';
+import Form from '../components/Common/Form';
+import SubmitButton from '../components/Common/SubmitButton';
+import TextArea from '../components/Common/TextArea';
+import TextInput from '../components/Common/TextInput';
+import RequireAuth from '../components/RequireAuth';
+import useNewRSForm from '../hooks/useNewRSForm';
+import { type IRSFormCreateData } from '../utils/models';
 
 function RSFormCreatePage() {
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ function RSFormCreatePage() {
       setFile(undefined)
     }
   }
-  
+
   const onSuccess = (newID: string) => {
     toast.success('Схема успешно создана');
     navigate(`/rsforms/${newID}`);
@@ -39,54 +39,55 @@ function RSFormCreatePage() {
   useEffect(() => {
     setError(undefined)
   }, [title, alias, setError]);
-  
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!loading) {
-      const data: IRSFormCreateData  = {
-        'title': title,
-        'alias': alias,
-        'comment': comment,
-        'is_common': common,
-      };
-      createSchema({
-        data: data,
-        file: file,
-        onSuccess: onSuccess
-      });
+    if (loading) {
+      return;
     }
+    const data: IRSFormCreateData = {
+      title,
+      alias,
+      comment,
+      is_common: common
+    };
+    void createSchema({
+      data,
+      file,
+      onSuccess
+    });
   };
 
   return (
-    <RequireAuth> 
+    <RequireAuth>
       <Form title='Создание концептуальной схемы' onSubmit={handleSubmit} widthClass='max-w-lg mt-4'>
         <TextInput id='title' label='Полное название' type='text'
           required={!file}
           placeholder={file && 'Загрузить из файла'}
           value={title}
-          onChange={event => setTitle(event.target.value)}
+          onChange={event => { setTitle(event.target.value); }}
         />
         <TextInput id='alias' label='Сокращение' type='text'
           required={!file}
           value={alias}
           placeholder={file && 'Загрузить из файла'}
           widthClass='max-w-sm'
-          onChange={event => setAlias(event.target.value)}
+          onChange={event => { setAlias(event.target.value); }}
         />
         <TextArea id='comment' label='Комментарий'
           value={comment}
           placeholder={file && 'Загрузить из файла'}
-          onChange={event => setComment(event.target.value)}
+          onChange={event => { setComment(event.target.value); }}
         />
         <Checkbox id='common' label='Общедоступная схема'
           value={common}
-          onChange={event => setCommon(event.target.checked)}
+          onChange={event => { setCommon(event.target.checked); }}
         />
         <FileInput id='trs' label='Загрузить *.trs'
           acceptType='.trs'
           onChange={handleFile}
         />
-        
+
         <div className='flex items-center justify-center py-2 mt-4'>
           <SubmitButton text='Создать схему' loading={loading} />
         </div>

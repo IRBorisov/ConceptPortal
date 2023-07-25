@@ -1,15 +1,17 @@
-import { toast } from 'react-toastify';
-import { BackendCallback } from './backendAPI';
 import fileDownload from 'js-file-download';
+import { toast } from 'react-toastify';
+
+import { type BackendCallback } from './backendAPI';
 
 export function shareCurrentURLProc() {
   const url = window.location.href + '&share';
-  navigator.clipboard.writeText(url);
-  toast.success(`Ссылка скопирована: ${url}`);
+  navigator.clipboard.writeText(url)
+  .then(() => toast.success(`Ссылка скопирована: ${url}`))
+  .catch(console.error);
 }
 
-export async function claimOwnershipProc(
-  claim: (callback: BackendCallback) => Promise<void>,
+export function claimOwnershipProc(
+  claim: (callback: BackendCallback) => void
 ) {
   if (!window.confirm('Вы уверены, что хотите стать владельцем данной схемы?')) {
     return;
@@ -17,9 +19,9 @@ export async function claimOwnershipProc(
   claim(() => toast.success('Вы стали владельцем схемы'));
 }
 
-export async function deleteRSFormProc(
-  destroy: (callback: BackendCallback) => Promise<void>, 
-  navigate: Function
+export function deleteRSFormProc(
+  destroy: (callback: BackendCallback) => void,
+  navigate: (path: string) => void
 ) {
   if (!window.confirm('Вы уверены, что хотите удалить данную схему?')) {
     return;
@@ -30,8 +32,8 @@ export async function deleteRSFormProc(
   });
 }
 
-export async function downloadRSFormProc(
-  download: (callback: BackendCallback) => Promise<void>, 
+export function downloadRSFormProc(
+  download: (callback: BackendCallback) => void,
   fileName: string
 ) {
   download((response) => {

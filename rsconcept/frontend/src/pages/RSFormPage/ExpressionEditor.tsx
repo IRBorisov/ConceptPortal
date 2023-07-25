@@ -1,17 +1,18 @@
+import { type AxiosResponse } from 'axios';
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
+
 import Button from '../../components/Common/Button';
 import Label from '../../components/Common/Label';
-import { useRSForm } from '../../context/RSFormContext';
-import { toast } from 'react-toastify';
-import RSTokenButton from './RSTokenButton';
-import { CstType, TokenID } from '../../utils/models';
-import useCheckExpression from '../../hooks/useCheckExpression';
-import ParsingResult from './ParsingResult';
 import { Loader } from '../../components/Common/Loader';
-import StatusBar from './StatusBar';
-import { AxiosResponse } from 'axios';
-import { TextWrapper, getSymbolSubstitute } from './textEditing';
+import { useRSForm } from '../../context/RSFormContext';
+import useCheckExpression from '../../hooks/useCheckExpression';
+import { CstType, TokenID } from '../../utils/models';
+import ParsingResult from './ParsingResult';
 import RSLocalButton from './RSLocalButton';
+import RSTokenButton from './RSTokenButton';
+import StatusBar from './StatusBar';
+import { getSymbolSubstitute, TextWrapper } from './textEditing';
 
 interface ExpressionEditorProps {
   id: string
@@ -19,7 +20,7 @@ interface ExpressionEditorProps {
   isActive: boolean
   disabled?: boolean
   placeholder?: string
-  value: any
+  value: string
   onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
   toggleEditMode: () => void
   setTypification: (typificaiton: string) => void
@@ -32,7 +33,7 @@ function ExpressionEditor({
 }: ExpressionEditorProps) {
   const { schema, activeCst } = useRSForm();
   const [isModified, setIsModified] = useState(false);
-  const { parseData, checkExpression, resetParse, loading } = useCheckExpression({schema: schema});
+  const { parseData, checkExpression, resetParse, loading } = useCheckExpression({ schema });
   const expressionCtrl = useRef<HTMLTextAreaElement>(null);
 
   useLayoutEffect(() => {
@@ -41,14 +42,17 @@ function ExpressionEditor({
   }, [activeCst, resetParse]);
 
   const handleCheckExpression = useCallback(() => {
+    if (!activeCst) {
+      return;
+    }
     const prefix = activeCst?.alias + (activeCst?.cstType === CstType.STRUCTURED ? '::=' : ':==');
     const expression = prefix + value;
     checkExpression(expression, (response: AxiosResponse) => {
       // TODO: update cursor position
       setIsModified(false);
-      setTypification(response.data['typification']);
+      setTypification(response.data.typification);
       toast.success('проверка завершена');
-    });
+    }).catch(console.error);
   }, [value, checkExpression, activeCst, setTypification]);
 
   const handleEdit = useCallback((id: TokenID, key?: string) => {
@@ -56,9 +60,9 @@ function ExpressionEditor({
       toast.error('Нет доступа к полю редактирования формального выражения');
       return;
     }
-    let text = new TextWrapper(expressionCtrl.current);
+    const text = new TextWrapper(expressionCtrl.current);
     if (id === TokenID.ID_LOCAL) {
-      text.insertChar(key!);
+      text.insertChar(key ?? 'unknown_local');
     } else {
       text.insertToken(id);
     }
@@ -74,8 +78,11 @@ function ExpressionEditor({
   }, [setIsModified, onChange]);
 
   const handleInput = useCallback((event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (!expressionCtrl.current) {
+      return;
+    }
     if (event.altKey) {
-      let text = new TextWrapper(expressionCtrl.current!);
+      const text = new TextWrapper(expressionCtrl.current);
       if (text.processAltKey(event.key)) {
         event.preventDefault();
         text.finalize();
@@ -86,7 +93,7 @@ function ExpressionEditor({
       const newSymbol = getSymbolSubstitute(event.key);
       if (newSymbol) {
         event.preventDefault();
-        let text = new TextWrapper(expressionCtrl.current!);
+        const text = new TextWrapper(expressionCtrl.current);
         text.replaceWith(newSymbol);
         text.finalize();
         setValue(text.value);
@@ -99,7 +106,7 @@ function ExpressionEditor({
     toggleEditMode()
   }, [toggleEditMode]);
 
-  const EditButtons = useMemo( () => {
+  const EditButtons = useMemo(() => {
     return (<div className='flex items-center justify-between w-full'>
     <div className='text-sm w-fit'>
       <div className='flex justify-start'>
@@ -112,7 +119,7 @@ function ExpressionEditor({
         <RSTokenButton id={TokenID.REDUCE} onInsert={handleEdit}/>
         <RSTokenButton id={TokenID.CARD} onInsert={handleEdit}/>
         <RSTokenButton id={TokenID.BOOL} onInsert={handleEdit}/>
-        
+
       </div>
       <div className='flex justify-start'>
         <RSTokenButton id={TokenID.BOOLEAN} onInsert={handleEdit}/>
@@ -126,7 +133,7 @@ function ExpressionEditor({
         <RSTokenButton id={TokenID.AND} onInsert={handleEdit}/>
         <RSTokenButton id={TokenID.IMPLICATION} onInsert={handleEdit}/>
         <RSTokenButton id={TokenID.SET_MINUS} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.PUNC_ITERATE} onInsert={handleEdit}/>      
+        <RSTokenButton id={TokenID.PUNC_ITERATE} onInsert={handleEdit}/>
         <RSTokenButton id={TokenID.SUBSET} onInsert={handleEdit}/>
         <RSTokenButton id={TokenID.DEBOOL} onInsert={handleEdit}/>
       </div>
@@ -134,7 +141,7 @@ function ExpressionEditor({
         <RSTokenButton id={TokenID.DECART} onInsert={handleEdit}/>
         <RSTokenButton id={TokenID.PUNC_SL} onInsert={handleEdit}/>
         <RSTokenButton id={TokenID.UNION} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.LIT_INTSET} onInsert={handleEdit}/>  
+        <RSTokenButton id={TokenID.LIT_INTSET} onInsert={handleEdit}/>
         <RSTokenButton id={TokenID.EXISTS} onInsert={handleEdit}/>
         <RSTokenButton id={TokenID.NOTEQUAL} onInsert={handleEdit}/>
         <RSTokenButton id={TokenID.NOTIN} onInsert={handleEdit}/>
@@ -176,10 +183,10 @@ function ExpressionEditor({
     </div>
     </div>);
   }, [handleEdit])
-  
+
   return (
     <div className='flex flex-col items-start [&:not(:first-child)]:mt-3 w-full'>
-      <Label 
+      <Label
         text={label}
         required={false}
         htmlFor={id}

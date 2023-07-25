@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import useLocalStorage from '../hooks/useLocalStorage';
 
+import useLocalStorage from '../hooks/useLocalStorage';
 
 interface IThemeContext {
   darkMode: boolean
@@ -44,8 +44,10 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
 
   return (
     <ThemeContext.Provider value={{
-      darkMode, toggleDarkMode: () => setDarkMode(prev => !prev),
-      noNavigation, toggleNoNavigation: () => setNoNavigation(prev => !prev),
+      darkMode,
+      toggleDarkMode: () => { setDarkMode(prev => !prev); },
+      noNavigation,
+      toggleNoNavigation: () => { setNoNavigation(prev => !prev); }
     }}>
       {children}
     </ThemeContext.Provider>

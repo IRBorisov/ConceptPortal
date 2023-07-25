@@ -3,7 +3,7 @@
 import { TokenID } from '../../utils/models'
 
 export function getSymbolSubstitute(input: string): string | undefined {
-  switch(input) {
+  switch (input) {
   case '`': return '∀';
   case '~': return '∃';
 
@@ -71,7 +71,7 @@ export class TextWrapper implements IManagedText {
     this.object.selectionStart = this.selStart;
     this.object.selectionEnd = this.selEnd;
   }
- 
+
   replaceWith(data: string) {
     this.value = this.value.substring(0, this.selStart) + data + this.value.substring(this.selEnd, this.value.length);
     this.selEnd += data.length - this.selEnd + this.selStart;
@@ -79,8 +79,8 @@ export class TextWrapper implements IManagedText {
   }
 
   envelopeWith(left: string, right: string) {
-    this.value = this.value.substring(0, this.selStart) + left + 
-                  this.value.substring(this.selStart, this.selEnd) + right + 
+    this.value = this.value.substring(0, this.selStart) + left +
+                  this.value.substring(this.selStart, this.selEnd) + right +
                   this.value.substring(this.selEnd, this.value.length);
     this.selEnd += left.length + right.length;
   }
@@ -100,18 +100,18 @@ export class TextWrapper implements IManagedText {
   }
 
   insertToken(tokenID: TokenID): boolean {
-    switch(tokenID) {
-    case TokenID.NT_DECLARATIVE_EXPR:   this.envelopeWith('D{ξ∈X1 | ', '}'); return true;
-    case TokenID.NT_IMPERATIVE_EXPR:    this.envelopeWith('I{(σ, γ) | σ:∈X1; γ:=F1[σ]; ', '}'); return true;
-    case TokenID.NT_RECURSIVE_FULL:     this.envelopeWith('R{ ξ:=D1 | 1=1 | ', '}'); return true;
-    case TokenID.BIGPR:                 this.envelopeWith('Pr1(', ')'); return true;
-    case TokenID.SMALLPR:               this.envelopeWith('pr1(', ')'); return true;
-    case TokenID.FILTER:                this.envelopeWith('Fi1[α](', ')'); return true;
-    case TokenID.REDUCE:                this.envelopeWith('red(', ')'); return true;
-    case TokenID.CARD:                  this.envelopeWith('card(', ')'); return true;
-    case TokenID.BOOL:                  this.envelopeWith('bool(', ')'); return true;
-    case TokenID.DEBOOL:                this.envelopeWith('debool(', ')'); return true;
-    
+    switch (tokenID) {
+    case TokenID.NT_DECLARATIVE_EXPR: this.envelopeWith('D{ξ∈X1 | ', '}'); return true;
+    case TokenID.NT_IMPERATIVE_EXPR: this.envelopeWith('I{(σ, γ) | σ:∈X1; γ:=F1[σ]; ', '}'); return true;
+    case TokenID.NT_RECURSIVE_FULL: this.envelopeWith('R{ ξ:=D1 | 1=1 | ', '}'); return true;
+    case TokenID.BIGPR: this.envelopeWith('Pr1(', ')'); return true;
+    case TokenID.SMALLPR: this.envelopeWith('pr1(', ')'); return true;
+    case TokenID.FILTER: this.envelopeWith('Fi1[α](', ')'); return true;
+    case TokenID.REDUCE: this.envelopeWith('red(', ')'); return true;
+    case TokenID.CARD: this.envelopeWith('card(', ')'); return true;
+    case TokenID.BOOL: this.envelopeWith('bool(', ')'); return true;
+    case TokenID.DEBOOL: this.envelopeWith('debool(', ')'); return true;
+
     case TokenID.PUNC_PL: {
       this.envelopeWith('(', ')');
       this.selEnd = this.selStart + 1;
@@ -130,41 +130,41 @@ export class TextWrapper implements IManagedText {
       } else {
         this.envelopeWith('ℬ(', ')');
       }
-       return true;
+      return true;
     }
-    
-    case TokenID.DECART:                this.replaceWith('×'); return true;
-    case TokenID.FORALL:                this.replaceWith('∀'); return true;
-    case TokenID.EXISTS:                this.replaceWith('∃'); return true;
-    case TokenID.IN:                    this.replaceWith('∈'); return true;
-    case TokenID.NOTIN:                 this.replaceWith('∉'); return true;
-    case TokenID.OR:                    this.replaceWith('∨'); return true;
-    case TokenID.AND:                   this.replaceWith('&'); return true;
-    case TokenID.SUBSET_OR_EQ:          this.replaceWith('⊆'); return true;
-    case TokenID.IMPLICATION:           this.replaceWith('⇒'); return true;
-    case TokenID.INTERSECTION:          this.replaceWith('∩'); return true;
-    case TokenID.UNION:                 this.replaceWith('∪'); return true;
-    case TokenID.SET_MINUS:             this.replaceWith('\\'); return true;
-    case TokenID.SYMMINUS:              this.replaceWith('∆'); return true;
-    case TokenID.LIT_EMPTYSET:          this.replaceWith('∅'); return true;
-    case TokenID.LIT_INTSET:            this.replaceWith('Z'); return true;
-    case TokenID.SUBSET:                this.replaceWith('⊂'); return true;
-    case TokenID.NOTSUBSET:             this.replaceWith('⊄'); return true;
-    case TokenID.EQUAL:                 this.replaceWith('='); return true;
-    case TokenID.NOTEQUAL:              this.replaceWith('≠'); return true;
-    case TokenID.NOT:                   this.replaceWith('¬'); return true;
-    case TokenID.EQUIVALENT:            this.replaceWith('⇔'); return true;
-    case TokenID.GREATER_OR_EQ:         this.replaceWith('≥'); return true;
-    case TokenID.LESSER_OR_EQ:          this.replaceWith('≤'); return true;
-    case TokenID.PUNC_ASSIGN:           this.replaceWith(':='); return true;
-    case TokenID.PUNC_ITERATE:          this.replaceWith(':∈'); return true;
-    case TokenID.MULTIPLY:              this.replaceWith('*'); return true;
+
+    case TokenID.DECART: this.replaceWith('×'); return true;
+    case TokenID.FORALL: this.replaceWith('∀'); return true;
+    case TokenID.EXISTS: this.replaceWith('∃'); return true;
+    case TokenID.IN: this.replaceWith('∈'); return true;
+    case TokenID.NOTIN: this.replaceWith('∉'); return true;
+    case TokenID.OR: this.replaceWith('∨'); return true;
+    case TokenID.AND: this.replaceWith('&'); return true;
+    case TokenID.SUBSET_OR_EQ: this.replaceWith('⊆'); return true;
+    case TokenID.IMPLICATION: this.replaceWith('⇒'); return true;
+    case TokenID.INTERSECTION: this.replaceWith('∩'); return true;
+    case TokenID.UNION: this.replaceWith('∪'); return true;
+    case TokenID.SET_MINUS: this.replaceWith('\\'); return true;
+    case TokenID.SYMMINUS: this.replaceWith('∆'); return true;
+    case TokenID.LIT_EMPTYSET: this.replaceWith('∅'); return true;
+    case TokenID.LIT_INTSET: this.replaceWith('Z'); return true;
+    case TokenID.SUBSET: this.replaceWith('⊂'); return true;
+    case TokenID.NOTSUBSET: this.replaceWith('⊄'); return true;
+    case TokenID.EQUAL: this.replaceWith('='); return true;
+    case TokenID.NOTEQUAL: this.replaceWith('≠'); return true;
+    case TokenID.NOT: this.replaceWith('¬'); return true;
+    case TokenID.EQUIVALENT: this.replaceWith('⇔'); return true;
+    case TokenID.GREATER_OR_EQ: this.replaceWith('≥'); return true;
+    case TokenID.LESSER_OR_EQ: this.replaceWith('≤'); return true;
+    case TokenID.PUNC_ASSIGN: this.replaceWith(':='); return true;
+    case TokenID.PUNC_ITERATE: this.replaceWith(':∈'); return true;
+    case TokenID.MULTIPLY: this.replaceWith('*'); return true;
     }
     return false;
   }
 
   processAltKey(key: string): boolean {
-  switch(key) {
+    switch (key) {
     // qwert
     //  asdfg
     //   zxcvb
@@ -183,7 +183,7 @@ export class TextWrapper implements IManagedText {
     case 'c': return this.insertToken(TokenID.CARD);
     case 'v': return this.insertToken(TokenID.DEBOOL);
     case 'b': return this.insertToken(TokenID.BOOL);
-    
+
     // `123456
     // ~!@#$%^
     case '`': return this.insertToken(TokenID.NOT);

@@ -1,15 +1,16 @@
-import { Tabs, TabList, TabPanel } from 'react-tabs';
-import ConstituentsTable from './ConstituentsTable';
-import { IConstituenta } from '../../utils/models';
-import { useRSForm } from '../../context/RSFormContext';
 import { useEffect, useLayoutEffect, useState } from 'react';
-import ConceptTab from '../../components/Common/ConceptTab';
-import RSFormCard from './RSFormCard';
-import { Loader } from '../../components/Common/Loader';
+import { TabList, TabPanel, Tabs } from 'react-tabs';
+
 import BackendError from '../../components/BackendError';
-import ConstituentEditor from './ConstituentEditor';
-import RSFormStats from './RSFormStats';
+import ConceptTab from '../../components/Common/ConceptTab';
+import { Loader } from '../../components/Common/Loader';
+import { useRSForm } from '../../context/RSFormContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
+import { type IConstituenta } from '../../utils/models';
+import ConstituentEditor from './ConstituentEditor';
+import ConstituentsTable from './ConstituentsTable';
+import RSFormCard from './RSFormCard';
+import RSFormStats from './RSFormStats';
 import TablistTools from './TablistTools';
 
 export enum RSFormTabsList {
@@ -19,7 +20,7 @@ export enum RSFormTabsList {
 }
 
 function RSFormTabs() {
-  const { setActiveID, activeCst, activeID, error, schema, loading } = useRSForm();
+  const { setActiveID, activeID, error, schema, loading } = useRSForm();
   const [tabIndex, setTabIndex] = useLocalStorage('rsform_edit_tab', RSFormTabsList.CARD);
   const [init, setInit] = useState(false);
 
@@ -37,7 +38,7 @@ function RSFormTabs() {
     if (schema) {
       const url = new URL(window.location.href);
       const activeQuery = url.searchParams.get('active');
-      const activeCst = schema?.items?.find((cst) => cst.id === Number(activeQuery)) || undefined;
+      const activeCst = schema?.items?.find((cst) => cst.id === Number(activeQuery));
       setActiveID(activeCst?.id);
       setInit(true);
     }
@@ -52,7 +53,7 @@ function RSFormTabs() {
   useEffect(() => {
     if (init) {
       const url = new URL(window.location.href);
-      let currentActive = url.searchParams.get('active');
+      const currentActive = url.searchParams.get('active');
       const currentTab = url.searchParams.get('tab');
       const saveHistory = tabIndex === RSFormTabsList.CST_EDIT && currentActive !== String(activeID);
       if (currentTab !== String(tabIndex)) {
@@ -78,7 +79,7 @@ function RSFormTabs() {
     { loading && <Loader /> }
     { error && <BackendError error={error} />}
     { schema && !loading &&
-    <Tabs 
+    <Tabs
       selectedIndex={tabIndex}
       onSelect={onSelectTab}
       defaultFocus={true}
@@ -89,7 +90,7 @@ function RSFormTabs() {
         <ConceptTab>Паспорт схемы</ConceptTab>
         <ConceptTab className='border-x-2 clr-border min-w-[10rem] flex justify-between gap-2'>
           <span>Конституенты</span>
-          <span>{`${schema.stats?.count_errors} | ${schema.stats?.count_all}`}</span> 
+          <span>{`${schema.stats?.count_errors ?? 0} | ${schema.stats?.count_all ?? 0}`}</span>
         </ConceptTab>
         <ConceptTab>Редактор</ConceptTab>
       </TabList>

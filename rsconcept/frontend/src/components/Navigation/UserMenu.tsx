@@ -1,9 +1,10 @@
-import { UserIcon } from '../Icons';
-import { useAuth } from '../../context/AuthContext';
-import UserDropdown from './UserDropdown';
-import NavigationButton from './NavigationButton';
 import { Link } from 'react-router-dom';
+
+import { useAuth } from '../../context/AuthContext';
 import useDropdown from '../../hooks/useDropdown';
+import { UserIcon } from '../Icons';
+import NavigationButton from './NavigationButton';
+import UserDropdown from './UserDropdown';
 
 function LoginRef() {
   return (
@@ -14,20 +15,20 @@ function LoginRef() {
 }
 
 function UserMenu() {
-  const {user} = useAuth();
+  const { user } = useAuth();
   const menu = useDropdown();
   return (
     <div ref={menu.ref}>
       { !user && <LoginRef />}
-      { user && 
+      { user &&
       <NavigationButton
         icon={<UserIcon />}
         description={`Пользователь ${user?.username}`}
-        onClick={menu.toggle} 
+        onClick={menu.toggle}
       />}
-      { user && menu.isActive && 
+      { user && menu.isActive &&
       <UserDropdown
-        hideDropdown={() => menu.hide()}
+        hideDropdown={() => { menu.hide(); }}
       />}
     </div>
   );

@@ -1,30 +1,32 @@
 import { useNavigate } from 'react-router-dom';
+
 import { useAuth } from '../../context/AuthContext';
-import DropdownButton from '../Common/DropdownButton';
 import { useConceptTheme } from '../../context/ThemeContext';
 import Dropdown from '../Common/Dropdown';
+import DropdownButton from '../Common/DropdownButton';
 
 interface UserDropdownProps {
-  hideDropdown: Function
+  hideDropdown: () => void
 }
 
-function UserDropdown({hideDropdown}: UserDropdownProps) {
-  const {darkMode, toggleDarkMode} = useConceptTheme();
+function UserDropdown({ hideDropdown }: UserDropdownProps) {
+  const { darkMode, toggleDarkMode } = useConceptTheme();
   const navigate = useNavigate();
-  const {user, logout} = useAuth();
+  const { user, logout } = useAuth();
 
   const navigateProfile = () => {
     hideDropdown()
     navigate('/profile');
   };
 
-  const logoutAndRedirect = () => {
-    hideDropdown()
-    logout(() => {navigate('/login/');})
+  const logoutAndRedirect =
+  () => {
+    hideDropdown();
+    logout(() => { navigate('/login/'); })
   };
 
   const navigateMyWork = () => {
-    hideDropdown()
+    hideDropdown();
     navigate('/rsforms?filter=personal');
   };
 
@@ -34,7 +36,7 @@ function UserDropdown({hideDropdown}: UserDropdownProps) {
         {user?.username}
       </DropdownButton>
       <DropdownButton description='Переключение темы оформления' onClick={toggleDarkMode}>
-        {darkMode ? 'Светлая тема' : 'Темная тема'} 
+        {darkMode ? 'Светлая тема' : 'Темная тема'}
       </DropdownButton>
       <DropdownButton onClick={navigateMyWork}>
         Мои схемы

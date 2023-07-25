@@ -4,7 +4,7 @@ interface TopSearchProps {
   placeholder: string
 }
 
-function TopSearch({placeholder}: TopSearchProps) {
+function TopSearch({ placeholder }: TopSearchProps) {
   return (
     <form action='#' method='GET' className='hidden md:block md:pl-2'>
       <div className='relative md:w-96'>

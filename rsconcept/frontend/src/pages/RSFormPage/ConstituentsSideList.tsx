@@ -1,18 +1,19 @@
-import { useCallback, useState, useMemo, useEffect } from 'react';
-import { useRSForm } from '../../context/RSFormContext';
-import { CstType, IConstituenta, matchConstituenta } from '../../utils/models';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+
 import Checkbox from '../../components/Common/Checkbox';
 import DataTableThemed from '../../components/Common/DataTableThemed';
+import { useRSForm } from '../../context/RSFormContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
+import { CstType, type IConstituenta, matchConstituenta } from '../../utils/models';
 import { extractGlobals } from '../../utils/staticUI';
 
 interface ConstituentsSideListProps {
   expression: string
 }
 
-function ConstituentsSideList({expression}: ConstituentsSideListProps) {
+function ConstituentsSideList({ expression }: ConstituentsSideListProps) {
   const { schema, setActiveID } = useRSForm();
-  const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema?.items || []);
+  const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema?.items ?? []);
   const [filterText, setFilterText] = useLocalStorage('side-filter-text', '')
   const [onlyExpression, setOnlyExpression] = useLocalStorage('side-filter-flag', false);
 
@@ -21,9 +22,9 @@ function ConstituentsSideList({expression}: ConstituentsSideListProps) {
       setFilteredData([]);
     } else if (onlyExpression) {
       const aliases = extractGlobals(expression);
-      let filtered = schema?.items.filter((cst) => aliases.has(cst.alias));
+      const filtered = schema?.items.filter((cst) => aliases.has(cst.alias));
       const names = filtered.map(cst => cst.alias)
-      const diff =  Array.from(aliases).filter(name => names.indexOf(name) < 0);
+      const diff = Array.from(aliases).filter(name => !names.includes(name));
       if (diff.length > 0) {
         diff.forEach(
           (alias, i) => filtered.push({
@@ -42,23 +43,23 @@ function ConstituentsSideList({expression}: ConstituentsSideListProps) {
   }, [filterText, setFilteredData, onlyExpression, expression, schema]);
 
   const handleRowClicked = useCallback(
-    (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
-		if (event.altKey && cst.id > 0) {
+  (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
+    if (event.altKey && cst.id > 0) {
       setActiveID(cst.id);
     }
-	}, [setActiveID]);
+  }, [setActiveID]);
 
   const handleDoubleClick = useCallback(
-    (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
-		if (cst.id > 0) setActiveID(cst.id);
-	}, [setActiveID]);
+  (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
+    if (cst.id > 0) setActiveID(cst.id);
+  }, [setActiveID]);
 
-  const columns = useMemo(() => 
+  const columns = useMemo(() =>
     [
       {
         id: 'id',
         selector: (cst: IConstituenta) => cst.id,
-        omit: true,
+        omit: true
       },
       {
         name: 'ID',
@@ -70,26 +71,27 @@ function ConstituentsSideList({expression}: ConstituentsSideListProps) {
           {
             when: (cst: IConstituenta) => cst.id <= 0,
             classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
-          },
-        ],
+          }
+        ]
       },
       {
         name: 'Описание',
         id: 'description',
-        selector: (cst: IConstituenta) => cst.term?.resolved || cst.definition?.text.resolved || cst.definition?.formal || cst.convention || '',
+        selector: (cst: IConstituenta) =>
+          cst.term?.resolved ?? cst.definition?.text.resolved ?? cst.definition?.formal ?? cst.convention ?? '',
         minWidth: '350px',
         wrap: true,
         conditionalCellStyles: [
           {
             when: (cst: IConstituenta) => cst.id <= 0,
             classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
-          },
-        ],
+          }
+        ]
       },
       {
         name: 'Выражение',
         id: 'expression',
-        selector: (cst: IConstituenta) => cst.definition?.formal || '',
+        selector: (cst: IConstituenta) => cst.definition?.formal ?? '',
         minWidth: '200px',
         hide: 1600,
         grow: 2,
@@ -98,8 +100,8 @@ function ConstituentsSideList({expression}: ConstituentsSideListProps) {
           {
             when: (cst: IConstituenta) => cst.id <= 0,
             classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
-          },
-        ],
+          }
+        ]
       }
     ], []
   );
@@ -112,7 +114,7 @@ function ConstituentsSideList({expression}: ConstituentsSideListProps) {
             className='w-full px-2 outline-none dark:bg-gray-700 hover:text-clip'
             placeholder='текст для фильтрации списка'
             value={filterText}
-            onChange={event => setFilterText(event.target.value)}
+            onChange={event => { setFilterText(event.target.value); }}
             disabled={onlyExpression}
           />
         </div>
@@ -120,7 +122,7 @@ function ConstituentsSideList({expression}: ConstituentsSideListProps) {
           <Checkbox
             label='из выражения'
             value={onlyExpression}
-            onChange={event => setOnlyExpression(event.target.checked)}
+            onChange={event => { setOnlyExpression(event.target.checked); }}
           />
         </div>
       </div>

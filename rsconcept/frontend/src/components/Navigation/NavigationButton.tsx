@@ -7,7 +7,7 @@ interface NavigationButtonProps {
 
 const defaultColors = 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
 
-function NavigationButton({icon, description, colorClass=defaultColors, onClick}: NavigationButtonProps) {
+function NavigationButton({ icon, description, colorClass = defaultColors, onClick }: NavigationButtonProps) {
   return (
     <button title={description}
       type='button'

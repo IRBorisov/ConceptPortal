@@ -1,18 +1,19 @@
 import { useNavigate } from 'react-router-dom';
-import NavigationButton from './NavigationButton';
-import { BellIcon, PlusIcon, SquaresIcon } from '../Icons';
 import { toast } from 'react-toastify';
+
+import { BellIcon, PlusIcon, SquaresIcon } from '../Icons';
+import NavigationButton from './NavigationButton';
 
 function UserTools() {
   const navigate = useNavigate();
-  
-  const navigateCreateRSForm = () => navigate('/rsform-create');
-  const navigateMyWork = () => navigate('/rsforms?filter=personal');
+
+  const navigateCreateRSForm = () => { navigate('/rsform-create'); };
+  const navigateMyWork = () => { navigate('/rsforms?filter=personal'); };
 
   const handleNotifications = () => {
     toast.info('Уведомления в разработке');
   };
-  
+
   return (
     <div className='flex items-center px-2 border-r-2 border-gray-400 dark:border-gray-300'>
       <span>

@@ -1,20 +1,22 @@
 import { useCallback } from 'react';
-import Button from '../../components/Common/Button';
-import Dropdown from '../../components/Common/Dropdown';
-import { CloneIcon, CrownIcon, DownloadIcon, DumpBinIcon, EyeIcon, EyeOffIcon, MenuIcon, PenIcon, ShareIcon, UploadIcon } from '../../components/Icons';
-import { useRSForm } from '../../context/RSFormContext';
-import useDropdown from '../../hooks/useDropdown';
-import DropdownButton from '../../components/Common/DropdownButton';
-import Checkbox from '../../components/Common/Checkbox';
-import { useAuth } from '../../context/AuthContext';
-import { claimOwnershipProc, deleteRSFormProc, downloadRSFormProc, shareCurrentURLProc } from '../../utils/procedures';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import Button from '../../components/Common/Button';
+import Checkbox from '../../components/Common/Checkbox';
+import Dropdown from '../../components/Common/Dropdown';
+import DropdownButton from '../../components/Common/DropdownButton';
+import { CloneIcon, CrownIcon, DownloadIcon, DumpBinIcon, EyeIcon, EyeOffIcon, MenuIcon, PenIcon, ShareIcon, UploadIcon } from '../../components/Icons';
+import { useAuth } from '../../context/AuthContext';
+import { useRSForm } from '../../context/RSFormContext';
+import useDropdown from '../../hooks/useDropdown';
+import { claimOwnershipProc, deleteRSFormProc, downloadRSFormProc, shareCurrentURLProc } from '../../utils/procedures';
+
 function TablistTools() {
   const navigate = useNavigate();
-  const {user} = useAuth();
-  const { schema,
+  const { user } = useAuth();
+  const {
+    schema,
     isOwned, isEditable, isTracking, isReadonly: readonly, isForceAdmin: forceAdmin,
     toggleTracking, toggleForceAdmin, toggleReadonly,
     claim, destroy, download
@@ -24,7 +26,7 @@ function TablistTools() {
 
   const handleClaimOwner = useCallback(() => {
     editMenu.hide();
-    claimOwnershipProc(claim);
+    claimOwnershipProc(claim)
   }, [claim, editMenu]);
 
   const handleDelete = useCallback(() => {
@@ -34,7 +36,7 @@ function TablistTools() {
 
   const handleDownload = useCallback(() => {
     schemaMenu.hide();
-    const fileName = (schema?.alias || 'Schema') + '.trs';
+    const fileName = (schema?.alias ?? 'Schema') + '.trs';
     downloadRSFormProc(download, fileName);
   }, [schemaMenu, download, schema?.alias]);
 
@@ -43,7 +45,6 @@ function TablistTools() {
     schemaMenu.hide();
     toast.info('Замена содержимого на файл Экстеора');
   }, [schemaMenu]);
-
 
   const handleClone = useCallback(() => {
     // TODO: implement
@@ -55,7 +56,7 @@ function TablistTools() {
     schemaMenu.hide();
     shareCurrentURLProc();
   }, [schemaMenu]);
-  
+
   return (
     <div className='flex items-center w-fit'>
       <div ref={schemaMenu.ref}>
@@ -64,23 +65,23 @@ function TablistTools() {
           icon={<MenuIcon size={5}/>}
           borderClass=''
           dense
-          onClick={schemaMenu.toggle} 
+          onClick={schemaMenu.toggle}
         />
         { schemaMenu.isActive &&
         <Dropdown>
-          <DropdownButton  onClick={handleShare}>
+          <DropdownButton onClick={handleShare}>
             <div className='inline-flex items-center justify-start gap-2'>
               <ShareIcon color='text-primary' size={4}/>
               <p>Поделиться</p>
             </div>
           </DropdownButton>
-          <DropdownButton  onClick={handleClone}>
+          <DropdownButton onClick={handleClone}>
             <div className='inline-flex items-center justify-start gap-2'>
               <CloneIcon color='text-primary' size={4}/>
               <p>Клонировать</p>
             </div>
           </DropdownButton>
-          <DropdownButton  onClick={handleDownload}>
+          <DropdownButton onClick={handleDownload}>
             <div className='inline-flex items-center justify-start gap-2'>
               <DownloadIcon color='text-primary' size={4}/>
               <p>Выгрузить файл Экстеор</p>
@@ -102,11 +103,11 @@ function TablistTools() {
       </div>
       <div ref={editMenu.ref}>
         <Button
-          tooltip={'измнение: ' + (isEditable ? '[доступно]': '[запрещено]')}
+          tooltip={'измнение: ' + (isEditable ? '[доступно]' : '[запрещено]')}
           borderClass=''
-          icon={<PenIcon size={5} color={isEditable ? 'text-green': 'text-red'}/>}
+          icon={<PenIcon size={5} color={isEditable ? 'text-green' : 'text-red'}/>}
           dense
-          onClick={editMenu.toggle} 
+          onClick={editMenu.toggle}
         />
         { editMenu.isActive &&
         <Dropdown>
@@ -130,14 +131,14 @@ function TablistTools() {
       </div>
       <div>
         <Button
-          tooltip={'отслеживание: ' + (isTracking ? '[включено]': '[выключено]')}
-          icon={isTracking ? 
-            <EyeIcon color='text-primary' size={5}/> 
+          tooltip={'отслеживание: ' + (isTracking ? '[включено]' : '[выключено]')}
+          icon={isTracking
+            ? <EyeIcon color='text-primary' size={5}/>
             : <EyeOffIcon size={5}/>
           }
           borderClass=''
           dense
-          onClick={toggleTracking} 
+          onClick={toggleTracking}
           />
       </div>
     </div>

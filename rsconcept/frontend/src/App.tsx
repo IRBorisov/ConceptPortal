@@ -1,20 +1,20 @@
 import { Route, Routes } from 'react-router-dom';
 
+import Footer from './components/Footer';
 import Navigation from './components/Navigation/Navigation';
-import RSFormsPage from './pages/RSFormsPage';
-import RSFormPage from './pages/RSFormPage';
-import NotFoundPage from './pages/NotFoundPage';
+import ToasterThemed from './components/ToasterThemed';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
-import RestorePasswordPage from './pages/RestorePasswordPage';
-import UserProfilePage from './pages/UserProfilePage';
-import RegisterPage from './pages/RegisterPage';
 import ManualsPage from './pages/ManualsPage';
-import Footer from './components/Footer';
+import NotFoundPage from './pages/NotFoundPage';
+import RegisterPage from './pages/RegisterPage';
+import RestorePasswordPage from './pages/RestorePasswordPage';
 import RSFormCreatePage from './pages/RSFormCreatePage';
-import ToasterThemed from './components/ToasterThemed';
+import RSFormPage from './pages/RSFormPage';
+import RSFormsPage from './pages/RSFormsPage';
+import UserProfilePage from './pages/UserProfilePage';
 
-function App() {
+function App () {
   return (
     <div className='antialiased clr-app'>
       <Navigation />
@@ -32,9 +32,9 @@ function App() {
           <Route path='signup' element={<RegisterPage/>} />
           <Route path='restore-password' element={ <RestorePasswordPage/>} />
           <Route path='profile' element={<UserProfilePage/>} />
-          
+
           <Route path='manuals' element={<ManualsPage/>} />
-          
+
           <Route path='rsforms' element={<RSFormsPage/>} />
           <Route path='rsforms/:id' element={ <RSFormPage/>} />
           <Route path='rsform-create' element={ <RSFormCreatePage/>} />

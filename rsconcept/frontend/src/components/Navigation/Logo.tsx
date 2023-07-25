@@ -4,7 +4,7 @@ interface LogoProps {
   title: string
 }
 
-function Logo({title}: LogoProps) {
+function Logo({ title }: LogoProps) {
   return (
     <Link to='/' className='flex items-center mr-4' tabIndex={-1}>
       <img src='/favicon.svg' className='min-h-[2.5rem] mr-2 min-w-[2.5rem]' alt=''/>

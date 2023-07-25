@@ -1,15 +1,15 @@
-import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useState } from 'react';
-import { ICurrentUser, IUserSignupData } from '../utils/models';
-import { ErrorInfo } from '../components/BackendError';
-import useLocalStorage from '../hooks/useLocalStorage';
-import { BackendCallback, getAuth, postLogin, postLogout, postSignup } from '../utils/backendAPI';
+import { createContext, useCallback, useContext, useLayoutEffect, useState } from 'react';
 
+import { type ErrorInfo } from '../components/BackendError';
+import useLocalStorage from '../hooks/useLocalStorage';
+import { type BackendCallback, getAuth, postLogin, postLogout, postSignup } from '../utils/backendAPI';
+import { type ICurrentUser, type IUserSignupData } from '../utils/models';
 
 interface IAuthContext {
   user: ICurrentUser | undefined
-  login: (username: string, password: string, callback?: BackendCallback) => Promise<void>
-  logout: (callback?: BackendCallback) => Promise<void>
-  signup: (data: IUserSignupData, callback?: BackendCallback) => Promise<void>
+  login: (username: string, password: string, callback?: BackendCallback) => void
+  logout: (callback?: BackendCallback) => void
+  signup: (data: IUserSignupData, callback?: BackendCallback) => void
   loading: boolean
   error: ErrorInfo
   setError: (error: ErrorInfo) => void
@@ -37,8 +37,8 @@ export const AuthState = ({ children }: AuthStateProps) => {
 
   const loadCurrentUser = useCallback(
     async () => {
-      getAuth({
-        onError: error => setUser(undefined),
+      await getAuth({
+        onError: () => { setUser(undefined); },
         onSucccess: response => {
           if (response.data.id) {
             setUser(response.data);
@@ -49,51 +49,54 @@ export const AuthState = ({ children }: AuthStateProps) => {
       });
     }, [setUser]
   );
-  
-  async function login(uname: string, pw: string, callback?: BackendCallback) {
+
+  function login(uname: string, pw: string, callback?: BackendCallback) {
     setError(undefined);
     postLogin({
-      data: {username: uname, password: pw},
+      data: { username: uname, password: pw },
       showError: true,
-      setLoading: setLoading,
-      onError: error => setError(error),
-      onSucccess: 
-      async (response) => {
-        await loadCurrentUser();
-        if(callback) callback(response);
+      setLoading,
+      onError: error => { setError(error); },
+      onSucccess:
+      (response) => {
+        loadCurrentUser()
+        .then(() => { if (callback) callback(response); })
+        .catch(console.error);
       }
-    });
+    }).catch(console.error);
   }
 
-  async function logout(callback?: BackendCallback) {
+  function logout(callback?: BackendCallback) {
     setError(undefined);
     postLogout({
       showError: true,
-      onSucccess: 
-      async (response) => {
-        await loadCurrentUser();
-        if (callback) callback(response);
+      onSucccess:
+      (response) => {
+        loadCurrentUser()
+        .then(() => { if (callback) callback(response); })
+        .catch(console.error);
       }
-    });
+    }).catch(console.error);
   }
 
-  async function signup(data: IUserSignupData, callback?: BackendCallback) {
+  function signup(data: IUserSignupData, callback?: BackendCallback) {
     setError(undefined);
     postSignup({
-      data: data,
+      data,
       showError: true,
-      setLoading: setLoading,
-      onError: error => setError(error),
+      setLoading,
+      onError: error => { setError(error); },
       onSucccess:
-      async (response) => {
-        await loadCurrentUser();
-        if (callback) callback(response);
+      (response) => {
+        loadCurrentUser()
+        .then(() => { if (callback) callback(response); })
+        .catch(console.error);
       }
-    });
+    }).catch(console.error);
   }
 
   useLayoutEffect(() => {
-    loadCurrentUser();
+    loadCurrentUser().catch(console.error);
   }, [loadCurrentUser])
 
   return (

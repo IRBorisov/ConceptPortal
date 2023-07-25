@@ -1,6 +1,7 @@
-import { useRef } from 'react'
-import Button from './Button'
-import useClickedOutside from '../../hooks/useClickedOutside'
+import { useRef } from 'react';
+
+import useClickedOutside from '../../hooks/useClickedOutside';
+import Button from './Button';
 
 interface ModalProps {
   title?: string
@@ -13,9 +14,9 @@ interface ModalProps {
   children: React.ReactNode
 }
 
-function Modal({title, show, toggle, onSubmit, onCancel, canSubmit, children, submitText='Продолжить'}: ModalProps) {
+function Modal({ title, show, toggle, onSubmit, onCancel, canSubmit, children, submitText = 'Продолжить' }: ModalProps) {
   const ref = useRef(null);
-  useClickedOutside({ref: ref, callback: toggle})
+  useClickedOutside({ ref, callback: toggle })
 
   if (!show) {
     return null;
@@ -23,7 +24,7 @@ function Modal({title, show, toggle, onSubmit, onCancel, canSubmit, children, su
 
   const handleCancel = () => {
     toggle();
-    if(onCancel) onCancel();
+    if (onCancel) onCancel();
   };
 
   const handleSubmit = () => {
@@ -33,14 +34,14 @@ function Modal({title, show, toggle, onSubmit, onCancel, canSubmit, children, su
 
   return (
     <>
-    <div className='fixed top-0 left-0 w-full h-full clr-modal opacity-50 z-50'>
+    <div className='fixed top-0 left-0 z-50 w-full h-full opacity-50 clr-modal'>
     </div>
     <div ref={ref} className='fixed bottom-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 px-6 py-4 flex flex-col w-fit z-[60] clr-card border shadow-md'>
       { title && <h1 className='mb-4 text-xl font-bold'>{title}</h1> }
       <div className='py-2'>
         {children}
       </div>
-      <div className='pt-4 mt-2 border-t-4 flex justify-between w-full'>
+      <div className='flex justify-between w-full pt-4 mt-2 border-t-4'>
         <Button
           text={submitText}
           widthClass='min-w-[6rem] w-fit h-fit'
@@ -48,7 +49,7 @@ function Modal({title, show, toggle, onSubmit, onCancel, canSubmit, children, su
           disabled={!canSubmit}
           onClick={handleSubmit}
         />
-        <Button 
+        <Button
           text='Отмена'
           onClick={handleCancel}
         />

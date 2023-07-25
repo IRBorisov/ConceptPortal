@@ -1,4 +1,5 @@
-import axios, { AxiosError } from 'axios';
+import axios, { type AxiosError } from 'axios';
+
 import PrettyJson from './Common/PrettyJSON';
 
 export type ErrorInfo = string | Error | AxiosError | undefined;
@@ -22,12 +23,12 @@ function DescribeError(error: ErrorInfo) {
   if (error.response.status === 404) {
     return (
       <div className='flex flex-col justify-start'>
-        <p>{`Обращение к несуществующему API`}</p>
+        <p>{'Обращение к несуществующему API'}</p>
         <PrettyJson data={error} />
       </div>
     );
   }
-  
+
   const isHtml = error.response.headers['content-type'].includes('text/html');
   return (
     <div className='flex flex-col justify-start'>
@@ -42,7 +43,7 @@ function DescribeError(error: ErrorInfo) {
   );
 }
 
-function BackendError({error}: BackendErrorProps) {
+function BackendError({ error }: BackendErrorProps) {
   return (
     <div className='py-2 text-sm font-semibold text-red-600 dark:text-red-400'>
       {DescribeError(error)}

@@ -1,10 +1,11 @@
+import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+
 import BackendError from '../../components/BackendError'
 import { Loader } from '../../components/Common/Loader'
-import { FilterType, RSFormsFilter, useRSForms } from '../../hooks/useRSForms'
-import RSFormsTable from './RSFormsTable';
-import { useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { FilterType, type RSFormsFilter, useRSForms } from '../../hooks/useRSForms'
+import RSFormsTable from './RSFormsTable';
 
 function RSFormsPage() {
   const search = useLocation().search;
@@ -14,13 +15,13 @@ function RSFormsPage() {
   useEffect(() => {
     const filterQuery = new URLSearchParams(search).get('filter');
     const type = (!user || !filterQuery ? FilterType.COMMON : filterQuery as FilterType);
-    let filter: RSFormsFilter = {type: type};
+    const filter: RSFormsFilter = { type };
     if (type === FilterType.PERSONAL) {
       filter.data = user?.id;
     }
-    loadList(filter);
+    loadList(filter).catch(console.error);
   }, [search, user, loadList]);
-  
+
   return (
     <div className='w-full'>
       { loading && <Loader /> }

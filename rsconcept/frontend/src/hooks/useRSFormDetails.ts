@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
-import { CalculateStats, IRSForm } from '../utils/models'
-import { ErrorInfo } from '../components/BackendError';
-import { getRSFormDetails } from '../utils/backendAPI';
 
-export function useRSFormDetails({target}: {target?: string}) {
+import { type ErrorInfo } from '../components/BackendError';
+import { getRSFormDetails } from '../utils/backendAPI';
+import { CalculateStats, type IRSForm } from '../utils/models'
+
+export function useRSFormDetails({ target }: { target?: string }) {
   const [schema, setInnerSchema] = useState<IRSForm | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ErrorInfo>(undefined);
@@ -15,26 +16,26 @@ export function useRSFormDetails({target}: {target?: string}) {
   }
 
   const fetchData = useCallback(
-  async () => {
-    setError(undefined);
-    setInnerSchema(undefined);
-    if (!target) {
-      return;
-    }
-    getRSFormDetails(target, {
-      showError: true,
-      setLoading: setLoading,
-      onError: error => setError(error),
-      onSucccess: (response) => setSchema(response.data)
-    });
-  }, [target]);
+    async () => {
+      setError(undefined);
+      setInnerSchema(undefined);
+      if (!target) {
+        return;
+      }
+      await getRSFormDetails(target, {
+        showError: true,
+        setLoading,
+        onError: error => { setError(error); },
+        onSucccess: (response) => { setSchema(response.data); }
+      });
+    }, [target]);
 
   async function reload() {
-    fetchData();
+    await fetchData();
   }
 
   useEffect(() => {
-    fetchData();
+    fetchData().catch((error) => { setError(error); });
   }, [fetchData])
 
   return { schema, setSchema, reload, error, setError, loading };

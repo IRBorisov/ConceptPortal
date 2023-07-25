@@ -1,11 +1,11 @@
 interface InfoMessageProps {
-    message: string
+  message: string
 }
 
-export function InfoMessage({message}: InfoMessageProps) {
-    return (
-        <p className='font-bold'>{ message }</p>
-    );
+export function InfoMessage({ message }: InfoMessageProps) {
+  return (
+    <p className='font-bold'>{ message }</p>
+  );
 }
 
 export default InfoMessage;

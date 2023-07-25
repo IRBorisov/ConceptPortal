@@ -1,20 +1,20 @@
-import { TokenID } from '../../utils/models'
+import { type TokenID } from '../../utils/models'
 import { getRSButtonData } from '../../utils/staticUI'
 
-interface  RSTokenButtonProps {
+interface RSTokenButtonProps {
   id: TokenID
   disabled?: boolean
   onInsert: (token: TokenID, key?: string) => void
 }
 
-function RSTokenButton({id, disabled, onInsert}: RSTokenButtonProps) {
+function RSTokenButton({ id, disabled, onInsert }: RSTokenButtonProps) {
   const data = getRSButtonData(id);
   const width = data.text.length > 3 ? 'w-[4rem]' : 'w-[2rem]';
   return (
     <button
       type='button'
       disabled={disabled}
-      onClick={() => onInsert(id)}
+      onClick={() => { onInsert(id); }}
       title={data.tooltip}
       tabIndex={-1}
       className={`px-1 cursor-pointer border rounded-none h-7 ${width} clr-btn-clear`}

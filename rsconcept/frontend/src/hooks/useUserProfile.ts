@@ -1,28 +1,29 @@
 import { useCallback, useEffect, useState } from 'react'
-import { IUserProfile } from '../utils/models'
-import { ErrorInfo } from '../components/BackendError'
+
+import { type ErrorInfo } from '../components/BackendError'
 import { getProfile } from '../utils/backendAPI'
+import { type IUserProfile } from '../utils/models'
 
 export function useUserProfile() {
   const [user, setUser] = useState<IUserProfile | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ErrorInfo>(undefined);
-  
+
   const fetchUser = useCallback(
     async () => {
       setError(undefined);
       setUser(undefined);
-      getProfile({
+      await getProfile({
         showError: true,
-        setLoading: setLoading,
-        onError: error => setError(error),
-        onSucccess: response => setUser(response.data)
+        setLoading,
+        onError: error => { setError(error); },
+        onSucccess: response => { setUser(response.data); }
       });
     }, [setUser]
   )
 
   useEffect(() => {
-    fetchUser();
+    fetchUser().catch((error) => { setError(error); });
   }, [fetchUser])
 
   return { user, fetchUser, error, loading };

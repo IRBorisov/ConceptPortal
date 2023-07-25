@@ -1,18 +1,19 @@
+import { type AxiosResponse } from 'axios';
 import { useCallback, useLayoutEffect, useState } from 'react';
-import { useRSForm } from '../../context/RSFormContext';
-import { CstType, EditMode, INewCstData } from '../../utils/models';
 import { toast } from 'react-toastify';
-import TextArea from '../../components/Common/TextArea';
-import ExpressionEditor from './ExpressionEditor';
+
 import SubmitButton from '../../components/Common/SubmitButton';
+import TextArea from '../../components/Common/TextArea';
+import { DumpBinIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
+import { useRSForm } from '../../context/RSFormContext';
+import { type CstType, EditMode, type INewCstData } from '../../utils/models';
 import { createAliasFor, getCstTypeLabel } from '../../utils/staticUI';
 import ConstituentsSideList from './ConstituentsSideList';
-import { DumpBinIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import CreateCstModal from './CreateCstModal';
-import { AxiosResponse } from 'axios';
+import ExpressionEditor from './ExpressionEditor';
 
 function ConstituentEditor() {
-  const { 
+  const {
     activeCst, activeID, schema, setActiveID, processing, isEditable,
     cstDelete, cstUpdate, cstCreate
   } = useRSForm();
@@ -30,7 +31,9 @@ function ConstituentEditor() {
 
   useLayoutEffect(() => {
     if (schema?.items && schema?.items.length > 0) {
-      setActiveID((prev) => (prev || schema?.items![0].id));
+      // TODO: figure out why schema.items could be undef?
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      setActiveID((prev) => (prev ?? schema?.items![0].id ?? undefined));
     }
   }, [schema, setActiveID])
 
@@ -38,43 +41,43 @@ function ConstituentEditor() {
     if (activeCst) {
       setAlias(activeCst.alias);
       setType(getCstTypeLabel(activeCst.cstType));
-      setConvention(activeCst.convention || '');
-      setTerm(activeCst.term?.raw || '');
-      setTextDefinition(activeCst.definition?.text?.raw || '');
-      setExpression(activeCst.definition?.formal || '');
-      setTypification(activeCst?.parse?.typification || 'N/A');
+      setConvention(activeCst.convention ?? '');
+      setTerm(activeCst.term?.raw ?? '');
+      setTextDefinition(activeCst.definition?.text?.raw ?? '');
+      setExpression(activeCst.definition?.formal ?? '');
+      setTypification(activeCst?.parse?.typification ?? 'N/A');
     }
   }, [activeCst]);
-  
-  const handleSubmit = 
-  async (event: React.FormEvent<HTMLFormElement>) => {
+
+  const handleSubmit =
+  (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!processing) {
       const data = {
-        'alias': alias,
-        'convention': convention,
-        'definition_formal': expression,
-        'definition_text': {
-          'raw': textDefinition,
-          'resolved': '',
+        alias: alias,
+        convention: convention,
+        definition_formal: expression,
+        definition_text: {
+          raw: textDefinition,
+          resolved: ''
         },
-        'term': {
-          'raw': term,
-          'resolved': '',
-          'forms': activeCst?.term?.forms || [],
+        term: {
+          raw: term,
+          resolved: '',
+          forms: activeCst?.term?.forms ?? []
         }
       };
-      cstUpdate(data, () =>  toast.success('Изменения сохранены'));
+      cstUpdate(data, () => toast.success('Изменения сохранены'));
     }
   };
 
   const handleDelete = useCallback(
-  async () => {
+  () => {
     if (!activeID || !schema?.items || !window.confirm('Вы уверены, что хотите удалить конституенту?')) {
       return;
     }
-    const data = { 
-      'items': [{'id': activeID}]
+    const data = {
+      items: [{ id: activeID }]
     }
     const index = schema.items.findIndex((cst) => cst.id === activeID);
     if (index !== -1 && index + 1 < schema.items.length) {
@@ -84,24 +87,23 @@ function ConstituentEditor() {
   }, [activeID, schema, setActiveID, cstDelete]);
 
   const handleAddNew = useCallback(
-  async (csttype?: CstType) => {
+  (csttype?: CstType) => {
     if (!activeID || !schema?.items) {
       return;
     }
     if (!csttype) {
       setShowCstModal(true);
     } else {
-      const data: INewCstData = { 
-        'csttype': csttype,
-        'alias': createAliasFor(csttype, schema!),
-        'insert_after': activeID
+      const data: INewCstData = {
+        csttype: csttype,
+        alias: createAliasFor(csttype, schema),
+        insert_after: activeID
       }
-      cstCreate(data, 
-      async (response: AxiosResponse) => {
-       // navigate(`/rsforms/${schema.id}?tab=${RSFormTabsList.CST_EDIT}&active=${response.data['new_cst']['id']}`);
-        setActiveID(response.data['new_cst']['id']);
-        toast.success(`Конституента добавлена: ${response.data['new_cst']['alias']}`);
-      });      
+      cstCreate(data,
+      (response: AxiosResponse) => {
+        setActiveID(response.data.new_cst.id);
+        toast.success(`Конституента добавлена: ${response.data.new_cst.alias as string}`);
+      });
     }
   }, [activeID, schema, cstCreate, setActiveID]);
 
@@ -113,12 +115,11 @@ function ConstituentEditor() {
     toast.info('Изменение типа в разработке');
   }, []);
 
-
   return (
     <div className='flex items-start w-full gap-2'>
       <CreateCstModal
         show={showCstModal}
-        toggle={() => setShowCstModal(!showCstModal)}
+        toggle={() => { setShowCstModal(!showCstModal); }}
         onCreate={handleAddNew}
         defaultType={activeCst?.cstType as CstType}
       />
@@ -133,8 +134,8 @@ function ConstituentEditor() {
             </button>
           <div className='flex items-start justify-center w-full gap-4'>
             <span className='mr-12'>
-              <label 
-                title='Переименовать конституенту' 
+              <label
+                title='Переименовать конституенту'
                 className='font-semibold underline cursor-pointer'
                 onClick={handleRename}
               >
@@ -143,7 +144,7 @@ function ConstituentEditor() {
               <b className='ml-2'>{alias}</b>
             </span>
             <span>
-              <label 
+              <label
                 title='Изменить тип конституенты'
                 className='font-semibold underline cursor-pointer'
                 onClick={handleChangeType}
@@ -158,9 +159,9 @@ function ConstituentEditor() {
               title='Создать конституенты после данной'
               className='px-1 py-1 font-bold rounded-full whitespace-nowrap disabled:cursor-not-allowed clr-btn-clear'
               disabled={!isEditable}
-              onClick={() => handleAddNew()}
+              onClick={() => { handleAddNew(); }}
             >
-              <SmallPlusIcon size={5} color={isEditable ? 'text-green': ''} />
+              <SmallPlusIcon size={5} color={isEditable ? 'text-green' : ''} />
             </button>
             <button type='button'
               title='Удалить редактируемую конституенту'
@@ -168,7 +169,7 @@ function ConstituentEditor() {
               disabled={!isEditable}
               onClick={handleDelete}
             >
-              <DumpBinIcon size={5} color={isEditable ? 'text-red': ''} />
+              <DumpBinIcon size={5} color={isEditable ? 'text-red' : ''} />
             </button>
           </div>
         </div>
@@ -178,8 +179,8 @@ function ConstituentEditor() {
           value={term}
           disabled={!isEditable}
           spellCheck
-          onChange={event => setTerm(event.target.value)}
-          onFocus={() => setEditMode(EditMode.TEXT)}
+          onChange={event => { setTerm(event.target.value); }}
+          onFocus={() => { setEditMode(EditMode.TEXT); }}
         />
         <TextArea id='typification' label='Типизация'
           rows={1}
@@ -190,9 +191,9 @@ function ConstituentEditor() {
           placeholder='Родоструктурное выражение, задающее формальное определение'
           value={expression}
           disabled={!isEditable}
-          isActive={editMode==='rslang'}
-          toggleEditMode={() => setEditMode(EditMode.RSLANG)}
-          onChange={event => setExpression(event.target.value)}
+          isActive={editMode === 'rslang'}
+          toggleEditMode={() => { setEditMode(EditMode.RSLANG); }}
+          onChange={event => { setExpression(event.target.value); }}
           setValue={setExpression}
           setTypification={setTypification}
         />
@@ -202,8 +203,8 @@ function ConstituentEditor() {
           value={textDefinition}
           disabled={!isEditable}
           spellCheck
-          onChange={event => setTextDefinition(event.target.value)}
-          onFocus={() => setEditMode(EditMode.TEXT)}
+          onChange={event => { setTextDefinition(event.target.value); }}
+          onFocus={() => { setEditMode(EditMode.TEXT); }}
         />
         <TextArea id='convention' label='Конвенция / Комментарий'
           placeholder='Договоренность об интерпретации неопределяемого понятия&#x000D;&#x000A;Комментарий к производному понятию'
@@ -211,8 +212,8 @@ function ConstituentEditor() {
           value={convention}
           disabled={!isEditable}
           spellCheck
-          onChange={event => setConvention(event.target.value)}
-          onFocus={() => setEditMode(EditMode.TEXT)}
+          onChange={event => { setConvention(event.target.value); }}
+          onFocus={() => { setEditMode(EditMode.TEXT); }}
         />
         <div className='flex justify-center w-full mt-2'>
           <SubmitButton

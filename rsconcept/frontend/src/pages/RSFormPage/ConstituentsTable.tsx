@@ -1,22 +1,23 @@
-import { CstType, IConstituenta, INewCstData, ParsingStatus, ValueClass, inferStatus } from '../../utils/models'
+import { type AxiosResponse } from 'axios';
 import { useCallback, useMemo, useState } from 'react';
-import DataTableThemed from '../../components/Common/DataTableThemed';
-import { useRSForm } from '../../context/RSFormContext';
-import Button from '../../components/Common/Button';
-import { ArrowDownIcon, ArrowUpIcon, ArrowsRotateIcon, DumpBinIcon, SmallPlusIcon } from '../../components/Icons';
 import { toast } from 'react-toastify';
+
+import Button from '../../components/Common/Button';
+import DataTableThemed from '../../components/Common/DataTableThemed';
 import Divider from '../../components/Common/Divider';
+import { ArrowDownIcon, ArrowsRotateIcon, ArrowUpIcon, DumpBinIcon, SmallPlusIcon } from '../../components/Icons';
+import { useRSForm } from '../../context/RSFormContext';
+import { useConceptTheme } from '../../context/ThemeContext';
+import { CstType, type IConstituenta, type INewCstData, inferStatus, ParsingStatus, ValueClass } from '../../utils/models'
 import { createAliasFor, getCstTypeLabel, getCstTypePrefix, getStatusInfo, getTypeLabel } from '../../utils/staticUI';
 import CreateCstModal from './CreateCstModal';
-import { AxiosResponse } from 'axios';
-import { useConceptTheme } from '../../context/ThemeContext';
 
 interface ConstituentsTableProps {
   onOpenEdit: (cst: IConstituenta) => void
 }
 
-function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
-  const { 
+function ConstituentsTable({ onOpenEdit }: ConstituentsTableProps) {
+  const {
     schema, isEditable,
     cstCreate, cstDelete, cstMoveTo
   } = useRSForm();
@@ -27,31 +28,31 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
   const [showCstModal, setShowCstModal] = useState(false);
 
   const handleRowClicked = useCallback(
-    (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
-		if (event.altKey) {
+  (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
+    if (event.altKey) {
       onOpenEdit(cst);
     }
-	}, [onOpenEdit]);
+  }, [onOpenEdit]);
 
   const handleSelectionChange = useCallback(
-    ({selectedRows}: {
-      allSelected: boolean;
-      selectedCount: number;
-      selectedRows: IConstituenta[];
+    ({ selectedRows }: {
+      allSelected: boolean
+      selectedCount: number
+      selectedRows: IConstituenta[]
     }) => {
     setSelected(selectedRows.map((cst) => cst.id));
   }, [setSelected]);
-  
+
   // Delete selected constituents
   const handleDelete = useCallback(() => {
     if (!schema?.items || !window.confirm('Вы уверены, что хотите удалить выбранные конституенты?')) {
       return;
     }
-    const data = { 
-      'items': selected.map(id => { return {'id': id }; }),
+    const data = {
+      items: selected.map(id => { return { id }; })
     }
-    const deletedNamed = selected.map(id => schema.items?.find((cst) => cst.id === id)?.alias);
-    cstDelete(data, () => toast.success(`Конституенты удалены: ${deletedNamed}`));
+    const deletedNames = selected.map(id => schema.items?.find((cst) => cst.id === id)?.alias);
+    cstDelete(data, () => toast.success(`Конституенты удалены: ${deletedNames.toString()}`));
   }, [selected, schema?.items, cstDelete]);
 
   // Move selected cst up
@@ -61,7 +62,7 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
       return;
     }
     const currentIndex = schema.items.reduce((prev, cst, index) => {
-      if (selected.indexOf(cst.id) < 0) {
+      if (!selected.includes(cst.id)) {
         return prev;
       } else if (prev === -1) {
         return index;
@@ -69,23 +70,22 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
       return Math.min(prev, index);
     }, -1);
     const insertIndex = Math.max(0, currentIndex - 1) + 1
-    const data = { 
-      'items': selected.map(id => { return {'id': id }; }),
-      'move_to': insertIndex
+    const data = {
+      items: selected.map(id => { return { id }; }),
+      move_to: insertIndex
     }
-    cstMoveTo(data);    
+    cstMoveTo(data);
   }, [selected, schema?.items, cstMoveTo]);
 
-  
   // Move selected cst down
   const handleMoveDown = useCallback(
-    async () => {
+    () => {
     if (!schema?.items || selected.length === 0) {
       return;
     }
     let count = 0;
     const currentIndex = schema.items.reduce((prev, cst, index) => {
-      if (selected.indexOf(cst.id) < 0) {
+      if (!selected.includes(cst.id)) {
         return prev;
       } else {
         count += 1;
@@ -96,32 +96,35 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
       }
     }, -1);
     const insertIndex = Math.min(schema.items.length - 1, currentIndex - count + 2) + 1
-    const data = { 
-      'items': selected.map(id => { return {'id': id }; }),
-      'move_to': insertIndex
+    const data = {
+      items: selected.map(id => { return { id }; }),
+      move_to: insertIndex
     }
-    cstMoveTo(data);    
+    cstMoveTo(data);
   }, [selected, schema?.items, cstMoveTo]);
 
   // Generate new names for all constituents
   const handleReindex = useCallback(() => {
     toast.info('Переиндексация');
   }, []);
-  
+
   // Add new constituent
   const handleAddNew = useCallback((csttype?: CstType) => {
+    if (!schema) {
+      return;
+    }
     if (!csttype) {
       setShowCstModal(true);
     } else {
-      let data: INewCstData = { 
-        'csttype': csttype,
-        'alias': createAliasFor(csttype, schema!)
+      const data: INewCstData = {
+        csttype,
+        alias: createAliasFor(csttype, schema)
       }
       if (selected.length > 0) {
-        data['insert_after'] = selected[selected.length - 1]
+        data.insert_after = selected[selected.length - 1]
       }
       cstCreate(data, (response: AxiosResponse) =>
-        toast.success(`Добавлена конституента ${response.data['new_cst']['alias']}`));      
+        toast.success(`Добавлена конституента ${response.data.new_cst.alias as string}`));
     }
   }, [schema, selected, cstCreate]);
 
@@ -133,25 +136,25 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
     if (!isEditable || selected.length === 0) {
       return;
     }
-    switch(event.key) {
+    switch (event.key) {
     case 'ArrowUp': handleMoveUp(); return;
-    case 'ArrowDown': handleMoveDown(); return;
+    case 'ArrowDown': handleMoveDown();
     }
   }, [isEditable, selected, handleMoveUp, handleMoveDown]);
-  
-  const columns = useMemo(() => 
+
+  const columns = useMemo(() =>
     [
       {
         name: 'ID',
         id: 'id',
         selector: (cst: IConstituenta) => cst.id,
-        omit: true,
+        omit: true
       },
       {
         name: 'Статус',
         id: 'status',
-        cell: (cst: IConstituenta) => 
-          <div style={{fontSize: 12}}>
+        cell: (cst: IConstituenta) =>
+          <div style={{ fontSize: 12 }}>
             {getStatusInfo(inferStatus(cst.parse?.status, cst.parse?.valueClass)).text}
           </div>,
         width: '80px',
@@ -170,8 +173,8 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
           {
             when: (cst: IConstituenta) => cst.parse?.status === ParsingStatus.VERIFIED && cst.parse?.valueClass === ValueClass.PROPERTY,
             classNames: ['bg-[#a5e9fa]', 'dark:bg-[#36899e]']
-          },
-        ],
+          }
+        ]
       },
       {
         name: 'Имя',
@@ -192,77 +195,82 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
           {
             when: (cst: IConstituenta) => cst.parse?.status === ParsingStatus.VERIFIED && cst.parse?.valueClass === ValueClass.PROPERTY,
             classNames: ['bg-[#a5e9fa]', 'dark:bg-[#36899e]']
-          },
-        ],
+          }
+        ]
       },
       {
         name: 'Тип',
         id: 'type',
-        cell: (cst: IConstituenta) => <div style={{fontSize: 12}}>{getTypeLabel(cst)}</div>,
+        cell: (cst: IConstituenta) => <div style={{ fontSize: 12 }}>{getTypeLabel(cst)}</div>,
         width: '140px',
         minWidth: '100px',
         maxWidth: '140px',
         wrap: true,
         reorder: true,
-        hide: 1600,
+        hide: 1600
       },
       {
         name: 'Термин',
         id: 'term',
-        selector: (cst: IConstituenta) => cst.term?.resolved || cst.term?.raw || '',
+        selector: (cst: IConstituenta) => cst.term?.resolved ?? cst.term?.raw ?? '',
         width: '350px',
         minWidth: '150px',
         maxWidth: '350px',
         wrap: true,
-        reorder: true,
+        reorder: true
       },
       {
         name: 'Формальное определение',
         id: 'expression',
-        selector: (cst: IConstituenta) => cst.definition?.formal || '',
+        selector: (cst: IConstituenta) => cst.definition?.formal ?? '',
         minWidth: '300px',
         maxWidth: '500px',
         grow: 2,
         wrap: true,
-        reorder: true,
+        reorder: true
       },
       {
         name: 'Текстовое определение',
         id: 'definition',
         cell: (cst: IConstituenta) => (
-          <div style={{fontSize: 12}}>
-            {cst.definition?.text.resolved || cst.definition?.text.raw || ''}
+          <div style={{ fontSize: 12 }}>
+            {cst.definition?.text.resolved ?? cst.definition?.text.raw ?? ''}
           </div>
         ),
         minWidth: '200px',
         grow: 2,
         wrap: true,
-        reorder: true,
+        reorder: true
       },
       {
         name: 'Конвенция / Комментарий',
         id: 'convention',
-        cell: (cst: IConstituenta) => <div style={{fontSize: 12}}>{cst.convention || ''}</div>,
+        cell: (cst: IConstituenta) => <div style={{ fontSize: 12 }}>{cst.convention ?? ''}</div>,
         minWidth: '100px',
         wrap: true,
         reorder: true,
-        hide: 1800,
-      },
+        hide: 1800
+      }
     ], []
   );
 
   return (<>
     <CreateCstModal
       show={showCstModal}
-      toggle={() => setShowCstModal(!showCstModal)}
+      toggle={() => { setShowCstModal(!showCstModal); }}
       onCreate={handleAddNew}
     />
     <div className='w-full'>
-      <div 
-        className={'flex justify-start w-full gap-1 px-2 py-1 border-y items-center h-[2.2rem] clr-app' 
-          + (!noNavigation ? ' sticky z-10 top-[4rem]' : ' sticky z-10 top-[0rem]')}
+      <div
+        className={'flex justify-start w-full gap-1 px-2 py-1 border-y items-center h-[2.2rem] clr-app' +
+          (!noNavigation ? ' sticky z-10 top-[4rem]' : ' sticky z-10 top-[0rem]')}
       >
-        <div className='mr-3 whitespace-nowrap'>Выбраны <span className='ml-2'><b>{selected.length}</b> из {schema?.stats?.count_all || 0}</span></div>
+        <div className='mr-3 whitespace-nowrap'>
+          Выбраны
+          <span className='ml-2'>
+            <b>{selected.length}</b> из {schema?.stats?.count_all ?? 0}
+          </span>
+        </div>
         {isEditable && <div className='flex justify-start w-full gap-1'>
           <Button
             tooltip='Переместить вверх'
@@ -280,7 +288,7 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
           />
           <Button
             tooltip='Удалить выбранные'
-            icon={<DumpBinIcon color={!nothingSelected ? 'text-red': ''} size={6}/>}
+            icon={<DumpBinIcon color={!nothingSelected ? 'text-red' : ''} size={6}/>}
             disabled={nothingSelected}
             dense
             onClick={handleDelete}
@@ -296,23 +304,23 @@ function ConstituentsTable({onOpenEdit}: ConstituentsTableProps) {
             tooltip='Новая конституента'
             icon={<SmallPlusIcon color='text-green' size={6}/>}
             dense
-            onClick={() => handleAddNew()}
+            onClick={() => { handleAddNew(); }}
           />
           {(Object.values(CstType)).map(
             (typeStr) => {
               const type = typeStr as CstType;
-              return <Button
+              return <Button key={type}
                 text={`${getCstTypePrefix(type)}`}
                 tooltip={getCstTypeLabel(type)}
                 dense
-                onClick={() =>handleAddNew(type)}
+                onClick={() => { handleAddNew(type); }}
               />;
           })}
         </div>}
       </div>
       <div className='w-full h-full' onKeyDown={handleTableKey} tabIndex={0}>
       <DataTableThemed
-        data={schema!.items!}
+        data={schema?.items ?? []}
         columns={columns}
         keyField='id'
         noDataComponent={

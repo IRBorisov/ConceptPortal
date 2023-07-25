@@ -1,8 +1,9 @@
-import Modal from '../../components/Common/Modal';
-import { CstType } from '../../utils/models';
-import Select from 'react-select';
-import { CstTypeSelector, getCstTypeLabel } from '../../utils/staticUI';
 import { useEffect, useState } from 'react';
+import Select from 'react-select';
+
+import Modal from '../../components/Common/Modal';
+import { type CstType } from '../../utils/models';
+import { CstTypeSelector, getCstTypeLabel } from '../../utils/staticUI';
 
 interface CreateCstModalProps {
   show: boolean
@@ -11,9 +12,9 @@ interface CreateCstModalProps {
   onCreate: (type: CstType) => void
 }
 
-function CreateCstModal({show, toggle, defaultType, onCreate}: CreateCstModalProps) {
+function CreateCstModal({ show, toggle, defaultType, onCreate }: CreateCstModalProps) {
   const [validated, setValidated] = useState(false);
-  const [selectedType, setSelectedType] = useState<CstType|undefined>(undefined);
+  const [selectedType, setSelectedType] = useState<CstType | undefined>(undefined);
 
   const handleSubmit = () => {
     if (selectedType) onCreate(selectedType);
@@ -29,19 +30,19 @@ function CreateCstModal({show, toggle, defaultType, onCreate}: CreateCstModalPro
   );
 
   return (
-    <Modal 
+    <Modal
       title='Создание конституенты'
       show={show}
       toggle={toggle}
       canSubmit={validated}
       onSubmit={handleSubmit}
     >
-      <Select 
+      <Select
         options={CstTypeSelector}
         placeholder='Выберите тип'
         filterOption={null}
-        value={selectedType && {value: selectedType, label: getCstTypeLabel(selectedType)}}
-        onChange={(data) => setSelectedType(data?.value)}
+        value={selectedType && { value: selectedType, label: getCstTypeLabel(selectedType) }}
+        onChange={(data) => { setSelectedType(data?.value); }}
       />
     </Modal>
   )

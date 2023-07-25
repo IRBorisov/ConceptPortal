@@ -5,9 +5,9 @@ interface LabelProps {
   title?: string
 }
 
-function Label({text, htmlFor, required=false, title}: LabelProps) {
+function Label({ text, htmlFor, required = false, title }: LabelProps) {
   return (
-    <label 
+    <label
       className='text-sm font-semibold'
       htmlFor={htmlFor}
       title={ (required && !title) ? 'обязательное поле' : title }

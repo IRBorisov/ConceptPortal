@@ -4,7 +4,7 @@ interface ParsingResultProps {
   data?: any
 }
 
-function ParsingResult({data}: ParsingResultProps) {
+function ParsingResult({ data }: ParsingResultProps) {
   return (
     <div className='w-full px-3 py-2 mt-2 border'>
       <PrettyJson data={data} />
