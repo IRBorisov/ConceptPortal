@@ -39,7 +39,7 @@ export const AuthState = ({ children }: AuthStateProps) => {
     async () => {
       await getAuth({
         onError: () => { setUser(undefined); },
-        onSucccess: response => {
+        onSuccess: response => {
           if (response.data.id) {
             setUser(response.data);
           } else {
@@ -57,7 +57,7 @@ export const AuthState = ({ children }: AuthStateProps) => {
       showError: true,
       setLoading,
       onError: error => { setError(error); },
-      onSucccess:
+      onSuccess:
       (response) => {
         loadCurrentUser()
         .then(() => { if (callback) callback(response); })
@@ -70,7 +70,7 @@ export const AuthState = ({ children }: AuthStateProps) => {
     setError(undefined);
     postLogout({
       showError: true,
-      onSucccess:
+      onSuccess:
       (response) => {
         loadCurrentUser()
         .then(() => { if (callback) callback(response); })
@@ -86,7 +86,7 @@ export const AuthState = ({ children }: AuthStateProps) => {
       showError: true,
       setLoading,
       onError: error => { setError(error); },
-      onSucccess:
+      onSuccess:
       (response) => {
         loadCurrentUser()
         .then(() => { if (callback) callback(response); })

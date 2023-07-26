@@ -30,7 +30,7 @@ export const UsersState = ({ children }: UsersStateProps) => {
   const getUserLabel = (userID?: number) => {
     const user = users.find(({ id }) => id === userID)
     if (user == null) {
-      return (userID !== undefined ? userID.toString() : 'Отсутствует');
+      return (userID ? userID.toString() : 'Отсутствует');
     }
     const hasFirstName = user.first_name != null && user.first_name !== '';
     const hasLastName = user.last_name != null && user.last_name !== '';
@@ -51,7 +51,7 @@ export const UsersState = ({ children }: UsersStateProps) => {
       await getActiveUsers({
         showError: true,
         onError: () => { setUsers([]); },
-        onSucccess: response => { setUsers(response.data); }
+        onSuccess: response => { setUsers(response.data); }
       });
     }, [setUsers]
   )

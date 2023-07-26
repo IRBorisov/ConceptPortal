@@ -9,7 +9,7 @@ import { type ICurrentUser, type IRSForm, type IUserInfo, type IUserProfile } fr
 export type BackendCallback = (response: AxiosResponse) => void;
 
 export interface IFrontRequest {
-  onSucccess?: BackendCallback
+  onSuccess?: BackendCallback
   onError?: (error: ErrorInfo) => void
   setLoading?: (loading: boolean) => void
   showError?: boolean
@@ -182,7 +182,7 @@ async function AxiosGet<ReturnType>({ endpoint, request, title }: IAxiosRequest)
   axios.get<ReturnType>(endpoint)
     .then((response) => {
       if (request?.setLoading) request?.setLoading(false);
-      if (request?.onSucccess) request.onSucccess(response);
+      if (request?.onSuccess) request.onSuccess(response);
     })
     .catch((error) => {
       if (request?.setLoading) request?.setLoading(false);
@@ -197,7 +197,7 @@ async function AxiosGetBlob({ endpoint, request, title }: IAxiosRequest) {
   axios.get(endpoint, { responseType: 'blob' })
     .then((response) => {
       if (request?.setLoading) request?.setLoading(false);
-      if (request?.onSucccess) request.onSucccess(response);
+      if (request?.onSuccess) request.onSuccess(response);
     })
     .catch((error) => {
       if (request?.setLoading) request?.setLoading(false);
@@ -212,7 +212,7 @@ async function AxiosPost({ endpoint, request, title }: IAxiosRequest) {
   axios.post(endpoint, request?.data)
     .then((response) => {
       if (request?.setLoading) request?.setLoading(false);
-      if (request?.onSucccess) request.onSucccess(response);
+      if (request?.onSuccess) request.onSuccess(response);
     })
     .catch((error) => {
       if (request?.setLoading) request?.setLoading(false);
@@ -227,7 +227,7 @@ async function AxiosDelete({ endpoint, request, title }: IAxiosRequest) {
   axios.delete(endpoint)
     .then((response) => {
       if (request?.setLoading) request?.setLoading(false);
-      if (request?.onSucccess) request.onSucccess(response);
+      if (request?.onSuccess) request.onSuccess(response);
     })
     .catch((error) => {
       if (request?.setLoading) request?.setLoading(false);
@@ -242,7 +242,7 @@ async function AxiosPatch<ReturnType>({ endpoint, request, title }: IAxiosReques
   axios.patch<ReturnType>(endpoint, request?.data)
     .then((response) => {
       if (request?.setLoading) request?.setLoading(false);
-      if (request?.onSucccess) request.onSucccess(response);
+      if (request?.onSuccess) request.onSuccess(response);
       return response.data;
     })
     .catch((error) => {

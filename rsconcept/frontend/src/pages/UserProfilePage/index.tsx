@@ -10,7 +10,7 @@ function UserProfilePage() {
     <div className='w-full'>
       { loading && <Loader /> }
       { error && <BackendError error={error} />}
-      { user && <UserProfile profile={user} /> }
+      { user && <UserProfile /> }
     </div>
   );
 }

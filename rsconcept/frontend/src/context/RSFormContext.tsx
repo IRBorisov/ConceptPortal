@@ -101,7 +101,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         showError: true,
         setLoading: setProcessing,
         onError: error => { setError(error) },
-        onSucccess: (response) => {
+        onSuccess: (response) => {
           reload(setProcessing)
           .then(() => { if (callback != null) callback(response); })
           .catch(console.error);
@@ -116,7 +116,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         showError: true,
         setLoading: setProcessing,
         onError: error => { setError(error) },
-        onSucccess: callback
+        onSuccess: callback
       }).catch(console.error);
     }, [schemaID, setError])
 
@@ -130,7 +130,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         showError: true,
         setLoading: setProcessing,
         onError: error => { setError(error) },
-        onSucccess: (response) => {
+        onSuccess: (response) => {
           schema.owner = user.id;
           schema.time_update = response.data.time_update;
           setSchema(schema);
@@ -146,7 +146,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         showError: true,
         setLoading: setProcessing,
         onError: error => { setError(error) },
-        onSucccess: callback
+        onSuccess: callback
       }).catch(console.error);
     }, [schemaID, setError])
 
@@ -158,7 +158,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         showError: true,
         setLoading: setProcessing,
         onError: error => { setError(error) },
-        onSucccess: (response) => {
+        onSuccess: (response) => {
           reload(setProcessing)
           .then(() => { if (callback != null) callback(response); })
           .catch(console.error);
@@ -174,7 +174,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         showError: true,
         setLoading: setProcessing,
         onError: error => { setError(error) },
-        onSucccess: (response) => {
+        onSuccess: (response) => {
           setSchema(response.data.schema);
           if (callback != null) callback(response);
         }
@@ -189,7 +189,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         showError: true,
         setLoading: setProcessing,
         onError: error => { setError(error) },
-        onSucccess: (response) => {
+        onSuccess: (response) => {
           setSchema(response.data)
           if (callback != null) callback(response)
         }
@@ -204,7 +204,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         showError: true,
         setLoading: setProcessing,
         onError: error => { setError(error) },
-        onSucccess: (response) => {
+        onSuccess: (response) => {
           setSchema(response.data);
           if (callback != null) callback(response);
         }

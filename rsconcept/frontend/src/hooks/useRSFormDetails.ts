@@ -25,7 +25,7 @@ export function useRSFormDetails({ target }: { target?: string }) {
         showError: true,
         setLoading: setCustomLoading ?? setLoading,
         onError: error => { setInnerSchema(undefined); setError(error); },
-        onSucccess: (response) => { setSchema(response.data); }
+        onSuccess: (response) => { setSchema(response.data); }
       });
     }, [target]);
 

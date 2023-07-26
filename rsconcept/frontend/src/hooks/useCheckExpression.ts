@@ -20,7 +20,7 @@ function useCheckExpression({ schema }: { schema?: IRSForm }) {
       showError: true,
       setLoading,
       onError: error => { setError(error); },
-      onSucccess: (response) => {
+      onSuccess: (response) => {
         setParseData(response.data);
         if (onSuccess) onSuccess(response);
       }

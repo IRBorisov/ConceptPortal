@@ -10,7 +10,7 @@ interface RSFormsTableProps {
   schemas: IRSForm[]
 }
 
-function RSFormsTable({schemas}: RSFormsTableProps) {
+function RSFormsTable({ schemas }: RSFormsTableProps) {
   const navigate = useNavigate();
   const intl = useIntl();
   const { getUserLabel } = useUsers();

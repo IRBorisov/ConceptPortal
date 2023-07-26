@@ -22,7 +22,7 @@ function useNewRSForm() {
       showError: true,
       setLoading,
       onError: error => { setError(error); },
-      onSucccess: response => { onSuccess(response.data.id); }
+      onSuccess: response => { onSuccess(response.data.id); }
     });
   }
 

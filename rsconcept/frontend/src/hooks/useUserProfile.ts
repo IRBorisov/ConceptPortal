@@ -13,11 +13,12 @@ export function useUserProfile() {
     async () => {
       setError(undefined);
       setUser(undefined);
+
       await getProfile({
         showError: true,
         setLoading,
         onError: error => { setError(error); },
-        onSucccess: response => { setUser(response.data); }
+        onSuccess: response => { setUser(response.data); }
       });
     }, [setUser]
   )

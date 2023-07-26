@@ -24,7 +24,7 @@ export function useRSForms() {
       showError: true,
       setLoading,
       onError: error => { setError(error); },
-      onSucccess: response => { setRSForms(response.data); }
+      onSuccess: response => { setRSForms(response.data); }
     });
   }, []);
 
