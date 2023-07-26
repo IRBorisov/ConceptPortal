@@ -1,56 +1,27 @@
-// Current user info
-export interface ICurrentUser {
-  id: number
+// ========= Users ===========
+export interface IUser {
+  id: number | null
   username: string
   is_staff: boolean
-}
-
-// User profile data
-export interface IUserProfile {
-  id: number
-  username: string
   email: string
   first_name: string
   last_name: string
 }
 
-// User base info
-export interface IUserInfo {
-  id: number
-  username: string
-  first_name: string
-  last_name: string
+export interface ICurrentUser extends Pick<IUser, 'id' | 'username' | 'is_staff'> {}
+
+export interface IUserLoginData extends Pick<IUser, 'username'> {
+  password: string
 }
 
-// User data for signup
-export interface IUserSignupData {
-  username: string
-  email: string
-  first_name: string
-  last_name: string
+export interface IUserSignupData extends Omit<IUser, 'is_staff' | 'id'> {
   password: string
   password2: string
 }
+export interface IUserProfile extends Omit<IUser, 'is_staff'> {}
+export interface IUserInfo extends Omit<IUserProfile, 'email'> {}
 
-// User data for signup
-export interface INewCstData {
-  alias: string
-  csttype: CstType
-  insert_after?: number
-}
-
-// Constituenta type
-export enum CstType {
-  BASE = 'basic',
-  CONSTANT = 'constant',
-  STRUCTURED = 'structure',
-  AXIOM = 'axiom',
-  TERM = 'term',
-  FUNCTION = 'function',
-  PREDICATE = 'predicate',
-  THEOREM = 'theorem'
-}
-
+// ======== Parsing ============
 // ValueClass
 export enum ValueClass {
   INVALID = 'invalid',
@@ -72,25 +43,56 @@ export enum ParsingStatus {
   INCORRECT = 'incorrect'
 }
 
-// Constituenta data
+export interface RSErrorDescription {
+  errorType: number
+  position: number
+  isCritical: boolean
+  params: string[]
+}
+
+export interface ExpressionParse {
+  parseResult: boolean
+  syntax: Syntax
+  typification: string
+  valueClass: ValueClass
+  astText: string
+  errors: RSErrorDescription[]
+}
+
+export interface RSExpression {
+  expression: string
+}
+
+// ====== Constituenta ==========
+export enum CstType {
+  BASE = 'basic',
+  STRUCTURED = 'structure',
+  TERM = 'term',
+  AXIOM = 'axiom',
+  FUNCTION = 'function',
+  PREDICATE = 'predicate',
+  CONSTANT = 'constant',
+  THEOREM = 'theorem'
+}
+
 export interface IConstituenta {
   id: number
   alias: string
   cstType: CstType
-  convention?: string
-  term?: {
+  convention: string
+  term: {
     raw: string
-    resolved?: string
-    forms?: string[]
+    resolved: string
+    forms: string[]
   }
-  definition?: {
+  definition: {
     formal: string
     text: {
       raw: string
-      resolved?: string
+      resolved: string
     }
   }
-  parse?: {
+  parse: {
     status: ParsingStatus
     valueClass: ValueClass
     typification: string
@@ -98,7 +100,42 @@ export interface IConstituenta {
   }
 }
 
-// RSForm stats
+export interface IConstituentaMeta {
+  id: number
+  schema: number
+  order: number
+  alias: string
+  convention: string
+  cst_type: CstType
+  definition_formal: string
+  definition_raw: string
+  definition_resolved: string
+  term_raw: string
+  term_resolved: string
+}
+
+export interface IConstituentaID extends Pick<IConstituentaMeta, 'id'>{}
+export interface IConstituentaList {
+  items: IConstituentaID[]
+}
+
+export interface ICstCreateData extends Pick<IConstituentaMeta, 'alias' | 'cst_type'> {
+  insert_after: number | null
+}
+
+export interface ICstMovetoData extends IConstituentaList {
+  move_to: number
+}
+
+export interface ICstUpdateData
+extends Pick<IConstituentaMeta, 'id' | 'alias' | 'convention' | 'definition_formal' | 'definition_raw' | 'term_raw'> {}
+
+export interface ICstCreatedResponse {
+  new_cst: IConstituentaMeta
+  schema: IRSFormData
+}
+
+// ========== RSForm ============
 export interface IRSFormStats {
   count_all: number
   count_errors: number
@@ -117,7 +154,6 @@ export interface IRSFormStats {
   count_theorem: number
 }
 
-// RSForm data
 export interface IRSForm {
   id: number
   title: string
@@ -126,125 +162,24 @@ export interface IRSForm {
   is_common: boolean
   time_create: string
   time_update: string
-  owner?: number
-  items?: IConstituenta[]
-  stats?: IRSFormStats
+  owner: number | null
+  items: IConstituenta[]
+  stats: IRSFormStats
 }
 
-// RSForm user input
-export interface IRSFormCreateData {
-  title: string
-  alias: string
-  comment: string
-  is_common: boolean
+export interface IRSFormData extends Omit<IRSForm, 'stats' > {}
+export interface IRSFormMeta extends Omit<IRSForm, 'items' | 'stats'> {}
+
+export interface IRSFormUpdateData
+extends Omit<IRSFormMeta, 'time_create' | 'time_update' | 'id' | 'owner'> {}
+
+export interface IRSFormCreateData
+extends IRSFormUpdateData {
   file?: File
+  fileName?: string
 }
 
-//! RS language token types enumeration
-export enum TokenID {
-  // Global, local IDs and literals
-  ID_LOCAL = 258,
-  ID_GLOBAL,
-  ID_FUNCTION,
-  ID_PREDICATE,
-  ID_RADICAL,
-  LIT_INTEGER,
-  LIT_INTSET,
-  LIT_EMPTYSET,
-
-  // Aithmetic
-  PLUS,
-  MINUS,
-  MULTIPLY,
-
-  // Integer predicate symbols
-  GREATER,
-  LESSER,
-  GREATER_OR_EQ,
-  LESSER_OR_EQ,
-
-  // Equality comparison
-  EQUAL,
-  NOTEQUAL,
-
-  // Logic predicate symbols
-  FORALL,
-  EXISTS,
-  NOT,
-  EQUIVALENT,
-  IMPLICATION,
-  OR,
-  AND,
-
-  // Set theory predicate symbols
-  IN,
-  NOTIN,
-  SUBSET,
-  SUBSET_OR_EQ,
-  NOTSUBSET,
-
-  // Set theory operators
-  DECART,
-  UNION,
-  INTERSECTION,
-  SET_MINUS,
-  SYMMINUS,
-  BOOLEAN,
-
-  // Structure operations
-  BIGPR,
-  SMALLPR,
-  FILTER,
-  CARD,
-  BOOL,
-  DEBOOL,
-  REDUCE,
-
-  // Term constructions prefixes
-  DECLARATIVE,
-  RECURSIVE,
-  IMPERATIVE,
-
-  // Punctuation
-  PUNC_DEFINE,
-  PUNC_STRUCT,
-  PUNC_ASSIGN,
-  PUNC_ITERATE,
-  PUNC_PL,
-  PUNC_PR,
-  PUNC_CL,
-  PUNC_CR,
-  PUNC_SL,
-  PUNC_SR,
-  PUNC_BAR,
-  PUNC_COMMA,
-  PUNC_SEMICOLON,
-
-  // ======= Non-terminal tokens =========
-  NT_ENUM_DECL, // Перечисление переменных в кванторной декларации
-  NT_TUPLE, // Кортеж (a,b,c), типизация B(T(a)xT(b)xT(c))
-  NT_ENUMERATION, // Задание множества перечислением
-  NT_TUPLE_DECL, // Декларация переменных с помощью кортежа
-  NT_ARG_DECL, // Объявление аргумента
-
-  NT_FUNC_DEFINITION, // Определение функции
-  NT_ARGUMENTS, // Задание аргументов функции
-  NT_FUNC_CALL, // Вызов функции
-
-  NT_DECLARATIVE_EXPR, // Задание множества с помощью выражения D{x из H | A(x) }
-  NT_IMPERATIVE_EXPR, // Императивное определение
-  NT_RECURSIVE_FULL, // Полная рекурсия
-  NT_RECURSIVE_SHORT, // Сокращенная рекурсия
-
-  NT_IMP_DECLARE, // Блок декларации
-  NT_IMP_ASSIGN, // Блок присвоения
-  NT_IMP_LOGIC, // Блок проверки
-
-  // ======= Helper tokens ========
-  INTERRUPT,
-  END,
-};
-
+// ================ Misc types ================
 // Constituenta edit mode
 export enum EditMode {
   TEXT = 'text',
@@ -280,9 +215,10 @@ export function inferStatus(parse?: ParsingStatus, value?: ValueClass): Expressi
   return ExpressionStatus.VERIFIED
 }
 
-export function CalculateStats(schema: IRSForm) {
-  if (!schema.items) {
-    schema.stats = {
+export function LoadRSFormData(schema: IRSFormData): IRSForm {
+  const result = schema as IRSForm
+  if (!result.items) {
+    result.stats = {
       count_all: 0,
       count_errors: 0,
       count_property: 0,
@@ -299,22 +235,22 @@ export function CalculateStats(schema: IRSForm) {
       count_predicate: 0,
       count_theorem: 0
     }
-    return;
+    return result;
   }
-  schema.stats = {
-    count_all: schema.items?.length || 0,
-    count_errors: schema.items?.reduce(
+  result.stats = {
+    count_all: schema.items.length || 0,
+    count_errors: schema.items.reduce(
       (sum, cst) => sum + (cst.parse?.status === ParsingStatus.INCORRECT ? 1 : 0) || 0, 0),
-    count_property: schema.items?.reduce(
+    count_property: schema.items.reduce(
       (sum, cst) => sum + (cst.parse?.valueClass === ValueClass.PROPERTY ? 1 : 0) || 0, 0),
-    count_incalc: schema.items?.reduce(
+    count_incalc: schema.items.reduce(
       (sum, cst) => sum +
       ((cst.parse?.status === ParsingStatus.VERIFIED && cst.parse?.valueClass === ValueClass.INVALID) ? 1 : 0) || 0, 0),
 
-    count_termin: schema.items?.reduce(
+    count_termin: schema.items.reduce(
       (sum, cst) => (sum + (cst.term?.raw ? 1 : 0) || 0), 0),
 
-    count_base: schema.items?.reduce(
+    count_base: schema.items.reduce(
       (sum, cst) => sum + (cst.cstType === CstType.BASE ? 1 : 0), 0),
     count_constant: schema.items?.reduce(
       (sum, cst) => sum + (cst.cstType === CstType.CONSTANT ? 1 : 0), 0),
@@ -322,15 +258,16 @@ export function CalculateStats(schema: IRSForm) {
       (sum, cst) => sum + (cst.cstType === CstType.STRUCTURED ? 1 : 0), 0),
     count_axiom: schema.items?.reduce(
       (sum, cst) => sum + (cst.cstType === CstType.AXIOM ? 1 : 0), 0),
-    count_term: schema.items?.reduce(
+    count_term: schema.items.reduce(
       (sum, cst) => sum + (cst.cstType === CstType.TERM ? 1 : 0), 0),
-    count_function: schema.items?.reduce(
+    count_function: schema.items.reduce(
       (sum, cst) => sum + (cst.cstType === CstType.FUNCTION ? 1 : 0), 0),
-    count_predicate: schema.items?.reduce(
+    count_predicate: schema.items.reduce(
       (sum, cst) => sum + (cst.cstType === CstType.PREDICATE ? 1 : 0), 0),
-    count_theorem: schema.items?.reduce(
+    count_theorem: schema.items.reduce(
       (sum, cst) => sum + (cst.cstType === CstType.THEOREM ? 1 : 0), 0)
   }
+  return result;
 }
 
 export function matchConstituenta(query: string, target?: IConstituenta) {

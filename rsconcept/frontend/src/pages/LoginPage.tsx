@@ -8,6 +8,7 @@ import TextInput from '../components/Common/TextInput';
 import TextURL from '../components/Common/TextURL';
 import InfoMessage from '../components/InfoMessage';
 import { useAuth } from '../context/AuthContext';
+import { IUserLoginData } from '../utils/models';
 
 function LoginPage() {
   const [username, setUsername] = useState('');
@@ -30,7 +31,11 @@ function LoginPage() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!loading) {
-      login(username, password, () => { navigate('/rsforms?filter=personal'); });
+      const data: IUserLoginData = {
+        username: username,
+        password: password
+      };
+      login(data, () => { navigate('/rsforms?filter=personal'); });
     }
   };
 

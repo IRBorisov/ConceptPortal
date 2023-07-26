@@ -12,6 +12,7 @@ import { CrownIcon, DownloadIcon, DumpBinIcon, SaveIcon, ShareIcon } from '../..
 import { useAuth } from '../../context/AuthContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { useUsers } from '../../context/UsersContext';
+import { IRSFormCreateData } from '../../utils/models';
 import { claimOwnershipProc, deleteRSFormProc, downloadRSFormProc, shareCurrentURLProc } from '../../utils/procedures';
 
 function RSFormCard() {
@@ -42,7 +43,8 @@ function RSFormCard() {
       schema.comment !== comment ||
       schema.is_common !== common
     );
-  }, [schema, title, alias, comment, common]);
+  }, [schema, schema?.title, schema?.alias, schema?.comment, schema?.is_common,
+      title, alias, comment, common]);
 
   useLayoutEffect(() => {
     if (schema) {
@@ -55,13 +57,12 @@ function RSFormCard() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = {
-      title,
-      alias,
-      comment,
+    const data: IRSFormCreateData = {
+      title: title,
+      alias: alias,
+      comment: comment,
       is_common: common
     };
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     update(data, () => toast.success('Изменения сохранены'));
   };
 
@@ -70,7 +71,6 @@ function RSFormCard() {
 
   const handleDownload = useCallback(() => {
     const fileName = (schema?.alias ?? 'Schema') + '.trs';
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     downloadRSFormProc(download, fileName);
   }, [download, schema?.alias]);
 
@@ -139,7 +139,7 @@ function RSFormCard() {
       <div className='flex justify-start mt-2'>
         <label className='font-semibold'>Владелец:</label>
         <span className='min-w-[200px] ml-2 overflow-ellipsis overflow-hidden whitespace-nowrap'>
-          {getUserLabel(schema?.owner)}
+          {getUserLabel(schema?.owner ?? null)}
         </span>
       </div>
       <div className='flex justify-start mt-2'>

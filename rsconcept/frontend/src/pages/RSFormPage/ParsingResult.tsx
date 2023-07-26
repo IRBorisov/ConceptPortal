@@ -1,7 +1,8 @@
 import PrettyJson from '../../components/Common/PrettyJSON';
+import { ExpressionParse } from '../../utils/models';
 
 interface ParsingResultProps {
-  data?: any
+  data?: ExpressionParse
 }
 
 function ParsingResult({ data }: ParsingResultProps) {

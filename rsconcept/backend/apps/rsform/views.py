@@ -56,16 +56,18 @@ class RSFormViewSet(viewsets.ModelViewSet):
         schema: models.RSForm = self.get_object()
         serializer = serializers.CstCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        if ('insert_after' in serializer.validated_data):
+        if ('insert_after' in serializer.validated_data and serializer.validated_data['insert_after'] is not None):
             cstafter = models.Constituenta.objects.get(pk=serializer.validated_data['insert_after'])
             constituenta = schema.insert_at(cstafter.order + 1,
                                             serializer.validated_data['alias'],
-                                            serializer.validated_data['csttype'])
+                                            serializer.validated_data['cst_type'])
         else:
-            constituenta = schema.insert_last(serializer.validated_data['alias'], serializer.validated_data['csttype'])
+            constituenta = schema.insert_last(serializer.validated_data['alias'], serializer.validated_data['cst_type'])
         schema.refresh_from_db()
         outSerializer = serializers.RSFormDetailsSerlializer(schema)
-        response = Response(status=201, data={'new_cst': constituenta.to_json(), 'schema': outSerializer.data})
+        response = Response(status=201, data={
+            'new_cst': serializers.ConstituentaSerializer(constituenta).data,
+            'schema': outSerializer.data})
         response['Location'] = constituenta.get_absolute_url()
         return response
 
@@ -175,13 +177,15 @@ def create_rsform(request):
         data = utils.read_trs(request.FILES['file'].file)
         if ('title' in request.data and request.data['title'] != ''):
             data['title'] = request.data['title']
+        if data['title'] == '':
+            data['title'] = 'Без названия ' + request.FILES['file'].fileName
         if ('alias' in request.data and request.data['alias'] != ''):
             data['alias'] = request.data['alias']
         if ('comment' in request.data and request.data['comment'] != ''):
             data['comment'] = request.data['comment']
         is_common = True
         if ('is_common' in request.data):
-            is_common = request.data['is_common']
+            is_common = request.data['is_common'] == 'true'
         schema = models.RSForm.import_json(owner, data, is_common)
     result = serializers.RSFormSerializer(schema)
     return Response(status=201, data=result.data)

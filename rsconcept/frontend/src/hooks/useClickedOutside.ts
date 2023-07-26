@@ -15,6 +15,6 @@ function useClickedOutside({ ref, callback }: { ref: React.RefObject<HTMLElement
       document.removeEventListener('mouseup', handleClickOutside);
     };
   }, [ref, callback]);
-};
+}
 
 export default useClickedOutside;

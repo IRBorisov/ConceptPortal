@@ -1,28 +1,21 @@
 import { useState } from 'react'
 
 import { type ErrorInfo } from '../components/BackendError';
-import { postNewRSForm } from '../utils/backendAPI';
+import { DataCallback, postNewRSForm } from '../utils/backendAPI';
+import { IRSFormCreateData, IRSFormMeta } from '../utils/models';
 
 function useNewRSForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ErrorInfo>(undefined);
 
-  async function createSchema({ data, file, onSuccess }: {
-    data: any
-    file?: File
-    onSuccess: (newID: string) => void
-  }) {
+  function createSchema(data: IRSFormCreateData, onSuccess: DataCallback<IRSFormMeta>) {
     setError(undefined);
-    if (file) {
-      data.file = file;
-      data.fileName = file.name;
-    }
-    await postNewRSForm({
-      data,
+    postNewRSForm({
+      data: data,
       showError: true,
-      setLoading,
+      setLoading: setLoading,
       onError: error => { setError(error); },
-      onSuccess: response => { onSuccess(response.data.id); }
+      onSuccess: onSuccess
     });
   }
 

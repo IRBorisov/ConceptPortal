@@ -9,7 +9,7 @@ interface TextAreaProps {
   placeholder?: string
   widthClass?: string
   rows?: number
-  value?: any
+  value?: string | ReadonlyArray<string> | number | undefined;
   onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
   onFocus?: () => void
 }

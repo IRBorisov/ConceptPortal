@@ -1,8 +1,12 @@
+import 'react-toastify/dist/ReactToastify.css';
+
 import { ToastContainer, type ToastContainerProps } from 'react-toastify';
 
 import { useConceptTheme } from '../context/ThemeContext';
 
-function ToasterThemed({ theme, ...props }: ToastContainerProps) {
+interface ToasterThemedProps extends Omit<ToastContainerProps, 'theme'>{}
+
+function ToasterThemed({ ...props }: ToasterThemedProps) {
   const { darkMode } = useConceptTheme();
 
   return (
@@ -12,4 +16,5 @@ function ToasterThemed({ theme, ...props }: ToastContainerProps) {
     />
   );
 }
+
 export default ToasterThemed;

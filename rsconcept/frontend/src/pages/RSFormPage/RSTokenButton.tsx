@@ -1,4 +1,4 @@
-import { type TokenID } from '../../utils/models'
+import { TokenID } from '../../utils/enums';
 import { getRSButtonData } from '../../utils/staticUI'
 
 interface RSTokenButtonProps {

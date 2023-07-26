@@ -53,7 +53,7 @@ class TestConstituenta(TestCase):
         self.assertEqual(cst.schema, self.schema1)
         self.assertEqual(cst.order, 1)
         self.assertEqual(cst.alias, 'X1')
-        self.assertEqual(cst.csttype, CstType.BASE)
+        self.assertEqual(cst.cst_type, CstType.BASE)
         self.assertEqual(cst.convention, '')
         self.assertEqual(cst.definition_formal, '')
         self.assertEqual(cst.term_raw, '')

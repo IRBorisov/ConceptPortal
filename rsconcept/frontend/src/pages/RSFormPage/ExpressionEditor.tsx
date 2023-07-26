@@ -1,4 +1,3 @@
-import { type AxiosResponse } from 'axios';
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -7,7 +6,8 @@ import Label from '../../components/Common/Label';
 import { Loader } from '../../components/Common/Loader';
 import { useRSForm } from '../../context/RSFormContext';
 import useCheckExpression from '../../hooks/useCheckExpression';
-import { CstType, TokenID } from '../../utils/models';
+import { TokenID } from '../../utils/enums';
+import { CstType } from '../../utils/models';
 import ParsingResult from './ParsingResult';
 import RSLocalButton from './RSLocalButton';
 import RSTokenButton from './RSTokenButton';
@@ -47,12 +47,16 @@ function ExpressionEditor({
     }
     const prefix = activeCst?.alias + (activeCst?.cstType === CstType.STRUCTURED ? '::=' : ':==');
     const expression = prefix + value;
-    checkExpression(expression, (response: AxiosResponse) => {
+    checkExpression(expression, parse => {
       // TODO: update cursor position
+      if (!parse.parseResult && parse.errors.length > 0) {
+        const errorPosition = parse.errors[0].position - prefix.length
+        expressionCtrl.current!.selectionStart = errorPosition;
+        expressionCtrl.current!.selectionEnd = errorPosition;
+      }
       setIsModified(false);
-      setTypification(response.data.typification);
-      toast.success('проверка завершена');
-    }).catch(console.error);
+      setTypification(parse.typification);
+    });
   }, [value, checkExpression, activeCst, setTypification]);
 
   const handleEdit = useCallback((id: TokenID, key?: string) => {

@@ -1,4 +1,3 @@
-import { type AxiosResponse } from 'axios';
 import { useCallback, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -8,8 +7,8 @@ import Divider from '../../components/Common/Divider';
 import { ArrowDownIcon, ArrowsRotateIcon, ArrowUpIcon, DumpBinIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
-import { CstType, type IConstituenta, type INewCstData, inferStatus, ParsingStatus, ValueClass } from '../../utils/models'
-import { createAliasFor, getCstTypeLabel, getCstTypePrefix, getStatusInfo, getTypeLabel } from '../../utils/staticUI';
+import { CstType, type IConstituenta, type ICstCreateData, ICstMovetoData,inferStatus, ParsingStatus, ValueClass } from '../../utils/models'
+import { createAliasFor, getCstTypePrefix, getCstTypeShortcut, getStatusInfo, getTypeLabel } from '../../utils/staticUI';
 import CreateCstModal from './CreateCstModal';
 
 interface ConstituentsTableProps {
@@ -51,8 +50,8 @@ function ConstituentsTable({ onOpenEdit }: ConstituentsTableProps) {
     const data = {
       items: selected.map(id => { return { id }; })
     }
-    const deletedNames = selected.map(id => schema.items?.find((cst) => cst.id === id)?.alias);
-    cstDelete(data, () => toast.success(`Конституенты удалены: ${deletedNames.toString()}`));
+    const deletedNames = selected.map(id => schema.items?.find((cst) => cst.id === id)?.alias).join(', ');
+    cstDelete(data, () => toast.success(`Конституенты удалены: ${deletedNames}`));
   }, [selected, schema?.items, cstDelete]);
 
   // Move selected cst up
@@ -69,10 +68,10 @@ function ConstituentsTable({ onOpenEdit }: ConstituentsTableProps) {
       }
       return Math.min(prev, index);
     }, -1);
-    const insertIndex = Math.max(0, currentIndex - 1) + 1
+    const target = Math.max(0, currentIndex - 1) + 1
     const data = {
       items: selected.map(id => { return { id }; }),
-      move_to: insertIndex
+      move_to: target
     }
     cstMoveTo(data);
   }, [selected, schema?.items, cstMoveTo]);
@@ -95,10 +94,10 @@ function ConstituentsTable({ onOpenEdit }: ConstituentsTableProps) {
         return Math.max(prev, index);
       }
     }, -1);
-    const insertIndex = Math.min(schema.items.length - 1, currentIndex - count + 2) + 1
-    const data = {
+    const target = Math.min(schema.items.length - 1, currentIndex - count + 2) + 1
+    const data: ICstMovetoData = {
       items: selected.map(id => { return { id }; }),
-      move_to: insertIndex
+      move_to: target
     }
     cstMoveTo(data);
   }, [selected, schema?.items, cstMoveTo]);
@@ -109,38 +108,56 @@ function ConstituentsTable({ onOpenEdit }: ConstituentsTableProps) {
   }, []);
 
   // Add new constituent
-  const handleAddNew = useCallback((csttype?: CstType) => {
+  const handleAddNew = useCallback((type?: CstType) => {
     if (!schema) {
       return;
     }
-    if (!csttype) {
+    if (!type) {
       setShowCstModal(true);
     } else {
-      const data: INewCstData = {
-        csttype,
-        alias: createAliasFor(csttype, schema)
+      const selectedPosition = selected.reduce((prev, cstID) => {
+        const position = schema.items.findIndex(cst => cst.id === cstID);
+        return Math.max(position, prev);
+      }, -1) + 1;
+      const data: ICstCreateData = {
+        cst_type: type,
+        alias: createAliasFor(type, schema),
+        insert_after: selectedPosition > 0 ? selectedPosition : null
       }
-      if (selected.length > 0) {
-        data.insert_after = selected[selected.length - 1]
-      }
-      cstCreate(data, (response: AxiosResponse) =>
-        toast.success(`Добавлена конституента ${response.data.new_cst.alias as string}`));
+      cstCreate(data, new_cst => toast.success(`Добавлена конституента ${new_cst.alias}`));
     }
   }, [schema, selected, cstCreate]);
 
   // Implement hotkeys for working with constituents table
-  const handleTableKey = useCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (!event.altKey) {
+  function handleTableKey(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (!event.altKey || !isEditable || event.shiftKey) {
       return;
     }
-    if (!isEditable || selected.length === 0) {
+    if (processAltKey(event.key)) {
+      event.preventDefault();
       return;
     }
-    switch (event.key) {
-    case 'ArrowUp': handleMoveUp(); return;
-    case 'ArrowDown': handleMoveDown();
+  }
+
+  function processAltKey(key: string): boolean {
+    if (selected.length > 0) {
+      switch (key) {
+        case 'ArrowUp': handleMoveUp(); return true;
+        case 'ArrowDown':  handleMoveDown(); return true;
+      }
     }
-  }, [isEditable, selected, handleMoveUp, handleMoveDown]);
+    switch (key) {
+    case '1': handleAddNew(CstType.BASE); return true;
+    case '2': handleAddNew(CstType.STRUCTURED); return true;
+    case '3': handleAddNew(CstType.TERM); return true;
+    case '4': handleAddNew(CstType.AXIOM); return true;
+    case 'q': handleAddNew(CstType.FUNCTION); return true;
+    case 'w': handleAddNew(CstType.PREDICATE); return true;
+    case '5': handleAddNew(CstType.CONSTANT); return true;
+    case '6': handleAddNew(CstType.THEOREM); return true;
+    }
+    return false;
+  }
 
   const columns = useMemo(() =>
     [
@@ -311,7 +328,7 @@ function ConstituentsTable({ onOpenEdit }: ConstituentsTableProps) {
               const type = typeStr as CstType;
               return <Button key={type}
                 text={`${getCstTypePrefix(type)}`}
-                tooltip={getCstTypeLabel(type)}
+                tooltip={getCstTypeShortcut(type)}
                 dense
                 onClick={() => { handleAddNew(type); }}
               />;

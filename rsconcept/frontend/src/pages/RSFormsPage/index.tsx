@@ -19,7 +19,7 @@ function RSFormsPage() {
     if (type === FilterType.PERSONAL) {
       filter.data = user?.id;
     }
-    loadList(filter).catch(console.error);
+    loadList(filter);
   }, [search, user, loadList]);
 
   return (

@@ -1,4 +1,5 @@
-import { CstType, ExpressionStatus, type IConstituenta, type IRSForm, ParsingStatus, TokenID } from './models';
+import { TokenID } from './enums';
+import { CstType, ExpressionStatus, type IConstituenta, type IRSForm, ParsingStatus, ValueClass } from './models';
 
 export interface IRSButtonData {
   text: string
@@ -195,6 +196,20 @@ export function getCstTypeLabel(type: CstType) {
   }
 }
 
+export function getCstTypeShortcut(type: CstType) {
+  const prefix = getCstTypeLabel(type) + ' [Alt + ';
+  switch (type) {
+  case CstType.BASE: return prefix + '1]';
+  case CstType.STRUCTURED: return prefix + '2]';
+  case CstType.TERM: return prefix + '3]';
+  case CstType.AXIOM: return prefix + '4]';
+  case CstType.FUNCTION: return prefix + 'Q]';
+  case CstType.PREDICATE: return prefix + 'W]';
+  case CstType.CONSTANT: return prefix + '5]';
+  case CstType.THEOREM: return prefix + '6]';
+  }
+}
+
 export const CstTypeSelector = (Object.values(CstType)).map(
   (typeStr) => {
     const type = typeStr as CstType;
@@ -271,4 +286,31 @@ export function createAliasFor(type: CstType, schema: IRSForm): string {
     return Math.max(prev, index);
   }, 1);
   return `${prefix}${index}`;
+}
+
+export function getMockConstituenta(id: number, alias: string, type: CstType, comment: string): IConstituenta {
+  return {
+    id: id,
+    alias: alias,
+    convention: comment,
+    cstType: type,
+    term: {
+      raw: '',
+      resolved: '',
+      forms: []
+    },
+    definition: {
+      formal: '',
+      text: {
+        raw: '',
+        resolved: ''
+      }
+    },
+    parse: {
+      status: ParsingStatus.INCORRECT,
+      valueClass: ValueClass.INVALID,
+      typification: 'N/A',
+      syntaxTree: ''
+    }
+  };
 }

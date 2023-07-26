@@ -1,5 +1,5 @@
 interface PrettyJsonProps {
-  data: any
+  data: unknown
 }
 
 function PrettyJson({ data }: PrettyJsonProps) {

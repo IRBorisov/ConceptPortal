@@ -5,7 +5,7 @@ import DataTableThemed from '../../components/Common/DataTableThemed';
 import { useRSForm } from '../../context/RSFormContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { CstType, type IConstituenta, matchConstituenta } from '../../utils/models';
-import { extractGlobals } from '../../utils/staticUI';
+import { extractGlobals, getMockConstituenta } from '../../utils/staticUI';
 
 interface ConstituentsSideListProps {
   expression: string
@@ -20,19 +20,16 @@ function ConstituentsSideList({ expression }: ConstituentsSideListProps) {
   useEffect(() => {
     if (!schema?.items) {
       setFilteredData([]);
-    } else if (onlyExpression) {
+      return;
+    }
+    if (onlyExpression) {
       const aliases = extractGlobals(expression);
       const filtered = schema?.items.filter((cst) => aliases.has(cst.alias));
       const names = filtered.map(cst => cst.alias)
       const diff = Array.from(aliases).filter(name => !names.includes(name));
       if (diff.length > 0) {
         diff.forEach(
-          (alias, i) => filtered.push({
-          id: -i,
-          alias: alias,
-          convention: 'Конституента отсутствует',
-          cstType: CstType.BASE
-        }));
+          (alias, index) => filtered.push(getMockConstituenta(-index, alias, CstType.BASE, 'Конституента отсутствует')));
       }
       setFilteredData(filtered);
     } else if (!filterText) {
@@ -50,7 +47,7 @@ function ConstituentsSideList({ expression }: ConstituentsSideListProps) {
   }, [setActiveID]);
 
   const handleDoubleClick = useCallback(
-  (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
+  (cst: IConstituenta) => {
     if (cst.id > 0) setActiveID(cst.id);
   }, [setActiveID]);
 

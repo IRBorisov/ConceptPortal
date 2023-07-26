@@ -86,11 +86,12 @@ class RSForm(models.Model):
             schema=self,
             order=position,
             alias=alias,
-            csttype=type
+            cst_type=type
         )
         self._update_from_core()
         self.save()
-        return Constituenta.objects.get(pk=result.pk)
+        result.refresh_from_db()
+        return result
 
     @transaction.atomic
     def insert_last(self, alias: str, type: CstType) -> 'Constituenta':
@@ -102,7 +103,7 @@ class RSForm(models.Model):
             schema=self,
             order=position,
             alias=alias,
-            csttype=type
+            cst_type=type
         )
         self._update_from_core()
         self.save()
@@ -217,7 +218,7 @@ class Constituenta(models.Model):
         max_length=8,
         default='undefined'
     )
-    csttype = models.CharField(
+    cst_type = models.CharField(
         verbose_name='Тип',
         max_length=10,
         choices=CstType.choices,
@@ -274,7 +275,7 @@ class Constituenta(models.Model):
             alias=data['alias'],
             schema=schema,
             order=order,
-            csttype=data['cstType'],
+            cst_type=data['cstType'],
             convention=data.get('convention', 'Без названия')
         )
         if 'definition' in data:
@@ -284,9 +285,9 @@ class Constituenta(models.Model):
                 cst.definition_raw = data['definition']['text'].get('raw', '')
                 cst.definition_resolved = data['definition']['text'].get('resolved', '')
         if 'term' in data:
-            cst.term_raw = data['definition']['text'].get('raw', '')
-            cst.term_resolved = data['definition']['text'].get('resolved', '')
-            cst.term_forms = data['definition']['text'].get('forms', [])
+            cst.term_raw = data['term'].get('raw', '')
+            cst.term_resolved = data['term'].get('resolved', '')
+            cst.term_forms = data['term'].get('forms', [])
         cst.save()
         return cst
 
@@ -294,7 +295,7 @@ class Constituenta(models.Model):
         return {
             'entityUID': self.id,
             'type': 'constituenta',
-            'cstType': self.csttype,
+            'cstType': self.cst_type,
             'alias': self.alias,
             'convention': self.convention,
             'term': {

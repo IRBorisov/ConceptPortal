@@ -11,7 +11,7 @@ import TextArea from '../components/Common/TextArea';
 import TextInput from '../components/Common/TextInput';
 import RequireAuth from '../components/RequireAuth';
 import useNewRSForm from '../hooks/useNewRSForm';
-import { type IRSFormCreateData } from '../utils/models';
+import { IRSFormCreateData, IRSFormMeta } from '../utils/models';
 
 function RSFormCreatePage() {
   const navigate = useNavigate();
@@ -30,9 +30,9 @@ function RSFormCreatePage() {
     }
   }
 
-  const onSuccess = (newID: string) => {
+  const onSuccess = (newSchema: IRSFormMeta) => {
     toast.success('Схема успешно создана');
-    navigate(`/rsforms/${newID}`);
+    navigate(`/rsforms/${newSchema.id}`);
   }
   const { createSchema, error, setError, loading } = useNewRSForm()
 
@@ -46,16 +46,14 @@ function RSFormCreatePage() {
       return;
     }
     const data: IRSFormCreateData = {
-      title,
-      alias,
-      comment,
-      is_common: common
+      title: title,
+      alias: alias,
+      comment: comment,
+      is_common: common,
+      file: file,
+      fileName: file?.name
     };
-    void createSchema({
-      data,
-      file,
-      onSuccess
-    });
+    void createSchema(data, onSuccess);
   };
 
   return (

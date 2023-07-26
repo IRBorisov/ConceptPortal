@@ -5,8 +5,8 @@ import { type IUserInfo } from '../utils/models';
 
 interface IUsersContext {
   users: IUserInfo[]
-  reload: () => Promise<void>
-  getUserLabel: (userID?: number) => string
+  reload: () => void
+  getUserLabel: (userID: number | null) => string
 }
 
 const UsersContext = createContext<IUsersContext | null>(null)
@@ -27,13 +27,13 @@ interface UsersStateProps {
 export const UsersState = ({ children }: UsersStateProps) => {
   const [users, setUsers] = useState<IUserInfo[]>([])
 
-  const getUserLabel = (userID?: number) => {
+  const getUserLabel = (userID: number | null) => {
     const user = users.find(({ id }) => id === userID)
-    if (user == null) {
+    if (!user) {
       return (userID ? userID.toString() : 'Отсутствует');
     }
-    const hasFirstName = user.first_name != null && user.first_name !== '';
-    const hasLastName = user.last_name != null && user.last_name !== '';
+    const hasFirstName = user.first_name !== '';
+    const hasLastName = user.last_name !== '';
     if (hasFirstName || hasLastName) {
       if (!hasLastName) {
         return user.first_name;
@@ -47,17 +47,17 @@ export const UsersState = ({ children }: UsersStateProps) => {
   }
 
   const reload = useCallback(
-    async () => {
-      await getActiveUsers({
+    () => {
+      getActiveUsers({
         showError: true,
         onError: () => { setUsers([]); },
-        onSuccess: response => { setUsers(response.data); }
+        onSuccess: newData => { setUsers(newData); }
       });
     }, [setUsers]
   )
 
   useEffect(() => {
-    reload().catch(console.error);
+    reload();
   }, [reload])
 
   return (

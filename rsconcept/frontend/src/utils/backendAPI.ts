@@ -1,253 +1,272 @@
-import axios, { type AxiosResponse } from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 import { toast } from 'react-toastify'
 
 import { type ErrorInfo } from '../components/BackendError'
-import { FilterType, type RSFormsFilter } from '../hooks/useRSForms'
+import { FilterType, RSFormsFilter } from '../hooks/useRSForms'
 import { config } from './constants'
-import { type ICurrentUser, type IRSForm, type IUserInfo, type IUserProfile } from './models'
+import {
+  ExpressionParse,
+  IConstituentaList,
+  IConstituentaMeta,
+  ICstCreateData,
+  ICstCreatedResponse,
+  ICstMovetoData,
+  ICstUpdateData,
+  ICurrentUser, IRSFormCreateData, IRSFormData,
+  IRSFormMeta, IRSFormUpdateData, IUserInfo, IUserLoginData, IUserProfile, IUserSignupData, RSExpression
+} from './models'
 
-export type BackendCallback = (response: AxiosResponse) => void;
+// ================ Data transfer types ================
+export type DataCallback<ResponseData = undefined> = (data: ResponseData) => void;
 
-export interface IFrontRequest {
-  onSuccess?: BackendCallback
+interface IFrontRequest<RequestData, ResponseData> {
+  data?: RequestData
+  onSuccess?: DataCallback<ResponseData>
   onError?: (error: ErrorInfo) => void
   setLoading?: (loading: boolean) => void
   showError?: boolean
-  data?: any
 }
 
-interface IAxiosRequest {
+export interface FrontPush<DataType> extends IFrontRequest<DataType, undefined> {
+  data: DataType
+}
+export interface FrontPull<DataType> extends IFrontRequest<undefined, DataType>{
+  onSuccess: DataCallback<DataType>
+}
+
+export interface FrontExchange<RequestData, ResponseData> extends IFrontRequest<RequestData, ResponseData>{
+  data: RequestData
+  onSuccess: DataCallback<ResponseData>
+}
+
+export interface FrontAction extends IFrontRequest<undefined, undefined>{}
+
+interface IAxiosRequest<RequestData, ResponseData> {
   endpoint: string
-  request?: IFrontRequest
-  title?: string
+  request: IFrontRequest<RequestData, ResponseData>
+  title: string
+  options?: AxiosRequestConfig
 }
 
-// ================= Export API ==============
-export async function postLogin(request?: IFrontRequest) {
-  await AxiosPost({
-    title: 'Login',
-    endpoint: `${config.url.AUTH}login`,
-    request
-  });
-}
-
-export async function getAuth(request?: IFrontRequest) {
-  await AxiosGet<ICurrentUser>({
+// ==================== API ====================
+export function getAuth(request: FrontPull<ICurrentUser>) {
+  AxiosGet({
     title: 'Current user',
     endpoint: `${config.url.AUTH}auth`,
-    request
+    request: request
   });
 }
 
-export async function getProfile(request?: IFrontRequest) {
-  await AxiosGet<IUserProfile>({
-    title: 'Current user profile',
-    endpoint: `${config.url.AUTH}profile`,
-    request
+export function postLogin(request: FrontPush<IUserLoginData>) {
+  AxiosPost({
+    title: 'Login',
+    endpoint: `${config.url.AUTH}login`,
+    request: request
   });
 }
 
-export async function postLogout(request?: IFrontRequest) {
-  await AxiosPost({
+export function postLogout(request: FrontAction) {
+  AxiosPost({
     title: 'Logout',
     endpoint: `${config.url.AUTH}logout`,
-    request
+    request: request
   });
-};
+}
 
-export async function postSignup(request?: IFrontRequest) {
-  await AxiosPost({
+export function postSignup(request: IFrontRequest<IUserSignupData, IUserProfile>) {
+  AxiosPost({
     title: 'Register user',
     endpoint: `${config.url.AUTH}signup`,
-    request
+    request: request
   });
 }
 
-export async function getActiveUsers(request?: IFrontRequest) {
-  await AxiosGet<IUserInfo>({
+export function getProfile(request: FrontPull<IUserProfile>) {
+  AxiosGet({
+    title: 'Current user profile',
+    endpoint: `${config.url.AUTH}profile`,
+    request: request
+  });
+}
+
+export function getActiveUsers(request: FrontPull<IUserInfo[]>) {
+  AxiosGet({
     title: 'Active users list',
     endpoint: `${config.url.AUTH}active-users`,
-    request
+    request: request
   });
 }
 
-export async function getRSForms(filter: RSFormsFilter, request?: IFrontRequest) {
-  let endpoint: string = ''
-  if (filter.type === FilterType.PERSONAL) {
-    endpoint = `${config.url.BASE}rsforms?owner=${filter.data as number}`
-  } else {
-    endpoint = `${config.url.BASE}rsforms?is_common=true`
-  }
-
-  await AxiosGet<IRSForm[]>({
+export function getRSForms(filter: RSFormsFilter, request: FrontPull<IRSFormMeta[]>) {
+  const endpoint =
+    filter.type === FilterType.PERSONAL
+    ? `${config.url.BASE}rsforms?owner=${filter.data as number}`
+    : `${config.url.BASE}rsforms?is_common=true`;
+  AxiosGet({
     title: 'RSForms list',
-    endpoint,
-    request
+    endpoint: endpoint,
+    request: request
   });
 }
 
-export async function postNewRSForm(request?: IFrontRequest) {
-  await AxiosPost({
+export function postNewRSForm(request: FrontExchange<IRSFormCreateData, IRSFormMeta>) {
+  AxiosPost({
     title: 'New RSForm',
     endpoint: `${config.url.BASE}rsforms/create-detailed/`,
-    request
+    request: request,
+    options: {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    }
   });
 }
 
-export async function getRSFormDetails(target: string, request?: IFrontRequest) {
-  await AxiosGet<IRSForm>({
+export function getRSFormDetails(target: string, request: FrontPull<IRSFormData>) {
+  AxiosGet({
     title: `RSForm details for id=${target}`,
     endpoint: `${config.url.BASE}rsforms/${target}/details/`,
-    request
+    request: request
   });
 }
 
-export async function patchRSForm(target: string, request?: IFrontRequest) {
-  await AxiosPatch({
+export function patchRSForm(target: string, request: FrontExchange<IRSFormUpdateData, IRSFormMeta>) {
+  AxiosPatch({
     title: `RSForm id=${target}`,
     endpoint: `${config.url.BASE}rsforms/${target}/`,
-    request
+    request: request
   });
 }
 
-export async function patchConstituenta(target: string, request?: IFrontRequest) {
-  await AxiosPatch({
-    title: `Constituenta id=${target}`,
-    endpoint: `${config.url.BASE}constituents/${target}/`,
-    request
-  });
-}
-
-export async function deleteRSForm(target: string, request?: IFrontRequest) {
-  await AxiosDelete({
+export function deleteRSForm(target: string, request: FrontAction) {
+  AxiosDelete({
     title: `RSForm id=${target}`,
     endpoint: `${config.url.BASE}rsforms/${target}/`,
-    request
+    request: request
   });
 }
 
-export async function getTRSFile(target: string, request?: IFrontRequest) {
-  await AxiosGetBlob({
-    title: `RSForm TRS file for id=${target}`,
-    endpoint: `${config.url.BASE}rsforms/${target}/export-trs/`,
-    request
-  });
-}
-
-export async function postClaimRSForm(target: string, request?: IFrontRequest) {
-  await AxiosPost({
+export function postClaimRSForm(target: string, request: FrontPull<IRSFormMeta>) {
+  AxiosPost({
     title: `Claim on RSForm id=${target}`,
     endpoint: `${config.url.BASE}rsforms/${target}/claim/`,
-    request
+    request: request
   });
 }
 
-export async function postCheckExpression(schema: string, request?: IFrontRequest) {
-  await AxiosPost({
-    title: `Check expression for RSForm id=${schema}: ${request?.data.expression as string}`,
-    endpoint: `${config.url.BASE}rsforms/${schema}/check/`,
-    request
+export function getTRSFile(target: string, request: FrontPull<Blob>) {
+  AxiosGet({
+    title: `RSForm TRS file for id=${target}`,
+    endpoint: `${config.url.BASE}rsforms/${target}/export-trs/`,
+    request: request,
+    options: { responseType: 'blob' }
   });
 }
 
-export async function postNewConstituenta(schema: string, request?: IFrontRequest) {
-  await AxiosPost({
-    title: `New Constituenta for RSForm id=${schema}: ${request?.data.alias as string}`,
+export function postNewConstituenta(schema: string, request: FrontExchange<ICstCreateData, ICstCreatedResponse>) {
+  AxiosPost({
+    title: `New Constituenta for RSForm id=${schema}: ${request.data.alias}`,
     endpoint: `${config.url.BASE}rsforms/${schema}/cst-create/`,
-    request
+    request: request
   });
 }
 
-export async function patchDeleteConstituenta(schema: string, request?: IFrontRequest) {
-  await AxiosPatch<IRSForm>({
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    title: `Delete Constituents for RSForm id=${schema}: ${request?.data.items.toString()}`,
+export function patchDeleteConstituenta(schema: string, request: FrontExchange<IConstituentaList, IRSFormData>) {
+  AxiosPatch({
+    title: `Delete Constituents for RSForm id=${schema}: ${request.data.items.map(item => String(item.id)).join(' ')}`,
     endpoint: `${config.url.BASE}rsforms/${schema}/cst-multidelete/`,
-    request
+    request: request
   });
 }
 
-export async function patchMoveConstituenta(schema: string, request?: IFrontRequest) {
-  await AxiosPatch<IRSForm>({
-    title: `Moving Constituents for RSForm id=${schema}: ${JSON.stringify(request?.data.items)} to ${request?.data.move_to as number}`,
+export function patchConstituenta(target: string, request: FrontExchange<ICstUpdateData, IConstituentaMeta>) {
+  AxiosPatch({
+    title: `Constituenta id=${target}`,
+    endpoint: `${config.url.BASE}constituents/${target}/`,
+    request: request
+  });
+}
+
+export function patchMoveConstituenta(schema: string, request: FrontExchange<ICstMovetoData, IRSFormData>) {
+  AxiosPatch({
+    title: `Moving Constituents for RSForm id=${schema}: ${JSON.stringify(request.data.items)} to ${request.data.move_to}`,
     endpoint: `${config.url.BASE}rsforms/${schema}/cst-moveto/`,
-    request
+    request: request
   });
 }
 
-// ====== Helper functions ===========
-async function AxiosGet<ReturnType>({ endpoint, request, title }: IAxiosRequest) {
-  if (title) console.log(`[[${title}]] requested`);
-  if (request?.setLoading) request?.setLoading(true);
-  axios.get<ReturnType>(endpoint)
+export function postCheckExpression(schema: string, request: FrontExchange<RSExpression, ExpressionParse>) {
+  AxiosPost({
+    title: `Check expression for RSForm id=${schema}: ${request.data.expression }`,
+    endpoint: `${config.url.BASE}rsforms/${schema}/check/`,
+    request: request
+  });
+}
+
+// ============ Helper functions =============
+function AxiosGet<ResponseData>({ endpoint, request, title, options }: IAxiosRequest<undefined, ResponseData>) {
+  console.log(`[[${title}]] requested`);
+  if (request.setLoading) request?.setLoading(true);
+  axios.get<ResponseData>(endpoint, options)
     .then((response) => {
-      if (request?.setLoading) request?.setLoading(false);
-      if (request?.onSuccess) request.onSuccess(response);
+      if (request.setLoading) request.setLoading(false);
+      if (request.onSuccess) request.onSuccess(response.data);
     })
     .catch((error) => {
-      if (request?.setLoading) request?.setLoading(false);
-      if (request?.showError) toast.error(error.message);
-      if (request?.onError) request.onError(error);
+      if (request.setLoading) request.setLoading(false);
+      if (request.showError) toast.error(error.message);
+      if (request.onError) request.onError(error);
     });
 }
 
-async function AxiosGetBlob({ endpoint, request, title }: IAxiosRequest) {
-  if (title) console.log(`[[${title}]] requested`);
-  if (request?.setLoading) request?.setLoading(true);
-  axios.get(endpoint, { responseType: 'blob' })
+function AxiosPost<RequestData, ResponseData>(
+  { endpoint, request, title, options }: IAxiosRequest<RequestData, ResponseData>
+) {
+  console.log(`[[${title}]] posted`);
+  if (request.setLoading) request.setLoading(true);
+  axios.post<ResponseData>(endpoint, request.data, options)
     .then((response) => {
-      if (request?.setLoading) request?.setLoading(false);
-      if (request?.onSuccess) request.onSuccess(response);
+      if (request.setLoading) request.setLoading(false);
+      if (request.onSuccess) request.onSuccess(response.data);
     })
     .catch((error) => {
-      if (request?.setLoading) request?.setLoading(false);
-      if (request?.showError) toast.error(error.message);
-      if (request?.onError) request.onError(error);
+      if (request.setLoading) request.setLoading(false);
+      if (request.showError) toast.error(error.message);
+      if (request.onError) request.onError(error);
     });
 }
 
-async function AxiosPost({ endpoint, request, title }: IAxiosRequest) {
-  if (title) console.log(`[[${title}]] posted`);
-  if (request?.setLoading) request?.setLoading(true);
-  axios.post(endpoint, request?.data)
+function AxiosDelete<RequestData, ResponseData>(
+  { endpoint, request, title, options }: IAxiosRequest<RequestData, ResponseData>
+) {
+  console.log(`[[${title}]] is being deleted`);
+  if (request.setLoading) request.setLoading(true);
+  axios.delete<ResponseData>(endpoint, options)
     .then((response) => {
-      if (request?.setLoading) request?.setLoading(false);
-      if (request?.onSuccess) request.onSuccess(response);
+      if (request.setLoading) request.setLoading(false);
+      if (request.onSuccess) request.onSuccess(response.data);
     })
     .catch((error) => {
-      if (request?.setLoading) request?.setLoading(false);
-      if (request?.showError) toast.error(error.message);
-      if (request?.onError) request.onError(error);
+      if (request.setLoading) request.setLoading(false);
+      if (request.showError) toast.error(error.message);
+      if (request.onError) request.onError(error);
     });
 }
 
-async function AxiosDelete({ endpoint, request, title }: IAxiosRequest) {
-  if (title) console.log(`[[${title}]] is being deleted`);
-  if (request?.setLoading) request?.setLoading(true);
-  axios.delete(endpoint)
+function AxiosPatch<RequestData, ResponseData>(
+  { endpoint, request, title, options }: IAxiosRequest<RequestData, ResponseData>
+) {
+  console.log(`[[${title}]] is being patrially updated`);
+  if (request.setLoading) request.setLoading(true);
+  axios.patch<ResponseData>(endpoint, request.data, options)
     .then((response) => {
-      if (request?.setLoading) request?.setLoading(false);
-      if (request?.onSuccess) request.onSuccess(response);
-    })
-    .catch((error) => {
-      if (request?.setLoading) request?.setLoading(false);
-      if (request?.showError) toast.error(error.message);
-      if (request?.onError) request.onError(error);
-    });
-}
-
-async function AxiosPatch<ReturnType>({ endpoint, request, title }: IAxiosRequest) {
-  if (title) console.log(`[[${title}]] is being patrially updated`);
-  if (request?.setLoading) request?.setLoading(true);
-  axios.patch<ReturnType>(endpoint, request?.data)
-    .then((response) => {
-      if (request?.setLoading) request?.setLoading(false);
-      if (request?.onSuccess) request.onSuccess(response);
+      if (request.setLoading) request.setLoading(false);
+      if (request.onSuccess) request.onSuccess(response.data);
       return response.data;
     })
     .catch((error) => {
-      if (request?.setLoading) request?.setLoading(false);
-      if (request?.showError) toast.error(error.message);
-      if (request?.onError) request.onError(error);
+      if (request.setLoading) request.setLoading(false);
+      if (request.showError) toast.error(error.message);
+      if (request.onError) request.onError(error);
     });
 }

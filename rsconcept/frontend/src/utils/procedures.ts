@@ -1,7 +1,8 @@
 import fileDownload from 'js-file-download';
 import { toast } from 'react-toastify';
 
-import { type BackendCallback } from './backendAPI';
+import { type DataCallback } from './backendAPI';
+import { IRSFormMeta } from './models';
 
 export function shareCurrentURLProc() {
   const url = window.location.href + '&share';
@@ -11,7 +12,7 @@ export function shareCurrentURLProc() {
 }
 
 export function claimOwnershipProc(
-  claim: (callback: BackendCallback) => void
+  claim: (callback: DataCallback<IRSFormMeta>) => void
 ) {
   if (!window.confirm('Вы уверены, что хотите стать владельцем данной схемы?')) {
     return;
@@ -20,7 +21,7 @@ export function claimOwnershipProc(
 }
 
 export function deleteRSFormProc(
-  destroy: (callback: BackendCallback) => void,
+  destroy: (callback: DataCallback) => void,
   navigate: (path: string) => void
 ) {
   if (!window.confirm('Вы уверены, что хотите удалить данную схему?')) {
@@ -33,14 +34,14 @@ export function deleteRSFormProc(
 }
 
 export function downloadRSFormProc(
-  download: (callback: BackendCallback) => void,
+  download: (callback: DataCallback<Blob>) => void,
   fileName: string
 ) {
-  download((response) => {
+  download((data) => {
     try {
-      fileDownload(response.data, fileName);
-    } catch (error: any) {
-      toast.error(error.message);
+      fileDownload(data, fileName);
+    } catch (error) {
+      console.error(error);
     }
   });
 }

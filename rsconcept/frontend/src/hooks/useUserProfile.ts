@@ -10,21 +10,20 @@ export function useUserProfile() {
   const [error, setError] = useState<ErrorInfo>(undefined);
 
   const fetchUser = useCallback(
-    async () => {
+    () => {
       setError(undefined);
       setUser(undefined);
-
-      await getProfile({
+      getProfile({
         showError: true,
-        setLoading,
+        setLoading: setLoading,
         onError: error => { setError(error); },
-        onSuccess: response => { setUser(response.data); }
+        onSuccess: newData => { setUser(newData); }
       });
     }, [setUser]
   )
 
   useEffect(() => {
-    fetchUser().catch((error) => { setError(error); });
+    fetchUser();
   }, [fetchUser])
 
   return { user, fetchUser, error, loading };

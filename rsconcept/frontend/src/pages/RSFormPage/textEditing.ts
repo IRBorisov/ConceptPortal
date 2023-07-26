@@ -1,6 +1,6 @@
 // Formatted text editing helpers
 
-import { TokenID } from '../../utils/models'
+import { TokenID } from '../../utils/enums';
 
 export function getSymbolSubstitute(input: string): string | undefined {
   switch (input) {
@@ -125,7 +125,7 @@ export class TextWrapper implements IManagedText {
       return true;
     }
     case TokenID.BOOLEAN: {
-      if (this.selEnd !== this.selStart && this.value.at(this.selStart) === 'ℬ') {
+      if (this.selEnd !== this.selStart && this.value[this.selStart] === 'ℬ') {
         this.envelopeWith('ℬ', '');
       } else {
         this.envelopeWith('ℬ(', ')');
@@ -209,4 +209,4 @@ export class TextWrapper implements IManagedText {
     }
     return false;
   }
-};
+}

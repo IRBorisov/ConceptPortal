@@ -15,6 +15,6 @@ function useDropdown() {
     toggle: () => { setIsActive(!isActive); },
     hide: () => { setIsActive(false); }
   };
-};
+}
 
 export default useDropdown;

@@ -4,7 +4,8 @@ import { Tab } from 'react-tabs';
 function ConceptTab({ children, className, ...otherProps }: TabProps) {
   return (
   <Tab
-    className={`px-2 py-1 text-sm hover:cursor-pointer clr-tab ${className?.toString() ?? ''} whitespace-nowrap`}
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    className={`px-2 py-1 text-sm hover:cursor-pointer clr-tab ${className} whitespace-nowrap`}
     {...otherProps}
   >
     {children}

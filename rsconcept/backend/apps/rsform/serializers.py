@@ -24,7 +24,7 @@ class ConstituentaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Constituenta
         fields = '__all__'
-        read_only_fields = ('id', 'order', 'alias', 'csttype')
+        read_only_fields = ('id', 'order', 'alias', 'cst_type')
 
     def update(self, instance: Constituenta, validated_data):
         instance.schema.save()
@@ -48,8 +48,8 @@ class StandaloneCstSerializer(serializers.ModelSerializer):
 
 class CstCreateSerializer(serializers.Serializer):
     alias = serializers.CharField(max_length=8)
-    csttype = serializers.CharField(max_length=10)
-    insert_after = serializers.IntegerField(required=False)
+    cst_type = serializers.CharField(max_length=10)
+    insert_after = serializers.IntegerField(required=False, allow_null=True)
 
 
 class CstListSerlializer(serializers.Serializer):

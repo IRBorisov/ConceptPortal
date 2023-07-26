@@ -1,7 +1,7 @@
 interface LabeledTextProps {
   id?: string
   label: string
-  text: any
+  text: string | number
   tooltip?: string
 }
 

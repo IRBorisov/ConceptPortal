@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 function getStorageValue<ValueType>(key: string, defaultValue: ValueType) {
   const saved = localStorage.getItem(key);
-  const initial = saved ? JSON.parse(saved) : undefined;
+  const initial = saved ? JSON.parse(saved) as ValueType : undefined;
   return initial || defaultValue;
 }
 

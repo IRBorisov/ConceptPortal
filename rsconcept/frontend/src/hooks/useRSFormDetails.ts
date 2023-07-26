@@ -2,40 +2,43 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { type ErrorInfo } from '../components/BackendError';
 import { getRSFormDetails } from '../utils/backendAPI';
-import { CalculateStats, type IRSForm } from '../utils/models'
+import { IRSForm, IRSFormData,LoadRSFormData } from '../utils/models'
 
 export function useRSFormDetails({ target }: { target?: string }) {
   const [schema, setInnerSchema] = useState<IRSForm | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ErrorInfo>(undefined);
 
-  function setSchema(schema?: IRSForm) {
-    if (schema) CalculateStats(schema);
+  function setSchema(data?: IRSFormData) {
+    if (!data) {
+      setInnerSchema(undefined);
+      return;
+    }
+    const schema = LoadRSFormData(data);
     setInnerSchema(schema);
     console.log('Loaded schema: ', schema);
   }
 
-  const fetchData = useCallback(
-    async (setCustomLoading?: typeof setLoading) => {
+  const reload = useCallback(
+    (setCustomLoading?: typeof setLoading, callback?: () => void) => {
       setError(undefined);
       if (!target) {
         return;
       }
-      await getRSFormDetails(target, {
+      getRSFormDetails(target, {
         showError: true,
         setLoading: setCustomLoading ?? setLoading,
         onError: error => { setInnerSchema(undefined); setError(error); },
-        onSuccess: (response) => { setSchema(response.data); }
+        onSuccess: schema => {
+          setSchema(schema);
+          if (callback) callback();
+        }
       });
     }, [target]);
 
-  async function reload(setCustomLoading?: typeof setLoading) {
-    await fetchData(setCustomLoading);
-  }
-
   useEffect(() => {
-    fetchData().catch((error) => { setError(error); });
-  }, [fetchData])
+    reload();
+  }, [reload])
 
   return { schema, setSchema, reload, error, setError, loading };
 }

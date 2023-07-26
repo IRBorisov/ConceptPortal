@@ -10,7 +10,8 @@ function RunServer() {
 	RunBackend
 	RunFrontend
     Start-Sleep -Seconds 1
-    Start-Process "http://127.0.0.1:8000/"
+    Start-Process "http://localhost:8000/"
+    Start-Process "http://localhost:3000/"
 }
 
 function RunBackend() {
@@ -29,7 +30,8 @@ function RunBackend() {
 
 function RunFrontend() {
 	Set-Location $PSScriptRoot\frontend
-    Invoke-Expression "cmd /c start powershell -Command { `$Host.UI.RawUI.WindowTitle = 'react'; & npm run start }"
+    & npm install
+    Invoke-Expression "cmd /c start powershell -Command { `$Host.UI.RawUI.WindowTitle = 'react'; & npm run dev }"
 }
 
 function FlushData {

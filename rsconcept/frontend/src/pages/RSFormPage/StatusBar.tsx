@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 
-import { ExpressionStatus, type IConstituenta, inferStatus, ParsingStatus } from '../../utils/models';
+import { ExpressionParse,ExpressionStatus, type IConstituenta, inferStatus, ParsingStatus } from '../../utils/models';
 import { getStatusInfo } from '../../utils/staticUI';
 
 interface StatusBarProps {
   isModified?: boolean
-  parseData?: any
+  parseData?: ExpressionParse
   constituenta?: IConstituenta
 }
 

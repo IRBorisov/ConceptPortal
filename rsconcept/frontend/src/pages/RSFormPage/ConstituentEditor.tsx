@@ -1,18 +1,20 @@
-import { type AxiosResponse } from 'axios';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import SubmitButton from '../../components/Common/SubmitButton';
 import TextArea from '../../components/Common/TextArea';
 import { DumpBinIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
-import { type CstType, EditMode, type INewCstData } from '../../utils/models';
+import { type CstType, EditMode, type ICstCreateData, ICstUpdateData } from '../../utils/models';
 import { createAliasFor, getCstTypeLabel } from '../../utils/staticUI';
 import ConstituentsSideList from './ConstituentsSideList';
 import CreateCstModal from './CreateCstModal';
 import ExpressionEditor from './ExpressionEditor';
+import { RSFormTabsList } from './RSFormTabs';
 
 function ConstituentEditor() {
+  const navigate = useNavigate();
   const {
     activeCst, activeID, schema, setActiveID, processing, isEditable,
     cstDelete, cstUpdate, cstCreate
@@ -33,10 +35,8 @@ function ConstituentEditor() {
   const isEnabled = useMemo(() => activeCst && isEditable, [activeCst, isEditable]);
 
   useLayoutEffect(() => {
-    if (schema?.items && schema?.items.length > 0) {
-      // TODO: figure out why schema.items could be undef?
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      setActiveID((prev) => (prev ?? schema?.items![0].id ?? undefined));
+    if (schema && schema?.items.length > 0) {
+      setActiveID((prev) => (prev ?? schema.items[0].id ?? undefined));
     }
   }, [schema, setActiveID]);
 
@@ -46,12 +46,14 @@ function ConstituentEditor() {
       return;
     }
     setIsModified(
-      activeCst.term?.raw !== term ||
-      activeCst.definition?.text?.raw !== textDefinition ||
+      activeCst.term.raw !== term ||
+      activeCst.definition.text.raw !== textDefinition ||
       activeCst.convention !== convention ||
-      activeCst.definition?.formal !== expression
+      activeCst.definition.formal !== expression
     );
-  }, [activeCst, term, textDefinition, expression, convention]);
+  }, [activeCst, activeCst?.term, activeCst?.definition.formal,
+    activeCst?.definition.text.raw, activeCst?.convention,
+    term, textDefinition, expression, convention]);
 
   useLayoutEffect(() => {
     if (activeCst) {
@@ -61,25 +63,25 @@ function ConstituentEditor() {
       setTerm(activeCst.term?.raw ?? '');
       setTextDefinition(activeCst.definition?.text?.raw ?? '');
       setExpression(activeCst.definition?.formal ?? '');
-      setTypification(activeCst?.parse?.typification ?? 'N/A');
+      setTypification(activeCst?.parse?.typification || 'N/A');
     }
   }, [activeCst]);
 
   const handleSubmit =
   (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!processing) {
-      const data = {
-        alias: alias,
-        convention: convention,
-        definition_formal: expression,
-        definition_raw: textDefinition,
-        term_raw: term
-      };
-      cstUpdate(String(activeID), data, () => {
-        toast.success('Изменения сохранены');
-      });
+    if (!activeID || processing) {
+      return;
     }
+    const data: ICstUpdateData = {
+      id: activeID,
+      alias: alias,
+      convention: convention,
+      definition_formal: expression,
+      definition_raw: textDefinition,
+      term_raw: term
+    };
+    cstUpdate(data, () => { toast.success('Изменения сохранены'); });
   };
 
   const handleDelete = useCallback(
@@ -98,25 +100,24 @@ function ConstituentEditor() {
   }, [activeID, schema, setActiveID, cstDelete]);
 
   const handleAddNew = useCallback(
-  (csttype?: CstType) => {
+  (type?: CstType) => {
     if (!activeID || !schema?.items) {
       return;
     }
-    if (!csttype) {
+    if (!type) {
       setShowCstModal(true);
     } else {
-      const data: INewCstData = {
-        csttype: csttype,
-        alias: createAliasFor(csttype, schema),
+      const data: ICstCreateData = {
+        cst_type: type,
+        alias: createAliasFor(type, schema),
         insert_after: activeID
       }
-      cstCreate(data,
-      (response: AxiosResponse) => {
-        setActiveID(response.data.new_cst.id);
-        toast.success(`Конституента добавлена: ${response.data.new_cst.alias as string}`);
+      cstCreate(data, newCst => {
+        navigate(`/rsforms/${schema.id}?tab=${RSFormTabsList.CST_EDIT}&active=${newCst.id}`);
+        toast.success(`Конституента добавлена: ${newCst.alias}`);
       });
     }
-  }, [activeID, schema, cstCreate, setActiveID]);
+  }, [activeID, schema, cstCreate, navigate]);
 
   const handleRename = useCallback(() => {
     toast.info('Переименование в разработке');
@@ -202,7 +203,7 @@ function ConstituentEditor() {
           placeholder='Родоструктурное выражение, задающее формальное определение'
           value={expression}
           disabled={!isEnabled}
-          isActive={editMode === 'rslang'}
+          isActive={editMode === EditMode.RSLANG}
           toggleEditMode={() => { setEditMode(EditMode.RSLANG); }}
           onChange={event => { setExpression(event.target.value); }}
           setValue={setExpression}

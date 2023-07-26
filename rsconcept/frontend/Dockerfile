@@ -7,16 +7,10 @@ RUN apt-get update -qq && \
 # ======= Build =======
 FROM node-base as builder
 
-ENV NODE_ENV production
 WORKDIR /result
 
-# Install dependencies
-COPY *.json *.js ./
-RUN npm ci --only=production
-
-# Build deployment files
-COPY ./public ./public
-COPY ./src ./src
+COPY ./ ./
+RUN npm install
 RUN npm run build
 
 # ========= Server =======
@@ -33,7 +27,7 @@ USER node
 
 # Bring up deployment files
 WORKDIR /home/node
-COPY --chown=node:node --from=builder /result/build ./
+COPY --chown=node:node --from=builder /result/dist ./
 
 # Start server through docker-compose
 # serve -s /home/node -l 3000

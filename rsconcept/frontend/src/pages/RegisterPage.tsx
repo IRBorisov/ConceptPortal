@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import BackendError from '../components/BackendError';
 import Form from '../components/Common/Form';
 import SubmitButton from '../components/Common/SubmitButton';
 import TextInput from '../components/Common/TextInput';
-import TextURL from '../components/Common/TextURL';
 import InfoMessage from '../components/InfoMessage';
 import { useAuth } from '../context/AuthContext';
 import { type IUserSignupData } from '../utils/models';
 
 function RegisterPage() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,7 +19,6 @@ function RegisterPage() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
 
-  const [success, setSuccess] = useState(false);
   const { user, signup, loading, error, setError } = useAuth()
 
   useEffect(() => {
@@ -35,20 +36,18 @@ function RegisterPage() {
         first_name: firstName,
         last_name: lastName
       };
-      signup(data, () => { setSuccess(true); });
+      signup(data, createdUser => {
+        navigate(`/login?username=${createdUser.username}`);
+        toast.success(`Пользователь успешно создан: ${createdUser.username}`);
+      });
     }
   };
 
   return (
     <div className='w-full py-2'>
-    { success &&
-      <div className='flex flex-col items-center'>
-        <InfoMessage message={`Вы успешно зарегистрировали пользователя ${username}`}/>
-        <TextURL text='Войти в аккаунт' href={`/login?username=${username}`}/>
-      </div>}
-    { !success && user &&
+    { user &&
       <InfoMessage message={`Вы вошли в систему как ${user.username}. Если хотите зарегистрировать нового пользователя, выйдите из системы (меню в правом верхнем углу экрана)`} /> }
-    { !success && !user &&
+    { !user &&
       <Form title='Регистрация пользователя' onSubmit={handleSubmit}>
         <TextInput id='username' label='Имя пользователя' type='text'
           required

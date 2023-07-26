@@ -1,4 +1,4 @@
-import { TokenID } from '../../utils/models'
+import { TokenID } from '../../utils/enums';
 
 interface RSLocalButtonProps {
   text: string
