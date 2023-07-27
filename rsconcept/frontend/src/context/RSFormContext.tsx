@@ -7,10 +7,10 @@ import {
   type DataCallback, deleteRSForm, getTRSFile,
   patchConstituenta, patchDeleteConstituenta, patchMoveConstituenta, patchResetAliases,
 patchRSForm,
-patchUploadTRS,  postClaimRSForm, postNewConstituenta} from '../utils/backendAPI'
+patchUploadTRS,  postClaimRSForm, postCloneRSForm,postNewConstituenta} from '../utils/backendAPI'
 import {
   IConstituenta, IConstituentaList, IConstituentaMeta, ICstCreateData,
-  ICstMovetoData, ICstUpdateData, IRSForm, IRSFormMeta, IRSFormUpdateData, IRSFormUploadData
+  ICstMovetoData, ICstUpdateData, IRSForm, IRSFormCreateData, IRSFormData, IRSFormMeta, IRSFormUpdateData, IRSFormUploadData
 } from '../utils/models'
 import { useAuth } from './AuthContext'
 
@@ -34,12 +34,13 @@ interface IRSFormContext {
   toggleForceAdmin: () => void
   toggleReadonly: () => void
   toggleTracking: () => void
-
+  
   update: (data: IRSFormUpdateData, callback?: DataCallback<IRSFormMeta>) => void
   destroy: (callback?: () => void) => void
   claim: (callback?: DataCallback<IRSFormMeta>) => void
   download: (callback: DataCallback<Blob>) => void
   upload: (data: IRSFormUploadData, callback: () => void) => void
+  clone: (data: IRSFormCreateData, callback: DataCallback<IRSFormData>) => void
   resetAliases: (callback: () => void) => void
 
   cstCreate: (data: ICstCreateData, callback?: DataCallback<IConstituentaMeta>) => void
@@ -165,6 +166,21 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       });
     }, [schemaID, setError, schema, user, setSchema])
 
+  const clone = useCallback(
+    (data: IRSFormCreateData, callback: DataCallback<IRSFormData>) => {
+      if (!schema || !user) {
+        return;
+      }
+      setError(undefined)
+      postCloneRSForm(schemaID, {
+        data: data,
+        showError: true,
+        setLoading: setProcessing,
+        onError: error => { setError(error) },
+        onSuccess: callback
+      });
+    }, [schemaID, setError, schema, user])
+
   const resetAliases = useCallback(
     (callback?: () => void) => {
       if (!schema || !user) {
@@ -262,7 +278,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       toggleForceAdmin: () => { setIsForceAdmin(prev => !prev) },
       toggleReadonly: () => { setIsReadonly(prev => !prev) },
       toggleTracking,
-      update, download, upload, destroy, claim, resetAliases,
+      update, download, upload, destroy, claim, resetAliases, clone,
       cstUpdate, cstCreate, cstDelete, cstMoveTo
     }}>
       { children }

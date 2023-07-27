@@ -120,6 +120,14 @@ export function postNewRSForm(request: FrontExchange<IRSFormCreateData, IRSFormM
   });
 }
 
+export function postCloneRSForm(schema: string, request: FrontExchange<IRSFormCreateData, IRSFormData>) {
+  AxiosPost({
+    title: 'clone RSForm',
+    endpoint: `${config.url.BASE}rsforms/${schema}/clone/`,
+    request: request
+  });
+}
+
 export function getRSFormDetails(target: string, request: FrontPull<IRSFormData>) {
   AxiosGet({
     title: `RSForm details for id=${target}`,

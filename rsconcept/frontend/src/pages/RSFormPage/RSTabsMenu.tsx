@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 
 import Button from '../../components/Common/Button';
 import Checkbox from '../../components/Common/Checkbox';
@@ -11,6 +10,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useRSForm } from '../../context/RSFormContext';
 import useDropdown from '../../hooks/useDropdown';
 import { claimOwnershipProc, deleteRSFormProc, downloadRSFormProc, shareCurrentURLProc } from '../../utils/procedures';
+import DlgCloneRSForm from './DlgCloneRSForm';
 import DlgUploadRSForm from './DlgUploadRSForm';
 
 function RSTabsMenu() {
@@ -24,7 +24,8 @@ function RSTabsMenu() {
   } = useRSForm();
   const schemaMenu = useDropdown();
   const editMenu = useDropdown();
-  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showUploadDialog, setShowUploadDialog] = useState(false);
+  const [showCloneDialog, setShowCloneDialogl] = useState(false);
 
   const handleClaimOwner = useCallback(() => {
     editMenu.hide();
@@ -44,13 +45,12 @@ function RSTabsMenu() {
 
   const handleUpload = useCallback(() => {
     schemaMenu.hide();
-    setShowUploadModal(true);
+    setShowUploadDialog(true);
   }, [schemaMenu]);
 
   const handleClone = useCallback(() => {
-    // TODO: implement
     schemaMenu.hide();
-    toast.info('Клонирование РС-формы');
+    setShowCloneDialogl(true);
   }, [schemaMenu]);
 
   const handleShare = useCallback(() => {
@@ -61,8 +61,12 @@ function RSTabsMenu() {
   return (
     <>
     <DlgUploadRSForm
-      show={showUploadModal}
-      hideWindow={() => { setShowUploadModal(false); }}
+      show={showUploadDialog}
+      hideWindow={() => { setShowUploadDialog(false); }}
+    />
+    <DlgCloneRSForm
+      show={showCloneDialog}
+      hideWindow={() => { setShowCloneDialogl(false); }}
     />
     <div className='flex items-center w-fit'>
       <div ref={schemaMenu.ref}>

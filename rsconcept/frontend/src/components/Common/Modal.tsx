@@ -38,7 +38,7 @@ function Modal({ title, show, hideWindow, onSubmit, onCancel, canSubmit, childre
     <>
     <div className='fixed top-0 left-0 z-50 w-full h-full opacity-50 clr-modal'>
     </div>
-    <div ref={ref} className='fixed bottom-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 px-6 py-4 flex flex-col w-fit z-[60] clr-card border shadow-md'>
+    <div ref={ref} className='fixed bottom-1/2 left-1/2 translate-y-1/2 -translate-x-1/2 px-6 py-4 flex flex-col w-fit h-fit z-[60] clr-card border shadow-md mb-[5rem]'>
       { title && <h1 className='mb-4 text-xl font-bold text-center'>{title}</h1> }
       <div className='py-2'>
         {children}
@@ -46,7 +46,7 @@ function Modal({ title, show, hideWindow, onSubmit, onCancel, canSubmit, childre
       <div className='flex justify-between w-full pt-4 mt-2 border-t-4'>
         <Button
           text={submitText}
-          widthClass='min-w-[6rem] w-fit h-fit'
+          widthClass='min-w-[6rem] min-h-[2.6rem] w-fit h-fit'
           colorClass='clr-btn-primary'
           disabled={!canSubmit}
           onClick={handleSubmit}
@@ -54,6 +54,7 @@ function Modal({ title, show, hideWindow, onSubmit, onCancel, canSubmit, childre
         />
         <Button
           text='Отмена'
+          widthClass='min-w-[6rem] min-h-[2.6rem] w-fit h-fit'
           onClick={handleCancel}
         />
       </div>

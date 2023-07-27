@@ -25,7 +25,6 @@ function RSTabs() {
   const [init, setInit] = useState(false);
 
   const onEditCst = (cst: IConstituenta) => {
-    console.log(`Set active cst: ${cst.alias}`);
     setActiveID(cst.id);
     setTabIndex(RSTabsList.CST_EDIT)
   };
@@ -38,11 +37,17 @@ function RSTabs() {
     if (schema) {
       const url = new URL(window.location.href);
       const activeQuery = url.searchParams.get('active');
-      const activeCst = schema?.items?.find((cst) => cst.id === Number(activeQuery));
+      const activeCst = schema.items.find((cst) => cst.id === Number(activeQuery));
       setActiveID(activeCst?.id);
       setInit(true);
+      
+      const oldTitle = document.title
+      document.title = schema.title
+      return () => {
+        document.title = oldTitle
+      }
     }
-  }, [setActiveID, schema, setInit]);
+  }, [setActiveID, schema, schema?.title, setInit]);
 
   useEffect(() => {
     const url = new URL(window.location.href);

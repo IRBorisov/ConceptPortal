@@ -314,3 +314,11 @@ export function getMockConstituenta(id: number, alias: string, type: CstType, co
     }
   };
 }
+
+export function getCloneTitle(schema: IRSForm): string {
+  if (!schema.title.includes('[клон]')) {
+    return schema.title + ' [клон]';
+  } else {
+    return (schema.title + '+');
+  }
+}
