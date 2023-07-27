@@ -35,7 +35,7 @@ function LoginPage() {
         username: username,
         password: password
       };
-      login(data, () => { navigate('/rsforms?filter=personal'); });
+      login(data, () => { navigate('/library?filter=personal'); });
     }
   };
 

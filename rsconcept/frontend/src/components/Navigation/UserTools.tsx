@@ -8,7 +8,7 @@ function UserTools() {
   const navigate = useNavigate();
 
   const navigateCreateRSForm = () => { navigate('/rsform-create'); };
-  const navigateMyWork = () => { navigate('/rsforms?filter=personal'); };
+  const navigateMyWork = () => { navigate('/library?filter=personal'); };
 
   const handleNotifications = () => {
     toast.info('Уведомления в разработке');

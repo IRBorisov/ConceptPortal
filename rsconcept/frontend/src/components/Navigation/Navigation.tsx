@@ -14,7 +14,7 @@ function Navigation () {
   const navigate = useNavigate();
   const { noNavigation, toggleNoNavigation } = useConceptTheme();
 
-  const navigateCommon = () => { navigate('/rsforms?filter=common') };
+  const navigateCommon = () => { navigate('/library?filter=common') };
   const navigateHelp = () => { navigate('/manuals') };
 
   return (

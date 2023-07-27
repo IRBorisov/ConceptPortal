@@ -81,7 +81,7 @@ function RSTabsMenu() {
               <p>Поделиться</p>
             </div>
           </DropdownButton>
-          <DropdownButton onClick={handleClone}>
+          <DropdownButton onClick={handleClone} disabled={!user} >
             <div className='inline-flex items-center justify-start gap-2'>
               <CloneIcon color='text-primary' size={4}/>
               <p>Клонировать</p>

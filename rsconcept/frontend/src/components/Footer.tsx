@@ -7,8 +7,8 @@ function Footer() {
     <footer className='z-50 px-4 pt-2 pb-4 border-t-2 t clr-footer'>
       <div className='flex items-stretch justify-center w-full mx-auto'>
         <div className='px-4 underline'>
-          <Link to='manuals' tabIndex={-1}>Справка</Link> <br/>
-          <Link to='rsforms?filter=common' tabIndex={-1}>Библиотека КС</Link> <br/>
+          <Link to='/manuals' tabIndex={-1}>Справка</Link> <br/>
+          <Link to='/library?filter=common' tabIndex={-1}>Библиотека КС</Link> <br/>
         </div>
         <div className='px-4 underline border-gray-400 border-x dark:border-gray-300'>
           <ul>
