@@ -69,7 +69,7 @@
 
   /* Transparent button */
   .clr-btn-clear {
-    @apply hover:bg-gray-300 dark:hover:bg-gray-400
+    @apply hover:bg-gray-300 dark:hover:bg-gray-400 dark:disabled:text-zinc-400 disabled:text-gray-400 text-gray-500 dark:text-zinc-200
   }
 
   .clr-checkbox {

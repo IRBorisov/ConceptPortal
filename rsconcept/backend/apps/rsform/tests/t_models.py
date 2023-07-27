@@ -209,7 +209,7 @@ class TestRSForm(TestCase):
         self.assertEqual(x1.order, 2)
         self.assertEqual(x2.order, 1)
 
-    def test_to_json(self):
+    def test_to_trs(self):
         schema = RSForm.objects.create(title='Test', alias='KS1', comment='Test')
         x1 = schema.insert_at(4, 'X1', CstType.BASE)
         x2 = schema.insert_at(1, 'X2', CstType.BASE)
@@ -223,9 +223,9 @@ class TestRSForm(TestCase):
             f'"term": {{"raw": "", "resolved": "", "forms": []}}, '
             f'"definition": {{"formal": "", "text": {{"raw": "", "resolved": ""}}}}}}]}}'
         )
-        self.assertEqual(schema.to_json(), expected)
+        self.assertEqual(schema.to_trs(), expected)
 
-    def test_import_json(self):
+    def test_create_from_trs(self):
         input = json.loads(
             '{"type": "rsform", "title": "Test", "alias": "KS1", '
             '"comment": "Test", "items": '
@@ -236,7 +236,7 @@ class TestRSForm(TestCase):
             '"term": {"raw": "", "resolved": ""}, '
             '"definition": {"formal": "", "text": {"raw": "", "resolved": ""}}}]}'
         )
-        schema = RSForm.import_json(self.user1, input, False)
+        schema = RSForm.create_from_trs(self.user1, input, False)
         self.assertEqual(schema.owner, self.user1)
         self.assertEqual(schema.title, 'Test')
         self.assertEqual(schema.alias, 'KS1')
@@ -245,3 +245,28 @@ class TestRSForm(TestCase):
         self.assertEqual(constituents.count(), 2)
         self.assertEqual(constituents[0].alias, 'X1')
         self.assertEqual(constituents[0].definition_formal, '123')
+
+    def test_load_trs(self):
+        schema = RSForm.objects.create(title='Test', owner=self.user1, alias='КС1')
+        x2 = schema.insert_last('X2', CstType.BASE)
+        schema.insert_last('X3', CstType.BASE)
+        input = json.loads(
+            '{"title": "Test1", "alias": "KS1", '
+            '"comment": "Test", "items": '
+            '[{"entityUID": "' + str(x2.id) + '", "cstType": "basic", "alias": "X1", "convention": "test", '
+            '"term": {"raw": "t1", "resolved": "t2"}, '
+            '"definition": {"formal": "123", "text": {"raw": "t3", "resolved": "t4"}}}]}'
+        )
+        schema.load_trs(input, sync_metadata=True, skip_update=True)
+        x2.refresh_from_db()
+        self.assertEqual(schema.constituents().count(), 1)
+        self.assertEqual(schema.title, input['title'])
+        self.assertEqual(schema.alias, input['alias'])
+        self.assertEqual(schema.comment, input['comment'])
+        self.assertEqual(x2.alias, input['items'][0]['alias'])
+        self.assertEqual(x2.convention, input['items'][0]['convention'])
+        self.assertEqual(x2.term_raw, input['items'][0]['term']['raw'])
+        self.assertEqual(x2.term_resolved, input['items'][0]['term']['resolved'])
+        self.assertEqual(x2.definition_formal, input['items'][0]['definition']['formal'])
+        self.assertEqual(x2.definition_raw, input['items'][0]['definition']['text']['raw'])
+        self.assertEqual(x2.definition_resolved, input['items'][0]['definition']['text']['resolved'])

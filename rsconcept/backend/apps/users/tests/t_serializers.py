@@ -29,3 +29,9 @@ class TestLoginSerializer(APITestCase):
         request = self.factory.post('/users/api/login', data)
         serializer = LoginSerializer(data=data, context={'request': request})
         self.assertFalse(serializer.is_valid(raise_exception=False))
+
+    def test_validate_empty_username(self):
+        data = {'username': '', 'auth': 'invalid'}
+        request = self.factory.post('/users/api/login', data)
+        serializer = LoginSerializer(data=data, context={'request': request})
+        self.assertFalse(serializer.is_valid(raise_exception=False))

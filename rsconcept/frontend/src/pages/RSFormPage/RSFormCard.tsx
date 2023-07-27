@@ -3,8 +3,8 @@ import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import Button from '../../components/Common/Button';
 import Checkbox from '../../components/Common/Checkbox';
+import MiniButton from '../../components/Common/MiniButton';
 import SubmitButton from '../../components/Common/SubmitButton';
 import TextArea from '../../components/Common/TextArea';
 import TextInput from '../../components/Common/TextInput';
@@ -76,6 +76,32 @@ function RSFormCard() {
 
   return (
     <form onSubmit={handleSubmit} className='flex-grow max-w-xl px-4 py-2 border min-w-fit'>
+      <div className='relative w-full'>
+      <div className='absolute top-0 right-0'>
+        <MiniButton
+          tooltip='Поделиться схемой'
+          icon={<ShareIcon size={5} color='text-primary'/>}
+          onClick={shareCurrentURLProc}
+        />
+        <MiniButton
+          tooltip='Скачать TRS файл'
+          icon={<DownloadIcon size={5} color='text-primary'/>}
+          onClick={handleDownload}
+        />
+        <MiniButton
+          tooltip={isClaimable ? 'Стать владельцем' : 'Вы уже являетесь владельцем' }
+          icon={<CrownIcon size={5} color={isOwned ? '' : 'text-green'}/>}
+          disabled={!isClaimable || !user}
+          onClick={() => { claimOwnershipProc(claim); }}
+        />
+        <MiniButton
+          tooltip='Удалить схему'
+          disabled={!isEditable}
+          onClick={handleDelete}
+          icon={<DumpBinIcon size={5} color={isEditable ? 'text-red' : ''} />}
+        />
+      </div>
+      </div>
       <TextInput id='title' label='Полное название' type='text'
         required
         value={title}
@@ -107,33 +133,6 @@ function RSFormCard() {
           disabled={!isModified || !isEditable}
           icon={<SaveIcon size={6} />}
         />
-        <div className='flex justify-end gap-1'>
-          <Button
-            tooltip='Поделиться схемой'
-            icon={<ShareIcon color='text-primary'/>}
-            onClick={shareCurrentURLProc}
-          />
-          <Button
-            tooltip='Скачать TRS файл'
-            icon={<DownloadIcon color='text-primary'/>}
-            loading={processing}
-            onClick={handleDownload}
-          />
-          <Button
-            tooltip={isClaimable ? 'Стать владельцем' : 'Вы уже являетесь владельцем' }
-            icon={<CrownIcon color={isOwned ? '' : 'text-green'}/>}
-            loading={processing}
-            disabled={!isClaimable || !user}
-            onClick={() => { claimOwnershipProc(claim); }}
-          />
-          <Button
-            tooltip={ isEditable ? 'Удалить схему' : 'Вы не можете редактировать данную схему'}
-            icon={<DumpBinIcon color={isEditable ? 'text-red' : ''} />}
-            loading={processing}
-            disabled={!isEditable}
-            onClick={handleDelete}
-          />
-        </div>
       </div>
 
       <div className='flex justify-start mt-2'>

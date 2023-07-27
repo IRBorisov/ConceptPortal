@@ -1,5 +1,5 @@
 interface ButtonProps
-extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'children'> {
+extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'children' | 'title'> {
   text?: string
   icon?: React.ReactNode
   tooltip?: string

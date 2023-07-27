@@ -98,7 +98,7 @@ class RSForm(models.Model):
         ''' Insert new constituenta at last position '''
         position = 1
         if self.constituents().exists():
-            position += self.constituents().only('order').aggregate(models.Max('order'))['order__max']
+            position += self.constituents().count()
         result = Constituenta.objects.create(
             schema=self,
             order=position,
@@ -118,7 +118,7 @@ class RSForm(models.Model):
         count_bot = 0
         size = len(listCst)
         update_list = []
-        for cst in self.constituents():
+        for cst in self.constituents().only('id', 'order').order_by('order'):
             if cst not in listCst:
                 if count_top + 1 < target:
                     cst.order = count_top + 1
@@ -142,9 +142,38 @@ class RSForm(models.Model):
         self._update_from_core()
         self.save()
 
+    @transaction.atomic
+    def load_trs(self, data: dict, sync_metadata: bool, skip_update: bool):
+        if sync_metadata:
+            self.title = data.get('title', 'Без названия')
+            self.alias = data.get('alias', '')
+            self.comment = data.get('comment', '')
+        order = 1
+        prev_constituents = self.constituents()
+        loaded_ids = set()
+        for cst_data in data['items']:
+            uid = int(cst_data['entityUID'])
+            if prev_constituents.filter(pk=uid).exists():
+                cst: Constituenta = prev_constituents.get(pk=uid)
+                cst.order = order
+                cst.load_trs(cst_data)
+                cst.save()
+            else:
+                cst = Constituenta.create_from_trs(cst_data, self, order)
+                cst.save()
+                uid = cst.id
+            loaded_ids.add(uid)
+            order += 1
+        for prev_cst in prev_constituents:
+            if prev_cst.id not in loaded_ids:
+                prev_cst.delete()
+        if not skip_update:
+            self._update_from_core()
+        self.save()
+
     @staticmethod
     @transaction.atomic
-    def import_json(owner: User, data: dict, is_common: bool = True) -> 'RSForm':
+    def create_from_trs(owner: User, data: dict, is_common: bool = True) -> 'RSForm':
         schema = RSForm.objects.create(
             title=data.get('title', 'Без названия'),
             owner=owner,
@@ -152,15 +181,15 @@ class RSForm(models.Model):
             comment=data.get('comment', ''),
             is_common=is_common
         )
-        schema._create_cst_from_json(data['items'])
+        schema._create_items_from_trs(data['items'])
         return schema
 
-    def to_json(self) -> str:
+    def to_trs(self) -> str:
         ''' Generate JSON string containing all data from RSForm '''
         result = self._prepare_json_rsform()
-        items = self.constituents().order_by('order')
+        items: list['Constituenta'] = self.constituents().order_by('order')
         for cst in items:
-            result['items'].append(cst.to_json())
+            result['items'].append(cst.to_trs())
         return result
 
     def __str__(self):
@@ -178,8 +207,9 @@ class RSForm(models.Model):
             'items': []
         }
 
+    @transaction.atomic
     def _update_from_core(self) -> dict:
-        checked = json.loads(pyconcept.check_schema(json.dumps(self.to_json())))
+        checked = json.loads(pyconcept.check_schema(json.dumps(self.to_trs())))
         update_list = self.constituents().only('id', 'order')
         if (len(checked['items']) != update_list.count()):
             raise ValidationError
@@ -194,10 +224,12 @@ class RSForm(models.Model):
         Constituenta.objects.bulk_update(update_list, ['order'])
         return checked
 
-    def _create_cst_from_json(self, items):
+    @transaction.atomic
+    def _create_items_from_trs(self, items):
         order = 1
         for cst in items:
-            Constituenta.import_json(cst, self, order)
+            object = Constituenta.create_from_trs(cst, self, order)
+            object.save()
             order += 1
 
 
@@ -270,28 +302,43 @@ class Constituenta(models.Model):
         return self.alias
 
     @staticmethod
-    def import_json(data: dict, schema: RSForm, order: int) -> 'Constituenta':
+    def create_from_trs(data: dict, schema: RSForm, order: int) -> 'Constituenta':
+        ''' Create constituenta from TRS json '''
         cst = Constituenta(
             alias=data['alias'],
             schema=schema,
             order=order,
             cst_type=data['cstType'],
-            convention=data.get('convention', 'Без названия')
         )
-        if 'definition' in data:
-            if 'formal' in data['definition']:
-                cst.definition_formal = data['definition']['formal']
-            if 'text' in data['definition']:
-                cst.definition_raw = data['definition']['text'].get('raw', '')
-                cst.definition_resolved = data['definition']['text'].get('resolved', '')
-        if 'term' in data:
-            cst.term_raw = data['term'].get('raw', '')
-            cst.term_resolved = data['term'].get('resolved', '')
-            cst.term_forms = data['term'].get('forms', [])
-        cst.save()
+        cst._load_texts(data)
         return cst
 
-    def to_json(self) -> str:
+    def load_trs(self, data: dict):
+        ''' Load data from TRS json '''
+        self.alias = data['alias']
+        self.cst_type = data['cstType']
+        self._load_texts(data)
+
+    def _load_texts(self, data: dict):
+        self.convention = data.get('convention', '')
+        if 'definition' in data:
+            self.definition_formal = data['definition'].get('formal', '')
+            if 'text' in data['definition']:
+                self.definition_raw = data['definition']['text'].get('raw', '')
+                self.definition_resolved = data['definition']['text'].get('resolved', '')
+            else:
+                self.definition_raw = ''
+                self.definition_resolved = ''
+        if 'term' in data:
+            self.term_raw = data['term'].get('raw', '')
+            self.term_resolved = data['term'].get('resolved', '')
+            self.term_forms = data['term'].get('forms', [])
+        else:
+            self.term_raw = ''
+            self.term_resolved = ''
+            self.term_forms = []
+
+    def to_trs(self) -> str:
         return {
             'entityUID': self.id,
             'type': 'constituenta',

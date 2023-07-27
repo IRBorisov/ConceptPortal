@@ -5,12 +5,12 @@ import { type ErrorInfo } from '../components/BackendError'
 import { useRSFormDetails } from '../hooks/useRSFormDetails'
 import {
   type DataCallback, deleteRSForm, getTRSFile,
-  patchConstituenta, patchDeleteConstituenta, patchMoveConstituenta, patchRSForm,
-  postClaimRSForm, postNewConstituenta
-} from '../utils/backendAPI'
+  patchConstituenta, patchDeleteConstituenta, patchMoveConstituenta, patchResetAliases,
+patchRSForm,
+patchUploadTRS,  postClaimRSForm, postNewConstituenta} from '../utils/backendAPI'
 import {
   IConstituenta, IConstituentaList, IConstituentaMeta, ICstCreateData,
-  ICstMovetoData, ICstUpdateData, IRSForm, IRSFormMeta, IRSFormUpdateData
+  ICstMovetoData, ICstUpdateData, IRSForm, IRSFormMeta, IRSFormUpdateData, IRSFormUploadData
 } from '../utils/models'
 import { useAuth } from './AuthContext'
 
@@ -36,9 +36,11 @@ interface IRSFormContext {
   toggleTracking: () => void
 
   update: (data: IRSFormUpdateData, callback?: DataCallback<IRSFormMeta>) => void
-  destroy: (callback?: DataCallback) => void
+  destroy: (callback?: () => void) => void
   claim: (callback?: DataCallback<IRSFormMeta>) => void
   download: (callback: DataCallback<Blob>) => void
+  upload: (data: IRSFormUploadData, callback: () => void) => void
+  resetAliases: (callback: () => void) => void
 
   cstCreate: (data: ICstCreateData, callback?: DataCallback<IConstituentaMeta>) => void
   cstUpdate: (data: ICstUpdateData, callback?: DataCallback<IConstituentaMeta>) => void
@@ -113,17 +115,35 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         }
       });
     }, [schemaID, setError, setSchema, schema])
+  
+  const upload = useCallback(
+    (data: IRSFormUploadData, callback?: () => void) => {
+      if (!schema) {
+        return;
+      }
+      setError(undefined)
+      patchUploadTRS(schemaID, {
+        data: data,
+        showError: true,
+        setLoading: setProcessing,
+        onError: error => { setError(error) },
+        onSuccess: newData => {
+          setSchema(newData);
+          if (callback) callback();
+        }
+      });
+    }, [schemaID, setError, setSchema, schema])
 
   const destroy = useCallback(
-    (callback?: DataCallback) => {
+    (callback?: () => void) => {
       setError(undefined)
       deleteRSForm(schemaID, {
         showError: true,
         setLoading: setProcessing,
         onError: error => { setError(error) },
-        onSuccess: newData => {
+        onSuccess: () => {
           setSchema(undefined);
-          if (callback) callback(newData);
+          if (callback) callback();
         }
       });
     }, [schemaID, setError, setSchema])
@@ -141,6 +161,23 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         onSuccess: newData => {
           setSchema(Object.assign(schema, newData));
           if (callback) callback(newData);
+        }
+      });
+    }, [schemaID, setError, schema, user, setSchema])
+
+  const resetAliases = useCallback(
+    (callback?: () => void) => {
+      if (!schema || !user) {
+        return;
+      }
+      setError(undefined)
+      patchResetAliases(schemaID, {
+        showError: true,
+        setLoading: setProcessing,
+        onError: error => { setError(error) },
+        onSuccess: newData => {
+          setSchema(Object.assign(schema, newData));
+          if (callback) callback();
         }
       });
     }, [schemaID, setError, schema, user, setSchema])
@@ -218,29 +255,15 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
   return (
     <RSFormContext.Provider value={{
       schema,
-      error,
-      loading,
-      processing,
-      activeID,
-      activeCst,
-      setActiveID,
-      isForceAdmin,
-      isReadonly,
+      error, loading, processing,
+      activeID, activeCst, setActiveID,
+      isForceAdmin, isReadonly, isOwned, isEditable,
+      isClaimable, isTracking,
       toggleForceAdmin: () => { setIsForceAdmin(prev => !prev) },
       toggleReadonly: () => { setIsReadonly(prev => !prev) },
-      isOwned,
-      isEditable,
-      isClaimable,
-      isTracking,
       toggleTracking,
-      update,
-      download,
-      destroy,
-      claim,
-      cstUpdate,
-      cstCreate,
-      cstDelete,
-      cstMoveTo
+      update, download, upload, destroy, claim, resetAliases,
+      cstUpdate, cstCreate, cstDelete, cstMoveTo
     }}>
       { children }
     </RSFormContext.Provider>

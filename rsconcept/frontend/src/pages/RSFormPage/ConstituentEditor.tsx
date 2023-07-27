@@ -2,6 +2,7 @@ import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import MiniButton from '../../components/Common/MiniButton';
 import SubmitButton from '../../components/Common/SubmitButton';
 import TextArea from '../../components/Common/TextArea';
 import { DumpBinIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
@@ -11,7 +12,7 @@ import { createAliasFor, getCstTypeLabel } from '../../utils/staticUI';
 import ConstituentsSideList from './ConstituentsSideList';
 import CreateCstModal from './CreateCstModal';
 import ExpressionEditor from './ExpressionEditor';
-import { RSFormTabsList } from './RSFormTabs';
+import { RSTabsList } from './RSTabs';
 
 function ConstituentEditor() {
   const navigate = useNavigate();
@@ -113,7 +114,7 @@ function ConstituentEditor() {
         insert_after: activeID
       }
       cstCreate(data, newCst => {
-        navigate(`/rsforms/${schema.id}?tab=${RSFormTabsList.CST_EDIT}&active=${newCst.id}`);
+        navigate(`/rsforms/${schema.id}?tab=${RSTabsList.CST_EDIT}&active=${newCst.id}`);
         toast.success(`Конституента добавлена: ${newCst.alias}`);
       });
     }
@@ -167,22 +168,18 @@ function ConstituentEditor() {
             </span>
           </div>
           <div className='flex justify-end'>
-            <button type='button'
-              title='Создать конституенты после данной'
-              className='px-1 py-1 font-bold rounded-full whitespace-nowrap disabled:cursor-not-allowed clr-btn-clear'
+            <MiniButton
+              tooltip='Создать конституенты после данной'
               disabled={!isEnabled}
               onClick={() => { handleAddNew(); }}
-            >
-              <SmallPlusIcon size={5} color={isEnabled ? 'text-green' : ''} />
-            </button>
-            <button type='button'
-              title='Удалить редактируемую конституенту'
-              className='px-1 py-1 font-bold rounded-full whitespace-nowrap disabled:cursor-not-allowed clr-btn-clear'
+              icon={<SmallPlusIcon size={5} color={isEnabled ? 'text-green' : ''} />} 
+            />
+            <MiniButton
+              tooltip='Удалить редактируемую конституенту'
               disabled={!isEnabled}
               onClick={handleDelete}
-            >
-              <DumpBinIcon size={5} color={isEnabled ? 'text-red' : ''} />
-            </button>
+              icon={<DumpBinIcon size={5} color={isEnabled ? 'text-red' : ''} />}
+            />
           </div>
         </div>
         <TextArea id='term' label='Термин'

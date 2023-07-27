@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -11,8 +11,9 @@ import { useAuth } from '../../context/AuthContext';
 import { useRSForm } from '../../context/RSFormContext';
 import useDropdown from '../../hooks/useDropdown';
 import { claimOwnershipProc, deleteRSFormProc, downloadRSFormProc, shareCurrentURLProc } from '../../utils/procedures';
+import UploadRSFormModal from './UploadRSFormModal';
 
-function TablistTools() {
+function RSTabsMenu() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const {
@@ -23,6 +24,7 @@ function TablistTools() {
   } = useRSForm();
   const schemaMenu = useDropdown();
   const editMenu = useDropdown();
+  const [showUploadModal, setShowUploadModal] = useState(false);
 
   const handleClaimOwner = useCallback(() => {
     editMenu.hide();
@@ -41,9 +43,8 @@ function TablistTools() {
   }, [schemaMenu, download, schema?.alias]);
 
   const handleUpload = useCallback(() => {
-    // TODO: implement
     schemaMenu.hide();
-    toast.info('Замена содержимого на файл Экстеора');
+    setShowUploadModal(true);
   }, [schemaMenu]);
 
   const handleClone = useCallback(() => {
@@ -58,6 +59,11 @@ function TablistTools() {
   }, [schemaMenu]);
 
   return (
+    <>
+    <UploadRSFormModal
+      show={showUploadModal}
+      hideWindow={() => { setShowUploadModal(false); }}
+    />
     <div className='flex items-center w-fit'>
       <div ref={schemaMenu.ref}>
         <Button
@@ -142,7 +148,8 @@ function TablistTools() {
           />
       </div>
     </div>
+    </>
   );
 }
 
-export default TablistTools
+export default RSTabsMenu

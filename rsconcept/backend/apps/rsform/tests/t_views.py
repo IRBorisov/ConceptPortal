@@ -115,7 +115,6 @@ class TestRSFormViewset(APITestCase):
         schema.insert_last(alias='X1', type=CstType.BASE)
         response = self.client.get(f'/api/rsforms/{schema.id}/contents/')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, schema.to_json())
 
     def test_details(self):
         schema = RSForm.objects.create(title='Test')
@@ -247,6 +246,57 @@ class TestRSFormViewset(APITestCase):
         response = self.client.patch(f'/api/rsforms/{schema.id}/cst-moveto/',
                                      data=data, content_type='application/json')
         self.assertEqual(response.status_code, 400)
+
+    def test_reset_aliases(self):
+        schema = self.rsform_owned
+        response = self.client.patch(f'/api/rsforms/{schema.id}/reset-aliases/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['id'], schema.id)
+
+        x2 = Constituenta.objects.create(schema=schema, alias='X2', cst_type='basic', order=1)
+        x1 = Constituenta.objects.create(schema=schema, alias='X1', cst_type='basic', order=2)
+        d11 = Constituenta.objects.create(schema=schema, alias='D11', cst_type='term', order=3)
+        response = self.client.patch(f'/api/rsforms/{schema.id}/reset-aliases/')
+        x1.refresh_from_db()
+        x2.refresh_from_db()
+        d11.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(x2.order, 1)
+        self.assertEqual(x2.alias, 'X1')
+        self.assertEqual(x1.order, 2)
+        self.assertEqual(x1.alias, 'X2')
+        self.assertEqual(d11.order, 3)
+        self.assertEqual(d11.alias, 'D1')
+
+        response = self.client.patch(f'/api/rsforms/{schema.id}/reset-aliases/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_load_trs(self):
+        schema = self.rsform_owned
+        schema.title = 'Testt11'
+        schema.save()
+        x1 = Constituenta.objects.create(schema=schema, alias='X1', cst_type='basic', order=1)
+        work_dir = os.path.dirname(os.path.abspath(__file__))
+        with open(f'{work_dir}/data/sample-rsform.trs', 'rb') as file:
+            data = {'file': file, 'load_metadata': False}
+            response = self.client.patch(f'/api/rsforms/{schema.id}/load-trs/', data=data, format='multipart')
+        schema.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(schema.title, 'Testt11')
+        self.assertEqual(len(response.data['items']), 25)
+        self.assertEqual(schema.constituents().count(), 25)
+        self.assertFalse(Constituenta.objects.all().filter(pk=x1.id).exists())
+
+    def test_clone(self):
+        schema = self.rsform_owned
+        schema.title = 'Testt11'
+        schema.save()
+        x1 = Constituenta.objects.create(schema=schema, alias='X12', cst_type='basic', order=1)
+        data = json.dumps({'title': 'Title'})
+        response = self.client.post(f'/api/rsforms/{schema.id}/clone/', data=data, content_type='application/json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data['title'], 'Title')
+        self.assertEqual(response.data['items'][0]['alias'], x1.alias)
 
 
 class TestFunctionalViews(APITestCase):

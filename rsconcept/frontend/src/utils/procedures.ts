@@ -21,7 +21,7 @@ export function claimOwnershipProc(
 }
 
 export function deleteRSFormProc(
-  destroy: (callback: DataCallback) => void,
+  destroy: (callback?: () => void) => void,
   navigate: (path: string) => void
 ) {
   if (!window.confirm('Вы уверены, что хотите удалить данную схему?')) {

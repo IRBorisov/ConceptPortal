@@ -5,7 +5,7 @@ import Button from './Button';
 import Label from './Label';
 
 interface FileInputProps {
-  id: string
+  id?: string
   required?: boolean
   label: string
   acceptType?: string
@@ -33,7 +33,7 @@ function FileInput({ id, required, label, acceptType, widthClass = 'w-full', onC
   };
 
   return (
-    <div className={'flex gap-2 py-2 mt-3 items-center ' + widthClass}>
+    <div className={'flex flex-col gap-2 py-2 [&:not(:first-child)]:mt-3 items-start ' + widthClass}>
       <input id={id} type='file'
         ref={inputRef}
         required={required}

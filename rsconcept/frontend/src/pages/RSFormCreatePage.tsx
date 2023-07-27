@@ -53,7 +53,7 @@ function RSFormCreatePage() {
       file: file,
       fileName: file?.name
     };
-    void createSchema(data, onSuccess);
+    createSchema(data, onSuccess);
   };
 
   return (

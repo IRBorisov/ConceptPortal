@@ -11,7 +11,7 @@ def load_initial_schemas(apps, schema_editor):
     for subdir, dirs, files in os.walk(rootdir):
         for file in files:
             data = utils.read_trs(os.path.join(subdir, file))
-            RSForm.import_json(None, data)
+            RSForm.create_from_trs(None, data)
 
 
 def load_initial_users(apps, schema_editor):

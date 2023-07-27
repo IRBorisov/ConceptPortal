@@ -18,13 +18,14 @@ interface ConstituentsTableProps {
 function ConstituentsTable({ onOpenEdit }: ConstituentsTableProps) {
   const {
     schema, isEditable,
-    cstCreate, cstDelete, cstMoveTo
+    cstCreate, cstDelete, cstMoveTo, resetAliases
   } = useRSForm();
   const { noNavigation } = useConceptTheme();
   const [selected, setSelected] = useState<number[]>([]);
   const nothingSelected = useMemo(() => selected.length === 0, [selected]);
 
   const [showCstModal, setShowCstModal] = useState(false);
+  const [toggledClearRows, setToggledClearRows] = useState(false);
 
   const handleRowClicked = useCallback(
   (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
@@ -39,8 +40,8 @@ function ConstituentsTable({ onOpenEdit }: ConstituentsTableProps) {
       selectedCount: number
       selectedRows: IConstituenta[]
     }) => {
-    setSelected(selectedRows.map((cst) => cst.id));
-  }, [setSelected]);
+      setSelected(selectedRows.map(cst => cst.id));
+    }, [setSelected]);
 
   // Delete selected constituents
   const handleDelete = useCallback(() => {
@@ -50,8 +51,11 @@ function ConstituentsTable({ onOpenEdit }: ConstituentsTableProps) {
     const data = {
       items: selected.map(id => { return { id }; })
     }
-    const deletedNames = selected.map(id => schema.items?.find((cst) => cst.id === id)?.alias).join(', ');
-    cstDelete(data, () => toast.success(`Конституенты удалены: ${deletedNames}`));
+    const deletedNames = selected.map(id => schema.items?.find(cst => cst.id === id)?.alias).join(', ');
+    cstDelete(data, () => {
+      toast.success(`Конституенты удалены: ${deletedNames}`);
+      setToggledClearRows(prev => !prev);
+    });
   }, [selected, schema?.items, cstDelete]);
 
   // Move selected cst up
@@ -70,7 +74,7 @@ function ConstituentsTable({ onOpenEdit }: ConstituentsTableProps) {
     }, -1);
     const target = Math.max(0, currentIndex - 1) + 1
     const data = {
-      items: selected.map(id => { return { id }; }),
+      items: selected.map(id => { return { id: id }; }),
       move_to: target
     }
     cstMoveTo(data);
@@ -96,16 +100,16 @@ function ConstituentsTable({ onOpenEdit }: ConstituentsTableProps) {
     }, -1);
     const target = Math.min(schema.items.length - 1, currentIndex - count + 2) + 1
     const data: ICstMovetoData = {
-      items: selected.map(id => { return { id }; }),
+      items: selected.map(id => { return { id: id }; }),
       move_to: target
     }
     cstMoveTo(data);
   }, [selected, schema?.items, cstMoveTo]);
 
   // Generate new names for all constituents
-  const handleReindex = useCallback(() => {
-    toast.info('Переиндексация');
-  }, []);
+  const handleReindex = useCallback(() => { 
+    resetAliases(() => toast.success('Переиндексация конституент успешна'));
+  }, [resetAliases]);
 
   // Add new constituent
   const handleAddNew = useCallback((type?: CstType) => {
@@ -130,7 +134,15 @@ function ConstituentsTable({ onOpenEdit }: ConstituentsTableProps) {
 
   // Implement hotkeys for working with constituents table
   function handleTableKey(event: React.KeyboardEvent<HTMLDivElement>) {
-    if (!event.altKey || !isEditable || event.shiftKey) {
+    if (!isEditable) {
+      return;
+    }
+    if (event.key === 'Delete' && selected.length > 0) {
+      event.preventDefault();
+      handleDelete();
+      return;
+    }
+    if (!event.altKey || event.shiftKey) {
       return;
     }
     if (processAltKey(event.key)) {
@@ -335,7 +347,11 @@ function ConstituentsTable({ onOpenEdit }: ConstituentsTableProps) {
           })}
         </div>}
       </div>
-      <div className='w-full h-full' onKeyDown={handleTableKey} tabIndex={0}>
+      <div className='w-full h-full' 
+        onKeyDown={handleTableKey}
+        tabIndex={0} 
+        title='Горячие клавиши:&#013;Двойной клик / Alt + клик - редактирование конституенты&#013;Alt + вверх/вниз - движение конституент&#013;Delete - удаление выбранных&#013;Alt + 1-6, Q,W - добавление конституент'
+      >
       <DataTableThemed
         data={schema?.items ?? []}
         columns={columns}
@@ -356,6 +372,7 @@ function ConstituentsTable({ onOpenEdit }: ConstituentsTableProps) {
         onSelectedRowsChange={handleSelectionChange}
         onRowDoubleClicked={onOpenEdit}
         onRowClicked={handleRowClicked}
+        clearSelectedRows={toggledClearRows}
         dense
       />
       </div>

@@ -8,12 +8,10 @@ import {
   ExpressionParse,
   IConstituentaList,
   IConstituentaMeta,
-  ICstCreateData,
-  ICstCreatedResponse,
-  ICstMovetoData,
-  ICstUpdateData,
+  ICstCreateData, ICstCreatedResponse, ICstMovetoData, ICstUpdateData,
   ICurrentUser, IRSFormCreateData, IRSFormData,
-  IRSFormMeta, IRSFormUpdateData, IUserInfo, IUserLoginData, IUserProfile, IUserSignupData, RSExpression
+  IRSFormMeta, IRSFormUpdateData, IRSFormUploadData, IUserInfo,
+  IUserLoginData, IUserProfile, IUserSignupData, RSExpression
 } from './models'
 
 // ================ Data transfer types ================
@@ -203,9 +201,30 @@ export function postCheckExpression(schema: string, request: FrontExchange<RSExp
   });
 }
 
+export function patchResetAliases(target: string, request: FrontPull<IRSFormData>) {
+  AxiosPatch({
+    title: `Reset alias for RSForm id=${target}`,
+    endpoint: `${config.url.BASE}rsforms/${target}/reset-aliases/`,
+    request: request
+  });
+}
+
+export function patchUploadTRS(target: string, request: FrontExchange<IRSFormUploadData, IRSFormData>) {
+  AxiosPatch({
+    title: `Replacing data with trs file for RSForm id=${target}`,
+    endpoint: `${config.url.BASE}rsforms/${target}/load-trs/`,
+    request: request,
+    options: {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    }
+  });
+}
+
 // ============ Helper functions =============
 function AxiosGet<ResponseData>({ endpoint, request, title, options }: IAxiosRequest<undefined, ResponseData>) {
-  console.log(`[[${title}]] requested`);
+  console.log(`REQUEST: [[${title}]]`);
   if (request.setLoading) request?.setLoading(true);
   axios.get<ResponseData>(endpoint, options)
     .then((response) => {
@@ -222,7 +241,7 @@ function AxiosGet<ResponseData>({ endpoint, request, title, options }: IAxiosReq
 function AxiosPost<RequestData, ResponseData>(
   { endpoint, request, title, options }: IAxiosRequest<RequestData, ResponseData>
 ) {
-  console.log(`[[${title}]] posted`);
+  console.log(`POST: [[${title}]]`);
   if (request.setLoading) request.setLoading(true);
   axios.post<ResponseData>(endpoint, request.data, options)
     .then((response) => {
@@ -239,7 +258,7 @@ function AxiosPost<RequestData, ResponseData>(
 function AxiosDelete<RequestData, ResponseData>(
   { endpoint, request, title, options }: IAxiosRequest<RequestData, ResponseData>
 ) {
-  console.log(`[[${title}]] is being deleted`);
+  console.log(`DELETE: [[${title}]]`);
   if (request.setLoading) request.setLoading(true);
   axios.delete<ResponseData>(endpoint, options)
     .then((response) => {
@@ -256,7 +275,7 @@ function AxiosDelete<RequestData, ResponseData>(
 function AxiosPatch<RequestData, ResponseData>(
   { endpoint, request, title, options }: IAxiosRequest<RequestData, ResponseData>
 ) {
-  console.log(`[[${title}]] is being patrially updated`);
+  console.log(`PATCH: [[${title}]]`);
   if (request.setLoading) request.setLoading(true);
   axios.patch<ResponseData>(endpoint, request.data, options)
     .then((response) => {

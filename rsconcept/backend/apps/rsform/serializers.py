@@ -20,6 +20,23 @@ class RSFormSerializer(serializers.ModelSerializer):
         read_only_fields = ('owner', 'id')
 
 
+class RSFormUploadSerializer(serializers.Serializer):
+    file = serializers.FileField()
+    load_metadata = serializers.BooleanField()
+
+
+class RSFormContentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RSForm
+
+    def to_representation(self, instance: RSForm):
+        result = RSFormSerializer(instance).data
+        result['items'] = []
+        for cst in instance.constituents().order_by('order'):
+            result['items'].append(ConstituentaSerializer(cst).data)
+        return result
+
+
 class ConstituentaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Constituenta
@@ -79,7 +96,7 @@ class RSFormDetailsSerlializer(serializers.BaseSerializer):
         model = RSForm
 
     def to_representation(self, instance: RSForm):
-        trs = pyconcept.check_schema(json.dumps(instance.to_json()))
+        trs = pyconcept.check_schema(json.dumps(instance.to_trs()))
         trs = trs.replace('entityUID', 'id')
         result = json.loads(trs)
         result['id'] = instance.id

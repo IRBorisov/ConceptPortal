@@ -179,6 +179,12 @@ extends IRSFormUpdateData {
   fileName?: string
 }
 
+export interface IRSFormUploadData {
+  load_metadata: boolean
+  file: File
+  fileName: string
+}
+
 // ================ Misc types ================
 // Constituenta edit mode
 export enum EditMode {

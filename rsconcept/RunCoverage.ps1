@@ -9,4 +9,4 @@ $exclude = '*/venv/*,*/tests/*,*/migrations/*,*__init__.py,manage.py,apps.py,url
 & $coverageExec report
 & $coverageExec html
 
-Start-Process "file:///D:/DEV/!WORK/Concept-Web/rsconcept/backend/htmlcov/index.html"
+Start-Process "file:///$PSScriptRoot\backend\htmlcov\index.html"
