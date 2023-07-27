@@ -5,10 +5,10 @@ import { useAuth } from '../context/AuthContext';
 function HomePage() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  if (user) {
-    navigate('/library?filter=personal');
-  } else {
+  if (!user) {
     navigate('/library?filter=common');
+  } else if(!user.is_staff) {
+    navigate('/library?filter=personal');
   }
 
   return (
