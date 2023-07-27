@@ -3,15 +3,15 @@ import { Route, Routes } from 'react-router-dom';
 import Footer from './components/Footer';
 import Navigation from './components/Navigation/Navigation';
 import ToasterThemed from './components/ToasterThemed';
+import CreateRSFormPage from './pages/CreateRSFormPage';
 import HomePage from './pages/HomePage';
+import LibraryPage from './pages/LibraryPage';
 import LoginPage from './pages/LoginPage';
 import ManualsPage from './pages/ManualsPage';
 import NotFoundPage from './pages/NotFoundPage';
 import RegisterPage from './pages/RegisterPage';
 import RestorePasswordPage from './pages/RestorePasswordPage';
-import RSFormCreatePage from './pages/RSFormCreatePage';
 import RSFormPage from './pages/RSFormPage';
-import RSFormsPage from './pages/RSFormsPage';
 import UserProfilePage from './pages/UserProfilePage';
 
 function App () {
@@ -35,9 +35,9 @@ function App () {
 
           <Route path='manuals' element={<ManualsPage/>} />
 
-          <Route path='rsforms' element={<RSFormsPage/>} />
+          <Route path='library' element={<LibraryPage/>} />
           <Route path='rsforms/:id' element={ <RSFormPage/>} />
-          <Route path='rsform-create' element={ <RSFormCreatePage/>} />
+          <Route path='rsform-create' element={ <CreateRSFormPage/>} />
           <Route path='*' element={ <NotFoundPage/>} />
         </Routes>
       </main>

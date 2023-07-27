@@ -5,14 +5,14 @@ import Modal from '../../components/Common/Modal';
 import { type CstType } from '../../utils/models';
 import { CstTypeSelector, getCstTypeLabel } from '../../utils/staticUI';
 
-interface CreateCstModalProps {
+interface DlgCreateCstProps {
   show: boolean
   hideWindow: () => void
   defaultType?: CstType
   onCreate: (type: CstType) => void
 }
 
-function CreateCstModal({ show, hideWindow, defaultType, onCreate }: CreateCstModalProps) {
+function DlgCreateCst({ show, hideWindow, defaultType, onCreate }: DlgCreateCstProps) {
   const [validated, setValidated] = useState(false);
   const [selectedType, setSelectedType] = useState<CstType | undefined>(undefined);
 
@@ -48,4 +48,4 @@ function CreateCstModal({ show, hideWindow, defaultType, onCreate }: CreateCstMo
   )
 }
 
-export default CreateCstModal;
+export default DlgCreateCst;

@@ -27,7 +27,7 @@ function UserDropdown({ hideDropdown }: UserDropdownProps) {
 
   const navigateMyWork = () => {
     hideDropdown();
-    navigate('/rsforms?filter=personal');
+    navigate('/library?filter=personal');
   };
 
   return (

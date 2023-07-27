@@ -9,13 +9,13 @@ import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import { CstType, type IConstituenta, type ICstCreateData, ICstMovetoData,inferStatus, ParsingStatus, ValueClass } from '../../utils/models'
 import { createAliasFor, getCstTypePrefix, getCstTypeShortcut, getStatusInfo, getTypeLabel } from '../../utils/staticUI';
-import CreateCstModal from './CreateCstModal';
+import DlgCreateCst from './DlgCreateCst';
 
-interface ConstituentsTableProps {
+interface EditorItemsProps {
   onOpenEdit: (cst: IConstituenta) => void
 }
 
-function ConstituentsTable({ onOpenEdit }: ConstituentsTableProps) {
+function EditorItems({ onOpenEdit }: EditorItemsProps) {
   const {
     schema, isEditable,
     cstCreate, cstDelete, cstMoveTo, resetAliases
@@ -284,7 +284,7 @@ function ConstituentsTable({ onOpenEdit }: ConstituentsTableProps) {
   );
 
   return (<>
-    <CreateCstModal
+    <DlgCreateCst
       show={showCstModal}
       hideWindow={() => { setShowCstModal(false); }}
       onCreate={handleAddNew}
@@ -380,4 +380,4 @@ function ConstituentsTable({ onOpenEdit }: ConstituentsTableProps) {
   </>);
 }
 
-export default ConstituentsTable;
+export default EditorItems;

@@ -11,7 +11,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useRSForm } from '../../context/RSFormContext';
 import useDropdown from '../../hooks/useDropdown';
 import { claimOwnershipProc, deleteRSFormProc, downloadRSFormProc, shareCurrentURLProc } from '../../utils/procedures';
-import UploadRSFormModal from './UploadRSFormModal';
+import DlgUploadRSForm from './DlgUploadRSForm';
 
 function RSTabsMenu() {
   const navigate = useNavigate();
@@ -60,7 +60,7 @@ function RSTabsMenu() {
 
   return (
     <>
-    <UploadRSFormModal
+    <DlgUploadRSForm
       show={showUploadModal}
       hideWindow={() => { setShowUploadModal(false); }}
     />

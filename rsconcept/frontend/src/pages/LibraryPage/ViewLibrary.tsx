@@ -6,11 +6,11 @@ import DataTableThemed from '../../components/Common/DataTableThemed';
 import { useUsers } from '../../context/UsersContext';
 import { IRSFormMeta } from '../../utils/models'
 
-interface RSFormsTableProps {
+interface ViewLibraryProps {
   schemas: IRSFormMeta[]
 }
 
-function RSFormsTable({ schemas }: RSFormsTableProps) {
+function ViewLibrary({ schemas }: ViewLibraryProps) {
   const navigate = useNavigate();
   const intl = useIntl();
   const { getUserLabel } = useUsers();
@@ -81,4 +81,4 @@ function RSFormsTable({ schemas }: RSFormsTableProps) {
   );
 }
 
-export default RSFormsTable;
+export default ViewLibrary;

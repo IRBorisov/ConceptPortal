@@ -1,6 +1,6 @@
 // Formatted text editing helpers
 
-import { TokenID } from '../../utils/enums';
+import { TokenID } from '../../../utils/enums';
 
 export function getSymbolSubstitute(input: string): string | undefined {
   switch (input) {

@@ -7,10 +7,10 @@ import { Loader } from '../../components/Common/Loader';
 import { useRSForm } from '../../context/RSFormContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { type IConstituenta } from '../../utils/models';
-import ConstituentEditor from './ConstituentEditor';
-import ConstituentsTable from './ConstituentsTable';
-import RSFormCard from './RSFormCard';
-import RSFormStats from './RSFormStats';
+import EditorConstituenta from './EditorConstituenta';
+import EditorItems from './EditorItems';
+import EditorRSForm from './EditorRSForm';
+import RSFormStats from './elements/RSFormStats';
 import RSTabsMenu from './RSTabsMenu';
 
 export enum RSTabsList {
@@ -96,16 +96,16 @@ function RSTabs() {
       </TabList>
 
       <TabPanel className='flex items-start w-full gap-2'>
-        <RSFormCard />
+        <EditorRSForm />
         {schema.stats && <RSFormStats stats={schema.stats}/>}
       </TabPanel>
 
       <TabPanel className='w-full'>
-        <ConstituentsTable onOpenEdit={onEditCst} />
+        <EditorItems onOpenEdit={onEditCst} />
       </TabPanel>
 
       <TabPanel>
-        <ConstituentEditor />
+        <EditorConstituenta />
       </TabPanel>
     </Tabs>
     }

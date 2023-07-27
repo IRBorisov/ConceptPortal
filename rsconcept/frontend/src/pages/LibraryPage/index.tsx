@@ -5,9 +5,9 @@ import BackendError from '../../components/BackendError'
 import { Loader } from '../../components/Common/Loader'
 import { useAuth } from '../../context/AuthContext';
 import { FilterType, type RSFormsFilter, useRSForms } from '../../hooks/useRSForms'
-import RSFormsTable from './RSFormsTable';
+import ViewLibrary from './ViewLibrary';
 
-function RSFormsPage() {
+function LibraryPage() {
   const search = useLocation().search;
   const { user } = useAuth();
   const { rsforms, error, loading, loadList } = useRSForms();
@@ -26,9 +26,9 @@ function RSFormsPage() {
     <div className='w-full'>
       { loading && <Loader /> }
       { error && <BackendError error={error} />}
-      { !loading && rsforms && <RSFormsTable schemas={rsforms} /> }
+      { !loading && rsforms && <ViewLibrary schemas={rsforms} /> }
     </div>
   );
 }
 
-export default RSFormsPage;
+export default LibraryPage;

@@ -6,9 +6,9 @@ function HomePage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   if (user) {
-    navigate('/rsforms?filter=personal');
+    navigate('/library?filter=personal');
   } else {
-    navigate('/rsforms?filter=common');
+    navigate('/library?filter=common');
   }
 
   return (

@@ -13,7 +13,7 @@ import RequireAuth from '../components/RequireAuth';
 import useNewRSForm from '../hooks/useNewRSForm';
 import { IRSFormCreateData, IRSFormMeta } from '../utils/models';
 
-function RSFormCreatePage() {
+function CreateRSFormPage() {
   const navigate = useNavigate();
 
   const [title, setTitle] = useState('');
@@ -95,4 +95,4 @@ function RSFormCreatePage() {
   );
 }
 
-export default RSFormCreatePage;
+export default CreateRSFormPage;

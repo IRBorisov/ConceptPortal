@@ -7,12 +7,12 @@ import Modal from '../../components/Common/Modal';
 import { useRSForm } from '../../context/RSFormContext';
 import { IRSFormUploadData } from '../../utils/models';
 
-interface UploadRSFormModalProps {
+interface DlgUploadRSFormProps {
   show: boolean
   hideWindow: () => void
 }
 
-function UploadRSFormModal({ show, hideWindow }: UploadRSFormModalProps) {
+function DlgUploadRSForm({ show, hideWindow }: DlgUploadRSFormProps) {
   const { upload } = useRSForm();
   const [loadMetadata, setLoadMetadata] = useState(false);
   const [file, setFile] = useState<File | undefined>()
@@ -60,4 +60,4 @@ function UploadRSFormModal({ show, hideWindow }: UploadRSFormModalProps) {
   )
 }
 
-export default UploadRSFormModal;
+export default DlgUploadRSForm;

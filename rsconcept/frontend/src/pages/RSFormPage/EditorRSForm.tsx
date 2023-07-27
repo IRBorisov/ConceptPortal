@@ -15,7 +15,7 @@ import { useUsers } from '../../context/UsersContext';
 import { IRSFormCreateData } from '../../utils/models';
 import { claimOwnershipProc, deleteRSFormProc, downloadRSFormProc, shareCurrentURLProc } from '../../utils/procedures';
 
-function RSFormCard() {
+function EditorRSForm() {
   const navigate = useNavigate();
   const intl = useIntl();
   const { getUserLabel } = useUsers();
@@ -153,4 +153,4 @@ function RSFormCard() {
   );
 }
 
-export default RSFormCard;
+export default EditorRSForm;

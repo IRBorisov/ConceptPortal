@@ -9,12 +9,12 @@ import { DumpBinIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { type CstType, EditMode, type ICstCreateData, ICstUpdateData } from '../../utils/models';
 import { createAliasFor, getCstTypeLabel } from '../../utils/staticUI';
-import ConstituentsSideList from './ConstituentsSideList';
-import CreateCstModal from './CreateCstModal';
-import ExpressionEditor from './ExpressionEditor';
+import DlgCreateCst from './DlgCreateCst';
+import EditorRSExpression from './EditorRSExpression';
+import ViewSideConstituents from './elements/ViewSideConstituents';
 import { RSTabsList } from './RSTabs';
 
-function ConstituentEditor() {
+function EditorConstituenta() {
   const navigate = useNavigate();
   const {
     activeCst, activeID, schema, setActiveID, processing, isEditable,
@@ -94,11 +94,13 @@ function ConstituentEditor() {
       items: [{ id: activeID }]
     }
     const index = schema.items.findIndex((cst) => cst.id === activeID);
+    let newActive: number | undefined = undefined
     if (index !== -1 && index + 1 < schema.items.length) {
-      setActiveID(schema.items[index + 1].id);
+      newActive = schema.items[index + 1].id;
     }
     cstDelete(data, () => toast.success('Конституента удалена'));
-  }, [activeID, schema, setActiveID, cstDelete]);
+    if (newActive) navigate(`/rsforms/${schema.id}?tab=${RSTabsList.CST_EDIT}&active=${newActive}`);
+  }, [activeID, schema, cstDelete, navigate]);
 
   const handleAddNew = useCallback(
   (type?: CstType) => {
@@ -130,7 +132,7 @@ function ConstituentEditor() {
 
   return (
     <div className='flex items-start w-full gap-2'>
-      <CreateCstModal
+      <DlgCreateCst
         show={showCstModal}
         hideWindow={() => { setShowCstModal(false); }}
         onCreate={handleAddNew}
@@ -196,7 +198,7 @@ function ConstituentEditor() {
           value={typification}
           disabled
         />
-        <ExpressionEditor id='expression' label='Формальное выражение'
+        <EditorRSExpression id='expression' label='Формальное выражение'
           placeholder='Родоструктурное выражение, задающее формальное определение'
           value={expression}
           disabled={!isEnabled}
@@ -232,9 +234,9 @@ function ConstituentEditor() {
           />
         </div>
       </form>
-      <ConstituentsSideList expression={expression}/>
+      <ViewSideConstituents expression={expression}/>
     </div>
   );
 }
 
-export default ConstituentEditor;
+export default EditorConstituenta;

@@ -8,13 +8,13 @@ import { useRSForm } from '../../context/RSFormContext';
 import useCheckExpression from '../../hooks/useCheckExpression';
 import { TokenID } from '../../utils/enums';
 import { CstType } from '../../utils/models';
-import ParsingResult from './ParsingResult';
-import RSLocalButton from './RSLocalButton';
-import RSTokenButton from './RSTokenButton';
-import StatusBar from './StatusBar';
-import { getSymbolSubstitute, TextWrapper } from './textEditing';
+import ParsingResult from './elements/ParsingResult';
+import RSLocalButton from './elements/RSLocalButton';
+import RSTokenButton from './elements/RSTokenButton';
+import StatusBar from './elements/StatusBar';
+import { getSymbolSubstitute, TextWrapper } from './elements/textEditing';
 
-interface ExpressionEditorProps {
+interface EditorRSExpressionProps {
   id: string
   label: string
   isActive: boolean
@@ -27,10 +27,10 @@ interface ExpressionEditorProps {
   setValue: (expression: string) => void
 }
 
-function ExpressionEditor({
+function EditorRSExpression({
   id, label, disabled, isActive, placeholder, value, setValue,
   toggleEditMode, setTypification, onChange
-}: ExpressionEditorProps) {
+}: EditorRSExpressionProps) {
   const { schema, activeCst } = useRSForm();
   const [isModified, setIsModified] = useState(false);
   const { parseData, checkExpression, resetParse, loading } = useCheckExpression({ schema });
@@ -231,4 +231,4 @@ function ExpressionEditor({
   );
 }
 
-export default ExpressionEditor;
+export default EditorRSExpression;

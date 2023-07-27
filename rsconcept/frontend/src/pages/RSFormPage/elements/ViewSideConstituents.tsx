@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import Checkbox from '../../components/Common/Checkbox';
-import DataTableThemed from '../../components/Common/DataTableThemed';
-import { useRSForm } from '../../context/RSFormContext';
-import useLocalStorage from '../../hooks/useLocalStorage';
-import { CstType, type IConstituenta, matchConstituenta } from '../../utils/models';
-import { extractGlobals, getMockConstituenta } from '../../utils/staticUI';
+import Checkbox from '../../../components/Common/Checkbox';
+import DataTableThemed from '../../../components/Common/DataTableThemed';
+import { useRSForm } from '../../../context/RSFormContext';
+import useLocalStorage from '../../../hooks/useLocalStorage';
+import { CstType, type IConstituenta, matchConstituenta } from '../../../utils/models';
+import { extractGlobals, getMockConstituenta } from '../../../utils/staticUI';
 
-interface ConstituentsSideListProps {
+interface ViewSideConstituentsProps {
   expression: string
 }
 
-function ConstituentsSideList({ expression }: ConstituentsSideListProps) {
+function ViewSideConstituents({ expression }: ViewSideConstituentsProps) {
   const { schema, setActiveID } = useRSForm();
   const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema?.items ?? []);
   const [filterText, setFilterText] = useLocalStorage('side-filter-text', '')
@@ -145,4 +145,4 @@ function ConstituentsSideList({ expression }: ConstituentsSideListProps) {
 );
 }
 
-export default ConstituentsSideList;
+export default ViewSideConstituents;

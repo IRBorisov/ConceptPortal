@@ -29,7 +29,7 @@ export function deleteRSFormProc(
   }
   destroy(() => {
     toast.success('Схема удалена');
-    navigate('/rsforms?filter=personal');
+    navigate('/library?filter=personal');
   });
 }
 
