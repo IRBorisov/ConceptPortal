@@ -1,5 +1,6 @@
 # ConceptPortal
-React + Django based web portal for editing RSForm schemas
+React + Django based web portal for editing RSForm schemas.
+This readme file is used mostly to document project dependencies
 
 
 # Developer Setup Notes
@@ -9,8 +10,66 @@ React + Django based web portal for editing RSForm schemas
 - run 'npm install' in rsconcept\frontend
 - use VSCode configs in root folder to start developement
 
+# Frontend stack & Tooling [Vite + React]
+<details>
+<summary>npm install</summary>
+  <pre>
+  - axios
+  - react-router-dom 
+  - react-toastify
+  - react-loader-spinner
+  - js-file-download
+  - react-tabs
+  - react-intl
+  - react-data-table-component
+  - react-select
+  - react-error-boundary
+  </pre>
+</details>
+<details>
+<summary>npm install -D</summary>
+  <pre>
+  - tailwindcss postcss autoprefixer
+  - eslint-plugin-simple-import-sort
+  </pre>
+</details>
+<details>
+<summary>VS Code plugins</summary>
+  <pre>
+  - ESLint
+  - 
+  </pre>
+</details>
 
-# This project was made possible because of these incredible projects and tools
-This project is based on multiple projects and works listed below. If you notice any problems with licensing or missing acknowledgements please inform repository maintainer.
+# Backend stack & Tooling [Django + PostgreSQL/SQLite]
+- [ConceptCore](https://github.com/IRBorisov/ConceptCore)
+<details>
+<summary>requirements</summary>
+  <pre>
+  - tzdata
+  - django
+  - djangorestframework
+  - django-cors-headers
+  - django-filter
+  - gunicorn
+  - coreapi
+  - psycopg2-binary
+  </pre>
+</details>
+<details>
+<summary>requirements_dev</summary>
+  <pre>
+  - coverage
+  </pre>
+</details>
+<details>
+<summary>VS Code plugins</summary>
+  <pre>
+  - 
+  - 
+  </pre>
+</details>
 
-- TODO
+# DevOps
+- Docker compose
+- PowerShell
