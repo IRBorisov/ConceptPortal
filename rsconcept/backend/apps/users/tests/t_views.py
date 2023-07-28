@@ -54,6 +54,19 @@ class TestUserUserProfileAPIView(APITestCase):
         self.assertEqual(response.data['first_name'], self.first_name)
         self.assertEqual(response.data['last_name'], '')
 
+    def test_patch_profile(self):
+        self.client.force_login(user=self.user)
+        data = json.dumps({
+            'email': '123@mail.ru',
+            'first_name': 'firstName',
+            'last_name': 'lastName',
+        })
+        response = self.client.patch('/users/api/profile', data=data, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['email'], '123@mail.ru')
+        self.assertEqual(response.data['first_name'], 'firstName')
+        self.assertEqual(response.data['last_name'], 'lastName')
+
     def test_edit_profile(self):
         newmail = 'newmail@gmail.com'
         data = json.dumps({'email': newmail})

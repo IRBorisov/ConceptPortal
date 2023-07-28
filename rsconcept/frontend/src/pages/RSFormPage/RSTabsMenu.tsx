@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Button from '../../components/Common/Button';
@@ -10,10 +10,13 @@ import { useAuth } from '../../context/AuthContext';
 import { useRSForm } from '../../context/RSFormContext';
 import useDropdown from '../../hooks/useDropdown';
 import { claimOwnershipProc, deleteRSFormProc, downloadRSFormProc, shareCurrentURLProc } from '../../utils/procedures';
-import DlgCloneRSForm from './DlgCloneRSForm';
-import DlgUploadRSForm from './DlgUploadRSForm';
 
-function RSTabsMenu() {
+interface RSTabsMenuProps {
+  showUploadDialog: () => void
+  showCloneDialog: () => void
+}
+
+function RSTabsMenu({showUploadDialog, showCloneDialog}: RSTabsMenuProps) {
   const navigate = useNavigate();
   const { user } = useAuth();
   const {
@@ -24,8 +27,7 @@ function RSTabsMenu() {
   } = useRSForm();
   const schemaMenu = useDropdown();
   const editMenu = useDropdown();
-  const [showUploadDialog, setShowUploadDialog] = useState(false);
-  const [showCloneDialog, setShowCloneDialogl] = useState(false);
+  
 
   const handleClaimOwner = useCallback(() => {
     editMenu.hide();
@@ -45,29 +47,20 @@ function RSTabsMenu() {
 
   const handleUpload = useCallback(() => {
     schemaMenu.hide();
-    setShowUploadDialog(true);
-  }, [schemaMenu]);
+    showUploadDialog();
+  }, [schemaMenu, showUploadDialog]);
 
   const handleClone = useCallback(() => {
     schemaMenu.hide();
-    setShowCloneDialogl(true);
-  }, [schemaMenu]);
+    showCloneDialog();
+  }, [schemaMenu, showCloneDialog]);
 
   const handleShare = useCallback(() => {
     schemaMenu.hide();
     shareCurrentURLProc();
   }, [schemaMenu]);
 
-  return (
-    <>
-    <DlgUploadRSForm
-      show={showUploadDialog}
-      hideWindow={() => { setShowUploadDialog(false); }}
-    />
-    <DlgCloneRSForm
-      show={showCloneDialog}
-      hideWindow={() => { setShowCloneDialogl(false); }}
-    />
+  return (    
     <div className='flex items-center w-fit'>
       <div ref={schemaMenu.ref}>
         <Button
@@ -152,7 +145,6 @@ function RSTabsMenu() {
           />
       </div>
     </div>
-    </>
   );
 }
 

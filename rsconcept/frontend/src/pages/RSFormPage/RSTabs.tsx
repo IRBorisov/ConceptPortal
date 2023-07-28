@@ -7,6 +7,8 @@ import { Loader } from '../../components/Common/Loader';
 import { useRSForm } from '../../context/RSFormContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { type IConstituenta } from '../../utils/models';
+import DlgCloneRSForm from './DlgCloneRSForm';
+import DlgUploadRSForm from './DlgUploadRSForm';
 import EditorConstituenta from './EditorConstituenta';
 import EditorItems from './EditorItems';
 import EditorRSForm from './EditorRSForm';
@@ -23,6 +25,9 @@ function RSTabs() {
   const { setActiveID, activeID, error, schema, loading } = useRSForm();
   const [tabIndex, setTabIndex] = useLocalStorage('rsform_edit_tab', RSTabsList.CARD);
   const [init, setInit] = useState(false);
+
+  const [showUploadDialog, setShowUploadDialog] = useState(false);
+  const [showCloneDialog, setShowCloneDialog] = useState(false);
 
   const onEditCst = (cst: IConstituenta) => {
     setActiveID(cst.id);
@@ -84,6 +89,15 @@ function RSTabs() {
     { loading && <Loader /> }
     { error && <BackendError error={error} />}
     { schema && !loading &&
+    <>
+    <DlgUploadRSForm
+      show={showUploadDialog}
+      hideWindow={() => { setShowUploadDialog(false); }}
+    />
+    <DlgCloneRSForm
+      show={showCloneDialog}
+      hideWindow={() => { setShowCloneDialog(false); }}
+    />
     <Tabs
       selectedIndex={tabIndex}
       onSelect={onSelectTab}
@@ -91,7 +105,10 @@ function RSTabs() {
       selectedTabClassName='font-bold'
     >
       <TabList className='flex items-start w-fit clr-bg-pop'>
-        <RSTabsMenu />
+        <RSTabsMenu 
+          showCloneDialog={() => setShowCloneDialog(true)} 
+          showUploadDialog={() => setShowUploadDialog(true)} 
+        />
         <ConceptTab>Паспорт схемы</ConceptTab>
         <ConceptTab className='border-x-2 clr-border min-w-[10rem] flex justify-between gap-2'>
           <span>Конституенты</span>
@@ -112,7 +129,7 @@ function RSTabs() {
       <TabPanel>
         <EditorConstituenta />
       </TabPanel>
-    </Tabs>
+    </Tabs></>
     }
   </div>);
 }

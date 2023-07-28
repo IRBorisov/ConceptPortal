@@ -233,7 +233,7 @@ export function patchUploadTRS(target: string, request: FrontExchange<IRSFormUpl
 // ============ Helper functions =============
 function AxiosGet<ResponseData>({ endpoint, request, title, options }: IAxiosRequest<undefined, ResponseData>) {
   console.log(`REQUEST: [[${title}]]`);
-  if (request.setLoading) request?.setLoading(true);
+  if (request.setLoading) request.setLoading(true);
   axios.get<ResponseData>(endpoint, options)
     .then((response) => {
       if (request.setLoading) request.setLoading(false);
