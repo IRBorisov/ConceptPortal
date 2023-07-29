@@ -10,7 +10,7 @@ This readme file is used mostly to document project dependencies
 - run 'npm install' in rsconcept\frontend
 - use VSCode configs in root folder to start developement
 
-# Frontend stack & Tooling [Vite + React]
+# Frontend stack & Tooling [Vite + React + Typescript]
 <details>
 <summary>npm install</summary>
   <pre>
@@ -24,6 +24,7 @@ This readme file is used mostly to document project dependencies
   - react-data-table-component
   - react-select
   - react-error-boundary
+  - reagraph
   </pre>
 </details>
 <details>
