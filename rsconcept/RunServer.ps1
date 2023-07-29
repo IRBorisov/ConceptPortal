@@ -35,8 +35,11 @@ function RunFrontend() {
 }
 
 function FlushData {
-    & $pyExec $djangoSrc flush --no-input
-	Remove-Item $PSScriptRoot\backend\db.sqlite3
+    & $pyExec $djangoSrc flush --no-input\
+    $dbPath = "$PSScriptRoot\backend\db.sqlite3"
+    if (Test-Path -Path $dbPath -PathType Leaf) {
+	    Remove-Item $dbPath
+    }
 }
 
 function AddAdmin {
