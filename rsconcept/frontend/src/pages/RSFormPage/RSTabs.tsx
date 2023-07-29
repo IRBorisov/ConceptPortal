@@ -165,12 +165,12 @@ function RSTabs() {
           showCloneDialog={() => setShowClone(true)} 
           showUploadDialog={() => setShowUpload(true)} 
         />
-        <ConceptTab>Паспорт схемы</ConceptTab>
-        <ConceptTab className='border-x-2 clr-border min-w-[10rem] flex justify-between gap-2'>
+        <ConceptTab className='border-r-2'>Паспорт схемы</ConceptTab>
+        <ConceptTab className='border-r-2 min-w-[10rem] flex justify-between gap-2'>
           <span>Конституенты</span>
           <span>{`${schema.stats?.count_errors ?? 0} | ${schema.stats?.count_all ?? 0}`}</span>
         </ConceptTab>
-        <ConceptTab>Редактор</ConceptTab>
+        <ConceptTab className='border-r-2'>Редактор</ConceptTab>
         <ConceptTab>Граф термов</ConceptTab>
       </TabList>
 

@@ -179,8 +179,8 @@ export interface IRSForm {
   graph: Graph
 }
 
-export interface IRSFormData extends Omit<IRSForm, 'stats' > {}
-export interface IRSFormMeta extends Omit<IRSForm, 'items' | 'stats'> {}
+export interface IRSFormData extends Omit<IRSForm, 'stats' | 'graph'> {}
+export interface IRSFormMeta extends Omit<IRSForm, 'items' | 'stats' | 'graph'> {}
 
 export interface IRSFormUpdateData
 extends Omit<IRSFormMeta, 'time_create' | 'time_update' | 'id' | 'owner'> {}

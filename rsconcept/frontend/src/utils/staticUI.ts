@@ -1,3 +1,5 @@
+import { LayoutTypes } from 'reagraph';
+
 import { resolveErrorClass,RSErrorClass, RSErrorType, TokenID } from './enums';
 import { CstType, ExpressionStatus, type IConstituenta, IRSErrorDescription,type IRSForm, ParsingStatus, ValueClass } from './models';
 
@@ -214,7 +216,23 @@ export const CstTypeSelector = (Object.values(CstType)).map(
   (typeStr) => {
     const type = typeStr as CstType;
     return { value: type, label: getCstTypeLabel(type) };
-  });
+});
+
+export const GraphLayoutSelector: {value: LayoutTypes, label: string}[] = [
+  { value: 'forceatlas2', label: 'forceatlas2'},
+  { value: 'nooverlap', label: 'nooverlap'},
+  { value: 'forceDirected2d', label: 'forceDirected2d'},
+  { value: 'forceDirected3d', label: 'forceDirected3d'},
+  { value: 'circular2d', label: 'circular2d'},
+  { value: 'treeTd2d', label: 'treeTd2d'},
+  { value: 'treeTd3d', label: 'treeTd3d'},
+  { value: 'treeLr2d', label: 'treeLr2d'},
+  { value: 'treeLr3d', label: 'treeLr3d'},
+  { value: 'radialOut2d', label: 'radialOut2d'},
+  { value: 'radialOut3d', label: 'radialOut3d'},
+//  { value: 'hierarchicalTd', label: 'hierarchicalTd'},
+//  { value: 'hierarchicalLr', label: 'hierarchicalLr'}
+];
 
 export function getCstTypePrefix(type: CstType) {
   switch (type) {

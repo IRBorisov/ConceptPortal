@@ -52,7 +52,7 @@
   }
 
   .clr-tab {
-    @apply text-gray-600 dark:text-zinc-200 hover:bg-gray-300 dark:hover:bg-gray-400
+    @apply clr-border text-gray-600 dark:text-zinc-200 hover:bg-gray-300 dark:hover:bg-gray-400
   }
 
   .clr-hover {
