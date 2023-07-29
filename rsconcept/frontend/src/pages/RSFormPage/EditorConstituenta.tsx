@@ -7,25 +7,24 @@ import SubmitButton from '../../components/Common/SubmitButton';
 import TextArea from '../../components/Common/TextArea';
 import { DumpBinIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
-import { type CstType, EditMode, type ICstCreateData, ICstUpdateData, SyntaxTree } from '../../utils/models';
-import { createAliasFor, getCstTypeLabel } from '../../utils/staticUI';
-import DlgCreateCst from './DlgCreateCst';
+import { type CstType, EditMode, ICstUpdateData, SyntaxTree } from '../../utils/models';
+import { getCstTypeLabel } from '../../utils/staticUI';
 import EditorRSExpression from './EditorRSExpression';
 import ViewSideConstituents from './elements/ViewSideConstituents';
 import { RSTabsList } from './RSTabs';
 
 interface EditorConstituentaProps {
   onShowAST: (ast: SyntaxTree) => void
+  onShowCreateCst: (position: number | undefined, type: CstType | undefined) => void
 }
 
-function EditorConstituenta({onShowAST}: EditorConstituentaProps) {
+function EditorConstituenta({ onShowAST, onShowCreateCst }: EditorConstituentaProps) {
   const navigate = useNavigate();
   const {
     activeCst, activeID, schema, setActiveID, processing, isEditable,
-    cstDelete, cstUpdate, cstCreate
+    cstDelete, cstUpdate
   } = useRSForm();
 
-  const [showCstModal, setShowCstModal] = useState(false);
   const [isModified, setIsModified] = useState(false);
   const [editMode, setEditMode] = useState(EditMode.TEXT);
 
@@ -107,24 +106,12 @@ function EditorConstituenta({onShowAST}: EditorConstituentaProps) {
   }, [activeID, schema, cstDelete, navigate]);
 
   const handleAddNew = useCallback(
-  (type?: CstType) => {
-    if (!activeID || !schema?.items) {
+  () => {
+    if (!activeID || !schema) {
       return;
     }
-    if (!type) {
-      setShowCstModal(true);
-    } else {
-      const data: ICstCreateData = {
-        cst_type: type,
-        alias: createAliasFor(type, schema),
-        insert_after: activeID
-      }
-      cstCreate(data, newCst => {
-        navigate(`/rsforms/${schema.id}?tab=${RSTabsList.CST_EDIT}&active=${newCst.id}`);
-        toast.success(`Конституента добавлена: ${newCst.alias}`);
-      });
-    }
-  }, [activeID, schema, cstCreate, navigate]);
+    onShowCreateCst(activeID, activeCst?.cstType);
+  }, [activeID, activeCst?.cstType, schema, onShowCreateCst]);
 
   const handleRename = useCallback(() => {
     toast.info('Переименование в разработке');
@@ -136,11 +123,6 @@ function EditorConstituenta({onShowAST}: EditorConstituentaProps) {
 
   return (
     <div className='flex items-start w-full gap-2'>
-      {showCstModal && <DlgCreateCst
-        hideWindow={() => { setShowCstModal(false); }}
-        onCreate={handleAddNew}
-        defaultType={activeCst?.cstType as CstType}
-      />}
       <form onSubmit={handleSubmit} className='flex-grow min-w-[50rem] max-w-min px-4 py-2 border'>
         <div className='flex items-start justify-between'>
             <button type='submit'
@@ -176,7 +158,7 @@ function EditorConstituenta({onShowAST}: EditorConstituentaProps) {
             <MiniButton
               tooltip='Создать конституенты после данной'
               disabled={!isEnabled}
-              onClick={() => { handleAddNew(); }}
+              onClick={handleAddNew}
               icon={<SmallPlusIcon size={5} color={isEnabled ? 'text-green' : ''} />} 
             />
             <MiniButton

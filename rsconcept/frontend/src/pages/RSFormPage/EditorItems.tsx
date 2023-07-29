@@ -7,24 +7,23 @@ import Divider from '../../components/Common/Divider';
 import { ArrowDownIcon, ArrowsRotateIcon, ArrowUpIcon, DumpBinIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
-import { CstType, type IConstituenta, type ICstCreateData, ICstMovetoData,inferStatus, ParsingStatus, ValueClass } from '../../utils/models'
-import { createAliasFor, getCstTypePrefix, getCstTypeShortcut, getStatusInfo, getTypeLabel } from '../../utils/staticUI';
-import DlgCreateCst from './DlgCreateCst';
+import { CstType, type IConstituenta, ICstMovetoData, inferStatus, ParsingStatus, ValueClass } from '../../utils/models'
+import { getCstTypePrefix, getCstTypeShortcut, getStatusInfo, getTypeLabel } from '../../utils/staticUI';
 
 interface EditorItemsProps {
   onOpenEdit: (cst: IConstituenta) => void
+  onShowCreateCst: (position: number | undefined, type: CstType | undefined, skipDialog?: boolean) => void
 }
 
-function EditorItems({ onOpenEdit }: EditorItemsProps) {
+function EditorItems({ onOpenEdit, onShowCreateCst }: EditorItemsProps) {
   const {
     schema, isEditable,
-    cstCreate, cstDelete, cstMoveTo, resetAliases
+    cstDelete, cstMoveTo, resetAliases
   } = useRSForm();
   const { noNavigation } = useConceptTheme();
   const [selected, setSelected] = useState<number[]>([]);
   const nothingSelected = useMemo(() => selected.length === 0, [selected]);
 
-  const [showCstModal, setShowCstModal] = useState(false);
   const [toggledClearRows, setToggledClearRows] = useState(false);
 
   const handleRowClicked = useCallback(
@@ -112,25 +111,18 @@ function EditorItems({ onOpenEdit }: EditorItemsProps) {
   }, [resetAliases]);
 
   // Add new constituent
-  const handleAddNew = useCallback((type?: CstType) => {
-    if (!schema) {
-      return;
-    }
-    if (!type) {
-      setShowCstModal(true);
-    } else {
+  const handleAddNew = useCallback(
+    (type?: CstType) => {
+      if (!schema) {
+        return;
+      }
       const selectedPosition = selected.reduce((prev, cstID) => {
         const position = schema.items.findIndex(cst => cst.id === cstID);
         return Math.max(position, prev);
       }, -1) + 1;
-      const data: ICstCreateData = {
-        cst_type: type,
-        alias: createAliasFor(type, schema),
-        insert_after: selectedPosition > 0 ? selectedPosition : null
-      }
-      cstCreate(data, new_cst => toast.success(`Добавлена конституента ${new_cst.alias}`));
-    }
-  }, [schema, selected, cstCreate]);
+      const insert_where = selectedPosition > 0 ? selectedPosition : undefined;
+      onShowCreateCst(insert_where, type, type !== undefined);
+    }, [schema, onShowCreateCst, selected]);
 
   // Implement hotkeys for working with constituents table
   function handleTableKey(event: React.KeyboardEvent<HTMLDivElement>) {
@@ -283,11 +275,7 @@ function EditorItems({ onOpenEdit }: EditorItemsProps) {
     ], []
   );
 
-  return (<>
-    {showCstModal && <DlgCreateCst
-      hideWindow={() => { setShowCstModal(false); }}
-      onCreate={handleAddNew}
-    />}
+  return (
     <div className='w-full'>
       <div
         className={'flex justify-start w-full gap-1 px-2 py-1 border-y items-center h-[2.2rem] clr-app' +
@@ -376,7 +364,7 @@ function EditorItems({ onOpenEdit }: EditorItemsProps) {
       />
       </div>
     </div>
-  </>);
+  );
 }
 
 export default EditorItems;

@@ -1,13 +1,17 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
+import { toast } from 'react-toastify';
 
 import BackendError from '../../components/BackendError';
 import ConceptTab from '../../components/Common/ConceptTab';
 import { Loader } from '../../components/Common/Loader';
 import { useRSForm } from '../../context/RSFormContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
-import { type IConstituenta,SyntaxTree } from '../../utils/models';
+import { CstType,type IConstituenta, ICstCreateData, SyntaxTree } from '../../utils/models';
+import { createAliasFor } from '../../utils/staticUI';
 import DlgCloneRSForm from './DlgCloneRSForm';
+import DlgCreateCst from './DlgCreateCst';
 import DlgShowAST from './DlgShowAST';
 import DlgUploadRSForm from './DlgUploadRSForm';
 import EditorConstituenta from './EditorConstituenta';
@@ -23,28 +27,64 @@ export enum RSTabsList {
 }
 
 function RSTabs() {
-  const { setActiveID, activeID, error, schema, loading } = useRSForm();
-  const [tabIndex, setTabIndex] = useLocalStorage('rsform_edit_tab', RSTabsList.CARD);
+  const navigate = useNavigate();
+  const { setActiveID, activeID, error, schema, loading, cstCreate } = useRSForm();
+  const [activeTab, setActiveTab] = useLocalStorage('rsform_edit_tab', RSTabsList.CARD);
   const [init, setInit] = useState(false);
 
   const [showUpload, setShowUpload] = useState(false);
+
   const [showClone, setShowClone] = useState(false);
+
   const [syntaxTree, setSyntaxTree] = useState<SyntaxTree>([]);
   const [showAST, setShowAST] = useState(false);
+  
+  const [defaultType, setDefaultType] = useState<CstType | undefined>(undefined);
+  const [insertPosition, setInsertPosition] = useState<number | undefined>(undefined);
+  const [showCreateCst, setShowCreateCst] = useState(false);
+
+  const handleAddNew = useCallback(
+  (type: CstType) => {
+    if (!schema?.items) {
+      return;
+    }
+    const data: ICstCreateData = {
+      cst_type: type,
+      alias: createAliasFor(type, schema),
+      insert_after: insertPosition ?? null
+    }
+    cstCreate(data, newCst => {
+      toast.success(`Конституента добавлена: ${newCst.alias}`);
+      if (activeTab === RSTabsList.CST_EDIT) {
+        navigate(`/rsforms/${schema.id}?tab=${RSTabsList.CST_EDIT}&active=${newCst.id}`);
+      }
+    });
+  }, [schema, cstCreate, insertPosition, navigate, activeTab]);
+
+  const onShowCreateCst = useCallback(
+    (position: number | undefined, type: CstType | undefined, skipDialog?: boolean) => {
+      if (skipDialog && type) {
+        handleAddNew(type);
+      } else {
+        setDefaultType(type);
+        setInsertPosition(position);
+        setShowCreateCst(true);
+      }
+    }, [handleAddNew]);
 
   const onShowAST = useCallback(
   (ast: SyntaxTree) => {
     setSyntaxTree(ast);
     setShowAST(true);
-  }, [])
+  }, []);
 
   const onEditCst = (cst: IConstituenta) => {
     setActiveID(cst.id);
-    setTabIndex(RSTabsList.CST_EDIT)
+    setActiveTab(RSTabsList.CST_EDIT)
   };
 
   const onSelectTab = (index: number) => {
-    setTabIndex(index);
+    setActiveTab(index);
   };
 
   useLayoutEffect(() => {
@@ -66,17 +106,17 @@ function RSTabs() {
   useEffect(() => {
     const url = new URL(window.location.href);
     const tabQuery = url.searchParams.get('tab');
-    setTabIndex(Number(tabQuery) || RSTabsList.CARD);
-  }, [setTabIndex]);
+    setActiveTab(Number(tabQuery) || RSTabsList.CARD);
+  }, [setActiveTab]);
 
   useEffect(() => {
     if (init) {
       const url = new URL(window.location.href);
       const currentActive = url.searchParams.get('active');
       const currentTab = url.searchParams.get('tab');
-      const saveHistory = tabIndex === RSTabsList.CST_EDIT && currentActive !== String(activeID);
-      if (currentTab !== String(tabIndex)) {
-        url.searchParams.set('tab', String(tabIndex));
+      const saveHistory = activeTab === RSTabsList.CST_EDIT && currentActive !== String(activeID);
+      if (currentTab !== String(activeTab)) {
+        url.searchParams.set('tab', String(activeTab));
       }
       if (activeID) {
         if (currentActive !== String(activeID)) {
@@ -91,7 +131,7 @@ function RSTabs() {
         window.history.replaceState(null, '', url.toString());
       }
     }
-  }, [tabIndex, activeID, init]);
+  }, [activeTab, activeID, init]);
 
   return (
   <div className='w-full'>
@@ -101,9 +141,19 @@ function RSTabs() {
     <>
     {showUpload && <DlgUploadRSForm hideWindow={() => { setShowUpload(false); }}/>}
     {showClone && <DlgCloneRSForm hideWindow={() => { setShowClone(false); }}/>}
-    {showAST && <DlgShowAST syntaxTree={syntaxTree} hideWindow={() => { setShowAST(false); }}/>}
+    {showAST && 
+    <DlgShowAST
+      syntaxTree={syntaxTree}
+      hideWindow={() => { setShowAST(false); }}
+    />}
+    {showCreateCst && 
+    <DlgCreateCst
+        hideWindow={() => { setShowCreateCst(false); }}
+        onCreate={handleAddNew}
+        defaultType={defaultType}
+    />}
     <Tabs
-      selectedIndex={tabIndex}
+      selectedIndex={activeTab}
       onSelect={onSelectTab}
       defaultFocus={true}
       selectedTabClassName='font-bold'
@@ -127,13 +177,14 @@ function RSTabs() {
       </TabPanel>
 
       <TabPanel className='w-full'>
-        <EditorItems onOpenEdit={onEditCst} />
+        <EditorItems onOpenEdit={onEditCst} onShowCreateCst={onShowCreateCst} />
       </TabPanel>
 
       <TabPanel>
-        <EditorConstituenta onShowAST={onShowAST} />
+        <EditorConstituenta onShowAST={onShowAST} onShowCreateCst={onShowCreateCst} />
       </TabPanel>
-    </Tabs></>
+    </Tabs>
+    </>
     }
   </div>);
 }
