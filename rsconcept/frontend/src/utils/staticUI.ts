@@ -269,10 +269,6 @@ export function getStatusInfo(status?: ExpressionStatus): IStatusInfo {
   };
 }
 
-export function extractGlobals(expression: string): Set<string> {
-  return new Set(expression.match(/[XCSADFPT]\d+/g) ?? []);
-}
-
 export function createAliasFor(type: CstType, schema: IRSForm): string {
   const prefix = getCstTypePrefix(type);
   if (!schema.items || schema.items.length <= 0) {

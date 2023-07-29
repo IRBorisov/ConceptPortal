@@ -1,4 +1,5 @@
 import { RSErrorType, TokenID } from './enums'
+import { Graph } from './Graph'
 
 // ========= Users ===========
 export interface IUser {
@@ -175,6 +176,7 @@ export interface IRSForm {
   owner: number | null
   items: IConstituenta[]
   stats: IRSFormStats
+  graph: Graph
 }
 
 export interface IRSFormData extends Omit<IRSForm, 'stats' > {}
@@ -212,6 +214,11 @@ export enum ExpressionStatus {
   VERIFIED
 }
 
+// ========== Model functions =================
+export function extractGlobals(expression: string): Set<string> {
+  return new Set(expression.match(/[XCSADFPT]\d+/g) ?? []);
+}
+
 export function inferStatus(parse?: ParsingStatus, value?: ValueClass): ExpressionStatus {
   if (!parse || !value) {
     return ExpressionStatus.UNDEFINED;
@@ -233,6 +240,7 @@ export function inferStatus(parse?: ParsingStatus, value?: ValueClass): Expressi
 
 export function LoadRSFormData(schema: IRSFormData): IRSForm {
   const result = schema as IRSForm
+  result.graph = new Graph;
   if (!result.items) {
     result.stats = {
       count_all: 0,
@@ -254,35 +262,45 @@ export function LoadRSFormData(schema: IRSFormData): IRSForm {
     return result;
   }
   result.stats = {
-    count_all: schema.items.length || 0,
-    count_errors: schema.items.reduce(
+    count_all: result.items.length || 0,
+    count_errors: result.items.reduce(
       (sum, cst) => sum + (cst.parse?.status === ParsingStatus.INCORRECT ? 1 : 0) || 0, 0),
-    count_property: schema.items.reduce(
+    count_property: result.items.reduce(
       (sum, cst) => sum + (cst.parse?.valueClass === ValueClass.PROPERTY ? 1 : 0) || 0, 0),
-    count_incalc: schema.items.reduce(
+    count_incalc: result.items.reduce(
       (sum, cst) => sum +
       ((cst.parse?.status === ParsingStatus.VERIFIED && cst.parse?.valueClass === ValueClass.INVALID) ? 1 : 0) || 0, 0),
 
-    count_termin: schema.items.reduce(
+    count_termin: result.items.reduce(
       (sum, cst) => (sum + (cst.term?.raw ? 1 : 0) || 0), 0),
 
-    count_base: schema.items.reduce(
+    count_base: result.items.reduce(
       (sum, cst) => sum + (cst.cstType === CstType.BASE ? 1 : 0), 0),
-    count_constant: schema.items?.reduce(
+    count_constant: result.items?.reduce(
       (sum, cst) => sum + (cst.cstType === CstType.CONSTANT ? 1 : 0), 0),
-    count_structured: schema.items?.reduce(
+    count_structured: result.items?.reduce(
       (sum, cst) => sum + (cst.cstType === CstType.STRUCTURED ? 1 : 0), 0),
-    count_axiom: schema.items?.reduce(
+    count_axiom: result.items?.reduce(
       (sum, cst) => sum + (cst.cstType === CstType.AXIOM ? 1 : 0), 0),
-    count_term: schema.items.reduce(
+    count_term: result.items.reduce(
       (sum, cst) => sum + (cst.cstType === CstType.TERM ? 1 : 0), 0),
-    count_function: schema.items.reduce(
+    count_function: result.items.reduce(
       (sum, cst) => sum + (cst.cstType === CstType.FUNCTION ? 1 : 0), 0),
-    count_predicate: schema.items.reduce(
+    count_predicate: result.items.reduce(
       (sum, cst) => sum + (cst.cstType === CstType.PREDICATE ? 1 : 0), 0),
-    count_theorem: schema.items.reduce(
+    count_theorem: result.items.reduce(
       (sum, cst) => sum + (cst.cstType === CstType.THEOREM ? 1 : 0), 0)
   }
+  result.items.forEach(cst => {
+    result.graph.addNode(cst.id);
+    const dependencies = extractGlobals(cst.definition.formal);
+    dependencies.forEach(value => {
+      const destination = schema.items.find(cst => cst.alias === value)
+      if (destination) {
+        result.graph.addEdge(cst.id, destination.id);
+      }
+    });
+  });
   return result;
 }
 

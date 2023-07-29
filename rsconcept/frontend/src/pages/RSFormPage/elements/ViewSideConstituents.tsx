@@ -4,8 +4,8 @@ import Checkbox from '../../../components/Common/Checkbox';
 import DataTableThemed from '../../../components/Common/DataTableThemed';
 import { useRSForm } from '../../../context/RSFormContext';
 import useLocalStorage from '../../../hooks/useLocalStorage';
-import { CstType, type IConstituenta, matchConstituenta } from '../../../utils/models';
-import { extractGlobals, getMockConstituenta } from '../../../utils/staticUI';
+import { CstType, extractGlobals,type IConstituenta, matchConstituenta } from '../../../utils/models';
+import { getMockConstituenta } from '../../../utils/staticUI';
 
 interface ViewSideConstituentsProps {
   expression: string

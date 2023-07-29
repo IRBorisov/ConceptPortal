@@ -17,13 +17,15 @@ import DlgUploadRSForm from './DlgUploadRSForm';
 import EditorConstituenta from './EditorConstituenta';
 import EditorItems from './EditorItems';
 import EditorRSForm from './EditorRSForm';
+import EditorTermGraph from './EditorTermGraph';
 import RSFormStats from './elements/RSFormStats';
 import RSTabsMenu from './RSTabsMenu';
 
 export enum RSTabsList {
   CARD = 0,
   CST_LIST = 1,
-  CST_EDIT = 2
+  CST_EDIT = 2,
+  TERM_GRAPH = 3
 }
 
 function RSTabs() {
@@ -169,6 +171,7 @@ function RSTabs() {
           <span>{`${schema.stats?.count_errors ?? 0} | ${schema.stats?.count_all ?? 0}`}</span>
         </ConceptTab>
         <ConceptTab>Редактор</ConceptTab>
+        <ConceptTab>Граф термов</ConceptTab>
       </TabList>
 
       <TabPanel className='flex items-start w-full gap-2'>
@@ -182,6 +185,10 @@ function RSTabs() {
 
       <TabPanel>
         <EditorConstituenta onShowAST={onShowAST} onShowCreateCst={onShowCreateCst} />
+      </TabPanel>
+
+      <TabPanel>
+        <EditorTermGraph />
       </TabPanel>
     </Tabs>
     </>
