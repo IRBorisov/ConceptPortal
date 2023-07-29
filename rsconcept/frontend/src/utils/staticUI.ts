@@ -1,5 +1,5 @@
-import { TokenID } from './enums';
-import { CstType, ExpressionStatus, type IConstituenta, type IRSForm, ParsingStatus, ValueClass } from './models';
+import { resolveErrorClass,RSErrorClass, RSErrorType, TokenID } from './enums';
+import { CstType, ExpressionStatus, type IConstituenta, IRSErrorDescription,type IRSForm, ParsingStatus, ValueClass } from './models';
 
 export interface IRSButtonData {
   text: string
@@ -30,7 +30,7 @@ export function getRSButtonData(id: TokenID): IRSButtonData {
   };
   case TokenID.DECART: return {
     text: '×',
-    tooltip: 'Декартово произведение [Shift + 8]'
+    tooltip: 'Декартово произведение [Shift + 8  / Alt + Shift + E]'
   };
   case TokenID.PUNC_PL: return {
     text: '( )',
@@ -321,4 +321,104 @@ export function getCloneTitle(schema: IRSForm): string {
   } else {
     return (schema.title + '+');
   }
+}
+
+export function getRSErrorPrefix(error: IRSErrorDescription): string {
+  const id = error.errorType.toString(16)
+  switch(resolveErrorClass(error.errorType)) {
+  case RSErrorClass.LEXER: return 'L' + id;
+  case RSErrorClass.PARSER: return 'P' + id;
+  case RSErrorClass.SEMANTIC: return 'S' + id;
+  case RSErrorClass.UNKNOWN: return 'U' + id;
+  }
+}
+
+export function getRSErrorMessage(error: IRSErrorDescription): string {
+  switch (error.errorType) {
+  case RSErrorType.syntax: 
+    return 'UNKNOWN SYNTAX ERROR';
+  case RSErrorType.missingParanthesis: 
+    return 'Некорректная конструкция языка родов структур, проверьте структуру выражения';
+  case RSErrorType.missingCurlyBrace: 
+    return "Пропущен символ '}'";
+  case RSErrorType.invalidQuantifier: 
+    return 'Некорректная кванторная декларация';
+  case RSErrorType.expectedArgDeclaration: 
+    return 'Ожидалось объявление аргументов терм-функции';
+  case RSErrorType.expectedLocal: 
+    return 'Ожидалось имя локальной переменной';
+
+  case RSErrorType.localDoubleDeclare: 
+    return `Предупреждение! Повторное объявление локальной переменной ${error.params[0]}`;
+  case RSErrorType.localNotUsed: 
+    return `Предупреждение! Переменная объявлена но не использована: ${error.params[0]}`;
+  case RSErrorType.localShadowing: 
+    return `Повторное объявление переменной: ${error.params[0]}`;
+
+  case RSErrorType.typesNotEqual: 
+    return `Типизация операндов не совпадает! ${error.params[0]} != ${error.params[1]}`;
+  case RSErrorType.globalNotTyped: 
+    return `Типизация конституенты не определена: ${error.params[0]}`;
+  case RSErrorType.invalidDecart: 
+    return `τ(α×b) = ℬ(𝔇τ(α)×𝔇τ(b)). Некорректная типизация аргумента: ${error.params[0]}`;
+  case RSErrorType.invalidBoolean: 
+    return `τ(ℬ(a)) = ℬℬ𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
+  case RSErrorType.invalidTypeOperation: 
+    return `Типизация операнда теоретико-множественной операции не корректна: ${error.params[0]}`;
+  case RSErrorType.invalidCard: 
+    return `Некорректная типизация аргумента операции мощности: ${error.params[0]}`;
+  case RSErrorType.invalidDebool: 
+    return `τ(debool(a)) = 𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
+  case RSErrorType.globalFuncMissing: 
+    return `Неизвестное имя функции: ${error.params[0]}`;
+  case RSErrorType.globalFuncWithoutArgs: 
+    return `Некорректное использование имени функции без аргументов: ${error.params[0]}`;
+  case RSErrorType.invalidReduce: 
+    return `τ(red(a)) = ℬ𝔇𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
+  case RSErrorType.invalidProjectionTuple: 
+    return `Проекция не определена: ${error.params[0]} -> ${error.params[1]}`;
+  case RSErrorType.invalidProjectionSet: 
+    return `τ(Pri(a)) = ℬ𝒞i𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
+  case RSErrorType.invalidEnumeration: 
+    return `Типизация аргументов перечисления не совпадает: ${error.params[0]} != ${error.params[1]}`;
+  case RSErrorType.ivalidBinding: 
+    return `Количество переменных в кортеже не соответствует размерности декартова произведения`;
+  case RSErrorType.localOutOfScope: 
+    return `Использование имени переменной вне области действия: ${error.params[0]}`;
+  case RSErrorType.invalidElementPredicat: 
+    return `Несоответствие типизаций операндов для оператора: ${error.params[0]}${error.params[1]}${error.params[2]}`;
+  case RSErrorType.invalidArgsArtity: 
+    return `Неверное число аргументов терм-функции: ${error.params[0]} != ${error.params[1]}`;
+  case RSErrorType.invalidArgumentType: 
+    return `Типизация аргумента терм-функции не соответствует объявленной: ${error.params[0]} != ${error.params[1]}`;
+  case RSErrorType.invalidEqualsEmpty: 
+    return `Только множества можно сравнивать с пустым множеством: ${error.params[0]}`;
+  case RSErrorType.globalStructure: 
+    return `Выражение родовой структуры должно быть ступенью`;
+  case RSErrorType.globalExpectedFunction: 
+    return `Ожидалось выражение объявления функции`;
+  case RSErrorType.emptySetUsage: 
+    return `Запрещено использование пустого множества как типизированного выражения`;
+  case RSErrorType.radicalUsage: 
+    return `Радикалы запрещены вне деклараций терм-функци: ${error.params[0]}`;
+  case RSErrorType.invalidFilterArgumentType: 
+    return `Типизация аргумента фильтра не корректна: ${error.params[0]}(${error.params[1]})`;
+  case RSErrorType.invalidFilterArity: 
+    return `Количество параметров фильтра не соответствует количеству индексов`;
+  case RSErrorType.arithmeticNotSupported: 
+    return `Тип не поддерживает арифметические операторы: ${error.params[0]}`;
+  case RSErrorType.typesNotCompatible: 
+    return `Типы не совместимы для выбранной операции: ${error.params[0]} и ${error.params[1]}`;
+  case RSErrorType.orderingNotSupported: 
+    return `Тип не поддерживает предикаты порядка: ${error.params[0]}`;
+  case RSErrorType.globalNoValue: 
+    return `Используется неинтерпретируемый глобальный идентификатор: ${error.params[0]}`;
+  case RSErrorType.invalidPropertyUsage: 
+    return `Использование неитерируемого множества в качестве значения`;
+  case RSErrorType.globalMissingAST: 
+    return `Не удалось получить дерево разбора для глобального идентификатора: ${error.params[0]}`;
+  case RSErrorType.globalFuncNoInterpretation: 
+    return `Функция не интерпретируется для данных аргументов`;  
+  }
+  return 'UNKNOWN ERROR';
 }

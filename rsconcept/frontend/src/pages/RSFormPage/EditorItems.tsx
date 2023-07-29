@@ -284,11 +284,10 @@ function EditorItems({ onOpenEdit }: EditorItemsProps) {
   );
 
   return (<>
-    <DlgCreateCst
-      show={showCstModal}
+    {showCstModal && <DlgCreateCst
       hideWindow={() => { setShowCstModal(false); }}
       onCreate={handleAddNew}
-    />
+    />}
     <div className='w-full'>
       <div
         className={'flex justify-start w-full gap-1 px-2 py-1 border-y items-center h-[2.2rem] clr-app' +

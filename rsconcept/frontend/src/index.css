@@ -77,7 +77,7 @@
   }
 
   .text-red {
-    @apply text-red-400 dark:text-red-600
+    @apply text-red-600 dark:text-red-400
   }
 
   .text-green {

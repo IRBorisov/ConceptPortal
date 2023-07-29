@@ -171,6 +171,7 @@ export class TextWrapper implements IManagedText {
     case 'q': return this.insertToken(TokenID.BIGPR);
     case 'w': return this.insertToken(TokenID.SMALLPR);
     case 'e': return this.insertToken(TokenID.BOOLEAN);
+    case 'E': return this.insertToken(TokenID.DECART);
     case 'r': return this.insertToken(TokenID.REDUCE);
     case 't': return this.insertToken(TokenID.NT_RECURSIVE_FULL);
     case 'a': return this.insertToken(TokenID.INTERSECTION);

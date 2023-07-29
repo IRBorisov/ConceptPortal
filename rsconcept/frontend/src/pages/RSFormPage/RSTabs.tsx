@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import BackendError from '../../components/BackendError';
@@ -6,8 +6,9 @@ import ConceptTab from '../../components/Common/ConceptTab';
 import { Loader } from '../../components/Common/Loader';
 import { useRSForm } from '../../context/RSFormContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
-import { type IConstituenta } from '../../utils/models';
+import { type IConstituenta,SyntaxTree } from '../../utils/models';
 import DlgCloneRSForm from './DlgCloneRSForm';
+import DlgShowAST from './DlgShowAST';
 import DlgUploadRSForm from './DlgUploadRSForm';
 import EditorConstituenta from './EditorConstituenta';
 import EditorItems from './EditorItems';
@@ -26,8 +27,16 @@ function RSTabs() {
   const [tabIndex, setTabIndex] = useLocalStorage('rsform_edit_tab', RSTabsList.CARD);
   const [init, setInit] = useState(false);
 
-  const [showUploadDialog, setShowUploadDialog] = useState(false);
-  const [showCloneDialog, setShowCloneDialog] = useState(false);
+  const [showUpload, setShowUpload] = useState(false);
+  const [showClone, setShowClone] = useState(false);
+  const [syntaxTree, setSyntaxTree] = useState<SyntaxTree>([]);
+  const [showAST, setShowAST] = useState(false);
+
+  const onShowAST = useCallback(
+  (ast: SyntaxTree) => {
+    setSyntaxTree(ast);
+    setShowAST(true);
+  }, [])
 
   const onEditCst = (cst: IConstituenta) => {
     setActiveID(cst.id);
@@ -90,14 +99,9 @@ function RSTabs() {
     { error && <BackendError error={error} />}
     { schema && !loading &&
     <>
-    <DlgUploadRSForm
-      show={showUploadDialog}
-      hideWindow={() => { setShowUploadDialog(false); }}
-    />
-    <DlgCloneRSForm
-      show={showCloneDialog}
-      hideWindow={() => { setShowCloneDialog(false); }}
-    />
+    {showUpload && <DlgUploadRSForm hideWindow={() => { setShowUpload(false); }}/>}
+    {showClone && <DlgCloneRSForm hideWindow={() => { setShowClone(false); }}/>}
+    {showAST && <DlgShowAST syntaxTree={syntaxTree} hideWindow={() => { setShowAST(false); }}/>}
     <Tabs
       selectedIndex={tabIndex}
       onSelect={onSelectTab}
@@ -106,8 +110,8 @@ function RSTabs() {
     >
       <TabList className='flex items-start w-fit clr-bg-pop'>
         <RSTabsMenu 
-          showCloneDialog={() => setShowCloneDialog(true)} 
-          showUploadDialog={() => setShowUploadDialog(true)} 
+          showCloneDialog={() => setShowClone(true)} 
+          showUploadDialog={() => setShowUpload(true)} 
         />
         <ConceptTab>Паспорт схемы</ConceptTab>
         <ConceptTab className='border-x-2 clr-border min-w-[10rem] flex justify-between gap-2'>
@@ -127,7 +131,7 @@ function RSTabs() {
       </TabPanel>
 
       <TabPanel>
-        <EditorConstituenta />
+        <EditorConstituenta onShowAST={onShowAST} />
       </TabPanel>
     </Tabs></>
     }

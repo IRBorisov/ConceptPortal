@@ -8,17 +8,15 @@ import { useRSForm } from '../../context/RSFormContext';
 import { IRSFormUploadData } from '../../utils/models';
 
 interface DlgUploadRSFormProps {
-  show: boolean
   hideWindow: () => void
 }
 
-function DlgUploadRSForm({ show, hideWindow }: DlgUploadRSFormProps) {
+function DlgUploadRSForm({ hideWindow }: DlgUploadRSFormProps) {
   const { upload } = useRSForm();
   const [loadMetadata, setLoadMetadata] = useState(false);
   const [file, setFile] = useState<File | undefined>()
 
   const handleSubmit = () => {
-    hideWindow();
     if (!file) {
       return;
     }
@@ -41,7 +39,6 @@ function DlgUploadRSForm({ show, hideWindow }: DlgUploadRSFormProps) {
   return (
     <Modal
       title='Загрузка схемы из Экстеор'
-      show={show}
       hideWindow={hideWindow}
       canSubmit={!!file}
       onSubmit={handleSubmit}
@@ -57,7 +54,7 @@ function DlgUploadRSForm({ show, hideWindow }: DlgUploadRSFormProps) {
       />
       </div>
     </Modal>
-  )
+  );
 }
 
 export default DlgUploadRSForm;

@@ -7,22 +7,17 @@ import Button from './Button';
 interface ModalProps {
   title?: string
   submitText?: string
-  show: boolean
-  canSubmit: boolean
+  canSubmit?: boolean
   hideWindow: () => void
   onSubmit: () => void
   onCancel?: () => void
   children: React.ReactNode
 }
 
-function Modal({ title, show, hideWindow, onSubmit, onCancel, canSubmit, children, submitText = 'Продолжить' }: ModalProps) {
+function Modal({ title, hideWindow, onSubmit, onCancel, canSubmit, children, submitText = 'Продолжить' }: ModalProps) {
   const ref = useRef(null);
   useClickedOutside({ ref, callback: hideWindow });
   useEscapeKey(hideWindow);
-
-  if (!show) {
-    return null;
-  }
 
   const handleCancel = () => {
     hideWindow();

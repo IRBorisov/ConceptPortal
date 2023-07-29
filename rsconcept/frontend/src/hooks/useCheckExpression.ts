@@ -2,18 +2,17 @@ import { useCallback, useState } from 'react'
 
 import { type ErrorInfo } from '../components/BackendError';
 import { DataCallback, postCheckExpression } from '../utils/backendAPI';
-import { ExpressionParse, type IRSForm } from '../utils/models';
+import { IExpressionParse, type IRSForm } from '../utils/models';
 
 function useCheckExpression({ schema }: { schema?: IRSForm }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ErrorInfo>(undefined);
-  const [parseData, setParseData] = useState<ExpressionParse | undefined>(undefined);
+  const [parseData, setParseData] = useState<IExpressionParse | undefined>(undefined);
 
   const resetParse = useCallback(() => { setParseData(undefined); }, []);
 
-  function checkExpression(expression: string, onSuccess?: DataCallback<ExpressionParse>) {
+  function checkExpression(expression: string, onSuccess?: DataCallback<IExpressionParse>) {
     setError(undefined);
-    setParseData(undefined);
     postCheckExpression(String(schema?.id), {
       data: { expression: expression },
       showError: true,

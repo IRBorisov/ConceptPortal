@@ -7,14 +7,18 @@ import SubmitButton from '../../components/Common/SubmitButton';
 import TextArea from '../../components/Common/TextArea';
 import { DumpBinIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
-import { type CstType, EditMode, type ICstCreateData, ICstUpdateData } from '../../utils/models';
+import { type CstType, EditMode, type ICstCreateData, ICstUpdateData, SyntaxTree } from '../../utils/models';
 import { createAliasFor, getCstTypeLabel } from '../../utils/staticUI';
 import DlgCreateCst from './DlgCreateCst';
 import EditorRSExpression from './EditorRSExpression';
 import ViewSideConstituents from './elements/ViewSideConstituents';
 import { RSTabsList } from './RSTabs';
 
-function EditorConstituenta() {
+interface EditorConstituentaProps {
+  onShowAST: (ast: SyntaxTree) => void
+}
+
+function EditorConstituenta({onShowAST}: EditorConstituentaProps) {
   const navigate = useNavigate();
   const {
     activeCst, activeID, schema, setActiveID, processing, isEditable,
@@ -132,12 +136,11 @@ function EditorConstituenta() {
 
   return (
     <div className='flex items-start w-full gap-2'>
-      <DlgCreateCst
-        show={showCstModal}
+      {showCstModal && <DlgCreateCst
         hideWindow={() => { setShowCstModal(false); }}
         onCreate={handleAddNew}
         defaultType={activeCst?.cstType as CstType}
-      />
+      />}
       <form onSubmit={handleSubmit} className='flex-grow min-w-[50rem] max-w-min px-4 py-2 border'>
         <div className='flex items-start justify-between'>
             <button type='submit'
@@ -204,6 +207,7 @@ function EditorConstituenta() {
           disabled={!isEnabled}
           isActive={editMode === EditMode.RSLANG}
           toggleEditMode={() => { setEditMode(EditMode.RSLANG); }}
+          onShowAST={onShowAST}
           onChange={event => { setExpression(event.target.value); }}
           setValue={setExpression}
           setTypification={setTypification}

@@ -1,3 +1,5 @@
+import { RSErrorType, TokenID } from './enums'
+
 // ========= Users ===========
 export interface IUser {
   id: number | null
@@ -21,45 +23,53 @@ export interface IUserSignupData extends Omit<IUser, 'is_staff' | 'id'> {
 export interface IUserProfile extends Omit<IUser, 'is_staff'> {}
 export interface IUserInfo extends Omit<IUserProfile, 'email'> {}
 
-// ======== Parsing ============
-// ValueClass
-export enum ValueClass {
-  INVALID = 'invalid',
-  VALUE = 'value',
-  PROPERTY = 'property'
-}
-
-// Syntax
+// ======== RS Parsing ============
 export enum Syntax {
   UNDEF = 'undefined',
   ASCII = 'ascii',
   MATH = 'math'
 }
 
-// ParsingStatus
+export enum ValueClass {
+  INVALID = 'invalid',
+  VALUE = 'value',
+  PROPERTY = 'property'
+}
+
 export enum ParsingStatus {
   UNDEF = 'undefined',
   VERIFIED = 'verified',
   INCORRECT = 'incorrect'
 }
 
-export interface RSErrorDescription {
-  errorType: number
+export interface IRSErrorDescription {
+  errorType: RSErrorType
   position: number
   isCritical: boolean
   params: string[]
 }
 
-export interface ExpressionParse {
+export interface ISyntaxTreeNode {
+  uid: number
+  parent: number
+  typeID: TokenID
+  start: number
+  finish: number
+  data: unknown
+}
+export type SyntaxTree = ISyntaxTreeNode[]
+
+export interface IExpressionParse {
   parseResult: boolean
   syntax: Syntax
   typification: string
   valueClass: ValueClass
+  errors: IRSErrorDescription[]
   astText: string
-  errors: RSErrorDescription[]
+  ast: SyntaxTree
 }
 
-export interface RSExpression {
+export interface IRSExpression {
   expression: string
 }
 

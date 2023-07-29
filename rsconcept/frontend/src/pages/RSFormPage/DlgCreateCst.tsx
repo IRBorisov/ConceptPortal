@@ -6,13 +6,12 @@ import { type CstType } from '../../utils/models';
 import { CstTypeSelector, getCstTypeLabel } from '../../utils/staticUI';
 
 interface DlgCreateCstProps {
-  show: boolean
   hideWindow: () => void
   defaultType?: CstType
   onCreate: (type: CstType) => void
 }
 
-function DlgCreateCst({ show, hideWindow, defaultType, onCreate }: DlgCreateCstProps) {
+function DlgCreateCst({ hideWindow, defaultType, onCreate }: DlgCreateCstProps) {
   const [validated, setValidated] = useState(false);
   const [selectedType, setSelectedType] = useState<CstType | undefined>(undefined);
 
@@ -32,7 +31,6 @@ function DlgCreateCst({ show, hideWindow, defaultType, onCreate }: DlgCreateCstP
   return (
     <Modal
       title='Создание конституенты'
-      show={show}
       hideWindow={hideWindow}
       canSubmit={validated}
       onSubmit={handleSubmit}
@@ -45,7 +43,7 @@ function DlgCreateCst({ show, hideWindow, defaultType, onCreate }: DlgCreateCstP
         onChange={(data) => { setSelectedType(data?.value); }}
       />
     </Modal>
-  )
+  );
 }
 
 export default DlgCreateCst;

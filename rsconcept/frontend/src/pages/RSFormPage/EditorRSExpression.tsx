@@ -7,7 +7,7 @@ import { Loader } from '../../components/Common/Loader';
 import { useRSForm } from '../../context/RSFormContext';
 import useCheckExpression from '../../hooks/useCheckExpression';
 import { TokenID } from '../../utils/enums';
-import { CstType } from '../../utils/models';
+import { CstType, SyntaxTree } from '../../utils/models';
 import ParsingResult from './elements/ParsingResult';
 import RSLocalButton from './elements/RSLocalButton';
 import RSTokenButton from './elements/RSTokenButton';
@@ -22,13 +22,14 @@ interface EditorRSExpressionProps {
   placeholder?: string
   value: string
   onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onShowAST: (ast: SyntaxTree) => void
   toggleEditMode: () => void
   setTypification: (typificaiton: string) => void
   setValue: (expression: string) => void
 }
 
 function EditorRSExpression({
-  id, label, disabled, isActive, placeholder, value, setValue,
+  id, label, disabled, isActive, placeholder, value, setValue, onShowAST, 
   toggleEditMode, setTypification, onChange
 }: EditorRSExpressionProps) {
   const { schema, activeCst } = useRSForm();
@@ -48,11 +49,11 @@ function EditorRSExpression({
     const prefix = activeCst?.alias + (activeCst?.cstType === CstType.STRUCTURED ? '::=' : ':==');
     const expression = prefix + value;
     checkExpression(expression, parse => {
-      // TODO: update cursor position
       if (!parse.parseResult && parse.errors.length > 0) {
         const errorPosition = parse.errors[0].position - prefix.length
         expressionCtrl.current!.selectionStart = errorPosition;
         expressionCtrl.current!.selectionEnd = errorPosition;
+        expressionCtrl.current!.focus();
       }
       setIsModified(false);
       setTypification(parse.typification);
@@ -85,25 +86,26 @@ function EditorRSExpression({
     if (!expressionCtrl.current) {
       return;
     }
-    if (event.altKey) {
-      const text = new TextWrapper(expressionCtrl.current);
-      if (text.processAltKey(event.key)) {
-        event.preventDefault();
-        text.finalize();
-        setValue(text.value);
-        setIsModified(true);
+    const text = new TextWrapper(expressionCtrl.current);
+    if (event.shiftKey && event.key === '*' && !event.altKey) {
+      text.insertToken(TokenID.DECART);
+    } else if (event.altKey) {
+      if (!text.processAltKey(event.key)) {
+        return;
       }
     } else if (!event.ctrlKey) {
       const newSymbol = getSymbolSubstitute(event.key);
-      if (newSymbol) {
-        event.preventDefault();
-        const text = new TextWrapper(expressionCtrl.current);
-        text.replaceWith(newSymbol);
-        text.finalize();
-        setValue(text.value);
-        setIsModified(true);
+      if (!newSymbol) {
+        return;
       }
+      text.replaceWith(newSymbol);
+    } else {
+      return;
     }
+    event.preventDefault();
+    text.finalize();
+    setValue(text.value);
+    setIsModified(true);
   }, [expressionCtrl, setValue]);
 
   const handleFocusIn = useCallback(() => {
@@ -225,8 +227,11 @@ function EditorRSExpression({
             parseData={parseData}
         />}
       </div>
-      { loading && <Loader />}
-      { parseData && <ParsingResult data={parseData} />}
+      { (loading || parseData) && 
+      <div className='w-full overflow-y-auto border mt-2 max-h-[14rem] min-h-[7rem]'>
+        { loading && <Loader />}
+        { !loading && parseData && <ParsingResult data={parseData} onShowAST={onShowAST} />}
+      </div>}
     </div>
   );
 }

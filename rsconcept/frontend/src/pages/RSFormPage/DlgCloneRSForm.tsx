@@ -11,11 +11,10 @@ import { IRSFormCreateData } from '../../utils/models';
 import { getCloneTitle } from '../../utils/staticUI';
 
 interface DlgCloneRSFormProps {
-  show: boolean
   hideWindow: () => void
 }
 
-function DlgCloneRSForm({ show, hideWindow }: DlgCloneRSFormProps) {
+function DlgCloneRSForm({ hideWindow }: DlgCloneRSFormProps) {
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [alias, setAlias] = useState('');
@@ -34,7 +33,6 @@ function DlgCloneRSForm({ show, hideWindow }: DlgCloneRSFormProps) {
   }, [schema, schema?.title, schema?.alias, schema?.comment, schema?.is_common]);
 
   const handleSubmit = () => {
-    hideWindow();
     const data: IRSFormCreateData = {
       title: title,
       alias: alias,
@@ -50,7 +48,6 @@ function DlgCloneRSForm({ show, hideWindow }: DlgCloneRSFormProps) {
   return (
     <Modal
       title='Создание копии концептуальной схемы'
-      show={show}
       hideWindow={hideWindow}
       canSubmit={true}
       submitText='Создать'
@@ -76,7 +73,7 @@ function DlgCloneRSForm({ show, hideWindow }: DlgCloneRSFormProps) {
         onChange={event => { setCommon(event.target.checked); }}
       />
     </Modal>
-  )
+  );
 }
 
 export default DlgCloneRSForm;

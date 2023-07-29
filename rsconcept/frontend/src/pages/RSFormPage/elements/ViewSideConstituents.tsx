@@ -75,7 +75,7 @@ function ViewSideConstituents({ expression }: ViewSideConstituentsProps) {
         name: 'Описание',
         id: 'description',
         selector: (cst: IConstituenta) =>
-          cst.term?.resolved ?? cst.definition?.text.resolved ?? cst.definition?.formal ?? cst.convention ?? '',
+          cst.term.resolved || cst.definition.text.resolved || cst.definition.formal || cst.convention,
         minWidth: '350px',
         wrap: true,
         conditionalCellStyles: [

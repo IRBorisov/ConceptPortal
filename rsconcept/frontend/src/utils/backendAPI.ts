@@ -5,14 +5,14 @@ import { type ErrorInfo } from '../components/BackendError'
 import { FilterType, RSFormsFilter } from '../hooks/useRSForms'
 import { config } from './constants'
 import {
-  ExpressionParse,
   IConstituentaList,
   IConstituentaMeta,
   ICstCreateData, ICstCreatedResponse, ICstMovetoData, ICstUpdateData,
-  ICurrentUser, IRSFormCreateData, IRSFormData,
+  ICurrentUser,   IExpressionParse,
+IRSExpression,
+IRSFormCreateData, IRSFormData,
   IRSFormMeta, IRSFormUpdateData, IRSFormUploadData, IUserInfo,
-  IUserLoginData, IUserProfile, IUserSignupData, RSExpression
-} from './models'
+  IUserLoginData, IUserProfile, IUserSignupData} from './models'
 
 // ================ Data transfer types ================
 export type DataCallback<ResponseData = undefined> = (data: ResponseData) => void;
@@ -201,7 +201,7 @@ export function patchMoveConstituenta(schema: string, request: FrontExchange<ICs
   });
 }
 
-export function postCheckExpression(schema: string, request: FrontExchange<RSExpression, ExpressionParse>) {
+export function postCheckExpression(schema: string, request: FrontExchange<IRSExpression, IExpressionParse>) {
   AxiosPost({
     title: `Check expression for RSForm id=${schema}: ${request.data.expression }`,
     endpoint: `${config.url.BASE}rsforms/${schema}/check/`,
