@@ -22,4 +22,8 @@ export const urls = {
   full_course: 'https://www.youtube.com/playlist?list=PLGe_JiAwpqu1C70ruQmCm_OWTWU3KJwDo'
 };
 
+export const resources = {
+  graph_font: 'https://ey2pz3.csb.app/NotoSansSC-Regular.ttf'
+}
+
 export const config = process.env.NODE_ENV === 'production' ? prod : dev;

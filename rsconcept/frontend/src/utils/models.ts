@@ -295,9 +295,9 @@ export function LoadRSFormData(schema: IRSFormData): IRSForm {
     result.graph.addNode(cst.id);
     const dependencies = extractGlobals(cst.definition.formal);
     dependencies.forEach(value => {
-      const destination = schema.items.find(cst => cst.alias === value)
-      if (destination) {
-        result.graph.addEdge(cst.id, destination.id);
+      const source = schema.items.find(cst => cst.alias === value)
+      if (source) {
+        result.graph.addEdge(source.id, cst.id);
       }
     });
   });
