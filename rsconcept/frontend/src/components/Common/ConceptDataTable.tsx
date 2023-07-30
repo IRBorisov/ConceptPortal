@@ -38,7 +38,7 @@ createTheme('customDark', {
   }
 }, 'dark');
 
-function DataTableThemed<T>({ theme, ...props }: TableProps<T>) {
+function ConceptDataTable<T>({ theme, ...props }: TableProps<T>) {
   const { darkMode } = useConceptTheme();
 
   return (
@@ -49,4 +49,4 @@ function DataTableThemed<T>({ theme, ...props }: TableProps<T>) {
   );
 }
 
-export default DataTableThemed;
+export default ConceptDataTable;

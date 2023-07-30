@@ -1,8 +1,8 @@
 import { useMemo, useRef } from 'react';
-import Select from 'react-select';
 import { GraphCanvasRef, GraphEdge, GraphNode, LayoutTypes, useSelection } from 'reagraph';
 
-import GraphThemed from '../../components/Common/GraphThemed';
+import ConceptGraph from '../../components/Common/ConceptGraph';
+import ConceptSelect from '../../components/Common/ConceptSelect';
 import { useRSForm } from '../../context/RSFormContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { GraphLayoutSelector } from '../../utils/staticUI';
@@ -56,16 +56,16 @@ function EditorTermGraph() {
     <div>
     <div className='relative w-full'>
     <div className='absolute top-0 left-0 z-20 px-3 py-2'>
-      <Select
+      <ConceptSelect
         className='w-[10rem]'
         options={GraphLayoutSelector}
         placeholder='Выберите тип'
-        value={layout && { value: layout, label: String(layout) }}
-        onChange={data => { data && setLayout(data.value); }}
+        values={layout ? [{ value: layout, label: String(layout) }] : []}
+        onChange={data => { data && setLayout(data[0].value); }}
       />
     </div>
     </div>
-    <GraphThemed ref={graphRef}
+    <ConceptGraph ref={graphRef}
       sizeClass='w-[1240px] h-[800px] 2xl:w-[1880px] 2xl:h-[800px]'
       nodes={nodes}
       edges={edges}

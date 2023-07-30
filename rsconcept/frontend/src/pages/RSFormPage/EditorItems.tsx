@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import Button from '../../components/Common/Button';
-import DataTableThemed from '../../components/Common/DataTableThemed';
+import ConceptDataTable from '../../components/Common/ConceptDataTable';
 import Divider from '../../components/Common/Divider';
 import { ArrowDownIcon, ArrowsRotateIcon, ArrowUpIcon, DumpBinIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
@@ -54,6 +54,7 @@ function EditorItems({ onOpenEdit, onShowCreateCst }: EditorItemsProps) {
     cstDelete(data, () => {
       toast.success(`Конституенты удалены: ${deletedNames}`);
       setToggledClearRows(prev => !prev);
+      setSelected([]);
     });
   }, [selected, schema?.items, cstDelete]);
 
@@ -339,7 +340,7 @@ function EditorItems({ onOpenEdit, onShowCreateCst }: EditorItemsProps) {
         tabIndex={0} 
         title='Горячие клавиши:&#013;Двойной клик / Alt + клик - редактирование конституенты&#013;Alt + вверх/вниз - движение конституент&#013;Delete - удаление выбранных&#013;Alt + 1-6, Q,W - добавление конституент'
       >
-      <DataTableThemed
+      <ConceptDataTable
         data={schema?.items ?? []}
         columns={columns}
         keyField='id'

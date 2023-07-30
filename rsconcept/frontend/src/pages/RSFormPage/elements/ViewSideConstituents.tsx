@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import Checkbox from '../../../components/Common/Checkbox';
-import DataTableThemed from '../../../components/Common/DataTableThemed';
+import ConceptDataTable from '../../../components/Common/ConceptDataTable';
 import { useRSForm } from '../../../context/RSFormContext';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import { CstType, extractGlobals,type IConstituenta, matchConstituenta } from '../../../utils/models';
@@ -123,7 +123,7 @@ function ViewSideConstituents({ expression }: ViewSideConstituentsProps) {
           />
         </div>
       </div>
-      <DataTableThemed
+      <ConceptDataTable
         data={filteredData}
         columns={columns}
         keyField='id'

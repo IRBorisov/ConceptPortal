@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import Select from 'react-select';
 
+import ConceptSelect from '../../components/Common/ConceptSelect';
 import Modal from '../../components/Common/Modal';
 import { type CstType } from '../../utils/models';
 import { CstTypeSelector, getCstTypeLabel } from '../../utils/staticUI';
@@ -35,12 +35,11 @@ function DlgCreateCst({ hideWindow, defaultType, onCreate }: DlgCreateCstProps) 
       canSubmit={validated}
       onSubmit={handleSubmit}
     >
-      <Select
+      <ConceptSelect
         options={CstTypeSelector}
         placeholder='Выберите тип'
-        filterOption={null}
-        value={selectedType && { value: selectedType, label: getCstTypeLabel(selectedType) }}
-        onChange={(data) => { setSelectedType(data?.value); }}
+        values={selectedType ? [{ value: selectedType, label: getCstTypeLabel(selectedType) }] : []}
+        onChange={data => { setSelectedType(data[0].value); }}
       />
     </Modal>
   );

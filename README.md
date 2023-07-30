@@ -22,9 +22,10 @@ This readme file is used mostly to document project dependencies
   - react-tabs
   - react-intl
   - react-data-table-component
-  - react-select
+  - react-dropdown-select
   - react-error-boundary
   - reagraph
+  - react-tooltip
   </pre>
 </details>
 <details>

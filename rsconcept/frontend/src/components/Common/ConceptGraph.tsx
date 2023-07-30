@@ -4,13 +4,13 @@ import { darkTheme, GraphCanvas, GraphCanvasProps, GraphCanvasRef, lightTheme } 
 import { useConceptTheme } from '../../context/ThemeContext';
 import { resources } from '../../utils/constants';
 
-interface GraphThemedProps
+interface ConceptGraphProps
 extends Omit<GraphCanvasProps, 'theme' | 'labelFontUrl'> {
   ref?: Ref<GraphCanvasRef>
   sizeClass: string
 }
 
-function GraphThemed({ sizeClass, ...props }: GraphThemedProps) {
+function ConceptGraph({ sizeClass, ...props }: ConceptGraphProps) {
   const { darkMode } = useConceptTheme();
   
   return (
@@ -26,4 +26,4 @@ function GraphThemed({ sizeClass, ...props }: GraphThemedProps) {
   );
 }
 
-export default GraphThemed;
+export default ConceptGraph;

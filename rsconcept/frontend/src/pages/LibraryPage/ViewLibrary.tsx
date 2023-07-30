@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
-import DataTableThemed from '../../components/Common/DataTableThemed';
+import ConceptDataTable from '../../components/Common/ConceptDataTable';
 import { useUsers } from '../../context/UsersContext';
 import { IRSFormMeta } from '../../utils/models'
 
@@ -59,7 +59,7 @@ function ViewLibrary({ schemas }: ViewLibraryProps) {
   );
 
   return (
-    <DataTableThemed
+    <ConceptDataTable
       columns={columns}
       data={schemas}
       defaultSortFieldId='time_update'
