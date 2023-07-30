@@ -6,6 +6,7 @@ import { useRSForm } from '../../../context/RSFormContext';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import { CstType, extractGlobals,type IConstituenta, matchConstituenta } from '../../../utils/models';
 import { getMockConstituenta } from '../../../utils/staticUI';
+import ConstituentaTooltip from './ConstituentaTooltip';
 
 interface ViewSideConstituentsProps {
   expression: string
@@ -61,7 +62,12 @@ function ViewSideConstituents({ expression }: ViewSideConstituentsProps) {
       {
         name: 'ID',
         id: 'alias',
-        selector: (cst: IConstituenta) => cst.alias,
+        cell: (cst: IConstituenta) => {
+          return (<div>
+            <span id={cst.alias}>{cst.alias}</span>
+            <ConstituentaTooltip data={cst} anchor={`#${cst.alias}`} />
+          </div>);
+        },
         width: '62px',
         maxWidth: '62px',
         conditionalCellStyles: [

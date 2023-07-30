@@ -3,8 +3,9 @@ import { toast } from 'react-toastify';
 
 import Button from '../../components/Common/Button';
 import ConceptDataTable from '../../components/Common/ConceptDataTable';
+import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import Divider from '../../components/Common/Divider';
-import { ArrowDownIcon, ArrowsRotateIcon, ArrowUpIcon, DumpBinIcon, SmallPlusIcon } from '../../components/Icons';
+import { ArrowDownIcon, ArrowsRotateIcon, ArrowUpIcon, DumpBinIcon, HelpIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import { CstType, type IConstituenta, ICstMovetoData, inferStatus, ParsingStatus, ValueClass } from '../../utils/models'
@@ -288,7 +289,7 @@ function EditorItems({ onOpenEdit, onShowCreateCst }: EditorItemsProps) {
             <b>{selected.length}</b> из {schema?.stats?.count_all ?? 0}
           </span>
         </div>
-        {isEditable && <div className='flex justify-start w-full gap-1'>
+        {isEditable && <div className='flex items-center justify-start w-full gap-1'>
           <Button
             tooltip='Переместить вверх'
             icon={<ArrowUpIcon size={6}/>}
@@ -333,13 +334,21 @@ function EditorItems({ onOpenEdit, onShowCreateCst }: EditorItemsProps) {
                 onClick={() => { handleAddNew(type); }}
               />;
           })}
+          <div id='items-table-help'>
+            <HelpIcon color='text-primary' size={6} />
+          </div>
+          <ConceptTooltip anchorSelect='#items-table-help'>
+            <div>
+              <h1>Горячие клавиши</h1>
+              <p><b>Двойной клик / Alt + клик</b> - редактирование конституенты</p>
+              <p><b>Alt + вверх/вниз</b> - движение конституент</p>
+              <p><b>Delete</b> - удаление конституент</p>
+              <p><b>Alt + 1-6, Q,W</b> - добавление конституент</p>
+            </div>
+          </ConceptTooltip>
         </div>}
       </div>
-      <div className='w-full h-full' 
-        onKeyDown={handleTableKey}
-        tabIndex={0} 
-        title='Горячие клавиши:&#013;Двойной клик / Alt + клик - редактирование конституенты&#013;Alt + вверх/вниз - движение конституент&#013;Delete - удаление выбранных&#013;Alt + 1-6, Q,W - добавление конституент'
-      >
+      <div className='w-full h-full' onKeyDown={handleTableKey}>
       <ConceptDataTable
         data={schema?.items ?? []}
         columns={columns}
@@ -350,11 +359,11 @@ function EditorItems({ onOpenEdit, onShowCreateCst }: EditorItemsProps) {
             <p>Создайте новую конституенту</p>
           </span>
         }
-
+        
         striped
         highlightOnHover
         pointerOnHover
-
+        
         selectableRows
         selectableRowsHighlight
         onSelectedRowsChange={handleSelectionChange}
@@ -362,7 +371,7 @@ function EditorItems({ onOpenEdit, onShowCreateCst }: EditorItemsProps) {
         onRowClicked={handleRowClicked}
         clearSelectedRows={toggledClearRows}
         dense
-      />
+        />
       </div>
     </div>
   );

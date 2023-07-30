@@ -19,6 +19,10 @@
 }
 
 @layer components {
+  h1 {
+    @apply text-lg font-bold text-center
+  }
+
   .border {
     @apply clr-border rounded
   }
