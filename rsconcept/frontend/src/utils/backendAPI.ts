@@ -12,7 +12,7 @@ import {
 IRSExpression,
 IRSFormCreateData, IRSFormData,
   IRSFormMeta, IRSFormUpdateData, IRSFormUploadData, IUserInfo,
-  IUserLoginData, IUserProfile, IUserSignupData} from './models'
+  IUserLoginData, IUserProfile, IUserSignupData, IUserUpdateData} from './models'
 
 // ================ Data transfer types ================
 export type DataCallback<ResponseData = undefined> = (data: ResponseData) => void;
@@ -81,6 +81,14 @@ export function postSignup(request: IFrontRequest<IUserSignupData, IUserProfile>
 
 export function getProfile(request: FrontPull<IUserProfile>) {
   AxiosGet({
+    title: 'Current user profile',
+    endpoint: `${config.url.AUTH}profile`,
+    request: request
+  });
+}
+
+export function patchProfile(request: FrontExchange<IUserUpdateData, IUserProfile>) {
+  AxiosPatch({
     title: 'Current user profile',
     endpoint: `${config.url.AUTH}profile`,
     request: request

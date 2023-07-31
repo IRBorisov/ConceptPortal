@@ -22,6 +22,7 @@ export interface IUserSignupData extends Omit<IUser, 'is_staff' | 'id'> {
   password2: string
 }
 export interface IUserProfile extends Omit<IUser, 'is_staff'> {}
+export interface IUserUpdateData extends Omit<IUser, 'is_staff' | 'id'> {}
 export interface IUserInfo extends Omit<IUserProfile, 'email'> {}
 
 // ======== RS Parsing ============

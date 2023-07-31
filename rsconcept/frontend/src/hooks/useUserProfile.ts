@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 
 import { type ErrorInfo } from '../components/BackendError'
-import { getProfile } from '../utils/backendAPI'
-import { type IUserProfile } from '../utils/models'
+import { DataCallback, getProfile, patchProfile } from '../utils/backendAPI'
+import { type IUserProfile,IUserUpdateData } from '../utils/models'
 
 export function useUserProfile() {
   const [user, setUser] = useState<IUserProfile | undefined>(undefined);
@@ -21,10 +21,22 @@ export function useUserProfile() {
       });
     }, [setUser]
   )
+  const updateUser = useCallback(
+    (data: IUserUpdateData, callback?: DataCallback<IUserProfile>) => {
+      setError(undefined);
+      patchProfile({
+        data: data,
+        showError: true,
+        setLoading: setLoading,
+        onError: error => { setError(error); },
+        onSuccess: newData => { setUser(newData); if (callback) callback(newData) }
+      });
+    }, [setUser]
+  )
 
   useEffect(() => {
     fetchUser();
   }, [fetchUser])
 
-  return { user, fetchUser, error, loading };
+  return { user, fetchUser, updateUser, error, loading };
 }
