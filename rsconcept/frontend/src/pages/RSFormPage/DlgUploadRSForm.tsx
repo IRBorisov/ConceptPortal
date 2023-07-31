@@ -38,17 +38,20 @@ function DlgUploadRSForm({ hideWindow }: DlgUploadRSFormProps) {
 
   return (
     <Modal
-      title='Загрузка схемы из Экстеор'
+      title='Импорт схемы из Экстеора'
       hideWindow={hideWindow}
       canSubmit={!!file}
       onSubmit={handleSubmit}
+      submitText='Загрузить'
     >
       <div className='max-w-[20rem]'>
-      <FileInput label='Загрузить файл'
-          acceptType='.trs'
-          onChange={handleFile}
-        />
-      <Checkbox label='Загружать метаданные'
+      <FileInput
+        label='Выбрать файл'
+        acceptType='.trs'
+        onChange={handleFile}
+      />
+      <Checkbox
+        label='Загружать название и комментарий'
         value={loadMetadata}
         onChange={event => { setLoadMetadata(event.target.checked); }}
       />

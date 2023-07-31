@@ -71,7 +71,7 @@ export function postLogout(request: FrontAction) {
   });
 }
 
-export function postSignup(request: IFrontRequest<IUserSignupData, IUserProfile>) {
+export function postSignup(request: FrontExchange<IUserSignupData, IUserProfile>) {
   AxiosPost({
     title: 'Register user',
     endpoint: `${config.url.AUTH}signup`,

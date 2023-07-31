@@ -15,7 +15,7 @@ import { RSTabsList } from './RSTabs';
 
 interface EditorConstituentaProps {
   onShowAST: (ast: SyntaxTree) => void
-  onShowCreateCst: (position: number | undefined, type: CstType | undefined) => void
+  onShowCreateCst: (selectedID: number | undefined, type: CstType | undefined) => void
 }
 
 function EditorConstituenta({ onShowAST, onShowCreateCst }: EditorConstituentaProps) {

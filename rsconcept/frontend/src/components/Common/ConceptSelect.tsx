@@ -6,9 +6,10 @@ extends Omit<PropsWithRef<SelectProps<T>>, 'noDataLabel'> {
   
 }
 
-function ConceptSelect<T extends object | string>({  ...props }: ConceptSelectProps<T>) {
+function ConceptSelect<T extends object | string>({ className,  ...props }: ConceptSelectProps<T>) {
   return (
   <Select
+    className={`overflow-ellipsis whitespace-nowrap ${className}`}
     {...props}
     noDataLabel='Список пуст'
   />

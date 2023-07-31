@@ -8,12 +8,13 @@ import Divider from '../../components/Common/Divider';
 import { ArrowDownIcon, ArrowsRotateIcon, ArrowUpIcon, DumpBinIcon, HelpIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
-import { CstType, type IConstituenta, ICstMovetoData, inferStatus, ParsingStatus, ValueClass } from '../../utils/models'
-import { getCstTypePrefix, getCstTypeShortcut, getStatusInfo, getTypeLabel } from '../../utils/staticUI';
+import { prefixes } from '../../utils/constants';
+import { CstType, IConstituenta, ICstMovetoData } from '../../utils/models'
+import { getCstTypePrefix, getCstTypeShortcut, getTypeLabel, mapStatusInfo } from '../../utils/staticUI';
 
 interface EditorItemsProps {
   onOpenEdit: (cst: IConstituenta) => void
-  onShowCreateCst: (position: number | undefined, type: CstType | undefined, skipDialog?: boolean) => void
+  onShowCreateCst: (selectedID: number | undefined, type: CstType | undefined, skipDialog?: boolean) => void
 }
 
 function EditorItems({ onOpenEdit, onShowCreateCst }: EditorItemsProps) {
@@ -108,7 +109,7 @@ function EditorItems({ onOpenEdit, onShowCreateCst }: EditorItemsProps) {
   }, [selected, schema?.items, cstMoveTo]);
 
   // Generate new names for all constituents
-  const handleReindex = useCallback(() => { 
+  const handleReindex = useCallback(() => {
     resetAliases(() => toast.success('Переиндексация конституент успешна'));
   }, [resetAliases]);
 
@@ -121,8 +122,8 @@ function EditorItems({ onOpenEdit, onShowCreateCst }: EditorItemsProps) {
       const selectedPosition = selected.reduce((prev, cstID) => {
         const position = schema.items.findIndex(cst => cst.id === cstID);
         return Math.max(position, prev);
-      }, -1) + 1;
-      const insert_where = selectedPosition > 0 ? selectedPosition : undefined;
+      }, -1);
+      const insert_where = selectedPosition >= 0 ? schema.items[selectedPosition].id : undefined;
       onShowCreateCst(insert_where, type, type !== undefined);
     }, [schema, onShowCreateCst, selected]);
 
@@ -174,52 +175,29 @@ function EditorItems({ onOpenEdit, onShowCreateCst }: EditorItemsProps) {
         omit: true
       },
       {
-        name: 'Статус',
-        id: 'status',
-        cell: (cst: IConstituenta) =>
-          <div style={{ fontSize: 12 }}>
-            {getStatusInfo(inferStatus(cst.parse?.status, cst.parse?.valueClass)).text}
-          </div>,
-        width: '80px',
-        maxWidth: '80px',
-        reorder: true,
-        hide: 1280,
-        conditionalCellStyles: [
-          {
-            when: (cst: IConstituenta) => cst.parse?.status !== ParsingStatus.VERIFIED,
-            classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
-          },
-          {
-            when: (cst: IConstituenta) => cst.parse?.status === ParsingStatus.VERIFIED && cst.parse?.valueClass === ValueClass.INVALID,
-            classNames: ['bg-[#beeefa]', 'dark:bg-[#286675]']
-          },
-          {
-            when: (cst: IConstituenta) => cst.parse?.status === ParsingStatus.VERIFIED && cst.parse?.valueClass === ValueClass.PROPERTY,
-            classNames: ['bg-[#a5e9fa]', 'dark:bg-[#36899e]']
-          }
-        ]
-      },
-      {
         name: 'Имя',
         id: 'alias',
         selector: (cst: IConstituenta) => cst.alias,
+        cell: (cst: IConstituenta) => {
+          const info = mapStatusInfo.get(cst.status)!;
+          return (<>
+            <div
+              id={`${prefixes.cst_list}${cst.alias}`}
+              className={`w-full rounded-md text-center ${info.color}`}
+            >
+              {cst.alias}
+            </div>
+            <ConceptTooltip
+              anchorSelect={`#${prefixes.cst_list}${cst.alias}`}
+              place='right'
+            >
+              <p><b>Статус: </b> {info.tooltip}</p>
+            </ConceptTooltip>
+          </>);
+        },
         width: '65px',
         maxWidth: '65px',
         reorder: true,
-        conditionalCellStyles: [
-          {
-            when: (cst: IConstituenta) => cst.parse?.status !== ParsingStatus.VERIFIED,
-            classNames: ['bg-[#ff8080]', 'dark:bg-[#800000]']
-          },
-          {
-            when: (cst: IConstituenta) => cst.parse?.status === ParsingStatus.VERIFIED && cst.parse?.valueClass === ValueClass.INVALID,
-            classNames: ['bg-[#ffbb80]', 'dark:bg-[#964600]']
-          },
-          {
-            when: (cst: IConstituenta) => cst.parse?.status === ParsingStatus.VERIFIED && cst.parse?.valueClass === ValueClass.PROPERTY,
-            classNames: ['bg-[#a5e9fa]', 'dark:bg-[#36899e]']
-          }
-        ]
       },
       {
         name: 'Тип',
@@ -311,7 +289,7 @@ function EditorItems({ onOpenEdit, onShowCreateCst }: EditorItemsProps) {
             dense
             onClick={handleDelete}
           />
-          <Divider vertical margins='1' />
+          <Divider vertical margins='my-1' />
           <Button
             tooltip='Переиндексировать имена'
             icon={<ArrowsRotateIcon color='text-primary' size={6}/>}
@@ -341,9 +319,23 @@ function EditorItems({ onOpenEdit, onShowCreateCst }: EditorItemsProps) {
             <div>
               <h1>Горячие клавиши</h1>
               <p><b>Двойной клик / Alt + клик</b> - редактирование конституенты</p>
+              <p><b>Клик на квадрат слева</b> - выделение конституенты</p>
               <p><b>Alt + вверх/вниз</b> - движение конституент</p>
               <p><b>Delete</b> - удаление конституент</p>
               <p><b>Alt + 1-6, Q,W</b> - добавление конституент</p>
+              <Divider margins='mt-2' />
+              <h1>Статусы</h1>
+              { [... mapStatusInfo.values()].map(info => {
+                  return (<p className='py-1'>
+                    <span className={`inline-block font-semibold min-w-[4rem] text-center border ${info.color}`}>
+                      {info.text}
+                    </span>
+                    <span> - </span>
+                    <span>
+                      {info.tooltip}
+                    </span>
+                  </p>);
+              })}
             </div>
           </ConceptTooltip>
         </div>}

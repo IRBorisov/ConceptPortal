@@ -21,8 +21,8 @@ export interface IUserSignupData extends Omit<IUser, 'is_staff' | 'id'> {
   password: string
   password2: string
 }
-export interface IUserProfile extends Omit<IUser, 'is_staff'> {}
 export interface IUserUpdateData extends Omit<IUser, 'is_staff' | 'id'> {}
+export interface IUserProfile extends Omit<IUser, 'is_staff'> {}
 export interface IUserInfo extends Omit<IUserProfile, 'email'> {}
 
 // ======== RS Parsing ============
@@ -104,6 +104,7 @@ export interface IConstituenta {
       resolved: string
     }
   }
+  status: ExpressionStatus
   parse: {
     status: ParsingStatus
     valueClass: ValueClass
@@ -216,10 +217,6 @@ export enum ExpressionStatus {
 }
 
 // ========== Model functions =================
-export function extractGlobals(expression: string): Set<string> {
-  return new Set(expression.match(/[XCSADFPT]\d+/g) ?? []);
-}
-
 export function inferStatus(parse?: ParsingStatus, value?: ValueClass): ExpressionStatus {
   if (!parse || !value) {
     return ExpressionStatus.UNDEFINED;
@@ -237,6 +234,10 @@ export function inferStatus(parse?: ParsingStatus, value?: ValueClass): Expressi
     return ExpressionStatus.PROPERTY;
   }
   return ExpressionStatus.VERIFIED
+}
+
+export function extractGlobals(expression: string): Set<string> {
+  return new Set(expression.match(/[XCSADFPT]\d+/g) ?? []);
 }
 
 export function LoadRSFormData(schema: IRSFormData): IRSForm {
@@ -293,6 +294,7 @@ export function LoadRSFormData(schema: IRSFormData): IRSForm {
       (sum, cst) => sum + (cst.cstType === CstType.THEOREM ? 1 : 0), 0)
   }
   result.items.forEach(cst => {
+    cst.status = inferStatus(cst.parse.status, cst.parse.valueClass);
     result.graph.addNode(cst.id);
     const dependencies = extractGlobals(cst.definition.formal);
     dependencies.forEach(value => {

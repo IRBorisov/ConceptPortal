@@ -8,6 +8,7 @@ import ConceptTab from '../../components/Common/ConceptTab';
 import { Loader } from '../../components/Common/Loader';
 import { useRSForm } from '../../context/RSFormContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
+import { prefixes, timeout_updateUI } from '../../utils/constants';
 import { CstType,type IConstituenta, ICstCreateData, SyntaxTree } from '../../utils/models';
 import { createAliasFor } from '../../utils/staticUI';
 import DlgCloneRSForm from './DlgCloneRSForm';
@@ -42,34 +43,44 @@ function RSTabs() {
   const [showAST, setShowAST] = useState(false);
   
   const [defaultType, setDefaultType] = useState<CstType | undefined>(undefined);
-  const [insertPosition, setInsertPosition] = useState<number | undefined>(undefined);
+  const [insertWhere, setInsertWhere] = useState<number | undefined>(undefined);
   const [showCreateCst, setShowCreateCst] = useState(false);
 
   const handleAddNew = useCallback(
-  (type: CstType) => {
+  (type: CstType, selectedCst?: number) => {
     if (!schema?.items) {
       return;
     }
     const data: ICstCreateData = {
       cst_type: type,
       alias: createAliasFor(type, schema),
-      insert_after: insertPosition ?? null
+      insert_after: selectedCst ?? insertWhere ?? null
     }
     cstCreate(data, newCst => {
       toast.success(`Конституента добавлена: ${newCst.alias}`);
-      if (activeTab === RSTabsList.CST_EDIT) {
-        navigate(`/rsforms/${schema.id}?tab=${RSTabsList.CST_EDIT}&active=${newCst.id}`);
+      navigate(`/rsforms/${schema.id}?tab=${activeTab}&active=${newCst.id}`);    
+      if (activeTab === RSTabsList.CST_EDIT || activeTab == RSTabsList.CST_LIST) {
+        setTimeout(() => {
+          const element = document.getElementById(`${prefixes.cst_list}${newCst.alias}`);
+          if (element) {
+            element.scrollIntoView({
+              behavior: 'smooth',
+              block: "end",
+              inline: "nearest"
+            });
+          }
+        }, timeout_updateUI);
       }
     });
-  }, [schema, cstCreate, insertPosition, navigate, activeTab]);
+  }, [schema, cstCreate, insertWhere, navigate, activeTab]);
 
   const onShowCreateCst = useCallback(
-    (position: number | undefined, type: CstType | undefined, skipDialog?: boolean) => {
+    (selectedID: number | undefined, type: CstType | undefined, skipDialog?: boolean) => {
       if (skipDialog && type) {
-        handleAddNew(type);
+        handleAddNew(type, selectedID);
       } else {
         setDefaultType(type);
-        setInsertPosition(position);
+        setInsertWhere(selectedID);
         setShowCreateCst(true);
       }
     }, [handleAddNew]);

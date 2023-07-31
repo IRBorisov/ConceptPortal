@@ -39,7 +39,7 @@ function DlgCreateCst({ hideWindow, defaultType, onCreate }: DlgCreateCstProps) 
         options={CstTypeSelector}
         placeholder='Выберите тип'
         values={selectedType ? [{ value: selectedType, label: getCstTypeLabel(selectedType) }] : []}
-        onChange={data => { setSelectedType(data[0].value); }}
+        onChange={data => { setSelectedType(data.length > 0 ? data[0].value : undefined); }}
       />
     </Modal>
   );

@@ -16,7 +16,6 @@ export function useRSFormDetails({ target }: { target?: string }) {
     }
     const schema = LoadRSFormData(data);
     setInnerSchema(schema);
-    console.log('Loaded schema: ', schema);
   }
 
   const reload = useCallback(

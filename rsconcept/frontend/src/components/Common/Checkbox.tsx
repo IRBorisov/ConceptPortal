@@ -6,15 +6,17 @@ export interface CheckboxProps {
   required?: boolean
   disabled?: boolean
   widthClass?: string
+  tooltip?: string
   value?: boolean
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-function Checkbox({ id, required, disabled, label, widthClass = 'w-full', value, onChange }: CheckboxProps) {
+// TODO: implement disabled={disabled}
+function Checkbox({ id, required, disabled, tooltip, label, widthClass = 'w-full', value, onChange }: CheckboxProps) {
   return (
-    <div className={'flex gap-2 [&:not(:first-child)]:mt-3 ' + widthClass}>
+    <div className={'flex gap-2 [&:not(:first-child)]:mt-3 ' + widthClass} title={tooltip}>
       <input id={id} type='checkbox'
-        className='relative cursor-pointer peer w-4 h-4 shrink-0 mt-0.5 border rounded-sm appearance-none clr-checkbox'
+        className='relative cursor-pointer disabled:cursor-not-allowed peer w-4 h-4 shrink-0 mt-0.5 border rounded-sm appearance-none clr-checkbox'
         required={required}
         disabled={disabled}
         checked={value}

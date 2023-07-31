@@ -87,7 +87,7 @@ function RSTabsMenu({showUploadDialog, showCloneDialog}: RSTabsMenuProps) {
           <DropdownButton onClick={handleDownload}>
             <div className='inline-flex items-center justify-start gap-2'>
               <DownloadIcon color='text-primary' size={4}/>
-              <p>Выгрузить файл Экстеор</p>
+              <p>Выгрузить в Экстеор</p>
             </div>
           </DropdownButton>
           <DropdownButton disabled={!isEditable} onClick={handleUpload}>
@@ -123,9 +123,14 @@ function RSTabsMenu({showUploadDialog, showCloneDialog}: RSTabsMenuProps) {
               </p>
             </div>
           </DropdownButton>
+          {(isOwned || user?.is_staff) &&
           <DropdownButton onClick={toggleReadonly}>
-            <Checkbox value={readonly} label='только чтение'/>
-          </DropdownButton>
+            <Checkbox 
+              value={readonly}
+              label='Я — читатель!'
+              tooltip='Режим чтения'
+            />
+          </DropdownButton>}
           {user?.is_staff &&
           <DropdownButton onClick={toggleForceAdmin}>
             <Checkbox value={forceAdmin} label='режим администратора'/>

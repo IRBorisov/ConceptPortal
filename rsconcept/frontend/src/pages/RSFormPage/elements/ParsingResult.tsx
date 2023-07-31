@@ -1,12 +1,13 @@
-import { IExpressionParse, SyntaxTree } from '../../../utils/models';
+import { IExpressionParse, IRSErrorDescription, SyntaxTree } from '../../../utils/models';
 import { getRSErrorMessage, getRSErrorPrefix } from '../../../utils/staticUI';
 
 interface ParsingResultProps {
   data: IExpressionParse
   onShowAST: (ast: SyntaxTree) => void
+  onShowError: (error: IRSErrorDescription) => void
 }
 
-function ParsingResult({ data, onShowAST }: ParsingResultProps) {
+function ParsingResult({ data, onShowAST, onShowError }: ParsingResultProps) {
   const errorCount = data.errors.reduce((total, error) => (error.isCritical ? total + 1 : total), 0);
   const warningsCount = data.errors.length - errorCount;
 
@@ -19,10 +20,10 @@ function ParsingResult({ data, onShowAST }: ParsingResultProps) {
       <p>Ошибок: <b>{errorCount}</b> | Предупреждений: <b>{warningsCount}</b></p>
       {data.errors.map(error => {
         return (
-        <p className='text-red'>
-          <span className='font-semibold'>{error.isCritical ? 'Ошибка' : 'Предупреждение'} {getRSErrorPrefix(error)}: </span>
-          <span>{getRSErrorMessage(error)}</span>
-          </p>
+        <p className='cursor-pointer text-red' onClick={() => onShowError(error)}>
+          <span className='mr-1 font-semibold underline'>{error.isCritical ? 'Ошибка' : 'Предупреждение'} {getRSErrorPrefix(error)}:</span>
+          <span> {getRSErrorMessage(error)}</span>
+        </p>
         );
       })}
       {data.astText && 

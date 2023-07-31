@@ -3,9 +3,11 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import Checkbox from '../../../components/Common/Checkbox';
 import ConceptDataTable from '../../../components/Common/ConceptDataTable';
 import { useRSForm } from '../../../context/RSFormContext';
+import { useConceptTheme } from '../../../context/ThemeContext';
 import useLocalStorage from '../../../hooks/useLocalStorage';
+import { prefixes } from '../../../utils/constants';
 import { CstType, extractGlobals,type IConstituenta, matchConstituenta } from '../../../utils/models';
-import { getMockConstituenta } from '../../../utils/staticUI';
+import { getMockConstituenta, mapStatusInfo } from '../../../utils/staticUI';
 import ConstituentaTooltip from './ConstituentaTooltip';
 
 interface ViewSideConstituentsProps {
@@ -13,7 +15,8 @@ interface ViewSideConstituentsProps {
 }
 
 function ViewSideConstituents({ expression }: ViewSideConstituentsProps) {
-  const { schema, setActiveID } = useRSForm();
+  const { darkMode } = useConceptTheme();
+  const { schema, setActiveID, activeID } = useRSForm();
   const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema?.items ?? []);
   const [filterText, setFilterText] = useLocalStorage('side-filter-text', '')
   const [onlyExpression, setOnlyExpression] = useLocalStorage('side-filter-flag', false);
@@ -52,6 +55,16 @@ function ViewSideConstituents({ expression }: ViewSideConstituentsProps) {
     if (cst.id > 0) setActiveID(cst.id);
   }, [setActiveID]);
 
+  const conditionalRowStyles = useMemo(() =>
+  [
+    {
+      when: (cst: IConstituenta) => cst.id === activeID,
+      style: {
+        backgroundColor: darkMode ? '#0068b3' : '#def1ff',
+      },
+    }
+  ], [activeID, darkMode]);
+
   const columns = useMemo(() =>
     [
       {
@@ -63,13 +76,19 @@ function ViewSideConstituents({ expression }: ViewSideConstituentsProps) {
         name: 'ID',
         id: 'alias',
         cell: (cst: IConstituenta) => {
-          return (<div>
-            <span id={cst.alias}>{cst.alias}</span>
-            <ConstituentaTooltip data={cst} anchor={`#${cst.alias}`} />
-          </div>);
+          const info = mapStatusInfo.get(cst.status)!;
+          return (<>
+            <div
+              id={`${prefixes.cst_list}${cst.alias}`}
+              className={`w-full rounded-md text-center ${info.color}`}
+            >
+              {cst.alias}
+            </div>
+            <ConstituentaTooltip data={cst} anchor={`#${prefixes.cst_list}${cst.alias}`} />
+          </>);
         },
-        width: '62px',
-        maxWidth: '62px',
+        width: '65px',
+        maxWidth: '65px',
         conditionalCellStyles: [
           {
             when: (cst: IConstituenta) => cst.id <= 0,
@@ -132,6 +151,7 @@ function ViewSideConstituents({ expression }: ViewSideConstituentsProps) {
       <ConceptDataTable
         data={filteredData}
         columns={columns}
+        conditionalRowStyles={conditionalRowStyles}
         keyField='id'
         noContextMenu
         noDataComponent={<span className='flex flex-col justify-center p-2 text-center'>

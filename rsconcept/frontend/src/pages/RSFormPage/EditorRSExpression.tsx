@@ -7,7 +7,8 @@ import { Loader } from '../../components/Common/Loader';
 import { useRSForm } from '../../context/RSFormContext';
 import useCheckExpression from '../../hooks/useCheckExpression';
 import { TokenID } from '../../utils/enums';
-import { CstType, SyntaxTree } from '../../utils/models';
+import { IRSErrorDescription, SyntaxTree } from '../../utils/models';
+import { getCstExpressionPrefix } from '../../utils/staticUI';
 import ParsingResult from './elements/ParsingResult';
 import RSLocalButton from './elements/RSLocalButton';
 import RSTokenButton from './elements/RSTokenButton';
@@ -42,23 +43,43 @@ function EditorRSExpression({
     resetParse();
   }, [activeCst, resetParse]);
 
-  const handleCheckExpression = useCallback(() => {
+  function handleFocusIn() {
+    toggleEditMode()
+  }
+
+  function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    onChange(event);
+    setIsModified(true);
+  }
+  
+  function handleCheckExpression() {
     if (!activeCst) {
       return;
     }
-    const prefix = activeCst?.alias + (activeCst?.cstType === CstType.STRUCTURED ? '::=' : ':==');
+    const prefix = getCstExpressionPrefix(activeCst);
     const expression = prefix + value;
     checkExpression(expression, parse => {
-      if (!parse.parseResult && parse.errors.length > 0) {
+      if (parse.errors.length > 0) {
         const errorPosition = parse.errors[0].position - prefix.length
         expressionCtrl.current!.selectionStart = errorPosition;
         expressionCtrl.current!.selectionEnd = errorPosition;
-        expressionCtrl.current!.focus();
       }
+      expressionCtrl.current!.focus();
       setIsModified(false);
       setTypification(parse.typification);
     });
-  }, [value, checkExpression, activeCst, setTypification]);
+  }
+
+  const onShowError = useCallback(
+  (error: IRSErrorDescription) => {
+      if (!activeCst || !expressionCtrl.current) {
+        return;
+      }
+      const errorPosition = error.position -  getCstExpressionPrefix(activeCst).length
+      expressionCtrl.current.selectionStart = errorPosition;
+      expressionCtrl.current.selectionEnd = errorPosition;
+      expressionCtrl.current.focus();
+  }, [activeCst]);
 
   const handleEdit = useCallback((id: TokenID, key?: string) => {
     if (!expressionCtrl.current) {
@@ -76,13 +97,9 @@ function EditorRSExpression({
     setValue(text.value);
     setIsModified(true);
   }, [setValue]);
-
-  const handleChange = useCallback((event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onChange(event);
-    setIsModified(true);
-  }, [setIsModified, onChange]);
-
-  const handleInput = useCallback((event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  
+  const handleInput = useCallback(
+  (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (!expressionCtrl.current) {
       return;
     }
@@ -107,10 +124,6 @@ function EditorRSExpression({
     setValue(text.value);
     setIsModified(true);
   }, [expressionCtrl, setValue]);
-
-  const handleFocusIn = useCallback(() => {
-    toggleEditMode()
-  }, [toggleEditMode]);
 
   const EditButtons = useMemo(() => {
     return (<div className='flex items-center justify-between w-full'>
@@ -188,7 +201,7 @@ function EditorRSExpression({
       </div>
     </div>
     </div>);
-  }, [handleEdit])
+  }, [handleEdit]);
 
   return (
     <div className='flex flex-col items-start [&:not(:first-child)]:mt-3 w-full'>
@@ -206,6 +219,7 @@ function EditorRSExpression({
           onFocus={handleFocusIn}
           onKeyDown={handleInput}
           disabled={disabled}
+          spellCheck={false}
       />
       <div className='flex w-full gap-4 py-1 mt-1 justify-stretch'>
         <div className='flex flex-col gap-2'>
@@ -230,7 +244,12 @@ function EditorRSExpression({
       { (loading || parseData) && 
       <div className='w-full overflow-y-auto border mt-2 max-h-[14rem] min-h-[7rem]'>
         { loading && <Loader />}
-        { !loading && parseData && <ParsingResult data={parseData} onShowAST={onShowAST} />}
+        { !loading && parseData && 
+        <ParsingResult 
+          data={parseData} 
+          onShowAST={onShowAST}
+          onShowError={onShowError}
+        />}
       </div>}
     </div>
   );

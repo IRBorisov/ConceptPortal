@@ -24,6 +24,23 @@ export function getTypeLabel(cst: IConstituenta) {
   return 'Логический';
 }
 
+export function getCstTypePrefix(type: CstType) {
+  switch (type) {
+  case CstType.BASE: return 'X';
+  case CstType.CONSTANT: return 'C';
+  case CstType.STRUCTURED: return 'S';
+  case CstType.AXIOM: return 'A';
+  case CstType.TERM: return 'D';
+  case CstType.FUNCTION: return 'F';
+  case CstType.PREDICATE: return 'P';
+  case CstType.THEOREM: return 'T';
+  }
+}
+
+export function getCstExpressionPrefix(cst: IConstituenta): string {
+  return cst.alias + (cst.cstType === CstType.STRUCTURED ? '::=' : ':==');
+}
+
 export function getRSButtonData(id: TokenID): IRSButtonData {
   switch (id) {
   case TokenID.BOOLEAN: return {
@@ -96,11 +113,11 @@ export function getRSButtonData(id: TokenID): IRSButtonData {
   };
   case TokenID.IN: return {
     text: '∈',
-    tooltip: 'быть элементом (принадлежит) [Alt + \']'
+    tooltip: 'быть элементом (принадлежит) [Alt + 1]'
   };
   case TokenID.NOTIN: return {
     text: '∉',
-    tooltip: 'не принадлежит [Alt + Shift + \']'
+    tooltip: 'не принадлежит [Alt + Shift + 1]'
   };
   case TokenID.SUBSET_OR_EQ: return {
     text: '⊆',
@@ -172,11 +189,11 @@ export function getRSButtonData(id: TokenID): IRSButtonData {
   };
   case TokenID.PUNC_ASSIGN: return {
     text: ':=',
-    tooltip: 'присвоение (императивный синтаксис)'
+    tooltip: 'присвоение (императивный синтаксис) [Alt + Shift + 6]'
   };
   case TokenID.PUNC_ITERATE: return {
     text: ':∈',
-    tooltip: 'перебор элементов множества (императивный синтаксис)'
+    tooltip: 'перебор элементов множества (императивный синтаксис) [Alt + 6]'
   };
   }
   return {
@@ -218,74 +235,70 @@ export const CstTypeSelector = (Object.values(CstType)).map(
     return { value: type, label: getCstTypeLabel(type) };
 });
 
+export const mapLayoutLabels: Map<string, string> = new Map([
+  ['forceatlas2', 'Атлас 2D'],
+  ['forceDirected2d', 'Силы 2D'],
+  ['forceDirected3d', 'Силы 3D'],
+  ['treeTd2d', 'ДеревоВерт 2D'],
+  ['treeTd3d', 'ДеревоВерт 3D'],
+  ['treeLr2d', 'ДеревоГор 2D'],
+  ['treeLr3d', 'ДеревоГор 3D'],
+  ['radialOut2d', 'Радиальная 2D'],
+  ['radialOut3d', 'Радиальная 3D'],
+  ['circular2d', 'Круговая'],
+  ['hierarchicalTd', 'ИерархияВерт'],
+  ['hierarchicalLr', 'ИерархияГор'],
+  ['nooverlap', 'Без перекрытия']
+]);
+
 export const GraphLayoutSelector: {value: LayoutTypes, label: string}[] = [
-  { value: 'forceatlas2', label: 'forceatlas2'},
-  { value: 'nooverlap', label: 'nooverlap'},
-  { value: 'forceDirected2d', label: 'forceDirected2d'},
-  { value: 'forceDirected3d', label: 'forceDirected3d'},
-  { value: 'circular2d', label: 'circular2d'},
-  { value: 'treeTd2d', label: 'treeTd2d'},
-  { value: 'treeTd3d', label: 'treeTd3d'},
-  { value: 'treeLr2d', label: 'treeLr2d'},
-  { value: 'treeLr3d', label: 'treeLr3d'},
-  { value: 'radialOut2d', label: 'radialOut2d'},
-  { value: 'radialOut3d', label: 'radialOut3d'},
-//  { value: 'hierarchicalTd', label: 'hierarchicalTd'},
-//  { value: 'hierarchicalLr', label: 'hierarchicalLr'}
+  { value: 'forceatlas2', label: 'Атлас 2D'},
+  { value: 'forceDirected2d', label: 'Силы 2D'},
+  { value: 'forceDirected3d', label: 'Силы 3D'},
+  { value: 'treeTd2d', label: 'ДеревоВ 2D'},
+  { value: 'treeTd3d', label: 'ДеревоВ 3D'},
+  { value: 'treeLr2d', label: 'ДеревоГ 2D'},
+  { value: 'treeLr3d', label: 'ДеревоГ 3D'},
+  { value: 'radialOut2d', label: 'Радиальная 2D'},
+  { value: 'radialOut3d', label: 'Радиальная 3D'},
+  // { value: 'circular2d', label: 'circular2d'},
+  //  { value: 'nooverlap', label: 'nooverlap'},
+  //  { value: 'hierarchicalTd', label: 'hierarchicalTd'},
+  //  { value: 'hierarchicalLr', label: 'hierarchicalLr'}
 ];
 
-export function getCstTypePrefix(type: CstType) {
-  switch (type) {
-  case CstType.BASE: return 'X';
-  case CstType.CONSTANT: return 'C';
-  case CstType.STRUCTURED: return 'S';
-  case CstType.AXIOM: return 'A';
-  case CstType.TERM: return 'D';
-  case CstType.FUNCTION: return 'F';
-  case CstType.PREDICATE: return 'P';
-  case CstType.THEOREM: return 'T';
-  }
-}
-
-export function getStatusInfo(status?: ExpressionStatus): IStatusInfo {
-  switch (status) {
-  case ExpressionStatus.UNDEFINED: return {
-    text: 'N/A',
-    color: 'bg-[#b3bdff] dark:bg-[#1e00b3]',
-    tooltip: 'произошла ошибка при проверке выражения'
-  };
-  case ExpressionStatus.UNKNOWN: return {
-    text: 'неизв',
-    color: 'bg-[#b3bdff] dark:bg-[#1e00b3]',
-    tooltip: 'требует проверки выражения'
-  };
-  case ExpressionStatus.INCORRECT: return {
-    text: 'ошибка',
-    color: 'bg-[#ff8080] dark:bg-[#800000]',
-    tooltip: 'ошибка в выражении'
-  };
-  case ExpressionStatus.INCALCULABLE: return {
-    text: 'невыч',
-    color: 'bg-[#ffbb80] dark:bg-[#964600]',
-    tooltip: 'выражение не вычислимо (экспоненциальная сложность)'
-  };
-  case ExpressionStatus.PROPERTY: return {
-    text: 'св-во',
-    color: 'bg-[#a5e9fa] dark:bg-[#36899e]',
-    tooltip: 'можно проверить принадлежность, но нельзя получить значение'
-  };
-  case ExpressionStatus.VERIFIED: return {
+export const mapStatusInfo: Map<ExpressionStatus, IStatusInfo> = new Map([
+  [ ExpressionStatus.VERIFIED, {
     text: 'ок',
     color: 'bg-[#aaff80] dark:bg-[#2b8000]',
     tooltip: 'выражение корректно и вычислимо'
-  };
-  }
-  return {
-    text: 'undefined',
-    color: '',
-    tooltip: '!ERROR!'
-  };
-}
+  }],
+  [ ExpressionStatus.INCORRECT, {
+    text: 'ошибка',
+    color: 'bg-[#ffc9c9] dark:bg-[#592b2b]',
+    tooltip: 'ошибка в выражении'
+  }],
+  [ ExpressionStatus.INCALCULABLE, {
+    text: 'невыч',
+    color: 'bg-[#ffbb80] dark:bg-[#964600]',
+    tooltip: 'выражение не вычислимо (экспоненциальная сложность)'
+  }],
+  [ ExpressionStatus.PROPERTY, {
+    text: 'св-во',
+    color: 'bg-[#a5e9fa] dark:bg-[#36899e]',
+    tooltip: 'можно проверить принадлежность, но нельзя получить значение'
+  }],
+  [ ExpressionStatus.UNKNOWN, {
+    text: 'неизв',
+    color: 'bg-[#b3bdff] dark:bg-[#1e00b3]',
+    tooltip: 'требует проверки выражения'
+  }],
+  [ ExpressionStatus.UNDEFINED, {
+    text: 'N/A',
+    color: 'bg-[#b3bdff] dark:bg-[#1e00b3]',
+    tooltip: 'произошла ошибка при проверке выражения'
+  }],
+]);
 
 export function createAliasFor(type: CstType, schema: IRSForm): string {
   const prefix = getCstTypePrefix(type);
@@ -320,6 +333,7 @@ export function getMockConstituenta(id: number, alias: string, type: CstType, co
         resolved: ''
       }
     },
+    status: ExpressionStatus.INCORRECT,
     parse: {
       status: ParsingStatus.INCORRECT,
       valueClass: ValueClass.INVALID,
@@ -365,7 +379,7 @@ export function getRSErrorMessage(error: IRSErrorDescription): string {
   case RSErrorType.localDoubleDeclare: 
     return `Предупреждение! Повторное объявление локальной переменной ${error.params[0]}`;
   case RSErrorType.localNotUsed: 
-    return `Предупреждение! Переменная объявлена но не использована: ${error.params[0]}`;
+    return `Предупреждение! Переменная объявлена, но не использована: ${error.params[0]}`;
   case RSErrorType.localShadowing: 
     return `Повторное объявление переменной: ${error.params[0]}`;
 

@@ -9,7 +9,7 @@ export function useUserProfile() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ErrorInfo>(undefined);
 
-  const fetchUser = useCallback(
+  const reload = useCallback(
     () => {
       setError(undefined);
       setUser(undefined);
@@ -29,14 +29,17 @@ export function useUserProfile() {
         showError: true,
         setLoading: setLoading,
         onError: error => { setError(error); },
-        onSuccess: newData => { setUser(newData); if (callback) callback(newData) }
+        onSuccess: newData => {
+          setUser(newData);
+          if (callback) callback(newData);
+        }
       });
     }, [setUser]
-  )
+  );
 
   useEffect(() => {
-    fetchUser();
-  }, [fetchUser])
+    reload();
+  }, [reload])
 
-  return { user, fetchUser, updateUser, error, loading };
+  return { user, updateUser, error, loading };
 }

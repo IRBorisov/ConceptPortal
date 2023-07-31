@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import { ExpressionStatus, type IConstituenta, IExpressionParse,inferStatus, ParsingStatus } from '../../../utils/models';
-import { getStatusInfo } from '../../../utils/staticUI';
+import { mapStatusInfo } from '../../../utils/staticUI';
 
 interface StatusBarProps {
   isModified?: boolean
@@ -21,7 +21,7 @@ function StatusBar({ isModified, constituenta, parseData }: StatusBarProps) {
     return inferStatus(constituenta?.parse?.status, constituenta?.parse?.valueClass);
   }, [isModified, constituenta, parseData]);
 
-  const data = getStatusInfo(status);
+  const data = mapStatusInfo.get(status)!;
   return (
     <div title={data.tooltip}
       className={'min-h-[2rem] min-w-[6rem] font-semibold inline-flex border rounded-lg items-center justify-center align-middle ' + data.color}>
