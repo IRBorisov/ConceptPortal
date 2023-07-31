@@ -15,6 +15,7 @@ import { IRSFormCreateData, IRSFormMeta } from '../utils/models';
 
 function CreateRSFormPage() {
   const navigate = useNavigate();
+  const { createSchema, error, setError, loading } = useNewRSForm()
 
   const [title, setTitle] = useState('');
   const [alias, setAlias] = useState('');
@@ -22,25 +23,24 @@ function CreateRSFormPage() {
   const [common, setCommon] = useState(false);
   const [file, setFile] = useState<File | undefined>()
 
-  const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    setError(undefined);
+  }, [title, alias, setError]);
+
+  function handleFile(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files && event.target.files.length > 0) {
       setFile(event.target.files[0]);
     } else {
-      setFile(undefined)
+      setFile(undefined);
     }
   }
 
-  const onSuccess = (newSchema: IRSFormMeta) => {
+  function onSuccess(newSchema: IRSFormMeta) {
     toast.success('Схема успешно создана');
     navigate(`/rsforms/${newSchema.id}`);
   }
-  const { createSchema, error, setError, loading } = useNewRSForm()
-
-  useEffect(() => {
-    setError(undefined)
-  }, [title, alias, setError]);
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (loading) {
       return;
@@ -54,43 +54,49 @@ function CreateRSFormPage() {
       fileName: file?.name
     };
     createSchema(data, onSuccess);
-  };
+  }
 
   return (
     <RequireAuth>
-      <Form title='Создание концептуальной схемы' onSubmit={handleSubmit} widthClass='max-w-lg mt-4'>
-        <TextInput id='title' label='Полное название' type='text'
-          required={!file}
-          placeholder={file && 'Загрузить из файла'}
-          value={title}
-          onChange={event => { setTitle(event.target.value); }}
-        />
-        <TextInput id='alias' label='Сокращение' type='text'
-          required={!file}
-          value={alias}
-          placeholder={file && 'Загрузить из файла'}
-          widthClass='max-w-sm'
-          onChange={event => { setAlias(event.target.value); }}
-        />
-        <TextArea id='comment' label='Комментарий'
-          value={comment}
-          placeholder={file && 'Загрузить из файла'}
-          onChange={event => { setComment(event.target.value); }}
-        />
-        <Checkbox id='common' label='Общедоступная схема'
-          value={common}
-          onChange={event => { setCommon(event.target.checked); }}
-        />
-        <FileInput id='trs' label='Загрузить *.trs'
-          acceptType='.trs'
-          onChange={handleFile}
-        />
+    <Form title='Создание концептуальной схемы' 
+      onSubmit={handleSubmit}
+      widthClass='max-w-lg mt-4'
+    >
+      <TextInput id='title' label='Полное название' type='text'
+        required={!file}
+        placeholder={file && 'Загрузить из файла'}
+        value={title}
+        onChange={event => setTitle(event.target.value)}
+      />
+      <TextInput id='alias' label='Сокращение' type='text'
+        required={!file}
+        value={alias}
+        placeholder={file && 'Загрузить из файла'}
+        widthClass='max-w-sm'
+        onChange={event => setAlias(event.target.value)}
+      />
+      <TextArea id='comment' label='Комментарий'
+        value={comment}
+        placeholder={file && 'Загрузить из файла'}
+        onChange={event => setComment(event.target.value)}
+      />
+      <Checkbox id='common' label='Общедоступная схема'
+        value={common}
+        onChange={event => setCommon(event.target.checked)}
+      />
+      <FileInput id='trs' label='Загрузить *.trs'
+        acceptType='.trs'
+        onChange={handleFile}
+      />
 
-        <div className='flex items-center justify-center py-2 mt-4'>
-          <SubmitButton text='Создать схему' loading={loading} />
-        </div>
-        { error && <BackendError error={error} />}
-      </Form>
+      <div className='flex items-center justify-center py-2 mt-4'>
+        <SubmitButton 
+          text='Создать схему'
+          loading={loading} 
+        />
+      </div>
+      { error && <BackendError error={error} />}
+    </Form>
     </RequireAuth>
   );
 }

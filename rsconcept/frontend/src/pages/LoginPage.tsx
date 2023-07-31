@@ -11,12 +11,12 @@ import { useAuth } from '../context/AuthContext';
 import { IUserLoginData } from '../utils/models';
 
 function LoginPage() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const { user, login, loading, error, setError } = useAuth()
-
   const navigate = useNavigate();
   const search = useLocation().search;
+  const { user, login, loading, error, setError } = useAuth();
+  
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   useEffect(() => {
     const name = new URLSearchParams(search).get('username');
@@ -28,7 +28,7 @@ function LoginPage() {
     setError(undefined);
   }, [username, password, setError]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!loading) {
       const data: IUserLoginData = {
@@ -37,7 +37,7 @@ function LoginPage() {
       };
       login(data, () => { navigate('/library?filter=personal'); });
     }
-  };
+  }
 
   return (
     <div className='w-full py-2'> { user

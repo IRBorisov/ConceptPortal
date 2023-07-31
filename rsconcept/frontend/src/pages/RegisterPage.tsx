@@ -12,6 +12,8 @@ import { type IUserSignupData } from '../utils/models';
 
 function RegisterPage() {
   const navigate = useNavigate();
+  const { user, signup, loading, error, setError } = useAuth();
+  
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,13 +21,11 @@ function RegisterPage() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
 
-  const { user, signup, loading, error, setError } = useAuth()
-
   useEffect(() => {
     setError(undefined);
   }, [username, email, password, password2, setError]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!loading) {
       const data: IUserSignupData = {
@@ -41,7 +41,7 @@ function RegisterPage() {
         toast.success(`Пользователь успешно создан: ${createdUser.username}`);
       });
     }
-  };
+  }
 
   return (
     <div className='w-full py-2'>

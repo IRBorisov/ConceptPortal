@@ -2,12 +2,12 @@ import { useLayoutEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import TextInput from '../../components/Common/TextInput';
-import { useUserProfile } from '../../hooks/useUserProfile';
+import { useUserProfile } from '../../context/UserProfileContext';
 import { IUserUpdateData } from '../../utils/models';
 
 
 export function UserProfile() {
-  const { updateUser, user} = useUserProfile();
+  const { updateUser, user, processing } = useUserProfile();
   
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -23,7 +23,7 @@ export function UserProfile() {
     }
   }, [user]);
   
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data: IUserUpdateData = {
       username: username,
@@ -32,18 +32,30 @@ export function UserProfile() {
       last_name: last_name,
     };
     updateUser(data, () => toast.success('Изменения сохранены'));
-  };
+  }
 
-  // console.log(user)
   return (
     <form onSubmit={handleSubmit} className='flex-grow max-w-xl px-4 py-2 border min-w-fit'>
     <div className='flex flex-col items-center justify-center px-2 py-2 border'>
-        <TextInput id='username' label="Логин:" value={username} onChange={event => { setUsername(event.target.value); }}/>
-        <TextInput id='first_name' label="Имя:" value={first_name} onChange={event => { setFirstName(event.target.value); }}/>
-        <TextInput id='last_name' label="Фамилия:" value={last_name} onChange={event => { setLastName(event.target.value); }}/>
-        <TextInput id='email' label="Электронная почта:" value={email} onChange={event => { setEmail(event.target.value); }}/>
+        <TextInput id='username' 
+          label='Логин:'
+          value={username}
+          onChange={event => setUsername(event.target.value)}
+        />
+        <TextInput id='first_name'
+          label="Имя:"
+          value={first_name}
+          onChange={event => setFirstName(event.target.value)}
+        />
+        <TextInput id='last_name' label="Фамилия:" value={last_name} onChange={event => setLastName(event.target.value)}/>
+        <TextInput id='email' label="Электронная почта:" value={email} onChange={event => setEmail(event.target.value)}/>
         <div className='flex items-center justify-between my-4'>
-          <button className='px-2 py-1 bg-green-500 border' type='submit'>Сохранить</button>
+          <button 
+            type='submit' 
+            className='px-2 py-1 bg-green-500 border'
+            disabled={processing}>
+              <span>Сохранить</span>
+          </button>
         </div>
          
     </div>

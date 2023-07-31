@@ -32,73 +32,19 @@ export enum RSTabsList {
 function RSTabs() {
   const navigate = useNavigate();
   const { setActiveID, activeID, error, schema, loading, cstCreate } = useRSForm();
+
   const [activeTab, setActiveTab] = useLocalStorage('rsform_edit_tab', RSTabsList.CARD);
+  
   const [init, setInit] = useState(false);
-
+  
   const [showUpload, setShowUpload] = useState(false);
-
   const [showClone, setShowClone] = useState(false);
-
   const [syntaxTree, setSyntaxTree] = useState<SyntaxTree>([]);
   const [showAST, setShowAST] = useState(false);
   
   const [defaultType, setDefaultType] = useState<CstType | undefined>(undefined);
   const [insertWhere, setInsertWhere] = useState<number | undefined>(undefined);
   const [showCreateCst, setShowCreateCst] = useState(false);
-
-  const handleAddNew = useCallback(
-  (type: CstType, selectedCst?: number) => {
-    if (!schema?.items) {
-      return;
-    }
-    const data: ICstCreateData = {
-      cst_type: type,
-      alias: createAliasFor(type, schema),
-      insert_after: selectedCst ?? insertWhere ?? null
-    }
-    cstCreate(data, newCst => {
-      toast.success(`Конституента добавлена: ${newCst.alias}`);
-      navigate(`/rsforms/${schema.id}?tab=${activeTab}&active=${newCst.id}`);    
-      if (activeTab === RSTabsList.CST_EDIT || activeTab == RSTabsList.CST_LIST) {
-        setTimeout(() => {
-          const element = document.getElementById(`${prefixes.cst_list}${newCst.alias}`);
-          if (element) {
-            element.scrollIntoView({
-              behavior: 'smooth',
-              block: "end",
-              inline: "nearest"
-            });
-          }
-        }, timeout_updateUI);
-      }
-    });
-  }, [schema, cstCreate, insertWhere, navigate, activeTab]);
-
-  const onShowCreateCst = useCallback(
-    (selectedID: number | undefined, type: CstType | undefined, skipDialog?: boolean) => {
-      if (skipDialog && type) {
-        handleAddNew(type, selectedID);
-      } else {
-        setDefaultType(type);
-        setInsertWhere(selectedID);
-        setShowCreateCst(true);
-      }
-    }, [handleAddNew]);
-
-  const onShowAST = useCallback(
-  (ast: SyntaxTree) => {
-    setSyntaxTree(ast);
-    setShowAST(true);
-  }, []);
-
-  const onEditCst = (cst: IConstituenta) => {
-    setActiveID(cst.id);
-    setActiveTab(RSTabsList.CST_EDIT)
-  };
-
-  const onSelectTab = (index: number) => {
-    setActiveTab(index);
-  };
 
   useLayoutEffect(() => {
     if (schema) {
@@ -145,6 +91,61 @@ function RSTabs() {
       }
     }
   }, [activeTab, activeID, init]);
+
+  function onSelectTab(index: number) {
+    setActiveTab(index);
+  }
+
+  const handleAddNew = useCallback(
+  (type: CstType, selectedCst?: number) => {
+    if (!schema?.items) {
+      return;
+    }
+    const data: ICstCreateData = {
+      cst_type: type,
+      alias: createAliasFor(type, schema),
+      insert_after: selectedCst ?? insertWhere ?? null
+    }
+    cstCreate(data, newCst => {
+      toast.success(`Конституента добавлена: ${newCst.alias}`);
+      navigate(`/rsforms/${schema.id}?tab=${activeTab}&active=${newCst.id}`);    
+      if (activeTab === RSTabsList.CST_EDIT || activeTab == RSTabsList.CST_LIST) {
+        setTimeout(() => {
+          const element = document.getElementById(`${prefixes.cst_list}${newCst.alias}`);
+          if (element) {
+            element.scrollIntoView({
+              behavior: 'smooth',
+              block: "end",
+              inline: "nearest"
+            });
+          }
+        }, timeout_updateUI);
+      }
+    });
+  }, [schema, cstCreate, insertWhere, navigate, activeTab]);
+
+  const onShowCreateCst = useCallback(
+    (selectedID: number | undefined, type: CstType | undefined, skipDialog?: boolean) => {
+      if (skipDialog && type) {
+        handleAddNew(type, selectedID);
+      } else {
+        setDefaultType(type);
+        setInsertWhere(selectedID);
+        setShowCreateCst(true);
+      }
+    }, [handleAddNew]);
+
+  const onShowAST = useCallback(
+  (ast: SyntaxTree) => {
+    setSyntaxTree(ast);
+    setShowAST(true);
+  }, []);
+
+  const onEditCst = useCallback(
+  (cst: IConstituenta) => {
+    setActiveID(cst.id);
+    setActiveTab(RSTabsList.CST_EDIT)
+  }, [setActiveID, setActiveTab]);
 
   return (
   <div className='w-full'>

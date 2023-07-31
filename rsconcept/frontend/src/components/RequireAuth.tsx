@@ -7,7 +7,8 @@ interface RequireAuthProps {
 }
 
 function RequireAuth({ children }: RequireAuthProps) {
-  const { user } = useAuth()
+  const { user } = useAuth();
+
   return (
     <>
       {user && children}
