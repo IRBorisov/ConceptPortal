@@ -6,3 +6,7 @@ $djangoSrc = "$PSScriptRoot\backend\manage.py"
 
 & $pyExec $djangoSrc check
 & $pyExec $djangoSrc test
+
+Set-Location $PSScriptRoot\frontend
+
+& npm test

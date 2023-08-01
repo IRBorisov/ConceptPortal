@@ -33,6 +33,9 @@ This readme file is used mostly to document project dependencies
   <pre>
   - tailwindcss postcss autoprefixer
   - eslint-plugin-simple-import-sort
+  - jest
+  - ts-jest
+  - @types/jest
   </pre>
 </details>
 <details>
