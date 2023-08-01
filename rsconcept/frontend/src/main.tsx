@@ -1,6 +1,5 @@
 import './index.css'
 
-import axios from 'axios';
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { ErrorBoundary } from 'react-error-boundary';
@@ -12,10 +11,9 @@ import ErrorFallback from './components/ErrorFallback.tsx';
 import { AuthState } from './context/AuthContext.tsx';
 import { ThemeState } from './context/ThemeContext.tsx';
 import { UsersState } from './context/UsersContext.tsx';
+import { initBackend } from './utils/backendAPI.ts';
 
-axios.defaults.withCredentials = true;
-axios.defaults.xsrfCookieName = 'csrftoken';
-axios.defaults.xsrfHeaderName = 'x-csrftoken';
+initBackend();
 
 const resetState = () => {
   console.log('Resetting state after error fallback')

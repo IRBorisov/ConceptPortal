@@ -5,14 +5,21 @@ import { type ErrorInfo } from '../components/BackendError'
 import { FilterType, RSFormsFilter } from '../hooks/useRSForms'
 import { config } from './constants'
 import {
-  IConstituentaList,
-  IConstituentaMeta,
+  IConstituentaList, IConstituentaMeta,
   ICstCreateData, ICstCreatedResponse, ICstMovetoData, ICstUpdateData,
-  ICurrentUser,   IExpressionParse,
-IRSExpression,
-IRSFormCreateData, IRSFormData,
+  ICurrentUser, IExpressionParse, IRSExpression,
+  IRSFormCreateData, IRSFormData,
   IRSFormMeta, IRSFormUpdateData, IRSFormUploadData, IUserInfo,
-  IUserLoginData, IUserProfile, IUserSignupData, IUserUpdateData} from './models'
+  IUserLoginData, IUserProfile, IUserSignupData, IUserUpdateData
+} from './models'
+
+export function initBackend() {
+  axios.defaults.withCredentials = true;
+  axios.defaults.xsrfCookieName = 'csrftoken';
+  axios.defaults.xsrfHeaderName = 'x-csrftoken';
+  axios.defaults.baseURL = `${config.backend}`;
+
+}
 
 // ================ Data transfer types ================
 export type DataCallback<ResponseData = undefined> = (data: ResponseData) => void;
@@ -50,7 +57,7 @@ interface IAxiosRequest<RequestData, ResponseData> {
 export function getAuth(request: FrontPull<ICurrentUser>) {
   AxiosGet({
     title: 'Current user',
-    endpoint: `${config.url.AUTH}auth`,
+    endpoint: `/users/api/auth`,
     request: request
   });
 }
@@ -58,7 +65,7 @@ export function getAuth(request: FrontPull<ICurrentUser>) {
 export function postLogin(request: FrontPush<IUserLoginData>) {
   AxiosPost({
     title: 'Login',
-    endpoint: `${config.url.AUTH}login`,
+    endpoint: `/users/api/login`,
     request: request
   });
 }
@@ -66,7 +73,7 @@ export function postLogin(request: FrontPush<IUserLoginData>) {
 export function postLogout(request: FrontAction) {
   AxiosPost({
     title: 'Logout',
-    endpoint: `${config.url.AUTH}logout`,
+    endpoint: `/users/api/logout`,
     request: request
   });
 }
@@ -74,7 +81,7 @@ export function postLogout(request: FrontAction) {
 export function postSignup(request: FrontExchange<IUserSignupData, IUserProfile>) {
   AxiosPost({
     title: 'Register user',
-    endpoint: `${config.url.AUTH}signup`,
+    endpoint: `/users/api/signup`,
     request: request
   });
 }
@@ -82,7 +89,7 @@ export function postSignup(request: FrontExchange<IUserSignupData, IUserProfile>
 export function getProfile(request: FrontPull<IUserProfile>) {
   AxiosGet({
     title: 'Current user profile',
-    endpoint: `${config.url.AUTH}profile`,
+    endpoint: `/users/api/profile`,
     request: request
   });
 }
@@ -90,7 +97,7 @@ export function getProfile(request: FrontPull<IUserProfile>) {
 export function patchProfile(request: FrontExchange<IUserUpdateData, IUserProfile>) {
   AxiosPatch({
     title: 'Current user profile',
-    endpoint: `${config.url.AUTH}profile`,
+    endpoint: `/users/api/profile`,
     request: request
   });
 }
@@ -98,7 +105,7 @@ export function patchProfile(request: FrontExchange<IUserUpdateData, IUserProfil
 export function getActiveUsers(request: FrontPull<IUserInfo[]>) {
   AxiosGet({
     title: 'Active users list',
-    endpoint: `${config.url.AUTH}active-users`,
+    endpoint: `/users/api/active-users`,
     request: request
   });
 }
@@ -106,8 +113,8 @@ export function getActiveUsers(request: FrontPull<IUserInfo[]>) {
 export function getRSForms(filter: RSFormsFilter, request: FrontPull<IRSFormMeta[]>) {
   const endpoint =
     filter.type === FilterType.PERSONAL
-    ? `${config.url.BASE}rsforms?owner=${filter.data as number}`
-    : `${config.url.BASE}rsforms?is_common=true`;
+    ? `/api/rsforms?owner=${filter.data as number}`
+    : `/api/rsforms?is_common=true`;
   AxiosGet({
     title: 'RSForms list',
     endpoint: endpoint,
@@ -118,7 +125,7 @@ export function getRSForms(filter: RSFormsFilter, request: FrontPull<IRSFormMeta
 export function postNewRSForm(request: FrontExchange<IRSFormCreateData, IRSFormMeta>) {
   AxiosPost({
     title: 'New RSForm',
-    endpoint: `${config.url.BASE}rsforms/create-detailed/`,
+    endpoint: `/api/rsforms/create-detailed/`,
     request: request,
     options: {
       headers: {
@@ -131,7 +138,7 @@ export function postNewRSForm(request: FrontExchange<IRSFormCreateData, IRSFormM
 export function postCloneRSForm(schema: string, request: FrontExchange<IRSFormCreateData, IRSFormData>) {
   AxiosPost({
     title: 'clone RSForm',
-    endpoint: `${config.url.BASE}rsforms/${schema}/clone/`,
+    endpoint: `/api/rsforms/${schema}/clone/`,
     request: request
   });
 }
@@ -139,7 +146,7 @@ export function postCloneRSForm(schema: string, request: FrontExchange<IRSFormCr
 export function getRSFormDetails(target: string, request: FrontPull<IRSFormData>) {
   AxiosGet({
     title: `RSForm details for id=${target}`,
-    endpoint: `${config.url.BASE}rsforms/${target}/details/`,
+    endpoint: `/api/rsforms/${target}/details/`,
     request: request
   });
 }
@@ -147,7 +154,7 @@ export function getRSFormDetails(target: string, request: FrontPull<IRSFormData>
 export function patchRSForm(target: string, request: FrontExchange<IRSFormUpdateData, IRSFormMeta>) {
   AxiosPatch({
     title: `RSForm id=${target}`,
-    endpoint: `${config.url.BASE}rsforms/${target}/`,
+    endpoint: `/api/rsforms/${target}/`,
     request: request
   });
 }
@@ -155,7 +162,7 @@ export function patchRSForm(target: string, request: FrontExchange<IRSFormUpdate
 export function deleteRSForm(target: string, request: FrontAction) {
   AxiosDelete({
     title: `RSForm id=${target}`,
-    endpoint: `${config.url.BASE}rsforms/${target}/`,
+    endpoint: `/api/rsforms/${target}/`,
     request: request
   });
 }
@@ -163,7 +170,7 @@ export function deleteRSForm(target: string, request: FrontAction) {
 export function postClaimRSForm(target: string, request: FrontPull<IRSFormMeta>) {
   AxiosPost({
     title: `Claim on RSForm id=${target}`,
-    endpoint: `${config.url.BASE}rsforms/${target}/claim/`,
+    endpoint: `/api/rsforms/${target}/claim/`,
     request: request
   });
 }
@@ -171,7 +178,7 @@ export function postClaimRSForm(target: string, request: FrontPull<IRSFormMeta>)
 export function getTRSFile(target: string, request: FrontPull<Blob>) {
   AxiosGet({
     title: `RSForm TRS file for id=${target}`,
-    endpoint: `${config.url.BASE}rsforms/${target}/export-trs/`,
+    endpoint: `/api/rsforms/${target}/export-trs/`,
     request: request,
     options: { responseType: 'blob' }
   });
@@ -180,7 +187,7 @@ export function getTRSFile(target: string, request: FrontPull<Blob>) {
 export function postNewConstituenta(schema: string, request: FrontExchange<ICstCreateData, ICstCreatedResponse>) {
   AxiosPost({
     title: `New Constituenta for RSForm id=${schema}: ${request.data.alias}`,
-    endpoint: `${config.url.BASE}rsforms/${schema}/cst-create/`,
+    endpoint: `/api/rsforms/${schema}/cst-create/`,
     request: request
   });
 }
@@ -188,7 +195,7 @@ export function postNewConstituenta(schema: string, request: FrontExchange<ICstC
 export function patchDeleteConstituenta(schema: string, request: FrontExchange<IConstituentaList, IRSFormData>) {
   AxiosPatch({
     title: `Delete Constituents for RSForm id=${schema}: ${request.data.items.map(item => String(item.id)).join(' ')}`,
-    endpoint: `${config.url.BASE}rsforms/${schema}/cst-multidelete/`,
+    endpoint: `/api/rsforms/${schema}/cst-multidelete/`,
     request: request
   });
 }
@@ -196,7 +203,7 @@ export function patchDeleteConstituenta(schema: string, request: FrontExchange<I
 export function patchConstituenta(target: string, request: FrontExchange<ICstUpdateData, IConstituentaMeta>) {
   AxiosPatch({
     title: `Constituenta id=${target}`,
-    endpoint: `${config.url.BASE}constituents/${target}/`,
+    endpoint: `/api/constituents/${target}/`,
     request: request
   });
 }
@@ -204,7 +211,7 @@ export function patchConstituenta(target: string, request: FrontExchange<ICstUpd
 export function patchMoveConstituenta(schema: string, request: FrontExchange<ICstMovetoData, IRSFormData>) {
   AxiosPatch({
     title: `Moving Constituents for RSForm id=${schema}: ${JSON.stringify(request.data.items)} to ${request.data.move_to}`,
-    endpoint: `${config.url.BASE}rsforms/${schema}/cst-moveto/`,
+    endpoint: `/api/rsforms/${schema}/cst-moveto/`,
     request: request
   });
 }
@@ -212,7 +219,7 @@ export function patchMoveConstituenta(schema: string, request: FrontExchange<ICs
 export function postCheckExpression(schema: string, request: FrontExchange<IRSExpression, IExpressionParse>) {
   AxiosPost({
     title: `Check expression for RSForm id=${schema}: ${request.data.expression }`,
-    endpoint: `${config.url.BASE}rsforms/${schema}/check/`,
+    endpoint: `/api/rsforms/${schema}/check/`,
     request: request
   });
 }
@@ -220,7 +227,7 @@ export function postCheckExpression(schema: string, request: FrontExchange<IRSEx
 export function patchResetAliases(target: string, request: FrontPull<IRSFormData>) {
   AxiosPatch({
     title: `Reset alias for RSForm id=${target}`,
-    endpoint: `${config.url.BASE}rsforms/${target}/reset-aliases/`,
+    endpoint: `/api/rsforms/${target}/reset-aliases/`,
     request: request
   });
 }
@@ -228,7 +235,7 @@ export function patchResetAliases(target: string, request: FrontPull<IRSFormData
 export function patchUploadTRS(target: string, request: FrontExchange<IRSFormUploadData, IRSFormData>) {
   AxiosPatch({
     title: `Replacing data with trs file for RSForm id=${target}`,
-    endpoint: `${config.url.BASE}rsforms/${target}/load-trs/`,
+    endpoint: `/api/rsforms/${target}/load-trs/`,
     request: request,
     options: {
       headers: {

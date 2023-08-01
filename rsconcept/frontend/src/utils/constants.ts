@@ -1,16 +1,10 @@
 // Constants
 const prod = {
-  url: {
-    BASE: 'http://rs.acconcept.ru:8000/api/',
-    AUTH: 'http://rs.acconcept.ru:8000/users/api/'
-  }
+  backend: 'http://rs.acconcept.ru:8000',
 };
 
 const dev = {
-  url: {
-    BASE: 'http://localhost:8000/api/',
-    AUTH: 'http://localhost:8000/users/api/'
-  }
+  backend: 'http://localhost:8000',
 };
 
 export const config = process.env.NODE_ENV === 'production' ? prod : dev;
