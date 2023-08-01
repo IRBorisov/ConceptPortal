@@ -1,7 +1,7 @@
 import { LayoutTypes } from 'reagraph';
 
 import { resolveErrorClass,RSErrorClass, RSErrorType, TokenID } from './enums';
-import { CstType, ExpressionStatus, type IConstituenta, IRSErrorDescription,type IRSForm, ParsingStatus, ValueClass } from './models';
+import { CstType, ExpressionStatus, type IConstituenta, IRSErrorDescription,type IRSForm, ISyntaxTreeNode,ParsingStatus, ValueClass } from './models';
 
 export interface IRSButtonData {
   text: string
@@ -449,4 +449,81 @@ export function getRSErrorMessage(error: IRSErrorDescription): string {
     return `Функция не интерпретируется для данных аргументов`;  
   }
   return 'UNKNOWN ERROR';
+}
+
+export function getNodeLabel(node: ISyntaxTreeNode): string {
+  switch(node.typeID) {
+  case TokenID.ID_LOCAL: return node.data.value as string;
+  case TokenID.ID_GLOBAL: return node.data.value as string;
+  case TokenID.ID_FUNCTION: return node.data.value as string;
+  case TokenID.ID_PREDICATE: return node.data.value as string;
+  case TokenID.ID_RADICAL: return node.data.value as string;
+
+  case TokenID.LIT_INTEGER: return String(node.data.value as number);
+
+  case TokenID.BIGPR: return 'Pr' + (node.data.value as string[]).toString();
+  case TokenID.SMALLPR: return 'pr' + (node.data.value as string[]).toString();
+  case TokenID.FILTER: return 'Fi' + (node.data.value as string[]).toString();
+
+  case TokenID.PLUS: return '+'
+  case TokenID.MINUS: return '-'
+  case TokenID.MULTIPLY: return '*'
+  case TokenID.GREATER: return '>'
+  case TokenID.LESSER: return '<'
+
+  case TokenID.NT_TUPLE: return 'TUPLE'
+  case TokenID.NT_ENUMERATION: return 'ENUM'
+
+  case TokenID.NT_ENUM_DECL: return 'ENUM_DECLARATION'
+  case TokenID.NT_TUPLE_DECL: return 'TUPLE_DECLARATION'
+  case TokenID.PUNC_DEFINE: return 'DEFINITION'
+
+  case TokenID.NT_ARG_DECL: return 'ARG'
+  case TokenID.NT_FUNC_CALL: return 'CALL'
+  case TokenID.NT_ARGUMENTS: return 'ARGS'
+
+  case TokenID.NT_FUNC_DEFINITION: return 'FUNCTION_DEFINITION'
+  case TokenID.NT_IMP_DECLARE: return 'IDECLARE'
+  case TokenID.NT_IMP_ASSIGN: return 'IASSIGN'
+  case TokenID.NT_IMP_LOGIC: return 'ICHECK'
+
+  case TokenID.NT_RECURSIVE_SHORT: return getRSButtonData(TokenID.NT_RECURSIVE_FULL).text;
+  
+  case TokenID.BOOLEAN:
+  case TokenID.DECART:
+  case TokenID.FORALL:
+  case TokenID.EXISTS:
+  case TokenID.NOT:
+  case TokenID.AND:
+  case TokenID.OR:
+  case TokenID.IMPLICATION:
+  case TokenID.EQUIVALENT:
+  case TokenID.LIT_EMPTYSET:
+  case TokenID.LIT_INTSET:
+  case TokenID.EQUAL:
+  case TokenID.NOTEQUAL:
+  case TokenID.GREATER_OR_EQ:
+  case TokenID.LESSER_OR_EQ:
+  case TokenID.IN:
+  case TokenID.NOTIN:
+  case TokenID.SUBSET_OR_EQ:
+  case TokenID.SUBSET:
+  case TokenID.NOTSUBSET:
+  case TokenID.INTERSECTION:
+  case TokenID.UNION:
+  case TokenID.SET_MINUS:
+  case TokenID.SYMMINUS:
+  case TokenID.NT_DECLARATIVE_EXPR:
+  case TokenID.NT_IMPERATIVE_EXPR:
+  case TokenID.NT_RECURSIVE_FULL:
+  case TokenID.REDUCE:
+  case TokenID.CARD:
+  case TokenID.BOOL:
+  case TokenID.DEBOOL:
+  case TokenID.PUNC_ASSIGN:
+  case TokenID.PUNC_ITERATE:
+    return getRSButtonData(node.typeID).text;
+  }
+ // node
+  return 'UNKNOWN ' + String(node.typeID);
 }

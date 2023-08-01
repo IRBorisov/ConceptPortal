@@ -40,6 +40,7 @@ function RSTabs() {
   const [showUpload, setShowUpload] = useState(false);
   const [showClone, setShowClone] = useState(false);
   const [syntaxTree, setSyntaxTree] = useState<SyntaxTree>([]);
+  const [expression, setExpression] = useState('');
   const [showAST, setShowAST] = useState(false);
   
   const [defaultType, setDefaultType] = useState<CstType | undefined>(undefined);
@@ -136,8 +137,9 @@ function RSTabs() {
     }, [handleAddNew]);
 
   const onShowAST = useCallback(
-  (ast: SyntaxTree) => {
+  (expression: string, ast: SyntaxTree) => {
     setSyntaxTree(ast);
+    setExpression(expression);
     setShowAST(true);
   }, []);
 
@@ -157,6 +159,7 @@ function RSTabs() {
     {showClone && <DlgCloneRSForm hideWindow={() => { setShowClone(false); }}/>}
     {showAST && 
     <DlgShowAST
+      expression={expression}
       syntaxTree={syntaxTree}
       hideWindow={() => { setShowAST(false); }}
     />}

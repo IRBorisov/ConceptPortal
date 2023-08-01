@@ -33,7 +33,7 @@ function Modal({ title, hideWindow, onSubmit, onCancel, canSubmit, children, sub
     </div>
     <div ref={ref} className='fixed bottom-1/2 left-1/2 translate-y-1/2 -translate-x-1/2 px-6 py-4 flex flex-col w-fit h-fit z-[60] clr-card border shadow-md mb-[5rem]'>
       { title && <h1 className='mb-2 text-xl font-bold text-center'>{title}</h1> }
-      <div className='py-2'>
+      <div>
         {children}
       </div>
       <div className='flex justify-between w-full pt-4 mt-2 border-t-4'>

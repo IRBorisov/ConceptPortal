@@ -57,7 +57,10 @@ export interface ISyntaxTreeNode {
   typeID: TokenID
   start: number
   finish: number
-  data: unknown
+  data: {
+    dataType: string,
+    value: unknown
+  }
 }
 export type SyntaxTree = ISyntaxTreeNode[]
 

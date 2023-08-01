@@ -36,6 +36,7 @@ function DlgCreateCst({ hideWindow, defaultType, onCreate }: DlgCreateCstProps) 
       onSubmit={handleSubmit}
     >
       <ConceptSelect
+        className='my-4'
         options={CstTypeSelector}
         placeholder='Выберите тип'
         values={selectedType ? [{ value: selectedType, label: getCstTypeLabel(selectedType) }] : []}

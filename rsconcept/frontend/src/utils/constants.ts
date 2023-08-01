@@ -20,7 +20,7 @@ export const urls = {
 };
 
 export const resources = {
-  graph_font: 'https://ey2pz3.csb.app/NotoSansSC-Regular.ttf'
+  graph_font: '/DejaVu.ttf'
 }
 
 export const prefixes = {

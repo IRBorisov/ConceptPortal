@@ -14,7 +14,7 @@ import ViewSideConstituents from './elements/ViewSideConstituents';
 import { RSTabsList } from './RSTabs';
 
 interface EditorConstituentaProps {
-  onShowAST: (ast: SyntaxTree) => void
+  onShowAST: (expression: string, ast: SyntaxTree) => void
   onShowCreateCst: (selectedID: number | undefined, type: CstType | undefined) => void
 }
 

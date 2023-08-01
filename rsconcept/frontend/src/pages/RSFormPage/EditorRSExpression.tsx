@@ -23,7 +23,7 @@ interface EditorRSExpressionProps {
   placeholder?: string
   value: string
   onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
-  onShowAST: (ast: SyntaxTree) => void
+  onShowAST: (expression: string, ast: SyntaxTree) => void
   toggleEditMode: () => void
   setTypification: (typificaiton: string) => void
   setValue: (expression: string) => void
@@ -247,7 +247,7 @@ function EditorRSExpression({
         { !loading && parseData && 
         <ParsingResult 
           data={parseData} 
-          onShowAST={onShowAST}
+          onShowAST={ast => onShowAST(value, ast)}
           onShowError={onShowError}
         />}
       </div>}
