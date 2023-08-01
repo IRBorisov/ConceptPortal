@@ -1,32 +1,47 @@
-import { useEffect } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import BackendError from '../../components/BackendError'
 import { Loader } from '../../components/Common/Loader'
 import { useAuth } from '../../context/AuthContext';
-import { FilterType, type RSFormsFilter, useRSForms } from '../../hooks/useRSForms'
+import { useLibrary } from '../../context/LibraryContext';
+import { useNavSearch } from '../../context/NavSearchContext';
+import { ILibraryFilter, IRSFormMeta } from '../../utils/models';
 import ViewLibrary from './ViewLibrary';
 
 function LibraryPage() {
   const search = useLocation().search;
+  const { query, cleanQuery } = useNavSearch();
   const { user } = useAuth();
-  const { rsforms, error, loading, loadList } = useRSForms();
-
-  useEffect(() => {
-    const filterQuery = new URLSearchParams(search).get('filter');
-    const type = (!user || !filterQuery ? FilterType.COMMON : filterQuery as FilterType);
-    const filter: RSFormsFilter = { type };
-    if (type === FilterType.PERSONAL) {
-      filter.data = user?.id;
+  const library = useLibrary();
+  
+  const [ filterParams, setFilterParams ] = useState<ILibraryFilter>({});
+  const [ items, setItems ] = useState<IRSFormMeta[]>([]);
+  
+  useLayoutEffect(() => {
+    const filterType = new URLSearchParams(search).get('filter');
+    if (filterType === 'common') {
+      setFilterParams({
+        is_common: true
+      });
+    } else if (filterType === 'personal' && user) {
+      setFilterParams({
+        ownedBy: user.id!
+      });
     }
-    loadList(filter);
-  }, [search, user, loadList]);
+  }, [user, search, cleanQuery]);
+
+  useLayoutEffect(() => {
+    const filter = filterParams;
+    filterParams.queryMeta = query ? query: undefined;
+    setItems(library.filter(filter));
+  }, [query, library, filterParams]);
 
   return (
     <div className='w-full'>
-      { loading && <Loader /> }
-      { error && <BackendError error={error} />}
-      { !loading && rsforms && <ViewLibrary schemas={rsforms} /> }
+      { library.loading && <Loader /> }
+      { library.error && <BackendError error={library.error} />}
+      { !library.loading && library.items && <ViewLibrary schemas={items} /> }
     </div>
   );
 }

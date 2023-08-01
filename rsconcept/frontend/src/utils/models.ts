@@ -199,6 +199,13 @@ export interface IRSFormUploadData {
   fileName: string
 }
 
+// ========== Library =====
+export interface ILibraryFilter {
+  ownedBy?: number
+  is_common?: boolean
+  queryMeta?: string
+}
+
 // ================ Misc types ================
 // Constituenta edit mode
 export enum EditMode {
@@ -312,13 +319,24 @@ export function matchConstituenta(query: string, target?: IConstituenta) {
     return false;
   } else if (target.alias.match(query)) {
     return true;
-  } else if (target.term?.resolved?.match(query)) {
+  } else if (target.term.resolved.match(query)) {
     return true;
-  } else if (target.definition?.formal.match(query)) {
+  } else if (target.definition.formal.match(query)) {
     return true;
-  } else if (target.definition?.text.resolved?.match(query)) {
+  } else if (target.definition.text.resolved.match(query)) {
     return true;
-  } else if (target.convention?.match(query)) {
+  } else if (target.convention.match(query)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+export function matchRSFormMeta(query: string, target: IRSFormMeta) {
+  const queryI = query.toUpperCase();
+  if (target.alias.toUpperCase().match(queryI)) {
+    return true;
+  } else if (target.title.toUpperCase().match(queryI)) {
     return true;
   } else {
     return false;

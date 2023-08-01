@@ -45,9 +45,9 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
   return (
     <ThemeContext.Provider value={{
       darkMode,
-      toggleDarkMode: () => { setDarkMode(prev => !prev); },
+      toggleDarkMode: () => setDarkMode(prev => !prev),
       noNavigation,
-      toggleNoNavigation: () => { setNoNavigation(prev => !prev); }
+      toggleNoNavigation: () => setNoNavigation(prev => !prev)
     }}>
       {children}
     </ThemeContext.Provider>

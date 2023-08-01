@@ -27,7 +27,7 @@ interface UsersStateProps {
 export const UsersState = ({ children }: UsersStateProps) => {
   const [users, setUsers] = useState<IUserInfo[]>([])
 
-  const getUserLabel = (userID: number | null) => {
+  function getUserLabel(userID: number | null) {
     const user = users.find(({ id }) => id === userID)
     if (!user) {
       return (userID ? userID.toString() : 'Отсутствует');
@@ -47,18 +47,17 @@ export const UsersState = ({ children }: UsersStateProps) => {
   }
 
   const reload = useCallback(
-    () => {
-      getActiveUsers({
-        showError: true,
-        onError: () => { setUsers([]); },
-        onSuccess: newData => { setUsers(newData); }
-      });
-    }, [setUsers]
-  )
+  () => {
+    getActiveUsers({
+      showError: true,
+      onError: () => { setUsers([]); },
+      onSuccess: newData => { setUsers(newData); }
+    });
+  }, [setUsers]);
 
   useEffect(() => {
     reload();
-  }, [reload])
+  }, [reload]);
 
   return (
     <UsersContext.Provider value={{

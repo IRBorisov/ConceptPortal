@@ -39,7 +39,7 @@ function Navigation () {
       <div className='pr-6 pl-2 py-2.5 h-[4rem] flex items-center justify-between border-b-2 clr-nav rounded-none'>
         <div className='flex items-start justify-start '>
           <Logo title='КонцептПортал' />
-          <TopSearch placeholder='Поиск схемы...' />
+          <TopSearch />
         </div>
         <div className='flex items-center'>
           {user && <UserTools/>}

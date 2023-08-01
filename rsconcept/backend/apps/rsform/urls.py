@@ -7,6 +7,7 @@ rsform_router = routers.SimpleRouter()
 rsform_router.register(r'rsforms', views.RSFormViewSet)
 
 urlpatterns = [
+    path('library/', views.LibraryView.as_view(), name='library'),
     path('constituents/<int:pk>/', views.ConstituentAPIView.as_view(), name='constituenta-detail'),
     path('rsforms/import-trs/', views.TrsImportView.as_view()),
     path('rsforms/create-detailed/', views.create_rsform),

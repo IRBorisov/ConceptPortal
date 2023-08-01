@@ -2,7 +2,6 @@ import axios, { AxiosRequestConfig } from 'axios'
 import { toast } from 'react-toastify'
 
 import { type ErrorInfo } from '../components/BackendError'
-import { FilterType, RSFormsFilter } from '../hooks/useRSForms'
 import { config } from './constants'
 import {
   IConstituentaList, IConstituentaMeta,
@@ -65,7 +64,7 @@ export function getAuth(request: FrontPull<ICurrentUser>) {
 export function postLogin(request: FrontPush<IUserLoginData>) {
   AxiosPost({
     title: 'Login',
-    endpoint: `/users/api/login`,
+    endpoint: '/users/api/login',
     request: request
   });
 }
@@ -73,7 +72,7 @@ export function postLogin(request: FrontPush<IUserLoginData>) {
 export function postLogout(request: FrontAction) {
   AxiosPost({
     title: 'Logout',
-    endpoint: `/users/api/logout`,
+    endpoint: '/users/api/logout',
     request: request
   });
 }
@@ -81,7 +80,7 @@ export function postLogout(request: FrontAction) {
 export function postSignup(request: FrontExchange<IUserSignupData, IUserProfile>) {
   AxiosPost({
     title: 'Register user',
-    endpoint: `/users/api/signup`,
+    endpoint: '/users/api/signup',
     request: request
   });
 }
@@ -89,7 +88,7 @@ export function postSignup(request: FrontExchange<IUserSignupData, IUserProfile>
 export function getProfile(request: FrontPull<IUserProfile>) {
   AxiosGet({
     title: 'Current user profile',
-    endpoint: `/users/api/profile`,
+    endpoint: '/users/api/profile',
     request: request
   });
 }
@@ -97,7 +96,7 @@ export function getProfile(request: FrontPull<IUserProfile>) {
 export function patchProfile(request: FrontExchange<IUserUpdateData, IUserProfile>) {
   AxiosPatch({
     title: 'Current user profile',
-    endpoint: `/users/api/profile`,
+    endpoint: '/users/api/profile',
     request: request
   });
 }
@@ -105,19 +104,15 @@ export function patchProfile(request: FrontExchange<IUserUpdateData, IUserProfil
 export function getActiveUsers(request: FrontPull<IUserInfo[]>) {
   AxiosGet({
     title: 'Active users list',
-    endpoint: `/users/api/active-users`,
+    endpoint: '/users/api/active-users',
     request: request
   });
 }
 
-export function getRSForms(filter: RSFormsFilter, request: FrontPull<IRSFormMeta[]>) {
-  const endpoint =
-    filter.type === FilterType.PERSONAL
-    ? `/api/rsforms?owner=${filter.data as number}`
-    : `/api/rsforms?is_common=true`;
+export function getLibrary(request: FrontPull<IRSFormMeta[]>) {
   AxiosGet({
-    title: 'RSForms list',
-    endpoint: endpoint,
+    title: 'Available RSForms (Library) list',
+    endpoint: '/api/library/',
     request: request
   });
 }
@@ -125,7 +120,7 @@ export function getRSForms(filter: RSFormsFilter, request: FrontPull<IRSFormMeta
 export function postNewRSForm(request: FrontExchange<IRSFormCreateData, IRSFormMeta>) {
   AxiosPost({
     title: 'New RSForm',
-    endpoint: `/api/rsforms/create-detailed/`,
+    endpoint: '/api/rsforms/create-detailed/',
     request: request,
     options: {
       headers: {

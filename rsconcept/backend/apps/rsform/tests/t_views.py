@@ -15,6 +15,10 @@ from apps.rsform.views import (
 )
 
 
+def _response_contains(response, schema: RSForm) -> bool:
+    return any(x for x in response.data if x['id'] == schema.id)
+
+
 class TestConstituentaAPI(APITestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
@@ -369,3 +373,29 @@ class TestFunctionalViews(APITestCase):
         response = parse_expression(request)
         self.assertEqual(response.status_code, 400)
         self.assertIsInstance(response.data['expression'][0], ErrorDetail)
+
+
+class TestLibraryAPI(APITestCase):
+    def setUp(self):
+        self.factory = APIRequestFactory()
+        self.user = User.objects.create(username='UserTest')
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+        self.rsform_owned: RSForm = RSForm.objects.create(title='Test', alias='T1', owner=self.user)
+        self.rsform_unowned: RSForm = RSForm.objects.create(title='Test2', alias='T2')
+        self.rsform_common: RSForm = RSForm.objects.create(title='Test3', alias='T3', is_common=True)
+
+    def test_retrieve_common(self):
+        self.client.logout()
+        response = self.client.get('/api/library/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(_response_contains(response, self.rsform_common))
+        self.assertFalse(_response_contains(response, self.rsform_unowned))
+        self.assertFalse(_response_contains(response, self.rsform_owned))
+
+    def test_retrieve_owned(self):
+        response = self.client.get('/api/library/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(_response_contains(response, self.rsform_common))
+        self.assertFalse(_response_contains(response, self.rsform_unowned))
+        self.assertTrue(_response_contains(response, self.rsform_owned))

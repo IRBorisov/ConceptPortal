@@ -1,6 +1,7 @@
 import json
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Q
 from rest_framework import views, viewsets, filters, generics, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -10,6 +11,21 @@ import pyconcept
 from . import models
 from . import serializers
 from . import utils
+
+
+class LibraryView(generics.ListAPIView):
+    '''
+    Get list of rsforms available for active user.
+    '''
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = serializers.RSFormSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        if not user.is_anonymous:
+            return models.RSForm.objects.filter(Q(is_common=True) | Q(owner=user))
+        else:
+            return models.RSForm.objects.filter(is_common=True)
 
 
 class ConstituentAPIView(generics.RetrieveUpdateAPIView):

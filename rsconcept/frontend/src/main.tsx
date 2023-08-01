@@ -9,6 +9,8 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App.tsx'
 import ErrorFallback from './components/ErrorFallback.tsx';
 import { AuthState } from './context/AuthContext.tsx';
+import { LibraryState } from './context/LibraryContext.tsx';
+import { NavSearchState } from './context/NavSearchContext.tsx';
 import { ThemeState } from './context/ThemeContext.tsx';
 import { UsersState } from './context/UsersContext.tsx';
 import { initBackend } from './utils/backendAPI.ts';
@@ -34,11 +36,17 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   >
   <IntlProvider locale='ru' defaultLocale='ru'>
   <ThemeState>
+  <NavSearchState>
   <AuthState>
   <UsersState>
+  <LibraryState>
+  
     <App />
+  
+  </LibraryState>
   </UsersState>
   </AuthState>
+  </NavSearchState>
   </ThemeState>
   </IntlProvider>
   </ErrorBoundary>
