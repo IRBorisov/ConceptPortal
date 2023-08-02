@@ -1,5 +1,4 @@
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import MiniButton from '../../components/Common/MiniButton';
@@ -11,19 +10,21 @@ import { type CstType, EditMode, ICstUpdateData, SyntaxTree } from '../../utils/
 import { getCstTypeLabel } from '../../utils/staticUI';
 import EditorRSExpression from './EditorRSExpression';
 import ViewSideConstituents from './elements/ViewSideConstituents';
-import { RSTabsList } from './RSTabs';
 
 interface EditorConstituentaProps {
+  activeID?: number
+  onOpenEdit: (cstID: number) => void
   onShowAST: (expression: string, ast: SyntaxTree) => void
-  onShowCreateCst: (selectedID: number | undefined, type: CstType | undefined) => void
+  onCreateCst: (selectedID: number | undefined, type: CstType | undefined) => void
+  onDeleteCst: (selected: number[], callback?: (items: number[]) => void) => void
 }
 
-function EditorConstituenta({ onShowAST, onShowCreateCst }: EditorConstituentaProps) {
-  const navigate = useNavigate();
-  const {
-    activeCst, activeID, schema, setActiveID, processing, isEditable,
-    cstDelete, cstUpdate
-  } = useRSForm();
+function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDeleteCst }: EditorConstituentaProps) {
+  const { schema, processing, isEditable, cstUpdate } = useRSForm();
+  const activeCst = useMemo(
+  () => {
+    return schema?.items?.find((cst) => cst.id === activeID);
+  }, [schema?.items, activeID]);
 
   const [isModified, setIsModified] = useState(false);
   const [editMode, setEditMode] = useState(EditMode.TEXT);
@@ -37,12 +38,6 @@ function EditorConstituenta({ onShowAST, onShowCreateCst }: EditorConstituentaPr
   const [typification, setTypification] = useState('N/A');
 
   const isEnabled = useMemo(() => activeCst && isEditable, [activeCst, isEditable]);
-
-  useLayoutEffect(() => {
-    if (schema && schema?.items.length > 0) {
-      setActiveID((prev) => (prev ?? schema.items[0].id ?? undefined));
-    }
-  }, [schema, setActiveID]);
 
   useLayoutEffect(() => {
     if (!activeCst) {
@@ -71,8 +66,7 @@ function EditorConstituenta({ onShowAST, onShowCreateCst }: EditorConstituentaPr
     }
   }, [activeCst]);
 
-  const handleSubmit =
-  (event: React.FormEvent<HTMLFormElement>) => {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!activeID || processing) {
       return;
@@ -86,40 +80,29 @@ function EditorConstituenta({ onShowAST, onShowCreateCst }: EditorConstituentaPr
       term_raw: term
     };
     cstUpdate(data, () => { toast.success('Изменения сохранены'); });
-  };
+  }
 
-  const handleDelete = useCallback(
-  () => {
-    if (!activeID || !schema?.items || !window.confirm('Вы уверены, что хотите удалить конституенту?')) {
+  function handleDelete() {
+    if (!schema || !activeID) {
       return;
     }
-    const data = {
-      items: [{ id: activeID }]
-    }
-    const index = schema.items.findIndex((cst) => cst.id === activeID);
-    let newActive: number | undefined = undefined
-    if (index !== -1 && index + 1 < schema.items.length) {
-      newActive = schema.items[index + 1].id;
-    }
-    cstDelete(data, () => toast.success('Конституента удалена'));
-    if (newActive) navigate(`/rsforms/${schema.id}?tab=${RSTabsList.CST_EDIT}&active=${newActive}`);
-  }, [activeID, schema, cstDelete, navigate]);
+    onDeleteCst([activeID]);
+  }
 
-  const handleAddNew = useCallback(
-  () => {
+  function handleCreateCst() {
     if (!activeID || !schema) {
       return;
     }
-    onShowCreateCst(activeID, activeCst?.cstType);
-  }, [activeID, activeCst?.cstType, schema, onShowCreateCst]);
+    onCreateCst(activeID, activeCst?.cstType);
+  }
 
-  const handleRename = useCallback(() => {
+  function handleRename() {
     toast.info('Переименование в разработке');
-  }, []);
+  }
 
-  const handleChangeType = useCallback(() => {
+  function handleChangeType() {
     toast.info('Изменение типа в разработке');
-  }, []);
+  }
 
   return (
     <div className='flex items-start w-full gap-2'>
@@ -158,7 +141,7 @@ function EditorConstituenta({ onShowAST, onShowCreateCst }: EditorConstituentaPr
             <MiniButton
               tooltip='Создать конституенты после данной'
               disabled={!isEnabled}
-              onClick={handleAddNew}
+              onClick={handleCreateCst}
               icon={<SmallPlusIcon size={5} color={isEnabled ? 'text-green' : ''} />} 
             />
             <MiniButton
@@ -220,7 +203,11 @@ function EditorConstituenta({ onShowAST, onShowCreateCst }: EditorConstituentaPr
           />
         </div>
       </form>
-      <ViewSideConstituents expression={expression}/>
+      <ViewSideConstituents
+        expression={expression}
+        activeID={activeID}
+        onOpenEdit={onOpenEdit}
+      />
     </div>
   );
 }

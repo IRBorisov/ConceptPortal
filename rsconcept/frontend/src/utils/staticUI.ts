@@ -14,7 +14,7 @@ export interface IStatusInfo {
   tooltip: string
 }
 
-export function getTypeLabel(cst: IConstituenta) {
+export function getTypeLabel(cst: IConstituenta): string {
   if (cst.parse?.typification) {
     return cst.parse.typification;
   }
@@ -22,6 +22,28 @@ export function getTypeLabel(cst: IConstituenta) {
     return 'N/A';
   }
   return 'Логический';
+}
+
+export function getCstDescription(cst: IConstituenta): string {
+  if (cst.cstType === CstType.STRUCTURED) {
+    return (
+      cst.term.resolved || cst.term.raw || 
+      cst.definition.text.resolved || cst.definition.text.raw || 
+      cst.convention || 
+      cst.definition.formal
+    );
+  } else {
+    return (
+      cst.term.resolved || cst.term.raw || 
+      cst.definition.text.resolved || cst.definition.text.raw || 
+      cst.definition.formal || 
+      cst.convention
+    );
+  }
+}
+
+export function getCstLabel(cst: IConstituenta) {
+  return `${cst.alias}: ${getCstDescription(cst)}`;
 }
 
 export function getCstTypePrefix(type: CstType) {

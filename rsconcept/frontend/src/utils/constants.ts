@@ -8,7 +8,7 @@ const dev = {
 };
 
 export const config = process.env.NODE_ENV === 'production' ? prod : dev;
-export const timeout_updateUI = 100;
+export const TIMEOUT_UI_REFRESH = 100;
 
 export const urls = {
   concept: 'https://www.acconcept.ru/',

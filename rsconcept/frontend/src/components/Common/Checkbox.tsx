@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+
 import Label from './Label';
 
 export interface CheckboxProps {
@@ -11,21 +13,34 @@ export interface CheckboxProps {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-// TODO: implement disabled={disabled}
 function Checkbox({ id, required, disabled, tooltip, label, widthClass = 'w-full', value, onChange }: CheckboxProps) {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const cursor = disabled ? 'cursor-not-allowed' : 'cursor-pointer';
+  
+  function handleLabelClick(event: React.MouseEvent<HTMLLabelElement, MouseEvent>): void {
+    event.preventDefault();
+    if (!disabled) {
+      inputRef.current?.click();
+    }
+  } 
+
   return (
     <div className={'flex gap-2 [&:not(:first-child)]:mt-3 ' + widthClass} title={tooltip}>
-      <input id={id} type='checkbox'
-        className='relative cursor-pointer disabled:cursor-not-allowed peer w-4 h-4 shrink-0 mt-0.5 border rounded-sm appearance-none clr-checkbox'
+      <input id={id} type='checkbox' ref={inputRef}
+        className={`relative peer w-4 h-4 shrink-0 mt-0.5 border rounded-sm appearance-none clr-checkbox ${cursor}`}
         required={required}
         disabled={disabled}
         checked={value}
         onChange={onChange}
       />
-      { label && <Label
+      { label && 
+      <Label
+        className={`${cursor}`}
         text={label}
         required={required}
         htmlFor={id}
+        onClick={handleLabelClick}
       />}
       <svg
         className='absolute hidden w-3 h-3 mt-1 ml-0.5 text-white pointer-events-none peer-checked:block'

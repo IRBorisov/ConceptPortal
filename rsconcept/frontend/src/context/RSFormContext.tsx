@@ -9,15 +9,13 @@ import {
 patchRSForm,
 patchUploadTRS,  postClaimRSForm, postCloneRSForm,postNewConstituenta} from '../utils/backendAPI'
 import {
-  IConstituenta, IConstituentaList, IConstituentaMeta, ICstCreateData,
+  IConstituentaList, IConstituentaMeta, ICstCreateData,
   ICstMovetoData, ICstUpdateData, IRSForm, IRSFormCreateData, IRSFormData, IRSFormMeta, IRSFormUpdateData, IRSFormUploadData
 } from '../utils/models'
 import { useAuth } from './AuthContext'
 
 interface IRSFormContext {
   schema?: IRSForm
-  activeCst?: IConstituenta
-  activeID?: number
 
   error: ErrorInfo
   loading: boolean
@@ -30,7 +28,6 @@ interface IRSFormContext {
   isTracking: boolean
   isForceAdmin: boolean
 
-  setActiveID: React.Dispatch<React.SetStateAction<number | undefined>>
   toggleForceAdmin: () => void
   toggleReadonly: () => void
   toggleTracking: () => void
@@ -69,7 +66,6 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
   const { user } = useAuth()
   const { schema, reload, error, setError, setSchema, loading } = useRSFormDetails({ target: schemaID })
   const [processing, setProcessing] = useState(false)
-  const [activeID, setActiveID] = useState<number | undefined>(undefined)
 
   const [isForceAdmin, setIsForceAdmin] = useState(false)
   const [isReadonly, setIsReadonly] = useState(false)
@@ -83,11 +79,6 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       ((isOwned || (isForceAdmin && user?.is_staff)) ?? false)
       )
     }, [user?.is_staff, isReadonly, isForceAdmin, isOwned, loading])
-
-  const activeCst = useMemo(
-    () => {
-      return schema?.items?.find((cst) => cst.id === activeID)
-    }, [schema?.items, activeID])
 
   const isTracking = useMemo(
     () => {
@@ -272,7 +263,6 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
     <RSFormContext.Provider value={{
       schema,
       error, loading, processing,
-      activeID, activeCst, setActiveID,
       isForceAdmin, isReadonly, isOwned, isEditable,
       isClaimable, isTracking,
       toggleForceAdmin: () => { setIsForceAdmin(prev => !prev) },

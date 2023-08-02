@@ -13,56 +13,32 @@ import { CstType, IConstituenta, ICstMovetoData } from '../../utils/models'
 import { getCstTypePrefix, getCstTypeShortcut, getTypeLabel, mapStatusInfo } from '../../utils/staticUI';
 
 interface EditorItemsProps {
-  onOpenEdit: (cst: IConstituenta) => void
-  onShowCreateCst: (selectedID: number | undefined, type: CstType | undefined, skipDialog?: boolean) => void
+  onOpenEdit: (cstID: number) => void
+  onCreateCst: (selectedID: number | undefined, type: CstType | undefined, skipDialog?: boolean) => void
+  onDeleteCst: (selected: number[], callback: (items: number[]) => void) => void
 }
 
-function EditorItems({ onOpenEdit, onShowCreateCst }: EditorItemsProps) {
-  const {
-    schema, isEditable,
-    cstDelete, cstMoveTo, resetAliases
-  } = useRSForm();
+function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps) {
+  const { schema, isEditable, cstMoveTo, resetAliases } = useRSForm();
   const { noNavigation } = useConceptTheme();
   const [selected, setSelected] = useState<number[]>([]);
   const nothingSelected = useMemo(() => selected.length === 0, [selected]);
 
   const [toggledClearRows, setToggledClearRows] = useState(false);
 
-  const handleRowClicked = useCallback(
-  (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
-    if (event.altKey) {
-      onOpenEdit(cst);
-    }
-  }, [onOpenEdit]);
-
-  const handleSelectionChange = useCallback(
-    ({ selectedRows }: {
-      allSelected: boolean
-      selectedCount: number
-      selectedRows: IConstituenta[]
-    }) => {
-      setSelected(selectedRows.map(cst => cst.id));
-    }, [setSelected]);
-
   // Delete selected constituents
-  const handleDelete = useCallback(() => {
-    if (!schema?.items || !window.confirm('Вы уверены, что хотите удалить выбранные конституенты?')) {
+  function handleDelete() {
+    if (!schema) {
       return;
     }
-    const data = {
-      items: selected.map(id => { return { id }; })
-    }
-    const deletedNames = selected.map(id => schema.items?.find(cst => cst.id === id)?.alias).join(', ');
-    cstDelete(data, () => {
-      toast.success(`Конституенты удалены: ${deletedNames}`);
+    onDeleteCst(selected, () => {
       setToggledClearRows(prev => !prev);
       setSelected([]);
     });
-  }, [selected, schema?.items, cstDelete]);
+  }
 
   // Move selected cst up
-  const handleMoveUp = useCallback(
-    () => {
+  function handleMoveUp() {
     if (!schema?.items || selected.length === 0) {
       return;
     }
@@ -80,11 +56,10 @@ function EditorItems({ onOpenEdit, onShowCreateCst }: EditorItemsProps) {
       move_to: target
     }
     cstMoveTo(data);
-  }, [selected, schema?.items, cstMoveTo]);
+  }
 
   // Move selected cst down
-  const handleMoveDown = useCallback(
-    () => {
+  function handleMoveDown() {
     if (!schema?.items || selected.length === 0) {
       return;
     }
@@ -106,26 +81,25 @@ function EditorItems({ onOpenEdit, onShowCreateCst }: EditorItemsProps) {
       move_to: target
     }
     cstMoveTo(data);
-  }, [selected, schema?.items, cstMoveTo]);
+  }
 
   // Generate new names for all constituents
-  const handleReindex = useCallback(() => {
+  function handleReindex() {
     resetAliases(() => toast.success('Переиндексация конституент успешна'));
-  }, [resetAliases]);
+  }
 
-  // Add new constituent
-  const handleAddNew = useCallback(
-    (type?: CstType) => {
-      if (!schema) {
-        return;
-      }
-      const selectedPosition = selected.reduce((prev, cstID) => {
-        const position = schema.items.findIndex(cst => cst.id === cstID);
-        return Math.max(position, prev);
-      }, -1);
-      const insert_where = selectedPosition >= 0 ? schema.items[selectedPosition].id : undefined;
-      onShowCreateCst(insert_where, type, type !== undefined);
-    }, [schema, onShowCreateCst, selected]);
+  // Add new constituenta
+  function handleCreateCst(type?: CstType){
+    if (!schema) {
+      return;
+    }
+    const selectedPosition = selected.reduce((prev, cstID) => {
+      const position = schema.items.findIndex(cst => cst.id === cstID);
+      return Math.max(position, prev);
+    }, -1);
+    const insert_where = selectedPosition >= 0 ? schema.items[selectedPosition].id : undefined;
+    onCreateCst(insert_where, type, type !== undefined);
+  }
 
   // Implement hotkeys for working with constituents table
   function handleTableKey(event: React.KeyboardEvent<HTMLDivElement>) {
@@ -154,17 +128,33 @@ function EditorItems({ onOpenEdit, onShowCreateCst }: EditorItemsProps) {
       }
     }
     switch (key) {
-    case '1': handleAddNew(CstType.BASE); return true;
-    case '2': handleAddNew(CstType.STRUCTURED); return true;
-    case '3': handleAddNew(CstType.TERM); return true;
-    case '4': handleAddNew(CstType.AXIOM); return true;
-    case 'q': handleAddNew(CstType.FUNCTION); return true;
-    case 'w': handleAddNew(CstType.PREDICATE); return true;
-    case '5': handleAddNew(CstType.CONSTANT); return true;
-    case '6': handleAddNew(CstType.THEOREM); return true;
+    case '1': handleCreateCst(CstType.BASE); return true;
+    case '2': handleCreateCst(CstType.STRUCTURED); return true;
+    case '3': handleCreateCst(CstType.TERM); return true;
+    case '4': handleCreateCst(CstType.AXIOM); return true;
+    case 'q': handleCreateCst(CstType.FUNCTION); return true;
+    case 'w': handleCreateCst(CstType.PREDICATE); return true;
+    case '5': handleCreateCst(CstType.CONSTANT); return true;
+    case '6': handleCreateCst(CstType.THEOREM); return true;
     }
     return false;
   }
+
+  const handleRowClicked = useCallback(
+  (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
+    if (event.altKey) {
+      onOpenEdit(cst.id);
+    }
+  }, [onOpenEdit]);
+  
+  const handleSelectionChange = useCallback(
+  ({ selectedRows }: {
+    allSelected: boolean
+    selectedCount: number
+    selectedRows: IConstituenta[]
+  }) => {
+    setSelected(selectedRows.map(cst => cst.id));
+  }, [setSelected]);
 
   const columns = useMemo(() =>
     [
@@ -300,7 +290,7 @@ function EditorItems({ onOpenEdit, onShowCreateCst }: EditorItemsProps) {
             tooltip='Новая конституента'
             icon={<SmallPlusIcon color='text-green' size={6}/>}
             dense
-            onClick={() => { handleAddNew(); }}
+            onClick={() => handleCreateCst()}
           />
           {(Object.values(CstType)).map(
             (typeStr) => {
@@ -309,7 +299,7 @@ function EditorItems({ onOpenEdit, onShowCreateCst }: EditorItemsProps) {
                 text={`${getCstTypePrefix(type)}`}
                 tooltip={getCstTypeShortcut(type)}
                 dense
-                onClick={() => { handleAddNew(type); }}
+                onClick={() => handleCreateCst(type)}
               />;
           })}
           <div id='items-table-help'>
@@ -359,7 +349,7 @@ function EditorItems({ onOpenEdit, onShowCreateCst }: EditorItemsProps) {
         selectableRows
         selectableRowsHighlight
         onSelectedRowsChange={handleSelectionChange}
-        onRowDoubleClicked={onOpenEdit}
+        onRowDoubleClicked={cst => onOpenEdit(cst.id)}
         onRowClicked={handleRowClicked}
         clearSelectedRows={toggledClearRows}
         dense

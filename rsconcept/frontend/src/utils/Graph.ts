@@ -1,30 +1,49 @@
-// Graph class with basic comparison. Does not work for objects
+// ======== ID based fast Graph implementation =============
 export class GraphNode {
   id: number;
-  adjacent: number[];
+  outputs: number[];
+  inputs: number[];
 
   constructor(id: number) {
     this.id = id;
-    this.adjacent = [];
+    this.outputs = [];
+    this.inputs = [];
   }
 
-  addAdjacent(node: number): void {
-    this.adjacent.push(node);
+  addOutput(node: number): void {
+    this.outputs.push(node);
   }
 
-  removeAdjacent(target: number): number | null {
-    const index = this.adjacent.findIndex(node => node === target);
-    if (index > -1) {
-      return this.adjacent.splice(index, 1)[0];
-    }
-    return null;
+  addInput(node: number): void {
+    this.inputs.push(node);
+  }
+
+  removeInput(target: number): number | null {
+    const index = this.inputs.findIndex(node => node === target);
+    return index > -1 ? this.inputs.splice(index, 1)[0] : null;
+  }
+
+  removeOutput(target: number): number | null {
+    const index = this.outputs.findIndex(node => node === target);
+    return index > -1 ? this.outputs.splice(index, 1)[0] : null;
   }
 }
 
 export class Graph {
   nodes: Map<number, GraphNode> = new Map();
 
-  constructor() {}
+  constructor(arr?: number[][]) {
+    if (!arr) {
+      return;
+    }
+    arr.forEach(edge => {
+      if (edge.length == 1) {
+        this.addNode(edge[0]);
+      } else {
+        this.addEdge(edge[0], edge[1]);
+      }
+    });
+  }
 
   addNode(target: number): GraphNode {
     let node = this.nodes.get(target);
@@ -40,8 +59,9 @@ export class Graph {
     if (!nodeToRemove) {
       return null;
     }
-    this.nodes.forEach((node) => {
-      node.removeAdjacent(nodeToRemove.id);
+    this.nodes.forEach(node => {
+      node.removeInput(nodeToRemove.id);
+      node.removeOutput(nodeToRemove.id);
     });
     this.nodes.delete(target);
     return nodeToRemove;
@@ -50,38 +70,99 @@ export class Graph {
   addEdge(source: number, destination: number): void {
     const sourceNode = this.addNode(source);
     const destinationNode = this.addNode(destination);
-    sourceNode.addAdjacent(destinationNode.id);
+    sourceNode.addOutput(destinationNode.id);
+    destinationNode.addInput(sourceNode.id);
   }
 
   removeEdge(source: number, destination: number): void {
     const sourceNode = this.nodes.get(source);
     const destinationNode = this.nodes.get(destination);
     if (sourceNode && destinationNode) {
-      sourceNode.removeAdjacent(destination);
+      sourceNode.removeOutput(destination);
+      destinationNode.removeInput(source);
     }
   }
+
+  expandOutputs(origin: number[]): number[] {
+    const result: number[] = [];
+    const marked = new Map<number, boolean>();
+    origin.forEach(id => marked.set(id, true));
+    origin.forEach(id => {
+      const node = this.nodes.get(id);
+      if (node) {
+        node.outputs.forEach(child => {
+          if (!marked.get(child) && !result.find(id => id === child)) {
+            result.push(child);
+          }
+        });
+      }
+    });
+    let position = 0;
+    while (position < result.length) {
+      const node = this.nodes.get(result[position]);
+      if (node && !marked.get(node.id)) {
+        marked.set(node.id, true);
+        node.outputs.forEach(child => {
+          if (!marked.get(child) && !result.find(id => id === child)) {
+            result.push(child);
+          }
+        });
+      }
+      position += 1;
+    }
+    return result;
+  }
+  
+  expandInputs(origin: number[]): number[] {
+    const result: number[] = [];
+    const marked = new Map<number, boolean>();
+    origin.forEach(id => marked.set(id, true));
+    origin.forEach(id => {
+      const node = this.nodes.get(id);
+      if (node) {
+        node.inputs.forEach(child => {
+          if (!marked.get(child) && !result.find(id => id === child)) {
+            result.push(child);
+          }
+        });
+      }
+    });
+    let position = 0;
+    while (position < result.length) {
+      const node = this.nodes.get(result[position]);
+      if (node && !marked.get(node.id)) {
+        marked.set(node.id, true);
+        node.inputs.forEach(child => {
+          if (!marked.get(child) && !result.find(id => id === child)) {
+            result.push(child);
+          }
+        });
+      }
+      position += 1;
+    }
+    return result;
+  }  
 
   visitDFS(visitor: (node: GraphNode) => void) {
     const visited: Map<number, boolean> = new Map();
     this.nodes.forEach(node => {
       if (!visited.has(node.id)) {
-        this.depthFirstSearchAux(node, visited, visitor);
+        this.depthFirstSearch(node, visited, visitor);
       }
     });
   }
 
-  private depthFirstSearchAux(node: GraphNode, visited: Map<number, boolean>, visitor: (node: GraphNode) => void): void {
-    if (!node) {
-      return;
-    }
+  private depthFirstSearch(
+    node: GraphNode,
+    visited: Map<number, boolean>,
+    visitor: (node: GraphNode) => void)
+  : void {
     visited.set(node.id, true);
-
     visitor(node);
-
-    node.adjacent.forEach((item) => {
+    node.outputs.forEach((item) => {
       if (!visited.has(item)) {
-        const childNode = this.nodes.get(item);
-        if (childNode) this.depthFirstSearchAux(childNode, visited, visitor);
+        const childNode = this.nodes.get(item)!;
+        this.depthFirstSearch(childNode, visited, visitor);
       }
     });
   }

@@ -7,16 +7,18 @@ import { useConceptTheme } from '../../../context/ThemeContext';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import { prefixes } from '../../../utils/constants';
 import { CstType, extractGlobals,type IConstituenta, matchConstituenta } from '../../../utils/models';
-import { getMockConstituenta, mapStatusInfo } from '../../../utils/staticUI';
+import { getCstDescription, getMockConstituenta, mapStatusInfo } from '../../../utils/staticUI';
 import ConstituentaTooltip from './ConstituentaTooltip';
 
 interface ViewSideConstituentsProps {
   expression: string
+  activeID?: number
+  onOpenEdit: (cstID: number) => void
 }
 
-function ViewSideConstituents({ expression }: ViewSideConstituentsProps) {
+function ViewSideConstituents({ expression, activeID, onOpenEdit }: ViewSideConstituentsProps) {
   const { darkMode } = useConceptTheme();
-  const { schema, setActiveID, activeID } = useRSForm();
+  const { schema } = useRSForm();
   const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema?.items ?? []);
   const [filterText, setFilterText] = useLocalStorage('side-filter-text', '')
   const [onlyExpression, setOnlyExpression] = useLocalStorage('side-filter-flag', false);
@@ -46,14 +48,16 @@ function ViewSideConstituents({ expression }: ViewSideConstituentsProps) {
   const handleRowClicked = useCallback(
   (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
     if (event.altKey && cst.id > 0) {
-      setActiveID(cst.id);
+      onOpenEdit(cst.id);
     }
-  }, [setActiveID]);
+  }, [onOpenEdit]);
 
   const handleDoubleClick = useCallback(
   (cst: IConstituenta) => {
-    if (cst.id > 0) setActiveID(cst.id);
-  }, [setActiveID]);
+    if (cst.id > 0) {
+      onOpenEdit(cst.id);
+    }
+  }, [onOpenEdit]);
 
   const conditionalRowStyles = useMemo(() =>
   [
@@ -99,8 +103,7 @@ function ViewSideConstituents({ expression }: ViewSideConstituentsProps) {
       {
         name: 'Описание',
         id: 'description',
-        selector: (cst: IConstituenta) =>
-          cst.term.resolved || cst.definition.text.resolved || cst.definition.formal || cst.convention,
+        selector: (cst: IConstituenta) => getCstDescription(cst),
         minWidth: '350px',
         wrap: true,
         conditionalCellStyles: [

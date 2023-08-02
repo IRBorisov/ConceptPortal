@@ -30,7 +30,7 @@ function EditorTermGraph() {
     const result: GraphEdge[] = [];
     let edgeID = 1;
     schema?.graph.nodes.forEach(source => {
-      source.adjacent.forEach(target => {
+      source.outputs.forEach(target => {
         result.push({
           id: String(edgeID),
           source: String(source.id),
