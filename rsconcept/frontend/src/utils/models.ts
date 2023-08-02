@@ -226,6 +226,25 @@ export enum ExpressionStatus {
   VERIFIED
 }
 
+// Dependency mode for schema analysis
+export enum DependencyMode {
+  ALL = 0,
+  EXPRESSION,
+  OUTPUTS,
+  INPUTS,
+  EXPAND_OUTPUTS,
+  EXPAND_INPUTS
+}
+
+// Constituent compare mode
+export enum CstMatchMode {
+  ALL = 1,
+  EXPR,
+  TERM,
+  TEXT,
+  NAME
+}
+
 // ========== Model functions =================
 export function inferStatus(parse?: ParsingStatus, value?: ValueClass): ExpressionStatus {
   if (!parse || !value) {
@@ -317,22 +336,23 @@ export function LoadRSFormData(schema: IRSFormData): IRSForm {
   return result;
 }
 
-export function matchConstituenta(query: string, target?: IConstituenta) {
-  if (!target) {
-    return false;
-  } else if (target.alias.match(query)) {
+export function matchConstituenta(query: string, target: IConstituenta, mode: CstMatchMode) {
+  if ((mode === CstMatchMode.ALL || mode === CstMatchMode.NAME) && 
+    target.alias.match(query)) {
     return true;
-  } else if (target.term.resolved.match(query)) {
-    return true;
-  } else if (target.definition.formal.match(query)) {
-    return true;
-  } else if (target.definition.text.resolved.match(query)) {
-    return true;
-  } else if (target.convention.match(query)) {
-    return true;
-  } else {
-    return false;
   }
+  if ((mode === CstMatchMode.ALL || mode === CstMatchMode.TERM) && 
+    target.term.resolved.match(query)) {
+    return true;
+  }
+  if ((mode === CstMatchMode.ALL || mode === CstMatchMode.EXPR) && 
+    target.definition.formal.match(query)) {
+    return true;
+  }
+  if ((mode === CstMatchMode.ALL || mode === CstMatchMode.TEXT)) {
+    return (target.definition.text.resolved.match(query) || target.convention.match(query));
+  }
+  return false;
 }
 
 export function matchRSFormMeta(query: string, target: IRSFormMeta) {
@@ -343,5 +363,23 @@ export function matchRSFormMeta(query: string, target: IRSFormMeta) {
     return true;
   } else {
     return false;
+  }
+}
+
+export function applyGraphFilter(schema: IRSForm, start: number, mode: DependencyMode): IConstituenta[] {
+  if (mode === DependencyMode.ALL) {
+    return schema.items;
+  }
+  let ids: number[] | undefined = undefined
+  switch (mode) {
+  case DependencyMode.OUTPUTS: { ids = schema.graph.nodes.get(start)?.outputs; break; }
+  case DependencyMode.INPUTS: { ids = schema.graph.nodes.get(start)?.inputs; break; }
+  case DependencyMode.EXPAND_OUTPUTS: { ids = schema.graph.expandOutputs([start]) ; break; }
+  case DependencyMode.EXPAND_INPUTS: { ids = schema.graph.expandInputs([start]) ; break; }
+  }
+  if (!ids) {
+    return schema.items;
+  } else {
+    return schema.items.filter(cst => ids!.find(id => id === cst.id));
   }
 }

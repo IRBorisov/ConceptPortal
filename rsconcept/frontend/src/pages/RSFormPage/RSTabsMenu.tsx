@@ -27,7 +27,6 @@ function RSTabsMenu({showUploadDialog, showCloneDialog}: RSTabsMenuProps) {
   } = useRSForm();
   const schemaMenu = useDropdown();
   const editMenu = useDropdown();
-  
 
   const handleClaimOwner = useCallback(() => {
     editMenu.hide();

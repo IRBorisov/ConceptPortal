@@ -7,7 +7,7 @@ import { Loader } from '../../components/Common/Loader';
 import { useRSForm } from '../../context/RSFormContext';
 import useCheckExpression from '../../hooks/useCheckExpression';
 import { TokenID } from '../../utils/enums';
-import { IRSErrorDescription, SyntaxTree } from '../../utils/models';
+import { IConstituenta, IRSErrorDescription, SyntaxTree } from '../../utils/models';
 import { getCstExpressionPrefix } from '../../utils/staticUI';
 import ParsingResult from './elements/ParsingResult';
 import RSLocalButton from './elements/RSLocalButton';
@@ -17,6 +17,7 @@ import { getSymbolSubstitute, TextWrapper } from './elements/textEditing';
 
 interface EditorRSExpressionProps {
   id: string
+  activeCst?: IConstituenta
   label: string
   isActive: boolean
   disabled?: boolean
@@ -30,10 +31,10 @@ interface EditorRSExpressionProps {
 }
 
 function EditorRSExpression({
-  id, label, disabled, isActive, placeholder, value, setValue, onShowAST, 
+  id, activeCst, label, disabled, isActive, placeholder, value, setValue, onShowAST, 
   toggleEditMode, setTypification, onChange
 }: EditorRSExpressionProps) {
-  const { schema, activeCst } = useRSForm();
+  const { schema } = useRSForm();
   const [isModified, setIsModified] = useState(false);
   const { parseData, checkExpression, resetParse, loading } = useCheckExpression({ schema });
   const expressionCtrl = useRef<HTMLTextAreaElement>(null);
