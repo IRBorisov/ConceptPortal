@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import Footer from './components/Footer';
 import Navigation from './components/Navigation/Navigation';
 import ToasterThemed from './components/ToasterThemed';
+import { useConceptTheme } from './context/ThemeContext';
 import CreateRSFormPage from './pages/CreateRSFormPage';
 import HomePage from './pages/HomePage';
 import LibraryPage from './pages/LibraryPage';
@@ -15,6 +16,8 @@ import RSFormPage from './pages/RSFormPage';
 import UserProfilePage from './pages/UserProfilePage';
 
 function App () {
+  const { noNavigation } = useConceptTheme();
+
   return (
     <div className='antialiased clr-app'>
       <Navigation />
@@ -24,7 +27,8 @@ function App () {
         draggable={false}
         pauseOnFocusLoss={false}
       />
-      <main className='min-h-[calc(100vh-7.5rem)] px-2 h-fit'>
+      <div className={`max-h-[calc(100vh-${noNavigation ? 0 : 4.5}rem)] overflow-auto`}>
+      <main className={`min-h-[calc(100vh-${noNavigation ? 8 : 12}rem)] px-2`}>
         <Routes>
           <Route path='/' element={ <HomePage/>} />
 
@@ -42,6 +46,7 @@ function App () {
         </Routes>
       </main>
       <Footer />
+      </div>
     </div>
   );
 }

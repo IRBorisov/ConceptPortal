@@ -18,7 +18,7 @@ function Navigation () {
   const navigateHelp = () => { navigate('/manuals') };
 
   return (
-    <nav className='sticky top-0 left-0 right-0 z-50'>
+    <nav className='sticky top-0 left-0 right-0 z-50 h-fit'>
       {!noNavigation &&
       <button
         title='Скрыть навигацию'
