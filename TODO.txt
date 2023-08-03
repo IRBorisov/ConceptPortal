@@ -2,6 +2,23 @@
 This list only contains global tech refactorings and tech debt
 For more specific TODOs see comments in code
 
+[Functionality]
+- home page
+- manuals
+- текстовый модуль для разрешения отсылок
+- компонент для форматирования в редакторе текста (формальное выражения + отсылки в тексте)
+- блок нотификаций пользователей
+- блок синтеза
+- блок организации библиотеки моделей
+- проектный модуль?
+- обратная связь - система баг репортов
+
+[Tech]
 - Use migtation/fixtures to provide initial data for testing
 - USe migtation/fixtures to load example common data
-- Add HTTPS for deployment
+
+[deployment]
+- HTTPS 
+- database backup daemon
+- logs collection
+- status dashboard for servers

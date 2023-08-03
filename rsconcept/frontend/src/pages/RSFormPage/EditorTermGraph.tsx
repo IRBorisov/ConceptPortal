@@ -127,7 +127,7 @@ function EditorTermGraph() {
     </div>
     </div>
     <div className='flex-wrap w-full h-full overflow-auto'>
-    <div className='relative w-[1240px] h-[730px] 2xl:w-[1880px] 2xl:h-[750px]'>
+    <div className='relative w-[1260px] h-[730px] 2xl:w-[1900px] 2xl:h-[750px]'>
       <GraphCanvas
         draggable
         ref={graphRef}
