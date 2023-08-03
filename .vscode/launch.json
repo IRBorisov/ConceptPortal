@@ -52,6 +52,26 @@
             "request": "launch",
             "script": "${workspaceFolder}/rsconcept/RunServer.ps1",
             "args": ["-freshStart"]
-        }
+        },
+        {
+            "name": "FE-Debug",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "${workspaceFolder}/rsconcept/frontend/node_modules/.bin/jest",
+            "args": [
+                "${fileBasenameNoExtension}",
+                "--runInBand",
+                "--watch",
+                "--coverage=false",
+                "--no-cache"
+            ],
+            "cwd": "${workspaceFolder}/rsconcept/frontend",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "sourceMaps": true,
+            "windows": {
+                "program": "${workspaceFolder}/rsconcept/frontend/node_modules/jest/bin/jest"
+            }
+        },
     ]
 }

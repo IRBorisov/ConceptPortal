@@ -10,6 +10,13 @@ export class GraphNode {
     this.inputs = [];
   }
 
+  clone(): GraphNode {
+    const result = new GraphNode(this.id);
+    result.outputs = [... this.outputs];
+    result.inputs = [... this.inputs];
+    return result;
+  }
+
   addOutput(node: number): void {
     this.outputs.push(node);
   }
@@ -45,6 +52,12 @@ export class Graph {
     });
   }
 
+  clone(): Graph {
+    const result = new Graph();
+    this.nodes.forEach(node => result.nodes.set(node.id, node.clone()));
+    return result;
+  }
+
   addNode(target: number): GraphNode {
     let node = this.nodes.get(target);
     if (!node) {
@@ -67,6 +80,16 @@ export class Graph {
     return nodeToRemove;
   }
 
+  removeIsolated(): GraphNode[] {
+    const result: GraphNode[] = [];
+    this.nodes.forEach(node => {
+      if (node.outputs.length === 0 && node.inputs.length === 0) {
+        this.nodes.delete(node.id);
+      }
+    });
+    return result;
+  }
+
   addEdge(source: number, destination: number): void {
     const sourceNode = this.addNode(source);
     const destinationNode = this.addNode(destination);
@@ -81,6 +104,14 @@ export class Graph {
       sourceNode.removeOutput(destination);
       destinationNode.removeInput(source);
     }
+  }
+
+  hasEdge(source: number, destination: number): boolean {
+    const sourceNode = this.nodes.get(source);
+    if (!sourceNode) {
+      return false;
+    }
+    return !!sourceNode.outputs.find(id => id === destination);
   }
 
   expandOutputs(origin: number[]): number[] {
@@ -143,27 +174,63 @@ export class Graph {
     return result;
   }  
 
-  visitDFS(visitor: (node: GraphNode) => void) {
-    const visited: Map<number, boolean> = new Map();
+  tolopogicalOrder(): number[] {
+    const result: number[] = [];
+    const marked = new Map<number, boolean>();
     this.nodes.forEach(node => {
-      if (!visited.has(node.id)) {
-        this.depthFirstSearch(node, visited, visitor);
+      if (marked.get(node.id)) {
+        return;
       }
+      const toVisit: number[] = [node.id];
+      let index = 0;
+      while (toVisit.length > 0) {
+        const item = toVisit[index];
+        if (marked.get(item)) {
+          if (!result.find(id => id ===item)) {
+            result.push(item);
+          } 
+          toVisit.splice(index, 1);
+          index -= 1;
+        } else {
+          marked.set(item, true);
+          const itemNode = this.nodes.get(item);
+          if (itemNode && itemNode.outputs.length > 0) {
+            itemNode.outputs.forEach(child => {
+              if (!marked.get(child)) {
+                toVisit.push(child);
+              }
+            });
+          }
+          if (index + 1 < toVisit.length) {
+            index += 1;
+          }
+        }
+      }
+      marked
     });
+    return result.reverse();
   }
 
-  private depthFirstSearch(
-    node: GraphNode,
-    visited: Map<number, boolean>,
-    visitor: (node: GraphNode) => void)
-  : void {
-    visited.set(node.id, true);
-    visitor(node);
-    node.outputs.forEach((item) => {
-      if (!visited.has(item)) {
-        const childNode = this.nodes.get(item)!;
-        this.depthFirstSearch(childNode, visited, visitor);
+  transitiveReduction() {
+    const order = this.tolopogicalOrder();
+    const marked = new Map<number, boolean>();
+    order.forEach(nodeID => {
+      if (marked.get(nodeID)) {
+        return;
+      }
+      const stack: {id: number, parents: number[]}[] = [];
+      stack.push({id: nodeID, parents: []});
+      while (stack.length > 0) {
+        const item = stack.splice(0, 1)[0];
+        const node = this.nodes.get(item.id);
+        if (node) {
+          node.outputs.forEach(child => {
+            item.parents.forEach(parent => this.removeEdge(parent, child));
+            stack.push({id: child, parents: [item.id, ...item.parents]})
+          });
+        }
+        marked.set(item.id, true)
       }
     });
-  }
+  } 
 }

@@ -20,6 +20,51 @@ describe('Testing Graph constuction', () => {
     expect([... graph.nodes.keys()]).toStrictEqual([1, 2, 3, 4]);
     expect([... graph.nodes.get(1)!.outputs]).toStrictEqual([2]);
   });
+
+  test('cloning', () => {
+    const graph = new Graph([[1, 2], [3], [4, 1]]);
+    const clone = graph.clone();
+    expect([... graph.nodes.keys()]).toStrictEqual([... clone.nodes.keys()]);
+    expect([... graph.nodes.values()]).toStrictEqual([... clone.nodes.values()]);
+
+    clone.removeNode(3);
+    expect(clone.nodes.get(3)).toBeUndefined();
+    expect(graph.nodes.get(3)).not.toBeUndefined();
+  });
+});
+
+describe('Testing Graph editing', () => {
+  test('removing edges should not remove nodes', () => {
+    const graph = new Graph([[1, 2], [3], [4, 1]]);
+    expect(graph.hasEdge(4, 1)).toBeTruthy();
+
+    graph.removeEdge(5, 0);
+    graph.removeEdge(4, 1);
+    
+    expect([... graph.nodes.keys()]).toStrictEqual([1, 2, 3, 4]);
+    expect(graph.hasEdge(4, 1)).toBeFalsy();
+  });
+
+  test('removing isolated nodes', () => {
+    const graph = new Graph([[9, 1], [9, 2], [2, 1], [4, 3], [5, 9], [7], [8]]);
+    graph.removeIsolated()
+    expect([... graph.nodes.keys()]).toStrictEqual([9, 1, 2, 4, 3, 5]);
+  });
+
+  test('transitive reduction', () => {
+    const graph = new Graph([[1, 3], [1, 2], [2, 3]]);
+    graph.transitiveReduction()
+    expect(graph.hasEdge(1, 2)).toBeTruthy();
+    expect(graph.hasEdge(2, 3)).toBeTruthy();
+    expect(graph.hasEdge(1, 3)).toBeFalsy();
+  });
+});
+
+describe('Testing Graph sort', () => {
+  test('topological order', () => {
+    const graph = new Graph([[9, 1], [9, 2], [2, 1], [4, 3], [5, 9]]);
+    expect(graph.tolopogicalOrder()).toStrictEqual([5, 4, 3, 9, 1, 2]);
+  });
 });
 
 describe('Testing Graph queries', () => {
