@@ -5,7 +5,7 @@ import { GithubIcon } from './Icons';
 
 function Footer() {
   return (
-    <footer className='z-50 px-4 pt-2 pb-4 border-t-2 t clr-footer'>
+    <footer className='z-50 px-4 pt-2 pb-4 border-t-2 clr-footer'>
       <div className='flex items-stretch justify-center w-full mx-auto'>
         <div className='px-4 underline whitespace-nowrap'>
           <Link to='/manuals' tabIndex={-1}>Справка</Link> <br/>

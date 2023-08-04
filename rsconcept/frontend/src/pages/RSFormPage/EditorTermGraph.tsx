@@ -14,7 +14,7 @@ import { GraphLayoutSelector,mapLayoutLabels } from '../../utils/staticUI';
 
 function EditorTermGraph() {
   const { schema } = useRSForm();
-  const { darkMode } = useConceptTheme();
+  const { darkMode, noNavigation } = useConceptTheme();
   const [ layout, setLayout ] = useLocalStorage<LayoutTypes>('graph_layout', 'forceatlas2');
 
   const [ filtered, setFiltered ] = useState<Graph>(new Graph());
@@ -91,6 +91,10 @@ function EditorTermGraph() {
     focusOnSelect: false
   });
 
+  const canvasSize = !noNavigation ? 
+    'w-[1240px] h-[736px] 2xl:w-[1880px] 2xl:h-[746px]' 
+  : 'w-[1240px] h-[800px] 2xl:w-[1880px] 2xl:h-[810px]';
+
   return (<>
     <div className='relative w-full'>
     <div className='absolute top-0 left-0 z-20 py-2 w-[12rem] flex flex-col'>
@@ -127,7 +131,7 @@ function EditorTermGraph() {
     </div>
     </div>
     <div className='flex-wrap w-full h-full overflow-auto'>
-    <div className='relative w-[1260px] h-[730px] 2xl:w-[1900px] 2xl:h-[750px]'>
+    <div className={`relative border-t border-r ${canvasSize}`}>
       <GraphCanvas
         draggable
         ref={graphRef}
@@ -142,7 +146,7 @@ function EditorTermGraph() {
         onNodePointerOver={onNodePointerOver}
         onNodePointerOut={onNodePointerOut}
         cameraMode={ orbit ? 'orbit' : layout.includes('3d') ? 'rotate' : 'pan'}
-        layoutOverrides={ layout.includes('tree') ? { nodeLevelRatio: 3 } : undefined }
+        layoutOverrides={ layout.includes('tree') ? { nodeLevelRatio: 1 } : undefined }
         labelFontUrl={resources.graph_font}
         theme={darkMode ? darkTheme : lightTheme}
         renderNode={({ node, ...rest }) => (
