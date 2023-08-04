@@ -68,7 +68,7 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
     } else if (schema && schema?.items.length > 0) {
       onOpenEdit(schema.items[0].id);
     }
-  }, [activeCst]);
+  }, [activeCst, onOpenEdit, schema]);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

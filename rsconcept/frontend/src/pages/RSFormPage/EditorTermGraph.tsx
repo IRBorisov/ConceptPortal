@@ -146,7 +146,7 @@ function EditorTermGraph() {
         onNodePointerOver={onNodePointerOver}
         onNodePointerOut={onNodePointerOut}
         cameraMode={ orbit ? 'orbit' : layout.includes('3d') ? 'rotate' : 'pan'}
-        layoutOverrides={ layout.includes('tree') ? { nodeLevelRatio: 1 } : undefined }
+        layoutOverrides={ layout.includes('tree') ? { nodeLevelRatio: schema && schema?.items.length < 50 ? 3 : 1 } : undefined }
         labelFontUrl={resources.graph_font}
         theme={darkMode ? darkTheme : lightTheme}
         renderNode={({ node, ...rest }) => (
