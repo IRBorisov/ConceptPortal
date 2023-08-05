@@ -55,14 +55,17 @@ RUN pip install --no-cache /wheels/* && \
     rm -rf /wheels
 
 # Copy application sources and setup permissions
-COPY apps/ ./apps/
+COPY apps/ ./apps
 COPY project/ ./project
+COPY data/ ./data
 COPY manage.py entrypoint.sh ./
 RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.sh && \
     chmod +x  $APP_HOME/entrypoint.sh && \
     chown -R app:app $APP_HOME && \
     chmod -R a+rwx $APP_HOME/static && \
     chmod -R a+rwx $APP_HOME/media
+
+RUN 
 
 USER app
 WORKDIR $APP_HOME
