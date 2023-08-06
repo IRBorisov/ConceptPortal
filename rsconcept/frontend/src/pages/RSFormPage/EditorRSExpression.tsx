@@ -8,7 +8,7 @@ import { useRSForm } from '../../context/RSFormContext';
 import useCheckExpression from '../../hooks/useCheckExpression';
 import { TokenID } from '../../utils/enums';
 import { IConstituenta, IRSErrorDescription, SyntaxTree } from '../../utils/models';
-import { getCstExpressionPrefix } from '../../utils/staticUI';
+import { getCstExpressionPrefix, getTypificationLabel } from '../../utils/staticUI';
 import ParsingResult from './elements/ParsingResult';
 import RSLocalButton from './elements/RSLocalButton';
 import RSTokenButton from './elements/RSTokenButton';
@@ -67,7 +67,11 @@ function EditorRSExpression({
       }
       expressionCtrl.current!.focus();
       setIsModified(false);
-      setTypification(parse.typification);
+      setTypification(getTypificationLabel({
+        isValid: parse.parseResult,
+        resultType: parse.typification,
+        args: parse.args
+      }));
     });
   }
 

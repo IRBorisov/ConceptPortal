@@ -64,6 +64,11 @@ export interface ISyntaxTreeNode {
 }
 export type SyntaxTree = ISyntaxTreeNode[]
 
+export interface IFunctionArg {
+  alias: string
+  typification: string
+}
+
 export interface IExpressionParse {
   parseResult: boolean
   syntax: Syntax
@@ -72,6 +77,7 @@ export interface IExpressionParse {
   errors: IRSErrorDescription[]
   astText: string
   ast: SyntaxTree
+  args: IFunctionArg[]
 }
 
 export interface IRSExpression {
@@ -113,6 +119,7 @@ export interface IConstituenta {
     valueClass: ValueClass
     typification: string
     syntaxTree: string
+    args: IFunctionArg[]
   }
 }
 

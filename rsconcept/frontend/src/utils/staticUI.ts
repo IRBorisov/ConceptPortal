@@ -1,7 +1,10 @@
 import { LayoutTypes } from 'reagraph';
 
 import { resolveErrorClass,RSErrorClass, RSErrorType, TokenID } from './enums';
-import { CstMatchMode,CstType, DependencyMode,ExpressionStatus, type IConstituenta, IRSErrorDescription,type IRSForm, ISyntaxTreeNode,ParsingStatus, ValueClass } from './models';
+import { CstMatchMode, CstType, DependencyMode,ExpressionStatus, IConstituenta,
+  IFunctionArg,IRSErrorDescription, IRSForm,
+  ISyntaxTreeNode, ParsingStatus, ValueClass 
+} from './models';
 
 export interface IRSButtonData {
   text: string
@@ -12,16 +15,6 @@ export interface IStatusInfo {
   text: string
   color: string
   tooltip: string
-}
-
-export function getTypeLabel(cst: IConstituenta): string {
-  if (cst.parse?.typification) {
-    return cst.parse.typification;
-  }
-  if (cst.parse?.status !== ParsingStatus.VERIFIED) {
-    return 'N/A';
-  }
-  return 'Логический';
 }
 
 export function getCstDescription(cst: IConstituenta): string {
@@ -381,7 +374,8 @@ export function getMockConstituenta(id: number, alias: string, type: CstType, co
       status: ParsingStatus.INCORRECT,
       valueClass: ValueClass.INVALID,
       typification: 'N/A',
-      syntaxTree: ''
+      syntaxTree: '',
+      args: []
     }
   };
 }
@@ -392,6 +386,32 @@ export function getCloneTitle(schema: IRSForm): string {
   } else {
     return (schema.title + '+');
   }
+}
+
+export function getTypificationLabel({isValid, resultType, args}: {
+  isValid: boolean,
+  resultType: string,
+  args: IFunctionArg[]
+}): string {
+  if (!isValid) {
+    return 'N/A';
+  }
+  if (resultType === '') {
+    resultType = 'Логический'
+  }
+  if (args.length === 0) {
+    return resultType;
+  }
+  const argsText = args.map(arg => arg.typification).join(', ');
+  return `${resultType} 🠔 [${argsText}]`;
+}
+
+export function getCstTypificationLabel(cst: IConstituenta): string {
+  return getTypificationLabel({
+    isValid: cst.parse.status === ParsingStatus.VERIFIED,
+    resultType: cst.parse.typification,
+    args: cst.parse.args
+  });
 }
 
 export function getRSErrorPrefix(error: IRSErrorDescription): string {

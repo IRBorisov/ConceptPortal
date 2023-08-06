@@ -9,7 +9,7 @@ import TextArea from '../../components/Common/TextArea';
 import { DumpBinIcon, HelpIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { type CstType, EditMode, ICstUpdateData, SyntaxTree } from '../../utils/models';
-import { getCstTypeLabel, mapStatusInfo } from '../../utils/staticUI';
+import { getCstTypeLabel, getCstTypificationLabel, mapStatusInfo } from '../../utils/staticUI';
 import EditorRSExpression from './EditorRSExpression';
 import ViewSideConstituents from './elements/ViewSideConstituents';
 
@@ -64,7 +64,7 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
       setTerm(activeCst.term?.raw ?? '');
       setTextDefinition(activeCst.definition?.text?.raw ?? '');
       setExpression(activeCst.definition?.formal ?? '');
-      setTypification(activeCst?.parse?.typification || 'N/A');
+      setTypification(activeCst ? getCstTypificationLabel(activeCst) : 'N/A');
     } else if (schema && schema?.items.length > 0) {
       onOpenEdit(schema.items[0].id);
     }

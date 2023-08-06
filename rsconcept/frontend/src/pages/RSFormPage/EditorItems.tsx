@@ -10,7 +10,7 @@ import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import { prefixes } from '../../utils/constants';
 import { CstType, IConstituenta, ICstMovetoData } from '../../utils/models'
-import { getCstTypePrefix, getCstTypeShortcut, getTypeLabel, mapStatusInfo } from '../../utils/staticUI';
+import { getCstTypePrefix, getCstTypeShortcut, getCstTypificationLabel, mapStatusInfo } from '../../utils/staticUI';
 
 interface EditorItemsProps {
   onOpenEdit: (cstID: number) => void
@@ -192,7 +192,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
       {
         name: 'Тип',
         id: 'type',
-        cell: (cst: IConstituenta) => <div style={{ fontSize: 12 }}>{getTypeLabel(cst)}</div>,
+        cell: (cst: IConstituenta) => <div style={{ fontSize: 12 }}>{getCstTypificationLabel(cst)}</div>,
         width: '140px',
         minWidth: '100px',
         maxWidth: '140px',

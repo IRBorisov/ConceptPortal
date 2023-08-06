@@ -34,6 +34,7 @@ class TestIntegrations(TestCase):
         schema = self._default_schema()
         out1 = json.loads(pc.check_expression(schema, 'X1=X1'))
         self.assertTrue(out1['parseResult'])
+        self.assertEqual(len(out1['args']), 0)
 
         out2 = json.loads(pc.check_expression(schema, 'X1=X2'))
         self.assertFalse(out2['parseResult'])
