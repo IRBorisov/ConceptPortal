@@ -193,9 +193,8 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
         name: 'Тип',
         id: 'type',
         cell: (cst: IConstituenta) => <div style={{ fontSize: 12 }}>{getCstTypificationLabel(cst)}</div>,
-        width: '140px',
-        minWidth: '100px',
-        maxWidth: '140px',
+        width: '175px',
+        maxWidth: '175px',
         wrap: true,
         reorder: true,
         hide: 1600

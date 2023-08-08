@@ -15,7 +15,7 @@ import { GraphLayoutSelector,mapLayoutLabels } from '../../utils/staticUI';
 function EditorTermGraph() {
   const { schema } = useRSForm();
   const { darkMode, noNavigation } = useConceptTheme();
-  const [ layout, setLayout ] = useLocalStorage<LayoutTypes>('graph_layout', 'forceatlas2');
+  const [ layout, setLayout ] = useLocalStorage<LayoutTypes>('graph_layout', 'treeTd2d');
 
   const [ filtered, setFiltered ] = useState<Graph>(new Graph());
   const [ orbit, setOrbit ] = useState(false);
