@@ -1,10 +1,10 @@
 volumes:
   postgres_volume:
-    name: "portal-db"
+    name: "postgresql-db"
   django_static_volume:
-    name: "portal-static"
+    name: "static"
   django_media_volume:
-    name: "portal-media"
+    name: "media"
 
 networks:
   default:
@@ -19,7 +19,6 @@ secrets:
 services:
   frontend:
     restart: always
-    container_name: "portal-front"
     depends_on:
       - backend
     build: 
@@ -31,7 +30,6 @@ services:
 
   backend:
     restart: always
-    container_name: "portal-back"
     depends_on:
       - postgresql-db
       - nginx
@@ -55,7 +53,6 @@ services:
 
   postgresql-db:
     restart: always
-    container_name: "portal-db"
     image: postgres:alpine
     secrets:
       - db_password
@@ -68,7 +65,6 @@ services:
 
   nginx:
     restart: always
-    container_name: "portal-nginx"
     build:
       context: ./nginx
     ports:

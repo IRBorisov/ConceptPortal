@@ -1,7 +1,6 @@
 // Constants
 const prod = {
   backend: 'http://dev.concept.ru:8000',
-  // backend: 'http://localhost:8000',
 };
 
 const dev = {
