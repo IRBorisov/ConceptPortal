@@ -18,7 +18,7 @@ interface ViewSideConstituentsProps {
 }
 
 function ViewSideConstituents({ expression, activeID, onOpenEdit }: ViewSideConstituentsProps) {
-  const { darkMode } = useConceptTheme();
+  const { darkMode, noNavigation } = useConceptTheme();
   const { schema } = useRSForm();
   
   const [filterMatch, setFilterMatch] = useLocalStorage('side-filter-match', CstMatchMode.ALL);
@@ -139,8 +139,16 @@ function ViewSideConstituents({ expression, activeID, onOpenEdit }: ViewSideCons
     ], []
   );
   
+  const maxHeight = useMemo(
+  () => {
+    // TODO: calculate hieght based on left editor column height
+    return !noNavigation ? 
+      'max-h-[calc(100vh-10.3rem)]'
+    : 'max-h-[calc(100vh-10.3rem)] '; 
+  }, [noNavigation]);
+  
   return (
-    <div className='max-h-[80vh] min-h-[40rem] overflow-y-scroll border flex-grow w-full'>
+    <div className={`${maxHeight} min-h-[40rem] overflow-y-scroll border flex-grow w-full`}>
       <div className='sticky top-0 left-0 right-0 z-10 flex items-center justify-between w-full gap-1 px-2 py-1 bg-white border-b-2 border-gray-400 rounded dark:bg-gray-700 dark:border-gray-300'>
         <div className='flex items-center justify-between w-full'>
           <MatchModePicker value={filterMatch} onChange={setFilterMatch}/>

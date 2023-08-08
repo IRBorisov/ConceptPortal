@@ -19,12 +19,14 @@ import UserProfilePage from './pages/UserProfilePage';
 function App () {
   const { noNavigation } = useConceptTheme();
 
-  const scrollWindowSize = useMemo(() => {
+  const scrollWindowSize = useMemo(
+  () => {
     return !noNavigation ? 
       'max-h-[calc(100vh-4.5rem)]'
     : 'max-h-[100vh]'; 
   }, [noNavigation]);
-  const mainSize = useMemo(() => {
+  const mainSize = useMemo(
+  () => {
     return !noNavigation ? 
       'min-h-[calc(100vh-12rem)]'
     : 'min-h-[calc(100vh-8rem)] '; 

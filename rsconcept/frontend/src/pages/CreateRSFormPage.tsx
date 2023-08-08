@@ -10,12 +10,14 @@ import SubmitButton from '../components/Common/SubmitButton';
 import TextArea from '../components/Common/TextArea';
 import TextInput from '../components/Common/TextInput';
 import RequireAuth from '../components/RequireAuth';
+import { useLibrary } from '../context/LibraryContext';
 import useNewRSForm from '../hooks/useNewRSForm';
 import { IRSFormCreateData, IRSFormMeta } from '../utils/models';
 
 function CreateRSFormPage() {
   const navigate = useNavigate();
-  const { createSchema, error, setError, loading } = useNewRSForm()
+  const { createSchema, error, setError, loading } = useNewRSForm();
+  const library = useLibrary();
 
   const [title, setTitle] = useState('');
   const [alias, setAlias] = useState('');
@@ -37,6 +39,7 @@ function CreateRSFormPage() {
 
   function onSuccess(newSchema: IRSFormMeta) {
     toast.success('Схема успешно создана');
+    library.reload();
     navigate(`/rsforms/${newSchema.id}`);
   }
   
