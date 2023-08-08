@@ -1,11 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { useAuth } from '../../context/AuthContext';
 import { BellIcon, PlusIcon, SquaresIcon } from '../Icons';
 import NavigationButton from './NavigationButton';
 
 function UserTools() {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const navigateCreateRSForm = () => { navigate('/rsform-create'); };
   const navigateMyWork = () => { navigate('/library?filter=personal'); };
@@ -24,7 +26,7 @@ function UserTools() {
         />
       </span>
       <NavigationButton icon={<SquaresIcon />} description='Мои схемы' onClick={navigateMyWork} />
-      <NavigationButton icon={<BellIcon />} description='Уведомления' onClick={handleNotifications} />
+      { user && user.is_staff && <NavigationButton icon={<BellIcon />} description='Уведомления' onClick={handleNotifications} />}
     </div>
   );
 }

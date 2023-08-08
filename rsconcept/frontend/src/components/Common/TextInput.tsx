@@ -21,7 +21,7 @@ function TextInput({
         htmlFor={id}
       />
       <input id={id}
-        className={'px-3 py-2 mt-2 leading-tight border shadow dark:bg-gray-800 truncate hover:text-clip ' + widthClass}
+        className={`px-3 py-2 mt-2 leading-tight border shadow truncate hover:text-clip clr-input ${widthClass}`}
         required={required}
         {...props}
       />

@@ -210,13 +210,22 @@ function EditorRSExpression({
 
   return (
     <div className='flex flex-col items-start [&:not(:first-child)]:mt-3 w-full'>
+      <div className='relative w-full'>
+      <div className='absolute top-[-0.3rem] right-0'>
+      <StatusBar
+        isModified={isModified}
+        constituenta={activeCst}
+        parseData={parseData}
+      />
+      </div>
+      </div>
       <Label
         text={label}
         required={false}
         htmlFor={id}
       />
       <textarea id={id} ref={expressionCtrl}
-          className='w-full px-3 py-2 mt-2 leading-tight border shadow dark:bg-gray-800'
+          className='w-full px-3 py-2 mt-2 leading-tight border shadow clr-input'
           rows={6}
           placeholder={placeholder}
           value={value}
@@ -228,23 +237,15 @@ function EditorRSExpression({
       />
       <div className='flex w-full gap-4 py-1 mt-1 justify-stretch'>
         <div className='flex flex-col gap-2'>
-          {isActive && <StatusBar
-            isModified={isModified}
-            constituenta={activeCst}
-            parseData={parseData}
-          />}
           <Button
             tooltip='Проверить формальное выражение'
             text='Проверить'
+            widthClass='h-full w-fit'
+            colorClass='clr-btn-default'
             onClick={handleCheckExpression}
           />
         </div>
         {isActive && EditButtons}
-        {!isActive && <StatusBar
-            isModified={isModified}
-            constituenta={activeCst}
-            parseData={parseData}
-        />}
       </div>
       { (loading || parseData) && 
       <div className='w-full overflow-y-auto border mt-2 max-h-[14rem] min-h-[7rem]'>

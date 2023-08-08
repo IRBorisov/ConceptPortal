@@ -5,6 +5,10 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000
+    port: 3000,
+    // https: {
+    //   key: fs.readFileSync('cert/portal-key.pem'),
+    //   cert: fs.readFileSync('cert/portal-cert.pem'),
+    // }
   }
 })

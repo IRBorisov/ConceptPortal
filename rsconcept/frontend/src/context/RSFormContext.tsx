@@ -87,7 +87,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
 
   const toggleTracking = useCallback(
     () => {
-      toast('not implemented yet')
+      toast.info('Отслеживание в разработке...')
     }, [])
 
   const update = useCallback(

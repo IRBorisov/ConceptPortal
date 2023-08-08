@@ -114,7 +114,7 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
         <div className='flex items-start justify-between'>
             <button type='submit'
               title='Сохранить изменения'
-              className='px-1 py-1 font-bold rounded whitespace-nowrap disabled:cursor-not-allowed clr-btn-primary'
+              className='px-1 py-1 font-bold border rounded whitespace-nowrap disabled:cursor-not-allowed clr-btn-primary'
               disabled={!isModified || !isEnabled}
             >
               <SaveIcon size={5} />
@@ -166,7 +166,7 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
                 <p>- слева от ввода текста настраивается набор атрибутов конституенты</p>
                 <p>- справа от ввода текста настраивается список конституент, которые фильтруются</p>
                 <p>- текущая конституента выделена цветом строки</p>
-                <p>- двойнок клин / Alt + клик - выбор редактируемой конституенты</p>
+                <p>- двойной клик / Alt + клик - выбор редактируемой конституенты</p>
                 <p>- при наведении на ID конституенты отображаются ее атрибуты</p>
                 <p>- столбец "Описание" содержит один из непустых текстовых атрибутов</p>
                 <Divider margins='mt-2' />

@@ -28,7 +28,7 @@ function TextArea({
         htmlFor={id}
       />
       <textarea id={id}
-          className={'px-3 py-2 mt-2 leading-tight border shadow dark:bg-gray-800 ' + widthClass}
+          className={`px-3 py-2 mt-2 leading-tight border shadow clr-input ${widthClass}`}
           rows={rows}
           placeholder={placeholder}
           required={required}

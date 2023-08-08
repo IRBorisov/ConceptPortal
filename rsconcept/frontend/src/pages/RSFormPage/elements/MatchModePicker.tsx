@@ -35,7 +35,7 @@ function MatchModePicker({ value, onChange }: MatchModePickerProps) {
           <p><b>везде:</b> искать во всех атрибутах</p>
         </DropdownButton>
         <DropdownButton onClick={() => handleChange(CstMatchMode.EXPR)}>
-          <p><b>ФВ:</b> искать в формальных выражениях</p>
+          <p><b>выраж:</b> искать в формальных выражениях</p>
         </DropdownButton>
         <DropdownButton onClick={() => handleChange(CstMatchMode.TERM)}>
           <p><b>термин:</b> искать в терминах</p>
