@@ -32,7 +32,6 @@ services:
     restart: always
     depends_on:
       - postgresql-db
-      - nginx
     secrets:
       - db_password
       - django_key
@@ -42,8 +41,8 @@ services:
     environment:
       SECRET_KEY: /run/secrets/django_key
       DB_PASSWORD: /run/secrets/db_password
-    ports:
-      - 8000:8000
+    expose:
+      - 8000
     volumes:
       - django_static_volume:/home/app/web/static
       - django_media_volume:/home/app/web/media
@@ -68,7 +67,9 @@ services:
     build:
       context: ./nginx
     ports:
-      - 1337:80
+      - 8000:80
+    depends_on:
+      - backend
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     volumes:
       - django_static_volume:/var/www/static

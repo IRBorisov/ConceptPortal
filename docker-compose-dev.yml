@@ -26,7 +26,6 @@ services:
     restart: always
     depends_on:
       - postgresql-db
-      - nginx
     build:
       context: ./rsconcept/backend
     env_file: ./rsconcept/backend/.env.dev
@@ -45,16 +44,4 @@ services:
     env_file: ./postgresql/.env.dev
     volumes:
       - postgres_volume:/var/lib/postgresql/data
-
-
-  nginx:
-    restart: always
-    build:
-      context: ./nginx
-    ports:
-      - 1337:80
-    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
-    volumes:
-      - django_static_volume:/var/www/static
-      - django_media_volume:/var/www/media
 
