@@ -1,0 +1,80 @@
+volumes:
+  postgres_volume:
+    name: "portal-db"
+  django_static_volume:
+    name: "portal-static"
+  django_media_volume:
+    name: "portal-media"
+
+networks:
+  default:
+    name: concept-api-net
+
+secrets:
+  django_key:
+    file: ./secrets/django_key.txt
+  db_password:
+    file: ./secrets/db_password.txt
+
+services:
+  frontend:
+    restart: always
+    container_name: "portal-front"
+    depends_on:
+      - backend
+    build: 
+      context: ./rsconcept/frontend
+    ports:
+      - 3000:3000
+    command: serve -s /home/node -l 3000
+
+
+  backend:
+    restart: always
+    container_name: "portal-back"
+    depends_on:
+      - postgresql-db
+      - nginx
+    secrets:
+      - db_password
+      - django_key
+    build:
+      context: ./rsconcept/backend
+    env_file: ./rsconcept/backend/.env.prod
+    environment:
+      SECRET_KEY: /run/secrets/django_key
+      DB_PASSWORD: /run/secrets/db_password
+    ports:
+      - 8000:8000
+    volumes:
+      - django_static_volume:/home/app/web/static
+      - django_media_volume:/home/app/web/media
+    command:
+      gunicorn -w 3 project.wsgi --bind 0.0.0.0:8000
+
+
+  postgresql-db:
+    restart: always
+    container_name: "portal-db"
+    image: postgres:alpine
+    secrets:
+      - db_password
+    env_file: ./postgresql/.env.prod
+    environment:
+      POSTGRES_PASSWORD: /run/secrets/db_password
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+
+
+  nginx:
+    restart: always
+    container_name: "portal-nginx"
+    build:
+      context: ./nginx
+    ports:
+      - 1337:80
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    volumes:
+      - django_static_volume:/var/www/static
+      - django_media_volume:/var/www/media
+
