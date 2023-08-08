@@ -31,6 +31,10 @@ class TestConstituentaAPI(APITestCase):
             alias='X1', schema=self.rsform_owned, order=1, convention='Test')
         self.cst2 = Constituenta.objects.create(
             alias='X2', schema=self.rsform_unowned, order=1, convention='Test1')
+        self.cst3 = Constituenta.objects.create(
+            alias='X3', schema=self.rsform_owned, order=2,
+            term_raw='Test1', term_resolved='Test1',
+            definition_raw='Test1', definition_resolved='Test2')
 
     def test_retrieve(self):
         response = self.client.get(f'/api/constituents/{self.cst1.id}/')
@@ -56,6 +60,17 @@ class TestConstituentaAPI(APITestCase):
 
         response = self.client.patch(f'/api/constituents/{self.cst1.id}/', data, content_type='application/json')
         self.assertEqual(response.status_code, 200)
+
+    def test_partial_update_update_resolved(self):
+        data = json.dumps({
+            'term_raw': 'New term',
+            'definition_raw': 'New def'
+        })
+        response = self.client.patch(f'/api/constituents/{self.cst3.id}/', data, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.cst3.refresh_from_db()
+        self.assertEqual(self.cst3.term_resolved, 'New term')
+        self.assertEqual(self.cst3.definition_resolved, 'New def')
 
     def test_readonly_cst_fields(self):
         data = json.dumps({'alias': 'X33', 'order': 10})
