@@ -1,4 +1,3 @@
-import Card from '../../../components/Common/Card';
 import Divider from '../../../components/Common/Divider';
 import LabeledText from '../../../components/Common/LabeledText';
 import { type IRSFormStats } from '../../../utils/models';
@@ -9,7 +8,7 @@ interface RSFormStatsProps {
 
 function RSFormStats({ stats }: RSFormStatsProps) {
   return (
-    <Card>
+    <div className='px-4 py-2 border'>
       <LabeledText id='count_all'
         label='Всего конституент '
         text={stats.count_all}
@@ -28,12 +27,12 @@ function RSFormStats({ stats }: RSFormStatsProps) {
         label='Невычислимы '
         text={stats.count_incalc}
       />}
-      <Divider />
+      <Divider margins='my-1' />
       <LabeledText id='count_termin'
         label='Термины '
         text={stats.count_termin}
       />
-      <Divider />
+      <Divider margins='my-1' />
       { stats.count_base > 0 &&
       <LabeledText id='count_base'
         label='Базисные множества '
@@ -74,7 +73,7 @@ function RSFormStats({ stats }: RSFormStatsProps) {
         label='Теормы '
         text={stats.count_theorem}
       />}
-    </Card>
+    </div>
   );
 }
 

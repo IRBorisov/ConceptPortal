@@ -109,8 +109,8 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
   }
 
   return (
-    <div className='flex items-start w-full gap-2'>
-      <form onSubmit={handleSubmit} className='flex-grow min-w-[50rem] max-w-min px-4 py-2 mb-2 border'>
+    <div className='flex items-stretch w-full gap-2 mb-2'>
+      <form onSubmit={handleSubmit} className='flex-grow min-w-[50rem] max-w-min max-h-fit px-4 py-2 border'>
         <div className='flex items-start justify-between'>
             <button type='submit'
               title='Сохранить изменения'
