@@ -23,8 +23,8 @@ services:
       - backend
     build: 
       context: ./rsconcept/frontend
-    ports:
-      - 3000:3000
+    expose:
+      - 3000
     command: serve -s /home/node -l 3000
 
 
@@ -67,11 +67,11 @@ services:
     build:
       context: ./nginx
     ports:
-      - 8000:80
+      - 8000:8000
+      - 3000:3000
     depends_on:
       - backend
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     volumes:
       - django_static_volume:/var/www/static
       - django_media_volume:/var/www/media
-
