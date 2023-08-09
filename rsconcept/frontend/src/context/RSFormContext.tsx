@@ -5,14 +5,17 @@ import { type ErrorInfo } from '../components/BackendError'
 import { useRSFormDetails } from '../hooks/useRSFormDetails'
 import {
   type DataCallback, deleteRSForm, getTRSFile,
-  patchConstituenta, patchDeleteConstituenta, patchMoveConstituenta, patchResetAliases,
-patchRSForm,
-patchUploadTRS,  postClaimRSForm, postCloneRSForm,postNewConstituenta} from '../utils/backendAPI'
+  patchConstituenta, patchDeleteConstituenta, 
+  patchMoveConstituenta, patchResetAliases, patchRSForm,
+  patchUploadTRS,  postClaimRSForm, postCloneRSForm, postNewConstituenta
+} from '../utils/backendAPI'
 import {
   IConstituentaList, IConstituentaMeta, ICstCreateData,
-  ICstMovetoData, ICstUpdateData, IRSForm, IRSFormCreateData, IRSFormData, IRSFormMeta, IRSFormUpdateData, IRSFormUploadData
+  ICstMovetoData, ICstUpdateData, IRSForm, IRSFormCreateData, 
+  IRSFormData, IRSFormMeta, IRSFormUpdateData, IRSFormUploadData
 } from '../utils/models'
 import { useAuth } from './AuthContext'
+import { useLibrary } from './LibraryContext'
 
 interface IRSFormContext {
   schema?: IRSForm
@@ -63,15 +66,16 @@ interface RSFormStateProps {
 }
 
 export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
-  const { user } = useAuth()
-  const { schema, reload, error, setError, setSchema, loading } = useRSFormDetails({ target: schemaID })
-  const [processing, setProcessing] = useState(false)
+  const { user } = useAuth();
+  const { schema, reload, error, setError, setSchema, loading } = useRSFormDetails({ target: schemaID });
+  const [ processing, setProcessing ] = useState(false);
+  const library = useLibrary();
 
-  const [isForceAdmin, setIsForceAdmin] = useState(false)
-  const [isReadonly, setIsReadonly] = useState(false)
+  const [ isForceAdmin, setIsForceAdmin ] = useState(false);
+  const [ isReadonly, setIsReadonly ] = useState(false);
 
-  const isOwned = useMemo(() => user?.id === schema?.owner || false, [user, schema?.owner])
-  const isClaimable = useMemo(() => user?.id !== schema?.owner || false, [user, schema?.owner])
+  const isOwned = useMemo(() => user?.id === schema?.owner || false, [user, schema?.owner]);
+  const isClaimable = useMemo(() => user?.id !== schema?.owner || false, [user, schema?.owner]);
   const isEditable = useMemo(
     () => {
       return (
@@ -83,181 +87,185 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
   const isTracking = useMemo(
     () => {
       return true
-    }, [])
+    }, []);
 
   const toggleTracking = useCallback(
     () => {
       toast.info('Отслеживание в разработке...')
-    }, [])
+    }, []);
 
   const update = useCallback(
-    (data: IRSFormUpdateData, callback?: DataCallback<IRSFormMeta>) => {
-      if (!schema) {
-        return;
+  (data: IRSFormUpdateData, callback?: DataCallback<IRSFormMeta>) => {
+    if (!schema) {
+      return;
+    }
+    setError(undefined)
+    patchRSForm(schemaID, {
+      data: data,
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => setError(error),
+      onSuccess: newData => {
+        setSchema(Object.assign(schema, newData));
+        if (callback) callback(newData);
       }
-      setError(undefined)
-      patchRSForm(schemaID, {
-        data: data,
-        showError: true,
-        setLoading: setProcessing,
-        onError: error => { setError(error) },
-        onSuccess: newData => {
-          setSchema(Object.assign(schema, newData));
-          if (callback) callback(newData);
-        }
-      });
-    }, [schemaID, setError, setSchema, schema])
+    });
+  }, [schemaID, setError, setSchema, schema]);
   
   const upload = useCallback(
-    (data: IRSFormUploadData, callback?: () => void) => {
-      if (!schema) {
-        return;
+  (data: IRSFormUploadData, callback?: () => void) => {
+    if (!schema) {
+      return;
+    }
+    setError(undefined)
+    patchUploadTRS(schemaID, {
+      data: data,
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => setError(error),
+      onSuccess: newData => {
+        setSchema(newData);
+        if (callback) callback();
       }
-      setError(undefined)
-      patchUploadTRS(schemaID, {
-        data: data,
-        showError: true,
-        setLoading: setProcessing,
-        onError: error => { setError(error) },
-        onSuccess: newData => {
-          setSchema(newData);
-          if (callback) callback();
-        }
-      });
-    }, [schemaID, setError, setSchema, schema])
+    });
+  }, [schemaID, setError, setSchema, schema]);
 
   const destroy = useCallback(
-    (callback?: () => void) => {
-      setError(undefined)
-      deleteRSForm(schemaID, {
-        showError: true,
-        setLoading: setProcessing,
-        onError: error => { setError(error) },
-        onSuccess: () => {
-          setSchema(undefined);
-          if (callback) callback();
-        }
-      });
-    }, [schemaID, setError, setSchema])
+  (callback?: () => void) => {
+    setError(undefined)
+    deleteRSForm(schemaID, {
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => setError(error),
+      onSuccess: () => {
+        setSchema(undefined);
+        library.reload();
+        if (callback) callback();
+      }
+    });
+  }, [schemaID, setError, setSchema, library]);
 
   const claim = useCallback(
-    (callback?: DataCallback<IRSFormMeta>) => {
-      if (!schema || !user) {
-        return;
+  (callback?: DataCallback<IRSFormMeta>) => {
+    if (!schema || !user) {
+      return;
+    }
+    setError(undefined)
+    postClaimRSForm(schemaID, {
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => setError(error),
+      onSuccess: newData => {
+        setSchema(Object.assign(schema, newData));
+        if (callback) callback(newData);
       }
-      setError(undefined)
-      postClaimRSForm(schemaID, {
-        showError: true,
-        setLoading: setProcessing,
-        onError: error => { setError(error) },
-        onSuccess: newData => {
-          setSchema(Object.assign(schema, newData));
-          if (callback) callback(newData);
-        }
-      });
-    }, [schemaID, setError, schema, user, setSchema])
+    });
+  }, [schemaID, setError, schema, user, setSchema]);
 
   const clone = useCallback(
-    (data: IRSFormCreateData, callback: DataCallback<IRSFormData>) => {
-      if (!schema || !user) {
-        return;
+  (data: IRSFormCreateData, callback: DataCallback<IRSFormData>) => {
+    if (!schema || !user) {
+      return;
+    }
+    setError(undefined)
+    postCloneRSForm(schemaID, {
+      data: data,
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => setError(error),
+      onSuccess: newSchema => {
+        library.reload();
+        if (callback) callback(newSchema);
       }
-      setError(undefined)
-      postCloneRSForm(schemaID, {
-        data: data,
-        showError: true,
-        setLoading: setProcessing,
-        onError: error => { setError(error) },
-        onSuccess: callback
-      });
-    }, [schemaID, setError, schema, user])
+    });
+  }, [schemaID, setError, schema, user, library]);
 
   const resetAliases = useCallback(
-    (callback?: () => void) => {
-      if (!schema || !user) {
-        return;
+  (callback?: () => void) => {
+    if (!schema || !user) {
+      return;
+    }
+    setError(undefined)
+    patchResetAliases(schemaID, {
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => { setError(error) },
+      onSuccess: newData => {
+        setSchema(Object.assign(schema, newData));
+        if (callback) callback();
       }
-      setError(undefined)
-      patchResetAliases(schemaID, {
-        showError: true,
-        setLoading: setProcessing,
-        onError: error => { setError(error) },
-        onSuccess: newData => {
-          setSchema(Object.assign(schema, newData));
-          if (callback) callback();
-        }
-      });
-    }, [schemaID, setError, schema, user, setSchema])
+    });
+  }, [schemaID, setError, schema, user, setSchema]);
 
   const download = useCallback(
-    (callback: DataCallback<Blob>) => {
-      setError(undefined)
-      getTRSFile(schemaID, {
-        showError: true,
-        setLoading: setProcessing,
-        onError: error => { setError(error) },
-        onSuccess: callback
-      });
-    }, [schemaID, setError])
+  (callback: DataCallback<Blob>) => {
+    setError(undefined)
+    getTRSFile(schemaID, {
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => { setError(error) },
+      onSuccess: callback
+    });
+  }, [schemaID, setError]);
 
   const cstCreate = useCallback(
-    (data: ICstCreateData, callback?: DataCallback<IConstituentaMeta>) => {
-      setError(undefined)
-      postNewConstituenta(schemaID, {
-        data: data,
-        showError: true,
-        setLoading: setProcessing,
-        onError: error => { setError(error) },
-        onSuccess: newData => {
-          setSchema(newData.schema);
-          if (callback) callback(newData.new_cst);
-        }
-      });
-    }, [schemaID, setError, setSchema]);
+  (data: ICstCreateData, callback?: DataCallback<IConstituentaMeta>) => {
+    setError(undefined)
+    postNewConstituenta(schemaID, {
+      data: data,
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => { setError(error) },
+      onSuccess: newData => {
+        setSchema(newData.schema);
+        if (callback) callback(newData.new_cst);
+      }
+    });
+  }, [schemaID, setError, setSchema]);
 
   const cstDelete = useCallback(
-    (data: IConstituentaList, callback?: () => void) => {
-      setError(undefined)
-      patchDeleteConstituenta(schemaID, {
-        data: data,
-        showError: true,
-        setLoading: setProcessing,
-        onError: error => { setError(error) },
-        onSuccess: newData => {
-          setSchema(newData);
-          if (callback) callback();
-        }
-      });
-    }, [schemaID, setError, setSchema]);
+  (data: IConstituentaList, callback?: () => void) => {
+    setError(undefined)
+    patchDeleteConstituenta(schemaID, {
+      data: data,
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => { setError(error) },
+      onSuccess: newData => {
+        setSchema(newData);
+        if (callback) callback();
+      }
+    });
+  }, [schemaID, setError, setSchema]);
 
   const cstUpdate = useCallback(
-    (data: ICstUpdateData, callback?: DataCallback<IConstituentaMeta>) => {
-      setError(undefined)
-      patchConstituenta(String(data.id), {
-        data: data,
-        showError: true,
-        setLoading: setProcessing,
-        onError: error => { setError(error) },
-        onSuccess: newData => {
-          reload(setProcessing, () => { if (callback != null) callback(newData); })
-        }
-      });
-    }, [setError, reload])
+  (data: ICstUpdateData, callback?: DataCallback<IConstituentaMeta>) => {
+    setError(undefined)
+    patchConstituenta(String(data.id), {
+      data: data,
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => { setError(error) },
+      onSuccess: newData => {
+        reload(setProcessing, () => { if (callback != null) callback(newData); })
+      }
+    });
+  }, [setError, reload]);
 
   const cstMoveTo = useCallback(
-    (data: ICstMovetoData, callback?: () => void) => {
-      setError(undefined)
-      patchMoveConstituenta(schemaID, {
-        data: data,
-        showError: true,
-        setLoading: setProcessing,
-        onError: error => { setError(error) },
-        onSuccess: newData => {
-          setSchema(newData);
-          if (callback) callback();
-        }
-      });
-    }, [schemaID, setError, setSchema]);
+  (data: ICstMovetoData, callback?: () => void) => {
+    setError(undefined)
+    patchMoveConstituenta(schemaID, {
+      data: data,
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => { setError(error) },
+      onSuccess: newData => {
+        setSchema(newData);
+        if (callback) callback();
+      }
+    });
+  }, [schemaID, setError, setSchema]);
 
   return (
     <RSFormContext.Provider value={{
@@ -273,5 +281,5 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
     }}>
       { children }
     </RSFormContext.Provider>
-  )
+  );
 }
