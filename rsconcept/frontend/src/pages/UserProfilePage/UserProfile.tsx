@@ -4,15 +4,20 @@ import { toast } from 'react-toastify';
 import TextInput from '../../components/Common/TextInput';
 import { useUserProfile } from '../../context/UserProfileContext';
 import { IUserUpdateData } from '../../utils/models';
+import { ChangePassword } from './ChangePassword';
 
 
 export function UserProfile() {
-  const { updateUser, user, processing } = useUserProfile();
+  const { updateUser, user, processing, error } = useUserProfile();
   
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [first_name, setFirstName] = useState('');
   const [last_name, setLastName] = useState('');
+  
+  
+  // const [showChangePassword, setShowChangePassword] = useState(false);
+
 
   useLayoutEffect(() => {
     if (user) {
@@ -35,8 +40,10 @@ export function UserProfile() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className='flex-grow max-w-xl px-4 py-2 border min-w-fit'>
-    <div className='flex flex-col items-center justify-center px-2 py-2 border'>
+    <div><h1 className='flex justify-center py-2'> Учетные данные пользователя </h1>
+    <div className='flex flex-row justify-center py-2'>
+    <div className='flex-grow max-w-sm px-4 '>
+    <form onSubmit={handleSubmit} className='flex-grow px-6 py-2 border center min-w-fit'>
         <TextInput id='username' 
           label='Логин:'
           value={username}
@@ -49,15 +56,18 @@ export function UserProfile() {
         />
         <TextInput id='last_name' label="Фамилия:" value={last_name} onChange={event => setLastName(event.target.value)}/>
         <TextInput id='email' label="Электронная почта:" value={email} onChange={event => setEmail(event.target.value)}/>
-        <div className='flex items-center justify-between my-4'>
+        <div className='flex items-center justify-center my-4'>
           <button 
             type='submit' 
-            className='px-2 py-1 bg-green-500 border'
+            className='px-2 py-1 bg-green-500 border center'
             disabled={processing}>
-              <span>Сохранить</span>
+              <span>Сохранить мои данные</span>
           </button>
         </div>
          
+    </form>
     </div>
-    </form>    
+    <ChangePassword /> 
+    </div>
+    </div>
   )}

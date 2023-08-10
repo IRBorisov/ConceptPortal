@@ -25,6 +25,11 @@ export interface IUserUpdateData extends Omit<IUser, 'is_staff' | 'id'> {}
 export interface IUserProfile extends Omit<IUser, 'is_staff'> {}
 export interface IUserInfo extends Omit<IUserProfile, 'email'> {}
 
+export interface IUserUpdatePassword {
+  old_password: string
+  new_password: string
+}
+
 // ======== RS Parsing ============
 export enum Syntax {
   UNDEF = 'undefined',

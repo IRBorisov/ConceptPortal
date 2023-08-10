@@ -9,7 +9,7 @@ import {
   ICurrentUser, IExpressionParse, IRSExpression,
   IRSFormCreateData, IRSFormData,
   IRSFormMeta, IRSFormUpdateData, IRSFormUploadData, IUserInfo,
-  IUserLoginData, IUserProfile, IUserSignupData, IUserUpdateData
+  IUserLoginData, IUserProfile, IUserSignupData, IUserUpdateData, IUserUpdatePassword
 } from './models'
 
 export function initBackend() {
@@ -97,6 +97,14 @@ export function patchProfile(request: FrontExchange<IUserUpdateData, IUserProfil
   AxiosPatch({
     title: 'Current user profile',
     endpoint: '/users/api/profile',
+    request: request
+  });
+}
+
+export function patchPassword(request: FrontPush<IUserUpdatePassword>) {
+  AxiosPatch({
+    title: 'Update Password',
+    endpoint: '/users/api/change-password',
     request: request
   });
 }

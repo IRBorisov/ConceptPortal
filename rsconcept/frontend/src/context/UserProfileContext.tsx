@@ -1,19 +1,22 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 import { ErrorInfo } from '../components/BackendError';
-import { DataCallback, getProfile, patchProfile } from '../utils/backendAPI';
-import { IUserProfile, IUserUpdateData } from '../utils/models';
+import { DataCallback, getProfile, patchPassword,patchProfile } from '../utils/backendAPI';
+import { IUserProfile, IUserUpdateData, IUserUpdatePassword } from '../utils/models';
+import { useAuth } from './AuthContext';
 
-interface IUserProfileContextContext {
+interface IUserProfileContext {
   user: IUserProfile | undefined
   loading: boolean
   processing: boolean
   error: ErrorInfo
   setError: (error: ErrorInfo) => void
   updateUser: (data: IUserUpdateData, callback?: DataCallback<IUserProfile>) => void
+  updatePassword: (data: IUserUpdatePassword, callback?: () => void) => void
 }
 
-const ProfileContext = createContext<IUserProfileContextContext | null>(null);
+const ProfileContext = createContext<IUserProfileContext | null>(null);
+
 export const useUserProfile = () => {
   const context = useContext(ProfileContext);
   if (!context) {
@@ -33,6 +36,7 @@ export const UserProfileState = ({ children }: UserProfileStateProps) => {
   const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<ErrorInfo>(undefined);
+  const auth = useAuth()
 
   const reload = useCallback(
     () => {
@@ -63,13 +67,29 @@ export const UserProfileState = ({ children }: UserProfileStateProps) => {
     }, [setUser]
   );
 
+  const updatePassword = useCallback(
+    (data: IUserUpdatePassword, callback?: () => void) => {
+      setError(undefined);
+      patchPassword({
+        data: data,
+        showError: true,
+        setLoading: setProcessing,
+        onError: error => { setError(error); },
+        onSuccess: () => {
+          setUser(undefined);
+          auth.logout();
+          if (callback) callback();       
+      }});
+    }, [setUser, auth]
+  );
+
   useEffect(() => {
     reload();
   }, [reload]);
 
   return (
     <ProfileContext.Provider
-      value={{user, updateUser, error, loading, setError, processing}}
+      value={{user, updateUser, updatePassword, error, loading, setError, processing}}
     >
       {children}
     </ProfileContext.Provider>

@@ -70,6 +70,17 @@ class UserSerializer(serializers.ModelSerializer):
             'last_name',
         ]
 
+class ChangePasswordSerializer(serializers.Serializer):
+    """
+    Serializer for password change endpoint.
+    """
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+    # def validate(self, attrs):
+    #     if attrs['new_password'] != "123":
+    #         raise serializers.ValidationError({"password": r"Пароль не '123'"})
+    #     return attrs
 
 class SignupSerializer(serializers.ModelSerializer):
     ''' User profile create '''
