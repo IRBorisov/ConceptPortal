@@ -6,7 +6,6 @@ import Form from '../components/Common/Form';
 import SubmitButton from '../components/Common/SubmitButton';
 import TextInput from '../components/Common/TextInput';
 import TextURL from '../components/Common/TextURL';
-import InfoMessage from '../components/InfoMessage';
 import { useAuth } from '../context/AuthContext';
 import { IUserLoginData } from '../utils/models';
 
@@ -41,7 +40,7 @@ function LoginPage() {
 
   return (
     <div className='w-full py-2'> { user
-      ? <InfoMessage message={`Вы вошли в систему как ${user.username}`} />
+      ? <b>{`Вы вошли в систему как ${user.username}`}</b>
       : <Form title='Ввод данных пользователя' onSubmit={handleSubmit} widthClass='w-[20rem]'>
         <TextInput id='username'
           label='Имя пользователя'

@@ -6,7 +6,6 @@ import BackendError from '../components/BackendError';
 import Form from '../components/Common/Form';
 import SubmitButton from '../components/Common/SubmitButton';
 import TextInput from '../components/Common/TextInput';
-import InfoMessage from '../components/InfoMessage';
 import { useAuth } from '../context/AuthContext';
 import { type IUserSignupData } from '../utils/models';
 
@@ -46,7 +45,7 @@ function RegisterPage() {
   return (
     <div className='w-full py-2'>
     { user &&
-      <InfoMessage message={`Вы вошли в систему как ${user.username}. Если хотите зарегистрировать нового пользователя, выйдите из системы (меню в правом верхнем углу экрана)`} /> }
+      <b>{`Вы вошли в систему как ${user.username}. Если хотите зарегистрировать нового пользователя, выйдите из системы (меню в правом верхнем углу экрана)`}</b>}
     { !user &&
       <Form title='Регистрация пользователя' onSubmit={handleSubmit}>
         <TextInput id='username' label='Имя пользователя' type='text'
