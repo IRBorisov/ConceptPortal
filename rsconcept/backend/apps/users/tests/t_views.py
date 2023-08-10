@@ -79,6 +79,27 @@ class TestUserUserProfileAPIView(APITestCase):
         self.assertEqual(response.data['username'], self.username)
         self.assertEqual(response.data['email'], newmail)
 
+    def test_change_password(self):
+        newpassword = 'pw2'
+        data = json.dumps({'old_password': self.password, 'new_password': newpassword})
+        response = self.client.patch('/users/api/change-password', data, content_type='application/json')
+        self.assertEqual(response.status_code, 403)
+        self.assertFalse(self.client.login(username=self.user.username, password=newpassword))
+        self.assertTrue(self.client.login(username=self.user.username, password=self.password))
+
+        invalid = json.dumps({'old_password': 'invalid', 'new_password': newpassword})
+        response = self.client.patch('/users/api/change-password', invalid, content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+        oldHash = self.user.password
+        self.client.force_login(user=self.user)
+        response = self.client.patch('/users/api/change-password', data, content_type='application/json')
+        self.user.refresh_from_db()
+        self.assertEqual(response.status_code, 204)
+        self.assertNotEqual(self.user.password, oldHash)
+        self.assertTrue(self.client.login(username=self.user.username, password=newpassword))
+        self.assertFalse(self.client.login(username=self.user.username, password=self.password))
+
 
 class TestSignupAPIView(APITestCase):
     def setUp(self):
