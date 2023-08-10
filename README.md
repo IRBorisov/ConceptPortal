@@ -9,6 +9,8 @@ This readme file is used mostly to document project dependencies
 - run rsconcept\backend\LocalEnvSetup.ps1
 - run 'npm install' in rsconcept\frontend
 - use VSCode configs in root folder to start developement
+- production: create secrets secrets\db_password.txt and django_key.txt
+- production: provide TLS certificate nginx\cert\portal-cert.pem and nginx\cert\portal-key.pem
 
 # Frontend stack & Tooling [Vite + React + Typescript]
 <details>

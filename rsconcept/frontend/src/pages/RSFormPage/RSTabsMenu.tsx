@@ -27,7 +27,6 @@ function RSTabsMenu({showUploadDialog, showCloneDialog}: RSTabsMenuProps) {
   } = useRSForm();
   const schemaMenu = useDropdown();
   const editMenu = useDropdown();
-  
 
   const handleClaimOwner = useCallback(() => {
     editMenu.hide();
@@ -61,12 +60,13 @@ function RSTabsMenu({showUploadDialog, showCloneDialog}: RSTabsMenuProps) {
   }, [schemaMenu]);
 
   return (    
-    <div className='flex items-center w-fit'>
+    <div className='flex items-stretch w-fit'>
       <div ref={schemaMenu.ref}>
         <Button
           tooltip='Действия'
           icon={<MenuIcon size={5}/>}
           borderClass=''
+          widthClass='h-full w-fit'
           dense
           onClick={schemaMenu.toggle}
         />
@@ -108,6 +108,7 @@ function RSTabsMenu({showUploadDialog, showCloneDialog}: RSTabsMenuProps) {
         <Button
           tooltip={'измнение: ' + (isEditable ? '[доступно]' : '[запрещено]')}
           borderClass=''
+          widthClass='h-full w-fit'
           icon={<PenIcon size={5} color={isEditable ? 'text-green' : 'text-red'}/>}
           dense
           onClick={editMenu.toggle}
@@ -144,6 +145,7 @@ function RSTabsMenu({showUploadDialog, showCloneDialog}: RSTabsMenuProps) {
             ? <EyeIcon color='text-primary' size={5}/>
             : <EyeOffIcon size={5}/>
           }
+          widthClass='h-full w-fit'
           borderClass=''
           dense
           onClick={toggleTracking}

@@ -1,8 +1,6 @@
-version: "3.9"
-
 volumes:
   postgres_volume:
-    name: "postgres-db"
+    name: "postgresql-db"
   django_static_volume:
     name: "static"
   django_media_volume:
@@ -12,6 +10,12 @@ networks:
   default:
     name: concept-api-net
 
+secrets:
+  django_key:
+    file: ./secrets/django_key.txt
+  db_password:
+    file: ./secrets/db_password.txt
+
 services:
   frontend:
     restart: always
@@ -19,8 +23,8 @@ services:
       - backend
     build: 
       context: ./rsconcept/frontend
-    ports:
-      - 3000:3000
+    expose:
+      - 3000
     command: serve -s /home/node -l 3000
 
 
@@ -28,12 +32,17 @@ services:
     restart: always
     depends_on:
       - postgresql-db
-      - nginx
+    secrets:
+      - db_password
+      - django_key
     build:
       context: ./rsconcept/backend
-    env_file: ./rsconcept/backend/.env.dev
-    ports:
-      - 8000:8000
+    env_file: ./rsconcept/backend/.env.prod
+    environment:
+      SECRET_KEY: /run/secrets/django_key
+      DB_PASSWORD: /run/secrets/db_password
+    expose:
+      - 8000
     volumes:
       - django_static_volume:/home/app/web/static
       - django_media_volume:/home/app/web/media
@@ -44,7 +53,11 @@ services:
   postgresql-db:
     restart: always
     image: postgres:alpine
-    env_file: ./postgresql/.env.dev
+    secrets:
+      - db_password
+    env_file: ./postgresql/.env.prod
+    environment:
+      POSTGRES_PASSWORD: /run/secrets/db_password
     volumes:
       - postgres_volume:/var/lib/postgresql/data
 
@@ -54,9 +67,11 @@ services:
     build:
       context: ./nginx
     ports:
-      - 1337:80
+      - 8000:8000
+      - 3000:3000
+    depends_on:
+      - backend
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     volumes:
       - django_static_volume:/var/www/static
       - django_media_volume:/var/www/media
-

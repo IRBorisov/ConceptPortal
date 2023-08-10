@@ -7,8 +7,8 @@ import { Loader } from '../../components/Common/Loader';
 import { useRSForm } from '../../context/RSFormContext';
 import useCheckExpression from '../../hooks/useCheckExpression';
 import { TokenID } from '../../utils/enums';
-import { IRSErrorDescription, SyntaxTree } from '../../utils/models';
-import { getCstExpressionPrefix } from '../../utils/staticUI';
+import { IConstituenta, IRSErrorDescription, SyntaxTree } from '../../utils/models';
+import { getCstExpressionPrefix, getTypificationLabel } from '../../utils/staticUI';
 import ParsingResult from './elements/ParsingResult';
 import RSLocalButton from './elements/RSLocalButton';
 import RSTokenButton from './elements/RSTokenButton';
@@ -17,6 +17,7 @@ import { getSymbolSubstitute, TextWrapper } from './elements/textEditing';
 
 interface EditorRSExpressionProps {
   id: string
+  activeCst?: IConstituenta
   label: string
   isActive: boolean
   disabled?: boolean
@@ -30,10 +31,10 @@ interface EditorRSExpressionProps {
 }
 
 function EditorRSExpression({
-  id, label, disabled, isActive, placeholder, value, setValue, onShowAST, 
+  id, activeCst, label, disabled, isActive, placeholder, value, setValue, onShowAST, 
   toggleEditMode, setTypification, onChange
 }: EditorRSExpressionProps) {
-  const { schema, activeCst } = useRSForm();
+  const { schema } = useRSForm();
   const [isModified, setIsModified] = useState(false);
   const { parseData, checkExpression, resetParse, loading } = useCheckExpression({ schema });
   const expressionCtrl = useRef<HTMLTextAreaElement>(null);
@@ -66,7 +67,11 @@ function EditorRSExpression({
       }
       expressionCtrl.current!.focus();
       setIsModified(false);
-      setTypification(parse.typification);
+      setTypification(getTypificationLabel({
+        isValid: parse.parseResult,
+        resultType: parse.typification,
+        args: parse.args
+      }));
     });
   }
 
@@ -205,13 +210,22 @@ function EditorRSExpression({
 
   return (
     <div className='flex flex-col items-start [&:not(:first-child)]:mt-3 w-full'>
+      <div className='relative w-full'>
+      <div className='absolute top-[-0.3rem] right-0'>
+      <StatusBar
+        isModified={isModified}
+        constituenta={activeCst}
+        parseData={parseData}
+      />
+      </div>
+      </div>
       <Label
         text={label}
         required={false}
         htmlFor={id}
       />
       <textarea id={id} ref={expressionCtrl}
-          className='w-full px-3 py-2 mt-2 leading-tight border shadow dark:bg-gray-800'
+          className='w-full px-3 py-2 mt-2 leading-tight border shadow clr-input'
           rows={6}
           placeholder={placeholder}
           value={value}
@@ -223,23 +237,15 @@ function EditorRSExpression({
       />
       <div className='flex w-full gap-4 py-1 mt-1 justify-stretch'>
         <div className='flex flex-col gap-2'>
-          {isActive && <StatusBar
-            isModified={isModified}
-            constituenta={activeCst}
-            parseData={parseData}
-          />}
           <Button
             tooltip='Проверить формальное выражение'
             text='Проверить'
+            widthClass='h-full w-fit'
+            colorClass='clr-btn-default'
             onClick={handleCheckExpression}
           />
         </div>
         {isActive && EditButtons}
-        {!isActive && <StatusBar
-            isModified={isModified}
-            constituenta={activeCst}
-            parseData={parseData}
-        />}
       </div>
       { (loading || parseData) && 
       <div className='w-full overflow-y-auto border mt-2 max-h-[14rem] min-h-[7rem]'>

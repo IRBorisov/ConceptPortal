@@ -1,5 +1,6 @@
 # SECURITY SENSITIVE FILES
-# persistent/*
+secrets/
+cert/
 
 # External distributions
 rsconcept/backend/import/*.whl

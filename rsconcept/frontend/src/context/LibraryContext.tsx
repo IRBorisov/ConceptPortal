@@ -1,17 +1,19 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 import { ErrorInfo } from '../components/BackendError';
-import { getLibrary } from '../utils/backendAPI';
-import { ILibraryFilter, IRSFormMeta, matchRSFormMeta } from '../utils/models';
+import { DataCallback, getLibrary, postNewRSForm } from '../utils/backendAPI';
+import { ILibraryFilter, IRSFormCreateData, IRSFormMeta, matchRSFormMeta } from '../utils/models';
 
 interface ILibraryContext {
   items: IRSFormMeta[]
   loading: boolean
+  processing: boolean
   error: ErrorInfo
   setError: (error: ErrorInfo) => void
 
   reload: () => void 
   filter: (params: ILibraryFilter) => IRSFormMeta[]
+  createSchema: (data: IRSFormCreateData, callback?: DataCallback<IRSFormMeta>) => void
 }
 
 const LibraryContext = createContext<ILibraryContext | null>(null)
@@ -30,9 +32,10 @@ interface LibraryStateProps {
 }
 
 export const LibraryState = ({ children }: LibraryStateProps) => {
-  const [items, setItems] = useState<IRSFormMeta[]>([])
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<ErrorInfo>(undefined);
+  const [ items, setItems ] = useState<IRSFormMeta[]>([])
+  const [ loading, setLoading ] = useState(false);
+  const [ processing, setProcessing ] = useState(false);
+  const [ error, setError ] = useState<ErrorInfo>(undefined);
 
   const filter = useCallback(
   (params: ILibraryFilter) => {
@@ -63,12 +66,27 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
 
   useEffect(() => {
     reload();
-  }, [reload])
+  }, [reload]);
+
+  const createSchema = useCallback(
+  (data: IRSFormCreateData, callback?: DataCallback<IRSFormMeta>) => {
+    setError(undefined);
+    postNewRSForm({
+      data: data,
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => { setError(error); },
+      onSuccess: newSchema => {
+        reload();
+        if (callback) callback(newSchema);
+      }
+    });
+  }, [reload]);
 
   return (
     <LibraryContext.Provider value={{ 
-      items, loading, error, setError, 
-      reload, filter
+      items, loading, processing, error, setError, 
+      reload, filter, createSchema
     }}>
       { children }
     </LibraryContext.Provider>

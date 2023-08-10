@@ -51,6 +51,10 @@
     @apply border-gray-400 dark:border-gray-300 bg-white dark:bg-gray-700
   }
 
+  .clr-input {
+    @apply dark:bg-black bg-white disabled:bg-[#f0f2f7] dark:disabled:bg-gray-700
+  }
+
   .clr-footer {
     @apply text-gray-600 bg-white border-gray-400 dark:bg-gray-700 dark:border-gray-300 dark:text-gray-300
   }
@@ -68,11 +72,11 @@
   }
 
   .clr-btn-primary {
-    @apply text-white bg-blue-400 hover:bg-blue-600 dark:bg-orange-600 dark:hover:bg-orange-400 disabled:bg-gray-400 dark:disabled:bg-gray-400
+    @apply text-white bg-blue-400 hover:bg-blue-600 dark:bg-orange-600 dark:hover:bg-orange-400 disabled:bg-gray-400 dark:disabled:bg-gray-600
   }
 
   .clr-btn-default {
-    @apply text-gray-500 dark:text-zinc-200 dark:disabled:text-zinc-400 disabled:text-gray-400 bg-gray-100 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-400
+    @apply text-gray-600 dark:text-zinc-200 dark:disabled:text-zinc-400 disabled:text-gray-400 bg-[#f0f2f7] hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-400
   }
 
   /* Transparent button */

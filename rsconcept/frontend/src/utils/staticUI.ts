@@ -1,7 +1,10 @@
 import { LayoutTypes } from 'reagraph';
 
 import { resolveErrorClass,RSErrorClass, RSErrorType, TokenID } from './enums';
-import { CstType, ExpressionStatus, type IConstituenta, IRSErrorDescription,type IRSForm, ISyntaxTreeNode,ParsingStatus, ValueClass } from './models';
+import { CstMatchMode, CstType, DependencyMode,ExpressionStatus, IConstituenta,
+  IFunctionArg,IRSErrorDescription, IRSForm,
+  ISyntaxTreeNode, ParsingStatus, ValueClass 
+} from './models';
 
 export interface IRSButtonData {
   text: string
@@ -12,16 +15,6 @@ export interface IStatusInfo {
   text: string
   color: string
   tooltip: string
-}
-
-export function getTypeLabel(cst: IConstituenta): string {
-  if (cst.parse?.typification) {
-    return cst.parse.typification;
-  }
-  if (cst.parse?.status !== ParsingStatus.VERIFIED) {
-    return 'N/A';
-  }
-  return 'Логический';
 }
 
 export function getCstDescription(cst: IConstituenta): string {
@@ -273,6 +266,27 @@ export const mapLayoutLabels: Map<string, string> = new Map([
   ['nooverlap', 'Без перекрытия']
 ]);
 
+export function getCstCompareLabel(mode: CstMatchMode): string {
+  switch(mode) {
+    case CstMatchMode.ALL: return 'везде';
+    case CstMatchMode.EXPR: return 'ФВ';
+    case CstMatchMode.TERM: return 'термин';
+    case CstMatchMode.TEXT: return 'текст';
+    case CstMatchMode.NAME: return 'ID';
+  }
+}
+
+export function getDependencyLabel(mode: DependencyMode): string {
+  switch(mode) {
+    case DependencyMode.ALL: return 'вся схема';
+    case DependencyMode.EXPRESSION: return 'выражение';
+    case DependencyMode.OUTPUTS: return 'потребители';
+    case DependencyMode.INPUTS: return 'поставщики';
+    case DependencyMode.EXPAND_INPUTS: return 'влияющие';
+    case DependencyMode.EXPAND_OUTPUTS: return 'зависимые';
+  }
+}
+
 export const GraphLayoutSelector: {value: LayoutTypes, label: string}[] = [
   { value: 'forceatlas2', label: 'Атлас 2D'},
   { value: 'forceDirected2d', label: 'Силы 2D'},
@@ -360,7 +374,8 @@ export function getMockConstituenta(id: number, alias: string, type: CstType, co
       status: ParsingStatus.INCORRECT,
       valueClass: ValueClass.INVALID,
       typification: 'N/A',
-      syntaxTree: ''
+      syntaxTree: '',
+      args: []
     }
   };
 }
@@ -371,6 +386,32 @@ export function getCloneTitle(schema: IRSForm): string {
   } else {
     return (schema.title + '+');
   }
+}
+
+export function getTypificationLabel({isValid, resultType, args}: {
+  isValid: boolean,
+  resultType: string,
+  args: IFunctionArg[]
+}): string {
+  if (!isValid) {
+    return 'N/A';
+  }
+  if (resultType === '') {
+    resultType = 'Логический'
+  }
+  if (args.length === 0) {
+    return resultType;
+  }
+  const argsText = args.map(arg => arg.typification).join(', ');
+  return `${resultType} 🠔 [${argsText}]`;
+}
+
+export function getCstTypificationLabel(cst: IConstituenta): string {
+  return getTypificationLabel({
+    isValid: cst.parse.status === ParsingStatus.VERIFIED,
+    resultType: cst.parse.typification,
+    args: cst.parse.args
+  });
 }
 
 export function getRSErrorPrefix(error: IRSErrorDescription): string {

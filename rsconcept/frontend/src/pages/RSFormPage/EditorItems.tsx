@@ -10,7 +10,7 @@ import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import { prefixes } from '../../utils/constants';
 import { CstType, IConstituenta, ICstMovetoData } from '../../utils/models'
-import { getCstTypePrefix, getCstTypeShortcut, getTypeLabel, mapStatusInfo } from '../../utils/staticUI';
+import { getCstTypePrefix, getCstTypeShortcut, getCstTypificationLabel, mapStatusInfo } from '../../utils/staticUI';
 
 interface EditorItemsProps {
   onOpenEdit: (cstID: number) => void
@@ -192,10 +192,9 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
       {
         name: 'Тип',
         id: 'type',
-        cell: (cst: IConstituenta) => <div style={{ fontSize: 12 }}>{getTypeLabel(cst)}</div>,
-        width: '140px',
-        minWidth: '100px',
-        maxWidth: '140px',
+        cell: (cst: IConstituenta) => <div style={{ fontSize: 12 }}>{getCstTypificationLabel(cst)}</div>,
+        width: '175px',
+        maxWidth: '175px',
         wrap: true,
         reorder: true,
         hide: 1600
@@ -249,7 +248,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
     <div className='w-full'>
       <div
         className={'flex justify-start w-full gap-1 px-2 py-1 border-y items-center h-[2.2rem] clr-app' +
-          (!noNavigation ? ' sticky z-10 top-[4rem]' : ' sticky z-10 top-[0rem]')}
+          (!noNavigation ? ' sticky z-10 top-[0rem]' : ' sticky z-10 top-[0rem]')}
       >
         <div className='mr-3 whitespace-nowrap'>
           Выбраны
@@ -257,25 +256,25 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
             <b>{selected.length}</b> из {schema?.stats?.count_all ?? 0}
           </span>
         </div>
-        {isEditable && <div className='flex items-center justify-start w-full gap-1'>
+        <div className='flex items-center justify-start w-full gap-1'>
           <Button
             tooltip='Переместить вверх'
             icon={<ArrowUpIcon size={6}/>}
-            disabled={nothingSelected}
+            disabled={!isEditable || nothingSelected}
             dense
             onClick={handleMoveUp}
           />
           <Button
             tooltip='Переместить вниз'
             icon={<ArrowDownIcon size={6}/>}
-            disabled={nothingSelected}
+            disabled={!isEditable || nothingSelected}
             dense
             onClick={handleMoveDown}
           />
           <Button
             tooltip='Удалить выбранные'
             icon={<DumpBinIcon color={!nothingSelected ? 'text-red' : ''} size={6}/>}
-            disabled={nothingSelected}
+            disabled={!isEditable || nothingSelected}
             dense
             onClick={handleDelete}
           />
@@ -284,12 +283,14 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
             tooltip='Переиндексировать имена'
             icon={<ArrowsRotateIcon color='text-primary' size={6}/>}
             dense
+            disabled={!isEditable}
             onClick={handleReindex}
           />
           <Button
             tooltip='Новая конституента'
             icon={<SmallPlusIcon color='text-green' size={6}/>}
             dense
+            disabled={!isEditable}
             onClick={() => handleCreateCst()}
           />
           {(Object.values(CstType)).map(
@@ -299,6 +300,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
                 text={`${getCstTypePrefix(type)}`}
                 tooltip={getCstTypeShortcut(type)}
                 dense
+                disabled={!isEditable}
                 onClick={() => handleCreateCst(type)}
               />;
           })}
@@ -328,7 +330,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
               })}
             </div>
           </ConceptTooltip>
-        </div>}
+        </div>
       </div>
       <div className='w-full h-full' onKeyDown={handleTableKey}>
       <ConceptDataTable

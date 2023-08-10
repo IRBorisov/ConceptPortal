@@ -1,24 +1,20 @@
+import { TextareaHTMLAttributes } from 'react';
+
 import Label from './Label';
 
-interface TextAreaProps {
-  id: string
+interface TextAreaProps 
+extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'className'> {
   label: string
-  required?: boolean
-  disabled?: boolean
-  spellCheck?: boolean
-  placeholder?: string
   widthClass?: string
-  rows?: number
-  value?: string | ReadonlyArray<string> | number | undefined;
-  onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
-  onFocus?: () => void
+  colorClass?: string
 }
 
 function TextArea({
-  id, label, placeholder,
-  required, spellCheck, disabled,
-  widthClass = 'w-full', rows = 4, value,
-  onChange, onFocus
+  id, label, required,
+  widthClass = 'w-full',
+  colorClass = 'colorClass',
+  rows = 4,
+  ...props
 }: TextAreaProps) {
   return (
     <div className='flex flex-col items-start [&:not(:first-child)]:mt-3'>
@@ -28,15 +24,10 @@ function TextArea({
         htmlFor={id}
       />
       <textarea id={id}
-          className={'px-3 py-2 mt-2 leading-tight border shadow dark:bg-gray-800 ' + widthClass}
+          className={`px-3 py-2 mt-2 leading-tight border shadow ${colorClass} ${widthClass}`}
           rows={rows}
-          placeholder={placeholder}
           required={required}
-          value={value}
-          onChange={onChange}
-          onFocus={onFocus}
-          disabled={disabled}
-          spellCheck={spellCheck}
+          {...props}
       />
     </div>
   );

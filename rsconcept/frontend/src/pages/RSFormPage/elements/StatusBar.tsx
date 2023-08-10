@@ -24,8 +24,8 @@ function StatusBar({ isModified, constituenta, parseData }: StatusBarProps) {
   const data = mapStatusInfo.get(status)!;
   return (
     <div title={data.tooltip}
-      className={'min-h-[2rem] min-w-[6rem] font-semibold inline-flex border rounded-lg items-center justify-center align-middle ' + data.color}>
-      {data.text}
+      className={`text-sm h-[1.6rem] w-[10rem] font-semibold inline-flex border items-center justify-center align-middle ${data.color}`}>
+      Статус: [ {data.text} ]
     </div>
   )
 }

@@ -46,7 +46,7 @@ function AddAdmin {
     $env:DJANGO_SUPERUSER_USERNAME = 'admin'
     $env:DJANGO_SUPERUSER_PASSWORD = '1234'
     $env:DJANGO_SUPERUSER_EMAIL = 'admin@admin.com'
-    & $pyExec $djangoSrc  createsuperuser --noinput
+    & $pyExec $djangoSrc createsuperuser --noinput
 }
 
 function DoMigrations {

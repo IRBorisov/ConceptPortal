@@ -10,12 +10,12 @@ import SubmitButton from '../components/Common/SubmitButton';
 import TextArea from '../components/Common/TextArea';
 import TextInput from '../components/Common/TextInput';
 import RequireAuth from '../components/RequireAuth';
-import useNewRSForm from '../hooks/useNewRSForm';
-import { IRSFormCreateData, IRSFormMeta } from '../utils/models';
+import { useLibrary } from '../context/LibraryContext';
+import { IRSFormCreateData } from '../utils/models';
 
 function CreateRSFormPage() {
   const navigate = useNavigate();
-  const { createSchema, error, setError, loading } = useNewRSForm()
+  const { createSchema, error, setError, processing } = useLibrary();
 
   const [title, setTitle] = useState('');
   const [alias, setAlias] = useState('');
@@ -34,15 +34,10 @@ function CreateRSFormPage() {
       setFile(undefined);
     }
   }
-
-  function onSuccess(newSchema: IRSFormMeta) {
-    toast.success('Схема успешно создана');
-    navigate(`/rsforms/${newSchema.id}`);
-  }
   
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (loading) {
+    if (processing) {
       return;
     }
     const data: IRSFormCreateData = {
@@ -53,7 +48,10 @@ function CreateRSFormPage() {
       file: file,
       fileName: file?.name
     };
-    createSchema(data, onSuccess);
+    createSchema(data, (newSchema) => {
+      toast.success('Схема успешно создана');
+      navigate(`/rsforms/${newSchema.id}`);
+    });
   }
 
   return (
@@ -92,7 +90,7 @@ function CreateRSFormPage() {
       <div className='flex items-center justify-center py-2 mt-4'>
         <SubmitButton 
           text='Создать схему'
-          loading={loading} 
+          loading={processing} 
         />
       </div>
       { error && <BackendError error={error} />}

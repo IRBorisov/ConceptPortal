@@ -70,7 +70,7 @@ function ViewLibrary({ schemas }: ViewLibraryProps) {
 
       noDataComponent={<span className='flex flex-col justify-center p-2 text-center'>
         <p>Список схем пуст</p>
-        <p>Измените фильтр или создайти новую концептуальную схему</p>
+        <p>Измените фильтр или создайте новую концептуальную схему</p>
       </span>}
 
       pagination

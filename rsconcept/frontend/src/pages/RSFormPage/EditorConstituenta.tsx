@@ -1,13 +1,15 @@
 import { useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import ConceptTooltip from '../../components/Common/ConceptTooltip';
+import Divider from '../../components/Common/Divider';
 import MiniButton from '../../components/Common/MiniButton';
 import SubmitButton from '../../components/Common/SubmitButton';
 import TextArea from '../../components/Common/TextArea';
-import { DumpBinIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
+import { DumpBinIcon, HelpIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { type CstType, EditMode, ICstUpdateData, SyntaxTree } from '../../utils/models';
-import { getCstTypeLabel } from '../../utils/staticUI';
+import { getCstTypeLabel, getCstTypificationLabel, mapStatusInfo } from '../../utils/staticUI';
 import EditorRSExpression from './EditorRSExpression';
 import ViewSideConstituents from './elements/ViewSideConstituents';
 
@@ -62,9 +64,11 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
       setTerm(activeCst.term?.raw ?? '');
       setTextDefinition(activeCst.definition?.text?.raw ?? '');
       setExpression(activeCst.definition?.formal ?? '');
-      setTypification(activeCst?.parse?.typification || 'N/A');
+      setTypification(activeCst ? getCstTypificationLabel(activeCst) : 'N/A');
+    } else if (schema && schema?.items.length > 0) {
+      onOpenEdit(schema.items[0].id);
     }
-  }, [activeCst]);
+  }, [activeCst, onOpenEdit, schema]);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -105,12 +109,12 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
   }
 
   return (
-    <div className='flex items-start w-full gap-2'>
-      <form onSubmit={handleSubmit} className='flex-grow min-w-[50rem] max-w-min px-4 py-2 border'>
+    <div className='flex items-stretch w-full gap-2 mb-2'>
+      <form onSubmit={handleSubmit} className='flex-grow min-w-[50rem] max-w-min max-h-fit px-4 py-2 border'>
         <div className='flex items-start justify-between'>
             <button type='submit'
               title='Сохранить изменения'
-              className='px-1 py-1 font-bold rounded whitespace-nowrap disabled:cursor-not-allowed clr-btn-primary'
+              className='px-1 py-1 font-bold border rounded whitespace-nowrap disabled:cursor-not-allowed clr-btn-primary'
               disabled={!isModified || !isEnabled}
             >
               <SaveIcon size={5} />
@@ -150,6 +154,36 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
               onClick={handleDelete}
               icon={<DumpBinIcon size={5} color={isEnabled ? 'text-red' : ''} />}
             />
+            <div id='cst-help' className='flex items-center ml-[0.25rem]'>
+              <HelpIcon color='text-primary' size={5} />
+            </div>
+            <ConceptTooltip anchorSelect='#cst-help'>
+              <div className='max-w-[35rem]'>
+                <h1>Подсказки</h1>
+                <p><b className='text-red'>Изменения сохраняются ПОСЛЕ нажатия на кнопку снизу или слева вверху</b></p>
+                <p><b>Клик на формальное выражение</b> - обратите внимание на кнопки снизу.<br/>Для каждой есть горячая клавиша в подсказке</p>
+                <p><b>Список конституент справа</b> - обратите внимание на настройки фильтрации</p>
+                <p>- слева от ввода текста настраивается набор атрибутов конституенты</p>
+                <p>- справа от ввода текста настраивается список конституент, которые фильтруются</p>
+                <p>- текущая конституента выделена цветом строки</p>
+                <p>- двойной клик / Alt + клик - выбор редактируемой конституенты</p>
+                <p>- при наведении на ID конституенты отображаются ее атрибуты</p>
+                <p>- столбец "Описание" содержит один из непустых текстовых атрибутов</p>
+                <Divider margins='mt-2' />
+                <h1>Статусы</h1>
+                { [... mapStatusInfo.values()].map(info => {
+                    return (<p className='py-1'>
+                      <span className={`inline-block font-semibold min-w-[4rem] text-center border ${info.color}`}>
+                        {info.text}
+                      </span>
+                      <span> - </span>
+                      <span>
+                        {info.tooltip}
+                      </span>
+                    </p>);
+                })}
+              </div>
+            </ConceptTooltip>
           </div>
         </div>
         <TextArea id='term' label='Термин'
@@ -167,6 +201,7 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
           disabled
         />
         <EditorRSExpression id='expression' label='Формальное выражение'
+          activeCst={activeCst}
           placeholder='Родоструктурное выражение, задающее формальное определение'
           value={expression}
           disabled={!isEnabled}

@@ -1,14 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import Checkbox from '../../../components/Common/Checkbox';
 import ConceptDataTable from '../../../components/Common/ConceptDataTable';
 import { useRSForm } from '../../../context/RSFormContext';
 import { useConceptTheme } from '../../../context/ThemeContext';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import { prefixes } from '../../../utils/constants';
-import { CstType, extractGlobals,type IConstituenta, matchConstituenta } from '../../../utils/models';
+import { applyGraphFilter, CstMatchMode, CstType, DependencyMode, extractGlobals, IConstituenta, matchConstituenta } from '../../../utils/models';
 import { getCstDescription, getMockConstituenta, mapStatusInfo } from '../../../utils/staticUI';
 import ConstituentaTooltip from './ConstituentaTooltip';
+import DependencyModePicker from './DependencyModePicker';
+import MatchModePicker from './MatchModePicker';
 
 interface ViewSideConstituentsProps {
   expression: string
@@ -19,31 +20,38 @@ interface ViewSideConstituentsProps {
 function ViewSideConstituents({ expression, activeID, onOpenEdit }: ViewSideConstituentsProps) {
   const { darkMode } = useConceptTheme();
   const { schema } = useRSForm();
+  
+  const [filterMatch, setFilterMatch] = useLocalStorage('side-filter-match', CstMatchMode.ALL);
+  const [filterText, setFilterText] = useLocalStorage('side-filter-text', '');
+  const [filterSource, setFilterSource] = useLocalStorage('side-filter-dependency', DependencyMode.ALL);
+  
   const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema?.items ?? []);
-  const [filterText, setFilterText] = useLocalStorage('side-filter-text', '')
-  const [onlyExpression, setOnlyExpression] = useLocalStorage('side-filter-flag', false);
 
   useEffect(() => {
     if (!schema?.items) {
       setFilteredData([]);
       return;
     }
-    if (onlyExpression) {
+    let filtered: IConstituenta[] = [];
+    if (filterSource === DependencyMode.EXPRESSION) {
       const aliases = extractGlobals(expression);
-      const filtered = schema?.items.filter((cst) => aliases.has(cst.alias));
+      filtered = schema.items.filter((cst) => aliases.has(cst.alias));
       const names = filtered.map(cst => cst.alias)
       const diff = Array.from(aliases).filter(name => !names.includes(name));
       if (diff.length > 0) {
         diff.forEach(
           (alias, index) => filtered.push(getMockConstituenta(-index, alias, CstType.BASE, 'Конституента отсутствует')));
       }
-      setFilteredData(filtered);
-    } else if (!filterText) {
-      setFilteredData(schema?.items);
+    } else if (!activeID) {
+      filtered = schema.items
     } else {
-      setFilteredData(schema?.items.filter((cst) => matchConstituenta(filterText, cst)));
+      filtered = applyGraphFilter(schema, activeID, filterSource);
     }
-  }, [filterText, setFilteredData, onlyExpression, expression, schema]);
+    if (filterText) {
+      filtered = filtered.filter((cst) => matchConstituenta(filterText, cst, filterMatch));
+    }
+    setFilteredData(filtered);
+  }, [filterText, setFilteredData, filterSource, expression, schema, filterMatch, activeID]);
 
   const handleRowClicked = useCallback(
   (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
@@ -130,25 +138,19 @@ function ViewSideConstituents({ expression, activeID, onOpenEdit }: ViewSideCons
       }
     ], []
   );
-
+  
   return (
-    <div className='max-h-[80vh] overflow-y-scroll border flex-grow w-full'>
-      <div className='sticky top-0 left-0 right-0 z-10 flex items-center justify-between w-full gap-1 px-2 py-1 bg-white border-b-2 border-gray-400 rounded dark:bg-gray-700 dark:border-gray-300'>
-        <div className='w-full'>
+    <div className='max-h-[calc(100vh-10.3rem)] min-h-[40rem] overflow-y-scroll border flex-grow w-full'>
+      <div className='sticky top-0 left-0 right-0 z-10 flex items-center justify-between w-full gap-1 px-2 py-1 bg-white border-b rounded clr-bg-pop clr-border'>
+        <div className='flex items-center justify-between w-full'>
+          <MatchModePicker value={filterMatch} onChange={setFilterMatch}/>
           <input type='text'
-            className='w-full px-2 outline-none dark:bg-gray-700 hover:text-clip'
-            placeholder='текст для фильтрации списка'
+            className='w-full px-2 bg-white outline-none hover:text-clip clr-bg-pop clr-border'
+            placeholder='наберите текст фильтра'
             value={filterText}
             onChange={event => { setFilterText(event.target.value); }}
-            disabled={onlyExpression}
           />
-        </div>
-        <div className='w-fit min-w-[8rem]'>
-          <Checkbox
-            label='из выражения'
-            value={onlyExpression}
-            onChange={event => { setOnlyExpression(event.target.checked); }}
-          />
+          <DependencyModePicker value={filterSource} onChange={setFilterSource}/>
         </div>
       </div>
       <ConceptDataTable

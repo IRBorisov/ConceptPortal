@@ -13,7 +13,9 @@ extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'child
 function Button({
   id, text, icon, tooltip,
   dense, disabled,
-  borderClass = 'border rounded', colorClass = 'clr-btn-default', widthClass = 'w-fit h-fit',
+  borderClass = 'border rounded',
+  colorClass = 'clr-btn-default',
+  widthClass = 'w-fit h-fit',
   loading, onClick,
   ...props
 }: ButtonProps) {

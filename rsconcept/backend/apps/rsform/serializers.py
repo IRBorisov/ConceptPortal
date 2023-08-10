@@ -43,9 +43,15 @@ class ConstituentaSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('id', 'order', 'alias', 'cst_type')
 
-    def update(self, instance: Constituenta, validated_data):
+    def update(self, instance: Constituenta, validated_data) -> Constituenta:
+        if ('term_raw' in validated_data):
+            validated_data['term_resolved'] = validated_data['term_raw']
+        if ('definition_raw' in validated_data):
+            validated_data['definition_resolved'] = validated_data['definition_raw']
+
+        result = super().update(instance, validated_data)
         instance.schema.save()
-        return super().update(instance, validated_data)
+        return result
 
 
 class StandaloneCstSerializer(serializers.ModelSerializer):

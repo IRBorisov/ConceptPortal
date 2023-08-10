@@ -16,10 +16,6 @@ interface DlgShowASTProps {
 function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
   const { darkMode } = useConceptTheme();
   
-  function handleSubmit() {
-    // Do nothing
-  }
-
   const nodes: GraphNode[] = useMemo(
   () => syntaxTree.map(node => {
     return {
@@ -46,14 +42,12 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
   return (
     <Modal
       hideWindow={hideWindow}
-      onSubmit={handleSubmit}
-      submitText='Закрыть'
-      canSubmit={true}
+      readonly
     >
       <div className='flex flex-col items-start gap-2'>
         <div className='w-full text-lg text-center'>{expression}</div>
         <div className='flex-wrap w-full h-full overflow-auto'>
-        <div className='relative w-[1040px] h-[600px] 2xl:w-[1680px] 2xl:h-[600px]'>
+        <div className='relative w-[1040px] h-[600px] 2xl:w-[1680px] 2xl:h-[600px] max-h-full max-w-full'>
           <GraphCanvas
             nodes={nodes}
             edges={edges}

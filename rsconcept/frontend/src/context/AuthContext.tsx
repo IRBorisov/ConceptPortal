@@ -10,6 +10,7 @@ interface IAuthContext {
   login: (data: IUserLoginData, callback?: DataCallback) => void
   logout: (callback?: DataCallback) => void
   signup: (data: IUserSignupData, callback?: DataCallback<IUserProfile>) => void
+  reload: (callback?: () => void) => void
   loading: boolean
   error: ErrorInfo
   setError: (error: ErrorInfo) => void
@@ -36,20 +37,19 @@ export const AuthState = ({ children }: AuthStateProps) => {
   const [error, setError] = useState<ErrorInfo>(undefined);
 
   const reload = useCallback(
-    (callback?: () => void) => {
-      getAuth({
-        onError: () => { setUser(undefined); },
-        onSuccess: currentUser => {
-          if (currentUser.id) {
-            setUser(currentUser);
-          } else {
-            setUser(undefined);
-          }
-          if (callback) callback();
+  (callback?: () => void) => {
+    getAuth({
+      onError: () => { setUser(undefined); },
+      onSuccess: currentUser => {
+        if (currentUser.id) {
+          setUser(currentUser);
+        } else {
+          setUser(undefined);
         }
-      });
-    }, [setUser]
-  );
+        if (callback) callback();
+      }
+    });
+  }, [setUser]);
 
   function login(data: IUserLoginData, callback?: DataCallback) {
     setError(undefined);
@@ -87,7 +87,7 @@ export const AuthState = ({ children }: AuthStateProps) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, signup, loading, error, setError }}
+      value={{ user, login, logout, signup, loading, error, reload, setError }}
     >
       {children}
     </AuthContext.Provider>

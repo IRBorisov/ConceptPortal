@@ -1,6 +1,8 @@
 // Constants
 const prod = {
-  backend: 'http://rs.acconcept.ru:8000',
+  backend: 'https://dev.concept.ru:8000',
+  // backend: 'https://localhost:8000',
+  // backend: 'https://api.portal.concept.ru',
 };
 
 const dev = {
@@ -16,7 +18,8 @@ export const urls = {
   exteor64: 'https://drive.google.com/open?id=1IJt25ZRQ-ZMA6t7hOqmo5cv05WJCQKMv&usp=drive_fs',
   ponomarev: 'https://inponomarev.ru/textbook',
   intro_video: 'https://www.youtube.com/watch?v=0Ty9mu9sOJo',
-  full_course: 'https://www.youtube.com/playlist?list=PLGe_JiAwpqu1C70ruQmCm_OWTWU3KJwDo'
+  full_course: 'https://www.youtube.com/playlist?list=PLGe_JiAwpqu1C70ruQmCm_OWTWU3KJwDo',
+  gitrepo: 'https://github.com/IRBorisov/ConceptPortal'
 };
 
 export const resources = {
