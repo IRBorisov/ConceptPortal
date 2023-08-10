@@ -16,8 +16,8 @@ function RequireAuth({ children }: RequireAuthProps) {
         <div className='flex flex-col items-center'>
           <InfoMessage message={'Данная функция доступна только зарегистрированным пользователям. Пожалуйста войдите в систему'} />
           <div className='flex flex-col items-start'>
-            <TextURL text='Войти в систему...' href='login' />
-            <TextURL text='Зарегистрироваться...' href='signup' />
+            <TextURL text='Войти в систему...' href='/login' />
+            <TextURL text='Зарегистрироваться...' href='/signup' />
           </div>
         </div>
       }

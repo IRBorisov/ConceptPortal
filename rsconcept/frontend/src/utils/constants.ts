@@ -2,6 +2,7 @@
 const prod = {
   backend: 'https://dev.concept.ru:8000',
   // backend: 'https://localhost:8000',
+  // backend: 'https://api.portal.concept.ru',
 };
 
 const dev = {
