@@ -3,14 +3,17 @@ import { type InputHTMLAttributes } from 'react';
 import Label from './Label';
 
 interface TextInputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'className'> {
+extends Omit<InputHTMLAttributes<HTMLInputElement>, 'className'> {
   id: string
   label: string
   widthClass?: string
+  colorClass?: string
 }
 
 function TextInput({
-  id, required, label, widthClass = 'w-full',
+  id, required, label,
+  widthClass = 'w-full',
+  colorClass = 'clr-input',
   ...props
 }: TextInputProps) {
   return (
@@ -21,7 +24,7 @@ function TextInput({
         htmlFor={id}
       />
       <input id={id}
-        className={`px-3 py-2 mt-2 leading-tight border shadow truncate hover:text-clip clr-input ${widthClass}`}
+        className={`px-3 py-2 mt-2 leading-tight border shadow truncate hover:text-clip ${colorClass} ${widthClass}`}
         required={required}
         {...props}
       />
