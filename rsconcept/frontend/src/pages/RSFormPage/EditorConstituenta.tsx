@@ -192,8 +192,8 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
           value={term}
           disabled={!isEnabled}
           spellCheck
-          onChange={event => { setTerm(event.target.value); }}
-          onFocus={() => { setEditMode(EditMode.TEXT); }}
+          onChange={event => setTerm(event.target.value)}
+          onFocus={() => setEditMode(EditMode.TEXT)}
         />
         <TextArea id='typification' label='Типизация'
           rows={1}
@@ -206,9 +206,9 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
           value={expression}
           disabled={!isEnabled}
           isActive={editMode === EditMode.RSLANG}
-          toggleEditMode={() => { setEditMode(EditMode.RSLANG); }}
+          toggleEditMode={() => setEditMode(EditMode.RSLANG)}
           onShowAST={onShowAST}
-          onChange={event => { setExpression(event.target.value); }}
+          onChange={newValue => setExpression(newValue)}
           setValue={setExpression}
           setTypification={setTypification}
         />

@@ -4,12 +4,14 @@ import { toast } from 'react-toastify';
 import Button from '../../components/Common/Button';
 import Label from '../../components/Common/Label';
 import { Loader } from '../../components/Common/Loader';
+import { useAuth } from '../../context/AuthContext';
 import { useRSForm } from '../../context/RSFormContext';
 import useCheckExpression from '../../hooks/useCheckExpression';
 import { TokenID } from '../../utils/enums';
 import { IConstituenta, IRSErrorDescription, SyntaxTree } from '../../utils/models';
 import { getCstExpressionPrefix, getTypificationLabel } from '../../utils/staticUI';
 import ParsingResult from './elements/ParsingResult';
+import RSInput from './elements/RSInput';
 import RSLocalButton from './elements/RSLocalButton';
 import RSTokenButton from './elements/RSTokenButton';
 import StatusBar from './elements/StatusBar';
@@ -22,11 +24,11 @@ interface EditorRSExpressionProps {
   isActive: boolean
   disabled?: boolean
   placeholder?: string
-  value: string
-  onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
   onShowAST: (expression: string, ast: SyntaxTree) => void
   toggleEditMode: () => void
   setTypification: (typificaiton: string) => void
+  value: string
+  onChange: (newValue: string) => void
   setValue: (expression: string) => void
 }
 
@@ -34,6 +36,7 @@ function EditorRSExpression({
   id, activeCst, label, disabled, isActive, placeholder, value, setValue, onShowAST, 
   toggleEditMode, setTypification, onChange
 }: EditorRSExpressionProps) {
+  const { user } = useAuth();
   const { schema } = useRSForm();
   const [isModified, setIsModified] = useState(false);
   const { parseData, checkExpression, resetParse, loading } = useCheckExpression({ schema });
@@ -49,7 +52,7 @@ function EditorRSExpression({
   }
 
   function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    onChange(event);
+    onChange(event.target.value);
     setIsModified(true);
   }
   
@@ -225,16 +228,23 @@ function EditorRSExpression({
         htmlFor={id}
       />
       <textarea id={id} ref={expressionCtrl}
-          className='w-full px-3 py-2 mt-2 leading-tight border shadow clr-input'
-          rows={6}
-          placeholder={placeholder}
-          value={value}
-          onChange={handleChange}
-          onFocus={handleFocusIn}
-          onKeyDown={handleInput}
-          disabled={disabled}
-          spellCheck={false}
+        className='w-full px-3 py-2 mt-2 leading-tight border shadow clr-input'
+        rows={6}
+        placeholder={placeholder}
+        value={value}
+        onChange={handleChange}
+        onFocus={handleFocusIn}
+        onKeyDown={handleInput}
+        disabled={disabled}
+        spellCheck={false}
       />
+      { user?.is_staff && <RSInput
+        value={value}
+        setValue={setValue}
+        onChange={onChange}
+        placeholder={placeholder}
+        disabled={disabled}
+      /> }
       <div className='flex w-full gap-4 py-1 mt-1 justify-stretch'>
         <div className='flex flex-col gap-2'>
           <Button
