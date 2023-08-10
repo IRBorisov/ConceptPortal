@@ -28,6 +28,8 @@ This readme file is used mostly to document project dependencies
   - react-error-boundary
   - reagraph
   - react-tooltip
+  - @uiw/react-codemirror
+  - @uiw/codemirror-themes
   </pre>
 </details>
 <details>

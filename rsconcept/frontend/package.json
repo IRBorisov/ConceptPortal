@@ -11,6 +11,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@uiw/codemirror-themes": "^4.21.9",
+    "@uiw/react-codemirror": "^4.21.9",
     "axios": "^1.4.0",
     "js-file-download": "^0.4.12",
     "react": "^18.2.0",

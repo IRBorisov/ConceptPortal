@@ -12,7 +12,7 @@ extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'className'> {
 function TextArea({
   id, label, required,
   widthClass = 'w-full',
-  colorClass = 'colorClass',
+  colorClass = 'clr-input',
   rows = 4,
   ...props
 }: TextAreaProps) {
