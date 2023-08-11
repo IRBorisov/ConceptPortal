@@ -6,7 +6,6 @@ import { Ref } from 'react';
 
 import { useConceptTheme } from '../../../context/ThemeContext';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
 const lightTheme: Extension = createTheme({
   theme: 'light',
   settings: {
@@ -23,7 +22,6 @@ const lightTheme: Extension = createTheme({
   ]
 });
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
 const darkTheme: Extension = createTheme({
   theme: 'dark',
   settings: {
