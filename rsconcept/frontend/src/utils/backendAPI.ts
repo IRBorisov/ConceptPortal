@@ -17,7 +17,6 @@ export function initBackend() {
   axios.defaults.xsrfCookieName = 'csrftoken';
   axios.defaults.xsrfHeaderName = 'x-csrftoken';
   axios.defaults.baseURL = `${config.backend}`;
-
 }
 
 // ================ Data transfer types ================

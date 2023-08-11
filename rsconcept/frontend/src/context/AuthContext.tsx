@@ -2,14 +2,15 @@ import { createContext, useCallback, useContext, useLayoutEffect, useState } fro
 
 import { type ErrorInfo } from '../components/BackendError';
 import useLocalStorage from '../hooks/useLocalStorage';
-import { type DataCallback, getAuth, postLogin, postLogout, postSignup } from '../utils/backendAPI';
-import { ICurrentUser, IUserLoginData, IUserProfile, IUserSignupData } from '../utils/models';
+import { type DataCallback, getAuth, patchPassword,postLogin, postLogout, postSignup } from '../utils/backendAPI';
+import { ICurrentUser, IUserLoginData, IUserProfile, IUserSignupData, IUserUpdatePassword } from '../utils/models';
 
 interface IAuthContext {
   user: ICurrentUser | undefined
   login: (data: IUserLoginData, callback?: DataCallback) => void
   logout: (callback?: DataCallback) => void
   signup: (data: IUserSignupData, callback?: DataCallback<IUserProfile>) => void
+  updatePassword: (data: IUserUpdatePassword, callback?: () => void) => void
   reload: (callback?: () => void) => void
   loading: boolean
   error: ErrorInfo
@@ -85,13 +86,28 @@ export const AuthState = ({ children }: AuthStateProps) => {
     });
   }
 
+  const updatePassword = useCallback(
+  (data: IUserUpdatePassword, callback?: () => void) => {
+    setError(undefined);
+    patchPassword({
+      data: data,
+      showError: true,
+      setLoading: setLoading,
+      onError: error => { setError(error); },
+      onSuccess: () => {
+        setUser(undefined);
+        reload();
+        if (callback) callback();       
+    }});
+  }, [setUser, reload]);
+
   useLayoutEffect(() => {
     reload();
   }, [reload])
 
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, signup, loading, error, reload, setError }}
+      value={{ user, login, logout, signup, loading, error, reload, setError, updatePassword }}
     >
       {children}
     </AuthContext.Provider>

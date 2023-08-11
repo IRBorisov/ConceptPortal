@@ -1,31 +1,34 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import BackendError from '../../components/BackendError';
 import TextInput from '../../components/Common/TextInput';
-import { useUserProfile } from '../../context/UserProfileContext';
+import { useAuth } from '../../context/AuthContext';
 import { IUserUpdatePassword } from '../../utils/models';
 
 
 export function ChangePassword() {
-  const { updatePassword, processing } = useUserProfile();
+  const { updatePassword, error, loading } = useAuth();
     
-  const [old_password, setOldPassword] = useState('');
-  const [new_password, setNewPassword] = useState('');
-  const [new_password_repeat, setNewPasswordRepeat] = useState('');
-  const [new_pass_color, setNewPassColor] = useState('');
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
   const navigate = useNavigate();
+
+  const colorClass = useMemo(() => {
+    return !!newPassword && !!newPasswordRepeat && newPassword !== newPasswordRepeat ? 'bg-red-500' : '';
+  }, [newPassword, newPasswordRepeat]);
   
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (new_password !== new_password_repeat) {
-      setNewPassColor('bg-red-500');
+    if (newPassword !== newPasswordRepeat) {
       toast.error('Пароли не совпадают');
     }
     else {
     const data: IUserUpdatePassword = {
-      old_password: old_password,
-      new_password: new_password,
+      old_password: oldPassword,
+      new_password: newPassword,
     };
     updatePassword(data, () => {toast.success('Изменения сохранены'); navigate('/login')});
    }
@@ -37,36 +40,34 @@ export function ChangePassword() {
         <TextInput id='old_password'
           type='password' 
           label='Введите старый пароль:'
-          value={old_password}
+          value={oldPassword}
           onChange={event => setOldPassword(event.target.value)}
         />
         <TextInput id='new_password'
-          colorClass={new_pass_color}
+          colorClass={colorClass}
           label="Введите новый пароль:"
-          value={new_password}
+          value={newPassword}
           onChange={event => {
             setNewPassword(event.target.value); 
-            setNewPassColor('');
           }}
         />
         <TextInput id='new_password_repeat'
-          colorClass={new_pass_color}
+          colorClass={colorClass}
           label="Повторите новый пароль:"
-          value={new_password_repeat}
+          value={newPasswordRepeat}
           onChange={event => {
             setNewPasswordRepeat(event.target.value); 
-            setNewPassColor('');
           }}
         />
         <div className='relative flex justify-center my-4 border'>
           <button 
             type='submit' 
             className='absolute bottom-0 px-2 py-1 bg-blue-500 border'
-            disabled={processing}>
+            disabled={loading}>
               <span>Сменить пароль</span>
           </button>
         </div>
-         
+        { error && <BackendError error={error} />}
     </form>   
     </div>  
   )}
