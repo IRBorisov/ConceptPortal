@@ -2,6 +2,7 @@ import { useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../context/AuthContext';
+import { TIMEOUT_UI_REFRESH } from '../utils/constants';
 
 function HomePage() {
   const navigate = useNavigate();
@@ -9,9 +10,13 @@ function HomePage() {
   
   useLayoutEffect(() => {
     if (!user) {
-      navigate('/library?filter=common');
+      setTimeout(() => {
+        navigate('/library?filter=common');
+      }, TIMEOUT_UI_REFRESH);
     } else if(!user.is_staff) {
-      navigate('/library?filter=personal');
+      setTimeout(() => {
+        navigate('/library?filter=personal');
+      }, TIMEOUT_UI_REFRESH);
     }
   }, [navigate, user])
 
