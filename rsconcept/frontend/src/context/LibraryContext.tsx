@@ -3,6 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 import { ErrorInfo } from '../components/BackendError';
 import { DataCallback, getLibrary, postNewRSForm } from '../utils/backendAPI';
 import { ILibraryFilter, IRSFormCreateData, IRSFormMeta, matchRSFormMeta } from '../utils/models';
+import { useAuth } from './AuthContext';
 
 interface ILibraryContext {
   items: IRSFormMeta[]
@@ -11,7 +12,7 @@ interface ILibraryContext {
   error: ErrorInfo
   setError: (error: ErrorInfo) => void
 
-  reload: () => void 
+  reload: (callback?: () => void) => void
   filter: (params: ILibraryFilter) => IRSFormMeta[]
   createSchema: (data: IRSFormCreateData, callback?: DataCallback<IRSFormMeta>) => void
 }
@@ -36,6 +37,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   const [ loading, setLoading ] = useState(false);
   const [ processing, setProcessing ] = useState(false);
   const [ error, setError ] = useState<ErrorInfo>(undefined);
+  const { user } = useAuth();
 
   const filter = useCallback(
   (params: ILibraryFilter) => {
@@ -53,20 +55,23 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   }, [items]);
 
   const reload = useCallback(
-  () => {
+  (callback?: () => void) => {
     setItems([]);
     setError(undefined);
     getLibrary({
       setLoading: setLoading,
       showError: true,
       onError: (error) => setError(error),
-      onSuccess: newData => { setItems(newData); }
+      onSuccess: newData => { 
+        setItems(newData);
+        if (callback) callback();
+      }
     });
   }, []);
 
   useEffect(() => {
     reload();
-  }, [reload]);
+  }, [reload, user]);
 
   const createSchema = useCallback(
   (data: IRSFormCreateData, callback?: DataCallback<IRSFormMeta>) => {

@@ -58,7 +58,9 @@ export const AuthState = ({ children }: AuthStateProps) => {
       showError: true,
       setLoading: setLoading,
       onError: error => { setError(error); },
-      onSuccess: newData => reload(() => { if (callback) callback(newData); })
+      onSuccess: newData => reload(() => {
+        if (callback) callback(newData);
+      })
     });
   }
 
@@ -66,7 +68,9 @@ export const AuthState = ({ children }: AuthStateProps) => {
     setError(undefined);
     postLogout({
       showError: true,
-      onSuccess: newData => reload(() => { if (callback) callback(newData); })
+      onSuccess: newData => reload(() => {
+        if (callback) callback(newData);
+      })
     });
   }
 

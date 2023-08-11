@@ -5,7 +5,7 @@ import { type IUserInfo } from '../utils/models';
 
 interface IUsersContext {
   users: IUserInfo[]
-  reload: () => void
+  reload: (callback?: () => void) => void
   getUserLabel: (userID: number | null) => string
 }
 
@@ -47,11 +47,14 @@ export const UsersState = ({ children }: UsersStateProps) => {
   }
 
   const reload = useCallback(
-  () => {
+  (callback?: () => void) => {
     getActiveUsers({
       showError: true,
-      onError: () => { setUsers([]); },
-      onSuccess: newData => { setUsers(newData); }
+      onError: () => setUsers([]),
+      onSuccess: newData => {
+        setUsers(newData);
+        if (callback) callback();
+      }
     });
   }, [setUsers]);
 
