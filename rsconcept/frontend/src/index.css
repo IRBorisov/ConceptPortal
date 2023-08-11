@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .rdt_TableCell{
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 [data-color-scheme="dark"] {
@@ -59,7 +59,7 @@
   }
 
   .clr-input {
-    @apply dark:bg-black bg-white disabled:bg-[#f0f2f7] dark:disabled:bg-gray-700
+    @apply dark:bg-[#070b12] bg-white disabled:bg-[#f0f2f7] dark:disabled:bg-gray-700
   }
 
   .clr-footer {

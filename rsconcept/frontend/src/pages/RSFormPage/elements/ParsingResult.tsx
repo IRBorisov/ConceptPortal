@@ -18,9 +18,9 @@ function ParsingResult({ data, onShowAST, onShowError }: ParsingResultProps) {
   return (
     <div className='px-3 py-2'>
       <p>Ошибок: <b>{errorCount}</b> | Предупреждений: <b>{warningsCount}</b></p>
-      {data.errors.map(error => {
+      {data.errors.map((error, index) => {
         return (
-        <p className='cursor-pointer text-red' onClick={() => onShowError(error)}>
+        <p key={`error-${index}`} className='cursor-pointer text-red' onClick={() => onShowError(error)}>
           <span className='mr-1 font-semibold underline'>{error.isCritical ? 'Ошибка' : 'Предупреждение'} {getRSErrorPrefix(error)}:</span>
           <span> {getRSErrorMessage(error)}</span>
         </p>

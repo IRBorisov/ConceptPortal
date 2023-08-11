@@ -1,5 +1,7 @@
 // Formatted text editing helpers
 
+import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
+
 import { TokenID } from '../../../utils/enums';
 
 export function getSymbolSubstitute(input: string): string | undefined {
@@ -34,65 +36,31 @@ export function getSymbolSubstitute(input: string): string | undefined {
   return undefined;
 }
 
-export interface IManagedText {
-  value: string
-  selStart: number
-  selEnd: number
-}
-
 // Note: Wrapper class for textareafield.
 // WARNING! Manipulations on value do not support UNDO browser
 // WARNING! No checks for selection out of text boundaries
-export class TextWrapper implements IManagedText {
-  value: string
-  selStart: number
-  selEnd: number
-  object: HTMLTextAreaElement
+export class TextWrapper {
+  ref: Required<ReactCodeMirrorRef>
 
-  constructor(element: HTMLTextAreaElement) {
-    this.object = element;
-    this.value = this.object.value;
-    this.selStart = this.object.selectionStart;
-    this.selEnd = this.object.selectionEnd;
-  }
-
-  focus() {
-    this.object.focus();
-  }
-
-  refresh() {
-    this.value = this.object.value;
-    this.selStart = this.object.selectionStart;
-    this.selEnd = this.object.selectionEnd;
-  }
-
-  finalize() {
-    this.object.value = this.value;
-    this.object.selectionStart = this.selStart;
-    this.object.selectionEnd = this.selEnd;
+  constructor(object: Required<ReactCodeMirrorRef>) {
+    this.ref = object;
   }
 
   replaceWith(data: string) {
-    this.value = this.value.substring(0, this.selStart) + data + this.value.substring(this.selEnd, this.value.length);
-    this.selEnd += data.length - this.selEnd + this.selStart;
-    this.selStart = this.selEnd;
+    this.ref.view.dispatch(this.ref.view.state.replaceSelection(data));
   }
 
   envelopeWith(left: string, right: string) {
-    this.value = this.value.substring(0, this.selStart) + left +
-                  this.value.substring(this.selStart, this.selEnd) + right +
-                  this.value.substring(this.selEnd, this.value.length);
-    this.selEnd += left.length + right.length;
-  }
-
-  moveSel(shift: number) {
-    this.selStart += shift;
-    this.selEnd += shift;
-  }
-
-  setSel(start: number, end: number) {
-    this.selStart = start;
-    this.selEnd = end;
+    this.ref.view.dispatch({
+      changes: [
+        {from: this.ref.view.state.selection.main.from, insert: left}, 
+        {from: this.ref.view.state.selection.main.to, insert: right}
+      ],
+      selection: {
+        anchor: this.ref.view.state.selection.main.from,
+        head: this.ref.view.state.selection.main.to + left.length + right.length
+      }
+    });
   }
 
   insertChar(key: string) {
@@ -114,18 +82,26 @@ export class TextWrapper implements IManagedText {
 
     case TokenID.PUNC_PL: {
       this.envelopeWith('(', ')');
-      this.selEnd = this.selStart + 1;
-      this.selStart = this.selEnd;
+      this.ref.view.dispatch({
+        selection: {
+          anchor: this.ref.view.state.selection.main.from + 1,
+        }
+      });
       return true;
     }
     case TokenID.PUNC_SL: {
       this.envelopeWith('[', ']');
-      this.selEnd = this.selStart + 1;
-      this.selStart = this.selEnd;
+      this.ref.view.dispatch({
+        selection: {
+          anchor: this.ref.view.state.selection.main.from + 1,
+        }
+      });
       return true;
     }
     case TokenID.BOOLEAN: {
-      if (this.selEnd !== this.selStart && this.value[this.selStart] === 'ℬ') {
+      const selStart = this.ref.view.state.selection.main.from;
+      if (selStart !== this.ref.view.state.selection.main.to && 
+        this.ref.view.state.sliceDoc(selStart, selStart + 1) === 'ℬ') {
         this.envelopeWith('ℬ', '');
       } else {
         this.envelopeWith('ℬ(', ')');

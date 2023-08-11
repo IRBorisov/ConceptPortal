@@ -4,7 +4,6 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import Button from '../../components/Common/Button';
 import Label from '../../components/Common/Label';
 import { Loader } from '../../components/Common/Loader';
-import { useAuth } from '../../context/AuthContext';
 import { useRSForm } from '../../context/RSFormContext';
 import useCheckExpression from '../../hooks/useCheckExpression';
 import { TokenID } from '../../utils/enums';
@@ -33,15 +32,13 @@ interface EditorRSExpressionProps {
 }
 
 function EditorRSExpression({
-  id, activeCst, label, disabled, isActive, placeholder, value, setValue, onShowAST, 
+  id, activeCst, label, disabled, isActive, placeholder, value, onShowAST, 
   toggleEditMode, setTypification, onChange
 }: EditorRSExpressionProps) {
-  const { user } = useAuth();
   const { schema } = useRSForm();
 
   const [isModified, setIsModified] = useState(false);
   const { parseData, checkExpression, resetParse, loading } = useCheckExpression({ schema });
-  const expressionCtrl = useRef<HTMLTextAreaElement>(null);
   const rsInput = useRef<ReactCodeMirrorRef>(null);
 
   useLayoutEffect(() => {
@@ -66,11 +63,10 @@ function EditorRSExpression({
     const expression = prefix + value;
     checkExpression(expression, parse => {
       if (parse.errors.length > 0) {
-        const errorPosition = parse.errors[0].position - prefix.length
-        expressionCtrl.current!.selectionStart = errorPosition;
-        expressionCtrl.current!.selectionEnd = errorPosition;
+        onShowError(parse.errors[0]);
+      } else {
+        rsInput.current?.view?.focus();
       }
-      expressionCtrl.current!.focus();
       setIsModified(false);
       setTypification(getTypificationLabel({
         isValid: parse.parseResult,
@@ -82,38 +78,40 @@ function EditorRSExpression({
 
   const onShowError = useCallback(
   (error: IRSErrorDescription) => {
-      if (!activeCst || !expressionCtrl.current) {
-        return;
+    if (!activeCst || !rsInput.current) {
+      return;
+    }
+    const prefix = getCstExpressionPrefix(activeCst);
+    const errorPosition = error.position - prefix.length;
+    rsInput.current?.view?.dispatch({
+      selection: {
+        anchor: errorPosition,
+        head: errorPosition
       }
-      const errorPosition = error.position -  getCstExpressionPrefix(activeCst).length
-      expressionCtrl.current.selectionStart = errorPosition;
-      expressionCtrl.current.selectionEnd = errorPosition;
-      expressionCtrl.current.focus();
+    });
+    rsInput.current?.view?.focus();
   }, [activeCst]);
 
   const handleEdit = useCallback((id: TokenID, key?: string) => {
-    if (!expressionCtrl.current) {
+    if (!rsInput.current || !rsInput.current.editor || !rsInput.current.state || !rsInput.current.view) {
       return;
     }
-    const text = new TextWrapper(expressionCtrl.current);
+    const text = new TextWrapper(rsInput.current as Required<ReactCodeMirrorRef>);
     if (id === TokenID.ID_LOCAL) {
       text.insertChar(key ?? 'unknown_local');
     } else {
       text.insertToken(id);
     }
-    text.finalize();
-    text.focus();
-    setValue(text.value);
+    rsInput.current?.view?.focus();
     setIsModified(true);
-  }, [setValue]);
+  }, []);
   
   const handleInput = useCallback(
-  (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (!expressionCtrl.current) {
+  (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!rsInput.current) {
       return;
     }
-    const text = new TextWrapper(expressionCtrl.current);
-    // rsInput.current?.state?.selection
+    const text = new TextWrapper(rsInput.current as Required<ReactCodeMirrorRef>);
     if (event.shiftKey && event.key === '*' && !event.altKey) {
       text.insertToken(TokenID.DECART);
     } else if (event.altKey) {
@@ -130,10 +128,8 @@ function EditorRSExpression({
       return;
     }
     event.preventDefault();
-    text.finalize();
-    setValue(text.value);
     setIsModified(true);
-  }, [expressionCtrl, setValue]);
+  }, []);
 
   const EditButtons = useMemo(() => {
     return (<div className='flex items-center justify-between w-full'>
@@ -229,24 +225,15 @@ function EditorRSExpression({
         required={false}
         htmlFor={id}
       />
-      <textarea id={id} ref={expressionCtrl}
-        className='w-full px-3 py-2 mt-2 leading-tight border shadow clr-input'
-        rows={6}
+      <RSInput innerref={rsInput}
+        className='mt-2'
+        value={value}
         placeholder={placeholder}
-        value={value}
-        onChange={event => handleChange(event.target.value)}
-        onFocus={handleFocusIn}
-        onKeyDown={handleInput}
-        disabled={disabled}
-        spellCheck={false}
-      />
-      { user?.is_staff && 
-      <RSInput ref={rsInput}
-        value={value}
+        editable={!disabled}
         onChange={handleChange}
-        placeholder={placeholder}
-        disabled={disabled}
-      /> }
+        onKeyDown={handleInput}
+        onFocus={handleFocusIn}
+      />
       <div className='flex w-full gap-4 py-1 mt-1 justify-stretch'>
         <div className='flex flex-col gap-2'>
           <Button
@@ -257,7 +244,7 @@ function EditorRSExpression({
             onClick={handleCheckExpression}
           />
         </div>
-        {isActive && EditButtons}
+        {isActive && !disabled && EditButtons}
       </div>
       { (loading || parseData) && 
       <div className='w-full overflow-y-auto border mt-2 max-h-[14rem] min-h-[7rem]'>

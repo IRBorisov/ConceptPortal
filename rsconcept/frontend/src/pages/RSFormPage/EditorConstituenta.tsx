@@ -171,8 +171,8 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
                 <p>- столбец "Описание" содержит один из непустых текстовых атрибутов</p>
                 <Divider margins='mt-2' />
                 <h1>Статусы</h1>
-                { [... mapStatusInfo.values()].map(info => {
-                    return (<p className='py-1'>
+                { [... mapStatusInfo.values()].map((info, index) => {
+                    return (<p className='py-1' key={`status-info-${index}`}>
                       <span className={`inline-block font-semibold min-w-[4rem] text-center border ${info.color}`}>
                         {info.text}
                       </span>

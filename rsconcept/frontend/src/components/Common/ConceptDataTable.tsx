@@ -15,21 +15,21 @@ createTheme('customDark', {
     disabled: 'rgba(228, 228, 231, 0.54)'
   },
   background: {
-    default: '#002b36'
+    default: '#002129'
   },
   context: {
     background: '#3e014d',
     text: 'rgba(228, 228, 231, 0.87)'
   },
   highlightOnHover: {
-    default: '#3e014d',
+    default: '#2d0138',
     text: 'rgba(228, 228, 231, 1)'
   },
   divider: {
     default: '#6b6b6b'
   },
   striped: {
-    default: '#004859',
+    default: '#003845',
     text: 'rgba(228, 228, 231, 1)'
   },
   selected: {
