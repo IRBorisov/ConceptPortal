@@ -1,5 +1,5 @@
+import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import Button from '../../components/Common/Button';
 import Label from '../../components/Common/Label';
@@ -38,9 +38,11 @@ function EditorRSExpression({
 }: EditorRSExpressionProps) {
   const { user } = useAuth();
   const { schema } = useRSForm();
+
   const [isModified, setIsModified] = useState(false);
   const { parseData, checkExpression, resetParse, loading } = useCheckExpression({ schema });
   const expressionCtrl = useRef<HTMLTextAreaElement>(null);
+  const rsInput = useRef<ReactCodeMirrorRef>(null);
 
   useLayoutEffect(() => {
     setIsModified(false);
@@ -51,8 +53,8 @@ function EditorRSExpression({
     toggleEditMode()
   }
 
-  function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    onChange(event.target.value);
+  function handleChange(newvalue: string) {
+    onChange(newvalue);
     setIsModified(true);
   }
   
@@ -91,7 +93,6 @@ function EditorRSExpression({
 
   const handleEdit = useCallback((id: TokenID, key?: string) => {
     if (!expressionCtrl.current) {
-      toast.error('Нет доступа к полю редактирования формального выражения');
       return;
     }
     const text = new TextWrapper(expressionCtrl.current);
@@ -112,6 +113,7 @@ function EditorRSExpression({
       return;
     }
     const text = new TextWrapper(expressionCtrl.current);
+    // rsInput.current?.state?.selection
     if (event.shiftKey && event.key === '*' && !event.altKey) {
       text.insertToken(TokenID.DECART);
     } else if (event.altKey) {
@@ -232,16 +234,16 @@ function EditorRSExpression({
         rows={6}
         placeholder={placeholder}
         value={value}
-        onChange={handleChange}
+        onChange={event => handleChange(event.target.value)}
         onFocus={handleFocusIn}
         onKeyDown={handleInput}
         disabled={disabled}
         spellCheck={false}
       />
-      { user?.is_staff && <RSInput
+      { user?.is_staff && 
+      <RSInput ref={rsInput}
         value={value}
-        setValue={setValue}
-        onChange={onChange}
+        onChange={handleChange}
         placeholder={placeholder}
         disabled={disabled}
       /> }

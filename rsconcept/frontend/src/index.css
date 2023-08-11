@@ -14,8 +14,15 @@
   color-scheme: light;
 }
 
-.react-dropdown-select-item   {
+.react-dropdown-select-item {
   @apply bg-gray-100 dark:bg-gray-600 dark:text-zinc-200 hover:bg-gray-50 hover:text-gray-700 dark:hover:text-white dark:hover:bg-gray-500
+}
+
+.cm-editor {
+  @apply border shadow rounded clr-border px-2
+}
+.cm-editor.cm-focused {
+  @apply border shadow rounded outline-2 outline
 }
 
 @layer components {

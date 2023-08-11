@@ -1,7 +1,8 @@
 import { Extension } from '@codemirror/state';
 import { createTheme } from '@uiw/codemirror-themes';
-import CodeMirror, { BasicSetupOptions } from '@uiw/react-codemirror';
+import CodeMirror, { BasicSetupOptions, ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { EditorView } from 'codemirror';
+import { Ref } from 'react';
 
 import { useConceptTheme } from '../../../context/ThemeContext';
 
@@ -9,7 +10,7 @@ import { useConceptTheme } from '../../../context/ThemeContext';
 const lightTheme: Extension = createTheme({
   theme: 'light',
   settings: {
-    fontFamily: 'Roboto',
+    fontFamily: 'inherit',
     background: '#ffffff',
     foreground: '#000000',
     selection: '#036dd626'
@@ -26,7 +27,7 @@ const lightTheme: Extension = createTheme({
 const darkTheme: Extension = createTheme({
   theme: 'dark',
   settings: {
-    fontFamily: 'Roboto',
+    fontFamily: 'inherit',
     background: '#000000',
     foreground: '#ffffff',
     selection: '#036dd626'
@@ -38,14 +39,6 @@ const darkTheme: Extension = createTheme({
     // { tag: t.definition(t.typeName), color: '#5c6166' },
   ]
 });
-
-interface RSInputProps {
-  disabled?: boolean
-  placeholder?: string
-  value: string
-  onChange: (newValue: string) => void
-  setValue: (expression: string) => void
-}
 
 const editorSetup: BasicSetupOptions = {
   highlightSpecialChars: true,
@@ -75,22 +68,37 @@ const editorSetup: BasicSetupOptions = {
   lintKeymap: false
 };
 
-function RSInput({ value, disabled, placeholder, setValue }: RSInputProps) {
+const editorExtensions = [
+  EditorView.lineWrapping
+];
+
+interface RSInputProps {
+  ref?: Ref<ReactCodeMirrorRef>
+  value?: string
+  disabled?: boolean
+  height?: string
+  placeholder?: string
+  onChange: (newValue: string) => void
+}
+
+function RSInput({ 
+  disabled, onChange,
+  height='10rem',
+  ...props 
+}: RSInputProps) {
   const { darkMode } = useConceptTheme();
 
   return (
-    <div className='w-full h-[10rem] border text-lg'>
+    <div className={`w-full h-[${height}]`}>
     <CodeMirror
-      value={value}
       basicSetup={editorSetup}
-      extensions={[EditorView.lineWrapping]}
+      extensions={editorExtensions}
       editable={!disabled}
-      placeholder={placeholder}
-      height='10rem'
+      height={height}
       indentWithTab={false}
-
       theme={darkMode ? darkTheme : lightTheme}
-      onChange={(value) => setValue(value)}
+      onChange={(value) => onChange(value)}
+      {...props}
     />
     </div>
   );
