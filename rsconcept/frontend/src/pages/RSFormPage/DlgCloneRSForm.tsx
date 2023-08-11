@@ -6,6 +6,7 @@ import Checkbox from '../../components/Common/Checkbox';
 import Modal from '../../components/Common/Modal';
 import TextArea from '../../components/Common/TextArea';
 import TextInput from '../../components/Common/TextInput';
+import { useLibrary } from '../../context/LibraryContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { IRSFormCreateData } from '../../utils/models';
 import { getCloneTitle } from '../../utils/staticUI';
@@ -21,7 +22,8 @@ function DlgCloneRSForm({ hideWindow }: DlgCloneRSFormProps) {
   const [comment, setComment] = useState('');
   const [common, setCommon] = useState(false);
 
-  const { schema, clone } = useRSForm();
+  const { cloneSchema } = useLibrary();
+  const { schema } = useRSForm();
 
   useEffect(() => {
     if (schema) {
@@ -33,13 +35,16 @@ function DlgCloneRSForm({ hideWindow }: DlgCloneRSFormProps) {
   }, [schema, schema?.title, schema?.alias, schema?.comment, schema?.is_common]);
 
   const handleSubmit = () => {
+    if (!schema) {
+      return;
+    }
     const data: IRSFormCreateData = {
       title: title,
       alias: alias,
       comment: comment,
       is_common: common
     };
-    clone(data, newSchema => {
+    cloneSchema(schema.id, data, newSchema => {
       toast.success(`Схема создана: ${newSchema.alias}`);
       navigate(`/rsforms/${newSchema.id}`);
     });

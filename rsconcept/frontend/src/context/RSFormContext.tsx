@@ -4,18 +4,17 @@ import { toast } from 'react-toastify'
 import { type ErrorInfo } from '../components/BackendError'
 import { useRSFormDetails } from '../hooks/useRSFormDetails'
 import {
-  type DataCallback, deleteRSForm, getTRSFile,
+  type DataCallback, getTRSFile,
   patchConstituenta, patchDeleteConstituenta, 
   patchMoveConstituenta, patchResetAliases, patchRSForm,
-  patchUploadTRS,  postClaimRSForm, postCloneRSForm, postNewConstituenta
+  patchUploadTRS,  postClaimRSForm, postNewConstituenta
 } from '../utils/backendAPI'
 import {
   IConstituentaList, IConstituentaMeta, ICstCreateData,
-  ICstMovetoData, ICstUpdateData, IRSForm, IRSFormCreateData, 
-  IRSFormData, IRSFormMeta, IRSFormUpdateData, IRSFormUploadData
+  ICstMovetoData, ICstUpdateData, IRSForm, 
+  IRSFormMeta, IRSFormUpdateData, IRSFormUploadData
 } from '../utils/models'
 import { useAuth } from './AuthContext'
-import { useLibrary } from './LibraryContext'
 
 interface IRSFormContext {
   schema?: IRSForm
@@ -36,11 +35,10 @@ interface IRSFormContext {
   toggleTracking: () => void
   
   update: (data: IRSFormUpdateData, callback?: DataCallback<IRSFormMeta>) => void
-  destroy: (callback?: () => void) => void
   claim: (callback?: DataCallback<IRSFormMeta>) => void
   download: (callback: DataCallback<Blob>) => void
   upload: (data: IRSFormUploadData, callback: () => void) => void
-  clone: (data: IRSFormCreateData, callback: DataCallback<IRSFormData>) => void
+
   resetAliases: (callback: () => void) => void
 
   cstCreate: (data: ICstCreateData, callback?: DataCallback<IConstituentaMeta>) => void
@@ -69,7 +67,6 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
   const { user } = useAuth();
   const { schema, reload, error, setError, setSchema, loading } = useRSFormDetails({ target: schemaID });
   const [ processing, setProcessing ] = useState(false);
-  const library = useLibrary();
 
   const [ isForceAdmin, setIsForceAdmin ] = useState(false);
   const [ isReadonly, setIsReadonly ] = useState(false);
@@ -130,21 +127,6 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
     });
   }, [schemaID, setError, setSchema, schema]);
 
-  const destroy = useCallback(
-  (callback?: () => void) => {
-    setError(undefined)
-    deleteRSForm(schemaID, {
-      showError: true,
-      setLoading: setProcessing,
-      onError: error => setError(error),
-      onSuccess: () => {
-        setSchema(undefined);
-        library.reload();
-        if (callback) callback();
-      }
-    });
-  }, [schemaID, setError, setSchema, library]);
-
   const claim = useCallback(
   (callback?: DataCallback<IRSFormMeta>) => {
     if (!schema || !user) {
@@ -161,24 +143,6 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       }
     });
   }, [schemaID, setError, schema, user, setSchema]);
-
-  const clone = useCallback(
-  (data: IRSFormCreateData, callback: DataCallback<IRSFormData>) => {
-    if (!schema || !user) {
-      return;
-    }
-    setError(undefined)
-    postCloneRSForm(schemaID, {
-      data: data,
-      showError: true,
-      setLoading: setProcessing,
-      onError: error => setError(error),
-      onSuccess: newSchema => {
-        library.reload();
-        if (callback) callback(newSchema);
-      }
-    });
-  }, [schemaID, setError, schema, user, library]);
 
   const resetAliases = useCallback(
   (callback?: () => void) => {
@@ -276,7 +240,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       toggleForceAdmin: () => { setIsForceAdmin(prev => !prev) },
       toggleReadonly: () => { setIsReadonly(prev => !prev) },
       toggleTracking,
-      update, download, upload, destroy, claim, resetAliases, clone,
+      update, download, upload, claim, resetAliases,
       cstUpdate, cstCreate, cstDelete, cstMoveTo
     }}>
       { children }

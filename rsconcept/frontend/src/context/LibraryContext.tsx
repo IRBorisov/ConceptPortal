@@ -1,8 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 import { ErrorInfo } from '../components/BackendError';
-import { DataCallback, getLibrary, postNewRSForm } from '../utils/backendAPI';
-import { ILibraryFilter, IRSFormCreateData, IRSFormMeta, matchRSFormMeta } from '../utils/models';
+import { DataCallback, deleteRSForm, getLibrary, postCloneRSForm, postNewRSForm } from '../utils/backendAPI';
+import { ILibraryFilter, IRSFormCreateData, IRSFormData, IRSFormMeta, matchRSFormMeta } from '../utils/models';
 import { useAuth } from './AuthContext';
 
 interface ILibraryContext {
@@ -12,9 +12,10 @@ interface ILibraryContext {
   error: ErrorInfo
   setError: (error: ErrorInfo) => void
 
-  reload: (callback?: () => void) => void
   filter: (params: ILibraryFilter) => IRSFormMeta[]
   createSchema: (data: IRSFormCreateData, callback?: DataCallback<IRSFormMeta>) => void
+  cloneSchema: (target:number, data: IRSFormCreateData, callback: DataCallback<IRSFormData>) => void
+  destroySchema: (target: number, callback?: () => void) => void
 }
 
 const LibraryContext = createContext<ILibraryContext | null>(null)
@@ -88,10 +89,40 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
     });
   }, [reload]);
 
+  const destroySchema = useCallback(
+  (target: number, callback?: () => void) => {
+    setError(undefined)
+    deleteRSForm(String(target), {
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => setError(error),
+      onSuccess: () => reload(() => {
+        if (callback) callback();
+      })
+    });
+  }, [setError, reload]);
+
+  const cloneSchema = useCallback(
+  (target: number, data: IRSFormCreateData, callback: DataCallback<IRSFormData>) => {
+    if (!user) {
+      return;
+    }
+    setError(undefined)
+    postCloneRSForm(String(target), {
+      data: data,
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => setError(error),
+      onSuccess: newSchema => reload(() => {
+        if (callback) callback(newSchema);
+      })
+    });
+  }, [reload, setError, user]);
+
   return (
     <LibraryContext.Provider value={{ 
       items, loading, processing, error, setError, 
-      reload, filter, createSchema
+      filter, createSchema, cloneSchema, destroySchema
     }}>
       { children }
     </LibraryContext.Provider>

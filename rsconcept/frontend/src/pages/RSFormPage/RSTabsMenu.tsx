@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import Button from '../../components/Common/Button';
 import Checkbox from '../../components/Common/Checkbox';
@@ -9,21 +8,21 @@ import { CloneIcon, CrownIcon, DownloadIcon, DumpBinIcon, EyeIcon, EyeOffIcon, M
 import { useAuth } from '../../context/AuthContext';
 import { useRSForm } from '../../context/RSFormContext';
 import useDropdown from '../../hooks/useDropdown';
-import { claimOwnershipProc, deleteRSFormProc, downloadRSFormProc, shareCurrentURLProc } from '../../utils/procedures';
+import { claimOwnershipProc, downloadRSFormProc, shareCurrentURLProc } from '../../utils/procedures';
 
 interface RSTabsMenuProps {
   showUploadDialog: () => void
   showCloneDialog: () => void
+  onDestroy: () => void
 }
 
-function RSTabsMenu({showUploadDialog, showCloneDialog}: RSTabsMenuProps) {
-  const navigate = useNavigate();
+function RSTabsMenu({showUploadDialog, showCloneDialog, onDestroy}: RSTabsMenuProps) {
   const { user } = useAuth();
   const {
     schema,
     isOwned, isEditable, isTracking, isReadonly: readonly, isForceAdmin: forceAdmin,
     toggleTracking, toggleForceAdmin, toggleReadonly,
-    claim, destroy, download
+    claim, download
   } = useRSForm();
   const schemaMenu = useDropdown();
   const editMenu = useDropdown();
@@ -35,8 +34,8 @@ function RSTabsMenu({showUploadDialog, showCloneDialog}: RSTabsMenuProps) {
 
   const handleDelete = useCallback(() => {
     schemaMenu.hide();
-    deleteRSFormProc(destroy, navigate);
-  }, [destroy, navigate, schemaMenu]);
+    onDestroy();
+  }, [onDestroy, schemaMenu]);
 
   const handleDownload = useCallback(() => {
     schemaMenu.hide();

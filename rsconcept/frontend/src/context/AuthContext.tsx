@@ -11,7 +11,6 @@ interface IAuthContext {
   logout: (callback?: DataCallback) => void
   signup: (data: IUserSignupData, callback?: DataCallback<IUserProfile>) => void
   updatePassword: (data: IUserUpdatePassword, callback?: () => void) => void
-  reload: (callback?: () => void) => void
   loading: boolean
   error: ErrorInfo
   setError: (error: ErrorInfo) => void
@@ -40,7 +39,7 @@ export const AuthState = ({ children }: AuthStateProps) => {
   const reload = useCallback(
   (callback?: () => void) => {
     getAuth({
-      onError: () => { setUser(undefined); },
+      onError: () => setUser(undefined),
       onSuccess: currentUser => {
         if (currentUser.id) {
           setUser(currentUser);
@@ -58,7 +57,7 @@ export const AuthState = ({ children }: AuthStateProps) => {
       data: data,
       showError: true,
       setLoading: setLoading,
-      onError: error => { setError(error); },
+      onError: error => setError(error),
       onSuccess: newData => reload(() => {
         if (callback) callback(newData);
       })
@@ -81,8 +80,10 @@ export const AuthState = ({ children }: AuthStateProps) => {
       data: data,
       showError: true,
       setLoading: setLoading,
-      onError: error => { setError(error); },
-      onSuccess: newData => reload(() => { if (callback) callback(newData); })
+      onError: error => setError(error),
+      onSuccess: newData => reload(() => {
+        if (callback) callback(newData);
+      })
     });
   }
 
@@ -93,13 +94,12 @@ export const AuthState = ({ children }: AuthStateProps) => {
       data: data,
       showError: true,
       setLoading: setLoading,
-      onError: error => { setError(error); },
-      onSuccess: () => {
-        setUser(undefined);
-        reload();
+      onError: error => setError(error),
+      onSuccess: () => reload(() => {
         if (callback) callback();       
-    }});
-  }, [setUser, reload]);
+      })
+    });
+  }, [reload]);
 
   useLayoutEffect(() => {
     reload();
@@ -107,7 +107,7 @@ export const AuthState = ({ children }: AuthStateProps) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, signup, loading, error, reload, setError, updatePassword }}
+      value={{ user, login, logout, signup, loading, error, setError, updatePassword }}
     >
       {children}
     </AuthContext.Provider>

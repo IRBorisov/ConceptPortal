@@ -20,19 +20,6 @@ export function claimOwnershipProc(
   claim(() => toast.success('Вы стали владельцем схемы'));
 }
 
-export function deleteRSFormProc(
-  destroy: (callback?: () => void) => void,
-  navigate: (path: string) => void
-) {
-  if (!window.confirm('Вы уверены, что хотите удалить данную схему?')) {
-    return;
-  }
-  destroy(() => {
-    toast.success('Схема удалена');
-    navigate('/library?filter=personal');
-  });
-}
-
 export function downloadRSFormProc(
   download: (callback: DataCallback<Blob>) => void,
   fileName: string

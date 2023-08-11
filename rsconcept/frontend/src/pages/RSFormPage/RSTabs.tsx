@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import BackendError from '../../components/BackendError';
 import ConceptTab from '../../components/Common/ConceptTab';
 import { Loader } from '../../components/Common/Loader';
+import { useLibrary } from '../../context/LibraryContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { prefixes, TIMEOUT_UI_REFRESH } from '../../utils/constants';
 import { CstType, ICstCreateData, SyntaxTree } from '../../utils/models';
@@ -36,6 +37,7 @@ function RSTabs() {
     error, schema, loading, 
     cstCreate, cstDelete 
   } = useRSForm();
+  const { destroySchema } = useLibrary();
 
   const [activeTab, setActiveTab] = useState(RSTabsList.CARD);
   const [activeID, setActiveID] = useState<number | undefined>(undefined)
@@ -151,7 +153,6 @@ function RSTabs() {
     });
   }, [afterDelete, cstDelete, schema, activeID, activeTab, navigateTo]);
 
-
   const promptDeleteCst = useCallback(
   (selected: number[], callback?: (items: number[]) => void) => {
     setAfterDelete(() => (
@@ -173,6 +174,17 @@ function RSTabs() {
   (cstID: number) => {
     navigateTo(RSTabsList.CST_EDIT, cstID)
   }, [navigateTo]);
+
+  const onDestroySchema = useCallback(
+  () => {
+    if (!schema || !window.confirm('Вы уверены, что хотите удалить данную схему?')) {
+      return;
+    }
+    destroySchema(schema.id, () => {
+      toast.success('Схема удалена');
+      navigate('/library?filter=personal');
+    });
+  }, [schema, destroySchema, navigate]);
 
   return (
   <div className='w-full'>
@@ -213,6 +225,7 @@ function RSTabs() {
     >
       <TabList className='flex items-start w-fit clr-bg-pop'>
         <RSTabsMenu 
+          onDestroy={onDestroySchema}
           showCloneDialog={() => setShowClone(true)} 
           showUploadDialog={() => setShowUpload(true)} 
         />
@@ -226,7 +239,9 @@ function RSTabs() {
       </TabList>
 
       <TabPanel className='flex items-start w-full gap-2'>
-        <EditorRSForm />
+        <EditorRSForm 
+          onDestroy={onDestroySchema}
+        />
         {schema.stats && <RSFormStats stats={schema.stats}/>}
       </TabPanel>
 

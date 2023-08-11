@@ -1,6 +1,5 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import Checkbox from '../../components/Common/Checkbox';
@@ -13,15 +12,18 @@ import { useAuth } from '../../context/AuthContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { useUsers } from '../../context/UsersContext';
 import { IRSFormCreateData } from '../../utils/models';
-import { claimOwnershipProc, deleteRSFormProc, downloadRSFormProc, shareCurrentURLProc } from '../../utils/procedures';
+import { claimOwnershipProc, downloadRSFormProc, shareCurrentURLProc } from '../../utils/procedures';
 
-function EditorRSForm() {
-  const navigate = useNavigate();
+interface EditorRSFormProps {
+  onDestroy: () => void
+}
+
+function EditorRSForm({ onDestroy }: EditorRSFormProps) {
   const intl = useIntl();
   const { getUserLabel } = useUsers();
   const {
     schema, update, download,
-    isEditable, isOwned, isClaimable, processing, destroy, claim
+    isEditable, isOwned, isClaimable, processing, claim
   } = useRSForm();
   const { user } = useAuth();
 
@@ -66,9 +68,6 @@ function EditorRSForm() {
     update(data, () => toast.success('Изменения сохранены'));
   };
 
-  const handleDelete =
-    useCallback(() => { deleteRSFormProc(destroy, navigate); }, [destroy, navigate]);
-
   const handleDownload = useCallback(() => {
     const fileName = (schema?.alias ?? 'Schema') + '.trs';
     downloadRSFormProc(download, fileName);
@@ -97,7 +96,7 @@ function EditorRSForm() {
         <MiniButton
           tooltip='Удалить схему'
           disabled={!isEditable}
-          onClick={handleDelete}
+          onClick={onDestroy}
           icon={<DumpBinIcon size={5} color={isEditable ? 'text-red' : ''} />}
         />
       </div>
