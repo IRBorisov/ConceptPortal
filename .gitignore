@@ -6,6 +6,7 @@ cert/
 rsconcept/backend/import/*.whl
 rsconcept/backend/static
 rsconcept/backend/media
+rsconcept/frontend/dist
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

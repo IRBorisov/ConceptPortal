@@ -4,13 +4,18 @@ This readme file is used mostly to document project dependencies
 
 
 # Developer Setup Notes
-- Install Python 3.9, NodeJS, VSCode
+- Install Python 3.9, NodeJS, VSCode, Docker Desktop
 - copy import wheels from ConceptCore to rsconcept\backend\import
 - run rsconcept\backend\LocalEnvSetup.ps1
 - run 'npm install' in rsconcept\frontend
 - use VSCode configs in root folder to start developement
 - production: create secrets secrets\db_password.txt and django_key.txt
 - production: provide TLS certificate nginx\cert\portal-cert.pem and nginx\cert\portal-key.pem
+
+# Contributing notes
+- use Test config in VSCode to run tests before pushing commits / requests
+- !BEFORE PUSHING INTO MAIN! in rsconcept\frontend run in terminal 'npm run build' and fix all errors
+- when making major changes make sure that Docker production is building correctly. run 'docker compose -f docker-compose-prod.yml up'
 
 # Frontend stack & Tooling [Vite + React + Typescript]
 <details>
