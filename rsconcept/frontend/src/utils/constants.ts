@@ -1,6 +1,6 @@
 // Constants
 const prod = {
-  backend: 'https://mail.acconcept.ru:8082',
+  backend: 'https://portal.acconcept.ru:8082',
   // backend: 'https://dev.concept.ru:8000',
   // backend: 'https://localhost:8000',
   // backend: 'https://api.portal.concept.ru',
