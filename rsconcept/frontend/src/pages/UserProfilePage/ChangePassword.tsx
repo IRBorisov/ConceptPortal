@@ -43,13 +43,13 @@ export function ChangePassword() {
           onChange={event => (setOldPassword(event.target.value))}
         />
         <TextInput id='new_password'
-          className={input_class}
+          //className={input_class}
           label="Введите новый пароль:"
           value={new_password}
           onChange={event => (setNewPassword(event.target.value), setPasswordEqual(true))}
         />
         <TextInput id='new_password'
-          className={input_class}
+          //className={input_class}
           label="Повторите новый пароль:"
           value={new_password_repeat}
           onChange={event => (setNewPasswordRepeat(event.target.value), setPasswordEqual(true))}
