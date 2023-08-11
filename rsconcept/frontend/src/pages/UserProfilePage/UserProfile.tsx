@@ -8,7 +8,7 @@ import { ChangePassword } from './ChangePassword';
 
 
 export function UserProfile() {
-  const { updateUser, user, processing, error } = useUserProfile();
+  const { updateUser, user, processing } = useUserProfile();
   
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
