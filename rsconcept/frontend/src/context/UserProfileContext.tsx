@@ -77,7 +77,7 @@ export const UserProfileState = ({ children }: UserProfileStateProps) => {
         onError: error => { setError(error); },
         onSuccess: () => {
           setUser(undefined);
-          auth.logout();
+          auth.reload();
           if (callback) callback();       
       }});
     }, [setUser, auth]

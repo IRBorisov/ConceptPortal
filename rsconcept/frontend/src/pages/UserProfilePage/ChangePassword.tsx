@@ -13,13 +13,13 @@ export function ChangePassword() {
   const [old_password, setOldPassword] = useState('');
   const [new_password, setNewPassword] = useState('');
   const [new_password_repeat, setNewPasswordRepeat] = useState('');
-  const [password_equal, setPasswordEqual] = useState(true);
+  const [new_pass_color, setNewPassColor] = useState('');
   const navigate = useNavigate();
   
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (new_password !== new_password_repeat) {
-      setPasswordEqual(false);
+      setNewPassColor('bg-red-500');
       toast.error('Пароли не совпадают');
     }
     else {
@@ -41,21 +41,21 @@ export function ChangePassword() {
           onChange={event => setOldPassword(event.target.value)}
         />
         <TextInput id='new_password'
-          colorClass={`${password_equal ? "" : "text-red-500"}`}
+          colorClass={new_pass_color}
           label="Введите новый пароль:"
           value={new_password}
           onChange={event => {
-            setNewPassword(event.target.value);
-            setPasswordEqual(true);
+            setNewPassword(event.target.value); 
+            setNewPassColor('');
           }}
         />
-        <TextInput id='new_password'
-          colorClass={`${password_equal ? "" : "text-red-500"}`}
+        <TextInput id='new_password_repeat'
+          colorClass={new_pass_color}
           label="Повторите новый пароль:"
           value={new_password_repeat}
           onChange={event => {
-            setNewPasswordRepeat(event.target.value);
-            setPasswordEqual(true);
+            setNewPasswordRepeat(event.target.value); 
+            setNewPassColor('');
           }}
         />
         <div className='relative flex justify-center my-4 border'>

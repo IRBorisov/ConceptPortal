@@ -58,3 +58,4 @@ bower_components
 
 # Environments
 venv/
+/GitExtensions.settings
