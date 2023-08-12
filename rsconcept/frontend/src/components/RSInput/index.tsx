@@ -1,11 +1,13 @@
 import { bracketMatching } from '@codemirror/language';
 import { Extension } from '@codemirror/state';
+import { tags as t } from '@lezer/highlight';
 import { createTheme } from '@uiw/codemirror-themes';
 import CodeMirror, { BasicSetupOptions, ReactCodeMirrorProps, ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { EditorView } from 'codemirror';
 import { Ref, useMemo } from 'react';
 
 import { useConceptTheme } from '../../context/ThemeContext';
+import { RSLanguage } from './rslang';
 
 const editorSetup: BasicSetupOptions = {
   highlightSpecialChars: true,
@@ -37,6 +39,7 @@ const editorSetup: BasicSetupOptions = {
 
 const editorExtensions = [
   EditorView.lineWrapping,
+  RSLanguage,
   bracketMatching()
 ];
 
@@ -62,15 +65,16 @@ function RSInput({
       fontFamily: 'inherit',
       background: editable ? '#ffffff' : '#f0f2f7',
       foreground: '#000000',
-      selection: '#036dd626',
-      selectionMatch: '#036dd626',
+      selection: '#aacef2',
       caret: '#5d00ff',
     },
     styles: [
-      // { tag: t.comment, color: '#787b8099' },
-      // { tag: t.variableName, color: '#0080ff' },
-      // { tag: [t.string, t.special(t.brace)], color: '#5c6166' },
-      // { tag: t.definition(t.typeName), color: '#5c6166' },
+      { tag: t.name, class: 'text-[#b266ff]' }, // GlobalID
+      { tag: t.variableName, class: 'text-[#24821a]' }, // LocalID
+      { tag: t.propertyName, class: '' }, // Radical
+      { tag: t.keyword, class: 'text-[#001aff]' }, // keywords
+      { tag: t.controlKeyword, class: 'font-semibold'}, // R | I | D
+      { tag: t.unit, class: 'text-[0.75rem]' }, // indicies
     ]
   }), [editable]);
   
@@ -81,20 +85,21 @@ function RSInput({
       fontFamily: 'inherit',
       background: editable ? '#070b12' : '#374151',
       foreground: '#e4e4e7',
-      selection: '#ffae00b0',
-      selectionMatch: '#ffae00b0',
+      selection: '#8c6000',
       caret: '#ffaa00'
     },
     styles: [
-      // { tag: t.comment, color: '#787b8099' },
-      // { tag: t.variableName, color: '#0080ff' },
-      // { tag: [t.string, t.special(t.brace)], color: '#5c6166' },
-      // { tag: t.definition(t.typeName), color: '#5c6166' },
+      { tag: t.name, class: 'text-[#dfbfff]' }, // GlobalID
+      { tag: t.variableName, class: 'text-[#69bf60]' }, // LocalID
+      { tag: t.propertyName, class: '' }, // Radical
+      { tag: t.keyword, class: 'text-[#808dff]' }, // keywords
+      { tag: t.controlKeyword, class: 'font-semibold'}, // R | I | D
+      { tag: t.unit, class: 'text-[0.75rem]' }, // indicies
     ]
   }), [editable]);
 
   return (
-    <div className={`w-full h-[${height}] ${cursor}`}>
+    <div className={`w-full h-[${height}] ${cursor} text-lg`}>
     <CodeMirror
       ref={innerref}
       basicSetup={editorSetup}

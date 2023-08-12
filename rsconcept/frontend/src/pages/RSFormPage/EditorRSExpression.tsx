@@ -4,7 +4,7 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import Button from '../../components/Common/Button';
 import Label from '../../components/Common/Label';
 import { Loader } from '../../components/Common/Loader';
-import RSInput from '../../components/RSInput/RSInput';
+import RSInput from '../../components/RSInput';
 import { getSymbolSubstitute, TextWrapper } from '../../components/RSInput/textEditing';
 import { useRSForm } from '../../context/RSFormContext';
 import useCheckExpression from '../../hooks/useCheckExpression';
