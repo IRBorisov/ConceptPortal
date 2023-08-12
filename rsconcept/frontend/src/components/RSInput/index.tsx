@@ -52,7 +52,6 @@ extends Omit<ReactCodeMirrorProps, 'onChange'> {
 
 function RSInput({ 
   innerref, onChange, editable,
-  height='10rem',
   ...props 
 }: RSInputProps) {
   const { darkMode } = useConceptTheme();
@@ -99,12 +98,11 @@ function RSInput({
   }), [editable]);
 
   return (
-    <div className={`w-full h-[${height}] ${cursor} text-lg`}>
+    <div className={`w-full ${cursor} text-lg`}>
     <CodeMirror
       ref={innerref}
       basicSetup={editorSetup}
       extensions={editorExtensions}
-      height={height}
       indentWithTab={false}
       theme={darkMode ? darkTheme : lightTheme}
       onChange={value => onChange(value)}

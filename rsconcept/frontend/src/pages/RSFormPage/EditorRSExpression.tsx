@@ -227,6 +227,7 @@ function EditorRSExpression({
       />
       <RSInput innerref={rsInput}
         className='mt-2'
+        height='10.1rem'
         value={value}
         placeholder={placeholder}
         editable={!disabled}
