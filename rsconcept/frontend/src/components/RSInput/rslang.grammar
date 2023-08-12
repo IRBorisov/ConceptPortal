@@ -1,0 +1,20 @@
+@top Program { expression* }
+
+@skip { space }
+
+expression {
+  Identifier |
+  String |
+  Application { "(" expression* ")" }
+}
+
+@tokens {
+  space { @whitespace+ }
+  Identifier { $[a-zA-Z_\-0-9]+ }
+  String { '"' (!["\\] | "\\" _)* '"' }
+  "(" ")"
+}
+
+@detectDelim
+
+@external propSource highlighting from "./highlight.ts"

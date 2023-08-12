@@ -4,17 +4,17 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import Button from '../../components/Common/Button';
 import Label from '../../components/Common/Label';
 import { Loader } from '../../components/Common/Loader';
+import RSInput from '../../components/RSInput/RSInput';
+import { getSymbolSubstitute, TextWrapper } from '../../components/RSInput/textEditing';
 import { useRSForm } from '../../context/RSFormContext';
 import useCheckExpression from '../../hooks/useCheckExpression';
 import { TokenID } from '../../utils/enums';
 import { IConstituenta, IRSErrorDescription, SyntaxTree } from '../../utils/models';
 import { getCstExpressionPrefix, getTypificationLabel } from '../../utils/staticUI';
 import ParsingResult from './elements/ParsingResult';
-import RSInput from './elements/RSInput';
 import RSLocalButton from './elements/RSLocalButton';
 import RSTokenButton from './elements/RSTokenButton';
 import StatusBar from './elements/StatusBar';
-import { getSymbolSubstitute, TextWrapper } from './elements/textEditing';
 
 interface EditorRSExpressionProps {
   id: string

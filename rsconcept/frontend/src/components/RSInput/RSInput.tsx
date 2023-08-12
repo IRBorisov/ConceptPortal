@@ -5,7 +5,7 @@ import CodeMirror, { BasicSetupOptions, ReactCodeMirrorProps, ReactCodeMirrorRef
 import { EditorView } from 'codemirror';
 import { Ref, useMemo } from 'react';
 
-import { useConceptTheme } from '../../../context/ThemeContext';
+import { useConceptTheme } from '../../context/ThemeContext';
 
 const editorSetup: BasicSetupOptions = {
   highlightSpecialChars: true,

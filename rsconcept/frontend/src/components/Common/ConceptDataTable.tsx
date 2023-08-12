@@ -38,12 +38,21 @@ createTheme('customDark', {
   }
 }, 'dark');
 
+createTheme('customLight', {
+  divider: {
+    default: '#d1d5db'
+  },
+  striped: {
+    default: '#f0f2f7'
+  },
+}, 'light');
+
 function ConceptDataTable<T>({ theme, ...props }: TableProps<T>) {
   const { darkMode } = useConceptTheme();
 
   return (
     <DataTable<T>
-      theme={ theme ?? (darkMode ? 'customDark' : '')}
+      theme={ theme ?? (darkMode ? 'customDark' : 'customLight')}
       {...props}
     />
   );

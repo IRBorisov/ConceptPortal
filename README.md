@@ -35,6 +35,7 @@ This readme file is used mostly to document project dependencies
   - react-tooltip
   - @uiw/react-codemirror
   - @uiw/codemirror-themes
+  - @lezer/lr
   </pre>
 </details>
 <details>
@@ -45,6 +46,7 @@ This readme file is used mostly to document project dependencies
   - jest
   - ts-jest
   - @types/jest
+  - @lezer/generator
   </pre>
 </details>
 <details>
