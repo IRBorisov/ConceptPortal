@@ -107,6 +107,7 @@ function EditorTermGraph() {
           onClick={handleCenter}
         />
         <ConceptSelect
+          className='min-w-[9.5rem]'
           options={GraphLayoutSelector}
           placeholder='Выберите тип'
           values={layout ? [{ value: layout, label: mapLayoutLabels.get(layout) }] : []}
