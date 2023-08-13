@@ -13,6 +13,9 @@ import { getCstTypeLabel, getCstTypificationLabel, mapStatusInfo } from '../../u
 import EditorRSExpression from './EditorRSExpression';
 import ViewSideConstituents from './elements/ViewSideConstituents';
 
+// Max height of content for left enditor pane
+const UNFOLDED_HEIGHT = '59.1rem';
+
 interface EditorConstituentaProps {
   activeID?: number
   onOpenEdit: (cstID: number) => void
@@ -109,8 +112,8 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
   }
 
   return (
-    <div className='flex items-stretch w-full gap-2 mb-2'>
-      <form onSubmit={handleSubmit} className='flex-grow min-w-[50rem] max-w-min max-h-fit px-4 py-2 border'>
+    <div className='flex items-stretch w-full gap-2 mb-2 justify-stretch'>
+      <form onSubmit={handleSubmit} className='min-w-[50rem] max-w-min px-4 py-2 border'>
         <div className='flex items-start justify-between'>
             <button type='submit'
               title='Сохранить изменения'
@@ -238,11 +241,14 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
           />
         </div>
       </form>
-      <ViewSideConstituents
-        expression={expression}
-        activeID={activeID}
-        onOpenEdit={onOpenEdit}
-      />
+      <div className='self-stretch border w-full pb-1'>
+        <ViewSideConstituents
+          expression={expression}
+          baseHeight={UNFOLDED_HEIGHT}
+          activeID={activeID}
+          onOpenEdit={onOpenEdit}
+        />
+      </div>
     </div>
   );
 }

@@ -247,9 +247,9 @@ function EditorRSExpression({
         </div>
         {isActive && !disabled && EditButtons}
       </div>
-      { (loading || parseData) && 
-      <div className='w-full overflow-y-auto border mt-2 max-h-[14rem] min-h-[7rem]'>
-        { loading && <Loader />}
+      { (isActive || loading || parseData) && 
+      <div className='w-full overflow-y-auto border mt-2 max-h-[14rem] min-h-[4.2rem]'>
+        { loading && <Loader size={6} />}
         { !loading && parseData && 
         <ParsingResult 
           data={parseData} 

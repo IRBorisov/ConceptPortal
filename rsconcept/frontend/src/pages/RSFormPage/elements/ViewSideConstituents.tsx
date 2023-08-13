@@ -11,14 +11,18 @@ import ConstituentaTooltip from './ConstituentaTooltip';
 import DependencyModePicker from './DependencyModePicker';
 import MatchModePicker from './MatchModePicker';
 
+// Height that should be left to accomodate navigation panel + bottom margin
+const LOCAL_NAVIGATION_H = '2.6rem';
+
 interface ViewSideConstituentsProps {
   expression: string
+  baseHeight: string
   activeID?: number
   onOpenEdit: (cstID: number) => void
 }
 
-function ViewSideConstituents({ expression, activeID, onOpenEdit }: ViewSideConstituentsProps) {
-  const { darkMode } = useConceptTheme();
+function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: ViewSideConstituentsProps) {
+  const { darkMode, noNavigation } = useConceptTheme();
   const { schema } = useRSForm();
   
   const [filterMatch, setFilterMatch] = useLocalStorage('side-filter-match', CstMatchMode.ALL);
@@ -27,7 +31,8 @@ function ViewSideConstituents({ expression, activeID, onOpenEdit }: ViewSideCons
   
   const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema?.items ?? []);
 
-  useEffect(() => {
+  useEffect(
+  () => {
     if (!schema?.items) {
       setFilteredData([]);
       return;
@@ -67,8 +72,8 @@ function ViewSideConstituents({ expression, activeID, onOpenEdit }: ViewSideCons
     }
   }, [onOpenEdit]);
 
-  const conditionalRowStyles = useMemo(() =>
-  [
+  const conditionalRowStyles = useMemo(
+  () => [
     {
       when: (cst: IConstituenta) => cst.id === activeID,
       style: {
@@ -77,92 +82,101 @@ function ViewSideConstituents({ expression, activeID, onOpenEdit }: ViewSideCons
     }
   ], [activeID, darkMode]);
 
-  const columns = useMemo(() =>
-    [
-      {
-        id: 'id',
-        selector: (cst: IConstituenta) => cst.id,
-        omit: true
+  const columns = useMemo(
+  () => [
+    {
+      id: 'id',
+      selector: (cst: IConstituenta) => cst.id,
+      omit: true
+    },
+    {
+      name: 'ID',
+      id: 'alias',
+      cell: (cst: IConstituenta) => {
+        const info = mapStatusInfo.get(cst.status)!;
+        return (<>
+          <div
+            id={`${prefixes.cst_list}${cst.alias}`}
+            className={`w-full rounded-md text-center ${info.color}`}
+          >
+            {cst.alias}
+          </div>
+          <ConstituentaTooltip data={cst} anchor={`#${prefixes.cst_list}${cst.alias}`} />
+        </>);
       },
-      {
-        name: 'ID',
-        id: 'alias',
-        cell: (cst: IConstituenta) => {
-          const info = mapStatusInfo.get(cst.status)!;
-          return (<>
-            <div
-              id={`${prefixes.cst_list}${cst.alias}`}
-              className={`w-full rounded-md text-center ${info.color}`}
-            >
-              {cst.alias}
-            </div>
-            <ConstituentaTooltip data={cst} anchor={`#${prefixes.cst_list}${cst.alias}`} />
-          </>);
-        },
-        width: '65px',
-        maxWidth: '65px',
-        conditionalCellStyles: [
-          {
-            when: (cst: IConstituenta) => cst.id <= 0,
-            classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
-          }
-        ]
-      },
-      {
-        name: 'Описание',
-        id: 'description',
-        selector: (cst: IConstituenta) => getCstDescription(cst),
-        minWidth: '350px',
-        wrap: true,
-        conditionalCellStyles: [
-          {
-            when: (cst: IConstituenta) => cst.id <= 0,
-            classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
-          }
-        ]
-      },
-      {
-        name: 'Выражение',
-        id: 'expression',
-        selector: (cst: IConstituenta) => cst.definition?.formal ?? '',
-        minWidth: '200px',
-        hide: 1600,
-        grow: 2,
-        wrap: true,
-        conditionalCellStyles: [
-          {
-            when: (cst: IConstituenta) => cst.id <= 0,
-            classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
-          }
-        ]
-      }
-    ], []
-  );
-  
-  return (
-    <div className='max-h-[calc(100vh-10.3rem)] min-h-[40rem] overflow-y-scroll border flex-grow w-full'>
-      <div className='sticky top-0 left-0 right-0 z-10 flex items-center justify-between w-full gap-1 px-2 py-1 bg-white border-b rounded clr-bg-pop clr-border'>
-        <div className='flex items-center justify-between w-full'>
-          <MatchModePicker value={filterMatch} onChange={setFilterMatch}/>
-          <input type='text'
-            className='w-full px-2 bg-white outline-none hover:text-clip clr-bg-pop clr-border'
-            placeholder='наберите текст фильтра'
-            value={filterText}
-            onChange={event => { setFilterText(event.target.value); }}
-          />
-          <DependencyModePicker value={filterSource} onChange={setFilterSource}/>
-        </div>
-      </div>
+      width: '65px',
+      maxWidth: '65px',
+      conditionalCellStyles: [
+        {
+          when: (cst: IConstituenta) => cst.id <= 0,
+          classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
+        }
+      ]
+    },
+    {
+      name: 'Описание',
+      id: 'description',
+      selector: (cst: IConstituenta) => getCstDescription(cst),
+      minWidth: '350px',
+      wrap: true,
+      conditionalCellStyles: [
+        {
+          when: (cst: IConstituenta) => cst.id <= 0,
+          classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
+        }
+      ]
+    },
+    {
+      name: 'Выражение',
+      id: 'expression',
+      selector: (cst: IConstituenta) => cst.definition?.formal ?? '',
+      minWidth: '200px',
+      hide: 1600,
+      grow: 2,
+      wrap: true,
+      conditionalCellStyles: [
+        {
+          when: (cst: IConstituenta) => cst.id <= 0,
+          classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
+        }
+      ]
+    }
+  ], []);
+
+  const maxHeight = useMemo(
+  () => {
+    const siblingHeight = `${baseHeight} - ${LOCAL_NAVIGATION_H}`
+    return (noNavigation ? 
+      `calc(min(100vh - 5.2rem, ${siblingHeight}))`
+    : `calc(min(100vh - 8.7rem, ${siblingHeight}))`);
+  }, [noNavigation, baseHeight]);
+
+  return (<>
+    <div className='px-2 py-1 sticky top-0 left-0 right-0 z-10 gap-1 flex items-center justify-between w-full bg-white border-b rounded clr-bg-pop clr-border'>
+      <MatchModePicker
+        value={filterMatch}
+        onChange={setFilterMatch}
+      />
+      <input type='text'
+        className='w-full px-2 bg-white outline-none hover:text-clip clr-bg-pop clr-border'
+        placeholder='наберите текст фильтра'
+        value={filterText}
+        onChange={event => setFilterText(event.target.value)}
+      />
+      <DependencyModePicker value={filterSource} onChange={setFilterSource}/>
+    </div>
+    <div className='overflow-y-auto' style={{maxHeight : `${maxHeight}`}}>
       <ConceptDataTable
         data={filteredData}
         columns={columns}
-        conditionalRowStyles={conditionalRowStyles}
         keyField='id'
-        noContextMenu
-        noDataComponent={<span className='flex flex-col justify-center p-2 text-center'>
-          <p>Список конституент пуст</p>
-          <p>Измените параметры фильтра</p>
-        </span>}
+        conditionalRowStyles={conditionalRowStyles}
+        noDataComponent={
+          <span className='flex flex-col justify-center p-2 text-center min-h-[5rem]'>
+            <p>Список конституент пуст</p>
+            <p>Измените параметры фильтра</p>
+          </span>
+        }
 
         striped
         highlightOnHover
@@ -173,7 +187,7 @@ function ViewSideConstituents({ expression, activeID, onOpenEdit }: ViewSideCons
         dense
       />
     </div>
-);
+  </>);
 }
 
 export default ViewSideConstituents;

@@ -33,9 +33,8 @@ function ParsingResult({ data, onShowAST, onShowError }: ParsingResultProps) {
           title='отобразить дерево разбора'
           onClick={handleShowAST}
         >
-          Дерево разбора:
+          Дерево разбора
         </button>
-        <span> {data.astText}</span>
       </p>}
     </div>
   )
