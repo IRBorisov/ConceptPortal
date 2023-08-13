@@ -8,6 +8,7 @@ import { Ref, useMemo } from 'react';
 
 import { useConceptTheme } from '../../context/ThemeContext';
 import { RSLanguage } from './rslang';
+//import { cursorTooltip } from './tooltip';
 
 const editorSetup: BasicSetupOptions = {
   highlightSpecialChars: true,
@@ -39,8 +40,9 @@ const editorSetup: BasicSetupOptions = {
 
 const editorExtensions = [
   EditorView.lineWrapping,
+  bracketMatching(),
   RSLanguage,
-  bracketMatching()
+  //cursorTooltip(),
 ];
 
 interface RSInputProps 
