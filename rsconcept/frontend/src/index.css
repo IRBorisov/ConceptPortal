@@ -24,12 +24,6 @@
 .cm-editor.cm-focused {
   @apply border shadow rounded outline-2 outline
 }
-.cm-matchingBracket {
-  @apply font-semibold
-}
-.cm-nonmatchingBracket {
-  @apply font-bold text-red-500
-}
 
 @layer components {
   h1 {

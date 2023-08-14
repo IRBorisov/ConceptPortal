@@ -1,4 +1,4 @@
-import { bracketMatching } from '@codemirror/language';
+
 import { Extension } from '@codemirror/state';
 import { tags as t } from '@lezer/highlight';
 import { createTheme } from '@uiw/codemirror-themes';
@@ -7,14 +7,15 @@ import { EditorView } from 'codemirror';
 import { Ref, useMemo } from 'react';
 
 import { useConceptTheme } from '../../context/ThemeContext';
+import { ccBracketMatching } from './bracketMatching';
 import { RSLanguage } from './rslang';
 //import { cursorTooltip } from './tooltip';
 
 const editorSetup: BasicSetupOptions = {
-  highlightSpecialChars: true,
+  highlightSpecialChars: false,
   history: true,
-  drawSelection: true,
-  syntaxHighlighting: true,
+  drawSelection: false,
+  syntaxHighlighting: false,
   defaultKeymap: true,
   historyKeymap: true,
 
@@ -37,13 +38,6 @@ const editorSetup: BasicSetupOptions = {
   completionKeymap: false,
   lintKeymap: false
 };
-
-const editorExtensions = [
-  EditorView.lineWrapping,
-  RSLanguage,
-  bracketMatching(),
-  //cursorTooltip(),
-];
 
 interface RSInputProps 
 extends Omit<ReactCodeMirrorProps, 'onChange'> {
@@ -101,14 +95,22 @@ function RSInput({
     ]
   }), [editable]);
 
+  const editorExtensions = useMemo(
+  () => [
+    EditorView.lineWrapping,
+    RSLanguage,
+    ccBracketMatching(darkMode),
+    //cursorTooltip(),
+  ], [darkMode]);
+
   return (
     <div className={`w-full ${cursor} text-lg`}>
     <CodeMirror
       ref={innerref}
       basicSetup={editorSetup}
+      theme={darkMode ? darkTheme : lightTheme}
       extensions={editorExtensions}
       indentWithTab={false}
-      theme={darkMode ? darkTheme : lightTheme}
       onChange={value => onChange(value)}
       editable={editable}
       {...props}
