@@ -52,10 +52,3 @@ token {
 @detectDelim
 
 @external propSource highlighting from "./highlight.ts"
-
-//@asciiLetter matches $[a-zA-Z]
-//@asciiLowercase matches $[a-z]
-//@asciiUppercase is equivalent to $[A-Z]
-//@digit matches $[0-9]
-//@whitespace matches any character the Unicode standard defines as whitespace.
-//@eof matches the end of the input

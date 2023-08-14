@@ -40,8 +40,8 @@ const editorSetup: BasicSetupOptions = {
 
 const editorExtensions = [
   EditorView.lineWrapping,
-  bracketMatching(),
   RSLanguage,
+  bracketMatching(),
   //cursorTooltip(),
 ];
 
@@ -74,6 +74,7 @@ function RSInput({
       { tag: t.variableName, class: 'text-[#24821a]' }, // LocalID
       { tag: t.propertyName, class: '' }, // Radical
       { tag: t.keyword, class: 'text-[#001aff]' }, // keywords
+      { tag: t.literal, class: 'text-[#001aff]' }, // literals
       { tag: t.controlKeyword, class: 'font-semibold'}, // R | I | D
       { tag: t.unit, class: 'text-[0.75rem]' }, // indicies
     ]
@@ -94,6 +95,7 @@ function RSInput({
       { tag: t.variableName, class: 'text-[#69bf60]' }, // LocalID
       { tag: t.propertyName, class: '' }, // Radical
       { tag: t.keyword, class: 'text-[#808dff]' }, // keywords
+      { tag: t.literal, class: 'text-[#808dff]' }, // literals
       { tag: t.controlKeyword, class: 'font-semibold'}, // R | I | D
       { tag: t.unit, class: 'text-[0.75rem]' }, // indicies
     ]
