@@ -1,53 +1,64 @@
-import { EditorState, Extension, StateField } from "@codemirror/state";
-import { EditorView, showTooltip } from "@codemirror/view";
+import { Extension } from "@codemirror/state";
+import { hoverTooltip } from "@codemirror/view";
 
-function getCursorTooltips(state: EditorState) {
-  return state.selection.ranges
-    .filter(range => !range.empty)
-    .map(range => {
-      const line = state.doc.lineAt(range.head);
-      const text = `${line.number}:${range.head - line.from}`;
-      return {
-        pos: (range.to + range.from)/2,
-        above: false,
-        strictSide: true,
-        create: () => {
-          const dom = document.createElement("div");
-          dom.className = "cm-tooltip-cursor";
-          dom.textContent = text;
-          return { dom };
-        }
-      };
-    });
+import { IConstituenta } from '../../utils/models';
+import { getCstTypificationLabel } from '../../utils/staticUI';
+
+function createTooltipFor(cst: IConstituenta) {
+  const dom = document.createElement('div');
+  dom.className = 'overflow-y-auto border shadow-md max-h-[25rem] max-w-[25rem] min-w-[10rem] w-fit z-20 text-sm';
+  const alias = document.createElement('h1');
+  alias.className = 'text-sm text-left';
+  alias.textContent = `${cst.alias}: ${getCstTypificationLabel(cst)}`;
+  dom.appendChild(alias);
+  if (cst.term.resolved) {
+    const term = document.createElement('p');
+    term.innerHTML = `<b>Термин:</b> ${cst.term.resolved}`;
+    dom.appendChild(term);
+  }
+  if (cst.definition.formal) {
+    const expression = document.createElement('p');
+    expression.innerHTML = `<b>Выражение:</b> ${cst.definition.formal}`;
+    dom.appendChild(expression);
+  }
+  if (cst.definition.text.resolved) {
+    const definition = document.createElement('p');
+    definition.innerHTML = `<b>Определение:</b> ${cst.definition.text.resolved}`;
+    dom.appendChild(definition);
+  }
+  if (cst.convention) {
+    const convention = document.createElement('p');
+    convention.innerHTML = `<b>Конвенция:</b> ${cst.convention}`;
+    dom.appendChild(convention);
+  }
+  return { dom: dom }
 }
 
-const cursorTooltipField = StateField.define({
-  create: getCursorTooltips,
-  update(tooltips, transaction) {
-    if (!transaction.docChanged && !transaction.selection) {
-      return tooltips;
+export const getHoverTooltip = (items: IConstituenta[]) => {
+  return hoverTooltip((view, pos, side) => {
+    const {from, to, text} = view.state.doc.lineAt(pos);
+    let start = pos, end = pos;
+    while (start > from && /\w/.test(text[start - from - 1]))
+      start--;
+    while (end < to && /\w/.test(text[end - from]))
+      end++;
+    if (start == pos && side < 0 || end == pos && side > 0) {
+      return null;
     }
-    return getCursorTooltips(transaction.state);
-  },
-  provide: field => showTooltip.computeN([field], state => state.field(field))
-});
-
-const cursorTooltipBaseTheme = EditorView.baseTheme({
-  ".cm-tooltip.cm-tooltip-cursor": {
-    backgroundColor: "#66b",
-    color: "white",
-    border: "none",
-    padding: "2px 7px",
-    borderRadius: "4px",
-    "&.cm-tooltip-arrow:before": {
-      borderTopColor: "#66b"
-    },
-    "&.cm-tooltip-arrow:after": {
-      borderTopColor: "transparent"
+    const alias = text.slice(start - from, end - from);
+    const cst = items.find(cst => cst.alias === alias);
+    if (!cst) {
+      return null;
     }
-  }
-});
+    return {
+      pos: start,
+      end: end,
+      above: false,
+      create: () => createTooltipFor(cst)
+    }
+  });
+}
 
-export function cursorTooltip(): Extension {
-  return [cursorTooltipField, cursorTooltipBaseTheme];
+export function rshoverTooltip(items: IConstituenta[]): Extension {
+  return [getHoverTooltip(items)];
 }

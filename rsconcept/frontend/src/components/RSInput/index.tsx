@@ -6,10 +6,11 @@ import CodeMirror, { BasicSetupOptions, ReactCodeMirrorProps, ReactCodeMirrorRef
 import { EditorView } from 'codemirror';
 import { Ref, useMemo } from 'react';
 
+import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import { ccBracketMatching } from './bracketMatching';
 import { RSLanguage } from './rslang';
-//import { cursorTooltip } from './tooltip';
+import { rshoverTooltip } from './tooltip';
 
 const editorSetup: BasicSetupOptions = {
   highlightSpecialChars: false,
@@ -51,6 +52,7 @@ function RSInput({
   ...props 
 }: RSInputProps) {
   const { darkMode } = useConceptTheme();
+  const { schema } = useRSForm();
 
   const cursor = useMemo(() => editable ? 'cursor-text': 'cursor-default', [editable]);
   const lightTheme: Extension = useMemo(
@@ -64,7 +66,7 @@ function RSInput({
       caret: '#5d00ff',
     },
     styles: [
-      { tag: t.name, class: 'text-[#b266ff]' }, // GlobalID
+      { tag: t.name, class: 'text-[#b266ff] cursor-default' }, // GlobalID
       { tag: t.variableName, class: 'text-[#24821a]' }, // LocalID
       { tag: t.propertyName, class: '' }, // Radical
       { tag: t.keyword, class: 'text-[#001aff]' }, // keywords
@@ -85,7 +87,7 @@ function RSInput({
       caret: '#ffaa00'
     },
     styles: [
-      { tag: t.name, class: 'text-[#dfbfff]' }, // GlobalID
+      { tag: t.name, class: 'text-[#dfbfff] cursor-default' }, // GlobalID
       { tag: t.variableName, class: 'text-[#69bf60]' }, // LocalID
       { tag: t.propertyName, class: '' }, // Radical
       { tag: t.keyword, class: 'text-[#808dff]' }, // keywords
@@ -100,8 +102,8 @@ function RSInput({
     EditorView.lineWrapping,
     RSLanguage,
     ccBracketMatching(darkMode),
-    //cursorTooltip(),
-  ], [darkMode]);
+    rshoverTooltip(schema?.items || []),
+  ], [darkMode, schema?.items]);
 
   return (
     <div className={`w-full ${cursor} text-lg`}>
