@@ -189,7 +189,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
   () => {
     return !noNavigation ? 
       'calc(100vh - 13rem)'
-    : 'calc(100vh - 8.5rem)';
+    : 'calc(100vh - 2rem)';
   }, [noNavigation]);
 
   const dismissedStyle = useCallback(
@@ -281,7 +281,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     <div className='flex-wrap w-full h-full overflow-auto'>
     <div 
       className='relative border-t border-r'
-      style={{width: canvasWidth, height: canvasHeight}}
+      style={{width: canvasWidth, height: canvasHeight, borderBottomWidth: noNavigation ? '1px': ''}}
     >
       <div id='items-graph-help' className='relative top-0 right-0 z-10 m-2'>
         <HelpIcon color='text-primary' size={6} />
