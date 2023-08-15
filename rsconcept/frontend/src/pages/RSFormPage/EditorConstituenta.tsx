@@ -241,7 +241,7 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
           />
         </div>
       </form>
-      <div className='self-stretch border w-full pb-1'>
+      <div className='self-stretch w-full pb-1 border'>
         <ViewSideConstituents
           expression={expression}
           baseHeight={UNFOLDED_HEIGHT}

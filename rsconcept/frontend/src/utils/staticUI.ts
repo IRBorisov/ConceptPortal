@@ -1,5 +1,6 @@
 import { LayoutTypes } from 'reagraph';
 
+import { ColoringScheme } from '../pages/RSFormPage/EditorTermGraph';
 import { resolveErrorClass,RSErrorClass, RSErrorType, TokenID } from './enums';
 import { CstMatchMode, CstType, DependencyMode,ExpressionStatus, IConstituenta,
   IFunctionArg,IRSErrorDescription, IRSForm,
@@ -244,27 +245,15 @@ export function getCstTypeShortcut(type: CstType) {
   }
 }
 
+export const mapCstTypeColors: Map<CstType, string> = new Map([
+  [CstType.BASE, 'Атлас 2D'],
+]);
+
 export const CstTypeSelector = (Object.values(CstType)).map(
   (typeStr) => {
     const type = typeStr as CstType;
     return { value: type, label: getCstTypeLabel(type) };
 });
-
-export const mapLayoutLabels: Map<string, string> = new Map([
-  ['forceatlas2', 'Атлас 2D'],
-  ['forceDirected2d', 'Силы 2D'],
-  ['forceDirected3d', 'Силы 3D'],
-  ['treeTd2d', 'ДеревоВерт 2D'],
-  ['treeTd3d', 'ДеревоВерт 3D'],
-  ['treeLr2d', 'ДеревоГор 2D'],
-  ['treeLr3d', 'ДеревоГор 3D'],
-  ['radialOut2d', 'Радиальная 2D'],
-  ['radialOut3d', 'Радиальная 3D'],
-  ['circular2d', 'Круговая'],
-  ['hierarchicalTd', 'ИерархияВерт'],
-  ['hierarchicalLr', 'ИерархияГор'],
-  ['nooverlap', 'Без перекрытия']
-]);
 
 export function getCstCompareLabel(mode: CstMatchMode): string {
   switch(mode) {
@@ -288,20 +277,72 @@ export function getDependencyLabel(mode: DependencyMode): string {
 }
 
 export const GraphLayoutSelector: {value: LayoutTypes, label: string}[] = [
-  { value: 'forceatlas2', label: 'Атлас 2D'},
-  { value: 'forceDirected2d', label: 'Силы 2D'},
-  { value: 'forceDirected3d', label: 'Силы 3D'},
-  { value: 'treeTd2d', label: 'ДеревоВ 2D'},
-  { value: 'treeTd3d', label: 'ДеревоВ 3D'},
-  { value: 'treeLr2d', label: 'ДеревоГ 2D'},
-  { value: 'treeLr3d', label: 'ДеревоГ 3D'},
-  { value: 'radialOut2d', label: 'Радиальная 2D'},
-  { value: 'radialOut3d', label: 'Радиальная 3D'},
+  { value: 'treeTd2d', label: 'Граф: ДеревоВ 2D'},
+  { value: 'treeTd3d', label: 'Граф: ДеревоВ 3D'},
+  { value: 'forceatlas2', label: 'Граф: Атлас 2D'},
+  { value: 'forceDirected2d', label: 'Граф: Силы 2D'},
+  { value: 'forceDirected3d', label: 'Граф: Силы 3D'},
+  { value: 'treeLr2d', label: 'Граф: ДеревоГ 2D'},
+  { value: 'treeLr3d', label: 'Граф: ДеревоГ 3D'},
+  { value: 'radialOut2d', label: 'Граф: Радиальная 2D'},
+  { value: 'radialOut3d', label: 'Граф: Радиальная 3D'},
   // { value: 'circular2d', label: 'circular2d'},
   //  { value: 'nooverlap', label: 'nooverlap'},
   //  { value: 'hierarchicalTd', label: 'hierarchicalTd'},
   //  { value: 'hierarchicalLr', label: 'hierarchicalLr'}
 ];
+
+export const mapLayoutLabels: Map<string, string> = new Map([
+  ['forceatlas2', 'Граф: Атлас 2D'],
+  ['forceDirected2d', 'Граф: Силы 2D'],
+  ['forceDirected3d', 'Граф: Силы 3D'],
+  ['treeTd2d', 'Граф: ДеревоВерт 2D'],
+  ['treeTd3d', 'Граф: ДеревоВерт 3D'],
+  ['treeLr2d', 'Граф: ДеревоГор 2D'],
+  ['treeLr3d', 'Граф: ДеревоГор 3D'],
+  ['radialOut2d', 'Граф: Радиальная 2D'],
+  ['radialOut3d', 'Граф: Радиальная 3D'],
+  ['circular2d', 'Граф: Круговая'],
+  ['hierarchicalTd', 'Граф: ИерархияВерт'],
+  ['hierarchicalLr', 'Граф: ИерархияГор'],
+  ['nooverlap', 'Граф: Без перекрытия']
+]);
+
+export const mapColoringLabels: Map<string, string> = new Map([
+  ['none', 'Цвет: моно'],
+  ['status', 'Цвет: статус'],
+  ['type', 'Цвет: тип'],
+]);
+
+export const GraphColoringSelector: {value: ColoringScheme, label: string}[] = [
+  { value: 'none', label: 'Цвет: моно'},
+  { value: 'status', label: 'Цвет: статус'},
+  { value: 'type', label: 'Цвет: тип'},
+];
+
+export function getCstTypeColor(type: CstType, darkMode: boolean): string {
+  switch (type) {
+  case CstType.BASE: return darkMode ? '#2b8000': '#aaff80';
+  case CstType.CONSTANT: return darkMode ? '#2b8000': '#aaff80';
+  case CstType.STRUCTURED: return darkMode ? '#2b8000': '#aaff80';
+  case CstType.TERM: return darkMode ? '#1e00b3': '#b3bdff';
+  case CstType.FUNCTION: return darkMode ? '#1e00b3': '#b3bdff';
+  case CstType.AXIOM: return darkMode ? '#592b2b': '#ffc9c9';
+  case CstType.PREDICATE: return darkMode ? '#1e00b3': '#b3bdff';
+  case CstType.THEOREM: return darkMode ? '#592b2b': '#ffc9c9';
+  }
+}
+
+export function getCstStatusColor(status: ExpressionStatus, darkMode: boolean): string {
+  switch (status) {
+  case ExpressionStatus.VERIFIED: return darkMode ? '#2b8000': '#aaff80';
+  case ExpressionStatus.INCORRECT: return darkMode ? '#592b2b': '#ffc9c9';
+  case ExpressionStatus.INCALCULABLE: return darkMode ? '#964600': '#ffbb80';
+  case ExpressionStatus.PROPERTY: return darkMode ? '#36899e': '#a5e9fa';
+  case ExpressionStatus.UNKNOWN: return darkMode ? '#1e00b3': '#b3bdff';
+  case ExpressionStatus.UNDEFINED: return darkMode ? '#1e00b3': '#b3bdff';
+  }
+}
 
 export const mapStatusInfo: Map<ExpressionStatus, IStatusInfo> = new Map([
   [ ExpressionStatus.VERIFIED, {

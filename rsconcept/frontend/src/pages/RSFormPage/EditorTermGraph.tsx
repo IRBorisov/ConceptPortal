@@ -1,29 +1,70 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { darkTheme, GraphCanvas, GraphCanvasRef, GraphEdge, GraphNode, LayoutTypes, lightTheme, Sphere, useSelection } from 'reagraph';
+import { darkTheme, GraphCanvas, GraphCanvasRef, GraphEdge, 
+  GraphNode, LayoutTypes, lightTheme, Sphere, useSelection
+} from 'reagraph';
 
 import Button from '../../components/Common/Button';
 import Checkbox from '../../components/Common/Checkbox';
 import ConceptSelect from '../../components/Common/ConceptSelect';
-import { ArrowsRotateIcon } from '../../components/Icons';
+import ConceptTooltip from '../../components/Common/ConceptTooltip';
+import Divider from '../../components/Common/Divider';
+import { ArrowsRotateIcon, HelpIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
-import { resources } from '../../utils/constants';
+import { prefixes, resources } from '../../utils/constants';
 import { Graph } from '../../utils/Graph';
-import { GraphLayoutSelector,mapLayoutLabels } from '../../utils/staticUI';
+import { IConstituenta } from '../../utils/models';
+import { getCstStatusColor, getCstTypeColor, getCstTypificationLabel, 
+  GraphColoringSelector, GraphLayoutSelector,
+  mapColoringLabels, mapLayoutLabels, mapStatusInfo
+} from '../../utils/staticUI';
+import ConstituentaTooltip from './elements/ConstituentaTooltip';
 
-function EditorTermGraph() {
+export type ColoringScheme = 'none' | 'status' | 'type';
+const TREE_SIZE_MILESTONE = 50;
+
+function getCstNodeColor(cst: IConstituenta, coloringScheme: ColoringScheme, darkMode: boolean): string {
+  if (coloringScheme === 'type') {
+    return getCstTypeColor(cst.cstType, darkMode);
+  }
+  if (coloringScheme === 'status') {
+    return getCstStatusColor(cst.status, darkMode);
+  }
+  return '';
+}
+
+interface EditorTermGraphProps {
+  onOpenEdit: (cstID: number) => void
+ // onCreateCst: (selectedID: number | undefined, type: CstType | undefined, skipDialog?: boolean) => void
+ // onDeleteCst: (selected: number[], callback: (items: number[]) => void) => void
+}
+
+function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
   const { schema } = useRSForm();
   const { darkMode, noNavigation } = useConceptTheme();
+  
   const [ layout, setLayout ] = useLocalStorage<LayoutTypes>('graph_layout', 'treeTd2d');
-
-  const [ filtered, setFiltered ] = useState<Graph>(new Graph());
+  const [ coloringScheme, setColoringScheme ] = useLocalStorage<ColoringScheme>('graph_coloring', 'none');
   const [ orbit, setOrbit ] = useState(false);
   const [ noHermits, setNoHermits ] = useLocalStorage('graph_no_hermits', true);
   const [ noTransitive, setNoTransitive ] = useLocalStorage('graph_no_transitive', false);
+  
+  const [ filtered, setFiltered ] = useState<Graph>(new Graph());
+  const [ dismissed, setDismissed ] = useState<number[]>([]);
+  const [ selectedDismissed, setSelectedDismissed ] = useState<number[]>([]);
   const graphRef = useRef<GraphCanvasRef | null>(null);
+  
+  const [hoverID, setHoverID] = useState<string | undefined>(undefined);
+  const hoverCst = useMemo(
+  () => {
+    return schema?.items.find(cst => String(cst.id) == hoverID);
+  }, [schema?.items, hoverID]);
 
-  useEffect(() => {
+  const is3D = useMemo(() => layout.includes('3d'), [layout]);
+
+  useEffect(
+  () => {
     if (!schema) {
       setFiltered(new Graph());
       return;
@@ -35,10 +76,32 @@ function EditorTermGraph() {
     if (noTransitive) {
       graph.transitiveReduction();
     }
+    const newDismissed: number[] = [];
+    schema.items.forEach(cst => {
+      if (!graph.nodes.has(cst.id)) {
+        newDismissed.push(cst.id);
+      }
+    });
     setFiltered(graph);
+    setDismissed(newDismissed);
+    setSelectedDismissed([]);
+    setHoverID(undefined);
   }, [schema, noHermits, noTransitive]);
 
-  const nodes: GraphNode[] = useMemo(() => {
+  function toggleDismissed(cstID: number) {
+    setSelectedDismissed(prev => {
+      const index = prev.findIndex(id => cstID == id);
+      if (index !== -1) {
+        prev.splice(index, 1);
+      } else {
+        prev.push(cstID);
+      }
+      return [... prev];
+    });
+  }
+
+  const nodes: GraphNode[] = useMemo(
+  () => {
     const result: GraphNode[] = [];
     if (!schema) {
       return result;
@@ -48,14 +111,16 @@ function EditorTermGraph() {
       if (cst) {
         result.push({
           id: String(node.id),
+          fill: getCstNodeColor(cst, coloringScheme, darkMode),
           label: cst.term.resolved ? `${cst.alias}: ${cst.term.resolved}` : cst.alias
         });
       }
     });
     return result;
-  }, [schema, filtered.nodes]);
+  }, [schema, coloringScheme, filtered.nodes, darkMode]);
 
-  const edges: GraphEdge[] = useMemo(() => {
+  const edges: GraphEdge[] = useMemo(
+  () => {
     const result: GraphEdge[] = [];
     let edgeID = 1;
     filtered.nodes.forEach(source => {
@@ -70,12 +135,7 @@ function EditorTermGraph() {
     });
     return result;
   }, [filtered.nodes]);
-
-  const handleCenter = useCallback(() => {
-    graphRef.current?.resetControls();
-    graphRef.current?.centerGraph();
-  }, []);
-
+  
   const { 
     selections, actives,
     onNodeClick,
@@ -91,30 +151,92 @@ function EditorTermGraph() {
     focusOnSelect: false
   });
 
-  const canvasSize = !noNavigation ? 
-    'w-[1240px] h-[736px] 2xl:w-[1880px] 2xl:h-[746px]' 
-  : 'w-[1240px] h-[800px] 2xl:w-[1880px] 2xl:h-[810px]';
+  const handleCenter = useCallback(
+  () => {
+    graphRef.current?.resetControls();
+    graphRef.current?.centerGraph();
+  }, []);
 
-  return (<>
-    <div className='relative w-full'>
-    <div className='absolute top-0 left-0 z-20 py-2 w-[12rem] flex flex-col'>
-      <div className='flex items-center gap-1 w-[15rem]'>
+  const handleHoverIn = useCallback(
+  (node: GraphNode) => {
+    setHoverID(node.id);
+    if (onNodePointerOver) onNodePointerOver(node);
+  }, [onNodePointerOver]);
+
+  const handleHoverOut = useCallback(
+  (node: GraphNode) => {
+    setHoverID(undefined);
+    if (onNodePointerOut) onNodePointerOut(node);
+  }, [onNodePointerOut]);
+
+  const handleNodeClick = useCallback(
+  (node: GraphNode) => {
+    if (selections.includes(node.id)) {
+      onOpenEdit(Number(node.id));
+      return;
+    }
+    if (onNodeClick) onNodeClick(node);
+  }, [onNodeClick, selections, onOpenEdit]);
+
+  const canvasWidth = useMemo(
+  () => {
+    return 'calc(100vw - 14.6rem)';
+  }, []);
+
+  const canvasHeight = useMemo(
+  () => {
+    return !noNavigation ? 
+      'calc(100vh - 13rem)'
+    : 'calc(100vh - 8.5rem)';
+  }, [noNavigation]);
+
+  const dismissedStyle = useCallback(
+  (cstID: number) => {
+    return selectedDismissed.includes(cstID) ? {outlineWidth: '2px', outlineStyle: 'solid'}: {};
+  }, [selectedDismissed]);
+
+  return (
+    <div className='flex justify-between w-full'>
+    <div className='flex flex-col py-2 border-t border-r w-[14.7rem] pr-2 text-sm' style={{height: canvasHeight}}>
+      {hoverCst && 
+      <div className='relative'>
+        <div className='absolute top-0 left-0 z-50 w-[25rem] min-h-[11rem] overflow-y-auto border h-fit clr-app px-3'>
+          <h1>Конституента {hoverCst.alias}</h1>
+          <p><b>Типизация: </b>{getCstTypificationLabel(hoverCst)}</p>
+          <p><b>Термин: </b>{hoverCst.term.resolved || hoverCst.term.raw}</p>
+          {hoverCst.definition.formal && <p><b>Выражение: </b>{hoverCst.definition.formal}</p>}
+          {hoverCst.definition.text.resolved && <p><b>Определение: </b>{hoverCst.definition.text.resolved}</p>}
+          {hoverCst.convention && <p><b>Конвенция: </b>{hoverCst.convention}</p>}
+        </div>
+      </div>}
+      <div className='flex items-center w-full gap-1'>
         <Button
-          icon={<ArrowsRotateIcon size={8} />}
+          icon={<ArrowsRotateIcon size={7} />}
           dense
           tooltip='Центрировать изображение'
           widthClass='h-full'
           onClick={handleCenter}
         />
         <ConceptSelect
-          className='min-w-[9.5rem]'
-          options={GraphLayoutSelector}
-          placeholder='Выберите тип'
-          values={layout ? [{ value: layout, label: mapLayoutLabels.get(layout) }] : []}
-          onChange={data => { setLayout(data.length > 0 ? data[0].value : GraphLayoutSelector[0].value); }}
+          className='min-w-[9.3rem]'
+          options={GraphColoringSelector}
+          searchable={false}
+          placeholder='Выберите цвет'
+          values={coloringScheme ? [{ value: coloringScheme, label: mapColoringLabels.get(coloringScheme) }] : []}
+          onChange={data => { setColoringScheme(data.length > 0 ? data[0].value : GraphColoringSelector[0].value); }}
         />
+        
       </div>
+      <ConceptSelect
+        className='mt-1 w-fit'
+        options={GraphLayoutSelector}
+        searchable={false}
+        placeholder='Выберите тип'
+        values={layout ? [{ value: layout, label: mapLayoutLabels.get(layout) }] : []}
+        onChange={data => { setLayout(data.length > 0 ? data[0].value : GraphLayoutSelector[0].value); }}
+      />
       <Checkbox
+        disabled={!is3D}
         label='Анимация вращения' 
         value={orbit} 
         onChange={ event => setOrbit(event.target.checked) }
@@ -129,10 +251,75 @@ function EditorTermGraph() {
         value={noTransitive} 
         onChange={ event => setNoTransitive(event.target.checked) }
       />
-    </div>
+
+      <Divider margins='mt-3 mb-2' />
+
+      <div className='flex flex-col overflow-y-auto'>
+        <p className='text-center'><b>Скрытые конституенты</b></p>
+        <div className='flex flex-wrap justify-center gap-2 py-2'>
+        {dismissed.map(cstID => {
+          const cst = schema!.items.find(cst => cst.id === cstID)!;
+          const info = mapStatusInfo.get(cst.status)!;
+          return (<>
+            <div
+              key={`${cst.alias}`}
+              id={`${prefixes.cst_list}${cst.alias}`}
+              className={`w-fit min-w-[3rem] rounded-md text-center cursor-pointer ${info.color}`}
+              style={dismissedStyle(cstID)}
+              onClick={() => toggleDismissed(cstID)}
+              onDoubleClick={() => onOpenEdit(cstID)}
+            >
+              {cst.alias}
+            </div>
+            <ConstituentaTooltip 
+              data={cst}
+              anchor={`#${prefixes.cst_list}${cst.alias}`}
+            />
+          </>);
+        })}
+        </div>
+      </div>
     </div>
     <div className='flex-wrap w-full h-full overflow-auto'>
-    <div className={`relative border-t border-r ${canvasSize}`}>
+    <div 
+      className='relative border-t border-r'
+      style={{width: canvasWidth, height: canvasHeight}}
+    >
+      <div id='items-graph-help' className='relative top-0 right-0 z-10 m-2'>
+        <HelpIcon color='text-primary' size={6} />
+      </div>
+      <ConceptTooltip anchorSelect='#items-graph-help'>
+        <div>
+          <h1>Настройка графа</h1>
+          <p><b>Цвет</b> - выбор правила покраски узлов</p>
+          <p><i>Скрытые конституенты окрашены в цвет статуса</i></p>
+          <p><b>Граф</b> - выбор модели расположения узлов</p>
+          <p><b>Удалить несвязанные</b> - в графе не отображаются одинокие вершины</p>
+          <p><b>Транзитивная редукция</b> - в графе устраняются транзитивные пути</p>
+
+          <Divider margins='mt-2' />
+
+          <h1>Горячие клавиши</h1>
+          <p><b>Двойной клик</b> - редактирование конституенты</p>
+          <p><b>Delete</b> - удаление конституент</p>
+          <p><b>Alt + 1-6,Q,W</b> - добавление конституент</p>
+
+          <Divider margins='mt-2' />
+          
+          <h1>Статусы</h1>
+          { [... mapStatusInfo.values()].map(info => {
+              return (<p className='py-1'>
+                <span className={`inline-block font-semibold min-w-[4rem] text-center border ${info.color}`}>
+                  {info.text}
+                </span>
+                <span> - </span>
+                <span>
+                  {info.tooltip}
+                </span>
+              </p>);
+          })}
+        </div>
+      </ConceptTooltip>
       <GraphCanvas
         draggable
         ref={graphRef}
@@ -141,13 +328,15 @@ function EditorTermGraph() {
         layoutType={layout}
         selections={selections}
         actives={actives}
-        onNodeClick={onNodeClick}
+        onNodeClick={handleNodeClick}
         onCanvasClick={onCanvasClick}
-        defaultNodeSize={5}
-        onNodePointerOver={onNodePointerOver}
-        onNodePointerOut={onNodePointerOut}
-        cameraMode={ orbit ? 'orbit' : layout.includes('3d') ? 'rotate' : 'pan'}
-        layoutOverrides={ layout.includes('tree') ? { nodeLevelRatio: schema && schema?.items.length < 50 ? 3 : 1 } : undefined }
+        onNodePointerOver={handleHoverIn}
+        onNodePointerOut={handleHoverOut}
+        cameraMode={ orbit ? 'orbit' : is3D ? 'rotate' : 'pan'}
+        layoutOverrides={ 
+          layout.includes('tree') ? { nodeLevelRatio: schema && schema?.items.length < TREE_SIZE_MILESTONE ? 3 : 1 } 
+          : undefined
+        }
         labelFontUrl={resources.graph_font}
         theme={darkMode ? darkTheme : lightTheme}
         renderNode={({ node, ...rest }) => (
@@ -156,7 +345,7 @@ function EditorTermGraph() {
       />
     </div>
     </div>
-  </>);
+  </div>);
 }
 
 

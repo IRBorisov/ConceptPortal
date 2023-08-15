@@ -40,7 +40,7 @@ function RSTabs() {
   const { destroySchema } = useLibrary();
 
   const [activeTab, setActiveTab] = useState(RSTabsList.CARD);
-  const [activeID, setActiveID] = useState<number | undefined>(undefined)
+  const [activeID, setActiveID] = useState<number | undefined>(undefined);
   
   const [showUpload, setShowUpload] = useState(false);
   const [showClone, setShowClone] = useState(false);
@@ -264,7 +264,9 @@ function RSTabs() {
       </TabPanel>
 
       <TabPanel>
-        <EditorTermGraph />
+        <EditorTermGraph 
+          onOpenEdit={onOpenCst}
+        />
       </TabPanel>
     </Tabs>
     </>}

@@ -314,7 +314,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
               <p><b>Клик на квадрат слева</b> - выделение конституенты</p>
               <p><b>Alt + вверх/вниз</b> - движение конституент</p>
               <p><b>Delete</b> - удаление конституент</p>
-              <p><b>Alt + 1-6, Q,W</b> - добавление конституент</p>
+              <p><b>Alt + 1-6,Q,W</b> - добавление конституент</p>
               <Divider margins='mt-2' />
               <h1>Статусы</h1>
               { [... mapStatusInfo.values()].map(info => {
