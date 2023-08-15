@@ -1,0 +1,54 @@
+@top Expression { token* }
+
+@skip { space }
+
+@tokens {
+  space { @whitespace+ }
+  Index { $[0-9]+ }
+  ComplexIndex { $[1-9](","$[1-9])* }
+  Integer { space$[0-9]+space? }
+
+  bigPr { "Pr" }
+  smallPr { "pr" }
+  filter { "Fi" }
+  card { "card" }
+  bool { "bool" }
+  debool { "debool" }
+  red { "red" }
+
+  ConstructPrefix { "D" | "R" | "I"  }
+
+  Global { $[XCSDAPTF]$[0-9]+ }
+  Radical { "R"$[0-9]+ }
+  local { $[_a-zα-ω]$[a-zα-ω]* }
+
+  "(" ")"
+  "[" "]"
+  "{" "}"
+  
+  @precedence { filter bigPr Global Radical ConstructPrefix }
+  @precedence { card bool debool red smallPr local }
+  @precedence { Integer space }
+}
+
+TextFunction {
+  bigPr ComplexIndex |
+  smallPr ComplexIndex |
+  filter ComplexIndex |
+  card | bool | debool | red
+}
+
+Local { local Index? }
+
+token {
+  TextFunction |
+  ConstructPrefix |
+  Integer |
+  Global |
+  Radical |
+  Local
+}
+
+@detectDelim
+
+@external propSource highlighting from "./highlight.ts"

@@ -1,17 +1,22 @@
-import { bracketMatching } from '@codemirror/language';
+
 import { Extension } from '@codemirror/state';
+import { tags as t } from '@lezer/highlight';
 import { createTheme } from '@uiw/codemirror-themes';
 import CodeMirror, { BasicSetupOptions, ReactCodeMirrorProps, ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { EditorView } from 'codemirror';
 import { Ref, useMemo } from 'react';
 
-import { useConceptTheme } from '../../../context/ThemeContext';
+import { useRSForm } from '../../context/RSFormContext';
+import { useConceptTheme } from '../../context/ThemeContext';
+import { ccBracketMatching } from './bracketMatching';
+import { RSLanguage } from './rslang';
+import { rshoverTooltip } from './tooltip';
 
 const editorSetup: BasicSetupOptions = {
-  highlightSpecialChars: true,
+  highlightSpecialChars: false,
   history: true,
-  drawSelection: true,
-  syntaxHighlighting: true,
+  drawSelection: false,
+  syntaxHighlighting: false,
   defaultKeymap: true,
   historyKeymap: true,
 
@@ -35,11 +40,6 @@ const editorSetup: BasicSetupOptions = {
   lintKeymap: false
 };
 
-const editorExtensions = [
-  EditorView.lineWrapping,
-  bracketMatching()
-];
-
 interface RSInputProps 
 extends Omit<ReactCodeMirrorProps, 'onChange'> {
   innerref?: Ref<ReactCodeMirrorRef> | undefined
@@ -49,10 +49,10 @@ extends Omit<ReactCodeMirrorProps, 'onChange'> {
 
 function RSInput({ 
   innerref, onChange, editable,
-  height='10rem',
   ...props 
 }: RSInputProps) {
   const { darkMode } = useConceptTheme();
+  const { schema } = useRSForm();
 
   const cursor = useMemo(() => editable ? 'cursor-text': 'cursor-default', [editable]);
   const lightTheme: Extension = useMemo(
@@ -62,15 +62,17 @@ function RSInput({
       fontFamily: 'inherit',
       background: editable ? '#ffffff' : '#f0f2f7',
       foreground: '#000000',
-      selection: '#036dd626',
-      selectionMatch: '#036dd626',
+      selection: '#aacef2',
       caret: '#5d00ff',
     },
     styles: [
-      // { tag: t.comment, color: '#787b8099' },
-      // { tag: t.variableName, color: '#0080ff' },
-      // { tag: [t.string, t.special(t.brace)], color: '#5c6166' },
-      // { tag: t.definition(t.typeName), color: '#5c6166' },
+      { tag: t.name, class: 'text-[#b266ff] cursor-default' }, // GlobalID
+      { tag: t.variableName, class: 'text-[#24821a]' }, // LocalID
+      { tag: t.propertyName, class: '' }, // Radical
+      { tag: t.keyword, class: 'text-[#001aff]' }, // keywords
+      { tag: t.literal, class: 'text-[#001aff]' }, // literals
+      { tag: t.controlKeyword, class: 'font-semibold'}, // R | I | D
+      { tag: t.unit, class: 'text-[0.75rem]' }, // indicies
     ]
   }), [editable]);
   
@@ -81,27 +83,36 @@ function RSInput({
       fontFamily: 'inherit',
       background: editable ? '#070b12' : '#374151',
       foreground: '#e4e4e7',
-      selection: '#ffae00b0',
-      selectionMatch: '#ffae00b0',
+      selection: '#8c6000',
       caret: '#ffaa00'
     },
     styles: [
-      // { tag: t.comment, color: '#787b8099' },
-      // { tag: t.variableName, color: '#0080ff' },
-      // { tag: [t.string, t.special(t.brace)], color: '#5c6166' },
-      // { tag: t.definition(t.typeName), color: '#5c6166' },
+      { tag: t.name, class: 'text-[#dfbfff] cursor-default' }, // GlobalID
+      { tag: t.variableName, class: 'text-[#69bf60]' }, // LocalID
+      { tag: t.propertyName, class: '' }, // Radical
+      { tag: t.keyword, class: 'text-[#808dff]' }, // keywords
+      { tag: t.literal, class: 'text-[#808dff]' }, // literals
+      { tag: t.controlKeyword, class: 'font-semibold'}, // R | I | D
+      { tag: t.unit, class: 'text-[0.75rem]' }, // indicies
     ]
   }), [editable]);
 
+  const editorExtensions = useMemo(
+  () => [
+    EditorView.lineWrapping,
+    RSLanguage,
+    ccBracketMatching(darkMode),
+    rshoverTooltip(schema?.items || []),
+  ], [darkMode, schema?.items]);
+
   return (
-    <div className={`w-full h-[${height}] ${cursor}`}>
+    <div className={`w-full ${cursor} text-lg`}>
     <CodeMirror
       ref={innerref}
       basicSetup={editorSetup}
-      extensions={editorExtensions}
-      height={height}
-      indentWithTab={false}
       theme={darkMode ? darkTheme : lightTheme}
+      extensions={editorExtensions}
+      indentWithTab={false}
       onChange={value => onChange(value)}
       editable={editable}
       {...props}

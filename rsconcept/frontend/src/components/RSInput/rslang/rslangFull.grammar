@@ -1,0 +1,200 @@
+@precedence {
+  plus @left minus @left,
+  times @left,
+  not @right,
+  log_equiv @left,
+  log_impl @left,
+  log_or @left,
+  log_and @left,
+  set_decart @left set_union @left set_intersect @left set_minus @left set_symminus @left,
+  set_bool @right,
+  p1, p2
+}
+
+@top Expression {
+  term_or_logic |
+  FunctionDeclaration
+}
+
+@skip { space }
+
+@tokens {
+  space { @whitespace+ }
+  ComplexIndex { $[1-9](","$[1-9])* }
+  integer { $[0-9]+ }
+  emptySet { "∅" }
+  integerSet { "Z" }
+
+  bigPr { "Pr" }
+  smallPr { "pr" }
+  filter { "Fi" }
+  card { "card" }
+  bool { "bool" }
+  debool { "debool" }
+  red { "red" }
+
+  quantifier { $[∀∃] }
+
+  Global { $[XCSDAT]$[0-9]+ }
+  Function { "F"$[0-9]+ }
+  Predicate { "P"$[0-9]+ }
+  Radical { "R"$[0-9]+ }
+  local { $[_a-zα-ω]($[a-zα-ω])* }
+  PrefixR { "R" }
+  PrefixI { "I" }
+  PrefixD { "D" }
+
+  "¬"
+  "⇔" "⇒" "∨" "&"
+  "ℬ"
+  "+" "-" "*" "∪" "\\" "∆" "∩" "×"
+  "∈" "∉" "⊆" "⊄" "⊂" ">" "≥" "≤" "≠" "="
+  ":∈" ":="
+
+  "[" "]"
+  "{" "}"
+  "(" ")"
+  
+  @precedence { filter bigPr Predicate Function Global Radical PrefixR PrefixI PrefixD }
+  @precedence { card bool debool red smallPr local }
+}
+
+Index { integer }
+Local { 
+  !p1 local |
+  !p2 local Index
+}
+
+Literal { integer | emptySet | integerSet }
+
+TextFunction {
+  bigPr ComplexIndex |
+  smallPr ComplexIndex |
+  card | bool | debool | red
+}
+
+Filter { filter ComplexIndex }
+
+term_or_logic	{ logic | term }
+
+FunctionDeclaration { "[" arg_declaration "]" term_or_logic }
+arg_declaration {
+  declaration |
+  arg_declaration "," declaration
+}
+declaration { Local "∈" term }
+
+logic {
+  LogicPredicate |
+  logicUnary |
+  LogicBinary
+}
+logic_all { logic | logic_par }
+logic_par { "(" logic ")" }
+logic_no_binary {
+  LogicPredicate
+  logicUnary
+  logic_par
+}
+logicUnary {
+  PredicateCall { Predicate "[" term_enum "]" } |
+  LogicNegation { !not "¬" logic_no_binary } |
+  LogicQuantor { quantifier QuantorVariable "∈" term logic_no_binary }
+}
+
+LogicPredicate {
+  term "∈" term |
+  term "∉" term |
+  term "⊆" term |
+  term "⊄" term |
+  term "⊂" term |
+  term ">" term |
+  term "≥" term |
+  term "≤" term |
+  term "≠" term |
+  term "=" term
+}
+
+LogicBinary {
+  logic_all !log_equiv "⇔" logic_all |
+  logic_all !log_impl "⇒" logic_all |
+  logic_all !log_or "∨" logic_all |
+  logic_all !log_and "&" logic_all
+}
+
+QuantorVariable { Variable | quant_var_enum }
+quant_var_enum { QuantorVariable "," Variable }
+Variable { Local |  "(" VariableComposite ")" }
+VariableComposite { var_all "," Variable }
+var_all { Variable | VariableComposite }
+
+term {
+  Literal | Local | Global | Radical |
+  BinaryOperation |
+  typed_constructors |
+  FunctionCall |
+  TextFunctionExpression
+}
+FunctionCall { Function "[" term_enum "]" }
+
+TextFunctionExpression {
+  TextFunction "(" term ")" |
+  Filter "[" term_enum "]" "(" term ")"
+}
+
+BinaryOperation {
+  term !plus "+" term |
+  term !minus "-" term |
+  term !times "*" term |
+  term !set_union "∪" term |
+  term !set_minus "\\" term |
+  term !set_symminus "∆" term |
+  term !set_intersect "∩" term |
+  term !set_decart "×" term |
+  "(" BinaryOperation ")"
+}
+
+typed_constructors {
+  Enumeration |
+  Tuple |
+  Boolean |
+  Declarative |
+  Imperative |
+  Recursion
+}
+Enumeration { "{" term_enum "}"}
+Tuple { "(" term_enum_min2 ")"}
+Boolean {
+  !set_bool "ℬ" "(" term ")" |
+  !set_bool "ℬ" Boolean
+}
+
+term_enum { term | term_enum_min2 }
+term_enum_min2 { term_enum "," term }
+
+Declarative {
+  "{" Local "∈" term "|" logic "}" |
+  PrefixD "{" Variable "∈" term "|" logic "}"
+}
+Recursion {
+  PrefixR "{" Variable ":=" term ("|" logic)? "|" term "}"
+}
+Imperative {
+  PrefixI "{" term "|" ImperativeBlocks "}"
+}
+ImperativeBlocks {
+  imp_block |
+  ImperativeBlocks ";" imp_block
+}
+imp_block {
+  ImperativeIteration |
+  ImperativeAssignment |
+  ImperativeCondition
+}
+ImperativeIteration { Local ":∈" term }
+ImperativeAssignment { Local ":=" term }
+ImperativeCondition { logic }
+
+@detectDelim
+
+@external propSource highlighting from "./highlight.ts"

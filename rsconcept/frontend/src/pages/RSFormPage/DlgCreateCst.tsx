@@ -35,6 +35,7 @@ function DlgCreateCst({ hideWindow, defaultType, onCreate }: DlgCreateCstProps) 
       canSubmit={validated}
       onSubmit={handleSubmit}
     >
+      <div className='fixed h-fit w-[15rem] px-2'>
       <ConceptSelect
         className='my-4'
         options={CstTypeSelector}
@@ -42,6 +43,8 @@ function DlgCreateCst({ hideWindow, defaultType, onCreate }: DlgCreateCstProps) 
         values={selectedType ? [{ value: selectedType, label: getCstTypeLabel(selectedType) }] : []}
         onChange={data => { setSelectedType(data.length > 0 ? data[0].value : undefined); }}
       />
+      </div>
+      <div className='h-[4rem]'></div>
     </Modal>
   );
 }

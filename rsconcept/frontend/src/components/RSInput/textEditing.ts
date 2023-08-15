@@ -2,7 +2,7 @@
 
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
-import { TokenID } from '../../../utils/enums';
+import { TokenID } from '../../utils/enums';
 
 export function getSymbolSubstitute(input: string): string | undefined {
   switch (input) {
@@ -68,6 +68,7 @@ export class TextWrapper {
   }
 
   insertToken(tokenID: TokenID): boolean {
+    const hasSelection = this.ref.view.state.selection.main.from !== this.ref.view.state.selection.main.to
     switch (tokenID) {
     case TokenID.NT_DECLARATIVE_EXPR: this.envelopeWith('D{ξ∈X1 | P1[ξ]', '}'); return true;
     case TokenID.NT_IMPERATIVE_EXPR: this.envelopeWith('I{(σ, γ) | σ:∈X1; γ:=F1[σ]; P1[σ, γ]', '}'); return true;
@@ -84,7 +85,7 @@ export class TextWrapper {
       this.envelopeWith('(', ')');
       this.ref.view.dispatch({
         selection: {
-          anchor: this.ref.view.state.selection.main.from + 1,
+          anchor: hasSelection ? this.ref.view.state.selection.main.to: this.ref.view.state.selection.main.from + 1,
         }
       });
       return true;
@@ -93,15 +94,14 @@ export class TextWrapper {
       this.envelopeWith('[', ']');
       this.ref.view.dispatch({
         selection: {
-          anchor: this.ref.view.state.selection.main.from + 1,
+          anchor: hasSelection ? this.ref.view.state.selection.main.to: this.ref.view.state.selection.main.from + 1,
         }
       });
       return true;
     }
     case TokenID.BOOLEAN: {
       const selStart = this.ref.view.state.selection.main.from;
-      if (selStart !== this.ref.view.state.selection.main.to && 
-        this.ref.view.state.sliceDoc(selStart, selStart + 1) === 'ℬ') {
+      if (hasSelection && this.ref.view.state.sliceDoc(selStart, selStart + 1) === 'ℬ') {
         this.envelopeWith('ℬ', '');
       } else {
         this.envelopeWith('ℬ(', ')');

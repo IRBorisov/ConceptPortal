@@ -19,7 +19,7 @@
 }
 
 .cm-editor {
-  @apply border shadow rounded clr-border px-2
+  @apply border shadow rounded clr-border px-1
 }
 .cm-editor.cm-focused {
   @apply border shadow rounded outline-2 outline
