@@ -8,6 +8,8 @@ import Checkbox from '../../components/Common/Checkbox';
 import ConceptSelect from '../../components/Common/ConceptSelect';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import Divider from '../../components/Common/Divider';
+import ConstituentaInfo from '../../components/Help/ConstituentaInfo';
+import CstStatusInfo from '../../components/Help/CstStatusInfo';
 import { ArrowsRotateIcon, HelpIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
@@ -15,7 +17,7 @@ import useLocalStorage from '../../hooks/useLocalStorage';
 import { prefixes, resources } from '../../utils/constants';
 import { Graph } from '../../utils/Graph';
 import { IConstituenta } from '../../utils/models';
-import { getCstStatusColor, getCstTypeColor, getCstTypificationLabel, 
+import { getCstStatusColor, getCstTypeColor, 
   GraphColoringSelector, GraphLayoutSelector,
   mapColoringLabels, mapLayoutLabels, mapStatusInfo
 } from '../../utils/staticUI';
@@ -200,14 +202,10 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     <div className='flex flex-col py-2 border-t border-r w-[14.7rem] pr-2 text-sm' style={{height: canvasHeight}}>
       {hoverCst && 
       <div className='relative'>
-        <div className='absolute top-0 left-0 z-50 w-[25rem] min-h-[11rem] overflow-y-auto border h-fit clr-app px-3'>
-          <h1>Конституента {hoverCst.alias}</h1>
-          <p><b>Типизация: </b>{getCstTypificationLabel(hoverCst)}</p>
-          <p><b>Термин: </b>{hoverCst.term.resolved || hoverCst.term.raw}</p>
-          {hoverCst.definition.formal && <p><b>Выражение: </b>{hoverCst.definition.formal}</p>}
-          {hoverCst.definition.text.resolved && <p><b>Определение: </b>{hoverCst.definition.text.resolved}</p>}
-          {hoverCst.convention && <p><b>Конвенция: </b>{hoverCst.convention}</p>}
-        </div>
+        <ConstituentaInfo 
+          data={hoverCst}
+          className='absolute top-0 left-0 z-50 w-[25rem] min-h-[11rem] overflow-y-auto border h-fit clr-app px-3' 
+        />
       </div>}
       <div className='flex items-center w-full gap-1'>
         <Button
@@ -306,18 +304,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
 
           <Divider margins='mt-2' />
           
-          <h1>Статусы</h1>
-          { [... mapStatusInfo.values()].map(info => {
-              return (<p className='py-1'>
-                <span className={`inline-block font-semibold min-w-[4rem] text-center border ${info.color}`}>
-                  {info.text}
-                </span>
-                <span> - </span>
-                <span>
-                  {info.tooltip}
-                </span>
-              </p>);
-          })}
+          <CstStatusInfo title='Статусы' />
         </div>
       </ConceptTooltip>
       <GraphCanvas

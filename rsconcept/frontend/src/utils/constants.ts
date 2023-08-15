@@ -28,5 +28,6 @@ export const resources = {
 }
 
 export const prefixes = {
-  cst_list: 'cst-list-'
+  cst_list: 'cst-list-',
+  cst_status_list: 'cst-status-list-'
 }

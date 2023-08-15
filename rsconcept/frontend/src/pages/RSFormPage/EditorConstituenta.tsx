@@ -6,10 +6,11 @@ import Divider from '../../components/Common/Divider';
 import MiniButton from '../../components/Common/MiniButton';
 import SubmitButton from '../../components/Common/SubmitButton';
 import TextArea from '../../components/Common/TextArea';
+import CstStatusInfo from '../../components/Help/CstStatusInfo';
 import { DumpBinIcon, HelpIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { type CstType, EditMode, ICstUpdateData, SyntaxTree } from '../../utils/models';
-import { getCstTypeLabel, getCstTypificationLabel, mapStatusInfo } from '../../utils/staticUI';
+import { getCstTypeLabel, getCstTypificationLabel } from '../../utils/staticUI';
 import EditorRSExpression from './EditorRSExpression';
 import ViewSideConstituents from './elements/ViewSideConstituents';
 
@@ -173,18 +174,7 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
                 <p>- при наведении на ID конституенты отображаются ее атрибуты</p>
                 <p>- столбец "Описание" содержит один из непустых текстовых атрибутов</p>
                 <Divider margins='mt-2' />
-                <h1>Статусы</h1>
-                { [... mapStatusInfo.values()].map((info, index) => {
-                    return (<p className='py-1' key={`status-info-${index}`}>
-                      <span className={`inline-block font-semibold min-w-[4rem] text-center border ${info.color}`}>
-                        {info.text}
-                      </span>
-                      <span> - </span>
-                      <span>
-                        {info.tooltip}
-                      </span>
-                    </p>);
-                })}
+                <CstStatusInfo title='Статусы' />
               </div>
             </ConceptTooltip>
           </div>

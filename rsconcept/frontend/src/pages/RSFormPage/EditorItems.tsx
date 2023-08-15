@@ -5,6 +5,7 @@ import Button from '../../components/Common/Button';
 import ConceptDataTable from '../../components/Common/ConceptDataTable';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import Divider from '../../components/Common/Divider';
+import CstStatusInfo from '../../components/Help/CstStatusInfo';
 import { ArrowDownIcon, ArrowsRotateIcon, ArrowUpIcon, DumpBinIcon, HelpIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
@@ -316,18 +317,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
               <p><b>Delete</b> - удаление конституент</p>
               <p><b>Alt + 1-6,Q,W</b> - добавление конституент</p>
               <Divider margins='mt-2' />
-              <h1>Статусы</h1>
-              { [... mapStatusInfo.values()].map(info => {
-                  return (<p className='py-1'>
-                    <span className={`inline-block font-semibold min-w-[4rem] text-center border ${info.color}`}>
-                      {info.text}
-                    </span>
-                    <span> - </span>
-                    <span>
-                      {info.tooltip}
-                    </span>
-                  </p>);
-              })}
+              <CstStatusInfo title='Статусы' />
             </div>
           </ConceptTooltip>
         </div>
