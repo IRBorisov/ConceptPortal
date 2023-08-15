@@ -16,6 +16,7 @@ function DlgGraphOptions({ hideWindow, initial, onConfirm }:DlgGraphOptionsProps
   const [ noHermits, setNoHermits ] = useState(true);
   const [ noTransitive, setNoTransitive ] = useState(false);
   const [ noTemplates, setNoTemplates ] = useState(true);
+  const [ noTerms, setNoTerms ] = useState(true);
 
   const [ allowBase, setAllowBase ] = useState(true);
   const [ allowStruct, setAllowStruct ] = useState(true);
@@ -31,6 +32,7 @@ function DlgGraphOptions({ hideWindow, initial, onConfirm }:DlgGraphOptionsProps
       noHermits: noHermits,
       noTransitive: noTransitive,
       noTemplates: noTemplates,
+      noTerms: noTerms,
 
       allowBase: allowBase,
       allowStruct: allowStruct,
@@ -52,6 +54,7 @@ function DlgGraphOptions({ hideWindow, initial, onConfirm }:DlgGraphOptionsProps
     setNoHermits(initial.noHermits);
     setNoTransitive(initial.noTransitive);
     setNoTemplates(initial.noTemplates);
+    setNoTerms(initial.noTerms);
 
     setAllowBase(initial.allowBase);
     setAllowStruct(initial.allowStruct);
@@ -74,6 +77,12 @@ function DlgGraphOptions({ hideWindow, initial, onConfirm }:DlgGraphOptionsProps
       <div className='flex gap-2'>
         <div className='flex flex-col'>
           <h1>Преобразования</h1>
+          <Checkbox
+            label='Скрыть текст'
+            tooltip='Не отображать термины'
+            value={noTerms} 
+            onChange={ event => setNoTerms(event.target.checked) }
+          />
           <Checkbox
             label='Скрыть несвязанные'
             tooltip='Неиспользуемые конституенты'

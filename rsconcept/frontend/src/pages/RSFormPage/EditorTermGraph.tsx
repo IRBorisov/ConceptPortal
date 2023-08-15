@@ -43,6 +43,7 @@ export interface GraphEditorParams {
   noHermits: boolean
   noTransitive: boolean
   noTemplates: boolean
+  noTerms: boolean
 
   allowBase: boolean
   allowStruct: boolean
@@ -71,6 +72,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
   const [ noHermits, setNoHermits ] = useLocalStorage('graph_no_hermits', true);
   const [ noTransitive, setNoTransitive ] = useLocalStorage('graph_no_transitive', false);
   const [ noTemplates, setNoTemplates ] = useLocalStorage('graph_no_templates', false);
+  const [ noTerms, setNoTerms ] = useLocalStorage('graph_no_terms', false);
   const [ allowBase, setAllowBase ] = useLocalStorage('graph_allow_base', true);
   const [ allowStruct, setAllowStruct ] = useLocalStorage('graph_allow_struct', true);
   const [ allowTerm, setAllowTerm ] = useLocalStorage('graph_allow_term', true);
@@ -170,12 +172,12 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         result.push({
           id: String(node.id),
           fill: getCstNodeColor(cst, coloringScheme, darkMode),
-          label: cst.term.resolved ? `${cst.alias}: ${cst.term.resolved}` : cst.alias
+          label: cst.term.resolved && !noTerms ? `${cst.alias}: ${cst.term.resolved}` : cst.alias
         });
       }
     });
     return result;
-  }, [schema, coloringScheme, filtered.nodes, darkMode]);
+  }, [schema, coloringScheme, filtered.nodes, darkMode, noTerms]);
 
   const edges: GraphEdge[] = useMemo(
   () => {
@@ -205,7 +207,8 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     nodes,
     edges,
     type: 'multi', // 'single' | 'multi' | 'multiModifier'
-    pathSelectionType: 'all',
+    pathSelectionType: 'out',
+    pathHoverType: 'all',
     focusOnSelect: false
   });
 
@@ -241,6 +244,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
       noHermits: noHermits,
       noTemplates: noTemplates,
       noTransitive: noTransitive,
+      noTerms: noTerms,
 
       allowBase: allowBase,
       allowStruct: allowStruct,
@@ -258,6 +262,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     setNoHermits(params.noHermits);
     setNoTransitive(params.noTransitive);
     setNoTemplates(params.noTemplates);
+    setNoTerms(params.noTerms);
 
     setAllowBase(params.allowBase);
     setAllowStruct(params.allowStruct);
@@ -269,7 +274,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     setAllowTheorem(params.allowTheorem);
   }, [setNoHermits, setNoTransitive, setNoTemplates, 
     setAllowBase, setAllowStruct, setAllowTerm, setAllowAxiom, setAllowFunction, 
-    setAllowPredicate, setAllowConstant, setAllowTheorem]);
+    setAllowPredicate, setAllowConstant, setAllowTheorem, setNoTerms]);
 
   const canvasWidth = useMemo(
   () => {
@@ -331,15 +336,20 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         onChange={data => { setLayout(data.length > 0 ? data[0].value : GraphLayoutSelector[0].value); }}
       />
       <Checkbox
-        disabled={!is3D}
-        label='Анимация вращения' 
-        value={orbit} 
-        onChange={ event => setOrbit(event.target.checked) }
+        label='Скрыть текст' 
+        value={noTerms} 
+        onChange={ event => setNoTerms(event.target.checked) }
       />
       <Checkbox
         label='Транзитивная редукция' 
         value={noTransitive} 
         onChange={ event => setNoTransitive(event.target.checked) }
+      />
+      <Checkbox
+        disabled={!is3D}
+        label='Анимация вращения' 
+        value={orbit} 
+        onChange={ event => setOrbit(event.target.checked) }
       />
 
       <Divider margins='mt-3 mb-2' />
@@ -354,7 +364,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
             <div
               key={`${cst.alias}`}
               id={`${prefixes.cst_list}${cst.alias}`}
-              className='w-fit min-w-[3rem] rounded-md text-center cursor-pointer]'
+              className='w-fit min-w-[3rem] rounded-md text-center cursor-pointer'
               style={ { backgroundColor: getCstNodeColor(cst, adjustedColoring, darkMode), ...dismissedStyle(cstID) }}
               onClick={() => toggleDismissed(cstID)}
               onDoubleClick={() => onOpenEdit(cstID)}
