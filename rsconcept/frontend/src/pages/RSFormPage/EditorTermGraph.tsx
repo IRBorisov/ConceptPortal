@@ -8,19 +8,22 @@ import Checkbox from '../../components/Common/Checkbox';
 import ConceptSelect from '../../components/Common/ConceptSelect';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import Divider from '../../components/Common/Divider';
+import MiniButton from '../../components/Common/MiniButton';
 import ConstituentaInfo from '../../components/Help/ConstituentaInfo';
+import CstClassInfo from '../../components/Help/CstClassInfo';
 import CstStatusInfo from '../../components/Help/CstStatusInfo';
-import { ArrowsRotateIcon, HelpIcon } from '../../components/Icons';
+import { ArrowsRotateIcon, FilterCogIcon, HelpIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { prefixes, resources } from '../../utils/constants';
 import { Graph } from '../../utils/Graph';
-import { IConstituenta } from '../../utils/models';
-import { getCstStatusColor, getCstTypeColor, 
+import { CstType, IConstituenta } from '../../utils/models';
+import { getCstClassColor, getCstStatusColor, 
   GraphColoringSelector, GraphLayoutSelector,
-  mapColoringLabels, mapLayoutLabels, mapStatusInfo
+  mapColoringLabels, mapLayoutLabels
 } from '../../utils/staticUI';
+import DlgGraphOptions from './DlgGraphOptions';
 import ConstituentaTooltip from './elements/ConstituentaTooltip';
 
 export type ColoringScheme = 'none' | 'status' | 'type';
@@ -28,12 +31,27 @@ const TREE_SIZE_MILESTONE = 50;
 
 function getCstNodeColor(cst: IConstituenta, coloringScheme: ColoringScheme, darkMode: boolean): string {
   if (coloringScheme === 'type') {
-    return getCstTypeColor(cst.cstType, darkMode);
+    return getCstClassColor(cst.cstClass, darkMode);
   }
   if (coloringScheme === 'status') {
     return getCstStatusColor(cst.status, darkMode);
   }
-  return '';
+  return (darkMode ? '#7a8c9e' :'#7ca0ab');
+}
+
+export interface GraphEditorParams {
+  noHermits: boolean
+  noTransitive: boolean
+  noTemplates: boolean
+
+  allowBase: boolean
+  allowStruct: boolean
+  allowTerm: boolean
+  allowAxiom: boolean
+  allowFunction: boolean
+  allowPredicate: boolean
+  allowConstant: boolean
+  allowTheorem: boolean
 }
 
 interface EditorTermGraphProps {
@@ -49,13 +67,24 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
   const [ layout, setLayout ] = useLocalStorage<LayoutTypes>('graph_layout', 'treeTd2d');
   const [ coloringScheme, setColoringScheme ] = useLocalStorage<ColoringScheme>('graph_coloring', 'none');
   const [ orbit, setOrbit ] = useState(false);
+  
   const [ noHermits, setNoHermits ] = useLocalStorage('graph_no_hermits', true);
   const [ noTransitive, setNoTransitive ] = useLocalStorage('graph_no_transitive', false);
+  const [ noTemplates, setNoTemplates ] = useLocalStorage('graph_no_templates', false);
+  const [ allowBase, setAllowBase ] = useLocalStorage('graph_allow_base', true);
+  const [ allowStruct, setAllowStruct ] = useLocalStorage('graph_allow_struct', true);
+  const [ allowTerm, setAllowTerm ] = useLocalStorage('graph_allow_term', true);
+  const [ allowAxiom, setAllowAxiom ] = useLocalStorage('graph_allow_axiom', true);
+  const [ allowFunction, setAllowFunction ] = useLocalStorage('function', true);
+  const [ allowPredicate, setAllowPredicate ] = useLocalStorage('graph_allow_predicate', true);
+  const [ allowConstant, setAllowConstant ] = useLocalStorage('graph_allow_constant', true);
+  const [ allowTheorem, setAllowTheorem ] = useLocalStorage('graph_allow_theorem', true);
   
   const [ filtered, setFiltered ] = useState<Graph>(new Graph());
   const [ dismissed, setDismissed ] = useState<number[]>([]);
   const [ selectedDismissed, setSelectedDismissed ] = useState<number[]>([]);
   const graphRef = useRef<GraphCanvasRef | null>(null);
+  const [showOptions, setShowOptions] = useState(false);
   
   const [hoverID, setHoverID] = useState<string | undefined>(undefined);
   const hoverCst = useMemo(
@@ -64,6 +93,19 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
   }, [schema?.items, hoverID]);
 
   const is3D = useMemo(() => layout.includes('3d'), [layout]);
+  const allowedTypes: CstType[] = useMemo(
+  () => {
+    const result: CstType[]  = [];
+    if (allowBase) result.push(CstType.BASE);
+    if (allowStruct) result.push(CstType.STRUCTURED);
+    if (allowTerm) result.push(CstType.TERM);
+    if (allowAxiom) result.push(CstType.AXIOM);
+    if (allowFunction) result.push(CstType.FUNCTION);
+    if (allowPredicate) result.push(CstType.PREDICATE);
+    if (allowConstant) result.push(CstType.CONSTANT);
+    if (allowTheorem) result.push(CstType.THEOREM);
+    return result;
+  }, [allowBase, allowStruct, allowTerm, allowAxiom, allowFunction, allowPredicate, allowConstant, allowTheorem]);
 
   useEffect(
   () => {
@@ -78,6 +120,20 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     if (noTransitive) {
       graph.transitiveReduction();
     }
+    if (noTemplates) {
+      schema.items.forEach(cst => {
+        if (cst.isTemplate) {
+          graph.foldNode(cst.id);
+        }
+      });
+    }
+    if (allowedTypes.length < Object.values(CstType).length) {
+      schema.items.forEach(cst => {
+        if (!allowedTypes.includes(cst.cstType)) {
+          graph.foldNode(cst.id);
+        }
+      });
+    }
     const newDismissed: number[] = [];
     schema.items.forEach(cst => {
       if (!graph.nodes.has(cst.id)) {
@@ -88,7 +144,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     setDismissed(newDismissed);
     setSelectedDismissed([]);
     setHoverID(undefined);
-  }, [schema, noHermits, noTransitive]);
+  }, [schema, noHermits, noTransitive, noTemplates, allowedTypes]);
 
   function toggleDismissed(cstID: number) {
     setSelectedDismissed(prev => {
@@ -153,7 +209,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     focusOnSelect: false
   });
 
-  const handleCenter = useCallback(
+  const handleRecreate = useCallback(
   () => {
     graphRef.current?.resetControls();
     graphRef.current?.centerGraph();
@@ -180,6 +236,41 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     if (onNodeClick) onNodeClick(node);
   }, [onNodeClick, selections, onOpenEdit]);
 
+  function getOptions() {
+    return {
+      noHermits: noHermits,
+      noTemplates: noTemplates,
+      noTransitive: noTransitive,
+
+      allowBase: allowBase,
+      allowStruct: allowStruct,
+      allowTerm: allowTerm,
+      allowAxiom: allowAxiom,
+      allowFunction: allowFunction,
+      allowPredicate: allowPredicate,
+      allowConstant: allowConstant,
+      allowTheorem: allowTheorem
+    }
+  }
+
+  const handleChangeOptions = useCallback(
+  (params: GraphEditorParams) => {
+    setNoHermits(params.noHermits);
+    setNoTransitive(params.noTransitive);
+    setNoTemplates(params.noTemplates);
+
+    setAllowBase(params.allowBase);
+    setAllowStruct(params.allowStruct);
+    setAllowTerm(params.allowTerm);
+    setAllowAxiom(params.allowAxiom);
+    setAllowFunction(params.allowFunction);
+    setAllowPredicate(params.allowPredicate);
+    setAllowConstant(params.allowConstant);
+    setAllowTheorem(params.allowTheorem);
+  }, [setNoHermits, setNoTransitive, setNoTemplates, 
+    setAllowBase, setAllowStruct, setAllowTerm, setAllowAxiom, setAllowFunction, 
+    setAllowPredicate, setAllowConstant, setAllowTheorem]);
+
   const canvasWidth = useMemo(
   () => {
     return 'calc(100vw - 14.6rem)';
@@ -199,6 +290,12 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
 
   return (
     <div className='flex justify-between w-full'>
+    {showOptions && 
+    <DlgGraphOptions
+      hideWindow={() => setShowOptions(false)}
+      initial={getOptions()}
+      onConfirm={handleChangeOptions}
+    />}
     <div className='flex flex-col py-2 border-t border-r w-[14.7rem] pr-2 text-sm' style={{height: canvasHeight}}>
       {hoverCst && 
       <div className='relative'>
@@ -209,11 +306,11 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
       </div>}
       <div className='flex items-center w-full gap-1'>
         <Button
-          icon={<ArrowsRotateIcon size={7} />}
+          icon={<FilterCogIcon size={7} />}
           dense
-          tooltip='Центрировать изображение'
+          tooltip='Настройки фильтрации узлов и связей'
           widthClass='h-full'
-          onClick={handleCenter}
+          onClick={() => setShowOptions(true)}
         />
         <ConceptSelect
           className='min-w-[9.3rem]'
@@ -240,11 +337,6 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         onChange={ event => setOrbit(event.target.checked) }
       />
       <Checkbox
-        label='Удалить несвязанные' 
-        value={noHermits} 
-        onChange={ event => setNoHermits(event.target.checked) }
-      />
-      <Checkbox
         label='Транзитивная редукция' 
         value={noTransitive} 
         onChange={ event => setNoTransitive(event.target.checked) }
@@ -257,13 +349,13 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         <div className='flex flex-wrap justify-center gap-2 py-2'>
         {dismissed.map(cstID => {
           const cst = schema!.items.find(cst => cst.id === cstID)!;
-          const info = mapStatusInfo.get(cst.status)!;
+          const adjustedColoring = coloringScheme === 'none' ? 'status': coloringScheme;
           return (<>
             <div
               key={`${cst.alias}`}
               id={`${prefixes.cst_list}${cst.alias}`}
-              className={`w-fit min-w-[3rem] rounded-md text-center cursor-pointer ${info.color}`}
-              style={dismissedStyle(cstID)}
+              className='w-fit min-w-[3rem] rounded-md text-center cursor-pointer]'
+              style={ { backgroundColor: getCstNodeColor(cst, adjustedColoring, darkMode), ...dismissedStyle(cstID) }}
               onClick={() => toggleDismissed(cstID)}
               onDoubleClick={() => onOpenEdit(cstID)}
             >
@@ -283,28 +375,31 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
       className='relative border-t border-r'
       style={{width: canvasWidth, height: canvasHeight, borderBottomWidth: noNavigation ? '1px': ''}}
     >
-      <div id='items-graph-help' className='relative top-0 right-0 z-10 m-2'>
-        <HelpIcon color='text-primary' size={6} />
+      <div className='relative top-0 right-0 z-10 flex m-2 flex-start'>
+        <div className='px-1 py-1' id='items-graph-help' >
+          <HelpIcon color='text-primary' size={6} />
+        </div>
+        <MiniButton
+          icon={<ArrowsRotateIcon size={6} />}
+          tooltip='Пересоздать граф'
+          onClick={handleRecreate}
+        />
       </div>
       <ConceptTooltip anchorSelect='#items-graph-help'>
         <div>
           <h1>Настройка графа</h1>
           <p><b>Цвет</b> - выбор правила покраски узлов</p>
-          <p><i>Скрытые конституенты окрашены в цвет статуса</i></p>
           <p><b>Граф</b> - выбор модели расположения узлов</p>
           <p><b>Удалить несвязанные</b> - в графе не отображаются одинокие вершины</p>
           <p><b>Транзитивная редукция</b> - в графе устраняются транзитивные пути</p>
 
           <Divider margins='mt-2' />
 
-          <h1>Горячие клавиши</h1>
-          <p><b>Двойной клик</b> - редактирование конституенты</p>
-          <p><b>Delete</b> - удаление конституент</p>
-          <p><b>Alt + 1-6,Q,W</b> - добавление конституент</p>
+          <CstClassInfo title='Классы конституент' />
 
           <Divider margins='mt-2' />
           
-          <CstStatusInfo title='Статусы' />
+          <CstStatusInfo title='Статусы конституент' />
         </div>
       </ConceptTooltip>
       <GraphCanvas
@@ -321,7 +416,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         onNodePointerOut={handleHoverOut}
         cameraMode={ orbit ? 'orbit' : is3D ? 'rotate' : 'pan'}
         layoutOverrides={ 
-          layout.includes('tree') ? { nodeLevelRatio: schema && schema?.items.length < TREE_SIZE_MILESTONE ? 3 : 1 } 
+          layout.includes('tree') ? { nodeLevelRatio: filtered.nodes.size < TREE_SIZE_MILESTONE ? 3 : 1 } 
           : undefined
         }
         labelFontUrl={resources.graph_font}

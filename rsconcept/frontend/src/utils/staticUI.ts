@@ -2,7 +2,7 @@ import { LayoutTypes } from 'reagraph';
 
 import { ColoringScheme } from '../pages/RSFormPage/EditorTermGraph';
 import { resolveErrorClass,RSErrorClass, RSErrorType, TokenID } from './enums';
-import { CstMatchMode, CstType, DependencyMode,ExpressionStatus, IConstituenta,
+import { CstClass, CstMatchMode, CstType, DependencyMode, ExpressionStatus, IConstituenta,
   IFunctionArg,IRSErrorDescription, IRSForm,
   ISyntaxTreeNode, ParsingStatus, ValueClass 
 } from './models';
@@ -12,7 +12,7 @@ export interface IRSButtonData {
   tooltip: string
 }
 
-export interface IStatusInfo {
+export interface IFormatInfo {
   text: string
   color: string
   tooltip: string
@@ -245,10 +245,6 @@ export function getCstTypeShortcut(type: CstType) {
   }
 }
 
-export const mapCstTypeColors: Map<CstType, string> = new Map([
-  [CstType.BASE, 'Атлас 2D'],
-]);
-
 export const CstTypeSelector = (Object.values(CstType)).map(
   (typeStr) => {
     const type = typeStr as CstType;
@@ -311,27 +307,14 @@ export const mapLayoutLabels: Map<string, string> = new Map([
 export const mapColoringLabels: Map<string, string> = new Map([
   ['none', 'Цвет: моно'],
   ['status', 'Цвет: статус'],
-  ['type', 'Цвет: тип'],
+  ['type', 'Цвет: класс'],
 ]);
 
 export const GraphColoringSelector: {value: ColoringScheme, label: string}[] = [
   { value: 'none', label: 'Цвет: моно'},
   { value: 'status', label: 'Цвет: статус'},
-  { value: 'type', label: 'Цвет: тип'},
+  { value: 'type', label: 'Цвет: класс'},
 ];
-
-export function getCstTypeColor(type: CstType, darkMode: boolean): string {
-  switch (type) {
-  case CstType.BASE: return darkMode ? '#2b8000': '#aaff80';
-  case CstType.CONSTANT: return darkMode ? '#2b8000': '#aaff80';
-  case CstType.STRUCTURED: return darkMode ? '#2b8000': '#aaff80';
-  case CstType.TERM: return darkMode ? '#1e00b3': '#b3bdff';
-  case CstType.FUNCTION: return darkMode ? '#1e00b3': '#b3bdff';
-  case CstType.AXIOM: return darkMode ? '#592b2b': '#ffc9c9';
-  case CstType.PREDICATE: return darkMode ? '#1e00b3': '#b3bdff';
-  case CstType.THEOREM: return darkMode ? '#592b2b': '#ffc9c9';
-  }
-}
 
 export function getCstStatusColor(status: ExpressionStatus, darkMode: boolean): string {
   switch (status) {
@@ -344,7 +327,7 @@ export function getCstStatusColor(status: ExpressionStatus, darkMode: boolean): 
   }
 }
 
-export const mapStatusInfo: Map<ExpressionStatus, IStatusInfo> = new Map([
+export const mapStatusInfo: Map<ExpressionStatus, IFormatInfo> = new Map([
   [ ExpressionStatus.VERIFIED, {
     text: 'ок',
     color: 'bg-[#aaff80] dark:bg-[#2b8000]',
@@ -374,6 +357,38 @@ export const mapStatusInfo: Map<ExpressionStatus, IStatusInfo> = new Map([
     text: 'N/A',
     color: 'bg-[#b3bdff] dark:bg-[#1e00b3]',
     tooltip: 'произошла ошибка при проверке выражения'
+  }],
+]);
+
+export function getCstClassColor(cstClass: CstClass, darkMode: boolean): string {
+  switch (cstClass) {
+  case CstClass.TEMPLATE: return darkMode ? '#36899e': '#a5e9fa';
+  case CstClass.BASIC: return darkMode ? '#2b8000': '#aaff80';
+  case CstClass.DERIVED: return darkMode ? '#1e00b3': '#b3bdff';
+  case CstClass.STATEMENT: return darkMode ? '#592b2b': '#ffc9c9';
+  }
+}
+
+export const mapCstClassInfo: Map<CstClass, IFormatInfo> = new Map([
+  [ CstClass.BASIC, {
+    text: 'базовый',
+    color: 'bg-[#aaff80] dark:bg-[#2b8000]',
+    tooltip: 'неопределяемое понятие, требует конвенции'
+  }],
+  [ CstClass.DERIVED, {
+    text: 'производный',
+    color: 'bg-[#b3bdff] dark:bg-[#1e00b3]',
+    tooltip: 'выводимое понятие, задаваемое определением'
+  }],
+  [ CstClass.STATEMENT, {
+    text: 'утверждение',
+    color: 'bg-[#ffc9c9] dark:bg-[#592b2b]',
+    tooltip: 'неопределяемое понятие, требует конвенции'
+  }],
+  [ CstClass.TEMPLATE, {
+    text: 'шаблон',
+    color: 'bg-[#a5e9fa] dark:bg-[#36899e]',
+    tooltip: 'параметризованный шаблон определения'
   }],
 ]);
 
@@ -411,6 +426,8 @@ export function getMockConstituenta(id: number, alias: string, type: CstType, co
       }
     },
     status: ExpressionStatus.INCORRECT,
+    isTemplate: false,
+    cstClass: CstClass.DERIVED,
     parse: {
       status: ParsingStatus.INCORRECT,
       valueClass: ValueClass.INVALID,

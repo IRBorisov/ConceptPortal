@@ -157,93 +157,92 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
     setSelected(selectedRows.map(cst => cst.id));
   }, [setSelected]);
 
-  const columns = useMemo(() =>
-    [
-      {
-        name: 'ID',
-        id: 'id',
-        selector: (cst: IConstituenta) => cst.id,
-        omit: true
-      },
-      {
-        name: 'Имя',
-        id: 'alias',
-        selector: (cst: IConstituenta) => cst.alias,
-        cell: (cst: IConstituenta) => {
-          const info = mapStatusInfo.get(cst.status)!;
-          return (<>
-            <div
-              id={`${prefixes.cst_list}${cst.alias}`}
-              className={`w-full rounded-md text-center ${info.color}`}
-            >
-              {cst.alias}
-            </div>
-            <ConceptTooltip
-              anchorSelect={`#${prefixes.cst_list}${cst.alias}`}
-              place='right'
-            >
-              <p><b>Статус: </b> {info.tooltip}</p>
-            </ConceptTooltip>
-          </>);
-        },
-        width: '65px',
-        maxWidth: '65px',
-        reorder: true,
-      },
-      {
-        name: 'Тип',
-        id: 'type',
-        cell: (cst: IConstituenta) => <div style={{ fontSize: 12 }}>{getCstTypificationLabel(cst)}</div>,
-        width: '175px',
-        maxWidth: '175px',
-        wrap: true,
-        reorder: true,
-        hide: 1600
-      },
-      {
-        name: 'Термин',
-        id: 'term',
-        selector: (cst: IConstituenta) => cst.term?.resolved ?? cst.term?.raw ?? '',
-        width: '350px',
-        minWidth: '150px',
-        maxWidth: '350px',
-        wrap: true,
-        reorder: true
-      },
-      {
-        name: 'Формальное определение',
-        id: 'expression',
-        selector: (cst: IConstituenta) => cst.definition?.formal ?? '',
-        minWidth: '300px',
-        maxWidth: '500px',
-        grow: 2,
-        wrap: true,
-        reorder: true
-      },
-      {
-        name: 'Текстовое определение',
-        id: 'definition',
-        cell: (cst: IConstituenta) => (
-          <div style={{ fontSize: 12 }}>
-            {cst.definition?.text.resolved ?? cst.definition?.text.raw ?? ''}
+  const columns = useMemo(
+  () => [
+    {
+      name: 'ID',
+      id: 'id',
+      selector: (cst: IConstituenta) => cst.id,
+      omit: true
+    },
+    {
+      name: 'Имя',
+      id: 'alias',
+      selector: (cst: IConstituenta) => cst.alias,
+      cell: (cst: IConstituenta) => {
+        const info = mapStatusInfo.get(cst.status)!;
+        return (<>
+          <div
+            id={`${prefixes.cst_list}${cst.alias}`}
+            className={`w-full rounded-md text-center ${info.color}`}
+          >
+            {cst.alias}
           </div>
-        ),
-        minWidth: '200px',
-        grow: 2,
-        wrap: true,
-        reorder: true
+          <ConceptTooltip
+            anchorSelect={`#${prefixes.cst_list}${cst.alias}`}
+            place='right'
+          >
+            <p><b>Статус: </b> {info.tooltip}</p>
+          </ConceptTooltip>
+        </>);
       },
-      {
-        name: 'Конвенция / Комментарий',
-        id: 'convention',
-        cell: (cst: IConstituenta) => <div style={{ fontSize: 12 }}>{cst.convention ?? ''}</div>,
-        minWidth: '100px',
-        wrap: true,
-        reorder: true,
-        hide: 1800
-      }
-    ], []
-  );
+      width: '65px',
+      maxWidth: '65px',
+      reorder: true,
+    },
+    {
+      name: 'Тип',
+      id: 'type',
+      cell: (cst: IConstituenta) => <div style={{ fontSize: 12 }}>{getCstTypificationLabel(cst)}</div>,
+      width: '175px',
+      maxWidth: '175px',
+      wrap: true,
+      reorder: true,
+      hide: 1600
+    },
+    {
+      name: 'Термин',
+      id: 'term',
+      selector: (cst: IConstituenta) => cst.term?.resolved ?? cst.term?.raw ?? '',
+      width: '350px',
+      minWidth: '150px',
+      maxWidth: '350px',
+      wrap: true,
+      reorder: true
+    },
+    {
+      name: 'Формальное определение',
+      id: 'expression',
+      selector: (cst: IConstituenta) => cst.definition?.formal ?? '',
+      minWidth: '300px',
+      maxWidth: '500px',
+      grow: 2,
+      wrap: true,
+      reorder: true
+    },
+    {
+      name: 'Текстовое определение',
+      id: 'definition',
+      cell: (cst: IConstituenta) => (
+        <div style={{ fontSize: 12 }}>
+          {cst.definition?.text.resolved ?? cst.definition?.text.raw ?? ''}
+        </div>
+      ),
+      minWidth: '200px',
+      grow: 2,
+      wrap: true,
+      reorder: true
+    },
+    {
+      name: 'Конвенция / Комментарий',
+      id: 'convention',
+      cell: (cst: IConstituenta) => <div style={{ fontSize: 12 }}>{cst.convention ?? ''}</div>,
+      minWidth: '100px',
+      wrap: true,
+      reorder: true,
+      hide: 1800
+    }
+  ], []);
 
   return (
     <div className='w-full'>
