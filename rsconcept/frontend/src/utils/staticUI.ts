@@ -1,7 +1,8 @@
 import { LayoutTypes } from 'reagraph';
 
+import { ColoringScheme } from '../pages/RSFormPage/EditorTermGraph';
 import { resolveErrorClass,RSErrorClass, RSErrorType, TokenID } from './enums';
-import { CstMatchMode, CstType, DependencyMode,ExpressionStatus, IConstituenta,
+import { CstClass, CstMatchMode, CstType, DependencyMode, ExpressionStatus, IConstituenta,
   IFunctionArg,IRSErrorDescription, IRSForm,
   ISyntaxTreeNode, ParsingStatus, ValueClass 
 } from './models';
@@ -11,7 +12,7 @@ export interface IRSButtonData {
   tooltip: string
 }
 
-export interface IStatusInfo {
+export interface IFormatInfo {
   text: string
   color: string
   tooltip: string
@@ -250,22 +251,6 @@ export const CstTypeSelector = (Object.values(CstType)).map(
     return { value: type, label: getCstTypeLabel(type) };
 });
 
-export const mapLayoutLabels: Map<string, string> = new Map([
-  ['forceatlas2', 'Атлас 2D'],
-  ['forceDirected2d', 'Силы 2D'],
-  ['forceDirected3d', 'Силы 3D'],
-  ['treeTd2d', 'ДеревоВерт 2D'],
-  ['treeTd3d', 'ДеревоВерт 3D'],
-  ['treeLr2d', 'ДеревоГор 2D'],
-  ['treeLr3d', 'ДеревоГор 3D'],
-  ['radialOut2d', 'Радиальная 2D'],
-  ['radialOut3d', 'Радиальная 3D'],
-  ['circular2d', 'Круговая'],
-  ['hierarchicalTd', 'ИерархияВерт'],
-  ['hierarchicalLr', 'ИерархияГор'],
-  ['nooverlap', 'Без перекрытия']
-]);
-
 export function getCstCompareLabel(mode: CstMatchMode): string {
   switch(mode) {
     case CstMatchMode.ALL: return 'везде';
@@ -288,22 +273,61 @@ export function getDependencyLabel(mode: DependencyMode): string {
 }
 
 export const GraphLayoutSelector: {value: LayoutTypes, label: string}[] = [
-  { value: 'forceatlas2', label: 'Атлас 2D'},
-  { value: 'forceDirected2d', label: 'Силы 2D'},
-  { value: 'forceDirected3d', label: 'Силы 3D'},
-  { value: 'treeTd2d', label: 'ДеревоВ 2D'},
-  { value: 'treeTd3d', label: 'ДеревоВ 3D'},
-  { value: 'treeLr2d', label: 'ДеревоГ 2D'},
-  { value: 'treeLr3d', label: 'ДеревоГ 3D'},
-  { value: 'radialOut2d', label: 'Радиальная 2D'},
-  { value: 'radialOut3d', label: 'Радиальная 3D'},
+  { value: 'treeTd2d', label: 'Граф: ДеревоВ 2D'},
+  { value: 'treeTd3d', label: 'Граф: ДеревоВ 3D'},
+  { value: 'forceatlas2', label: 'Граф: Атлас 2D'},
+  { value: 'forceDirected2d', label: 'Граф: Силы 2D'},
+  { value: 'forceDirected3d', label: 'Граф: Силы 3D'},
+  { value: 'treeLr2d', label: 'Граф: ДеревоГ 2D'},
+  { value: 'treeLr3d', label: 'Граф: ДеревоГ 3D'},
+  { value: 'radialOut2d', label: 'Граф: Радиальная 2D'},
+  { value: 'radialOut3d', label: 'Граф: Радиальная 3D'},
   // { value: 'circular2d', label: 'circular2d'},
   //  { value: 'nooverlap', label: 'nooverlap'},
   //  { value: 'hierarchicalTd', label: 'hierarchicalTd'},
   //  { value: 'hierarchicalLr', label: 'hierarchicalLr'}
 ];
 
-export const mapStatusInfo: Map<ExpressionStatus, IStatusInfo> = new Map([
+export const mapLayoutLabels: Map<string, string> = new Map([
+  ['forceatlas2', 'Граф: Атлас 2D'],
+  ['forceDirected2d', 'Граф: Силы 2D'],
+  ['forceDirected3d', 'Граф: Силы 3D'],
+  ['treeTd2d', 'Граф: ДеревоВерт 2D'],
+  ['treeTd3d', 'Граф: ДеревоВерт 3D'],
+  ['treeLr2d', 'Граф: ДеревоГор 2D'],
+  ['treeLr3d', 'Граф: ДеревоГор 3D'],
+  ['radialOut2d', 'Граф: Радиальная 2D'],
+  ['radialOut3d', 'Граф: Радиальная 3D'],
+  ['circular2d', 'Граф: Круговая'],
+  ['hierarchicalTd', 'Граф: ИерархияВерт'],
+  ['hierarchicalLr', 'Граф: ИерархияГор'],
+  ['nooverlap', 'Граф: Без перекрытия']
+]);
+
+export const mapColoringLabels: Map<string, string> = new Map([
+  ['none', 'Цвет: моно'],
+  ['status', 'Цвет: статус'],
+  ['type', 'Цвет: класс'],
+]);
+
+export const GraphColoringSelector: {value: ColoringScheme, label: string}[] = [
+  { value: 'none', label: 'Цвет: моно'},
+  { value: 'status', label: 'Цвет: статус'},
+  { value: 'type', label: 'Цвет: класс'},
+];
+
+export function getCstStatusColor(status: ExpressionStatus, darkMode: boolean): string {
+  switch (status) {
+  case ExpressionStatus.VERIFIED: return darkMode ? '#2b8000': '#aaff80';
+  case ExpressionStatus.INCORRECT: return darkMode ? '#592b2b': '#ffc9c9';
+  case ExpressionStatus.INCALCULABLE: return darkMode ? '#964600': '#ffbb80';
+  case ExpressionStatus.PROPERTY: return darkMode ? '#36899e': '#a5e9fa';
+  case ExpressionStatus.UNKNOWN: return darkMode ? '#1e00b3': '#b3bdff';
+  case ExpressionStatus.UNDEFINED: return darkMode ? '#1e00b3': '#b3bdff';
+  }
+}
+
+export const mapStatusInfo: Map<ExpressionStatus, IFormatInfo> = new Map([
   [ ExpressionStatus.VERIFIED, {
     text: 'ок',
     color: 'bg-[#aaff80] dark:bg-[#2b8000]',
@@ -317,7 +341,7 @@ export const mapStatusInfo: Map<ExpressionStatus, IStatusInfo> = new Map([
   [ ExpressionStatus.INCALCULABLE, {
     text: 'невыч',
     color: 'bg-[#ffbb80] dark:bg-[#964600]',
-    tooltip: 'выражение не вычислимо (экспоненциальная сложность)'
+    tooltip: 'выражение не вычислимо'
   }],
   [ ExpressionStatus.PROPERTY, {
     text: 'св-во',
@@ -333,6 +357,38 @@ export const mapStatusInfo: Map<ExpressionStatus, IStatusInfo> = new Map([
     text: 'N/A',
     color: 'bg-[#b3bdff] dark:bg-[#1e00b3]',
     tooltip: 'произошла ошибка при проверке выражения'
+  }],
+]);
+
+export function getCstClassColor(cstClass: CstClass, darkMode: boolean): string {
+  switch (cstClass) {
+  case CstClass.TEMPLATE: return darkMode ? '#36899e': '#a5e9fa';
+  case CstClass.BASIC: return darkMode ? '#2b8000': '#aaff80';
+  case CstClass.DERIVED: return darkMode ? '#1e00b3': '#b3bdff';
+  case CstClass.STATEMENT: return darkMode ? '#592b2b': '#ffc9c9';
+  }
+}
+
+export const mapCstClassInfo: Map<CstClass, IFormatInfo> = new Map([
+  [ CstClass.BASIC, {
+    text: 'базовый',
+    color: 'bg-[#aaff80] dark:bg-[#2b8000]',
+    tooltip: 'неопределяемое понятие, требует конвенции'
+  }],
+  [ CstClass.DERIVED, {
+    text: 'производный',
+    color: 'bg-[#b3bdff] dark:bg-[#1e00b3]',
+    tooltip: 'выводимое понятие, задаваемое определением'
+  }],
+  [ CstClass.STATEMENT, {
+    text: 'утверждение',
+    color: 'bg-[#ffc9c9] dark:bg-[#592b2b]',
+    tooltip: 'неопределяемое понятие, требует конвенции'
+  }],
+  [ CstClass.TEMPLATE, {
+    text: 'шаблон',
+    color: 'bg-[#a5e9fa] dark:bg-[#36899e]',
+    tooltip: 'параметризованный шаблон определения'
   }],
 ]);
 
@@ -370,6 +426,8 @@ export function getMockConstituenta(id: number, alias: string, type: CstType, co
       }
     },
     status: ExpressionStatus.INCORRECT,
+    isTemplate: false,
+    cstClass: CstClass.DERIVED,
     parse: {
       status: ParsingStatus.INCORRECT,
       valueClass: ValueClass.INVALID,

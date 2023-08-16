@@ -10,7 +10,7 @@ function Footer() {
         <div className='px-4 underline whitespace-nowrap'>
           <Link to='/manuals' tabIndex={-1}>Справка</Link> <br/>
           <Link to='/library?filter=common' tabIndex={-1}>Библиотека КС</Link> <br/>
-          <a href={urls.gitrepo} className='flex'>
+          <a href={urls.gitrepo} className='flex' tabIndex={-1}>
             <GithubIcon />
             <span className='ml-1'>Репозиторий</span>
           </a>

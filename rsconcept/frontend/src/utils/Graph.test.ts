@@ -45,6 +45,16 @@ describe('Testing Graph editing', () => {
     expect(graph.hasEdge(4, 1)).toBeFalsy();
   });
 
+  test('folding node redirectes edges', () => {
+    const graph = new Graph([[1, 3], [2, 3], [3, 4], [3, 5], [3, 3]]);
+    graph.foldNode(3);
+    expect(graph.hasNode(3)).toBeFalsy();
+    expect(graph.hasEdge(1, 4)).toBeTruthy();
+    expect(graph.hasEdge(1, 5)).toBeTruthy();
+    expect(graph.hasEdge(2, 4)).toBeTruthy();
+    expect(graph.hasEdge(2, 5)).toBeTruthy();
+  });
+
   test('removing isolated nodes', () => {
     const graph = new Graph([[9, 1], [9, 2], [2, 1], [4, 3], [5, 9], [7], [8]]);
     graph.removeIsolated()
@@ -53,7 +63,7 @@ describe('Testing Graph editing', () => {
 
   test('transitive reduction', () => {
     const graph = new Graph([[1, 3], [1, 2], [2, 3]]);
-    graph.transitiveReduction()
+    graph.transitiveReduction();
     expect(graph.hasEdge(1, 2)).toBeTruthy();
     expect(graph.hasEdge(2, 3)).toBeTruthy();
     expect(graph.hasEdge(1, 3)).toBeFalsy();

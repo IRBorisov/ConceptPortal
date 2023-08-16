@@ -40,7 +40,7 @@ function RSTabs() {
   const { destroySchema } = useLibrary();
 
   const [activeTab, setActiveTab] = useState(RSTabsList.CARD);
-  const [activeID, setActiveID] = useState<number | undefined>(undefined)
+  const [activeID, setActiveID] = useState<number | undefined>(undefined);
   
   const [showUpload, setShowUpload] = useState(false);
   const [showClone, setShowClone] = useState(false);
@@ -223,7 +223,7 @@ function RSTabs() {
       defaultFocus={true}
       selectedTabClassName='font-bold'
     >
-      <TabList className='flex items-start w-fit clr-bg-pop'>
+      <TabList className='flex items-start select-none w-fit clr-bg-pop'>
         <RSTabsMenu 
           onDestroy={onDestroySchema}
           showCloneDialog={() => setShowClone(true)} 
@@ -264,7 +264,11 @@ function RSTabs() {
       </TabPanel>
 
       <TabPanel>
-        <EditorTermGraph />
+        <EditorTermGraph 
+          onOpenEdit={onOpenCst}
+          onCreateCst={promptCreateCst}
+          onDeleteCst={promptDeleteCst}
+        />
       </TabPanel>
     </Tabs>
     </>}

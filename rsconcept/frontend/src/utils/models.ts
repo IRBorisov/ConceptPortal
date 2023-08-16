@@ -101,6 +101,13 @@ export enum CstType {
   THEOREM = 'theorem'
 }
 
+export enum CstClass {
+  BASIC = 'basic',
+  DERIVED = 'derived',
+  STATEMENT = 'statement',
+  TEMPLATE = 'template'
+}
+
 export interface IConstituenta {
   id: number
   alias: string
@@ -118,7 +125,9 @@ export interface IConstituenta {
       resolved: string
     }
   }
+  cstClass: CstClass
   status: ExpressionStatus
+  isTemplate: boolean
   parse: {
     status: ParsingStatus
     valueClass: ValueClass
@@ -230,12 +239,12 @@ export enum EditMode {
 
 // RSExpression status
 export enum ExpressionStatus {
-  UNDEFINED = 0,
-  UNKNOWN,
-  INCORRECT,
-  INCALCULABLE,
-  PROPERTY,
-  VERIFIED
+  UNDEFINED = 'undefined',
+  UNKNOWN = 'unknown',
+  INCORRECT = 'incorrect',
+  INCALCULABLE = 'incalculable',
+  PROPERTY = 'property',
+  VERIFIED = 'verified'
 }
 
 // Dependency mode for schema analysis
@@ -274,7 +283,28 @@ export function inferStatus(parse?: ParsingStatus, value?: ValueClass): Expressi
   if (value === ValueClass.PROPERTY) {
     return ExpressionStatus.PROPERTY;
   }
-  return ExpressionStatus.VERIFIED
+  return ExpressionStatus.VERIFIED;
+}
+
+export function inferTemplate(expression: string): boolean {
+  const match = expression.match(/R\d+/g);
+  return (match && match?.length > 0) ?? false;
+}
+
+export function inferClass(type: CstType, isTemplate: boolean): CstClass {
+  if (isTemplate) {
+    return CstClass.TEMPLATE;
+  }
+  switch (type) {
+  case CstType.BASE: return CstClass.BASIC;
+  case CstType.CONSTANT: return CstClass.BASIC;
+  case CstType.STRUCTURED: return CstClass.BASIC;
+  case CstType.TERM: return CstClass.DERIVED;
+  case CstType.FUNCTION: return CstClass.DERIVED;
+  case CstType.AXIOM: return CstClass.STATEMENT;
+  case CstType.PREDICATE: return CstClass.DERIVED;
+  case CstType.THEOREM: return CstClass.STATEMENT;
+  }
 }
 
 export function extractGlobals(expression: string): Set<string> {
@@ -336,6 +366,8 @@ export function LoadRSFormData(schema: IRSFormData): IRSForm {
   }
   result.items.forEach(cst => {
     cst.status = inferStatus(cst.parse.status, cst.parse.valueClass);
+    cst.isTemplate = inferTemplate(cst.definition.formal);
+    cst.cstClass = inferClass(cst.cstType, cst.isTemplate);
     result.graph.addNode(cst.id);
     const dependencies = extractGlobals(cst.definition.formal);
     dependencies.forEach(value => {

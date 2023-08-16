@@ -158,7 +158,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
         onChange={setFilterMatch}
       />
       <input type='text'
-        className='w-full px-2 bg-white outline-none hover:text-clip clr-bg-pop clr-border'
+        className='w-full px-2 bg-white outline-none select-none hover:text-clip clr-bg-pop clr-border'
         placeholder='наберите текст фильтра'
         value={filterText}
         onChange={event => setFilterText(event.target.value)}

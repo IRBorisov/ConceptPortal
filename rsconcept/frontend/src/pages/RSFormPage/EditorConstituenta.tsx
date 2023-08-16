@@ -6,10 +6,11 @@ import Divider from '../../components/Common/Divider';
 import MiniButton from '../../components/Common/MiniButton';
 import SubmitButton from '../../components/Common/SubmitButton';
 import TextArea from '../../components/Common/TextArea';
+import CstStatusInfo from '../../components/Help/InfoCstStatus';
 import { DumpBinIcon, HelpIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { type CstType, EditMode, ICstUpdateData, SyntaxTree } from '../../utils/models';
-import { getCstTypeLabel, getCstTypificationLabel, mapStatusInfo } from '../../utils/staticUI';
+import { getCstTypeLabel, getCstTypificationLabel } from '../../utils/staticUI';
 import EditorRSExpression from './EditorRSExpression';
 import ViewSideConstituents from './elements/ViewSideConstituents';
 
@@ -146,18 +147,18 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
           </div>
           <div className='flex justify-end'>
             <MiniButton
-              tooltip='Создать конституенты после данной'
-              disabled={!isEnabled}
-              onClick={handleCreateCst}
-              icon={<SmallPlusIcon size={5} color={isEnabled ? 'text-green' : ''} />} 
-            />
-            <MiniButton
               tooltip='Удалить редактируемую конституенту'
               disabled={!isEnabled}
               onClick={handleDelete}
               icon={<DumpBinIcon size={5} color={isEnabled ? 'text-red' : ''} />}
             />
-            <div id='cst-help' className='flex items-center ml-[0.25rem]'>
+            <MiniButton
+              tooltip='Создать конституенты после данной'
+              disabled={!isEnabled}
+              onClick={handleCreateCst}
+              icon={<SmallPlusIcon size={5} color={isEnabled ? 'text-green' : ''} />} 
+            />
+            <div id='cst-help' className='flex items-center ml-[6px]'>
               <HelpIcon color='text-primary' size={5} />
             </div>
             <ConceptTooltip anchorSelect='#cst-help'>
@@ -173,18 +174,7 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
                 <p>- при наведении на ID конституенты отображаются ее атрибуты</p>
                 <p>- столбец "Описание" содержит один из непустых текстовых атрибутов</p>
                 <Divider margins='mt-2' />
-                <h1>Статусы</h1>
-                { [... mapStatusInfo.values()].map((info, index) => {
-                    return (<p className='py-1' key={`status-info-${index}`}>
-                      <span className={`inline-block font-semibold min-w-[4rem] text-center border ${info.color}`}>
-                        {info.text}
-                      </span>
-                      <span> - </span>
-                      <span>
-                        {info.tooltip}
-                      </span>
-                    </p>);
-                })}
+                <CstStatusInfo title='Статусы' />
               </div>
             </ConceptTooltip>
           </div>
@@ -241,7 +231,7 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
           />
         </div>
       </form>
-      <div className='self-stretch border w-full pb-1'>
+      <div className='self-stretch w-full pb-1 border'>
         <ViewSideConstituents
           expression={expression}
           baseHeight={UNFOLDED_HEIGHT}

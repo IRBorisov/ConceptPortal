@@ -22,14 +22,14 @@ function App () {
   const scrollWindowSize = useMemo(
   () => {
     return !noNavigation ? 
-      'max-h-[calc(100vh-4.5rem)]'
-    : 'max-h-[100vh]'; 
+      'calc(100vh - 4.5rem)'
+    : '100vh'; 
   }, [noNavigation]);
   const mainSize = useMemo(
   () => {
     return !noNavigation ? 
-      'min-h-[calc(100vh-12rem)]'
-    : 'min-h-[calc(100vh-8rem)] '; 
+      'calc(100vh - 12rem)'
+    : '100vh'; 
   }, [noNavigation]);
   
   return (
@@ -42,8 +42,8 @@ function App () {
         pauseOnFocusLoss={false}
       />
       
-      <div className={`${scrollWindowSize} overflow-auto`}>
-      <main className={`${mainSize} px-2`}>
+      <div className='overflow-auto' style={{maxHeight: scrollWindowSize}}>
+      <main  className='px-2' style={{minHeight: mainSize}}>
         <Routes>
           <Route path='/' element={ <HomePage/>} />
 
@@ -60,7 +60,7 @@ function App () {
           <Route path='*' element={ <NotFoundPage/>} />
         </Routes>
       </main>
-      <Footer />
+      {!noNavigation && <Footer />}
       </div>
     </div>
   );

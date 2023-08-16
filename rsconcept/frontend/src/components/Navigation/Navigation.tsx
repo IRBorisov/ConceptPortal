@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 
-import { useAuth } from '../../context/AuthContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import { EducationIcon, LibraryIcon } from '../Icons';
 import Logo from './Logo'
@@ -10,7 +9,6 @@ import UserMenu from './UserMenu';
 import UserTools from './UserTools';
 
 function Navigation () {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const { noNavigation, toggleNoNavigation } = useConceptTheme();
 
@@ -37,12 +35,12 @@ function Navigation () {
       </button>}
       {!noNavigation &&
       <div className='pr-6 pl-2 py-2.5 h-[4rem] flex items-center justify-between border-b-2 clr-nav rounded-none'>
-        <div className='flex items-start justify-start '>
+        <div className='flex items-start justify-start select-none'>
           <Logo title='КонцептПортал' />
           <TopSearch />
         </div>
         <div className='flex items-center'>
-          {user && <UserTools/>}
+          <UserTools/>
           <div className='flex items-center pl-2'>
             <NavigationButton icon={<LibraryIcon />} description='Общие схемы' onClick={navigateCommon} />
             <NavigationButton icon={<EducationIcon />} description='Справка' onClick={navigateHelp} />

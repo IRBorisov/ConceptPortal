@@ -67,6 +67,10 @@ export class Graph {
     return node;
   }
 
+  hasNode(target: number): boolean {
+    return !!this.nodes.get(target);
+  }
+
   removeNode(target: number): GraphNode | null {
     const nodeToRemove = this.nodes.get(target);
     if (!nodeToRemove) {
@@ -78,6 +82,19 @@ export class Graph {
     });
     this.nodes.delete(target);
     return nodeToRemove;
+  }
+
+  foldNode(target: number): GraphNode | null {
+    const nodeToRemove = this.nodes.get(target);
+    if (!nodeToRemove) {
+      return null;
+    }
+    nodeToRemove.inputs.forEach(input => {
+      nodeToRemove.outputs.forEach(output => {
+        this.addEdge(input, output);
+      })
+    });
+    return this.removeNode(target);
   }
 
   removeIsolated(): GraphNode[] {
