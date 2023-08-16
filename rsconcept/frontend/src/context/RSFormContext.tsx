@@ -76,10 +76,10 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
   const isEditable = useMemo(
     () => {
       return (
-        !loading && !isReadonly &&
+        !loading && !processing && !isReadonly &&
       ((isOwned || (isForceAdmin && user?.is_staff)) ?? false)
       )
-    }, [user?.is_staff, isReadonly, isForceAdmin, isOwned, loading])
+    }, [user?.is_staff, isReadonly, isForceAdmin, isOwned, loading, processing])
 
   const isTracking = useMemo(
     () => {

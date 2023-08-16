@@ -90,7 +90,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
   }
 
   // Add new constituenta
-  function handleCreateCst(type?: CstType){
+  function handleCreateCst(type?: CstType) {
     if (!schema) {
       return;
     }

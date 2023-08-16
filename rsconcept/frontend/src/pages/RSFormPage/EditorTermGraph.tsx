@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { darkTheme, GraphCanvas, GraphCanvasRef, GraphEdge, 
   GraphNode, LayoutTypes, lightTheme, Sphere, useSelection
 } from 'reagraph';
@@ -12,7 +12,7 @@ import MiniButton from '../../components/Common/MiniButton';
 import InfoConstituenta from '../../components/Help/InfoConstituenta';
 import InfoCstClass from '../../components/Help/InfoCstClass';
 import CstStatusInfo from '../../components/Help/InfoCstStatus';
-import { ArrowsRotateIcon, FilterCogIcon, HelpIcon } from '../../components/Icons';
+import { ArrowsRotateIcon, DumpBinIcon, FilterCogIcon, HelpIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
@@ -57,12 +57,12 @@ export interface GraphEditorParams {
 
 interface EditorTermGraphProps {
   onOpenEdit: (cstID: number) => void
- // onCreateCst: (selectedID: number | undefined, type: CstType | undefined, skipDialog?: boolean) => void
- // onDeleteCst: (selected: number[], callback: (items: number[]) => void) => void
+  onCreateCst: (selectedID: number | undefined, type: CstType | undefined, skipDialog?: boolean) => void
+  onDeleteCst: (selected: number[], callback: (items: number[]) => void) => void
 }
 
-function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
-  const { schema } = useRSForm();
+function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGraphProps) {
+  const { schema, isEditable } = useRSForm();
   const { darkMode, noNavigation } = useConceptTheme();
   
   const [ layout, setLayout ] = useLocalStorage<LayoutTypes>('graph_layout', 'treeTd2d');
@@ -87,6 +87,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
   const [ selectedDismissed, setSelectedDismissed ] = useState<number[]>([]);
   const graphRef = useRef<GraphCanvasRef | null>(null);
   const [showOptions, setShowOptions] = useState(false);
+  const [toggleUpdate, setToggleUpdate] = useState(false);
   
   const [hoverID, setHoverID] = useState<string | undefined>(undefined);
   const hoverCst = useMemo(
@@ -109,7 +110,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     return result;
   }, [allowBase, allowStruct, allowTerm, allowAxiom, allowFunction, allowPredicate, allowConstant, allowTheorem]);
 
-  useEffect(
+  useLayoutEffect(
   () => {
     if (!schema) {
       setFiltered(new Graph());
@@ -146,7 +147,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     setDismissed(newDismissed);
     setSelectedDismissed([]);
     setHoverID(undefined);
-  }, [schema, noHermits, noTransitive, noTemplates, allowedTypes]);
+  }, [schema, noHermits, noTransitive, noTemplates, allowedTypes, toggleUpdate]);
 
   function toggleDismissed(cstID: number) {
     setSelectedDismissed(prev => {
@@ -199,6 +200,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
   const { 
     selections, actives,
     onNodeClick,
+    clearSelections,
     onCanvasClick,
     onNodePointerOver,
     onNodePointerOut
@@ -213,9 +215,10 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
   });
 
   const allSelected: string[] = useMemo(
-    () => {
-      return [ ... selectedDismissed.map(id => String(id)), ... selections];
-    }, [selectedDismissed, selections]);
+  () => {
+    return [ ... selectedDismissed.map(id => String(id)), ... selections];
+  }, [selectedDismissed, selections]);
+  const nothingSelected = useMemo(() => allSelected.length === 0, [allSelected]);
 
   const handleRecreate = useCallback(
   () => {
@@ -249,6 +252,43 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     setSelectedDismissed([]);
     if (onCanvasClick) onCanvasClick(event);
   }, [onCanvasClick]);
+
+  // Implement hotkeys for editing
+  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    console.log(event);
+    if (!isEditable) {
+      return;
+    }
+    if (event.key === 'Delete' && allSelected.length > 0) {
+      event.preventDefault();
+      handleDeleteCst();
+      return;
+    }
+  }
+
+  function handleCreateCst() {
+    if (!schema) {
+      return;
+    }
+    const selectedPosition = allSelected.reduce((prev, cstID) => {
+      const position = schema.items.findIndex(cst => cst.id === Number(cstID));
+      return Math.max(position, prev);
+    }, -1);
+    const insert_where = selectedPosition >= 0 ? schema.items[selectedPosition].id : undefined;
+    onCreateCst(insert_where, undefined);
+  }
+
+  function handleDeleteCst() {
+    if (!schema) {
+      return;
+    }
+    onDeleteCst([... allSelected.map(id => Number(id))], () => {
+      clearSelections();
+      setDismissed([]);
+      setSelectedDismissed([]);
+      setToggleUpdate(prev => !prev);
+    });
+  }
 
   function getOptions() {
     return {
@@ -305,7 +345,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
   }, [selectedDismissed]);
 
   return (
-    <div className='flex justify-between w-full'>
+    <div className='flex justify-between w-full' tabIndex={0} onKeyDown={handleKeyDown}>
     {showOptions && 
     <DlgGraphOptions
       hideWindow={() => setShowOptions(false)}
@@ -321,11 +361,27 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         />
       </div>}
       
-      <div className='mr-3 whitespace-nowrap'>
-        Выбраны
-        <span className='ml-2'>
-          <b>{allSelected.length}</b> из {schema?.stats?.count_all ?? 0}
-        </span>
+      <div className='flex items-center justify-between'>
+        <div className='mr-3 whitespace-nowrap'>
+          Выбраны
+          <span className='ml-1'>
+            <b>{allSelected.length}</b> из {schema?.stats?.count_all ?? 0}
+          </span>
+        </div>
+        <div>
+          <MiniButton
+            tooltip='Удалить выбранные'
+            icon={<DumpBinIcon color={!nothingSelected ? 'text-red' : ''} size={5}/>}
+            disabled={!isEditable || nothingSelected}
+            onClick={handleDeleteCst}
+          />
+          <MiniButton
+            tooltip='Новая конституента'
+            icon={<SmallPlusIcon color='text-green' size={5}/>}
+            disabled={!isEditable}
+            onClick={handleCreateCst}
+          />
+        </div>
       </div>
 
       <Divider margins='mt-3 mb-2' />
@@ -401,7 +457,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         </div>
       </div>
     </div>
-    <div className='flex-wrap w-full h-full overflow-auto'>
+    <div className='w-full h-full overflow-auto'>
     <div 
       className='relative border-t border-r'
       style={{width: canvasWidth, height: canvasHeight, borderBottomWidth: noNavigation ? '1px': ''}}

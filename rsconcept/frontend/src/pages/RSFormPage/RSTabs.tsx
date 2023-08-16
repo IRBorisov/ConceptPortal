@@ -266,6 +266,8 @@ function RSTabs() {
       <TabPanel>
         <EditorTermGraph 
           onOpenEdit={onOpenCst}
+          onCreateCst={promptCreateCst}
+          onDeleteCst={promptDeleteCst}
         />
       </TabPanel>
     </Tabs>
