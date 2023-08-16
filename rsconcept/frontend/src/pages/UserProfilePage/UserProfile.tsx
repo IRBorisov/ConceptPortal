@@ -14,10 +14,6 @@ export function UserProfile() {
   const [email, setEmail] = useState('');
   const [first_name, setFirstName] = useState('');
   const [last_name, setLastName] = useState('');
-  
-  
-  // const [showChangePassword, setShowChangePassword] = useState(false);
-
 
   useLayoutEffect(() => {
     if (user) {
@@ -40,34 +36,39 @@ export function UserProfile() {
   }
 
   return (
-    <div><h1 className='flex justify-center py-2'> Учетные данные пользователя </h1>
-    <div className='flex flex-row justify-center py-2'>
-    <div className='flex-grow max-w-sm px-4 '>
-    <form onSubmit={handleSubmit} className='flex-grow px-6 py-2 border center min-w-fit'>
-        <TextInput id='username' 
-          label='Логин:'
-          value={username}
-          onChange={event => setUsername(event.target.value)}
-        />
-        <TextInput id='first_name'
-          label="Имя:"
-          value={first_name}
-          onChange={event => setFirstName(event.target.value)}
-        />
-        <TextInput id='last_name' label="Фамилия:" value={last_name} onChange={event => setLastName(event.target.value)}/>
-        <TextInput id='email' label="Электронная почта:" value={email} onChange={event => setEmail(event.target.value)}/>
-        <div className='flex items-center justify-center my-4'>
-          <button 
-            type='submit' 
-            className='px-2 py-1 bg-green-500 border center'
-            disabled={processing}>
-              <span>Сохранить мои данные</span>
-          </button>
-        </div>
-         
-    </form>
-    </div>
-    <ChangePassword /> 
-    </div>
+    <div className='flex justify-center'>
+      <div className='place-self-center'>
+        <h1 className='flex justify-center py-2'> Учетные данные пользователя </h1>
+        <div className='flex justify-center px-6 py-2 max-w-fit'>
+          <div className='flex max-w-sm px-4'>
+            <form onSubmit={handleSubmit} className='px-6 min-w-fit'>
+              <div>
+                <TextInput id='username' 
+                  label='Логин:'
+                  value={username}
+                  onChange={event => setUsername(event.target.value)}
+                />
+                <TextInput id='first_name'
+                  label="Имя:"
+                  value={first_name}
+                  onChange={event => setFirstName(event.target.value)}
+                />
+                <TextInput id='last_name' label="Фамилия:" value={last_name} onChange={event => setLastName(event.target.value)}/>
+                <TextInput id='email' label="Электронная почта:" value={email} onChange={event => setEmail(event.target.value)}/>
+              </div>  
+              <div className='flex justify-center px-0 py-4'>
+                <button 
+                  type='submit' 
+                  className={`px-2 py-1 border clr-btn-green`}
+                  
+                  disabled={processing}>
+                    <span>Сохранить мои данные</span>
+                </button>
+              </div>  
+            </form>   
+          </div>
+          <ChangePassword /> 
+        </div>   
+      </div>
     </div>
   )}

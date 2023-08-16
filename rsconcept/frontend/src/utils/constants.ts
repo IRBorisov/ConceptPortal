@@ -24,7 +24,7 @@ export const urls = {
 };
 
 export const resources = {
-  graph_font: '/DejaVu.ttf'
+  graph_font: '/DejaVu_min.ttf'
 }
 
 export const prefixes = {

@@ -17,7 +17,7 @@ export function ChangePassword() {
   const navigate = useNavigate();
 
   const colorClass = useMemo(() => {
-    return !!newPassword && !!newPasswordRepeat && newPassword !== newPasswordRepeat ? 'bg-red-500' : '';
+    return !!newPassword && !!newPasswordRepeat && newPassword !== newPasswordRepeat ? 'bg-red-500' : 'clr-input';
   }, [newPassword, newPasswordRepeat]);
   
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -35,39 +35,41 @@ export function ChangePassword() {
   }
 
   return (
-    <div className='flex-grow max-w-sm px-4'>
-    <form onSubmit={handleSubmit} className='flex-grow min-h-full px-6 py-2 border min-w-fit bg-slate-200'>
-        <TextInput id='old_password'
-          type='password' 
-          label='Введите старый пароль:'
-          value={oldPassword}
-          onChange={event => setOldPassword(event.target.value)}
-        />
-        <TextInput id='new_password'
-          colorClass={colorClass}
-          label="Введите новый пароль:"
-          value={newPassword}
-          onChange={event => {
-            setNewPassword(event.target.value); 
-          }}
-        />
-        <TextInput id='new_password_repeat'
-          colorClass={colorClass}
-          label="Повторите новый пароль:"
-          value={newPasswordRepeat}
-          onChange={event => {
-            setNewPasswordRepeat(event.target.value); 
-          }}
-        />
-        <div className='relative flex justify-center my-4 border'>
+    <div className='flex max-w-sm px-4 border-l-2'>
+      <form onSubmit={handleSubmit} className='flex flex-col justify-between px-6 min-w-fit '>
+        <div>
+          <TextInput id='old_password'
+            type='password' 
+            label='Введите старый пароль:'
+            value={oldPassword}
+            onChange={event => setOldPassword(event.target.value)}
+          />
+          <TextInput id='new_password'
+            colorClass={colorClass}
+            label="Введите новый пароль:"
+            value={newPassword}
+            onChange={event => {
+              setNewPassword(event.target.value); 
+            }}
+          />
+          <TextInput id='new_password_repeat'
+            colorClass={colorClass}
+            label="Повторите новый пароль:"
+            value={newPasswordRepeat}
+            onChange={event => {
+              setNewPasswordRepeat(event.target.value); 
+            }}
+          />          
+        </div>
+          { error && <BackendError error={error} />}
+        <div className='flex justify-center py-4'>
           <button 
             type='submit' 
-            className='absolute bottom-0 px-2 py-1 bg-blue-500 border'
+            className={`px-2 py-1 border clr-btn-blue`}
             disabled={loading}>
               <span>Сменить пароль</span>
           </button>
         </div>
-        { error && <BackendError error={error} />}
-    </form>   
-    </div>  
+      </form>
+    </div>   
   )}
