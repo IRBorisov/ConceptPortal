@@ -223,7 +223,7 @@ function RSTabs() {
       defaultFocus={true}
       selectedTabClassName='font-bold'
     >
-      <TabList className='flex items-start w-fit clr-bg-pop'>
+      <TabList className='flex items-start select-none w-fit clr-bg-pop'>
         <RSTabsMenu 
           onDestroy={onDestroySchema}
           showCloneDialog={() => setShowClone(true)} 

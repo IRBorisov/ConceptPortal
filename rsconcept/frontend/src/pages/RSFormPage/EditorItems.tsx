@@ -247,7 +247,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
   return (
     <div className='w-full'>
       <div
-        className={'flex justify-start w-full gap-1 px-2 py-1 border-y items-center h-[2.2rem] clr-app' +
+        className={'flex justify-start w-full gap-1 px-2 py-1 border-y items-center h-[2.2rem] select-none clr-app' +
           (!noNavigation ? ' sticky z-10 top-[0rem]' : ' sticky z-10 top-[0rem]')}
       >
         <div className='mr-3 whitespace-nowrap'>

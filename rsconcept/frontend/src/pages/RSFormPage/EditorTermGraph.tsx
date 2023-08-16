@@ -212,6 +212,11 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     focusOnSelect: false
   });
 
+  const allSelected: string[] = useMemo(
+    () => {
+      return [ ... selectedDismissed.map(id => String(id)), ... selections];
+    }, [selectedDismissed, selections]);
+
   const handleRecreate = useCallback(
   () => {
     graphRef.current?.resetControls();
@@ -238,6 +243,12 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     }
     if (onNodeClick) onNodeClick(node);
   }, [onNodeClick, selections, onOpenEdit]);
+
+  const handleCanvasClick = useCallback(
+  (event: MouseEvent) => {
+    setSelectedDismissed([]);
+    if (onCanvasClick) onCanvasClick(event);
+  }, [onCanvasClick]);
 
   function getOptions() {
     return {
@@ -301,7 +312,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
       initial={getOptions()}
       onConfirm={handleChangeOptions}
     />}
-    <div className='flex flex-col py-2 border-t border-r w-[14.7rem] pr-2 text-sm' style={{height: canvasHeight}}>
+    <div className='flex flex-col py-2 border-t border-r w-[14.7rem] pr-2 text-sm select-none' style={{height: canvasHeight}}>
       {hoverCst && 
       <div className='relative'>
         <InfoConstituenta 
@@ -309,6 +320,16 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
           className='absolute top-0 left-0 z-50 w-[25rem] min-h-[11rem] overflow-y-auto border h-fit clr-app px-3' 
         />
       </div>}
+      
+      <div className='mr-3 whitespace-nowrap'>
+        Выбраны
+        <span className='ml-2'>
+          <b>{allSelected.length}</b> из {schema?.stats?.count_all ?? 0}
+        </span>
+      </div>
+
+      <Divider margins='mt-3 mb-2' />
+
       <div className='flex items-center w-full gap-1'>
         <Button
           icon={<FilterCogIcon size={7} />}
@@ -421,7 +442,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         selections={selections}
         actives={actives}
         onNodeClick={handleNodeClick}
-        onCanvasClick={onCanvasClick}
+        onCanvasClick={handleCanvasClick}
         onNodePointerOver={handleHoverIn}
         onNodePointerOut={handleHoverOut}
         cameraMode={ orbit ? 'orbit' : is3D ? 'rotate' : 'pan'}
