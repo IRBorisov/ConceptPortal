@@ -1,19 +1,19 @@
 import { prefixes } from '../../utils/constants';
-import { mapCstClassInfo } from '../../utils/staticUI';
+import { mapStatusInfo } from '../../utils/staticUI';
 
-interface CstClassInfoProps {
+interface InfoCstStatusProps {
   title?: string
 }
 
-function CstClassInfo({ title }: CstClassInfoProps) {
+function InfoCstStatus({ title }: InfoCstStatusProps) {
   return (
     <div className='flex flex-col gap-1'>
       { title && <h1>{title}</h1>}
-      { [... mapCstClassInfo.values()].map(
+      { [... mapStatusInfo.values()].map(
       (info, index) => {
         return (
         <p key={`${prefixes.cst_status_list}${index}`}>
-          <span className={`px-1 inline-block font-semibold min-w-[6.5rem] text-center border ${info.color}`}>
+          <span className={`px-1 inline-block font-semibold min-w-[4rem] text-center border ${info.color}`}>
             {info.text}
           </span>
           <span> - </span>
@@ -26,4 +26,4 @@ function CstClassInfo({ title }: CstClassInfoProps) {
   );
 }
 
-export default CstClassInfo;
+export default InfoCstStatus;

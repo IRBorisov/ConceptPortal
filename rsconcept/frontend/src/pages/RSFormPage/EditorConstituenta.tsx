@@ -6,7 +6,7 @@ import Divider from '../../components/Common/Divider';
 import MiniButton from '../../components/Common/MiniButton';
 import SubmitButton from '../../components/Common/SubmitButton';
 import TextArea from '../../components/Common/TextArea';
-import CstStatusInfo from '../../components/Help/CstStatusInfo';
+import CstStatusInfo from '../../components/Help/InfoCstStatus';
 import { DumpBinIcon, HelpIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { type CstType, EditMode, ICstUpdateData, SyntaxTree } from '../../utils/models';

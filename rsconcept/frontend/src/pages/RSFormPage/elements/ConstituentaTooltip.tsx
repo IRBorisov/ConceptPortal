@@ -1,5 +1,5 @@
 import ConceptTooltip from '../../../components/Common/ConceptTooltip';
-import ConstituentaInfo from '../../../components/Help/ConstituentaInfo';
+import InfoConstituenta from '../../../components/Help/InfoConstituenta';
 import { IConstituenta } from '../../../utils/models';
 
 interface ConstituentaTooltipProps {
@@ -13,7 +13,7 @@ function ConstituentaTooltip({ data, anchor }: ConstituentaTooltipProps) {
       anchorSelect={anchor}
       className='max-w-[25rem] min-w-[25rem]'
     >
-      <ConstituentaInfo data={data} />
+      <InfoConstituenta data={data} />
     </ConceptTooltip>
   );
 }

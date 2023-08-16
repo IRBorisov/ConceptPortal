@@ -5,7 +5,7 @@ import Button from '../../components/Common/Button';
 import ConceptDataTable from '../../components/Common/ConceptDataTable';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import Divider from '../../components/Common/Divider';
-import CstStatusInfo from '../../components/Help/CstStatusInfo';
+import CstStatusInfo from '../../components/Help/InfoCstStatus';
 import { ArrowDownIcon, ArrowsRotateIcon, ArrowUpIcon, DumpBinIcon, HelpIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';

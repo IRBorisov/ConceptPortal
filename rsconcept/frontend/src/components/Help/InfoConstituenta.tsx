@@ -1,12 +1,12 @@
 import { IConstituenta } from '../../utils/models';
 import { getCstTypificationLabel } from '../../utils/staticUI';
 
-interface ConstituentaInfoProps
+interface InfoConstituentaProps
 extends React.HTMLAttributes<HTMLDivElement> {
   data: IConstituenta
 }
 
-function ConstituentaInfo({ data, ...props }: ConstituentaInfoProps) {
+function InfoConstituenta({ data, ...props }: InfoConstituentaProps) {
   return (
     <div {...props}>
       <h1>Конституента {data.alias}</h1>
@@ -19,4 +19,4 @@ function ConstituentaInfo({ data, ...props }: ConstituentaInfoProps) {
   );
 }
 
-export default ConstituentaInfo;
+export default InfoConstituenta;

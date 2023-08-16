@@ -9,9 +9,9 @@ import ConceptSelect from '../../components/Common/ConceptSelect';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import Divider from '../../components/Common/Divider';
 import MiniButton from '../../components/Common/MiniButton';
-import ConstituentaInfo from '../../components/Help/ConstituentaInfo';
-import CstClassInfo from '../../components/Help/CstClassInfo';
-import CstStatusInfo from '../../components/Help/CstStatusInfo';
+import InfoConstituenta from '../../components/Help/InfoConstituenta';
+import InfoCstClass from '../../components/Help/InfoCstClass';
+import CstStatusInfo from '../../components/Help/InfoCstStatus';
 import { ArrowsRotateIcon, FilterCogIcon, HelpIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
@@ -304,7 +304,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     <div className='flex flex-col py-2 border-t border-r w-[14.7rem] pr-2 text-sm' style={{height: canvasHeight}}>
       {hoverCst && 
       <div className='relative'>
-        <ConstituentaInfo 
+        <InfoConstituenta 
           data={hoverCst}
           className='absolute top-0 left-0 z-50 w-[25rem] min-h-[11rem] overflow-y-auto border h-fit clr-app px-3' 
         />
@@ -405,7 +405,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
 
           <Divider margins='mt-2' />
 
-          <CstClassInfo title='Классы конституент' />
+          <InfoCstClass title='Классы конституент' />
 
           <Divider margins='mt-2' />
           
