@@ -4,12 +4,15 @@ import { tags as t } from '@lezer/highlight';
 import { createTheme } from '@uiw/codemirror-themes';
 import CodeMirror, { BasicSetupOptions, ReactCodeMirrorProps, ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { EditorView } from 'codemirror';
-import { Ref, useMemo } from 'react';
+import { RefObject, useCallback, useMemo, useRef } from 'react';
 
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
+import { TokenID } from '../../utils/enums';
+import Label from '../Common/Label';
 import { ccBracketMatching } from './bracketMatching';
 import { RSLanguage } from './rslang';
+import { getSymbolSubstitute,TextWrapper } from './textEditing';
 import { rshoverTooltip } from './tooltip';
 
 const editorSetup: BasicSetupOptions = {
@@ -41,18 +44,24 @@ const editorSetup: BasicSetupOptions = {
 };
 
 interface RSInputProps 
-extends Omit<ReactCodeMirrorProps, 'onChange'> {
-  innerref?: Ref<ReactCodeMirrorRef> | undefined
-  onChange: (newValue: string) => void
-  onKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => void
+extends Omit<ReactCodeMirrorProps, 'onChange'| 'onKeyDown'> {
+  label?: string
+  innerref?: RefObject<ReactCodeMirrorRef> | undefined
+  onChange?: (newValue: string) => void
 }
 
 function RSInput({ 
-  innerref, onChange, editable,
+  id, label, innerref, onChange, editable,
   ...props 
 }: RSInputProps) {
   const { darkMode } = useConceptTheme();
   const { schema } = useRSForm();
+
+  const internalRef = useRef<ReactCodeMirrorRef>(null);
+  const thisRef = useMemo(
+  () => {
+    return innerref ?? internalRef;
+  }, [internalRef, innerref])
 
   const cursor = useMemo(() => editable ? 'cursor-text': 'cursor-default', [editable]);
   const lightTheme: Extension = useMemo(
@@ -105,16 +114,47 @@ function RSInput({
     rshoverTooltip(schema?.items || []),
   ], [darkMode, schema?.items]);
 
+  const handleInput = useCallback(
+  (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!thisRef.current) {
+      return;
+    }
+    const text = new TextWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
+    if (event.shiftKey && event.key === '*' && !event.altKey) {
+      text.insertToken(TokenID.DECART);
+    } else if (event.altKey) {
+      if (!text.processAltKey(event.key)) {
+        return;
+      }
+    } else if (!event.ctrlKey) {
+      const newSymbol = getSymbolSubstitute(event.key);
+      if (!newSymbol) {
+        return;
+      }
+      text.replaceWith(newSymbol);
+    } else {
+      return;
+    }
+    event.preventDefault();
+  }, [thisRef]);
+
   return (
     <div className={`w-full ${cursor} text-lg`}>
-    <CodeMirror
-      ref={innerref}
+    {label && 
+    <Label
+      text={label}
+      required={false}
+      htmlFor={id}
+    />}
+    <CodeMirror id={id}
+      ref={thisRef}
       basicSetup={editorSetup}
       theme={darkMode ? darkTheme : lightTheme}
       extensions={editorExtensions}
       indentWithTab={false}
-      onChange={value => onChange(value)}
+      onChange={onChange}
       editable={editable}
+      onKeyDown={handleInput}
       {...props}
     />
     </div>

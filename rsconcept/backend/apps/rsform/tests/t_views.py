@@ -215,6 +215,28 @@ class TestRSFormViewset(APITestCase):
         x4 = Constituenta.objects.get(alias=response.data['new_cst']['alias'])
         self.assertEqual(x4.order, 3)
 
+    def test_create_constituenta_data(self):
+        data = json.dumps({
+            'alias': 'X3',
+            'cst_type': 'basic',
+            'convention': '1',
+            'term_raw': '2',
+            'definition_formal': '3',
+            'definition_raw': '4'
+        })
+        schema = self.rsform_owned
+        response = self.client.post(f'/api/rsforms/{schema.id}/cst-create/',
+                                    data=data, content_type='application/json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data['new_cst']['alias'], 'X3')
+        self.assertEqual(response.data['new_cst']['cst_type'], 'basic')
+        self.assertEqual(response.data['new_cst']['convention'], '1')
+        self.assertEqual(response.data['new_cst']['term_raw'], '2')
+        self.assertEqual(response.data['new_cst']['term_resolved'], '2')
+        self.assertEqual(response.data['new_cst']['definition_formal'], '3')
+        self.assertEqual(response.data['new_cst']['definition_raw'], '4')
+        self.assertEqual(response.data['new_cst']['definition_resolved'], '4')
+
     def test_delete_constituenta(self):
         schema = self.rsform_owned
         data = json.dumps({'items': [{'id': 1337}]})

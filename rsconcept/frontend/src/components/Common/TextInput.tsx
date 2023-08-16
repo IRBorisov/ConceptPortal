@@ -8,16 +8,17 @@ extends Omit<InputHTMLAttributes<HTMLInputElement>, 'className'> {
   label: string
   widthClass?: string
   colorClass?: string
+  singleRow?: boolean
 }
 
 function TextInput({
-  id, required, label,
+  id, required, label, singleRow,
   widthClass = 'w-full',
   colorClass = 'clr-input',
   ...props
 }: TextInputProps) {
   return (
-    <div className='flex flex-col items-start [&:not(:first-child)]:mt-3'>
+    <div className={`flex ${singleRow ? 'items-center gap-4' : 'flex-col items-start'}  [&:not(:first-child)]:mt-3`}>
       <Label
         text={label}
         required={required}

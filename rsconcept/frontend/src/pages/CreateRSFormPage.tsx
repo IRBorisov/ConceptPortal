@@ -58,7 +58,7 @@ function CreateRSFormPage() {
     <RequireAuth>
     <Form title='Создание концептуальной схемы' 
       onSubmit={handleSubmit}
-      widthClass='max-w-lg mt-4'
+      widthClass='max-w-lg w-full mt-4'
     >
       <TextInput id='title' label='Полное название' type='text'
         required={!file}
@@ -67,10 +67,10 @@ function CreateRSFormPage() {
         onChange={event => setTitle(event.target.value)}
       />
       <TextInput id='alias' label='Сокращение' type='text'
+        singleRow
         required={!file}
         value={alias}
         placeholder={file && 'Загрузить из файла'}
-        widthClass='max-w-sm'
         onChange={event => setAlias(event.target.value)}
       />
       <TextArea id='comment' label='Комментарий'

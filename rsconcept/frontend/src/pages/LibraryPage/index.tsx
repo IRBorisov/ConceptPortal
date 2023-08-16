@@ -11,7 +11,7 @@ import ViewLibrary from './ViewLibrary';
 
 function LibraryPage() {
   const search = useLocation().search;
-  const { query, cleanQuery } = useNavSearch();
+  const { query, resetQuery: cleanQuery } = useNavSearch();
   const { user } = useAuth();
   const library = useLibrary();
   
@@ -21,10 +21,12 @@ function LibraryPage() {
   useLayoutEffect(() => {
     const filterType = new URLSearchParams(search).get('filter');
     if (filterType === 'common') {
+      cleanQuery();
       setFilterParams({
         is_common: true
       });
     } else if (filterType === 'personal' && user) {
+      cleanQuery();
       setFilterParams({
         ownedBy: user.id!
       });

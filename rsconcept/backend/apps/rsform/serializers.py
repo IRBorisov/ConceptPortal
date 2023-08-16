@@ -69,10 +69,19 @@ class StandaloneCstSerializer(serializers.ModelSerializer):
         return attrs
 
 
-class CstCreateSerializer(serializers.Serializer):
-    alias = serializers.CharField(max_length=8)
-    cst_type = serializers.CharField(max_length=10)
+class CstCreateSerializer(serializers.ModelSerializer):
     insert_after = serializers.IntegerField(required=False, allow_null=True)
+
+    class Meta:
+        model = Constituenta
+        fields = 'alias', 'cst_type', 'convention', 'term_raw', 'definition_raw', 'definition_formal', 'insert_after'
+
+    def validate(self, attrs):
+        if ('term_raw' in attrs):
+            attrs['term_resolved'] = attrs['term_raw']
+        if ('definition_raw' in attrs):
+            attrs['definition_resolved'] = attrs['definition_raw']
+        return attrs
 
 
 class CstListSerlializer(serializers.Serializer):

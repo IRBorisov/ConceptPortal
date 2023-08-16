@@ -9,7 +9,7 @@ import TextArea from '../../components/Common/TextArea';
 import CstStatusInfo from '../../components/Help/InfoCstStatus';
 import { DumpBinIcon, HelpIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
-import { type CstType, EditMode, ICstUpdateData, SyntaxTree } from '../../utils/models';
+import { CstType, EditMode, ICstCreateData, ICstUpdateData, SyntaxTree } from '../../utils/models';
 import { getCstTypeLabel, getCstTypificationLabel } from '../../utils/staticUI';
 import EditorRSExpression from './EditorRSExpression';
 import ViewSideConstituents from './elements/ViewSideConstituents';
@@ -21,7 +21,7 @@ interface EditorConstituentaProps {
   activeID?: number
   onOpenEdit: (cstID: number) => void
   onShowAST: (expression: string, ast: SyntaxTree) => void
-  onCreateCst: (selectedID: number | undefined, type: CstType | undefined) => void
+  onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void
   onDeleteCst: (selected: number[], callback?: (items: number[]) => void) => void
 }
 
@@ -101,7 +101,16 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
     if (!activeID || !schema) {
       return;
     }
-    onCreateCst(activeID, activeCst?.cstType);
+    const data: ICstCreateData = {
+      insert_after: activeID,
+      cst_type: activeCst?.cstType ?? CstType.BASE,
+      alias: '',
+      term_raw: '',
+      definition_formal: '',
+      definition_raw: '',
+      convention: '',
+    };
+    onCreateCst(data);
   }
 
   function handleRename() {

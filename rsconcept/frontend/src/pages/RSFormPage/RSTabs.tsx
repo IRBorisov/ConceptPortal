@@ -9,7 +9,7 @@ import { Loader } from '../../components/Common/Loader';
 import { useLibrary } from '../../context/LibraryContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { prefixes, TIMEOUT_UI_REFRESH } from '../../utils/constants';
-import { CstType, ICstCreateData, SyntaxTree } from '../../utils/models';
+import { ICstCreateData, SyntaxTree } from '../../utils/models';
 import { createAliasFor } from '../../utils/staticUI';
 import DlgCloneRSForm from './DlgCloneRSForm';
 import DlgCreateCst from './DlgCreateCst';
@@ -53,8 +53,7 @@ function RSTabs() {
   const [toBeDeleted, setToBeDeleted] = useState<number[]>([]);
   const [showDeleteCst, setShowDeleteCst] = useState(false);
   
-  const [defaultType, setDefaultType] = useState<CstType | undefined>(undefined);
-  const [insertWhere, setInsertWhere] = useState<number | undefined>(undefined);
+  const [createInitialData, setCreateInitialData] = useState<ICstCreateData>();
   const [showCreateCst, setShowCreateCst] = useState(false);
 
   useLayoutEffect(() => {
@@ -90,15 +89,11 @@ function RSTabs() {
   }, [navigate, schema, activeTab]);
 
   const handleCreateCst = useCallback(
-  (type: CstType, selectedCst?: number) => {
+  (data: ICstCreateData) => {
     if (!schema?.items) {
       return;
     }
-    const data: ICstCreateData = {
-      cst_type: type,
-      alias: createAliasFor(type, schema),
-      insert_after: selectedCst ?? insertWhere ?? null
-    }
+    data.alias = createAliasFor(data.cst_type, schema);
     cstCreate(data, newCst => {
       toast.success(`Конституента добавлена: ${newCst.alias}`);
       navigateTo(activeTab, newCst.id);    
@@ -115,15 +110,14 @@ function RSTabs() {
         }, TIMEOUT_UI_REFRESH);
       }
     });
-  }, [schema, cstCreate, insertWhere, navigateTo, activeTab]);
+  }, [schema, cstCreate, navigateTo, activeTab]);
 
   const promptCreateCst = useCallback(
-  (selectedID: number | undefined, type: CstType | undefined, skipDialog?: boolean) => {
-    if (skipDialog && type) {
-      handleCreateCst(type, selectedID);
+  (initialData: ICstCreateData, skipDialog?: boolean) => {
+    if (skipDialog) {
+      handleCreateCst(initialData);
     } else {
-      setDefaultType(type);
-      setInsertWhere(selectedID);
+      setCreateInitialData(initialData);
       setShowCreateCst(true);
     }
   }, [handleCreateCst]);
@@ -209,7 +203,7 @@ function RSTabs() {
     <DlgCreateCst
       hideWindow={() => setShowCreateCst(false)}
       onCreate={handleCreateCst}
-      defaultType={defaultType}
+      initial={createInitialData}
     />}
     {showDeleteCst && 
     <DlgDeleteCst

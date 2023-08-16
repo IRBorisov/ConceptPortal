@@ -82,6 +82,14 @@ class RSFormViewSet(viewsets.ModelViewSet):
                                             serializer.validated_data['cst_type'])
         else:
             constituenta = schema.insert_last(serializer.validated_data['alias'], serializer.validated_data['cst_type'])
+
+        constituenta.convention = serializer.validated_data.get('convention', '')
+        constituenta.term_raw = serializer.validated_data.get('term_raw', '')
+        constituenta.term_resolved = serializer.validated_data.get('term_resolved', '')
+        constituenta.definition_formal = serializer.validated_data.get('definition_formal', '')
+        constituenta.definition_raw = serializer.validated_data.get('definition_raw', '')
+        constituenta.definition_resolved = serializer.validated_data.get('definition_resolved', '')
+        constituenta.save()
         schema.refresh_from_db()
         outSerializer = serializers.RSFormDetailsSerlializer(schema)
         response = Response(status=201, data={

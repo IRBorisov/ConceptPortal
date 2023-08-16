@@ -2,10 +2,9 @@ import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import Button from '../../components/Common/Button';
-import Label from '../../components/Common/Label';
 import { Loader } from '../../components/Common/Loader';
 import RSInput from '../../components/RSInput';
-import { getSymbolSubstitute, TextWrapper } from '../../components/RSInput/textEditing';
+import { TextWrapper } from '../../components/RSInput/textEditing';
 import { useRSForm } from '../../context/RSFormContext';
 import useCheckExpression from '../../hooks/useCheckExpression';
 import { TokenID } from '../../utils/enums';
@@ -32,8 +31,8 @@ interface EditorRSExpressionProps {
 }
 
 function EditorRSExpression({
-  id, activeCst, label, disabled, isActive, placeholder, value, onShowAST, 
-  toggleEditMode, setTypification, onChange
+  activeCst, disabled, isActive, value, onShowAST, 
+  toggleEditMode, setTypification, onChange, ... props
 }: EditorRSExpressionProps) {
   const { schema } = useRSForm();
 
@@ -103,31 +102,6 @@ function EditorRSExpression({
       text.insertToken(id);
     }
     rsInput.current?.view?.focus();
-    setIsModified(true);
-  }, []);
-  
-  const handleInput = useCallback(
-  (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (!rsInput.current) {
-      return;
-    }
-    const text = new TextWrapper(rsInput.current as Required<ReactCodeMirrorRef>);
-    if (event.shiftKey && event.key === '*' && !event.altKey) {
-      text.insertToken(TokenID.DECART);
-    } else if (event.altKey) {
-      if (!text.processAltKey(event.key)) {
-        return;
-      }
-    } else if (!event.ctrlKey) {
-      const newSymbol = getSymbolSubstitute(event.key);
-      if (!newSymbol) {
-        return;
-      }
-      text.replaceWith(newSymbol);
-    } else {
-      return;
-    }
-    event.preventDefault();
     setIsModified(true);
   }, []);
 
@@ -220,20 +194,14 @@ function EditorRSExpression({
       />
       </div>
       </div>
-      <Label
-        text={label}
-        required={false}
-        htmlFor={id}
-      />
       <RSInput innerref={rsInput}
         className='mt-2'
         height='10.1rem'
         value={value}
-        placeholder={placeholder}
         editable={!disabled}
         onChange={handleChange}
-        onKeyDown={handleInput}
         onFocus={handleFocusIn}
+        {...props}
       />
       <div className='flex w-full gap-4 py-1 mt-1 justify-stretch'>
         <div className='flex flex-col gap-2'>

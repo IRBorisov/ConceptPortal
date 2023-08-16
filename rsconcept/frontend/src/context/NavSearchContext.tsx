@@ -3,7 +3,7 @@ import { createContext, useCallback, useContext, useState } from 'react';
 interface INavSearchContext {
   query: string
   setQuery: (value: string) => void
-  cleanQuery: () => void
+  resetQuery: () => void
 }
 
 const NavSearchContext = createContext<INavSearchContext | null>(null);
@@ -24,13 +24,13 @@ interface NavSearchStateProps {
 export const NavSearchState = ({ children }: NavSearchStateProps) => {
   const [query, setQuery] = useState('');
 
-  const cleanQuery = useCallback(() => setQuery(''), []);
+  const resetQuery = useCallback(() => setQuery(''), []);
 
   return (
     <NavSearchContext.Provider value={{ 
       query, 
       setQuery,
-      cleanQuery
+      resetQuery: resetQuery
     }}>
       {children}
     </NavSearchContext.Provider>

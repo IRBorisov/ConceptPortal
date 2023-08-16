@@ -156,7 +156,8 @@ export interface IConstituentaList {
   items: IConstituentaID[]
 }
 
-export interface ICstCreateData extends Pick<IConstituentaMeta, 'alias' | 'cst_type'> {
+export interface ICstCreateData 
+extends Pick<IConstituentaMeta, 'alias' | 'cst_type' | 'definition_raw' | 'term_raw' | 'convention' | 'definition_formal' > {
   insert_after: number | null
 }
 

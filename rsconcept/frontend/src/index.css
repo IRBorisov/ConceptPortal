@@ -102,6 +102,10 @@
     @apply bg-white dark:bg-gray-900 checked:bg-blue-700 dark:checked:bg-orange-500
   }
 
+  .clr-url {
+    @apply hover:text-blue-600 text-blue-400 dark:text-orange-600 dark:hover:text-orange-400
+  }
+
   .text-red {
     @apply text-red-600 dark:text-red-400
   }

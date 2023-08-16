@@ -485,7 +485,7 @@ export function getRSErrorPrefix(error: IRSErrorDescription): string {
 export function getRSErrorMessage(error: IRSErrorDescription): string {
   switch (error.errorType) {
   case RSErrorType.syntax: 
-    return 'UNKNOWN SYNTAX ERROR';
+    return 'Неопределенная синтаксическая ошибка';
   case RSErrorType.missingParanthesis: 
     return 'Некорректная конструкция языка родов структур, проверьте структуру выражения';
   case RSErrorType.missingCurlyBrace: 

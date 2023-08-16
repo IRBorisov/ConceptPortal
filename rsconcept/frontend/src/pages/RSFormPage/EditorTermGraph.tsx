@@ -18,7 +18,7 @@ import { useConceptTheme } from '../../context/ThemeContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { prefixes, resources } from '../../utils/constants';
 import { Graph } from '../../utils/Graph';
-import { CstType, IConstituenta } from '../../utils/models';
+import { CstType, IConstituenta, ICstCreateData } from '../../utils/models';
 import { getCstClassColor, getCstStatusColor, 
   GraphColoringSelector, GraphLayoutSelector,
   mapColoringLabels, mapLayoutLabels
@@ -57,7 +57,7 @@ export interface GraphEditorParams {
 
 interface EditorTermGraphProps {
   onOpenEdit: (cstID: number) => void
-  onCreateCst: (selectedID: number | undefined, type: CstType | undefined, skipDialog?: boolean) => void
+  onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void
   onDeleteCst: (selected: number[], callback: (items: number[]) => void) => void
 }
 
@@ -270,12 +270,16 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
     if (!schema) {
       return;
     }
-    const selectedPosition = allSelected.reduce((prev, cstID) => {
-      const position = schema.items.findIndex(cst => cst.id === Number(cstID));
-      return Math.max(position, prev);
-    }, -1);
-    const insert_where = selectedPosition >= 0 ? schema.items[selectedPosition].id : undefined;
-    onCreateCst(insert_where, undefined);
+    const data: ICstCreateData = {
+      insert_after: null,
+      cst_type: allSelected.length == 0 ? CstType.BASE: CstType.TERM,
+      alias: '',
+      term_raw: '',
+      definition_formal: allSelected.map(id => schema.items.find(cst => cst.id === Number(id))!.alias).join(' '),
+      definition_raw: '',
+      convention: '',
+    };
+    onCreateCst(data);
   }
 
   function handleDeleteCst() {
@@ -352,7 +356,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       initial={getOptions()}
       onConfirm={handleChangeOptions}
     />}
-    <div className='flex flex-col py-2 border-t border-r max-w-[12.44rem] pr-2 text-sm select-none' style={{height: canvasHeight}}>
+    <div className='flex flex-col border-t border-r max-w-[12.44rem] pr-2 pb-2 text-sm select-none' style={{height: canvasHeight}}>
       {hoverCst && 
       <div className='relative'>
         <InfoConstituenta 
@@ -361,7 +365,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         />
       </div>}
       
-      <div className='flex items-center justify-between'>
+      <div className='flex items-center justify-between py-1'>
         <div className='mr-3 whitespace-nowrap'>
           Выбраны
           <span className='ml-1'>
@@ -459,7 +463,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       className='relative border-t border-r'
       style={{width: canvasWidth, height: canvasHeight, borderBottomWidth: noNavigation ? '1px': ''}}
     >
-      <div className='relative top-0 right-0 z-10 flex m-2 flex-start'>
+      <div className='relative top-0 right-0 z-10 flex mt-1 ml-2 flex-start'>
         <div className='px-1 py-1' id='items-graph-help' >
           <HelpIcon color='text-primary' size={5} />
         </div>

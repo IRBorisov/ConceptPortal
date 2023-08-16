@@ -41,7 +41,7 @@ function LoginPage() {
   return (
     <div className='w-full py-2'> { user
       ? <b>{`Вы вошли в систему как ${user.username}`}</b>
-      : <Form title='Ввод данных пользователя' onSubmit={handleSubmit} widthClass='w-[20rem]'>
+      : <Form title='Ввод данных пользователя' onSubmit={handleSubmit} widthClass='w-[21rem]'>
         <TextInput id='username'
           label='Имя пользователя'
           required

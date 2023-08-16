@@ -10,12 +10,12 @@ import { ArrowDownIcon, ArrowsRotateIcon, ArrowUpIcon, DumpBinIcon, HelpIcon, Sm
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import { prefixes } from '../../utils/constants';
-import { CstType, IConstituenta, ICstMovetoData } from '../../utils/models'
+import { CstType, IConstituenta, ICstCreateData, ICstMovetoData } from '../../utils/models'
 import { getCstTypePrefix, getCstTypeShortcut, getCstTypificationLabel, mapStatusInfo } from '../../utils/staticUI';
 
 interface EditorItemsProps {
   onOpenEdit: (cstID: number) => void
-  onCreateCst: (selectedID: number | undefined, type: CstType | undefined, skipDialog?: boolean) => void
+  onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void
   onDeleteCst: (selected: number[], callback: (items: number[]) => void) => void
 }
 
@@ -99,7 +99,16 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
       return Math.max(position, prev);
     }, -1);
     const insert_where = selectedPosition >= 0 ? schema.items[selectedPosition].id : undefined;
-    onCreateCst(insert_where, type, type !== undefined);
+    const data: ICstCreateData = {
+      insert_after: insert_where ?? null,
+      cst_type: type ?? CstType.BASE,
+      alias: '',
+      term_raw: '',
+      definition_formal: '',
+      definition_raw: '',
+      convention: '',
+    };
+    onCreateCst(data, type !== undefined);
   }
 
   // Implement hotkeys for working with constituents table
