@@ -42,6 +42,10 @@
     @apply border-gray-300 dark:border-gray-400
   }
 
+  .clr-border-nav {
+    @apply border-gray-400 dark:border-gray-300
+  }
+
   .clr-app {
     @apply bg-gray-50 dark:bg-gray-800
   }
@@ -55,7 +59,7 @@
   }
 
   .clr-nav {
-    @apply border-gray-400 dark:border-gray-300 bg-white dark:bg-gray-700
+    @apply border-gray-400 dark:border-gray-300 bg-white dark:bg-gray-900
   }
 
   .clr-input {
@@ -63,7 +67,7 @@
   }
 
   .clr-footer {
-    @apply text-gray-600 bg-white border-gray-400 dark:bg-gray-700 dark:border-gray-300 dark:text-gray-300
+    @apply text-gray-600 bg-white border-gray-400 dark:bg-gray-900 dark:border-gray-300 dark:text-gray-300
   }
 
   .clr-card {
@@ -102,7 +106,7 @@
     @apply bg-white dark:bg-gray-900 checked:bg-blue-700 dark:checked:bg-orange-500
   }
 
-  .clr-url {
+  .text-url {
     @apply hover:text-blue-600 text-blue-400 dark:text-orange-600 dark:hover:text-orange-400
   }
 

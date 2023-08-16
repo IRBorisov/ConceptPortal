@@ -75,7 +75,7 @@ function ViewLibrary({ schemas }: ViewLibraryProps) {
           <span> | </span>
           <TextURL text='Все схемы' href='/library?filter=common'/>
           <span> | </span>
-          <span className='cursor-pointer hover:underline clr-url' onClick={cleanQuery}>
+          <span className='cursor-pointer hover:underline text-url' onClick={cleanQuery}>
             <b>Очистить фильтр</b>
           </span>
         </p>

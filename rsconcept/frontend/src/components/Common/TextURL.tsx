@@ -7,7 +7,7 @@ interface TextURLProps {
 
 function TextURL({ text, href }: TextURLProps) {
   return (
-    <Link className='font-bold hover:underline clr-url' to={href}>
+    <Link className='font-bold hover:underline clr-text' to={href}>
       {text}
     </Link>
   );

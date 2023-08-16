@@ -14,14 +14,14 @@ function UserTools() {
   const navigateMyWork = () => navigate('/library?filter=personal');
 
   return (
-    <div className='flex items-center px-2 border-r-2 border-gray-400 dark:border-gray-300'>
+    <div className='flex items-center px-2 border-r-2 clr-border-nav'>
       <span>
         { user && 
         <NavigationButton 
           description='Новая схема'
           icon={<PlusIcon />}
           onClick={navigateCreateRSForm}
-          colorClass='text-blue-500 hover:text-blue-700 dark:text-orange-500 dark:hover:text-orange-300'
+          colorClass='text-url'
         />}
         { !user &&
         <NavigationButton id='items-nav-help'
