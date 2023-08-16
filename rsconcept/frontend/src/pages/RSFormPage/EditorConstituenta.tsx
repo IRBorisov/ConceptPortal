@@ -147,18 +147,18 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
           </div>
           <div className='flex justify-end'>
             <MiniButton
-              tooltip='Создать конституенты после данной'
-              disabled={!isEnabled}
-              onClick={handleCreateCst}
-              icon={<SmallPlusIcon size={5} color={isEnabled ? 'text-green' : ''} />} 
-            />
-            <MiniButton
               tooltip='Удалить редактируемую конституенту'
               disabled={!isEnabled}
               onClick={handleDelete}
               icon={<DumpBinIcon size={5} color={isEnabled ? 'text-red' : ''} />}
             />
-            <div id='cst-help' className='flex items-center ml-[0.25rem]'>
+            <MiniButton
+              tooltip='Создать конституенты после данной'
+              disabled={!isEnabled}
+              onClick={handleCreateCst}
+              icon={<SmallPlusIcon size={5} color={isEnabled ? 'text-green' : ''} />} 
+            />
+            <div id='cst-help' className='flex items-center ml-[6px]'>
               <HelpIcon color='text-primary' size={5} />
             </div>
             <ConceptTooltip anchorSelect='#cst-help'>

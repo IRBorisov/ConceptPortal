@@ -345,14 +345,14 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
   }, [selectedDismissed]);
 
   return (
-    <div className='flex justify-between w-full' tabIndex={0} onKeyDown={handleKeyDown}>
+    <div className='flex justify-between w-full outline-none' tabIndex={0} onKeyDown={handleKeyDown}>
     {showOptions && 
     <DlgGraphOptions
       hideWindow={() => setShowOptions(false)}
       initial={getOptions()}
       onConfirm={handleChangeOptions}
     />}
-    <div className='flex flex-col py-2 border-t border-r w-[14.7rem] pr-2 text-sm select-none' style={{height: canvasHeight}}>
+    <div className='flex flex-col py-2 border-t border-r max-w-[12.44rem] pr-2 text-sm select-none' style={{height: canvasHeight}}>
       {hoverCst && 
       <div className='relative'>
         <InfoConstituenta 
@@ -383,9 +383,6 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
           />
         </div>
       </div>
-
-      <Divider margins='mt-3 mb-2' />
-
       <div className='flex items-center w-full gap-1'>
         <Button
           icon={<FilterCogIcon size={7} />}
@@ -464,29 +461,38 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
     >
       <div className='relative top-0 right-0 z-10 flex m-2 flex-start'>
         <div className='px-1 py-1' id='items-graph-help' >
-          <HelpIcon color='text-primary' size={6} />
+          <HelpIcon color='text-primary' size={5} />
         </div>
         <MiniButton
-          icon={<ArrowsRotateIcon size={6} />}
+          icon={<ArrowsRotateIcon size={5} />}
           tooltip='Пересоздать граф'
           onClick={handleRecreate}
         />
       </div>
       <ConceptTooltip anchorSelect='#items-graph-help'>
-        <div>
-          <h1>Настройка графа</h1>
-          <p><b>Цвет</b> - выбор правила покраски узлов</p>
-          <p><b>Граф</b> - выбор модели расположения узлов</p>
-          <p><b>Удалить несвязанные</b> - в графе не отображаются одинокие вершины</p>
-          <p><b>Транзитивная редукция</b> - в графе устраняются транзитивные пути</p>
+        <div className='flex'>
+          <div> 
+            <h1>Настройка графа</h1>
+            <p><b>Цвет</b> - выбор правила покраски узлов</p>
+            <p><b>Граф</b> - выбор модели расположения узлов</p>
+            <p><b>Удалить несвязанные</b> - скрыть одинокие вершины</p>
+            <p><b>Транзитивная редукция</b> - скрыть транзитивные пути</p>
 
-          <Divider margins='mt-2' />
+            <Divider margins='mt-2' />
+            
+            <CstStatusInfo title='Статусы конституент' />
+          </div>
+          <Divider vertical margins='mx-3' />
+          <div>
+            <h1>Горячие клавиши</h1>
+            <p><b>Клик на конституенту</b> - выделение, включая скрытые конституенты</p>
+            <p><b>Довйной клик</b> - редактирование конституенты</p>
+            <p><b>Delete</b> - удалить выбранные</p>
 
-          <InfoCstClass title='Классы конституент' />
-
-          <Divider margins='mt-2' />
-          
-          <CstStatusInfo title='Статусы конституент' />
+            <Divider margins='mt-2' />
+            
+            <InfoCstClass title='Классы конституент' />
+          </div>
         </div>
       </ConceptTooltip>
       <GraphCanvas

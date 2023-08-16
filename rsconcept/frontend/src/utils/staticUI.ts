@@ -341,7 +341,7 @@ export const mapStatusInfo: Map<ExpressionStatus, IFormatInfo> = new Map([
   [ ExpressionStatus.INCALCULABLE, {
     text: 'невыч',
     color: 'bg-[#ffbb80] dark:bg-[#964600]',
-    tooltip: 'выражение не вычислимо (экспоненциальная сложность)'
+    tooltip: 'выражение не вычислимо'
   }],
   [ ExpressionStatus.PROPERTY, {
     text: 'св-во',
