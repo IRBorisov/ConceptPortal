@@ -1,4 +1,5 @@
 ''' Concept core text processing library. '''
+# pylint: skip-file
 from .syntax import RuSyntax, Capitalization
 from .rumodel import Morphology, SemanticRole, WordTag, morpho
 from .ruparser import PhraseParser, WordToken, Collation

@@ -68,7 +68,11 @@ class RuSyntax:
         ''' Test if text is a single word. '''
         try:
             gen = tokenize(text)
-            return next(gen) == '' or next(gen) == ''
+            if next(gen) == '':
+                return True
+            if next(gen) == '':
+                return True
+            return False
         except StopIteration:
             return True
 

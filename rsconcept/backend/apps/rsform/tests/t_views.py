@@ -16,7 +16,7 @@ from apps.rsform.views import (
 
 
 def _response_contains(response, schema: RSForm) -> bool:
-    return any(x for x in response.data if x['id'] == schema.id)
+    return any(x for x in response.data if x['id'] == schema.pk)
 
 
 class TestConstituentaAPI(APITestCase):
@@ -25,8 +25,8 @@ class TestConstituentaAPI(APITestCase):
         self.user = User.objects.create(username='UserTest')
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
-        self.rsform_owned: RSForm = RSForm.objects.create(title='Test', alias='T1', owner=self.user)
-        self.rsform_unowned: RSForm = RSForm.objects.create(title='Test2', alias='T2')
+        self.rsform_owned = RSForm.objects.create(title='Test', alias='T1', owner=self.user)
+        self.rsform_unowned = RSForm.objects.create(title='Test2', alias='T2')
         self.cst1 = Constituenta.objects.create(
             alias='X1', schema=self.rsform_owned, order=1, convention='Test')
         self.cst2 = Constituenta.objects.create(
@@ -87,8 +87,8 @@ class TestRSFormViewset(APITestCase):
         self.user = User.objects.create(username='UserTest')
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
-        self.rsform_owned: RSForm = RSForm.objects.create(title='Test', alias='T1', owner=self.user)
-        self.rsform_unowned: RSForm = RSForm.objects.create(title='Test2', alias='T2')
+        self.rsform_owned = RSForm.objects.create(title='Test', alias='T1', owner=self.user)
+        self.rsform_unowned = RSForm.objects.create(title='Test2', alias='T2')
 
     def test_create_anonymous(self):
         self.client.logout()
@@ -131,7 +131,7 @@ class TestRSFormViewset(APITestCase):
 
     def test_contents(self):
         schema = RSForm.objects.create(title='Title1')
-        schema.insert_last(alias='X1', type=CstType.BASE)
+        schema.insert_last(alias='X1', insert_type=CstType.BASE)
         response = self.client.get(f'/api/rsforms/{schema.id}/contents/')
         self.assertEqual(response.status_code, 200)
 
@@ -418,9 +418,9 @@ class TestLibraryAPI(APITestCase):
         self.user = User.objects.create(username='UserTest')
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
-        self.rsform_owned: RSForm = RSForm.objects.create(title='Test', alias='T1', owner=self.user)
-        self.rsform_unowned: RSForm = RSForm.objects.create(title='Test2', alias='T2')
-        self.rsform_common: RSForm = RSForm.objects.create(title='Test3', alias='T3', is_common=True)
+        self.rsform_owned = RSForm.objects.create(title='Test', alias='T1', owner=self.user)
+        self.rsform_unowned = RSForm.objects.create(title='Test2', alias='T2')
+        self.rsform_common = RSForm.objects.create(title='Test3', alias='T3', is_common=True)
 
     def test_retrieve_common(self):
         self.client.logout()

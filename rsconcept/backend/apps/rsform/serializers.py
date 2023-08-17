@@ -73,7 +73,7 @@ class RSFormDetailsSerlializer(serializers.BaseSerializer):
         trs = pyconcept.check_schema(json.dumps(instance.to_trs()))
         trs = trs.replace('entityUID', 'id')
         result = json.loads(trs)
-        result['id'] = instance.id
+        result['id'] = instance.pk
         result['time_update'] = instance.time_update
         result['time_create'] = instance.time_create
         result['is_common'] = instance.is_common
@@ -101,7 +101,7 @@ class ConstituentaSerializer(serializers.ModelSerializer):
         if 'definition_raw' in validated_data:
             validated_data['definition_resolved'] = validated_data['definition_raw']
 
-        result = super().update(instance, validated_data)
+        result: Constituenta = super().update(instance, validated_data)
         instance.schema.save()
         return result
 

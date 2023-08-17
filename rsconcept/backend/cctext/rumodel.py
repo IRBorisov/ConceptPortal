@@ -1,6 +1,7 @@
 ''' Russian language models. '''
 from __future__ import annotations
 from enum import Enum, unique
+from typing import Iterable
 
 from pymorphy2 import MorphAnalyzer
 from pymorphy2.tagset import OpencorporaTag as WordTag
@@ -59,14 +60,14 @@ class Morphology:
         return pos in ['ADJF', 'ADJS', 'PRTF', 'PRTS']
 
     @property
-    def effective_pos(self) -> str:
+    def effective_POS(self) -> str:
         ''' Access part of speech. Pronouns are considered as nouns '''
-        pos = self.tag.POS
+        pos: str = self.tag.POS
         if pos and self.tag.POS == 'NPRO':
             return 'NOUN'
         return pos
 
-    def complete_tags(self, tags: frozenset[str]) -> set[str]:
+    def complete_tags(self, tags: Iterable[str]) -> set[str]:
         ''' Add missing tags before inflection. '''
         result = set(tags)
         pos = self.tag.POS
@@ -111,6 +112,7 @@ class Morphology:
         if count == 0:
             return ''
         elif count == 1:
-            return next(iter(grammemes))
+            result: str = next(iter(grammemes))
+            return result
         else:
             return ','.join(grammemes)

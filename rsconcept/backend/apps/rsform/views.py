@@ -53,7 +53,7 @@ class RSFormViewSet(viewsets.ModelViewSet):
     ordering = '-time_update'
 
     def _get_schema(self) -> models.RSForm:
-        return self.get_object()
+        return self.get_object() # type: ignore
 
     def perform_create(self, serializer):
         if not self.request.user.is_anonymous and 'owner' not in self.request.POST:
@@ -114,7 +114,7 @@ class RSFormViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['patch'], url_path='cst-moveto')
     def cst_moveto(self, request, pk):
         ''' Endpoint: Move multiple constituents. '''
-        schema: models.RSForm = self._get_schema()
+        schema = self._get_schema()
         serializer = serializers.CstMoveSerlializer(data=request.data, context={'schema': schema})
         serializer.is_valid(raise_exception=True)
         schema.move_cst(serializer.validated_data['constituents'], serializer.validated_data['move_to'])

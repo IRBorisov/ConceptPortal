@@ -9,5 +9,8 @@ pymorphy2-dicts-ru
 pymorphy2-dicts-uk
 razdel
 
+mypy
 pylint
 coverage
+django-stubs[compatible-mypy]
+djangorestframework-stubs[compatible-mypy]

@@ -1,6 +1,7 @@
 ''' Test russian language parsing. '''
 import unittest
 
+from typing import Iterable, Optional
 from cctext import PhraseParser
 
 parser = PhraseParser()
@@ -9,16 +10,20 @@ parser = PhraseParser()
 class TestRuParser(unittest.TestCase):
     ''' Test class for russian parsing. '''
 
-    def _assert_parse(self, text: str, expected: list[str], require_index: int = -1, require_tags: list[str] = None):
+    def _assert_parse(self, text: str, expected: list[str],
+                      require_index: int = -1,
+                      require_tags: Optional[Iterable[str]] = None):
         phrase = parser.parse(text, require_index, require_tags)
-        self.assertEqual(phrase.get_morpho().tag.grammemes, set(expected))
+        self.assertIsNotNone(phrase)
+        if phrase:
+            self.assertEqual(phrase.get_morpho().tag.grammemes, set(expected))
 
     def _assert_inflect(self, text: str, tags: list[str], expected: str):
         model = parser.parse(text)
         if not model:
             result = text
         else:
-            result = model.inflect(set(tags))
+            result = model.inflect(frozenset(tags))
         self.assertEqual(result, expected)
 
     def test_parse_word(self):

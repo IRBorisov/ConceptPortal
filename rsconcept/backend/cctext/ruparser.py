@@ -1,5 +1,6 @@
 ''' Parsing russian language using pymorphy2 and natasha libraries. '''
 from __future__ import annotations
+from typing import Iterable, Optional
 
 from razdel.substring import Substring as Segment
 from pymorphy2.analyzer import Parse as WordForm
@@ -11,16 +12,15 @@ INDEX_NONE = -1
 NO_COORDINATION = -1
 WORD_NONE = -1
 
+Tags = Iterable[str]
+
 
 class WordToken:
-    ''' Minimal text token. '''
+    ''' Atomic text token. '''
     def __init__(self, segment: Segment, forms: list[WordForm], main_form: int = 0):
         self.segment: Segment = segment
         self.forms: list[WordForm] = forms
         self.main: int = main_form
-
-    def __del__(self):
-        pass
 
     def get_morpho(self) -> Morphology:
         ''' Return morphology for current token. '''
@@ -30,7 +30,7 @@ class WordToken:
         ''' Access main form. '''
         return self.forms[self.main]
 
-    def inflect(self, inflection_tags: set[str]):
+    def inflect(self, inflection_tags: set[str]) -> Optional[WordForm]:
         ''' Apply inflection to segment text. Does not modify forms '''
         inflected = self.get_form().inflect(inflection_tags)
         if not inflected:
@@ -43,21 +43,20 @@ class Collation:
     ''' Parsed data for input coordinated text. '''
     def __init__(self, text: str):
         self.text = text
-        self.words = []
-        self.coordination = []
+        self.words: list[WordToken] = []
+        self.coordination: list[int] = []
         self.main_word: int = WORD_NONE
 
-    def __del__(self):
-        pass
+    def is_valid(self) -> bool:
+        ''' Check if data is parsed correctly '''
+        return self.main_word != WORD_NONE
 
     def get_form(self) -> WordForm:
-        ''' Access main form. '''
+        ''' Access WordForm. '''
         return self.words[self.main_word].get_form()
 
     def get_morpho(self) -> Morphology:
         ''' Access parsed main mrophology. '''
-        if self.main_word == WORD_NONE:
-            return None
         return self.words[self.main_word].get_morpho()
 
     def add_word(self, segment, forms: list, main_form: int, need_coordination: bool = True):
@@ -65,28 +64,29 @@ class Collation:
         self.words.append(WordToken(segment, forms, main_form))
         self.coordination.append(NO_COORDINATION if not need_coordination else 0)
 
-    def inflect(self, target_tags: frozenset[str]) -> str:
+    def inflect(self, target_tags: Tags) -> str:
         ''' Inflect text to match required tags. '''
-        origin = self.get_morpho()
-        if not origin or origin.tag.grammemes.issuperset(target_tags):
-            return self.text
-        if not self._apply_inflection(origin, target_tags):
-            return self.text
-        new_text = self._generate_text()
-        return new_text
+        if self.is_valid():
+            origin = self.get_morpho()
+            if not origin.tag.grammemes.issuperset(target_tags):
+                if self._apply_inflection(origin, target_tags):
+                    return self._generate_text()
+        return self.text
 
     def inflect_like(self, base_model: Collation) -> str:
         ''' Create inflection to substitute base_model form. '''
-        morph = base_model.get_morpho()
-        if morph.effective_pos is None:
-            return self.text
-        tags = set()
-        tags.add(morph.effective_pos)
-        tags = morph.complete_tags(tags)
-        return self.inflect(tags)
+        if self.is_valid():
+            morph = base_model.get_morpho()
+            if morph.effective_POS:
+                tags = set()
+                tags.add(morph.effective_POS)
+                tags = morph.complete_tags(tags)
+                return self.inflect(tags)
+        return self.text
 
     def inflect_dependant(self, master_model: Collation) -> str:
         ''' Create inflection to coordinate with master_model form. '''
+        assert self.is_valid()
         morph = master_model.get_morpho()
         tags = morph.coordination_tags()
         tags = self.get_morpho().complete_tags(tags)
@@ -94,12 +94,12 @@ class Collation:
 
     def normal_form(self) -> str:
         ''' Generate normal form. '''
-        main_form = self.get_form()
-        if not main_form:
-            return self.text
-        new_morpho = Morphology(main_form.normalized.tag)
-        new_tags = new_morpho.complete_tags(frozenset())
-        return self.inflect(new_tags)
+        if self.is_valid():
+            main_form = self.get_form()
+            new_morpho = Morphology(main_form.normalized.tag)
+            new_tags = new_morpho.complete_tags(frozenset())
+            return self.inflect(new_tags)
+        return self.text
 
     def _iterate_coordinated(self):
         words_count = len(self.words)
@@ -108,21 +108,20 @@ class Collation:
             yield self.words[current_word]
             current_word += self.coordination[current_word]
 
-    def _inflect_main_word(self, origin: Morphology, target_tags: frozenset[str]) -> Morphology:
+    def _inflect_main_word(self, origin: Morphology, target_tags: Tags) -> Optional[Morphology]:
         full_tags = origin.complete_tags(target_tags)
         inflected = self.words[self.main_word].inflect(full_tags)
         if not inflected:
             return None
         return Morphology(inflected.tag)
 
-    def _apply_inflection(self, origin: Morphology, target_tags: frozenset[str]) -> bool:
+    def _apply_inflection(self, origin: Morphology, target_tags: Tags) -> bool:
         new_moprho = self._inflect_main_word(origin, target_tags)
         if not new_moprho:
             return False
         inflection_tags = new_moprho.coordination_tags()
         if len(inflection_tags) == 0:
             return True
-
         for word in self._iterate_coordinated():
             word.inflect(inflection_tags)
         return True
@@ -155,13 +154,17 @@ class PhraseParser:
     _MAIN_WAIT_LIMIT = 10  # count words untill fixing main
     _MAIN_MAX_FOLLOWERS = 3  # count words after main as coordination candidates
 
-    def parse(self, text: str, require_index: int = INDEX_NONE, require_tags: frozenset[str] = None) -> Collation:
-        ''' Determine morpho tags for input text.
-        ::returns:: Morphology of a text or None if no suitable form is available '''
-        if text == '':
-            return None
+    def parse(self, text: str,
+              require_index: int = INDEX_NONE,
+              require_tags: Optional[Tags] = None) -> Optional[Collation]:
+        ''' 
+        Determine morpho tags for input text.
+        ::returns:: Morphology of a text or None if no suitable form is available 
+        '''
         segments = list(RuSyntax.tokenize(text))
-        if len(segments) == 1:
+        if len(segments) == 0:
+            return None
+        elif len(segments) == 1:
             return self._parse_single(segments[0], require_index, require_tags)
         else:
             return self._parse_multiword(text, segments, require_index, require_tags)
@@ -169,9 +172,9 @@ class PhraseParser:
     def normalize(self, text: str):
         ''' Get normal form for target text. '''
         processed = self.parse(text)
-        if not processed:
-            return text
-        return processed.normal_form()
+        if processed:
+            return processed.normal_form()
+        return text
 
     def find_substr(self, text: str, sub: str) -> tuple[int, int]:
         ''' Search for substring position in text regardless of morphology. '''
@@ -234,7 +237,7 @@ class PhraseParser:
             return dependant_normal
         return dependant_model.inflect_dependant(master_model)
 
-    def _parse_single(self, segment, require_index: int, require_tags: frozenset[str]) -> Collation:
+    def _parse_single(self, segment, require_index: int, require_tags: Optional[Tags]) -> Optional[Collation]:
         forms = list(self._filtered_parse(segment.text))
         parse_index = INDEX_NONE
         if len(forms) == 0 or require_index >= len(forms):
@@ -266,9 +269,10 @@ class PhraseParser:
         result.main_word = 0
         return result
 
-    def _parse_multiword(self, text: str, segments: list, require_index: int, require_tags: frozenset[str]):
+    def _parse_multiword(self, text: str, segments: list, require_index: int,
+                         require_tags: Optional[Tags]) -> Optional[Collation]:
         result = Collation(text)
-        priority_main = self._PRIORITY_NONE
+        priority_main: float = self._PRIORITY_NONE
         segment_index = 0
         main_wait = 0
         word_index = 0
@@ -295,20 +299,20 @@ class PhraseParser:
                        output: Collation,
                        segment: Segment,
                        require_index: int,
-                       require_tags: frozenset[str]) -> float:
+                       require_tags: Optional[Tags]) -> Optional[float]:
         ''' Return priority for this can be a new main word '''
         forms = list(self._filtered_parse(segment.text))
         if len(forms) == 0:
             return None
-        main_index = INDEX_NONE
-        segment_score = self._PRIORITY_NONE
+        main_index: int = INDEX_NONE
+        segment_score: float = self._PRIORITY_NONE
         needs_coordination = False
-        local_sum = 0
-        score_sum = 0
+        local_sum: float = 0
+        score_sum: float = 0
         if require_index != INDEX_NONE:
             form = forms[require_index]
             if not require_tags or form.tag.grammemes.issuperset(require_tags):
-                (local_max, segment_score) = PhraseParser._get_priority_for(form.tag)
+                (local_max, segment_score) = PhraseParser._get_priorities_for(form.tag)
                 main_index = require_index
                 needs_coordination = Morphology.is_dependable(form.tag.POS)
         else:
@@ -316,7 +320,7 @@ class PhraseParser:
             for (index, form) in enumerate(forms):
                 if require_tags and not form.tag.grammemes.issuperset(require_tags):
                     continue
-                (local_priority, global_priority) = PhraseParser._get_priority_for(form.tag)
+                (local_priority, global_priority) = PhraseParser._get_priorities_for(form.tag)
                 needs_coordination = needs_coordination or Morphology.is_dependable(form.tag.POS)
                 local_sum += global_priority * form.score
                 score_sum += form.score
@@ -414,7 +418,8 @@ class PhraseParser:
                 yield form
 
     @staticmethod
-    def _parse_word(text: str, require_index: int = INDEX_NONE, require_tags: frozenset[str] = None) -> Morphology:
+    def _parse_word(text: str, require_index: int = INDEX_NONE,
+                    require_tags: Optional[Tags] = None) -> Optional[Morphology]:
         parsed_variants = morpho.parse(text)
         if not parsed_variants or require_index >= len(parsed_variants):
             return None
@@ -432,7 +437,7 @@ class PhraseParser:
         return None
 
     @staticmethod
-    def _get_priority_for(tag: WordTag) -> tuple[float, float]:
+    def _get_priorities_for(tag: WordTag) -> tuple[float, float]:
         ''' Return pair of local and global priorities. '''
         if tag.POS in ['VERB', 'INFN']:
             return (9, 10)
@@ -447,7 +452,9 @@ class PhraseParser:
         return (0, 0)
 
     @staticmethod
-    def _choose_context_etalon(target: Morphology, before: Collation, after: Collation) -> Collation:
+    def _choose_context_etalon(target: Morphology,
+                               before: Optional[Collation],
+                               after: Optional[Collation]) -> Optional[Collation]:
         if not before or not before.get_morpho().can_coordinate:
             return after
         if not after or not after.get_morpho().can_coordinate:
@@ -473,7 +480,7 @@ class PhraseParser:
         return before
 
     @staticmethod
-    def _combine_morpho(target: Morphology, etalon: WordTag) -> str:
+    def _combine_morpho(target: Morphology, etalon: WordTag) -> frozenset[str]:
         part_of_speech = target.tag.POS
         number = etalon.number
         if number == 'plur':

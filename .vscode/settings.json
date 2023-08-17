@@ -13,6 +13,6 @@
 			"mode": "auto"
 		}
 	],
-	"python.linting.pylintEnabled": true,
-	"python.linting.enabled": true
+	"python.linting.enabled": true,
+	"python.linting.mypyEnabled": true
 }

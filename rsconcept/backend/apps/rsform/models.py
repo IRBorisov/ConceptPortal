@@ -1,14 +1,18 @@
 ''' Models: RSForms for conceptual schemas. '''
 import json
 import pyconcept
-from django.db import models, transaction
+from django.db import transaction
+from django.db.models import (
+    CASCADE, SET_NULL, ForeignKey, Model, PositiveIntegerField, QuerySet,
+    TextChoices, TextField, BooleanField, CharField, DateTimeField, JSONField
+)
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 from django.urls import reverse
 from apps.users.models import User
 
 
-class CstType(models.TextChoices):
+class CstType(TextChoices):
     ''' Type of constituenta '''
     BASE = 'basic'
     CONSTANT = 'constant'
@@ -20,7 +24,7 @@ class CstType(models.TextChoices):
     THEOREM = 'theorem'
 
 
-class Syntax(models.TextChoices):
+class Syntax(TextChoices):
     ''' Syntax types '''
     UNDEF = 'undefined'
     ASCII = 'ascii'
@@ -31,35 +35,35 @@ def _empty_forms():
     return []
 
 
-class RSForm(models.Model):
+class RSForm(Model):
     ''' RSForm is a math form of capturing conceptual schema '''
-    owner = models.ForeignKey(
+    owner: ForeignKey = ForeignKey(
         verbose_name='Владелец',
         to=User,
-        on_delete=models.SET_NULL,
+        on_delete=SET_NULL,
         null=True
     )
-    title = models.TextField(
+    title: TextField = TextField(
         verbose_name='Название'
     )
-    alias = models.CharField(
+    alias: CharField = CharField(
         verbose_name='Шифр',
         max_length=255,
         blank=True
     )
-    comment = models.TextField(
+    comment: TextField = TextField(
         verbose_name='Комментарий',
         blank=True
     )
-    is_common = models.BooleanField(
+    is_common: BooleanField = BooleanField(
         verbose_name='Общая',
         default=False
     )
-    time_create = models.DateTimeField(
+    time_create: DateTimeField = DateTimeField(
         verbose_name='Дата создания',
         auto_now_add=True
     )
-    time_update = models.DateTimeField(
+    time_update: DateTimeField = DateTimeField(
         verbose_name='Дата изменения',
         auto_now=True
     )
@@ -69,7 +73,7 @@ class RSForm(models.Model):
         verbose_name = 'Схема'
         verbose_name_plural = 'Схемы'
 
-    def constituents(self) -> models.QuerySet:
+    def constituents(self) -> QuerySet:
         ''' Get QuerySet containing all constituents of current RSForm '''
         return Constituenta.objects.filter(schema=self)
 
@@ -162,7 +166,7 @@ class RSForm(models.Model):
             else:
                 cst = Constituenta.create_from_trs(cst_data, self, order)
                 cst.save()
-                uid = cst.id
+                uid = cst.pk
             loaded_ids.add(uid)
             order += 1
         for prev_cst in prev_constituents:
@@ -186,10 +190,10 @@ class RSForm(models.Model):
         schema._create_items_from_trs(data['items'])
         return schema
 
-    def to_trs(self) -> str:
+    def to_trs(self) -> dict:
         ''' Generate JSON string containing all data from RSForm '''
         result = self._prepare_json_rsform()
-        items: list['Constituenta'] = self.constituents().order_by('order')
+        items = self.constituents().order_by('order')
         for cst in items:
             result['items'].append(cst.to_trs())
         return result
@@ -200,7 +204,7 @@ class RSForm(models.Model):
     def get_absolute_url(self):
         return reverse('rsform-detail', kwargs={'pk': self.pk})
 
-    def _prepare_json_rsform(self: 'Constituenta') -> dict:
+    def _prepare_json_rsform(self: 'RSForm') -> dict:
         return {
             'type': 'rsform',
             'title': self.title,
@@ -211,10 +215,10 @@ class RSForm(models.Model):
 
     @transaction.atomic
     def _update_from_core(self) -> dict:
-        checked = json.loads(pyconcept.check_schema(json.dumps(self.to_trs())))
+        checked: dict = json.loads(pyconcept.check_schema(json.dumps(self.to_trs())))
         update_list = self.constituents().only('id', 'order')
         if len(checked['items']) != update_list.count():
-            raise ValidationError
+            raise ValidationError('Invalid constituents count')
         order = 1
         for cst in checked['items']:
             cst_id = cst['entityUID']
@@ -235,59 +239,59 @@ class RSForm(models.Model):
             order += 1
 
 
-class Constituenta(models.Model):
+class Constituenta(Model):
     ''' Constituenta is the base unit for every conceptual schema '''
-    schema = models.ForeignKey(
+    schema: ForeignKey = ForeignKey(
         verbose_name='Концептуальная схема',
         to=RSForm,
-        on_delete=models.CASCADE
+        on_delete=CASCADE
     )
-    order = models.PositiveIntegerField(
+    order: PositiveIntegerField = PositiveIntegerField(
         verbose_name='Позиция',
         validators=[MinValueValidator(1)],
         default=-1,
     )
-    alias = models.CharField(
+    alias: CharField = CharField(
         verbose_name='Имя',
         max_length=8,
         default='undefined'
     )
-    cst_type = models.CharField(
+    cst_type: CharField = CharField(
         verbose_name='Тип',
         max_length=10,
         choices=CstType.choices,
         default=CstType.BASE
     )
-    convention = models.TextField(
+    convention: TextField = TextField(
         verbose_name='Комментарий/Конвенция',
         default='',
         blank=True
     )
-    term_raw = models.TextField(
+    term_raw: TextField = TextField(
         verbose_name='Термин (с отсылками)',
         default='',
         blank=True
     )
-    term_resolved = models.TextField(
+    term_resolved: TextField = TextField(
         verbose_name='Термин',
         default='',
         blank=True
     )
-    term_forms = models.JSONField(
+    term_forms: JSONField = JSONField(
         verbose_name='Словоформы',
         default=_empty_forms
     )
-    definition_formal = models.TextField(
+    definition_formal: TextField = TextField(
         verbose_name='Родоструктурное определение',
         default='',
         blank=True
     )
-    definition_raw = models.TextField(
+    definition_raw: TextField = TextField(
         verbose_name='Текстовое определние (с отсылками)',
         default='',
         blank=True
     )
-    definition_resolved = models.TextField(
+    definition_resolved: TextField = TextField(
         verbose_name='Текстовое определние',
         default='',
         blank=True
@@ -342,9 +346,9 @@ class Constituenta(models.Model):
             self.term_resolved = ''
             self.term_forms = []
 
-    def to_trs(self) -> str:
+    def to_trs(self) -> dict:
         return {
-            'entityUID': self.id,
+            'entityUID': self.pk,
             'type': 'constituenta',
             'cstType': self.cst_type,
             'alias': self.alias,

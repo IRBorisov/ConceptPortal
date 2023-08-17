@@ -76,6 +76,10 @@ This readme file is used mostly to document project dependencies
 <summary>requirements_dev</summary>
   <pre>
   - coverage
+  - pylint
+  - mypy
+  - django-stubs[compatible-mypy]
+  - djangorestframework-stubs[compatible-mypy]
   </pre>
 </details>
 <details>

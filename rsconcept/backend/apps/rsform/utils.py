@@ -21,7 +21,8 @@ def read_trs(file) -> dict:
     ''' Read JSON from TRS file '''
     with ZipFile(file, 'r') as archive:
         json_data = archive.read('document.json')
-    return json.loads(json_data)
+    result: dict = json.loads(json_data)
+    return result
 
 
 def write_trs(json_data: dict) -> bytes:
