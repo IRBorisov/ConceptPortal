@@ -12,6 +12,13 @@
             "args": []
         },
         {
+            "name": "Lint",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "${workspaceFolder}/rsconcept/RunLint.ps1",
+            "args": []
+        },
+        {
             "name": "Test",
             "type": "PowerShell",
             "request": "launch",

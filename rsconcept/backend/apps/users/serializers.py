@@ -1,3 +1,4 @@
+''' Serializers: User profile and Authentification. '''
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
@@ -6,7 +7,7 @@ from . import models
 
 
 class LoginSerializer(serializers.Serializer):
-    ''' User authentification by login/password. '''
+    ''' Serializer: User authentification by login/password. '''
     username = serializers.CharField(
         label='Имя пользователя',
         write_only=True
@@ -32,10 +33,17 @@ class LoginSerializer(serializers.Serializer):
         attrs['user'] = user
         return attrs
 
+    def create(self, validated_data):
+        raise NotImplementedError('unexpected `create()` call')
+
+    def update(self, instance, validated_data):
+        raise NotImplementedError('unexpected `update()` call')
+
 
 class AuthSerializer(serializers.ModelSerializer):
-    ''' Authentication data serializaer '''
+    ''' Serializer: Authentication data. '''
     class Meta:
+        ''' serializer metadata. '''
         model = models.User
         fields = [
             'id',
@@ -45,8 +53,9 @@ class AuthSerializer(serializers.ModelSerializer):
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
-    ''' User data serializaer '''
+    ''' Serializer: User data. '''
     class Meta:
+        ''' serializer metadata. '''
         model = models.User
         fields = [
             'id',
@@ -57,10 +66,11 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    ''' User data serializaer '''
+    ''' Serializer: User data. '''
     id = serializers.IntegerField(read_only=True)
 
     class Meta:
+        ''' serializer metadata. '''
         model = models.User
         fields = [
             'id',
@@ -70,25 +80,27 @@ class UserSerializer(serializers.ModelSerializer):
             'last_name',
         ]
 
+
 class ChangePasswordSerializer(serializers.Serializer):
-    """
-    Serializer for password change endpoint.
-    """
+    ''' Serializer: Change password. '''
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
 
-    # def validate(self, attrs):
-    #     if attrs['new_password'] != "123":
-    #         raise serializers.ValidationError({"password": r"Пароль не '123'"})
-    #     return attrs
+    def create(self, validated_data):
+        raise NotImplementedError('unexpected `create()` call')
+
+    def update(self, instance, validated_data):
+        raise NotImplementedError('unexpected `update()` call')
+
 
 class SignupSerializer(serializers.ModelSerializer):
-    ''' User profile create '''
+    ''' Serializer: Create user profile. '''
     id = serializers.IntegerField(read_only=True)
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
+        ''' serializer metadata. '''
         model = models.User
         fields = [
             'id',

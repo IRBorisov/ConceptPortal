@@ -3,9 +3,11 @@ django
 djangorestframework
 django-cors-headers
 django-filter
-coverage
 coreapi
 pymorphy2
 pymorphy2-dicts-ru
 pymorphy2-dicts-uk
 razdel
+
+pylint
+coverage

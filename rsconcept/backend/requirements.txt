@@ -3,10 +3,11 @@ django
 djangorestframework
 django-cors-headers
 django-filter
-psycopg2-binary
-gunicorn
 coreapi
 pymorphy2
 pymorphy2-dicts-ru
 pymorphy2-dicts-uk
 razdel
+
+psycopg2-binary
+gunicorn

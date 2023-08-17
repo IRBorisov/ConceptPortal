@@ -81,8 +81,8 @@ This readme file is used mostly to document project dependencies
 <details>
 <summary>VS Code plugins</summary>
   <pre>
-  - 
-  - 
+  - Pylance
+  - Pylint
   </pre>
 </details>
 

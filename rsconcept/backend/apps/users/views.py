@@ -1,3 +1,4 @@
+''' REST API: User profile and Authentification. '''
 from django.contrib.auth import login, logout
 
 from rest_framework import status, permissions, views, generics
@@ -6,15 +7,13 @@ from rest_framework.response import Response
 from . import serializers
 from . import models
 
-from django.contrib.auth.models import User
-
 class LoginAPIView(views.APIView):
     '''
-    Login user via username + password.
+    Endpoint: Login user via username + password.
     '''
     permission_classes = (permissions.AllowAny,)
 
-    def post(self, request, format=None):
+    def post(self, request):
         serializer = serializers.LoginSerializer(
             data=self.request.data,
             context={'request': self.request}
@@ -27,11 +26,11 @@ class LoginAPIView(views.APIView):
 
 class LogoutAPIView(views.APIView):
     '''
-    Logout current user.
+    Endpoint: Logout current user.
     '''
     permission_classes = (permissions.IsAuthenticated,)
 
-    def post(self, request, format=None):
+    def post(self, request):
         logout(request)
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
@@ -57,7 +56,7 @@ class AuthAPIView(generics.RetrieveAPIView):
 
 class ActiveUsersView(generics.ListAPIView):
     '''
-    Get list of active user.
+    Endpoint: Get list of active users.
     '''
     permission_classes = (permissions.AllowAny,)
     serializer_class = serializers.UserSerializer
@@ -68,20 +67,19 @@ class ActiveUsersView(generics.ListAPIView):
 
 class UserProfileAPIView(generics.RetrieveUpdateAPIView):
     '''
-    User profile info.
+    Endpoint: User profile info.
     '''
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.UserSerializer
 
     def get_object(self):
         return self.request.user
-    
+
+
 class UpdatePassword(views.APIView):
-    """
-    An endpoint for changing password.
-    """
-    # {"username": "admin", "password": "1234"}
-    # {"old_password": "1234", "new_password": "1234"}
+    '''
+    Endpoint: Change password for current user.
+    '''
     permission_classes = (permissions.IsAuthenticated, )
 
     def get_object(self, queryset=None):
@@ -89,16 +87,13 @@ class UpdatePassword(views.APIView):
 
     def patch(self, request, *args, **kwargs):
         self.object = self.get_object()
-        
         serializer = serializers.ChangePasswordSerializer(data=request.data)
-
         if serializer.is_valid():
-            # Check old password
             old_password = serializer.data.get("old_password")
             if not self.object.check_password(old_password):
-                return Response({"old_password": ["Wrong password."]}, 
+                return Response({"old_password": ["Wrong password."]},
                                 status=status.HTTP_400_BAD_REQUEST)
-            # set_password also hashes the password that the user will get
+            # Note: set_password also hashes the password that the user will get
             self.object.set_password(serializer.data.get("new_password"))
             self.object.save()
             return Response(status=status.HTTP_204_NO_CONTENT)

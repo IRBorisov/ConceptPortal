@@ -1,42 +1,12 @@
 ''' Russian language models. '''
 from __future__ import annotations
-from enum import Enum, IntEnum, unique
+from enum import Enum, unique
 
 from pymorphy2 import MorphAnalyzer
 from pymorphy2.tagset import OpencorporaTag as WordTag
 
 # ''' Morphology parser. '''
 morpho = MorphAnalyzer()
-
-
-@unique
-class NamedEntityRole(IntEnum):
-    ''' Enumerating NER types. '''
-    unknwn = 0
-    loc = 1
-    per = 2
-    org = 3
-
-    @staticmethod
-    def from_str(text: str) -> NamedEntityRole:
-        ''' From text to ID. '''
-        if text == 'LOC':
-            return NamedEntityRole.loc
-        elif text == 'PER':
-            return NamedEntityRole.per
-        elif text == 'ORG':
-            return NamedEntityRole.org
-        return NamedEntityRole.unknwn
-
-    def as_str(self) -> str:
-        ''' From ID to text. '''
-        if self.value == NamedEntityRole.loc:
-            return 'LOC'
-        elif self.value == NamedEntityRole.per:
-            return 'PER'
-        elif self.value == NamedEntityRole.org:
-            return 'ORG'
-        return 'UNKN'
 
 
 @unique

@@ -1,14 +1,15 @@
+''' Admin view: RSForms for conceptual schemas. '''
 from django.contrib import admin
 
 from . import models
 
 
 class ConstituentaAdmin(admin.ModelAdmin):
-    pass
+    ''' Admin model: Constituenta. '''
 
 
 class RSFormAdmin(admin.ModelAdmin):
-    pass
+    ''' Admin model: RSForm. '''
 
 
 admin.site.register(models.Constituenta, ConstituentaAdmin)

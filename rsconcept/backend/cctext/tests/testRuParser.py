@@ -1,9 +1,9 @@
 ''' Test russian language parsing. '''
 import unittest
 
-from cctext import RuParser
+from cctext import PhraseParser
 
-parser = RuParser()
+parser = PhraseParser()
 
 
 class TestRuParser(unittest.TestCase):

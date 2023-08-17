@@ -1,3 +1,1 @@
-from django.contrib import admin
-
-# Register your models here.
+''' Admin: User profile and Authentification. '''

@@ -1,3 +1,4 @@
+''' REST API: RSForms for conceptual schemas. '''
 import json
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
@@ -14,9 +15,7 @@ from . import utils
 
 
 class LibraryView(generics.ListAPIView):
-    '''
-    Get list of rsforms available for active user.
-    '''
+    ''' Endpoint: Get list of rsforms available for active user. '''
     permission_classes = (permissions.AllowAny,)
     serializer_class = serializers.RSFormSerializer
 
@@ -29,6 +28,7 @@ class LibraryView(generics.ListAPIView):
 
 
 class ConstituentAPIView(generics.RetrieveUpdateAPIView):
+    ''' Endpoint: Get / Update Constituenta. '''
     queryset = models.Constituenta.objects.all()
     serializer_class = serializers.ConstituentaSerializer
 
@@ -41,14 +41,16 @@ class ConstituentAPIView(generics.RetrieveUpdateAPIView):
         return result
 
 
+# pylint: disable=too-many-ancestors
 class RSFormViewSet(viewsets.ModelViewSet):
+    ''' Endpoint: RSForm operations. '''
     queryset = models.RSForm.objects.all()
     serializer_class = serializers.RSFormSerializer
 
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
     filterset_fields = ['owner', 'is_common']
     ordering_fields = ('owner', 'title', 'time_update')
-    ordering = ('-time_update')
+    ordering = '-time_update'
 
     def _get_schema(self) -> models.RSForm:
         return self.get_object()
@@ -71,7 +73,7 @@ class RSFormViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'], url_path='cst-create')
     def cst_create(self, request, pk):
-        ''' Create new constituenta '''
+        ''' Create new constituenta. '''
         schema = self._get_schema()
         serializer = serializers.CstCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -100,7 +102,7 @@ class RSFormViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['patch'], url_path='cst-multidelete')
     def cst_multidelete(self, request, pk):
-        ''' Delete multiple constituents '''
+        ''' Endpoint: Delete multiple constituents. '''
         schema = self._get_schema()
         serializer = serializers.CstListSerlializer(data=request.data, context={'schema': schema})
         serializer.is_valid(raise_exception=True)
@@ -111,7 +113,7 @@ class RSFormViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['patch'], url_path='cst-moveto')
     def cst_moveto(self, request, pk):
-        ''' Delete multiple constituents '''
+        ''' Endpoint: Move multiple constituents. '''
         schema: models.RSForm = self._get_schema()
         serializer = serializers.CstMoveSerlializer(data=request.data, context={'schema': schema})
         serializer.is_valid(raise_exception=True)
@@ -122,7 +124,7 @@ class RSFormViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['patch'], url_path='reset-aliases')
     def reset_aliases(self, request, pk):
-        ''' Recreate all aliases based on order '''
+        ''' Endpoint: Recreate all aliases based on order. '''
         schema = self._get_schema()
         result = json.loads(pyconcept.reset_aliases(json.dumps(schema.to_trs())))
         schema.load_trs(data=result, sync_metadata=False, skip_update=True)
@@ -131,7 +133,7 @@ class RSFormViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['patch'], url_path='load-trs')
     def load_trs(self, request, pk):
-        ''' Load data from file and replace current schema '''
+        ''' Endpoint: Load data from file and replace current schema. '''
         serializer = serializers.RSFormUploadSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         schema = self._get_schema()
@@ -143,7 +145,7 @@ class RSFormViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'], url_path='clone')
     def clone(self, request, pk):
-        ''' Clone RSForm constituents and create new schema using new metadata '''
+        ''' Endpoint: Clone RSForm constituents and create new schema using new metadata. '''
         serializer = serializers.RSFormSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         new_schema = models.RSForm.objects.create(
@@ -159,6 +161,7 @@ class RSFormViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def claim(self, request, pk=None):
+        ''' Endpoint: Claim ownership of RSForm. '''
         schema = self._get_schema()
         if schema.owner == self.request.user:
             return Response(status=304)
@@ -169,20 +172,20 @@ class RSFormViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def contents(self, request, pk):
-        ''' View schema db contents (including constituents) '''
+        ''' Endpoint: View schema db contents (including constituents). '''
         schema = serializers.RSFormContentsSerializer(self._get_schema()).data
         return Response(schema)
 
     @action(detail=True, methods=['get'])
     def details(self, request, pk):
-        ''' Detailed schema view including statuses '''
+        ''' Endpoint: Detailed schema view including statuses. '''
         schema = self._get_schema()
         serializer = serializers.RSFormDetailsSerlializer(schema)
         return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
     def check(self, request, pk):
-        ''' Check RS expression against schema context '''
+        ''' Endpoint: Check RSLang expression against schema context. '''
         schema = self._get_schema().to_trs()
         serializer = serializers.ExpressionSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -192,7 +195,7 @@ class RSFormViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'], url_path='export-trs')
     def export_trs(self, request, pk):
-        ''' Download Exteor compatible file '''
+        ''' Endpoint: Download Exteor compatible file. '''
         schema = self._get_schema().to_trs()
         trs = utils.write_trs(schema)
         filename = self._get_schema().alias
@@ -208,10 +211,10 @@ class RSFormViewSet(viewsets.ModelViewSet):
 
 
 class TrsImportView(views.APIView):
-    ''' Upload RS form in Exteor format '''
+    ''' Endpoint: Upload RS form in Exteor format. '''
     serializer_class = serializers.FileSerializer
 
-    def post(self, request, format=None):
+    def post(self, request):
         data = utils.read_trs(request.FILES['file'].file)
         owner = self.request.user
         if owner.is_anonymous:
@@ -223,11 +226,11 @@ class TrsImportView(views.APIView):
 
 @api_view(['POST'])
 def create_rsform(request):
-    ''' Create RSForm from user input and/or trs file '''
+    ''' Endpoint: Create RSForm from user input and/or trs file. '''
     owner = request.user
     if owner.is_anonymous:
         owner = None
-    if ('file' not in request.FILES):
+    if 'file' not in request.FILES:
         serializer = serializers.RSFormSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         schema = models.RSForm.objects.create(
@@ -239,16 +242,16 @@ def create_rsform(request):
         )
     else:
         data = utils.read_trs(request.FILES['file'].file)
-        if ('title' in request.data and request.data['title'] != ''):
+        if 'title' in request.data and request.data['title'] != '':
             data['title'] = request.data['title']
         if data['title'] == '':
             data['title'] = 'Без названия ' + request.FILES['file'].fileName
-        if ('alias' in request.data and request.data['alias'] != ''):
+        if 'alias' in request.data and request.data['alias'] != '':
             data['alias'] = request.data['alias']
-        if ('comment' in request.data and request.data['comment'] != ''):
+        if 'comment' in request.data and request.data['comment'] != '':
             data['comment'] = request.data['comment']
         is_common = True
-        if ('is_common' in request.data):
+        if 'is_common' in request.data:
             is_common = request.data['is_common'] == 'true'
         schema = models.RSForm.create_from_trs(owner, data, is_common)
     result = serializers.RSFormSerializer(schema)
@@ -257,7 +260,7 @@ def create_rsform(request):
 
 @api_view(['POST'])
 def parse_expression(request):
-    '''Parse RS expression '''
+    ''' Endpoint: Parse RS expression. '''
     serializer = serializers.ExpressionSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     expression = serializer.validated_data['expression']
@@ -267,7 +270,7 @@ def parse_expression(request):
 
 @api_view(['POST'])
 def convert_to_ascii(request):
-    ''' Convert to ASCII syntax '''
+    ''' Endpoint: Convert expression to ASCII syntax. '''
     serializer = serializers.ExpressionSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     expression = serializer.validated_data['expression']
@@ -277,7 +280,7 @@ def convert_to_ascii(request):
 
 @api_view(['POST'])
 def convert_to_math(request):
-    '''Convert to MATH syntax '''
+    ''' Endpoint: Convert expression to MATH syntax. '''
     serializer = serializers.ExpressionSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     expression = serializer.validated_data['expression']

@@ -19,7 +19,6 @@ class SchemaOwnerOrAdmin(BasePermission):
 
 def read_trs(file) -> dict:
     ''' Read JSON from TRS file '''
-    # TODO: deal with different versions
     with ZipFile(file, 'r') as archive:
         json_data = archive.read('document.json')
     return json.loads(json_data)

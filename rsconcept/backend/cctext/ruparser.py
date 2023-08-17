@@ -109,7 +109,6 @@ class Collation:
             current_word += self.coordination[current_word]
 
     def _inflect_main_word(self, origin: Morphology, target_tags: frozenset[str]) -> Morphology:
-        # TODO: implement Part of speech transition for VERB <-> NOUN
         full_tags = origin.complete_tags(target_tags)
         inflected = self.words[self.main_word].inflect(full_tags)
         if not inflected:
@@ -141,7 +140,7 @@ class Collation:
         return result
 
 
-class RuParser:
+class PhraseParser:
     ''' Russian grammar parser. '''
     def __init__(self):
         pass
@@ -205,14 +204,14 @@ class RuParser:
 
         model_after = self.parse(cntxt_after)
         model_before = self.parse(cntxt_before)
-        etalon = RuParser._choose_context_etalon(target_morpho, model_before, model_after)
+        etalon = PhraseParser._choose_context_etalon(target_morpho, model_before, model_after)
         if not etalon:
             return text
         etalon_moprho = etalon.get_morpho()
         if not etalon_moprho.can_coordinate:
             return text
 
-        new_form = RuParser._combine_morpho(target_morpho, etalon_moprho.tag)
+        new_form = PhraseParser._combine_morpho(target_morpho, etalon_moprho.tag)
         return target.inflect(new_form)
 
     def inflect_substitute(self, substitute_normal: str, original: str) -> str:
@@ -274,7 +273,7 @@ class RuParser:
         main_wait = 0
         word_index = 0
         for segment in segments:
-            if main_wait > RuParser._MAIN_WAIT_LIMIT:
+            if main_wait > PhraseParser._MAIN_WAIT_LIMIT:
                 break
             segment_index += 1
             priority = self._parse_segment(result, segment, require_index, require_tags)
@@ -309,7 +308,7 @@ class RuParser:
         if require_index != INDEX_NONE:
             form = forms[require_index]
             if not require_tags or form.tag.grammemes.issuperset(require_tags):
-                (local_max, segment_score) = RuParser._get_priority_for(form.tag)
+                (local_max, segment_score) = PhraseParser._get_priority_for(form.tag)
                 main_index = require_index
                 needs_coordination = Morphology.is_dependable(form.tag.POS)
         else:
@@ -317,7 +316,7 @@ class RuParser:
             for (index, form) in enumerate(forms):
                 if require_tags and not form.tag.grammemes.issuperset(require_tags):
                     continue
-                (local_priority, global_priority) = RuParser._get_priority_for(form.tag)
+                (local_priority, global_priority) = PhraseParser._get_priority_for(form.tag)
                 needs_coordination = needs_coordination or Morphology.is_dependable(form.tag.POS)
                 local_sum += global_priority * form.score
                 score_sum += form.score
@@ -347,7 +346,7 @@ class RuParser:
                 if index != target.main_word:
                     word.main = INDEX_NONE
             else:
-                word.main = RuParser._find_coordination(word.forms, main_morpho.tag, index < target.main_word)
+                word.main = PhraseParser._find_coordination(word.forms, main_morpho.tag, index < target.main_word)
                 needs_change = word.main != INDEX_NONE
                 if not needs_change or not main_coordinate:
                     target.coordination[index] = NO_COORDINATION
@@ -392,14 +391,14 @@ class RuParser:
     @staticmethod
     def _filtered_parse(text: str):
         capital = Capitalization.from_text(text)
-        score_filter = RuParser._filter_score(morpho.parse(text))
-        for form in RuParser._filter_capital(score_filter, capital):
+        score_filter = PhraseParser._filter_score(morpho.parse(text))
+        for form in PhraseParser._filter_capital(score_filter, capital):
             yield form
 
     @staticmethod
     def _filter_score(generator):
         for form in generator:
-            if form.score < RuParser._FILTER_SCORE:
+            if form.score < PhraseParser._FILTER_SCORE:
                 break
             yield form
 

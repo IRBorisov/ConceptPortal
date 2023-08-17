@@ -1,11 +1,11 @@
+''' Models: RSForms for conceptual schemas. '''
 import json
+import pyconcept
 from django.db import models, transaction
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 from django.urls import reverse
 from apps.users.models import User
-
-import pyconcept
 
 
 class CstType(models.TextChoices):
@@ -65,6 +65,7 @@ class RSForm(models.Model):
     )
 
     class Meta:
+        ''' Model metadata. '''
         verbose_name = 'Схема'
         verbose_name_plural = 'Схемы'
 
@@ -73,7 +74,7 @@ class RSForm(models.Model):
         return Constituenta.objects.filter(schema=self)
 
     @transaction.atomic
-    def insert_at(self, position: int, alias: str, type: CstType) -> 'Constituenta':
+    def insert_at(self, position: int, alias: str, insert_type: CstType) -> 'Constituenta':
         ''' Insert new constituenta at given position. All following constituents order is shifted by 1 position '''
         if position <= 0:
             raise ValidationError('Invalid position: should be positive integer')
@@ -86,7 +87,7 @@ class RSForm(models.Model):
             schema=self,
             order=position,
             alias=alias,
-            cst_type=type
+            cst_type=insert_type
         )
         self._update_from_core()
         self.save()
@@ -94,7 +95,7 @@ class RSForm(models.Model):
         return result
 
     @transaction.atomic
-    def insert_last(self, alias: str, type: CstType) -> 'Constituenta':
+    def insert_last(self, alias: str, insert_type: CstType) -> 'Constituenta':
         ''' Insert new constituenta at last position '''
         position = 1
         if self.constituents().exists():
@@ -103,7 +104,7 @@ class RSForm(models.Model):
             schema=self,
             order=position,
             alias=alias,
-            cst_type=type
+            cst_type=insert_type
         )
         self._update_from_core()
         self.save()
@@ -181,6 +182,7 @@ class RSForm(models.Model):
             comment=data.get('comment', ''),
             is_common=is_common
         )
+        # pylint: disable=protected-access
         schema._create_items_from_trs(data['items'])
         return schema
 
@@ -211,13 +213,13 @@ class RSForm(models.Model):
     def _update_from_core(self) -> dict:
         checked = json.loads(pyconcept.check_schema(json.dumps(self.to_trs())))
         update_list = self.constituents().only('id', 'order')
-        if (len(checked['items']) != update_list.count()):
+        if len(checked['items']) != update_list.count():
             raise ValidationError
         order = 1
         for cst in checked['items']:
-            id = cst['entityUID']
+            cst_id = cst['entityUID']
             for oldCst in update_list:
-                if oldCst.id == id:
+                if oldCst.id == cst_id:
                     oldCst.order = order
                     order += 1
                     break
@@ -228,8 +230,8 @@ class RSForm(models.Model):
     def _create_items_from_trs(self, items):
         order = 1
         for cst in items:
-            object = Constituenta.create_from_trs(cst, self, order)
-            object.save()
+            cst_object = Constituenta.create_from_trs(cst, self, order)
+            cst_object.save()
             order += 1
 
 
@@ -292,6 +294,7 @@ class Constituenta(models.Model):
     )
 
     class Meta:
+        ''' Model metadata. '''
         verbose_name = 'Конституета'
         verbose_name_plural = 'Конституенты'
 
@@ -310,6 +313,7 @@ class Constituenta(models.Model):
             order=order,
             cst_type=data['cstType'],
         )
+        # pylint: disable=protected-access
         cst._load_texts(data)
         return cst
 

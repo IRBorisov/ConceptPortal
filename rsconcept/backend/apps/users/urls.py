@@ -1,4 +1,4 @@
-''' Routing for users management '''
+''' Routing: User profile and Authentification. '''
 from django.urls import path
 from . import views
 

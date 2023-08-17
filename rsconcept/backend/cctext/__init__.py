@@ -1,7 +1,7 @@
-'''Concept core text processing library'''
+''' Concept core text processing library. '''
 from .syntax import RuSyntax, Capitalization
-from .rumodel import Morphology, SemanticRole, NamedEntityRole, WordTag, morpho
-from .ruparser import RuParser, WordToken, Collation
+from .rumodel import Morphology, SemanticRole, WordTag, morpho
+from .ruparser import PhraseParser, WordToken, Collation
 
 from .conceptapi import (
     parse, normalize,
@@ -9,3 +9,5 @@ from .conceptapi import (
     match_all_morpho, find_substr,
     split_tags
 )
+
+# TODO: implement Part of speech transition for VERB <-> NOUN

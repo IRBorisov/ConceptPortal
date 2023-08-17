@@ -5,9 +5,9 @@ Concept API Python functions.
 '''
 from cctext.rumodel import Morphology
 from .syntax import RuSyntax
-from .ruparser import RuParser
+from .ruparser import PhraseParser
 
-parser = RuParser()
+parser = PhraseParser()
 
 
 def split_tags(tags: str) -> frozenset[str]:
