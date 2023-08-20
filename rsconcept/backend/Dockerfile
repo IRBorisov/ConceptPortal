@@ -56,6 +56,7 @@ RUN pip install --no-cache /wheels/* && \
 
 # Copy application sources and setup permissions
 COPY apps/ ./apps
+COPY cctext/ ./cctext
 COPY project/ ./project
 COPY data/ ./data
 COPY manage.py entrypoint.sh ./
