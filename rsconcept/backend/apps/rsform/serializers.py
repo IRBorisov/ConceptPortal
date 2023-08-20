@@ -1,5 +1,6 @@
 ''' Serializers for conceptual schema API. '''
 import json
+from typing import Optional
 from rest_framework import serializers
 
 import pyconcept
@@ -93,16 +94,25 @@ class ConstituentaSerializer(serializers.ModelSerializer):
         ''' serializer metadata. '''
         model = Constituenta
         fields = '__all__'
-        read_only_fields = ('id', 'order', 'alias', 'cst_type')
+        read_only_fields = ('id', 'order', 'alias', 'cst_type', 'definition_resolved', 'term_resolved')
 
     def update(self, instance: Constituenta, validated_data) -> Constituenta:
-        if 'term_raw' in validated_data:
-            validated_data['term_resolved'] = validated_data['term_raw']
-        if 'definition_raw' in validated_data:
-            validated_data['definition_resolved'] = validated_data['definition_raw']
-
+        schema: RSForm = instance.schema
+        definition: Optional[str] = validated_data['definition_raw'] if 'definition_raw' in validated_data else None
+        term: Optional[str] = validated_data['term_raw'] if 'term_raw' in validated_data else None
+        term_changed = False
+        if definition is not None and definition != instance.definition_raw :
+            validated_data['definition_resolved'] = schema.resolver().resolve(definition)
+        if term is not None and term != instance.term_raw:
+            validated_data['term_resolved'] = schema.resolver().resolve(term)
+            if validated_data['term_resolved'] != instance.term_resolved:
+                validated_data['term_forms'] = []
+            term_changed = validated_data['term_resolved'] != instance.term_resolved
         result: Constituenta = super().update(instance, validated_data)
-        instance.schema.save()
+        if term_changed:
+            schema.on_term_change(result.alias)
+            result.refresh_from_db()
+        schema.save()
         return result
 
 
@@ -131,13 +141,6 @@ class CstCreateSerializer(serializers.ModelSerializer):
         ''' serializer metadata. '''
         model = Constituenta
         fields = 'alias', 'cst_type', 'convention', 'term_raw', 'definition_raw', 'definition_formal', 'insert_after'
-
-    def validate(self, attrs):
-        if 'term_raw' in attrs:
-            attrs['term_resolved'] = attrs['term_raw']
-        if 'definition_raw' in attrs:
-            attrs['definition_resolved'] = attrs['definition_raw']
-        return attrs
 
 
 class CstListSerlializer(serializers.Serializer):

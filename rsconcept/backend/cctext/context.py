@@ -1,21 +1,19 @@
 ''' Term context for reference resolution. '''
-from typing import Iterable, Dict, Optional
-from dataclasses import dataclass
+from typing import Iterable, Dict, Optional, TypedDict
 
 from .conceptapi import inflect
 
 
-@dataclass
-class TermForm:
+class TermForm(TypedDict):
     ''' Term in a specific form. '''
     text: str
-    form: str
+    tags: str
 
 
 def _search_form(query: str, data: Iterable[TermForm]) -> Optional[str]:
     for tf in data:
-        if tf.form == query:
-            return tf.text
+        if tf['tags'] == query:
+            return tf['text']
     return None
 
 
@@ -55,7 +53,7 @@ class Entity:
                     text = inflect(self._nominal, form)
                 except ValueError as error:
                     text = f'!{error}!'.replace('Unknown grammeme', 'Неизвестная граммема')
-                self._cached.append(TermForm(text=text, form=form))
+                self._cached.append({'text': text, 'tags': form})
         return text
 
 # Term context for resolving entity references.

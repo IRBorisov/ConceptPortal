@@ -1,7 +1,7 @@
 ''' Unit tests: context. '''
 import unittest
 
-from cctext.context import TermForm, Entity, TermContext
+from cctext.context import Entity, TermContext
 
 class TestEntity(unittest.TestCase):
     '''Test Entity termform access.'''
@@ -10,12 +10,12 @@ class TestEntity(unittest.TestCase):
         self.nominal = 'человек'
         self.text1 = 'test1'
         self.form1 = 'sing,datv'
-        self.entity = Entity(self.alias, self.nominal, [TermForm(self.text1, self.form1)])
+        self.entity = Entity(self.alias, self.nominal, [{'text': self.text1, 'tags': self.form1}])
 
     def test_attributes(self):
         self.assertEqual(self.entity.alias, self.alias)
         self.assertEqual(self.entity.get_nominal(), self.nominal)
-        self.assertEqual(self.entity.manual, [TermForm(self.text1, self.form1)])
+        self.assertEqual(self.entity.manual, [{'text': self.text1, 'tags': self.form1}])
 
     def test_get_form(self):
         self.assertEqual(self.entity.get_form(''), self.nominal)

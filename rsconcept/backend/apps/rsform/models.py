@@ -1,5 +1,6 @@
 ''' Models: RSForms for conceptual schemas. '''
 import json
+from typing import Optional
 import pyconcept
 from django.db import transaction
 from django.db.models import (
@@ -10,6 +11,7 @@ from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 from django.urls import reverse
 from apps.users.models import User
+from cctext import Resolver, Entity
 
 
 class CstType(TextChoices):
@@ -73,9 +75,33 @@ class RSForm(Model):
         verbose_name = 'Схема'
         verbose_name_plural = 'Схемы'
 
-    def constituents(self) -> QuerySet:
+    def constituents(self) -> QuerySet['Constituenta']:
         ''' Get QuerySet containing all constituents of current RSForm '''
         return Constituenta.objects.filter(schema=self)
+
+    def resolver(self) -> Resolver:
+        ''' Create resolver for text references based on schema terms. '''
+        result = Resolver({})
+        for cst in self.constituents():
+            entity = Entity(alias=cst.alias, nominal=cst.term_resolved, manual_forms=cst.term_forms)
+            result.context[cst.alias] = entity
+        return result
+
+    @transaction.atomic
+    def on_term_change(self, alias: str):
+        ''' Trigger cascade resolutions when term changes. '''
+        pass
+    #     void Thesaurus::OnTermChange(const EntityUID target) {
+	# auto expansion = TermGraph().ExpandOutputs({ target });
+	# const auto ordered = TermGraph().Sort(expansion);
+	# for (const auto entity : ordered) {
+	# 	storage.at(entity).term.UpdateFrom(Context());
+	# }
+	# expansion = DefGraph().ExpandOutputs(expansion);
+	# for (const auto entity : expansion) {
+	# 	storage.at(entity).definition.UpdateFrom(Context());
+	# }
+
 
     @transaction.atomic
     def insert_at(self, position: int, alias: str, insert_type: CstType) -> 'Constituenta':
@@ -148,6 +174,30 @@ class RSForm(Model):
         self.save()
 
     @transaction.atomic
+    def create_cst(self, data: dict, insert_after: Optional[str]=None) -> 'Constituenta':
+        ''' Create new cst from data. '''
+        resolver = self.resolver()
+        cst = self._insert_new(data, insert_after)
+        cst.convention = data.get('convention', '')
+        cst.definition_formal = data.get('definition_formal', '')
+        cst.term_raw = data.get('term_raw', '')
+        if cst.term_raw != '':
+            cst.term_resolved = resolver.resolve(cst.term_raw)
+        cst.definition_raw = data.get('definition_raw', '')
+        if cst.definition_raw != '':
+            cst.definition_resolved = resolver.resolve(cst.definition_raw)
+        cst.save()
+        self.on_term_change(cst.alias)
+        return cst
+
+    def _insert_new(self, data: dict, insert_after: Optional[str]=None) -> 'Constituenta':
+        if insert_after is not None:
+            cstafter = Constituenta.objects.get(pk=insert_after)
+            return self.insert_at(cstafter.order + 1, data['alias'], data['cst_type'])
+        else:
+            return self.insert_last(data['alias'], data['cst_type'])
+
+    @transaction.atomic
     def load_trs(self, data: dict, sync_metadata: bool, skip_update: bool):
         if sync_metadata:
             self.title = data.get('title', 'Без названия')
@@ -170,7 +220,7 @@ class RSForm(Model):
             loaded_ids.add(uid)
             order += 1
         for prev_cst in prev_constituents:
-            if prev_cst.id not in loaded_ids:
+            if prev_cst.pk not in loaded_ids:
                 prev_cst.delete()
         if not skip_update:
             self._update_from_core()
@@ -214,8 +264,9 @@ class RSForm(Model):
         }
 
     @transaction.atomic
-    def _update_from_core(self) -> dict:
-        checked: dict = json.loads(pyconcept.check_schema(json.dumps(self.to_trs())))
+    def _update_from_core(self):
+        # TODO: resolve text refs
+        checked = json.loads(pyconcept.check_schema(json.dumps(self.to_trs())))
         update_list = self.constituents().only('id', 'order')
         if len(checked['items']) != update_list.count():
             raise ValidationError('Invalid constituents count')
@@ -223,12 +274,11 @@ class RSForm(Model):
         for cst in checked['items']:
             cst_id = cst['entityUID']
             for oldCst in update_list:
-                if oldCst.id == cst_id:
+                if oldCst.pk == cst_id:
                     oldCst.order = order
                     order += 1
                     break
         Constituenta.objects.bulk_update(update_list, ['order'])
-        return checked
 
     @transaction.atomic
     def _create_items_from_trs(self, items):

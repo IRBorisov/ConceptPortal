@@ -77,27 +77,15 @@ class RSFormViewSet(viewsets.ModelViewSet):
         schema = self._get_schema()
         serializer = serializers.CstCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        if ('insert_after' in serializer.validated_data and serializer.validated_data['insert_after'] is not None):
-            cstafter = models.Constituenta.objects.get(pk=serializer.validated_data['insert_after'])
-            constituenta = schema.insert_at(cstafter.order + 1,
-                                            serializer.validated_data['alias'],
-                                            serializer.validated_data['cst_type'])
-        else:
-            constituenta = schema.insert_last(serializer.validated_data['alias'], serializer.validated_data['cst_type'])
-
-        constituenta.convention = serializer.validated_data.get('convention', '')
-        constituenta.term_raw = serializer.validated_data.get('term_raw', '')
-        constituenta.term_resolved = serializer.validated_data.get('term_resolved', '')
-        constituenta.definition_formal = serializer.validated_data.get('definition_formal', '')
-        constituenta.definition_raw = serializer.validated_data.get('definition_raw', '')
-        constituenta.definition_resolved = serializer.validated_data.get('definition_resolved', '')
-        constituenta.save()
+        data = serializer.validated_data
+        new_cst = schema.create_cst(data, data['insert_after'] if 'insert_after' in data else None)
         schema.refresh_from_db()
         outSerializer = serializers.RSFormDetailsSerlializer(schema)
         response = Response(status=201, data={
-            'new_cst': serializers.ConstituentaSerializer(constituenta).data,
-            'schema': outSerializer.data})
-        response['Location'] = constituenta.get_absolute_url()
+            'new_cst': serializers.ConstituentaSerializer(new_cst).data,
+            'schema': outSerializer.data
+        })
+        response['Location'] = new_cst.get_absolute_url()
         return response
 
     @action(detail=True, methods=['patch'], url_path='cst-multidelete')
