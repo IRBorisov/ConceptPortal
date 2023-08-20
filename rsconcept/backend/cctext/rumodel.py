@@ -8,14 +8,15 @@ from pymorphy2.tagset import OpencorporaTag as WordTag
 
 # ''' Morphology parser. '''
 morpho = MorphAnalyzer()
+Grammemes = Iterable[str]
 
 
-def split_tags(text: str) -> list[str]:
+def split_grams(text: str) -> list[str]:
     ''' Split grammemes string into set of items. '''
     return [tag.strip() for tag in filter(None, text.split(','))]
 
 
-def combine_tags(tags: Iterable[str]) -> str:
+def combine_grams(tags: Iterable[str]) -> str:
     ''' Combine grammemes into string. '''
     return ','.join(tags)
 
@@ -74,9 +75,9 @@ class Morphology:
             return 'NOUN'
         return pos
 
-    def complete_tags(self, tags: Iterable[str]) -> set[str]:
+    def complete_grams(self, grams: Iterable[str]) -> set[str]:
         ''' Add missing tags before inflection. '''
-        result = set(tags)
+        result = set(grams)
         pos = self.tag.POS
         if pos and result.isdisjoint(WordTag.PARTS_OF_SPEECH):
             result.add(pos if pos != 'INFN' or len(result) == 0 else 'VERB')
@@ -100,7 +101,7 @@ class Morphology:
             result = result.difference(WordTag.GENDERS)
         return result
 
-    def coordination_tags(self) -> set[str]:
+    def coordination_grams(self) -> set[str]:
         ''' Return set of grammemes for inflection to keep coordination . '''
         result = set()
         if self.tag.case:
@@ -114,4 +115,4 @@ class Morphology:
 
     def to_text(self) -> str:
         ''' Produce string of all grammemes. '''
-        return combine_tags(self.tag.grammemes)
+        return combine_grams(self.tag.grammemes)

@@ -12,8 +12,8 @@ class TestRuParser(unittest.TestCase):
 
     def _assert_parse(self, text: str, expected: Iterable[str],
                       require_index: int = -1,
-                      require_tags: Optional[Iterable[str]] = None):
-        phrase = parser.parse(text, require_index, require_tags)
+                      require_grams: Optional[Iterable[str]] = None):
+        phrase = parser.parse(text, require_index, require_grams)
         self.assertIsNotNone(phrase)
         if phrase:
             self.assertEqual(phrase.get_morpho().tag.grammemes, set(expected))
@@ -51,10 +51,10 @@ class TestRuParser(unittest.TestCase):
         self._assert_parse('32-', ['intg', 'NUMB'])
 
         self._assert_parse('слон', ['NOUN', 'anim', 'masc', 'sing', 'nomn'], require_index=0)
-        self._assert_parse('слон', ['NOUN', 'anim', 'masc', 'sing', 'nomn'], require_tags=['masc'])
+        self._assert_parse('слон', ['NOUN', 'anim', 'masc', 'sing', 'nomn'], require_grams=['masc'])
         self._assert_parse('прямой', ['ADJF', 'gent', 'sing', 'femn', 'Qual'], require_index=0)
         self._assert_parse('прямой', ['ADJF', 'datv', 'Qual', 'sing', 'femn'], require_index=1)
-        self._assert_parse('прямой', ['NOUN', 'sing', 'inan', 'femn', 'gent'], require_tags=['NOUN'])
+        self._assert_parse('прямой', ['NOUN', 'sing', 'inan', 'femn', 'gent'], require_grams=['NOUN'])
 
         self._assert_parse('консистенции', ['NOUN', 'inan', 'femn', 'plur', 'nomn'])
         self._assert_parse('тест', ['NOUN', 'sing', 'masc', 'inan', 'nomn'])
@@ -65,9 +65,9 @@ class TestRuParser(unittest.TestCase):
         self.assertEqual(parser.parse('КАиП'), None)
         self.assertEqual(parser.parse('СЛОН'), None)
         self.assertEqual(parser.parse(''), None)
-        self.assertEqual(parser.parse('слон', require_tags=set(['femn'])), None)
-        self.assertEqual(parser.parse('32', require_tags=set(['NOUN'])), None)
-        self.assertEqual(parser.parse('32-', require_tags=set(['NOUN'])), None)
+        self.assertEqual(parser.parse('слон', require_grams=set(['femn'])), None)
+        self.assertEqual(parser.parse('32', require_grams=set(['NOUN'])), None)
+        self.assertEqual(parser.parse('32-', require_grams=set(['NOUN'])), None)
         self.assertEqual(parser.parse('слон', require_index=42), None)
 
     def test_parse_text(self):

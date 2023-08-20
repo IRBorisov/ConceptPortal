@@ -6,15 +6,15 @@ Concept API Python functions.
 from cctext.rumodel import Morphology
 from .syntax import RuSyntax
 from .ruparser import PhraseParser
-from .rumodel import split_tags
+from .rumodel import split_grams
 
 parser = PhraseParser()
 
 
-def parse(text: str, require_tags: str = '') -> str:
+def parse(text: str, require_grams: str = '') -> str:
     ''' Determine morpho tags for input text.
     ::returns:: string of comma separated grammar tags or empty string '''
-    model = parser.parse(text, require_tags=split_tags(require_tags))
+    model = parser.parse(text, require_grams=split_grams(require_grams))
     if model is None:
         return ''
     result = model.get_morpho().to_text()
@@ -41,10 +41,10 @@ def normalize(text: str) -> str:
     return model.normal_form()
 
 
-def inflect(text: str, target_tags: str) -> str:
+def inflect(text: str, target_grams: str) -> str:
     ''' Inflect text to match required tags.
     ::returns:: infected text or initial text if infection failed '''
-    target_set = split_tags(target_tags)
+    target_set = split_grams(target_grams)
     model = parser.parse(text)
     if model is None:
         return text
@@ -66,15 +66,15 @@ def inflect_dependant(dependant_normal: str, master: str) -> str:
     return parser.inflect_dependant(dependant_normal, master)
 
 
-def match_all_morpho(text: str, filter_tags: str) -> list[list[int]]:
+def match_all_morpho(text: str, filter_grams: str) -> list[list[int]]:
     ''' Search for all words corresponding to tags. '''
-    target_set = split_tags(filter_tags)
+    target_set = split_grams(filter_grams)
     if len(target_set) == 0:
         return []
 
     result = []
     for elem in RuSyntax.tokenize(text):
-        model = parser.parse(elem.text, require_tags=target_set)
+        model = parser.parse(elem.text, require_grams=target_set)
         if model:
             result.append([elem.start, elem.stop])
     return result
