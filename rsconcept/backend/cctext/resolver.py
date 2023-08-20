@@ -13,7 +13,11 @@ def resolve_entity(ref: EntityReference, context: TermContext) -> str:
     alias = ref.entity
     if alias not in context:
         return f'!Неизвестная сущность: {alias}!'
-    return context[alias].get_form(ref.form)
+    resolved = context[alias].get_form(ref.form)
+    if resolved == '':
+        return f'!Отсутствует термин: {alias}!'
+    else:
+        return resolved
 
 
 def resolve_syntactic(ref: SyntacticReference, index: int, allrefs: list['ResolvedReference']) -> str:

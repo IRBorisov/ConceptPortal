@@ -13,11 +13,13 @@ class TestResolver(unittest.TestCase):
     def setUp(self):
         self.context = cast(TermContext, {})
         self.context['X1'] = Entity('X1', 'человек')
+        self.context['X2'] = Entity('X2', '')
         self.resolver = Resolver(self.context)
 
     def test_resolve_entity(self):
         self.assertEqual(resolve_entity(EntityReference('X1', ''), self.context), 'человек')
         self.assertEqual(resolve_entity(EntityReference('X1', 'plur'), self.context), 'люди')
+        self.assertEqual(resolve_entity(EntityReference('X2', ''), self.context), '!Отсутствует термин: X2!')
         self.assertEqual(resolve_entity(EntityReference('X1', 'invalid'), self.context), '!Неизвестная граммема: invalid!')
         self.assertEqual(resolve_entity(EntityReference('X123', 'plur'), self.context), '!Неизвестная сущность: X123!')
 

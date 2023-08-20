@@ -25,6 +25,7 @@ class TestReferences(unittest.TestCase):
         self.assertIsNone(parse_reference('invalid'))
         self.assertIsNone(parse_reference(' '))
         self.assertIsNone(parse_reference('@{|}'))
+        self.assertIsNone(parse_reference('@{|черный}'))
         self.assertIsNone(parse_reference('@{ | }'))
         self.assertIsNone(parse_reference('@{-1| }'))
         self.assertIsNone(parse_reference('@{1| }'))
