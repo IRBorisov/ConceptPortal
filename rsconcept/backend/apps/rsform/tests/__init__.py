@@ -1,5 +1,4 @@
 ''' Tests. '''
-# flake8: noqa
 from .t_imports import *
 from .t_views import *
 from .t_models import *

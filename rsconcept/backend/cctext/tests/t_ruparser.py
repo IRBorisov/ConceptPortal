@@ -1,4 +1,4 @@
-''' Test russian language parsing. '''
+''' Unit tests: ruparser. '''
 import unittest
 
 from typing import Iterable, Optional
@@ -10,7 +10,7 @@ parser = PhraseParser()
 class TestRuParser(unittest.TestCase):
     ''' Test class for russian parsing. '''
 
-    def _assert_parse(self, text: str, expected: list[str],
+    def _assert_parse(self, text: str, expected: Iterable[str],
                       require_index: int = -1,
                       require_tags: Optional[Iterable[str]] = None):
         phrase = parser.parse(text, require_index, require_tags)

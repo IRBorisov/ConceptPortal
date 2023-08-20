@@ -1,13 +1,23 @@
 ''' Russian language models. '''
 from __future__ import annotations
 from enum import Enum, unique
-from typing import Iterable
+from typing import Iterable, Optional
 
 from pymorphy2 import MorphAnalyzer
 from pymorphy2.tagset import OpencorporaTag as WordTag
 
 # ''' Morphology parser. '''
 morpho = MorphAnalyzer()
+
+
+def split_tags(text: str) -> list[str]:
+    ''' Split grammemes string into set of items. '''
+    return [tag.strip() for tag in filter(None, text.split(','))]
+
+
+def combine_tags(tags: Iterable[str]) -> str:
+    ''' Combine grammemes into string. '''
+    return ','.join(tags)
 
 
 @unique
@@ -19,8 +29,8 @@ class SemanticRole(Enum):
     definition = 3
 
     @staticmethod
-    def from_pos(pos: str) -> SemanticRole:
-        ''' Fabric method to produce types from part of speech. '''
+    def from_POS(pos: Optional[str]) -> SemanticRole:
+        ''' Production method: types from part of speech. '''
         if pos in ['NOUN', 'NPRO']:
             return SemanticRole.term
         elif pos in ['VERB', 'INFN', 'PRTF', 'PRTS']:
@@ -36,10 +46,7 @@ class Morphology:
     '''
     def __init__(self, tag: WordTag, semantic=SemanticRole.unknwn):
         self.tag = tag
-        self.semantic = semantic if semantic != SemanticRole.unknwn else SemanticRole.from_pos(tag.POS)
-
-    def __del__(self):
-        pass
+        self.semantic = semantic if semantic != SemanticRole.unknwn else SemanticRole.from_POS(tag.POS)
 
     _TAGS_IMMUTABLE = frozenset(['INFN', 'ADVB', 'COMP', 'PNCT', 'PREP', 'CONJ', 'PRCL', 'INTJ'])
 
@@ -60,9 +67,9 @@ class Morphology:
         return pos in ['ADJF', 'ADJS', 'PRTF', 'PRTS']
 
     @property
-    def effective_POS(self) -> str:
+    def effective_POS(self) -> Optional[str]:
         ''' Access part of speech. Pronouns are considered as nouns '''
-        pos: str = self.tag.POS
+        pos: Optional[str] = self.tag.POS
         if pos and self.tag.POS == 'NPRO':
             return 'NOUN'
         return pos
@@ -105,14 +112,6 @@ class Morphology:
             result.add(self.tag.gender)
         return result
 
-    def as_str(self) -> str:
+    def to_text(self) -> str:
         ''' Produce string of all grammemes. '''
-        grammemes = self.tag.grammemes
-        count = len(grammemes)
-        if count == 0:
-            return ''
-        elif count == 1:
-            result: str = next(iter(grammemes))
-            return result
-        else:
-            return ','.join(grammemes)
+        return combine_tags(self.tag.grammemes)

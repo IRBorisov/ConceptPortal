@@ -70,6 +70,8 @@ This readme file is used mostly to document project dependencies
   - gunicorn
   - coreapi
   - psycopg2-binary
+  - pymorphy2
+  - razdel
   </pre>
 </details>
 <details>
@@ -87,6 +89,7 @@ This readme file is used mostly to document project dependencies
   <pre>
   - Pylance
   - Pylint
+  - Django
   </pre>
 </details>
 

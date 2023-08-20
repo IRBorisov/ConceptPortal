@@ -1,10 +1,10 @@
-'''Test module for Russian syntax'''
+''' Unit tests: syntax. '''
 import unittest
 
 from cctext import RuSyntax, Capitalization
 
 
-class TestRusParser(unittest.TestCase):
+class TestRusSyntax(unittest.TestCase):
     ''' Test class for russian syntax. '''
 
     def test_capitalization(self):

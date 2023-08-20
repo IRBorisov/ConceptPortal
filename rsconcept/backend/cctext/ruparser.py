@@ -381,7 +381,7 @@ class PhraseParser:
             case = form.tag.case
             if pos not in ['ADJF', 'ADJS', 'PRTF', 'PRTS']:
                 continue
-            if SemanticRole.from_pos(pos) == SemanticRole.term and case == 'gent':
+            if SemanticRole.from_POS(pos) == SemanticRole.term and case == 'gent':
                 if before_main:
                     continue
                 else:

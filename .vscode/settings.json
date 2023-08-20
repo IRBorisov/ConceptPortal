@@ -1,4 +1,8 @@
 {
+	"search.exclude": {
+    ".mypy_cache/": true,
+    ".pytest_cache/": true
+	},
 	"python.testing.unittestArgs": [
 		"-v",
 		"-s",
@@ -14,5 +18,16 @@
 		}
 	],
 	"python.linting.enabled": true,
-	"python.linting.mypyEnabled": true
+	"python.linting.mypyEnabled": true,
+	"python.analysis.typeCheckingMode": "off",
+	"python.analysis.diagnosticSeverityOverrides": {
+		// "reportOptionalMemberAccess": "none"
+	},
+	"python.analysis.ignore": ["**/tests/**", "**/node_modules/**", "**/venv/**"],
+	"python.analysis.packageIndexDepths": [
+    {
+        "name": "django",
+        "depth": 5
+    }
+	]
 }

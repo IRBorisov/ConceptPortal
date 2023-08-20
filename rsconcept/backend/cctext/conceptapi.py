@@ -1,18 +1,14 @@
 '''
 Concept API Python functions.
 
-::guarantee:: doesnt raise exceptions and returns workable outputs in situations where empty string would be returned
+::guarantee:: doesnt raise exceptions and returns workable outputs
 '''
 from cctext.rumodel import Morphology
 from .syntax import RuSyntax
 from .ruparser import PhraseParser
+from .rumodel import split_tags
 
 parser = PhraseParser()
-
-
-def split_tags(tags: str) -> frozenset[str]:
-    ''' Split grammemes string into set of items. '''
-    return frozenset([tag.strip() for tag in filter(None, tags.split(','))])
 
 
 def parse(text: str, require_tags: str = '') -> str:
@@ -21,7 +17,7 @@ def parse(text: str, require_tags: str = '') -> str:
     model = parser.parse(text, require_tags=split_tags(require_tags))
     if model is None:
         return ''
-    result = model.get_morpho().as_str()
+    result = model.get_morpho().to_text()
     return result if result != 'UNKN' else ''
 
 
@@ -32,7 +28,7 @@ def get_all_forms(text_normal: str) -> list[tuple[str, str]]:
         return []
     result = []
     for form in model.get_form().lexeme:
-        result.append((form.word, Morphology(form.tag).as_str()))
+        result.append((form.word, Morphology(form.tag).to_text()))
     return result
 
 

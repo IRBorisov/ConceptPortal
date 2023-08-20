@@ -1,4 +1,4 @@
-'''Test Concept Text API'''
+''' Unit tests: conceptapi. '''
 import unittest
 
 import cctext as cc
@@ -7,12 +7,12 @@ import cctext as cc
 class TestConceptAPI(unittest.TestCase):
     '''Test class for Concept API.'''
     def _assert_tags(self, actual: str, expected: str):
-        self.assertEqual(cc.split_tags(actual), cc.split_tags(expected))
-
+        self.assertEqual(set(cc.split_tags(actual)), set(cc.split_tags(expected)))
+        
     def test_parse(self):
         ''' Test parsing. '''
         self._assert_tags(cc.parse(''), '')
-        self._assert_tags(cc.parse('1'), 'intg,NUMB')
+        self._assert_tags(cc.parse('1'), 'NUMB,intg')
         self._assert_tags(cc.parse('слон', require_tags='masc'), 'NOUN,anim,masc,sing,nomn')
 
     def test_normalize_word(self):

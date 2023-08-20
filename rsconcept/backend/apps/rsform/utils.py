@@ -8,13 +8,21 @@ from rest_framework.permissions import BasePermission
 class ObjectOwnerOrAdmin(BasePermission):
     ''' Permission for object ownership restriction '''
     def has_object_permission(self, request, view, obj):
-        return request.user == obj.owner or request.user.is_staff
+        if request.user == obj.owner:
+            return True
+        if not hasattr(request.user, 'is_staff'):
+            return False
+        return request.user.is_staff # type: ignore
 
 
 class SchemaOwnerOrAdmin(BasePermission):
     ''' Permission for object ownership restriction '''
     def has_object_permission(self, request, view, obj):
-        return request.user == obj.schema.owner or request.user.is_staff
+        if request.user == obj.schema.owner:
+            return True
+        if not hasattr(request.user, 'is_staff'):
+            return False
+        return request.user.is_staff # type: ignore
 
 
 def read_trs(file) -> dict:
