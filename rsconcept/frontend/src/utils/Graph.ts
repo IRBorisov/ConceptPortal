@@ -194,20 +194,19 @@ export class Graph {
   tolopogicalOrder(): number[] {
     const result: number[] = [];
     const marked = new Map<number, boolean>();
+    const toVisit: number[] = [];
     this.nodes.forEach(node => {
       if (marked.get(node.id)) {
         return;
       }
-      const toVisit: number[] = [node.id];
-      let index = 0;
+      toVisit.push(node.id)
       while (toVisit.length > 0) {
-        const item = toVisit[index];
+        const item = toVisit[toVisit.length - 1];
         if (marked.get(item)) {
-          if (!result.find(id => id ===item)) {
+          if (!result.find(id => id === item)) {
             result.push(item);
           } 
-          toVisit.splice(index, 1);
-          index -= 1;
+          toVisit.pop();
         } else {
           marked.set(item, true);
           const itemNode = this.nodes.get(item);
@@ -218,12 +217,8 @@ export class Graph {
               }
             });
           }
-          if (index + 1 < toVisit.length) {
-            index += 1;
-          }
         }
       }
-      marked
     });
     return result.reverse();
   }

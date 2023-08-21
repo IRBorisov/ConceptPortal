@@ -73,7 +73,7 @@ describe('Testing Graph editing', () => {
 describe('Testing Graph sort', () => {
   test('topological order', () => {
     const graph = new Graph([[9, 1], [9, 2], [2, 1], [4, 3], [5, 9]]);
-    expect(graph.tolopogicalOrder()).toStrictEqual([5, 4, 3, 9, 1, 2]);
+    expect(graph.tolopogicalOrder()).toStrictEqual([5, 4, 3, 9, 2, 1]);
   });
 });
 
