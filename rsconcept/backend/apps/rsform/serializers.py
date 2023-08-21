@@ -110,7 +110,7 @@ class ConstituentaSerializer(serializers.ModelSerializer):
             term_changed = validated_data['term_resolved'] != instance.term_resolved
         result: Constituenta = super().update(instance, validated_data)
         if term_changed:
-            schema.on_term_change(result.alias)
+            schema.on_term_change([result.alias])
             result.refresh_from_db()
         schema.save()
         return result

@@ -1,6 +1,6 @@
 ''' Models: RSForms for conceptual schemas. '''
 import json
-from typing import Optional
+from typing import Iterable, Optional
 import pyconcept
 from django.db import transaction
 from django.db.models import (
@@ -11,7 +11,8 @@ from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 from django.urls import reverse
 from apps.users.models import User
-from cctext import Resolver, Entity
+from cctext import Resolver, Entity, extract_entities
+from .graph import Graph
 
 
 class CstType(TextChoices):
@@ -88,20 +89,34 @@ class RSForm(Model):
         return result
 
     @transaction.atomic
-    def on_term_change(self, alias: str):
+    def on_term_change(self, changed: Iterable[str]):
         ''' Trigger cascade resolutions when term changes. '''
-        pass
-    #     void Thesaurus::OnTermChange(const EntityUID target) {
-	# auto expansion = TermGraph().ExpandOutputs({ target });
-	# const auto ordered = TermGraph().Sort(expansion);
-	# for (const auto entity : ordered) {
-	# 	storage.at(entity).term.UpdateFrom(Context());
-	# }
-	# expansion = DefGraph().ExpandOutputs(expansion);
-	# for (const auto entity : expansion) {
-	# 	storage.at(entity).definition.UpdateFrom(Context());
-	# }
+        graph_terms = self._term_graph()
+        expansion = graph_terms.expand_outputs(changed)
+        resolver = self.resolver()
+        if len(expansion) > 0:
+            for alias in graph_terms.topological_order():
+                if alias not in expansion:
+                    continue
+                cst = self.constituents().get(alias=alias)
+                resolved = resolver.resolve(cst.term_raw)
+                if resolved == cst.term_resolved:
+                    continue
+                cst.set_term_resolved(resolved)
+                cst.save()
+                resolver.context[cst.alias] = Entity(cst.alias, resolved)
 
+        graph_defs = self._definition_graph()
+        update_defs = set(expansion + graph_defs.expand_outputs(expansion)).union(changed)
+        if len(update_defs) == 0:
+            return
+        for alias in update_defs:
+            cst = self.constituents().get(alias=alias)
+            resolved = resolver.resolve(cst.definition_raw)
+            if resolved == cst.definition_resolved:
+                continue
+            cst.definition_resolved = resolved
+            cst.save()
 
     @transaction.atomic
     def insert_at(self, position: int, alias: str, insert_type: CstType) -> 'Constituenta':
@@ -119,7 +134,7 @@ class RSForm(Model):
             alias=alias,
             cst_type=insert_type
         )
-        self._update_from_core()
+        self._update_order()
         self.save()
         result.refresh_from_db()
         return result
@@ -136,7 +151,7 @@ class RSForm(Model):
             alias=alias,
             cst_type=insert_type
         )
-        self._update_from_core()
+        self._update_order()
         self.save()
         result.refresh_from_db()
         return result
@@ -162,7 +177,7 @@ class RSForm(Model):
                 count_moved += 1
             update_list.append(cst)
         Constituenta.objects.bulk_update(update_list, ['order'])
-        self._update_from_core()
+        self._update_order()
         self.save()
 
     @transaction.atomic
@@ -170,7 +185,8 @@ class RSForm(Model):
         ''' Delete multiple constituents. Do not check if listCst are from this schema '''
         for cst in listCst:
             cst.delete()
-        self._update_from_core()
+        self._update_order()
+        self._resolve_all_text()
         self.save()
 
     @transaction.atomic
@@ -182,12 +198,15 @@ class RSForm(Model):
         cst.definition_formal = data.get('definition_formal', '')
         cst.term_raw = data.get('term_raw', '')
         if cst.term_raw != '':
-            cst.term_resolved = resolver.resolve(cst.term_raw)
+            resolved = resolver.resolve(cst.term_raw)
+            cst.term_resolved = resolved
+            resolver.context[cst.alias] = Entity(cst.alias, resolved)
         cst.definition_raw = data.get('definition_raw', '')
         if cst.definition_raw != '':
             cst.definition_resolved = resolver.resolve(cst.definition_raw)
         cst.save()
-        self.on_term_change(cst.alias)
+        self.on_term_change([cst.alias])
+        cst.refresh_from_db()
         return cst
 
     def _insert_new(self, data: dict, insert_after: Optional[str]=None) -> 'Constituenta':
@@ -223,7 +242,8 @@ class RSForm(Model):
             if prev_cst.pk not in loaded_ids:
                 prev_cst.delete()
         if not skip_update:
-            self._update_from_core()
+            self._update_order()
+        self._resolve_all_text()
         self.save()
 
     @staticmethod
@@ -264,8 +284,7 @@ class RSForm(Model):
         }
 
     @transaction.atomic
-    def _update_from_core(self):
-        # TODO: resolve text refs
+    def _update_order(self):
         checked = json.loads(pyconcept.check_schema(json.dumps(self.to_trs())))
         update_list = self.constituents().only('id', 'order')
         if len(checked['items']) != update_list.count():
@@ -287,6 +306,44 @@ class RSForm(Model):
             cst_object = Constituenta.create_from_trs(cst, self, order)
             cst_object.save()
             order += 1
+
+    def _resolve_all_text(self):
+        graph_terms = self._term_graph()
+        resolver = Resolver({})
+        for alias in graph_terms.topological_order():
+            cst = self.constituents().get(alias=alias)
+            resolved = resolver.resolve(cst.term_raw)
+            resolver.context[cst.alias] = Entity(cst.alias, resolved)
+            if resolved != cst.term_resolved:
+                cst.term_resolved = resolved
+                cst.save()
+        for cst in self.constituents():
+            resolved = resolver.resolve(cst.definition_raw)
+            if resolved != cst.definition_resolved:
+                cst.definition_resolved = resolved
+                cst.save()
+
+    def _term_graph(self) -> Graph:
+        result = Graph()
+        cst_list = self.constituents().only('order', 'alias', 'term_raw').order_by('order')
+        for cst in cst_list:
+            result.add_node(cst.alias)
+        for cst in cst_list:
+            for alias in extract_entities(cst.term_raw):
+                if result.contains(alias):
+                    result.add_edge(id_from=alias, id_to=cst.alias)
+        return result
+    
+    def _definition_graph(self) -> Graph:
+        result = Graph()
+        cst_list = self.constituents().only('order', 'alias', 'definition_raw').order_by('order')
+        for cst in cst_list:
+            result.add_node(cst.alias)
+        for cst in cst_list:
+            for alias in extract_entities(cst.definition_raw):
+                if result.contains(alias):
+                    result.add_edge(id_from=alias, id_to=cst.alias)
+        return result
 
 
 class Constituenta(Model):
@@ -353,10 +410,18 @@ class Constituenta(Model):
         verbose_name_plural = 'Конституенты'
 
     def get_absolute_url(self):
+        ''' URL access. '''
         return reverse('constituenta-detail', kwargs={'pk': self.pk})
 
     def __str__(self):
         return self.alias
+    
+    def set_term_resolved(self, new_term: str):
+        ''' Set term and reset forms if needed. '''
+        if new_term == self.term_resolved:
+            return
+        self.term_resolved = new_term
+        self.term_forms = []
 
     @staticmethod
     def create_from_trs(data: dict, schema: RSForm, order: int) -> 'Constituenta':

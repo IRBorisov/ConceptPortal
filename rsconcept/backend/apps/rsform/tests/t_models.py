@@ -169,6 +169,24 @@ class TestRSForm(TestCase):
         self.assertEqual(cst2.schema, schema)
         self.assertEqual(cst1.order, 1)
 
+    def test_create_cst_resolve(self):
+        schema = RSForm.objects.create(title='Test')
+        cst1 = schema.insert_last('X1', CstType.BASE)
+        cst1.term_raw = '@{X2|datv}'
+        cst1.definition_raw = '@{X1|datv} @{X2|datv}'
+        cst1.save()
+        cst2 = schema.create_cst({
+            'alias': 'X2', 
+            'cst_type': CstType.BASE,
+            'term_raw': 'слон',
+            'definition_raw': '@{X1|plur} @{X2|plur}'
+        })
+        cst1.refresh_from_db()
+        self.assertEqual(cst1.term_resolved, 'слону')
+        self.assertEqual(cst1.definition_resolved, 'слону слону')
+        self.assertEqual(cst2.term_resolved, 'слон')
+        self.assertEqual(cst2.definition_resolved, 'слонам слоны')
+
     def test_delete_cst(self):
         schema = RSForm.objects.create(title='Test')
         x1 = schema.insert_last('X1', CstType.BASE)
@@ -255,7 +273,7 @@ class TestRSForm(TestCase):
             '"comment": "Test", "items": '
             '[{"entityUID": "' + str(x2.id) + '", "cstType": "basic", "alias": "X1", "convention": "test", '
             '"term": {"raw": "t1", "resolved": "t2"}, '
-            '"definition": {"formal": "123", "text": {"raw": "t3", "resolved": "t4"}}}]}'
+            '"definition": {"formal": "123", "text": {"raw": "@{X1|datv}", "resolved": "t4"}}}]}'
         )
         schema.load_trs(input, sync_metadata=True, skip_update=True)
         x2.refresh_from_db()
@@ -266,7 +284,7 @@ class TestRSForm(TestCase):
         self.assertEqual(x2.alias, input['items'][0]['alias'])
         self.assertEqual(x2.convention, input['items'][0]['convention'])
         self.assertEqual(x2.term_raw, input['items'][0]['term']['raw'])
-        self.assertEqual(x2.term_resolved, input['items'][0]['term']['resolved'])
+        self.assertEqual(x2.term_resolved, input['items'][0]['term']['raw'])
         self.assertEqual(x2.definition_formal, input['items'][0]['definition']['formal'])
         self.assertEqual(x2.definition_raw, input['items'][0]['definition']['text']['raw'])
-        self.assertEqual(x2.definition_resolved, input['items'][0]['definition']['text']['resolved'])
+        self.assertEqual(x2.definition_resolved, input['items'][0]['term']['raw'])

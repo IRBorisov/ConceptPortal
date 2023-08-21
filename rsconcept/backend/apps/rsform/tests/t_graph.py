@@ -6,8 +6,8 @@ from apps.rsform.graph import Graph
 
 class TestGraph(unittest.TestCase):
     ''' Test class for graph. '''
+    
     def test_construction(self):
-        ''' Test graph construction methods. '''
         graph = Graph()
         self.assertFalse(graph.contains('X1'))
 
@@ -27,7 +27,6 @@ class TestGraph(unittest.TestCase):
         self.assertTrue(graph.has_edge('X2', 'X1'))
 
     def test_expand_outputs(self):
-        ''' Test Method: Graph.expand_outputs. '''
         graph = Graph({
             'X1': ['X2'],
             'X2': ['X3', 'X5'],
@@ -42,7 +41,6 @@ class TestGraph(unittest.TestCase):
         self.assertEqual(graph.expand_outputs(['X2', 'X5']), ['X3', 'X6', 'X1'])
 
     def test_topological_order(self):
-        ''' Test Method: Graph.topological_order. '''
         self.assertEqual(Graph().topological_order(), [])
         graph = Graph({
             'X1': [],

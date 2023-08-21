@@ -5,8 +5,19 @@ from typing import cast
 from cctext import (
     EntityReference, TermContext, Entity, SyntacticReference,
     Resolver, ResolvedReference, Position,
-    resolve_entity, resolve_syntactic
+    resolve_entity, resolve_syntactic, extract_entities
 )
+
+
+class TestUtils(unittest.TestCase):
+    ''' Test utilitiy methods. '''
+    def test_extract_entities(self):
+        self.assertEqual(extract_entities(''), [])
+        self.assertEqual(extract_entities('@{-1|черны}'), [])
+        self.assertEqual(extract_entities('@{X1|nomn}'), ['X1'])
+        self.assertEqual(extract_entities('@{X1|datv}'), ['X1'])
+        self.assertEqual(extract_entities('@{X1|datv} @{X1|datv} @{X2|datv}'), ['X1', 'X2'])
+
 
 class TestResolver(unittest.TestCase):
     '''Test reference Resolver.'''

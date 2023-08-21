@@ -5,7 +5,7 @@ from .rumodel import Morphology, SemanticRole, WordTag, morpho, split_grams, com
 from .ruparser import PhraseParser, WordToken, Collation
 from .reference import EntityReference, ReferenceType, SyntacticReference, parse_reference
 from .context import TermForm, Entity, TermContext
-from .resolver import Position, Resolver, ResolvedReference, resolve_entity, resolve_syntactic
+from .resolver import Position, Resolver, ResolvedReference, resolve_entity, resolve_syntactic, extract_entities
 
 from .conceptapi import (
     parse, normalize,
