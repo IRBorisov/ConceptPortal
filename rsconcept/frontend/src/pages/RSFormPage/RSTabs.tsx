@@ -217,7 +217,7 @@ function RSTabs() {
       defaultFocus={true}
       selectedTabClassName='font-bold'
     >
-      <TabList className='flex items-start select-none w-fit clr-bg-pop'>
+      <TabList className='flex items-start px-2 select-none w-fit clr-bg-pop'>
         <RSTabsMenu 
           onDestroy={onDestroySchema}
           showCloneDialog={() => setShowClone(true)} 
@@ -232,7 +232,7 @@ function RSTabs() {
         <ConceptTab>Граф термов</ConceptTab>
       </TabList>
 
-      <TabPanel className='flex items-start w-full gap-2'>
+      <TabPanel className='flex items-start w-full gap-2 px-2'>
         <EditorRSForm 
           onDestroy={onDestroySchema}
         />
@@ -247,7 +247,7 @@ function RSTabs() {
         />
       </TabPanel>
 
-      <TabPanel>
+      <TabPanel className='pl-2'>
         <EditorConstituenta 
           activeID={activeID}
           onOpenEdit={onOpenCst}
@@ -257,7 +257,7 @@ function RSTabs() {
         />
       </TabPanel>
 
-      <TabPanel>
+      <TabPanel className='pl-2'>
         <EditorTermGraph 
           onOpenEdit={onOpenCst}
           onCreateCst={promptCreateCst}

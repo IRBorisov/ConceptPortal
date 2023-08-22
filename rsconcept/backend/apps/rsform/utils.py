@@ -1,6 +1,7 @@
 ''' Utility functions '''
 import json
 from io import BytesIO
+import re
 from zipfile import ZipFile
 from rest_framework.permissions import BasePermission
 
@@ -35,13 +36,24 @@ def read_trs(file) -> dict:
 
 def write_trs(json_data: dict) -> bytes:
     ''' Write json data to TRS file including version info '''
-    json_data["claimed"] = False
-    json_data["selection"] = []
-    json_data["version"] = 16
-    json_data["versionInfo"] = "Exteor 4.8.13.1000 - 30/05/2022"
-
     content = BytesIO()
     data = json.dumps(json_data, indent=4, ensure_ascii=False)
     with ZipFile(content, 'w') as archive:
         archive.writestr('document.json', data=data)
     return content.getvalue()
+
+def apply_mapping_pattern(text: str, mapping: dict[str, str], pattern: re.Pattern[str]) -> str:
+    ''' Apply mapping to matching in regular expression patter subgroup 1. '''
+    if text == '' or pattern == '':
+        return text
+    pos_input: int = 0
+    output: str = ''
+    for segment in re.finditer(pattern, text):
+        entity = segment.group(1)
+        if entity in mapping:
+            output += text[pos_input : segment.start(1)]
+            output += mapping[entity]
+            output += text[segment.end(1) : segment.end(0)]
+            pos_input = segment.end(0)
+    output += text[pos_input : len(text)]
+    return output

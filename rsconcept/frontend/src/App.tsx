@@ -43,7 +43,7 @@ function App () {
       />
       
       <div className='overflow-auto' style={{maxHeight: scrollWindowSize}}>
-      <main  className='px-2' style={{minHeight: mainSize}}>
+      <main style={{minHeight: mainSize}}>
         <Routes>
           <Route path='/' element={ <HomePage/>} />
 

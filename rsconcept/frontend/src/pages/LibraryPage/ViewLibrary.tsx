@@ -68,8 +68,9 @@ function ViewLibrary({ schemas }: ViewLibraryProps) {
       highlightOnHover
       pointerOnHover
 
-      noDataComponent={<span className='flex flex-col justify-center p-2 text-center'>
-        <p>Список схем пуст</p>
+      noDataComponent={
+      <div className='flex flex-col gap-4 justify-center p-2 text-center min-h-[10rem]'>
+        <p><b>Список схем пуст</b></p>
         <p>
           <TextURL text='Создать схему' href='/rsform-create'/>
           <span> | </span>
@@ -79,7 +80,7 @@ function ViewLibrary({ schemas }: ViewLibraryProps) {
             <b>Очистить фильтр</b>
           </span>
         </p>
-      </span>}
+      </div>}
 
       pagination
       paginationPerPage={50}

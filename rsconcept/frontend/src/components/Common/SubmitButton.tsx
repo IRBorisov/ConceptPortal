@@ -1,14 +1,20 @@
-interface SubmitButtonProps {
-  text: string
+interface SubmitButtonProps
+extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'children' | 'title'> {
+  text?: string
+  tooltip?: string
   loading?: boolean
-  disabled?: boolean
   icon?: React.ReactNode
+  widthClass?: string
 }
 
-function SubmitButton({ text = 'ОК', icon, disabled, loading = false }: SubmitButtonProps) {
+function SubmitButton({
+  text = 'ОК', icon, disabled, tooltip, loading,
+  widthClass = 'w-fit h-fit'
+}: SubmitButtonProps) {
   return (
     <button type='submit'
-      className={`px-4 py-2 inline-flex items-center gap-2 align-middle justify-center font-bold select-none disabled:cursor-not-allowed border rounded clr-btn-primary ${loading ? ' cursor-progress' : ''}`}
+      title={tooltip}
+      className={`px-4 py-2 inline-flex items-center gap-2 align-middle justify-center font-bold select-none disabled:cursor-not-allowed border rounded clr-btn-primary ${widthClass} ${loading ? ' cursor-progress' : ''}`}
       disabled={disabled ?? loading}
     >
       {icon && <span>{icon}</span>}

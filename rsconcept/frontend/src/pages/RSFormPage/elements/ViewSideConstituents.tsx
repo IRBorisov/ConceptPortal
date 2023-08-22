@@ -152,13 +152,13 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
   }, [noNavigation, baseHeight]);
 
   return (<>
-    <div className='sticky top-0 left-0 right-0 z-10 flex items-center justify-between w-full gap-1 px-2 py-1 bg-white border-b rounded clr-bg-pop clr-border'>
+    <div className='sticky top-0 left-0 right-0 z-10 flex items-start justify-between w-full gap-1 px-2 py-1 bg-white border-b rounded clr-bg-pop clr-border'>
       <MatchModePicker
         value={filterMatch}
         onChange={setFilterMatch}
       />
       <input type='text'
-        className='w-full px-2 bg-white outline-none select-none hover:text-clip clr-bg-pop clr-border'
+        className='w-full px-2 bg-white outline-none select-none hover:text-clip clr-bg-pop'
         placeholder='наберите текст фильтра'
         value={filterText}
         onChange={event => setFilterText(event.target.value)}

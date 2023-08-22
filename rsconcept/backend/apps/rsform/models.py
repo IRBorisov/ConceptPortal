@@ -1,7 +1,9 @@
 ''' Models: RSForms for conceptual schemas. '''
 import json
-from typing import Iterable, Optional
-import pyconcept
+from copy import deepcopy
+import re
+from typing import Iterable, Optional, cast
+
 from django.db import transaction
 from django.db.models import (
     CASCADE, SET_NULL, ForeignKey, Model, PositiveIntegerField, QuerySet,
@@ -10,9 +12,16 @@ from django.db.models import (
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 from django.urls import reverse
+
+import pyconcept
 from apps.users.models import User
 from cctext import Resolver, Entity, extract_entities
 from .graph import Graph
+from .utils import apply_mapping_pattern
+
+
+_REF_ENTITY_PATTERN = re.compile(r'@{([^0-9\-].*?)\|.*?}')
+_GLOBAL_ID_PATTERN = re.compile(r'([XCSADFPT][0-9]+)')
 
 
 class CstType(TextChoices):
@@ -36,6 +45,26 @@ class Syntax(TextChoices):
 
 def _empty_forms():
     return []
+
+def _get_type_prefix(cst_type: CstType) -> str:
+    ''' Get alias prefix. '''
+    if cst_type == CstType.BASE:
+        return 'X'
+    if cst_type == CstType.CONSTANT:
+        return 'C'
+    if cst_type == CstType.STRUCTURED:
+        return 'S'
+    if cst_type == CstType.AXIOM:
+        return 'A'
+    if cst_type == CstType.TERM:
+        return 'D'
+    if cst_type == CstType.FUNCTION:
+        return 'F'
+    if cst_type == CstType.PREDICATE:
+        return 'P'
+    if cst_type == CstType.THEOREM:
+        return 'T'
+    return 'X'
 
 
 class RSForm(Model):
@@ -134,7 +163,7 @@ class RSForm(Model):
             alias=alias,
             cst_type=insert_type
         )
-        self._update_order()
+        self.update_order()
         self.save()
         result.refresh_from_db()
         return result
@@ -151,7 +180,7 @@ class RSForm(Model):
             alias=alias,
             cst_type=insert_type
         )
-        self._update_order()
+        self.update_order()
         self.save()
         result.refresh_from_db()
         return result
@@ -177,7 +206,7 @@ class RSForm(Model):
                 count_moved += 1
             update_list.append(cst)
         Constituenta.objects.bulk_update(update_list, ['order'])
-        self._update_order()
+        self.update_order()
         self.save()
 
     @transaction.atomic
@@ -185,8 +214,8 @@ class RSForm(Model):
         ''' Delete multiple constituents. Do not check if listCst are from this schema '''
         for cst in listCst:
             cst.delete()
-        self._update_order()
-        self._resolve_all_text()
+        self.update_order()
+        self.resolve_all_text()
         self.save()
 
     @transaction.atomic
@@ -209,89 +238,61 @@ class RSForm(Model):
         cst.refresh_from_db()
         return cst
 
-    def _insert_new(self, data: dict, insert_after: Optional[str]=None) -> 'Constituenta':
-        if insert_after is not None:
-            cstafter = Constituenta.objects.get(pk=insert_after)
-            return self.insert_at(cstafter.order + 1, data['alias'], data['cst_type'])
-        else:
-            return self.insert_last(data['alias'], data['cst_type'])
+    def reset_aliases(self):
+        ''' Recreate all aliases based on cst order. '''
+        mapping = self._create_reset_mapping()
+        self._apply_mapping(mapping)
+
+    def _create_reset_mapping(self) -> dict[str, str]:
+        bases = cast(dict[str, int], {})
+        mapping = cast(dict[str, str], {})
+        for cst_type in CstType.values:
+            bases[cst_type] = 1
+        cst_list = self.constituents().order_by('order')
+        for cst in cst_list:
+            alias = f'{_get_type_prefix(cst.cst_type)}{bases[cst.cst_type]}'
+            bases[cst.cst_type] += 1
+            if cst.alias != alias:
+                mapping[cst.alias] = alias
+        return mapping
 
     @transaction.atomic
-    def load_trs(self, data: dict, sync_metadata: bool, skip_update: bool):
-        if sync_metadata:
-            self.title = data.get('title', 'Без названия')
-            self.alias = data.get('alias', '')
-            self.comment = data.get('comment', '')
-        order = 1
-        prev_constituents = self.constituents()
-        loaded_ids = set()
-        for cst_data in data['items']:
-            uid = int(cst_data['entityUID'])
-            if prev_constituents.filter(pk=uid).exists():
-                cst: Constituenta = prev_constituents.get(pk=uid)
-                cst.order = order
-                cst.load_trs(cst_data)
+    def _apply_mapping(self, mapping: dict[str, str]):
+        cst_list = self.constituents().order_by('order')
+        for cst in cst_list:
+            modified = False
+            if cst.alias in mapping:
+                modified = True
+                cst.alias = mapping[cst.alias]
+            expression = apply_mapping_pattern(cst.definition_formal, mapping, _GLOBAL_ID_PATTERN)
+            if expression != cst.definition_formal:
+                modified = True
+                cst.definition_formal = expression
+            convention = apply_mapping_pattern(cst.convention, mapping, _GLOBAL_ID_PATTERN)
+            if convention != cst.convention:
+                modified = True
+                cst.convention = convention
+            term = apply_mapping_pattern(cst.term_raw, mapping, _REF_ENTITY_PATTERN)
+            if term != cst.term_raw:
+                modified = True
+                cst.term_raw = term
+            definition = apply_mapping_pattern(cst.definition_raw, mapping, _REF_ENTITY_PATTERN)
+            if definition != cst.definition_raw:
+                modified = True
+                cst.definition_raw = definition
+            if modified:
                 cst.save()
-            else:
-                cst = Constituenta.create_from_trs(cst_data, self, order)
-                cst.save()
-                uid = cst.pk
-            loaded_ids.add(uid)
-            order += 1
-        for prev_cst in prev_constituents:
-            if prev_cst.pk not in loaded_ids:
-                prev_cst.delete()
-        if not skip_update:
-            self._update_order()
-        self._resolve_all_text()
-        self.save()
-
-    @staticmethod
-    @transaction.atomic
-    def create_from_trs(owner: User, data: dict, is_common: bool = True) -> 'RSForm':
-        schema = RSForm.objects.create(
-            title=data.get('title', 'Без названия'),
-            owner=owner,
-            alias=data.get('alias', ''),
-            comment=data.get('comment', ''),
-            is_common=is_common
-        )
-        # pylint: disable=protected-access
-        schema._create_items_from_trs(data['items'])
-        return schema
-
-    def to_trs(self) -> dict:
-        ''' Generate JSON string containing all data from RSForm '''
-        result = self._prepare_json_rsform()
-        items = self.constituents().order_by('order')
-        for cst in items:
-            result['items'].append(cst.to_trs())
-        return result
-
-    def __str__(self):
-        return self.title
-
-    def get_absolute_url(self):
-        return reverse('rsform-detail', kwargs={'pk': self.pk})
-
-    def _prepare_json_rsform(self: 'RSForm') -> dict:
-        return {
-            'type': 'rsform',
-            'title': self.title,
-            'alias': self.alias,
-            'comment': self.comment,
-            'items': []
-        }
 
     @transaction.atomic
-    def _update_order(self):
-        checked = json.loads(pyconcept.check_schema(json.dumps(self.to_trs())))
+    def update_order(self):
+        ''' Update constituents order. '''
+        checked = PyConceptAdapter(self).basic()
         update_list = self.constituents().only('id', 'order')
         if len(checked['items']) != update_list.count():
             raise ValidationError('Invalid constituents count')
         order = 1
         for cst in checked['items']:
-            cst_id = cst['entityUID']
+            cst_id = cst['id']
             for oldCst in update_list:
                 if oldCst.pk == cst_id:
                     oldCst.order = order
@@ -300,14 +301,8 @@ class RSForm(Model):
         Constituenta.objects.bulk_update(update_list, ['order'])
 
     @transaction.atomic
-    def _create_items_from_trs(self, items):
-        order = 1
-        for cst in items:
-            cst_object = Constituenta.create_from_trs(cst, self, order)
-            cst_object.save()
-            order += 1
-
-    def _resolve_all_text(self):
+    def resolve_all_text(self):
+        ''' Trigger reference resolution for all texts. '''
         graph_terms = self._term_graph()
         resolver = Resolver({})
         for alias in graph_terms.topological_order():
@@ -323,6 +318,19 @@ class RSForm(Model):
                 cst.definition_resolved = resolved
                 cst.save()
 
+    def _insert_new(self, data: dict, insert_after: Optional[str]=None) -> 'Constituenta':
+        if insert_after is not None:
+            cstafter = Constituenta.objects.get(pk=insert_after)
+            return self.insert_at(cstafter.order + 1, data['alias'], data['cst_type'])
+        else:
+            return self.insert_last(data['alias'], data['cst_type'])
+
+    def __str__(self) -> str:
+        return f'{self.title}'
+
+    def get_absolute_url(self):
+        return reverse('rsform-detail', kwargs={'pk': self.pk})
+
     def _term_graph(self) -> Graph:
         result = Graph()
         cst_list = self.constituents().only('order', 'alias', 'term_raw').order_by('order')
@@ -333,7 +341,7 @@ class RSForm(Model):
                 if result.contains(alias):
                     result.add_edge(id_from=alias, id_to=cst.alias)
         return result
-    
+
     def _definition_graph(self) -> Graph:
         result = Graph()
         cst_list = self.constituents().only('order', 'alias', 'definition_raw').order_by('order')
@@ -413,9 +421,9 @@ class Constituenta(Model):
         ''' URL access. '''
         return reverse('constituenta-detail', kwargs={'pk': self.pk})
 
-    def __str__(self):
-        return self.alias
-    
+    def __str__(self) -> str:
+        return f'{self.alias}'
+
     def set_term_resolved(self, new_term: str):
         ''' Set term and reset forms if needed. '''
         if new_term == self.term_resolved:
@@ -423,61 +431,83 @@ class Constituenta(Model):
         self.term_resolved = new_term
         self.term_forms = []
 
-    @staticmethod
-    def create_from_trs(data: dict, schema: RSForm, order: int) -> 'Constituenta':
-        ''' Create constituenta from TRS json '''
-        cst = Constituenta(
-            alias=data['alias'],
-            schema=schema,
-            order=order,
-            cst_type=data['cstType'],
-        )
-        # pylint: disable=protected-access
-        cst._load_texts(data)
-        return cst
+class PyConceptAdapter:
+    ''' RSForm adapter for interacting with pyconcept module. '''
+    def __init__(self, instance: RSForm):
+        self.schema = instance
+        self.data = self._prepare_request()
+        self._checked_data: Optional[dict] = None
 
-    def load_trs(self, data: dict):
-        ''' Load data from TRS json '''
-        self.alias = data['alias']
-        self.cst_type = data['cstType']
-        self._load_texts(data)
+    def basic(self) -> dict:
+        ''' Check RSForm and return check results.
+            Warning! Does not include texts. '''
+        self._produce_response()
+        if self._checked_data is None:
+            raise ValueError('Invalid data response from pyconcept')
+        return self._checked_data
 
-    def _load_texts(self, data: dict):
-        self.convention = data.get('convention', '')
-        if 'definition' in data:
-            self.definition_formal = data['definition'].get('formal', '')
-            if 'text' in data['definition']:
-                self.definition_raw = data['definition']['text'].get('raw', '')
-                self.definition_resolved = data['definition']['text'].get('resolved', '')
-            else:
-                self.definition_raw = ''
-                self.definition_resolved = ''
-        if 'term' in data:
-            self.term_raw = data['term'].get('raw', '')
-            self.term_resolved = data['term'].get('resolved', '')
-            self.term_forms = data['term'].get('forms', [])
-        else:
-            self.term_raw = ''
-            self.term_resolved = ''
-            self.term_forms = []
+    def full(self) -> dict:
+        ''' Check RSForm and return check results including initial texts. '''
+        self._produce_response()
+        if self._checked_data is None:
+            raise ValueError('Invalid data response from pyconcept')
+        return self._complete_rsform_details(self._checked_data)
 
-    def to_trs(self) -> dict:
-        return {
-            'entityUID': self.pk,
-            'type': 'constituenta',
-            'cstType': self.cst_type,
-            'alias': self.alias,
-            'convention': self.convention,
-            'term': {
-                'raw': self.term_raw,
-                'resolved': self.term_resolved,
-                'forms': self.term_forms,
-            },
-            'definition': {
-                'formal': self.definition_formal,
-                'text': {
-                    'raw': self.definition_raw,
-                    'resolved': self.definition_resolved,
-                },
-            },
+    def _complete_rsform_details(self, data: dict) -> dict:
+        result = deepcopy(data)
+        result['id'] = self.schema.pk
+        result['alias'] = self.schema.alias
+        result['title'] = self.schema.title
+        result['comment'] = self.schema.comment
+        result['time_update'] = self.schema.time_update
+        result['time_create'] = self.schema.time_create
+        result['is_common'] = self.schema.is_common
+        result['owner'] = (self.schema.owner.pk if self.schema.owner is not None else None)
+        for cst_data in result['items']:
+            cst = Constituenta.objects.get(pk=cst_data['id'])
+            cst_data['convention'] = cst.convention
+            cst_data['term'] = {
+                'raw': cst.term_raw,
+                'resolved': cst.term_resolved,
+                'forms': cst.term_forms
+            }
+            cst_data['definition']['text'] = {
+                'raw': cst.definition_raw,
+                'resolved': cst.definition_resolved,
+            }
+        return result
+
+    def _prepare_request(self) -> dict:
+        result: dict = {
+            'items': []
         }
+        items = self.schema.constituents().order_by('order')
+        for cst in items:
+            result['items'].append({
+                'entityUID': cst.pk,
+                'cstType': cst.cst_type,
+                'alias': cst.alias,
+                'definition': {
+                    'formal': cst.definition_formal
+                }
+            })
+        return result
+
+    def _produce_response(self):
+        if self._checked_data is not None:
+            return
+        response = pyconcept.check_schema(json.dumps(self.data))
+        data = json.loads(response)
+        self._checked_data = {
+            'items': []
+        }
+        for cst in data['items']:
+            self._checked_data['items'].append({
+                'id': cst['entityUID'],
+                'cstType': cst['cstType'],
+                'alias': cst['alias'],
+                'definition': {
+                    'formal': cst['definition']['formal']
+                },
+                'parse': cst['parse']
+            })

@@ -39,7 +39,7 @@ function LoginPage() {
   }
 
   return (
-    <div className='w-full py-2'> { user
+    <div className='w-full py-4'> { user
       ? <b>{`Вы вошли в систему как ${user.username}`}</b>
       : <Form title='Ввод данных пользователя' onSubmit={handleSubmit} widthClass='w-[21rem]'>
         <TextInput id='username'
@@ -58,11 +58,15 @@ function LoginPage() {
           onChange={event => { setPassword(event.target.value); }}
         />
 
-        <div className='flex items-center justify-between mt-4'>
-          <SubmitButton text='Вход' loading={loading}/>
-          <TextURL text='Восстановить пароль...' href='/restore-password' />
+        <div className='flex justify-center w-full gap-2 mt-4'>
+          <SubmitButton
+            text='Вход'
+            widthClass='w-[7rem]'
+            loading={loading}
+          />
         </div>
-        <div className='mt-2'>
+        <div className='flex flex-col mt-2 text-sm'>
+          <TextURL text='Восстановить пароль...' href='/restore-password' />
           <TextURL text='Нет аккаунта? Зарегистрируйтесь...' href='/signup' />
         </div>
         { error && <BackendError error={error} />}

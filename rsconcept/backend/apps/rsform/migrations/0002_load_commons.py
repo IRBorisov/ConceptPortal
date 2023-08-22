@@ -3,6 +3,7 @@ from django.db import migrations
 
 from apps.rsform import utils
 from apps.rsform.models import RSForm
+from apps.rsform.serializers import RSFormTRSSerializer
 from apps.users.models import User
 
 
@@ -11,7 +12,10 @@ def load_initial_schemas(apps, schema_editor):
     for subdir, dirs, files in os.walk(rootdir):
         for file in files:
             data = utils.read_trs(os.path.join(subdir, file))
-            RSForm.create_from_trs(None, data)
+            data['is_common'] = True
+            serializer = RSFormTRSSerializer(data=data, context={'load_meta': True})
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
 
 
 def load_initial_users(apps, schema_editor):

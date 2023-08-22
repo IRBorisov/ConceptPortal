@@ -21,7 +21,7 @@ function MatchModePicker({ value, onChange }: MatchModePickerProps) {
   }, [pickerMenu, onChange]);
 
   return (
-  <div ref={pickerMenu.ref}>
+  <div ref={pickerMenu.ref} className='h-full'>
     <span
       className='text-sm font-semibold underline cursor-pointer select-none whitespace-nowrap'
       tabIndex={-1}
