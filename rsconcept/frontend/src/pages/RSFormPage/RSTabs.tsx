@@ -9,11 +9,12 @@ import { Loader } from '../../components/Common/Loader';
 import { useLibrary } from '../../context/LibraryContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { prefixes, TIMEOUT_UI_REFRESH } from '../../utils/constants';
-import { ICstCreateData, SyntaxTree } from '../../utils/models';
+import { ICstCreateData, ICstRenameData, SyntaxTree } from '../../utils/models';
 import { createAliasFor } from '../../utils/staticUI';
 import DlgCloneRSForm from './DlgCloneRSForm';
 import DlgCreateCst from './DlgCreateCst';
 import DlgDeleteCst from './DlgDeleteCst';
+import DlgRenameCst from './DlgRenameCst';
 import DlgShowAST from './DlgShowAST';
 import DlgUploadRSForm from './DlgUploadRSForm';
 import EditorConstituenta from './EditorConstituenta';
@@ -35,7 +36,7 @@ function RSTabs() {
   const search = useLocation().search;
   const { 
     error, schema, loading, 
-    cstCreate, cstDelete 
+    cstCreate, cstDelete, cstRename
   } = useRSForm();
   const { destroySchema } = useLibrary();
 
@@ -55,6 +56,9 @@ function RSTabs() {
   
   const [createInitialData, setCreateInitialData] = useState<ICstCreateData>();
   const [showCreateCst, setShowCreateCst] = useState(false);
+  
+  const [renameInitialData, setRenameInitialData] = useState<ICstRenameData>();
+  const [showRenameCst, setShowRenameCst] = useState(false);
 
   useLayoutEffect(() => {
     if (schema) {
@@ -121,6 +125,17 @@ function RSTabs() {
       setShowCreateCst(true);
     }
   }, [handleCreateCst]);
+
+  const handleRenameCst = useCallback(
+  (data: ICstRenameData) => {
+    cstRename(data, () => toast.success(`Конституента переименована: ${renameInitialData!.alias} -> ${data.alias}`));
+  }, [cstRename, renameInitialData]);
+
+  const promptRenameCst = useCallback(
+  (initialData: ICstRenameData) => {
+    setRenameInitialData(initialData);
+    setShowRenameCst(true);
+  }, []);
 
   const handleDeleteCst = useCallback(
   (deleted: number[]) => {
@@ -205,6 +220,12 @@ function RSTabs() {
       onCreate={handleCreateCst}
       initial={createInitialData}
     />}
+    {showRenameCst && 
+    <DlgRenameCst
+      hideWindow={() => setShowRenameCst(false)}
+      onRename={handleRenameCst}
+      initial={renameInitialData}
+    />}
     {showDeleteCst && 
     <DlgDeleteCst
       hideWindow={() => setShowDeleteCst(false)}
@@ -254,6 +275,7 @@ function RSTabs() {
           onShowAST={onShowAST}
           onCreateCst={promptCreateCst}
           onDeleteCst={promptDeleteCst}
+          onRenameCst={promptRenameCst}
         />
       </TabPanel>
 

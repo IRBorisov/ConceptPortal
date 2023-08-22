@@ -9,7 +9,7 @@ import TextArea from '../../components/Common/TextArea';
 import CstStatusInfo from '../../components/Help/InfoCstStatus';
 import { DumpBinIcon, HelpIcon, PenIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
-import { CstType, EditMode, ICstCreateData, ICstUpdateData, SyntaxTree } from '../../utils/models';
+import { CstType, EditMode, ICstCreateData, ICstRenameData, ICstUpdateData, SyntaxTree } from '../../utils/models';
 import { getCstTypificationLabel } from '../../utils/staticUI';
 import EditorRSExpression from './EditorRSExpression';
 import ViewSideConstituents from './elements/ViewSideConstituents';
@@ -22,10 +22,11 @@ interface EditorConstituentaProps {
   onOpenEdit: (cstID: number) => void
   onShowAST: (expression: string, ast: SyntaxTree) => void
   onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void
+  onRenameCst: (initial: ICstRenameData) => void
   onDeleteCst: (selected: number[], callback?: (items: number[]) => void) => void
 }
 
-function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDeleteCst }: EditorConstituentaProps) {
+function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onOpenEdit, onDeleteCst }: EditorConstituentaProps) {
   const { schema, processing, isEditable, cstUpdate } = useRSForm();
   const activeCst = useMemo(
   () => {
@@ -112,7 +113,15 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
   }
 
   function handleRename() {
-    toast.info('Переименование в разработке');
+    if (!activeID || !activeCst) {
+      return;
+    }
+    const data: ICstRenameData = {
+      id: activeID,
+      alias: activeCst?.alias,
+      cst_type: activeCst.cstType
+    };
+    onRenameCst(data);
   }
 
   return (

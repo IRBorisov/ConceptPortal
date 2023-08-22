@@ -18,14 +18,14 @@ function TextInput({
   ...props
 }: TextInputProps) {
   return (
-    <div className={`flex ${singleRow ? 'items-center gap-4' : 'flex-col items-start'}  [&:not(:first-child)]:mt-3`}>
+    <div className={`flex [&:not(:first-child)]:mt-3 ${singleRow ? 'items-center gap-4 ' + widthClass : 'flex-col items-start'}`}>
       <Label
         text={label}
         required={required}
         htmlFor={id}
       />
       <input id={id}
-        className={`px-3 py-2 mt-2 leading-tight border shadow truncate hover:text-clip ${colorClass} ${widthClass}`}
+        className={`px-3 py-2 mt-2 leading-tight border shadow truncate hover:text-clip ${colorClass} ${singleRow ? '' : widthClass}`}
         required={required}
         {...props}
       />

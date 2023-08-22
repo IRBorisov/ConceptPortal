@@ -5,7 +5,7 @@ import { type ErrorInfo } from '../components/BackendError'
 import { config } from './constants'
 import {
   IConstituentaList, IConstituentaMeta,
-  ICstCreateData, ICstCreatedResponse, ICstMovetoData, ICstUpdateData,
+  ICstCreateData, ICstCreatedResponse, ICstMovetoData, ICstRenameData, ICstUpdateData,
   ICurrentUser, IExpressionParse, IRSExpression,
   IRSFormCreateData, IRSFormData,
   IRSFormMeta, IRSFormUpdateData, IRSFormUploadData, IUserInfo,
@@ -206,6 +206,14 @@ export function patchConstituenta(target: string, request: FrontExchange<ICstUpd
   AxiosPatch({
     title: `Constituenta id=${target}`,
     endpoint: `/api/constituents/${target}/`,
+    request: request
+  });
+}
+
+export function patchRenameConstituenta(schema: string, request: FrontExchange<ICstRenameData, IConstituentaMeta>) {
+  AxiosPatch({
+    title: `Renaming constituenta id=${request.data.id} for schema id=${schema}`,
+    endpoint: `/api/rsforms/${schema}/cst-rename/`,
     request: request
   });
 }

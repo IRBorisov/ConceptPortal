@@ -5,13 +5,14 @@ import { type ErrorInfo } from '../components/BackendError'
 import { useRSFormDetails } from '../hooks/useRSFormDetails'
 import {
   type DataCallback, getTRSFile,
-  patchConstituenta, patchDeleteConstituenta, 
-  patchMoveConstituenta, patchResetAliases, patchRSForm,
+  patchConstituenta, patchDeleteConstituenta,
+  patchMoveConstituenta, patchRenameConstituenta,
+  patchResetAliases, patchRSForm,
   patchUploadTRS,  postClaimRSForm, postNewConstituenta
 } from '../utils/backendAPI'
 import {
   IConstituentaList, IConstituentaMeta, ICstCreateData,
-  ICstMovetoData, ICstUpdateData, IRSForm, 
+  ICstMovetoData, ICstRenameData, ICstUpdateData, IRSForm, 
   IRSFormMeta, IRSFormUpdateData, IRSFormUploadData
 } from '../utils/models'
 import { useAuth } from './AuthContext'
@@ -42,6 +43,7 @@ interface IRSFormContext {
   resetAliases: (callback: () => void) => void
 
   cstCreate: (data: ICstCreateData, callback?: DataCallback<IConstituentaMeta>) => void
+  cstRename: (data: ICstRenameData, callback?: DataCallback<IConstituentaMeta>) => void
   cstUpdate: (data: ICstUpdateData, callback?: DataCallback<IConstituentaMeta>) => void
   cstDelete: (data: IConstituentaList, callback?: () => void) => void
   cstMoveTo: (data: ICstMovetoData, callback?: () => void) => void
@@ -153,7 +155,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
     patchResetAliases(schemaID, {
       showError: true,
       setLoading: setProcessing,
-      onError: error => { setError(error) },
+      onError: error => setError(error),
       onSuccess: newData => {
         setSchema(Object.assign(schema, newData));
         if (callback) callback();
@@ -167,7 +169,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
     getTRSFile(schemaID, {
       showError: true,
       setLoading: setProcessing,
-      onError: error => { setError(error) },
+      onError: error => setError(error),
       onSuccess: callback
     });
   }, [schemaID, setError]);
@@ -179,7 +181,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       data: data,
       showError: true,
       setLoading: setProcessing,
-      onError: error => { setError(error) },
+      onError: error => setError(error),
       onSuccess: newData => {
         setSchema(newData.schema);
         if (callback) callback(newData.new_cst);
@@ -194,7 +196,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       data: data,
       showError: true,
       setLoading: setProcessing,
-      onError: error => { setError(error) },
+      onError: error => setError(error),
       onSuccess: newData => {
         setSchema(newData);
         if (callback) callback();
@@ -209,12 +211,26 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       data: data,
       showError: true,
       setLoading: setProcessing,
-      onError: error => { setError(error) },
+      onError: error => setError(error),
       onSuccess: newData => {
-        reload(setProcessing, () => { if (callback != null) callback(newData); })
+        reload(setProcessing, () => { if (callback) callback(newData); })
       }
     });
   }, [setError, reload]);
+
+  const cstRename = useCallback(
+  (data: ICstRenameData, callback?: DataCallback<IConstituentaMeta>) => {
+    setError(undefined)
+    patchRenameConstituenta(schemaID, {
+      data: data,
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => setError(error),
+      onSuccess: newData => {
+        reload(setProcessing, () => { if (callback) callback(newData); })
+      }
+    });
+  }, [setError, reload, schemaID]);
 
   const cstMoveTo = useCallback(
   (data: ICstMovetoData, callback?: () => void) => {
@@ -223,7 +239,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       data: data,
       showError: true,
       setLoading: setProcessing,
-      onError: error => { setError(error) },
+      onError: error => setError(error),
       onSuccess: newData => {
         setSchema(newData);
         if (callback) callback();
@@ -237,11 +253,11 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       error, loading, processing,
       isForceAdmin, isReadonly, isOwned, isEditable,
       isClaimable, isTracking,
-      toggleForceAdmin: () => { setIsForceAdmin(prev => !prev) },
-      toggleReadonly: () => { setIsReadonly(prev => !prev) },
+      toggleForceAdmin: () => setIsForceAdmin(prev => !prev),
+      toggleReadonly: () => setIsReadonly(prev => !prev),
       toggleTracking,
       update, download, upload, claim, resetAliases,
-      cstUpdate, cstCreate, cstDelete, cstMoveTo
+      cstUpdate, cstCreate, cstRename, cstDelete, cstMoveTo
     }}>
       { children }
     </RSFormContext.Provider>
