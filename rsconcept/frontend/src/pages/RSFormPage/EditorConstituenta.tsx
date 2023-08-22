@@ -18,11 +18,11 @@ import ViewSideConstituents from './elements/ViewSideConstituents';
 const UNFOLDED_HEIGHT = '59.1rem';
 
 interface EditorConstituentaProps {
-  activeID?: number
-  onOpenEdit: (cstID: number) => void
+  activeID?: string
+  onOpenEdit: (cstID: string) => void
   onShowAST: (expression: string, ast: SyntaxTree) => void
   onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void
-  onDeleteCst: (selected: number[], callback?: (items: number[]) => void) => void
+  onDeleteCst: (selected: string[], callback?: (items: string[]) => void) => void
 }
 
 function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDeleteCst }: EditorConstituentaProps) {

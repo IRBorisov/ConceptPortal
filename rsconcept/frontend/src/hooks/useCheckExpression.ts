@@ -13,7 +13,7 @@ function useCheckExpression({ schema }: { schema?: IRSForm }) {
 
   function checkExpression(expression: string, onSuccess?: DataCallback<IExpressionParse>) {
     setError(undefined);
-    postCheckExpression(String(schema?.id), {
+    postCheckExpression(schema!.id, {
       data: { expression: expression },
       showError: true,
       setLoading,

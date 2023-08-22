@@ -184,7 +184,7 @@ function EditorRSExpression({
   }, [handleEdit]);
 
   return (
-    <div className='flex flex-col items-start [&:not(:first-child)]:mt-3 w-full'>
+    <div className='flex flex-col items-start [&:not(:first-child)]:mt-3 w-full min-h-[15.75rem]'>
       <div className='relative w-full'>
       <div className='absolute top-[-0.3rem] right-0'>
       <StatusBar

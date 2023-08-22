@@ -12,7 +12,7 @@ interface IUsersContext {
 const UsersContext = createContext<IUsersContext | null>(null)
 export const useUsers = (): IUsersContext => {
   const context = useContext(UsersContext);
-  if (context == null) {
+  if (context === null) {
     throw new Error(
       'useUsers has to be used within <UsersState.Provider>'
     );

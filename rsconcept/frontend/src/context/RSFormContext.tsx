@@ -50,7 +50,7 @@ interface IRSFormContext {
 const RSFormContext = createContext<IRSFormContext | null>(null)
 export const useRSForm = () => {
   const context = useContext(RSFormContext)
-  if (context == null) {
+  if (context === null) {
     throw new Error(
       'useRSForm has to be used within <RSFormState.Provider>'
     )
@@ -205,7 +205,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
   const cstUpdate = useCallback(
   (data: ICstUpdateData, callback?: DataCallback<IConstituentaMeta>) => {
     setError(undefined)
-    patchConstituenta(String(data.id), {
+    patchConstituenta(data.id, {
       data: data,
       showError: true,
       setLoading: setProcessing,

@@ -28,7 +28,7 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
   () => {
     const result: GraphEdge[] = [];
     syntaxTree.forEach(node => {
-      if (node.parent != node.uid) {
+      if (node.parent !== node.uid) {
         result.push({
           id: String(node.uid),
           source: String(node.parent),

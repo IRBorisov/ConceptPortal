@@ -109,7 +109,7 @@ export enum CstClass {
 }
 
 export interface IConstituenta {
-  id: number
+  id: string
   alias: string
   cstType: CstType
   convention: string
@@ -138,8 +138,8 @@ export interface IConstituenta {
 }
 
 export interface IConstituentaMeta {
-  id: number
-  schema: number
+  id: string
+  schema: string
   order: number
   alias: string
   convention: string
@@ -158,7 +158,7 @@ export interface IConstituentaList {
 
 export interface ICstCreateData 
 extends Pick<IConstituentaMeta, 'alias' | 'cst_type' | 'definition_raw' | 'term_raw' | 'convention' | 'definition_formal' > {
-  insert_after: number | null
+  insert_after: string | null
 }
 
 export interface ICstMovetoData extends IConstituentaList {
@@ -167,6 +167,9 @@ export interface ICstMovetoData extends IConstituentaList {
 
 export interface ICstUpdateData
 extends Pick<IConstituentaMeta, 'id' | 'alias' | 'convention' | 'definition_formal' | 'definition_raw' | 'term_raw'> {}
+
+export interface ICstRenameData 
+extends Pick<IConstituentaMeta, 'id' | 'alias' | 'cst_type' > {}
 
 export interface ICstCreatedResponse {
   new_cst: IConstituentaMeta
@@ -193,7 +196,7 @@ export interface IRSFormStats {
 }
 
 export interface IRSForm {
-  id: number
+  id: string
   title: string
   alias: string
   comment: string
@@ -365,7 +368,9 @@ export function LoadRSFormData(schema: IRSFormData): IRSForm {
     count_theorem: result.items.reduce(
       (sum, cst) => sum + (cst.cstType === CstType.THEOREM ? 1 : 0), 0)
   }
+  result.id = String(result.id)
   result.items.forEach(cst => {
+    cst.id = String(cst.id)
     cst.status = inferStatus(cst.parse.status, cst.parse.valueClass);
     cst.isTemplate = inferTemplate(cst.definition.formal);
     cst.cstClass = inferClass(cst.cstType, cst.isTemplate);
@@ -411,11 +416,11 @@ export function matchRSFormMeta(query: string, target: IRSFormMeta) {
   }
 }
 
-export function applyGraphFilter(schema: IRSForm, start: number, mode: DependencyMode): IConstituenta[] {
+export function applyGraphFilter(schema: IRSForm, start: string, mode: DependencyMode): IConstituenta[] {
   if (mode === DependencyMode.ALL) {
     return schema.items;
   }
-  let ids: number[] | undefined = undefined
+  let ids: string[] | undefined = undefined
   switch (mode) {
   case DependencyMode.OUTPUTS: { ids = schema.graph.nodes.get(start)?.outputs; break; }
   case DependencyMode.INPUTS: { ids = schema.graph.nodes.get(start)?.inputs; break; }

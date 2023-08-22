@@ -64,9 +64,12 @@ function RegisterPage() {
           onChange={event => { setPassword2(event.target.value); }}
         />
         <div className='text-sm'>
-          <p>- минимум 8 символов</p>
+          <p>- используйте уникальный пароль</p>
+          <p>- портал функционирует в тестовом режиме</p>
+          <p>- безопасность информации пользователей не гарантируется</p>
+          {/* <p>- минимум 8 символов</p>
           <p>- большие, маленькие буквы, цифры</p>
-          <p>- минимум 1 спец. символ</p>
+          <p>- минимум 1 спец. символ</p> */}
         </div>
         <TextInput id='email' label='email' type='text'
           required

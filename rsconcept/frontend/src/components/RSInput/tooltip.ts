@@ -42,7 +42,7 @@ export const getHoverTooltip = (items: IConstituenta[]) => {
       start--;
     while (end < to && /\w/.test(text[end - from]))
       end++;
-    if (start == pos && side < 0 || end == pos && side > 0) {
+    if (start === pos && side < 0 || end === pos && side > 0) {
       return null;
     }
     const alias = text.slice(start - from, end - from);

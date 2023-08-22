@@ -407,7 +407,7 @@ export function createAliasFor(type: CstType, schema: IRSForm): string {
   return `${prefix}${index}`;
 }
 
-export function getMockConstituenta(id: number, alias: string, type: CstType, comment: string): IConstituenta {
+export function getMockConstituenta(id: string, alias: string, type: CstType, comment: string): IConstituenta {
   return {
     id: id,
     alias: alias,

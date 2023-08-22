@@ -40,7 +40,7 @@ function RSTabs() {
   const { destroySchema } = useLibrary();
 
   const [activeTab, setActiveTab] = useState(RSTabsList.CARD);
-  const [activeID, setActiveID] = useState<number | undefined>(undefined);
+  const [activeID, setActiveID] = useState<string | undefined>(undefined);
   
   const [showUpload, setShowUpload] = useState(false);
   const [showClone, setShowClone] = useState(false);
@@ -49,8 +49,8 @@ function RSTabs() {
   const [expression, setExpression] = useState('');
   const [showAST, setShowAST] = useState(false);
   
-  const [afterDelete, setAfterDelete] = useState<((items: number[]) => void) | undefined>(undefined);
-  const [toBeDeleted, setToBeDeleted] = useState<number[]>([]);
+  const [afterDelete, setAfterDelete] = useState<((items: string[]) => void) | undefined>(undefined);
+  const [toBeDeleted, setToBeDeleted] = useState<string[]>([]);
   const [showDeleteCst, setShowDeleteCst] = useState(false);
   
   const [createInitialData, setCreateInitialData] = useState<ICstCreateData>();
@@ -70,7 +70,7 @@ function RSTabs() {
     const activeTab = Number(new URLSearchParams(search).get('tab')) ?? RSTabsList.CARD;
     const cstQuery = new URLSearchParams(search).get('active');
     setActiveTab(activeTab);
-    setActiveID(Number(cstQuery) ?? (schema && schema?.items.length > 0 && schema?.items[0]));
+    setActiveID(cstQuery ?? ((schema && schema?.items.length > 0) ? schema.items[0].id : undefined))
   }, [search, setActiveTab, setActiveID, schema]);
 
   function onSelectTab(index: number) {
@@ -78,7 +78,7 @@ function RSTabs() {
   }
 
   const navigateTo = useCallback(
-  (tab: RSTabsList, activeID?: number) => {
+  (tab: RSTabsList, activeID?: string) => {
     if (activeID) {
       navigate(`/rsforms/${schema!.id}?tab=${tab}&active=${activeID}`, {
         replace: tab === activeTab && tab !== RSTabsList.CST_EDIT
@@ -97,7 +97,7 @@ function RSTabs() {
     cstCreate(data, newCst => {
       toast.success(`Конституента добавлена: ${newCst.alias}`);
       navigateTo(activeTab, newCst.id);    
-      if (activeTab === RSTabsList.CST_EDIT || activeTab == RSTabsList.CST_LIST) {
+      if (activeTab === RSTabsList.CST_EDIT || activeTab === RSTabsList.CST_LIST) {
         setTimeout(() => {
           const element = document.getElementById(`${prefixes.cst_list}${newCst.alias}`);
           if (element) {
@@ -123,7 +123,7 @@ function RSTabs() {
   }, [handleCreateCst]);
 
   const handleDeleteCst = useCallback(
-  (deleted: number[]) => {
+  (deleted: string[]) => {
     if (!schema) {
       return;
     }
@@ -148,9 +148,9 @@ function RSTabs() {
   }, [afterDelete, cstDelete, schema, activeID, activeTab, navigateTo]);
 
   const promptDeleteCst = useCallback(
-  (selected: number[], callback?: (items: number[]) => void) => {
+  (selected: string[], callback?: (items: string[]) => void) => {
     setAfterDelete(() => (
-    (items: number[]) => {
+    (items: string[]) => {
       if (callback) callback(items);
     }));
     setToBeDeleted(selected);
@@ -165,7 +165,7 @@ function RSTabs() {
   }, []);
 
   const onOpenCst = useCallback(
-  (cstID: number) => {
+  (cstID: string) => {
     navigateTo(RSTabsList.CST_EDIT, cstID)
   }, [navigateTo]);
 
@@ -217,19 +217,19 @@ function RSTabs() {
       defaultFocus={true}
       selectedTabClassName='font-bold'
     >
-      <TabList className='flex items-start px-2 select-none w-fit clr-bg-pop'>
+      <TabList className='flex items-start pl-2 select-none w-fit clr-bg-pop'>
         <RSTabsMenu 
           onDestroy={onDestroySchema}
           showCloneDialog={() => setShowClone(true)} 
           showUploadDialog={() => setShowUpload(true)} 
         />
-        <ConceptTab className='border-r-2'>Паспорт схемы</ConceptTab>
+        <ConceptTab className='border-r-2 min-w-[7.8rem]'>Паспорт схемы</ConceptTab>
         <ConceptTab className='border-r-2 min-w-[10rem] flex justify-between gap-2'>
           <span>Конституенты</span>
           <span>{`${schema.stats?.count_errors ?? 0} | ${schema.stats?.count_all ?? 0}`}</span>
         </ConceptTab>
-        <ConceptTab className='border-r-2'>Редактор</ConceptTab>
-        <ConceptTab>Граф термов</ConceptTab>
+        <ConceptTab className='border-r-2 min-w-[5.2rem]'>Редактор</ConceptTab>
+        <ConceptTab className='min-w-[6.5rem]'>Граф термов</ConceptTab>
       </TabList>
 
       <TabPanel className='flex items-start w-full gap-2 px-2'>

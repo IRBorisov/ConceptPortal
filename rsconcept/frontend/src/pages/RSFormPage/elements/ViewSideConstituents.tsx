@@ -17,8 +17,12 @@ const LOCAL_NAVIGATION_H = '2.6rem';
 interface ViewSideConstituentsProps {
   expression: string
   baseHeight: string
-  activeID?: number
-  onOpenEdit: (cstID: number) => void
+  activeID?: string
+  onOpenEdit: (cstID: string) => void
+}
+
+function isMockCst(cst: IConstituenta) {
+  return cst.id[0] === '-'
 }
 
 function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: ViewSideConstituentsProps) {
@@ -45,7 +49,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       const diff = Array.from(aliases).filter(name => !names.includes(name));
       if (diff.length > 0) {
         diff.forEach(
-          (alias, index) => filtered.push(getMockConstituenta(-index, alias, CstType.BASE, 'Конституента отсутствует')));
+          (alias, index) => filtered.push(getMockConstituenta(`-${index}`, alias, CstType.BASE, 'Конституента отсутствует')));
       }
     } else if (!activeID) {
       filtered = schema.items
@@ -60,14 +64,14 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
 
   const handleRowClicked = useCallback(
   (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
-    if (event.altKey && cst.id > 0) {
+    if (event.altKey && !isMockCst(cst)) {
       onOpenEdit(cst.id);
     }
   }, [onOpenEdit]);
 
   const handleDoubleClick = useCallback(
   (cst: IConstituenta) => {
-    if (cst.id > 0) {
+    if (!isMockCst(cst)) {
       onOpenEdit(cst.id);
     }
   }, [onOpenEdit]);
@@ -108,7 +112,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       maxWidth: '65px',
       conditionalCellStyles: [
         {
-          when: (cst: IConstituenta) => cst.id <= 0,
+          when: (cst: IConstituenta) => isMockCst(cst),
           classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
         }
       ]
@@ -121,7 +125,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       wrap: true,
       conditionalCellStyles: [
         {
-          when: (cst: IConstituenta) => cst.id <= 0,
+          when: (cst: IConstituenta) => isMockCst(cst),
           classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
         }
       ]
@@ -136,7 +140,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       wrap: true,
       conditionalCellStyles: [
         {
-          when: (cst: IConstituenta) => cst.id <= 0,
+          when: (cst: IConstituenta) => isMockCst(cst),
           classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
         }
       ]

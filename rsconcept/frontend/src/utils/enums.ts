@@ -162,11 +162,11 @@ const ERRCODE_LEXER_MASK = 0x0200;
 const ERRCODE_PARSER_MASK = 0x0400;
 const ERRCODE_TYPE_MASK = 0x0800;
 export function resolveErrorClass(error: RSErrorType): RSErrorClass {
-	if ((error & ERRCODE_LEXER_MASK) != 0) {
+	if ((error & ERRCODE_LEXER_MASK) !== 0) {
 		return RSErrorClass.LEXER;
-	} else if ((error & ERRCODE_PARSER_MASK) != 0) {
+	} else if ((error & ERRCODE_PARSER_MASK) !== 0) {
 		return RSErrorClass.PARSER;
-	} else if ((error & ERRCODE_TYPE_MASK) != 0) {
+	} else if ((error & ERRCODE_TYPE_MASK) !== 0) {
 		return RSErrorClass.SEMANTIC;
 	} else {
 		return RSErrorClass.UNKNOWN;

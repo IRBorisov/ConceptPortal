@@ -7,15 +7,15 @@ import { getCstLabel } from '../../utils/staticUI';
 
 interface DlgDeleteCstProps {
   hideWindow: () => void
-  selected: number[]
-  onDelete: (items: number[]) => void
+  selected: string[]
+  onDelete: (items: string[]) => void
 }
 
 function DlgDeleteCst({ hideWindow, selected, onDelete }: DlgDeleteCstProps) {
   const { schema } = useRSForm();
 
   const [ expandOut, setExpandOut ] = useState(false);
-  const expansion: number[] = useMemo(() => schema?.graph.expandOutputs(selected) ?? [], [selected, schema?.graph]);
+  const expansion: string[] = useMemo(() => schema?.graph.expandOutputs(selected) ?? [], [selected, schema?.graph]);
 
   function handleSubmit() {
     hideWindow();
