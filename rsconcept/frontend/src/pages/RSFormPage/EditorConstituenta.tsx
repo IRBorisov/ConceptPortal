@@ -7,10 +7,10 @@ import MiniButton from '../../components/Common/MiniButton';
 import SubmitButton from '../../components/Common/SubmitButton';
 import TextArea from '../../components/Common/TextArea';
 import CstStatusInfo from '../../components/Help/InfoCstStatus';
-import { DumpBinIcon, HelpIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
+import { DumpBinIcon, HelpIcon, PenIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { CstType, EditMode, ICstCreateData, ICstUpdateData, SyntaxTree } from '../../utils/models';
-import { getCstTypeLabel, getCstTypificationLabel } from '../../utils/staticUI';
+import { getCstTypificationLabel } from '../../utils/staticUI';
 import EditorRSExpression from './EditorRSExpression';
 import ViewSideConstituents from './elements/ViewSideConstituents';
 
@@ -36,7 +36,6 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
   const [editMode, setEditMode] = useState(EditMode.TEXT);
 
   const [alias, setAlias] = useState('');
-  const [type, setType] = useState('');
   const [term, setTerm] = useState('');
   const [textDefinition, setTextDefinition] = useState('');
   const [expression, setExpression] = useState('');
@@ -63,7 +62,6 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
   useLayoutEffect(() => {
     if (activeCst) {
       setAlias(activeCst.alias);
-      setType(getCstTypeLabel(activeCst.cstType));
       setConvention(activeCst.convention ?? '');
       setTerm(activeCst.term?.raw ?? '');
       setTextDefinition(activeCst.definition?.text?.raw ?? '');
@@ -117,76 +115,66 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onOpenEdit, onDe
     toast.info('Переименование в разработке');
   }
 
-  function handleChangeType() {
-    toast.info('Изменение типа в разработке');
-  }
-
   return (
     <div className='flex items-stretch w-full gap-2 mb-2 justify-stretch'>
       <form onSubmit={handleSubmit} className='min-w-[50rem] max-w-min px-4 py-2 border'>
-        <div className='flex items-start justify-between'>
-            <button type='submit'
-              title='Сохранить изменения'
-              className='px-1 py-1 font-bold border rounded whitespace-nowrap disabled:cursor-not-allowed clr-btn-primary'
-              disabled={!isModified || !isEnabled}
-            >
-              <SaveIcon size={5} />
-            </button>
-          <div className='flex items-start justify-center w-full gap-4'>
-            <span className='mr-12'>
-              <label
-                title='Переименовать конституенту'
-                className='font-semibold underline cursor-pointer'
-                onClick={handleRename}
-              >
-                ID
-              </label>
-              <b className='ml-2'>{alias}</b>
-            </span>
-            <span>
-              <label
-                title='Изменить тип конституенты'
-                className='font-semibold underline cursor-pointer'
-                onClick={handleChangeType}
-              >
-                Тип
-              </label>
-              <span className='ml-2'>{type}</span>
-            </span>
+        <div className='relative'>
+          <div className='absolute top-0 left-0'>
+        <MiniButton 
+          tooltip='Сохранить изменения'
+          disabled={!isModified || !isEnabled}
+          icon={<SaveIcon size={6} color={isModified && isEnabled ? 'text-primary' : ''}/>}
+        >
+        </MiniButton>
+        </div>
+        </div>
+        <div className='relative'>
+        <div className='absolute top-0 right-0 flex justify-end'>
+          <MiniButton
+            tooltip='Удалить редактируемую конституенту'
+            disabled={!isEnabled}
+            onClick={handleDelete}
+            icon={<DumpBinIcon size={5} color={isEnabled ? 'text-red' : ''} />}
+          />
+          <MiniButton
+            tooltip='Создать конституенты после данной'
+            disabled={!isEnabled}
+            onClick={handleCreateCst}
+            icon={<SmallPlusIcon size={5} color={isEnabled ? 'text-green' : ''} />} 
+          />
+          <div id='cst-help' className='flex items-center ml-[6px]'>
+            <HelpIcon color='text-primary' size={5} />
           </div>
-          <div className='flex justify-end'>
-            <MiniButton
-              tooltip='Удалить редактируемую конституенту'
-              disabled={!isEnabled}
-              onClick={handleDelete}
-              icon={<DumpBinIcon size={5} color={isEnabled ? 'text-red' : ''} />}
-            />
-            <MiniButton
-              tooltip='Создать конституенты после данной'
-              disabled={!isEnabled}
-              onClick={handleCreateCst}
-              icon={<SmallPlusIcon size={5} color={isEnabled ? 'text-green' : ''} />} 
-            />
-            <div id='cst-help' className='flex items-center ml-[6px]'>
-              <HelpIcon color='text-primary' size={5} />
+          <ConceptTooltip anchorSelect='#cst-help'>
+            <div className='max-w-[35rem]'>
+              <h1>Подсказки</h1>
+              <p><b className='text-red'>Изменения сохраняются ПОСЛЕ нажатия на кнопку снизу или слева вверху</b></p>
+              <p><b>Клик на формальное выражение</b> - обратите внимание на кнопки снизу.<br/>Для каждой есть горячая клавиша в подсказке</p>
+              <p><b>Список конституент справа</b> - обратите внимание на настройки фильтрации</p>
+              <p>- слева от ввода текста настраивается набор атрибутов конституенты</p>
+              <p>- справа от ввода текста настраивается список конституент, которые фильтруются</p>
+              <p>- текущая конституента выделена цветом строки</p>
+              <p>- двойной клик / Alt + клик - выбор редактируемой конституенты</p>
+              <p>- при наведении на ID конституенты отображаются ее атрибуты</p>
+              <p>- столбец "Описание" содержит один из непустых текстовых атрибутов</p>
+              <Divider margins='mt-2' />
+              <CstStatusInfo title='Статусы' />
             </div>
-            <ConceptTooltip anchorSelect='#cst-help'>
-              <div className='max-w-[35rem]'>
-                <h1>Подсказки</h1>
-                <p><b className='text-red'>Изменения сохраняются ПОСЛЕ нажатия на кнопку снизу или слева вверху</b></p>
-                <p><b>Клик на формальное выражение</b> - обратите внимание на кнопки снизу.<br/>Для каждой есть горячая клавиша в подсказке</p>
-                <p><b>Список конституент справа</b> - обратите внимание на настройки фильтрации</p>
-                <p>- слева от ввода текста настраивается набор атрибутов конституенты</p>
-                <p>- справа от ввода текста настраивается список конституент, которые фильтруются</p>
-                <p>- текущая конституента выделена цветом строки</p>
-                <p>- двойной клик / Alt + клик - выбор редактируемой конституенты</p>
-                <p>- при наведении на ID конституенты отображаются ее атрибуты</p>
-                <p>- столбец "Описание" содержит один из непустых текстовых атрибутов</p>
-                <Divider margins='mt-2' />
-                <CstStatusInfo title='Статусы' />
-              </div>
-            </ConceptTooltip>
+          </ConceptTooltip>
+        </div>
+        </div>
+        <div className='flex items-center justify-center w-full pr-10'>
+          <div className='font-semibold w-fit'>
+            <span className=''>Конституента </span>
+            <span className='ml-4'>{alias}</span>
           </div>
+          <MiniButton
+            tooltip='Переименовать конституету'
+            disabled={!isEnabled}
+            noHover
+            onClick={handleRename}
+            icon={<PenIcon size={4} color={isEnabled ? 'text-primary' : ''} />}
+          />
         </div>
         <TextArea id='term' label='Термин'
           placeholder='Схемный или предметный термин, обозначающий данное понятие или утверждение'

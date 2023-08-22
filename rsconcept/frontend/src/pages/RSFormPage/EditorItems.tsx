@@ -305,13 +305,15 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
           {(Object.values(CstType)).map(
             (typeStr) => {
               const type = typeStr as CstType;
-              return <Button key={type}
+              return (
+              <Button key={type}
                 text={`${getCstTypePrefix(type)}`}
                 tooltip={getCstTypeShortcut(type)}
                 dense
+                widthClass='w-[1.4rem]'
                 disabled={!isEditable}
                 onClick={() => handleCreateCst(type)}
-              />;
+              />);
           })}
           <div id='items-table-help'>
             <HelpIcon color='text-primary' size={6} />

@@ -187,7 +187,7 @@ function EditorRSExpression({
   return (
     <div className='flex flex-col items-start [&:not(:first-child)]:mt-3 w-full min-h-[15.75rem]'>
       <div className='relative w-full'>
-      <div className='absolute top-[-0.3rem] right-0'>
+      <div className='absolute top-[-0.1rem] right-0'>
       <StatusBar
         isModified={isModified}
         constituenta={activeCst}
