@@ -7,7 +7,7 @@ from .conceptapi import inflect_dependant
 from .context import TermContext
 from .reference import EntityReference, SyntacticReference, parse_reference, Reference
 
-_REF_ENTITY_PATTERN = re.compile(r'@{([^0-9\-].*?)\|.*?}')
+_REF_ENTITY_PATTERN = re.compile(r'@{([^0-9\-][^\}\|\{]*?)\|([^\}\|\{]*?)}')
 
 def extract_entities(text: str) -> list[str]:
     ''' Extract list of entities that are referenced. '''
@@ -76,7 +76,7 @@ class ResolvedReference:
 
 class Resolver:
     ''' Text reference resolver '''
-    REFERENCE_PATTERN = re.compile(r'@{.*?}')
+    REFERENCE_PATTERN = re.compile(r'@{[^\}\{]*?}')
 
     def __init__(self, context: TermContext):
         self.context = context

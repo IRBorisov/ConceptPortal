@@ -72,7 +72,9 @@ class TestConstituentaAPI(APITestCase):
         response = self.client.patch(f'/api/constituents/{self.cst3.id}/', data, content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.cst3.refresh_from_db()
+        self.assertEqual(response.data['term_resolved'], 'New term')
         self.assertEqual(self.cst3.term_resolved, 'New term')
+        self.assertEqual(response.data['definition_resolved'], 'New def')
         self.assertEqual(self.cst3.definition_resolved, 'New def')
 
     def test_update_resolved_refs(self):
@@ -84,7 +86,9 @@ class TestConstituentaAPI(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.cst3.refresh_from_db()
         self.assertEqual(self.cst3.term_resolved, self.cst1.term_resolved)
+        self.assertEqual(response.data['term_resolved'], self.cst1.term_resolved)
         self.assertEqual(self.cst3.definition_resolved, f'{self.cst1.term_resolved} form1')
+        self.assertEqual(response.data['definition_resolved'], f'{self.cst1.term_resolved} form1')
 
     def test_readonly_cst_fields(self):
         data = json.dumps({'alias': 'X33', 'order': 10})
@@ -151,14 +155,27 @@ class TestRSFormViewset(APITestCase):
 
     def test_details(self):
         schema = RSForm.objects.create(title='Test')
-        cst = schema.insert_at(1, 'X1', CstType.BASE)
-        schema.insert_at(2, 'X2', CstType.BASE)
+        x1 = schema.insert_at(1, 'X1', CstType.BASE)
+        x2 = schema.insert_at(2, 'X2', CstType.BASE)
+        x1.term_raw = 'человек'
+        x1.term_resolved = 'человек'
+        x2.term_raw = '@{X1|plur}'
+        x2.term_resolved = 'люди'
+        x1.save()
+        x2.save()
+
         response = self.client.get(f'/api/rsforms/{schema.id}/details/')
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['title'], 'Test')
         self.assertEqual(len(response.data['items']), 2)
+        self.assertEqual(response.data['items'][0]['id'], x1.id)
         self.assertEqual(response.data['items'][0]['parse']['status'], 'verified')
-        self.assertEqual(response.data['items'][0]['id'], cst.id)
+        self.assertEqual(response.data['items'][0]['term']['raw'], x1.term_raw)
+        self.assertEqual(response.data['items'][0]['term']['resolved'], x1.term_resolved)
+        self.assertEqual(response.data['items'][1]['id'], x2.id)
+        self.assertEqual(response.data['items'][1]['term']['raw'], x2.term_raw)
+        self.assertEqual(response.data['items'][1]['term']['resolved'], x2.term_resolved)
 
     def test_check(self):
         schema = RSForm.objects.create(title='Test')
@@ -347,11 +364,24 @@ class TestRSFormViewset(APITestCase):
         schema.title = 'Testt11'
         schema.save()
         x1 = Constituenta.objects.create(schema=schema, alias='X12', cst_type='basic', order=1)
+        d1 = Constituenta.objects.create(schema=schema, alias='D2', cst_type='term', order=1)
+        x1.term_raw = 'человек'
+        x1.term_resolved = 'человек'
+        d1.term_raw = '@{X12|plur}'
+        d1.term_resolved = 'люди'
+        x1.save()
+        d1.save()
+
         data = json.dumps({'title': 'Title'})
         response = self.client.post(f'/api/rsforms/{schema.id}/clone/', data=data, content_type='application/json')
+
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data['title'], 'Title')
         self.assertEqual(response.data['items'][0]['alias'], x1.alias)
+        self.assertEqual(response.data['items'][0]['term']['raw'], x1.term_raw)
+        self.assertEqual(response.data['items'][0]['term']['resolved'], x1.term_resolved)
+        self.assertEqual(response.data['items'][1]['term']['raw'], d1.term_raw)
+        self.assertEqual(response.data['items'][1]['term']['resolved'], d1.term_resolved)
 
 
 class TestFunctionalViews(APITestCase):

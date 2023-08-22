@@ -3,6 +3,7 @@ from typing import Optional
 from rest_framework import serializers
 from django.db import transaction
 
+from .utils import fix_old_references
 from .models import Constituenta, RSForm
 
 _CST_TYPE = 'constituenta'
@@ -197,11 +198,11 @@ class RSFormTRSSerializer(serializers.Serializer):
         if 'definition' in data:
             cst.definition_formal = data['definition'].get('formal', '')
             if 'text' in data['definition']:
-                cst.definition_raw = data['definition']['text'].get('raw', '')
+                cst.definition_raw = fix_old_references(data['definition']['text'].get('raw', ''))
             else:
                 cst.definition_raw = ''
         if 'term' in data:
-            cst.term_raw = data['term'].get('raw', '')
+            cst.term_raw = fix_old_references(data['term'].get('raw', ''))
             cst.term_forms = data['term'].get('forms', [])
         else:
             cst.term_raw = ''

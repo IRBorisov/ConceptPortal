@@ -57,3 +57,18 @@ def apply_mapping_pattern(text: str, mapping: dict[str, str], pattern: re.Patter
             pos_input = segment.end(0)
     output += text[pos_input : len(text)]
     return output
+
+_REF_OLD_PATTERN = re.compile(r'@{([^0-9\-][^\}\|\{]*?)\|([^\}\|\{]*?)\|([^\}\|\{]*?)}')
+
+def fix_old_references(text: str) -> str:
+    ''' Fix reference format: @{X1|nomn|sing} -> {X1|nomn,sing} '''
+    if text == '':
+        return text
+    pos_input: int = 0
+    output: str = ''
+    for segment in re.finditer(_REF_OLD_PATTERN, text):
+        output += text[pos_input : segment.start(0)]
+        output += f'@{{{segment.group(1)}|{segment.group(2)},{segment.group(3)}}}'
+        pos_input = segment.end(0)
+    output += text[pos_input : len(text)]
+    return output

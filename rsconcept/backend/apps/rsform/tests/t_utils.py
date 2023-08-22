@@ -2,7 +2,7 @@
 import unittest
 import re
 
-from apps.rsform.utils import apply_mapping_pattern
+from apps.rsform.utils import apply_mapping_pattern, fix_old_references
 
 
 class TestUtils(unittest.TestCase):
@@ -14,3 +14,10 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(apply_mapping_pattern('X20', mapping, pattern), 'X20')
         self.assertEqual(apply_mapping_pattern('X101', mapping, pattern), 'X20')
         self.assertEqual(apply_mapping_pattern('asdf X101 asdf', mapping, pattern), 'asdf X20 asdf')
+
+    def test_fix_old_references(self):
+        self.assertEqual(fix_old_references(''), '')
+        self.assertEqual(fix_old_references('X20'), 'X20')
+        self.assertEqual(fix_old_references('@{X1|nomn,sing}'), '@{X1|nomn,sing}')
+        self.assertEqual(fix_old_references('@{X1|sing,ablt} @{X1|sing,ablt}'), '@{X1|sing,ablt} @{X1|sing,ablt}')
+        self.assertEqual(fix_old_references('@{X1|nomn|sing}'), '@{X1|nomn,sing}')

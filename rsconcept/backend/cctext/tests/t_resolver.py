@@ -17,6 +17,7 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(extract_entities('@{X1|nomn}'), ['X1'])
         self.assertEqual(extract_entities('@{X1|datv}'), ['X1'])
         self.assertEqual(extract_entities('@{X1|datv} @{X1|datv} @{X2|datv}'), ['X1', 'X2'])
+        self.assertEqual(extract_entities('@{X1} | @{X1} | @{X2}'), [])
 
 
 class TestResolver(unittest.TestCase):
