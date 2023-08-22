@@ -407,7 +407,7 @@ export function createAliasFor(type: CstType, schema: IRSForm): string {
   return `${prefix}${index}`;
 }
 
-export function getMockConstituenta(id: string, alias: string, type: CstType, comment: string): IConstituenta {
+export function getMockConstituenta(id: number, alias: string, type: CstType, comment: string): IConstituenta {
   return {
     id: id,
     alias: alias,
@@ -568,6 +568,10 @@ export function getRSErrorMessage(error: IRSErrorDescription): string {
     return `Не удалось получить дерево разбора для глобального идентификатора: ${error.params[0]}`;
   case RSErrorType.globalFuncNoInterpretation: 
     return `Функция не интерпретируется для данных аргументов`;  
+  case RSErrorType.globalNonemptyBase: 
+    return `Непустое выражение базисного/константного множества`;
+  case RSErrorType.globalUnexpectedType: 
+    return `Типизация выражения не соответствует типу конституенты`;
   }
   return 'UNKNOWN ERROR';
 }

@@ -60,7 +60,7 @@ function EditorRSExpression({
     }
     const prefix = getCstExpressionPrefix(activeCst);
     const expression = prefix + value;
-    checkExpression(expression, parse => {
+    checkExpression(expression, activeCst, parse => {
       if (parse.errors.length > 0) {
         onShowError(parse.errors[0]);
       } else {
@@ -81,7 +81,8 @@ function EditorRSExpression({
       return;
     }
     const prefix = getCstExpressionPrefix(activeCst);
-    const errorPosition = error.position - prefix.length;
+    let errorPosition = error.position - prefix.length;
+    if (errorPosition < 0) errorPosition = 0;
     rsInput.current?.view?.dispatch({
       selection: {
         anchor: errorPosition,

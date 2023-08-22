@@ -56,9 +56,9 @@ export interface GraphEditorParams {
 }
 
 interface EditorTermGraphProps {
-  onOpenEdit: (cstID: string) => void
+  onOpenEdit: (cstID: number) => void
   onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void
-  onDeleteCst: (selected: string[], callback: (items: string[]) => void) => void
+  onDeleteCst: (selected: number[], callback: (items: number[]) => void) => void
 }
 
 function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGraphProps) {
@@ -83,16 +83,16 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
   const [ allowTheorem, setAllowTheorem ] = useLocalStorage('graph_allow_theorem', true);
   
   const [ filtered, setFiltered ] = useState<Graph>(new Graph());
-  const [ dismissed, setDismissed ] = useState<string[]>([]);
-  const [ selectedDismissed, setSelectedDismissed ] = useState<string[]>([]);
+  const [ dismissed, setDismissed ] = useState<number[]>([]);
+  const [ selectedDismissed, setSelectedDismissed ] = useState<number[]>([]);
   const graphRef = useRef<GraphCanvasRef | null>(null);
   const [showOptions, setShowOptions] = useState(false);
   const [toggleUpdate, setToggleUpdate] = useState(false);
   
-  const [hoverID, setHoverID] = useState<string | undefined>(undefined);
+  const [hoverID, setHoverID] = useState<number | undefined>(undefined);
   const hoverCst = useMemo(
   () => {
-    return schema?.items.find(cst => String(cst.id) === hoverID);
+    return schema?.items.find(cst => cst.id === hoverID);
   }, [schema?.items, hoverID]);
 
   const is3D = useMemo(() => layout.includes('3d'), [layout]);
@@ -137,7 +137,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         }
       });
     }
-    const newDismissed: string[] = [];
+    const newDismissed: number[] = [];
     schema.items.forEach(cst => {
       if (!graph.nodes.has(cst.id)) {
         newDismissed.push(cst.id);
@@ -149,7 +149,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
     setHoverID(undefined);
   }, [schema, noHermits, noTransitive, noTemplates, allowedTypes, toggleUpdate]);
 
-  function toggleDismissed(cstID: string) {
+  function toggleDismissed(cstID: number) {
     setSelectedDismissed(prev => {
       const index = prev.findIndex(id => cstID === id);
       if (index !== -1) {
@@ -171,7 +171,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       const cst = schema.items.find(cst => cst.id === node.id);
       if (cst) {
         result.push({
-          id: node.id,
+          id: String(node.id),
           fill: getCstNodeColor(cst, coloringScheme, darkMode),
           label: cst.term.resolved && !noTerms ? `${cst.alias}: ${cst.term.resolved}` : cst.alias
         });
@@ -189,8 +189,8 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       source.outputs.forEach(target => {
         result.push({
           id: String(edgeID),
-          source: source.id,
-          target: target
+          source: String(source.id),
+          target: String(target)
         });
         edgeID += 1;
       });
@@ -216,9 +216,9 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
     focusOnSelect: false
   });
 
-  const allSelected: string[] = useMemo(
+  const allSelected: number[] = useMemo(
   () => {
-    return [ ... selectedDismissed, ... selections];
+    return [ ... selectedDismissed, ... selections.map(id => Number(id))];
   }, [selectedDismissed, selections]);
   const nothingSelected = useMemo(() => allSelected.length === 0, [allSelected]);
 
@@ -230,7 +230,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
 
   const handleHoverIn = useCallback(
   (node: GraphNode) => {
-    setHoverID(node.id);
+    setHoverID(Number(node.id));
     if (onNodePointerOver) onNodePointerOver(node);
   }, [onNodePointerOver]);
 
@@ -243,7 +243,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
   const handleNodeClick = useCallback(
   (node: GraphNode) => {
     if (selections.includes(node.id)) {
-      onOpenEdit(node.id);
+      onOpenEdit(Number(node.id));
       return;
     }
     if (onNodeClick) onNodeClick(node);
@@ -346,7 +346,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
   }, [noNavigation]);
 
   const dismissedStyle = useCallback(
-  (cstID: string) => {
+  (cstID: number) => {
     return selectedDismissed.includes(cstID) ? {outlineWidth: '2px', outlineStyle: 'solid'}: {};
   }, [selectedDismissed]);
 
@@ -358,7 +358,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       initial={getOptions()}
       onConfirm={handleChangeOptions}
     />}
-    <div className='flex flex-col border-t border-r max-w-[12.44rem] pr-2 pb-2 text-sm select-none' style={{height: canvasHeight}}>
+    <div className='flex flex-col border-t border-r max-w-[12.5rem] pr-2 pb-2 text-sm select-none' style={{height: canvasHeight}}>
       {hoverCst && 
       <div className='relative'>
         <InfoConstituenta 
@@ -408,10 +408,10 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         
       </div>
       <ConceptSelect
-        className='mt-1 w-fit'
+        className='w-full mt-1'
         options={GraphLayoutSelector}
         searchable={false}
-        placeholder='Выберите тип'
+        placeholder='Способ расположения'
         values={layout ? [{ value: layout, label: mapLayoutLabels.get(layout) }] : []}
         onChange={data => { setLayout(data.length > 0 ? data[0].value : GraphLayoutSelector[0].value); }}
       />

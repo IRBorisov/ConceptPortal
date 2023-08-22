@@ -40,7 +40,7 @@ function RSTabs() {
   const { destroySchema } = useLibrary();
 
   const [activeTab, setActiveTab] = useState(RSTabsList.CARD);
-  const [activeID, setActiveID] = useState<string | undefined>(undefined);
+  const [activeID, setActiveID] = useState<number | undefined>(undefined);
   
   const [showUpload, setShowUpload] = useState(false);
   const [showClone, setShowClone] = useState(false);
@@ -49,8 +49,8 @@ function RSTabs() {
   const [expression, setExpression] = useState('');
   const [showAST, setShowAST] = useState(false);
   
-  const [afterDelete, setAfterDelete] = useState<((items: string[]) => void) | undefined>(undefined);
-  const [toBeDeleted, setToBeDeleted] = useState<string[]>([]);
+  const [afterDelete, setAfterDelete] = useState<((items: number[]) => void) | undefined>(undefined);
+  const [toBeDeleted, setToBeDeleted] = useState<number[]>([]);
   const [showDeleteCst, setShowDeleteCst] = useState(false);
   
   const [createInitialData, setCreateInitialData] = useState<ICstCreateData>();
@@ -70,7 +70,7 @@ function RSTabs() {
     const activeTab = Number(new URLSearchParams(search).get('tab')) ?? RSTabsList.CARD;
     const cstQuery = new URLSearchParams(search).get('active');
     setActiveTab(activeTab);
-    setActiveID(cstQuery ?? ((schema && schema?.items.length > 0) ? schema.items[0].id : undefined))
+    setActiveID(Number(cstQuery) ?? ((schema && schema?.items.length > 0) ? schema.items[0].id : undefined))
   }, [search, setActiveTab, setActiveID, schema]);
 
   function onSelectTab(index: number) {
@@ -78,7 +78,7 @@ function RSTabs() {
   }
 
   const navigateTo = useCallback(
-  (tab: RSTabsList, activeID?: string) => {
+  (tab: RSTabsList, activeID?: number) => {
     if (activeID) {
       navigate(`/rsforms/${schema!.id}?tab=${tab}&active=${activeID}`, {
         replace: tab === activeTab && tab !== RSTabsList.CST_EDIT
@@ -123,7 +123,7 @@ function RSTabs() {
   }, [handleCreateCst]);
 
   const handleDeleteCst = useCallback(
-  (deleted: string[]) => {
+  (deleted: number[]) => {
     if (!schema) {
       return;
     }
@@ -148,9 +148,9 @@ function RSTabs() {
   }, [afterDelete, cstDelete, schema, activeID, activeTab, navigateTo]);
 
   const promptDeleteCst = useCallback(
-  (selected: string[], callback?: (items: string[]) => void) => {
+  (selected: number[], callback?: (items: number[]) => void) => {
     setAfterDelete(() => (
-    (items: string[]) => {
+    (items: number[]) => {
       if (callback) callback(items);
     }));
     setToBeDeleted(selected);
@@ -165,7 +165,7 @@ function RSTabs() {
   }, []);
 
   const onOpenCst = useCallback(
-  (cstID: string) => {
+  (cstID: number) => {
     navigateTo(RSTabsList.CST_EDIT, cstID)
   }, [navigateTo]);
 

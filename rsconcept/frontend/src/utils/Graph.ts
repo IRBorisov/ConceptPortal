@@ -1,10 +1,10 @@
 // ======== ID based fast Graph implementation =============
 export class GraphNode {
-  id: string;
-  outputs: string[];
-  inputs: string[];
+  id: number;
+  outputs: number[];
+  inputs: number[];
 
-  constructor(id: string) {
+  constructor(id: number) {
     this.id = id;
     this.outputs = [];
     this.inputs = [];
@@ -17,29 +17,29 @@ export class GraphNode {
     return result;
   }
 
-  addOutput(node: string): void {
+  addOutput(node: number): void {
     this.outputs.push(node);
   }
 
-  addInput(node: string): void {
+  addInput(node: number): void {
     this.inputs.push(node);
   }
 
-  removeInput(target: string): string | null {
+  removeInput(target: number): number | null {
     const index = this.inputs.findIndex(node => node === target);
     return index > -1 ? this.inputs.splice(index, 1)[0] : null;
   }
 
-  removeOutput(target: string): string | null {
+  removeOutput(target: number): number | null {
     const index = this.outputs.findIndex(node => node === target);
     return index > -1 ? this.outputs.splice(index, 1)[0] : null;
   }
 }
 
 export class Graph {
-  nodes: Map<string, GraphNode> = new Map();
+  nodes: Map<number, GraphNode> = new Map();
 
-  constructor(arr?: string[][]) {
+  constructor(arr?: number[][]) {
     if (!arr) {
       return;
     }
@@ -58,7 +58,7 @@ export class Graph {
     return result;
   }
 
-  addNode(target: string): GraphNode {
+  addNode(target: number): GraphNode {
     let node = this.nodes.get(target);
     if (!node) {
       node = new GraphNode(target);
@@ -67,11 +67,11 @@ export class Graph {
     return node;
   }
 
-  hasNode(target: string): boolean {
+  hasNode(target: number): boolean {
     return !!this.nodes.get(target);
   }
 
-  removeNode(target: string): GraphNode | null {
+  removeNode(target: number): GraphNode | null {
     const nodeToRemove = this.nodes.get(target);
     if (!nodeToRemove) {
       return null;
@@ -84,7 +84,7 @@ export class Graph {
     return nodeToRemove;
   }
 
-  foldNode(target: string): GraphNode | null {
+  foldNode(target: number): GraphNode | null {
     const nodeToRemove = this.nodes.get(target);
     if (!nodeToRemove) {
       return null;
@@ -107,14 +107,14 @@ export class Graph {
     return result;
   }
 
-  addEdge(source: string, destination: string): void {
+  addEdge(source: number, destination: number): void {
     const sourceNode = this.addNode(source);
     const destinationNode = this.addNode(destination);
     sourceNode.addOutput(destinationNode.id);
     destinationNode.addInput(sourceNode.id);
   }
 
-  removeEdge(source: string, destination: string): void {
+  removeEdge(source: number, destination: number): void {
     const sourceNode = this.nodes.get(source);
     const destinationNode = this.nodes.get(destination);
     if (sourceNode && destinationNode) {
@@ -123,7 +123,7 @@ export class Graph {
     }
   }
 
-  hasEdge(source: string, destination: string): boolean {
+  hasEdge(source: number, destination: number): boolean {
     const sourceNode = this.nodes.get(source);
     if (!sourceNode) {
       return false;
@@ -131,9 +131,9 @@ export class Graph {
     return !!sourceNode.outputs.find(id => id === destination);
   }
 
-  expandOutputs(origin: string[]): string[] {
-    const result: string[] = [];
-    const marked = new Map<string, boolean>();
+  expandOutputs(origin: number[]): number[] {
+    const result: number[] = [];
+    const marked = new Map<number, boolean>();
     origin.forEach(id => marked.set(id, true));
     origin.forEach(id => {
       const node = this.nodes.get(id);
@@ -161,9 +161,9 @@ export class Graph {
     return result;
   }
   
-  expandInputs(origin: string[]): string[] {
-    const result: string[] = [];
-    const marked = new Map<string, boolean>();
+  expandInputs(origin: number[]): number[] {
+    const result: number[] = [];
+    const marked = new Map<number, boolean>();
     origin.forEach(id => marked.set(id, true));
     origin.forEach(id => {
       const node = this.nodes.get(id);
@@ -191,10 +191,10 @@ export class Graph {
     return result;
   }  
 
-  tolopogicalOrder(): string[] {
-    const result: string[] = [];
-    const marked = new Map<string, boolean>();
-    const toVisit: string[] = [];
+  tolopogicalOrder(): number[] {
+    const result: number[] = [];
+    const marked = new Map<number, boolean>();
+    const toVisit: number[] = [];
     this.nodes.forEach(node => {
       if (marked.get(node.id)) {
         return;
@@ -225,12 +225,12 @@ export class Graph {
 
   transitiveReduction() {
     const order = this.tolopogicalOrder();
-    const marked = new Map<string, boolean>();
+    const marked = new Map<number, boolean>();
     order.forEach(nodeID => {
       if (marked.get(nodeID)) {
         return;
       }
-      const stack: {id: string, parents: string[]}[] = [];
+      const stack: {id: number, parents: number[]}[] = [];
       stack.push({id: nodeID, parents: []});
       while (stack.length > 0) {
         const item = stack.splice(0, 1)[0];

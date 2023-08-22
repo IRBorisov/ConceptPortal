@@ -17,12 +17,12 @@ const LOCAL_NAVIGATION_H = '2.6rem';
 interface ViewSideConstituentsProps {
   expression: string
   baseHeight: string
-  activeID?: string
-  onOpenEdit: (cstID: string) => void
+  activeID?: number
+  onOpenEdit: (cstID: number) => void
 }
 
 function isMockCst(cst: IConstituenta) {
-  return cst.id[0] === '-'
+  return cst.id <= 0;
 }
 
 function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: ViewSideConstituentsProps) {
@@ -49,7 +49,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       const diff = Array.from(aliases).filter(name => !names.includes(name));
       if (diff.length > 0) {
         diff.forEach(
-          (alias, index) => filtered.push(getMockConstituenta(`-${index}`, alias, CstType.BASE, 'Конституента отсутствует')));
+          (alias, index) => filtered.push(getMockConstituenta(-index, alias, CstType.BASE, 'Конституента отсутствует')));
       }
     } else if (!activeID) {
       filtered = schema.items

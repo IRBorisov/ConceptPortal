@@ -205,7 +205,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
   const cstUpdate = useCallback(
   (data: ICstUpdateData, callback?: DataCallback<IConstituentaMeta>) => {
     setError(undefined)
-    patchConstituenta(data.id, {
+    patchConstituenta(String(data.id), {
       data: data,
       showError: true,
       setLoading: setProcessing,

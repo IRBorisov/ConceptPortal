@@ -14,8 +14,8 @@ interface ILibraryContext {
 
   filter: (params: ILibraryFilter) => IRSFormMeta[]
   createSchema: (data: IRSFormCreateData, callback?: DataCallback<IRSFormMeta>) => void
-  cloneSchema: (target: string, data: IRSFormCreateData, callback: DataCallback<IRSFormData>) => void
-  destroySchema: (target: string, callback?: () => void) => void
+  cloneSchema: (target: number, data: IRSFormCreateData, callback: DataCallback<IRSFormData>) => void
+  destroySchema: (target: number, callback?: () => void) => void
 }
 
 const LibraryContext = createContext<ILibraryContext | null>(null)
@@ -62,8 +62,8 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
     getLibrary({
       setLoading: setLoading,
       showError: true,
-      onError: (error) => setError(error),
-      onSuccess: newData => { 
+      onError: error => setError(error),
+      onSuccess: newData => {
         setItems(newData);
         if (callback) callback();
       }
@@ -90,9 +90,9 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   }, [reload]);
 
   const destroySchema = useCallback(
-  (target: string, callback?: () => void) => {
+  (target: number, callback?: () => void) => {
     setError(undefined)
-    deleteRSForm(target, {
+    deleteRSForm(String(target), {
       showError: true,
       setLoading: setProcessing,
       onError: error => setError(error),
@@ -103,12 +103,12 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   }, [setError, reload]);
 
   const cloneSchema = useCallback(
-  (target: string, data: IRSFormCreateData, callback: DataCallback<IRSFormData>) => {
+  (target: number, data: IRSFormCreateData, callback: DataCallback<IRSFormData>) => {
     if (!user) {
       return;
     }
     setError(undefined)
-    postCloneRSForm(target, {
+    postCloneRSForm(String(target), {
       data: data,
       showError: true,
       setLoading: setProcessing,

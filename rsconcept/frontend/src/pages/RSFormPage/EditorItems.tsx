@@ -14,15 +14,15 @@ import { CstType, IConstituenta, ICstCreateData, ICstMovetoData } from '../../ut
 import { getCstTypePrefix, getCstTypeShortcut, getCstTypificationLabel, mapStatusInfo } from '../../utils/staticUI';
 
 interface EditorItemsProps {
-  onOpenEdit: (cstID: string) => void
+  onOpenEdit: (cstID: number) => void
   onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void
-  onDeleteCst: (selected: string[], callback: (items: string[]) => void) => void
+  onDeleteCst: (selected: number[], callback: (items: number[]) => void) => void
 }
 
 function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps) {
   const { schema, isEditable, cstMoveTo, resetAliases } = useRSForm();
   const { noNavigation } = useConceptTheme();
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<number[]>([]);
   const nothingSelected = useMemo(() => selected.length === 0, [selected]);
 
   const [toggledClearRows, setToggledClearRows] = useState(false);
