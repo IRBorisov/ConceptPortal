@@ -200,7 +200,7 @@ class RSFormViewSet(viewsets.ModelViewSet):
         expression = serializer.validated_data['expression']
         result = pyconcept.check_expression(json.dumps(schema.data), expression)
         return Response(json.loads(result))
-    
+
     @action(detail=True, methods=['post'])
     def resolve(self, request, pk):
         ''' Endpoint: Resolve refenrces in text against schema terms context. '''
