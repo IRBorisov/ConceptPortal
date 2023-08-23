@@ -9,7 +9,7 @@ function MiniButton({ icon, tooltip, children, noHover, ...props }: MiniButtonPr
   return (
     <button type='button'
       title={tooltip}
-      className={`px-1 py-1 font-bold rounded-full cursor-pointer whitespace-nowrap disabled:cursor-not-allowed clr-btn-clear ${noHover ? '' : 'clr-hover'}`}
+      className={`px-1 py-1 font-bold rounded-full cursor-pointer whitespace-nowrap disabled:cursor-not-allowed clr-btn-clear ${noHover ? 'outline-none' : 'clr-hover'}`}
       {...props}
     >
       {icon && <span>{icon}</span>}

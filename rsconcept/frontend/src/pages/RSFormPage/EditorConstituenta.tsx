@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import MiniButton from '../../components/Common/MiniButton';
+import ReferenceInput from '../../components/Common/ReferenceInput';
 import SubmitButton from '../../components/Common/SubmitButton';
 import TextArea from '../../components/Common/TextArea';
 import HelpConstituenta from '../../components/Help/HelpConstituenta';
@@ -171,10 +172,12 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
             icon={<PenIcon size={4} color={isEnabled ? 'text-primary' : ''} />}
           />
         </div>
-        <TextArea id='term' label='Термин'
+        <ReferenceInput id='term' label='Термин'
           placeholder='Схемный или предметный термин, обозначающий данное понятие или утверждение'
           rows={2}
           value={term}
+          initialValue={activeCst?.term.raw ?? ''}
+          resolved={activeCst?.term.resolved ?? ''}
           disabled={!isEnabled}
           spellCheck
           onChange={event => setTerm(event.target.value)}
@@ -197,10 +200,12 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
           setValue={setExpression}
           setTypification={setTypification}
         />
-        <TextArea id='definition' label='Текстовое определение'
+        <ReferenceInput id='definition' label='Текстовое определение'
           placeholder='Лингвистическая интерпретация формального выражения'
           rows={4}
           value={textDefinition}
+          initialValue={activeCst?.definition.text.raw ?? ''}
+          resolved={activeCst?.definition.text.resolved ?? ''}
           disabled={!isEnabled}
           spellCheck
           onChange={event => { setTextDefinition(event.target.value); }}

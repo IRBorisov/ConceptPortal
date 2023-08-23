@@ -6,6 +6,8 @@ from zipfile import ZipFile
 from rest_framework.test import APITestCase, APIRequestFactory, APIClient
 from rest_framework.exceptions import ErrorDetail
 
+from cctext import ReferenceType
+
 from apps.users.models import User
 from apps.rsform.models import Syntax, RSForm, Constituenta, CstType
 from apps.rsform.views import (
@@ -20,6 +22,7 @@ def _response_contains(response, schema: RSForm) -> bool:
 
 
 class TestConstituentaAPI(APITestCase):
+    ''' Testing constituenta view. '''
     def setUp(self):
         self.factory = APIRequestFactory()
         self.user = User.objects.create(username='UserTest')
@@ -100,6 +103,7 @@ class TestConstituentaAPI(APITestCase):
 
 
 class TestRSFormViewset(APITestCase):
+    ''' Testing RSForm view. '''
     def setUp(self):
         self.factory = APIRequestFactory()
         self.user = User.objects.create(username='UserTest')
@@ -188,6 +192,34 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(response.data['astText'], '[=[X1][X1]]')
         self.assertEqual(response.data['typification'], 'LOGIC')
         self.assertEqual(response.data['valueClass'], 'value')
+
+    def test_resolve(self):
+        schema = RSForm.objects.create(title='Test')
+        x1 = schema.insert_at(1, 'X1', CstType.BASE)
+        x1.term_resolved = 'синий слон'
+        x1.save()
+        data = json.dumps({'text': '@{1|редкий} @{X1|plur,datv}'})
+        response = self.client.post(f'/api/rsforms/{schema.id}/resolve/', data=data, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['input'], '@{1|редкий} @{X1|plur,datv}')
+        self.assertEqual(response.data['output'], 'редким синим слонам')
+        self.assertEqual(len(response.data['refs']), 2)
+        self.assertEqual(response.data['refs'][0]['type'], str(ReferenceType.syntactic))
+        self.assertEqual(response.data['refs'][0]['resolved'], 'редким')
+        self.assertEqual(response.data['refs'][0]['data']['offset'], 1)
+        self.assertEqual(response.data['refs'][0]['data']['nominal'], 'редкий')
+        self.assertEqual(response.data['refs'][0]['pos_input']['start'], 0)
+        self.assertEqual(response.data['refs'][0]['pos_input']['finish'], 11)
+        self.assertEqual(response.data['refs'][0]['pos_output']['start'], 0)
+        self.assertEqual(response.data['refs'][0]['pos_output']['finish'], 6)
+        self.assertEqual(response.data['refs'][1]['type'], str(ReferenceType.entity))
+        self.assertEqual(response.data['refs'][1]['resolved'], 'синим слонам')
+        self.assertEqual(response.data['refs'][1]['data']['entity'], 'X1')
+        self.assertEqual(response.data['refs'][1]['data']['form'], 'plur,datv')
+        self.assertEqual(response.data['refs'][1]['pos_input']['start'], 12)
+        self.assertEqual(response.data['refs'][1]['pos_input']['finish'], 27)
+        self.assertEqual(response.data['refs'][1]['pos_output']['start'], 7)
+        self.assertEqual(response.data['refs'][1]['pos_output']['finish'], 19)
 
     def test_import_trs(self):
         work_dir = os.path.dirname(os.path.abspath(__file__))

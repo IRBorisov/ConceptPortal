@@ -111,7 +111,7 @@ class RSFormViewSet(viewsets.ModelViewSet):
     def cst_multidelete(self, request, pk):
         ''' Endpoint: Delete multiple constituents. '''
         schema = self._get_schema()
-        serializer = serializers.CstListSerlializer(data=request.data, context={'schema': schema})
+        serializer = serializers.CstListSerializer(data=request.data, context={'schema': schema})
         serializer.is_valid(raise_exception=True)
         schema.delete_cst(serializer.validated_data['constituents'])
         schema.refresh_from_db()
@@ -121,7 +121,7 @@ class RSFormViewSet(viewsets.ModelViewSet):
     def cst_moveto(self, request, pk):
         ''' Endpoint: Move multiple constituents. '''
         schema = self._get_schema()
-        serializer = serializers.CstMoveSerlializer(data=request.data, context={'schema': schema})
+        serializer = serializers.CstMoveSerializer(data=request.data, context={'schema': schema})
         serializer.is_valid(raise_exception=True)
         schema.move_cst(serializer.validated_data['constituents'], serializer.validated_data['move_to'])
         schema.refresh_from_db()
@@ -200,6 +200,17 @@ class RSFormViewSet(viewsets.ModelViewSet):
         expression = serializer.validated_data['expression']
         result = pyconcept.check_expression(json.dumps(schema.data), expression)
         return Response(json.loads(result))
+    
+    @action(detail=True, methods=['post'])
+    def resolve(self, request, pk):
+        ''' Endpoint: Resolve refenrces in text against schema terms context. '''
+        schema = self._get_schema()
+        serializer = serializers.TextSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        text = serializer.validated_data['text']
+        resolver = schema.resolver()
+        resolver.resolve(text)
+        return Response(status=200, data=serializers.ResolverSerializer(resolver).data)
 
     @action(detail=True, methods=['get'], url_path='export-trs')
     def export_trs(self, request, pk):

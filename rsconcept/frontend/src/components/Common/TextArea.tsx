@@ -2,7 +2,7 @@ import { TextareaHTMLAttributes } from 'react';
 
 import Label from './Label';
 
-interface TextAreaProps 
+export interface TextAreaProps 
 extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'className'> {
   label: string
   widthClass?: string

@@ -3,6 +3,8 @@ from typing import Optional, cast
 from rest_framework import serializers
 from django.db import transaction
 
+from cctext import Resolver, Reference, ReferenceType, EntityReference, SyntacticReference
+
 from .utils import fix_old_references
 from .models import Constituenta, RSForm
 
@@ -21,6 +23,11 @@ class FileSerializer(serializers.Serializer):
 class ExpressionSerializer(serializers.Serializer):
     ''' Serializer: RSLang expression. '''
     expression = serializers.CharField()
+
+
+class TextSerializer(serializers.Serializer):
+    ''' Serializer: Text with references. '''
+    text = serializers.CharField()
 
 
 class RSFormMetaSerializer(serializers.ModelSerializer):
@@ -288,7 +295,7 @@ class CstRenameSerializer(serializers.ModelSerializer):
         return attrs
 
 
-class CstListSerlializer(serializers.Serializer):
+class CstListSerializer(serializers.Serializer):
     ''' Serializer: List of constituents from one origin. '''
     items = serializers.ListField(
         child=CstStandaloneSerializer()
@@ -307,6 +314,41 @@ class CstListSerlializer(serializers.Serializer):
         return attrs
 
 
-class CstMoveSerlializer(CstListSerlializer):
+class CstMoveSerializer(CstListSerializer):
     ''' Serializer: Change constituenta position. '''
     move_to = serializers.IntegerField()
+
+
+class ResolverSerializer(serializers.Serializer):
+    ''' Serializer: Resolver results serializer. '''
+    def to_representation(self, instance: Resolver) -> dict:
+        return {
+            'input': instance.input,
+            'output': instance.output,
+            'refs': [{
+                'type': str(ref.ref.get_type()),
+                'data': self._get_reference_data(ref.ref),
+                'resolved': ref.resolved,
+                'pos_input': {
+                    'start': ref.pos_input.start,
+                    'finish': ref.pos_input.finish
+                },
+                'pos_output': {
+                    'start': ref.pos_output.start,
+                    'finish': ref.pos_output.finish
+                }
+            } for ref in instance.refs]
+        }
+
+    @staticmethod
+    def _get_reference_data(ref: Reference) -> dict:
+        if ref.get_type() == ReferenceType.entity:
+            return {
+                'entity': cast(EntityReference, ref).entity,
+                'form': cast(EntityReference, ref).form
+            }
+        else:
+            return {
+                'offset': cast(SyntacticReference, ref).offset,
+                'nominal': cast(SyntacticReference, ref).nominal
+            }

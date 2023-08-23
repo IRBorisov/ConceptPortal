@@ -11,7 +11,7 @@ function HomePage() {
   useLayoutEffect(() => {
     if (!user) {
       setTimeout(() => {
-        navigate('/library?filter=common');
+        navigate('/manuals');
       }, TIMEOUT_UI_REFRESH);
     } else if(!user.is_staff) {
       setTimeout(() => {
@@ -22,7 +22,7 @@ function HomePage() {
 
   return (
     <div className='flex flex-col items-center justify-center w-full py-2'>
-      <p>Home page</p>
+      <p>Лендинг находится в разработке. Данная страница видна только пользователям с правами администратора.</p>
     </div>
   );
 }

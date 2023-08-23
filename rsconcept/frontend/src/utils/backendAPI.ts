@@ -6,7 +6,7 @@ import { config } from './constants'
 import {
   IConstituentaList, IConstituentaMeta,
   ICstCreateData, ICstCreatedResponse, ICstMovetoData, ICstRenameData, ICstUpdateData,
-  ICurrentUser, IExpressionParse, IRSExpression,
+  ICurrentUser, IExpressionParse, IReferenceData, IRefsText, IRSExpression,
   IRSFormCreateData, IRSFormData,
   IRSFormMeta, IRSFormUpdateData, IRSFormUploadData, IUserInfo,
   IUserLoginData, IUserProfile, IUserSignupData, IUserUpdateData, IUserUpdatePassword
@@ -230,6 +230,14 @@ export function postCheckExpression(schema: string, request: FrontExchange<IRSEx
   AxiosPost({
     title: `Check expression for RSForm id=${schema}: ${request.data.expression }`,
     endpoint: `/api/rsforms/${schema}/check/`,
+    request: request
+  });
+}
+
+export function postResolveText(schema: string, request: FrontExchange<IRefsText, IReferenceData>) {
+  AxiosPost({
+    title: `Resolve text references for RSForm id=${schema}: ${request.data.text }`,
+    endpoint: `/api/rsforms/${schema}/resolve/`,
     request: request
   });
 }

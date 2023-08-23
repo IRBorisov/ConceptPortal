@@ -61,7 +61,7 @@ function RSInput({
   const thisRef = useMemo(
   () => {
     return innerref ?? internalRef;
-  }, [internalRef, innerref])
+  }, [internalRef, innerref]);
 
   const cursor = useMemo(() => editable ? 'cursor-text': 'cursor-default', [editable]);
   const lightTheme: Extension = useMemo(
