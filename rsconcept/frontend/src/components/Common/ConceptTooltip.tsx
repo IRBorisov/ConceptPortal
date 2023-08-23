@@ -12,6 +12,7 @@ function ConceptTooltip({ className, place='bottom', ...props }: ConceptTooltipP
 
   return (
   <Tooltip
+    opacity={0.95}
     className={`overflow-auto border shadow-md z-20 ${className}`}
     variant={(darkMode ? 'dark' : 'light')}
     place={place}

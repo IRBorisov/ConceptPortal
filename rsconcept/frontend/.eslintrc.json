@@ -22,9 +22,6 @@
             "off",
             { "allowConstantExport": true }
         ],
-        "simple-import-sort/imports": "warn",
-
-        "@typescript-eslint/no-unsafe-member-access": "off",
-        "@typescript-eslint/no-unsafe-argument": "off"
+        "simple-import-sort/imports": "warn"
     }
 }

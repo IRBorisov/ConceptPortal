@@ -20,7 +20,8 @@ export const urls = {
   ponomarev: 'https://inponomarev.ru/textbook',
   intro_video: 'https://www.youtube.com/watch?v=0Ty9mu9sOJo',
   full_course: 'https://www.youtube.com/playlist?list=PLGe_JiAwpqu1C70ruQmCm_OWTWU3KJwDo',
-  gitrepo: 'https://github.com/IRBorisov/ConceptPortal'
+  gitrepo: 'https://github.com/IRBorisov/ConceptPortal',
+  mailportal: 'mailto:portal@acconcept.ru'
 };
 
 export const resources = {
@@ -29,5 +30,6 @@ export const resources = {
 
 export const prefixes = {
   cst_list: 'cst-list-',
-  cst_status_list: 'cst-status-list-'
+  cst_status_list: 'cst-status-list-',
+  topic_list: 'topic-list-',
 }

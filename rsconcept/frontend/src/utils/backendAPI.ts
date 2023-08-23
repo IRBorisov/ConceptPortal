@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import axios, { AxiosError, AxiosRequestConfig } from 'axios'
 import { toast } from 'react-toastify'
 
 import { type ErrorInfo } from '../components/BackendError'
@@ -260,11 +260,11 @@ function AxiosGet<ResponseData>({ endpoint, request, title, options }: IAxiosReq
   console.log(`REQUEST: [[${title}]]`);
   if (request.setLoading) request.setLoading(true);
   axios.get<ResponseData>(endpoint, options)
-    .then((response) => {
+    .then(response => {
       if (request.setLoading) request.setLoading(false);
       if (request.onSuccess) request.onSuccess(response.data);
     })
-    .catch((error) => {
+    .catch((error: Error | AxiosError) => {
       if (request.setLoading) request.setLoading(false);
       if (request.showError) toast.error(error.message);
       if (request.onError) request.onError(error);
@@ -277,11 +277,11 @@ function AxiosPost<RequestData, ResponseData>(
   console.log(`POST: [[${title}]]`);
   if (request.setLoading) request.setLoading(true);
   axios.post<ResponseData>(endpoint, request.data, options)
-    .then((response) => {
+    .then(response => {
       if (request.setLoading) request.setLoading(false);
       if (request.onSuccess) request.onSuccess(response.data);
     })
-    .catch((error) => {
+    .catch((error: Error | AxiosError) => {
       if (request.setLoading) request.setLoading(false);
       if (request.showError) toast.error(error.message);
       if (request.onError) request.onError(error);
@@ -294,11 +294,11 @@ function AxiosDelete<RequestData, ResponseData>(
   console.log(`DELETE: [[${title}]]`);
   if (request.setLoading) request.setLoading(true);
   axios.delete<ResponseData>(endpoint, options)
-    .then((response) => {
+    .then(response => {
       if (request.setLoading) request.setLoading(false);
       if (request.onSuccess) request.onSuccess(response.data);
     })
-    .catch((error) => {
+    .catch((error: Error | AxiosError) => {
       if (request.setLoading) request.setLoading(false);
       if (request.showError) toast.error(error.message);
       if (request.onError) request.onError(error);
@@ -311,12 +311,12 @@ function AxiosPatch<RequestData, ResponseData>(
   console.log(`PATCH: [[${title}]]`);
   if (request.setLoading) request.setLoading(true);
   axios.patch<ResponseData>(endpoint, request.data, options)
-    .then((response) => {
+    .then(response => {
       if (request.setLoading) request.setLoading(false);
       if (request.onSuccess) request.onSuccess(response.data);
       return response.data;
     })
-    .catch((error) => {
+    .catch((error: Error | AxiosError) => {
       if (request.setLoading) request.setLoading(false);
       if (request.showError) toast.error(error.message);
       if (request.onError) request.onError(error);

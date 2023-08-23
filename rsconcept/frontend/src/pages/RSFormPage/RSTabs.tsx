@@ -74,7 +74,7 @@ function RSTabs() {
     const activeTab = Number(new URLSearchParams(search).get('tab')) ?? RSTabsList.CARD;
     const cstQuery = new URLSearchParams(search).get('active');
     setActiveTab(activeTab);
-    setActiveID(Number(cstQuery) ?? ((schema && schema?.items.length > 0) ? schema.items[0].id : undefined))
+    setActiveID(Number(cstQuery) ?? ((schema && schema?.items.length > 0) ? schema.items[0].id : undefined));
   }, [search, setActiveTab, setActiveID, schema]);
 
   function onSelectTab(index: number) {
@@ -128,7 +128,7 @@ function RSTabs() {
 
   const handleRenameCst = useCallback(
   (data: ICstRenameData) => {
-    cstRename(data, () => toast.success(`Конституента переименована: ${renameInitialData!.alias} -> ${data.alias}`));
+    cstRename(data, () => toast.success(`Переименование: ${renameInitialData!.alias} -> ${data.alias}`));
   }, [cstRename, renameInitialData]);
 
   const promptRenameCst = useCallback(

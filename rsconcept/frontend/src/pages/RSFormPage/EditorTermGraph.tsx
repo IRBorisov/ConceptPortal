@@ -9,9 +9,8 @@ import ConceptSelect from '../../components/Common/ConceptSelect';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import Divider from '../../components/Common/Divider';
 import MiniButton from '../../components/Common/MiniButton';
+import HelpTermGraph from '../../components/Help/HelpTermGraph';
 import InfoConstituenta from '../../components/Help/InfoConstituenta';
-import InfoCstClass from '../../components/Help/InfoCstClass';
-import CstStatusInfo from '../../components/Help/InfoCstStatus';
 import { ArrowsRotateIcon, DumpBinIcon, FilterCogIcon, HelpIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
@@ -476,30 +475,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         />
       </div>
       <ConceptTooltip anchorSelect='#items-graph-help'>
-        <div className='flex'>
-          <div> 
-            <h1>Настройка графа</h1>
-            <p><b>Цвет</b> - выбор правила покраски узлов</p>
-            <p><b>Граф</b> - выбор модели расположения узлов</p>
-            <p><b>Удалить несвязанные</b> - скрыть одинокие вершины</p>
-            <p><b>Транзитивная редукция</b> - скрыть транзитивные пути</p>
-
-            <Divider margins='mt-2' />
-            
-            <CstStatusInfo title='Статусы конституент' />
-          </div>
-          <Divider vertical margins='mx-3' />
-          <div>
-            <h1>Горячие клавиши</h1>
-            <p><b>Клик на конституенту</b> - выделение, включая скрытые конституенты</p>
-            <p><b>Довйной клик</b> - редактирование конституенты</p>
-            <p><b>Delete</b> - удалить выбранные</p>
-
-            <Divider margins='mt-2' />
-            
-            <InfoCstClass title='Классы конституент' />
-          </div>
-        </div>
+        <HelpTermGraph />
       </ConceptTooltip>
       <GraphCanvas
         draggable

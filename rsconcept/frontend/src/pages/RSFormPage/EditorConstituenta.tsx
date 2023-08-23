@@ -2,11 +2,10 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
-import Divider from '../../components/Common/Divider';
 import MiniButton from '../../components/Common/MiniButton';
 import SubmitButton from '../../components/Common/SubmitButton';
 import TextArea from '../../components/Common/TextArea';
-import CstStatusInfo from '../../components/Help/InfoCstStatus';
+import HelpConstituenta from '../../components/Help/HelpConstituenta';
 import { DumpBinIcon, HelpIcon, PenIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { CstType, EditMode, ICstCreateData, ICstRenameData, ICstUpdateData, SyntaxTree } from '../../utils/models';
@@ -155,20 +154,7 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
             <HelpIcon color='text-primary' size={5} />
           </div>
           <ConceptTooltip anchorSelect='#cst-help'>
-            <div className='max-w-[35rem]'>
-              <h1>Подсказки</h1>
-              <p><b className='text-red'>Изменения сохраняются ПОСЛЕ нажатия на кнопку снизу или слева вверху</b></p>
-              <p><b>Клик на формальное выражение</b> - обратите внимание на кнопки снизу.<br/>Для каждой есть горячая клавиша в подсказке</p>
-              <p><b>Список конституент справа</b> - обратите внимание на настройки фильтрации</p>
-              <p>- слева от ввода текста настраивается набор атрибутов конституенты</p>
-              <p>- справа от ввода текста настраивается список конституент, которые фильтруются</p>
-              <p>- текущая конституента выделена цветом строки</p>
-              <p>- двойной клик / Alt + клик - выбор редактируемой конституенты</p>
-              <p>- при наведении на ID конституенты отображаются ее атрибуты</p>
-              <p>- столбец "Описание" содержит один из непустых текстовых атрибутов</p>
-              <Divider margins='mt-2' />
-              <CstStatusInfo title='Статусы' />
-            </div>
+            <HelpConstituenta />
           </ConceptTooltip>
         </div>
         </div>

@@ -3,11 +3,13 @@ import { useIntl } from 'react-intl';
 import { toast } from 'react-toastify';
 
 import Checkbox from '../../components/Common/Checkbox';
+import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import MiniButton from '../../components/Common/MiniButton';
 import SubmitButton from '../../components/Common/SubmitButton';
 import TextArea from '../../components/Common/TextArea';
 import TextInput from '../../components/Common/TextInput';
-import { CrownIcon, DownloadIcon, DumpBinIcon, SaveIcon, ShareIcon } from '../../components/Icons';
+import HelpRSFormMeta from '../../components/Help/HelpRSFormMeta';
+import { CrownIcon, DownloadIcon, DumpBinIcon, HelpIcon, SaveIcon, ShareIcon } from '../../components/Icons';
 import { useAuth } from '../../context/AuthContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { useUsers } from '../../context/UsersContext';
@@ -76,7 +78,7 @@ function EditorRSForm({ onDestroy }: EditorRSFormProps) {
   return (
     <form onSubmit={handleSubmit} className='flex-grow max-w-xl px-4 py-2 border min-w-fit'>
       <div className='relative w-full'>
-      <div className='absolute top-0 right-0'>
+      <div className='absolute top-0 right-0 flex'>
         <MiniButton
           tooltip='Поделиться схемой'
           icon={<ShareIcon size={5} color='text-primary'/>}
@@ -99,6 +101,12 @@ function EditorRSForm({ onDestroy }: EditorRSFormProps) {
           onClick={onDestroy}
           icon={<DumpBinIcon size={5} color={isEditable ? 'text-red' : ''} />}
         />
+        <div id='rsform-help' className='py-1 ml-1'>
+          <HelpIcon color='text-primary' size={5} />
+        </div>
+        <ConceptTooltip anchorSelect='#rsform-help'>
+          <HelpRSFormMeta />
+        </ConceptTooltip>
       </div>
       </div>
       <TextInput id='title' label='Полное название' type='text'

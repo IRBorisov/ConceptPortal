@@ -5,7 +5,7 @@ import Button from '../../components/Common/Button';
 import ConceptDataTable from '../../components/Common/ConceptDataTable';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import Divider from '../../components/Common/Divider';
-import CstStatusInfo from '../../components/Help/InfoCstStatus';
+import HelpRSFormItems from '../../components/Help/HelpRSFormItems';
 import { ArrowDownIcon, ArrowsRotateIcon, ArrowUpIcon, DumpBinIcon, HelpIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
@@ -319,16 +319,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
             <HelpIcon color='text-primary' size={6} />
           </div>
           <ConceptTooltip anchorSelect='#items-table-help'>
-            <div>
-              <h1>Горячие клавиши</h1>
-              <p><b>Двойной клик / Alt + клик</b> - редактирование конституенты</p>
-              <p><b>Клик на квадрат слева</b> - выделение конституенты</p>
-              <p><b>Alt + вверх/вниз</b> - движение конституент</p>
-              <p><b>Delete</b> - удаление конституент</p>
-              <p><b>Alt + 1-6,Q,W</b> - добавление конституент</p>
-              <Divider margins='mt-2' />
-              <CstStatusInfo title='Статусы' />
-            </div>
+            <HelpRSFormItems />
           </ConceptTooltip>
         </div>
       </div>

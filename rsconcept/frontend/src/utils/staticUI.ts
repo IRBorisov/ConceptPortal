@@ -2,7 +2,9 @@ import { LayoutTypes } from 'reagraph';
 
 import { ColoringScheme } from '../pages/RSFormPage/EditorTermGraph';
 import { resolveErrorClass,RSErrorClass, RSErrorType, TokenID } from './enums';
-import { CstClass, CstMatchMode, CstType, DependencyMode, ExpressionStatus, IConstituenta,
+import {
+  CstClass, CstMatchMode, CstType, 
+  DependencyMode, ExpressionStatus, HelpTopic, IConstituenta,
   IFunctionArg,IRSErrorDescription, IRSForm,
   ISyntaxTreeNode, ParsingStatus, ValueClass 
 } from './models';
@@ -15,6 +17,11 @@ export interface IRSButtonData {
 export interface IFormatInfo {
   text: string
   color: string
+  tooltip: string
+}
+
+export interface ITopicInfo {
+  text: string
   tooltip: string
 }
 
@@ -246,7 +253,7 @@ export function getCstTypeShortcut(type: CstType) {
 }
 
 export const CstTypeSelector = (Object.values(CstType)).map(
-  (typeStr) => {
+(typeStr) => {
     const type = typeStr as CstType;
     return { value: type, label: getCstTypeLabel(type) };
 });
@@ -357,6 +364,45 @@ export const mapStatusInfo: Map<ExpressionStatus, IFormatInfo> = new Map([
     text: 'N/A',
     color: 'bg-[#b3bdff] dark:bg-[#1e00b3]',
     tooltip: 'произошла ошибка при проверке выражения'
+  }]
+]);
+
+export const mapTopicInfo: Map<HelpTopic, ITopicInfo> = new Map([
+  [ HelpTopic.MAIN, {
+    text: 'Портал',
+    tooltip: 'Общая справка по порталу'
+  }],
+  [ HelpTopic.RSLANG, {
+    text: 'Рода структур',
+    tooltip: 'Справка по языку родов структур и экспликации'
+  }],
+  [ HelpTopic.LIBRARY, {
+    text: 'Библиотека',
+    tooltip: 'Интерфейс работы с библиотекой схем'
+  }],
+  [ HelpTopic.RSFORM, {
+    text: 'Концептуальная схема',
+    tooltip: 'Интерфейс работы с описанием схемы'
+  }],
+  [ HelpTopic.CSTLIST, {
+    text: 'Список конституент',
+    tooltip: 'Интерфейс работы со списком конституент'
+  }],
+  [ HelpTopic.CONSTITUENTA, {
+    text: 'Конституента',
+    tooltip: 'Интерфейс редактирования конституенты'
+  }],
+  [ HelpTopic.GRAPH_TERM, {
+    text: 'Граф термов',
+    tooltip: 'Интерфейс работ с графом термов схемы'
+  }],
+  [ HelpTopic.EXTEOR, {
+    text: 'Экстеор',
+    tooltip: 'Справка по программе Экстеор'
+  }],
+  [ HelpTopic.API, {
+    text: 'REST API',
+    tooltip: 'Документация интерфейса для разработчиков'
   }],
 ]);
 

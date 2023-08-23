@@ -270,6 +270,19 @@ export enum CstMatchMode {
   NAME
 }
 
+// Help manual topic compare mode
+export enum HelpTopic {
+  MAIN = 'main',
+  RSLANG = 'rslang',
+  LIBRARY = 'library',
+  RSFORM = 'rsform',
+  CSTLIST = 'cstlist',
+  CONSTITUENTA = 'constituenta',
+  GRAPH_TERM = 'graph-term',
+  EXTEOR = 'exteor',
+  API = 'api'
+}
+
 // ========== Model functions =================
 export function inferStatus(parse?: ParsingStatus, value?: ValueClass): ExpressionStatus {
   if (!parse || !value) {
