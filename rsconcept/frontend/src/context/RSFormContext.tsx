@@ -227,10 +227,11 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       setLoading: setProcessing,
       onError: error => setError(error),
       onSuccess: newData => {
-        reload(setProcessing, () => { if (callback) callback(newData); })
+        setSchema(newData.schema);
+        if (callback) callback(newData.new_cst);
       }
     });
-  }, [setError, reload, schemaID]);
+  }, [setError, setSchema, schemaID]);
 
   const cstMoveTo = useCallback(
   (data: ICstMovetoData, callback?: () => void) => {

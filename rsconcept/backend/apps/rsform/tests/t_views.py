@@ -246,6 +246,56 @@ class TestRSFormViewset(APITestCase):
         x4 = Constituenta.objects.get(alias=response.data['new_cst']['alias'])
         self.assertEqual(x4.order, 3)
 
+    def test_rename_constituenta(self):
+        self.cst1 = Constituenta.objects.create(
+            alias='X1', schema=self.rsform_owned, order=1, convention='Test',
+            term_raw='Test1', term_resolved='Test1',
+            term_forms=[{'text':'form1', 'tags':'sing,datv'}])
+        self.cst2 = Constituenta.objects.create(
+            alias='X2', schema=self.rsform_unowned, order=1, convention='Test1',
+            term_raw='Test2', term_resolved='Test2')
+        self.cst3 = Constituenta.objects.create(
+            alias='X3', schema=self.rsform_owned, order=2,
+            term_raw='Test3', term_resolved='Test3',
+            definition_raw='Test1', definition_resolved='Test2')
+        
+        data = json.dumps({'alias': 'D2', 'cst_type': 'term', 'id': self.cst2.pk})
+        response = self.client.patch(f'/api/rsforms/{self.rsform_unowned.id}/cst-rename/',
+                                    data=data, content_type='application/json')
+        self.assertEqual(response.status_code, 403)
+
+        response = self.client.patch(f'/api/rsforms/{self.rsform_owned.id}/cst-rename/',
+                                    data=data, content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+        data = json.dumps({'alias': self.cst1.alias, 'cst_type': 'term', 'id': self.cst1.pk})
+        response = self.client.patch(f'/api/rsforms/{self.rsform_owned.id}/cst-rename/',
+                                    data=data, content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+        data = json.dumps({'alias': 'D2', 'cst_type': 'term', 'id': self.cst1.pk})
+        schema = self.rsform_owned
+        d1 = Constituenta.objects.create(schema=schema, alias='D1', cst_type='term', order=4)
+        d1.term_raw = '@{X1|plur}'
+        d1.definition_formal = 'X1'
+        d1.save()
+        
+        self.assertEqual(self.cst1.order, 1)
+        self.assertEqual(self.cst1.alias, 'X1')
+        self.assertEqual(self.cst1.cst_type, CstType.BASE)
+        response = self.client.patch(f'/api/rsforms/{schema.id}/cst-rename/',
+                                    data=data, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['new_cst']['alias'], 'D2')
+        self.assertEqual(response.data['new_cst']['cst_type'], 'term')
+        d1.refresh_from_db()
+        self.cst1.refresh_from_db()
+        self.assertEqual(d1.term_resolved, '')
+        self.assertEqual(d1.term_raw,  '@{D2|plur}')
+        self.assertEqual(self.cst1.order, 2)
+        self.assertEqual(self.cst1.alias, 'D2')
+        self.assertEqual(self.cst1.cst_type, CstType.TERM)
+
     def test_create_constituenta_data(self):
         data = json.dumps({
             'alias': 'X3',

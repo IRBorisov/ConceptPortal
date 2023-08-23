@@ -1,5 +1,6 @@
 ''' REST API: RSForms for conceptual schemas. '''
 import json
+from django.db import transaction
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q
@@ -63,7 +64,7 @@ class RSFormViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action in ['update', 'destroy', 'partial_update', 'load_trs',
-                           'cst_create', 'cst_multidelete', 'reset_aliases']:
+                           'cst_create', 'cst_multidelete', 'reset_aliases', 'cst_rename']:
             permission_classes = [utils.ObjectOwnerOrAdmin]
         elif self.action in ['create', 'claim', 'clone']:
             permission_classes = [permissions.IsAuthenticated]
@@ -86,6 +87,25 @@ class RSFormViewSet(viewsets.ModelViewSet):
         })
         response['Location'] = new_cst.get_absolute_url()
         return response
+
+    @transaction.atomic
+    @action(detail=True, methods=['patch'], url_path='cst-rename')
+    def cst_rename(self, request, pk):
+        ''' Rename constituenta possibly changing type. '''
+        schema = self._get_schema()
+        serializer = serializers.CstRenameSerializer(data=request.data, context={'schema': schema})
+        serializer.is_valid(raise_exception=True)
+        old_alias = models.Constituenta.objects.get(pk=request.data['id']).alias
+        serializer.save()
+        mapping = { old_alias: serializer.validated_data['alias'] }
+        schema.apply_mapping(mapping, change_aliases=False)
+        schema.update_order()
+        schema.refresh_from_db()
+        cst = models.Constituenta.objects.get(pk=serializer.validated_data['id'])
+        return Response(status=200, data={
+            'new_cst': serializers.ConstituentaSerializer(cst).data,
+            'schema': models.PyConceptAdapter(schema).full()
+        })
 
     @action(detail=True, methods=['patch'], url_path='cst-multidelete')
     def cst_multidelete(self, request, pk):

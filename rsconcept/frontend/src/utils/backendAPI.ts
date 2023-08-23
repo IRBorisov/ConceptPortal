@@ -210,7 +210,7 @@ export function patchConstituenta(target: string, request: FrontExchange<ICstUpd
   });
 }
 
-export function patchRenameConstituenta(schema: string, request: FrontExchange<ICstRenameData, IConstituentaMeta>) {
+export function patchRenameConstituenta(schema: string, request: FrontExchange<ICstRenameData, ICstCreatedResponse>) {
   AxiosPatch({
     title: `Renaming constituenta id=${request.data.id} for schema id=${schema}`,
     endpoint: `/api/rsforms/${schema}/cst-rename/`,

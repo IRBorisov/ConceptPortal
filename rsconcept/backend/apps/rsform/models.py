@@ -241,7 +241,7 @@ class RSForm(Model):
     def reset_aliases(self):
         ''' Recreate all aliases based on cst order. '''
         mapping = self._create_reset_mapping()
-        self._apply_mapping(mapping)
+        self.apply_mapping(mapping, change_aliases=True)
 
     def _create_reset_mapping(self) -> dict[str, str]:
         bases = cast(dict[str, int], {})
@@ -257,11 +257,12 @@ class RSForm(Model):
         return mapping
 
     @transaction.atomic
-    def _apply_mapping(self, mapping: dict[str, str]):
+    def apply_mapping(self, mapping: dict[str, str], change_aliases: bool = False):
+        ''' Apply rename mapping. '''
         cst_list = self.constituents().order_by('order')
         for cst in cst_list:
             modified = False
-            if cst.alias in mapping:
+            if change_aliases and cst.alias in mapping:
                 modified = True
                 cst.alias = mapping[cst.alias]
             expression = apply_mapping_pattern(cst.definition_formal, mapping, _GLOBAL_ID_PATTERN)

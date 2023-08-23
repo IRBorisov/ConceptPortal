@@ -1,5 +1,5 @@
 ''' Serializers for conceptual schema API. '''
-from typing import Optional
+from typing import Optional, cast
 from rest_framework import serializers
 from django.db import transaction
 
@@ -262,6 +262,30 @@ class CstCreateSerializer(serializers.ModelSerializer):
         ''' serializer metadata. '''
         model = Constituenta
         fields = 'alias', 'cst_type', 'convention', 'term_raw', 'definition_raw', 'definition_formal', 'insert_after'
+
+
+class CstRenameSerializer(serializers.ModelSerializer):
+    ''' Serializer: Constituenta renaming. '''
+    class Meta:
+        ''' serializer metadata. '''
+        model = Constituenta
+        fields = 'id', 'alias', 'cst_type'
+
+    def validate(self, attrs):
+        schema = cast(RSForm, self.context['schema'])
+        old_cst = Constituenta.objects.get(pk=self.initial_data['id'])
+        if old_cst.schema != schema:
+            raise serializers.ValidationError({
+                'id': f'Изменяемая конституента должна относиться к изменяемой схеме: {schema.title}'
+            })
+        if old_cst.alias == self.initial_data['alias']:
+            raise serializers.ValidationError({
+                'alias': f'Имя конституенты должно отличаться от текущего: {self.initial_data["alias"]}'
+            })
+        self.instance = old_cst
+        attrs['schema'] = schema
+        attrs['id'] = self.initial_data['id']
+        return attrs
 
 
 class CstListSerlializer(serializers.Serializer):
