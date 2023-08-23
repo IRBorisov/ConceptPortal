@@ -31,12 +31,14 @@ function ManualsPage() {
   }, [search, setActiveTopic, navigateTo]);
 
   return (
-    <div className='flex items-start justify-start w-full gap-2'>
+    <div className='flex w-full gap-2 justify-stretch'>
       <TopicsList 
         activeTopic={activeTopic}
         onChangeTopic={topic => onSelectTopic(topic)}
       />
-      <ViewTopic topic={activeTopic} />
+      <ViewTopic 
+        topic={activeTopic}
+      />
     </div>
   );
 }
