@@ -1,10 +1,11 @@
 import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Button from '../../components/Common/Button';
 import Checkbox from '../../components/Common/Checkbox';
 import Dropdown from '../../components/Common/Dropdown';
 import DropdownButton from '../../components/Common/DropdownButton';
-import { CloneIcon, CrownIcon, DownloadIcon, DumpBinIcon, EyeIcon, EyeOffIcon, MenuIcon, PenIcon, ShareIcon, UploadIcon } from '../../components/Icons';
+import { CloneIcon, CrownIcon, DownloadIcon, DumpBinIcon, EyeIcon, EyeOffIcon, MenuIcon, PenIcon, PlusIcon, ShareIcon, UploadIcon } from '../../components/Icons';
 import { useAuth } from '../../context/AuthContext';
 import { useRSForm } from '../../context/RSFormContext';
 import useDropdown from '../../hooks/useDropdown';
@@ -17,6 +18,7 @@ interface RSTabsMenuProps {
 }
 
 function RSTabsMenu({showUploadDialog, showCloneDialog, onDestroy}: RSTabsMenuProps) {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const {
     schema,
@@ -53,10 +55,14 @@ function RSTabsMenu({showUploadDialog, showCloneDialog, onDestroy}: RSTabsMenuPr
     showCloneDialog();
   }, [schemaMenu, showCloneDialog]);
 
-  const handleShare = useCallback(() => {
+  function handleShare() {
     schemaMenu.hide();
     shareCurrentURLProc();
-  }, [schemaMenu]);
+  }
+
+  function handleCreateNew() {
+    navigate('/rsform-create');
+  }
 
   return (    
     <div className='flex items-stretch w-fit'>
@@ -99,6 +105,12 @@ function RSTabsMenu({showUploadDialog, showCloneDialog, onDestroy}: RSTabsMenuPr
             <span className='inline-flex items-center justify-start gap-2'>
               <DumpBinIcon color={isEditable ? 'text-red' : ''} size={4} />
               <p>Удалить схему</p>
+            </span>
+          </DropdownButton>
+          <DropdownButton onClick={handleCreateNew}>
+            <span className='inline-flex items-center justify-start gap-2'>
+              <PlusIcon color='text-url' size={4} />
+              <p>Создать новую схему</p>
             </span>
           </DropdownButton>
         </Dropdown>}

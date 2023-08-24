@@ -326,7 +326,7 @@ class ResolverSerializer(serializers.Serializer):
             'input': instance.input,
             'output': instance.output,
             'refs': [{
-                'type': str(ref.ref.get_type()),
+                'type': ref.ref.get_type().value,
                 'data': self._get_reference_data(ref.ref),
                 'resolved': ref.resolved,
                 'pos_input': {

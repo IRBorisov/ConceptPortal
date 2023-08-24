@@ -21,7 +21,7 @@ function MatchModePicker({ value, onChange }: MatchModePickerProps) {
   }, [pickerMenu, onChange]);
 
   return (
-  <div ref={pickerMenu.ref} className='h-full'>
+  <div ref={pickerMenu.ref} className='h-full min-w-[3.4rem]'>
     <span
       className='text-sm font-semibold underline cursor-pointer select-none whitespace-nowrap'
       tabIndex={-1}
@@ -44,7 +44,7 @@ function MatchModePicker({ value, onChange }: MatchModePickerProps) {
           <p><b>текст:</b> искать в определениях и конвенциях</p>
         </DropdownButton>
         <DropdownButton onClick={() => handleChange(CstMatchMode.NAME)}>
-          <p><b>ID:</b> искать в идентификаторах конституент</p>
+          <p><b>имя:</b> искать в идентификаторах конституент</p>
         </DropdownButton>
       </Dropdown>
     }

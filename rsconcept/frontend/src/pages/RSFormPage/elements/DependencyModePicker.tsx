@@ -21,7 +21,7 @@ function DependencyModePicker({ value, onChange }: DependencyModePickerProps) {
   }, [pickerMenu, onChange]);
 
   return (
-  <div ref={pickerMenu.ref} className='h-full'>
+  <div ref={pickerMenu.ref} className='h-full min-w-[5.8rem] text-right'>
     <span
       className='text-sm font-semibold underline cursor-pointer select-none whitespace-nowrap'
       tabIndex={-1}

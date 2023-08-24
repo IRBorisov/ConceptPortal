@@ -261,10 +261,10 @@ export const CstTypeSelector = (Object.values(CstType)).map(
 export function getCstCompareLabel(mode: CstMatchMode): string {
   switch(mode) {
     case CstMatchMode.ALL: return 'везде';
-    case CstMatchMode.EXPR: return 'ФВ';
+    case CstMatchMode.EXPR: return 'выраж';
     case CstMatchMode.TERM: return 'термин';
     case CstMatchMode.TEXT: return 'текст';
-    case CstMatchMode.NAME: return 'ID';
+    case CstMatchMode.NAME: return 'имя';
   }
 }
 

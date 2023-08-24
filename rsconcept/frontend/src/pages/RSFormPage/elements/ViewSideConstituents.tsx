@@ -167,7 +167,10 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
         value={filterText}
         onChange={event => setFilterText(event.target.value)}
       />
-      <DependencyModePicker value={filterSource} onChange={setFilterSource}/>
+      <DependencyModePicker
+        value={filterSource}
+        onChange={setFilterSource}
+      />
     </div>
     <div className='overflow-y-auto' style={{maxHeight : `${maxHeight}`}}>
       <ConceptDataTable

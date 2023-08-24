@@ -26,16 +26,20 @@
 }
 
 @layer components {
+  :root {
+    @apply bg-gray-50
+  }
+
+  .dark {
+    @apply text-zinc-200 bg-gray-800
+  }
+
   h1 {
     @apply text-lg font-bold text-center
   }
 
   .border {
     @apply clr-border rounded
-  }
-
-  .dark {
-    @apply text-zinc-200 bg-gray-900
   }
 
   .clr-border {
@@ -67,7 +71,7 @@
   }
 
   .clr-footer {
-    @apply text-gray-600 bg-white border-gray-400 dark:bg-gray-900 dark:border-gray-300 dark:text-gray-300
+    @apply clr-app text-gray-600 border-gray-400 dark:border-gray-300 dark:text-gray-300
   }
 
   .clr-card {

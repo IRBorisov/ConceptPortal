@@ -9,7 +9,7 @@ interface TopicsListProps {
 
 function TopicsList({ activeTopic, onChangeTopic }: TopicsListProps) {
   return (
-    <div className='sticky top-0 left-0 border-r min-w-[13rem] pt-2 select-none flex flex-col clr-bg-pop'>
+    <div className='sticky top-0 left-0 border-r border-b min-w-[13rem] pt-2 select-none flex flex-col clr-bg-pop'>
       <div className='mb-2 font-bold text-center'>Справка</div>
       { [... mapTopicInfo.entries()].map(
       ([topic, info], index) => {

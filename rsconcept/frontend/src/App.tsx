@@ -28,7 +28,7 @@ function App () {
   const mainSize = useMemo(
   () => {
     return !noNavigation ? 
-      'calc(100vh - 12rem)'
+      'calc(100vh - 9.2rem)'
     : '100vh'; 
   }, [noNavigation]);
   

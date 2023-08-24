@@ -340,7 +340,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
   const canvasHeight = useMemo(
   () => {
     return !noNavigation ? 
-      'calc(100vh - 13rem)'
+      'calc(100vh - 10.5rem)'
     : 'calc(100vh - 2rem)';
   }, [noNavigation]);
 
@@ -461,7 +461,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
     </div>
     <div className='w-full h-full overflow-auto'>
     <div 
-      className='relative border-t border-r'
+      className='relative border-r border-y'
       style={{width: canvasWidth, height: canvasHeight, borderBottomWidth: noNavigation ? '1px': ''}}
     >
       <div className='relative top-0 right-0 z-10 flex mt-1 ml-2 flex-start'>
