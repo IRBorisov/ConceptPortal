@@ -196,7 +196,7 @@ function EditorRSExpression({
       </div>
       </div>
       <RSInput innerref={rsInput}
-        className='mt-2'
+        className='mt-2 text-lg'
         height='10.1rem'
         value={value}
         editable={!disabled}

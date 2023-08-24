@@ -70,9 +70,45 @@ export class TextWrapper {
   insertToken(tokenID: TokenID): boolean {
     const hasSelection = this.ref.view.state.selection.main.from !== this.ref.view.state.selection.main.to
     switch (tokenID) {
-    case TokenID.NT_DECLARATIVE_EXPR: this.envelopeWith('D{ξ∈X1 | P1[ξ]', '}'); return true;
-    case TokenID.NT_IMPERATIVE_EXPR: this.envelopeWith('I{(σ, γ) | σ:∈X1; γ:=F1[σ]; P1[σ, γ]', '}'); return true;
-    case TokenID.NT_RECURSIVE_FULL: this.envelopeWith('R{ ξ:=D1 | F1[ξ]≠∅ | ξ∪F1[ξ]', '}'); return true;
+    case TokenID.NT_DECLARATIVE_EXPR: {
+      if (hasSelection) {
+        this.envelopeWith('D{ξ∈X1 | ', '}');
+      } else {
+        this.envelopeWith('D{ξ∈X1 | P1[ξ]', '}');
+      }
+      this.ref.view.dispatch({
+        selection: {
+          anchor: this.ref.view.state.selection.main.from + 2,
+        }
+      });
+      return true;
+    }
+    case TokenID.NT_IMPERATIVE_EXPR: {
+      if (hasSelection) {
+        this.envelopeWith('I{(σ, γ) | σ:∈X1; γ:=F1[σ]; ', '}');
+      } else {
+        this.envelopeWith('I{(σ, γ) | σ:∈X1; γ:=F1[σ]; P1[σ, γ]', '}');
+      }
+      this.ref.view.dispatch({
+        selection: {
+          anchor: this.ref.view.state.selection.main.from + 2,
+        }
+      });
+      return true;
+    }
+    case TokenID.NT_RECURSIVE_FULL: {
+      if (hasSelection) {
+        this.envelopeWith('R{ξ:=D1 | F1[ξ]≠∅ | ', '}');
+      } else {
+        this.envelopeWith('R{ξ:=D1 | F1[ξ]≠∅ | ξ∪F1[ξ]', '}');
+      }
+      this.ref.view.dispatch({
+        selection: {
+          anchor: this.ref.view.state.selection.main.from + 2,
+        }
+      });
+      return true;
+    }
     case TokenID.BIGPR: this.envelopeWith('Pr1(', ')'); return true;
     case TokenID.SMALLPR: this.envelopeWith('pr1(', ')'); return true;
     case TokenID.FILTER: this.envelopeWith('Fi1[α](', ')'); return true;

@@ -16,7 +16,7 @@ function Footer() {
           <p className='mt-0.5 text-center'>© 2023 ЦИВТ КОНЦЕПТ</p>
         </div>
         <div className='flex flex-col underline'>
-          <a href={urls.exteor64} tabIndex={-1}>Экстеор</a>
+          <Link to='/manuals?topic=exteor' tabIndex={-1}>Экстеор</Link>
         </div>
         
       </div>

@@ -139,7 +139,7 @@ function RSInput({
   }, [thisRef]);
 
   return (
-    <div className={`w-full ${cursor} text-lg`}>
+    <div className={`w-full ${cursor}`}>
     {label && 
     <Label
       text={label}
