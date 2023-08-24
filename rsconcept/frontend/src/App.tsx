@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import Footer from './components/Footer';
@@ -17,21 +16,7 @@ import RSFormPage from './pages/RSFormPage';
 import UserProfilePage from './pages/UserProfilePage';
 
 function App () {
-  const { noNavigation } = useConceptTheme();
-
-  const scrollWindowSize = useMemo(
-  () => {
-    return !noNavigation ? 
-      'calc(100vh - 4.5rem)'
-    : '100vh'; 
-  }, [noNavigation]);
-  const mainSize = useMemo(
-  () => {
-    return !noNavigation ? 
-      'calc(100vh - 9.2rem)'
-    : '100vh'; 
-  }, [noNavigation]);
-  
+  const { noNavigation, viewportHeight, mainHeight } = useConceptTheme();  
   return (
     <div className='antialiased clr-app'>
       <Navigation />
@@ -42,8 +27,8 @@ function App () {
         pauseOnFocusLoss={false}
       />
       
-      <div className='overflow-auto' style={{maxHeight: scrollWindowSize}}>
-      <main style={{minHeight: mainSize}}>
+      <div className='overflow-auto' style={{maxHeight: viewportHeight}}>
+      <main className='h-full' style={{minHeight: mainHeight}}>
         <Routes>
           <Route path='/' element={ <HomePage/>} />
 

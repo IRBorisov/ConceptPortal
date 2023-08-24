@@ -1,10 +1,12 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useLayoutEffect, useMemo, useState } from 'react';
 
 import useLocalStorage from '../hooks/useLocalStorage';
 
 interface IThemeContext {
   darkMode: boolean
   noNavigation: boolean
+  viewportHeight: string
+  mainHeight: string
   toggleDarkMode: () => void
   toggleNoNavigation: () => void
 }
@@ -38,16 +40,31 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
     root.setAttribute('data-color-scheme', !isDark ? 'light' : 'dark');
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setDarkClass(darkMode)
   }, [darkMode]);
+
+  const mainHeight = useMemo(
+  () => {
+    return !noNavigation ? 
+      'calc(100vh - 9.2rem)'
+    : '100vh'; 
+  }, [noNavigation]);
+
+  const viewportHeight = useMemo(
+  () => {
+    return !noNavigation ? 
+      'calc(100vh - 4.5rem)'
+    : '100vh'; 
+  }, [noNavigation]);
 
   return (
     <ThemeContext.Provider value={{
       darkMode,
-      toggleDarkMode: () => setDarkMode(prev => !prev),
       noNavigation,
-      toggleNoNavigation: () => setNoNavigation(prev => !prev)
+      toggleDarkMode: () => setDarkMode(prev => !prev),
+      toggleNoNavigation: () => setNoNavigation(prev => !prev),
+      viewportHeight, mainHeight
     }}>
       {children}
     </ThemeContext.Provider>

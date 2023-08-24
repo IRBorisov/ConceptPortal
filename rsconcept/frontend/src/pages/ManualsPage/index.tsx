@@ -1,6 +1,7 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { useConceptTheme } from '../../context/ThemeContext';
 import { HelpTopic } from '../../utils/models';
 import TopicsList from './TopicsList';
 import ViewTopic from './ViewTopic';
@@ -8,6 +9,7 @@ import ViewTopic from './ViewTopic';
 function ManualsPage() {
   const navigate = useNavigate();
   const search = useLocation().search;
+  const { mainHeight } = useConceptTheme();
   const [activeTopic, setActiveTopic] = useState<HelpTopic>(HelpTopic.MAIN);
 
   const navigateTo = useCallback(
@@ -31,7 +33,7 @@ function ManualsPage() {
   }, [search, setActiveTopic, navigateTo]);
 
   return (
-    <div className='flex w-full gap-2 justify-stretch'>
+    <div className='flex w-full gap-2 justify-stretch' style={{minHeight: mainHeight}}>
       <TopicsList 
         activeTopic={activeTopic}
         onChangeTopic={topic => onSelectTopic(topic)}

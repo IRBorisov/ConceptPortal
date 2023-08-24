@@ -8,7 +8,6 @@ import Divider from '../../components/Common/Divider';
 import HelpRSFormItems from '../../components/Help/HelpRSFormItems';
 import { ArrowDownIcon, ArrowsRotateIcon, ArrowUpIcon, DumpBinIcon, HelpIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
-import { useConceptTheme } from '../../context/ThemeContext';
 import { prefixes } from '../../utils/constants';
 import { CstType, IConstituenta, ICstCreateData, ICstMovetoData } from '../../utils/models'
 import { getCstTypePrefix, getCstTypeShortcut, getCstTypificationLabel, mapStatusInfo } from '../../utils/staticUI';
@@ -21,7 +20,6 @@ interface EditorItemsProps {
 
 function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps) {
   const { schema, isEditable, cstMoveTo, resetAliases } = useRSForm();
-  const { noNavigation } = useConceptTheme();
   const [selected, setSelected] = useState<number[]>([]);
   const nothingSelected = useMemo(() => selected.length === 0, [selected]);
 
@@ -200,7 +198,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
       reorder: true,
     },
     {
-      name: 'Тип',
+      name: 'Типизация',
       id: 'type',
       cell: (cst: IConstituenta) => <div style={{ fontSize: 12 }}>{getCstTypificationLabel(cst)}</div>,
       width: '175px',
@@ -256,8 +254,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
   return (
     <div className='w-full'>
       <div
-        className={'flex justify-start w-full gap-1 px-2 py-1 border-y items-center h-[2.2rem] select-none clr-app' +
-          (!noNavigation ? ' sticky z-10 top-[0rem]' : ' sticky z-10 top-[0rem]')}
+        className='sticky top-0 z-10 flex justify-start w-full gap-1 px-2 py-1 border-y items-center h-[2.2rem] select-none clr-app'
       >
         <div className='mr-3 whitespace-nowrap'>
           Выбраны
