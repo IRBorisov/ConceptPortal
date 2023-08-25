@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { toast } from 'react-toastify';
 
@@ -13,19 +13,21 @@ import { CrownIcon, DownloadIcon, DumpBinIcon, HelpIcon, SaveIcon, ShareIcon } f
 import { useAuth } from '../../context/AuthContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { useUsers } from '../../context/UsersContext';
-import { IRSFormCreateData } from '../../utils/models';
-import { claimOwnershipProc, downloadRSFormProc, shareCurrentURLProc } from '../../utils/procedures';
+import { IRSFormCreateData, LibraryItemType } from '../../utils/models';
 
 interface EditorRSFormProps {
   onDestroy: () => void
+  onClaim: () => void
+  onShare: () => void
+  onDownload: () => void
 }
 
-function EditorRSForm({ onDestroy }: EditorRSFormProps) {
+function EditorRSForm({ onDestroy, onClaim, onShare, onDownload }: EditorRSFormProps) {
   const intl = useIntl();
   const { getUserLabel } = useUsers();
   const {
-    schema, update, download,
-    isEditable, isOwned, isClaimable, processing, claim
+    schema, update, isForceAdmin,
+    isEditable, isOwned, isClaimable, processing
   } = useRSForm();
   const { user } = useAuth();
 
@@ -33,6 +35,7 @@ function EditorRSForm({ onDestroy }: EditorRSFormProps) {
   const [alias, setAlias] = useState('');
   const [comment, setComment] = useState('');
   const [common, setCommon] = useState(false);
+  const [canonical, setCanonical] = useState(false);
 
   const [isModified, setIsModified] = useState(true);
 
@@ -45,10 +48,12 @@ function EditorRSForm({ onDestroy }: EditorRSFormProps) {
       schema.title !== title ||
       schema.alias !== alias ||
       schema.comment !== comment ||
-      schema.is_common !== common
+      schema.is_common !== common ||
+      schema.is_canonical !== canonical
     );
-  }, [schema, schema?.title, schema?.alias, schema?.comment, schema?.is_common,
-      title, alias, comment, common]);
+  }, [schema, schema?.title, schema?.alias, schema?.comment,
+      schema?.is_common, schema?.is_canonical,
+      title, alias, comment, common, canonical]);
 
   useLayoutEffect(() => {
     if (schema) {
@@ -56,24 +61,22 @@ function EditorRSForm({ onDestroy }: EditorRSFormProps) {
       setAlias(schema.alias);
       setComment(schema.comment);
       setCommon(schema.is_common);
+      setCanonical(schema.is_canonical);
     }
   }, [schema]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data: IRSFormCreateData = {
+      item_type: LibraryItemType.RSFORM,
       title: title,
       alias: alias,
       comment: comment,
-      is_common: common
+      is_common: common,
+      is_canonical: canonical
     };
     update(data, () => toast.success('Изменения сохранены'));
   };
-
-  const handleDownload = useCallback(() => {
-    const fileName = (schema?.alias ?? 'Schema') + '.trs';
-    downloadRSFormProc(download, fileName);
-  }, [download, schema?.alias]);
 
   return (
     <form onSubmit={handleSubmit} className='flex-grow max-w-xl px-4 py-2 border min-w-fit'>
@@ -82,18 +85,18 @@ function EditorRSForm({ onDestroy }: EditorRSFormProps) {
         <MiniButton
           tooltip='Поделиться схемой'
           icon={<ShareIcon size={5} color='text-primary'/>}
-          onClick={shareCurrentURLProc}
+          onClick={onShare}
         />
         <MiniButton
           tooltip='Скачать TRS файл'
           icon={<DownloadIcon size={5} color='text-primary'/>}
-          onClick={handleDownload}
+          onClick={onDownload}
         />
         <MiniButton
           tooltip={isClaimable ? 'Стать владельцем' : 'Вы уже являетесь владельцем' }
           icon={<CrownIcon size={5} color={isOwned ? '' : 'text-green'}/>}
           disabled={!isClaimable || !user}
-          onClick={() => { claimOwnershipProc(claim); }}
+          onClick={onClaim}
         />
         <MiniButton
           tooltip='Удалить схему'
@@ -113,25 +116,35 @@ function EditorRSForm({ onDestroy }: EditorRSFormProps) {
         required
         value={title}
         disabled={!isEditable}
-        onChange={event => { setTitle(event.target.value); }}
+        onChange={event => setTitle(event.target.value)}
       />
       <TextInput id='alias' label='Сокращение' type='text'
         required
         value={alias}
         disabled={!isEditable}
         widthClass='max-w-sm'
-        onChange={event => { setAlias(event.target.value); }}
+        onChange={event => setAlias(event.target.value)}
       />
       <TextArea id='comment' label='Комментарий'
         value={comment}
         disabled={!isEditable}
-        onChange={event => { setComment(event.target.value); }}
+        onChange={event => setComment(event.target.value)}
       />
-      <Checkbox id='common' label='Общедоступная схема'
-        value={common}
-        disabled={!isEditable}
-        onChange={event => { setCommon(event.target.checked); }}
-      />
+      <div className='flex justify-between whitespace-nowrap'>
+        <div></div>
+        <Checkbox id='common' label='Общедоступная схема'
+          value={common}
+          disabled={!isEditable}
+          onChange={event => setCommon(event.target.checked)}
+        />
+        <Checkbox id='canonical' label='Библиотечная схема'
+          widthClass='w-fit'
+          value={canonical}
+          tooltip='Только администраторы могут присваивать схемам библиотечный статус'
+          disabled={!isEditable || !isForceAdmin}
+          onChange={event => setCanonical(event.target.checked)}
+        />
+      </div>
 
       <div className='flex items-center justify-between gap-1 py-2 mt-2'>
         <SubmitButton

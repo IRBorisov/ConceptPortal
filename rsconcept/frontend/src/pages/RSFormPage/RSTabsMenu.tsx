@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Button from '../../components/Common/Button';
@@ -9,55 +8,57 @@ import { CloneIcon, CrownIcon, DownloadIcon, DumpBinIcon, EyeIcon, EyeOffIcon, M
 import { useAuth } from '../../context/AuthContext';
 import { useRSForm } from '../../context/RSFormContext';
 import useDropdown from '../../hooks/useDropdown';
-import { claimOwnershipProc, downloadRSFormProc, shareCurrentURLProc } from '../../utils/procedures';
 
 interface RSTabsMenuProps {
   showUploadDialog: () => void
   showCloneDialog: () => void
   onDestroy: () => void
+  onClaim: () => void
+  onShare: () => void
+  onDownload: () => void
 }
 
-function RSTabsMenu({showUploadDialog, showCloneDialog, onDestroy}: RSTabsMenuProps) {
+function RSTabsMenu({
+  showUploadDialog, showCloneDialog,
+  onDestroy, onShare, onDownload, onClaim
+}: RSTabsMenuProps) {
   const navigate = useNavigate();
   const { user } = useAuth();
   const {
-    schema,
     isOwned, isEditable, isTracking, isReadonly: readonly, isForceAdmin: forceAdmin,
-    toggleTracking, toggleForceAdmin, toggleReadonly,
-    claim, download
+    toggleTracking, toggleForceAdmin, toggleReadonly
   } = useRSForm();
   const schemaMenu = useDropdown();
   const editMenu = useDropdown();
 
-  const handleClaimOwner = useCallback(() => {
+  function handleClaimOwner() {
     editMenu.hide();
-    claimOwnershipProc(claim)
-  }, [claim, editMenu]);
+    onClaim();
+  }
 
-  const handleDelete = useCallback(() => {
+  function handleDelete() {
     schemaMenu.hide();
     onDestroy();
-  }, [onDestroy, schemaMenu]);
+  }
 
-  const handleDownload = useCallback(() => {
+  function handleDownload () {
     schemaMenu.hide();
-    const fileName = (schema?.alias ?? 'Schema') + '.trs';
-    downloadRSFormProc(download, fileName);
-  }, [schemaMenu, download, schema?.alias]);
+    onDownload();
+  }
 
-  const handleUpload = useCallback(() => {
+  function handleUpload() {
     schemaMenu.hide();
     showUploadDialog();
-  }, [schemaMenu, showUploadDialog]);
+  }
 
-  const handleClone = useCallback(() => {
+  function handleClone() {
     schemaMenu.hide();
     showCloneDialog();
-  }, [schemaMenu, showCloneDialog]);
+  }
 
   function handleShare() {
     schemaMenu.hide();
-    shareCurrentURLProc();
+    onShare();
   }
 
   function handleCreateNew() {

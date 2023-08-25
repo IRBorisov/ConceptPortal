@@ -1,3 +1,4 @@
+import fileDownload from 'js-file-download';
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
@@ -35,7 +36,7 @@ function RSTabs() {
   const navigate = useNavigate();
   const search = useLocation().search;
   const { 
-    error, schema, loading, 
+    error, schema, loading, claim, download,
     cstCreate, cstDelete, cstRename
   } = useRSForm();
   const { destroySchema } = useLibrary();
@@ -195,6 +196,35 @@ function RSTabs() {
     });
   }, [schema, destroySchema, navigate]);
 
+  const onClaimSchema = useCallback(
+  () => {
+    if (!window.confirm('Вы уверены, что хотите стать владельцем данной схемы?')) {
+      return;
+    }
+    claim(() => toast.success('Вы стали владельцем схемы'));
+  }, [claim]);
+
+  const onShareSchema = useCallback(
+  () => {
+    const url = window.location.href + '&share';
+    navigator.clipboard.writeText(url)
+    .then(() => toast.success(`Ссылка скопирована: ${url}`))
+    .catch(console.error);
+  }, []);
+
+  const onDownloadSchema = useCallback(
+  () => {
+    const fileName = (schema?.alias ?? 'Schema') + '.trs';
+    download(
+    (data) => {
+      try {
+        fileDownload(data, fileName);
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  }, [schema?.alias, download]);
+
   return (
   <div className='w-full'>
     { loading && <Loader /> }
@@ -240,7 +270,10 @@ function RSTabs() {
     >
       <TabList className='flex items-start pl-2 select-none w-fit clr-bg-pop'>
         <RSTabsMenu 
+          onDownload={onDownloadSchema}
           onDestroy={onDestroySchema}
+          onClaim={onClaimSchema}
+          onShare={onShareSchema}
           showCloneDialog={() => setShowClone(true)} 
           showUploadDialog={() => setShowUpload(true)} 
         />
@@ -255,7 +288,10 @@ function RSTabs() {
 
       <TabPanel className='flex items-start w-full gap-2 px-2'>
         <EditorRSForm 
+          onDownload={onDownloadSchema}
           onDestroy={onDestroySchema}
+          onClaim={onClaimSchema}
+          onShare={onShareSchema}
         />
         {schema.stats && <RSFormStats stats={schema.stats}/>}
       </TabPanel>

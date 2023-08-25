@@ -21,16 +21,18 @@ function DlgCloneRSForm({ hideWindow }: DlgCloneRSFormProps) {
   const [alias, setAlias] = useState('');
   const [comment, setComment] = useState('');
   const [common, setCommon] = useState(false);
+  const [canonical, setCanonical] = useState(false);
 
   const { cloneSchema } = useLibrary();
   const { schema } = useRSForm();
 
   useEffect(() => {
     if (schema) {
-      setTitle(getCloneTitle(schema))
-      setAlias(schema.alias)
-      setComment(schema.comment)
-      setCommon(schema.is_common)
+      setTitle(getCloneTitle(schema));
+      setAlias(schema.alias);
+      setComment(schema.comment);
+      setCommon(schema.is_common);
+      setCanonical(false);
     }
   }, [schema, schema?.title, schema?.alias, schema?.comment, schema?.is_common]);
 
@@ -39,10 +41,12 @@ function DlgCloneRSForm({ hideWindow }: DlgCloneRSFormProps) {
       return;
     }
     const data: IRSFormCreateData = {
+      item_type: schema.item_type,
       title: title,
       alias: alias,
       comment: comment,
-      is_common: common
+      is_common: common,
+      is_canonical: canonical
     };
     cloneSchema(schema.id, data, newSchema => {
       toast.success(`Схема создана: ${newSchema.alias}`);

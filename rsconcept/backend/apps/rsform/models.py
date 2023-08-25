@@ -24,6 +24,12 @@ _REF_ENTITY_PATTERN = re.compile(r'@{([^0-9\-].*?)\|.*?}')
 _GLOBAL_ID_PATTERN = re.compile(r'([XCSADFPT][0-9]+)')
 
 
+class LibraryItemType(TextChoices):
+    ''' Type of library items '''
+    RSFORM = 'rsform'
+    OPERATIONS_SCHEMA = 'oss'
+
+
 class CstType(TextChoices):
     ''' Type of constituenta '''
     BASE = 'basic'
@@ -67,8 +73,14 @@ def _get_type_prefix(cst_type: CstType) -> str:
     return 'X'
 
 
-class RSForm(Model):
-    ''' RSForm is a math form of capturing conceptual schema '''
+class LibraryItem(Model):
+    ''' Abstract library item.
+        Please use wrappers below to access functionality. '''
+    item_type: CharField = CharField(
+        verbose_name='Тип',
+        max_length=50,
+        choices=LibraryItemType.choices
+    )
     owner: ForeignKey = ForeignKey(
         verbose_name='Владелец',
         to=User,
@@ -91,6 +103,10 @@ class RSForm(Model):
         verbose_name='Общая',
         default=False
     )
+    is_canonical: BooleanField = BooleanField(
+        verbose_name='Каноничная',
+        default=False
+    )
     time_create: DateTimeField = DateTimeField(
         verbose_name='Дата создания',
         auto_now_add=True
@@ -105,9 +121,127 @@ class RSForm(Model):
         verbose_name = 'Схема'
         verbose_name_plural = 'Схемы'
 
+    def __str__(self) -> str:
+        return f'{self.title}'
+
+    def get_absolute_url(self):
+        return f'/api/library/{self.pk}/'
+
+
+class Subscription(Model):
+    ''' User subscription to library item. '''
+    user: ForeignKey = ForeignKey(
+        verbose_name='Пользователь',
+        to=User,
+        on_delete=CASCADE
+    )
+    item: ForeignKey = ForeignKey(
+        verbose_name='Элемент',
+        to=LibraryItem,
+        on_delete=CASCADE
+    )
+
+    class Meta:
+        ''' Model metadata. '''
+        verbose_name = 'Подписки'
+        verbose_name_plural = 'Подписка'
+
+    def __str__(self) -> str:
+        return f'{self.user} -> {self.item}'
+
+
+class Constituenta(Model):
+    ''' Constituenta is the base unit for every conceptual schema '''
+    schema: ForeignKey = ForeignKey(
+        verbose_name='Концептуальная схема',
+        to=LibraryItem,
+        on_delete=CASCADE
+    )
+    order: PositiveIntegerField = PositiveIntegerField(
+        verbose_name='Позиция',
+        validators=[MinValueValidator(1)],
+        default=-1,
+    )
+    alias: CharField = CharField(
+        verbose_name='Имя',
+        max_length=8,
+        default='undefined'
+    )
+    cst_type: CharField = CharField(
+        verbose_name='Тип',
+        max_length=10,
+        choices=CstType.choices,
+        default=CstType.BASE
+    )
+    convention: TextField = TextField(
+        verbose_name='Комментарий/Конвенция',
+        default='',
+        blank=True
+    )
+    term_raw: TextField = TextField(
+        verbose_name='Термин (с отсылками)',
+        default='',
+        blank=True
+    )
+    term_resolved: TextField = TextField(
+        verbose_name='Термин',
+        default='',
+        blank=True
+    )
+    term_forms: JSONField = JSONField(
+        verbose_name='Словоформы',
+        default=_empty_forms
+    )
+    definition_formal: TextField = TextField(
+        verbose_name='Родоструктурное определение',
+        default='',
+        blank=True
+    )
+    definition_raw: TextField = TextField(
+        verbose_name='Текстовое определние (с отсылками)',
+        default='',
+        blank=True
+    )
+    definition_resolved: TextField = TextField(
+        verbose_name='Текстовое определние',
+        default='',
+        blank=True
+    )
+
+    class Meta:
+        ''' Model metadata. '''
+        verbose_name = 'Конституета'
+        verbose_name_plural = 'Конституенты'
+
+    def get_absolute_url(self):
+        ''' URL access. '''
+        return reverse('constituenta-detail', kwargs={'pk': self.pk})
+
+    def __str__(self) -> str:
+        return f'{self.alias}'
+
+    def set_term_resolved(self, new_term: str):
+        ''' Set term and reset forms if needed. '''
+        if new_term == self.term_resolved:
+            return
+        self.term_resolved = new_term
+        self.term_forms = []
+
+
+class RSForm:
+    ''' RSForm is a math form of capturing conceptual schema. '''
+    def __init__(self, item: LibraryItem):
+        if item.item_type != LibraryItemType.RSFORM:
+            raise ValueError('Attempting to use invalid adaptor for non-RSForm item')
+        self.item = item
+
+    @staticmethod
+    def create(**kwargs) -> 'RSForm':
+        return RSForm(LibraryItem.objects.create(item_type=LibraryItemType.RSFORM, **kwargs))
+
     def constituents(self) -> QuerySet['Constituenta']:
-        ''' Get QuerySet containing all constituents of current RSForm '''
-        return Constituenta.objects.filter(schema=self)
+        ''' Get QuerySet containing all constituents of current RSForm. '''
+        return Constituenta.objects.filter(schema=self.item)
 
     def resolver(self) -> Resolver:
         ''' Create resolver for text references based on schema terms. '''
@@ -152,19 +286,19 @@ class RSForm(Model):
         ''' Insert new constituenta at given position. All following constituents order is shifted by 1 position '''
         if position <= 0:
             raise ValidationError('Invalid position: should be positive integer')
-        update_list = Constituenta.objects.only('id', 'order', 'schema').filter(schema=self, order__gte=position)
+        update_list = Constituenta.objects.only('id', 'order', 'schema').filter(schema=self.item, order__gte=position)
         for cst in update_list:
             cst.order += 1
         Constituenta.objects.bulk_update(update_list, ['order'])
 
         result = Constituenta.objects.create(
-            schema=self,
+            schema=self.item,
             order=position,
             alias=alias,
             cst_type=insert_type
         )
         self.update_order()
-        self.save()
+        self.item.save()
         result.refresh_from_db()
         return result
 
@@ -175,13 +309,13 @@ class RSForm(Model):
         if self.constituents().exists():
             position += self.constituents().count()
         result = Constituenta.objects.create(
-            schema=self,
+            schema=self.item,
             order=position,
             alias=alias,
             cst_type=insert_type
         )
         self.update_order()
-        self.save()
+        self.item.save()
         result.refresh_from_db()
         return result
 
@@ -207,7 +341,7 @@ class RSForm(Model):
             update_list.append(cst)
         Constituenta.objects.bulk_update(update_list, ['order'])
         self.update_order()
-        self.save()
+        self.item.save()
 
     @transaction.atomic
     def delete_cst(self, listCst):
@@ -216,7 +350,7 @@ class RSForm(Model):
             cst.delete()
         self.update_order()
         self.resolve_all_text()
-        self.save()
+        self.item.save()
 
     @transaction.atomic
     def create_cst(self, data: dict, insert_after: Optional[str]=None) -> 'Constituenta':
@@ -326,12 +460,6 @@ class RSForm(Model):
         else:
             return self.insert_last(data['alias'], data['cst_type'])
 
-    def __str__(self) -> str:
-        return f'{self.title}'
-
-    def get_absolute_url(self):
-        return reverse('rsform-detail', kwargs={'pk': self.pk})
-
     def _term_graph(self) -> Graph:
         result = Graph()
         cst_list = self.constituents().only('order', 'alias', 'term_raw').order_by('order')
@@ -354,83 +482,6 @@ class RSForm(Model):
                     result.add_edge(id_from=alias, id_to=cst.alias)
         return result
 
-
-class Constituenta(Model):
-    ''' Constituenta is the base unit for every conceptual schema '''
-    schema: ForeignKey = ForeignKey(
-        verbose_name='Концептуальная схема',
-        to=RSForm,
-        on_delete=CASCADE
-    )
-    order: PositiveIntegerField = PositiveIntegerField(
-        verbose_name='Позиция',
-        validators=[MinValueValidator(1)],
-        default=-1,
-    )
-    alias: CharField = CharField(
-        verbose_name='Имя',
-        max_length=8,
-        default='undefined'
-    )
-    cst_type: CharField = CharField(
-        verbose_name='Тип',
-        max_length=10,
-        choices=CstType.choices,
-        default=CstType.BASE
-    )
-    convention: TextField = TextField(
-        verbose_name='Комментарий/Конвенция',
-        default='',
-        blank=True
-    )
-    term_raw: TextField = TextField(
-        verbose_name='Термин (с отсылками)',
-        default='',
-        blank=True
-    )
-    term_resolved: TextField = TextField(
-        verbose_name='Термин',
-        default='',
-        blank=True
-    )
-    term_forms: JSONField = JSONField(
-        verbose_name='Словоформы',
-        default=_empty_forms
-    )
-    definition_formal: TextField = TextField(
-        verbose_name='Родоструктурное определение',
-        default='',
-        blank=True
-    )
-    definition_raw: TextField = TextField(
-        verbose_name='Текстовое определние (с отсылками)',
-        default='',
-        blank=True
-    )
-    definition_resolved: TextField = TextField(
-        verbose_name='Текстовое определние',
-        default='',
-        blank=True
-    )
-
-    class Meta:
-        ''' Model metadata. '''
-        verbose_name = 'Конституета'
-        verbose_name_plural = 'Конституенты'
-
-    def get_absolute_url(self):
-        ''' URL access. '''
-        return reverse('constituenta-detail', kwargs={'pk': self.pk})
-
-    def __str__(self) -> str:
-        return f'{self.alias}'
-
-    def set_term_resolved(self, new_term: str):
-        ''' Set term and reset forms if needed. '''
-        if new_term == self.term_resolved:
-            return
-        self.term_resolved = new_term
-        self.term_forms = []
 
 class PyConceptAdapter:
     ''' RSForm adapter for interacting with pyconcept module. '''
@@ -456,14 +507,14 @@ class PyConceptAdapter:
 
     def _complete_rsform_details(self, data: dict) -> dict:
         result = deepcopy(data)
-        result['id'] = self.schema.pk
-        result['alias'] = self.schema.alias
-        result['title'] = self.schema.title
-        result['comment'] = self.schema.comment
-        result['time_update'] = self.schema.time_update
-        result['time_create'] = self.schema.time_create
-        result['is_common'] = self.schema.is_common
-        result['owner'] = (self.schema.owner.pk if self.schema.owner is not None else None)
+        result['id'] = self.schema.item.pk
+        result['alias'] = self.schema.item.alias
+        result['title'] = self.schema.item.title
+        result['comment'] = self.schema.item.comment
+        result['time_update'] = self.schema.item.time_update
+        result['time_create'] = self.schema.item.time_create
+        result['is_common'] = self.schema.item.is_common
+        result['owner'] = (self.schema.item.owner.pk if self.schema.item.owner is not None else None)
         for cst_data in result['items']:
             cst = Constituenta.objects.get(pk=cst_data['id'])
             cst_data['convention'] = cst.convention

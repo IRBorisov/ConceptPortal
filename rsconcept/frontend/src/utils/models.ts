@@ -214,6 +214,29 @@ export interface ICstCreatedResponse {
   schema: IRSFormData
 }
 
+// ========== LibraryItem ============
+export enum LibraryItemType {
+  RSFORM = 'rsform',
+  OPERATIONS_SCHEMA = 'oss'
+}
+
+export interface ILibraryItem {
+  id: number
+  item_type: LibraryItemType
+  title: string
+  alias: string
+  comment: string
+  is_common: boolean
+  is_canonical: boolean
+  time_create: string
+  time_update: string
+  owner: number | null
+}
+
+export interface ILibraryUpdateData
+extends Omit<ILibraryItem, 'time_create' | 'time_update' | 'id' | 'owner'> {}
+
+
 // ========== RSForm ============
 export interface IRSFormStats {
   count_all: number
@@ -233,28 +256,17 @@ export interface IRSFormStats {
   count_theorem: number
 }
 
-export interface IRSForm {
-  id: number
-  title: string
-  alias: string
-  comment: string
-  is_common: boolean
-  time_create: string
-  time_update: string
-  owner: number | null
+export interface IRSForm
+extends ILibraryItem {
   items: IConstituenta[]
   stats: IRSFormStats
   graph: Graph
 }
 
 export interface IRSFormData extends Omit<IRSForm, 'stats' | 'graph'> {}
-export interface IRSFormMeta extends Omit<IRSForm, 'items' | 'stats' | 'graph'> {}
-
-export interface IRSFormUpdateData
-extends Omit<IRSFormMeta, 'time_create' | 'time_update' | 'id' | 'owner'> {}
 
 export interface IRSFormCreateData
-extends IRSFormUpdateData {
+extends ILibraryUpdateData {
   file?: File
   fileName?: string
 }
@@ -454,7 +466,7 @@ export function matchConstituenta(query: string, target: IConstituenta, mode: Cs
   return false;
 }
 
-export function matchRSFormMeta(query: string, target: IRSFormMeta) {
+export function matchLibraryItem(query: string, target: ILibraryItem): boolean {
   const queryI = query.toUpperCase();
   if (target.alias.toUpperCase().match(queryI)) {
     return true;

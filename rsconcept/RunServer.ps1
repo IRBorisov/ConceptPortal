@@ -5,6 +5,7 @@ Param(
 
 $pyExec = "$PSScriptRoot\backend\venv\Scripts\python.exe"
 $djangoSrc = "$PSScriptRoot\backend\manage.py"
+$initialData = "fixtures/InitialData.json"
 
 function RunServer() {
 	RunBackend
@@ -20,6 +21,7 @@ function RunBackend() {
         FlushData
         DoMigrations
         PrepareStatic -clearPrevious
+        AddInitialData
         AddAdmin
     } else {
         DoMigrations
@@ -35,13 +37,16 @@ function RunFrontend() {
 }
 
 function FlushData {
-    & $pyExec $djangoSrc flush --no-input\
+    & $pyExec $djangoSrc flush --noinput
     $dbPath = "$PSScriptRoot\backend\db.sqlite3"
     if (Test-Path -Path $dbPath -PathType Leaf) {
 	    Remove-Item $dbPath
     }
 }
 
+function AddInitialData {
+    & $pyExec manage.py loaddata $initialData
+}
 function AddAdmin {
     $env:DJANGO_SUPERUSER_USERNAME = 'admin'
     $env:DJANGO_SUPERUSER_PASSWORD = '1234'

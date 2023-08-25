@@ -6,7 +6,7 @@ from django.db import transaction
 from cctext import Resolver, Reference, ReferenceType, EntityReference, SyntacticReference
 
 from .utils import fix_old_references
-from .models import Constituenta, RSForm
+from .models import Constituenta, LibraryItem, RSForm
 
 _CST_TYPE = 'constituenta'
 _TRS_TYPE = 'rsform'
@@ -30,13 +30,27 @@ class TextSerializer(serializers.Serializer):
     text = serializers.CharField()
 
 
-class RSFormMetaSerializer(serializers.ModelSerializer):
-    ''' Serializer: General purpose RSForm data. '''
+class LibraryItemSerializer(serializers.ModelSerializer):
+    ''' Serializer: Library item data. '''
+    class Meta:
+        ''' serializer metadata. '''
+        model = LibraryItem
+        fields = '__all__'
+        read_only_fields = ('owner', 'id', 'item_type')
+
+
+class RSFormSerializer(serializers.ModelSerializer):
+    ''' Serializer: Detailed data for RSForm. '''
     class Meta:
         ''' serializer metadata. '''
         model = RSForm
-        fields = '__all__'
-        read_only_fields = ('owner', 'id')
+
+    def to_representation(self, instance: RSForm):
+        result = LibraryItemSerializer(instance.item).data
+        result['items'] = []
+        for cst in instance.constituents().order_by('order'):
+            result['items'].append(ConstituentaSerializer(cst).data)
+        return result
 
 
 class RSFormUploadSerializer(serializers.Serializer):
@@ -45,26 +59,8 @@ class RSFormUploadSerializer(serializers.Serializer):
     load_metadata = serializers.BooleanField()
 
 
-class RSFormContentsSerializer(serializers.ModelSerializer):
-    ''' Serializer: Detailed data for RSForm. '''
-    class Meta:
-        ''' serializer metadata. '''
-        model = RSForm
-
-    def to_representation(self, instance: RSForm):
-        result = RSFormMetaSerializer(instance).data
-        result['items'] = []
-        for cst in instance.constituents().order_by('order'):
-            result['items'].append(ConstituentaSerializer(cst).data)
-        return result
-
-
 class RSFormTRSSerializer(serializers.Serializer):
     ''' Serializer: TRS file production and loading for RSForm. '''
-    class Meta:
-        ''' serializer metadata. '''
-        model = RSForm
-
     def to_representation(self, instance: RSForm) -> dict:
         result = self._prepare_json_rsform(instance)
         items = instance.constituents().order_by('order')
@@ -76,9 +72,9 @@ class RSFormTRSSerializer(serializers.Serializer):
     def _prepare_json_rsform(schema: RSForm) -> dict:
         return {
             'type': _TRS_TYPE,
-            'title': schema.title,
-            'alias': schema.alias,
-            'comment': schema.comment,
+            'title': schema.item.title,
+            'alias': schema.item.alias,
+            'comment': schema.item.comment,
             'items': [],
             'claimed': False,
             'selection': [],
@@ -114,6 +110,8 @@ class RSFormTRSSerializer(serializers.Serializer):
             result['owner'] = data['owner']
         if 'is_common' in data:
             result['is_common'] = data['is_common']
+        if 'is_canonical' in data:
+            result['is_canonical'] = data['is_canonical']
         result['items'] = data.get('items', [])
         if self.context['load_meta']:
             result['title'] = data.get('title', 'Без названия')
@@ -121,7 +119,7 @@ class RSFormTRSSerializer(serializers.Serializer):
             result['comment']= data.get('comment', '')
         if 'id' in data:
             result['id'] = data['id']
-            self.instance = RSForm.objects.get(pk=result['id'])
+            self.instance = RSForm(LibraryItem.objects.get(pk=result['id']))
         return result
 
     def validate(self, attrs: dict):
@@ -135,19 +133,20 @@ class RSFormTRSSerializer(serializers.Serializer):
 
     @transaction.atomic
     def create(self, validated_data: dict) -> RSForm:
-        self.instance = RSForm(
+        self.instance: RSForm = RSForm.create(
             owner=validated_data.get('owner', None),
             alias=validated_data['alias'],
             title=validated_data['title'],
             comment=validated_data['comment'],
-            is_common=validated_data['is_common']
+            is_common=validated_data['is_common'],
+            is_canonical=validated_data['is_canonical']
         )
-        self.instance.save()
+        self.instance.item.save()
         order = 1
         for cst_data in validated_data['items']:
             cst = Constituenta(
                 alias=cst_data['alias'],
-                schema=self.instance,
+                schema=self.instance.item,
                 order=order,
                 cst_type=cst_data['cstType'],
             )
@@ -160,11 +159,11 @@ class RSFormTRSSerializer(serializers.Serializer):
     @transaction.atomic
     def update(self, instance: RSForm, validated_data) -> RSForm:
         if 'alias' in validated_data:
-            instance.alias = validated_data['alias']
+            instance.item.alias = validated_data['alias']
         if 'title' in validated_data:
-            instance.title = validated_data['title']
+            instance.item.title = validated_data['title']
         if 'comment' in validated_data:
-            instance.comment = validated_data['comment']
+            instance.item.comment = validated_data['comment']
 
         order = 1
         prev_constituents = instance.constituents()
@@ -181,7 +180,7 @@ class RSFormTRSSerializer(serializers.Serializer):
             else:
                 cst = Constituenta(
                     alias=cst_data['alias'],
-                    schema=instance,
+                    schema=instance.item,
                     order=order,
                     cst_type=cst_data['cstType'],
                 )
@@ -196,7 +195,7 @@ class RSFormTRSSerializer(serializers.Serializer):
 
         instance.update_order()
         instance.resolve_all_text()
-        instance.save()
+        instance.item.save()
         return instance
 
     @staticmethod
@@ -225,7 +224,7 @@ class ConstituentaSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'order', 'alias', 'cst_type', 'definition_resolved', 'term_resolved')
 
     def update(self, instance: Constituenta, validated_data) -> Constituenta:
-        schema: RSForm = instance.schema
+        schema = RSForm(instance.schema)
         definition: Optional[str] = validated_data['definition_raw'] if 'definition_raw' in validated_data else None
         term: Optional[str] = validated_data['term_raw'] if 'term_raw' in validated_data else None
         term_changed = False
@@ -240,7 +239,7 @@ class ConstituentaSerializer(serializers.ModelSerializer):
         if term_changed:
             schema.on_term_change([result.alias])
             result.refresh_from_db()
-        schema.save()
+        schema.item.save()
         return result
 
 
@@ -281,16 +280,16 @@ class CstRenameSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         schema = cast(RSForm, self.context['schema'])
         old_cst = Constituenta.objects.get(pk=self.initial_data['id'])
-        if old_cst.schema != schema:
+        if old_cst.schema != schema.item:
             raise serializers.ValidationError({
-                'id': f'Изменяемая конституента должна относиться к изменяемой схеме: {schema.title}'
+                'id': f'Изменяемая конституента должна относиться к изменяемой схеме: {schema.item.title}'
             })
         if old_cst.alias == self.initial_data['alias']:
             raise serializers.ValidationError({
                 'alias': f'Имя конституенты должно отличаться от текущего: {self.initial_data["alias"]}'
             })
         self.instance = old_cst
-        attrs['schema'] = schema
+        attrs['schema'] = schema.item
         attrs['id'] = self.initial_data['id']
         return attrs
 
@@ -306,7 +305,7 @@ class CstListSerializer(serializers.Serializer):
         cstList = []
         for item in attrs['items']:
             cst = item['object']
-            if cst.schema != schema:
+            if cst.schema != schema.item:
                 raise serializers.ValidationError(
                     {'items': f'Конституенты должны относиться к данной схеме: {item}'})
             cstList.append(cst)

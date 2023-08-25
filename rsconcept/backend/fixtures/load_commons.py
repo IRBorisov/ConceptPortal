@@ -13,16 +13,10 @@ def load_initial_schemas(apps, schema_editor):
         for file in files:
             data = utils.read_trs(os.path.join(subdir, file))
             data['is_common'] = True
+            data['is_canonical'] = True
             serializer = RSFormTRSSerializer(data=data, context={'load_meta': True})
             serializer.is_valid(raise_exception=True)
             serializer.save()
-
-
-def load_initial_users(apps, schema_editor):
-    for n in range(1, 10, 1):
-        User.objects.create_user(
-            f'TestUser{n}', f'usermail{n}@gmail.com', '1234'
-        )
 
 
 class Migration(migrations.Migration):
@@ -35,5 +29,4 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(load_initial_schemas),
-        migrations.RunPython(load_initial_users),
     ]

@@ -6,14 +6,14 @@ import { useRSFormDetails } from '../hooks/useRSFormDetails'
 import {
   type DataCallback, getTRSFile,
   patchConstituenta, patchDeleteConstituenta,
+patchLibraryItem,
   patchMoveConstituenta, patchRenameConstituenta,
-  patchResetAliases, patchRSForm,
-  patchUploadTRS,  postClaimRSForm, postNewConstituenta
+  patchResetAliases,   patchUploadTRS,  postClaimLibraryItem, postNewConstituenta
 } from '../utils/backendAPI'
 import {
   IConstituentaList, IConstituentaMeta, ICstCreateData,
-  ICstMovetoData, ICstRenameData, ICstUpdateData, IRSForm, 
-  IRSFormMeta, IRSFormUpdateData, IRSFormUploadData
+  ICstMovetoData, ICstRenameData, ICstUpdateData, ILibraryItem, 
+  ILibraryUpdateData, IRSForm, IRSFormUploadData
 } from '../utils/models'
 import { useAuth } from './AuthContext'
 
@@ -35,8 +35,8 @@ interface IRSFormContext {
   toggleReadonly: () => void
   toggleTracking: () => void
   
-  update: (data: IRSFormUpdateData, callback?: DataCallback<IRSFormMeta>) => void
-  claim: (callback?: DataCallback<IRSFormMeta>) => void
+  update: (data: ILibraryUpdateData, callback?: DataCallback<ILibraryItem>) => void
+  claim: (callback?: DataCallback<ILibraryItem>) => void
   download: (callback: DataCallback<Blob>) => void
   upload: (data: IRSFormUploadData, callback: () => void) => void
 
@@ -73,33 +73,41 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
   const [ isForceAdmin, setIsForceAdmin ] = useState(false);
   const [ isReadonly, setIsReadonly ] = useState(false);
 
-  const isOwned = useMemo(() => user?.id === schema?.owner || false, [user, schema?.owner]);
-  const isClaimable = useMemo(() => user?.id !== schema?.owner || false, [user, schema?.owner]);
+  const isOwned = useMemo(
+  () => {
+    return user?.id === schema?.owner || false;
+  }, [user, schema?.owner]);
+
+  const isClaimable = useMemo(
+  () => {
+    return (user?.id !== schema?.owner && schema?.is_common && !schema?.is_canonical) ?? false;
+  }, [user, schema?.owner, schema?.is_common, schema?.is_canonical]);
+
   const isEditable = useMemo(
-    () => {
-      return (
-        !loading && !processing && !isReadonly &&
+  () => {
+    return (
+      !loading && !processing && !isReadonly &&
       ((isOwned || (isForceAdmin && user?.is_staff)) ?? false)
-      )
-    }, [user?.is_staff, isReadonly, isForceAdmin, isOwned, loading, processing])
+    );
+  }, [user?.is_staff, isReadonly, isForceAdmin, isOwned, loading, processing]);
 
   const isTracking = useMemo(
-    () => {
-      return true
-    }, []);
+  () => {
+    return true;
+  }, []);
 
   const toggleTracking = useCallback(
-    () => {
-      toast.info('Отслеживание в разработке...')
-    }, []);
+  () => {
+    toast.info('Отслеживание в разработке...')
+  }, []);
 
   const update = useCallback(
-  (data: IRSFormUpdateData, callback?: DataCallback<IRSFormMeta>) => {
+  (data: ILibraryUpdateData, callback?: DataCallback<ILibraryItem>) => {
     if (!schema) {
       return;
     }
     setError(undefined)
-    patchRSForm(schemaID, {
+    patchLibraryItem(schemaID, {
       data: data,
       showError: true,
       setLoading: setProcessing,
@@ -130,12 +138,12 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
   }, [schemaID, setError, setSchema, schema]);
 
   const claim = useCallback(
-  (callback?: DataCallback<IRSFormMeta>) => {
+  (callback?: DataCallback<ILibraryItem>) => {
     if (!schema || !user) {
       return;
     }
     setError(undefined)
-    postClaimRSForm(schemaID, {
+    postClaimLibraryItem(schemaID, {
       showError: true,
       setLoading: setProcessing,
       onError: error => setError(error),

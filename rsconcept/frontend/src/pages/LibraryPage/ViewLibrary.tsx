@@ -6,19 +6,19 @@ import ConceptDataTable from '../../components/Common/ConceptDataTable';
 import TextURL from '../../components/Common/TextURL';
 import { useNavSearch } from '../../context/NavSearchContext';
 import { useUsers } from '../../context/UsersContext';
-import { IRSFormMeta } from '../../utils/models'
+import { ILibraryItem } from '../../utils/models'
 
 interface ViewLibraryProps {
-  schemas: IRSFormMeta[]
+  items: ILibraryItem[]
 }
 
-function ViewLibrary({ schemas }: ViewLibraryProps) {
+function ViewLibrary({ items }: ViewLibraryProps) {
   const { resetQuery: cleanQuery } = useNavSearch();
   const navigate = useNavigate();
   const intl = useIntl();
   const { getUserLabel } = useUsers();
 
-  const openRSForm = (schema: IRSFormMeta) => navigate(`/rsforms/${schema.id}`);
+  const openRSForm = (item: ILibraryItem) => navigate(`/rsforms/${item.id}`);
 
   const columns = useMemo(() =>
   [
@@ -26,7 +26,17 @@ function ViewLibrary({ schemas }: ViewLibraryProps) {
       name: 'Шифр',
       id: 'alias',
       maxWidth: '140px',
-      selector: (schema: IRSFormMeta) => schema.alias,
+      selector: (item: ILibraryItem) => item.alias,
+      sortable: true,
+      reorder: true
+    },
+    {
+      name: 'Статусы',
+      id: 'status',
+      maxWidth: '50px',
+      selector: (item: ILibraryItem) => {
+        return `${item.is_canonical ? 'C': ''}${item.is_common ? 'S': ''}`
+      },
       sortable: true,
       reorder: true
     },
@@ -34,16 +44,16 @@ function ViewLibrary({ schemas }: ViewLibraryProps) {
       name: 'Название',
       id: 'title',
       minWidth: '50%',
-      selector: (schema: IRSFormMeta) => schema.title,
+      selector: (item: ILibraryItem) => item.title,
       sortable: true,
       reorder: true
     },
     {
       name: 'Владелец',
       id: 'owner',
-      selector: (schema: IRSFormMeta) => schema.owner ?? 0,
-      format: (schema: IRSFormMeta) => {
-        return getUserLabel(schema.owner);
+      selector: (item: ILibraryItem) => item.owner ?? 0,
+      format: (item: ILibraryItem) => {
+        return getUserLabel(item.owner);
       },
       sortable: true,
       reorder: true
@@ -51,8 +61,8 @@ function ViewLibrary({ schemas }: ViewLibraryProps) {
     {
       name: 'Обновлена',
       id: 'time_update',
-      selector: (schema: IRSFormMeta) => schema.time_update,
-      format: (schema: IRSFormMeta) => new Date(schema.time_update).toLocaleString(intl.locale),
+      selector: (item: ILibraryItem) => item.time_update,
+      format: (item: ILibraryItem) => new Date(item.time_update).toLocaleString(intl.locale),
       sortable: true,
       reorder: true
     }
@@ -61,7 +71,7 @@ function ViewLibrary({ schemas }: ViewLibraryProps) {
   return (
     <ConceptDataTable
       columns={columns}
-      data={schemas}
+      data={items}
       defaultSortFieldId='time_update'
       defaultSortAsc={false}
       striped

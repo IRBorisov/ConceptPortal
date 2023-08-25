@@ -8,9 +8,9 @@ class ConstituentaAdmin(admin.ModelAdmin):
     ''' Admin model: Constituenta. '''
 
 
-class RSFormAdmin(admin.ModelAdmin):
-    ''' Admin model: RSForm. '''
+class Librarydmin(admin.ModelAdmin):
+    ''' Admin model: LibraryItem. '''
 
 
 admin.site.register(models.Constituenta, ConstituentaAdmin)
-admin.site.register(models.RSForm, RSFormAdmin)
+admin.site.register(models.LibraryItem, Librarydmin)

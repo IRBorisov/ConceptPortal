@@ -6,7 +6,7 @@ import { Loader } from '../../components/Common/Loader'
 import { useAuth } from '../../context/AuthContext';
 import { useLibrary } from '../../context/LibraryContext';
 import { useNavSearch } from '../../context/NavSearchContext';
-import { ILibraryFilter, IRSFormMeta } from '../../utils/models';
+import { ILibraryFilter, ILibraryItem } from '../../utils/models';
 import ViewLibrary from './ViewLibrary';
 
 function LibraryPage() {
@@ -16,7 +16,7 @@ function LibraryPage() {
   const library = useLibrary();
   
   const [ filterParams, setFilterParams ] = useState<ILibraryFilter>({});
-  const [ items, setItems ] = useState<IRSFormMeta[]>([]);
+  const [ items, setItems ] = useState<ILibraryItem[]>([]);
   
   useLayoutEffect(() => {
     const filterType = new URLSearchParams(search).get('filter');
@@ -43,7 +43,7 @@ function LibraryPage() {
     <div className='w-full'>
       { library.loading && <Loader /> }
       { library.error && <BackendError error={library.error} />}
-      { !library.loading && library.items && <ViewLibrary schemas={items} /> }
+      { !library.loading && library.items && <ViewLibrary items={items} /> }
     </div>
   );
 }

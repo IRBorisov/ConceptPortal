@@ -11,7 +11,7 @@ import TextArea from '../components/Common/TextArea';
 import TextInput from '../components/Common/TextInput';
 import RequireAuth from '../components/RequireAuth';
 import { useLibrary } from '../context/LibraryContext';
-import { IRSFormCreateData } from '../utils/models';
+import { IRSFormCreateData, LibraryItemType } from '../utils/models';
 
 function CreateRSFormPage() {
   const navigate = useNavigate();
@@ -41,10 +41,12 @@ function CreateRSFormPage() {
       return;
     }
     const data: IRSFormCreateData = {
+      item_type: LibraryItemType.RSFORM,
       title: title,
       alias: alias,
       comment: comment,
       is_common: common,
+      is_canonical: false,
       file: file,
       fileName: file?.name
     };

@@ -6,9 +6,8 @@ import { config } from './constants'
 import {
   IConstituentaList, IConstituentaMeta,
   ICstCreateData, ICstCreatedResponse, ICstMovetoData, ICstRenameData, ICstUpdateData,
-  ICurrentUser, IExpressionParse, IReferenceData, IRefsText, IRSExpression,
-  IRSFormCreateData, IRSFormData,
-  IRSFormMeta, IRSFormUpdateData, IRSFormUploadData, IUserInfo,
+  ICurrentUser, IExpressionParse, ILibraryItem, ILibraryUpdateData, IReferenceData, IRefsText, 
+  IRSExpression,  IRSFormCreateData, IRSFormData, IRSFormUploadData, IUserInfo,
   IUserLoginData, IUserProfile, IUserSignupData, IUserUpdateData, IUserUpdatePassword
 } from './models'
 
@@ -116,15 +115,15 @@ export function getActiveUsers(request: FrontPull<IUserInfo[]>) {
   });
 }
 
-export function getLibrary(request: FrontPull<IRSFormMeta[]>) {
+export function getLibrary(request: FrontPull<ILibraryItem[]>) {
   AxiosGet({
     title: 'Available RSForms (Library) list',
-    endpoint: '/api/library/',
+    endpoint: '/api/library/active/',
     request: request
   });
 }
 
-export function postNewRSForm(request: FrontExchange<IRSFormCreateData, IRSFormMeta>) {
+export function postNewRSForm(request: FrontExchange<IRSFormCreateData, ILibraryItem>) {
   AxiosPost({
     title: 'New RSForm',
     endpoint: '/api/rsforms/create-detailed/',
@@ -137,10 +136,10 @@ export function postNewRSForm(request: FrontExchange<IRSFormCreateData, IRSFormM
   });
 }
 
-export function postCloneRSForm(schema: string, request: FrontExchange<IRSFormCreateData, IRSFormData>) {
+export function postCloneLibraryItem(target: string, request: FrontExchange<IRSFormCreateData, IRSFormData>) {
   AxiosPost({
     title: 'clone RSForm',
-    endpoint: `/api/rsforms/${schema}/clone/`,
+    endpoint: `/api/library/${target}/clone/`,
     request: request
   });
 }
@@ -153,26 +152,26 @@ export function getRSFormDetails(target: string, request: FrontPull<IRSFormData>
   });
 }
 
-export function patchRSForm(target: string, request: FrontExchange<IRSFormUpdateData, IRSFormMeta>) {
+export function patchLibraryItem(target: string, request: FrontExchange<ILibraryUpdateData, ILibraryItem>) {
   AxiosPatch({
     title: `RSForm id=${target}`,
-    endpoint: `/api/rsforms/${target}/`,
+    endpoint: `/api/library/${target}/`,
     request: request
   });
 }
 
-export function deleteRSForm(target: string, request: FrontAction) {
+export function deleteLibraryItem(target: string, request: FrontAction) {
   AxiosDelete({
     title: `RSForm id=${target}`,
-    endpoint: `/api/rsforms/${target}/`,
+    endpoint: `/api/library/${target}/`,
     request: request
   });
 }
 
-export function postClaimRSForm(target: string, request: FrontPull<IRSFormMeta>) {
+export function postClaimLibraryItem(target: string, request: FrontPull<ILibraryItem>) {
   AxiosPost({
     title: `Claim on RSForm id=${target}`,
-    endpoint: `/api/rsforms/${target}/claim/`,
+    endpoint: `/api/library/${target}/claim/`,
     request: request
   });
 }

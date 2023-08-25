@@ -3,7 +3,7 @@ import json
 from io import BytesIO
 import re
 from zipfile import ZipFile
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import BasePermission, IsAuthenticated
 
 
 class ObjectOwnerOrAdmin(BasePermission):
@@ -14,6 +14,14 @@ class ObjectOwnerOrAdmin(BasePermission):
         if not hasattr(request.user, 'is_staff'):
             return False
         return request.user.is_staff # type: ignore
+
+
+class IsClaimable(IsAuthenticated):
+    ''' Permission for object ownership restriction '''
+    def has_object_permission(self, request, view, obj):
+        if not super().has_permission(request, view):
+            return False
+        return obj.is_common
 
 
 class SchemaOwnerOrAdmin(BasePermission):

@@ -8,14 +8,17 @@ from apps.rsform.models import (
     RSForm,
     Constituenta,
     CstType,
-    User
+    User,
+    LibraryItem,
+    LibraryItemType
 )
 
 
 class TestConstituenta(TestCase):
+    ''' Testing Constituenta model. '''
     def setUp(self):
-        self.schema1 = RSForm.objects.create(title='Test1')
-        self.schema2 = RSForm.objects.create(title='Test2')
+        self.schema1 = LibraryItem.objects.create(item_type=LibraryItemType.RSFORM, title='Test1')
+        self.schema2 = LibraryItem.objects.create(item_type=LibraryItemType.RSFORM, title='Test2')
 
     def test_str(self):
         testStr = 'X1'
@@ -63,7 +66,8 @@ class TestConstituenta(TestCase):
         self.assertEqual(cst.definition_raw, '')
 
 
-class TestRSForm(TestCase):
+class TestLibraryItem(TestCase):
+    ''' Testing LibraryItem model. '''
     def setUp(self):
         self.user1 = User.objects.create(username='User1')
         self.user2 = User.objects.create(username='User2')
@@ -71,65 +75,79 @@ class TestRSForm(TestCase):
 
     def test_str(self):
         testStr = 'Test123'
-        schema = RSForm.objects.create(title=testStr, owner=self.user1, alias='КС1')
-        self.assertEqual(str(schema), testStr)
+        item = LibraryItem.objects.create(item_type=LibraryItemType.RSFORM,
+                                    title=testStr, owner=self.user1, alias='КС1')
+        self.assertEqual(str(item), testStr)
 
     def test_url(self):
         testStr = 'Test123'
-        schema = RSForm.objects.create(title=testStr, owner=self.user1, alias='КС1')
-        self.assertEqual(schema.get_absolute_url(), f'/api/rsforms/{schema.id}/')
+        item = LibraryItem.objects.create(item_type=LibraryItemType.RSFORM,
+                                  title=testStr, owner=self.user1, alias='КС1')
+        self.assertEqual(item.get_absolute_url(), f'/api/library/{item.id}/')
 
     def test_create_default(self):
-        schema = RSForm.objects.create(title='Test')
-        self.assertIsNone(schema.owner)
-        self.assertEqual(schema.title, 'Test')
-        self.assertEqual(schema.alias, '')
-        self.assertEqual(schema.comment, '')
-        self.assertEqual(schema.is_common, False)
+        item = LibraryItem.objects.create(item_type=LibraryItemType.RSFORM, title='Test')
+        self.assertIsNone(item.owner)
+        self.assertEqual(item.title, 'Test')
+        self.assertEqual(item.alias, '')
+        self.assertEqual(item.comment, '')
+        self.assertEqual(item.is_common, False)
+        self.assertEqual(item.is_canonical, False)
 
     def test_create(self):
-        schema = RSForm.objects.create(
+        item = LibraryItem.objects.create(
+            item_type=LibraryItemType.RSFORM,
             title='Test',
             owner=self.user1,
             alias='KS1',
             comment='Test comment',
-            is_common=True
+            is_common=True,
+            is_canonical=True
         )
-        self.assertEqual(schema.owner, self.user1)
-        self.assertEqual(schema.title, 'Test')
-        self.assertEqual(schema.alias, 'KS1')
-        self.assertEqual(schema.comment, 'Test comment')
-        self.assertEqual(schema.is_common, True)
+        self.assertEqual(item.owner, self.user1)
+        self.assertEqual(item.title, 'Test')
+        self.assertEqual(item.alias, 'KS1')
+        self.assertEqual(item.comment, 'Test comment')
+        self.assertEqual(item.is_common, True)
+        self.assertEqual(item.is_canonical, True)
+
+
+class TestRSForm(TestCase):
+    ''' Testing RSForm wrapper. '''
+    def setUp(self):
+        self.user1 = User.objects.create(username='User1')
+        self.user2 = User.objects.create(username='User2')
+        self.assertNotEqual(self.user1, self.user2)
 
     def test_constituents(self):
-        schema1 = RSForm.objects.create(title='Test1')
-        schema2 = RSForm.objects.create(title='Test2')
+        schema1 = RSForm.create(title='Test1')
+        schema2 = RSForm.create(title='Test2')
         self.assertFalse(schema1.constituents().exists())
         self.assertFalse(schema2.constituents().exists())
 
-        Constituenta.objects.create(alias='X1', schema=schema1, order=1)
-        Constituenta.objects.create(alias='X2', schema=schema1, order=2)
+        Constituenta.objects.create(alias='X1', schema=schema1.item, order=1)
+        Constituenta.objects.create(alias='X2', schema=schema1.item, order=2)
         self.assertTrue(schema1.constituents().exists())
         self.assertFalse(schema2.constituents().exists())
         self.assertEqual(schema1.constituents().count(), 2)
 
     def test_insert_at(self):
-        schema = RSForm.objects.create(title='Test')
+        schema = RSForm.create(title='Test')
         cst1 = schema.insert_at(1, 'X1', CstType.BASE)
         self.assertEqual(cst1.order, 1)
-        self.assertEqual(cst1.schema, schema)
+        self.assertEqual(cst1.schema, schema.item)
 
         cst2 = schema.insert_at(1, 'X2', CstType.BASE)
         cst1.refresh_from_db()
         self.assertEqual(cst2.order, 1)
-        self.assertEqual(cst2.schema, schema)
+        self.assertEqual(cst2.schema, schema.item)
         self.assertEqual(cst1.order, 2)
 
         cst3 = schema.insert_at(4, 'X3', CstType.BASE)
         cst2.refresh_from_db()
         cst1.refresh_from_db()
         self.assertEqual(cst3.order, 3)
-        self.assertEqual(cst3.schema, schema)
+        self.assertEqual(cst3.schema, schema.item)
         self.assertEqual(cst2.order, 1)
         self.assertEqual(cst1.order, 2)
 
@@ -138,7 +156,7 @@ class TestRSForm(TestCase):
         cst2.refresh_from_db()
         cst1.refresh_from_db()
         self.assertEqual(cst4.order, 3)
-        self.assertEqual(cst4.schema, schema)
+        self.assertEqual(cst4.schema, schema.item)
         self.assertEqual(cst3.order, 4)
         self.assertEqual(cst2.order, 1)
         self.assertEqual(cst1.order, 2)
@@ -147,7 +165,7 @@ class TestRSForm(TestCase):
             schema.insert_at(0, 'X5', CstType.BASE)
 
     def test_insert_at_reorder(self):
-        schema = RSForm.objects.create(title='Test')
+        schema = RSForm.create(title='Test')
         schema.insert_at(1, 'X1', CstType.BASE)
         d1 = schema.insert_at(2, 'D1', CstType.TERM)
         d2 = schema.insert_at(1, 'D2', CstType.TERM)
@@ -159,18 +177,18 @@ class TestRSForm(TestCase):
         self.assertEqual(x2.order, 2)
 
     def test_insert_last(self):
-        schema = RSForm.objects.create(title='Test')
+        schema = RSForm.create(title='Test')
         cst1 = schema.insert_last('X1', CstType.BASE)
         self.assertEqual(cst1.order, 1)
-        self.assertEqual(cst1.schema, schema)
+        self.assertEqual(cst1.schema, schema.item)
 
         cst2 = schema.insert_last('X2', CstType.BASE)
         self.assertEqual(cst2.order, 2)
-        self.assertEqual(cst2.schema, schema)
+        self.assertEqual(cst2.schema, schema.item)
         self.assertEqual(cst1.order, 1)
 
     def test_create_cst_resolve(self):
-        schema = RSForm.objects.create(title='Test')
+        schema = RSForm.create(title='Test')
         cst1 = schema.insert_last('X1', CstType.BASE)
         cst1.term_raw = '@{X2|datv}'
         cst1.definition_raw = '@{X1|datv} @{X2|datv}'
@@ -188,7 +206,7 @@ class TestRSForm(TestCase):
         self.assertEqual(cst2.definition_resolved, 'слонам слоны')
 
     def test_delete_cst(self):
-        schema = RSForm.objects.create(title='Test')
+        schema = RSForm.create(title='Test')
         x1 = schema.insert_last('X1', CstType.BASE)
         x2 = schema.insert_last('X2', CstType.BASE)
         d1 = schema.insert_last('D1', CstType.TERM)
@@ -196,13 +214,13 @@ class TestRSForm(TestCase):
         schema.delete_cst([x2, d1])
         x1.refresh_from_db()
         d2.refresh_from_db()
-        schema.refresh_from_db()
+        schema.item.refresh_from_db()
         self.assertEqual(schema.constituents().count(), 2)
         self.assertEqual(x1.order, 1)
         self.assertEqual(d2.order, 2)
 
     def test_move_cst(self):
-        schema = RSForm.objects.create(title='Test')
+        schema = RSForm.create(title='Test')
         x1 = schema.insert_last('X1', CstType.BASE)
         x2 = schema.insert_last('X2', CstType.BASE)
         d1 = schema.insert_last('D1', CstType.TERM)
@@ -218,7 +236,7 @@ class TestRSForm(TestCase):
         self.assertEqual(d2.order, 3)
 
     def test_move_cst_down(self):
-        schema = RSForm.objects.create(title='Test')
+        schema = RSForm.create(title='Test')
         x1 = schema.insert_last('X1', CstType.BASE)
         x2 = schema.insert_last('X2', CstType.BASE)
         schema.move_cst([x1], 2)
@@ -228,7 +246,7 @@ class TestRSForm(TestCase):
         self.assertEqual(x2.order, 1)
 
     def test_reset_aliases(self):
-        schema = RSForm.objects.create(title='Test')
+        schema = RSForm.create(title='Test')
         x1 = schema.insert_last('X11', CstType.BASE)
         x2 = schema.insert_last('X21', CstType.BASE)
         d1 = schema.insert_last('D11', CstType.TERM)
