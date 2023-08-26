@@ -94,7 +94,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
 
   const isTracking = useMemo(
   () => {
-    if (!schema || !user) {
+    if (!user || !schema || !user.id) {
       return false;
     }
     return schema.subscribers.includes(user.id);
@@ -165,7 +165,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       setLoading: setProcessing,
       onError: error => setError(error),
       onSuccess: () => {
-        if (!schema.subscribers.includes(user.id)) {
+        if (user.id && !schema.subscribers.includes(user.id)) {
           schema.subscribers.push(user.id);
         }
         if (!user.subscriptions.includes(schema.id)) {
@@ -188,7 +188,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       setLoading: setProcessing,
       onError: error => setError(error),
       onSuccess: () => {
-        if (schema.subscribers.includes(user.id)) {
+        if (user.id && schema.subscribers.includes(user.id)) {
           schema.subscribers.splice(schema.subscribers.indexOf(user.id), 1);
         }
         if (user.subscriptions.includes(schema.id)) {

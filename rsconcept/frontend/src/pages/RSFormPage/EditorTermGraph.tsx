@@ -337,8 +337,8 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
   const canvasHeight = useMemo(
   () => {
     return !noNavigation ? 
-      'calc(100vh - 10.5rem)'
-    : 'calc(100vh - 2rem)';
+      'calc(100vh - 9.8rem)'
+    : 'calc(100vh - 1.8rem)';
   }, [noNavigation]);
 
   const dismissedStyle = useCallback(

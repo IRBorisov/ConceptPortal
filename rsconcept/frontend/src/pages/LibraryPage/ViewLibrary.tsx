@@ -3,26 +3,32 @@ import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
 import ConceptDataTable from '../../components/Common/ConceptDataTable';
+import ConceptTooltip from '../../components/Common/ConceptTooltip';
+import MiniButton from '../../components/Common/MiniButton';
 import TextURL from '../../components/Common/TextURL';
-import { EducationIcon, EyeIcon, GroupIcon } from '../../components/Icons';
+import HelpLibrary from '../../components/Help/HelpLibrary';
+import { EducationIcon, EyeIcon, GroupIcon, HelpIcon, PlusIcon } from '../../components/Icons';
 import { useAuth } from '../../context/AuthContext';
-import { useNavSearch } from '../../context/NavSearchContext';
 import { useUsers } from '../../context/UsersContext';
 import { prefixes } from '../../utils/constants';
-import { ILibraryItem } from '../../utils/models'
+import { ILibraryItem } from '../../utils/models';
 
 interface ViewLibraryProps {
   items: ILibraryItem[]
+  cleanQuery: () => void
 }
 
-function ViewLibrary({ items }: ViewLibraryProps) {
-  const { resetQuery: cleanQuery } = useNavSearch();
+function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
   const { user } = useAuth();
   const navigate = useNavigate();
   const intl = useIntl();
   const { getUserLabel } = useUsers();
 
   const openRSForm = (item: ILibraryItem) => navigate(`/rsforms/${item.id}`);
+
+  function handleCreateNew() {
+    navigate('/rsform-create');
+  }
 
   const columns = useMemo(
   () => [
@@ -83,6 +89,26 @@ function ViewLibrary({ items }: ViewLibraryProps) {
   ], [intl, getUserLabel, user]);
   
   return (
+    <div>
+      <div className='relative w-full'>
+      <div className='absolute top-0 left-0 z-20 flex gap-1 mt-2 ml-1'>
+        <MiniButton
+          onClick={handleCreateNew}
+          tooltip='Создать схему'
+          noHover
+          disabled={!user || !user.id}
+          icon={<PlusIcon color={!user || !user.id ? '' : 'text-primary'} size={5} />}
+        />
+        <div id='library-help' className='py-2'>
+          <HelpIcon color='text-primary' size={5} />
+        </div>
+        <ConceptTooltip anchorSelect='#library-help'>
+          <div className='max-w-[35rem]'>
+            <HelpLibrary />
+          </div>
+        </ConceptTooltip>
+      </div>
+      </div>
     <ConceptDataTable
       columns={columns}
       data={items}
@@ -111,6 +137,7 @@ function ViewLibrary({ items }: ViewLibraryProps) {
       paginationRowsPerPageOptions={[10, 20, 30, 50, 100]}
       onRowClicked={openRSForm}
     />
+    </div>
   );
 }
 
