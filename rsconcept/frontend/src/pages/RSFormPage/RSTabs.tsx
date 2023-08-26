@@ -36,8 +36,8 @@ function RSTabs() {
   const navigate = useNavigate();
   const search = useLocation().search;
   const { 
-    error, schema, loading, claim, download,
-    cstCreate, cstDelete, cstRename
+    error, schema, loading, claim, download, isTracking,
+    cstCreate, cstDelete, cstRename, subscribe, unsubscribe
   } = useRSForm();
   const { destroySchema } = useLibrary();
 
@@ -224,6 +224,21 @@ function RSTabs() {
       }
     });
   }, [schema?.alias, download]);
+  
+  const handleToggleSubscribe = useCallback(
+  () => {
+    if (isTracking) {
+      unsubscribe(
+        () => {
+          toast.success('Отслеживание отключено');
+        });
+    } else {
+      subscribe(
+        () => {
+          toast.success('Отслеживание включено');
+        });
+    }
+  }, [isTracking, subscribe, unsubscribe]);
 
   return (
   <div className='w-full'>
@@ -274,6 +289,7 @@ function RSTabs() {
           onDestroy={onDestroySchema}
           onClaim={onClaimSchema}
           onShare={onShareSchema}
+          onToggleSubscribe={handleToggleSubscribe}
           showCloneDialog={() => setShowClone(true)} 
           showUploadDialog={() => setShowUpload(true)} 
         />

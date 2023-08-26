@@ -44,7 +44,9 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   (params: ILibraryFilter) => {
     let result = items;
     if (params.ownedBy) {
-      result = result.filter(item => item.owner === params.ownedBy);
+      result = result.filter(item =>
+        item.owner === params.ownedBy
+        || user?.subscriptions.includes(item.id));
     }
     if (params.is_common !== undefined) {
       result = result.filter(item => item.is_common === params.is_common);
@@ -53,7 +55,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
       result = result.filter(item => matchLibraryItem(params.queryMeta!, item));
     }
     return result;
-  }, [items]);
+  }, [items, user]);
 
   const reload = useCallback(
   (callback?: () => void) => {

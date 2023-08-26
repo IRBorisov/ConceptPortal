@@ -1,15 +1,14 @@
 import { createContext, useCallback, useContext, useMemo, useState } from 'react'
-import { toast } from 'react-toastify'
 
 import { type ErrorInfo } from '../components/BackendError'
 import { useRSFormDetails } from '../hooks/useRSFormDetails'
 import {
-  type DataCallback, getTRSFile,
+  type DataCallback, deleteUnsubscribe,
+getTRSFile,
   patchConstituenta, patchDeleteConstituenta,
 patchLibraryItem,
   patchMoveConstituenta, patchRenameConstituenta,
-  patchResetAliases,   patchUploadTRS,  postClaimLibraryItem, postNewConstituenta
-} from '../utils/backendAPI'
+  patchResetAliases,   patchUploadTRS,  postClaimLibraryItem, postNewConstituenta, postSubscribe} from '../utils/backendAPI'
 import {
   IConstituentaList, IConstituentaMeta, ICstCreateData,
   ICstMovetoData, ICstRenameData, ICstUpdateData, ILibraryItem, 
@@ -33,10 +32,11 @@ interface IRSFormContext {
 
   toggleForceAdmin: () => void
   toggleReadonly: () => void
-  toggleTracking: () => void
   
   update: (data: ILibraryUpdateData, callback?: DataCallback<ILibraryItem>) => void
   claim: (callback?: DataCallback<ILibraryItem>) => void
+  subscribe: (callback?: () => void) => void
+  unsubscribe: (callback?: () => void) => void
   download: (callback: DataCallback<Blob>) => void
   upload: (data: IRSFormUploadData, callback: () => void) => void
 
@@ -72,6 +72,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
 
   const [ isForceAdmin, setIsForceAdmin ] = useState(false);
   const [ isReadonly, setIsReadonly ] = useState(false);
+  const [ toggleTracking, setToggleTracking ] = useState(false);
 
   const isOwned = useMemo(
   () => {
@@ -93,13 +94,12 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
 
   const isTracking = useMemo(
   () => {
-    return true;
-  }, []);
-
-  const toggleTracking = useCallback(
-  () => {
-    toast.info('Отслеживание в разработке...')
-  }, []);
+    if (!schema || !user) {
+      return false;
+    }
+    return schema.subscribers.includes(user.id);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, schema, toggleTracking]);
 
   const update = useCallback(
   (data: ILibraryUpdateData, callback?: DataCallback<ILibraryItem>) => {
@@ -153,6 +153,52 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       }
     });
   }, [schemaID, setError, schema, user, setSchema]);
+  
+  const subscribe = useCallback(
+  (callback?: () => void) => {
+    if (!schema || !user) {
+      return;
+    }
+    setError(undefined)
+    postSubscribe(schemaID, {
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => setError(error),
+      onSuccess: () => {
+        if (!schema.subscribers.includes(user.id)) {
+          schema.subscribers.push(user.id);
+        }
+        if (!user.subscriptions.includes(schema.id)) {
+          user.subscriptions.push(schema.id);
+        }
+        setToggleTracking(prev => !prev);
+        if (callback) callback();
+      }
+    });
+  }, [schemaID, setError, schema, user]);
+
+  const unsubscribe = useCallback(
+  (callback?: () => void) => {
+    if (!schema || !user) {
+      return;
+    }
+    setError(undefined)
+    deleteUnsubscribe(schemaID, {
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => setError(error),
+      onSuccess: () => {
+        if (schema.subscribers.includes(user.id)) {
+          schema.subscribers.splice(schema.subscribers.indexOf(user.id), 1);
+        }
+        if (user.subscriptions.includes(schema.id)) {
+          user.subscriptions.splice(user.subscriptions.indexOf(schema.id), 1);
+        }
+        setToggleTracking(prev => !prev);
+        if (callback) callback();
+      }
+    });
+  }, [schemaID, setError, schema, user]);
 
   const resetAliases = useCallback(
   (callback?: () => void) => {
@@ -264,8 +310,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       isClaimable, isTracking,
       toggleForceAdmin: () => setIsForceAdmin(prev => !prev),
       toggleReadonly: () => setIsReadonly(prev => !prev),
-      toggleTracking,
-      update, download, upload, claim, resetAliases,
+      update, download, upload, claim, resetAliases, subscribe, unsubscribe,
       cstUpdate, cstCreate, cstRename, cstDelete, cstMoveTo
     }}>
       { children }

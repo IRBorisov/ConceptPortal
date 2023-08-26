@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
+from apps.rsform.models import Subscription
 from . import models
 
 
@@ -40,16 +41,23 @@ class LoginSerializer(serializers.Serializer):
         raise NotImplementedError('unexpected `update()` call')
 
 
-class AuthSerializer(serializers.ModelSerializer):
+class AuthSerializer(serializers.Serializer):
     ''' Serializer: Authentication data. '''
-    class Meta:
-        ''' serializer metadata. '''
-        model = models.User
-        fields = [
-            'id',
-            'username',
-            'is_staff'
-        ]
+    def to_representation(self, instance: models.User) -> dict:
+        if instance.is_anonymous:
+            return {
+                'id': None,
+                'username': '',
+                'is_staff': False,
+                'subscriptions': []
+            }
+        else:
+            return {
+                'id': instance.pk,
+                'username': instance.username,
+                'is_staff': instance.is_staff,
+                'subscriptions': [sub.item.pk for sub in Subscription.objects.filter(user=instance)]
+            }
 
 
 class UserInfoSerializer(serializers.ModelSerializer):

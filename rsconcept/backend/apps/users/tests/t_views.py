@@ -3,9 +3,10 @@ import json
 from rest_framework.test import APITestCase, APIClient
 
 from apps.users.models import User
+from apps.rsform.models import LibraryItem, LibraryItemType
 
 
-# TODO: test AUTH and ATIVE_USERS
+# TODO: test ACTIVE_USERS
 class TestUserAPIViews(APITestCase):
     def setUp(self):
         self.username = 'UserTest'
@@ -29,6 +30,30 @@ class TestUserAPIViews(APITestCase):
         self.assertEqual(self.client.post('/users/api/logout').status_code, 204)
 
         self.assertEqual(self.client.post('/users/api/logout').status_code, 403)
+
+    def test_auth(self):
+        LibraryItem.objects.create(item_type=LibraryItemType.RSFORM, title='T1')
+        item = LibraryItem.objects.create(
+            item_type=LibraryItemType.RSFORM,
+            title='Test',
+            alias='T1',
+            is_common=True,
+            owner=self.user
+        )
+        response = self.client.get('/users/api/auth')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['id'], None)
+        self.assertEqual(response.data['username'], '')
+        self.assertEqual(response.data['is_staff'], False)
+        self.assertEqual(response.data['subscriptions'], [])
+
+        self.client.force_login(self.user)
+        response = self.client.get('/users/api/auth')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['id'], self.user.pk)
+        self.assertEqual(response.data['username'], self.user.username)
+        self.assertEqual(response.data['is_staff'], self.user.is_staff)
+        self.assertEqual(response.data['subscriptions'], [item.pk])
 
 
 class TestUserUserProfileAPIView(APITestCase):

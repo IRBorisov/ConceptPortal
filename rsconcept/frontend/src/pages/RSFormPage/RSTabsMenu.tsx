@@ -16,17 +16,18 @@ interface RSTabsMenuProps {
   onClaim: () => void
   onShare: () => void
   onDownload: () => void
+  onToggleSubscribe: () => void
 }
 
 function RSTabsMenu({
   showUploadDialog, showCloneDialog,
-  onDestroy, onShare, onDownload, onClaim
+  onDestroy, onShare, onDownload, onClaim, onToggleSubscribe
 }: RSTabsMenuProps) {
   const navigate = useNavigate();
   const { user } = useAuth();
   const {
-    isOwned, isEditable, isTracking, isReadonly: readonly, isForceAdmin: forceAdmin,
-    toggleTracking, toggleForceAdmin, toggleReadonly
+    isOwned, isEditable, isTracking, isReadonly, isClaimable, isForceAdmin,
+    toggleForceAdmin, toggleReadonly, processing
   } = useRSForm();
   const schemaMenu = useDropdown();
   const editMenu = useDropdown();
@@ -127,7 +128,11 @@ function RSTabsMenu({
         />
         { editMenu.isActive &&
         <Dropdown>
-          <DropdownButton disabled={!user} onClick={!isOwned ? handleClaimOwner : undefined}>
+          <DropdownButton 
+            disabled={!user || !isClaimable}
+            onClick={!isOwned ? handleClaimOwner : undefined}
+            description={!user || !isClaimable ? 'Стать владельцем можно только для общей небиблиотечной схемы' : ''}
+          >
             <div className='inline-flex items-center gap-1 justify-normal'>
               <span className={isOwned ? 'text-green' : ''}><CrownIcon size={4} /></span>
               <p>
@@ -139,20 +144,21 @@ function RSTabsMenu({
           {(isOwned || user?.is_staff) &&
           <DropdownButton onClick={toggleReadonly}>
             <Checkbox 
-              value={readonly}
+              value={isReadonly}
               label='Я — читатель!'
               tooltip='Режим чтения'
             />
           </DropdownButton>}
           {user?.is_staff &&
           <DropdownButton onClick={toggleForceAdmin}>
-            <Checkbox value={forceAdmin} label='режим администратора'/>
+            <Checkbox value={isForceAdmin} label='режим администратора'/>
           </DropdownButton>}
         </Dropdown>}
       </div>
       <div>
         <Button
           tooltip={'отслеживание: ' + (isTracking ? '[включено]' : '[выключено]')}
+          disabled={processing}
           icon={isTracking
             ? <EyeIcon color='text-primary' size={5}/>
             : <EyeOffIcon size={5}/>
@@ -160,7 +166,7 @@ function RSTabsMenu({
           widthClass='h-full w-fit'
           borderClass=''
           dense
-          onClick={toggleTracking}
+          onClick={onToggleSubscribe}
           />
       </div>
     </div>

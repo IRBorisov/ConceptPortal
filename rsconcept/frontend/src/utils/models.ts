@@ -11,7 +11,9 @@ export interface IUser {
   last_name: string
 }
 
-export interface ICurrentUser extends Pick<IUser, 'id' | 'username' | 'is_staff'> {}
+export interface ICurrentUser extends Pick<IUser, 'id' | 'username' | 'is_staff'> {
+  subscriptions: number[]
+}
 
 export interface IUserLoginData extends Pick<IUser, 'username'> {
   password: string
@@ -261,6 +263,7 @@ extends ILibraryItem {
   items: IConstituenta[]
   stats: IRSFormStats
   graph: Graph
+  subscribers: number[]
 }
 
 export interface IRSFormData extends Omit<IRSForm, 'stats' | 'graph'> {}

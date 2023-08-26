@@ -127,6 +127,17 @@ class LibraryItem(Model):
     def get_absolute_url(self):
         return f'/api/library/{self.pk}/'
 
+    def subscribers(self) -> list[User]:
+        ''' Get all subscribers for this item . '''
+        return [s.user for s in Subscription.objects.filter(item=self.pk)]
+
+    @transaction.atomic
+    def save(self, *args, **kwargs):
+        subscribe = not self.pk and self.owner
+        super().save(*args, **kwargs)
+        if subscribe:
+            Subscription.subscribe(user=self.owner, item=self)
+
 
 class Subscription(Model):
     ''' User subscription to library item. '''
@@ -145,9 +156,27 @@ class Subscription(Model):
         ''' Model metadata. '''
         verbose_name = 'Подписки'
         verbose_name_plural = 'Подписка'
+        unique_together = [['user', 'item']]
 
     def __str__(self) -> str:
         return f'{self.user} -> {self.item}'
+
+    @staticmethod
+    def subscribe(user: User, item: LibraryItem) -> bool:
+        ''' Add subscription. '''
+        if Subscription.objects.filter(user=user, item=item).exists():
+            return False
+        Subscription.objects.create(user=user, item=item)
+        return True
+
+    @staticmethod
+    def unsubscribe(user: User, item: LibraryItem) -> bool:
+        ''' Remove subscription. '''
+        sub = Subscription.objects.filter(user=user, item=item)
+        if not sub.exists():
+            return False
+        sub.delete()
+        return True
 
 
 class Constituenta(Model):
@@ -514,6 +543,7 @@ class PyConceptAdapter:
         result['time_update'] = self.schema.item.time_update
         result['time_create'] = self.schema.item.time_create
         result['is_common'] = self.schema.item.is_common
+        result['is_canonical'] = self.schema.item.is_canonical
         result['owner'] = (self.schema.item.owner.pk if self.schema.item.owner is not None else None)
         for cst_data in result['items']:
             cst = Constituenta.objects.get(pk=cst_data['id'])
@@ -527,6 +557,7 @@ class PyConceptAdapter:
                 'raw': cst.definition_raw,
                 'resolved': cst.definition_resolved,
             }
+        result['subscribers'] = [item.pk for item in self.schema.item.subscribers()]
         return result
 
     def _prepare_request(self) -> dict:

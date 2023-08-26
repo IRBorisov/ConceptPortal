@@ -176,7 +176,6 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         });
       }
     });
-    console.log(result);
     return result;
   }, [schema, coloringScheme, filtered.nodes, darkMode, noTerms]);
 
@@ -194,7 +193,6 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         edgeID += 1;
       });
     });
-    console.log(result);
     return result;
   }, [filtered.nodes]);
   
@@ -256,7 +254,6 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
 
   // Implement hotkeys for editing
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
-    console.log(event);
     if (!isEditable) {
       return;
     }

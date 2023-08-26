@@ -118,7 +118,7 @@ export function getActiveUsers(request: FrontPull<IUserInfo[]>) {
 export function getLibrary(request: FrontPull<ILibraryItem[]>) {
   AxiosGet({
     title: 'Available RSForms (Library) list',
-    endpoint: '/api/library/active/',
+    endpoint: '/api/library/active',
     request: request
   });
 }
@@ -126,7 +126,7 @@ export function getLibrary(request: FrontPull<ILibraryItem[]>) {
 export function postNewRSForm(request: FrontExchange<IRSFormCreateData, ILibraryItem>) {
   AxiosPost({
     title: 'New RSForm',
-    endpoint: '/api/rsforms/create-detailed/',
+    endpoint: '/api/rsforms/create-detailed',
     request: request,
     options: {
       headers: {
@@ -139,7 +139,7 @@ export function postNewRSForm(request: FrontExchange<IRSFormCreateData, ILibrary
 export function postCloneLibraryItem(target: string, request: FrontExchange<IRSFormCreateData, IRSFormData>) {
   AxiosPost({
     title: 'clone RSForm',
-    endpoint: `/api/library/${target}/clone/`,
+    endpoint: `/api/library/${target}/clone`,
     request: request
   });
 }
@@ -147,7 +147,7 @@ export function postCloneLibraryItem(target: string, request: FrontExchange<IRSF
 export function getRSFormDetails(target: string, request: FrontPull<IRSFormData>) {
   AxiosGet({
     title: `RSForm details for id=${target}`,
-    endpoint: `/api/rsforms/${target}/details/`,
+    endpoint: `/api/rsforms/${target}/details`,
     request: request
   });
 }
@@ -155,7 +155,7 @@ export function getRSFormDetails(target: string, request: FrontPull<IRSFormData>
 export function patchLibraryItem(target: string, request: FrontExchange<ILibraryUpdateData, ILibraryItem>) {
   AxiosPatch({
     title: `RSForm id=${target}`,
-    endpoint: `/api/library/${target}/`,
+    endpoint: `/api/library/${target}`,
     request: request
   });
 }
@@ -163,7 +163,7 @@ export function patchLibraryItem(target: string, request: FrontExchange<ILibrary
 export function deleteLibraryItem(target: string, request: FrontAction) {
   AxiosDelete({
     title: `RSForm id=${target}`,
-    endpoint: `/api/library/${target}/`,
+    endpoint: `/api/library/${target}`,
     request: request
   });
 }
@@ -171,7 +171,23 @@ export function deleteLibraryItem(target: string, request: FrontAction) {
 export function postClaimLibraryItem(target: string, request: FrontPull<ILibraryItem>) {
   AxiosPost({
     title: `Claim on RSForm id=${target}`,
-    endpoint: `/api/library/${target}/claim/`,
+    endpoint: `/api/library/${target}/claim`,
+    request: request
+  });
+}
+
+export function postSubscribe(target: string, request: FrontAction) {
+  AxiosPost({
+    title: `Claim on RSForm id=${target}`,
+    endpoint: `/api/library/${target}/subscribe`,
+    request: request
+  });
+}
+
+export function deleteUnsubscribe(target: string, request: FrontAction) {
+  AxiosDelete({
+    title: `Claim on RSForm id=${target}`,
+    endpoint: `/api/library/${target}/unsubscribe`,
     request: request
   });
 }
@@ -179,7 +195,7 @@ export function postClaimLibraryItem(target: string, request: FrontPull<ILibrary
 export function getTRSFile(target: string, request: FrontPull<Blob>) {
   AxiosGet({
     title: `RSForm TRS file for id=${target}`,
-    endpoint: `/api/rsforms/${target}/export-trs/`,
+    endpoint: `/api/rsforms/${target}/export-trs`,
     request: request,
     options: { responseType: 'blob' }
   });
@@ -188,7 +204,7 @@ export function getTRSFile(target: string, request: FrontPull<Blob>) {
 export function postNewConstituenta(schema: string, request: FrontExchange<ICstCreateData, ICstCreatedResponse>) {
   AxiosPost({
     title: `New Constituenta for RSForm id=${schema}: ${request.data.alias}`,
-    endpoint: `/api/rsforms/${schema}/cst-create/`,
+    endpoint: `/api/rsforms/${schema}/cst-create`,
     request: request
   });
 }
@@ -196,7 +212,7 @@ export function postNewConstituenta(schema: string, request: FrontExchange<ICstC
 export function patchDeleteConstituenta(schema: string, request: FrontExchange<IConstituentaList, IRSFormData>) {
   AxiosPatch({
     title: `Delete Constituents for RSForm id=${schema}: ${request.data.items.map(item => String(item.id)).join(' ')}`,
-    endpoint: `/api/rsforms/${schema}/cst-multidelete/`,
+    endpoint: `/api/rsforms/${schema}/cst-multidelete`,
     request: request
   });
 }
@@ -204,7 +220,7 @@ export function patchDeleteConstituenta(schema: string, request: FrontExchange<I
 export function patchConstituenta(target: string, request: FrontExchange<ICstUpdateData, IConstituentaMeta>) {
   AxiosPatch({
     title: `Constituenta id=${target}`,
-    endpoint: `/api/constituents/${target}/`,
+    endpoint: `/api/constituents/${target}`,
     request: request
   });
 }
@@ -212,7 +228,7 @@ export function patchConstituenta(target: string, request: FrontExchange<ICstUpd
 export function patchRenameConstituenta(schema: string, request: FrontExchange<ICstRenameData, ICstCreatedResponse>) {
   AxiosPatch({
     title: `Renaming constituenta id=${request.data.id} for schema id=${schema}`,
-    endpoint: `/api/rsforms/${schema}/cst-rename/`,
+    endpoint: `/api/rsforms/${schema}/cst-rename`,
     request: request
   });
 }
@@ -220,7 +236,7 @@ export function patchRenameConstituenta(schema: string, request: FrontExchange<I
 export function patchMoveConstituenta(schema: string, request: FrontExchange<ICstMovetoData, IRSFormData>) {
   AxiosPatch({
     title: `Moving Constituents for RSForm id=${schema}: ${JSON.stringify(request.data.items)} to ${request.data.move_to}`,
-    endpoint: `/api/rsforms/${schema}/cst-moveto/`,
+    endpoint: `/api/rsforms/${schema}/cst-moveto`,
     request: request
   });
 }
@@ -228,7 +244,7 @@ export function patchMoveConstituenta(schema: string, request: FrontExchange<ICs
 export function postCheckExpression(schema: string, request: FrontExchange<IRSExpression, IExpressionParse>) {
   AxiosPost({
     title: `Check expression for RSForm id=${schema}: ${request.data.expression }`,
-    endpoint: `/api/rsforms/${schema}/check/`,
+    endpoint: `/api/rsforms/${schema}/check`,
     request: request
   });
 }
@@ -236,7 +252,7 @@ export function postCheckExpression(schema: string, request: FrontExchange<IRSEx
 export function postResolveText(schema: string, request: FrontExchange<IRefsText, IReferenceData>) {
   AxiosPost({
     title: `Resolve text references for RSForm id=${schema}: ${request.data.text }`,
-    endpoint: `/api/rsforms/${schema}/resolve/`,
+    endpoint: `/api/rsforms/${schema}/resolve`,
     request: request
   });
 }
@@ -244,7 +260,7 @@ export function postResolveText(schema: string, request: FrontExchange<IRefsText
 export function patchResetAliases(target: string, request: FrontPull<IRSFormData>) {
   AxiosPatch({
     title: `Reset alias for RSForm id=${target}`,
-    endpoint: `/api/rsforms/${target}/reset-aliases/`,
+    endpoint: `/api/rsforms/${target}/reset-aliases`,
     request: request
   });
 }
@@ -252,7 +268,7 @@ export function patchResetAliases(target: string, request: FrontPull<IRSFormData
 export function patchUploadTRS(target: string, request: FrontExchange<IRSFormUploadData, IRSFormData>) {
   AxiosPatch({
     title: `Replacing data with trs file for RSForm id=${target}`,
-    endpoint: `/api/rsforms/${target}/load-trs/`,
+    endpoint: `/api/rsforms/${target}/load-trs`,
     request: request,
     options: {
       headers: {

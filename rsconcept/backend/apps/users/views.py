@@ -8,9 +8,7 @@ from . import serializers
 from . import models
 
 class LoginAPIView(views.APIView):
-    '''
-    Endpoint: Login user via username + password.
-    '''
+    ''' Endpoint: Login via username + password. '''
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
@@ -25,9 +23,7 @@ class LoginAPIView(views.APIView):
 
 
 class LogoutAPIView(views.APIView):
-    '''
-    Endpoint: Logout current user.
-    '''
+    ''' Endpoint: Logout. '''
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
@@ -36,17 +32,13 @@ class LogoutAPIView(views.APIView):
 
 
 class SignupAPIView(generics.CreateAPIView):
-    '''
-    Register user.
-    '''
+    ''' Endpoint: Register user. '''
     permission_classes = (permissions.AllowAny, )
     serializer_class = serializers.SignupSerializer
 
 
 class AuthAPIView(generics.RetrieveAPIView):
-    '''
-    Get current user authentification ID.
-    '''
+    ''' Endpoint: Current user info. '''
     permission_classes = (permissions.AllowAny,)
     serializer_class = serializers.AuthSerializer
 
@@ -55,9 +47,7 @@ class AuthAPIView(generics.RetrieveAPIView):
 
 
 class ActiveUsersView(generics.ListAPIView):
-    '''
-    Endpoint: Get list of active users.
-    '''
+    ''' Endpoint: Get list of active users. '''
     permission_classes = (permissions.AllowAny,)
     serializer_class = serializers.UserSerializer
 
@@ -66,9 +56,7 @@ class ActiveUsersView(generics.ListAPIView):
 
 
 class UserProfileAPIView(generics.RetrieveUpdateAPIView):
-    '''
-    Endpoint: User profile info.
-    '''
+    ''' Endpoint: User profile. '''
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.UserSerializer
 
@@ -77,9 +65,7 @@ class UserProfileAPIView(generics.RetrieveUpdateAPIView):
 
 
 class UpdatePassword(views.APIView):
-    '''
-    Endpoint: Change password for current user.
-    '''
+    ''' Endpoint: Change password for current user. '''
     permission_classes = (permissions.IsAuthenticated, )
 
     def get_object(self, queryset=None):

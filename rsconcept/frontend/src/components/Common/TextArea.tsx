@@ -3,14 +3,15 @@ import { TextareaHTMLAttributes } from 'react';
 import Label from './Label';
 
 export interface TextAreaProps 
-extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'className'> {
+extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'className' | 'title'> {
   label: string
+  tooltip?: string
   widthClass?: string
   colorClass?: string
 }
 
 function TextArea({
-  id, label, required,
+  id, label, required, tooltip,
   widthClass = 'w-full',
   colorClass = 'clr-input',
   rows = 4,
@@ -24,10 +25,11 @@ function TextArea({
         htmlFor={id}
       />
       <textarea id={id}
-          className={`px-3 py-2 mt-2 leading-tight border shadow ${colorClass} ${widthClass}`}
-          rows={rows}
-          required={required}
-          {...props}
+        title={tooltip}
+        className={`px-3 py-2 mt-2 leading-tight border shadow ${colorClass} ${widthClass}`}
+        rows={rows}
+        required={required}
+        {...props}
       />
     </div>
   );

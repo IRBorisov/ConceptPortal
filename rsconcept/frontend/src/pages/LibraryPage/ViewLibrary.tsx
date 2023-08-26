@@ -4,8 +4,11 @@ import { useNavigate } from 'react-router-dom';
 
 import ConceptDataTable from '../../components/Common/ConceptDataTable';
 import TextURL from '../../components/Common/TextURL';
+import { EducationIcon, EyeIcon, GroupIcon } from '../../components/Icons';
+import { useAuth } from '../../context/AuthContext';
 import { useNavSearch } from '../../context/NavSearchContext';
 import { useUsers } from '../../context/UsersContext';
+import { prefixes } from '../../utils/constants';
 import { ILibraryItem } from '../../utils/models'
 
 interface ViewLibraryProps {
@@ -14,29 +17,40 @@ interface ViewLibraryProps {
 
 function ViewLibrary({ items }: ViewLibraryProps) {
   const { resetQuery: cleanQuery } = useNavSearch();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const intl = useIntl();
   const { getUserLabel } = useUsers();
 
   const openRSForm = (item: ILibraryItem) => navigate(`/rsforms/${item.id}`);
 
-  const columns = useMemo(() =>
-  [
+  const columns = useMemo(
+  () => [
+    {
+      name: '',
+      id: 'status',
+      minWidth: '60px',
+      maxWidth: '60px',
+      cell: (item: ILibraryItem) => {
+        return (<>
+          <div
+            className='flex items-center justify-start gap-1'
+            id={`${prefixes.library_list}${item.id}`}
+          >
+            {user && user.subscriptions.includes(item.id) && <EyeIcon size={3}/>}
+            {item.is_common && <GroupIcon size={3}/>}
+            {item.is_canonical && <EducationIcon size={3}/>}
+          </div>
+        </>);
+      },
+      sortable: true,
+      reorder: true
+    },
     {
       name: 'Шифр',
       id: 'alias',
       maxWidth: '140px',
       selector: (item: ILibraryItem) => item.alias,
-      sortable: true,
-      reorder: true
-    },
-    {
-      name: 'Статусы',
-      id: 'status',
-      maxWidth: '50px',
-      selector: (item: ILibraryItem) => {
-        return `${item.is_canonical ? 'C': ''}${item.is_common ? 'S': ''}`
-      },
       sortable: true,
       reorder: true
     },
@@ -66,7 +80,7 @@ function ViewLibrary({ items }: ViewLibraryProps) {
       sortable: true,
       reorder: true
     }
-  ], [intl, getUserLabel]);
+  ], [intl, getUserLabel, user]);
   
   return (
     <ConceptDataTable

@@ -175,7 +175,6 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
     {
       name: 'Имя',
       id: 'alias',
-      selector: (cst: IConstituenta) => cst.alias,
       cell: (cst: IConstituenta) => {
         const info = mapStatusInfo.get(cst.status)!;
         return (<>

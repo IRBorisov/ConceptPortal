@@ -24,7 +24,8 @@ class LibraryActiveView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         if not user.is_anonymous:
-            return m.LibraryItem.objects.filter(Q(is_common=True) | Q(owner=user))
+            # pyling: disable=unsupported-binary-operation
+            return m.LibraryItem.objects.filter(Q(is_common=True) | Q(owner=user) | Q(subscription__user=user))
         else:
             return m.LibraryItem.objects.filter(is_common=True)
 
@@ -62,7 +63,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action in ['update', 'destroy', 'partial_update']:
             permission_classes = [utils.ObjectOwnerOrAdmin]
-        elif self.action in ['create', 'clone']:
+        elif self.action in ['create', 'clone', 'subscribe', 'unsubscribe']:
             permission_classes = [permissions.IsAuthenticated]
         elif self.action in ['claim']:
             permission_classes = [utils.IsClaimable]
@@ -70,13 +71,16 @@ class LibraryViewSet(viewsets.ModelViewSet):
             permission_classes = [permissions.AllowAny]
         return [permission() for permission in permission_classes]
 
+    def _get_item(self) -> m.LibraryItem:
+        return cast(m.LibraryItem, self.get_object())
+
     @transaction.atomic
     @action(detail=True, methods=['post'], url_path='clone')
     def clone(self, request, pk):
         ''' Endpoint: Create deep copy of library item. '''
         serializer = s.LibraryItemSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        item = cast(m.LibraryItem, self.get_object())
+        item = self._get_item()
         if item.item_type == m.LibraryItemType.RSFORM:
             schema = m.RSForm(item)
             clone_data = s.RSFormTRSSerializer(schema).data
@@ -93,21 +97,37 @@ class LibraryViewSet(viewsets.ModelViewSet):
             return Response(status=201, data=m.PyConceptAdapter(new_schema).full())
         return Response(status=404)
 
+    @transaction.atomic
     @action(detail=True, methods=['post'])
     def claim(self, request, pk=None):
         ''' Endpoint: Claim ownership of LibraryItem. '''
-        item = cast(m.LibraryItem, self.get_object())
+        item = self._get_item()
         if item.owner == self.request.user:
             return Response(status=304)
         else:
             item.owner = self.request.user
             item.save()
+            m.Subscription.subscribe(user=item.owner, item=item)
             return Response(status=200, data=s.LibraryItemSerializer(item).data)
+
+    @action(detail=True, methods=['post'])
+    def subscribe(self, request, pk):
+        ''' Endpoint: Subscribe current user to item. '''
+        item = self._get_item()
+        m.Subscription.subscribe(user=self.request.user, item=item)
+        return Response(status=200)
+
+    @action(detail=True, methods=['delete'])
+    def unsubscribe(self, request, pk):
+        ''' Endpoint: Unsubscribe current user from item. '''
+        item = self._get_item()
+        m.Subscription.unsubscribe(user=self.request.user, item=item)
+        return Response(status=200)
 
 
 class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.RetrieveAPIView):
     ''' Endpoint: RSForm operations. '''
-    queryset = m.LibraryItem.objects.all().filter(item_type=m.LibraryItemType.RSFORM)
+    queryset = m.LibraryItem.objects.filter(item_type=m.LibraryItemType.RSFORM)
     serializer_class = s.LibraryItemSerializer
 
     def _get_schema(self) -> m.RSForm:

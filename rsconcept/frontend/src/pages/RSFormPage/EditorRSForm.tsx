@@ -154,11 +154,17 @@ function EditorRSForm({ onDestroy, onClaim, onShare, onDownload }: EditorRSFormP
           icon={<SaveIcon size={6} />}
         />
       </div>
-
+      
       <div className='flex justify-start mt-2'>
         <label className='font-semibold'>Владелец:</label>
         <span className='min-w-[200px] ml-2 overflow-ellipsis overflow-hidden whitespace-nowrap'>
           {getUserLabel(schema?.owner ?? null)}
+        </span>
+      </div>
+      <div className='flex justify-start mt-2'>
+        <label className='font-semibold'>Отслеживают:</label>
+        <span id='subscriber-count' className='ml-2'>
+          { schema?.subscribers.length ?? 0 }
         </span>
       </div>
       <div className='flex justify-start mt-2'>
