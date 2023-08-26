@@ -500,7 +500,7 @@ export function getTypificationLabel({isValid, resultType, args}: {
   if (!isValid) {
     return 'N/A';
   }
-  if (resultType === '') {
+  if (resultType === '' || resultType === 'LOGIC') {
     resultType = 'Логический'
   }
   if (args.length === 0) {

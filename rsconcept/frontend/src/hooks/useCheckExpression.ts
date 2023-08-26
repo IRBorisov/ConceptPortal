@@ -6,23 +6,26 @@ import { RSErrorType } from '../utils/enums';
 import { CstType, IConstituenta, IExpressionParse, IFunctionArg, type IRSForm } from '../utils/models';
 import { getCstExpressionPrefix } from '../utils/staticUI';
 
+const LOGIC_TYPIIFCATION = 'LOGIC';
+
 function checkTypeConsistency(type: CstType, typification: string, args: IFunctionArg[]): boolean {
+  console.log(typification)
   switch (type) {
   case CstType.BASE:
   case CstType.CONSTANT:
   case CstType.STRUCTURED:
   case CstType.TERM:
-    return typification !== '' && args.length === 0;
+    return typification !== LOGIC_TYPIIFCATION && args.length === 0;
 
   case CstType.AXIOM:
   case CstType.THEOREM:
-    return typification === '' && args.length === 0;
+    return typification === LOGIC_TYPIIFCATION && args.length === 0;
 
   case CstType.FUNCTION:
-    return typification !== '' && args.length !== 0;
+    return typification !== LOGIC_TYPIIFCATION && args.length !== 0;
 
   case CstType.PREDICATE:
-    return typification === '' && args.length !== 0;
+    return typification === LOGIC_TYPIIFCATION && args.length !== 0;
   }
 }
 
@@ -42,7 +45,7 @@ function useCheckExpression({ schema }: { schema?: IRSForm }) {
       onError: error => { setError(error); },
       onSuccess: parse => {
         if (activeCst && parse.parseResult) {
-          if (activeCst.cstType == CstType.BASE || activeCst.cstType == CstType.CONSTANT) {
+          if (activeCst.cstType === CstType.BASE || activeCst.cstType === CstType.CONSTANT) {
             if (expression !== getCstExpressionPrefix(activeCst)) {
               parse.parseResult = false;
               parse.errors.push({
