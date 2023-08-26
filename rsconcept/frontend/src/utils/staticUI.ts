@@ -1,6 +1,7 @@
 import { LayoutTypes } from 'reagraph';
 
 import { ColoringScheme } from '../pages/RSFormPage/EditorTermGraph';
+import { IColorTheme } from './color';
 import { resolveErrorClass,RSErrorClass, RSErrorType, TokenID } from './enums';
 import {
   CstClass, CstMatchMode, CstType, 
@@ -9,18 +10,7 @@ import {
   ISyntaxTreeNode, ParsingStatus, ValueClass 
 } from './models';
 
-export interface IRSButtonData {
-  text: string
-  tooltip: string
-}
-
-export interface IFormatInfo {
-  text: string
-  color: string
-  tooltip: string
-}
-
-export interface ITopicInfo {
+export interface IDescriptor {
   text: string
   tooltip: string
 }
@@ -64,7 +54,7 @@ export function getCstExpressionPrefix(cst: IConstituenta): string {
   return cst.alias + (cst.cstType === CstType.STRUCTURED ? '::=' : ':==');
 }
 
-export function getRSButtonData(id: TokenID): IRSButtonData {
+export function getRSButtonData(id: TokenID): IDescriptor {
   switch (id) {
   case TokenID.BOOLEAN: return {
     text: 'ℬ()',
@@ -323,51 +313,45 @@ export const GraphColoringSelector: {value: ColoringScheme, label: string}[] = [
   { value: 'type', label: 'Цвет: класс'},
 ];
 
-export function getCstStatusColor(status: ExpressionStatus, darkMode: boolean): string {
+export function getCstStatusColor(status: ExpressionStatus, colors: IColorTheme): string {
   switch (status) {
-  case ExpressionStatus.VERIFIED: return darkMode ? '#2b8000': '#aaff80';
-  case ExpressionStatus.INCORRECT: return darkMode ? '#592b2b': '#ffc9c9';
-  case ExpressionStatus.INCALCULABLE: return darkMode ? '#964600': '#ffbb80';
-  case ExpressionStatus.PROPERTY: return darkMode ? '#36899e': '#a5e9fa';
-  case ExpressionStatus.UNKNOWN: return darkMode ? '#1e00b3': '#b3bdff';
-  case ExpressionStatus.UNDEFINED: return darkMode ? '#1e00b3': '#b3bdff';
+  case ExpressionStatus.VERIFIED: return colors.green;
+  case ExpressionStatus.INCORRECT: return colors.red;
+  case ExpressionStatus.INCALCULABLE: return colors.orange;
+  case ExpressionStatus.PROPERTY: return colors.teal;
+  case ExpressionStatus.UNKNOWN: return colors.blue;
+  case ExpressionStatus.UNDEFINED: return colors.blue;
   }
 }
 
-export const mapStatusInfo: Map<ExpressionStatus, IFormatInfo> = new Map([
+export const mapStatusInfo: Map<ExpressionStatus, IDescriptor> = new Map([
   [ ExpressionStatus.VERIFIED, {
     text: 'ок',
-    color: 'bg-[#aaff80] dark:bg-[#2b8000]',
     tooltip: 'выражение корректно и вычислимо'
   }],
   [ ExpressionStatus.INCORRECT, {
     text: 'ошибка',
-    color: 'bg-[#ffc9c9] dark:bg-[#592b2b]',
     tooltip: 'ошибка в выражении'
   }],
   [ ExpressionStatus.INCALCULABLE, {
     text: 'невыч',
-    color: 'bg-[#ffbb80] dark:bg-[#964600]',
     tooltip: 'выражение не вычислимо'
   }],
   [ ExpressionStatus.PROPERTY, {
     text: 'св-во',
-    color: 'bg-[#a5e9fa] dark:bg-[#36899e]',
     tooltip: 'можно проверить принадлежность, но нельзя получить значение'
   }],
   [ ExpressionStatus.UNKNOWN, {
     text: 'неизв',
-    color: 'bg-[#b3bdff] dark:bg-[#1e00b3]',
     tooltip: 'требует проверки выражения'
   }],
   [ ExpressionStatus.UNDEFINED, {
     text: 'N/A',
-    color: 'bg-[#b3bdff] dark:bg-[#1e00b3]',
     tooltip: 'произошла ошибка при проверке выражения'
   }]
 ]);
 
-export const mapTopicInfo: Map<HelpTopic, ITopicInfo> = new Map([
+export const mapTopicInfo: Map<HelpTopic, IDescriptor> = new Map([
   [ HelpTopic.MAIN, {
     text: 'Портал',
     tooltip: 'Общая справка по порталу'
@@ -406,34 +390,30 @@ export const mapTopicInfo: Map<HelpTopic, ITopicInfo> = new Map([
   }],
 ]);
 
-export function getCstClassColor(cstClass: CstClass, darkMode: boolean): string {
+export function getCstClassColor(cstClass: CstClass, colors: IColorTheme): string {
   switch (cstClass) {
-  case CstClass.TEMPLATE: return darkMode ? '#36899e': '#a5e9fa';
-  case CstClass.BASIC: return darkMode ? '#2b8000': '#aaff80';
-  case CstClass.DERIVED: return darkMode ? '#1e00b3': '#b3bdff';
-  case CstClass.STATEMENT: return darkMode ? '#592b2b': '#ffc9c9';
+    case CstClass.BASIC: return colors.green;
+    case CstClass.DERIVED: return colors.blue;
+    case CstClass.STATEMENT: return colors.red;
+    case CstClass.TEMPLATE: return colors.teal;
   }
 }
 
-export const mapCstClassInfo: Map<CstClass, IFormatInfo> = new Map([
+export const mapCstClassInfo: Map<CstClass, IDescriptor> = new Map([
   [ CstClass.BASIC, {
     text: 'базовый',
-    color: 'bg-[#aaff80] dark:bg-[#2b8000]',
     tooltip: 'неопределяемое понятие, требует конвенции'
   }],
   [ CstClass.DERIVED, {
     text: 'производный',
-    color: 'bg-[#b3bdff] dark:bg-[#1e00b3]',
     tooltip: 'выводимое понятие, задаваемое определением'
   }],
   [ CstClass.STATEMENT, {
     text: 'утверждение',
-    color: 'bg-[#ffc9c9] dark:bg-[#592b2b]',
     tooltip: 'неопределяемое понятие, требует конвенции'
   }],
   [ CstClass.TEMPLATE, {
     text: 'шаблон',
-    color: 'bg-[#a5e9fa] dark:bg-[#36899e]',
     tooltip: 'параметризованный шаблон определения'
   }],
 ]);

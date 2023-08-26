@@ -29,5 +29,13 @@
         "name": "django",
         "depth": 5
     }
+	],
+	"colorize.include": [".tsx", ".jsx", ".ts", ".js"],
+	"colorize.languages": [
+		"typescript",
+		"javascript",
+		"css",
+		"typescriptreact",
+		"javascriptreact"
 	]
 }

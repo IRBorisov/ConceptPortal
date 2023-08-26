@@ -6,15 +6,29 @@ import { useAuth } from '../../context/AuthContext';
 import { ILibraryFilter } from '../../utils/models';
 
 interface SearchPanelProps {
-  filter: ILibraryFilter
   setFilter: React.Dispatch<React.SetStateAction<ILibraryFilter>>
 }
 
-function SearchPanel({ filter, setFilter }: SearchPanelProps) {
+function SearchPanel({ setFilter }: SearchPanelProps) {
   const search = useLocation().search;
   const { user } = useAuth();
 
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState('');
+
+  function handleChangeQuery(event: React.ChangeEvent<HTMLInputElement>) {
+    const newQuery = event.target.value;
+    setQuery(newQuery);
+    setFilter(prev => {
+      return {
+        query: newQuery,
+        is_owned: prev.is_owned,
+        is_common: prev.is_common,
+        is_canonical: prev.is_canonical,
+        is_subscribed: prev.is_subscribed,
+        is_personal: prev.is_personal
+      };
+    });
+  }
   
   useLayoutEffect(() => {
     const filterType = new URLSearchParams(search).get('filter');
@@ -26,23 +40,23 @@ function SearchPanel({ filter, setFilter }: SearchPanelProps) {
     } else if (filterType === 'personal' && user) {
       setQuery('');
       setFilter({
-        ownedBy: user.id!
+        is_personal: true
       });
     }
   }, [user, search, setQuery, setFilter]);
 
   return (
-    <div className='sticky top-0 left-0 right-0 z-10 flex justify-center w-full border-b clr-bg-pop'>
-      <div className='relative w-96'>
+    <div className='sticky top-0 left-0 right-0 z-10 flex justify-center w-full border-b clr-input'>
+      <div className='relative w-96 min-w-[10rem]'>
         <div className='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none'>
           <MagnifyingGlassIcon />
         </div>
         <input
           type='text'
           value={query}
-          className='w-full p-2 pl-10 text-sm outline-none clr-bg-pop border-x clr-border'
+          className='w-full p-2 pl-10 text-sm outline-none clr-input border-x clr-border'
           placeholder='Поиск схемы...'
-          onChange={data => setQuery(data.target.value)}
+          onChange={handleChangeQuery}
         />
       </div>
     </div>

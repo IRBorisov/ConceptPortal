@@ -283,7 +283,7 @@ function RSTabs() {
       defaultFocus={true}
       selectedTabClassName='font-bold'
     >
-      <TabList className='flex items-start pl-2 select-none w-fit clr-bg-pop'>
+      <TabList className='flex items-start pl-2 border-b select-none w-fit clr-bg-pop clr-border'>
         <RSTabsMenu 
           onDownload={onDownloadSchema}
           onDestroy={onDestroySchema}

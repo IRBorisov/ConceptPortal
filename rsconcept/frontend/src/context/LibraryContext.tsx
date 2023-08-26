@@ -43,16 +43,23 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   const filter = useCallback(
   (params: ILibraryFilter) => {
     let result = items;
-    if (params.ownedBy) {
-      result = result.filter(item =>
-        item.owner === params.ownedBy
-        || user?.subscriptions.includes(item.id));
+    if (params.is_owned) {
+      result = result.filter(item => item.owner === user?.id);
     }
     if (params.is_common !== undefined) {
       result = result.filter(item => item.is_common === params.is_common);
     }
-    if (params.queryMeta) {
-      result = result.filter(item => matchLibraryItem(params.queryMeta!, item));
+    if (params.is_canonical !== undefined) {
+      result = result.filter(item => item.is_canonical === params.is_canonical);
+    }
+    if (params.is_subscribed !== undefined) {
+      result = result.filter(item => user?.subscriptions.includes(item.id));
+    }
+    if (params.is_personal !== undefined) {
+      result = result.filter(item => user?.subscriptions.includes(item.id) || item.owner === user?.id);
+    }
+    if (params.query) {
+      result = result.filter(item => matchLibraryItem(params.query!, item));
     }
     return result;
   }, [items, user]);

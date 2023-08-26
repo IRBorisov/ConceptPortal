@@ -282,9 +282,12 @@ export interface IRSFormUploadData {
 
 // ========== Library =====
 export interface ILibraryFilter {
-  ownedBy?: number
+  query?: string
+  is_personal?: boolean
+  is_owned?: boolean
   is_common?: boolean
-  queryMeta?: string
+  is_canonical?: boolean
+  is_subscribed?: boolean
 }
 
 // ================ Misc types ================

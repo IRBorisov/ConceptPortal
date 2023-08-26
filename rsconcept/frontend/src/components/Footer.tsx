@@ -11,7 +11,7 @@ function Footer() {
           <Link to='/manuals' tabIndex={-1}>Справка</Link> <br/>
         </div>
         <div className=''>
-          <a href={urls.concept} tabIndex={-1} className='underline'>Центр Концепт</a>
+          <p className='w-full text-center underline'><a href={urls.concept} tabIndex={-1} >Центр Концепт</a></p>
           <p className='mt-0.5 text-center'>© 2023 ЦИВТ КОНЦЕПТ</p>
         </div>
         <div className='flex flex-col underline'>

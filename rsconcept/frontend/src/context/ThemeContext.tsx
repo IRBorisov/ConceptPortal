@@ -1,12 +1,14 @@
 import { createContext, useContext, useLayoutEffect, useMemo, useState } from 'react';
 
 import useLocalStorage from '../hooks/useLocalStorage';
+import { darkT, IColorTheme, lightT } from '../utils/color';
 
 interface IThemeContext {
   darkMode: boolean
   noNavigation: boolean
   viewportHeight: string
   mainHeight: string
+  colors: IColorTheme
   toggleDarkMode: () => void
   toggleNoNavigation: () => void
 }
@@ -28,6 +30,7 @@ interface ThemeStateProps {
 
 export const ThemeState = ({ children }: ThemeStateProps) => {
   const [darkMode, setDarkMode] = useLocalStorage('darkMode', false);
+  const [colors, setColors] = useState<IColorTheme>(lightT);
   const [noNavigation, setNoNavigation] = useState(false);
 
   const setDarkClass = (isDark: boolean) => {
@@ -43,6 +46,10 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
   useLayoutEffect(() => {
     setDarkClass(darkMode)
   }, [darkMode]);
+
+  useLayoutEffect(() => {
+    setColors(darkMode ? darkT : lightT)
+  }, [darkMode, setColors]);
 
   const mainHeight = useMemo(
   () => {
@@ -60,7 +67,7 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
 
   return (
     <ThemeContext.Provider value={{
-      darkMode,
+      darkMode, colors,
       noNavigation,
       toggleDarkMode: () => setDarkMode(prev => !prev),
       toggleNoNavigation: () => setNoNavigation(prev => !prev),
