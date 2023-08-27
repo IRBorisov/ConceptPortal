@@ -355,7 +355,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       initial={getOptions()}
       onConfirm={handleChangeOptions}
     />}
-    <div className='flex flex-col border-r border-b min-w-[13.5rem] px-2 pb-2 text-sm select-none clr-border' style={{height: canvasHeight}}>
+    <div className='flex flex-col border-r border-b min-w-[13.5rem] max-w-min px-2 pb-2 text-sm select-none clr-border' style={{height: canvasHeight}}>
       {hoverCst && 
       <div className='relative'>
         <InfoConstituenta 
