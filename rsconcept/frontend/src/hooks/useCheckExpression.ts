@@ -60,7 +60,7 @@ function useCheckExpression({ schema }: { schema?: IRSForm }) {
   const [error, setError] = useState<ErrorInfo>(undefined);
   const [parseData, setParseData] = useState<IExpressionParse | undefined>(undefined);
 
-  const resetParse = useCallback(() => { setParseData(undefined); }, []);
+  const resetParse = useCallback(() => setParseData(undefined), []);
 
   function checkExpression(expression: string, activeCst?: IConstituenta, onSuccess?: DataCallback<IExpressionParse>) {
     setError(undefined);

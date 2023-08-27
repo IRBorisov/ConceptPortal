@@ -283,9 +283,9 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       showError: true,
       setLoading: setProcessing,
       onError: error => setError(error),
-      onSuccess: newData => {
-        reload(setProcessing, () => { if (callback) callback(newData); })
-      }
+      onSuccess: newData => reload(setProcessing, () => {
+        if (callback) callback(newData);
+      })
     });
   }, [setError, reload]);
 

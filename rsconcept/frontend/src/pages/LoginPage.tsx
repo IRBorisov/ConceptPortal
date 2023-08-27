@@ -34,7 +34,7 @@ function LoginPage() {
         username: username,
         password: password
       };
-      login(data, () => { navigate('/library?filter=personal'); });
+      login(data, () => navigate('/library'));
     }
   }
 
@@ -54,14 +54,14 @@ function LoginPage() {
           type='text'
           value={username}
           autoFocus
-          onChange={event => { setUsername(event.target.value); }}
+          onChange={event => setUsername(event.target.value)}
         />
         <TextInput id='password'
           label='Пароль'
           required
           type='password'
           value={password}
-          onChange={event => { setPassword(event.target.value); }}
+          onChange={event => setPassword(event.target.value)}
         />
 
         <div className='flex justify-center w-full gap-2 mt-4'>

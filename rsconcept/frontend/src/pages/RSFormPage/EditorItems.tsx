@@ -53,7 +53,9 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
     }, -1);
     const target = Math.max(0, currentIndex - 1) + 1
     const data = {
-      items: selected.map(id => { return { id: id }; }),
+      items: selected.map(id => {
+        return { id: id };
+      }),
       move_to: target
     }
     cstMoveTo(data);
@@ -78,7 +80,9 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
     }, -1);
     const target = Math.min(schema.items.length - 1, currentIndex - count + 2) + 1
     const data: ICstMovetoData = {
-      items: selected.map(id => { return { id: id }; }),
+      items: selected.map(id => {
+        return { id: id };
+      }),
       move_to: target
     }
     cstMoveTo(data);
@@ -89,7 +93,6 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
     resetAliases(() => toast.success('Переиндексация конституент успешна'));
   }
 
-  // Add new constituenta
   function handleCreateCst(type?: CstType) {
     if (!schema) {
       return;

@@ -34,9 +34,7 @@ function DlgCreateCst({ hideWindow, initial, onCreate }: DlgCreateCstProps) {
     }
   }
 
-  const handleSubmit = () => {
-    onCreate(getData());
-  };
+  const handleSubmit = () => onCreate(getData());
 
   useEffect(() => {
     if (initial) {
@@ -48,10 +46,7 @@ function DlgCreateCst({ hideWindow, initial, onCreate }: DlgCreateCstProps) {
     }
   }, [initial]);
 
-  useEffect(() => {
-    setValidated(selectedType !== undefined);
-  }, [selectedType]
-  );
+  useEffect(() => setValidated(selectedType !== undefined), [selectedType]);
 
   return (
     <Modal
@@ -67,7 +62,7 @@ function DlgCreateCst({ hideWindow, initial, onCreate }: DlgCreateCstProps) {
         options={CstTypeSelector}
         placeholder='Выберите тип'
         values={selectedType ? [{ value: selectedType, label: getCstTypeLabel(selectedType) }] : []}
-        onChange={data => { setSelectedType(data.length > 0 ? data[0].value : CstType.BASE); }}
+        onChange={data => setSelectedType(data.length > 0 ? data[0].value : CstType.BASE)}
       />
       </div>
       <TextArea id='term' label='Термин'
@@ -89,14 +84,14 @@ function DlgCreateCst({ hideWindow, initial, onCreate }: DlgCreateCstProps) {
         rows={2}
         value={textDefinition}
         spellCheck
-        onChange={event => { setTextDefinition(event.target.value); }}
+        onChange={event => setTextDefinition(event.target.value)}
       />
       <TextArea id='convention' label='Конвенция / Комментарий'
         placeholder='Договоренность об интерпретации неопределяемого понятия&#x000D;&#x000A;Комментарий к производному понятию'
         rows={2}
         value={convention}
         spellCheck
-        onChange={event => { setConvention(event.target.value); }}
+        onChange={event => setConvention(event.target.value)}
       />
       </div>
     </Modal>

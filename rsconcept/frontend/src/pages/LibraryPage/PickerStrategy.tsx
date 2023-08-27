@@ -38,12 +38,14 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
         <Checkbox 
           value={value === LibraryFilterStrategy.MANUAL}
           label='Отображать все'
+          widthClass='w-fit px-2'
         />
       </DropdownButton>
       <DropdownButton onClick={() => handleChange(LibraryFilterStrategy.COMMON)}>
         <Checkbox 
           value={value === LibraryFilterStrategy.COMMON}
           label='Общедоступные'
+          widthClass='w-fit px-2'
           tooltip='Отображать только общедоступные схемы'
         />
       </DropdownButton>
@@ -51,6 +53,7 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
         <Checkbox 
           value={value === LibraryFilterStrategy.CANONICAL}
           label='Библиотечные'
+          widthClass='w-fit px-2'
           tooltip='Отображать только библиотечные схемы'
         />
       </DropdownButton>
@@ -58,6 +61,7 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
         <Checkbox 
           value={value === LibraryFilterStrategy.PERSONAL}
           label='Личные'
+          widthClass='w-fit px-2'
           tooltip='Отображать только подписки и владеемые схемы'
         />
       </DropdownButton>
@@ -65,6 +69,7 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
         <Checkbox 
           value={value === LibraryFilterStrategy.SUBSCRIBE}
           label='Подписки'
+          widthClass='w-fit px-2'
           tooltip='Отображать только подписки'
         />
       </DropdownButton>
@@ -72,6 +77,7 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
         <Checkbox 
           value={value === LibraryFilterStrategy.OWNED}
           label='Я - Владелец!'
+          widthClass='w-fit px-2'
           tooltip='Отображать только владеемые схемы'
         />
       </DropdownButton>

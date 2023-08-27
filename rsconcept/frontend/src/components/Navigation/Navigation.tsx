@@ -10,8 +10,8 @@ function Navigation () {
   const navigate = useNavigate();
   const { noNavigation, toggleNoNavigation } = useConceptTheme();
 
-  const navigateLibrary = () => { navigate('/library') };
-  const navigateHelp = () => { navigate('/manuals') };
+  const navigateLibrary = () => navigate('/library');
+  const navigateHelp = () => navigate('/manuals');
 
   return (
     <nav className='sticky top-0 left-0 right-0 z-50 select-none h-fit'>

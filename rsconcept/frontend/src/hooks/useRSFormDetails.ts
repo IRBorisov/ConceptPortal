@@ -27,7 +27,10 @@ export function useRSFormDetails({ target }: { target?: string }) {
       getRSFormDetails(target, {
         showError: true,
         setLoading: setCustomLoading ?? setLoading,
-        onError: error => { setInnerSchema(undefined); setError(error); },
+        onError: error => {
+          setInnerSchema(undefined);
+          setError(error);
+        },
         onSuccess: schema => {
           setSchema(schema);
           if (callback) callback();

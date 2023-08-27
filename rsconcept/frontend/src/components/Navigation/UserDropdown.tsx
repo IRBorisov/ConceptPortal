@@ -16,14 +16,14 @@ function UserDropdown({ hideDropdown }: UserDropdownProps) {
   const { user, logout } = useAuth();
 
   const navigateProfile = () => {
-    hideDropdown()
+    hideDropdown();
     navigate('/profile');
   };
 
   const logoutAndRedirect =
   () => {
     hideDropdown();
-    logout(() => { navigate('/login/'); })
+    logout(() => navigate('/login/'));
   };
 
   const navigateMyWork = () => {
@@ -33,10 +33,16 @@ function UserDropdown({ hideDropdown }: UserDropdownProps) {
 
   return (
     <Dropdown widthClass='w-36' stretchLeft>
-      <DropdownButton description='Профиль пользователя' onClick={navigateProfile}>
+      <DropdownButton
+        description='Профиль пользователя'
+        onClick={navigateProfile}
+      >
         {user?.username}
       </DropdownButton>
-      <DropdownButton description='Переключение темы оформления' onClick={toggleDarkMode}>
+      <DropdownButton
+        description='Переключение темы оформления'
+        onClick={toggleDarkMode}
+      >
         {darkMode ? 'Светлая тема' : 'Темная тема'}
       </DropdownButton>
       <DropdownButton onClick={navigateMyWork}>

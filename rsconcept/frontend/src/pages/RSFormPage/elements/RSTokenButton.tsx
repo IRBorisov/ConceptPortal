@@ -14,7 +14,7 @@ function RSTokenButton({ id, disabled, onInsert }: RSTokenButtonProps) {
     <button
       type='button'
       disabled={disabled}
-      onClick={() => { onInsert(id); }}
+      onClick={() => onInsert(id)}
       title={data.tooltip}
       tabIndex={-1}
       className={`px-1 cursor-pointer border rounded-none h-7 ${width} clr-btn-clear`}

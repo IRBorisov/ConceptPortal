@@ -31,11 +31,11 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
   const handleSubmit = () => onRename(getData());
 
   useLayoutEffect(
-    () => {
-      if (schema && initial && cstType !== initial.cst_type) {
-        setAlias(createAliasFor(cstType, schema));
-      }
-    }, [initial, cstType, schema]);
+  () => {
+    if (schema && initial && cstType !== initial.cst_type) {
+      setAlias(createAliasFor(cstType, schema));
+    }
+  }, [initial, cstType, schema]);
 
   useLayoutEffect(
   () => {
@@ -72,7 +72,7 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
           options={CstTypeSelector}
           placeholder='Выберите тип'
           values={cstType ? [{ value: cstType, label: getCstTypeLabel(cstType) }] : []}
-          onChange={data => { setCstType(data.length > 0 ? data[0].value : CstType.BASE); }}
+          onChange={data => setCstType(data.length > 0 ? data[0].value : CstType.BASE)}
         />
         <div>
         <TextInput id='alias' label='Имя'

@@ -148,7 +148,9 @@ function RSTabs() {
       return;
     }
     const data = {
-      items: deleted.map(id => { return { id: id }; })
+      items: deleted.map(id => {
+        return { id: id };
+      })
     };
     let activeIndex = schema.items.findIndex(cst => cst.id === activeID);
     cstDelete(data, () => {

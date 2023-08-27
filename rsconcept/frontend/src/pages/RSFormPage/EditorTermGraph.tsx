@@ -400,7 +400,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
           searchable={false}
           placeholder='Выберите цвет'
           values={coloringScheme ? [{ value: coloringScheme, label: mapColoringLabels.get(coloringScheme) }] : []}
-          onChange={data => { setColoringScheme(data.length > 0 ? data[0].value : GraphColoringSelector[0].value); }}
+          onChange={data => setColoringScheme(data.length > 0 ? data[0].value : GraphColoringSelector[0].value)}
         />
         
       </div>
@@ -410,7 +410,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         searchable={false}
         placeholder='Способ расположения'
         values={layout ? [{ value: layout, label: mapLayoutLabels.get(layout) }] : []}
-        onChange={data => { setLayout(data.length > 0 ? data[0].value : GraphLayoutSelector[0].value); }}
+        onChange={data => setLayout(data.length > 0 ? data[0].value : GraphLayoutSelector[0].value)}
       />
       <Checkbox
         label='Скрыть текст' 

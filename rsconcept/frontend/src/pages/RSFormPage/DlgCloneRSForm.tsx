@@ -65,21 +65,21 @@ function DlgCloneRSForm({ hideWindow }: DlgCloneRSFormProps) {
       <TextInput id='title' label='Полное название' type='text'
         required
         value={title}
-        onChange={event => { setTitle(event.target.value); }}
+        onChange={event => setTitle(event.target.value)}
       />
       <TextInput id='alias' label='Сокращение' type='text'
         required
         value={alias}
         widthClass='max-w-sm'
-        onChange={event => { setAlias(event.target.value); }}
+        onChange={event => setAlias(event.target.value)}
       />
       <TextArea id='comment' label='Комментарий'
         value={comment}
-        onChange={event => { setComment(event.target.value); }}
+        onChange={event => setComment(event.target.value)}
       />
       <Checkbox id='common' label='Общедоступная схема'
         value={common}
-        onChange={event => { setCommon(event.target.checked); }}
+        onChange={event => setCommon(event.target.checked)}
       />
     </Modal>
   );
