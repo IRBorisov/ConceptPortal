@@ -9,7 +9,7 @@ interface BackendErrorProps {
 }
 
 function DescribeError(error: ErrorInfo) {
-  console.log(error);
+  reportError(error);
   if (!error) {
     return <p>Ошибки отсутствуют</p>;
   } else if (typeof error === 'string') {

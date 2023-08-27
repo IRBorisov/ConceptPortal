@@ -9,7 +9,6 @@ import { getCstExpressionPrefix } from '../utils/staticUI';
 const LOGIC_TYPIIFCATION = 'LOGIC';
 
 function checkTypeConsistency(type: CstType, typification: string, args: IFunctionArg[]): boolean {
-  console.log(typification)
   switch (type) {
   case CstType.BASE:
   case CstType.CONSTANT:

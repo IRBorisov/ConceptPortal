@@ -7,7 +7,6 @@ interface EmbedYoutubeProps {
 function EmbedYoutube({ videoID, pxHeight, pxWidth }: EmbedYoutubeProps) {
   if (!pxWidth) {
     pxWidth = pxHeight * 16 / 9;
-    console.log(pxWidth);
   }
   return (
     <div 
