@@ -1,7 +1,7 @@
 import './index.css'
 
 import React from 'react'
-import ReactDOM from 'react-dom/client'
+import { createRoot } from 'react-dom/client'
 import { ErrorBoundary } from 'react-error-boundary';
 import { IntlProvider } from 'react-intl';
 
@@ -24,7 +24,7 @@ const logError = (error: Error, info: { componentStack: string }) => {
   console.log('Component stack: ' + info.componentStack)
 };
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
   <ErrorBoundary
     FallbackComponent={ErrorFallback}
