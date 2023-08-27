@@ -58,7 +58,7 @@ RUN pip install --no-cache /wheels/* && \
 COPY apps/ ./apps
 COPY cctext/ ./cctext
 COPY project/ ./project
-COPY data/ ./data
+COPY fixtures/ ./fixtures
 COPY manage.py entrypoint.sh ./
 RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.sh && \
     chmod +x  $APP_HOME/entrypoint.sh && \
