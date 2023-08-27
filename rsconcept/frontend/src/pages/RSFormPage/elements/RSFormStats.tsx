@@ -8,7 +8,7 @@ interface RSFormStatsProps {
 
 function RSFormStats({ stats }: RSFormStatsProps) {
   return (
-    <div className='px-4 py-2 border'>
+    <div className='flex flex-col gap-1 px-4 py-2 border min-w-[16rem]'>
       <LabeledText id='count_all'
         label='Всего конституент '
         text={stats.count_all}
@@ -27,12 +27,20 @@ function RSFormStats({ stats }: RSFormStatsProps) {
         label='Невычислимы '
         text={stats.count_incalc}
       />}
-      <Divider margins='my-1' />
+      <Divider margins='my-2' />
       <LabeledText id='count_termin'
         label='Термины '
         text={stats.count_termin}
       />
-      <Divider margins='my-1' />
+      <LabeledText id='count_definition'
+        label='Определения '
+        text={stats.count_definition}
+      />
+      <LabeledText id='count_convention'
+        label='Конвенции '
+        text={stats.count_convention}
+      />
+      <Divider margins='my-2' />
       { stats.count_base > 0 &&
       <LabeledText id='count_base'
         label='Базисные множества '

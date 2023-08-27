@@ -54,7 +54,7 @@ function RSInput({
   id, label, innerref, onChange, editable,
   ...props 
 }: RSInputProps) {
-  const { darkMode } = useConceptTheme();
+  const { darkMode, colors } = useConceptTheme();
   const { schema } = useRSForm();
 
   const internalRef = useRef<ReactCodeMirrorRef>(null);
@@ -69,9 +69,9 @@ function RSInput({
     theme: 'light',
     settings: {
       fontFamily: 'inherit',
-      background: editable ? '#ffffff' : '#f0f2f7',
-      foreground: '#000000',
-      selection: '#aacef2',
+      background: editable ? colors.input : colors.inputDisabled,
+      foreground: colors.text,
+      selection: colors.selection,
       caret: '#5d00ff',
     },
     styles: [
@@ -83,16 +83,16 @@ function RSInput({
       { tag: t.controlKeyword, class: 'font-semibold'}, // R | I | D
       { tag: t.unit, class: 'text-[0.75rem]' }, // indicies
     ]
-  }), [editable]);
+  }), [editable, colors]);
   
   const darkTheme: Extension = useMemo(
   () => createTheme({
     theme: 'dark',
     settings: {
       fontFamily: 'inherit',
-      background: editable ? '#070b12' : '#374151',
-      foreground: '#e4e4e7',
-      selection: '#8c6000',
+      background: editable ? colors.input : colors.inputDisabled,
+      foreground: colors.text,
+      selection: colors.selection,
       caret: '#ffaa00'
     },
     styles: [
@@ -104,7 +104,7 @@ function RSInput({
       { tag: t.controlKeyword, class: 'font-semibold'}, // R | I | D
       { tag: t.unit, class: 'text-[0.75rem]' }, // indicies
     ]
-  }), [editable]);
+  }), [editable, colors]);
 
   const editorExtensions = useMemo(
   () => [

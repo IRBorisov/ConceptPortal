@@ -31,11 +31,11 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
   const handleSubmit = () => onRename(getData());
 
   useLayoutEffect(
-    () => {
-      if (schema && initial && cstType !== initial.cst_type) {
-        setAlias(createAliasFor(cstType, schema));
-      }
-    }, [initial, cstType, schema]);
+  () => {
+    if (schema && initial && cstType !== initial.cst_type) {
+      setAlias(createAliasFor(cstType, schema));
+    }
+  }, [initial, cstType, schema]);
 
   useLayoutEffect(
   () => {
@@ -66,13 +66,13 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
       submitInvalidTooltip={'Введите имя, соответствующее типу и отсутствующее в схеме'}
       submitText='Переименовать'
     >
-      <div className='flex items-center gap-4 px-2 mb-2 h-fit min-w-[25rem]'>
+      <div className='flex items-center gap-4 px-2 my-2 h-fit min-w-[25rem]'>
         <ConceptSelect
-          className='mt-2 min-w-[14rem] self-center'
+          className='min-w-[14rem] self-center'
           options={CstTypeSelector}
           placeholder='Выберите тип'
           values={cstType ? [{ value: cstType, label: getCstTypeLabel(cstType) }] : []}
-          onChange={data => { setCstType(data.length > 0 ? data[0].value : CstType.BASE); }}
+          onChange={data => setCstType(data.length > 0 ? data[0].value : CstType.BASE)}
         />
         <div>
         <TextInput id='alias' label='Имя'

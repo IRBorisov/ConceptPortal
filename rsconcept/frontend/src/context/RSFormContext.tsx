@@ -15,6 +15,7 @@ import {
   ILibraryUpdateData, IRSForm, IRSFormUploadData
 } from '../utils/models'
 import { useAuth } from './AuthContext'
+import { useLibrary } from './LibraryContext'
 
 interface IRSFormContext {
   schema?: IRSForm
@@ -66,6 +67,7 @@ interface RSFormStateProps {
 }
 
 export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
+  const library = useLibrary();
   const { user } = useAuth();
   const { schema, reload, error, setError, setSchema, loading } = useRSFormDetails({ target: schemaID });
   const [ processing, setProcessing ] = useState(false);
@@ -114,10 +116,14 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       onError: error => setError(error),
       onSuccess: newData => {
         setSchema(Object.assign(schema, newData));
+        const libraryItem = library.items.find(item => item.id === newData.id);
+        if (libraryItem) {
+          Object.assign(libraryItem, newData);
+        }
         if (callback) callback(newData);
       }
     });
-  }, [schemaID, setError, setSchema, schema]);
+  }, [schemaID, setError, setSchema, schema, library]);
   
   const upload = useCallback(
   (data: IRSFormUploadData, callback?: () => void) => {
@@ -132,10 +138,14 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       onError: error => setError(error),
       onSuccess: newData => {
         setSchema(newData);
+        const libraryItem = library.items.find(item => item.id === newData.id);
+        if (libraryItem) {
+          Object.assign(libraryItem, newData);
+        }
         if (callback) callback();
       }
     });
-  }, [schemaID, setError, setSchema, schema]);
+  }, [schemaID, setError, setSchema, schema, library]);
 
   const claim = useCallback(
   (callback?: DataCallback<ILibraryItem>) => {
@@ -149,10 +159,17 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       onError: error => setError(error),
       onSuccess: newData => {
         setSchema(Object.assign(schema, newData));
+        const libraryItem = library.items.find(item => item.id === newData.id);
+        if (libraryItem) {
+          libraryItem.owner = user.id
+        }
+        if (!user.subscriptions.includes(schema.id)) {
+          user.subscriptions.push(schema.id);
+        }
         if (callback) callback(newData);
       }
     });
-  }, [schemaID, setError, schema, user, setSchema]);
+  }, [schemaID, setError, schema, user, setSchema, library]);
   
   const subscribe = useCallback(
   (callback?: () => void) => {
@@ -266,9 +283,9 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       showError: true,
       setLoading: setProcessing,
       onError: error => setError(error),
-      onSuccess: newData => {
-        reload(setProcessing, () => { if (callback) callback(newData); })
-      }
+      onSuccess: newData => reload(setProcessing, () => {
+        if (callback) callback(newData);
+      })
     });
   }, [setError, reload]);
 

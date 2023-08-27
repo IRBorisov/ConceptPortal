@@ -30,7 +30,7 @@ function UserMenu() {
       </div>
       { user && menu.isActive &&
       <UserDropdown
-        hideDropdown={() => { menu.hide(); }}
+        hideDropdown={() => menu.hide()}
       />}
     </div>
   );

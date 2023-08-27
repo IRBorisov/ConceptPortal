@@ -4,8 +4,6 @@ For more specific TODOs see comments in code
 
 [Functionality]
 - home page
-- manuals
-- текстовый модуль для разрешения отсылок
 - блок нотификаций пользователей
 - блок синтеза
 - блок организации библиотеки моделей
@@ -13,9 +11,6 @@ For more specific TODOs see comments in code
 - обратная связь - система баг репортов
 
 [Tech]
-- Use migtation/fixtures to provide initial data for testing
-- USe migtation/fixtures to load example common data
-
 - create custom Select component
 - reload react-data-table-component
 

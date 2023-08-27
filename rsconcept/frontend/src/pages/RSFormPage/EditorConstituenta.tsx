@@ -45,7 +45,8 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
 
   const isEnabled = useMemo(() => activeCst && isEditable, [activeCst, isEditable]);
 
-  useLayoutEffect(() => {
+  useLayoutEffect(
+  () => {
     if (!activeCst) {
       setIsModified(false);
       return;
@@ -60,7 +61,8 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
     activeCst?.definition.text.raw, activeCst?.convention,
     term, textDefinition, expression, convention]);
 
-  useLayoutEffect(() => {
+  useLayoutEffect(
+  () => {
     if (activeCst) {
       setAlias(activeCst.alias);
       setConvention(activeCst.convention ?? '');
@@ -73,8 +75,10 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
     }
   }, [activeCst, onOpenEdit, schema]);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  function handleSubmit(event?: React.FormEvent<HTMLFormElement>) {
+    if (event) {
+      event.preventDefault();
+    }
     if (!activeID || processing) {
       return;
     }
@@ -86,7 +90,7 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
       definition_raw: textDefinition,
       term_raw: term
     };
-    cstUpdate(data, () => { toast.success('Изменения сохранены'); });
+    cstUpdate(data, () => toast.success('Изменения сохранены'));
   }
 
   function handleDelete() {
@@ -126,13 +130,14 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
 
   return (
     <div className='flex items-stretch w-full gap-2 mb-2 justify-stretch'>
-      <form onSubmit={handleSubmit} className='min-w-[50rem] max-w-min px-4 py-2 border'>
+      <form onSubmit={handleSubmit} className='min-w-[50rem] max-w-min px-4 py-2 border-y border-r clr-border'>
         <div className='relative'>
           <div className='absolute top-0 left-0'>
         <MiniButton 
           tooltip='Сохранить изменения'
           disabled={!isModified || !isEnabled}
           icon={<SaveIcon size={6} color={isModified && isEnabled ? 'text-primary' : ''}/>}
+          onClick={() => handleSubmit()}
         >
         </MiniButton>
         </div>
@@ -208,8 +213,8 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
           resolved={activeCst?.definition.text.resolved ?? ''}
           disabled={!isEnabled}
           spellCheck
-          onChange={event => { setTextDefinition(event.target.value); }}
-          onFocus={() => { setEditMode(EditMode.TEXT); }}
+          onChange={event => setTextDefinition(event.target.value)}
+          onFocus={() => setEditMode(EditMode.TEXT)}
         />
         <TextArea id='convention' label='Конвенция / Комментарий'
           placeholder='Договоренность об интерпретации неопределяемого понятия&#x000D;&#x000A;Комментарий к производному понятию'
@@ -217,10 +222,10 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
           value={convention}
           disabled={!isEnabled}
           spellCheck
-          onChange={event => { setConvention(event.target.value); }}
-          onFocus={() => { setEditMode(EditMode.TEXT); }}
+          onChange={event => setConvention(event.target.value)}
+          onFocus={() => setEditMode(EditMode.TEXT)}
         />
-        <div className='flex justify-center w-full mt-2'>
+        <div className='flex justify-center w-full mt-4 mb-2'>
           <SubmitButton
             text='Сохранить изменения'
             disabled={!isModified || !isEnabled}

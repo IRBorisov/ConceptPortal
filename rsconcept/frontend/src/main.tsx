@@ -35,15 +35,15 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   >
   <IntlProvider locale='ru' defaultLocale='ru'>
   <ThemeState>
-  <AuthState>
   <UsersState>
+  <AuthState>
   <LibraryState>
   
     <App />
   
   </LibraryState>
-  </UsersState>
   </AuthState>
+  </UsersState>
   </ThemeState>
   </IntlProvider>
   </ErrorBoundary>

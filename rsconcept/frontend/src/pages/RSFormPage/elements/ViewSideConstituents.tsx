@@ -6,13 +6,13 @@ import { useConceptTheme } from '../../../context/ThemeContext';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import { prefixes } from '../../../utils/constants';
 import { applyGraphFilter, CstMatchMode, CstType, DependencyMode, extractGlobals, IConstituenta, matchConstituenta } from '../../../utils/models';
-import { getCstDescription, getMockConstituenta, mapStatusInfo } from '../../../utils/staticUI';
+import { getCstDescription, getCstStatusColor, getMockConstituenta } from '../../../utils/staticUI';
 import ConstituentaTooltip from './ConstituentaTooltip';
 import DependencyModePicker from './DependencyModePicker';
 import MatchModePicker from './MatchModePicker';
 
 // Height that should be left to accomodate navigation panel + bottom margin
-const LOCAL_NAVIGATION_H = '2.6rem';
+const LOCAL_NAVIGATION_H = '2.1rem';
 
 interface ViewSideConstituentsProps {
   expression: string
@@ -26,7 +26,7 @@ function isMockCst(cst: IConstituenta) {
 }
 
 function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: ViewSideConstituentsProps) {
-  const { darkMode, noNavigation } = useConceptTheme();
+  const { noNavigation, colors } = useConceptTheme();
   const { schema } = useRSForm();
   
   const [filterMatch, setFilterMatch] = useLocalStorage('side-filter-match', CstMatchMode.ALL);
@@ -81,10 +81,10 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
     {
       when: (cst: IConstituenta) => cst.id === activeID,
       style: {
-        backgroundColor: darkMode ? '#0068b3' : '#def1ff',
+        backgroundColor: colors.selection,
       },
     }
-  ], [activeID, darkMode]);
+  ], [activeID, colors]);
 
   const columns = useMemo(
   () => [
@@ -97,11 +97,11 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       name: 'ID',
       id: 'alias',
       cell: (cst: IConstituenta) => {
-        const info = mapStatusInfo.get(cst.status)!;
         return (<>
           <div
             id={`${prefixes.cst_list}${cst.alias}`}
-            className={`w-full rounded-md text-center ${info.color}`}
+            className='w-full text-center rounded-md'
+            style={{backgroundColor: getCstStatusColor(cst.status, colors)}}
           >
             {cst.alias}
           </div>
@@ -113,7 +113,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       conditionalCellStyles: [
         {
           when: (cst: IConstituenta) => isMockCst(cst),
-          classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
+          style: {backgroundColor: colors.selectionError}
         }
       ]
     },
@@ -126,7 +126,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       conditionalCellStyles: [
         {
           when: (cst: IConstituenta) => isMockCst(cst),
-          classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
+          style: {backgroundColor: colors.selectionError}
         }
       ]
     },
@@ -141,11 +141,11 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       conditionalCellStyles: [
         {
           when: (cst: IConstituenta) => isMockCst(cst),
-          classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
+          style: {backgroundColor: colors.selectionError}
         }
       ]
     }
-  ], []);
+  ], [colors]);
 
   const maxHeight = useMemo(
   () => {
@@ -156,13 +156,13 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
   }, [noNavigation, baseHeight]);
 
   return (<>
-    <div className='sticky top-0 left-0 right-0 z-10 flex items-start justify-between w-full gap-1 px-2 py-1 bg-white border-b rounded clr-bg-pop clr-border'>
+    <div className='sticky top-0 left-0 right-0 z-10 flex items-start justify-between w-full gap-1 px-2 py-1 border-b rounded clr-input clr-border'>
       <MatchModePicker
         value={filterMatch}
         onChange={setFilterMatch}
       />
       <input type='text'
-        className='w-full px-2 bg-white outline-none select-none hover:text-clip clr-bg-pop'
+        className='w-full px-2 outline-none select-none hover:text-clip clr-input'
         placeholder='наберите текст фильтра'
         value={filterText}
         onChange={event => setFilterText(event.target.value)}

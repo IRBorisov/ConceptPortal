@@ -9,7 +9,7 @@ function useResolveText({ schema }: { schema?: IRSForm }) {
   const [error, setError] = useState<ErrorInfo>(undefined);
   const [refsData, setRefsData] = useState<IReferenceData | undefined>(undefined);
 
-  const resetData = useCallback(() => { setRefsData(undefined); }, []);
+  const resetData = useCallback(() => setRefsData(undefined), []);
 
   function resolveText(text: string, onSuccess?: DataCallback<IReferenceData>) {
     setError(undefined);
@@ -17,7 +17,7 @@ function useResolveText({ schema }: { schema?: IRSForm }) {
       data: { text: text },
       showError: true,
       setLoading,
-      onError: error => { setError(error); },
+      onError: error => setError(error),
       onSuccess: data => {
         setRefsData(data);
         if (onSuccess) onSuccess(data);

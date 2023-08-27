@@ -53,7 +53,7 @@ This readme file is used mostly to document project dependencies
 <summary>VS Code plugins</summary>
   <pre>
   - ESLint
-  - 
+  - Colorize
   </pre>
 </details>
 

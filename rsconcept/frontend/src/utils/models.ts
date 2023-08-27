@@ -247,6 +247,8 @@ export interface IRSFormStats {
   count_incalc: number
 
   count_termin: number
+  count_definition: number
+  count_convention: number
 
   count_base: number
   count_constant: number
@@ -281,10 +283,22 @@ export interface IRSFormUploadData {
 }
 
 // ========== Library =====
+export enum LibraryFilterStrategy {
+  MANUAL = 'manual',
+  PERSONAL = 'personal',
+  COMMON = 'common',
+  SUBSCRIBE = 'subscribe',
+  CANONICAL = 'canonical',
+  OWNED = 'owned'
+}
+
 export interface ILibraryFilter {
-  ownedBy?: number
+  query?: string
+  is_personal?: boolean
+  is_owned?: boolean
   is_common?: boolean
-  queryMeta?: string
+  is_canonical?: boolean
+  is_subscribed?: boolean
 }
 
 // ================ Misc types ================
@@ -392,6 +406,8 @@ export function LoadRSFormData(schema: IRSFormData): IRSForm {
       count_incalc: 0,
 
       count_termin: 0,
+      count_definition: 0,
+      count_convention: 0,
 
       count_base: 0,
       count_constant: 0,
@@ -416,6 +432,10 @@ export function LoadRSFormData(schema: IRSFormData): IRSForm {
 
     count_termin: result.items.reduce(
       (sum, cst) => (sum + (cst.term?.raw ? 1 : 0) || 0), 0),
+    count_definition: result.items.reduce(
+      (sum, cst) => (sum + (cst.definition?.text.raw ? 1 : 0) || 0), 0),
+    count_convention: result.items.reduce(
+      (sum, cst) => (sum + (cst.convention ? 1 : 0) || 0), 0),
 
     count_base: result.items.reduce(
       (sum, cst) => sum + (cst.cstType === CstType.BASE ? 1 : 0), 0),

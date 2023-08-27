@@ -14,6 +14,20 @@ function EditorProfile() {
   const [first_name, setFirstName] = useState('');
   const [last_name, setLastName] = useState('');
 
+  const [isModified, setIsModified] = useState(true);
+
+  useLayoutEffect(() => {
+    if (!user) {
+      setIsModified(false);
+      return;
+    }
+    setIsModified(
+      user.email !== email ||
+      user.first_name !== first_name ||
+      user.last_name !== last_name
+    );
+  }, [user, user?.email, user?.first_name, user?.last_name, email, first_name, last_name]);
+
   useLayoutEffect(() => {
     if (user) {
       setUsername(user.username);
@@ -57,6 +71,7 @@ function EditorProfile() {
           <SubmitButton
             text='Сохранить данные'
             loading={processing}
+            disabled={!isModified}
           />
         </div>  
       </form>   

@@ -10,13 +10,13 @@ import ViewLibrary from './ViewLibrary';
 function LibraryPage() {
   const library = useLibrary();
   
-  const [ filterParams, setFilterParams ] = useState<ILibraryFilter>({});
+  const [ filter, setFilter ] = useState<ILibraryFilter>({});
   const [ items, setItems ] = useState<ILibraryItem[]>([]);
   
-  useLayoutEffect(() => {
-    const filter = filterParams;
+  useLayoutEffect(
+  () => {
     setItems(library.filter(filter));
-  }, [library, filterParams]);
+  }, [library, filter, filter.query]);
 
   return (
     <div className='w-full'>
@@ -24,12 +24,13 @@ function LibraryPage() {
       { library.error && <BackendError error={library.error} />}
       { !library.loading && library.items && 
       <div className='flex flex-col w-full'>
-        <SearchPanel 
-          filter={filterParams}
-          setFilter={setFilterParams}
+        <SearchPanel
+          total={library.items.length ?? 0}
+          filtered={items.length}
+          setFilter={setFilter}
         />
         <ViewLibrary
-          cleanQuery={() => setFilterParams({})}
+          cleanQuery={() => setFilter({})}
           items={items} 
         />
       </div>

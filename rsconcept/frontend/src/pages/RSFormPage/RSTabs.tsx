@@ -9,8 +9,9 @@ import ConceptTab from '../../components/Common/ConceptTab';
 import { Loader } from '../../components/Common/Loader';
 import { useLibrary } from '../../context/LibraryContext';
 import { useRSForm } from '../../context/RSFormContext';
+import { useConceptTheme } from '../../context/ThemeContext';
 import { prefixes, TIMEOUT_UI_REFRESH } from '../../utils/constants';
-import { ICstCreateData, ICstRenameData, SyntaxTree } from '../../utils/models';
+import { ICstCreateData, ICstRenameData, LibraryFilterStrategy, SyntaxTree } from '../../utils/models';
 import { createAliasFor } from '../../utils/staticUI';
 import DlgCloneRSForm from './DlgCloneRSForm';
 import DlgCreateCst from './DlgCreateCst';
@@ -25,7 +26,7 @@ import EditorTermGraph from './EditorTermGraph';
 import RSFormStats from './elements/RSFormStats';
 import RSTabsMenu from './RSTabsMenu';
 
-export enum RSTabsList {
+export enum RSTabID {
   CARD = 0,
   CST_LIST = 1,
   CST_EDIT = 2,
@@ -40,8 +41,9 @@ function RSTabs() {
     cstCreate, cstDelete, cstRename, subscribe, unsubscribe
   } = useRSForm();
   const { destroySchema } = useLibrary();
+  const { setNoFooter } = useConceptTheme();
 
-  const [activeTab, setActiveTab] = useState(RSTabsList.CARD);
+  const [activeTab, setActiveTab] = useState<RSTabID>(RSTabID.CARD);
   const [activeID, setActiveID] = useState<number | undefined>(undefined);
   
   const [showUpload, setShowUpload] = useState(false);
@@ -72,21 +74,23 @@ function RSTabs() {
   }, [schema]);
 
   useLayoutEffect(() => {
-    const activeTab = Number(new URLSearchParams(search).get('tab')) ?? RSTabsList.CARD;
+    const activeTab = (Number(new URLSearchParams(search).get('tab')) ?? RSTabID.CARD) as RSTabID;
     const cstQuery = new URLSearchParams(search).get('active');
     setActiveTab(activeTab);
+    setNoFooter(activeTab === RSTabID.CST_EDIT || activeTab === RSTabID.CST_LIST);
     setActiveID(Number(cstQuery) ?? ((schema && schema?.items.length > 0) ? schema.items[0].id : undefined));
-  }, [search, setActiveTab, setActiveID, schema]);
+    return () => setNoFooter(false);
+  }, [search, setActiveTab, setActiveID, schema, setNoFooter]);
 
   function onSelectTab(index: number) {
     navigateTo(index, activeID);
   }
 
   const navigateTo = useCallback(
-  (tab: RSTabsList, activeID?: number) => {
+  (tab: RSTabID, activeID?: number) => {
     if (activeID) {
       navigate(`/rsforms/${schema!.id}?tab=${tab}&active=${activeID}`, {
-        replace: tab === activeTab && tab !== RSTabsList.CST_EDIT
+        replace: tab === activeTab && tab !== RSTabID.CST_EDIT
       });
     } else {
       navigate(`/rsforms/${schema!.id}?tab=${tab}`);
@@ -102,7 +106,7 @@ function RSTabs() {
     cstCreate(data, newCst => {
       toast.success(`Конституента добавлена: ${newCst.alias}`);
       navigateTo(activeTab, newCst.id);    
-      if (activeTab === RSTabsList.CST_EDIT || activeTab === RSTabsList.CST_LIST) {
+      if (activeTab === RSTabID.CST_EDIT || activeTab === RSTabID.CST_LIST) {
         setTimeout(() => {
           const element = document.getElementById(`${prefixes.cst_list}${newCst.alias}`);
           if (element) {
@@ -144,14 +148,16 @@ function RSTabs() {
       return;
     }
     const data = {
-      items: deleted.map(id => { return { id: id }; })
+      items: deleted.map(id => {
+        return { id: id };
+      })
     };
     let activeIndex = schema.items.findIndex(cst => cst.id === activeID);
     cstDelete(data, () => {
       const deletedNames = deleted.map(id => schema.items.find(cst => cst.id === id)?.alias).join(', ');
       toast.success(`Конституенты удалены: ${deletedNames}`);
       if (deleted.length === schema.items.length) {
-        navigateTo(RSTabsList.CST_LIST);
+        navigateTo(RSTabID.CST_LIST);
       }
       if (activeIndex) {
         while (activeIndex < schema.items.length && deleted.find(id => id === schema.items[activeIndex].id)) {
@@ -182,7 +188,7 @@ function RSTabs() {
 
   const onOpenCst = useCallback(
   (cstID: number) => {
-    navigateTo(RSTabsList.CST_EDIT, cstID)
+    navigateTo(RSTabID.CST_EDIT, cstID)
   }, [navigateTo]);
 
   const onDestroySchema = useCallback(
@@ -192,7 +198,7 @@ function RSTabs() {
     }
     destroySchema(schema.id, () => {
       toast.success('Схема удалена');
-      navigate('/library?filter=personal');
+      navigate(`/library?filter=${LibraryFilterStrategy.PERSONAL}`);
     });
   }, [schema, destroySchema, navigate]);
 
@@ -283,7 +289,7 @@ function RSTabs() {
       defaultFocus={true}
       selectedTabClassName='font-bold'
     >
-      <TabList className='flex items-start pl-2 select-none w-fit clr-bg-pop'>
+      <TabList className='flex items-start pl-2 border-b border-r-2 select-none w-fit clr-bg-pop clr-border'>
         <RSTabsMenu 
           onDownload={onDownloadSchema}
           onDestroy={onDestroySchema}
@@ -302,7 +308,7 @@ function RSTabs() {
         <ConceptTab className='min-w-[6.5rem]'>Граф термов</ConceptTab>
       </TabList>
 
-      <TabPanel className='flex items-start w-full gap-2 px-2'>
+      <TabPanel className='flex w-full gap-4'>
         <EditorRSForm 
           onDownload={onDownloadSchema}
           onDestroy={onDestroySchema}
@@ -320,7 +326,7 @@ function RSTabs() {
         />
       </TabPanel>
 
-      <TabPanel className='pl-2'>
+      <TabPanel>
         <EditorConstituenta 
           activeID={activeID}
           onOpenEdit={onOpenCst}
@@ -331,7 +337,7 @@ function RSTabs() {
         />
       </TabPanel>
 
-      <TabPanel className='pl-2'>
+      <TabPanel>
         <EditorTermGraph 
           onOpenEdit={onOpenCst}
           onCreateCst={promptCreateCst}

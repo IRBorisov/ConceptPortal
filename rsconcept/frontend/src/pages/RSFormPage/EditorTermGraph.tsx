@@ -1,6 +1,6 @@
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { darkTheme, GraphCanvas, GraphCanvasRef, GraphEdge, 
-  GraphNode, LayoutTypes, lightTheme, Sphere, useSelection
+import { GraphCanvas, GraphCanvasRef, GraphEdge, 
+  GraphNode, LayoutTypes, Sphere, useSelection
 } from 'reagraph';
 
 import Button from '../../components/Common/Button';
@@ -15,6 +15,7 @@ import { ArrowsRotateIcon, DumpBinIcon, FilterCogIcon, HelpIcon, SmallPlusIcon }
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
+import { graphDarkT, graphLightT, IColorTheme } from '../../utils/color';
 import { prefixes, resources } from '../../utils/constants';
 import { Graph } from '../../utils/Graph';
 import { CstType, IConstituenta, ICstCreateData } from '../../utils/models';
@@ -28,14 +29,14 @@ import ConstituentaTooltip from './elements/ConstituentaTooltip';
 export type ColoringScheme = 'none' | 'status' | 'type';
 const TREE_SIZE_MILESTONE = 50;
 
-function getCstNodeColor(cst: IConstituenta, coloringScheme: ColoringScheme, darkMode: boolean): string {
+function getCstNodeColor(cst: IConstituenta, coloringScheme: ColoringScheme, colors: IColorTheme): string {
   if (coloringScheme === 'type') {
-    return getCstClassColor(cst.cstClass, darkMode);
+    return getCstClassColor(cst.cstClass, colors);
   }
   if (coloringScheme === 'status') {
-    return getCstStatusColor(cst.status, darkMode);
+    return getCstStatusColor(cst.status, colors);
   }
-  return (darkMode ? '#7a8c9e' :'#7ca0ab');
+  return '';
 }
 
 export interface GraphEditorParams {
@@ -62,7 +63,7 @@ interface EditorTermGraphProps {
 
 function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGraphProps) {
   const { schema, isEditable } = useRSForm();
-  const { darkMode, noNavigation } = useConceptTheme();
+  const { darkMode, colors, noNavigation } = useConceptTheme();
   
   const [ layout, setLayout ] = useLocalStorage<LayoutTypes>('graph_layout', 'treeTd2d');
   const [ coloringScheme, setColoringScheme ] = useLocalStorage<ColoringScheme>('graph_coloring', 'none');
@@ -171,13 +172,13 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       if (cst) {
         result.push({
           id: String(node.id),
-          fill: getCstNodeColor(cst, coloringScheme, darkMode),
+          fill: getCstNodeColor(cst, coloringScheme, colors),
           label: cst.term.resolved && !noTerms ? `${cst.alias}: ${cst.term.resolved}` : cst.alias
         });
       }
     });
     return result;
-  }, [schema, coloringScheme, filtered.nodes, darkMode, noTerms]);
+  }, [schema, coloringScheme, filtered.nodes, noTerms, colors]);
 
   const edges: GraphEdge[] = useMemo(
   () => {
@@ -337,8 +338,8 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
   const canvasHeight = useMemo(
   () => {
     return !noNavigation ? 
-      'calc(100vh - 9.8rem)'
-    : 'calc(100vh - 1.8rem)';
+      'calc(100vh - 10.1rem)'
+    : 'calc(100vh - 2.1rem)';
   }, [noNavigation]);
 
   const dismissedStyle = useCallback(
@@ -354,7 +355,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       initial={getOptions()}
       onConfirm={handleChangeOptions}
     />}
-    <div className='flex flex-col border-t border-r max-w-[12.5rem] pr-2 pb-2 text-sm select-none' style={{height: canvasHeight}}>
+    <div className='flex flex-col border-r border-b min-w-[13.5rem] max-w-min px-2 pb-2 text-sm select-none clr-border' style={{height: canvasHeight}}>
       {hoverCst && 
       <div className='relative'>
         <InfoConstituenta 
@@ -394,12 +395,12 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
           onClick={() => setShowOptions(true)}
         />
         <ConceptSelect
-          className='min-w-[9.3rem]'
+          className='min-w-[9.8rem]'
           options={GraphColoringSelector}
           searchable={false}
           placeholder='Выберите цвет'
           values={coloringScheme ? [{ value: coloringScheme, label: mapColoringLabels.get(coloringScheme) }] : []}
-          onChange={data => { setColoringScheme(data.length > 0 ? data[0].value : GraphColoringSelector[0].value); }}
+          onChange={data => setColoringScheme(data.length > 0 ? data[0].value : GraphColoringSelector[0].value)}
         />
         
       </div>
@@ -409,7 +410,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         searchable={false}
         placeholder='Способ расположения'
         values={layout ? [{ value: layout, label: mapLayoutLabels.get(layout) }] : []}
-        onChange={data => { setLayout(data.length > 0 ? data[0].value : GraphLayoutSelector[0].value); }}
+        onChange={data => setLayout(data.length > 0 ? data[0].value : GraphLayoutSelector[0].value)}
       />
       <Checkbox
         label='Скрыть текст' 
@@ -441,7 +442,10 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
               key={`${cst.alias}`}
               id={`${prefixes.cst_list}${cst.alias}`}
               className='w-fit min-w-[3rem] rounded-md text-center cursor-pointer'
-              style={ { backgroundColor: getCstNodeColor(cst, adjustedColoring, darkMode), ...dismissedStyle(cstID) }}
+              style={{ 
+                backgroundColor: getCstNodeColor(cst, adjustedColoring, colors),
+                ...dismissedStyle(cstID)
+              }}
               onClick={() => toggleDismissed(cstID)}
               onDoubleClick={() => onOpenEdit(cstID)}
             >
@@ -458,7 +462,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
     </div>
     <div className='w-full h-full overflow-auto'>
     <div 
-      className='relative border-r border-y'
+      className='relative'
       style={{width: canvasWidth, height: canvasHeight, borderBottomWidth: noNavigation ? '1px': ''}}
     >
       <div className='relative top-0 right-0 z-10 flex mt-1 ml-2 flex-start'>
@@ -492,7 +496,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
           : undefined
         }
         labelFontUrl={resources.graph_font}
-        theme={darkMode ? darkTheme : lightTheme}
+        theme={darkMode ? graphDarkT : graphLightT}
         renderNode={({ node, ...rest }) => (
           <Sphere {...rest} node={node} />
         )}

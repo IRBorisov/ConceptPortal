@@ -3,6 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 import { ErrorInfo } from '../components/BackendError';
 import { DataCallback, getProfile, patchProfile } from '../utils/backendAPI';
 import { IUserProfile, IUserUpdateData } from '../utils/models';
+import { useUsers } from './UsersContext';
 
 interface IUserProfileContext {
   user: IUserProfile | undefined
@@ -30,39 +31,43 @@ interface UserProfileStateProps {
 }
 
 export const UserProfileState = ({ children }: UserProfileStateProps) => {
+  const { users } = useUsers();
   const [user, setUser] = useState<IUserProfile | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<ErrorInfo>(undefined);
 
   const reload = useCallback(
-    () => {
-      setError(undefined);
-      setUser(undefined);
-      getProfile({
-        showError: true,
-        setLoading: setLoading,
-        onError: error => { setError(error); },
-        onSuccess: newData => { setUser(newData); }
-      });
-    }, [setUser]
-  );
+  () => {
+    setError(undefined);
+    setUser(undefined);
+    getProfile({
+      showError: true,
+      setLoading: setLoading,
+      onError: error => setError(error),
+      onSuccess: newData => setUser(newData)
+    });
+  }, [setUser]);
   
   const updateUser = useCallback(
-    (data: IUserUpdateData, callback?: DataCallback<IUserProfile>) => {
-      setError(undefined);
-      patchProfile({
-        data: data,
-        showError: true,
-        setLoading: setProcessing,
-        onError: error => { setError(error); },
-        onSuccess: newData => {
-          setUser(newData);
-          if (callback) callback(newData);
+  (data: IUserUpdateData, callback?: DataCallback<IUserProfile>) => {
+    setError(undefined);
+    patchProfile({
+      data: data,
+      showError: true,
+      setLoading: setProcessing,
+      onError: error => setError(error),
+      onSuccess: newData => {
+        setUser(newData);
+        const libraryUser = users.find(item => item.id === user?.id);
+        if (libraryUser) {
+          libraryUser.first_name = newData.first_name;
+          libraryUser.last_name = newData.last_name;
         }
-      });
-    }, [setUser]
-  );
+        if (callback) callback(newData);
+      }
+    });
+  }, [setUser, users]);
 
   useEffect(() => {
     reload();

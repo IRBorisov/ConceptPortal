@@ -16,7 +16,7 @@ function UserTabs() {
   const { user: auth } = useAuth();
   const { items } = useLibrary();
 
-  const [showSubs, setShowSubs] = useState(true);
+  const [showSubs, setShowSubs] = useState(false);
 
   const subscriptions = useMemo(
   () => {

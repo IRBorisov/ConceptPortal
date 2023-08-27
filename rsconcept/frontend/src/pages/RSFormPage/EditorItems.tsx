@@ -8,9 +8,10 @@ import Divider from '../../components/Common/Divider';
 import HelpRSFormItems from '../../components/Help/HelpRSFormItems';
 import { ArrowDownIcon, ArrowsRotateIcon, ArrowUpIcon, DumpBinIcon, HelpIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
+import { useConceptTheme } from '../../context/ThemeContext';
 import { prefixes } from '../../utils/constants';
 import { CstType, IConstituenta, ICstCreateData, ICstMovetoData } from '../../utils/models'
-import { getCstTypePrefix, getCstTypeShortcut, getCstTypificationLabel, mapStatusInfo } from '../../utils/staticUI';
+import { getCstStatusColor, getCstTypePrefix, getCstTypeShortcut, getCstTypificationLabel, mapStatusInfo } from '../../utils/staticUI';
 
 interface EditorItemsProps {
   onOpenEdit: (cstID: number) => void
@@ -19,6 +20,7 @@ interface EditorItemsProps {
 }
 
 function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps) {
+  const { colors } = useConceptTheme();
   const { schema, isEditable, cstMoveTo, resetAliases } = useRSForm();
   const [selected, setSelected] = useState<number[]>([]);
   const nothingSelected = useMemo(() => selected.length === 0, [selected]);
@@ -51,7 +53,9 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
     }, -1);
     const target = Math.max(0, currentIndex - 1) + 1
     const data = {
-      items: selected.map(id => { return { id: id }; }),
+      items: selected.map(id => {
+        return { id: id };
+      }),
       move_to: target
     }
     cstMoveTo(data);
@@ -76,7 +80,9 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
     }, -1);
     const target = Math.min(schema.items.length - 1, currentIndex - count + 2) + 1
     const data: ICstMovetoData = {
-      items: selected.map(id => { return { id: id }; }),
+      items: selected.map(id => {
+        return { id: id };
+      }),
       move_to: target
     }
     cstMoveTo(data);
@@ -87,7 +93,6 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
     resetAliases(() => toast.success('Переиндексация конституент успешна'));
   }
 
-  // Add new constituenta
   function handleCreateCst(type?: CstType) {
     if (!schema) {
       return;
@@ -180,7 +185,8 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
         return (<>
           <div
             id={`${prefixes.cst_list}${cst.alias}`}
-            className={`w-full rounded-md text-center ${info.color}`}
+            className='w-full text-center rounded-md'
+            style={{backgroundColor: getCstStatusColor(cst.status, colors)}}
           >
             {cst.alias}
           </div>
@@ -248,7 +254,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
       reorder: true,
       hide: 1800
     }
-  ], []);
+  ], [colors]);
 
   return (
     <div className='w-full'>

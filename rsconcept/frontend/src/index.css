@@ -42,6 +42,10 @@
     @apply clr-border rounded
   }
 
+  .text-btn {
+    @apply text-gray-600 dark:text-zinc-200 dark:disabled:text-zinc-400 disabled:text-gray-400
+  }
+
   .clr-border {
     @apply border-gray-300 dark:border-[#434343]
   }
@@ -102,7 +106,7 @@
     @apply text-white bg-blue-400 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-400 dark:text-black disabled:bg-gray-400 dark:disabled:bg-gray-600
   }
   .clr-btn-default {
-    @apply text-gray-600 dark:text-zinc-200 dark:disabled:text-zinc-400 disabled:text-gray-400 bg-[#f0f2f7] hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-400
+    @apply bg-[#f0f2f7] hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-400 text-btn
   }
 
   /* Transparent button */

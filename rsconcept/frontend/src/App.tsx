@@ -16,7 +16,7 @@ import RSFormPage from './pages/RSFormPage';
 import UserProfilePage from './pages/UserProfilePage';
 
 function App () {
-  const { noNavigation, viewportHeight, mainHeight } = useConceptTheme();  
+  const { noNavigation, noFooter, viewportHeight, mainHeight } = useConceptTheme();  
   return (
     <div className='antialiased clr-app'>
       <Navigation />
@@ -45,7 +45,7 @@ function App () {
           <Route path='*' element={ <NotFoundPage/>} />
         </Routes>
       </main>
-      {!noNavigation && <Footer />}
+      {!noNavigation && !noFooter && <Footer />}
       </div>
     </div>
   );

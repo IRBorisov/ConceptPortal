@@ -3,7 +3,8 @@ import { createContext, useCallback, useContext, useLayoutEffect, useState } fro
 import { type ErrorInfo } from '../components/BackendError';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { type DataCallback, getAuth, patchPassword,postLogin, postLogout, postSignup } from '../utils/backendAPI';
-import { ICurrentUser, IUserLoginData, IUserProfile, IUserSignupData, IUserUpdatePassword } from '../utils/models';
+import { ICurrentUser, IUserInfo, IUserLoginData, IUserProfile, IUserSignupData, IUserUpdatePassword } from '../utils/models';
+import { useUsers } from './UsersContext';
 
 interface IAuthContext {
   user: ICurrentUser | undefined
@@ -32,6 +33,7 @@ interface AuthStateProps {
 }
 
 export const AuthState = ({ children }: AuthStateProps) => {
+  const { users } = useUsers();
   const [user, setUser] = useLocalStorage<ICurrentUser | undefined>('user', undefined);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ErrorInfo>(undefined);
@@ -82,6 +84,7 @@ export const AuthState = ({ children }: AuthStateProps) => {
       setLoading: setLoading,
       onError: error => setError(error),
       onSuccess: newData => reload(() => {
+        users.push(newData as IUserInfo);
         if (callback) callback(newData);
       })
     });

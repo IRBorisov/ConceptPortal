@@ -34,28 +34,34 @@ function LoginPage() {
         username: username,
         password: password
       };
-      login(data, () => { navigate('/library?filter=personal'); });
+      login(data, () => navigate('/library'));
     }
   }
 
   return (
-    <div className='w-full py-4'> { user
+    <div className='flex justify-center w-full'>
+    <div className='py-2'> { user
       ? <b>{`Вы вошли в систему как ${user.username}`}</b>
-      : <Form title='Ввод данных пользователя' onSubmit={handleSubmit} widthClass='w-[21rem]'>
+      : 
+      <Form
+        title='Ввод данных пользователя'
+        onSubmit={handleSubmit}
+        widthClass='w-[24rem]'
+      >
         <TextInput id='username'
           label='Имя пользователя'
           required
           type='text'
           value={username}
           autoFocus
-          onChange={event => { setUsername(event.target.value); }}
+          onChange={event => setUsername(event.target.value)}
         />
         <TextInput id='password'
           label='Пароль'
           required
           type='password'
           value={password}
-          onChange={event => { setPassword(event.target.value); }}
+          onChange={event => setPassword(event.target.value)}
         />
 
         <div className='flex justify-center w-full gap-2 mt-4'>
@@ -72,6 +78,7 @@ function LoginPage() {
         { error && <BackendError error={error} />}
       </Form>
   }</div>
+  </div>
   );
 }
 

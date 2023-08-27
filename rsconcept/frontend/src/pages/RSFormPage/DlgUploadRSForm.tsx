@@ -32,7 +32,7 @@ function DlgUploadRSForm({ hideWindow }: DlgUploadRSFormProps) {
     if (event.target.files && event.target.files.length > 0) {
       setFile(event.target.files[0]);
     } else {
-      setFile(undefined)
+      setFile(undefined);
     }
   }
 
@@ -53,7 +53,7 @@ function DlgUploadRSForm({ hideWindow }: DlgUploadRSFormProps) {
       <Checkbox
         label='Загружать название и комментарий'
         value={loadMetadata}
-        onChange={event => { setLoadMetadata(event.target.checked); }}
+        onChange={event => setLoadMetadata(event.target.checked)}
       />
       </div>
     </Modal>

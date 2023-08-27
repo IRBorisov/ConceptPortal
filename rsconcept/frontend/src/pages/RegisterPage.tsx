@@ -47,26 +47,30 @@ function RegisterPage() {
     { user &&
       <b>{`Вы вошли в систему как ${user.username}. Если хотите зарегистрировать нового пользователя, выйдите из системы (меню в правом верхнем углу экрана)`}</b>}
     { !user &&
-      <Form title='Регистрация пользователя' onSubmit={handleSubmit}>
+      <Form
+        title='Регистрация пользователя'
+        onSubmit={handleSubmit}
+        widthClass='w-[24rem]'
+      >
         <TextInput id='username' label='Имя пользователя' type='text'
           required
           value={username}
-          onChange={event => { setUsername(event.target.value); }}
+          onChange={event => setUsername(event.target.value)}
         />
         <TextInput id='password' label='Пароль' type='password'
           required
           value={password}
-          onChange={event => { setPassword(event.target.value); }}
+          onChange={event => setPassword(event.target.value)}
         />
         <TextInput id='password2' label='Повторите пароль' type='password'
           required
           value={password2}
-          onChange={event => { setPassword2(event.target.value); }}
+          onChange={event => setPassword2(event.target.value)}
         />
         <div className='text-sm'>
           <p>- используйте уникальный пароль</p>
           <p>- портал функционирует в тестовом режиме</p>
-          <p>- безопасность информации пользователей не гарантируется</p>
+          <p className='font-semibold text-red'>- безопасность информации не гарантируется</p>
           {/* <p>- минимум 8 символов</p>
           <p>- большие, маленькие буквы, цифры</p>
           <p>- минимум 1 спец. символ</p> */}
@@ -74,18 +78,18 @@ function RegisterPage() {
         <TextInput id='email' label='email' type='text'
           required
           value={email}
-          onChange={event => { setEmail(event.target.value); }}
+          onChange={event => setEmail(event.target.value)}
         />
         <TextInput id='first_name' label='Имя' type='text'
           value={firstName}
-          onChange={event => { setFirstName(event.target.value); }}
+          onChange={event => setFirstName(event.target.value)}
         />
         <TextInput id='last_name' label='Фамилия' type='text'
           value={lastName}
-          onChange={event => { setLastName(event.target.value); }}
+          onChange={event => setLastName(event.target.value)}
         />
 
-        <div className='flex items-center justify-between my-4'>
+        <div className='flex items-center justify-center w-full my-4'>
           <SubmitButton text='Регистрировать' loading={loading}/>
         </div>
         { error && <BackendError error={error} />}
