@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 
 import Footer from './components/Footer';
 import Navigation from './components/Navigation/Navigation';
@@ -15,8 +15,8 @@ import RestorePasswordPage from './pages/RestorePasswordPage';
 import RSFormPage from './pages/RSFormPage';
 import UserProfilePage from './pages/UserProfilePage';
 
-function App () {
-  const { noNavigation, noFooter, viewportHeight, mainHeight } = useConceptTheme();  
+function Root() {
+  const { noNavigation, noFooter, viewportHeight, mainHeight } = useConceptTheme();
   return (
     <div className='antialiased clr-app'>
       <Navigation />
@@ -26,28 +26,66 @@ function App () {
         draggable={false}
         pauseOnFocusLoss={false}
       />
-      
       <div className='overflow-auto' style={{maxHeight: viewportHeight}}>
       <main className='h-full' style={{minHeight: mainHeight}}>
-        <Routes>
-          <Route path='/' element={ <HomePage/>} />
-
-          <Route path='login' element={ <LoginPage/>} />
-          <Route path='signup' element={<RegisterPage/>} />
-          <Route path='restore-password' element={ <RestorePasswordPage/>} />
-          <Route path='profile' element={<UserProfilePage/>} />
-
-          <Route path='manuals' element={<ManualsPage/>} />
-
-          <Route path='library' element={<LibraryPage/>} />
-          <Route path='rsforms/:id' element={ <RSFormPage/>} />
-          <Route path='rsform-create' element={ <CreateRSFormPage/>} />
-          <Route path='*' element={ <NotFoundPage/>} />
-        </Routes>
+        <Outlet />
       </main>
       {!noNavigation && !noFooter && <Footer />}
       </div>
     </div>
+  );
+}
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Root />,
+    errorElement: <NotFoundPage />,
+    children: [
+      {
+        path: '',
+        element: <HomePage />,
+      },
+      {
+        path: 'login',
+        element: <LoginPage />,
+      },
+      {
+        path: 'signup',
+        element: <RegisterPage />,
+      },
+      {
+        path: 'restore-password',
+        element: <RestorePasswordPage />,
+      },
+      {
+        path: 'profile',
+        element: <UserProfilePage />,
+      },
+      {
+        path: 'manuals',
+        element: <ManualsPage />,
+      },
+
+      {
+        path: 'library',
+        element: <LibraryPage />,
+      },
+      {
+        path: 'rsforms/:id',
+        element: <RSFormPage />,
+      },
+      {
+        path: 'rsform-create',
+        element: <CreateRSFormPage />,
+      },
+    ]
+  },
+]);
+
+function App () {
+  return (
+    <RouterProvider router={router} />
   );
 }
 
