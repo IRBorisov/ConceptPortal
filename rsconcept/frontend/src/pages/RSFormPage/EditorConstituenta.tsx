@@ -75,8 +75,10 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
     }
   }, [activeCst, onOpenEdit, schema]);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  function handleSubmit(event?: React.FormEvent<HTMLFormElement>) {
+    if (event) {
+      event.preventDefault();
+    }
     if (!activeID || processing) {
       return;
     }
@@ -135,6 +137,7 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
           tooltip='Сохранить изменения'
           disabled={!isModified || !isEnabled}
           icon={<SaveIcon size={6} color={isModified && isEnabled ? 'text-primary' : ''}/>}
+          onClick={() => handleSubmit()}
         >
         </MiniButton>
         </div>
