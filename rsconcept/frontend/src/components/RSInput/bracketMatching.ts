@@ -1,6 +1,8 @@
 import { bracketMatching, MatchResult } from '@codemirror/language';
 import { Decoration, EditorView } from '@codemirror/view';
 
+import { bracketsDarkT, bracketsLightT } from '../../utils/color';
+
 const matchingMark = Decoration.mark({class: "cc-matchingBracket"});
 const nonmatchingMark = Decoration.mark({class: "cc-nonmatchingBracket"});
 
@@ -14,31 +16,9 @@ function bracketRender(match: MatchResult) {
   return decorations;
 }
 
-const darkTheme = EditorView.baseTheme({
-  '.cc-matchingBracket': {
-    fontWeight: 600,
-  },
-  '.cc-nonmatchingBracket': {
-    color: '#ef4444',
-    fontWeight: 700,
-  },
-  '&.cm-focused .cc-matchingBracket': {
-    backgroundColor: '#734f00',
-  },
-});
+const darkTheme = EditorView.baseTheme(bracketsDarkT);
 
-const lightTheme = EditorView.baseTheme({
-  '.cc-matchingBracket': {
-    fontWeight: 600,
-  },
-  '.cc-nonmatchingBracket': {
-    color: '#ef4444',
-    fontWeight: 700,
-  },
-  '&.cm-focused .cc-matchingBracket': {
-    backgroundColor: '#dae6f2',
-  },
-});
+const lightTheme = EditorView.baseTheme(bracketsLightT);
 
 export function ccBracketMatching(darkMode: boolean) {
   return [bracketMatching({ renderMatch: bracketRender }), darkMode ? darkTheme : lightTheme];

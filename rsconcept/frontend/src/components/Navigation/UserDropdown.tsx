@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../context/AuthContext';
 import { useConceptTheme } from '../../context/ThemeContext';
+import { LibraryFilterStrategy } from '../../utils/models';
 import Dropdown from '../Common/Dropdown';
 import DropdownButton from '../Common/DropdownButton';
 
@@ -27,7 +28,7 @@ function UserDropdown({ hideDropdown }: UserDropdownProps) {
 
   const navigateMyWork = () => {
     hideDropdown();
-    navigate('/library?filter=personal');
+    navigate(`/library?filter=${LibraryFilterStrategy.PERSONAL}`);
   };
 
   return (

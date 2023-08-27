@@ -39,9 +39,15 @@ function LoginPage() {
   }
 
   return (
-    <div className='w-full py-4'> { user
+    <div className='flex justify-center w-full'>
+    <div className='py-2'> { user
       ? <b>{`Вы вошли в систему как ${user.username}`}</b>
-      : <Form title='Ввод данных пользователя' onSubmit={handleSubmit} widthClass='w-[21rem]'>
+      : 
+      <Form
+        title='Ввод данных пользователя'
+        onSubmit={handleSubmit}
+        widthClass='w-[24rem]'
+      >
         <TextInput id='username'
           label='Имя пользователя'
           required
@@ -72,6 +78,7 @@ function LoginPage() {
         { error && <BackendError error={error} />}
       </Form>
   }</div>
+  </div>
   );
 }
 

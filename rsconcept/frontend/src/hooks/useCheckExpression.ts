@@ -29,6 +29,32 @@ function checkTypeConsistency(type: CstType, typification: string, args: IFuncti
   }
 }
 
+function adjustResults(parse: IExpressionParse, emptyExpression: boolean, cstType: CstType) {
+  if (!parse.parseResult && parse.errors.length > 0 && parse.errors[0].errorType !== RSErrorType.syntax) {
+    return;
+  }
+  if (cstType === CstType.BASE || cstType === CstType.CONSTANT) {
+    if (!emptyExpression) {
+      parse.parseResult = false;
+      parse.errors.push({
+        errorType: RSErrorType.globalNonemptyBase,
+        isCritical: true,
+        params: [],
+        position: 0
+      });
+    }
+  }
+  if (!checkTypeConsistency(cstType, parse.typification, parse.args)) {
+    parse.parseResult = false;
+    parse.errors.push({
+      errorType: RSErrorType.globalUnexpectedType,
+      isCritical: true,
+      params: [],
+      position: 0
+    });
+  }
+}
+
 function useCheckExpression({ schema }: { schema?: IRSForm }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ErrorInfo>(undefined);
@@ -42,29 +68,10 @@ function useCheckExpression({ schema }: { schema?: IRSForm }) {
       data: { expression: expression },
       showError: true,
       setLoading,
-      onError: error => { setError(error); },
+      onError: error => setError(error),
       onSuccess: parse => {
-        if (activeCst && parse.parseResult) {
-          if (activeCst.cstType === CstType.BASE || activeCst.cstType === CstType.CONSTANT) {
-            if (expression !== getCstExpressionPrefix(activeCst)) {
-              parse.parseResult = false;
-              parse.errors.push({
-                errorType: RSErrorType.globalNonemptyBase,
-                isCritical: true,
-                params: [],
-                position: 0
-              });
-            }
-          }
-          if (!checkTypeConsistency(activeCst.cstType, parse.typification, parse.args)) {
-            parse.parseResult = false;
-            parse.errors.push({
-              errorType: RSErrorType.globalUnexpectedType,
-              isCritical: true,
-              params: [],
-              position: 0
-            });
-          }
+        if (activeCst) {
+          adjustResults(parse, expression === getCstExpressionPrefix(activeCst), activeCst.cstType);
         }
         setParseData(parse);
         if (onSuccess) onSuccess(parse);

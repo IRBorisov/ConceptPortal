@@ -91,12 +91,14 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
       showError: true,
       setLoading: setProcessing,
       onError: error => setError(error),
-      onSuccess: newSchema => {
-        reload();
+      onSuccess: newSchema => reload(() => {
+        if (user && !user.subscriptions.includes(newSchema.id)) {
+          user.subscriptions.push(newSchema.id);
+        }
         if (callback) callback(newSchema);
-      }
+      })
     });
-  }, [reload]);
+  }, [reload, user]);
 
   const destroySchema = useCallback(
   (target: number, callback?: () => void) => {
@@ -106,10 +108,13 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
       setLoading: setProcessing,
       onError: error => setError(error),
       onSuccess: () => reload(() => {
+        if (user && user.subscriptions.includes(target)) {
+          user.subscriptions.splice(user.subscriptions.findIndex(item => item === target), 1);
+        }
         if (callback) callback();
       })
     });
-  }, [setError, reload]);
+  }, [setError, reload, user]);
 
   const cloneSchema = useCallback(
   (target: number, data: IRSFormCreateData, callback: DataCallback<IRSFormData>) => {
@@ -123,6 +128,9 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
       setLoading: setProcessing,
       onError: error => setError(error),
       onSuccess: newSchema => reload(() => {
+        if (user && !user.subscriptions.includes(newSchema.id)) {
+          user.subscriptions.push(newSchema.id);
+        }
         if (callback) callback(newSchema);
       })
     });

@@ -24,7 +24,7 @@ class LibraryActiveView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         if not user.is_anonymous:
-            # pyling: disable=unsupported-binary-operation
+            # pylint: disable=unsupported-binary-operation
             return m.LibraryItem.objects.filter(Q(is_common=True) | Q(owner=user) | Q(subscription__user=user))
         else:
             return m.LibraryItem.objects.filter(is_common=True)

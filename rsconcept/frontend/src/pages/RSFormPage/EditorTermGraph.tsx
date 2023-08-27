@@ -9,14 +9,13 @@ import ConceptSelect from '../../components/Common/ConceptSelect';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import Divider from '../../components/Common/Divider';
 import MiniButton from '../../components/Common/MiniButton';
-import { darkTheme, lightTheme } from '../../components/GraphThemes';
 import HelpTermGraph from '../../components/Help/HelpTermGraph';
 import InfoConstituenta from '../../components/Help/InfoConstituenta';
 import { ArrowsRotateIcon, DumpBinIcon, FilterCogIcon, HelpIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
-import { IColorTheme } from '../../utils/color';
+import { graphDarkT, graphLightT, IColorTheme } from '../../utils/color';
 import { prefixes, resources } from '../../utils/constants';
 import { Graph } from '../../utils/Graph';
 import { CstType, IConstituenta, ICstCreateData } from '../../utils/models';
@@ -30,14 +29,14 @@ import ConstituentaTooltip from './elements/ConstituentaTooltip';
 export type ColoringScheme = 'none' | 'status' | 'type';
 const TREE_SIZE_MILESTONE = 50;
 
-function getCstNodeColor(cst: IConstituenta, coloringScheme: ColoringScheme, darkMode: boolean, colors: IColorTheme): string {
+function getCstNodeColor(cst: IConstituenta, coloringScheme: ColoringScheme, colors: IColorTheme): string {
   if (coloringScheme === 'type') {
     return getCstClassColor(cst.cstClass, colors);
   }
   if (coloringScheme === 'status') {
     return getCstStatusColor(cst.status, colors);
   }
-  return (darkMode ? '#7a8c9e' :'#7ca0ab');
+  return '';
 }
 
 export interface GraphEditorParams {
@@ -173,13 +172,13 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       if (cst) {
         result.push({
           id: String(node.id),
-          fill: getCstNodeColor(cst, coloringScheme, darkMode, colors),
+          fill: getCstNodeColor(cst, coloringScheme, colors),
           label: cst.term.resolved && !noTerms ? `${cst.alias}: ${cst.term.resolved}` : cst.alias
         });
       }
     });
     return result;
-  }, [schema, coloringScheme, filtered.nodes, darkMode, noTerms, colors]);
+  }, [schema, coloringScheme, filtered.nodes, noTerms, colors]);
 
   const edges: GraphEdge[] = useMemo(
   () => {
@@ -356,7 +355,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       initial={getOptions()}
       onConfirm={handleChangeOptions}
     />}
-    <div className='flex flex-col border-r border-b min-w-[13rem] pr-2 pb-2 text-sm select-none clr-border' style={{height: canvasHeight}}>
+    <div className='flex flex-col border-r border-b min-w-[13.5rem] px-2 pb-2 text-sm select-none clr-border' style={{height: canvasHeight}}>
       {hoverCst && 
       <div className='relative'>
         <InfoConstituenta 
@@ -444,7 +443,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
               id={`${prefixes.cst_list}${cst.alias}`}
               className='w-fit min-w-[3rem] rounded-md text-center cursor-pointer'
               style={{ 
-                backgroundColor: getCstNodeColor(cst, adjustedColoring, darkMode, colors),
+                backgroundColor: getCstNodeColor(cst, adjustedColoring, colors),
                 ...dismissedStyle(cstID)
               }}
               onClick={() => toggleDismissed(cstID)}
@@ -497,7 +496,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
           : undefined
         }
         labelFontUrl={resources.graph_font}
-        theme={darkMode ? darkTheme : lightTheme}
+        theme={darkMode ? graphDarkT : graphLightT}
         renderNode={({ node, ...rest }) => (
           <Sphere {...rest} node={node} />
         )}

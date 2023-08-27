@@ -66,9 +66,9 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
       submitInvalidTooltip={'Введите имя, соответствующее типу и отсутствующее в схеме'}
       submitText='Переименовать'
     >
-      <div className='flex items-center gap-4 px-2 mb-2 h-fit min-w-[25rem]'>
+      <div className='flex items-center gap-4 px-2 my-2 h-fit min-w-[25rem]'>
         <ConceptSelect
-          className='mt-2 min-w-[14rem] self-center'
+          className='min-w-[14rem] self-center'
           options={CstTypeSelector}
           placeholder='Выберите тип'
           values={cstType ? [{ value: cstType, label: getCstTypeLabel(cstType) }] : []}

@@ -12,7 +12,7 @@ import DependencyModePicker from './DependencyModePicker';
 import MatchModePicker from './MatchModePicker';
 
 // Height that should be left to accomodate navigation panel + bottom margin
-const LOCAL_NAVIGATION_H = '2.6rem';
+const LOCAL_NAVIGATION_H = '2.1rem';
 
 interface ViewSideConstituentsProps {
   expression: string
@@ -26,7 +26,7 @@ function isMockCst(cst: IConstituenta) {
 }
 
 function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: ViewSideConstituentsProps) {
-  const { darkMode, noNavigation, colors } = useConceptTheme();
+  const { noNavigation, colors } = useConceptTheme();
   const { schema } = useRSForm();
   
   const [filterMatch, setFilterMatch] = useLocalStorage('side-filter-match', CstMatchMode.ALL);
@@ -81,10 +81,10 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
     {
       when: (cst: IConstituenta) => cst.id === activeID,
       style: {
-        backgroundColor: darkMode ? '#0068b3' : '#def1ff',
+        backgroundColor: colors.selection,
       },
     }
-  ], [activeID, darkMode]);
+  ], [activeID, colors]);
 
   const columns = useMemo(
   () => [
@@ -113,7 +113,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       conditionalCellStyles: [
         {
           when: (cst: IConstituenta) => isMockCst(cst),
-          classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
+          style: {backgroundColor: colors.selectionError}
         }
       ]
     },
@@ -126,7 +126,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       conditionalCellStyles: [
         {
           when: (cst: IConstituenta) => isMockCst(cst),
-          classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
+          style: {backgroundColor: colors.selectionError}
         }
       ]
     },
@@ -141,7 +141,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       conditionalCellStyles: [
         {
           when: (cst: IConstituenta) => isMockCst(cst),
-          classNames: ['bg-[#ffc9c9]', 'dark:bg-[#592b2b]']
+          style: {backgroundColor: colors.selectionError}
         }
       ]
     }

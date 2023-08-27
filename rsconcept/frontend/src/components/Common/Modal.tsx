@@ -46,7 +46,7 @@ function Modal({
       <div className='max-h-[calc(95vh-15rem)]'>
         {children}
       </div>
-      <div className='flex justify-center w-full gap-4 pt-4 mt-2 border-t-4'>
+      <div className='flex justify-center w-full gap-4 pt-4 mt-2 border-t-4 clr-border'>
         {!readonly && 
         <Button
           text={submitText}

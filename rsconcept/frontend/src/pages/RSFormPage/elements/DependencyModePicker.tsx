@@ -52,14 +52,6 @@ function DependencyModePicker({ value, onChange }: DependencyModePickerProps) {
       </Dropdown>
     }
   </div>
-
-  //     case DependencyMode.OUTPUTS: return 'потребители';
-  //     case DependencyMode.INPUTS: return 'поставщики';
-  //     case DependencyMode.EXPAND_INPUTS: return 'влияющие';
-  //     case DependencyMode.EXPAND_OUTPUTS: return 'зависимые';
-  //   }
-  // }
-  
   );
 }
 

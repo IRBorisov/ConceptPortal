@@ -126,7 +126,7 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
 
   return (
     <div className='flex items-stretch w-full gap-2 mb-2 justify-stretch'>
-      <form onSubmit={handleSubmit} className='min-w-[50rem] max-w-min px-4 py-2 border'>
+      <form onSubmit={handleSubmit} className='min-w-[50rem] max-w-min px-4 py-2 border-y border-r clr-border'>
         <div className='relative'>
           <div className='absolute top-0 left-0'>
         <MiniButton 
@@ -220,7 +220,7 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
           onChange={event => { setConvention(event.target.value); }}
           onFocus={() => { setEditMode(EditMode.TEXT); }}
         />
-        <div className='flex justify-center w-full mt-2'>
+        <div className='flex justify-center w-full mt-4 mb-2'>
           <SubmitButton
             text='Сохранить изменения'
             disabled={!isModified || !isEnabled}

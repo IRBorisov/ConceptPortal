@@ -24,7 +24,9 @@ function LibraryPage() {
       { library.error && <BackendError error={library.error} />}
       { !library.loading && library.items && 
       <div className='flex flex-col w-full'>
-        <SearchPanel 
+        <SearchPanel
+          total={library.items.length ?? 0}
+          filtered={items.length}
           setFilter={setFilter}
         />
         <ViewLibrary

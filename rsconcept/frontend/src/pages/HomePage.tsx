@@ -15,7 +15,7 @@ function HomePage() {
       }, TIMEOUT_UI_REFRESH);
     } else if(!user.is_staff) {
       setTimeout(() => {
-        navigate('/library?filter=personal');
+        navigate('/library');
       }, TIMEOUT_UI_REFRESH);
     }
   }, [navigate, user])

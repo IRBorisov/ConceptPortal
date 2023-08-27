@@ -124,7 +124,7 @@ function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
         <p>
           <TextURL text='Создать схему' href='/rsform-create'/>
           <span> | </span>
-          <TextURL text='Все схемы' href='/library?filter=common'/>
+          <TextURL text='Все схемы' href='/library'/>
           <span> | </span>
           <span className='cursor-pointer hover:underline text-url' onClick={cleanQuery}>
             <b>Очистить фильтр</b>

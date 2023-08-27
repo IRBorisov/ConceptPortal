@@ -10,7 +10,7 @@ function Navigation () {
   const navigate = useNavigate();
   const { noNavigation, toggleNoNavigation } = useConceptTheme();
 
-  const navigateCommon = () => { navigate('/library?filter=common') };
+  const navigateLibrary = () => { navigate('/library') };
   const navigateHelp = () => { navigate('/manuals') };
 
   return (
@@ -42,7 +42,7 @@ function Navigation () {
               text='Библиотека'
               description='Библиотека концептуальных схем'
               icon={<LibraryIcon />}
-              onClick={navigateCommon}
+              onClick={navigateLibrary}
             />
             <NavigationButton
               text='Справка'

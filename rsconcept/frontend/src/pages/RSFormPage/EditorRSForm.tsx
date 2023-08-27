@@ -27,7 +27,7 @@ function EditorRSForm({ onDestroy, onClaim, onShare, onDownload }: EditorRSFormP
   const { getUserLabel } = useUsers();
   const {
     schema, update, isForceAdmin,
-    isEditable, isOwned, isClaimable, processing
+    isEditable, isClaimable, processing
   } = useRSForm();
   const { user } = useAuth();
 
@@ -79,7 +79,7 @@ function EditorRSForm({ onDestroy, onClaim, onShare, onDownload }: EditorRSFormP
   };
 
   return (
-    <form onSubmit={handleSubmit} className='flex-grow max-w-[34.7rem] px-4 py-2 border min-w-fit'>
+    <form onSubmit={handleSubmit} className='flex-grow max-w-[35.3rem] px-4 py-2 border-y border-r clr-border min-w-fit'>
       <div className='relative w-full'>
       <div className='absolute top-0 right-0 flex'>
         <MiniButton
@@ -93,8 +93,8 @@ function EditorRSForm({ onDestroy, onClaim, onShare, onDownload }: EditorRSFormP
           onClick={onDownload}
         />
         <MiniButton
-          tooltip={isClaimable ? 'Стать владельцем' : 'Вы уже являетесь владельцем' }
-          icon={<CrownIcon size={5} color={isOwned ? '' : 'text-green'}/>}
+          tooltip={isClaimable ? 'Стать владельцем' : 'Невозможно стать владельцем' }
+          icon={<CrownIcon size={5} color={!isClaimable ? '' : 'text-green'}/>}
           disabled={!isClaimable || !user}
           onClick={onClaim}
         />

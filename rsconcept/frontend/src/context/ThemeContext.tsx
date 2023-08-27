@@ -4,12 +4,17 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import { darkT, IColorTheme, lightT } from '../utils/color';
 
 interface IThemeContext {
-  darkMode: boolean
-  noNavigation: boolean
   viewportHeight: string
   mainHeight: string
+  
   colors: IColorTheme
+  
+  darkMode: boolean
   toggleDarkMode: () => void
+
+  noNavigation: boolean
+  noFooter: boolean
+  setNoFooter: (value: boolean) => void
   toggleNoNavigation: () => void
 }
 
@@ -17,9 +22,7 @@ const ThemeContext = createContext<IThemeContext | null>(null);
 export const useConceptTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error(
-      'useConceptTheme has to be used within <ThemeState.Provider>'
-    );
+    throw new Error('useConceptTheme has to be used within <ThemeState.Provider>');
   }
   return context;
 }
@@ -32,8 +35,9 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
   const [darkMode, setDarkMode] = useLocalStorage('darkMode', false);
   const [colors, setColors] = useState<IColorTheme>(lightT);
   const [noNavigation, setNoNavigation] = useState(false);
+  const [noFooter, setNoFooter] = useState(false);
 
-  const setDarkClass = (isDark: boolean) => {
+  function setDarkClass(isDark: boolean) {
     const root = window.document.documentElement;
     if (isDark) {
       root.classList.add('dark');
@@ -41,7 +45,7 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
       root.classList.remove('dark');
     }
     root.setAttribute('data-color-scheme', !isDark ? 'light' : 'dark');
-  };
+  }
 
   useLayoutEffect(() => {
     setDarkClass(darkMode)
@@ -68,9 +72,10 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
   return (
     <ThemeContext.Provider value={{
       darkMode, colors,
-      noNavigation,
+      noNavigation, noFooter,
       toggleDarkMode: () => setDarkMode(prev => !prev),
       toggleNoNavigation: () => setNoNavigation(prev => !prev),
+      setNoFooter,
       viewportHeight, mainHeight
     }}>
       {children}
