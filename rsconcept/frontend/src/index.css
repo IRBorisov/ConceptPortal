@@ -43,27 +43,27 @@
   }
 
   .clr-border {
-    @apply border-gray-300 dark:border-gray-400
+    @apply border-gray-300 dark:border-[#434343]
   }
 
   .clr-border-nav {
-    @apply border-gray-400 dark:border-gray-300
+    @apply border-gray-400 dark:border-[#434343]
   }
 
   .clr-app {
-    @apply bg-gray-50 dark:bg-gray-800
+    @apply bg-gray-50 dark:bg-[#181818]
   }
 
   .clr-bg-pop {
-    @apply bg-gray-100 dark:bg-gray-600
+    @apply bg-gray-100 dark:bg-[#272727] dark:border-[#434343]
   }
 
   .clr-modal {
-    @apply bg-gray-300 dark:bg-gray-800
+    @apply bg-gray-300 dark:bg-gray-800 
   }
 
   .clr-nav {
-    @apply border-gray-400 dark:border-gray-300 bg-white dark:bg-gray-900
+    @apply border-gray-400 dark:border-[#434343] bg-white dark:bg-[#181818]
   }
 
   .clr-input {
@@ -71,15 +71,15 @@
   }
 
   .clr-footer {
-    @apply clr-app text-gray-600 border-gray-400 dark:border-gray-300 dark:text-gray-300
+    @apply clr-app text-gray-600 border-gray-400 dark:border-[#434343] dark:text-gray-300
   }
 
   .clr-card {
-    @apply bg-gray-50 dark:bg-gray-600
+    @apply bg-gray-50 dark:bg-gray-600 
   }
 
   .clr-tab {
-    @apply clr-border text-gray-600 dark:text-zinc-200 hover:bg-gray-300 dark:hover:bg-gray-400
+    @apply clr-border text-gray-600 dark:text-zinc-200 hover:bg-gray-300 dark:hover:bg-gray-400 
   }
 
   .clr-hover {
