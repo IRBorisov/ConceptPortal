@@ -13,6 +13,10 @@ const dev = {
 export const config = process.env.NODE_ENV === 'production' ? prod : dev;
 export const TIMEOUT_UI_REFRESH = 100;
 
+export const youtube = {
+  intro: '0Ty9mu9sOJo'
+};
+
 export const urls = {
   concept: 'https://www.acconcept.ru/',
   exteor32: 'https://drive.google.com/open?id=1IHlMMwaYlAUBRSxU1RU_hXM5mFU9-oyK&usp=drive_fs',
