@@ -58,7 +58,7 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
   const mainHeight = useMemo(
   () => {
     return !noNavigation ? 
-      'calc(100vh - 8.6rem)'
+      'calc(100vh - 8rem)'
     : '100vh'; 
   }, [noNavigation]);
 
