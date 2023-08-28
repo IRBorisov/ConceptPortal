@@ -5,11 +5,14 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists/*
 
 # ======= Build =======
+ARG BUILD_TYPE=production
 FROM node-base as builder
 
 WORKDIR /result
 
 COPY ./ ./
+COPY ./env/.env.$BUILD_TYPE ./
+RUN rm -rf ./env
 RUN npm install
 ENV NODE_ENV production
 RUN npm run build

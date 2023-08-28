@@ -2,20 +2,11 @@
 React + Django based web portal for editing RSForm schemas.
 This readme file is used mostly to document project dependencies
 
-
-# Developer Setup Notes
-- Install Python 3.9, NodeJS, VSCode, Docker Desktop
-- copy import wheels from ConceptCore to rsconcept\backend\import
-- run rsconcept\backend\LocalEnvSetup.ps1
-- run 'npm install' in rsconcept\frontend
-- use VSCode configs in root folder to start developement
-- production: create secrets secrets\db_password.txt and django_key.txt
-- production: provide TLS certificate nginx\cert\portal-cert.pem and nginx\cert\portal-key.pem
-
 # Contributing notes
+!BEFORE PUSHING INTO MAIN!
 - use Test config in VSCode to run tests before pushing commits / requests
-- !BEFORE PUSHING INTO MAIN! in rsconcept\frontend run in terminal 'npm run build' and fix all errors
-- when making major changes make sure that Docker production is building correctly. run 'docker compose -f docker-compose-prod.yml up'
+- cd rsconcept/frontend & npm run build
+- docker compose -f docker-compose-prod.yml up
 
 # Frontend stack & Tooling [Vite + React + Typescript]
 <details>
@@ -62,11 +53,11 @@ This readme file is used mostly to document project dependencies
 <details>
 <summary>requirements</summary>
   <pre>
-  - tzdata
   - django
   - djangorestframework
   - django-cors-headers
   - django-filter
+  - tzdata
   - gunicorn
   - coreapi
   - psycopg2-binary
@@ -96,3 +87,32 @@ This readme file is used mostly to document project dependencies
 # DevOps
 - Docker compose
 - PowerShell
+- Certbot
+- Docker VSCode extension
+
+# Developer Notes
+## Local build (Windows 10+)
+- this is main developers build
+- Install Python 3.9, NodeJS, VSCode, Docker Desktop
+- copy import wheels from ConceptCore to rsconcept/backend/import
+- run rsconcept/backend/LocalEnvSetup.ps1
+- run 'npm install' in rsconcept/frontend
+- use VSCode configs in root folder to start developement
+
+## Developement build
+- this build does not use HTTPS and nginx for networking
+- backend and frontend debugging is supported
+- hmr (hot updates) for frontend
+- run via 'docker compose -f "docker-compose-dev.yml" up --build -d'
+- populate initial data: rsconcept/PopulateDevData.ps1 dev-portal-backend
+
+## Local production build
+- this build is same as production except not using production secrets and working on localhost
+- provide TLS certificate (can be self-signed) 'nginx/cert/local-cert.pem' and 'nginx/cert/local-key.pem'
+- run via 'docker compose -f "docker-compose-prod-local.yml" up --build -d'
+- populate initial data: rsconcept/PopulateDevData.ps1 local-portal-backend
+
+## Production build
+- create secrets secrets/db_password.txt and django_key.txt
+- provide TLS certificate 'nginx/cert/front-cert.pem' and 'nginx/cert/front-key.pem'
+- run via 'docker compose -f "docker-compose-prod.yml" up --build -d'

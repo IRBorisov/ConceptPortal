@@ -1,16 +1,7 @@
 // Constants
-const prod = {
-  backend: 'https://portal.acconcept.ru:8082',
-  // backend: 'https://dev.concept.ru:8000',
-  // backend: 'https://localhost:8000',
-  // backend: 'https://api.portal.concept.ru',
+export const config = {
+  backend: import.meta.env.VITE_PORTAL_BACKEND as string
 };
-
-const dev = {
-  backend: 'http://localhost:8000',
-};
-
-export const config = process.env.NODE_ENV === 'production' ? prod : dev;
 export const TIMEOUT_UI_REFRESH = 100;
 
 export const youtube = {

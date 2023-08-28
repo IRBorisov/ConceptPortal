@@ -1,0 +1,55 @@
+name: dev-concept-portal
+
+volumes:
+  postgres_volume:
+    name: "dev-portal-data"
+  django_static_volume:
+    name: "dev-portal-static"
+  django_media_volume:
+    name: "dev-portal-media"
+
+networks:
+  default:
+    name: dev-concept-api-net
+
+services:
+  frontend:
+    container_name: dev-portal-frontend
+    restart: always
+    depends_on:
+      - backend
+    build: 
+      context: ./rsconcept/frontend
+      dockerfile: Dockerfile.dev
+      args:
+        BUILD_TYPE: development
+    ports:
+      - 3002:3002
+    command: npm run dev -- --host
+
+
+  backend:
+    container_name: dev-portal-backend
+    restart: always
+    depends_on:
+      - postgresql-db
+    build:
+      context: ./rsconcept/backend
+    env_file: ./rsconcept/backend/.env.dev
+    ports:
+      - 8002:8002
+    volumes:
+      - django_static_volume:/home/app/web/static
+      - django_media_volume:/home/app/web/media
+    command:
+      gunicorn -w 3 project.wsgi --bind 0.0.0.0:8002
+
+
+  postgresql-db:
+    container_name: dev-portal-db
+    restart: always
+    image: postgres:alpine
+    env_file: ./postgresql/.env.dev
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+

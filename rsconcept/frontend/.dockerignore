@@ -1,3 +1,4 @@
 # Dev specific
 .gitignore
 node_modules
+.env.local

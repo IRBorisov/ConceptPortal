@@ -1,0 +1,17 @@
+# ======== Multi-stage base ==========
+FROM node:bullseye-slim as node-base
+RUN apt-get update -qq && \
+    apt-get upgrade -y && \
+    rm -rf /var/lib/apt/lists/*
+
+# ========= Server =======
+FROM node-base as product-server
+ARG BUILD_TYPE=production
+
+WORKDIR /home
+
+COPY ./ ./
+COPY ./env/.env.$BUILD_TYPE ./
+RUN rm -rf ./env
+
+RUN npm install
