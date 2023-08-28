@@ -73,21 +73,21 @@ export const dataTableDarkT = {
     disabled: 'rgba(228, 228, 231, 0.54)'
   },
   background: {
-    default: '#111827'
+    default: '#181818'
   },
   highlightOnHover: {
-    default: '#4d6080',
+    default: '#606060',
     text: 'rgba(228, 228, 231, 1)'
   },
   divider: {
     default: '#6b6b6b'
   },
   striped: {
-    default: '#374151',
-    text: 'rgba(228, 228, 231, 1)'
+    default: '#272727',
+    text: 'rgba(228, 228, 228, 1)'
   },
   selected: {
-    default: '#4d6080',
+    default: '#181818',
     text: 'rgba(228, 228, 231, 1)'
   }
 };
