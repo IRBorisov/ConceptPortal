@@ -21,5 +21,11 @@ const darkTheme = EditorView.baseTheme(bracketsDarkT);
 const lightTheme = EditorView.baseTheme(bracketsLightT);
 
 export function ccBracketMatching(darkMode: boolean) {
-  return [bracketMatching({ renderMatch: bracketRender }), darkMode ? darkTheme : lightTheme];
+  return [
+    bracketMatching({ 
+      renderMatch: bracketRender,
+      brackets:'{}[]()'
+    }),
+    darkMode ? darkTheme : lightTheme
+  ];
 }

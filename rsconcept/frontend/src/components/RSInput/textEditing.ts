@@ -51,15 +51,19 @@ export class TextWrapper {
   }
 
   envelopeWith(left: string, right: string) {
+    const hasSelection = this.ref.view.state.selection.main.from !== this.ref.view.state.selection.main.to
+    const newSelection = hasSelection ? {
+      anchor: this.ref.view.state.selection.main.from,
+      head: this.ref.view.state.selection.main.to + left.length + right.length
+    } : {
+      anchor: this.ref.view.state.selection.main.to + left.length + right.length - 1,
+    }
     this.ref.view.dispatch({
       changes: [
         {from: this.ref.view.state.selection.main.from, insert: left}, 
         {from: this.ref.view.state.selection.main.to, insert: right}
       ],
-      selection: {
-        anchor: this.ref.view.state.selection.main.from,
-        head: this.ref.view.state.selection.main.to + left.length + right.length
-      }
+      selection: newSelection
     });
   }
 
@@ -89,11 +93,6 @@ export class TextWrapper {
       } else {
         this.envelopeWith('I{(σ, γ) | σ:∈X1; γ:=F1[σ]; P1[σ, γ]', '}');
       }
-      this.ref.view.dispatch({
-        selection: {
-          anchor: this.ref.view.state.selection.main.from + 2,
-        }
-      });
       return true;
     }
     case TokenID.NT_RECURSIVE_FULL: {
@@ -102,11 +101,6 @@ export class TextWrapper {
       } else {
         this.envelopeWith('R{ξ:=D1 | F1[ξ]≠∅ | ξ∪F1[ξ]', '}');
       }
-      this.ref.view.dispatch({
-        selection: {
-          anchor: this.ref.view.state.selection.main.from + 2,
-        }
-      });
       return true;
     }
     case TokenID.BIGPR: this.envelopeWith('Pr1(', ')'); return true;
@@ -128,11 +122,13 @@ export class TextWrapper {
     }
     case TokenID.PUNC_SL: {
       this.envelopeWith('[', ']');
-      this.ref.view.dispatch({
-        selection: {
-          anchor: hasSelection ? this.ref.view.state.selection.main.to: this.ref.view.state.selection.main.from + 1,
-        }
+      if (hasSelection) {
+        this.ref.view.dispatch({
+          selection: {
+            anchor: hasSelection ? this.ref.view.state.selection.main.to: this.ref.view.state.selection.main.from + 1,
+          }
       });
+      }
       return true;
     }
     case TokenID.BOOLEAN: {

@@ -163,6 +163,12 @@ function RSTabs() {
         while (activeIndex < schema.items.length && deleted.find(id => id === schema.items[activeIndex].id)) {
           ++activeIndex;
         }
+        if (activeIndex >= schema.items.length) {
+          activeIndex = schema.items.length - 1;
+          while (activeIndex >= 0 && deleted.find(id => id === schema.items[activeIndex].id)) {
+            --activeIndex;
+          }
+        }
         navigateTo(activeTab, schema.items[activeIndex].id);
       }
       if (afterDelete) afterDelete(deleted);

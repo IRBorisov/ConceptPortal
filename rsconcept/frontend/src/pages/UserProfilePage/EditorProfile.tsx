@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import SubmitButton from '../../components/Common/SubmitButton';
 import TextInput from '../../components/Common/TextInput';
 import { useUserProfile } from '../../context/UserProfileContext';
+import useModificationPrompt from '../../hooks/useModificationPrompt';
 import { IUserUpdateData } from '../../utils/models';
 
 function EditorProfile() {
@@ -14,7 +15,7 @@ function EditorProfile() {
   const [first_name, setFirstName] = useState('');
   const [last_name, setLastName] = useState('');
 
-  const [isModified, setIsModified] = useState(true);
+  const { isModified, setIsModified } = useModificationPrompt();
 
   useLayoutEffect(() => {
     if (!user) {
@@ -26,7 +27,7 @@ function EditorProfile() {
       user.first_name !== first_name ||
       user.last_name !== last_name
     );
-  }, [user, user?.email, user?.first_name, user?.last_name, email, first_name, last_name]);
+  }, [user, user?.email, user?.first_name, user?.last_name, email, first_name, last_name, setIsModified]);
 
   useLayoutEffect(() => {
     if (user) {

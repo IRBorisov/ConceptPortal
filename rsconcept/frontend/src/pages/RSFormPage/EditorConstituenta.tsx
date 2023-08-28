@@ -9,6 +9,7 @@ import TextArea from '../../components/Common/TextArea';
 import HelpConstituenta from '../../components/Help/HelpConstituenta';
 import { DumpBinIcon, HelpIcon, PenIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
+import useModificationPrompt from '../../hooks/useModificationPrompt';
 import { CstType, EditMode, ICstCreateData, ICstRenameData, ICstUpdateData, SyntaxTree } from '../../utils/models';
 import { getCstTypificationLabel } from '../../utils/staticUI';
 import EditorRSExpression from './EditorRSExpression';
@@ -33,7 +34,8 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
     return schema?.items?.find((cst) => cst.id === activeID);
   }, [schema?.items, activeID]);
 
-  const [isModified, setIsModified] = useState(false);
+  const { isModified, setIsModified } = useModificationPrompt();
+  
   const [editMode, setEditMode] = useState(EditMode.TEXT);
 
   const [alias, setAlias] = useState('');
@@ -59,7 +61,7 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
     );
   }, [activeCst, activeCst?.term, activeCst?.definition.formal,
     activeCst?.definition.text.raw, activeCst?.convention,
-    term, textDefinition, expression, convention]);
+    term, textDefinition, expression, convention, setIsModified]);
 
   useLayoutEffect(
   () => {
@@ -70,8 +72,6 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
       setTextDefinition(activeCst.definition?.text?.raw ?? '');
       setExpression(activeCst.definition?.formal ?? '');
       setTypification(activeCst ? getCstTypificationLabel(activeCst) : 'N/A');
-    } else if (schema && schema?.items.length > 0) {
-      onOpenEdit(schema.items[0].id);
     }
   }, [activeCst, onOpenEdit, schema]);
 

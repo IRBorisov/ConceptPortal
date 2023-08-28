@@ -1,10 +1,9 @@
 import './index.css'
 
 import React from 'react'
-import ReactDOM from 'react-dom/client'
+import { createRoot } from 'react-dom/client'
 import { ErrorBoundary } from 'react-error-boundary';
 import { IntlProvider } from 'react-intl';
-import { BrowserRouter } from 'react-router-dom';
 
 import App from './App.tsx'
 import ErrorFallback from './components/ErrorFallback.tsx';
@@ -25,9 +24,8 @@ const logError = (error: Error, info: { componentStack: string }) => {
   console.log('Component stack: ' + info.componentStack)
 };
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-  <BrowserRouter>
   <ErrorBoundary
     FallbackComponent={ErrorFallback}
     onReset={resetState}
@@ -47,6 +45,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   </ThemeState>
   </IntlProvider>
   </ErrorBoundary>
-  </BrowserRouter>
   </React.StrictMode>,
 )

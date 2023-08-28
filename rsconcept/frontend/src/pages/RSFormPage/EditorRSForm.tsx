@@ -13,6 +13,7 @@ import { CrownIcon, DownloadIcon, DumpBinIcon, HelpIcon, SaveIcon, ShareIcon } f
 import { useAuth } from '../../context/AuthContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { useUsers } from '../../context/UsersContext';
+import useModificationPrompt from '../../hooks/useModificationPrompt';
 import { IRSFormCreateData, LibraryItemType } from '../../utils/models';
 
 interface EditorRSFormProps {
@@ -37,7 +38,7 @@ function EditorRSForm({ onDestroy, onClaim, onShare, onDownload }: EditorRSFormP
   const [common, setCommon] = useState(false);
   const [canonical, setCanonical] = useState(false);
 
-  const [isModified, setIsModified] = useState(true);
+  const { isModified, setIsModified } = useModificationPrompt();
 
   useLayoutEffect(() => {
     if (!schema) {
@@ -53,7 +54,7 @@ function EditorRSForm({ onDestroy, onClaim, onShare, onDownload }: EditorRSFormP
     );
   }, [schema, schema?.title, schema?.alias, schema?.comment,
       schema?.is_common, schema?.is_canonical,
-      title, alias, comment, common, canonical]);
+      title, alias, comment, common, canonical, setIsModified]);
 
   useLayoutEffect(() => {
     if (schema) {
