@@ -72,8 +72,6 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
       setTextDefinition(activeCst.definition?.text?.raw ?? '');
       setExpression(activeCst.definition?.formal ?? '');
       setTypification(activeCst ? getCstTypificationLabel(activeCst) : 'N/A');
-    } else if (schema && schema?.items.length > 0) {
-      onOpenEdit(schema.items[0].id);
     }
   }, [activeCst, onOpenEdit, schema]);
 
