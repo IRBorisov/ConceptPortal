@@ -117,7 +117,7 @@ export function getActiveUsers(request: FrontPull<IUserInfo[]>) {
 
 export function getLibrary(request: FrontPull<ILibraryItem[]>) {
   AxiosGet({
-    title: 'Available RSForms (Library) list',
+    title: 'Available LibraryItems list',
     endpoint: '/api/library/active',
     request: request
   });
@@ -138,7 +138,7 @@ export function postNewRSForm(request: FrontExchange<IRSFormCreateData, ILibrary
 
 export function postCloneLibraryItem(target: string, request: FrontExchange<IRSFormCreateData, IRSFormData>) {
   AxiosPost({
-    title: 'clone RSForm',
+    title: 'Clone RSForm',
     endpoint: `/api/library/${target}/clone`,
     request: request
   });
@@ -154,7 +154,7 @@ export function getRSFormDetails(target: string, request: FrontPull<IRSFormData>
 
 export function patchLibraryItem(target: string, request: FrontExchange<ILibraryUpdateData, ILibraryItem>) {
   AxiosPatch({
-    title: `RSForm id=${target}`,
+    title: `LibraryItem id=${target}`,
     endpoint: `/api/library/${target}`,
     request: request
   });
@@ -162,7 +162,7 @@ export function patchLibraryItem(target: string, request: FrontExchange<ILibrary
 
 export function deleteLibraryItem(target: string, request: FrontAction) {
   AxiosDelete({
-    title: `RSForm id=${target}`,
+    title: `LibraryItem id=${target}`,
     endpoint: `/api/library/${target}`,
     request: request
   });
@@ -170,7 +170,7 @@ export function deleteLibraryItem(target: string, request: FrontAction) {
 
 export function postClaimLibraryItem(target: string, request: FrontPull<ILibraryItem>) {
   AxiosPost({
-    title: `Claim on RSForm id=${target}`,
+    title: `Claim on LibrartyItem id=${target}`,
     endpoint: `/api/library/${target}/claim`,
     request: request
   });
@@ -178,7 +178,7 @@ export function postClaimLibraryItem(target: string, request: FrontPull<ILibrary
 
 export function postSubscribe(target: string, request: FrontAction) {
   AxiosPost({
-    title: `Claim on RSForm id=${target}`,
+    title: `Subscribe to LibrartyItem id=${target}`,
     endpoint: `/api/library/${target}/subscribe`,
     request: request
   });
@@ -186,7 +186,7 @@ export function postSubscribe(target: string, request: FrontAction) {
 
 export function deleteUnsubscribe(target: string, request: FrontAction) {
   AxiosDelete({
-    title: `Claim on RSForm id=${target}`,
+    title: `Unsubscribe from LibraryItem id=${target}`,
     endpoint: `/api/library/${target}/unsubscribe`,
     request: request
   });
