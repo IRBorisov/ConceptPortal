@@ -31,7 +31,7 @@ const TREE_SIZE_MILESTONE = 50;
 
 function getCstNodeColor(cst: IConstituenta, coloringScheme: ColoringScheme, colors: IColorTheme): string {
   if (coloringScheme === 'type') {
-    return getCstClassColor(cst.cstClass, colors);
+    return getCstClassColor(cst.cst_class, colors);
   }
   if (coloringScheme === 'status') {
     return getCstStatusColor(cst.status, colors);
@@ -125,14 +125,14 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
     }
     if (noTemplates) {
       schema.items.forEach(cst => {
-        if (cst.isTemplate) {
+        if (cst.is_template) {
           graph.foldNode(cst.id);
         }
       });
     }
     if (allowedTypes.length < Object.values(CstType).length) {
       schema.items.forEach(cst => {
-        if (!allowedTypes.includes(cst.cstType)) {
+        if (!allowedTypes.includes(cst.cst_type)) {
           graph.foldNode(cst.id);
         }
       });
@@ -173,7 +173,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         result.push({
           id: String(node.id),
           fill: getCstNodeColor(cst, coloringScheme, colors),
-          label: cst.term.resolved && !noTerms ? `${cst.alias}: ${cst.term.resolved}` : cst.alias
+          label: cst.term_resolved && !noTerms ? `${cst.alias}: ${cst.term_resolved}` : cst.alias
         });
       }
     });
@@ -360,7 +360,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       <div className='relative'>
         <InfoConstituenta 
           data={hoverCst}
-          className='absolute top-0 left-0 z-50 w-[25rem] min-h-[11rem] overflow-y-auto border h-fit clr-app px-3' 
+          className='absolute top-[2.2rem] left-[2.6rem] z-50 w-[25rem] min-h-[11rem] overflow-y-auto border h-fit clr-app px-3' 
         />
       </div>}
       

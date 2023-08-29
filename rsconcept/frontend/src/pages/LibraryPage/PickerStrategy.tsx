@@ -5,6 +5,7 @@ import Checkbox from '../../components/Common/Checkbox';
 import Dropdown from '../../components/Common/Dropdown';
 import DropdownButton from '../../components/Common/DropdownButton';
 import { FilterCogIcon } from '../../components/Icons';
+import { useAuth } from '../../context/AuthContext';
 import useDropdown from '../../hooks/useDropdown';
 import { LibraryFilterStrategy } from '../../utils/models';
 
@@ -15,6 +16,7 @@ interface PickerStrategyProps {
 
 function PickerStrategy({ value, onChange }: PickerStrategyProps) {
   const pickerMenu = useDropdown();
+  const { user } = useAuth();
 
   const handleChange = useCallback(
   (newValue: LibraryFilterStrategy) => {
@@ -61,6 +63,7 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
         <Checkbox 
           value={value === LibraryFilterStrategy.PERSONAL}
           label='Личные'
+          disabled={!user}
           widthClass='w-fit px-2'
           tooltip='Отображать только подписки и владеемые схемы'
         />
@@ -69,6 +72,7 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
         <Checkbox 
           value={value === LibraryFilterStrategy.SUBSCRIBE}
           label='Подписки'
+          disabled={!user}
           widthClass='w-fit px-2'
           tooltip='Отображать только подписки'
         />
@@ -76,6 +80,7 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
       <DropdownButton onClick={() => handleChange(LibraryFilterStrategy.OWNED)}>
         <Checkbox 
           value={value === LibraryFilterStrategy.OWNED}
+          disabled={!user}
           label='Я - Владелец!'
           widthClass='w-fit px-2'
           tooltip='Отображать только владеемые схемы'

@@ -54,23 +54,23 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
       return;
     }
     setIsModified(
-      activeCst.term.raw !== term ||
-      activeCst.definition.text.raw !== textDefinition ||
+      activeCst.term_raw !== term ||
+      activeCst.definition_raw !== textDefinition ||
       activeCst.convention !== convention ||
-      activeCst.definition.formal !== expression
+      activeCst.definition_formal !== expression
     );
-  }, [activeCst, activeCst?.term, activeCst?.definition.formal,
-    activeCst?.definition.text.raw, activeCst?.convention,
+  }, [activeCst, activeCst?.term_raw, activeCst?.definition_formal,
+    activeCst?.definition_raw, activeCst?.convention,
     term, textDefinition, expression, convention, setIsModified]);
 
   useLayoutEffect(
   () => {
     if (activeCst) {
       setAlias(activeCst.alias);
-      setConvention(activeCst.convention ?? '');
-      setTerm(activeCst.term?.raw ?? '');
-      setTextDefinition(activeCst.definition?.text?.raw ?? '');
-      setExpression(activeCst.definition?.formal ?? '');
+      setConvention(activeCst.convention || '');
+      setTerm(activeCst.term_raw || '');
+      setTextDefinition(activeCst.definition_raw || '');
+      setExpression(activeCst.definition_formal || '');
       setTypification(activeCst ? getCstTypificationLabel(activeCst) : 'N/A');
     }
   }, [activeCst, onOpenEdit, schema]);
@@ -106,7 +106,7 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
     }
     const data: ICstCreateData = {
       insert_after: activeID,
-      cst_type: activeCst?.cstType ?? CstType.BASE,
+      cst_type: activeCst?.cst_type ?? CstType.BASE,
       alias: '',
       term_raw: '',
       definition_formal: '',
@@ -123,7 +123,7 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
     const data: ICstRenameData = {
       id: activeID,
       alias: activeCst?.alias,
-      cst_type: activeCst.cstType
+      cst_type: activeCst.cst_type
     };
     onRenameCst(data);
   }
@@ -181,8 +181,8 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
           placeholder='Схемный или предметный термин, обозначающий данное понятие или утверждение'
           rows={2}
           value={term}
-          initialValue={activeCst?.term.raw ?? ''}
-          resolved={activeCst?.term.resolved ?? ''}
+          initialValue={activeCst?.term_raw ?? ''}
+          resolved={activeCst?.term_resolved ?? ''}
           disabled={!isEnabled}
           spellCheck
           onChange={event => setTerm(event.target.value)}
@@ -209,8 +209,8 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
           placeholder='Лингвистическая интерпретация формального выражения'
           rows={4}
           value={textDefinition}
-          initialValue={activeCst?.definition.text.raw ?? ''}
-          resolved={activeCst?.definition.text.resolved ?? ''}
+          initialValue={activeCst?.definition_raw ?? ''}
+          resolved={activeCst?.definition_resolved ?? ''}
           disabled={!isEnabled}
           spellCheck
           onChange={event => setTextDefinition(event.target.value)}

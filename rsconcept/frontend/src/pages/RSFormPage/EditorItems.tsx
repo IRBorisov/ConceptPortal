@@ -215,7 +215,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
     {
       name: 'Термин',
       id: 'term',
-      selector: (cst: IConstituenta) => cst.term?.resolved ?? cst.term?.raw ?? '',
+      selector: (cst: IConstituenta) => cst.term_resolved || cst.term_raw || '',
       width: '350px',
       minWidth: '150px',
       maxWidth: '350px',
@@ -225,7 +225,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
     {
       name: 'Формальное определение',
       id: 'expression',
-      selector: (cst: IConstituenta) => cst.definition?.formal ?? '',
+      selector: (cst: IConstituenta) => cst.definition_formal || '',
       minWidth: '300px',
       maxWidth: '500px',
       grow: 2,
@@ -237,7 +237,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
       id: 'definition',
       cell: (cst: IConstituenta) => (
         <div style={{ fontSize: 12 }}>
-          {cst.definition?.text.resolved ?? cst.definition?.text.raw ?? ''}
+          {cst.definition_resolved || cst.definition_raw || ''}
         </div>
       ),
       minWidth: '200px',

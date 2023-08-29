@@ -94,7 +94,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
             clone = s.RSFormTRSSerializer(data=clone_data, context={'load_meta': True})
             clone.is_valid(raise_exception=True)
             new_schema = clone.save()
-            return Response(status=201, data=m.PyConceptAdapter(new_schema).full())
+            return Response(status=201, data=s.RSFormParseSerializer(new_schema).data)
         return Response(status=404)
 
     @transaction.atomic
@@ -153,7 +153,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         schema.item.refresh_from_db()
         response = Response(status=201, data={
             'new_cst': s.ConstituentaSerializer(new_cst).data,
-            'schema': m.PyConceptAdapter(schema).full()
+            'schema': s.RSFormParseSerializer(schema).data
         })
         response['Location'] = new_cst.get_absolute_url()
         return response
@@ -169,12 +169,11 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         serializer.save()
         mapping = { old_alias: serializer.validated_data['alias'] }
         schema.apply_mapping(mapping, change_aliases=False)
-        schema.update_order()
         schema.item.refresh_from_db()
         cst = m.Constituenta.objects.get(pk=serializer.validated_data['id'])
         return Response(status=200, data={
             'new_cst': s.ConstituentaSerializer(cst).data,
-            'schema': m.PyConceptAdapter(schema).full()
+            'schema': s.RSFormParseSerializer(schema).data
         })
 
     @action(detail=True, methods=['patch'], url_path='cst-multidelete')
@@ -185,7 +184,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         serializer.is_valid(raise_exception=True)
         schema.delete_cst(serializer.validated_data['constituents'])
         schema.item.refresh_from_db()
-        return Response(status=202, data=m.PyConceptAdapter(schema).full())
+        return Response(status=202, data=s.RSFormParseSerializer(schema).data)
 
     @action(detail=True, methods=['patch'], url_path='cst-moveto')
     def cst_moveto(self, request, pk):
@@ -195,14 +194,14 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         serializer.is_valid(raise_exception=True)
         schema.move_cst(serializer.validated_data['constituents'], serializer.validated_data['move_to'])
         schema.item.refresh_from_db()
-        return Response(status=200, data=m.PyConceptAdapter(schema).full())
+        return Response(status=200, data=s.RSFormParseSerializer(schema).data)
 
     @action(detail=True, methods=['patch'], url_path='reset-aliases')
     def reset_aliases(self, request, pk):
         ''' Endpoint: Recreate all aliases based on order. '''
         schema = self._get_schema()
         schema.reset_aliases()
-        return Response(status=200, data=m.PyConceptAdapter(schema).full())
+        return Response(status=200, data=s.RSFormParseSerializer(schema).data)
 
     @action(detail=True, methods=['patch'], url_path='load-trs')
     def load_trs(self, request, pk):
@@ -217,7 +216,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         serializer = s.RSFormTRSSerializer(data=data, context={'load_meta': load_metadata})
         serializer.is_valid(raise_exception=True)
         schema = serializer.save()
-        return Response(status=200, data=m.PyConceptAdapter(schema).full())
+        return Response(status=200, data=s.RSFormParseSerializer(schema).data)
 
     @action(detail=True, methods=['get'])
     def contents(self, request, pk):
@@ -229,13 +228,13 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     def details(self, request, pk):
         ''' Endpoint: Detailed schema view including statuses and parse. '''
         schema = self._get_schema()
-        serializer = m.PyConceptAdapter(schema)
-        return Response(serializer.full())
+        serializer = s.RSFormParseSerializer(schema)
+        return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
     def check(self, request, pk):
         ''' Endpoint: Check RSLang expression against schema context. '''
-        schema =  m.PyConceptAdapter(self._get_schema())
+        schema =  s.PyConceptAdapter(self._get_schema())
         serializer = s.ExpressionSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         expression = serializer.validated_data['expression']

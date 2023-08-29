@@ -1,8 +1,10 @@
 ''' Serializers for conceptual schema API. '''
+import json
 from typing import Optional, cast
 from rest_framework import serializers
 from django.db import transaction
 
+import pyconcept
 from cctext import Resolver, Reference, ReferenceType, EntityReference, SyntacticReference
 
 from .utils import fix_old_references
@@ -31,12 +33,77 @@ class TextSerializer(serializers.Serializer):
 
 
 class LibraryItemSerializer(serializers.ModelSerializer):
-    ''' Serializer: Library item data. '''
+    ''' Serializer: LibraryItem entry. '''
     class Meta:
         ''' serializer metadata. '''
         model = LibraryItem
         fields = '__all__'
         read_only_fields = ('owner', 'id', 'item_type')
+
+
+class LibraryItemDetailsSerializer(serializers.ModelSerializer):
+    ''' Serializer: LibraryItem detailed data. '''
+    class Meta:
+        ''' serializer metadata. '''
+        model = LibraryItem
+        fields = '__all__'
+        read_only_fields = ('owner', 'id', 'item_type')
+
+    def to_representation(self, instance: LibraryItem):
+        result = super().to_representation(instance)
+        result['subscribers'] = [item.pk for item in instance.subscribers()]
+        return result
+
+
+class PyConceptAdapter:
+    ''' RSForm adapter for interacting with pyconcept module. '''
+    def __init__(self, instance: RSForm):
+        self.schema = instance
+        self.data = self._prepare_request()
+        self._checked_data: Optional[dict] = None
+
+    def parse(self) -> dict:
+        ''' Check RSForm and return check results.
+            Warning! Does not include texts. '''
+        self._produce_response()
+        if self._checked_data is None:
+            raise ValueError('Invalid data response from pyconcept')
+        return self._checked_data
+
+    def _prepare_request(self) -> dict:
+        result: dict = {
+            'items': []
+        }
+        items = self.schema.constituents().order_by('order')
+        for cst in items:
+            result['items'].append({
+                'entityUID': cst.pk,
+                'cstType': cst.cst_type,
+                'alias': cst.alias,
+                'definition': {
+                    'formal': cst.definition_formal
+                }
+            })
+        return result
+
+    def _produce_response(self):
+        if self._checked_data is not None:
+            return
+        response = pyconcept.check_schema(json.dumps(self.data))
+        data = json.loads(response)
+        self._checked_data = {
+            'items': []
+        }
+        for cst in data['items']:
+            self._checked_data['items'].append({
+                'id': cst['entityUID'],
+                'cstType': cst['cstType'],
+                'alias': cst['alias'],
+                'definition': {
+                    'formal': cst['definition']['formal']
+                },
+                'parse': cst['parse']
+            })
 
 
 class RSFormSerializer(serializers.ModelSerializer):
@@ -46,10 +113,27 @@ class RSFormSerializer(serializers.ModelSerializer):
         model = RSForm
 
     def to_representation(self, instance: RSForm):
-        result = LibraryItemSerializer(instance.item).data
+        result = LibraryItemDetailsSerializer(instance.item).data
         result['items'] = []
         for cst in instance.constituents().order_by('order'):
             result['items'].append(ConstituentaSerializer(cst).data)
+        return result
+
+
+class RSFormParseSerializer(serializers.ModelSerializer):
+    ''' Serializer: Detailed data for RSForm including parse. '''
+    class Meta:
+        ''' serializer metadata. '''
+        model = RSForm
+
+    def to_representation(self, instance: RSForm):
+        result = RSFormSerializer(instance).data
+        parse = PyConceptAdapter(instance).parse()
+        for cst_data in result['items']:
+            cst_data['parse'] = next(
+                cst['parse'] for cst in parse['items']
+                if cst['id'] == cst_data['id']
+            )
         return result
 
 
@@ -193,7 +277,6 @@ class RSFormTRSSerializer(serializers.Serializer):
             if prev_cst.pk not in loaded_ids:
                 prev_cst.delete()
 
-        instance.update_order()
         instance.resolve_all_text()
         instance.item.save()
         return instance

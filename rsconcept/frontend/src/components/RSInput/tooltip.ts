@@ -11,19 +11,19 @@ function createTooltipFor(cst: IConstituenta) {
   alias.className = 'text-sm text-left';
   alias.textContent = `${cst.alias}: ${getCstTypificationLabel(cst)}`;
   dom.appendChild(alias);
-  if (cst.term.resolved) {
+  if (cst.term_resolved) {
     const term = document.createElement('p');
-    term.innerHTML = `<b>Термин:</b> ${cst.term.resolved}`;
+    term.innerHTML = `<b>Термин:</b> ${cst.term_resolved}`;
     dom.appendChild(term);
   }
-  if (cst.definition.formal) {
+  if (cst.definition_formal) {
     const expression = document.createElement('p');
-    expression.innerHTML = `<b>Выражение:</b> ${cst.definition.formal}`;
+    expression.innerHTML = `<b>Выражение:</b> ${cst.definition_formal}`;
     dom.appendChild(expression);
   }
-  if (cst.definition.text.resolved) {
+  if (cst.definition_resolved) {
     const definition = document.createElement('p');
-    definition.innerHTML = `<b>Определение:</b> ${cst.definition.text.resolved}`;
+    definition.innerHTML = `<b>Определение:</b> ${cst.definition_resolved}`;
     dom.appendChild(definition);
   }
   if (cst.convention) {

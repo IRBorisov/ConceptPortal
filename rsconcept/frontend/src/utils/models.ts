@@ -148,33 +148,9 @@ export enum CstClass {
   TEMPLATE = 'template'
 }
 
-export interface IConstituenta {
-  id: number
-  alias: string
-  cstType: CstType
-  convention: string
-  term: {
-    raw: string
-    resolved: string
-    forms: string[]
-  }
-  definition: {
-    formal: string
-    text: {
-      raw: string
-      resolved: string
-    }
-  }
-  cstClass: CstClass
-  status: ExpressionStatus
-  isTemplate: boolean
-  parse: {
-    status: ParsingStatus
-    valueClass: ValueClass
-    typification: string
-    syntaxTree: string
-    args: IFunctionArg[]
-  }
+export interface TermForm {
+  text: string
+  tags: string
 }
 
 export interface IConstituentaMeta {
@@ -189,6 +165,21 @@ export interface IConstituentaMeta {
   definition_resolved: string
   term_raw: string
   term_resolved: string
+  term_forms: TermForm[]
+}
+
+export interface IConstituenta
+extends IConstituentaMeta {
+  cst_class: CstClass
+  status: ExpressionStatus
+  is_template: boolean
+  parse: {
+    status: ParsingStatus
+    valueClass: ValueClass
+    typification: string
+    syntaxTree: string
+    args: IFunctionArg[]
+  }
 }
 
 export interface IConstituentaID extends Pick<IConstituentaMeta, 'id'>{}
@@ -431,35 +422,35 @@ export function LoadRSFormData(schema: IRSFormData): IRSForm {
       ((cst.parse?.status === ParsingStatus.VERIFIED && cst.parse?.valueClass === ValueClass.INVALID) ? 1 : 0) || 0, 0),
 
     count_termin: result.items.reduce(
-      (sum, cst) => (sum + (cst.term?.raw ? 1 : 0) || 0), 0),
+      (sum, cst) => (sum + (cst.term_raw ? 1 : 0) || 0), 0),
     count_definition: result.items.reduce(
-      (sum, cst) => (sum + (cst.definition?.text.raw ? 1 : 0) || 0), 0),
+      (sum, cst) => (sum + (cst.definition_raw ? 1 : 0) || 0), 0),
     count_convention: result.items.reduce(
       (sum, cst) => (sum + (cst.convention ? 1 : 0) || 0), 0),
 
     count_base: result.items.reduce(
-      (sum, cst) => sum + (cst.cstType === CstType.BASE ? 1 : 0), 0),
+      (sum, cst) => sum + (cst.cst_type === CstType.BASE ? 1 : 0), 0),
     count_constant: result.items?.reduce(
-      (sum, cst) => sum + (cst.cstType === CstType.CONSTANT ? 1 : 0), 0),
+      (sum, cst) => sum + (cst.cst_type === CstType.CONSTANT ? 1 : 0), 0),
     count_structured: result.items?.reduce(
-      (sum, cst) => sum + (cst.cstType === CstType.STRUCTURED ? 1 : 0), 0),
+      (sum, cst) => sum + (cst.cst_type === CstType.STRUCTURED ? 1 : 0), 0),
     count_axiom: result.items?.reduce(
-      (sum, cst) => sum + (cst.cstType === CstType.AXIOM ? 1 : 0), 0),
+      (sum, cst) => sum + (cst.cst_type === CstType.AXIOM ? 1 : 0), 0),
     count_term: result.items.reduce(
-      (sum, cst) => sum + (cst.cstType === CstType.TERM ? 1 : 0), 0),
+      (sum, cst) => sum + (cst.cst_type === CstType.TERM ? 1 : 0), 0),
     count_function: result.items.reduce(
-      (sum, cst) => sum + (cst.cstType === CstType.FUNCTION ? 1 : 0), 0),
+      (sum, cst) => sum + (cst.cst_type === CstType.FUNCTION ? 1 : 0), 0),
     count_predicate: result.items.reduce(
-      (sum, cst) => sum + (cst.cstType === CstType.PREDICATE ? 1 : 0), 0),
+      (sum, cst) => sum + (cst.cst_type === CstType.PREDICATE ? 1 : 0), 0),
     count_theorem: result.items.reduce(
-      (sum, cst) => sum + (cst.cstType === CstType.THEOREM ? 1 : 0), 0)
+      (sum, cst) => sum + (cst.cst_type === CstType.THEOREM ? 1 : 0), 0)
   }
   result.items.forEach(cst => {
     cst.status = inferStatus(cst.parse.status, cst.parse.valueClass);
-    cst.isTemplate = inferTemplate(cst.definition.formal);
-    cst.cstClass = inferClass(cst.cstType, cst.isTemplate);
+    cst.is_template = inferTemplate(cst.definition_formal);
+    cst.cst_class = inferClass(cst.cst_type, cst.is_template);
     result.graph.addNode(cst.id);
-    const dependencies = extractGlobals(cst.definition.formal);
+    const dependencies = extractGlobals(cst.definition_formal);
     dependencies.forEach(value => {
       const source = schema.items.find(cst => cst.alias === value)
       if (source) {
@@ -476,15 +467,15 @@ export function matchConstituenta(query: string, target: IConstituenta, mode: Cs
     return true;
   }
   if ((mode === CstMatchMode.ALL || mode === CstMatchMode.TERM) && 
-    target.term.resolved.match(query)) {
+    target.term_resolved.match(query)) {
     return true;
   }
   if ((mode === CstMatchMode.ALL || mode === CstMatchMode.EXPR) && 
-    target.definition.formal.match(query)) {
+    target.definition_formal.match(query)) {
     return true;
   }
   if ((mode === CstMatchMode.ALL || mode === CstMatchMode.TEXT)) {
-    return (target.definition.text.resolved.match(query) || target.convention.match(query));
+    return (target.definition_resolved.match(query) || target.convention.match(query));
   }
   return false;
 }
