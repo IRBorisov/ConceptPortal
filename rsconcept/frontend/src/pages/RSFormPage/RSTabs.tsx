@@ -10,6 +10,7 @@ import { Loader } from '../../components/Common/Loader';
 import { useLibrary } from '../../context/LibraryContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
+import useModificationPrompt from '../../hooks/useModificationPrompt';
 import { prefixes, TIMEOUT_UI_REFRESH } from '../../utils/constants';
 import { ICstCreateData, ICstRenameData, LibraryFilterStrategy, SyntaxTree } from '../../utils/models';
 import { createAliasFor } from '../../utils/staticUI';
@@ -42,6 +43,8 @@ function RSTabs() {
   } = useRSForm();
   const { destroySchema } = useLibrary();
   const { setNoFooter } = useConceptTheme();
+
+  const { isModified, setIsModified } = useModificationPrompt();
 
   const [activeTab, setActiveTab] = useState<RSTabID>(RSTabID.CARD);
   const [activeID, setActiveID] = useState<number | undefined>(undefined);
@@ -226,6 +229,11 @@ function RSTabs() {
 
   const onDownloadSchema = useCallback(
   () => {
+    if (isModified) {
+      if (!window.confirm('Присутствуют несохраненные изменения. Продолжить без их учета?')) {
+        return;
+      }
+    }
     const fileName = (schema?.alias ?? 'Schema') + '.trs';
     download(
     (data) => {
@@ -235,8 +243,18 @@ function RSTabs() {
         console.error(error);
       }
     });
-  }, [schema?.alias, download]);
-  
+  }, [schema?.alias, download, isModified]);
+
+  const handleShowClone = useCallback(
+  () => {
+    if (isModified) {
+      if (!window.confirm('Присутствуют несохраненные изменения. Продолжить без их учета?')) {
+        return;
+      }
+    }
+    setShowClone(true);
+  }, [isModified]);
+
   const handleToggleSubscribe = useCallback(
   () => {
     if (isTracking) {
@@ -302,7 +320,7 @@ function RSTabs() {
           onClaim={onClaimSchema}
           onShare={onShareSchema}
           onToggleSubscribe={handleToggleSubscribe}
-          showCloneDialog={() => setShowClone(true)} 
+          showCloneDialog={handleShowClone} 
           showUploadDialog={() => setShowUpload(true)} 
         />
         <ConceptTab className='border-r-2 min-w-[7.8rem]'>Паспорт схемы</ConceptTab>
@@ -315,7 +333,9 @@ function RSTabs() {
       </TabList>
 
       <TabPanel className='flex w-full gap-4'>
-        <EditorRSForm 
+        <EditorRSForm
+          isModified={isModified}
+          setIsModified={setIsModified}
           onDownload={onDownloadSchema}
           onDestroy={onDestroySchema}
           onClaim={onClaimSchema}
@@ -333,7 +353,9 @@ function RSTabs() {
       </TabPanel>
 
       <TabPanel>
-        <EditorConstituenta 
+        <EditorConstituenta
+          isModified={isModified}
+          setIsModified={setIsModified}
           activeID={activeID}
           onOpenEdit={onOpenCst}
           onShowAST={onShowAST}

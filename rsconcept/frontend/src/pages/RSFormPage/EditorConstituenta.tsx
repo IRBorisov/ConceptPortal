@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { Dispatch, SetStateAction, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
@@ -9,7 +9,6 @@ import TextArea from '../../components/Common/TextArea';
 import HelpConstituenta from '../../components/Help/HelpConstituenta';
 import { DumpBinIcon, HelpIcon, PenIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
-import useModificationPrompt from '../../hooks/useModificationPrompt';
 import { CstType, EditMode, ICstCreateData, ICstRenameData, ICstUpdateData, SyntaxTree } from '../../utils/models';
 import { getCstTypificationLabel } from '../../utils/staticUI';
 import EditorRSExpression from './EditorRSExpression';
@@ -25,16 +24,19 @@ interface EditorConstituentaProps {
   onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void
   onRenameCst: (initial: ICstRenameData) => void
   onDeleteCst: (selected: number[], callback?: (items: number[]) => void) => void
+  isModified: boolean
+  setIsModified: Dispatch<SetStateAction<boolean>>
 }
 
-function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onOpenEdit, onDeleteCst }: EditorConstituentaProps) {
+function EditorConstituenta({
+  isModified, setIsModified, activeID,
+  onShowAST, onCreateCst, onRenameCst, onOpenEdit, onDeleteCst
+}: EditorConstituentaProps) {
   const { schema, processing, isEditable, cstUpdate } = useRSForm();
   const activeCst = useMemo(
   () => {
     return schema?.items?.find((cst) => cst.id === activeID);
   }, [schema?.items, activeID]);
-
-  const { isModified, setIsModified } = useModificationPrompt();
   
   const [editMode, setEditMode] = useState(EditMode.TEXT);
 
@@ -59,6 +61,7 @@ function EditorConstituenta({ activeID, onShowAST, onCreateCst, onRenameCst, onO
       activeCst.convention !== convention ||
       activeCst.definition_formal !== expression
     );
+    return () => setIsModified(false);
   }, [activeCst, activeCst?.term_raw, activeCst?.definition_formal,
     activeCst?.definition_raw, activeCst?.convention,
     term, textDefinition, expression, convention, setIsModified]);

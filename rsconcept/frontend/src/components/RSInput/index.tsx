@@ -13,7 +13,7 @@ import Label from '../Common/Label';
 import { ccBracketMatching } from './bracketMatching';
 import { RSLanguage } from './rslang';
 import { getSymbolSubstitute,TextWrapper } from './textEditing';
-import { rshoverTooltip } from './tooltip';
+import { rshoverTooltip as rsHoverTooltip } from './tooltip';
 
 const editorSetup: BasicSetupOptions = {
   highlightSpecialChars: false,
@@ -111,7 +111,7 @@ function RSInput({
     EditorView.lineWrapping,
     RSLanguage,
     ccBracketMatching(darkMode),
-    rshoverTooltip(schema?.items || []),
+    rsHoverTooltip(schema?.items || []),
   ], [darkMode, schema?.items]);
 
   const handleInput = useCallback(

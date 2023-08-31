@@ -64,7 +64,7 @@ function SearchPanel({ total, filtered, setFilter }: SearchPanelProps) {
   }, [strategy, navigate]);
 
   return (
-    <div className='sticky top-0 left-0 right-0 z-10 flex items-center justify-start w-full border-b clr-input'>
+    <div className='sticky top-0 left-0 right-0 z-30 flex items-center justify-start w-full border-b clr-input'>
       <div className='px-2 py-1 select-none whitespace-nowrap min-w-[10rem]'>
         Фильтр
         <span className='ml-2'>

@@ -624,6 +624,7 @@ export function getNodeLabel(node: ISyntaxTreeNode): string {
   case TokenID.NT_ENUM_DECL: return 'ENUM_DECLARATION'
   case TokenID.NT_TUPLE_DECL: return 'TUPLE_DECLARATION'
   case TokenID.PUNC_DEFINE: return 'DEFINITION'
+  case TokenID.PUNC_STRUCT: return 'STRUCTURE_DEFITION'
 
   case TokenID.NT_ARG_DECL: return 'ARG'
   case TokenID.NT_FUNC_CALL: return 'CALL'

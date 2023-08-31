@@ -54,9 +54,9 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
       <DropdownButton onClick={() => handleChange(LibraryFilterStrategy.CANONICAL)}>
         <Checkbox 
           value={value === LibraryFilterStrategy.CANONICAL}
-          label='Библиотечные'
+          label='Неизменные'
           widthClass='w-fit px-2'
-          tooltip='Отображать только библиотечные схемы'
+          tooltip='Отображать только неизменные схемы'
         />
       </DropdownButton>
       <DropdownButton onClick={() => handleChange(LibraryFilterStrategy.PERSONAL)}>

@@ -131,7 +131,7 @@ function RSTabsMenu({
           <DropdownButton 
             disabled={!user || !isClaimable}
             onClick={!isOwned ? handleClaimOwner : undefined}
-            description={!user || !isClaimable ? 'Стать владельцем можно только для общей небиблиотечной схемы' : ''}
+            description={!user || !isClaimable ? 'Стать владельцем можно только для общей изменяемой схемы' : ''}
           >
             <div className='inline-flex items-center gap-1 justify-normal'>
               <span className={isOwned ? 'text-green' : ''}><CrownIcon size={4} /></span>
