@@ -234,21 +234,20 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     @action(detail=True, methods=['post'])
     def check(self, request, pk):
         ''' Endpoint: Check RSLang expression against schema context. '''
-        schema =  s.PyConceptAdapter(self._get_schema())
         serializer = s.ExpressionSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         expression = serializer.validated_data['expression']
+        schema =  s.PyConceptAdapter(self._get_schema())
         result = pyconcept.check_expression(json.dumps(schema.data), expression)
         return Response(json.loads(result))
 
     @action(detail=True, methods=['post'])
     def resolve(self, request, pk):
         ''' Endpoint: Resolve refenrces in text against schema terms context. '''
-        schema = self._get_schema()
         serializer = s.TextSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         text = serializer.validated_data['text']
-        resolver = schema.resolver()
+        resolver = self._get_schema().resolver()
         resolver.resolve(text)
         return Response(status=200, data=s.ResolverSerializer(resolver).data)
 
