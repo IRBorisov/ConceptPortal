@@ -213,10 +213,14 @@ class TestLibraryViewset(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFalse(_response_contains(response, self.unowned))
 
+        user2 =  User.objects.create(username='UserTest2')
         Subscription.subscribe(user=self.user, item=self.unowned)
+        Subscription.subscribe(user=user2, item=self.unowned)
+        Subscription.subscribe(user=user2, item=self.owned)
         response = self.client.get('/api/library/active')
         self.assertEqual(response.status_code, 200)
         self.assertTrue(_response_contains(response, self.unowned))
+        self.assertEqual(len(response.data), 3)
 
     def test_subscriptions(self):
         response = self.client.delete(f'/api/library/{self.unowned.id}/unsubscribe')

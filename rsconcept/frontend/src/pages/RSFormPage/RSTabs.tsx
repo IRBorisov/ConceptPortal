@@ -12,7 +12,7 @@ import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useModificationPrompt from '../../hooks/useModificationPrompt';
 import { prefixes, TIMEOUT_UI_REFRESH } from '../../utils/constants';
-import { ICstCreateData, ICstRenameData, LibraryFilterStrategy, SyntaxTree } from '../../utils/models';
+import { ICstCreateData, ICstRenameData, SyntaxTree } from '../../utils/models';
 import { createAliasFor } from '../../utils/staticUI';
 import DlgCloneRSForm from './DlgCloneRSForm';
 import DlgCreateCst from './DlgCreateCst';
@@ -207,7 +207,7 @@ function RSTabs() {
     }
     destroySchema(schema.id, () => {
       toast.success('Схема удалена');
-      navigate(`/library?filter=${LibraryFilterStrategy.PERSONAL}`);
+      navigate('/library');
     });
   }, [schema, destroySchema, navigate]);
 

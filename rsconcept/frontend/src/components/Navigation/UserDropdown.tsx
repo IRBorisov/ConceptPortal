@@ -28,7 +28,7 @@ function UserDropdown({ hideDropdown }: UserDropdownProps) {
 
   const navigateMyWork = () => {
     hideDropdown();
-    navigate(`/library?filter=${LibraryFilterStrategy.PERSONAL}`);
+    navigate(`/library`);
   };
 
   return (
