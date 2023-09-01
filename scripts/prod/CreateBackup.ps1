@@ -67,5 +67,4 @@ function DjangoDump() {
   & docker exec $containerBackend rm $local_archiveDump
 }
 
-
 CreateBackup

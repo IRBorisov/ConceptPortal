@@ -1,4 +1,4 @@
-# ====== Load database backup ==========
+# ====== Load database backup from PostgreSQL dump ==========
 # WARNING! DO NOT RUN THIS FILE AUTOMATICALLY FROM REPOSITORY LOCATION!
 # ========================================
 
@@ -9,13 +9,9 @@ $pgUser = "portal-admin"
 $pgDB = "portal-db"
 
 function LoadPostgreBackup() {
-  PostgreLoad
-}
-
-function PostgreLoad() {
   $local_dbDump = "/home/db-restore.dump"
   & docker cp ${dataDump} ${target}:$local_dbDump
-  docker exec --interactive $target `
+  docker exec $target `
     pg_restore `
     --username=$pgUser `
     --dbname=$pgDB `
