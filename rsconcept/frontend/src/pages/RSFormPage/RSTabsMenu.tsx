@@ -145,13 +145,18 @@ function RSTabsMenu({
           <DropdownButton onClick={toggleReadonly}>
             <Checkbox 
               value={isReadonly}
+              onChange={toggleReadonly}
               label='Я — читатель!'
               tooltip='Режим чтения'
             />
           </DropdownButton>}
           {user?.is_staff &&
           <DropdownButton onClick={toggleForceAdmin}>
-            <Checkbox value={isForceAdmin} label='режим администратора'/>
+            <Checkbox
+              value={isForceAdmin}
+              onChange={toggleForceAdmin}
+              label='режим администратора'
+            />
           </DropdownButton>}
         </Dropdown>}
       </div>
