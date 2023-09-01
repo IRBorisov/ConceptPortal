@@ -4,7 +4,7 @@
 
 # Input params
 $dataDump = "D:\DEV\backup\portal\2023-09-01\2023-09-01-db.dump"
-$target = "local-portal-db"
+$target = "dev-portal-db"
 $pgUser = "portal-admin"
 $pgDB = "portal-db"
 
