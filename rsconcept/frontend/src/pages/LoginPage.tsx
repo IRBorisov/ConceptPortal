@@ -10,6 +10,7 @@ import { useAuth } from '../context/AuthContext';
 import { IUserLoginData } from '../utils/models';
 
 function LoginPage() {
+  const location = useLocation();
   const navigate = useNavigate();
   const search = useLocation().search;
   const { user, login, loading, error, setError } = useAuth();
@@ -34,7 +35,13 @@ function LoginPage() {
         username: username,
         password: password
       };
-      login(data, () => navigate('/library'));
+      login(data, () => {
+        if (location.key !== "default") {
+          navigate(-1);
+        } else {
+          navigate('/library');
+        }
+      });
     }
   }
 
@@ -44,7 +51,7 @@ function LoginPage() {
       ? <b>{`Вы вошли в систему как ${user.username}`}</b>
       : 
       <Form
-        title='Ввод данных пользователя'
+        title='Вход в Портал'
         onSubmit={handleSubmit}
         widthClass='w-[24rem]'
       >
@@ -64,10 +71,10 @@ function LoginPage() {
           onChange={event => setPassword(event.target.value)}
         />
 
-        <div className='flex justify-center w-full gap-2 mt-4'>
+        <div className='flex justify-center w-full gap-2 py-2 mt-4'>
           <SubmitButton
             text='Вход'
-            widthClass='w-[7rem]'
+            widthClass='w-[12rem]'
             loading={loading}
           />
         </div>

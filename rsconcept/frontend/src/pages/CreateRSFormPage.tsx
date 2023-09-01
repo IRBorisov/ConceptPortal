@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import BackendError from '../components/BackendError';
+import Button from '../components/Common/Button';
 import Checkbox from '../components/Common/Checkbox';
 import FileInput from '../components/Common/FileInput';
 import Form from '../components/Common/Form';
@@ -14,6 +15,7 @@ import { useLibrary } from '../context/LibraryContext';
 import { IRSFormCreateData, LibraryItemType } from '../utils/models';
 
 function CreateRSFormPage() {
+  const location = useLocation();
   const navigate = useNavigate();
   const { createSchema, error, setError, processing } = useLibrary();
 
@@ -32,6 +34,14 @@ function CreateRSFormPage() {
       setFile(event.target.files[0]);
     } else {
       setFile(undefined);
+    }
+  }
+
+  function handleCancel() {
+    if (location.key !== "default") {
+      navigate(-1);
+    } else {
+      navigate('/library');
     }
   }
   
@@ -89,10 +99,16 @@ function CreateRSFormPage() {
         onChange={handleFile}
       />
 
-      <div className='flex items-center justify-center py-2 mt-4'>
+      <div className='flex items-center justify-center gap-4 py-2 mt-4'>
         <SubmitButton 
           text='Создать схему'
-          loading={processing} 
+          loading={processing}
+          widthClass='min-w-[10rem]'
+        />
+        <Button 
+          text='Отмена'
+          onClick={() => handleCancel()}
+          widthClass='min-w-[10rem]'
         />
       </div>
       { error && <BackendError error={error} />}
