@@ -8,28 +8,28 @@
             "name": "Run",
             "type": "PowerShell",
             "request": "launch",
-            "script": "${workspaceFolder}/rsconcept/RunServer.ps1",
+            "script": "${workspaceFolder}/scripts/dev/RunServer.ps1",
             "args": []
         },
         {
             "name": "Lint",
             "type": "PowerShell",
             "request": "launch",
-            "script": "${workspaceFolder}/rsconcept/RunLint.ps1",
+            "script": "${workspaceFolder}/scripts/dev/RunLint.ps1",
             "args": []
         },
         {
             "name": "Test",
             "type": "PowerShell",
             "request": "launch",
-            "script": "${workspaceFolder}/rsconcept/RunTests.ps1",
+            "script": "${workspaceFolder}/scripts/dev/RunTests.ps1",
             "args": []
         },
         {
             "name": "BE-Coverage",
             "type": "PowerShell",
             "request": "launch",
-            "script": "${workspaceFolder}/rsconcept/RunCoverage.ps1",
+            "script": "${workspaceFolder}/scripts/dev/RunCoverage.ps1",
             "args": []
         },
         {
@@ -57,7 +57,7 @@
             "name": "Restart",
             "type": "PowerShell",
             "request": "launch",
-            "script": "${workspaceFolder}/rsconcept/RunServer.ps1",
+            "script": "${workspaceFolder}/scripts/dev/RunServer.ps1",
             "args": ["-freshStart"]
         },
         {

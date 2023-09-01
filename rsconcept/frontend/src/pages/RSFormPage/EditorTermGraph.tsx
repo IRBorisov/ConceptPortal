@@ -358,7 +358,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
     <div className='flex flex-col border-r border-b min-w-[13.5rem] max-w-min px-2 pb-2 text-sm select-none clr-border' style={{height: canvasHeight}}>
       {hoverCst && 
       <div className='relative'>
-        <InfoConstituenta 
+        <InfoConstituenta
           data={hoverCst}
           className='absolute top-[2.2rem] left-[2.6rem] z-50 w-[25rem] min-h-[11rem] overflow-y-auto border h-fit clr-app px-3' 
         />
