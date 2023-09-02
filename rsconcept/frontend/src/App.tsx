@@ -18,7 +18,7 @@ import UserProfilePage from './pages/UserProfilePage';
 function Root() {
   const { noNavigation, noFooter, viewportHeight, mainHeight } = useConceptTheme();
   return (
-    <div className='antialiased clr-app'>
+    <div className='w-screen antialiased clr-app'>
       <Navigation />
       <ToasterThemed
         className='mt-[4rem] text-sm'
@@ -26,11 +26,11 @@ function Root() {
         draggable={false}
         pauseOnFocusLoss={false}
       />
-      <div className='overflow-auto' style={{maxHeight: viewportHeight}}>
-      <main className='h-full' style={{minHeight: mainHeight}}>
+      <div className='w-full overflow-auto' style={{maxHeight: viewportHeight}}>
+      <main className='w-full h-full' style={{minHeight: mainHeight}}>
         <Outlet />
       </main>
-      {!noNavigation && !noFooter && <Footer />}
+        {!noNavigation && !noFooter && <Footer />}
       </div>
     </div>
   );

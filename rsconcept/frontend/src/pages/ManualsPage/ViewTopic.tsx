@@ -15,7 +15,7 @@ interface ViewTopicProps {
 
 function ViewTopic({ topic }: ViewTopicProps) {
   return (
-    <div className='px-2 py-2'>
+    <div className='w-full px-2 py-2'>
       {topic === HelpTopic.MAIN && <HelpMain />}
       {topic === HelpTopic.RSLANG && <HelpRSLang />}
       {topic === HelpTopic.LIBRARY && <HelpLibrary />}

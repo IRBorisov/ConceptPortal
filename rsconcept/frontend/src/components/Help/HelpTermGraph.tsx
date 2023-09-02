@@ -4,7 +4,7 @@ import InfoCstStatus from './InfoCstStatus';
 
 function HelpTermGraph() {
   return (
-    <div className='flex text-sm'>
+    <div className='flex'>
       <div> 
         <h1>Настройка графа</h1>
         <p><b>Цвет</b> - выбор правила покраски узлов</p>
@@ -20,7 +20,7 @@ function HelpTermGraph() {
       <div>
         <h1>Горячие клавиши</h1>
         <p><b>Клик на конституенту</b> - выделение, включая скрытые конституенты</p>
-        <p><b>Довйной клик</b> - редактирование конституенты</p>
+        <p><b>Двойной клик</b> - редактирование конституенты</p>
         <p><b>Delete</b> - удалить выбранные</p>
 
         <Divider margins='mt-2' />

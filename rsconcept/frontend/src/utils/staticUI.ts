@@ -361,23 +361,23 @@ export const mapTopicInfo: Map<HelpTopic, IDescriptor> = new Map([
     tooltip: 'Справка по языку родов структур и экспликации'
   }],
   [ HelpTopic.LIBRARY, {
-    text: 'Библиотека',
+    text: 'Библиотека:',
     tooltip: 'Интерфейс работы с библиотекой схем'
   }],
   [ HelpTopic.RSFORM, {
-    text: 'Концептуальная схема',
+    text: '- паспорт схемы',
     tooltip: 'Интерфейс работы с описанием схемы'
   }],
   [ HelpTopic.CSTLIST, {
-    text: 'Список конституент',
+    text: '- список конституент',
     tooltip: 'Интерфейс работы со списком конституент'
   }],
   [ HelpTopic.CONSTITUENTA, {
-    text: 'Конституента',
+    text: '- конституента',
     tooltip: 'Интерфейс редактирования конституенты'
   }],
   [ HelpTopic.GRAPH_TERM, {
-    text: 'Граф термов',
+    text: '- граф термов',
     tooltip: 'Интерфейс работ с графом термов схемы'
   }],
   [ HelpTopic.EXTEOR, {

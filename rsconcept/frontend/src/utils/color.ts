@@ -43,15 +43,15 @@ export const lightT: IColorTheme = {
 export const darkT: IColorTheme = {
   red: '#bf0d00',
   green: '#2b8000',
-  blue: '#394bbf',
+  blue: '#bf0d00',
   teal: '#0099bf',
   orange: '#964600',
 
   text: '#e4e4e7',
   
-  input: '#070b12',
-  inputDisabled: '#374151', // bg-gray-700
-  selection: '#8c6000',
+  input: '#181818',
+  inputDisabled: '#272727', // bg-gray-700
+  selection: '#394bbf',
   selectionError: '#592b2b'
 };
 

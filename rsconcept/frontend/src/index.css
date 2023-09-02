@@ -27,11 +27,11 @@
 
 @layer components {
   :root {
-    @apply bg-gray-50
+    @apply bg-gray-50;
   }
 
   .dark {
-    @apply text-zinc-200 bg-gray-800
+    @apply text-zinc-200 bg-[#181818]
   }
 
   h1 {
@@ -63,7 +63,7 @@
   }
 
   .clr-modal {
-    @apply bg-gray-300 dark:bg-gray-800 
+    @apply bg-gray-300 dark:bg-[#272727] 
   }
 
   .clr-nav {
@@ -71,7 +71,7 @@
   }
 
   .clr-input {
-    @apply dark:bg-[#070b12] bg-white disabled:bg-[#c6c6c6] dark:disabled:bg-[#181818]
+    @apply dark:bg-[#181818] bg-white disabled:bg-[#c6c6c6] dark:disabled:bg-[#181818]
   }
 
   .clr-footer {
@@ -79,11 +79,11 @@
   }
 
   .clr-card {
-    @apply bg-gray-50 dark:bg-gray-600 
+    @apply bg-gray-50 dark:bg-[#272727]
   }
 
   .clr-tab {
-    @apply clr-border text-gray-600 dark:text-zinc-200 hover:bg-gray-300 dark:hover:bg-gray-400 
+    @apply clr-border text-gray-700 dark:text-zinc-200 hover:bg-blue-200 dark:hover:bg-[#EA580C]
   }
 
   .clr-hover {
@@ -106,7 +106,7 @@
     @apply text-white bg-blue-400 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-400 dark:text-black disabled:bg-gray-400 dark:disabled:bg-gray-600
   }
   .clr-btn-default {
-    @apply bg-[#f0f2f7] hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-400 text-btn
+    @apply bg-[#f0f2f7] hover:bg-gray-300 dark:bg-[#434343] dark:hover:bg-[#606060] text-btn
   }
 
   /* Transparent button */
@@ -115,7 +115,7 @@
   }
 
   .clr-checkbox {
-    @apply bg-white dark:bg-gray-900 checked:bg-blue-700 dark:checked:bg-orange-500
+    @apply bg-white dark:bg-[#181818] checked:bg-blue-700 dark:checked:bg-orange-500
   }
 
   .clr-input-red {

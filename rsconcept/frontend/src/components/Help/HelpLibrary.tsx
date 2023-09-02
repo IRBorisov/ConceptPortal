@@ -2,7 +2,7 @@ import { EducationIcon, EyeIcon, GroupIcon } from '../Icons';
 
 function HelpLibrary() {
   return (
-    <div className=''>
+    <div className='w-full'>
       <h1>Библиотека концептуальных схем</h1>
       <p>В библиотеки собраны различные концептуальные схемы.</p>
       <p>Группировка и классификации схем на данный момент не проводится.</p>
@@ -18,7 +18,7 @@ function HelpLibrary() {
       </div>
       <div className='flex items-center gap-2'>
         <EducationIcon size={4}/>
-        <p>Аттрибут <b>библиотечная</b> выделяет неизменяемые стандартные схемы.</p>
+        <p>Аттрибут <b>неизменяемая</b> выделяет неизменяемые стандартные схемы.</p>
       </div>
     </div>
   );

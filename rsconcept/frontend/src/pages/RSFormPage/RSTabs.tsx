@@ -293,7 +293,7 @@ function RSTabs() {
       selectedIndex={activeTab}
       onSelect={onSelectTab}
       defaultFocus={true}
-      selectedTabClassName='font-bold'
+      selectedTabClassName='font-bold bg-blue-200 dark:bg-[#EA580C]'
     >
       <TabList className='flex items-start pl-2 border-b border-r-2 select-none w-fit clr-bg-pop clr-border'>
         <RSTabsMenu 

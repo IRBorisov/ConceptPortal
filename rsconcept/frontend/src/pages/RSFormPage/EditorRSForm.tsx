@@ -138,7 +138,7 @@ function EditorRSForm({ onDestroy, onClaim, onShare, onDownload }: EditorRSFormP
           disabled={!isEditable}
           onChange={event => setCommon(event.target.checked)}
         />
-        <Checkbox id='canonical' label='Библиотечная схема'
+        <Checkbox id='canonical' label='Неизменяемая схема'
           widthClass='w-fit'
           value={canonical}
           tooltip='Только администраторы могут присваивать схемам библиотечный статус'

@@ -43,9 +43,9 @@ function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
             className='flex items-center justify-start gap-1'
             id={`${prefixes.library_list}${item.id}`}
           >
-            {user && user.subscriptions.includes(item.id) && <EyeIcon size={3}/>}
-            {item.is_common && <GroupIcon size={3}/>}
-            {item.is_canonical && <EducationIcon size={3}/>}
+            {user && user.subscriptions.includes(item.id) && <p title="Отслеживаемая"><EyeIcon size={3}/></p>}
+            {item.is_common && <p title="Общедоступная"><GroupIcon size={3}/></p>}
+            {item.is_canonical && <p title="Неизменяемая"><EducationIcon size={3}/></p>}
           </div>
         </>);
       },
