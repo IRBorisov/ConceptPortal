@@ -1,0 +1,71 @@
+name: local-concept-portal
+
+volumes:
+  postgres_volume:
+    name: "local-portal-data"
+  django_static_volume:
+    name: "local-portal-static"
+  django_media_volume:
+    name: "local-portal-media"
+
+networks:
+  default:
+    name: local-concept-api-net
+
+services:
+  frontend:
+    container_name: local-portal-frontend
+    restart: always
+    depends_on:
+      - backend
+    build: 
+      context: ./rsconcept/frontend
+      args:
+        BUILD_TYPE: production.local
+    expose:
+      - 3001
+    command: serve -s /home/node -l 3001
+
+
+  backend:
+    container_name: local-portal-backend
+    restart: always
+    depends_on:
+      - postgresql-db
+    build:
+      context: ./rsconcept/backend
+    env_file: ./rsconcept/backend/.env.prod.local
+    expose:
+      - 8001
+    volumes:
+      - django_static_volume:/home/app/web/static
+      - django_media_volume:/home/app/web/media
+    command:
+      gunicorn -w 3 project.wsgi --bind 0.0.0.0:8001
+
+
+  postgresql-db:
+    container_name: local-portal-db
+    restart: always
+    image: postgres:alpine
+    env_file: ./postgresql/.env.prod.local
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+
+
+  nginx:
+    container_name: local-portal-router
+    restart: always
+    build:
+      context: ./nginx
+      args:
+        BUILD_TYPE: production.local
+    ports:
+      - 8001:8001
+      - 3001:3001
+    depends_on:
+      - backend
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    volumes:
+      - django_static_volume:/var/www/static
+      - django_media_volume:/var/www/media

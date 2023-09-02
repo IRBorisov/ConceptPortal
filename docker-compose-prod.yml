@@ -26,6 +26,8 @@ services:
       - backend
     build: 
       context: ./rsconcept/frontend
+      args:
+        BUILD_TYPE: production
     expose:
       - 3000
     command: serve -s /home/node -l 3000
@@ -72,6 +74,8 @@ services:
     restart: always
     build:
       context: ./nginx
+      args:
+        BUILD_TYPE: production
     ports:
       - 8000:8000
       - 3000:3000

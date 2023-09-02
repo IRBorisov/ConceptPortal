@@ -16,18 +16,18 @@ export interface IDescriptor {
 }
 
 export function getCstDescription(cst: IConstituenta): string {
-  if (cst.cstType === CstType.STRUCTURED) {
+  if (cst.cst_type === CstType.STRUCTURED) {
     return (
-      cst.term.resolved || cst.term.raw || 
-      cst.definition.text.resolved || cst.definition.text.raw || 
+      cst.term_resolved || cst.term_raw || 
+      cst.definition_resolved || cst.definition_raw || 
       cst.convention || 
-      cst.definition.formal
+      cst.definition_formal
     );
   } else {
     return (
-      cst.term.resolved || cst.term.raw || 
-      cst.definition.text.resolved || cst.definition.text.raw || 
-      cst.definition.formal || 
+      cst.term_resolved || cst.term_raw || 
+      cst.definition_resolved || cst.definition_raw || 
+      cst.definition_formal || 
       cst.convention
     );
   }
@@ -51,7 +51,7 @@ export function getCstTypePrefix(type: CstType) {
 }
 
 export function getCstExpressionPrefix(cst: IConstituenta): string {
-  return cst.alias + (cst.cstType === CstType.STRUCTURED ? '::=' : ':==');
+  return cst.alias + (cst.cst_type === CstType.STRUCTURED ? '::=' : ':==');
 }
 
 export function getRSButtonData(id: TokenID): IDescriptor {
@@ -424,7 +424,7 @@ export function createAliasFor(type: CstType, schema: IRSForm): string {
     return `${prefix}1`;
   }
   const index = schema.items.reduce((prev, cst, index) => {
-    if (cst.cstType !== type) {
+    if (cst.cst_type !== type) {
       return prev;
     }
     index = Number(cst.alias.slice(1 - cst.alias.length)) + 1;
@@ -433,27 +433,23 @@ export function createAliasFor(type: CstType, schema: IRSForm): string {
   return `${prefix}${index}`;
 }
 
-export function getMockConstituenta(id: number, alias: string, type: CstType, comment: string): IConstituenta {
+export function getMockConstituenta(schema: number, id: number, alias: string, type: CstType, comment: string): IConstituenta {
   return {
     id: id,
+    order: -1,
+    schema: schema,
     alias: alias,
     convention: comment,
-    cstType: type,
-    term: {
-      raw: '',
-      resolved: '',
-      forms: []
-    },
-    definition: {
-      formal: '',
-      text: {
-        raw: '',
-        resolved: ''
-      }
-    },
+    cst_type: type,
+    term_raw: '',
+    term_resolved: '',
+    term_forms: [],
+    definition_formal: '',
+    definition_raw: '',
+    definition_resolved: '',
     status: ExpressionStatus.INCORRECT,
-    isTemplate: false,
-    cstClass: CstClass.DERIVED,
+    is_template: false,
+    cst_class: CstClass.DERIVED,
     parse: {
       status: ParsingStatus.INCORRECT,
       valueClass: ValueClass.INVALID,
@@ -628,6 +624,7 @@ export function getNodeLabel(node: ISyntaxTreeNode): string {
   case TokenID.NT_ENUM_DECL: return 'ENUM_DECLARATION'
   case TokenID.NT_TUPLE_DECL: return 'TUPLE_DECLARATION'
   case TokenID.PUNC_DEFINE: return 'DEFINITION'
+  case TokenID.PUNC_STRUCT: return 'STRUCTURE_DEFITION'
 
   case TokenID.NT_ARG_DECL: return 'ARG'
   case TokenID.NT_FUNC_CALL: return 'CALL'

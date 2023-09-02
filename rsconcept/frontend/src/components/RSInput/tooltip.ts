@@ -6,24 +6,23 @@ import { getCstTypificationLabel } from '../../utils/staticUI';
 
 function createTooltipFor(cst: IConstituenta) {
   const dom = document.createElement('div');
-  dom.className = 'overflow-y-auto border shadow-md max-h-[25rem] max-w-[25rem] min-w-[10rem] w-fit z-20 text-sm';
-  const alias = document.createElement('h1');
-  alias.className = 'text-sm text-left';
-  alias.textContent = `${cst.alias}: ${getCstTypificationLabel(cst)}`;
+  dom.className = 'overflow-y-auto border shadow-md max-h-[25rem] max-w-[25rem] min-w-[10rem] w-fit z-20 text-sm clr-border px-2 py-2';
+  const alias = document.createElement('p');
+  alias.innerHTML = `<b>${cst.alias}:</b> ${getCstTypificationLabel(cst)}`;
   dom.appendChild(alias);
-  if (cst.term.resolved) {
+  if (cst.term_resolved) {
     const term = document.createElement('p');
-    term.innerHTML = `<b>Термин:</b> ${cst.term.resolved}`;
+    term.innerHTML = `<b>Термин:</b> ${cst.term_resolved}`;
     dom.appendChild(term);
   }
-  if (cst.definition.formal) {
+  if (cst.definition_formal) {
     const expression = document.createElement('p');
-    expression.innerHTML = `<b>Выражение:</b> ${cst.definition.formal}`;
+    expression.innerHTML = `<b>Выражение:</b> ${cst.definition_formal}`;
     dom.appendChild(expression);
   }
-  if (cst.definition.text.resolved) {
+  if (cst.definition_resolved) {
     const definition = document.createElement('p');
-    definition.innerHTML = `<b>Определение:</b> ${cst.definition.text.resolved}`;
+    definition.innerHTML = `<b>Определение:</b> ${cst.definition_resolved}`;
     dom.appendChild(definition);
   }
   if (cst.convention) {

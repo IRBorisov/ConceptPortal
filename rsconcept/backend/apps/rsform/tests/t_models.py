@@ -200,10 +200,10 @@ class TestRSForm(TestCase):
         d2 = schema.insert_at(1, 'D2', CstType.TERM)
         d1.refresh_from_db()
         self.assertEqual(d1.order, 3)
-        self.assertEqual(d2.order, 2)
+        self.assertEqual(d2.order, 1)
 
         x2 = schema.insert_at(4, 'X2', CstType.BASE)
-        self.assertEqual(x2.order, 2)
+        self.assertEqual(x2.order, 4)
 
     def test_insert_last(self):
         schema = RSForm.create(title='Test')
@@ -259,10 +259,10 @@ class TestRSForm(TestCase):
         x2.refresh_from_db()
         d1.refresh_from_db()
         d2.refresh_from_db()
-        self.assertEqual(x1.order, 2)
+        self.assertEqual(x1.order, 3)
         self.assertEqual(x2.order, 1)
         self.assertEqual(d1.order, 4)
-        self.assertEqual(d2.order, 3)
+        self.assertEqual(d2.order, 2)
 
     def test_move_cst_down(self):
         schema = RSForm.create(title='Test')

@@ -46,6 +46,7 @@ RUN mkdir -p $USER_HOME && \
     mkdir -p $APP_HOME && \
     mkdir -p $APP_HOME/static && \
     mkdir -p $APP_HOME/media && \
+    mkdir -p $APP_HOME/backup && \
     adduser --system --group app
 
 # Install python dependencies
@@ -61,10 +62,11 @@ COPY project/ ./project
 COPY fixtures/ ./fixtures
 COPY manage.py entrypoint.sh ./
 RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.sh && \
-    chmod +x  $APP_HOME/entrypoint.sh && \
+    chmod +x $APP_HOME/entrypoint.sh && \
     chown -R app:app $APP_HOME && \
     chmod -R a+rwx $APP_HOME/static && \
-    chmod -R a+rwx $APP_HOME/media
+    chmod -R a+rwx $APP_HOME/media && \
+    chmod -R a+rwx $APP_HOME/backup
 
 RUN 
 

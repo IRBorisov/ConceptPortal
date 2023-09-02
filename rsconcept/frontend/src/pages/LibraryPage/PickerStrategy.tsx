@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
 
 import Button from '../../components/Common/Button';
-import Checkbox from '../../components/Common/Checkbox';
 import Dropdown from '../../components/Common/Dropdown';
-import DropdownButton from '../../components/Common/DropdownButton';
+import DropdownCheckbox from '../../components/Common/DropdownCheckbox';
 import { FilterCogIcon } from '../../components/Icons';
+import { useAuth } from '../../context/AuthContext';
 import useDropdown from '../../hooks/useDropdown';
 import { LibraryFilterStrategy } from '../../utils/models';
 
@@ -15,6 +15,7 @@ interface PickerStrategyProps {
 
 function PickerStrategy({ value, onChange }: PickerStrategyProps) {
   const pickerMenu = useDropdown();
+  const { user } = useAuth();
 
   const handleChange = useCallback(
   (newValue: LibraryFilterStrategy) => {
@@ -34,53 +35,44 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
     />
     { pickerMenu.isActive &&
     <Dropdown>
-      <DropdownButton onClick={() => handleChange(LibraryFilterStrategy.MANUAL)}>
-        <Checkbox 
-          value={value === LibraryFilterStrategy.MANUAL}
-          label='Отображать все'
-          widthClass='w-fit px-2'
-        />
-      </DropdownButton>
-      <DropdownButton onClick={() => handleChange(LibraryFilterStrategy.COMMON)}>
-        <Checkbox 
-          value={value === LibraryFilterStrategy.COMMON}
-          label='Общедоступные'
-          widthClass='w-fit px-2'
-          tooltip='Отображать только общедоступные схемы'
-        />
-      </DropdownButton>
-      <DropdownButton onClick={() => handleChange(LibraryFilterStrategy.CANONICAL)}>
-        <Checkbox 
-          value={value === LibraryFilterStrategy.CANONICAL}
-          label='Библиотечные'
-          widthClass='w-fit px-2'
-          tooltip='Отображать только библиотечные схемы'
-        />
-      </DropdownButton>
-      <DropdownButton onClick={() => handleChange(LibraryFilterStrategy.PERSONAL)}>
-        <Checkbox 
-          value={value === LibraryFilterStrategy.PERSONAL}
-          label='Личные'
-          widthClass='w-fit px-2'
-          tooltip='Отображать только подписки и владеемые схемы'
-        />
-      </DropdownButton>
-      <DropdownButton onClick={() => handleChange(LibraryFilterStrategy.SUBSCRIBE)}>
-        <Checkbox 
-          value={value === LibraryFilterStrategy.SUBSCRIBE}
-          label='Подписки'
-          widthClass='w-fit px-2'
-          tooltip='Отображать только подписки'
-        />
-      </DropdownButton>
-      <DropdownButton onClick={() => handleChange(LibraryFilterStrategy.OWNED)}>
-        <Checkbox 
-          value={value === LibraryFilterStrategy.OWNED}
-          label='Я - Владелец!'
-          widthClass='w-fit px-2'
-          tooltip='Отображать только владеемые схемы'
-        />
-      </DropdownButton>
+      <DropdownCheckbox
+        onChange={() => handleChange(LibraryFilterStrategy.MANUAL)}
+        value={value === LibraryFilterStrategy.MANUAL}
+        label='Отображать все'
+      />
+      <DropdownCheckbox
+        onChange={() => handleChange(LibraryFilterStrategy.COMMON)}
+        value={value === LibraryFilterStrategy.COMMON}
+        label='Общедоступные'
+        tooltip='Отображать только общедоступные схемы'
+      />
+      <DropdownCheckbox
+        onChange={() => handleChange(LibraryFilterStrategy.CANONICAL)}
+        value={value === LibraryFilterStrategy.CANONICAL}
+        label='Неизменные'
+        tooltip='Отображать только неизменные схемы'
+      />
+      <DropdownCheckbox
+        onChange={() => handleChange(LibraryFilterStrategy.PERSONAL)}
+        value={value === LibraryFilterStrategy.PERSONAL}
+        label='Личные'
+        disabled={!user}
+        tooltip='Отображать только подписки и владеемые схемы'
+      />
+      <DropdownCheckbox
+        onChange={() => handleChange(LibraryFilterStrategy.SUBSCRIBE)}
+        value={value === LibraryFilterStrategy.SUBSCRIBE}
+        label='Подписки'
+        disabled={!user}
+        tooltip='Отображать только подписки'
+      />
+      <DropdownCheckbox
+        onChange={() => handleChange(LibraryFilterStrategy.OWNED)}
+        value={value === LibraryFilterStrategy.OWNED}
+        disabled={!user}
+        label='Я - Владелец!'
+        tooltip='Отображать только владеемые схемы'
+      />
     </Dropdown>}
   </div>
   );

@@ -11,9 +11,9 @@ function InfoConstituenta({ data, ...props }: InfoConstituentaProps) {
     <div {...props}>
       <h1>Конституента {data.alias}</h1>
       <p><b>Типизация: </b>{getCstTypificationLabel(data)}</p>
-      <p><b>Термин: </b>{data.term.resolved || data.term.raw}</p>
-      {data.definition.formal && <p><b>Выражение: </b>{data.definition.formal}</p>}
-      {data.definition.text.resolved && <p><b>Определение: </b>{data.definition.text.resolved}</p>}
+      <p><b>Термин: </b>{data.term_resolved || data.term_raw}</p>
+      {data.definition_formal && <p><b>Выражение: </b>{data.definition_formal}</p>}
+      {data.definition_resolved && <p><b>Определение: </b>{data.definition_resolved}</p>}
       {data.convention && <p><b>Конвенция: </b>{data.convention}</p>}
     </div>
   );

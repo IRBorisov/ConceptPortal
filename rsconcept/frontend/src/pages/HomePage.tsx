@@ -13,7 +13,7 @@ function HomePage() {
       setTimeout(() => {
         navigate('/manuals');
       }, TIMEOUT_UI_REFRESH);
-    } else if(!user.is_staff) {
+    } else {
       setTimeout(() => {
         navigate('/library');
       }, TIMEOUT_UI_REFRESH);

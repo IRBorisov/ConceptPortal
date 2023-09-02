@@ -49,7 +49,16 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       const diff = Array.from(aliases).filter(name => !names.includes(name));
       if (diff.length > 0) {
         diff.forEach(
-          (alias, index) => filtered.push(getMockConstituenta(-index, alias, CstType.BASE, 'Конституента отсутствует')));
+          (alias, index) => filtered.push(
+            getMockConstituenta(
+              schema.id,
+              -index,
+              alias,
+              CstType.BASE,
+              'Конституента отсутствует'
+            )
+          )
+        );
       }
     } else if (!activeID) {
       filtered = schema.items
@@ -133,7 +142,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
     {
       name: 'Выражение',
       id: 'expression',
-      selector: (cst: IConstituenta) => cst.definition?.formal ?? '',
+      selector: (cst: IConstituenta) => cst.definition_formal || '',
       minWidth: '200px',
       hide: 1600,
       grow: 2,

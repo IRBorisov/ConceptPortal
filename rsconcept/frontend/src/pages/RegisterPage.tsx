@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import BackendError from '../components/BackendError';
+import Button from '../components/Common/Button';
 import Form from '../components/Common/Form';
 import SubmitButton from '../components/Common/SubmitButton';
 import TextInput from '../components/Common/TextInput';
@@ -10,6 +11,7 @@ import { useAuth } from '../context/AuthContext';
 import { type IUserSignupData } from '../utils/models';
 
 function RegisterPage() {
+  const location = useLocation();
   const navigate = useNavigate();
   const { user, signup, loading, error, setError } = useAuth();
   
@@ -23,6 +25,14 @@ function RegisterPage() {
   useEffect(() => {
     setError(undefined);
   }, [username, email, password, password2, setError]);
+
+  function handleCancel() {
+    if (location.key !== "default") {
+      navigate(-1);
+    } else {
+      navigate('/library');
+    }
+  }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -48,7 +58,7 @@ function RegisterPage() {
       <b>{`Вы вошли в систему как ${user.username}. Если хотите зарегистрировать нового пользователя, выйдите из системы (меню в правом верхнем углу экрана)`}</b>}
     { !user &&
       <Form
-        title='Регистрация пользователя'
+        title='Регистрация'
         onSubmit={handleSubmit}
         widthClass='w-[24rem]'
       >
@@ -89,8 +99,17 @@ function RegisterPage() {
           onChange={event => setLastName(event.target.value)}
         />
 
-        <div className='flex items-center justify-center w-full my-4'>
-          <SubmitButton text='Регистрировать' loading={loading}/>
+        <div className='flex items-center justify-center w-full gap-4 my-4'>
+          <SubmitButton
+            text='Регистрировать' 
+            loading={loading}
+            widthClass='min-w-[10rem]'
+          />
+          <Button 
+            text='Отмена'
+            onClick={() => handleCancel()}
+            widthClass='min-w-[10rem]'
+          />
         </div>
         { error && <BackendError error={error} />}
       </Form>

@@ -57,16 +57,16 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
 
   const mainHeight = useMemo(
   () => {
-    return !noNavigation ? 
-      'calc(100vh - 8rem)'
-    : '100vh'; 
+    return !noNavigation ?
+      'calc(100vh - 7rem - 2px)'
+    : '100vh';
   }, [noNavigation]);
 
   const viewportHeight = useMemo(
   () => {
-    return !noNavigation ? 
-      'calc(100vh - 3.9rem)'
-    : '100vh'; 
+    return !noNavigation ?
+      'calc(100vh - 3rem - 2px)'
+    : '100vh';
   }, [noNavigation]);
 
   return (

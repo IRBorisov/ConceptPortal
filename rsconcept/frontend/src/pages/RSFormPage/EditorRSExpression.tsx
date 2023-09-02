@@ -220,10 +220,16 @@ function EditorRSExpression({
       <div className='w-full overflow-y-auto border mt-2 max-h-[14rem] min-h-[4.2rem]'>
         { loading && <Loader size={6} />}
         { !loading && parseData && 
-        <ParsingResult 
+        <ParsingResult
           data={parseData} 
           onShowAST={ast => onShowAST(value, ast)}
           onShowError={onShowError}
+        />}
+        { !loading && !parseData &&
+        <input
+          disabled={true}
+          className='w-full h-full px-2 align-middle select-none clr-app'
+          placeholder='Результаты проверки выражения'
         />}
       </div>}
     </div>

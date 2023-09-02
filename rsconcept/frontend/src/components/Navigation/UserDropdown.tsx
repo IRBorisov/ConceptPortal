@@ -34,13 +34,13 @@ function UserDropdown({ hideDropdown }: UserDropdownProps) {
   return (
     <Dropdown widthClass='w-36' stretchLeft>
       <DropdownButton
-        description='Профиль пользователя'
+        tooltip='Профиль пользователя'
         onClick={navigateProfile}
       >
         {user?.username}
       </DropdownButton>
       <DropdownButton
-        description='Переключение темы оформления'
+        tooltip='Переключение темы оформления'
         onClick={toggleDarkMode}
       >
         {darkMode ? 'Светлая тема' : 'Темная тема'}

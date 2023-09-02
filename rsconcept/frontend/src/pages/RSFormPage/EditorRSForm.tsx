@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useLayoutEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { toast } from 'react-toastify';
 
@@ -13,7 +13,6 @@ import { CrownIcon, DownloadIcon, DumpBinIcon, HelpIcon, SaveIcon, ShareIcon } f
 import { useAuth } from '../../context/AuthContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { useUsers } from '../../context/UsersContext';
-import useModificationPrompt from '../../hooks/useModificationPrompt';
 import { IRSFormCreateData, LibraryItemType } from '../../utils/models';
 
 interface EditorRSFormProps {
@@ -21,9 +20,11 @@ interface EditorRSFormProps {
   onClaim: () => void
   onShare: () => void
   onDownload: () => void
+  isModified: boolean
+  setIsModified: Dispatch<SetStateAction<boolean>>
 }
 
-function EditorRSForm({ onDestroy, onClaim, onShare, onDownload }: EditorRSFormProps) {
+function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, onDownload }: EditorRSFormProps) {
   const intl = useIntl();
   const { getUserLabel } = useUsers();
   const {
@@ -38,8 +39,6 @@ function EditorRSForm({ onDestroy, onClaim, onShare, onDownload }: EditorRSFormP
   const [common, setCommon] = useState(false);
   const [canonical, setCanonical] = useState(false);
 
-  const { isModified, setIsModified } = useModificationPrompt();
-
   useLayoutEffect(() => {
     if (!schema) {
       setIsModified(false);
@@ -52,6 +51,7 @@ function EditorRSForm({ onDestroy, onClaim, onShare, onDownload }: EditorRSFormP
       schema.is_common !== common ||
       schema.is_canonical !== canonical
     );
+    return () => setIsModified(false);
   }, [schema, schema?.title, schema?.alias, schema?.comment,
       schema?.is_common, schema?.is_canonical,
       title, alias, comment, common, canonical, setIsModified]);
@@ -138,10 +138,10 @@ function EditorRSForm({ onDestroy, onClaim, onShare, onDownload }: EditorRSFormP
           disabled={!isEditable}
           onChange={event => setCommon(event.target.checked)}
         />
-        <Checkbox id='canonical' label='Неизменяемая схема'
+        <Checkbox id='canonical' label='Неизменная схема'
           widthClass='w-fit'
           value={canonical}
-          tooltip='Только администраторы могут присваивать схемам библиотечный статус'
+          tooltip='Только администраторы могут присваивать схемам неизменный статус'
           disabled={!isEditable || !isForceAdmin}
           onChange={event => setCanonical(event.target.checked)}
         />

@@ -213,10 +213,14 @@ class TestLibraryViewset(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFalse(_response_contains(response, self.unowned))
 
+        user2 =  User.objects.create(username='UserTest2')
         Subscription.subscribe(user=self.user, item=self.unowned)
+        Subscription.subscribe(user=user2, item=self.unowned)
+        Subscription.subscribe(user=user2, item=self.owned)
         response = self.client.get('/api/library/active')
         self.assertEqual(response.status_code, 200)
         self.assertTrue(_response_contains(response, self.unowned))
+        self.assertEqual(len(response.data), 3)
 
     def test_subscriptions(self):
         response = self.client.delete(f'/api/library/{self.unowned.id}/unsubscribe')
@@ -287,11 +291,11 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(len(response.data['items']), 2)
         self.assertEqual(response.data['items'][0]['id'], x1.id)
         self.assertEqual(response.data['items'][0]['parse']['status'], 'verified')
-        self.assertEqual(response.data['items'][0]['term']['raw'], x1.term_raw)
-        self.assertEqual(response.data['items'][0]['term']['resolved'], x1.term_resolved)
+        self.assertEqual(response.data['items'][0]['term_raw'], x1.term_raw)
+        self.assertEqual(response.data['items'][0]['term_resolved'], x1.term_resolved)
         self.assertEqual(response.data['items'][1]['id'], x2.id)
-        self.assertEqual(response.data['items'][1]['term']['raw'], x2.term_raw)
-        self.assertEqual(response.data['items'][1]['term']['resolved'], x2.term_resolved)
+        self.assertEqual(response.data['items'][1]['term_raw'], x2.term_raw)
+        self.assertEqual(response.data['items'][1]['term_resolved'], x2.term_resolved)
         self.assertEqual(response.data['subscribers'], [self.user.pk])
 
     def test_check(self):
@@ -412,6 +416,7 @@ class TestRSFormViewset(APITestCase):
         d1.definition_formal = 'X1'
         d1.save()
         
+        self.assertEqual(d1.order, 4)
         self.assertEqual(self.cst1.order, 1)
         self.assertEqual(self.cst1.alias, 'X1')
         self.assertEqual(self.cst1.cst_type, CstType.BASE)
@@ -422,9 +427,10 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(response.data['new_cst']['cst_type'], 'term')
         d1.refresh_from_db()
         self.cst1.refresh_from_db()
+        self.assertEqual(d1.order, 4)
         self.assertEqual(d1.term_resolved, '')
         self.assertEqual(d1.term_raw,  '@{D2|plur}')
-        self.assertEqual(self.cst1.order, 2)
+        self.assertEqual(self.cst1.order, 1)
         self.assertEqual(self.cst1.alias, 'D2')
         self.assertEqual(self.cst1.cst_type, CstType.TERM)
 
@@ -560,10 +566,10 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data['title'], 'Title')
         self.assertEqual(response.data['items'][0]['alias'], x1.alias)
-        self.assertEqual(response.data['items'][0]['term']['raw'], x1.term_raw)
-        self.assertEqual(response.data['items'][0]['term']['resolved'], x1.term_resolved)
-        self.assertEqual(response.data['items'][1]['term']['raw'], d1.term_raw)
-        self.assertEqual(response.data['items'][1]['term']['resolved'], d1.term_resolved)
+        self.assertEqual(response.data['items'][0]['term_raw'], x1.term_raw)
+        self.assertEqual(response.data['items'][0]['term_resolved'], x1.term_resolved)
+        self.assertEqual(response.data['items'][1]['term_raw'], d1.term_raw)
+        self.assertEqual(response.data['items'][1]['term_resolved'], d1.term_resolved)
 
 
 class TestFunctionalViews(APITestCase):

@@ -1,6 +1,4 @@
 ''' Models: RSForms for conceptual schemas. '''
-import json
-from copy import deepcopy
 import re
 from typing import Iterable, Optional, cast
 
@@ -13,7 +11,6 @@ from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 from django.urls import reverse
 
-import pyconcept
 from apps.users.models import User
 from cctext import Resolver, Entity, extract_entities
 from .graph import Graph
@@ -315,6 +312,8 @@ class RSForm:
         ''' Insert new constituenta at given position. All following constituents order is shifted by 1 position '''
         if position <= 0:
             raise ValidationError('Invalid position: should be positive integer')
+        currentSize = self.constituents().count()
+        position =  max(1, min(position, currentSize + 1))
         update_list = Constituenta.objects.only('id', 'order', 'schema').filter(schema=self.item, order__gte=position)
         for cst in update_list:
             cst.order += 1
@@ -326,7 +325,6 @@ class RSForm:
             alias=alias,
             cst_type=insert_type
         )
-        self.update_order()
         self.item.save()
         result.refresh_from_db()
         return result
@@ -343,7 +341,6 @@ class RSForm:
             alias=alias,
             cst_type=insert_type
         )
-        self.update_order()
         self.item.save()
         result.refresh_from_db()
         return result
@@ -369,7 +366,6 @@ class RSForm:
                 count_moved += 1
             update_list.append(cst)
         Constituenta.objects.bulk_update(update_list, ['order'])
-        self.update_order()
         self.item.save()
 
     @transaction.atomic
@@ -377,7 +373,7 @@ class RSForm:
         ''' Delete multiple constituents. Do not check if listCst are from this schema '''
         for cst in listCst:
             cst.delete()
-        self.update_order()
+        self._reset_order()
         self.resolve_all_text()
         self.item.save()
 
@@ -448,23 +444,6 @@ class RSForm:
                 cst.save()
 
     @transaction.atomic
-    def update_order(self):
-        ''' Update constituents order. '''
-        checked = PyConceptAdapter(self).basic()
-        update_list = self.constituents().only('id', 'order')
-        if len(checked['items']) != update_list.count():
-            raise ValidationError('Invalid constituents count')
-        order = 1
-        for cst in checked['items']:
-            cst_id = cst['id']
-            for oldCst in update_list:
-                if oldCst.pk == cst_id:
-                    oldCst.order = order
-                    order += 1
-                    break
-        Constituenta.objects.bulk_update(update_list, ['order'])
-
-    @transaction.atomic
     def resolve_all_text(self):
         ''' Trigger reference resolution for all texts. '''
         graph_terms = self._term_graph()
@@ -481,6 +460,15 @@ class RSForm:
             if resolved != cst.definition_resolved:
                 cst.definition_resolved = resolved
                 cst.save()
+
+    @transaction.atomic
+    def _reset_order(self):
+        order = 1
+        for cst in self.constituents().only('id', 'order').order_by('order'):
+            if cst.order != order:
+                cst.order = order
+                cst.save()
+            order += 1
 
     def _insert_new(self, data: dict, insert_after: Optional[str]=None) -> 'Constituenta':
         if insert_after is not None:
@@ -510,87 +498,3 @@ class RSForm:
                 if result.contains(alias):
                     result.add_edge(id_from=alias, id_to=cst.alias)
         return result
-
-
-class PyConceptAdapter:
-    ''' RSForm adapter for interacting with pyconcept module. '''
-    def __init__(self, instance: RSForm):
-        self.schema = instance
-        self.data = self._prepare_request()
-        self._checked_data: Optional[dict] = None
-
-    def basic(self) -> dict:
-        ''' Check RSForm and return check results.
-            Warning! Does not include texts. '''
-        self._produce_response()
-        if self._checked_data is None:
-            raise ValueError('Invalid data response from pyconcept')
-        return self._checked_data
-
-    def full(self) -> dict:
-        ''' Check RSForm and return check results including initial texts. '''
-        self._produce_response()
-        if self._checked_data is None:
-            raise ValueError('Invalid data response from pyconcept')
-        return self._complete_rsform_details(self._checked_data)
-
-    def _complete_rsform_details(self, data: dict) -> dict:
-        result = deepcopy(data)
-        result['id'] = self.schema.item.pk
-        result['alias'] = self.schema.item.alias
-        result['title'] = self.schema.item.title
-        result['comment'] = self.schema.item.comment
-        result['time_update'] = self.schema.item.time_update
-        result['time_create'] = self.schema.item.time_create
-        result['is_common'] = self.schema.item.is_common
-        result['is_canonical'] = self.schema.item.is_canonical
-        result['owner'] = (self.schema.item.owner.pk if self.schema.item.owner is not None else None)
-        for cst_data in result['items']:
-            cst = Constituenta.objects.get(pk=cst_data['id'])
-            cst_data['convention'] = cst.convention
-            cst_data['term'] = {
-                'raw': cst.term_raw,
-                'resolved': cst.term_resolved,
-                'forms': cst.term_forms
-            }
-            cst_data['definition']['text'] = {
-                'raw': cst.definition_raw,
-                'resolved': cst.definition_resolved,
-            }
-        result['subscribers'] = [item.pk for item in self.schema.item.subscribers()]
-        return result
-
-    def _prepare_request(self) -> dict:
-        result: dict = {
-            'items': []
-        }
-        items = self.schema.constituents().order_by('order')
-        for cst in items:
-            result['items'].append({
-                'entityUID': cst.pk,
-                'cstType': cst.cst_type,
-                'alias': cst.alias,
-                'definition': {
-                    'formal': cst.definition_formal
-                }
-            })
-        return result
-
-    def _produce_response(self):
-        if self._checked_data is not None:
-            return
-        response = pyconcept.check_schema(json.dumps(self.data))
-        data = json.loads(response)
-        self._checked_data = {
-            'items': []
-        }
-        for cst in data['items']:
-            self._checked_data['items'].append({
-                'id': cst['entityUID'],
-                'cstType': cst['cstType'],
-                'alias': cst['alias'],
-                'definition': {
-                    'formal': cst['definition']['formal']
-                },
-                'parse': cst['parse']
-            })

@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 
 import Button from '../../components/Common/Button';
-import Checkbox from '../../components/Common/Checkbox';
 import Dropdown from '../../components/Common/Dropdown';
 import DropdownButton from '../../components/Common/DropdownButton';
+import DropdownCheckbox from '../../components/Common/DropdownCheckbox';
 import { CloneIcon, CrownIcon, DownloadIcon, DumpBinIcon, EyeIcon, EyeOffIcon, MenuIcon, PenIcon, PlusIcon, ShareIcon, UploadIcon } from '../../components/Icons';
 import { useAuth } from '../../context/AuthContext';
 import { useRSForm } from '../../context/RSFormContext';
@@ -131,7 +131,7 @@ function RSTabsMenu({
           <DropdownButton 
             disabled={!user || !isClaimable}
             onClick={!isOwned ? handleClaimOwner : undefined}
-            description={!user || !isClaimable ? 'Стать владельцем можно только для общей небиблиотечной схемы' : ''}
+            tooltip={!user || !isClaimable ? 'Стать владельцем можно только для общей изменяемой схемы' : ''}
           >
             <div className='inline-flex items-center gap-1 justify-normal'>
               <span className={isOwned ? 'text-green' : ''}><CrownIcon size={4} /></span>
@@ -142,17 +142,18 @@ function RSTabsMenu({
             </div>
           </DropdownButton>
           {(isOwned || user?.is_staff) &&
-          <DropdownButton onClick={toggleReadonly}>
-            <Checkbox 
-              value={isReadonly}
-              label='Я — читатель!'
-              tooltip='Режим чтения'
-            />
-          </DropdownButton>}
+          <DropdownCheckbox
+            value={isReadonly}
+            onChange={toggleReadonly}
+            label='Я — читатель!'
+            tooltip='Режим чтения'
+          />}
           {user?.is_staff &&
-          <DropdownButton onClick={toggleForceAdmin}>
-            <Checkbox value={isForceAdmin} label='режим администратора'/>
-          </DropdownButton>}
+          <DropdownCheckbox
+            value={isForceAdmin}
+            onChange={toggleForceAdmin}
+            label='режим администратора'
+          />}
         </Dropdown>}
       </div>
       <div>

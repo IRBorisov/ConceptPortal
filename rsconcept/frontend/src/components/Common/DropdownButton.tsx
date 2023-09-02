@@ -1,16 +1,16 @@
-interface NavigationTextItemProps {
-  description?: string | undefined
+interface DropdownButtonProps {
+  tooltip?: string | undefined
   onClick?: () => void
   disabled?: boolean
   children: React.ReactNode
 }
 
-function DropdownButton({ description = '', onClick, disabled, children }: NavigationTextItemProps) {
-  const behavior = (onClick ? 'cursor-pointer clr-hover' : 'cursor-default') + ' disabled:cursor-not-allowed';
+function DropdownButton({ tooltip, onClick, disabled, children }: DropdownButtonProps) {
+  const behavior = (onClick ? 'cursor-pointer disabled:cursor-not-allowed clr-hover' : 'cursor-default');
   return (
     <button
       disabled={disabled}
-      title={description}
+      title={tooltip}
       onClick={onClick}
       className={`px-3 py-1 text-left overflow-ellipsis ${behavior} whitespace-nowrap`}
     >
