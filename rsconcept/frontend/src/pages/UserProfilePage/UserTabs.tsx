@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 
 import BackendError from '../../components/BackendError';
-import { Loader } from '../../components/Common/Loader';
+import { ConceptLoader } from '../../components/Common/ConceptLoader';
 import MiniButton from '../../components/Common/MiniButton';
 import { EyeIcon, EyeOffIcon } from '../../components/Icons';
 import { useAuth } from '../../context/AuthContext';
@@ -25,7 +25,7 @@ function UserTabs() {
 
   return (
     <div className='w-full'>
-      { loading && <Loader /> }
+      { loading && <ConceptLoader /> }
       { error && <BackendError error={error} />}
       { user && 
       <div className='flex justify-center gap-2 py-2'>

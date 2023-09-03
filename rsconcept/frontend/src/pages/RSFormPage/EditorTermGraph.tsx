@@ -66,7 +66,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
   const { darkMode, colors, noNavigation } = useConceptTheme();
   
   const [ layout, setLayout ] = useLocalStorage<LayoutTypes>('graph_layout', 'treeTd2d');
-  const [ coloringScheme, setColoringScheme ] = useLocalStorage<ColoringScheme>('graph_coloring', 'none');
+  const [ coloringScheme, setColoringScheme ] = useLocalStorage<ColoringScheme>('graph_coloring', 'type');
   const [ orbit, setOrbit ] = useState(false);
   
   const [ noHermits, setNoHermits ] = useLocalStorage('graph_no_hermits', true);
@@ -355,7 +355,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       initial={getOptions()}
       onConfirm={handleChangeOptions}
     />}
-    <div className='flex flex-col border-r border-b min-w-[13.5rem] max-w-min px-2 pb-2 text-sm select-none clr-border' style={{height: canvasHeight}}>
+    <div className='flex flex-col border-r border-b min-w-[13.5rem] max-w-min px-2 pb-2 text-sm select-none' style={{height: canvasHeight}}>
       {hoverCst && 
       <div className='relative'>
         <InfoConstituenta
@@ -374,13 +374,13 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         <div>
           <MiniButton
             tooltip='Удалить выбранные'
-            icon={<DumpBinIcon color={!nothingSelected ? 'text-red' : ''} size={5}/>}
+            icon={<DumpBinIcon color={!nothingSelected ? 'text-warning' : ''} size={5}/>}
             disabled={!isEditable || nothingSelected}
             onClick={handleDeleteCst}
           />
           <MiniButton
             tooltip='Новая конституента'
-            icon={<SmallPlusIcon color='text-green' size={5}/>}
+            icon={<SmallPlusIcon color='text-success' size={5}/>}
             disabled={!isEditable}
             onClick={handleCreateCst}
           />
@@ -460,7 +460,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         </div>
       </div>
     </div>
-    <div className='w-full h-full overflow-auto border'>
+    <div className='w-full h-full overflow-auto'>
     <div 
       className='relative'
       style={{width: canvasWidth, height: canvasHeight, borderBottomWidth: noNavigation ? '1px': ''}}

@@ -19,7 +19,7 @@ function EditorPassword() {
 
   const passwordColor = useMemo(
   () => {
-    return !!newPassword && !!newPasswordRepeat && newPassword !== newPasswordRepeat ? 'clr-input-red' : 'clr-input';
+    return !!newPassword && !!newPasswordRepeat && newPassword !== newPasswordRepeat ? 'clr-warning' : 'clr-input';
   }, [newPassword, newPasswordRepeat]);
 
   const canSubmit = useMemo(
@@ -48,7 +48,7 @@ function EditorPassword() {
   }, [newPassword, oldPassword, newPasswordRepeat, setError]);
 
   return (
-    <div className='flex py-2 border-l-2 clr-border max-w-[14rem]'>
+    <div className='flex py-2 border-l-2 max-w-[14rem]'>
       <form onSubmit={handleSubmit} className='flex flex-col justify-between px-6 min-w-fit'>
         <div>
           <TextInput id='old_password'
@@ -59,7 +59,7 @@ function EditorPassword() {
           />
           <TextInput id='new_password' type='password' 
             colorClass={passwordColor}
-            label="Новый пароль"
+            label='Новый пароль'
             value={newPassword}
             onChange={event => {
               setNewPassword(event.target.value); 
@@ -67,7 +67,7 @@ function EditorPassword() {
           />
           <TextInput id='new_password_repeat' type='password' 
             colorClass={passwordColor}
-            label="Повторите новый"
+            label='Повторите новый'
             value={newPasswordRepeat}
             onChange={event => {
               setNewPasswordRepeat(event.target.value); 

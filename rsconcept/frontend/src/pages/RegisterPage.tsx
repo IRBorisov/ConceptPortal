@@ -27,7 +27,7 @@ function RegisterPage() {
   }, [username, email, password, password2, setError]);
 
   function handleCancel() {
-    if (location.key !== "default") {
+    if (location.key !== 'default') {
       navigate(-1);
     } else {
       navigate('/library');
@@ -80,7 +80,7 @@ function RegisterPage() {
         <div className='text-sm'>
           <p>- используйте уникальный пароль</p>
           <p>- портал функционирует в тестовом режиме</p>
-          <p className='font-semibold text-red'>- безопасность информации не гарантируется</p>
+          <p className='font-semibold text-warning'>- безопасность информации не гарантируется</p>
           {/* <p>- минимум 8 символов</p>
           <p>- большие, маленькие буквы, цифры</p>
           <p>- минимум 1 спец. символ</p> */}

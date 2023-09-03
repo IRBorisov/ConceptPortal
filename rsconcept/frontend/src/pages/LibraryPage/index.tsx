@@ -1,7 +1,7 @@
 import { useLayoutEffect, useState } from 'react';
 
 import BackendError from '../../components/BackendError'
-import { Loader } from '../../components/Common/Loader'
+import { ConceptLoader } from '../../components/Common/ConceptLoader'
 import { useLibrary } from '../../context/LibraryContext';
 import { ILibraryFilter, ILibraryItem } from '../../utils/models';
 import SearchPanel from './SearchPanel';
@@ -20,7 +20,7 @@ function LibraryPage() {
 
   return (
     <div className='w-full'>
-      { library.loading && <Loader /> }
+      { library.loading && <ConceptLoader /> }
       { library.error && <BackendError error={library.error} />}
       { !library.loading && library.items && 
       <div className='flex flex-col w-full'>

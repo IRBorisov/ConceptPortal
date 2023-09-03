@@ -1,4 +1,4 @@
-import { NodeType, Tree, TreeCursor } from "@lezer/common"
+import { NodeType, Tree, TreeCursor } from '@lezer/common'
 
 export type CursorNode = {
   type: NodeType
@@ -44,16 +44,16 @@ export function traverseTree(tree: Tree, { beforeEnter, onEnter, onLeave, }: Tre
 
 export function printTree(tree: Tree): string {
   const state = {
-    output: "",
+    output: '',
     prefixes: [] as string[]
   }
   traverseTree(tree, {
     onEnter: node => {
-      state.output += "[";
+      state.output += '[';
       state.output += node.type.name;
     },
     onLeave: () => {
-      state.output += "]";
+      state.output += ']';
     },
   })
   return state.output;

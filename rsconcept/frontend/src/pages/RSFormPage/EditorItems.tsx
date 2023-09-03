@@ -6,7 +6,7 @@ import ConceptDataTable from '../../components/Common/ConceptDataTable';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import Divider from '../../components/Common/Divider';
 import HelpRSFormItems from '../../components/Help/HelpRSFormItems';
-import { ArrowDownIcon, ArrowsRotateIcon, ArrowUpIcon, DumpBinIcon, HelpIcon, SmallPlusIcon } from '../../components/Icons';
+import { ArrowDownIcon, ArrowUpIcon, DumpBinIcon, HelpIcon, MeshIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import { prefixes } from '../../utils/constants';
@@ -90,7 +90,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
 
   // Generate new names for all constituents
   function handleReindex() {
-    resetAliases(() => toast.success('Переиндексация конституент успешна'));
+    resetAliases(() => toast.success('Имена конституент обновлены'));
   }
 
   function handleCreateCst(type?: CstType) {
@@ -185,7 +185,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
         return (<>
           <div
             id={`${prefixes.cst_list}${cst.alias}`}
-            className='w-full text-center rounded-md'
+            className='w-full px-1 text-center rounded-md whitespace-nowrap'
             style={{backgroundColor: getCstStatusColor(cst.status, colors)}}
           >
             {cst.alias}
@@ -284,22 +284,22 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
           />
           <Button
             tooltip='Удалить выбранные'
-            icon={<DumpBinIcon color={!nothingSelected ? 'text-red' : ''} size={6}/>}
+            icon={<DumpBinIcon color={isEditable && !nothingSelected ? 'text-warning' : ''} size={6}/>}
             disabled={!isEditable || nothingSelected}
             dense
             onClick={handleDelete}
           />
           <Divider vertical margins='my-1' />
           <Button
-            tooltip='Переиндексировать имена'
-            icon={<ArrowsRotateIcon color='text-primary' size={6}/>}
+            tooltip='Сбросить имена'
+            icon={<MeshIcon color={isEditable ? 'text-primary': ''} size={6}/>}
             dense
             disabled={!isEditable}
             onClick={handleReindex}
           />
           <Button
             tooltip='Новая конституента'
-            icon={<SmallPlusIcon color='text-green' size={6}/>}
+            icon={<SmallPlusIcon color={isEditable ? 'text-success': ''} size={6}/>}
             dense
             disabled={!isEditable}
             onClick={() => handleCreateCst()}
@@ -320,7 +320,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
           <div id='items-table-help'>
             <HelpIcon color='text-primary' size={6} />
           </div>
-          <ConceptTooltip anchorSelect='#items-table-help'>
+          <ConceptTooltip anchorSelect='#items-table-help' offset={30}>
             <HelpRSFormItems />
           </ConceptTooltip>
         </div>

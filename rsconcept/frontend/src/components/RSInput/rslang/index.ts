@@ -1,4 +1,4 @@
-import {LRLanguage} from "@codemirror/language"
+import {LRLanguage} from '@codemirror/language'
 
 import { parser } from './parser';
 

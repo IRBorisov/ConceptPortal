@@ -13,10 +13,10 @@ function DropdownCheckbox({ tooltip, onChange, disabled, ...props }: DropdownChe
   return (
     <div
       title={tooltip}
-      className={`px-4 py-1 text-left overflow-ellipsis ${behavior} whitespace-nowrap`}
+      className={`px-4 py-1 text-left overflow-ellipsis ${behavior} w-full whitespace-nowrap`}
     >
       <Checkbox 
-        widthClass='w-fit'
+        widthClass='w-full'
         disabled={disabled}
         onChange={onChange}
         {...props}

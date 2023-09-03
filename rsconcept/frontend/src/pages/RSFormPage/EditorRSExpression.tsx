@@ -2,7 +2,7 @@ import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import Button from '../../components/Common/Button';
-import { Loader } from '../../components/Common/Loader';
+import { ConceptLoader } from '../../components/Common/ConceptLoader';
 import RSInput from '../../components/RSInput';
 import { TextWrapper } from '../../components/RSInput/textEditing';
 import { useRSForm } from '../../context/RSFormContext';
@@ -187,7 +187,7 @@ function EditorRSExpression({
   return (
     <div className='flex flex-col items-start [&:not(:first-child)]:mt-3 w-full min-h-[15.75rem]'>
       <div className='relative w-full'>
-      <div className='absolute top-[-0.1rem] right-0'>
+      <div className='absolute top-[-0.3rem] right-0'>
       <StatusBar
         isModified={isModified}
         constituenta={activeCst}
@@ -196,7 +196,7 @@ function EditorRSExpression({
       </div>
       </div>
       <RSInput innerref={rsInput}
-        className='mt-2 text-lg'
+        className='text-lg'
         height='10.1rem'
         value={value}
         editable={!disabled}
@@ -218,7 +218,7 @@ function EditorRSExpression({
       </div>
       { (isActive || loading || parseData) && 
       <div className='w-full overflow-y-auto border mt-2 max-h-[14rem] min-h-[4.2rem]'>
-        { loading && <Loader size={6} />}
+        { loading && <ConceptLoader size={6} />}
         { !loading && parseData && 
         <ParsingResult
           data={parseData} 

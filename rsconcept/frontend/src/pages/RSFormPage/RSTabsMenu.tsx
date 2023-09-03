@@ -67,7 +67,7 @@ function RSTabsMenu({
   }
 
   return (    
-    <div className='flex items-stretch w-fit'>
+    <div className='flex items-stretch h-full w-fit'>
       <div ref={schemaMenu.ref}>
         <Button
           tooltip='Действия'
@@ -99,13 +99,13 @@ function RSTabsMenu({
           </DropdownButton>
           <DropdownButton disabled={!isEditable} onClick={handleUpload}>
             <div className='inline-flex items-center justify-start gap-2'>
-              <UploadIcon color={isEditable ? 'text-red' : ''} size={4}/>
+              <UploadIcon color={isEditable ? 'text-warning' : ''} size={4}/>
               <p>Загрузить из Экстеора</p>
             </div>
           </DropdownButton>
           <DropdownButton disabled={!isEditable} onClick={handleDelete}>
             <span className='inline-flex items-center justify-start gap-2'>
-              <DumpBinIcon color={isEditable ? 'text-red' : ''} size={4} />
+              <DumpBinIcon color={isEditable ? 'text-warning' : ''} size={4} />
               <p>Удалить схему</p>
             </span>
           </DropdownButton>
@@ -122,7 +122,7 @@ function RSTabsMenu({
           tooltip={'измнение: ' + (isEditable ? '[доступно]' : '[запрещено]')}
           borderClass=''
           widthClass='h-full w-fit'
-          icon={<PenIcon size={5} color={isEditable ? 'text-green' : 'text-red'}/>}
+          icon={<PenIcon size={5} color={isEditable ? 'text-success' : 'text-warning'}/>}
           dense
           onClick={editMenu.toggle}
         />
@@ -134,7 +134,7 @@ function RSTabsMenu({
             tooltip={!user || !isClaimable ? 'Стать владельцем можно только для общей изменяемой схемы' : ''}
           >
             <div className='inline-flex items-center gap-1 justify-normal'>
-              <span className={isOwned ? 'text-green' : ''}><CrownIcon size={4} /></span>
+              <span className={isOwned ? 'text-success' : ''}><CrownIcon size={4} /></span>
               <p>
                 { isOwned && <b>Владелец схемы</b> }
                 { !isOwned && <b>Стать владельцем</b> }

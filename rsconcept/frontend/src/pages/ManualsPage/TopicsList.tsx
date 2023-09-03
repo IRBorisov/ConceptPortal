@@ -9,13 +9,13 @@ interface TopicsListProps {
 
 function TopicsList({ activeTopic, onChangeTopic }: TopicsListProps) {
   return (
-    <div className='sticky top-0 left-0 border-r border-b min-w-[13rem] pt-2 select-none flex flex-col clr-bg-pop clr-border'>
-      <div className='mb-2 font-bold text-center'>Справка</div>
+    <div className='sticky top-0 left-0 border-r border-b min-w-[13rem] pt-2 select-none flex flex-col clr-controls'>
+      <div className='mb-2 font-semibold text-center'>Справка</div>
       { [... mapTopicInfo.entries()].map(
       ([topic, info], index) => {
         return (
           <div key={`${prefixes.topic_list}${index}`}
-            className={`px-3 py-1 border-y cursor-pointer hover:bg-blue-200 dark:hover:bg-[#EA580C] clr-border ${activeTopic === topic ? 'font-bold bg-blue-200 dark:bg-[#EA580C] ' : ''}`}
+            className={`px-3 py-1 border-y cursor-pointer clr-hover ${activeTopic === topic ? 'font-semibold clr-selected ' : ''}`}
             title={info.tooltip}
             onClick={() => onChangeTopic(topic)}
           >

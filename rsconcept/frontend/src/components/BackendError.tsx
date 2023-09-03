@@ -59,7 +59,7 @@ function DescribeError(error: ErrorInfo) {
 
 function BackendError({ error }: BackendErrorProps) {
   return (
-    <div className='py-2 text-sm font-semibold text-red-600 dark:text-red-400'>
+    <div className='py-2 text-sm font-semibold select-text text-warning'>
       {DescribeError(error)}
     </div>
   );

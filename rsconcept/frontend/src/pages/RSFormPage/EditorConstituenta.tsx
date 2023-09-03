@@ -133,7 +133,7 @@ function EditorConstituenta({
 
   return (
     <div className='flex items-stretch w-full gap-2 mb-2 justify-stretch'>
-      <form onSubmit={handleSubmit} className='min-w-[50rem] max-w-min px-4 py-2 border-y border-r clr-border'>
+      <form onSubmit={handleSubmit} className='min-w-[50rem] max-w-min px-4 py-2 border-y border-r'>
         <div className='relative'>
           <div className='absolute top-0 left-0'>
         <MiniButton 
@@ -151,13 +151,13 @@ function EditorConstituenta({
             tooltip='Удалить редактируемую конституенту'
             disabled={!isEnabled}
             onClick={handleDelete}
-            icon={<DumpBinIcon size={5} color={isEnabled ? 'text-red' : ''} />}
+            icon={<DumpBinIcon size={5} color={isEnabled ? 'text-warning' : ''} />}
           />
           <MiniButton
             tooltip='Создать конституенты после данной'
             disabled={!isEnabled}
             onClick={handleCreateCst}
-            icon={<SmallPlusIcon size={5} color={isEnabled ? 'text-green' : ''} />} 
+            icon={<SmallPlusIcon size={5} color={isEnabled ? 'text-success' : ''} />} 
           />
           <div id='cst-help' className='flex items-center ml-[6px]'>
             <HelpIcon color='text-primary' size={5} />
@@ -167,7 +167,7 @@ function EditorConstituenta({
           </ConceptTooltip>
         </div>
         </div>
-        <div className='flex items-center justify-center w-full pr-10'>
+        <div className='flex items-center justify-center w-full gap-1 pr-10'>
           <div className='font-semibold w-fit'>
             <span className=''>Конституента </span>
             <span className='ml-4'>{alias}</span>
@@ -194,6 +194,7 @@ function EditorConstituenta({
         <TextArea id='typification' label='Типизация'
           rows={1}
           value={typification}
+          colorClass='clr-app'
           disabled
         />
         <EditorRSExpression id='expression' label='Формальное выражение'

@@ -1,26 +1,27 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../context/AuthContext';
 import useDropdown from '../../hooks/useDropdown';
-import { UserIcon } from '../Icons';
+import { InDoor, UserIcon } from '../Icons';
 import NavigationButton from './NavigationButton';
 import UserDropdown from './UserDropdown';
 
-function LoginRef() {
-  return (
-    <Link to='login' className='inline-block h-full px-1 py-2 font-semibold rounded-lg hover:underline clr-btn-nav text-primary'>
-      Войти...
-    </Link>
-  );
-}
-
 function UserMenu() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const menu = useDropdown();
+
+  const navigateLogin = () => navigate('/login');
   return (
-    <div ref={menu.ref}>
-      <div className='w-[4.2rem] flex justify-end'>
-      { !user && <LoginRef />}
+    <div ref={menu.ref} className='h-full'>
+      <div className='flex items-center justify-end h-full w-fit'>
+      { !user && 
+      <NavigationButton
+        text='Войти...'
+        description='Перейти на страницу логина'
+        icon={<InDoor />}
+        onClick={navigateLogin}
+      />}
       { user &&
       <NavigationButton
         icon={<UserIcon />}

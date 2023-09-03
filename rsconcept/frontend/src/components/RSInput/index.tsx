@@ -69,10 +69,9 @@ function RSInput({
     theme: 'light',
     settings: {
       fontFamily: 'inherit',
-      background: editable ? colors.input : colors.inputDisabled,
-      foreground: colors.text,
-      selection: colors.selection,
-      caret: '#5d00ff',
+      background: editable ? colors.bgInput : colors.bgDisabled,
+      foreground: colors.fgDefault,
+      selection: colors.bgHover
     },
     styles: [
       { tag: t.name, class: 'text-[#b266ff] cursor-default' }, // GlobalID
@@ -90,10 +89,9 @@ function RSInput({
     theme: 'dark',
     settings: {
       fontFamily: 'inherit',
-      background: editable ? colors.input : colors.inputDisabled,
-      foreground: colors.text,
-      selection: colors.selection,
-      caret: '#ffaa00'
+      background: editable ? colors.bgInput : colors.bgDisabled,
+      foreground: colors.fgDefault,
+      selection: colors.bgHover
     },
     styles: [
       { tag: t.name, class: 'text-[#dfbfff] cursor-default' }, // GlobalID
@@ -139,12 +137,13 @@ function RSInput({
   }, [thisRef]);
 
   return (
-    <div className={`w-full ${cursor}`}>
+    <div className={`flex flex-col w-full ${cursor}`}>
     {label && 
     <Label
       text={label}
       required={false}
       htmlFor={id}
+      className='mb-2'
     />}
     <CodeMirror id={id}
       ref={thisRef}

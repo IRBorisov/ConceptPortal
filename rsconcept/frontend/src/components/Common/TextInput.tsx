@@ -27,7 +27,7 @@ function TextInput({
       />
       <input id={id}
         title={tooltip}
-        className={`px-3 py-2 leading-tight border shadow truncate hover:text-clip ${colorClass} ${singleRow ? '' : 'mt-2 ' + widthClass}`}
+        className={`px-3 py-2 leading-tight border shadow truncate hover:text-clip clr-outline ${colorClass} ${singleRow ? '' : 'mt-2 ' + widthClass}`}
         required={required}
         {...props}
       />

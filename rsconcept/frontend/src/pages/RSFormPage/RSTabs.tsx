@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 
 import BackendError from '../../components/BackendError';
 import ConceptTab from '../../components/Common/ConceptTab';
-import { Loader } from '../../components/Common/Loader';
+import { ConceptLoader } from '../../components/Common/ConceptLoader';
 import { useLibrary } from '../../context/LibraryContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
@@ -91,12 +91,18 @@ function RSTabs() {
 
   const navigateTo = useCallback(
   (tab: RSTabID, activeID?: number) => {
+    if (!schema) {
+      return;
+    }
     if (activeID) {
-      navigate(`/rsforms/${schema!.id}?tab=${tab}&active=${activeID}`, {
+      navigate(`/rsforms/${schema.id}?tab=${tab}&active=${activeID}`, {
         replace: tab === activeTab && tab !== RSTabID.CST_EDIT
       });
+    } else if (tab !== activeTab && tab === RSTabID.CST_EDIT && schema.items.length > 0) {
+      activeID = schema.items[0].id;
+      navigate(`/rsforms/${schema.id}?tab=${tab}&active=${activeID}`, { replace: true });
     } else {
-      navigate(`/rsforms/${schema!.id}?tab=${tab}`);
+      navigate(`/rsforms/${schema.id}?tab=${tab}`);
     }
   }, [navigate, schema, activeTab]);
 
@@ -272,7 +278,7 @@ function RSTabs() {
 
   return (
   <div className='w-full'>
-    { loading && <Loader /> }
+    { loading && <ConceptLoader /> }
     { error && <BackendError error={error} />}
     { schema && !loading && <>
     {showUpload && 
@@ -311,9 +317,9 @@ function RSTabs() {
       selectedIndex={activeTab}
       onSelect={onSelectTab}
       defaultFocus={true}
-      selectedTabClassName='font-bold bg-blue-200 dark:bg-[#EA580C]'
+      selectedTabClassName='font-semibold clr-selected'
     >
-      <TabList className='flex items-start pl-2 border-b border-r-2 select-none w-fit clr-bg-pop clr-border'>
+      <TabList className='flex items-start pl-2 border-b border-r-2 select-none justify-stretch w-fit clr-controls h-[1.9rem]'>
         <RSTabsMenu 
           onDownload={onDownloadSchema}
           onDestroy={onDestroySchema}

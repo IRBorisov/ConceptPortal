@@ -26,7 +26,7 @@ function TextArea({
       />
       <textarea id={id}
         title={tooltip}
-        className={`px-3 py-2 mt-2 leading-tight border shadow ${colorClass} ${widthClass}`}
+        className={`px-3 py-2 mt-2 leading-tight border shadow clr-outline ${colorClass} ${widthClass}`}
         rows={rows}
         required={required}
         {...props}

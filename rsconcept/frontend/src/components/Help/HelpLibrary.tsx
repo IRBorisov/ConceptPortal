@@ -18,7 +18,7 @@ function HelpLibrary() {
       </div>
       <div className='flex items-center gap-2'>
         <EducationIcon size={4}/>
-        <p>Аттрибут <b>неизменяемая</b> выделяет неизменяемые стандартные схемы.</p>
+        <p>Аттрибут <b>неизменная</b> выделяет стандартные схемы.</p>
       </div>
     </div>
   );

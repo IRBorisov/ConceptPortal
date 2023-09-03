@@ -90,7 +90,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
     {
       when: (cst: IConstituenta) => cst.id === activeID,
       style: {
-        backgroundColor: colors.selection,
+        backgroundColor: colors.bgSelected,
       },
     }
   ], [activeID, colors]);
@@ -109,7 +109,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
         return (<>
           <div
             id={`${prefixes.cst_list}${cst.alias}`}
-            className='w-full text-center rounded-md'
+            className='w-full px-1 text-center rounded-md min-w-fit whitespace-nowrap'
             style={{backgroundColor: getCstStatusColor(cst.status, colors)}}
           >
             {cst.alias}
@@ -122,7 +122,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       conditionalCellStyles: [
         {
           when: (cst: IConstituenta) => isMockCst(cst),
-          style: {backgroundColor: colors.selectionError}
+          style: {backgroundColor: colors.bgWarning}
         }
       ]
     },
@@ -135,7 +135,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       conditionalCellStyles: [
         {
           when: (cst: IConstituenta) => isMockCst(cst),
-          style: {backgroundColor: colors.selectionError}
+          style: {backgroundColor: colors.bgWarning}
         }
       ]
     },
@@ -150,7 +150,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       conditionalCellStyles: [
         {
           when: (cst: IConstituenta) => isMockCst(cst),
-          style: {backgroundColor: colors.selectionError}
+          style: {backgroundColor: colors.fgWarning}
         }
       ]
     }
@@ -165,7 +165,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
   }, [noNavigation, baseHeight]);
 
   return (<>
-    <div className='sticky top-0 left-0 right-0 z-10 flex items-start justify-between w-full gap-1 px-2 py-1 border-b rounded clr-input clr-border'>
+    <div className='sticky top-0 left-0 right-0 z-10 flex items-start justify-between w-full gap-1 px-2 py-1 border-b rounded clr-input'>
       <MatchModePicker
         value={filterMatch}
         onChange={setFilterMatch}

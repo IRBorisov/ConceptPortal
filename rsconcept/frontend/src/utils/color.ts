@@ -4,24 +4,20 @@ export interface IColorTheme {
   blue: string
   teal: string
   orange: string
+  
+  bgDefault: string
+  bgInput: string
+  bgControls: string
+  bgDisabled: string
+  bgHover: string
+  bgSelected: string
+  bgWarning: string
+  
+  border: string
 
-  text: string
-
-  input: string
-  inputDisabled: string
-  selection: string
-  selectionError: string
-
-  // bg100: string
-  // bg70: string
-  // bg50: string
-
-  // fg100: string
-  // fg70: string
-  // fg50: string
-
-  // primary: string
-  // secondary: string
+  fgDefault: string
+  fgDisabled: string
+  fgWarning: string
 }
 
 // =========== GENERAL THEMES =========
@@ -32,63 +28,94 @@ export const lightT: IColorTheme = {
   teal: '#a5e9fa',
   orange: '#ffbb80',
 
-  text: '#000000',
+  bgDefault: 'var(--cl-bg-100)',
+  bgInput: 'var(--cl-bg-120)',
+  bgControls: 'var(--cl-bg-80)',
+  bgDisabled: 'var(--cl-bg-60)',
+  bgHover: 'var(--cl-prim-bg-60)',
+  bgSelected: 'var(--cl-prim-bg-80)',
+  bgWarning: 'var(--cl-red-bg-100)',
+  
+  border: 'var(--cl-bg-40)',
 
-  input: '#ffffff',
-  inputDisabled: '#f0f2f7',
-  selection: '#def1ff',
-  selectionError: '#ffc9c9'
+  fgDefault: 'var(--cl-fg-100)',
+  fgDisabled: 'var(--cl-fg-60)',
+  fgWarning: 'var(--cl-red-fg-100)'
 };
 
 export const darkT: IColorTheme = {
   red: '#bf0d00',
   green: '#2b8000',
-  blue: '#bf0d00',
-  teal: '#0099bf',
+  blue: '#394bbf',
+  teal: '#007a99',
   orange: '#964600',
 
-  text: '#e4e4e7',
-  
-  input: '#181818',
-  inputDisabled: '#272727', // bg-gray-700
-  selection: '#394bbf',
-  selectionError: '#592b2b'
+  bgDefault: 'var(--cd-bg-100)',
+  bgInput: 'var(--cd-bg-120)',
+  bgControls: 'var(--cd-bg-80)',
+  bgDisabled: 'var(--cd-bg-60)',
+  bgHover: 'var(--cd-prim-bg-60)',
+  bgSelected: 'var(--cd-prim-bg-80)',
+  bgWarning: 'var(--cd-red-bg-100)',
+
+  border: 'var(--cd-bg-40)',
+
+  fgDefault: 'var(--cd-fg-100)',
+  fgDisabled: 'var(--cd-fg-60)',
+  fgWarning: 'var(--cd-red-fg-100)'
 };
 
 
 // ========= DATA TABLE THEMES ========
 export const dataTableLightT = {
+  text: {
+    primary: lightT.fgDefault,
+    secondary: lightT.fgDefault,
+    disabled: lightT.fgDisabled
+  },
+  background: {
+    default: lightT.bgDefault
+  },
+  highlightOnHover: {
+    default: lightT.bgHover,
+    text: lightT.fgDefault
+  },
   divider: {
-    default: '#d1d5db'
+    default: lightT.border
   },
   striped: {
-    default: '#f0f2f7'
+    default: lightT.bgControls,
+    text: lightT.fgDefault
   },
+  selected: {
+    default: lightT.bgSelected,
+    text: lightT.fgDefault
+  }
 }
 
 export const dataTableDarkT = {
   text: {
-    primary: 'rgba(228, 228, 231, 1)',
-    secondary: 'rgba(228, 228, 231, 0.87)',
-    disabled: 'rgba(228, 228, 231, 0.54)'
+    primary: darkT.fgDefault,
+    secondary: darkT.fgDefault,
+    disabled: darkT.fgDisabled
   },
   background: {
-    default: '#181818'
+    default: darkT.bgDefault
   },
   highlightOnHover: {
-    default: '#606060',
-    text: 'rgba(228, 228, 231, 1)'
+    default: darkT.bgHover,
+    text: darkT.fgDefault
   },
   divider: {
-    default: '#6b6b6b'
+    default: darkT.border
   },
   striped: {
-    default: '#272727',
-    text: 'rgba(228, 228, 228, 1)'
+    default: darkT.bgControls,
+    text: darkT.fgDefault
   },
   selected: {
-    default: '#181818',
-    text: 'rgba(228, 228, 231, 1)'
+    default: darkT.bgSelected,
+    text: darkT.fgDefault
   }
 };
 
@@ -144,7 +171,7 @@ export const graphLightT = {
 
 export const graphDarkT = {
   canvas: {
-    background: '#1f2937'
+    background: '#181818' // var(--cd-bg-100)
   },
   node: {
     fill: '#7a8c9e',
@@ -193,27 +220,21 @@ export const graphDarkT = {
 
 // ======== Bracket Matching Themes ===========
 export const bracketsLightT = {
-  '.cc-matchingBracket': {
-    fontWeight: 600,
-  },
   '.cc-nonmatchingBracket': {
-    color: '#ef4444',
+    color: lightT.fgWarning,
     fontWeight: 700,
   },
   '&.cm-focused .cc-matchingBracket': {
-    backgroundColor: '#dae6f2',
+    backgroundColor: lightT.bgSelected,
   },
 };
 
 export const bracketsDarkT = {
-  '.cc-matchingBracket': {
-    fontWeight: 600,
-  },
   '.cc-nonmatchingBracket': {
-    color: '#ef4444',
+    color: darkT.fgWarning,
     fontWeight: 700,
   },
   '&.cm-focused .cc-matchingBracket': {
-    backgroundColor: '#734f00',
+    backgroundColor: darkT.bgSelected,
   },
 };

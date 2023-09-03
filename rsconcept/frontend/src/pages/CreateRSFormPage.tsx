@@ -38,7 +38,7 @@ function CreateRSFormPage() {
   }
 
   function handleCancel() {
-    if (location.key !== "default") {
+    if (location.key !== 'default') {
       navigate(-1);
     } else {
       navigate('/library');

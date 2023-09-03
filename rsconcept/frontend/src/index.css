@@ -2,8 +2,75 @@
 @tailwind components;
 @tailwind utilities;
 
-.rdt_TableCell{
-  font-size: 0.875rem;
+:root {
+  /* Light Theme */
+  --cl-bg-120: #ffffff;
+  --cl-bg-100: #f9fafb;
+  --cl-bg-80: #f3f4f6;
+  --cl-bg-60: #e5e7eb;
+  --cl-bg-40: #d1d5db;
+
+  --cl-fg-40: #8c8c8c;
+  --cl-fg-60: #777777;
+  --cl-fg-80: #333333;
+  --cl-fg-100: #000000;
+
+  --cl-prim-bg-100: #3377ff;
+  --cl-prim-bg-80: #ccddff;
+  --cl-prim-bg-60: #e0ebff;
+  
+  --cl-prim-fg-60: #1a63ff;
+  --cl-prim-fg-80: #0051ff;
+  --cl-prim-fg-100: #ffffff;
+
+  --cl-red-bg-100: #ffe5e5;
+  --cl-red-fg-100: #dc2626;
+  --cl-green-fg-100: #4ade80;
+
+  /* Dark Theme */
+  --cd-bg-120: #0d0d0d;
+  --cd-bg-100: #181818;
+  --cd-bg-80: #272727;
+  --cd-bg-60: #383838;
+  --cd-bg-40: #595959;
+  
+  --cd-fg-40: #878792;
+  --cd-fg-60: #bcbcc2;
+  --cd-fg-80: #d4d4d8;
+  --cd-fg-100: #e4e4e7;
+
+  --cd-prim-bg-100: #e66000;
+  --cd-prim-bg-80: #b36800;
+  --cd-prim-bg-60: #663c00;
+
+  --cd-prim-fg-60: #ffa666;
+  --cd-prim-fg-80: #ff6a00;
+  --cd-prim-fg-100: #ffffff;
+
+  --cd-red-bg-100: #4d0000;
+  --cd-red-fg-100: #ff334b;
+  --cd-green-fg-100: #22c55e;
+}
+
+:root {
+  color: var(--cl-fg-100);
+  border-color: var(--cl-bg-40);
+  background-color: var(--cl-bg-100);
+
+  &.dark {
+    color: var(--cd-fg-100);
+    border-color: var(--cd-bg-40);
+    background-color: var(--cd-bg-100);
+  }
+}
+
+:focus {
+  outline-width: 2px;
+  outline-style: solid;
+  outline-color: transparent;
+  .dark & {
+    outline-color: transparent;
+  }
 }
 
 [data-color-scheme="dark"] {
@@ -14,127 +81,213 @@
   color-scheme: light;
 }
 
-.react-dropdown-select-item {
-  @apply bg-gray-100 dark:bg-gray-600 dark:text-zinc-200 hover:bg-gray-50 hover:text-gray-700 dark:hover:text-white dark:hover:bg-gray-500
-}
-
-.cm-editor {
-  @apply border shadow rounded clr-border px-1
-}
-.cm-editor.cm-focused {
-  @apply border shadow rounded outline-2 outline
-}
-
 @layer components {
-  :root {
-    @apply bg-gray-50;
-  }
-
-  .dark {
-    @apply text-zinc-200 bg-[#181818]
-  }
-
   h1 {
     @apply text-lg font-bold text-center
   }
 
   .border {
-    @apply clr-border rounded
+    @apply rounded
   }
 
-  .text-btn {
-    @apply text-gray-600 dark:text-zinc-200 dark:disabled:text-zinc-400 disabled:text-gray-400
+  .clr-modal-backdrop {
+    opacity: 0.75;
   }
 
-  .clr-border {
-    @apply border-gray-300 dark:border-[#434343]
+  :is(.clr-border,
+    .border, .border-x, .border-y, .border-b, .border-t, .border-l, .border-r,
+    .border-2, .border-x-2, .border-y-2, .border-b-2, .border-t-2, .border-l-2, .border-r-2,
+    .divide-x, .divide-y, .divide-x-2, .divide-y-2
+  ) {
+    border-color: var(--cl-bg-40);
+    .dark & {
+      border-color: var(--cd-bg-40);
+    }
   }
 
-  .clr-border-nav {
-    @apply border-gray-400 dark:border-[#434343]
+  :is(.clr-app,
+    .clr-footer,
+    .clr-modal-backdrop,
+    .clr-btn-nav,
+    .clr-checkbox
+  ) {
+    background-color: var(--cl-bg-100);
+    .dark & {
+      background-color: var(--cd-bg-100);
+    }
   }
 
-  .clr-app {
-    @apply bg-gray-50 dark:bg-[#181818]
+  :is(.clr-input
+   ) {
+    background-color: var(--cl-bg-120);
+    .dark & {
+      background-color: var(--cd-bg-120);
+    }
   }
 
-  .clr-bg-pop {
-    @apply bg-gray-100 dark:bg-[#272727] dark:border-[#434343]
+  :is(.clr-controls,
+    .clr-btn-default
+  ) {
+    background-color: var(--cl-bg-80);
+    .dark & {
+      background-color: var(--cd-bg-80);
+    }
   }
 
-  .clr-modal {
-    @apply bg-gray-300 dark:bg-[#272727] 
+  :is(.clr-primary,
+    .clr-btn-primary,
+    .clr-checkbox:checked
+  ) {
+    color: var(--cl-prim-fg-100);
+    background-color: var(--cl-prim-bg-100);
+    .dark & {
+      color: var(--cd-prim-fg-100);
+      background-color: var(--cd-prim-bg-100);
+    }
   }
 
-  .clr-nav {
-    @apply border-gray-400 dark:border-[#434343] bg-white dark:bg-[#181818]
+  :is(.clr-selected
+  ) {
+    color: var(--cl-fg-100);
+    background-color: var(--cl-prim-bg-80);
+    .dark & {
+      color: var(--cd-fg-100);
+      background-color: var(--cd-prim-bg-80);
+    }
   }
 
-  .clr-input {
-    @apply dark:bg-[#181818] bg-white disabled:bg-[#c6c6c6] dark:disabled:bg-[#181818]
+  :is(.clr-disabled,
+    .clr-input,
+    .clr-btn-default,
+    .clr-btn-primary
+  ):disabled {
+    color: var(--cl-fg-60);
+    background-color: var(--cl-bg-60);
+    .dark & {
+      color: var(--cd-fg-60);
+      background-color: var(--cd-bg-60);
+    }
+  }
+
+  :is(.clr-hover,
+    .clr-tab,
+    .clr-btn-nav,
+    .clr-btn-default,
+    .clr-btn-primary,
+    .clr-btn-clear
+  ):hover:not(:disabled) {
+    color: var(--cl-fg-100);
+    background-color: var(--cl-prim-bg-60);
+    .dark & {
+      color: var(--cd-fg-100);
+      background-color: var(--cd-prim-bg-60);
+    }
+  }
+
+  :is(.clr-outline
+  ):focus {
+    outline-width: 2px;
+    outline-style: solid;
+    outline-color: var(--cl-bg-40);
+    .dark & {
+      outline-color: var(--cd-bg-40);
+    }
+  }
+
+  :is(.text-primary,
+    .text-url
+  ) {
+    color: var(--cl-prim-fg-80);
+    .dark & {
+      color: var(--cd-prim-fg-80);
+    }
   }
 
   .clr-footer {
-    @apply clr-app text-gray-600 border-gray-400 dark:border-[#434343] dark:text-[#aaaaaa]
-  }
-
-  .clr-card {
-    @apply bg-gray-50 dark:bg-[#272727]
-  }
-
-  .clr-tab {
-    @apply clr-border text-gray-700 dark:text-zinc-200 hover:bg-blue-200 dark:hover:bg-[#EA580C]
-  }
-
-  .clr-hover {
-    @apply hover:bg-gray-200 hover:text-gray-700 dark:hover:text-white dark:hover:bg-gray-500
+    color: var(--cl-fg-40);
+    .dark & {
+      color: var(--cd-fg-40);
+    }
   }
 
   .clr-btn-nav {
-    @apply text-gray-500 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white focus:ring-gray-300 dark:focus:ring-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600
+    color: var(--cl-fg-60);
+    .dark & {
+      color: var(--cd-fg-60);
+    }
   }
 
-  .clr-btn-primary {
-    @apply text-white bg-blue-400 hover:bg-blue-600 dark:bg-orange-600 dark:hover:bg-orange-400 disabled:bg-gray-400 dark:disabled:bg-gray-600
-  }
-
-  .clr-btn-green {
-    @apply text-white bg-green-400 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-400 dark:text-black disabled:bg-gray-400 dark:disabled:bg-gray-600
-  }
-
-  .clr-btn-blue {
-    @apply text-white bg-blue-400 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-400 dark:text-black disabled:bg-gray-400 dark:disabled:bg-gray-600
-  }
-  .clr-btn-default {
-    @apply bg-[#f0f2f7] hover:bg-gray-300 dark:bg-[#434343] dark:hover:bg-[#606060] text-btn
-  }
-
-  /* Transparent button */
   .clr-btn-clear {
-    @apply dark:disabled:text-zinc-400 disabled:text-gray-400 text-gray-500 dark:text-zinc-200
+    color: var(--cl-fg-60);
+    &:disabled {
+      color: var(--cl-fg-40);
+    }
+    .dark & {
+      color: var(--cd-fg-60);
+      &:disabled {
+        color: var(--cd-fg-40);
+      }
+    }
   }
 
-  .clr-checkbox {
-    @apply bg-white dark:bg-[#181818] checked:bg-blue-700 dark:checked:bg-orange-500
+  .clr-warning {
+    background-color: var(--cl-red-bg-100);
+    .dark & {
+      background-color: var(--cd-red-bg-100);
+    }
   }
 
-  .clr-input-red {
-    @apply bg-red-300 dark:bg-red-700
+  .text-warning {
+    color: var(--cl-red-fg-100);
+    .dark & {
+      color: var(--cd-red-fg-100);
+    }
   }
 
-  .text-url {
-    @apply hover:text-blue-600 text-blue-400 dark:text-orange-500 dark:hover:text-orange-300
+  .text-success {
+    color: var(--cl-green-fg-100);
+    .dark & {
+      color: var(--cd-green-fg-100);
+    } 
+  }
+}
+
+.cm-editor {
+  border-color: var(--cl-bg-40);
+  .dark & {
+    border-color: var(--cd-bg-40);
+  }
+  @apply border shadow rounded px-1
+}
+.cm-editor.cm-focused {
+  border-color: var(--cl-bg-40);
+  outline-color: var(--cl-bg-40);
+  .dark & {
+    border-color: var(--cd-bg-40);
+    outline-color: var(--cd-bg-40);
+  }
+  @apply border shadow rounded outline-2 outline
+}
+
+.rdt_TableCell{
+  font-size: 0.875rem;
+}
+
+.react-dropdown-select-item {
+  color: var(--cl-fg-100);
+  border-color: var(--cl-bg-40);
+  background-color: var(--cl-bg-100);
+
+  &:hover {
+    background-color: var(--cl-prim-bg-60);
   }
 
-  .text-red {
-    @apply text-red-600 dark:text-red-400
-  }
-
-  .text-green {
-    @apply text-green-400 dark:text-green-500
-  }
-
-  .text-primary {
-    @apply text-blue-600 dark:text-orange-400
+  .dark & {
+    color: var(--cd-fg-100);
+    border-color: var(--cd-bg-40);
+    background-color: var(--cd-bg-100);
+    &:hover {
+      background-color: var(--cd-prim-bg-60);
+    }
   }
 }

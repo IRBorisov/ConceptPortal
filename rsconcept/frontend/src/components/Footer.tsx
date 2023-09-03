@@ -4,7 +4,7 @@ import { urls } from '../utils/constants';
 
 function Footer() {
   return (
-    <footer className='z-50 px-4 pt-2 pb-4 text-sm select-none whitespace-nowrap clr-footer'>
+    <footer className='z-50 px-4 py-2 text-sm select-none whitespace-nowrap clr-footer'>
       <div className='justify-center w-full mx-auto'>
         <div className='mb-2 text-center'>
           <Link className='mx-2 hover:underline' to='/library' tabIndex={-1}>Библиотека</Link> 

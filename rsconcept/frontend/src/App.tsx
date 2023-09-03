@@ -1,8 +1,8 @@
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 
+import ConceptToaster from './components/ConceptToaster';
 import Footer from './components/Footer';
 import Navigation from './components/Navigation/Navigation';
-import ToasterThemed from './components/ToasterThemed';
 import { useConceptTheme } from './context/ThemeContext';
 import CreateRSFormPage from './pages/CreateRSFormPage';
 import HomePage from './pages/HomePage';
@@ -20,7 +20,7 @@ function Root() {
   return (
     <div className='w-screen antialiased clr-app'>
       <Navigation />
-      <ToasterThemed
+      <ConceptToaster
         className='mt-[4rem] text-sm'
         autoClose={3000}
         draggable={false}

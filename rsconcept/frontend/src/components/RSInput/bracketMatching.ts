@@ -3,8 +3,8 @@ import { Decoration, EditorView } from '@codemirror/view';
 
 import { bracketsDarkT, bracketsLightT } from '../../utils/color';
 
-const matchingMark = Decoration.mark({class: "cc-matchingBracket"});
-const nonmatchingMark = Decoration.mark({class: "cc-nonmatchingBracket"});
+const matchingMark = Decoration.mark({class: 'cc-matchingBracket'});
+const nonmatchingMark = Decoration.mark({class: 'cc-nonmatchingBracket'});
 
 function bracketRender(match: MatchResult) {
   const decorations = [];

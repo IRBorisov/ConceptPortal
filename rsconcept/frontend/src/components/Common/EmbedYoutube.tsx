@@ -14,7 +14,7 @@ function EmbedYoutube({ videoID, pxHeight, pxWidth }: EmbedYoutubeProps) {
       style={{height: 0, paddingBottom: `${pxHeight}px`, paddingLeft: `${pxWidth}px`}}
     >
       <iframe
-        className='absolute top-0 left-0 clr-border'
+        className='absolute top-0 left-0 border'
         style={{minHeight: `${pxHeight}px`, minWidth: `${pxWidth}px`}}
         width={`${pxWidth}px`}
         height={`${pxHeight}px`}

@@ -80,7 +80,7 @@ function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, 
   };
 
   return (
-    <form onSubmit={handleSubmit} className='flex-grow max-w-[35.3rem] px-4 py-2 border-y border-r clr-border min-w-fit'>
+    <form onSubmit={handleSubmit} className='flex-grow max-w-[35.3rem] px-4 py-2 border-y border-r min-w-fit'>
       <div className='relative w-full'>
       <div className='absolute top-0 right-0 flex'>
         <MiniButton
@@ -95,7 +95,7 @@ function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, 
         />
         <MiniButton
           tooltip={isClaimable ? 'Стать владельцем' : 'Невозможно стать владельцем' }
-          icon={<CrownIcon size={5} color={!isClaimable ? '' : 'text-green'}/>}
+          icon={<CrownIcon size={5} color={!isClaimable ? '' : 'text-success'}/>}
           disabled={!isClaimable || !user}
           onClick={onClaim}
         />
@@ -103,7 +103,7 @@ function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, 
           tooltip='Удалить схему'
           disabled={!isEditable}
           onClick={onDestroy}
-          icon={<DumpBinIcon size={5} color={isEditable ? 'text-red' : ''} />}
+          icon={<DumpBinIcon size={5} color={isEditable ? 'text-warning' : ''} />}
         />
         <div id='rsform-help' className='py-1 ml-1'>
           <HelpIcon color='text-primary' size={5} />

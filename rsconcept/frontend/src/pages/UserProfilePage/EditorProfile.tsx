@@ -61,12 +61,12 @@ function EditorProfile() {
             onChange={event => setUsername(event.target.value)}
           />
           <TextInput id='first_name'
-            label="Имя"
+            label='Имя'
             value={first_name}
             onChange={event => setFirstName(event.target.value)}
           />
-          <TextInput id='last_name' label="Фамилия" value={last_name} onChange={event => setLastName(event.target.value)}/>
-          <TextInput id='email' label="Электронная почта" value={email} onChange={event => setEmail(event.target.value)}/>
+          <TextInput id='last_name' label='Фамилия' value={last_name} onChange={event => setLastName(event.target.value)}/>
+          <TextInput id='email' label='Электронная почта' value={email} onChange={event => setEmail(event.target.value)}/>
         </div>  
         <div className='flex justify-center w-full mt-10'>
           <SubmitButton

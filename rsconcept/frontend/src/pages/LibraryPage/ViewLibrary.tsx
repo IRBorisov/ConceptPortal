@@ -4,10 +4,9 @@ import { useNavigate } from 'react-router-dom';
 
 import ConceptDataTable from '../../components/Common/ConceptDataTable';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
-import MiniButton from '../../components/Common/MiniButton';
 import TextURL from '../../components/Common/TextURL';
 import HelpLibrary from '../../components/Help/HelpLibrary';
-import { EducationIcon, EyeIcon, GroupIcon, HelpIcon, PlusIcon } from '../../components/Icons';
+import { EducationIcon, EyeIcon, GroupIcon, HelpIcon } from '../../components/Icons';
 import { useAuth } from '../../context/AuthContext';
 import { useUsers } from '../../context/UsersContext';
 import { prefixes } from '../../utils/constants';
@@ -26,10 +25,6 @@ function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
 
   const openRSForm = (item: ILibraryItem) => navigate(`/rsforms/${item.id}`);
 
-  function handleCreateNew() {
-    navigate('/rsform-create');
-  }
-
   const columns = useMemo(
   () => [
     {
@@ -43,9 +38,9 @@ function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
             className='flex items-center justify-start gap-1'
             id={`${prefixes.library_list}${item.id}`}
           >
-            {user && user.subscriptions.includes(item.id) && <p title="Отслеживаемая"><EyeIcon size={3}/></p>}
-            {item.is_common && <p title="Общедоступная"><GroupIcon size={3}/></p>}
-            {item.is_canonical && <p title="Неизменяемая"><EducationIcon size={3}/></p>}
+            {user && user.subscriptions.includes(item.id) && <p title='Отслеживаемая'><EyeIcon size={3}/></p>}
+            {item.is_common && <p title='Общедоступная'><GroupIcon size={3}/></p>}
+            {item.is_canonical && <p title='Неизменная'><EducationIcon size={3}/></p>}
           </div>
         </>);
       },
@@ -91,16 +86,9 @@ function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
   return (
     <div>
       <div className='relative w-full'>
-      <div className='absolute top-0 left-0 z-20 flex gap-1 mt-2 ml-1'>
-        <MiniButton
-          onClick={handleCreateNew}
-          tooltip='Создать схему'
-          noHover
-          disabled={!user || !user.id}
-          icon={<PlusIcon color={!user || !user.id ? '' : 'text-primary'} size={5} />}
-        />
+      <div className='absolute top-0 left-0 z-20 flex gap-1 mt-1 ml-5'>
         <div id='library-help' className='py-2'>
-          <HelpIcon color='text-primary' size={5} />
+          <HelpIcon color='text-primary' size={6} />
         </div>
         <ConceptTooltip anchorSelect='#library-help'>
           <div className='max-w-[35rem]'>

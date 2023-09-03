@@ -45,7 +45,7 @@ function ViewSubscriptions({items}: ViewSubscriptionsProps) {
 
   return (
     <ConceptDataTable
-      className='h-full overflow-auto border clr-border'
+      className='h-full overflow-auto border'
       columns={columns}
       data={items}
       defaultSortFieldId='time_update'
