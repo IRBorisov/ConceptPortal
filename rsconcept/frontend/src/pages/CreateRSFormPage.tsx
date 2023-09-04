@@ -94,7 +94,7 @@ function CreateRSFormPage() {
         value={common}
         onChange={event => setCommon(event.target.checked)}
       />
-      <FileInput id='trs' label='Загрузить *.trs'
+      <FileInput id='trs' label='Загрузить из Экстеор'
         acceptType='.trs'
         onChange={handleFile}
       />

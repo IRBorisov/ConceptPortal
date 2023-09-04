@@ -13,7 +13,7 @@ export interface CheckboxProps {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-function Checkbox({ id, required, disabled, tooltip, label, widthClass = 'w-full', value, onChange }: CheckboxProps) {
+function Checkbox({ id, required, disabled, tooltip, label, widthClass = 'w-fit', value, onChange }: CheckboxProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const cursor = disabled ? 'cursor-not-allowed' : 'cursor-pointer';
@@ -23,11 +23,11 @@ function Checkbox({ id, required, disabled, tooltip, label, widthClass = 'w-full
     if (!disabled) {
       inputRef.current?.click();
     }
-  } 
+  }
 
   return (
     <button
-      className={'flex gap-2 [&:not(:first-child)]:mt-3 ' + widthClass}
+      className={'flex [&:not(:first-child)]:mt-3 clr-outline focus:outline-dotted focus:outline-1 ' + widthClass}
       title={tooltip}
       disabled={disabled}
       onClick={handleClick}
@@ -42,7 +42,7 @@ function Checkbox({ id, required, disabled, tooltip, label, widthClass = 'w-full
       />
       { label && 
       <Label
-        className={`${cursor}`}
+        className={`${cursor} px-2`}
         text={label}
         required={required}
         htmlFor={id}

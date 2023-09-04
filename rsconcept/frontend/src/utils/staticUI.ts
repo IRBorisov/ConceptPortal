@@ -598,13 +598,14 @@ export function getRSErrorMessage(error: IRSErrorDescription): string {
   return 'UNKNOWN ERROR';
 }
 
-export function getNodeLabel(node: ISyntaxTreeNode): string {
+export function getASTNodeLabel(node: ISyntaxTreeNode): string {
   switch(node.typeID) {
-  case TokenID.ID_LOCAL: return node.data.value as string;
-  case TokenID.ID_GLOBAL: return node.data.value as string;
-  case TokenID.ID_FUNCTION: return node.data.value as string;
-  case TokenID.ID_PREDICATE: return node.data.value as string;
-  case TokenID.ID_RADICAL: return node.data.value as string;
+  case TokenID.ID_LOCAL:
+  case TokenID.ID_GLOBAL:
+  case TokenID.ID_FUNCTION:
+  case TokenID.ID_PREDICATE:
+  case TokenID.ID_RADICAL:
+    return node.data.value as string;
 
   case TokenID.LIT_INTEGER: return String(node.data.value as number);
 
@@ -674,4 +675,83 @@ export function getNodeLabel(node: ISyntaxTreeNode): string {
   }
  // node
   return 'UNKNOWN ' + String(node.typeID);
+}
+
+export function getASTNodeColor(node: ISyntaxTreeNode, colors: IColorTheme): string {
+  switch(node.typeID) {
+    case TokenID.PUNC_DEFINE:
+    case TokenID.PUNC_STRUCT:
+    case TokenID.ID_LOCAL:
+      return colors.green;
+    
+    case TokenID.ID_GLOBAL:
+    case TokenID.ID_FUNCTION:
+    case TokenID.ID_PREDICATE:
+    case TokenID.ID_RADICAL:
+    case TokenID.LIT_INTEGER:
+    case TokenID.LIT_EMPTYSET:
+    case TokenID.LIT_INTSET:
+      return colors.teal;
+    
+    case TokenID.FORALL:
+    case TokenID.EXISTS:
+    case TokenID.NOT:
+    case TokenID.AND:
+    case TokenID.OR:
+    case TokenID.IMPLICATION:
+    case TokenID.EQUIVALENT:
+    case TokenID.GREATER:
+    case TokenID.LESSER:
+    case TokenID.EQUAL:
+    case TokenID.NOTEQUAL:
+    case TokenID.GREATER_OR_EQ:
+    case TokenID.LESSER_OR_EQ:
+    case TokenID.IN:
+    case TokenID.NOTIN:
+    case TokenID.SUBSET_OR_EQ:
+    case TokenID.SUBSET:
+    case TokenID.NOTSUBSET:
+      return colors.orange;
+    
+    case TokenID.NT_TUPLE:
+    case TokenID.NT_ENUMERATION:
+    case TokenID.BIGPR:
+    case TokenID.SMALLPR:
+    case TokenID.FILTER:
+    case TokenID.PLUS:
+    case TokenID.MINUS:
+    case TokenID.MULTIPLY:
+    case TokenID.BOOLEAN:
+    case TokenID.DECART:
+    case TokenID.INTERSECTION:
+    case TokenID.UNION:
+    case TokenID.SET_MINUS:
+    case TokenID.SYMMINUS:
+    case TokenID.REDUCE:
+    case TokenID.CARD:
+    case TokenID.BOOL:
+    case TokenID.DEBOOL:
+      return colors.blue;
+
+    case TokenID.NT_FUNC_DEFINITION:
+    case TokenID.NT_DECLARATIVE_EXPR:
+    case TokenID.NT_IMPERATIVE_EXPR:
+    case TokenID.NT_RECURSIVE_FULL:
+    case TokenID.NT_ENUM_DECL:
+    case TokenID.NT_TUPLE_DECL:
+    case TokenID.NT_ARG_DECL:
+    case TokenID.NT_FUNC_CALL:
+    case TokenID.NT_ARGUMENTS:
+    case TokenID.NT_IMP_DECLARE:
+    case TokenID.NT_IMP_ASSIGN:
+    case TokenID.NT_IMP_LOGIC:
+    case TokenID.NT_RECURSIVE_SHORT:
+        return '';
+
+    case TokenID.PUNC_ASSIGN:
+    case TokenID.PUNC_ITERATE:
+      return colors.red;
+    }
+   // node
+    return colors.red;
 }

@@ -222,7 +222,7 @@ function EditorRSExpression({
         { !loading && parseData && 
         <ParsingResult
           data={parseData} 
-          onShowAST={ast => onShowAST(value, ast)}
+          onShowAST={ast => onShowAST(getCstExpressionPrefix(activeCst!) + value, ast)}
           onShowError={onShowError}
         />}
         { !loading && !parseData &&

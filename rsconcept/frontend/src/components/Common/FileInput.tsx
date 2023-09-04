@@ -15,7 +15,7 @@ interface FileInputProps {
 
 function FileInput({ id, required, label, acceptType, widthClass = 'w-full', onChange }: FileInputProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [labelText, setLabelText] = useState('Файл не выбран');
+  const [labelText, setLabelText] = useState('');
 
   const handleUploadClick = () => {
     inputRef.current?.click();
@@ -25,7 +25,7 @@ function FileInput({ id, required, label, acceptType, widthClass = 'w-full', onC
     if (event.target.files && event.target.files.length > 0) {
       setLabelText(event.target.files[0].name)
     } else {
-      setLabelText('Файл не выбран')
+      setLabelText('')
     }
     if (onChange) {
       onChange(event);
