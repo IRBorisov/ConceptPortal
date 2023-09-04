@@ -1,8 +1,9 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import { MagnifyingGlassIcon } from '../../components/Icons';
 import { useAuth } from '../../context/AuthContext';
+import { useConceptNavigation } from '../../context/NagivationContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { ILibraryFilter, LibraryFilterStrategy } from '../../utils/models';
 import PickerStrategy from './PickerStrategy';
@@ -26,7 +27,7 @@ interface SearchPanelProps {
 }
 
 function SearchPanel({ total, filtered, setFilter }: SearchPanelProps) {
-  const navigate = useNavigate();
+  const { navigateTo } = useConceptNavigation();
   const search = useLocation().search;
   const { user } = useAuth();
 
@@ -51,29 +52,29 @@ function SearchPanel({ total, filtered, setFilter }: SearchPanelProps) {
   useLayoutEffect(() => {
     const searchFilter = new URLSearchParams(search).get('filter')  as LibraryFilterStrategy | null;
     if (searchFilter === null) {
-      navigate(`/library?filter=${strategy}`, { replace: true });
+      navigateTo(`/library?filter=${strategy}`, { replace: true });
       return;
     }
     const inputStrategy = searchFilter && Object.values(LibraryFilterStrategy).includes(searchFilter) ? searchFilter : LibraryFilterStrategy.MANUAL;
     setQuery('')
     setStrategy(inputStrategy)
     setFilter(ApplyStrategy(inputStrategy));
-  }, [user, search, setQuery, setFilter, setStrategy, strategy, navigate]);
+  }, [user, search, setQuery, setFilter, setStrategy, strategy, navigateTo]);
 
   const handleChangeStrategy = useCallback(
   (value: LibraryFilterStrategy) => {
     if (value === strategy) {
       return;
     }
-    navigate(`/library?filter=${value}`)
-  }, [strategy, navigate]);
+    navigateTo(`/library?filter=${value}`)
+  }, [strategy, navigateTo]);
 
   return (
     <div className='sticky top-0 left-0 right-0 z-30 flex items-center justify-start w-full border-b clr-input'>
       <div className='px-2 py-1 select-none whitespace-nowrap min-w-[10rem]'>
         Фильтр
         <span className='ml-2'>
-          <b>{filtered}</b> из {total}
+          {filtered} из {total}
         </span>
       </div>
       <div className='flex items-center justify-center w-full pr-[10rem]'>

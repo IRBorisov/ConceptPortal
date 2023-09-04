@@ -264,7 +264,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
         <div className='mr-3 whitespace-nowrap'>
           Выбраны
           <span className='ml-2'>
-            <b>{selected.length}</b> из {schema?.stats?.count_all ?? 0}
+            {selected.length} из {schema?.stats?.count_all ?? 0}
           </span>
         </div>
         <div className='flex items-center justify-start w-full gap-1'>

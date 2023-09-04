@@ -25,6 +25,10 @@ export const resources = {
   graph_font: '/DejaVu.ttf'
 }
 
+export const globalIDs = {
+  main_scroll: 'main-scroll'
+}
+
 export const prefixes = {
   cst_list: 'cst-list-',
   cst_status_list: 'cst-status-list-',

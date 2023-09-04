@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import BackendError from '../components/BackendError';
@@ -8,11 +8,12 @@ import Form from '../components/Common/Form';
 import SubmitButton from '../components/Common/SubmitButton';
 import TextInput from '../components/Common/TextInput';
 import { useAuth } from '../context/AuthContext';
+import { useConceptNavigation } from '../context/NagivationContext';
 import { type IUserSignupData } from '../utils/models';
 
 function RegisterPage() {
   const location = useLocation();
-  const navigate = useNavigate();
+  const { navigateTo, navigateHistory } = useConceptNavigation();
   const { user, signup, loading, error, setError } = useAuth();
   
   const [username, setUsername] = useState('');
@@ -28,9 +29,9 @@ function RegisterPage() {
 
   function handleCancel() {
     if (location.key !== 'default') {
-      navigate(-1);
+      navigateHistory(-1);
     } else {
-      navigate('/library');
+      navigateTo('/library');
     }
   }
 
@@ -46,7 +47,7 @@ function RegisterPage() {
         last_name: lastName
       };
       signup(data, createdUser => {
-        navigate(`/login?username=${createdUser.username}`);
+        navigateTo(`/login?username=${createdUser.username}`);
         toast.success(`Пользователь успешно создан: ${createdUser.username}`);
       });
     }

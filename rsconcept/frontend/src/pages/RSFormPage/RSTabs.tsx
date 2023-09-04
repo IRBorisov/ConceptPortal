@@ -1,7 +1,7 @@
 import axios from 'axios';
 import fileDownload from 'js-file-download';
 import { useCallback, useLayoutEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 import { toast } from 'react-toastify';
 
@@ -10,6 +10,7 @@ import { ConceptLoader } from '../../components/Common/ConceptLoader';
 import ConceptTab from '../../components/Common/ConceptTab';
 import TextURL from '../../components/Common/TextURL';
 import { useLibrary } from '../../context/LibraryContext';
+import { useConceptNavigation } from '../../context/NagivationContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useModificationPrompt from '../../hooks/useModificationPrompt';
@@ -50,7 +51,7 @@ function ProcessError({error}: {error: ErrorInfo}): React.ReactElement {
 }
 
 function RSTabs() {
-  const navigate = useNavigate();
+  const { navigateTo } = useConceptNavigation();
   const search = useLocation().search;
   const { 
     error, schema, loading, claim, download, isTracking,
@@ -101,25 +102,25 @@ function RSTabs() {
   }, [search, setActiveTab, setActiveID, schema, setNoFooter]);
 
   function onSelectTab(index: number) {
-    navigateTo(index, activeID);
+    navigateTab(index, activeID);
   }
 
-  const navigateTo = useCallback(
+  const navigateTab = useCallback(
   (tab: RSTabID, activeID?: number) => {
     if (!schema) {
       return;
     }
     if (activeID) {
-      navigate(`/rsforms/${schema.id}?tab=${tab}&active=${activeID}`, {
+      navigateTo(`/rsforms/${schema.id}?tab=${tab}&active=${activeID}`, {
         replace: tab === activeTab && tab !== RSTabID.CST_EDIT
       });
     } else if (tab !== activeTab && tab === RSTabID.CST_EDIT && schema.items.length > 0) {
       activeID = schema.items[0].id;
-      navigate(`/rsforms/${schema.id}?tab=${tab}&active=${activeID}`, { replace: true });
+      navigateTo(`/rsforms/${schema.id}?tab=${tab}&active=${activeID}`, { replace: true });
     } else {
-      navigate(`/rsforms/${schema.id}?tab=${tab}`);
+      navigateTo(`/rsforms/${schema.id}?tab=${tab}`);
     }
-  }, [navigate, schema, activeTab]);
+  }, [navigateTo, schema, activeTab]);
 
   const handleCreateCst = useCallback(
   (data: ICstCreateData) => {
@@ -129,7 +130,7 @@ function RSTabs() {
     data.alias = createAliasFor(data.cst_type, schema);
     cstCreate(data, newCst => {
       toast.success(`Конституента добавлена: ${newCst.alias}`);
-      navigateTo(activeTab, newCst.id);    
+      navigateTab(activeTab, newCst.id);    
       if (activeTab === RSTabID.CST_EDIT || activeTab === RSTabID.CST_LIST) {
         setTimeout(() => {
           const element = document.getElementById(`${prefixes.cst_list}${newCst.alias}`);
@@ -143,7 +144,7 @@ function RSTabs() {
         }, TIMEOUT_UI_REFRESH);
       }
     });
-  }, [schema, cstCreate, navigateTo, activeTab]);
+  }, [schema, cstCreate, navigateTab, activeTab]);
 
   const promptCreateCst = useCallback(
   (initialData: ICstCreateData, skipDialog?: boolean) => {
@@ -181,7 +182,7 @@ function RSTabs() {
       const deletedNames = deleted.map(id => schema.items.find(cst => cst.id === id)?.alias).join(', ');
       toast.success(`Конституенты удалены: ${deletedNames}`);
       if (deleted.length === schema.items.length) {
-        navigateTo(RSTabID.CST_LIST);
+        navigateTab(RSTabID.CST_LIST);
       }
       if (activeIndex) {
         while (activeIndex < schema.items.length && deleted.find(id => id === schema.items[activeIndex].id)) {
@@ -193,11 +194,11 @@ function RSTabs() {
             --activeIndex;
           }
         }
-        navigateTo(activeTab, schema.items[activeIndex].id);
+        navigateTab(activeTab, schema.items[activeIndex].id);
       }
       if (afterDelete) afterDelete(deleted);
     });
-  }, [afterDelete, cstDelete, schema, activeID, activeTab, navigateTo]);
+  }, [afterDelete, cstDelete, schema, activeID, activeTab, navigateTab]);
 
   const promptDeleteCst = useCallback(
   (selected: number[], callback?: (items: number[]) => void) => {
@@ -218,8 +219,8 @@ function RSTabs() {
 
   const onOpenCst = useCallback(
   (cstID: number) => {
-    navigateTo(RSTabID.CST_EDIT, cstID)
-  }, [navigateTo]);
+    navigateTab(RSTabID.CST_EDIT, cstID)
+  }, [navigateTab]);
 
   const onDestroySchema = useCallback(
   () => {
@@ -228,9 +229,9 @@ function RSTabs() {
     }
     destroySchema(schema.id, () => {
       toast.success('Схема удалена');
-      navigate('/library');
+      navigateTo('/library');
     });
-  }, [schema, destroySchema, navigate]);
+  }, [schema, destroySchema, navigateTo]);
 
   const onClaimSchema = useCallback(
   () => {

@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import { useNavigate } from 'react-router-dom';
 
 import ConceptDataTable from '../../components/Common/ConceptDataTable';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
@@ -8,6 +7,7 @@ import TextURL from '../../components/Common/TextURL';
 import HelpLibrary from '../../components/Help/HelpLibrary';
 import { EducationIcon, EyeIcon, GroupIcon, HelpIcon } from '../../components/Icons';
 import { useAuth } from '../../context/AuthContext';
+import { useConceptNavigation } from '../../context/NagivationContext';
 import { useUsers } from '../../context/UsersContext';
 import { prefixes } from '../../utils/constants';
 import { ILibraryItem } from '../../utils/models';
@@ -18,12 +18,12 @@ interface ViewLibraryProps {
 }
 
 function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
-  const { user } = useAuth();
-  const navigate = useNavigate();
+  const { navigateTo } = useConceptNavigation();
   const intl = useIntl();
+  const { user } = useAuth();
   const { getUserLabel } = useUsers();
 
-  const openRSForm = (item: ILibraryItem) => navigate(`/rsforms/${item.id}`);
+  const openRSForm = (item: ILibraryItem) => navigateTo(`/rsforms/${item.id}`);
 
   const columns = useMemo(
   () => [

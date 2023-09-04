@@ -1,6 +1,5 @@
-import { useNavigate } from 'react-router-dom';
-
 import { useAuth } from '../../context/AuthContext';
+import { useConceptNavigation } from '../../context/NagivationContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import { LibraryFilterStrategy } from '../../utils/models';
 import Dropdown from '../Common/Dropdown';
@@ -12,23 +11,23 @@ interface UserDropdownProps {
 
 function UserDropdown({ hideDropdown }: UserDropdownProps) {
   const { darkMode, toggleDarkMode } = useConceptTheme();
-  const navigate = useNavigate();
+  const { navigateTo } = useConceptNavigation();
   const { user, logout } = useAuth();
 
   const navigateProfile = () => {
     hideDropdown();
-    navigate('/profile');
+    navigateTo('/profile');
   };
 
   const logoutAndRedirect =
   () => {
     hideDropdown();
-    logout(() => navigate('/login/'));
+    logout(() => navigateTo('/login/'));
   };
 
   const navigateMyWork = () => {
     hideDropdown();
-    navigate(`/library?filter=${LibraryFilterStrategy.PERSONAL}`);
+    navigateTo(`/library?filter=${LibraryFilterStrategy.PERSONAL}`);
   };
 
   return (

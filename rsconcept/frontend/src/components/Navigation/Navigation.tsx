@@ -1,5 +1,4 @@
-import { useNavigate } from 'react-router-dom';
-
+import { useConceptNavigation } from '../../context/NagivationContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import { EducationIcon, LibraryIcon, PlusIcon } from '../Icons';
 import Logo from './Logo'
@@ -7,12 +6,12 @@ import NavigationButton from './NavigationButton';
 import UserMenu from './UserMenu';
 
 function Navigation () {
-  const navigate = useNavigate();
+  const { navigateTo } = useConceptNavigation();
   const { noNavigation, toggleNoNavigation } = useConceptTheme();
 
-  const navigateLibrary = () => navigate('/library');
-  const navigateHelp = () => navigate('/manuals');
-  const navigateCreateNew = () => navigate('/rsform-create');
+  const navigateLibrary = () => navigateTo('/library');
+  const navigateHelp = () => navigateTo('/manuals');
+  const navigateCreateNew = () => navigateTo('/rsform-create');
 
   return (
     <nav className='sticky top-0 left-0 right-0 z-50 select-none h-fit'>

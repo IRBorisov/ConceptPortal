@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import Checkbox from '../../components/Common/Checkbox';
@@ -7,6 +6,7 @@ import Modal from '../../components/Common/Modal';
 import TextArea from '../../components/Common/TextArea';
 import TextInput from '../../components/Common/TextInput';
 import { useLibrary } from '../../context/LibraryContext';
+import { useConceptNavigation } from '../../context/NagivationContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { IRSFormCreateData } from '../../utils/models';
 import { getCloneTitle } from '../../utils/staticUI';
@@ -16,7 +16,7 @@ interface DlgCloneRSFormProps {
 }
 
 function DlgCloneRSForm({ hideWindow }: DlgCloneRSFormProps) {
-  const navigate = useNavigate();
+  const { navigateTo } = useConceptNavigation();
   const [title, setTitle] = useState('');
   const [alias, setAlias] = useState('');
   const [comment, setComment] = useState('');
@@ -50,7 +50,7 @@ function DlgCloneRSForm({ hideWindow }: DlgCloneRSFormProps) {
     };
     cloneSchema(schema.id, data, newSchema => {
       toast.success(`Схема создана: ${newSchema.alias}`);
-      navigate(`/rsforms/${newSchema.id}`);
+      navigateTo(`/rsforms/${newSchema.id}`);
     });
   };
 

@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import { useNavigate } from 'react-router-dom';
 
 import ConceptDataTable from '../../components/Common/ConceptDataTable';
+import { useConceptNavigation } from '../../context/NagivationContext';
 import { ILibraryItem } from '../../utils/models';
 
 interface ViewSubscriptionsProps {
@@ -10,10 +10,10 @@ interface ViewSubscriptionsProps {
 }
 
 function ViewSubscriptions({items}: ViewSubscriptionsProps) {
-  const navigate = useNavigate();
+  const { navigateTo } = useConceptNavigation();
   const intl = useIntl();
 
-  const openRSForm = (item: ILibraryItem) => navigate(`/rsforms/${item.id}`);
+  const openRSForm = (item: ILibraryItem) => navigateTo(`/rsforms/${item.id}`);
 
   const columns = useMemo(() =>
   [

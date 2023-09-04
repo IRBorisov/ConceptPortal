@@ -13,9 +13,13 @@ interface IThemeContext {
   toggleDarkMode: () => void
 
   noNavigation: boolean
+  toggleNoNavigation: () => void
+
   noFooter: boolean
   setNoFooter: (value: boolean) => void
-  toggleNoNavigation: () => void
+
+  showScroll: boolean
+  setShowScroll: (value: boolean) => void
 }
 
 const ThemeContext = createContext<IThemeContext | null>(null);
@@ -36,6 +40,7 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
   const [colors, setColors] = useState<IColorTheme>(lightT);
   const [noNavigation, setNoNavigation] = useState(false);
   const [noFooter, setNoFooter] = useState(false);
+  const [showScroll, setShowScroll] = useState(false);
 
   function setDarkClass(isDark: boolean) {
     const root = window.document.documentElement;
@@ -72,10 +77,10 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
   return (
     <ThemeContext.Provider value={{
       darkMode, colors,
-      noNavigation, noFooter,
+      noNavigation, noFooter, showScroll,
       toggleDarkMode: () => setDarkMode(prev => !prev),
       toggleNoNavigation: () => setNoNavigation(prev => !prev),
-      setNoFooter,
+      setNoFooter, setShowScroll,
       viewportHeight, mainHeight
     }}>
       {children}

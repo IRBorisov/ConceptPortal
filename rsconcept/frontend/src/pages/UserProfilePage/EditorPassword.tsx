@@ -1,21 +1,21 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import BackendError from '../../components/BackendError';
 import SubmitButton from '../../components/Common/SubmitButton';
 import TextInput from '../../components/Common/TextInput';
 import { useAuth } from '../../context/AuthContext';
+import { useConceptNavigation } from '../../context/NagivationContext';
 import { IUserUpdatePassword } from '../../utils/models';
 
 
 function EditorPassword() {
+  const { navigateTo } = useConceptNavigation();
   const { updatePassword, error, setError, loading } = useAuth();
     
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
-  const navigate = useNavigate();
 
   const passwordColor = useMemo(
   () => {
@@ -39,7 +39,7 @@ function EditorPassword() {
     };
     updatePassword(data, () => {
       toast.success('Изменения сохранены');
-      navigate('/login')
+      navigateTo('/login');
     });
   }
 

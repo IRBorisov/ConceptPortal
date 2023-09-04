@@ -1,24 +1,24 @@
 import { useLayoutEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../context/AuthContext';
+import { useConceptNavigation } from '../context/NagivationContext';
 import { TIMEOUT_UI_REFRESH } from '../utils/constants';
 
 function HomePage() {
-  const navigate = useNavigate();
+  const { navigateTo } = useConceptNavigation();
   const { user } = useAuth();
   
   useLayoutEffect(() => {
     if (!user) {
       setTimeout(() => {
-        navigate('/manuals');
+        navigateTo('/manuals');
       }, TIMEOUT_UI_REFRESH);
     } else {
       setTimeout(() => {
-        navigate('/library');
+        navigateTo('/library');
       }, TIMEOUT_UI_REFRESH);
     }
-  }, [navigate, user])
+  }, [navigateTo, user])
 
   return (
     <div className='flex flex-col items-center justify-center w-full px-4 py-2'>

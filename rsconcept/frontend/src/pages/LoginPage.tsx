@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import BackendError, { ErrorInfo } from '../components/BackendError';
 import Form from '../components/Common/Form';
@@ -8,6 +8,7 @@ import SubmitButton from '../components/Common/SubmitButton';
 import TextInput from '../components/Common/TextInput';
 import TextURL from '../components/Common/TextURL';
 import { useAuth } from '../context/AuthContext';
+import { useConceptNavigation } from '../context/NagivationContext';
 import { useConceptTheme } from '../context/ThemeContext';
 import { IUserLoginData } from '../utils/models';
 
@@ -26,7 +27,7 @@ function ProcessError({error}: {error: ErrorInfo}): React.ReactElement {
 function LoginPage() {
   const {mainHeight} = useConceptTheme();
   const location = useLocation();
-  const navigate = useNavigate();
+  const { navigateTo, navigateHistory } = useConceptNavigation();
   const search = useLocation().search;
   const { user, login, loading, error, setError } = useAuth();
   
@@ -52,9 +53,9 @@ function LoginPage() {
       };
       login(data, () => {
         if (location.key !== 'default') {
-          navigate(-1);
+          navigateHistory(-1);
         } else {
-          navigate('/library');
+          navigateTo('/library');
         }
       });
     }

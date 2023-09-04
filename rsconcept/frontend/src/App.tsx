@@ -3,6 +3,7 @@ import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 import ConceptToaster from './components/ConceptToaster';
 import Footer from './components/Footer';
 import Navigation from './components/Navigation/Navigation';
+import { NavigationState } from './context/NagivationContext';
 import { useConceptTheme } from './context/ThemeContext';
 import CreateRSFormPage from './pages/CreateRSFormPage';
 import HomePage from './pages/HomePage';
@@ -14,25 +15,36 @@ import RegisterPage from './pages/RegisterPage';
 import RestorePasswordPage from './pages/RestorePasswordPage';
 import RSFormPage from './pages/RSFormPage';
 import UserProfilePage from './pages/UserProfilePage';
+import { globalIDs } from './utils/constants';
 
 function Root() {
-  const { noNavigation, noFooter, viewportHeight, mainHeight } = useConceptTheme();
+  const { noNavigation, noFooter, viewportHeight, mainHeight, showScroll } = useConceptTheme();
   return (
+    <NavigationState>
     <div className='w-screen antialiased clr-app'>
-      <Navigation />
+      
       <ConceptToaster
         className='mt-[4rem] text-sm'
         autoClose={3000}
         draggable={false}
         pauseOnFocusLoss={false}
       />
-      <div className='w-full overflow-auto' style={{maxHeight: viewportHeight}}>
-      <main className='w-full h-full' style={{minHeight: mainHeight}}>
-        <Outlet />
-      </main>
-        {!noNavigation && !noFooter && <Footer />}
+      
+      <Navigation />
+      <div id={globalIDs.main_scroll}
+        className='w-full overflow-x-auto'
+        style={{
+          maxHeight: viewportHeight,
+          overflowY: showScroll ? 'scroll': 'auto'
+        }}
+      >
+        <main className='w-full h-full' style={{minHeight: mainHeight}}>
+          <Outlet />
+        </main>
+      {!noNavigation && !noFooter && <Footer />}
       </div>
     </div>
+    </NavigationState>
   );
 }
 

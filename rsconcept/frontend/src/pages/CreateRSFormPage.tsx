@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import BackendError from '../components/BackendError';
@@ -12,11 +12,12 @@ import TextArea from '../components/Common/TextArea';
 import TextInput from '../components/Common/TextInput';
 import RequireAuth from '../components/RequireAuth';
 import { useLibrary } from '../context/LibraryContext';
+import { useConceptNavigation } from '../context/NagivationContext';
 import { IRSFormCreateData, LibraryItemType } from '../utils/models';
 
 function CreateRSFormPage() {
   const location = useLocation();
-  const navigate = useNavigate();
+  const { navigateTo, navigateHistory } = useConceptNavigation();
   const { createSchema, error, setError, processing } = useLibrary();
 
   const [title, setTitle] = useState('');
@@ -39,9 +40,9 @@ function CreateRSFormPage() {
 
   function handleCancel() {
     if (location.key !== 'default') {
-      navigate(-1);
+      navigateHistory(-1);
     } else {
-      navigate('/library');
+      navigateTo('/library');
     }
   }
   
@@ -62,7 +63,7 @@ function CreateRSFormPage() {
     };
     createSchema(data, (newSchema) => {
       toast.success('Схема успешно создана');
-      navigate(`/rsforms/${newSchema.id}`);
+      navigateTo(`/rsforms/${newSchema.id}`);
     });
   }
 
