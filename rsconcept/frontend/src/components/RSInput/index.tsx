@@ -69,7 +69,7 @@ function RSInput({
     theme: 'light',
     settings: {
       fontFamily: 'inherit',
-      background: editable ? colors.bgInput : colors.bgDisabled,
+      background: editable ? colors.bgInput : colors.bgDefault,
       foreground: colors.fgDefault,
       selection: colors.bgHover
     },
@@ -89,7 +89,7 @@ function RSInput({
     theme: 'dark',
     settings: {
       fontFamily: 'inherit',
-      background: editable ? colors.bgInput : colors.bgDisabled,
+      background: editable ? colors.bgInput : colors.bgDefault,
       foreground: colors.fgDefault,
       selection: colors.bgHover
     },

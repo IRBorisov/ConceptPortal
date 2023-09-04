@@ -17,7 +17,7 @@ function InfoCstStatus({ title }: InfoCstStatusProps) {
         return (
         <p key={`${prefixes.cst_status_list}${index}`}>
           <span
-            className='px-1 inline-block font-semibold min-w-[5rem] text-center border'
+            className='px-1 inline-block font-semibold min-w-[5rem] text-center border text-sm'
             style={{backgroundColor: getCstStatusColor(status, colors)}}
           >
             {info.text}

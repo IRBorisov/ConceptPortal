@@ -114,7 +114,8 @@
     .clr-footer,
     .clr-modal-backdrop,
     .clr-btn-nav,
-    .clr-checkbox
+    .clr-checkbox,
+    .clr-input:disabled
   ) {
     background-color: var(--cl-bg-100);
     .dark & {
@@ -162,7 +163,6 @@
   }
 
   :is(.clr-disabled,
-    .clr-input,
     .clr-btn-default,
     .clr-btn-primary
   ):disabled {

@@ -17,9 +17,8 @@ function InfoCstClass({ title }: InfoCstClassProps) {
         return (
         <p key={`${prefixes.cst_status_list}${index}`}>
           <span
-            className='px-1 inline-block font-semibold min-w-[7rem] text-center border'
+            className='px-1 inline-block font-semibold min-w-[7rem] text-center border text-sm'
             style={{backgroundColor: getCstClassColor(cstClass, colors)}}
-          
           >
             {info.text}
           </span>
