@@ -61,10 +61,19 @@ function LoginPage() {
   }
 
   return (
-    <div className='flex items-center justify-center w-full select-none' style={{minHeight: mainHeight}}>
+    <div className='flex items-start justify-center w-full pt-4 select-none' style={{minHeight: mainHeight}}>
     { user &&
-    <div className='py-2 font-semibold'>
-      {`Вы вошли в систему как ${user.username}`}
+    <div className='flex flex-col items-center gap-2'>
+      <p className='font-semibold'>{`Вы вошли в систему как ${user.username}`}</p>
+      <p>
+        <TextURL text='Создать схему' href='/rsform-create'/>
+        <span> | </span>
+        <TextURL text='Библиотека' href='/library'/>
+        <span> | </span>
+        <TextURL text='Справка' href='/manuals'/>
+        <span> | </span>
+        <TextURL text='Выйти' href='/logout'/>
+      </p>
     </div>}
     { !user &&
     <Form

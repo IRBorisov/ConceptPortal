@@ -51,7 +51,7 @@ function SearchPanel({ total, filtered, setFilter }: SearchPanelProps) {
   useLayoutEffect(() => {
     const searchFilter = new URLSearchParams(search).get('filter')  as LibraryFilterStrategy | null;
     if (searchFilter === null) {
-      navigate(`/library?filter=${strategy}`);
+      navigate(`/library?filter=${strategy}`, { replace: true });
       return;
     }
     const inputStrategy = searchFilter && Object.values(LibraryFilterStrategy).includes(searchFilter) ? searchFilter : LibraryFilterStrategy.MANUAL;

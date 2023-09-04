@@ -5,8 +5,8 @@ import { TabList, TabPanel, Tabs } from 'react-tabs';
 import { toast } from 'react-toastify';
 
 import BackendError from '../../components/BackendError';
-import ConceptTab from '../../components/Common/ConceptTab';
 import { ConceptLoader } from '../../components/Common/ConceptLoader';
+import ConceptTab from '../../components/Common/ConceptTab';
 import { useLibrary } from '../../context/LibraryContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
