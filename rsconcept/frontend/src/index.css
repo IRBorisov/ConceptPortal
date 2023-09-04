@@ -141,7 +141,7 @@
   }
 
   :is(.clr-primary,
-    .clr-btn-primary,
+    .clr-btn-primary:hover,
     .clr-checkbox:checked
   ) {
     color: var(--cl-prim-fg-100);
@@ -152,7 +152,8 @@
     }
   }
 
-  :is(.clr-selected
+  :is(.clr-selected,
+    .clr-btn-primary,
   ) {
     color: var(--cl-fg-100);
     background-color: var(--cl-prim-bg-80);
@@ -178,7 +179,6 @@
     .clr-tab,
     .clr-btn-nav,
     .clr-btn-default,
-    .clr-btn-primary,
     .clr-btn-clear
   ):hover:not(:disabled) {
     color: var(--cl-fg-100);

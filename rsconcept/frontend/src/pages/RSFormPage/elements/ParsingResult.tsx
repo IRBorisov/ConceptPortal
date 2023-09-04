@@ -32,6 +32,7 @@ function ParsingResult({ data, onShowAST, onShowError }: ParsingResultProps) {
           className='font-semibold underline text-primary'
           title='отобразить дерево разбора'
           onClick={handleShowAST}
+          tabIndex={-1}
         >
           Дерево разбора
         </button>

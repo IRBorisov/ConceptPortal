@@ -1,12 +1,14 @@
+import axios from 'axios';
 import fileDownload from 'js-file-download';
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 import { toast } from 'react-toastify';
 
-import BackendError from '../../components/BackendError';
+import BackendError, { ErrorInfo } from '../../components/BackendError';
 import { ConceptLoader } from '../../components/Common/ConceptLoader';
 import ConceptTab from '../../components/Common/ConceptTab';
+import TextURL from '../../components/Common/TextURL';
 import { useLibrary } from '../../context/LibraryContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
@@ -32,6 +34,19 @@ export enum RSTabID {
   CST_LIST = 1,
   CST_EDIT = 2,
   TERM_GRAPH = 3
+}
+
+function ProcessError({error}: {error: ErrorInfo}): React.ReactElement {
+  if (axios.isAxiosError(error) && error.response && error.response.status === 404) {
+    return (
+      <div className='flex flex-col items-center justify-center w-full p-2'>
+        <p>Схема с указанным идентификатором отсутствует на портале.</p>
+        <TextURL text='Перейти в Библиотеку' href='/library'/>
+      </div>
+    );
+  } else {
+    return ( <BackendError error={error} />);
+  }
 }
 
 function RSTabs() {
@@ -279,7 +294,7 @@ function RSTabs() {
   return (
   <div className='w-full'>
     { loading && <ConceptLoader /> }
-    { error && <BackendError error={error} />}
+    { error && <ProcessError error={error} />}
     { schema && !loading && <>
     {showUpload && 
     <DlgUploadRSForm
