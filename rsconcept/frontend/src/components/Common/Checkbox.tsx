@@ -38,6 +38,7 @@ function Checkbox({ id, required, disabled, tooltip, label, widthClass = 'w-full
         disabled={disabled}
         checked={value}
         onChange={onChange}
+        tabIndex={-1}
       />
       { label && 
       <Label

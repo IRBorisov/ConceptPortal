@@ -12,6 +12,7 @@ function NavigationButton({ id, icon, description, onClick, text }: NavigationBu
       title={description}
       type='button'
       onClick={onClick}
+      tabIndex={-1}
       className={`flex items-center h-full gap-1 ${text ? 'px-2' : 'px-4'} mr-1 min-w-fit whitespace-nowrap clr-btn-nav`}
     >
       {icon && <span>{icon}</span>}

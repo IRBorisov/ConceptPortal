@@ -76,6 +76,7 @@ function RSTabsMenu({
           widthClass='h-full w-fit'
           dense
           onClick={schemaMenu.toggle}
+          tabIndex={-1}
         />
         { schemaMenu.isActive &&
         <Dropdown>
@@ -125,6 +126,7 @@ function RSTabsMenu({
           icon={<PenIcon size={5} color={isEditable ? 'text-success' : 'text-warning'}/>}
           dense
           onClick={editMenu.toggle}
+          tabIndex={-1}
         />
         { editMenu.isActive &&
         <Dropdown>
@@ -168,6 +170,7 @@ function RSTabsMenu({
           borderClass=''
           dense
           onClick={onToggleSubscribe}
+          tabIndex={-1}
           />
       </div>
     </div>

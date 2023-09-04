@@ -327,7 +327,7 @@ function RSTabs() {
           onShare={onShareSchema}
           onToggleSubscribe={handleToggleSubscribe}
           showCloneDialog={handleShowClone} 
-          showUploadDialog={() => setShowUpload(true)} 
+          showUploadDialog={() => setShowUpload(true)}
         />
         <ConceptTab className='border-r-2 min-w-[7.8rem]'>Паспорт схемы</ConceptTab>
         <ConceptTab className='border-r-2 min-w-[10rem] flex justify-between gap-2'>

@@ -21,6 +21,7 @@ function Navigation () {
         title='Скрыть навигацию'
         className='absolute top-0 right-0 z-[60] w-[1.2rem] h-[3rem] border-b-2 border-l-2 clr-btn-nav rounded-none'
         onClick={toggleNoNavigation}
+        tabIndex={-1}
       >
         <p>{'>'}</p><p>{'>'}</p>
       </button>}
@@ -29,6 +30,7 @@ function Navigation () {
         title='Показать навигацию'
         className='absolute top-0 right-0 z-[60] px-1 h-[1.6rem] border-b-2 border-l-2 clr-btn-nav rounded-none'
         onClick={toggleNoNavigation}
+        tabIndex={-1}
       >
         {'∨∨∨'}
       </button>}

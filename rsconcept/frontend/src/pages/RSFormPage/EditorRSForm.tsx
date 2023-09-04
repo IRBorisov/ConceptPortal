@@ -132,9 +132,9 @@ function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, 
         onChange={event => setComment(event.target.value)}
       />
       <div className='flex justify-between whitespace-nowrap'>
-        <div></div>
         <Checkbox id='common' label='Общедоступная схема'
           value={common}
+          widthClass='w-fit mt-3'
           disabled={!isEditable}
           onChange={event => setCommon(event.target.checked)}
         />

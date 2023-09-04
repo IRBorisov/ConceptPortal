@@ -309,11 +309,12 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
               const type = typeStr as CstType;
               return (
               <Button key={type}
-                text={`${getCstTypePrefix(type)}`}
+                text={getCstTypePrefix(type)}
                 tooltip={getCstTypeShortcut(type)}
                 dense
                 widthClass='w-[1.4rem]'
                 disabled={!isEditable}
+                tabIndex={-1}
                 onClick={() => handleCreateCst(type)}
               />);
           })}
@@ -343,6 +344,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
         
         selectableRows
         selectableRowsHighlight
+        selectableRowsComponentProps={{tabIndex: -1}}
         onSelectedRowsChange={handleSelectionChange}
         onRowDoubleClicked={cst => onOpenEdit(cst.id)}
         onRowClicked={handleRowClicked}
