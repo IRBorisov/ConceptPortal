@@ -1,3 +1,5 @@
+@import 'react-toastify/dist/ReactToastify.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -40,8 +42,8 @@
   --cd-fg-100: #e4e4e7;
 
   --cd-prim-bg-100: #e66000;
-  --cd-prim-bg-80: #b36800;
-  --cd-prim-bg-60: #663c00;
+  --cd-prim-bg-80: #cc7700;
+  --cd-prim-bg-60: #995900;
 
   --cd-prim-fg-60: #ffa666;
   --cd-prim-fg-80: #ff6a00;
@@ -50,6 +52,9 @@
   --cd-red-bg-100: #4d0000;
   --cd-red-fg-100: #ff334b;
   --cd-green-fg-100: #22c55e;
+
+  /* Import overrides */
+  --toastify-color-dark: var(--cd-bg-60);
 }
 
 :root {

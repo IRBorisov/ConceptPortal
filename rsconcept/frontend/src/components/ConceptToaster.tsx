@@ -1,5 +1,3 @@
-import 'react-toastify/dist/ReactToastify.css';
-
 import { ToastContainer, type ToastContainerProps } from 'react-toastify';
 
 import { useConceptTheme } from '../context/ThemeContext';
