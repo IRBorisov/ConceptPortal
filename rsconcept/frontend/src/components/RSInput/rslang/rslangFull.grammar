@@ -8,6 +8,7 @@
   log_and @left,
   set_decart @left set_union @left set_intersect @left set_minus @left set_symminus @left,
   set_bool @right,
+  quant @right,
   p1, p2
 }
 
@@ -33,8 +34,6 @@
   debool { "debool" }
   red { "red" }
 
-  quantifier { $[∀∃] }
-
   Global { $[XCSDAT]$[0-9]+ }
   Function { "F"$[0-9]+ }
   Predicate { "P"$[0-9]+ }
@@ -45,10 +44,10 @@
   PrefixD { "D" }
 
   "¬"
-  "⇔" "⇒" "∨" "&"
+  "∀" "∃" "⇔" "⇒" "∨" "&"
   "ℬ"
   "+" "-" "*" "∪" "\\" "∆" "∩" "×"
-  "∈" "∉" "⊆" "⊄" "⊂" ">" "≥" "≤" "≠" "="
+  "∈" "∉" "⊆" "⊄" "⊂" ">" "≥" "≤" "<" "≠" "="
   ":∈" ":="
 
   "[" "]"
@@ -87,19 +86,18 @@ declaration { Local "∈" term }
 logic {
   LogicPredicate |
   logicUnary |
-  LogicBinary
-}
-logic_all { logic | logic_par }
-logic_par { "(" logic ")" }
-logic_no_binary {
-  LogicPredicate
-  logicUnary
+  LogicBinary |
   logic_par
 }
+logic_par { "(" logic ")" }
 logicUnary {
   PredicateCall { Predicate "[" term_enum "]" } |
-  LogicNegation { !not "¬" logic_no_binary } |
-  LogicQuantor { quantifier QuantorVariable "∈" term logic_no_binary }
+  LogicNegation { !not "¬" logic } |
+  LogicQuantor
+}
+LogicQuantor {
+  "∀" QuantorVariable "∈" term !quant logic |
+  "∃" QuantorVariable "∈" term !quant logic
 }
 
 LogicPredicate {
@@ -110,16 +108,17 @@ LogicPredicate {
   term "⊂" term |
   term ">" term |
   term "≥" term |
+  term "<" term |
   term "≤" term |
   term "≠" term |
   term "=" term
 }
 
 LogicBinary {
-  logic_all !log_equiv "⇔" logic_all |
-  logic_all !log_impl "⇒" logic_all |
-  logic_all !log_or "∨" logic_all |
-  logic_all !log_and "&" logic_all
+  logic !log_equiv "⇔" logic |
+  logic !log_impl "⇒" logic |
+  logic !log_or "∨" logic |
+  logic !log_and "&" logic
 }
 
 QuantorVariable { Variable | quant_var_enum }

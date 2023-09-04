@@ -29,7 +29,8 @@ export const
   TextFunction = 45,
   ComplexIndex = 46,
   Filter = 47,
-  Predicate = 58,
-  QuantorVariable = 62,
-  LogicBinary = 63,
-  FunctionDeclaration = 68
+  Predicate = 59,
+  LogicQuantor = 62,
+  QuantorVariable = 64,
+  LogicBinary = 66,
+  FunctionDeclaration = 71
