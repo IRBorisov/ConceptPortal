@@ -86,7 +86,7 @@ function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
   return (
     <div>
       <div className='relative w-full'>
-      <div className='absolute top-0 left-0 z-20 flex gap-1 mt-1 ml-5'>
+      <div className='absolute top-0 left-0 flex gap-1 mt-1 ml-5 z-pop'>
         <div id='library-help' className='py-2'>
           <HelpIcon color='text-primary' size={6} />
         </div>

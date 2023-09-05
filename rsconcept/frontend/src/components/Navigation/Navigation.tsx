@@ -14,11 +14,11 @@ function Navigation () {
   const navigateCreateNew = () => navigateTo('/rsform-create');
 
   return (
-    <nav className='sticky top-0 left-0 right-0 z-50 select-none h-fit'>
+    <nav className='sticky top-0 left-0 right-0 select-none z-navigation h-fit'>
       {!noNavigation &&
       <button
         title='Скрыть навигацию'
-        className='absolute top-0 right-0 z-[60] w-[1.2rem] h-[3rem] border-b-2 border-l-2 clr-btn-nav rounded-none'
+        className='absolute top-0 right-0 z-navigation w-[1.2rem] h-[3rem] border-b-2 border-l-2 clr-btn-nav rounded-none'
         onClick={toggleNoNavigation}
         tabIndex={-1}
       >
@@ -27,7 +27,7 @@ function Navigation () {
       {noNavigation &&
       <button
         title='Показать навигацию'
-        className='absolute top-0 right-0 z-[60] px-1 h-[1.6rem] border-b-2 border-l-2 clr-btn-nav rounded-none'
+        className='absolute top-0 right-0 z-navigation px-1 h-[1.6rem] border-b-2 border-l-2 clr-btn-nav rounded-none'
         onClick={toggleNoNavigation}
         tabIndex={-1}
       >

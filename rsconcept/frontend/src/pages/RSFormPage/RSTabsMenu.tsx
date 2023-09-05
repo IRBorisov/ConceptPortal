@@ -154,7 +154,8 @@ function RSTabsMenu({
           <DropdownCheckbox
             value={isForceAdmin}
             onChange={toggleForceAdmin}
-            label='режим администратора'
+            label='Я — администратор!'
+            tooltip='Режим редактирования для администраторов'
           />}
         </Dropdown>}
       </div>

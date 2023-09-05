@@ -361,7 +361,7 @@ export const mapTopicInfo: Map<HelpTopic, IDescriptor> = new Map([
     tooltip: 'Справка по языку родов структур и экспликации'
   }],
   [ HelpTopic.LIBRARY, {
-    text: 'Библиотека:',
+    text: 'Библиотека',
     tooltip: 'Интерфейс работы с библиотекой схем'
   }],
   [ HelpTopic.RSFORM, {

@@ -6,7 +6,7 @@ import { getCstTypificationLabel } from '../../utils/staticUI';
 
 function createTooltipFor(cst: IConstituenta) {
   const dom = document.createElement('div');
-  dom.className = 'overflow-y-auto border shadow-md max-h-[25rem] max-w-[25rem] min-w-[10rem] w-fit z-20 text-sm px-2 py-2';
+  dom.className = 'overflow-y-auto border shadow-md max-h-[25rem] max-w-[25rem] min-w-[10rem] w-fit z-tooltip text-sm px-2 py-2';
   const alias = document.createElement('p');
   alias.innerHTML = `<b>${cst.alias}:</b> ${getCstTypificationLabel(cst)}`;
   dom.appendChild(alias);

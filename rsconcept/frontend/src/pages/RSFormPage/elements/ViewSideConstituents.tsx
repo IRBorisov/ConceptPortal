@@ -165,7 +165,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
   }, [noNavigation, baseHeight]);
 
   return (<>
-    <div className='sticky top-0 left-0 right-0 z-10 flex items-start justify-between w-full gap-1 px-2 py-1 border-b rounded clr-input'>
+    <div className='sticky top-0 left-0 right-0 flex items-start justify-between w-full gap-1 px-2 py-1 border-b rounded clr-input'>
       <MatchModePicker
         value={filterMatch}
         onChange={setFilterMatch}

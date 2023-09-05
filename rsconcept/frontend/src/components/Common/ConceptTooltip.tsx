@@ -4,16 +4,16 @@ import { useConceptTheme } from '../../context/ThemeContext';
 
 interface ConceptTooltipProps
 extends Omit<ITooltip, 'variant'> {
-  
+  layer?: string
 }
 
-function ConceptTooltip({ className, place='bottom', ...props }: ConceptTooltipProps) {
+function ConceptTooltip({ className, layer, place='bottom', ...props }: ConceptTooltipProps) {
   const { darkMode } = useConceptTheme();
 
   return (
   <Tooltip
     opacity={0.95}
-    className={`overflow-auto border shadow-md z-20 ${className}`}
+    className={`overflow-auto border shadow-md ${layer ?? 'z-tooltip'} ${className}`}
     variant={(darkMode ? 'dark' : 'light')}
     place={place}
     {...props}

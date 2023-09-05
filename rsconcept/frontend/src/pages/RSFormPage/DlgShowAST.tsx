@@ -73,7 +73,7 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
           }
         </div>
         <div className='flex-wrap w-full h-full overflow-auto'>
-        <div className='relative w-[1040px] h-[600px] 2xl:w-[1680px] 2xl:h-[600px] max-h-full max-w-full'>
+        <div className='relative' style={{width: 'calc(100vw - 6rem - 2px)', height: 'calc(100vh - 14rem - 2px)'}}>
           <GraphCanvas
             nodes={nodes}
             edges={edges}

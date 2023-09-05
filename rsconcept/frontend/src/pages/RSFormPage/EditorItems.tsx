@@ -259,7 +259,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
   return (
     <div className='w-full'>
       <div
-        className='sticky top-0 z-10 flex justify-start w-full gap-1 px-2 py-1 border-y items-center h-[2.2rem] select-none clr-app'
+        className='sticky top-0 flex justify-start w-full gap-1 px-2 py-1 border-y items-center h-[2.2rem] select-none clr-app'
       >
         <div className='mr-3 whitespace-nowrap'>
           Выбраны

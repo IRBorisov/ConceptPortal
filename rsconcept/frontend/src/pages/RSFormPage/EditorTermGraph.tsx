@@ -360,7 +360,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       <div className='relative'>
         <InfoConstituenta
           data={hoverCst}
-          className='absolute top-[2.2rem] left-[2.6rem] z-50 w-[25rem] min-h-[11rem] overflow-y-auto border h-fit clr-app px-3' 
+          className='absolute top-[2.2rem] left-[2.6rem] z-tooltip w-[25rem] min-h-[11rem] overflow-y-auto border h-fit clr-app px-3' 
         />
       </div>}
       
@@ -465,7 +465,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       className='relative'
       style={{width: canvasWidth, height: canvasHeight, borderBottomWidth: noNavigation ? '1px': ''}}
     >
-      <div className='relative top-0 right-0 z-10 flex mt-1 ml-2 flex-start'>
+      <div className='relative top-0 right-0 flex mt-1 ml-2 z-pop flex-start'>
         <div className='px-1 py-1' id='items-graph-help' >
           <HelpIcon color='text-primary' size={5} />
         </div>
