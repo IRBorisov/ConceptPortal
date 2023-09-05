@@ -523,6 +523,8 @@ export function getRSErrorMessage(error: IRSErrorDescription): string {
     return `Предупреждение! Повторное объявление локальной переменной ${error.params[0]}`;
   case RSErrorType.localNotUsed: 
     return `Предупреждение! Переменная объявлена, но не использована: ${error.params[0]}`;
+  case RSErrorType.localUndeclared: 
+    return `Использование необъявленной переменной: ${error.params[0]}`;
   case RSErrorType.localShadowing: 
     return `Повторное объявление переменной: ${error.params[0]}`;
 

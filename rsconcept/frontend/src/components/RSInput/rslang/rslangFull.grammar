@@ -21,7 +21,7 @@
 
 @tokens {
   space { @whitespace+ }
-  ComplexIndex { $[1-9](","$[1-9])* }
+  ComplexIndex { $[1-9]$[0-9]*(","$[1-9]$[0-9]*)* }
   integer { $[0-9]+ }
   emptySet { "∅" }
   integerSet { "Z" }

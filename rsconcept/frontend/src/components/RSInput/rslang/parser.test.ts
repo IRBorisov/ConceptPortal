@@ -16,6 +16,8 @@ const testData = [
   ['1+2*5', '[Expression[BinaryOperation[BinaryOperation[Literal][+][Literal]][*][Literal]]]'],
   ['a1∪Z', '[Expression[BinaryOperation[Local[Index]][∪][Literal]]]'],
   ['Pr1(X1)', '[Expression[TextFunctionExpression[TextFunction[ComplexIndex]][(][Global][)]]]'],
+  ['Pr11(X1)', '[Expression[TextFunctionExpression[TextFunction[ComplexIndex]][(][Global][)]]]'],
+  ['Pr11,21(X1)', '[Expression[TextFunctionExpression[TextFunction[ComplexIndex]][(][Global][)]]]'],
   ['pr1(S1)', '[Expression[TextFunctionExpression[TextFunction[ComplexIndex]][(][Global][)]]]'],
   ['Pr1,2(X1)', '[Expression[TextFunctionExpression[TextFunction[ComplexIndex]][(][Global][)]]]'],
   ['card(X1)', '[Expression[TextFunctionExpression[TextFunction][(][Global][)]]]'],
@@ -36,6 +38,7 @@ const testData = [
 describe('Testing RSParser', () => {
   it.each(testData)('Parse %p', 
   (input: string, expectedTree: string) => {
+    // NOTE: use strict parser to determine exact error position
     // const tree = parser.configure({strict: true}).parse(input);
     const tree = parser.parse(input);
     expect(printTree(tree)).toBe(expectedTree);
