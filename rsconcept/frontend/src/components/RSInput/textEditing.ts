@@ -4,34 +4,39 @@ import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
 import { TokenID } from '../../utils/enums';
 
-export function getSymbolSubstitute(input: string): string | undefined {
-  switch (input) {
-  case '`': return '∀';
-  case '~': return '∃';
+export function getSymbolSubstitute(keyCode: string, shiftPressed: boolean): string | undefined {
+  if (shiftPressed) {
+    switch (keyCode) {
+    case 'Backquote': return '∃';
+    }
+  } else {
+    switch (keyCode) {
+    case 'Backquote': return '∀';
 
-  // qwerty = μωερτπ
-  //  asdfgh = ασδφγλ
-  //   zxcvbn = ζξψθβη
-  case 'q': return 'μ';
-  case 'w': return 'ω';
-  case 'e': return 'ε';
-  case 'r': return 'ρ';
-  case 't': return 'τ';
-  case 'y': return 'π';
+    // qwerty = μωερτπ
+    //  asdfgh = ασδφγλ
+    //   zxcvbn = ζξψθβη
+    case 'KeyQ': return 'μ';
+    case 'KeyW': return 'ω';
+    case 'KeyE': return 'ε';
+    case 'KeyR': return 'ρ';
+    case 'KeyT': return 'τ';
+    case 'KeyY': return 'π';
 
-  case 'a': return 'α';
-  case 's': return 'σ';
-  case 'd': return 'δ';
-  case 'f': return 'φ';
-  case 'g': return 'γ';
-  case 'h': return 'λ';
+    case 'KeyA': return 'α';
+    case 'KeyS': return 'σ';
+    case 'KeyD': return 'δ';
+    case 'KeyF': return 'φ';
+    case 'KeyG': return 'γ';
+    case 'KeyH': return 'λ';
 
-  case 'z': return 'ζ';
-  case 'x': return 'ξ';
-  case 'c': return 'ψ';
-  case 'v': return 'θ';
-  case 'b': return 'β';
-  case 'n': return 'η';
+    case 'KeyZ': return 'ζ';
+    case 'KeyX': return 'ξ';
+    case 'KeyC': return 'ψ';
+    case 'KeyV': return 'θ';
+    case 'KeyB': return 'β';
+    case 'KeyN': return 'η';
+    }
   }
   return undefined;
 }
@@ -171,50 +176,61 @@ export class TextWrapper {
     return false;
   }
 
-  processAltKey(key: string): boolean {
-    switch (key) {
-    // qwert
-    //  asdfg
-    //   zxcvb
-    case 'q': return this.insertToken(TokenID.BIGPR);
-    case 'w': return this.insertToken(TokenID.SMALLPR);
-    case 'e': return this.insertToken(TokenID.BOOLEAN);
-    case 'E': return this.insertToken(TokenID.DECART);
-    case 'r': return this.insertToken(TokenID.REDUCE);
-    case 't': return this.insertToken(TokenID.NT_RECURSIVE_FULL);
-    case 'a': return this.insertToken(TokenID.INTERSECTION);
-    case 's': return this.insertToken(TokenID.UNION);
-    case 'd': return this.insertToken(TokenID.NT_DECLARATIVE_EXPR);
-    case 'f': return this.insertToken(TokenID.FILTER);
-    case 'g': return this.insertToken(TokenID.NT_IMPERATIVE_EXPR);
-    case 'z': return this.insertToken(TokenID.LIT_INTSET);
-    case 'x': return this.insertToken(TokenID.LIT_EMPTYSET);
-    case 'c': return this.insertToken(TokenID.CARD);
-    case 'v': return this.insertToken(TokenID.DEBOOL);
-    case 'b': return this.insertToken(TokenID.BOOL);
+  processAltKey(keyCode: string, shiftPressed: boolean): boolean {
+    if (shiftPressed) {
+      switch (keyCode) {
+      // qwert
+      //  asdfg
+      //   zxcvb
+      case 'KeyE': return this.insertToken(TokenID.DECART);
 
-    // `123456
-    // ~!@#$%^
-    case '`': return this.insertToken(TokenID.NOT);
-    case '~': return this.insertToken(TokenID.NOTEQUAL);
-    case '1': return this.insertToken(TokenID.IN);
-    case '!': return this.insertToken(TokenID.NOTIN); // Alt + 1
-    case '2': return this.insertToken(TokenID.SUBSET_OR_EQ);
-    case '@': return this.insertToken(TokenID.NOTSUBSET); // Alt + 2
-    case '3': return this.insertToken(TokenID.AND);
-    case '#': return this.insertToken(TokenID.OR); // Alt + 3
-    case '4': return this.insertToken(TokenID.IMPLICATION);
-    case '$': return this.insertToken(TokenID.EQUIVALENT); // Alt + 4
-    case '5': return this.insertToken(TokenID.SET_MINUS);
-    case '%': return this.insertToken(TokenID.SYMMINUS); // Alt + 5
-    case '6': return this.insertToken(TokenID.PUNC_ITERATE);
-    case '^': return this.insertToken(TokenID.PUNC_ASSIGN); // Alt + 6
-    case '7': return this.insertToken(TokenID.SUBSET);
-    case '&': return this.insertToken(TokenID.GREATER_OR_EQ); // Alt + 7
-    case '8': return this.insertToken(TokenID.MULTIPLY);
-    case '*': return this.insertToken(TokenID.LESSER_OR_EQ); // Alt + 8
-    case '(': return this.insertToken(TokenID.PUNC_PL); // Alt + 9
-    case '[': return this.insertToken(TokenID.PUNC_SL);
+      // `123456
+      // ~!@#$%^
+      case 'Backquote': return this.insertToken(TokenID.NOTEQUAL);
+      case 'Digit1': return this.insertToken(TokenID.NOTIN); // !
+      case 'Digit2': return this.insertToken(TokenID.NOTSUBSET); // @
+      case 'Digit3': return this.insertToken(TokenID.OR); // #
+      case 'Digit4': return this.insertToken(TokenID.EQUIVALENT); // $
+      case 'Digit5': return this.insertToken(TokenID.SYMMINUS); // %
+      case 'Digit6': return this.insertToken(TokenID.PUNC_ASSIGN); // ^
+      case 'Digit7': return this.insertToken(TokenID.GREATER_OR_EQ); // &
+      case 'Digit8': return this.insertToken(TokenID.LESSER_OR_EQ); // *
+      case 'Digit9': return this.insertToken(TokenID.PUNC_PL); // (
+      }
+    } else {
+      switch (keyCode) {
+      // qwert
+      //  asdfg
+      //   zxcvb
+      case 'KeyQ': return this.insertToken(TokenID.BIGPR);
+      case 'KeyW': return this.insertToken(TokenID.SMALLPR);
+      case 'KeyE': return this.insertToken(TokenID.BOOLEAN);
+      case 'KeyR': return this.insertToken(TokenID.REDUCE);
+      case 'KeyT': return this.insertToken(TokenID.NT_RECURSIVE_FULL);
+      case 'KeyA': return this.insertToken(TokenID.INTERSECTION);
+      case 'KeyS': return this.insertToken(TokenID.UNION);
+      case 'KeyD': return this.insertToken(TokenID.NT_DECLARATIVE_EXPR);
+      case 'KeyF': return this.insertToken(TokenID.FILTER);
+      case 'KeyG': return this.insertToken(TokenID.NT_IMPERATIVE_EXPR);
+      case 'KeyZ': return this.insertToken(TokenID.LIT_INTSET);
+      case 'KeyX': return this.insertToken(TokenID.LIT_EMPTYSET);
+      case 'KeyC': return this.insertToken(TokenID.CARD);
+      case 'KeyV': return this.insertToken(TokenID.DEBOOL);
+      case 'KeyB': return this.insertToken(TokenID.BOOL);
+
+      // `123456
+      // ~!@#$%^
+      case 'Backquote': return this.insertToken(TokenID.NOT);
+      case 'Digit1': return this.insertToken(TokenID.IN);
+      case 'Digit2': return this.insertToken(TokenID.SUBSET_OR_EQ);
+      case 'Digit3': return this.insertToken(TokenID.AND);
+      case 'Digit4': return this.insertToken(TokenID.IMPLICATION);
+      case 'Digit5': return this.insertToken(TokenID.SET_MINUS);
+      case 'Digit6': return this.insertToken(TokenID.PUNC_ITERATE);
+      case 'Digit7': return this.insertToken(TokenID.SUBSET);
+      case 'Digit8': return this.insertToken(TokenID.MULTIPLY);
+      case 'BracketLeft': return this.insertToken(TokenID.PUNC_SL);
+      }
     }
     return false;
   }

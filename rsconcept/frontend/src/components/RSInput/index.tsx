@@ -121,11 +121,11 @@ function RSInput({
     if (event.shiftKey && event.key === '*' && !event.altKey) {
       text.insertToken(TokenID.DECART);
     } else if (event.altKey) {
-      if (!text.processAltKey(event.key)) {
+      if (!text.processAltKey(event.code, event.shiftKey)) {
         return;
       }
     } else if (!event.ctrlKey) {
-      const newSymbol = getSymbolSubstitute(event.key);
+      const newSymbol = getSymbolSubstitute(event.code, event.shiftKey);
       if (!newSymbol) {
         return;
       }
