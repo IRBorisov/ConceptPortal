@@ -1,6 +1,6 @@
 
 import { Extension } from '@codemirror/state';
-import { tags as t } from '@lezer/highlight';
+import { tags } from '@lezer/highlight';
 import { createTheme } from '@uiw/codemirror-themes';
 import CodeMirror, { BasicSetupOptions, ReactCodeMirrorProps, ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { EditorView } from 'codemirror';
@@ -64,9 +64,9 @@ function RSInput({
   }, [internalRef, innerref]);
 
   const cursor = useMemo(() => editable ? 'cursor-text': 'cursor-default', [editable]);
-  const lightTheme: Extension = useMemo(
+  const customTheme: Extension = useMemo(
   () => createTheme({
-    theme: 'light',
+    theme: darkMode ? 'dark' : 'light',
     settings: {
       fontFamily: 'inherit',
       background: editable ? colors.bgInput : colors.bgDefault,
@@ -74,35 +74,15 @@ function RSInput({
       selection: colors.bgHover
     },
     styles: [
-      { tag: t.name, class: 'text-[#b266ff] cursor-default' }, // GlobalID
-      { tag: t.variableName, class: 'text-[#24821a]' }, // LocalID
-      { tag: t.propertyName, class: '' }, // Radical
-      { tag: t.keyword, class: 'text-[#001aff]' }, // keywords
-      { tag: t.literal, class: 'text-[#001aff]' }, // literals
-      { tag: t.controlKeyword, class: 'font-semibold'}, // R | I | D
-      { tag: t.unit, class: 'text-[0.75rem]' }, // indicies
+      { tag: tags.name, color: colors.fgPurple, cursor: 'default' }, // GlobalID
+      { tag: tags.variableName, color: colors.fgGreen }, // LocalID
+      { tag: tags.propertyName, color: colors.fgTeal }, // Radical
+      { tag: tags.keyword, color: colors.fgBlue }, // keywords
+      { tag: tags.literal, color: colors.fgBlue }, // literals
+      { tag: tags.controlKeyword, fontWeight: '500'}, // R | I | D
+      { tag: tags.unit, fontSize: '0.75rem' }, // indicies
     ]
-  }), [editable, colors]);
-  
-  const darkTheme: Extension = useMemo(
-  () => createTheme({
-    theme: 'dark',
-    settings: {
-      fontFamily: 'inherit',
-      background: editable ? colors.bgInput : colors.bgDefault,
-      foreground: colors.fgDefault,
-      selection: colors.bgHover
-    },
-    styles: [
-      { tag: t.name, class: 'text-[#dfbfff] cursor-default' }, // GlobalID
-      { tag: t.variableName, class: 'text-[#69bf60]' }, // LocalID
-      { tag: t.propertyName, class: '' }, // Radical
-      { tag: t.keyword, class: 'text-[#808dff]' }, // keywords
-      { tag: t.literal, class: 'text-[#808dff]' }, // literals
-      { tag: t.controlKeyword, class: 'font-semibold'}, // R | I | D
-      { tag: t.unit, class: 'text-[0.75rem]' }, // indicies
-    ]
-  }), [editable, colors]);
+  }), [editable, colors, darkMode]);
 
   const editorExtensions = useMemo(
   () => [
@@ -137,7 +117,7 @@ function RSInput({
   }, [thisRef]);
 
   return (
-    <div className={`flex flex-col w-full ${cursor}`}>
+    <div className={`flex flex-col  w-full ${cursor}`}>
     {label && 
     <Label
       text={label}
@@ -148,7 +128,7 @@ function RSInput({
     <CodeMirror id={id}
       ref={thisRef}
       basicSetup={editorSetup}
-      theme={darkMode ? darkTheme : lightTheme}
+      theme={customTheme}
       extensions={editorExtensions}
       indentWithTab={false}
       onChange={onChange}

@@ -1,6 +1,6 @@
 import { useLayoutEffect, useState } from 'react';
 
-import ConceptSelect from '../../components/Common/ConceptSelect';
+import ConceptSelectSingle from '../../components/Common/ConceptSelectSingle';
 import Modal from '../../components/Common/Modal';
 import TextInput from '../../components/Common/TextInput';
 import { useRSForm } from '../../context/RSFormContext';
@@ -67,12 +67,12 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
       submitText='Переименовать'
     >
       <div className='flex items-center gap-4 px-2 my-2 h-fit min-w-[25rem]'>
-        <ConceptSelect
+        <ConceptSelectSingle
           className='min-w-[14rem] self-center'
           options={CstTypeSelector}
           placeholder='Выберите тип'
-          values={cstType ? [{ value: cstType, label: getCstTypeLabel(cstType) }] : []}
-          onChange={data => setCstType(data.length > 0 ? data[0].value : CstType.BASE)}
+          value={cstType ? { value: cstType, label: getCstTypeLabel(cstType) } : null}
+          onChange={data => setCstType(data?.value ?? CstType.BASE)}
         />
         <div>
         <TextInput id='alias' label='Имя'

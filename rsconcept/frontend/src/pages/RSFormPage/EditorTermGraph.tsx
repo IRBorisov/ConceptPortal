@@ -5,7 +5,7 @@ import { GraphCanvas, GraphCanvasRef, GraphEdge,
 
 import Button from '../../components/Common/Button';
 import Checkbox from '../../components/Common/Checkbox';
-import ConceptSelect from '../../components/Common/ConceptSelect';
+import ConceptSelectSingle from '../../components/Common/ConceptSelectSingle';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import Divider from '../../components/Common/Divider';
 import MiniButton from '../../components/Common/MiniButton';
@@ -16,7 +16,7 @@ import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { graphDarkT, graphLightT, IColorTheme } from '../../utils/color';
-import { prefixes, resources } from '../../utils/constants';
+import { prefixes, resources, TIMEOUT_GRAPH_REFRESH } from '../../utils/constants';
 import { Graph } from '../../utils/Graph';
 import { CstType, IConstituenta, ICstCreateData } from '../../utils/models';
 import { getCstClassColor, getCstStatusColor, 
@@ -220,9 +220,9 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
   }, [selectedDismissed, selections]);
   const nothingSelected = useMemo(() => allSelected.length === 0, [allSelected]);
 
-  const handleRecreate = useCallback(
+  const handleResetViewpoint = useCallback(
   () => {
-    graphRef.current?.resetControls();
+    graphRef.current?.resetControls(true);
     graphRef.current?.centerGraph();
   }, []);
 
@@ -291,6 +291,16 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       setSelectedDismissed([]);
       setToggleUpdate(prev => !prev);
     });
+  }
+
+  function handleChangeLayout(newLayout: LayoutTypes) {
+    if (newLayout === layout) {
+      return;
+    }
+    setLayout(newLayout);
+    setTimeout(() => {
+      handleResetViewpoint();
+    }, TIMEOUT_GRAPH_REFRESH);
   }
 
   function getOptions() {
@@ -394,23 +404,23 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
           widthClass='h-full'
           onClick={() => setShowOptions(true)}
         />
-        <ConceptSelect
+        <ConceptSelectSingle
           className='min-w-[9.8rem]'
           options={GraphColoringSelector}
-          searchable={false}
+          isSearchable={false}
           placeholder='Выберите цвет'
-          values={coloringScheme ? [{ value: coloringScheme, label: mapColoringLabels.get(coloringScheme) }] : []}
-          onChange={data => setColoringScheme(data.length > 0 ? data[0].value : GraphColoringSelector[0].value)}
+          value={coloringScheme ? { value: coloringScheme, label: mapColoringLabels.get(coloringScheme) } : null}
+          onChange={data => setColoringScheme(data?.value ?? GraphColoringSelector[0].value)}
         />
         
       </div>
-      <ConceptSelect
+      <ConceptSelectSingle
         className='w-full mt-1'
         options={GraphLayoutSelector}
-        searchable={false}
+        isSearchable={false}
         placeholder='Способ расположения'
-        values={layout ? [{ value: layout, label: mapLayoutLabels.get(layout) }] : []}
-        onChange={data => setLayout(data.length > 0 ? data[0].value : GraphLayoutSelector[0].value)}
+        value={layout ? { value: layout, label: mapLayoutLabels.get(layout) } : null}
+        onChange={data => handleChangeLayout(data?.value ?? GraphLayoutSelector[0].value)}
       />
       <Checkbox
         label='Скрыть текст' 
@@ -471,8 +481,8 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         </div>
         <MiniButton
           icon={<ArrowsRotateIcon size={5} />}
-          tooltip='Пересоздать граф'
-          onClick={handleRecreate}
+          tooltip='Восстановить камеру'
+          onClick={handleResetViewpoint}
         />
       </div>
       <ConceptTooltip anchorSelect='#items-graph-help'>

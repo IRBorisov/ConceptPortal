@@ -315,12 +315,12 @@ export const GraphColoringSelector: {value: ColoringScheme, label: string}[] = [
 
 export function getCstStatusColor(status: ExpressionStatus, colors: IColorTheme): string {
   switch (status) {
-  case ExpressionStatus.VERIFIED: return colors.green;
-  case ExpressionStatus.INCORRECT: return colors.red;
-  case ExpressionStatus.INCALCULABLE: return colors.orange;
-  case ExpressionStatus.PROPERTY: return colors.teal;
-  case ExpressionStatus.UNKNOWN: return colors.blue;
-  case ExpressionStatus.UNDEFINED: return colors.blue;
+  case ExpressionStatus.VERIFIED: return colors.bgGreen;
+  case ExpressionStatus.INCORRECT: return colors.bgRed;
+  case ExpressionStatus.INCALCULABLE: return colors.bgOrange;
+  case ExpressionStatus.PROPERTY: return colors.bgTeal;
+  case ExpressionStatus.UNKNOWN: return colors.bgBlue;
+  case ExpressionStatus.UNDEFINED: return colors.bgBlue;
   }
 }
 
@@ -392,10 +392,10 @@ export const mapTopicInfo: Map<HelpTopic, IDescriptor> = new Map([
 
 export function getCstClassColor(cstClass: CstClass, colors: IColorTheme): string {
   switch (cstClass) {
-    case CstClass.BASIC: return colors.green;
-    case CstClass.DERIVED: return colors.blue;
-    case CstClass.STATEMENT: return colors.red;
-    case CstClass.TEMPLATE: return colors.teal;
+    case CstClass.BASIC: return colors.bgGreen;
+    case CstClass.DERIVED: return colors.bgBlue;
+    case CstClass.STATEMENT: return colors.bgRed;
+    case CstClass.TEMPLATE: return colors.bgTeal;
   }
 }
 
@@ -684,7 +684,7 @@ export function getASTNodeColor(node: ISyntaxTreeNode, colors: IColorTheme): str
     case TokenID.PUNC_DEFINE:
     case TokenID.PUNC_STRUCT:
     case TokenID.ID_LOCAL:
-      return colors.green;
+      return colors.bgGreen;
     
     case TokenID.ID_GLOBAL:
     case TokenID.ID_FUNCTION:
@@ -693,7 +693,7 @@ export function getASTNodeColor(node: ISyntaxTreeNode, colors: IColorTheme): str
     case TokenID.LIT_INTEGER:
     case TokenID.LIT_EMPTYSET:
     case TokenID.LIT_INTSET:
-      return colors.teal;
+      return colors.bgTeal;
     
     case TokenID.FORALL:
     case TokenID.EXISTS:
@@ -713,7 +713,7 @@ export function getASTNodeColor(node: ISyntaxTreeNode, colors: IColorTheme): str
     case TokenID.SUBSET_OR_EQ:
     case TokenID.SUBSET:
     case TokenID.NOTSUBSET:
-      return colors.orange;
+      return colors.bgOrange;
     
     case TokenID.NT_TUPLE:
     case TokenID.NT_ENUMERATION:
@@ -733,7 +733,7 @@ export function getASTNodeColor(node: ISyntaxTreeNode, colors: IColorTheme): str
     case TokenID.CARD:
     case TokenID.BOOL:
     case TokenID.DEBOOL:
-      return colors.blue;
+      return colors.bgBlue;
 
     case TokenID.NT_FUNC_DEFINITION:
     case TokenID.NT_DECLARATIVE_EXPR:
@@ -752,8 +752,8 @@ export function getASTNodeColor(node: ISyntaxTreeNode, colors: IColorTheme): str
 
     case TokenID.PUNC_ASSIGN:
     case TokenID.PUNC_ITERATE:
-      return colors.red;
+      return colors.bgRed;
     }
    // node
-    return colors.red;
+    return colors.bgRed;
 }

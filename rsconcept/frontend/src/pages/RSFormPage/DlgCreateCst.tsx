@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import ConceptSelect from '../../components/Common/ConceptSelect';
+import ConceptSelectSingle from '../../components/Common/ConceptSelectSingle';
 import Modal from '../../components/Common/Modal';
 import TextArea from '../../components/Common/TextArea';
 import RSInput from '../../components/RSInput';
@@ -55,15 +55,15 @@ function DlgCreateCst({ hideWindow, initial, onCreate }: DlgCreateCstProps) {
       canSubmit={validated}
       onSubmit={handleSubmit}
     >
-      <div className='h-fit w-[35rem] px-2 mb-2 flex flex-col justify-stretch'>
+    <div className='h-fit w-[35rem] px-2 mb-2 flex flex-col justify-stretch'>
       <div className='flex justify-center w-full'>
-      <ConceptSelect
-        className='my-2 min-w-[15rem] self-center'
-        options={CstTypeSelector}
-        placeholder='Выберите тип'
-        values={selectedType ? [{ value: selectedType, label: getCstTypeLabel(selectedType) }] : []}
-        onChange={data => setSelectedType(data.length > 0 ? data[0].value : CstType.BASE)}
-      />
+        <ConceptSelectSingle
+          className='my-2 min-w-[15rem] self-center'
+          options={CstTypeSelector}
+          placeholder='Выберите тип'
+          value={selectedType ? { value: selectedType, label: getCstTypeLabel(selectedType) } : null}
+          onChange={data => setSelectedType(data?.value ?? CstType.BASE)}
+        />
       </div>
       <TextArea id='term' label='Термин'
         placeholder='Схемный или предметный термин, обозначающий данное понятие или утверждение'
@@ -72,12 +72,14 @@ function DlgCreateCst({ hideWindow, initial, onCreate }: DlgCreateCstProps) {
         spellCheck
         onChange={event => setTerm(event.target.value)}
       />
-      <RSInput id='expression' label='Формальное выражение'
-        editable
-        height='5.5rem'
-        value={expression}
-        onChange={value => setExpression(value)}
-      />
+      <div className='mt-3'>
+        <RSInput id='expression' label='Формальное выражение'
+          editable
+          height='5.5rem'
+          value={expression}
+          onChange={value => setExpression(value)}
+        />
+      </div>
       <TextArea id='definition' label='Текстовое определение'
         placeholder='Лингвистическая интерпретация формального выражения'
         rows={2}
@@ -92,7 +94,7 @@ function DlgCreateCst({ hideWindow, initial, onCreate }: DlgCreateCstProps) {
         spellCheck
         onChange={event => setConvention(event.target.value)}
       />
-      </div>
+    </div>
     </Modal>
   );
 }
