@@ -9,12 +9,11 @@ For more specific TODOs see comments in code
 - блок организации библиотеки моделей
 - проектный модуль?
 - обратная связь - система баг репортов
+- система обработки ошибок backend
 
 [Tech]
-- create custom Select component
 - reload react-data-table-component
 
 [deployment]
-- database backup daemon
 - logs collection
 - status dashboard for servers
