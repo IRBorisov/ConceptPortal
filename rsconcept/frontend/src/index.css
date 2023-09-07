@@ -140,7 +140,6 @@
     .clr-footer,
     .clr-modal-backdrop,
     .clr-btn-nav,
-    .clr-checkbox,
     .clr-input:disabled
   ) {
     background-color: var(--cl-bg-100);
@@ -168,8 +167,7 @@
 
   :is(.clr-primary,
     .clr-btn-primary:hover,
-    .clr-btn-primary:focus,
-    .clr-checkbox:checked
+    .clr-btn-primary:focus
   ) {
     color: var(--cl-prim-fg-100);
     background-color: var(--cl-prim-bg-100);

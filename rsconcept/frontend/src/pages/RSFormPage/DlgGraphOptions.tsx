@@ -81,25 +81,25 @@ function DlgGraphOptions({ hideWindow, initial, onConfirm }:DlgGraphOptionsProps
             label='Скрыть текст'
             tooltip='Не отображать термины'
             value={noTerms} 
-            onChange={ event => setNoTerms(event.target.checked) }
+            setValue={ value => setNoTerms(value) }
           />
           <Checkbox
             label='Скрыть несвязанные'
             tooltip='Неиспользуемые конституенты'
             value={noHermits} 
-            onChange={ event => setNoHermits(event.target.checked) }
+            setValue={ value => setNoHermits(value) }
           />
           <Checkbox
             label='Скрыть шаблоны'
             tooltip='Терм-функции и предикат-функции с параметризованными аргументами'
             value={noTemplates} 
-            onChange={ event => setNoTemplates(event.target.checked) }
+            setValue={ value => setNoTemplates(value) }
           />
           <Checkbox
             label='Транзитивная редукция'
             tooltip='Удалить связи, образующие транзитивные пути в графе'
             value={noTransitive} 
-            onChange={ event => setNoTransitive(event.target.checked) }
+            setValue={ value => setNoTransitive(value) }
           />
         </div>
         <div className='flex flex-col'>
@@ -107,42 +107,42 @@ function DlgGraphOptions({ hideWindow, initial, onConfirm }:DlgGraphOptionsProps
           <Checkbox
             label={getCstTypeLabel(CstType.BASE)}
             value={allowBase} 
-            onChange={ event => setAllowBase(event.target.checked) }
+            setValue={ value => setAllowBase(value) }
           />
           <Checkbox
             label={getCstTypeLabel(CstType.STRUCTURED)}
             value={allowStruct} 
-            onChange={ event => setAllowStruct(event.target.checked) }
+            setValue={ value => setAllowStruct(value) }
           />
           <Checkbox
             label={getCstTypeLabel(CstType.TERM)}
             value={allowTerm} 
-            onChange={ event => setAllowTerm(event.target.checked) }
+            setValue={ value => setAllowTerm(value) }
           />
           <Checkbox
             label={getCstTypeLabel(CstType.AXIOM)}
             value={allowAxiom} 
-            onChange={ event => setAllowAxiom(event.target.checked) }
+            setValue={ value => setAllowAxiom(value) }
           />
           <Checkbox
             label={getCstTypeLabel(CstType.FUNCTION)}
             value={allowFunction} 
-            onChange={ event => setAllowFunction(event.target.checked) }
+            setValue={ value => setAllowFunction(value) }
           />
           <Checkbox
             label={getCstTypeLabel(CstType.PREDICATE)}
             value={allowPredicate} 
-            onChange={ event => setAllowPredicate(event.target.checked) }
+            setValue={ value => setAllowPredicate(value) }
           />
           <Checkbox
             label={getCstTypeLabel(CstType.CONSTANT)}
             value={allowConstant} 
-            onChange={ event => setAllowConstant(event.target.checked) }
+            setValue={ value => setAllowConstant(value) }
           />
           <Checkbox
             label={getCstTypeLabel(CstType.THEOREM)}
             value={allowTheorem} 
-            onChange={ event => setAllowTheorem(event.target.checked) }
+            setValue ={ value => setAllowTheorem(value) }
           />
         </div>
       </div>

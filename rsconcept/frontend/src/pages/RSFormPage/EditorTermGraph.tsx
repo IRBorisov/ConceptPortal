@@ -415,18 +415,18 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       <Checkbox
         label='Скрыть текст' 
         value={noTerms} 
-        onChange={ event => setNoTerms(event.target.checked) }
+        setValue={ value => setNoTerms(value) }
       />
       <Checkbox
         label='Транзитивная редукция' 
         value={noTransitive} 
-        onChange={ event => setNoTransitive(event.target.checked) }
+        setValue={ value => setNoTransitive(value) }
       />
       <Checkbox
         disabled={!is3D}
         label='Анимация вращения' 
         value={orbit} 
-        onChange={ event => setOrbit(event.target.checked) }
+        setValue={ value => setOrbit(value) }
       />
 
       <Divider margins='mt-3 mb-2' />

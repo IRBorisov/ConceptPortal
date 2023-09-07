@@ -36,38 +36,38 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
     { pickerMenu.isActive &&
     <Dropdown>
       <DropdownCheckbox
-        onChange={() => handleChange(LibraryFilterStrategy.MANUAL)}
+        setValue={() => handleChange(LibraryFilterStrategy.MANUAL)}
         value={value === LibraryFilterStrategy.MANUAL}
         label='Отображать все'
       />
       <DropdownCheckbox
-        onChange={() => handleChange(LibraryFilterStrategy.COMMON)}
+        setValue={() => handleChange(LibraryFilterStrategy.COMMON)}
         value={value === LibraryFilterStrategy.COMMON}
         label='Общедоступные'
         tooltip='Отображать только общедоступные схемы'
       />
       <DropdownCheckbox
-        onChange={() => handleChange(LibraryFilterStrategy.CANONICAL)}
+        setValue={() => handleChange(LibraryFilterStrategy.CANONICAL)}
         value={value === LibraryFilterStrategy.CANONICAL}
         label='Неизменные'
         tooltip='Отображать только стандартные схемы'
       />
       <DropdownCheckbox
-        onChange={() => handleChange(LibraryFilterStrategy.PERSONAL)}
+        setValue={() => handleChange(LibraryFilterStrategy.PERSONAL)}
         value={value === LibraryFilterStrategy.PERSONAL}
         label='Личные'
         disabled={!user}
         tooltip='Отображать только подписки и владеемые схемы'
       />
       <DropdownCheckbox
-        onChange={() => handleChange(LibraryFilterStrategy.SUBSCRIBE)}
+        setValue={() => handleChange(LibraryFilterStrategy.SUBSCRIBE)}
         value={value === LibraryFilterStrategy.SUBSCRIBE}
         label='Подписки'
         disabled={!user}
         tooltip='Отображать только подписки'
       />
       <DropdownCheckbox
-        onChange={() => handleChange(LibraryFilterStrategy.OWNED)}
+        setValue={() => handleChange(LibraryFilterStrategy.OWNED)}
         value={value === LibraryFilterStrategy.OWNED}
         disabled={!user}
         label='Я - Владелец!'

@@ -146,14 +146,14 @@ function RSTabsMenu({
           {(isOwned || user?.is_staff) &&
           <DropdownCheckbox
             value={isReadonly}
-            onChange={toggleReadonly}
+            setValue={toggleReadonly}
             label='Я — читатель!'
             tooltip='Режим чтения'
           />}
           {user?.is_staff &&
           <DropdownCheckbox
             value={isForceAdmin}
-            onChange={toggleForceAdmin}
+            setValue={toggleForceAdmin}
             label='Я — администратор!'
             tooltip='Режим редактирования для администраторов'
           />}

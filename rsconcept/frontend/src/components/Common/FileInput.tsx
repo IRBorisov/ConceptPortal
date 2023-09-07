@@ -4,18 +4,22 @@ import { UploadIcon } from '../Icons';
 import Button from './Button';
 import Label from './Label';
 
-interface FileInputProps {
-  id?: string
-  required?: boolean
+interface FileInputProps 
+extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'className' | 'title' | 'style' | 'accept' | 'type'> {
   label: string
+  tooltip?: string
   acceptType?: string
   widthClass?: string
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-function FileInput({ id, required, label, acceptType, widthClass = 'w-full', onChange }: FileInputProps) {
+function FileInput({
+  label, acceptType, tooltip,
+  widthClass = 'w-fit', onChange,
+  ...props 
+}: FileInputProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [labelText, setLabelText] = useState('');
+  const [fileName, setFileName] = useState('');
 
   const handleUploadClick = () => {
     inputRef.current?.click();
@@ -23,9 +27,9 @@ function FileInput({ id, required, label, acceptType, widthClass = 'w-full', onC
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
-      setLabelText(event.target.files[0].name)
+      setFileName(event.target.files[0].name)
     } else {
-      setLabelText('')
+      setFileName('')
     }
     if (onChange) {
       onChange(event);
@@ -33,21 +37,22 @@ function FileInput({ id, required, label, acceptType, widthClass = 'w-full', onC
   };
 
   return (
-    <div className={'flex flex-col gap-2 py-2 [&:not(:first-child)]:mt-3 items-start ' + widthClass}>
-      <input id={id} type='file'
+    <div className={`flex flex-col gap-2 py-2 mt-3 items-start ${widthClass}`}>
+      <input type='file'
         ref={inputRef}
-        required={required}
         style={{ display: 'none' }}
         accept={acceptType}
         onChange={handleFileChange}
+        {...props}
       />
       <Button
         text={label}
         icon={<UploadIcon/>}
         onClick={handleUploadClick}
+        tooltip={tooltip}
       />
       <Label
-        text={labelText}
+        text={fileName}
       />
     </div>
   );
