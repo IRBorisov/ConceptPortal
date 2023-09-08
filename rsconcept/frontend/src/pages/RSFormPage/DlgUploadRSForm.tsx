@@ -5,6 +5,7 @@ import Checkbox from '../../components/Common/Checkbox';
 import FileInput from '../../components/Common/FileInput';
 import Modal from '../../components/Common/Modal';
 import { useRSForm } from '../../context/RSFormContext';
+import { EXTEOR_TRS_FILE } from '../../utils/constants';
 import { IRSFormUploadData } from '../../utils/models';
 
 interface DlgUploadRSFormProps {
@@ -47,7 +48,7 @@ function DlgUploadRSForm({ hideWindow }: DlgUploadRSFormProps) {
       <div className='flex flex-col items-center'>
         <FileInput
           label='Выбрать файл'
-          acceptType='.trs'
+          acceptType={EXTEOR_TRS_FILE}
           onChange={handleFile}
         />
         <Checkbox

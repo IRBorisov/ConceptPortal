@@ -5,6 +5,8 @@ export const config = {
 export const TIMEOUT_UI_REFRESH = 100;
 export const TIMEOUT_GRAPH_REFRESH = 200;
 
+export const EXTEOR_TRS_FILE = '.trs';
+
 export const youtube = {
   intro: '0Ty9mu9sOJo'
 };
