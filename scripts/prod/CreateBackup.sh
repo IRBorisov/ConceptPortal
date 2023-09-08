@@ -46,4 +46,7 @@ DjangoDump()
 EnsureLocation
 PostgreDump
 DjangoDump
-echo "Backup created at: $destination"
+
+green="\033[0;32m"
+noColor='\033[0m'
+echo -e "${green}Backup created at: ${destination}${noColor}"
