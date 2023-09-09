@@ -5,6 +5,7 @@ import Checkbox from '../../components/Common/Checkbox';
 import FileInput from '../../components/Common/FileInput';
 import Modal from '../../components/Common/Modal';
 import { useRSForm } from '../../context/RSFormContext';
+import { EXTEOR_TRS_FILE } from '../../utils/constants';
 import { IRSFormUploadData } from '../../utils/models';
 
 interface DlgUploadRSFormProps {
@@ -44,17 +45,18 @@ function DlgUploadRSForm({ hideWindow }: DlgUploadRSFormProps) {
       onSubmit={handleSubmit}
       submitText='Загрузить'
     >
-      <div className='max-w-[20rem]'>
-      <FileInput
-        label='Выбрать файл'
-        acceptType='.trs'
-        onChange={handleFile}
-      />
-      <Checkbox
-        label='Загружать название и комментарий'
-        value={loadMetadata}
-        onChange={event => setLoadMetadata(event.target.checked)}
-      />
+      <div className='flex flex-col items-center'>
+        <FileInput
+          label='Выбрать файл'
+          acceptType={EXTEOR_TRS_FILE}
+          onChange={handleFile}
+        />
+        <Checkbox
+          label='Загружать название и комментарий'
+          value={loadMetadata}
+          setValue={value => setLoadMetadata(value)}
+          widthClass='w-fit pb-2'
+        />
       </div>
     </Modal>
   );

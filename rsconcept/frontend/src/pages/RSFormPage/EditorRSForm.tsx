@@ -136,14 +136,14 @@ function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, 
           value={common}
           widthClass='w-fit mt-3'
           disabled={!isEditable}
-          onChange={event => setCommon(event.target.checked)}
+          setValue={value => setCommon(value)}
         />
         <Checkbox id='canonical' label='Неизменная схема'
           widthClass='w-fit'
           value={canonical}
           tooltip='Только администраторы могут присваивать схемам неизменный статус'
           disabled={!isEditable || !isForceAdmin}
-          onChange={event => setCanonical(event.target.checked)}
+          setValue={value => setCanonical(value)}
         />
       </div>
 

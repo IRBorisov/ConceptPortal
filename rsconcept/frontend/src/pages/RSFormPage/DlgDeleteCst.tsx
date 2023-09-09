@@ -52,7 +52,7 @@ function DlgDeleteCst({ hideWindow, selected, onDelete }: DlgDeleteCstProps) {
       <Checkbox
         label='Удалить зависимые конституенты'
         value={expandOut}
-        onChange={data => setExpandOut(data.target.checked)}
+        setValue={value => setExpandOut(value)}
       />
     </div>
     </Modal>

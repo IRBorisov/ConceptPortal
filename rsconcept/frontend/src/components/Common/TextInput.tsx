@@ -1,9 +1,7 @@
-import { type InputHTMLAttributes } from 'react';
-
 import Label from './Label';
 
 interface TextInputProps
-extends Omit<InputHTMLAttributes<HTMLInputElement>, 'className' | 'title'> {
+extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'className' | 'title'> {
   id: string
   label: string
   tooltip?: string

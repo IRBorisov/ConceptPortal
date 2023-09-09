@@ -6,60 +6,48 @@
 
 :root {
   /* Light Theme */
-  --cl-bg-120: #ffffff;
-  --cl-bg-100: #f9fafb;
-  --cl-bg-80: #f3f4f6;
-  --cl-bg-60: #e5e7eb;
-  --cl-bg-40: #d1d5db;
+  --cl-bg-120:        hsl(000, 000%, 100%);
+  --cl-bg-100:        hsl(220, 020%, 098%);
+  --cl-bg-80:         hsl(220, 014%, 096%);
+  --cl-bg-60:         hsl(220, 013%, 091%);
+  --cl-bg-40:         hsl(216, 012%, 084%);
 
-  --cl-fg-40: #8c8c8c;
-  --cl-fg-60: #777777;
-  --cl-fg-80: #333333;
-  --cl-fg-100: #000000;
+  --cl-fg-60:         hsl(000, 000%, 055%);
+  --cl-fg-80:         hsl(000, 000%, 047%);
+  --cl-fg-100:        hsl(000, 000%, 000%);
 
-  --cl-prim-bg-100: #3377ff;
-  --cl-prim-bg-80: #ccddff;
-  --cl-prim-bg-60: #e0ebff;
+  --cl-prim-bg-100:   hsl(220, 100%, 060%);
+  --cl-prim-bg-80:    hsl(220, 100%, 090%);
+  --cl-prim-bg-60:    hsl(220, 100%, 094%);
   
-  --cl-prim-fg-60: #1a63ff;
-  --cl-prim-fg-80: #0051ff;
-  --cl-prim-fg-100: #ffffff;
+  --cl-prim-fg-80:    hsl(220, 100%, 050%);
+  --cl-prim-fg-100:   hsl(000, 000%, 100%);
 
-  --cl-red-bg-100: #ffe5e5;
-  --cl-red-fg-100: #dc2626;
-  --cl-green-fg-100: #4ade80;
+  --cl-red-bg-100:    hsl(000, 100%, 095%);
+  --cl-red-fg-100:    hsl(000, 072%, 051%);
+  --cl-green-fg-100:  hsl(120, 080%, 058%);
 
   /* Dark Theme */
-  --cd-bg-120: #0d0d0d;
-  --cd-bg-100: #181818;
-  --cd-bg-80: #272727;
-  --cd-bg-60: #383838;
-  --cd-bg-40: #595959;
+  --cd-bg-120:        hsl(000, 000%, 005%);
+  --cd-bg-100:        hsl(000, 000%, 009%);
+  --cd-bg-80:         hsl(000, 000%, 015%);
+  --cd-bg-60:         hsl(000, 000%, 022%);
+  --cd-bg-40:         hsl(000, 000%, 035%);
   
-  --cd-fg-40: #878792;
-  --cd-fg-60: #bcbcc2;
-  --cd-fg-80: #d4d4d8;
-  --cd-fg-100: #e4e4e7;
+  --cd-fg-60:         hsl(000, 000%, 055%);
+  --cd-fg-80:         hsl(000, 000%, 080%);
+  --cd-fg-100:        hsl(000, 000%, 093%);
 
-  /* --cd-prim-bg-100: #e66000;
-  --cd-prim-bg-80: #cc7700;
-  --cd-prim-bg-60: #995900;
+  --cd-prim-bg-100:   hsl(025, 079%, 052%);
+  --cd-prim-bg-80:    hsl(035, 080%, 043%);
+  --cd-prim-bg-60:    hsl(045, 080%, 031%);
 
-  --cd-prim-fg-60: #ffa666;
-  --cd-prim-fg-80: #ff6a00;
-  --cd-prim-fg-100: #ffffff; */
+  --cd-prim-fg-80:    hsl(025, 080%, 050%);
+  --cd-prim-fg-100:   hsl(000, 000%, 100%);
 
-  --cd-prim-bg-100: hsl(267, 90%, 60%);
-  --cd-prim-bg-80: hsl(267, 90%, 45%);
-  --cd-prim-bg-60: hsl(269, 90%, 30%);
-
-  --cd-prim-fg-60: hsl(267, 90%, 45%);
-  --cd-prim-fg-80: hsl(267, 90%, 60%);
-  --cd-prim-fg-100: #ffffff;
-
-  --cd-red-bg-100: #4d0000;
-  --cd-red-fg-100: #ff334b;
-  --cd-green-fg-100: #22c55e;
+  --cd-red-bg-100:    hsl(000, 100%, 015%);
+  --cd-red-fg-100:    hsl(000, 100%, 060%);
+  --cd-green-fg-100:  hsl(120, 080%, 040%);
 
   /* Import overrides */
   --toastify-color-dark: var(--cd-bg-60);
@@ -148,7 +136,6 @@
     .clr-footer,
     .clr-modal-backdrop,
     .clr-btn-nav,
-    .clr-checkbox,
     .clr-input:disabled
   ) {
     background-color: var(--cl-bg-100);
@@ -176,8 +163,7 @@
 
   :is(.clr-primary,
     .clr-btn-primary:hover,
-    .clr-btn-primary:focus,
-    .clr-checkbox:checked
+    .clr-btn-primary:focus
   ) {
     color: var(--cl-prim-fg-100);
     background-color: var(--cl-prim-bg-100);
@@ -202,10 +188,10 @@
     .clr-btn-default,
     .clr-btn-primary
   ):disabled {
-    color: var(--cl-fg-60);
+    color: var(--cl-fg-80);
     background-color: var(--cl-bg-60);
     .dark & {
-      color: var(--cd-fg-60);
+      color: var(--cd-fg-80);
       background-color: var(--cd-bg-60);
     }
   }
@@ -230,9 +216,9 @@
   ):focus {
     outline-width: 2px;
     outline-style: solid;
-    outline-color: var(--cl-bg-40);
+    outline-color: var(--cl-prim-bg-100);
     .dark & {
-      outline-color: var(--cd-bg-40);
+      outline-color: var(--cd-prim-bg-100);
     }
   }
 
@@ -246,28 +232,28 @@
   }
 
   .clr-footer {
-    color: var(--cl-fg-40);
+    color: var(--cl-fg-60);
     .dark & {
-      color: var(--cd-fg-40);
+      color: var(--cd-fg-60);
     }
   }
 
   .clr-btn-nav {
-    color: var(--cl-fg-60);
+    color: var(--cl-fg-80);
     .dark & {
-      color: var(--cd-fg-60);
+      color: var(--cd-fg-80);
     }
   }
 
   .clr-btn-clear {
-    color: var(--cl-fg-60);
+    color: var(--cl-fg-80);
     &:disabled {
-      color: var(--cl-fg-40);
+      color: var(--cl-fg-60);
     }
     .dark & {
-      color: var(--cd-fg-60);
+      color: var(--cd-fg-80);
       &:disabled {
-        color: var(--cd-fg-40);
+        color: var(--cd-fg-60);
       }
     }
   }
@@ -303,33 +289,14 @@
 }
 .cm-editor.cm-focused {
   border-color: var(--cl-bg-40);
-  outline-color: var(--cl-bg-40);
+  outline-color: var(--cl-prim-bg-100);
   .dark & {
     border-color: var(--cd-bg-40);
-    outline-color: var(--cd-bg-40);
+    outline-color: var(--cd-prim-bg-100);
   }
   @apply border shadow rounded outline-2 outline
 }
 
 .rdt_TableCell{
   font-size: 0.875rem;
-}
-
-.react-dropdown-select-item {
-  color: var(--cl-fg-100);
-  border-color: var(--cl-bg-40);
-  background-color: var(--cl-bg-100);
-
-  &:hover {
-    background-color: var(--cl-prim-bg-60);
-  }
-
-  .dark & {
-    color: var(--cd-fg-100);
-    border-color: var(--cd-bg-40);
-    background-color: var(--cd-bg-100);
-    &:hover {
-      background-color: var(--cd-prim-bg-60);
-    }
-  }
 }

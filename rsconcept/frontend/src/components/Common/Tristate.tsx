@@ -1,21 +1,17 @@
+
 import { useMemo } from 'react';
 
-import { CheckboxChecked } from '../Icons';
+import { CheckboxChecked, CheckboxNull } from '../Icons';
+import { CheckboxProps } from './Checkbox';
 import Label from './Label';
 
-export interface CheckboxProps {
-  id?: string
-  label?: string
-  required?: boolean
-  disabled?: boolean
-  widthClass?: string
-  tooltip?: string
-
-  value: boolean
-  setValue?: (newValue: boolean) => void
+export interface TristateProps
+extends Omit<CheckboxProps, 'value' | 'setValue'> {
+  value: boolean | null
+  setValue?: (newValue: boolean | null) => void
 }
 
-function Checkbox({ id, required, disabled, tooltip, label, widthClass = 'w-fit', value, setValue }: CheckboxProps) {
+function Checkbox({ id, required, disabled, tooltip, label, widthClass = 'w-fit', value, setValue }: TristateProps) {
   const cursor = useMemo(
   () => {
     if (disabled) {
@@ -36,7 +32,11 @@ function Checkbox({ id, required, disabled, tooltip, label, widthClass = 'w-fit'
     if (disabled || !setValue) {
       return;
     }
-    setValue(!value);
+    if (value === false) {
+        setValue(null); 
+    } else {
+      setValue(!value);
+    }
   }
 
   return (
@@ -56,6 +56,7 @@ function Checkbox({ id, required, disabled, tooltip, label, widthClass = 'w-fit'
         htmlFor={id}
       />}
       {value && <CheckboxChecked />}
+      {value === null && <CheckboxNull />}
     </button>
   );
 }

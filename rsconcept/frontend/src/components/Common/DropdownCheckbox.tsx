@@ -1,15 +1,15 @@
 import Checkbox from './Checkbox';
 
 interface DropdownCheckboxProps {
+  value: boolean
   label?: string
   tooltip?: string
   disabled?: boolean
-  value?: boolean
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  setValue?: (newValue: boolean) => void
 }
 
-function DropdownCheckbox({ tooltip, onChange, disabled, ...props }: DropdownCheckboxProps) {
-  const behavior = (onChange && !disabled ? 'clr-hover' : '');
+function DropdownCheckbox({ tooltip, setValue, disabled, ...props }: DropdownCheckboxProps) {
+  const behavior = (setValue && !disabled ? 'clr-hover' : '');
   return (
     <div
       title={tooltip}
@@ -18,7 +18,7 @@ function DropdownCheckbox({ tooltip, onChange, disabled, ...props }: DropdownChe
       <Checkbox 
         widthClass='w-full'
         disabled={disabled}
-        onChange={onChange}
+        setValue={setValue}
         {...props}
       /> 
     </div>

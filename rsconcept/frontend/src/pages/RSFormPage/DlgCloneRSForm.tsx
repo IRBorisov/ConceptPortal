@@ -79,7 +79,7 @@ function DlgCloneRSForm({ hideWindow }: DlgCloneRSFormProps) {
       />
       <Checkbox id='common' label='Общедоступная схема'
         value={common}
-        onChange={event => setCommon(event.target.checked)}
+        setValue={value => setCommon(value)}
       />
     </Modal>
   );

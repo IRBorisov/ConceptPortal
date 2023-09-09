@@ -1,5 +1,5 @@
 # ======== Multi-stage base ==========
-FROM node:bullseye-slim as node-base
+FROM node:18-bullseye-slim as node-base
 RUN apt-get update -qq && \
     apt-get upgrade -y && \
     rm -rf /var/lib/apt/lists/*

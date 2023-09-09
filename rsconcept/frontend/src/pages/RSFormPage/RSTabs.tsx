@@ -14,7 +14,7 @@ import { useConceptNavigation } from '../../context/NagivationContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useModificationPrompt from '../../hooks/useModificationPrompt';
-import { prefixes, TIMEOUT_UI_REFRESH } from '../../utils/constants';
+import { EXTEOR_TRS_FILE, prefixes, TIMEOUT_UI_REFRESH } from '../../utils/constants';
 import { ICstCreateData, ICstRenameData, SyntaxTree } from '../../utils/models';
 import { createAliasFor } from '../../utils/staticUI';
 import DlgCloneRSForm from './DlgCloneRSForm';
@@ -256,7 +256,7 @@ function RSTabs() {
         return;
       }
     }
-    const fileName = (schema?.alias ?? 'Schema') + '.trs';
+    const fileName = (schema?.alias ?? 'Schema') +  EXTEOR_TRS_FILE;
     download(
     (data) => {
       try {

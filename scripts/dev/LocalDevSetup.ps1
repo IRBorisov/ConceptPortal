@@ -1,7 +1,7 @@
 # Create venv and install dependencies + imports
 
 $backend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\backend"
-$frontend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\fronted"
+$frontend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\frontend"
 $envPath = "$backend\venv"
 $python = "$envPath\Scripts\python.exe"
 
@@ -12,7 +12,7 @@ function LocalDevelopmentSetup() {
 
 function FrontendSetup() {
     Set-Location $frontend
-    & npm install
+    & npm install --only=dev 
 }
 
 function BackendSetup() {

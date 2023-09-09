@@ -1,70 +1,107 @@
-export interface IColorTheme {
-  red: string
-  green: string
-  blue: string
-  teal: string
-  orange: string
-  
+// =========== Modules contains all dynamic color definitions ==========
+
+
+// ============= MAIN COLOR THEMES ==========
+export interface IColorTheme {  
   bgDefault: string
   bgInput: string
   bgControls: string
   bgDisabled: string
-  bgHover: string
+  bgPrimary: string
   bgSelected: string
+  bgHover: string
   bgWarning: string
   
   border: string
 
   fgDefault: string
+  fgSelected: string
   fgDisabled: string
   fgWarning: string
+
+  // Hightlight syntax accents
+  bgRed: string
+  bgGreen: string
+  bgBlue: string
+  bgPurple: string
+  bgTeal: string
+  bgOrange: string
+
+  fgRed: string
+  fgGreen: string
+  fgBlue: string
+  fgPurple: string
+  fgTeal: string
+  fgOrange: string
 }
 
-// =========== GENERAL THEMES =========
+// ======= Light =======
 export const lightT: IColorTheme = {
-  red: '#ffc9c9',
-  green: '#aaff80',
-  blue: '#b3bdff',
-  teal: '#a5e9fa',
-  orange: '#ffbb80',
-
-  bgDefault: 'var(--cl-bg-100)',
-  bgInput: 'var(--cl-bg-120)',
+  bgDefault:  'var(--cl-bg-100)',
+  bgInput:    'var(--cl-bg-120)',
   bgControls: 'var(--cl-bg-80)',
   bgDisabled: 'var(--cl-bg-60)',
-  bgHover: 'var(--cl-prim-bg-60)',
+  bgPrimary:  'var(--cl-prim-bg-100)',
   bgSelected: 'var(--cl-prim-bg-80)',
-  bgWarning: 'var(--cl-red-bg-100)',
+  bgHover:    'var(--cl-prim-bg-60)',
+  bgWarning:  'var(--cl-red-bg-100)',
   
-  border: 'var(--cl-bg-40)',
+  border:     'var(--cl-bg-40)',
 
-  fgDefault: 'var(--cl-fg-100)',
-  fgDisabled: 'var(--cl-fg-60)',
-  fgWarning: 'var(--cl-red-fg-100)'
+  fgDefault:  'var(--cl-fg-100)',
+  fgSelected: 'var(--cl-fg-100)',
+  fgDisabled: 'var(--cl-fg-80)',
+  fgWarning:  'var(--cl-red-fg-100)',
+
+  // Hightlight syntax accents
+  bgRed:      'hsl(000, 100%, 089%)',
+  bgGreen:    'hsl(100, 100%, 075%)',
+  bgBlue:     'hsl(235, 100%, 085%)',
+  bgPurple:   'hsl(274, 089%, 081%)',
+  bgTeal:     'hsl(192, 089%, 081%)',
+  bgOrange:   'hsl(028, 100%, 075%)',
+
+  fgRed:      'hsl(000, 090%, 045%)',
+  fgGreen:    'hsl(100, 090%, 035%)',
+  fgBlue:     'hsl(235, 100%, 050%)',
+  fgPurple:   'hsl(270, 100%, 070%)',
+  fgTeal:     'hsl(192, 090%, 040%)',
+  fgOrange:   'hsl(030, 090%, 055%)'
 };
 
+// ======= DARK ========
 export const darkT: IColorTheme = {
-  red: '#bf0d00',
-  green: '#2b8000',
-  blue: '#394bbf',
-  teal: '#007a99',
-  orange: '#964600',
-
-  bgDefault: 'var(--cd-bg-100)',
-  bgInput: 'var(--cd-bg-120)',
+  bgDefault:  'var(--cd-bg-100)',
+  bgInput:    'var(--cd-bg-120)',
   bgControls: 'var(--cd-bg-80)',
   bgDisabled: 'var(--cd-bg-60)',
-  bgHover: 'var(--cd-prim-bg-60)',
+  bgPrimary:  'var(--cd-prim-bg-100)',
   bgSelected: 'var(--cd-prim-bg-80)',
-  bgWarning: 'var(--cd-red-bg-100)',
+  bgHover:    'var(--cd-prim-bg-60)',
+  bgWarning:  'var(--cd-red-bg-100)',
 
-  border: 'var(--cd-bg-40)',
+  border:     'var(--cd-bg-40)',
 
-  fgDefault: 'var(--cd-fg-100)',
-  fgDisabled: 'var(--cd-fg-60)',
-  fgWarning: 'var(--cd-red-fg-100)'
+  fgDefault:  'var(--cd-fg-100)',
+  fgSelected: 'var(--cd-fg-100)',
+  fgDisabled: 'var(--cd-fg-80)',
+  fgWarning:  'var(--cd-red-fg-100)',
+
+  // Hightlight syntax accents
+  bgRed:      'hsl(000, 080%, 037%)',
+  bgGreen:    'hsl(100, 080%, 025%)',
+  bgBlue:     'hsl(235, 054%, 049%)',
+  bgPurple:   'hsl(270, 080%, 050%)',
+  bgTeal:     'hsl(192, 080%, 030%)',
+  bgOrange:   'hsl(035, 100%, 035%)',
+
+  fgRed:      'hsl(000, 080%, 050%)',
+  fgGreen:    'hsl(100, 080%, 040%)',
+  fgBlue:     'hsl(235, 100%, 080%)',
+  fgPurple:   'hsl(270, 100%, 080%)',
+  fgTeal:     'hsl(192, 100%, 030%)',
+  fgOrange:   'hsl(035, 100%, 050%)'
 };
-
 
 // ========= DATA TABLE THEMES ========
 export const dataTableLightT = {
@@ -118,6 +155,51 @@ export const dataTableDarkT = {
     text: darkT.fgDefault
   }
 };
+
+// ============ SELECT THEMES ==========
+export const selectLightT = {
+  primary: lightT.bgPrimary,
+  primary75: lightT.bgSelected,
+  primary50: lightT.bgHover,
+  primary25: lightT.bgHover,
+
+  danger: lightT.fgWarning,
+  dangerLight: lightT.bgWarning,
+
+  neutral0: lightT.bgInput,
+  neutral5: lightT.bgDefault,
+  neutral10: lightT.border,
+  neutral20: lightT.border,
+  neutral30: lightT.border,
+  neutral40: lightT.fgDisabled,
+  neutral50: lightT.fgWarning,
+  neutral60: lightT.fgDefault,
+  neutral70: lightT.fgWarning,
+  neutral80: lightT.fgDefault,
+  neutral90: lightT.fgWarning
+}
+
+export const selectDarkT = {
+  primary: darkT.bgPrimary,
+  primary75: darkT.bgSelected,
+  primary50: darkT.bgHover,
+  primary25: darkT.bgHover,
+
+  danger: darkT.fgWarning,
+  dangerLight: darkT.bgWarning,
+
+  neutral0: darkT.bgInput,
+  neutral5: darkT.bgDefault,
+  neutral10: darkT.border,
+  neutral20: darkT.border,
+  neutral30: darkT.border,
+  neutral40: darkT.fgDisabled,
+  neutral50: darkT.fgWarning,
+  neutral60: darkT.fgDefault,
+  neutral70: darkT.fgWarning,
+  neutral80: darkT.fgDefault,
+  neutral90: darkT.fgWarning
+}
 
 // ============ GRAPH THEMES ==========
 export const graphLightT = {
@@ -221,20 +303,22 @@ export const graphDarkT = {
 // ======== Bracket Matching Themes ===========
 export const bracketsLightT = {
   '.cc-nonmatchingBracket': {
-    color: lightT.fgWarning,
+    color: lightT.fgRed,
     fontWeight: 700,
   },
   '&.cm-focused .cc-matchingBracket': {
     backgroundColor: lightT.bgSelected,
+    color: lightT.fgSelected
   },
 };
 
 export const bracketsDarkT = {
   '.cc-nonmatchingBracket': {
-    color: darkT.fgWarning,
+    color: darkT.fgRed,
     fontWeight: 700,
   },
   '&.cm-focused .cc-matchingBracket': {
     backgroundColor: darkT.bgSelected,
+    color: darkT.fgSelected
   },
 };

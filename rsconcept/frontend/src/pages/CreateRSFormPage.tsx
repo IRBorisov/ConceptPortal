@@ -1,18 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import BackendError from '../components/BackendError';
 import Button from '../components/Common/Button';
 import Checkbox from '../components/Common/Checkbox';
-import FileInput from '../components/Common/FileInput';
 import Form from '../components/Common/Form';
+import Label from '../components/Common/Label';
+import MiniButton from '../components/Common/MiniButton';
 import SubmitButton from '../components/Common/SubmitButton';
 import TextArea from '../components/Common/TextArea';
 import TextInput from '../components/Common/TextInput';
+import { UploadIcon } from '../components/Icons';
 import RequireAuth from '../components/RequireAuth';
 import { useLibrary } from '../context/LibraryContext';
 import { useConceptNavigation } from '../context/NagivationContext';
+import { EXTEOR_TRS_FILE } from '../utils/constants';
 import { IRSFormCreateData, LibraryItemType } from '../utils/models';
 
 function CreateRSFormPage() {
@@ -24,19 +27,14 @@ function CreateRSFormPage() {
   const [alias, setAlias] = useState('');
   const [comment, setComment] = useState('');
   const [common, setCommon] = useState(false);
-  const [file, setFile] = useState<File | undefined>()
+
+  const [fileName, setFileName] = useState('');
+  const [file, setFile] = useState<File | undefined>();
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     setError(undefined);
   }, [title, alias, setError]);
-
-  function handleFile(event: React.ChangeEvent<HTMLInputElement>) {
-    if (event.target.files && event.target.files.length > 0) {
-      setFile(event.target.files[0]);
-    } else {
-      setFile(undefined);
-    }
-  }
 
   function handleCancel() {
     if (location.key !== 'default') {
@@ -67,12 +65,39 @@ function CreateRSFormPage() {
     });
   }
 
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    if (event.target.files && event.target.files.length > 0) {
+      setFileName(event.target.files[0].name);
+      setFile(event.target.files[0]);
+    } else {
+      setFileName('');
+      setFile(undefined);
+    }
+  }
+
   return (
     <RequireAuth>
     <Form title='Создание концептуальной схемы' 
       onSubmit={handleSubmit}
       widthClass='max-w-lg w-full mt-4'
     >
+      <div className='relative w-full'>
+      <div className='absolute top-[-2.4rem] right-[-1rem] flex'>
+        <input
+          type='file'
+          ref={inputRef}
+          style={{ display: 'none' }}
+          accept={EXTEOR_TRS_FILE}
+          onChange={handleFileChange}
+        />
+        <MiniButton
+          tooltip='Загрузить из Экстеор'
+          icon={<UploadIcon size={5} color='text-primary'/>}
+          onClick={() => inputRef.current?.click()}
+        />
+      </div>
+      </div>
+      { fileName && <Label text={`Загружен файл: ${fileName}`} />}
       <TextInput id='title' label='Полное название' type='text'
         required={!file}
         placeholder={file && 'Загрузить из файла'}
@@ -93,13 +118,8 @@ function CreateRSFormPage() {
       />
       <Checkbox id='common' label='Общедоступная схема'
         value={common}
-        onChange={event => setCommon(event.target.checked)}
+        setValue={value => setCommon(value ?? false)}
       />
-      <FileInput id='trs' label='Загрузить из Экстеор'
-        acceptType='.trs'
-        onChange={handleFile}
-      />
-
       <div className='flex items-center justify-center gap-4 py-2 mt-4'>
         <SubmitButton 
           text='Создать схему'
