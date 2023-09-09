@@ -41,12 +41,20 @@
   --cd-fg-80: #d4d4d8;
   --cd-fg-100: #e4e4e7;
 
-  --cd-prim-bg-100: #e66000;
+  /* --cd-prim-bg-100: #e66000;
   --cd-prim-bg-80: #cc7700;
   --cd-prim-bg-60: #995900;
 
   --cd-prim-fg-60: #ffa666;
   --cd-prim-fg-80: #ff6a00;
+  --cd-prim-fg-100: #ffffff; */
+
+  --cd-prim-bg-100: hsl(267, 90%, 60%);
+  --cd-prim-bg-80: hsl(267, 90%, 45%);
+  --cd-prim-bg-60: hsl(269, 90%, 30%);
+
+  --cd-prim-fg-60: hsl(267, 90%, 45%);
+  --cd-prim-fg-80: hsl(267, 90%, 60%);
   --cd-prim-fg-100: #ffffff;
 
   --cd-red-bg-100: #4d0000;
