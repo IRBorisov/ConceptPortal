@@ -186,7 +186,11 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
           <div
             id={`${prefixes.cst_list}${cst.alias}`}
             className='w-full px-1 text-center rounded-md whitespace-nowrap'
-            style={{backgroundColor: getCstStatusColor(cst.status, colors)}}
+            style={{borderWidth: "1px", 
+              borderColor: getCstStatusColor(cst.status, colors), 
+              color: getCstStatusColor(cst.status, colors), 
+              fontWeight: 600,
+              backgroundColor: colors.bgDefault}}
           >
             {cst.alias}
           </div>

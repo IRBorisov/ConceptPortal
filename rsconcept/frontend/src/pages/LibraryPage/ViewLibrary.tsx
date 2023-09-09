@@ -120,6 +120,7 @@ function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
         </p>
       </div>}
 
+      
       pagination
       paginationPerPage={50}
       paginationRowsPerPageOptions={[10, 20, 30, 50, 100]}

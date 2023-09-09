@@ -38,16 +38,24 @@
   --cd-fg-80:         hsl(000, 000%, 080%);
   --cd-fg-100:        hsl(000, 000%, 093%);
 
-  --cd-prim-bg-100:   hsl(025, 079%, 052%);
+  /* --cd-prim-bg-100:   hsl(025, 079%, 052%);
   --cd-prim-bg-80:    hsl(035, 080%, 043%);
   --cd-prim-bg-60:    hsl(045, 080%, 031%);
 
   --cd-prim-fg-80:    hsl(025, 080%, 050%);
-  --cd-prim-fg-100:   hsl(000, 000%, 100%);
+  --cd-prim-fg-100:   hsl(000, 000%, 100%); */
+
+  --cd-prim-bg-100: hsl(267, 50%, 50%);
+  --cd-prim-bg-80: hsl(267, 50%, 35%);
+  --cd-prim-bg-60: hsl(269, 50%, 20%);
+
+  --cd-prim-fg-60: hsl(267, 50%, 35%);
+  --cd-prim-fg-80: hsl(267, 50%, 50%);
+  --cd-prim-fg-100: #ffffff;
 
   --cd-red-bg-100:    hsl(000, 100%, 015%);
   --cd-red-fg-100:    hsl(000, 100%, 060%);
-  --cd-green-fg-100:  hsl(120, 080%, 040%);
+  --cd-green-fg-100:  hsl(120, 80%, 40%);
 
   /* Import overrides */
   --toastify-color-dark: var(--cd-bg-60);

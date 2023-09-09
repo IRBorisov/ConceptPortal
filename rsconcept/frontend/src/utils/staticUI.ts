@@ -315,12 +315,12 @@ export const GraphColoringSelector: {value: ColoringScheme, label: string}[] = [
 
 export function getCstStatusColor(status: ExpressionStatus, colors: IColorTheme): string {
   switch (status) {
-  case ExpressionStatus.VERIFIED: return colors.bgGreen;
-  case ExpressionStatus.INCORRECT: return colors.bgRed;
-  case ExpressionStatus.INCALCULABLE: return colors.bgOrange;
-  case ExpressionStatus.PROPERTY: return colors.bgTeal;
-  case ExpressionStatus.UNKNOWN: return colors.bgBlue;
-  case ExpressionStatus.UNDEFINED: return colors.bgBlue;
+  case ExpressionStatus.VERIFIED: return colors.fgGreen;
+  case ExpressionStatus.INCORRECT: return colors.fgRed;
+  case ExpressionStatus.INCALCULABLE: return colors.fgOrange;
+  case ExpressionStatus.PROPERTY: return colors.fgTeal;
+  case ExpressionStatus.UNKNOWN: return colors.fgBlue;
+  case ExpressionStatus.UNDEFINED: return colors.fgBlue;
   }
 }
 
