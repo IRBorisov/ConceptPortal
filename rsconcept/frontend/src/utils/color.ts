@@ -95,65 +95,12 @@ export const darkT: IColorTheme = {
   bgTeal:     'hsl(192, 080%, 030%)',
   bgOrange:   'hsl(035, 100%, 035%)',
 
-  fgRed:      'hsl(000, 080%, 050%)',
-  fgGreen:    'hsl(100, 080%, 040%)',
+  fgRed:      'hsl(000, 080%, 045%)',
+  fgGreen:    'hsl(100, 080%, 035%)',
   fgBlue:     'hsl(235, 100%, 080%)',
   fgPurple:   'hsl(270, 100%, 080%)',
   fgTeal:     'hsl(192, 100%, 030%)',
   fgOrange:   'hsl(035, 100%, 050%)'
-};
-
-// ========= DATA TABLE THEMES ========
-export const dataTableLightT = {
-  text: {
-    primary: lightT.fgDefault,
-    secondary: lightT.fgDefault,
-    disabled: lightT.fgDisabled
-  },
-  background: {
-    default: lightT.bgDefault
-  },
-  highlightOnHover: {
-    default: lightT.bgHover,
-    text: lightT.fgDefault
-  },
-  divider: {
-    default: lightT.border
-  },
-  striped: {
-    default: lightT.bgControls,
-    text: lightT.fgDefault
-  },
-  selected: {
-    default: lightT.bgSelected,
-    text: lightT.fgDefault
-  }
-}
-
-export const dataTableDarkT = {
-  text: {
-    primary: darkT.fgDefault,
-    secondary: darkT.fgDefault,
-    disabled: darkT.fgDisabled
-  },
-  background: {
-    default: darkT.bgDefault
-  },
-  highlightOnHover: {
-    default: darkT.bgHover,
-    text: darkT.fgDefault
-  },
-  divider: {
-    default: darkT.border
-  },
-  striped: {
-    default: darkT.bgControls,
-    text: darkT.fgDefault
-  },
-  selected: {
-    default: darkT.bgSelected,
-    text: darkT.fgDefault
-  }
 };
 
 // ============ SELECT THEMES ==========

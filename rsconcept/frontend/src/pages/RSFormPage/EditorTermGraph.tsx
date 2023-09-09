@@ -19,7 +19,7 @@ import { graphDarkT, graphLightT, IColorTheme } from '../../utils/color';
 import { prefixes, resources, TIMEOUT_GRAPH_REFRESH } from '../../utils/constants';
 import { Graph } from '../../utils/Graph';
 import { CstType, IConstituenta, ICstCreateData } from '../../utils/models';
-import { getCstClassColor, getCstStatusColor, 
+import { getCstClassColor, getCstStatusBgColor, 
   GraphColoringSelector, GraphLayoutSelector,
   mapColoringLabels, mapLayoutLabels
 } from '../../utils/staticUI';
@@ -34,7 +34,7 @@ function getCstNodeColor(cst: IConstituenta, coloringScheme: ColoringScheme, col
     return getCstClassColor(cst.cst_class, colors);
   }
   if (coloringScheme === 'status') {
-    return getCstStatusColor(cst.status, colors);
+    return getCstStatusBgColor(cst.status, colors);
   }
   return '';
 }

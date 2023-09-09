@@ -26,7 +26,7 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
   return (
   <div ref={pickerMenu.ref} className='h-full text-right'>
     <Button
-      icon={<FilterCogIcon size={6} />}
+      icon={<FilterCogIcon color='text-controls' size={6} />}
       dense
       tooltip='Фильтры'
       colorClass='clr-input clr-hover text-btn'

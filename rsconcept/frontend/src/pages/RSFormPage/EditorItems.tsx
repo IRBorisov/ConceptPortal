@@ -1,9 +1,10 @@
-import { useCallback, useMemo, useState } from 'react';
+import { createColumnHelper,RowSelectionState } from '@tanstack/react-table';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import Button from '../../components/Common/Button';
-import ConceptDataTable from '../../components/Common/ConceptDataTable';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
+import DataTable from '../../components/Common/DataTable';
 import Divider from '../../components/Common/Divider';
 import HelpRSFormItems from '../../components/Help/HelpRSFormItems';
 import { ArrowDownIcon, ArrowUpIcon, DumpBinIcon, HelpIcon, MeshIcon, SmallPlusIcon } from '../../components/Icons';
@@ -11,7 +12,9 @@ import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import { prefixes } from '../../utils/constants';
 import { CstType, IConstituenta, ICstCreateData, ICstMovetoData } from '../../utils/models'
-import { getCstStatusColor, getCstTypePrefix, getCstTypeShortcut, getCstTypificationLabel, mapStatusInfo } from '../../utils/staticUI';
+import { getCstStatusFgColor, getCstTypePrefix, getCstTypeShortcut, getCstTypificationLabel, mapStatusInfo } from '../../utils/staticUI';
+
+const columnHelper = createColumnHelper<IConstituenta>();
 
 interface EditorItemsProps {
   onOpenEdit: (cstID: number) => void
@@ -25,7 +28,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
   const [selected, setSelected] = useState<number[]>([]);
   const nothingSelected = useMemo(() => selected.length === 0, [selected]);
 
-  const [toggledClearRows, setToggledClearRows] = useState(false);
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
   // Delete selected constituents
   function handleDelete() {
@@ -33,8 +36,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
       return;
     }
     onDeleteCst(selected, () => {
-      setToggledClearRows(prev => !prev);
-      setSelected([]);
+      setRowSelection({});
     });
   }
 
@@ -53,12 +55,16 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
     }, -1);
     const target = Math.max(0, currentIndex - 1) + 1
     const data = {
-      items: selected.map(id => {
-        return { id: id };
-      }),
+      items: selected.map(id => ({ id: id })),
       move_to: target
     }
-    cstMoveTo(data);
+    cstMoveTo(data, () => {
+      const newSelection: RowSelectionState = {};
+      selected.forEach((_, index) => {
+        newSelection[String(target + index - 1)] = true;
+      })
+      setRowSelection(newSelection);
+    });
   }
 
   // Move selected cst down
@@ -80,12 +86,16 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
     }, -1);
     const target = Math.min(schema.items.length - 1, currentIndex - count + 2) + 1
     const data: ICstMovetoData = {
-      items: selected.map(id => {
-        return { id: id };
-      }),
+      items: selected.map(id => ({ id: id })),
       move_to: target
     }
-    cstMoveTo(data);
+    cstMoveTo(data, () => {
+      const newSelection: RowSelectionState = {};
+      selected.forEach((_, index) => {
+        newSelection[String(target + index - 1)] = true;
+      })
+      setRowSelection(newSelection);
+    });
   }
 
   // Generate new names for all constituents
@@ -156,41 +166,53 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
   const handleRowClicked = useCallback(
   (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
     if (event.altKey) {
+      event.preventDefault();
       onOpenEdit(cst.id);
     }
   }, [onOpenEdit]);
+
+  const handleRowDoubleClicked = useCallback(
+  (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
+    event.preventDefault();
+    onOpenEdit(cst.id);
+  }, [onOpenEdit]);
   
-  const handleSelectionChange = useCallback(
-  ({ selectedRows }: {
-    allSelected: boolean
-    selectedCount: number
-    selectedRows: IConstituenta[]
-  }) => {
-    setSelected(selectedRows.map(cst => cst.id));
-  }, [setSelected]);
+  useLayoutEffect(
+  () => {
+    if (!schema || Object.keys(rowSelection).length === 0) {
+      setSelected([]);
+    } else {
+      const selected: number[] = [];
+      schema.items.forEach((cst, index) => {
+        if (rowSelection[String(index)] === true) {
+          selected.push(cst.id);
+        }
+      });
+      setSelected(selected);
+    }
+  }, [rowSelection, schema]);
 
   const columns = useMemo(
   () => [
-    {
-      name: 'ID',
-      id: 'id',
-      selector: (cst: IConstituenta) => cst.id,
-      omit: true
-    },
-    {
-      name: 'Имя',
+    columnHelper.accessor('alias', {
       id: 'alias',
-      cell: (cst: IConstituenta) => {
-        const info = mapStatusInfo.get(cst.status)!;
+      header: 'Имя',
+      size: 65,
+      minSize: 65,
+      cell: props => {
+        const cst = props.row.original;
+        const info = mapStatusInfo.get(cst.status);
         return (<>
           <div
             id={`${prefixes.cst_list}${cst.alias}`}
             className='w-full px-1 text-center rounded-md whitespace-nowrap'
-            style={{borderWidth: "1px", 
-              borderColor: getCstStatusColor(cst.status, colors), 
-              color: getCstStatusColor(cst.status, colors), 
+            style={{
+              borderWidth: "1px", 
+              borderColor: getCstStatusFgColor(cst.status, colors), 
+              color: getCstStatusFgColor(cst.status, colors), 
               fontWeight: 600,
-              backgroundColor: colors.bgDefault}}
+              backgroundColor: colors.bgInput
+            }}
           >
             {cst.alias}
           </div>
@@ -198,67 +220,63 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
             anchorSelect={`#${prefixes.cst_list}${cst.alias}`}
             place='right'
           >
-            <p><b>Статус: </b> {info.tooltip}</p>
+            <p><span className='font-semibold'>Статус</span>: {info!.tooltip}</p>
           </ConceptTooltip>
         </>);
-      },
-      width: '65px',
-      maxWidth: '65px',
-      reorder: true,
-    },
-    {
-      name: 'Типизация',
+      }
+    }),
+    columnHelper.accessor(cst => getCstTypificationLabel(cst), {
       id: 'type',
-      cell: (cst: IConstituenta) => <div style={{ fontSize: 12 }}>{getCstTypificationLabel(cst)}</div>,
-      width: '175px',
-      maxWidth: '175px',
-      wrap: true,
-      reorder: true,
-      hide: 1600
-    },
-    {
-      name: 'Термин',
+      header: 'Типизация',
+      size: 175,
+      maxSize: 175,
+      cell: props => <div style={{ fontSize: 12 }}>{props.getValue()}</div>
+    }),
+    columnHelper.accessor(cst => cst.term_resolved || cst.term_raw || '', {
       id: 'term',
-      selector: (cst: IConstituenta) => cst.term_resolved || cst.term_raw || '',
-      width: '350px',
-      minWidth: '150px',
-      maxWidth: '350px',
-      wrap: true,
-      reorder: true
-    },
-    {
-      name: 'Формальное определение',
+      header: 'Термин',
+      size: 350,
+      minSize: 150,
+      maxSize: 350
+    }),
+    columnHelper.accessor('definition_formal', {
       id: 'expression',
-      selector: (cst: IConstituenta) => cst.definition_formal || '',
-      minWidth: '300px',
-      maxWidth: '500px',
-      grow: 2,
-      wrap: true,
-      reorder: true
-    },
-    {
-      name: 'Текстовое определение',
+      header: 'Формальное определение',
+      size: 300,
+      minSize: 300,
+      maxSize: 500
+    }),
+    columnHelper.accessor(cst => cst.definition_resolved || cst.definition_raw || '', {
       id: 'definition',
-      cell: (cst: IConstituenta) => (
-        <div style={{ fontSize: 12 }}>
-          {cst.definition_resolved || cst.definition_raw || ''}
-        </div>
-      ),
-      minWidth: '200px',
-      grow: 2,
-      wrap: true,
-      reorder: true
-    },
-    {
-      name: 'Конвенция / Комментарий',
+      header: 'Текстовое определение',
+      size: 200,
+      minSize: 200,
+      cell: props => <div style={{ fontSize: 12 }}>{props.getValue()}</div>
+    }),
+    columnHelper.accessor('convention', {
       id: 'convention',
-      cell: (cst: IConstituenta) => <div style={{ fontSize: 12 }}>{cst.convention ?? ''}</div>,
-      minWidth: '100px',
-      wrap: true,
-      reorder: true,
-      hide: 1800
-    }
+      header: 'Конвенция / Комментарий',
+      minSize: 100,
+      maxSize: undefined,
+      cell: props => <div style={{ fontSize: 12 }}>{props.getValue()}</div>
+    }),
   ], [colors]);
+
+    //   name: 'Типизация',
+    //   hide: 1600
+    // },
+    // {
+    //   name: 'Формальное определение',
+    //   grow: 2,
+    // },
+    // {
+    //   name: 'Текстовое определение',
+    //   grow: 2,
+    // },
+    // {
+    //   name: 'Конвенция / Комментарий',
+    //   id: 'convention',
+    //   hide: 1800
 
   return (
     <div className='w-full'>
@@ -330,30 +348,30 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
           </ConceptTooltip>
         </div>
       </div>
-      <div className='w-full h-full' onKeyDown={handleTableKey}>
-      <ConceptDataTable
+      <div className='w-full h-full text-sm' onKeyDown={handleTableKey}>
+      <DataTable
         data={schema?.items ?? []}
         columns={columns}
-        keyField='id'
+        state={{
+          rowSelection: rowSelection
+        }}
+        
+        enableMultiRowSelection
+
+        onRowDoubleClicked={handleRowDoubleClicked}
+        onRowClicked={handleRowClicked}
+        onRowSelectionChange={setRowSelection}
+        
         noDataComponent={
           <span className='flex flex-col justify-center p-2 text-center'>
             <p>Список пуст</p>
-            <p>Создайте новую конституенту</p>
+            <p 
+              className='cursor-pointer text-primary hover:underline'
+              onClick={() => handleCreateCst()}>
+              Создать новую конституенту
+            </p>
           </span>
         }
-        
-        striped
-        highlightOnHover
-        pointerOnHover
-        
-        selectableRows
-        selectableRowsHighlight
-        selectableRowsComponentProps={{tabIndex: -1}}
-        onSelectedRowsChange={handleSelectionChange}
-        onRowDoubleClicked={cst => onOpenEdit(cst.id)}
-        onRowClicked={handleRowClicked}
-        clearSelectedRows={toggledClearRows}
-        dense
         />
       </div>
     </div>

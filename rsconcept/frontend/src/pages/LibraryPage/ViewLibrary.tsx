@@ -1,8 +1,9 @@
+import { createColumnHelper } from '@tanstack/react-table';
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
-import ConceptDataTable from '../../components/Common/ConceptDataTable';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
+import DataTable from '../../components/Common/DataTable';
 import TextURL from '../../components/Common/TextURL';
 import HelpLibrary from '../../components/Help/HelpLibrary';
 import { EducationIcon, EyeIcon, GroupIcon, HelpIcon } from '../../components/Icons';
@@ -17,6 +18,8 @@ interface ViewLibraryProps {
   cleanQuery: () => void
 }
 
+const columnHelper = createColumnHelper<ILibraryItem>();
+
 function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
   const { navigateTo } = useConceptNavigation();
   const intl = useIntl();
@@ -27,12 +30,13 @@ function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
 
   const columns = useMemo(
   () => [
-    {
-      name: '',
+    columnHelper.display({
       id: 'status',
-      minWidth: '60px',
-      maxWidth: '60px',
-      cell: (item: ILibraryItem) => {
+      header: '',
+      size: 60,
+      maxSize: 60,
+      cell: props => {
+        const item = props.row.original;
         return (<>
           <div
             className='flex items-center justify-start gap-1'
@@ -44,51 +48,50 @@ function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
           </div>
         </>);
       },
-      sortable: true,
-      reorder: true
-    },
-    {
-      name: 'Шифр',
+    }),
+    columnHelper.accessor('alias', {
       id: 'alias',
-      maxWidth: '140px',
-      selector: (item: ILibraryItem) => item.alias,
-      sortable: true,
-      reorder: true
-    },
-    {
-      name: 'Название',
+      header: 'Шифр',
+      size: 200,
+      minSize: 200,
+      maxSize: 200,
+      enableSorting: true
+    }),
+    columnHelper.accessor('title', {
       id: 'title',
-      minWidth: '50%',
-      selector: (item: ILibraryItem) => item.title,
-      sortable: true,
-      reorder: true
-    },
-    {
-      name: 'Владелец',
+      header: 'Название',
+      minSize: 200,
+      size: 1000,
+      maxSize: 1000,
+      enableSorting: true
+    }),
+    columnHelper.accessor(item => item.owner ?? 0, {
       id: 'owner',
-      selector: (item: ILibraryItem) => item.owner ?? 0,
-      format: (item: ILibraryItem) => {
-        return getUserLabel(item.owner);
-      },
-      sortable: true,
-      reorder: true
-    },
-    {
-      name: 'Обновлена',
+      header: 'Владелец',
+      cell: props => getUserLabel(props.cell.getValue()),
+      enableSorting: true,
+      enableResizing: false,
+      minSize: 200,
+      size: 300,
+      maxSize: 300
+    }),
+    columnHelper.accessor('time_update', {
       id: 'time_update',
-      selector: (item: ILibraryItem) => item.time_update,
-      format: (item: ILibraryItem) => new Date(item.time_update).toLocaleString(intl.locale),
-      sortable: true,
-      reorder: true
-    }
+      header: 'Обновлена',
+      minSize: 200,
+      size: 200,
+      maxSize: 200,
+      cell: props => new Date(props.cell.getValue()).toLocaleString(intl.locale),
+      enableSorting: true
+    })
   ], [intl, getUserLabel, user]);
   
   return (
     <div>
       <div className='relative w-full'>
-      <div className='absolute top-0 left-0 flex gap-1 mt-1 ml-5 z-pop'>
+      <div className='absolute top-[-0.125rem] left-0 flex gap-1 ml-3 z-pop'>
         <div id='library-help' className='py-2'>
-          <HelpIcon color='text-primary' size={6} />
+          <HelpIcon color='text-primary' size={5} />
         </div>
         <ConceptTooltip anchorSelect='#library-help'>
           <div className='max-w-[35rem]'>
@@ -97,14 +100,11 @@ function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
         </ConceptTooltip>
       </div>
       </div>
-    <ConceptDataTable
+    <DataTable
       columns={columns}
       data={items}
-      defaultSortFieldId='time_update'
-      defaultSortAsc={false}
-      striped
-      highlightOnHover
-      pointerOnHover
+      // defaultSortFieldId='time_update'
+      // defaultSortAsc={false}
 
       noDataComponent={
       <div className='flex flex-col gap-4 justify-center p-2 text-center min-h-[10rem]'>
@@ -120,10 +120,9 @@ function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
         </p>
       </div>}
 
-      
-      pagination
-      paginationPerPage={50}
-      paginationRowsPerPageOptions={[10, 20, 30, 50, 100]}
+      // pagination
+      // paginationPerPage={50}
+      // paginationRowsPerPageOptions={[10, 20, 30, 50, 100]}
       onRowClicked={openRSForm}
     />
     </div>

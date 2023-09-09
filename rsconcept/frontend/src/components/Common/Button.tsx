@@ -27,7 +27,7 @@ function Button({
       disabled={disabled ?? loading}
       onClick={onClick}
       title={tooltip}
-      className={`inline-flex items-center gap-2 align-middle justify-center select-none ${padding} ${borderClass} ${colorClass} ${widthClass} ${cursor}`}
+      className={`inline-flex items-center gap-2 align-middle justify-center select-none ${padding} ${colorClass} ${widthClass} ${borderClass} ${cursor}`}
       {...props}
     >
       {icon && <span>{icon}</span>}

@@ -321,7 +321,7 @@ export function InDoor(props: IconProps) {
 export function CheckboxChecked() {
   return (
     <svg
-      className='absolute w-3 h-3 mt-1 ml-0.5'
+      className='w-3 h-3'
       viewBox='0 0 512 512'
       fill='#ffffff'
     >
@@ -333,8 +333,8 @@ export function CheckboxChecked() {
 export function CheckboxNull() {
   return (
     <svg
-      className='absolute w-3 h-3 mt-1 ml-0.5'
-      viewBox='0 0 512 512'
+      className='w-3 h-3'
+      viewBox='0 0 16 16'
       fill='#ffffff'
     >
       <path d='M2 7.75A.75.75 0 012.75 7h10a.75.75 0 010 1.5h-10A.75.75 0 012 7.75z' />

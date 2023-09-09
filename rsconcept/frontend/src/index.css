@@ -7,18 +7,18 @@
 :root {
   /* Light Theme */
   --cl-bg-120:        hsl(000, 000%, 100%);
-  --cl-bg-100:        hsl(220, 020%, 098%);
-  --cl-bg-80:         hsl(220, 014%, 096%);
-  --cl-bg-60:         hsl(220, 013%, 091%);
-  --cl-bg-40:         hsl(216, 012%, 084%);
+  --cl-bg-100:        hsl(000, 000%, 098%);
+  --cl-bg-80:         hsl(000, 000%, 094%);
+  --cl-bg-60:         hsl(000, 000%, 091%);
+  --cl-bg-40:         hsl(000, 000%, 080%);
 
   --cl-fg-60:         hsl(000, 000%, 055%);
   --cl-fg-80:         hsl(000, 000%, 047%);
   --cl-fg-100:        hsl(000, 000%, 000%);
 
   --cl-prim-bg-100:   hsl(220, 100%, 060%);
-  --cl-prim-bg-80:    hsl(220, 100%, 090%);
-  --cl-prim-bg-60:    hsl(220, 100%, 094%);
+  --cl-prim-bg-80:    hsl(220, 080%, 092%);
+  --cl-prim-bg-60:    hsl(190, 080%, 094%);
   
   --cl-prim-fg-80:    hsl(220, 100%, 050%);
   --cl-prim-fg-100:   hsl(000, 000%, 100%);
@@ -38,24 +38,16 @@
   --cd-fg-80:         hsl(000, 000%, 080%);
   --cd-fg-100:        hsl(000, 000%, 093%);
 
-  /* --cd-prim-bg-100:   hsl(025, 079%, 052%);
-  --cd-prim-bg-80:    hsl(035, 080%, 043%);
-  --cd-prim-bg-60:    hsl(045, 080%, 031%);
+  --cd-prim-bg-100:   hsl(267, 050%, 050%);
+  --cd-prim-bg-80:    hsl(267, 050%, 032%);
+  --cd-prim-bg-60:    hsl(269, 030%, 028%);
 
-  --cd-prim-fg-80:    hsl(025, 080%, 050%);
-  --cd-prim-fg-100:   hsl(000, 000%, 100%); */
-
-  --cd-prim-bg-100: hsl(267, 50%, 50%);
-  --cd-prim-bg-80: hsl(267, 50%, 35%);
-  --cd-prim-bg-60: hsl(269, 50%, 20%);
-
-  --cd-prim-fg-60: hsl(267, 50%, 35%);
-  --cd-prim-fg-80: hsl(267, 50%, 50%);
-  --cd-prim-fg-100: #ffffff;
+  --cd-prim-fg-80:    hsl(267, 070%, 070%);
+  --cd-prim-fg-100:   hsl(000, 000%, 100%);
 
   --cd-red-bg-100:    hsl(000, 100%, 015%);
-  --cd-red-fg-100:    hsl(000, 100%, 060%);
-  --cd-green-fg-100:  hsl(120, 80%, 40%);
+  --cd-red-fg-100:    hsl(000, 080%, 055%);
+  --cd-green-fg-100:  hsl(120, 080%, 040%);
 
   /* Import overrides */
   --toastify-color-dark: var(--cd-bg-60);
@@ -246,14 +238,10 @@
     }
   }
 
-  .clr-btn-nav {
-    color: var(--cl-fg-80);
-    .dark & {
-      color: var(--cd-fg-80);
-    }
-  }
-
-  .clr-btn-clear {
+  :is(.text-controls,
+    .clr-btn-nav,
+    .clr-btn-clear
+  ) {
     color: var(--cl-fg-80);
     &:disabled {
       color: var(--cl-fg-60);

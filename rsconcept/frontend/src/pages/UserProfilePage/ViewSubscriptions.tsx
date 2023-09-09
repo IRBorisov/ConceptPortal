@@ -1,13 +1,16 @@
+import { createColumnHelper } from '@tanstack/react-table';
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
-import ConceptDataTable from '../../components/Common/ConceptDataTable';
+import DataTable from '../../components/Common/DataTable';
 import { useConceptNavigation } from '../../context/NagivationContext';
 import { ILibraryItem } from '../../utils/models';
 
 interface ViewSubscriptionsProps {
   items: ILibraryItem[]
 }
+
+const columnHelper = createColumnHelper<ILibraryItem>();
 
 function ViewSubscriptions({items}: ViewSubscriptionsProps) {
   const { navigateTo } = useConceptNavigation();
@@ -17,50 +20,48 @@ function ViewSubscriptions({items}: ViewSubscriptionsProps) {
 
   const columns = useMemo(() =>
   [
-    {
-      name: 'Шифр',
+    columnHelper.accessor('alias', {
       id: 'alias',
-      maxWidth: '140px',
-      selector: (item: ILibraryItem) => item.alias,
-      sortable: true,
-      reorder: true
-    },
-    {
-      name: 'Название',
+      header: 'Шифр',
+      size: 200,
+      minSize: 200,
+      maxSize: 200,
+      enableSorting: true
+    }),
+    columnHelper.accessor('title', {
       id: 'title',
-      minWidth: '50%',
-      selector: (item: ILibraryItem) => item.title,
-      sortable: true,
-      reorder: true
-    },
-    {
-      name: 'Обновлена',
+      header: 'Название',
+      minSize: 200,
+      size: 800,
+      maxSize: 800,
+      enableSorting: true
+    }),
+    columnHelper.accessor('time_update', {
       id: 'time_update',
-      selector: (item: ILibraryItem) => item.time_update,
-      format: (item: ILibraryItem) => new Date(item.time_update).toLocaleString(intl.locale),
-      sortable: true,
-      reorder: true
-    }
+      header: 'Обновлена',
+      minSize: 200,
+      size: 200,
+      maxSize: 200,
+      cell: props => new Date(props.cell.getValue()).toLocaleString(intl.locale),
+      enableSorting: true
+    })
   ], [intl]);
 
   return (
-    <ConceptDataTable
-      className='h-full overflow-auto border'
+    <div className='h-full overflow-auto text-sm border w-fit'>
+    <DataTable
       columns={columns}
       data={items}
-      defaultSortFieldId='time_update'
-      defaultSortAsc={false}
+      // defaultSortFieldId='time_update'
+      // defaultSortAsc={false}
 
       noDataComponent={
         <div className='h-[10rem]'>Отслеживаемые схемы отсутствуют</div>
       }
 
-      striped
-      dense
-      highlightOnHover
-      pointerOnHover
       onRowClicked={openRSForm}
     />
+    </div>
   )
 }
 

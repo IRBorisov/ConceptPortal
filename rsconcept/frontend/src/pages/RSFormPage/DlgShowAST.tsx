@@ -18,18 +18,15 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
   const { darkMode, colors } = useConceptTheme();
   const [hoverID, setHoverID] = useState<number | undefined>(undefined);
   const hoverNode = useMemo(
-  () => {
-    return syntaxTree.find(node => node.uid === hoverID);
-  }, [hoverID, syntaxTree]);
-  
+    () => syntaxTree.find(node => node.uid === hoverID)
+  , [hoverID, syntaxTree]);
+
   const nodes: GraphNode[] = useMemo(
-  () => syntaxTree.map(node => {
-    return {
-      id: String(node.uid),
-      label: getASTNodeLabel(node),
-      fill: getASTNodeColor(node, colors),
-    };
-  }), [syntaxTree, colors]);
+  () => syntaxTree.map(node => ({
+    id: String(node.uid),
+    label: getASTNodeLabel(node),
+    fill: getASTNodeColor(node, colors),
+  })), [syntaxTree, colors]);
 
   const edges: GraphEdge[] = useMemo(
   () => {
@@ -47,14 +44,12 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
   }, [syntaxTree]);
 
   const handleHoverIn = useCallback(
-  (node: GraphNode) => {
-    setHoverID(Number(node.id));
-  }, []);
+    (node: GraphNode) => setHoverID(Number(node.id))
+  , []);
 
   const handleHoverOut = useCallback(
-  () => {
-    setHoverID(undefined);
-  }, []);
+    () => setHoverID(undefined)
+  , []);
 
   return (
     <Modal

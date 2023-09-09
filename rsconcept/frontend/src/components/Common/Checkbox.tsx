@@ -3,7 +3,8 @@ import { useMemo } from 'react';
 import { CheckboxChecked } from '../Icons';
 import Label from './Label';
 
-export interface CheckboxProps {
+export interface CheckboxProps
+extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'children' | 'title' | 'value' | 'onClick' > {
   id?: string
   label?: string
   required?: boolean
@@ -15,7 +16,10 @@ export interface CheckboxProps {
   setValue?: (newValue: boolean) => void
 }
 
-function Checkbox({ id, required, disabled, tooltip, label, widthClass = 'w-fit', value, setValue }: CheckboxProps) {
+function Checkbox({
+  id, required, disabled, tooltip, label, 
+  widthClass = 'w-fit', value, setValue, ...props
+}: CheckboxProps) {
   const cursor = useMemo(
   () => {
     if (disabled) {
@@ -46,8 +50,11 @@ function Checkbox({ id, required, disabled, tooltip, label, widthClass = 'w-fit'
       title={tooltip}
       disabled={disabled}
       onClick={handleClick}
+      {...props}
     >
-      <div className={`relative peer w-4 h-4 shrink-0 mt-0.5 border rounded-sm appearance-none ${bgColor} ${cursor}`} />
+      <div className={`max-w-[1rem] min-w-[1rem] h-4 mt-0.5 border rounded-sm ${bgColor} ${cursor}`} >
+        { value && <div className='mt-[1px] ml-[1px]'><CheckboxChecked /></div>}
+      </div>
       { label && 
       <Label
         className={`${cursor} px-2 text-start`}
@@ -55,7 +62,6 @@ function Checkbox({ id, required, disabled, tooltip, label, widthClass = 'w-fit'
         required={required}
         htmlFor={id}
       />}
-      {value && <CheckboxChecked />}
     </button>
   );
 }

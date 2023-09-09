@@ -21,7 +21,7 @@ function TextArea({
     <div className='flex flex-col items-start [&:not(:first-child)]:mt-3'>
       <Label
         text={label}
-        required={required}
+        required={!props.disabled && required}
         htmlFor={id}
       />
       <textarea id={id}

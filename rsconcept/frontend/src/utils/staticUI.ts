@@ -242,11 +242,13 @@ export function getCstTypeShortcut(type: CstType) {
   }
 }
 
-export const CstTypeSelector = (Object.values(CstType)).map(
-(typeStr) => {
-    const type = typeStr as CstType;
-    return { value: type, label: getCstTypeLabel(type) };
-});
+export const CstTypeSelector = (
+  Object.values(CstType)).map(
+  typeStr => ({
+    value: typeStr as CstType,
+    label: getCstTypeLabel(typeStr as CstType)
+  })
+);
 
 export function getCstCompareLabel(mode: CstMatchMode): string {
   switch(mode) {
@@ -313,7 +315,18 @@ export const GraphColoringSelector: {value: ColoringScheme, label: string}[] = [
   { value: 'type', label: 'Цвет: класс'},
 ];
 
-export function getCstStatusColor(status: ExpressionStatus, colors: IColorTheme): string {
+export function getCstStatusBgColor(status: ExpressionStatus, colors: IColorTheme): string {
+  switch (status) {
+  case ExpressionStatus.VERIFIED: return colors.bgGreen;
+  case ExpressionStatus.INCORRECT: return colors.bgRed;
+  case ExpressionStatus.INCALCULABLE: return colors.bgOrange;
+  case ExpressionStatus.PROPERTY: return colors.bgTeal;
+  case ExpressionStatus.UNKNOWN: return colors.bgBlue;
+  case ExpressionStatus.UNDEFINED: return colors.bgBlue;
+  }
+}
+
+export function getCstStatusFgColor(status: ExpressionStatus, colors: IColorTheme): string {
   switch (status) {
   case ExpressionStatus.VERIFIED: return colors.fgGreen;
   case ExpressionStatus.INCORRECT: return colors.fgRed;

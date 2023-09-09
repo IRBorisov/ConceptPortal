@@ -1,12 +1,13 @@
+import { createColumnHelper } from '@tanstack/react-table';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import ConceptDataTable from '../../../components/Common/ConceptDataTable';
+import DataTable from '../../../components/Common/DataTable';
 import { useRSForm } from '../../../context/RSFormContext';
 import { useConceptTheme } from '../../../context/ThemeContext';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import { prefixes } from '../../../utils/constants';
 import { applyGraphFilter, CstMatchMode, CstType, DependencyMode, extractGlobals, IConstituenta, matchConstituenta } from '../../../utils/models';
-import { getCstDescription, getCstStatusColor, getMockConstituenta } from '../../../utils/staticUI';
+import { getCstDescription, getCstStatusFgColor, getMockConstituenta } from '../../../utils/staticUI';
 import ConstituentaTooltip from './ConstituentaTooltip';
 import DependencyModePicker from './DependencyModePicker';
 import MatchModePicker from './MatchModePicker';
@@ -24,6 +25,8 @@ interface ViewSideConstituentsProps {
 function isMockCst(cst: IConstituenta) {
   return cst.id <= 0;
 }
+
+const columnHelper = createColumnHelper<IConstituenta>();
 
 function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: ViewSideConstituentsProps) {
   const { noNavigation, colors } = useConceptTheme();
@@ -85,75 +88,61 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
     }
   }, [onOpenEdit]);
 
-  const conditionalRowStyles = useMemo(
-  () => [
-    {
-      when: (cst: IConstituenta) => cst.id === activeID,
-      style: {
-        backgroundColor: colors.bgSelected,
-      },
-    }
-  ], [activeID, colors]);
-
   const columns = useMemo(
   () => [
-    {
-      id: 'id',
-      selector: (cst: IConstituenta) => cst.id,
-      omit: true
-    },
-    {
-      name: 'ID',
+    columnHelper.accessor('alias', {
       id: 'alias',
-      cell: (cst: IConstituenta) => {
+      header: 'Имя',
+      size: 65,
+      minSize: 65,
+      cell: props => {
+        const cst = props.row.original;
         return (<>
           <div
             id={`${prefixes.cst_list}${cst.alias}`}
-            className='w-full px-1 text-center rounded-md min-w-fit whitespace-nowrap'
-            style={{backgroundColor: getCstStatusColor(cst.status, colors)}}
+            className='w-full px-1 text-center rounded-md whitespace-nowrap'
+            style={{
+              borderWidth: '1px', 
+              borderColor: getCstStatusFgColor(cst.status, colors), 
+              color: getCstStatusFgColor(cst.status, colors), 
+              fontWeight: 600,
+              backgroundColor: isMockCst(cst) ? colors.bgWarning : colors.bgInput
+            }}
           >
             {cst.alias}
           </div>
           <ConstituentaTooltip data={cst} anchor={`#${prefixes.cst_list}${cst.alias}`} />
         </>);
-      },
-      width: '65px',
-      maxWidth: '65px',
-      conditionalCellStyles: [
-        {
-          when: (cst: IConstituenta) => isMockCst(cst),
-          style: {backgroundColor: colors.bgWarning}
-        }
-      ]
-    },
-    {
-      name: 'Описание',
+      }
+    }),
+    columnHelper.accessor(cst => getCstDescription(cst), {
       id: 'description',
-      selector: (cst: IConstituenta) => getCstDescription(cst),
-      minWidth: '350px',
-      wrap: true,
-      conditionalCellStyles: [
-        {
-          when: (cst: IConstituenta) => isMockCst(cst),
-          style: {backgroundColor: colors.bgWarning}
-        }
-      ]
-    },
-    {
-      name: 'Выражение',
+      header: 'Описание',
+      size: 350,
+      minSize: 350,
+      maxSize: 350,
+      cell: props => 
+        <div style={{
+          fontSize: 12,
+          color: isMockCst(props.row.original) ? colors.fgWarning : undefined
+        }}>
+          {props.getValue()}
+        </div>
+    }),
+    columnHelper.accessor('definition_formal', {
       id: 'expression',
-      selector: (cst: IConstituenta) => cst.definition_formal || '',
-      minWidth: '200px',
-      hide: 1600,
-      grow: 2,
-      wrap: true,
-      conditionalCellStyles: [
-        {
-          when: (cst: IConstituenta) => isMockCst(cst),
-          style: {backgroundColor: colors.fgWarning}
-        }
-      ]
-    }
+      header: 'Выражение',
+      size: 700,
+      minSize: 0,
+      maxSize: 700,
+      cell: props => 
+        <div style={{
+          fontSize: 12,
+          color: isMockCst(props.row.original) ? colors.fgWarning : undefined
+        }}>
+          {props.getValue()}
+        </div>
+    })
   ], [colors]);
 
   const maxHeight = useMemo(
@@ -181,12 +170,14 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
         onChange={setFilterSource}
       />
     </div>
-    <div className='overflow-y-auto' style={{maxHeight : `${maxHeight}`}}>
-      <ConceptDataTable
+    <div className='overflow-y-auto text-sm' style={{maxHeight : `${maxHeight}`}}>
+      <DataTable
         data={filteredData}
         columns={columns}
-        keyField='id'
-        conditionalRowStyles={conditionalRowStyles}
+
+        
+        // conditionalRowStyles={conditionalRowStyles}
+
         noDataComponent={
           <span className='flex flex-col justify-center p-2 text-center min-h-[5rem]'>
             <p>Список конституент пуст</p>
@@ -194,13 +185,8 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
           </span>
         }
 
-        striped
-        highlightOnHover
-        pointerOnHover
-
         onRowDoubleClicked={handleDoubleClick}
         onRowClicked={handleRowClicked}
-        dense
       />
     </div>
   </>);

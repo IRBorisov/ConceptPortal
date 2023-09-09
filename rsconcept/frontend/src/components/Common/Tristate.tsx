@@ -11,7 +11,10 @@ extends Omit<CheckboxProps, 'value' | 'setValue'> {
   setValue?: (newValue: boolean | null) => void
 }
 
-function Checkbox({ id, required, disabled, tooltip, label, widthClass = 'w-fit', value, setValue }: TristateProps) {
+function Tristate({
+  id, required, disabled, tooltip, label, 
+  widthClass = 'w-fit', value, setValue, ...props
+}: TristateProps) {
   const cursor = useMemo(
   () => {
     if (disabled) {
@@ -33,9 +36,11 @@ function Checkbox({ id, required, disabled, tooltip, label, widthClass = 'w-fit'
       return;
     }
     if (value === false) {
-        setValue(null); 
+      setValue(null); 
+    } else if (value === null) {
+      setValue(true);
     } else {
-      setValue(!value);
+      setValue(false);
     }
   }
 
@@ -46,8 +51,12 @@ function Checkbox({ id, required, disabled, tooltip, label, widthClass = 'w-fit'
       title={tooltip}
       disabled={disabled}
       onClick={handleClick}
+      {...props}
     >
-      <div className={`relative peer w-4 h-4 shrink-0 mt-0.5 border rounded-sm appearance-none ${bgColor} ${cursor}`} />
+      <div className={`w-4 h-4 shrink-0 mt-0.5 border rounded-sm ${bgColor} ${cursor}`} >
+        { value && <div className='mt-[1px] ml-[1px]'><CheckboxChecked /></div>}
+        { value == null && <div className='mt-[1px] ml-[1px]'><CheckboxNull /></div>}
+      </div>
       { label && 
       <Label
         className={`${cursor} px-2 text-start`}
@@ -55,10 +64,8 @@ function Checkbox({ id, required, disabled, tooltip, label, widthClass = 'w-fit'
         required={required}
         htmlFor={id}
       />}
-      {value && <CheckboxChecked />}
-      {value === null && <CheckboxNull />}
     </button>
   );
 }
 
-export default Checkbox;
+export default Tristate;

@@ -37,16 +37,14 @@ function SearchPanel({ total, filtered, setFilter }: SearchPanelProps) {
   function handleChangeQuery(event: React.ChangeEvent<HTMLInputElement>) {
     const newQuery = event.target.value;
     setQuery(newQuery);
-    setFilter(prev => {
-      return {
-        query: newQuery,
-        is_owned: prev.is_owned,
-        is_common: prev.is_common,
-        is_canonical: prev.is_canonical,
-        is_subscribed: prev.is_subscribed,
-        is_personal: prev.is_personal
-      };
-    });
+    setFilter(prev => ({
+      query: newQuery,
+      is_owned: prev.is_owned,
+      is_common: prev.is_common,
+      is_canonical: prev.is_canonical,
+      is_subscribed: prev.is_subscribed,
+      is_personal: prev.is_personal
+    }));
   }
   
   useLayoutEffect(() => {
@@ -83,7 +81,7 @@ function SearchPanel({ total, filtered, setFilter }: SearchPanelProps) {
           onChange={handleChangeStrategy}
         />
         <div className='relative w-96 min-w-[10rem]'>
-          <div className='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none'>
+          <div className='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-controls'>
             <MagnifyingGlassIcon />
           </div>
           <input

@@ -19,11 +19,11 @@ This readme file is used mostly to document project dependencies
   - js-file-download
   - react-tabs
   - react-intl
-  - react-data-table-component
   - react-select
   - react-error-boundary
   - reagraph
   - react-tooltip
+  - @tanstack/react-table
   - @uiw/react-codemirror
   - @uiw/codemirror-themes
   - @lezer/lr

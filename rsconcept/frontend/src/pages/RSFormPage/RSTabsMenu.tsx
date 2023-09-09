@@ -71,9 +71,10 @@ function RSTabsMenu({
       <div ref={schemaMenu.ref}>
         <Button
           tooltip='Действия'
-          icon={<MenuIcon size={5}/>}
+          icon={<MenuIcon color='text-controls' size={5}/>}
           borderClass=''
           widthClass='h-full w-fit'
+          style={{outlineColor: 'transparent'}}
           dense
           onClick={schemaMenu.toggle}
           tabIndex={-1}
@@ -123,6 +124,7 @@ function RSTabsMenu({
           tooltip={'измнение: ' + (isEditable ? '[доступно]' : '[запрещено]')}
           borderClass=''
           widthClass='h-full w-fit'
+          style={{outlineColor: 'transparent'}}
           icon={<PenIcon size={5} color={isEditable ? 'text-success' : 'text-warning'}/>}
           dense
           onClick={editMenu.toggle}
@@ -136,7 +138,7 @@ function RSTabsMenu({
             tooltip={!user || !isClaimable ? 'Стать владельцем можно только для общей изменяемой схемы' : ''}
           >
             <div className='inline-flex items-center gap-1 justify-normal'>
-              <span className={isOwned ? 'text-success' : ''}><CrownIcon size={4} /></span>
+              <span><CrownIcon size={4} color={isOwned ? 'text-success' : 'text-controls'} /></span>
               <p>
                 { isOwned && <b>Владелец схемы</b> }
                 { !isOwned && <b>Стать владельцем</b> }
@@ -165,10 +167,11 @@ function RSTabsMenu({
           disabled={processing}
           icon={isTracking
             ? <EyeIcon color='text-primary' size={5}/>
-            : <EyeOffIcon size={5}/>
+            : <EyeOffIcon color='text-controls' size={5}/>
           }
           widthClass='h-full w-fit'
           borderClass=''
+          style={{outlineColor: 'transparent'}}
           dense
           onClick={onToggleSubscribe}
           tabIndex={-1}

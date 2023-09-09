@@ -137,7 +137,7 @@ function RSTabs() {
           if (element) {
             element.scrollIntoView({
               behavior: 'smooth',
-              block: 'end',
+              block: 'nearest',
               inline: 'nearest'
             });
           }
@@ -173,9 +173,7 @@ function RSTabs() {
       return;
     }
     const data = {
-      items: deleted.map(id => {
-        return { id: id };
-      })
+      items: deleted.map(id => ({ id: id }))
     };
     let activeIndex = schema.items.findIndex(cst => cst.id === activeID);
     cstDelete(data, () => {
@@ -345,7 +343,7 @@ function RSTabs() {
           showCloneDialog={handleShowClone} 
           showUploadDialog={() => setShowUpload(true)}
         />
-        <ConceptTab className='border-r-2 min-w-[7.8rem]'>Паспорт схемы</ConceptTab>
+        <ConceptTab className='border-x-2 min-w-[7.8rem]'>Паспорт схемы</ConceptTab>
         <ConceptTab className='border-r-2 min-w-[10rem] flex justify-between gap-2'>
           <span>Конституенты</span>
           <span>{`${schema.stats?.count_errors ?? 0} | ${schema.stats?.count_all ?? 0}`}</span>

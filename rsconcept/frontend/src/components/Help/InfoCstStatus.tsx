@@ -1,6 +1,6 @@
 import { useConceptTheme } from '../../context/ThemeContext';
 import { prefixes } from '../../utils/constants';
-import { getCstStatusColor, mapStatusInfo } from '../../utils/staticUI';
+import { getCstStatusBgColor, mapStatusInfo } from '../../utils/staticUI';
 
 interface InfoCstStatusProps {
   title?: string
@@ -18,7 +18,7 @@ function InfoCstStatus({ title }: InfoCstStatusProps) {
         <p key={`${prefixes.cst_status_list}${index}`}>
           <span
             className='px-1 inline-block font-semibold min-w-[5rem] text-center border text-sm'
-            style={{backgroundColor: getCstStatusColor(status, colors)}}
+            style={{backgroundColor: getCstStatusBgColor(status, colors)}}
           >
             {info.text}
           </span>

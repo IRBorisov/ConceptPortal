@@ -17,34 +17,27 @@ function ConceptSelectSingle<
 > ({ ...props }: ConceptSelectSingleProps<Option, Group>) {
   const { darkMode, colors } = useConceptTheme();
   const themeColors = useMemo(
-  () => {
-    return !darkMode ? selectLightT : selectDarkT;
-  }, [darkMode]);
+    () => !darkMode ? selectLightT : selectDarkT
+  , [darkMode]);
 
   const adjustedStyles: StylesConfig<Option, false, Group> = useMemo(
-  () => {
-    return {
-      control: (styles, { isDisabled }) => {
-        return {
-          ...styles,
-          borderRadius: '0.25rem',
-          cursor: isDisabled ? 'not-allowed' : 'pointer'
-        };
-      },
-      option: (styles, { isSelected }) => {
-        return {
-          ...styles,
-          backgroundColor: isSelected ? colors.bgSelected : styles.backgroundColor,
-          color: isSelected ? colors.fgSelected : styles.color,
-          borderWidth: '1px',
-          borderColor: colors.border
-        };
-      },
-      input: (styles) => ({...styles}),
-      placeholder: (styles) => ({...styles}),
-      singleValue: (styles) => ({...styles}),
-    };
-  }, [colors]);
+  () => ({
+    control: (styles, { isDisabled }) => ({
+      ...styles,
+      borderRadius: '0.25rem',
+      cursor: isDisabled ? 'not-allowed' : 'pointer'
+    }),
+    option: (styles, { isSelected }) => ({
+      ...styles,
+      backgroundColor: isSelected ? colors.bgSelected : styles.backgroundColor,
+      color: isSelected ? colors.fgSelected : styles.color,
+      borderWidth: '1px',
+      borderColor: colors.border
+    }),
+    input: (styles) => ({...styles}),
+    placeholder: (styles) => ({...styles}),
+    singleValue: (styles) => ({...styles}),
+  }), [colors]);
 
   return (
     <Select

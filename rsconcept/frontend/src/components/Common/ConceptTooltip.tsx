@@ -12,7 +12,7 @@ function ConceptTooltip({ className, layer, place='bottom', ...props }: ConceptT
 
   return (
   <Tooltip
-    opacity={0.95}
+    opacity={0.97}
     className={`overflow-auto border shadow-md ${layer ?? 'z-tooltip'} ${className}`}
     variant={(darkMode ? 'dark' : 'light')}
     place={place}

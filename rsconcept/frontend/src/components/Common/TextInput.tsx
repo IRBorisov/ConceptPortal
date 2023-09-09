@@ -20,7 +20,7 @@ function TextInput({
     <div className={`flex [&:not(:first-child)]:mt-3 ${singleRow ? 'items-center gap-4 ' + widthClass : 'flex-col items-start'}`}>
       <Label
         text={label}
-        required={required}
+        required={!props.disabled && required}
         htmlFor={id}
       />
       <input id={id}
