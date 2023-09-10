@@ -12,7 +12,7 @@ function LocalDevelopmentSetup() {
 
 function FrontendSetup() {
     Set-Location $frontend
-    & npm install --only=dev 
+    & npm install
 }
 
 function BackendSetup() {
