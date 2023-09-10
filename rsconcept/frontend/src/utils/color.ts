@@ -65,7 +65,7 @@ export const lightT: IColorTheme = {
   fgGreen:    'hsl(100, 090%, 035%)',
   fgBlue:     'hsl(235, 100%, 050%)',
   fgPurple:   'hsl(270, 100%, 070%)',
-  fgTeal:     'hsl(192, 090%, 040%)',
+  fgTeal:     'hsl(200, 080%, 050%)',
   fgOrange:   'hsl(030, 090%, 055%)'
 };
 

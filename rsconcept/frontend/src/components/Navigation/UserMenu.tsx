@@ -1,7 +1,7 @@
 import { useAuth } from '../../context/AuthContext';
 import { useConceptNavigation } from '../../context/NagivationContext';
 import useDropdown from '../../hooks/useDropdown';
-import { InDoor, UserIcon } from '../Icons';
+import { InDoorIcon, UserIcon } from '../Icons';
 import NavigationButton from './NavigationButton';
 import UserDropdown from './UserDropdown';
 
@@ -18,7 +18,7 @@ function UserMenu() {
       <NavigationButton
         text='Войти...'
         description='Перейти на страницу логина'
-        icon={<InDoor />}
+        icon={<InDoorIcon />}
         onClick={navigateLogin}
       />}
       { user &&

@@ -1,8 +1,7 @@
-import { createColumnHelper } from '@tanstack/react-table';
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
-import DataTable from '../../components/Common/DataTable';
+import DataTable, { createColumnHelper } from '../../components/DataTable';
 import { useConceptNavigation } from '../../context/NagivationContext';
 import { ILibraryItem } from '../../utils/models';
 
@@ -52,9 +51,13 @@ function ViewSubscriptions({items}: ViewSubscriptionsProps) {
     <DataTable
       columns={columns}
       data={items}
-      // defaultSortFieldId='time_update'
-      // defaultSortAsc={false}
 
+      dense
+      enableSorting
+      initialSorting={{
+        id: 'time_update',
+        desc: true
+      }}
       noDataComponent={
         <div className='h-[10rem]'>Отслеживаемые схемы отсутствуют</div>
       }

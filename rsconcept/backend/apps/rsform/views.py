@@ -27,9 +27,9 @@ class LibraryActiveView(generics.ListAPIView):
             # pylint: disable=unsupported-binary-operation
             return m.LibraryItem.objects.filter(
                 Q(is_common=True) | Q(owner=user) | Q(subscription__user=user)
-            ).distinct()
+            ).distinct().order_by('-time_update')
         else:
-            return m.LibraryItem.objects.filter(is_common=True)
+            return m.LibraryItem.objects.filter(is_common=True).order_by('-time_update')
 
 
 class ConstituentAPIView(generics.RetrieveUpdateAPIView):

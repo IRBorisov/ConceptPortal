@@ -1,18 +1,23 @@
-import { createColumnHelper,RowSelectionState } from '@tanstack/react-table';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import Button from '../../components/Common/Button';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
-import DataTable from '../../components/Common/DataTable';
 import Divider from '../../components/Common/Divider';
+import DataTable, { createColumnHelper, type RowSelectionState,VisibilityState } from '../../components/DataTable';
 import HelpRSFormItems from '../../components/Help/HelpRSFormItems';
 import { ArrowDownIcon, ArrowUpIcon, DumpBinIcon, HelpIcon, MeshIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
+import useWindowSize from '../../hooks/useWindowSize';
 import { prefixes } from '../../utils/constants';
 import { CstType, IConstituenta, ICstCreateData, ICstMovetoData } from '../../utils/models'
 import { getCstStatusFgColor, getCstTypePrefix, getCstTypeShortcut, getCstTypificationLabel, mapStatusInfo } from '../../utils/staticUI';
+
+// Window width cutoff for columns
+const COLUMN_DEFINITION_HIDE_THRESHOLD = 1000;
+const COLUMN_TYPE_HIDE_THRESHOLD = 1200;
+const COLUMN_CONVENTION_HIDE_THRESHOLD = 1800;
 
 const columnHelper = createColumnHelper<IConstituenta>();
 
@@ -24,11 +29,13 @@ interface EditorItemsProps {
 
 function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps) {
   const { colors } = useConceptTheme();
+  const windowSize = useWindowSize();
   const { schema, isEditable, cstMoveTo, resetAliases } = useRSForm();
   const [selected, setSelected] = useState<number[]>([]);
   const nothingSelected = useMemo(() => selected.length === 0, [selected]);
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
   // Delete selected constituents
   function handleDelete() {
@@ -155,7 +162,9 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
     case '2': handleCreateCst(CstType.STRUCTURED); return true;
     case '3': handleCreateCst(CstType.TERM); return true;
     case '4': handleCreateCst(CstType.AXIOM); return true;
+    case 'й':
     case 'q': handleCreateCst(CstType.FUNCTION); return true;
+    case 'ц':
     case 'w': handleCreateCst(CstType.PREDICATE); return true;
     case '5': handleCreateCst(CstType.CONSTANT); return true;
     case '6': handleCreateCst(CstType.THEOREM); return true;
@@ -176,6 +185,15 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
     event.preventDefault();
     onOpenEdit(cst.id);
   }, [onOpenEdit]);
+
+  useLayoutEffect(
+  () => {
+    setColumnVisibility({
+      'type': (windowSize.width ?? 0) >= COLUMN_TYPE_HIDE_THRESHOLD,
+      'convention': (windowSize.width ?? 0) >= COLUMN_CONVENTION_HIDE_THRESHOLD,
+      'definition': (windowSize.width ?? 0) >= COLUMN_DEFINITION_HIDE_THRESHOLD
+    });
+  }, [windowSize]);
   
   useLayoutEffect(
   () => {
@@ -199,13 +217,14 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
       header: 'Имя',
       size: 65,
       minSize: 65,
+      maxSize: 65,
       cell: props => {
         const cst = props.row.original;
         const info = mapStatusInfo.get(cst.status);
         return (<>
           <div
             id={`${prefixes.cst_list}${cst.alias}`}
-            className='w-full px-1 text-center rounded-md whitespace-nowrap'
+            className='w-full min-w-[3.1rem] px-1 text-center rounded-md whitespace-nowrap'
             style={{
               borderWidth: "1px", 
               borderColor: getCstStatusFgColor(cst.status, colors), 
@@ -228,154 +247,145 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
     columnHelper.accessor(cst => getCstTypificationLabel(cst), {
       id: 'type',
       header: 'Типизация',
-      size: 175,
-      maxSize: 175,
-      cell: props => <div style={{ fontSize: 12 }}>{props.getValue()}</div>
+      size: 150,
+      minSize: 150,
+      maxSize: 150,
+      enableHiding: true,
+      cell: props => <div className='text-sm min-w-[8.4rem]'>{props.getValue()}</div>
     }),
     columnHelper.accessor(cst => cst.term_resolved || cst.term_raw || '', {
       id: 'term',
       header: 'Термин',
-      size: 350,
+      size: 500,
       minSize: 150,
-      maxSize: 350
+      maxSize: 500
     }),
     columnHelper.accessor('definition_formal', {
       id: 'expression',
       header: 'Формальное определение',
-      size: 300,
+      size: 1000,
       minSize: 300,
-      maxSize: 500
+      maxSize: 1000
     }),
     columnHelper.accessor(cst => cst.definition_resolved || cst.definition_raw || '', {
       id: 'definition',
       header: 'Текстовое определение',
-      size: 200,
+      size: 1000,
       minSize: 200,
-      cell: props => <div style={{ fontSize: 12 }}>{props.getValue()}</div>
+      maxSize: 1000,
+      cell: props => <div className='text-xs'>{props.getValue()}</div>
     }),
     columnHelper.accessor('convention', {
       id: 'convention',
       header: 'Конвенция / Комментарий',
+      size: 500,
       minSize: 100,
-      maxSize: undefined,
-      cell: props => <div style={{ fontSize: 12 }}>{props.getValue()}</div>
+      maxSize: 500,
+      enableHiding: true,
+      cell: props => <div className='text-xs'>{props.getValue()}</div>
     }),
   ], [colors]);
 
-    //   name: 'Типизация',
-    //   hide: 1600
-    // },
-    // {
-    //   name: 'Формальное определение',
-    //   grow: 2,
-    // },
-    // {
-    //   name: 'Текстовое определение',
-    //   grow: 2,
-    // },
-    // {
-    //   name: 'Конвенция / Комментарий',
-    //   id: 'convention',
-    //   hide: 1800
-
   return (
-    <div className='w-full'>
-      <div
-        className='sticky top-0 flex justify-start w-full gap-1 px-2 py-1 border-y items-center h-[2.2rem] select-none clr-app'
-      >
-        <div className='mr-3 whitespace-nowrap'>
-          Выбраны
-          <span className='ml-2'>
-            {selected.length} из {schema?.stats?.count_all ?? 0}
-          </span>
-        </div>
-        <div className='flex items-center justify-start w-full gap-1'>
-          <Button
-            tooltip='Переместить вверх'
-            icon={<ArrowUpIcon size={6}/>}
-            disabled={!isEditable || nothingSelected}
-            dense
-            onClick={handleMoveUp}
-          />
-          <Button
-            tooltip='Переместить вниз'
-            icon={<ArrowDownIcon size={6}/>}
-            disabled={!isEditable || nothingSelected}
-            dense
-            onClick={handleMoveDown}
-          />
-          <Button
-            tooltip='Удалить выбранные'
-            icon={<DumpBinIcon color={isEditable && !nothingSelected ? 'text-warning' : ''} size={6}/>}
-            disabled={!isEditable || nothingSelected}
-            dense
-            onClick={handleDelete}
-          />
-          <Divider vertical margins='my-1' />
-          <Button
-            tooltip='Сбросить имена'
-            icon={<MeshIcon color={isEditable ? 'text-primary': ''} size={6}/>}
-            dense
-            disabled={!isEditable}
-            onClick={handleReindex}
-          />
-          <Button
-            tooltip='Новая конституента'
-            icon={<SmallPlusIcon color={isEditable ? 'text-success': ''} size={6}/>}
-            dense
-            disabled={!isEditable}
-            onClick={() => handleCreateCst()}
-          />
-          {(Object.values(CstType)).map(
-            (typeStr) => {
-              const type = typeStr as CstType;
-              return (
-              <Button key={type}
-                text={getCstTypePrefix(type)}
-                tooltip={getCstTypeShortcut(type)}
-                dense
-                widthClass='w-[1.4rem]'
-                disabled={!isEditable}
-                tabIndex={-1}
-                onClick={() => handleCreateCst(type)}
-              />);
-          })}
-          <div id='items-table-help'>
-            <HelpIcon color='text-primary' size={6} />
-          </div>
-          <ConceptTooltip anchorSelect='#items-table-help' offset={30}>
-            <HelpRSFormItems />
-          </ConceptTooltip>
-        </div>
+  <div className='w-full'>
+    <div
+      className='sticky top-0 flex justify-start w-full gap-1 px-2 py-1 border-y items-center h-[2.2rem] select-none clr-app'
+    >
+      <div className='mr-3 whitespace-nowrap'>
+        Выбраны
+        <span className='ml-2'>
+          {selected.length} из {schema?.stats?.count_all ?? 0}
+        </span>
       </div>
-      <div className='w-full h-full text-sm' onKeyDown={handleTableKey}>
-      <DataTable
-        data={schema?.items ?? []}
-        columns={columns}
-        state={{
-          rowSelection: rowSelection
-        }}
-        
-        enableMultiRowSelection
-
-        onRowDoubleClicked={handleRowDoubleClicked}
-        onRowClicked={handleRowClicked}
-        onRowSelectionChange={setRowSelection}
-        
-        noDataComponent={
-          <span className='flex flex-col justify-center p-2 text-center'>
-            <p>Список пуст</p>
-            <p 
-              className='cursor-pointer text-primary hover:underline'
-              onClick={() => handleCreateCst()}>
-              Создать новую конституенту
-            </p>
-          </span>
-        }
+      <div className='flex items-center justify-start w-full gap-1'>
+        <Button
+          tooltip='Переместить вверх'
+          icon={<ArrowUpIcon size={6}/>}
+          disabled={!isEditable || nothingSelected}
+          dense
+          onClick={handleMoveUp}
         />
+        <Button
+          tooltip='Переместить вниз'
+          icon={<ArrowDownIcon size={6}/>}
+          disabled={!isEditable || nothingSelected}
+          dense
+          onClick={handleMoveDown}
+        />
+        <Button
+          tooltip='Удалить выбранные'
+          icon={<DumpBinIcon color={isEditable && !nothingSelected ? 'text-warning' : ''} size={6}/>}
+          disabled={!isEditable || nothingSelected}
+          dense
+          onClick={handleDelete}
+        />
+        <Divider vertical margins='my-1' />
+        <Button
+          tooltip='Сбросить имена'
+          icon={<MeshIcon color={isEditable ? 'text-primary': ''} size={6}/>}
+          dense
+          disabled={!isEditable}
+          onClick={handleReindex}
+        />
+        <Button
+          tooltip='Новая конституента'
+          icon={<SmallPlusIcon color={isEditable ? 'text-success': ''} size={6}/>}
+          dense
+          disabled={!isEditable}
+          onClick={() => handleCreateCst()}
+        />
+        {(Object.values(CstType)).map(
+          (typeStr) => {
+            const type = typeStr as CstType;
+            return (
+            <Button key={type}
+              text={getCstTypePrefix(type)}
+              tooltip={getCstTypeShortcut(type)}
+              dense
+              widthClass='w-[1.4rem]'
+              disabled={!isEditable}
+              tabIndex={-1}
+              onClick={() => handleCreateCst(type)}
+            />);
+        })}
+        <div id='items-table-help'>
+          <HelpIcon color='text-primary' size={6} />
+        </div>
+        <ConceptTooltip anchorSelect='#items-table-help' offset={30}>
+          <HelpRSFormItems />
+        </ConceptTooltip>
       </div>
     </div>
-  );
+    <div className='w-full h-full text-sm' onKeyDown={handleTableKey}>
+    <DataTable
+      data={schema?.items ?? []}
+      columns={columns}        
+      dense
+
+      onRowDoubleClicked={handleRowDoubleClicked}
+      onRowClicked={handleRowClicked}
+
+      enableHiding
+      columnVisibility={columnVisibility}
+      onColumnVisibilityChange={setColumnVisibility}
+
+      enableRowSelection
+      rowSelection={rowSelection}
+      onRowSelectionChange={setRowSelection}
+      
+      noDataComponent={
+        <span className='flex flex-col justify-center p-2 text-center'>
+          <p>Список пуст</p>
+          <p 
+            className='cursor-pointer text-primary hover:underline'
+            onClick={() => handleCreateCst()}>
+            Создать новую конституенту
+          </p>
+        </span>
+      }
+      />
+    </div>
+  </div>);
 }
 
 export default EditorItems;

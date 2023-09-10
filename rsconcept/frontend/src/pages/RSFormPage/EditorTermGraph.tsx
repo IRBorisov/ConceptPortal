@@ -375,10 +375,10 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       </div>}
       
       <div className='flex items-center justify-between py-1'>
-        <div className='mr-3 whitespace-nowrap'>
+        <div className='mr-3 whitespace-nowrap text-base'>
           Выбраны
           <span className='ml-1'>
-            <b>{allSelected.length}</b> из {schema?.stats?.count_all ?? 0}
+            {allSelected.length} из {schema?.stats?.count_all ?? 0}
           </span>
         </div>
         <div>

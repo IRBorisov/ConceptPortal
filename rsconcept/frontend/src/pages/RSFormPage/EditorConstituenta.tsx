@@ -9,6 +9,7 @@ import TextArea from '../../components/Common/TextArea';
 import HelpConstituenta from '../../components/Help/HelpConstituenta';
 import { DumpBinIcon, HelpIcon, PenIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
+import useWindowSize from '../../hooks/useWindowSize';
 import { CstType, EditMode, ICstCreateData, ICstRenameData, ICstUpdateData, SyntaxTree } from '../../utils/models';
 import { getCstTypificationLabel } from '../../utils/staticUI';
 import EditorRSExpression from './EditorRSExpression';
@@ -16,6 +17,8 @@ import ViewSideConstituents from './elements/ViewSideConstituents';
 
 // Max height of content for left enditor pane
 const UNFOLDED_HEIGHT = '59.1rem';
+
+const SIDELIST_HIDE_THRESHOLD = 1000;
 
 interface EditorConstituentaProps {
   activeID?: number
@@ -32,6 +35,7 @@ function EditorConstituenta({
   isModified, setIsModified, activeID,
   onShowAST, onCreateCst, onRenameCst, onOpenEdit, onDeleteCst
 }: EditorConstituentaProps) {
+  const windowSize = useWindowSize();
   const { schema, processing, isEditable, cstUpdate } = useRSForm();
   const activeCst = useMemo(
   () => {
@@ -237,6 +241,7 @@ function EditorConstituenta({
           />
         </div>
       </form>
+      {(windowSize.width ?? 0) >= SIDELIST_HIDE_THRESHOLD &&
       <div className='self-stretch w-full pb-1 border'>
         <ViewSideConstituents
           expression={expression}
@@ -244,7 +249,7 @@ function EditorConstituenta({
           activeID={activeID}
           onOpenEdit={onOpenEdit}
         />
-      </div>
+      </div>}
     </div>
   );
 }

@@ -1,10 +1,10 @@
-import { createColumnHelper } from '@tanstack/react-table';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
-import DataTable from '../../../components/Common/DataTable';
+import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } from '../../../components/DataTable';
 import { useRSForm } from '../../../context/RSFormContext';
 import { useConceptTheme } from '../../../context/ThemeContext';
 import useLocalStorage from '../../../hooks/useLocalStorage';
+import useWindowSize from '../../../hooks/useWindowSize';
 import { prefixes } from '../../../utils/constants';
 import { applyGraphFilter, CstMatchMode, CstType, DependencyMode, extractGlobals, IConstituenta, matchConstituenta } from '../../../utils/models';
 import { getCstDescription, getCstStatusFgColor, getMockConstituenta } from '../../../utils/staticUI';
@@ -14,6 +14,9 @@ import MatchModePicker from './MatchModePicker';
 
 // Height that should be left to accomodate navigation panel + bottom margin
 const LOCAL_NAVIGATION_H = '2.1rem';
+
+// Window width cutoff for expression show
+const COLUMN_EXPRESSION_HIDE_THRESHOLD = 1500;
 
 interface ViewSideConstituentsProps {
   expression: string
@@ -29,8 +32,11 @@ function isMockCst(cst: IConstituenta) {
 const columnHelper = createColumnHelper<IConstituenta>();
 
 function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: ViewSideConstituentsProps) {
+  const windowSize = useWindowSize();
   const { noNavigation, colors } = useConceptTheme();
   const { schema } = useRSForm();
+
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({'expression': true})
   
   const [filterMatch, setFilterMatch] = useLocalStorage('side-filter-match', CstMatchMode.ALL);
   const [filterText, setFilterText] = useLocalStorage('side-filter-text', '');
@@ -38,7 +44,19 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
   
   const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema?.items ?? []);
 
-  useEffect(
+  useLayoutEffect(
+  () => {
+    setColumnVisibility(prev => {
+      const newValue = (windowSize.width ?? 0) >= COLUMN_EXPRESSION_HIDE_THRESHOLD;
+      if (newValue === prev['expression']) {
+        return prev;
+      } else {
+        return {'expression': newValue}
+      }
+    });
+  }, [windowSize]);
+
+  useLayoutEffect(
   () => {
     if (!schema?.items) {
       setFilteredData([]);
@@ -118,9 +136,9 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
     columnHelper.accessor(cst => getCstDescription(cst), {
       id: 'description',
       header: 'Описание',
-      size: 350,
+      size: 500,
       minSize: 350,
-      maxSize: 350,
+      maxSize: 500,
       cell: props => 
         <div style={{
           fontSize: 12,
@@ -132,9 +150,10 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
     columnHelper.accessor('definition_formal', {
       id: 'expression',
       header: 'Выражение',
-      size: 700,
+      size: 1000,
       minSize: 0,
-      maxSize: 700,
+      maxSize: 1000,
+      enableHiding: true,
       cell: props => 
         <div style={{
           fontSize: 12,
@@ -144,6 +163,16 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
         </div>
     })
   ], [colors]);
+
+  const conditionalRowStyles = useMemo(
+  (): IConditionalStyle<IConstituenta>[] => [
+    {
+      when: (cst: IConstituenta) => cst.id === activeID,
+      style: {
+        backgroundColor: colors.bgSelected
+      },
+    }
+  ], [activeID, colors]);
 
   const maxHeight = useMemo(
   () => {
@@ -174,9 +203,12 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       <DataTable
         data={filteredData}
         columns={columns}
+        conditionalRowStyles={conditionalRowStyles}
+        dense
 
-        
-        // conditionalRowStyles={conditionalRowStyles}
+        enableHiding
+        columnVisibility={columnVisibility}
+        onColumnVisibilityChange={setColumnVisibility}
 
         noDataComponent={
           <span className='flex flex-col justify-center p-2 text-center min-h-[5rem]'>

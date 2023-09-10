@@ -1,7 +1,7 @@
 
 import { useMemo } from 'react';
 
-import { CheckboxChecked, CheckboxNull } from '../Icons';
+import { CheckboxCheckedIcon, CheckboxNullIcon } from '../Icons';
 import { CheckboxProps } from './Checkbox';
 import Label from './Label';
 
@@ -54,8 +54,8 @@ function Tristate({
       {...props}
     >
       <div className={`w-4 h-4 shrink-0 mt-0.5 border rounded-sm ${bgColor} ${cursor}`} >
-        { value && <div className='mt-[1px] ml-[1px]'><CheckboxChecked /></div>}
-        { value == null && <div className='mt-[1px] ml-[1px]'><CheckboxNull /></div>}
+        { value && <div className='mt-[1px] ml-[1px]'><CheckboxCheckedIcon /></div>}
+        { value == null && <div className='mt-[1px] ml-[1px]'><CheckboxNullIcon /></div>}
       </div>
       { label && 
       <Label

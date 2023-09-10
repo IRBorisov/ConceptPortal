@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { CheckboxChecked } from '../Icons';
+import { CheckboxCheckedIcon } from '../Icons';
 import Label from './Label';
 
 export interface CheckboxProps
@@ -53,7 +53,7 @@ function Checkbox({
       {...props}
     >
       <div className={`max-w-[1rem] min-w-[1rem] h-4 mt-0.5 border rounded-sm ${bgColor} ${cursor}`} >
-        { value && <div className='mt-[1px] ml-[1px]'><CheckboxChecked /></div>}
+        { value && <div className='mt-[1px] ml-[1px]'><CheckboxCheckedIcon /></div>}
       </div>
       { label && 
       <Label

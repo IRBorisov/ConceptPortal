@@ -19,7 +19,7 @@ function IconSVG({ viewbox, size = 6, color, props, children }: IconSVGProps) {
     <svg
       width={width}
       height={width}
-      className={`w-[${width}] h-[${width}] ${color ?? ''}`}
+      className={`w-[${width}] h-[${width}] ${color}`}
       fill='currentColor'
       viewBox={viewbox}
       {...props}
@@ -309,7 +309,7 @@ export function MeshIcon(props: IconProps) {
   );
 }
 
-export function InDoor(props: IconProps) {
+export function InDoorIcon(props: IconProps) {
   return (
     <IconSVG viewbox='0 0 24 24' {...props}>
       <path fill='none' d='M0 0h24v24H0z' />
@@ -318,7 +318,55 @@ export function InDoor(props: IconProps) {
   );
 }
 
-export function CheckboxChecked() {
+export function GotoLastIcon(props: IconProps) {
+  return (
+    <IconSVG viewbox='0 0 24 24' {...props}>
+      <path d='M7.707 17.707L13.414 12 7.707 6.293 6.293 7.707 10.586 12l-4.293 4.293zM15 6h2v12h-2z' />
+    </IconSVG>
+  );
+}
+
+export function GotoFirstIcon(props: IconProps) {
+  return (
+    <IconSVG viewbox='0 0 24 24' {...props}>
+      <path d='M16.293 17.707l1.414-1.414L13.414 12l4.293-4.293-1.414-1.414L10.586 12zM7 6h2v12H7z' />
+    </IconSVG>
+  );
+}
+
+export function GotoNextIcon(props: IconProps) {
+  return (
+    <IconSVG viewbox='0 0 24 24' {...props}>
+      <path d='M10.707 17.707L16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z' />
+    </IconSVG>
+  );
+}
+
+export function GotoPrevIcon(props: IconProps) {
+  return (
+    <IconSVG viewbox='0 0 24 24' {...props}>
+      <path d='M13.293 6.293L7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z' />
+    </IconSVG>
+  );
+}
+
+export function DescendingIcon(props: IconProps) {
+  return (
+    <IconSVG viewbox='0 0 24 24' {...props}>
+      <path d='M11.998 17l7-8h-14z' />
+    </IconSVG>
+  );
+}
+
+export function AscendingIcon(props: IconProps) {
+  return (
+    <IconSVG viewbox='0 0 24 24' {...props}>
+      <path d='M5 15h14l-7-8z' />
+    </IconSVG>
+  );
+}
+
+export function CheckboxCheckedIcon() {
   return (
     <svg
       className='w-3 h-3'
@@ -330,7 +378,7 @@ export function CheckboxChecked() {
   );
 }
 
-export function CheckboxNull() {
+export function CheckboxNullIcon() {
   return (
     <svg
       className='w-3 h-3'

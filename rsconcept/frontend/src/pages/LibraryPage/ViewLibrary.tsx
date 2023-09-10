@@ -1,15 +1,15 @@
-import { createColumnHelper } from '@tanstack/react-table';
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
-import DataTable from '../../components/Common/DataTable';
 import TextURL from '../../components/Common/TextURL';
+import DataTable, { createColumnHelper } from '../../components/DataTable';
 import HelpLibrary from '../../components/Help/HelpLibrary';
 import { EducationIcon, EyeIcon, GroupIcon, HelpIcon } from '../../components/Icons';
 import { useAuth } from '../../context/AuthContext';
 import { useConceptNavigation } from '../../context/NagivationContext';
 import { useUsers } from '../../context/UsersContext';
+import useLocalStorage from '../../hooks/useLocalStorage';
 import { prefixes } from '../../utils/constants';
 import { ILibraryItem } from '../../utils/models';
 
@@ -26,6 +26,8 @@ function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
   const { user } = useAuth();
   const { getUserLabel } = useUsers();
 
+  const [ itemsPerPage, setItemsPerPage ] = useLocalStorage<number>('library_per_page', 50);
+
   const openRSForm = (item: ILibraryItem) => navigateTo(`/rsforms/${item.id}`);
 
   const columns = useMemo(
@@ -34,6 +36,7 @@ function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
       id: 'status',
       header: '',
       size: 60,
+      minSize: 60,
       maxSize: 60,
       cell: props => {
         const item = props.row.original;
@@ -55,34 +58,38 @@ function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
       size: 200,
       minSize: 200,
       maxSize: 200,
-      enableSorting: true
+      enableSorting: true,
+      sortingFn: 'text'
     }),
     columnHelper.accessor('title', {
       id: 'title',
       header: 'Название',
-      minSize: 200,
       size: 1000,
+      minSize: 400,
       maxSize: 1000,
-      enableSorting: true
+      enableSorting: true,
+      sortingFn: 'text'
     }),
     columnHelper.accessor(item => item.owner ?? 0, {
       id: 'owner',
       header: 'Владелец',
+      size: 300,
+      minSize: 200,
+      maxSize: 300,
       cell: props => getUserLabel(props.cell.getValue()),
       enableSorting: true,
-      enableResizing: false,
-      minSize: 200,
-      size: 300,
-      maxSize: 300
+      sortingFn: 'text'
     }),
     columnHelper.accessor('time_update', {
       id: 'time_update',
       header: 'Обновлена',
-      minSize: 200,
-      size: 200,
-      maxSize: 200,
+      size: 220,
+      minSize: 220,
+      maxSize: 220,
       cell: props => new Date(props.cell.getValue()).toLocaleString(intl.locale),
-      enableSorting: true
+      enableSorting: true,
+      sortingFn: 'datetime',
+      sortDescFirst: true
     })
   ], [intl, getUserLabel, user]);
   
@@ -103,8 +110,6 @@ function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
     <DataTable
       columns={columns}
       data={items}
-      // defaultSortFieldId='time_update'
-      // defaultSortAsc={false}
 
       noDataComponent={
       <div className='flex flex-col gap-4 justify-center p-2 text-center min-h-[10rem]'>
@@ -119,11 +124,19 @@ function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
           </span>
         </p>
       </div>}
-
-      // pagination
-      // paginationPerPage={50}
-      // paginationRowsPerPageOptions={[10, 20, 30, 50, 100]}
+      
       onRowClicked={openRSForm}
+
+      enableSorting
+      initialSorting={{
+        id: 'time_update',
+        desc: true
+      }}
+
+      enablePagination
+      paginationPerPage={itemsPerPage}
+      onChangePaginationOption={setItemsPerPage}
+      paginationOptions={[10, 20, 30, 50, 100]}
     />
     </div>
   );

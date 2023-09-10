@@ -80,7 +80,7 @@ function SearchPanel({ total, filtered, setFilter }: SearchPanelProps) {
           value={strategy}
           onChange={handleChangeStrategy}
         />
-        <div className='relative w-96 min-w-[10rem]'>
+        <div className='relative w-96 min-w-[10rem] select-none'>
           <div className='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-controls'>
             <MagnifyingGlassIcon />
           </div>
