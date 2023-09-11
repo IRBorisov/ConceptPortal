@@ -34,9 +34,8 @@ function LibraryPage() {
   const resetQuery = useCallback(
   () => {
     setQuery('');
-    setStrategy(LibraryFilterStrategy.MANUAL);
     setFilter({});
-  }, [setStrategy])
+  }, [])
 
   return (
     <div className='w-full'>
