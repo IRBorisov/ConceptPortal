@@ -44,7 +44,9 @@ const editorSetup: BasicSetupOptions = {
 };
 
 interface RSInputProps 
-extends Omit<ReactCodeMirrorProps, 'onChange'| 'onKeyDown'> {
+extends Pick<ReactCodeMirrorProps, 
+  'id'| 'editable' | 'height' | 'value' | 'className' | 'onFocus' | 'onBlur'
+> {
   label?: string
   innerref?: RefObject<ReactCodeMirrorRef> | undefined
   onChange?: (newValue: string) => void

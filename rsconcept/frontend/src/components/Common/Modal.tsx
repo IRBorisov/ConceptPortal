@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import useEscapeKey from '../../hooks/useEscapeKey';
 import Button from './Button';
 
-interface ModalProps {
+export interface ModalProps {
   title?: string
   submitText?: string
   submitInvalidTooltip?: string
@@ -46,7 +46,7 @@ function Modal({
       <div className='max-h-[calc(100vh-8rem)]'>
         {children}
       </div>
-      <div className='flex justify-center w-full gap-4 pt-4 mt-2 border-t-2 z-modal-top'>
+      <div className='flex justify-center w-full gap-4 pt-4 mt-2 border-t-2 z-modal-controls'>
         {!readonly && 
         <Button
           text={submitText}

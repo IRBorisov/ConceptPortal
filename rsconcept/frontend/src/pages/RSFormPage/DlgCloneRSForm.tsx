@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import Checkbox from '../../components/Common/Checkbox';
-import Modal from '../../components/Common/Modal';
+import Modal, { ModalProps } from '../../components/Common/Modal';
 import TextArea from '../../components/Common/TextArea';
 import TextInput from '../../components/Common/TextInput';
 import { useLibrary } from '../../context/LibraryContext';
@@ -11,9 +11,8 @@ import { useRSForm } from '../../context/RSFormContext';
 import { IRSFormCreateData } from '../../utils/models';
 import { getCloneTitle } from '../../utils/staticUI';
 
-interface DlgCloneRSFormProps {
-  hideWindow: () => void
-}
+interface DlgCloneRSFormProps
+extends Pick<ModalProps, 'hideWindow'> {}
 
 function DlgCloneRSForm({ hideWindow }: DlgCloneRSFormProps) {
   const { navigateTo } = useConceptNavigation();

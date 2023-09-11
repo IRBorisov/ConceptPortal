@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react';
 
 import Checkbox from '../../components/Common/Checkbox';
-import Modal from '../../components/Common/Modal';
+import Modal, { ModalProps } from '../../components/Common/Modal';
 import { useRSForm } from '../../context/RSFormContext';
 import { getCstLabel } from '../../utils/staticUI';
 
-interface DlgDeleteCstProps {
-  hideWindow: () => void
+interface DlgDeleteCstProps
+extends Pick<ModalProps, 'hideWindow'> {
   selected: number[]
   onDelete: (items: number[]) => void
 }

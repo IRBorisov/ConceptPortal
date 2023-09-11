@@ -10,6 +10,7 @@ function BackendLint() {
   $mypy = "$backend\venv\Scripts\mypy.exe"
 
   Set-Location $backend
+  $env:DJANGO_SETTINGS_MODULE = "project.settings"
   & $pylint cctext project apps
   & $mypy cctext project apps
 }

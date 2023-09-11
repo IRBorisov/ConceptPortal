@@ -1,15 +1,15 @@
 import { useCallback, useMemo, useState } from 'react';
 import { GraphCanvas,GraphEdge, GraphNode } from 'reagraph';
 
-import Modal from '../../components/Common/Modal';
+import Modal, { ModalProps } from '../../components/Common/Modal';
 import { useConceptTheme } from '../../context/ThemeContext';
 import { graphDarkT, graphLightT } from '../../utils/color';
 import { resources } from '../../utils/constants';
 import { SyntaxTree } from '../../utils/models';
 import { getASTNodeColor, getASTNodeLabel } from '../../utils/staticUI';
 
-interface DlgShowASTProps {
-  hideWindow: () => void
+interface DlgShowASTProps
+extends Pick<ModalProps, 'hideWindow'> {
   syntaxTree: SyntaxTree
   expression: string
 }

@@ -236,7 +236,7 @@ class Constituenta(Model):
 
     class Meta:
         ''' Model metadata. '''
-        verbose_name = 'Конституета'
+        verbose_name = 'Конституента'
         verbose_name_plural = 'Конституенты'
 
     def get_absolute_url(self):

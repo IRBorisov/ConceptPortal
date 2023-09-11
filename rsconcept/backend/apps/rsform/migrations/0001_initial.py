@@ -52,7 +52,7 @@ class Migration(migrations.Migration):
                 ('schema', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='rsform.libraryitem', verbose_name='Концептуальная схема')),
             ],
             options={
-                'verbose_name': 'Конституета',
+                'verbose_name': 'Конституента',
                 'verbose_name_plural': 'Конституенты',
             },
         ),

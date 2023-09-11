@@ -96,7 +96,6 @@ This readme file is used mostly to document project dependencies
 - Install Python 3.9, NodeJS, VSCode, Docker Desktop
 - copy import wheels from ConceptCore to rsconcept/backend/import
 - run rsconcept/backend/LocalEnvSetup.ps1
-- run 'npm install' in rsconcept/frontend
 - use VSCode configs in root folder to start developement
 
 ## Developement build

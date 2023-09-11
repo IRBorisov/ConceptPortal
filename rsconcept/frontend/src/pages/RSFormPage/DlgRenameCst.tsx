@@ -1,14 +1,14 @@
 import { useLayoutEffect, useState } from 'react';
 
 import ConceptSelectSingle from '../../components/Common/ConceptSelectSingle';
-import Modal from '../../components/Common/Modal';
+import Modal, { ModalProps } from '../../components/Common/Modal';
 import TextInput from '../../components/Common/TextInput';
 import { useRSForm } from '../../context/RSFormContext';
 import { CstType, ICstRenameData } from '../../utils/models';
 import { createAliasFor, CstTypeSelector, getCstTypeLabel, getCstTypePrefix } from '../../utils/staticUI';
 
-interface DlgRenameCstProps {
-  hideWindow: () => void
+interface DlgRenameCstProps
+extends Pick<ModalProps, 'hideWindow'> {
   initial?: ICstRenameData
   onRename: (data: ICstRenameData) => void
 }
@@ -63,12 +63,12 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
       hideWindow={hideWindow}
       canSubmit={validated}
       onSubmit={handleSubmit}
-      submitInvalidTooltip={'Введите имя, соответствующее типу и отсутствующее в схеме'}
+      submitInvalidTooltip={'Введите незанятое имя, соответствующее типу'}
       submitText='Переименовать'
     >
       <div className='flex items-center gap-4 px-2 my-2 h-fit min-w-[25rem]'>
         <ConceptSelectSingle
-          className='min-w-[14rem] self-center'
+          className='min-w-[14rem] self-center z-modal-top'
           options={CstTypeSelector}
           placeholder='Выберите тип'
           value={cstType ? { value: cstType, label: getCstTypeLabel(cstType) } : null}

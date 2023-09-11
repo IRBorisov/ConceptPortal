@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 
 import ConceptSelectSingle from '../../components/Common/ConceptSelectSingle';
-import Modal from '../../components/Common/Modal';
+import Modal, { ModalProps } from '../../components/Common/Modal';
 import TextArea from '../../components/Common/TextArea';
 import RSInput from '../../components/RSInput';
 import { CstType,ICstCreateData } from '../../utils/models';
 import { CstTypeSelector, getCstTypeLabel } from '../../utils/staticUI';
 
-interface DlgCreateCstProps {
-  hideWindow: () => void
+interface DlgCreateCstProps
+extends Pick<ModalProps, 'hideWindow'> {
   initial?: ICstCreateData
   onCreate: (data: ICstCreateData) => void
 }
@@ -31,7 +31,7 @@ function DlgCreateCst({ hideWindow, initial, onCreate }: DlgCreateCstProps) {
       definition_formal: expression,
       definition_raw: textDefinition,
       term_raw: term
-    }
+    };
   }
 
   const handleSubmit = () => onCreate(getData());

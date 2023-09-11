@@ -1,13 +1,13 @@
 import { useLayoutEffect, useState } from 'react';
 
 import Checkbox from '../../components/Common/Checkbox';
-import Modal from '../../components/Common/Modal';
+import Modal, { ModalProps } from '../../components/Common/Modal';
 import { CstType } from '../../utils/models';
 import { getCstTypeLabel } from '../../utils/staticUI';
 import { GraphEditorParams } from './EditorTermGraph';
 
-interface DlgGraphOptionsProps {
-  hideWindow: () => void
+interface DlgGraphOptionsProps
+extends Pick<ModalProps, 'hideWindow'> {
   initial: GraphEditorParams
   onConfirm: (params: GraphEditorParams) => void
 }
