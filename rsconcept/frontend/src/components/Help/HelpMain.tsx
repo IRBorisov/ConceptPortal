@@ -1,5 +1,5 @@
+import { LibraryFilterStrategy } from '../../models/miscelanious';
 import { urls } from '../../utils/constants';
-import { LibraryFilterStrategy } from '../../utils/models';
 import TextURL from '../Common/TextURL';
 
 function HelpMain() {

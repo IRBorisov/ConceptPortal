@@ -1,9 +1,10 @@
 import { useCallback, useState } from 'react'
 
 import { type ErrorInfo } from '../components/BackendError';
+import { CstType, IConstituenta, type IRSForm } from '../models/rsform';
+import { IExpressionParse, IFunctionArg } from '../models/rslang';
+import { RSErrorType } from '../models/rslang';
 import { DataCallback, postCheckExpression } from '../utils/backendAPI';
-import { RSErrorType } from '../utils/enums';
-import { CstType, IConstituenta, IExpressionParse, IFunctionArg, type IRSForm } from '../utils/models';
 import { getCstExpressionPrefix } from '../utils/staticUI';
 
 const LOGIC_TYPIIFCATION = 'LOGIC';

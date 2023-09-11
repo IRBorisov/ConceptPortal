@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 
 import DataTable, { createColumnHelper } from '../../components/DataTable';
 import { useConceptNavigation } from '../../context/NagivationContext';
-import { ILibraryItem } from '../../utils/models';
+import { ILibraryItem } from '../../models/library';
 
 interface ViewSubscriptionsProps {
   items: ILibraryItem[]

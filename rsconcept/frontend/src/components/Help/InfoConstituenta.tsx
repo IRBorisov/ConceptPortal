@@ -1,4 +1,4 @@
-import { IConstituenta } from '../../utils/models';
+import { IConstituenta } from '../../models/rsform';
 import { getCstTypificationLabel } from '../../utils/staticUI';
 
 interface InfoConstituentaProps

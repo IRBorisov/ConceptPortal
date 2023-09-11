@@ -1,8 +1,9 @@
 import { useCallback, useState } from 'react'
 
 import { ErrorInfo } from '../components/BackendError';
+import { IReferenceData } from '../models/language';
+import { IRSForm } from '../models/rsform';
 import { DataCallback, postResolveText } from '../utils/backendAPI';
-import { IReferenceData,IRSForm } from '../utils/models';
 
 function useResolveText({ schema }: { schema?: IRSForm }) {
   const [loading, setLoading] = useState(false);

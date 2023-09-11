@@ -1,4 +1,4 @@
-import { IExpressionParse, IRSErrorDescription, SyntaxTree } from '../../../utils/models';
+import { IExpressionParse, IRSErrorDescription, SyntaxTree } from '../../../models/rslang';
 import { getRSErrorMessage, getRSErrorPrefix } from '../../../utils/staticUI';
 
 interface ParsingResultProps {

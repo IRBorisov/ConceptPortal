@@ -7,7 +7,7 @@ import HelpRSFormItems from '../../components/Help/HelpRSFormItems';
 import HelpRSFormMeta from '../../components/Help/HelpRSFormMeta';
 import HelpRSLang from '../../components/Help/HelpRSLang';
 import HelpTermGraph from '../../components/Help/HelpTermGraph';
-import { HelpTopic } from '../../utils/models';
+import { HelpTopic } from '../../models/miscelanious';
 
 interface ViewTopicProps {
   topic: HelpTopic

@@ -10,7 +10,9 @@ import HelpConstituenta from '../../components/Help/HelpConstituenta';
 import { DumpBinIcon, HelpIcon, PenIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import useWindowSize from '../../hooks/useWindowSize';
-import { CstType, EditMode, ICstCreateData, ICstRenameData, ICstUpdateData, SyntaxTree } from '../../utils/models';
+import { EditMode } from '../../models/miscelanious';
+import { CstType, IConstituenta, ICstCreateData, ICstRenameData, ICstUpdateData } from '../../models/rsform';
+import { SyntaxTree } from '../../models/rslang';
 import { getCstTypificationLabel } from '../../utils/staticUI';
 import EditorRSExpression from './EditorRSExpression';
 import ViewSideConstituents from './elements/ViewSideConstituents';
@@ -22,25 +24,23 @@ const SIDELIST_HIDE_THRESHOLD = 1000;
 
 interface EditorConstituentaProps {
   activeID?: number
+  activeCst?: IConstituenta | undefined
   onOpenEdit: (cstID: number) => void
   onShowAST: (expression: string, ast: SyntaxTree) => void
   onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void
   onRenameCst: (initial: ICstRenameData) => void
+  onEditTerm: () => void
   onDeleteCst: (selected: number[], callback?: (items: number[]) => void) => void
   isModified: boolean
   setIsModified: Dispatch<SetStateAction<boolean>>
 }
 
 function EditorConstituenta({
-  isModified, setIsModified, activeID,
+  isModified, setIsModified, activeID, activeCst, onEditTerm,
   onShowAST, onCreateCst, onRenameCst, onOpenEdit, onDeleteCst
 }: EditorConstituentaProps) {
   const windowSize = useWindowSize();
-  const { schema, processing, isEditable, cstUpdate } = useRSForm();
-  const activeCst = useMemo(
-  () => {
-    return schema?.items?.find((cst) => cst.id === activeID);
-  }, [schema?.items, activeID]);
+  const { schema, processing, isEditable, cstUpdate, isForceAdmin } = useRSForm();
   
   const [editMode, setEditMode] = useState(EditMode.TEXT);
 
@@ -139,14 +139,13 @@ function EditorConstituenta({
     <div className='flex items-stretch w-full gap-2 mb-2 justify-stretch'>
       <form onSubmit={handleSubmit} className='min-w-[50rem] max-w-min px-4 py-2 border-y border-r'>
         <div className='relative'>
-          <div className='absolute top-0 left-0'>
-        <MiniButton 
-          tooltip='Сохранить изменения'
-          disabled={!isModified || !isEnabled}
-          icon={<SaveIcon size={6} color={isModified && isEnabled ? 'text-primary' : ''}/>}
-          onClick={() => handleSubmit()}
-        >
-        </MiniButton>
+        <div className='absolute top-0 left-0'>
+          <MiniButton 
+            tooltip='Сохранить изменения'
+            disabled={!isModified || !isEnabled}
+            icon={<SaveIcon size={6} color={isModified && isEnabled ? 'text-primary' : ''}/>}
+            onClick={() => handleSubmit()}
+          />
         </div>
         </div>
         <div className='relative'>
@@ -177,15 +176,26 @@ function EditorConstituenta({
             <span className='ml-4'>{alias}</span>
           </div>
           <MiniButton
-            tooltip='Переименовать конституету'
+            tooltip='Переименовать конституенту'
             disabled={!isEnabled}
             noHover
             onClick={handleRename}
             icon={<PenIcon size={4} color={isEnabled ? 'text-primary' : ''} />}
           />
         </div>
+        {isForceAdmin && <div className='relative'>
+        <div className='absolute left-[3.2rem] top-[0.5rem]'>
+        <MiniButton
+          tooltip='Редактировать словоформы термина'
+          disabled={!isEnabled}
+          noHover
+          onClick={onEditTerm}
+          icon={<PenIcon size={4} color={isEnabled ? 'text-primary' : ''} />}
+        />
+        </div>
+        </div>}
         <ReferenceInput id='term' label='Термин'
-          placeholder='Схемный или предметный термин, обозначающий данное понятие или утверждение'
+          placeholder='Обозначение, используемое в текстовых определениях данной схемы'
           rows={2}
           value={term}
           initialValue={activeCst?.term_raw ?? ''}

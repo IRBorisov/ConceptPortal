@@ -1,7 +1,7 @@
 import { Extension } from '@codemirror/state';
 import { hoverTooltip } from '@codemirror/view';
 
-import { IConstituenta } from '../../utils/models';
+import { IConstituenta } from '../../models/rsform';
 import { getCstTypificationLabel } from '../../utils/staticUI';
 
 function createTooltipFor(cst: IConstituenta) {

@@ -6,7 +6,7 @@ import SubmitButton from '../../components/Common/SubmitButton';
 import TextInput from '../../components/Common/TextInput';
 import { useAuth } from '../../context/AuthContext';
 import { useConceptNavigation } from '../../context/NagivationContext';
-import { IUserUpdatePassword } from '../../utils/models';
+import { IUserUpdatePassword } from '../../models/library';
 
 
 function EditorPassword() {

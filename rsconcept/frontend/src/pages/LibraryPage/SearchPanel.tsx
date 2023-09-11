@@ -5,7 +5,8 @@ import { MagnifyingGlassIcon } from '../../components/Icons';
 import { useAuth } from '../../context/AuthContext';
 import { useConceptNavigation } from '../../context/NagivationContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
-import { ILibraryFilter, LibraryFilterStrategy } from '../../utils/models';
+import { ILibraryFilter } from '../../models/miscelanious';
+import { LibraryFilterStrategy } from '../../models/miscelanious';
 import PickerStrategy from './PickerStrategy';
 
 

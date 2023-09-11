@@ -4,7 +4,8 @@ import BackendError from '../../components/BackendError'
 import { ConceptLoader } from '../../components/Common/ConceptLoader'
 import { useLibrary } from '../../context/LibraryContext';
 import { useConceptTheme } from '../../context/ThemeContext';
-import { ILibraryFilter, ILibraryItem } from '../../utils/models';
+import { ILibraryItem } from '../../models/library';
+import { ILibraryFilter } from '../../models/miscelanious';
 import SearchPanel from './SearchPanel';
 import ViewLibrary from './ViewLibrary';
 

@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 
 import { useConceptNavigation } from '../../context/NagivationContext';
 import { useConceptTheme } from '../../context/ThemeContext';
-import { HelpTopic } from '../../utils/models';
+import { HelpTopic } from '../../models/miscelanious';
 import TopicsList from './TopicsList';
 import ViewTopic from './ViewTopic';
 

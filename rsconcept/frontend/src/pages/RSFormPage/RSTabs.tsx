@@ -1,6 +1,6 @@
 import axios from 'axios';
 import fileDownload from 'js-file-download';
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 import { toast } from 'react-toastify';
@@ -14,12 +14,14 @@ import { useConceptNavigation } from '../../context/NagivationContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useModificationPrompt from '../../hooks/useModificationPrompt';
+import { ICstCreateData, ICstRenameData } from '../../models/rsform';
+import { SyntaxTree } from '../../models/rslang';
 import { EXTEOR_TRS_FILE, prefixes, TIMEOUT_UI_REFRESH } from '../../utils/constants';
-import { ICstCreateData, ICstRenameData, SyntaxTree } from '../../utils/models';
 import { createAliasFor } from '../../utils/staticUI';
 import DlgCloneRSForm from './DlgCloneRSForm';
 import DlgCreateCst from './DlgCreateCst';
 import DlgDeleteCst from './DlgDeleteCst';
+import DlgEditTerm from './DlgEditTerm';
 import DlgRenameCst from './DlgRenameCst';
 import DlgShowAST from './DlgShowAST';
 import DlgUploadRSForm from './DlgUploadRSForm';
@@ -64,6 +66,9 @@ function RSTabs() {
 
   const [activeTab, setActiveTab] = useState<RSTabID>(RSTabID.CARD);
   const [activeID, setActiveID] = useState<number | undefined>(undefined);
+  const activeCst = useMemo(
+    () => schema?.items?.find(cst => cst.id === activeID)
+  , [schema?.items, activeID]);
   
   const [showUpload, setShowUpload] = useState(false);
   const [showClone, setShowClone] = useState(false);
@@ -81,6 +86,8 @@ function RSTabs() {
   
   const [renameInitialData, setRenameInitialData] = useState<ICstRenameData>();
   const [showRenameCst, setShowRenameCst] = useState(false);
+
+  const [showEditTerm, setShowEditTerm] = useState(false);
 
   useLayoutEffect(() => {
     if (schema) {
@@ -256,7 +263,7 @@ function RSTabs() {
     }
     const fileName = (schema?.alias ?? 'Schema') +  EXTEOR_TRS_FILE;
     download(
-    (data) => {
+    (data: Blob) => {
       try {
         fileDownload(data, fileName);
       } catch (error) {
@@ -265,7 +272,7 @@ function RSTabs() {
     });
   }, [schema?.alias, download, isModified]);
 
-  const handleShowClone = useCallback(
+  const promptClone = useCallback(
   () => {
     if (isModified) {
       if (!window.confirm('Присутствуют несохраненные изменения. Продолжить без их учета?')) {
@@ -278,17 +285,24 @@ function RSTabs() {
   const handleToggleSubscribe = useCallback(
   () => {
     if (isTracking) {
-      unsubscribe(
-        () => {
-          toast.success('Отслеживание отключено');
-        });
+      unsubscribe(() => toast.success('Отслеживание отключено'));
     } else {
-      subscribe(
-        () => {
-          toast.success('Отслеживание включено');
-        });
+      subscribe(() => toast.success('Отслеживание включено'));
     }
   }, [isTracking, subscribe, unsubscribe]);
+
+  const promptShowEditTerm = useCallback(
+  () => {
+    if (!activeCst) {
+      return;
+    }
+    if (isModified) {
+      if (!window.confirm('Присутствуют несохраненные изменения. Продолжить без их учета?')) {
+        return;
+      }
+    }
+    setShowEditTerm(true);
+  }, [isModified, activeCst]);
 
   return (
   <div className='w-full'>
@@ -327,6 +341,12 @@ function RSTabs() {
       onDelete={handleDeleteCst}
       selected={toBeDeleted}
     />}
+    {showEditTerm &&
+    <DlgEditTerm
+      hideWindow={() => setShowEditTerm(false)}
+      onSave={() => {}} // TODO: implement cst update
+      target={activeCst!}
+    />}
     <Tabs
       selectedIndex={activeTab}
       onSelect={onSelectTab}
@@ -340,7 +360,7 @@ function RSTabs() {
           onClaim={onClaimSchema}
           onShare={onShareSchema}
           onToggleSubscribe={handleToggleSubscribe}
-          showCloneDialog={handleShowClone} 
+          showCloneDialog={promptClone} 
           showUploadDialog={() => setShowUpload(true)}
         />
         <ConceptTab className='border-x-2 min-w-[7.8rem]'>Паспорт схемы</ConceptTab>
@@ -377,11 +397,13 @@ function RSTabs() {
           isModified={isModified}
           setIsModified={setIsModified}
           activeID={activeID}
+          activeCst={activeCst}
           onOpenEdit={onOpenCst}
           onShowAST={onShowAST}
           onCreateCst={promptCreateCst}
           onDeleteCst={promptDeleteCst}
           onRenameCst={promptRenameCst}
+          onEditTerm={promptShowEditTerm}
         />
       </TabPanel>
 

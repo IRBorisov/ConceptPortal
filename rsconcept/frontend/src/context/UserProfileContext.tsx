@@ -1,8 +1,9 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 import { ErrorInfo } from '../components/BackendError';
+import { IUserProfile } from '../models/library';
+import { IUserUpdateData } from '../models/library';
 import { DataCallback, getProfile, patchProfile } from '../utils/backendAPI';
-import { IUserProfile, IUserUpdateData } from '../utils/models';
 import { useUsers } from './UsersContext';
 
 interface IUserProfileContext {

@@ -4,7 +4,7 @@ import ConceptSelectSingle from '../../components/Common/ConceptSelectSingle';
 import Modal, { ModalProps } from '../../components/Common/Modal';
 import TextArea from '../../components/Common/TextArea';
 import RSInput from '../../components/RSInput';
-import { CstType,ICstCreateData } from '../../utils/models';
+import { CstType,ICstCreateData } from '../../models/rsform';
 import { CstTypeSelector, getCstTypeLabel } from '../../utils/staticUI';
 
 interface DlgCreateCstProps

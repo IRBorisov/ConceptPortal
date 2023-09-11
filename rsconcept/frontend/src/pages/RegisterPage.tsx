@@ -9,7 +9,7 @@ import SubmitButton from '../components/Common/SubmitButton';
 import TextInput from '../components/Common/TextInput';
 import { useAuth } from '../context/AuthContext';
 import { useConceptNavigation } from '../context/NagivationContext';
-import { type IUserSignupData } from '../utils/models';
+import { type IUserSignupData } from '../models/library';
 
 function RegisterPage() {
   const location = useLocation();

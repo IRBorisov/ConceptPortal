@@ -1,6 +1,6 @@
 import ConceptTooltip from '../../../components/Common/ConceptTooltip';
 import InfoConstituenta from '../../../components/Help/InfoConstituenta';
-import { IConstituenta } from '../../../utils/models';
+import { IConstituenta } from '../../../models/rsform';
 
 interface ConstituentaTooltipProps {
   data: IConstituenta

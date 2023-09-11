@@ -13,7 +13,8 @@ import { CrownIcon, DownloadIcon, DumpBinIcon, HelpIcon, SaveIcon, ShareIcon } f
 import { useAuth } from '../../context/AuthContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { useUsers } from '../../context/UsersContext';
-import { IRSFormCreateData, LibraryItemType } from '../../utils/models';
+import { IRSFormCreateData } from '../../models/rsform';
+import { LibraryItemType } from '../../models/library';
 
 interface EditorRSFormProps {
   onDestroy: () => void

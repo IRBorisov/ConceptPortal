@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import Dropdown from '../../../components/Common/Dropdown';
 import DropdownButton from '../../../components/Common/DropdownButton';
 import useDropdown from '../../../hooks/useDropdown';
-import { DependencyMode } from '../../../utils/models';
+import { DependencyMode } from '../../../models/miscelanious';
 import { getDependencyLabel } from '../../../utils/staticUI';
 
 interface DependencyModePickerProps {
@@ -30,27 +30,26 @@ function DependencyModePicker({ value, onChange }: DependencyModePickerProps) {
       {getDependencyLabel(value)}
     </span>
     { pickerMenu.isActive &&
-      <Dropdown stretchLeft >
-        <DropdownButton onClick={() => handleChange(DependencyMode.ALL)}>
-          <p><b>вся схема:</b> список всех конституент схемы</p>
-        </DropdownButton>
-        <DropdownButton onClick={() => handleChange(DependencyMode.EXPRESSION)}>
-          <p><b>выражение:</b> список идентификаторов из выражения</p>
-        </DropdownButton>
-        <DropdownButton onClick={() => handleChange(DependencyMode.OUTPUTS)}>
-          <p><b>потребители:</b> конституенты, ссылающиеся на данную</p>
-        </DropdownButton>
-        <DropdownButton onClick={() => handleChange(DependencyMode.INPUTS)}>
-          <p><b>поставщики:</b> конституенты, на которые ссылается данная</p>
-        </DropdownButton>
-        <DropdownButton onClick={() => handleChange(DependencyMode.EXPAND_OUTPUTS)}>
-          <p><b>зависимые:</b> конституенты, зависящие по цепочке</p>
-        </DropdownButton>
-        <DropdownButton onClick={() => handleChange(DependencyMode.EXPAND_INPUTS)}>
-          <p><b>влияющие:</b> конституенты, влияющие на данную (цепочка)</p>
-        </DropdownButton>
-      </Dropdown>
-    }
+    <Dropdown stretchLeft >
+      <DropdownButton onClick={() => handleChange(DependencyMode.ALL)}>
+        <p><b>вся схема:</b> список всех конституент схемы</p>
+      </DropdownButton>
+      <DropdownButton onClick={() => handleChange(DependencyMode.EXPRESSION)}>
+        <p><b>выражение:</b> список идентификаторов из выражения</p>
+      </DropdownButton>
+      <DropdownButton onClick={() => handleChange(DependencyMode.OUTPUTS)}>
+        <p><b>потребители:</b> конституенты, ссылающиеся на данную</p>
+      </DropdownButton>
+      <DropdownButton onClick={() => handleChange(DependencyMode.INPUTS)}>
+        <p><b>поставщики:</b> конституенты, на которые ссылается данная</p>
+      </DropdownButton>
+      <DropdownButton onClick={() => handleChange(DependencyMode.EXPAND_OUTPUTS)}>
+        <p><b>зависимые:</b> конституенты, зависящие по цепочке</p>
+      </DropdownButton>
+      <DropdownButton onClick={() => handleChange(DependencyMode.EXPAND_INPUTS)}>
+        <p><b>влияющие:</b> конституенты, влияющие на данную (цепочка)</p>
+      </DropdownButton>
+    </Dropdown>}
   </div>
   );
 }

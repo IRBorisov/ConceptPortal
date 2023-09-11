@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import Dropdown from '../../../components/Common/Dropdown';
 import DropdownButton from '../../../components/Common/DropdownButton';
 import useDropdown from '../../../hooks/useDropdown';
-import { CstMatchMode } from '../../../utils/models';
+import { CstMatchMode } from '../../../models/miscelanious';
 import { getCstCompareLabel } from '../../../utils/staticUI';
 
 interface MatchModePickerProps {

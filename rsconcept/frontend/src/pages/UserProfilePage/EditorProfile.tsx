@@ -5,7 +5,7 @@ import SubmitButton from '../../components/Common/SubmitButton';
 import TextInput from '../../components/Common/TextInput';
 import { useUserProfile } from '../../context/UserProfileContext';
 import useModificationPrompt from '../../hooks/useModificationPrompt';
-import { IUserUpdateData } from '../../utils/models';
+import { IUserUpdateData } from '../../models/library';
 
 function EditorProfile() {
   const { updateUser, user, processing } = useUserProfile();

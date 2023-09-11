@@ -2,8 +2,13 @@ import { createContext, useCallback, useContext, useLayoutEffect, useState } fro
 
 import { type ErrorInfo } from '../components/BackendError';
 import useLocalStorage from '../hooks/useLocalStorage';
+import { IUserLoginData } from '../models/library';
+import { ICurrentUser } from '../models/library';
+import { IUserSignupData } from '../models/library';
+import { IUserProfile } from '../models/library';
+import { IUserInfo } from '../models/library';
+import { IUserUpdatePassword } from '../models/library';
 import { type DataCallback, getAuth, patchPassword,postLogin, postLogout, postSignup } from '../utils/backendAPI';
-import { ICurrentUser, IUserInfo, IUserLoginData, IUserProfile, IUserSignupData, IUserUpdatePassword } from '../utils/models';
 import { useUsers } from './UsersContext';
 
 interface IAuthContext {

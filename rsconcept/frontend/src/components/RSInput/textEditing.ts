@@ -2,7 +2,7 @@
 
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
-import { TokenID } from '../../utils/enums';
+import { TokenID } from '../../models/rslang';
 
 export function getSymbolSubstitute(keyCode: string, shiftPressed: boolean): string | undefined {
   if (shiftPressed) {

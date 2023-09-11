@@ -1,5 +1,5 @@
+import { HelpTopic } from '../../models/miscelanious';
 import { prefixes } from '../../utils/constants';
-import { HelpTopic } from '../../utils/models';
 import { mapTopicInfo } from '../../utils/staticUI';
 
 interface TopicsListProps {

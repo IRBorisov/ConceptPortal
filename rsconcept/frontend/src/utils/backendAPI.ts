@@ -2,14 +2,23 @@ import axios, { AxiosError, AxiosRequestConfig } from 'axios'
 import { toast } from 'react-toastify'
 
 import { type ErrorInfo } from '../components/BackendError'
-import { config } from './constants'
+import { IReferenceData } from '../models/language'
+import { IRefsText } from '../models/language'
+import { ICurrentUser } from '../models/library'
+import { IUserLoginData } from '../models/library'
+import { IUserSignupData } from '../models/library'
+import { IUserProfile } from '../models/library'
+import { IUserUpdateData } from '../models/library'
+import { IUserInfo } from '../models/library'
+import { IUserUpdatePassword } from '../models/library'
+import { ILibraryItem } from '../models/library'
+import { ILibraryUpdateData } from '../models/library'
 import {
   IConstituentaList, IConstituentaMeta,
   ICstCreateData, ICstCreatedResponse, ICstMovetoData, ICstRenameData, ICstUpdateData,
-  ICurrentUser, IExpressionParse, ILibraryItem, ILibraryUpdateData, IReferenceData, IRefsText, 
-  IRSExpression,  IRSFormCreateData, IRSFormData, IRSFormUploadData, IUserInfo,
-  IUserLoginData, IUserProfile, IUserSignupData, IUserUpdateData, IUserUpdatePassword
-} from './models'
+  IRSFormCreateData, IRSFormData, IRSFormUploadData} from '../models/rsform'
+import { IExpressionParse, IRSExpression } from '../models/rslang'
+import { config } from './constants'
 
 export function initBackend() {
   axios.defaults.withCredentials = true;

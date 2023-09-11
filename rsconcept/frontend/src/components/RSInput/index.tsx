@@ -8,7 +8,7 @@ import { RefObject, useCallback, useMemo, useRef } from 'react';
 
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
-import { TokenID } from '../../utils/enums';
+import { TokenID } from '../../models/rslang';
 import Label from '../Common/Label';
 import { ccBracketMatching } from './bracketMatching';
 import { RSLanguage } from './rslang';

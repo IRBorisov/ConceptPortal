@@ -1,14 +1,14 @@
 import { LayoutTypes } from 'reagraph';
 
+import { DependencyMode } from '../models/miscelanious';
+import { HelpTopic } from '../models/miscelanious';
+import { CstMatchMode } from '../models/miscelanious';
+import { ExpressionStatus } from '../models/rsform';
+import { CstClass, CstType, IConstituenta, IRSForm } from '../models/rsform';
+import { IFunctionArg, IRSErrorDescription, ISyntaxTreeNode, ParsingStatus, ValueClass } from '../models/rslang';
+import { resolveErrorClass, RSErrorClass, RSErrorType, TokenID } from '../models/rslang';
 import { ColoringScheme } from '../pages/RSFormPage/EditorTermGraph';
 import { IColorTheme } from './color';
-import { resolveErrorClass,RSErrorClass, RSErrorType, TokenID } from './enums';
-import {
-  CstClass, CstMatchMode, CstType, 
-  DependencyMode, ExpressionStatus, HelpTopic, IConstituenta,
-  IFunctionArg,IRSErrorDescription, IRSForm,
-  ISyntaxTreeNode, ParsingStatus, ValueClass 
-} from './models';
 
 export interface IDescriptor {
   text: string
@@ -66,11 +66,11 @@ export function getRSButtonData(id: TokenID): IDescriptor {
   };
   case TokenID.PUNC_PL: return {
     text: '( )',
-    tooltip: 'Скобки вокруг выражения [ Alt + Shift + 9 ]'
+    tooltip: 'Скобки вокруг выражения [Alt + Shift + 9 ]'
   };
   case TokenID.PUNC_SL: return {
     text: '[ ]',
-    tooltip: 'Скобки вокруг выражения [ Alt + [ ]'
+    tooltip: 'Скобки вокруг выражения [Alt + [ ]'
   };
   case TokenID.FORALL: return {
     text: '∀',
@@ -490,7 +490,7 @@ export function getTypificationLabel({isValid, resultType, args}: {
     return 'N/A';
   }
   if (resultType === '' || resultType === 'LOGIC') {
-    resultType = 'Логический'
+    resultType = 'Логический';
   }
   if (args.length === 0) {
     return resultType;
@@ -586,7 +586,7 @@ export function getRSErrorMessage(error: IRSErrorDescription): string {
   case RSErrorType.emptySetUsage: 
     return `Запрещено использование пустого множества как типизированного выражения`;
   case RSErrorType.radicalUsage: 
-    return `Радикалы запрещены вне деклараций терм-функци: ${error.params[0]}`;
+    return `Радикалы запрещены вне деклараций терм-функции: ${error.params[0]}`;
   case RSErrorType.invalidFilterArgumentType: 
     return `Типизация аргумента фильтра не корректна: ${error.params[0]}(${error.params[1]})`;
   case RSErrorType.invalidFilterArity: 
@@ -694,79 +694,79 @@ export function getASTNodeLabel(node: ISyntaxTreeNode): string {
 
 export function getASTNodeColor(node: ISyntaxTreeNode, colors: IColorTheme): string {
   switch(node.typeID) {
-    case TokenID.PUNC_DEFINE:
-    case TokenID.PUNC_STRUCT:
-    case TokenID.ID_LOCAL:
-      return colors.bgGreen;
-    
-    case TokenID.ID_GLOBAL:
-    case TokenID.ID_FUNCTION:
-    case TokenID.ID_PREDICATE:
-    case TokenID.ID_RADICAL:
-    case TokenID.LIT_INTEGER:
-    case TokenID.LIT_EMPTYSET:
-    case TokenID.LIT_INTSET:
-      return colors.bgTeal;
-    
-    case TokenID.FORALL:
-    case TokenID.EXISTS:
-    case TokenID.NOT:
-    case TokenID.AND:
-    case TokenID.OR:
-    case TokenID.IMPLICATION:
-    case TokenID.EQUIVALENT:
-    case TokenID.GREATER:
-    case TokenID.LESSER:
-    case TokenID.EQUAL:
-    case TokenID.NOTEQUAL:
-    case TokenID.GREATER_OR_EQ:
-    case TokenID.LESSER_OR_EQ:
-    case TokenID.IN:
-    case TokenID.NOTIN:
-    case TokenID.SUBSET_OR_EQ:
-    case TokenID.SUBSET:
-    case TokenID.NOTSUBSET:
-      return colors.bgOrange;
-    
-    case TokenID.NT_TUPLE:
-    case TokenID.NT_ENUMERATION:
-    case TokenID.BIGPR:
-    case TokenID.SMALLPR:
-    case TokenID.FILTER:
-    case TokenID.PLUS:
-    case TokenID.MINUS:
-    case TokenID.MULTIPLY:
-    case TokenID.BOOLEAN:
-    case TokenID.DECART:
-    case TokenID.INTERSECTION:
-    case TokenID.UNION:
-    case TokenID.SET_MINUS:
-    case TokenID.SYMMINUS:
-    case TokenID.REDUCE:
-    case TokenID.CARD:
-    case TokenID.BOOL:
-    case TokenID.DEBOOL:
-      return colors.bgBlue;
+  case TokenID.PUNC_DEFINE:
+  case TokenID.PUNC_STRUCT:
+  case TokenID.ID_LOCAL:
+    return colors.bgGreen;
+  
+  case TokenID.ID_GLOBAL:
+  case TokenID.ID_FUNCTION:
+  case TokenID.ID_PREDICATE:
+  case TokenID.ID_RADICAL:
+  case TokenID.LIT_INTEGER:
+  case TokenID.LIT_EMPTYSET:
+  case TokenID.LIT_INTSET:
+    return colors.bgTeal;
+  
+  case TokenID.FORALL:
+  case TokenID.EXISTS:
+  case TokenID.NOT:
+  case TokenID.AND:
+  case TokenID.OR:
+  case TokenID.IMPLICATION:
+  case TokenID.EQUIVALENT:
+  case TokenID.GREATER:
+  case TokenID.LESSER:
+  case TokenID.EQUAL:
+  case TokenID.NOTEQUAL:
+  case TokenID.GREATER_OR_EQ:
+  case TokenID.LESSER_OR_EQ:
+  case TokenID.IN:
+  case TokenID.NOTIN:
+  case TokenID.SUBSET_OR_EQ:
+  case TokenID.SUBSET:
+  case TokenID.NOTSUBSET:
+    return colors.bgOrange;
+  
+  case TokenID.NT_TUPLE:
+  case TokenID.NT_ENUMERATION:
+  case TokenID.BIGPR:
+  case TokenID.SMALLPR:
+  case TokenID.FILTER:
+  case TokenID.PLUS:
+  case TokenID.MINUS:
+  case TokenID.MULTIPLY:
+  case TokenID.BOOLEAN:
+  case TokenID.DECART:
+  case TokenID.INTERSECTION:
+  case TokenID.UNION:
+  case TokenID.SET_MINUS:
+  case TokenID.SYMMINUS:
+  case TokenID.REDUCE:
+  case TokenID.CARD:
+  case TokenID.BOOL:
+  case TokenID.DEBOOL:
+    return colors.bgBlue;
 
-    case TokenID.NT_FUNC_DEFINITION:
-    case TokenID.NT_DECLARATIVE_EXPR:
-    case TokenID.NT_IMPERATIVE_EXPR:
-    case TokenID.NT_RECURSIVE_FULL:
-    case TokenID.NT_ENUM_DECL:
-    case TokenID.NT_TUPLE_DECL:
-    case TokenID.NT_ARG_DECL:
-    case TokenID.NT_FUNC_CALL:
-    case TokenID.NT_ARGUMENTS:
-    case TokenID.NT_IMP_DECLARE:
-    case TokenID.NT_IMP_ASSIGN:
-    case TokenID.NT_IMP_LOGIC:
-    case TokenID.NT_RECURSIVE_SHORT:
-        return '';
+  case TokenID.NT_FUNC_DEFINITION:
+  case TokenID.NT_DECLARATIVE_EXPR:
+  case TokenID.NT_IMPERATIVE_EXPR:
+  case TokenID.NT_RECURSIVE_FULL:
+  case TokenID.NT_ENUM_DECL:
+  case TokenID.NT_TUPLE_DECL:
+  case TokenID.NT_ARG_DECL:
+  case TokenID.NT_FUNC_CALL:
+  case TokenID.NT_ARGUMENTS:
+  case TokenID.NT_IMP_DECLARE:
+  case TokenID.NT_IMP_ASSIGN:
+  case TokenID.NT_IMP_LOGIC:
+  case TokenID.NT_RECURSIVE_SHORT:
+      return '';
 
-    case TokenID.PUNC_ASSIGN:
-    case TokenID.PUNC_ITERATE:
-      return colors.bgRed;
-    }
-   // node
+  case TokenID.PUNC_ASSIGN:
+  case TokenID.PUNC_ITERATE:
     return colors.bgRed;
+  }
+  // node
+  return colors.bgRed;
 }

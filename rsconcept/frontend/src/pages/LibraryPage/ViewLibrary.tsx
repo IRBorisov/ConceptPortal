@@ -10,8 +10,8 @@ import { useAuth } from '../../context/AuthContext';
 import { useConceptNavigation } from '../../context/NagivationContext';
 import { useUsers } from '../../context/UsersContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
+import { ILibraryItem } from '../../models/library';
 import { prefixes } from '../../utils/constants';
-import { ILibraryItem } from '../../utils/models';
 
 interface ViewLibraryProps {
   items: ILibraryItem[]

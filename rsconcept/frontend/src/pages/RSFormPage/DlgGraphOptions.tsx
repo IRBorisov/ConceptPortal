@@ -2,7 +2,7 @@ import { useLayoutEffect, useState } from 'react';
 
 import Checkbox from '../../components/Common/Checkbox';
 import Modal, { ModalProps } from '../../components/Common/Modal';
-import { CstType } from '../../utils/models';
+import { CstType } from '../../models/rsform';
 import { getCstTypeLabel } from '../../utils/staticUI';
 import { GraphEditorParams } from './EditorTermGraph';
 

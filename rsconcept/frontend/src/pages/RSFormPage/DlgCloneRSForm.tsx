@@ -8,7 +8,7 @@ import TextInput from '../../components/Common/TextInput';
 import { useLibrary } from '../../context/LibraryContext';
 import { useConceptNavigation } from '../../context/NagivationContext';
 import { useRSForm } from '../../context/RSFormContext';
-import { IRSFormCreateData } from '../../utils/models';
+import { IRSFormCreateData } from '../../models/rsform';
 import { getCloneTitle } from '../../utils/staticUI';
 
 interface DlgCloneRSFormProps

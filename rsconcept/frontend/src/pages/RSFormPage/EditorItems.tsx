@@ -10,8 +10,8 @@ import { ArrowDownIcon, ArrowUpIcon, DumpBinIcon, HelpIcon, MeshIcon, SmallPlusI
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useWindowSize from '../../hooks/useWindowSize';
+import { CstType, IConstituenta, ICstCreateData, ICstMovetoData } from '../../models/rsform'
 import { prefixes } from '../../utils/constants';
-import { CstType, IConstituenta, ICstCreateData, ICstMovetoData } from '../../utils/models'
 import { getCstStatusFgColor, getCstTypePrefix, getCstTypeShortcut, getCstTypificationLabel, mapStatusInfo } from '../../utils/staticUI';
 
 // Window width cutoff for columns

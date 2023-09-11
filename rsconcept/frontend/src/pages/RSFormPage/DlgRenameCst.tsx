@@ -4,7 +4,7 @@ import ConceptSelectSingle from '../../components/Common/ConceptSelectSingle';
 import Modal, { ModalProps } from '../../components/Common/Modal';
 import TextInput from '../../components/Common/TextInput';
 import { useRSForm } from '../../context/RSFormContext';
-import { CstType, ICstRenameData } from '../../utils/models';
+import { CstType, ICstRenameData } from '../../models/rsform';
 import { createAliasFor, CstTypeSelector, getCstTypeLabel, getCstTypePrefix } from '../../utils/staticUI';
 
 interface DlgRenameCstProps

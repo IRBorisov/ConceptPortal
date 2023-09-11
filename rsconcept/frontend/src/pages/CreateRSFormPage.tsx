@@ -15,8 +15,9 @@ import { UploadIcon } from '../components/Icons';
 import RequireAuth from '../components/RequireAuth';
 import { useLibrary } from '../context/LibraryContext';
 import { useConceptNavigation } from '../context/NagivationContext';
+import { LibraryItemType } from '../models/library';
+import { IRSFormCreateData } from '../models/rsform';
 import { EXTEOR_TRS_FILE } from '../utils/constants';
-import { IRSFormCreateData, LibraryItemType } from '../utils/models';
 
 function CreateRSFormPage() {
   const location = useLocation();

@@ -15,10 +15,10 @@ import { ArrowsRotateIcon, DumpBinIcon, FilterCogIcon, HelpIcon, SmallPlusIcon }
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
+import { CstType, IConstituenta, ICstCreateData } from '../../models/rsform';
 import { graphDarkT, graphLightT, IColorTheme } from '../../utils/color';
 import { prefixes, resources, TIMEOUT_GRAPH_REFRESH } from '../../utils/constants';
 import { Graph } from '../../utils/Graph';
-import { CstType, IConstituenta, ICstCreateData } from '../../utils/models';
 import { getCstClassColor, getCstStatusBgColor, 
   GraphColoringSelector, GraphLayoutSelector,
   mapColoringLabels, mapLayoutLabels

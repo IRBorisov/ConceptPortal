@@ -1,7 +1,9 @@
 import { useMemo } from 'react';
 
 import { useConceptTheme } from '../../../context/ThemeContext';
-import { ExpressionStatus, type IConstituenta, IExpressionParse,inferStatus, ParsingStatus } from '../../../utils/models';
+import { ExpressionStatus } from '../../../models/rsform';
+import { type IConstituenta, inferStatus } from '../../../models/rsform';
+import { IExpressionParse, ParsingStatus } from '../../../models/rslang';
 import { getCstStatusBgColor, mapStatusInfo } from '../../../utils/staticUI';
 
 interface StatusBarProps {

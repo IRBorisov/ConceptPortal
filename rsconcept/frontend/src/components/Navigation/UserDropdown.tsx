@@ -1,7 +1,7 @@
 import { useAuth } from '../../context/AuthContext';
 import { useConceptNavigation } from '../../context/NagivationContext';
 import { useConceptTheme } from '../../context/ThemeContext';
-import { LibraryFilterStrategy } from '../../utils/models';
+import { LibraryFilterStrategy } from '../../models/miscelanious';
 import Dropdown from '../Common/Dropdown';
 import DropdownButton from '../Common/DropdownButton';
 

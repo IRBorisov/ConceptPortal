@@ -10,7 +10,7 @@ import TextURL from '../components/Common/TextURL';
 import { useAuth } from '../context/AuthContext';
 import { useConceptNavigation } from '../context/NagivationContext';
 import { useConceptTheme } from '../context/ThemeContext';
-import { IUserLoginData } from '../utils/models';
+import { IUserLoginData } from '../models/library';
 
 function ProcessError({error}: {error: ErrorInfo}): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {

@@ -6,7 +6,7 @@ import DropdownCheckbox from '../../components/Common/DropdownCheckbox';
 import { FilterCogIcon } from '../../components/Icons';
 import { useAuth } from '../../context/AuthContext';
 import useDropdown from '../../hooks/useDropdown';
-import { LibraryFilterStrategy } from '../../utils/models';
+import { LibraryFilterStrategy } from '../../models/miscelanious';
 
 interface PickerStrategyProps {
   value: LibraryFilterStrategy
