@@ -49,7 +49,7 @@ function UserTabs() {
           </div>   
         </div>
         {subscriptions.length > 0 && showSubs &&
-        <div className='flex flex-col w-full gap-2 pl-4'>
+        <div className='flex flex-col w-full gap-6 pl-4'>
           <h1>Отслеживаемые схемы</h1>
           <ViewSubscriptions items={subscriptions} />
         </div>}

@@ -190,7 +190,7 @@ export default function DataTable<TData extends RowData>({
     </tfoot>
   </table>}
   
-  {enablePagination && 
+  {!isEmpty && enablePagination && 
   <PaginationTools
     table={tableImpl}
     paginationOptions={paginationOptions}

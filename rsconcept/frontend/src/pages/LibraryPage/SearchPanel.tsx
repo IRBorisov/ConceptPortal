@@ -1,10 +1,9 @@
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { useCallback, useLayoutEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { MagnifyingGlassIcon } from '../../components/Icons';
 import { useAuth } from '../../context/AuthContext';
 import { useConceptNavigation } from '../../context/NagivationContext';
-import useLocalStorage from '../../hooks/useLocalStorage';
 import { ILibraryFilter } from '../../models/miscelanious';
 import { LibraryFilterStrategy } from '../../models/miscelanious';
 import PickerStrategy from './PickerStrategy';
@@ -25,15 +24,16 @@ interface SearchPanelProps {
   total: number
   filtered: number
   setFilter: React.Dispatch<React.SetStateAction<ILibraryFilter>>
+  query: string
+  setQuery: React.Dispatch<React.SetStateAction<string>>
+  strategy: LibraryFilterStrategy
+  setStrategy: React.Dispatch<React.SetStateAction<LibraryFilterStrategy>>
 }
 
-function SearchPanel({ total, filtered, setFilter }: SearchPanelProps) {
+function SearchPanel({ total, filtered, query, setQuery, strategy, setStrategy, setFilter }: SearchPanelProps) {
   const { navigateTo } = useConceptNavigation();
   const search = useLocation().search;
   const { user } = useAuth();
-
-  const [query, setQuery] = useState('');
-  const [strategy, setStrategy] = useLocalStorage<LibraryFilterStrategy>('search_strategy', LibraryFilterStrategy.MANUAL);
 
   function handleChangeQuery(event: React.ChangeEvent<HTMLInputElement>) {
     const newQuery = event.target.value;
@@ -76,7 +76,7 @@ function SearchPanel({ total, filtered, setFilter }: SearchPanelProps) {
           {filtered} из {total}
         </span>
       </div>
-      <div className='flex items-center justify-center w-full pr-[10rem]'>
+      <div className='flex items-center justify-center w-full ml-8'>
         <PickerStrategy
           value={strategy}
           onChange={handleChangeStrategy}

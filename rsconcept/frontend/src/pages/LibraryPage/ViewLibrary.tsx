@@ -15,12 +15,12 @@ import { prefixes } from '../../utils/constants';
 
 interface ViewLibraryProps {
   items: ILibraryItem[]
-  cleanQuery: () => void
+  resetQuery: () => void
 }
 
 const columnHelper = createColumnHelper<ILibraryItem>();
 
-function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
+function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
   const { navigateTo } = useConceptNavigation();
   const intl = useIntl();
   const { user } = useAuth();
@@ -42,7 +42,7 @@ function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
         const item = props.row.original;
         return (<>
           <div
-            className='flex items-center justify-start gap-1'
+            className='flex items-center justify-start gap-1 min-w-[2.75rem]'
             id={`${prefixes.library_list}${item.id}`}
           >
             {user && user.subscriptions.includes(item.id) && <p title='Отслеживаемая'><EyeIcon size={3}/></p>}
@@ -83,10 +83,10 @@ function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
     columnHelper.accessor('time_update', {
       id: 'time_update',
       header: 'Обновлена',
-      size: 220,
-      minSize: 220,
-      maxSize: 220,
-      cell: props => new Date(props.cell.getValue()).toLocaleString(intl.locale),
+      size: 150,
+      minSize: 150,
+      maxSize: 150,
+      cell: props => <div className='text-sm min-w-[8.25rem]'>{new Date(props.cell.getValue()).toLocaleString(intl.locale)}</div>,
       enableSorting: true,
       sortingFn: 'datetime',
       sortDescFirst: true
@@ -95,6 +95,7 @@ function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
   
   return (
     <div>
+      {items.length > 0 &&
       <div className='relative w-full'>
       <div className='absolute top-[-0.125rem] left-0 flex gap-1 ml-3 z-pop'>
         <div id='library-help' className='py-2'>
@@ -106,38 +107,35 @@ function ViewLibrary({ items, cleanQuery }: ViewLibraryProps) {
           </div>
         </ConceptTooltip>
       </div>
-      </div>
-    <DataTable
-      columns={columns}
-      data={items}
-
-      noDataComponent={
-      <div className='flex flex-col gap-4 justify-center p-2 text-center min-h-[10rem]'>
-        <p><b>Список схем пуст</b></p>
-        <p>
-          <TextURL text='Создать схему' href='/rsform-create'/>
-          <span> | </span>
-          <TextURL text='Все схемы' href='/library'/>
-          <span> | </span>
-          <span className='cursor-pointer hover:underline text-url' onClick={cleanQuery}>
-            <b>Очистить фильтр</b>
-          </span>
-        </p>
       </div>}
-      
-      onRowClicked={openRSForm}
+      <DataTable
+        columns={columns}
+        data={items}
 
-      enableSorting
-      initialSorting={{
-        id: 'time_update',
-        desc: true
-      }}
+        noDataComponent={
+        <div className='flex flex-col gap-4 justify-center p-2 text-center min-h-[6rem]'>
+          <p>Список схем пуст</p>
+          <p className='flex justify-center gap-4'>
+            <TextURL text='Создать схему' href='/rsform-create'/>
+            <span className='cursor-pointer hover:underline text-url' onClick={cleanQuery}>
+              Очистить фильтр
+            </span>
+          </p>
+        </div>}
+        
+        onRowClicked={openRSForm}
 
-      enablePagination
-      paginationPerPage={itemsPerPage}
-      onChangePaginationOption={setItemsPerPage}
-      paginationOptions={[10, 20, 30, 50, 100]}
-    />
+        enableSorting
+        initialSorting={{
+          id: 'time_update',
+          desc: true
+        }}
+
+        enablePagination
+        paginationPerPage={itemsPerPage}
+        onChangePaginationOption={setItemsPerPage}
+        paginationOptions={[10, 20, 30, 50, 100]}
+      />
     </div>
   );
 }

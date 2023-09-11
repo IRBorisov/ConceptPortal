@@ -38,10 +38,10 @@ function ViewSubscriptions({items}: ViewSubscriptionsProps) {
     columnHelper.accessor('time_update', {
       id: 'time_update',
       header: 'Обновлена',
-      minSize: 200,
-      size: 200,
-      maxSize: 200,
-      cell: props => new Date(props.cell.getValue()).toLocaleString(intl.locale),
+      minSize: 150,
+      size: 150,
+      maxSize: 150,
+      cell: props => <div className='min-w-[8.25rem]'>{new Date(props.cell.getValue()).toLocaleString(intl.locale)}</div>,
       enableSorting: true
     })
   ], [intl]);
