@@ -220,7 +220,6 @@ function EditorConstituenta({
           toggleEditMode={() => setEditMode(EditMode.RSLANG)}
           onShowAST={onShowAST}
           onChange={newValue => setExpression(newValue)}
-          setValue={setExpression}
           setTypification={setTypification}
         />
         <ReferenceInput id='definition' label='Текстовое определение'

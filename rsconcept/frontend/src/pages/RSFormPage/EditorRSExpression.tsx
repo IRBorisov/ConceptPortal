@@ -28,12 +28,11 @@ interface EditorRSExpressionProps {
   setTypification: (typificaiton: string) => void
   value: string
   onChange: (newValue: string) => void
-  setValue: (expression: string) => void
 }
 
 function EditorRSExpression({
   activeCst, disabled, isActive, value, onShowAST, 
-  toggleEditMode, setTypification, onChange, ... props
+  toggleEditMode, setTypification, onChange, ...props
 }: EditorRSExpressionProps) {
   const { schema } = useRSForm();
 
