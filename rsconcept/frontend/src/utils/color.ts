@@ -119,7 +119,7 @@ export const selectLightT = {
   neutral20: lightT.border,
   neutral30: lightT.border,
   neutral40: lightT.fgDisabled,
-  neutral50: lightT.fgWarning,
+  neutral50: lightT.fgDisabled, // placeholder
   neutral60: lightT.fgDefault,
   neutral70: lightT.fgWarning,
   neutral80: lightT.fgDefault,
@@ -141,7 +141,7 @@ export const selectDarkT = {
   neutral20: darkT.border,
   neutral30: darkT.border,
   neutral40: darkT.fgDisabled,
-  neutral50: darkT.fgWarning,
+  neutral50: darkT.fgDisabled, // placeholder
   neutral60: darkT.fgDefault,
   neutral70: darkT.fgWarning,
   neutral80: darkT.fgDefault,

@@ -4,17 +4,17 @@ import Select, { GroupBase, Props, StylesConfig } from 'react-select';
 import { useConceptTheme } from '../../context/ThemeContext';
 import { selectDarkT, selectLightT } from '../../utils/color';
 
-interface ConceptSelectSingleProps<
+interface SelectSingleProps<
   Option,
   Group extends GroupBase<Option> = GroupBase<Option>
 >
 extends Omit<Props<Option, false, Group>, 'theme'> {
 }
 
-function ConceptSelectSingle<
+function SelectSingle<
   Option,
   Group extends GroupBase<Option> = GroupBase<Option>
-> ({ ...props }: ConceptSelectSingleProps<Option, Group>) {
+> ({ ...props }: SelectSingleProps<Option, Group>) {
   const { darkMode, colors } = useConceptTheme();
   const themeColors = useMemo(
     () => !darkMode ? selectLightT : selectDarkT
@@ -56,4 +56,4 @@ function ConceptSelectSingle<
   );
 }
 
-export default ConceptSelectSingle;
+export default SelectSingle;

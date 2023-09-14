@@ -40,7 +40,7 @@ function EditorConstituenta({
   onShowAST, onCreateCst, onRenameCst, onOpenEdit, onDeleteCst
 }: EditorConstituentaProps) {
   const windowSize = useWindowSize();
-  const { schema, processing, isEditable, cstUpdate, isForceAdmin } = useRSForm();
+  const { schema, processing, isEditable, cstUpdate } = useRSForm();
   
   const [editMode, setEditMode] = useState(EditMode.TEXT);
 
@@ -183,7 +183,7 @@ function EditorConstituenta({
             icon={<PenIcon size={4} color={isEnabled ? 'text-primary' : ''} />}
           />
         </div>
-        {isForceAdmin && <div className='relative'>
+        <div className='relative'>
         <div className='absolute left-[3.2rem] top-[0.5rem]'>
         <MiniButton
           tooltip='Редактировать словоформы термина'
@@ -193,7 +193,7 @@ function EditorConstituenta({
           icon={<PenIcon size={4} color={isEnabled ? 'text-primary' : ''} />}
         />
         </div>
-        </div>}
+        </div>
         <ReferenceInput id='term' label='Термин'
           placeholder='Обозначение, используемое в текстовых определениях данной схемы'
           rows={2}

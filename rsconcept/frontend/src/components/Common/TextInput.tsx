@@ -2,8 +2,8 @@ import Label from './Label';
 
 interface TextInputProps
 extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'className' | 'title'> {
-  id: string
-  label: string
+  id?: string
+  label?: string
   tooltip?: string
   widthClass?: string
   colorClass?: string
@@ -18,11 +18,11 @@ function TextInput({
 }: TextInputProps) {
   return (
     <div className={`flex [&:not(:first-child)]:mt-3 ${singleRow ? 'items-center gap-4 ' + widthClass : 'flex-col items-start'}`}>
-      <Label
+      {label && <Label
         text={label}
         required={!props.disabled && required}
         htmlFor={id}
-      />
+      />}
       <input id={id}
         title={tooltip}
         className={`px-3 py-2 leading-tight border shadow truncate hover:text-clip clr-outline ${colorClass} ${singleRow ? '' : 'mt-2 ' + widthClass}`}

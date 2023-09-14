@@ -5,10 +5,10 @@ import { GraphCanvas, GraphCanvasRef, GraphEdge,
 
 import Button from '../../components/Common/Button';
 import Checkbox from '../../components/Common/Checkbox';
-import ConceptSelectSingle from '../../components/Common/ConceptSelectSingle';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import Divider from '../../components/Common/Divider';
 import MiniButton from '../../components/Common/MiniButton';
+import SelectSingle from '../../components/Common/SelectSingle';
 import HelpTermGraph from '../../components/Help/HelpTermGraph';
 import InfoConstituenta from '../../components/Help/InfoConstituenta';
 import { ArrowsRotateIcon, DumpBinIcon, FilterCogIcon, HelpIcon, SmallPlusIcon } from '../../components/Icons';
@@ -19,8 +19,9 @@ import { CstType, IConstituenta, ICstCreateData } from '../../models/rsform';
 import { graphDarkT, graphLightT, IColorTheme } from '../../utils/color';
 import { prefixes, resources, TIMEOUT_GRAPH_REFRESH } from '../../utils/constants';
 import { Graph } from '../../utils/Graph';
+import { SelectorGraphLayout } from '../../utils/selectors';
+import { SelectorGraphColoring } from '../../utils/selectors';
 import { getCstClassColor, getCstStatusBgColor, 
-  GraphColoringSelector, GraphLayoutSelector,
   mapColoringLabels, mapLayoutLabels
 } from '../../utils/staticUI';
 import DlgGraphOptions from './DlgGraphOptions';
@@ -404,23 +405,23 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
           widthClass='h-full'
           onClick={() => setShowOptions(true)}
         />
-        <ConceptSelectSingle
+        <SelectSingle
           className='min-w-[9.8rem]'
-          options={GraphColoringSelector}
+          options={SelectorGraphColoring}
           isSearchable={false}
           placeholder='Выберите цвет'
           value={coloringScheme ? { value: coloringScheme, label: mapColoringLabels.get(coloringScheme) } : null}
-          onChange={data => setColoringScheme(data?.value ?? GraphColoringSelector[0].value)}
+          onChange={data => setColoringScheme(data?.value ?? SelectorGraphColoring[0].value)}
         />
         
       </div>
-      <ConceptSelectSingle
+      <SelectSingle
         className='w-full mt-1'
-        options={GraphLayoutSelector}
+        options={SelectorGraphLayout}
         isSearchable={false}
         placeholder='Способ расположения'
         value={layout ? { value: layout, label: mapLayoutLabels.get(layout) } : null}
-        onChange={data => handleChangeLayout(data?.value ?? GraphLayoutSelector[0].value)}
+        onChange={data => handleChangeLayout(data?.value ?? SelectorGraphLayout[0].value)}
       />
       <Checkbox
         label='Скрыть текст' 

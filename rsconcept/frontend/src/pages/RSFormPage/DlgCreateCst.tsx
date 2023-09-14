@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 
-import ConceptSelectSingle from '../../components/Common/ConceptSelectSingle';
 import Modal, { ModalProps } from '../../components/Common/Modal';
+import SelectSingle from '../../components/Common/SelectSingle';
 import TextArea from '../../components/Common/TextArea';
 import RSInput from '../../components/RSInput';
 import { CstType,ICstCreateData } from '../../models/rsform';
-import { CstTypeSelector, getCstTypeLabel } from '../../utils/staticUI';
+import { SelectorCstType } from '../../utils/selectors';
+import { getCstTypeLabel } from '../../utils/staticUI';
 
 interface DlgCreateCstProps
 extends Pick<ModalProps, 'hideWindow'> {
@@ -57,9 +58,9 @@ function DlgCreateCst({ hideWindow, initial, onCreate }: DlgCreateCstProps) {
     >
     <div className='h-fit w-[35rem] px-2 mb-2 flex flex-col justify-stretch'>
       <div className='flex justify-center w-full'>
-        <ConceptSelectSingle
+        <SelectSingle
           className='my-2 min-w-[15rem] self-center'
-          options={CstTypeSelector}
+          options={SelectorCstType}
           placeholder='Выберите тип'
           value={selectedType ? { value: selectedType, label: getCstTypeLabel(selectedType) } : null}
           onChange={data => setSelectedType(data?.value ?? CstType.BASE)}

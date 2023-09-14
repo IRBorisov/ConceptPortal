@@ -1,11 +1,12 @@
 import { useLayoutEffect, useState } from 'react';
 
-import ConceptSelectSingle from '../../components/Common/ConceptSelectSingle';
 import Modal, { ModalProps } from '../../components/Common/Modal';
+import SelectSingle from '../../components/Common/SelectSingle';
 import TextInput from '../../components/Common/TextInput';
 import { useRSForm } from '../../context/RSFormContext';
 import { CstType, ICstRenameData } from '../../models/rsform';
-import { createAliasFor, CstTypeSelector, getCstTypeLabel, getCstTypePrefix } from '../../utils/staticUI';
+import { createAliasFor, getCstTypeLabel, getCstTypePrefix } from '../../utils/staticUI';
+import { SelectorCstType } from '../../utils/selectors';
 
 interface DlgRenameCstProps
 extends Pick<ModalProps, 'hideWindow'> {
@@ -67,9 +68,9 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
       submitText='Переименовать'
     >
       <div className='flex items-center gap-4 px-2 my-2 h-fit min-w-[25rem]'>
-        <ConceptSelectSingle
+        <SelectSingle
           className='min-w-[14rem] self-center z-modal-top'
-          options={CstTypeSelector}
+          options={SelectorCstType}
           placeholder='Выберите тип'
           value={cstType ? { value: cstType, label: getCstTypeLabel(cstType) } : null}
           onChange={data => setCstType(data?.value ?? CstType.BASE)}

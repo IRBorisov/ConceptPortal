@@ -1,4 +1,3 @@
-import { LayoutTypes } from 'reagraph';
 
 import { DependencyMode } from '../models/miscelanious';
 import { HelpTopic } from '../models/miscelanious';
@@ -7,7 +6,6 @@ import { ExpressionStatus } from '../models/rsform';
 import { CstClass, CstType, IConstituenta, IRSForm } from '../models/rsform';
 import { IFunctionArg, IRSErrorDescription, ISyntaxTreeNode, ParsingStatus, ValueClass } from '../models/rslang';
 import { resolveErrorClass, RSErrorClass, RSErrorType, TokenID } from '../models/rslang';
-import { ColoringScheme } from '../pages/RSFormPage/EditorTermGraph';
 import { IColorTheme } from './color';
 
 export interface IDescriptor {
@@ -242,14 +240,6 @@ export function getCstTypeShortcut(type: CstType) {
   }
 }
 
-export const CstTypeSelector = (
-  Object.values(CstType)).map(
-  typeStr => ({
-    value: typeStr as CstType,
-    label: getCstTypeLabel(typeStr as CstType)
-  })
-);
-
 export function getCstCompareLabel(mode: CstMatchMode): string {
   switch(mode) {
     case CstMatchMode.ALL: return 'везде';
@@ -270,22 +260,6 @@ export function getDependencyLabel(mode: DependencyMode): string {
     case DependencyMode.EXPAND_OUTPUTS: return 'зависимые';
   }
 }
-
-export const GraphLayoutSelector: {value: LayoutTypes, label: string}[] = [
-  { value: 'treeTd2d', label: 'Граф: ДеревоВ 2D'},
-  { value: 'treeTd3d', label: 'Граф: ДеревоВ 3D'},
-  { value: 'forceatlas2', label: 'Граф: Атлас 2D'},
-  { value: 'forceDirected2d', label: 'Граф: Силы 2D'},
-  { value: 'forceDirected3d', label: 'Граф: Силы 3D'},
-  { value: 'treeLr2d', label: 'Граф: ДеревоГ 2D'},
-  { value: 'treeLr3d', label: 'Граф: ДеревоГ 3D'},
-  { value: 'radialOut2d', label: 'Граф: Радиальная 2D'},
-  { value: 'radialOut3d', label: 'Граф: Радиальная 3D'},
-  // { value: 'circular2d', label: 'circular2d'},
-  //  { value: 'nooverlap', label: 'nooverlap'},
-  //  { value: 'hierarchicalTd', label: 'hierarchicalTd'},
-  //  { value: 'hierarchicalLr', label: 'hierarchicalLr'}
-];
 
 export const mapLayoutLabels: Map<string, string> = new Map([
   ['forceatlas2', 'Граф: Атлас 2D'],
@@ -308,12 +282,6 @@ export const mapColoringLabels: Map<string, string> = new Map([
   ['status', 'Цвет: статус'],
   ['type', 'Цвет: класс'],
 ]);
-
-export const GraphColoringSelector: {value: ColoringScheme, label: string}[] = [
-  { value: 'none', label: 'Цвет: моно'},
-  { value: 'status', label: 'Цвет: статус'},
-  { value: 'type', label: 'Цвет: класс'},
-];
 
 export function getCstStatusBgColor(status: ExpressionStatus, colors: IColorTheme): string {
   switch (status) {

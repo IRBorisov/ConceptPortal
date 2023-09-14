@@ -42,7 +42,7 @@ function Modal({
       ref={ref}
       className='fixed bottom-1/2 left-1/2 translate-y-1/2 -translate-x-1/2 px-6 py-4 flex flex-col justify-start w-fit max-w-[calc(100vw-2rem)] h-fit z-modal clr-app border shadow-md'
     >
-      { title && <h1 className='mb-2 text-xl'>{title}</h1> }
+      { title && <h1 className='mb-2 text-xl select-none'>{title}</h1> }
       <div className='max-h-[calc(100vh-8rem)]'>
         {children}
       </div>
