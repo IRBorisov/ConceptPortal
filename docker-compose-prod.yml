@@ -7,6 +7,10 @@ volumes:
     name: "portal-static"
   django_media_volume:
     name: "portal-media"
+  cerbot_www_volume:
+    name: "portal-certbot-serve"
+  cerbot_conf_volume:
+    name: "portal-certbot-config"
 
 networks:
   default:
@@ -69,6 +73,14 @@ services:
       - postgres_volume:/var/lib/postgresql/data
 
 
+  certbot:
+    container_name: portal-certbot
+    image: certbot/certbot:latest
+    volumes:
+      - cerbot_www_volume:/var/www/certbot/:rw
+      - cerbot_conf_volume:/etc/letsencrypt/:rw
+
+
   nginx:
     container_name: portal-router
     restart: always
@@ -77,11 +89,13 @@ services:
       args:
         BUILD_TYPE: production
     ports:
-      - 8000:8000
-      - 3000:3000
+      - 80:80
+      - 443:443
     depends_on:
       - backend
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     volumes:
       - django_static_volume:/var/www/static
       - django_media_volume:/var/www/media
+      - cerbot_www_volume:/var/www/certbot/:ro
+      - cerbot_conf_volume:/etc/nginx/ssl/:ro
