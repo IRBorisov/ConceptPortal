@@ -28,7 +28,7 @@ interface EditorItemsProps {
 }
 
 function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps) {
-  const { colors } = useConceptTheme();
+  const { colors, mainHeight } = useConceptTheme();
   const windowSize = useWindowSize();
   const { schema, isEditable, cstMoveTo, resetAliases } = useRSForm();
   const [selected, setSelected] = useState<number[]>([]);
@@ -136,6 +136,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
     if (!isEditable) {
       return;
     }
+    console.log(1);
     if (event.key === 'Delete' && selected.length > 0) {
       event.preventDefault();
       handleDelete();
@@ -288,7 +289,12 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
   ], [colors]);
 
   return (
-  <div className='w-full'>
+  <div
+    className='w-full outline-none'
+    style={{minHeight: mainHeight}}
+    tabIndex={0}
+    onKeyDown={handleTableKey}
+  >
     <div className='sticky top-0 flex justify-start w-full gap-1 px-2 py-1 border-b items-center h-[2.2rem] select-none clr-app'>
       <div className='mr-3 min-w-[9rem] whitespace-nowrap'>
         Выбор {selected.length} из {schema?.stats?.count_all ?? 0}
@@ -352,7 +358,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
         </ConceptTooltip>
       </div>
     </div>
-    <div className='w-full h-full text-sm' onKeyDown={handleTableKey}>
+    <div className='w-full h-full text-sm'>
     <DataTable
       data={schema?.items ?? []}
       columns={columns}        
