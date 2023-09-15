@@ -1,21 +1,19 @@
-import Card from './Card';
-
 interface FormProps {
   title: string
-  widthClass?: string
+  dimensions?: string
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void
   children: React.ReactNode
 }
 
-function Form({ title, onSubmit, widthClass = 'max-w-xs', children }: FormProps) {
+function Form({ title, onSubmit, dimensions = 'max-w-xs', children }: FormProps) {
   return (
-    <div className='flex flex-col items-center w-full'>
-      <Card title={title} widthClass={widthClass}>
-        <form onSubmit={onSubmit}>
-          {children}
-        </form>
-      </Card>
-    </div>
+    <form
+      className={`border shadow-md py-2 clr-app px-6 flex flex-col gap-3 ${dimensions}`}
+      onSubmit={onSubmit}
+    >
+      { title && <h1 className='text-xl font-bold whitespace-nowrap'>{title}</h1> }
+      {children}
+    </form>
   );
 }
 

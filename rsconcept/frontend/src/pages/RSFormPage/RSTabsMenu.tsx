@@ -73,7 +73,7 @@ function RSTabsMenu({
           tooltip='Действия'
           icon={<MenuIcon color='text-controls' size={5}/>}
           borderClass=''
-          widthClass='h-full w-fit'
+          dimensions='h-full w-fit'
           style={{outlineColor: 'transparent'}}
           dense
           onClick={schemaMenu.toggle}
@@ -123,7 +123,7 @@ function RSTabsMenu({
         <Button
           tooltip={'измнение: ' + (isEditable ? '[доступно]' : '[запрещено]')}
           borderClass=''
-          widthClass='h-full w-fit'
+          dimensions='h-full w-fit'
           style={{outlineColor: 'transparent'}}
           icon={<PenIcon size={5} color={isEditable ? 'text-success' : 'text-warning'}/>}
           dense
@@ -169,7 +169,7 @@ function RSTabsMenu({
             ? <EyeIcon color='text-primary' size={5}/>
             : <EyeOffIcon color='text-controls' size={5}/>
           }
-          widthClass='h-full w-fit'
+          dimensions='h-full w-fit'
           borderClass=''
           style={{outlineColor: 'transparent'}}
           dense

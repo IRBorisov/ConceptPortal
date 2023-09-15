@@ -458,7 +458,7 @@ export function getTypificationLabel({isValid, resultType, args}: {
     return 'N/A';
   }
   if (resultType === '' || resultType === 'LOGIC') {
-    resultType = 'Логический';
+    resultType = 'Logical';
   }
   if (args.length === 0) {
     return resultType;

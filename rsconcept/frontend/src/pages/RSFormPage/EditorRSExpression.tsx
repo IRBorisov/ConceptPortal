@@ -107,7 +107,8 @@ function EditorRSExpression({
   }, []);
 
   const EditButtons = useMemo(() => {
-    return (<div className='flex items-center justify-between w-full'>
+    return (
+    <div className='flex items-center justify-between w-full'>
     <div className='text-sm w-fit'>
       <div className='flex justify-start'>
         <RSTokenButton id={TokenID.NT_DECLARATIVE_EXPR} onInsert={handleEdit}/>
@@ -185,55 +186,54 @@ function EditorRSExpression({
   }, [handleEdit]);
 
   return (
-    <div className='flex flex-col items-start [&:not(:first-child)]:mt-3 w-full min-h-[15.75rem]'>
-      <div className='relative w-full'>
-      <div className='absolute top-[-0.3rem] right-0'>
-      <StatusBar
-        isModified={isModified}
-        constituenta={activeCst}
-        parseData={parseData}
-      />
-      </div>
-      </div>
-      <RSInput innerref={rsInput}
-        className='text-lg'
-        height='10.1rem'
-        value={value}
-        editable={!disabled}
-        onChange={handleChange}
-        onFocus={handleFocusIn}
-        {...props}
-      />
-      <div className='flex w-full gap-4 py-1 mt-1 justify-stretch'>
-        <div className='flex flex-col gap-2'>
-          <Button
-            tooltip='Проверить формальное выражение'
-            text='Проверить'
-            widthClass='h-full w-fit'
-            colorClass='clr-btn-default'
-            onClick={handleCheckExpression}
-          />
-        </div>
-        {isActive && !disabled && EditButtons}
-      </div>
-      { (isActive || loading || parseData) && 
-      <div className='w-full overflow-y-auto border mt-2 max-h-[14rem] min-h-[4.2rem]'>
-        { loading && <ConceptLoader size={6} />}
-        { !loading && parseData && 
-        <ParsingResult
-          data={parseData} 
-          onShowAST={ast => onShowAST(getCstExpressionPrefix(activeCst!) + value, ast)}
-          onShowError={onShowError}
-        />}
-        { !loading && !parseData &&
-        <input
-          disabled={true}
-          className='w-full h-full px-2 align-middle select-none clr-app'
-          placeholder='Результаты проверки выражения'
-        />}
-      </div>}
+  <div className='flex flex-col items-start w-full min-h-[15.75rem]'>
+    <div className='relative w-full'>
+    <div className='absolute top-[-0.3rem] right-0'>
+    <StatusBar
+      isModified={isModified}
+      constituenta={activeCst}
+      parseData={parseData}
+    />
     </div>
-  );
+    </div>
+    <RSInput innerref={rsInput}
+      className='text-lg'
+      height='10.1rem'
+      value={value}
+      editable={!disabled}
+      onChange={handleChange}
+      onFocus={handleFocusIn}
+      {...props}
+    />
+    <div className='flex items-stretch w-full gap-4 py-1 mt-1 justify-stretch'>
+      <div>
+        <Button
+          tooltip='Проверить формальное выражение'
+          text='Проверить'
+          dimensions='h-full w-fit'
+          colorClass='clr-btn-default'
+          onClick={handleCheckExpression}
+        />
+      </div>
+      {isActive && !disabled && EditButtons}
+    </div>
+    { (isActive || loading || parseData) && 
+    <div className='w-full overflow-y-auto border mt-1 max-h-[14rem] min-h-[4.2rem]'>
+      { loading && <ConceptLoader size={6} />}
+      { !loading && parseData && 
+      <ParsingResult
+        data={parseData} 
+        onShowAST={ast => onShowAST(getCstExpressionPrefix(activeCst!) + value, ast)}
+        onShowError={onShowError}
+      />}
+      { !loading && !parseData &&
+      <input
+        disabled={true}
+        className='w-full h-full px-2 align-middle select-none clr-app'
+        placeholder='Результаты проверки выражения'
+      />}
+    </div>}
+  </div>);
 }
 
 export default EditorRSExpression;

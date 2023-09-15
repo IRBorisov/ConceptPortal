@@ -5,7 +5,7 @@ extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'child
   tooltip?: string
   dense?: boolean
   loading?: boolean
-  widthClass?: string
+  dimensions?: string
   borderClass?: string
   colorClass?: string
 }
@@ -15,7 +15,7 @@ function Button({
   dense, disabled,
   borderClass = 'border rounded',
   colorClass = 'clr-btn-default',
-  widthClass = 'w-fit h-fit',
+  dimensions = 'w-fit h-fit',
   loading, onClick,
   ...props
 }: ButtonProps) {
@@ -27,10 +27,10 @@ function Button({
       disabled={disabled ?? loading}
       onClick={onClick}
       title={tooltip}
-      className={`inline-flex items-center gap-2 align-middle justify-center select-none ${padding} ${colorClass} ${widthClass} ${borderClass} ${cursor}`}
+      className={`inline-flex items-center gap-2 align-middle justify-center select-none ${padding} ${colorClass} ${dimensions} ${borderClass} ${cursor}`}
       {...props}
     >
-      {icon && <span>{icon}</span>}
+      {icon && icon}
       {text && <span className={'font-semibold'}>{text}</span>}
     </button>
   );

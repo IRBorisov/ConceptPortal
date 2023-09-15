@@ -5,8 +5,8 @@ import SelectSingle from '../../components/Common/SelectSingle';
 import TextInput from '../../components/Common/TextInput';
 import { useRSForm } from '../../context/RSFormContext';
 import { CstType, ICstRenameData } from '../../models/rsform';
-import { createAliasFor, getCstTypeLabel, getCstTypePrefix } from '../../utils/staticUI';
 import { SelectorCstType } from '../../utils/selectors';
+import { createAliasFor, getCstTypeLabel, getCstTypePrefix } from '../../utils/staticUI';
 
 interface DlgRenameCstProps
 extends Pick<ModalProps, 'hideWindow'> {
@@ -78,7 +78,7 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
         <div>
         <TextInput id='alias' label='Имя'
           singleRow
-          widthClass='w-[7rem]'
+          dimensions='w-[7rem]'
           value={alias}
           onChange={event => setAlias(event.target.value)}
         />

@@ -224,7 +224,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
         return (<>
           <div
             id={`${prefixes.cst_list}${cst.alias}`}
-            className='w-full min-w-[3.1rem] px-1 text-center rounded-md whitespace-nowrap'
+            className='w-full min-w-[3.1rem] max-w-[3.1rem] px-1 text-center rounded-md whitespace-nowrap'
             style={{
               borderWidth: "1px", 
               borderColor: getCstStatusFgColor(cst.status, colors), 
@@ -251,7 +251,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
       minSize: 150,
       maxSize: 150,
       enableHiding: true,
-      cell: props => <div className='text-sm min-w-[8.4rem]'>{props.getValue()}</div>
+      cell: props => <div className='text-sm min-w-[9.3rem] max-w-[9.3rem] break-words'>{props.getValue()}</div>
     }),
     columnHelper.accessor(cst => cst.term_resolved || cst.term_raw || '', {
       id: 'term',
@@ -265,7 +265,8 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
       header: 'Формальное определение',
       size: 1000,
       minSize: 300,
-      maxSize: 1000
+      maxSize: 1000,
+      cell: props => <div className='break-words'>{props.getValue()}</div>
     }),
     columnHelper.accessor(cst => cst.definition_resolved || cst.definition_raw || '', {
       id: 'definition',
@@ -283,19 +284,14 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
       maxSize: 500,
       enableHiding: true,
       cell: props => <div className='text-xs'>{props.getValue()}</div>
-    }),
+    })
   ], [colors]);
 
   return (
   <div className='w-full'>
-    <div
-      className='sticky top-0 flex justify-start w-full gap-1 px-2 py-1 border-y items-center h-[2.2rem] select-none clr-app'
-    >
-      <div className='mr-3 whitespace-nowrap'>
-        Выбраны
-        <span className='ml-2'>
-          {selected.length} из {schema?.stats?.count_all ?? 0}
-        </span>
+    <div className='sticky top-0 flex justify-start w-full gap-1 px-2 py-1 border-b items-center h-[2.2rem] select-none clr-app'>
+      <div className='mr-3 min-w-[9rem] whitespace-nowrap'>
+        Выбор {selected.length} из {schema?.stats?.count_all ?? 0}
       </div>
       <div className='flex items-center justify-start w-full gap-1'>
         <Button
@@ -342,7 +338,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
               text={getCstTypePrefix(type)}
               tooltip={getCstTypeShortcut(type)}
               dense
-              widthClass='w-[1.4rem]'
+              dimensions='w-[1.4rem]'
               disabled={!isEditable}
               tabIndex={-1}
               onClick={() => handleCreateCst(type)}
@@ -378,7 +374,8 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
           <p>Список пуст</p>
           <p 
             className='cursor-pointer text-primary hover:underline'
-            onClick={() => handleCreateCst()}>
+            onClick={() => handleCreateCst()}
+          >
             Создать новую конституенту
           </p>
         </span>

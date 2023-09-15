@@ -4,17 +4,17 @@ extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'child
   tooltip?: string
   loading?: boolean
   icon?: React.ReactNode
-  widthClass?: string
+  dimensions?: string
 }
 
 function SubmitButton({
   text = 'ОК', icon, disabled, tooltip, loading,
-  widthClass = 'w-fit h-fit'
+  dimensions = 'w-fit h-fit'
 }: SubmitButtonProps) {
   return (
     <button type='submit'
       title={tooltip}
-      className={`px-4 py-2 inline-flex items-center gap-2 align-middle justify-center font-semibold select-none disabled:cursor-not-allowed border rounded clr-btn-primary ${widthClass} ${loading ? ' cursor-progress' : ''}`}
+      className={`px-4 py-2 inline-flex items-center gap-2 align-middle justify-center font-semibold select-none disabled:cursor-not-allowed border rounded clr-btn-primary ${dimensions} ${loading ? ' cursor-progress' : ''}`}
       disabled={disabled ?? loading}
     >
       {icon && <span>{icon}</span>}

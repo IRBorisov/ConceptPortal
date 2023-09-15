@@ -31,7 +31,7 @@ function UserDropdown({ hideDropdown }: UserDropdownProps) {
   };
 
   return (
-    <Dropdown widthClass='w-36' stretchLeft>
+    <Dropdown dimensions='w-36' stretchLeft>
       <DropdownButton
         tooltip='Профиль пользователя'
         onClick={navigateProfile}

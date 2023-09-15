@@ -30,7 +30,7 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
       dense
       tooltip='Фильтры'
       colorClass='clr-input clr-hover text-btn'
-      widthClass='h-full py-1 px-2 border-none'
+      dimensions='h-full py-1 px-2 border-none'
       onClick={pickerMenu.toggle}
     />
     { pickerMenu.isActive &&

@@ -77,27 +77,29 @@ function CreateRSFormPage() {
   }
 
   return (
-    <RequireAuth>
-    <Form title='Создание концептуальной схемы' 
-      onSubmit={handleSubmit}
-      widthClass='max-w-lg w-full mt-4'
-    >
-      <div className='relative w-full'>
-      <div className='absolute top-[-2.4rem] right-[-1rem] flex'>
-        <input
-          type='file'
-          ref={inputRef}
-          style={{ display: 'none' }}
-          accept={EXTEOR_TRS_FILE}
-          onChange={handleFileChange}
-        />
-        <MiniButton
-          tooltip='Загрузить из Экстеор'
-          icon={<UploadIcon size={5} color='text-primary'/>}
-          onClick={() => inputRef.current?.click()}
-        />
-      </div>
-      </div>
+  <RequireAuth>
+  <div className='flex justify-center w-full'>
+  <Form title='Создание концептуальной схемы' 
+    onSubmit={handleSubmit}
+    dimensions='max-w-lg w-full mt-4'
+  >
+    <div className='relative w-full'>
+    <div className='absolute top-[-2.4rem] right-[-1rem] flex'>
+      <input
+        type='file'
+        ref={inputRef}
+        style={{ display: 'none' }}
+        accept={EXTEOR_TRS_FILE}
+        onChange={handleFileChange}
+      />
+      <MiniButton
+        tooltip='Загрузить из Экстеор'
+        icon={<UploadIcon size={5} color='text-primary'/>}
+        onClick={() => inputRef.current?.click()}
+      />
+    </div>
+    </div>
+    <div className='flex flex-col gap-3'>
       { fileName && <Label text={`Загружен файл: ${fileName}`} />}
       <TextInput id='title' label='Полное название' type='text'
         required={!file}
@@ -121,22 +123,23 @@ function CreateRSFormPage() {
         value={common}
         setValue={value => setCommon(value ?? false)}
       />
-      <div className='flex items-center justify-center gap-4 py-2 mt-4'>
+      <div className='flex items-center justify-center gap-4 py-2'>
         <SubmitButton 
           text='Создать схему'
           loading={processing}
-          widthClass='min-w-[10rem]'
+          dimensions='min-w-[10rem]'
         />
         <Button 
           text='Отмена'
           onClick={() => handleCancel()}
-          widthClass='min-w-[10rem]'
+          dimensions='min-w-[10rem]'
         />
       </div>
       { error && <BackendError error={error} />}
-    </Form>
-    </RequireAuth>
-  );
+    </div>
+  </Form>
+  </div>
+  </RequireAuth>);
 }
 
 export default CreateRSFormPage;

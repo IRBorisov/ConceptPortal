@@ -75,7 +75,7 @@ function DlgGraphOptions({ hideWindow, initial, onConfirm }:DlgGraphOptionsProps
       submitText='Применить'
     >
       <div className='flex gap-2'>
-        <div className='flex flex-col'>
+        <div className='flex flex-col gap-1'>
           <h1>Преобразования</h1>
           <Checkbox
             label='Скрыть текст'
@@ -102,7 +102,7 @@ function DlgGraphOptions({ hideWindow, initial, onConfirm }:DlgGraphOptionsProps
             setValue={ value => setNoTransitive(value) }
           />
         </div>
-        <div className='flex flex-col'>
+        <div className='flex flex-col gap-1'>
           <h1>Типы конституент</h1>
           <Checkbox
             label={getCstTypeLabel(CstType.BASE)}

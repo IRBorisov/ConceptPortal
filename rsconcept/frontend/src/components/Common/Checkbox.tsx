@@ -9,7 +9,7 @@ extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'child
   label?: string
   required?: boolean
   disabled?: boolean
-  widthClass?: string
+  dimensions?: string
   tooltip?: string
 
   value: boolean
@@ -18,7 +18,7 @@ extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'child
 
 function Checkbox({
   id, required, disabled, tooltip, label, 
-  widthClass = 'w-fit', value, setValue, ...props
+  dimensions = 'w-fit', value, setValue, ...props
 }: CheckboxProps) {
   const cursor = useMemo(
   () => {
@@ -46,7 +46,7 @@ function Checkbox({
   return (
     <button
       id={id}
-      className={`flex items-center [&:not(:first-child)]:mt-3 clr-outline focus:outline-dotted focus:outline-1 ${widthClass}`}
+      className={`flex items-center clr-outline focus:outline-dotted focus:outline-1 ${dimensions}`}
       title={tooltip}
       disabled={disabled}
       onClick={handleClick}

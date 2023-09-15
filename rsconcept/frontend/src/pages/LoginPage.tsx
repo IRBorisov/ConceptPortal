@@ -15,7 +15,7 @@ import { IUserLoginData } from '../models/library';
 function ProcessError({error}: {error: ErrorInfo}): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
     return (
-      <div className='mt-2 text-sm select-text text-warning'>
+      <div className='text-sm select-text text-warning'>
         На Портале отсутствует такое сочетание имени пользователя и пароля
       </div>
     );
@@ -80,7 +80,7 @@ function LoginPage() {
     <Form
       title='Вход в Портал'
       onSubmit={handleSubmit}
-      widthClass='w-[24rem]'
+      dimensions='w-[24rem]'
     >
       <TextInput id='username'
         label='Имя пользователя'
@@ -98,14 +98,14 @@ function LoginPage() {
         onChange={event => setPassword(event.target.value)}
       />
 
-      <div className='flex justify-center w-full gap-2 py-2 mt-4'>
+      <div className='flex justify-center w-full gap-2 py-2'>
         <SubmitButton
           text='Вход'
-          widthClass='w-[12rem]'
+          dimensions='w-[12rem]'
           loading={loading}
         />
       </div>
-      <div className='flex flex-col mt-2 text-sm'>
+      <div className='flex flex-col text-sm'>
         <TextURL text='Восстановить пароль...' href='/restore-password' />
         <TextURL text='Нет аккаунта? Зарегистрируйтесь...' href='/signup' />
       </div>

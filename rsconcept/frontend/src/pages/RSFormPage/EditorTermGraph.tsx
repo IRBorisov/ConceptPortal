@@ -376,24 +376,21 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       </div>}
       
       <div className='flex items-center justify-between py-1'>
-        <div className='mr-3 whitespace-nowrap text-base'>
-          Выбраны
-          <span className='ml-1'>
-            {allSelected.length} из {schema?.stats?.count_all ?? 0}
-          </span>
+        <div className='mr-3 text-base'>
+          Выбор {allSelected.length} из {schema?.stats?.count_all ?? 0}
         </div>
-        <div>
-          <MiniButton
-            tooltip='Удалить выбранные'
-            icon={<DumpBinIcon color={!nothingSelected ? 'text-warning' : ''} size={5}/>}
-            disabled={!isEditable || nothingSelected}
-            onClick={handleDeleteCst}
-          />
+        <div className='min-w-fit'>
           <MiniButton
             tooltip='Новая конституента'
-            icon={<SmallPlusIcon color='text-success' size={5}/>}
+            icon={<SmallPlusIcon color={isEditable ? 'text-success': ''} size={5}/>}
             disabled={!isEditable}
             onClick={handleCreateCst}
+          />
+          <MiniButton
+            tooltip='Удалить выбранные'
+            icon={<DumpBinIcon color={isEditable && !nothingSelected ? 'text-warning' : ''} size={5}/>}
+            disabled={!isEditable || nothingSelected}
+            onClick={handleDeleteCst}
           />
         </div>
       </div>
@@ -402,7 +399,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
           icon={<FilterCogIcon size={7} />}
           dense
           tooltip='Настройки фильтрации узлов и связей'
-          widthClass='h-full'
+          dimensions='h-full'
           onClick={() => setShowOptions(true)}
         />
         <SelectSingle
@@ -423,6 +420,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         value={layout ? { value: layout, label: mapLayoutLabels.get(layout) } : null}
         onChange={data => handleChangeLayout(data?.value ?? SelectorGraphLayout[0].value)}
       />
+      <div className='flex flex-col gap-1 mt-2'>
       <Checkbox
         label='Скрыть текст' 
         value={noTerms} 
@@ -439,6 +437,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         value={orbit} 
         setValue={ value => setOrbit(value) }
       />
+      </div>
 
       <Divider margins='mt-3 mb-2' />
 

@@ -13,8 +13,8 @@ import { CrownIcon, DownloadIcon, DumpBinIcon, HelpIcon, SaveIcon, ShareIcon } f
 import { useAuth } from '../../context/AuthContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { useUsers } from '../../context/UsersContext';
-import { IRSFormCreateData } from '../../models/rsform';
 import { LibraryItemType } from '../../models/library';
+import { IRSFormCreateData } from '../../models/rsform';
 
 interface EditorRSFormProps {
   onDestroy: () => void
@@ -81,39 +81,40 @@ function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, 
   };
 
   return (
-    <form onSubmit={handleSubmit} className='flex-grow max-w-[35.3rem] px-4 py-2 border-y border-r min-w-fit'>
-      <div className='relative w-full'>
-      <div className='absolute top-0 right-0 flex'>
-        <MiniButton
-          tooltip='Поделиться схемой'
-          icon={<ShareIcon size={5} color='text-primary'/>}
-          onClick={onShare}
-        />
-        <MiniButton
-          tooltip='Скачать TRS файл'
-          icon={<DownloadIcon size={5} color='text-primary'/>}
-          onClick={onDownload}
-        />
-        <MiniButton
-          tooltip={isClaimable ? 'Стать владельцем' : 'Невозможно стать владельцем' }
-          icon={<CrownIcon size={5} color={!isClaimable ? '' : 'text-success'}/>}
-          disabled={!isClaimable || !user}
-          onClick={onClaim}
-        />
-        <MiniButton
-          tooltip='Удалить схему'
-          disabled={!isEditable}
-          onClick={onDestroy}
-          icon={<DumpBinIcon size={5} color={isEditable ? 'text-warning' : ''} />}
-        />
-        <div id='rsform-help' className='py-1 ml-1'>
-          <HelpIcon color='text-primary' size={5} />
-        </div>
-        <ConceptTooltip anchorSelect='#rsform-help'>
-          <HelpRSFormMeta />
-        </ConceptTooltip>
+  <form onSubmit={handleSubmit} className='flex-grow max-w-[35.3rem] px-4 py-2 border-y border-r min-w-fit'>
+    <div className='relative w-full'>
+    <div className='absolute top-0 right-0 flex'>
+      <MiniButton
+        tooltip='Поделиться схемой'
+        icon={<ShareIcon size={5} color='text-primary'/>}
+        onClick={onShare}
+      />
+      <MiniButton
+        tooltip='Скачать TRS файл'
+        icon={<DownloadIcon size={5} color='text-primary'/>}
+        onClick={onDownload}
+      />
+      <MiniButton
+        tooltip={isClaimable ? 'Стать владельцем' : 'Невозможно стать владельцем' }
+        icon={<CrownIcon size={5} color={!isClaimable ? '' : 'text-success'}/>}
+        disabled={!isClaimable || !user}
+        onClick={onClaim}
+      />
+      <MiniButton
+        tooltip='Удалить схему'
+        disabled={!isEditable}
+        onClick={onDestroy}
+        icon={<DumpBinIcon size={5} color={isEditable ? 'text-warning' : ''} />}
+      />
+      <div id='rsform-help' className='py-1 ml-1'>
+        <HelpIcon color='text-primary' size={5} />
       </div>
-      </div>
+      <ConceptTooltip anchorSelect='#rsform-help'>
+        <HelpRSFormMeta />
+      </ConceptTooltip>
+    </div>
+    </div>
+    <div className='flex flex-col gap-3 mt-2'>
       <TextInput id='title' label='Полное название' type='text'
         required
         value={title}
@@ -124,7 +125,7 @@ function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, 
         required
         value={alias}
         disabled={!isEditable}
-        widthClass='max-w-sm'
+        dimensions='max-w-sm'
         onChange={event => setAlias(event.target.value)}
       />
       <TextArea id='comment' label='Комментарий'
@@ -135,12 +136,12 @@ function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, 
       <div className='flex justify-between whitespace-nowrap'>
         <Checkbox id='common' label='Общедоступная схема'
           value={common}
-          widthClass='w-fit mt-3'
+          dimensions='w-fit'
           disabled={!isEditable}
           setValue={value => setCommon(value)}
         />
         <Checkbox id='canonical' label='Неизменная схема'
-          widthClass='w-fit'
+          dimensions='w-fit'
           value={canonical}
           tooltip='Только администраторы могут присваивать схемам неизменный статус'
           disabled={!isEditable || !isForceAdmin}
@@ -148,36 +149,38 @@ function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, 
         />
       </div>
 
-      <div className='flex items-center justify-between gap-1 py-2 mt-2'>
-        <SubmitButton
-          text='Сохранить изменения'
-          loading={processing}
-          disabled={!isModified || !isEditable}
-          icon={<SaveIcon size={6} />}
-        />
-      </div>
+      <SubmitButton
+        text='Сохранить изменения'
+        loading={processing}
+        disabled={!isModified || !isEditable}
+        icon={<SaveIcon size={6} />}
+        dimensions='my-2 w-fit'
+      />
       
-      <div className='flex justify-start mt-2'>
-        <label className='font-semibold'>Владелец:</label>
-        <span className='min-w-[200px] ml-2 overflow-ellipsis overflow-hidden whitespace-nowrap'>
-          {getUserLabel(schema?.owner ?? null)}
-        </span>
+      <div className='flex flex-col gap-1'>
+        <div className='flex justify-start'>
+          <label className='font-semibold'>Владелец:</label>
+          <span className='min-w-[200px] ml-2 overflow-ellipsis overflow-hidden whitespace-nowrap'>
+            {getUserLabel(schema?.owner ?? null)}
+          </span>
+        </div>
+        <div className='flex justify-start'>
+          <label className='font-semibold'>Отслеживают:</label>
+          <span id='subscriber-count' className='ml-2'>
+            { schema?.subscribers.length ?? 0 }
+          </span>
+        </div>
+        <div className='flex justify-start'>
+          <label className='font-semibold'>Дата обновления:</label>
+          <span className='ml-2'>{schema && new Date(schema?.time_update).toLocaleString(intl.locale)}</span>
+        </div>
+        <div className='flex justify-start'>
+          <label className='font-semibold'>Дата создания:</label>
+          <span className='ml-8'>{schema && new Date(schema?.time_create).toLocaleString(intl.locale)}</span>
+        </div>
       </div>
-      <div className='flex justify-start mt-2'>
-        <label className='font-semibold'>Отслеживают:</label>
-        <span id='subscriber-count' className='ml-2'>
-          { schema?.subscribers.length ?? 0 }
-        </span>
-      </div>
-      <div className='flex justify-start mt-2'>
-        <label className='font-semibold'>Дата обновления:</label>
-        <span className='ml-2'>{schema && new Date(schema?.time_update).toLocaleString(intl.locale)}</span>
-      </div>
-      <div className='flex justify-start mt-2'>
-        <label className='font-semibold'>Дата создания:</label>
-        <span className='ml-8'>{schema && new Date(schema?.time_create).toLocaleString(intl.locale)}</span>
-      </div>
-    </form>
+    </div>
+  </form>
   );
 }
 

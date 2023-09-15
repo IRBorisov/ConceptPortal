@@ -61,6 +61,7 @@ function DlgCloneRSForm({ hideWindow }: DlgCloneRSFormProps) {
       submitText='Создать'
       onSubmit={handleSubmit}
     >
+    <div className='flex flex-col gap-3'>
       <TextInput id='title' label='Полное название' type='text'
         required
         value={title}
@@ -69,7 +70,7 @@ function DlgCloneRSForm({ hideWindow }: DlgCloneRSFormProps) {
       <TextInput id='alias' label='Сокращение' type='text'
         required
         value={alias}
-        widthClass='max-w-sm'
+        dimensions='max-w-sm'
         onChange={event => setAlias(event.target.value)}
       />
       <TextArea id='comment' label='Комментарий'
@@ -80,6 +81,7 @@ function DlgCloneRSForm({ hideWindow }: DlgCloneRSFormProps) {
         value={common}
         setValue={value => setCommon(value)}
       />
+    </div>
     </Modal>
   );
 }

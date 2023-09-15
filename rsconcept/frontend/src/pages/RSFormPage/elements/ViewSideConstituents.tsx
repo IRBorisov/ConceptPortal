@@ -121,7 +121,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
         return (<>
           <div
             id={`${prefixes.cst_list}${cst.alias}`}
-            className='w-full px-1 text-center rounded-md whitespace-nowrap'
+            className='min-w-[3.1rem] max-w-[3.1rem] px-1 text-center rounded-md whitespace-nowrap'
             style={{
               borderWidth: '1px', 
               borderColor: getCstStatusFgColor(cst.status, colors), 

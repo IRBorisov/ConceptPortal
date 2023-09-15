@@ -45,7 +45,7 @@ function DlgUploadRSForm({ hideWindow }: DlgUploadRSFormProps) {
       onSubmit={handleSubmit}
       submitText='Загрузить'
     >
-      <div className='flex flex-col items-center'>
+      <div className='flex flex-col items-start min-w-[20rem] max-w-[20rem]'>
         <FileInput
           label='Выбрать файл'
           acceptType={EXTEOR_TRS_FILE}
@@ -55,7 +55,7 @@ function DlgUploadRSForm({ hideWindow }: DlgUploadRSFormProps) {
           label='Загружать название и комментарий'
           value={loadMetadata}
           setValue={value => setLoadMetadata(value)}
-          widthClass='w-fit pb-2'
+          dimensions='w-fit pb-2'
         />
       </div>
     </Modal>

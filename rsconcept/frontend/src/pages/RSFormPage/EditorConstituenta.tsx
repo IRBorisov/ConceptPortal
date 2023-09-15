@@ -136,41 +136,19 @@ function EditorConstituenta({
   }
 
   return (
-    <div className='flex items-stretch w-full gap-2 mb-2 justify-stretch'>
-      <form onSubmit={handleSubmit} className='min-w-[50rem] max-w-min px-4 py-2 border-y border-r'>
-        <div className='relative'>
-        <div className='absolute top-0 left-0'>
-          <MiniButton 
-            tooltip='Сохранить изменения'
-            disabled={!isModified || !isEnabled}
-            icon={<SaveIcon size={6} color={isModified && isEnabled ? 'text-primary' : ''}/>}
-            onClick={() => handleSubmit()}
-          />
-        </div>
-        </div>
-        <div className='relative'>
-        <div className='absolute top-0 right-0 flex justify-end'>
-          <MiniButton
-            tooltip='Удалить редактируемую конституенту'
-            disabled={!isEnabled}
-            onClick={handleDelete}
-            icon={<DumpBinIcon size={5} color={isEnabled ? 'text-warning' : ''} />}
-          />
-          <MiniButton
-            tooltip='Создать конституенты после данной'
-            disabled={!isEnabled}
-            onClick={handleCreateCst}
-            icon={<SmallPlusIcon size={5} color={isEnabled ? 'text-success' : ''} />} 
-          />
-          <div id='cst-help' className='flex items-center ml-[6px]'>
-            <HelpIcon color='text-primary' size={5} />
-          </div>
-          <ConceptTooltip anchorSelect='#cst-help'>
-            <HelpConstituenta />
-          </ConceptTooltip>
-        </div>
-        </div>
-        <div className='flex items-center justify-center w-full gap-1 pr-10'>
+  <div className='flex w-full gap-2 mb-2 justify-stretch'>
+    <form onSubmit={handleSubmit} className='min-w-[50rem] max-w-min px-4 py-2 border-y border-r'>
+      <div className='relative w-full'>
+      <div className='absolute top-0 right-0 flex items-start justify-between w-full'>
+        <MiniButton
+          tooltip='Редактировать словоформы термина'
+          disabled={!isEnabled}
+          dimensions='w-fit pl-[3.2rem] pt-[0.4rem]'
+          noHover
+          onClick={onEditTerm}
+          icon={<PenIcon size={4} color={isEnabled ? 'text-primary' : ''} />}
+        />
+        <div className='flex items-center justify-center w-full gap-1'>
           <div className='font-semibold w-fit'>
             <span className=''>Конституента </span>
             <span className='ml-4'>{alias}</span>
@@ -183,17 +161,35 @@ function EditorConstituenta({
             icon={<PenIcon size={4} color={isEnabled ? 'text-primary' : ''} />}
           />
         </div>
-        <div className='relative'>
-        <div className='absolute left-[3.2rem] top-[0.5rem]'>
-        <MiniButton
-          tooltip='Редактировать словоформы термина'
-          disabled={!isEnabled}
-          noHover
-          onClick={onEditTerm}
-          icon={<PenIcon size={4} color={isEnabled ? 'text-primary' : ''} />}
-        />
+        <div className='flex justify-end min-w-fit'>
+          <MiniButton
+            tooltip='Сохранить изменения'
+            disabled={!isModified || !isEnabled}
+            icon={<SaveIcon size={5} color={isModified && isEnabled ? 'text-primary' : ''}/>}
+            onClick={() => handleSubmit()}
+          />
+          <MiniButton
+            tooltip='Создать конституенты после данной'
+            disabled={!isEnabled}
+            onClick={handleCreateCst}
+            icon={<SmallPlusIcon size={5} color={isEnabled ? 'text-success' : ''} />} 
+          />
+          <MiniButton
+            tooltip='Удалить редактируемую конституенту'
+            disabled={!isEnabled}
+            onClick={handleDelete}
+            icon={<DumpBinIcon size={5} color={isEnabled ? 'text-warning' : ''} />}
+          />
+          <div id='cst-help' className='px-1 py-1'>
+            <HelpIcon color='text-primary' size={5} />
+          </div>
+          <ConceptTooltip anchorSelect='#cst-help' offset={4}>
+            <HelpConstituenta />
+          </ConceptTooltip>
         </div>
-        </div>
+      </div>
+      </div>
+      <div className='flex flex-col gap-2 mt-1'>
         <ReferenceInput id='term' label='Термин'
           placeholder='Обозначение, используемое в текстовых определениях данной схемы'
           rows={2}
@@ -242,25 +238,25 @@ function EditorConstituenta({
           onChange={event => setConvention(event.target.value)}
           onFocus={() => setEditMode(EditMode.TEXT)}
         />
-        <div className='flex justify-center w-full mt-4 mb-2'>
+        <div className='flex justify-center w-full mt-2'>
           <SubmitButton
             text='Сохранить изменения'
             disabled={!isModified || !isEnabled}
             icon={<SaveIcon size={6} />}
           />
         </div>
-      </form>
-      {(windowSize.width ?? 0) >= SIDELIST_HIDE_THRESHOLD &&
-      <div className='self-stretch w-full pb-1 border'>
-        <ViewSideConstituents
-          expression={expression}
-          baseHeight={UNFOLDED_HEIGHT}
-          activeID={activeID}
-          onOpenEdit={onOpenEdit}
-        />
-      </div>}
-    </div>
-  );
+      </div>
+    </form>
+    {(windowSize.width ?? 0) >= SIDELIST_HIDE_THRESHOLD &&
+    <div className='self-stretch w-full border'>
+      <ViewSideConstituents
+        expression={expression}
+        baseHeight={UNFOLDED_HEIGHT}
+        activeID={activeID}
+        onOpenEdit={onOpenEdit}
+      />
+    </div>}
+  </div>);
 }
 
 export default EditorConstituenta;

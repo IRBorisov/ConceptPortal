@@ -50,33 +50,31 @@ function EditorProfile() {
   }
 
   return (
-    <div className='flex py-2'>
-      <form onSubmit={handleSubmit} className='px-6 min-w-[18rem]'>
-        <div>
-          <TextInput id='username' 
-            label='Логин'
-            tooltip='Логин изменить нельзя'
-            disabled={true}
-            value={username}
-            onChange={event => setUsername(event.target.value)}
-          />
-          <TextInput id='first_name'
-            label='Имя'
-            value={first_name}
-            onChange={event => setFirstName(event.target.value)}
-          />
-          <TextInput id='last_name' label='Фамилия' value={last_name} onChange={event => setLastName(event.target.value)}/>
-          <TextInput id='email' label='Электронная почта' value={email} onChange={event => setEmail(event.target.value)}/>
-        </div>  
-        <div className='flex justify-center w-full mt-10'>
-          <SubmitButton
-            text='Сохранить данные'
-            loading={processing}
-            disabled={!isModified}
-          />
-        </div>  
-      </form>   
-    </div>
+    <form onSubmit={handleSubmit} className='px-6 py-2 flex flex-col gap-8 min-w-[18rem]'>
+      <div className='flex flex-col gap-3'>
+        <TextInput id='username' 
+          label='Логин'
+          tooltip='Логин изменить нельзя'
+          disabled={true}
+          value={username}
+          onChange={event => setUsername(event.target.value)}
+        />
+        <TextInput id='first_name'
+          label='Имя'
+          value={first_name}
+          onChange={event => setFirstName(event.target.value)}
+        />
+        <TextInput id='last_name' label='Фамилия' value={last_name} onChange={event => setLastName(event.target.value)}/>
+        <TextInput id='email' label='Электронная почта' value={email} onChange={event => setEmail(event.target.value)}/>
+      </div>  
+      <div className='flex justify-center w-full'>
+        <SubmitButton
+          text='Сохранить данные'
+          loading={processing}
+          disabled={!isModified}
+        />
+      </div>  
+    </form>
   )
 }
 

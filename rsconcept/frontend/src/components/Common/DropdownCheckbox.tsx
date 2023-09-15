@@ -16,7 +16,7 @@ function DropdownCheckbox({ tooltip, setValue, disabled, ...props }: DropdownChe
       className={`px-4 py-1 text-left overflow-ellipsis ${behavior} w-full whitespace-nowrap`}
     >
       <Checkbox 
-        widthClass='w-full'
+        dimensions='w-full'
         disabled={disabled}
         setValue={setValue}
         {...props}

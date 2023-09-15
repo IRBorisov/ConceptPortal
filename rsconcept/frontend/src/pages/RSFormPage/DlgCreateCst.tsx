@@ -56,7 +56,7 @@ function DlgCreateCst({ hideWindow, initial, onCreate }: DlgCreateCstProps) {
       canSubmit={validated}
       onSubmit={handleSubmit}
     >
-    <div className='h-fit w-[35rem] px-2 mb-2 flex flex-col justify-stretch'>
+    <div className='h-fit w-[35rem] px-2 mb-2 flex flex-col justify-stretch gap-3'>
       <div className='flex justify-center w-full'>
         <SelectSingle
           className='my-2 min-w-[15rem] self-center'
@@ -73,14 +73,12 @@ function DlgCreateCst({ hideWindow, initial, onCreate }: DlgCreateCstProps) {
         spellCheck
         onChange={event => setTerm(event.target.value)}
       />
-      <div className='mt-3'>
-        <RSInput id='expression' label='Формальное выражение'
-          editable
-          height='5.5rem'
-          value={expression}
-          onChange={value => setExpression(value)}
-        />
-      </div>
+      <RSInput id='expression' label='Формальное выражение'
+        editable
+        height='5.5rem'
+        value={expression}
+        onChange={value => setExpression(value)}
+      />
       <TextArea id='definition' label='Текстовое определение'
         placeholder='Лингвистическая интерпретация формального выражения'
         rows={2}

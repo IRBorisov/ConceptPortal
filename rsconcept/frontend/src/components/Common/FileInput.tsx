@@ -9,13 +9,13 @@ extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'className' | 'title' 
   label: string
   tooltip?: string
   acceptType?: string
-  widthClass?: string
+  dimensions?: string
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 function FileInput({
   label, acceptType, tooltip,
-  widthClass = 'w-fit', onChange,
+  dimensions = 'w-fit', onChange,
   ...props 
 }: FileInputProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -37,7 +37,7 @@ function FileInput({
   };
 
   return (
-    <div className={`flex flex-col gap-2 py-2 mt-3 items-start ${widthClass}`}>
+    <div className={`flex flex-col gap-2 py-2 items-start ${dimensions}`}>
       <input type='file'
         ref={inputRef}
         style={{ display: 'none' }}

@@ -51,7 +51,7 @@ function Modal({
         <Button
           text={submitText}
           tooltip={!canSubmit ? submitInvalidTooltip: ''}
-          widthClass='min-w-[6rem] min-h-[2.6rem] w-fit h-fit'
+          dimensions='min-w-[6rem] min-h-[2.6rem] w-fit h-fit'
           colorClass='clr-btn-primary'
           disabled={!canSubmit}
           onClick={handleSubmit}
@@ -59,7 +59,7 @@ function Modal({
         />}
         <Button
           text={readonly ? 'Закрыть' : 'Отмена'}
-          widthClass='min-w-[6rem] min-h-[2.6rem] w-fit h-fit'
+          dimensions='min-w-[6rem] min-h-[2.6rem] w-fit h-fit'
           onClick={handleCancel}
         />
       </div>

@@ -13,7 +13,7 @@ extends Omit<CheckboxProps, 'value' | 'setValue'> {
 
 function Tristate({
   id, required, disabled, tooltip, label, 
-  widthClass = 'w-fit', value, setValue, ...props
+  dimensions = 'w-fit', value, setValue, ...props
 }: TristateProps) {
   const cursor = useMemo(
   () => {
@@ -47,7 +47,7 @@ function Tristate({
   return (
     <button
       id={id}
-      className={`flex items-center [&:not(:first-child)]:mt-3 clr-outline focus:outline-dotted focus:outline-1 ${widthClass}`}
+      className={`flex items-center clr-outline focus:outline-dotted focus:outline-1 ${dimensions}`}
       title={tooltip}
       disabled={disabled}
       onClick={handleClick}

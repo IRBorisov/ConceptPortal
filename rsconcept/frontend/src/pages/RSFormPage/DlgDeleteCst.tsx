@@ -36,14 +36,14 @@ function DlgDeleteCst({ hideWindow, selected, onDelete }: DlgDeleteCstProps) {
     >
     <div className='max-w-[60vw] min-w-[20rem]'>
       <p>Выбраны к удалению: <b>{selected.length}</b></p>
-      <div className='px-3 border h-[9rem] overflow-y-auto whitespace-nowrap'>
+      <div className='px-3 border h-[9rem] mt-1 overflow-y-auto whitespace-nowrap'>
         {selected.map(id => {
           const cst = schema!.items.find(cst => cst.id === id);
           return (cst && <p>{getCstLabel(cst)}</p>);
         })}
       </div>
       <p className='mt-4'>Зависимые конституенты: <b>{expansion.length}</b></p>
-      <div className='px-3 border h-[9rem] overflow-y-auto whitespace-nowrap'>
+      <div className='mt-1 mb-3 px-3 border h-[9rem] overflow-y-auto whitespace-nowrap'>
         {expansion.map(id => {
           const cst = schema!.items.find(cst => cst.id === id);
           return (cst && <p>{getCstLabel(cst)}</p>);

@@ -61,7 +61,7 @@ function RegisterPage() {
       <Form
         title='Регистрация'
         onSubmit={handleSubmit}
-        widthClass='w-[24rem]'
+        dimensions='w-[24rem]'
       >
         <TextInput id='username' label='Имя пользователя' type='text'
           required
@@ -104,12 +104,12 @@ function RegisterPage() {
           <SubmitButton
             text='Регистрировать' 
             loading={loading}
-            widthClass='min-w-[10rem]'
+            dimensions='min-w-[10rem]'
           />
           <Button 
             text='Отмена'
             onClick={() => handleCancel()}
-            widthClass='min-w-[10rem]'
+            dimensions='min-w-[10rem]'
           />
         </div>
         { error && <BackendError error={error} />}

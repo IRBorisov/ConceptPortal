@@ -1,13 +1,25 @@
+import axios from 'axios';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import BackendError from '../../components/BackendError';
+import BackendError, { ErrorInfo } from '../../components/BackendError';
 import SubmitButton from '../../components/Common/SubmitButton';
 import TextInput from '../../components/Common/TextInput';
 import { useAuth } from '../../context/AuthContext';
 import { useConceptNavigation } from '../../context/NagivationContext';
 import { IUserUpdatePassword } from '../../models/library';
 
+function ProcessError({error}: {error: ErrorInfo}): React.ReactElement {
+  if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
+    return (
+      <div className='text-sm select-text text-warning'>
+        Неверно введен старый пароль
+      </div>
+    );
+  } else {
+    return (<BackendError error={error} />);
+  }
+}
 
 function EditorPassword() {
   const { navigateTo } = useConceptNavigation();
@@ -50,7 +62,7 @@ function EditorPassword() {
   return (
     <div className='flex py-2 border-l-2 max-w-[14rem]'>
       <form onSubmit={handleSubmit} className='flex flex-col justify-between px-6 min-w-fit'>
-        <div>
+        <div className='flex flex-col gap-3'>
           <TextInput id='old_password'
             type='password' 
             label='Старый пароль'
@@ -74,7 +86,7 @@ function EditorPassword() {
             }}
           />          
         </div>
-        { error && <BackendError error={error} />}
+        { error && <ProcessError error={error} />}
         <div className='flex justify-center w-full'>
           <SubmitButton
             disabled={!canSubmit}
