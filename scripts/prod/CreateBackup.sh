@@ -3,7 +3,7 @@
 # Create a copy in secure location @production host. Update backup scripts from repository manually
 # ========================================
 
-backupLocation="/home/admuser/backup"
+backupLocation="/home/prod/backup"
 pgUser="portal-admin"
 pgDB="portal-db"
 containerDB="portal-db"
