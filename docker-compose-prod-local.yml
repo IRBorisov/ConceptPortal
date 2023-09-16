@@ -58,6 +58,7 @@ services:
     restart: always
     build:
       context: ./nginx
+      dockerfile: Dockerfile.local
       args:
         BUILD_TYPE: production.local
     ports:
