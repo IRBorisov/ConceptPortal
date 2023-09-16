@@ -1,6 +1,6 @@
 # SECURITY SENSITIVE FILES
 secrets/
-cert/
+nginx/cert/*.pem
 
 # External distributions
 rsconcept/backend/import/*.whl

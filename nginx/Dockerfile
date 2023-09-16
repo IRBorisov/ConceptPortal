@@ -3,4 +3,4 @@ ARG BUILD_TYPE=production
 
 # Сopу nginx configuration to the proxy-server
 COPY ./$BUILD_TYPE.conf /etc/nginx/conf.d/default.conf
-COPY ./cert/* /etc/ssl/private/
+COPY ./cert/*.pem /etc/ssl/private/
