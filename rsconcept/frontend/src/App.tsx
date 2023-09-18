@@ -21,7 +21,7 @@ function Root() {
   const { noNavigation, noFooter, viewportHeight, mainHeight, showScroll } = useConceptTheme();
   return (
     <NavigationState>
-    <div className='w-screen antialiased clr-app'>
+    <div className='w-screen antialiased clr-app min-w-[30rem]'>
       
       <ConceptToaster
         className='mt-[4rem] text-sm'

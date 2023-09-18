@@ -29,7 +29,7 @@ function LoginPage() {
   const location = useLocation();
   const { navigateTo, navigateHistory } = useConceptNavigation();
   const search = useLocation().search;
-  const { user, login, loading, error, setError } = useAuth();
+  const { user, login, logout, loading, error, setError } = useAuth();
   
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -61,6 +61,10 @@ function LoginPage() {
     }
   }
 
+  function logoutAndRedirect() {
+    logout(() => navigateTo('/login/'));
+  }
+
   return (
     <div className='flex items-start justify-center w-full pt-4 select-none' style={{minHeight: mainHeight}}>
     { user &&
@@ -73,7 +77,12 @@ function LoginPage() {
         <span> | </span>
         <TextURL text='Справка' href='/manuals'/>
         <span> | </span>
-        <TextURL text='Выйти' href='/logout'/>
+        <span
+          className='cursor-pointer hover:underline text-url'
+          onClick={logoutAndRedirect}
+        >
+          Выйти
+        </span>
       </p>
     </div>}
     { !user &&
