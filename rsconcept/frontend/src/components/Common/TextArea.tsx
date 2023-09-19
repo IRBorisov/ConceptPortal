@@ -4,7 +4,7 @@ import Label from './Label';
 
 export interface TextAreaProps 
 extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'className' | 'title'> {
-  label: string
+  label?: string
   tooltip?: string
   dimensions?: string
   colorClass?: string

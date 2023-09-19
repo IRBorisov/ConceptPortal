@@ -1,44 +1,8 @@
 // Module: Natural language model declarations.
 
-// ====== Reference resolution =====
-export interface IRefsText {
-  text: string
-}
-
-export enum ReferenceType {
-  ENTITY = 'entity',
-  SYNTACTIC = 'syntax'
-}
-export interface IEntityReference {
-  entity: string
-  form: string
-}
-
-export interface ISyntacticReference {
-  offset: number
-  nominal: string
-}
-
-export interface ITextPosition {
-  start: number
-  finish: number
-}
-
-export interface IResolvedReference {
-  type: ReferenceType
-  data: IEntityReference | ISyntacticReference
-  pos_input: ITextPosition
-  pos_output: ITextPosition
-}
-
-export interface IReferenceData {
-  input: string
-  output: string
-  refs: IResolvedReference[]
-}
 
 // ====== Morphology ========
-export enum Morpheme {
+export enum Grammeme {
   // Части речи
   NOUN = 'NOUN',
   ADJF = 'ADJF',
@@ -121,18 +85,55 @@ export enum Morpheme {
 }
 
 export const PartOfSpeech = [
-  Morpheme.NOUN, Morpheme.ADJF, Morpheme.ADJS, Morpheme.COMP,
-  Morpheme.VERB, Morpheme.INFN, Morpheme.PRTF, Morpheme.PRTS,
-  Morpheme.GRND, Morpheme.ADVB, Morpheme.NPRO, Morpheme.PRED,
-  Morpheme.PREP, Morpheme.CONJ, Morpheme.PRCL, Morpheme.INTJ,
-  Morpheme.PNCT
-]
+  Grammeme.NOUN, Grammeme.ADJF, Grammeme.ADJS, Grammeme.COMP,
+  Grammeme.VERB, Grammeme.INFN, Grammeme.PRTF, Grammeme.PRTS,
+  Grammeme.GRND, Grammeme.ADVB, Grammeme.NPRO, Grammeme.PRED,
+  Grammeme.PREP, Grammeme.CONJ, Grammeme.PRCL, Grammeme.INTJ,
+  Grammeme.PNCT
+];
 
 export const Gender = [
-  Morpheme.masc, Morpheme.femn, Morpheme.neut
-]
+  Grammeme.masc, Grammeme.femn, Grammeme.neut
+];
 
 export const Case = [
-  Morpheme.nomn, Morpheme.gent, Morpheme.datv,
-  Morpheme.accs, Morpheme.ablt, Morpheme.loct
-]
+  Grammeme.nomn, Grammeme.gent, Grammeme.datv,
+  Grammeme.accs, Grammeme.ablt, Grammeme.loct
+];
+
+// ====== Reference resolution =====
+export interface IRefsText {
+  text: string
+}
+
+export enum ReferenceType {
+  ENTITY = 'entity',
+  SYNTACTIC = 'syntax'
+}
+export interface IEntityReference {
+  entity: string
+  form: string
+}
+
+export interface ISyntacticReference {
+  offset: number
+  nominal: string
+}
+
+export interface ITextPosition {
+  start: number
+  finish: number
+}
+
+export interface IResolvedReference {
+  type: ReferenceType
+  data: IEntityReference | ISyntacticReference
+  pos_input: ITextPosition
+  pos_output: ITextPosition
+}
+
+export interface IReferenceData {
+  input: string
+  output: string
+  refs: IResolvedReference[]
+}

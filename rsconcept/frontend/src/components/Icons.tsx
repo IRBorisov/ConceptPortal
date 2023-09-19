@@ -389,3 +389,43 @@ export function CheckboxNullIcon() {
     </svg>
   );
 }
+
+export function ChevronUpIcon(props: IconProps) {
+  return (
+    <IconSVG viewbox='0 0 24 24' {...props}>
+      <path d='M6.293 13.293l1.414 1.414L12 10.414l4.293 4.293 1.414-1.414L12 7.586z' />
+    </IconSVG>
+  );
+}
+
+export function ChevronDoubleUpIcon(props: IconProps) {
+  return (
+    <IconSVG viewbox='0 0 24 24' {...props}>
+      <path d='M6.293 11.293l1.414 1.414L12 8.414l4.293 4.293 1.414-1.414L12 5.586z' />
+      <path d='M6.293 16.293l1.414 1.414L12 13.414l4.293 4.293 1.414-1.414L12 10.586z' />
+    </IconSVG>
+  );
+}
+
+export function CheckIcon(props: IconProps) {
+  return (
+    <IconSVG viewbox='0 0 24 24' {...props}>
+      <path d='M10 15.586l-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z' />
+    </IconSVG>
+  );
+}
+
+export function CrossIcon(props: IconProps) {
+  return (
+    <IconSVG viewbox='0 0 21 21' {...props}>
+      <g
+        fillRule='evenodd'
+        stroke='currentColor'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      >
+        <path d='M15.5 15.5l-10-10zM15.5 5.5l-10 10' />
+      </g>
+    </IconSVG>
+  );
+}
