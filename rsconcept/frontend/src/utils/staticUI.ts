@@ -116,11 +116,11 @@ export function getRSButtonData(id: TokenID): IDescriptor {
   };
   case TokenID.GREATER_OR_EQ: return {
     text: '≥',
-    tooltip: 'больше или равно'
+    tooltip: 'больше или равно [Alt + Shift + 7]'
   };
   case TokenID.LESSER_OR_EQ: return {
     text: '≤',
-    tooltip: 'меньше или равно'
+    tooltip: 'меньше или равно [Alt + Shift + 8]'
   };
   case TokenID.IN: return {
     text: '∈',
@@ -136,7 +136,7 @@ export function getRSButtonData(id: TokenID): IDescriptor {
   };
   case TokenID.SUBSET: return {
     text: '⊂',
-    tooltip: 'строгое подмножество [Alt + ;]'
+    tooltip: 'строгое подмножество [Alt + 7]'
   };
   case TokenID.NOTSUBSET: return {
     text: '⊄',
@@ -144,11 +144,11 @@ export function getRSButtonData(id: TokenID): IDescriptor {
   };
   case TokenID.INTERSECTION: return {
     text: '∩',
-    tooltip: 'пересечение [Alt + Y]'
+    tooltip: 'пересечение [Alt + A]'
   };
   case TokenID.UNION: return {
     text: '∪',
-    tooltip: 'объединение [Alt + U]'
+    tooltip: 'объединение [Alt + S]'
   };
   case TokenID.SET_MINUS: return {
     text: '\\',
