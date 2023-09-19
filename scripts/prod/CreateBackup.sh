@@ -2,51 +2,51 @@
 # WARNING! DO NOT RUN THIS FILE AUTOMATICALLY FROM REPOSITORY LOCATION!
 # Create a copy in secure location @production host. Update backup scripts from repository manually
 # ========================================
+BACKUP_LOCATION="/home/prod/backup"
+POSTGRE_USER="portal-admin"
+POSTGRE_DB="portal-db"
+CONTAINER_DB="portal-db"
+CONTAINER_BACK="portal-backend"
 
-backupLocation="/home/prod/backup"
-pgUser="portal-admin"
-pgDB="portal-db"
-containerDB="portal-db"
-containerBackend="portal-backend"
+DATE_FORMATTED=$(date '+%Y-%m-%d')
+DESTINATION="${BACKUP_LOCATION}/${DATE_FORMATTED}"
 
-dateFmt=$(date '+%Y-%m-%d')
-destination="$backupLocation/$dateFmt"
-
-EnsureLocation()
-{
-  rm -rf $destination
-  mkdir $destination
+ensure_location() {
+  rm -rf $DESTINATION
+  mkdir $DESTINATION
 }
 
-PostgreDump()
-{
-  dbDump="$destination/$dateFmt-db.dump"
-  docker exec $containerDB pg_dump \
-    --username=$pgUser \
+dump_postgre() {
+  DB_DUMP_FILE="${DESTINATION}/${DATE_FORMATTED}-db.dump"
+  docker exec $CONTAINER_DB pg_dump \
+    --username=$POSTGRE_USER \
     --exclude-table=django_migrations \
     --format=custom \
-    --dbname=$pgDB \
-	> $dbDump
+    --dbname=$POSTGRE_DB \
+	> $DB_DUMP_FILE
 }
 
-DjangoDump()
-{
-  dataDump="$destination/$dateFmt-data.json"
-  docker exec $containerBackend \
+dump_django() {
+  DATA_DUMP_FILE="${DESTINATION}/${DATE_FORMATTED}-data.json"
+  docker exec $CONTAINER_BACK \
     python manage.py dumpdata \
       --indent=2 \
       --exclude=admin.LogEntry \
       --exclude=sessions \
       --exclude=contenttypes \
       --exclude=auth.permission \
-      > $dataDump
-  gzip --force $dataDump
+      > $DATA_DUMP_FILE
+  gzip --force $DATA_DUMP_FILE
 }
 
-EnsureLocation
-PostgreDump
-DjangoDump
+create_backup() {
+  ensure_location
+  dump_postgre
+  dump_django
 
-green="\033[0;32m"
-noColor='\033[0m'
-echo -e "${green}Backup created at: ${destination}${noColor}"
+  green="\033[0;32m"
+  noColor='\033[0m'
+  echo -e "${green}Backup created at: ${DESTINATION}${noColor}"
+}
+
+create_backup
