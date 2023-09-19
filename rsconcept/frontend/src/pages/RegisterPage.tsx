@@ -54,7 +54,7 @@ function RegisterPage() {
   }
 
   return (
-    <div className='w-full py-2'>
+    <div className='flex justify-center w-full py-2'>
     { user &&
       <b>{`Вы вошли в систему как ${user.username}. Если хотите зарегистрировать нового пользователя, выйдите из системы (меню в правом верхнем углу экрана)`}</b>}
     { !user &&
