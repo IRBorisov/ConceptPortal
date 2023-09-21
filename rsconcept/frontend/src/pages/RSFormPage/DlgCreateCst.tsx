@@ -6,7 +6,7 @@ import TextArea from '../../components/Common/TextArea';
 import RSInput from '../../components/RSInput';
 import { CstType,ICstCreateData } from '../../models/rsform';
 import { SelectorCstType } from '../../utils/selectors';
-import { getCstTypeLabel } from '../../utils/staticUI';
+import { labelCstType } from '../../utils/labels';
 
 interface DlgCreateCstProps
 extends Pick<ModalProps, 'hideWindow'> {
@@ -62,7 +62,7 @@ function DlgCreateCst({ hideWindow, initial, onCreate }: DlgCreateCstProps) {
           className='my-2 min-w-[15rem] self-center'
           options={SelectorCstType}
           placeholder='Выберите тип'
-          value={selectedType ? { value: selectedType, label: getCstTypeLabel(selectedType) } : null}
+          value={selectedType ? { value: selectedType, label: labelCstType(selectedType) } : null}
           onChange={data => setSelectedType(data?.value ?? CstType.BASE)}
         />
       </div>

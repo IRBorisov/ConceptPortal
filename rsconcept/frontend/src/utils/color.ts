@@ -1,5 +1,8 @@
 // =========== Modules contains all dynamic color definitions ==========
 
+import { CstClass, ExpressionStatus } from '../models/rsform'
+import { ISyntaxTreeNode, TokenID } from '../models/rslang'
+
 
 // ============= MAIN COLOR THEMES ==========
 export interface IColorTheme {  
@@ -269,3 +272,115 @@ export const bracketsDarkT = {
     color: darkT.fgSelected
   },
 };
+
+// =========== Misc colors ======================
+export function colorbgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): string {
+  switch (node.typeID) {
+  case TokenID.PUNC_DEFINE:
+  case TokenID.PUNC_STRUCT:
+  case TokenID.ID_LOCAL:
+    return colors.bgGreen;
+
+  case TokenID.ID_GLOBAL:
+  case TokenID.ID_FUNCTION:
+  case TokenID.ID_PREDICATE:
+  case TokenID.ID_RADICAL:
+  case TokenID.LIT_INTEGER:
+  case TokenID.LIT_EMPTYSET:
+  case TokenID.LIT_INTSET:
+    return colors.bgTeal;
+
+  case TokenID.FORALL:
+  case TokenID.EXISTS:
+  case TokenID.NOT:
+  case TokenID.AND:
+  case TokenID.OR:
+  case TokenID.IMPLICATION:
+  case TokenID.EQUIVALENT:
+  case TokenID.GREATER:
+  case TokenID.LESSER:
+  case TokenID.EQUAL:
+  case TokenID.NOTEQUAL:
+  case TokenID.GREATER_OR_EQ:
+  case TokenID.LESSER_OR_EQ:
+  case TokenID.IN:
+  case TokenID.NOTIN:
+  case TokenID.SUBSET_OR_EQ:
+  case TokenID.SUBSET:
+  case TokenID.NOTSUBSET:
+    return colors.bgOrange;
+
+  case TokenID.NT_TUPLE:
+  case TokenID.NT_ENUMERATION:
+  case TokenID.BIGPR:
+  case TokenID.SMALLPR:
+  case TokenID.FILTER:
+  case TokenID.PLUS:
+  case TokenID.MINUS:
+  case TokenID.MULTIPLY:
+  case TokenID.BOOLEAN:
+  case TokenID.DECART:
+  case TokenID.INTERSECTION:
+  case TokenID.UNION:
+  case TokenID.SET_MINUS:
+  case TokenID.SYMMINUS:
+  case TokenID.REDUCE:
+  case TokenID.CARD:
+  case TokenID.BOOL:
+  case TokenID.DEBOOL:
+    return colors.bgBlue;
+
+  case TokenID.NT_FUNC_DEFINITION:
+  case TokenID.NT_DECLARATIVE_EXPR:
+  case TokenID.NT_IMPERATIVE_EXPR:
+  case TokenID.NT_RECURSIVE_FULL:
+  case TokenID.NT_ENUM_DECL:
+  case TokenID.NT_TUPLE_DECL:
+  case TokenID.NT_ARG_DECL:
+  case TokenID.NT_FUNC_CALL:
+  case TokenID.NT_ARGUMENTS:
+  case TokenID.NT_IMP_DECLARE:
+  case TokenID.NT_IMP_ASSIGN:
+  case TokenID.NT_IMP_LOGIC:
+  case TokenID.NT_RECURSIVE_SHORT:
+    return '';
+
+  case TokenID.PUNC_ASSIGN:
+  case TokenID.PUNC_ITERATE:
+    return colors.bgRed;
+  }
+  // node
+  return colors.bgRed;
+}
+
+export function colorbgCstStatus(status: ExpressionStatus, colors: IColorTheme): string {
+  switch (status) {
+    case ExpressionStatus.VERIFIED: return colors.bgGreen;
+    case ExpressionStatus.INCORRECT: return colors.bgRed;
+    case ExpressionStatus.INCALCULABLE: return colors.bgOrange;
+    case ExpressionStatus.PROPERTY: return colors.bgTeal;
+    case ExpressionStatus.UNKNOWN: return colors.bgBlue;
+    case ExpressionStatus.UNDEFINED: return colors.bgBlue;
+  }
+}
+
+export function colorfgCstStatus(status: ExpressionStatus, colors: IColorTheme): string {
+  switch (status) {
+    case ExpressionStatus.VERIFIED: return colors.fgGreen;
+    case ExpressionStatus.INCORRECT: return colors.fgRed;
+    case ExpressionStatus.INCALCULABLE: return colors.fgOrange;
+    case ExpressionStatus.PROPERTY: return colors.fgTeal;
+    case ExpressionStatus.UNKNOWN: return colors.fgBlue;
+    case ExpressionStatus.UNDEFINED: return colors.fgBlue;
+  }
+}
+
+export function colorbgCstClass(cstClass: CstClass, colors: IColorTheme): string {
+  switch (cstClass) {
+    case CstClass.BASIC: return colors.bgGreen;
+    case CstClass.DERIVED: return colors.bgBlue;
+    case CstClass.STATEMENT: return colors.bgRed;
+    case CstClass.TEMPLATE: return colors.bgTeal;
+  }
+}
+

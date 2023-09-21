@@ -21,9 +21,10 @@ import { prefixes, resources, TIMEOUT_GRAPH_REFRESH } from '../../utils/constant
 import { Graph } from '../../utils/Graph';
 import { SelectorGraphLayout } from '../../utils/selectors';
 import { SelectorGraphColoring } from '../../utils/selectors';
-import { getCstClassColor, getCstStatusBgColor, 
-  mapColoringLabels, mapLayoutLabels
-} from '../../utils/staticUI';
+import { colorbgCstClass } from '../../utils/color';
+import { colorbgCstStatus } from '../../utils/color';
+import { mapLabelColoring } from '../../utils/labels';
+import { mapLableLayout } from '../../utils/labels';
 import DlgGraphOptions from './DlgGraphOptions';
 import ConstituentaTooltip from './elements/ConstituentaTooltip';
 
@@ -32,10 +33,10 @@ const TREE_SIZE_MILESTONE = 50;
 
 function getCstNodeColor(cst: IConstituenta, coloringScheme: ColoringScheme, colors: IColorTheme): string {
   if (coloringScheme === 'type') {
-    return getCstClassColor(cst.cst_class, colors);
+    return colorbgCstClass(cst.cst_class, colors);
   }
   if (coloringScheme === 'status') {
-    return getCstStatusBgColor(cst.status, colors);
+    return colorbgCstStatus(cst.status, colors);
   }
   return '';
 }
@@ -407,7 +408,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
           options={SelectorGraphColoring}
           isSearchable={false}
           placeholder='Выберите цвет'
-          value={coloringScheme ? { value: coloringScheme, label: mapColoringLabels.get(coloringScheme) } : null}
+          value={coloringScheme ? { value: coloringScheme, label: mapLabelColoring.get(coloringScheme) } : null}
           onChange={data => setColoringScheme(data?.value ?? SelectorGraphColoring[0].value)}
         />
         
@@ -417,7 +418,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         options={SelectorGraphLayout}
         isSearchable={false}
         placeholder='Способ расположения'
-        value={layout ? { value: layout, label: mapLayoutLabels.get(layout) } : null}
+        value={layout ? { value: layout, label: mapLableLayout.get(layout) } : null}
         onChange={data => handleChangeLayout(data?.value ?? SelectorGraphLayout[0].value)}
       />
       <div className='flex flex-col gap-1 mt-2'>

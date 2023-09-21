@@ -4,7 +4,7 @@ import Dropdown from '../../../components/Common/Dropdown';
 import DropdownButton from '../../../components/Common/DropdownButton';
 import useDropdown from '../../../hooks/useDropdown';
 import { DependencyMode } from '../../../models/miscelanious';
-import { getDependencyLabel } from '../../../utils/staticUI';
+import { labelDependencyMode } from '../../../utils/labels';
 
 interface DependencyModePickerProps {
   value: DependencyMode
@@ -27,7 +27,7 @@ function DependencyModePicker({ value, onChange }: DependencyModePickerProps) {
       tabIndex={-1}
       onClick={pickerMenu.toggle}
     >
-      {getDependencyLabel(value)}
+      {labelDependencyMode(value)}
     </span>
     { pickerMenu.isActive &&
     <Dropdown stretchLeft >

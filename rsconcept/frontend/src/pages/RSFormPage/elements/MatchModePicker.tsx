@@ -4,7 +4,7 @@ import Dropdown from '../../../components/Common/Dropdown';
 import DropdownButton from '../../../components/Common/DropdownButton';
 import useDropdown from '../../../hooks/useDropdown';
 import { CstMatchMode } from '../../../models/miscelanious';
-import { getCstCompareLabel } from '../../../utils/staticUI';
+import { labelCstMathchMode } from '../../../utils/labels';
 
 interface MatchModePickerProps {
   value: CstMatchMode
@@ -27,7 +27,7 @@ function MatchModePicker({ value, onChange }: MatchModePickerProps) {
       tabIndex={-1}
       onClick={pickerMenu.toggle}
     >
-      {getCstCompareLabel(value)}
+      {labelCstMathchMode(value)}
     </span>
     { pickerMenu.isActive &&
       <Dropdown>

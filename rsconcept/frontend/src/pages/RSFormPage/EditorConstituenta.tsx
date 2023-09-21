@@ -13,7 +13,7 @@ import useWindowSize from '../../hooks/useWindowSize';
 import { EditMode } from '../../models/miscelanious';
 import { CstType, IConstituenta, ICstCreateData, ICstRenameData, ICstUpdateData } from '../../models/rsform';
 import { SyntaxTree } from '../../models/rslang';
-import { getCstTypificationLabel } from '../../utils/staticUI';
+import { labelCstTypification } from '../../utils/labels';
 import EditorRSExpression from './EditorRSExpression';
 import ViewSideConstituents from './elements/ViewSideConstituents';
 
@@ -78,7 +78,7 @@ function EditorConstituenta({
       setTerm(activeCst.term_raw || '');
       setTextDefinition(activeCst.definition_raw || '');
       setExpression(activeCst.definition_formal || '');
-      setTypification(activeCst ? getCstTypificationLabel(activeCst) : 'N/A');
+      setTypification(activeCst ? labelCstTypification(activeCst) : 'N/A');
     }
   }, [activeCst, onOpenEdit, schema]);
 

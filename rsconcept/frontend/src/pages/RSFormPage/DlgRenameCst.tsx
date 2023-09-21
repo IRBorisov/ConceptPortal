@@ -6,7 +6,8 @@ import TextInput from '../../components/Common/TextInput';
 import { useRSForm } from '../../context/RSFormContext';
 import { CstType, ICstRenameData } from '../../models/rsform';
 import { SelectorCstType } from '../../utils/selectors';
-import { createAliasFor, getCstTypeLabel, getCstTypePrefix } from '../../utils/staticUI';
+import { createAliasFor, getCstTypePrefix } from '../../utils/misc';
+import { labelCstType } from '../../utils/labels';
 
 interface DlgRenameCstProps
 extends Pick<ModalProps, 'hideWindow'> {
@@ -72,7 +73,7 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
           className='min-w-[14rem] self-center z-modal-top'
           options={SelectorCstType}
           placeholder='Выберите тип'
-          value={cstType ? { value: cstType, label: getCstTypeLabel(cstType) } : null}
+          value={cstType ? { value: cstType, label: labelCstType(cstType) } : null}
           onChange={data => setCstType(data?.value ?? CstType.BASE)}
         />
         <div>

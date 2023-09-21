@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import Checkbox from '../../components/Common/Checkbox';
 import Modal, { ModalProps } from '../../components/Common/Modal';
 import { useRSForm } from '../../context/RSFormContext';
-import { getCstLabel } from '../../utils/staticUI';
+import { labelConstituenta } from '../../utils/labels';
 
 interface DlgDeleteCstProps
 extends Pick<ModalProps, 'hideWindow'> {
@@ -39,14 +39,14 @@ function DlgDeleteCst({ hideWindow, selected, onDelete }: DlgDeleteCstProps) {
       <div className='px-3 border h-[9rem] mt-1 overflow-y-auto whitespace-nowrap'>
         {selected.map(id => {
           const cst = schema!.items.find(cst => cst.id === id);
-          return (cst && <p>{getCstLabel(cst)}</p>);
+          return (cst && <p>{labelConstituenta(cst)}</p>);
         })}
       </div>
       <p className='mt-4'>Зависимые конституенты: <b>{expansion.length}</b></p>
       <div className='mt-1 mb-3 px-3 border h-[9rem] overflow-y-auto whitespace-nowrap'>
         {expansion.map(id => {
           const cst = schema!.items.find(cst => cst.id === id);
-          return (cst && <p>{getCstLabel(cst)}</p>);
+          return (cst && <p>{labelConstituenta(cst)}</p>);
         })}
       </div>
       <Checkbox

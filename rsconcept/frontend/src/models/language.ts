@@ -3,6 +3,9 @@
 
 // ====== Morphology ========
 export enum Grammeme {
+  // Неизвестная граммема
+  UNKN = 'UNKN',
+
   // Части речи
   NOUN = 'NOUN',
   ADJF = 'ADJF',
@@ -21,7 +24,6 @@ export enum Grammeme {
   CONJ = 'CONJ',
   PRCL = 'PRCL',
   INTJ = 'INTJ',
-  PNCT = 'PNCT',
 
   // Одушевленность
   anim = 'anim',
@@ -88,8 +90,7 @@ export const PartOfSpeech = [
   Grammeme.NOUN, Grammeme.ADJF, Grammeme.ADJS, Grammeme.COMP,
   Grammeme.VERB, Grammeme.INFN, Grammeme.PRTF, Grammeme.PRTS,
   Grammeme.GRND, Grammeme.ADVB, Grammeme.NPRO, Grammeme.PRED,
-  Grammeme.PREP, Grammeme.CONJ, Grammeme.PRCL, Grammeme.INTJ,
-  Grammeme.PNCT
+  Grammeme.PREP, Grammeme.CONJ, Grammeme.PRCL, Grammeme.INTJ
 ];
 
 export const Gender = [
@@ -101,6 +102,94 @@ export const Case = [
   Grammeme.accs, Grammeme.ablt, Grammeme.loct
 ];
 
+export const Plurality = [ Grammeme.sing, Grammeme.plur ];
+
+export const Perfectivity = [ Grammeme.perf, Grammeme.impf ];
+export const Transitivity = [ Grammeme.tran, Grammeme.intr ];
+export const Mood = [ Grammeme.indc, Grammeme.impr ];
+export const Inclusion = [ Grammeme.incl, Grammeme.excl ];
+export const Voice = [ Grammeme.actv, Grammeme.pssv ];
+
+export const Tense = [
+  Grammeme.pres,
+  Grammeme.past,
+  Grammeme.futr
+];
+
+export const Person = [
+  Grammeme.per1,
+  Grammeme.per2,
+  Grammeme.per3
+];
+
+export const GrammemeGroups = [
+  PartOfSpeech, Gender, Case, Plurality, Perfectivity,
+  Transitivity, Mood, Inclusion, Voice, Tense, Person
+];
+
+export const NounGrams = [
+  Grammeme.NOUN, Grammeme.ADJF, Grammeme.ADJS,
+  ...Gender,
+  ...Case,
+  ...Plurality
+];
+
+export const VerbGrams = [
+  Grammeme.VERB, Grammeme.INFN, Grammeme.PRTF, Grammeme.PRTS,
+  ...Perfectivity,
+  ...Transitivity,
+  ...Mood,
+  ...Inclusion,
+  ...Voice,
+  ...Tense,
+  ...Person
+];
+
+// Grammeme parse data
+export interface IGramData {
+  type: Grammeme
+  data: string
+}
+
+// Equality comparator for IGramData
+export function matchGrammeme(value: IGramData, test: IGramData): boolean {
+  if (value.type !== test.type) {
+    return false;
+  }
+  return value.type !== Grammeme.UNKN || value.data === test.data;
+}
+
+function parseSingleGrammeme(text: string): IGramData {
+  if (Object.values(Grammeme).includes(text as Grammeme)) {
+    return {
+      data: text,
+      type: text as Grammeme
+    }
+  } else {
+    return {
+      data: text,
+      type: Grammeme.UNKN
+    }
+  }
+}
+
+export function parseGrammemes(termForm: string): IGramData[] {
+  const result: IGramData[] = [];
+  const chunks = termForm.split(',');
+  chunks.forEach(chunk => {
+    chunk = chunk.trim();
+    if (chunk !== '') {
+      result.push(parseSingleGrammeme(chunk));
+    }
+  });
+  return result;
+}
+
+export interface IWordForm {
+  text: string
+  grams: IGramData[]
+}
+
 // ====== Reference resolution =====
 export interface IRefsText {
   text: string
@@ -110,6 +199,7 @@ export enum ReferenceType {
   ENTITY = 'entity',
   SYNTACTIC = 'syntax'
 }
+
 export interface IEntityReference {
   entity: string
   form: string

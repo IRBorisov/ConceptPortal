@@ -15,13 +15,16 @@
         "project": ["tsconfig.json", "tsconfig.node.json"]
     },
     "plugins": [
-        "react-refresh", "simple-import-sort"
+        "react-refresh",
+        "simple-import-sort",
+        "eslint-plugin-tsdoc"
     ],
     "rules": {
         "react-refresh/only-export-components": [
             "off",
             { "allowConstantExport": true }
         ],
-        "simple-import-sort/imports": "warn"
+        "simple-import-sort/imports": "warn",
+        "tsdoc/syntax": "warn"
     }
 }

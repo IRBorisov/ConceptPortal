@@ -1,4 +1,6 @@
-// ======== ID based fast Graph implementation =============
+/**
+ * Represents single node of a {@link Graph}, as implemented by storing outgoing and incoming connections.
+ */
 export class GraphNode {
   id: number;
   outputs: number[];
@@ -36,6 +38,11 @@ export class GraphNode {
   }
 }
 
+/**
+ * Represents a Graph.
+ * 
+ * This class is optimized for TermGraph use case and not supposed to be used as generic graph implementation.
+ */
 export class Graph {
   nodes: Map<number, GraphNode> = new Map();
 

@@ -5,7 +5,7 @@ import { CstType, IConstituenta, type IRSForm } from '../models/rsform';
 import { IExpressionParse, IFunctionArg } from '../models/rslang';
 import { RSErrorType } from '../models/rslang';
 import { DataCallback, postCheckExpression } from '../utils/backendAPI';
-import { getCstExpressionPrefix } from '../utils/staticUI';
+import { getCstExpressionPrefix } from '../utils/misc';
 
 const LOGIC_TYPIIFCATION = 'LOGIC';
 

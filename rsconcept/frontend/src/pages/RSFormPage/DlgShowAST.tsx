@@ -5,8 +5,9 @@ import Modal, { ModalProps } from '../../components/Common/Modal';
 import { useConceptTheme } from '../../context/ThemeContext';
 import { SyntaxTree } from '../../models/rslang';
 import { graphDarkT, graphLightT } from '../../utils/color';
+import { colorbgSyntaxTree } from '../../utils/color';
 import { resources } from '../../utils/constants';
-import { getASTNodeColor, getASTNodeLabel } from '../../utils/staticUI';
+import { labelSyntaxTree } from '../../utils/labels';
 
 interface DlgShowASTProps
 extends Pick<ModalProps, 'hideWindow'> {
@@ -24,8 +25,8 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
   const nodes: GraphNode[] = useMemo(
   () => syntaxTree.map(node => ({
     id: String(node.uid),
-    label: getASTNodeLabel(node),
-    fill: getASTNodeColor(node, colors),
+    label: labelSyntaxTree(node),
+    fill: colorbgSyntaxTree(node, colors),
   })), [syntaxTree, colors]);
 
   const edges: GraphEdge[] = useMemo(

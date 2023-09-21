@@ -1,6 +1,8 @@
 import { useConceptTheme } from '../../context/ThemeContext';
+import { CstClass } from '../../models/rsform';
+import { colorbgCstClass } from '../../utils/color';
 import { prefixes } from '../../utils/constants';
-import { getCstClassColor, mapCstClassInfo } from '../../utils/staticUI';
+import { describeCstClass, labelCstClass } from '../../utils/labels';
 
 interface InfoCstClassProps {
   title?: string
@@ -12,19 +14,19 @@ function InfoCstClass({ title }: InfoCstClassProps) {
   return (
     <div className='flex flex-col gap-1'>
       { title && <h1>{title}</h1>}
-      { [... mapCstClassInfo.entries()].map(
-      ([cstClass, info], index) => {
+      { Object.values(CstClass).map(
+      (cclass, index) => {
         return (
         <p key={`${prefixes.cst_status_list}${index}`}>
           <span
             className='px-1 inline-block font-semibold min-w-[7rem] text-center border text-sm'
-            style={{backgroundColor: getCstClassColor(cstClass, colors)}}
+            style={{backgroundColor: colorbgCstClass(cclass, colors)}}
           >
-            {info.text}
+            {labelCstClass(cclass)}
           </span>
           <span> - </span>
           <span>
-            {info.tooltip}
+            {describeCstClass(cclass)}
           </span>
         </p>);
       })}

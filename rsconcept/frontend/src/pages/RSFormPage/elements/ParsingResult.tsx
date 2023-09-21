@@ -1,5 +1,6 @@
 import { IExpressionParse, IRSErrorDescription, SyntaxTree } from '../../../models/rslang';
-import { getRSErrorMessage, getRSErrorPrefix } from '../../../utils/staticUI';
+import { describeRSError } from '../../../utils/labels';
+import { getRSErrorPrefix } from '../../../utils/misc';
 
 interface ParsingResultProps {
   data: IExpressionParse
@@ -22,7 +23,7 @@ function ParsingResult({ data, onShowAST, onShowError }: ParsingResultProps) {
         return (
         <p key={`error-${index}`} className='cursor-pointer text-warning' onClick={() => onShowError(error)}>
           <span className='mr-1 font-semibold underline'>{error.isCritical ? 'Ошибка' : 'Предупреждение'} {getRSErrorPrefix(error)}:</span>
-          <span> {getRSErrorMessage(error)}</span>
+          <span> {describeRSError(error)}</span>
         </p>
         );
       })}

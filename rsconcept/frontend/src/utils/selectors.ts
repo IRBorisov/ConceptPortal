@@ -1,10 +1,11 @@
 // Module: Selector maps
 import { LayoutTypes } from 'reagraph';
 
-import { Grammeme } from '../models/language';
+import { Grammeme, IGramData } from '../models/language';
 import { CstType } from '../models/rsform';
 import { ColoringScheme } from '../pages/RSFormPage/EditorTermGraph';
-import { getCstTypeLabel } from './staticUI';
+import { labelGrammeme } from './labels';
+import { labelCstType } from './labels';
 
 
 export const SelectorGraphLayout: { value: LayoutTypes, label: string }[] = [
@@ -31,55 +32,37 @@ export const SelectorGraphColoring: { value: ColoringScheme, label: string }[] =
 
 export const SelectorCstType = (
   Object.values(CstType)).map(
-    typeStr => ({
-      value: typeStr as CstType,
-      label: getCstTypeLabel(typeStr as CstType)
-    })
-  );
+  typeStr => ({
+    value: typeStr as CstType,
+    label: labelCstType(typeStr as CstType)
+  })
+);
 
-export const SelectorGrammems: { value: Grammeme, label: string }[] = [
-  { value: Grammeme.sing, label: 'Число: един' },
-  { value: Grammeme.plur, label: 'Число: множ' },
+export interface IGrammemeOption {
+  value: Grammeme
+  label: string
+}
 
-  { value: Grammeme.nomn, label: 'Падеж: имен' },
-  { value: Grammeme.gent, label: 'Падеж: род' },
-  { value: Grammeme.datv, label: 'Падеж: дат' },
-  { value: Grammeme.accs, label: 'Падеж: вин' },
-  { value: Grammeme.ablt, label: 'Падеж: твор' },
-  { value: Grammeme.loct, label: 'Падеж: пред' },
+export const SelectorGrammems: IGrammemeOption[] = 
+[
+  Grammeme.NOUN, Grammeme.VERB,
 
-  { value: Grammeme.NOUN, label: 'ЧР: сущ' },
-  { value: Grammeme.VERB, label: 'ЧР: глагол' },
-  { value: Grammeme.INFN, label: 'ЧР: глагол инф' },
-  { value: Grammeme.ADJF, label: 'ЧР: прил' },
-  { value: Grammeme.ADJS, label: 'ЧР: кр прил' },
-  { value: Grammeme.PRTF, label: 'ЧР: прич' },
-  { value: Grammeme.PRTS, label: 'ЧР: кр прич' },  
+  Grammeme.sing, Grammeme.plur,
+  Grammeme.nomn, Grammeme.gent, Grammeme.datv,
+  Grammeme.accs, Grammeme.ablt, Grammeme.loct,
 
-  { value: Grammeme.perf, label: 'Совершенный: да' },
-  { value: Grammeme.impf, label: 'Совершенный: нет' },
+  Grammeme.INFN, Grammeme.ADJF, Grammeme.PRTF,
+  Grammeme.ADJS, Grammeme.PRTS,
 
-  { value: Grammeme.tran, label: 'Переходный: да' },
-  { value: Grammeme.intr, label: 'Переходный: нет' },
-
-  { value: Grammeme.pres, label: 'Время: наст' },
-  { value: Grammeme.past, label: 'Время: прош' },
-  { value: Grammeme.futr, label: 'Время: буд' },
-
-  { value: Grammeme.per1, label: 'Лицо: 1' },
-  { value: Grammeme.per2, label: 'Лицо: 2' },
-  { value: Grammeme.per3, label: 'Лицо: 3' },
-
-  { value: Grammeme.impr, label: 'Повелительный: да' },
-  { value: Grammeme.indc, label: 'Повелительный: нет' },
-
-  { value: Grammeme.incl, label: 'Включающий: да' },
-  { value: Grammeme.excl, label: 'Включающий: нет' },
-
-  { value: Grammeme.pssv, label: 'Страдательный: да' },
-  { value: Grammeme.actv, label: 'Страдательный: нет' },
-];
-
-// { value: Grammeme.masc, label: 'Род: муж' },
-// { value: Grammeme.femn, label: 'Род: жен' },
-// { value: Grammeme.neut, label: 'Род: ср' },
+  Grammeme.perf, Grammeme.impf,
+  Grammeme.tran, Grammeme.intr,
+  Grammeme.pres, Grammeme.past, Grammeme.futr,
+  Grammeme.per1, Grammeme.per2, Grammeme.per3,
+  Grammeme.impr, Grammeme.indc,
+  Grammeme.incl, Grammeme.excl,
+  Grammeme.pssv, Grammeme.actv,
+].map(
+gram => ({
+  value: gram,
+  label: labelGrammeme({type: gram, data: ''} as IGramData)
+}));

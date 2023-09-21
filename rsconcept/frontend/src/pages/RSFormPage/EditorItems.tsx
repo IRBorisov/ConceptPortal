@@ -11,8 +11,10 @@ import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useWindowSize from '../../hooks/useWindowSize';
 import { CstType, IConstituenta, ICstCreateData, ICstMovetoData } from '../../models/rsform'
+import { colorfgCstStatus } from '../../utils/color';
 import { prefixes } from '../../utils/constants';
-import { getCstStatusFgColor, getCstTypePrefix, getCstTypeShortcut, getCstTypificationLabel, mapStatusInfo } from '../../utils/staticUI';
+import { describeExpressionStatus, labelCstTypification } from '../../utils/labels';
+import { getCstTypePrefix, getCstTypeShortcut } from '../../utils/misc';
 
 // Window width cutoff for columns
 const COLUMN_DEFINITION_HIDE_THRESHOLD = 1000;
@@ -221,15 +223,14 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
       maxSize: 65,
       cell: props => {
         const cst = props.row.original;
-        const info = mapStatusInfo.get(cst.status);
         return (<>
           <div
             id={`${prefixes.cst_list}${cst.alias}`}
             className='w-full min-w-[3.1rem] max-w-[3.1rem] px-1 text-center rounded-md whitespace-nowrap'
             style={{
               borderWidth: "1px", 
-              borderColor: getCstStatusFgColor(cst.status, colors), 
-              color: getCstStatusFgColor(cst.status, colors), 
+              borderColor: colorfgCstStatus(cst.status, colors), 
+              color: colorfgCstStatus(cst.status, colors), 
               fontWeight: 600,
               backgroundColor: colors.bgInput
             }}
@@ -240,12 +241,12 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
             anchorSelect={`#${prefixes.cst_list}${cst.alias}`}
             place='right'
           >
-            <p><span className='font-semibold'>Статус</span>: {info!.tooltip}</p>
+            <p><span className='font-semibold'>Статус</span>: {describeExpressionStatus(cst.status)}</p>
           </ConceptTooltip>
         </>);
       }
     }),
-    columnHelper.accessor(cst => getCstTypificationLabel(cst), {
+    columnHelper.accessor(cst => labelCstTypification(cst), {
       id: 'type',
       header: 'Типизация',
       size: 150,

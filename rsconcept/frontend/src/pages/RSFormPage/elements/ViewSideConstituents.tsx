@@ -9,8 +9,10 @@ import { DependencyMode } from '../../../models/miscelanious';
 import { CstMatchMode } from '../../../models/miscelanious';
 import { applyGraphFilter } from '../../../models/miscelanious';
 import { CstType, extractGlobals, IConstituenta, matchConstituenta } from '../../../models/rsform';
+import { createMockConstituenta } from '../../../models/rsform';
+import { colorfgCstStatus } from '../../../utils/color';
 import { prefixes } from '../../../utils/constants';
-import { getCstDescription, getCstStatusFgColor, getMockConstituenta } from '../../../utils/staticUI';
+import { describeConstituenta } from '../../../utils/labels';
 import ConstituentaTooltip from './ConstituentaTooltip';
 import DependencyModePicker from './DependencyModePicker';
 import MatchModePicker from './MatchModePicker';
@@ -74,7 +76,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       if (diff.length > 0) {
         diff.forEach(
           (alias, index) => filtered.push(
-            getMockConstituenta(
+            createMockConstituenta(
               schema.id,
               -index,
               alias,
@@ -124,8 +126,8 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
             className='min-w-[3.1rem] max-w-[3.1rem] px-1 text-center rounded-md whitespace-nowrap'
             style={{
               borderWidth: '1px', 
-              borderColor: getCstStatusFgColor(cst.status, colors), 
-              color: getCstStatusFgColor(cst.status, colors), 
+              borderColor: colorfgCstStatus(cst.status, colors), 
+              color: colorfgCstStatus(cst.status, colors), 
               fontWeight: 600,
               backgroundColor: isMockCst(cst) ? colors.bgWarning : colors.bgInput
             }}
@@ -136,7 +138,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
         </>);
       }
     }),
-    columnHelper.accessor(cst => getCstDescription(cst), {
+    columnHelper.accessor(cst => describeConstituenta(cst), {
       id: 'description',
       header: 'Описание',
       size: 500,

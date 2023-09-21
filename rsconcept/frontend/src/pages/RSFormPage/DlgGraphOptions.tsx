@@ -3,7 +3,7 @@ import { useLayoutEffect, useState } from 'react';
 import Checkbox from '../../components/Common/Checkbox';
 import Modal, { ModalProps } from '../../components/Common/Modal';
 import { CstType } from '../../models/rsform';
-import { getCstTypeLabel } from '../../utils/staticUI';
+import { labelCstType } from '../../utils/labels';
 import { GraphEditorParams } from './EditorTermGraph';
 
 interface DlgGraphOptionsProps
@@ -105,42 +105,42 @@ function DlgGraphOptions({ hideWindow, initial, onConfirm }:DlgGraphOptionsProps
         <div className='flex flex-col gap-1'>
           <h1>Типы конституент</h1>
           <Checkbox
-            label={getCstTypeLabel(CstType.BASE)}
+            label={labelCstType(CstType.BASE)}
             value={allowBase} 
             setValue={ value => setAllowBase(value) }
           />
           <Checkbox
-            label={getCstTypeLabel(CstType.STRUCTURED)}
+            label={labelCstType(CstType.STRUCTURED)}
             value={allowStruct} 
             setValue={ value => setAllowStruct(value) }
           />
           <Checkbox
-            label={getCstTypeLabel(CstType.TERM)}
+            label={labelCstType(CstType.TERM)}
             value={allowTerm} 
             setValue={ value => setAllowTerm(value) }
           />
           <Checkbox
-            label={getCstTypeLabel(CstType.AXIOM)}
+            label={labelCstType(CstType.AXIOM)}
             value={allowAxiom} 
             setValue={ value => setAllowAxiom(value) }
           />
           <Checkbox
-            label={getCstTypeLabel(CstType.FUNCTION)}
+            label={labelCstType(CstType.FUNCTION)}
             value={allowFunction} 
             setValue={ value => setAllowFunction(value) }
           />
           <Checkbox
-            label={getCstTypeLabel(CstType.PREDICATE)}
+            label={labelCstType(CstType.PREDICATE)}
             value={allowPredicate} 
             setValue={ value => setAllowPredicate(value) }
           />
           <Checkbox
-            label={getCstTypeLabel(CstType.CONSTANT)}
+            label={labelCstType(CstType.CONSTANT)}
             value={allowConstant} 
             setValue={ value => setAllowConstant(value) }
           />
           <Checkbox
-            label={getCstTypeLabel(CstType.THEOREM)}
+            label={labelCstType(CstType.THEOREM)}
             value={allowTheorem} 
             setValue ={ value => setAllowTheorem(value) }
           />

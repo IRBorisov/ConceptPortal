@@ -1,5 +1,5 @@
 import { IConstituenta } from '../../models/rsform';
-import { getCstTypificationLabel } from '../../utils/staticUI';
+import { labelCstTypification } from '../../utils/labels';
 
 interface InfoConstituentaProps
 extends React.HTMLAttributes<HTMLDivElement> {
@@ -10,7 +10,7 @@ function InfoConstituenta({ data, ...props }: InfoConstituentaProps) {
   return (
     <div {...props}>
       <h1>Конституента {data.alias}</h1>
-      <p><b>Типизация: </b>{getCstTypificationLabel(data)}</p>
+      <p><b>Типизация: </b>{labelCstTypification(data)}</p>
       <p><b>Термин: </b>{data.term_resolved || data.term_raw}</p>
       {data.definition_formal && <p><b>Выражение: </b>{data.definition_formal}</p>}
       {data.definition_resolved && <p><b>Определение: </b>{data.definition_resolved}</p>}

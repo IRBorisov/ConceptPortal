@@ -1,5 +1,11 @@
+COMPOSE_FILE="docker-compose-prod.yml"
+BACKUP_SCRIPT="./scripts/prod/CreateBackup.sh"
+
 git reset --hard
 git pull
-/bin/bash ./scripts/prod/CreateBackup.sh
-docker compose --file "docker-compose-prod.yml" up --build --detach
+
+/bin/bash "${BACKUP_SCRIPT}"
+
+docker compose --file "${COMPOSE_FILE}" up --build --detach
 docker image prune --all --force
+docker compose --file "${COMPOSE_FILE}" restart

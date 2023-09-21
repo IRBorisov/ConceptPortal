@@ -17,7 +17,7 @@ import useModificationPrompt from '../../hooks/useModificationPrompt';
 import { ICstCreateData, ICstRenameData } from '../../models/rsform';
 import { SyntaxTree } from '../../models/rslang';
 import { EXTEOR_TRS_FILE, prefixes, TIMEOUT_UI_REFRESH } from '../../utils/constants';
-import { createAliasFor } from '../../utils/staticUI';
+import { createAliasFor } from '../../utils/misc';
 import DlgCloneRSForm from './DlgCloneRSForm';
 import DlgCreateCst from './DlgCreateCst';
 import DlgDeleteCst from './DlgDeleteCst';

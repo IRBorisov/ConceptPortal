@@ -9,7 +9,7 @@ import { useLibrary } from '../../context/LibraryContext';
 import { useConceptNavigation } from '../../context/NagivationContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { IRSFormCreateData } from '../../models/rsform';
-import { getCloneTitle } from '../../utils/staticUI';
+import { cloneTitle } from '../../utils/misc';
 
 interface DlgCloneRSFormProps
 extends Pick<ModalProps, 'hideWindow'> {}
@@ -27,7 +27,7 @@ function DlgCloneRSForm({ hideWindow }: DlgCloneRSFormProps) {
 
   useEffect(() => {
     if (schema) {
-      setTitle(getCloneTitle(schema));
+      setTitle(cloneTitle(schema));
       setAlias(schema.alias);
       setComment(schema.comment);
       setCommon(schema.is_common);

@@ -274,3 +274,30 @@ export function inferClass(type: CstType, isTemplate: boolean): CstClass {
   }
 }
 
+export function createMockConstituenta(schema: number, id: number, alias: string, type: CstType, comment: string): IConstituenta {
+  return {
+    id: id,
+    order: -1,
+    schema: schema,
+    alias: alias,
+    convention: comment,
+    cst_type: type,
+    term_raw: '',
+    term_resolved: '',
+    term_forms: [],
+    definition_formal: '',
+    definition_raw: '',
+    definition_resolved: '',
+    status: ExpressionStatus.INCORRECT,
+    is_template: false,
+    cst_class: CstClass.DERIVED,
+    parse: {
+      status: ParsingStatus.INCORRECT,
+      valueClass: ValueClass.INVALID,
+      typification: 'N/A',
+      syntaxTree: '',
+      args: []
+    }
+  };
+}
+

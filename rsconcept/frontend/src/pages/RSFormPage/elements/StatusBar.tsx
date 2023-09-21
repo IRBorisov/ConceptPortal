@@ -4,7 +4,8 @@ import { useConceptTheme } from '../../../context/ThemeContext';
 import { ExpressionStatus } from '../../../models/rsform';
 import { type IConstituenta, inferStatus } from '../../../models/rsform';
 import { IExpressionParse, ParsingStatus } from '../../../models/rslang';
-import { getCstStatusBgColor, mapStatusInfo } from '../../../utils/staticUI';
+import { colorbgCstStatus } from '../../../utils/color';
+import { describeExpressionStatus, labelExpressionStatus } from '../../../utils/labels';
 
 interface StatusBarProps {
   isModified?: boolean
@@ -25,13 +26,12 @@ function StatusBar({ isModified, constituenta, parseData }: StatusBarProps) {
     return inferStatus(constituenta?.parse?.status, constituenta?.parse?.valueClass);
   }, [isModified, constituenta, parseData]);
 
-  const data = mapStatusInfo.get(status)!;
   return (
-    <div title={data.tooltip}
+    <div title={describeExpressionStatus(status)}
       className='text-sm h-[1.6rem] w-[10rem] font-semibold inline-flex border items-center select-none justify-center align-middle'
-      style={{backgroundColor: getCstStatusBgColor(status, colors)}}
+      style={{backgroundColor: colorbgCstStatus(status, colors)}}
     >
-      Статус: [ {data.text} ]
+      Статус: [ {labelExpressionStatus(status)} ]
     </div>
   )
 }

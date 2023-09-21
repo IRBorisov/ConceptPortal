@@ -10,7 +10,8 @@ import useCheckExpression from '../../hooks/useCheckExpression';
 import { IConstituenta } from '../../models/rsform';
 import { IRSErrorDescription, SyntaxTree } from '../../models/rslang';
 import { TokenID } from '../../models/rslang';
-import { getCstExpressionPrefix, getTypificationLabel } from '../../utils/staticUI';
+import { labelTypification } from '../../utils/labels';
+import { getCstExpressionPrefix } from '../../utils/misc';
 import ParsingResult from './elements/ParsingResult';
 import RSLocalButton from './elements/RSLocalButton';
 import RSTokenButton from './elements/RSTokenButton';
@@ -67,7 +68,7 @@ function EditorRSExpression({
         rsInput.current?.view?.focus();
       }
       setIsModified(false);
-      setTypification(getTypificationLabel({
+      setTypification(labelTypification({
         isValid: parse.parseResult,
         resultType: parse.typification,
         args: parse.args
@@ -111,49 +112,49 @@ function EditorRSExpression({
     <div className='flex items-center justify-between w-full'>
     <div className='text-sm w-fit'>
       <div className='flex justify-start'>
-        <RSTokenButton id={TokenID.NT_DECLARATIVE_EXPR} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.NT_IMPERATIVE_EXPR} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.NT_RECURSIVE_FULL} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.BIGPR} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.SMALLPR} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.FILTER} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.REDUCE} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.CARD} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.BOOL} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.NT_DECLARATIVE_EXPR} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.NT_IMPERATIVE_EXPR} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.NT_RECURSIVE_FULL} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.BIGPR} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.SMALLPR} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.FILTER} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.REDUCE} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.CARD} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.BOOL} onInsert={handleEdit}/>
 
       </div>
       <div className='flex justify-start'>
-        <RSTokenButton id={TokenID.BOOLEAN} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.PUNC_PL} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.INTERSECTION} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.LIT_EMPTYSET} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.FORALL} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.NOT} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.IN} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.SUBSET_OR_EQ} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.AND} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.IMPLICATION} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.SET_MINUS} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.PUNC_ITERATE} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.SUBSET} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.DEBOOL} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.BOOLEAN} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.PUNC_PL} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.INTERSECTION} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.LIT_EMPTYSET} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.FORALL} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.NOT} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.IN} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.SUBSET_OR_EQ} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.AND} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.IMPLICATION} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.SET_MINUS} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.PUNC_ITERATE} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.SUBSET} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.DEBOOL} onInsert={handleEdit}/>
       </div>
       <div className='flex justify-start'>
-        <RSTokenButton id={TokenID.DECART} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.PUNC_SL} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.UNION} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.LIT_INTSET} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.EXISTS} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.NOTEQUAL} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.NOTIN} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.NOTSUBSET} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.OR} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.EQUIVALENT} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.SYMMINUS} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.PUNC_ASSIGN} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.EQUAL} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.GREATER_OR_EQ} onInsert={handleEdit}/>
-        <RSTokenButton id={TokenID.LESSER_OR_EQ} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.DECART} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.PUNC_SL} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.UNION} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.LIT_INTSET} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.EXISTS} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.NOTEQUAL} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.NOTIN} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.NOTSUBSET} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.OR} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.EQUIVALENT} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.SYMMINUS} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.PUNC_ASSIGN} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.EQUAL} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.GREATER_OR_EQ} onInsert={handleEdit}/>
+        <RSTokenButton token={TokenID.LESSER_OR_EQ} onInsert={handleEdit}/>
       </div>
     </div>
     <div className='text-xs w-fit'>
