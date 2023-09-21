@@ -1,5 +1,6 @@
 // =========== Modules contains all dynamic color definitions ==========
 
+import { Grammeme, NounGrams, PartOfSpeech, VerbGrams } from '../models/language'
 import { CstClass, ExpressionStatus } from '../models/rsform'
 import { ISyntaxTreeNode, TokenID } from '../models/rslang'
 
@@ -382,5 +383,31 @@ export function colorbgCstClass(cstClass: CstClass, colors: IColorTheme): string
     case CstClass.STATEMENT: return colors.bgRed;
     case CstClass.TEMPLATE: return colors.bgTeal;
   }
+}
+
+export function colorfgGrammeme(gram: Grammeme, colors: IColorTheme): string {
+  if (PartOfSpeech.includes(gram)) {
+    return colors.fgBlue;
+  }
+  if (NounGrams.includes(gram)) {
+    return colors.fgGreen;
+  }
+  if (VerbGrams.includes(gram)) {
+    return colors.fgTeal;
+  }
+  return colors.fgDefault;
+}
+
+export function colorbgGrammeme(gram: Grammeme, colors: IColorTheme): string {
+  if (PartOfSpeech.includes(gram)) {
+    return colors.bgBlue;
+  }
+  if (NounGrams.includes(gram)) {
+    return colors.bgGreen;
+  }
+  if (VerbGrams.includes(gram)) {
+    return colors.bgTeal;
+  }
+  return colors.bgInput;
 }
 

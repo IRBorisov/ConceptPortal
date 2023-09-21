@@ -3,10 +3,14 @@ from django.contrib.auth import login, logout
 
 from rest_framework import status, permissions, views, generics
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema, extend_schema_view
 
 from . import serializers
 from . import models
 
+
+@extend_schema(tags=['Auth'])
+@extend_schema_view()
 class LoginAPIView(views.APIView):
     ''' Endpoint: Login via username + password. '''
     permission_classes = (permissions.AllowAny,)
@@ -22,6 +26,8 @@ class LoginAPIView(views.APIView):
         return Response(None, status=status.HTTP_202_ACCEPTED)
 
 
+@extend_schema(tags=['Auth'])
+@extend_schema_view()
 class LogoutAPIView(views.APIView):
     ''' Endpoint: Logout. '''
     permission_classes = (permissions.IsAuthenticated,)
@@ -31,12 +37,16 @@ class LogoutAPIView(views.APIView):
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
 
+@extend_schema(tags=['User'])
+@extend_schema_view()
 class SignupAPIView(generics.CreateAPIView):
     ''' Endpoint: Register user. '''
     permission_classes = (permissions.AllowAny, )
     serializer_class = serializers.SignupSerializer
 
 
+@extend_schema(tags=['Auth'])
+@extend_schema_view()
 class AuthAPIView(generics.RetrieveAPIView):
     ''' Endpoint: Current user info. '''
     permission_classes = (permissions.AllowAny,)
@@ -46,6 +56,8 @@ class AuthAPIView(generics.RetrieveAPIView):
         return self.request.user
 
 
+@extend_schema(tags=['User'])
+@extend_schema_view()
 class ActiveUsersView(generics.ListAPIView):
     ''' Endpoint: Get list of active users. '''
     permission_classes = (permissions.AllowAny,)
@@ -55,6 +67,8 @@ class ActiveUsersView(generics.ListAPIView):
         return models.User.objects.filter(is_active=True)
 
 
+@extend_schema(tags=['User'])
+@extend_schema_view()
 class UserProfileAPIView(generics.RetrieveUpdateAPIView):
     ''' Endpoint: User profile. '''
     permission_classes = (permissions.IsAuthenticated,)
@@ -64,6 +78,8 @@ class UserProfileAPIView(generics.RetrieveUpdateAPIView):
         return self.request.user
 
 
+@extend_schema(tags=['Auth'])
+@extend_schema_view()
 class UpdatePassword(views.APIView):
     ''' Endpoint: Change password for current user. '''
     permission_classes = (permissions.IsAuthenticated, )

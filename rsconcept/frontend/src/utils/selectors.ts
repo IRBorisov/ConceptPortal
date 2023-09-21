@@ -38,7 +38,7 @@ export const SelectorCstType = (
   })
 );
 
-export interface IGrammemeOption {
+export interface IGrammemeOption extends IGramData {
   value: Grammeme
   label: string
 }
@@ -63,6 +63,8 @@ export const SelectorGrammems: IGrammemeOption[] =
   Grammeme.pssv, Grammeme.actv,
 ].map(
 gram => ({
+  type: gram,
+  data: gram as string,
   value: gram,
   label: labelGrammeme({type: gram, data: ''} as IGramData)
 }));

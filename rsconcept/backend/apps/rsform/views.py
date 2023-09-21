@@ -9,6 +9,7 @@ from rest_framework import views, viewsets, filters, generics, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from drf_spectacular.utils import extend_schema, extend_schema_view
 
 import pyconcept
 from . import models as m
@@ -16,6 +17,8 @@ from . import serializers as s
 from . import utils
 
 
+@extend_schema(tags=['Library'])
+@extend_schema_view()
 class LibraryActiveView(generics.ListAPIView):
     ''' Endpoint: Get list of rsforms available for active user. '''
     permission_classes = (permissions.AllowAny,)
@@ -32,6 +35,8 @@ class LibraryActiveView(generics.ListAPIView):
             return m.LibraryItem.objects.filter(is_common=True).order_by('-time_update')
 
 
+@extend_schema(tags=['Constituenta'])
+@extend_schema_view()
 class ConstituentAPIView(generics.RetrieveUpdateAPIView):
     ''' Endpoint: Get / Update Constituenta. '''
     queryset = m.Constituenta.objects.all()
@@ -45,7 +50,10 @@ class ConstituentAPIView(generics.RetrieveUpdateAPIView):
             result.append(utils.SchemaOwnerOrAdmin())
         return result
 
+
 # pylint: disable=too-many-ancestors
+@extend_schema(tags=['Library'])
+@extend_schema_view()
 class LibraryViewSet(viewsets.ModelViewSet):
     ''' Endpoint: Library operations. '''
     queryset = m.LibraryItem.objects.all()
@@ -76,6 +84,12 @@ class LibraryViewSet(viewsets.ModelViewSet):
     def _get_item(self) -> m.LibraryItem:
         return cast(m.LibraryItem, self.get_object())
 
+    # TODO: response schema
+    @extend_schema(
+        request=s.LibraryItemSerializer,
+        summary='clone item including contents',
+        tags=['Library']
+    )
     @transaction.atomic
     @action(detail=True, methods=['post'], url_path='clone')
     def clone(self, request, pk):
@@ -99,6 +113,12 @@ class LibraryViewSet(viewsets.ModelViewSet):
             return Response(status=201, data=s.RSFormParseSerializer(new_schema).data)
         return Response(status=404)
 
+    @extend_schema(
+        request=None,
+        responses={200: s.LibraryItemSerializer},
+        summary='claim item',
+        tags=['Library']
+    )
     @transaction.atomic
     @action(detail=True, methods=['post'])
     def claim(self, request, pk=None):
@@ -112,6 +132,12 @@ class LibraryViewSet(viewsets.ModelViewSet):
             m.Subscription.subscribe(user=item.owner, item=item)
             return Response(status=200, data=s.LibraryItemSerializer(item).data)
 
+    @extend_schema(
+        request=None,
+        responses={200: None},
+        summary='subscribe to item',
+        tags=['Library']
+    )
     @action(detail=True, methods=['post'])
     def subscribe(self, request, pk):
         ''' Endpoint: Subscribe current user to item. '''
@@ -119,6 +145,12 @@ class LibraryViewSet(viewsets.ModelViewSet):
         m.Subscription.subscribe(user=self.request.user, item=item)
         return Response(status=200)
 
+    @extend_schema(
+        request=None,
+        responses={200: None},
+        summary='unsubscribe from item',
+        tags=['Library']
+    )
     @action(detail=True, methods=['delete'])
     def unsubscribe(self, request, pk):
         ''' Endpoint: Unsubscribe current user from item. '''
@@ -127,6 +159,8 @@ class LibraryViewSet(viewsets.ModelViewSet):
         return Response(status=200)
 
 
+@extend_schema(tags=['RSForm'])
+@extend_schema_view()
 class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.RetrieveAPIView):
     ''' Endpoint: RSForm operations. '''
     queryset = m.LibraryItem.objects.filter(item_type=m.LibraryItemType.RSFORM)
@@ -144,6 +178,12 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             permission_classes = [permissions.AllowAny]
         return [permission() for permission in permission_classes]
 
+    # TODO: response schema
+    @extend_schema(
+        request=s.CstCreateSerializer,
+        summary='create constituenta',
+        tags=['Constituenta']
+    )
     @action(detail=True, methods=['post'], url_path='cst-create')
     def cst_create(self, request, pk):
         ''' Create new constituenta. '''
@@ -160,6 +200,12 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         response['Location'] = new_cst.get_absolute_url()
         return response
 
+    # TODO: response schema
+    @extend_schema(
+        request=s.CstRenameSerializer,
+        summary='rename constituenta',
+        tags=['Constituenta']
+    )
     @transaction.atomic
     @action(detail=True, methods=['patch'], url_path='cst-rename')
     def cst_rename(self, request, pk):
@@ -178,6 +224,12 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             'schema': s.RSFormParseSerializer(schema).data
         })
 
+    # TODO: response schema
+    @extend_schema(
+        request=s.CstListSerializer,
+        summary='delete constituents',
+        tags=['Constituenta']
+    )
     @action(detail=True, methods=['patch'], url_path='cst-multidelete')
     def cst_multidelete(self, request, pk):
         ''' Endpoint: Delete multiple constituents. '''
@@ -188,6 +240,12 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         schema.item.refresh_from_db()
         return Response(status=202, data=s.RSFormParseSerializer(schema).data)
 
+    # TODO: response schema
+    @extend_schema(
+        request=s.CstMoveSerializer,
+        summary='move constituenta',
+        tags=['Constituenta']
+    )
     @action(detail=True, methods=['patch'], url_path='cst-moveto')
     def cst_moveto(self, request, pk):
         ''' Endpoint: Move multiple constituents. '''
@@ -198,6 +256,12 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         schema.item.refresh_from_db()
         return Response(status=200, data=s.RSFormParseSerializer(schema).data)
 
+    # TODO: response schema
+    @extend_schema(
+        request=None,
+        summary='reset aliases, update expressions and references',
+        tags=['RSForm']
+    )
     @action(detail=True, methods=['patch'], url_path='reset-aliases')
     def reset_aliases(self, request, pk):
         ''' Endpoint: Recreate all aliases based on order. '''
@@ -205,6 +269,12 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         schema.reset_aliases()
         return Response(status=200, data=s.RSFormParseSerializer(schema).data)
 
+    # TODO: response schema
+    @extend_schema(
+        request=s.RSFormUploadSerializer,
+        summary='load data from TRS file',
+        tags=['RSForm']
+    )
     @action(detail=True, methods=['patch'], url_path='load-trs')
     def load_trs(self, request, pk):
         ''' Endpoint: Load data from file and replace current schema. '''
@@ -220,12 +290,24 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         schema = serializer.save()
         return Response(status=200, data=s.RSFormParseSerializer(schema).data)
 
+    # TODO: response schema
+    @extend_schema(
+        request=None,
+        summary='get all constituents data from DB',
+        tags=['RSForm']
+    )
     @action(detail=True, methods=['get'])
     def contents(self, request, pk):
         ''' Endpoint: View schema db contents (including constituents). '''
         schema = s.RSFormSerializer(self._get_schema()).data
         return Response(schema)
 
+    # TODO: response schema
+    @extend_schema(
+        request=None,
+        summary='get all constituents data and parses',
+        tags=['RSForm']
+    )
     @action(detail=True, methods=['get'])
     def details(self, request, pk):
         ''' Endpoint: Detailed schema view including statuses and parse. '''
@@ -233,6 +315,12 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         serializer = s.RSFormParseSerializer(schema)
         return Response(serializer.data)
 
+    # TODO: response schema
+    @extend_schema(
+        request=s.ExpressionSerializer,
+        summary='check RSLang expression',
+        tags=['RSForm', 'Functions']
+    )
     @action(detail=True, methods=['post'])
     def check(self, request, pk):
         ''' Endpoint: Check RSLang expression against schema context. '''
@@ -243,6 +331,12 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         result = pyconcept.check_expression(json.dumps(schema.data), expression)
         return Response(json.loads(result))
 
+    @extend_schema(
+        request=s.TextSerializer,
+        responses={200: s.ResolverSerializer},
+        summary='resolve text with references',
+        tags=['RSForm', 'Functions']
+    )
     @action(detail=True, methods=['post'])
     def resolve(self, request, pk):
         ''' Endpoint: Resolve refenrces in text against schema terms context. '''
@@ -253,6 +347,12 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         resolver.resolve(text)
         return Response(status=200, data=s.ResolverSerializer(resolver).data)
 
+    # TODO: create a proper file response schema
+    @extend_schema(
+        responses={(200, 'application/zip'): bytes},
+        summary='export as TRS file',
+        tags=['RSForm']
+    )
     @action(detail=True, methods=['get'], url_path='export-trs')
     def export_trs(self, request, pk):
         ''' Endpoint: Download Exteor compatible file. '''
@@ -274,6 +374,10 @@ class TrsImportView(views.APIView):
     ''' Endpoint: Upload RS form in Exteor format. '''
     serializer_class = s.FileSerializer
 
+    @extend_schema(
+        summary='import TRS file into RSForm',
+        tags=['RSForm']
+    )
     def post(self, request):
         data = utils.read_trs(request.FILES['file'].file)
         owner = self.request.user
@@ -287,6 +391,10 @@ class TrsImportView(views.APIView):
         return Response(status=201, data=result.data)
 
 
+@extend_schema(
+    summary='create new RSForm empty or from file',
+    tags=['RSForm']
+)
 @api_view(['POST'])
 def create_rsform(request):
     ''' Endpoint: Create RSForm from user input and/or trs file. '''
@@ -334,6 +442,13 @@ def _prepare_rsform_data(data: dict, request, owner: m.User):
         is_canonical = request.data['is_canonical'] == 'true'
     data['is_canonical'] = is_canonical
 
+
+# TODO: define schema for response
+@extend_schema(
+    request=s.ExpressionSerializer,
+    summary='RS expression into Syntax Tree',
+    tags=['Functions']
+)
 @api_view(['POST'])
 def parse_expression(request):
     ''' Endpoint: Parse RS expression. '''
@@ -344,6 +459,12 @@ def parse_expression(request):
     return Response(json.loads(result))
 
 
+@extend_schema(
+    request=s.ExpressionSerializer,
+    responses={200: s.ResultTextSerializer},
+    summary='Unicode syntax to ASCII TeX',
+    tags=['Functions']
+)
 @api_view(['POST'])
 def convert_to_ascii(request):
     ''' Endpoint: Convert expression to ASCII syntax. '''
@@ -354,6 +475,12 @@ def convert_to_ascii(request):
     return Response({'result': result})
 
 
+@extend_schema(
+    request=s.ExpressionSerializer,
+    responses={200: s.ResultTextSerializer},
+    summary='ASCII TeX syntax to Unicode symbols',
+    tags=['Functions']
+)
 @api_view(['POST'])
 def convert_to_math(request):
     ''' Endpoint: Convert expression to MATH syntax. '''

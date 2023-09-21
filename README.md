@@ -58,6 +58,7 @@ This readme file is used mostly to document project dependencies
   - djangorestframework
   - django-cors-headers
   - django-filter
+  - drf-spectacular
   - tzdata
   - gunicorn
   - coreapi
@@ -72,7 +73,6 @@ This readme file is used mostly to document project dependencies
   - coverage
   - pylint
   - mypy
-  - django-stubs[compatible-mypy]
   - djangorestframework-stubs[compatible-mypy]
   </pre>
 </details>

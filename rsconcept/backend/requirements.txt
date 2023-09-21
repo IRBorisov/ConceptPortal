@@ -3,6 +3,7 @@ django
 djangorestframework
 django-cors-headers
 django-filter
+drf-spectacular
 coreapi
 pymorphy2
 pymorphy2-dicts-ru

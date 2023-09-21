@@ -9,6 +9,7 @@ from . import models
 
 class LoginSerializer(serializers.Serializer):
     ''' Serializer: User authentification by login/password. '''
+    # TODO: declare schema
     username = serializers.CharField(
         label='Имя пользователя',
         write_only=True
@@ -43,6 +44,7 @@ class LoginSerializer(serializers.Serializer):
 
 class AuthSerializer(serializers.Serializer):
     ''' Serializer: Authentication data. '''
+    # TODO: declare schema
     def to_representation(self, instance: models.User) -> dict:
         if instance.is_anonymous:
             return {

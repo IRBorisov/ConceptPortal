@@ -27,6 +27,11 @@ class ExpressionSerializer(serializers.Serializer):
     expression = serializers.CharField()
 
 
+class ResultTextSerializer(serializers.Serializer):
+    ''' Serializer: Text result of a function call. '''
+    result = serializers.CharField()
+
+
 class TextSerializer(serializers.Serializer):
     ''' Serializer: Text with references. '''
     text = serializers.CharField()
@@ -379,6 +384,7 @@ class CstRenameSerializer(serializers.ModelSerializer):
 
 class CstListSerializer(serializers.Serializer):
     ''' Serializer: List of constituents from one origin. '''
+    # TODO: fix schema
     items = serializers.ListField(
         child=CstStandaloneSerializer()
     )
@@ -403,6 +409,7 @@ class CstMoveSerializer(CstListSerializer):
 
 class ResolverSerializer(serializers.Serializer):
     ''' Serializer: Resolver results serializer. '''
+    # TODO: add schema
     def to_representation(self, instance: Resolver) -> dict:
         return {
             'input': instance.input,
