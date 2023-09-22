@@ -8,5 +8,6 @@ git pull
 
 docker compose --file "${COMPOSE_FILE}" up --build --detach
 docker image prune --all --force
-sleep 5
-docker compose --file "${COMPOSE_FILE}" restart
+
+# Use this command to restart containers if something went wrong
+# docker compose --file "docker-compose-prod.yml" restart
