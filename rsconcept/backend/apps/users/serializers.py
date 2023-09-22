@@ -7,9 +7,15 @@ from apps.rsform.models import Subscription
 from . import models
 
 
+class NonFieldErrorSerializer(serializers.Serializer):
+    ''' Serializer: list of non-field errors. '''
+    non_field_errors = serializers.ListField(
+        child=serializers.CharField()
+    )
+
+
 class LoginSerializer(serializers.Serializer):
     ''' Serializer: User authentification by login/password. '''
-    # TODO: declare schema
     username = serializers.CharField(
         label='Имя пользователя',
         write_only=True
@@ -44,7 +50,13 @@ class LoginSerializer(serializers.Serializer):
 
 class AuthSerializer(serializers.Serializer):
     ''' Serializer: Authentication data. '''
-    # TODO: declare schema
+    id = serializers.IntegerField()
+    username = serializers.CharField()
+    is_staff = serializers.BooleanField()
+    subscriptions = serializers.ListField(
+        child=serializers.IntegerField()
+    )
+
     def to_representation(self, instance: models.User) -> dict:
         if instance.is_anonymous:
             return {

@@ -80,7 +80,7 @@ class TestLibraryItem(TestCase):
         testStr = 'Test123'
         item = LibraryItem.objects.create(item_type=LibraryItemType.RSFORM,
                                   title=testStr, owner=self.user1, alias='КС1')
-        self.assertEqual(item.get_absolute_url(), f'/api/library/{item.id}/')
+        self.assertEqual(item.get_absolute_url(), f'/api/library/{item.id}')
 
     def test_create_default(self):
         item = LibraryItem.objects.create(item_type=LibraryItemType.RSFORM, title='Test')

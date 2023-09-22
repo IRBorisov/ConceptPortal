@@ -27,11 +27,6 @@ class ExpressionSerializer(serializers.Serializer):
     expression = serializers.CharField()
 
 
-class ResultTextSerializer(serializers.Serializer):
-    ''' Serializer: Text result of a function call. '''
-    result = serializers.CharField()
-
-
 class TextSerializer(serializers.Serializer):
     ''' Serializer: Text with references. '''
     text = serializers.CharField()
@@ -46,19 +41,232 @@ class LibraryItemSerializer(serializers.ModelSerializer):
         read_only_fields = ('owner', 'id', 'item_type')
 
 
+class FunctionArgSerializer(serializers.Serializer):
+    ''' Serializer: RSLang function argument type. '''
+    alias = serializers.CharField()
+    typification = serializers.CharField()
+
+
+class CstParseSerializer(serializers.Serializer):
+    ''' Serializer: Constituenta parse result. '''
+    status = serializers.CharField()
+    valueClass = serializers.CharField()
+    typification = serializers.CharField()
+    syntaxTree = serializers.CharField()
+    args = serializers.ListField(
+        child=FunctionArgSerializer()
+    )
+
+
+class ErrorDescriptionSerializer(serializers.Serializer):
+    ''' Serializer: RSError description. '''
+    errorType = serializers.IntegerField()
+    position = serializers.IntegerField()
+    isCritical = serializers.BooleanField()
+    params = serializers.ListField(
+        child=serializers.CharField()
+    )
+
+class NodeDataSerializer(serializers.Serializer):
+    ''' Serializer: Node data. '''
+    dataType = serializers.CharField()
+    value = serializers.CharField()
+
+
+class ASTNodeSerializer(serializers.Serializer):
+    ''' Serializer: Syntax tree node. '''
+    uid = serializers.IntegerField()
+    parent = serializers.IntegerField() # type: ignore
+    typeID = serializers.IntegerField()
+    start = serializers.IntegerField()
+    finish = serializers.IntegerField()
+    data = NodeDataSerializer() # type: ignore
+
+
+class ExpressionParseSerializer(serializers.Serializer):
+    ''' Serializer: RSlang expression parse result. '''
+    parseResult = serializers.BooleanField()
+    syntax = serializers.CharField()
+    typification = serializers.CharField()
+    valueClass = serializers.CharField()
+    astText = serializers.CharField()
+    ast = serializers.ListField(
+        child=ASTNodeSerializer()
+    )
+    errors = serializers.ListField( # type: ignore
+        child=ErrorDescriptionSerializer()
+    )
+    args = serializers.ListField(
+        child=FunctionArgSerializer()
+    )
+
+
 class LibraryItemDetailsSerializer(serializers.ModelSerializer):
     ''' Serializer: LibraryItem detailed data. '''
+    subscribers = serializers.SerializerMethodField()
+
     class Meta:
         ''' serializer metadata. '''
         model = LibraryItem
         fields = '__all__'
         read_only_fields = ('owner', 'id', 'item_type')
 
-    def to_representation(self, instance: LibraryItem):
-        result = super().to_representation(instance)
-        result['subscribers'] = [item.pk for item in instance.subscribers()]
+    def get_subscribers(self, instance: LibraryItem) -> list[int]:
+        return [item.pk for item in instance.subscribers()]
+
+
+class ConstituentaSerializer(serializers.ModelSerializer):
+    ''' Serializer: Constituenta data. '''
+    class Meta:
+        ''' serializer metadata. '''
+        model = Constituenta
+        fields = '__all__'
+        read_only_fields = ('id', 'order', 'alias', 'cst_type', 'definition_resolved', 'term_resolved')
+
+    def update(self, instance: Constituenta, validated_data) -> Constituenta:
+        schema = RSForm(instance.schema)
+        definition: Optional[str] = validated_data['definition_raw'] if 'definition_raw' in validated_data else None
+        term: Optional[str] = validated_data['term_raw'] if 'term_raw' in validated_data else None
+        term_changed = False
+        if definition is not None and definition != instance.definition_raw :
+            validated_data['definition_resolved'] = schema.resolver().resolve(definition)
+        if term is not None and term != instance.term_raw:
+            validated_data['term_resolved'] = schema.resolver().resolve(term)
+            if validated_data['term_resolved'] != instance.term_resolved:
+                validated_data['term_forms'] = []
+            term_changed = validated_data['term_resolved'] != instance.term_resolved
+        result: Constituenta = super().update(instance, validated_data)
+        if term_changed:
+            schema.on_term_change([result.alias])
+            result.refresh_from_db()
+        schema.item.save()
         return result
 
+
+class CstCreateSerializer(serializers.ModelSerializer):
+    ''' Serializer: Constituenta creation. '''
+    insert_after = serializers.IntegerField(required=False, allow_null=True)
+
+    class Meta:
+        ''' serializer metadata. '''
+        model = Constituenta
+        fields = 'alias', 'cst_type', 'convention', 'term_raw', 'definition_raw', 'definition_formal', 'insert_after'
+
+
+class CstRenameSerializer(serializers.ModelSerializer):
+    ''' Serializer: Constituenta renaming. '''
+    class Meta:
+        ''' serializer metadata. '''
+        model = Constituenta
+        fields = 'id', 'alias', 'cst_type'
+
+    def validate(self, attrs):
+        schema = cast(RSForm, self.context['schema'])
+        old_cst = Constituenta.objects.get(pk=self.initial_data['id'])
+        if old_cst.schema != schema.item:
+            raise serializers.ValidationError({
+                'id': f'Изменяемая конституента должна относиться к изменяемой схеме: {schema.item.title}'
+            })
+        if old_cst.alias == self.initial_data['alias']:
+            raise serializers.ValidationError({
+                'alias': f'Имя конституенты должно отличаться от текущего: {self.initial_data["alias"]}'
+            })
+        self.instance = old_cst
+        attrs['schema'] = schema.item
+        attrs['id'] = self.initial_data['id']
+        return attrs
+
+
+class CstListSerializer(serializers.Serializer):
+    ''' Serializer: List of constituents from one origin. '''
+    items = serializers.ListField(
+        child=serializers.IntegerField()
+    )
+
+    def validate(self, attrs):
+        schema = self.context['schema']
+        cstList = []
+        for item in attrs['items']:
+            try:
+                cst = Constituenta.objects.get(pk=item)
+            except Constituenta.DoesNotExist as exception:
+                raise serializers.ValidationError(
+                    {f"{item}": 'Конституента не существует'}
+                ) from exception
+            if cst.schema != schema.item:
+                raise serializers.ValidationError(
+                    {'items': f'Конституенты должны относиться к данной схеме: {item}'})
+            cstList.append(cst)
+        attrs['constituents'] = cstList
+        return attrs
+
+
+class CstMoveSerializer(CstListSerializer):
+    ''' Serializer: Change constituenta position. '''
+    move_to = serializers.IntegerField()
+
+
+class TextPositionSerializer(serializers.Serializer):
+    ''' Serializer: Text position. '''
+    start = serializers.IntegerField()
+    finish = serializers.IntegerField()
+
+
+class ReferenceDataSerializer(serializers.Serializer):
+    ''' Serializer: Reference data - Union of all references. '''
+    offset = serializers.IntegerField()
+    nominal = serializers.CharField()
+    entity = serializers.CharField()
+    form = serializers.CharField()
+
+
+class ReferenceSerializer(serializers.Serializer):
+    ''' Serializer: Language reference. '''
+    type = serializers.CharField()
+    data = ReferenceDataSerializer() # type: ignore
+    pos_input = TextPositionSerializer()
+    pos_output = TextPositionSerializer()
+
+
+class ResolverSerializer(serializers.Serializer):
+    ''' Serializer: Resolver results serializer. '''
+    input = serializers.CharField()
+    output = serializers.CharField()
+    refs = serializers.ListField(
+        child=ReferenceSerializer()
+    )
+
+    def to_representation(self, instance: Resolver) -> dict:
+        return {
+            'input': instance.input,
+            'output': instance.output,
+            'refs': [{
+                'type': ref.ref.get_type().value,
+                'data': self._get_reference_data(ref.ref),
+                'resolved': ref.resolved,
+                'pos_input': {
+                    'start': ref.pos_input.start,
+                    'finish': ref.pos_input.finish
+                },
+                'pos_output': {
+                    'start': ref.pos_output.start,
+                    'finish': ref.pos_output.finish
+                }
+            } for ref in instance.refs]
+        }
+
+    @staticmethod
+    def _get_reference_data(ref: Reference) -> dict:
+        if ref.get_type() == ReferenceType.entity:
+            return {
+                'entity': cast(EntityReference, ref).entity,
+                'form': cast(EntityReference, ref).form
+            }
+        else:
+            return {
+                'offset': cast(SyntacticReference, ref).offset,
+                'nominal': cast(SyntacticReference, ref).nominal
+            }
 
 class PyConceptAdapter:
     ''' RSForm adapter for interacting with pyconcept module. '''
@@ -113,27 +321,54 @@ class PyConceptAdapter:
 
 class RSFormSerializer(serializers.ModelSerializer):
     ''' Serializer: Detailed data for RSForm. '''
+    subscribers = serializers.ListField(
+        child=serializers.IntegerField()
+    )
+    items = serializers.ListField(
+        child=ConstituentaSerializer()
+    )
+
     class Meta:
         ''' serializer metadata. '''
-        model = RSForm
+        model = LibraryItem
+        fields = '__all__'
 
-    def to_representation(self, instance: RSForm):
-        result = LibraryItemDetailsSerializer(instance.item).data
+    def to_representation(self, instance: LibraryItem):
+        result = LibraryItemDetailsSerializer(instance).data
+        schema = RSForm(instance)
         result['items'] = []
-        for cst in instance.constituents().order_by('order'):
+        for cst in schema.constituents().order_by('order'):
             result['items'].append(ConstituentaSerializer(cst).data)
         return result
 
 
-class RSFormParseSerializer(serializers.ModelSerializer):
-    ''' Serializer: Detailed data for RSForm including parse. '''
+class CstDetailsSerializer(serializers.ModelSerializer):
+    ''' Serializer: Constituenta data including parse. '''
+    parse = CstParseSerializer()
+
     class Meta:
         ''' serializer metadata. '''
-        model = RSForm
+        model = Constituenta
+        fields = '__all__'
 
-    def to_representation(self, instance: RSForm):
+
+class RSFormParseSerializer(serializers.ModelSerializer):
+    ''' Serializer: Detailed data for RSForm including parse. '''
+    subscribers = serializers.ListField(
+        child=serializers.IntegerField()
+    )
+    items = serializers.ListField(
+        child=CstDetailsSerializer()
+    )
+
+    class Meta:
+        ''' serializer metadata. '''
+        model = LibraryItem
+        fields = '__all__'
+
+    def to_representation(self, instance: LibraryItem):
         result = RSFormSerializer(instance).data
-        parse = PyConceptAdapter(instance).parse()
+        parse = PyConceptAdapter(RSForm(instance)).parse()
         for cst_data in result['items']:
             cst_data['parse'] = next(
                 cst['parse'] for cst in parse['items']
@@ -302,142 +537,12 @@ class RSFormTRSSerializer(serializers.Serializer):
             cst.term_raw = ''
             cst.term_forms = []
 
-
-class ConstituentaSerializer(serializers.ModelSerializer):
-    ''' Serializer: Constituenta data. '''
-    class Meta:
-        ''' serializer metadata. '''
-        model = Constituenta
-        fields = '__all__'
-        read_only_fields = ('id', 'order', 'alias', 'cst_type', 'definition_resolved', 'term_resolved')
-
-    def update(self, instance: Constituenta, validated_data) -> Constituenta:
-        schema = RSForm(instance.schema)
-        definition: Optional[str] = validated_data['definition_raw'] if 'definition_raw' in validated_data else None
-        term: Optional[str] = validated_data['term_raw'] if 'term_raw' in validated_data else None
-        term_changed = False
-        if definition is not None and definition != instance.definition_raw :
-            validated_data['definition_resolved'] = schema.resolver().resolve(definition)
-        if term is not None and term != instance.term_raw:
-            validated_data['term_resolved'] = schema.resolver().resolve(term)
-            if validated_data['term_resolved'] != instance.term_resolved:
-                validated_data['term_forms'] = []
-            term_changed = validated_data['term_resolved'] != instance.term_resolved
-        result: Constituenta = super().update(instance, validated_data)
-        if term_changed:
-            schema.on_term_change([result.alias])
-            result.refresh_from_db()
-        schema.item.save()
-        return result
+class ResultTextResponse(serializers.Serializer):
+    ''' Serializer: Text result of a function call. '''
+    result = serializers.CharField()
 
 
-class CstStandaloneSerializer(serializers.ModelSerializer):
-    ''' Serializer: Constituenta in current context. '''
-    id = serializers.IntegerField()
-
-    class Meta:
-        ''' serializer metadata. '''
-        model = Constituenta
-        exclude = ('schema', )
-
-    def validate(self, attrs):
-        try:
-            attrs['object'] = Constituenta.objects.get(pk=attrs['id'])
-        except Constituenta.DoesNotExist as exception:
-            raise serializers.ValidationError({f"{attrs['id']}": 'Конституента не существует'}) from exception
-        return attrs
-
-
-class CstCreateSerializer(serializers.ModelSerializer):
-    ''' Serializer: Constituenta creation. '''
-    insert_after = serializers.IntegerField(required=False, allow_null=True)
-
-    class Meta:
-        ''' serializer metadata. '''
-        model = Constituenta
-        fields = 'alias', 'cst_type', 'convention', 'term_raw', 'definition_raw', 'definition_formal', 'insert_after'
-
-
-class CstRenameSerializer(serializers.ModelSerializer):
-    ''' Serializer: Constituenta renaming. '''
-    class Meta:
-        ''' serializer metadata. '''
-        model = Constituenta
-        fields = 'id', 'alias', 'cst_type'
-
-    def validate(self, attrs):
-        schema = cast(RSForm, self.context['schema'])
-        old_cst = Constituenta.objects.get(pk=self.initial_data['id'])
-        if old_cst.schema != schema.item:
-            raise serializers.ValidationError({
-                'id': f'Изменяемая конституента должна относиться к изменяемой схеме: {schema.item.title}'
-            })
-        if old_cst.alias == self.initial_data['alias']:
-            raise serializers.ValidationError({
-                'alias': f'Имя конституенты должно отличаться от текущего: {self.initial_data["alias"]}'
-            })
-        self.instance = old_cst
-        attrs['schema'] = schema.item
-        attrs['id'] = self.initial_data['id']
-        return attrs
-
-
-class CstListSerializer(serializers.Serializer):
-    ''' Serializer: List of constituents from one origin. '''
-    # TODO: fix schema
-    items = serializers.ListField(
-        child=CstStandaloneSerializer()
-    )
-
-    def validate(self, attrs):
-        schema = self.context['schema']
-        cstList = []
-        for item in attrs['items']:
-            cst = item['object']
-            if cst.schema != schema.item:
-                raise serializers.ValidationError(
-                    {'items': f'Конституенты должны относиться к данной схеме: {item}'})
-            cstList.append(cst)
-        attrs['constituents'] = cstList
-        return attrs
-
-
-class CstMoveSerializer(CstListSerializer):
-    ''' Serializer: Change constituenta position. '''
-    move_to = serializers.IntegerField()
-
-
-class ResolverSerializer(serializers.Serializer):
-    ''' Serializer: Resolver results serializer. '''
-    # TODO: add schema
-    def to_representation(self, instance: Resolver) -> dict:
-        return {
-            'input': instance.input,
-            'output': instance.output,
-            'refs': [{
-                'type': ref.ref.get_type().value,
-                'data': self._get_reference_data(ref.ref),
-                'resolved': ref.resolved,
-                'pos_input': {
-                    'start': ref.pos_input.start,
-                    'finish': ref.pos_input.finish
-                },
-                'pos_output': {
-                    'start': ref.pos_output.start,
-                    'finish': ref.pos_output.finish
-                }
-            } for ref in instance.refs]
-        }
-
-    @staticmethod
-    def _get_reference_data(ref: Reference) -> dict:
-        if ref.get_type() == ReferenceType.entity:
-            return {
-                'entity': cast(EntityReference, ref).entity,
-                'form': cast(EntityReference, ref).form
-            }
-        else:
-            return {
-                'offset': cast(SyntacticReference, ref).offset,
-                'nominal': cast(SyntacticReference, ref).nominal
-            }
+class NewCstResponse(serializers.Serializer):
+    ''' Serializer: Create cst response. '''
+    new_cst = ConstituentaSerializer()
+    schema = RSFormParseSerializer()

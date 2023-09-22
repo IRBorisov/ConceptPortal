@@ -220,7 +220,7 @@ export function postNewConstituenta(schema: string, request: FrontExchange<ICstC
 
 export function patchDeleteConstituenta(schema: string, request: FrontExchange<IConstituentaList, IRSFormData>) {
   AxiosPatch({
-    title: `Delete Constituents for RSForm id=${schema}: ${request.data.items.map(item => String(item.id)).join(' ')}`,
+    title: `Delete Constituents for RSForm id=${schema}: ${request.data.items.map(item => String(item)).join(' ')}`,
     endpoint: `/api/rsforms/${schema}/cst-multidelete`,
     request: request
   });

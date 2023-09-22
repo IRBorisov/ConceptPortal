@@ -67,9 +67,8 @@ extends IConstituentaMeta {
   }
 }
 
-export interface IConstituentaID extends Pick<IConstituentaMeta, 'id'>{}
 export interface IConstituentaList {
-  items: IConstituentaID[]
+  items: number[]
 }
 
 export interface ICstCreateData 

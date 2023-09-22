@@ -14,8 +14,8 @@ function RunServer() {
 	BackendRun
 	FrontendRun
     Start-Sleep -Seconds 1
-    Start-Process "http://localhost:8000/"
-    Start-Process "http://localhost:3000/"
+    Start-Process "http://localhost:8000"
+    Start-Process "http://localhost:3000"
 }
 
 function BackendRun() {

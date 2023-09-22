@@ -122,7 +122,7 @@ class LibraryItem(Model):
         return f'{self.title}'
 
     def get_absolute_url(self):
-        return f'/api/library/{self.pk}/'
+        return f'/api/library/{self.pk}'
 
     def subscribers(self) -> list[User]:
         ''' Get all subscribers for this item . '''

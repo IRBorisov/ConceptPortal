@@ -224,19 +224,19 @@ class TestLibraryViewset(APITestCase):
 
     def test_subscriptions(self):
         response = self.client.delete(f'/api/library/{self.unowned.id}/unsubscribe')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 204)
         self.assertFalse(self.user in self.unowned.subscribers())
 
         response = self.client.post(f'/api/library/{self.unowned.id}/subscribe')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 204)
         self.assertTrue(self.user in self.unowned.subscribers())
 
         response = self.client.post(f'/api/library/{self.unowned.id}/subscribe')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 204)
         self.assertTrue(self.user in self.unowned.subscribers())
 
         response = self.client.delete(f'/api/library/{self.unowned.id}/unsubscribe')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 204)
         self.assertFalse(self.user in self.unowned.subscribers())
 
 
@@ -458,14 +458,14 @@ class TestRSFormViewset(APITestCase):
 
     def test_delete_constituenta(self):
         schema = self.owned
-        data = json.dumps({'items': [{'id': 1337}]})
+        data = json.dumps({'items': [1337]})
         response = self.client.patch(f'/api/rsforms/{schema.item.id}/cst-multidelete',
                                      data=data, content_type='application/json')
         self.assertEqual(response.status_code, 400)
 
         x1 = Constituenta.objects.create(schema=schema.item, alias='X1', cst_type='basic', order=1)
         x2 = Constituenta.objects.create(schema=schema.item, alias='X2', cst_type='basic', order=2)
-        data = json.dumps({'items': [{'id': x1.id}]})
+        data = json.dumps({'items': [x1.id]})
         response = self.client.patch(f'/api/rsforms/{schema.item.id}/cst-multidelete',
                                      data=data, content_type='application/json')
         x2.refresh_from_db()
@@ -477,21 +477,21 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(x2.order, 1)
 
         x3 = Constituenta.objects.create(schema=self.unowned.item, alias='X1', cst_type='basic', order=1)
-        data = json.dumps({'items': [{'id': x3.id}]})
+        data = json.dumps({'items': [x3.id]})
         response = self.client.patch(f'/api/rsforms/{schema.item.id}/cst-multidelete',
                                      data=data, content_type='application/json')
         self.assertEqual(response.status_code, 400)
 
     def test_move_constituenta(self):
         item = self.owned.item
-        data = json.dumps({'items': [{'id': 1337}], 'move_to': 1})
+        data = json.dumps({'items': [1337], 'move_to': 1})
         response = self.client.patch(f'/api/rsforms/{item.id}/cst-moveto',
                                      data=data, content_type='application/json')
         self.assertEqual(response.status_code, 400)
 
         x1 = Constituenta.objects.create(schema=item, alias='X1', cst_type='basic', order=1)
         x2 = Constituenta.objects.create(schema=item, alias='X2', cst_type='basic', order=2)
-        data = json.dumps({'items': [{'id': x2.id}], 'move_to': 1})
+        data = json.dumps({'items': [x2.id], 'move_to': 1})
         response = self.client.patch(f'/api/rsforms/{item.id}/cst-moveto',
                                      data=data, content_type='application/json')
         x1.refresh_from_db()
@@ -502,7 +502,7 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(x2.order, 1)
 
         x3 = Constituenta.objects.create(schema=self.unowned.item, alias='X1', cst_type='basic', order=1)
-        data = json.dumps({'items': [{'id': x3.id}], 'move_to': 1})
+        data = json.dumps({'items': [x3.id], 'move_to': 1})
         response = self.client.patch(f'/api/rsforms/{item.id}/cst-moveto',
                                      data=data, content_type='application/json')
         self.assertEqual(response.status_code, 400)

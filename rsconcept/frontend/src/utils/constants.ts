@@ -21,7 +21,7 @@ export const urls = {
 
   gitrepo: 'https://github.com/IRBorisov/ConceptPortal',
   mailportal: 'mailto:portal@acconcept.ru',
-  restapi: 'https://api.portal.acconcept.ru/docs'
+  restapi: 'https://api.portal.acconcept.ru/docs/'
 };
 
 export const resources = {

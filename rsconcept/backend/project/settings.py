@@ -86,9 +86,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'project.urls'
-LOGIN_URL = '/admin/login/'
+LOGIN_URL = '/admin/login'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+APPEND_SLASH = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -140,6 +141,20 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'Портал для работы с экспликациями концептуальных схем',
     'VERSION': '0.1.0',
     'SERVE_INCLUDE_SCHEMA': False,
+
+    'COMPONENT_SPLIT_PATCH': True,
+    'COMPONENT_SPLIT_REQUEST': True,
+
+    'SERVE_PERMISSIONS': ['rest_framework.permissions.AllowAny'],
+    'SERVE_AUTHENTICATION': None,
+
+    'DISABLE_ERRORS_AND_WARNINGS': False,
+
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "persistAuthorization": True,
+        "withCredentials": True
+    }
 }
 
 
