@@ -11,8 +11,7 @@ urlpatterns = [
     path('admin', admin.site.urls),
     path('api/', include('apps.rsform.urls')),
     path('users/', include('apps.users.urls')),
-    path('docs/', SpectacularSwaggerView.as_view(), name='docs'),
     path('schema', SpectacularAPIView.as_view(), name='schema'),
     path('redoc', SpectacularRedocView.as_view()),
-    path('', lambda: redirect('docs/', permanent=True)),
+    path('', SpectacularSwaggerView.as_view(), name='home'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
