@@ -21,14 +21,19 @@ def parse(text: str, require_grams: str = '') -> str:
     return result if result != 'UNKN' else ''
 
 
-def get_all_forms(text_normal: str) -> list[tuple[str, str]]:
-    ''' Get all infeclted forms. '''
+# def parse_variants(text: str, require_grams: str = '') -> list[tuple[str, str]]:
+#     ''' Get all variants of a parse.
+#     ::returns:: string of comma separated grammar tags or empty string '''
+
+
+def generate_lexeme(text_normal: str) -> list[tuple[str, str]]:
+    ''' Get all inflected forms belonging to same Lexeme. '''
     model = parser.parse(text_normal)
     if not model:
         return []
     result = []
     for form in model.get_form().lexeme:
-        result.append((form.word, Morphology(form.tag).to_text()))
+        result.append((model.inflect(form.tag.grammemes), Morphology(form.tag).to_text()))
     return result
 
 

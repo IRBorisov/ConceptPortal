@@ -6,14 +6,17 @@ from zipfile import ZipFile
 from rest_framework.test import APITestCase, APIRequestFactory, APIClient
 from rest_framework.exceptions import ErrorDetail
 
-from cctext import ReferenceType
+from cctext import ReferenceType, split_grams
 
 from apps.users.models import User
 from apps.rsform.models import Syntax, RSForm, Constituenta, CstType, LibraryItem, LibraryItemType, Subscription
 from apps.rsform.views import (
     convert_to_ascii,
     convert_to_math,
-    parse_expression
+    parse_expression,
+    inflect,
+    parse_text,
+    generate_lexeme
 )
 
 
@@ -572,7 +575,7 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(response.data['items'][1]['term_resolved'], d1.term_resolved)
 
 
-class TestFunctionalViews(APITestCase):
+class TestRSLanguageViews(APITestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
         self.user = User.objects.create(username='UserTest')
@@ -601,35 +604,35 @@ class TestFunctionalViews(APITestCase):
 
     def test_convert_to_ascii(self):
         data = {'expression': '1=1'}
-        request = self.factory.post('/api/func/to-ascii', data)
+        request = self.factory.post('/api/rslang/to-ascii', data)
         response = convert_to_ascii(request)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['result'], r'1 \eq 1')
 
     def test_convert_to_ascii_missing_data(self):
         data = {'data': '1=1'}
-        request = self.factory.post('/api/func/to-ascii', data)
+        request = self.factory.post('/api/rslang/to-ascii', data)
         response = convert_to_ascii(request)
         self.assertEqual(response.status_code, 400)
         self.assertIsInstance(response.data['expression'][0], ErrorDetail)
 
     def test_convert_to_math(self):
         data = {'expression': r'1 \eq 1'}
-        request = self.factory.post('/api/func/to-math', data)
+        request = self.factory.post('/api/rslang/to-math', data)
         response = convert_to_math(request)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['result'], r'1=1')
 
     def test_convert_to_math_missing_data(self):
         data = {'data': r'1 \eq 1'}
-        request = self.factory.post('/api/func/to-math', data)
+        request = self.factory.post('/api/rslang/to-math', data)
         response = convert_to_math(request)
         self.assertEqual(response.status_code, 400)
         self.assertIsInstance(response.data['expression'][0], ErrorDetail)
 
     def test_parse_expression(self):
         data = {'expression': r'1=1'}
-        request = self.factory.post('/api/func/parse-expression', data)
+        request = self.factory.post('/api/rslang/parse-expression', data)
         response = parse_expression(request)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['parseResult'], True)
@@ -638,7 +641,38 @@ class TestFunctionalViews(APITestCase):
 
     def test_parse_expression_missing_data(self):
         data = {'data': r'1=1'}
-        request = self.factory.post('/api/func/parse-expression', data)
+        request = self.factory.post('/api/rslang/parse-expression', data)
         response = parse_expression(request)
         self.assertEqual(response.status_code, 400)
         self.assertIsInstance(response.data['expression'][0], ErrorDetail)
+
+
+class TestNaturalLanguageViews(APITestCase):
+    def setUp(self):
+        self.factory = APIRequestFactory()
+        self.client = APIClient()
+
+    def _assert_tags(self, actual: str, expected: str):
+        self.assertEqual(set(split_grams(actual)), set(split_grams(expected)))
+
+    def test_parse_text(self):
+        data = {'text': 'синим слонам'}
+        request = self.factory.post('/api/cctext/parse', data)
+        response = parse_text(request)
+        self.assertEqual(response.status_code, 200)
+        self._assert_tags(response.data['result'], 'datv,NOUN,plur,anim,masc')
+
+    def test_inflect(self):
+        data = {'text': 'синий слон', 'grams': 'plur,datv'}
+        request = self.factory.post('/api/cctext/inflect', data)
+        response = inflect(request)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['result'], 'синим слонам')
+
+    def test_generate_lexeme(self):
+        data = {'text': 'синий слон'}
+        request = self.factory.post('/api/cctext/generate-lexeme', data)
+        response = generate_lexeme(request)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data['items']), 12)
+        self.assertEqual(response.data['items'][0]['text'], 'синий слон')

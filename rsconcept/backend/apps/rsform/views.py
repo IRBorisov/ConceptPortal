@@ -13,6 +13,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status as c
 
 import pyconcept
+import cctext
 from . import models as m
 from . import serializers as s
 from . import utils
@@ -527,7 +528,10 @@ def convert_to_ascii(request):
     serializer.is_valid(raise_exception=True)
     expression = serializer.validated_data['expression']
     result = pyconcept.convert_to_ascii(expression)
-    return Response({'result': result})
+    return Response(
+        status=c.HTTP_200_OK,
+        data={'result': result}
+    )
 
 
 @extend_schema(
@@ -544,4 +548,67 @@ def convert_to_math(request):
     serializer.is_valid(raise_exception=True)
     expression = serializer.validated_data['expression']
     result = pyconcept.convert_to_math(expression)
-    return Response({'result': result})
+    return Response(
+        status=c.HTTP_200_OK,
+        data={'result': result}
+    )
+
+@extend_schema(
+    summary='generate wordform',
+    tags=['NaturalLanguage'],
+    request=s.WordFormSerializer,
+    responses={200: s.ResultTextResponse},
+    auth=None
+)
+@api_view(['POST'])
+def inflect(request):
+    ''' Endpoint: Generate wordform with set grammemes. '''
+    serializer = s.WordFormSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    text = serializer.validated_data['text']
+    grams = serializer.validated_data['grams']
+    result = cctext.inflect(text, grams)
+    return Response(
+        status=c.HTTP_200_OK,
+        data={'result': result}
+    )
+
+
+@extend_schema(
+    summary='basic set of wordforms',
+    tags=['NaturalLanguage'],
+    request=s.TextSerializer,
+    responses={200: s.MultiFormSerializer},
+    auth=None
+)
+@api_view(['POST'])
+def generate_lexeme(request):
+    ''' Endpoint: Generate basic set of wordforms. '''
+    serializer = s.TextSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    nominal = serializer.validated_data['text']
+    result = cctext.generate_lexeme(nominal)
+    return Response(
+        status=c.HTTP_200_OK,
+        data=s.MultiFormSerializer.from_list(result)
+    )
+
+
+@extend_schema(
+    summary='get all language parse variants',
+    tags=['NaturalLanguage'],
+    request=s.TextSerializer,
+    responses={200: s.ResultTextResponse},
+    auth=None
+)
+@api_view(['POST'])
+def parse_text(request):
+    ''' Endpoint: Get likely vocabulary parse. '''
+    serializer = s.TextSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    text = serializer.validated_data['text']
+    result = cctext.parse(text)
+    return Response(
+        status=c.HTTP_200_OK,
+        data={'result': result}
+    )

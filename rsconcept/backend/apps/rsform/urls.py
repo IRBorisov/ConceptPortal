@@ -12,8 +12,14 @@ urlpatterns = [
     path('constituents/<int:pk>', views.ConstituentAPIView.as_view(), name='constituenta-detail'),
     path('rsforms/import-trs', views.TrsImportView.as_view()),
     path('rsforms/create-detailed', views.create_rsform),
-    path('func/parse-expression', views.parse_expression),
-    path('func/to-ascii', views.convert_to_ascii),
-    path('func/to-math', views.convert_to_math),
+
+    path('rslang/parse-expression', views.parse_expression),
+    path('rslang/to-ascii', views.convert_to_ascii),
+    path('rslang/to-math', views.convert_to_math),
+
+    path('cctext/inflect', views.inflect),
+    path('cctext/generate-lexeme', views.generate_lexeme),
+    path('cctext/parse', views.parse_text),
+
     path('', include(library_router.urls)),
 ]

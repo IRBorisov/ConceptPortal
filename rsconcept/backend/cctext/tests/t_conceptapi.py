@@ -21,14 +21,19 @@ class TestConceptAPI(unittest.TestCase):
         self.assertEqual(cc.normalize('первого'), 'первый')
         self.assertEqual(cc.normalize('диких людей'), 'дикий человек')
 
-    def test_get_all_forms(self):
+    def test_generate_lexeme(self):
         ''' Test all lexical forms. '''
-        self.assertEqual(cc.get_all_forms(''), [])
+        self.assertEqual(cc.generate_lexeme(''), [])
 
-        forms = cc.get_all_forms('наверное')
+        forms = cc.generate_lexeme('наверное')
         self.assertEqual(len(forms), 1)
         self.assertEqual(forms[0][0], 'наверное')
         self._assert_tags(forms[0][1], 'CONJ,Prnt')
+
+        forms = cc.generate_lexeme('молодой человек')
+        self.assertEqual(len(forms), 19)
+        self.assertEqual(forms[0][0], 'молодой человек')
+        self._assert_tags(forms[0][1], 'nomn,masc,sing,anim,NOUN')
 
     def test_inflect(self):
         ''' Test inflection. '''

@@ -27,6 +27,30 @@ class ExpressionSerializer(serializers.Serializer):
     expression = serializers.CharField()
 
 
+class WordFormSerializer(serializers.Serializer):
+    ''' Serializer: inflect request. '''
+    text = serializers.CharField()
+    grams = serializers.CharField()
+
+
+class MultiFormSerializer(serializers.Serializer):
+    ''' Serializer: inflect request. '''
+    items = serializers.ListField(
+        child=WordFormSerializer()
+    )
+
+    @staticmethod
+    def from_list(data: list[tuple[str, str]]) -> dict:
+        result: dict = {}
+        result['items'] = []
+        for item in data:
+            result['items'].append({
+                'text': item[0],
+                'grams': item[1]
+            })
+        return result
+
+
 class TextSerializer(serializers.Serializer):
     ''' Serializer: Text with references. '''
     text = serializers.CharField()

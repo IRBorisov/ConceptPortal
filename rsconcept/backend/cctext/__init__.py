@@ -9,7 +9,7 @@ from .resolver import Reference, Position, Resolver, ResolvedReference, resolve_
 
 from .conceptapi import (
     parse, normalize,
-    get_all_forms, inflect, inflect_context, inflect_substitute, inflect_dependant,
+    generate_lexeme, inflect, inflect_context, inflect_substitute, inflect_dependant,
     match_all_morpho, find_substr
 )
 
