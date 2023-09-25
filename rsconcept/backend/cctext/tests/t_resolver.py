@@ -2,9 +2,11 @@
 import unittest
 from typing import cast
 
+from django.test import tag
+
 from cctext import (
     EntityReference, TermContext, Entity, SyntacticReference,
-    Resolver, ResolvedReference, Position,
+    Resolver, ResolvedReference, Position, TermForm,
     resolve_entity, resolve_syntactic, extract_entities
 )
 
@@ -88,3 +90,20 @@ class TestResolver(unittest.TestCase):
         self.assertEqual(self.resolver.refs[1].pos_output, Position(9, 15))
         self.assertEqual(self.resolver.refs[2].pos_input, Position(28, 38))
         self.assertEqual(self.resolver.refs[2].pos_output, Position(16, 20))
+
+    def test_resolve_manual_forms(self):
+        self.context['X1'] = Entity(
+            alias='X1',
+            nominal='человек',
+            manual_forms=[
+                TermForm(text='тест1', grams='NOUN,sing'.split(',')),
+                TermForm(text='тест2', grams='NOUN,datv,plur'.split(','))
+            ]
+        )
+        self.assertEqual(self.resolver.resolve('@{X1|NOUN,sing,nomn}'), 'тест1', 'Match subset')
+        self.assertEqual(self.resolver.resolve('@{X1|NOUN,sing}'), 'тест1', 'Match full')
+        self.assertEqual(self.resolver.resolve('@{X1|NOUN,datv,plur}'), 'тест2')
+        self.assertEqual(self.resolver.resolve('@{X1|NOUN,plur,datv}'), 'тест2', 'Match any order')
+        self.assertEqual(self.resolver.resolve('@{X1|datv,plur}'), 'тест2', 'Match missing POS')
+        self.assertEqual(self.resolver.resolve('@{X1|NOUN,datv,sing}'), 'тест1')
+        self.assertEqual(self.resolver.resolve('@{X1|VERB,datv,plur}'), 'человек')

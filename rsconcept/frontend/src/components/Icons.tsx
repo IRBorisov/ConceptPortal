@@ -252,6 +252,22 @@ export function ArrowDownIcon(props: IconProps) {
   );
 }
 
+export function ArrowLeftIcon(props: IconProps) {
+  return (
+    <IconSVG viewbox='0 0 24 24' {...props}>
+      <path d='M12.707 17.293L8.414 13H18v-2H8.414l4.293-4.293-1.414-1.414L4.586 12l6.707 6.707z' />
+    </IconSVG>
+  );
+}
+
+export function ArrowRightIcon(props: IconProps) {
+  return (
+    <IconSVG viewbox='0 0 24 24' {...props}>
+      <path d='M11.293 17.293l1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z' />
+    </IconSVG>
+  );
+}
+
 export function CloneIcon(props: IconProps) {
   return (
     <IconSVG viewbox='0 0 512 512' {...props}>
@@ -403,6 +419,15 @@ export function ChevronDoubleUpIcon(props: IconProps) {
     <IconSVG viewbox='0 0 24 24' {...props}>
       <path d='M6.293 11.293l1.414 1.414L12 8.414l4.293 4.293 1.414-1.414L12 5.586z' />
       <path d='M6.293 16.293l1.414 1.414L12 13.414l4.293 4.293 1.414-1.414L12 10.586z' />
+    </IconSVG>
+  );
+}
+
+export function ChevronDoubleDownIcon(props: IconProps) {
+  return (
+    <IconSVG viewbox='0 0 24 24' {...props}>
+      <path d='M12 15.586l-4.293-4.293-1.414 1.414L12 18.414l5.707-5.707-1.414-1.414z' />
+      <path d='M17.707 7.707l-1.414-1.414L12 10.586 7.707 6.293 6.293 7.707 12 13.414z' />
     </IconSVG>
   );
 }

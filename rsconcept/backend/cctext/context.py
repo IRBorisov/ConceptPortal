@@ -1,24 +1,40 @@
 ''' Term context for reference resolution. '''
 from typing import Iterable, Dict, Optional, TypedDict
 
-from .conceptapi import inflect
+from .ruparser import PhraseParser
+from .rumodel import WordTag
+
+
+parser = PhraseParser()
 
 
 class TermForm(TypedDict):
-    ''' Term in a specific form. '''
+    ''' Represents term in a specific form. '''
     text: str
-    tags: str
+    grams: Iterable[str]
 
 
-def _search_form(query: str, data: Iterable[TermForm]) -> Optional[str]:
-    for tf in data:
-        if tf['tags'] == query:
-            return tf['text']
+def _match_grams(query: Iterable[str], test: Iterable[str]) -> bool:
+    ''' Check if grams from test fit query. '''
+    for gram in test:
+        if not gram in query:
+            if not gram in WordTag.PARTS_OF_SPEECH:
+                return False
+            for pos in WordTag.PARTS_OF_SPEECH:
+                if pos in query:
+                    return False
+    return True
+
+
+def _search_form(query: Iterable[str], data: Iterable[TermForm]) -> Optional[str]:
+    for form in data:
+        if _match_grams(query, form['grams']):
+            return form['text']
     return None
 
 
 class Entity:
-    ''' Text entity. '''
+    ''' Represents text entity. '''
     def __init__(self, alias: str, nominal: str, manual_forms: Optional[Iterable[TermForm]]=None):
         if manual_forms is None:
             self.manual = []
@@ -41,20 +57,28 @@ class Entity:
         self.manual = []
         self._cached = []
 
-    def get_form(self, form: str) -> str:
+    def get_form(self, grams: Iterable[str]) -> str:
         ''' Get specific term form. '''
-        if form == '':
+        if all(False for _ in grams):
             return self._nominal
-        text = _search_form(form, self.manual)
-        if text is None:
-            text = _search_form(form, self._cached)
-            if text is None:
-                try:
-                    text = inflect(self._nominal, form)
-                except ValueError as error:
-                    text = f'!{error}!'.replace('Unknown grammeme', 'Неизвестная граммема')
-                self._cached.append({'text': text, 'tags': form})
+        text = _search_form(grams, self.manual)
+        if text is not None:
+            return text
+        text = _search_form(grams, self._cached)
+        if text is not None:
+            return text
+
+        model = parser.parse(self._nominal)
+        if model is None:
+            text = self._nominal
+        else:
+            try:
+                text = model.inflect(grams)
+            except ValueError as error:
+                text = f'!{error}!'.replace('Unknown grammeme', 'Неизвестная граммема')
+        self._cached.append({'text': text, 'grams': grams})
         return text
 
-# Term context for resolving entity references.
+
+# Represents term context for resolving entity references.
 TermContext = Dict[str, Entity]

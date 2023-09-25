@@ -1,24 +1,23 @@
-import axios, { AxiosError, AxiosRequestConfig } from 'axios'
-import { toast } from 'react-toastify'
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import { toast } from 'react-toastify';
 
-import { type ErrorInfo } from '../components/BackendError'
-import { IReferenceData } from '../models/language'
-import { IRefsText } from '../models/language'
-import { ICurrentUser } from '../models/library'
-import { IUserLoginData } from '../models/library'
-import { IUserSignupData } from '../models/library'
-import { IUserProfile } from '../models/library'
-import { IUserUpdateData } from '../models/library'
-import { IUserInfo } from '../models/library'
-import { IUserUpdatePassword } from '../models/library'
-import { ILibraryItem } from '../models/library'
-import { ILibraryUpdateData } from '../models/library'
+import { type ErrorInfo } from '../components/BackendError';
+import {
+  ILexemeData,
+  IResolutionData, ITextRequest,
+  ITextResult, IWordFormPlain
+} from '../models/language';
+import {
+  ICurrentUser,   ILibraryItem, ILibraryUpdateData,
+  IUserInfo, IUserLoginData, IUserProfile, IUserSignupData,
+  IUserUpdateData, IUserUpdatePassword
+} from '../models/library';
 import {
   IConstituentaList, IConstituentaMeta,
   ICstCreateData, ICstCreatedResponse, ICstMovetoData, ICstRenameData, ICstUpdateData,
-  IRSFormCreateData, IRSFormData, IRSFormUploadData} from '../models/rsform'
-import { IExpressionParse, IRSExpression } from '../models/rslang'
-import { config } from './constants'
+  IRSFormCreateData, IRSFormData, IRSFormUploadData} from '../models/rsform';
+import { IExpressionParse, IRSExpression } from '../models/rslang';
+import { config } from './constants';
 
 export function initBackend() {
   axios.defaults.withCredentials = true;
@@ -258,14 +257,6 @@ export function postCheckExpression(schema: string, request: FrontExchange<IRSEx
   });
 }
 
-export function postResolveText(schema: string, request: FrontExchange<IRefsText, IReferenceData>) {
-  AxiosPost({
-    title: `Resolve text references for RSForm id=${schema}: ${request.data.text }`,
-    endpoint: `/api/rsforms/${schema}/resolve`,
-    request: request
-  });
-}
-
 export function patchResetAliases(target: string, request: FrontPull<IRSFormData>) {
   AxiosPatch({
     title: `Reset alias for RSForm id=${target}`,
@@ -284,6 +275,38 @@ export function patchUploadTRS(target: string, request: FrontExchange<IRSFormUpl
         'Content-Type': 'multipart/form-data'
       }
     }
+  });
+}
+
+export function postResolveText(schema: string, request: FrontExchange<ITextRequest, IResolutionData>) {
+  AxiosPost({
+    title: `Resolve text references for RSForm id=${schema}: ${request.data.text}`,
+    endpoint: `/api/rsforms/${schema}/resolve`,
+    request: request
+  });
+}
+
+export function postInflectText(request: FrontExchange<IWordFormPlain, ITextResult>) {
+  AxiosPost({
+    title: `Inflect text ${request.data.text} to ${request.data.grams}`,
+    endpoint: `/api/cctext/inflect`,
+    request: request
+  });
+}
+
+export function postParseText(request: FrontExchange<ITextRequest, ITextResult>) {
+  AxiosPost({
+    title: `Parse text ${request.data.text}`,
+    endpoint: `/api/cctext/parse`,
+    request: request
+  });
+}
+
+export function postGenerateLexeme(request: FrontExchange<ITextRequest, ILexemeData>) {
+  AxiosPost({
+    title: `Parse text ${request.data.text}`,
+    endpoint: `/api/cctext/generate-lexeme`,
+    request: request
   });
 }
 

@@ -12,9 +12,9 @@ from django.core.exceptions import ValidationError
 from django.urls import reverse
 
 from apps.users.models import User
-from cctext import Resolver, Entity, extract_entities
+from cctext import Resolver, Entity, extract_entities, split_grams, TermForm
 from .graph import Graph
-from .utils import apply_mapping_pattern
+from .utils import apply_pattern
 
 
 _REF_ENTITY_PATTERN = re.compile(r'@{([^0-9\-].*?)\|.*?}')
@@ -273,7 +273,14 @@ class RSForm:
         ''' Create resolver for text references based on schema terms. '''
         result = Resolver({})
         for cst in self.constituents():
-            entity = Entity(alias=cst.alias, nominal=cst.term_resolved, manual_forms=cst.term_forms)
+            entity = Entity(
+                alias=cst.alias,
+                nominal=cst.term_resolved,
+                manual_forms=[
+                    TermForm(text=form['text'], grams=split_grams(form['tags']))
+                    for form in cst.term_forms
+                ]
+            )
             result.context[cst.alias] = entity
         return result
 
@@ -314,7 +321,10 @@ class RSForm:
             raise ValidationError('Invalid position: should be positive integer')
         currentSize = self.constituents().count()
         position =  max(1, min(position, currentSize + 1))
-        update_list = Constituenta.objects.only('id', 'order', 'schema').filter(schema=self.item, order__gte=position)
+        update_list = \
+            Constituenta.objects \
+                .only('id', 'order', 'schema') \
+                .filter(schema=self.item, order__gte=position)
         for cst in update_list:
             cst.order += 1
         Constituenta.objects.bulk_update(update_list, ['order'])
@@ -424,19 +434,19 @@ class RSForm:
             if change_aliases and cst.alias in mapping:
                 modified = True
                 cst.alias = mapping[cst.alias]
-            expression = apply_mapping_pattern(cst.definition_formal, mapping, _GLOBAL_ID_PATTERN)
+            expression = apply_pattern(cst.definition_formal, mapping, _GLOBAL_ID_PATTERN)
             if expression != cst.definition_formal:
                 modified = True
                 cst.definition_formal = expression
-            convention = apply_mapping_pattern(cst.convention, mapping, _GLOBAL_ID_PATTERN)
+            convention = apply_pattern(cst.convention, mapping, _GLOBAL_ID_PATTERN)
             if convention != cst.convention:
                 modified = True
                 cst.convention = convention
-            term = apply_mapping_pattern(cst.term_raw, mapping, _REF_ENTITY_PATTERN)
+            term = apply_pattern(cst.term_raw, mapping, _REF_ENTITY_PATTERN)
             if term != cst.term_raw:
                 modified = True
                 cst.term_raw = term
-            definition = apply_mapping_pattern(cst.definition_raw, mapping, _REF_ENTITY_PATTERN)
+            definition = apply_pattern(cst.definition_raw, mapping, _REF_ENTITY_PATTERN)
             if definition != cst.definition_raw:
                 modified = True
                 cst.definition_raw = definition

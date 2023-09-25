@@ -3,6 +3,8 @@ import re
 from typing import cast, Optional
 from dataclasses import dataclass
 
+from .rumodel import split_grams
+
 from .conceptapi import inflect_dependant
 from .context import TermContext
 from .reference import EntityReference, SyntacticReference, parse_reference, Reference
@@ -24,7 +26,8 @@ def resolve_entity(ref: EntityReference, context: TermContext) -> str:
     alias = ref.entity
     if alias not in context:
         return f'!Неизвестная сущность: {alias}!'
-    resolved = context[alias].get_form(ref.form)
+    grams = split_grams(ref.form)
+    resolved = context[alias].get_form(grams)
     if resolved == '':
         return f'!Отсутствует термин: {alias}!'
     else:

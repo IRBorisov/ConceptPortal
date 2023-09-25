@@ -202,7 +202,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         serializer = s.CstCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
-        new_cst = schema.create_cst(data, data['insert_after'] if 'insert_after' in data else None)
+        new_cst = schema.create_cst(
+            data=data,
+            insert_after=data['insert_after'] if 'insert_after' in data else None
+        )
         schema.item.refresh_from_db()
         response = Response(
             status=c.HTTP_201_CREATED,
@@ -251,7 +254,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     def cst_multidelete(self, request, pk):
         ''' Endpoint: Delete multiple constituents. '''
         schema = self._get_schema()
-        serializer = s.CstListSerializer(data=request.data, context={'schema': schema})
+        serializer = s.CstListSerializer(
+            data=request.data,
+            context={'schema': schema}
+        )
         serializer.is_valid(raise_exception=True)
         schema.delete_cst(serializer.validated_data['constituents'])
         schema.item.refresh_from_db()
@@ -270,9 +276,15 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     def cst_moveto(self, request, pk):
         ''' Endpoint: Move multiple constituents. '''
         schema = self._get_schema()
-        serializer = s.CstMoveSerializer(data=request.data, context={'schema': schema})
+        serializer = s.CstMoveSerializer(
+            data=request.data,
+            context={'schema': schema}
+        )
         serializer.is_valid(raise_exception=True)
-        schema.move_cst(serializer.validated_data['constituents'], serializer.validated_data['move_to'])
+        schema.move_cst(
+            listCst=serializer.validated_data['constituents'],
+            target=serializer.validated_data['move_to']
+        )
         schema.item.refresh_from_db()
         return Response(
             status=c.HTTP_200_OK,
@@ -311,7 +323,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         data = utils.read_trs(request.FILES['file'].file)
         data['id'] = schema.item.pk
 
-        serializer = s.RSFormTRSSerializer(data=data, context={'load_meta': load_metadata})
+        serializer = s.RSFormTRSSerializer(
+            data=data,
+            context={'load_meta': load_metadata}
+        )
         serializer.is_valid(raise_exception=True)
         schema = serializer.save()
         return Response(
@@ -427,7 +442,10 @@ class TrsImportView(views.APIView):
         if owner.is_anonymous:
             owner = None
         _prepare_rsform_data(data, request, owner)
-        serializer = s.RSFormTRSSerializer(data=data, context={'load_meta': True})
+        serializer = s.RSFormTRSSerializer(
+            data=data,
+            context={'load_meta': True}
+        )
         serializer.is_valid(raise_exception=True)
         schema = serializer.save()
         result = s.LibraryItemSerializer(schema.item)
@@ -575,7 +593,7 @@ def inflect(request):
 
 
 @extend_schema(
-    summary='basic set of wordforms',
+    summary='all wordforms for current lexeme',
     tags=['NaturalLanguage'],
     request=s.TextSerializer,
     responses={200: s.MultiFormSerializer},
@@ -583,7 +601,7 @@ def inflect(request):
 )
 @api_view(['POST'])
 def generate_lexeme(request):
-    ''' Endpoint: Generate basic set of wordforms. '''
+    ''' Endpoint: Generate complete set of wordforms for lexeme. '''
     serializer = s.TextSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     nominal = serializer.validated_data['text']
@@ -595,7 +613,7 @@ def generate_lexeme(request):
 
 
 @extend_schema(
-    summary='get all language parse variants',
+    summary='get likely parse grammemes',
     tags=['NaturalLanguage'],
     request=s.TextSerializer,
     responses={200: s.ResultTextResponse},

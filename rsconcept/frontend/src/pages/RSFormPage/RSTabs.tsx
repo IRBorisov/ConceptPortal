@@ -14,7 +14,7 @@ import { useConceptNavigation } from '../../context/NagivationContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useModificationPrompt from '../../hooks/useModificationPrompt';
-import { ICstCreateData, ICstRenameData } from '../../models/rsform';
+import { ICstCreateData, ICstRenameData, ICstUpdateData, TermForm } from '../../models/rsform';
 import { SyntaxTree } from '../../models/rslang';
 import { EXTEOR_TRS_FILE, prefixes, TIMEOUT_UI_REFRESH } from '../../utils/constants';
 import { createAliasFor } from '../../utils/misc';
@@ -57,7 +57,7 @@ function RSTabs() {
   const search = useLocation().search;
   const { 
     error, schema, loading, claim, download, isTracking,
-    cstCreate, cstDelete, cstRename, subscribe, unsubscribe
+    cstCreate, cstDelete, cstRename, subscribe, unsubscribe, cstUpdate
   } = useRSForm();
   const { destroySchema } = useLibrary();
   const { setNoFooter } = useConceptTheme();
@@ -304,6 +304,19 @@ function RSTabs() {
     setShowEditTerm(true);
   }, [isModified, activeCst]);
 
+  const handleSaveWordforms = useCallback(
+  (forms: TermForm[]) => {
+    if (!activeID) {
+      return;
+    }
+    const data: ICstUpdateData = {
+      id: activeID,
+      term_forms: forms
+    };
+    console.log(data);
+    cstUpdate(data, () => toast.success('Изменения сохранены'));
+  }, [cstUpdate, activeID]);
+
   return (
   <div className='w-full'>
     { loading && <ConceptLoader /> }
@@ -344,7 +357,7 @@ function RSTabs() {
     {showEditTerm &&
     <DlgEditTerm
       hideWindow={() => setShowEditTerm(false)}
-      onSave={() => {}} // TODO: implement cst update
+      onSave={handleSaveWordforms}
       target={activeCst!}
     />}
     <Tabs

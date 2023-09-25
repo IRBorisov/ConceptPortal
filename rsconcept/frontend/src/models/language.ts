@@ -1,6 +1,13 @@
 // Module: Natural language model declarations.
 
 /**
+ * Represents API result for text output.
+*/
+export interface ITextResult {
+  result: string
+}
+
+/**
  * Represents single unit of language Morphology.
 */
 export enum Grammeme {
@@ -172,7 +179,6 @@ export const GrammemeGroups = [
 */
 export const NounGrams = [
   Grammeme.NOUN, Grammeme.ADJF, Grammeme.ADJS,
-  ...Gender,
   ...Case,
   ...Plurality
 ];
@@ -209,6 +215,21 @@ export interface IGramData {
 export interface IWordForm {
   text: string
   grams: IGramData[]
+}
+
+/**
+ * Represents wordform data used for backend communication.
+*/
+export interface IWordFormPlain {
+  text: string
+  grams: string
+}
+
+/**
+ * Represents lexeme response containing multiple {@link Wordform}s.
+*/
+export interface ILexemeData {
+  items: IWordFormPlain[]
 }
 
 /**
@@ -275,30 +296,48 @@ export function parseGrammemes(termForm: string): IGramData[] {
 }
 
 // ====== Reference resolution =====
-export interface IRefsText {
+/**
+ * Represents text request.
+*/
+export interface ITextRequest {
   text: string
 }
 
+/**
+ * Represents text reference type.
+*/
 export enum ReferenceType {
   ENTITY = 'entity',
   SYNTACTIC = 'syntax'
 }
 
+/**
+ * Represents entity reference payload.
+*/
 export interface IEntityReference {
   entity: string
   form: string
 }
 
+/**
+ * Represents syntactic reference payload.
+*/
 export interface ISyntacticReference {
   offset: number
   nominal: string
 }
 
+/**
+ * Represents text 0-indexed position inside another text.
+*/
 export interface ITextPosition {
   start: number
   finish: number
 }
 
+/**
+ * Represents single resolved reference data.
+*/
 export interface IResolvedReference {
   type: ReferenceType
   data: IEntityReference | ISyntacticReference
@@ -306,7 +345,10 @@ export interface IResolvedReference {
   pos_output: ITextPosition
 }
 
-export interface IReferenceData {
+/**
+ * Represents resolved references data for the whole text.
+*/
+export interface IResolutionData {
   input: string
   output: string
   refs: IResolvedReference[]

@@ -150,7 +150,7 @@ export default function DataTable<TData extends RowData>({
         style={conditionalRowStyles && getRowStyles(row)}
       >
         {enableRowSelection && 
-        <td className='pl-3 pr-1 border-y'>
+        <td key={`select-${row.id}`} className='pl-3 pr-1 border-y'>
           <SelectRow row={row} />
         </td>}
         {row.getVisibleCells().map(

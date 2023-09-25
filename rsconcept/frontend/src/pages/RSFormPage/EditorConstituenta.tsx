@@ -140,14 +140,15 @@ function EditorConstituenta({
     <form onSubmit={handleSubmit} className='min-w-[50rem] max-w-min px-4 py-2 border-y border-r'>
       <div className='relative w-full'>
       <div className='absolute top-0 right-0 flex items-start justify-between w-full'>
+        {activeCst && 
         <MiniButton
-          tooltip='Редактировать словоформы термина'
+          tooltip={`Редактировать словоформы термина: ${activeCst.term_forms.length}`}
           disabled={!isEnabled}
-          dimensions='w-fit pl-[3.2rem] pt-[0.4rem]'
+          dimensions='w-fit ml-[3.2rem] pt-[0.4rem]'
           noHover
           onClick={onEditTerm}
           icon={<PenIcon size={4} color={isEnabled ? 'text-primary' : ''} />}
-        />
+        />}
         <div className='flex items-center justify-center w-full gap-1'>
           <div className='font-semibold w-fit'>
             <span className=''>Конституента </span>

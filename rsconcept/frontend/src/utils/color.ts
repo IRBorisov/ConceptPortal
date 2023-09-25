@@ -395,7 +395,10 @@ export function colorfgGrammeme(gram: Grammeme, colors: IColorTheme): string {
   if (VerbGrams.includes(gram)) {
     return colors.fgTeal;
   }
-  return colors.fgDefault;
+  if (gram === Grammeme.UNKN) {
+    return colors.fgRed;
+  }
+  return colors.fgPurple;
 }
 
 export function colorbgGrammeme(gram: Grammeme, colors: IColorTheme): string {

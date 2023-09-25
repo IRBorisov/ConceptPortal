@@ -39,12 +39,11 @@ export const SelectorCstType = (
 );
 
 export interface IGrammemeOption extends IGramData {
-  value: Grammeme
+  value: string
   label: string
 }
 
-export const SelectorGrammems: IGrammemeOption[] = 
-[
+export const SelectorGrammemesList = [
   Grammeme.NOUN, Grammeme.VERB,
 
   Grammeme.sing, Grammeme.plur,
@@ -61,10 +60,13 @@ export const SelectorGrammems: IGrammemeOption[] =
   Grammeme.impr, Grammeme.indc,
   Grammeme.incl, Grammeme.excl,
   Grammeme.pssv, Grammeme.actv,
-].map(
+];
+
+export const SelectorGrammems: IGrammemeOption[] = 
+SelectorGrammemesList.map(
 gram => ({
   type: gram,
   data: gram as string,
-  value: gram,
+  value: gram as string,
   label: labelGrammeme({type: gram, data: ''} as IGramData)
 }));

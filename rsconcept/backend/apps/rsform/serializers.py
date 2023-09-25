@@ -148,18 +148,19 @@ class ConstituentaSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'order', 'alias', 'cst_type', 'definition_resolved', 'term_resolved')
 
     def update(self, instance: Constituenta, validated_data) -> Constituenta:
+        data = validated_data # Note: create alias for better code readability
         schema = RSForm(instance.schema)
-        definition: Optional[str] = validated_data['definition_raw'] if 'definition_raw' in validated_data else None
-        term: Optional[str] = validated_data['term_raw'] if 'term_raw' in validated_data else None
-        term_changed = False
+        definition: Optional[str] = data['definition_raw'] if 'definition_raw' in data else None
+        term: Optional[str] = data['term_raw'] if 'term_raw' in data else None
+        term_changed = 'term_forms' in data
         if definition is not None and definition != instance.definition_raw :
-            validated_data['definition_resolved'] = schema.resolver().resolve(definition)
+            data['definition_resolved'] = schema.resolver().resolve(definition)
         if term is not None and term != instance.term_raw:
-            validated_data['term_resolved'] = schema.resolver().resolve(term)
-            if validated_data['term_resolved'] != instance.term_resolved:
-                validated_data['term_forms'] = []
-            term_changed = validated_data['term_resolved'] != instance.term_resolved
-        result: Constituenta = super().update(instance, validated_data)
+            data['term_resolved'] = schema.resolver().resolve(term)
+            if data['term_resolved'] != instance.term_resolved and 'term_forms' not in data:
+                data['term_forms'] = []
+            term_changed = data['term_resolved'] != instance.term_resolved
+        result: Constituenta = super().update(instance, data)
         if term_changed:
             schema.on_term_change([result.alias])
             result.refresh_from_db()

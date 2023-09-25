@@ -6,17 +6,19 @@ import Modal from '../../components/Common/Modal';
 import SelectMulti from '../../components/Common/SelectMulti';
 import TextArea from '../../components/Common/TextArea';
 import DataTable, { createColumnHelper } from '../../components/DataTable';
-import { CheckIcon, ChevronDoubleUpIcon, ChevronUpIcon, CrossIcon } from '../../components/Icons';
+import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, ChevronDoubleDownIcon, CrossIcon } from '../../components/Icons';
 import { useConceptTheme } from '../../context/ThemeContext';
+import useConceptText from '../../hooks/useConceptText';
 import {
-  Grammeme, GrammemeGroups, IWordForm,
+  Grammeme, GrammemeGroups, ITextRequest, IWordForm,
+  IWordFormPlain,
   matchWordForm, NounGrams, parseGrammemes,
   sortGrammemes, VerbGrams
 } from '../../models/language';
 import { IConstituenta, TermForm } from '../../models/rsform';
 import { colorfgGrammeme } from '../../utils/color';
 import { labelGrammeme } from '../../utils/labels';
-import { IGrammemeOption, SelectorGrammems } from '../../utils/selectors';
+import { IGrammemeOption, SelectorGrammemesList, SelectorGrammems } from '../../utils/selectors';
 
 interface DlgEditTermProps {
   hideWindow: () => void
@@ -27,6 +29,7 @@ interface DlgEditTermProps {
 const columnHelper = createColumnHelper<IWordForm>();
 
 function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
+  const textProcessor = useConceptText();
   const { colors } = useConceptTheme();
   const [term, setTerm] = useState('');
 
@@ -41,7 +44,7 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
     forms.forEach(
     ({text, grams}) => result.push({
       text: text,
-      tags: grams.join(',')
+      tags: grams.map(gram => gram.data).join(',')
     }));
     return result;
   }
@@ -58,6 +61,7 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
     setForms(initForms);
     setTerm(target.term_resolved);
     setInputText(target.term_resolved);
+    setInputGrams([]);
   }, [target]);
 
   // Filter grammemes when input changes
@@ -102,8 +106,8 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
       }))
     };
     setForms(forms => [
-      ...forms.filter(value => !matchWordForm(value, newForm)),
-      newForm
+      newForm,
+      ...forms.filter(value => !matchWordForm(value, newForm))
     ]);
   }
 
@@ -121,22 +125,54 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
     });
   }
 
+  function handleRowClicked(form: IWordForm) {
+    setInputText(form.text);
+    setInputGrams(SelectorGrammems.filter(gram => form.grams.find(test => test.type === gram.type)));
+  }
+
   function handleResetForm() {
     setInputText('');
     setInputGrams([]);
   }
 
-  function handleGenerateSelected() {
-    
+  function handleInflect() {
+    const data: IWordFormPlain = {
+      text: term,
+      grams: inputGrams.map(gram => gram.data).join(',')
+    }
+    textProcessor.inflect(data, response => setInputText(response.result));
   }
 
-  function handleGenerateBasics() {
+  function handleParse() {
+    const data: ITextRequest = {
+      text: inputText
+    }
+    textProcessor.parse(data, response => {
+      const grams = parseGrammemes(response.result);
+      setInputGrams(SelectorGrammems.filter(gram => grams.find(test => test.type === gram.type)));
+    });
+  }
+
+  function handleGenerateLexeme() {
     if (forms.length > 0) {
       if (!window.confirm('Данное действие приведет к перезаписи словоформ при совпадении граммем. Продолжить?')) {
         return;
       }
     }
-    
+    const data: ITextRequest = {
+      text: inputText
+    }
+    textProcessor.generateLexeme(data, response => {
+      const newForms: IWordForm[] = response.items.map(
+      form => ({
+        text: form.text,
+        grams: parseGrammemes(form.grams).filter(gram => SelectorGrammemesList.find(item => item === gram.type))
+      }));
+      setForms(forms => [
+        ...newForms,
+        ...forms.filter(value => !newForms.find(test => matchWordForm(value, test))),
+      ]);
+    });
   }
 
   const columns = useMemo(
@@ -156,10 +192,11 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
       minSize: 250,
       maxSize: 250,
       cell: props => 
-        <div className='flex justify-start gap-1 select-none'>
+        <div className='flex flex-wrap justify-start gap-1 select-none'>
           { props.getValue().map(
           gram => 
             <div
+              key={`${props.cell.id}-${gram.type}`}
               className='min-w-[3rem] px-1 text-sm text-center rounded-md whitespace-nowrap'
               title=''
               style={{
@@ -217,34 +254,47 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
         <TextArea
           placeholder='Введите текст'
           rows={2}
-          dimensions='min-w-[20rem]'
-          
+          dimensions='min-w-[20rem] min-h-[4.2rem]'
+
+          disabled={textProcessor.loading}
           value={inputText}
           onChange={event => setInputText(event.target.value)}
         />
-        <div className='flex items-center justify-start'>
-          <MiniButton
-            tooltip='Добавить словоформу'
-            icon={<CheckIcon size={6} color={!inputText || inputGrams.length == 0 ? 'text-disabled' : 'text-success'}/>}
-            disabled={!inputText || inputGrams.length == 0}
-            onClick={handleAddForm}
-          />
-          <MiniButton
-            tooltip='Сбросить словоформу'
-            icon={<CrossIcon size={6} color='text-warning'/>}
-            onClick={handleResetForm}
-          />
-          <MiniButton
-            tooltip='Генерировать словоформу'
-            icon={<ChevronUpIcon size={6} color={inputGrams.length == 0 ? 'text-disabled' : 'text-primary'}/>}
-            disabled={inputGrams.length == 0}
-            onClick={handleGenerateSelected}
-          />
-          <MiniButton
-            tooltip='Генерировать базовые словоформы'
-            icon={<ChevronDoubleUpIcon size={6} color='text-primary'/>}
-            onClick={handleGenerateBasics}
-          />
+        <div className='flex items-center justify-between'>
+          <div className='flex items-center justify-start'>
+            <MiniButton
+              tooltip='Добавить словоформу'
+              icon={<CheckIcon size={6} color={!inputText || inputGrams.length == 0 ? 'text-disabled' : 'text-success'}/>}
+              disabled={textProcessor.loading || !inputText || inputGrams.length == 0}
+              onClick={handleAddForm}
+            />
+            <MiniButton
+              tooltip='Сбросить словоформу'
+              icon={<CrossIcon size={6} color='text-warning'/>}
+              disabled={textProcessor.loading}
+              onClick={handleResetForm}
+            />
+            <MiniButton
+              tooltip='Генерировать все словоформы'
+              icon={<ChevronDoubleDownIcon size={6} color='text-primary'/>}
+              disabled={textProcessor.loading}
+              onClick={handleGenerateLexeme}
+            />
+          </div>
+          <div className='flex items-center justify-start'>
+            <MiniButton
+              tooltip='Генерировать словоформу'
+              icon={<ArrowLeftIcon size={6} color={inputGrams.length == 0 ? 'text-disabled' : 'text-primary'}/>}
+              disabled={textProcessor.loading || inputGrams.length == 0}
+              onClick={handleInflect}
+            />
+            <MiniButton
+              tooltip='Определить граммемы'
+              icon={<ArrowRightIcon size={6} color={!inputText ? 'text-disabled' : 'text-primary'}/>}
+              disabled={textProcessor.loading || !inputText}
+              onClick={handleParse}
+            />
+          </div>
         </div>
       </div>
       <SelectMulti
@@ -253,6 +303,7 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
         placeholder='Выберите граммемы'
         
         value={inputGrams}
+        isDisabled={textProcessor.loading}
         onChange={newValue => setInputGrams(sortGrammemes([...newValue]))}
       />
     </div>
@@ -269,9 +320,8 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
             <p>Добавьте словоформу</p>
           </span>
         }
-
-        // onRowDoubleClicked={handleDoubleClick}
-        // onRowClicked={handleRowClicked}
+        
+        onRowDoubleClicked={handleRowClicked}
       />
     </div>
   </div>
