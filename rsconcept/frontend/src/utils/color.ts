@@ -60,7 +60,7 @@ export const lightT: IColorTheme = {
   // Hightlight syntax accents
   bgRed:      'hsl(000, 100%, 089%)',
   bgGreen:    'hsl(100, 100%, 075%)',
-  bgBlue:     'hsl(235, 100%, 085%)',
+  bgBlue:     'hsl(235, 080%, 087%)',
   bgPurple:   'hsl(274, 089%, 081%)',
   bgTeal:     'hsl(192, 089%, 081%)',
   bgOrange:   'hsl(028, 100%, 075%)',
@@ -68,7 +68,7 @@ export const lightT: IColorTheme = {
   fgRed:      'hsl(000, 090%, 045%)',
   fgGreen:    'hsl(100, 090%, 035%)',
   fgBlue:     'hsl(235, 100%, 050%)',
-  fgPurple:   'hsl(270, 100%, 070%)',
+  fgPurple:   'hsl(270, 100%, 055%)',
   fgTeal:     'hsl(200, 080%, 050%)',
   fgOrange:   'hsl(030, 090%, 055%)'
 };

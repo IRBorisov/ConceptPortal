@@ -24,12 +24,12 @@ export enum CstClass {
 
 // Constituenta expression status
 export enum ExpressionStatus {
+  VERIFIED = 'verified',
+  INCORRECT = 'incorrect',
+  PROPERTY = 'property',
+  INCALCULABLE = 'incalculable',
   UNDEFINED = 'undefined',
   UNKNOWN = 'unknown',
-  INCORRECT = 'incorrect',
-  INCALCULABLE = 'incalculable',
-  PROPERTY = 'property',
-  VERIFIED = 'verified'
 }
 
 export interface TermForm {

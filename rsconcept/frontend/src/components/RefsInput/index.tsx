@@ -88,7 +88,7 @@ function RefsInput({
     },
     styles: [
       { tag: tags.name, color: colors.fgPurple }, // GlobalID
-      { tag: tags.literal, color: colors.fgBlue }, // literals
+      { tag: tags.literal, color: colors.fgTeal }, // literals
     ]
   }), [editable, colors, darkMode]);
 
