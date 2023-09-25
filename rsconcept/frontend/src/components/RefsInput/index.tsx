@@ -4,15 +4,15 @@ import { tags } from '@lezer/highlight';
 import { createTheme } from '@uiw/codemirror-themes';
 import CodeMirror, { BasicSetupOptions, ReactCodeMirrorProps, ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { EditorView } from 'codemirror';
-import { RefObject, useCallback, useMemo, useRef } from 'react';
+import { RefObject, useCallback, useMemo, useRef, useState } from 'react';
 
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
-import { TokenID } from '../../models/rslang';
+import useResolveText from '../../hooks/useResolveText';
 import Label from '../Common/Label';
-import { ccBracketMatching } from './bracketMatching';
-import { RSLanguage } from './rslang';
-import { getSymbolSubstitute,TextWrapper } from './textEditing';
+import Modal from '../Common/Modal';
+import PrettyJson from '../Common/PrettyJSON';
+import { NaturalLanguage } from './parse';
 import { rshoverTooltip as rsHoverTooltip } from './tooltip';
 
 const editorSetup: BasicSetupOptions = {
@@ -43,21 +43,32 @@ const editorSetup: BasicSetupOptions = {
   lintKeymap: false
 };
 
-interface RSInputProps 
+interface RefsInputInputProps 
 extends Pick<ReactCodeMirrorProps, 
   'id'| 'editable' | 'height' | 'value' | 'className' | 'onFocus' | 'onBlur' | 'placeholder'
 > {
   label?: string
   innerref?: RefObject<ReactCodeMirrorRef> | undefined
   onChange?: (newValue: string) => void
+  
+  initialValue?: string
+  value?: string
+  resolved?: string
 }
 
-function RSInput({ 
-  id, label, innerref, onChange, editable,
+function RefsInput({ 
+  id, label, innerref, onChange, editable, 
+  initialValue, value, resolved,
+  onFocus, onBlur,
   ...props 
-}: RSInputProps) {
+}: RefsInputInputProps) {
   const { darkMode, colors } = useConceptTheme();
   const { schema } = useRSForm();
+
+  const { resolveText, refsData } = useResolveText({schema: schema});
+
+  const [showResolve, setShowResolve] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const internalRef = useRef<ReactCodeMirrorRef>(null);
   const thisRef = useMemo(
@@ -76,49 +87,60 @@ function RSInput({
       selection: colors.bgHover
     },
     styles: [
-      { tag: tags.name, color: colors.fgPurple, cursor: 'default' }, // GlobalID
-      { tag: tags.variableName, color: colors.fgGreen }, // LocalID
-      { tag: tags.propertyName, color: colors.fgTeal }, // Radical
-      { tag: tags.keyword, color: colors.fgBlue }, // keywords
+      { tag: tags.name, color: colors.fgPurple }, // GlobalID
       { tag: tags.literal, color: colors.fgBlue }, // literals
-      { tag: tags.controlKeyword, fontWeight: '500'}, // R | I | D
-      { tag: tags.unit, fontSize: '0.75rem' }, // indicies
     ]
   }), [editable, colors, darkMode]);
 
   const editorExtensions = useMemo(
   () => [
     EditorView.lineWrapping,
-    RSLanguage,
-    ccBracketMatching(darkMode),
+    NaturalLanguage,
     rsHoverTooltip(schema?.items || []),
-  ], [darkMode, schema?.items]);
+  ], [schema?.items]);
+
+  function handleChange(newValue: string) {
+    if (onChange) onChange(newValue);
+  }
+
+  function handleFocusIn(event: React.FocusEvent<HTMLDivElement>) {
+    setIsFocused(true);
+    if (onFocus) onFocus(event);
+  }
+
+  function handleFocusOut(event: React.FocusEvent<HTMLDivElement>) {
+    setIsFocused(false);
+    if (onBlur) onBlur(event);
+  }
 
   const handleInput = useCallback(
   (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (!thisRef.current) {
+      event.preventDefault();
       return;
     }
-    const text = new TextWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
-    if (event.shiftKey && event.key === '*' && !event.altKey) {
-      text.insertToken(TokenID.DECART);
-    } else if (event.altKey) {
-      if (!text.processAltKey(event.code, event.shiftKey)) {
+    if (event.altKey) {
+      if (event.key === 'r' && value) {
+        event.preventDefault();
+        resolveText(value, () => {
+          setShowResolve(true);
+        });
         return;
       }
-    } else if (!event.ctrlKey) {
-      const newSymbol = getSymbolSubstitute(event.code, event.shiftKey);
-      if (!newSymbol) {
-        return;
-      }
-      text.replaceWith(newSymbol);
-    } else {
-      return;
     }
-    event.preventDefault();
-  }, [thisRef]);
+  }, [thisRef, resolveText, value]);
 
   return (
+  <>
+    { showResolve &&
+    <Modal
+      readonly
+      hideWindow={() => setShowResolve(false)}
+    >
+      <div className='max-h-[60vh] max-w-[80vw] overflow-auto'>
+        <PrettyJson data={refsData} />
+      </div>
+    </Modal>}
     <div className={`flex flex-col  w-full ${cursor}`}>
     {label && 
     <Label
@@ -132,14 +154,19 @@ function RSInput({
       basicSetup={editorSetup}
       theme={customTheme}
       extensions={editorExtensions}
+
+      value={isFocused ? value : (value !== initialValue ? value : resolved)}
+
       indentWithTab={false}
-      onChange={onChange}
+      onChange={handleChange}
       editable={editable}
       onKeyDown={handleInput}
+      onFocus={handleFocusIn}
+      onBlur={handleFocusOut}
       {...props}
     />
     </div>
-  );
+  </>);
 }
 
-export default RSInput;
+export default RefsInput;

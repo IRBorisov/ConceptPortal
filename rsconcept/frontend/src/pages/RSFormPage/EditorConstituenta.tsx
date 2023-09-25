@@ -8,6 +8,7 @@ import SubmitButton from '../../components/Common/SubmitButton';
 import TextArea from '../../components/Common/TextArea';
 import HelpConstituenta from '../../components/Help/HelpConstituenta';
 import { DumpBinIcon, HelpIcon, PenIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
+import RefsInput from '../../components/RefsInput';
 import { useRSForm } from '../../context/RSFormContext';
 import useWindowSize from '../../hooks/useWindowSize';
 import { EditMode } from '../../models/miscelanious';
@@ -144,7 +145,7 @@ function EditorConstituenta({
         <MiniButton
           tooltip={`Редактировать словоформы термина: ${activeCst.term_forms.length}`}
           disabled={!isEnabled}
-          dimensions='w-fit ml-[3.2rem] pt-[0.4rem]'
+          dimensions='w-fit ml-[3.2rem] pt-[0.3rem]'
           noHover
           onClick={onEditTerm}
           icon={<PenIcon size={4} color={isEnabled ? 'text-primary' : ''} />}
@@ -219,15 +220,15 @@ function EditorConstituenta({
           onChange={newValue => setExpression(newValue)}
           setTypification={setTypification}
         />
-        <ReferenceInput id='definition' label='Текстовое определение'
+        <RefsInput id='definition' label='Текстовое определение'
           placeholder='Лингвистическая интерпретация формального выражения'
-          rows={4}
+          height='6.3rem'
           value={textDefinition}
           initialValue={activeCst?.definition_raw ?? ''}
           resolved={activeCst?.definition_resolved ?? ''}
-          disabled={!isEnabled}
-          spellCheck
-          onChange={event => setTextDefinition(event.target.value)}
+          editable={isEnabled}
+          // spellCheck
+          onChange={newValue => setTextDefinition(newValue)}
           onFocus={() => setEditMode(EditMode.TEXT)}
         />
         <TextArea id='convention' label='Конвенция / Комментарий'

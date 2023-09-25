@@ -1,0 +1,50 @@
+@precedence {
+  p1
+  p2
+}
+
+@top Text { textItem* }
+
+@skip { space }
+
+@tokens {
+  space { @whitespace+ }
+
+  Offset { $[-]?$[1-9]$[0-9]* }
+  Global { $[XCSDATFPR]$[1-9]$[0-9]* }
+
+  Word { ![@{|} \t\n]+ }
+
+  Gram { $[-a-zA-Z0-9]+ } 
+
+  @precedence { Word, space }
+}
+
+textItem { 
+  !p1 ref |
+  !p2 Word
+}
+
+ref {
+  RefEntity |
+  RefSyntactic
+}
+
+RefEntity {
+  "@{" Global "|" grams "}"
+}
+
+RefSyntactic {
+  "@{" Offset "|" Nominal "}"
+}
+
+Nominal { Word+ }
+
+grams {
+  Gram |
+  Gram "," grams
+}
+
+@detectDelim
+
+@external propSource highlighting from "./highlight.ts"
