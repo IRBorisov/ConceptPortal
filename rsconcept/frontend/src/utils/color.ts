@@ -1,6 +1,6 @@
 // =========== Modules contains all dynamic color definitions ==========
 
-import { Grammeme, NounGrams, PartOfSpeech, VerbGrams } from '../models/language'
+import { GramData, Grammeme, NounGrams, PartOfSpeech, VerbGrams } from '../models/language'
 import { CstClass, ExpressionStatus } from '../models/rsform'
 import { ISyntaxTreeNode, TokenID } from '../models/rslang'
 
@@ -385,30 +385,31 @@ export function colorbgCstClass(cstClass: CstClass, colors: IColorTheme): string
   }
 }
 
-export function colorfgGrammeme(gram: Grammeme, colors: IColorTheme): string {
-  if (PartOfSpeech.includes(gram)) {
+export function colorfgGrammeme(gram: GramData, colors: IColorTheme): string {
+  if (PartOfSpeech.includes(gram as Grammeme)) {
     return colors.fgBlue;
   }
-  if (NounGrams.includes(gram)) {
+  if (NounGrams.includes(gram as Grammeme)) {
     return colors.fgGreen;
   }
-  if (VerbGrams.includes(gram)) {
+  if (VerbGrams.includes(gram as Grammeme)) {
     return colors.fgTeal;
   }
-  if (gram === Grammeme.UNKN) {
+  if (!Object.values(Grammeme).includes(gram as Grammeme)) {
     return colors.fgRed;
+  } else {
+    return colors.fgPurple;
   }
-  return colors.fgPurple;
 }
 
-export function colorbgGrammeme(gram: Grammeme, colors: IColorTheme): string {
-  if (PartOfSpeech.includes(gram)) {
+export function colorbgGrammeme(gram: GramData, colors: IColorTheme): string {
+  if (PartOfSpeech.includes(gram as Grammeme)) {
     return colors.bgBlue;
   }
-  if (NounGrams.includes(gram)) {
+  if (NounGrams.includes(gram as Grammeme)) {
     return colors.bgGreen;
   }
-  if (VerbGrams.includes(gram)) {
+  if (VerbGrams.includes(gram as Grammeme)) {
     return colors.bgTeal;
   }
   return colors.bgInput;

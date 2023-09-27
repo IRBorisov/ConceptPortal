@@ -1,6 +1,6 @@
 // =========== Modules contains all text descriptors ==========
 
-import { Grammeme,IGramData } from '../models/language';
+import { GramData,Grammeme } from '../models/language';
 import { CstMatchMode, DependencyMode, HelpTopic } from '../models/miscelanious';
 import { CstClass, CstType, ExpressionStatus, IConstituenta } from '../models/rsform';
 import { IFunctionArg, IRSErrorDescription, ISyntaxTreeNode, ParsingStatus, RSErrorType, TokenID } from '../models/rslang';
@@ -20,6 +20,17 @@ export function describeConstituenta(cst: IConstituenta): string {
       cst.definition_formal ||
       cst.convention
     );
+  }
+}
+
+export function describeConstituentaTerm(cst: IConstituenta | undefined): string {
+  if (!cst) {
+    return '!Конституента отсутствует!';
+  }
+  if (!cst.term_resolved) {
+    return '!Пустой термин!';
+  } else {
+    return cst.term_resolved;
   }
 }
 
@@ -346,8 +357,10 @@ export function labelSyntaxTree(node: ISyntaxTreeNode): string {
   return 'UNKNOWN ' + String(node.typeID);
 }
 
-export function labelGrammeme(gram: IGramData): string {
-  switch (gram.type) {
+export function labelGrammeme(gram: GramData): string {
+  switch (gram) {
+  default: return `Неизв: ${gram}`;
+
   case Grammeme.NOUN: return 'ЧР: сущ';
   case Grammeme.VERB: return 'ЧР: глагол';
   case Grammeme.INFN: return 'ЧР: глагол инф';
@@ -411,8 +424,6 @@ export function labelGrammeme(gram: IGramData): string {
   case Grammeme.Slng: return 'Стиль: жаргон';
   case Grammeme.Arch: return 'Стиль: устаревший';
   case Grammeme.Litr: return 'Стиль: литературный';
-
-  case Grammeme.UNKN: return `Неизв: ${gram.data}`;
   }
 }
 

@@ -10,15 +10,13 @@ import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, ChevronDoubleDownIcon, CrossI
 import { useConceptTheme } from '../../context/ThemeContext';
 import useConceptText from '../../hooks/useConceptText';
 import {
-  Grammeme, GrammemeGroups, ITextRequest, IWordForm,
-  IWordFormPlain,
-  matchWordForm, NounGrams, parseGrammemes,
-  sortGrammemes, VerbGrams
+  GramData, Grammeme, GrammemeGroups, ITextRequest, IWordForm,
+  IWordFormPlain, matchWordForm, NounGrams, parseGrammemes, VerbGrams
 } from '../../models/language';
 import { IConstituenta, TermForm } from '../../models/rsform';
 import { colorfgGrammeme } from '../../utils/color';
 import { labelGrammeme } from '../../utils/labels';
-import { IGrammemeOption, SelectorGrammemesList, SelectorGrammems } from '../../utils/selectors';
+import { compareGrammemeOptions,IGrammemeOption, SelectorGrammemesList, SelectorGrammems } from '../../utils/selectors';
 
 interface DlgEditTermProps {
   hideWindow: () => void
@@ -44,7 +42,7 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
     forms.forEach(
     ({text, grams}) => result.push({
       text: text,
-      tags: grams.map(gram => gram.data).join(',')
+      tags: grams.join(',')
     }));
     return result;
   }
@@ -67,32 +65,32 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
   // Filter grammemes when input changes
   useEffect(
   () => {
-    let newFilter: Grammeme[] = [];
-    inputGrams.forEach(({type: gram}) => {
+    let newFilter: GramData[] = [];
+    inputGrams.forEach(({value: gram}) => {
       if (!newFilter.includes(gram)) {
-        if (NounGrams.includes(gram)) {
+        if (NounGrams.includes(gram as Grammeme)) {
           newFilter.push(...NounGrams);
         }
-        if (VerbGrams.includes(gram)) {
+        if (VerbGrams.includes(gram as Grammeme)) {
           newFilter.push(...VerbGrams);
         }
       }
     });
 
-    inputGrams.forEach(({type: gram}) =>
+    inputGrams.forEach(({value: gram}) =>
     GrammemeGroups.forEach(group => {
-      if (group.includes(gram)) {
-        newFilter = newFilter.filter(item => !group.includes(item) || item === gram);
+      if (group.includes(gram as Grammeme)) {
+        newFilter = newFilter.filter(item => !group.includes(item as Grammeme) || item === gram);
       }
     }));
 
-    newFilter.push(...inputGrams.map(({type: gram}) => gram));
+    newFilter.push(...inputGrams.map(({value}) => value));
     if (newFilter.length === 0) {
       newFilter = [...VerbGrams, ...NounGrams];
     }
     
     newFilter = [... new Set(newFilter)];
-    setOptions(SelectorGrammems.filter(({type: gram}) => newFilter.includes(gram)));
+    setOptions(SelectorGrammems.filter(({value}) => newFilter.includes(value)));
   }, [inputGrams]);
 
   const handleSubmit = () => onSave(getData());
@@ -100,10 +98,7 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
   function handleAddForm() {
     const newForm: IWordForm = {
       text: inputText,
-      grams: inputGrams.map(item => ({
-        type: item.type,
-        data: item.data
-      }))
+      grams: inputGrams.map(item => item.value)
     };
     setForms(forms => [
       newForm,
@@ -127,7 +122,7 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
 
   function handleRowClicked(form: IWordForm) {
     setInputText(form.text);
-    setInputGrams(SelectorGrammems.filter(gram => form.grams.find(test => test.type === gram.type)));
+    setInputGrams(SelectorGrammems.filter(gram => form.grams.find(test => test === gram.value)));
   }
 
   function handleResetForm() {
@@ -138,7 +133,7 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
   function handleInflect() {
     const data: IWordFormPlain = {
       text: term,
-      grams: inputGrams.map(gram => gram.data).join(',')
+      grams: inputGrams.map(gram => gram.value).join(',')
     }
     textProcessor.inflect(data, response => setInputText(response.result));
   }
@@ -149,7 +144,7 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
     }
     textProcessor.parse(data, response => {
       const grams = parseGrammemes(response.result);
-      setInputGrams(SelectorGrammems.filter(gram => grams.find(test => test.type === gram.type)));
+      setInputGrams(SelectorGrammems.filter(gram => grams.find(test => test === gram.value)));
     });
   }
 
@@ -166,7 +161,7 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
       const newForms: IWordForm[] = response.items.map(
       form => ({
         text: form.text,
-        grams: parseGrammemes(form.grams).filter(gram => SelectorGrammemesList.find(item => item === gram.type))
+        grams: parseGrammemes(form.grams).filter(gram => SelectorGrammemesList.find(item => item === gram as Grammeme))
       }));
       setForms(forms => [
         ...newForms,
@@ -196,13 +191,13 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
           { props.getValue().map(
           gram => 
             <div
-              key={`${props.cell.id}-${gram.type}`}
+              key={`${props.cell.id}-${gram}`}
               className='min-w-[3rem] px-1 text-sm text-center rounded-md whitespace-nowrap'
               title=''
               style={{
                 borderWidth: '1px', 
-                borderColor: colorfgGrammeme(gram.type, colors),
-                color: colorfgGrammeme(gram.type, colors), 
+                borderColor: colorfgGrammeme(gram, colors),
+                color: colorfgGrammeme(gram, colors), 
                 fontWeight: 600,
                 backgroundColor: colors.bgInput
               }}
@@ -260,7 +255,7 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
           value={inputText}
           onChange={event => setInputText(event.target.value)}
         />
-        <div className='flex items-center justify-between'>
+        <div className='flex items-center justify-between select-none'>
           <div className='flex items-center justify-start'>
             <MiniButton
               tooltip='Добавить словоформу'
@@ -280,6 +275,9 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
               disabled={textProcessor.loading}
               onClick={handleGenerateLexeme}
             />
+          </div>
+          <div className='text-sm'>
+            Словоформ: {forms.length}
           </div>
           <div className='flex items-center justify-start'>
             <MiniButton
@@ -304,7 +302,7 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
         
         value={inputGrams}
         isDisabled={textProcessor.loading}
-        onChange={newValue => setInputGrams(sortGrammemes([...newValue]))}
+        onChange={newValue => setInputGrams([...newValue].sort(compareGrammemeOptions))}
       />
     </div>
     

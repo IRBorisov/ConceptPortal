@@ -1,4 +1,4 @@
-import { printTree } from '../../../utils/print-lezer-tree';
+import { printTree } from '../../../utils/codemirror';
 import { parser } from './parser';
 
 const testData = [

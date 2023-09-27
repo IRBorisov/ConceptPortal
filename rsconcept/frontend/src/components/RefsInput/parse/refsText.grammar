@@ -1,4 +1,5 @@
 @precedence {
+  text @right
   p1
   p2
 }
@@ -13,16 +14,22 @@
   Offset { $[-]?$[1-9]$[0-9]* }
   Global { $[XCSDATFPR]$[1-9]$[0-9]* }
 
-  Word { ![@{|} \t\n]+ }
+  word { ![@{|} \t\n]+ }
 
-  Gram { $[-a-zA-Z0-9]+ } 
+  gram { $[-a-zA-Z0-9]+ } 
 
-  @precedence { Word, space }
+  @precedence { word, space }
 }
 
 textItem { 
   !p1 ref |
-  !p2 Word
+  !p2 Filler
+}
+
+Filler { word_enum }
+word_enum {
+  word |
+  word !text word_enum
 }
 
 ref {
@@ -31,19 +38,18 @@ ref {
 }
 
 RefEntity {
-  "@{" Global "|" grams "}"
+  "@{" Global "|" Grams "}"
+}
+Grams { gram_enum }
+gram_enum {
+  gram |
+  gram "," gram_enum
 }
 
 RefSyntactic {
   "@{" Offset "|" Nominal "}"
 }
-
-Nominal { Word+ }
-
-grams {
-  Gram |
-  Gram "," grams
-}
+Nominal { word+ }
 
 @detectDelim
 

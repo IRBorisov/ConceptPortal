@@ -1,13 +1,15 @@
 // Module: Selector maps
 import { LayoutTypes } from 'reagraph';
 
-import { Grammeme, IGramData } from '../models/language';
+import { compareGrammemes,type GramData, Grammeme } from '../models/language';
 import { CstType } from '../models/rsform';
 import { ColoringScheme } from '../pages/RSFormPage/EditorTermGraph';
 import { labelGrammeme } from './labels';
 import { labelCstType } from './labels';
 
-
+/**
+ * Represents options for GraphLayout selector.
+*/
 export const SelectorGraphLayout: { value: LayoutTypes, label: string }[] = [
   { value: 'treeTd2d', label: 'Граф: ДеревоВ 2D' },
   { value: 'treeTd3d', label: 'Граф: ДеревоВ 3D' },
@@ -24,12 +26,18 @@ export const SelectorGraphLayout: { value: LayoutTypes, label: string }[] = [
   //  { value: 'hierarchicalLr', label: 'hierarchicalLr'}
 ];
 
+/**
+ * Represents options for {@link ColoringScheme} selector.
+*/
 export const SelectorGraphColoring: { value: ColoringScheme, label: string }[] = [
   { value: 'none', label: 'Цвет: моно' },
   { value: 'status', label: 'Цвет: статус' },
   { value: 'type', label: 'Цвет: класс' },
 ];
 
+/**
+ * Represents options for {@link CstType} selector.
+*/
 export const SelectorCstType = (
   Object.values(CstType)).map(
   typeStr => ({
@@ -38,11 +46,24 @@ export const SelectorCstType = (
   })
 );
 
-export interface IGrammemeOption extends IGramData {
-  value: string
+/**
+ * Represents single option for {@link Grammeme} selector.
+*/
+export interface IGrammemeOption {
+  value: GramData
   label: string
 }
 
+/**
+ * Compares {@link IGrammemeOption} based on Grammeme comparison.
+ */
+export function compareGrammemeOptions(left: IGrammemeOption, right: IGrammemeOption): number {
+  return compareGrammemes(left.value, right.value);
+}
+
+/**
+ * Represents list of {@link Grammeme}s available in reference construction.
+*/
 export const SelectorGrammemesList = [
   Grammeme.NOUN, Grammeme.VERB,
 
@@ -62,11 +83,12 @@ export const SelectorGrammemesList = [
   Grammeme.pssv, Grammeme.actv,
 ];
 
+/**
+ * Represents options for {@link Grammeme} selector.
+*/
 export const SelectorGrammems: IGrammemeOption[] = 
 SelectorGrammemesList.map(
 gram => ({
-  type: gram,
-  data: gram as string,
-  value: gram as string,
-  label: labelGrammeme({type: gram, data: ''} as IGramData)
+  value: gram,
+  label: labelGrammeme(gram)
 }));

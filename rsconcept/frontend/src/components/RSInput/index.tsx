@@ -13,7 +13,7 @@ import Label from '../Common/Label';
 import { ccBracketMatching } from './bracketMatching';
 import { RSLanguage } from './rslang';
 import { getSymbolSubstitute,TextWrapper } from './textEditing';
-import { rshoverTooltip as rsHoverTooltip } from './tooltip';
+import { rsHoverTooltip } from './tooltip';
 
 const editorSetup: BasicSetupOptions = {
   highlightSpecialChars: false,

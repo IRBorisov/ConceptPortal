@@ -3,8 +3,8 @@ export const
   Text = 1,
   RefEntity = 2,
   Global = 3,
-  Gram = 4,
+  Grams = 4,
   RefSyntactic = 5,
   Offset = 6,
   Nominal = 7,
-  Word = 8
+  Filler = 8

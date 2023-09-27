@@ -13,7 +13,7 @@ import Label from '../Common/Label';
 import Modal from '../Common/Modal';
 import PrettyJson from '../Common/PrettyJSON';
 import { NaturalLanguage } from './parse';
-import { rshoverTooltip as rsHoverTooltip } from './tooltip';
+import { refsHoverTooltip } from './tooltip';
 
 const editorSetup: BasicSetupOptions = {
   highlightSpecialChars: false,
@@ -87,7 +87,7 @@ function RefsInput({
       selection: colors.bgHover
     },
     styles: [
-      { tag: tags.name, color: colors.fgPurple }, // GlobalID
+      { tag: tags.name, color: colors.fgPurple, cursor: 'pointer' }, // GlobalID
       { tag: tags.literal, color: colors.fgTeal }, // literals
     ]
   }), [editable, colors, darkMode]);
@@ -96,8 +96,8 @@ function RefsInput({
   () => [
     EditorView.lineWrapping,
     NaturalLanguage,
-    rsHoverTooltip(schema?.items || []),
-  ], [schema?.items]);
+    refsHoverTooltip(schema?.items || [], colors),
+  ], [schema?.items, colors]);
 
   function handleChange(newValue: string) {
     if (onChange) onChange(newValue);

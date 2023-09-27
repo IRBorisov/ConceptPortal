@@ -1,18 +1,18 @@
-import { printTree } from '../../../utils/print-lezer-tree';
+import { printTree } from '../../../utils/codemirror';
 import { parser } from './parser';
 
 const testData = [
   ['', '[Text]'],
-  ['тест русский', '[Text[Word][Word]]'],
-  ['test english', '[Text[Word][Word]]'],
-  ['test greek σσσ', '[Text[Word][Word][Word]]'],
-  ['X1 раз два X2', '[Text[Word][Word][Word][Word]]'],
+  ['тест русский', '[Text[Filler]]'],
+  ['test english', '[Text[Filler]]'],
+  ['test greek σσσ', '[Text[Filler]]'],
+  ['X1 раз два X2', '[Text[Filler]]'],
 
-  ['@{1| черный }', '[Text[RefSyntactic[Offset][Nominal[Word]]]]'],
-  ['@{-1| черный }', '[Text[RefSyntactic[Offset][Nominal[Word]]]]'],
-  ['@{-100| черный слон }', '[Text[RefSyntactic[Offset][Nominal[Word][Word]]]]'],
-  ['@{X1|VERB,past,sing}', '[Text[RefEntity[Global][Gram][Gram][Gram]]]'],
-  ['@{X12|VERB,past,sing}', '[Text[RefEntity[Global][Gram][Gram][Gram]]]'],
+  ['@{1| черный }', '[Text[RefSyntactic[Offset][Nominal]]]'],
+  ['@{-1| черный }', '[Text[RefSyntactic[Offset][Nominal]]]'],
+  ['@{-100| черный слон }', '[Text[RefSyntactic[Offset][Nominal]]]'],
+  ['@{X1|VERB,past,sing}', '[Text[RefEntity[Global][Grams]]]'],
+  ['@{X12|VERB,past,sing}', '[Text[RefEntity[Global][Grams]]]'],
 ];
 
 describe('Testing NaturalParser', () => {

@@ -1,4 +1,6 @@
-// Module: Natural language model declarations.
+/**
+ * Module: Natural language model declarations.
+ */
 
 /**
  * Represents API result for text output.
@@ -11,9 +13,6 @@ export interface ITextResult {
  * Represents single unit of language Morphology.
 */
 export enum Grammeme {
-  // Неизвестная граммема
-  UNKN = 'UNKN',
-
   // Части речи
   NOUN = 'NOUN', ADJF = 'ADJF', ADJS = 'ADJS', COMP = 'COMP',
   VERB = 'VERB', INFN = 'INFN', PRTF = 'PRTF', PRTS = 'PRTS',
@@ -204,17 +203,14 @@ export const VerbGrams = [
 /**
  * Represents {@link Grammeme} parse data.
 */
-export interface IGramData {
-  type: Grammeme
-  data: string
-}
+export type GramData = Grammeme | string;
 
 /**
  * Represents specific wordform attached to {@link Grammeme}s.
 */
 export interface IWordForm {
   text: string
-  grams: IGramData[]
+  grams: GramData[]
 }
 
 /**
@@ -233,16 +229,6 @@ export interface ILexemeData {
 }
 
 /**
- * Equality comparator for {@link IGramData}. Compares text data for unknown grammemes
- */
-export function matchGrammeme(left: IGramData, right: IGramData): boolean {
-  if (left.type !== right.type) {
-    return false;
-  }
-  return left.type !== Grammeme.UNKN || left.data === right.data;
-}
-
-/**
  * Equality comparator for {@link IWordForm}. Compares a set of Grammemes attached to wordforms
  */
 export function matchWordForm(left: IWordForm, right: IWordForm): boolean {
@@ -250,41 +236,43 @@ export function matchWordForm(left: IWordForm, right: IWordForm): boolean {
     return false;
   }
   for (let index = 0; index < left.grams.length; ++index) {
-    if (!matchGrammeme(left.grams[index], right.grams[index])) {
+    if (left.grams[index] !== right.grams[index]) {
       return false;
     }
   }
   return true;
 }
 
-function parseSingleGrammeme(text: string): IGramData {
+function parseSingleGrammeme(text: string): GramData {
   if (Object.values(Grammeme).includes(text as Grammeme)) {
-    return {
-      data: text,
-      type: text as Grammeme
-    }
+    return text as Grammeme;
   } else {
-    return {
-      data: text,
-      type: Grammeme.UNKN
-    }
+    return text;
   }
 }
 
-export function sortGrammemes<TData extends IGramData>(input: TData[]): TData[] {
-  const result: TData[] = [];
-  Object.values(Grammeme).forEach(
-  gram => {
-    const item = input.find(data => data.type === gram);
-    if (item) {
-      result.push(item);
-    }
-  });
-  return result;
+/**
+ * Compares {@link GramData} based on Grammeme enum and alpha order for strings.
+ */
+export function compareGrammemes(left: GramData, right: GramData): number {
+  const indexLeft = Object.values(Grammeme).findIndex(gram => gram === left as Grammeme);
+  const indexRight = Object.values(Grammeme).findIndex(gram => gram === right as Grammeme);
+  if (indexLeft === -1 && indexRight === -1) {
+    return left.localeCompare(right);
+  } else if (indexLeft === -1 && indexRight !== -1) {
+    return 1;
+  } else if (indexLeft !== -1 && indexRight === -1) {
+    return -1;
+  } else {
+    return indexLeft - indexRight;
+  }
 }
 
-export function parseGrammemes(termForm: string): IGramData[] {
-  const result: IGramData[] = [];
+/**
+ * Transforms {@link Grammeme} enumeration to {@link GramData}.
+ */
+export function parseGrammemes(termForm: string): GramData[] {
+  const result: GramData[] = [];
   const chunks = termForm.split(',');
   chunks.forEach(chunk => {
     chunk = chunk.trim();
@@ -292,7 +280,7 @@ export function parseGrammemes(termForm: string): IGramData[] {
       result.push(parseSingleGrammeme(chunk));
     }
   });
-  return sortGrammemes(result);
+  return result.sort(compareGrammemes);
 }
 
 // ====== Reference resolution =====
@@ -352,4 +340,30 @@ export interface IResolutionData {
   input: string
   output: string
   refs: IResolvedReference[]
+}
+
+/**
+ * Extracts {@link IEntityReference} from string representation.
+ * 
+ * @param text - Reference text in a valid pattern. Must fit format '\@\{GLOBAL_ID|GRAMMEMES\}'
+ */
+export function parseEntityReference(text: string): IEntityReference {
+  const blocks = text.slice(2, text.length - 1).split('|');
+  return {
+    entity: blocks[0].trim(),
+    form: blocks[1].trim()
+  }
+}
+
+/**
+ * Extracts {@link ISyntacticReference} from string representation.
+ * 
+ * @param text - Reference text in a valid pattern. Must fit format '\@\{OFFSET|NOMINAL_FORM\}'
+ */
+export function parseSyntacticReference(text: string): ISyntacticReference {
+  const blocks = text.slice(2, text.length - 1).split('|');
+  return {
+    offset: Number(blocks[0].trim()),
+    nominal: blocks[1].trim()
+  }
 }
