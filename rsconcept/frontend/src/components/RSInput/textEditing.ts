@@ -3,6 +3,7 @@
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
 import { TokenID } from '../../models/rslang';
+import { CodeMirrorWrapper } from '../../utils/codemirror';
 
 export function getSymbolSubstitute(keyCode: string, shiftPressed: boolean): string | undefined {
   if (shiftPressed) {
@@ -41,43 +42,17 @@ export function getSymbolSubstitute(keyCode: string, shiftPressed: boolean): str
   return undefined;
 }
 
-// Note: Wrapper class for textareafield.
-// WARNING! Manipulations on value do not support UNDO browser
-// WARNING! No checks for selection out of text boundaries
-export class TextWrapper {
-  ref: Required<ReactCodeMirrorRef>
-
+/**
+ * Wrapper class for RSLang editor.
+*/
+export class RSTextWrapper extends CodeMirrorWrapper {
   constructor(object: Required<ReactCodeMirrorRef>) {
-    this.ref = object;
-  }
-
-  replaceWith(data: string) {
-    this.ref.view.dispatch(this.ref.view.state.replaceSelection(data));
-  }
-
-  envelopeWith(left: string, right: string) {
-    const hasSelection = this.ref.view.state.selection.main.from !== this.ref.view.state.selection.main.to
-    const newSelection = hasSelection ? {
-      anchor: this.ref.view.state.selection.main.from,
-      head: this.ref.view.state.selection.main.to + left.length + right.length
-    } : {
-      anchor: this.ref.view.state.selection.main.to + left.length + right.length - 1,
-    }
-    this.ref.view.dispatch({
-      changes: [
-        {from: this.ref.view.state.selection.main.from, insert: left}, 
-        {from: this.ref.view.state.selection.main.to, insert: right}
-      ],
-      selection: newSelection
-    });
-  }
-
-  insertChar(key: string) {
-    this.replaceWith(key);
+    super(object);
   }
 
   insertToken(tokenID: TokenID): boolean {
-    const hasSelection = this.ref.view.state.selection.main.from !== this.ref.view.state.selection.main.to
+    const selection = this.getSelection();
+    const hasSelection = selection.from !== selection.to
     switch (tokenID) {
     case TokenID.NT_DECLARATIVE_EXPR: {
       if (hasSelection) {
@@ -87,7 +62,7 @@ export class TextWrapper {
       }
       this.ref.view.dispatch({
         selection: {
-          anchor: this.ref.view.state.selection.main.from + 2,
+          anchor: selection.from + 2,
         }
       });
       return true;
@@ -120,7 +95,7 @@ export class TextWrapper {
       this.envelopeWith('(', ')');
       this.ref.view.dispatch({
         selection: {
-          anchor: hasSelection ? this.ref.view.state.selection.main.to: this.ref.view.state.selection.main.from + 1,
+          anchor: hasSelection ? selection.to: selection.from + 1,
         }
       });
       return true;
@@ -130,14 +105,14 @@ export class TextWrapper {
       if (hasSelection) {
         this.ref.view.dispatch({
           selection: {
-            anchor: hasSelection ? this.ref.view.state.selection.main.to: this.ref.view.state.selection.main.from + 1,
+            anchor: hasSelection ? selection.to: selection.from + 1,
           }
       });
       }
       return true;
     }
     case TokenID.BOOLEAN: {
-      const selStart = this.ref.view.state.selection.main.from;
+      const selStart = selection.from;
       if (hasSelection && this.ref.view.state.sliceDoc(selStart, selStart + 1) === 'ℬ') {
         this.envelopeWith('ℬ', '');
       } else {

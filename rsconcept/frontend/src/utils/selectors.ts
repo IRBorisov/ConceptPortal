@@ -65,22 +65,9 @@ export function compareGrammemeOptions(left: IGrammemeOption, right: IGrammemeOp
  * Represents list of {@link Grammeme}s available in reference construction.
 */
 export const SelectorGrammemesList = [
-  Grammeme.NOUN, Grammeme.VERB,
-
   Grammeme.sing, Grammeme.plur,
   Grammeme.nomn, Grammeme.gent, Grammeme.datv,
   Grammeme.accs, Grammeme.ablt, Grammeme.loct,
-
-  Grammeme.INFN, Grammeme.ADJF, Grammeme.PRTF,
-  Grammeme.ADJS, Grammeme.PRTS,
-
-  Grammeme.perf, Grammeme.impf,
-  Grammeme.tran, Grammeme.intr,
-  Grammeme.pres, Grammeme.past, Grammeme.futr,
-  Grammeme.per1, Grammeme.per2, Grammeme.per3,
-  Grammeme.impr, Grammeme.indc,
-  Grammeme.incl, Grammeme.excl,
-  Grammeme.pssv, Grammeme.actv,
 ];
 
 /**

@@ -4,7 +4,7 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import Button from '../../components/Common/Button';
 import { ConceptLoader } from '../../components/Common/ConceptLoader';
 import RSInput from '../../components/RSInput';
-import { TextWrapper } from '../../components/RSInput/textEditing';
+import { RSTextWrapper } from '../../components/RSInput/textEditing';
 import { useRSForm } from '../../context/RSFormContext';
 import useCheckExpression from '../../hooks/useCheckExpression';
 import { IConstituenta } from '../../models/rsform';
@@ -97,7 +97,7 @@ function EditorRSExpression({
     if (!rsInput.current || !rsInput.current.editor || !rsInput.current.state || !rsInput.current.view) {
       return;
     }
-    const text = new TextWrapper(rsInput.current as Required<ReactCodeMirrorRef>);
+    const text = new RSTextWrapper(rsInput.current as Required<ReactCodeMirrorRef>);
     if (id === TokenID.ID_LOCAL) {
       text.insertChar(key ?? 'unknown_local');
     } else {

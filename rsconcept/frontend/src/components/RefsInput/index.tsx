@@ -9,10 +9,11 @@ import { RefObject, useCallback, useMemo, useRef, useState } from 'react';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useResolveText from '../../hooks/useResolveText';
+import { CodeMirrorWrapper } from '../../utils/codemirror';
 import Label from '../Common/Label';
 import Modal from '../Common/Modal';
 import PrettyJson from '../Common/PrettyJSON';
-import { NaturalLanguage } from './parse';
+import { NaturalLanguage, ReferenceTokens } from './parse';
 import { refsHoverTooltip } from './tooltip';
 
 const editorSetup: BasicSetupOptions = {
@@ -97,7 +98,7 @@ function RefsInput({
   () => [
     EditorView.lineWrapping,
     NaturalLanguage,
-    refsHoverTooltip(schema?.items || [], colors),
+    refsHoverTooltip(schema?.items || [], colors)
   ], [schema?.items, colors]);
 
   function handleChange(newValue: string) {
@@ -116,7 +117,7 @@ function RefsInput({
 
   const handleInput = useCallback(
   (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (!thisRef.current) {
+    if (!thisRef.current?.view) {
       event.preventDefault();
       return;
     }
@@ -128,6 +129,10 @@ function RefsInput({
         });
         return;
       }
+    }
+    if (event.ctrlKey && event.code === 'Space') {
+      const wrap = new CodeMirrorWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
+      wrap.fixSelection(ReferenceTokens);
     }
   }, [thisRef, resolveText, value]);
 
@@ -164,6 +169,7 @@ function RefsInput({
       onKeyDown={handleInput}
       onFocus={handleFocusIn}
       onBlur={handleFocusOut}
+      // spellCheck={true} // TODO: figure out while automatic spellcheck doesnt work or implement with extension
       {...props}
     />
     </div>

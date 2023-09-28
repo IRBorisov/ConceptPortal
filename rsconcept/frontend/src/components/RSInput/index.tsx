@@ -12,7 +12,7 @@ import { TokenID } from '../../models/rslang';
 import Label from '../Common/Label';
 import { ccBracketMatching } from './bracketMatching';
 import { RSLanguage } from './rslang';
-import { getSymbolSubstitute,TextWrapper } from './textEditing';
+import { getSymbolSubstitute,RSTextWrapper } from './textEditing';
 import { rsHoverTooltip } from './tooltip';
 
 const editorSetup: BasicSetupOptions = {
@@ -99,7 +99,7 @@ function RSInput({
     if (!thisRef.current) {
       return;
     }
-    const text = new TextWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
+    const text = new RSTextWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
     if (event.shiftKey && event.key === '*' && !event.altKey) {
       text.insertToken(TokenID.DECART);
     } else if (event.altKey) {

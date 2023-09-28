@@ -1,4 +1,6 @@
+import { syntaxTree } from '@codemirror/language'
 import { NodeType, Tree, TreeCursor } from '@lezer/common'
+import { ReactCodeMirrorRef, SelectionRange } from '@uiw/react-codemirror'
 
 import { IEntityReference, ISyntacticReference, parseGrammemes } from '../models/language'
 import { IConstituenta } from '../models/rsform'
@@ -224,4 +226,77 @@ export function domTooltipSyntacticReference(ref: ISyntacticReference, masterRef
   dom.appendChild(nominal);
     
   return { dom: dom };
+}
+
+/**
+ * Wrapper class for CodeMirror editor.
+ * 
+ * Assumes single range selection.
+*/
+export class CodeMirrorWrapper {
+  ref: Required<ReactCodeMirrorRef>;
+
+  constructor(object: Required<ReactCodeMirrorRef>) {
+    this.ref = object;
+  }
+
+  getSelection(): SelectionRange {
+    return this.ref.view.state.selection.main;
+  }
+
+  setSelection(from: number, to: number) {
+    this.ref.view.dispatch({
+      selection: {
+        anchor: from,
+        head: to
+      }
+    });
+  }
+
+  replaceWith(data: string) {
+    this.ref.view.dispatch(this.ref.view.state.replaceSelection(data));
+  }
+
+  envelopeWith(left: string, right: string) {
+    const selection = this.getSelection();
+    const newSelection = !selection.empty ? {
+      anchor: selection.from,
+      head: selection.to + left.length + right.length
+    } : {
+      anchor: selection.to + left.length + right.length - 1,
+    };
+    this.ref.view.dispatch({
+      changes: [
+        { from: selection.from, insert: left },
+        { from: selection.to, insert: right }
+      ],
+      selection: newSelection
+    });
+  }
+
+  insertChar(key: string) {
+    this.replaceWith(key);
+  }
+
+  /**
+   * Enlarges selection to nearest spaces.
+   * 
+   * If tokenFilter is provided then minimal valid token is selected.
+  */
+  fixSelection(tokenFilter?: number[]) {
+    const selection = this.getSelection();
+    if (tokenFilter) {
+      const nodes = findEnvelopingNodes(selection.from, selection.to, syntaxTree(this.ref.view.state), tokenFilter);
+      if (nodes.length > 0) {
+        const target = nodes[nodes.length - 1];
+        this.setSelection(target.from, target.to);
+        return;
+      }
+    }
+    const startWord = this.ref.view.state.wordAt(selection.from);
+    const endWord = this.ref.view.state.wordAt(selection.to);
+    if (startWord || endWord) {
+      this.setSelection(startWord?.from ?? selection.from, endWord?.to ?? selection.to);
+    }
+  }
 }

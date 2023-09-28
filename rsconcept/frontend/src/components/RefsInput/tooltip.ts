@@ -1,4 +1,4 @@
-import { syntaxTree } from "@codemirror/language"
+import { syntaxTree } from '@codemirror/language'
 import { Extension } from '@codemirror/state';
 import { hoverTooltip } from '@codemirror/view';
 
@@ -6,11 +6,13 @@ import { parseEntityReference, parseSyntacticReference } from '../../models/lang
 import { IConstituenta } from '../../models/rsform';
 import { domTooltipEntityReference, domTooltipSyntacticReference, findContainedNodes, findEnvelopingNodes } from '../../utils/codemirror';
 import { IColorTheme } from '../../utils/color';
+import { ReferenceTokens } from './parse';
 import { RefEntity, RefSyntactic } from './parse/parser.terms';
 
 export const globalsHoverTooltip = (items: IConstituenta[], colors: IColorTheme) => {
-  return hoverTooltip((view, pos) => {
-    const nodes = findEnvelopingNodes(pos, pos, syntaxTree(view.state), [RefEntity, RefSyntactic]);
+  return hoverTooltip(
+  (view, pos) => {
+    const nodes = findEnvelopingNodes(pos, pos, syntaxTree(view.state), ReferenceTokens);
     if (nodes.length !== 1) {
       return null;
     }
@@ -26,7 +28,7 @@ export const globalsHoverTooltip = (items: IConstituenta[], colors: IColorTheme)
         above: false,
         create: () => domTooltipEntityReference(ref, cst, colors)
       }
-    } else {
+    } else if (nodes[0].type.id === RefSyntactic) {
       const ref = parseSyntacticReference(text);
       let masterText: string | undefined = undefined;
       if (ref.offset > 0) {
@@ -49,6 +51,8 @@ export const globalsHoverTooltip = (items: IConstituenta[], colors: IColorTheme)
         above: false,
         create: () => domTooltipSyntacticReference(ref, masterText)
       }
+    } else {
+      return null;
     }
   });
 }

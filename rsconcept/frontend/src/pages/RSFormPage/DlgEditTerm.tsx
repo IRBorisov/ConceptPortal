@@ -158,15 +158,18 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
       text: inputText
     }
     textProcessor.generateLexeme(data, response => {
-      const newForms: IWordForm[] = response.items.map(
-      form => ({
-        text: form.text,
-        grams: parseGrammemes(form.grams).filter(gram => SelectorGrammemesList.find(item => item === gram as Grammeme))
-      }));
-      setForms(forms => [
-        ...newForms,
-        ...forms.filter(value => !newForms.find(test => matchWordForm(value, test))),
-      ]);
+      const lexeme: IWordForm[] = [];
+      response.items.forEach(
+      form => {
+        const newForm: IWordForm = {
+          text: form.text,
+          grams: parseGrammemes(form.grams).filter(gram => SelectorGrammemesList.find(item => item === gram as Grammeme))
+        }
+        if (newForm.grams.length === 2 && !lexeme.some(test => matchWordForm(test, newForm))) {
+          lexeme.push(newForm);
+        }
+      });
+      setForms(lexeme);
     });
   }
 
