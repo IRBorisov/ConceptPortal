@@ -87,8 +87,9 @@ function RefsInput({
       selection: colors.bgHover
     },
     styles: [
-      { tag: tags.name, color: colors.fgPurple, cursor: 'pointer' }, // GlobalID
-      { tag: tags.literal, color: colors.fgTeal }, // literals
+      { tag: tags.name, color: colors.fgPurple, cursor: 'default' }, // EntityReference
+      { tag: tags.literal, color: colors.fgTeal, cursor: 'default' }, // SyntacticReference
+      { tag: tags.comment, color: colors.fgRed }, // Error
     ]
   }), [editable, colors, darkMode]);
 

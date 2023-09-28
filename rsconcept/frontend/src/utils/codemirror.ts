@@ -110,7 +110,7 @@ export function findContainedNodes(start: number, finish: number, tree: Tree, fi
     node => {
     if (
       (!filter || filter.includes(node.type.id)) &&
-      node.to <= start && node.from >= finish
+      node.to <= finish && node.from >= start
     ) {
       result.push({
         type: node.type, 
@@ -164,17 +164,21 @@ export function domTooltipConstituenta(cst: IConstituenta) {
 */
 export function domTooltipEntityReference(ref: IEntityReference, cst: IConstituenta | undefined, colors: IColorTheme) {
   const DIMENSIONS = 'max-h-[25rem] max-w-[25rem] min-w-[10rem] w-fit z-tooltip px-2 py-2';
-  const LAYOUT = 'flex flex-col gap-1 overflow-y-auto'
+  const LAYOUT = 'flex flex-col overflow-y-auto';
 
   const dom = document.createElement('div');
   dom.className = `${DIMENSIONS} ${LAYOUT} border shadow-md text-sm select-none cursor-auto`;
+
+  const title = document.createElement('p');
+  title.innerHTML = '<b>Ссылка на конституенту</b>';
+  dom.appendChild(title);
 
   const term = document.createElement('p');
   term.innerHTML = `<b>${ref.entity}:</b> ${describeConstituentaTerm(cst)}`;
   dom.appendChild(term);
 
   const grams = document.createElement('div');
-  grams.className = 'flex flex-wrap gap-1';
+  grams.className = 'flex flex-wrap gap-1 mt-1';
   parseGrammemes(ref.form).forEach(
   gramStr => {
     const gram = document.createElement('div');
@@ -196,9 +200,9 @@ export function domTooltipEntityReference(ref: IEntityReference, cst: IConstitue
 /**
  * Create DOM tooltip for {@link ISyntacticReference}.
 */
-export function domTooltipSyntacticReference(ref: ISyntacticReference) {
+export function domTooltipSyntacticReference(ref: ISyntacticReference, masterRef: string | undefined) {
   const DIMENSIONS = 'max-h-[25rem] max-w-[25rem] min-w-[10rem] w-fit z-tooltip px-2 py-2';
-  const LAYOUT = 'flex flex-col gap-1 overflow-y-auto'
+  const LAYOUT = 'flex flex-col overflow-y-auto'
 
   const dom = document.createElement('div');
   dom.className = `${DIMENSIONS} ${LAYOUT} border shadow-md text-sm select-none cursor-auto`;
@@ -210,6 +214,10 @@ export function domTooltipSyntacticReference(ref: ISyntacticReference) {
   const offset = document.createElement('p');
   offset.innerHTML = `<b>Смещение:</b> ${ref.offset}`;
   dom.appendChild(offset);
+
+  const master = document.createElement('p');
+  master.innerHTML = `<b>Основная ссылка: </b> ${masterRef ?? 'не определена'}`;
+  dom.appendChild(master);
 
   const nominal = document.createElement('p');
   nominal.innerHTML = `<b>Начальная форма:</b> ${ref.nominal}`;

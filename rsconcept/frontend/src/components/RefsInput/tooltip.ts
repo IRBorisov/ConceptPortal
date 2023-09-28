@@ -4,7 +4,7 @@ import { hoverTooltip } from '@codemirror/view';
 
 import { parseEntityReference, parseSyntacticReference } from '../../models/language';
 import { IConstituenta } from '../../models/rsform';
-import { domTooltipEntityReference, domTooltipSyntacticReference, findEnvelopingNodes } from '../../utils/codemirror';
+import { domTooltipEntityReference, domTooltipSyntacticReference, findContainedNodes, findEnvelopingNodes } from '../../utils/codemirror';
 import { IColorTheme } from '../../utils/color';
 import { RefEntity, RefSyntactic } from './parse/parser.terms';
 
@@ -28,11 +28,26 @@ export const globalsHoverTooltip = (items: IConstituenta[], colors: IColorTheme)
       }
     } else {
       const ref = parseSyntacticReference(text);
+      let masterText: string | undefined = undefined;
+      if (ref.offset > 0) {
+        const entities = findContainedNodes(end, view.state.doc.length, syntaxTree(view.state), [RefEntity]);
+        console.log(end);
+        if (ref.offset <= entities.length) {
+          const master = entities[ref.offset - 1];
+          masterText = view.state.doc.sliceString(master.from, master.to);
+        }
+      } else {
+        const entities = findContainedNodes(0, start, syntaxTree(view.state), [RefEntity]);
+        if (-ref.offset <= entities.length) {
+          const master = entities[-ref.offset - 1];
+          masterText = view.state.doc.sliceString(master.from, master.to);
+        }
+      }
       return {
         pos: start,
         end: end,
         above: false,
-        create: () => domTooltipSyntacticReference(ref)
+        create: () => domTooltipSyntacticReference(ref, masterText)
       }
     }
   });

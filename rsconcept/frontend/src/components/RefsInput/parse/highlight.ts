@@ -8,4 +8,6 @@ export const highlighting = styleTags({
   RefSyntactic: tags.literal,
   Offset: tags.literal,
   Nominal: tags.literal,
+
+  Error: tags.comment
 });

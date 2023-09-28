@@ -7,4 +7,5 @@ export const
   RefSyntactic = 5,
   Offset = 6,
   Nominal = 7,
-  Filler = 8
+  Error = 8,
+  Filler = 9
