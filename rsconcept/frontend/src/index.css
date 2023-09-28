@@ -279,6 +279,8 @@
 }
 
 .cm-editor {
+  resize: vertical;
+  overflow: auto !important;
   border-color: var(--cl-bg-40);
   .dark & {
     border-color: var(--cd-bg-40);

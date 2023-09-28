@@ -3,7 +3,6 @@ import { toast } from 'react-toastify';
 
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import MiniButton from '../../components/Common/MiniButton';
-import ReferenceInput from '../../components/Common/ReferenceInput';
 import SubmitButton from '../../components/Common/SubmitButton';
 import TextArea from '../../components/Common/TextArea';
 import HelpConstituenta from '../../components/Help/HelpConstituenta';
@@ -192,15 +191,14 @@ function EditorConstituenta({
       </div>
       </div>
       <div className='flex flex-col gap-2 mt-1'>
-        <ReferenceInput id='term' label='Термин'
+        <RefsInput id='term' label='Термин'
           placeholder='Обозначение, используемое в текстовых определениях данной схемы'
-          rows={2}
+          height='3.5rem'
           value={term}
           initialValue={activeCst?.term_raw ?? ''}
           resolved={activeCst?.term_resolved ?? ''}
-          disabled={!isEnabled}
-          spellCheck
-          onChange={event => setTerm(event.target.value)}
+          editable={isEnabled}
+          onChange={newValue => setTerm(newValue)}
           onFocus={() => setEditMode(EditMode.TEXT)}
         />
         <TextArea id='typification' label='Типизация'
@@ -227,7 +225,6 @@ function EditorConstituenta({
           initialValue={activeCst?.definition_raw ?? ''}
           resolved={activeCst?.definition_resolved ?? ''}
           editable={isEnabled}
-          // spellCheck
           onChange={newValue => setTextDefinition(newValue)}
           onFocus={() => setEditMode(EditMode.TEXT)}
         />
