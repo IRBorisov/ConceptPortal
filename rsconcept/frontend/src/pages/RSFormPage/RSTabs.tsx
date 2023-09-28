@@ -313,7 +313,6 @@ function RSTabs() {
       id: activeID,
       term_forms: forms
     };
-    console.log(data);
     cstUpdate(data, () => toast.success('Изменения сохранены'));
   }, [cstUpdate, activeID]);
 

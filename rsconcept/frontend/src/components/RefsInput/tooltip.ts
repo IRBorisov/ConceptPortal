@@ -33,7 +33,6 @@ export const globalsHoverTooltip = (items: IConstituenta[], colors: IColorTheme)
       let masterText: string | undefined = undefined;
       if (ref.offset > 0) {
         const entities = findContainedNodes(end, view.state.doc.length, syntaxTree(view.state), [RefEntity]);
-        console.log(end);
         if (ref.offset <= entities.length) {
           const master = entities[ref.offset - 1];
           masterText = view.state.doc.sliceString(master.from, master.to);

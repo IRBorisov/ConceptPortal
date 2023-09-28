@@ -138,7 +138,6 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
     if (!isEditable) {
       return;
     }
-    console.log(1);
     if (event.key === 'Delete' && selected.length > 0) {
       event.preventDefault();
       handleDelete();
