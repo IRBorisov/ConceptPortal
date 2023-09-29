@@ -244,6 +244,11 @@ export class CodeMirrorWrapper {
     return this.ref.view.state.selection.main;
   }
 
+  getSelectionText(): string {
+    const selection = this.getSelection();
+    return this.ref.view.state.doc.sliceString(selection.from, selection.to);
+  }
+
   setSelection(from: number, to: number) {
     this.ref.view.dispatch({
       selection: {
@@ -251,6 +256,10 @@ export class CodeMirrorWrapper {
         head: to
       }
     });
+  }
+
+  insertChar(key: string) {
+    this.replaceWith(key);
   }
 
   replaceWith(data: string) {
@@ -274,8 +283,20 @@ export class CodeMirrorWrapper {
     });
   }
 
-  insertChar(key: string) {
-    this.replaceWith(key);
+  /**
+   * Access list of SyntaxNodes contained in current selection
+  */
+  getContainedNodes(tokenFilter?: number[]): SyntaxNode[] {
+    const selection = this.getSelection();
+    return findContainedNodes(selection.from, selection.to, syntaxTree(this.ref.view.state), tokenFilter);
+  }
+
+  /**
+   * Access list of SyntaxNodes enveloping current selection
+  */
+  getEnvelopingNodes(tokenFilter?: number[]): SyntaxNode[] {
+    const selection = this.getSelection();
+    return findEnvelopingNodes(selection.from, selection.to, syntaxTree(this.ref.view.state), tokenFilter);
   }
 
   /**

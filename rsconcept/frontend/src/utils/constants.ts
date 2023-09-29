@@ -36,5 +36,6 @@ export const prefixes = {
   cst_list: 'cst-list-',
   cst_status_list: 'cst-status-list-',
   topic_list: 'topic-list-',
-  library_list: 'library-list-'
+  library_list: 'library-list-',
+  wordform_list: 'wordform-list'
 }

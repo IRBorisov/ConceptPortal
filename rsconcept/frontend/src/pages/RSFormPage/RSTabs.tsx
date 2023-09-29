@@ -21,7 +21,7 @@ import { createAliasFor } from '../../utils/misc';
 import DlgCloneRSForm from './DlgCloneRSForm';
 import DlgCreateCst from './DlgCreateCst';
 import DlgDeleteCst from './DlgDeleteCst';
-import DlgEditTerm from './DlgEditTerm';
+import DlgEditWordForms from './DlgEditWordForms';
 import DlgRenameCst from './DlgRenameCst';
 import DlgShowAST from './DlgShowAST';
 import DlgUploadRSForm from './DlgUploadRSForm';
@@ -354,7 +354,7 @@ function RSTabs() {
       selected={toBeDeleted}
     />}
     {showEditTerm &&
-    <DlgEditTerm
+    <DlgEditWordForms
       hideWindow={() => setShowEditTerm(false)}
       onSave={handleSaveWordforms}
       target={activeCst!}

@@ -194,6 +194,7 @@ function EditorConstituenta({
         <RefsInput id='term' label='Термин'
           placeholder='Обозначение, используемое в текстовых определениях данной схемы'
           height='3.5rem'
+          items={schema?.items}
           value={term}
           initialValue={activeCst?.term_raw ?? ''}
           resolved={activeCst?.term_resolved ?? ''}
@@ -221,6 +222,7 @@ function EditorConstituenta({
         <RefsInput id='definition' label='Текстовое определение'
           placeholder='Лингвистическая интерпретация формального выражения'
           height='6.3rem'
+          items={schema?.items}
           value={textDefinition}
           initialValue={activeCst?.definition_raw ?? ''}
           resolved={activeCst?.definition_resolved ?? ''}

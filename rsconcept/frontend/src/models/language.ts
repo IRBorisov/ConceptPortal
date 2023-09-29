@@ -283,6 +283,39 @@ export function parseGrammemes(termForm: string): GramData[] {
   return result.sort(compareGrammemes);
 }
 
+/**
+ * Creates a list of compatible {@link Grammeme}s.
+ */
+export function getCompatibleGrams(input: Grammeme[]): Grammeme[] {
+  let result: Grammeme[] = [];
+  input.forEach(
+  (gram) => {
+    if (!result.includes(gram)) {
+      if (NounGrams.includes(gram)) {
+        result.push(...NounGrams);
+      }
+      if (VerbGrams.includes(gram)) {
+        result.push(...VerbGrams);
+      }
+    }
+  });
+
+  input.forEach(
+  (gram) => GrammemeGroups.forEach(
+  (group) => {
+    if (group.includes(gram)) {
+      result = result.filter(item => !group.includes(item));
+    }
+  }));
+  
+  if (result.length === 0) {
+    return [... new Set<Grammeme>([...VerbGrams, ...NounGrams])];
+  } else {
+    return result;
+  }
+}
+
+
 // ====== Reference resolution =====
 /**
  * Represents text request.
@@ -324,11 +357,17 @@ export interface ITextPosition {
 }
 
 /**
- * Represents single resolved reference data.
+ * Represents abstract reference data.
 */
-export interface IResolvedReference {
+export interface IReference {
   type: ReferenceType
   data: IEntityReference | ISyntacticReference
+}
+
+/**
+ * Represents single resolved reference data.
+*/
+export interface IResolvedReference extends IReference {
   pos_input: ITextPosition
   pos_output: ITextPosition
 }

@@ -9,11 +9,15 @@ import { RefObject, useCallback, useMemo, useRef, useState } from 'react';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useResolveText from '../../hooks/useResolveText';
+import { ReferenceType } from '../../models/language';
+import { IConstituenta } from '../../models/rsform';
 import { CodeMirrorWrapper } from '../../utils/codemirror';
 import Label from '../Common/Label';
 import Modal from '../Common/Modal';
 import PrettyJson from '../Common/PrettyJSON';
+import DlgEditReference from './DlgEditReference';
 import { NaturalLanguage, ReferenceTokens } from './parse';
+import { RefEntity } from './parse/parser.terms';
 import { refsHoverTooltip } from './tooltip';
 
 const editorSetup: BasicSetupOptions = {
@@ -51,6 +55,7 @@ extends Pick<ReactCodeMirrorProps,
   label?: string
   innerref?: RefObject<ReactCodeMirrorRef> | undefined
   onChange?: (newValue: string) => void
+  items?: IConstituenta[]
   
   initialValue?: string
   value?: string
@@ -58,7 +63,7 @@ extends Pick<ReactCodeMirrorProps,
 }
 
 function RefsInput({ 
-  id, label, innerref, onChange, editable, 
+  id, label, innerref, onChange, editable, items,
   initialValue, value, resolved,
   onFocus, onBlur,
   ...props 
@@ -70,6 +75,11 @@ function RefsInput({
 
   const [showResolve, setShowResolve] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+
+  const [showEditor, setShowEditor] = useState(false);
+  const [currentType, setCurrentType] = useState<ReferenceType>(ReferenceType.ENTITY);
+  const [refText, setRefText] = useState('');
+  const [hintText, setHintText] = useState('');
 
   const internalRef = useRef<ReactCodeMirrorRef>(null);
   const thisRef = useMemo(
@@ -133,11 +143,41 @@ function RefsInput({
     if (event.ctrlKey && event.code === 'Space') {
       const wrap = new CodeMirrorWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
       wrap.fixSelection(ReferenceTokens);
+      const nodes = wrap.getEnvelopingNodes(ReferenceTokens);
+      if (nodes.length !== 1) {
+        setCurrentType(ReferenceType.ENTITY);
+        setRefText('');
+        setHintText(wrap.getSelectionText());
+      } else {
+        setCurrentType(nodes[0].type.id === RefEntity ? ReferenceType.ENTITY : ReferenceType.SYNTACTIC);
+        setRefText(wrap.getSelectionText());
+      }
+      setShowEditor(true);
     }
   }, [thisRef, resolveText, value]);
 
+  const handleInputReference = useCallback(
+  (referenceText: string) => {
+    if (!thisRef.current?.view) {
+      return;
+    }
+    thisRef.current.view.focus();
+    const wrap = new CodeMirrorWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
+    wrap.replaceWith(referenceText);
+  }, [thisRef]);
+
   return (
   <>
+    { showEditor && 
+    <DlgEditReference
+      hideWindow={() => setShowEditor(false)}
+      items={items ?? []}
+      initialType={currentType}
+      initialRef={refText}
+      initialText={hintText}
+      onSave={handleInputReference}
+    />
+    }
     { showResolve &&
     <Modal
       readonly
@@ -161,7 +201,7 @@ function RefsInput({
       theme={customTheme}
       extensions={editorExtensions}
 
-      value={isFocused ? value : (value !== initialValue ? value : resolved)}
+      value={isFocused ? value : (value !== initialValue || showEditor ? value : resolved)}
 
       indentWithTab={false}
       onChange={handleChange}

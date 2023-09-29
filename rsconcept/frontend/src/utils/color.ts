@@ -103,7 +103,7 @@ export const darkT: IColorTheme = {
   fgGreen:    'hsl(100, 080%, 035%)',
   fgBlue:     'hsl(235, 100%, 080%)',
   fgPurple:   'hsl(270, 100%, 080%)',
-  fgTeal:     'hsl(192, 100%, 030%)',
+  fgTeal:     'hsl(192, 100%, 045%)',
   fgOrange:   'hsl(035, 100%, 050%)'
 };
 

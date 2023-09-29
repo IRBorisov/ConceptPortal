@@ -5,8 +5,8 @@ import SelectSingle from '../../components/Common/SelectSingle';
 import TextArea from '../../components/Common/TextArea';
 import RSInput from '../../components/RSInput';
 import { CstType,ICstCreateData } from '../../models/rsform';
-import { SelectorCstType } from '../../utils/selectors';
 import { labelCstType } from '../../utils/labels';
+import { SelectorCstType } from '../../utils/selectors';
 
 interface DlgCreateCstProps
 extends Pick<ModalProps, 'hideWindow'> {

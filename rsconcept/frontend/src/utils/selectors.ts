@@ -1,10 +1,10 @@
 // Module: Selector maps
 import { LayoutTypes } from 'reagraph';
 
-import { compareGrammemes,type GramData, Grammeme } from '../models/language';
+import { compareGrammemes,type GramData, Grammeme, ReferenceType } from '../models/language';
 import { CstType } from '../models/rsform';
 import { ColoringScheme } from '../pages/RSFormPage/EditorTermGraph';
-import { labelGrammeme } from './labels';
+import { labelGrammeme, labelReferenceType } from './labels';
 import { labelCstType } from './labels';
 
 /**
@@ -79,3 +79,33 @@ gram => ({
   value: gram,
   label: labelGrammeme(gram)
 }));
+
+/**
+ * Represents options for {@link ReferenceType} selector.
+*/
+export const SelectorReferenceType = (
+  Object.values(ReferenceType)).map(
+  typeStr => ({
+    value: typeStr as ReferenceType,
+    label: labelReferenceType(typeStr as ReferenceType)
+  })
+);
+
+/**
+ * Represents recommended wordforms data.
+*/
+export const PremadeWordForms = [
+  { text: 'ед им', example: 'ручка', grams: [Grammeme.sing, Grammeme.nomn] },
+  { text: 'ед род', example: 'ручки', grams: [Grammeme.sing, Grammeme.gent] },
+  { text: 'ед дат', example: 'ручке', grams: [Grammeme.sing, Grammeme.datv] },
+  { text: 'ед вин', example: 'ручку', grams: [Grammeme.sing, Grammeme.accs] },
+  { text: 'ед твор', example: 'ручкой', grams: [Grammeme.sing, Grammeme.ablt] },
+  { text: 'ед пред', example: 'ручке', grams: [Grammeme.sing, Grammeme.loct] },
+  
+  { text: 'мн им', example: 'ручки', grams: [Grammeme.plur, Grammeme.nomn] },
+  { text: 'мн род', example: 'ручек', grams: [Grammeme.plur, Grammeme.gent] },
+  { text: 'мн дат', example: 'ручкам', grams: [Grammeme.plur, Grammeme.datv] },
+  { text: 'мн вин', example: 'ручки', grams: [Grammeme.plur, Grammeme.accs] },
+  { text: 'мн твор', example: 'ручками', grams: [Grammeme.plur, Grammeme.ablt] },
+  { text: 'мн пред', example: 'ручках', grams: [Grammeme.plur, Grammeme.loct] }
+];

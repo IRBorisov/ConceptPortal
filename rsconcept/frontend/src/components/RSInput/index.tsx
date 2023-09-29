@@ -26,7 +26,7 @@ const editorSetup: BasicSetupOptions = {
   lineNumbers: false,
   highlightActiveLineGutter: false,
   foldGutter: false,
-  dropCursor: false,
+  dropCursor: true,
   allowMultipleSelections: false,
   indentOnInput: false,
   bracketMatching: false,

@@ -10,15 +10,15 @@ import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, ChevronDoubleDownIcon, CrossI
 import { useConceptTheme } from '../../context/ThemeContext';
 import useConceptText from '../../hooks/useConceptText';
 import {
-  GramData, Grammeme, GrammemeGroups, ITextRequest, IWordForm,
-  IWordFormPlain, matchWordForm, NounGrams, parseGrammemes, VerbGrams
+  getCompatibleGrams, Grammeme, ITextRequest, IWordForm,
+  IWordFormPlain, matchWordForm, parseGrammemes
 } from '../../models/language';
 import { IConstituenta, TermForm } from '../../models/rsform';
 import { colorfgGrammeme } from '../../utils/color';
 import { labelGrammeme } from '../../utils/labels';
 import { compareGrammemeOptions,IGrammemeOption, SelectorGrammemesList, SelectorGrammems } from '../../utils/selectors';
 
-interface DlgEditTermProps {
+interface DlgEditWordFormsProps {
   hideWindow: () => void
   target: IConstituenta
   onSave: (data: TermForm[]) => void
@@ -26,7 +26,7 @@ interface DlgEditTermProps {
 
 const columnHelper = createColumnHelper<IWordForm>();
 
-function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
+function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps) {
   const textProcessor = useConceptText();
   const { colors } = useConceptTheme();
   const [term, setTerm] = useState('');
@@ -65,32 +65,12 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
   // Filter grammemes when input changes
   useEffect(
   () => {
-    let newFilter: GramData[] = [];
-    inputGrams.forEach(({value: gram}) => {
-      if (!newFilter.includes(gram)) {
-        if (NounGrams.includes(gram as Grammeme)) {
-          newFilter.push(...NounGrams);
-        }
-        if (VerbGrams.includes(gram as Grammeme)) {
-          newFilter.push(...VerbGrams);
-        }
-      }
-    });
-
-    inputGrams.forEach(({value: gram}) =>
-    GrammemeGroups.forEach(group => {
-      if (group.includes(gram as Grammeme)) {
-        newFilter = newFilter.filter(item => !group.includes(item as Grammeme) || item === gram);
-      }
-    }));
-
-    newFilter.push(...inputGrams.map(({value}) => value));
-    if (newFilter.length === 0) {
-      newFilter = [...VerbGrams, ...NounGrams];
-    }
-    
-    newFilter = [... new Set(newFilter)];
-    setOptions(SelectorGrammems.filter(({value}) => newFilter.includes(value)));
+    const compatible = getCompatibleGrams(
+      inputGrams
+        .filter(data => Object.values(Grammeme).includes(data.value as Grammeme))
+        .map(data => data.value as Grammeme)
+    );
+    setOptions(SelectorGrammems.filter(({value}) => compatible.includes(value as Grammeme)));
   }, [inputGrams]);
 
   const handleSubmit = () => onSave(getData());
@@ -329,4 +309,4 @@ function DlgEditTerm({ hideWindow, target, onSave }: DlgEditTermProps) {
   </Modal>);
 }
 
-export default DlgEditTerm;
+export default DlgEditWordForms;

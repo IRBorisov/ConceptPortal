@@ -1,6 +1,6 @@
 // =========== Modules contains all text descriptors ==========
 
-import { GramData,Grammeme } from '../models/language';
+import { GramData,Grammeme, ReferenceType } from '../models/language';
 import { CstMatchMode, DependencyMode, HelpTopic } from '../models/miscelanious';
 import { CstClass, CstType, ExpressionStatus, IConstituenta } from '../models/rsform';
 import { IFunctionArg, IRSErrorDescription, ISyntaxTreeNode, ParsingStatus, RSErrorType, TokenID } from '../models/rslang';
@@ -221,7 +221,7 @@ export function describeHelpTopic(topic: HelpTopic): string {
   }
 }
 
-export function labelCstType(type: CstType) {
+export function labelCstType(type: CstType): string {
   switch (type) {
     case CstType.BASE:          return 'Базисное множество';
     case CstType.CONSTANT:      return 'Константное множество';
@@ -231,6 +231,13 @@ export function labelCstType(type: CstType) {
     case CstType.FUNCTION:      return 'Терм-функция';
     case CstType.PREDICATE:     return 'Предикат-функция';
     case CstType.THEOREM:       return 'Теорема';
+  }
+}
+
+export function labelReferenceType(type: ReferenceType): string {
+  switch(type) {
+    case ReferenceType.ENTITY:    return 'Использование термина';
+    case ReferenceType.SYNTACTIC: return 'Синтаксическая зависимость';
   }
 }
 
