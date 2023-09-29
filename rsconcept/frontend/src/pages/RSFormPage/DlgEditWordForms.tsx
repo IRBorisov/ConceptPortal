@@ -1,12 +1,14 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
+import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import Divider from '../../components/Common/Divider';
 import MiniButton from '../../components/Common/MiniButton';
 import Modal from '../../components/Common/Modal';
 import SelectMulti from '../../components/Common/SelectMulti';
 import TextArea from '../../components/Common/TextArea';
 import DataTable, { createColumnHelper } from '../../components/DataTable';
-import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, ChevronDoubleDownIcon, CrossIcon } from '../../components/Icons';
+import HelpTerminologyControl from '../../components/Help/HelpTerminologyControl';
+import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, ChevronDoubleDownIcon, CrossIcon, HelpIcon } from '../../components/Icons';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useConceptText from '../../hooks/useConceptText';
 import {
@@ -215,6 +217,21 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
     canSubmit
     onSubmit={handleSubmit}
   >
+    <div className='relative w-full'>
+    <div className='absolute top-0 right-0'>
+    <div id='terminology-help' className='px-1 py-1'>
+        <HelpIcon color='text-primary' size={5} />
+      </div>
+      <ConceptTooltip
+        anchorSelect='#terminology-help'
+        className='max-w-[30rem] z-modal-tooltip'
+        offset={4}
+      >
+        <HelpTerminologyControl />
+      </ConceptTooltip>
+    </div>
+    </div>
+      
   <div className='min-w-[40rem]'>
     <TextArea id='nominal' label='Начальная форма'
       placeholder='Начальная форма'

@@ -196,12 +196,13 @@ export function describeExpressionStatus(status: ExpressionStatus): string {
 export function labelHelpTopic(topic: HelpTopic): string {
   switch (topic) {
     case HelpTopic.MAIN:          return 'Портал';
-    case HelpTopic.RSLANG:        return 'Экспликация';
     case HelpTopic.LIBRARY:       return 'Библиотека';
     case HelpTopic.RSFORM:        return '- паспорт схемы';
     case HelpTopic.CSTLIST:       return '- список конституент';
     case HelpTopic.CONSTITUENTA:  return '- конституента';
     case HelpTopic.GRAPH_TERM:    return '- граф термов';
+    case HelpTopic.RSLANG:        return 'Экспликация';
+    case HelpTopic.TERM_CONTROL:  return 'Терминологизация';
     case HelpTopic.EXTEOR:        return 'Экстеор';
     case HelpTopic.API:           return 'REST API';
   }
@@ -210,12 +211,13 @@ export function labelHelpTopic(topic: HelpTopic): string {
 export function describeHelpTopic(topic: HelpTopic): string {
   switch (topic) {
     case HelpTopic.MAIN:          return 'Общая справка по порталу';
-    case HelpTopic.RSLANG:        return 'Справка по языку родов структур и экспликации';
     case HelpTopic.LIBRARY:       return 'Описание работы с библиотекой схем';
     case HelpTopic.RSFORM:        return 'Описание работы с описанием схемы';
     case HelpTopic.CSTLIST:       return 'Описание работы со списком конституентт';
     case HelpTopic.CONSTITUENTA:  return 'Описание редактирования конституенты';
     case HelpTopic.GRAPH_TERM:    return 'Описание работы с графом термов схемы';
+    case HelpTopic.RSLANG:        return 'Справка по языку родов структур и экспликации';
+    case HelpTopic.TERM_CONTROL:  return 'Справка по контролю терминов и текстовым отсылкам';
     case HelpTopic.EXTEOR:        return 'Справка по программе для экспликации "Экстеор" для Windows';
     case HelpTopic.API:           return 'Описание интерфейса для разработчиков';
   }

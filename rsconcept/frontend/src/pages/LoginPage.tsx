@@ -109,7 +109,7 @@ function LoginPage() {
 
       <div className='flex justify-center w-full gap-2 py-2'>
         <SubmitButton
-          text='Вход'
+          text='Войти'
           dimensions='w-[12rem]'
           loading={loading}
         />

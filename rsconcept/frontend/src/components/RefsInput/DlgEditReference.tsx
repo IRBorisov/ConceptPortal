@@ -10,12 +10,15 @@ import { colorfgCstStatus } from '../../utils/color';
 import { prefixes } from '../../utils/constants';
 import { labelReferenceType } from '../../utils/labels';
 import { compareGrammemeOptions, IGrammemeOption, PremadeWordForms, SelectorGrammems, SelectorReferenceType } from '../../utils/selectors';
+import ConceptTooltip from '../Common/ConceptTooltip';
 import Label from '../Common/Label';
 import Modal from '../Common/Modal';
 import SelectMulti from '../Common/SelectMulti';
 import SelectSingle from '../Common/SelectSingle';
 import TextInput from '../Common/TextInput';
 import DataTable, { IConditionalStyle } from '../DataTable';
+import HelpTerminologyControl from '../Help/HelpTerminologyControl';
+import { HelpIcon } from '../Icons';
 import TermformButton from './TermformButton';
 
 interface DlgEditReferenceProps {
@@ -214,14 +217,26 @@ function DlgEditReference({ hideWindow, items, initialRef, initialText, initialT
     onSubmit={handleSubmit}
   >
   <div className='min-w-[40rem] flex flex-col gap-4 mb-4 mt-2'>
-    <SelectSingle
-      className='z-modal-top min-w-[20rem] w-fit self-center'
-      options={SelectorReferenceType}
-      isSearchable={false}
-      placeholder='Тип ссылки'
-      value={{ value: type, label: labelReferenceType(type) }}
-      onChange={data => setType(data?.value ?? ReferenceType.ENTITY)}
-    />
+    <div className='flex self-center flex-start'>
+      <SelectSingle
+        className='z-modal-top min-w-[20rem] w-fit'
+        options={SelectorReferenceType}
+        isSearchable={false}
+        placeholder='Тип ссылки'
+        value={{ value: type, label: labelReferenceType(type) }}
+        onChange={data => setType(data?.value ?? ReferenceType.ENTITY)}
+      />
+      <div id='terminology-help' className='px-1 py-1'>
+        <HelpIcon color='text-primary' size={5} />
+      </div>
+      <ConceptTooltip
+        anchorSelect='#terminology-help'
+        className='max-w-[30rem]'
+        offset={4}
+      >
+        <HelpTerminologyControl />
+      </ConceptTooltip>
+    </div>
     {type === ReferenceType.SYNTACTIC &&
     <div className='flex gap-4 flex-start'>
       <TextInput id='offset' type='number'

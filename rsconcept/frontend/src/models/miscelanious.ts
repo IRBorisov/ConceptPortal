@@ -21,12 +21,13 @@ export enum DependencyMode {
 // Help manual topic compare mode
 export enum HelpTopic {
   MAIN = 'main',
-  RSLANG = 'rslang',
   LIBRARY = 'library',
   RSFORM = 'rsform',
   CSTLIST = 'cstlist',
   CONSTITUENTA = 'constituenta',
   GRAPH_TERM = 'graph-term',
+  RSLANG = 'rslang',
+  TERM_CONTROL = 'terminology-control',
   EXTEOR = 'exteor',
   API = 'api'
 }
