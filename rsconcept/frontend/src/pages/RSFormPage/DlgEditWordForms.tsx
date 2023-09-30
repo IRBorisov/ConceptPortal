@@ -1,7 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
-import Divider from '../../components/Common/Divider';
 import MiniButton from '../../components/Common/MiniButton';
 import Modal from '../../components/Common/Modal';
 import SelectMulti from '../../components/Common/SelectMulti';
@@ -107,9 +106,8 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
     setInputGrams(SelectorGrammems.filter(gram => form.grams.find(test => test === gram.value)));
   }
 
-  function handleResetForm() {
-    setInputText('');
-    setInputGrams([]);
+  function handleResetAll() {
+    setForms([]);
   }
 
   function handleInflect() {
@@ -199,12 +197,12 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
       maxSize: 50,
       cell: props => 
         <div>
-          <MiniButton
-            tooltip='Удалить словоформу'
-            icon={<CrossIcon size={4} color='text-warning'/>}
-            noHover
-            onClick={() => handleDeleteRow(props.row.index)}
-          />
+        <MiniButton
+          tooltip='Удалить словоформу'
+          icon={<CrossIcon size={4} color='text-warning'/>}
+          noHover
+          onClick={() => handleDeleteRow(props.row.index)}
+        />
         </div>
     })
   ], [colors]);
@@ -232,7 +230,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
     </div>
     </div>
       
-  <div className='min-w-[40rem]'>
+  <div className='min-w-[40rem] max-w-[40rem]'>
     <TextArea id='nominal' label='Начальная форма'
       placeholder='Начальная форма'
       rows={1}
@@ -242,58 +240,38 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
       spellCheck
     />
 
-    <Divider margins='my-4'/>
+    <div className='text-sm mt-4 mb-2 font-semibold'>
+      Параметры словоформы
+    </div>
 
-    <div className='flex items-start gap-2 justify-stretch min-h-[6.3rem]'>
-      <div className='flex flex-col gap-1'>
-        <TextArea
-          placeholder='Введите текст'
-          rows={2}
-          dimensions='min-w-[20rem] min-h-[4.2rem]'
+    <div className='flex items-start justify-between w-full'>
+      <TextArea
+        placeholder='Введите текст'
+        rows={2}
+        dimensions='min-w-[18rem] w-full min-h-[4.2rem]'
 
-          disabled={textProcessor.loading}
-          value={inputText}
-          onChange={event => setInputText(event.target.value)}
+        value={inputText}
+        onChange={event => setInputText(event.target.value)}
+      />
+      <div className='max-w-min'>
+        <MiniButton
+          tooltip='Генерировать словоформу'
+          icon={<ArrowLeftIcon
+            size={6}
+            color={inputGrams.length == 0 ? 'text-disabled' : 'text-primary'}
+          />}
+          disabled={textProcessor.loading || inputGrams.length == 0}
+          onClick={handleInflect}
         />
-        <div className='flex items-center justify-between select-none'>
-          <div className='flex items-center justify-start'>
-            <MiniButton
-              tooltip='Добавить словоформу'
-              icon={<CheckIcon size={6} color={!inputText || inputGrams.length == 0 ? 'text-disabled' : 'text-success'}/>}
-              disabled={textProcessor.loading || !inputText || inputGrams.length == 0}
-              onClick={handleAddForm}
-            />
-            <MiniButton
-              tooltip='Сбросить словоформу'
-              icon={<CrossIcon size={6} color='text-warning'/>}
-              disabled={textProcessor.loading}
-              onClick={handleResetForm}
-            />
-            <MiniButton
-              tooltip='Генерировать все словоформы'
-              icon={<ChevronDoubleDownIcon size={6} color='text-primary'/>}
-              disabled={textProcessor.loading}
-              onClick={handleGenerateLexeme}
-            />
-          </div>
-          <div className='text-sm'>
-            Словоформ: {forms.length}
-          </div>
-          <div className='flex items-center justify-start'>
-            <MiniButton
-              tooltip='Генерировать словоформу'
-              icon={<ArrowLeftIcon size={6} color={inputGrams.length == 0 ? 'text-disabled' : 'text-primary'}/>}
-              disabled={textProcessor.loading || inputGrams.length == 0}
-              onClick={handleInflect}
-            />
-            <MiniButton
-              tooltip='Определить граммемы'
-              icon={<ArrowRightIcon size={6} color={!inputText ? 'text-disabled' : 'text-primary'}/>}
-              disabled={textProcessor.loading || !inputText}
-              onClick={handleParse}
-            />
-          </div>
-        </div>
+        <MiniButton
+          tooltip='Определить граммемы'
+          icon={<ArrowRightIcon
+            size={6}
+            color={!inputText ? 'text-disabled' : 'text-primary'}
+          />}
+          disabled={textProcessor.loading || !inputText}
+          onClick={handleParse}
+        />
       </div>
       <SelectMulti
         className='z-modal-top min-w-[20rem] max-w-[20rem] h-full flex-grow'
@@ -301,25 +279,58 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         placeholder='Выберите граммемы'
         
         value={inputGrams}
-        isDisabled={textProcessor.loading}
         onChange={newValue => setInputGrams([...newValue].sort(compareGrammemeOptions))}
       />
     </div>
+
+    <div className='flex flex-start justify-between'>
+      <div className='flex items-center justify-start'>
+        <MiniButton
+          tooltip='Внести словоформу'
+          icon={<CheckIcon
+            size={6}
+            color={!inputText || inputGrams.length == 0 ? 'text-disabled' : 'text-success'}
+          />}
+          disabled={textProcessor.loading || !inputText || inputGrams.length == 0}
+          onClick={handleAddForm}
+        />
+        <MiniButton
+          tooltip='Генерировать все словоформы'
+          icon={<ChevronDoubleDownIcon
+            size={6}
+            color={!inputText ? 'text-disabled' : 'text-primary'}
+          />}
+          disabled={textProcessor.loading || !inputText}
+          onClick={handleGenerateLexeme}
+        />
+      </div>
+      <div className='text-sm mt-2 mb-1 font-semibold w-full text-center'>
+        Заданные вручную словоформы: [{forms.length}]
+      </div>
+      <MiniButton
+        tooltip='Сбросить ВСЕ словоформы'
+        icon={<CrossIcon
+          size={6}
+          color={forms.length === 0 ? 'text-disabled' : 'text-warning'}
+        />}
+        disabled={textProcessor.loading || forms.length === 0}
+        onClick={handleResetAll}
+        />
+    </div>
     
-    <div className='border overflow-y-auto max-h-[17.4rem] min-h-[17.4rem]'>
+    <div className='border overflow-y-auto max-h-[17.4rem] min-h-[17.4rem] mb-2'>
     <DataTable
         data={forms}
         columns={columns}
+        headPosition='0'
         dense
-
         noDataComponent={
           <span className='flex flex-col justify-center p-2 text-center min-h-[2rem]'>
             <p>Список пуст</p>
             <p>Добавьте словоформу</p>
           </span>
         }
-        
-        onRowDoubleClicked={handleRowClicked}
+        onRowClicked={handleRowClicked}
       />
     </div>
   </div>

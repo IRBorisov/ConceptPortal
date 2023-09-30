@@ -96,9 +96,9 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
   return (
     <div>
       {items.length > 0 &&
-      <div className='relative w-full'>
+      <div className='sticky top-[2.3rem] w-full'>
       <div className='absolute top-[-0.125rem] left-0 flex gap-1 ml-3 z-pop'>
-        <div id='library-help' className='py-2'>
+        <div id='library-help' className='py-2 '>
           <HelpIcon color='text-primary' size={5} />
         </div>
         <ConceptTooltip anchorSelect='#library-help'>
@@ -112,6 +112,7 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
         columns={columns}
         data={items}
 
+        headPosition='2.3rem'
         noDataComponent={
         <div className='flex flex-col gap-4 justify-center p-2 text-center min-h-[6rem]'>
           <p>Список схем пуст</p>

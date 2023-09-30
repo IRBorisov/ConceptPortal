@@ -17,7 +17,7 @@ function TextInput({
   colorClass = 'clr-input',
   ...props
 }: TextInputProps) {
-  const borderClass = noBorder ? '': 'border';
+  const borderClass = noBorder ? '': 'border shadow';
   return (
     <div className={`flex ${singleRow ? 'items-center gap-4 ' + dimensions : 'flex-col items-start gap-2'}`}>
       {label && 
@@ -28,7 +28,7 @@ function TextInput({
       />}
       <input id={id}
         title={tooltip}
-        className={`px-3 py-2 leading-tight ${borderClass} shadow truncate hover:text-clip clr-outline ${colorClass} ${singleRow ? 'w-full' : dimensions}`}
+        className={`px-3 py-2 leading-tight ${borderClass} truncate hover:text-clip clr-outline ${colorClass} ${singleRow ? 'w-full' : dimensions}`}
         required={required}
         {...props}
       />

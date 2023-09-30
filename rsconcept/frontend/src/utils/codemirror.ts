@@ -210,7 +210,7 @@ export function domTooltipSyntacticReference(ref: ISyntacticReference, masterRef
   dom.className = `${DIMENSIONS} ${LAYOUT} border shadow-md text-sm select-none cursor-auto`;
 
   const title = document.createElement('p');
-  title.innerHTML = '<b>Синтаксическая ссылка</b>';
+  title.innerHTML = '<b>Связывание слов</b>';
   dom.appendChild(title);
 
   const offset = document.createElement('p');

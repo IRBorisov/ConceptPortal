@@ -26,6 +26,7 @@ extends Pick<TableOptions<TData>,
   'onRowSelectionChange' | 'onColumnVisibilityChange'
 > {
   dense?: boolean
+  headPosition?: string
   conditionalRowStyles?: IConditionalStyle<TData>[]
   onRowClicked?: (rowData: TData, event: React.MouseEvent<Element, MouseEvent>) => void
   onRowDoubleClicked?: (rowData: TData, event: React.MouseEvent<Element, MouseEvent>) => void
@@ -46,8 +47,14 @@ extends Pick<TableOptions<TData>,
   initialSorting?: ColumnSort
 }
 
+/**
+ * UI element: data representation as a table.
+ * 
+ * @param headPosition - Top position of sticky header (0 if no other sticky elements are present). 
+ * No sticky header if omitted
+*/
 export default function DataTable<TData extends RowData>({
-  dense, conditionalRowStyles,
+  dense, headPosition, conditionalRowStyles,
   onRowClicked, onRowDoubleClicked, noDataComponent,
 
   enableRowSelection,
@@ -106,7 +113,13 @@ export default function DataTable<TData extends RowData>({
   
   {!isEmpty &&
   <table>
-    <thead>
+    <thead
+      className='clr-app shadow-border'
+      style={{
+        top: headPosition,
+        position: 'sticky'
+      }}
+    >
     {tableImpl.getHeaderGroups().map(
     (headerGroup: HeaderGroup<TData>) => (
       <tr key={headerGroup.id}>
@@ -122,7 +135,7 @@ export default function DataTable<TData extends RowData>({
             style={{
               textAlign: header.getSize() > 100 ? 'left': 'center',
               width: header.getSize(),
-              cursor: enableSorting && header.column.getCanSort() ? 'pointer': 'auto'
+              cursor: enableSorting && header.column.getCanSort() ? 'pointer': 'auto',
             }}
             onClick={enableSorting ? header.column.getToggleSortingHandler() : undefined}
           >
@@ -144,8 +157,7 @@ export default function DataTable<TData extends RowData>({
         key={row.id}
         className={
           row.getIsSelected() ? 'clr-selected clr-hover' :
-          index % 2 === 0 ? 'clr-controls clr-hover' :
-          'clr-app clr-hover'
+          index % 2 === 0 ? 'clr-controls clr-hover' : 'clr-app clr-hover'
         }
         style={conditionalRowStyles && getRowStyles(row)}
       >

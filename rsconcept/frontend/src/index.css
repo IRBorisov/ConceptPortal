@@ -122,6 +122,10 @@
   .border {
     @apply rounded
   }
+  
+  .shadow-border {
+    @apply shadow-sm shadow-[var(--cl-bg-40)] dark:shadow-[var(--cd-bg-40)]
+  }
 
   .clr-modal-backdrop {
     opacity: 0.75;

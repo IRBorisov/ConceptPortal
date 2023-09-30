@@ -47,12 +47,13 @@ function ViewSubscriptions({items}: ViewSubscriptionsProps) {
   ], [intl]);
 
   return (
-    <div className='h-full overflow-auto text-sm border w-fit'>
+    <div className='max-h-[23.8rem] overflow-auto text-sm border w-fit'>
     <DataTable
       columns={columns}
       data={items}
-
+      headPosition='0'
       dense
+
       enableSorting
       initialSorting={{
         id: 'time_update',

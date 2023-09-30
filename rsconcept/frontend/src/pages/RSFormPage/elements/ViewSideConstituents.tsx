@@ -209,6 +209,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
         data={filteredData}
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
+        headPosition='0'
         dense
 
         enableHiding

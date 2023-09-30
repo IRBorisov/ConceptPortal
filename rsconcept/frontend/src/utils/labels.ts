@@ -239,7 +239,7 @@ export function labelCstType(type: CstType): string {
 export function labelReferenceType(type: ReferenceType): string {
   switch(type) {
     case ReferenceType.ENTITY:    return 'Использование термина';
-    case ReferenceType.SYNTACTIC: return 'Синтаксическая зависимость';
+    case ReferenceType.SYNTACTIC: return 'Связывание слов';
   }
 }
 

@@ -174,7 +174,7 @@ function DlgEditReference({ hideWindow, items, initialRef, initialText, initialT
         const cst = props.row.original;
         return (<>
           <div
-            id={`${prefixes.cst_list}${cst.alias}`}
+            id={`${prefixes.cst_wordform_list}${cst.alias}`}
             className='min-w-[3.1rem] max-w-[3.1rem] px-1 text-center rounded-md whitespace-nowrap'
             style={{
               borderWidth: '1px', 
@@ -185,7 +185,7 @@ function DlgEditReference({ hideWindow, items, initialRef, initialText, initialT
           >
             {cst.alias}
           </div>
-          <ConstituentaTooltip data={cst} anchor={`#${prefixes.cst_list}${cst.alias}`} />
+          <ConstituentaTooltip data={cst} anchor={`#${prefixes.cst_wordform_list}${cst.alias}`} />
         </>);
       }
     }),
@@ -217,7 +217,7 @@ function DlgEditReference({ hideWindow, items, initialRef, initialText, initialT
     onSubmit={handleSubmit}
   >
   <div className='min-w-[40rem] flex flex-col gap-4 mb-4 mt-2'>
-    <div className='flex self-center flex-start'>
+    <div className='flex items-center self-center flex-start'>
       <SelectSingle
         className='z-modal-top min-w-[20rem] w-fit'
         options={SelectorReferenceType}
@@ -231,7 +231,7 @@ function DlgEditReference({ hideWindow, items, initialRef, initialText, initialT
       </div>
       <ConceptTooltip
         anchorSelect='#terminology-help'
-        className='max-w-[30rem]'
+        className='max-w-[30rem] z-modal-tooltip'
         offset={4}
       >
         <HelpTerminologyControl />
@@ -269,6 +269,8 @@ function DlgEditReference({ hideWindow, items, initialRef, initialText, initialT
         data={filteredData}
         columns={columnsConstituenta}
         conditionalRowStyles={conditionalRowStyles}
+        
+        headPosition='0'
         dense
 
         noDataComponent={
@@ -289,15 +291,19 @@ function DlgEditReference({ hideWindow, items, initialRef, initialText, initialT
           value={alias}
           onChange={event => setAlias(event.target.value)}
         />
-        <TextInput
-          label='Термин'
-          singleRow
-          disabled
-          noBorder
-          value={term}
-          tooltip={term}
-          dimensions='w-full'
-        />
+        <div className='flex items-center w-full flex-start'>
+          <div className='self-center text-sm font-semibold'>
+            Термин:
+          </div>
+          <TextInput
+            singleRow
+            disabled
+            noBorder
+            value={term}
+            tooltip={term}
+            dimensions='w-full text-sm'
+          />
+        </div>
       </div>
       {FormButtons}
       <div className='flex items-center gap-10 flex-start'>

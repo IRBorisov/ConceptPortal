@@ -361,7 +361,8 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
     <div className='w-full h-full text-sm'>
     <DataTable
       data={schema?.items ?? []}
-      columns={columns}        
+      columns={columns}
+      headPosition='2.2rem'
       dense
 
       onRowDoubleClicked={handleRowDoubleClicked}
