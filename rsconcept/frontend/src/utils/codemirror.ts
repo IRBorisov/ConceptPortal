@@ -240,6 +240,10 @@ export class CodeMirrorWrapper {
     this.ref = object;
   }
 
+  getText(from: number, to: number): string {
+    return this.ref.view.state.doc.sliceString(from, to);
+  }
+
   getSelection(): SelectionRange {
     return this.ref.view.state.selection.main;
   }
@@ -284,7 +288,7 @@ export class CodeMirrorWrapper {
   }
 
   /**
-   * Access list of SyntaxNodes contained in current selection
+   * Access list of SyntaxNodes contained in current selection.
   */
   getContainedNodes(tokenFilter?: number[]): SyntaxNode[] {
     const selection = this.getSelection();
@@ -292,11 +296,18 @@ export class CodeMirrorWrapper {
   }
 
   /**
-   * Access list of SyntaxNodes enveloping current selection
+   * Access list of SyntaxNodes enveloping current selection.
   */
   getEnvelopingNodes(tokenFilter?: number[]): SyntaxNode[] {
     const selection = this.getSelection();
     return findEnvelopingNodes(selection.from, selection.to, syntaxTree(this.ref.view.state), tokenFilter);
+  }
+
+  /**
+   * Access list of SyntaxNodes contained in documents.
+  */
+  getAllNodes(tokenFilter?: number[]): SyntaxNode[] {
+    return findContainedNodes(0, this.ref.view.state.doc.length, syntaxTree(this.ref.view.state), tokenFilter);
   }
 
   /**

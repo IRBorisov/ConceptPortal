@@ -8,33 +8,36 @@ import { IConstituenta, matchConstituenta } from '../../models/rsform';
 import ConstituentaTooltip from '../../pages/RSFormPage/elements/ConstituentaTooltip';
 import { colorfgCstStatus } from '../../utils/color';
 import { prefixes } from '../../utils/constants';
-import { labelReferenceType } from '../../utils/labels';
-import { compareGrammemeOptions, IGrammemeOption, PremadeWordForms, SelectorGrammems, SelectorReferenceType } from '../../utils/selectors';
+import { compareGrammemeOptions, IGrammemeOption, PremadeWordForms, SelectorGrammems } from '../../utils/selectors';
 import ConceptTooltip from '../Common/ConceptTooltip';
 import Label from '../Common/Label';
 import Modal from '../Common/Modal';
 import SelectMulti from '../Common/SelectMulti';
-import SelectSingle from '../Common/SelectSingle';
 import TextInput from '../Common/TextInput';
 import DataTable, { IConditionalStyle } from '../DataTable';
 import HelpTerminologyControl from '../Help/HelpTerminologyControl';
 import { HelpIcon } from '../Icons';
-import TermformButton from './TermformButton';
+import ReferenceTypeButton from './ReferenceTypeButton';
+import WordformButton from './WordformButton';
+
+export interface IReferenceInputState {
+  type: ReferenceType
+  refRaw?: string
+  text?: string
+  mainRefs: string[]
+  basePosition: number
+}
 
 interface DlgEditReferenceProps {
   hideWindow: () => void
   items: IConstituenta[]
-  
-  initialType: ReferenceType
-  initialRef?: string
-  initialText?: string
-  
+  initial: IReferenceInputState
   onSave: (newRef: string) => void
 }
 
 const constituentaHelper = createColumnHelper<IConstituenta>();
 
-function DlgEditReference({ hideWindow, items, initialRef, initialText, initialType, onSave }: DlgEditReferenceProps) {
+function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferenceProps) {
   const { colors } = useConceptTheme();
 
   const [type, setType] = useState<ReferenceType>(ReferenceType.ENTITY);
@@ -48,6 +51,16 @@ function DlgEditReference({ hideWindow, items, initialRef, initialText, initialT
   const [filteredData, setFilteredData] = useState<IConstituenta[]>([]);
   const [selectedGrams, setSelectedGrams] = useState<IGrammemeOption[]>([]);
   const [gramOptions, setGramOptions] = useState<IGrammemeOption[]>([]);
+
+  const mainLink = useMemo(
+  () => {
+    const position = offset > 0 ? initial.basePosition + (offset - 1) : initial.basePosition + offset;
+    if (offset === 0 || position < 0 || position >= initial.mainRefs.length) {
+      return 'Некорректное значение смещения';
+    } else {
+      return initial.mainRefs[position];
+    }
+  }, [initial, offset]);
 
   const isValid = useMemo(
   () => {
@@ -73,23 +86,23 @@ function DlgEditReference({ hideWindow, items, initialRef, initialText, initialT
   // Initialization
   useLayoutEffect(
   () => {
-    setType(initialType);
-    if (initialRef) {
-      if (initialType === ReferenceType.ENTITY) {
-        const ref = parseEntityReference(initialRef);
+    setType(initial.type);
+    if (initial.refRaw) {
+      if (initial.type === ReferenceType.ENTITY) {
+        const ref = parseEntityReference(initial.refRaw);
         setAlias(ref.entity);
         const grams = parseGrammemes(ref.form);
         setSelectedGrams(SelectorGrammems.filter(data => grams.includes(data.value)));
-      } else if (initialType === ReferenceType.SYNTACTIC) {
-        const ref = parseSyntacticReference(initialRef);
+      } else if (initial.type === ReferenceType.SYNTACTIC) {
+        const ref = parseSyntacticReference(initial.refRaw);
         setOffset(ref.offset);
         setNominal(ref.nominal);
       }
-    } else if (initialText) {
-      setNominal(initialText ?? '');
-      setFilter(initialText);
+    } else if (initial.text) {
+      setNominal(initial.text ?? '');
+      setFilter(initial.text);
     }
-  }, [initialRef, initialText, initialType, items]);
+  }, [initial, items]);
 
   // Filter constituents
   useEffect(
@@ -140,7 +153,7 @@ function DlgEditReference({ hideWindow, items, initialRef, initialText, initialT
       <div className='flex flex-start'>
       {PremadeWordForms.slice(0, 6).map(
       (data, index) => 
-        <TermformButton id={`${prefixes.wordform_list}${index}`}
+        <WordformButton id={`${prefixes.wordform_list}${index}`}
           text={data.text} example={data.example} grams={data.grams}
           isSelected={data.grams.every(gram => selectedGrams.find(item => item.value as Grammeme === gram))}
           onSelectGrams={handleSelectGrams}
@@ -151,7 +164,7 @@ function DlgEditReference({ hideWindow, items, initialRef, initialText, initialT
       <div className='flex flex-start'>
       {PremadeWordForms.slice(6, 12).map(
       (data, index) => 
-        <TermformButton id={`${prefixes.wordform_list}${index}`}
+        <WordformButton id={`${prefixes.wordform_list}${index}`}
           text={data.text} example={data.example} grams={data.grams}
           isSelected={data.grams.every(gram => selectedGrams.find(item => item.value as Grammeme === gram))}
           onSelectGrams={handleSelectGrams}
@@ -216,15 +229,17 @@ function DlgEditReference({ hideWindow, items, initialRef, initialText, initialT
     canSubmit={isValid}
     onSubmit={handleSubmit}
   >
-  <div className='min-w-[40rem] flex flex-col gap-4 mb-4 mt-2'>
+  <div className='min-w-[40rem] flex flex-col gap-4 mb-4 mt-2 min-h-[34rem]'>
     <div className='flex items-center self-center flex-start'>
-      <SelectSingle
-        className='z-modal-top min-w-[20rem] w-fit'
-        options={SelectorReferenceType}
-        isSearchable={false}
-        placeholder='Тип ссылки'
-        value={{ value: type, label: labelReferenceType(type) }}
-        onChange={data => setType(data?.value ?? ReferenceType.ENTITY)}
+      <ReferenceTypeButton 
+        type={ReferenceType.ENTITY}
+        onSelect={setType}
+        isSelected={type === ReferenceType.ENTITY}
+      />
+      <ReferenceTypeButton 
+        type={ReferenceType.SYNTACTIC}
+        onSelect={setType}
+        isSelected={type === ReferenceType.SYNTACTIC}
       />
       <div id='terminology-help' className='px-1 py-1'>
         <HelpIcon color='text-primary' size={5} />
@@ -238,20 +253,31 @@ function DlgEditReference({ hideWindow, items, initialRef, initialText, initialT
       </ConceptTooltip>
     </div>
     {type === ReferenceType.SYNTACTIC &&
-    <div className='flex gap-4 flex-start'>
-      <TextInput id='offset' type='number'
-        label='Смещение'
-        dimensions='max-w-[10rem]'
-        singleRow
-        value={offset}
-        onChange={event => setOffset(event.target.valueAsNumber)}
-      />
+    <div className='flex flex-col gap-2'>
+      <div className='flex flex-start'>
+        <TextInput id='offset' type='number'
+          label='Смещение'
+          dimensions='max-w-[10rem]'
+          singleRow
+          value={offset}
+          onChange={event => setOffset(event.target.valueAsNumber)}
+        />
+        <div className='self-center text-sm font-semibold whitespace-nowrap ml-2'>
+          Основная ссылка:
+        </div>
+        <TextInput
+          singleRow
+          disabled
+          noBorder
+          value={mainLink}
+          dimensions='w-full text-sm'
+        />
+      </div>
       <TextInput id='nominal' type='text'
         dimensions='w-full'
         label='Начальная форма'
         placeholder='зависимое слово в начальной форме'
         spellCheck
-        singleRow
         value={nominal}
         onChange={event => setNominal(event.target.value)}
       />

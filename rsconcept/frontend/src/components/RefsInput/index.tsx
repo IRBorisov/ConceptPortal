@@ -63,9 +63,9 @@ extends Pick<ReactCodeMirrorProps,
 }
 
 function RefsInput({ 
-  id, label, innerref, onChange, editable, items,
+  id, label, innerref, editable, items,
   initialValue, value, resolved,
-  onFocus, onBlur,
+  onFocus, onBlur, onChange,
   ...props 
 }: RefsInputInputProps) {
   const { darkMode, colors } = useConceptTheme();
@@ -80,6 +80,8 @@ function RefsInput({
   const [currentType, setCurrentType] = useState<ReferenceType>(ReferenceType.ENTITY);
   const [refText, setRefText] = useState('');
   const [hintText, setHintText] = useState('');
+  const [basePosition, setBasePosition] = useState(0);
+  const [mainRefs, setMainRefs] = useState<string[]>([]);
 
   const internalRef = useRef<ReactCodeMirrorRef>(null);
   const thisRef = useMemo(
@@ -152,6 +154,12 @@ function RefsInput({
         setCurrentType(nodes[0].type.id === RefEntity ? ReferenceType.ENTITY : ReferenceType.SYNTACTIC);
         setRefText(wrap.getSelectionText());
       }
+
+      const selection = wrap.getSelection();
+      const mainNodes = wrap.getAllNodes([RefEntity]).filter(node => node.from >= selection.to || node.to <= selection.from);
+      setMainRefs(mainNodes.map(node => wrap.getText(node.from, node.to)));
+      setBasePosition(mainNodes.filter(node => node.to <= selection.from).length);
+
       setShowEditor(true);
     }
   }, [thisRef, resolveText, value]);
@@ -172,9 +180,13 @@ function RefsInput({
     <DlgEditReference
       hideWindow={() => setShowEditor(false)}
       items={items ?? []}
-      initialType={currentType}
-      initialRef={refText}
-      initialText={hintText}
+      initial={{
+        type: currentType,
+        refRaw: refText,
+        text: hintText,
+        basePosition: basePosition,
+        mainRefs: mainRefs
+      }}
       onSave={handleInputReference}
     />
     }

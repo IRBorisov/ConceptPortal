@@ -1,6 +1,6 @@
 import { Grammeme } from '../../models/language';
 
-interface TermformButtonProps {
+interface WordformButtonProps {
   id?: string
   text: string
   example: string
@@ -9,7 +9,7 @@ interface TermformButtonProps {
   onSelectGrams: (grams: Grammeme[]) => void
 }
 
-function TermformButton({ text, example, grams, onSelectGrams, isSelected, ...props }: TermformButtonProps) {
+function WordformButton({ text, example, grams, onSelectGrams, isSelected, ...props }: WordformButtonProps) {
   return (
     <button
       type='button'
@@ -24,4 +24,4 @@ function TermformButton({ text, example, grams, onSelectGrams, isSelected, ...pr
   );
 }
 
-export default TermformButton;
+export default WordformButton;
