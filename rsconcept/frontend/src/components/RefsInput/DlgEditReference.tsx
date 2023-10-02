@@ -229,7 +229,7 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
     canSubmit={isValid}
     onSubmit={handleSubmit}
   >
-  <div className='min-w-[40rem] flex flex-col gap-4 mb-4 mt-2 min-h-[34rem]'>
+  <div className='min-w-[40rem] max-w-[40rem] flex flex-col gap-4 mb-4 mt-2 min-h-[34rem]'>
     <div className='flex items-center self-center flex-start'>
       <ReferenceTypeButton 
         type={ReferenceType.ENTITY}
@@ -262,7 +262,7 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
           value={offset}
           onChange={event => setOffset(event.target.valueAsNumber)}
         />
-        <div className='self-center text-sm font-semibold whitespace-nowrap ml-2'>
+        <div className='self-center ml-2 text-sm font-semibold whitespace-nowrap'>
           Основная ссылка:
         </div>
         <TextInput

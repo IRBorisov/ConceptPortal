@@ -14,22 +14,25 @@ function InfoCstStatus({ title }: InfoCstStatusProps) {
   return (
     <div className='flex flex-col gap-1'>
       { title && <h1>{title}</h1>}
-      { Object.values(ExpressionStatus).map(
-      (status, index) => {
-        return (
-        <p key={`${prefixes.cst_status_list}${index}`}>
-          <span
-            className='px-1 inline-block font-semibold min-w-[5rem] text-center border text-sm'
-            style={{backgroundColor: colorbgCstStatus(status, colors)}}
-          >
-            {labelExpressionStatus(status)}
-          </span>
-          <span> - </span>
-          <span>
-            {describeExpressionStatus(status)}
-          </span>
-        </p>);
-      })}
+      { Object.values(ExpressionStatus)
+        .filter(status => status !== ExpressionStatus.UNDEFINED)
+        .map(
+        (status, index) => {
+          return (
+          <p key={`${prefixes.cst_status_list}${index}`}>
+            <span
+              className='px-1 inline-block font-semibold min-w-[7rem] text-center border text-sm'
+              style={{backgroundColor: colorbgCstStatus(status, colors)}}
+            >
+              {labelExpressionStatus(status)}
+            </span>
+            <span> - </span>
+            <span>
+              {describeExpressionStatus(status)}
+            </span>
+          </p>);
+        }
+      )}
     </div>
   );
 }

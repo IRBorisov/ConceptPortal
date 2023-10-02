@@ -26,8 +26,8 @@ export enum CstClass {
 export enum ExpressionStatus {
   VERIFIED = 'verified',
   INCORRECT = 'incorrect',
-  PROPERTY = 'property',
   INCALCULABLE = 'incalculable',
+  PROPERTY = 'property',
   UNDEFINED = 'undefined',
   UNKNOWN = 'unknown',
 }

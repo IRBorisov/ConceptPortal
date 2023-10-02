@@ -114,6 +114,12 @@
   color-scheme: light;
 }
 
+@layer utilities {
+  .small-caps {
+    font-variant: small-caps;
+  }
+}
+
 @layer components {
   h1 {
     @apply text-lg font-bold text-center

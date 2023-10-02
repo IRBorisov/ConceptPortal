@@ -17,14 +17,14 @@ import { useConceptTheme } from '../../context/ThemeContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { CstType, IConstituenta, ICstCreateData } from '../../models/rsform';
 import { graphDarkT, graphLightT, IColorTheme } from '../../utils/color';
-import { prefixes, resources, TIMEOUT_GRAPH_REFRESH } from '../../utils/constants';
-import { Graph } from '../../utils/Graph';
-import { SelectorGraphLayout } from '../../utils/selectors';
-import { SelectorGraphColoring } from '../../utils/selectors';
 import { colorbgCstClass } from '../../utils/color';
 import { colorbgCstStatus } from '../../utils/color';
+import { prefixes, resources, TIMEOUT_GRAPH_REFRESH } from '../../utils/constants';
+import { Graph } from '../../utils/Graph';
 import { mapLabelColoring } from '../../utils/labels';
 import { mapLableLayout } from '../../utils/labels';
+import { SelectorGraphLayout } from '../../utils/selectors';
+import { SelectorGraphColoring } from '../../utils/selectors';
 import DlgGraphOptions from './DlgGraphOptions';
 import ConstituentaTooltip from './elements/ConstituentaTooltip';
 
@@ -487,7 +487,9 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         />
       </div>
       <ConceptTooltip anchorSelect='#items-graph-help'>
+        <div className='text-sm max-w-[calc(100vw-20rem)]'>
         <HelpTermGraph />
+        </div>
       </ConceptTooltip>
       <GraphCanvas
         draggable

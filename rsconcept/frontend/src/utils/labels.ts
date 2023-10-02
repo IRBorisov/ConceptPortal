@@ -173,11 +173,11 @@ new Map([
 
 export function labelExpressionStatus(status: ExpressionStatus): string {
   switch (status) {
-    case ExpressionStatus.VERIFIED:     return 'ок';
+    case ExpressionStatus.VERIFIED:     return 'корректно';
     case ExpressionStatus.INCORRECT:    return 'ошибка';
-    case ExpressionStatus.INCALCULABLE: return 'невыч';
-    case ExpressionStatus.PROPERTY:     return 'св-во';
-    case ExpressionStatus.UNKNOWN:      return 'неизв';
+    case ExpressionStatus.INCALCULABLE: return 'невычислимо';
+    case ExpressionStatus.PROPERTY:     return 'неразмерное';
+    case ExpressionStatus.UNKNOWN:      return 'непроверено';
     case ExpressionStatus.UNDEFINED:    return 'N/A';
   }
 }
@@ -186,8 +186,8 @@ export function describeExpressionStatus(status: ExpressionStatus): string {
   switch (status) {
     case ExpressionStatus.VERIFIED:     return 'выражение корректно и вычислимо';
     case ExpressionStatus.INCORRECT:    return 'ошибка в выражении';
-    case ExpressionStatus.INCALCULABLE: return 'выражение не вычислимо';
-    case ExpressionStatus.PROPERTY:     return 'можно проверить принадлежность, но нельзя получить значение';
+    case ExpressionStatus.INCALCULABLE: return 'нельзя использовать для вычисления интерпретации';
+    case ExpressionStatus.PROPERTY:     return 'только для проверки принадлежности';
     case ExpressionStatus.UNKNOWN:      return 'требует проверки выражения';
     case ExpressionStatus.UNDEFINED:    return 'произошла ошибка при проверке выражения';
   }

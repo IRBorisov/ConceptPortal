@@ -15,7 +15,7 @@ function RSLocalButton({ text, tooltip, disabled, onInsert }: RSLocalButtonProps
       onClick={() => onInsert(TokenID.ID_LOCAL, text)}
       title={tooltip}
       tabIndex={-1}
-      className='w-[1.5rem] h-7 cursor-pointer border rounded-none clr-btn-clear'
+      className='w-[1.5rem] h-7 cursor-pointer border rounded-none clr-hover clr-btn-clear'
     >
       {text}
     </button>

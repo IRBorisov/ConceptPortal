@@ -31,7 +31,7 @@ function StatusBar({ isModified, constituenta, parseData }: StatusBarProps) {
       className='text-sm h-[1.6rem] w-[10rem] font-semibold inline-flex border items-center select-none justify-center align-middle'
       style={{backgroundColor: colorbgCstStatus(status, colors)}}
     >
-      Статус: [ {labelExpressionStatus(status)} ]
+      {labelExpressionStatus(status)}
     </div>
   )
 }

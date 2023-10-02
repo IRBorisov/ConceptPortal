@@ -149,10 +149,10 @@ function EditorConstituenta({
           onClick={onEditTerm}
           icon={<PenIcon size={4} color={isEnabled ? 'text-primary' : ''} />}
         />}
-        <div className='flex items-center justify-center w-full gap-1'>
+        <div className='flex items-center justify-center w-full'>
           <div className='font-semibold w-fit'>
-            <span className=''>Конституента </span>
-            <span className='ml-4'>{alias}</span>
+            <span className='small-caps'>Конституента</span>
+            <span className='ml-2 small-caps'>{alias}</span>
           </div>
           <MiniButton
             tooltip='Переименовать конституенту'

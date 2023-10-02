@@ -157,7 +157,7 @@ function EditorRSExpression({
         <RSTokenButton token={TokenID.LESSER_OR_EQ} onInsert={handleEdit}/>
       </div>
     </div>
-    <div className='text-xs w-fit'>
+    <div className='text-sm w-fit'>
       <div className='flex justify-start'>
         <RSLocalButton text='μ' tooltip='q' onInsert={handleEdit}/>
         <RSLocalButton text='ω' tooltip='w' onInsert={handleEdit}/>
@@ -187,7 +187,7 @@ function EditorRSExpression({
   }, [handleEdit]);
 
   return (
-  <div className='flex flex-col items-start w-full min-h-[15.75rem]'>
+  <div className='flex flex-col items-start w-full'>
     <div className='relative w-full'>
     <div className='absolute top-[-0.3rem] right-0'>
     <StatusBar
@@ -198,8 +198,7 @@ function EditorRSExpression({
     </div>
     </div>
     <RSInput innerref={rsInput}
-      className='text-lg'
-      height='10.1rem'
+      height='7.6rem'
       value={value}
       editable={!disabled}
       onChange={handleChange}
