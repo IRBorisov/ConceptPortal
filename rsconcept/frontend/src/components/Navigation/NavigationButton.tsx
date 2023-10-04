@@ -13,7 +13,7 @@ function NavigationButton({ id, icon, description, onClick, text }: NavigationBu
       type='button'
       onClick={onClick}
       tabIndex={-1}
-      className={`flex items-center h-full gap-1 ${text ? 'px-2' : 'px-4'} mr-1 min-w-fit whitespace-nowrap clr-btn-nav`}
+      className={`flex items-center h-full gap-1 ${text ? 'px-2' : 'px-4'} mr-1 min-w-fit small-caps whitespace-nowrap clr-btn-nav`}
     >
       {icon && <span>{icon}</span>}
       {text && <span className='font-semibold'>{text}</span>}

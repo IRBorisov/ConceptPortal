@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 
 import Dropdown from '../../../components/Common/Dropdown';
 import DropdownButton from '../../../components/Common/DropdownButton';
+import { FilterCogIcon } from '../../../components/Icons';
 import useDropdown from '../../../hooks/useDropdown';
 import { CstMatchMode } from '../../../models/miscelanious';
 import { labelCstMathchMode } from '../../../utils/labels';
@@ -21,16 +22,18 @@ function MatchModePicker({ value, onChange }: MatchModePickerProps) {
   }, [pickerMenu, onChange]);
 
   return (
-  <div ref={pickerMenu.ref} className='h-full min-w-[3.4rem]'>
-    <span
-      className='text-sm font-semibold underline cursor-pointer select-none whitespace-nowrap'
+  <div ref={pickerMenu.ref} className='h-full'>
+    <button
+      className='h-full w-[6rem] px-1 py-1 border clr-input clr-hover clr-btn-default text-btn inline-flex align-middle gap-1'
+      title='Настройка атрибутов для фильтрации'
       tabIndex={-1}
       onClick={pickerMenu.toggle}
     >
-      {labelCstMathchMode(value)}
-    </span>
+      <FilterCogIcon color='text-controls' size={5} />
+      <span className='text-sm font-semibold whitespace-nowrap'>{labelCstMathchMode(value)}</span>
+    </button>
     { pickerMenu.isActive &&
-      <Dropdown>
+      <Dropdown stretchLeft>
         <DropdownButton onClick={() => handleChange(CstMatchMode.ALL)}>
           <p><b>везде:</b> искать во всех атрибутах</p>
         </DropdownButton>

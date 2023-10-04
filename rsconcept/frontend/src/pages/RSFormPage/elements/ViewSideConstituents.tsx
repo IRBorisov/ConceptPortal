@@ -1,6 +1,7 @@
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
 import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } from '../../../components/DataTable';
+import { MagnifyingGlassIcon } from '../../../components/Icons';
 import { useRSForm } from '../../../context/RSFormContext';
 import { useConceptTheme } from '../../../context/ThemeContext';
 import useLocalStorage from '../../../hooks/useLocalStorage';
@@ -189,16 +190,19 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
   }, [noNavigation, baseHeight]);
 
   return (<>
-    <div className='sticky top-0 left-0 right-0 flex items-start justify-between w-full gap-1 px-2 py-1 border-b rounded clr-input'>
+    <div className='sticky top-0 left-0 right-0 flex items-center justify-start w-full gap-1 px-2 border-b rounded clr-input'>
+      <div className='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-controls'>
+        <MagnifyingGlassIcon />
+      </div>
+      <input type='text'
+        className='w-[14rem] pr-2 pl-8 py-1 outline-none select-none hover:text-clip clr-input'
+        placeholder='текст фильтра'
+        value={filterText}
+        onChange={event => setFilterText(event.target.value)}
+      />
       <MatchModePicker
         value={filterMatch}
         onChange={setFilterMatch}
-      />
-      <input type='text'
-        className='w-full px-2 outline-none select-none hover:text-clip clr-input'
-        placeholder='наберите текст фильтра'
-        value={filterText}
-        onChange={event => setFilterText(event.target.value)}
       />
       <DependencyModePicker
         value={filterSource}
