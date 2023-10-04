@@ -166,6 +166,7 @@ export enum TokenID {
 }
 
 export enum RSErrorType {
+  unknownSymbol = 33283,
   syntax = 33792,
   missingParanthesis = 33798,
   missingCurlyBrace = 33799,

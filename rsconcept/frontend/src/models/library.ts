@@ -1,5 +1,7 @@
 // Module: Schema library models.
 
+import { TextMatcher } from '../utils/utils'
+
 // ========= Users ===========
 export interface IUser {
   id: number | null
@@ -53,13 +55,7 @@ export interface ILibraryUpdateData
 
 // ============= API ===============
 export function matchLibraryItem(query: string, target: ILibraryItem): boolean {
-  const queryI = query.toUpperCase()
-  if (target.alias.toUpperCase().match(queryI)) {
-    return true
-  } else if (target.title.toUpperCase().match(queryI)) {
-    return true
-  } else {
-    return false
-  }
+  const matcher = new TextMatcher(query);
+  return matcher.test(target.alias) || matcher.test(target.title);
 }
 

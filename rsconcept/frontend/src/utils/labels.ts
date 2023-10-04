@@ -438,6 +438,8 @@ export function labelGrammeme(gram: GramData): string {
 
 export function describeRSError(error: IRSErrorDescription): string {
   switch (error.errorType) {
+  case RSErrorType.unknownSymbol:
+    return `Неизвестный символ: ${error.params[0]}`;
   case RSErrorType.syntax:
     return 'Неопределенная синтаксическая ошибка';
   case RSErrorType.missingParanthesis:

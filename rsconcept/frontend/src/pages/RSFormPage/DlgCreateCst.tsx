@@ -74,6 +74,7 @@ function DlgCreateCst({ hideWindow, initial, onCreate }: DlgCreateCstProps) {
         onChange={event => setTerm(event.target.value)}
       />
       <RSInput id='expression' label='Формальное выражение'
+        placeholder='Родоструктурное выражение, задающее формальное определение'
         editable
         height='5.5rem'
         value={expression}

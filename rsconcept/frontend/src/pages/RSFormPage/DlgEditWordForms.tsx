@@ -240,7 +240,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
       spellCheck
     />
 
-    <div className='text-sm mt-4 mb-2 font-semibold'>
+    <div className='mt-4 mb-2 text-sm font-semibold'>
       Параметры словоформы
     </div>
 
@@ -283,7 +283,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
       />
     </div>
 
-    <div className='flex flex-start justify-between'>
+    <div className='flex justify-between flex-start'>
       <div className='flex items-center justify-start'>
         <MiniButton
           tooltip='Внести словоформу'
@@ -304,7 +304,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
           onClick={handleGenerateLexeme}
         />
       </div>
-      <div className='text-sm mt-2 mb-1 font-semibold w-full text-center'>
+      <div className='w-full mt-2 mb-1 text-sm font-semibold text-center'>
         Заданные вручную словоформы: [{forms.length}]
       </div>
       <MiniButton

@@ -1,4 +1,5 @@
 import { Graph } from '../utils/Graph'
+import { TextMatcher } from '../utils/utils'
 import { ILibraryUpdateData } from './library'
 import { ILibraryItem } from './library'
 import { CstMatchMode } from './miscelanious'
@@ -215,21 +216,22 @@ export function loadRSFormData(schema: IRSFormData): IRSForm {
   return result;
 }
 
-export function matchConstituenta(query: string, target: IConstituenta, mode: CstMatchMode) {
+export function matchConstituenta(query: string, target: IConstituenta, mode: CstMatchMode): boolean {
+  const matcher = new TextMatcher(query);
   if ((mode === CstMatchMode.ALL || mode === CstMatchMode.NAME) && 
-    target.alias.match(query)) {
+    matcher.test(target.alias)) {
     return true;
   }
   if ((mode === CstMatchMode.ALL || mode === CstMatchMode.TERM) && 
-    target.term_resolved.match(query)) {
+    matcher.test(target.term_resolved)) {
     return true;
   }
   if ((mode === CstMatchMode.ALL || mode === CstMatchMode.EXPR) && 
-    target.definition_formal.match(query)) {
+    matcher.test(target.definition_formal)) {
     return true;
   }
   if ((mode === CstMatchMode.ALL || mode === CstMatchMode.TEXT)) {
-    return (target.definition_resolved.match(query) || target.convention.match(query));
+    return (matcher.test(target.definition_resolved) || matcher.test(target.convention));
   }
   return false;
 }

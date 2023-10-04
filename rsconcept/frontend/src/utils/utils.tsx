@@ -15,3 +15,31 @@ export function trimString(target: string, maxLen: number): string {
     return target.substring(0, maxLen) + '...';
   }
 }
+
+/**
+ * Wrapper class for generalized text matching.
+ * 
+ * If possible create regexp, otherwise use symbol matching.
+*/
+export class TextMatcher {
+  protected query: RegExp | string
+  
+  constructor(query: string, isPlainText?: boolean, isCaseSensitive?: boolean) {
+    if (isPlainText) {
+      query = query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+    }
+    try {
+      this.query = new RegExp(query, isCaseSensitive ? '' : 'i');
+    } catch(exception: unknown) {
+      this.query = query;
+    }
+  }
+
+  test(text: string): boolean {
+    if (typeof this.query === 'string') {
+      return text.indexOf(this.query) !== -1;
+    } else {
+      return !!text.match(this.query);
+    }
+  }
+}

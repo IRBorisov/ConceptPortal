@@ -92,6 +92,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       filtered = applyGraphFilter(schema, activeID, filterSource);
     }
     if (filterText) {
+      console.log(filterText);
       filtered = filtered.filter((cst) => matchConstituenta(filterText, cst, filterMatch));
     }
     setFilteredData(filtered);
@@ -141,9 +142,9 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
     columnHelper.accessor(cst => describeConstituenta(cst), {
       id: 'description',
       header: 'Описание',
-      size: 500,
+      size: 1000,
       minSize: 350,
-      maxSize: 500,
+      maxSize: 1000,
       cell: props => 
         <div style={{
           fontSize: 12,
@@ -155,9 +156,9 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
     columnHelper.accessor('definition_formal', {
       id: 'expression',
       header: 'Выражение',
-      size: 1000,
+      size: 2000,
       minSize: 0,
-      maxSize: 1000,
+      maxSize: 2000,
       enableHiding: true,
       cell: props => 
         <div style={{
