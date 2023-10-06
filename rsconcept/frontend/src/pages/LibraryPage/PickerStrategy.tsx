@@ -1,12 +1,14 @@
 import { useCallback } from 'react';
 
-import Button from '../../components/Common/Button';
 import Dropdown from '../../components/Common/Dropdown';
 import DropdownCheckbox from '../../components/Common/DropdownCheckbox';
+import SelectorButton from '../../components/Common/SelectorButton';
 import { FilterCogIcon } from '../../components/Icons';
 import { useAuth } from '../../context/AuthContext';
 import useDropdown from '../../hooks/useDropdown';
 import { LibraryFilterStrategy } from '../../models/miscelanious';
+import { prefixes } from '../../utils/constants';
+import { describeLibraryFilter, labelLibraryFilter } from '../../utils/labels';
 
 interface PickerStrategyProps {
   value: LibraryFilterStrategy
@@ -14,65 +16,52 @@ interface PickerStrategyProps {
 }
 
 function PickerStrategy({ value, onChange }: PickerStrategyProps) {
-  const pickerMenu = useDropdown();
+  const strategyMenu = useDropdown();
   const { user } = useAuth();
 
   const handleChange = useCallback(
   (newValue: LibraryFilterStrategy) => {
-    pickerMenu.hide();
+    strategyMenu.hide();
     onChange(newValue);
-  }, [pickerMenu, onChange]);
+  }, [strategyMenu, onChange]);
+
+  function isStrategyDisabled(strategy: LibraryFilterStrategy): boolean {
+    if (
+      strategy === LibraryFilterStrategy.PERSONAL ||
+      strategy === LibraryFilterStrategy.SUBSCRIBE ||
+      strategy === LibraryFilterStrategy.OWNED
+    ) {
+      return !user;
+    } else {
+      return false;
+    }
+  }
 
   return (
-  <div ref={pickerMenu.ref} className='h-full text-right'>
-    <Button
-      icon={<FilterCogIcon color='text-controls' size={6} />}
-      dense
-      tooltip='Фильтры'
-      colorClass='clr-input clr-hover text-btn'
-      dimensions='h-full py-1 px-2 border-none'
-      onClick={pickerMenu.toggle}
+  <div ref={strategyMenu.ref} className='h-full text-right'>
+    <SelectorButton 
+      tooltip='Список фильтров'
+      transparent
+      icon={<FilterCogIcon size={5} />}
+      text={labelLibraryFilter(value)}
+      tabIndex={-1}
+      onClick={strategyMenu.toggle}
     />
-    { pickerMenu.isActive &&
+    { strategyMenu.isActive &&
     <Dropdown>
-      <DropdownCheckbox
-        setValue={() => handleChange(LibraryFilterStrategy.MANUAL)}
-        value={value === LibraryFilterStrategy.MANUAL}
-        label='Отображать все'
-      />
-      <DropdownCheckbox
-        setValue={() => handleChange(LibraryFilterStrategy.COMMON)}
-        value={value === LibraryFilterStrategy.COMMON}
-        label='Общедоступные'
-        tooltip='Отображать только общедоступные схемы'
-      />
-      <DropdownCheckbox
-        setValue={() => handleChange(LibraryFilterStrategy.CANONICAL)}
-        value={value === LibraryFilterStrategy.CANONICAL}
-        label='Неизменные'
-        tooltip='Отображать только стандартные схемы'
-      />
-      <DropdownCheckbox
-        setValue={() => handleChange(LibraryFilterStrategy.PERSONAL)}
-        value={value === LibraryFilterStrategy.PERSONAL}
-        label='Личные'
-        disabled={!user}
-        tooltip='Отображать только подписки и владеемые схемы'
-      />
-      <DropdownCheckbox
-        setValue={() => handleChange(LibraryFilterStrategy.SUBSCRIBE)}
-        value={value === LibraryFilterStrategy.SUBSCRIBE}
-        label='Подписки'
-        disabled={!user}
-        tooltip='Отображать только подписки'
-      />
-      <DropdownCheckbox
-        setValue={() => handleChange(LibraryFilterStrategy.OWNED)}
-        value={value === LibraryFilterStrategy.OWNED}
-        disabled={!user}
-        label='Я - Владелец!'
-        tooltip='Отображать только владеемые схемы'
-      />
+      { Object.values(LibraryFilterStrategy).map(
+      (enumValue, index) => {
+        const strategy = enumValue as LibraryFilterStrategy;
+        return (
+        <DropdownCheckbox
+          key={`${prefixes.library_filters_list}${index}`}
+          value={value === strategy}
+          setValue={() => handleChange(strategy)}
+          label={labelLibraryFilter(strategy)}
+          tooltip={describeLibraryFilter(strategy)}
+          disabled={isStrategyDisabled(strategy)}
+        />);
+      })}
     </Dropdown>}
   </div>
   );

@@ -1,22 +1,28 @@
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
+import Dropdown from '../../../components/Common/Dropdown';
+import DropdownButton from '../../../components/Common/DropdownButton';
+import SelectorButton from '../../../components/Common/SelectorButton';
 import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } from '../../../components/DataTable';
-import { MagnifyingGlassIcon } from '../../../components/Icons';
+import { CogIcon, FilterCogIcon, MagnifyingGlassIcon } from '../../../components/Icons';
 import { useRSForm } from '../../../context/RSFormContext';
 import { useConceptTheme } from '../../../context/ThemeContext';
+import useDropdown from '../../../hooks/useDropdown';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import useWindowSize from '../../../hooks/useWindowSize';
-import { DependencyMode } from '../../../models/miscelanious';
+import { DependencyMode as CstSource } from '../../../models/miscelanious';
 import { CstMatchMode } from '../../../models/miscelanious';
 import { applyGraphFilter } from '../../../models/miscelanious';
 import { CstType, extractGlobals, IConstituenta, matchConstituenta } from '../../../models/rsform';
 import { createMockConstituenta } from '../../../models/rsform';
 import { colorfgCstStatus } from '../../../utils/color';
 import { prefixes } from '../../../utils/constants';
-import { describeConstituenta } from '../../../utils/labels';
+import { 
+  describeConstituenta, describeCstMathchMode, 
+  describeCstSource, labelCstMathchMode, 
+  labelCstSource
+} from '../../../utils/labels';
 import ConstituentaTooltip from './ConstituentaTooltip';
-import DependencyModePicker from './DependencyModePicker';
-import MatchModePicker from './MatchModePicker';
 
 // Height that should be left to accomodate navigation panel + bottom margin
 const LOCAL_NAVIGATION_H = '2.1rem';
@@ -46,9 +52,12 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
   
   const [filterMatch, setFilterMatch] = useLocalStorage('side-filter-match', CstMatchMode.ALL);
   const [filterText, setFilterText] = useLocalStorage('side-filter-text', '');
-  const [filterSource, setFilterSource] = useLocalStorage('side-filter-dependency', DependencyMode.ALL);
+  const [filterSource, setFilterSource] = useLocalStorage('side-filter-dependency', CstSource.ALL);
   
   const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema?.items ?? []);
+
+  const matchModeMenu = useDropdown();
+  const sourceMenu = useDropdown();
 
   useLayoutEffect(
   () => {
@@ -69,7 +78,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       return;
     }
     let filtered: IConstituenta[] = [];
-    if (filterSource === DependencyMode.EXPRESSION) {
+    if (filterSource === CstSource.EXPRESSION) {
       const aliases = extractGlobals(expression);
       filtered = schema.items.filter((cst) => aliases.has(cst.alias));
       const names = filtered.map(cst => cst.alias)
@@ -112,6 +121,18 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       onOpenEdit(cst.id);
     }
   }, [onOpenEdit]);
+
+  const handleMatchModeChange = useCallback(
+  (newValue: CstMatchMode) => {
+    matchModeMenu.hide();
+    setFilterMatch(newValue);
+  }, [matchModeMenu, setFilterMatch]);
+
+  const handleSourceChange = useCallback(
+    (newValue: CstSource) => {
+      sourceMenu.hide();
+      setFilterSource(newValue);
+    }, [sourceMenu, setFilterSource]);
 
   const columns = useMemo(
   () => [
@@ -196,18 +217,59 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       </div>
       <input type='text'
         className='w-[14rem] pr-2 pl-8 py-1 outline-none select-none hover:text-clip clr-input'
-        placeholder='текст фильтра'
+        placeholder='Поиск'
         value={filterText}
         onChange={event => setFilterText(event.target.value)}
       />
-      <MatchModePicker
-        value={filterMatch}
-        onChange={setFilterMatch}
-      />
-      <DependencyModePicker
-        value={filterSource}
-        onChange={setFilterSource}
-      />
+      <div ref={matchModeMenu.ref}>
+        <SelectorButton 
+          tooltip='Настройка атрибутов для фильтрации'
+          transparent
+          icon={<FilterCogIcon size={5} />}
+          text={labelCstMathchMode(filterMatch)}
+          tabIndex={-1}
+          onClick={matchModeMenu.toggle}
+        />
+        { matchModeMenu.isActive &&
+        <Dropdown stretchLeft>
+          { Object.values(CstMatchMode).filter(value => !isNaN(Number(value))).map(
+          (value, index) => {
+            const matchMode = value as CstMatchMode;
+            return (
+            <DropdownButton
+              key={`${prefixes.cst_match_mode_list}${index}`}
+              onClick={() => handleMatchModeChange(matchMode)}
+            >
+              <p><span className='font-semibold'>{labelCstMathchMode(matchMode)}:</span> {describeCstMathchMode(matchMode)}</p>
+            </DropdownButton>);
+          })}
+        </Dropdown>}
+      </div>
+
+      <div ref={sourceMenu.ref}>
+        <SelectorButton 
+          tooltip='Настройка фильтрации по графу термов'
+          transparent
+          icon={<CogIcon size={4} />}
+          text={labelCstSource(filterSource)}
+          tabIndex={-1}
+          onClick={sourceMenu.toggle}
+        />
+        { sourceMenu.isActive &&
+        <Dropdown stretchLeft>
+          { Object.values(CstSource).filter(value => !isNaN(Number(value))).map(
+          (value, index) => {
+            const source = value as CstSource;
+            return (
+            <DropdownButton
+              key={`${prefixes.cst_source_list}${index}`}
+              onClick={() => handleSourceChange(source)}
+            >
+              <p><span className='font-semibold'>{labelCstSource(source)}:</span> {describeCstSource(source)}</p>
+            </DropdownButton>);
+          })}
+        </Dropdown>}
+      </div>
     </div>
     <div className='overflow-y-auto text-sm' style={{maxHeight : `${maxHeight}`}}>
       <DataTable

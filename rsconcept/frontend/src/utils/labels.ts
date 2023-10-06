@@ -1,7 +1,7 @@
 // =========== Modules contains all text descriptors ==========
 
 import { GramData,Grammeme, ReferenceType } from '../models/language';
-import { CstMatchMode, DependencyMode, HelpTopic } from '../models/miscelanious';
+import { CstMatchMode, DependencyMode, HelpTopic, LibraryFilterStrategy } from '../models/miscelanious';
 import { CstClass, CstType, ExpressionStatus, IConstituenta } from '../models/rsform';
 import { IFunctionArg, IRSErrorDescription, ISyntaxTreeNode, ParsingStatus, RSErrorType, TokenID } from '../models/rslang';
 
@@ -128,22 +128,65 @@ export function describeToken(id: TokenID): string {
 
 export function labelCstMathchMode(mode: CstMatchMode): string {
   switch (mode) {
-    case CstMatchMode.ALL:  return 'везде';
-    case CstMatchMode.EXPR: return 'выраж';
+    case CstMatchMode.ALL:  return 'общий';
+    case CstMatchMode.EXPR: return 'выражение';
     case CstMatchMode.TERM: return 'термин';
     case CstMatchMode.TEXT: return 'текст';
     case CstMatchMode.NAME: return 'имя';
   }
 }
 
-export function labelDependencyMode(mode: DependencyMode): string {
+export function describeCstMathchMode(mode: CstMatchMode): string {
   switch (mode) {
-    case DependencyMode.ALL:            return 'вся схема';
+    case CstMatchMode.ALL:  return 'искать во всех атрибутах';
+    case CstMatchMode.EXPR: return 'искать в формальных выражениях';
+    case CstMatchMode.TERM: return 'искать в терминах';
+    case CstMatchMode.TEXT: return 'искать в определениях и конвенциях';
+    case CstMatchMode.NAME: return 'искать в идентификаторах конституент';
+  }
+}
+
+export function labelCstSource(mode: DependencyMode): string {
+  switch (mode) {
+    case DependencyMode.ALL:            return 'не ограничен';
     case DependencyMode.EXPRESSION:     return 'выражение';
     case DependencyMode.OUTPUTS:        return 'потребители';
     case DependencyMode.INPUTS:         return 'поставщики';
     case DependencyMode.EXPAND_INPUTS:  return 'влияющие';
     case DependencyMode.EXPAND_OUTPUTS: return 'зависимые';
+  }
+}
+
+export function describeCstSource(mode: DependencyMode): string {
+  switch (mode) {
+    case DependencyMode.ALL:            return 'все конституенты';
+    case DependencyMode.EXPRESSION:     return 'идентификаторы из выражения';
+    case DependencyMode.OUTPUTS:        return 'конституенты, ссылающиеся на данную';
+    case DependencyMode.INPUTS:         return 'конституенты, на которые ссылается данная';
+    case DependencyMode.EXPAND_INPUTS:  return 'конституенты, зависящие по цепочке';
+    case DependencyMode.EXPAND_OUTPUTS: return 'конституенты, влияющие на данную по цепочке';
+  }
+}
+
+export function labelLibraryFilter(strategy: LibraryFilterStrategy): string {
+  switch (strategy) {
+    case LibraryFilterStrategy.MANUAL:      return 'отображать все';
+    case LibraryFilterStrategy.COMMON:      return 'общедоступные';
+    case LibraryFilterStrategy.CANONICAL:   return 'неизменные';
+    case LibraryFilterStrategy.PERSONAL:    return 'личные';
+    case LibraryFilterStrategy.SUBSCRIBE:   return 'подписки';
+    case LibraryFilterStrategy.OWNED:       return 'владелец';
+  }
+}
+
+export function describeLibraryFilter(strategy: LibraryFilterStrategy): string {
+  switch (strategy) {
+    case LibraryFilterStrategy.MANUAL:      return 'Отображать все схемы';
+    case LibraryFilterStrategy.COMMON:      return 'Отображать общедоступные схемы';
+    case LibraryFilterStrategy.CANONICAL:   return 'Отображать стандартные схемы';
+    case LibraryFilterStrategy.PERSONAL:    return 'Отображать подписки и владеемые схемы';
+    case LibraryFilterStrategy.SUBSCRIBE:   return 'Отображать подписки';
+    case LibraryFilterStrategy.OWNED:       return 'Отображать владеемые схемы';
   }
 }
 

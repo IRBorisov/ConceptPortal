@@ -12,7 +12,7 @@ For more specific TODOs see comments in code
 - система обработки ошибок backend
 
 [Tech]
-- reload react-data-table-component
+- multilevel modals / rework modal system
 
 [deployment]
 - logs collection

@@ -16,7 +16,7 @@ import SelectMulti from '../Common/SelectMulti';
 import TextInput from '../Common/TextInput';
 import DataTable, { IConditionalStyle } from '../DataTable';
 import HelpTerminologyControl from '../Help/HelpTerminologyControl';
-import { HelpIcon } from '../Icons';
+import { HelpIcon, MagnifyingGlassIcon } from '../Icons';
 import ReferenceTypeButton from './ReferenceTypeButton';
 import WordformButton from './WordformButton';
 
@@ -284,12 +284,17 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
     </div>}
     {type === ReferenceType.ENTITY &&
     <div className='flex flex-col gap-2'>
-      <TextInput
-        dimensions='w-full'
-        placeholder='текст фильтра'
-        value={filter}
-        onChange={event => setFilter(event.target.value)}
-      />
+      <div className='relative'>
+        <div className='absolute inset-y-0 flex items-center pl-3 pointer-events-none text-controls'>
+          <MagnifyingGlassIcon />
+        </div>
+        <TextInput
+          dimensions='w-full pl-10'
+          placeholder='Поиск'
+          value={filter}
+          onChange={event => setFilter(event.target.value)}
+        />
+      </div>
       <div className='border min-h-[15.5rem] max-h-[15.5rem] text-sm overflow-y-auto'>
       <DataTable
         data={filteredData}
@@ -311,8 +316,9 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
       </div>
       <div className='flex gap-4 flex-start'>
         <TextInput
-          label='Отсылаемый идентификатор'
-          dimensions='max-w-[18rem] min-w-[18rem] whitespace-nowrap'
+          label='Отсылаемая конституента'
+          dimensions='max-w-[16rem] min-w-[16rem] whitespace-nowrap'
+          placeholder='Имя'
           singleRow
           value={alias}
           onChange={event => setAlias(event.target.value)}

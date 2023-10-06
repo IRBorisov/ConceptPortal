@@ -76,12 +76,8 @@ function SearchPanel({ total, filtered, query, setQuery, strategy, setStrategy, 
           {filtered} из {total}
         </span>
       </div>
-      <div className='flex items-center justify-center w-full ml-8'>
-        <PickerStrategy
-          value={strategy}
-          onChange={handleChangeStrategy}
-        />
-        <div className='relative w-96 min-w-[10rem] select-none'>
+      <div className='flex items-center justify-center w-full gap-1'>
+        <div className='relative min-w-[10rem] select-none'>
           <div className='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-controls'>
             <MagnifyingGlassIcon />
           </div>
@@ -89,10 +85,14 @@ function SearchPanel({ total, filtered, query, setQuery, strategy, setStrategy, 
             type='text'
             value={query}
             className='w-full p-2 pl-10 text-sm outline-none clr-input'
-            placeholder='Поиск схемы...'
+            placeholder='Поиск'
             onChange={handleChangeQuery}
           />
         </div>
+        <PickerStrategy
+          value={strategy}
+          onChange={handleChangeStrategy}
+        />
       </div>
     </div>
   );
