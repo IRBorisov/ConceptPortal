@@ -36,7 +36,7 @@ function Navigation () {
       {!noNavigation &&
       <div className='flex items-stretch justify-between pl-2 pr-[0.8rem] border-b-2 rounded-none h-[3rem]'>
         <div className='flex items-center justify-start'>
-          <Logo title='КонцептПортал' />
+          <Logo />
         </div>
         <div className='flex items-center h-full'>
           <NavigationButton

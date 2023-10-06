@@ -1,14 +1,25 @@
 import { Link } from 'react-router-dom';
 
-interface LogoProps {
-  title: string
-}
+import useWindowSize from '../../hooks/useWindowSize';
 
-function Logo({ title }: LogoProps) {
+const HIDE_LOGO_TEXT_LIMIT = 700;
+
+function Logo() {
+  const windowSize = useWindowSize();
+
   return (
-    <Link to='/' className='flex items-center mr-4' tabIndex={-1}>
-      <img src='/favicon.svg' className='min-h-[2rem] mr-2 min-w-[2rem]' alt=''/>
-      <span className='self-center hidden text-xl font-semibold small-caps md:block whitespace-nowrap dark:text-white'>{title}</span>
+    <Link to='/' className='flex items-center h-full mr-2' tabIndex={-1}>
+      { (windowSize.width && windowSize.width >= HIDE_LOGO_TEXT_LIMIT) && 
+      <img alt=''
+        src='/logo_full.svg'
+        className='max-h-[1.6rem] min-w-[1.6rem]'
+      />}
+      { (!windowSize.width || windowSize.width < HIDE_LOGO_TEXT_LIMIT) && 
+      <img alt=''
+        src='/logo_sign.svg'
+        className='max-h-[1.6rem] min-w-[2.2rem]'
+        
+      />}
     </Link>
   );
 }
