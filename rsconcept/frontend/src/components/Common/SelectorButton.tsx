@@ -21,7 +21,7 @@ function SelectorButton({
   const position = `px-1 flex flex-start items-center gap-1 ${dimensions}`
   return (
     <button type='button'
-      className={`text-sm small-caps ${!transparent && 'border'} ${cursor} ${position} text-btn text-controls ${!transparent && colorClass}`}
+      className={`text-sm small-caps ${!transparent && 'border'} ${cursor} ${position} text-btn text-controls ${transparent ? 'clr-hover' : colorClass}`}
       title={tooltip}
       {...props}
     >

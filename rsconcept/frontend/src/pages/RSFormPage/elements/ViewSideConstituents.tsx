@@ -211,7 +211,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
   }, [noNavigation, baseHeight]);
 
   return (<>
-    <div className='sticky top-0 left-0 right-0 flex items-center justify-start w-full gap-1 px-2 border-b rounded clr-input'>
+    <div className='sticky top-0 left-0 right-0 flex items-stretch justify-start w-full gap-1 px-2 border-b rounded clr-input'>
       <div className='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-controls'>
         <MagnifyingGlassIcon />
       </div>
@@ -224,6 +224,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       <div ref={matchModeMenu.ref}>
         <SelectorButton 
           tooltip='Настройка атрибутов для фильтрации'
+          dimensions='w-fit h-full'
           transparent
           icon={<FilterCogIcon size={5} />}
           text={labelCstMathchMode(filterMatch)}
@@ -249,6 +250,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       <div ref={sourceMenu.ref}>
         <SelectorButton 
           tooltip='Настройка фильтрации по графу термов'
+          dimensions='w-fit h-full'
           transparent
           icon={<CogIcon size={4} />}
           text={labelCstSource(filterSource)}

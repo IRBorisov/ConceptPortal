@@ -41,6 +41,7 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
   <div ref={strategyMenu.ref} className='h-full text-right'>
     <SelectorButton 
       tooltip='Список фильтров'
+      dimensions='w-fit h-full'
       transparent
       icon={<FilterCogIcon size={5} />}
       text={labelLibraryFilter(value)}
