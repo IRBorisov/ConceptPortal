@@ -108,7 +108,7 @@ export default function DataTable<TData extends RowData>({
   }
 
   return (
-  <div className='w-full'>
+  <div className='w-fit'>
   {isEmpty && (noDataComponent ?? <DefaultNoData />)}
   
   {!isEmpty &&

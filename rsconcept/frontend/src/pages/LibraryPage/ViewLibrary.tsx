@@ -64,18 +64,18 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
     columnHelper.accessor('title', {
       id: 'title',
       header: 'Название',
-      size: 1000,
+      size: 2000,
       minSize: 400,
-      maxSize: 1000,
+      maxSize: 2000,
       enableSorting: true,
       sortingFn: 'text'
     }),
     columnHelper.accessor(item => item.owner ?? 0, {
       id: 'owner',
       header: 'Владелец',
-      size: 300,
+      size: 600,
       minSize: 200,
-      maxSize: 300,
+      maxSize: 600,
       cell: props => getUserLabel(props.cell.getValue()),
       enableSorting: true,
       sortingFn: 'text'
