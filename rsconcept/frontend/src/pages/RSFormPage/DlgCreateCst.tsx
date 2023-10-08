@@ -1,22 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 
 import Modal, { ModalProps } from '../../components/Common/Modal';
 import SelectSingle from '../../components/Common/SelectSingle';
 import TextArea from '../../components/Common/TextArea';
+import TextInput from '../../components/Common/TextInput';
 import RSInput from '../../components/RSInput';
-import { CstType,ICstCreateData } from '../../models/rsform';
+import { CstType,ICstCreateData, IRSForm } from '../../models/rsform';
 import { labelCstType } from '../../utils/labels';
+import { createAliasFor, getCstTypePrefix } from '../../utils/misc';
 import { SelectorCstType } from '../../utils/selectors';
 
 interface DlgCreateCstProps
 extends Pick<ModalProps, 'hideWindow'> {
   initial?: ICstCreateData
+  schema: IRSForm
   onCreate: (data: ICstCreateData) => void
 }
 
-function DlgCreateCst({ hideWindow, initial, onCreate }: DlgCreateCstProps) {
+function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstProps) {
   const [validated, setValidated] = useState(false);
   const [selectedType, setSelectedType] = useState<CstType>(CstType.BASE);
+  const [alias, setAlias] = useState('');
   
   const [term, setTerm] = useState('');
   const [textDefinition, setTextDefinition] = useState('');
@@ -27,7 +31,7 @@ function DlgCreateCst({ hideWindow, initial, onCreate }: DlgCreateCstProps) {
     return {
       cst_type: selectedType,
       insert_after: initial?.insert_after ?? null,
-      alias: '',
+      alias: alias,
       convention: convention,
       definition_formal: expression,
       definition_raw: textDefinition,
@@ -37,17 +41,30 @@ function DlgCreateCst({ hideWindow, initial, onCreate }: DlgCreateCstProps) {
 
   const handleSubmit = () => onCreate(getData());
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (initial) {
       setSelectedType(initial.cst_type);
       setTerm(initial.term_raw);
       setTextDefinition(initial.definition_raw);
       setExpression(initial.definition_formal);
       setConvention(initial.convention);
+      setAlias(initial.alias);
     }
   }, [initial]);
 
-  useEffect(() => setValidated(selectedType !== undefined), [selectedType]);
+  useLayoutEffect(
+  () => {
+    setAlias(createAliasFor(selectedType, schema));
+  }, [selectedType, schema]);
+
+  useEffect(
+  () => {
+    if(alias.length < 2 || alias[0] !== getCstTypePrefix(selectedType)) {
+      setValidated(false);
+    } else {
+      setValidated(!schema.items.find(cst => cst.alias === alias))
+    }
+  }, [alias, selectedType, schema]);
 
   return (
     <Modal
@@ -57,13 +74,19 @@ function DlgCreateCst({ hideWindow, initial, onCreate }: DlgCreateCstProps) {
       onSubmit={handleSubmit}
     >
     <div className='h-fit w-[35rem] px-2 mb-2 flex flex-col justify-stretch gap-3'>
-      <div className='flex justify-center w-full'>
+      <div className='flex justify-center w-full gap-6'>
         <SelectSingle
           className='my-2 min-w-[15rem] self-center'
           options={SelectorCstType}
           placeholder='Выберите тип'
           value={selectedType ? { value: selectedType, label: labelCstType(selectedType) } : null}
           onChange={data => setSelectedType(data?.value ?? CstType.BASE)}
+        />
+        <TextInput id='alias' label='Имя'
+          singleRow
+          dimensions='w-[7rem]'
+          value={alias}
+          onChange={event => setAlias(event.target.value)}
         />
       </div>
       <TextArea id='term' label='Термин'

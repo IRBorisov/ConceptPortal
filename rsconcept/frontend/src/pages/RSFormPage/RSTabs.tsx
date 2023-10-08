@@ -17,7 +17,6 @@ import useModificationPrompt from '../../hooks/useModificationPrompt';
 import { ICstCreateData, ICstRenameData, ICstUpdateData, TermForm } from '../../models/rsform';
 import { SyntaxTree } from '../../models/rslang';
 import { EXTEOR_TRS_FILE, prefixes, TIMEOUT_UI_REFRESH } from '../../utils/constants';
-import { createAliasFor } from '../../utils/misc';
 import DlgCloneRSForm from './DlgCloneRSForm';
 import DlgCreateCst from './DlgCreateCst';
 import DlgDeleteCst from './DlgDeleteCst';
@@ -134,7 +133,7 @@ function RSTabs() {
     if (!schema?.items) {
       return;
     }
-    data.alias = createAliasFor(data.cst_type, schema);
+    //data.alias = createAliasFor(data.cst_type, schema);
     cstCreate(data, newCst => {
       toast.success(`Конституента добавлена: ${newCst.alias}`);
       navigateTab(activeTab, newCst.id);    
@@ -339,6 +338,7 @@ function RSTabs() {
     <DlgCreateCst
       hideWindow={() => setShowCreateCst(false)}
       onCreate={handleCreateCst}
+      schema={schema}
       initial={createInitialData}
     />}
     {showRenameCst && 
