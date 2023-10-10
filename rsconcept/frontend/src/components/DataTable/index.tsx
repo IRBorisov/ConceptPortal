@@ -108,106 +108,106 @@ export default function DataTable<TData extends RowData>({
   }
 
   return (
-  <div className='w-fit'>
+  <div className='w-full'>
   {isEmpty && (noDataComponent ?? <DefaultNoData />)}
-  
-  {!isEmpty &&
-  <table>
-    <thead
-      className='clr-app shadow-border'
-      style={{
-        top: headPosition,
-        position: 'sticky'
-      }}
-    >
-    {tableImpl.getHeaderGroups().map(
-    (headerGroup: HeaderGroup<TData>) => (
-      <tr key={headerGroup.id}>
-        {enableRowSelection && 
-        <th className='pl-3 pr-1'>
-          <SelectAll table={tableImpl} />
-        </th>}
-        {headerGroup.headers.map(
-        (header: Header<TData, unknown>) => (
-          <th key={header.id}
-            colSpan={header.colSpan}
-            className='px-2 py-2 text-xs font-semibold select-none whitespace-nowrap'
-            style={{
-              textAlign: header.getSize() > 100 ? 'left': 'center',
-              width: header.getSize(),
-              cursor: enableSorting && header.column.getCanSort() ? 'pointer': 'auto',
-            }}
-            onClick={enableSorting ? header.column.getToggleSortingHandler() : undefined}
-          >
-            {header.isPlaceholder ? null : (
-            <div className='flex gap-1'>
-              {flexRender(header.column.columnDef.header, header.getContext())}
-              {enableSorting && header.column.getCanSort() && <SortingIcon column={header.column} />}
-            </div>)}
-          </th>
-        ))}
-      </tr>
-    ))}
-    </thead>
-
-    <tbody>
-    {tableImpl.getRowModel().rows.map(
-    (row: Row<TData>, index) => (
-      <tr
-        key={row.id}
-        className={
-          row.getIsSelected() ? 'clr-selected clr-hover' :
-          index % 2 === 0 ? 'clr-controls clr-hover' : 'clr-app clr-hover'
-        }
-        style={conditionalRowStyles && getRowStyles(row)}
+  {!isEmpty && 
+  <div className='flex flex-col items-stretch'>
+    <table>
+      <thead
+        className='clr-app shadow-border'
+        style={{
+          top: headPosition,
+          position: 'sticky'
+        }}
       >
-        {enableRowSelection && 
-        <td key={`select-${row.id}`} className='pl-3 pr-1 border-y'>
-          <SelectRow row={row} />
-        </td>}
-        {row.getVisibleCells().map(
-        (cell: Cell<TData, unknown>) => (
-          <td
-            key={cell.id}
-            className='px-2 border-y'
-            style={{
-              cursor: onRowClicked || onRowDoubleClicked ? 'pointer': 'auto',
-              paddingBottom: dense ? '0.25rem': '0.5rem',
-              paddingTop: dense ? '0.25rem': '0.5rem'
-            }}
-            onClick={event => onRowClicked && onRowClicked(row.original, event)}
-            onDoubleClick={event => onRowDoubleClicked && onRowDoubleClicked(row.original, event)}
-          >
-            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-          </td>
-        ))}
-      </tr>
-    ))}
-    </tbody>
-
-    <tfoot>
-    {tableImpl.getFooterGroups().map(
-    (footerGroup: HeaderGroup<TData>) => (
-      <tr key={footerGroup.id}>
-      {footerGroup.headers.map(
-      (header: Header<TData, unknown>) => (
-        <th key={header.id}>
-          {header.isPlaceholder ? null
-            : flexRender(header.column.columnDef.footer, header.getContext())
-          }
-        </th>
-        ))}
-      </tr>
+      {tableImpl.getHeaderGroups().map(
+      (headerGroup: HeaderGroup<TData>) => (
+        <tr key={headerGroup.id}>
+          {enableRowSelection && 
+          <th className='pl-3 pr-1'>
+            <SelectAll table={tableImpl} />
+          </th>}
+          {headerGroup.headers.map(
+          (header: Header<TData, unknown>) => (
+            <th key={header.id}
+              colSpan={header.colSpan}
+              className='px-2 py-2 text-xs font-semibold select-none whitespace-nowrap'
+              style={{
+                textAlign: header.getSize() > 100 ? 'left': 'center',
+                width: header.getSize(),
+                cursor: enableSorting && header.column.getCanSort() ? 'pointer': 'auto',
+              }}
+              onClick={enableSorting ? header.column.getToggleSortingHandler() : undefined}
+            >
+              {header.isPlaceholder ? null : (
+              <div className='flex gap-1'>
+                {flexRender(header.column.columnDef.header, header.getContext())}
+                {enableSorting && header.column.getCanSort() && <SortingIcon column={header.column} />}
+              </div>)}
+            </th>
+          ))}
+        </tr>
       ))}
-    </tfoot>
-  </table>}
-  
-  {!isEmpty && enablePagination && 
-  <PaginationTools
-    table={tableImpl}
-    paginationOptions={paginationOptions}
-    onChangePaginationOption={onChangePaginationOption}
-  />
-  }
+      </thead>
+
+      <tbody>
+      {tableImpl.getRowModel().rows.map(
+      (row: Row<TData>, index) => (
+        <tr
+          key={row.id}
+          className={
+            row.getIsSelected() ? 'clr-selected clr-hover' :
+            index % 2 === 0 ? 'clr-controls clr-hover' : 'clr-app clr-hover'
+          }
+          style={conditionalRowStyles && getRowStyles(row)}
+        >
+          {enableRowSelection && 
+          <td key={`select-${row.id}`} className='pl-3 pr-1 border-y'>
+            <SelectRow row={row} />
+          </td>}
+          {row.getVisibleCells().map(
+          (cell: Cell<TData, unknown>) => (
+            <td
+              key={cell.id}
+              className='px-2 border-y'
+              style={{
+                cursor: onRowClicked || onRowDoubleClicked ? 'pointer': 'auto',
+                paddingBottom: dense ? '0.25rem': '0.5rem',
+                paddingTop: dense ? '0.25rem': '0.5rem'
+              }}
+              onClick={event => onRowClicked && onRowClicked(row.original, event)}
+              onDoubleClick={event => onRowDoubleClicked && onRowDoubleClicked(row.original, event)}
+            >
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </td>
+          ))}
+        </tr>
+      ))}
+      </tbody>
+
+      <tfoot>
+      {tableImpl.getFooterGroups().map(
+      (footerGroup: HeaderGroup<TData>) => (
+        <tr key={footerGroup.id}>
+        {footerGroup.headers.map(
+        (header: Header<TData, unknown>) => (
+          <th key={header.id}>
+            {header.isPlaceholder ? null
+              : flexRender(header.column.columnDef.footer, header.getContext())
+            }
+          </th>
+          ))}
+        </tr>
+        ))}
+      </tfoot>
+    </table>
+    
+    {enablePagination && 
+    <PaginationTools
+      table={tableImpl}
+      paginationOptions={paginationOptions}
+      onChangePaginationOption={onChangePaginationOption}
+    />}
+  </div>}
   </div>);
 }
