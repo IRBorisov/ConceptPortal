@@ -84,8 +84,8 @@ export function labelToken(id: TokenID): string {
 
 export function describeToken(id: TokenID): string {
   switch (id) {
-  case TokenID.BOOLEAN:         return 'Булеан [Alt + E]';
-  case TokenID.DECART:          return 'Декартово произведение [Shift + 8  / Alt + Shift + E]';
+  case TokenID.BOOLEAN:         return 'Булеан [Alt + E / Shift + B]';
+  case TokenID.DECART:          return 'Декартово произведение [Alt + Shift + E / Shift + 8]';
   case TokenID.PUNC_PL:         return 'Скобки вокруг выражения [Alt + Shift + 9 ]';
   case TokenID.PUNC_SL:         return 'Скобки вокруг выражения [Alt + [ ]';
   case TokenID.FORALL:          return 'Квантор всеобщности [`]';

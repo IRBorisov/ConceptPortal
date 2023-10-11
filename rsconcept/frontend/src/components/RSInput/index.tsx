@@ -100,9 +100,20 @@ function RSInput({
       return;
     }
     const text = new RSTextWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
-    if (event.shiftKey && event.key === '*' && !event.altKey) {
-      text.insertToken(TokenID.DECART);
-    } else if (event.altKey) {
+    if (event.shiftKey && !event.altKey) {
+      if (event.key === '*') {
+        text.insertToken(TokenID.DECART);
+        event.preventDefault();
+        return;
+      }
+      if (event.key === 'B') {
+        text.insertChar('ℬ');
+        event.preventDefault();
+        return;
+      }
+    }
+    
+    if (event.altKey) {
       if (!text.processAltKey(event.code, event.shiftKey)) {
         return;
       }

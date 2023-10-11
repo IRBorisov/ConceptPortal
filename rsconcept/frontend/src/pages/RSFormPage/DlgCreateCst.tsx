@@ -99,7 +99,7 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
       <RSInput id='expression' label='Формальное выражение'
         placeholder='Родоструктурное выражение, задающее формальное определение'
         editable
-        height='5.5rem'
+        height='4.8rem'
         value={expression}
         onChange={value => setExpression(value)}
       />

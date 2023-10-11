@@ -1,4 +1,3 @@
-import { LibraryFilterStrategy } from '../../models/miscelanious';
 import { urls } from '../../utils/constants';
 import TextURL from '../Common/TextURL';
 
@@ -8,9 +7,7 @@ function HelpMain() {
     <h1>Портал</h1>
     <p className=''>Портал позволяет анализировать предметные области, формально записывать системы определений (концептуальные схемы) и синтезировать их с помощью математического аппарата родов структур.</p>
     <p className='mt-4 mb-1 text-center'><b>Основные разделы</b></p>
-    <li><TextURL text='Библиотека' href='/library' /> - все схемы доступные пользователю</li>
-    <li><TextURL text='Общие схемы' href={`/library?filter=${LibraryFilterStrategy.COMMON}`} /> - общедоступные схемы и инструменты поиска и навигации по ним</li>
-    <li><TextURL text='Мои схемы' href={`/library?filter=${LibraryFilterStrategy.PERSONAL}`} /> - отслеживаемые и редактируемые схемы. Основной рабочий раздел</li>
+    <li><TextURL text='Библиотека' href='/library' /> - библиотека концептуальных схем. Доступны сортировка, поиск и фильтрация</li>
     <li><TextURL text='Профиль' href='/profile' /> - данные пользователя и смена пароля</li>
     
     <p className='mt-4 mb-1 text-center'><b>Навигация</b></p>
@@ -19,7 +16,7 @@ function HelpMain() {
 
     <p className='mt-4 mb-1 text-center'><b>Поддержка</b></p>
     <p>Портал разрабатывается <TextURL text='Центром Концепт' href={urls.concept}/> и является проектом с открытым исходным кодом, доступным на <TextURL text='Github' href={urls.gitrepo}/>.</p>
-    <p>Ждём Ваши пожелания по доработке, найденные ошибки и иные предложения по адресу <TextURL href={urls.mailportal} text='portal@acconcept.ru'/></p>
+    <p>Ваши пожелания по доработке, найденные ошибки и иные предложения можно направлять по email: <TextURL href={urls.mailportal} text='portal@acconcept.ru'/></p>
   </div>);
 }
 
