@@ -106,7 +106,7 @@ function RSInput({
         event.preventDefault();
         return;
       }
-      if (event.key === 'B') {
+      if (event.code === 'KeyB') {
         text.insertChar('ℬ');
         event.preventDefault();
         return;
