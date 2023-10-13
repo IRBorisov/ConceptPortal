@@ -204,7 +204,7 @@ export const graphLightT = {
 
 export const graphDarkT = {
   canvas: {
-    background: '#181818' // var(--cd-bg-100)
+    background: '#171717' // var(--cd-bg-100)
   },
   node: {
     fill: '#7a8c9e',
