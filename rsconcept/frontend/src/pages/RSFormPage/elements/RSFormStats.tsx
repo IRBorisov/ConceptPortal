@@ -8,7 +8,7 @@ interface RSFormStatsProps {
 
 function RSFormStats({ stats }: RSFormStatsProps) {
   return (
-    <div className='flex flex-col gap-1 px-4 py-2 border min-w-[16rem]'>
+    <div className='flex flex-col gap-1 px-4 py-2 mt-4 border min-w-[16rem]'>
       <LabeledText id='count_all'
         label='Всего конституент '
         text={stats.count_all}

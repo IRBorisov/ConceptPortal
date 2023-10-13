@@ -3,7 +3,6 @@ import { toast } from 'react-toastify';
 
 import Button from '../../components/Common/Button';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
-import Divider from '../../components/Common/Divider';
 import DataTable, { createColumnHelper, type RowSelectionState,VisibilityState } from '../../components/DataTable';
 import HelpRSFormItems from '../../components/Help/HelpRSFormItems';
 import { ArrowDownIcon, ArrowUpIcon, DumpBinIcon, HelpIcon, MeshIcon, SmallPlusIcon } from '../../components/Icons';
@@ -20,6 +19,8 @@ import { getCstTypePrefix, getCstTypeShortcut } from '../../utils/misc';
 const COLUMN_DEFINITION_HIDE_THRESHOLD = 1000;
 const COLUMN_TYPE_HIDE_THRESHOLD = 1200;
 const COLUMN_CONVENTION_HIDE_THRESHOLD = 1800;
+
+const EDITOR_BUTTON_DIMENSIONS = 'h-[1.5rem] w-[1.8em]';
 
 const columnHelper = createColumnHelper<IConstituenta>();
 
@@ -299,11 +300,12 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
       <div className='mr-3 min-w-[9rem] whitespace-nowrap'>
         Выбор {selected.length} из {schema?.stats?.count_all ?? 0}
       </div>
-      <div className='flex items-center justify-start w-full gap-1'>
+      <div className='flex items-center justify-center w-full gap-1 pr-[9rem]'>
         <Button
           tooltip='Переместить вверх'
           icon={<ArrowUpIcon size={6}/>}
           disabled={!isEditable || nothingSelected}
+          dimensions={EDITOR_BUTTON_DIMENSIONS}
           dense
           onClick={handleMoveUp}
         />
@@ -311,27 +313,31 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
           tooltip='Переместить вниз'
           icon={<ArrowDownIcon size={6}/>}
           disabled={!isEditable || nothingSelected}
+          dimensions={EDITOR_BUTTON_DIMENSIONS}
           dense
           onClick={handleMoveDown}
         />
         <Button
           tooltip='Удалить выбранные'
-          icon={<DumpBinIcon color={isEditable && !nothingSelected ? 'text-warning' : ''} size={6}/>}
+          icon={<DumpBinIcon color={isEditable && !nothingSelected ? 'text-warning' : ''} size={5}/>}
           disabled={!isEditable || nothingSelected}
+          dimensions={EDITOR_BUTTON_DIMENSIONS}
           dense
           onClick={handleDelete}
         />
-        <Divider vertical margins='my-1' />
+
         <Button
           tooltip='Сбросить имена'
-          icon={<MeshIcon color={isEditable ? 'text-primary': ''} size={6}/>}
+          icon={<MeshIcon color={isEditable ? 'text-primary': ''} size={5}/>}
+          dimensions={EDITOR_BUTTON_DIMENSIONS}
           dense
           disabled={!isEditable}
           onClick={handleReindex}
         />
         <Button
           tooltip='Новая конституента'
-          icon={<SmallPlusIcon color={isEditable ? 'text-success': ''} size={6}/>}
+          icon={<SmallPlusIcon color={isEditable ? 'text-success': ''} size={5}/>}
+          dimensions={EDITOR_BUTTON_DIMENSIONS}
           dense
           disabled={!isEditable}
           onClick={() => handleCreateCst()}
@@ -344,14 +350,14 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
               text={getCstTypePrefix(type)}
               tooltip={getCstTypeShortcut(type)}
               dense
-              dimensions='w-[1.4rem]'
+              dimensions={EDITOR_BUTTON_DIMENSIONS}
               disabled={!isEditable}
               tabIndex={-1}
               onClick={() => handleCreateCst(type)}
             />);
         })}
         <div id='items-table-help'>
-          <HelpIcon color='text-primary' size={6} />
+          <HelpIcon color='text-primary' size={5} />
         </div>
         <ConceptTooltip anchorSelect='#items-table-help' offset={30}>
           <HelpRSFormItems />

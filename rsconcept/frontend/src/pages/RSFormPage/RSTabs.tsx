@@ -364,9 +364,10 @@ function RSTabs() {
       selectedIndex={activeTab}
       onSelect={onSelectTab}
       defaultFocus={true}
-      selectedTabClassName='font-semibold clr-selected'
+      selectedTabClassName='clr-selected'
+      className='flex flex-col items-center w-full'
     >
-      <TabList className='flex items-start pl-2 border-b border-r-2 select-none justify-stretch w-fit clr-controls h-[1.9rem]'>
+      <TabList className='flex items-start border-b-2 border-x-2 select-none justify-stretch w-fit clr-controls h-[1.9rem] small-caps font-semibold'>
         <RSTabsMenu 
           onDownload={onDownloadSchema}
           onDestroy={onDestroySchema}
@@ -385,7 +386,7 @@ function RSTabs() {
         <ConceptTab className='min-w-[6.5rem]'>Граф термов</ConceptTab>
       </TabList>
 
-      <TabPanel className='flex w-full gap-4'>
+      <TabPanel className='flex gap-4 w-fit'>
         <EditorRSForm
           isModified={isModified}
           setIsModified={setIsModified}
@@ -405,7 +406,7 @@ function RSTabs() {
         />
       </TabPanel>
 
-      <TabPanel>
+      <TabPanel className='flex justify-center w-full'>
         <EditorConstituenta
           isModified={isModified}
           setIsModified={setIsModified}

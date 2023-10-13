@@ -136,8 +136,8 @@ function EditorConstituenta({
   }
 
   return (
-  <div className='flex w-full gap-2 mb-2 justify-stretch'>
-    <form onSubmit={handleSubmit} className='min-w-[50rem] max-w-min px-4 py-2 border-y border-r'>
+  <div className='flex w-full max-w-[1500px] gap-2 mt-2 justify-stretch'>
+    <form onSubmit={handleSubmit} className='min-w-[50rem] max-w-min px-4 py-2 border'>
       <div className='relative w-full'>
       <div className='absolute top-0 right-0 flex items-start justify-between w-full'>
         {activeCst && 

@@ -81,7 +81,7 @@ function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, 
   };
 
   return (
-  <form onSubmit={handleSubmit} className='flex-grow max-w-[35.3rem] px-4 py-2 border-y border-r min-w-fit'>
+  <form onSubmit={handleSubmit} className='flex-grow max-w-[40rem] min-w-[30rem] px-4 py-2 mt-4 border'>
     <div className='relative w-full'>
     <div className='absolute top-0 right-0 flex'>
       <MiniButton
