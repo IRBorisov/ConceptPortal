@@ -474,7 +474,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
     <div className='w-full h-full overflow-auto'>
     <div 
       className='relative'
-      style={{width: canvasWidth, height: canvasHeight, borderBottomWidth: noNavigation ? '1px': ''}}
+      style={{width: canvasWidth, height: canvasHeight}}
     >
       <div className='relative top-0 right-0 flex mt-1 ml-2 z-pop flex-start'>
         <div className='px-1 py-1' id='items-graph-help' >
