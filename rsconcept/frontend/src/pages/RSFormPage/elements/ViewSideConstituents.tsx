@@ -211,7 +211,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
   }, [noNavigation, baseHeight]);
 
   return (<>
-    <div className='sticky top-0 left-0 right-0 flex items-stretch justify-start w-full gap-1 px-2 border-b rounded clr-input'>
+    <div className='sticky top-0 left-0 right-0 flex items-stretch justify-between w-full gap-1 pl-2 border-b clr-input'>
       <div className='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-controls'>
         <MagnifyingGlassIcon />
       </div>
@@ -221,56 +221,58 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
         value={filterText}
         onChange={event => setFilterText(event.target.value)}
       />
-      <div ref={matchModeMenu.ref}>
-        <SelectorButton 
-          tooltip='Настройка атрибутов для фильтрации'
-          dimensions='w-fit h-full'
-          transparent
-          icon={<FilterCogIcon size={5} />}
-          text={labelCstMathchMode(filterMatch)}
-          tabIndex={-1}
-          onClick={matchModeMenu.toggle}
-        />
-        { matchModeMenu.isActive &&
-        <Dropdown stretchLeft>
-          { Object.values(CstMatchMode).filter(value => !isNaN(Number(value))).map(
-          (value, index) => {
-            const matchMode = value as CstMatchMode;
-            return (
-            <DropdownButton
-              key={`${prefixes.cst_match_mode_list}${index}`}
-              onClick={() => handleMatchModeChange(matchMode)}
-            >
-              <p><span className='font-semibold'>{labelCstMathchMode(matchMode)}:</span> {describeCstMathchMode(matchMode)}</p>
-            </DropdownButton>);
-          })}
-        </Dropdown>}
-      </div>
+      <div className='flex'>
+        <div ref={matchModeMenu.ref}>
+          <SelectorButton 
+            tooltip='Настройка атрибутов для фильтрации'
+            dimensions='w-fit h-full'
+            transparent
+            icon={<FilterCogIcon size={5} />}
+            text={labelCstMathchMode(filterMatch)}
+            tabIndex={-1}
+            onClick={matchModeMenu.toggle}
+          />
+          { matchModeMenu.isActive &&
+          <Dropdown stretchLeft>
+            { Object.values(CstMatchMode).filter(value => !isNaN(Number(value))).map(
+            (value, index) => {
+              const matchMode = value as CstMatchMode;
+              return (
+              <DropdownButton
+                key={`${prefixes.cst_match_mode_list}${index}`}
+                onClick={() => handleMatchModeChange(matchMode)}
+              >
+                <p><span className='font-semibold'>{labelCstMathchMode(matchMode)}:</span> {describeCstMathchMode(matchMode)}</p>
+              </DropdownButton>);
+            })}
+          </Dropdown>}
+        </div>
 
-      <div ref={sourceMenu.ref}>
-        <SelectorButton 
-          tooltip='Настройка фильтрации по графу термов'
-          dimensions='w-fit h-full'
-          transparent
-          icon={<CogIcon size={4} />}
-          text={labelCstSource(filterSource)}
-          tabIndex={-1}
-          onClick={sourceMenu.toggle}
-        />
-        { sourceMenu.isActive &&
-        <Dropdown stretchLeft>
-          { Object.values(CstSource).filter(value => !isNaN(Number(value))).map(
-          (value, index) => {
-            const source = value as CstSource;
-            return (
-            <DropdownButton
-              key={`${prefixes.cst_source_list}${index}`}
-              onClick={() => handleSourceChange(source)}
-            >
-              <p><span className='font-semibold'>{labelCstSource(source)}:</span> {describeCstSource(source)}</p>
-            </DropdownButton>);
-          })}
-        </Dropdown>}
+        <div ref={sourceMenu.ref}>
+          <SelectorButton 
+            tooltip='Настройка фильтрации по графу термов'
+            dimensions='w-fit h-full'
+            transparent
+            icon={<CogIcon size={4} />}
+            text={labelCstSource(filterSource)}
+            tabIndex={-1}
+            onClick={sourceMenu.toggle}
+          />
+          { sourceMenu.isActive &&
+          <Dropdown stretchLeft>
+            { Object.values(CstSource).filter(value => !isNaN(Number(value))).map(
+            (value, index) => {
+              const source = value as CstSource;
+              return (
+              <DropdownButton
+                key={`${prefixes.cst_source_list}${index}`}
+                onClick={() => handleSourceChange(source)}
+              >
+                <p><span className='font-semibold'>{labelCstSource(source)}:</span> {describeCstSource(source)}</p>
+              </DropdownButton>);
+            })}
+          </Dropdown>}
+        </div>
       </div>
     </div>
     <div className='overflow-y-auto text-sm' style={{maxHeight : `${maxHeight}`}}>

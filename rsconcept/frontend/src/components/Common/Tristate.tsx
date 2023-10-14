@@ -12,7 +12,7 @@ extends Omit<CheckboxProps, 'value' | 'setValue'> {
 }
 
 function Tristate({
-  id, required, disabled, tooltip, label, 
+  id, disabled, tooltip, label, 
   dimensions = 'w-fit', value, setValue, ...props
 }: TristateProps) {
   const cursor = useMemo(
@@ -61,7 +61,6 @@ function Tristate({
       <Label
         className={`${cursor} px-2 text-start`}
         text={label}
-        required={required}
         htmlFor={id}
       />}
     </button>

@@ -7,7 +7,6 @@ export interface CheckboxProps
 extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'children' | 'title' | 'value' | 'onClick' > {
   id?: string
   label?: string
-  required?: boolean
   disabled?: boolean
   dimensions?: string
   tooltip?: string
@@ -17,7 +16,7 @@ extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'child
 }
 
 function Checkbox({
-  id, required, disabled, tooltip, label, 
+  id, disabled, tooltip, label, 
   dimensions = 'w-fit', value, setValue, ...props
 }: CheckboxProps) {
   const cursor = useMemo(
@@ -59,7 +58,6 @@ function Checkbox({
       <Label
         className={`${cursor} px-2 text-start`}
         text={label}
-        required={required}
         htmlFor={id}
       />}
     </button>

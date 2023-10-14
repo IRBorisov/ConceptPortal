@@ -1,19 +1,19 @@
 import { LabelHTMLAttributes } from 'react';
 
 interface LabelProps 
-extends Omit<React.DetailedHTMLProps<LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>, 'children'> {
+extends Omit<React.DetailedHTMLProps<LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>, 'children' | 'title'> {
   text: string
-  required?: boolean
+  tooltip?: string
 }
 
-function Label({ text, required, title, className, ...props }: LabelProps) {
+function Label({ text, tooltip, className, ...props }: LabelProps) {
   return (
     <label
       className={`text-sm font-semibold ${className}`}
-      title={ (required && !title) ? 'обязательное поле' : title }
+      title={tooltip}
       {...props}
     >
-      {text + (required ? '*' : '')}
+      {text}
     </label>
   );
 }

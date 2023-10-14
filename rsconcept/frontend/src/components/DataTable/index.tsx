@@ -109,15 +109,14 @@ export default function DataTable<TData extends RowData>({
 
   return (
   <div className='w-full'>
-  {isEmpty && (noDataComponent ?? <DefaultNoData />)}
-  {!isEmpty && 
   <div className='flex flex-col items-stretch'>
     <table>
       <thead
-        className='clr-app shadow-border'
+        className={`clr-app shadow-border`}
         style={{
           top: headPosition,
-          position: 'sticky'
+          position: 'sticky',
+          visibility: !isEmpty ? 'visible' : 'hidden'
         }}
       >
       {tableImpl.getHeaderGroups().map(
@@ -149,7 +148,7 @@ export default function DataTable<TData extends RowData>({
         </tr>
       ))}
       </thead>
-
+      
       <tbody>
       {tableImpl.getRowModel().rows.map(
       (row: Row<TData>, index) => (
@@ -202,12 +201,13 @@ export default function DataTable<TData extends RowData>({
       </tfoot>
     </table>
     
-    {enablePagination && 
+    {enablePagination && !isEmpty &&
     <PaginationTools
       table={tableImpl}
       paginationOptions={paginationOptions}
       onChangePaginationOption={onChangePaginationOption}
     />}
-  </div>}
+  </div>
+  {isEmpty && (noDataComponent ?? <DefaultNoData />)}
   </div>);
 }

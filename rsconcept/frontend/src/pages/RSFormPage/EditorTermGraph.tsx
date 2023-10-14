@@ -397,10 +397,10 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       </div>
       <div className='flex items-center w-full gap-1'>
         <Button
-          icon={<FilterCogIcon size={7} />}
+          icon={<FilterCogIcon size={6} />}
           dense
           tooltip='Настройки фильтрации узлов и связей'
-          dimensions='h-full'
+          dimensions='min-h-[2.3rem] min-w-[2.3rem]'
           onClick={() => setShowOptions(true)}
         />
         <SelectSingle
@@ -411,7 +411,6 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
           value={coloringScheme ? { value: coloringScheme, label: mapLabelColoring.get(coloringScheme) } : null}
           onChange={data => setColoringScheme(data?.value ?? SelectorGraphColoring[0].value)}
         />
-        
       </div>
       <SelectSingle
         className='w-full mt-1'

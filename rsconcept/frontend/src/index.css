@@ -111,7 +111,7 @@
   .dark & {
     background: var(--cd-prim-bg-60);
   }
-  :hover& {
+  tr :hover& {
     background: var(--cl-red-bg-100);
     .dark & {
       background: var(--cd-red-bg-100);

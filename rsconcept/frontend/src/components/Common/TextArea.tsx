@@ -19,9 +19,9 @@ function TextArea({
 }: TextAreaProps) {
   return (
     <div className='flex flex-col items-start gap-2'>
-      {label && <Label
+      {label && 
+      <Label
         text={label}
-        required={!props.disabled && required}
         htmlFor={id}
       />}
       <textarea id={id}

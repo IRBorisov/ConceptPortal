@@ -134,7 +134,6 @@ function RSInput({
     {label && 
     <Label
       text={label}
-      required={false}
       htmlFor={id}
       className='mb-2'
     />}

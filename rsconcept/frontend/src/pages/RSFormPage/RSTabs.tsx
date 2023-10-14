@@ -384,13 +384,25 @@ function RSTabs() {
           showCloneDialog={promptClone} 
           showUploadDialog={() => setShowUpload(true)}
         />
-        <ConceptTab className='border-x-2 min-w-[7.8rem]'>Паспорт схемы</ConceptTab>
-        <ConceptTab className='border-r-2 min-w-[10rem] flex justify-between gap-2'>
+        <ConceptTab 
+          className='border-x-2 min-w-[7.8rem]'
+          title={`Название схемы: ${schema.title ?? ''}`}
+        >
+          Паспорт схемы
+        </ConceptTab>
+        <ConceptTab 
+          className='border-r-2 w-fit flex justify-between gap-2'
+          title={`Всего конституент: ${schema.stats?.count_all ?? 0}\nКоличество ошибок: ${schema.stats?.count_errors ?? 0}`}
+        >
           <span>Конституенты</span>
           <span>{`${schema.stats?.count_errors ?? 0} | ${schema.stats?.count_all ?? 0}`}</span>
         </ConceptTab>
-        <ConceptTab className='border-r-2 min-w-[5.2rem]'>Редактор</ConceptTab>
-        <ConceptTab className='min-w-[6.5rem]'>Граф термов</ConceptTab>
+        <ConceptTab className='border-r-2 min-w-[5.2rem]'>
+          Редактор
+        </ConceptTab>
+        <ConceptTab className='min-w-[6.5rem]'>
+          Граф термов
+        </ConceptTab>
       </TabList>
 
       <div className='overflow-y-auto' style={{ maxHeight: panelHeight}}>

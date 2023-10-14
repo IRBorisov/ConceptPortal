@@ -15,7 +15,7 @@ function TopicsList({ activeTopic, onChangeTopic }: TopicsListProps) {
       (topic, index) => {
         return (
           <div key={`${prefixes.topic_list}${index}`}
-            className={`px-3 py-1 border-y cursor-pointer clr-hover ${activeTopic === topic ? 'font-semibold clr-selected ' : ''}`}
+            className={`px-3 py-1 border-y cursor-pointer clr-hover ${activeTopic === topic ? 'clr-selected ' : ''}`}
             title={describeHelpTopic(topic)}
             onClick={() => onChangeTopic(topic)}
           >

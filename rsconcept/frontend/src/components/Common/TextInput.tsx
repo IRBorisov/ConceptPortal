@@ -23,7 +23,6 @@ function TextInput({
       {label && 
       <Label
         text={label}
-        required={!props.disabled && required}
         htmlFor={id}
       />}
       <input id={id}
