@@ -34,7 +34,7 @@ function ManualsPage() {
   }, [search, setActiveTopic, navigateTopic]);
 
   return (
-    <div className='flex w-full gap-2 justify-stretch' style={{minHeight: mainHeight}}>
+    <div className='flex w-full gap-2 justify-start items-start' style={{minHeight: mainHeight}}>
       <TopicsList 
         activeTopic={activeTopic}
         onChangeTopic={topic => onSelectTopic(topic)}

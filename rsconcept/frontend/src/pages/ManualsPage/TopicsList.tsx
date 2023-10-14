@@ -9,8 +9,8 @@ interface TopicsListProps {
 
 function TopicsList({ activeTopic, onChangeTopic }: TopicsListProps) {
   return (
-    <div className='sticky top-0 left-0 border-r border-b min-w-[13rem] pt-2 select-none flex flex-col clr-controls'>
-      <div className='mb-2 font-semibold text-center'>Справка</div>
+    <div className='sticky top-0 left-0 border-x min-w-[13rem] select-none flex flex-col clr-controls small-caps h-fit'>
+      <div className='my-2 text-lg text-center'>Справка</div>
       { Object.values(HelpTopic).map(
       (topic, index) => {
         return (

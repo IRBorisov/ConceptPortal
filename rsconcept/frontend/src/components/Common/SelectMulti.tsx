@@ -35,6 +35,10 @@ function SelectMulti<
       borderWidth: '1px',
       borderColor: colors.border
     }),
+    menuList: (styles) => ({
+      ...styles,
+      padding: '0px'
+    }),
     input: (styles) => ({...styles}),
     placeholder: (styles) => ({...styles}),
     multiValue: styles => ({

@@ -60,7 +60,7 @@ function RSTabs() {
     cstCreate, cstDelete, cstRename, subscribe, unsubscribe, cstUpdate
   } = useRSForm();
   const { destroySchema } = useLibrary();
-  const { setNoFooter } = useConceptTheme();
+  const { setNoFooter, noNavigation } = useConceptTheme();
 
   const { isModified, setIsModified } = useModificationPrompt();
 
@@ -88,6 +88,13 @@ function RSTabs() {
   const [showRenameCst, setShowRenameCst] = useState(false);
 
   const [showEditTerm, setShowEditTerm] = useState(false);
+
+  const panelHeight = useMemo(
+  () => {
+    return !noNavigation ? 
+      'calc(100vh - 4.8rem - 4px)'
+    : 'calc(100vh - 2rem - 4px)';
+  }, [noNavigation]);
 
   useLayoutEffect(() => {
     if (schema) {
@@ -386,48 +393,50 @@ function RSTabs() {
         <ConceptTab className='min-w-[6.5rem]'>Граф термов</ConceptTab>
       </TabList>
 
-      <TabPanel className='flex gap-4 w-fit'>
-        <EditorRSForm
-          isModified={isModified}
-          setIsModified={setIsModified}
-          onDownload={onDownloadSchema}
-          onDestroy={onDestroySchema}
-          onClaim={onClaimSchema}
-          onShare={onShareSchema}
-        />
-        {schema.stats && <RSFormStats stats={schema.stats}/>}
-      </TabPanel>
+      <div className='overflow-y-auto' style={{ maxHeight: panelHeight}}>
+        <TabPanel className='flex gap-4 w-fit'>
+          <EditorRSForm
+            isModified={isModified}
+            setIsModified={setIsModified}
+            onDownload={onDownloadSchema}
+            onDestroy={onDestroySchema}
+            onClaim={onClaimSchema}
+            onShare={onShareSchema}
+          />
+          {schema.stats && <RSFormStats stats={schema.stats}/>}
+        </TabPanel>
 
-      <TabPanel className='w-full'>
-        <EditorItems
-          onOpenEdit={onOpenCst}
-          onCreateCst={promptCreateCst}
-          onDeleteCst={promptDeleteCst}
-        />
-      </TabPanel>
+        <TabPanel className='w-full'>
+          <EditorItems
+            onOpenEdit={onOpenCst}
+            onCreateCst={promptCreateCst}
+            onDeleteCst={promptDeleteCst}
+          />
+        </TabPanel>
 
-      <TabPanel className='flex justify-center w-full'>
-        <EditorConstituenta
-          isModified={isModified}
-          setIsModified={setIsModified}
-          activeID={activeID}
-          activeCst={activeCst}
-          onOpenEdit={onOpenCst}
-          onShowAST={onShowAST}
-          onCreateCst={promptCreateCst}
-          onDeleteCst={promptDeleteCst}
-          onRenameCst={promptRenameCst}
-          onEditTerm={promptShowEditTerm}
-        />
-      </TabPanel>
+        <TabPanel className='flex justify-center w-full'>
+          <EditorConstituenta
+            isModified={isModified}
+            setIsModified={setIsModified}
+            activeID={activeID}
+            activeCst={activeCst}
+            onOpenEdit={onOpenCst}
+            onShowAST={onShowAST}
+            onCreateCst={promptCreateCst}
+            onDeleteCst={promptDeleteCst}
+            onRenameCst={promptRenameCst}
+            onEditTerm={promptShowEditTerm}
+          />
+        </TabPanel>
 
-      <TabPanel>
-        <EditorTermGraph 
-          onOpenEdit={onOpenCst}
-          onCreateCst={promptCreateCst}
-          onDeleteCst={promptDeleteCst}
-        />
-      </TabPanel>
+        <TabPanel>
+          <EditorTermGraph 
+            onOpenEdit={onOpenCst}
+            onCreateCst={promptCreateCst}
+            onDeleteCst={promptDeleteCst}
+          />
+        </TabPanel>
+      </div>
     </Tabs>
     </>}
   </div>);

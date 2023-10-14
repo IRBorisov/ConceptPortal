@@ -229,7 +229,7 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
     canSubmit={isValid}
     onSubmit={handleSubmit}
   >
-  <div className='min-w-[40rem] max-w-[40rem] flex flex-col gap-4 mb-4 mt-2 min-h-[34rem]'>
+  <div className='min-w-[40rem] max-w-[40rem] flex flex-col gap-4 mb-4 min-h-[34rem]'>
     <div className='flex items-center self-center flex-start'>
       <ReferenceTypeButton 
         type={ReferenceType.ENTITY}

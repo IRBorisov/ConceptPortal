@@ -1,7 +1,6 @@
 import { useAuth } from '../../context/AuthContext';
 import { useConceptNavigation } from '../../context/NagivationContext';
 import { useConceptTheme } from '../../context/ThemeContext';
-import { LibraryFilterStrategy } from '../../models/miscelanious';
 import Dropdown from '../Common/Dropdown';
 import DropdownButton from '../Common/DropdownButton';
 
@@ -25,11 +24,6 @@ function UserDropdown({ hideDropdown }: UserDropdownProps) {
     logout(() => navigateTo('/login/'));
   };
 
-  const navigateMyWork = () => {
-    hideDropdown();
-    navigateTo(`/library?filter=${LibraryFilterStrategy.PERSONAL}`);
-  };
-
   return (
     <Dropdown dimensions='w-36' stretchLeft>
       <DropdownButton
@@ -43,9 +37,6 @@ function UserDropdown({ hideDropdown }: UserDropdownProps) {
         onClick={toggleDarkMode}
       >
         {darkMode ? 'Светлая тема' : 'Темная тема'}
-      </DropdownButton>
-      <DropdownButton onClick={navigateMyWork}>
-        Мои схемы
       </DropdownButton>
       <DropdownButton onClick={logoutAndRedirect}>
         <b>Выйти...</b>

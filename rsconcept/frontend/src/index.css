@@ -122,7 +122,11 @@
 
 @layer components {
   h1 {
-    @apply text-lg font-bold text-center
+    @apply text-lg font-semibold text-center
+  }
+
+  b {
+    @apply font-semibold
   }
 
   .border {

@@ -27,6 +27,10 @@ function SelectSingle<
       borderRadius: '0.25rem',
       cursor: isDisabled ? 'not-allowed' : 'pointer'
     }),
+    menuList: (styles) => ({
+      ...styles,
+      padding: '0px'
+    }),
     option: (styles, { isSelected }) => ({
       ...styles,
       backgroundColor: isSelected ? colors.bgSelected : styles.backgroundColor,

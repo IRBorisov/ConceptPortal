@@ -12,7 +12,7 @@ function ReferenceTypeButton({ type, isSelected, onSelect, ...props }: Reference
   return (
     <button type='button' tabIndex={-1}
       onClick={() => onSelect(type)}
-      className={`min-w-[12rem] px-2 py-1 border font-semibold rounded-none cursor-pointer clr-btn-clear clr-hover ${isSelected ? 'clr-selected': ''}`}
+      className={`min-w-[12rem] px-2 py-1 border font-semibold small-caps rounded-none cursor-pointer clr-btn-clear clr-hover ${isSelected ? 'clr-selected': ''}`}
       {...props}
     >
       {labelReferenceType(type)}

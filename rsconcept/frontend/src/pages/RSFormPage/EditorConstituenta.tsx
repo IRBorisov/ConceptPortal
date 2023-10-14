@@ -136,8 +136,8 @@ function EditorConstituenta({
   }
 
   return (
-  <div className='flex w-full max-w-[1500px] gap-2 mt-2 justify-stretch'>
-    <form onSubmit={handleSubmit} className='min-w-[50rem] max-w-min px-4 py-2 border'>
+  <div className='flex w-full max-w-[1500px] gap-2 justify-stretch'>
+    <form onSubmit={handleSubmit} className='min-w-[50rem] max-w-min px-4 py-2'>
       <div className='relative w-full'>
       <div className='absolute top-0 right-0 flex items-start justify-between w-full'>
         {activeCst && 
@@ -249,7 +249,7 @@ function EditorConstituenta({
       </div>
     </form>
     {(windowSize.width ?? 0) >= SIDELIST_HIDE_THRESHOLD &&
-    <div className='self-stretch w-full border'>
+    <div className='self-stretch w-full border mt-10'>
       <ViewSideConstituents
         expression={expression}
         baseHeight={UNFOLDED_HEIGHT}
