@@ -38,7 +38,7 @@ function Root() {
           overflowY: showScroll ? 'scroll': 'auto'
         }}
       >
-        <main className='w-full h-full' style={{minHeight: mainHeight}}>
+        <main className='w-full h-full min-w-fit' style={{minHeight: mainHeight}}>
           <Outlet />
         </main>
       {!noNavigation && !noFooter && <Footer />}

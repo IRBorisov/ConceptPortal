@@ -206,8 +206,8 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
   () => {
     const siblingHeight = `${baseHeight} - ${LOCAL_NAVIGATION_H}`
     return (noNavigation ? 
-      `calc(min(100vh - 7.2rem, ${siblingHeight}))`
-    : `calc(min(100vh - 10.7rem, ${siblingHeight}))`);
+      `calc(min(100vh - 8.2rem, ${siblingHeight}))`
+    : `calc(min(100vh - 11.7rem, ${siblingHeight}))`);
   }, [noNavigation, baseHeight]);
 
   return (<>

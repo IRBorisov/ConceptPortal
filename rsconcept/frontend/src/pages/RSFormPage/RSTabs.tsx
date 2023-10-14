@@ -372,7 +372,7 @@ function RSTabs() {
       onSelect={onSelectTab}
       defaultFocus={true}
       selectedTabClassName='clr-selected'
-      className='flex flex-col items-center w-full'
+      className='flex flex-col w-full items-center'
     >
       <TabList className='flex items-start border-b-2 border-x-2 select-none justify-stretch w-fit clr-controls h-[1.9rem] small-caps font-semibold'>
         <RSTabsMenu 
@@ -406,7 +406,7 @@ function RSTabs() {
           {schema.stats && <RSFormStats stats={schema.stats}/>}
         </TabPanel>
 
-        <TabPanel className='w-full'>
+        <TabPanel>
           <EditorItems
             onOpenEdit={onOpenCst}
             onCreateCst={promptCreateCst}
@@ -414,7 +414,7 @@ function RSTabs() {
           />
         </TabPanel>
 
-        <TabPanel className='flex justify-center w-full'>
+        <TabPanel>
           <EditorConstituenta
             isModified={isModified}
             setIsModified={setIsModified}

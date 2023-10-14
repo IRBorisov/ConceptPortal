@@ -136,8 +136,8 @@ function EditorConstituenta({
   }
 
   return (
-  <div className='flex w-full max-w-[1500px] gap-2 justify-stretch'>
-    <form onSubmit={handleSubmit} className='min-w-[50rem] max-w-min px-4 py-2'>
+  <div className='flex max-w-[1500px] gap-2'>
+    <form onSubmit={handleSubmit} className='min-w-[50rem] max-w-[50rem] px-4 py-2'>
       <div className='relative w-full'>
       <div className='absolute top-0 right-0 flex items-start justify-between w-full'>
         {activeCst && 
@@ -162,7 +162,7 @@ function EditorConstituenta({
             icon={<PenIcon size={4} color={isEnabled ? 'text-primary' : ''} />}
           />
         </div>
-        <div className='flex justify-end min-w-fit'>
+        <div className='flex justify-end'>
           <MiniButton
             tooltip='Сохранить изменения'
             disabled={!isModified || !isEnabled}

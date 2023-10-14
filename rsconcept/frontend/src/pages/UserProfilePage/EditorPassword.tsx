@@ -61,7 +61,7 @@ function EditorPassword() {
 
   return (
     <div className='flex py-2 border-l-2 max-w-[14rem]'>
-      <form onSubmit={handleSubmit} className='flex flex-col justify-between px-6 min-w-fit'>
+      <form onSubmit={handleSubmit} className='flex flex-col justify-between px-6'>
         <div className='flex flex-col gap-3'>
           <TextInput id='old_password'
             type='password' 

@@ -106,6 +106,13 @@
   }
 }
 
+::selection {
+  background: var(--cl-prim-bg-60);
+  .dark & {
+    background: var(--cd-prim-bg-60);
+  }
+}
+
 [data-color-scheme="dark"] {
   color-scheme: dark;
 }

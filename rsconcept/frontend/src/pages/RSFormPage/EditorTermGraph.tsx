@@ -367,7 +367,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       initial={getOptions()}
       onConfirm={handleChangeOptions}
     />}
-    <div className='flex flex-col border min-w-[13.5rem] max-w-[13.5rem] px-2 pb-2 text-sm select-none h-fit'>
+    <div className='flex flex-col border min-w-[13.5rem] max-w-[13.5rem] px-2 pb-2 mt-4 text-sm select-none h-fit'>
       {hoverCst && 
       <div className='relative'>
         <InfoConstituenta
@@ -440,8 +440,9 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       />
       </div>
 
-      <Divider margins='mt-3 mb-2' />
+      {dismissed.length > 0 && <Divider margins='mt-3 mb-2' />}
 
+      {dismissed.length > 0 &&
       <div className='flex flex-col overflow-y-auto'>
         <p className='text-center'><b>Скрытые конституенты</b></p>
         <div className='flex flex-wrap justify-center gap-2 py-2'>
@@ -469,14 +470,14 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
           </>);
         })}
         </div>
-      </div>
+      </div>}
     </div>
     <div className='w-full h-full overflow-auto'>
     <div 
       className='relative'
       style={{width: canvasWidth, height: canvasHeight}}
     >
-      <div className='relative top-0 right-0 flex mt-1 ml-2 z-pop flex-start'>
+      <div className='relative top-4 right-0 flex mt-1 ml-2 z-pop flex-start'>
         <div className='px-1 py-1' id='items-graph-help' >
           <HelpIcon color='text-primary' size={5} />
         </div>
