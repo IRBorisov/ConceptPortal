@@ -288,7 +288,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
         onColumnVisibilityChange={setColumnVisibility}
 
         noDataComponent={
-          <span className='flex flex-col justify-center p-2 text-center min-h-[5rem]'>
+          <span className='flex flex-col justify-center p-2 text-center min-h-[5rem] select-none'>
             <p>Список конституент пуст</p>
             <p>Измените параметры фильтра</p>
           </span>
