@@ -19,9 +19,11 @@ const resetState = () => {
   console.log('Resetting state after error fallback')
 };
 
-const logError = (error: Error, info: { componentStack: string }) => {
-  console.log('Error fallback: ' + error.message)
-  console.log('Component stack: ' + info.componentStack)
+const logError = (error: Error, info: { componentStack?: string | null | undefined }) => {
+  console.log('Error fallback: ' + error.message);
+  if (info.componentStack) {
+    console.log('Component stack: ' + info.componentStack);
+  }
 };
 
 createRoot(document.getElementById('root')!).render(
