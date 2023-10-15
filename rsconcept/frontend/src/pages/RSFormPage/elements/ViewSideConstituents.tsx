@@ -4,7 +4,7 @@ import Dropdown from '../../../components/Common/Dropdown';
 import DropdownButton from '../../../components/Common/DropdownButton';
 import SelectorButton from '../../../components/Common/SelectorButton';
 import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } from '../../../components/DataTable';
-import { CogIcon, FilterCogIcon, MagnifyingGlassIcon } from '../../../components/Icons';
+import { CogIcon, FilterIcon, MagnifyingGlassIcon } from '../../../components/Icons';
 import { useRSForm } from '../../../context/RSFormContext';
 import { useConceptTheme } from '../../../context/ThemeContext';
 import useDropdown from '../../../hooks/useDropdown';
@@ -227,7 +227,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
             tooltip='Настройка атрибутов для фильтрации'
             dimensions='w-fit h-full'
             transparent
-            icon={<FilterCogIcon size={5} />}
+            icon={<FilterIcon size={5} />}
             text={labelCstMathchMode(filterMatch)}
             tabIndex={-1}
             onClick={matchModeMenu.toggle}

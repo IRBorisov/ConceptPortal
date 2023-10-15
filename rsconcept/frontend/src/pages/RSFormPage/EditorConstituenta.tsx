@@ -165,8 +165,8 @@ function EditorConstituenta({
           onClick={onEditTerm}
           icon={<PenIcon size={4} color={isEnabled ? 'text-primary' : ''} />}
         />}
-        <div className='flex items-center justify-center w-full'>
-          <div className='font-semibold w-fit pointer-events-none'>
+        <div className='flex items-center justify-center w-full pl-[4rem]'>
+          <div className='font-semibold pointer-events-none w-fit'>
             <span className='small-caps'>Конституента </span>
             <span className='ml-1 small-caps'>{alias}</span>
           </div>
@@ -178,7 +178,7 @@ function EditorConstituenta({
             icon={<PenIcon size={4} color={isEnabled ? 'text-primary' : ''} />}
           />
         </div>
-        <div className='flex justify-end items-center'>
+        <div className='flex items-center justify-end'>
           <MiniButton
             tooltip='Сохранить изменения'
             disabled={!isModified || !isEnabled}
@@ -271,7 +271,7 @@ function EditorConstituenta({
       </div>
     </form>
     {(windowSize.width ?? 0) >= SIDELIST_HIDE_THRESHOLD &&
-    <div className='w-full h-fit border mt-10'>
+    <div className='w-full mt-10 border h-fit'>
       <ViewSideConstituents
         expression={expression}
         baseHeight={UNFOLDED_HEIGHT}

@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import Dropdown from '../../components/Common/Dropdown';
 import DropdownCheckbox from '../../components/Common/DropdownCheckbox';
 import SelectorButton from '../../components/Common/SelectorButton';
-import { FilterCogIcon } from '../../components/Icons';
+import { FilterIcon } from '../../components/Icons';
 import { useAuth } from '../../context/AuthContext';
 import useDropdown from '../../hooks/useDropdown';
 import { LibraryFilterStrategy } from '../../models/miscelanious';
@@ -43,7 +43,7 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
       tooltip='Список фильтров'
       dimensions='w-fit h-full'
       transparent
-      icon={<FilterCogIcon size={5} />}
+      icon={<FilterIcon size={5} />}
       text={labelLibraryFilter(value)}
       tabIndex={-1}
       onClick={strategyMenu.toggle}

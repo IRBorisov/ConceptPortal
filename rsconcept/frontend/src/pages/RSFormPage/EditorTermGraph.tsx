@@ -10,7 +10,7 @@ import MiniButton from '../../components/Common/MiniButton';
 import SelectSingle from '../../components/Common/SelectSingle';
 import HelpTermGraph from '../../components/Help/HelpTermGraph';
 import InfoConstituenta from '../../components/Help/InfoConstituenta';
-import { ArrowsRotateIcon, DumpBinIcon, FilterCogIcon, HelpIcon, SmallPlusIcon } from '../../components/Icons';
+import { ArrowsRotateIcon, DumpBinIcon, FilterIcon, HelpIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
@@ -422,7 +422,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         </div>
         <div className='flex items-center w-full gap-1'>
           <Button
-            icon={<FilterCogIcon size={6} />}
+            icon={<FilterIcon size={6} />}
             dense
             tooltip='Настройки фильтрации узлов и связей'
             dimensions='min-h-[2.3rem] min-w-[2.3rem]'

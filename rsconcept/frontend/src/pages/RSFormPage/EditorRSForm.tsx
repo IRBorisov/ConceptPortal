@@ -9,7 +9,7 @@ import SubmitButton from '../../components/Common/SubmitButton';
 import TextArea from '../../components/Common/TextArea';
 import TextInput from '../../components/Common/TextInput';
 import HelpRSFormMeta from '../../components/Help/HelpRSFormMeta';
-import { CrownIcon, DownloadIcon, DumpBinIcon, HelpIcon, SaveIcon, ShareIcon } from '../../components/Icons';
+import { DownloadIcon, DumpBinIcon, HelpIcon, OwnerIcon, SaveIcon, ShareIcon } from '../../components/Icons';
 import { useAuth } from '../../context/AuthContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { useUsers } from '../../context/UsersContext';
@@ -96,7 +96,7 @@ function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, 
       />
       <MiniButton
         tooltip={isClaimable ? 'Стать владельцем' : 'Невозможно стать владельцем' }
-        icon={<CrownIcon size={5} color={!isClaimable ? '' : 'text-success'}/>}
+        icon={<OwnerIcon size={5} color={!isClaimable ? '' : 'text-success'}/>}
         disabled={!isClaimable || !user}
         onClick={onClaim}
       />

@@ -4,7 +4,10 @@ import Button from '../../../components/Common/Button';
 import Dropdown from '../../../components/Common/Dropdown';
 import DropdownButton from '../../../components/Common/DropdownButton';
 import DropdownCheckbox from '../../../components/Common/DropdownCheckbox';
-import { CloneIcon, CrownIcon, DownloadIcon, DumpBinIcon, EyeIcon, EyeOffIcon, MenuIcon, PenIcon, PlusIcon, ShareIcon, UploadIcon } from '../../../components/Icons';
+import {
+  CloneIcon, DownloadIcon, DumpBinIcon, EyeIcon, EyeOffIcon,
+  MenuIcon, OwnerIcon, PenIcon, ShareIcon, SmallPlusIcon, UploadIcon
+} from '../../../components/Icons';
 import { useAuth } from '../../../context/AuthContext';
 import { useRSForm } from '../../../context/RSFormContext';
 import useDropdown from '../../../hooks/useDropdown';
@@ -113,7 +116,7 @@ function RSTabsMenu({
           </DropdownButton>
           <DropdownButton onClick={handleCreateNew}>
             <span className='inline-flex items-center justify-start gap-2'>
-              <PlusIcon color='text-url' size={4} />
+              <SmallPlusIcon color='text-url' size={4} />
               <p>Создать новую схему</p>
             </span>
           </DropdownButton>
@@ -137,8 +140,8 @@ function RSTabsMenu({
             onClick={!isOwned ? handleClaimOwner : undefined}
             tooltip={!user || !isClaimable ? 'Стать владельцем можно только для общей изменяемой схемы' : ''}
           >
-            <div className='inline-flex items-center gap-1 justify-normal'>
-              <span><CrownIcon size={4} color={isOwned ? 'text-success' : 'text-controls'} /></span>
+            <div className='flex items-center gap-2 pl-1'>
+              <span><OwnerIcon size={5} color={isOwned ? 'text-success' : 'text-controls'} /></span>
               <p>
                 { isOwned && <b>Владелец схемы</b> }
                 { !isOwned && <b>Стать владельцем</b> }
