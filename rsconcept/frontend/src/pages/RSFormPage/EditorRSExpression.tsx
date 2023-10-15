@@ -52,7 +52,7 @@ function EditorRSExpression({
 
   function handleChange(newvalue: string) {
     onChange(newvalue);
-    setIsModified(true);
+    setIsModified(newvalue !== activeCst?.definition_formal);
   }
   
   function handleCheckExpression() {
