@@ -270,8 +270,10 @@ export function ArrowRightIcon(props: IconProps) {
 
 export function CloneIcon(props: IconProps) {
   return (
-    <IconSVG viewbox='0 0 512 512' {...props}>
-      <path d='M64 464h224c8.8 0 16-7.2 16-16v-64h48v64c0 35.3-28.7 64-64 64H64c-35.35 0-64-28.7-64-64V224c0-35.3 28.65-64 64-64h64v48H64c-8.84 0-16 7.2-16 16v224c0 8.8 7.16 16 16 16zm96-400c0-35.35 28.7-64 64-64h224c35.3 0 64 28.65 64 64v224c0 35.3-28.7 64-64 64H224c-35.3 0-64-28.7-64-64V64zm64 240h224c8.8 0 16-7.2 16-16V64c0-8.84-7.2-16-16-16H224c-8.8 0-16 7.16-16 16v224c0 8.8 7.2 16 16 16z' />
+    <IconSVG viewbox='0 0 24 24' {...props}>
+      <path d='M11 10H9v3H6v2h3v3h2v-3h3v-2h-3z' />
+      <path d='M4 22h12c1.103 0 2-.897 2-2V8c0-1.103-.897-2-2-2H4c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2zM4 8h12l.002 12H4V8z' />
+      <path d='M20 2H8v2h12v12h2V4c0-1.103-.897-2-2-2z' />
     </IconSVG>
   );
 }
@@ -279,7 +281,8 @@ export function CloneIcon(props: IconProps) {
 export function DumpBinIcon(props: IconProps) {
   return (
     <IconSVG viewbox='0 0 24 24' {...props}>
-      <path d='M19 4h-3.5l-1-1h-5l-1 1H5v2h14M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12z' />
+      <path d='M5 20a2 2 0 002 2h10a2 2 0 002-2V8h2V6h-4V4a2 2 0 00-2-2H9a2 2 0 00-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z' />
+      <path d='M9 10h2v8H9zm4 0h2v8h-2z' />
     </IconSVG>
   );
 }
@@ -295,7 +298,7 @@ export function ArrowsRotateIcon(props: IconProps) {
 export function SaveIcon(props: IconProps) {
   return (
     <IconSVG viewbox='0 0 24 24' {...props}>
-      <path d='M19.35 10.04A7.49 7.49 0 0012 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 000 14a6 6 0 006 6h13a5 5 0 005-5c0-2.64-2.05-4.78-4.65-4.96M19 18H6a4 4 0 01-4-4c0-2.05 1.53-3.76 3.56-3.97l1.07-.11.5-.95A5.469 5.469 0 0112 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5 1.53.11A2.98 2.98 0 0122 15a3 3 0 01-3 3M8 13h2.55v3h2.9v-3H16l-4-4-4 4z' />
+      <path d='M5 21h14a2 2 0 002-2V8a1 1 0 00-.29-.71l-4-4A1 1 0 0016 3H5a2 2 0 00-2 2v14a2 2 0 002 2zm10-2H9v-5h6zM13 7h-2V5h2zM5 5h2v4h8V5h.59L19 8.41V19h-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5H5z' />
     </IconSVG>
   );
 }
@@ -303,8 +306,8 @@ export function SaveIcon(props: IconProps) {
 export function HelpIcon(props: IconProps) {
   return (
     <IconSVG viewbox='0 0 24 24' {...props}>
-      <path d='M12 6a3.939 3.939 0 00-3.934 3.934h2C10.066 8.867 10.934 8 12 8s1.934.867 1.934 1.934c0 .598-.481 1.032-1.216 1.626a9.208 9.208 0 00-.691.599c-.998.997-1.027 2.056-1.027 2.174V15h2l-.001-.633c.001-.016.033-.386.441-.793.15-.15.339-.3.535-.458.779-.631 1.958-1.584 1.958-3.182A3.937 3.937 0 0012 6zm-1 10h2v2h-2z' />
       <path d='M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z' />
+      <path d='M11 11h2v6h-2zm0-4h2v2h-2z' />
     </IconSVG>
   );
 }

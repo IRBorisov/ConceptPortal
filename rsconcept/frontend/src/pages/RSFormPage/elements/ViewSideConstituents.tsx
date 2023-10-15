@@ -102,7 +102,6 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       filtered = applyGraphFilter(schema, activeID, filterSource);
     }
     if (filterText) {
-      console.log(filterText);
       filtered = filtered.filter((cst) => matchConstituenta(filterText, cst, filterMatch));
     }
     setFilteredData(filtered);
@@ -141,6 +140,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       header: 'Имя',
       size: 65,
       minSize: 65,
+      footer: undefined,
       cell: props => {
         const cst = props.row.original;
         return (<>
@@ -282,6 +282,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
         conditionalRowStyles={conditionalRowStyles}
         headPosition='0'
         dense
+        noFooter
 
         enableHiding
         columnVisibility={columnVisibility}

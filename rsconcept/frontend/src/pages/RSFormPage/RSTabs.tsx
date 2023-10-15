@@ -30,7 +30,7 @@ import EditorItems from './EditorItems';
 import EditorRSForm from './EditorRSForm';
 import EditorTermGraph from './EditorTermGraph';
 import RSFormStats from './elements/RSFormStats';
-import RSTabsMenu from './RSTabsMenu';
+import RSTabsMenu from './elements/RSTabsMenu';
 
 export enum RSTabID {
   CARD = 0,

@@ -6,7 +6,7 @@ import MiniButton from '../../components/Common/MiniButton';
 import SubmitButton from '../../components/Common/SubmitButton';
 import TextArea from '../../components/Common/TextArea';
 import HelpConstituenta from '../../components/Help/HelpConstituenta';
-import { DumpBinIcon, HelpIcon, PenIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
+import { CloneIcon, DumpBinIcon, HelpIcon, PenIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import RefsInput from '../../components/RefsInput';
 import { useRSForm } from '../../context/RSFormContext';
 import useWindowSize from '../../hooks/useWindowSize';
@@ -123,6 +123,22 @@ function EditorConstituenta({
     onCreateCst(data);
   }
 
+  function handleCloneCst() {
+    if (!activeID || !schema || !activeCst) {
+      return;
+    }
+    const data: ICstCreateData = {
+      insert_after: activeID,
+      cst_type: activeCst.cst_type,
+      alias: '',
+      term_raw: activeCst.term_raw,
+      definition_formal: activeCst.definition_formal,
+      definition_raw: activeCst.definition_raw,
+      convention: activeCst.convention,
+    };
+    onCreateCst(data, true);
+  }
+
   function handleRename() {
     if (!activeID || !activeCst) {
       return;
@@ -162,7 +178,7 @@ function EditorConstituenta({
             icon={<PenIcon size={4} color={isEnabled ? 'text-primary' : ''} />}
           />
         </div>
-        <div className='flex justify-end'>
+        <div className='flex justify-end items-center'>
           <MiniButton
             tooltip='Сохранить изменения'
             disabled={!isModified || !isEnabled}
@@ -170,10 +186,16 @@ function EditorConstituenta({
             onClick={() => handleSubmit()}
           />
           <MiniButton
-            tooltip='Создать конституенты после данной'
+            tooltip='Создать конституенту после данной'
             disabled={!isEnabled}
             onClick={handleCreateCst}
             icon={<SmallPlusIcon size={5} color={isEnabled ? 'text-success' : ''} />} 
+          />
+          <MiniButton
+            tooltip='Клонировать конституенту'
+            disabled={!isEnabled}
+            onClick={handleCloneCst}
+            icon={<CloneIcon size={5} color={isEnabled ? 'text-success' : ''} />} 
           />
           <MiniButton
             tooltip='Удалить редактируемую конституенту'
@@ -249,7 +271,7 @@ function EditorConstituenta({
       </div>
     </form>
     {(windowSize.width ?? 0) >= SIDELIST_HIDE_THRESHOLD &&
-    <div className='self-stretch w-full border mt-10'>
+    <div className='w-full h-fit border mt-10'>
       <ViewSideConstituents
         expression={expression}
         baseHeight={UNFOLDED_HEIGHT}

@@ -6,7 +6,6 @@ import { GraphCanvas, GraphCanvasRef, GraphEdge,
 import Button from '../../components/Common/Button';
 import Checkbox from '../../components/Common/Checkbox';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
-import Divider from '../../components/Common/Divider';
 import MiniButton from '../../components/Common/MiniButton';
 import SelectSingle from '../../components/Common/SelectSingle';
 import HelpTermGraph from '../../components/Help/HelpTermGraph';
@@ -354,97 +353,121 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
     : 'calc(100vh - 3rem - 4px)';
   }, [noNavigation]);
 
+  const dismissedHeight = useMemo(
+    () => {
+      return !noNavigation ? 
+        'calc(100vh - 28rem - 4px)'
+      : 'calc(100vh - 22.2rem - 4px)';
+    }, [noNavigation]);
+
   const dismissedStyle = useCallback(
   (cstID: number) => {
     return selectedDismissed.includes(cstID) ? {outlineWidth: '2px', outlineStyle: 'solid'}: {};
   }, [selectedDismissed]);
 
-  return (
-    <div className='flex justify-between w-full outline-none' tabIndex={0} onKeyDown={handleKeyDown}>
+  return (<>
     {showOptions && 
     <DlgGraphOptions
       hideWindow={() => setShowOptions(false)}
       initial={getOptions()}
       onConfirm={handleChangeOptions}
     />}
-    <div className='flex flex-col border min-w-[13.5rem] max-w-[13.5rem] px-2 pb-2 mt-4 text-sm select-none h-fit'>
-      {hoverCst && 
-      <div className='relative'>
-        <InfoConstituenta
-          data={hoverCst}
-          className='absolute top-[2.2rem] left-[2.6rem] z-tooltip w-[25rem] min-h-[11rem] overflow-y-auto border h-fit clr-app px-3' 
-        />
-      </div>}
-      
-      <div className='flex items-center justify-between py-1'>
-        <div className='mr-3 text-base'>
-          Выбор {allSelected.length} из {schema?.stats?.count_all ?? 0}
-        </div>
-        <div className='min-w-fit'>
-          <MiniButton
-            tooltip='Новая конституента'
-            icon={<SmallPlusIcon color={isEditable ? 'text-success': ''} size={5}/>}
-            disabled={!isEditable}
-            onClick={handleCreateCst}
-          />
-          <MiniButton
-            tooltip='Удалить выбранные'
-            icon={<DumpBinIcon color={isEditable && !nothingSelected ? 'text-warning' : ''} size={5}/>}
-            disabled={!isEditable || nothingSelected}
-            onClick={handleDeleteCst}
-          />
-        </div>
+
+    <div className='relative w-full z-pop'>
+    <div className='absolute top-0 right-0 flex items-start justify-center w-full'>
+      <MiniButton
+        tooltip='Новая конституента'
+        icon={<SmallPlusIcon color={isEditable ? 'text-success': ''} size={5}/>}
+        disabled={!isEditable}
+        onClick={handleCreateCst}
+      />
+      <MiniButton
+        tooltip='Удалить выбранные'
+        icon={<DumpBinIcon color={isEditable && !nothingSelected ? 'text-warning' : ''} size={5}/>}
+        disabled={!isEditable || nothingSelected}
+        onClick={handleDeleteCst}
+      />
+      <MiniButton
+        icon={<ArrowsRotateIcon size={5} />}
+        tooltip='Восстановить камеру'
+        onClick={handleResetViewpoint}
+      />
+      <div className='px-1 py-1' id='items-graph-help' >
+        <HelpIcon color='text-primary' size={5} />
       </div>
-      <div className='flex items-center w-full gap-1'>
-        <Button
-          icon={<FilterCogIcon size={6} />}
-          dense
-          tooltip='Настройки фильтрации узлов и связей'
-          dimensions='min-h-[2.3rem] min-w-[2.3rem]'
-          onClick={() => setShowOptions(true)}
-        />
+    </div>
+    </div>
+
+    <ConceptTooltip anchorSelect='#items-graph-help'>
+      <div className='text-sm max-w-[calc(100vw-20rem)]'>
+        <HelpTermGraph />
+      </div>
+    </ConceptTooltip>
+    
+    <div className='flex justify-between w-full outline-none' tabIndex={0} onKeyDown={handleKeyDown}>
+    <div className='flex flex-col gap-4 max-w-[13.5rem] min-w-[13.5rem]'>
+      <div className='flex flex-col border px-2 pb-2 mt-4 text-sm select-none h-fit'>
+        {hoverCst && 
+        <div className='relative'>
+          <InfoConstituenta
+            data={hoverCst}
+            className='absolute top-[2.2rem] left-[2.6rem] z-tooltip w-[25rem] min-h-[11rem] overflow-y-auto border h-fit clr-app px-3' 
+          />
+        </div>}
+        
+        <div className='flex items-center justify-between py-1'>
+          <div className='mr-3 text-base'>
+            Выбор {allSelected.length} из {schema?.stats?.count_all ?? 0}
+          </div>
+        </div>
+        <div className='flex items-center w-full gap-1'>
+          <Button
+            icon={<FilterCogIcon size={6} />}
+            dense
+            tooltip='Настройки фильтрации узлов и связей'
+            dimensions='min-h-[2.3rem] min-w-[2.3rem]'
+            onClick={() => setShowOptions(true)}
+          />
+          <SelectSingle
+            className='min-w-[9.8rem]'
+            options={SelectorGraphColoring}
+            isSearchable={false}
+            placeholder='Выберите цвет'
+            value={coloringScheme ? { value: coloringScheme, label: mapLabelColoring.get(coloringScheme) } : null}
+            onChange={data => setColoringScheme(data?.value ?? SelectorGraphColoring[0].value)}
+          />
+        </div>
         <SelectSingle
-          className='min-w-[9.8rem]'
-          options={SelectorGraphColoring}
+          className='w-full mt-1'
+          options={SelectorGraphLayout}
           isSearchable={false}
-          placeholder='Выберите цвет'
-          value={coloringScheme ? { value: coloringScheme, label: mapLabelColoring.get(coloringScheme) } : null}
-          onChange={data => setColoringScheme(data?.value ?? SelectorGraphColoring[0].value)}
+          placeholder='Способ расположения'
+          value={layout ? { value: layout, label: mapLableLayout.get(layout) } : null}
+          onChange={data => handleChangeLayout(data?.value ?? SelectorGraphLayout[0].value)}
         />
+        <div className='flex flex-col gap-1 mt-2'>
+          <Checkbox
+            label='Скрыть текст' 
+            value={noTerms} 
+            setValue={ value => setNoTerms(value) }
+          />
+          <Checkbox
+            label='Транзитивная редукция' 
+            value={noTransitive} 
+            setValue={ value => setNoTransitive(value) }
+          />
+          <Checkbox
+            disabled={!is3D}
+            label='Анимация вращения' 
+            value={orbit} 
+            setValue={ value => setOrbit(value) }
+          />
+        </div>
       </div>
-      <SelectSingle
-        className='w-full mt-1'
-        options={SelectorGraphLayout}
-        isSearchable={false}
-        placeholder='Способ расположения'
-        value={layout ? { value: layout, label: mapLableLayout.get(layout) } : null}
-        onChange={data => handleChangeLayout(data?.value ?? SelectorGraphLayout[0].value)}
-      />
-      <div className='flex flex-col gap-1 mt-2'>
-      <Checkbox
-        label='Скрыть текст' 
-        value={noTerms} 
-        setValue={ value => setNoTerms(value) }
-      />
-      <Checkbox
-        label='Транзитивная редукция' 
-        value={noTransitive} 
-        setValue={ value => setNoTransitive(value) }
-      />
-      <Checkbox
-        disabled={!is3D}
-        label='Анимация вращения' 
-        value={orbit} 
-        setValue={ value => setOrbit(value) }
-      />
-      </div>
-
-      {dismissed.length > 0 && <Divider margins='mt-3 mb-2' />}
-
       {dismissed.length > 0 &&
-      <div className='flex flex-col overflow-y-auto'>
-        <p className='text-center'><b>Скрытые конституенты</b></p>
-        <div className='flex flex-wrap justify-center gap-2 py-2'>
+      <div className='flex border flex-col text-sm'>
+        <p className='text-center py-2'><b>Скрытые конституенты</b></p>
+        <div className='flex flex-wrap justify-center pb-2 gap-2 overflow-y-auto' style={{height: dismissedHeight}}>
         {dismissed.map(cstID => {
           const cst = schema!.items.find(cst => cst.id === cstID)!;
           const adjustedColoring = coloringScheme === 'none' ? 'status': coloringScheme;
@@ -452,7 +475,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
             <div
               key={`${cst.alias}`}
               id={`${prefixes.cst_list}${cst.alias}`}
-              className='w-fit min-w-[3rem] rounded-md text-center cursor-pointer'
+              className='w-fit min-w-[3rem] rounded-md text-center cursor-pointer select-none'
               style={{ 
                 backgroundColor: getCstNodeColor(cst, adjustedColoring, colors),
                 ...dismissedStyle(cstID)
@@ -470,27 +493,12 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         })}
         </div>
       </div>}
-    </div>
+    </div>    
     <div className='w-full h-full overflow-auto'>
     <div 
       className='relative'
       style={{width: canvasWidth, height: canvasHeight}}
     >
-      <div className='relative top-4 right-0 flex mt-1 ml-2 z-pop flex-start'>
-        <div className='px-1 py-1' id='items-graph-help' >
-          <HelpIcon color='text-primary' size={5} />
-        </div>
-        <MiniButton
-          icon={<ArrowsRotateIcon size={5} />}
-          tooltip='Восстановить камеру'
-          onClick={handleResetViewpoint}
-        />
-      </div>
-      <ConceptTooltip anchorSelect='#items-graph-help'>
-        <div className='text-sm max-w-[calc(100vw-20rem)]'>
-        <HelpTermGraph />
-        </div>
-      </ConceptTooltip>
       <GraphCanvas
         draggable
         ref={graphRef}
@@ -516,7 +524,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       />
     </div>
     </div>
-  </div>);
+  </div></>);
 }
 
 
