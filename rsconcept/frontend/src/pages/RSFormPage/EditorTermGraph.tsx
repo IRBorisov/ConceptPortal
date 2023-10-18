@@ -406,7 +406,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
     
     <div className='flex justify-between w-full outline-none' tabIndex={0} onKeyDown={handleKeyDown}>
     <div className='flex flex-col gap-4 max-w-[13.5rem] min-w-[13.5rem]'>
-      <div className='flex flex-col border px-2 pb-2 mt-4 text-sm select-none h-fit'>
+      <div className='flex flex-col px-2 pb-2 mt-4 text-sm border select-none h-fit'>
         {hoverCst && 
         <div className='relative'>
           <InfoConstituenta
@@ -465,9 +465,9 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         </div>
       </div>
       {dismissed.length > 0 &&
-      <div className='flex border flex-col text-sm'>
-        <p className='text-center py-2'><b>Скрытые конституенты</b></p>
-        <div className='flex flex-wrap justify-center pb-2 gap-2 overflow-y-auto' style={{height: dismissedHeight}}>
+      <div className='flex flex-col text-sm border'>
+        <p className='py-2 text-center'><b>Скрытые конституенты</b></p>
+        <div className='flex flex-wrap justify-center gap-2 pb-2 overflow-y-auto' style={{maxHeight: dismissedHeight}}>
         {dismissed.map(cstID => {
           const cst = schema!.items.find(cst => cst.id === cstID)!;
           const adjustedColoring = coloringScheme === 'none' ? 'status': coloringScheme;
