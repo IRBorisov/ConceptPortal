@@ -61,7 +61,7 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
         <div className='w-full text-lg text-center'>
           {!hoverNode && expression}
           {hoverNode &&
-          <div className='flex justify-center whitespace-pre'>
+          <div>
             <span>{expression.slice(0, hoverNode.start)}</span>
             <span className='clr-selected'>{expression.slice(hoverNode.start, hoverNode.finish)}</span>
             <span>{expression.slice(hoverNode.finish)}</span>
