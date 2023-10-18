@@ -11,7 +11,7 @@ import MiniButton from '../components/Common/MiniButton';
 import SubmitButton from '../components/Common/SubmitButton';
 import TextArea from '../components/Common/TextArea';
 import TextInput from '../components/Common/TextInput';
-import { UploadIcon } from '../components/Icons';
+import { DownloadIcon } from '../components/Icons';
 import RequireAuth from '../components/RequireAuth';
 import { useLibrary } from '../context/LibraryContext';
 import { useConceptNavigation } from '../context/NagivationContext';
@@ -94,7 +94,7 @@ function CreateRSFormPage() {
       />
       <MiniButton
         tooltip='Загрузить из Экстеор'
-        icon={<UploadIcon size={5} color='text-primary'/>}
+        icon={<DownloadIcon size={5} color='text-primary'/>}
         onClick={() => inputRef.current?.click()}
       />
     </div>
