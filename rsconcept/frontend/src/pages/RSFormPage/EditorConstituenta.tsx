@@ -6,11 +6,10 @@ import MiniButton from '../../components/Common/MiniButton';
 import SubmitButton from '../../components/Common/SubmitButton';
 import TextArea from '../../components/Common/TextArea';
 import HelpConstituenta from '../../components/Help/HelpConstituenta';
-import { CloneIcon, DumpBinIcon, HelpIcon, PenIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
+import { CloneIcon, DumpBinIcon, EditIcon, HelpIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import RefsInput from '../../components/RefsInput';
 import { useRSForm } from '../../context/RSFormContext';
 import useWindowSize from '../../hooks/useWindowSize';
-import { EditMode } from '../../models/miscelanious';
 import { CstType, IConstituenta, ICstCreateData, ICstRenameData, ICstUpdateData } from '../../models/rsform';
 import { SyntaxTree } from '../../models/rslang';
 import { labelCstTypification } from '../../utils/labels';
@@ -20,7 +19,7 @@ import ViewSideConstituents from './elements/ViewSideConstituents';
 // Max height of content for left enditor pane
 const UNFOLDED_HEIGHT = '59.1rem';
 
-const SIDELIST_HIDE_THRESHOLD = 1000;
+const SIDELIST_HIDE_THRESHOLD = 1100;
 
 interface EditorConstituentaProps {
   activeID?: number
@@ -41,8 +40,6 @@ function EditorConstituenta({
 }: EditorConstituentaProps) {
   const windowSize = useWindowSize();
   const { schema, processing, isEditable, cstUpdate } = useRSForm();
-  
-  const [editMode, setEditMode] = useState(EditMode.TEXT);
 
   const [alias, setAlias] = useState('');
   const [term, setTerm] = useState('');
@@ -153,7 +150,7 @@ function EditorConstituenta({
 
   return (
   <div className='flex max-w-[1500px] gap-2'>
-    <form onSubmit={handleSubmit} className='min-w-[50rem] max-w-[50rem] px-4 py-2'>
+    <form onSubmit={handleSubmit} className='min-w-[50rem] max-w-[50rem] px-4 py-1'>
       <div className='relative w-full'>
       <div className='absolute top-0 right-0 flex items-start justify-between w-full'>
         {activeCst && 
@@ -163,7 +160,7 @@ function EditorConstituenta({
           dimensions='w-fit ml-[3.2rem] pt-[0.3rem]'
           noHover
           onClick={onEditTerm}
-          icon={<PenIcon size={4} color={isEnabled ? 'text-primary' : ''} />}
+          icon={<EditIcon size={4} color={isEnabled ? 'text-primary' : ''} />}
         />}
         <div className='flex items-center justify-center w-full pl-[4rem]'>
           <div className='font-semibold pointer-events-none w-fit'>
@@ -175,7 +172,7 @@ function EditorConstituenta({
             disabled={!isEnabled}
             noHover
             onClick={handleRename}
-            icon={<PenIcon size={4} color={isEnabled ? 'text-primary' : ''} />}
+            icon={<EditIcon size={4} color={isEnabled ? 'text-primary' : ''} />}
           />
         </div>
         <div className='flex items-center justify-end'>
@@ -215,16 +212,16 @@ function EditorConstituenta({
       <div className='flex flex-col gap-2 mt-1'>
         <RefsInput id='term' label='Термин'
           placeholder='Обозначение, используемое в текстовых определениях данной схемы'
-          height='3.5rem'
+          height='2.1rem'
           items={schema?.items}
           value={term}
           initialValue={activeCst?.term_raw ?? ''}
           resolved={activeCst?.term_resolved ?? ''}
           editable={isEnabled}
           onChange={newValue => setTerm(newValue)}
-          onFocus={() => setEditMode(EditMode.TEXT)}
         />
         <TextArea id='typification' label='Типизация'
+          dense
           rows={1}
           value={typification}
           colorClass='clr-app'
@@ -235,31 +232,27 @@ function EditorConstituenta({
           placeholder='Родоструктурное выражение, задающее формальное определение'
           value={expression}
           disabled={!isEnabled}
-          isActive={editMode === EditMode.RSLANG}
-          toggleEditMode={() => setEditMode(EditMode.RSLANG)}
           onShowAST={onShowAST}
           onChange={newValue => setExpression(newValue)}
           setTypification={setTypification}
         />
         <RefsInput id='definition' label='Текстовое определение'
           placeholder='Лингвистическая интерпретация формального выражения'
-          height='6.3rem'
+          height='4.8rem'
           items={schema?.items}
           value={textDefinition}
           initialValue={activeCst?.definition_raw ?? ''}
           resolved={activeCst?.definition_resolved ?? ''}
           editable={isEnabled}
           onChange={newValue => setTextDefinition(newValue)}
-          onFocus={() => setEditMode(EditMode.TEXT)}
         />
         <TextArea id='convention' label='Конвенция / Комментарий'
           placeholder='Договоренность об интерпретации неопределяемого понятия&#x000D;&#x000A;Комментарий к производному понятию'
-          rows={4}
+          rows={2}
           value={convention}
           disabled={!isEnabled}
           spellCheck
           onChange={event => setConvention(event.target.value)}
-          onFocus={() => setEditMode(EditMode.TEXT)}
         />
         <div className='flex justify-center w-full mt-2'>
           <SubmitButton
@@ -271,7 +264,7 @@ function EditorConstituenta({
       </div>
     </form>
     {(windowSize.width ?? 0) >= SIDELIST_HIDE_THRESHOLD &&
-    <div className='w-full mt-10 border h-fit'>
+    <div className='w-full mt-[2.25rem] border h-fit'>
       <ViewSideConstituents
         expression={expression}
         baseHeight={UNFOLDED_HEIGHT}

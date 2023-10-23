@@ -258,7 +258,7 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
         <TextInput id='offset' type='number'
           label='Смещение'
           dimensions='max-w-[10rem]'
-          singleRow
+          dense
           value={offset}
           onChange={event => setOffset(event.target.valueAsNumber)}
         />
@@ -266,7 +266,7 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
           Основная ссылка:
         </div>
         <TextInput
-          singleRow
+          dense
           disabled
           noBorder
           value={mainLink}
@@ -319,7 +319,7 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
           label='Отсылаемая конституента'
           dimensions='max-w-[16rem] min-w-[16rem] whitespace-nowrap'
           placeholder='Имя'
-          singleRow
+          dense
           value={alias}
           onChange={event => setAlias(event.target.value)}
         />
@@ -328,7 +328,7 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
             Термин:
           </div>
           <TextInput
-            singleRow
+            dense
             disabled
             noBorder
             value={term}

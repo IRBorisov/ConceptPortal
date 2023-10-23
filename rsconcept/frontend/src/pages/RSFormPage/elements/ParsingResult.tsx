@@ -1,20 +1,15 @@
-import { IExpressionParse, IRSErrorDescription, SyntaxTree } from '../../../models/rslang';
+import { IExpressionParse, IRSErrorDescription } from '../../../models/rslang';
 import { describeRSError } from '../../../utils/labels';
 import { getRSErrorPrefix } from '../../../utils/misc';
 
 interface ParsingResultProps {
   data: IExpressionParse
-  onShowAST: (ast: SyntaxTree) => void
   onShowError: (error: IRSErrorDescription) => void
 }
 
-function ParsingResult({ data, onShowAST, onShowError }: ParsingResultProps) {
+function ParsingResult({ data, onShowError }: ParsingResultProps) {
   const errorCount = data.errors.reduce((total, error) => (error.isCritical ? total + 1 : total), 0);
   const warningsCount = data.errors.length - errorCount;
-
-  function handleShowAST() {
-    onShowAST(data.ast);
-  }
 
   return (
     <div className='px-3 py-2'>
@@ -27,17 +22,6 @@ function ParsingResult({ data, onShowAST, onShowError }: ParsingResultProps) {
         </p>
         );
       })}
-      {data.astText && 
-      <p>
-        <button type='button' 
-          className='font-semibold underline text-primary'
-          title='отобразить дерево разбора'
-          onClick={handleShowAST}
-          tabIndex={-1}
-        >
-          Дерево разбора
-        </button>
-      </p>}
     </div>
   )
 }

@@ -5,8 +5,8 @@ import Dropdown from '../../../components/Common/Dropdown';
 import DropdownButton from '../../../components/Common/DropdownButton';
 import DropdownCheckbox from '../../../components/Common/DropdownCheckbox';
 import {
-  CloneIcon, DownloadIcon, DumpBinIcon, EyeIcon, EyeOffIcon,
-  MenuIcon, OwnerIcon, PenIcon, ShareIcon, SmallPlusIcon, UploadIcon
+  CloneIcon, DownloadIcon, DumpBinIcon, EditIcon, MenuIcon, NotSubscribedIcon,
+OwnerIcon, ShareIcon, SmallPlusIcon, SubscribedIcon,   UploadIcon
 } from '../../../components/Icons';
 import { useAuth } from '../../../context/AuthContext';
 import { useRSForm } from '../../../context/RSFormContext';
@@ -76,7 +76,7 @@ function RSTabsMenu({
           tooltip='Действия'
           icon={<MenuIcon color='text-controls' size={5}/>}
           borderClass=''
-          dimensions='h-full w-fit'
+          dimensions='h-full w-fit pl-2'
           style={{outlineColor: 'transparent'}}
           dense
           onClick={schemaMenu.toggle}
@@ -128,7 +128,7 @@ function RSTabsMenu({
           borderClass=''
           dimensions='h-full w-fit'
           style={{outlineColor: 'transparent'}}
-          icon={<PenIcon size={5} color={isEditable ? 'text-success' : 'text-warning'}/>}
+          icon={<EditIcon size={5} color={isEditable ? 'text-success' : 'text-warning'}/>}
           dense
           onClick={editMenu.toggle}
           tabIndex={-1}
@@ -169,10 +169,10 @@ function RSTabsMenu({
           tooltip={'отслеживание: ' + (isTracking ? '[включено]' : '[выключено]')}
           disabled={processing}
           icon={isTracking
-            ? <EyeIcon color='text-primary' size={5}/>
-            : <EyeOffIcon color='text-controls' size={5}/>
+            ? <SubscribedIcon color='text-primary' size={5}/>
+            : <NotSubscribedIcon color='text-controls' size={5}/>
           }
-          dimensions='h-full w-fit'
+          dimensions='h-full w-fit pr-2'
           borderClass=''
           style={{outlineColor: 'transparent'}}
           dense

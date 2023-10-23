@@ -78,7 +78,7 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
         />
         <div>
         <TextInput id='alias' label='Имя'
-          singleRow
+          dense
           dimensions='w-[7rem]'
           value={alias}
           onChange={event => setAlias(event.target.value)}

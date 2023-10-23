@@ -165,7 +165,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       id: 'description',
       header: 'Описание',
       size: 1000,
-      minSize: 350,
+      minSize: 250,
       maxSize: 1000,
       cell: props => 
         <div style={{
@@ -211,12 +211,12 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
   }, [noNavigation, baseHeight]);
 
   return (<>
-    <div className='sticky top-0 left-0 right-0 flex items-stretch justify-between w-full gap-1 pl-2 border-b clr-input'>
+    <div className='sticky top-0 left-0 right-0 flex items-stretch justify-between gap-1 pl-2 border-b clr-input'>
       <div className='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-controls'>
         <MagnifyingGlassIcon />
       </div>
       <input type='text'
-        className='w-[14rem] pr-2 pl-8 py-1 outline-none select-none hover:text-clip clr-input'
+        className='w-full min-w-[6rem] pr-2 pl-8 py-1 outline-none select-none hover:text-clip clr-input'
         placeholder='Поиск'
         value={filterText}
         onChange={event => setFilterText(event.target.value)}

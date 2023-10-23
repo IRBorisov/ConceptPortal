@@ -374,7 +374,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
     />}
 
     <div className='relative w-full z-pop'>
-    <div className='absolute top-0 right-0 flex items-start justify-center w-full'>
+    <div className='absolute right-0 flex items-start justify-center w-full top-1'>
       <MiniButton
         tooltip='Новая конституента'
         icon={<SmallPlusIcon color={isEditable ? 'text-success': ''} size={5}/>}

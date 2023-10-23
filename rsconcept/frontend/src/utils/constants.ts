@@ -38,8 +38,9 @@ export const prefixes = {
   cst_status_list: 'cst-status-list-',
   cst_match_mode_list: 'cst-match-mode-list-',
   cst_source_list: 'cst-source-list-',
-  library_filters_list: 'library-filters-list',
+  library_filters_list: 'library-filters-list-',
   topic_list: 'topic-list-',
   library_list: 'library-list-',
-  wordform_list: 'wordform-list'
+  wordform_list: 'wordform-list-',
+  rsedit_btn: 'rsedit-btn-'
 }

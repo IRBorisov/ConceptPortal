@@ -315,7 +315,7 @@
   .dark & {
     border-color: var(--cd-bg-40);
   }
-  @apply border shadow rounded px-1
+  @apply border rounded px-1
 }
 .cm-editor.cm-focused {
   border-color: var(--cl-bg-40);
@@ -324,7 +324,7 @@
     border-color: var(--cd-bg-40);
     outline-color: var(--cd-prim-bg-100);
   }
-  @apply border shadow rounded outline-2 outline
+  @apply border rounded outline-2 outline
 }
 
 .rdt_TableCell{

@@ -72,6 +72,7 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
       hideWindow={hideWindow}
       canSubmit={validated}
       onSubmit={handleSubmit}
+      submitText='Создать'
     >
     <div className='h-fit w-[35rem] px-2 mb-2 flex flex-col justify-stretch gap-3'>
       <div className='flex justify-center w-full gap-6'>
@@ -83,7 +84,7 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
           onChange={data => setSelectedType(data?.value ?? CstType.BASE)}
         />
         <TextInput id='alias' label='Имя'
-          singleRow
+          dense
           dimensions='w-[7rem]'
           value={alias}
           onChange={event => setAlias(event.target.value)}

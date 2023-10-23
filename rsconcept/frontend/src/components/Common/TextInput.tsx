@@ -7,19 +7,19 @@ extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'className' | 'title'>
   tooltip?: string
   dimensions?: string
   colorClass?: string
-  singleRow?: boolean
+  dense?: boolean
   noBorder?: boolean
 }
 
 function TextInput({
-  id, required, label, singleRow, tooltip, noBorder,
+  id, required, label, dense, tooltip, noBorder,
   dimensions = 'w-full',
   colorClass = 'clr-input',
   ...props
 }: TextInputProps) {
-  const borderClass = noBorder ? '': 'border shadow';
+  const borderClass = noBorder ? '': 'border';
   return (
-    <div className={`flex ${singleRow ? 'items-center gap-4 ' + dimensions : 'flex-col items-start gap-2'}`}>
+    <div className={`flex ${dense ? 'items-center gap-4 ' + dimensions : 'flex-col items-start gap-2'}`}>
       {label && 
       <Label
         text={label}
@@ -27,7 +27,7 @@ function TextInput({
       />}
       <input id={id}
         title={tooltip}
-        className={`px-3 py-2 leading-tight ${borderClass} truncate hover:text-clip clr-outline ${colorClass} ${singleRow ? 'w-full' : dimensions}`}
+        className={`px-3 py-2 leading-tight ${borderClass} truncate hover:text-clip clr-outline ${colorClass} ${dense ? 'w-full' : dimensions}`}
         required={required}
         {...props}
       />

@@ -108,7 +108,7 @@ function CreateRSFormPage() {
         onChange={event => setTitle(event.target.value)}
       />
       <TextInput id='alias' label='Сокращение' type='text'
-        singleRow
+        dense
         required={!file}
         value={alias}
         placeholder={file && 'Загрузить из файла'}

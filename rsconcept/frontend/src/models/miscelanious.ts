@@ -2,12 +2,6 @@
 
 import { IConstituenta, IRSForm } from './rsform'
 
-// Constituenta edit mode
-export enum EditMode {
-  TEXT = 'text',
-  RSLANG = 'rslang'
-}
-
 // Dependency mode for schema analysis
 export enum DependencyMode {
   ALL = 0,

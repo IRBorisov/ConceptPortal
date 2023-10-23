@@ -30,7 +30,7 @@ function checkTypeConsistency(type: CstType, typification: string, args: IFuncti
 }
 
 function adjustResults(parse: IExpressionParse, emptyExpression: boolean, cstType: CstType) {
-  if (!parse.parseResult && parse.errors.length > 0 && parse.errors[0].errorType !== RSErrorType.syntax) {
+  if (!parse.parseResult && parse.errors.length > 0) {
     return;
   }
   if (cstType === CstType.BASE || cstType === CstType.CONSTANT) {

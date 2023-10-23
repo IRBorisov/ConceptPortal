@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import BackendError from '../../components/BackendError';
 import { ConceptLoader } from '../../components/Common/ConceptLoader';
 import MiniButton from '../../components/Common/MiniButton';
-import { EyeIcon, EyeOffIcon } from '../../components/Icons';
+import { NotSubscribedIcon,SubscribedIcon } from '../../components/Icons';
 import { useAuth } from '../../context/AuthContext';
 import { useLibrary } from '../../context/LibraryContext';
 import { useUserProfile } from '../../context/UserProfileContext';
@@ -35,8 +35,8 @@ function UserTabs() {
               <MiniButton
                 tooltip='Показать/Скрыть список отслеживаний'
                 icon={showSubs
-                  ? <EyeIcon color='text-primary' size={5}/>
-                  : <EyeOffIcon color='text-primary' size={5}/>
+                  ? <SubscribedIcon color='text-primary' size={5}/>
+                  : <NotSubscribedIcon color='text-primary' size={5}/>
                 }
                 onClick={() => setShowSubs(prev => !prev)}
               />

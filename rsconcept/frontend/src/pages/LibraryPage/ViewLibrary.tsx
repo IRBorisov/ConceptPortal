@@ -5,7 +5,7 @@ import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import TextURL from '../../components/Common/TextURL';
 import DataTable, { createColumnHelper } from '../../components/DataTable';
 import HelpLibrary from '../../components/Help/HelpLibrary';
-import { EducationIcon, EyeIcon, GroupIcon, HelpIcon } from '../../components/Icons';
+import { EducationIcon, GroupIcon, HelpIcon,SubscribedIcon } from '../../components/Icons';
 import { useAuth } from '../../context/AuthContext';
 import { useConceptNavigation } from '../../context/NagivationContext';
 import { useUsers } from '../../context/UsersContext';
@@ -45,7 +45,7 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
             className='flex items-center justify-start gap-1 min-w-[2.75rem]'
             id={`${prefixes.library_list}${item.id}`}
           >
-            {user && user.subscriptions.includes(item.id) && <p title='Отслеживаемая'><EyeIcon size={3}/></p>}
+            {user && user.subscriptions.includes(item.id) && <p title='Отслеживаемая'><SubscribedIcon size={3}/></p>}
             {item.is_common && <p title='Общедоступная'><GroupIcon size={3}/></p>}
             {item.is_canonical && <p title='Неизменная'><EducationIcon size={3}/></p>}
           </div>

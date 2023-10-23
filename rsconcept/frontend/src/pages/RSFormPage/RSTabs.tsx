@@ -372,7 +372,7 @@ function RSTabs() {
       onSelect={onSelectTab}
       defaultFocus={true}
       selectedTabClassName='clr-selected'
-      className='flex flex-col w-full items-center'
+      className='flex flex-col items-center w-full'
     >
       <TabList className='flex items-start border-b-2 border-x-2 select-none justify-stretch w-fit clr-controls h-[1.9rem] small-caps font-semibold'>
         <RSTabsMenu 
@@ -391,11 +391,10 @@ function RSTabs() {
           Паспорт схемы
         </ConceptTab>
         <ConceptTab 
-          className='border-r-2 w-fit flex justify-between gap-2'
+          className='flex justify-between gap-2 border-r-2 w-fit'
           title={`Всего конституент: ${schema.stats?.count_all ?? 0}\nКоличество ошибок: ${schema.stats?.count_errors ?? 0}`}
         >
           <span>Конституенты</span>
-          <span>{`${schema.stats?.count_errors ?? 0} | ${schema.stats?.count_all ?? 0}`}</span>
         </ConceptTab>
         <ConceptTab className='border-r-2 min-w-[5.2rem]'>
           Редактор
