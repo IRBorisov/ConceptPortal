@@ -190,8 +190,16 @@ class TestRSForm(TestCase):
         self.assertEqual(cst2.order, 1)
         self.assertEqual(cst1.order, 2)
 
+    def test_insert_at_invalid_position(self):
+        schema = RSForm.create(title='Test')
         with self.assertRaises(ValidationError):
             schema.insert_at(0, 'X5', CstType.BASE)
+
+    def test_insert_at_invalid_alias(self):
+        schema = RSForm.create(title='Test')
+        schema.insert_at(1, 'X1', CstType.BASE)
+        with self.assertRaises(ValidationError):
+            schema.insert_at(2, 'X1', CstType.BASE)
 
     def test_insert_at_reorder(self):
         schema = RSForm.create(title='Test')

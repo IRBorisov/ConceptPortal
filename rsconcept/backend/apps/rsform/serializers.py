@@ -188,13 +188,18 @@ class CstRenameSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         schema = cast(RSForm, self.context['schema'])
         old_cst = Constituenta.objects.get(pk=self.initial_data['id'])
+        new_alias = self.initial_data['alias']
         if old_cst.schema != schema.item:
             raise serializers.ValidationError({
                 'id': f'Изменяемая конституента должна относиться к изменяемой схеме: {schema.item.title}'
             })
-        if old_cst.alias == self.initial_data['alias']:
+        if old_cst.alias == new_alias:
             raise serializers.ValidationError({
-                'alias': f'Имя конституенты должно отличаться от текущего: {self.initial_data["alias"]}'
+                'alias': f'Имя конституенты должно отличаться от текущего: {new_alias}'
+            })
+        if schema.constituents().filter(alias=new_alias).exists():
+            raise serializers.ValidationError({
+                'alias': f'Конституента с таким именем уже существует: {new_alias}'
             })
         self.instance = old_cst
         attrs['schema'] = schema.item

@@ -10,7 +10,8 @@ class ConstituentaAdmin(admin.ModelAdmin):
     list_display = ['schema', 'alias', 'term_resolved', 'definition_resolved']
     search_fields = ['term_resolved', 'definition_resolved']
 
-class LibraryAdmin(admin.ModelAdmin):
+
+class LibraryItemAdmin(admin.ModelAdmin):
     ''' Admin model: LibraryItem. '''
     date_hierarchy = 'time_update'
     list_display = [
@@ -20,6 +21,18 @@ class LibraryAdmin(admin.ModelAdmin):
     ]
     list_filter = ['is_common', 'is_canonical', 'time_update']
     search_fields = ['alias', 'title']
+
+
+class LibraryTemplateAdmin(admin.ModelAdmin):
+    ''' Admin model: LibraryTemplate. '''
+    list_display = ['id', 'alias']
+    list_select_related = ['lib_source']
+
+    def alias(self, template: models.LibraryTemplate):
+        if template.lib_source:
+            return template.lib_source.alias
+        else:
+            return 'N/A'
 
 
 class SubscriptionAdmin(admin.ModelAdmin):
@@ -32,5 +45,6 @@ class SubscriptionAdmin(admin.ModelAdmin):
 
 
 admin.site.register(models.Constituenta, ConstituentaAdmin)
-admin.site.register(models.LibraryItem, LibraryAdmin)
+admin.site.register(models.LibraryItem, LibraryItemAdmin)
+admin.site.register(models.LibraryTemplate, LibraryTemplateAdmin)
 admin.site.register(models.Subscription, SubscriptionAdmin)

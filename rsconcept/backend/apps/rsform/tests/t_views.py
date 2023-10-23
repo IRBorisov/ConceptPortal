@@ -8,7 +8,10 @@ from rest_framework.exceptions import ErrorDetail
 from cctext import ReferenceType, split_grams
 
 from apps.users.models import User
-from apps.rsform.models import Syntax, RSForm, Constituenta, CstType, LibraryItem, LibraryItemType, Subscription
+from apps.rsform.models import (
+  Syntax, RSForm, Constituenta, CstType,
+  LibraryItem, LibraryItemType, Subscription, LibraryTemplate
+)
 from apps.rsform.views import (
     convert_to_ascii,
     convert_to_math,
@@ -264,6 +267,20 @@ class TestLibraryViewset(APITestCase):
         self.assertEqual(response.status_code, 204)
         self.assertFalse(self.user in self.unowned.subscribers())
 
+    def test_retrieve_templates(self):
+        response = self.client.get('/api/library/templates')
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(_response_contains(response, self.common))
+        self.assertFalse(_response_contains(response, self.unowned))
+        self.assertFalse(_response_contains(response, self.owned))
+
+        LibraryTemplate.objects.create(lib_source=self.unowned)
+        response = self.client.get('/api/library/templates')
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(_response_contains(response, self.common))
+        self.assertTrue(_response_contains(response, self.unowned))
+        self.assertFalse(_response_contains(response, self.owned))
+
 
 class TestRSFormViewset(APITestCase):
     ''' Testing RSForm view. '''
@@ -420,22 +437,22 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(x4.order, 3)
 
     def test_rename_constituenta(self):
-        self.cst1 = Constituenta.objects.create(
+        cst1 = Constituenta.objects.create(
             alias='X1', schema=self.owned.item, order=1, convention='Test',
             term_raw='Test1', term_resolved='Test1',
             term_forms=[{'text':'form1', 'tags':'sing,datv'}]
         )
-        self.cst2 = Constituenta.objects.create(
+        cst2 = Constituenta.objects.create(
             alias='X2', schema=self.unowned.item, order=1, convention='Test1',
             term_raw='Test2', term_resolved='Test2'
         )
-        self.cst3 = Constituenta.objects.create(
+        cst3 = Constituenta.objects.create(
             alias='X3', schema=self.owned.item, order=2,
             term_raw='Test3', term_resolved='Test3',
             definition_raw='Test1', definition_resolved='Test2'
         )
         
-        data = {'alias': 'D2', 'cst_type': 'term', 'id': self.cst2.pk}
+        data = {'alias': 'D2', 'cst_type': 'term', 'id': cst2.pk}
         response = self.client.patch(
             f'/api/rsforms/{self.unowned.item.id}/cst-rename',
             data=data, format='json'
@@ -448,14 +465,21 @@ class TestRSFormViewset(APITestCase):
         )
         self.assertEqual(response.status_code, 400)
 
-        data = {'alias': self.cst1.alias, 'cst_type': 'term', 'id': self.cst1.pk}
+        data = {'alias': cst1.alias, 'cst_type': 'term', 'id': cst1.pk}
         response = self.client.patch(
             f'/api/rsforms/{self.owned.item.id}/cst-rename',
             data=data, format='json'
         )
         self.assertEqual(response.status_code, 400)
 
-        data = {'alias': 'D2', 'cst_type': 'term', 'id': self.cst1.pk}
+        data = {'alias': cst3.alias, 'id': cst1.pk}
+        response = self.client.patch(
+            f'/api/rsforms/{self.owned.item.id}/cst-rename',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, 400)
+
+        data = {'alias': 'D2', 'cst_type': 'term', 'id': cst1.pk}
         item = self.owned.item
         d1 = Constituenta.objects.create(schema=item, alias='D1', cst_type='term', order=4)
         d1.term_raw = '@{X1|plur}'
@@ -463,9 +487,9 @@ class TestRSFormViewset(APITestCase):
         d1.save()
         
         self.assertEqual(d1.order, 4)
-        self.assertEqual(self.cst1.order, 1)
-        self.assertEqual(self.cst1.alias, 'X1')
-        self.assertEqual(self.cst1.cst_type, CstType.BASE)
+        self.assertEqual(cst1.order, 1)
+        self.assertEqual(cst1.alias, 'X1')
+        self.assertEqual(cst1.cst_type, CstType.BASE)
         response = self.client.patch(
             f'/api/rsforms/{item.id}/cst-rename',
             data=data, format='json'
@@ -474,13 +498,13 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(response.data['new_cst']['alias'], 'D2')
         self.assertEqual(response.data['new_cst']['cst_type'], 'term')
         d1.refresh_from_db()
-        self.cst1.refresh_from_db()
+        cst1.refresh_from_db()
         self.assertEqual(d1.order, 4)
         self.assertEqual(d1.term_resolved, '')
         self.assertEqual(d1.term_raw,  '@{D2|plur}')
-        self.assertEqual(self.cst1.order, 1)
-        self.assertEqual(self.cst1.alias, 'D2')
-        self.assertEqual(self.cst1.cst_type, CstType.TERM)
+        self.assertEqual(cst1.order, 1)
+        self.assertEqual(cst1.alias, 'D2')
+        self.assertEqual(cst1.cst_type, CstType.TERM)
 
     def test_create_constituenta_data(self):
         data = {

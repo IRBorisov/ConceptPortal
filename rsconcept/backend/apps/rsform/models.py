@@ -71,8 +71,7 @@ def _get_type_prefix(cst_type: CstType) -> str:
 
 
 class LibraryItem(Model):
-    ''' Abstract library item.
-        Please use wrappers below to access functionality. '''
+    ''' Abstract library item.'''
     item_type: CharField = CharField(
         verbose_name='Тип',
         max_length=50,
@@ -134,6 +133,21 @@ class LibraryItem(Model):
         super().save(*args, **kwargs)
         if subscribe:
             Subscription.subscribe(user=self.owner, item=self)
+
+
+class LibraryTemplate(Model):
+    ''' Template for library items and constituents. '''
+    lib_source: ForeignKey = ForeignKey(
+        verbose_name='Источник',
+        to=LibraryItem,
+        on_delete=CASCADE,
+        null=True
+    )
+
+    class Meta:
+        ''' Model metadata. '''
+        verbose_name = 'Шаблон'
+        verbose_name_plural = 'Шаблоны'
 
 
 class Subscription(Model):
@@ -319,6 +333,8 @@ class RSForm:
         ''' Insert new constituenta at given position. All following constituents order is shifted by 1 position '''
         if position <= 0:
             raise ValidationError('Invalid position: should be positive integer')
+        if self.constituents().filter(alias=alias).exists():
+            raise ValidationError(f'Alias taken {alias}')
         currentSize = self.constituents().count()
         position =  max(1, min(position, currentSize + 1))
         update_list = \
@@ -342,6 +358,8 @@ class RSForm:
     @transaction.atomic
     def insert_last(self, alias: str, insert_type: CstType) -> 'Constituenta':
         ''' Insert new constituenta at last position '''
+        if self.constituents().filter(alias=alias).exists():
+            raise ValidationError(f'Alias taken {alias}')
         position = 1
         if self.constituents().exists():
             position += self.constituents().count()

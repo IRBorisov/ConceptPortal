@@ -9,6 +9,7 @@ library_router.register('rsforms', views.RSFormViewSet)
 
 urlpatterns = [
     path('library/active', views.LibraryActiveView.as_view(), name='library'),
+    path('library/templates', views.LibraryTemplatesView.as_view(), name='library'),
     path('constituents/<int:pk>', views.ConstituentAPIView.as_view(), name='constituenta-detail'),
     path('rsforms/import-trs', views.TrsImportView.as_view()),
     path('rsforms/create-detailed', views.create_rsform),

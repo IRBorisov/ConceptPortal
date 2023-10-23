@@ -22,7 +22,7 @@ from . import utils
 @extend_schema(tags=['Library'])
 @extend_schema_view()
 class LibraryActiveView(generics.ListAPIView):
-    ''' Endpoint: Get list of rsforms available for active user. '''
+    ''' Endpoint: Get list of library items available for active user. '''
     permission_classes = (permissions.AllowAny,)
     serializer_class = s.LibraryItemSerializer
 
@@ -35,6 +35,18 @@ class LibraryActiveView(generics.ListAPIView):
             ).distinct().order_by('-time_update')
         else:
             return m.LibraryItem.objects.filter(is_common=True).order_by('-time_update')
+        
+
+@extend_schema(tags=['Library'])
+@extend_schema_view()
+class LibraryTemplatesView(generics.ListAPIView):
+    ''' Endpoint: Get list of templates. '''
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = s.LibraryItemSerializer
+
+    def get_queryset(self):
+        template_ids = m.LibraryTemplate.objects.values_list('lib_source', flat=True)
+        return m.LibraryItem.objects.filter(pk__in=template_ids)
 
 
 @extend_schema(tags=['Constituenta'])
