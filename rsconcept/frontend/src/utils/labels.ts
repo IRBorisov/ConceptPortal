@@ -244,6 +244,7 @@ export function labelHelpTopic(topic: HelpTopic): string {
     case HelpTopic.CSTLIST:       return '- список конституент';
     case HelpTopic.CONSTITUENTA:  return '- конституента';
     case HelpTopic.GRAPH_TERM:    return '- граф термов';
+    case HelpTopic.RSTEMPLATES:   return '- Банк выражений';
     case HelpTopic.RSLANG:        return 'Экспликация';
     case HelpTopic.TERM_CONTROL:  return 'Терминологизация';
     case HelpTopic.EXTEOR:        return 'Экстеор';
@@ -259,6 +260,7 @@ export function describeHelpTopic(topic: HelpTopic): string {
     case HelpTopic.CSTLIST:       return 'Описание работы со списком конституентт';
     case HelpTopic.CONSTITUENTA:  return 'Описание редактирования конституенты';
     case HelpTopic.GRAPH_TERM:    return 'Описание работы с графом термов схемы';
+    case HelpTopic.RSTEMPLATES:   return 'Описание работы с Банком выражений>';
     case HelpTopic.RSLANG:        return 'Справка по языку родов структур и экспликации';
     case HelpTopic.TERM_CONTROL:  return 'Справка по контролю терминов и текстовым отсылкам';
     case HelpTopic.EXTEOR:        return 'Справка по программе для экспликации "Экстеор" для Windows';

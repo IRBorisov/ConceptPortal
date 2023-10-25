@@ -73,7 +73,11 @@ export interface IConstituentaList {
 }
 
 export interface ICstCreateData 
-extends Pick<IConstituentaMeta, 'alias' | 'cst_type' | 'definition_raw' | 'term_raw' | 'convention' | 'definition_formal' > {
+extends Pick<
+  IConstituentaMeta, 
+  'alias' | 'cst_type' | 'definition_raw' | 'term_raw' |
+  'convention' | 'definition_formal' | 'term_forms'
+> {
   insert_after: number | null
 }
 

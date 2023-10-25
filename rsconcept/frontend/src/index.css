@@ -25,7 +25,7 @@
 
   --cl-red-bg-100:    hsl(000, 100%, 095%);
   --cl-red-fg-100:    hsl(000, 072%, 051%);
-  --cl-green-fg-100:  hsl(120, 080%, 058%);
+  --cl-green-fg-100:  hsl(120, 080%, 37%);
 
   /* Dark Theme */
   --cd-bg-120:        hsl(000, 000%, 005%);
@@ -47,7 +47,7 @@
 
   --cd-red-bg-100:    hsl(000, 100%, 015%);
   --cd-red-fg-100:    hsl(000, 080%, 055%);
-  --cd-green-fg-100:  hsl(120, 080%, 040%);
+  --cd-green-fg-100:  hsl(120, 080%, 042%);
 
   /* Import overrides */
   --toastify-color-dark: var(--cd-bg-60);

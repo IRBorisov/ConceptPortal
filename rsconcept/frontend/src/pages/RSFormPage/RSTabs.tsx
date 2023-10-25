@@ -24,6 +24,7 @@ import DlgDeleteCst from './DlgDeleteCst';
 import DlgEditWordForms from './DlgEditWordForms';
 import DlgRenameCst from './DlgRenameCst';
 import DlgShowAST from './DlgShowAST';
+import DlgTemplates from './DlgTemplates';
 import DlgUploadRSForm from './DlgUploadRSForm';
 import EditorConstituenta from './EditorConstituenta';
 import EditorItems from './EditorItems';
@@ -88,6 +89,8 @@ function RSTabs() {
   const [showRenameCst, setShowRenameCst] = useState(false);
 
   const [showEditTerm, setShowEditTerm] = useState(false);
+
+  const [showTemplates, setShowTemplates] = useState(false);
 
   const panelHeight = useMemo(
   () => {
@@ -261,6 +264,11 @@ function RSTabs() {
     .catch(console.error);
   }, []);
 
+  const onShowTemplates = useCallback(
+  () => {
+    setShowTemplates(true);
+  }, []);
+
   const onDownloadSchema = useCallback(
   () => {
     if (isModified) {
@@ -367,6 +375,12 @@ function RSTabs() {
       onSave={handleSaveWordforms}
       target={activeCst!}
     />}
+    {showTemplates && 
+    <DlgTemplates
+      schema={schema}
+      hideWindow={() => setShowTemplates(false)}
+      onCreate={handleCreateCst}
+    />}
     <Tabs
       selectedIndex={activeTab}
       onSelect={onSelectTab}
@@ -381,6 +395,7 @@ function RSTabs() {
           onClaim={onClaimSchema}
           onShare={onShareSchema}
           onToggleSubscribe={handleToggleSubscribe}
+          onTemplates={onShowTemplates}
           showCloneDialog={promptClone} 
           showUploadDialog={() => setShowUpload(true)}
         />
@@ -422,6 +437,7 @@ function RSTabs() {
             onOpenEdit={onOpenCst}
             onCreateCst={promptCreateCst}
             onDeleteCst={promptDeleteCst}
+            onTemplates={() => onShowTemplates()} // TODO: implement insertion point
           />
         </TabPanel>
 

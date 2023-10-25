@@ -6,6 +6,7 @@ import HelpMain from '../../components/Help/HelpMain';
 import HelpRSFormItems from '../../components/Help/HelpRSFormItems';
 import HelpRSFormMeta from '../../components/Help/HelpRSFormMeta';
 import HelpRSLang from '../../components/Help/HelpRSLang';
+import HelpRSTemplates from '../../components/Help/HelpRSTemplates';
 import HelpTermGraph from '../../components/Help/HelpTermGraph';
 import HelpTerminologyControl from '../../components/Help/HelpTerminologyControl';
 import { HelpTopic } from '../../models/miscelanious';
@@ -23,6 +24,7 @@ function ViewTopic({ topic }: ViewTopicProps) {
       {topic === HelpTopic.CSTLIST && <HelpRSFormItems />}
       {topic === HelpTopic.CONSTITUENTA && <HelpConstituenta />}
       {topic === HelpTopic.GRAPH_TERM && <HelpTermGraph />}
+      {topic === HelpTopic.RSTEMPLATES && <HelpRSTemplates />}
       {topic === HelpTopic.RSLANG && <HelpRSLang />}
       {topic === HelpTopic.TERM_CONTROL && <HelpTerminologyControl />}
       {topic === HelpTopic.EXTEOR && <HelpExteor />}

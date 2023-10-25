@@ -17,7 +17,7 @@ function RSTokenButton({ token, disabled, onInsert }: RSTokenButtonProps) {
       onClick={() => onInsert(token)}
       title={describeToken(token)}
       tabIndex={-1}
-      className={`px-1 cursor-pointer disabled:cursor-default border rounded-none h-6 ${width} clr-outline clr-hover clr-btn-clear`}
+      className={`px-1 cursor-pointer disabled:cursor-default border rounded-none h-6 ${width} outline-none clr-hover clr-btn-clear`}
     >
       {label && <span className='whitespace-nowrap'>{label}</span>}
     </button>

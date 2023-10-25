@@ -1,11 +1,8 @@
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import Button from '../../components/Common/Button';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import DataTable, { createColumnHelper, type RowSelectionState,VisibilityState } from '../../components/DataTable';
-import HelpRSFormItems from '../../components/Help/HelpRSFormItems';
-import { ArrowDownIcon, ArrowUpIcon, DumpBinIcon, HelpIcon, MeshIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useWindowSize from '../../hooks/useWindowSize';
@@ -13,30 +10,28 @@ import { CstType, IConstituenta, ICstCreateData, ICstMovetoData } from '../../mo
 import { colorfgCstStatus } from '../../utils/color';
 import { prefixes } from '../../utils/constants';
 import { describeExpressionStatus, labelCstTypification } from '../../utils/labels';
-import { getCstTypePrefix, getCstTypeShortcut } from '../../utils/misc';
+import RSItemsMenu from './elements/RSItemsMenu';
 
 // Window width cutoff for columns
 const COLUMN_DEFINITION_HIDE_THRESHOLD = 1000;
 const COLUMN_TYPE_HIDE_THRESHOLD = 1200;
 const COLUMN_CONVENTION_HIDE_THRESHOLD = 1800;
 
-const EDITOR_BUTTON_DIMENSIONS = 'h-[1.5rem] w-[1.8em]';
-
 const columnHelper = createColumnHelper<IConstituenta>();
 
 interface EditorItemsProps {
   onOpenEdit: (cstID: number) => void
+  onTemplates: (selected: number[]) => void
   onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void
   onDeleteCst: (selected: number[], callback: (items: number[]) => void) => void
 }
 
-function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps) {
+function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: EditorItemsProps) {
   const { colors, mainHeight } = useConceptTheme();
   const windowSize = useWindowSize();
   const { schema, isEditable, cstMoveTo, resetAliases } = useRSForm();
   const [selected, setSelected] = useState<number[]>([]);
-  const nothingSelected = useMemo(() => selected.length === 0, [selected]);
-
+  
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
@@ -130,8 +125,31 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
       definition_formal: '',
       definition_raw: '',
       convention: '',
+      term_forms: []
     };
     onCreateCst(data, type !== undefined);
+  }
+
+  // Clone selected
+  function handleClone() {
+    if (selected.length !== 1 || !schema) {
+      return;
+    }
+    const activeCst = schema.items.find(cst => cst.id === selected[0]);
+    if (!activeCst) {
+      return;
+    }
+    const data: ICstCreateData = {
+      insert_after: activeCst.id,
+      cst_type: activeCst.cst_type,
+      alias: '',
+      term_raw: activeCst.term_raw,
+      definition_formal: activeCst.definition_formal,
+      definition_raw: activeCst.definition_raw,
+      convention: activeCst.convention,
+      term_forms: activeCst.term_forms
+    };
+    onCreateCst(data, true);
   }
 
   // Implement hotkeys for working with constituents table
@@ -297,73 +315,21 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst }: EditorItemsProps)
     onKeyDown={handleTableKey}
   >
     <div className='sticky top-0 flex justify-start w-full gap-1 px-2 py-1 border-b items-center h-[2.2rem] select-none clr-app'>
-      <div className='mr-3 min-w-[9rem] whitespace-nowrap'>
+      <div className='mr-3 min-w-[9rem] whitespace-nowrap small-caps'>
         Выбор {selected.length} из {schema?.stats?.count_all ?? 0}
       </div>
-      <div className='flex items-center justify-center w-full gap-1 pr-[9rem]'>
-        <Button
-          tooltip='Переместить вверх'
-          icon={<ArrowUpIcon size={6}/>}
-          disabled={!isEditable || nothingSelected}
-          dimensions={EDITOR_BUTTON_DIMENSIONS}
-          dense
-          onClick={handleMoveUp}
-        />
-        <Button
-          tooltip='Переместить вниз'
-          icon={<ArrowDownIcon size={6}/>}
-          disabled={!isEditable || nothingSelected}
-          dimensions={EDITOR_BUTTON_DIMENSIONS}
-          dense
-          onClick={handleMoveDown}
-        />
-        <Button
-          tooltip='Удалить выбранные'
-          icon={<DumpBinIcon color={isEditable && !nothingSelected ? 'text-warning' : ''} size={5}/>}
-          disabled={!isEditable || nothingSelected}
-          dimensions={EDITOR_BUTTON_DIMENSIONS}
-          dense
-          onClick={handleDelete}
-        />
-
-        <Button
-          tooltip='Сбросить имена'
-          icon={<MeshIcon color={isEditable ? 'text-primary': ''} size={5}/>}
-          dimensions={EDITOR_BUTTON_DIMENSIONS}
-          dense
-          disabled={!isEditable}
-          onClick={handleReindex}
-        />
-        <Button
-          tooltip='Новая конституента'
-          icon={<SmallPlusIcon color={isEditable ? 'text-success': ''} size={5}/>}
-          dimensions={EDITOR_BUTTON_DIMENSIONS}
-          dense
-          disabled={!isEditable}
-          onClick={() => handleCreateCst()}
-        />
-        {(Object.values(CstType)).map(
-          (typeStr) => {
-            const type = typeStr as CstType;
-            return (
-            <Button key={type}
-              text={getCstTypePrefix(type)}
-              tooltip={getCstTypeShortcut(type)}
-              dense
-              dimensions={EDITOR_BUTTON_DIMENSIONS}
-              disabled={!isEditable}
-              tabIndex={-1}
-              onClick={() => handleCreateCst(type)}
-            />);
-        })}
-        <div id='items-table-help'>
-          <HelpIcon color='text-primary' size={5} />
-        </div>
-        <ConceptTooltip anchorSelect='#items-table-help' offset={30}>
-          <HelpRSFormItems />
-        </ConceptTooltip>
-      </div>
+      <RSItemsMenu
+        selected={selected}
+        onMoveUp={handleMoveUp}
+        onMoveDown={handleMoveDown}
+        onClone={handleClone}
+        onCreate={handleCreateCst}
+        onDelete={handleDelete}
+        onTemplates={() => onTemplates(selected)}
+        onReindex={handleReindex}
+      />
     </div>
+    
     <div className='w-full h-full text-sm'>
     <DataTable
       data={schema?.items ?? []}

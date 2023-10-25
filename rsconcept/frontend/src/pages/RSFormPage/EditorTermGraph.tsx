@@ -278,6 +278,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       definition_formal: allSelected.map(id => schema.items.find(cst => cst.id === id)!.alias).join(' '),
       definition_raw: '',
       convention: '',
+      term_forms: []
     };
     onCreateCst(data);
   }
@@ -416,7 +417,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         </div>}
         
         <div className='flex items-center justify-between py-1'>
-          <div className='mr-3 text-base'>
+          <div className='mr-3 text-base small-caps'>
             Выбор {allSelected.length} из {schema?.stats?.count_all ?? 0}
           </div>
         </div>

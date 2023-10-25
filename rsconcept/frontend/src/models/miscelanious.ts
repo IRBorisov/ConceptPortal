@@ -20,6 +20,7 @@ export enum HelpTopic {
   CSTLIST = 'cstlist',
   CONSTITUENTA = 'constituenta',
   GRAPH_TERM = 'graph-term',
+  RSTEMPLATES = 'rstemplates',
   RSLANG = 'rslang',
   TERM_CONTROL = 'terminology-control',
   EXTEOR = 'exteor',

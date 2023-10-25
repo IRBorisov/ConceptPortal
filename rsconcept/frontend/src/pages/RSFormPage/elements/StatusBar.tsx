@@ -28,7 +28,7 @@ function StatusBar({ isModified, constituenta, parseData }: StatusBarProps) {
 
   return (
     <div title={describeExpressionStatus(status)}
-      className='inline-flex items-center justify-center w-full h-full text-sm font-semibold align-middle border select-none small-caps'
+      className='inline-flex items-center justify-center w-full h-full text-sm font-semibold align-middle border rounded-none select-none small-caps'
       style={{backgroundColor: colorbgCstStatus(status, colors)}}
     >
       {labelExpressionStatus(status)}

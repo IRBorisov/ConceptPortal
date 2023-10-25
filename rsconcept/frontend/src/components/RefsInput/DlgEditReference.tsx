@@ -2,7 +2,11 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
 import { useConceptTheme } from '../../context/ThemeContext';
-import { getCompatibleGrams, Grammeme, parseEntityReference,parseGrammemes,parseSyntacticReference,ReferenceType } from '../../models/language';
+import {
+  getCompatibleGrams, Grammeme,
+  parseEntityReference, parseGrammemes, 
+  parseSyntacticReference, ReferenceType
+} from '../../models/language';
 import { CstMatchMode } from '../../models/miscelanious';
 import { IConstituenta, matchConstituenta } from '../../models/rsform';
 import ConstituentaTooltip from '../../pages/RSFormPage/elements/ConstituentaTooltip';

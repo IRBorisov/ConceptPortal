@@ -116,6 +116,7 @@ function EditorConstituenta({
       definition_formal: '',
       definition_raw: '',
       convention: '',
+      term_forms: []
     };
     onCreateCst(data);
   }
@@ -132,6 +133,7 @@ function EditorConstituenta({
       definition_formal: activeCst.definition_formal,
       definition_raw: activeCst.definition_raw,
       convention: activeCst.convention,
+      term_forms: activeCst.term_forms
     };
     onCreateCst(data, true);
   }
@@ -209,7 +211,7 @@ function EditorConstituenta({
         </div>
       </div>
       </div>
-      <div className='flex flex-col gap-2 mt-1'>
+      <div className='flex flex-col gap-3 mt-1'>
         <RefsInput id='term' label='Термин'
           placeholder='Обозначение, используемое в текстовых определениях данной схемы'
           height='2.1rem'

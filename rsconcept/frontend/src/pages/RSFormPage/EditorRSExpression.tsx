@@ -118,7 +118,7 @@ function EditorRSExpression({
   return (
   <div className='flex flex-col items-start w-full'>
     <div className='relative w-full'>
-      <div className='absolute top-[-0.2rem] left-[10.3rem]'>
+      <div className='absolute top-[-0.2rem] left-[10.5rem]'>
       <MiniButton
           tooltip='Дерево разбора выражения'
           noHover
@@ -138,13 +138,14 @@ function EditorRSExpression({
       disabled={disabled}
       onEdit={handleEdit}
     />
-    <div className='w-full mt-1 max-h-[5rem] min-h-[5rem] flex gap-2'>
-      <div className='flex flex-col gap-1'>
+    <div className='w-full max-h-[5rem] min-h-[5rem] flex'>
+      <div className='flex flex-col'>
         <Button
           tooltip='Проверить формальное выражение'
           text='Проверить'
-          dimensions='w-fit h-[3rem]'
+          dimensions='w-fit h-[3rem] z-pop'
           colorClass='clr-btn-default'
+          borderClass='rounded-none border'
           onClick={() => handleCheckExpression()}
         />
         <StatusBar
@@ -153,7 +154,7 @@ function EditorRSExpression({
           parseData={parseData}
         />
       </div>
-      <div className='w-full overflow-y-auto text-sm border'>
+      <div className='w-full overflow-y-auto text-sm border rounded-none'>
         { loading && <ConceptLoader size={6} />}
         { !loading && parseData && 
         <ParsingResult
