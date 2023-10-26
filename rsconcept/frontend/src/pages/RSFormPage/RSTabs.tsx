@@ -30,7 +30,6 @@ import EditorConstituenta from './EditorConstituenta';
 import EditorItems from './EditorItems';
 import EditorRSForm from './EditorRSForm';
 import EditorTermGraph from './EditorTermGraph';
-import RSFormStats from './elements/RSFormStats';
 import RSTabsMenu from './elements/RSTabsMenu';
 
 export enum RSTabID {
@@ -420,7 +419,7 @@ function RSTabs() {
       </TabList>
 
       <div className='overflow-y-auto' style={{ maxHeight: panelHeight}}>
-        <TabPanel className='flex gap-4 w-fit'>
+        <TabPanel>
           <EditorRSForm
             isModified={isModified}
             setIsModified={setIsModified}
@@ -429,7 +428,6 @@ function RSTabs() {
             onClaim={onClaimSchema}
             onShare={onShareSchema}
           />
-          {schema.stats && <RSFormStats stats={schema.stats}/>}
         </TabPanel>
 
         <TabPanel>

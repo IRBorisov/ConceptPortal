@@ -3,12 +3,15 @@ import LabeledText from '../../../components/Common/LabeledText';
 import { type IRSFormStats } from '../../../models/rsform';
 
 interface RSFormStatsProps {
-  stats: IRSFormStats
+  stats?: IRSFormStats
 }
 
 function RSFormStats({ stats }: RSFormStatsProps) {
+  if (!stats) {
+    return null;
+  }
   return (
-    <div className='flex flex-col gap-1 px-4 py-2 mt-4 border min-w-[16rem]'>
+    <div className='flex flex-col gap-1 px-4 py-2 mt-7 min-w-[16rem]'>
       <LabeledText id='count_all'
         label='Всего конституент '
         text={stats.count_all}
