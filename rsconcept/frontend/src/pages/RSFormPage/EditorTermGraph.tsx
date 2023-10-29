@@ -3,14 +3,12 @@ import { GraphCanvas, GraphCanvasRef, GraphEdge,
   GraphNode, LayoutTypes, Sphere, useSelection
 } from 'reagraph';
 
-import Button from '../../components/Common/Button';
-import Checkbox from '../../components/Common/Checkbox';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import MiniButton from '../../components/Common/MiniButton';
 import SelectSingle from '../../components/Common/SelectSingle';
 import HelpTermGraph from '../../components/Help/HelpTermGraph';
 import InfoConstituenta from '../../components/Help/InfoConstituenta';
-import { ArrowsRotateIcon, DumpBinIcon, FilterIcon, HelpIcon, SmallPlusIcon } from '../../components/Icons';
+import { ArrowsFocusIcon, DumpBinIcon, FilterIcon, HelpIcon, LetterAIcon, LetterALinesIcon, PlanetIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
@@ -71,7 +69,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
   const [ orbit, setOrbit ] = useState(false);
   
   const [ noHermits, setNoHermits ] = useLocalStorage('graph_no_hermits', true);
-  const [ noTransitive, setNoTransitive ] = useLocalStorage('graph_no_transitive', false);
+  const [ noTransitive, setNoTransitive ] = useLocalStorage('graph_no_transitive', true);
   const [ noTemplates, setNoTemplates ] = useLocalStorage('graph_no_templates', false);
   const [ noTerms, setNoTerms ] = useLocalStorage('graph_no_terms', false);
   const [ allowBase, setAllowBase ] = useLocalStorage('graph_allow_base', true);
@@ -344,7 +342,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
 
   const canvasWidth = useMemo(
   () => {
-    return 'calc(100vw - 14.6rem)';
+    return 'calc(100vw - 1.1rem)';
   }, []);
 
   const canvasHeight = useMemo(
@@ -374,8 +372,25 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       onConfirm={handleChangeOptions}
     />}
 
+    { allSelected.length > 0 && 
+    <div className='relative w-full z-pop'>
+    <div className='absolute left-0 top-0 px-2 whitespace-nowrap small-caps clr-app select-none'>
+      Выбор {allSelected.length} из {schema?.stats?.count_all ?? 0}
+    </div>
+    </div>}
+
     <div className='relative w-full z-pop'>
     <div className='absolute right-0 flex items-start justify-center w-full top-1'>
+      <MiniButton
+        tooltip='Настройки фильтрации узлов и связей'
+        icon={<FilterIcon color='text-primary' size={5}/>}
+        onClick={() => setShowOptions(true)}
+      />
+      <MiniButton
+        tooltip={ !noTerms ? 'Скрыть текст' : 'Отобразить текст' }
+        icon={ !noTerms ? <LetterALinesIcon color='text-success' size={5}/> : <LetterAIcon color='text-primary' size={5}/> }
+        onClick={() => setNoTerms(prev => !prev)}
+      />
       <MiniButton
         tooltip='Новая конституента'
         icon={<SmallPlusIcon color={isEditable ? 'text-success': ''} size={5}/>}
@@ -389,48 +404,40 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         onClick={handleDeleteCst}
       />
       <MiniButton
-        icon={<ArrowsRotateIcon size={5} />}
+        icon={<ArrowsFocusIcon color='text-primary' size={5} />}
         tooltip='Восстановить камеру'
         onClick={handleResetViewpoint}
+      />
+      <MiniButton
+        icon={<PlanetIcon color={ !is3D ? '' : orbit ? 'text-success' : 'text-primary'} size={5} />}
+        tooltip='Анимация вращения'
+        disabled={!is3D}
+        onClick={() => setOrbit(prev => !prev) }
       />
       <div className='px-1 py-1' id='items-graph-help' >
         <HelpIcon color='text-primary' size={5} />
       </div>
+      <ConceptTooltip anchorSelect='#items-graph-help'>
+        <div className='text-sm max-w-[calc(100vw-20rem)] z-tooltip'>
+          <HelpTermGraph />
+        </div>
+      </ConceptTooltip>
     </div>
     </div>
 
-    <ConceptTooltip anchorSelect='#items-graph-help'>
-      <div className='text-sm max-w-[calc(100vw-20rem)]'>
-        <HelpTermGraph />
-      </div>
-    </ConceptTooltip>
-    
-    <div className='flex justify-between w-full outline-none' tabIndex={0} onKeyDown={handleKeyDown}>
-    <div className='flex flex-col gap-4 max-w-[13.5rem] min-w-[13.5rem]'>
-      <div className='flex flex-col px-2 pb-2 mt-4 text-sm border select-none h-fit'>
-        {hoverCst && 
-        <div className='relative'>
-          <InfoConstituenta
-            data={hoverCst}
-            className='absolute top-[2.2rem] left-[2.6rem] z-tooltip w-[25rem] min-h-[11rem] overflow-y-auto border h-fit clr-app px-3' 
-          />
-        </div>}
-        
-        <div className='flex items-center justify-between py-1'>
-          <div className='mr-3 text-base small-caps'>
-            Выбор {allSelected.length} из {schema?.stats?.count_all ?? 0}
-          </div>
-        </div>
-        <div className='flex items-center w-full gap-1'>
-          <Button
-            icon={<FilterIcon size={6} />}
-            dense
-            tooltip='Настройки фильтрации узлов и связей'
-            dimensions='min-h-[2.3rem] min-w-[2.3rem]'
-            onClick={() => setShowOptions(true)}
-          />
+    {hoverCst && 
+    <div className='relative'>
+      <InfoConstituenta
+        data={hoverCst}
+        className='absolute top-[1.6rem] left-[2.6rem] z-tooltip w-[25rem] min-h-[11rem] shadow-md overflow-y-auto border h-fit clr-app px-3' 
+      />
+    </div>}
+
+    <div className='relative z-pop'>
+    <div className='absolute top-0 left-0 flex flex-col max-w-[13.5rem] min-w-[13.5rem]'>
+      <div className='flex flex-col px-2 pb-2 mt-8 text-sm select-none h-fit'>        
+        <div className='flex items-center w-full gap-1 text-sm'>
           <SelectSingle
-            className='min-w-[9.8rem]'
             options={SelectorGraphColoring}
             isSearchable={false}
             placeholder='Выберите цвет'
@@ -446,27 +453,9 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
           value={layout ? { value: layout, label: mapLableLayout.get(layout) } : null}
           onChange={data => handleChangeLayout(data?.value ?? SelectorGraphLayout[0].value)}
         />
-        <div className='flex flex-col gap-1 mt-2'>
-          <Checkbox
-            label='Скрыть текст' 
-            value={noTerms} 
-            setValue={ value => setNoTerms(value) }
-          />
-          <Checkbox
-            label='Транзитивная редукция' 
-            value={noTransitive} 
-            setValue={ value => setNoTransitive(value) }
-          />
-          <Checkbox
-            disabled={!is3D}
-            label='Анимация вращения' 
-            value={orbit} 
-            setValue={ value => setOrbit(value) }
-          />
-        </div>
       </div>
       {dismissed.length > 0 &&
-      <div className='flex flex-col text-sm border'>
+      <div className='flex flex-col text-sm ml-2 border clr-app max-w-[12.5rem] min-w-[12.5rem]'>
         <p className='py-2 text-center'><b>Скрытые конституенты</b></p>
         <div className='flex flex-wrap justify-center gap-2 pb-2 overflow-y-auto' style={{maxHeight: dismissedHeight}}>
         {dismissed.map(cstID => {
@@ -494,8 +483,10 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         })}
         </div>
       </div>}
-    </div>    
-    <div className='w-full h-full overflow-auto'>
+    </div>
+    </div>
+
+    <div className='h-full overflow-auto w-full outline-none' tabIndex={0} onKeyDown={handleKeyDown}>
     <div 
       className='relative'
       style={{width: canvasWidth, height: canvasHeight}}
@@ -523,7 +514,6 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
           <Sphere {...rest} node={node} />
         )}
       />
-    </div>
     </div>
   </div></>);
 }

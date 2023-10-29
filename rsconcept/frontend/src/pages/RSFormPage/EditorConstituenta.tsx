@@ -256,7 +256,7 @@ function EditorConstituenta({
           spellCheck
           onChange={event => setConvention(event.target.value)}
         />
-        <div className='flex justify-center w-full mt-2'>
+        <div className='flex justify-center w-full'>
           <SubmitButton
             text='Сохранить изменения'
             disabled={!isModified || !isEnabled}

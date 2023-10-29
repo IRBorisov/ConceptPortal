@@ -327,6 +327,38 @@ export function ArrowsRotateIcon(props: IconProps) {
   );
 }
 
+export function ArrowsFocusIcon(props: IconProps) {
+  return (
+    <IconSVG viewbox='0 0 24 24' {...props}>
+      <path d='M16.121 6.465L14 4.344V10h5.656l-2.121-2.121 3.172-3.172-1.414-1.414zM4.707 3.293L3.293 4.707l3.172 3.172L4.344 10H10V4.344L7.879 6.465zM19.656 14H14v5.656l2.121-2.121 3.172 3.172 1.414-1.414-3.172-3.172zM6.465 16.121l-3.172 3.172 1.414 1.414 3.172-3.172L10 19.656V14H4.344z' />
+    </IconSVG>
+  );
+}
+
+export function LetterAIcon(props: IconProps) {
+  return (
+    <IconSVG viewbox='0 0 24 24' {...props}>
+      <path d='M11.307 4l-6 16h2.137l1.875-5h6.363l1.875 5h2.137l-6-16h-2.387zm-1.239 9L12.5 6.515 14.932 13h-4.864z' />
+    </IconSVG>
+  );
+}
+
+export function LetterALinesIcon(props: IconProps) {
+  return (
+    <IconSVG viewbox='0 0 24 24' {...props}>
+      <path d='M15 4h7v2h-7zm1 4h6v2h-6zm2 4h4v2h-4zM9.307 4l-6 16h2.137l1.875-5h6.363l1.875 5h2.137l-6-16H9.307zm-1.239 9L10.5 6.515 12.932 13H8.068z' />
+    </IconSVG>
+  );
+}
+
+export function PlanetIcon(props: IconProps) {
+  return (
+    <IconSVG viewbox='0 0 24 24' {...props}>
+      <path d='M2.76 20.2a2.73 2.73 0 002.15.85 8.86 8.86 0 003.37-.86 9 9 0 0012.27-10.9c1.31-2.23 1.75-4.26.67-5.48a2.94 2.94 0 00-2.57-1A5 5 0 0016.1 4 9 9 0 003.58 15.14c-1.06 1.21-2.05 3.68-.82 5.06zm1.5-1.32c-.22-.25 0-1.07.37-1.76a9.26 9.26 0 001.57 1.74c-1.03.3-1.71.28-1.94.02zm14.51-5.17A7 7 0 0115.58 18 7.12 7.12 0 0112 19a6.44 6.44 0 01-1.24-.13 30.73 30.73 0 004.42-3.29 31.5 31.5 0 003.8-4 6.88 6.88 0 01-.21 2.13zm.09-8.89a.94.94 0 01.87.32c.23.26.16.94-.26 1.93a9.2 9.2 0 00-1.61-1.86 2.48 2.48 0 011-.39zM5.22 10.31A6.94 6.94 0 018.41 6 7 7 0 0112 5a6.9 6.9 0 016 3.41 5.19 5.19 0 01.35.66 27.43 27.43 0 01-4.49 5A27.35 27.35 0 018.35 18a7 7 0 01-3.13-7.65z' />
+    </IconSVG>
+  );
+}
+
 export function SaveIcon(props: IconProps) {
   return (
     <IconSVG viewbox='0 0 24 24' {...props}>
