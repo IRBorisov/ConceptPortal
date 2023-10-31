@@ -175,7 +175,7 @@ class CstCreateSerializer(serializers.ModelSerializer):
     class Meta:
         ''' serializer metadata. '''
         model = Constituenta
-        fields = 'alias', 'cst_type', 'convention', 'term_raw', 'definition_raw', 'definition_formal', 'insert_after'
+        fields = 'alias', 'cst_type', 'convention', 'term_raw', 'definition_raw', 'definition_formal', 'insert_after', 'term_forms'
 
 
 class CstRenameSerializer(serializers.ModelSerializer):

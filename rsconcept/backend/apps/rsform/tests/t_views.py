@@ -426,15 +426,23 @@ class TestRSFormViewset(APITestCase):
         x3 = Constituenta.objects.get(alias=response.data['new_cst']['alias'])
         self.assertEqual(x3.order, 3)
 
-        data = {'alias': 'X4', 'cst_type': 'basic', 'insert_after': x2.id}
+        data = {
+            'alias': 'X4',
+            'cst_type': 'basic',
+            'insert_after': x2.id,
+            'term_raw': 'test',
+            'term_forms': [{'text':'form1', 'tags':'sing,datv'}]
+        }
         response = self.client.post(
             f'/api/rsforms/{item.id}/cst-create',
             data=data, format='json'
         )
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.data['new_cst']['alias'], 'X4')
+        self.assertEqual(response.data['new_cst']['alias'], data['alias'])
         x4 = Constituenta.objects.get(alias=response.data['new_cst']['alias'])
         self.assertEqual(x4.order, 3)
+        self.assertEqual(x4.term_raw, data['term_raw'])
+        self.assertEqual(x4.term_forms, data['term_forms'])
 
     def test_rename_constituenta(self):
         cst1 = Constituenta.objects.create(

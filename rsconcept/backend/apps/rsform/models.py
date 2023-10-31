@@ -412,6 +412,7 @@ class RSForm:
         cst = self._insert_new(data, insert_after)
         cst.convention = data.get('convention', '')
         cst.definition_formal = data.get('definition_formal', '')
+        cst.term_forms = data.get('term_forms', [])
         cst.term_raw = data.get('term_raw', '')
         if cst.term_raw != '':
             resolved = resolver.resolve(cst.term_raw)
