@@ -1,13 +1,13 @@
 import { useLayoutEffect, useState } from 'react';
 
-import Modal, { ModalProps } from '../../components/Common/Modal';
-import SelectSingle from '../../components/Common/SelectSingle';
-import TextInput from '../../components/Common/TextInput';
-import { useRSForm } from '../../context/RSFormContext';
-import { CstType, ICstRenameData } from '../../models/rsform';
-import { labelCstType } from '../../utils/labels';
-import { createAliasFor, getCstTypePrefix } from '../../utils/misc';
-import { SelectorCstType } from '../../utils/selectors';
+import Modal, { ModalProps } from '../components/Common/Modal';
+import SelectSingle from '../components/Common/SelectSingle';
+import TextInput from '../components/Common/TextInput';
+import { useRSForm } from '../context/RSFormContext';
+import { CstType, ICstRenameData } from '../models/rsform';
+import { labelCstType } from '../utils/labels';
+import { createAliasFor, getCstTypePrefix } from '../utils/misc';
+import { SelectorCstType } from '../utils/selectors';
 
 interface DlgRenameCstProps
 extends Pick<ModalProps, 'hideWindow'> {

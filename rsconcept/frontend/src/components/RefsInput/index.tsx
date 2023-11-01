@@ -8,6 +8,7 @@ import { RefObject, useCallback, useMemo, useRef, useState } from 'react';
 
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
+import DlgEditReference from '../../dialogs/DlgEditReference';
 import useResolveText from '../../hooks/useResolveText';
 import { ReferenceType } from '../../models/language';
 import { IConstituenta } from '../../models/rsform';
@@ -15,7 +16,6 @@ import { CodeMirrorWrapper } from '../../utils/codemirror';
 import Label from '../Common/Label';
 import Modal from '../Common/Modal';
 import PrettyJson from '../Common/PrettyJSON';
-import DlgEditReference from './DlgEditReference';
 import { NaturalLanguage, ReferenceTokens } from './parse';
 import { RefEntity } from './parse/parser.terms';
 import { refsHoverTooltip } from './tooltip';

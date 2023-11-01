@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 
-import Checkbox from '../../components/Common/Checkbox';
-import Modal, { ModalProps } from '../../components/Common/Modal';
-import { useRSForm } from '../../context/RSFormContext';
-import { labelConstituenta } from '../../utils/labels';
+import Checkbox from '../components/Common/Checkbox';
+import Modal, { ModalProps } from '../components/Common/Modal';
+import { useRSForm } from '../context/RSFormContext';
+import { labelConstituenta } from '../utils/labels';
 
 interface DlgDeleteCstProps
 extends Pick<ModalProps, 'hideWindow'> {

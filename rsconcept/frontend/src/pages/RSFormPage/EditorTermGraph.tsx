@@ -11,6 +11,7 @@ import InfoConstituenta from '../../components/Help/InfoConstituenta';
 import { ArrowsFocusIcon, DumpBinIcon, FilterIcon, HelpIcon, LetterAIcon, LetterALinesIcon, PlanetIcon, SmallPlusIcon } from '../../components/Icons';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
+import DlgGraphOptions from '../../dialogs/DlgGraphOptions';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { CstType, IConstituenta, ICstCreateData } from '../../models/rsform';
 import { graphDarkT, graphLightT, IColorTheme } from '../../utils/color';
@@ -22,7 +23,6 @@ import { mapLabelColoring } from '../../utils/labels';
 import { mapLableLayout } from '../../utils/labels';
 import { SelectorGraphLayout } from '../../utils/selectors';
 import { SelectorGraphColoring } from '../../utils/selectors';
-import DlgGraphOptions from './DlgGraphOptions';
 import ConstituentaTooltip from './elements/ConstituentaTooltip';
 
 export type ColoringScheme = 'none' | 'status' | 'type';
@@ -374,7 +374,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
 
     { allSelected.length > 0 && 
     <div className='relative w-full z-pop'>
-    <div className='absolute left-0 top-0 px-2 whitespace-nowrap small-caps clr-app select-none'>
+    <div className='absolute top-0 left-0 px-2 select-none whitespace-nowrap small-caps clr-app'>
       Выбор {allSelected.length} из {schema?.stats?.count_all ?? 0}
     </div>
     </div>}
@@ -486,7 +486,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
     </div>
     </div>
 
-    <div className='h-full overflow-auto w-full outline-none' tabIndex={0} onKeyDown={handleKeyDown}>
+    <div className='w-full h-full overflow-auto outline-none' tabIndex={0} onKeyDown={handleKeyDown}>
     <div 
       className='relative'
       style={{width: canvasWidth, height: canvasHeight}}

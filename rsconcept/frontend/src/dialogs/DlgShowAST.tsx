@@ -1,13 +1,13 @@
 import { useCallback, useMemo, useState } from 'react';
 import { GraphCanvas,GraphEdge, GraphNode } from 'reagraph';
 
-import Modal, { ModalProps } from '../../components/Common/Modal';
-import { useConceptTheme } from '../../context/ThemeContext';
-import { SyntaxTree } from '../../models/rslang';
-import { graphDarkT, graphLightT } from '../../utils/color';
-import { colorbgSyntaxTree } from '../../utils/color';
-import { resources } from '../../utils/constants';
-import { labelSyntaxTree } from '../../utils/labels';
+import Modal, { ModalProps } from '../components/Common/Modal';
+import { useConceptTheme } from '../context/ThemeContext';
+import { SyntaxTree } from '../models/rslang';
+import { graphDarkT, graphLightT } from '../utils/color';
+import { colorbgSyntaxTree } from '../utils/color';
+import { resources } from '../utils/constants';
+import { labelSyntaxTree } from '../utils/labels';
 
 interface DlgShowASTProps
 extends Pick<ModalProps, 'hideWindow'> {

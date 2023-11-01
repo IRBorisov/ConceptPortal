@@ -1,23 +1,23 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
-import ConceptTooltip from '../../components/Common/ConceptTooltip';
-import MiniButton from '../../components/Common/MiniButton';
-import Modal from '../../components/Common/Modal';
-import SelectMulti from '../../components/Common/SelectMulti';
-import TextArea from '../../components/Common/TextArea';
-import DataTable, { createColumnHelper } from '../../components/DataTable';
-import HelpTerminologyControl from '../../components/Help/HelpTerminologyControl';
-import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, ChevronDoubleDownIcon, CrossIcon, HelpIcon } from '../../components/Icons';
-import { useConceptTheme } from '../../context/ThemeContext';
-import useConceptText from '../../hooks/useConceptText';
+import ConceptTooltip from '../components/Common/ConceptTooltip';
+import MiniButton from '../components/Common/MiniButton';
+import Modal from '../components/Common/Modal';
+import SelectMulti from '../components/Common/SelectMulti';
+import TextArea from '../components/Common/TextArea';
+import DataTable, { createColumnHelper } from '../components/DataTable';
+import HelpTerminologyControl from '../components/Help/HelpTerminologyControl';
+import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, ChevronDoubleDownIcon, CrossIcon, HelpIcon } from '../components/Icons';
+import { useConceptTheme } from '../context/ThemeContext';
+import useConceptText from '../hooks/useConceptText';
 import {
   getCompatibleGrams, Grammeme, ITextRequest, IWordForm,
   IWordFormPlain, matchWordForm, parseGrammemes
-} from '../../models/language';
-import { IConstituenta, TermForm } from '../../models/rsform';
-import { colorfgGrammeme } from '../../utils/color';
-import { labelGrammeme } from '../../utils/labels';
-import { compareGrammemeOptions,IGrammemeOption, SelectorGrammemesList, SelectorGrammems } from '../../utils/selectors';
+} from '../models/language';
+import { IConstituenta, TermForm } from '../models/rsform';
+import { colorfgGrammeme } from '../utils/color';
+import { labelGrammeme } from '../utils/labels';
+import { compareGrammemeOptions,IGrammemeOption, SelectorGrammemesList, SelectorGrammems } from '../utils/selectors';
 
 interface DlgEditWordFormsProps {
   hideWindow: () => void

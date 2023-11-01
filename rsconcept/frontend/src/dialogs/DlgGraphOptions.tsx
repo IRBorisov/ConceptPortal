@@ -1,10 +1,10 @@
 import { useLayoutEffect, useState } from 'react';
 
-import Checkbox from '../../components/Common/Checkbox';
-import Modal, { ModalProps } from '../../components/Common/Modal';
-import { CstType } from '../../models/rsform';
-import { labelCstType } from '../../utils/labels';
-import { GraphEditorParams } from './EditorTermGraph';
+import Checkbox from '../components/Common/Checkbox';
+import Modal, { ModalProps } from '../components/Common/Modal';
+import { CstType } from '../models/rsform';
+import { GraphEditorParams } from '../pages/RSFormPage/EditorTermGraph';
+import { labelCstType } from '../utils/labels';
 
 interface DlgGraphOptionsProps
 extends Pick<ModalProps, 'hideWindow'> {

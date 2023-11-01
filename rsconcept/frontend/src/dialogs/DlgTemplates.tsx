@@ -1,18 +1,18 @@
 import { useEffect, useLayoutEffect, useState } from 'react';
 
-import ConceptTooltip from '../../components/Common/ConceptTooltip';
-import Modal, { ModalProps } from '../../components/Common/Modal';
-import SelectSingle from '../../components/Common/SelectSingle';
-import SwitchButton from '../../components/Common/SwitchButton';
-import TextArea from '../../components/Common/TextArea';
-import TextInput from '../../components/Common/TextInput';
-import HelpRSTemplates from '../../components/Help/HelpRSTemplates';
-import { HelpIcon } from '../../components/Icons';
-import RSInput from '../../components/RSInput';
-import { CstType,ICstCreateData, IRSForm } from '../../models/rsform';
-import { labelCstType } from '../../utils/labels';
-import { createAliasFor, getCstTypePrefix } from '../../utils/misc';
-import { SelectorCstType } from '../../utils/selectors';
+import ConceptTooltip from '../components/Common/ConceptTooltip';
+import Modal, { ModalProps } from '../components/Common/Modal';
+import SelectSingle from '../components/Common/SelectSingle';
+import SwitchButton from '../components/Common/SwitchButton';
+import TextArea from '../components/Common/TextArea';
+import TextInput from '../components/Common/TextInput';
+import HelpRSTemplates from '../components/Help/HelpRSTemplates';
+import { HelpIcon } from '../components/Icons';
+import RSInput from '../components/RSInput';
+import { CstType,ICstCreateData, IRSForm } from '../models/rsform';
+import { labelCstType } from '../utils/labels';
+import { createAliasFor, getCstTypePrefix } from '../utils/misc';
+import { SelectorCstType } from '../utils/selectors';
 
 interface DlgTemplatesProps
 extends Pick<ModalProps, 'hideWindow'> {
