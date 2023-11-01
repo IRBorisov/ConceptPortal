@@ -1,7 +1,6 @@
-import { useLayoutEffect, useState } from 'react';
-
 import Checkbox from '../components/Common/Checkbox';
 import Modal, { ModalProps } from '../components/Common/Modal';
+import usePartialUpdate from '../hooks/usePartialUpdate';
 import { GraphEditorParams } from '../models/miscelanious';
 import { CstType } from '../models/rsform';
 import { labelCstType } from '../utils/labels';
@@ -12,59 +11,13 @@ extends Pick<ModalProps, 'hideWindow'> {
   onConfirm: (params: GraphEditorParams) => void
 }
 
-function DlgGraphOptions({ hideWindow, initial, onConfirm }:DlgGraphOptionsProps) {
-  const [ noHermits, setNoHermits ] = useState(true);
-  const [ noTransitive, setNoTransitive ] = useState(false);
-  const [ noTemplates, setNoTemplates ] = useState(true);
-  const [ noTerms, setNoTerms ] = useState(true);
-
-  const [ allowBase, setAllowBase ] = useState(true);
-  const [ allowStruct, setAllowStruct ] = useState(true);
-  const [ allowTerm, setAllowTerm ] = useState(true);
-  const [ allowAxiom, setAllowAxiom ] = useState(true);
-  const [ allowFunction, setAllowFunction ] = useState(true);
-  const [ allowPredicate, setAllowPredicate ] = useState(true);
-  const [ allowConstant, setAllowConstant ] = useState(true);
-  const [ allowTheorem, setAllowTheorem ] = useState(true);
-
-  function getParams() {
-    return {
-      noHermits: noHermits,
-      noTransitive: noTransitive,
-      noTemplates: noTemplates,
-      noTerms: noTerms,
-
-      allowBase: allowBase,
-      allowStruct: allowStruct,
-      allowTerm: allowTerm,
-      allowAxiom: allowAxiom,
-      allowFunction: allowFunction,
-      allowPredicate: allowPredicate,
-      allowConstant: allowConstant,
-      allowTheorem: allowTheorem
-    }
-  }
+function DlgGraphOptions({ hideWindow, initial, onConfirm } : DlgGraphOptionsProps) {
+  const [params, updateParams] = usePartialUpdate(initial);
 
   const handleSubmit = () => {
     hideWindow();
-    onConfirm(getParams());
+    onConfirm(params);
   };
-
-  useLayoutEffect(() => {
-    setNoHermits(initial.noHermits);
-    setNoTransitive(initial.noTransitive);
-    setNoTemplates(initial.noTemplates);
-    setNoTerms(initial.noTerms);
-
-    setAllowBase(initial.allowBase);
-    setAllowStruct(initial.allowStruct);
-    setAllowTerm(initial.allowTerm);
-    setAllowAxiom(initial.allowAxiom);
-    setAllowFunction(initial.allowFunction);
-    setAllowPredicate(initial.allowPredicate);
-    setAllowConstant(initial.allowConstant);
-    setAllowTheorem(initial.allowTheorem);
-  }, [initial]);
 
   return (
     <Modal
@@ -80,69 +33,69 @@ function DlgGraphOptions({ hideWindow, initial, onConfirm }:DlgGraphOptionsProps
           <Checkbox
             label='Скрыть текст'
             tooltip='Не отображать термины'
-            value={noTerms} 
-            setValue={ value => setNoTerms(value) }
+            value={params.noTerms} 
+            setValue={ value => updateParams({noTerms: value}) }
           />
           <Checkbox
             label='Скрыть несвязанные'
             tooltip='Неиспользуемые конституенты'
-            value={noHermits} 
-            setValue={ value => setNoHermits(value) }
+            value={params.noHermits} 
+            setValue={ value => updateParams({ noHermits: value}) }
           />
           <Checkbox
             label='Скрыть шаблоны'
             tooltip='Терм-функции и предикат-функции с параметризованными аргументами'
-            value={noTemplates} 
-            setValue={ value => setNoTemplates(value) }
+            value={params.noTemplates} 
+            setValue={ value => updateParams({ noTemplates: value}) }
           />
           <Checkbox
             label='Транзитивная редукция'
             tooltip='Удалить связи, образующие транзитивные пути в графе'
-            value={noTransitive} 
-            setValue={ value => setNoTransitive(value) }
+            value={params.noTransitive} 
+            setValue={ value => updateParams({ noTransitive: value}) }
           />
         </div>
         <div className='flex flex-col gap-1'>
           <h1>Типы конституент</h1>
           <Checkbox
             label={labelCstType(CstType.BASE)}
-            value={allowBase} 
-            setValue={ value => setAllowBase(value) }
+            value={params.allowBase} 
+            setValue={ value => updateParams({ allowBase: value}) }
           />
           <Checkbox
             label={labelCstType(CstType.STRUCTURED)}
-            value={allowStruct} 
-            setValue={ value => setAllowStruct(value) }
+            value={params.allowStruct} 
+            setValue={ value => updateParams({ allowStruct: value}) }
           />
           <Checkbox
             label={labelCstType(CstType.TERM)}
-            value={allowTerm} 
-            setValue={ value => setAllowTerm(value) }
+            value={params.allowTerm} 
+            setValue={ value => updateParams({ allowTerm: value}) }
           />
           <Checkbox
             label={labelCstType(CstType.AXIOM)}
-            value={allowAxiom} 
-            setValue={ value => setAllowAxiom(value) }
+            value={params.allowAxiom} 
+            setValue={ value => updateParams({ allowAxiom: value}) }
           />
           <Checkbox
             label={labelCstType(CstType.FUNCTION)}
-            value={allowFunction} 
-            setValue={ value => setAllowFunction(value) }
+            value={params.allowFunction} 
+            setValue={ value => updateParams({ allowFunction: value}) }
           />
           <Checkbox
             label={labelCstType(CstType.PREDICATE)}
-            value={allowPredicate} 
-            setValue={ value => setAllowPredicate(value) }
+            value={params.allowPredicate} 
+            setValue={ value => updateParams({ allowPredicate: value}) }
           />
           <Checkbox
             label={labelCstType(CstType.CONSTANT)}
-            value={allowConstant} 
-            setValue={ value => setAllowConstant(value) }
+            value={params.allowConstant} 
+            setValue={ value => updateParams({ allowConstant: value}) }
           />
           <Checkbox
             label={labelCstType(CstType.THEOREM)}
-            value={allowTheorem} 
-            setValue ={ value => setAllowTheorem(value) }
+            value={params.allowTheorem} 
+            setValue ={ value => updateParams({ allowTheorem: value}) }
           />
         </div>
       </div>

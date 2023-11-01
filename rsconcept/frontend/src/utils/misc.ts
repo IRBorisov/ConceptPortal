@@ -19,6 +19,14 @@ export function getCstTypePrefix(type: CstType) {
   }
 }
 
+export function validateCstAlias(alias: string, type: CstType, schema: IRSForm): boolean {
+  return (
+    alias.length >= 2 &&
+    alias[0] == getCstTypePrefix(type) &&
+    !schema.items.find(cst => cst.alias === alias)
+  );
+}
+
 export function getCstExpressionPrefix(cst: IConstituenta): string {
   return cst.alias + (cst.cst_type === CstType.STRUCTURED ? '::=' : ':==');
 }

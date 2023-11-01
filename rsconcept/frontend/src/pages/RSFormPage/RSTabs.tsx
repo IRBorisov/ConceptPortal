@@ -360,7 +360,7 @@ function RSTabs() {
     <DlgRenameCst
       hideWindow={() => setShowRenameCst(false)}
       onRename={handleRenameCst}
-      initial={renameInitialData}
+      initial={renameInitialData!}
     />}
     {showDeleteCst && 
     <DlgDeleteCst

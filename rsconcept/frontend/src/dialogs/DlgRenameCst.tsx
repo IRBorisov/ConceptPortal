@@ -4,60 +4,40 @@ import Modal, { ModalProps } from '../components/Common/Modal';
 import SelectSingle from '../components/Common/SelectSingle';
 import TextInput from '../components/Common/TextInput';
 import { useRSForm } from '../context/RSFormContext';
+import usePartialUpdate from '../hooks/usePartialUpdate';
 import { CstType, ICstRenameData } from '../models/rsform';
 import { labelCstType } from '../utils/labels';
-import { createAliasFor, getCstTypePrefix } from '../utils/misc';
+import { createAliasFor, validateCstAlias } from '../utils/misc';
 import { SelectorCstType } from '../utils/selectors';
 
 interface DlgRenameCstProps
 extends Pick<ModalProps, 'hideWindow'> {
-  initial?: ICstRenameData
+  initial: ICstRenameData
   onRename: (data: ICstRenameData) => void
 }
 
 function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
   const { schema } = useRSForm();
   const [validated, setValidated] = useState(false);
-  const [cstType, setCstType] = useState<CstType>(CstType.BASE);
-  const [cstID, setCstID] = useState(0)
-  const [alias, setAlias] = useState('');
-
-  function getData(): ICstRenameData {
-    return {
-      cst_type: cstType,
-      alias: alias,
-      id: cstID
-    }
-  }
-
-  const handleSubmit = () => onRename(getData());
+  const [cstData, updateData] = usePartialUpdate(initial);
+  
+  const handleSubmit = () => onRename(cstData);
 
   useLayoutEffect(
   () => {
-    if (schema && initial && cstType !== initial.cst_type) {
-      setAlias(createAliasFor(cstType, schema));
+    if (schema && initial && cstData.cst_type !== initial.cst_type) {
+      updateData({ alias: createAliasFor(cstData.cst_type, schema)});
     }
-  }, [initial, cstType, schema]);
+  }, [initial, cstData.cst_type, updateData, schema]);
 
   useLayoutEffect(
   () => {
-    if (initial) {
-      setCstType(initial.cst_type);
-      setAlias(initial.alias);
-      setCstID(initial.id);
-    }
-  }, [initial]);
-
-  useLayoutEffect(
-  () => {
-    if (!initial ||  !schema) {
-      setValidated(false);
-    } else if(alias === initial.alias || alias.length < 2 || alias[0] !== getCstTypePrefix(cstType)) {
-      setValidated(false);
-    } else {
-      setValidated(!schema.items.find(cst => cst.alias === alias))
-    }
-  }, [cstType, alias, initial, schema]);
+    setValidated(
+      !!schema &&
+      cstData.alias !== initial.alias &&
+      validateCstAlias(cstData.alias, cstData.cst_type, schema)
+    );
+  }, [cstData.cst_type, cstData.alias, initial, schema]);
 
   return (
     <Modal
@@ -73,15 +53,15 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
           className='min-w-[14rem] self-center z-modal-top'
           options={SelectorCstType}
           placeholder='Выберите тип'
-          value={cstType ? { value: cstType, label: labelCstType(cstType) } : null}
-          onChange={data => setCstType(data?.value ?? CstType.BASE)}
+          value={{ value: cstData.cst_type, label: labelCstType(cstData.cst_type) }}
+          onChange={data => updateData({cst_type: data?.value ?? CstType.BASE})}
         />
         <div>
         <TextInput id='alias' label='Имя'
           dense
           dimensions='w-[7rem]'
-          value={alias}
-          onChange={event => setAlias(event.target.value)}
+          value={cstData.alias}
+          onChange={event => updateData({alias: event.target.value})}
         />
         </div>
       </div>

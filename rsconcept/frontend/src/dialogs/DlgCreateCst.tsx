@@ -5,9 +5,10 @@ import SelectSingle from '../components/Common/SelectSingle';
 import TextArea from '../components/Common/TextArea';
 import TextInput from '../components/Common/TextInput';
 import RSInput from '../components/RSInput';
+import usePartialUpdate from '../hooks/usePartialUpdate';
 import { CstType,ICstCreateData, IRSForm } from '../models/rsform';
 import { labelCstType } from '../utils/labels';
-import { createAliasFor, getCstTypePrefix } from '../utils/misc';
+import { createAliasFor, validateCstAlias } from '../utils/misc';
 import { SelectorCstType } from '../utils/selectors';
 
 interface DlgCreateCstProps
@@ -19,53 +20,31 @@ extends Pick<ModalProps, 'hideWindow'> {
 
 function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstProps) {
   const [validated, setValidated] = useState(false);
-  const [selectedType, setSelectedType] = useState<CstType>(CstType.BASE);
-  const [alias, setAlias] = useState('');
-  
-  const [term, setTerm] = useState('');
-  const [textDefinition, setTextDefinition] = useState('');
-  const [expression, setExpression] = useState('');
-  const [convention, setConvention] = useState('');
 
-  function getData(): ICstCreateData {
-    return {
-      cst_type: selectedType,
-      insert_after: initial?.insert_after ?? null,
-      alias: alias,
-      convention: convention,
-      definition_formal: expression,
-      definition_raw: textDefinition,
-      term_raw: term,
+  const [cstData, updateCstData] = usePartialUpdate(
+    initial || {
+      cst_type: CstType.BASE,
+      insert_after: null,
+      alias: '',
+      convention: '',
+      definition_formal: '',
+      definition_raw: '',
+      term_raw: '',
       term_forms: []
-    };
-  }
-
-  const handleSubmit = () => onCreate(getData());
-
-  useLayoutEffect(() => {
-    if (initial) {
-      setSelectedType(initial.cst_type);
-      setTerm(initial.term_raw);
-      setTextDefinition(initial.definition_raw);
-      setExpression(initial.definition_formal);
-      setConvention(initial.convention);
-      setAlias(initial.alias);
     }
-  }, [initial]);
+  );
+
+  const handleSubmit = () => onCreate(cstData);
 
   useLayoutEffect(
   () => {
-    setAlias(createAliasFor(selectedType, schema));
-  }, [selectedType, schema]);
+    updateCstData({ alias: createAliasFor(cstData.cst_type, schema) });
+  }, [cstData.cst_type, updateCstData, schema]);
 
   useEffect(
   () => {
-    if(alias.length < 2 || alias[0] !== getCstTypePrefix(selectedType)) {
-      setValidated(false);
-    } else {
-      setValidated(!schema.items.find(cst => cst.alias === alias))
-    }
-  }, [alias, selectedType, schema]);
+    setValidated(validateCstAlias(cstData.alias, cstData.cst_type, schema));
+  }, [cstData.alias, cstData.cst_type, schema]);
 
   return (
     <Modal
@@ -81,43 +60,43 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
           className='my-2 min-w-[15rem] self-center'
           options={SelectorCstType}
           placeholder='Выберите тип'
-          value={selectedType ? { value: selectedType, label: labelCstType(selectedType) } : null}
-          onChange={data => setSelectedType(data?.value ?? CstType.BASE)}
+          value={{ value: cstData.cst_type, label: labelCstType(cstData.cst_type) }}
+          onChange={data => updateCstData({ cst_type: data?.value ?? CstType.BASE})}
         />
         <TextInput id='alias' label='Имя'
           dense
           dimensions='w-[7rem]'
-          value={alias}
-          onChange={event => setAlias(event.target.value)}
+          value={cstData.alias}
+          onChange={event => updateCstData({ alias: event.target.value})}
         />
       </div>
       <TextArea id='term' label='Термин'
         placeholder='Схемный или предметный термин, обозначающий данное понятие или утверждение'
         rows={2}
-        value={term}
+        value={cstData.term_raw}
         spellCheck
-        onChange={event => setTerm(event.target.value)}
+        onChange={event => updateCstData({ term_raw: event.target.value })}
       />
       <RSInput id='expression' label='Формальное выражение'
         placeholder='Родоструктурное выражение, задающее формальное определение'
         editable
         height='4.8rem'
-        value={expression}
-        onChange={value => setExpression(value)}
+        value={cstData.definition_formal}
+        onChange={value => updateCstData({definition_formal: value})}
       />
       <TextArea id='definition' label='Текстовое определение'
         placeholder='Лингвистическая интерпретация формального выражения'
         rows={2}
-        value={textDefinition}
+        value={cstData.definition_raw}
         spellCheck
-        onChange={event => setTextDefinition(event.target.value)}
+        onChange={event => updateCstData({ definition_raw: event.target.value })}
       />
       <TextArea id='convention' label='Конвенция / Комментарий'
         placeholder='Договоренность об интерпретации неопределяемого понятия&#x000D;&#x000A;Комментарий к производному понятию'
         rows={2}
-        value={convention}
+        value={cstData.convention}
         spellCheck
-        onChange={event => setConvention(event.target.value)}
+        onChange={event => updateCstData({ convention: event.target.value })}
       />
     </div>
     </Modal>
