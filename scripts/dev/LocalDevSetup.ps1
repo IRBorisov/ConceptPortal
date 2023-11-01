@@ -38,7 +38,7 @@ function CreateEnv() {
 
 function InstallPips() {
     & $python -m pip install --upgrade pip
-    & $python -m pip install -r requirements_dev.txt
+    & $python -m pip install -r requirements_dev.txt --no-warn-script-location
 }
 
 function InstallImports() {

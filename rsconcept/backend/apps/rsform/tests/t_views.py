@@ -355,6 +355,12 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(response.data['typification'], 'LOGIC')
         self.assertEqual(response.data['valueClass'], 'value')
 
+        response = self.client.post(
+            f'/api/rsforms/{self.unowned.item.id}/check',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, 200)
+
     def test_resolve(self):
         schema = RSForm.create(title='Test')
         x1 = schema.insert_at(1, 'X1', CstType.BASE)

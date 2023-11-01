@@ -14,3 +14,6 @@ mypy
 pylint
 coverage
 djangorestframework-stubs[compatible-mypy]
+
+psycopg2-binary
+gunicorn
