@@ -61,27 +61,6 @@ function DlgTemplates({ hideWindow, schema, onCreate }: DlgTemplatesProps) {
     }
   }, [alias, selectedType, schema]);
 
-{/* <SwitchButton 
-      value={type}
-      isSelected={isSelected}
-      onSelect={onSelect}
-      dimensions='min-w-[12rem] h-fit'
-      label={labelReferenceType(type)}
-    /> */}
-  // <div className='flex items-center self-center flex-start'>
-  //     <ReferenceTypeButton 
-  //       type={ReferenceType.ENTITY}
-  //       onSelect={setType}
-  //       isSelected={type === ReferenceType.ENTITY}
-  //     />
-  //     <ReferenceTypeButton 
-  //       type={ReferenceType.SYNTACTIC}
-  //       onSelect={setType}
-  //       isSelected={type === ReferenceType.SYNTACTIC}
-  //     />
-      
-  //   </div>
-
   return (
   <Modal
     title='Создание конституенты из шаблона'

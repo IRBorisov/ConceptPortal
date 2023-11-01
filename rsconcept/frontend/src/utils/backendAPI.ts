@@ -131,6 +131,14 @@ export function getLibrary(request: FrontPull<ILibraryItem[]>) {
   });
 }
 
+export function getTemplates(request: FrontPull<ILibraryItem[]>) {
+  AxiosGet({
+    title: 'Available LibraryItems list',
+    endpoint: '/api/library/templates',
+    request: request
+  });
+}
+
 export function postNewRSForm(request: FrontExchange<IRSFormCreateData, ILibraryItem>) {
   AxiosPost({
     title: 'New RSForm',

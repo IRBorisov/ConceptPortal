@@ -59,7 +59,7 @@ function RSTabs() {
     error, schema, loading, claim, download, isTracking,
     cstCreate, cstDelete, cstRename, subscribe, unsubscribe, cstUpdate
   } = useRSForm();
-  const { destroySchema } = useLibrary();
+  const { destroyItem } = useLibrary();
   const { setNoFooter, noNavigation } = useConceptTheme();
 
   const { isModified, setIsModified } = useModificationPrompt();
@@ -241,11 +241,11 @@ function RSTabs() {
     if (!schema || !window.confirm('Вы уверены, что хотите удалить данную схему?')) {
       return;
     }
-    destroySchema(schema.id, () => {
+    destroyItem(schema.id, () => {
       toast.success('Схема удалена');
       navigateTo('/library');
     });
-  }, [schema, destroySchema, navigateTo]);
+  }, [schema, destroyItem, navigateTo]);
 
   const onClaimSchema = useCallback(
   () => {

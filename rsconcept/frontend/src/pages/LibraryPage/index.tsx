@@ -28,7 +28,7 @@ function LibraryPage() {
 
   useLayoutEffect(
   () => {
-    setItems(library.filter(filter));
+    setItems(library.applyFilter(filter));
   }, [library, filter, filter.query]);
 
   const resetQuery = useCallback(

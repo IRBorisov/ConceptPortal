@@ -22,7 +22,7 @@ function DlgCloneRSForm({ hideWindow }: DlgCloneRSFormProps) {
   const [common, setCommon] = useState(false);
   const [canonical, setCanonical] = useState(false);
 
-  const { cloneSchema } = useLibrary();
+  const { cloneItem } = useLibrary();
   const { schema } = useRSForm();
 
   useEffect(() => {
@@ -47,7 +47,7 @@ function DlgCloneRSForm({ hideWindow }: DlgCloneRSFormProps) {
       is_common: common,
       is_canonical: canonical
     };
-    cloneSchema(schema.id, data, newSchema => {
+    cloneItem(schema.id, data, newSchema => {
       toast.success(`Схема создана: ${newSchema.alias}`);
       navigateTo(`/rsforms/${newSchema.id}`);
     });

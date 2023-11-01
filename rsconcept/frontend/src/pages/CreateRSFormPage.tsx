@@ -22,7 +22,7 @@ import { EXTEOR_TRS_FILE } from '../utils/constants';
 function CreateRSFormPage() {
   const location = useLocation();
   const { navigateTo, navigateHistory } = useConceptNavigation();
-  const { createSchema, error, setError, processing } = useLibrary();
+  const { createItem, error, setError, processing } = useLibrary();
 
   const [title, setTitle] = useState('');
   const [alias, setAlias] = useState('');
@@ -60,7 +60,7 @@ function CreateRSFormPage() {
       file: file,
       fileName: file?.name
     };
-    createSchema(data, (newSchema) => {
+    createItem(data, (newSchema) => {
       toast.success('Схема успешно создана');
       navigateTo(`/rsforms/${newSchema.id}`);
     });
