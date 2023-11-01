@@ -16,7 +16,7 @@
     "@tanstack/react-table": "^8.10.7",
     "@uiw/codemirror-themes": "^4.21.20",
     "@uiw/react-codemirror": "^4.21.20",
-    "axios": "^1.6.0",
+    "axios": "^1.5.1",
     "js-file-download": "^0.4.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
