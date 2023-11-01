@@ -2,8 +2,8 @@ import { useLayoutEffect, useState } from 'react';
 
 import Checkbox from '../components/Common/Checkbox';
 import Modal, { ModalProps } from '../components/Common/Modal';
+import { GraphEditorParams } from '../models/miscelanious';
 import { CstType } from '../models/rsform';
-import { GraphEditorParams } from '../pages/RSFormPage/EditorTermGraph';
 import { labelCstType } from '../utils/labels';
 
 interface DlgGraphOptionsProps

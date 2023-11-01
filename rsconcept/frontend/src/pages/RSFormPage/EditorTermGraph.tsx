@@ -6,6 +6,7 @@ import { GraphCanvas, GraphCanvasRef, GraphEdge,
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import MiniButton from '../../components/Common/MiniButton';
 import SelectSingle from '../../components/Common/SelectSingle';
+import ConstituentaTooltip from '../../components/Help/ConstituentaTooltip';
 import HelpTermGraph from '../../components/Help/HelpTermGraph';
 import InfoConstituenta from '../../components/Help/InfoConstituenta';
 import { ArrowsFocusIcon, DumpBinIcon, FilterIcon, HelpIcon, LetterAIcon, LetterALinesIcon, PlanetIcon, SmallPlusIcon } from '../../components/Icons';
@@ -13,6 +14,7 @@ import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import DlgGraphOptions from '../../dialogs/DlgGraphOptions';
 import useLocalStorage from '../../hooks/useLocalStorage';
+import { GraphEditorParams } from '../../models/miscelanious';
 import { CstType, IConstituenta, ICstCreateData } from '../../models/rsform';
 import { graphDarkT, graphLightT, IColorTheme } from '../../utils/color';
 import { colorbgCstClass } from '../../utils/color';
@@ -23,7 +25,6 @@ import { mapLabelColoring } from '../../utils/labels';
 import { mapLableLayout } from '../../utils/labels';
 import { SelectorGraphLayout } from '../../utils/selectors';
 import { SelectorGraphColoring } from '../../utils/selectors';
-import ConstituentaTooltip from './elements/ConstituentaTooltip';
 
 export type ColoringScheme = 'none' | 'status' | 'type';
 const TREE_SIZE_MILESTONE = 50;
@@ -36,22 +37,6 @@ function getCstNodeColor(cst: IConstituenta, coloringScheme: ColoringScheme, col
     return colorbgCstStatus(cst.status, colors);
   }
   return '';
-}
-
-export interface GraphEditorParams {
-  noHermits: boolean
-  noTransitive: boolean
-  noTemplates: boolean
-  noTerms: boolean
-
-  allowBase: boolean
-  allowStruct: boolean
-  allowTerm: boolean
-  allowAxiom: boolean
-  allowFunction: boolean
-  allowPredicate: boolean
-  allowConstant: boolean
-  allowTheorem: boolean
 }
 
 interface EditorTermGraphProps {

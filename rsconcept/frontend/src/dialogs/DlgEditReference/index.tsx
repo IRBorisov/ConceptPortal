@@ -1,28 +1,28 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
-import ConceptTooltip from '../components/Common/ConceptTooltip';
-import Label from '../components/Common/Label';
-import Modal from '../components/Common/Modal';
-import SelectMulti from '../components/Common/SelectMulti';
-import TextInput from '../components/Common/TextInput';
-import DataTable, { IConditionalStyle } from '../components/DataTable';
-import HelpTerminologyControl from '../components/Help/HelpTerminologyControl';
-import { HelpIcon, MagnifyingGlassIcon } from '../components/Icons';
-import ReferenceTypeButton from '../components/RefsInput/ReferenceTypeButton';
-import WordformButton from '../components/RefsInput/WordformButton';
-import { useConceptTheme } from '../context/ThemeContext';
+import ConceptTooltip from '../../components/Common/ConceptTooltip';
+import Label from '../../components/Common/Label';
+import Modal from '../../components/Common/Modal';
+import SelectMulti from '../../components/Common/SelectMulti';
+import TextInput from '../../components/Common/TextInput';
+import DataTable, { IConditionalStyle } from '../../components/DataTable';
+import ConstituentaTooltip from '../../components/Help/ConstituentaTooltip';
+import HelpTerminologyControl from '../../components/Help/HelpTerminologyControl';
+import { HelpIcon, MagnifyingGlassIcon } from '../../components/Icons';
+import { useConceptTheme } from '../../context/ThemeContext';
 import {
   getCompatibleGrams, Grammeme,
   parseEntityReference, parseGrammemes, 
   parseSyntacticReference, ReferenceType
-} from '../models/language';
-import { CstMatchMode } from '../models/miscelanious';
-import { IConstituenta, matchConstituenta } from '../models/rsform';
-import ConstituentaTooltip from '../pages/RSFormPage/elements/ConstituentaTooltip';
-import { colorfgCstStatus } from '../utils/color';
-import { prefixes } from '../utils/constants';
-import { compareGrammemeOptions, IGrammemeOption, PremadeWordForms, SelectorGrammems } from '../utils/selectors';
+} from '../../models/language';
+import { CstMatchMode } from '../../models/miscelanious';
+import { IConstituenta, matchConstituenta } from '../../models/rsform';
+import { colorfgCstStatus } from '../../utils/color';
+import { prefixes } from '../../utils/constants';
+import { compareGrammemeOptions, IGrammemeOption, PremadeWordForms, SelectorGrammems } from '../../utils/selectors';
+import ReferenceTypeButton from './ReferenceTypeButton';
+import WordformButton from './WordformButton';
 
 export interface IReferenceInputState {
   type: ReferenceType

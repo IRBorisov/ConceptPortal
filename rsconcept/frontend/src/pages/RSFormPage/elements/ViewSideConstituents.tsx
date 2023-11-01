@@ -22,7 +22,7 @@ import {
   describeCstSource, labelCstMathchMode, 
   labelCstSource
 } from '../../../utils/labels';
-import ConstituentaTooltip from './ConstituentaTooltip';
+import ConstituentaTooltip from '../../../components/Help/ConstituentaTooltip';
 
 // Height that should be left to accomodate navigation panel + bottom margin
 const LOCAL_NAVIGATION_H = '2.1rem';

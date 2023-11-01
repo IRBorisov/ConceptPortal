@@ -1,6 +1,6 @@
+import SwitchButton from '../../components/Common/SwitchButton';
 import { ReferenceType } from '../../models/language';
 import { labelReferenceType } from '../../utils/labels';
-import SwitchButton from '../Common/SwitchButton';
 
 interface ReferenceTypeButtonProps {
   type: ReferenceType

@@ -2,7 +2,9 @@
 
 import { IConstituenta, IRSForm } from './rsform'
 
-// Dependency mode for schema analysis
+/**
+ * Represents graph dependency mode.
+*/
 export enum DependencyMode {
   ALL = 0,
   EXPRESSION,
@@ -12,7 +14,9 @@ export enum DependencyMode {
   EXPAND_INPUTS
 }
 
-// Help manual topic compare mode
+/**
+ * Represents manuals topic.
+*/
 export enum HelpTopic {
   MAIN = 'main',
   LIBRARY = 'library',
@@ -27,7 +31,9 @@ export enum HelpTopic {
   API = 'api'
 }
 
-// Constituent compare mode
+/**
+ * Represents {@link IConstituenta} matching mode.
+*/
 export enum CstMatchMode {
   ALL = 1,
   EXPR,
@@ -36,6 +42,9 @@ export enum CstMatchMode {
   NAME
 }
 
+/**
+ * Represents Library filter parameters.
+*/
 export interface ILibraryFilter {
   query?: string
   is_personal?: boolean
@@ -45,7 +54,9 @@ export interface ILibraryFilter {
   is_subscribed?: boolean
 }
 
-// Library premade filters
+/**
+ * Represents filtering strategy for Library.
+*/
 export enum LibraryFilterStrategy {
   MANUAL = 'manual',
   PERSONAL = 'personal',
@@ -53,6 +64,25 @@ export enum LibraryFilterStrategy {
   SUBSCRIBE = 'subscribe',
   CANONICAL = 'canonical',
   OWNED = 'owned'
+}
+
+/**
+ * Represents parameters for GraphEditor.
+*/
+export interface GraphEditorParams {
+  noHermits: boolean
+  noTransitive: boolean
+  noTemplates: boolean
+  noTerms: boolean
+
+  allowBase: boolean
+  allowStruct: boolean
+  allowTerm: boolean
+  allowAxiom: boolean
+  allowFunction: boolean
+  allowPredicate: boolean
+  allowConstant: boolean
+  allowTheorem: boolean
 }
 
 // ================== API ====================
