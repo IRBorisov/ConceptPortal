@@ -77,7 +77,7 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
         spellCheck
         onChange={event => updateCstData({ term_raw: event.target.value })}
       />
-      <RSInput id='expression' label='Формальное выражение'
+      <RSInput id='expression' label='Формальное определение'
         placeholder='Родоструктурное выражение, задающее формальное определение'
         editable
         height='4.8rem'

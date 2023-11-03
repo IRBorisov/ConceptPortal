@@ -229,7 +229,7 @@ function EditorConstituenta({
           colorClass='clr-app'
           disabled
         />
-        <EditorRSExpression id='expression' label='Формальное выражение'
+        <EditorRSExpression id='expression' label='Формальное определение'
           activeCst={activeCst}
           placeholder='Родоструктурное выражение, задающее формальное определение'
           value={expression}

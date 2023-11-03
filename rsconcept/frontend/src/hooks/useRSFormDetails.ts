@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 
 import { type ErrorInfo } from '../components/BackendError';
-import { IRSForm, IRSFormData,loadRSFormData } from '../models/rsform'
+import { IRSForm, IRSFormData, loadRSFormData } from '../models/rsform'
 import { getRSFormDetails } from '../utils/backendAPI';
 
 export function useRSFormDetails({ target }: { target?: string }) {
@@ -19,24 +19,24 @@ export function useRSFormDetails({ target }: { target?: string }) {
   }
 
   const reload = useCallback(
-    (setCustomLoading?: typeof setLoading, callback?: () => void) => {
-      setError(undefined);
-      if (!target) {
-        return;
+  (setCustomLoading?: typeof setLoading, callback?: () => void) => {
+    setError(undefined);
+    if (!target) {
+      return;
+    }
+    getRSFormDetails(target, {
+      showError: true,
+      setLoading: setCustomLoading ?? setLoading,
+      onError: error => {
+        setInnerSchema(undefined);
+        setError(error);
+      },
+      onSuccess: schema => {
+        setSchema(schema);
+        if (callback) callback();
       }
-      getRSFormDetails(target, {
-        showError: true,
-        setLoading: setCustomLoading ?? setLoading,
-        onError: error => {
-          setInnerSchema(undefined);
-          setError(error);
-        },
-        onSuccess: schema => {
-          setSchema(schema);
-          if (callback) callback();
-        }
-      });
-    }, [target]);
+    });
+  }, [target]);
 
   useEffect(() => {
     reload();

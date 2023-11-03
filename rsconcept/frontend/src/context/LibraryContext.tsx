@@ -4,8 +4,8 @@ import { ErrorInfo } from '../components/BackendError';
 import { matchLibraryItem } from '../models/library';
 import { ILibraryItem } from '../models/library';
 import { ILibraryFilter } from '../models/miscelanious';
-import { IRSFormCreateData, IRSFormData } from '../models/rsform';
-import { DataCallback, deleteLibraryItem, getLibrary, getTemplates, postCloneLibraryItem, postNewRSForm } from '../utils/backendAPI';
+import { IRSForm, IRSFormCreateData, IRSFormData, loadRSFormData } from '../models/rsform';
+import { DataCallback, deleteLibraryItem, getLibrary, getRSFormDetails, getTemplates, postCloneLibraryItem, postNewRSForm } from '../utils/backendAPI';
 import { useAuth } from './AuthContext';
 
 interface ILibraryContext {
@@ -15,8 +15,9 @@ interface ILibraryContext {
   processing: boolean
   error: ErrorInfo
   setError: (error: ErrorInfo) => void
-
+  
   applyFilter: (params: ILibraryFilter) => ILibraryItem[]
+  retrieveTemplate: (templateID: number, callback: (schema: IRSForm) => void) => void
   createItem: (data: IRSFormCreateData, callback?: DataCallback<ILibraryItem>) => void
   cloneItem: (target: number, data: IRSFormCreateData, callback: DataCallback<IRSFormData>) => void
   destroyItem: (target: number, callback?: () => void) => void
@@ -38,12 +39,14 @@ interface LibraryStateProps {
 }
 
 export const LibraryState = ({ children }: LibraryStateProps) => {
-  const [ items, setItems ] = useState<ILibraryItem[]>([])
-  const [ templates, setTemplates ] = useState<ILibraryItem[]>([])
+  const [ items, setItems ] = useState<ILibraryItem[]>([]);
+  const [ templates, setTemplates ] = useState<ILibraryItem[]>([]);
   const [ loading, setLoading ] = useState(false);
   const [ processing, setProcessing ] = useState(false);
   const [ error, setError ] = useState<ErrorInfo>(undefined);
   const { user } = useAuth();
+
+  const [ cachedTemplates, setCachedTemplates ] = useState<IRSForm[]>([]);
 
   const applyFilter = useCallback(
   (params: ILibraryFilter) => {
@@ -68,6 +71,26 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
     }
     return result;
   }, [items, user]);
+
+  const retrieveTemplate = useCallback(
+  (templateID: number, callback: (schema: IRSForm) => void) => {
+    const cached = cachedTemplates.find(schema => schema.id == templateID);
+    if (cached) {
+      callback(cached);
+      return;
+    }
+    setError(undefined);
+    getRSFormDetails(String(templateID), {
+      showError: true,
+      setLoading: setLoading,
+      onError: error => setError(error),
+      onSuccess: data => {
+        const schema = loadRSFormData(data);
+        setCachedTemplates(prev => ([...prev, schema]));
+        callback(schema);
+      }
+    });
+  }, [cachedTemplates]);
 
   const reload = useCallback(
   (callback?: () => void) => {
@@ -150,7 +173,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   return (
     <LibraryContext.Provider value={{ 
       items, templates, loading, processing, error, setError, 
-      applyFilter, createItem, cloneItem, destroyItem
+      applyFilter, createItem, cloneItem, destroyItem, retrieveTemplate
     }}>
       { children }
     </LibraryContext.Provider>

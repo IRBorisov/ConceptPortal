@@ -16,6 +16,9 @@ export enum CstType {
   THEOREM = 'theorem'
 }
 
+// CstType constant for category dividers in TemplateSchemas. TODO: create separate sctructure for templates
+export const CATEGORY_CST_TYPE = CstType.THEOREM;
+
 export enum CstClass {
   BASIC = 'basic',
   DERIVED = 'derived',
@@ -305,5 +308,20 @@ export function createMockConstituenta(schema: number, id: number, alias: string
       args: []
     }
   };
+}
+
+export function applyFilterCategory(target: IConstituenta, schema: IRSFormData): IConstituenta[] {
+  const nextCategory = schema.items.find(
+    cst => (
+      cst.order > target.order &&
+      cst.cst_type === CATEGORY_CST_TYPE
+    )
+  );
+  return schema.items.filter(
+    cst => (
+      cst.order > target.order &&
+      (!nextCategory || cst.order <= nextCategory.order)
+    )
+  );
 }
 

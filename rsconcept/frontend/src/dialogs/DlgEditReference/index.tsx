@@ -179,7 +179,6 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
     </div>);
   }, [handleSelectGrams, selectedGrams]);
 
-
   const columnsConstituenta = useMemo(
   () => [
     constituentaHelper.accessor('alias', {

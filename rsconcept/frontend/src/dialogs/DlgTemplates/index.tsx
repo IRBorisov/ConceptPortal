@@ -2,18 +2,14 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import Modal, { ModalProps } from '../../components/Common/Modal';
-import SelectSingle from '../../components/Common/SelectSingle';
 import SwitchButton from '../../components/Common/SwitchButton';
-import TextArea from '../../components/Common/TextArea';
-import TextInput from '../../components/Common/TextInput';
 import HelpRSTemplates from '../../components/Help/HelpRSTemplates';
 import { HelpIcon } from '../../components/Icons';
-import RSInput from '../../components/RSInput';
 import usePartialUpdate from '../../hooks/usePartialUpdate';
-import { CstType,ICstCreateData, IRSForm } from '../../models/rsform';
-import { labelCstType } from '../../utils/labels';
+import { CstType, ICstCreateData, IRSForm } from '../../models/rsform';
 import { createAliasFor, validateCstAlias } from '../../utils/misc';
-import { SelectorCstType } from '../../utils/selectors';
+import ConstituentaTab from './ConstituentaTab';
+import TemplateTab, { ITemplateState } from './TemplateTab';
 
 interface DlgTemplatesProps
 extends Pick<ModalProps, 'hideWindow'> {
@@ -23,7 +19,7 @@ extends Pick<ModalProps, 'hideWindow'> {
 
 function DlgTemplates({ hideWindow, schema, onCreate }: DlgTemplatesProps) {
   const [validated, setValidated] = useState(false);
-  const [cstData, updateCstData] = usePartialUpdate({
+  const [cstData, updateCstData] = usePartialUpdate<ICstCreateData>({
     cst_type: CstType.TERM,
     insert_after: null,
     alias: '',
@@ -33,7 +29,10 @@ function DlgTemplates({ hideWindow, schema, onCreate }: DlgTemplatesProps) {
     term_raw: '',
     term_forms: []
   });
-
+  const [ templateData, updateTemplateData ] = usePartialUpdate<ITemplateState>({
+    filterText: ''
+  });
+  
   const [ showAttributes, setShowAttributes ] = useState(false);
 
   const handleSubmit = () => onCreate(cstData);
@@ -47,6 +46,24 @@ function DlgTemplates({ hideWindow, schema, onCreate }: DlgTemplatesProps) {
   () => {
     setValidated(validateCstAlias(cstData.alias, cstData.cst_type, schema));
   }, [cstData.alias, cstData.cst_type, schema]);
+
+  useLayoutEffect(
+  () => {
+    if (!templateData.prototype) {
+      updateCstData({
+        definition_raw: '',
+        definition_formal: '',
+        term_raw: ''
+      });
+    } else {
+    updateCstData({
+      cst_type: templateData.prototype.cst_type,
+      definition_raw: templateData.prototype.definition_raw,
+      definition_formal: templateData.prototype.definition_formal,
+      term_raw:  templateData.prototype.term_raw
+    });
+    }
+  }, [templateData.prototype, updateCstData]);
 
   return (
   <Modal
@@ -87,56 +104,16 @@ function DlgTemplates({ hideWindow, schema, onCreate }: DlgTemplatesProps) {
     </div>
 
     { !showAttributes && 
-    <div>
-      Выбор шаблона и параметров
-    </div>}
+    <TemplateTab
+      state={templateData}
+      partialUpdate={updateTemplateData}
+    />}
     
     { showAttributes && 
-    <div>
-      <div className='flex justify-center w-full gap-6'>
-        <SelectSingle
-          className='my-2 min-w-[15rem] self-center'
-          options={SelectorCstType}
-          placeholder='Выберите тип'
-          value={{ value: cstData.cst_type, label: labelCstType(cstData.cst_type) }}
-          onChange={data => updateCstData({ cst_type: data?.value ?? CstType.TERM})}
-        />
-        <TextInput id='alias' label='Имя'
-          dense
-          dimensions='w-[7rem]'
-          value={cstData.alias}
-          onChange={event => updateCstData({ alias: event.target.value})}
-        />
-      </div>
-      <TextArea id='term' label='Термин'
-        placeholder='Схемный или предметный термин, обозначающий данное понятие или утверждение'
-        rows={2}
-        value={cstData.term_raw}
-        spellCheck
-        onChange={event => updateCstData({ term_raw: event.target.value })}
-      />
-      <RSInput id='expression' label='Формальное выражение'
-        placeholder='Родоструктурное выражение, задающее формальное определение'
-        editable
-        height='4.8rem'
-        value={cstData.definition_formal}
-        onChange={value => updateCstData({definition_formal: value})}
-      />
-      <TextArea id='definition' label='Текстовое определение'
-        placeholder='Лингвистическая интерпретация формального выражения'
-        rows={2}
-        value={cstData.definition_raw}
-        spellCheck
-        onChange={event => updateCstData({ definition_raw: event.target.value })}
-      />
-      <TextArea id='convention' label='Конвенция / Комментарий'
-        placeholder='Договоренность об интерпретации неопределяемого понятия&#x000D;&#x000A;Комментарий к производному понятию'
-        rows={2}
-        value={cstData.convention}
-        spellCheck
-        onChange={event => updateCstData({ convention: event.target.value })}
-      />
-    </div>}
+    <ConstituentaTab 
+      state={cstData}
+      partialUpdate={updateCstData}
+    />}
   </div>
   </Modal>);
 }

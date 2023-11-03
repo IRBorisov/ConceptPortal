@@ -118,7 +118,7 @@ function EditorRSExpression({
   return (
   <div className='flex flex-col items-start w-full'>
     <div className='relative w-full'>
-      <div className='absolute top-[-0.2rem] left-[10.5rem]'>
+      <div className='absolute top-[-0.2rem] left-[11rem]'>
       <MiniButton
           tooltip='Дерево разбора выражения'
           noHover
@@ -141,7 +141,7 @@ function EditorRSExpression({
     <div className='w-full max-h-[5rem] min-h-[5rem] flex'>
       <div className='flex flex-col'>
         <Button
-          tooltip='Проверить формальное выражение'
+          tooltip='Проверить формальное определение'
           text='Проверить'
           dimensions='w-fit h-[3rem] z-pop'
           colorClass='clr-btn-default'
