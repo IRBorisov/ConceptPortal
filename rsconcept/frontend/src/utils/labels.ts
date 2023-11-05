@@ -152,8 +152,8 @@ export function labelCstSource(mode: DependencyMode): string {
     case DependencyMode.EXPRESSION:     return 'выражение';
     case DependencyMode.OUTPUTS:        return 'потребители';
     case DependencyMode.INPUTS:         return 'поставщики';
-    case DependencyMode.EXPAND_INPUTS:  return 'влияющие';
     case DependencyMode.EXPAND_OUTPUTS: return 'зависимые';
+    case DependencyMode.EXPAND_INPUTS:  return 'влияющие';
   }
 }
 
@@ -161,10 +161,10 @@ export function describeCstSource(mode: DependencyMode): string {
   switch (mode) {
     case DependencyMode.ALL:            return 'все конституенты';
     case DependencyMode.EXPRESSION:     return 'идентификаторы из выражения';
-    case DependencyMode.OUTPUTS:        return 'конституенты, ссылающиеся на данную';
-    case DependencyMode.INPUTS:         return 'конституенты, на которые ссылается данная';
-    case DependencyMode.EXPAND_INPUTS:  return 'конституенты, зависящие по цепочке';
-    case DependencyMode.EXPAND_OUTPUTS: return 'конституенты, влияющие на данную по цепочке';
+    case DependencyMode.OUTPUTS:        return 'прямые ссылки на текущую';
+    case DependencyMode.INPUTS:         return 'пярмые ссылки из текущей';
+    case DependencyMode.EXPAND_OUTPUTS: return 'опосредованные ссылки на текущую';
+    case DependencyMode.EXPAND_INPUTS:  return 'опосредованные ссылки из текущей';
   }
 }
 

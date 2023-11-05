@@ -66,12 +66,14 @@ function EditorPassword() {
           <TextInput id='old_password'
             type='password' 
             label='Старый пароль'
+            allowEnter
             value={oldPassword}
             onChange={event => setOldPassword(event.target.value)}
           />
           <TextInput id='new_password' type='password' 
             colors={passwordColor}
             label='Новый пароль'
+            allowEnter
             value={newPassword}
             onChange={event => {
               setNewPassword(event.target.value); 
@@ -80,6 +82,7 @@ function EditorPassword() {
           <TextInput id='new_password_repeat' type='password' 
             colors={passwordColor}
             label='Повторите новый'
+            allowEnter
             value={newPasswordRepeat}
             onChange={event => {
               setNewPasswordRepeat(event.target.value); 

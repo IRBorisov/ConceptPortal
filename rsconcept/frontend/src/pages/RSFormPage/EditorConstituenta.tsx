@@ -6,7 +6,7 @@ import MiniButton from '../../components/Common/MiniButton';
 import SubmitButton from '../../components/Common/SubmitButton';
 import TextArea from '../../components/Common/TextArea';
 import HelpConstituenta from '../../components/Help/HelpConstituenta';
-import { CloneIcon, DumpBinIcon, EditIcon, HelpIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
+import { ArrowsRotateIcon, CloneIcon, DumpBinIcon, EditIcon, HelpIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import RefsInput from '../../components/RefsInput';
 import { useRSForm } from '../../context/RSFormContext';
 import useWindowSize from '../../hooks/useWindowSize';
@@ -47,6 +47,7 @@ function EditorConstituenta({
   const [expression, setExpression] = useState('');
   const [convention, setConvention] = useState('');
   const [typification, setTypification] = useState('N/A');
+  const [toggleReset, setToggleReset] = useState(false);
 
   const isEnabled = useMemo(() => activeCst && isEditable, [activeCst, isEditable]);
 
@@ -77,7 +78,7 @@ function EditorConstituenta({
       setExpression(activeCst.definition_formal || '');
       setTypification(activeCst ? labelCstTypification(activeCst) : 'N/A');
     }
-  }, [activeCst, onOpenEdit, schema]);
+  }, [activeCst, onOpenEdit, schema, toggleReset]);
 
   function handleSubmit(event?: React.FormEvent<HTMLFormElement>) {
     if (event) {
@@ -150,8 +151,17 @@ function EditorConstituenta({
     onRenameCst(data);
   }
 
+  function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.ctrlKey && event.code === 'KeyS') {
+      if (isModified) {
+        handleSubmit();
+      }
+      event.preventDefault();
+    }
+  }
+
   return (
-  <div className='flex max-w-[1500px] gap-2'>
+  <div className='flex max-w-[1500px] gap-2' tabIndex={0} onKeyDown={handleInput}>
     <form onSubmit={handleSubmit} className='min-w-[50rem] max-w-[50rem] px-4 py-1'>
       <div className='relative w-full'>
       <div className='absolute top-0 right-0 flex items-start justify-between w-full'>
@@ -183,6 +193,12 @@ function EditorConstituenta({
             disabled={!isModified || !isEnabled}
             icon={<SaveIcon size={5} color={isModified && isEnabled ? 'text-primary' : ''}/>}
             onClick={() => handleSubmit()}
+          />
+          <MiniButton
+            tooltip='Сборсить несохраненные изменения'
+            disabled={!isEnabled || !isModified}
+            onClick={() => setToggleReset(prev => !prev)}
+            icon={<ArrowsRotateIcon size={5} color={isEnabled && isModified ? 'text-primary' : ''} />}
           />
           <MiniButton
             tooltip='Создать конституенту после данной'
@@ -234,6 +250,7 @@ function EditorConstituenta({
           placeholder='Родоструктурное выражение, задающее формальное определение'
           value={expression}
           disabled={!isEnabled}
+          toggleReset={toggleReset}
           onShowAST={onShowAST}
           onChange={newValue => setExpression(newValue)}
           setTypification={setTypification}

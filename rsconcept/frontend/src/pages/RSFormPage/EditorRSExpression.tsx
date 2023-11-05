@@ -24,6 +24,7 @@ interface EditorRSExpressionProps {
   activeCst?: IConstituenta
   label: string
   disabled?: boolean
+  toggleReset?: boolean
   placeholder?: string
   onShowAST: (expression: string, ast: SyntaxTree) => void
   setTypification: (typificaiton: string) => void
@@ -32,7 +33,7 @@ interface EditorRSExpressionProps {
 }
 
 function EditorRSExpression({
-  activeCst, disabled, value, onShowAST, 
+  activeCst, disabled, value, onShowAST, toggleReset,
   setTypification, onChange, ...props
 }: EditorRSExpressionProps) {
   const { schema } = useRSForm();
@@ -44,7 +45,7 @@ function EditorRSExpression({
   useLayoutEffect(() => {
     setIsModified(false);
     resetParse();
-  }, [activeCst, resetParse]);
+  }, [activeCst, resetParse, toggleReset]);
 
   function handleChange(newvalue: string) {
     onChange(newvalue);

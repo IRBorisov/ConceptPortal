@@ -55,17 +55,27 @@ function EditorProfile() {
         <TextInput id='username'
           label='Логин'
           tooltip='Логин изменить нельзя'
-          disabled={true}
+          disabled
           value={username}
-          onChange={event => setUsername(event.target.value)}
         />
         <TextInput id='first_name'
           label='Имя'
           value={first_name}
+          allowEnter
           onChange={event => setFirstName(event.target.value)}
         />
-        <TextInput id='last_name' label='Фамилия' value={last_name} onChange={event => setLastName(event.target.value)}/>
-        <TextInput id='email' label='Электронная почта' value={email} onChange={event => setEmail(event.target.value)}/>
+        <TextInput id='last_name'
+          label='Фамилия'
+          value={last_name}
+          allowEnter
+          onChange={event => setLastName(event.target.value)}
+        />
+        <TextInput id='email'
+          label='Электронная почта'
+          allowEnter
+          value={email}
+          onChange={event => setEmail(event.target.value)}
+        />
       </div>  
       <div className='flex justify-center w-full'>
         <SubmitButton

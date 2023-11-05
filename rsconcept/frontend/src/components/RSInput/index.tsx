@@ -104,29 +104,24 @@ function RSInput({
       if (event.key === '*') {
         text.insertToken(TokenID.DECART);
         event.preventDefault();
-        return;
-      }
-      if (event.code === 'KeyB') {
+      } else if (event.code === 'KeyB') {
         text.insertChar('ℬ');
         event.preventDefault();
-        return;
+      } else if (event.code === 'KeyZ') {
+        text.insertChar('Z');
+        event.preventDefault();
       }
-    }
-    
-    if (event.altKey) {
-      if (!text.processAltKey(event.code, event.shiftKey)) {
-        return;
+    } else if (event.altKey) {
+      if (text.processAltKey(event.code, event.shiftKey)) {
+        event.preventDefault();
       }
     } else if (!event.ctrlKey) {
       const newSymbol = getSymbolSubstitute(event.code, event.shiftKey);
-      if (!newSymbol) {
-        return;
+      if (newSymbol) {
+        text.replaceWith(newSymbol);
+        event.preventDefault();
       }
-      text.replaceWith(newSymbol);
-    } else {
-      return;
     }
-    event.preventDefault();
   }, [thisRef]);
 
   return (

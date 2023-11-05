@@ -66,7 +66,7 @@ function LoginPage() {
   }
 
   return (
-    <div className='flex items-start justify-center w-full pt-4 select-none' style={{minHeight: mainHeight}}>
+    <div className='flex items-start justify-center w-full pt-8 select-none' style={{minHeight: mainHeight}}>
     { user &&
     <div className='flex flex-col items-center gap-2'>
       <p className='font-semibold'>{`Вы вошли в систему как ${user.username}`}</p>
@@ -87,10 +87,13 @@ function LoginPage() {
     </div>}
     { !user &&
     <Form
-      title='Вход в Портал'
       onSubmit={handleSubmit}
       dimensions='w-[24rem]'
     >
+      <img alt='Концепт Портал'
+        src='/logo_full.svg'
+        className='max-h-[2.5rem] min-w-[2.5rem] mt-2 mb-4'
+      />
       <TextInput id='username' type='text'
         label='Имя пользователя'
         required
@@ -107,7 +110,7 @@ function LoginPage() {
         onChange={event => setPassword(event.target.value)}
       />
 
-      <div className='flex justify-center w-full gap-2 py-2'>
+      <div className='flex justify-center w-full py-2'>
         <SubmitButton
           text='Войти'
           dimensions='w-[12rem]'

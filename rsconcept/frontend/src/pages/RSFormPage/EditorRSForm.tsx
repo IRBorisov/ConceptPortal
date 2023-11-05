@@ -69,8 +69,10 @@ function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, 
     }
   }, [schema]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
+    if (event) {
+      event.preventDefault();
+    }
     const data: IRSFormCreateData = {
       item_type: LibraryItemType.RSFORM,
       title: title,
@@ -82,8 +84,17 @@ function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, 
     update(data, () => toast.success('Изменения сохранены'));
   };
 
+  function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.ctrlKey && event.code === 'KeyS') {
+      if (isModified) {
+        handleSubmit();
+      }
+      event.preventDefault();
+    }
+  }
+
   return (
-  <div>
+  <div tabIndex={0} onKeyDown={handleInput}>
     <div className='relative flex items-start justify-center w-full'>
     <div className='absolute flex mt-1'>
       <MiniButton
