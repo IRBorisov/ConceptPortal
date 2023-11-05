@@ -15,10 +15,10 @@ interface ConstituentaTabProps {
 
 function ConstituentaTab({state, partialUpdate}: ConstituentaTabProps) {
   return (
-  <div className='flex flex-col gap-2'>
+  <div className='flex flex-col gap-3'>
     <div className='flex justify-center w-full gap-6'>
       <SelectSingle
-        className='my-2 min-w-[15rem] self-center'
+        className='min-w-[15rem] self-center'
         options={SelectorCstType}
         placeholder='Выберите тип'
         value={{ value: state.cst_type, label: labelCstType(state.cst_type) }}
@@ -40,7 +40,6 @@ function ConstituentaTab({state, partialUpdate}: ConstituentaTabProps) {
     />
     <RSInput id='expression' label='Формальное определение'
       placeholder='Родоструктурное выражение, задающее формальное определение'
-      editable
       height='4.8rem'
       value={state.definition_formal}
       onChange={value => partialUpdate({definition_formal: value})}

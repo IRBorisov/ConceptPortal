@@ -235,7 +235,7 @@ function EditorConstituenta({
           value={term}
           initialValue={activeCst?.term_raw ?? ''}
           resolved={activeCst?.term_resolved ?? ''}
-          editable={isEnabled}
+          disabled={!isEnabled}
           onChange={newValue => setTerm(newValue)}
         />
         <TextArea id='typification' label='Типизация'
@@ -262,7 +262,7 @@ function EditorConstituenta({
           value={textDefinition}
           initialValue={activeCst?.definition_raw ?? ''}
           resolved={activeCst?.definition_resolved ?? ''}
-          editable={isEnabled}
+          disabled={!isEnabled}
           onChange={newValue => setTextDefinition(newValue)}
         />
         <TextArea id='convention' label='Конвенция / Комментарий'

@@ -40,18 +40,18 @@ function Modal({
     <div className='fixed top-0 left-0 w-full h-full z-navigation clr-modal-backdrop' />
     <div 
       ref={ref}
-      className='fixed bottom-1/2 left-1/2 translate-y-1/2 -translate-x-1/2 px-6 py-4 flex flex-col justify-start w-fit max-w-[calc(100vw-2rem)] h-fit z-modal clr-app border shadow-md'
+      className='fixed bottom-1/2 left-1/2 translate-y-1/2 -translate-x-1/2 px-6 py-3 flex flex-col justify-start w-fit max-w-[calc(100vw-2rem)] h-fit z-modal clr-app border shadow-md'
     >
-      { title && <h1 className='mb-2 text-xl select-none'>{title}</h1> }
+      { title && <h1 className='pb-3 text-xl select-none'>{title}</h1> }
       <div className='max-h-[calc(100vh-8rem)]'>
         {children}
       </div>
-      <div className='flex justify-center w-full gap-4 pt-4 mt-2 border-t-2 z-modal-controls'>
+      <div className='flex justify-center w-full gap-4 pt-3 mt-2 border-t-2 z-modal-controls'>
         {!readonly && 
         <Button
           text={submitText}
           tooltip={!canSubmit ? submitInvalidTooltip: ''}
-          dimensions='min-w-[6rem] min-h-[2.6rem] w-fit h-fit'
+          dimensions='min-w-[8rem] min-h-[2.6rem] w-fit h-fit'
           colors='clr-btn-primary'
           disabled={!canSubmit}
           onClick={handleSubmit}
@@ -59,7 +59,7 @@ function Modal({
         />}
         <Button
           text={readonly ? 'Закрыть' : 'Отмена'}
-          dimensions='min-w-[6rem] min-h-[2.6rem] w-fit h-fit'
+          dimensions='min-w-[8rem] min-h-[2.6rem] w-fit h-fit'
           onClick={handleCancel}
         />
       </div>

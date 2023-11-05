@@ -1,11 +1,10 @@
 import { Dispatch, useEffect, useMemo, useState } from 'react';
 
+import ConceptSearch from '../../components/Common/ConceptSearch';
 import SelectSingle from '../../components/Common/SelectSingle';
 import TextArea from '../../components/Common/TextArea';
-import TextInput from '../../components/Common/TextInput';
 import DataTable, { createColumnHelper,IConditionalStyle } from '../../components/DataTable';
 import ConstituentaTooltip from '../../components/Help/ConstituentaTooltip';
-import { MagnifyingGlassIcon } from '../../components/Icons';
 import RSInput from '../../components/RSInput';
 import { useLibrary } from '../../context/LibraryContext';
 import { useConceptTheme } from '../../context/ThemeContext';
@@ -106,7 +105,6 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
   () => [
     constituentaHelper.accessor('alias', {
       id: 'alias',
-      header: 'Имя',
       size: 65,
       minSize: 65,
       cell: props => {
@@ -130,7 +128,6 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
     }),
     constituentaHelper.accessor('term_resolved', {
       id: 'term',
-      header: 'Термин',
       size: 600,
       minSize: 350,
       maxSize: 600
@@ -148,8 +145,8 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
   ], [state.prototype, colors]);
 
   return (
-  <div className='flex flex-col gap-2 mt-2'>
-    <div className='flex justify-between gap-4'>
+  <div className='flex flex-col gap-3'>
+    <div className='flex justify-between gap-3'>
       <SelectSingle
         className='w-full'
         options={categorySelector}
@@ -170,27 +167,19 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
       />
     </div>
     <div>
-      <div className='relative'>
-        <div className='absolute inset-y-0 flex items-center pl-3 pointer-events-none text-controls'>
-          <MagnifyingGlassIcon />
-        </div>
-        <TextInput
-          dimensions='w-full pl-10'
-          placeholder='Поиск'
-          noOutline
-          value={state.filterText}
-          onChange={event => partialUpdate({ filterText: event.target.value} )}
-        />
-      </div>
-
-      <div className='border min-h-[15.5rem] max-h-[15.5rem] text-sm overflow-y-auto select-none'>
+      <ConceptSearch 
+        value={state.filterText}
+        onChange={newValue => partialUpdate({ filterText: newValue} )}
+        dense
+      />
+      <div className='border min-h-[17.5rem] max-h-[17.5rem] text-sm overflow-y-auto select-none'>
       <DataTable
         data={filteredData}
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
         
-        headPosition='0'
         dense
+        noHeader
 
         noDataComponent={
           <span className='flex flex-col justify-center p-2 text-center min-h-[5rem]'>
@@ -204,7 +193,7 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
       </div>
     </div>
     <TextArea id='term'
-      rows={2}
+      rows={1}
       disabled
       placeholder='Шаблон конституенты не выбран'
       value={prototypeInfo}
@@ -213,7 +202,7 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
     <RSInput id='expression'
       height='4.8rem'
       placeholder='Выберите шаблон из списка'
-      editable={false}
+      disabled
       value={state.prototype?.definition_formal}
     />
   </div>);

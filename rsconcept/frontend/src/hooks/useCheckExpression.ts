@@ -2,14 +2,14 @@ import { useCallback, useState } from 'react'
 
 import { type ErrorInfo } from '../components/BackendError';
 import { CstType, IConstituenta, type IRSForm } from '../models/rsform';
-import { IExpressionParse, IFunctionArg } from '../models/rslang';
+import { IExpressionParse, IArgumentInfo } from '../models/rslang';
 import { RSErrorType } from '../models/rslang';
 import { DataCallback, postCheckExpression } from '../utils/backendAPI';
 import { getCstExpressionPrefix } from '../utils/misc';
 
 const LOGIC_TYPIIFCATION = 'LOGIC';
 
-function checkTypeConsistency(type: CstType, typification: string, args: IFunctionArg[]): boolean {
+function checkTypeConsistency(type: CstType, typification: string, args: IArgumentInfo[]): boolean {
   switch (type) {
   case CstType.BASE:
   case CstType.CONSTANT:

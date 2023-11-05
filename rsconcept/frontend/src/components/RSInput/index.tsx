@@ -45,15 +45,16 @@ const editorSetup: BasicSetupOptions = {
 
 interface RSInputProps 
 extends Pick<ReactCodeMirrorProps, 
-  'id'| 'editable' | 'height' | 'value' | 'className' | 'onFocus' | 'onBlur' | 'placeholder'
+  'id' | 'height' | 'value' | 'className' | 'onFocus' | 'onBlur' | 'placeholder'
 > {
   label?: string
+  disabled?: boolean
   innerref?: RefObject<ReactCodeMirrorRef> | undefined
   onChange?: (newValue: string) => void
 }
 
 function RSInput({ 
-  id, label, innerref, onChange, editable,
+  id, label, innerref, onChange, disabled,
   ...props 
 }: RSInputProps) {
   const { darkMode, colors } = useConceptTheme();
@@ -65,13 +66,13 @@ function RSInput({
     return innerref ?? internalRef;
   }, [internalRef, innerref]);
 
-  const cursor = useMemo(() => editable ? 'cursor-text': 'cursor-default', [editable]);
+  const cursor = useMemo(() => !disabled ? 'cursor-text': 'cursor-default', [disabled]);
   const customTheme: Extension = useMemo(
   () => createTheme({
     theme: darkMode ? 'dark' : 'light',
     settings: {
       fontFamily: 'inherit',
-      background: editable ? colors.bgInput : colors.bgDefault,
+      background: !disabled ? colors.bgInput : colors.bgDefault,
       foreground: colors.fgDefault,
       selection: colors.bgHover
     },
@@ -84,7 +85,7 @@ function RSInput({
       { tag: tags.controlKeyword, fontWeight: '500'}, // R | I | D
       { tag: tags.unit, fontSize: '0.75rem' }, // indicies
     ]
-  }), [editable, colors, darkMode]);
+  }), [disabled, colors, darkMode]);
 
   const editorExtensions = useMemo(
   () => [
@@ -139,7 +140,7 @@ function RSInput({
       extensions={editorExtensions}
       indentWithTab={false}
       onChange={onChange}
-      editable={editable}
+      editable={!disabled}
       onKeyDown={handleInput}
       {...props}
     />

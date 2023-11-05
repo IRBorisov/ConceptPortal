@@ -27,7 +27,8 @@ extends Pick<TableOptions<TData>,
 > {
   dense?: boolean
   headPosition?: string
-  noFooter?: boolean // Disables footer rendering
+  noHeader?: boolean
+  noFooter?: boolean
   conditionalRowStyles?: IConditionalStyle<TData>[]
   onRowClicked?: (rowData: TData, event: React.MouseEvent<Element, MouseEvent>) => void
   onRowDoubleClicked?: (rowData: TData, event: React.MouseEvent<Element, MouseEvent>) => void
@@ -55,7 +56,7 @@ extends Pick<TableOptions<TData>,
  * No sticky header if omitted
 */
 export default function DataTable<TData extends RowData>({
-  dense, headPosition, conditionalRowStyles, noFooter,
+  dense, headPosition, conditionalRowStyles, noFooter, noHeader,
   onRowClicked, onRowDoubleClicked, noDataComponent,
 
   enableRowSelection,
@@ -112,6 +113,7 @@ export default function DataTable<TData extends RowData>({
   <div className='w-full'>
   <div className='flex flex-col items-stretch'>
     <table>
+      { !noHeader &&
       <thead
         className={`clr-app shadow-border`}
         style={{
@@ -147,7 +149,7 @@ export default function DataTable<TData extends RowData>({
           ))}
         </tr>
       ))}
-      </thead>
+      </thead>}
       
       <tbody>
       {tableImpl.getRowModel().rows.map(

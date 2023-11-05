@@ -43,9 +43,14 @@ export interface ISyntaxTreeNode {
 }
 export type SyntaxTree = ISyntaxTreeNode[]
 
-export interface IFunctionArg {
+export interface IArgumentInfo {
   alias: string
   typification: string
+}
+
+export interface IArgumentValue {
+  alias: string
+  value?: string
 }
 
 export interface IExpressionParse {
@@ -56,7 +61,7 @@ export interface IExpressionParse {
   errors: IRSErrorDescription[]
   astText: string
   ast: SyntaxTree
-  args: IFunctionArg[]
+  args: IArgumentInfo[]
 }
 
 //! RS language token types enumeration

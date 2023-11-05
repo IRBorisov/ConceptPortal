@@ -14,12 +14,12 @@ import { useConceptNavigation } from '../../context/NagivationContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import DlgCloneRSForm from '../../dialogs/DlgCloneRSForm';
+import DlgConstituentaTemplate from '../../dialogs/DlgConstituentaTemplate';
 import DlgCreateCst from '../../dialogs/DlgCreateCst';
 import DlgDeleteCst from '../../dialogs/DlgDeleteCst';
 import DlgEditWordForms from '../../dialogs/DlgEditWordForms';
 import DlgRenameCst from '../../dialogs/DlgRenameCst';
 import DlgShowAST from '../../dialogs/DlgShowAST';
-import DlgTemplates from '../../dialogs/DlgTemplates';
 import DlgUploadRSForm from '../../dialogs/DlgUploadRSForm';
 import useModificationPrompt from '../../hooks/useModificationPrompt';
 import { ICstCreateData, ICstRenameData, ICstUpdateData, TermForm } from '../../models/rsform';
@@ -64,7 +64,7 @@ function RSTabs() {
 
   const { isModified, setIsModified } = useModificationPrompt();
 
-  const [activeTab, setActiveTab] = useState<RSTabID>(RSTabID.CARD);
+  const [activeTab, setActiveTab] = useState(RSTabID.CARD);
   const [activeID, setActiveID] = useState<number | undefined>(undefined);
   const activeCst = useMemo(
     () => schema?.items?.find(cst => cst.id === activeID)
@@ -375,7 +375,7 @@ function RSTabs() {
       target={activeCst!}
     />}
     {showTemplates && 
-    <DlgTemplates
+    <DlgConstituentaTemplate
       schema={schema}
       hideWindow={() => setShowTemplates(false)}
       onCreate={handleCreateCst}
@@ -383,7 +383,7 @@ function RSTabs() {
     <Tabs
       selectedIndex={activeTab}
       onSelect={onSelectTab}
-      defaultFocus={true}
+      defaultFocus
       selectedTabClassName='clr-selected'
       className='flex flex-col items-center w-full'
     >
@@ -399,21 +399,21 @@ function RSTabs() {
           showUploadDialog={() => setShowUpload(true)}
         />
         <ConceptTab 
-          className='border-x-2 min-w-[7.8rem]'
-          title={`Название схемы: ${schema.title ?? ''}`}
+          className='border-x-2'
+          tooltip={`Название схемы: ${schema.title ?? ''}`}
         >
           Паспорт схемы
         </ConceptTab>
         <ConceptTab 
-          className='flex justify-between gap-2 border-r-2 w-fit'
-          title={`Всего конституент: ${schema.stats?.count_all ?? 0}\nКоличество ошибок: ${schema.stats?.count_errors ?? 0}`}
+          className='border-r-2'
+          tooltip={`Всего конституент: ${schema.stats?.count_all ?? 0}\nКоличество ошибок: ${schema.stats?.count_errors ?? 0}`}
         >
-          <span>Конституенты</span>
+          Конституенты
         </ConceptTab>
-        <ConceptTab className='border-r-2 min-w-[5.2rem]'>
+        <ConceptTab className='border-r-2'>
           Редактор
         </ConceptTab>
-        <ConceptTab className='min-w-[6.5rem]'>
+        <ConceptTab className=''>
           Граф термов
         </ConceptTab>
       </TabList>

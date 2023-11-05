@@ -217,7 +217,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
   >
     <div className='relative w-full'>
     <div className='absolute top-0 right-0'>
-    <div id='terminology-help' className='px-1 py-1'>
+      <div id='terminology-help' className='px-1 py-1'>
         <HelpIcon color='text-primary' size={5} />
       </div>
       <ConceptTooltip

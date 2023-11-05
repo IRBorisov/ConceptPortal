@@ -3,7 +3,7 @@ import { TextMatcher } from '../utils/utils'
 import { ILibraryUpdateData } from './library'
 import { ILibraryItem } from './library'
 import { CstMatchMode } from './miscelanious'
-import { IFunctionArg, ParsingStatus, ValueClass } from './rslang'
+import { IArgumentInfo, ParsingStatus, ValueClass } from './rslang'
 
 export enum CstType {
   BASE = 'basic',
@@ -67,7 +67,7 @@ extends IConstituentaMeta {
     valueClass: ValueClass
     typification: string
     syntaxTree: string
-    args: IFunctionArg[]
+    args: IArgumentInfo[]
   }
 }
 

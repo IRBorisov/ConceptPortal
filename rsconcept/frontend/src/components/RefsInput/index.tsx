@@ -50,12 +50,13 @@ const editorSetup: BasicSetupOptions = {
 
 interface RefsInputInputProps 
 extends Pick<ReactCodeMirrorProps, 
-  'id'| 'editable' | 'height' | 'value' | 'className' | 'onFocus' | 'onBlur' | 'placeholder'
+  'id'| 'height' | 'value' | 'className' | 'onFocus' | 'onBlur' | 'placeholder'
 > {
   label?: string
   innerref?: RefObject<ReactCodeMirrorRef> | undefined
   onChange?: (newValue: string) => void
   items?: IConstituenta[]
+  disabled?: boolean
   
   initialValue?: string
   value?: string
@@ -63,7 +64,7 @@ extends Pick<ReactCodeMirrorProps,
 }
 
 function RefsInput({ 
-  id, label, innerref, editable, items,
+  id, label, innerref, disabled, items,
   initialValue, value, resolved,
   onFocus, onBlur, onChange,
   ...props 
@@ -89,13 +90,13 @@ function RefsInput({
     return innerref ?? internalRef;
   }, [internalRef, innerref]);
 
-  const cursor = useMemo(() => editable ? 'cursor-text': 'cursor-default', [editable]);
+  const cursor = useMemo(() => !disabled ? 'cursor-text': 'cursor-default', [disabled]);
   const customTheme: Extension = useMemo(
   () => createTheme({
     theme: darkMode ? 'dark' : 'light',
     settings: {
       fontFamily: 'inherit',
-      background: editable ? colors.bgInput : colors.bgDefault,
+      background: !disabled ? colors.bgInput : colors.bgDefault,
       foreground: colors.fgDefault,
       selection: colors.bgHover
     },
@@ -104,7 +105,7 @@ function RefsInput({
       { tag: tags.literal, color: colors.fgTeal, cursor: 'default' }, // SyntacticReference
       { tag: tags.comment, color: colors.fgRed }, // Error
     ]
-  }), [editable, colors, darkMode]);
+  }), [disabled, colors, darkMode]);
 
   const editorExtensions = useMemo(
   () => [
@@ -216,7 +217,7 @@ function RefsInput({
 
       indentWithTab={false}
       onChange={handleChange}
-      editable={editable}
+      editable={!disabled}
       onKeyDown={handleInput}
       onFocus={handleFocusIn}
       onBlur={handleFocusOut}

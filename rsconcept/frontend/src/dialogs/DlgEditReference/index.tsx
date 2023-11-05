@@ -1,6 +1,7 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
+import ConceptSearch from '../../components/Common/ConceptSearch';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import Label from '../../components/Common/Label';
 import Modal from '../../components/Common/Modal';
@@ -9,7 +10,7 @@ import TextInput from '../../components/Common/TextInput';
 import DataTable, { IConditionalStyle } from '../../components/DataTable';
 import ConstituentaTooltip from '../../components/Help/ConstituentaTooltip';
 import HelpTerminologyControl from '../../components/Help/HelpTerminologyControl';
-import { HelpIcon, MagnifyingGlassIcon } from '../../components/Icons';
+import { HelpIcon } from '../../components/Icons';
 import { useConceptTheme } from '../../context/ThemeContext';
 import {
   getCompatibleGrams, Grammeme,
@@ -183,7 +184,6 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
   () => [
     constituentaHelper.accessor('alias', {
       id: 'alias',
-      header: 'Имя',
       size: 65,
       minSize: 65,
       cell: props => {
@@ -207,7 +207,6 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
     }),
     constituentaHelper.accessor('term_resolved', {
       id: 'term',
-      header: 'Термин',
       size: 600,
       minSize: 350,
       maxSize: 600
@@ -287,35 +286,31 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
     </div>}
     {type === ReferenceType.ENTITY &&
     <div className='flex flex-col gap-2'>
-      <div className='relative'>
-        <div className='absolute inset-y-0 flex items-center pl-3 pointer-events-none text-controls'>
-          <MagnifyingGlassIcon />
-        </div>
-        <TextInput
-          dimensions='w-full pl-10'
-          placeholder='Поиск'
+      <div>
+        <ConceptSearch 
           value={filter}
-          onChange={event => setFilter(event.target.value)}
+          onChange={newValue => setFilter(newValue)}
+          dense
+        />
+        <div className='border min-h-[15.5rem] max-h-[15.5rem] text-sm overflow-y-auto'>
+        <DataTable
+          data={filteredData}
+          columns={columnsConstituenta}
+          conditionalRowStyles={conditionalRowStyles}
+          
+          noHeader
+          dense
+
+          noDataComponent={
+            <span className='flex flex-col justify-center p-2 text-center min-h-[5rem]'>
+              <p>Список конституент пуст</p>
+              <p>Измените параметры фильтра</p>
+            </span>
+          }
+
+          onRowClicked={handleSelectConstituenta}
         />
       </div>
-      <div className='border min-h-[15.5rem] max-h-[15.5rem] text-sm overflow-y-auto'>
-      <DataTable
-        data={filteredData}
-        columns={columnsConstituenta}
-        conditionalRowStyles={conditionalRowStyles}
-        
-        headPosition='0'
-        dense
-
-        noDataComponent={
-          <span className='flex flex-col justify-center p-2 text-center min-h-[5rem]'>
-            <p>Список конституент пуст</p>
-            <p>Измените параметры фильтра</p>
-          </span>
-        }
-
-        onRowClicked={handleSelectConstituenta}
-      />
       </div>
       <div className='flex gap-4 flex-start'>
         <TextInput

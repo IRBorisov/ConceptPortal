@@ -3,7 +3,7 @@
 import { GramData,Grammeme, ReferenceType } from '../models/language';
 import { CstMatchMode, DependencyMode, HelpTopic, LibraryFilterStrategy } from '../models/miscelanious';
 import { CstClass, CstType, ExpressionStatus, IConstituenta } from '../models/rsform';
-import { IFunctionArg, IRSErrorDescription, ISyntaxTreeNode, ParsingStatus, RSErrorType, TokenID } from '../models/rslang';
+import { IArgumentInfo, IRSErrorDescription, ISyntaxTreeNode, ParsingStatus, RSErrorType, TokenID } from '../models/rslang';
 
 export function describeConstituenta(cst: IConstituenta): string {
   if (cst.cst_type === CstType.STRUCTURED) {
@@ -309,7 +309,7 @@ export function describeCstClass(cclass: CstClass): string {
 export function labelTypification({ isValid, resultType, args }: {
   isValid: boolean;
   resultType: string;
-  args: IFunctionArg[];
+  args: IArgumentInfo[];
 }): string {
   if (!isValid) {
     return 'N/A';
