@@ -70,7 +70,7 @@ function EditorPassword() {
             onChange={event => setOldPassword(event.target.value)}
           />
           <TextInput id='new_password' type='password' 
-            colorClass={passwordColor}
+            colors={passwordColor}
             label='Новый пароль'
             value={newPassword}
             onChange={event => {
@@ -78,7 +78,7 @@ function EditorPassword() {
             }}
           />
           <TextInput id='new_password_repeat' type='password' 
-            colorClass={passwordColor}
+            colors={passwordColor}
             label='Повторите новый'
             value={newPasswordRepeat}
             onChange={event => {

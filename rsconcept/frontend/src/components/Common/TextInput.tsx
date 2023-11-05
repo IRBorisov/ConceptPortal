@@ -1,21 +1,22 @@
+import { IColorsProps, IEditorProps } from '../commonInterfaces';
 import Label from './Label';
 
-interface TextInputProps
-extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'className' | 'title'> {
-  id?: string
-  label?: string
-  tooltip?: string
-  dimensions?: string
-  colorClass?: string
+interface TextInputProps 
+extends IEditorProps, IColorsProps, Omit<React.InputHTMLAttributes<HTMLInputElement>, 'className' | 'title'> {
   dense?: boolean
-  noBorder?: boolean
-  noOutline?: boolean
+  allowEnter?: boolean
+}
+
+function preventEnterCapture(event: React.KeyboardEvent<HTMLInputElement>) {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+  }
 }
 
 function TextInput({
-  id, required, label, dense, tooltip, noBorder, noOutline,
+  id, label, dense, tooltip, noBorder, noOutline, allowEnter, onKeyDown,
   dimensions = 'w-full',
-  colorClass = 'clr-input',
+  colors = 'clr-input',
   ...props
 }: TextInputProps) {
   const borderClass = noBorder ? '': 'border';
@@ -29,8 +30,9 @@ function TextInput({
       />}
       <input id={id}
         title={tooltip}
-        className={`px-3 py-2 leading-tight truncate hover:text-clip ${outlineClass} ${borderClass} ${colorClass} ${dense ? 'w-full' : dimensions}`}
-        required={required}
+        
+        onKeyDown={!allowEnter && !onKeyDown ? preventEnterCapture: onKeyDown}
+        className={`px-3 py-2 leading-tight truncate hover:text-clip ${colors} ${outlineClass} ${borderClass} ${dense ? 'w-full' : dimensions}`}
         {...props}
       />
     </div>

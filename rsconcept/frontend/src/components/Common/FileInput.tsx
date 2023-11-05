@@ -8,8 +8,9 @@ interface FileInputProps
 extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'className' | 'title' | 'style' | 'accept' | 'type'> {
   label: string
   tooltip?: string
-  acceptType?: string
   dimensions?: string
+  
+  acceptType?: string
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 

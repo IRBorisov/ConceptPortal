@@ -52,7 +52,7 @@ function Modal({
           text={submitText}
           tooltip={!canSubmit ? submitInvalidTooltip: ''}
           dimensions='min-w-[6rem] min-h-[2.6rem] w-fit h-fit'
-          colorClass='clr-btn-primary'
+          colors='clr-btn-primary'
           disabled={!canSubmit}
           onClick={handleSubmit}
           autoFocus

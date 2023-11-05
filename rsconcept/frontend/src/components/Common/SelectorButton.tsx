@@ -5,14 +5,14 @@ extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'child
   tooltip?: string
   dimensions?: string
   borderClass?: string
-  colorClass?: string
+  colors?: string
   transparent?: boolean
 }
 
 
 function SelectorButton({
   text, icon, tooltip,
-  colorClass = 'clr-btn-default',
+  colors = 'clr-btn-default',
   dimensions = 'w-fit h-fit',
   transparent,
   ...props
@@ -21,7 +21,7 @@ function SelectorButton({
   const position = `px-1 flex flex-start items-center gap-1 ${dimensions}`
   return (
     <button type='button'
-      className={`text-sm small-caps ${!transparent && 'border'} ${cursor} ${position} text-btn text-controls select-none ${transparent ? 'clr-hover' : colorClass}`}
+      className={`text-sm small-caps ${!transparent && 'border'} ${cursor} ${position} text-btn text-controls select-none ${transparent ? 'clr-hover' : colors}`}
       title={tooltip}
       {...props}
     >

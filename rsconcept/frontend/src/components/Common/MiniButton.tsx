@@ -1,5 +1,5 @@
 interface MiniButtonProps
-extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'title' |'children' > {
+extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'title' | 'children' > {
   icon: React.ReactNode
   tooltip?: string
   noHover?: boolean

@@ -243,7 +243,6 @@
   }
 
   :is(.clr-outline,
-    .clr-btn-default,
     .clr-btn-primary
   ):focus {
     outline-width: 2px;

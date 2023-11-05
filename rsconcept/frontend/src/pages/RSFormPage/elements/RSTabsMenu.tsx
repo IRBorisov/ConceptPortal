@@ -81,9 +81,9 @@ function RSTabsMenu({
       <Button
         tooltip='Действия'
         icon={<MenuIcon color='text-controls' size={5}/>}
-        borderClass=''
         dimensions='h-full w-fit pl-2'
         style={{outlineColor: 'transparent'}}
+        noBorder
         dense
         onClick={schemaMenu.toggle}
         tabIndex={-1}
@@ -137,11 +137,11 @@ function RSTabsMenu({
     <div ref={editMenu.ref}>
       <Button
         tooltip={'измнение: ' + (isEditable ? '[доступно]' : '[запрещено]')}
-        borderClass=''
         dimensions='h-full w-fit'
         style={{outlineColor: 'transparent'}}
         icon={<EditIcon size={5} color={isEditable ? 'text-success' : 'text-warning'}/>}
         dense
+        noBorder
         onClick={editMenu.toggle}
         tabIndex={-1}
       />
@@ -185,9 +185,9 @@ function RSTabsMenu({
           : <NotSubscribedIcon color='text-controls' size={5}/>
         }
         dimensions='h-full w-fit pr-2'
-        borderClass=''
         style={{outlineColor: 'transparent'}}
         dense
+        noBorder
         onClick={onToggleSubscribe}
         tabIndex={-1}
         />

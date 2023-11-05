@@ -226,7 +226,7 @@ function EditorConstituenta({
           dense
           rows={1}
           value={typification}
-          colorClass='clr-app'
+          colors='clr-app'
           disabled
         />
         <EditorRSExpression id='expression' label='Формальное определение'

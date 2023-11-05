@@ -1,4 +1,4 @@
-// =========== Modules contains all text descriptors ==========
+// =========== Module contains all text descriptors. ==========
 
 import { GramData,Grammeme, ReferenceType } from '../models/language';
 import { CstMatchMode, DependencyMode, HelpTopic, LibraryFilterStrategy } from '../models/miscelanious';

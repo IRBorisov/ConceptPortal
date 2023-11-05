@@ -91,18 +91,18 @@ function LoginPage() {
       onSubmit={handleSubmit}
       dimensions='w-[24rem]'
     >
-      <TextInput id='username'
+      <TextInput id='username' type='text'
         label='Имя пользователя'
         required
-        type='text'
+        allowEnter
         value={username}
         autoFocus
         onChange={event => setUsername(event.target.value)}
       />
-      <TextInput id='password'
+      <TextInput id='password' type='password'
         label='Пароль'
         required
-        type='password'
+        allowEnter
         value={password}
         onChange={event => setPassword(event.target.value)}
       />

@@ -143,9 +143,9 @@ function EditorRSExpression({
         <Button
           tooltip='Проверить формальное определение'
           text='Проверить'
-          dimensions='w-fit h-[3rem] z-pop'
-          colorClass='clr-btn-default'
-          borderClass='rounded-none border'
+          dimensions='w-fit h-[3rem] z-pop rounded-none'
+          colors='clr-btn-default'
+          noOutline
           onClick={() => handleCheckExpression()}
         />
         <StatusBar
