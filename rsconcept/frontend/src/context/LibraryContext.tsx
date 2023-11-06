@@ -4,7 +4,8 @@ import { ErrorInfo } from '../components/BackendError';
 import { matchLibraryItem } from '../models/library';
 import { ILibraryItem } from '../models/library';
 import { ILibraryFilter } from '../models/miscelanious';
-import { IRSForm, IRSFormCreateData, IRSFormData, loadRSFormData } from '../models/rsform';
+import { IRSForm, IRSFormCreateData, IRSFormData } from '../models/rsform';
+import { loadRSFormData } from '../models/rsformAPI';
 import { DataCallback, deleteLibraryItem, getLibrary, getRSFormDetails, getTemplates, postCloneLibraryItem, postNewRSForm } from '../utils/backendAPI';
 import { useAuth } from './AuthContext';
 

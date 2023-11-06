@@ -14,7 +14,8 @@ import {
   parseSyntacticReference, ReferenceType
 } from '../../models/language';
 import { CstMatchMode } from '../../models/miscelanious';
-import { IConstituenta, matchConstituenta } from '../../models/rsform';
+import { IConstituenta } from '../../models/rsform';
+import { matchConstituenta } from '../../models/rsformAPI';
 import { prefixes } from '../../utils/constants';
 import { compareGrammemeOptions, IGrammemeOption, PremadeWordForms, SelectorGrammems } from '../../utils/selectors';
 import ReferenceTypeButton from './ReferenceTypeButton';

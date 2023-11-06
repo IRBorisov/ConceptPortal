@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 
 import { type ErrorInfo } from '../components/BackendError';
-import { IRSForm, IRSFormData, loadRSFormData } from '../models/rsform'
+import { IRSForm, IRSFormData } from '../models/rsform'
+import { loadRSFormData } from '../models/rsformAPI';
 import { getRSFormDetails } from '../utils/backendAPI';
 
 export function useRSFormDetails({ target }: { target?: string }) {

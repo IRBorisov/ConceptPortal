@@ -5,7 +5,8 @@ import TextArea from '../../components/Common/TextArea';
 import RSInput from '../../components/RSInput';
 import ConstituentaPicker from '../../components/Shared/ConstituentaPicker';
 import { useLibrary } from '../../context/LibraryContext';
-import { applyFilterCategory, CATEGORY_CST_TYPE, IConstituenta, IRSForm } from '../../models/rsform';
+import { CATEGORY_CST_TYPE, IConstituenta, IRSForm } from '../../models/rsform';
+import { applyFilterCategory } from '../../models/rsformAPI';
 import { prefixes } from '../../utils/constants';
 export interface ITemplateState {
   templateID?: number

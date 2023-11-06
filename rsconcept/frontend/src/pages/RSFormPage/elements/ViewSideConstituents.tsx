@@ -14,8 +14,9 @@ import useWindowSize from '../../../hooks/useWindowSize';
 import { DependencyMode as CstSource } from '../../../models/miscelanious';
 import { CstMatchMode } from '../../../models/miscelanious';
 import { applyGraphFilter } from '../../../models/miscelanious';
-import { CstType, extractGlobals, IConstituenta, isMockCst, matchConstituenta } from '../../../models/rsform';
-import { createMockConstituenta } from '../../../models/rsform';
+import { CstType, IConstituenta } from '../../../models/rsform';
+import { createMockConstituenta, isMockCst, matchConstituenta } from '../../../models/rsformAPI';
+import { extractGlobals } from '../../../models/rslangAPI';
 import { prefixes } from '../../../utils/constants';
 import { 
   describeConstituenta, describeCstMathchMode, 

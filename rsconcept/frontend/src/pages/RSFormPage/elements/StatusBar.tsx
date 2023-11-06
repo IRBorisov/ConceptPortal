@@ -2,7 +2,8 @@ import { useMemo } from 'react';
 
 import { useConceptTheme } from '../../../context/ThemeContext';
 import { ExpressionStatus } from '../../../models/rsform';
-import { type IConstituenta, inferStatus } from '../../../models/rsform';
+import { type IConstituenta } from '../../../models/rsform';
+import { inferStatus } from '../../../models/rsformAPI';
 import { IExpressionParse, ParsingStatus } from '../../../models/rslang';
 import { colorbgCstStatus } from '../../../utils/color';
 import { describeExpressionStatus, labelExpressionStatus } from '../../../utils/labels';
