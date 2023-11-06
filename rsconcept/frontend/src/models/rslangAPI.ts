@@ -1,7 +1,10 @@
 // Module: RSLang model API
 
+import { applyPattern } from '../utils/utils';
 import { CstType } from './rsform';
 import { IArgumentValue } from './rslang'
+
+const LOCALS_REGEXP = /[_a-zα-ω][a-zα-ω]*\d*/g;
 
 export function extractGlobals(expression: string): Set<string> {
   return new Set(expression.match(/[XCSADFPT]\d+/g) ?? []);
@@ -17,20 +20,6 @@ export function inferTemplatedType(templateType: CstType, args: IArgumentValue[]
   }
 }
 
-export function substituteTemplateArgs(expression: string, args: IArgumentValue[]): string {
-  if (args.every(arg => !arg.value)) {
-    return expression;
-  }
-
-  const mapping: { [key: string]: string } = {};
-  args.filter(arg => !!arg.value).forEach(arg => { mapping[arg.alias] = arg.value!; })
-
-
-
-  // TODO: figure out actual substitution
-  return expression
-}
-
 export function splitTemplateDefinition(target: string) {
   let start = 0;
   for (; start < target.length && target[start] !== '['; ++start) ;
@@ -42,7 +31,10 @@ export function splitTemplateDefinition(target: string) {
         if (counter !== 0) {
           --counter;
         } else {
-          
+          return {
+            head: target.substring(start + 1, end).trim(),
+            body: target.substring(end + 1).trim()
+          }
         }
       }
     }
@@ -53,39 +45,31 @@ export function splitTemplateDefinition(target: string) {
   }
 }
 
-// function applyPattern(text: string, mapping: { [key: string]: string }, pattern: RegExp): string {
-//   /** Apply mapping to matching in regular expression patter subgroup 1. */
-//   if (text === '' || pattern === null) {
-//       return text;
-//   }
-//   let posInput: number = 0;
-//   let output: string = '';
-//   const patternMatches = text.matchAll(pattern);
-//   for (const segment of patternMatches) {
-//       const entity = segment[1];
-//       if (entity in mapping) {
-//           output += text.substring(posInput, segment.index);
-//           output += mapping[entity];
-//           output += text.substring(segment.index, segment.index + segment[0].length);
-//           posInput = segment.index + segment[0].length;
-//       }
-//   }
-//   output += text.substring(posInput);
-//   return output;
-// }
+export function substituteTemplateArgs(expression: string, args: IArgumentValue[]): string {
+  if (args.every(arg => !arg.value)) {
+    return expression;
+  }
 
-// def apply_pattern(text: str, mapping: dict[str, str], pattern: re.Pattern[str]) -> str:
-//     ''' Apply mapping to matching in regular expression patter subgroup 1. '''
-//     if text == '' or pattern == '':
-//         return text
-//     pos_input: int = 0
-//     output: str = ''
-//     for segment in re.finditer(pattern, text):
-//         entity = segment.group(1)
-//         if entity in mapping:
-//             output += text[pos_input : segment.start(1)]
-//             output += mapping[entity]
-//             output += text[segment.end(1) : segment.end(0)]
-//             pos_input = segment.end(0)
-//     output += text[pos_input : len(text)]
-//     return output
+  const mapping: { [key: string]: string } = {};
+  args.filter(arg => !!arg.value).forEach(arg => { mapping[arg.alias] = arg.value!; })
+
+  let { head, body } = splitTemplateDefinition(expression);
+  body = applyPattern(body, mapping, LOCALS_REGEXP);
+  const argTexts = head.split(',').map(text => text.trim());
+  head = argTexts
+  .filter(
+    arg => [...arg.matchAll(LOCALS_REGEXP)]
+      .every(local => local.every(match => !(match in mapping)))
+  ).join(', ');
+
+  console.log(body);
+  console.log(head);
+  console.log(args);
+  console.log(mapping);
+
+  if (!head) {
+    return body;
+  } else {
+    return `[${head}] ${body}`
+  }
+}

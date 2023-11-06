@@ -31,3 +31,26 @@ export class TextMatcher {
     }
   }
 }
+
+/**
+ * Text substitution guided by mapping and regular explression.
+*/
+export function applyPattern(text: string, mapping: { [key: string]: string }, pattern: RegExp): string {
+  if (text === '' || pattern === null) {
+    return text;
+  }
+  let posInput = 0;
+  let output = '';
+  const patternMatches = text.matchAll(pattern);
+  for (const segment of patternMatches) {
+    const entity = segment[0];
+    const start = segment.index!;
+    if (entity in mapping) {
+      output += text.substring(posInput, start);
+      output += mapping[entity];
+      posInput = start + segment[0].length;
+    }
+  }
+  output += text.substring(posInput);
+  return output;
+}
