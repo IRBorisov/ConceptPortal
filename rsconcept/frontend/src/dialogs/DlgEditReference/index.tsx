@@ -8,11 +8,8 @@ import TextInput from '../../components/Common/TextInput';
 import HelpTerminologyControl from '../../components/Help/HelpTerminologyControl';
 import { HelpIcon } from '../../components/Icons';
 import ConstituentaPicker from '../../components/Shared/ConstituentaPicker';
-import {
-  getCompatibleGrams, Grammeme,
-  parseEntityReference, parseGrammemes, 
-  parseSyntacticReference, ReferenceType
-} from '../../models/language';
+import { Grammeme, ReferenceType } from '../../models/language';
+import { getCompatibleGrams, parseEntityReference, parseGrammemes, parseSyntacticReference } from '../../models/languageAPI';
 import { CstMatchMode } from '../../models/miscelanious';
 import { IConstituenta } from '../../models/rsform';
 import { matchConstituenta } from '../../models/rsformAPI';

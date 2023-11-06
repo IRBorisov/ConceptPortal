@@ -1,7 +1,8 @@
 // Module: Selector maps
 import { LayoutTypes } from 'reagraph';
 
-import { compareGrammemes,type GramData, Grammeme, ReferenceType } from '../models/language';
+import { type GramData, Grammeme, ReferenceType } from '../models/language';
+import { compareGrammemes } from '../models/languageAPI';
 import { CstType } from '../models/rsform';
 import { ColoringScheme } from '../pages/RSFormPage/EditorTermGraph';
 import { labelGrammeme, labelReferenceType } from './labels';

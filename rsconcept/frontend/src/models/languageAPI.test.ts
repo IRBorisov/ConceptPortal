@@ -1,4 +1,5 @@
-import { Grammeme, parseEntityReference, parseGrammemes, parseSyntacticReference } from './language';
+import { Grammeme } from './language';
+import { parseEntityReference, parseGrammemes, parseSyntacticReference } from './languageAPI';
 
 
 describe('Testing grammeme parsing', () => {

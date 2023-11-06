@@ -2,7 +2,7 @@ import { syntaxTree } from '@codemirror/language'
 import { Extension } from '@codemirror/state';
 import { hoverTooltip } from '@codemirror/view';
 
-import { parseEntityReference, parseSyntacticReference } from '../../models/language';
+import { parseEntityReference, parseSyntacticReference } from '../../models/languageAPI';
 import { IConstituenta } from '../../models/rsform';
 import { domTooltipEntityReference, domTooltipSyntacticReference, findContainedNodes, findEnvelopingNodes } from '../../utils/codemirror';
 import { IColorTheme } from '../../utils/color';

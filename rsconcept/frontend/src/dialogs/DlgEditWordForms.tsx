@@ -10,10 +10,8 @@ import HelpTerminologyControl from '../components/Help/HelpTerminologyControl';
 import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, ChevronDoubleDownIcon, CrossIcon, HelpIcon } from '../components/Icons';
 import { useConceptTheme } from '../context/ThemeContext';
 import useConceptText from '../hooks/useConceptText';
-import {
-  getCompatibleGrams, Grammeme, ITextRequest, IWordForm,
-  IWordFormPlain, matchWordForm, parseGrammemes
-} from '../models/language';
+import { Grammeme, ITextRequest, IWordForm, IWordFormPlain } from '../models/language';
+import { getCompatibleGrams, matchWordForm, parseGrammemes } from '../models/languageAPI';
 import { IConstituenta, TermForm } from '../models/rsform';
 import { colorfgGrammeme } from '../utils/color';
 import { labelGrammeme } from '../utils/labels';
