@@ -27,12 +27,10 @@ export enum TabID {
 
 function DlgConstituentaTemplate({ hideWindow, schema, onCreate }: DlgConstituentaTemplateProps) {
   const [validated, setValidated] = useState(false);
-  const [ templateData, updateTemplateData ] = usePartialUpdate<ITemplateState>({
-    filterText: ''
-  });
+  const [ templateData, updateTemplateData ] = usePartialUpdate<ITemplateState>({});
   const [ argumentsData, updateArgumentsData ] = usePartialUpdate<IArgumentsState>({
-    filterText: '',
-    definition: ''
+    definition: '',
+    arguments: []
   });
   const [cstData, updateCstData] = usePartialUpdate<ICstCreateData>({
     cst_type: CstType.TERM,
@@ -80,7 +78,13 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate }: DlgConstituen
       });
       updateArgumentsData({
         definition: templateData.prototype.definition_formal,
-        arguments: []
+        arguments: templateData.prototype.parse.args.map(
+          arg => ({
+            alias: arg.alias,
+            typification: arg.typification,
+            value: ''
+          })
+        )
       });
     }
   }, [templateData.prototype, updateCstData, updateArgumentsData]);
@@ -136,6 +140,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate }: DlgConstituen
 
       <TabPanel>
         <ArgumentsTab
+          schema={schema}
           state={argumentsData}
           partialUpdate={updateArgumentsData}
         />

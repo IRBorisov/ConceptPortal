@@ -48,6 +48,7 @@ extends Pick<ReactCodeMirrorProps,
   'id' | 'height' | 'value' | 'className' | 'onFocus' | 'onBlur' | 'placeholder'
 > {
   label?: string
+  dimensions?: string
   disabled?: boolean
   innerref?: RefObject<ReactCodeMirrorRef> | undefined
   onChange?: (newValue: string) => void
@@ -55,6 +56,7 @@ extends Pick<ReactCodeMirrorProps,
 
 function RSInput({ 
   id, label, innerref, onChange, disabled,
+  dimensions = 'w-full',
   ...props 
 }: RSInputProps) {
   const { darkMode, colors } = useConceptTheme();
@@ -126,7 +128,7 @@ function RSInput({
   }, [thisRef]);
 
   return (
-    <div className={`flex flex-col  w-full ${cursor}`}>
+    <div className={`flex flex-col ${dimensions} ${cursor}`}>
     {label && 
     <Label
       text={label}

@@ -223,7 +223,7 @@ export function loadRSFormData(schema: IRSFormData): IRSForm {
   return result;
 }
 
-export function matchConstituenta(query: string, target: IConstituenta, mode: CstMatchMode): boolean {
+export function matchConstituenta(target: IConstituenta, query: string, mode: CstMatchMode): boolean {
   const matcher = new TextMatcher(query);
   if ((mode === CstMatchMode.ALL || mode === CstMatchMode.NAME) && 
     matcher.test(target.alias)) {
@@ -281,6 +281,10 @@ export function inferClass(type: CstType, isTemplate: boolean): CstClass {
   case CstType.PREDICATE: return CstClass.DERIVED;
   case CstType.THEOREM: return CstClass.STATEMENT;
   }
+}
+
+export function isMockCst(cst: IConstituenta) {
+  return cst.id <= 0;
 }
 
 export function createMockConstituenta(schema: number, id: number, alias: string, type: CstType, comment: string): IConstituenta {

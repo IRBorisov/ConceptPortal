@@ -1,23 +1,16 @@
 import { Dispatch, useEffect, useMemo, useState } from 'react';
 
-import ConceptSearch from '../../components/Common/ConceptSearch';
 import SelectSingle from '../../components/Common/SelectSingle';
 import TextArea from '../../components/Common/TextArea';
-import DataTable, { createColumnHelper,IConditionalStyle } from '../../components/DataTable';
-import ConstituentaTooltip from '../../components/Help/ConstituentaTooltip';
 import RSInput from '../../components/RSInput';
+import ConstituentaPicker from '../../components/Shared/ConstituentaPicker';
 import { useLibrary } from '../../context/LibraryContext';
-import { useConceptTheme } from '../../context/ThemeContext';
-import { CstMatchMode } from '../../models/miscelanious';
-import { applyFilterCategory, CATEGORY_CST_TYPE, IConstituenta, IRSForm, matchConstituenta } from '../../models/rsform';
-import { colorfgCstStatus } from '../../utils/color';
+import { applyFilterCategory, CATEGORY_CST_TYPE, IConstituenta, IRSForm } from '../../models/rsform';
 import { prefixes } from '../../utils/constants';
-
 export interface ITemplateState {
   templateID?: number
   prototype?: IConstituenta
   filterCategory?: IConstituenta
-  filterText: string
 }
 
 interface TemplateTabProps {
@@ -25,11 +18,7 @@ interface TemplateTabProps {
   partialUpdate: Dispatch<Partial<ITemplateState>>
 }
 
-const constituentaHelper = createColumnHelper<IConstituenta>();
-
-function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
-  const { colors } = useConceptTheme();
-  
+function TemplateTab({ state, partialUpdate }: TemplateTabProps) { 
   const { templates, retrieveTemplate } = useLibrary();
   const [ selectedSchema, setSelectedSchema ] = useState<IRSForm | undefined>(undefined);
   
@@ -91,58 +80,8 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
     if (state.filterCategory) {
       data = applyFilterCategory(state.filterCategory, selectedSchema);
     }
-    if (state.filterText) {
-      data = data.filter(cst => matchConstituenta(state.filterText, cst, CstMatchMode.TERM));
-    }
     setFilteredData(data);
-  }, [state.filterText, state.filterCategory, selectedSchema]);
-
-  function handleSelectTemplate(cst: IConstituenta) {
-    partialUpdate( { prototype: cst } );
-  }
-
-  const columns = useMemo(
-  () => [
-    constituentaHelper.accessor('alias', {
-      id: 'alias',
-      size: 65,
-      minSize: 65,
-      cell: props => {
-        const cst = props.row.original;
-        return (<>
-          <div
-            id={`${prefixes.cst_template_ist}${cst.alias}`}
-            className='min-w-[3.1rem] max-w-[3.1rem] px-1 text-center rounded-md whitespace-nowrap'
-            style={{
-              borderWidth: '1px', 
-              borderColor: colorfgCstStatus(cst.status, colors), 
-              color: colorfgCstStatus(cst.status, colors), 
-              fontWeight: 600
-            }}
-          >
-            {cst.alias}
-          </div>
-          <ConstituentaTooltip data={cst} anchor={`#${prefixes.cst_template_ist}${cst.alias}`} />
-        </>);
-      }
-    }),
-    constituentaHelper.accessor('term_resolved', {
-      id: 'term',
-      size: 600,
-      minSize: 350,
-      maxSize: 600
-    })
-  ], [colors]);
-
-  const conditionalRowStyles = useMemo(
-  (): IConditionalStyle<IConstituenta>[] => [
-    {
-      when: (cst: IConstituenta) => cst.id === state.prototype?.id,
-      style: {
-        backgroundColor: colors.bgSelected
-      },
-    }
-  ], [state.prototype, colors]);
+  }, [state.filterCategory, selectedSchema]);
 
   return (
   <div className='flex flex-col gap-3'>
@@ -166,32 +105,13 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
         onChange={data => partialUpdate({templateID: (data ? data.value : undefined)})}
       />
     </div>
-    <div>
-      <ConceptSearch 
-        value={state.filterText}
-        onChange={newValue => partialUpdate({ filterText: newValue} )}
-        dense
-      />
-      <div className='border min-h-[17.5rem] max-h-[17.5rem] text-sm overflow-y-auto select-none'>
-      <DataTable
-        data={filteredData}
-        columns={columns}
-        conditionalRowStyles={conditionalRowStyles}
-        
-        dense
-        noHeader
-
-        noDataComponent={
-          <span className='flex flex-col justify-center p-2 text-center min-h-[5rem]'>
-            <p>Список конституент пуст</p>
-            <p>Измените параметры фильтра</p>
-          </span>
-        }
-
-        onRowClicked={handleSelectTemplate}
-      />
-      </div>
-    </div>
+    <ConstituentaPicker
+      value={state.prototype}
+      data={filteredData}
+      onSelectValue={cst => partialUpdate( { prototype: cst } )}
+      prefixID={prefixes.cst_template_ist}
+      rows={9}
+    />
     <TextArea id='term'
       rows={1}
       disabled

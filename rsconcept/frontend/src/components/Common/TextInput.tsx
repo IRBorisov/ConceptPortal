@@ -19,8 +19,8 @@ function TextInput({
   colors = 'clr-input',
   ...props
 }: TextInputProps) {
-  const borderClass = noBorder ? '': 'border';
-  const outlineClass = noOutline ? '': 'clr-outline';
+  const borderClass = noBorder ? '' : 'border';
+  const outlineClass = noOutline ? '' : 'clr-outline';
   return (
     <div className={`flex ${dense ? 'items-center gap-4 ' + dimensions : 'flex-col items-start gap-2'}`}>
       {label && 

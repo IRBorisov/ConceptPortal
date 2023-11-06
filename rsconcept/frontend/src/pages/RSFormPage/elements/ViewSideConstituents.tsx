@@ -5,6 +5,7 @@ import DropdownButton from '../../../components/Common/DropdownButton';
 import SelectorButton from '../../../components/Common/SelectorButton';
 import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } from '../../../components/DataTable';
 import { CogIcon, FilterIcon, MagnifyingGlassIcon } from '../../../components/Icons';
+import ConstituentaBadge from '../../../components/Shared/ConstituentaBadge';
 import { useRSForm } from '../../../context/RSFormContext';
 import { useConceptTheme } from '../../../context/ThemeContext';
 import useDropdown from '../../../hooks/useDropdown';
@@ -13,16 +14,14 @@ import useWindowSize from '../../../hooks/useWindowSize';
 import { DependencyMode as CstSource } from '../../../models/miscelanious';
 import { CstMatchMode } from '../../../models/miscelanious';
 import { applyGraphFilter } from '../../../models/miscelanious';
-import { CstType, extractGlobals, IConstituenta, matchConstituenta } from '../../../models/rsform';
+import { CstType, extractGlobals, IConstituenta, isMockCst, matchConstituenta } from '../../../models/rsform';
 import { createMockConstituenta } from '../../../models/rsform';
-import { colorfgCstStatus } from '../../../utils/color';
 import { prefixes } from '../../../utils/constants';
 import { 
   describeConstituenta, describeCstMathchMode, 
   describeCstSource, labelCstMathchMode, 
   labelCstSource
 } from '../../../utils/labels';
-import ConstituentaTooltip from '../../../components/Help/ConstituentaTooltip';
 
 // Height that should be left to accomodate navigation panel + bottom margin
 const LOCAL_NAVIGATION_H = '2.1rem';
@@ -35,10 +34,6 @@ interface ViewSideConstituentsProps {
   baseHeight: string
   activeID?: number
   onOpenEdit: (cstID: number) => void
-}
-
-function isMockCst(cst: IConstituenta) {
-  return cst.id <= 0;
 }
 
 const columnHelper = createColumnHelper<IConstituenta>();
@@ -102,7 +97,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       filtered = applyGraphFilter(schema, activeID, filterSource);
     }
     if (filterText) {
-      filtered = filtered.filter((cst) => matchConstituenta(filterText, cst, filterMatch));
+      filtered = filtered.filter(cst => matchConstituenta(cst, filterText, filterMatch));
     }
     setFilteredData(filtered);
   }, [filterText, setFilteredData, filterSource, expression, schema, filterMatch, activeID]);
@@ -141,25 +136,12 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       size: 65,
       minSize: 65,
       footer: undefined,
-      cell: props => {
-        const cst = props.row.original;
-        return (<>
-          <div
-            id={`${prefixes.cst_list}${cst.alias}`}
-            className='min-w-[3.1rem] max-w-[3.1rem] px-1 text-center rounded-md whitespace-nowrap'
-            style={{
-              borderWidth: '1px', 
-              borderColor: colorfgCstStatus(cst.status, colors), 
-              color: colorfgCstStatus(cst.status, colors), 
-              fontWeight: 600,
-              backgroundColor: isMockCst(cst) ? colors.bgWarning : colors.bgInput
-            }}
-          >
-            {cst.alias}
-          </div>
-          <ConstituentaTooltip data={cst} anchor={`#${prefixes.cst_list}${cst.alias}`} />
-        </>);
-      }
+      cell: props =>
+        <ConstituentaBadge 
+          theme={colors}
+          value={props.row.original}
+          prefixID={prefixes.cst_list}
+        />
     }),
     columnHelper.accessor(cst => describeConstituenta(cst), {
       id: 'description',

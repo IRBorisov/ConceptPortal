@@ -48,8 +48,7 @@ export interface IArgumentInfo {
   typification: string
 }
 
-export interface IArgumentValue {
-  alias: string
+export interface IArgumentValue extends IArgumentInfo {
   value?: string
 }
 

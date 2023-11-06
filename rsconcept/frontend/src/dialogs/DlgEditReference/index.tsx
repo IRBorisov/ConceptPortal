@@ -1,17 +1,13 @@
-import { createColumnHelper } from '@tanstack/react-table';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
-import ConceptSearch from '../../components/Common/ConceptSearch';
 import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import Label from '../../components/Common/Label';
 import Modal from '../../components/Common/Modal';
 import SelectMulti from '../../components/Common/SelectMulti';
 import TextInput from '../../components/Common/TextInput';
-import DataTable, { IConditionalStyle } from '../../components/DataTable';
-import ConstituentaTooltip from '../../components/Help/ConstituentaTooltip';
 import HelpTerminologyControl from '../../components/Help/HelpTerminologyControl';
 import { HelpIcon } from '../../components/Icons';
-import { useConceptTheme } from '../../context/ThemeContext';
+import ConstituentaPicker from '../../components/Shared/ConstituentaPicker';
 import {
   getCompatibleGrams, Grammeme,
   parseEntityReference, parseGrammemes, 
@@ -19,7 +15,6 @@ import {
 } from '../../models/language';
 import { CstMatchMode } from '../../models/miscelanious';
 import { IConstituenta, matchConstituenta } from '../../models/rsform';
-import { colorfgCstStatus } from '../../utils/color';
 import { prefixes } from '../../utils/constants';
 import { compareGrammemeOptions, IGrammemeOption, PremadeWordForms, SelectorGrammems } from '../../utils/selectors';
 import ReferenceTypeButton from './ReferenceTypeButton';
@@ -40,20 +35,16 @@ interface DlgEditReferenceProps {
   onSave: (newRef: string) => void
 }
 
-const constituentaHelper = createColumnHelper<IConstituenta>();
-
 function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferenceProps) {
-  const { colors } = useConceptTheme();
-
   const [type, setType] = useState<ReferenceType>(ReferenceType.ENTITY);
 
   const [nominal, setNominal] = useState('');
   const [offset, setOffset] = useState(1);
 
+  const [selectedCst, setSelectedCst] = useState<IConstituenta | undefined>(undefined);
   const [alias, setAlias] = useState('');
   const [term, setTerm] = useState('');
-  const [filter, setFilter] = useState('');
-  const [filteredData, setFilteredData] = useState<IConstituenta[]>([]);
+
   const [selectedGrams, setSelectedGrams] = useState<IGrammemeOption[]>([]);
   const [gramOptions, setGramOptions] = useState<IGrammemeOption[]>([]);
 
@@ -105,23 +96,8 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
       }
     } else if (initial.text) {
       setNominal(initial.text ?? '');
-      setFilter(initial.text);
     }
   }, [initial, items]);
-
-  // Filter constituents
-  useEffect(
-  () => {
-    if (filter === '') {
-      setFilteredData(items.filter(
-        (cst) => cst.term_resolved !== '')
-      );
-    } else {
-      setFilteredData(items.filter(
-        (cst) => matchConstituenta(filter, cst, CstMatchMode.TERM))
-      );
-    }
-  }, [filter, items]);
 
   // Filter grammemes when input changes
   useEffect(
@@ -145,6 +121,7 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
 
   function handleSelectConstituenta(cst: IConstituenta) {
     setAlias(cst.alias);
+    setSelectedCst(cst);
   }
 
   const handleSelectGrams = useCallback(
@@ -179,49 +156,6 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
       
     </div>);
   }, [handleSelectGrams, selectedGrams]);
-
-  const columnsConstituenta = useMemo(
-  () => [
-    constituentaHelper.accessor('alias', {
-      id: 'alias',
-      size: 65,
-      minSize: 65,
-      cell: props => {
-        const cst = props.row.original;
-        return (<>
-          <div
-            id={`${prefixes.cst_wordform_list}${cst.alias}`}
-            className='min-w-[3.1rem] max-w-[3.1rem] px-1 text-center rounded-md whitespace-nowrap'
-            style={{
-              borderWidth: '1px', 
-              borderColor: colorfgCstStatus(cst.status, colors), 
-              color: colorfgCstStatus(cst.status, colors), 
-              fontWeight: 600
-            }}
-          >
-            {cst.alias}
-          </div>
-          <ConstituentaTooltip data={cst} anchor={`#${prefixes.cst_wordform_list}${cst.alias}`} />
-        </>);
-      }
-    }),
-    constituentaHelper.accessor('term_resolved', {
-      id: 'term',
-      size: 600,
-      minSize: 350,
-      maxSize: 600
-    })
-  ], [colors]);
-
-  const conditionalRowStyles = useMemo(
-  (): IConditionalStyle<IConstituenta>[] => [
-    {
-      when: (cst: IConstituenta) => cst.alias === alias,
-      style: {
-        backgroundColor: colors.bgSelected
-      },
-    }
-  ], [alias, colors]);
   
   return (
   <Modal
@@ -286,32 +220,17 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
     </div>}
     {type === ReferenceType.ENTITY &&
     <div className='flex flex-col gap-2'>
-      <div>
-        <ConceptSearch 
-          value={filter}
-          onChange={newValue => setFilter(newValue)}
-          dense
-        />
-        <div className='border min-h-[15.5rem] max-h-[15.5rem] text-sm overflow-y-auto'>
-        <DataTable
-          data={filteredData}
-          columns={columnsConstituenta}
-          conditionalRowStyles={conditionalRowStyles}
-          
-          noHeader
-          dense
+      <ConstituentaPicker 
+        value={selectedCst}
+        data={items}
+        onSelectValue={handleSelectConstituenta}
+        prefixID={prefixes.cst_modal_list}
+        describeFunc={cst => cst.term_resolved}
+        matchFunc={(cst, filter) => matchConstituenta(cst, filter, CstMatchMode.TERM)}
+        prefilterFunc={cst => cst.term_resolved !== ''}
+        rows={8}
+      />
 
-          noDataComponent={
-            <span className='flex flex-col justify-center p-2 text-center min-h-[5rem]'>
-              <p>Список конституент пуст</p>
-              <p>Измените параметры фильтра</p>
-            </span>
-          }
-
-          onRowClicked={handleSelectConstituenta}
-        />
-      </div>
-      </div>
       <div className='flex gap-4 flex-start'>
         <TextInput
           label='Отсылаемая конституента'

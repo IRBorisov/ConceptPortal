@@ -1,15 +1,14 @@
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import DataTable, { createColumnHelper, type RowSelectionState,VisibilityState } from '../../components/DataTable';
+import ConstituentaBadge from '../../components/Shared/ConstituentaBadge';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useWindowSize from '../../hooks/useWindowSize';
 import { CstType, IConstituenta, ICstCreateData, ICstMovetoData } from '../../models/rsform'
-import { colorfgCstStatus } from '../../utils/color';
 import { prefixes } from '../../utils/constants';
-import { describeExpressionStatus, labelCstTypification } from '../../utils/labels';
+import { labelCstTypification } from '../../utils/labels';
 import RSItemsMenu from './elements/RSItemsMenu';
 
 // Window width cutoff for columns
@@ -239,30 +238,13 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edit
       size: 65,
       minSize: 65,
       maxSize: 65,
-      cell: props => {
-        const cst = props.row.original;
-        return (<>
-          <div
-            id={`${prefixes.cst_list}${cst.alias}`}
-            className='w-full min-w-[3.1rem] max-w-[3.1rem] px-1 text-center rounded-md whitespace-nowrap'
-            style={{
-              borderWidth: "1px", 
-              borderColor: colorfgCstStatus(cst.status, colors), 
-              color: colorfgCstStatus(cst.status, colors), 
-              fontWeight: 600,
-              backgroundColor: colors.bgInput
-            }}
-          >
-            {cst.alias}
-          </div>
-          <ConceptTooltip
-            anchorSelect={`#${prefixes.cst_list}${cst.alias}`}
-            place='right'
-          >
-            <p><span className='font-semibold'>Статус</span>: {describeExpressionStatus(cst.status)}</p>
-          </ConceptTooltip>
-        </>);
-      }
+      cell: props => 
+        <ConstituentaBadge 
+          theme={colors}
+          value={props.row.original}
+          prefixID={prefixes.cst_list}
+          shortTooltip
+        />
     }),
     columnHelper.accessor(cst => labelCstTypification(cst), {
       id: 'type',
