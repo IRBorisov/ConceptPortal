@@ -50,12 +50,13 @@ extends Pick<ReactCodeMirrorProps,
   label?: string
   dimensions?: string
   disabled?: boolean
+  noTooltip?: boolean
   innerref?: RefObject<ReactCodeMirrorRef> | undefined
   onChange?: (newValue: string) => void
 }
 
 function RSInput({ 
-  id, label, innerref, onChange, disabled,
+  id, label, innerref, onChange, disabled, noTooltip,
   dimensions = 'w-full',
   ...props 
 }: RSInputProps) {
@@ -94,8 +95,8 @@ function RSInput({
     EditorView.lineWrapping,
     RSLanguage,
     ccBracketMatching(darkMode),
-    rsHoverTooltip(schema?.items || []),
-  ], [darkMode, schema?.items]);
+    ... noTooltip ? [] : [rsHoverTooltip(schema?.items || [])],
+  ], [darkMode, schema?.items, noTooltip]);
 
   const handleInput = useCallback(
   (event: React.KeyboardEvent<HTMLDivElement>) => {

@@ -3,7 +3,7 @@ import { TextMatcher } from '../utils/utils'
 import { ILibraryUpdateData } from './library'
 import { ILibraryItem } from './library'
 import { CstMatchMode } from './miscelanious'
-import { IArgumentInfo, ParsingStatus, ValueClass } from './rslang'
+import { IArgumentInfo, IArgumentValue, ParsingStatus, ValueClass } from './rslang'
 
 export enum CstType {
   BASE = 'basic',
@@ -146,6 +146,24 @@ export interface IRSFormUploadData {
 // ========== API =================
 export function extractGlobals(expression: string): Set<string> {
   return new Set(expression.match(/[XCSADFPT]\d+/g) ?? []);
+}
+
+export function inferTemplatedType(templateType: CstType, args: IArgumentValue[]): CstType {
+  if (args.length === 0 || args.some(arg => !arg.value)) {
+    return templateType;
+  } else if (templateType === CstType.PREDICATE) {
+    return CstType.AXIOM;
+  } else {
+    return CstType.TERM;
+  }
+}
+
+export function substituteTemplateArgs(expression: string, args: IArgumentValue[]): string {
+  if (args.every(arg => !arg.value)) {
+    return expression;
+  }
+  // TODO: figure out actual substitution
+  return expression;
 }
 
 export function loadRSFormData(schema: IRSFormData): IRSForm {

@@ -132,15 +132,17 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
       />
     </div>
 
-    <div 
-      title='Выберите аргумент из списка сверху и значение из списка снизу'
-      className='flex items-center justify-center w-full gap-2 select-none'
-    >
-      <span className='font-semibold text-center'>{selectedArgument?.alias || 'ARG'}</span>
+    <div className='flex items-center justify-center w-full gap-2 select-none'>
+      <span title='Выберите аргумент из списка сверху и значение из списка снизу'
+        className='font-semibold text-center'
+      >
+        {selectedArgument?.alias || 'ARG'}
+      </span>
       <span>=</span>
       <RSInput
         dimensions='max-w-[12rem] w-full'
         value={argumentValue}
+        noTooltip
         onChange={newValue => setArgumentValue(newValue)}
       />
       <MiniButton

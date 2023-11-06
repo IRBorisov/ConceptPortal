@@ -7,7 +7,7 @@ import Modal, { ModalProps } from '../../components/Common/Modal';
 import HelpRSTemplates from '../../components/Help/HelpRSTemplates';
 import { HelpIcon } from '../../components/Icons';
 import usePartialUpdate from '../../hooks/usePartialUpdate';
-import { CstType, ICstCreateData, IRSForm } from '../../models/rsform';
+import { CstType, ICstCreateData, inferTemplatedType, IRSForm, substituteTemplateArgs } from '../../models/rsform';
 import { createAliasFor, validateCstAlias } from '../../utils/misc';
 import ArgumentsTab, { IArgumentsState } from './ArgumentsTab';
 import ConstituentaTab from './ConstituentaTab';
@@ -27,12 +27,12 @@ export enum TabID {
 
 function DlgConstituentaTemplate({ hideWindow, schema, onCreate }: DlgConstituentaTemplateProps) {
   const [validated, setValidated] = useState(false);
-  const [ templateData, updateTemplateData ] = usePartialUpdate<ITemplateState>({});
-  const [ argumentsData, updateArgumentsData ] = usePartialUpdate<IArgumentsState>({
+  const [ template, updateTemplate ] = usePartialUpdate<ITemplateState>({});
+  const [ substitutes, updateSubstitutes ] = usePartialUpdate<IArgumentsState>({
     definition: '',
     arguments: []
   });
-  const [cstData, updateCstData] = usePartialUpdate<ICstCreateData>({
+  const [constituenta, updateConstituenta] = usePartialUpdate<ICstCreateData>({
     cst_type: CstType.TERM,
     insert_after: null,
     alias: '',
@@ -45,40 +45,40 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate }: DlgConstituen
   
   const [ activeTab, setActiveTab ] = useState(TabID.TEMPLATE);
 
-  const handleSubmit = () => onCreate(cstData);
+  const handleSubmit = () => onCreate(constituenta);
   
   useLayoutEffect(
   () => {
-    updateCstData({ alias: createAliasFor(cstData.cst_type, schema) });
-  }, [cstData.cst_type, updateCstData, schema]);
+    updateConstituenta({ alias: createAliasFor(constituenta.cst_type, schema) });
+  }, [constituenta.cst_type, updateConstituenta, schema]);
 
   useEffect(
   () => {
-    setValidated(validateCstAlias(cstData.alias, cstData.cst_type, schema));
-  }, [cstData.alias, cstData.cst_type, schema]);
+    setValidated(validateCstAlias(constituenta.alias, constituenta.cst_type, schema));
+  }, [constituenta.alias, constituenta.cst_type, schema]);
 
   useLayoutEffect(
   () => {
-    if (!templateData.prototype) {
-      updateCstData({
+    if (!template.prototype) {
+      updateConstituenta({
         definition_raw: '',
         definition_formal: '',
         term_raw: ''
       });
-      updateArgumentsData({
+      updateSubstitutes({
         definition: '',
         arguments: []
       });
     } else {
-      updateCstData({
-        cst_type: templateData.prototype.cst_type,
-        definition_raw: templateData.prototype.definition_raw,
-        definition_formal: templateData.prototype.definition_formal,
-        term_raw:  templateData.prototype.term_raw
+      updateConstituenta({
+        cst_type: template.prototype.cst_type,
+        definition_raw: template.prototype.definition_raw,
+        definition_formal: template.prototype.definition_formal,
+        term_raw:  template.prototype.term_raw
       });
-      updateArgumentsData({
-        definition: templateData.prototype.definition_formal,
-        arguments: templateData.prototype.parse.args.map(
+      updateSubstitutes({
+        definition: template.prototype.definition_formal,
+        arguments: template.prototype.parse.args.map(
           arg => ({
             alias: arg.alias,
             typification: arg.typification,
@@ -87,7 +87,23 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate }: DlgConstituen
         )
       });
     }
-  }, [templateData.prototype, updateCstData, updateArgumentsData]);
+  }, [template.prototype, updateConstituenta, updateSubstitutes]);
+
+  useLayoutEffect(
+  () => {
+    if (substitutes.arguments.length === 0 || !template.prototype) {
+      return;
+    }
+    const definition = substituteTemplateArgs(template.prototype.definition_formal, substitutes.arguments);
+    const type = inferTemplatedType(template.prototype.cst_type, substitutes.arguments);
+    updateConstituenta({
+      cst_type: type,
+      definition_formal: definition,
+    });
+    updateSubstitutes({
+      definition: definition,
+    });
+  }, [substitutes.arguments, template.prototype, updateConstituenta, updateSubstitutes]);
 
   return (
   <Modal
@@ -133,23 +149,23 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate }: DlgConstituen
     <div className='w-full'>
       <TabPanel>
         <TemplateTab
-          state={templateData}
-          partialUpdate={updateTemplateData}
+          state={template}
+          partialUpdate={updateTemplate}
         />
       </TabPanel>
 
       <TabPanel>
         <ArgumentsTab
           schema={schema}
-          state={argumentsData}
-          partialUpdate={updateArgumentsData}
+          state={substitutes}
+          partialUpdate={updateSubstitutes}
         />
       </TabPanel>
 
       <TabPanel>
         <ConstituentaTab 
-          state={cstData}
-          partialUpdate={updateCstData}
+          state={constituenta}
+          partialUpdate={updateConstituenta}
         />
       </TabPanel>
     </div>
