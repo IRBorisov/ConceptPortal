@@ -114,6 +114,27 @@ function RSInput({
       } else if (event.code === 'KeyZ') {
         text.insertChar('Z');
         event.preventDefault();
+      } else if (event.code === 'KeyR') {
+        text.insertChar('R');
+        event.preventDefault();
+      } else if (event.code === 'KeyF') {
+        text.insertChar('F');
+        event.preventDefault();
+      } else if (event.code === 'KeyP') {
+        text.insertChar('P');
+        event.preventDefault();
+      } else if (event.code === 'KeyX') {
+        text.insertChar('X');
+        event.preventDefault();
+      } else if (event.code === 'KeyS') {
+        text.insertChar('S');
+        event.preventDefault();
+      } else if (event.code === 'KeyD') {
+        text.insertChar('D');
+        event.preventDefault();
+      } else if (event.code === 'KeyC') {
+        text.insertChar('C');
+        event.preventDefault();
       }
     } else if (event.altKey) {
       if (text.processAltKey(event.code, event.shiftKey)) {

@@ -1,5 +1,5 @@
 import { createColumnHelper } from '@tanstack/react-table';
-import { Dispatch, useCallback, useMemo, useState } from 'react';
+import { Dispatch, useCallback, useEffect, useMemo, useState } from 'react';
 
 import MiniButton from '../../components/Common/MiniButton';
 import DataTable, { IConditionalStyle } from '../../components/DataTable';
@@ -32,9 +32,19 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
 
   const [argumentValue, setArgumentValue] = useState('');
 
+  useEffect(
+  () => {
+    if (!selectedArgument && state.arguments.length > 0) {
+      setSelectedArgument(state.arguments[0]);
+    }
+  }, [state.arguments, selectedArgument]);
+
   const handleSelectArgument = useCallback(
   (arg: IArgumentValue) => {
     setSelectedArgument(arg);
+    if (arg.value) {
+      setArgumentValue(arg.value);
+    }
   }, []);
 
   const handleSelectConstituenta = useCallback(
