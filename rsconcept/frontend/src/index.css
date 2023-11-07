@@ -198,6 +198,7 @@
     .clr-btn-primary:hover,
     .clr-btn-primary:focus
   ) {
+    @apply transition;
     color: var(--cl-prim-fg-100);
     background-color: var(--cl-prim-bg-100);
     .dark & {
@@ -221,6 +222,7 @@
     .clr-btn-default,
     .clr-btn-primary
   ):disabled {
+    @apply transition;
     color: var(--cl-fg-80);
     background-color: var(--cl-bg-60);
     .dark & {
@@ -234,6 +236,7 @@
     .clr-btn-nav,
     .clr-btn-default
   ):hover:not(:disabled) {
+    @apply transition;
     color: var(--cl-fg-100);
     background-color: var(--cl-prim-bg-60);
     .dark & {
