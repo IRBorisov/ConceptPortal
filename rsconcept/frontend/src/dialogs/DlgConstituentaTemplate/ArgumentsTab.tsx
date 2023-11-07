@@ -175,9 +175,8 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
     />
 
     <RSInput id='result'
-      dimensions='w-full mt-[0.3rem]'
       placeholder='Итоговое определение'
-      height='4.9rem'
+      height='5.1rem'
       value={state.definition}
       disabled
     />

@@ -40,7 +40,7 @@ function ConstituentaTab({state, partialUpdate}: ConstituentaTabProps) {
     />
     <RSInput id='expression' label='Формальное определение'
       placeholder='Родоструктурное выражение, задающее формальное определение'
-      height='4.9rem'
+      height='5.1rem'
       value={state.definition_formal}
       onChange={value => partialUpdate({definition_formal: value})}
     />

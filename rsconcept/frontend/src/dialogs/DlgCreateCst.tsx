@@ -79,7 +79,7 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
       />
       <RSInput id='expression' label='Формальное определение'
         placeholder='Родоструктурное выражение, задающее формальное определение'
-        height='4.9rem'
+        height='5.1rem'
         value={cstData.definition_formal}
         onChange={value => updateCstData({definition_formal: value})}
       />

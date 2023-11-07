@@ -121,7 +121,7 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
       spellCheck
     />
     <RSInput id='expression'
-      height='4.9rem'
+      height='5.1rem'
       placeholder='Выберите шаблон из списка'
       disabled
       value={state.prototype?.definition_formal}
