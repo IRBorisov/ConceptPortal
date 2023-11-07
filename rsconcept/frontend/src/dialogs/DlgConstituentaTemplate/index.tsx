@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import ConceptTab from '../../components/Common/ConceptTab';
@@ -27,7 +27,7 @@ export enum TabID {
 }
 
 function DlgConstituentaTemplate({ hideWindow, schema, onCreate }: DlgConstituentaTemplateProps) {
-  const [validated, setValidated] = useState(false);
+  const [ validated, setValidated ] = useState(false);
   const [ template, updateTemplate ] = usePartialUpdate<ITemplateState>({});
   const [ substitutes, updateSubstitutes ] = usePartialUpdate<IArgumentsState>({
     definition: '',
@@ -53,7 +53,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate }: DlgConstituen
     updateConstituenta({ alias: createAliasFor(constituenta.cst_type, schema) });
   }, [constituenta.cst_type, updateConstituenta, schema]);
 
-  useEffect(
+  useLayoutEffect(
   () => {
     setValidated(validateCstAlias(constituenta.alias, constituenta.cst_type, schema));
   }, [constituenta.alias, constituenta.cst_type, schema]);
@@ -119,6 +119,8 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate }: DlgConstituen
     selectedIndex={activeTab}
     onSelect={setActiveTab}
     defaultFocus
+    forceRenderTabPanel
+
     selectedTabClassName='clr-selected'
     className='flex flex-col items-center'
   >
@@ -148,14 +150,14 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate }: DlgConstituen
     </div>
     
     <div className='w-full'>
-      <TabPanel>
+      <TabPanel style={{ display: activeTab === TabID.TEMPLATE ? '': 'none' }}>
         <TemplateTab
           state={template}
           partialUpdate={updateTemplate}
         />
       </TabPanel>
 
-      <TabPanel>
+      <TabPanel style={{ display: activeTab === TabID.ARGUMENTS ? '': 'none' }}>
         <ArgumentsTab
           schema={schema}
           state={substitutes}
@@ -163,7 +165,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate }: DlgConstituen
         />
       </TabPanel>
 
-      <TabPanel>
+      <TabPanel style={{ display: activeTab === TabID.CONSTITUENTA ? '': 'none' }}>
         <ConstituentaTab 
           state={constituenta}
           partialUpdate={updateConstituenta}

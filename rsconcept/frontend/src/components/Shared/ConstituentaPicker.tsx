@@ -90,7 +90,7 @@ function ConstituentaPicker({
       className='overflow-y-auto text-sm border select-none' 
       style={{ maxHeight: size, minHeight: size }}
     >
-      <DataTable dense noHeader
+      <DataTable dense noHeader noFooter
         data={filteredData}
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}

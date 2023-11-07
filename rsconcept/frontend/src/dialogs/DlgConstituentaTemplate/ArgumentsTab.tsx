@@ -128,13 +128,13 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
   return (
   <div className='flex flex-col gap-3'>
 
-    <div className='overflow-y-auto text-sm border select-none max-h-[7.5rem] min-h-[7.5rem]'>
-      <DataTable dense
+    <div className='overflow-y-auto text-sm border select-none max-h-[5.8rem] min-h-[5.8rem]'>
+      <DataTable dense noFooter
         data={state.arguments}
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
         noDataComponent={
-          <span className='flex flex-col justify-center p-2 text-center min-h-[5rem]'>
+          <span className='flex flex-col justify-center p-2 text-center min-h-[3.6rem]'>
             <p>Аргументы отсутствуют</p>
           </span>
         }
@@ -142,7 +142,7 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
       />
     </div>
 
-    <div className='flex items-center justify-center w-full gap-2 select-none'>
+    <div className='flex items-center justify-center w-full gap-2 py-1 select-none'>
       <span title='Выберите аргумент из списка сверху и значение из списка снизу'
         className='font-semibold text-center'
       >
@@ -171,10 +171,11 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
       data={schema?.items}
       onSelectValue={handleSelectConstituenta}
       prefixID={prefixes.cst_modal_list}
-      rows={5}
+      rows={7}
     />
 
     <RSInput id='result'
+      dimensions='w-full mt-[0.3rem]'
       placeholder='Итоговое определение'
       height='4.8rem'
       value={state.definition}
