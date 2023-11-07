@@ -384,7 +384,6 @@ function RSTabs() {
       selectedIndex={activeTab}
       onSelect={onSelectTab}
       defaultFocus
-      forceRenderTabPanel
       selectedTabClassName='clr-selected'
       className='flex flex-col items-center w-full'
     >
@@ -420,7 +419,7 @@ function RSTabs() {
       </TabList>
 
       <div className='overflow-y-auto' style={{ maxHeight: panelHeight}}>
-        <TabPanel style={{ display: activeTab === RSTabID.CARD ? '': 'none' }}>
+        <TabPanel forceRender style={{ display: activeTab === RSTabID.CARD ? '': 'none' }}>
           <EditorRSForm
             isModified={isModified}
             setIsModified={setIsModified}
@@ -431,7 +430,7 @@ function RSTabs() {
           />
         </TabPanel>
 
-        <TabPanel style={{ display: activeTab === RSTabID.CST_LIST ? '': 'none' }}>
+        <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_LIST ? '': 'none' }}>
           <EditorItems
             onOpenEdit={onOpenCst}
             onCreateCst={promptCreateCst}
@@ -440,7 +439,7 @@ function RSTabs() {
           />
         </TabPanel>
 
-        <TabPanel style={{ display: activeTab === RSTabID.CST_EDIT ? '': 'none' }}>
+        <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_EDIT ? '': 'none' }}>
           <EditorConstituenta
             isModified={isModified}
             setIsModified={setIsModified}

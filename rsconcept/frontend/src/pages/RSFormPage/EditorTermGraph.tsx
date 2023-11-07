@@ -245,7 +245,6 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
     if (event.key === 'Delete' && allSelected.length > 0) {
       event.preventDefault();
       handleDeleteCst();
-      return;
     }
   }
 
@@ -446,10 +445,11 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         {dismissed.map(cstID => {
           const cst = schema!.items.find(cst => cst.id === cstID)!;
           const adjustedColoring = coloringScheme === 'none' ? 'status': coloringScheme;
-          return (<>
+          const id = `${prefixes.cst_hidden_list}${cst.alias}`
+          return (<div key={`wrap-${id}`}>
             <div
-              key={`${cst.alias}`}
-              id={`${prefixes.cst_list}${cst.alias}`}
+              key={id}
+              id={id}
               className='w-fit min-w-[3rem] rounded-md text-center cursor-pointer select-none'
               style={{ 
                 backgroundColor: getCstNodeColor(cst, adjustedColoring, colors),
@@ -460,18 +460,18 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
             >
               {cst.alias}
             </div>
-            <ConstituentaTooltip 
+            <ConstituentaTooltip
               data={cst}
-              anchor={`#${prefixes.cst_list}${cst.alias}`}
+              anchor={`#${id}`}
             />
-          </>);
+          </div>);
         })}
         </div>
       </div>}
     </div>
     </div>
 
-    <div className='w-full h-full overflow-auto outline-none' tabIndex={0} onKeyDown={handleKeyDown}>
+    <div className='w-full h-full overflow-auto outline-none' tabIndex={-1} onKeyDown={handleKeyDown}>
     <div 
       className='relative'
       style={{width: canvasWidth, height: canvasHeight}}

@@ -94,7 +94,7 @@ function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, 
   }
 
   return (
-  <div tabIndex={0} onKeyDown={handleInput}>
+  <div tabIndex={-1} onKeyDown={handleInput}>
     <div className='relative flex items-start justify-center w-full'>
     <div className='absolute flex mt-1'>
       <MiniButton

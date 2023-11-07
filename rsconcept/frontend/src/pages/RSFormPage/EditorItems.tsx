@@ -293,7 +293,7 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edit
   <div
     className='w-full outline-none'
     style={{minHeight: mainHeight}}
-    tabIndex={0}
+    tabIndex={-1}
     onKeyDown={handleTableKey}
   >
     <div className='sticky top-0 flex justify-start w-full gap-1 px-2 py-1 border-b items-center h-[2.2rem] select-none clr-app'>

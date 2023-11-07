@@ -34,6 +34,7 @@ export const globalIDs = {
 
 export const prefixes = {
   cst_list: 'cst-list-',
+  cst_hidden_list: 'cst-hidden-list-',
   cst_modal_list: 'cst-modal-list-',
   cst_template_ist: 'cst-template-list-',
   cst_wordform_list: 'cst-wordform-list-',
