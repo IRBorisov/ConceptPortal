@@ -101,7 +101,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       filtered = filtered.filter(cst => matchConstituenta(cst, filterText, filterMatch));
     }
     setFilteredData(filtered);
-  }, [filterText, setFilteredData, filterSource, expression, schema, filterMatch, activeID]);
+  }, [filterText, setFilteredData, filterSource, expression, schema?.items, schema, filterMatch, activeID]);
 
   const handleRowClicked = useCallback(
   (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {

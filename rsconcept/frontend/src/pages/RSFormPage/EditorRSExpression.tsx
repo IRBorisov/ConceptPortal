@@ -129,8 +129,8 @@ function EditorRSExpression({
       </div>
     </div>
     <RSInput innerref={rsInput}
-      height='4.8rem'
       value={value}
+      minHeight='3.5rem'
       disabled={disabled}
       onChange={handleChange}
       {...props}

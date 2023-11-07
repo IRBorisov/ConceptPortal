@@ -230,7 +230,6 @@ function EditorConstituenta({
       <div className='flex flex-col gap-3 mt-1'>
         <RefsInput id='term' label='Термин'
           placeholder='Обозначение, используемое в текстовых определениях данной схемы'
-          height='2.1rem'
           items={schema?.items}
           value={term}
           initialValue={activeCst?.term_raw ?? ''}
@@ -239,7 +238,7 @@ function EditorConstituenta({
           onChange={newValue => setTerm(newValue)}
         />
         <TextArea id='typification' label='Типизация'
-          dense
+          dense noBorder
           rows={1}
           value={typification}
           colors='clr-app'
@@ -257,7 +256,6 @@ function EditorConstituenta({
         />
         <RefsInput id='definition' label='Текстовое определение'
           placeholder='Лингвистическая интерпретация формального выражения'
-          height='4.8rem'
           items={schema?.items}
           value={textDefinition}
           initialValue={activeCst?.definition_raw ?? ''}
@@ -266,7 +264,7 @@ function EditorConstituenta({
           onChange={newValue => setTextDefinition(newValue)}
         />
         <TextArea id='convention' label='Конвенция / Комментарий'
-          placeholder='Договоренность об интерпретации неопределяемого понятия&#x000D;&#x000A;Комментарий к производному понятию'
+          placeholder='Договоренность об интерпретации или пояснение'
           rows={2}
           value={convention}
           disabled={!isEnabled}

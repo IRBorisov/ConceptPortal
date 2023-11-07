@@ -79,7 +79,7 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
       />
       <RSInput id='expression' label='Формальное определение'
         placeholder='Родоструктурное выражение, задающее формальное определение'
-        height='4.8rem'
+        height='4.9rem'
         value={cstData.definition_formal}
         onChange={value => updateCstData({definition_formal: value})}
       />
@@ -91,7 +91,7 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
         onChange={event => updateCstData({ definition_raw: event.target.value })}
       />
       <TextArea id='convention' label='Конвенция / Комментарий'
-        placeholder='Договоренность об интерпретации неопределяемого понятия&#x000D;&#x000A;Комментарий к производному понятию'
+        placeholder='Договоренность об интерпретации или пояснение'
         rows={2}
         value={cstData.convention}
         spellCheck

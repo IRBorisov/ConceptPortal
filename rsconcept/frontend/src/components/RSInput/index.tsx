@@ -45,7 +45,7 @@ const editorSetup: BasicSetupOptions = {
 
 interface RSInputProps 
 extends Pick<ReactCodeMirrorProps, 
-  'id' | 'height' | 'value' | 'className' | 'onFocus' | 'onBlur' | 'placeholder'
+  'id' | 'height' | 'minHeight' | 'maxHeight' | 'value' | 'className' | 'onFocus' | 'onBlur' | 'placeholder'
 > {
   label?: string
   dimensions?: string

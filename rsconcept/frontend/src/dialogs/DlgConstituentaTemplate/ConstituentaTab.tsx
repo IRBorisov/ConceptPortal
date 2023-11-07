@@ -40,7 +40,7 @@ function ConstituentaTab({state, partialUpdate}: ConstituentaTabProps) {
     />
     <RSInput id='expression' label='Формальное определение'
       placeholder='Родоструктурное выражение, задающее формальное определение'
-      height='4.8rem'
+      height='4.9rem'
       value={state.definition_formal}
       onChange={value => partialUpdate({definition_formal: value})}
     />
@@ -52,7 +52,7 @@ function ConstituentaTab({state, partialUpdate}: ConstituentaTabProps) {
       onChange={event => partialUpdate({ definition_raw: event.target.value })}
     />
     <TextArea id='convention' label='Конвенция / Комментарий'
-      placeholder='Договоренность об интерпретации неопределяемого понятия&#x000D;&#x000A;Комментарий к производному понятию'
+      placeholder='Договоренность об интерпретации или пояснение к схеме'
       rows={2}
       value={state.convention}
       spellCheck
