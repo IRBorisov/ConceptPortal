@@ -12,7 +12,7 @@ function ParsingResult({ data, onShowError }: ParsingResultProps) {
   const warningsCount = data.errors.length - errorCount;
 
   return (
-    <div className='px-3 py-2'>
+    <div className='px-2 py-1'>
       <p>Ошибок: <b>{errorCount}</b> | Предупреждений: <b>{warningsCount}</b></p>
       {data.errors.map((error, index) => {
         return (

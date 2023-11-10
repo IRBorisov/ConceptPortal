@@ -72,7 +72,7 @@ function ConstituentaPicker({
     })
   ], [colors, prefixID, describeFunc]);
 
-  const size = useMemo(() => (`${0.125 + 1.94*rows}rem`), [rows]);
+  const size = useMemo(() => (`calc(2px + (2px + 1.8rem)*${rows})`), [rows]);
 
   const conditionalRowStyles = useMemo(
   (): IConditionalStyle<IConstituenta>[] => [{

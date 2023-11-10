@@ -81,7 +81,7 @@ function RSFormStats({ stats }: RSFormStatsProps) {
       />}
       { stats.count_theorem > 0 &&
       <LabeledText id='count_theorem'
-        label='Теормы '
+        label='Теоремы '
         text={stats.count_theorem}
       />}
     </div>

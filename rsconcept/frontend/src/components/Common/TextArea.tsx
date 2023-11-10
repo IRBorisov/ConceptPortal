@@ -9,10 +9,10 @@ extends IEditorProps, IColorsProps, Omit<TextareaHTMLAttributes<HTMLTextAreaElem
 }
 
 function TextArea({
-  id, label, required, tooltip, dense, noBorder, noOutline,
+  id, label, required, tooltip, rows,
+  dense, noBorder, noOutline,
   dimensions = 'w-full',
   colors = 'clr-input',
-  rows = 4,
   ...props
 }: TextAreaProps) {
   const borderClass = noBorder ? '': 'border';

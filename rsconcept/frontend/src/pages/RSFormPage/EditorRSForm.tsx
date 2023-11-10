@@ -98,6 +98,12 @@ function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, 
     <div className='relative flex items-start justify-center w-full'>
     <div className='absolute flex mt-1'>
       <MiniButton
+        tooltip='Сохранить изменения'
+        disabled={!isModified || !isEditable}
+        icon={<SaveIcon size={5} color={isModified && isEditable ? 'text-primary' : ''}/>}
+        onClick={() => handleSubmit()}
+      />
+      <MiniButton
         tooltip='Поделиться схемой'
         icon={<ShareIcon size={5} color='text-primary'/>}
         onClick={onShare}
@@ -165,14 +171,15 @@ function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, 
               setValue={value => setCanonical(value)}
             />
           </div>
-
-          <SubmitButton
-            text='Сохранить изменения'
-            loading={processing}
-            disabled={!isModified || !isEditable}
-            icon={<SaveIcon size={6} />}
-            dimensions='my-2 w-fit'
-          />
+          <div className='flex justify-center w-full'>
+            <SubmitButton
+              text='Сохранить изменения'
+              loading={processing}
+              disabled={!isModified || !isEditable}
+              icon={<SaveIcon size={6} />}
+              dimensions='my-2 w-fit'
+            />
+          </div>
           
           <div className='flex flex-col gap-1'>
             <div className='flex justify-start'>

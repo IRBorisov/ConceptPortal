@@ -5,7 +5,7 @@ import Dropdown from '../../../components/Common/Dropdown';
 import DropdownButton from '../../../components/Common/DropdownButton';
 import DropdownCheckbox from '../../../components/Common/DropdownCheckbox';
 import {
-  CloneIcon, DiamondIcon, DownloadIcon, DumpBinIcon, EditIcon, MenuIcon, NotSubscribedIcon,
+  CloneIcon, DownloadIcon, DumpBinIcon, EditIcon, MenuIcon, NotSubscribedIcon,
 OwnerIcon, ShareIcon, SmallPlusIcon, SubscribedIcon,   UploadIcon
 } from '../../../components/Icons';
 import { useAuth } from '../../../context/AuthContext';
@@ -20,12 +20,11 @@ interface RSTabsMenuProps {
   onShare: () => void
   onDownload: () => void
   onToggleSubscribe: () => void
-  onTemplates: () => void
 }
 
 function RSTabsMenu({
   showUploadDialog, showCloneDialog,
-  onDestroy, onShare, onDownload, onClaim, onToggleSubscribe, onTemplates
+  onDestroy, onShare, onDownload, onClaim, onToggleSubscribe
 }: RSTabsMenuProps) {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -44,11 +43,6 @@ function RSTabsMenu({
   function handleDelete() {
     schemaMenu.hide();
     onDestroy();
-  }
-  
-  function handleTemplates() {
-    schemaMenu.hide();
-    onTemplates();
   }
 
   function handleDownload () {
@@ -102,12 +96,6 @@ function RSTabsMenu({
             <p>Клонировать</p>
           </div>
         </DropdownButton>
-        <DropdownButton onClick={handleTemplates} disabled={!isEditable} >
-          <div className='inline-flex items-center justify-start gap-2'>
-            <DiamondIcon color={isEditable ? 'text-success' : ''} size={4}/>
-            <p>Банк выражений</p>
-          </div>
-        </DropdownButton>
         <DropdownButton onClick={handleDownload}>
           <div className='inline-flex items-center justify-start gap-2'>
             <DownloadIcon color='text-primary' size={4}/>
@@ -150,7 +138,7 @@ function RSTabsMenu({
         <DropdownButton 
           disabled={!user || !isClaimable}
           onClick={!isOwned ? handleClaimOwner : undefined}
-          tooltip={!user || !isClaimable ? 'Стать владельцем можно только для общей изменяемой схемы' : ''}
+          tooltip={!user || !isClaimable ? 'Взять во владение можно общую изменяемую схему' : ''}
         >
           <div className='flex items-center gap-2 pl-1'>
             <span><OwnerIcon size={5} color={isOwned ? 'text-success' : 'text-controls'} /></span>

@@ -5,7 +5,7 @@ interface DividerProps {
 
 function Divider({ vertical, margins = 'mx-2' }: DividerProps) {
   return (
-    <div className={`${margins} ${vertical ? 'border-x-2 h-full': 'border-y-2 w-full'}`} />
+    <div className={`${margins} ${vertical ? 'border-x h-full': 'border-y w-full'}`} />
   );
 }
 

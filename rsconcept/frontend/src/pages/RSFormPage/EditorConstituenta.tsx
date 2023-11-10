@@ -239,9 +239,13 @@ function EditorConstituenta({
         />
         <TextArea id='typification' label='Типизация'
           dense noBorder
-          rows={1}
+          rows={typification.length > 70 ? 2 : 1}
           value={typification}
           colors='clr-app'
+          dimensions='w-full'
+          style={{
+            resize: 'none'
+          }}
           disabled
         />
         <EditorRSExpression id='expression' label='Формальное определение'
@@ -265,7 +269,6 @@ function EditorConstituenta({
         />
         <TextArea id='convention' label='Конвенция / Комментарий'
           placeholder='Договоренность об интерпретации или пояснение'
-          rows={2}
           value={convention}
           disabled={!isEnabled}
           spellCheck

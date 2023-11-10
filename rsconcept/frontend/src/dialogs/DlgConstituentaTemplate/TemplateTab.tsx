@@ -86,35 +86,37 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
 
   return (
   <div className='flex flex-col gap-3'>
-    <div className='flex justify-between gap-3'>
-      <SelectSingle
-        className='w-full'
-        options={categorySelector}
-        placeholder='Выберите категорию'
-        value={state.filterCategory && selectedSchema ? {
-          value: state.filterCategory.id,
-          label: state.filterCategory.term_raw
-        } : null}
-        onChange={data => partialUpdate({filterCategory: selectedSchema?.items.find(cst => cst.id === data?.value) })}
-        isClearable
-      />
-      <SelectSingle
-        className='min-w-[15rem]'
-        options={templateSelector}
-        placeholder='Выберите источник'
-        value={state.templateID ? { value: state.templateID, label: templates.find(item => item.id == state.templateID)!.title }: null}
-        onChange={data => partialUpdate({templateID: (data ? data.value : undefined)})}
+    <div>
+      <div className='flex justify-between gap-6'>
+        <SelectSingle
+          className='w-full'
+          options={categorySelector}
+          placeholder='Выберите категорию'
+          value={state.filterCategory && selectedSchema ? {
+            value: state.filterCategory.id,
+            label: state.filterCategory.term_raw
+          } : null}
+          onChange={data => partialUpdate({filterCategory: selectedSchema?.items.find(cst => cst.id === data?.value) })}
+          isClearable
+        />
+        <SelectSingle
+          className='min-w-[15rem]'
+          options={templateSelector}
+          placeholder='Выберите источник'
+          value={state.templateID ? { value: state.templateID, label: templates.find(item => item.id == state.templateID)!.title }: null}
+          onChange={data => partialUpdate({templateID: (data ? data.value : undefined)})}
+        />
+      </div>
+      <ConstituentaPicker
+        value={state.prototype}
+        data={filteredData}
+        onSelectValue={cst => partialUpdate( { prototype: cst } )}
+        prefixID={prefixes.cst_template_ist}
+        rows={9}
       />
     </div>
-    <ConstituentaPicker
-      value={state.prototype}
-      data={filteredData}
-      onSelectValue={cst => partialUpdate( { prototype: cst } )}
-      prefixID={prefixes.cst_template_ist}
-      rows={9}
-    />
     <TextArea id='term'
-      rows={1}
+      rows={2}
       disabled
       placeholder='Шаблон конституенты не выбран'
       value={prototypeInfo}

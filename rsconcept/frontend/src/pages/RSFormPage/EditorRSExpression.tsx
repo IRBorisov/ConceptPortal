@@ -130,7 +130,7 @@ function EditorRSExpression({
     </div>
     <RSInput innerref={rsInput}
       value={value}
-      minHeight='3.5rem'
+      minHeight='3.8rem'
       disabled={disabled}
       onChange={handleChange}
       {...props}
@@ -139,12 +139,12 @@ function EditorRSExpression({
       disabled={disabled}
       onEdit={handleEdit}
     />
-    <div className='w-full max-h-[5rem] min-h-[5rem] flex'>
-      <div className='flex flex-col'>
+    <div className='w-full max-h-[4.5rem] min-h-[4.5rem] flex'>
+      <div className='flex flex-col text-sm'>
         <Button
           tooltip='Проверить формальное определение'
           text='Проверить'
-          dimensions='w-fit h-[3rem] z-pop rounded-none'
+          dimensions='w-[6.75rem] min-h-[3rem] z-pop rounded-none'
           colors='clr-btn-default'
           noOutline
           onClick={() => handleCheckExpression()}

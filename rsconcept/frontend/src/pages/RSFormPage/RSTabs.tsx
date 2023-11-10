@@ -394,7 +394,6 @@ function RSTabs() {
           onClaim={onClaimSchema}
           onShare={onShareSchema}
           onToggleSubscribe={handleToggleSubscribe}
-          onTemplates={onShowTemplates}
           showCloneDialog={promptClone} 
           showUploadDialog={() => setShowUpload(true)}
         />
@@ -402,13 +401,13 @@ function RSTabs() {
           className='border-x-2'
           tooltip={`Название схемы: ${schema.title ?? ''}`}
         >
-          Паспорт схемы
+          Карточка
         </ConceptTab>
         <ConceptTab 
           className='border-r-2'
           tooltip={`Всего конституент: ${schema.stats?.count_all ?? 0}\nКоличество ошибок: ${schema.stats?.count_errors ?? 0}`}
         >
-          Конституенты
+          Содержание
         </ConceptTab>
         <ConceptTab className='border-r-2'>
           Редактор

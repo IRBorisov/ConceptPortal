@@ -56,7 +56,8 @@ extends Pick<ReactCodeMirrorProps,
 }
 
 function RSInput({ 
-  id, label, innerref, onChange, disabled, noTooltip,
+  id, label, innerref, onChange,
+  disabled, noTooltip,
   dimensions = 'w-full',
   ...props 
 }: RSInputProps) {

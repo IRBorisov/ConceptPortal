@@ -158,7 +158,7 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
       <MiniButton
         tooltip='Подставить значение аргумента'
         icon={<CheckIcon
-          size={6}
+          size={5}
           color={!argumentValue || !selectedArgument ? 'text-disabled' : 'text-success'}
         />}
         disabled={!argumentValue || !selectedArgument}
@@ -177,6 +177,7 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
     <RSInput id='result'
       placeholder='Итоговое определение'
       height='5.1rem'
+      dimensions='w-full mt-[0.45rem]'
       value={state.definition}
       disabled
     />
