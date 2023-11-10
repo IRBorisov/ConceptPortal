@@ -11,9 +11,6 @@ import { AuthState } from './context/AuthContext.tsx';
 import { LibraryState } from './context/LibraryContext.tsx';
 import { ThemeState } from './context/ThemeContext.tsx';
 import { UsersState } from './context/UsersContext.tsx';
-import { initBackend } from './utils/backendAPI.ts';
-
-initBackend();
 
 const resetState = () => {
   console.log('Resetting state after error fallback')

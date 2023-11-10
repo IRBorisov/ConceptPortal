@@ -19,12 +19,24 @@ import {
 import { IExpressionParse, IRSExpression } from '../models/rslang';
 import { config } from './constants';
 
-export function initBackend() {
-  axios.defaults.withCredentials = true;
-  axios.defaults.xsrfCookieName = 'csrftoken';
-  axios.defaults.xsrfHeaderName = 'x-csrftoken';
-  axios.defaults.baseURL = `${config.backend}`;
+const defaultOptions = {
+  xsrfCookieName: 'csrftoken',
+  xsrfHeaderName: 'x-csrftoken',
+  baseURL: `${config.backend}`,
+  withCredentials: true
 }
+
+const axiosInstance = axios.create(defaultOptions);
+axiosInstance.interceptors.request.use(
+(config) => {
+  const token = document.cookie.split('; ')
+    .find((row) => row.startsWith('csrftoken='))
+    ?.split('=')[1];
+  if (token) {
+    config.headers['x-csrftoken'] = token;
+  }
+  return config;
+});
 
 // ================ Data transfer types ================
 export type DataCallback<ResponseData = undefined> = (data: ResponseData) => void;
@@ -322,7 +334,7 @@ export function postGenerateLexeme(request: FrontExchange<ITextRequest, ILexemeD
 function AxiosGet<ResponseData>({ endpoint, request, title, options }: IAxiosRequest<undefined, ResponseData>) {
   console.log(`REQUEST: [[${title}]]`);
   if (request.setLoading) request.setLoading(true);
-  axios.get<ResponseData>(endpoint, options)
+  axiosInstance.get<ResponseData>(endpoint, options)
     .then(response => {
       if (request.setLoading) request.setLoading(false);
       if (request.onSuccess) request.onSuccess(response.data);
@@ -339,7 +351,7 @@ function AxiosPost<RequestData, ResponseData>(
 ) {
   console.log(`POST: [[${title}]]`);
   if (request.setLoading) request.setLoading(true);
-  axios.post<ResponseData>(endpoint, request.data, options)
+  axiosInstance.post<ResponseData>(endpoint, request.data, options)
     .then(response => {
       if (request.setLoading) request.setLoading(false);
       if (request.onSuccess) request.onSuccess(response.data);
@@ -356,7 +368,7 @@ function AxiosDelete<RequestData, ResponseData>(
 ) {
   console.log(`DELETE: [[${title}]]`);
   if (request.setLoading) request.setLoading(true);
-  axios.delete<ResponseData>(endpoint, options)
+  axiosInstance.delete<ResponseData>(endpoint, options)
     .then(response => {
       if (request.setLoading) request.setLoading(false);
       if (request.onSuccess) request.onSuccess(response.data);
@@ -373,7 +385,7 @@ function AxiosPatch<RequestData, ResponseData>(
 ) {
   console.log(`PATCH: [[${title}]]`);
   if (request.setLoading) request.setLoading(true);
-  axios.patch<ResponseData>(endpoint, request.data, options)
+  axiosInstance.patch<ResponseData>(endpoint, request.data, options)
     .then(response => {
       if (request.setLoading) request.setLoading(false);
       if (request.onSuccess) request.onSuccess(response.data);
