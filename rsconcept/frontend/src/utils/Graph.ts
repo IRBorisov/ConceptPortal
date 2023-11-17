@@ -1,4 +1,8 @@
 /**
+ * Module: Custom graph data structure.
+ */
+
+/**
  * Represents single node of a {@link Graph}, as implemented by storing outgoing and incoming connections.
  */
 export class GraphNode {

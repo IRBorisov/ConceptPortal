@@ -1,8 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 import { ErrorInfo } from '../components/BackendError';
-import { matchLibraryItem } from '../models/library';
 import { ILibraryItem } from '../models/library';
+import { matchLibraryItem } from '../models/libraryAPI';
 import { ILibraryFilter } from '../models/miscelanious';
 import { IRSForm, IRSFormCreateData, IRSFormData } from '../models/rsform';
 import { loadRSFormData } from '../models/rsformAPI';
@@ -68,7 +68,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
       result = result.filter(item => user?.subscriptions.includes(item.id) || item.owner === user?.id);
     }
     if (params.query) {
-      result = result.filter(item => matchLibraryItem(params.query!, item));
+      result = result.filter(item => matchLibraryItem(item, params.query!));
     }
     return result;
   }, [items, user]);

@@ -44,5 +44,5 @@ createRoot(document.getElementById('root')!).render(
   </ThemeState>
   </IntlProvider>
   </ErrorBoundary>
-  </React.StrictMode>,
+  </React.StrictMode>
 )

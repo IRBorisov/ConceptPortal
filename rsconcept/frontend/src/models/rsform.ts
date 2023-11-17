@@ -1,8 +1,15 @@
+/**
+ * Module: Models for formal representation for systems of concepts.
+ */
+
 import { Graph } from '../utils/Graph'
 import { ILibraryUpdateData } from './library'
 import { ILibraryItem } from './library'
 import { IArgumentInfo, ParsingStatus, ValueClass } from './rslang'
 
+/**
+ * Represents Constituenta type.
+*/
 export enum CstType {
   BASE = 'basic',
   STRUCTURED = 'structure',
@@ -17,6 +24,9 @@ export enum CstType {
 // CstType constant for category dividers in TemplateSchemas. TODO: create separate sctructure for templates
 export const CATEGORY_CST_TYPE = CstType.THEOREM;
 
+/**
+ * Represents Constituenta classification in terms of system of concepts.
+*/
 export enum CstClass {
   BASIC = 'basic',
   DERIVED = 'derived',
@@ -24,7 +34,9 @@ export enum CstClass {
   TEMPLATE = 'template'
 }
 
-// Constituenta expression status
+/**
+ * Represents formal expression Status.
+*/
 export enum ExpressionStatus {
   VERIFIED = 'verified',
   INCORRECT = 'incorrect',
@@ -34,12 +46,17 @@ export enum ExpressionStatus {
   UNKNOWN = 'unknown',
 }
 
+/**
+ * Represents word form for natural languange.
+*/
 export interface TermForm {
   text: string
   tags: string
 }
 
-// ====== Constituenta ==========
+/**
+ * Represents Constituenta basic persistent data.
+*/
 export interface IConstituentaMeta {
   id: number
   schema: number
@@ -55,6 +72,9 @@ export interface IConstituentaMeta {
   term_forms: TermForm[]
 }
 
+/**
+ * Represents Constituenta.
+*/
 export interface IConstituenta
 extends IConstituentaMeta {
   cst_class: CstClass
@@ -69,10 +89,16 @@ extends IConstituentaMeta {
   }
 }
 
+/**
+ * Represents Constituenta list.
+*/
 export interface IConstituentaList {
   items: number[]
 }
 
+/**
+ * Represents constituenta data, used in creation process.
+*/
 export interface ICstCreateData 
 extends Pick<
   IConstituentaMeta, 
@@ -82,23 +108,37 @@ extends Pick<
   insert_after: number | null
 }
 
+/**
+ * Represents data, used in ordering constituents in a list.
+*/
 export interface ICstMovetoData extends IConstituentaList {
   move_to: number
 }
 
+/**
+ * Represents data, used in updating persistent attributes in {@link IConstituenta}.
+*/
 export interface ICstUpdateData
 extends Pick<IConstituentaMeta, 'id'>,
 Partial<Pick<IConstituentaMeta, | 'alias' | 'convention' | 'definition_formal' | 'definition_raw' | 'term_raw' | 'term_forms'>> {}
 
+/**
+ * Represents data, used in renaming {@link IConstituenta}.
+*/
 export interface ICstRenameData 
 extends Pick<IConstituentaMeta, 'id' | 'alias' | 'cst_type' > {}
 
+/**
+ * Represents data response when creating {@link IConstituenta}.
+*/
 export interface ICstCreatedResponse {
   new_cst: IConstituentaMeta
   schema: IRSFormData
 }
 
-// ========== RSForm ============
+/**
+ * Represents {@link IRSForm} statistics.
+*/
 export interface IRSFormStats {
   count_all: number
   count_errors: number
@@ -119,6 +159,9 @@ export interface IRSFormStats {
   count_theorem: number
 }
 
+/**
+ * Represents formal explication for set of concepts.
+*/
 export interface IRSForm
 extends ILibraryItem {
   items: IConstituenta[]
@@ -127,14 +170,23 @@ extends ILibraryItem {
   subscribers: number[]
 }
 
+/**
+ * Represents data for {@link IRSForm} provided by backend.
+*/
 export interface IRSFormData extends Omit<IRSForm, 'stats' | 'graph'> {}
 
+/**
+ * Represents data, used for creating {@link IRSForm}.
+*/
 export interface IRSFormCreateData
 extends ILibraryUpdateData {
   file?: File
   fileName?: string
 }
 
+/**
+ * Represents data, used for uploading {@link IRSForm} as file.
+*/
 export interface IRSFormUploadData {
   load_metadata: boolean
   file: File

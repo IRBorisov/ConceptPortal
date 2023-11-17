@@ -1,4 +1,6 @@
-// Module: Selector maps
+/**
+ * Module: Mappings for selector UI elements.
+ */
 import { LayoutTypes } from 'reagraph';
 
 import { type GramData, Grammeme, ReferenceType } from '../models/language';

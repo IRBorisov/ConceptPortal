@@ -1,9 +1,10 @@
-
-// Module: miscellaneous static functions to generate UI resources
+/**
+ * Module: miscellaneous static functions to generate UI resources.
+ */
 
 import { CstType, IConstituenta, IRSForm } from '../models/rsform';
-import { IRSErrorDescription } from '../models/rslang';
-import { resolveErrorClass, RSErrorClass } from '../models/rslang';
+import { IRSErrorDescription, RSErrorClass } from '../models/rslang';
+import { inferErrorClass } from '../models/rslangAPI';
 import { labelCstType } from './labels';
 
 export function getCstTypePrefix(type: CstType) {
@@ -70,7 +71,7 @@ export function cloneTitle(schema: IRSForm): string {
 
 export function getRSErrorPrefix(error: IRSErrorDescription): string {
   const id = error.errorType.toString(16)
-  switch(resolveErrorClass(error.errorType)) {
+  switch(inferErrorClass(error.errorType)) {
   case RSErrorClass.LEXER: return 'L' + id;
   case RSErrorClass.PARSER: return 'P' + id;
   case RSErrorClass.SEMANTIC: return 'S' + id;

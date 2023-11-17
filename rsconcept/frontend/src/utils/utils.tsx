@@ -1,6 +1,13 @@
+/**
+ * Module: Utility functions.
+ */
+
+/**
+ * Checks if arguments is Node.
+ */
 export function assertIsNode(e: EventTarget | null): asserts e is Node {
-  if (!e || !('nodeType' in e)) {
-    throw new Error('Node expected');
+  if (e === null || !('nodeType' in e)) {
+    throw new TypeError(`Expected 'Node' but recieved '${e?.constructor.name ?? 'null'}'`);
   }
 }
 

@@ -1,28 +1,44 @@
-// Module: RSLang model types
+/**
+ * Module: Models for RSLanguage.
+ */
 
-// ======== RS Parsing ============
+/**
+ * Represents formal expression.
+*/
 export interface IRSExpression {
   expression: string
 }
 
+/**
+ * Represents syntax type.
+*/
 export enum Syntax {
   UNDEF = 'undefined',
   ASCII = 'ascii',
   MATH = 'math'
 }
 
+/**
+ * Represents computability class.
+*/
 export enum ValueClass {
-  INVALID = 'invalid',
+  INVALID = 'invalid', // incalculable
   VALUE = 'value',
   PROPERTY = 'property'
 }
 
+/**
+ * Represents parsing status.
+*/
 export enum ParsingStatus {
   UNDEF = 'undefined',
   VERIFIED = 'verified',
   INCORRECT = 'incorrect'
 }
 
+/**
+ * Represents parsing error description.
+*/
 export interface IRSErrorDescription {
   errorType: RSErrorType
   position: number
@@ -30,6 +46,9 @@ export interface IRSErrorDescription {
   params: string[]
 }
 
+/**
+ * Represents AST node.
+*/
 export interface ISyntaxTreeNode {
   uid: number
   parent: number
@@ -41,17 +60,30 @@ export interface ISyntaxTreeNode {
     value: unknown
   }
 }
+
+/**
+ * Represents Syntax tree for RSLang expression.
+*/
 export type SyntaxTree = ISyntaxTreeNode[]
 
+/**
+ * Represents function argument definition.
+*/
 export interface IArgumentInfo {
   alias: string
   typification: string
 }
 
+/**
+ * Represents function argument value.
+*/
 export interface IArgumentValue extends IArgumentInfo {
   value?: string
 }
 
+/**
+ * Represents results of expression parse in RSLang.
+*/
 export interface IExpressionParse {
   parseResult: boolean
   syntax: Syntax
@@ -63,7 +95,9 @@ export interface IExpressionParse {
   args: IArgumentInfo[]
 }
 
-//! RS language token types enumeration
+/**
+ * Represents RSLang token types.
+*/
 export enum TokenID {
   // Global, local IDs and literals
   ID_LOCAL = 258,
@@ -225,26 +259,12 @@ export enum RSErrorType {
   globalFuncNoInterpretation = 34883
 }
 
-// Error handling
+/**
+ * Represents error class.
+*/
 export enum RSErrorClass {
   LEXER,
   PARSER,
   SEMANTIC,
   UNKNOWN
-}
-
-const ERRCODE_LEXER_MASK = 512;
-const ERRCODE_PARSER_MASK = 1024;
-const ERRCODE_TYPE_MASK = 2048;
-
-export function resolveErrorClass(error: RSErrorType): RSErrorClass {
-  if ((error & ERRCODE_LEXER_MASK) !== 0) {
-    return RSErrorClass.LEXER;
-  } else if ((error & ERRCODE_PARSER_MASK) !== 0) {
-    return RSErrorClass.PARSER;
-  } else if ((error & ERRCODE_TYPE_MASK) !== 0) {
-    return RSErrorClass.SEMANTIC;
-  } else {
-    return RSErrorClass.UNKNOWN;
-  }
 }

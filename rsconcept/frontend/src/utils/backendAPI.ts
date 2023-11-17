@@ -1,3 +1,7 @@
+/**
+ * Module: API for backend communications.
+ */
+
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { toast } from 'react-toastify';
 
@@ -17,12 +21,12 @@ import {
   ICstCreateData, ICstCreatedResponse, ICstMovetoData, ICstRenameData, ICstUpdateData,
   IRSFormCreateData, IRSFormData, IRSFormUploadData} from '../models/rsform';
 import { IExpressionParse, IRSExpression } from '../models/rslang';
-import { config } from './constants';
+import { buidConstants } from './constants';
 
 const defaultOptions = {
   xsrfCookieName: 'csrftoken',
   xsrfHeaderName: 'x-csrftoken',
-  baseURL: `${config.backend}`,
+  baseURL: `${buidConstants.backend}`,
   withCredentials: true
 }
 

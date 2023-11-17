@@ -1,11 +1,15 @@
-// =========== Modules contains all dynamic color definitions ==========
+/**
+ * Module: Single place for all color definitions in code (see index.css for full defs).
+ */
 
 import { GramData, Grammeme, NounGrams, PartOfSpeech, VerbGrams } from '../models/language'
 import { CstClass, ExpressionStatus } from '../models/rsform'
 import { ISyntaxTreeNode, TokenID } from '../models/rslang'
 
 
-// ============= MAIN COLOR THEMES ==========
+/**
+ * Represents application color theme configuration.
+ */
 export interface IColorTheme {  
   bgDefault: string
   bgInput: string
@@ -39,7 +43,9 @@ export interface IColorTheme {
   fgOrange: string
 }
 
-// ======= Light =======
+/**
+ * Represents application Light theme.
+ */
 export const lightT: IColorTheme = {
   bgDefault:  'var(--cl-bg-100)',
   bgInput:    'var(--cl-bg-120)',
@@ -73,7 +79,9 @@ export const lightT: IColorTheme = {
   fgOrange:   'hsl(030, 090%, 055%)'
 };
 
-// ======= DARK ========
+/**
+ * Represents application Dark theme.
+ */
 export const darkT: IColorTheme = {
   bgDefault:  'var(--cd-bg-100)',
   bgInput:    'var(--cd-bg-120)',
@@ -107,7 +115,9 @@ export const darkT: IColorTheme = {
   fgOrange:   'hsl(035, 100%, 050%)'
 };
 
-// ============ SELECT THEMES ==========
+/**
+ * Represents Select component Light theme.
+ */
 export const selectLightT = {
   primary: lightT.bgPrimary,
   primary75: lightT.bgSelected,
@@ -130,6 +140,9 @@ export const selectLightT = {
   neutral90: lightT.fgWarning
 }
 
+/**
+ * Represents Select component Dark theme.
+ */
 export const selectDarkT = {
   primary: darkT.bgPrimary,
   primary75: darkT.bgSelected,
@@ -152,7 +165,9 @@ export const selectDarkT = {
   neutral90: darkT.fgWarning
 }
 
-// ============ GRAPH THEMES ==========
+/**
+ * Represents Graph component Light theme.
+ */
 export const graphLightT = {
   canvas: {
     background: '#f9fafb',
@@ -202,6 +217,9 @@ export const graphLightT = {
   }
 }
 
+/**
+ * Represents Graph component Dark theme.
+ */
 export const graphDarkT = {
   canvas: {
     background: '#171717' // var(--cd-bg-100)
@@ -251,7 +269,9 @@ export const graphDarkT = {
   }
 }
 
-// ======== Bracket Matching Themes ===========
+/**
+ * Represents Brackets highlights Light theme.
+ */
 export const bracketsLightT = {
   '.cc-nonmatchingBracket': {
     color: lightT.fgRed,
@@ -263,6 +283,9 @@ export const bracketsLightT = {
   },
 };
 
+/**
+ * Represents Brackets highlights Dark theme.
+ */
 export const bracketsDarkT = {
   '.cc-nonmatchingBracket': {
     color: darkT.fgRed,
@@ -274,7 +297,9 @@ export const bracketsDarkT = {
   },
 };
 
-// =========== Misc colors ======================
+/**
+ * Determines background color for {@link ISyntaxTreeNode} based on its type.
+ */
 export function colorbgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): string {
   switch (node.typeID) {
   case TokenID.PUNC_DEFINE:
@@ -354,6 +379,9 @@ export function colorbgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): s
   return colors.bgRed;
 }
 
+/**
+ * Determines background color for {@link ExpressionStatus}.
+ */
 export function colorbgCstStatus(status: ExpressionStatus, colors: IColorTheme): string {
   switch (status) {
     case ExpressionStatus.VERIFIED: return colors.bgGreen;
@@ -365,6 +393,9 @@ export function colorbgCstStatus(status: ExpressionStatus, colors: IColorTheme):
   }
 }
 
+/**
+ * Determines foreground color for {@link ExpressionStatus}.
+ */
 export function colorfgCstStatus(status: ExpressionStatus, colors: IColorTheme): string {
   switch (status) {
     case ExpressionStatus.VERIFIED: return colors.fgGreen;
@@ -376,6 +407,9 @@ export function colorfgCstStatus(status: ExpressionStatus, colors: IColorTheme):
   }
 }
 
+/**
+ * Determines background color for {@link IConstituenta} depending on its {@link CstClass}.
+ */
 export function colorbgCstClass(cstClass: CstClass, colors: IColorTheme): string {
   switch (cstClass) {
     case CstClass.BASIC: return colors.bgGreen;
@@ -385,6 +419,25 @@ export function colorbgCstClass(cstClass: CstClass, colors: IColorTheme): string
   }
 }
 
+/**
+ * Determines background color for {@link GramData}.
+ */
+export function colorbgGrammeme(gram: GramData, colors: IColorTheme): string {
+  if (PartOfSpeech.includes(gram as Grammeme)) {
+    return colors.bgBlue;
+  }
+  if (NounGrams.includes(gram as Grammeme)) {
+    return colors.bgGreen;
+  }
+  if (VerbGrams.includes(gram as Grammeme)) {
+    return colors.bgTeal;
+  }
+  return colors.bgInput;
+}
+
+/**
+ * Determines foreground color for {@link GramData}.
+ */
 export function colorfgGrammeme(gram: GramData, colors: IColorTheme): string {
   if (PartOfSpeech.includes(gram as Grammeme)) {
     return colors.fgBlue;
@@ -401,17 +454,3 @@ export function colorfgGrammeme(gram: GramData, colors: IColorTheme): string {
     return colors.fgPurple;
   }
 }
-
-export function colorbgGrammeme(gram: GramData, colors: IColorTheme): string {
-  if (PartOfSpeech.includes(gram as Grammeme)) {
-    return colors.bgBlue;
-  }
-  if (NounGrams.includes(gram as Grammeme)) {
-    return colors.bgGreen;
-  }
-  if (VerbGrams.includes(gram as Grammeme)) {
-    return colors.bgTeal;
-  }
-  return colors.bgInput;
-}
-

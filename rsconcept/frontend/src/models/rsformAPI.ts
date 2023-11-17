@@ -1,4 +1,7 @@
-// ========== RSForm API =================
+/**
+ * Module: API for formal representation for systems of concepts.
+ */
+
 import { Graph } from '../utils/Graph';
 import { TextMatcher } from '../utils/utils';
 import { CstMatchMode } from './miscelanious';
@@ -9,8 +12,15 @@ import {
 import { ParsingStatus, ValueClass } from './rslang';
 import { extractGlobals } from './rslangAPI';
 
-export function loadRSFormData(schema: IRSFormData): IRSForm {
-  const result = schema as IRSForm
+/**
+ * Loads data into an {@link IRSForm} based on {@link IRSFormData}.
+ *
+ * @remarks
+ * This function processes the provided input, initializes the IRSForm, and calculates statistics
+ * based on the loaded data. It also establishes dependencies between concepts in the graph.
+ */
+export function loadRSFormData(input: IRSFormData): IRSForm {
+  const result = input as IRSForm
   result.graph = new Graph;
   if (!result.items) {
     result.stats = {
@@ -75,7 +85,7 @@ export function loadRSFormData(schema: IRSFormData): IRSForm {
     result.graph.addNode(cst.id);
     const dependencies = extractGlobals(cst.definition_formal);
     dependencies.forEach(value => {
-      const source = schema.items.find(cst => cst.alias === value)
+      const source = input.items.find(cst => cst.alias === value)
       if (source) {
         result.graph.addEdge(source.id, cst.id);
       }
@@ -84,6 +94,13 @@ export function loadRSFormData(schema: IRSFormData): IRSForm {
   return result;
 }
 
+/**
+ * Checks if a given target {@link IConstituenta} matches the specified query using the provided matching mode.
+ *
+ * @param target - The target object to be matched.
+ * @param query - The query string used for matching.
+ * @param mode - The matching mode to determine which properties to include in the matching process.
+ */
 export function matchConstituenta(target: IConstituenta, query: string, mode: CstMatchMode): boolean {
   const matcher = new TextMatcher(query);
   if ((mode === CstMatchMode.ALL || mode === CstMatchMode.NAME) && 
@@ -104,6 +121,20 @@ export function matchConstituenta(target: IConstituenta, query: string, mode: Cs
   return false;
 }
 
+/**
+ * Infers the status of an expression based on parsing and value information.
+ *
+ * @param parse - parsing status of the expression.
+ * @param value - value class of the expression.
+ * 
+ * @returns The inferred expression status:
+ * - `ExpressionStatus.UNDEFINED` if either parsing or value is not provided.
+ * - `ExpressionStatus.UNKNOWN` if parsing status is `ParsingStatus.UNDEF`.
+ * - `ExpressionStatus.INCORRECT` if parsing status is `ParsingStatus.INCORRECT`.
+ * - `ExpressionStatus.INCALCULABLE` if value is `ValueClass.INVALID`.
+ * - `ExpressionStatus.PROPERTY` if value is `ValueClass.PROPERTY`.
+ * - `ExpressionStatus.VERIFIED` if both parsing and value are valid.
+ */
 export function inferStatus(parse?: ParsingStatus, value?: ValueClass): ExpressionStatus {
   if (!parse || !value) {
     return ExpressionStatus.UNDEFINED;
@@ -123,11 +154,26 @@ export function inferStatus(parse?: ParsingStatus, value?: ValueClass): Expressi
   return ExpressionStatus.VERIFIED;
 }
 
+/**
+ * Checks if given expression is a template.
+ */
 export function inferTemplate(expression: string): boolean {
   const match = expression.match(/R\d+/g);
   return (match && match?.length > 0) ?? false;
 }
 
+/**
+ * Infers the {@link CstClass} based on the provided {@link CstType} and template status.
+ *
+ * @param type - The CstType representing the type of the Constituenta.
+ * @param isTemplate - A boolean indicating whether the Constituenta is a template.
+ *
+ * @returns The inferred CstClass based on the combination of CstType and template status:
+ * - `CstClass.TEMPLATE` if the Constituenta is a template.
+ * - `CstClass.BASIC` if the CstType is BASE, CONSTANT, or STRUCTURED.
+ * - `CstClass.DERIVED` if the CstType is TERM, FUNCTION, or PREDICATE.
+ * - `CstClass.STATEMENT` if the CstType is AXIOM or THEOREM.
+ */
 export function inferClass(type: CstType, isTemplate: boolean): CstClass {
   if (isTemplate) {
     return CstClass.TEMPLATE;
@@ -144,11 +190,16 @@ export function inferClass(type: CstType, isTemplate: boolean): CstClass {
   }
 }
 
-export function isMockCst(cst: IConstituenta) {
-  return cst.id <= 0;
-}
-
-export function createMockConstituenta(schema: number, id: number, alias: string, type: CstType, comment: string): IConstituenta {
+/**
+ * Creates a mock {@link IConstituenta} object with the provided parameters and default values for other properties.
+ */
+export function createMockConstituenta(
+  schema: number,
+  id: number,
+  alias: string,
+  type: CstType,
+  comment: string
+): IConstituenta {
   return {
     id: id,
     order: -1,
@@ -175,16 +226,26 @@ export function createMockConstituenta(schema: number, id: number, alias: string
   };
 }
 
-export function applyFilterCategory(target: IConstituenta, schema: IRSFormData): IConstituenta[] {
+/**
+ * Checks if given {@link IConstituenta} is mock.
+ */
+export function isMockCst(cst: IConstituenta) {
+  return cst.id <= 0;
+}
+
+/**
+ * TODO: description
+ */
+export function applyFilterCategory(start: IConstituenta, schema: IRSFormData): IConstituenta[] {
   const nextCategory = schema.items.find(
     cst => (
-      cst.order > target.order &&
+      cst.order > start.order &&
       cst.cst_type === CATEGORY_CST_TYPE
     )
   );
   return schema.items.filter(
     cst => (
-      cst.order > target.order &&
+      cst.order > start.order &&
       (!nextCategory || cst.order <= nextCategory.order)
     )
   );

@@ -1,10 +1,17 @@
-// =========== Module contains all text descriptors. ==========
-
+/**
+ * Module: Text descriptors for UI and model elements.
+ * 
+ * Label is a short text used to represent an entity.
+ * Description is a long description used in tooltips.
+ */
 import { GramData,Grammeme, ReferenceType } from '../models/language';
 import { CstMatchMode, DependencyMode, HelpTopic, LibraryFilterStrategy } from '../models/miscelanious';
 import { CstClass, CstType, ExpressionStatus, IConstituenta } from '../models/rsform';
 import { IArgumentInfo, IRSErrorDescription, ISyntaxTreeNode, ParsingStatus, RSErrorType, TokenID } from '../models/rslang';
 
+/**
+ * Generates desription for {@link IConstituenta}.
+ */
 export function describeConstituenta(cst: IConstituenta): string {
   if (cst.cst_type === CstType.STRUCTURED) {
     return (
@@ -23,7 +30,10 @@ export function describeConstituenta(cst: IConstituenta): string {
   }
 }
 
-export function describeConstituentaTerm(cst: IConstituenta | undefined): string {
+/**
+ * Generates desription for term of a given {@link IConstituenta}.
+ */
+export function describeConstituentaTerm(cst?: IConstituenta): string {
   if (!cst) {
     return '!Конституента отсутствует!';
   }
@@ -34,10 +44,16 @@ export function describeConstituentaTerm(cst: IConstituenta | undefined): string
   }
 }
 
+/**
+ * Generates label for {@link IConstituenta}.
+ */
 export function labelConstituenta(cst: IConstituenta) {
   return `${cst.alias}: ${describeConstituenta(cst)}`;
 }
 
+/**
+ * Retrieves label for {@link TokenID}.
+ */
 export function labelToken(id: TokenID): string {
   switch (id) {
   case TokenID.BOOLEAN:       return 'ℬ()';
@@ -126,6 +142,9 @@ export function describeToken(id: TokenID): string {
   return `no description: ${id}`;
 }
 
+/**
+ * Retrieves label for {@link CstMatchMode}.
+ */
 export function labelCstMathchMode(mode: CstMatchMode): string {
   switch (mode) {
     case CstMatchMode.ALL:  return 'общий';
@@ -136,6 +155,9 @@ export function labelCstMathchMode(mode: CstMatchMode): string {
   }
 }
 
+/**
+ * Retrieves description for {@link CstMatchMode}.
+ */
 export function describeCstMathchMode(mode: CstMatchMode): string {
   switch (mode) {
     case CstMatchMode.ALL:  return 'искать во всех атрибутах';
@@ -146,6 +168,9 @@ export function describeCstMathchMode(mode: CstMatchMode): string {
   }
 }
 
+/**
+ * Retrieves label for {@link DependencyMode}.
+ */
 export function labelCstSource(mode: DependencyMode): string {
   switch (mode) {
     case DependencyMode.ALL:            return 'не ограничен';
@@ -157,6 +182,9 @@ export function labelCstSource(mode: DependencyMode): string {
   }
 }
 
+/**
+ * Retrieves description for {@link DependencyMode}.
+ */
 export function describeCstSource(mode: DependencyMode): string {
   switch (mode) {
     case DependencyMode.ALL:            return 'все конституенты';
@@ -168,6 +196,9 @@ export function describeCstSource(mode: DependencyMode): string {
   }
 }
 
+/**
+ * Retrieves label for {@link LibraryFilterStrategy}.
+ */
 export function labelLibraryFilter(strategy: LibraryFilterStrategy): string {
   switch (strategy) {
     case LibraryFilterStrategy.MANUAL:      return 'отображать все';
@@ -179,6 +210,9 @@ export function labelLibraryFilter(strategy: LibraryFilterStrategy): string {
   }
 }
 
+/**
+ * Retrieves description for {@link LibraryFilterStrategy}.
+ */
 export function describeLibraryFilter(strategy: LibraryFilterStrategy): string {
   switch (strategy) {
     case LibraryFilterStrategy.MANUAL:      return 'Отображать все схемы';
@@ -190,6 +224,9 @@ export function describeLibraryFilter(strategy: LibraryFilterStrategy): string {
   }
 }
 
+/**
+ * Retrieves label for graph layout mode.
+ */
 export const mapLableLayout: Map<string, string> = 
 new Map([
   ['forceatlas2', 'Граф: Атлас 2D'],
@@ -207,6 +244,9 @@ new Map([
   ['nooverlap', 'Граф: Без перекрытия']
 ]);
 
+/**
+ * Retrieves label for graph coloring mode.
+ */
 export const mapLabelColoring: Map<string, string> = 
 new Map([
   ['none', 'Цвет: моно'],
@@ -214,6 +254,9 @@ new Map([
   ['type', 'Цвет: класс'],
 ]);
 
+/**
+ * Retrieves label for {@link ExpressionStatus}.
+ */
 export function labelExpressionStatus(status: ExpressionStatus): string {
   switch (status) {
     case ExpressionStatus.VERIFIED:     return 'корректно';
@@ -225,6 +268,9 @@ export function labelExpressionStatus(status: ExpressionStatus): string {
   }
 }
 
+/**
+ * Retrieves description for {@link ExpressionStatus}.
+ */
 export function describeExpressionStatus(status: ExpressionStatus): string {
   switch (status) {
     case ExpressionStatus.VERIFIED:     return 'выражение корректно и вычислимо';
@@ -236,6 +282,9 @@ export function describeExpressionStatus(status: ExpressionStatus): string {
   }
 }
 
+/**
+ * Retrieves label for {@link HelpTopic}.
+ */
 export function labelHelpTopic(topic: HelpTopic): string {
   switch (topic) {
     case HelpTopic.MAIN:          return 'Портал';
@@ -252,6 +301,9 @@ export function labelHelpTopic(topic: HelpTopic): string {
   }
 }
 
+/**
+ * Retrieves description for {@link HelpTopic}.
+ */
 export function describeHelpTopic(topic: HelpTopic): string {
   switch (topic) {
     case HelpTopic.MAIN:          return 'Общая справка по порталу';
@@ -268,6 +320,9 @@ export function describeHelpTopic(topic: HelpTopic): string {
   }
 }
 
+/**
+ * Retrieves label for {@link CstType}.
+ */
 export function labelCstType(type: CstType): string {
   switch (type) {
     case CstType.BASE:          return 'Базисное множество';
@@ -281,6 +336,9 @@ export function labelCstType(type: CstType): string {
   }
 }
 
+/**
+ * Retrieves label for {@link ReferenceType}.
+ */
 export function labelReferenceType(type: ReferenceType): string {
   switch(type) {
     case ReferenceType.ENTITY:    return 'Использование термина';
@@ -288,6 +346,9 @@ export function labelReferenceType(type: ReferenceType): string {
   }
 }
 
+/**
+ * Retrieves label for {@link CstClass}.
+ */
 export function labelCstClass(cclass: CstClass): string {
   switch (cclass) {
     case CstClass.BASIC:        return 'базовый';
@@ -297,6 +358,9 @@ export function labelCstClass(cclass: CstClass): string {
   }
 }
 
+/**
+ * Retrieves description for {@link CstClass}.
+ */
 export function describeCstClass(cclass: CstClass): string {
   switch (cclass) {
     case CstClass.BASIC:        return 'неопределяемое понятие, требует конвенции';
@@ -306,6 +370,9 @@ export function describeCstClass(cclass: CstClass): string {
   }
 }
 
+/**
+ * Generates label for typification.
+ */
 export function labelTypification({ isValid, resultType, args }: {
   isValid: boolean;
   resultType: string;
@@ -332,6 +399,9 @@ export function labelCstTypification(cst: IConstituenta): string {
   });
 }
 
+/**
+ * Generates label for {@link ISyntaxTreeNode}.
+ */
 export function labelSyntaxTree(node: ISyntaxTreeNode): string {
   switch (node.typeID) {
     case TokenID.ID_LOCAL:
@@ -481,6 +551,9 @@ export function labelGrammeme(gram: GramData): string {
   }
 }
 
+/**
+ * Generates error description for {@link IRSErrorDescription}.
+ */
 export function describeRSError(error: IRSErrorDescription): string {
   switch (error.errorType) {
   case RSErrorType.unknownSymbol:

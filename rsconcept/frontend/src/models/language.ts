@@ -260,6 +260,7 @@ export interface ISyntacticReference {
   nominal: string
 }
 
+
 /**
  * Represents text 0-indexed position inside another text.
 */

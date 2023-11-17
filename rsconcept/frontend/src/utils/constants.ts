@@ -1,16 +1,47 @@
-// Constants
-export const config = {
+/**
+ * Module: Global constants.
+ */
+
+/**
+ * Variable constants depending on build type.
+ */
+export const buidConstants = {
   backend: import.meta.env.VITE_PORTAL_BACKEND as string
 };
+
+/**
+ * General UI timeout [in ms] for waiting for render.
+ */
 export const TIMEOUT_UI_REFRESH = 100;
+
+/**
+ * Timeout [in ms] for graph refresh.
+ */
 export const TIMEOUT_GRAPH_REFRESH = 200;
 
+/**
+ * Exteor file extension for RSForm.
+ */
 export const EXTEOR_TRS_FILE = '.trs';
 
+/**
+ * Resource relative URIs.
+ */
+export const resources = {
+  graph_font: '/DejaVu.ttf'
+}
+
+
+/**
+ * Youtube IDs for embedding.
+ */
 export const youtube = {
   intro: '0Ty9mu9sOJo'
 };
 
+/**
+ * Constant URLs.
+ */
 export const urls = {
   concept: 'https://www.acconcept.ru/',
   exteor32: 'https://drive.google.com/open?id=1IHlMMwaYlAUBRSxU1RU_hXM5mFU9-oyK&usp=drive_fs',
@@ -24,14 +55,16 @@ export const urls = {
   restapi: 'https://api.portal.acconcept.ru'
 };
 
-export const resources = {
-  graph_font: '/DejaVu.ttf'
-}
-
+/**
+ * Global unique IDs.
+ */
 export const globalIDs = {
   main_scroll: 'main-scroll'
 }
 
+/**
+ * Prefixes for generating unique keys for lists.
+ */
 export const prefixes = {
   cst_list: 'cst-list-',
   cst_hidden_list: 'cst-hidden-list-',
