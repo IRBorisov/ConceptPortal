@@ -7,7 +7,7 @@ import { GramData, Grammeme, GrammemeGroups, IEntityReference, ISyntacticReferen
 /**
  * Equality comparator for {@link IWordForm}. Compares a set of Grammemes attached to wordforms
  */
-export function matchWordForm(left: IWordForm, right: IWordForm): boolean {
+export function wordFormEquals(left: IWordForm, right: IWordForm): boolean {
   if (left.grams.length !== right.grams.length) {
     return false;
   }
@@ -19,18 +19,10 @@ export function matchWordForm(left: IWordForm, right: IWordForm): boolean {
   return true;
 }
 
-function parseSingleGrammeme(text: string): GramData {
-  if (Object.values(Grammeme).includes(text as Grammeme)) {
-    return text as Grammeme;
-  } else {
-    return text;
-  }
-}
-
 /**
  * Compares {@link GramData} based on Grammeme enum and alpha order for strings.
  */
-export function compareGrammemes(left: GramData, right: GramData): number {
+export function grammemeCompare(left: GramData, right: GramData): number {
   const indexLeft = Object.values(Grammeme).findIndex(gram => gram === left as Grammeme);
   const indexRight = Object.values(Grammeme).findIndex(gram => gram === right as Grammeme);
   if (indexLeft === -1 && indexRight === -1) {
@@ -51,12 +43,12 @@ export function parseGrammemes(termForm: string): GramData[] {
   const result: GramData[] = [];
   const chunks = termForm.split(',');
   chunks.forEach(chunk => {
-    chunk = chunk.trim();
-    if (chunk !== '') {
-      result.push(parseSingleGrammeme(chunk));
+    const gram = chunk.trim();
+    if (gram !== '') {
+      result.push(gram);
     }
   });
-  return result.sort(compareGrammemes);
+  return result.sort(grammemeCompare);
 }
 
 /**

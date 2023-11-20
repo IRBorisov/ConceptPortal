@@ -4,7 +4,7 @@
 import { LayoutTypes } from 'reagraph';
 
 import { type GramData, Grammeme, ReferenceType } from '../models/language';
-import { compareGrammemes } from '../models/languageAPI';
+import { grammemeCompare } from '../models/languageAPI';
 import { CstType } from '../models/rsform';
 import { ColoringScheme } from '../pages/RSFormPage/EditorTermGraph';
 import { labelGrammeme, labelReferenceType } from './labels';
@@ -61,7 +61,7 @@ export interface IGrammemeOption {
  * Compares {@link IGrammemeOption} based on Grammeme comparison.
  */
 export function compareGrammemeOptions(left: IGrammemeOption, right: IGrammemeOption): number {
-  return compareGrammemes(left.value, right.value);
+  return grammemeCompare(left.value, right.value);
 }
 
 /**

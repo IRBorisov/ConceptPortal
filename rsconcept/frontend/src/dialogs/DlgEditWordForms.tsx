@@ -11,7 +11,7 @@ import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, ChevronDoubleDownIcon, CrossI
 import { useConceptTheme } from '../context/ThemeContext';
 import useConceptText from '../hooks/useConceptText';
 import { Grammeme, ITextRequest, IWordForm, IWordFormPlain } from '../models/language';
-import { getCompatibleGrams, matchWordForm, parseGrammemes } from '../models/languageAPI';
+import { getCompatibleGrams, wordFormEquals, parseGrammemes } from '../models/languageAPI';
 import { IConstituenta, TermForm } from '../models/rsform';
 import { colorfgGrammeme } from '../utils/color';
 import { labelGrammeme } from '../utils/labels';
@@ -81,7 +81,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
     };
     setForms(forms => [
       newForm,
-      ...forms.filter(value => !matchWordForm(value, newForm))
+      ...forms.filter(value => !wordFormEquals(value, newForm))
     ]);
   }
 
@@ -143,7 +143,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
           text: form.text,
           grams: parseGrammemes(form.grams).filter(gram => SelectorGrammemesList.find(item => item === gram as Grammeme))
         }
-        if (newForm.grams.length === 2 && !lexeme.some(test => matchWordForm(test, newForm))) {
+        if (newForm.grams.length === 2 && !lexeme.some(test => wordFormEquals(test, newForm))) {
           lexeme.push(newForm);
         }
       });
