@@ -118,10 +118,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       onError: error => setError(error),
       onSuccess: newData => {
         setSchema(Object.assign(schema, newData));
-        const libraryItem = library.items.find(item => item.id === newData.id);
-        if (libraryItem) {
-          Object.assign(libraryItem, newData);
-        }
+        library.localUpdateItem(newData);
         if (callback) callback(newData);
       }
     });
@@ -140,10 +137,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       onError: error => setError(error),
       onSuccess: newData => {
         setSchema(newData);
-        const libraryItem = library.items.find(item => item.id === newData.id);
-        if (libraryItem) {
-          Object.assign(libraryItem, newData);
-        }
+        library.localUpdateItem(newData);
         if (callback) callback();
       }
     });
@@ -161,12 +155,9 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       onError: error => setError(error),
       onSuccess: newData => {
         setSchema(Object.assign(schema, newData));
-        const libraryItem = library.items.find(item => item.id === newData.id);
-        if (libraryItem) {
-          libraryItem.owner = user.id
-        }
-        if (!user.subscriptions.includes(schema.id)) {
-          user.subscriptions.push(schema.id);
+        library.localUpdateItem(newData);
+        if (!user.subscriptions.includes(newData.id)) {
+          user.subscriptions.push(newData.id);
         }
         if (callback) callback(newData);
       }
@@ -231,10 +222,11 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       onError: error => setError(error),
       onSuccess: newData => {
         setSchema(Object.assign(schema, newData));
+        library.localUpdateTimestamp(newData.id);
         if (callback) callback();
       }
     });
-  }, [schemaID, setError, schema, user, setSchema]);
+  }, [schemaID, setError, schema, library, user, setSchema]);
 
   const download = useCallback(
   (callback: DataCallback<Blob>) => {
@@ -257,10 +249,11 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       onError: error => setError(error),
       onSuccess: newData => {
         setSchema(newData.schema);
+        library.localUpdateTimestamp(newData.schema.id);
         if (callback) callback(newData.new_cst);
       }
     });
-  }, [schemaID, setError, setSchema]);
+  }, [schemaID, setError, library, setSchema]);
 
   const cstDelete = useCallback(
   (data: IConstituentaList, callback?: () => void) => {
@@ -272,10 +265,11 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       onError: error => setError(error),
       onSuccess: newData => {
         setSchema(newData);
+        library.localUpdateTimestamp(newData.id);
         if (callback) callback();
       }
     });
-  }, [schemaID, setError, setSchema]);
+  }, [schemaID, setError, library, setSchema]);
 
   const cstUpdate = useCallback(
   (data: ICstUpdateData, callback?: DataCallback<IConstituentaMeta>) => {
@@ -286,10 +280,11 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       setLoading: setProcessing,
       onError: error => setError(error),
       onSuccess: newData => reload(setProcessing, () => {
+        library.localUpdateTimestamp(Number(schemaID));
         if (callback) callback(newData);
       })
     });
-  }, [setError, reload]);
+  }, [setError, schemaID, library, reload]);
 
   const cstRename = useCallback(
   (data: ICstRenameData, callback?: DataCallback<IConstituentaMeta>) => {
@@ -301,10 +296,11 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       onError: error => setError(error),
       onSuccess: newData => {
         setSchema(newData.schema);
+        library.localUpdateTimestamp(newData.schema.id);
         if (callback) callback(newData.new_cst);
       }
     });
-  }, [setError, setSchema, schemaID]);
+  }, [setError, setSchema, library, schemaID]);
 
   const cstMoveTo = useCallback(
   (data: ICstMovetoData, callback?: () => void) => {
@@ -316,10 +312,11 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       onError: error => setError(error),
       onSuccess: newData => {
         setSchema(newData);
+        library.localUpdateTimestamp(Number(schemaID));
         if (callback) callback();
       }
     });
-  }, [schemaID, setError, setSchema]);
+  }, [schemaID, setError, library, setSchema]);
 
   return (
     <RSFormContext.Provider value={{

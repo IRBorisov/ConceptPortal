@@ -22,6 +22,9 @@ interface ILibraryContext {
   createItem: (data: IRSFormCreateData, callback?: DataCallback<ILibraryItem>) => void
   cloneItem: (target: number, data: IRSFormCreateData, callback: DataCallback<IRSFormData>) => void
   destroyItem: (target: number, callback?: () => void) => void
+
+  localUpdateItem: (data: ILibraryItem) => void
+  localUpdateTimestamp: (target: number) => void
 }
 
 const LibraryContext = createContext<ILibraryContext | null>(null)
@@ -118,6 +121,20 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
     reload();
   }, [reload, user]);
 
+  const localUpdateItem = useCallback(
+  (data: ILibraryItem) => {
+    const libraryItem = items.find(item => item.id === data.id);
+    if (libraryItem) Object.assign(libraryItem, data);
+  }, [items]);
+
+  const localUpdateTimestamp = useCallback(
+  (target: number) => {
+    const libraryItem = items.find(item => item.id === target);
+    if (libraryItem) {
+      libraryItem.time_update = Date();
+    }
+  }, [items]);
+
   const createItem = useCallback(
   (data: IRSFormCreateData, callback?: DataCallback<ILibraryItem>) => {
     setError(undefined);
@@ -174,7 +191,8 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   return (
     <LibraryContext.Provider value={{ 
       items, templates, loading, processing, error, setError, 
-      applyFilter, createItem, cloneItem, destroyItem, retrieveTemplate
+      applyFilter, createItem, cloneItem, destroyItem, retrieveTemplate,
+      localUpdateItem, localUpdateTimestamp
     }}>
       { children }
     </LibraryContext.Provider>
