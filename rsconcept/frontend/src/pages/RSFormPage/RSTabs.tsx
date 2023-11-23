@@ -195,10 +195,12 @@ function RSTabs() {
     cstDelete(data, () => {
       const deletedNames = deleted.map(id => schema.items.find(cst => cst.id === id)?.alias).join(', ');
       toast.success(`Конституенты удалены: ${deletedNames}`);
+
       if (deleted.length === schema.items.length) {
         navigateTab(RSTabID.CST_LIST);
-      }
-      if (activeIndex) {
+      } else if (activeIndex === -1) {
+        navigateTab(activeTab);
+      } else {
         while (activeIndex < schema.items.length && deleted.find(id => id === schema.items[activeIndex].id)) {
           ++activeIndex;
         }
@@ -210,6 +212,7 @@ function RSTabs() {
         }
         navigateTab(activeTab, schema.items[activeIndex].id);
       }
+      
       if (afterDelete) afterDelete(deleted);
     });
   }, [afterDelete, cstDelete, schema, activeID, activeTab, navigateTab]);

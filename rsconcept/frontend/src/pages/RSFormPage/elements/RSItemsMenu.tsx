@@ -9,6 +9,7 @@ import { ArrowDownIcon, ArrowDropdownIcon, ArrowUpIcon, CloneIcon, DiamondIcon, 
 import { useRSForm } from '../../../context/RSFormContext';
 import useDropdown from '../../../hooks/useDropdown';
 import { CstType } from '../../../models/rsform';
+import { prefixes } from '../../../utils/constants';
 import { labelCstType } from '../../../utils/labels';
 import { getCstTypePrefix, getCstTypeShortcut } from '../../../utils/misc';
 
@@ -79,6 +80,7 @@ function RSItemsMenu({
         const type = typeStr as CstType;
         return (
         <DropdownButton
+          key={`${prefixes.csttype_list}${typeStr}`}
           onClick={() => onCreate(type)}
           tooltip={getCstTypeShortcut(type)}
         >
