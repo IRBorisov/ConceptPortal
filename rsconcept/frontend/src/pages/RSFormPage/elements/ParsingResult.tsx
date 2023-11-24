@@ -4,7 +4,7 @@ import { getRSErrorPrefix } from '../../../utils/misc';
 
 interface ParsingResultProps {
   data: IExpressionParse
-  disabled: boolean
+  disabled?: boolean
   onShowError: (error: IRSErrorDescription) => void
 }
 
