@@ -14,7 +14,7 @@ function Navigation () {
   const navigateCreateNew = () => navigateTo('/rsform-create');
 
   return (
-    <nav className='sticky top-0 left-0 right-0 select-none z-navigation h-fit'>
+    <nav className='sticky top-0 left-0 right-0 select-none clr-app z-navigation h-fit'>
       {!noNavigation &&
       <button
         title='Скрыть навигацию'

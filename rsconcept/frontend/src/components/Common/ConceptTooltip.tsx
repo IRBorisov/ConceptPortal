@@ -11,6 +11,7 @@ function ConceptTooltip({
   className,
   layer='z-tooltip',
   place='bottom',
+  style,
   ...props
 }: ConceptTooltipProps) {
   const { darkMode } = useConceptTheme();
@@ -18,6 +19,7 @@ function ConceptTooltip({
   return (
   <Tooltip
     opacity={0.97}
+    style={{...{ paddingTop: '2px', paddingBottom: '2px'}, ...style}}
     className={`overflow-auto border shadow-md ${layer} ${className}`}
     variant={(darkMode ? 'dark' : 'light')}
     place={place}

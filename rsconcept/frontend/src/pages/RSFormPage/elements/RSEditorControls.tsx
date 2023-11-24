@@ -85,8 +85,8 @@ interface RSEditorControlsProps {
 
 function RSEditorControls({ onEdit, disabled }: RSEditorControlsProps) {
   return (
-  <div className='flex items-center justify-between w-full text-sm'>
-    <div className='border-r w-fit'>
+  <div className='flex items-center justify-start w-full text-sm'>
+    <div className='w-fit'>
       <div className='flex justify-start'>
         {MAIN_FIRST_ROW.map(
         (token) => 
@@ -110,7 +110,7 @@ function RSEditorControls({ onEdit, disabled }: RSEditorControlsProps) {
       </div>
     </div>
 
-    <div className='border-l w-fit'>
+    <div className='w-fit'>
       <div className='flex justify-start'>
         {SECONDARY_FIRST_ROW.map(
         ({text, tooltip}) => 

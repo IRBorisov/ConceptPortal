@@ -12,7 +12,7 @@ function InfoCstClass({ title }: InfoCstClassProps) {
   const { colors } = useConceptTheme();
 
   return (
-    <div className='flex flex-col gap-1'>
+    <div className='flex flex-col gap-1 mb-2'>
       { title && <h1>{title}</h1>}
       { Object.values(CstClass).map(
       (cclass, index) => {
