@@ -159,7 +159,8 @@ function EditorRSExpression({
         { loading && <ConceptLoader size={6} />}
         { !loading && parseData && 
         <ParsingResult
-          data={parseData} 
+          data={parseData}
+          disabled={disabled}
           onShowError={onShowError}
         />}
         { !loading && !parseData &&
