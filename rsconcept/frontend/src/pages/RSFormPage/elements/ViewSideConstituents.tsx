@@ -258,7 +258,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
         </div>
       </div>
     </div>
-    <div className='overflow-y-auto text-sm' style={{maxHeight : `${maxHeight}`}}>
+    <div className='overflow-y-auto text-sm overscroll-none' style={{maxHeight : `${maxHeight}`}}>
       <DataTable
         data={filteredData}
         columns={columns}

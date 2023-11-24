@@ -21,7 +21,7 @@ function Root() {
   const { noNavigation, noFooter, viewportHeight, mainHeight, showScroll } = useConceptTheme();
   return (
     <NavigationState>
-    <div className='w-screen antialiased clr-app min-w-[30rem]'>
+    <div className='w-screen antialiased clr-app min-w-[30rem] overflow-hidden'>
       
       <ConceptToaster
         className='mt-[4rem] text-sm'
@@ -32,7 +32,7 @@ function Root() {
       
       <Navigation />
       <div id={globalIDs.main_scroll}
-        className='w-full overflow-x-auto'
+        className='w-full overflow-x-auto overscroll-none'
         style={{
           maxHeight: viewportHeight,
           overflowY: showScroll ? 'scroll': 'auto'
