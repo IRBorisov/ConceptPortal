@@ -1,4 +1,4 @@
-import Divider from '../Common/Divider';
+import Divider from '../common/Divider';
 import InfoCstClass from './InfoCstClass';
 import InfoCstStatus from './InfoCstStatus';
 

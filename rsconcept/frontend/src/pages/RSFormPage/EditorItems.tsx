@@ -2,7 +2,7 @@ import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import DataTable, { createColumnHelper, type RowSelectionState,VisibilityState } from '../../components/DataTable';
-import ConstituentaBadge from '../../components/Shared/ConstituentaBadge';
+import ConstituentaBadge from '../../components/shared/ConstituentaBadge';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useWindowSize from '../../hooks/useWindowSize';

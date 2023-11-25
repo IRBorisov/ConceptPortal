@@ -2,7 +2,7 @@ import { IConstituenta } from '../../models/rsform';
 import { isMockCst } from '../../models/rsformAPI';
 import { colorfgCstStatus,IColorTheme } from '../../utils/color';
 import { describeExpressionStatus } from '../../utils/labels';
-import ConceptTooltip from '../Common/ConceptTooltip';
+import ConceptTooltip from '../common/ConceptTooltip';
 import ConstituentaTooltip from '../Help/ConstituentaTooltip';
 
 interface ConstituentaBadgeProps {

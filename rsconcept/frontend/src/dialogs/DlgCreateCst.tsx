@@ -1,9 +1,9 @@
 import { useEffect, useLayoutEffect, useState } from 'react';
 
-import Modal, { ModalProps } from '../components/Common/Modal';
-import SelectSingle from '../components/Common/SelectSingle';
-import TextArea from '../components/Common/TextArea';
-import TextInput from '../components/Common/TextInput';
+import Modal, { ModalProps } from '../components/common/Modal';
+import SelectSingle from '../components/common/SelectSingle';
+import TextArea from '../components/common/TextArea';
+import TextInput from '../components/common/TextInput';
 import RSInput from '../components/RSInput';
 import usePartialUpdate from '../hooks/usePartialUpdate';
 import { CstType,ICstCreateData, IRSForm } from '../models/rsform';

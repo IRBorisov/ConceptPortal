@@ -1,5 +1,5 @@
-import Divider from '../../../components/Common/Divider';
-import LabeledText from '../../../components/Common/LabeledText';
+import Divider from '../../../components/common/Divider';
+import LabeledText from '../../../components/common/LabeledText';
 import { type IRSFormStats } from '../../../models/rsform';
 
 interface RSFormStatsProps {

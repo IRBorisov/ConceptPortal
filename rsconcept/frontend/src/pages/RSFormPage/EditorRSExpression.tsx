@@ -2,9 +2,9 @@ import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import Button from '../../components/Common/Button';
-import { ConceptLoader } from '../../components/Common/ConceptLoader';
-import MiniButton from '../../components/Common/MiniButton';
+import Button from '../../components/common/Button';
+import { ConceptLoader } from '../../components/common/ConceptLoader';
+import MiniButton from '../../components/common/MiniButton';
 import { ASTNetworkIcon } from '../../components/Icons';
 import RSInput from '../../components/RSInput';
 import { RSTextWrapper } from '../../components/RSInput/textEditing';

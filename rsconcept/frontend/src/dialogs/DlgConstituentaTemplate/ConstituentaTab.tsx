@@ -1,8 +1,8 @@
 import { Dispatch } from 'react';
 
-import SelectSingle from '../../components/Common/SelectSingle';
-import TextArea from '../../components/Common/TextArea';
-import TextInput from '../../components/Common/TextInput';
+import SelectSingle from '../../components/common/SelectSingle';
+import TextArea from '../../components/common/TextArea';
+import TextInput from '../../components/common/TextInput';
 import RSInput from '../../components/RSInput';
 import { CstType, ICstCreateData } from '../../models/rsform';
 import { labelCstType } from '../../utils/labels';

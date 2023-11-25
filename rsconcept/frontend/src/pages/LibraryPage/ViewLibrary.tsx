@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
-import ConceptTooltip from '../../components/Common/ConceptTooltip';
-import TextURL from '../../components/Common/TextURL';
+import ConceptTooltip from '../../components/common/ConceptTooltip';
+import TextURL from '../../components/common/TextURL';
 import DataTable, { createColumnHelper } from '../../components/DataTable';
 import HelpLibrary from '../../components/Help/HelpLibrary';
 import { EducationIcon, GroupIcon, HelpIcon,SubscribedIcon } from '../../components/Icons';

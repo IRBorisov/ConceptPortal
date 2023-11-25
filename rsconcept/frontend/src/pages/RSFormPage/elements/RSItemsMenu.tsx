@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 
-import ConceptTooltip from '../../../components/Common/ConceptTooltip';
-import Dropdown from '../../../components/Common/Dropdown';
-import DropdownButton from '../../../components/Common/DropdownButton';
-import MiniButton from '../../../components/Common/MiniButton';
+import ConceptTooltip from '../../../components/common/ConceptTooltip';
+import Dropdown from '../../../components/common/Dropdown';
+import DropdownButton from '../../../components/common/DropdownButton';
+import MiniButton from '../../../components/common/MiniButton';
 import HelpRSFormItems from '../../../components/Help/HelpRSFormItems';
 import { ArrowDownIcon, ArrowDropdownIcon, ArrowUpIcon, CloneIcon, DiamondIcon, DumpBinIcon, HelpIcon, SmallPlusIcon,UpdateIcon } from '../../../components/Icons';
 import { useRSForm } from '../../../context/RSFormContext';

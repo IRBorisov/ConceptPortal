@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 
-import Dropdown from '../../components/Common/Dropdown';
-import DropdownCheckbox from '../../components/Common/DropdownCheckbox';
-import SelectorButton from '../../components/Common/SelectorButton';
+import Dropdown from '../../components/common/Dropdown';
+import DropdownCheckbox from '../../components/common/DropdownCheckbox';
+import SelectorButton from '../../components/common/SelectorButton';
 import { FilterIcon } from '../../components/Icons';
 import { useAuth } from '../../context/AuthContext';
 import useDropdown from '../../hooks/useDropdown';

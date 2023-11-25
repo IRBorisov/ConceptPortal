@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 
-import Checkbox from '../components/Common/Checkbox';
-import Modal, { ModalProps } from '../components/Common/Modal';
+import Checkbox from '../components/common/Checkbox';
+import Modal, { ModalProps } from '../components/common/Modal';
 import { useRSForm } from '../context/RSFormContext';
 import { prefixes } from '../utils/constants';
 import { labelConstituenta } from '../utils/labels';

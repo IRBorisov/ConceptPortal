@@ -1,8 +1,8 @@
 import { useLayoutEffect, useState } from 'react';
 
-import Modal, { ModalProps } from '../components/Common/Modal';
-import SelectSingle from '../components/Common/SelectSingle';
-import TextInput from '../components/Common/TextInput';
+import Modal, { ModalProps } from '../components/common/Modal';
+import SelectSingle from '../components/common/SelectSingle';
+import TextInput from '../components/common/TextInput';
 import { useRSForm } from '../context/RSFormContext';
 import usePartialUpdate from '../hooks/usePartialUpdate';
 import { CstType, ICstRenameData } from '../models/rsform';

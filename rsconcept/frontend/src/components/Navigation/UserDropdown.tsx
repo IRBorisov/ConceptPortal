@@ -1,8 +1,8 @@
 import { useAuth } from '../../context/AuthContext';
 import { useConceptNavigation } from '../../context/NagivationContext';
 import { useConceptTheme } from '../../context/ThemeContext';
-import Dropdown from '../Common/Dropdown';
-import DropdownButton from '../Common/DropdownButton';
+import Dropdown from '../common/Dropdown';
+import DropdownButton from '../common/DropdownButton';
 
 interface UserDropdownProps {
   hideDropdown: () => void

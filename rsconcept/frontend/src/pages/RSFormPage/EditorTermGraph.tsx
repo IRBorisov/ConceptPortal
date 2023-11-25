@@ -3,9 +3,9 @@ import { GraphCanvas, GraphCanvasRef, GraphEdge,
   GraphNode, LayoutTypes, Sphere, useSelection
 } from 'reagraph';
 
-import ConceptTooltip from '../../components/Common/ConceptTooltip';
-import MiniButton from '../../components/Common/MiniButton';
-import SelectSingle from '../../components/Common/SelectSingle';
+import ConceptTooltip from '../../components/common/ConceptTooltip';
+import MiniButton from '../../components/common/MiniButton';
+import SelectSingle from '../../components/common/SelectSingle';
 import ConstituentaTooltip from '../../components/Help/ConstituentaTooltip';
 import HelpTermGraph from '../../components/Help/HelpTermGraph';
 import InfoConstituenta from '../../components/Help/InfoConstituenta';

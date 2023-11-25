@@ -1,10 +1,10 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
-import ConceptTooltip from '../components/Common/ConceptTooltip';
-import MiniButton from '../components/Common/MiniButton';
-import Modal from '../components/Common/Modal';
-import SelectMulti from '../components/Common/SelectMulti';
-import TextArea from '../components/Common/TextArea';
+import ConceptTooltip from '../components/common/ConceptTooltip';
+import MiniButton from '../components/common/MiniButton';
+import Modal from '../components/common/Modal';
+import SelectMulti from '../components/common/SelectMulti';
+import TextArea from '../components/common/TextArea';
 import DataTable, { createColumnHelper } from '../components/DataTable';
 import HelpTerminologyControl from '../components/Help/HelpTerminologyControl';
 import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, ChevronDoubleDownIcon, CrossIcon, HelpIcon } from '../components/Icons';

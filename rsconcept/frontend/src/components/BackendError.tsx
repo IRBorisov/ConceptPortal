@@ -1,6 +1,6 @@
 import axios, { type AxiosError,AxiosHeaderValue } from 'axios';
 
-import PrettyJson from './Common/PrettyJSON';
+import PrettyJson from './common/PrettyJSON';
 
 export type ErrorInfo = string | Error | AxiosError | undefined;
 
