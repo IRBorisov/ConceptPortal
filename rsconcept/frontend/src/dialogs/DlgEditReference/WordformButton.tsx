@@ -1,7 +1,6 @@
 import { Grammeme } from '../../models/language';
 
 interface WordformButtonProps {
-  id?: string
   text: string
   example: string
   grams: Grammeme[]

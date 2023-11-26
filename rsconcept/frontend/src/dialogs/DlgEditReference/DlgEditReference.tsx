@@ -133,7 +133,7 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
       <div className='flex flex-start'>
       {PremadeWordForms.slice(0, 6).map(
       (data, index) => 
-        <WordformButton id={`${prefixes.wordform_list}${index}`}
+        <WordformButton key={`${prefixes.wordform_list}${index}`}
           text={data.text} example={data.example} grams={data.grams}
           isSelected={data.grams.every(gram => selectedGrams.find(item => item.value as Grammeme === gram))}
           onSelectGrams={handleSelectGrams}
@@ -144,7 +144,7 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
       <div className='flex flex-start'>
       {PremadeWordForms.slice(6, 12).map(
       (data, index) => 
-        <WordformButton id={`${prefixes.wordform_list}${index}`}
+        <WordformButton key={`${prefixes.wordform_list}${index}`}
           text={data.text} example={data.example} grams={data.grams}
           isSelected={data.grams.every(gram => selectedGrams.find(item => item.value as Grammeme === gram))}
           onSelectGrams={handleSelectGrams}
@@ -158,8 +158,8 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
   return (
   <Modal
     title='Редактирование ссылки'
-    hideWindow={hideWindow}
     submitText='Сохранить ссылку'
+    hideWindow={hideWindow}
     canSubmit={isValid}
     onSubmit={handleSubmit}
   >
@@ -186,7 +186,7 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
         <HelpTerminologyControl />
       </ConceptTooltip>
     </div>
-    {type === ReferenceType.SYNTACTIC &&
+    {type !== ReferenceType.SYNTACTIC ? null :
     <div className='flex flex-col gap-2'>
       <div className='flex flex-start'>
         <TextInput id='offset' type='number'
@@ -208,15 +208,15 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
         />
       </div>
       <TextInput id='nominal' type='text'
-        dimensions='w-full'
         label='Начальная форма'
         placeholder='зависимое слово в начальной форме'
+        dimensions='w-full'
         spellCheck
         value={nominal}
         onChange={event => setNominal(event.target.value)}
       />
     </div>}
-    {type === ReferenceType.ENTITY &&
+    {type !== ReferenceType.ENTITY ? null :
     <div className='flex flex-col gap-2'>
       <ConstituentaPicker 
         value={selectedCst}
@@ -232,8 +232,8 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
       <div className='flex gap-4 flex-start'>
         <TextInput
           label='Отсылаемая конституента'
-          dimensions='max-w-[16rem] min-w-[16rem] whitespace-nowrap'
           placeholder='Имя'
+          dimensions='max-w-[16rem] min-w-[16rem] whitespace-nowrap'
           dense
           value={alias}
           onChange={event => setAlias(event.target.value)}
@@ -252,14 +252,15 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
           />
         </div>
       </div>
+
       {FormButtons}
+      
       <div className='flex items-center gap-10 flex-start'>
         <Label text='Отсылаемая словоформа'/>
         <SelectMulti
+          placeholder='Выберите граммемы'
           className='flex-grow h-full z-modal-top'
           options={gramOptions}
-          placeholder='Выберите граммемы'
-          
           value={selectedGrams}
           onChange={newValue => setSelectedGrams([...newValue].sort(compareGrammemeOptions))}
         />
