@@ -50,8 +50,8 @@ function DescribeError(error: ErrorInfo) {
       <p>{error.message}</p>
       {error.response.data && (<>
         <p className='mt-2 underline'>Описание</p>
-        { isHtml && <div dangerouslySetInnerHTML={{ __html: error.response.data as TrustedHTML }} /> }
-        { !isHtml && <PrettyJson data={error.response.data as object} />}
+        {isHtml ? <div dangerouslySetInnerHTML={{ __html: error.response.data as TrustedHTML }} /> : null}
+        {!isHtml ? <PrettyJson data={error.response.data as object} /> : null}
       </>)}
     </div>
   );

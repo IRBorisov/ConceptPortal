@@ -85,9 +85,7 @@ function CreateRSFormPage() {
   >
     <div className='relative w-full'>
     <div className='absolute top-[-2.4rem] right-[-1rem] flex'>
-      <input
-        type='file'
-        ref={inputRef}
+      <input ref={inputRef} type='file'
         style={{ display: 'none' }}
         accept={EXTEOR_TRS_FILE}
         onChange={handleFileChange}
@@ -100,26 +98,29 @@ function CreateRSFormPage() {
     </div>
     </div>
     <div className='flex flex-col gap-3'>
-      { fileName && <Label text={`Загружен файл: ${fileName}`} />}
-      <TextInput id='title' label='Полное название' type='text'
-        required={!file}
+      {fileName ? <Label text={`Загружен файл: ${fileName}`} /> : null}
+      <TextInput
+        label='Полное название'
         placeholder={file && 'Загрузить из файла'}
+        required={!file}
         value={title}
         onChange={event => setTitle(event.target.value)}
       />
-      <TextInput id='alias' label='Сокращение' type='text'
-        dense
+      <TextInput dense
+        label='Сокращение' 
+        placeholder={file && 'Загрузить из файла'}
         required={!file}
         value={alias}
-        placeholder={file && 'Загрузить из файла'}
         onChange={event => setAlias(event.target.value)}
       />
-      <TextArea id='comment' label='Комментарий'
-        value={comment}
+      <TextArea
+        label='Комментарий'
         placeholder={file && 'Загрузить из файла'}
+        value={comment}
         onChange={event => setComment(event.target.value)}
       />
-      <Checkbox id='common' label='Общедоступная схема'
+      <Checkbox 
+        label='Общедоступная схема'
         value={common}
         setValue={value => setCommon(value ?? false)}
       />
@@ -129,13 +130,13 @@ function CreateRSFormPage() {
           loading={processing}
           dimensions='min-w-[10rem]'
         />
-        <Button 
+        <Button
           text='Отмена'
-          onClick={() => handleCancel()}
           dimensions='min-w-[10rem]'
+          onClick={() => handleCancel()}
         />
       </div>
-      { error && <BackendError error={error} />}
+      {error ? <BackendError error={error} /> : null}
     </div>
   </Form>
   </div>

@@ -17,20 +17,19 @@ interface ViewTopicProps {
 
 function ViewTopic({ topic }: ViewTopicProps) {
   return (
-    <div className='w-full px-2 py-2'>
-      {topic === HelpTopic.MAIN && <HelpMain />}
-      {topic === HelpTopic.LIBRARY && <HelpLibrary />}
-      {topic === HelpTopic.RSFORM && <HelpRSFormMeta />}
-      {topic === HelpTopic.CSTLIST && <HelpRSFormItems />}
-      {topic === HelpTopic.CONSTITUENTA && <HelpConstituenta />}
-      {topic === HelpTopic.GRAPH_TERM && <HelpTermGraph />}
-      {topic === HelpTopic.RSTEMPLATES && <HelpRSTemplates />}
-      {topic === HelpTopic.RSLANG && <HelpRSLang />}
-      {topic === HelpTopic.TERM_CONTROL && <HelpTerminologyControl />}
-      {topic === HelpTopic.EXTEOR && <HelpExteor />}
-      {topic === HelpTopic.API && <HelpAPI />}
-    </div>
-  );
+  <div className='w-full px-2 py-2'>
+    {topic === HelpTopic.MAIN ? <HelpMain /> : null}
+    {topic === HelpTopic.LIBRARY ? <HelpLibrary /> : null}
+    {topic === HelpTopic.RSFORM ? <HelpRSFormMeta /> : null}
+    {topic === HelpTopic.CSTLIST ? <HelpRSFormItems /> : null}
+    {topic === HelpTopic.CONSTITUENTA ? <HelpConstituenta /> : null}
+    {topic === HelpTopic.GRAPH_TERM ? <HelpTermGraph /> : null}
+    {topic === HelpTopic.RSTEMPLATES ? <HelpRSTemplates /> : null}
+    {topic === HelpTopic.RSLANG ? <HelpRSLang /> : null}
+    {topic === HelpTopic.TERM_CONTROL ? <HelpTerminologyControl /> : null}
+    {topic === HelpTopic.EXTEOR ? <HelpExteor /> : null}
+    {topic === HelpTopic.API ? <HelpAPI /> : null}
+  </div>);
 }
 
 export default ViewTopic;

@@ -335,54 +335,54 @@ function RSTabs() {
 
   return (
   <div className='w-full'>
-    { loading && <ConceptLoader /> }
-    { error && <ProcessError error={error} />}
-    { schema && !loading && <>
-    {showUpload && 
+    {loading ? <ConceptLoader /> : null}
+    {error ? <ProcessError error={error} /> : null}
+    {(schema && !loading) ? <>
+    {showUpload ? 
     <DlgUploadRSForm
       hideWindow={() => setShowUpload(false)}
-    />}
-    {showClone &&
+    /> : null}
+    {showClone ?
     <DlgCloneRSForm
       hideWindow={() => setShowClone(false)}
-    />}
-    {showAST && 
+    /> : null}
+    {showAST ? 
     <DlgShowAST
       expression={expression}
       syntaxTree={syntaxTree}
       hideWindow={() => setShowAST(false)}
-    />}
-    {showCreateCst && 
+    /> : null}
+    {showCreateCst ? 
     <DlgCreateCst
       hideWindow={() => setShowCreateCst(false)}
       onCreate={handleCreateCst}
       schema={schema}
       initial={createInitialData}
-    />}
-    {showRenameCst && 
+    /> : null}
+    {showRenameCst ? 
     <DlgRenameCst
       hideWindow={() => setShowRenameCst(false)}
       onRename={handleRenameCst}
       initial={renameInitialData!}
-    />}
-    {showDeleteCst && 
+    /> : null}
+    {showDeleteCst ? 
     <DlgDeleteCst
       hideWindow={() => setShowDeleteCst(false)}
       onDelete={handleDeleteCst}
       selected={toBeDeleted}
-    />}
-    {showEditTerm &&
+    /> : null}
+    {showEditTerm ?
     <DlgEditWordForms
       hideWindow={() => setShowEditTerm(false)}
       onSave={handleSaveWordforms}
       target={activeCst!}
-    />}
-    {showTemplates && 
+    /> : null}
+    {showTemplates ? 
     <DlgConstituentaTemplate
       schema={schema}
       hideWindow={() => setShowTemplates(false)}
       onCreate={handleCreateCst}
-    />}
+    /> : null}
     <Tabs
       selectedIndex={activeTab}
       onSelect={onSelectTab}
@@ -465,7 +465,7 @@ function RSTabs() {
         </TabPanel>
       </div>
     </Tabs>
-    </>}
+    </> : null}
   </div>);
 }
 

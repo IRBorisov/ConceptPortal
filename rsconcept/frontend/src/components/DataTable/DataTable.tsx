@@ -113,7 +113,7 @@ export default function DataTable<TData extends RowData>({
   <div className='w-full'>
   <div className='flex flex-col items-stretch'>
     <table>
-      { !noHeader &&
+      {!noHeader ?
       <thead
         className={`clr-app shadow-border`}
         style={{
@@ -124,10 +124,10 @@ export default function DataTable<TData extends RowData>({
       {tableImpl.getHeaderGroups().map(
       (headerGroup: HeaderGroup<TData>) => (
         <tr key={headerGroup.id}>
-          {enableRowSelection && 
+          {enableRowSelection ?
           <th className='pl-3 pr-1'>
             <SelectAll table={tableImpl} />
-          </th>}
+          </th> : null}
           {headerGroup.headers.map(
           (header: Header<TData, unknown>) => (
             <th key={header.id}
@@ -140,16 +140,16 @@ export default function DataTable<TData extends RowData>({
               }}
               onClick={enableSorting ? header.column.getToggleSortingHandler() : undefined}
             >
-              {header.isPlaceholder ? null : (
+              {!header.isPlaceholder ? (
               <div className='flex gap-1'>
                 {flexRender(header.column.columnDef.header, header.getContext())}
-                {enableSorting && header.column.getCanSort() && <SortingIcon column={header.column} />}
-              </div>)}
+                {(enableSorting && header.column.getCanSort()) ? <SortingIcon column={header.column} /> : null}
+              </div>) : null}
             </th>
           ))}
         </tr>
       ))}
-      </thead>}
+      </thead> : null}
       
       <tbody>
       {tableImpl.getRowModel().rows.map(
@@ -162,10 +162,10 @@ export default function DataTable<TData extends RowData>({
           }
           style={conditionalRowStyles && getRowStyles(row)}
         >
-          {enableRowSelection && 
+          {enableRowSelection ?
           <td key={`select-${row.id}`} className='pl-3 pr-1 border-y'>
             <SelectRow row={row} />
-          </td>}
+          </td> : null}
           {row.getVisibleCells().map(
           (cell: Cell<TData, unknown>) => (
             <td
@@ -176,8 +176,8 @@ export default function DataTable<TData extends RowData>({
                 paddingBottom: dense ? '0.25rem': '0.5rem',
                 paddingTop: dense ? '0.25rem': '0.5rem'
               }}
-              onClick={event => onRowClicked && onRowClicked(row.original, event)}
-              onDoubleClick={event => onRowDoubleClicked && onRowDoubleClicked(row.original, event)}
+              onClick={event => onRowClicked ? onRowClicked(row.original, event) : undefined}
+              onDoubleClick={event => onRowDoubleClicked ? onRowDoubleClicked(row.original, event) : undefined}
             >
               {flexRender(cell.column.columnDef.cell, cell.getContext())}
             </td>
@@ -186,7 +186,7 @@ export default function DataTable<TData extends RowData>({
       ))}
       </tbody>
       
-      {!noFooter && 
+      {!noFooter ?
       <tfoot>
       {tableImpl.getFooterGroups().map(
       (footerGroup: HeaderGroup<TData>) => (
@@ -194,23 +194,21 @@ export default function DataTable<TData extends RowData>({
         {footerGroup.headers.map(
         (header: Header<TData, unknown>) => (
           <th key={header.id}>
-            {header.isPlaceholder ? null
-              : flexRender(header.column.columnDef.footer, header.getContext())
-            }
+            {!header.isPlaceholder ? flexRender(header.column.columnDef.footer, header.getContext()) : null}
           </th>
           ))}
         </tr>
         ))}
-      </tfoot>}
+      </tfoot> : null}
     </table>
     
-    {enablePagination && !isEmpty &&
+    {(enablePagination && !isEmpty) ?
     <PaginationTools
       table={tableImpl}
       paginationOptions={paginationOptions}
       onChangePaginationOption={onChangePaginationOption}
-    />}
+    /> : null}
   </div>
-  {isEmpty && (noDataComponent ?? <DefaultNoData />)}
+  {isEmpty ? (noDataComponent ?? <DefaultNoData />) : null}
   </div>);
 }

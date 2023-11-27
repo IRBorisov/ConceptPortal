@@ -45,9 +45,18 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
             className='flex items-center justify-start gap-1 min-w-[2.75rem]'
             id={`${prefixes.library_list}${item.id}`}
           >
-            {user && user.subscriptions.includes(item.id) && <p title='Отслеживаемая'><SubscribedIcon size={3}/></p>}
-            {item.is_common && <p title='Общедоступная'><GroupIcon size={3}/></p>}
-            {item.is_canonical && <p title='Неизменная'><EducationIcon size={3}/></p>}
+            {(user && user.subscriptions.includes(item.id)) ?
+            <p title='Отслеживаемая'>
+              <SubscribedIcon size={3}/>
+            </p> : null}
+            {item.is_common ?
+            <p title='Общедоступная'>
+              <GroupIcon size={3}/>
+            </p> : null}
+            {item.is_canonical ?
+            <p title='Неизменная'>
+              <EducationIcon size={3}/>
+            </p> : null}
           </div>
         </>);
       },
@@ -94,51 +103,50 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
   ], [intl, getUserLabel, user]);
   
   return (
-    <div>
-      {items.length > 0 &&
-      <div className='sticky top-[2.3rem] w-full'>
-      <div className='absolute top-[-0.125rem] left-0 flex gap-1 ml-3 z-pop'>
-        <div id='library-help' className='py-2 '>
-          <HelpIcon color='text-primary' size={5} />
-        </div>
-        <ConceptTooltip anchorSelect='#library-help'>
-          <div className='max-w-[35rem]'>
-            <HelpLibrary />
-          </div>
-        </ConceptTooltip>
+  <>
+    {items.length !== 0 ?
+    <div className='sticky top-[2.3rem] w-full'>
+    <div className='absolute top-[-0.125rem] left-0 flex gap-1 ml-3 z-pop'>
+      <div id='library-help' className='py-2 '>
+        <HelpIcon color='text-primary' size={5} />
       </div>
-      </div>}
-      <DataTable
-        columns={columns}
-        data={items}
-
-        headPosition='2.3rem'
-        noDataComponent={
-        <div className='flex flex-col gap-4 justify-center p-2 text-center min-h-[6rem]'>
-          <p>Список схем пуст</p>
-          <p className='flex justify-center gap-4'>
-            <TextURL text='Создать схему' href='/rsform-create'/>
-            <span className='cursor-pointer hover:underline text-url' onClick={cleanQuery}>
-              Очистить фильтр
-            </span>
-          </p>
-        </div>}
-        
-        onRowClicked={openRSForm}
-
-        enableSorting
-        initialSorting={{
-          id: 'time_update',
-          desc: true
-        }}
-
-        enablePagination
-        paginationPerPage={itemsPerPage}
-        onChangePaginationOption={setItemsPerPage}
-        paginationOptions={[10, 20, 30, 50, 100]}
-      />
+      <ConceptTooltip anchorSelect='#library-help'>
+        <div className='max-w-[35rem]'>
+          <HelpLibrary />
+        </div>
+      </ConceptTooltip>
     </div>
-  );
+    </div> : null}
+    <DataTable
+      columns={columns}
+      data={items}
+
+      headPosition='2.3rem'
+      noDataComponent={
+      <div className='flex flex-col gap-4 justify-center p-2 text-center min-h-[6rem]'>
+        <p>Список схем пуст</p>
+        <p className='flex justify-center gap-4'>
+          <TextURL text='Создать схему' href='/rsform-create'/>
+          <span className='cursor-pointer hover:underline text-url' onClick={cleanQuery}>
+            Очистить фильтр
+          </span>
+        </p>
+      </div>}
+      
+      onRowClicked={openRSForm}
+
+      enableSorting
+      initialSorting={{
+        id: 'time_update',
+        desc: true
+      }}
+
+      enablePagination
+      paginationPerPage={itemsPerPage}
+      onChangePaginationOption={setItemsPerPage}
+      paginationOptions={[10, 20, 30, 50, 100]}
+    />
+  </>);
 }
 
 export default ViewLibrary;

@@ -66,6 +66,7 @@ export const globalIDs = {
  * Prefixes for generating unique keys for lists.
  */
 export const prefixes = {
+  page_size: 'page-size-',
   cst_list: 'cst-list-',
   cst_hidden_list: 'cst-hidden-list-',
   cst_modal_list: 'cst-modal-list-',

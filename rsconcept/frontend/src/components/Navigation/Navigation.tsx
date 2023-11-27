@@ -15,25 +15,23 @@ function Navigation () {
 
   return (
     <nav className='sticky top-0 left-0 right-0 select-none clr-app z-navigation h-fit'>
-      {!noNavigation &&
-      <button
-        title='Скрыть навигацию'
-        className='absolute top-0 right-0 z-navigation w-[1.2rem] h-[3rem] border-b-2 border-l-2 clr-btn-nav rounded-none'
-        onClick={toggleNoNavigation}
-        tabIndex={-1}
-      >
-        <p>{'>'}</p><p>{'>'}</p>
-      </button>}
-      {noNavigation &&
-      <button
+      {noNavigation ?
+      <button type='button' tabIndex={-1}
         title='Показать навигацию'
         className='absolute top-0 right-0 z-navigation px-1 h-[1.6rem] border-b-2 border-l-2 clr-btn-nav rounded-none'
         onClick={toggleNoNavigation}
-        tabIndex={-1}
       >
         {'∨∨∨'}
-      </button>}
-      {!noNavigation &&
+      </button> : null}
+      {!noNavigation ?
+      <button type='button' tabIndex={-1}
+        title='Скрыть навигацию'
+        className='absolute top-0 right-0 z-navigation w-[1.2rem] h-[3rem] border-b-2 border-l-2 clr-btn-nav rounded-none'
+        onClick={toggleNoNavigation}
+      >
+        <p>{'>'}</p><p>{'>'}</p>
+      </button> : null}
+      {!noNavigation ?
       <div className='flex items-stretch justify-between pl-2 pr-[0.8rem] border-b-2 rounded-none h-[3rem]'>
         <div className='flex items-center justify-start'>
           <Logo />
@@ -59,7 +57,7 @@ function Navigation () {
           />
           <UserMenu />
         </div>
-      </div>}
+      </div> : null}
     </nav>
   );
 }

@@ -290,10 +290,9 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edit
   ], [colors]);
 
   return (
-  <div
+  <div tabIndex={-1}
     className='w-full outline-none'
     style={{minHeight: mainHeight}}
-    tabIndex={-1}
     onKeyDown={handleTableKey}
   >
     <div className='sticky top-0 flex justify-start w-full gap-1 px-2 py-1 border-b items-center h-[2.2rem] select-none clr-app'>
@@ -313,11 +312,10 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edit
     </div>
     
     <div className='w-full h-full text-sm'>
-    <DataTable
+    <DataTable dense noFooter
       data={schema?.items ?? []}
       columns={columns}
       headPosition='2.2rem'
-      dense
 
       onRowDoubleClicked={handleRowDoubleClicked}
       onRowClicked={handleRowClicked}

@@ -205,7 +205,9 @@ function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, 
           </div>
         </div>
       </form>
-      {schema && <Divider vertical />}
+
+      <Divider vertical />
+      
       <RSFormStats stats={schema?.stats}/>
     </div>
   </div>);

@@ -11,7 +11,7 @@ function Form({ title, onSubmit, dimensions = 'max-w-xs', children }: FormProps)
       className={`border shadow-md py-2 clr-app px-6 flex flex-col gap-3 ${dimensions}`}
       onSubmit={onSubmit}
     >
-      { title && <h1 className='text-xl whitespace-nowrap'>{title}</h1> }
+      { title ? <h1 className='text-xl whitespace-nowrap'>{title}</h1> : null }
       {children}
     </form>
   );

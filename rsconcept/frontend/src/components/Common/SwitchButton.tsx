@@ -22,7 +22,7 @@ function SwitchButton<ValueType>({
     className={`px-2 py-1 border font-semibold small-caps rounded-none cursor-pointer clr-btn-clear clr-hover ${dimensions} ${isSelected ? 'clr-selected': ''}`}
     {...props}
   >
-    {icon && icon}
+    {icon ? icon : null}
     {label}
   </button>);
 }

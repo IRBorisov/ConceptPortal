@@ -54,69 +54,68 @@ function RegisterPage() {
   }
 
   return (
-    <div className='flex justify-center w-full py-2'>
-    { user &&
-      <b>{`Вы вошли в систему как ${user.username}`}</b>}
-    { !user &&
-      <Form
-        title='Регистрация'
-        onSubmit={handleSubmit}
-        dimensions='w-[24rem]'
-      >
-        <TextInput id='username' label='Имя пользователя' type='text'
-          required
-          value={username}
-          onChange={event => setUsername(event.target.value)}
-        />
-        <TextInput id='password' label='Пароль' type='password'
-          required
-          value={password}
-          onChange={event => setPassword(event.target.value)}
-        />
-        <TextInput id='password2' label='Повторите пароль' type='password'
-          required
-          value={password2}
-          onChange={event => setPassword2(event.target.value)}
-        />
-        <div className='text-sm'>
-          <p>- используйте уникальный пароль</p>
-          <p>- портал функционирует в тестовом режиме</p>
-          <p className='font-semibold text-warning'>- безопасность информации не гарантируется</p>
-          {/* <p>- минимум 8 символов</p>
-          <p>- большие, маленькие буквы, цифры</p>
-          <p>- минимум 1 спец. символ</p> */}
-        </div>
-        <TextInput id='email' label='email' type='text'
-          required
-          value={email}
-          onChange={event => setEmail(event.target.value)}
-        />
-        <TextInput id='first_name' label='Имя' type='text'
-          value={firstName}
-          onChange={event => setFirstName(event.target.value)}
-        />
-        <TextInput id='last_name' label='Фамилия' type='text'
-          value={lastName}
-          onChange={event => setLastName(event.target.value)}
-        />
+  <div className='flex justify-center w-full py-2'>
+    {user ? <b>{`Вы вошли в систему как ${user.username}`}</b> : null}
+    {!user ?
+    <Form
+      title='Регистрация'
+      onSubmit={handleSubmit}
+      dimensions='w-[24rem]'
+    >
+      <TextInput id='username' required
+        label='Имя пользователя'
+        value={username}
+        onChange={event => setUsername(event.target.value)}
+      />
+      <TextInput id='password' type='password' required
+        label='Пароль' 
+        value={password}
+        onChange={event => setPassword(event.target.value)}
+      />
+      <TextInput id='password2' required type='password'
+        label='Повторите пароль'
+        value={password2}
+        onChange={event => setPassword2(event.target.value)}
+      />
+      <div className='text-sm'>
+        <p>- используйте уникальный пароль</p>
+        <p>- портал функционирует в тестовом режиме</p>
+        <p className='font-semibold text-warning'>- безопасность информации не гарантируется</p>
+        {/* <p>- минимум 8 символов</p>
+        <p>- большие, маленькие буквы, цифры</p>
+        <p>- минимум 1 спец. символ</p> */}
+      </div>
+      <TextInput id='email' required
+        label='email'
+        value={email}
+        onChange={event => setEmail(event.target.value)}
+      />
+      <TextInput id='first_name'
+        label='Имя'
+        value={firstName}
+        onChange={event => setFirstName(event.target.value)}
+      />
+      <TextInput id='last_name'
+        label='Фамилия'
+        value={lastName}
+        onChange={event => setLastName(event.target.value)}
+      />
 
-        <div className='flex items-center justify-center w-full gap-4 my-4'>
-          <SubmitButton
-            text='Регистрировать' 
-            loading={loading}
-            dimensions='min-w-[10rem]'
-          />
-          <Button 
-            text='Отмена'
-            onClick={() => handleCancel()}
-            dimensions='min-w-[10rem]'
-          />
-        </div>
-        { error && <BackendError error={error} />}
-      </Form>
-    }
-    </div>
-  );
+      <div className='flex items-center justify-center w-full gap-4 my-4'>
+        <SubmitButton
+          text='Регистрировать' 
+          dimensions='min-w-[10rem]'
+          loading={loading}
+        />
+        <Button 
+          text='Отмена'
+          dimensions='min-w-[10rem]'
+          onClick={() => handleCancel()}
+        />
+      </div>
+      {error ? <BackendError error={error} /> : null}
+    </Form> : null}
+  </div>);
 }
 
 export default RegisterPage;

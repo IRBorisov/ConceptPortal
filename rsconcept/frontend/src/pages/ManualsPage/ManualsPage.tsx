@@ -34,16 +34,16 @@ function ManualsPage() {
   }, [search, setActiveTopic, navigateTopic]);
 
   return (
-    <div className='flex w-full gap-2 justify-start items-start' style={{minHeight: mainHeight}}>
-      <TopicsList 
-        activeTopic={activeTopic}
-        onChangeTopic={topic => onSelectTopic(topic)}
-      />
-      <ViewTopic 
-        topic={activeTopic}
-      />
-    </div>
-  );
+  <div
+    className='flex items-start justify-start w-full gap-2'
+    style={{minHeight: mainHeight}}
+  >
+    <TopicsList 
+      activeTopic={activeTopic}
+      onChangeTopic={topic => onSelectTopic(topic)}
+    />
+    <ViewTopic topic={activeTopic} />
+  </div>);
 }
 
 export default ManualsPage;

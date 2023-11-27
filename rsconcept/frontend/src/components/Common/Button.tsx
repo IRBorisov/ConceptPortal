@@ -28,8 +28,8 @@ function Button({
       className={`inline-flex items-center gap-2 align-middle justify-center select-none ${padding} ${colors} ${outlineClass} ${borderClass} ${dimensions} ${cursor}`}
       {...props}
     >
-      {icon && icon}
-      {text && <span className='font-semibold'>{text}</span>}
+      {icon ? icon : null}
+      {text ? <span className='font-semibold'>{text}</span> : null}
     </button>
   );
 }

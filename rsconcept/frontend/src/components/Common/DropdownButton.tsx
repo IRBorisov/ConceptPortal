@@ -6,10 +6,10 @@ interface DropdownButtonProps {
 }
 
 function DropdownButton({ tooltip, onClick, disabled, children }: DropdownButtonProps) {
-  const behavior = (onClick ? 'cursor-pointer disabled:cursor-not-allowed clr-hover' : 'cursor-default');
+  const behavior = onClick ? 'cursor-pointer disabled:cursor-not-allowed clr-hover' : 'cursor-default';
   const text = disabled ? 'text-controls' : '';
   return (
-    <button
+    <button type='button'
       disabled={disabled}
       title={tooltip}
       onClick={onClick}

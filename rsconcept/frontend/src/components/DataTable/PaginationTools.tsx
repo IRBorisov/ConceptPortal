@@ -1,6 +1,7 @@
 import { Table } from '@tanstack/react-table';
 import { useCallback } from 'react';
 
+import { prefixes } from '../../utils/constants';
 import { GotoFirstIcon, GotoLastIcon, GotoNextIcon, GotoPrevIcon } from '../Icons';
 
 interface PaginationToolsProps<TData> {
@@ -20,7 +21,7 @@ function PaginationTools<TData>({ table, paginationOptions, onChangePaginationOp
   }, [onChangePaginationOption, table]);
   
   return (
-  <div className='text-sm flex justify-end w-full items-center text-controls select-none my-2'>
+  <div className='flex items-center justify-end w-full my-2 text-sm select-none text-controls'>
   <div className='flex items-center gap-1 mr-3'>
     <div className=''>
       {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
@@ -31,14 +32,14 @@ function PaginationTools<TData>({ table, paginationOptions, onChangePaginationOp
     <div className=''>{table.getFilteredRowModel().rows.length}</div>
   </div>
   <div className='flex'>
-    <button
+    <button type='button'
       className='clr-hover text-controls'
       onClick={() => table.setPageIndex(0)}
       disabled={!table.getCanPreviousPage()}
     >
       <GotoFirstIcon />
     </button>
-    <button
+    <button type='button'
       className='clr-hover text-controls'
       onClick={() => table.previousPage()}
       disabled={!table.getCanPreviousPage()}
@@ -47,7 +48,7 @@ function PaginationTools<TData>({ table, paginationOptions, onChangePaginationOp
     </button>
     <input type='text'
       title='Номер страницы. Выделите для ручного ввода'
-      className='w-6 clr-app text-center'
+      className='w-6 text-center clr-app'
       value={table.getState().pagination.pageIndex + 1}
       onChange={event => {
         const page = event.target.value ? Number(event.target.value) - 1 : 0;
@@ -56,14 +57,15 @@ function PaginationTools<TData>({ table, paginationOptions, onChangePaginationOp
         }
       }}
     />
-    <button
+    <button type='button'
       className='clr-hover text-controls'
       onClick={() => table.nextPage()}
       disabled={!table.getCanNextPage()}
     >
       <GotoNextIcon />
     </button>
-    <button className='clr-hover text-controls'
+    <button type='button'
+      className='clr-hover text-controls'
       onClick={() => table.setPageIndex(table.getPageCount() - 1)}
       disabled={!table.getCanNextPage()}
     >
@@ -73,11 +75,11 @@ function PaginationTools<TData>({ table, paginationOptions, onChangePaginationOp
   <select
     value={table.getState().pagination.pageSize}
     onChange={handlePaginationOptionsChange}
-    className='clr-app mx-2 cursor-pointer'
+    className='mx-2 cursor-pointer clr-app'
   >
   {paginationOptions.map(
-  pageSize => (
-    <option key={pageSize} value={pageSize}>
+  (pageSize) => (
+    <option key={`${prefixes.page_size}${pageSize}`} value={pageSize}>
       {pageSize} на стр
     </option>
   ))}

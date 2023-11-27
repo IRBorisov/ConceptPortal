@@ -206,18 +206,16 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
       />
       <div className='flex'>
         <div ref={matchModeMenu.ref}>
-          <SelectorButton 
+          <SelectorButton transparent tabIndex={-1}
             tooltip='Настройка атрибутов для фильтрации'
             dimensions='w-fit h-full'
-            transparent
             icon={<FilterIcon size={5} />}
             text={labelCstMathchMode(filterMatch)}
-            tabIndex={-1}
             onClick={matchModeMenu.toggle}
           />
           { matchModeMenu.isActive &&
           <Dropdown stretchLeft>
-            { Object.values(CstMatchMode).filter(value => !isNaN(Number(value))).map(
+            {Object.values(CstMatchMode).filter(value => !isNaN(Number(value))).map(
             (value, index) => {
               const matchMode = value as CstMatchMode;
               return (
@@ -232,18 +230,16 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
         </div>
 
         <div ref={sourceMenu.ref}>
-          <SelectorButton 
+          <SelectorButton transparent tabIndex={-1}
             tooltip='Настройка фильтрации по графу термов'
             dimensions='w-fit h-full'
-            transparent
             icon={<CogIcon size={4} />}
             text={labelCstSource(filterSource)}
-            tabIndex={-1}
             onClick={sourceMenu.toggle}
           />
-          { sourceMenu.isActive &&
+          {sourceMenu.isActive ?
           <Dropdown stretchLeft>
-            { Object.values(CstSource).filter(value => !isNaN(Number(value))).map(
+            {Object.values(CstSource).filter(value => !isNaN(Number(value))).map(
             (value, index) => {
               const source = value as CstSource;
               return (
@@ -254,18 +250,16 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
                 <p><span className='font-semibold'>{labelCstSource(source)}:</span> {describeCstSource(source)}</p>
               </DropdownButton>);
             })}
-          </Dropdown>}
+          </Dropdown> : null}
         </div>
       </div>
     </div>
     <div className='overflow-y-auto text-sm overscroll-none' style={{maxHeight : `${maxHeight}`}}>
-      <DataTable
+      <DataTable dense noFooter
         data={filteredData}
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
         headPosition='0'
-        dense
-        noFooter
 
         enableHiding
         columnVisibility={columnVisibility}

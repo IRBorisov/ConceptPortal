@@ -58,8 +58,8 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
       <div className='flex justify-center w-full gap-6'>
         <SelectSingle
           className='my-2 min-w-[15rem] self-center'
-          options={SelectorCstType}
           placeholder='Выберите тип'
+          options={SelectorCstType}
           value={{ value: cstData.cst_type, label: labelCstType(cstData.cst_type) }}
           onChange={data => updateCstData({ cst_type: data?.value ?? CstType.BASE})}
         />

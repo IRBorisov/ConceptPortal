@@ -11,17 +11,14 @@ function RSTokenButton({ token, disabled, onInsert }: RSTokenButtonProps) {
   const label = labelToken(token);
   const width = label.length > 3 ? 'w-[4.5rem]' : 'w-[2.25rem]';
   return (
-    <button
-      type='button'
-      disabled={disabled}
-      onClick={() => onInsert(token)}
-      title={describeToken(token)}
-      tabIndex={-1}
-      className={`px-1 cursor-pointer disabled:cursor-default border rounded-none h-6 ${width} outline-none clr-hover clr-btn-clear`}
-    >
-      {label && <span className='whitespace-nowrap'>{label}</span>}
-    </button>
-  );
+  <button type='button' tabIndex={-1}
+    disabled={disabled}
+    onClick={() => onInsert(token)}
+    title={describeToken(token)}
+    className={`px-1 cursor-pointer disabled:cursor-default border rounded-none h-6 ${width} outline-none clr-hover clr-btn-clear`}
+  >
+    {label ? <span className='whitespace-nowrap'>{label}</span> : null}
+  </button>);
 }
 
 export default RSTokenButton;

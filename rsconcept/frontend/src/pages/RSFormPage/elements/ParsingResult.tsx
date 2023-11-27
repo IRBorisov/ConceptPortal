@@ -13,22 +13,23 @@ function ParsingResult({ data, disabled, onShowError }: ParsingResultProps) {
   const warningsCount = data.errors.length - errorCount;
 
   return (
-    <div className='px-2 py-1'>
-      <p>Ошибок: <b>{errorCount}</b> | Предупреждений: <b>{warningsCount}</b></p>
-      {data.errors.map((error, index) => {
-        return (
-        <p
-          key={`error-${index}`}
-          className={`text-warning ${disabled ? '' : 'cursor-pointer'}`}
-          onClick={disabled ? undefined : () => onShowError(error)}
-        >
-          <span className='mr-1 font-semibold underline'>{error.isCritical ? 'Ошибка' : 'Предупреждение'} {getRSErrorPrefix(error)}:</span>
-          <span> {describeRSError(error)}</span>
-        </p>
-        );
-      })}
-    </div>
-  )
+  <div className='px-2 py-1'>
+    <p>Ошибок: <b>{errorCount}</b> | Предупреждений: <b>{warningsCount}</b></p>
+    {data.errors.map(
+    (error, index) => {
+      return (
+      <p
+        key={`error-${index}`}
+        className={`text-warning ${disabled ? '' : 'cursor-pointer'}`}
+        onClick={disabled ? undefined : () => onShowError(error)}
+      >
+        <span className='mr-1 font-semibold underline'>
+          {error.isCritical ? 'Ошибка' : 'Предупреждение'} {`${getRSErrorPrefix(error)}:`}
+        </span>
+        <span>{` ${describeRSError(error)}`}</span>
+      </p>);
+    })}
+  </div>);
 }
 
 export default ParsingResult;

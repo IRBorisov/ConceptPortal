@@ -9,7 +9,7 @@ interface DropdownCheckboxProps {
 }
 
 function DropdownCheckbox({ tooltip, setValue, disabled, ...props }: DropdownCheckboxProps) {
-  const behavior = (setValue && !disabled ? 'clr-hover' : '');
+  const behavior = (setValue && !disabled) ? 'clr-hover' : '';
   return (
     <div
       title={tooltip}

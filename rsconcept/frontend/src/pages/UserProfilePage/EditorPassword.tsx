@@ -31,7 +31,15 @@ function EditorPassword() {
 
   const passwordColor = useMemo(
   () => {
-    return !!newPassword && !!newPasswordRepeat && newPassword !== newPasswordRepeat ? 'clr-warning' : 'clr-input';
+    if (
+      !!newPassword &&
+      !!newPasswordRepeat &&
+      newPassword !== newPasswordRepeat
+    ) {
+      return 'clr-warning';
+    } else {
+      return 'clr-input';
+    }
   }, [newPassword, newPasswordRepeat]);
 
   const canSubmit = useMemo(
@@ -60,46 +68,44 @@ function EditorPassword() {
   }, [newPassword, oldPassword, newPasswordRepeat, setError]);
 
   return (
-    <div className='flex py-2 border-l-2 max-w-[14rem]'>
-      <form onSubmit={handleSubmit} className='flex flex-col justify-between px-6'>
-        <div className='flex flex-col gap-3'>
-          <TextInput id='old_password'
-            type='password' 
-            label='Старый пароль'
-            allowEnter
-            value={oldPassword}
-            onChange={event => setOldPassword(event.target.value)}
-          />
-          <TextInput id='new_password' type='password' 
-            colors={passwordColor}
-            label='Новый пароль'
-            allowEnter
-            value={newPassword}
-            onChange={event => {
-              setNewPassword(event.target.value); 
-            }}
-          />
-          <TextInput id='new_password_repeat' type='password' 
-            colors={passwordColor}
-            label='Повторите новый'
-            allowEnter
-            value={newPasswordRepeat}
-            onChange={event => {
-              setNewPasswordRepeat(event.target.value); 
-            }}
-          />          
-        </div>
-        { error && <ProcessError error={error} />}
-        <div className='flex justify-center w-full'>
-          <SubmitButton
-            disabled={!canSubmit}
-            loading={loading}
-            text='Сменить пароль'
-          />
-        </div>
-      </form>
-    </div>   
-  )
+  <div className='flex py-2 border-l-2 max-w-[14rem]'>
+  <form
+    className='flex flex-col justify-between px-6'
+    onSubmit={handleSubmit}
+  >
+    <div className='flex flex-col gap-3'>
+      <TextInput id='old_password' type='password' allowEnter
+        label='Старый пароль'
+        value={oldPassword}
+        onChange={event => setOldPassword(event.target.value)}
+      />
+      <TextInput id='new_password' type='password' allowEnter
+        label='Новый пароль'
+        colors={passwordColor}
+        value={newPassword}
+        onChange={event => {
+          setNewPassword(event.target.value); 
+        }}
+      />
+      <TextInput id='new_password_repeat' type='password' allowEnter
+        label='Повторите новый'
+        colors={passwordColor}
+        value={newPasswordRepeat}
+        onChange={event => {
+          setNewPasswordRepeat(event.target.value); 
+        }}
+      />          
+    </div>
+    {error ? <ProcessError error={error} /> : null}
+    <div className='flex justify-center w-full'>
+      <SubmitButton
+        text='Сменить пароль'
+        disabled={!canSubmit}
+        loading={loading}
+      />
+    </div>
+  </form>
+  </div>);
 }
 
 export default EditorPassword;

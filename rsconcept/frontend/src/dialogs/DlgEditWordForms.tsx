@@ -11,7 +11,7 @@ import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, ChevronDoubleDownIcon, CrossI
 import { useConceptTheme } from '../context/ThemeContext';
 import useConceptText from '../hooks/useConceptText';
 import { Grammeme, ITextRequest, IWordForm, IWordFormPlain } from '../models/language';
-import { getCompatibleGrams, wordFormEquals, parseGrammemes } from '../models/languageAPI';
+import { getCompatibleGrams, parseGrammemes,wordFormEquals } from '../models/languageAPI';
 import { IConstituenta, TermForm } from '../models/rsform';
 import { colorfgGrammeme } from '../utils/color';
 import { labelGrammeme } from '../utils/labels';
@@ -169,12 +169,11 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
       maxSize: 250,
       cell: props => 
         <div className='flex flex-wrap justify-start gap-1 select-none'>
-          { props.getValue().map(
-          gram => 
+          {props.getValue().map(
+          (gram) => 
             <div
               key={`${props.cell.id}-${gram}`}
               className='min-w-[3rem] px-1 text-sm text-center rounded-md whitespace-nowrap'
-              title=''
               style={{
                 borderWidth: '1px', 
                 borderColor: colorfgGrammeme(gram, colors),
@@ -195,10 +194,9 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
       maxSize: 50,
       cell: props => 
         <div>
-        <MiniButton
+        <MiniButton noHover
           tooltip='Удалить словоформу'
           icon={<CrossIcon size={4} color='text-warning'/>}
-          noHover
           onClick={() => handleDeleteRow(props.row.index)}
         />
         </div>
@@ -247,7 +245,6 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         placeholder='Введите текст'
         rows={2}
         dimensions='min-w-[18rem] w-full min-h-[4.2rem]'
-
         value={inputText}
         onChange={event => setInputText(event.target.value)}
       />
@@ -317,11 +314,10 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
     </div>
     
     <div className='border overflow-y-auto max-h-[17.4rem] min-h-[17.4rem] mb-2'>
-    <DataTable
+    <DataTable dense noFooter
         data={forms}
         columns={columns}
         headPosition='0'
-        dense
         noDataComponent={
           <span className='flex flex-col justify-center p-2 text-center min-h-[2rem]'>
             <p>Список пуст</p>

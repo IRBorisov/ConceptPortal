@@ -72,17 +72,14 @@ function RSTabsMenu({
   return (    
   <div className='flex items-stretch h-full w-fit'>
     <div ref={schemaMenu.ref}>
-      <Button
+      <Button noBorder dense tabIndex={-1}
         tooltip='Действия'
         icon={<MenuIcon color='text-controls' size={5}/>}
         dimensions='h-full w-fit pl-2'
         style={{outlineColor: 'transparent'}}
-        noBorder
-        dense
         onClick={schemaMenu.toggle}
-        tabIndex={-1}
       />
-      { schemaMenu.isActive &&
+      {schemaMenu.isActive ?
       <Dropdown>
         <DropdownButton onClick={handleShare}>
           <div className='inline-flex items-center justify-start gap-2'>
@@ -120,20 +117,17 @@ function RSTabsMenu({
             <p>Создать новую схему</p>
           </span>
         </DropdownButton>
-      </Dropdown>}
+      </Dropdown> : null}
     </div>
     <div ref={editMenu.ref}>
-      <Button
+      <Button dense noBorder tabIndex={-1}
         tooltip={'измнение: ' + (isEditable ? '[доступно]' : '[запрещено]')}
         dimensions='h-full w-fit'
         style={{outlineColor: 'transparent'}}
         icon={<EditIcon size={5} color={isEditable ? 'text-success' : 'text-warning'}/>}
-        dense
-        noBorder
         onClick={editMenu.toggle}
-        tabIndex={-1}
       />
-      { editMenu.isActive &&
+      {editMenu.isActive ?
       <Dropdown>
         <DropdownButton 
           disabled={!user || !isClaimable}
@@ -141,31 +135,33 @@ function RSTabsMenu({
           tooltip={!user || !isClaimable ? 'Взять во владение можно общую изменяемую схему' : ''}
         >
           <div className='flex items-center gap-2 pl-1'>
-            <span><OwnerIcon size={5} color={isOwned ? 'text-success' : 'text-controls'} /></span>
+            <span>
+              <OwnerIcon size={5} color={isOwned ? 'text-success' : 'text-controls'} />
+            </span>
             <p>
-              { isOwned && <b>Владелец схемы</b> }
-              { !isOwned && <b>Стать владельцем</b> }
+              {isOwned ? <b>Владелец схемы</b> : null}
+              {!isOwned ? <b>Стать владельцем</b>  : null}
             </p>
           </div>
         </DropdownButton>
-        {(isOwned || user?.is_staff) &&
+        {(isOwned || user?.is_staff) ?
         <DropdownCheckbox
           value={isReadonly}
           setValue={toggleReadonly}
           label='Я — читатель!'
           tooltip='Режим чтения'
-        />}
-        {user?.is_staff &&
+        /> : null}
+        {user?.is_staff ?
         <DropdownCheckbox
           value={isForceAdmin}
           setValue={toggleForceAdmin}
           label='Я — администратор!'
           tooltip='Режим редактирования для администраторов'
-        />}
-      </Dropdown>}
+        /> : null}
+      </Dropdown>: null}
     </div>
     <div>
-      <Button
+      <Button dense noBorder tabIndex={-1}
         tooltip={'отслеживание: ' + (isTracking ? '[включено]' : '[выключено]')}
         disabled={processing}
         icon={isTracking
@@ -174,10 +170,7 @@ function RSTabsMenu({
         }
         dimensions='h-full w-fit pr-2'
         style={{outlineColor: 'transparent'}}
-        dense
-        noBorder
         onClick={onToggleSubscribe}
-        tabIndex={-1}
         />
     </div>
   </div>);

@@ -127,7 +127,6 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
 
   return (
   <div className='flex flex-col gap-3'>
-
     <div className='overflow-y-auto text-sm border select-none max-h-[5.8rem] min-h-[5.8rem]'>
       <DataTable dense noFooter
         data={state.arguments}

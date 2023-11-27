@@ -45,8 +45,7 @@ function Tristate({
   }
 
   return (
-    <button
-      id={id}
+    <button type='button' id={id}
       className={`flex items-center clr-outline focus:outline-dotted focus:outline-1 ${dimensions}`}
       title={tooltip}
       disabled={disabled}
@@ -54,15 +53,15 @@ function Tristate({
       {...props}
     >
       <div className={`w-4 h-4 shrink-0 mt-0.5 border rounded-sm ${bgColor} ${cursor}`} >
-        { value && <div className='mt-[1px] ml-[1px]'><CheckboxCheckedIcon /></div>}
-        { value == null && <div className='mt-[1px] ml-[1px]'><CheckboxNullIcon /></div>}
+        {value ? <div className='mt-[1px] ml-[1px]'><CheckboxCheckedIcon /></div> : null}
+        {value == null ? <div className='mt-[1px] ml-[1px]'><CheckboxNullIcon /></div> : null}
       </div>
-      { label && 
+      {label ? 
       <Label
         className={`${cursor} px-2 text-start`}
         text={label}
         htmlFor={id}
-      />}
+      /> : null}
     </button>
   );
 }

@@ -12,8 +12,7 @@ function Footer() {
           <Link className='mx-2 hover:underline' to={urls.concept} tabIndex={-1}>Центр Концепт</Link>
           <Link className='mx-2 hover:underline' to='/manuals?topic=exteor' tabIndex={-1}>Экстеор</Link>
         </div>
-        <div className=''>
-          
+        <div>
           <p className='mt-0.5 text-center'>© 2023 ЦИВТ КОНЦЕПТ</p>
         </div>
 

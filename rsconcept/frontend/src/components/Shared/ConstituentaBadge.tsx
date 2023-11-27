@@ -27,14 +27,18 @@ function ConstituentaBadge({ value, prefixID, shortTooltip, theme }: Constituent
     >
       {value.alias}
     </div>
-    { !shortTooltip && <ConstituentaTooltip data={value} anchor={`#${prefixID}${value.alias}`} />}
-    { shortTooltip && 
+    {!shortTooltip ?
+    <ConstituentaTooltip
+      anchor={`#${prefixID}${value.alias}`}
+      data={value}
+    /> : null}
+    {shortTooltip ?
     <ConceptTooltip
       anchorSelect={`#${prefixID}${value.alias}`}
       place='right'
     >
       <p><span className='font-semibold'>Статус</span>: {describeExpressionStatus(value.status)}</p>
-    </ConceptTooltip>}
+    </ConceptTooltip> : null}
   </div>);
 }
 

@@ -38,28 +38,26 @@ function LibraryPage() {
   }, [])
 
   return (
-    <div className='w-full'>
-      { library.loading && <ConceptLoader /> }
-      { library.error && <BackendError error={library.error} />}
-      { !library.loading && library.items && 
-      <div className='flex flex-col w-full'>
-        <SearchPanel
-          query={query}
-          setQuery={setQuery}
-          strategy={strategy}
-          setStrategy={setStrategy}
-          total={library.items.length ?? 0}
-          filtered={items.length}
-          setFilter={setFilter}
-        />
-        <ViewLibrary
-          resetQuery={resetQuery}
-          items={items} 
-        />
-      </div>
-      }
-    </div>
-  );
+  <>
+    {library.loading ? <ConceptLoader/> : null}
+    {library.error ? <BackendError error={library.error}/> : null}
+    {(!library.loading && library.items) ? 
+    <div className='flex flex-col w-full'>
+      <SearchPanel
+        query={query}
+        setQuery={setQuery}
+        strategy={strategy}
+        setStrategy={setStrategy}
+        total={library.items.length ?? 0}
+        filtered={items.length}
+        setFilter={setFilter}
+      />
+      <ViewLibrary
+        resetQuery={resetQuery}
+        items={items} 
+      />
+    </div> : null}
+  </>);
 }
 
 export default LibraryPage;

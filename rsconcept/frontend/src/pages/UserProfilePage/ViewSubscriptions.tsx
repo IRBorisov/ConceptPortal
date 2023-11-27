@@ -47,26 +47,22 @@ function ViewSubscriptions({items}: ViewSubscriptionsProps) {
   ], [intl]);
 
   return (
-    <div className='max-h-[23.8rem] overflow-auto text-sm border w-fit'>
-    <DataTable
-      columns={columns}
-      data={items}
-      headPosition='0'
-      dense
+  <div className='max-h-[23.8rem] overflow-auto text-sm border w-fit'>
+  <DataTable dense noFooter
+    columns={columns}
+    data={items}
+    headPosition='0'
 
-      enableSorting
-      initialSorting={{
-        id: 'time_update',
-        desc: true
-      }}
-      noDataComponent={
-        <div className='h-[10rem]'>Отслеживаемые схемы отсутствуют</div>
-      }
+    enableSorting
+    initialSorting={{
+      id: 'time_update',
+      desc: true
+    }}
+    noDataComponent={<div className='h-[10rem]'>Отслеживаемые схемы отсутствуют</div>}
 
-      onRowClicked={openRSForm}
-    />
-    </div>
-  )
+    onRowClicked={openRSForm}
+  />
+  </div>);
 }
 
 export default ViewSubscriptions;

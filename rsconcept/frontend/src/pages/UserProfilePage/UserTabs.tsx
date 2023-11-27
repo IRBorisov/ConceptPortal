@@ -24,39 +24,37 @@ function UserTabs() {
   }, [auth, items]);
 
   return (
-    <div className='w-full'>
-      { loading && <ConceptLoader /> }
-      { error && <BackendError error={error} />}
-      { user && 
-      <div className='flex justify-center gap-2 py-2'>
-        <div className='flex flex-col gap-2 min-w-max'>
-          <div className='relative w-full'>
-            <div className='absolute top-0 right-0 mt-2'>
-              <MiniButton
-                tooltip='Показать/Скрыть список отслеживаний'
-                icon={showSubs
-                  ? <SubscribedIcon color='text-primary' size={5}/>
-                  : <NotSubscribedIcon color='text-primary' size={5}/>
-                }
-                onClick={() => setShowSubs(prev => !prev)}
-              />
-            </div>
+  <div className='w-full'>
+    {loading ? <ConceptLoader /> : null}
+    {error ? <BackendError error={error} /> : null}
+    {user ? 
+    <div className='flex justify-center gap-2 py-2'>
+      <div className='flex flex-col gap-2 min-w-max'>
+        <div className='relative w-full'>
+          <div className='absolute top-0 right-0 mt-2'>
+            <MiniButton
+              tooltip='Показать/Скрыть список отслеживаний'
+              icon={showSubs
+                ? <SubscribedIcon color='text-primary' size={5}/>
+                : <NotSubscribedIcon color='text-primary' size={5}/>
+              }
+              onClick={() => setShowSubs(prev => !prev)}
+            />
           </div>
-          <h1>Учетные данные пользователя</h1>
-          <div className='flex justify-center py-2 max-w-fit'>
-            <EditorProfile />
-            <EditorPassword />
-          </div>   
         </div>
-        {subscriptions.length > 0 && showSubs &&
-        <div className='flex flex-col w-full gap-6 pl-4'>
-          <h1>Отслеживаемые схемы</h1>
-          <ViewSubscriptions items={subscriptions} />
-        </div>}
+        <h1>Учетные данные пользователя</h1>
+        <div className='flex justify-center py-2 max-w-fit'>
+          <EditorProfile />
+          <EditorPassword />
+        </div>   
       </div>
-      }
-    </div>
-  );
+      {(subscriptions.length > 0 && showSubs) ?
+      <div className='flex flex-col w-full gap-6 pl-4'>
+        <h1>Отслеживаемые схемы</h1>
+        <ViewSubscriptions items={subscriptions} />
+      </div> : null}
+    </div> : null}
+  </div>);
 }
 
 export default UserTabs;

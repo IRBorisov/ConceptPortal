@@ -177,7 +177,7 @@ function RefsInput({
 
   return (
   <>
-    { showEditor && 
+    {showEditor ?
     <DlgEditReference
       hideWindow={() => setShowEditor(false)}
       items={items ?? []}
@@ -189,9 +189,8 @@ function RefsInput({
         mainRefs: mainRefs
       }}
       onSave={handleInputReference}
-    />
-    }
-    { showResolve &&
+    /> : null}
+    {showResolve ?
     <Modal
       readonly
       hideWindow={() => setShowResolve(false)}
@@ -199,16 +198,15 @@ function RefsInput({
       <div className='max-h-[60vh] max-w-[80vw] overflow-auto'>
         <PrettyJson data={refsData} />
       </div>
-    </Modal>}
+    </Modal> : null}
     <div className={`flex flex-col  w-full ${cursor}`}>
-    {label && 
+    {label ? 
     <Label
       text={label}
       htmlFor={id}
       className='mb-2'
-    />}
-    <CodeMirror id={id}
-      ref={thisRef}
+    /> : null}
+    <CodeMirror id={id} ref={thisRef}
       basicSetup={editorSetup}
       theme={customTheme}
       extensions={editorExtensions}

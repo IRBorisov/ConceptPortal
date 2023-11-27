@@ -186,37 +186,31 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
         <HelpTerminologyControl />
       </ConceptTooltip>
     </div>
-    {type !== ReferenceType.SYNTACTIC ? null :
+    {type === ReferenceType.SYNTACTIC ?
     <div className='flex flex-col gap-2'>
       <div className='flex flex-start'>
-        <TextInput id='offset' type='number'
+        <TextInput type='number' dense
           label='Смещение'
           dimensions='max-w-[10rem]'
-          dense
           value={offset}
           onChange={event => setOffset(event.target.valueAsNumber)}
         />
         <div className='self-center ml-2 text-sm font-semibold whitespace-nowrap'>
           Основная ссылка:
         </div>
-        <TextInput
-          dense
-          disabled
-          noBorder
+        <TextInput disabled dense noBorder
           value={mainLink}
           dimensions='w-full text-sm'
         />
       </div>
-      <TextInput id='nominal' type='text'
+      <TextInput spellCheck
         label='Начальная форма'
         placeholder='зависимое слово в начальной форме'
-        dimensions='w-full'
-        spellCheck
         value={nominal}
         onChange={event => setNominal(event.target.value)}
       />
-    </div>}
-    {type !== ReferenceType.ENTITY ? null :
+    </div> : null}
+    {type === ReferenceType.ENTITY ?
     <div className='flex flex-col gap-2'>
       <ConstituentaPicker 
         value={selectedCst}
@@ -230,11 +224,10 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
       />
 
       <div className='flex gap-4 flex-start'>
-        <TextInput
+        <TextInput dense
           label='Отсылаемая конституента'
           placeholder='Имя'
           dimensions='max-w-[16rem] min-w-[16rem] whitespace-nowrap'
-          dense
           value={alias}
           onChange={event => setAlias(event.target.value)}
         />
@@ -242,10 +235,7 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
           <div className='self-center text-sm font-semibold'>
             Термин:
           </div>
-          <TextInput
-            dense
-            disabled
-            noBorder
+          <TextInput disabled dense noBorder
             value={term}
             tooltip={term}
             dimensions='w-full text-sm'
@@ -265,7 +255,7 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
           onChange={newValue => setSelectedGrams([...newValue].sort(compareGrammemeOptions))}
         />
       </div>
-    </div>}
+    </div> : null}
   </div>
   </Modal>);
 }

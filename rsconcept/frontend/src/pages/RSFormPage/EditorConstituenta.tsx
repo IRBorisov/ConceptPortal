@@ -161,8 +161,14 @@ function EditorConstituenta({
   }
 
   return (
-  <div className='flex max-w-[1500px]' tabIndex={-1} onKeyDown={handleInput}>
-    <form onSubmit={handleSubmit} className='min-w-[47.8rem] max-w-[47.8rem] px-4 py-1'>
+  <div tabIndex={-1}
+    className='flex max-w-[1500px]'
+    onKeyDown={handleInput}
+  >
+    <form 
+      onSubmit={handleSubmit}
+      className='min-w-[47.8rem] max-w-[47.8rem] px-4 py-1'
+    >
       <div className='relative w-full'>
       <div className='absolute top-0 right-0 flex items-start justify-between w-full'>
         {activeCst && 
@@ -179,10 +185,9 @@ function EditorConstituenta({
             <span className='small-caps'>Конституента </span>
             <span className='ml-1 small-caps'>{alias}</span>
           </div>
-          <MiniButton
+          <MiniButton noHover
             tooltip='Переименовать конституенту'
             disabled={!isEnabled}
-            noHover
             onClick={handleRename}
             icon={<EditIcon size={4} color={isEnabled ? 'text-primary' : ''} />}
           />
@@ -228,7 +233,8 @@ function EditorConstituenta({
       </div>
       </div>
       <div className='flex flex-col gap-3 mt-1'>
-        <RefsInput id='term' label='Термин'
+        <RefsInput 
+          label='Термин'
           placeholder='Обозначение, используемое в текстовых определениях данной схемы'
           items={schema?.items}
           value={term}
@@ -237,8 +243,8 @@ function EditorConstituenta({
           disabled={!isEnabled}
           onChange={newValue => setTerm(newValue)}
         />
-        <TextArea id='typification' label='Типизация'
-          dense noBorder
+        <TextArea dense noBorder
+          label='Типизация'
           rows={typification.length > 70 ? 2 : 1}
           value={typification}
           colors='clr-app'
@@ -248,7 +254,8 @@ function EditorConstituenta({
           }}
           disabled
         />
-        <EditorRSExpression id='expression' label='Формальное определение'
+        <EditorRSExpression
+          label='Формальное определение'
           activeCst={activeCst}
           placeholder='Родоструктурное выражение, задающее формальное определение'
           value={expression}
@@ -258,7 +265,8 @@ function EditorConstituenta({
           onChange={newValue => setExpression(newValue)}
           setTypification={setTypification}
         />
-        <RefsInput id='definition' label='Текстовое определение'
+        <RefsInput 
+          label='Текстовое определение'
           placeholder='Лингвистическая интерпретация формального выражения'
           items={schema?.items}
           value={textDefinition}
@@ -267,11 +275,11 @@ function EditorConstituenta({
           disabled={!isEnabled}
           onChange={newValue => setTextDefinition(newValue)}
         />
-        <TextArea id='convention' label='Конвенция / Комментарий'
+        <TextArea spellCheck
+          label='Конвенция / Комментарий'
           placeholder='Договоренность об интерпретации или пояснение'
           value={convention}
           disabled={!isEnabled}
-          spellCheck
           onChange={event => setConvention(event.target.value)}
         />
         <div className='flex justify-center w-full'>
@@ -283,7 +291,7 @@ function EditorConstituenta({
         </div>
       </div>
     </form>
-    {(windowSize.width ?? 0) >= SIDELIST_HIDE_THRESHOLD &&
+    {(windowSize.width ?? 0) >= SIDELIST_HIDE_THRESHOLD ?
     <div className='w-full mt-[2.25rem] border h-fit'>
       <ViewSideConstituents
         expression={expression}
@@ -291,7 +299,7 @@ function EditorConstituenta({
         activeID={activeID}
         onOpenEdit={onOpenEdit}
       />
-    </div>}
+    </div> : null}
   </div>);
 }
 

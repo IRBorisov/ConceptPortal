@@ -20,7 +20,7 @@ import RSEditorControls from './elements/RSEditorControls';
 import StatusBar from './elements/StatusBar';
 
 interface EditorRSExpressionProps {
-  id: string
+  id?: string
   activeCst?: IConstituenta
   label: string
   disabled?: boolean
@@ -141,12 +141,11 @@ function EditorRSExpression({
     />
     <div className='w-full max-h-[4.5rem] min-h-[4.5rem] flex'>
       <div className='flex flex-col text-sm'>
-        <Button
-          tooltip='Проверить формальное определение'
+        <Button noOutline
           text='Проверить'
+          tooltip='Проверить формальное определение'
           dimensions='w-[6.75rem] min-h-[3rem] z-pop rounded-none'
           colors='clr-btn-default'
-          noOutline
           onClick={() => handleCheckExpression()}
         />
         <StatusBar
@@ -156,19 +155,18 @@ function EditorRSExpression({
         />
       </div>
       <div className='w-full overflow-y-auto text-sm border rounded-none'>
-        { loading && <ConceptLoader size={6} />}
-        { !loading && parseData && 
+        {loading ? <ConceptLoader size={6} /> : null}
+        {(!loading && parseData) ? 
         <ParsingResult
           data={parseData}
           disabled={disabled}
           onShowError={onShowError}
-        />}
-        { !loading && !parseData &&
-        <input
-          disabled={true}
+        /> : null}
+        {(!loading && !parseData) ?
+        <input disabled
           className='w-full px-2 py-1 text-base select-none h-fit clr-app'
           placeholder='Результаты проверки выражения'
-        />}
+        /> : null}
       </div>
     </div>
   </div>);

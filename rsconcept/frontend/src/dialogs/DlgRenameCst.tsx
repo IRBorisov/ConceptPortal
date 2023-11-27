@@ -42,23 +42,25 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
   return (
     <Modal
       title='Переименование конституенты'
+      submitText='Переименовать'
+      submitInvalidTooltip={'Введите незанятое имя, соответствующее типу'}
       hideWindow={hideWindow}
       canSubmit={validated}
       onSubmit={handleSubmit}
-      submitInvalidTooltip={'Введите незанятое имя, соответствующее типу'}
-      submitText='Переименовать'
     >
       <div className='flex items-center gap-4 px-2 my-2 h-fit min-w-[25rem]'>
         <SelectSingle
+          placeholder='Выберите тип'
           className='min-w-[14rem] self-center z-modal-top'
           options={SelectorCstType}
-          placeholder='Выберите тип'
-          value={{ value: cstData.cst_type, label: labelCstType(cstData.cst_type) }}
+          value={{
+            value: cstData.cst_type,
+            label: labelCstType(cstData.cst_type)
+          }}
           onChange={data => updateData({cst_type: data?.value ?? CstType.BASE})}
         />
         <div>
-        <TextInput id='alias' label='Имя'
-          dense
+        <TextInput id='alias' label='Имя' dense
           dimensions='w-[7rem]'
           value={cstData.alias}
           onChange={event => updateData({alias: event.target.value})}

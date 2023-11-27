@@ -12,7 +12,8 @@ function SortingIcon<TData>({ column }: SortingIconProps<TData>) {
       desc: <DescendingIcon size={4} />,
       asc: <AscendingIcon size={4}/>,
     }[column.getIsSorted() as string] ?? 
-    <DescendingIcon size={4} color='opacity-0 hover:opacity-50' />}
+      <DescendingIcon size={4} color='opacity-0 hover:opacity-50' />
+    }
   </>);
 }
 

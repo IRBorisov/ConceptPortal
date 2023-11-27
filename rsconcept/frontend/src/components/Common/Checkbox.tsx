@@ -5,7 +5,6 @@ import Label from './Label';
 
 export interface CheckboxProps
 extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'children' | 'title' | 'value' | 'onClick' > {
-  id?: string
   label?: string
   disabled?: boolean
   dimensions?: string
@@ -43,8 +42,7 @@ function Checkbox({
   }
 
   return (
-    <button
-      id={id}
+    <button type='button' id={id}
       className={`flex items-center clr-outline focus:outline-dotted focus:outline-1 ${dimensions}`}
       title={tooltip}
       disabled={disabled}
@@ -52,14 +50,17 @@ function Checkbox({
       {...props}
     >
       <div className={`max-w-[1rem] min-w-[1rem] h-4 mt-0.5 border rounded-sm ${bgColor} ${cursor}`} >
-        { value && <div className='mt-[1px] ml-[1px]'><CheckboxCheckedIcon /></div>}
+        {value ?
+        <div className='mt-[1px] ml-[1px]'>
+          <CheckboxCheckedIcon />
+        </div> : null}
       </div>
-      { label && 
+      {label ?
       <Label
         className={`${cursor} px-2 text-start`}
         text={label}
         htmlFor={id}
-      />}
+      /> : null}
     </button>
   );
 }

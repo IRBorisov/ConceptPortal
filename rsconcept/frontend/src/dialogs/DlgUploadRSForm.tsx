@@ -38,28 +38,27 @@ function DlgUploadRSForm({ hideWindow }: DlgUploadRSFormProps) {
   }
 
   return (
-    <Modal
-      title='Импорт схемы из Экстеора'
-      hideWindow={hideWindow}
-      canSubmit={!!file}
-      onSubmit={handleSubmit}
-      submitText='Загрузить'
-    >
-      <div className='flex flex-col items-start min-w-[20rem] max-w-[20rem]'>
-        <FileInput
-          label='Выбрать файл'
-          acceptType={EXTEOR_TRS_FILE}
-          onChange={handleFile}
-        />
-        <Checkbox
-          label='Загружать название и комментарий'
-          value={loadMetadata}
-          setValue={value => setLoadMetadata(value)}
-          dimensions='w-fit pb-2'
-        />
-      </div>
-    </Modal>
-  );
+  <Modal
+    title='Импорт схемы из Экстеора'
+    hideWindow={hideWindow}
+    canSubmit={!!file}
+    onSubmit={handleSubmit}
+    submitText='Загрузить'
+  >
+    <div className='flex flex-col items-start min-w-[20rem] max-w-[20rem]'>
+      <FileInput
+        label='Выбрать файл'
+        acceptType={EXTEOR_TRS_FILE}
+        onChange={handleFile}
+      />
+      <Checkbox
+        label='Загружать название и комментарий'
+        dimensions='w-fit pb-2'
+        value={loadMetadata}
+        setValue={value => setLoadMetadata(value)}
+      />
+    </div>
+  </Modal>);
 }
 
 export default DlgUploadRSForm;

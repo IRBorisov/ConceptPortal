@@ -152,12 +152,12 @@ function RSInput({
 
   return (
     <div className={`flex flex-col ${dimensions} ${cursor}`}>
-    {label && 
+    {label ?
     <Label
       text={label}
       htmlFor={id}
       className='mb-2'
-    />}
+    /> : null}
     <CodeMirror id={id}
       ref={thisRef}
       basicSetup={editorSetup}

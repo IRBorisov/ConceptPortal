@@ -8,12 +8,10 @@ interface SelectRowProps<TData> {
 
 function SelectRow<TData>({ row }: SelectRowProps<TData>) {  
   return (
-    <Checkbox
-      tabIndex={-1}
-      value={row.getIsSelected()}
-      setValue={row.getToggleSelectedHandler()}
-    />
-  );
+  <Checkbox tabIndex={-1}
+    value={row.getIsSelected()}
+    setValue={row.getToggleSelectedHandler()}
+  />);
 }
 
 export default SelectRow;

@@ -20,32 +20,33 @@ import { globalIDs } from './utils/constants';
 function Root() {
   const { noNavigation, noFooter, viewportHeight, mainHeight, showScroll } = useConceptTheme();
   return (
-    <NavigationState>
-    <div className='w-screen antialiased clr-app min-w-[30rem] overflow-hidden'>
+  <NavigationState>
+  <div className='w-screen antialiased clr-app min-w-[30rem] overflow-hidden'>
+
+    <ConceptToaster
+      className='mt-[4rem] text-sm'
+      autoClose={3000}
+      draggable={false}
+      pauseOnFocusLoss={false}
+    />
+    
+    <Navigation />
+
+    <div id={globalIDs.main_scroll}
+      className='w-full overflow-x-auto overscroll-none'
+      style={{
+        maxHeight: viewportHeight,
+        overflowY: showScroll ? 'scroll': 'auto'
+      }}
+    >
+      <main className='w-full h-full min-w-fit' style={{minHeight: mainHeight}}>
+        <Outlet />
+      </main>
       
-      <ConceptToaster
-        className='mt-[4rem] text-sm'
-        autoClose={3000}
-        draggable={false}
-        pauseOnFocusLoss={false}
-      />
-      
-      <Navigation />
-      <div id={globalIDs.main_scroll}
-        className='w-full overflow-x-auto overscroll-none'
-        style={{
-          maxHeight: viewportHeight,
-          overflowY: showScroll ? 'scroll': 'auto'
-        }}
-      >
-        <main className='w-full h-full min-w-fit' style={{minHeight: mainHeight}}>
-          <Outlet />
-        </main>
-      {!noNavigation && !noFooter && <Footer />}
-      </div>
+    {(!noNavigation && !noFooter) ? <Footer /> : null}
     </div>
-    </NavigationState>
-  );
+  </div>
+  </NavigationState>);
 }
 
 const router = createBrowserRouter([

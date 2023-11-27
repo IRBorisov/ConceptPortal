@@ -4,12 +4,21 @@ import NavigationButton from './NavigationButton';
 
 function ThemeSwitcher() {
   const { darkMode, toggleDarkMode } = useConceptTheme();
-  return (
-    <>
-      {darkMode && <NavigationButton icon={<LightThemeIcon />} description='Светлая тема' onClick={toggleDarkMode} />}
-      {!darkMode && <NavigationButton icon={<DarkThemeIcon />} description='Темная тема' onClick={toggleDarkMode} />}
-    </>
-  );
+  if (darkMode) {
+    return (
+    <NavigationButton
+      description='Светлая тема'
+      icon={<LightThemeIcon />}
+      onClick={toggleDarkMode}
+    />);
+  } else {
+    return (
+    <NavigationButton
+      description='Темная тема'
+      icon={<DarkThemeIcon />}
+      onClick={toggleDarkMode}
+    />);
+  }
 }
 
 export default ThemeSwitcher;

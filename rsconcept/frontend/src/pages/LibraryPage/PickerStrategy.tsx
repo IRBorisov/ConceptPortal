@@ -39,18 +39,16 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
 
   return (
   <div ref={strategyMenu.ref} className='h-full text-right'>
-    <SelectorButton 
+    <SelectorButton transparent tabIndex={-1}
       tooltip='Список фильтров'
       dimensions='w-fit h-full'
-      transparent
       icon={<FilterIcon size={5} />}
       text={labelLibraryFilter(value)}
-      tabIndex={-1}
       onClick={strategyMenu.toggle}
     />
-    { strategyMenu.isActive &&
+    {strategyMenu.isActive ?
     <Dropdown>
-      { Object.values(LibraryFilterStrategy).map(
+      {Object.values(LibraryFilterStrategy).map(
       (enumValue, index) => {
         const strategy = enumValue as LibraryFilterStrategy;
         return (
@@ -63,7 +61,7 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
           disabled={isStrategyDisabled(strategy)}
         />);
       })}
-    </Dropdown>}
+    </Dropdown> : null}
   </div>
   );
 }

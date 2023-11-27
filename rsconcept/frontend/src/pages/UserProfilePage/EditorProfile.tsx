@@ -50,42 +50,37 @@ function EditorProfile() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className='px-6 py-2 flex flex-col gap-8 min-w-[18rem]'>
-      <div className='flex flex-col gap-3'>
-        <TextInput id='username'
-          label='Логин'
-          tooltip='Логин изменить нельзя'
-          disabled
-          value={username}
-        />
-        <TextInput id='first_name'
-          label='Имя'
-          value={first_name}
-          allowEnter
-          onChange={event => setFirstName(event.target.value)}
-        />
-        <TextInput id='last_name'
-          label='Фамилия'
-          value={last_name}
-          allowEnter
-          onChange={event => setLastName(event.target.value)}
-        />
-        <TextInput id='email'
-          label='Электронная почта'
-          allowEnter
-          value={email}
-          onChange={event => setEmail(event.target.value)}
-        />
-      </div>  
-      <div className='flex justify-center w-full'>
-        <SubmitButton
-          text='Сохранить данные'
-          loading={processing}
-          disabled={!isModified}
-        />
-      </div>  
-    </form>
-  )
+  <form onSubmit={handleSubmit} className='px-6 py-2 flex flex-col gap-8 min-w-[18rem]'>
+    <div className='flex flex-col gap-3'>
+      <TextInput id='username' disabled
+        label='Логин'
+        tooltip='Логин изменить нельзя'
+        value={username}
+      />
+      <TextInput id='first_name' allowEnter
+        label='Имя'
+        value={first_name}
+        onChange={event => setFirstName(event.target.value)}
+      />
+      <TextInput id='last_name' allowEnter
+        label='Фамилия'
+        value={last_name}
+        onChange={event => setLastName(event.target.value)}
+      />
+      <TextInput id='email' allowEnter
+        label='Электронная почта'
+        value={email}
+        onChange={event => setEmail(event.target.value)}
+      />
+    </div>  
+    <div className='flex justify-center w-full'>
+      <SubmitButton
+        text='Сохранить данные'
+        loading={processing}
+        disabled={!isModified}
+      />
+    </div>  
+  </form>);
 }
 
   export default EditorProfile;

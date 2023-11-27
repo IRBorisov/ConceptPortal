@@ -66,66 +66,62 @@ function LoginPage() {
   }
 
   return (
-    <div className='flex items-start justify-center w-full pt-8 select-none' style={{minHeight: mainHeight}}>
-    { user &&
-    <div className='flex flex-col items-center gap-2'>
-      <p className='font-semibold'>{`Вы вошли в систему как ${user.username}`}</p>
-      <p>
-        <TextURL text='Создать схему' href='/rsform-create'/>
-        <span> | </span>
-        <TextURL text='Библиотека' href='/library'/>
-        <span> | </span>
-        <TextURL text='Справка' href='/manuals'/>
-        <span> | </span>
-        <span
-          className='cursor-pointer hover:underline text-url'
-          onClick={logoutAndRedirect}
-        >
-          Выйти
-        </span>
-      </p>
-    </div>}
-    { !user &&
-    <Form
-      onSubmit={handleSubmit}
-      dimensions='w-[24rem]'
-    >
-      <img alt='Концепт Портал'
-        src='/logo_full.svg'
-        className='max-h-[2.5rem] min-w-[2.5rem] mt-2 mb-4'
-      />
-      <TextInput id='username' type='text'
-        label='Имя пользователя'
-        required
-        allowEnter
-        value={username}
-        autoFocus
-        onChange={event => setUsername(event.target.value)}
-      />
-      <TextInput id='password' type='password'
-        label='Пароль'
-        required
-        allowEnter
-        value={password}
-        onChange={event => setPassword(event.target.value)}
-      />
+  <div
+    className='flex items-start justify-center w-full pt-8 select-none'
+    style={{minHeight: mainHeight}}
+  >
+  {user ?
+  <div className='flex flex-col items-center gap-2'>
+    <p className='font-semibold'>{`Вы вошли в систему как ${user.username}`}</p>
+    <p>
+      <TextURL text='Создать схему' href='/rsform-create'/>
+      <span> | </span>
+      <TextURL text='Библиотека' href='/library'/>
+      <span> | </span>
+      <TextURL text='Справка' href='/manuals'/>
+      <span> | </span>
+      <span
+        className='cursor-pointer hover:underline text-url'
+        onClick={logoutAndRedirect}
+      >
+        Выйти
+      </span>
+    </p>
+  </div> : null}
+  {!user ?
+  <Form
+    onSubmit={handleSubmit}
+    dimensions='w-[24rem]'
+  >
+    <img alt='Концепт Портал'
+      src='/logo_full.svg'
+      className='max-h-[2.5rem] min-w-[2.5rem] mt-2 mb-4'
+    />
+    <TextInput id='username' autoFocus required allowEnter
+      label='Имя пользователя'
+      value={username}
+      onChange={event => setUsername(event.target.value)}
+    />
+    <TextInput id='password' type='password' required allowEnter
+      label='Пароль'
+      value={password}
+      onChange={event => setPassword(event.target.value)}
+    />
 
-      <div className='flex justify-center w-full py-2'>
-        <SubmitButton
-          text='Войти'
-          dimensions='w-[12rem]'
-          loading={loading}
-        />
-      </div>
-      <div className='flex flex-col text-sm'>
-        <TextURL text='Восстановить пароль...' href='/restore-password' />
-        <TextURL text='Нет аккаунта? Зарегистрируйтесь...' href='/signup' />
-      </div>
-      { error && <ProcessError error={error} />}
-    </Form>
-    }
-  </div>
-  );
+    <div className='flex justify-center w-full py-2'>
+      <SubmitButton
+        text='Войти'
+        dimensions='w-[12rem]'
+        loading={loading}
+      />
+    </div>
+    <div className='flex flex-col text-sm'>
+      <TextURL text='Восстановить пароль...' href='/restore-password' />
+      <TextURL text='Нет аккаунта? Зарегистрируйтесь...' href='/signup' />
+    </div>
+    {error ? <ProcessError error={error} /> : null}
+  </Form> : null}
+  </div>);
 }
 
 export default LoginPage;

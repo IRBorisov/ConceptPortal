@@ -14,24 +14,24 @@ function UserMenu() {
   return (
     <div ref={menu.ref} className='h-full'>
       <div className='flex items-center justify-end h-full w-fit'>
-      { !user && 
+      {!user ?
       <NavigationButton
         text='Войти...'
         description='Перейти на страницу логина'
         icon={<InDoorIcon />}
         onClick={navigateLogin}
-      />}
-      { user &&
+      /> : null}
+      {user ?
       <NavigationButton
-        icon={<UserIcon />}
         description={`Пользователь ${user?.username}`}
+        icon={<UserIcon />}
         onClick={menu.toggle}
-      />}
+      /> : null}
       </div>
-      { user && menu.isActive &&
+      {(user && menu.isActive) ?
       <UserDropdown
         hideDropdown={() => menu.hide()}
-      />}
+      /> : null}
     </div>
   );
 }

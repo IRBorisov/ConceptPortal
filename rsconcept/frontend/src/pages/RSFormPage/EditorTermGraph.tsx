@@ -471,7 +471,10 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
     </div>
     </div>
 
-    <div className='w-full h-full overflow-auto outline-none' tabIndex={-1} onKeyDown={handleKeyDown}>
+    <div tabIndex={-1}
+      className='w-full h-full overflow-auto outline-none' 
+      onKeyDown={handleKeyDown}
+    >
     <div 
       className='relative'
       style={{width: canvasWidth, height: canvasHeight}}

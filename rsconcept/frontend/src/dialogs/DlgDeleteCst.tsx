@@ -30,9 +30,9 @@ function DlgDeleteCst({ hideWindow, selected, onDelete }: DlgDeleteCstProps) {
   return (
     <Modal
       title='Удаление конституент'
+      submitText={expandOut ? 'Удалить с зависимыми' : 'Удалить'}
       hideWindow={hideWindow}
       canSubmit={true}
-      submitText={expandOut ? 'Удалить с зависимыми' : 'Удалить'}
       onSubmit={handleSubmit}
     >
     <div className='max-w-[60vw] min-w-[20rem]'>
@@ -41,10 +41,10 @@ function DlgDeleteCst({ hideWindow, selected, onDelete }: DlgDeleteCstProps) {
       {selected.map(
       (id) => {
         const cst = schema!.items.find(cst => cst.id === id);
-        return (cst && 
+        return (cst ?
         <p key={`${prefixes.cst_delete_list}${cst.id}`}>
           {labelConstituenta(cst)}
-        </p>);
+        </p> : null);
       })}
       </div>
       <p className='mt-4'>Зависимые конституенты: <b>{expansion.length}</b></p>
@@ -52,10 +52,10 @@ function DlgDeleteCst({ hideWindow, selected, onDelete }: DlgDeleteCstProps) {
       {expansion.map(
       (id) => {
         const cst = schema!.items.find(cst => cst.id === id);
-        return (cst &&
+        return (cst ?
         <p key={`${prefixes.cst_dependant_list}${cst.id}`}>
           {labelConstituenta(cst)}
-        </p>);
+        </p> : null);
       })}
       </div>
       <Checkbox

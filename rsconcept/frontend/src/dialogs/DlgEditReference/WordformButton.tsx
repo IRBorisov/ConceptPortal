@@ -10,10 +10,8 @@ interface WordformButtonProps {
 
 function WordformButton({ text, example, grams, onSelectGrams, isSelected, ...props }: WordformButtonProps) {
   return (
-    <button
-      type='button'
+    <button type='button' tabIndex={-1}
       onClick={() => onSelectGrams(grams)}
-      tabIndex={-1}
       className={`min-w-[6rem] p-1 border rounded-none cursor-pointer clr-btn-clear clr-hover ${isSelected ? 'clr-selected': ''}`}
       {...props}
     >

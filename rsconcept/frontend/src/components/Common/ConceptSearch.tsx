@@ -20,7 +20,7 @@ function ConceptSearch({ value, onChange, dense }: ConceptSearchProps) {
       noOutline
       noBorder={dense}
       value={value}
-      onChange={event => onChange && onChange(event.target.value)}
+      onChange={event => (onChange ? onChange(event.target.value) : undefined)}
     />
   </div>);
 }

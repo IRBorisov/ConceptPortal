@@ -18,15 +18,16 @@ function SelectorButton({
   ...props
 }: SelectorButtonProps) {
   const cursor = 'disabled:cursor-not-allowed cursor-pointer';
-  const position = `px-1 flex flex-start items-center gap-1 ${dimensions}`
+  const position = `px-1 flex flex-start items-center gap-1 ${dimensions}`;
+  const design = (transparent ? 'clr-hover' : `border ${colors}`) + ' text-btn text-controls';
   return (
     <button type='button'
-      className={`text-sm small-caps ${!transparent && 'border'} ${cursor} ${position} text-btn text-controls select-none ${transparent ? 'clr-hover' : colors}`}
+      className={`text-sm small-caps select-none ${cursor} ${position} ${design}`}
       title={tooltip}
       {...props}
     >
-      {icon && icon}
-      {text && <div className={'font-semibold whitespace-nowrap pb-1'}>{text}</div>}
+      {icon ? icon : null}
+      {text ? <div className={'font-semibold whitespace-nowrap pb-1'}>{text}</div> : null}
     </button>
   );
 }
