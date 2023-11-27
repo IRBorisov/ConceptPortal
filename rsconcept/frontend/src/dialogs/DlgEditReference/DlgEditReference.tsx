@@ -163,7 +163,7 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
     canSubmit={isValid}
     onSubmit={handleSubmit}
   >
-  <div className='min-w-[40rem] max-w-[40rem] flex flex-col gap-4 mb-4 min-h-[34rem]'>
+  <div className='min-w-[40rem] max-w-[40rem] flex flex-col gap-3 mb-2 min-h-[34rem]'>
     <div className='flex items-center self-center flex-start'>
       <ReferenceTypeButton 
         type={ReferenceType.ENTITY}
@@ -211,7 +211,7 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
       />
     </div> : null}
     {type === ReferenceType.ENTITY ?
-    <div className='flex flex-col gap-2'>
+    <div className='flex flex-col gap-3'>
       <ConstituentaPicker 
         value={selectedCst}
         data={items}
@@ -245,11 +245,12 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
 
       {FormButtons}
       
-      <div className='flex items-center gap-10 flex-start'>
+      <div className='flex items-center gap-4 flex-start'>
         <Label text='Отсылаемая словоформа'/>
         <SelectMulti
           placeholder='Выберите граммемы'
           className='flex-grow h-full z-modal-top'
+          menuPlacement='top'
           options={gramOptions}
           value={selectedGrams}
           onChange={newValue => setSelectedGrams([...newValue].sort(compareGrammemeOptions))}
