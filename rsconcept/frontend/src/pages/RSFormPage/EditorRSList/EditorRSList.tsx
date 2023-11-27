@@ -9,7 +9,7 @@ import useWindowSize from '../../../hooks/useWindowSize';
 import { CstType, IConstituenta, ICstCreateData, ICstMovetoData } from '../../../models/rsform'
 import { prefixes } from '../../../utils/constants';
 import { labelCstTypification } from '../../../utils/labels';
-import RSItemsMenu from './RSListToolbar';
+import RSListToolbar from './RSListToolbar';
 
 // Window width cutoff for columns
 const COLUMN_DEFINITION_HIDE_THRESHOLD = 1000;
@@ -299,7 +299,7 @@ function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edi
       <div className='mr-3 min-w-[9rem] whitespace-nowrap small-caps'>
         Выбор {selected.length} из {schema?.stats?.count_all ?? 0}
       </div>
-      <RSItemsMenu
+      <RSListToolbar
         selectedCount={selected.length}
         editorMode={isEditable}
         onMoveUp={handleMoveUp}

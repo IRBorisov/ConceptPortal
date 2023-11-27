@@ -12,7 +12,7 @@ import { prefixes } from '../../../utils/constants';
 import { labelCstType } from '../../../utils/labels';
 import { getCstTypePrefix, getCstTypeShortcut } from '../../../utils/misc';
 
-interface RSItemsMenuProps {
+interface RSListToolbarProps {
   editorMode?: boolean
   selectedCount: number
 
@@ -25,16 +25,16 @@ interface RSItemsMenuProps {
   onReindex: () => void
 }
 
-function RSItemsMenu({
+function RSListToolbar({
   selectedCount, editorMode,
   onMoveUp, onMoveDown, onDelete, onClone, onCreate, onTemplates, onReindex
-}: RSItemsMenuProps) {
+}: RSListToolbarProps) {
   const insertMenu = useDropdown();
 
   const nothingSelected = useMemo(() => selectedCount === 0, [selectedCount]);
 
   return (    
-  <div className='flex items-center justify-center w-full pr-[9rem]'>
+  <div className='flex items-center justify-center w-full pr-[9rem] mt-1'>
     <MiniButton
       tooltip='Переместить вверх'
       icon={<ArrowUpIcon size={5}/>}
@@ -112,4 +112,4 @@ function RSItemsMenu({
   </div>);
 }
 
-export default RSItemsMenu;
+export default RSListToolbar;
