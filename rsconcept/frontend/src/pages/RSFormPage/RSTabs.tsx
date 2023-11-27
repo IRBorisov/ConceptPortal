@@ -22,7 +22,7 @@ import DlgRenameCst from '../../dialogs/DlgRenameCst';
 import DlgShowAST from '../../dialogs/DlgShowAST';
 import DlgUploadRSForm from '../../dialogs/DlgUploadRSForm';
 import useModificationPrompt from '../../hooks/useModificationPrompt';
-import { ICstCreateData, ICstRenameData, ICstUpdateData, TermForm } from '../../models/rsform';
+import { IConstituenta, ICstCreateData, ICstRenameData, ICstUpdateData, IRSForm, TermForm } from '../../models/rsform';
 import { SyntaxTree } from '../../models/rslang';
 import { EXTEOR_TRS_FILE, prefixes, TIMEOUT_UI_REFRESH } from '../../utils/constants';
 import { createAliasFor } from '../../utils/misc';
@@ -191,28 +191,20 @@ function RSTabs() {
     const data = {
       items: deleted
     };
-    let activeIndex = schema.items.findIndex(cst => cst.id === activeID);
-    cstDelete(data, () => {
-      const deletedNames = deleted.map(id => schema.items.find(cst => cst.id === id)?.alias).join(', ');
-      toast.success(`Конституенты удалены: ${deletedNames}`);
 
-      if (deleted.length === schema.items.length) {
+    const deletedNames = deleted.map(id => schema.items.find(cst => cst.id === id)?.alias).join(', ');
+    const isEmpty = deleted.length === schema.items.length;
+    const nextActive = isEmpty ? undefined : getNextActiveOnDelete(activeID, schema.items, deleted);
+    
+    cstDelete(data, () => {
+      toast.success(`Конституенты удалены: ${deletedNames}`);
+      if (isEmpty) {
         navigateTab(RSTabID.CST_LIST);
-      } else if (activeIndex === -1) {
+      } else if (!nextActive) {
         navigateTab(activeTab);
       } else {
-        while (activeIndex < schema.items.length && deleted.find(id => id === schema.items[activeIndex].id)) {
-          ++activeIndex;
-        }
-        if (activeIndex >= schema.items.length) {
-          activeIndex = schema.items.length - 1;
-          while (activeIndex >= 0 && deleted.find(id => id === schema.items[activeIndex].id)) {
-            --activeIndex;
-          }
-        }
-        navigateTab(activeTab, schema.items[activeIndex].id);
+        navigateTab(activeTab, nextActive);
       }
-      
       if (afterDelete) afterDelete(deleted);
     });
   }, [afterDelete, cstDelete, schema, activeID, activeTab, navigateTab]);
@@ -470,3 +462,29 @@ function RSTabs() {
 }
 
 export default RSTabs;
+
+// ====== Internals =========
+function getNextActiveOnDelete(activeID: number | undefined, items: IConstituenta[], deleted: number[]): number | undefined {
+  if (items.length === deleted.length) {
+    return undefined;
+  }
+
+  let activeIndex = items.findIndex(cst => cst.id === activeID);
+  if (activeIndex === -1) {
+    return undefined;
+  }
+
+  while (
+    activeIndex < items.length &&
+    deleted.find(id => id === items[activeIndex].id)
+  ) {
+    ++activeIndex;
+  }
+  if (activeIndex >= items.length) {
+    activeIndex = items.length - 1;
+    while (activeIndex >= 0 && deleted.find(id => id === items[activeIndex].id)) {
+      --activeIndex;
+    }
+  }
+  return items[activeIndex].id;
+}
