@@ -15,6 +15,11 @@ export enum DependencyMode {
 }
 
 /**
+ * Represents graph node coloring scheme.
+*/
+export type GraphColoringScheme = 'none' | 'status' | 'type';
+
+/**
  * Represents manuals topic.
 */
 export enum HelpTopic {
@@ -69,11 +74,11 @@ export enum LibraryFilterStrategy {
 /**
  * Represents parameters for GraphEditor.
 */
-export interface GraphEditorParams {
+export interface GraphFilterParams {
   noHermits: boolean
   noTransitive: boolean
   noTemplates: boolean
-  noTerms: boolean
+  noText: boolean
 
   allowBase: boolean
   allowStruct: boolean

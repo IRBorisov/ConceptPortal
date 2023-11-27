@@ -5,8 +5,8 @@ import { LayoutTypes } from 'reagraph';
 
 import { type GramData, Grammeme, ReferenceType } from '../models/language';
 import { grammemeCompare } from '../models/languageAPI';
+import { GraphColoringScheme } from '../models/miscelanious';
 import { CstType } from '../models/rsform';
-import { ColoringScheme } from '../pages/RSFormPage/EditorTermGraph';
 import { labelGrammeme, labelReferenceType } from './labels';
 import { labelCstType } from './labels';
 
@@ -30,9 +30,9 @@ export const SelectorGraphLayout: { value: LayoutTypes, label: string }[] = [
 ];
 
 /**
- * Represents options for {@link ColoringScheme} selector.
+ * Represents options for {@link GraphColoringScheme} selector.
 */
-export const SelectorGraphColoring: { value: ColoringScheme, label: string }[] = [
+export const SelectorGraphColoring: { value: GraphColoringScheme, label: string }[] = [
   { value: 'none', label: 'Цвет: моно' },
   { value: 'status', label: 'Цвет: статус' },
   { value: 'type', label: 'Цвет: класс' },

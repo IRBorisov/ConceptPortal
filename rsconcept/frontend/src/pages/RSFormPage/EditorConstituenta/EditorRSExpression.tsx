@@ -2,22 +2,22 @@ import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import Button from '../../components/Common/Button';
-import { ConceptLoader } from '../../components/Common/ConceptLoader';
-import MiniButton from '../../components/Common/MiniButton';
-import { ASTNetworkIcon } from '../../components/Icons';
-import RSInput from '../../components/RSInput';
-import { RSTextWrapper } from '../../components/RSInput/textEditing';
-import { useRSForm } from '../../context/RSFormContext';
-import useCheckExpression from '../../hooks/useCheckExpression';
-import { IConstituenta } from '../../models/rsform';
-import { IExpressionParse, IRSErrorDescription, SyntaxTree } from '../../models/rslang';
-import { TokenID } from '../../models/rslang';
-import { labelTypification } from '../../utils/labels';
-import { getCstExpressionPrefix } from '../../utils/misc';
-import ParsingResult from './elements/ParsingResult';
-import RSEditorControls from './elements/RSEditorControls';
-import StatusBar from './elements/StatusBar';
+import Button from '../../../components/Common/Button';
+import { ConceptLoader } from '../../../components/Common/ConceptLoader';
+import MiniButton from '../../../components/Common/MiniButton';
+import { ASTNetworkIcon } from '../../../components/Icons';
+import RSInput from '../../../components/RSInput';
+import { RSTextWrapper } from '../../../components/RSInput/textEditing';
+import { useRSForm } from '../../../context/RSFormContext';
+import useCheckExpression from '../../../hooks/useCheckExpression';
+import { IConstituenta } from '../../../models/rsform';
+import { IExpressionParse, IRSErrorDescription, SyntaxTree } from '../../../models/rslang';
+import { TokenID } from '../../../models/rslang';
+import { labelTypification } from '../../../utils/labels';
+import { getCstExpressionPrefix } from '../../../utils/misc';
+import ParsingResult from './ParsingResult';
+import RSEditorControls from './RSEditControls';
+import StatusBar from './StatusBar';
 
 interface EditorRSExpressionProps {
   id?: string

@@ -1,20 +1,21 @@
 import { useNavigate } from 'react-router-dom';
 
-import Button from '../../../components/Common/Button';
-import Dropdown from '../../../components/Common/Dropdown';
-import DropdownButton from '../../../components/Common/DropdownButton';
-import DropdownCheckbox from '../../../components/Common/DropdownCheckbox';
+import Button from '../../components/Common/Button';
+import Dropdown from '../../components/Common/Dropdown';
+import DropdownButton from '../../components/Common/DropdownButton';
+import DropdownCheckbox from '../../components/Common/DropdownCheckbox';
 import {
   CloneIcon, DownloadIcon, DumpBinIcon, EditIcon, MenuIcon, NotSubscribedIcon,
 OwnerIcon, ShareIcon, SmallPlusIcon, SubscribedIcon,   UploadIcon
-} from '../../../components/Icons';
-import { useAuth } from '../../../context/AuthContext';
-import { useRSForm } from '../../../context/RSFormContext';
-import useDropdown from '../../../hooks/useDropdown';
+} from '../../components/Icons';
+import { useAuth } from '../../context/AuthContext';
+import { useRSForm } from '../../context/RSFormContext';
+import useDropdown from '../../hooks/useDropdown';
 
 interface RSTabsMenuProps {
   showUploadDialog: () => void
   showCloneDialog: () => void
+  
   onDestroy: () => void
   onClaim: () => void
   onShare: () => void

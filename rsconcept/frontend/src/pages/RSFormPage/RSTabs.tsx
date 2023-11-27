@@ -27,10 +27,10 @@ import { SyntaxTree } from '../../models/rslang';
 import { EXTEOR_TRS_FILE, prefixes, TIMEOUT_UI_REFRESH } from '../../utils/constants';
 import { createAliasFor } from '../../utils/misc';
 import EditorConstituenta from './EditorConstituenta';
-import EditorItems from './EditorItems';
 import EditorRSForm from './EditorRSForm';
+import EditorRSList from './EditorRSList';
 import EditorTermGraph from './EditorTermGraph';
-import RSTabsMenu from './elements/RSTabsMenu';
+import RSTabsMenu from './RSTabsMenu';
 
 export enum RSTabID {
   CARD = 0,
@@ -425,7 +425,7 @@ function RSTabs() {
         </TabPanel>
 
         <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_LIST ? '': 'none' }}>
-          <EditorItems
+          <EditorRSList
             onOpenEdit={onOpenCst}
             onCreateCst={promptCreateCst}
             onDeleteCst={promptDeleteCst}

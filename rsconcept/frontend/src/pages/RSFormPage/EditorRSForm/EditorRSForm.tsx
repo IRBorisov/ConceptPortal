@@ -2,21 +2,21 @@ import { Dispatch, SetStateAction, useLayoutEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { toast } from 'react-toastify';
 
-import Checkbox from '../../components/Common/Checkbox';
-import ConceptTooltip from '../../components/Common/ConceptTooltip';
-import Divider from '../../components/Common/Divider';
-import MiniButton from '../../components/Common/MiniButton';
-import SubmitButton from '../../components/Common/SubmitButton';
-import TextArea from '../../components/Common/TextArea';
-import TextInput from '../../components/Common/TextInput';
-import HelpRSFormMeta from '../../components/Help/HelpRSFormMeta';
-import { DownloadIcon, DumpBinIcon, HelpIcon, OwnerIcon, SaveIcon, ShareIcon } from '../../components/Icons';
-import { useAuth } from '../../context/AuthContext';
-import { useRSForm } from '../../context/RSFormContext';
-import { useUsers } from '../../context/UsersContext';
-import { LibraryItemType } from '../../models/library';
-import { IRSFormCreateData } from '../../models/rsform';
-import RSFormStats from './elements/RSFormStats';
+import Checkbox from '../../../components/Common/Checkbox';
+import ConceptTooltip from '../../../components/Common/ConceptTooltip';
+import Divider from '../../../components/Common/Divider';
+import MiniButton from '../../../components/Common/MiniButton';
+import SubmitButton from '../../../components/Common/SubmitButton';
+import TextArea from '../../../components/Common/TextArea';
+import TextInput from '../../../components/Common/TextInput';
+import HelpRSFormMeta from '../../../components/Help/HelpRSFormMeta';
+import { DownloadIcon, DumpBinIcon, HelpIcon, OwnerIcon, SaveIcon, ShareIcon } from '../../../components/Icons';
+import { useAuth } from '../../../context/AuthContext';
+import { useRSForm } from '../../../context/RSFormContext';
+import { useUsers } from '../../../context/UsersContext';
+import { LibraryItemType } from '../../../models/library';
+import { IRSFormCreateData } from '../../../models/rsform';
+import RSFormStats from './RSFormStats';
 
 interface EditorRSFormProps {
   onDestroy: () => void

@@ -1,15 +1,15 @@
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import DataTable, { createColumnHelper, type RowSelectionState,VisibilityState } from '../../components/DataTable';
-import ConstituentaBadge from '../../components/Shared/ConstituentaBadge';
-import { useRSForm } from '../../context/RSFormContext';
-import { useConceptTheme } from '../../context/ThemeContext';
-import useWindowSize from '../../hooks/useWindowSize';
-import { CstType, IConstituenta, ICstCreateData, ICstMovetoData } from '../../models/rsform'
-import { prefixes } from '../../utils/constants';
-import { labelCstTypification } from '../../utils/labels';
-import RSItemsMenu from './elements/RSItemsMenu';
+import DataTable, { createColumnHelper, type RowSelectionState,VisibilityState } from '../../../components/DataTable';
+import ConstituentaBadge from '../../../components/Shared/ConstituentaBadge';
+import { useRSForm } from '../../../context/RSFormContext';
+import { useConceptTheme } from '../../../context/ThemeContext';
+import useWindowSize from '../../../hooks/useWindowSize';
+import { CstType, IConstituenta, ICstCreateData, ICstMovetoData } from '../../../models/rsform'
+import { prefixes } from '../../../utils/constants';
+import { labelCstTypification } from '../../../utils/labels';
+import RSItemsMenu from './RSListToolbar';
 
 // Window width cutoff for columns
 const COLUMN_DEFINITION_HIDE_THRESHOLD = 1000;
@@ -18,14 +18,14 @@ const COLUMN_CONVENTION_HIDE_THRESHOLD = 1800;
 
 const columnHelper = createColumnHelper<IConstituenta>();
 
-interface EditorItemsProps {
+interface EditorRSListProps {
   onOpenEdit: (cstID: number) => void
   onTemplates: (selected: number[]) => void
   onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void
   onDeleteCst: (selected: number[], callback: (items: number[]) => void) => void
 }
 
-function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: EditorItemsProps) {
+function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: EditorRSListProps) {
   const { colors, mainHeight } = useConceptTheme();
   const windowSize = useWindowSize();
   const { schema, isEditable, cstMoveTo, resetAliases } = useRSForm();
@@ -300,7 +300,8 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edit
         Выбор {selected.length} из {schema?.stats?.count_all ?? 0}
       </div>
       <RSItemsMenu
-        selected={selected}
+        selectedCount={selected.length}
+        editorMode={isEditable}
         onMoveUp={handleMoveUp}
         onMoveDown={handleMoveDown}
         onClone={handleClone}
@@ -344,4 +345,4 @@ function EditorItems({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edit
   </div>);
 }
 
-export default EditorItems;
+export default EditorRSList;

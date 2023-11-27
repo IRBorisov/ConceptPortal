@@ -1,20 +1,20 @@
 import { Dispatch, SetStateAction, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import ConceptTooltip from '../../components/Common/ConceptTooltip';
-import MiniButton from '../../components/Common/MiniButton';
-import SubmitButton from '../../components/Common/SubmitButton';
-import TextArea from '../../components/Common/TextArea';
-import HelpConstituenta from '../../components/Help/HelpConstituenta';
-import { ArrowsRotateIcon, CloneIcon, DumpBinIcon, EditIcon, HelpIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
-import RefsInput from '../../components/RefsInput';
-import { useRSForm } from '../../context/RSFormContext';
-import useWindowSize from '../../hooks/useWindowSize';
-import { CstType, IConstituenta, ICstCreateData, ICstRenameData, ICstUpdateData } from '../../models/rsform';
-import { SyntaxTree } from '../../models/rslang';
-import { labelCstTypification } from '../../utils/labels';
+import ConceptTooltip from '../../../components/Common/ConceptTooltip';
+import MiniButton from '../../../components/Common/MiniButton';
+import SubmitButton from '../../../components/Common/SubmitButton';
+import TextArea from '../../../components/Common/TextArea';
+import HelpConstituenta from '../../../components/Help/HelpConstituenta';
+import { ArrowsRotateIcon, CloneIcon, DumpBinIcon, EditIcon, HelpIcon, SaveIcon, SmallPlusIcon } from '../../../components/Icons';
+import RefsInput from '../../../components/RefsInput';
+import { useRSForm } from '../../../context/RSFormContext';
+import useWindowSize from '../../../hooks/useWindowSize';
+import { CstType, IConstituenta, ICstCreateData, ICstRenameData, ICstUpdateData } from '../../../models/rsform';
+import { SyntaxTree } from '../../../models/rslang';
+import { labelCstTypification } from '../../../utils/labels';
 import EditorRSExpression from './EditorRSExpression';
-import ViewSideConstituents from './elements/ViewSideConstituents';
+import ViewSideConstituents from './ViewSideConstituents';
 
 // Max height of content for left enditor pane
 const UNFOLDED_HEIGHT = '59.1rem';
