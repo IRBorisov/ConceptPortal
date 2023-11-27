@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { GraphCanvas,GraphEdge, GraphNode } from 'reagraph';
 
-import Modal, { ModalProps } from '../components/common/Modal';
+import Modal, { ModalProps } from '../components/Common/Modal';
 import { useConceptTheme } from '../context/ThemeContext';
 import { SyntaxTree } from '../models/rslang';
 import { graphDarkT, graphLightT } from '../utils/color';

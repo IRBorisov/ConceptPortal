@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
 
 import BackendError from '../../components/BackendError';
-import { ConceptLoader } from '../../components/common/ConceptLoader';
-import MiniButton from '../../components/common/MiniButton';
+import { ConceptLoader } from '../../components/Common/ConceptLoader';
+import MiniButton from '../../components/Common/MiniButton';
 import { NotSubscribedIcon,SubscribedIcon } from '../../components/Icons';
 import { useAuth } from '../../context/AuthContext';
 import { useLibrary } from '../../context/LibraryContext';

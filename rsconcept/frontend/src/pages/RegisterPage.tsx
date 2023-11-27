@@ -3,10 +3,10 @@ import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import BackendError from '../components/BackendError';
-import Button from '../components/common/Button';
-import Form from '../components/common/Form';
-import SubmitButton from '../components/common/SubmitButton';
-import TextInput from '../components/common/TextInput';
+import Button from '../components/Common/Button';
+import Form from '../components/Common/Form';
+import SubmitButton from '../components/Common/SubmitButton';
+import TextInput from '../components/Common/TextInput';
 import { useAuth } from '../context/AuthContext';
 import { useConceptNavigation } from '../context/NagivationContext';
 import { type IUserSignupData } from '../models/library';

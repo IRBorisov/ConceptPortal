@@ -1,4 +1,4 @@
-import Divider from '../common/Divider';
+import Divider from '../Common/Divider';
 import InfoCstStatus from './InfoCstStatus';
 
 function HelpConstituenta() {

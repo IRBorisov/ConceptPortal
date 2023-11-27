@@ -9,7 +9,7 @@ import { RefObject, useCallback, useMemo, useRef } from 'react';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import { TokenID } from '../../models/rslang';
-import Label from '../common/Label';
+import Label from '../Common/Label';
 import { ccBracketMatching } from './bracketMatching';
 import { RSLanguage } from './rslang';
 import { getSymbolSubstitute,RSTextWrapper } from './textEditing';

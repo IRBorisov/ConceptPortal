@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 
-import Button from '../../../components/common/Button';
-import Dropdown from '../../../components/common/Dropdown';
-import DropdownButton from '../../../components/common/DropdownButton';
-import DropdownCheckbox from '../../../components/common/DropdownCheckbox';
+import Button from '../../../components/Common/Button';
+import Dropdown from '../../../components/Common/Dropdown';
+import DropdownButton from '../../../components/Common/DropdownButton';
+import DropdownCheckbox from '../../../components/Common/DropdownCheckbox';
 import {
   CloneIcon, DownloadIcon, DumpBinIcon, EditIcon, MenuIcon, NotSubscribedIcon,
 OwnerIcon, ShareIcon, SmallPlusIcon, SubscribedIcon,   UploadIcon

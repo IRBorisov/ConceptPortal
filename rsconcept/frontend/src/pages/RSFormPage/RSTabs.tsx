@@ -6,9 +6,9 @@ import { TabList, TabPanel, Tabs } from 'react-tabs';
 import { toast } from 'react-toastify';
 
 import BackendError, { ErrorInfo } from '../../components/BackendError';
-import { ConceptLoader } from '../../components/common/ConceptLoader';
-import ConceptTab from '../../components/common/ConceptTab';
-import TextURL from '../../components/common/TextURL';
+import { ConceptLoader } from '../../components/Common/ConceptLoader';
+import ConceptTab from '../../components/Common/ConceptTab';
+import TextURL from '../../components/Common/TextURL';
 import { useLibrary } from '../../context/LibraryContext';
 import { useConceptNavigation } from '../../context/NagivationContext';
 import { useRSForm } from '../../context/RSFormContext';

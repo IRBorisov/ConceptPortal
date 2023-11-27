@@ -1,5 +1,5 @@
-import Checkbox from '../components/common/Checkbox';
-import Modal, { ModalProps } from '../components/common/Modal';
+import Checkbox from '../components/Common/Checkbox';
+import Modal, { ModalProps } from '../components/Common/Modal';
 import usePartialUpdate from '../hooks/usePartialUpdate';
 import { GraphEditorParams } from '../models/miscelanious';
 import { CstType } from '../models/rsform';

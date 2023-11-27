@@ -1,5 +1,5 @@
 import { useAuth } from '../context/AuthContext';
-import TextURL from './common/TextURL';
+import TextURL from './Common/TextURL';
 
 interface RequireAuthProps {
   children: React.ReactNode

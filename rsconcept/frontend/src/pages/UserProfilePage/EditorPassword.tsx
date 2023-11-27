@@ -3,8 +3,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import BackendError, { ErrorInfo } from '../../components/BackendError';
-import SubmitButton from '../../components/common/SubmitButton';
-import TextInput from '../../components/common/TextInput';
+import SubmitButton from '../../components/Common/SubmitButton';
+import TextInput from '../../components/Common/TextInput';
 import { useAuth } from '../../context/AuthContext';
 import { useConceptNavigation } from '../../context/NagivationContext';
 import { IUserUpdatePassword } from '../../models/library';

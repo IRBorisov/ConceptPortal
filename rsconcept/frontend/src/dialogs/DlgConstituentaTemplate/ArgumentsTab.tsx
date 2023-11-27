@@ -1,11 +1,11 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { Dispatch, useCallback, useEffect, useMemo, useState } from 'react';
 
-import MiniButton from '../../components/common/MiniButton';
+import MiniButton from '../../components/Common/MiniButton';
 import DataTable, { IConditionalStyle } from '../../components/DataTable';
 import { CheckIcon, CrossIcon } from '../../components/Icons';
 import RSInput from '../../components/RSInput';
-import ConstituentaPicker from '../../components/shared/ConstituentaPicker';
+import ConstituentaPicker from '../../components/Shared/ConstituentaPicker';
 import { useConceptTheme } from '../../context/ThemeContext';
 import { IConstituenta, IRSForm } from '../../models/rsform';
 import { IArgumentValue } from '../../models/rslang';

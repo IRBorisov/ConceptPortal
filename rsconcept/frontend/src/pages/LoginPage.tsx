@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import BackendError, { ErrorInfo } from '../components/BackendError';
-import Form from '../components/common/Form';
-import SubmitButton from '../components/common/SubmitButton';
-import TextInput from '../components/common/TextInput';
-import TextURL from '../components/common/TextURL';
+import Form from '../components/Common/Form';
+import SubmitButton from '../components/Common/SubmitButton';
+import TextInput from '../components/Common/TextInput';
+import TextURL from '../components/Common/TextURL';
 import { useAuth } from '../context/AuthContext';
 import { useConceptNavigation } from '../context/NagivationContext';
 import { useConceptTheme } from '../context/ThemeContext';

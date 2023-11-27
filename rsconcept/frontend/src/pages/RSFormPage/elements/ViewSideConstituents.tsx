@@ -1,11 +1,11 @@
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
-import Dropdown from '../../../components/common/Dropdown';
-import DropdownButton from '../../../components/common/DropdownButton';
-import SelectorButton from '../../../components/common/SelectorButton';
+import Dropdown from '../../../components/Common/Dropdown';
+import DropdownButton from '../../../components/Common/DropdownButton';
+import SelectorButton from '../../../components/Common/SelectorButton';
 import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } from '../../../components/DataTable';
 import { CogIcon, FilterIcon, MagnifyingGlassIcon } from '../../../components/Icons';
-import ConstituentaBadge from '../../../components/shared/ConstituentaBadge';
+import ConstituentaBadge from '../../../components/Shared/ConstituentaBadge';
 import { useRSForm } from '../../../context/RSFormContext';
 import { useConceptTheme } from '../../../context/ThemeContext';
 import useDropdown from '../../../hooks/useDropdown';

@@ -1,7 +1,7 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
 
 import BackendError from '../../components/BackendError'
-import { ConceptLoader } from '../../components/common/ConceptLoader'
+import { ConceptLoader } from '../../components/Common/ConceptLoader'
 import { useLibrary } from '../../context/LibraryContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useLocalStorage from '../../hooks/useLocalStorage';

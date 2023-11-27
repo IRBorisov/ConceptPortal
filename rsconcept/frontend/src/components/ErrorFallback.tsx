@@ -1,6 +1,6 @@
 import { type FallbackProps } from 'react-error-boundary';
 
-import Button from './common/Button';
+import Button from './Common/Button';
 
 function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   reportError(error);

@@ -1,5 +1,5 @@
 import { urls } from '../../utils/constants';
-import TextURL from '../common/TextURL';
+import TextURL from '../Common/TextURL';
 
 function HelpMain() {
   return (

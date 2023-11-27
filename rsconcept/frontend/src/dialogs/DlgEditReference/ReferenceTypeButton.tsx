@@ -1,4 +1,4 @@
-import SwitchButton from '../../components/common/SwitchButton';
+import SwitchButton from '../../components/Common/SwitchButton';
 import { ReferenceType } from '../../models/language';
 import { labelReferenceType } from '../../utils/labels';
 

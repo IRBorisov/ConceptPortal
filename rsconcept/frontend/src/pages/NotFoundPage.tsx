@@ -1,4 +1,4 @@
-import TextURL from '../components/common/TextURL';
+import TextURL from '../components/Common/TextURL';
 
 export function NotFoundPage() {
   return (

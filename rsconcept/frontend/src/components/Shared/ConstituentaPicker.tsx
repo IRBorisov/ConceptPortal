@@ -6,7 +6,7 @@ import { IConstituenta } from '../../models/rsform';
 import { matchConstituenta } from '../../models/rsformAPI';
 import { prefixes } from '../../utils/constants';
 import { describeConstituenta } from '../../utils/labels';
-import ConceptSearch from '../common/ConceptSearch';
+import ConceptSearch from '../Common/ConceptSearch';
 import DataTable, { createColumnHelper, IConditionalStyle } from '../DataTable';
 import ConstituentaBadge from './ConstituentaBadge';
 

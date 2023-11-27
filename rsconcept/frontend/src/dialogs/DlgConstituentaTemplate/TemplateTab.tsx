@@ -1,9 +1,9 @@
 import { Dispatch, useEffect, useMemo, useState } from 'react';
 
-import SelectSingle from '../../components/common/SelectSingle';
-import TextArea from '../../components/common/TextArea';
+import SelectSingle from '../../components/Common/SelectSingle';
+import TextArea from '../../components/Common/TextArea';
 import RSInput from '../../components/RSInput';
-import ConstituentaPicker from '../../components/shared/ConstituentaPicker';
+import ConstituentaPicker from '../../components/Shared/ConstituentaPicker';
 import { useLibrary } from '../../context/LibraryContext';
 import { CATEGORY_CST_TYPE, IConstituenta, IRSForm } from '../../models/rsform';
 import { applyFilterCategory } from '../../models/rsformAPI';

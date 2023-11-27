@@ -1,9 +1,9 @@
 import { useLayoutEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
-import ConceptTab from '../../components/common/ConceptTab';
-import ConceptTooltip from '../../components/common/ConceptTooltip';
-import Modal, { ModalProps } from '../../components/common/Modal';
+import ConceptTab from '../../components/Common/ConceptTab';
+import ConceptTooltip from '../../components/Common/ConceptTooltip';
+import Modal, { ModalProps } from '../../components/Common/Modal';
 import HelpRSTemplates from '../../components/Help/HelpRSTemplates';
 import { HelpIcon } from '../../components/Icons';
 import usePartialUpdate from '../../hooks/usePartialUpdate';

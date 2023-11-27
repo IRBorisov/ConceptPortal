@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import ConceptTooltip from '../../components/common/ConceptTooltip';
-import MiniButton from '../../components/common/MiniButton';
-import SubmitButton from '../../components/common/SubmitButton';
-import TextArea from '../../components/common/TextArea';
+import ConceptTooltip from '../../components/Common/ConceptTooltip';
+import MiniButton from '../../components/Common/MiniButton';
+import SubmitButton from '../../components/Common/SubmitButton';
+import TextArea from '../../components/Common/TextArea';
 import HelpConstituenta from '../../components/Help/HelpConstituenta';
 import { ArrowsRotateIcon, CloneIcon, DumpBinIcon, EditIcon, HelpIcon, SaveIcon, SmallPlusIcon } from '../../components/Icons';
 import RefsInput from '../../components/RefsInput';

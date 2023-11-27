@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import Checkbox from '../components/common/Checkbox';
-import Modal, { ModalProps } from '../components/common/Modal';
-import TextArea from '../components/common/TextArea';
-import TextInput from '../components/common/TextInput';
+import Checkbox from '../components/Common/Checkbox';
+import Modal, { ModalProps } from '../components/Common/Modal';
+import TextArea from '../components/Common/TextArea';
+import TextInput from '../components/Common/TextInput';
 import { useLibrary } from '../context/LibraryContext';
 import { useConceptNavigation } from '../context/NagivationContext';
 import { useRSForm } from '../context/RSFormContext';

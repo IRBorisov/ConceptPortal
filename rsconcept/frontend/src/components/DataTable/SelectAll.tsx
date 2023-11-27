@@ -1,6 +1,6 @@
 import { Table } from '@tanstack/react-table';
 
-import Tristate from '../common/Tristate';
+import Tristate from '../Common/Tristate';
 
 interface SelectAllProps<TData> {
   table: Table<TData>

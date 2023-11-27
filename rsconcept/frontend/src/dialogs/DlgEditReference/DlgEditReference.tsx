@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
-import ConceptTooltip from '../../components/common/ConceptTooltip';
-import Label from '../../components/common/Label';
-import Modal from '../../components/common/Modal';
-import SelectMulti from '../../components/common/SelectMulti';
-import TextInput from '../../components/common/TextInput';
+import ConceptTooltip from '../../components/Common/ConceptTooltip';
+import Label from '../../components/Common/Label';
+import Modal from '../../components/Common/Modal';
+import SelectMulti from '../../components/Common/SelectMulti';
+import TextInput from '../../components/Common/TextInput';
 import HelpTerminologyControl from '../../components/Help/HelpTerminologyControl';
 import { HelpIcon } from '../../components/Icons';
-import ConstituentaPicker from '../../components/shared/ConstituentaPicker';
+import ConstituentaPicker from '../../components/Shared/ConstituentaPicker';
 import { Grammeme, ReferenceType } from '../../models/language';
 import { getCompatibleGrams, parseEntityReference, parseGrammemes, parseSyntacticReference } from '../../models/languageAPI';
 import { CstMatchMode } from '../../models/miscelanious';
