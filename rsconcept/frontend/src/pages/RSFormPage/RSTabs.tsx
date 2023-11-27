@@ -22,7 +22,7 @@ import DlgRenameCst from '../../dialogs/DlgRenameCst';
 import DlgShowAST from '../../dialogs/DlgShowAST';
 import DlgUploadRSForm from '../../dialogs/DlgUploadRSForm';
 import useModificationPrompt from '../../hooks/useModificationPrompt';
-import { IConstituenta, ICstCreateData, ICstRenameData, ICstUpdateData, IRSForm, TermForm } from '../../models/rsform';
+import { IConstituenta, ICstCreateData, ICstRenameData, ICstUpdateData, TermForm } from '../../models/rsform';
 import { SyntaxTree } from '../../models/rslang';
 import { EXTEOR_TRS_FILE, prefixes, TIMEOUT_UI_REFRESH } from '../../utils/constants';
 import { createAliasFor } from '../../utils/misc';
