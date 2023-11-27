@@ -59,7 +59,7 @@ function RSInput({
   id, label, innerref, onChange,
   disabled, noTooltip,
   dimensions = 'w-full',
-  ...props 
+  ...restProps 
 }: RSInputProps) {
   const { darkMode, colors } = useConceptTheme();
   const { schema } = useRSForm();
@@ -167,7 +167,7 @@ function RSInput({
       onChange={onChange}
       editable={!disabled}
       onKeyDown={handleInput}
-      {...props}
+      {...restProps}
     />
     </div>
   );

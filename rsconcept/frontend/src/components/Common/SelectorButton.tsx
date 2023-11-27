@@ -15,7 +15,7 @@ function SelectorButton({
   colors = 'clr-btn-default',
   dimensions = 'w-fit h-fit',
   transparent,
-  ...props
+  ...restProps
 }: SelectorButtonProps) {
   const cursor = 'disabled:cursor-not-allowed cursor-pointer';
   const position = `px-1 flex flex-start items-center gap-1 ${dimensions}`;
@@ -24,7 +24,7 @@ function SelectorButton({
     <button type='button'
       className={`text-sm small-caps select-none ${cursor} ${position} ${design}`}
       title={tooltip}
-      {...props}
+      {...restProps}
     >
       {icon ? icon : null}
       {text ? <div className={'font-semibold whitespace-nowrap pb-1'}>{text}</div> : null}

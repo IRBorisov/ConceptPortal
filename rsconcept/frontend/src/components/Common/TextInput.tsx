@@ -17,7 +17,7 @@ function TextInput({
   id, label, dense, tooltip, noBorder, noOutline, allowEnter, onKeyDown,
   dimensions = 'w-full',
   colors = 'clr-input',
-  ...props
+  ...restProps
 }: TextInputProps) {
   const borderClass = noBorder ? '' : 'border';
   const outlineClass = noOutline ? '' : 'clr-outline';
@@ -32,7 +32,7 @@ function TextInput({
         title={tooltip}
         onKeyDown={!allowEnter && !onKeyDown ? preventEnterCapture : onKeyDown}
         className={`px-3 py-2 leading-tight truncate hover:text-clip ${colors} ${outlineClass} ${borderClass} ${dense ? 'w-full' : dimensions}`}
-        {...props}
+        {...restProps}
       />
     </div>
   );

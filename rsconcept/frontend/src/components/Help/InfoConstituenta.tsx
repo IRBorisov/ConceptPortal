@@ -6,9 +6,9 @@ extends React.HTMLAttributes<HTMLDivElement> {
   data: IConstituenta
 }
 
-function InfoConstituenta({ data, ...props }: InfoConstituentaProps) {
+function InfoConstituenta({ data, ...restProps }: InfoConstituentaProps) {
   return (
-  <div {...props}>
+  <div {...restProps}>
     <h1>Конституента {data.alias}</h1>
     <p>
       <b>Типизация: </b>

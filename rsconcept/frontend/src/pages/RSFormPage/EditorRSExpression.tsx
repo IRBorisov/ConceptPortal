@@ -34,7 +34,7 @@ interface EditorRSExpressionProps {
 
 function EditorRSExpression({
   activeCst, disabled, value, onShowAST, toggleReset,
-  setTypification, onChange, ...props
+  setTypification, onChange, ...restProps
 }: EditorRSExpressionProps) {
   const { schema } = useRSForm();
 
@@ -133,7 +133,7 @@ function EditorRSExpression({
       minHeight='3.8rem'
       disabled={disabled}
       onChange={handleChange}
-      {...props}
+      {...restProps}
     />
     <RSEditorControls 
       disabled={disabled}

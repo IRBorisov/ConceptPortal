@@ -9,14 +9,14 @@ extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'title
 function MiniButton({
   icon, tooltip, noHover, tabIndex,
   dimensions='w-fit h-fit',
-  ...props
+  ...restProps
 }: MiniButtonProps) {
   return (
     <button type='button'
       title={tooltip}
       tabIndex={tabIndex ?? -1}
       className={`px-1 py-1 rounded-full cursor-pointer disabled:cursor-not-allowed clr-btn-clear ${noHover ? 'outline-none' : 'clr-hover'} ${dimensions}`}
-      {...props}
+      {...restProps}
     >
       {icon}
     </button>

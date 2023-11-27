@@ -67,7 +67,7 @@ function RefsInput({
   id, label, innerref, disabled, items,
   initialValue, value, resolved,
   onFocus, onBlur, onChange,
-  ...props 
+  ...restProps 
 }: RefsInputInputProps) {
   const { darkMode, colors } = useConceptTheme();
   const { schema } = useRSForm();
@@ -221,7 +221,7 @@ function RefsInput({
       onBlur={handleFocusOut}
       spellCheck
       // spellCheck= // TODO: figure out while automatic spellcheck doesnt work or implement with extension
-      {...props}
+      {...restProps}
     />
     </div>
   </>);

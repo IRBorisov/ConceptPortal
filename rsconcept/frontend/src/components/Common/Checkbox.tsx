@@ -16,7 +16,7 @@ extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'child
 
 function Checkbox({
   id, disabled, tooltip, label, 
-  dimensions = 'w-fit', value, setValue, ...props
+  dimensions = 'w-fit', value, setValue, ...restProps
 }: CheckboxProps) {
   const cursor = useMemo(
   () => {
@@ -47,7 +47,7 @@ function Checkbox({
       title={tooltip}
       disabled={disabled}
       onClick={handleClick}
-      {...props}
+      {...restProps}
     >
       <div className={`max-w-[1rem] min-w-[1rem] h-4 mt-0.5 border rounded-sm ${bgColor} ${cursor}`} >
         {value ?

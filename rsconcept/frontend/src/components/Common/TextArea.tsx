@@ -13,7 +13,7 @@ function TextArea({
   dense, noBorder, noOutline,
   dimensions = 'w-full',
   colors = 'clr-input',
-  ...props
+  ...restProps
 }: TextAreaProps) {
   const borderClass = noBorder ? '': 'border';
   const outlineClass = noOutline ? '': 'clr-outline';
@@ -29,7 +29,7 @@ function TextArea({
         className={`px-3 py-2 leading-tight ${outlineClass} ${borderClass} ${colors} ${dense ? 'w-full' : dimensions}`}
         rows={rows}
         required={required}
-        {...props}
+        {...restProps}
       />
     </div>
   );

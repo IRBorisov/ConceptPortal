@@ -13,7 +13,9 @@ extends Omit<CheckboxProps, 'value' | 'setValue'> {
 
 function Tristate({
   id, disabled, tooltip, label, 
-  dimensions = 'w-fit', value, setValue, ...props
+  dimensions = 'w-fit',
+  value, setValue,
+  ...restProps
 }: TristateProps) {
   const cursor = useMemo(
   () => {
@@ -50,7 +52,7 @@ function Tristate({
       title={tooltip}
       disabled={disabled}
       onClick={handleClick}
-      {...props}
+      {...restProps}
     >
       <div className={`w-4 h-4 shrink-0 mt-0.5 border rounded-sm ${bgColor} ${cursor}`} >
         {value ? <div className='mt-[1px] ml-[1px]'><CheckboxCheckedIcon /></div> : null}

@@ -14,7 +14,7 @@ extends Omit<Props<Option, false, Group>, 'theme'> {
 function SelectSingle<
   Option,
   Group extends GroupBase<Option> = GroupBase<Option>
-> ({ ...props }: SelectSingleProps<Option, Group>) {
+> (props: SelectSingleProps<Option, Group>) {
   const { darkMode, colors } = useConceptTheme();
   const themeColors = useMemo(
     () => !darkMode ? selectLightT : selectDarkT

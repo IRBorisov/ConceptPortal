@@ -15,7 +15,7 @@ function Button({
   colors = 'clr-btn-default',
   dimensions = 'w-fit h-fit',
   loading,
-  ...props
+  ...restProps
 }: ButtonProps) {
   const borderClass = noBorder ? '' : 'border rounded';
   const padding = dense ? 'px-1' : 'px-3 py-2';
@@ -26,7 +26,7 @@ function Button({
       disabled={disabled ?? loading}
       title={tooltip}
       className={`inline-flex items-center gap-2 align-middle justify-center select-none ${padding} ${colors} ${outlineClass} ${borderClass} ${dimensions} ${cursor}`}
-      {...props}
+      {...restProps}
     >
       {icon ? icon : null}
       {text ? <span className='font-semibold'>{text}</span> : null}

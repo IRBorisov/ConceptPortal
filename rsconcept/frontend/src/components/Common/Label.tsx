@@ -6,12 +6,12 @@ extends Omit<React.DetailedHTMLProps<LabelHTMLAttributes<HTMLLabelElement>, HTML
   tooltip?: string
 }
 
-function Label({ text, tooltip, className, ...props }: LabelProps) {
+function Label({ text, tooltip, className, ...restProps }: LabelProps) {
   return (
     <label
       className={`text-sm font-semibold ${className}`}
       title={tooltip}
-      {...props}
+      {...restProps}
     >
       {text}
     </label>

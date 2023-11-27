@@ -4,7 +4,7 @@ import { useConceptTheme } from '../context/ThemeContext';
 
 interface ToasterThemedProps extends Omit<ToastContainerProps, 'theme'>{}
 
-function ToasterThemed({ ...props }: ToasterThemedProps) {
+function ToasterThemed(props: ToasterThemedProps) {
   const { darkMode } = useConceptTheme();
 
   return (

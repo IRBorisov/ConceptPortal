@@ -13,14 +13,14 @@ interface SwitchButtonProps<ValueType> {
 function SwitchButton<ValueType>({
   value, icon, label, tooltip,
   dimensions='w-fit h-fit',
-  isSelected, onSelect, ...props
+  isSelected, onSelect, ...restProps
 }: SwitchButtonProps<ValueType>) {
   return (
   <button type='button' tabIndex={-1}
     title={tooltip}
     onClick={() => onSelect(value)}
     className={`px-2 py-1 border font-semibold small-caps rounded-none cursor-pointer clr-btn-clear clr-hover ${dimensions} ${isSelected ? 'clr-selected': ''}`}
-    {...props}
+    {...restProps}
   >
     {icon ? icon : null}
     {label}

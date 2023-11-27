@@ -17,7 +17,7 @@ extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'className' | 'title' 
 function FileInput({
   label, acceptType, tooltip,
   dimensions = 'w-fit', onChange,
-  ...props 
+  ...restProps 
 }: FileInputProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [fileName, setFileName] = useState('');
@@ -44,7 +44,7 @@ function FileInput({
         style={{ display: 'none' }}
         accept={acceptType}
         onChange={handleFileChange}
-        {...props}
+        {...restProps}
       />
       <Button
         text={label}
