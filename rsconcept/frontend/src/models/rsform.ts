@@ -3,8 +3,7 @@
  */
 
 import { Graph } from '../utils/Graph'
-import { ILibraryUpdateData } from './library'
-import { ILibraryItem } from './library'
+import { ILibraryItemEx, ILibraryUpdateData } from './library'
 import { IArgumentInfo, ParsingStatus, ValueClass } from './rslang'
 
 /**
@@ -163,11 +162,10 @@ export interface IRSFormStats {
  * Represents formal explication for set of concepts.
 */
 export interface IRSForm
-extends ILibraryItem {
+extends ILibraryItemEx {
   items: IConstituenta[]
   stats: IRSFormStats
   graph: Graph
-  subscribers: number[]
 }
 
 /**

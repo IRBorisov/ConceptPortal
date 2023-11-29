@@ -33,7 +33,7 @@ function RSListToolbar({
 
   const nothingSelected = useMemo(() => selectedCount === 0, [selectedCount]);
 
-  return (    
+  return (
   <div className='flex items-center justify-center w-full pr-[9rem] mt-1'>
     <MiniButton
       tooltip='Переместить вверх'
@@ -88,14 +88,12 @@ function RSListToolbar({
       })}
       </Dropdown>}
     </div>
-
     <MiniButton
       tooltip='Создать конституенту из шаблона'
       icon={<DiamondIcon color={editorMode ? 'text-primary': ''} size={5}/>}
       disabled={!editorMode}
       onClick={onTemplates}
     />
-
     <MiniButton
       tooltip='Сброс имен: присвоить порядковые имена'
       icon={<UpdateIcon color={editorMode ? 'text-primary': ''} size={5}/>}

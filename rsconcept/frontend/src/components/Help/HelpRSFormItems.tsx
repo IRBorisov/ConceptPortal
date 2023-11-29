@@ -1,5 +1,5 @@
 import Divider from '../Common/Divider';
-import InfoCstStatus from './InfoCstStatus';
+import InfoCstStatus from '../Shared/InfoCstStatus';
 
 function HelpRSFormItems() {
   return (

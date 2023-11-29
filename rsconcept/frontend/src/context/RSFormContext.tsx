@@ -26,12 +26,12 @@ interface IRSFormContext {
   loading: boolean
   processing: boolean
 
+  editorMode: boolean
+  adminMode: boolean
   isOwned: boolean
-  isEditable: boolean
   isClaimable: boolean
   isReadonly: boolean
   isTracking: boolean
-  isForceAdmin: boolean
 
   toggleForceAdmin: () => void
   toggleReadonly: () => void
@@ -74,7 +74,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
   const { schema, reload, error, setError, setSchema, loading } = useRSFormDetails({ target: schemaID });
   const [ processing, setProcessing ] = useState(false);
 
-  const [ isForceAdmin, setIsForceAdmin ] = useState(false);
+  const [ adminMode, setAdminMode ] = useState(false);
   const [ isReadonly, setIsReadonly ] = useState(false);
   const [ toggleTracking, setToggleTracking ] = useState(false);
 
@@ -88,13 +88,13 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
     return (user?.id !== schema?.owner && schema?.is_common && !schema?.is_canonical) ?? false;
   }, [user, schema?.owner, schema?.is_common, schema?.is_canonical]);
 
-  const isEditable = useMemo(
+  const editorMode = useMemo(
   () => {
     return (
       !loading && !processing && !isReadonly &&
-      ((isOwned || (isForceAdmin && user?.is_staff)) ?? false)
+      ((isOwned || (adminMode && user?.is_staff)) ?? false)
     );
-  }, [user?.is_staff, isReadonly, isForceAdmin, isOwned, loading, processing]);
+  }, [user?.is_staff, isReadonly, adminMode, isOwned, loading, processing]);
 
   const isTracking = useMemo(
   () => {
@@ -322,9 +322,9 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
     <RSFormContext.Provider value={{
       schema,
       error, loading, processing,
-      isForceAdmin, isReadonly, isOwned, isEditable,
+      adminMode, isReadonly, isOwned, editorMode,
       isClaimable, isTracking,
-      toggleForceAdmin: () => setIsForceAdmin(prev => !prev),
+      toggleForceAdmin: () => setAdminMode(prev => !prev),
       toggleReadonly: () => setIsReadonly(prev => !prev),
       update, download, upload, claim, resetAliases, subscribe, unsubscribe,
       cstUpdate, cstCreate, cstRename, cstDelete, cstMoveTo

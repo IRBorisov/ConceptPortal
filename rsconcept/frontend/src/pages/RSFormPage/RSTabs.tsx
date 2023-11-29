@@ -88,7 +88,8 @@ function RSTabs() {
   const [showRenameCst, setShowRenameCst] = useState(false);
 
   const [showEditTerm, setShowEditTerm] = useState(false);
-
+  
+  const [insertCstID, setInsertCstID] = useState<number | undefined>(undefined);
   const [showTemplates, setShowTemplates] = useState(false);
 
   const panelHeight = useMemo(
@@ -259,7 +260,8 @@ function RSTabs() {
   }, []);
 
   const onShowTemplates = useCallback(
-  () => {
+  (selectedID?: number) => {
+    setInsertCstID(selectedID);
     setShowTemplates(true);
   }, []);
 
@@ -373,6 +375,7 @@ function RSTabs() {
     <DlgConstituentaTemplate
       schema={schema}
       hideWindow={() => setShowTemplates(false)}
+      insertAfter={insertCstID}
       onCreate={handleCreateCst}
     /> : null}
     <Tabs
@@ -412,7 +415,7 @@ function RSTabs() {
         </ConceptTab>
       </TabList>
 
-      <div className='overflow-y-auto' style={{ maxHeight: panelHeight}}>
+      <div className='overflow-y-auto min-w-[48rem]' style={{ maxHeight: panelHeight}}>
         <TabPanel forceRender style={{ display: activeTab === RSTabID.CARD ? '': 'none' }}>
           <EditorRSForm
             isModified={isModified}
@@ -429,7 +432,7 @@ function RSTabs() {
             onOpenEdit={onOpenCst}
             onCreateCst={promptCreateCst}
             onDeleteCst={promptDeleteCst}
-            onTemplates={() => onShowTemplates()} // TODO: implement insertion point
+            onTemplates={onShowTemplates}
           />
         </TabPanel>
 
@@ -445,6 +448,7 @@ function RSTabs() {
             onDeleteCst={promptDeleteCst}
             onRenameCst={promptRenameCst}
             onEditTerm={promptShowEditTerm}
+            onTemplates={onShowTemplates}
           />
         </TabPanel>
 

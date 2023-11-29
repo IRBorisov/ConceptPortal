@@ -59,7 +59,9 @@ export const urls = {
  * Global unique IDs.
  */
 export const globalIDs = {
-  main_scroll: 'main-scroll'
+  main_scroll: 'main-scroll',
+  library_item_editor: 'library-item-editor',
+  constituenta_editor: 'constituenta-editor'
 }
 
 /**

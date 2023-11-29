@@ -119,6 +119,13 @@
   }
 }
 
+::placeholder {
+  color: var(--cl-fg-60);
+  .dark & {
+    color: var(--cd-fg-60);
+  }
+}
+
 [data-color-scheme="dark"] {
   color-scheme: dark;
 }
@@ -327,6 +334,13 @@
     outline-color: var(--cd-prim-bg-100);
   }
   @apply border rounded outline-2 outline
+}
+
+.cm-editor .cm-placeholder {
+  color: var(--cl-fg-60);
+  .dark & {
+    color: var(--cd-fg-60);
+  }
 }
 
 .rdt_TableCell{

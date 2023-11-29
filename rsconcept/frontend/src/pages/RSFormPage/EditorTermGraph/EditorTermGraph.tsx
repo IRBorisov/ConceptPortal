@@ -1,7 +1,7 @@
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { GraphEdge, GraphNode, LayoutTypes } from 'reagraph';
 
-import InfoConstituenta from '../../../components/Help/InfoConstituenta';
+import InfoConstituenta from '../../../components/Shared/InfoConstituenta';
 import { useRSForm } from '../../../context/RSFormContext';
 import { useConceptTheme } from '../../../context/ThemeContext';
 import DlgGraphParams from '../../../dialogs/DlgGraphParams';
@@ -12,6 +12,7 @@ import { colorbgGraphNode } from '../../../utils/color';
 import { TIMEOUT_GRAPH_REFRESH } from '../../../utils/constants';
 import GraphSidebar from './GraphSidebar';
 import GraphToolbar from './GraphToolbar';
+import SelectedCounter from './SelectedCounter';
 import TermGraph from './TermGraph';
 import useGraphFilter from './useGraphFilter';
 import ViewHidden from './ViewHidden';
@@ -23,7 +24,7 @@ interface EditorTermGraphProps {
 }
 
 function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGraphProps) {
-  const { schema, isEditable } = useRSForm();
+  const { schema, editorMode: isEditable } = useRSForm();
   const { colors } = useConceptTheme();
 
   const [toggleDataUpdate, setToggleDataUpdate] = useState(false);
@@ -196,12 +197,10 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       onConfirm={handleChangeParams}
     /> : null}
 
-    {selected.length > 0 ?
-    <div className='relative w-full z-pop'>
-    <div className='absolute top-0 left-0 px-2 select-none whitespace-nowrap small-caps clr-app'>
-      Выбор {selected.length} из {schema?.stats?.count_all ?? 0}
-    </div>
-    </div> : null}
+    <SelectedCounter 
+      total={schema?.stats?.count_all ?? 0}
+      selected={selected.length}
+    />
 
     <GraphToolbar
       editorMode={isEditable}
@@ -233,7 +232,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
     </div> : null}
 
     <div className='relative z-pop'>
-    <div className='absolute top-0 left-0 flex flex-col max-w-[13.5rem] min-w-[13.5rem]'>
+    <div className='absolute top-0 left-0 flex flex-col gap-3 max-w-[13.5rem] min-w-[13.5rem]'>
       <GraphSidebar 
         coloring={coloringScheme}
         layout={layout}

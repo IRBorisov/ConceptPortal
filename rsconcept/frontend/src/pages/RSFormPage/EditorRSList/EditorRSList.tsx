@@ -20,7 +20,7 @@ const columnHelper = createColumnHelper<IConstituenta>();
 
 interface EditorRSListProps {
   onOpenEdit: (cstID: number) => void
-  onTemplates: (selected: number[]) => void
+  onTemplates: (insertAfter?: number) => void
   onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void
   onDeleteCst: (selected: number[], callback: (items: number[]) => void) => void
 }
@@ -28,7 +28,7 @@ interface EditorRSListProps {
 function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: EditorRSListProps) {
   const { colors, mainHeight } = useConceptTheme();
   const windowSize = useWindowSize();
-  const { schema, isEditable, cstMoveTo, resetAliases } = useRSForm();
+  const { schema, editorMode: isEditable, cstMoveTo, resetAliases } = useRSForm();
   const [selected, setSelected] = useState<number[]>([]);
   
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -307,7 +307,7 @@ function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edi
         onClone={handleClone}
         onCreate={handleCreateCst}
         onDelete={handleDelete}
-        onTemplates={() => onTemplates(selected)}
+        onTemplates={() => onTemplates(selected.length !== 0 ? selected[selected.length-1] : undefined)}
         onReindex={handleReindex}
       />
     </div>

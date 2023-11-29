@@ -87,11 +87,11 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
   return (
   <div className='flex flex-col gap-3'>
     <div>
-      <div className='flex justify-between gap-6'>
+      <div className='flex justify-between'>
         <SelectSingle
-          className='w-full'
-          options={categorySelector}
           placeholder='Выберите категорию'
+          className='w-full border-none'
+          options={categorySelector}
           value={state.filterCategory && selectedSchema ? {
             value: state.filterCategory.id,
             label: state.filterCategory.term_raw
@@ -100,9 +100,9 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
           isClearable
         />
         <SelectSingle
+          placeholder='Выберите источник'
           className='min-w-[15rem]'
           options={templateSelector}
-          placeholder='Выберите источник'
           value={state.templateID ? { value: state.templateID, label: templates.find(item => item.id == state.templateID)!.title }: null}
           onChange={data => partialUpdate({templateID: (data ? data.value : undefined)})}
         />

@@ -30,7 +30,7 @@ function RSTabsMenu({
   const navigate = useNavigate();
   const { user } = useAuth();
   const {
-    isOwned, isEditable, isTracking, isReadonly, isClaimable, isForceAdmin,
+    isOwned, editorMode: isEditable, isTracking, isReadonly, isClaimable, adminMode: isForceAdmin,
     toggleForceAdmin, toggleReadonly, processing
   } = useRSForm();
   const schemaMenu = useDropdown();

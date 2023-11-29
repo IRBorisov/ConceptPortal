@@ -85,6 +85,14 @@ export interface ILibraryItem {
 }
 
 /**
+ * Represents library item extended data.
+*/
+export interface ILibraryItemEx
+extends ILibraryItem {
+  subscribers: number[]
+}
+
+/**
  * Represents update data for editing {@link ILibraryItem}.
 */
 export interface ILibraryUpdateData

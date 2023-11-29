@@ -18,6 +18,7 @@ interface DlgConstituentaTemplateProps
 extends Pick<ModalProps, 'hideWindow'> {
   schema: IRSForm
   onCreate: (data: ICstCreateData) => void
+  insertAfter?: number
 }
 
 export enum TabID {
@@ -26,7 +27,7 @@ export enum TabID {
   CONSTITUENTA = 2
 }
 
-function DlgConstituentaTemplate({ hideWindow, schema, onCreate }: DlgConstituentaTemplateProps) {
+function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: DlgConstituentaTemplateProps) {
   const [ validated, setValidated ] = useState(false);
   const [ template, updateTemplate ] = usePartialUpdate<ITemplateState>({});
   const [ substitutes, updateSubstitutes ] = usePartialUpdate<IArgumentsState>({
@@ -35,7 +36,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate }: DlgConstituen
   });
   const [constituenta, updateConstituenta] = usePartialUpdate<ICstCreateData>({
     cst_type: CstType.TERM,
-    insert_after: null,
+    insert_after: insertAfter ?? null,
     alias: '',
     convention: '',
     definition_formal: '',
