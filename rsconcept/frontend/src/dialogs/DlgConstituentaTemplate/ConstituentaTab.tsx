@@ -16,9 +16,9 @@ interface ConstituentaTabProps {
 function ConstituentaTab({state, partialUpdate}: ConstituentaTabProps) {
   return (
   <div className='flex flex-col gap-3'>
-    <div className='flex justify-center w-full gap-6'>
+    <div className='flex justify-center w-full gap-3 pr-2'>
       <SelectSingle
-        className='min-w-[15rem] self-center'
+        className='min-w-[14rem] self-center'
         options={SelectorCstType}
         placeholder='Выберите тип'
         value={{ value: state.cst_type, label: labelCstType(state.cst_type) }}

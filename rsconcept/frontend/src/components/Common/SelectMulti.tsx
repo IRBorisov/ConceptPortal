@@ -8,13 +8,13 @@ interface SelectMultiProps<
   Option,
   Group extends GroupBase<Option> = GroupBase<Option>
 >
-extends Omit<Props<Option, true, Group>, 'theme'> {
+extends Omit<Props<Option, true, Group>, 'theme' | 'menuPortalTarget'> {
+  noPortal?: boolean
 }
 
-function SelectMulti<
-  Option,
-  Group extends GroupBase<Option> = GroupBase<Option>
-> (props: SelectMultiProps<Option, Group>) {
+function SelectMulti<Option, Group extends GroupBase<Option> = GroupBase<Option>> ({
+  noPortal, ...restProps
+}: SelectMultiProps<Option, Group>) {
   const { darkMode, colors } = useConceptTheme();
   const themeColors = useMemo(
     () => !darkMode ? selectLightT : selectDarkT
@@ -27,13 +27,16 @@ function SelectMulti<
       borderRadius: '0.25rem',
       cursor: isDisabled ? 'not-allowed' : 'pointer'
     }),
-
     option: (styles, { isSelected }) => ({
       ...styles,
       backgroundColor: isSelected ? colors.bgSelected : styles.backgroundColor,
       color: isSelected ? colors.fgSelected : styles.color,
       borderWidth: '1px',
       borderColor: colors.border
+    }),
+    menuPortal: (styles) => ({
+      ...styles,
+      zIndex: 9999
     }),
     menuList: (styles) => ({
       ...styles,
@@ -50,7 +53,7 @@ function SelectMulti<
   }), [colors]);
 
   return (
-    <Select
+    <Select isMulti
       noOptionsMessage={() => 'Список пуст'}
       theme={theme => ({
         ...theme,
@@ -60,9 +63,9 @@ function SelectMulti<
           ...themeColors
         },
       })}
-      isMulti
+      menuPortalTarget={!noPortal ? document.body : null}
       styles={adjustedStyles}
-      {...props}
+      {...restProps}
     />
   );
 }

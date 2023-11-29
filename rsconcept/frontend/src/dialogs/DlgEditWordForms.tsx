@@ -269,7 +269,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         />
       </div>
       <SelectMulti
-        className='z-modal-top min-w-[20rem] max-w-[20rem] h-full flex-grow'
+        className='min-w-[20rem] max-w-[20rem] h-full flex-grow'
         options={options}
         placeholder='Выберите граммемы'
         

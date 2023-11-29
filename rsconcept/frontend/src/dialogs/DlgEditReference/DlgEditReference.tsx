@@ -249,7 +249,7 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
         <Label text='Отсылаемая словоформа'/>
         <SelectMulti
           placeholder='Выберите граммемы'
-          className='flex-grow h-full z-modal-top'
+          className='flex-grow h-full'
           menuPlacement='top'
           options={gramOptions}
           value={selectedGrams}

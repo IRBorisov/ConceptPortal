@@ -8,13 +8,13 @@ interface SelectSingleProps<
   Option,
   Group extends GroupBase<Option> = GroupBase<Option>
 >
-extends Omit<Props<Option, false, Group>, 'theme'> {
+extends Omit<Props<Option, false, Group>, 'theme' | 'menuPortalTarget'> {
+  noPortal?: boolean
 }
 
-function SelectSingle<
-  Option,
-  Group extends GroupBase<Option> = GroupBase<Option>
-> (props: SelectSingleProps<Option, Group>) {
+function SelectSingle<Option, Group extends GroupBase<Option> = GroupBase<Option>> ({
+  noPortal, ...restProps
+}: SelectSingleProps<Option, Group>) {
   const { darkMode, colors } = useConceptTheme();
   const themeColors = useMemo(
     () => !darkMode ? selectLightT : selectDarkT
@@ -26,6 +26,10 @@ function SelectSingle<
       ...styles,
       borderRadius: '0.25rem',
       cursor: isDisabled ? 'not-allowed' : 'pointer'
+    }),
+    menuPortal: (styles) => ({
+      ...styles,
+      zIndex: 9999
     }),
     menuList: (styles) => ({
       ...styles,
@@ -54,8 +58,9 @@ function SelectSingle<
           ...themeColors
         },
       })}
+      menuPortalTarget={!noPortal ? document.body : null}
       styles={adjustedStyles}
-      {...props}
+      {...restProps}
     />
   );
 }

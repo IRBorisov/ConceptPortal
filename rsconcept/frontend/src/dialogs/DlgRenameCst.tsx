@@ -51,7 +51,7 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
       <div className='flex items-center gap-4 px-2 my-2 h-fit min-w-[25rem]'>
         <SelectSingle
           placeholder='Выберите тип'
-          className='min-w-[14rem] self-center z-modal-top'
+          className='min-w-[14rem] self-center'
           options={SelectorCstType}
           value={{
             value: cstData.cst_type,
