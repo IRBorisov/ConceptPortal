@@ -1,7 +1,6 @@
 /**
  * Module: API for miscellanious frontend model types. Future tagets for refactoring aimed at extracting modules.
  */
-
 import { DependencyMode } from './miscelanious';
 import { IConstituenta, IRSForm } from './rsform';
 
