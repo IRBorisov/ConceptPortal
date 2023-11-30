@@ -131,7 +131,7 @@ function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edi
 
   // Clone selected
   function handleClone() {
-    if (selected.length !== 1 || !schema) {
+    if (selected.length < 1 || !schema) {
       return;
     }
     const activeCst = schema.items.find(cst => cst.id === selected[0]);
@@ -164,30 +164,30 @@ function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edi
     if (!event.altKey || event.shiftKey) {
       return;
     }
-    if (processAltKey(event.key)) {
+    if (processAltKey(event.code)) {
       event.preventDefault();
       return;
     }
   }
 
-  function processAltKey(key: string): boolean {
+  function processAltKey(code: string): boolean {
     if (selected.length > 0) {
-      switch (key) {
+      switch (code) {
         case 'ArrowUp': handleMoveUp(); return true;
         case 'ArrowDown':  handleMoveDown(); return true;
+        case 'KeyV':  handleClone(); return true;
       }
     }
-    switch (key) {
-    case '1': handleCreateCst(CstType.BASE); return true;
-    case '2': handleCreateCst(CstType.STRUCTURED); return true;
-    case '3': handleCreateCst(CstType.TERM); return true;
-    case '4': handleCreateCst(CstType.AXIOM); return true;
-    case 'й':
-    case 'q': handleCreateCst(CstType.FUNCTION); return true;
-    case 'ц':
-    case 'w': handleCreateCst(CstType.PREDICATE); return true;
-    case '5': handleCreateCst(CstType.CONSTANT); return true;
-    case '6': handleCreateCst(CstType.THEOREM); return true;
+    switch (code) {
+    case 'Backquote': handleCreateCst(); return true;
+    case 'Digit1':    handleCreateCst(CstType.BASE); return true;
+    case 'Digit2':    handleCreateCst(CstType.STRUCTURED); return true;
+    case 'Digit3':    handleCreateCst(CstType.TERM); return true;
+    case 'Digit4':    handleCreateCst(CstType.AXIOM); return true;
+    case 'KeyQ':      handleCreateCst(CstType.FUNCTION); return true;
+    case 'KeyW':      handleCreateCst(CstType.PREDICATE); return true;
+    case 'Digit5':    handleCreateCst(CstType.CONSTANT); return true;
+    case 'Digit6':    handleCreateCst(CstType.THEOREM); return true;
     }
     return false;
   }
@@ -295,8 +295,8 @@ function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edi
     style={{minHeight: mainHeight}}
     onKeyDown={handleTableKey}
   >
-    <div className='sticky top-0 flex justify-start w-full gap-1 px-2 py-1 border-b items-center h-[2.2rem] select-none clr-app'>
-      <div className='mr-3 min-w-[9rem] whitespace-nowrap small-caps'>
+    <div className='sticky top-0 flex justify-start w-full gap-1 px-2 border-b py-1 items-center select-none clr-app'>
+      <div className='min-w-[9rem] max-w-[9rem] whitespace-nowrap small-caps'>
         Выбор {selected.length} из {schema?.stats?.count_all ?? 0}
       </div>
       <RSListToolbar
@@ -316,7 +316,7 @@ function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edi
     <DataTable dense noFooter
       data={schema?.items ?? []}
       columns={columns}
-      headPosition='2.2rem'
+      headPosition='2.3rem'
 
       onRowDoubleClicked={handleRowDoubleClicked}
       onRowClicked={handleRowClicked}

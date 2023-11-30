@@ -8,7 +8,6 @@ import { RefObject, useCallback, useMemo, useRef } from 'react';
 
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
-import { TokenID } from '../../models/rslang';
 import Label from '../Common/Label';
 import { ccBracketMatching } from './bracketMatching';
 import { RSLanguage } from './rslang';
@@ -105,39 +104,7 @@ function RSInput({
       return;
     }
     const text = new RSTextWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
-    if (event.shiftKey && !event.altKey) {
-      if (event.key === '*') {
-        text.insertToken(TokenID.DECART);
-        event.preventDefault();
-      } else if (event.code === 'KeyB') {
-        text.insertChar('ℬ');
-        event.preventDefault();
-      } else if (event.code === 'KeyZ') {
-        text.insertChar('Z');
-        event.preventDefault();
-      } else if (event.code === 'KeyR') {
-        text.insertChar('R');
-        event.preventDefault();
-      } else if (event.code === 'KeyF') {
-        text.insertChar('F');
-        event.preventDefault();
-      } else if (event.code === 'KeyP') {
-        text.insertChar('P');
-        event.preventDefault();
-      } else if (event.code === 'KeyX') {
-        text.insertChar('X');
-        event.preventDefault();
-      } else if (event.code === 'KeyS') {
-        text.insertChar('S');
-        event.preventDefault();
-      } else if (event.code === 'KeyD') {
-        text.insertChar('D');
-        event.preventDefault();
-      } else if (event.code === 'KeyC') {
-        text.insertChar('C');
-        event.preventDefault();
-      }
-    } else if (event.altKey) {
+    if (event.altKey) {
       if (text.processAltKey(event.code, event.shiftKey)) {
         event.preventDefault();
       }

@@ -34,33 +34,27 @@ function RSListToolbar({
   const nothingSelected = useMemo(() => selectedCount === 0, [selectedCount]);
 
   return (
-  <div className='flex items-center justify-center w-full pr-[9rem] mt-1'>
+  <div className='flex items-center justify-center w-full mr-[9rem]'>
     <MiniButton
-      tooltip='Переместить вверх'
+      tooltip='Переместить вверх [Alt + вверх]'
       icon={<ArrowUpIcon size={5}/>}
       disabled={!editorMode || nothingSelected}
       onClick={onMoveUp}
     />
     <MiniButton
-      tooltip='Переместить вниз'
+      tooltip='Переместить вниз [Alt + вниз]'
       icon={<ArrowDownIcon size={5}/>}
       disabled={!editorMode || nothingSelected}
       onClick={onMoveDown}
     />
     <MiniButton
-      tooltip='Удалить выбранные'
-      icon={<DumpBinIcon color={editorMode && !nothingSelected ? 'text-warning' : ''} size={5}/>}
-      disabled={!editorMode || nothingSelected}
-      onClick={onDelete}
-    />
-    <MiniButton
-      tooltip='Клонировать конституенту'
+      tooltip='Клонировать конституенту [Alt + V]'
       icon={<CloneIcon color={editorMode && selectedCount === 1 ? 'text-success': ''} size={5}/>}
       disabled={!editorMode || selectedCount !== 1}
       onClick={onClone}
     />
     <MiniButton
-      tooltip='Добавить новую конституенту...'
+      tooltip='Добавить новую конституенту... [Alt + `]'
       icon={<SmallPlusIcon color={editorMode ? 'text-success': ''} size={5}/>}
       disabled={!editorMode}
       onClick={() => onCreate()}
@@ -72,7 +66,7 @@ function RSListToolbar({
         disabled={!editorMode}
         onClick={insertMenu.toggle}
       />
-      { insertMenu.isActive && 
+      {insertMenu.isActive ?
       <Dropdown>
       {(Object.values(CstType)).map(
       (typeStr) => {
@@ -86,7 +80,7 @@ function RSListToolbar({
           {`${getCstTypePrefix(type)}1 — ${labelCstType(type)}`}
         </DropdownButton>);
       })}
-      </Dropdown>}
+      </Dropdown> : null}
     </div>
     <MiniButton
       tooltip='Создать конституенту из шаблона'
@@ -100,7 +94,12 @@ function RSListToolbar({
       disabled={!editorMode}
       onClick={onReindex}
     />
-    
+    <MiniButton
+      tooltip='Удалить выбранные [Delete]'
+      icon={<DumpBinIcon color={editorMode && !nothingSelected ? 'text-warning' : ''} size={5}/>}
+      disabled={!editorMode || nothingSelected}
+      onClick={onDelete}
+    />
     <div className='ml-1' id='items-table-help'>
       <HelpIcon color='text-primary' size={5} />
     </div>

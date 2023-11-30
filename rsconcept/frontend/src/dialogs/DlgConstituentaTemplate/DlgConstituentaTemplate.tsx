@@ -28,9 +28,9 @@ export enum TabID {
 }
 
 function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: DlgConstituentaTemplateProps) {
-  const [ validated, setValidated ] = useState(false);
-  const [ template, updateTemplate ] = usePartialUpdate<ITemplateState>({});
-  const [ substitutes, updateSubstitutes ] = usePartialUpdate<IArgumentsState>({
+  const [validated, setValidated] = useState(false);
+  const [template, updateTemplate] = usePartialUpdate<ITemplateState>({});
+  const [substitutes, updateSubstitutes] = usePartialUpdate<IArgumentsState>({
     definition: '',
     arguments: []
   });
@@ -116,26 +116,29 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     submitText='Создать'
   >
   <div className='max-w-[40rem] min-w-[40rem] min-h-[35rem] px-2 mb-1'>
-  <Tabs
+  <Tabs defaultFocus forceRenderTabPanel
+    className='flex flex-col items-center'
+    selectedTabClassName='clr-selected'
     selectedIndex={activeTab}
     onSelect={setActiveTab}
-    defaultFocus
-    forceRenderTabPanel
-
-    selectedTabClassName='clr-selected'
-    className='flex flex-col items-center'
   >
     <div className='flex gap-1 pl-6 mb-3'>
       <TabList className='flex items-start font-semibold text-center border select-none clr-controls small-caps'>
-        <ConceptTab tooltip='Выбор шаблона выражения' className='border-r w-[8rem]'>
-          Шаблон
-        </ConceptTab>
-        <ConceptTab tooltip='Подстановка аргументов шаблона' className='border-r w-[8rem]'>
-          Аргументы
-        </ConceptTab>
-        <ConceptTab tooltip='Редактирование атрибутов конституенты' className='w-[8rem]'>
-          Конституента
-        </ConceptTab>
+        <ConceptTab
+          label='Шаблон'
+          tooltip='Выбор шаблона выражения'
+          className='border-r w-[8rem]'
+        />
+        <ConceptTab
+          label='Аргументы'
+          tooltip='Подстановка аргументов шаблона'
+          className='border-r w-[8rem]'
+        />
+        <ConceptTab
+          label='Конституента'
+          tooltip='Редактирование атрибутов конституенты'
+          className='w-[8rem]'
+        />
       </TabList>
 
       <div id='templates-help' className='px-1 py-1'>

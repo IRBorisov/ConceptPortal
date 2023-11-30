@@ -53,8 +53,8 @@ function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, 
       onDestroy={onDestroy}
     />
     <div className='flex w-full'>
-      <div className='flex-grow max-w-[40rem] min-w-[30rem] px-4 py-2'>
-        <div className='flex flex-col gap-3 mt-2'>
+      <div className='flex-grow max-w-[40rem] min-w-[30rem] px-4 pb-2'>
+        <div className='flex flex-col gap-3'>
           <FormRSForm id={globalIDs.library_item_editor}
             isModified={isModified}
             setIsModified={setIsModified}

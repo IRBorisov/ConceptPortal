@@ -6,9 +6,24 @@ import { TokenID } from '../../models/rslang';
 import { CodeMirrorWrapper } from '../../utils/codemirror';
 
 export function getSymbolSubstitute(keyCode: string, shiftPressed: boolean): string | undefined {
+  console.log(keyCode);
   if (shiftPressed) {
     switch (keyCode) {
     case 'Backquote': return '∃';
+    case 'Backslash': return '|';
+    case 'BracketLeft': return '{';
+    case 'BracketRight': return '}';
+
+    case 'Digit8': return '×';
+    case 'KeyB': return 'ℬ';
+    case 'KeyZ': return 'Z';
+    case 'KeyR': return 'R';
+    case 'KeyF': return 'F';
+    case 'KeyP': return 'P';
+    case 'KeyX': return 'X';
+    case 'KeyS': return 'S';
+    case 'KeyD': return 'D';
+    case 'KeyC': return 'C';
     }
   } else {
     switch (keyCode) {
@@ -37,6 +52,11 @@ export function getSymbolSubstitute(keyCode: string, shiftPressed: boolean): str
     case 'KeyV': return 'θ';
     case 'KeyB': return 'β';
     case 'KeyN': return 'η';
+
+    // punctuation
+    case 'BracketLeft': return '[';
+    case 'BracketRight': return ']';
+    case 'Comma': return ',';
     }
   }
   return undefined;

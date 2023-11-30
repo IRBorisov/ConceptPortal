@@ -26,7 +26,8 @@ function ConstituentaToolbar({
   const canSave = useMemo(() => (isModified && editorMode), [isModified, editorMode]);
   return (    
   <div className='relative w-full'>
-  <div className='absolute right-0 flex items-start justify-center w-full select-none top-1'>
+  <div className='absolute right-0 flex items-start justify-center w-full top-1'>
+  <div className=' flex justify-start w-fit select-auto z-pop'>
     <MiniButton
       tooltip='Сохранить изменения'
       disabled={!canSave}
@@ -69,6 +70,7 @@ function ConstituentaToolbar({
     <ConceptTooltip anchorSelect='#cst-help' offset={4}>
       <HelpConstituenta />
     </ConceptTooltip>
+  </div>
   </div>
   </div>);
 }

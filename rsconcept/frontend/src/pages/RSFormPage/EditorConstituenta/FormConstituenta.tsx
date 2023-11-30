@@ -103,7 +103,7 @@ function FormConstituenta({
   return (<>
   {readyForEdit ?
   <div className='relative'>
-  <div className='absolute top-0 right-[-3rem] w-full flex justify-start'>
+  <div className='absolute top-0 right-[-3rem] w-full flex justify-start select-none'>
     <MiniButton
       tooltip={`Редактировать словоформы термина: ${constituenta!.term_forms.length}`}
       disabled={!readyForEdit}
@@ -111,7 +111,7 @@ function FormConstituenta({
       onClick={onEditTerm}
       icon={<EditIcon size={4} color={readyForEdit ? 'text-primary' : ''} />}
     />
-    <div className='pt-1 pl-6 text-sm font-semibold pointer-events-none w-fit'>
+    <div className='pt-1 pl-6 text-sm font-semibold w-fit'>
       <span>Имя </span>
       <span className='ml-1'>{constituenta?.alias ?? ''}</span>
     </div>

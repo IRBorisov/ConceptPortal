@@ -327,142 +327,143 @@ function RSTabs() {
     cstUpdate(data, () => toast.success('Изменения сохранены'));
   }, [cstUpdate, activeID]);
 
-  return (
-  <div className='w-full'>
-    {loading ? <ConceptLoader /> : null}
-    {error ? <ProcessError error={error} /> : null}
-    {(schema && !loading) ? <>
-    {showUpload ? 
-    <DlgUploadRSForm
-      hideWindow={() => setShowUpload(false)}
-    /> : null}
-    {showClone ?
-    <DlgCloneRSForm
-      hideWindow={() => setShowClone(false)}
-    /> : null}
-    {showAST ? 
-    <DlgShowAST
-      expression={expression}
-      syntaxTree={syntaxTree}
-      hideWindow={() => setShowAST(false)}
-    /> : null}
-    {showCreateCst ? 
-    <DlgCreateCst
-      hideWindow={() => setShowCreateCst(false)}
-      onCreate={handleCreateCst}
-      schema={schema}
-      initial={createInitialData}
-    /> : null}
-    {showRenameCst ? 
-    <DlgRenameCst
-      hideWindow={() => setShowRenameCst(false)}
-      onRename={handleRenameCst}
-      initial={renameInitialData!}
-    /> : null}
-    {showDeleteCst ? 
-    <DlgDeleteCst
-      hideWindow={() => setShowDeleteCst(false)}
-      onDelete={handleDeleteCst}
-      selected={toBeDeleted}
-    /> : null}
-    {showEditTerm ?
-    <DlgEditWordForms
-      hideWindow={() => setShowEditTerm(false)}
-      onSave={handleSaveWordforms}
-      target={activeCst!}
-    /> : null}
-    {showTemplates ? 
-    <DlgConstituentaTemplate
-      schema={schema}
-      hideWindow={() => setShowTemplates(false)}
-      insertAfter={insertCstID}
-      onCreate={handleCreateCst}
-    /> : null}
-    <Tabs
-      selectedIndex={activeTab}
-      onSelect={onSelectTab}
-      defaultFocus
-      selectedTabClassName='clr-selected'
-      className='flex flex-col items-center w-full'
-    >
-      <TabList className='flex items-start border-b-2 border-x-2 select-none justify-stretch w-fit clr-controls h-[1.9rem] small-caps font-semibold'>
-        <RSTabsMenu 
+  return (<>
+  {loading ? <ConceptLoader /> : null}
+  {error ? <ProcessError error={error} /> : null}
+
+  {showUpload ? 
+  <DlgUploadRSForm
+    hideWindow={() => setShowUpload(false)}
+  /> : null}
+  {showClone ?
+  <DlgCloneRSForm
+    hideWindow={() => setShowClone(false)}
+  /> : null}
+  {showAST ? 
+  <DlgShowAST
+    expression={expression}
+    syntaxTree={syntaxTree}
+    hideWindow={() => setShowAST(false)}
+  /> : null}
+  {showCreateCst ? 
+  <DlgCreateCst
+    hideWindow={() => setShowCreateCst(false)}
+    onCreate={handleCreateCst}
+    schema={schema!}
+    initial={createInitialData}
+  /> : null}
+  {showRenameCst ? 
+  <DlgRenameCst
+    hideWindow={() => setShowRenameCst(false)}
+    onRename={handleRenameCst}
+    initial={renameInitialData!}
+  /> : null}
+  {showDeleteCst ? 
+  <DlgDeleteCst
+    hideWindow={() => setShowDeleteCst(false)}
+    onDelete={handleDeleteCst}
+    selected={toBeDeleted}
+  /> : null}
+  {showEditTerm ?
+  <DlgEditWordForms
+    hideWindow={() => setShowEditTerm(false)}
+    onSave={handleSaveWordforms}
+    target={activeCst!}
+  /> : null}
+  {showTemplates ? 
+  <DlgConstituentaTemplate
+    schema={schema!}
+    hideWindow={() => setShowTemplates(false)}
+    insertAfter={insertCstID}
+    onCreate={handleCreateCst}
+  /> : null}
+
+  {(schema && !loading) ?
+  <Tabs
+    selectedIndex={activeTab}
+    onSelect={onSelectTab}
+    defaultFocus
+    selectedTabClassName='clr-selected'
+    className='flex flex-col w-full'
+  >
+    <div className='flex justify-center w-[100vw]'>
+    <TabList className='flex items-start border-b-2 border-x-2 select-none justify-stretch w-fit clr-controls h-[1.9rem] small-caps font-semibold'>
+      <RSTabsMenu 
+        onDownload={onDownloadSchema}
+        onDestroy={onDestroySchema}
+        onClaim={onClaimSchema}
+        onShare={onShareSchema}
+        onToggleSubscribe={handleToggleSubscribe}
+        showCloneDialog={promptClone} 
+        showUploadDialog={() => setShowUpload(true)}
+      />
+      <ConceptTab
+        label='Карточка'
+        className='border-x-2'
+        tooltip={`Название схемы: ${schema.title ?? ''}`}
+      />
+      <ConceptTab
+        label='Содержание'
+        className='border-r-2'
+        tooltip={`Всего конституент: ${schema.stats?.count_all ?? 0}\nКоличество ошибок: ${schema.stats?.count_errors ?? 0}`}
+      />
+      <ConceptTab
+        label='Редактор'
+        className='border-r-2'
+      />
+      <ConceptTab
+        label='Граф термов'
+      />
+    </TabList>
+    </div>
+
+    <div className='overflow-y-auto min-w-[48rem] w-[100vw] flex justify-center' style={{ maxHeight: panelHeight}}>
+      <TabPanel forceRender style={{ display: activeTab === RSTabID.CARD ? '': 'none' }}>
+        <EditorRSForm
+          isModified={isModified}
+          setIsModified={setIsModified}
           onDownload={onDownloadSchema}
           onDestroy={onDestroySchema}
           onClaim={onClaimSchema}
           onShare={onShareSchema}
-          onToggleSubscribe={handleToggleSubscribe}
-          showCloneDialog={promptClone} 
-          showUploadDialog={() => setShowUpload(true)}
         />
-        <ConceptTab 
-          className='border-x-2'
-          tooltip={`Название схемы: ${schema.title ?? ''}`}
-        >
-          Карточка
-        </ConceptTab>
-        <ConceptTab 
-          className='border-r-2'
-          tooltip={`Всего конституент: ${schema.stats?.count_all ?? 0}\nКоличество ошибок: ${schema.stats?.count_errors ?? 0}`}
-        >
-          Содержание
-        </ConceptTab>
-        <ConceptTab className='border-r-2'>
-          Редактор
-        </ConceptTab>
-        <ConceptTab className=''>
-          Граф термов
-        </ConceptTab>
-      </TabList>
+      </TabPanel>
 
-      <div className='overflow-y-auto min-w-[48rem]' style={{ maxHeight: panelHeight}}>
-        <TabPanel forceRender style={{ display: activeTab === RSTabID.CARD ? '': 'none' }}>
-          <EditorRSForm
-            isModified={isModified}
-            setIsModified={setIsModified}
-            onDownload={onDownloadSchema}
-            onDestroy={onDestroySchema}
-            onClaim={onClaimSchema}
-            onShare={onShareSchema}
-          />
-        </TabPanel>
+      <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_LIST ? '': 'none' }}>
+        <EditorRSList
+          onOpenEdit={onOpenCst}
+          onCreateCst={promptCreateCst}
+          onDeleteCst={promptDeleteCst}
+          onTemplates={onShowTemplates}
+        />
+      </TabPanel>
 
-        <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_LIST ? '': 'none' }}>
-          <EditorRSList
-            onOpenEdit={onOpenCst}
-            onCreateCst={promptCreateCst}
-            onDeleteCst={promptDeleteCst}
-            onTemplates={onShowTemplates}
-          />
-        </TabPanel>
+      <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_EDIT ? '': 'none' }}>
+        <EditorConstituenta
+          isModified={isModified}
+          setIsModified={setIsModified}
+          activeID={activeID}
+          activeCst={activeCst}
+          onOpenEdit={onOpenCst}
+          onShowAST={onShowAST}
+          onCreateCst={promptCreateCst}
+          onDeleteCst={promptDeleteCst}
+          onRenameCst={promptRenameCst}
+          onEditTerm={promptShowEditTerm}
+          onTemplates={onShowTemplates}
+        />
+      </TabPanel>
 
-        <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_EDIT ? '': 'none' }}>
-          <EditorConstituenta
-            isModified={isModified}
-            setIsModified={setIsModified}
-            activeID={activeID}
-            activeCst={activeCst}
-            onOpenEdit={onOpenCst}
-            onShowAST={onShowAST}
-            onCreateCst={promptCreateCst}
-            onDeleteCst={promptDeleteCst}
-            onRenameCst={promptRenameCst}
-            onEditTerm={promptShowEditTerm}
-            onTemplates={onShowTemplates}
-          />
-        </TabPanel>
-
-        <TabPanel style={{ display: activeTab === RSTabID.TERM_GRAPH ? '': 'none' }}>
-          <EditorTermGraph 
-            onOpenEdit={onOpenCst}
-            onCreateCst={promptCreateCst}
-            onDeleteCst={promptDeleteCst}
-          />
-        </TabPanel>
-      </div>
-    </Tabs>
-    </> : null}
-  </div>);
+      <TabPanel style={{ display: activeTab === RSTabID.TERM_GRAPH ? '': 'none' }}>
+        <EditorTermGraph 
+          onOpenEdit={onOpenCst}
+          onCreateCst={promptCreateCst}
+          onDeleteCst={promptDeleteCst}
+        />
+      </TabPanel>
+    </div>
+  </Tabs> : null}
+  </>);
 }
 
 export default RSTabs;
