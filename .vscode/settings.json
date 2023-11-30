@@ -17,8 +17,6 @@
 			"mode": "auto"
 		}
 	],
-	"python.linting.enabled": true,
-	"python.linting.mypyEnabled": true,
 	"python.analysis.typeCheckingMode": "off",
 	"python.analysis.diagnosticSeverityOverrides": {
 		// "reportOptionalMemberAccess": "none"
