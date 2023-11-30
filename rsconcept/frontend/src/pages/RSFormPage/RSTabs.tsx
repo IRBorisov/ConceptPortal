@@ -115,8 +115,9 @@ function RSTabs() {
     setActiveTab(activeTab);
     setNoFooter(activeTab === RSTabID.CST_EDIT || activeTab === RSTabID.CST_LIST);
     setActiveID(Number(cstQuery) ?? ((schema && schema?.items.length > 0) ? schema.items[0].id : undefined));
+    setIsModified(false);
     return () => setNoFooter(false);
-  }, [search, setActiveTab, setActiveID, schema, setNoFooter]);
+  }, [search, setActiveTab, setActiveID, schema, setNoFooter, setIsModified]);
 
   function onSelectTab(index: number) {
     navigateTab(index, activeID);

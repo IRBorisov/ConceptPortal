@@ -26,7 +26,7 @@ interface EditorRSListProps {
 }
 
 function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: EditorRSListProps) {
-  const { colors, mainHeight } = useConceptTheme();
+  const { colors, noNavigation } = useConceptTheme();
   const windowSize = useWindowSize();
   const { schema, editorMode: isEditable, cstMoveTo, resetAliases } = useRSForm();
   const [selected, setSelected] = useState<number[]>([]);
@@ -289,15 +289,21 @@ function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edi
     })
   ], [colors]);
 
+  const tableHeight = useMemo(
+  () => {
+    return !noNavigation ? 
+      'calc(100vh - 7.2rem - 4px)'
+    : 'calc(100vh - 4.4rem - 4px)';
+  }, [noNavigation]);
+
   return (
   <div tabIndex={-1}
     className='w-full outline-none'
-    style={{minHeight: mainHeight}}
     onKeyDown={handleTableKey}
   >
-    <div className='sticky top-0 flex justify-start w-full gap-1 px-2 border-b py-1 items-center select-none clr-app'>
+    <div className='sticky top-0 flex items-center justify-start w-full gap-1 px-2 py-1 border-b select-none clr-app'>
       <div className='min-w-[9rem] max-w-[9rem] whitespace-nowrap small-caps'>
-        Выбор {selected.length} из {schema?.stats?.count_all ?? 0}
+        {`Выбор ${selected.length} из ${schema?.stats?.count_all ?? 0}`}
       </div>
       <RSListToolbar
         selectedCount={selected.length}
@@ -312,11 +318,11 @@ function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edi
       />
     </div>
     
-    <div className='w-full h-full text-sm'>
+    <div className='w-full h-full overflow-auto text-sm' style={{maxHeight: tableHeight}}>
     <DataTable dense noFooter
       data={schema?.items ?? []}
       columns={columns}
-      headPosition='2.3rem'
+      headPosition='0rem'
 
       onRowDoubleClicked={handleRowDoubleClicked}
       onRowClicked={handleRowClicked}
