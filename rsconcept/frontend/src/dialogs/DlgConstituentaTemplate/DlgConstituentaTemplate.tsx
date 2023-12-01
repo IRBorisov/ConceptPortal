@@ -45,7 +45,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     term_forms: []
   });
   
-  const [ activeTab, setActiveTab ] = useState(TabID.TEMPLATE);
+  const [activeTab, setActiveTab] = useState(TabID.TEMPLATE);
 
   const handleSubmit = () => onCreate(constituenta);
   
@@ -123,7 +123,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     onSelect={setActiveTab}
   >
     <div className='flex gap-1 pl-6 mb-3'>
-      <TabList className='flex items-start font-semibold text-center border select-none clr-controls small-caps'>
+      <TabList className='flex border'>
         <ConceptTab
           label='Шаблон'
           tooltip='Выбор шаблона выражения'
@@ -147,7 +147,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
       <ConceptTooltip
         anchorSelect='#templates-help'
         className='max-w-[30rem] z-modal-tooltip'
-        offset={4}
+        offset={10}
       >
         <HelpRSTemplates />
       </ConceptTooltip>

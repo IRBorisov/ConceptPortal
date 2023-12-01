@@ -193,6 +193,7 @@
   }
 
   :is(.clr-controls,
+    .clr-tab,
     .clr-btn-default
   ) {
     background-color: var(--cl-bg-80);

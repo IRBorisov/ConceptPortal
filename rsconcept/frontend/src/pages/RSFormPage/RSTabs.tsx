@@ -388,7 +388,7 @@ function RSTabs() {
     className='flex flex-col w-full'
   >
     <div className='flex justify-center w-[100vw]'>
-    <TabList className='flex items-start border-b-2 border-x-2 select-none justify-stretch w-fit clr-controls h-[1.9rem] small-caps font-semibold'>
+    <TabList className='flex border-b-2 border-x-2 justify-stretch w-fit h-[1.9rem]'>
       <RSTabsMenu 
         onDownload={onDownloadSchema}
         onDestroy={onDestroySchema}

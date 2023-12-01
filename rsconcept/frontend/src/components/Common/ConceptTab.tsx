@@ -11,7 +11,7 @@ extends Omit<TabProps, 'title' | 'children'> {
 function ConceptTab({ label, tooltip, className, ...otherProps }: ConceptTabProps) {
   return (
   <Tab
-    className={`px-2 py-1 h-full flex justify-center text-sm hover:cursor-pointer clr-tab whitespace-nowrap min-w-[6rem] ${className}`}
+    className={`px-2 py-1 h-full min-w-[6rem] flex justify-center text-sm hover:cursor-pointer clr-tab whitespace-nowrap small-caps select-none font-semibold ${className}`}
     title={tooltip}
     {...otherProps}
   >
