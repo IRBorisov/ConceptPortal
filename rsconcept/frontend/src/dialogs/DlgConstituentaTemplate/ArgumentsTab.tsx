@@ -3,7 +3,7 @@ import { Dispatch, useCallback, useEffect, useMemo, useState } from 'react';
 
 import MiniButton from '../../components/Common/MiniButton';
 import DataTable, { IConditionalStyle } from '../../components/DataTable';
-import { CheckIcon, CrossIcon } from '../../components/Icons';
+import { ArrowsRotateIcon, CheckIcon, CrossIcon } from '../../components/Icons';
 import RSInput from '../../components/RSInput';
 import ConstituentaPicker from '../../components/Shared/ConstituentaPicker';
 import { useConceptTheme } from '../../context/ThemeContext';
@@ -32,6 +32,15 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
 
   const [argumentValue, setArgumentValue] = useState('');
 
+  const selectedClearable = useMemo(
+  () => {
+    return argumentValue && !!selectedArgument && !!selectedArgument.value;
+  }, [argumentValue, selectedArgument]);
+
+  const isModified = useMemo(
+  () => (selectedArgument && argumentValue !== selectedArgument.value),
+  [selectedArgument, argumentValue]);
+
   useEffect(
   () => {
     if (!selectedArgument && state.arguments.length > 0) {
@@ -55,24 +64,25 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
 
   const handleClearArgument = useCallback(
   (target: IArgumentValue) => {
-    target.value = '';
+    const newArg = { ...target, value: '' }
     partialUpdate({
-      arguments: [
-        target,
-        ...state.arguments.filter(arg => arg.alias !== target.alias)
-      ]
+      arguments: state.arguments.map((arg) => (arg.alias !== target.alias ? arg : newArg))
     });
+    setSelectedArgument(newArg);
   }, [partialUpdate, state.arguments]);
+
+  const handleReset = useCallback(
+  () => {
+    setArgumentValue(selectedArgument?.value ?? '');
+  }, [selectedArgument]);
 
   const handleAssignArgument = useCallback(
   (target: IArgumentValue, value: string) => {
-    target.value = value;
+    const newArg = { ...target, value: value }
     partialUpdate({
-      arguments: [
-        target,
-        ...state.arguments.filter(arg => arg.alias !== target.alias)
-      ]
+      arguments: state.arguments.map((arg) => (arg.alias !== target.alias ? arg : newArg))
     });
+    setSelectedArgument(newArg);
   }, [partialUpdate, state.arguments]);
 
   const columns = useMemo(
@@ -148,21 +158,31 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
         {selectedArgument?.alias || 'ARG'}
       </span>
       <span>=</span>
-      <RSInput
+      <RSInput noTooltip
         dimensions='max-w-[12rem] w-full'
         value={argumentValue}
-        noTooltip
         onChange={newValue => setArgumentValue(newValue)}
       />
-      <MiniButton
-        tooltip='Подставить значение аргумента'
-        icon={<CheckIcon
-          size={5}
-          color={!argumentValue || !selectedArgument ? 'text-disabled' : 'text-success'}
-        />}
-        disabled={!argumentValue || !selectedArgument}
-        onClick={() => handleAssignArgument(selectedArgument!, argumentValue)}
-      />
+      <div className='flex'>
+        <MiniButton
+          tooltip='Подставить значение аргумента'
+          icon={<CheckIcon size={5} color={!argumentValue || !selectedArgument ? 'text-disabled' : 'text-success'} />}
+          disabled={!argumentValue || !selectedArgument}
+          onClick={() => handleAssignArgument(selectedArgument!, argumentValue)}
+        />
+        <MiniButton
+          tooltip='Откатить значение'
+          disabled={!isModified}
+          onClick={handleReset}
+          icon={<ArrowsRotateIcon size={5} color={isModified ? 'text-primary' : ''} />}
+        />
+        <MiniButton
+          tooltip='Очистить значение аргумента'
+          disabled={!selectedClearable}
+          icon={<CrossIcon size={5} color={!selectedClearable ? 'text-disabled' : 'text-warning'}/>}
+          onClick={() => selectedArgument ? handleClearArgument(selectedArgument) : undefined}
+        />
+      </div>
     </div>
 
     <ConstituentaPicker

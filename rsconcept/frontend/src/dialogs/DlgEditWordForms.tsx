@@ -218,8 +218,9 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
       </div>
       <ConceptTooltip
         anchorSelect='#terminology-help'
-        className='max-w-[30rem] z-modal-tooltip'
-        offset={4}
+        className='max-w-[40rem]'
+        layer='z-modal-tooltip'
+        offset={1}
       >
         <HelpTerminologyControl />
       </ConceptTooltip>

@@ -35,17 +35,16 @@ function Modal({
     if (onSubmit) onSubmit();
   };
 
-  return (
-    <>
+  return (<>
     <div className='fixed top-0 left-0 w-full h-full z-navigation clr-modal-backdrop' />
     <div ref={ref}
-      className='fixed bottom-1/2 left-1/2 translate-y-1/2 -translate-x-1/2 px-4 py-3 flex flex-col justify-start w-fit max-w-[calc(100vw-2rem)] overflow-x-auto h-fit z-modal clr-app border shadow-md'
+      className='fixed bottom-1/2 left-1/2 translate-y-1/2 -translate-x-1/2 px-4 flex flex-col justify-start w-fit max-w-[calc(100vw-2rem)] overflow-x-auto h-fit z-modal clr-app border shadow-md'
     >
-      {title ? <h1 className='pb-3 text-xl select-none'>{title}</h1> : null}
+      {title ? <h1 className='py-2 text-lg select-none'>{title}</h1> : null}
       <div className='max-h-[calc(100vh-8rem)] overflow-auto px-2'>
         {children}
       </div>
-      <div className='flex justify-center w-full gap-4 pt-3 mt-2 border-t-2 z-modal-controls'>
+      <div className='flex justify-center w-full gap-6 py-3 z-modal-controls'>
         {!readonly ? 
         <Button autoFocus
           text={submitText}
@@ -62,8 +61,7 @@ function Modal({
         />
       </div>
     </div>
-    </>
-  );
+  </>);
 }
 
 export default Modal;

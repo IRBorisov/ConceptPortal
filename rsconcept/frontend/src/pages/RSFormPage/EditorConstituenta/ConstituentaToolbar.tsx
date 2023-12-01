@@ -27,7 +27,7 @@ function ConstituentaToolbar({
   return (    
   <div className='relative w-full'>
   <div className='absolute right-0 flex items-start justify-center w-full top-1'>
-  <div className=' flex justify-start w-fit select-auto z-pop'>
+  <div className='flex justify-start select-auto w-fit z-tooltip'>
     <MiniButton
       tooltip='Сохранить изменения'
       disabled={!canSave}
@@ -35,7 +35,7 @@ function ConstituentaToolbar({
       onClick={onSubmit}
     />
     <MiniButton
-      tooltip='Сборсить несохраненные изменения'
+      tooltip='Сбросить несохраненные изменения'
       disabled={!canSave}
       onClick={onReset}
       icon={<ArrowsRotateIcon size={5} color={canSave ? 'text-primary' : ''} />}
@@ -67,7 +67,10 @@ function ConstituentaToolbar({
     <div id='cst-help' className='px-1 py-1'>
       <HelpIcon color='text-primary' size={5} />
     </div>
-    <ConceptTooltip anchorSelect='#cst-help' offset={4}>
+    <ConceptTooltip
+      anchorSelect='#cst-help'
+      offset={4}
+    >
       <HelpConstituenta />
     </ConceptTooltip>
   </div>

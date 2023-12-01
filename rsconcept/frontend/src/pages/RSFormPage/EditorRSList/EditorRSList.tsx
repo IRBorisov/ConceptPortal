@@ -1,22 +1,11 @@
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import DataTable, { createColumnHelper, type RowSelectionState,VisibilityState } from '../../../components/DataTable';
-import ConstituentaBadge from '../../../components/Shared/ConstituentaBadge';
+import { type RowSelectionState } from '../../../components/DataTable';
 import { useRSForm } from '../../../context/RSFormContext';
-import { useConceptTheme } from '../../../context/ThemeContext';
-import useWindowSize from '../../../hooks/useWindowSize';
-import { CstType, IConstituenta, ICstCreateData, ICstMovetoData } from '../../../models/rsform'
-import { prefixes } from '../../../utils/constants';
-import { labelCstTypification } from '../../../utils/labels';
+import { CstType, ICstCreateData, ICstMovetoData } from '../../../models/rsform'
 import RSListToolbar from './RSListToolbar';
-
-// Window width cutoff for columns
-const COLUMN_DEFINITION_HIDE_THRESHOLD = 1000;
-const COLUMN_TYPE_HIDE_THRESHOLD = 1200;
-const COLUMN_CONVENTION_HIDE_THRESHOLD = 1800;
-
-const columnHelper = createColumnHelper<IConstituenta>();
+import RSTable from './RSTable';
 
 interface EditorRSListProps {
   onOpenEdit: (cstID: number) => void
@@ -26,13 +15,25 @@ interface EditorRSListProps {
 }
 
 function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: EditorRSListProps) {
-  const { colors, noNavigation } = useConceptTheme();
-  const windowSize = useWindowSize();
   const { schema, editorMode: isEditable, cstMoveTo, resetAliases } = useRSForm();
   const [selected, setSelected] = useState<number[]>([]);
-  
+
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+
+  useLayoutEffect(
+  () => {
+    if (!schema || Object.keys(rowSelection).length === 0) {
+      setSelected([]);
+    } else {
+      const selected: number[] = [];
+      schema.items.forEach((cst, index) => {
+        if (rowSelection[String(index)] === true) {
+          selected.push(cst.id);
+        }
+      });
+      setSelected(selected);
+    }
+  }, [rowSelection, schema]);
 
   // Delete selected constituents
   function handleDelete() {
@@ -179,122 +180,18 @@ function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edi
       }
     }
     switch (code) {
-    case 'Backquote': handleCreateCst(); return true;
-    case 'Digit1':    handleCreateCst(CstType.BASE); return true;
-    case 'Digit2':    handleCreateCst(CstType.STRUCTURED); return true;
-    case 'Digit3':    handleCreateCst(CstType.TERM); return true;
-    case 'Digit4':    handleCreateCst(CstType.AXIOM); return true;
-    case 'KeyQ':      handleCreateCst(CstType.FUNCTION); return true;
-    case 'KeyW':      handleCreateCst(CstType.PREDICATE); return true;
-    case 'Digit5':    handleCreateCst(CstType.CONSTANT); return true;
-    case 'Digit6':    handleCreateCst(CstType.THEOREM); return true;
+      case 'Backquote': handleCreateCst(); return true;
+      case 'Digit1':    handleCreateCst(CstType.BASE); return true;
+      case 'Digit2':    handleCreateCst(CstType.STRUCTURED); return true;
+      case 'Digit3':    handleCreateCst(CstType.TERM); return true;
+      case 'Digit4':    handleCreateCst(CstType.AXIOM); return true;
+      case 'KeyQ':      handleCreateCst(CstType.FUNCTION); return true;
+      case 'KeyW':      handleCreateCst(CstType.PREDICATE); return true;
+      case 'Digit5':    handleCreateCst(CstType.CONSTANT); return true;
+      case 'Digit6':    handleCreateCst(CstType.THEOREM); return true;
     }
     return false;
   }
-
-  const handleRowClicked = useCallback(
-  (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
-    if (event.altKey) {
-      event.preventDefault();
-      onOpenEdit(cst.id);
-    }
-  }, [onOpenEdit]);
-
-  const handleRowDoubleClicked = useCallback(
-  (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
-    event.preventDefault();
-    onOpenEdit(cst.id);
-  }, [onOpenEdit]);
-
-  useLayoutEffect(
-  () => {
-    setColumnVisibility({
-      'type': (windowSize.width ?? 0) >= COLUMN_TYPE_HIDE_THRESHOLD,
-      'convention': (windowSize.width ?? 0) >= COLUMN_CONVENTION_HIDE_THRESHOLD,
-      'definition': (windowSize.width ?? 0) >= COLUMN_DEFINITION_HIDE_THRESHOLD
-    });
-  }, [windowSize]);
-  
-  useLayoutEffect(
-  () => {
-    if (!schema || Object.keys(rowSelection).length === 0) {
-      setSelected([]);
-    } else {
-      const selected: number[] = [];
-      schema.items.forEach((cst, index) => {
-        if (rowSelection[String(index)] === true) {
-          selected.push(cst.id);
-        }
-      });
-      setSelected(selected);
-    }
-  }, [rowSelection, schema]);
-
-  const columns = useMemo(
-  () => [
-    columnHelper.accessor('alias', {
-      id: 'alias',
-      header: 'Имя',
-      size: 65,
-      minSize: 65,
-      maxSize: 65,
-      cell: props => 
-        <ConstituentaBadge 
-          theme={colors}
-          value={props.row.original}
-          prefixID={prefixes.cst_list}
-          shortTooltip
-        />
-    }),
-    columnHelper.accessor(cst => labelCstTypification(cst), {
-      id: 'type',
-      header: 'Типизация',
-      size: 150,
-      minSize: 150,
-      maxSize: 150,
-      enableHiding: true,
-      cell: props => <div className='text-sm min-w-[9.3rem] max-w-[9.3rem] break-words'>{props.getValue()}</div>
-    }),
-    columnHelper.accessor(cst => cst.term_resolved || cst.term_raw || '', {
-      id: 'term',
-      header: 'Термин',
-      size: 500,
-      minSize: 150,
-      maxSize: 500
-    }),
-    columnHelper.accessor('definition_formal', {
-      id: 'expression',
-      header: 'Формальное определение',
-      size: 1000,
-      minSize: 300,
-      maxSize: 1000,
-      cell: props => <div className='break-words'>{props.getValue()}</div>
-    }),
-    columnHelper.accessor(cst => cst.definition_resolved || cst.definition_raw || '', {
-      id: 'definition',
-      header: 'Текстовое определение',
-      size: 1000,
-      minSize: 200,
-      maxSize: 1000,
-      cell: props => <div className='text-xs'>{props.getValue()}</div>
-    }),
-    columnHelper.accessor('convention', {
-      id: 'convention',
-      header: 'Конвенция / Комментарий',
-      size: 500,
-      minSize: 100,
-      maxSize: 500,
-      enableHiding: true,
-      cell: props => <div className='text-xs'>{props.getValue()}</div>
-    })
-  ], [colors]);
-
-  const tableHeight = useMemo(
-  () => {
-    return !noNavigation ? 
-      'calc(100vh - 7.2rem - 4px)'
-    : 'calc(100vh - 4.4rem - 4px)';
-  }, [noNavigation]);
 
   return (
   <div tabIndex={-1}
@@ -317,37 +214,14 @@ function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edi
         onReindex={handleReindex}
       />
     </div>
-    
-    <div className='w-full h-full overflow-auto text-sm' style={{maxHeight: tableHeight}}>
-    <DataTable dense noFooter
-      data={schema?.items ?? []}
-      columns={columns}
-      headPosition='0rem'
 
-      onRowDoubleClicked={handleRowDoubleClicked}
-      onRowClicked={handleRowClicked}
-
-      enableHiding
-      columnVisibility={columnVisibility}
-      onColumnVisibilityChange={setColumnVisibility}
-
-      enableRowSelection
-      rowSelection={rowSelection}
-      onRowSelectionChange={setRowSelection}
-      
-      noDataComponent={
-        <span className='flex flex-col justify-center p-2 text-center'>
-          <p>Список пуст</p>
-          <p 
-            className='cursor-pointer text-primary hover:underline'
-            onClick={() => handleCreateCst()}
-          >
-            Создать новую конституенту
-          </p>
-        </span>
-      }
-      />
-    </div>
+    <RSTable 
+      items={schema?.items}
+      selected={rowSelection}
+      setSelected={setRowSelection}
+      onEdit={onOpenEdit}
+      onCreateNew={() => handleCreateCst()}
+    />
   </div>);
 }
 
