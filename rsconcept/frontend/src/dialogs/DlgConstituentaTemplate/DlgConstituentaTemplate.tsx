@@ -147,7 +147,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
       <ConceptTooltip
         anchorSelect='#templates-help'
         className='max-w-[35rem] z-modal-tooltip'
-        offset={10}
+        offset={12}
       >
         <HelpRSTemplates />
       </ConceptTooltip>

@@ -70,8 +70,8 @@ function GraphToolbar({
     <div className='px-1 py-1' id='items-graph-help'>
       <HelpIcon color='text-primary' size={5} />
     </div>
-    <ConceptTooltip anchorSelect='#items-graph-help'>
-      <div className='text-sm max-w-[calc(100vw-20rem)] z-tooltip'>
+    <ConceptTooltip anchorSelect='#items-graph-help' offset={4}>
+      <div className='text-sm max-w-[calc(100vw-20rem)]'>
         <HelpTermGraph />
       </div>
     </ConceptTooltip>

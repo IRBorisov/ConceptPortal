@@ -106,7 +106,7 @@ function RSListToolbar({
     <div className='px-1 py-1' id='items-table-help'>
       <HelpIcon color='text-primary' size={5} />
     </div>
-    <ConceptTooltip anchorSelect='#items-table-help' offset={8}>
+    <ConceptTooltip anchorSelect='#items-table-help' offset={5}>
       <HelpRSFormItems />
     </ConceptTooltip>
   </div>

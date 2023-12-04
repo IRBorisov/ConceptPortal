@@ -58,7 +58,7 @@ function RSFormToolbar({
     <div id='rsform-help' className='py-1 ml-1'>
       <HelpIcon color='text-primary' size={5} />
     </div>
-    <ConceptTooltip anchorSelect='#rsform-help'>
+    <ConceptTooltip anchorSelect='#rsform-help' offset={4}>
       <HelpRSFormMeta />
     </ConceptTooltip>
   </div>
