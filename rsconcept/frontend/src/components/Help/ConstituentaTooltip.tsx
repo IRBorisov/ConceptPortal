@@ -9,13 +9,12 @@ interface ConstituentaTooltipProps {
 
 function ConstituentaTooltip({ data, anchor }: ConstituentaTooltipProps) {
   return (
-    <ConceptTooltip
-      anchorSelect={anchor}
-      className='max-w-[25rem] min-w-[25rem]'
-    >
-      <InfoConstituenta data={data} />
-    </ConceptTooltip>
-  );
+  <ConceptTooltip
+    anchorSelect={anchor}
+    className='max-w-[25rem] min-w-[25rem]'
+  >
+    <InfoConstituenta data={data} />
+  </ConceptTooltip>);
 }
 
 export default ConstituentaTooltip;

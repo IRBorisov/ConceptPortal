@@ -1,12 +1,13 @@
 import { useMemo } from 'react';
 
-import ConceptTooltip from '../../../components/Common/ConceptTooltip';
 import Dropdown from '../../../components/Common/Dropdown';
 import DropdownButton from '../../../components/Common/DropdownButton';
 import MiniButton from '../../../components/Common/MiniButton';
-import HelpRSFormItems from '../../../components/Help/HelpRSFormItems';
-import { ArrowDownIcon, ArrowDropdownIcon, ArrowUpIcon, CloneIcon, DiamondIcon, DumpBinIcon, HelpIcon, SmallPlusIcon, UpdateIcon } from '../../../components/Icons';
+import Overlay from '../../../components/Common/Overlay';
+import HelpButton from '../../../components/Help/HelpButton';
+import { ArrowDownIcon, ArrowDropdownIcon, ArrowUpIcon, CloneIcon, DiamondIcon, DumpBinIcon, SmallPlusIcon, UpdateIcon } from '../../../components/Icons';
 import useDropdown from '../../../hooks/useDropdown';
+import { HelpTopic } from '../../../models/miscelanious';
 import { CstType } from '../../../models/rsform';
 import { prefixes } from '../../../utils/constants';
 import { labelCstType } from '../../../utils/labels';
@@ -34,8 +35,7 @@ function RSListToolbar({
   const nothingSelected = useMemo(() => selectedCount === 0, [selectedCount]);
   
   return (
-  <div className='relative w-full z-pop'>
-  <div className='absolute flex items-start justify-center w-full top-1'>
+  <Overlay position='w-full top-1 flex items-start justify-center'>
     <MiniButton
       tooltip='Переместить вверх [Alt + вверх]'
       icon={<ArrowUpIcon size={5}/>}
@@ -103,14 +103,8 @@ function RSListToolbar({
       disabled={!isMutable || nothingSelected}
       onClick={onDelete}
     />
-    <div className='px-1 py-1' id='items-table-help'>
-      <HelpIcon color='text-primary' size={5} />
-    </div>
-    <ConceptTooltip anchorSelect='#items-table-help' offset={5}>
-      <HelpRSFormItems />
-    </ConceptTooltip>
-  </div>
-  </div>);
+    <HelpButton topic={HelpTopic.CSTLIST} offset={5} />
+  </Overlay>);
 }
 
 export default RSListToolbar;

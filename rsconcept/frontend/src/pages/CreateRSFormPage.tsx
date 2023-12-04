@@ -8,6 +8,7 @@ import Checkbox from '../components/Common/Checkbox';
 import Form from '../components/Common/Form';
 import Label from '../components/Common/Label';
 import MiniButton from '../components/Common/MiniButton';
+import Overlay from '../components/Common/Overlay';
 import SubmitButton from '../components/Common/SubmitButton';
 import TextArea from '../components/Common/TextArea';
 import TextInput from '../components/Common/TextInput';
@@ -78,13 +79,12 @@ function CreateRSFormPage() {
 
   return (
   <RequireAuth>
-  <div className='flex justify-center w-full'>
+  <div className='flex justify-center'>
   <Form title='Создание концептуальной схемы' 
     onSubmit={handleSubmit}
     dimensions='max-w-lg w-full mt-4'
   >
-    <div className='relative w-full'>
-    <div className='absolute top-[-2.4rem] right-[-1rem] flex'>
+    <Overlay position='top-[-2.4rem] right-[-1rem]'>
       <input ref={inputRef} type='file'
         style={{ display: 'none' }}
         accept={EXTEOR_TRS_FILE}
@@ -95,49 +95,47 @@ function CreateRSFormPage() {
         icon={<DownloadIcon size={5} color='text-primary'/>}
         onClick={() => inputRef.current?.click()}
       />
+    </Overlay>
+    {fileName ? <Label text={`Загружен файл: ${fileName}`} /> : null}
+
+    <TextInput
+      label='Полное название'
+      placeholder={file && 'Загрузить из файла'}
+      required={!file}
+      value={title}
+      onChange={event => setTitle(event.target.value)}
+    />
+    <TextInput dense
+      label='Сокращение' 
+      placeholder={file && 'Загрузить из файла'}
+      required={!file}
+      value={alias}
+      onChange={event => setAlias(event.target.value)}
+    />
+    <TextArea
+      label='Комментарий'
+      placeholder={file && 'Загрузить из файла'}
+      value={comment}
+      onChange={event => setComment(event.target.value)}
+    />
+    <Checkbox 
+      label='Общедоступная схема'
+      value={common}
+      setValue={value => setCommon(value ?? false)}
+    />
+    <div className='flex items-center justify-center gap-4 py-2'>
+      <SubmitButton 
+        text='Создать схему'
+        loading={processing}
+        dimensions='min-w-[10rem]'
+      />
+      <Button
+        text='Отмена'
+        dimensions='min-w-[10rem]'
+        onClick={() => handleCancel()}
+      />
     </div>
-    </div>
-    <div className='flex flex-col gap-3'>
-      {fileName ? <Label text={`Загружен файл: ${fileName}`} /> : null}
-      <TextInput
-        label='Полное название'
-        placeholder={file && 'Загрузить из файла'}
-        required={!file}
-        value={title}
-        onChange={event => setTitle(event.target.value)}
-      />
-      <TextInput dense
-        label='Сокращение' 
-        placeholder={file && 'Загрузить из файла'}
-        required={!file}
-        value={alias}
-        onChange={event => setAlias(event.target.value)}
-      />
-      <TextArea
-        label='Комментарий'
-        placeholder={file && 'Загрузить из файла'}
-        value={comment}
-        onChange={event => setComment(event.target.value)}
-      />
-      <Checkbox 
-        label='Общедоступная схема'
-        value={common}
-        setValue={value => setCommon(value ?? false)}
-      />
-      <div className='flex items-center justify-center gap-4 py-2'>
-        <SubmitButton 
-          text='Создать схему'
-          loading={processing}
-          dimensions='min-w-[10rem]'
-        />
-        <Button
-          text='Отмена'
-          dimensions='min-w-[10rem]'
-          onClick={() => handleCancel()}
-        />
-      </div>
-      {error ? <BackendError error={error} /> : null}
-    </div>
+    {error ? <BackendError error={error} /> : null}
   </Form>
   </div>
   </RequireAuth>);

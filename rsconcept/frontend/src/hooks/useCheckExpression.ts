@@ -1,8 +1,8 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState } from 'react';
 
 import { type ErrorInfo } from '../components/BackendError';
 import { CstType, IConstituenta, type IRSForm } from '../models/rsform';
-import { IExpressionParse, IArgumentInfo } from '../models/rslang';
+import { IArgumentInfo,IExpressionParse } from '../models/rslang';
 import { RSErrorType } from '../models/rslang';
 import { DataCallback, postCheckExpression } from '../utils/backendAPI';
 import { getCstExpressionPrefix } from '../utils/misc';

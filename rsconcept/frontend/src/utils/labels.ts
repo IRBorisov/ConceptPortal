@@ -482,7 +482,7 @@ export function labelSyntaxTree(node: ISyntaxTreeNode): string {
 }
 
 export function labelGrammeme(gram: GramData): string {
-  switch (gram) {
+  switch (gram as Grammeme) {
   default: return `Неизв: ${gram}`;
 
   case Grammeme.NOUN: return 'ЧР: сущ';

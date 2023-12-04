@@ -14,7 +14,7 @@ function SubmitButton({
   return (
   <button type='submit'
     title={tooltip}
-    className={`px-4 py-2 inline-flex items-center gap-2 align-middle justify-center font-semibold select-none disabled:cursor-not-allowed border rounded clr-btn-primary ${dimensions} ${loading ? ' cursor-progress' : ''}`}
+    className={`px-3 py-2 inline-flex items-center gap-2 align-middle justify-center font-semibold select-none disabled:cursor-not-allowed border clr-btn-primary ${dimensions} ${loading ? ' cursor-progress' : ''}`}
     disabled={disabled ?? loading}
     {...restProps}
   >

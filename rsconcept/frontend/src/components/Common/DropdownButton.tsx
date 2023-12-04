@@ -9,15 +9,14 @@ function DropdownButton({ tooltip, onClick, disabled, children }: DropdownButton
   const behavior = onClick ? 'cursor-pointer disabled:cursor-not-allowed clr-hover' : 'cursor-default';
   const text = disabled ? 'text-controls' : '';
   return (
-    <button type='button'
-      disabled={disabled}
-      title={tooltip}
-      onClick={onClick}
-      className={`px-3 py-1 text-left overflow-ellipsis whitespace-nowrap ${behavior} ${text}`}
-    >
-      {children}
-    </button>
-  );
+  <button type='button'
+    disabled={disabled}
+    title={tooltip}
+    onClick={onClick}
+    className={`px-3 py-1 text-left overflow-ellipsis whitespace-nowrap ${behavior} ${text}`}
+  >
+    {children}
+  </button>);
 }
 
 export default DropdownButton;

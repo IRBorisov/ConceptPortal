@@ -68,9 +68,8 @@ function EditorPassword() {
   }, [newPassword, oldPassword, newPasswordRepeat, setError]);
 
   return (
-  <div className='flex py-2 border-l-2 max-w-[14rem]'>
   <form
-    className='flex flex-col justify-between px-6'
+    className='flex flex-col justify-between px-6 border-l-2 max-w-[14rem] py-2'
     onSubmit={handleSubmit}
   >
     <div className='flex flex-col gap-3'>
@@ -104,8 +103,7 @@ function EditorPassword() {
         loading={loading}
       />
     </div>
-  </form>
-  </div>);
+  </form>);
 }
 
 export default EditorPassword;

@@ -13,7 +13,8 @@ interface ConstituentaBadgeProps {
 }
 
 function ConstituentaBadge({ value, prefixID, shortTooltip, theme }: ConstituentaBadgeProps) {
-  return (<div className='w-fit'>
+  return (
+  <div className='w-fit'>
     <div
       id={`${prefixID}${value.alias}`}
       className='min-w-[3.1rem] max-w-[3.1rem] px-1 text-center rounded-md whitespace-nowrap'

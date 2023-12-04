@@ -1,17 +1,16 @@
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
-import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import TextURL from '../../components/Common/TextURL';
 import DataTable, { createColumnHelper } from '../../components/DataTable';
-import HelpLibrary from '../../components/Help/HelpLibrary';
-import { EducationIcon, GroupIcon, HelpIcon,SubscribedIcon } from '../../components/Icons';
+import HelpButton from '../../components/Help/HelpButton';
 import { useAuth } from '../../context/AuthContext';
 import { useConceptNavigation } from '../../context/NagivationContext';
 import { useUsers } from '../../context/UsersContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { ILibraryItem } from '../../models/library';
-import { prefixes } from '../../utils/constants';
+import { HelpTopic } from '../../models/miscelanious';
+import ItemIcons from './ItemIcons';
 
 interface ViewLibraryProps {
   items: ILibraryItem[]
@@ -25,10 +24,9 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
   const intl = useIntl();
   const { user } = useAuth();
   const { getUserLabel } = useUsers();
+  const [itemsPerPage, setItemsPerPage] = useLocalStorage<number>('library_per_page', 50);
 
-  const [ itemsPerPage, setItemsPerPage ] = useLocalStorage<number>('library_per_page', 50);
-
-  const openRSForm = (item: ILibraryItem) => navigateTo(`/rsforms/${item.id}`);
+  const handleOpenItem = (item: ILibraryItem) => navigateTo(`/rsforms/${item.id}`);
 
   const columns = useMemo(
   () => [
@@ -38,28 +36,11 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
       size: 60,
       minSize: 60,
       maxSize: 60,
-      cell: props => {
-        const item = props.row.original;
-        return (<>
-          <div
-            className='flex items-center justify-start gap-1 min-w-[2.75rem]'
-            id={`${prefixes.library_list}${item.id}`}
-          >
-            {(user && user.subscriptions.includes(item.id)) ?
-            <p title='Отслеживаемая'>
-              <SubscribedIcon size={3}/>
-            </p> : null}
-            {item.is_common ?
-            <p title='Общедоступная'>
-              <GroupIcon size={3}/>
-            </p> : null}
-            {item.is_canonical ?
-            <p title='Неизменная'>
-              <EducationIcon size={3}/>
-            </p> : null}
-          </div>
-        </>);
-      },
+      cell: props => 
+        <ItemIcons
+          item={props.row.original}
+          user={user}
+        />,
     }),
     columnHelper.accessor('alias', {
       id: 'alias',
@@ -95,7 +76,10 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
       size: 150,
       minSize: 150,
       maxSize: 150,
-      cell: props => <div className='text-sm min-w-[8.25rem]'>{new Date(props.cell.getValue()).toLocaleString(intl.locale)}</div>,
+      cell: props =>
+        <div className='text-sm min-w-[8.25rem]'>
+          {new Date(props.cell.getValue()).toLocaleString(intl.locale)}
+        </div>,
       enableSorting: true,
       sortingFn: 'datetime',
       sortDescFirst: true
@@ -104,36 +88,30 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
   
   return (
   <>
-    {items.length !== 0 ?
     <div className='sticky top-[2.3rem] w-full'>
-    <div className='absolute top-[-0.125rem] left-0 flex gap-1 ml-3 z-pop'>
-      <div id='library-help' className='py-2 '>
-        <HelpIcon color='text-primary' size={5} />
-      </div>
-      <ConceptTooltip anchorSelect='#library-help'>
-        <div className='max-w-[35rem]'>
-          <HelpLibrary />
-        </div>
-      </ConceptTooltip>
+    <div className='absolute top-[0.125rem] left-[0.25rem] flex gap-1 ml-3 z-pop'>
+      <HelpButton
+        topic={HelpTopic.LIBRARY}
+        dimensions='max-w-[35rem]'
+        offset={0}
+      />
     </div>
-    </div> : null}
+    </div>
     <DataTable
       columns={columns}
       data={items}
 
       headPosition='2.3rem'
       noDataComponent={
-      <div className='flex flex-col gap-4 justify-center p-2 text-center min-h-[6rem]'>
+      <div className='p-3 text-center min-h-[6rem]'>
         <p>Список схем пуст</p>
-        <p className='flex justify-center gap-4'>
+        <p className='flex justify-center gap-6 mt-3'>
           <TextURL text='Создать схему' href='/rsform-create'/>
-          <span className='cursor-pointer hover:underline text-url' onClick={cleanQuery}>
-            Очистить фильтр
-          </span>
+          <TextURL text='Очистить фильтр' onClick={cleanQuery} />
         </p>
       </div>}
       
-      onRowClicked={openRSForm}
+      onRowClicked={handleOpenItem}
 
       enableSorting
       initialSorting={{

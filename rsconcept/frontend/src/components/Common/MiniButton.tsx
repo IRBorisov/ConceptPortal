@@ -12,15 +12,14 @@ function MiniButton({
   ...restProps
 }: MiniButtonProps) {
   return (
-    <button type='button'
-      title={tooltip}
-      tabIndex={tabIndex ?? -1}
-      className={`px-1 py-1 rounded-full cursor-pointer disabled:cursor-not-allowed clr-btn-clear ${noHover ? 'outline-none' : 'clr-hover'} ${dimensions}`}
-      {...restProps}
-    >
-      {icon}
-    </button>
-  );
+  <button type='button'
+    title={tooltip}
+    tabIndex={tabIndex ?? -1}
+    className={`px-1 py-1 rounded-full cursor-pointer disabled:cursor-not-allowed clr-btn-clear ${noHover ? 'outline-none' : 'clr-hover'} ${dimensions}`}
+    {...restProps}
+  >
+    {icon}
+  </button>);
 }
 
 export default MiniButton;

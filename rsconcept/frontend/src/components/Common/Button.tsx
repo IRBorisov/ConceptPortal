@@ -1,4 +1,4 @@
-import { IColorsProps, IControlProps } from '../commonInterfaces'
+import { IColorsProps, IControlProps } from '../commonInterfaces';
 
 interface ButtonProps
 extends IControlProps, IColorsProps, Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'children' | 'title'| 'type'> {

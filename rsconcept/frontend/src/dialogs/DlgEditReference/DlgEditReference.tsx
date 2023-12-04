@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import ConceptTab from '../../components/Common/ConceptTab';
-import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import Modal from '../../components/Common/Modal';
-import HelpTerminologyControl from '../../components/Help/HelpTerminologyControl';
-import { HelpIcon } from '../../components/Icons';
+import Overlay from '../../components/Common/Overlay';
+import HelpButton from '../../components/Help/HelpButton';
 import { ReferenceType } from '../../models/language';
+import { HelpTopic } from '../../models/miscelanious';
 import { IConstituenta } from '../../models/rsform';
 import { labelReferenceType } from '../../utils/labels';
 import EntityTab from './EntityTab';
@@ -48,38 +48,28 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
     canSubmit={isValid}
     onSubmit={handleSubmit}
   >
-  <div className='min-w-[40rem] max-w-[40rem] flex flex-col gap-3 mb-2 min-h-[34rem]'>
   <Tabs defaultFocus
-    className='flex flex-col items-center'
+    className='flex flex-col items-center min-w-[40rem] max-w-[40rem] mb-2 min-h-[34rem]'
     selectedTabClassName='clr-selected'
     selectedIndex={activeTab}
     onSelect={setActiveTab}
   >
-    <div className='flex gap-1 pl-6 mb-3'>
-      <TabList className='flex border'>
-        <ConceptTab
-          label={labelReferenceType(ReferenceType.ENTITY)}
-          tooltip='Отсылка на термин в заданной словоформе'
-          className='w-[12rem] border-r-2'
-        />
-        <ConceptTab
-          label={labelReferenceType(ReferenceType.SYNTACTIC)}
-          tooltip='Установление синтаксической связи с отсылкой на термин'
-          className='w-[12rem]'
-        />
-      </TabList>
+    <Overlay position='top-0 left-[12.2rem]'>
+      <HelpButton topic={HelpTopic.TERM_CONTROL} dimensions='max-w-[38rem]' offset={14} />
+    </Overlay>
 
-      <div id='terminology-help' className='px-1 py-1'>
-        <HelpIcon color='text-primary' size={5} />
-      </div>
-      <ConceptTooltip
-        anchorSelect='#terminology-help'
-        className='max-w-[30rem] z-modal-tooltip'
-        offset={10}
-      >
-        <HelpTerminologyControl />
-      </ConceptTooltip>
-    </div>
+    <TabList className='flex mb-3 border'>
+      <ConceptTab
+        label={labelReferenceType(ReferenceType.ENTITY)}
+        tooltip='Отсылка на термин в заданной словоформе'
+        className='w-[12rem] border-r-2'
+      />
+      <ConceptTab
+        label={labelReferenceType(ReferenceType.SYNTACTIC)}
+        tooltip='Установление синтаксической связи с отсылкой на термин'
+        className='w-[12rem]'
+      />
+    </TabList>
     
     <div className='w-full'>
       <TabPanel>
@@ -100,7 +90,6 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
       </TabPanel>
     </div>
   </Tabs>
-  </div>
   </Modal>);
 }
 

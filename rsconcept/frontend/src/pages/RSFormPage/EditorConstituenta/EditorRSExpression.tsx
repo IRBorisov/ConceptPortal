@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import Button from '../../../components/Common/Button';
 import { ConceptLoader } from '../../../components/Common/ConceptLoader';
 import MiniButton from '../../../components/Common/MiniButton';
+import Overlay from '../../../components/Common/Overlay';
 import { ASTNetworkIcon } from '../../../components/Icons';
 import RSInput from '../../../components/RSInput';
 import { RSTextWrapper } from '../../../components/RSInput/textEditing';
@@ -118,16 +119,13 @@ function EditorRSExpression({
 
   return (
   <div className='flex flex-col items-start w-full'>
-    <div className='relative w-full'>
-      <div className='absolute top-[-0.2rem] left-[11rem]'>
-      <MiniButton
-          tooltip='Дерево разбора выражения'
-          noHover
-          onClick={handleShowAST}
-          icon={<ASTNetworkIcon size={5} color='text-primary' />}
-        />
-      </div>
-    </div>
+    <Overlay position='top-[-0.2rem] left-[11rem]'>
+      <MiniButton noHover
+        tooltip='Дерево разбора выражения'
+        onClick={handleShowAST}
+        icon={<ASTNetworkIcon size={5} color='text-primary' />}
+      />
+     </Overlay>
     <RSInput innerref={rsInput}
       value={value}
       minHeight='3.8rem'

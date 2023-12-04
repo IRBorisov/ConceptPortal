@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState } from 'react';
 
 import { ErrorInfo } from '../components/BackendError';
 import { IResolutionData } from '../models/language';

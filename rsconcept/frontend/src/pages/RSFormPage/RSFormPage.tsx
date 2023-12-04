@@ -6,10 +6,9 @@ import RSTabs from './RSTabs';
 function RSFormPage() {
   const { id } = useParams();
   return (
-    <RSFormState schemaID={id ?? ''}>
-      <RSTabs />
-    </RSFormState>
-  );
+  <RSFormState schemaID={id ?? ''}>
+    <RSTabs />
+  </RSFormState>);
 }
 
 export default RSFormPage;

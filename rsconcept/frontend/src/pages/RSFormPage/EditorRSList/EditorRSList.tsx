@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { type RowSelectionState } from '../../../components/DataTable';
 import SelectedCounter from '../../../components/Shared/SelectedCounter';
 import { useRSForm } from '../../../context/RSFormContext';
-import { CstType, ICstCreateData, ICstMovetoData } from '../../../models/rsform'
+import { CstType, ICstCreateData, ICstMovetoData } from '../../../models/rsform';
 import RSListToolbar from './RSListToolbar';
 import RSTable from './RSTable';
 

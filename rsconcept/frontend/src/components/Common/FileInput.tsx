@@ -38,25 +38,24 @@ function FileInput({
   };
 
   return (
-    <div className={`flex flex-col gap-2 py-2 items-start ${dimensions}`}>
-      <input type='file'
-        ref={inputRef}
-        style={{ display: 'none' }}
-        accept={acceptType}
-        onChange={handleFileChange}
-        {...restProps}
-      />
-      <Button
-        text={label}
-        icon={<UploadIcon/>}
-        onClick={handleUploadClick}
-        tooltip={tooltip}
-      />
-      <Label
-        text={fileName}
-      />
-    </div>
-  );
+  <div className={`flex flex-col gap-2 py-2 items-start ${dimensions}`}>
+    <input type='file'
+      ref={inputRef}
+      style={{ display: 'none' }}
+      accept={acceptType}
+      onChange={handleFileChange}
+      {...restProps}
+    />
+    <Button
+      text={label}
+      icon={<UploadIcon/>}
+      onClick={handleUploadClick}
+      tooltip={tooltip}
+    />
+    <Label
+      text={fileName}
+    />
+  </div>);
 }
 
 export default FileInput;

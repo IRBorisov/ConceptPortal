@@ -2,11 +2,11 @@ import { useLayoutEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import ConceptTab from '../../components/Common/ConceptTab';
-import ConceptTooltip from '../../components/Common/ConceptTooltip';
 import Modal, { ModalProps } from '../../components/Common/Modal';
-import HelpRSTemplates from '../../components/Help/HelpRSTemplates';
-import { HelpIcon } from '../../components/Icons';
+import Overlay from '../../components/Common/Overlay';
+import HelpButton from '../../components/Help/HelpButton';
 import usePartialUpdate from '../../hooks/usePartialUpdate';
+import { HelpTopic } from '../../models/miscelanious';
 import { CstType, ICstCreateData, IRSForm } from '../../models/rsform';
 import { inferTemplatedType, substituteTemplateArgs } from '../../models/rslangAPI';
 import { createAliasFor, validateCstAlias } from '../../utils/misc';
@@ -115,43 +115,33 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     onSubmit={handleSubmit}
     submitText='Создать'
   >
-  <div className='max-w-[40rem] min-w-[40rem] min-h-[35rem] px-2 mb-1'>
   <Tabs defaultFocus forceRenderTabPanel
-    className='flex flex-col items-center'
+    className='flex flex-col items-center max-w-[40rem] min-w-[40rem] min-h-[35rem] mb-1'
     selectedTabClassName='clr-selected'
     selectedIndex={activeTab}
     onSelect={setActiveTab}
   >
-    <div className='flex gap-1 pl-6 mb-3'>
-      <TabList className='flex border'>
-        <ConceptTab
-          label='Шаблон'
-          tooltip='Выбор шаблона выражения'
-          className='border-r w-[8rem]'
-        />
-        <ConceptTab
-          label='Аргументы'
-          tooltip='Подстановка аргументов шаблона'
-          className='border-r w-[8rem]'
-        />
-        <ConceptTab
-          label='Конституента'
-          tooltip='Редактирование атрибутов конституенты'
-          className='w-[8rem]'
-        />
-      </TabList>
-
-      <div id='templates-help' className='px-1 py-1'>
-        <HelpIcon color='text-primary' size={5} />
-      </div>
-      <ConceptTooltip
-        anchorSelect='#templates-help'
-        className='max-w-[35rem] z-modal-tooltip'
-        offset={12}
-      >
-        <HelpRSTemplates />
-      </ConceptTooltip>
-    </div>
+    <Overlay position='top-0 left-[12.3rem]'>
+      <HelpButton topic={HelpTopic.RSTEMPLATES} dimensions='max-w-[35rem]' />
+    </Overlay>
+    
+    <TabList className='flex mb-3 border'>
+      <ConceptTab
+        label='Шаблон'
+        tooltip='Выбор шаблона выражения'
+        className='border-r w-[8rem]'
+      />
+      <ConceptTab
+        label='Аргументы'
+        tooltip='Подстановка аргументов шаблона'
+        className='border-r w-[8rem]'
+      />
+      <ConceptTab
+        label='Конституента'
+        tooltip='Редактирование атрибутов конституенты'
+        className='w-[8rem]'
+      />
+    </TabList>
     
     <div className='w-full'>
       <TabPanel style={{ display: activeTab === TabID.TEMPLATE ? '': 'none' }}>
@@ -177,7 +167,6 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
       </TabPanel>
     </div>
   </Tabs>
-  </div>
   </Modal>);
 }
 

@@ -18,7 +18,7 @@ function GraphSidebar({
   layout, setLayout
 } : GraphSidebarProps) {
   return (
-    <div className='flex flex-col px-2 pb-2 text-sm select-none mt-9 h-fit'>        
+    <div className='flex flex-col px-2 text-sm select-none mt-9 h-fit'>        
     <SelectSingle
       placeholder='Выберите цвет'
       options={SelectorGraphColoring}

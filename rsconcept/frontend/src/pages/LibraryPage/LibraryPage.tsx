@@ -1,7 +1,7 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
 
-import BackendError from '../../components/BackendError'
-import { ConceptLoader } from '../../components/Common/ConceptLoader'
+import BackendError from '../../components/BackendError';
+import { ConceptLoader } from '../../components/Common/ConceptLoader';
 import { useLibrary } from '../../context/LibraryContext';
 import { useConceptTheme } from '../../context/ThemeContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
@@ -14,8 +14,8 @@ function LibraryPage() {
   const library = useLibrary();
   const { setShowScroll } = useConceptTheme();
   
-  const [ filter, setFilter ] = useState<ILibraryFilter>({});
-  const [ items, setItems ] = useState<ILibraryItem[]>([]);
+  const [filter, setFilter] = useState<ILibraryFilter>({});
+  const [items, setItems] = useState<ILibraryItem[]>([]);
 
   const [query, setQuery] = useState('');
   const [strategy, setStrategy] = useLocalStorage<LibraryFilterStrategy>('search_strategy', LibraryFilterStrategy.MANUAL);
@@ -42,7 +42,7 @@ function LibraryPage() {
     {library.loading ? <ConceptLoader/> : null}
     {library.error ? <BackendError error={library.error}/> : null}
     {(!library.loading && library.items) ? 
-    <div className='flex flex-col w-full'>
+    <>
       <SearchPanel
         query={query}
         setQuery={setQuery}
@@ -56,7 +56,7 @@ function LibraryPage() {
         resetQuery={resetQuery}
         items={items} 
       />
-    </div> : null}
+    </> : null}
   </>);
 }
 

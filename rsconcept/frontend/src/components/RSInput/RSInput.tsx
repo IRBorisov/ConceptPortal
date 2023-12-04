@@ -118,12 +118,11 @@ function RSInput({
   }, [thisRef]);
 
   return (
-    <div className={`flex flex-col ${dimensions} ${cursor}`}>
+  <div className={`flex flex-col gap-2 ${dimensions} ${cursor}`}>
     {label ?
     <Label
       text={label}
       htmlFor={id}
-      className='mb-2'
     /> : null}
     <CodeMirror id={id}
       ref={thisRef}
@@ -136,8 +135,7 @@ function RSInput({
       onKeyDown={handleInput}
       {...restProps}
     />
-    </div>
-  );
+  </div>);
 }
 
 export default RSInput;

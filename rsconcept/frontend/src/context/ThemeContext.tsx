@@ -75,15 +75,14 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
   }, [noNavigation]);
 
   return (
-    <ThemeContext.Provider value={{
-      darkMode, colors,
-      noNavigation, noFooter, showScroll,
-      toggleDarkMode: () => setDarkMode(prev => !prev),
-      toggleNoNavigation: () => setNoNavigation(prev => !prev),
-      setNoFooter, setShowScroll,
-      viewportHeight, mainHeight
-    }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  <ThemeContext.Provider value={{
+    darkMode, colors,
+    noNavigation, noFooter, showScroll,
+    toggleDarkMode: () => setDarkMode(prev => !prev),
+    toggleNoNavigation: () => setNoNavigation(prev => !prev),
+    setNoFooter, setShowScroll,
+    viewportHeight, mainHeight
+  }}>
+    {children}
+  </ThemeContext.Provider>);
 }

@@ -22,20 +22,19 @@ function TextInput({
   const borderClass = noBorder ? '' : 'border';
   const outlineClass = noOutline ? '' : 'clr-outline';
   return (
-    <div className={`flex ${dense ? 'items-center gap-4 ' + dimensions : 'flex-col items-start gap-2'}`}>
-      {label ?
-      <Label
-        text={label}
-        htmlFor={id}
-      /> : null}
-      <input id={id}
-        title={tooltip}
-        onKeyDown={!allowEnter && !onKeyDown ? preventEnterCapture : onKeyDown}
-        className={`px-3 py-2 leading-tight truncate hover:text-clip ${colors} ${outlineClass} ${borderClass} ${dense ? 'w-full' : dimensions}`}
-        {...restProps}
-      />
-    </div>
-  );
+  <div className={`flex ${dense ? 'items-center gap-4 ' + dimensions : 'flex-col items-start gap-2'}`}>
+    {label ?
+    <Label
+      text={label}
+      htmlFor={id}
+    /> : null}
+    <input id={id}
+      title={tooltip}
+      onKeyDown={!allowEnter && !onKeyDown ? preventEnterCapture : onKeyDown}
+      className={`px-3 py-2 leading-tight truncate hover:text-clip ${colors} ${outlineClass} ${borderClass} ${dense ? 'w-full' : dimensions}`}
+      {...restProps}
+    />
+  </div>);
 }
 
 export default TextInput;

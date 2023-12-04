@@ -219,7 +219,6 @@ function RefsInput({
       onKeyDown={handleInput}
       onFocus={handleFocusIn}
       onBlur={handleFocusOut}
-      spellCheck
       // spellCheck= // TODO: figure out while automatic spellcheck doesnt work or implement with extension
       {...restProps}
     />

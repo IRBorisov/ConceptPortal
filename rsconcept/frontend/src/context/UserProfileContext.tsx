@@ -68,7 +68,7 @@ export const UserProfileState = ({ children }: UserProfileStateProps) => {
         if (callback) callback(newData);
       }
     });
-  }, [setUser, users]);
+  }, [setUser, users, user?.id]);
 
   useEffect(() => {
     reload();

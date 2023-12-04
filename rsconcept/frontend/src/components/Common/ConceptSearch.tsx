@@ -14,10 +14,9 @@ function ConceptSearch({ value, onChange, dense }: ConceptSearchProps) {
     <div className='absolute inset-y-0 flex items-center pl-3 pointer-events-none text-controls'>
       <MagnifyingGlassIcon />
     </div>
-    <TextInput
-      dimensions={`w-full pl-10 ${borderClass} rounded`}
+    <TextInput noOutline
       placeholder='Поиск'
-      noOutline
+      dimensions={`w-full pl-10 ${borderClass}`}
       noBorder={dense}
       value={value}
       onChange={event => (onChange ? onChange(event.target.value) : undefined)}

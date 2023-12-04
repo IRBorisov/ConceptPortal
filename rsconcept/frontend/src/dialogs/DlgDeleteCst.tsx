@@ -15,7 +15,7 @@ extends Pick<ModalProps, 'hideWindow'> {
 function DlgDeleteCst({ hideWindow, selected, onDelete }: DlgDeleteCstProps) {
   const { schema } = useRSForm();
 
-  const [ expandOut, setExpandOut ] = useState(false);
+  const [expandOut, setExpandOut] = useState(false);
   const expansion: number[] = useMemo(() => schema?.graph.expandOutputs(selected) ?? [], [selected, schema?.graph]);
 
   function handleSubmit() {
@@ -28,11 +28,10 @@ function DlgDeleteCst({ hideWindow, selected, onDelete }: DlgDeleteCstProps) {
   }
 
   return (
-  <Modal
+  <Modal canSubmit
     title='Удаление конституент'
     submitText={expandOut ? 'Удалить с зависимыми' : 'Удалить'}
     hideWindow={hideWindow}
-    canSubmit={true}
     onSubmit={handleSubmit}
   >
   <div className='max-w-[60vw] min-w-[30rem]'>

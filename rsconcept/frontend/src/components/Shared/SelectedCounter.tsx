@@ -1,3 +1,5 @@
+import Overlay from '../Common/Overlay';
+
 interface SelectedCounterProps {
   total: number
   selected: number
@@ -13,11 +15,12 @@ function SelectedCounter({
     return null;
   }
   return (
-  <div className='relative w-full z-pop'>
-  <div className={`absolute px-2 select-none whitespace-nowrap small-caps clr-app ${position}`}>
+  <Overlay
+    position={`px-2 ${position}`}
+    className='select-none whitespace-nowrap small-caps clr-app'
+  >
     Выбор {selected} из {total}
-  </div>
-  </div>);
+  </Overlay>);
 }
 
 export default SelectedCounter;

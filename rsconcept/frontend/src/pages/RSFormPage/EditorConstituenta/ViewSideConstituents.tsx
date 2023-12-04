@@ -194,7 +194,7 @@ function ViewSideConstituents({ expression, baseHeight, activeID, onOpenEdit }: 
   }, [noNavigation, baseHeight]);
 
   return (<>
-    <div className='sticky top-0 left-0 right-0 flex items-stretch justify-between gap-1 pl-2 border-b clr-input'>
+    <div className='relative top-0 left-0 right-0 flex items-stretch justify-between gap-1 pl-2 border-b clr-input'>
       <div className='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-controls'>
         <MagnifyingGlassIcon />
       </div>

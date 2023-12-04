@@ -1,23 +1,23 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
-import { type ErrorInfo } from '../components/BackendError'
-import { useRSFormDetails } from '../hooks/useRSFormDetails'
-import { ILibraryItem } from '../models/library'
-import { ILibraryUpdateData } from '../models/library'
+import { type ErrorInfo } from '../components/BackendError';
+import { useRSFormDetails } from '../hooks/useRSFormDetails';
+import { ILibraryItem } from '../models/library';
+import { ILibraryUpdateData } from '../models/library';
 import {
   IConstituentaList, IConstituentaMeta, ICstCreateData,
   ICstMovetoData, ICstRenameData, ICstUpdateData, 
   IRSForm, IRSFormUploadData
-} from '../models/rsform'
+} from '../models/rsform';
 import {
   type DataCallback, deleteUnsubscribe,
 getTRSFile,
   patchConstituenta, patchDeleteConstituenta,
 patchLibraryItem,
   patchMoveConstituenta, patchRenameConstituenta,
-  patchResetAliases,   patchUploadTRS,  postClaimLibraryItem, postNewConstituenta, postSubscribe} from '../utils/backendAPI'
-import { useAuth } from './AuthContext'
-import { useLibrary } from './LibraryContext'
+  patchResetAliases,   patchUploadTRS,  postClaimLibraryItem, postNewConstituenta, postSubscribe} from '../utils/backendAPI';
+import { useAuth } from './AuthContext';
+import { useLibrary } from './LibraryContext';
 
 interface IRSFormContext {
   schema?: IRSForm
@@ -27,14 +27,14 @@ interface IRSFormContext {
   processing: boolean
 
   isMutable: boolean
-  adminMode: boolean
   isOwned: boolean
   isClaimable: boolean
-  isReadonly: boolean
   isTracking: boolean
-
-  toggleForceAdmin: () => void
-  toggleReadonly: () => void
+  
+  adminMode: boolean
+  toggleAdminMode: () => void
+  readerMode: boolean
+  toggleReaderMode: () => void
   
   update: (data: ILibraryUpdateData, callback?: DataCallback<ILibraryItem>) => void
   claim: (callback?: DataCallback<ILibraryItem>) => void
@@ -56,11 +56,9 @@ const RSFormContext = createContext<IRSFormContext | null>(null)
 export const useRSForm = () => {
   const context = useContext(RSFormContext)
   if (context === null) {
-    throw new Error(
-      'useRSForm has to be used within <RSFormState.Provider>'
-    )
+    throw new Error('useRSForm has to be used within <RSFormState.Provider>');
   }
-  return context
+  return context;
 }
 
 interface RSFormStateProps {
@@ -72,11 +70,11 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
   const library = useLibrary();
   const { user } = useAuth();
   const { schema, reload, error, setError, setSchema, loading } = useRSFormDetails({ target: schemaID });
-  const [ processing, setProcessing ] = useState(false);
+  const [processing, setProcessing] = useState(false);
 
-  const [ adminMode, setAdminMode ] = useState(false);
-  const [ isReadonly, setIsReadonly ] = useState(false);
-  const [ toggleTracking, setToggleTracking ] = useState(false);
+  const [adminMode, setAdminMode] = useState(false);
+  const [readerMode, setReaderMode] = useState(false);
+  const [toggleTracking, setToggleTracking] = useState(false);
 
   const isOwned = useMemo(
   () => {
@@ -91,10 +89,10 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
   const isMutable = useMemo(
   () => {
     return (
-      !loading && !processing && !isReadonly &&
+      !loading && !processing && !readerMode &&
       ((isOwned || (adminMode && user?.is_staff)) ?? false)
     );
-  }, [user?.is_staff, isReadonly, adminMode, isOwned, loading, processing]);
+  }, [user?.is_staff, readerMode, adminMode, isOwned, loading, processing]);
 
   const isTracking = useMemo(
   () => {
@@ -319,17 +317,16 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
   }, [schemaID, setError, library, setSchema]);
 
   return (
-    <RSFormContext.Provider value={{
-      schema,
-      error, loading, processing,
-      adminMode, isReadonly, isOwned, isMutable,
-      isClaimable, isTracking,
-      toggleForceAdmin: () => setAdminMode(prev => !prev),
-      toggleReadonly: () => setIsReadonly(prev => !prev),
-      update, download, upload, claim, resetAliases, subscribe, unsubscribe,
-      cstUpdate, cstCreate, cstRename, cstDelete, cstMoveTo
-    }}>
-      { children }
-    </RSFormContext.Provider>
-  );
+  <RSFormContext.Provider value={{
+    schema,
+    error, loading, processing,
+    adminMode, readerMode, isOwned, isMutable,
+    isClaimable, isTracking,
+    update, download, upload, claim, resetAliases, subscribe, unsubscribe,
+    cstUpdate, cstCreate, cstRename, cstDelete, cstMoveTo,
+    toggleAdminMode: () => setAdminMode(prev => !prev),
+    toggleReaderMode: () => setReaderMode(prev => !prev)
+  }}>
+    { children }
+  </RSFormContext.Provider>);
 }

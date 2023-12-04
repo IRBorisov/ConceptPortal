@@ -53,21 +53,20 @@ function SelectMulti<Option, Group extends GroupBase<Option> = GroupBase<Option>
   }), [colors]);
 
   return (
-    <Select isMulti
-      noOptionsMessage={() => 'Список пуст'}
-      theme={theme => ({
-        ...theme,
-        borderRadius: 0,
-        colors: {
-          ...theme.colors,
-          ...themeColors
-        },
-      })}
-      menuPortalTarget={!noPortal ? document.body : null}
-      styles={adjustedStyles}
-      {...restProps}
-    />
-  );
+  <Select isMulti
+    noOptionsMessage={() => 'Список пуст'}
+    theme={theme => ({
+      ...theme,
+      borderRadius: 0,
+      colors: {
+        ...theme.colors,
+        ...themeColors
+      },
+    })}
+    menuPortalTarget={!noPortal ? document.body : null}
+    styles={adjustedStyles}
+    {...restProps}
+  />);
 }
 
 export default SelectMulti;

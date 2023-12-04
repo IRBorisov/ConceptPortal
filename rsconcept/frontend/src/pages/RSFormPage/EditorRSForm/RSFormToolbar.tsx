@@ -1,9 +1,10 @@
-import { useMemo } from 'react'
+import { useMemo } from 'react';
 
-import ConceptTooltip from '../../../components/Common/ConceptTooltip'
-import MiniButton from '../../../components/Common/MiniButton'
-import HelpRSFormMeta from '../../../components/Help/HelpRSFormMeta'
-import { DownloadIcon, DumpBinIcon, HelpIcon, OwnerIcon, SaveIcon, ShareIcon } from '../../../components/Icons'
+import MiniButton from '../../../components/Common/MiniButton';
+import Overlay from '../../../components/Common/Overlay';
+import HelpButton from '../../../components/Help/HelpButton';
+import { DownloadIcon, DumpBinIcon, OwnerIcon, SaveIcon, ShareIcon } from '../../../components/Icons';
+import { HelpTopic } from '../../../models/miscelanious';
 
 interface RSFormToolbarProps {
   isMutable: boolean
@@ -25,8 +26,7 @@ function RSFormToolbar({
 }: RSFormToolbarProps) {
   const canSave = useMemo(() => (modified && isMutable), [modified, isMutable]);
   return (    
-  <div className='relative flex items-start justify-center w-full'>
-  <div className='absolute flex mt-1'>
+  <Overlay position='w-full top-1 flex items-start justify-center'>
     <MiniButton
       tooltip='Сохранить изменения'
       disabled={!canSave}
@@ -55,14 +55,8 @@ function RSFormToolbar({
       onClick={onDestroy}
       icon={<DumpBinIcon size={5} color={isMutable ? 'text-warning' : ''} />}
     />
-    <div id='rsform-help' className='py-1 ml-1'>
-      <HelpIcon color='text-primary' size={5} />
-    </div>
-    <ConceptTooltip anchorSelect='#rsform-help' offset={4}>
-      <HelpRSFormMeta />
-    </ConceptTooltip>
-  </div>
-  </div>);
+    <HelpButton topic={HelpTopic.RSFORM} offset={4} />
+  </Overlay>);
 }
 
 export default RSFormToolbar;

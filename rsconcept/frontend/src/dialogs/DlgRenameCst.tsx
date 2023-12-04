@@ -48,8 +48,7 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
     canSubmit={validated}
     onSubmit={handleSubmit}
   >
-  <div className='flex justify-center w-full min-w-[22rem] my-3'>
-  <div className='flex items-center gap-6'>
+  <div className='flex justify-center items-center gap-6 w-full min-w-[22rem] my-3'>
     <SelectSingle
       placeholder='Выберите тип'
       className='min-w-[14rem] self-center'
@@ -61,13 +60,13 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
       onChange={data => updateData({cst_type: data?.value ?? CstType.BASE})}
     />
     <div>
-    <TextInput id='alias' label='Имя' dense
+    <TextInput dense
+      label='Имя'
       dimensions='w-[7rem]'
       value={cstData.alias}
       onChange={event => updateData({alias: event.target.value})}
     />
     </div>
-  </div>
   </div>
   </Modal>);
 }

@@ -43,14 +43,14 @@ interface LibraryStateProps {
 }
 
 export const LibraryState = ({ children }: LibraryStateProps) => {
-  const [ items, setItems ] = useState<ILibraryItem[]>([]);
-  const [ templates, setTemplates ] = useState<ILibraryItem[]>([]);
-  const [ loading, setLoading ] = useState(false);
-  const [ processing, setProcessing ] = useState(false);
-  const [ error, setError ] = useState<ErrorInfo>(undefined);
   const { user } = useAuth();
 
-  const [ cachedTemplates, setCachedTemplates ] = useState<IRSForm[]>([]);
+  const [items, setItems] = useState<ILibraryItem[]>([]);
+  const [templates, setTemplates] = useState<ILibraryItem[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [processing, setProcessing] = useState(false);
+  const [error, setError] = useState<ErrorInfo>(undefined);
+  const [cachedTemplates, setCachedTemplates] = useState<IRSForm[]>([]);
 
   const applyFilter = useCallback(
   (params: ILibraryFilter) => {
@@ -189,12 +189,11 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   }, [reload, setError, user]);
 
   return (
-    <LibraryContext.Provider value={{ 
-      items, templates, loading, processing, error, setError, 
-      applyFilter, createItem, cloneItem, destroyItem, retrieveTemplate,
-      localUpdateItem, localUpdateTimestamp
-    }}>
-      { children }
-    </LibraryContext.Provider>
-  );
+  <LibraryContext.Provider value={{ 
+    items, templates, loading, processing, error, setError, 
+    applyFilter, createItem, cloneItem, destroyItem, retrieveTemplate,
+    localUpdateItem, localUpdateTimestamp
+  }}>
+    {children}
+  </LibraryContext.Provider>);
 }

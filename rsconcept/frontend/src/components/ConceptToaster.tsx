@@ -8,11 +8,10 @@ function ToasterThemed(props: ToasterThemedProps) {
   const { darkMode } = useConceptTheme();
 
   return (
-    <ToastContainer
-      theme={ darkMode ? 'dark' : 'light'}
-      {...props}
-    />
-  );
+  <ToastContainer
+    theme={ darkMode ? 'dark' : 'light'}
+    {...props}
+  />);
 }
 
 export default ToasterThemed;

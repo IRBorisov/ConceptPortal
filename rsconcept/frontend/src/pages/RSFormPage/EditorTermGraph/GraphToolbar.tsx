@@ -1,7 +1,8 @@
-import ConceptTooltip from '../../../components/Common/ConceptTooltip'
-import MiniButton from '../../../components/Common/MiniButton'
-import HelpTermGraph from '../../../components/Help/HelpTermGraph'
-import { ArrowsFocusIcon, DumpBinIcon, FilterIcon, HelpIcon, LetterAIcon, LetterALinesIcon, PlanetIcon, SmallPlusIcon } from '../../../components/Icons'
+import MiniButton from '../../../components/Common/MiniButton';
+import Overlay from '../../../components/Common/Overlay';
+import HelpButton from '../../../components/Help/HelpButton';
+import { ArrowsFocusIcon, DumpBinIcon, FilterIcon, LetterAIcon, LetterALinesIcon, PlanetIcon, SmallPlusIcon } from '../../../components/Icons';
+import { HelpTopic } from '../../../models/miscelanious';
 
 interface GraphToolbarProps {
   isMutable: boolean
@@ -28,8 +29,7 @@ function GraphToolbar({
   onCreate, onDelete, onResetViewpoint
 } : GraphToolbarProps) {
   return (
-  <div className='relative w-full z-pop'>
-  <div className='absolute right-0 flex items-start justify-center w-full top-1'>
+  <Overlay position='w-full top-1 right-0 flex items-start justify-center'>
     <MiniButton
       tooltip='Настройки фильтрации узлов и связей'
       icon={<FilterIcon color='text-primary' size={5} />}
@@ -67,16 +67,8 @@ function GraphToolbar({
       disabled={!is3D}
       onClick={toggleOrbit}
     />
-    <div className='px-1 py-1' id='items-graph-help'>
-      <HelpIcon color='text-primary' size={5} />
-    </div>
-    <ConceptTooltip anchorSelect='#items-graph-help' offset={4}>
-      <div className='text-sm max-w-[calc(100vw-20rem)]'>
-        <HelpTermGraph />
-      </div>
-    </ConceptTooltip>
-  </div>
-  </div>);
+    <HelpButton topic={HelpTopic.GRAPH_TERM} dimensions='max-w-[calc(100vw-20rem)]' offset={4} />
+  </Overlay>);
 }
 
 export default GraphToolbar;

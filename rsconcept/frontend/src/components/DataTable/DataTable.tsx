@@ -1,7 +1,7 @@
 import {
   Cell, ColumnSort,
   createColumnHelper, flexRender, getCoreRowModel,
-  getPaginationRowModel,   getSortedRowModel, Header, HeaderGroup,
+  getPaginationRowModel, getSortedRowModel, Header, HeaderGroup,
   PaginationState, Row, RowData, type RowSelectionState,
   SortingState, TableOptions, useReactTable, type VisibilityState
 } from '@tanstack/react-table';
@@ -73,7 +73,7 @@ export default function DataTable<TData extends RowData>({
   paginationOptions=[10, 20, 30, 40, 50],
   onChangePaginationOption,
 
-  ...options
+  ...restProps
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = useState<SortingState>(initialSorting ? [initialSorting] : []);
 
@@ -97,16 +97,16 @@ export default function DataTable<TData extends RowData>({
     onPaginationChange: enablePagination ? setPagination : undefined,
     onSortingChange: enableSorting ? setSorting : undefined,
     enableMultiRowSelection: enableRowSelection,
-    ...options
+    ...restProps
   });
 
   const isEmpty = tableImpl.getRowModel().rows.length === 0;
 
   function getRowStyles(row: Row<TData>) {
-    return  {...conditionalRowStyles!
+    return ({...conditionalRowStyles!
       .filter(item => item.when(row.original))
       .reduce((prev, item) => ({...prev, ...item.style}), {})
-  };
+    });
   }
 
   return (

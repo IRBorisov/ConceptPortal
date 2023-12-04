@@ -35,8 +35,8 @@ function ConstituentaPicker({
   onSelectValue
 } : ConstituentaPickerProps) {
   const { colors } = useConceptTheme();
-  const [ filteredData, setFilteredData ] = useState<IConstituenta[]>([]);
-  const [ filterText, setFilterText ] = useState('');
+  const [filteredData, setFilteredData] = useState<IConstituenta[]>([]);
+  const [filterText, setFilterText] = useState('');
 
   useEffect(
   () => {

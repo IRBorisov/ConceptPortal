@@ -5,7 +5,7 @@ import { CstType, IRSForm } from '../../../models/rsform';
 import { Graph } from '../../../utils/Graph';
 
 function useGraphFilter(schema: IRSForm | undefined, params: GraphFilterParams, toggleUpdate: boolean) {
-  const [ filtered, setFiltered ] = useState<Graph>(new Graph());
+  const [filtered, setFiltered] = useState<Graph>(new Graph());
 
   const allowedTypes: CstType[] = useMemo(
   () => {

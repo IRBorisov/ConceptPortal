@@ -1,6 +1,7 @@
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { GraphEdge, GraphNode, LayoutTypes } from 'reagraph';
 
+import Overlay from '../../../components/Common/Overlay';
 import InfoConstituenta from '../../../components/Shared/InfoConstituenta';
 import SelectedCounter from '../../../components/Shared/SelectedCounter';
 import { useRSForm } from '../../../context/RSFormContext';
@@ -225,15 +226,17 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
     />
 
     {hoverCst ?
-    <div className='relative'>
+    <Overlay
+      position='top-[1.6rem] left-[2.6rem] px-3 w-[25rem] h-fit min-h-[11rem] overflow-y-auto'
+      layer='z-tooltip'
+      className='border shadow-md clr-app'
+    >
       <InfoConstituenta
         data={hoverCst}
-        className='absolute top-[1.6rem] left-[2.6rem] z-tooltip w-[25rem] min-h-[11rem] shadow-md overflow-y-auto border h-fit clr-app px-3' 
       />
-    </div> : null}
-
-    <div className='relative z-pop'>
-    <div className='absolute top-0 left-0 flex flex-col gap-3 max-w-[13.5rem] min-w-[13.5rem]'>
+    </Overlay> : null}
+    
+    <Overlay position='top-0 left-0 max-w-[13.5rem] min-w-[13.5rem]' className='flex flex-col gap-3'>
       <GraphSidebar 
         coloring={coloringScheme}
         layout={layout}
@@ -248,8 +251,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
         toggleSelection={toggleDismissed}
         onEdit={onOpenEdit}
       />
-    </div>
-    </div>
+    </Overlay>
 
     <TermGraph 
       nodes={nodes}

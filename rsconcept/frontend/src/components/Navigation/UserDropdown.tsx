@@ -25,24 +25,23 @@ function UserDropdown({ hideDropdown }: UserDropdownProps) {
   };
 
   return (
-    <Dropdown dimensions='w-36' stretchLeft>
-      <DropdownButton
-        tooltip='Профиль пользователя'
-        onClick={navigateProfile}
-      >
-        {user?.username}
-      </DropdownButton>
-      <DropdownButton
-        tooltip='Переключение темы оформления'
-        onClick={toggleDarkMode}
-      >
-        {darkMode ? 'Светлая тема' : 'Темная тема'}
-      </DropdownButton>
-      <DropdownButton onClick={logoutAndRedirect}>
-        <b>Выйти...</b>
-      </DropdownButton>
-    </Dropdown>
-  );
+  <Dropdown dimensions='w-36' stretchLeft>
+    <DropdownButton
+      tooltip='Профиль пользователя'
+      onClick={navigateProfile}
+    >
+      {user?.username}
+    </DropdownButton>
+    <DropdownButton
+      tooltip='Переключение темы оформления'
+      onClick={toggleDarkMode}
+    >
+      {darkMode ? 'Светлая тема' : 'Темная тема'}
+    </DropdownButton>
+    <DropdownButton onClick={logoutAndRedirect}>
+      <b>Выйти...</b>
+    </DropdownButton>
+  </Dropdown>);
 }
 
 export default UserDropdown;

@@ -114,10 +114,9 @@ export const AuthState = ({ children }: AuthStateProps) => {
   }, [reload])
 
   return (
-    <AuthContext.Provider
-      value={{ user, login, logout, signup, loading, error, setError, updatePassword }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  <AuthContext.Provider
+    value={{ user, login, logout, signup, loading, error, setError, updatePassword }}
+  >
+    {children}
+  </AuthContext.Provider>);
 };

@@ -51,10 +51,9 @@ export const NavigationState = ({ children }: NavigationStateProps) => {
 
 
   return (
-    <NagivationContext.Provider value={{
-      navigateTo, navigateHistory
-    }}>
-      {children}
-    </NagivationContext.Provider>
-  );
+  <NagivationContext.Provider value={{
+    navigateTo, navigateHistory
+  }}>
+    {children}
+  </NagivationContext.Provider>);
 }

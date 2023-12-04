@@ -1,17 +1,18 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
-import ConceptTooltip from '../components/Common/ConceptTooltip';
 import MiniButton from '../components/Common/MiniButton';
 import Modal from '../components/Common/Modal';
+import Overlay from '../components/Common/Overlay';
 import SelectMulti from '../components/Common/SelectMulti';
 import TextArea from '../components/Common/TextArea';
 import DataTable, { createColumnHelper } from '../components/DataTable';
-import HelpTerminologyControl from '../components/Help/HelpTerminologyControl';
-import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, ChevronDoubleDownIcon, CrossIcon, HelpIcon } from '../components/Icons';
+import HelpButton from '../components/Help/HelpButton';
+import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, ChevronDoubleDownIcon, CrossIcon } from '../components/Icons';
 import { useConceptTheme } from '../context/ThemeContext';
 import useConceptText from '../hooks/useConceptText';
 import { Grammeme, ITextRequest, IWordForm, IWordFormPlain } from '../models/language';
 import { getCompatibleGrams, parseGrammemes,wordFormEquals } from '../models/languageAPI';
+import { HelpTopic } from '../models/miscelanious';
 import { IConstituenta, TermForm } from '../models/rsform';
 import { colorfgGrammeme } from '../utils/color';
 import { labelGrammeme } from '../utils/labels';
@@ -204,37 +205,22 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
   ], [colors]);
 
   return (
-  <Modal
+  <Modal canSubmit
     title='Редактирование словоформ'
     hideWindow={hideWindow}
     submitText='Сохранить'
-    canSubmit
     onSubmit={handleSubmit}
   >
-    <div className='relative w-full'>
-    <div className='absolute top-0 right-0'>
-      <div id='terminology-help' className='px-1 py-1'>
-        <HelpIcon color='text-primary' size={5} />
-      </div>
-      <ConceptTooltip
-        anchorSelect='#terminology-help'
-        className='max-w-[40rem]'
-        layer='z-modal-tooltip'
-        offset={1}
-      >
-        <HelpTerminologyControl />
-      </ConceptTooltip>
-    </div>
-    </div>
-      
   <div className='min-w-[40rem] max-w-[40rem]'>
-    <TextArea id='nominal' label='Начальная форма'
+    <Overlay position='top-[-0.2rem] left-[7.5rem]'>
+      <HelpButton topic={HelpTopic.TERM_CONTROL} dimensions='max-w-[38rem]' offset={3} />
+    </Overlay>
+  
+    <TextArea disabled spellCheck
+      label='Начальная форма'
       placeholder='Начальная форма'
       rows={1}
-      
       value={term}
-      disabled={true}
-      spellCheck
     />
 
     <div className='mt-3 mb-2 text-sm font-semibold'>
@@ -245,8 +231,8 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
       <div className='flex items-center'>
         <TextArea
           placeholder='Введите текст'
-          rows={2}
           dimensions='min-w-[18rem] w-full min-h-[4.2rem]'
+          rows={2}
           value={inputText}
           onChange={event => setInputText(event.target.value)}
         />
@@ -289,7 +275,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
           onClick={handleAddForm}
         />
         <MiniButton
-          tooltip='Генерировать все словоформы'
+          tooltip='Генерировать стандартные словоформы'
           icon={<ChevronDoubleDownIcon
             size={5}
             color={!inputText ? 'text-disabled' : 'text-primary'}
@@ -302,7 +288,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         Заданные вручную словоформы [{forms.length}]
       </div>
       <MiniButton
-        tooltip='Сбросить ВСЕ словоформы'
+        tooltip='Сбросить все словоформы'
         icon={<CrossIcon size={5} color={forms.length === 0 ? 'text-disabled' : 'text-warning'} />}
         disabled={textProcessor.loading || forms.length === 0}
         onClick={handleResetAll}

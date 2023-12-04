@@ -21,15 +21,14 @@ function SelectorButton({
   const position = `px-1 flex flex-start items-center gap-1 ${dimensions}`;
   const design = (transparent ? 'clr-hover' : `border ${colors}`) + ' text-btn text-controls';
   return (
-    <button type='button'
-      className={`text-sm small-caps select-none ${cursor} ${position} ${design}`}
-      title={tooltip}
-      {...restProps}
-    >
-      {icon ? icon : null}
-      {text ? <div className={'font-semibold whitespace-nowrap pb-1'}>{text}</div> : null}
-    </button>
-  );
+  <button type='button'
+    className={`text-sm small-caps select-none ${cursor} ${position} ${design}`}
+    title={tooltip}
+    {...restProps}
+  >
+    {icon ? icon : null}
+    {text ? <div className={'font-semibold whitespace-nowrap pb-1'}>{text}</div> : null}
+  </button>);
 }
 
 export default SelectorButton;

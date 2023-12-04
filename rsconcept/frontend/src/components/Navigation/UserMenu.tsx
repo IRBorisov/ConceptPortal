@@ -12,28 +12,27 @@ function UserMenu() {
 
   const navigateLogin = () => navigateTo('/login');
   return (
-    <div ref={menu.ref} className='h-full'>
-      <div className='flex items-center justify-end h-full w-fit'>
-      {!user ?
-      <NavigationButton
-        text='Войти...'
-        description='Перейти на страницу логина'
-        icon={<InDoorIcon />}
-        onClick={navigateLogin}
-      /> : null}
-      {user ?
-      <NavigationButton
-        description={`Пользователь ${user?.username}`}
-        icon={<UserIcon />}
-        onClick={menu.toggle}
-      /> : null}
-      </div>
-      {(user && menu.isActive) ?
-      <UserDropdown
-        hideDropdown={() => menu.hide()}
-      /> : null}
+  <div ref={menu.ref} className='h-full'>
+    <div className='flex items-center justify-end h-full w-fit'>
+    {!user ?
+    <NavigationButton
+      text='Войти...'
+      description='Перейти на страницу логина'
+      icon={<InDoorIcon />}
+      onClick={navigateLogin}
+    /> : null}
+    {user ?
+    <NavigationButton
+      description={`Пользователь ${user?.username}`}
+      icon={<UserIcon />}
+      onClick={menu.toggle}
+    /> : null}
     </div>
-  );
+    {(user && menu.isActive) ?
+    <UserDropdown
+      hideDropdown={() => menu.hide()}
+    /> : null}
+  </div>);
 }
 
 export default UserMenu;

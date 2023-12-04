@@ -30,8 +30,8 @@ function RSTabsMenu({
   const navigate = useNavigate();
   const { user } = useAuth();
   const {
-    isOwned, isMutable, isTracking, isReadonly, isClaimable, adminMode: isForceAdmin,
-    toggleForceAdmin, toggleReadonly, processing
+    isOwned, isMutable, isTracking, readerMode, isClaimable, adminMode,
+    toggleAdminMode, toggleReaderMode, processing
   } = useRSForm();
   const schemaMenu = useDropdown();
   const editMenu = useDropdown();
@@ -147,15 +147,15 @@ function RSTabsMenu({
         </DropdownButton>
         {(isOwned || user?.is_staff) ?
         <DropdownCheckbox
-          value={isReadonly}
-          setValue={toggleReadonly}
+          value={readerMode}
+          setValue={toggleReaderMode}
           label='Я — читатель!'
           tooltip='Режим чтения'
         /> : null}
         {user?.is_staff ?
         <DropdownCheckbox
-          value={isForceAdmin}
-          setValue={toggleForceAdmin}
+          value={adminMode}
+          setValue={toggleAdminMode}
           label='Я — администратор!'
           tooltip='Режим редактирования для администраторов'
         /> : null}

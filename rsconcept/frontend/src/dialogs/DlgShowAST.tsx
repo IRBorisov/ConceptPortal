@@ -57,8 +57,7 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
     hideWindow={hideWindow}
     readonly
   >
-  <div className='flex flex-col items-start gap-2 mt-2'>
-    <div className='w-full text-lg text-center'>
+    <div className='w-full my-2 text-lg text-center'>
       {!hoverNode ? expression : null}
       {hoverNode ?
       <div>
@@ -86,7 +85,6 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
       />
     </div>
     </div>
-  </div>
   </Modal>);
 }
 

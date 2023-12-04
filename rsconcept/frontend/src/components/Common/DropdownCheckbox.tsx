@@ -11,18 +11,17 @@ interface DropdownCheckboxProps {
 function DropdownCheckbox({ tooltip, setValue, disabled, ...restProps }: DropdownCheckboxProps) {
   const behavior = (setValue && !disabled) ? 'clr-hover' : '';
   return (
-    <div
-      title={tooltip}
-      className={`px-4 py-1 text-left overflow-ellipsis ${behavior} w-full whitespace-nowrap`}
-    >
-      <Checkbox 
-        dimensions='w-full'
-        disabled={disabled}
-        setValue={setValue}
-        {...restProps}
-      /> 
-    </div>
-  );
+  <div
+    title={tooltip}
+    className={`px-4 py-1 text-left overflow-ellipsis ${behavior} w-full whitespace-nowrap`}
+  >
+    <Checkbox 
+      dimensions='w-full'
+      disabled={disabled}
+      setValue={setValue}
+      {...restProps}
+    /> 
+  </div>);
 }
 
 export default DropdownCheckbox;

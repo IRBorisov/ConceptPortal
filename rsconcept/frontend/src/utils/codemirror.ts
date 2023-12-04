@@ -2,15 +2,15 @@
  * Module: CodeMirror customizations.
  */
 
-import { syntaxTree } from '@codemirror/language'
-import { NodeType, Tree, TreeCursor } from '@lezer/common'
-import { ReactCodeMirrorRef, SelectionRange } from '@uiw/react-codemirror'
+import { syntaxTree } from '@codemirror/language';
+import { NodeType, Tree, TreeCursor } from '@lezer/common';
+import { ReactCodeMirrorRef, SelectionRange } from '@uiw/react-codemirror';
 
-import { IEntityReference, ISyntacticReference } from '../models/language'
-import { parseGrammemes } from '../models/languageAPI'
-import { IConstituenta } from '../models/rsform'
-import { colorfgGrammeme,IColorTheme } from './color'
-import { describeConstituentaTerm, labelCstTypification, labelGrammeme } from './labels'
+import { IEntityReference, ISyntacticReference } from '../models/language';
+import { parseGrammemes } from '../models/languageAPI';
+import { IConstituenta } from '../models/rsform';
+import { colorfgGrammeme,IColorTheme } from './color';
+import { describeConstituentaTerm, labelCstTypification, labelGrammeme } from './labels';
 
 /**
  * Represents syntax tree node data.

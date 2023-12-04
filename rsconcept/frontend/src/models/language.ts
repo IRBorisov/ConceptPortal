@@ -100,42 +100,42 @@ export const Case = [
  * 
  * Implemented as a list of mututally exclusive {@link Grammeme}s.
 */
-export const Plurality = [ Grammeme.sing, Grammeme.plur ];
+export const Plurality = [Grammeme.sing, Grammeme.plur];
 
 /**
  * Represents verb perfectivity language concept.
  * 
  * Implemented as a list of mututally exclusive {@link Grammeme}s.
 */
-export const Perfectivity = [ Grammeme.perf, Grammeme.impf ];
+export const Perfectivity = [Grammeme.perf, Grammeme.impf];
 
 /**
  * Represents verb transitivity language concept.
  * 
  * Implemented as a list of mututally exclusive {@link Grammeme}s.
 */
-export const Transitivity = [ Grammeme.tran, Grammeme.intr ];
+export const Transitivity = [Grammeme.tran, Grammeme.intr];
 
 /**
  * Represents verb mood language concept.
  * 
  * Implemented as a list of mututally exclusive {@link Grammeme}s.
 */
-export const Mood = [ Grammeme.indc, Grammeme.impr ];
+export const Mood = [Grammeme.indc, Grammeme.impr];
 
 /**
  * Represents verb self-inclusion language concept.
  * 
  * Implemented as a list of mututally exclusive {@link Grammeme}s.
 */
-export const Inclusion = [ Grammeme.incl, Grammeme.excl ];
+export const Inclusion = [Grammeme.incl, Grammeme.excl];
 
 /**
  * Represents verb voice language concept.
  * 
  * Implemented as a list of mututally exclusive {@link Grammeme}s.
 */
-export const Voice = [ Grammeme.actv, Grammeme.pssv ];
+export const Voice = [Grammeme.actv, Grammeme.pssv];
 
 /**
  * Represents verb tense language concept.

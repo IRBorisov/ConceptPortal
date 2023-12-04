@@ -47,25 +47,24 @@ function Tristate({
   }
 
   return (
-    <button type='button' id={id}
-      className={`flex items-center clr-outline focus:outline-dotted focus:outline-1 ${dimensions}`}
-      title={tooltip}
-      disabled={disabled}
-      onClick={handleClick}
-      {...restProps}
-    >
-      <div className={`w-4 h-4 shrink-0 mt-0.5 border rounded-sm ${bgColor} ${cursor}`} >
-        {value ? <div className='mt-[1px] ml-[1px]'><CheckboxCheckedIcon /></div> : null}
-        {value == null ? <div className='mt-[1px] ml-[1px]'><CheckboxNullIcon /></div> : null}
-      </div>
-      {label ? 
-      <Label
-        className={`${cursor} px-2 text-start`}
-        text={label}
-        htmlFor={id}
-      /> : null}
-    </button>
-  );
+  <button type='button' id={id}
+    className={`flex items-center clr-outline focus:outline-dotted focus:outline-1 ${dimensions}`}
+    title={tooltip}
+    disabled={disabled}
+    onClick={handleClick}
+    {...restProps}
+  >
+    <div className={`w-4 h-4 shrink-0 mt-0.5 border rounded-sm ${bgColor} ${cursor}`} >
+      {value ? <div className='mt-[1px] ml-[1px]'><CheckboxCheckedIcon /></div> : null}
+      {value == null ? <div className='mt-[1px] ml-[1px]'><CheckboxNullIcon /></div> : null}
+    </div>
+    {label ? 
+    <Label
+      className={`${cursor} px-2 text-start`}
+      text={label}
+      htmlFor={id}
+    /> : null}
+  </button>);
 }
 
 export default Tristate;

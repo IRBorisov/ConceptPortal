@@ -4,6 +4,7 @@ import useEscapeKey from '../../hooks/useEscapeKey';
 import { CrossIcon } from '../Icons';
 import Button from './Button';
 import MiniButton from './MiniButton';
+import Overlay from './Overlay';
 
 export interface ModalProps {
   title?: string
@@ -43,15 +44,13 @@ function Modal({
     <div ref={ref}
       className='fixed bottom-1/2 left-1/2 translate-y-1/2 -translate-x-1/2 px-6 w-fit max-w-[calc(100vw-2rem)] h-fit z-modal clr-app border shadow-md'
     >
-      <div className='relative'>
-      <div className='absolute right-[-1rem] top-2 text-disabled'>
+      <Overlay position='right-[-1rem] top-2' className='text-disabled'>
         <MiniButton
           tooltip='Закрыть диалоговое окно [ESC]'
           icon={<CrossIcon size={5}/>}
           onClick={handleCancel}
         />
-      </div>
-      </div>
+      </Overlay>
       
       {title ? <h1 className='my-2 text-lg select-none'>{title}</h1> : null}
 

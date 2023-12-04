@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, useLayoutEffect, useMemo, useState } from 're
 import { toast } from 'react-toastify';
 
 import MiniButton from '../../../components/Common/MiniButton';
+import Overlay from '../../../components/Common/Overlay';
 import SubmitButton from '../../../components/Common/SubmitButton';
 import TextArea from '../../../components/Common/TextArea';
 import { EditIcon, SaveIcon } from '../../../components/Icons';
@@ -101,11 +102,9 @@ function FormConstituenta({
   }
 
   return (<>
-  {readyForEdit ?
-  <div className='relative'>
-  <div className='absolute top-0 right-[-3rem] w-full flex justify-start select-none'>
+  <Overlay position='top-0 left-[3rem]' className='flex justify-start select-none' >
     <MiniButton
-      tooltip={`Редактировать словоформы термина: ${constituenta!.term_forms.length}`}
+      tooltip={`Редактировать словоформы термина: ${constituenta?.term_forms.length ?? 0}`}
       disabled={!readyForEdit}
       noHover
       onClick={onEditTerm}
@@ -121,8 +120,7 @@ function FormConstituenta({
       onClick={handleRename}
       icon={<EditIcon size={4} color={readyForEdit ? 'text-primary' : ''} />}
     />
-  </div>
-  </div> : null}
+  </Overlay>
   <form id={id}
     className='flex flex-col gap-3 mt-1'
     onSubmit={handleSubmit}

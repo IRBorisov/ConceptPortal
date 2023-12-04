@@ -21,7 +21,7 @@ interface TemplateTabProps {
 
 function TemplateTab({ state, partialUpdate }: TemplateTabProps) { 
   const { templates, retrieveTemplate } = useLibrary();
-  const [ selectedSchema, setSelectedSchema ] = useState<IRSForm | undefined>(undefined);
+  const [selectedSchema, setSelectedSchema] = useState<IRSForm | undefined>(undefined);
   
   const [filteredData, setFilteredData] = useState<IConstituenta[]>([]);
 

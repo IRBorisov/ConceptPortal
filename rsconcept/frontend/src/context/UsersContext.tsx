@@ -61,12 +61,11 @@ export const UsersState = ({ children }: UsersStateProps) => {
   }, [reload]);
 
   return (
-    <UsersContext.Provider value={{
-      users,
-      reload,
-      getUserLabel
-    }}>
-      { children }
-    </UsersContext.Provider>
-  );
+  <UsersContext.Provider value={{
+    users,
+    reload,
+    getUserLabel
+  }}>
+    { children }
+  </UsersContext.Provider>);
 }

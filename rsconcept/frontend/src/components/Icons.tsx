@@ -14,26 +14,25 @@ export interface IconProps {
 }
 
 function IconSVG({ viewbox, size = 6, color, props, children }: IconSVGProps) {
-  const width = `${size * 1 / 4}rem`
+  const width = `${size * 1 / 4}rem`;
   return (
-    <svg
-      width={width}
-      height={width}
-      className={`w-[${width}] h-[${width}] ${color}`}
-      fill='currentColor'
-      viewBox={viewbox}
-      {...props}
-    >
-      {children}
-    </svg>
-  );
+  <svg
+    width={width}
+    height={width}
+    className={`w-[${width}] h-[${width}] ${color}`}
+    fill='currentColor'
+    viewBox={viewbox}
+    {...props}
+  >
+    {children}
+  </svg>);
 }
 
 export function MagnifyingGlassIcon({ size, ...props }: IconProps) {
   return (
-      <IconSVG viewbox='0 0 20 20' size={size ?? 5} {...props} >
-        <path d='M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z'/>
-      </IconSVG>
+    <IconSVG viewbox='0 0 20 20' size={size ?? 5} {...props} >
+      <path d='M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z'/>
+    </IconSVG>
   );
 }
 

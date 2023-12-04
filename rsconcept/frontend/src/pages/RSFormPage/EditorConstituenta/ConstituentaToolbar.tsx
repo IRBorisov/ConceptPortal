@@ -1,9 +1,12 @@
-import { useMemo } from 'react'
+import { useMemo } from 'react';
 
-import ConceptTooltip from '../../../components/Common/ConceptTooltip'
-import MiniButton from '../../../components/Common/MiniButton'
-import HelpConstituenta from '../../../components/Help/HelpConstituenta'
-import { ArrowsRotateIcon, CloneIcon, DiamondIcon, DumpBinIcon, HelpIcon, SaveIcon, SmallPlusIcon } from '../../../components/Icons'
+import MiniButton from '../../../components/Common/MiniButton';
+import Overlay from '../../../components/Common/Overlay';
+import HelpButton from '../../../components/Help/HelpButton';
+import { 
+  ArrowsRotateIcon, CloneIcon, DiamondIcon, DumpBinIcon, SaveIcon, SmallPlusIcon
+} from '../../../components/Icons';
+import { HelpTopic } from '../../../models/miscelanious';
 
 interface ConstituentaToolbarProps {
   isMutable: boolean
@@ -24,10 +27,8 @@ function ConstituentaToolbar({
   onDelete, onClone, onCreate, onTemplates
 }: ConstituentaToolbarProps) {
   const canSave = useMemo(() => (isModified && isMutable), [isModified, isMutable]);
-  return (    
-  <div className='relative w-full'>
-  <div className='absolute right-0 flex items-start justify-center w-full top-1'>
-  <div className='flex justify-start select-auto w-fit z-tooltip'>
+  return (
+  <Overlay position='right-1/2 translate-x-1/2 top-1 flex items-start'>
     <MiniButton
       tooltip='Сохранить изменения'
       disabled={!canSave}
@@ -64,18 +65,8 @@ function ConstituentaToolbar({
       onClick={onDelete}
       icon={<DumpBinIcon size={5} color={isMutable ? 'text-warning' : ''} />}
     />
-    <div id='cst-help' className='px-1 py-1'>
-      <HelpIcon color='text-primary' size={5} />
-    </div>
-    <ConceptTooltip
-      anchorSelect='#cst-help'
-      offset={4}
-    >
-      <HelpConstituenta />
-    </ConceptTooltip>
-  </div>
-  </div>
-  </div>);
+    <HelpButton topic={HelpTopic.CONSTITUENTA} offset={4} />
+  </Overlay>);
 }
 
 export default ConstituentaToolbar;
