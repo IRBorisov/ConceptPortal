@@ -75,6 +75,7 @@ services:
 
   certbot:
     container_name: portal-certbot
+    restart: no
     image: certbot/certbot:latest
     volumes:
       - cerbot_www_volume:/var/www/certbot/:rw
