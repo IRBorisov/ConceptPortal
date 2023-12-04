@@ -305,7 +305,7 @@
 
   .text-default {
     color: var(--cl-fg-100);
-    &.dark {
+    .dark & {
       color: var(--cd-fg-100);
     }
   }
