@@ -2,6 +2,7 @@ import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { GraphEdge, GraphNode, LayoutTypes } from 'reagraph';
 
 import InfoConstituenta from '../../../components/Shared/InfoConstituenta';
+import SelectedCounter from '../../../components/Shared/SelectedCounter';
 import { useRSForm } from '../../../context/RSFormContext';
 import { useConceptTheme } from '../../../context/ThemeContext';
 import DlgGraphParams from '../../../dialogs/DlgGraphParams';
@@ -12,7 +13,6 @@ import { colorbgGraphNode } from '../../../utils/color';
 import { TIMEOUT_GRAPH_REFRESH } from '../../../utils/constants';
 import GraphSidebar from './GraphSidebar';
 import GraphToolbar from './GraphToolbar';
-import SelectedCounter from './SelectedCounter';
 import TermGraph from './TermGraph';
 import useGraphFilter from './useGraphFilter';
 import ViewHidden from './ViewHidden';
@@ -24,7 +24,7 @@ interface EditorTermGraphProps {
 }
 
 function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGraphProps) {
-  const { schema, editorMode: isEditable } = useRSForm();
+  const { schema, isMutable } = useRSForm();
   const { colors } = useConceptTheme();
 
   const [toggleDataUpdate, setToggleDataUpdate] = useState(false);
@@ -179,7 +179,7 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     // Hotkeys implementation
-    if (!isEditable) {
+    if (!isMutable) {
       return;
     }
     if (event.key === 'Delete') {
@@ -197,13 +197,14 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
       onConfirm={handleChangeParams}
     /> : null}
 
-    <SelectedCounter 
+    <SelectedCounter hideZero
       total={schema?.stats?.count_all ?? 0}
       selected={selected.length}
+      position='top-[0.3rem] left-0'
     />
 
     <GraphToolbar
-      editorMode={isEditable}
+      isMutable={isMutable}
       nothingSelected={nothingSelected}
       is3D={is3D}
       orbit={orbit}

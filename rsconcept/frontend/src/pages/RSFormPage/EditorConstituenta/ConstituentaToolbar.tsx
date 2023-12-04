@@ -6,7 +6,7 @@ import HelpConstituenta from '../../../components/Help/HelpConstituenta'
 import { ArrowsRotateIcon, CloneIcon, DiamondIcon, DumpBinIcon, HelpIcon, SaveIcon, SmallPlusIcon } from '../../../components/Icons'
 
 interface ConstituentaToolbarProps {
-  editorMode: boolean
+  isMutable: boolean
   isModified: boolean
 
   onSubmit: () => void
@@ -19,11 +19,11 @@ interface ConstituentaToolbarProps {
 }
 
 function ConstituentaToolbar({
-  editorMode, isModified,
+  isMutable, isModified,
   onSubmit, onReset,
   onDelete, onClone, onCreate, onTemplates
 }: ConstituentaToolbarProps) {
-  const canSave = useMemo(() => (isModified && editorMode), [isModified, editorMode]);
+  const canSave = useMemo(() => (isModified && isMutable), [isModified, isMutable]);
   return (    
   <div className='relative w-full'>
   <div className='absolute right-0 flex items-start justify-center w-full top-1'>
@@ -42,27 +42,27 @@ function ConstituentaToolbar({
     />
     <MiniButton
       tooltip='Создать конституенту после данной'
-      disabled={!editorMode}
+      disabled={!isMutable}
       onClick={onCreate}
-      icon={<SmallPlusIcon size={5} color={editorMode ? 'text-success' : ''} />} 
+      icon={<SmallPlusIcon size={5} color={isMutable ? 'text-success' : ''} />} 
     />
     <MiniButton
       tooltip='Клонировать конституенту'
-      disabled={!editorMode}
+      disabled={!isMutable}
       onClick={onClone}
-      icon={<CloneIcon size={5} color={editorMode ? 'text-success' : ''} />} 
+      icon={<CloneIcon size={5} color={isMutable ? 'text-success' : ''} />} 
     />
     <MiniButton
       tooltip='Создать конституенту из шаблона'
-      icon={<DiamondIcon color={editorMode ? 'text-primary': ''} size={5}/>}
-      disabled={!editorMode}
+      icon={<DiamondIcon color={isMutable ? 'text-primary': ''} size={5}/>}
+      disabled={!isMutable}
       onClick={onTemplates}
     />
     <MiniButton
       tooltip='Удалить редактируемую конституенту'
-      disabled={!editorMode}
+      disabled={!isMutable}
       onClick={onDelete}
-      icon={<DumpBinIcon size={5} color={editorMode ? 'text-warning' : ''} />}
+      icon={<DumpBinIcon size={5} color={isMutable ? 'text-warning' : ''} />}
     />
     <div id='cst-help' className='px-1 py-1'>
       <HelpIcon color='text-primary' size={5} />

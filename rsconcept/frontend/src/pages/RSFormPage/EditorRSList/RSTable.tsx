@@ -33,7 +33,6 @@ function RSTable({
   
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
-
   useLayoutEffect(
   () => {
     setColumnVisibility({

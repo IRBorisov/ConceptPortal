@@ -19,7 +19,7 @@ interface EditorRSFormProps {
 }
 
 function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, onDownload }: EditorRSFormProps) {
-  const { schema, editorMode: isEditable, isClaimable } = useRSForm();
+  const { schema, isMutable, isClaimable } = useRSForm();
   const { user } = useAuth();
 
   function initiateSubmit() {
@@ -41,7 +41,7 @@ function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, 
   return (
   <div tabIndex={-1} onKeyDown={handleInput}>
     <RSFormToolbar 
-      editorMode={isEditable}
+      isMutable={isMutable}
       modified={isModified}
       claimable={isClaimable}
       anonymous={!user}

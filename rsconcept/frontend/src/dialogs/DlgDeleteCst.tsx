@@ -28,44 +28,43 @@ function DlgDeleteCst({ hideWindow, selected, onDelete }: DlgDeleteCstProps) {
   }
 
   return (
-    <Modal
-      title='Удаление конституент'
-      submitText={expandOut ? 'Удалить с зависимыми' : 'Удалить'}
-      hideWindow={hideWindow}
-      canSubmit={true}
-      onSubmit={handleSubmit}
-    >
-    <div className='max-w-[60vw] min-w-[20rem]'>
-      <p>Выбраны к удалению: <b>{selected.length}</b></p>
-      <div className='px-3 border h-[9rem] mt-1 overflow-y-auto whitespace-nowrap'>
-      {selected.map(
-      (id) => {
-        const cst = schema!.items.find(cst => cst.id === id);
-        return (cst ?
-        <p key={`${prefixes.cst_delete_list}${cst.id}`}>
-          {labelConstituenta(cst)}
-        </p> : null);
-      })}
-      </div>
-      <p className='mt-4'>Зависимые конституенты: <b>{expansion.length}</b></p>
-      <div className='mt-1 mb-3 px-3 border h-[9rem] overflow-y-auto whitespace-nowrap'>
-      {expansion.map(
-      (id) => {
-        const cst = schema!.items.find(cst => cst.id === id);
-        return (cst ?
-        <p key={`${prefixes.cst_dependant_list}${cst.id}`}>
-          {labelConstituenta(cst)}
-        </p> : null);
-      })}
-      </div>
-      <Checkbox
-        label='Удалить зависимые конституенты'
-        value={expandOut}
-        setValue={value => setExpandOut(value)}
-      />
+  <Modal
+    title='Удаление конституент'
+    submitText={expandOut ? 'Удалить с зависимыми' : 'Удалить'}
+    hideWindow={hideWindow}
+    canSubmit={true}
+    onSubmit={handleSubmit}
+  >
+  <div className='max-w-[60vw] min-w-[30rem]'>
+    <p>Выбраны к удалению: <b>{selected.length}</b></p>
+    <div className='px-3 border h-[9rem] mt-1 overflow-y-auto whitespace-nowrap'>
+    {selected.map(
+    (id) => {
+      const cst = schema!.items.find(cst => cst.id === id);
+      return (cst ?
+      <p key={`${prefixes.cst_delete_list}${cst.id}`}>
+        {labelConstituenta(cst)}
+      </p> : null);
+    })}
     </div>
-    </Modal>
-  );
+    <p className='mt-4'>Зависимые конституенты: <b>{expansion.length}</b></p>
+    <div className='mt-1 mb-3 px-3 border h-[9rem] overflow-y-auto whitespace-nowrap'>
+    {expansion.map(
+    (id) => {
+      const cst = schema!.items.find(cst => cst.id === id);
+      return (cst ?
+      <p key={`${prefixes.cst_dependant_list}${cst.id}`}>
+        {labelConstituenta(cst)}
+      </p> : null);
+    })}
+    </div>
+    <Checkbox
+      label='Удалить зависимые конституенты'
+      value={expandOut}
+      setValue={value => setExpandOut(value)}
+    />
+  </div>
+  </Modal>);
 }
 
 export default DlgDeleteCst;

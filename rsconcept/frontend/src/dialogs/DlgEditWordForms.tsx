@@ -207,7 +207,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
   <Modal
     title='Редактирование словоформ'
     hideWindow={hideWindow}
-    submitText='Сохранить данные'
+    submitText='Сохранить'
     canSubmit
     onSubmit={handleSubmit}
   >
@@ -237,54 +237,52 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
       spellCheck
     />
 
-    <div className='mt-4 mb-2 text-sm font-semibold'>
+    <div className='mt-3 mb-2 text-sm font-semibold'>
       Параметры словоформы
     </div>
 
     <div className='flex items-start justify-between w-full'>
-      <TextArea
-        placeholder='Введите текст'
-        rows={2}
-        dimensions='min-w-[18rem] w-full min-h-[4.2rem]'
-        value={inputText}
-        onChange={event => setInputText(event.target.value)}
-      />
-      <div className='max-w-min'>
-        <MiniButton
-          tooltip='Генерировать словоформу'
-          icon={<ArrowLeftIcon
-            size={6}
-            color={inputGrams.length == 0 ? 'text-disabled' : 'text-primary'}
-          />}
-          disabled={textProcessor.loading || inputGrams.length == 0}
-          onClick={handleInflect}
+      <div className='flex items-center'>
+        <TextArea
+          placeholder='Введите текст'
+          rows={2}
+          dimensions='min-w-[18rem] w-full min-h-[4.2rem]'
+          value={inputText}
+          onChange={event => setInputText(event.target.value)}
         />
-        <MiniButton
-          tooltip='Определить граммемы'
-          icon={<ArrowRightIcon
-            size={6}
-            color={!inputText ? 'text-disabled' : 'text-primary'}
-          />}
-          disabled={textProcessor.loading || !inputText}
-          onClick={handleParse}
-        />
+        <div className='max-w-min'>
+          <MiniButton
+            tooltip='Генерировать словоформу'
+            icon={<ArrowLeftIcon size={5} color={inputGrams.length == 0 ? 'text-disabled' : 'text-primary'} />}
+            disabled={textProcessor.loading || inputGrams.length == 0}
+            onClick={handleInflect}
+          />
+          <MiniButton
+            tooltip='Определить граммемы'
+            icon={<ArrowRightIcon
+              size={5}
+              color={!inputText ? 'text-disabled' : 'text-primary'}
+            />}
+            disabled={textProcessor.loading || !inputText}
+            onClick={handleParse}
+          />
+        </div>
       </div>
       <SelectMulti
         className='min-w-[20rem] max-w-[20rem] h-full flex-grow'
         options={options}
         placeholder='Выберите граммемы'
-        
         value={inputGrams}
         onChange={newValue => setInputGrams([...newValue].sort(compareGrammemeOptions))}
       />
     </div>
 
-    <div className='flex justify-between flex-start'>
+    <div className='flex items-center justify-between mt-2 mb-1 flex-start'>
       <div className='flex items-center justify-start'>
         <MiniButton
           tooltip='Внести словоформу'
           icon={<CheckIcon
-            size={6}
+            size={5}
             color={!inputText || inputGrams.length == 0 ? 'text-disabled' : 'text-success'}
           />}
           disabled={textProcessor.loading || !inputText || inputGrams.length == 0}
@@ -293,25 +291,22 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         <MiniButton
           tooltip='Генерировать все словоформы'
           icon={<ChevronDoubleDownIcon
-            size={6}
+            size={5}
             color={!inputText ? 'text-disabled' : 'text-primary'}
           />}
           disabled={textProcessor.loading || !inputText}
           onClick={handleGenerateLexeme}
         />
       </div>
-      <div className='w-full mt-2 mb-1 text-sm font-semibold text-center'>
-        Заданные вручную словоформы: [{forms.length}]
+      <div className='w-full text-sm font-semibold text-center'>
+        Заданные вручную словоформы [{forms.length}]
       </div>
       <MiniButton
         tooltip='Сбросить ВСЕ словоформы'
-        icon={<CrossIcon
-          size={6}
-          color={forms.length === 0 ? 'text-disabled' : 'text-warning'}
-        />}
+        icon={<CrossIcon size={5} color={forms.length === 0 ? 'text-disabled' : 'text-warning'} />}
         disabled={textProcessor.loading || forms.length === 0}
         onClick={handleResetAll}
-        />
+      />
     </div>
     
     <div className='border overflow-y-auto max-h-[17.4rem] min-h-[17.4rem] mb-2'>

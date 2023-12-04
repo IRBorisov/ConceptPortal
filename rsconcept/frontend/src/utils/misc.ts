@@ -2,6 +2,7 @@
  * Module: miscellaneous static functions to generate UI resources.
  */
 
+import { ILibraryItem } from '../models/library';
 import { CstType, IConstituenta, IRSForm } from '../models/rsform';
 import { IRSErrorDescription, RSErrorClass } from '../models/rslang';
 import { inferErrorClass } from '../models/rslangAPI';
@@ -61,11 +62,11 @@ export function createAliasFor(type: CstType, schema: IRSForm): string {
   return `${prefix}${index}`;
 }
 
-export function cloneTitle(schema: IRSForm): string {
-  if (!schema.title.includes('[клон]')) {
-    return schema.title + ' [клон]';
+export function cloneTitle(target: ILibraryItem): string {
+  if (!target.title.includes('[клон]')) {
+    return target.title + ' [клон]';
   } else {
-    return (schema.title + '+');
+    return (target.title + '+');
   }
 }
 

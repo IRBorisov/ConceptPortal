@@ -21,7 +21,7 @@ function FormRSForm({
 }: FormRSFormProps) {
   const {
     schema, update, adminMode: adminMode,
-    editorMode: editorMode, processing
+    isMutable: isMutable, processing
   } = useRSForm();
   
   const [title, setTitle] = useState('');
@@ -82,20 +82,20 @@ function FormRSForm({
     <TextInput required
       label='Полное название'
       value={title}
-      disabled={!editorMode}
+      disabled={!isMutable}
       onChange={event => setTitle(event.target.value)}
     />
     <TextInput required dense
       label='Сокращение' 
       dimensions='w-full'
-      disabled={!editorMode}
+      disabled={!isMutable}
       value={alias}
       onChange={event => setAlias(event.target.value)}
     />
     <TextArea
       label='Комментарий'
       value={comment}
-      disabled={!editorMode}
+      disabled={!isMutable}
       onChange={event => setComment(event.target.value)}
     />
     <div className='flex justify-between whitespace-nowrap'>
@@ -103,7 +103,7 @@ function FormRSForm({
         label='Общедоступная схема'
         tooltip='Общедоступные схемы видны всем пользователям и могут быть изменены'
         dimensions='w-fit'
-        disabled={!editorMode}
+        disabled={!isMutable}
         value={common}
         setValue={value => setCommon(value)}
       />
@@ -111,7 +111,7 @@ function FormRSForm({
         label='Неизменная схема'
         tooltip='Только администраторы могут присваивать схемам неизменный статус'
         dimensions='w-fit'
-        disabled={!editorMode || !adminMode}
+        disabled={!isMutable || !adminMode}
         value={canonical}
         setValue={value => setCanonical(value)}
       />
@@ -120,7 +120,7 @@ function FormRSForm({
       <SubmitButton
         text='Сохранить изменения'
         loading={processing}
-        disabled={!isModified || !editorMode}
+        disabled={!isModified || !isMutable}
         icon={<SaveIcon size={6} />}
         dimensions='my-2 w-fit'
       />

@@ -303,6 +303,13 @@
     }
   }
 
+  .text-default {
+    color: var(--cl-fg-100);
+    &.dark {
+      color: var(--cd-fg-100);
+    }
+  }
+
   .text-warning {
     color: var(--cl-red-fg-100);
     .dark & {

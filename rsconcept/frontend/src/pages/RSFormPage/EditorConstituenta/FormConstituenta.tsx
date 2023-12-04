@@ -30,9 +30,9 @@ function FormConstituenta({
   constituenta, toggleReset,
   onRenameCst, onShowAST, onEditTerm
 }: FormConstituentaProps) {
-  const { schema, cstUpdate, editorMode, processing } = useRSForm();
+  const { schema, cstUpdate, isMutable, processing } = useRSForm();
 
-  const readyForEdit = useMemo(() => (!!constituenta && editorMode), [constituenta, editorMode]);
+  const readyForEdit = useMemo(() => (!!constituenta && isMutable), [constituenta, isMutable]);
   
   const [alias, setAlias] = useState('');
   const [term, setTerm] = useState('');

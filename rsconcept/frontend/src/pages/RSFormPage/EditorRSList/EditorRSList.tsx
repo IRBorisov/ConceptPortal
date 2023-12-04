@@ -2,6 +2,7 @@ import { useLayoutEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { type RowSelectionState } from '../../../components/DataTable';
+import SelectedCounter from '../../../components/Shared/SelectedCounter';
 import { useRSForm } from '../../../context/RSFormContext';
 import { CstType, ICstCreateData, ICstMovetoData } from '../../../models/rsform'
 import RSListToolbar from './RSListToolbar';
@@ -15,7 +16,7 @@ interface EditorRSListProps {
 }
 
 function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: EditorRSListProps) {
-  const { schema, editorMode: isEditable, cstMoveTo, resetAliases } = useRSForm();
+  const { schema, isMutable, cstMoveTo, resetAliases } = useRSForm();
   const [selected, setSelected] = useState<number[]>([]);
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -154,7 +155,7 @@ function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edi
 
   // Implement hotkeys for working with constituents table
   function handleTableKey(event: React.KeyboardEvent<HTMLDivElement>) {
-    if (!isEditable) {
+    if (!isMutable) {
       return;
     }
     if (event.key === 'Delete' && selected.length > 0) {
@@ -197,23 +198,25 @@ function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edi
   <div tabIndex={-1}
     className='w-full outline-none'
     onKeyDown={handleTableKey}
-  >
-    <div className='sticky top-0 flex items-center justify-start w-full gap-1 px-2 py-1 border-b select-none clr-app'>
-      <div className='min-w-[9rem] max-w-[9rem] whitespace-nowrap small-caps'>
-        {`Выбор ${selected.length} из ${schema?.stats?.count_all ?? 0}`}
-      </div>
-      <RSListToolbar
-        selectedCount={selected.length}
-        editorMode={isEditable}
-        onMoveUp={handleMoveUp}
-        onMoveDown={handleMoveDown}
-        onClone={handleClone}
-        onCreate={handleCreateCst}
-        onDelete={handleDelete}
-        onTemplates={() => onTemplates(selected.length !== 0 ? selected[selected.length-1] : undefined)}
-        onReindex={handleReindex}
-      />
-    </div>
+  > 
+    <RSListToolbar
+      selectedCount={selected.length}
+      isMutable={isMutable}
+      onMoveUp={handleMoveUp}
+      onMoveDown={handleMoveDown}
+      onClone={handleClone}
+      onCreate={handleCreateCst}
+      onDelete={handleDelete}
+      onTemplates={() => onTemplates(selected.length !== 0 ? selected[selected.length-1] : undefined)}
+      onReindex={handleReindex}
+    />
+    <SelectedCounter 
+      total={schema?.stats?.count_all ?? 0}
+      selected={selected.length}
+      position='left-0 top-1'
+    />
+    
+    <div className='pt-[2.3rem] border-b' />
 
     <RSTable 
       items={schema?.items}

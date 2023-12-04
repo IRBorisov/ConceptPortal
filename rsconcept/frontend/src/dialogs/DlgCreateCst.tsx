@@ -47,59 +47,58 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
   }, [cstData.alias, cstData.cst_type, schema]);
 
   return (
-    <Modal
-      title='Создание конституенты'
-      hideWindow={hideWindow}
-      canSubmit={validated}
-      onSubmit={handleSubmit}
-      submitText='Создать'
-    >
-    <div className='h-fit w-[35rem] px-2 mb-2 flex flex-col justify-stretch gap-3'>
-      <div className='flex justify-center w-full gap-6'>
-        <SelectSingle
-          className='my-2 min-w-[15rem] self-center'
-          placeholder='Выберите тип'
-          options={SelectorCstType}
-          value={{ value: cstData.cst_type, label: labelCstType(cstData.cst_type) }}
-          onChange={data => updateCstData({ cst_type: data?.value ?? CstType.BASE})}
-        />
-        <TextInput id='alias' label='Имя'
-          dense
-          dimensions='w-[7rem]'
-          value={cstData.alias}
-          onChange={event => updateCstData({ alias: event.target.value})}
-        />
-      </div>
-      <TextArea id='term' label='Термин'
-        placeholder='Схемный или предметный термин, обозначающий данное понятие или утверждение'
-        rows={2}
-        value={cstData.term_raw}
-        spellCheck
-        onChange={event => updateCstData({ term_raw: event.target.value })}
+  <Modal
+    title='Создание конституенты'
+    hideWindow={hideWindow}
+    canSubmit={validated}
+    onSubmit={handleSubmit}
+    submitText='Создать'
+  >
+  <div className='h-fit w-[35rem] px-2 my-2 flex flex-col justify-stretch gap-3'>
+    <div className='flex justify-center w-full gap-6'>
+      <SelectSingle
+        className='min-w-[15rem] self-center'
+        placeholder='Выберите тип'
+        options={SelectorCstType}
+        value={{ value: cstData.cst_type, label: labelCstType(cstData.cst_type) }}
+        onChange={data => updateCstData({ cst_type: data?.value ?? CstType.BASE})}
       />
-      <RSInput id='expression' label='Формальное определение'
-        placeholder='Родоструктурное выражение, задающее формальное определение'
-        height='5.1rem'
-        value={cstData.definition_formal}
-        onChange={value => updateCstData({definition_formal: value})}
-      />
-      <TextArea id='definition' label='Текстовое определение'
-        placeholder='Лингвистическая интерпретация формального выражения'
-        rows={2}
-        value={cstData.definition_raw}
-        spellCheck
-        onChange={event => updateCstData({ definition_raw: event.target.value })}
-      />
-      <TextArea id='convention' label='Конвенция / Комментарий'
-        placeholder='Договоренность об интерпретации или пояснение'
-        rows={2}
-        value={cstData.convention}
-        spellCheck
-        onChange={event => updateCstData({ convention: event.target.value })}
+      <TextInput id='alias' label='Имя'
+        dense
+        dimensions='w-[7rem]'
+        value={cstData.alias}
+        onChange={event => updateCstData({ alias: event.target.value})}
       />
     </div>
-    </Modal>
-  );
+    <TextArea id='term' label='Термин'
+      placeholder='Схемный или предметный термин, обозначающий данное понятие или утверждение'
+      rows={2}
+      value={cstData.term_raw}
+      spellCheck
+      onChange={event => updateCstData({ term_raw: event.target.value })}
+    />
+    <RSInput id='expression' label='Формальное определение'
+      placeholder='Родоструктурное выражение, задающее формальное определение'
+      height='5.1rem'
+      value={cstData.definition_formal}
+      onChange={value => updateCstData({definition_formal: value})}
+    />
+    <TextArea id='definition' label='Текстовое определение'
+      placeholder='Лингвистическая интерпретация формального выражения'
+      rows={2}
+      value={cstData.definition_raw}
+      spellCheck
+      onChange={event => updateCstData({ definition_raw: event.target.value })}
+    />
+    <TextArea id='convention' label='Конвенция / Комментарий'
+      placeholder='Договоренность об интерпретации или пояснение'
+      rows={2}
+      value={cstData.convention}
+      spellCheck
+      onChange={event => updateCstData({ convention: event.target.value })}
+    />
+  </div>
+  </Modal>);
 }
 
 export default DlgCreateCst;

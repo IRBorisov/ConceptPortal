@@ -40,35 +40,36 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
   }, [cstData.cst_type, cstData.alias, initial, schema]);
 
   return (
-    <Modal
-      title='Переименование конституенты'
-      submitText='Переименовать'
-      submitInvalidTooltip={'Введите незанятое имя, соответствующее типу'}
-      hideWindow={hideWindow}
-      canSubmit={validated}
-      onSubmit={handleSubmit}
-    >
-      <div className='flex items-center gap-4 px-2 my-2 h-fit min-w-[25rem]'>
-        <SelectSingle
-          placeholder='Выберите тип'
-          className='min-w-[14rem] self-center'
-          options={SelectorCstType}
-          value={{
-            value: cstData.cst_type,
-            label: labelCstType(cstData.cst_type)
-          }}
-          onChange={data => updateData({cst_type: data?.value ?? CstType.BASE})}
-        />
-        <div>
-        <TextInput id='alias' label='Имя' dense
-          dimensions='w-[7rem]'
-          value={cstData.alias}
-          onChange={event => updateData({alias: event.target.value})}
-        />
-        </div>
-      </div>
-    </Modal>
-  );
+  <Modal
+    title='Переименование конституенты'
+    submitText='Переименовать'
+    submitInvalidTooltip={'Введите незанятое имя, соответствующее типу'}
+    hideWindow={hideWindow}
+    canSubmit={validated}
+    onSubmit={handleSubmit}
+  >
+  <div className='flex justify-center w-full min-w-[22rem] my-3'>
+  <div className='flex items-center gap-6'>
+    <SelectSingle
+      placeholder='Выберите тип'
+      className='min-w-[14rem] self-center'
+      options={SelectorCstType}
+      value={{
+        value: cstData.cst_type,
+        label: labelCstType(cstData.cst_type)
+      }}
+      onChange={data => updateData({cst_type: data?.value ?? CstType.BASE})}
+    />
+    <div>
+    <TextInput id='alias' label='Имя' dense
+      dimensions='w-[7rem]'
+      value={cstData.alias}
+      onChange={event => updateData({alias: event.target.value})}
+    />
+    </div>
+  </div>
+  </div>
+  </Modal>);
 }
 
 export default DlgRenameCst;

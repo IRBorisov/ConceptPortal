@@ -14,10 +14,10 @@ extends Pick<ModalProps, 'hideWindow'> {
 function DlgGraphParams({ hideWindow, initial, onConfirm } : DlgGraphParamsProps) {
   const [params, updateParams] = usePartialUpdate(initial);
 
-  const handleSubmit = () => {
+  function handleSubmit() {
     hideWindow();
     onConfirm(params);
-  };
+  }
 
   return (
   <Modal canSubmit
@@ -26,7 +26,7 @@ function DlgGraphParams({ hideWindow, initial, onConfirm } : DlgGraphParamsProps
     onSubmit={handleSubmit}
     submitText='Применить'
   >
-  <div className='flex gap-2'>
+  <div className='flex gap-6 my-2'>
     <div className='flex flex-col gap-1'>
       <h1>Преобразования</h1>
       <Checkbox

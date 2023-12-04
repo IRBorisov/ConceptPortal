@@ -35,11 +35,11 @@ function EditorConstituenta({
   onShowAST, onCreateCst, onRenameCst, onOpenEdit, onDeleteCst, onTemplates
 }: EditorConstituentaProps) {
   const windowSize = useWindowSize();
-  const { schema, editorMode } = useRSForm();
+  const { schema, isMutable } = useRSForm();
 
   const [toggleReset, setToggleReset] = useState(false);
 
-  const readyForEdit = useMemo(() => (!!activeCst && editorMode), [activeCst, editorMode]);
+  const readyForEdit = useMemo(() => (!!activeCst && isMutable), [activeCst, isMutable]);
 
   function handleDelete() {
     if (!schema || !activeID) {
@@ -103,7 +103,7 @@ function EditorConstituenta({
     onKeyDown={handleInput}
   >
     <ConstituentaToolbar
-      editorMode={readyForEdit}
+      isMutable={readyForEdit}
       isModified={isModified}
     
       onSubmit={initiateSubmit}

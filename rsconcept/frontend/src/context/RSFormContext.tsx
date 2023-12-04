@@ -26,7 +26,7 @@ interface IRSFormContext {
   loading: boolean
   processing: boolean
 
-  editorMode: boolean
+  isMutable: boolean
   adminMode: boolean
   isOwned: boolean
   isClaimable: boolean
@@ -88,7 +88,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
     return (user?.id !== schema?.owner && schema?.is_common && !schema?.is_canonical) ?? false;
   }, [user, schema?.owner, schema?.is_common, schema?.is_canonical]);
 
-  const editorMode = useMemo(
+  const isMutable = useMemo(
   () => {
     return (
       !loading && !processing && !isReadonly &&
@@ -322,7 +322,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
     <RSFormContext.Provider value={{
       schema,
       error, loading, processing,
-      adminMode, isReadonly, isOwned, editorMode,
+      adminMode, isReadonly, isOwned, isMutable,
       isClaimable, isTracking,
       toggleForceAdmin: () => setAdminMode(prev => !prev),
       toggleReadonly: () => setIsReadonly(prev => !prev),

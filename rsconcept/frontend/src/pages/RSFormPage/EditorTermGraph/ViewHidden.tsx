@@ -42,7 +42,7 @@ function ViewHidden({
   }
   return (
   <div className='flex flex-col text-sm ml-2 border clr-app max-w-[12.5rem] min-w-[12.5rem]'>
-    <p className='pt-2 text-center'><b>Скрытые конституенты</b></p>
+    <p className='mt-2 text-center'><b>Скрытые конституенты</b></p>
     <div className='flex flex-wrap justify-center gap-2 py-2 overflow-y-auto' style={{ maxHeight: dismissedHeight }}>
     {items.map(
     (cstID) => {

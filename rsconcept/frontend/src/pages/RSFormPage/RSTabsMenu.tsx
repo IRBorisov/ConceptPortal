@@ -30,7 +30,7 @@ function RSTabsMenu({
   const navigate = useNavigate();
   const { user } = useAuth();
   const {
-    isOwned, editorMode: isEditable, isTracking, isReadonly, isClaimable, adminMode: isForceAdmin,
+    isOwned, isMutable, isTracking, isReadonly, isClaimable, adminMode: isForceAdmin,
     toggleForceAdmin, toggleReadonly, processing
   } = useRSForm();
   const schemaMenu = useDropdown();
@@ -100,15 +100,15 @@ function RSTabsMenu({
             <p>Выгрузить в Экстеор</p>
           </div>
         </DropdownButton>
-        <DropdownButton disabled={!isEditable} onClick={handleUpload}>
+        <DropdownButton disabled={!isMutable} onClick={handleUpload}>
           <div className='inline-flex items-center justify-start gap-2'>
-            <UploadIcon color={isEditable ? 'text-warning' : ''} size={4}/>
+            <UploadIcon color={isMutable ? 'text-warning' : ''} size={4}/>
             <p>Загрузить из Экстеора</p>
           </div>
         </DropdownButton>
-        <DropdownButton disabled={!isEditable} onClick={handleDelete}>
+        <DropdownButton disabled={!isMutable} onClick={handleDelete}>
           <span className='inline-flex items-center justify-start gap-2'>
-            <DumpBinIcon color={isEditable ? 'text-warning' : ''} size={4} />
+            <DumpBinIcon color={isMutable ? 'text-warning' : ''} size={4} />
             <p>Удалить схему</p>
           </span>
         </DropdownButton>
@@ -122,10 +122,10 @@ function RSTabsMenu({
     </div>
     <div ref={editMenu.ref}>
       <Button dense noBorder tabIndex={-1}
-        tooltip={'измнение: ' + (isEditable ? '[доступно]' : '[запрещено]')}
+        tooltip={'измнение: ' + (isMutable ? '[доступно]' : '[запрещено]')}
         dimensions='h-full w-fit'
         style={{outlineColor: 'transparent'}}
-        icon={<EditIcon size={5} color={isEditable ? 'text-success' : 'text-warning'}/>}
+        icon={<EditIcon size={5} color={isMutable ? 'text-success' : 'text-warning'}/>}
         onClick={editMenu.toggle}
       />
       {editMenu.isActive ?
@@ -135,14 +135,14 @@ function RSTabsMenu({
           onClick={!isOwned ? handleClaimOwner : undefined}
           tooltip={!user || !isClaimable ? 'Взять во владение можно общую изменяемую схему' : ''}
         >
-          <div className='flex items-center gap-2 pl-1'>
+          <div className='flex items-center gap-2 pl-1 text-default'>
             <span>
-              <OwnerIcon size={5} color={isOwned ? 'text-success' : 'text-controls'} />
+              <OwnerIcon size={4} color={isOwned ? 'text-success' : 'text-controls'} />
             </span>
-            <p>
-              {isOwned ? <b>Владелец схемы</b> : null}
+            <div>
+              {isOwned ? <b className='text-default'>Вы — владелец</b> : null}
               {!isOwned ? <b>Стать владельцем</b>  : null}
-            </p>
+            </div>
           </div>
         </DropdownButton>
         {(isOwned || user?.is_staff) ?

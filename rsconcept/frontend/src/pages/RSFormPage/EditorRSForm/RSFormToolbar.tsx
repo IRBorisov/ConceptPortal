@@ -6,7 +6,7 @@ import HelpRSFormMeta from '../../../components/Help/HelpRSFormMeta'
 import { DownloadIcon, DumpBinIcon, HelpIcon, OwnerIcon, SaveIcon, ShareIcon } from '../../../components/Icons'
 
 interface RSFormToolbarProps {
-  editorMode: boolean
+  isMutable: boolean
   modified: boolean
   claimable: boolean
   anonymous: boolean
@@ -19,11 +19,11 @@ interface RSFormToolbarProps {
 }
 
 function RSFormToolbar({
-  editorMode, modified, claimable, anonymous,
+  isMutable, modified, claimable, anonymous,
   onSubmit, onShare, onDownload,
   onClaim, onDestroy
 }: RSFormToolbarProps) {
-  const canSave = useMemo(() => (modified && editorMode), [modified, editorMode]);
+  const canSave = useMemo(() => (modified && isMutable), [modified, isMutable]);
   return (    
   <div className='relative flex items-start justify-center w-full'>
   <div className='absolute flex mt-1'>
@@ -51,9 +51,9 @@ function RSFormToolbar({
     />
     <MiniButton
       tooltip='Удалить схему'
-      disabled={!editorMode}
+      disabled={!isMutable}
       onClick={onDestroy}
-      icon={<DumpBinIcon size={5} color={editorMode ? 'text-warning' : ''} />}
+      icon={<DumpBinIcon size={5} color={isMutable ? 'text-warning' : ''} />}
     />
     <div id='rsform-help' className='py-1 ml-1'>
       <HelpIcon color='text-primary' size={5} />

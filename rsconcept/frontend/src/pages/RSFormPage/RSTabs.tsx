@@ -13,7 +13,7 @@ import { useLibrary } from '../../context/LibraryContext';
 import { useConceptNavigation } from '../../context/NagivationContext';
 import { useRSForm } from '../../context/RSFormContext';
 import { useConceptTheme } from '../../context/ThemeContext';
-import DlgCloneRSForm from '../../dialogs/DlgCloneRSForm';
+import DlgCloneLibraryItem from '../../dialogs/DlgCloneLibraryItem';
 import DlgConstituentaTemplate from '../../dialogs/DlgConstituentaTemplate';
 import DlgCreateCst from '../../dialogs/DlgCreateCst';
 import DlgDeleteCst from '../../dialogs/DlgDeleteCst';
@@ -48,7 +48,7 @@ function ProcessError({error}: {error: ErrorInfo}): React.ReactElement {
       </div>
     );
   } else {
-    return ( <BackendError error={error} />);
+    return (<BackendError error={error} />);
   }
 }
 
@@ -337,7 +337,8 @@ function RSTabs() {
     hideWindow={() => setShowUpload(false)}
   /> : null}
   {showClone ?
-  <DlgCloneRSForm
+  <DlgCloneLibraryItem
+    base={schema!}
     hideWindow={() => setShowClone(false)}
   /> : null}
   {showAST ? 
