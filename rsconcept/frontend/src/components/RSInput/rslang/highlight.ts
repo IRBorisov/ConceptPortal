@@ -15,5 +15,9 @@ export const highlighting = styleTags({
   Filter: tags.keyword,
   PrefixR: tags.controlKeyword,
   PrefixI: tags.controlKeyword,
-  PrefixD: tags.controlKeyword
+  PrefixD: tags.controlKeyword,
+  "{": tags.brace,
+  "}": tags.brace,
+  "|": tags.brace,
+  ";": tags.brace,
 });

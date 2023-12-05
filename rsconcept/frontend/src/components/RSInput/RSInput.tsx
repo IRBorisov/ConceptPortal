@@ -87,6 +87,7 @@ function RSInput({
       { tag: tags.literal, color: colors.fgBlue }, // literals
       { tag: tags.controlKeyword, fontWeight: '500'}, // R | I | D
       { tag: tags.unit, fontSize: '0.75rem' }, // indicies
+      { tag: tags.brace, color:colors.fgPurple, fontWeight: '500' }, // braces (curly brackets)
     ]
   }), [disabled, colors, darkMode]);
 
