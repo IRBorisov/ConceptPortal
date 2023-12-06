@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import { ITooltip, Tooltip } from 'react-tooltip';
 
 import { useConceptTheme } from '../../context/ThemeContext';
@@ -16,7 +17,7 @@ function ConceptTooltip({
 }: ConceptTooltipProps) {
   const { darkMode } = useConceptTheme();
 
-  return (
+  return createPortal(
   <Tooltip
     opacity={0.97}
     style={{...{ paddingTop: '2px', paddingBottom: '2px'}, ...style}}
@@ -24,8 +25,7 @@ function ConceptTooltip({
     variant={(darkMode ? 'dark' : 'light')}
     place={place}
     {...restProps}
-  />
-  );
+  />, document.body);
 }
 
 export default ConceptTooltip;
