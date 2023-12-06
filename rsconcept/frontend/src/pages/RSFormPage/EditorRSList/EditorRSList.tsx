@@ -177,11 +177,14 @@ function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edi
       switch (code) {
         case 'ArrowUp': handleMoveUp(); return true;
         case 'ArrowDown':  handleMoveDown(); return true;
-        case 'KeyV':  handleClone(); return true;
+        case 'KeyV':    handleClone(); return true;
       }
     }
     switch (code) {
       case 'Backquote': handleCreateCst(); return true;
+      case 'KeyE':      onTemplates(); return true;
+      case 'KeyR':      handleReindex(); return true;
+      
       case 'Digit1':    handleCreateCst(CstType.BASE); return true;
       case 'Digit2':    handleCreateCst(CstType.STRUCTURED); return true;
       case 'Digit3':    handleCreateCst(CstType.TERM); return true;

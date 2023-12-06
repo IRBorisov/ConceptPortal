@@ -48,7 +48,7 @@ function EditorConstituenta({
     onDeleteCst([activeID]);
   }
 
-  function handleCreateCst() {
+  function handleCreate() {
     if (!activeID || !schema) {
       return;
     }
@@ -65,7 +65,7 @@ function EditorConstituenta({
     onCreateCst(data);
   }
 
-  function handleCloneCst() {
+  function handleClone() {
     if (!activeID || !schema || !activeCst) {
       return;
     }
@@ -82,19 +82,39 @@ function EditorConstituenta({
     onCreateCst(data, true);
   }
 
+  function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (!isMutable) {
+      return;
+    }
+    if (event.ctrlKey && event.code === 'KeyS') {
+      if (isModified) {
+        initiateSubmit();
+      }
+      event.preventDefault();
+      return;
+    }
+    if (!event.altKey || event.shiftKey) {
+      return;
+    }
+    if (processAltKey(event.code)) {
+      event.preventDefault();
+      return;
+    }
+  }
+
   function initiateSubmit() {
     const element = document.getElementById(globalIDs.constituenta_editor) as HTMLFormElement;
     if (element) {
       element.requestSubmit();
     }
   }
-  function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
-    if (event.ctrlKey && event.code === 'KeyS') {
-      if (isModified) {
-        initiateSubmit();
-      }
-      event.preventDefault();
+
+  function processAltKey(code: string): boolean {
+    switch (code) {
+      case 'KeyE':   onTemplates(); return true;
+      case 'KeyV':   handleClone(); return true;
     }
+    return false;
   }
 
   return (
@@ -110,8 +130,8 @@ function EditorConstituenta({
       onReset={() => setToggleReset(prev => !prev)}
     
       onDelete={handleDelete}
-      onClone={handleCloneCst}
-      onCreate={handleCreateCst}
+      onClone={handleClone}
+      onCreate={handleCreate}
       onTemplates={() => onTemplates(activeID)}
     />
     <div className='flex justify-start'>

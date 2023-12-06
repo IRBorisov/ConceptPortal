@@ -28,7 +28,7 @@ function RSFormToolbar({
   return (    
   <Overlay position='w-full top-1 flex items-start justify-center'>
     <MiniButton
-      tooltip='Сохранить изменения'
+      tooltip='Сохранить изменения [Ctrl + S]'
       disabled={!canSave}
       icon={<SaveIcon size={5} color={canSave ? 'text-primary' : ''}/>}
       onClick={onSubmit}

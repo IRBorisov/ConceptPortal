@@ -30,7 +30,7 @@ function ConstituentaToolbar({
   return (
   <Overlay position='right-1/2 translate-x-1/2 top-1 flex items-start'>
     <MiniButton
-      tooltip='Сохранить изменения'
+      tooltip='Сохранить изменения [Ctrl + S]'
       disabled={!canSave}
       icon={<SaveIcon size={5} color={canSave ? 'text-primary' : ''}/>}
       onClick={onSubmit}
@@ -48,13 +48,13 @@ function ConstituentaToolbar({
       icon={<SmallPlusIcon size={5} color={isMutable ? 'text-success' : ''} />} 
     />
     <MiniButton
-      tooltip='Клонировать конституенту'
+      tooltip='Клонировать конституенту [Alt + V]'
       disabled={!isMutable}
       onClick={onClone}
       icon={<CloneIcon size={5} color={isMutable ? 'text-success' : ''} />} 
     />
     <MiniButton
-      tooltip='Создать конституенту из шаблона'
+      tooltip='Создать конституенту из шаблона [Alt + E]'
       icon={<DiamondIcon color={isMutable ? 'text-primary': ''} size={5}/>}
       disabled={!isMutable}
       onClick={onTemplates}

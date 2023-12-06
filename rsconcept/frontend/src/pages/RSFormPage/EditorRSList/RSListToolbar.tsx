@@ -86,13 +86,13 @@ function RSListToolbar({
       </div>
     </div>
     <MiniButton
-      tooltip='Создать конституенту из шаблона'
+      tooltip='Создать конституенту из шаблона [Alt + E]'
       icon={<DiamondIcon color={isMutable ? 'text-primary': ''} size={5}/>}
       disabled={!isMutable}
       onClick={onTemplates}
     />
     <MiniButton
-      tooltip='Сброс имен: присвоить порядковые имена'
+      tooltip='Сброс имен: присвоить порядковые имена [Alt + R]'
       icon={<UpdateIcon color={isMutable ? 'text-primary': ''} size={5}/>}
       disabled={!isMutable}
       onClick={onReindex}
