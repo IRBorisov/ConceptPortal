@@ -25,10 +25,10 @@ function DlgGraphParams({ hideWindow, initial, onConfirm } : DlgGraphParamsProps
     title='Настройки графа термов'
     onSubmit={handleSubmit}
     submitText='Применить'
+    className='flex gap-12 px-6 py-2'
   >
-  <div className='flex gap-6 my-2'>
     <div className='flex flex-col gap-1'>
-      <h1>Преобразования</h1>
+      <h1 className='mb-2'>Преобразования</h1>
       <Checkbox
         label='Скрыть текст'
         tooltip='Не отображать термины'
@@ -55,7 +55,7 @@ function DlgGraphParams({ hideWindow, initial, onConfirm } : DlgGraphParamsProps
       />
     </div>
     <div className='flex flex-col gap-1'>
-      <h1>Типы конституент</h1>
+      <h1 className='mb-2'>Типы конституент</h1>
       <Checkbox
         label={labelCstType(CstType.BASE)}
         value={params.allowBase} 
@@ -97,7 +97,6 @@ function DlgGraphParams({ hideWindow, initial, onConfirm } : DlgGraphParamsProps
         setValue={value => updateParams({ allowTheorem: value})}
       />
     </div>
-  </div>
   </Modal>);
 }
 

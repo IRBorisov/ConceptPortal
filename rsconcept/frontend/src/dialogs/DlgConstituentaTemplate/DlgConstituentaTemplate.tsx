@@ -114,33 +114,35 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     canSubmit={validated}
     onSubmit={handleSubmit}
     submitText='Создать'
+    className='max-w-[43rem] min-w-[43rem] min-h-[35rem] px-6'
   >
   <Tabs defaultFocus forceRenderTabPanel
-    className='flex flex-col items-center max-w-[40rem] min-w-[40rem] min-h-[35rem] mb-1'
     selectedTabClassName='clr-selected'
     selectedIndex={activeTab}
     onSelect={setActiveTab}
   >
-    <Overlay position='top-0 left-[12.3rem]'>
+    <Overlay position='top-0 right-[6rem]'>
       <HelpButton topic={HelpTopic.RSTEMPLATES} dimensions='max-w-[35rem]' />
     </Overlay>
     
-    <TabList className='flex mb-3 border'>
-      <ConceptTab
-        label='Шаблон'
-        tooltip='Выбор шаблона выражения'
-        className='border-r w-[8rem]'
-      />
-      <ConceptTab
-        label='Аргументы'
-        tooltip='Подстановка аргументов шаблона'
-        className='border-r w-[8rem]'
-      />
-      <ConceptTab
-        label='Конституента'
-        tooltip='Редактирование атрибутов конституенты'
-        className='w-[8rem]'
-      />
+    <TabList className='flex justify-center mb-3'>
+      <div className='flex border w-fit'>
+        <ConceptTab
+          label='Шаблон'
+          tooltip='Выбор шаблона выражения'
+          className='border-r w-[8rem]'
+        />
+        <ConceptTab
+          label='Аргументы'
+          tooltip='Подстановка аргументов шаблона'
+          className='border-r w-[8rem]'
+        />
+        <ConceptTab
+          label='Конституента'
+          tooltip='Редактирование атрибутов конституенты'
+          className='w-[8rem]'
+        />
+      </div>
     </TabList>
     
     <div className='w-full'>

@@ -47,28 +47,30 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
     hideWindow={hideWindow}
     canSubmit={isValid}
     onSubmit={handleSubmit}
+    className='items-center min-w-[40rem] max-w-[40rem] px-6 min-h-[34rem]'
   >
   <Tabs defaultFocus
-    className='flex flex-col items-center min-w-[40rem] max-w-[40rem] mb-2 min-h-[34rem]'
     selectedTabClassName='clr-selected'
     selectedIndex={activeTab}
     onSelect={setActiveTab}
   >
-    <Overlay position='top-0 left-[12.2rem]'>
-      <HelpButton topic={HelpTopic.TERM_CONTROL} dimensions='max-w-[38rem]' offset={14} />
+    <Overlay position='top-0 right-[4rem]'>
+      <HelpButton topic={HelpTopic.TERM_CONTROL} dimensions='max-w-[35rem]' offset={14} />
     </Overlay>
 
-    <TabList className='flex mb-3 border'>
-      <ConceptTab
-        label={labelReferenceType(ReferenceType.ENTITY)}
-        tooltip='Отсылка на термин в заданной словоформе'
-        className='w-[12rem] border-r-2'
-      />
-      <ConceptTab
-        label={labelReferenceType(ReferenceType.SYNTACTIC)}
-        tooltip='Установление синтаксической связи с отсылкой на термин'
-        className='w-[12rem]'
-      />
+    <TabList className='flex justify-center mb-3'>
+      <div className='flex border w-fit'>
+        <ConceptTab
+          label={labelReferenceType(ReferenceType.ENTITY)}
+          tooltip='Отсылка на термин в заданной словоформе'
+          className='w-[12rem] border-r-2'
+        />
+        <ConceptTab
+          label={labelReferenceType(ReferenceType.SYNTACTIC)}
+          tooltip='Установление синтаксической связи с отсылкой на термин'
+          className='w-[12rem]'
+        />
+      </div>
     </TabList>
     
     <div className='w-full'>

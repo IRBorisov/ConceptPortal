@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
+import Label from '../components/Common/Label';
 import MiniButton from '../components/Common/MiniButton';
 import Modal from '../components/Common/Modal';
 import Overlay from '../components/Common/Overlay';
@@ -210,28 +211,28 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
     hideWindow={hideWindow}
     submitText='Сохранить'
     onSubmit={handleSubmit}
+    className='min-w-[40rem] max-w-[40rem] px-6'
   >
-  <div className='min-w-[40rem] max-w-[40rem]'>
     <Overlay position='top-[-0.2rem] left-[7.5rem]'>
       <HelpButton topic={HelpTopic.TERM_CONTROL} dimensions='max-w-[38rem]' offset={3} />
     </Overlay>
   
     <TextArea disabled spellCheck
       label='Начальная форма'
-      placeholder='Начальная форма'
+      placeholder='Термин в начальной форме'
       rows={1}
       value={term}
     />
 
-    <div className='mt-3 mb-2 text-sm font-semibold'>
-      Параметры словоформы
+    <div className='mt-3 mb-2'>
+      <Label text='Параметры словоформы' />
     </div>
 
     <div className='flex items-start justify-between w-full'>
       <div className='flex items-center'>
         <TextArea
           placeholder='Введите текст'
-          dimensions='min-w-[18rem] w-full min-h-[4.2rem]'
+          dimensions='min-w-[18rem] w-full min-h-[5rem]'
           rows={2}
           value={inputText}
           onChange={event => setInputText(event.target.value)}
@@ -309,7 +310,6 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         onRowClicked={handleRowClicked}
       />
     </div>
-  </div>
   </Modal>);
 }
 

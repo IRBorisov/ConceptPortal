@@ -87,7 +87,7 @@ function RSInput({
       { tag: tags.literal, color: colors.fgBlue }, // literals
       { tag: tags.controlKeyword, fontWeight: '500'}, // R | I | D
       { tag: tags.unit, fontSize: '0.75rem' }, // indicies
-      { tag: tags.brace, color:colors.fgPurple, fontWeight: '500' }, // braces (curly brackets)
+      { tag: tags.brace, color:colors.fgPurple, fontWeight: '700' }, // braces (curly brackets)
     ]
   }), [disabled, colors, darkMode]);
 
@@ -108,12 +108,14 @@ function RSInput({
     if (event.altKey) {
       if (text.processAltKey(event.code, event.shiftKey)) {
         event.preventDefault();
+        event.stopPropagation();
       }
     } else if (!event.ctrlKey) {
       const newSymbol = getSymbolSubstitute(event.code, event.shiftKey);
       if (newSymbol) {
         text.replaceWith(newSymbol);
         event.preventDefault();
+        event.stopPropagation();
       }
     }
   }, [thisRef]);

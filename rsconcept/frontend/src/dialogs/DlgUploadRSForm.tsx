@@ -44,20 +44,20 @@ function DlgUploadRSForm({ hideWindow }: DlgUploadRSFormProps) {
     canSubmit={!!file}
     onSubmit={handleSubmit}
     submitText='Загрузить'
+    className='w-[20rem] px-6'
   >
-    <div className='flex flex-col items-start min-w-[20rem] max-w-[20rem]'>
-      <FileInput
-        label='Выбрать файл'
-        acceptType={EXTEOR_TRS_FILE}
-        onChange={handleFile}
-      />
-      <Checkbox
-        label='Загружать название и комментарий'
-        dimensions='w-fit pb-2'
-        value={loadMetadata}
-        setValue={value => setLoadMetadata(value)}
-      />
-    </div>
+    <FileInput
+      label='Выбрать файл'
+      dimensions='w-full flex items-center'
+      acceptType={EXTEOR_TRS_FILE}
+      onChange={handleFile}
+    />
+    <Checkbox
+      label='Загружать название и комментарий'
+      dimensions='w-fit py-2'
+      value={loadMetadata}
+      setValue={value => setLoadMetadata(value)}
+    />
   </Modal>);
 }
 

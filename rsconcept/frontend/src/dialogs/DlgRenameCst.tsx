@@ -47,8 +47,8 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
     hideWindow={hideWindow}
     canSubmit={validated}
     onSubmit={handleSubmit}
+    className='flex justify-center items-center gap-6 w-full min-w-[24rem] py-6 px-6'
   >
-  <div className='flex justify-center items-center gap-6 w-full min-w-[22rem] my-3'>
     <SelectSingle
       placeholder='Выберите тип'
       className='min-w-[14rem] self-center'
@@ -67,7 +67,6 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
       onChange={event => updateData({alias: event.target.value})}
     />
     </div>
-  </div>
   </Modal>);
 }
 

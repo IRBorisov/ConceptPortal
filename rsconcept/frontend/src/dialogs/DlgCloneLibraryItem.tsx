@@ -60,8 +60,8 @@ function DlgCloneLibraryItem({ hideWindow, base }: DlgCloneLibraryItemProps) {
     canSubmit={canSubmit}
     submitText='Создать'
     onSubmit={handleSubmit}
+    className='flex flex-col gap-3 px-6 py-2'
   >
-  <div className='flex flex-col gap-3'>
     <TextInput
       label='Полное название'
       value={title}
@@ -83,7 +83,6 @@ function DlgCloneLibraryItem({ hideWindow, base }: DlgCloneLibraryItemProps) {
       value={common}
       setValue={value => setCommon(value)}
     />
-  </div>
   </Modal>);
 }
 

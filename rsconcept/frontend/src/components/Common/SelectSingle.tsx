@@ -25,7 +25,8 @@ function SelectSingle<Option, Group extends GroupBase<Option> = GroupBase<Option
     control: (styles, { isDisabled }) => ({
       ...styles,
       borderRadius: '0.25rem',
-      cursor: isDisabled ? 'not-allowed' : 'pointer'
+      cursor: isDisabled ? 'not-allowed' : 'pointer',
+      boxShadow: 'none'
     }),
     menuPortal: (styles) => ({
       ...styles,

@@ -9,7 +9,7 @@ extends Omit<React.DetailedHTMLProps<LabelHTMLAttributes<HTMLLabelElement>, HTML
 function Label({ text, tooltip, className, ...restProps }: LabelProps) {
   return (
   <label
-    className={`text-sm font-semibold ${className} whitespace-nowrap`}
+    className={`text-sm font-semibold whitespace-nowrap ${className}`}
     title={tooltip}
     {...restProps}
   >

@@ -362,6 +362,7 @@ function RSTabs() {
   /> : null}
   {showDeleteCst ? 
   <DlgDeleteCst
+    schema={schema!}
     hideWindow={() => setShowDeleteCst(false)}
     onDelete={handleDeleteCst}
     selected={toBeDeleted}

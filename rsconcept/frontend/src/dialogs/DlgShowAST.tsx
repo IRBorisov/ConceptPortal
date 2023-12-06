@@ -53,9 +53,9 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
   , []);
 
   return (
-  <Modal
+  <Modal readonly
     hideWindow={hideWindow}
-    readonly
+    className='px-6'
   >
     <div className='w-full my-2 text-lg text-center'>
       {!hoverNode ? expression : null}

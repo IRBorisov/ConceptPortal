@@ -16,12 +16,13 @@ export interface ModalProps {
   onSubmit?: () => void
   onCancel?: () => void
   children: React.ReactNode
+  className?: string
 }
 
 function Modal({ 
   title, hideWindow, onSubmit,
   readonly, onCancel, canSubmit,
-  submitInvalidTooltip,
+  submitInvalidTooltip, className,
   children,
   submitText = 'Продолжить'
 }: ModalProps) {
@@ -42,9 +43,9 @@ function Modal({
   <>
     <div className='fixed top-0 left-0 w-full h-full z-navigation clr-modal-backdrop' />
     <div ref={ref}
-      className='fixed bottom-1/2 left-1/2 translate-y-1/2 -translate-x-1/2 px-6 w-fit max-w-[calc(100vw-2rem)] h-fit z-modal clr-app border shadow-md'
+      className='fixed -translate-x-1/2 translate-y-1/2 border shadow-md bottom-1/2 left-1/2 z-modal clr-app'
     >
-      <Overlay position='right-[-1rem] top-2' className='text-disabled'>
+      <Overlay position='right-[0.3rem] top-2' className='text-disabled'>
         <MiniButton
           tooltip='Закрыть диалоговое окно [ESC]'
           icon={<CrossIcon size={5}/>}
@@ -52,25 +53,32 @@ function Modal({
         />
       </Overlay>
       
-      {title ? <h1 className='my-2 text-lg select-none'>{title}</h1> : null}
+      {title ? <h1 className='px-12 py-2 text-lg select-none'>{title}</h1> : null}
 
-      <div className='max-h-[calc(100vh-8rem)] overflow-auto flex flex-col justify-start '>
+      <div
+        className={`w-full h-fit ${className}`}
+        style={{
+          maxHeight: 'calc(100vh - 8rem)',
+          maxWidth: 'calc(100vw - 2rem)',
+          overflow: 'auto'
+        }}
+      >
         {children}
       </div>
 
-      <div className='flex justify-center w-full gap-6 my-3 z-modal-controls'>
+      <div className='flex justify-center w-full gap-12 px-6 py-3 z-modal-controls min-w-fit'>
         {!readonly ? 
         <Button autoFocus
           text={submitText}
           tooltip={!canSubmit ? submitInvalidTooltip: ''}
-          dimensions='min-w-[8rem] min-h-[2.6rem] w-fit h-fit'
+          dimensions='min-w-[8rem] min-h-[2.6rem]'
           colors='clr-btn-primary'
           disabled={!canSubmit}
           onClick={handleSubmit}
         /> : null}
         <Button
           text={readonly ? 'Закрыть' : 'Отмена'}
-          dimensions='min-w-[8rem] min-h-[2.6rem] w-fit h-fit'
+          dimensions='min-w-[8rem] min-h-[2.6rem]'
           onClick={handleCancel}
         />
       </div>
