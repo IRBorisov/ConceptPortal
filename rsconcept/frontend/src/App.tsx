@@ -1,3 +1,4 @@
+import { pdfjs } from 'react-pdf';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 
 import ConceptToaster from './components/ConceptToaster';
@@ -16,6 +17,11 @@ import RestorePasswordPage from './pages/RestorePasswordPage';
 import RSFormPage from './pages/RSFormPage';
 import UserProfilePage from './pages/UserProfilePage';
 import { globalIDs } from './utils/constants';
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.js',
+  import.meta.url,
+).toString();
 
 function Root() {
   const { noNavigation, noFooter, viewportHeight, mainHeight, showScroll } = useConceptTheme();

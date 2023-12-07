@@ -28,9 +28,9 @@ export const EXTEOR_TRS_FILE = '.trs';
  * Resource relative URIs.
  */
 export const resources = {
-  graph_font: '/DejaVu.ttf'
-}
-
+  graph_font: '/DejaVu.ttf',
+  privacy_policy: '/privacy.pdf'
+};
 
 /**
  * Youtube IDs for embedding.
@@ -62,7 +62,7 @@ export const globalIDs = {
   main_scroll: 'main-scroll',
   library_item_editor: 'library-item-editor',
   constituenta_editor: 'constituenta-editor'
-}
+};
 
 /**
  * Prefixes for generating unique keys for lists.
@@ -85,4 +85,4 @@ export const prefixes = {
   library_list: 'library-list-',
   wordform_list: 'wordform-list-',
   rsedit_btn: 'rsedit-btn-'
-}
+};

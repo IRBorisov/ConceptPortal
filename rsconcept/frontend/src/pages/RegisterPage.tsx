@@ -4,9 +4,11 @@ import { toast } from 'react-toastify';
 
 import BackendError from '../components/BackendError';
 import Button from '../components/Common/Button';
+import Checkbox from '../components/Common/Checkbox';
 import Form from '../components/Common/Form';
 import SubmitButton from '../components/Common/SubmitButton';
 import TextInput from '../components/Common/TextInput';
+import TextURL from '../components/Common/TextURL';
 import { useAuth } from '../context/AuthContext';
 import { useConceptNavigation } from '../context/NagivationContext';
 import { type IUserSignupData } from '../models/library';
@@ -22,6 +24,8 @@ function RegisterPage() {
   const [password2, setPassword2] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+
+  const [acceptPrivacy, setAcceptPrivacy] = useState(false);
 
   useEffect(() => {
     setError(undefined);
@@ -60,7 +64,7 @@ function RegisterPage() {
     <Form
       title='Регистрация'
       onSubmit={handleSubmit}
-      dimensions='w-[24rem]'
+      dimensions='w-[30rem] mt-3'
     >
       <TextInput id='username' required
         label='Имя пользователя'
@@ -80,7 +84,6 @@ function RegisterPage() {
       <div className='text-sm'>
         <p>- используйте уникальный пароль</p>
         <p>- портал функционирует в тестовом режиме</p>
-        <p className='font-semibold text-warning'>- безопасность информации не гарантируется</p>
         {/* <p>- минимум 8 символов</p>
         <p>- большие, маленькие буквы, цифры</p>
         <p>- минимум 1 спец. символ</p> */}
@@ -100,12 +103,24 @@ function RegisterPage() {
         value={lastName}
         onChange={event => setLastName(event.target.value)}
       />
+      <div className='flex text-sm'>
+        <Checkbox
+          label='Принимаю условия'
+          value={acceptPrivacy}
+          setValue={setAcceptPrivacy}
+        />
+        <TextURL 
+          text='обработки персональных данных...'
+          href={'/manuals?topic=privacy'}
+        />
+      </div>
 
       <div className='flex items-center justify-center w-full gap-4 my-4'>
         <SubmitButton
           text='Регистрировать' 
           dimensions='min-w-[10rem]'
           loading={loading}
+          disabled={!acceptPrivacy}
         />
         <Button 
           text='Отмена'

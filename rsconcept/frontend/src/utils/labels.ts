@@ -298,6 +298,7 @@ export function labelHelpTopic(topic: HelpTopic): string {
     case HelpTopic.TERM_CONTROL:  return 'Терминологизация';
     case HelpTopic.EXTEOR:        return 'Экстеор';
     case HelpTopic.API:           return 'REST API';
+    case HelpTopic.PRIVACY:       return 'Конфиденциальность';
   }
 }
 
@@ -317,6 +318,7 @@ export function describeHelpTopic(topic: HelpTopic): string {
     case HelpTopic.TERM_CONTROL:  return 'Справка по контролю терминов и текстовым отсылкам';
     case HelpTopic.EXTEOR:        return 'Справка по программе для экспликации "Экстеор" для Windows';
     case HelpTopic.API:           return 'Описание интерфейса для разработчиков';
+    case HelpTopic.PRIVACY:       return 'Политика обработки персональных данных';
   }
 }
 

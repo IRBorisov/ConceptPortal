@@ -43,7 +43,7 @@ function Checkbox({
 
   return (
     <button type='button' id={id}
-      className={`flex items-center clr-outline focus:outline-dotted focus:outline-1 ${dimensions}`}
+      className={`flex items-center outline-none ${dimensions}`}
       title={tooltip}
       disabled={disabled}
       onClick={handleClick}

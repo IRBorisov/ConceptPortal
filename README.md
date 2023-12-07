@@ -6,7 +6,6 @@ This readme file is used mostly to document project dependencies
 !BEFORE PUSHING INTO MAIN!
 - use Test config in VSCode to run tests before pushing commits / requests
 - cd rsconcept/frontend & npm run build
-- docker compose -f docker-compose-prod.yml up
 
 # Frontend stack & Tooling [Vite + React + Typescript]
 <details>
@@ -21,6 +20,7 @@ This readme file is used mostly to document project dependencies
   - react-intl
   - react-select
   - react-error-boundary
+  - react-pdf
   - reagraph
   - react-tooltip
   - @tanstack/react-table
@@ -104,15 +104,17 @@ This readme file is used mostly to document project dependencies
 - backend and frontend debugging is supported
 - hmr (hot updates) for frontend
 - run via 'docker compose -f "docker-compose-dev.yml" up --build -d'
-- populate initial data: rsconcept/PopulateDevData.ps1 dev-portal-backend
+- populate initial data: 'scripts/dev/PopulateDevData.ps1'
 
 ## Local production build
 - this build is same as production except not using production secrets and working on localhost
 - provide TLS certificate (can be self-signed) 'nginx/cert/local-cert.pem' and 'nginx/cert/local-key.pem'
 - run via 'docker compose -f "docker-compose-prod-local.yml" up --build -d'
-- populate initial data: rsconcept/PopulateDevData.ps1 local-portal-backend
 
 ## Production build
-- create secrets secrets/db_password.txt and django_key.txt
-- provide TLS certificate 'nginx/cert/front-cert.pem' and 'nginx/cert/front-key.pem'
+- provide secrets: 'secrets/db_password.txt' and 'django_key.txt'
+- setup domain names for application and API in configs: 'frontend\env\.env.production', 'rsconcept\backend\.env.dev', 'nginx\production.conf'
+- provide privacy policy document in PDF: 'frontend/public/privacy.pdf'
+- use certbot to obtain certificates via 'docker compose -f "docker-compose-prod.yml" run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ -d portal.acconcept.ru api.portal.acconcept.ru'
 - run via 'docker compose -f "docker-compose-prod.yml" up --build -d'
+- update via 'bash scripts/prod/UpdateProd.sh'

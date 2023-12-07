@@ -4,6 +4,7 @@ import HelpConstituenta from './HelpConstituenta';
 import HelpExteor from './HelpExteor';
 import HelpLibrary from './HelpLibrary';
 import HelpMain from './HelpMain';
+import HelpPrivacy from './HelpPrivacy';
 import HelpRSFormItems from './HelpRSFormItems';
 import HelpRSFormMeta from './HelpRSFormMeta';
 import HelpRSLang from './HelpRSLang';
@@ -27,6 +28,7 @@ function InfoTopic({ topic }: InfoTopicProps) {
   if (topic === HelpTopic.TERM_CONTROL) return <HelpTerminologyControl />;
   if (topic === HelpTopic.EXTEOR) return <HelpExteor />;
   if (topic === HelpTopic.API) return <HelpAPI />;
+  if (topic === HelpTopic.PRIVACY) return <HelpPrivacy />;
   return null;
 }
 

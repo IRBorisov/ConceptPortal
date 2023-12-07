@@ -33,7 +33,8 @@ export enum HelpTopic {
   RSLANG = 'rslang',
   TERM_CONTROL = 'terminology-control',
   EXTEOR = 'exteor',
-  API = 'api'
+  API = 'api',
+  PRIVACY = 'privacy',
 }
 
 /**
