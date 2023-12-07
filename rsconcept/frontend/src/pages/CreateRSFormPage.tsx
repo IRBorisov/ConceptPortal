@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import BackendError from '../components/BackendError';
 import Button from '../components/Common/Button';
 import Checkbox from '../components/Common/Checkbox';
-import Form from '../components/Common/Form';
 import Label from '../components/Common/Label';
 import MiniButton from '../components/Common/MiniButton';
 import Overlay from '../components/Common/Overlay';
@@ -79,11 +78,11 @@ function CreateRSFormPage() {
 
   return (
   <RequireAuth>
-  <div className='flex justify-center'>
-  <Form title='Создание концептуальной схемы' 
+  <form
+    className='max-w-lg w-full py-3 px-6 flex flex-col gap-3'
     onSubmit={handleSubmit}
-    dimensions='max-w-lg w-full mt-4'
   >
+    <h1>Создание концептуальной схемы</h1>
     <Overlay position='top-[-2.4rem] right-[-1rem]'>
       <input ref={inputRef} type='file'
         style={{ display: 'none' }}
@@ -123,7 +122,7 @@ function CreateRSFormPage() {
       value={common}
       setValue={value => setCommon(value ?? false)}
     />
-    <div className='flex items-center justify-center gap-4 py-2'>
+    <div className='flex items-center justify-around py-2'>
       <SubmitButton 
         text='Создать схему'
         loading={processing}
@@ -136,8 +135,7 @@ function CreateRSFormPage() {
       />
     </div>
     {error ? <BackendError error={error} /> : null}
-  </Form>
-  </div>
+  </form>
   </RequireAuth>);
 }
 

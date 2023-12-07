@@ -5,13 +5,17 @@ import { toast } from 'react-toastify';
 import BackendError from '../components/BackendError';
 import Button from '../components/Common/Button';
 import Checkbox from '../components/Common/Checkbox';
-import Form from '../components/Common/Form';
+import ConceptTooltip from '../components/Common/ConceptTooltip';
+import Overlay from '../components/Common/Overlay';
 import SubmitButton from '../components/Common/SubmitButton';
 import TextInput from '../components/Common/TextInput';
 import TextURL from '../components/Common/TextURL';
+import ExpectedAnonymous from '../components/ExpectedAnonymous';
+import { HelpIcon } from '../components/Icons';
 import { useAuth } from '../context/AuthContext';
 import { useConceptNavigation } from '../context/NagivationContext';
 import { type IUserSignupData } from '../models/library';
+import { globalIDs } from '../utils/constants';
 
 function RegisterPage() {
   const location = useLocation();
@@ -57,80 +61,99 @@ function RegisterPage() {
     }
   }
 
+  if (user) {
+    return (<ExpectedAnonymous />);
+  }
   return (
-  <div className='flex justify-center w-full py-2'>
-    {user ? <b>{`Вы вошли в систему как ${user.username}`}</b> : null}
-    {!user ?
-    <Form
-      title='Регистрация'
-      onSubmit={handleSubmit}
-      dimensions='w-[30rem] mt-3'
-    >
-      <TextInput id='username' required
-        label='Имя пользователя'
-        value={username}
-        onChange={event => setUsername(event.target.value)}
-      />
-      <TextInput id='password' type='password' required
-        label='Пароль' 
-        value={password}
-        onChange={event => setPassword(event.target.value)}
-      />
-      <TextInput id='password2' required type='password'
-        label='Повторите пароль'
-        value={password2}
-        onChange={event => setPassword2(event.target.value)}
-      />
-      <div className='text-sm'>
-        <p>- используйте уникальный пароль</p>
-        <p>- портал функционирует в тестовом режиме</p>
-        {/* <p>- минимум 8 символов</p>
-        <p>- большие, маленькие буквы, цифры</p>
-        <p>- минимум 1 спец. символ</p> */}
-      </div>
-      <TextInput id='email' required
-        label='email'
-        value={email}
-        onChange={event => setEmail(event.target.value)}
-      />
-      <TextInput id='first_name'
-        label='Имя'
-        value={firstName}
-        onChange={event => setFirstName(event.target.value)}
-      />
-      <TextInput id='last_name'
-        label='Фамилия'
-        value={lastName}
-        onChange={event => setLastName(event.target.value)}
-      />
-      <div className='flex text-sm'>
-        <Checkbox
-          label='Принимаю условия'
-          value={acceptPrivacy}
-          setValue={setAcceptPrivacy}
+  <form
+    className='py-3 px-6 flex flex-col gap-3 h-fit'
+    onSubmit={handleSubmit}
+  >
+    <h1>Новый пользователь</h1>
+    <div className='flex gap-12'>
+      <div className='flex flex-col gap-3'>
+        <div className='absolute'>
+          <Overlay
+            id={globalIDs.password_tooltip}
+            position='top-[4.8rem] left-[3.4rem] absolute'
+          >
+            <HelpIcon color='text-primary' size={5} />
+          </Overlay>
+          <ConceptTooltip
+            anchorSelect={`#${globalIDs.password_tooltip}`}
+            offset={6}
+          >
+            <p>- используйте уникальный пароль</p>
+            <p>- портал функционирует в тестовом режиме</p>
+          </ConceptTooltip>
+        </div>
+
+        <TextInput id='username' required
+          label='Имя пользователя (логин)'
+          value={username}
+          dimensions='w-[12rem]'
+          onChange={event => setUsername(event.target.value)}
         />
-        <TextURL 
-          text='обработки персональных данных...'
-          href={'/manuals?topic=privacy'}
+        <TextInput id='password' type='password' required
+          label='Пароль'
+          dimensions='w-[15rem]'
+          value={password}
+          onChange={event => setPassword(event.target.value)}
+        />
+        <TextInput id='password2' required type='password'
+          label='Повторите пароль'
+          dimensions='w-[15rem]'
+          value={password2}
+          onChange={event => setPassword2(event.target.value)}
         />
       </div>
 
-      <div className='flex items-center justify-center w-full gap-4 my-4'>
-        <SubmitButton
-          text='Регистрировать' 
-          dimensions='min-w-[10rem]'
-          loading={loading}
-          disabled={!acceptPrivacy}
+      <div className='flex flex-col gap-3 w-[15rem]'>
+        <TextInput id='email' required
+          label='Электронная почта (email)'
+          value={email}
+          onChange={event => setEmail(event.target.value)}
         />
-        <Button 
-          text='Отмена'
-          dimensions='min-w-[10rem]'
-          onClick={() => handleCancel()}
+        <TextInput id='first_name'
+          label='Отображаемое имя'
+          value={firstName}
+          onChange={event => setFirstName(event.target.value)}
+        />
+        <TextInput id='last_name'
+          label='Отображаемая фамилия'
+          value={lastName}
+          onChange={event => setLastName(event.target.value)}
         />
       </div>
-      {error ? <BackendError error={error} /> : null}
-    </Form> : null}
-  </div>);
+    </div>
+    
+    <div className='flex text-sm'>
+      <Checkbox
+        label='Принимаю условия'
+        value={acceptPrivacy}
+        setValue={setAcceptPrivacy}
+      />
+      <TextURL 
+        text='обработки персональных данных...'
+        href={'/manuals?topic=privacy'}
+      />
+    </div>
+
+    <div className='flex items-center justify-around w-full my-3'>
+      <SubmitButton
+        text='Регистрировать' 
+        dimensions='min-w-[10rem]'
+        loading={loading}
+        disabled={!acceptPrivacy}
+      />
+      <Button 
+        text='Назад'
+        dimensions='min-w-[10rem]'
+        onClick={() => handleCancel()}
+      />
+    </div>
+    {error ? <BackendError error={error} /> : null}
+  </form>);
 }
 
 export default RegisterPage;

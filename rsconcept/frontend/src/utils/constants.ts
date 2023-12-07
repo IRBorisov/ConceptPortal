@@ -29,7 +29,8 @@ export const EXTEOR_TRS_FILE = '.trs';
  */
 export const resources = {
   graph_font: '/DejaVu.ttf',
-  privacy_policy: '/privacy.pdf'
+  privacy_policy: '/privacy.pdf',
+  logo: '/logo_full.svg'
 };
 
 /**
@@ -59,6 +60,7 @@ export const urls = {
  * Global unique IDs.
  */
 export const globalIDs = {
+  password_tooltip: 'password-tooltip',
   main_scroll: 'main-scroll',
   library_item_editor: 'library-item-editor',
   constituenta_editor: 'constituenta-editor'

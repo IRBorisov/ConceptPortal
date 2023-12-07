@@ -36,7 +36,9 @@ function PDFViewer({
   <Document
     file={file}
     onLoadSuccess={onDocumentLoadSuccess}
-    className='mx-3 w-fit'
+    className='px-3 w-fit'
+    loading='Загрузка PDF файла...'
+    error='Не удалось загрузить файл.'
   >
     <Overlay position='top-6 left-1/2 -translate-x-1/2' className='flex select-none'>
       <PageControls 

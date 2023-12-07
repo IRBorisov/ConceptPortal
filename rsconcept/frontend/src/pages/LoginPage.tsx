@@ -3,14 +3,14 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import BackendError, { ErrorInfo } from '../components/BackendError';
-import Form from '../components/Common/Form';
 import SubmitButton from '../components/Common/SubmitButton';
 import TextInput from '../components/Common/TextInput';
 import TextURL from '../components/Common/TextURL';
+import ExpectedAnonymous from '../components/ExpectedAnonymous';
 import { useAuth } from '../context/AuthContext';
 import { useConceptNavigation } from '../context/NagivationContext';
-import { useConceptTheme } from '../context/ThemeContext';
 import { IUserLoginData } from '../models/library';
+import { resources } from '../utils/constants';
 
 function ProcessError({error}: {error: ErrorInfo}): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
@@ -25,11 +25,10 @@ function ProcessError({error}: {error: ErrorInfo}): React.ReactElement {
 }
 
 function LoginPage() {
-  const {mainHeight} = useConceptTheme();
   const location = useLocation();
   const { navigateTo, navigateHistory } = useConceptNavigation();
   const search = useLocation().search;
-  const { user, login, logout, loading, error, setError } = useAuth();
+  const { user, login, loading, error, setError } = useAuth();
   
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -61,41 +60,17 @@ function LoginPage() {
     }
   }
 
-  function logoutAndRedirect() {
-    logout(() => navigateTo('/login/'));
+  if (user) {
+    return (<ExpectedAnonymous />);
   }
-
   return (
-  <div
-    className='flex items-start justify-center w-full pt-8 select-none'
-    style={{minHeight: mainHeight}}
-  >
-  {user ?
-  <div className='flex flex-col items-center gap-2'>
-    <p className='font-semibold'>{`Вы вошли в систему как ${user.username}`}</p>
-    <p>
-      <TextURL text='Создать схему' href='/rsform-create'/>
-      <span> | </span>
-      <TextURL text='Библиотека' href='/library'/>
-      <span> | </span>
-      <TextURL text='Справка' href='/manuals'/>
-      <span> | </span>
-      <span
-        className='cursor-pointer hover:underline text-url'
-        onClick={logoutAndRedirect}
-      >
-        Выйти
-      </span>
-    </p>
-  </div> : null}
-  {!user ?
-  <Form
+  <form
+    className='pt-12 pb-6 px-6 flex flex-col gap-3 w-[24rem]'
     onSubmit={handleSubmit}
-    dimensions='w-[24rem]'
   >
     <img alt='Концепт Портал'
-      src='/logo_full.svg'
-      className='max-h-[2.5rem] min-w-[2.5rem] mt-2 mb-4'
+      src={resources.logo}
+      className='max-h-[2.5rem] min-w-[2.5rem] mb-3'
     />
     <TextInput id='username' autoFocus required allowEnter
       label='Имя пользователя'
@@ -113,6 +88,7 @@ function LoginPage() {
         text='Войти'
         dimensions='w-[12rem]'
         loading={loading}
+        disabled={!username || !password}
       />
     </div>
     <div className='flex flex-col text-sm'>
@@ -120,8 +96,7 @@ function LoginPage() {
       <TextURL text='Нет аккаунта? Зарегистрируйтесь...' href='/signup' />
     </div>
     {error ? <ProcessError error={error} /> : null}
-  </Form> : null}
-  </div>);
+  </form>);
 }
 
 export default LoginPage;

@@ -45,7 +45,7 @@ function Root() {
         overflowY: showScroll ? 'scroll': 'auto'
       }}
     >
-      <main className='w-full h-full min-w-fit' style={{minHeight: mainHeight}}>
+      <main className='w-full h-full min-w-fit flex flex-col items-center' style={{minHeight: mainHeight}}>
         <Outlet />
       </main>
       

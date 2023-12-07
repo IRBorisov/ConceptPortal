@@ -7,7 +7,7 @@ interface ViewTopicProps {
 
 function ViewTopic({ topic }: ViewTopicProps) {
   return (
-  <div className='w-full px-2 py-2'>
+  <div className='w-full px-2 py-2 max-w-[80rem]'>
     <InfoTopic topic={topic}/>
   </div>);
 }
