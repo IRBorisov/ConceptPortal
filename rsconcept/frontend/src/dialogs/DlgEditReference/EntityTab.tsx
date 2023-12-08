@@ -1,18 +1,18 @@
 import { useEffect, useLayoutEffect, useState } from 'react';
 
 import Label from '../../components/Common/Label';
-import SelectMulti from '../../components/Common/SelectMulti';
 import TextInput from '../../components/Common/TextInput';
 import ConstituentaPicker from '../../components/Shared/ConstituentaPicker';
-import { Grammeme, ReferenceType } from '../../models/language';
-import { getCompatibleGrams, parseEntityReference, parseGrammemes } from '../../models/languageAPI';
+import SelectGrammeme from '../../components/Shared/SelectGrammeme';
+import { ReferenceType } from '../../models/language';
+import { parseEntityReference, parseGrammemes } from '../../models/languageAPI';
 import { CstMatchMode } from '../../models/miscelanious';
 import { IConstituenta } from '../../models/rsform';
 import { matchConstituenta } from '../../models/rsformAPI';
 import { prefixes } from '../../utils/constants';
-import { compareGrammemeOptions,IGrammemeOption, SelectorGrammems } from '../../utils/selectors';
+import { IGrammemeOption, SelectorGrammems } from '../../utils/selectors';
 import { IReferenceInputState } from './DlgEditReference';
-import SelectTermform from './SelectTermform';
+import SelectWordForm from './SelectWordForm';
 
 interface EntityTabProps {
   initial: IReferenceInputState
@@ -25,9 +25,7 @@ function EntityTab({ initial, items, setIsValid, setReference }: EntityTabProps)
   const [selectedCst, setSelectedCst] = useState<IConstituenta | undefined>(undefined);
   const [alias, setAlias] = useState('');
   const [term, setTerm] = useState('');
-
   const [selectedGrams, setSelectedGrams] = useState<IGrammemeOption[]>([]);
-  const [gramOptions, setGramOptions] = useState<IGrammemeOption[]>([]);
 
   // Initialization
   useLayoutEffect(
@@ -46,17 +44,6 @@ function EntityTab({ initial, items, setIsValid, setReference }: EntityTabProps)
     setIsValid(alias !== '' && selectedGrams.length > 0);
     setReference(`@{${alias}|${selectedGrams.map(gram => gram.value).join(',')}}`);
   }, [alias, selectedGrams, setIsValid, setReference]);
-  
-  // Filter grammemes when input changes
-  useEffect(
-  () => {
-    const compatible = getCompatibleGrams(
-      selectedGrams
-        .filter(data => Object.values(Grammeme).includes(data.value as Grammeme))
-        .map(data => data.value as Grammeme)
-    );
-    setGramOptions(SelectorGrammems.filter(({value}) => compatible.includes(value as Grammeme)));
-  }, [selectedGrams]);
 
   // Update term when alias changes
   useEffect(
@@ -91,30 +78,28 @@ function EntityTab({ initial, items, setIsValid, setReference }: EntityTabProps)
         value={alias}
         onChange={event => setAlias(event.target.value)}
       />
-      <div className='flex items-center w-full flex-start'>
-        <Label text='Термин' />
-        <TextInput disabled dense noBorder
-          value={term}
-          tooltip={term}
-          dimensions='w-full text-sm'
-        />
-      </div>
+      <TextInput disabled dense noBorder
+        label='Термин'
+        value={term}
+        tooltip={term}
+        dimensions='w-full text-sm'
+      />
     </div>
 
-    <SelectTermform
+    <SelectWordForm
       selected={selectedGrams}
       setSelected={setSelectedGrams}
     />
     
     <div className='flex items-center gap-4 flex-start'>
       <Label text='Отсылаемая словоформа'/>
-      <SelectMulti
+      <SelectGrammeme
         placeholder='Выберите граммемы'
-        className='flex-grow h-full'
+        dimensions='h-full '
+        className='flex-grow'
         menuPlacement='top'
-        options={gramOptions}
         value={selectedGrams}
-        onChange={newValue => setSelectedGrams([...newValue].sort(compareGrammemeOptions))}
+        setValue={setSelectedGrams}
       />
     </div>
   </div>);

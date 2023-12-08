@@ -1,7 +1,6 @@
 /**
  * Module: CodeMirror customizations.
  */
-
 import { syntaxTree } from '@codemirror/language';
 import { NodeType, Tree, TreeCursor } from '@lezer/common';
 import { ReactCodeMirrorRef, SelectionRange } from '@uiw/react-codemirror';
@@ -200,7 +199,6 @@ export function domTooltipEntityReference(ref: IEntityReference, cst: IConstitue
     grams.appendChild(gram);
   });
   dom.appendChild(grams);
-
   return { dom: dom };
 }
 

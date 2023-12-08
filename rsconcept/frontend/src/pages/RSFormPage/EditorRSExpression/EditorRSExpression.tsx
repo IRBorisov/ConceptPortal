@@ -2,8 +2,6 @@ import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import Button from '../../../components/Common/Button';
-import { ConceptLoader } from '../../../components/Common/ConceptLoader';
 import MiniButton from '../../../components/Common/MiniButton';
 import Overlay from '../../../components/Common/Overlay';
 import { ASTNetworkIcon } from '../../../components/Icons';
@@ -16,9 +14,8 @@ import { IExpressionParse, IRSErrorDescription, SyntaxTree } from '../../../mode
 import { TokenID } from '../../../models/rslang';
 import { labelTypification } from '../../../utils/labels';
 import { getCstExpressionPrefix } from '../../../utils/misc';
-import ParsingResult from './ParsingResult';
+import RSAnalyzer from './RSAnalyzer';
 import RSEditorControls from './RSEditControls';
-import StatusBar from './StatusBar';
 
 interface EditorRSExpressionProps {
   id?: string
@@ -126,6 +123,7 @@ function EditorRSExpression({
         icon={<ASTNetworkIcon size={5} color='text-primary' />}
       />
      </Overlay>
+
     <RSInput innerref={rsInput}
       value={value}
       minHeight='3.8rem'
@@ -133,40 +131,20 @@ function EditorRSExpression({
       onChange={handleChange}
       {...restProps}
     />
+
     <RSEditorControls 
       disabled={disabled}
       onEdit={handleEdit}
     />
-    <div className='w-full max-h-[4.5rem] min-h-[4.5rem] flex'>
-      <div className='flex flex-col text-sm'>
-        <Button noOutline
-          text='Проверить'
-          tooltip='Проверить формальное определение'
-          dimensions='w-[6.75rem] min-h-[3rem] z-pop rounded-none'
-          colors='clr-btn-default'
-          onClick={() => handleCheckExpression()}
-        />
-        <StatusBar
-          isModified={isModified}
-          constituenta={activeCst}
-          parseData={parseData}
-        />
-      </div>
-      <div className='w-full overflow-y-auto text-sm border rounded-none'>
-        {loading ? <ConceptLoader size={6} /> : null}
-        {(!loading && parseData) ? 
-        <ParsingResult
-          data={parseData}
-          disabled={disabled}
-          onShowError={onShowError}
-        /> : null}
-        {(!loading && !parseData) ?
-        <input disabled
-          className='w-full px-2 py-1 text-base select-none h-fit clr-app'
-          placeholder='Результаты проверки выражения'
-        /> : null}
-      </div>
-    </div>
+    
+    <RSAnalyzer 
+      parseData={parseData}
+      processing={loading}
+      isModified={isModified}
+      activeCst={activeCst}
+      onCheckExpression={handleCheckExpression}
+      onShowError={onShowError}
+    />
   </div>);
 }
 

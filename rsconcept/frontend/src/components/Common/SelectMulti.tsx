@@ -4,7 +4,7 @@ import Select, { GroupBase, Props, StylesConfig } from 'react-select';
 import { useConceptTheme } from '../../context/ThemeContext';
 import { selectDarkT, selectLightT } from '../../utils/color';
 
-interface SelectMultiProps<
+export interface SelectMultiProps<
   Option,
   Group extends GroupBase<Option> = GroupBase<Option>
 >

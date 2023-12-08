@@ -81,7 +81,7 @@ function ConstituentaPicker({
   }], [value, colors]);
 
   return (
-  <div>
+  <>
     <ConceptSearch dense
       value={filterText}
       onChange={newValue => setFilterText(newValue)}
@@ -103,7 +103,7 @@ function ConstituentaPicker({
         onRowClicked={onSelectValue}
       />
     </div>
-  </div>);
+  </>);
 }
 
 export default ConstituentaPicker;

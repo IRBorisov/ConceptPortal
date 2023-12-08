@@ -91,11 +91,6 @@ export function substituteTemplateArgs(expression: string, args: IArgumentValue[
       .every(local => local.every(match => !(match in mapping)))
   ).join(', ');
 
-  console.log(body);
-  console.log(head);
-  console.log(args);
-  console.log(mapping);
-
   if (!head) {
     return body;
   } else {

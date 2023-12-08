@@ -4,16 +4,19 @@ interface TextURLProps {
   text: string
   tooltip?: string
   href?: string
+  color?: string
   onClick?: () => void
 }
 
-function TextURL({ text, href, tooltip, onClick }: TextURLProps) {
+function TextURL({ text, href, tooltip, color='text-url', onClick }: TextURLProps) {
+  const design = `cursor-pointer hover:underline ${color}`;
   if (href) {
     return (
     <Link
-      className='cursor-pointer hover:underline text-url'
+      className={design}
       title={tooltip}
       to={href}
+      tabIndex={-1}
     >
       {text}
     </Link>
@@ -21,8 +24,9 @@ function TextURL({ text, href, tooltip, onClick }: TextURLProps) {
   } else if (onClick) {
     return (
     <span
-      className='cursor-pointer hover:underline text-url'
+      className={design}
       onClick={onClick}
+      tabIndex={-1}
     >
       {text}
     </span>);

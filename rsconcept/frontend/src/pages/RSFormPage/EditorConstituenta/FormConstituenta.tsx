@@ -11,7 +11,7 @@ import { useRSForm } from '../../../context/RSFormContext';
 import { IConstituenta, ICstRenameData, ICstUpdateData } from '../../../models/rsform';
 import { SyntaxTree } from '../../../models/rslang';
 import { labelCstTypification } from '../../../utils/labels';
-import EditorRSExpression from './EditorRSExpression';
+import EditorRSExpression from '../EditorRSExpression';
 
 interface FormConstituentaProps {
   id?: string

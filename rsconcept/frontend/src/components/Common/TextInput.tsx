@@ -19,7 +19,7 @@ function TextInput({
   colors = 'clr-input',
   ...restProps
 }: TextInputProps) {
-  const borderClass = noBorder ? '' : 'border';
+  const borderClass = noBorder ? '' : 'border px-3';
   const outlineClass = noOutline ? '' : 'clr-outline';
   return (
   <div className={`flex ${dense ? 'items-center gap-4 ' + dimensions : 'flex-col items-start gap-2'}`}>
@@ -31,7 +31,7 @@ function TextInput({
     <input id={id}
       title={tooltip}
       onKeyDown={!allowEnter && !onKeyDown ? preventEnterCapture : onKeyDown}
-      className={`px-3 py-2 leading-tight truncate hover:text-clip ${colors} ${outlineClass} ${borderClass} ${dense ? 'w-full' : dimensions}`}
+      className={`py-2 leading-tight truncate hover:text-clip ${colors} ${outlineClass} ${borderClass} ${dense ? 'w-full' : dimensions}`}
       {...restProps}
     />
   </div>);

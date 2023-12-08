@@ -8,7 +8,7 @@ import UserMenu from './UserMenu';
 
 function Navigation () {
   const { navigateTo } = useConceptNavigation();
-  const { noNavigation, toggleNoNavigation } = useConceptTheme();
+  const { noNavigation } = useConceptTheme();
 
   const navigateLibrary = () => navigateTo('/library');
   const navigateHelp = () => navigateTo('/manuals');
@@ -16,7 +16,7 @@ function Navigation () {
 
   return (
   <nav className='sticky top-0 left-0 right-0 select-none clr-app z-navigation h-fit'>
-    <ToggleNavigationButton noNavigation={noNavigation} toggleNoNavigation={toggleNoNavigation} />
+    <ToggleNavigationButton />
     {!noNavigation ?
     <div className='flex items-stretch justify-between pl-2 pr-[0.8rem] border-b-2 rounded-none h-[3rem]'>
       <div className='flex items-center justify-start'>

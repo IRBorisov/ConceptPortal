@@ -5,9 +5,9 @@ import useWindowSize from '../../../hooks/useWindowSize';
 import { CstType, IConstituenta, ICstCreateData, ICstRenameData } from '../../../models/rsform';
 import { SyntaxTree } from '../../../models/rslang';
 import { globalIDs } from '../../../utils/constants';
+import ViewConstituents from '../ViewConstituents';
 import ConstituentaToolbar from './ConstituentaToolbar';
 import FormConstituenta from './FormConstituenta';
-import ViewSideConstituents from './ViewSideConstituents';
 
 // Max height of content for left enditor pane.
 const UNFOLDED_HEIGHT = '59.1rem';
@@ -117,11 +117,7 @@ function EditorConstituenta({
     return false;
   }
 
-  return (
-  <div tabIndex={-1}
-    className='max-w-[1500px]'
-    onKeyDown={handleInput}
-  >
+  return (<>
     <ConstituentaToolbar
       isMutable={readyForEdit}
       isModified={isModified}
@@ -134,7 +130,10 @@ function EditorConstituenta({
       onCreate={handleCreate}
       onTemplates={() => onTemplates(activeID)}
     />
-    <div className='flex justify-start'>
+    <div tabIndex={-1}
+      className='max-w-[1500px] flex justify-start w-full'
+      onKeyDown={handleInput}
+    >
       <div className='min-w-[47.8rem] max-w-[47.8rem] px-4 py-1'>
         <FormConstituenta id={globalIDs.constituenta_editor}
           constituenta={activeCst}
@@ -149,7 +148,8 @@ function EditorConstituenta({
       </div>
       {(windowSize.width && windowSize.width >= SIDELIST_HIDE_THRESHOLD) ?
       <div className='w-full mt-[2.25rem] border h-fit'>
-        <ViewSideConstituents
+        <ViewConstituents
+          schema={schema}
           expression={activeCst?.definition_formal ?? ''}
           baseHeight={UNFOLDED_HEIGHT}
           activeID={activeID}
@@ -157,7 +157,7 @@ function EditorConstituenta({
         />
       </div> : null}
     </div>
-  </div>);
+  </>);
 }
 
 export default EditorConstituenta;

@@ -6,7 +6,6 @@ import { TokenID } from '../../models/rslang';
 import { CodeMirrorWrapper } from '../../utils/codemirror';
 
 export function getSymbolSubstitute(keyCode: string, shiftPressed: boolean): string | undefined {
-  console.log(keyCode);
   if (shiftPressed) {
     switch (keyCode) {
     case 'Backquote': return '∃';

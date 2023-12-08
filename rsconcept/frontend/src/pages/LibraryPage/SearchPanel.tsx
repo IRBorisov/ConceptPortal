@@ -1,7 +1,7 @@
 import { useCallback, useLayoutEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { MagnifyingGlassIcon } from '../../components/Icons';
+import ConceptSearch from '../../components/Common/ConceptSearch';
 import { useAuth } from '../../context/AuthContext';
 import { useConceptNavigation } from '../../context/NagivationContext';
 import { ILibraryFilter } from '../../models/miscelanious';
@@ -35,8 +35,7 @@ function SearchPanel({ total, filtered, query, setQuery, strategy, setStrategy, 
   const search = useLocation().search;
   const { user } = useAuth();
 
-  function handleChangeQuery(event: React.ChangeEvent<HTMLInputElement>) {
-    const newQuery = event.target.value;
+  function handleChangeQuery(newQuery: string) {
     setQuery(newQuery);
     setFilter(prev => ({
       query: newQuery,
@@ -77,17 +76,11 @@ function SearchPanel({ total, filtered, query, setQuery, strategy, setStrategy, 
       </span>
     </div>
     <div className='flex items-center justify-center w-full gap-1'>
-      <div className='relative min-w-[10rem] select-none'>
-        <div className='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-controls'>
-          <MagnifyingGlassIcon />
-        </div>
-        <input
-          placeholder='Поиск'
-          value={query}
-          className='w-full p-2 pl-10 text-sm outline-none clr-input'
-          onChange={handleChangeQuery}
-        />
-      </div>
+      <ConceptSearch noBorder
+        value={query}
+        onChange={handleChangeQuery}
+        dimensions='min-w-[10rem] '
+      />
       <PickerStrategy
         value={strategy}
         onChange={handleChangeStrategy}

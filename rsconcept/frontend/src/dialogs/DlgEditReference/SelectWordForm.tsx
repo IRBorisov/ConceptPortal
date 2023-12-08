@@ -5,12 +5,12 @@ import { prefixes } from '../../utils/constants';
 import { IGrammemeOption, PremadeWordForms, SelectorGrammems } from '../../utils/selectors';
 import WordformButton from './WordformButton';
 
-interface SelectTermformProps {
+interface SelectWordFormProps {
   selected: IGrammemeOption[]
   setSelected: React.Dispatch<React.SetStateAction<IGrammemeOption[]>>
 }
 
-function SelectTermform({ selected, setSelected }: SelectTermformProps) {
+function SelectWordForm({ selected, setSelected }: SelectWordFormProps) {
   const handleSelect = useCallback(
   (grams: Grammeme[]) => {
     setSelected(SelectorGrammems.filter(({value}) => grams.includes(value as Grammeme)));
@@ -42,4 +42,4 @@ function SelectTermform({ selected, setSelected }: SelectTermformProps) {
   </div>);
 }
 
-export default SelectTermform;
+export default SelectWordForm;
