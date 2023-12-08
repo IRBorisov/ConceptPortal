@@ -34,6 +34,13 @@ export const resources = {
 };
 
 /**
+ * Regex patterns for data validation.
+ */
+export const patterns = {
+  login: '^[a-zA-Z][a-zA-Z0-9_\\-]{1,}[a-zA-Z0-9]$'
+}
+
+/**
  * Youtube IDs for embedding.
  */
 export const youtube = {

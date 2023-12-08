@@ -15,7 +15,7 @@ import { HelpIcon } from '../components/Icons';
 import { useAuth } from '../context/AuthContext';
 import { useConceptNavigation } from '../context/NagivationContext';
 import { type IUserSignupData } from '../models/library';
-import { globalIDs } from '../utils/constants';
+import { globalIDs, patterns } from '../utils/constants';
 
 function RegisterPage() {
   const location = useLocation();
@@ -66,7 +66,7 @@ function RegisterPage() {
   }
   return (
   <form
-    className='py-3 px-6 flex flex-col gap-3 h-fit'
+    className='flex flex-col gap-3 px-6 py-3 h-fit'
     onSubmit={handleSubmit}
   >
     <h1>Новый пользователь</h1>
@@ -90,6 +90,8 @@ function RegisterPage() {
 
         <TextInput id='username' required
           label='Имя пользователя (логин)'
+          pattern={patterns.login}
+          tooltip='Минимум 3 знака. Латинские буквы и цифры. Не может начинаться с цифры'
           value={username}
           dimensions='w-[12rem]'
           onChange={event => setUsername(event.target.value)}
@@ -111,6 +113,7 @@ function RegisterPage() {
       <div className='flex flex-col gap-3 w-[15rem]'>
         <TextInput id='email' required
           label='Электронная почта (email)'
+          tooltip='электронная почта в корректном формате, например: i.petrov@mycompany.ru.com'
           value={email}
           onChange={event => setEmail(event.target.value)}
         />
