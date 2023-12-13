@@ -11,7 +11,7 @@ import ConceptTab from '@/components/Common/ConceptTab';
 import TextURL from '@/components/Common/TextURL';
 import InfoError, { ErrorData } from '@/components/InfoError';
 import { useLibrary } from '@/context/LibraryContext';
-import { useConceptNavigation } from '@/context/NagivationContext';
+import { useBlockNavigation, useConceptNavigation } from '@/context/NagivationContext';
 import { useRSForm } from '@/context/RSFormContext';
 import { useConceptTheme } from '@/context/ThemeContext';
 import DlgCloneLibraryItem from '@/dialogs/DlgCloneLibraryItem';
@@ -66,6 +66,7 @@ function RSTabs() {
   const { setNoFooter, noNavigation } = useConceptTheme();
 
   const [isModified, setIsModified] = useState(false);
+  useBlockNavigation(isModified);
 
   const [activeTab, setActiveTab] = useState(RSTabID.CARD);
   const [activeID, setActiveID] = useState<number | undefined>(undefined);

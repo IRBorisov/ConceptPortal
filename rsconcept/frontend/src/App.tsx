@@ -79,18 +79,17 @@ const router = createBrowserRouter([
         path: 'manuals',
         element: <ManualsPage />,
       },
-
       {
         path: 'library',
         element: <LibraryPage />,
       },
       {
-        path: 'rsforms/:id',
-        element: <RSFormPage />,
+        path: 'library/create',
+        element: <CreateRSFormPage />,
       },
       {
-        path: 'rsform-create',
-        element: <CreateRSFormPage />,
+        path: 'rsforms/:id',
+        element: <RSFormPage />,
       },
     ]
   },

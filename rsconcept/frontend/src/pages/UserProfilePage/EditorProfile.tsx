@@ -1,17 +1,16 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import SubmitButton from '@/components/Common/SubmitButton';
 import TextInput from '@/components/Common/TextInput';
-import { useConceptNavigation } from '@/context/NagivationContext';
+import { useBlockNavigation } from '@/context/NagivationContext';
 import { useUserProfile } from '@/context/UserProfileContext';
 import { IUserUpdateData } from '@/models/library';
 
 function EditorProfile() {
   const { updateUser, user, processing } = useUserProfile();
-  const router = useConceptNavigation();
   
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -29,12 +28,7 @@ function EditorProfile() {
       user.last_name !== last_name
     );
   }, [user, email, first_name, last_name]);
-
-  useEffect(
-  () => {
-    router.setIsBlocked(isModified);
-    return () => router.setIsBlocked(false);
-  }, [router, isModified]);
+  useBlockNavigation(isModified);
 
   useLayoutEffect(() => {
     if (user) {

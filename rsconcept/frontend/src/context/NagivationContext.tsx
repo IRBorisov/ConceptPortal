@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { unstable_usePrompt, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { globalIDs } from '@/utils/constants';
 
@@ -33,17 +33,17 @@ interface NavigationStateProps {
 export const NavigationState = ({ children }: NavigationStateProps) => {
   const router = useNavigate();
   const { pathname } = useLocation();
-
+  
   const [isBlocked, setIsBlocked] = useState(false);
-  unstable_usePrompt({
-    when: isBlocked,
-    message: 'Изменения не сохранены. Вы уверены что хотите совершить переход?'
-  });
-
-  const canBack = useCallback(
+  const validate = useCallback(
   () => {
-    return (!!window.history && window.history?.length !== 0);
-  }, []);
+    return (
+      !isBlocked ||
+      confirm('Изменения не сохранены. Вы уверены что хотите совершить переход?')
+    );
+  }, [isBlocked]);
+
+  const canBack = useCallback(() => (!!window.history && window.history?.length !== 0), []);
 
   const scrollTop = useCallback(
   () => {
@@ -56,31 +56,39 @@ export const NavigationState = ({ children }: NavigationStateProps) => {
 
   const push = useCallback(
   (path: string) => {
-    scrollTop();
-    setIsBlocked(false);
-    router(path);
-  }, [router, scrollTop]);
+    if (validate()) {
+      scrollTop();
+      router(path);
+      setIsBlocked(false);
+    }
+  }, [router, validate, scrollTop]);
 
   const replace = useCallback(
   (path: string) => {
-    scrollTop();
-    setIsBlocked(false);
-    router(path, {replace: true});
-  }, [router, scrollTop]);
+    if (validate()) {
+      scrollTop();
+      router(path, {replace: true});
+      setIsBlocked(false);
+    }
+  }, [router, validate, scrollTop]);
 
   const back = useCallback(
   () => {
-    scrollTop();
-    setIsBlocked(false);
-    router(-1);
-  }, [router, scrollTop]);
+    if (validate()) {
+      scrollTop();
+      router(-1);
+      setIsBlocked(false);
+    }
+  }, [router, validate, scrollTop]);
 
   const forward = useCallback(
   () => {
-    scrollTop();
-    setIsBlocked(false);
-    router(1);
-  }, [router, scrollTop]);
+    if (validate()) {
+      scrollTop();
+      router(1);
+      setIsBlocked(false);
+    }
+  }, [router, validate, scrollTop]);
 
   useEffect(() => {
     scrollTop();
@@ -93,4 +101,13 @@ export const NavigationState = ({ children }: NavigationStateProps) => {
   }}>
     {children}
   </NagivationContext.Provider>);
+}
+
+export function useBlockNavigation(isBlocked: boolean) {
+  const router = useConceptNavigation();
+  useEffect(
+  () => {
+    router.setIsBlocked(isBlocked);
+    return () => router.setIsBlocked(false);
+  }, [router, isBlocked]);
 }
