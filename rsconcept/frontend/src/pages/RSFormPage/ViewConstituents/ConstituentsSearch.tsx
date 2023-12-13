@@ -41,7 +41,6 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
     let result: IConstituenta[] = [];
     if (filterSource === DependencyMode.EXPRESSION) {
       const aliases = extractGlobals(activeExpression);
-      console.log(aliases);
       result = schema.items.filter((cst) => aliases.has(cst.alias));
       const names = result.map(cst => cst.alias)
       const diff = Array.from(aliases).filter(name => !names.includes(name));
