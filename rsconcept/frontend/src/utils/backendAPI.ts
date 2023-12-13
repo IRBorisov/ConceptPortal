@@ -22,12 +22,12 @@ import {
   IRSFormCreateData, IRSFormData, IRSFormUploadData} from '@/models/rsform';
 import { IExpressionParse, IRSExpression } from '@/models/rslang';
 
-import { buidConstants } from './constants';
+import { buildConstants } from './constants';
 
 const defaultOptions = {
   xsrfCookieName: 'csrftoken',
   xsrfHeaderName: 'x-csrftoken',
-  baseURL: `${buidConstants.backend}`,
+  baseURL: `${buildConstants.backend}`,
   withCredentials: true
 }
 

@@ -11,6 +11,7 @@ import { SaveIcon } from '@/components/Icons';
 import { useRSForm } from '@/context/RSFormContext';
 import { LibraryItemType } from '@/models/library';
 import { IRSFormCreateData } from '@/models/rsform';
+import { limits, patterns } from '@/utils/constants';
 
 interface FormRSFormProps {
   id?: string
@@ -87,9 +88,11 @@ function FormRSForm({
       disabled={!isMutable}
       onChange={event => setTitle(event.target.value)}
     />
-    <TextInput required dense
+    <TextInput required
       label='Сокращение' 
-      dimensions='w-full'
+      dimensions='w-[14rem]'
+      pattern={patterns.alias}
+      tooltip={`не более ${limits.alias_len} символов`}
       disabled={!isMutable}
       value={alias}
       onChange={event => setAlias(event.target.value)}

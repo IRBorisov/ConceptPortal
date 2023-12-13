@@ -101,13 +101,13 @@ function RSTabs() {
 
   useLayoutEffect(() => {
     if (schema) {
-      const oldTitle = document.title
-      document.title = schema.title
+      const oldTitle = document.title;
+      document.title = schema.title;
       return () => {
-        document.title = oldTitle
+        document.title = oldTitle;
       }
     }
-  }, [schema]);
+  }, [schema, schema?.title]);
 
   useLayoutEffect(() => {
     setActiveTab(tabQuery);

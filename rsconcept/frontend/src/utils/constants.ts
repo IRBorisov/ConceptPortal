@@ -5,7 +5,7 @@
 /**
  * Variable constants depending on build type.
  */
-export const buidConstants = {
+export const buildConstants = {
   backend: import.meta.env.VITE_PORTAL_BACKEND as string
 };
 
@@ -34,10 +34,18 @@ export const resources = {
 };
 
 /**
+ * Numeric limitations.
+ */
+export const limits = {
+  alias_len: 12,
+}
+
+/**
  * Regex patterns for data validation.
  */
 export const patterns = {
-  login: '^[a-zA-Z][a-zA-Z0-9_\\-]{1,}[a-zA-Z0-9]$'
+  login: '^[a-zA-Z][a-zA-Z0-9_\\-]{1,}[a-zA-Z0-9]$',
+  alias: `.{1,${limits.alias_len}}`
 }
 
 /**

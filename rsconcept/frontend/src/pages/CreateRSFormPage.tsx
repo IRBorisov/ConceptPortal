@@ -18,7 +18,7 @@ import { useLibrary } from '@/context/LibraryContext';
 import { useConceptNavigation } from '@/context/NagivationContext';
 import { LibraryItemType } from '@/models/library';
 import { IRSFormCreateData } from '@/models/rsform';
-import { EXTEOR_TRS_FILE } from '@/utils/constants';
+import { EXTEOR_TRS_FILE, limits, patterns } from '@/utils/constants';
 
 function CreateRSFormPage() {
   const router = useConceptNavigation();
@@ -97,17 +97,18 @@ function CreateRSFormPage() {
     </Overlay>
     {fileName ? <Label text={`Загружен файл: ${fileName}`} /> : null}
 
-    <TextInput
+    <TextInput required={!file}
       label='Полное название'
       placeholder={file && 'Загрузить из файла'}
-      required={!file}
       value={title}
       onChange={event => setTitle(event.target.value)}
     />
-    <TextInput dense
-      label='Сокращение' 
+    <TextInput required={!file}
+      label='Сокращение'
       placeholder={file && 'Загрузить из файла'}
-      required={!file}
+      dimensions='w-[14rem]'
+      pattern={patterns.alias}
+      tooltip={`не более ${limits.alias_len} символов`}
       value={alias}
       onChange={event => setAlias(event.target.value)}
     />
