@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { useConceptTheme } from '../../context/ThemeContext';
+import { useConceptTheme } from '@/context/ThemeContext';
 
 function ToggleNavigationButton() {
   const { noNavigation, toggleNoNavigation } = useConceptTheme();

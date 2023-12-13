@@ -56,6 +56,10 @@ bower_components
 
 *.sublime*
 
+# NextJS
+**/.next/
+**/out/
+
 
 # Environments
 venv/

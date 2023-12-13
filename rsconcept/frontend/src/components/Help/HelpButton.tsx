@@ -1,7 +1,8 @@
-import { HelpTopic } from '../../models/miscelanious';
-import ConceptTooltip from '../Common/ConceptTooltip';
-import TextURL from '../Common/TextURL';
-import { HelpIcon } from '../Icons';
+import ConceptTooltip from '@/components/Common/ConceptTooltip';
+import TextURL from '@/components/Common/TextURL';
+import { HelpIcon } from '@/components/Icons';
+import { HelpTopic } from '@/models/miscelanious';
+
 import InfoTopic from './InfoTopic';
 
 interface HelpButtonProps {

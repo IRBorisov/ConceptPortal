@@ -1,6 +1,6 @@
-import { HelpTopic } from '../../models/miscelanious';
-import { prefixes } from '../../utils/constants';
-import { describeHelpTopic, labelHelpTopic } from '../../utils/labels';
+import { HelpTopic } from '@/models/miscelanious';
+import { prefixes } from '@/utils/constants';
+import { describeHelpTopic, labelHelpTopic } from '@/utils/labels';
 
 interface TopicsListProps {
   activeTopic: HelpTopic

@@ -1,10 +1,12 @@
+'use client';
+
 import { Dispatch, SetStateAction, useMemo, useState } from 'react';
 
-import { useRSForm } from '../../../context/RSFormContext';
-import useWindowSize from '../../../hooks/useWindowSize';
-import { CstType, IConstituenta, ICstCreateData, ICstRenameData } from '../../../models/rsform';
-import { SyntaxTree } from '../../../models/rslang';
-import { globalIDs } from '../../../utils/constants';
+import { useRSForm } from '@/context/RSFormContext';
+import useWindowSize from '@/hooks/useWindowSize';
+import { CstType, IConstituenta, ICstCreateData, ICstRenameData } from '@/models/rsform';
+import { globalIDs } from '@/utils/constants';
+
 import ViewConstituents from '../ViewConstituents';
 import ConstituentaToolbar from './ConstituentaToolbar';
 import FormConstituenta from './FormConstituenta';
@@ -22,7 +24,6 @@ interface EditorConstituentaProps {
   setIsModified: Dispatch<SetStateAction<boolean>>
 
   onOpenEdit: (cstID: number) => void
-  onShowAST: (expression: string, ast: SyntaxTree) => void
   onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void
   onRenameCst: (initial: ICstRenameData) => void
   onEditTerm: () => void
@@ -32,7 +33,7 @@ interface EditorConstituentaProps {
 
 function EditorConstituenta({
   isModified, setIsModified, activeID, activeCst, onEditTerm,
-  onShowAST, onCreateCst, onRenameCst, onOpenEdit, onDeleteCst, onTemplates
+  onCreateCst, onRenameCst, onOpenEdit, onDeleteCst, onTemplates
 }: EditorConstituentaProps) {
   const windowSize = useWindowSize();
   const { schema, isMutable } = useRSForm();
@@ -141,7 +142,6 @@ function EditorConstituenta({
           toggleReset={toggleReset}
           
           setIsModified={setIsModified}
-          onShowAST={onShowAST}
           onEditTerm={onEditTerm}
           onRenameCst={onRenameCst}
         />

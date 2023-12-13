@@ -1,4 +1,4 @@
-import { urls } from '../utils/constants';
+import { urls } from '@/utils/constants';
 import TextURL from './Common/TextURL';
 
 function Footer() {

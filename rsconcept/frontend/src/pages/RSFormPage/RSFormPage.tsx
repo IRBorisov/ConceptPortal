@@ -1,12 +1,15 @@
+'use client';
+
 import { useParams } from 'react-router-dom';
 
-import { RSFormState } from '../../context/RSFormContext';
+import { RSFormState } from '@/context/RSFormContext';
+
 import RSTabs from './RSTabs';
 
 function RSFormPage() {
-  const { id } = useParams();
+  const params = useParams();
   return (
-  <RSFormState schemaID={id ?? ''}>
+  <RSFormState schemaID={params.id ?? ''}>
     <RSTabs />
   </RSFormState>);
 }

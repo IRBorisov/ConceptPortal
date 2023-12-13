@@ -1,9 +1,11 @@
-import Checkbox from '../components/Common/Checkbox';
-import Modal, { ModalProps } from '../components/Common/Modal';
-import usePartialUpdate from '../hooks/usePartialUpdate';
-import { GraphFilterParams } from '../models/miscelanious';
-import { CstType } from '../models/rsform';
-import { labelCstType } from '../utils/labels';
+'use client';
+
+import Checkbox from '@/components/Common/Checkbox';
+import Modal, { ModalProps } from '@/components/Common/Modal';
+import usePartialUpdate from '@/hooks/usePartialUpdate';
+import { GraphFilterParams } from '@/models/miscelanious';
+import { CstType } from '@/models/rsform';
+import { labelCstType } from '@/utils/labels';
 
 interface DlgGraphParamsProps
 extends Pick<ModalProps, 'hideWindow'> {

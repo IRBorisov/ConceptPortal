@@ -1,13 +1,16 @@
+'use client';
+
 import { useMemo, useState } from 'react';
 
-import BackendError from '../../components/BackendError';
-import { ConceptLoader } from '../../components/Common/ConceptLoader';
-import MiniButton from '../../components/Common/MiniButton';
-import Overlay from '../../components/Common/Overlay';
-import { NotSubscribedIcon,SubscribedIcon } from '../../components/Icons';
-import { useAuth } from '../../context/AuthContext';
-import { useLibrary } from '../../context/LibraryContext';
-import { useUserProfile } from '../../context/UserProfileContext';
+import { ConceptLoader } from '@/components/Common/ConceptLoader';
+import MiniButton from '@/components/Common/MiniButton';
+import Overlay from '@/components/Common/Overlay';
+import { NotSubscribedIcon,SubscribedIcon } from '@/components/Icons';
+import InfoError from '@/components/InfoError';
+import { useAuth } from '@/context/AuthContext';
+import { useLibrary } from '@/context/LibraryContext';
+import { useUserProfile } from '@/context/UserProfileContext';
+
 import EditorPassword from './EditorPassword';
 import EditorProfile from './EditorProfile';
 import ViewSubscriptions from './ViewSubscriptions';
@@ -27,7 +30,7 @@ function UserTabs() {
   return (
   <>
     {loading ? <ConceptLoader /> : null}
-    {error ? <BackendError error={error} /> : null}
+    {error ? <InfoError error={error} /> : null}
     {user ? 
     <div className='flex justify-center gap-2 py-2'>
       <div className='flex flex-col gap-2 min-w-max'>

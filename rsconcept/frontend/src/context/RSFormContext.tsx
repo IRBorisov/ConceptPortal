@@ -1,28 +1,32 @@
+'use client';
+
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
-import { type ErrorInfo } from '../components/BackendError';
-import { useRSFormDetails } from '../hooks/useRSFormDetails';
-import { ILibraryItem } from '../models/library';
-import { ILibraryUpdateData } from '../models/library';
+import { type ErrorData } from '@/components/InfoError';
+import useRSFormDetails from '@/hooks/useRSFormDetails';
+import { ILibraryItem } from '@/models/library';
+import { ILibraryUpdateData } from '@/models/library';
 import {
   IConstituentaList, IConstituentaMeta, ICstCreateData,
   ICstMovetoData, ICstRenameData, ICstUpdateData, 
   IRSForm, IRSFormUploadData
-} from '../models/rsform';
+} from '@/models/rsform';
 import {
   type DataCallback, deleteUnsubscribe,
-getTRSFile,
+  getTRSFile,
   patchConstituenta, patchDeleteConstituenta,
-patchLibraryItem,
+  patchLibraryItem,
   patchMoveConstituenta, patchRenameConstituenta,
-  patchResetAliases,   patchUploadTRS,  postClaimLibraryItem, postNewConstituenta, postSubscribe} from '../utils/backendAPI';
+  patchResetAliases,   patchUploadTRS,  postClaimLibraryItem, postNewConstituenta, postSubscribe
+} from '@/utils/backendAPI';
+
 import { useAuth } from './AuthContext';
 import { useLibrary } from './LibraryContext';
 
 interface IRSFormContext {
   schema?: IRSForm
 
-  error: ErrorInfo
+  error: ErrorData
   loading: boolean
   processing: boolean
 

@@ -1,19 +1,22 @@
+'use client';
+
 import { useLayoutEffect, useState } from 'react';
 
-import Label from '../../components/Common/Label';
-import MiniButton from '../../components/Common/MiniButton';
-import Modal from '../../components/Common/Modal';
-import Overlay from '../../components/Common/Overlay';
-import TextArea from '../../components/Common/TextArea';
-import HelpButton from '../../components/Help/HelpButton';
-import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, ChevronDoubleDownIcon } from '../../components/Icons';
-import SelectGrammeme from '../../components/Shared/SelectGrammeme';
-import useConceptText from '../../hooks/useConceptText';
-import { Grammeme, ITextRequest, IWordForm, IWordFormPlain } from '../../models/language';
-import { parseGrammemes, wordFormEquals } from '../../models/languageAPI';
-import { HelpTopic } from '../../models/miscelanious';
-import { IConstituenta, TermForm } from '../../models/rsform';
-import { IGrammemeOption, SelectorGrammemesList, SelectorGrammems } from '../../utils/selectors';
+import Label from '@/components/Common/Label';
+import MiniButton from '@/components/Common/MiniButton';
+import Modal from '@/components/Common/Modal';
+import Overlay from '@/components/Common/Overlay';
+import TextArea from '@/components/Common/TextArea';
+import HelpButton from '@/components/Help/HelpButton';
+import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, ChevronDoubleDownIcon } from '@/components/Icons';
+import SelectGrammeme from '@/components/Shared/SelectGrammeme';
+import useConceptText from '@/hooks/useConceptText';
+import { Grammeme, ITextRequest, IWordForm, IWordFormPlain } from '@/models/language';
+import { parseGrammemes, wordFormEquals } from '@/models/languageAPI';
+import { HelpTopic } from '@/models/miscelanious';
+import { IConstituenta, TermForm } from '@/models/rsform';
+import { IGrammemeOption, SelectorGrammemesList, SelectorGrammems } from '@/utils/selectors';
+
 import WordFormsTable from './WordFormsTable';
 
 interface DlgEditWordFormsProps {

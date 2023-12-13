@@ -1,6 +1,6 @@
-import { EducationIcon, GroupIcon, SubscribedIcon } from '../../components/Icons';
-import { ICurrentUser, ILibraryItem } from '../../models/library';
-import { prefixes } from '../../utils/constants';
+import { EducationIcon, GroupIcon, SubscribedIcon } from '@/components/Icons';
+import { ICurrentUser, ILibraryItem } from '@/models/library';
+import { prefixes } from '@/utils/constants';
 
 interface ItemIconsProps {
   user?: ICurrentUser

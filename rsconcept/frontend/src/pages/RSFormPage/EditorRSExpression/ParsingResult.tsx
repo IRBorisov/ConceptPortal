@@ -1,6 +1,8 @@
-import { IExpressionParse, IRSErrorDescription } from '../../../models/rslang';
-import { describeRSError } from '../../../utils/labels';
-import { getRSErrorPrefix } from '../../../utils/misc';
+'use client';
+
+import { IExpressionParse, IRSErrorDescription } from '@/models/rslang';
+import { describeRSError } from '@/utils/labels';
+import { getRSErrorPrefix } from '@/utils/misc';
 
 interface ParsingResultProps {
   data: IExpressionParse

@@ -1,8 +1,10 @@
+'use client';
+
 import { useMemo } from 'react';
 import Select, { GroupBase, Props, StylesConfig } from 'react-select';
 
-import { useConceptTheme } from '../../context/ThemeContext';
-import { selectDarkT, selectLightT } from '../../utils/color';
+import { useConceptTheme } from '@/context/ThemeContext';
+import { selectDarkT, selectLightT } from '@/utils/color';
 
 interface SelectSingleProps<
   Option,

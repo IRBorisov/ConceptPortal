@@ -97,5 +97,4 @@ describe('Testing Graph queries', () => {
     expect(graph.expandInputs([7])).toStrictEqual([]);
     expect(graph.expandInputs([6])).toStrictEqual([5, 2, 1]);
   });
-
 });

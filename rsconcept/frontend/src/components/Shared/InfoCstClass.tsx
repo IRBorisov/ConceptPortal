@@ -1,8 +1,8 @@
-import { useConceptTheme } from '../../context/ThemeContext';
-import { CstClass } from '../../models/rsform';
-import { colorbgCstClass } from '../../utils/color';
-import { prefixes } from '../../utils/constants';
-import { describeCstClass, labelCstClass } from '../../utils/labels';
+import { useConceptTheme } from '@/context/ThemeContext';
+import { CstClass } from '@/models/rsform';
+import { colorbgCstClass } from '@/utils/color';
+import { prefixes } from '@/utils/constants';
+import { describeCstClass, labelCstClass } from '@/utils/labels';
 
 interface InfoCstClassProps {
   title?: string

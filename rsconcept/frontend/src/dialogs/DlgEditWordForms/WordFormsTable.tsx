@@ -1,11 +1,13 @@
+'use client';
+
 import { useCallback, useMemo } from 'react';
 
-import MiniButton from '../../components/Common/MiniButton';
-import Overlay from '../../components/Common/Overlay';
-import DataTable, { createColumnHelper } from '../../components/DataTable';
-import { CrossIcon } from '../../components/Icons';
-import WordFormBadge from '../../components/Shared/WordFormBadge';
-import { IWordForm } from '../../models/language';
+import MiniButton from '@/components/Common/MiniButton';
+import Overlay from '@/components/Common/Overlay';
+import DataTable, { createColumnHelper } from '@/components/DataTable';
+import { CrossIcon } from '@/components/Icons';
+import WordFormBadge from '@/components/Shared/WordFormBadge';
+import { IWordForm } from '@/models/language';
 
 interface WordFormsTableProps {
   forms: IWordForm[]

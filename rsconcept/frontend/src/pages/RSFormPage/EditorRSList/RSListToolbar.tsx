@@ -1,17 +1,19 @@
+'use client';
+
 import { useMemo } from 'react';
 
-import Dropdown from '../../../components/Common/Dropdown';
-import DropdownButton from '../../../components/Common/DropdownButton';
-import MiniButton from '../../../components/Common/MiniButton';
-import Overlay from '../../../components/Common/Overlay';
-import HelpButton from '../../../components/Help/HelpButton';
-import { ArrowDownIcon, ArrowDropdownIcon, ArrowUpIcon, CloneIcon, DiamondIcon, DumpBinIcon, SmallPlusIcon, UpdateIcon } from '../../../components/Icons';
-import useDropdown from '../../../hooks/useDropdown';
-import { HelpTopic } from '../../../models/miscelanious';
-import { CstType } from '../../../models/rsform';
-import { prefixes } from '../../../utils/constants';
-import { labelCstType } from '../../../utils/labels';
-import { getCstTypePrefix, getCstTypeShortcut } from '../../../utils/misc';
+import Dropdown from '@/components/Common/Dropdown';
+import DropdownButton from '@/components/Common/DropdownButton';
+import MiniButton from '@/components/Common/MiniButton';
+import Overlay from '@/components/Common/Overlay';
+import HelpButton from '@/components/Help/HelpButton';
+import { ArrowDownIcon, ArrowDropdownIcon, ArrowUpIcon, CloneIcon, DiamondIcon, DumpBinIcon, SmallPlusIcon, UpdateIcon } from '@/components/Icons';
+import useDropdown from '@/hooks/useDropdown';
+import { HelpTopic } from '@/models/miscelanious';
+import { CstType } from '@/models/rsform';
+import { prefixes } from '@/utils/constants';
+import { labelCstType } from '@/utils/labels';
+import { getCstTypePrefix, getCstTypeShortcut } from '@/utils/misc';
 
 interface RSListToolbarProps {
   isMutable?: boolean

@@ -1,9 +1,12 @@
+'use client';
+
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { useMemo, useState } from 'react';
 import { Document, Page } from 'react-pdf';
 
-import useWindowSize from '../../hooks/useWindowSize';
-import { graphLightT } from '../../utils/color';
+import useWindowSize from '@/hooks/useWindowSize';
+import { graphLightT } from '@/utils/color';
+
 import Overlay from './Overlay';
 import PageControls from './PageControls';
 
@@ -14,15 +17,12 @@ interface PDFViewerProps {
   file?: string | ArrayBuffer | Blob 
 }
 
-function PDFViewer({
-  file
-}: PDFViewerProps) {
+function PDFViewer({ file }: PDFViewerProps) {
   const windowSize = useWindowSize();
 
   const [pageCount, setPageCount] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
 
-  
   const pageWidth = useMemo(
   () => {
     return Math.max(MINIMUM_WIDTH, (Math.min((windowSize?.width ?? 0) - 300, MAXIMUM_WIDTH)));
@@ -48,7 +48,7 @@ function PDFViewer({
       />
     </Overlay>
     <Page
-      className='select-none pointer-events-none'
+      className='pointer-events-none select-none'
       renderTextLayer={false}
       renderAnnotationLayer={false}
       pageNumber={pageNumber}

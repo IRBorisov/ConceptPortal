@@ -1,5 +1,5 @@
-import { resources } from '../../utils/constants';
-import PDFViewer from '../Common/PDFViewer';
+import PDFViewer from '@/components/Common/PDFViewer';
+import { resources } from '@/utils/constants';
 
 function HelpPrivacy() {
   return (

@@ -1,14 +1,16 @@
+'use client';
+
 import { useCallback } from 'react';
 
-import Dropdown from '../../components/Common/Dropdown';
-import DropdownCheckbox from '../../components/Common/DropdownCheckbox';
-import SelectorButton from '../../components/Common/SelectorButton';
-import { FilterIcon } from '../../components/Icons';
-import { useAuth } from '../../context/AuthContext';
-import useDropdown from '../../hooks/useDropdown';
-import { LibraryFilterStrategy } from '../../models/miscelanious';
-import { prefixes } from '../../utils/constants';
-import { describeLibraryFilter, labelLibraryFilter } from '../../utils/labels';
+import Dropdown from '@/components/Common/Dropdown';
+import DropdownCheckbox from '@/components/Common/DropdownCheckbox';
+import SelectorButton from '@/components/Common/SelectorButton';
+import { FilterIcon } from '@/components/Icons';
+import { useAuth } from '@/context/AuthContext';
+import useDropdown from '@/hooks/useDropdown';
+import { LibraryFilterStrategy } from '@/models/miscelanious';
+import { prefixes } from '@/utils/constants';
+import { describeLibraryFilter, labelLibraryFilter } from '@/utils/labels';
 
 interface PickerStrategyProps {
   value: LibraryFilterStrategy

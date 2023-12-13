@@ -6,9 +6,10 @@ import CodeMirror, { BasicSetupOptions, ReactCodeMirrorProps, ReactCodeMirrorRef
 import { EditorView } from 'codemirror';
 import { RefObject, useCallback, useMemo, useRef } from 'react';
 
-import { useRSForm } from '../../context/RSFormContext';
-import { useConceptTheme } from '../../context/ThemeContext';
-import Label from '../Common/Label';
+import Label from '@/components/Common/Label';
+import { useRSForm } from '@/context/RSFormContext';
+import { useConceptTheme } from '@/context/ThemeContext';
+
 import { ccBracketMatching } from './bracketMatching';
 import { RSLanguage } from './rslang';
 import { getSymbolSubstitute,RSTextWrapper } from './textEditing';

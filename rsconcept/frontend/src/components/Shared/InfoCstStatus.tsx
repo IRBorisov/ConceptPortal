@@ -1,8 +1,8 @@
-import { useConceptTheme } from '../../context/ThemeContext';
-import { ExpressionStatus } from '../../models/rsform';
-import { colorbgCstStatus } from '../../utils/color';
-import { prefixes } from '../../utils/constants';
-import { describeExpressionStatus, labelExpressionStatus } from '../../utils/labels';
+import { useConceptTheme } from '@/context/ThemeContext';
+import { ExpressionStatus } from '@/models/rsform';
+import { colorbgCstStatus } from '@/utils/color';
+import { prefixes } from '@/utils/constants';
+import { describeExpressionStatus, labelExpressionStatus } from '@/utils/labels';
 
 interface InfoCstStatusProps {
   title?: string

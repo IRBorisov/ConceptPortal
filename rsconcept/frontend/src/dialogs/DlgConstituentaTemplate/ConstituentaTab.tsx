@@ -1,12 +1,14 @@
+'use client';
+
 import { Dispatch } from 'react';
 
-import SelectSingle from '../../components/Common/SelectSingle';
-import TextArea from '../../components/Common/TextArea';
-import TextInput from '../../components/Common/TextInput';
-import RSInput from '../../components/RSInput';
-import { CstType, ICstCreateData } from '../../models/rsform';
-import { labelCstType } from '../../utils/labels';
-import { SelectorCstType } from '../../utils/selectors';
+import SelectSingle from '@/components/Common/SelectSingle';
+import TextArea from '@/components/Common/TextArea';
+import TextInput from '@/components/Common/TextInput';
+import RSInput from '@/components/RSInput';
+import { CstType, ICstCreateData } from '@/models/rsform';
+import { labelCstType } from '@/utils/labels';
+import { SelectorCstType } from '@/utils/selectors';
 
 interface ConstituentaTabProps {
   state: ICstCreateData

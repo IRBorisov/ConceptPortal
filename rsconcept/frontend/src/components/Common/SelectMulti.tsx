@@ -1,8 +1,10 @@
+'use client';
+
 import { useMemo } from 'react';
 import Select, { GroupBase, Props, StylesConfig } from 'react-select';
 
-import { useConceptTheme } from '../../context/ThemeContext';
-import { selectDarkT, selectLightT } from '../../utils/color';
+import { useConceptTheme } from '@/context/ThemeContext';
+import { selectDarkT, selectLightT } from '@/utils/color';
 
 export interface SelectMultiProps<
   Option,
@@ -45,12 +47,11 @@ function SelectMulti<Option, Group extends GroupBase<Option> = GroupBase<Option>
     }),
     input: (styles) => ({...styles}),
     placeholder: (styles) => ({...styles}),
-    multiValue: styles => ({
+    multiValue: (styles) => ({
       ...styles,
       borderRadius: '0.5rem',
       backgroundColor: colors.bgSelected,
-    }),
-    
+    })
   }), [colors]);
 
   return (

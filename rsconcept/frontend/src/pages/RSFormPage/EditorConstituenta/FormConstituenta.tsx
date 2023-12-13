@@ -1,16 +1,18 @@
+'use client';
+
 import { Dispatch, SetStateAction, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import MiniButton from '../../../components/Common/MiniButton';
-import Overlay from '../../../components/Common/Overlay';
-import SubmitButton from '../../../components/Common/SubmitButton';
-import TextArea from '../../../components/Common/TextArea';
-import { EditIcon, SaveIcon } from '../../../components/Icons';
-import RefsInput from '../../../components/RefsInput';
-import { useRSForm } from '../../../context/RSFormContext';
-import { IConstituenta, ICstRenameData, ICstUpdateData } from '../../../models/rsform';
-import { SyntaxTree } from '../../../models/rslang';
-import { labelCstTypification } from '../../../utils/labels';
+import MiniButton from '@/components/Common/MiniButton';
+import Overlay from '@/components/Common/Overlay';
+import SubmitButton from '@/components/Common/SubmitButton';
+import TextArea from '@/components/Common/TextArea';
+import { EditIcon, SaveIcon } from '@/components/Icons';
+import RefsInput from '@/components/RefsInput';
+import { useRSForm } from '@/context/RSFormContext';
+import { IConstituenta, ICstRenameData, ICstUpdateData } from '@/models/rsform';
+import { labelCstTypification } from '@/utils/labels';
+
 import EditorRSExpression from '../EditorRSExpression';
 
 interface FormConstituentaProps {
@@ -22,14 +24,13 @@ interface FormConstituentaProps {
   setIsModified: Dispatch<SetStateAction<boolean>>
 
   onRenameCst: (initial: ICstRenameData) => void
-  onShowAST: (expression: string, ast: SyntaxTree) => void
   onEditTerm: () => void
 }
 
 function FormConstituenta({
   id, isModified, setIsModified,
   constituenta, toggleReset,
-  onRenameCst, onShowAST, onEditTerm
+  onRenameCst, onEditTerm
 }: FormConstituentaProps) {
   const { schema, cstUpdate, isMutable, processing } = useRSForm();
 
@@ -153,7 +154,6 @@ function FormConstituenta({
       value={expression}
       disabled={!readyForEdit}
       toggleReset={toggleReset}
-      onShowAST={onShowAST}
       onChange={newValue => setExpression(newValue)}
       setTypification={setTypification}
     />

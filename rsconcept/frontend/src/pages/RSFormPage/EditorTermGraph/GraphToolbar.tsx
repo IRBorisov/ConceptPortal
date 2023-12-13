@@ -1,8 +1,10 @@
-import MiniButton from '../../../components/Common/MiniButton';
-import Overlay from '../../../components/Common/Overlay';
-import HelpButton from '../../../components/Help/HelpButton';
-import { ArrowsFocusIcon, DumpBinIcon, FilterIcon, LetterAIcon, LetterALinesIcon, PlanetIcon, SmallPlusIcon } from '../../../components/Icons';
-import { HelpTopic } from '../../../models/miscelanious';
+'use client';
+
+import MiniButton from '@/components/Common/MiniButton';
+import Overlay from '@/components/Common/Overlay';
+import HelpButton from '@/components/Help/HelpButton';
+import { ArrowsFocusIcon, DumpBinIcon, FilterIcon, LetterAIcon, LetterALinesIcon, PlanetIcon, SmallPlusIcon } from '@/components/Icons';
+import { HelpTopic } from '@/models/miscelanious';
 
 interface GraphToolbarProps {
   isMutable: boolean

@@ -1,7 +1,9 @@
+'use client';
+
 import { createContext, useContext, useLayoutEffect, useMemo, useState } from 'react';
 
-import useLocalStorage from '../hooks/useLocalStorage';
-import { darkT, IColorTheme, lightT } from '../utils/color';
+import useLocalStorage from '@/hooks/useLocalStorage';
+import { darkT, IColorTheme, lightT } from '@/utils/color';
 
 interface IThemeContext {
   viewportHeight: string
@@ -53,7 +55,7 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
   }
 
   useLayoutEffect(() => {
-    setDarkClass(darkMode)
+    setDarkClass(darkMode);
   }, [darkMode]);
 
   useLayoutEffect(() => {

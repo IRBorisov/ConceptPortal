@@ -1,7 +1,9 @@
+'use client';
+
 import { createPortal } from 'react-dom';
 import { ITooltip, Tooltip } from 'react-tooltip';
 
-import { useConceptTheme } from '../../context/ThemeContext';
+import { useConceptTheme } from '@/context/ThemeContext';
 
 interface ConceptTooltipProps
 extends Omit<ITooltip, 'variant'> {
@@ -17,6 +19,9 @@ function ConceptTooltip({
 }: ConceptTooltipProps) {
   const { darkMode } = useConceptTheme();
 
+  if (typeof window === 'undefined') {
+    return null;
+  }
   return createPortal(
   <Tooltip
     opacity={0.97}

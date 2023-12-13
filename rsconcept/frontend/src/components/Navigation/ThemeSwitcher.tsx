@@ -1,5 +1,6 @@
-import { useConceptTheme } from '../../context/ThemeContext';
-import { DarkThemeIcon, LightThemeIcon } from '../Icons';
+import { DarkThemeIcon, LightThemeIcon } from '@/components/Icons';
+import { useConceptTheme } from '@/context/ThemeContext';
+
 import NavigationButton from './NavigationButton';
 
 function ThemeSwitcher() {

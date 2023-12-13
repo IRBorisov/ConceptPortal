@@ -1,15 +1,17 @@
+'use client';
+
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import Checkbox from '../components/Common/Checkbox';
-import Modal, { ModalProps } from '../components/Common/Modal';
-import TextArea from '../components/Common/TextArea';
-import TextInput from '../components/Common/TextInput';
-import { useLibrary } from '../context/LibraryContext';
-import { useConceptNavigation } from '../context/NagivationContext';
-import { ILibraryItem } from '../models/library';
-import { IRSFormCreateData } from '../models/rsform';
-import { cloneTitle } from '../utils/misc';
+import Checkbox from '@/components/Common/Checkbox';
+import Modal, { ModalProps } from '@/components/Common/Modal';
+import TextArea from '@/components/Common/TextArea';
+import TextInput from '@/components/Common/TextInput';
+import { useLibrary } from '@/context/LibraryContext';
+import { useConceptNavigation } from '@/context/NagivationContext';
+import { ILibraryItem } from '@/models/library';
+import { IRSFormCreateData } from '@/models/rsform';
+import { cloneTitle } from '@/utils/misc';
 
 interface DlgCloneLibraryItemProps
 extends Pick<ModalProps, 'hideWindow'> {
@@ -17,7 +19,7 @@ extends Pick<ModalProps, 'hideWindow'> {
 }
 
 function DlgCloneLibraryItem({ hideWindow, base }: DlgCloneLibraryItemProps) {
-  const { navigateTo } = useConceptNavigation();
+  const router = useConceptNavigation();
   const [title, setTitle] = useState('');
   const [alias, setAlias] = useState('');
   const [comment, setComment] = useState('');
@@ -49,7 +51,7 @@ function DlgCloneLibraryItem({ hideWindow, base }: DlgCloneLibraryItemProps) {
     };
     cloneItem(base.id, data, newSchema => {
       toast.success(`Копия создана: ${newSchema.alias}`);
-      navigateTo(`/rsforms/${newSchema.id}`);
+      router.push(`/rsforms/${newSchema.id}`);
     });
   }
 

@@ -2,10 +2,11 @@
  * Module: miscellaneous static functions to generate UI resources.
  */
 
-import { ILibraryItem } from '../models/library';
-import { CstType, IConstituenta, IRSForm } from '../models/rsform';
-import { IRSErrorDescription, RSErrorClass } from '../models/rslang';
-import { inferErrorClass } from '../models/rslangAPI';
+import { ILibraryItem } from '@/models/library';
+import { CstType, IConstituenta, IRSForm } from '@/models/rsform';
+import { IRSErrorDescription, RSErrorClass } from '@/models/rslang';
+import { inferErrorClass } from '@/models/rslangAPI';
+
 import { labelCstType } from './labels';
 
 export function getCstTypePrefix(type: CstType) {
@@ -79,4 +80,3 @@ export function getRSErrorPrefix(error: IRSErrorDescription): string {
   case RSErrorClass.UNKNOWN: return 'U' + id;
   }
 }
-

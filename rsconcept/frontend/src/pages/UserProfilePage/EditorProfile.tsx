@@ -1,33 +1,40 @@
-import { useLayoutEffect, useState } from 'react';
+'use client';
+
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import SubmitButton from '../../components/Common/SubmitButton';
-import TextInput from '../../components/Common/TextInput';
-import { useUserProfile } from '../../context/UserProfileContext';
-import useModificationPrompt from '../../hooks/useModificationPrompt';
-import { IUserUpdateData } from '../../models/library';
+import SubmitButton from '@/components/Common/SubmitButton';
+import TextInput from '@/components/Common/TextInput';
+import { useConceptNavigation } from '@/context/NagivationContext';
+import { useUserProfile } from '@/context/UserProfileContext';
+import { IUserUpdateData } from '@/models/library';
 
 function EditorProfile() {
   const { updateUser, user, processing } = useUserProfile();
+  const router = useConceptNavigation();
   
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [first_name, setFirstName] = useState('');
   const [last_name, setLastName] = useState('');
 
-  const { isModified, setIsModified } = useModificationPrompt();
-
-  useLayoutEffect(() => {
+  const isModified: boolean = useMemo(
+  () => {
     if (!user) {
-      setIsModified(false);
-      return;
+      return false;
     }
-    setIsModified(
+    return (
       user.email !== email ||
       user.first_name !== first_name ||
       user.last_name !== last_name
     );
-  }, [user, user?.email, user?.first_name, user?.last_name, email, first_name, last_name, setIsModified]);
+  }, [user, email, first_name, last_name]);
+
+  useEffect(
+  () => {
+    router.setIsBlocked(isModified);
+    return () => router.setIsBlocked(false);
+  }, [router, isModified]);
 
   useLayoutEffect(() => {
     if (user) {
@@ -83,5 +90,4 @@ function EditorProfile() {
   </form>);
 }
 
-  export default EditorProfile;
-  
+export default EditorProfile;

@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Cell, ColumnSort,
   createColumnHelper, flexRender, getCoreRowModel,
@@ -55,7 +57,7 @@ extends Pick<TableOptions<TData>,
  * @param headPosition - Top position of sticky header (0 if no other sticky elements are present). 
  * No sticky header if omitted
 */
-export default function DataTable<TData extends RowData>({
+function DataTable<TData extends RowData>({
   dense, headPosition, conditionalRowStyles, noFooter, noHeader,
   onRowClicked, onRowDoubleClicked, noDataComponent,
 
@@ -212,3 +214,5 @@ export default function DataTable<TData extends RowData>({
   {isEmpty ? (noDataComponent ?? <DefaultNoData />) : null}
   </div>);
 }
+
+export default DataTable;

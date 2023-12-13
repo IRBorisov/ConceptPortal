@@ -1,20 +1,21 @@
-import { useAuth } from '../context/AuthContext';
-import { useConceptNavigation } from '../context/NagivationContext';
+import { useAuth } from '@/context/AuthContext';
+import { useConceptNavigation } from '@/context/NagivationContext';
+
 import TextURL from './Common/TextURL';
 
 function ExpectedAnonymous() {
   const { user, logout } = useAuth();
-  const { navigateTo } = useConceptNavigation();
+  const router = useConceptNavigation();
 
   function logoutAndRedirect() {
-    logout(() => navigateTo('/login/'));
+    logout(() => router.push('/login/'));
   }
 
   return (
   <div className='flex flex-col items-center gap-3 py-6'>
     <p className='font-semibold'>{`Вы вошли в систему как ${user?.username ?? ''}`}</p>
     <div className='flex gap-3'>
-      <TextURL text='Новая схема' href='/rsform-create'/>
+      <TextURL text='Новая схема' href='/library/create'/>
       <span> | </span>
       <TextURL text='Библиотека' href='/library'/>
       <span> | </span>

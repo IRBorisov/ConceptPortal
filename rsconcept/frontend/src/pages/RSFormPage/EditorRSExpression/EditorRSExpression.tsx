@@ -1,19 +1,23 @@
+'use client';
+
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import MiniButton from '../../../components/Common/MiniButton';
-import Overlay from '../../../components/Common/Overlay';
-import { ASTNetworkIcon } from '../../../components/Icons';
-import RSInput from '../../../components/RSInput';
-import { RSTextWrapper } from '../../../components/RSInput/textEditing';
-import { useRSForm } from '../../../context/RSFormContext';
-import useCheckExpression from '../../../hooks/useCheckExpression';
-import { IConstituenta } from '../../../models/rsform';
-import { IExpressionParse, IRSErrorDescription, SyntaxTree } from '../../../models/rslang';
-import { TokenID } from '../../../models/rslang';
-import { labelTypification } from '../../../utils/labels';
-import { getCstExpressionPrefix } from '../../../utils/misc';
+import MiniButton from '@/components/Common/MiniButton';
+import Overlay from '@/components/Common/Overlay';
+import { ASTNetworkIcon } from '@/components/Icons';
+import RSInput from '@/components/RSInput';
+import { RSTextWrapper } from '@/components/RSInput/textEditing';
+import { useRSForm } from '@/context/RSFormContext';
+import DlgShowAST from '@/dialogs/DlgShowAST';
+import useCheckExpression from '@/hooks/useCheckExpression';
+import { IConstituenta } from '@/models/rsform';
+import { IExpressionParse, IRSErrorDescription, SyntaxTree } from '@/models/rslang';
+import { TokenID } from '@/models/rslang';
+import { labelTypification } from '@/utils/labels';
+import { getCstExpressionPrefix } from '@/utils/misc';
+
 import RSAnalyzer from './RSAnalyzer';
 import RSEditorControls from './RSEditControls';
 
@@ -24,14 +28,13 @@ interface EditorRSExpressionProps {
   disabled?: boolean
   toggleReset?: boolean
   placeholder?: string
-  onShowAST: (expression: string, ast: SyntaxTree) => void
   setTypification: (typificaiton: string) => void
   value: string
   onChange: (newValue: string) => void
 }
 
 function EditorRSExpression({
-  activeCst, disabled, value, onShowAST, toggleReset,
+  activeCst, disabled, value, toggleReset,
   setTypification, onChange, ...restProps
 }: EditorRSExpressionProps) {
   const { schema } = useRSForm();
@@ -39,6 +42,10 @@ function EditorRSExpression({
   const [isModified, setIsModified] = useState(false);
   const { parseData, checkExpression, resetParse, loading } = useCheckExpression({ schema });
   const rsInput = useRef<ReactCodeMirrorRef>(null);
+
+  const [syntaxTree, setSyntaxTree] = useState<SyntaxTree>([]);
+  const [expression, setExpression] = useState('');
+  const [showAST, setShowAST] = useState(false);
 
   useLayoutEffect(() => {
     setIsModified(false);
@@ -109,13 +116,21 @@ function EditorRSExpression({
       if (!parse.astText) {
         toast.error('Невозможно построить дерево разбора');
       } else {
-        onShowAST(getCstExpressionPrefix(activeCst!) + value, parse.ast);
+        setSyntaxTree(parse.ast);
+        setExpression(getCstExpressionPrefix(activeCst!) + value);
+        setShowAST(true);
       }
     });
   }
 
   return (
   <div className='flex flex-col items-start w-full'>
+    {showAST ? 
+    <DlgShowAST
+      expression={expression}
+      syntaxTree={syntaxTree}
+      hideWindow={() => setShowAST(false)}
+    /> : null}
     <Overlay position='top-[-0.2rem] left-[11rem]'>
       <MiniButton noHover
         tooltip='Дерево разбора выражения'

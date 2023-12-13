@@ -1,4 +1,4 @@
-import { EducationIcon, GroupIcon,SubscribedIcon } from '../Icons';
+import { EducationIcon, GroupIcon,SubscribedIcon } from '@/components/Icons';
 
 function HelpLibrary() {
   return (

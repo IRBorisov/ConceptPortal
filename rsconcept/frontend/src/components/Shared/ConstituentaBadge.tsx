@@ -1,9 +1,9 @@
-import { IConstituenta } from '../../models/rsform';
-import { isMockCst } from '../../models/rsformAPI';
-import { colorfgCstStatus,IColorTheme } from '../../utils/color';
-import { describeExpressionStatus } from '../../utils/labels';
-import ConceptTooltip from '../Common/ConceptTooltip';
-import ConstituentaTooltip from '../Help/ConstituentaTooltip';
+import ConceptTooltip from '@/components/Common/ConceptTooltip';
+import ConstituentaTooltip from '@/components/Help/ConstituentaTooltip';
+import { IConstituenta } from '@/models/rsform';
+import { isMockCst } from '@/models/rsformAPI';
+import { colorfgCstStatus,IColorTheme } from '@/utils/color';
+import { describeExpressionStatus } from '@/utils/labels';
 
 interface ConstituentaBadgeProps {
   prefixID?: string

@@ -1,12 +1,14 @@
+'use client';
+
 import { useMemo } from 'react';
 
-import MiniButton from '../../../components/Common/MiniButton';
-import Overlay from '../../../components/Common/Overlay';
-import HelpButton from '../../../components/Help/HelpButton';
+import MiniButton from '@/components/Common/MiniButton';
+import Overlay from '@/components/Common/Overlay';
+import HelpButton from '@/components/Help/HelpButton';
 import { 
   ArrowsRotateIcon, CloneIcon, DiamondIcon, DumpBinIcon, SaveIcon, SmallPlusIcon
-} from '../../../components/Icons';
-import { HelpTopic } from '../../../models/miscelanious';
+} from '@/components/Icons';
+import { HelpTopic } from '@/models/miscelanious';
 
 interface ConstituentaToolbarProps {
   isMutable: boolean

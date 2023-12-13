@@ -1,6 +1,6 @@
 import { TextareaHTMLAttributes } from 'react';
 
-import { IColorsProps, IEditorProps } from '../commonInterfaces';
+import { IColorsProps, IEditorProps } from './commonInterfaces';
 import Label from './Label';
 
 export interface TextAreaProps 

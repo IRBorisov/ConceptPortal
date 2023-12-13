@@ -1,24 +1,13 @@
-import { useCallback, useLayoutEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+'use client';
 
-import ConceptSearch from '../../components/Common/ConceptSearch';
-import { useAuth } from '../../context/AuthContext';
-import { useConceptNavigation } from '../../context/NagivationContext';
-import { ILibraryFilter } from '../../models/miscelanious';
-import { LibraryFilterStrategy } from '../../models/miscelanious';
+import { useCallback } from 'react';
+
+import ConceptSearch from '@/components/Common/ConceptSearch';
+import { useConceptNavigation } from '@/context/NagivationContext';
+import { ILibraryFilter } from '@/models/miscelanious';
+import { LibraryFilterStrategy } from '@/models/miscelanious';
+
 import PickerStrategy from './PickerStrategy';
-
-
-function ApplyStrategy(strategy: LibraryFilterStrategy): ILibraryFilter {
-  switch (strategy) {
-  case LibraryFilterStrategy.MANUAL: return {};
-  case LibraryFilterStrategy.COMMON: return { is_common: true };
-  case LibraryFilterStrategy.CANONICAL: return { is_canonical: true };
-  case LibraryFilterStrategy.PERSONAL: return { is_personal: true };
-  case LibraryFilterStrategy.SUBSCRIBE: return { is_subscribed: true };
-  case LibraryFilterStrategy.OWNED: return { is_owned: true };
-  }
-}
 
 interface SearchPanelProps {
   total: number
@@ -27,13 +16,10 @@ interface SearchPanelProps {
   query: string
   setQuery: React.Dispatch<React.SetStateAction<string>>
   strategy: LibraryFilterStrategy
-  setStrategy: React.Dispatch<React.SetStateAction<LibraryFilterStrategy>>
 }
 
-function SearchPanel({ total, filtered, query, setQuery, strategy, setStrategy, setFilter }: SearchPanelProps) {
-  const { navigateTo } = useConceptNavigation();
-  const search = useLocation().search;
-  const { user } = useAuth();
+function SearchPanel({ total, filtered, query, setQuery, strategy, setFilter }: SearchPanelProps) {
+  const router = useConceptNavigation();
 
   function handleChangeQuery(newQuery: string) {
     setQuery(newQuery);
@@ -46,26 +32,13 @@ function SearchPanel({ total, filtered, query, setQuery, strategy, setStrategy, 
       is_personal: prev.is_personal
     }));
   }
-  
-  useLayoutEffect(() => {
-    const searchFilter = new URLSearchParams(search).get('filter')  as LibraryFilterStrategy | null;
-    if (searchFilter === null) {
-      navigateTo(`/library?filter=${strategy}`, { replace: true });
-      return;
-    }
-    const inputStrategy = searchFilter && Object.values(LibraryFilterStrategy).includes(searchFilter) ? searchFilter : LibraryFilterStrategy.MANUAL;
-    setQuery('')
-    setStrategy(inputStrategy)
-    setFilter(ApplyStrategy(inputStrategy));
-  }, [user, search, setQuery, setFilter, setStrategy, strategy, navigateTo]);
 
   const handleChangeStrategy = useCallback(
   (value: LibraryFilterStrategy) => {
-    if (value === strategy) {
-      return;
+    if (value !== strategy) {
+      router.push(`/library?filter=${value}`);
     }
-    navigateTo(`/library?filter=${value}`)
-  }, [strategy, navigateTo]);
+  }, [strategy, router]);
 
   return (
   <div className='sticky top-0 left-0 right-0 flex items-stretch justify-start w-full border-b clr-input max-h-[2.3rem] pr-40'>

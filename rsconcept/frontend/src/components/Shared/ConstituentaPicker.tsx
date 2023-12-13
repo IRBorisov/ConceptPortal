@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { useConceptTheme } from '../../context/ThemeContext';
-import { CstMatchMode } from '../../models/miscelanious';
-import { IConstituenta } from '../../models/rsform';
-import { matchConstituenta } from '../../models/rsformAPI';
-import { prefixes } from '../../utils/constants';
-import { describeConstituenta } from '../../utils/labels';
-import ConceptSearch from '../Common/ConceptSearch';
-import DataTable, { createColumnHelper, IConditionalStyle } from '../DataTable';
+import ConceptSearch from '@/components/Common/ConceptSearch';
+import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/DataTable';
+import { useConceptTheme } from '@/context/ThemeContext';
+import { CstMatchMode } from '@/models/miscelanious';
+import { IConstituenta } from '@/models/rsform';
+import { matchConstituenta } from '@/models/rsformAPI';
+import { prefixes } from '@/utils/constants';
+import { describeConstituenta } from '@/utils/labels';
+
 import ConstituentaBadge from './ConstituentaBadge';
 
 interface ConstituentaPickerProps {

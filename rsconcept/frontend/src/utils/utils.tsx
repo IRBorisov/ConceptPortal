@@ -2,6 +2,8 @@
  * Module: Utility functions.
  */
 
+import { AxiosHeaderValue, AxiosResponse } from 'axios';
+
 /**
  * Checks if arguments is Node.
  */
@@ -60,4 +62,22 @@ export function applyPattern(text: string, mapping: { [key: string]: string }, p
   }
   output += text.substring(posInput);
   return output;
+}
+
+/**
+ * Check if Axios reponse is html.
+*/
+export function isResponseHtml(response?: AxiosResponse) {
+  if (!response) {
+    return false;
+  }
+  const header = response.headers['content-type'] as AxiosHeaderValue;
+  if (!header) {
+    return false;
+  }
+  if (typeof header === 'number' || typeof header === 'boolean') {
+    return false;
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+  return header.includes('text/html');
 }

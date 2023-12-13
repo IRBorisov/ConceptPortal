@@ -1,11 +1,20 @@
-import { createContext, useCallback, useContext, useEffect } from 'react';
-import { NavigateOptions, useLocation, useNavigate } from 'react-router-dom';
+'use client';
 
-import { globalIDs } from '../utils/constants';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { unstable_usePrompt, useLocation, useNavigate } from 'react-router-dom';
+
+import { globalIDs } from '@/utils/constants';
 
 interface INagivationContext{
-  navigateTo: (path: string, options?: NavigateOptions) => void
-  navigateHistory: (offset: number) => void
+  push: (path: string) => void
+  replace: (path: string) => void
+  back: () => void
+  forward: () => void
+
+  canBack: () => boolean
+  
+  isBlocked: boolean
+  setIsBlocked: (value: boolean) => void
 }
 
 const NagivationContext = createContext<INagivationContext | null>(null);
@@ -22,37 +31,65 @@ interface NavigationStateProps {
 }
 
 export const NavigationState = ({ children }: NavigationStateProps) => {
-  const implNavigate = useNavigate();
+  const router = useNavigate();
   const { pathname } = useLocation();
 
-  function scrollTop() {
+  const [isBlocked, setIsBlocked] = useState(false);
+  unstable_usePrompt({
+    when: isBlocked,
+    message: 'Изменения не сохранены. Вы уверены что хотите совершить переход?'
+  });
+
+  const canBack = useCallback(
+  () => {
+    return (!!window.history && window.history?.length !== 0);
+  }, []);
+
+  const scrollTop = useCallback(
+  () => {
     window.scrollTo(0, 0);
     const mainScroll = document.getElementById(globalIDs.main_scroll);
     if (mainScroll) {
       mainScroll.scroll(0,0);
     }
-  }
+  }, []);
 
-  const navigateTo = useCallback(
-  (path: string, options?: NavigateOptions) => {
+  const push = useCallback(
+  (path: string) => {
     scrollTop();
-    implNavigate(path, options);
-  }, [implNavigate]);
+    setIsBlocked(false);
+    router(path);
+  }, [router, scrollTop]);
 
-  const navigateHistory = useCallback(
-  (offset: number) => {
+  const replace = useCallback(
+  (path: string) => {
     scrollTop();
-    implNavigate(offset);
-  }, [implNavigate]);
+    setIsBlocked(false);
+    router(path, {replace: true});
+  }, [router, scrollTop]);
+
+  const back = useCallback(
+  () => {
+    scrollTop();
+    setIsBlocked(false);
+    router(-1);
+  }, [router, scrollTop]);
+
+  const forward = useCallback(
+  () => {
+    scrollTop();
+    setIsBlocked(false);
+    router(1);
+  }, [router, scrollTop]);
 
   useEffect(() => {
     scrollTop();
-  }, [pathname]);
-
+  }, [pathname, scrollTop]);
 
   return (
   <NagivationContext.Provider value={{
-    navigateTo, navigateHistory
+    push, replace, back, forward, 
+    canBack, isBlocked, setIsBlocked
   }}>
     {children}
   </NagivationContext.Provider>);

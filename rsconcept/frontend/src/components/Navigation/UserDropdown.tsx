@@ -1,8 +1,8 @@
-import { useAuth } from '../../context/AuthContext';
-import { useConceptNavigation } from '../../context/NagivationContext';
-import { useConceptTheme } from '../../context/ThemeContext';
-import Dropdown from '../Common/Dropdown';
-import DropdownButton from '../Common/DropdownButton';
+import Dropdown from '@/components/Common/Dropdown';
+import DropdownButton from '@/components/Common/DropdownButton';
+import { useAuth } from '@/context/AuthContext';
+import { useConceptNavigation } from '@/context/NagivationContext';
+import { useConceptTheme } from '@/context/ThemeContext';
 
 interface UserDropdownProps {
   hideDropdown: () => void
@@ -10,18 +10,18 @@ interface UserDropdownProps {
 
 function UserDropdown({ hideDropdown }: UserDropdownProps) {
   const { darkMode, toggleDarkMode } = useConceptTheme();
-  const { navigateTo } = useConceptNavigation();
+  const router = useConceptNavigation();
   const { user, logout } = useAuth();
 
   const navigateProfile = () => {
     hideDropdown();
-    navigateTo('/profile');
+    router.push('/profile');
   };
 
   const logoutAndRedirect =
   () => {
     hideDropdown();
-    logout(() => navigateTo('/login/'));
+    logout(() => router.push('/login/'));
   };
 
   return (

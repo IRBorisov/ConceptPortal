@@ -1,17 +1,20 @@
+'use client';
+
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { GraphEdge, GraphNode, LayoutTypes } from 'reagraph';
 
-import Overlay from '../../../components/Common/Overlay';
-import InfoConstituenta from '../../../components/Shared/InfoConstituenta';
-import SelectedCounter from '../../../components/Shared/SelectedCounter';
-import { useRSForm } from '../../../context/RSFormContext';
-import { useConceptTheme } from '../../../context/ThemeContext';
-import DlgGraphParams from '../../../dialogs/DlgGraphParams';
-import useLocalStorage from '../../../hooks/useLocalStorage';
-import { GraphColoringScheme, GraphFilterParams } from '../../../models/miscelanious';
-import { CstType, ICstCreateData } from '../../../models/rsform';
-import { colorbgGraphNode } from '../../../utils/color';
-import { TIMEOUT_GRAPH_REFRESH } from '../../../utils/constants';
+import Overlay from '@/components/Common/Overlay';
+import InfoConstituenta from '@/components/Shared/InfoConstituenta';
+import SelectedCounter from '@/components/Shared/SelectedCounter';
+import { useRSForm } from '@/context/RSFormContext';
+import { useConceptTheme } from '@/context/ThemeContext';
+import DlgGraphParams from '@/dialogs/DlgGraphParams';
+import useLocalStorage from '@/hooks/useLocalStorage';
+import { GraphColoringScheme, GraphFilterParams } from '@/models/miscelanious';
+import { CstType, ICstCreateData } from '@/models/rsform';
+import { colorbgGraphNode } from '@/utils/color';
+import { TIMEOUT_GRAPH_REFRESH } from '@/utils/constants';
+
 import GraphSidebar from './GraphSidebar';
 import GraphToolbar from './GraphToolbar';
 import TermGraph from './TermGraph';

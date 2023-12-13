@@ -1,37 +1,23 @@
-import { useCallback, useLayoutEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+'use client';
 
-import { useConceptNavigation } from '../../context/NagivationContext';
-import { useConceptTheme } from '../../context/ThemeContext';
-import { HelpTopic } from '../../models/miscelanious';
+import { useConceptNavigation } from '@/context/NagivationContext';
+import { useConceptTheme } from '@/context/ThemeContext';
+import useQueryStrings from '@/hooks/useQueryStrings';
+import { HelpTopic } from '@/models/miscelanious';
+
 import TopicsList from './TopicsList';
 import ViewTopic from './ViewTopic';
 
 function ManualsPage() {
-  const { navigateTo } = useConceptNavigation();
-  const search = useLocation().search;
-  const { mainHeight } = useConceptTheme();
-  const [activeTopic, setActiveTopic] = useState<HelpTopic>(HelpTopic.MAIN);
+  const router = useConceptNavigation();
+  const query = useQueryStrings();
+  const topic = (query.get('topic') || HelpTopic.MAIN) as HelpTopic;
 
-  const navigateTopic = useCallback(
-  (newTopic: HelpTopic) => {
-    navigateTo(`/manuals?topic=${newTopic}`);
-  }, [navigateTo]);
-  
+  const { mainHeight } = useConceptTheme();
 
   function onSelectTopic(newTopic: HelpTopic) {
-    navigateTopic(newTopic);
+    router.push(`/manuals?topic=${newTopic}`);
   }
-
-  useLayoutEffect(() => {
-    const topic = new URLSearchParams(search).get('topic') as HelpTopic;
-    if (!Object.values(HelpTopic).includes(topic)) {
-      navigateTopic(HelpTopic.MAIN);
-      return;
-    } else {
-      setActiveTopic(topic);
-    }
-  }, [search, setActiveTopic, navigateTopic]);
 
   return (
   <div
@@ -39,10 +25,10 @@ function ManualsPage() {
     style={{minHeight: mainHeight}}
   >
     <TopicsList 
-      activeTopic={activeTopic}
+      activeTopic={topic}
       onChangeTopic={topic => onSelectTopic(topic)}
     />
-    <ViewTopic topic={activeTopic} />
+    <ViewTopic topic={topic} />
   </div>);
 }
 

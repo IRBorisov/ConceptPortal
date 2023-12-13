@@ -2,8 +2,9 @@
  * Module: API for formal representation for systems of concepts.
  */
 
-import { Graph } from '../utils/Graph';
-import { TextMatcher } from '../utils/utils';
+import { Graph } from '@/utils/Graph';
+import { TextMatcher } from '@/utils/utils';
+
 import { CstMatchMode } from './miscelanious';
 import {
   CATEGORY_CST_TYPE, CstClass, CstType, 
@@ -250,4 +251,3 @@ export function applyFilterCategory(start: IConstituenta, schema: IRSFormData): 
     )
   );
 }
-

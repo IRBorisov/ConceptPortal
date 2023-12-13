@@ -1,9 +1,12 @@
+'use client';
+
 import { useMemo, useState } from 'react';
 
-import Checkbox from '../../components/Common/Checkbox';
-import Modal, { ModalProps } from '../../components/Common/Modal';
-import { IRSForm } from '../../models/rsform';
-import { prefixes } from '../../utils/constants';
+import Checkbox from '@/components/Common/Checkbox';
+import Modal, { ModalProps } from '@/components/Common/Modal';
+import { IRSForm } from '@/models/rsform';
+import { prefixes } from '@/utils/constants';
+
 import ConstituentsList from './ConstituentsList';
 
 interface DlgDeleteCstProps

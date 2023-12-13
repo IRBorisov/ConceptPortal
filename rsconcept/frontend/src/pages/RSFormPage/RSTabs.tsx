@@ -1,31 +1,31 @@
+'use client';
+
 import axios from 'axios';
 import fileDownload from 'js-file-download';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 import { toast } from 'react-toastify';
 
-import BackendError, { ErrorInfo } from '../../components/BackendError';
-import { ConceptLoader } from '../../components/Common/ConceptLoader';
-import ConceptTab from '../../components/Common/ConceptTab';
-import TextURL from '../../components/Common/TextURL';
-import { useLibrary } from '../../context/LibraryContext';
-import { useConceptNavigation } from '../../context/NagivationContext';
-import { useRSForm } from '../../context/RSFormContext';
-import { useConceptTheme } from '../../context/ThemeContext';
-import DlgCloneLibraryItem from '../../dialogs/DlgCloneLibraryItem';
-import DlgConstituentaTemplate from '../../dialogs/DlgConstituentaTemplate';
-import DlgCreateCst from '../../dialogs/DlgCreateCst';
-import DlgDeleteCst from '../../dialogs/DlgDeleteCst';
-import DlgEditWordForms from '../../dialogs/DlgEditWordForms';
-import DlgRenameCst from '../../dialogs/DlgRenameCst';
-import DlgShowAST from '../../dialogs/DlgShowAST';
-import DlgUploadRSForm from '../../dialogs/DlgUploadRSForm';
-import useModificationPrompt from '../../hooks/useModificationPrompt';
-import { IConstituenta, ICstCreateData, ICstRenameData, ICstUpdateData, TermForm } from '../../models/rsform';
-import { SyntaxTree } from '../../models/rslang';
-import { EXTEOR_TRS_FILE, prefixes, TIMEOUT_UI_REFRESH } from '../../utils/constants';
-import { createAliasFor } from '../../utils/misc';
+import { ConceptLoader } from '@/components/Common/ConceptLoader';
+import ConceptTab from '@/components/Common/ConceptTab';
+import TextURL from '@/components/Common/TextURL';
+import InfoError, { ErrorData } from '@/components/InfoError';
+import { useLibrary } from '@/context/LibraryContext';
+import { useConceptNavigation } from '@/context/NagivationContext';
+import { useRSForm } from '@/context/RSFormContext';
+import { useConceptTheme } from '@/context/ThemeContext';
+import DlgCloneLibraryItem from '@/dialogs/DlgCloneLibraryItem';
+import DlgConstituentaTemplate from '@/dialogs/DlgConstituentaTemplate';
+import DlgCreateCst from '@/dialogs/DlgCreateCst';
+import DlgDeleteCst from '@/dialogs/DlgDeleteCst';
+import DlgEditWordForms from '@/dialogs/DlgEditWordForms';
+import DlgRenameCst from '@/dialogs/DlgRenameCst';
+import DlgUploadRSForm from '@/dialogs/DlgUploadRSForm';
+import useQueryStrings from '@/hooks/useQueryStrings';
+import { IConstituenta, ICstCreateData, ICstRenameData, ICstUpdateData, TermForm } from '@/models/rsform';
+import { EXTEOR_TRS_FILE, prefixes, TIMEOUT_UI_REFRESH } from '@/utils/constants';
+import { createAliasFor } from '@/utils/misc';
+
 import EditorConstituenta from './EditorConstituenta';
 import EditorRSForm from './EditorRSForm';
 import EditorRSList from './EditorRSList';
@@ -39,7 +39,7 @@ export enum RSTabID {
   TERM_GRAPH = 3
 }
 
-function ProcessError({error}: {error: ErrorInfo}): React.ReactElement {
+function ProcessError({error}: {error: ErrorData}): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 404) {
     return (
       <div className='flex flex-col items-center justify-center w-full p-2'>
@@ -48,13 +48,16 @@ function ProcessError({error}: {error: ErrorInfo}): React.ReactElement {
       </div>
     );
   } else {
-    return (<BackendError error={error} />);
+    return (<InfoError error={error} />);
   }
 }
 
 function RSTabs() {
-  const { navigateTo } = useConceptNavigation();
-  const search = useLocation().search;
+  const router = useConceptNavigation();
+  const query = useQueryStrings();
+  const tabQuery = (Number(query.get('tab')) ?? RSTabID.CARD) as RSTabID;
+  const cstQuery = query.get('active');
+
   const { 
     error, schema, loading, claim, download, isTracking,
     cstCreate, cstDelete, cstRename, subscribe, unsubscribe, cstUpdate
@@ -62,7 +65,7 @@ function RSTabs() {
   const { destroyItem } = useLibrary();
   const { setNoFooter, noNavigation } = useConceptTheme();
 
-  const { isModified, setIsModified } = useModificationPrompt();
+  const [isModified, setIsModified] = useState(false);
 
   const [activeTab, setActiveTab] = useState(RSTabID.CARD);
   const [activeID, setActiveID] = useState<number | undefined>(undefined);
@@ -72,10 +75,6 @@ function RSTabs() {
   
   const [showUpload, setShowUpload] = useState(false);
   const [showClone, setShowClone] = useState(false);
-  
-  const [syntaxTree, setSyntaxTree] = useState<SyntaxTree>([]);
-  const [expression, setExpression] = useState('');
-  const [showAST, setShowAST] = useState(false);
   
   const [afterDelete, setAfterDelete] = useState<((items: number[]) => void) | undefined>(undefined);
   const [toBeDeleted, setToBeDeleted] = useState<number[]>([]);
@@ -110,14 +109,12 @@ function RSTabs() {
   }, [schema]);
 
   useLayoutEffect(() => {
-    const activeTab = (Number(new URLSearchParams(search).get('tab')) ?? RSTabID.CARD) as RSTabID;
-    const cstQuery = new URLSearchParams(search).get('active');
-    setActiveTab(activeTab);
-    setNoFooter(activeTab === RSTabID.CST_EDIT || activeTab === RSTabID.CST_LIST);
+    setActiveTab(tabQuery);
+    setNoFooter(tabQuery === RSTabID.CST_EDIT || tabQuery === RSTabID.CST_LIST);
     setActiveID(Number(cstQuery) ?? ((schema && schema?.items.length > 0) ? schema.items[0].id : undefined));
     setIsModified(false);
     return () => setNoFooter(false);
-  }, [search, setActiveTab, setActiveID, schema, setNoFooter, setIsModified]);
+  }, [tabQuery, cstQuery, setActiveTab, setActiveID, schema, setNoFooter, setIsModified]);
 
   function onSelectTab(index: number) {
     navigateTab(index, activeID);
@@ -129,16 +126,18 @@ function RSTabs() {
       return;
     }
     if (activeID) {
-      navigateTo(`/rsforms/${schema.id}?tab=${tab}&active=${activeID}`, {
-        replace: tab === activeTab && tab !== RSTabID.CST_EDIT
-      });
+      if (tab === activeTab && tab !== RSTabID.CST_EDIT) {
+        router.replace(`/rsforms/${schema.id}?tab=${tab}&active=${activeID}`);
+      } else {
+        router.push(`/rsforms/${schema.id}?tab=${tab}&active=${activeID}`);
+      }
     } else if (tab !== activeTab && tab === RSTabID.CST_EDIT && schema.items.length > 0) {
       activeID = schema.items[0].id;
-      navigateTo(`/rsforms/${schema.id}?tab=${tab}&active=${activeID}`, { replace: true });
+      router.replace(`/rsforms/${schema.id}?tab=${tab}&active=${activeID}`);
     } else {
-      navigateTo(`/rsforms/${schema.id}?tab=${tab}`);
+      router.push(`/rsforms/${schema.id}?tab=${tab}`);
     }
-  }, [navigateTo, schema, activeTab]);
+  }, [router, schema, activeTab]);
 
   const handleCreateCst = useCallback(
   (data: ICstCreateData) => {
@@ -221,13 +220,6 @@ function RSTabs() {
     setShowDeleteCst(true)
   }, []);
 
-  const onShowAST = useCallback(
-  (expression: string, ast: SyntaxTree) => {
-    setSyntaxTree(ast);
-    setExpression(expression);
-    setShowAST(true);
-  }, []);
-
   const onOpenCst = useCallback(
   (cstID: number) => {
     navigateTab(RSTabID.CST_EDIT, cstID)
@@ -240,9 +232,9 @@ function RSTabs() {
     }
     destroyItem(schema.id, () => {
       toast.success('Схема удалена');
-      navigateTo('/library');
+      router.push('/library');
     });
-  }, [schema, destroyItem, navigateTo]);
+  }, [schema, destroyItem, router]);
 
   const onClaimSchema = useCallback(
   () => {
@@ -340,12 +332,6 @@ function RSTabs() {
   <DlgCloneLibraryItem
     base={schema!}
     hideWindow={() => setShowClone(false)}
-  /> : null}
-  {showAST ? 
-  <DlgShowAST
-    expression={expression}
-    syntaxTree={syntaxTree}
-    hideWindow={() => setShowAST(false)}
   /> : null}
   {showCreateCst ? 
   <DlgCreateCst
@@ -448,7 +434,6 @@ function RSTabs() {
           activeID={activeID}
           activeCst={activeCst}
           onOpenEdit={onOpenCst}
-          onShowAST={onShowAST}
           onCreateCst={promptCreateCst}
           onDeleteCst={promptDeleteCst}
           onRenameCst={promptRenameCst}

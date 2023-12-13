@@ -1,8 +1,8 @@
 import { useLayoutEffect, useMemo, useState } from 'react';
 
-import { GraphFilterParams } from '../../../models/miscelanious';
-import { CstType, IRSForm } from '../../../models/rsform';
-import { Graph } from '../../../utils/Graph';
+import { GraphFilterParams } from '@/models/miscelanious';
+import { CstType, IRSForm } from '@/models/rsform';
+import { Graph } from '@/utils/Graph';
 
 function useGraphFilter(schema: IRSForm | undefined, params: GraphFilterParams, toggleUpdate: boolean) {
   const [filtered, setFiltered] = useState<Graph>(new Graph());

@@ -1,12 +1,14 @@
+'use client';
+
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
-import DataTable, { createColumnHelper,RowSelectionState,VisibilityState } from '../../../components/DataTable';
-import ConstituentaBadge from '../../../components/Shared/ConstituentaBadge';
-import { useConceptTheme } from '../../../context/ThemeContext';
-import useWindowSize from '../../../hooks/useWindowSize';
-import { IConstituenta } from '../../../models/rsform';
-import { prefixes } from '../../../utils/constants';
-import { labelCstTypification } from '../../../utils/labels';
+import DataTable, { createColumnHelper,RowSelectionState,VisibilityState } from '@/components/DataTable';
+import ConstituentaBadge from '@/components/Shared/ConstituentaBadge';
+import { useConceptTheme } from '@/context/ThemeContext';
+import useWindowSize from '@/hooks/useWindowSize';
+import { IConstituenta } from '@/models/rsform';
+import { prefixes } from '@/utils/constants';
+import { labelCstTypification } from '@/utils/labels';
 
 interface RSTableProps {
   items?: IConstituenta[]

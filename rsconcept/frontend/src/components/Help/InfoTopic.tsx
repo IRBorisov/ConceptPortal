@@ -1,4 +1,5 @@
-import { HelpTopic } from '../../models/miscelanious';
+import { HelpTopic } from '@/models/miscelanious';
+
 import HelpAPI from './HelpAPI';
 import HelpConstituenta from './HelpConstituenta';
 import HelpExteor from './HelpExteor';

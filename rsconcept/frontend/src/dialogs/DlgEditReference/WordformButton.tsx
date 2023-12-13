@@ -1,4 +1,4 @@
-import { Grammeme } from '../../models/language';
+import { Grammeme } from '@/models/language';
 
 interface WordformButtonProps {
   text: string

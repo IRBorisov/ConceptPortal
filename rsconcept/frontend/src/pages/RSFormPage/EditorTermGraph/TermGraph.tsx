@@ -1,9 +1,13 @@
-import { useCallback, useLayoutEffect, useMemo, useRef } from 'react';
-import { GraphCanvas, GraphCanvasRef, GraphEdge, GraphNode, LayoutTypes, Sphere, useSelection } from 'reagraph';
+'use client';
 
-import { useConceptTheme } from '../../../context/ThemeContext';
-import { graphDarkT, graphLightT } from '../../../utils/color';
-import { resources } from '../../../utils/constants';
+import { useCallback, useLayoutEffect, useMemo, useRef } from 'react';
+
+import GraphUI, {
+  GraphCanvasRef, GraphEdge, GraphNode, LayoutTypes, Sphere, useSelection
+} from '@/components/Common/GraphUI';
+import { useConceptTheme } from '@/context/ThemeContext';
+import { graphDarkT, graphLightT } from '@/utils/color';
+import { resources } from '@/utils/constants';
 
 interface TermGraphProps {
   nodes: GraphNode[]
@@ -109,7 +113,7 @@ function TermGraph({
   return (
   <div className='w-full h-full overflow-auto outline-none'>
   <div className='relative' style={{width: canvasWidth, height: canvasHeight}}>
-    <GraphCanvas
+    <GraphUI
       draggable
       ref={graphRef}
       nodes={nodes}

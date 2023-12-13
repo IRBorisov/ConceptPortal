@@ -1,7 +1,10 @@
+'use client';
+
 import { Table } from '@tanstack/react-table';
 import { useCallback } from 'react';
 
-import { prefixes } from '../../utils/constants';
+import { prefixes } from '@/utils/constants';
+
 import { GotoFirstIcon, GotoLastIcon, GotoNextIcon, GotoPrevIcon } from '../Icons';
 
 interface PaginationToolsProps<TData> {

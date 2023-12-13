@@ -1,16 +1,28 @@
+'use client';
+
 import { useCallback, useLayoutEffect, useState } from 'react';
 
-import BackendError from '../../components/BackendError';
-import { ConceptLoader } from '../../components/Common/ConceptLoader';
-import { useLibrary } from '../../context/LibraryContext';
-import { useConceptTheme } from '../../context/ThemeContext';
-import useLocalStorage from '../../hooks/useLocalStorage';
-import { ILibraryItem } from '../../models/library';
-import { ILibraryFilter, LibraryFilterStrategy } from '../../models/miscelanious';
+import { ConceptLoader } from '@/components/Common/ConceptLoader';
+import InfoError from '@/components/InfoError';
+import { useAuth } from '@/context/AuthContext';
+import { useLibrary } from '@/context/LibraryContext';
+import { useConceptNavigation } from '@/context/NagivationContext';
+import { useConceptTheme } from '@/context/ThemeContext';
+import useLocalStorage from '@/hooks/useLocalStorage';
+import useQueryStrings from '@/hooks/useQueryStrings';
+import { ILibraryItem } from '@/models/library';
+import { ILibraryFilter, LibraryFilterStrategy } from '@/models/miscelanious';
+
 import SearchPanel from './SearchPanel';
 import ViewLibrary from './ViewLibrary';
 
 function LibraryPage() {
+  const router = useConceptNavigation();
+  const urlParams = useQueryStrings();
+  const searchFilter = (urlParams.get('filter') || null) as LibraryFilterStrategy | null;
+  
+  const { user } = useAuth();
+
   const library = useLibrary();
   const { setShowScroll } = useConceptTheme();
   
@@ -19,6 +31,17 @@ function LibraryPage() {
 
   const [query, setQuery] = useState('');
   const [strategy, setStrategy] = useLocalStorage<LibraryFilterStrategy>('search_strategy', LibraryFilterStrategy.MANUAL);
+
+  useLayoutEffect(() => {
+    if (searchFilter === null) {
+      router.replace(`/library?filter=${strategy}`);
+      return;
+    }
+    const inputStrategy = searchFilter && Object.values(LibraryFilterStrategy).includes(searchFilter) ? searchFilter : LibraryFilterStrategy.MANUAL;
+    setQuery('');
+    setStrategy(inputStrategy);
+    setFilter(ApplyStrategy(inputStrategy));
+  }, [user, router, setQuery, setFilter, setStrategy, strategy, searchFilter]);
 
   useLayoutEffect(
   () => {
@@ -40,14 +63,13 @@ function LibraryPage() {
   return (
   <>
     {library.loading ? <ConceptLoader/> : null}
-    {library.error ? <BackendError error={library.error}/> : null}
+    {library.error ? <InfoError error={library.error}/> : null}
     {(!library.loading && library.items) ? 
     <>
       <SearchPanel
         query={query}
         setQuery={setQuery}
         strategy={strategy}
-        setStrategy={setStrategy}
         total={library.items.length ?? 0}
         filtered={items.length}
         setFilter={setFilter}
@@ -61,3 +83,15 @@ function LibraryPage() {
 }
 
 export default LibraryPage;
+
+// ====== Internals =======
+function ApplyStrategy(strategy: LibraryFilterStrategy): ILibraryFilter {
+  switch (strategy) {
+  case LibraryFilterStrategy.MANUAL: return {};
+  case LibraryFilterStrategy.COMMON: return { is_common: true };
+  case LibraryFilterStrategy.CANONICAL: return { is_canonical: true };
+  case LibraryFilterStrategy.PERSONAL: return { is_personal: true };
+  case LibraryFilterStrategy.SUBSCRIBE: return { is_subscribed: true };
+  case LibraryFilterStrategy.OWNED: return { is_owned: true };
+  }
+}

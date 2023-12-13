@@ -1,3 +1,5 @@
+'use client';
+
 import { useCallback, useEffect } from 'react';
 
 const KEY_NAME_ESC = 'Escape';

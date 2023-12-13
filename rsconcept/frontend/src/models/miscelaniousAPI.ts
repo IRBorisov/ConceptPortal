@@ -25,4 +25,3 @@ export function applyGraphFilter(target: IRSForm, start: number, mode: Dependenc
     return target.items.filter(cst => ids!.find(id => id === cst.id))
   }
 }
-

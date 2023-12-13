@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 
-import useWindowSize from '../../hooks/useWindowSize';
-import { urls, youtube } from '../../utils/constants';
-import EmbedYoutube from '../Common/EmbedYoutube';
+import EmbedYoutube from '@/components/Common/EmbedYoutube';
+import useWindowSize from '@/hooks/useWindowSize';
+import { urls, youtube } from '@/utils/constants';
 
 const OPT_VIDEO_H = 1080;
 

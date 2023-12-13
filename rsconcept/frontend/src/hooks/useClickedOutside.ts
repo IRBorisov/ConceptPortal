@@ -1,6 +1,8 @@
+'use client';
+
 import { useEffect } from 'react';
 
-import { assertIsNode } from '../utils/utils';
+import { assertIsNode } from '@/utils/utils';
 
 function useClickedOutside({ ref, callback }: { ref: React.RefObject<HTMLElement>, callback?: () => void }) {
   useEffect(() => {

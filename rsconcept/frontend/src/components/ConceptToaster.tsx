@@ -1,6 +1,6 @@
 import { ToastContainer, type ToastContainerProps } from 'react-toastify';
 
-import { useConceptTheme } from '../context/ThemeContext';
+import { useConceptTheme } from '@/context/ThemeContext';
 
 interface ToasterThemedProps extends Omit<ToastContainerProps, 'theme'>{}
 

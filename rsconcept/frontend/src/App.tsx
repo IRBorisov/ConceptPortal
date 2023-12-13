@@ -1,4 +1,3 @@
-import { pdfjs } from 'react-pdf';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 
 import ConceptToaster from './components/ConceptToaster';
@@ -17,11 +16,6 @@ import RestorePasswordPage from './pages/RestorePasswordPage';
 import RSFormPage from './pages/RSFormPage';
 import UserProfilePage from './pages/UserProfilePage';
 import { globalIDs } from './utils/constants';
-
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url,
-).toString();
 
 function Root() {
   const { noNavigation, noFooter, viewportHeight, mainHeight, showScroll } = useConceptTheme();
@@ -45,7 +39,7 @@ function Root() {
         overflowY: showScroll ? 'scroll': 'auto'
       }}
     >
-      <main className='w-full h-full min-w-fit flex flex-col items-center' style={{minHeight: mainHeight}}>
+      <main className='flex flex-col items-center w-full h-full min-w-fit' style={{minHeight: mainHeight}}>
         <Outlet />
       </main>
       

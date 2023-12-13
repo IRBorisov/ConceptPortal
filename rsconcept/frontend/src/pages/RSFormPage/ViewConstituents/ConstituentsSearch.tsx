@@ -1,19 +1,21 @@
+'use client';
+
 import { useCallback, useLayoutEffect } from 'react';
 
-import ConceptSearch from '../../../components/Common/ConceptSearch';
-import Dropdown from '../../../components/Common/Dropdown';
-import DropdownButton from '../../../components/Common/DropdownButton';
-import SelectorButton from '../../../components/Common/SelectorButton';
-import { CogIcon, FilterIcon } from '../../../components/Icons';
-import useDropdown from '../../../hooks/useDropdown';
-import useLocalStorage from '../../../hooks/useLocalStorage';
-import { CstMatchMode, DependencyMode } from '../../../models/miscelanious';
-import { applyGraphFilter } from '../../../models/miscelaniousAPI';
-import { CstType, IConstituenta, IRSForm } from '../../../models/rsform';
-import { createMockConstituenta, matchConstituenta } from '../../../models/rsformAPI';
-import { extractGlobals } from '../../../models/rslangAPI';
-import { prefixes } from '../../../utils/constants';
-import { describeCstMathchMode, describeCstSource, labelCstMathchMode, labelCstSource } from '../../../utils/labels';
+import ConceptSearch from '@/components/Common/ConceptSearch';
+import Dropdown from '@/components/Common/Dropdown';
+import DropdownButton from '@/components/Common/DropdownButton';
+import SelectorButton from '@/components/Common/SelectorButton';
+import { CogIcon, FilterIcon } from '@/components/Icons';
+import useDropdown from '@/hooks/useDropdown';
+import useLocalStorage from '@/hooks/useLocalStorage';
+import { CstMatchMode, DependencyMode } from '@/models/miscelanious';
+import { applyGraphFilter } from '@/models/miscelaniousAPI';
+import { CstType, IConstituenta, IRSForm } from '@/models/rsform';
+import { createMockConstituenta, matchConstituenta } from '@/models/rsformAPI';
+import { extractGlobals } from '@/models/rslangAPI';
+import { prefixes } from '@/utils/constants';
+import { describeCstMathchMode, describeCstSource, labelCstMathchMode, labelCstSource } from '@/utils/labels';
 
 interface ConstituentsSearchProps {
   schema?: IRSForm

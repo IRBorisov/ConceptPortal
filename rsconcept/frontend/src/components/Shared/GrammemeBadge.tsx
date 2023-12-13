@@ -1,7 +1,7 @@
-import { useConceptTheme } from '../../context/ThemeContext';
-import { GramData } from '../../models/language';
-import { colorfgGrammeme } from '../../utils/color';
-import { labelGrammeme } from '../../utils/labels';
+import { useConceptTheme } from '@/context/ThemeContext';
+import { GramData } from '@/models/language';
+import { colorfgGrammeme } from '@/utils/color';
+import { labelGrammeme } from '@/utils/labels';
 
 interface GrammemeBadgeProps {
   key?: string

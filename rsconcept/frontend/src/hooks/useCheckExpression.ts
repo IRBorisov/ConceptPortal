@@ -1,11 +1,13 @@
+'use client';
+
 import { useCallback, useState } from 'react';
 
-import { type ErrorInfo } from '../components/BackendError';
-import { CstType, IConstituenta, type IRSForm } from '../models/rsform';
-import { IArgumentInfo,IExpressionParse } from '../models/rslang';
-import { RSErrorType } from '../models/rslang';
-import { DataCallback, postCheckExpression } from '../utils/backendAPI';
-import { getCstExpressionPrefix } from '../utils/misc';
+import { type ErrorData } from '@/components/InfoError';
+import { CstType, IConstituenta, type IRSForm } from '@/models/rsform';
+import { IArgumentInfo,IExpressionParse } from '@/models/rslang';
+import { RSErrorType } from '@/models/rslang';
+import { DataCallback, postCheckExpression } from '@/utils/backendAPI';
+import { getCstExpressionPrefix } from '@/utils/misc';
 
 const LOGIC_TYPIIFCATION = 'LOGIC';
 
@@ -57,7 +59,7 @@ function adjustResults(parse: IExpressionParse, emptyExpression: boolean, cstTyp
 
 function useCheckExpression({ schema }: { schema?: IRSForm }) {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<ErrorInfo>(undefined);
+  const [error, setError] = useState<ErrorData>(undefined);
   const [parseData, setParseData] = useState<IExpressionParse | undefined>(undefined);
 
   const resetParse = useCallback(() => setParseData(undefined), []);

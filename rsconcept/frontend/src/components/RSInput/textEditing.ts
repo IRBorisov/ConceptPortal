@@ -2,8 +2,8 @@
 
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
-import { TokenID } from '../../models/rslang';
-import { CodeMirrorWrapper } from '../../utils/codemirror';
+import { TokenID } from '@/models/rslang';
+import { CodeMirrorWrapper } from '@/utils/codemirror';
 
 export function getSymbolSubstitute(keyCode: string, shiftPressed: boolean): string | undefined {
   if (shiftPressed) {

@@ -1,5 +1,5 @@
-import { IConstituenta } from '../../models/rsform';
-import { labelCstTypification } from '../../utils/labels';
+import { IConstituenta } from '@/models/rsform';
+import { labelCstTypification } from '@/utils/labels';
 
 interface InfoConstituentaProps
 extends React.HTMLAttributes<HTMLDivElement> {

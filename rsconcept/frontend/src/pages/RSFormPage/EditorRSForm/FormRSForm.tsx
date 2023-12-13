@@ -1,14 +1,16 @@
+'use client';
+
 import { Dispatch, SetStateAction, useLayoutEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import Checkbox from '../../../components/Common/Checkbox';
-import SubmitButton from '../../../components/Common/SubmitButton';
-import TextArea from '../../../components/Common/TextArea';
-import TextInput from '../../../components/Common/TextInput';
-import { SaveIcon } from '../../../components/Icons';
-import { useRSForm } from '../../../context/RSFormContext';
-import { LibraryItemType } from '../../../models/library';
-import { IRSFormCreateData } from '../../../models/rsform';
+import Checkbox from '@/components/Common/Checkbox';
+import SubmitButton from '@/components/Common/SubmitButton';
+import TextArea from '@/components/Common/TextArea';
+import TextInput from '@/components/Common/TextInput';
+import { SaveIcon } from '@/components/Icons';
+import { useRSForm } from '@/context/RSFormContext';
+import { LibraryItemType } from '@/models/library';
+import { IRSFormCreateData } from '@/models/rsform';
 
 interface FormRSFormProps {
   id?: string

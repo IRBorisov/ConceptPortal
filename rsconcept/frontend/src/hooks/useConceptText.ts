@@ -1,12 +1,14 @@
+'use client';
+
 import { useCallback, useState } from 'react';
 
-import { ErrorInfo } from '../components/BackendError';
-import { ILexemeData, ITextRequest, ITextResult, IWordFormPlain } from '../models/language';
-import { DataCallback, postGenerateLexeme, postInflectText, postParseText } from '../utils/backendAPI';
+import { ErrorData } from '@/components/InfoError';
+import { ILexemeData, ITextRequest, ITextResult, IWordFormPlain } from '@/models/language';
+import { DataCallback, postGenerateLexeme, postInflectText, postParseText } from '@/utils/backendAPI';
 
 function useConceptText() {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<ErrorInfo>(undefined);
+  const [error, setError] = useState<ErrorData>(undefined);
 
   const inflect = useCallback(
   (data: IWordFormPlain, onSuccess: DataCallback<ITextResult>) => {

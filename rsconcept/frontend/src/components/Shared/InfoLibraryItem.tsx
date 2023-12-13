@@ -1,7 +1,7 @@
 import { useIntl } from 'react-intl';
 
-import { useUsers } from '../../context/UsersContext';
-import { ILibraryItemEx } from '../../models/library';
+import { useUsers } from '@/context/UsersContext';
+import { ILibraryItemEx } from '@/models/library';
 
 interface InfoLibraryItemProps {
   item?: ILibraryItemEx

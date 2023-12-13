@@ -1,25 +1,25 @@
+'use client';
+
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import BackendError from '../components/BackendError';
-import Button from '../components/Common/Button';
-import Checkbox from '../components/Common/Checkbox';
-import ConceptTooltip from '../components/Common/ConceptTooltip';
-import Overlay from '../components/Common/Overlay';
-import SubmitButton from '../components/Common/SubmitButton';
-import TextInput from '../components/Common/TextInput';
-import TextURL from '../components/Common/TextURL';
-import ExpectedAnonymous from '../components/ExpectedAnonymous';
-import { HelpIcon } from '../components/Icons';
-import { useAuth } from '../context/AuthContext';
-import { useConceptNavigation } from '../context/NagivationContext';
-import { type IUserSignupData } from '../models/library';
-import { globalIDs, patterns } from '../utils/constants';
+import Button from '@/components/Common/Button';
+import Checkbox from '@/components/Common/Checkbox';
+import ConceptTooltip from '@/components/Common/ConceptTooltip';
+import Overlay from '@/components/Common/Overlay';
+import SubmitButton from '@/components/Common/SubmitButton';
+import TextInput from '@/components/Common/TextInput';
+import TextURL from '@/components/Common/TextURL';
+import ExpectedAnonymous from '@/components/ExpectedAnonymous';
+import { HelpIcon } from '@/components/Icons';
+import InfoError from '@/components/InfoError';
+import { useAuth } from '@/context/AuthContext';
+import { useConceptNavigation } from '@/context/NagivationContext';
+import { type IUserSignupData } from '@/models/library';
+import { globalIDs, patterns } from '@/utils/constants';
 
 function RegisterPage() {
-  const location = useLocation();
-  const { navigateTo, navigateHistory } = useConceptNavigation();
+  const router = useConceptNavigation();
   const { user, signup, loading, error, setError } = useAuth();
   
   const [username, setUsername] = useState('');
@@ -36,10 +36,10 @@ function RegisterPage() {
   }, [username, email, password, password2, setError]);
 
   function handleCancel() {
-    if (location.key !== 'default') {
-      navigateHistory(-1);
+    if (router.canBack()) {
+      router.back();
     } else {
-      navigateTo('/library');
+      router.push('/library');
     }
   }
 
@@ -55,7 +55,7 @@ function RegisterPage() {
         last_name: lastName
       };
       signup(data, createdUser => {
-        navigateTo(`/login?username=${createdUser.username}`);
+        router.push(`/login?username=${createdUser.username}`);
         toast.success(`Пользователь успешно создан: ${createdUser.username}`);
       });
     }
@@ -93,7 +93,7 @@ function RegisterPage() {
           pattern={patterns.login}
           tooltip='Минимум 3 знака. Латинские буквы и цифры. Не может начинаться с цифры'
           value={username}
-          dimensions='w-[12rem]'
+          dimensions='w-[15rem]'
           onChange={event => setUsername(event.target.value)}
         />
         <TextInput id='password' type='password' required
@@ -155,7 +155,7 @@ function RegisterPage() {
         onClick={() => handleCancel()}
       />
     </div>
-    {error ? <BackendError error={error} /> : null}
+    {error ? <InfoError error={error} /> : null}
   </form>);
 }
 

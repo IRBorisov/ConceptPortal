@@ -1,9 +1,9 @@
 import { LayoutTypes } from 'reagraph';
 
-import SelectSingle from '../../../components/Common/SelectSingle';
-import { GraphColoringScheme } from '../../../models/miscelanious';
-import { mapLabelColoring, mapLableLayout } from '../../../utils/labels';
-import { SelectorGraphColoring, SelectorGraphLayout } from '../../../utils/selectors';
+import SelectSingle from '@/components/Common/SelectSingle';
+import { GraphColoringScheme } from '@/models/miscelanious';
+import { mapLabelColoring, mapLableLayout } from '@/utils/labels';
+import { SelectorGraphColoring, SelectorGraphLayout } from '@/utils/selectors';
 
 interface GraphSidebarProps {
   coloring: GraphColoringScheme

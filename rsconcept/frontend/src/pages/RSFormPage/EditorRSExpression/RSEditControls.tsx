@@ -1,8 +1,8 @@
-import { TokenID } from '../../../models/rslang';
-import { prefixes } from '../../../utils/constants';
+import { TokenID } from '@/models/rslang';
+import { prefixes } from '@/utils/constants';
+
 import RSLocalButton from './RSLocalButton';
 import RSTokenButton from './RSTokenButton';
-
 
 const MAIN_FIRST_ROW: TokenID[] = [
   TokenID.NT_DECLARATIVE_EXPR,

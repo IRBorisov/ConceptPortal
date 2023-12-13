@@ -1,8 +1,11 @@
+'use client';
+
 import { useCallback } from 'react';
 
-import { Grammeme } from '../../models/language';
-import { prefixes } from '../../utils/constants';
-import { IGrammemeOption, PremadeWordForms, SelectorGrammems } from '../../utils/selectors';
+import { Grammeme } from '@/models/language';
+import { prefixes } from '@/utils/constants';
+import { IGrammemeOption, PremadeWordForms, SelectorGrammems } from '@/utils/selectors';
+
 import WordformButton from './WordformButton';
 
 interface SelectWordFormProps {

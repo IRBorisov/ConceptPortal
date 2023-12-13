@@ -1,12 +1,14 @@
+'use client';
+
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
-import Checkbox from '../components/Common/Checkbox';
-import FileInput from '../components/Common/FileInput';
-import Modal from '../components/Common/Modal';
-import { useRSForm } from '../context/RSFormContext';
-import { IRSFormUploadData } from '../models/rsform';
-import { EXTEOR_TRS_FILE } from '../utils/constants';
+import Checkbox from '@/components/Common/Checkbox';
+import FileInput from '@/components/Common/FileInput';
+import Modal from '@/components/Common/Modal';
+import { useRSForm } from '@/context/RSFormContext';
+import { IRSFormUploadData } from '@/models/rsform';
+import { EXTEOR_TRS_FILE } from '@/utils/constants';
 
 interface DlgUploadRSFormProps {
   hideWindow: () => void

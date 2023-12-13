@@ -4,10 +4,10 @@
  * Label is a short text used to represent an entity.
  * Description is a long description used in tooltips.
  */
-import { GramData,Grammeme, ReferenceType } from '../models/language';
-import { CstMatchMode, DependencyMode, HelpTopic, LibraryFilterStrategy } from '../models/miscelanious';
-import { CstClass, CstType, ExpressionStatus, IConstituenta } from '../models/rsform';
-import { IArgumentInfo, IRSErrorDescription, ISyntaxTreeNode, ParsingStatus, RSErrorType, TokenID } from '../models/rslang';
+import { GramData,Grammeme, ReferenceType } from '@/models/language';
+import { CstMatchMode, DependencyMode, HelpTopic, LibraryFilterStrategy } from '@/models/miscelanious';
+import { CstClass, CstType, ExpressionStatus, IConstituenta } from '@/models/rsform';
+import { IArgumentInfo, IRSErrorDescription, ISyntaxTreeNode, ParsingStatus, RSErrorType, TokenID } from '@/models/rslang';
 
 /**
  * Generates desription for {@link IConstituenta}.
@@ -653,4 +653,3 @@ export function describeRSError(error: IRSErrorDescription): string {
   }
   return 'UNKNOWN ERROR';
 }
-

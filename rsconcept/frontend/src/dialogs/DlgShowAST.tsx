@@ -1,13 +1,15 @@
-import { useCallback, useMemo, useState } from 'react';
-import { GraphCanvas,GraphEdge, GraphNode } from 'reagraph';
+'use client';
 
-import Modal, { ModalProps } from '../components/Common/Modal';
-import { useConceptTheme } from '../context/ThemeContext';
-import { SyntaxTree } from '../models/rslang';
-import { graphDarkT, graphLightT } from '../utils/color';
-import { colorbgSyntaxTree } from '../utils/color';
-import { resources } from '../utils/constants';
-import { labelSyntaxTree } from '../utils/labels';
+import { useCallback, useMemo, useState } from 'react';
+
+import GraphUI, { GraphEdge, GraphNode } from '@/components/Common/GraphUI';
+import Modal, { ModalProps } from '@/components/Common/Modal';
+import { useConceptTheme } from '@/context/ThemeContext';
+import { SyntaxTree } from '@/models/rslang';
+import { graphDarkT, graphLightT } from '@/utils/color';
+import { colorbgSyntaxTree } from '@/utils/color';
+import { resources } from '@/utils/constants';
+import { labelSyntaxTree } from '@/utils/labels';
 
 interface DlgShowASTProps
 extends Pick<ModalProps, 'hideWindow'> {
@@ -74,7 +76,7 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
         height: 'calc(100vh - 14rem - 2px)'
       }}
     >
-      <GraphCanvas
+      <GraphUI
         nodes={nodes}
         edges={edges}
         layoutType='hierarchicalTd'

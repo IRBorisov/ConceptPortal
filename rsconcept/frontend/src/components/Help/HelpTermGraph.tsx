@@ -1,6 +1,6 @@
-import Divider from '../Common/Divider';
-import InfoCstClass from '../Shared/InfoCstClass';
-import InfoCstStatus from '../Shared/InfoCstStatus';
+import Divider from '@/components/Common/Divider';
+import InfoCstClass from '@/components/Shared/InfoCstClass';
+import InfoCstStatus from '@/components/Shared/InfoCstStatus';
 
 function HelpTermGraph() {
   return (

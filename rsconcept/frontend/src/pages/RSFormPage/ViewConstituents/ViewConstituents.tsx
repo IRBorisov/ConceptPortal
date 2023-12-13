@@ -1,7 +1,10 @@
+'use client';
+
 import { useMemo, useState } from 'react';
 
-import { useConceptTheme } from '../../../context/ThemeContext';
-import { IConstituenta, IRSForm } from '../../../models/rsform';
+import { useConceptTheme } from '@/context/ThemeContext';
+import { IConstituenta, IRSForm } from '@/models/rsform';
+
 import ConstituentsSearch from './ConstituentsSearch';
 import ConstituentsTable from './ConstituentsTable';
 

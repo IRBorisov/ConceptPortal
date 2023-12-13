@@ -1,5 +1,5 @@
-import { IConstituenta } from '../../models/rsform';
-import { labelConstituenta } from '../../utils/labels';
+import { IConstituenta } from '@/models/rsform';
+import { labelConstituenta } from '@/utils/labels';
 
 interface ConstituentsListProps {
   list: number[]

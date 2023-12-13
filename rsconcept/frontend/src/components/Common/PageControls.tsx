@@ -1,4 +1,4 @@
-import { GotoFirstIcon, GotoLastIcon, GotoNextIcon, GotoPrevIcon } from '../Icons';
+import { GotoFirstIcon, GotoLastIcon, GotoNextIcon, GotoPrevIcon } from '@/components/Icons';
 
 interface PageControlsProps {
   pageNumber: number

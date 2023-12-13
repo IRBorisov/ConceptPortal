@@ -1,4 +1,5 @@
-import { IWordForm } from '../../models/language';
+import { IWordForm } from '@/models/language';
+
 import GrammemeBadge from './GrammemeBadge';
 
 interface WordFormBadgeProps {

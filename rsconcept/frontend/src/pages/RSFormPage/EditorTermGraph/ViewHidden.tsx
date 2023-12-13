@@ -1,11 +1,13 @@
+'use client';
+
 import { useCallback, useMemo } from 'react';
 
-import ConstituentaTooltip from '../../../components/Help/ConstituentaTooltip';
-import { useConceptTheme } from '../../../context/ThemeContext';
-import { GraphColoringScheme } from '../../../models/miscelanious';
-import { IRSForm } from '../../../models/rsform';
-import { colorbgGraphNode } from '../../../utils/color';
-import { prefixes } from '../../../utils/constants';
+import ConstituentaTooltip from '@/components/Help/ConstituentaTooltip';
+import { useConceptTheme } from '@/context/ThemeContext';
+import { GraphColoringScheme } from '@/models/miscelanious';
+import { IRSForm } from '@/models/rsform';
+import { colorbgGraphNode } from '@/utils/color';
+import { prefixes } from '@/utils/constants';
 
 interface ViewHiddenProps {
   items: number[]

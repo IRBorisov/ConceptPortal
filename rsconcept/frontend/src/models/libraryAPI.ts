@@ -2,7 +2,8 @@
  * Module: API for Library entities and Users.
  */
 
-import { TextMatcher } from '../utils/utils';
+import { TextMatcher } from '@/utils/utils';
+
 import { ILibraryItem } from './library';
 
 /**
@@ -15,4 +16,3 @@ export function matchLibraryItem(target: ILibraryItem, query: string): boolean {
   const matcher = new TextMatcher(query);
   return matcher.test(target.alias) || matcher.test(target.title);
 }
-

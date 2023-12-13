@@ -16,8 +16,7 @@ function ConceptTab({ label, tooltip, className, ...otherProps }: ConceptTabProp
     {...otherProps}
   >
     {label}
-  </Tab>
-  );
+  </Tab>);
 }
 
 ConceptTab.tabsRole = 'Tab';

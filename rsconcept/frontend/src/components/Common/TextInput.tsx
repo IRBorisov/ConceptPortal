@@ -1,4 +1,4 @@
-import { IColorsProps, IEditorProps } from '../commonInterfaces';
+import { IColorsProps, IEditorProps } from './commonInterfaces';
 import Label from './Label';
 
 interface TextInputProps 

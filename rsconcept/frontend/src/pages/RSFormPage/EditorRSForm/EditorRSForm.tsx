@@ -1,10 +1,13 @@
+'use client';
+
 import { Dispatch, SetStateAction } from 'react';
 
-import Divider from '../../../components/Common/Divider';
-import InfoLibraryItem from '../../../components/Shared/InfoLibraryItem';
-import { useAuth } from '../../../context/AuthContext';
-import { useRSForm } from '../../../context/RSFormContext';
-import { globalIDs } from '../../../utils/constants';
+import Divider from '@/components/Common/Divider';
+import InfoLibraryItem from '@/components/Shared/InfoLibraryItem';
+import { useAuth } from '@/context/AuthContext';
+import { useRSForm } from '@/context/RSFormContext';
+import { globalIDs } from '@/utils/constants';
+
 import FormRSForm from './FormRSForm';
 import RSFormStats from './RSFormStats';
 import RSFormToolbar from './RSFormToolbar';

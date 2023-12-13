@@ -1,14 +1,17 @@
+'use client';
+
 import { useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
-import ConceptTab from '../../components/Common/ConceptTab';
-import Modal from '../../components/Common/Modal';
-import Overlay from '../../components/Common/Overlay';
-import HelpButton from '../../components/Help/HelpButton';
-import { ReferenceType } from '../../models/language';
-import { HelpTopic } from '../../models/miscelanious';
-import { IConstituenta } from '../../models/rsform';
-import { labelReferenceType } from '../../utils/labels';
+import ConceptTab from '@/components/Common/ConceptTab';
+import Modal from '@/components/Common/Modal';
+import Overlay from '@/components/Common/Overlay';
+import HelpButton from '@/components/Help/HelpButton';
+import { ReferenceType } from '@/models/language';
+import { HelpTopic } from '@/models/miscelanious';
+import { IConstituenta } from '@/models/rsform';
+import { labelReferenceType } from '@/utils/labels';
+
 import EntityTab from './EntityTab';
 import SyntacticTab from './SyntacticTab';
 

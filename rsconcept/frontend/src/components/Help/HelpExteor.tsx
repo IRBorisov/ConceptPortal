@@ -1,5 +1,5 @@
-import { urls } from '../../utils/constants';
-import TextURL from '../Common/TextURL';
+import TextURL from '@/components/Common/TextURL';
+import { urls } from '@/utils/constants';
 
 function HelpExteor() {
   return (

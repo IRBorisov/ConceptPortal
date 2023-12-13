@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import { Grammeme } from '../../models/language';
-import { getCompatibleGrams } from '../../models/languageAPI';
-import { compareGrammemeOptions,IGrammemeOption, SelectorGrammems } from '../../utils/selectors';
-import SelectMulti, { SelectMultiProps } from '../Common/SelectMulti';
+import SelectMulti, { SelectMultiProps } from '@/components/Common/SelectMulti';
+import { Grammeme } from '@/models/language';
+import { getCompatibleGrams } from '@/models/languageAPI';
+import { compareGrammemeOptions,IGrammemeOption, SelectorGrammems } from '@/utils/selectors';
 
 interface SelectGrammemeProps extends
 Omit<SelectMultiProps<IGrammemeOption>, 'value' | 'onChange'> {

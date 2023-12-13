@@ -1,9 +1,11 @@
+'use client';
+
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
-import DataTable, { createColumnHelper } from '../../components/DataTable';
-import { useConceptNavigation } from '../../context/NagivationContext';
-import { ILibraryItem } from '../../models/library';
+import DataTable, { createColumnHelper } from '@/components/DataTable';
+import { useConceptNavigation } from '@/context/NagivationContext';
+import { ILibraryItem } from '@/models/library';
 
 interface ViewSubscriptionsProps {
   items: ILibraryItem[]
@@ -12,10 +14,10 @@ interface ViewSubscriptionsProps {
 const columnHelper = createColumnHelper<ILibraryItem>();
 
 function ViewSubscriptions({items}: ViewSubscriptionsProps) {
-  const { navigateTo } = useConceptNavigation();
+  const router = useConceptNavigation();
   const intl = useIntl();
 
-  const openRSForm = (item: ILibraryItem) => navigateTo(`/rsforms/${item.id}`);
+  const openRSForm = (item: ILibraryItem) => router.push(`/rsforms/${item.id}`);
 
   const columns = useMemo(() =>
   [

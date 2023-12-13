@@ -2,7 +2,8 @@
  * Module: API for RSLanguage.
  */
 
-import { applyPattern } from '../utils/utils';
+import { applyPattern } from '@/utils/utils';
+
 import { CstType } from './rsform';
 import { IArgumentValue, RSErrorClass, RSErrorType } from './rslang'
 

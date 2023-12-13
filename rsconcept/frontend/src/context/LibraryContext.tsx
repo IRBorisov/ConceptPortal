@@ -1,12 +1,15 @@
+'use client';
+
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
-import { ErrorInfo } from '../components/BackendError';
-import { ILibraryItem } from '../models/library';
-import { matchLibraryItem } from '../models/libraryAPI';
-import { ILibraryFilter } from '../models/miscelanious';
-import { IRSForm, IRSFormCreateData, IRSFormData } from '../models/rsform';
-import { loadRSFormData } from '../models/rsformAPI';
-import { DataCallback, deleteLibraryItem, getLibrary, getRSFormDetails, getTemplates, postCloneLibraryItem, postNewRSForm } from '../utils/backendAPI';
+import { ErrorData } from '@/components/InfoError';
+import { ILibraryItem } from '@/models/library';
+import { matchLibraryItem } from '@/models/libraryAPI';
+import { ILibraryFilter } from '@/models/miscelanious';
+import { IRSForm, IRSFormCreateData, IRSFormData } from '@/models/rsform';
+import { loadRSFormData } from '@/models/rsformAPI';
+import { DataCallback, deleteLibraryItem, getLibrary, getRSFormDetails, getTemplates, postCloneLibraryItem, postNewRSForm } from '@/utils/backendAPI';
+
 import { useAuth } from './AuthContext';
 
 interface ILibraryContext {
@@ -14,8 +17,8 @@ interface ILibraryContext {
   templates: ILibraryItem[]
   loading: boolean
   processing: boolean
-  error: ErrorInfo
-  setError: (error: ErrorInfo) => void
+  error: ErrorData
+  setError: (error: ErrorData) => void
   
   applyFilter: (params: ILibraryFilter) => ILibraryItem[]
   retrieveTemplate: (templateID: number, callback: (schema: IRSForm) => void) => void
@@ -49,7 +52,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   const [templates, setTemplates] = useState<ILibraryItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const [error, setError] = useState<ErrorInfo>(undefined);
+  const [error, setError] = useState<ErrorData>(undefined);
   const [cachedTemplates, setCachedTemplates] = useState<IRSForm[]>([]);
 
   const applyFilter = useCallback(

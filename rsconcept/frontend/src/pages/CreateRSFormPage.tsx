@@ -1,27 +1,27 @@
+'use client';
+
 import { useEffect, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import BackendError from '../components/BackendError';
-import Button from '../components/Common/Button';
-import Checkbox from '../components/Common/Checkbox';
-import Label from '../components/Common/Label';
-import MiniButton from '../components/Common/MiniButton';
-import Overlay from '../components/Common/Overlay';
-import SubmitButton from '../components/Common/SubmitButton';
-import TextArea from '../components/Common/TextArea';
-import TextInput from '../components/Common/TextInput';
-import { DownloadIcon } from '../components/Icons';
-import RequireAuth from '../components/RequireAuth';
-import { useLibrary } from '../context/LibraryContext';
-import { useConceptNavigation } from '../context/NagivationContext';
-import { LibraryItemType } from '../models/library';
-import { IRSFormCreateData } from '../models/rsform';
-import { EXTEOR_TRS_FILE } from '../utils/constants';
+import Button from '@/components/Common/Button';
+import Checkbox from '@/components/Common/Checkbox';
+import Label from '@/components/Common/Label';
+import MiniButton from '@/components/Common/MiniButton';
+import Overlay from '@/components/Common/Overlay';
+import SubmitButton from '@/components/Common/SubmitButton';
+import TextArea from '@/components/Common/TextArea';
+import TextInput from '@/components/Common/TextInput';
+import { DownloadIcon } from '@/components/Icons';
+import InfoError from '@/components/InfoError';
+import RequireAuth from '@/components/RequireAuth';
+import { useLibrary } from '@/context/LibraryContext';
+import { useConceptNavigation } from '@/context/NagivationContext';
+import { LibraryItemType } from '@/models/library';
+import { IRSFormCreateData } from '@/models/rsform';
+import { EXTEOR_TRS_FILE } from '@/utils/constants';
 
 function CreateRSFormPage() {
-  const location = useLocation();
-  const { navigateTo, navigateHistory } = useConceptNavigation();
+  const router = useConceptNavigation();
   const { createItem, error, setError, processing } = useLibrary();
 
   const [title, setTitle] = useState('');
@@ -38,10 +38,10 @@ function CreateRSFormPage() {
   }, [title, alias, setError]);
 
   function handleCancel() {
-    if (location.key !== 'default') {
-      navigateHistory(-1);
+    if (router.canBack()) {
+      router.back();
     } else {
-      navigateTo('/library');
+      router.push('/library');
     }
   }
   
@@ -62,7 +62,7 @@ function CreateRSFormPage() {
     };
     createItem(data, (newSchema) => {
       toast.success('Схема успешно создана');
-      navigateTo(`/rsforms/${newSchema.id}`);
+      router.push(`/rsforms/${newSchema.id}`);
     });
   }
 
@@ -79,7 +79,7 @@ function CreateRSFormPage() {
   return (
   <RequireAuth>
   <form
-    className='max-w-lg w-full py-3 px-6 flex flex-col gap-3'
+    className='flex flex-col w-full max-w-lg gap-3 px-6 py-3'
     onSubmit={handleSubmit}
   >
     <h1>Создание концептуальной схемы</h1>
@@ -134,7 +134,7 @@ function CreateRSFormPage() {
         onClick={() => handleCancel()}
       />
     </div>
-    {error ? <BackendError error={error} /> : null}
+    {error ? <InfoError error={error} /> : null}
   </form>
   </RequireAuth>);
 }

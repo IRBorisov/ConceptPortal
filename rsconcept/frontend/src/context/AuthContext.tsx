@@ -1,14 +1,17 @@
+'use client';
+
 import { createContext, useCallback, useContext, useLayoutEffect, useState } from 'react';
 
-import { type ErrorInfo } from '../components/BackendError';
-import useLocalStorage from '../hooks/useLocalStorage';
-import { IUserLoginData } from '../models/library';
-import { ICurrentUser } from '../models/library';
-import { IUserSignupData } from '../models/library';
-import { IUserProfile } from '../models/library';
-import { IUserInfo } from '../models/library';
-import { IUserUpdatePassword } from '../models/library';
-import { type DataCallback, getAuth, patchPassword,postLogin, postLogout, postSignup } from '../utils/backendAPI';
+import { type ErrorData } from '@/components/InfoError';
+import useLocalStorage from '@/hooks/useLocalStorage';
+import { IUserLoginData } from '@/models/library';
+import { ICurrentUser } from '@/models/library';
+import { IUserSignupData } from '@/models/library';
+import { IUserProfile } from '@/models/library';
+import { IUserInfo } from '@/models/library';
+import { IUserUpdatePassword } from '@/models/library';
+import { type DataCallback, getAuth, patchPassword,postLogin, postLogout, postSignup } from '@/utils/backendAPI';
+
 import { useUsers } from './UsersContext';
 
 interface IAuthContext {
@@ -18,8 +21,8 @@ interface IAuthContext {
   signup: (data: IUserSignupData, callback?: DataCallback<IUserProfile>) => void
   updatePassword: (data: IUserUpdatePassword, callback?: () => void) => void
   loading: boolean
-  error: ErrorInfo
-  setError: (error: ErrorInfo) => void
+  error: ErrorData
+  setError: (error: ErrorData) => void
 }
 
 const AuthContext = createContext<IAuthContext | null>(null);
@@ -41,7 +44,7 @@ export const AuthState = ({ children }: AuthStateProps) => {
   const { users } = useUsers();
   const [user, setUser] = useLocalStorage<ICurrentUser | undefined>('user', undefined);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<ErrorInfo>(undefined);
+  const [error, setError] = useState<ErrorData>(undefined);
 
   const reload = useCallback(
   (callback?: () => void) => {

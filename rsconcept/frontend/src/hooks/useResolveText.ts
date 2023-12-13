@@ -1,13 +1,15 @@
+'use client';
+
 import { useCallback, useState } from 'react';
 
-import { ErrorInfo } from '../components/BackendError';
-import { IResolutionData } from '../models/language';
-import { IRSForm } from '../models/rsform';
-import { DataCallback, postResolveText } from '../utils/backendAPI';
+import { ErrorData } from '@/components/InfoError';
+import { IResolutionData } from '@/models/language';
+import { IRSForm } from '@/models/rsform';
+import { DataCallback, postResolveText } from '@/utils/backendAPI';
 
 function useResolveText({ schema }: { schema?: IRSForm }) {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<ErrorInfo>(undefined);
+  const [error, setError] = useState<ErrorData>(undefined);
   const [refsData, setRefsData] = useState<IResolutionData | undefined>(undefined);
 
   const resetData = useCallback(() => setRefsData(undefined), []);

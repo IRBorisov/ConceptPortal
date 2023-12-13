@@ -1,16 +1,19 @@
+'use client';
+
 import { useEffect, useLayoutEffect, useState } from 'react';
 
-import Label from '../../components/Common/Label';
-import TextInput from '../../components/Common/TextInput';
-import ConstituentaPicker from '../../components/Shared/ConstituentaPicker';
-import SelectGrammeme from '../../components/Shared/SelectGrammeme';
-import { ReferenceType } from '../../models/language';
-import { parseEntityReference, parseGrammemes } from '../../models/languageAPI';
-import { CstMatchMode } from '../../models/miscelanious';
-import { IConstituenta } from '../../models/rsform';
-import { matchConstituenta } from '../../models/rsformAPI';
-import { prefixes } from '../../utils/constants';
-import { IGrammemeOption, SelectorGrammems } from '../../utils/selectors';
+import Label from '@/components/Common/Label';
+import TextInput from '@/components/Common/TextInput';
+import ConstituentaPicker from '@/components/Shared/ConstituentaPicker';
+import SelectGrammeme from '@/components/Shared/SelectGrammeme';
+import { ReferenceType } from '@/models/language';
+import { parseEntityReference, parseGrammemes } from '@/models/languageAPI';
+import { CstMatchMode } from '@/models/miscelanious';
+import { IConstituenta } from '@/models/rsform';
+import { matchConstituenta } from '@/models/rsformAPI';
+import { prefixes } from '@/utils/constants';
+import { IGrammemeOption, SelectorGrammems } from '@/utils/selectors';
+
 import { IReferenceInputState } from './DlgEditReference';
 import SelectWordForm from './SelectWordForm';
 

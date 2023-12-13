@@ -1,22 +1,22 @@
-import { useAuth } from '../../context/AuthContext';
-import { useConceptNavigation } from '../../context/NagivationContext';
-import useDropdown from '../../hooks/useDropdown';
-import { InDoorIcon, UserIcon } from '../Icons';
+import { InDoorIcon, UserIcon } from '@/components/Icons';
+import { useAuth } from '@/context/AuthContext';
+import { useConceptNavigation } from '@/context/NagivationContext';
+import useDropdown from '@/hooks/useDropdown';
+
 import NavigationButton from './NavigationButton';
 import UserDropdown from './UserDropdown';
 
 function UserMenu() {
-  const { navigateTo } = useConceptNavigation();
+  const router = useConceptNavigation();
   const { user } = useAuth();
   const menu = useDropdown();
 
-  const navigateLogin = () => navigateTo('/login');
+  const navigateLogin = () => router.push('/login');
   return (
   <div ref={menu.ref} className='h-full'>
     <div className='flex items-center justify-end h-full w-fit'>
     {!user ?
     <NavigationButton
-      text='Войти...'
       description='Перейти на страницу логина'
       icon={<InDoorIcon />}
       onClick={navigateLogin}

@@ -1,6 +1,6 @@
 import { Column } from '@tanstack/react-table';
 
-import { AscendingIcon, DescendingIcon } from '../Icons';
+import { AscendingIcon, DescendingIcon } from '@/components/Icons';
 
 interface SortingIconProps<TData> {
   column: Column<TData>

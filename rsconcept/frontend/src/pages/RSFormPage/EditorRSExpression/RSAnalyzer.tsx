@@ -1,7 +1,10 @@
-import Button from '../../../components/Common/Button';
-import { ConceptLoader } from '../../../components/Common/ConceptLoader';
-import { IConstituenta } from '../../../models/rsform';
-import { IExpressionParse, IRSErrorDescription } from '../../../models/rslang';
+'use client';
+
+import Button from '@/components/Common/Button';
+import { ConceptLoader } from '@/components/Common/ConceptLoader';
+import { IConstituenta } from '@/models/rsform';
+import { IExpressionParse, IRSErrorDescription } from '@/models/rslang';
+
 import ParsingResult from './ParsingResult';
 import StatusBar from './StatusBar';
 

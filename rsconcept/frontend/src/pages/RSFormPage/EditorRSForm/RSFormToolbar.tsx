@@ -1,10 +1,12 @@
+'use client';
+
 import { useMemo } from 'react';
 
-import MiniButton from '../../../components/Common/MiniButton';
-import Overlay from '../../../components/Common/Overlay';
-import HelpButton from '../../../components/Help/HelpButton';
-import { DownloadIcon, DumpBinIcon, OwnerIcon, SaveIcon, ShareIcon } from '../../../components/Icons';
-import { HelpTopic } from '../../../models/miscelanious';
+import MiniButton from '@/components/Common/MiniButton';
+import Overlay from '@/components/Common/Overlay';
+import HelpButton from '@/components/Help/HelpButton';
+import { DownloadIcon, DumpBinIcon, OwnerIcon, SaveIcon, ShareIcon } from '@/components/Icons';
+import { HelpTopic } from '@/models/miscelanious';
 
 interface RSFormToolbarProps {
   isMutable: boolean

@@ -1,5 +1,5 @@
-import { TokenID } from '../../../models/rslang';
-import { describeToken, labelToken } from '../../../utils/labels';
+import { TokenID } from '@/models/rslang';
+import { describeToken, labelToken } from '@/utils/labels';
 
 interface RSTokenButtonProps {
   token: TokenID

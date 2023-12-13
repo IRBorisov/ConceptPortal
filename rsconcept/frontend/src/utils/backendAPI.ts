@@ -5,22 +5,23 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { toast } from 'react-toastify';
 
-import { type ErrorInfo } from '../components/BackendError';
+import { type ErrorData } from '@/components/InfoError';
 import {
   ILexemeData,
   IResolutionData, ITextRequest,
   ITextResult, IWordFormPlain
-} from '../models/language';
+} from '@/models/language';
 import {
   ICurrentUser,   ILibraryItem, ILibraryUpdateData,
   IUserInfo, IUserLoginData, IUserProfile, IUserSignupData,
   IUserUpdateData, IUserUpdatePassword
-} from '../models/library';
+} from '@/models/library';
 import {
   IConstituentaList, IConstituentaMeta,
   ICstCreateData, ICstCreatedResponse, ICstMovetoData, ICstRenameData, ICstUpdateData,
-  IRSFormCreateData, IRSFormData, IRSFormUploadData} from '../models/rsform';
-import { IExpressionParse, IRSExpression } from '../models/rslang';
+  IRSFormCreateData, IRSFormData, IRSFormUploadData} from '@/models/rsform';
+import { IExpressionParse, IRSExpression } from '@/models/rslang';
+
 import { buidConstants } from './constants';
 
 const defaultOptions = {
@@ -48,7 +49,7 @@ export type DataCallback<ResponseData = undefined> = (data: ResponseData) => voi
 interface IFrontRequest<RequestData, ResponseData> {
   data?: RequestData
   onSuccess?: DataCallback<ResponseData>
-  onError?: (error: ErrorInfo) => void
+  onError?: (error: ErrorData) => void
   setLoading?: (loading: boolean) => void
   showError?: boolean
 }

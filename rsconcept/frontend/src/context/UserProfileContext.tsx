@@ -1,17 +1,20 @@
+'use client';
+
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
-import { ErrorInfo } from '../components/BackendError';
-import { IUserProfile } from '../models/library';
-import { IUserUpdateData } from '../models/library';
-import { DataCallback, getProfile, patchProfile } from '../utils/backendAPI';
+import { ErrorData } from '@/components/InfoError';
+import { IUserProfile } from '@/models/library';
+import { IUserUpdateData } from '@/models/library';
+import { DataCallback, getProfile, patchProfile } from '@/utils/backendAPI';
+
 import { useUsers } from './UsersContext';
 
 interface IUserProfileContext {
   user: IUserProfile | undefined
   loading: boolean
   processing: boolean
-  error: ErrorInfo
-  setError: (error: ErrorInfo) => void
+  error: ErrorData
+  setError: (error: ErrorData) => void
   updateUser: (data: IUserUpdateData, callback?: DataCallback<IUserProfile>) => void
 }
 
@@ -36,7 +39,7 @@ export const UserProfileState = ({ children }: UserProfileStateProps) => {
   const [user, setUser] = useState<IUserProfile | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const [error, setError] = useState<ErrorInfo>(undefined);
+  const [error, setError] = useState<ErrorData>(undefined);
 
   const reload = useCallback(
   () => {

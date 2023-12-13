@@ -1,13 +1,15 @@
+'use client';
+
 import { ThreeDots } from 'react-loader-spinner';
 
-import { useConceptTheme } from '../../context/ThemeContext';
+import { useConceptTheme } from '@/context/ThemeContext';
 
 interface ConceptLoaderProps {
   size?: number
 }
 
 export function ConceptLoader({size=10}: ConceptLoaderProps) {
-  const {colors} = useConceptTheme()
+  const {colors} = useConceptTheme();
 
   return (
     <div className='flex justify-center w-full h-full'>

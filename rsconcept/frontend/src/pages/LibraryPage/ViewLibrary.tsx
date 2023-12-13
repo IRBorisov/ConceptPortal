@@ -1,15 +1,18 @@
+'use client';
+
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
-import TextURL from '../../components/Common/TextURL';
-import DataTable, { createColumnHelper } from '../../components/DataTable';
-import HelpButton from '../../components/Help/HelpButton';
-import { useAuth } from '../../context/AuthContext';
-import { useConceptNavigation } from '../../context/NagivationContext';
-import { useUsers } from '../../context/UsersContext';
-import useLocalStorage from '../../hooks/useLocalStorage';
-import { ILibraryItem } from '../../models/library';
-import { HelpTopic } from '../../models/miscelanious';
+import TextURL from '@/components/Common/TextURL';
+import DataTable, { createColumnHelper } from '@/components/DataTable';
+import HelpButton from '@/components/Help/HelpButton';
+import { useAuth } from '@/context/AuthContext';
+import { useConceptNavigation } from '@/context/NagivationContext';
+import { useUsers } from '@/context/UsersContext';
+import useLocalStorage from '@/hooks/useLocalStorage';
+import { ILibraryItem } from '@/models/library';
+import { HelpTopic } from '@/models/miscelanious';
+
 import ItemIcons from './ItemIcons';
 
 interface ViewLibraryProps {
@@ -20,13 +23,13 @@ interface ViewLibraryProps {
 const columnHelper = createColumnHelper<ILibraryItem>();
 
 function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
-  const { navigateTo } = useConceptNavigation();
+  const router = useConceptNavigation();
   const intl = useIntl();
   const { user } = useAuth();
   const { getUserLabel } = useUsers();
   const [itemsPerPage, setItemsPerPage] = useLocalStorage<number>('library_per_page', 50);
 
-  const handleOpenItem = (item: ILibraryItem) => navigateTo(`/rsforms/${item.id}`);
+  const handleOpenItem = (item: ILibraryItem) => router.push(`/rsforms/${item.id}`);
 
   const columns = useMemo(
   () => [
@@ -106,7 +109,7 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
       <div className='p-3 text-center min-h-[6rem]'>
         <p>Список схем пуст</p>
         <p className='flex justify-center gap-6 mt-3'>
-          <TextURL text='Создать схему' href='/rsform-create'/>
+          <TextURL text='Создать схему' href='/library/create'/>
           <TextURL text='Очистить фильтр' onClick={cleanQuery} />
         </p>
       </div>}

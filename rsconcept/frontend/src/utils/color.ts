@@ -2,16 +2,16 @@
  * Module: Single place for all color definitions in code (see index.css for full defs).
  */
 
-import { GramData, Grammeme, NounGrams, PartOfSpeech, VerbGrams } from '../models/language';
-import { GraphColoringScheme } from '../models/miscelanious';
-import { CstClass, ExpressionStatus, IConstituenta } from '../models/rsform';
-import { ISyntaxTreeNode, TokenID } from '../models/rslang';
+import { GramData, Grammeme, NounGrams, PartOfSpeech, VerbGrams } from '@/models/language';
+import { GraphColoringScheme } from '@/models/miscelanious';
+import { CstClass, ExpressionStatus, IConstituenta } from '@/models/rsform';
+import { ISyntaxTreeNode, TokenID } from '@/models/rslang';
 
 
 /**
  * Represents application color theme configuration.
  */
-export interface IColorTheme {  
+export interface IColorTheme {
   bgDefault: string
   bgInput: string
   bgControls: string

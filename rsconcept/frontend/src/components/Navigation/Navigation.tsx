@@ -1,25 +1,27 @@
-import { useConceptNavigation } from '../../context/NagivationContext';
-import { useConceptTheme } from '../../context/ThemeContext';
-import { EducationIcon, LibraryIcon, PlusIcon } from '../Icons';
-import Logo from './Logo'
+import { useConceptNavigation } from '@/context/NagivationContext';
+import { useConceptTheme } from '@/context/ThemeContext';
+
+import { EducationIcon, LibraryIcon, PlusIcon } from '@/components/Icons';
+import Logo from './Logo';
 import NavigationButton from './NavigationButton';
 import ToggleNavigationButton from './ToggleNavigationButton';
 import UserMenu from './UserMenu';
 
 function Navigation () {
-  const { navigateTo } = useConceptNavigation();
+  const router = useConceptNavigation();
   const { noNavigation } = useConceptTheme();
 
-  const navigateLibrary = () => navigateTo('/library');
-  const navigateHelp = () => navigateTo('/manuals');
-  const navigateCreateNew = () => navigateTo('/rsform-create');
+  const navigateHome = () => router.push('/');
+  const navigateLibrary = () => router.push('/library');
+  const navigateHelp = () => router.push('/manuals');
+  const navigateCreateNew = () => router.push('/library/create');
 
   return (
-  <nav className='sticky top-0 left-0 right-0 select-none clr-app z-navigation h-fit'>
+  <nav className='sticky top-0 left-0 right-0 select-none clr-app z-navigation'>
     <ToggleNavigationButton />
     {!noNavigation ?
     <div className='flex items-stretch justify-between pl-2 pr-[0.8rem] border-b-2 rounded-none h-[3rem]'>
-      <div className='flex items-center justify-start'>
+      <div className='flex items-center mr-2 cursor-pointer' onClick={navigateHome} tabIndex={-1}>
         <Logo />
       </div>
       <div className='flex items-center h-full'>

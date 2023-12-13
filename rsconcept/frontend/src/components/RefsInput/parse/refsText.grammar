@@ -56,4 +56,4 @@ Nominal { word+ }
 
 @detectDelim
 
-@external propSource highlighting from "./highlight.ts"
+@external propSource highlighting from "./highlight"

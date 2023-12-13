@@ -1,6 +1,9 @@
+'use client';
+
 import { useRef } from 'react';
 
-import useEscapeKey from '../../hooks/useEscapeKey';
+import useEscapeKey from '@/hooks/useEscapeKey';
+
 import { CrossIcon } from '../Icons';
 import Button from './Button';
 import MiniButton from './MiniButton';

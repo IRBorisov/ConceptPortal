@@ -1,43 +1,43 @@
+'use client';
+
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 
-import BackendError, { ErrorInfo } from '../components/BackendError';
-import SubmitButton from '../components/Common/SubmitButton';
-import TextInput from '../components/Common/TextInput';
-import TextURL from '../components/Common/TextURL';
-import ExpectedAnonymous from '../components/ExpectedAnonymous';
-import { useAuth } from '../context/AuthContext';
-import { useConceptNavigation } from '../context/NagivationContext';
-import { IUserLoginData } from '../models/library';
-import { resources } from '../utils/constants';
+import SubmitButton from '@/components/Common/SubmitButton';
+import TextInput from '@/components/Common/TextInput';
+import TextURL from '@/components/Common/TextURL';
+import ExpectedAnonymous from '@/components/ExpectedAnonymous';
+import InfoError, { ErrorData } from '@/components/InfoError';
+import { useAuth } from '@/context/AuthContext';
+import { useConceptNavigation } from '@/context/NagivationContext';
+import useQueryStrings from '@/hooks/useQueryStrings';
+import { IUserLoginData } from '@/models/library';
+import { resources } from '@/utils/constants';
 
-function ProcessError({error}: {error: ErrorInfo}): React.ReactElement {
+
+function ProcessError({error}: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
     return (
-      <div className='text-sm select-text text-warning'>
-        На Портале отсутствует такое сочетание имени пользователя и пароля
-      </div>
-    );
+    <div className='text-sm select-text text-warning'>
+      На Портале отсутствует такое сочетание имени пользователя и пароля
+    </div>);
   } else {
-    return ( <BackendError error={error} />);
+    return (
+    <InfoError
+      error={error}
+    />);
   }
 }
 
 function LoginPage() {
-  const location = useLocation();
-  const { navigateTo, navigateHistory } = useConceptNavigation();
-  const search = useLocation().search;
+  const router = useConceptNavigation();
+  const query = useQueryStrings();
+  const userQuery = query.get('username');
+
   const { user, login, loading, error, setError } = useAuth();
   
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState(userQuery || '');
   const [password, setPassword] = useState('');
-
-  useEffect(() => {
-    const name = new URLSearchParams(search).get('username');
-    setUsername(name ?? '');
-    setPassword('');
-  }, [search]);
 
   useEffect(() => {
     setError(undefined);
@@ -51,10 +51,10 @@ function LoginPage() {
         password: password
       };
       login(data, () => {
-        if (location.key !== 'default') {
-          navigateHistory(-1);
+        if (router.canBack()) {
+          router.back();
         } else {
-          navigateTo('/library');
+          router.push('/library');
         }
       });
     }

@@ -3,10 +3,11 @@
  */
 import { LayoutTypes } from 'reagraph';
 
-import { type GramData, Grammeme, ReferenceType } from '../models/language';
-import { grammemeCompare } from '../models/languageAPI';
-import { GraphColoringScheme } from '../models/miscelanious';
-import { CstType } from '../models/rsform';
+import { type GramData, Grammeme, ReferenceType } from '@/models/language';
+import { grammemeCompare } from '@/models/languageAPI';
+import { GraphColoringScheme } from '@/models/miscelanious';
+import { CstType } from '@/models/rsform';
+
 import { labelGrammeme, labelReferenceType } from './labels';
 import { labelCstType } from './labels';
 
