@@ -1,20 +1,16 @@
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig, loadEnv,PluginOption } from 'vite';
 
 import { dependencies } from './package.json';
 
+// Packages to include in main app bundle
 const inlinePackages = ['react', 'react-router-dom', 'react-dom'];
-function renderChunks(deps: Record<string, string>) {
-  const chunks = {};
-  Object.keys(deps).forEach((key) => {
-    if (inlinePackages.includes(key)) {
-      return;
-    }
-    chunks[key] = [key];
-  })
-  return chunks;
-}
+
+// Roolup warnings that should not be displayed
+const warningsToIgnore = [
+  ['SOURCEMAP_ERROR', "Can't resolve original location of error"]
+];
 
 // https://vitejs.dev/config/
 export default (({ mode }: { mode: string }) => {
@@ -24,7 +20,10 @@ export default (({ mode }: { mode: string }) => {
   };
   const enableHttps = process.env.VITE_PORTAL_FRONT_HTTPS === 'true';
   return defineConfig({
-    plugins: [react()],
+    plugins: [
+      react(),
+      muteWarningsPlugin(warningsToIgnore),
+    ],
     server: {
       port: Number(process.env.VITE_PORTAL_FRONT_PORT),
 
@@ -50,3 +49,57 @@ export default (({ mode }: { mode: string }) => {
     }
   });
 });
+
+
+// ======== Internals =======
+
+function renderChunks(deps: Record<string, string>) {
+  const chunks = {};
+  Object.keys(deps).forEach((key) => {
+    if (inlinePackages.includes(key)) {
+      return;
+    }
+    chunks[key] = [key];
+  })
+  return chunks;
+}
+
+function muteWarningsPlugin(warningsToIgnore: string[][]): PluginOption {
+  const mutedMessages = new Set();
+  return {
+    name: 'mute-warnings',
+    enforce: 'pre',
+    config: (userConfig) => ({
+      build: {
+        rollupOptions: {
+          onwarn(warning, defaultHandler) {
+            if (warning.code) {
+              const muted = warningsToIgnore.find(
+                ([code, message]) =>
+                  code == warning.code && warning.message.includes(message),
+              )
+
+              if (muted) {
+                mutedMessages.add(muted.join());
+                return;
+              }
+            }
+
+            if (userConfig.build?.rollupOptions?.onwarn) {
+              userConfig.build.rollupOptions.onwarn(warning, defaultHandler)
+            } else {
+              defaultHandler(warning)
+            }
+          },
+        },
+      },
+    }),
+    closeBundle() {
+      const diff = warningsToIgnore.filter((x) => !mutedMessages.has(x.join()));
+      if (diff.length > 0) {
+        this.warn('Some of your muted warnings never appeared during the build process:');
+        diff.forEach((m) => this.warn(`- ${m.join(': ')}`));
+      }
+    },
+  }
+}
