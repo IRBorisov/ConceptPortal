@@ -89,7 +89,7 @@ function WordFormsTable({ forms, setForms, onFormSelect, loading }: WordFormsTab
       columns={columns}
       headPosition='0'
       noDataComponent={
-        <span className='flex flex-col justify-center p-2 text-center min-h-[2rem]'>
+        <span className='p-2 text-center min-h-[2rem]'>
           <p>Список пуст</p>
           <p>Добавьте словоформу</p>
         </span>

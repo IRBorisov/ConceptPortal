@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 interface SubmitButtonProps
 extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'children' | 'title'> {
   text?: string
@@ -14,7 +16,16 @@ function SubmitButton({
   return (
   <button type='submit'
     title={tooltip}
-    className={`px-3 py-2 inline-flex items-center gap-2 align-middle justify-center font-semibold select-none disabled:cursor-not-allowed border clr-btn-primary ${dimensions} ${loading ? ' cursor-progress' : ''}`}
+    className={clsx(
+      'px-3 py-2',
+      'inline-flex items-center gap-2 align-middle justify-center',
+      'border',
+      'font-semibold',
+      'clr-btn-primary',
+      'select-none disabled:cursor-not-allowed',
+      loading && 'cursor-progress',
+      dimensions
+    )}
     disabled={disabled ?? loading}
     {...restProps}
   >

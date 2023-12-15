@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import { IConstituenta } from '@/models/rsform';
 import { labelConstituenta } from '@/utils/labels';
 
@@ -15,7 +17,13 @@ function ConstituentsList({ list, items, title, prefix }: ConstituentsListProps)
     <p className='pb-1'>
       {title}: <b>{list.length}</b>
     </p> : null}
-    <div className='px-3 border h-[9rem] overflow-y-auto whitespace-nowrap'>
+    <div className={clsx(
+      'h-[9rem]',
+      'px-3',
+      'overflow-y-auto', 
+      'border',
+      'whitespace-nowrap'
+    )}>
       {list.map(
       (id) => {
         const cst = items.find(cst => cst.id === id);

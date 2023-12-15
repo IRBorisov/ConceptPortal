@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -92,7 +93,12 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
   return (
   <>
     <div className='sticky top-[2.3rem] w-full'>
-    <div className='absolute top-[0.125rem] left-[0.25rem] flex gap-1 ml-3 z-pop'>
+    <div className={clsx(
+      'z-pop',
+      'absolute top-[0.125rem] left-[0.25rem]',
+      'ml-3',
+      'flex gap-1'
+    )}>
       <HelpButton
         topic={HelpTopic.LIBRARY}
         dimensions='max-w-[35rem]'

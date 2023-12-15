@@ -12,17 +12,18 @@ This readme file is used mostly to document project dependencies
 <summary>npm install</summary>
   <pre>
   - axios
+  - clsx
   - react-router-dom 
   - react-toastify
   - react-loader-spinner
-  - js-file-download
   - react-tabs
   - react-intl
   - react-select
   - react-error-boundary
   - react-pdf
-  - reagraph
   - react-tooltip
+  - js-file-download
+  - reagraph
   - @tanstack/react-table
   - @uiw/react-codemirror
   - @uiw/codemirror-themes

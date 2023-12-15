@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
 
 import Modal, { ModalProps } from '@/components/Common/Modal';
@@ -49,7 +50,10 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
     hideWindow={hideWindow}
     canSubmit={validated}
     onSubmit={handleSubmit}
-    className='flex justify-center items-center gap-6 w-full min-w-[24rem] py-6 px-6'
+    className={clsx(
+      'w-full min-w-[24rem]',
+      'py-6 px-6 flex gap-6 justify-center items-center'
+    )}
   >
     <SelectSingle
       placeholder='Выберите тип'

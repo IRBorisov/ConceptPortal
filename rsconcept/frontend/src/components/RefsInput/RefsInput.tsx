@@ -1,18 +1,17 @@
+'use client';
 
 import { Extension } from '@codemirror/state';
 import { tags } from '@lezer/highlight';
 import { createTheme } from '@uiw/codemirror-themes';
 import CodeMirror, { BasicSetupOptions, ReactCodeMirrorProps, ReactCodeMirrorRef } from '@uiw/react-codemirror';
+import clsx from 'clsx';
 import { EditorView } from 'codemirror';
 import { RefObject, useCallback, useMemo, useRef, useState } from 'react';
 
 import Label from '@/components/Common/Label';
-import Modal from '@/components/Common/Modal';
-import PrettyJson from '@/components/Common/PrettyJSON';
 import { useRSForm } from '@/context/RSFormContext';
 import { useConceptTheme } from '@/context/ThemeContext';
 import DlgEditReference from '@/dialogs/DlgEditReference';
-import useResolveText from '@/hooks/useResolveText';
 import { ReferenceType } from '@/models/language';
 import { IConstituenta } from '@/models/rsform';
 import { CodeMirrorWrapper } from '@/utils/codemirror';
@@ -73,9 +72,6 @@ function RefsInput({
   const { darkMode, colors } = useConceptTheme();
   const { schema } = useRSForm();
 
-  const { resolveText, refsData } = useResolveText({schema: schema});
-
-  const [showResolve, setShowResolve] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
   const [showEditor, setShowEditor] = useState(false);
@@ -135,15 +131,6 @@ function RefsInput({
       event.preventDefault();
       return;
     }
-    if (event.altKey) {
-      if (event.key === 'r' && value) {
-        event.preventDefault();
-        resolveText(value, () => {
-          setShowResolve(true);
-        });
-        return;
-      }
-    }
     if (event.ctrlKey && event.code === 'Space') {
       const wrap = new CodeMirrorWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
       wrap.fixSelection(ReferenceTokens);
@@ -164,7 +151,7 @@ function RefsInput({
 
       setShowEditor(true);
     }
-  }, [thisRef, resolveText, value]);
+  }, [thisRef]);
 
   const handleInputReference = useCallback(
   (referenceText: string) => {
@@ -176,37 +163,26 @@ function RefsInput({
     wrap.replaceWith(referenceText);
   }, [thisRef]);
 
-  return (
-  <>
-    {showEditor ?
-    <DlgEditReference
-      hideWindow={() => setShowEditor(false)}
-      items={items ?? []}
-      initial={{
-        type: currentType,
-        refRaw: refText,
-        text: hintText,
-        basePosition: basePosition,
-        mainRefs: mainRefs
-      }}
-      onSave={handleInputReference}
-    /> : null}
-    {showResolve ?
-    <Modal
-      readonly
-      hideWindow={() => setShowResolve(false)}
-    >
-      <div className='max-h-[60vh] max-w-[80vw] overflow-auto'>
-        <PrettyJson data={refsData} />
-      </div>
-    </Modal> : null}
-    <div className={`flex flex-col  w-full ${cursor}`}>
-    {label ? 
-    <Label
-      text={label}
-      htmlFor={id}
-      className='mb-2'
-    /> : null}
+  return (<>
+  {showEditor ?
+  <DlgEditReference
+    hideWindow={() => setShowEditor(false)}
+    items={items ?? []}
+    initial={{
+      type: currentType,
+      refRaw: refText,
+      text: hintText,
+      basePosition: basePosition,
+      mainRefs: mainRefs
+    }}
+    onSave={handleInputReference}
+  /> : null}
+  <div className={clsx(
+    'w-full',
+    'flex flex-col gap-2',
+    cursor
+  )}>
+    <Label text={label} htmlFor={id} />
     <CodeMirror id={id} ref={thisRef}
       basicSetup={editorSetup}
       theme={customTheme}
@@ -223,7 +199,7 @@ function RefsInput({
       // spellCheck= // TODO: figure out while automatic spellcheck doesnt work or implement with extension
       {...restProps}
     />
-    </div>
+  </div>
   </>);
 }
 

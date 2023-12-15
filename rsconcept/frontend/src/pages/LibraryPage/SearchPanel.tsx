@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useCallback } from 'react';
 
 import ConceptSearch from '@/components/Common/ConceptSearch';
@@ -41,18 +42,32 @@ function SearchPanel({ total, filtered, query, setQuery, strategy, setFilter }: 
   }, [strategy, router]);
 
   return (
-  <div className='sticky top-0 left-0 right-0 flex items-stretch justify-start w-full border-b clr-input max-h-[2.3rem] pr-40'>
-    <div className='px-2 py-1 select-none whitespace-nowrap min-w-[10rem]'>
+  <div className={clsx(
+    'sticky top-0',
+    'w-full max-h-[2.3rem]',
+    'pr-40 flex justify-start items-stretch',
+    'border-b',
+    'clr-input'
+  )}>
+    <div className={clsx(
+      'min-w-[10rem]',
+      'px-2 self-center',
+      'select-none',
+      'whitespace-nowrap', 
+    )}>
       Фильтр
       <span className='ml-2'>
         {filtered} из {total}
       </span>
     </div>
-    <div className='flex items-center justify-center w-full gap-1'>
+    <div className={clsx(
+      'w-full',
+      'flex gap-1 justify-center items-center'
+    )}>
       <ConceptSearch noBorder
+        dimensions='min-w-[10rem]'
         value={query}
         onChange={handleChangeQuery}
-        dimensions='min-w-[10rem] '
       />
       <PickerStrategy
         value={strategy}

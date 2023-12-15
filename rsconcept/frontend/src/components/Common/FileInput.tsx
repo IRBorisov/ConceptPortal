@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useRef, useState } from 'react';
 
 import { UploadIcon } from '../Icons';
@@ -40,7 +41,11 @@ function FileInput({
   };
 
   return (
-  <div className={`flex flex-col gap-2 py-2 items-start ${dimensions}`}>
+  <div className={clsx(
+    'py-2',
+    'flex flex-col gap-2 items-start',
+    dimensions
+  )}>
     <input type='file'
       ref={inputRef}
       style={{ display: 'none' }}
@@ -54,9 +59,7 @@ function FileInput({
       onClick={handleUploadClick}
       tooltip={tooltip}
     />
-    <Label
-      text={fileName}
-    />
+    <Label text={fileName} />
   </div>);
 }
 

@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 interface DividerProps {
   vertical?: boolean
   margins?: string
@@ -5,8 +7,13 @@ interface DividerProps {
 
 function Divider({ vertical, margins = 'mx-2' }: DividerProps) {
   return (
-    <div className={`${margins} ${vertical ? 'border-x h-full': 'border-y w-full'}`} />
-  );
+  <div className={clsx(
+    margins, 
+    {
+      'border-x h-full': vertical,
+      'border-y w-full': !vertical
+    }
+  )}/>);
 }
 
 export default Divider;

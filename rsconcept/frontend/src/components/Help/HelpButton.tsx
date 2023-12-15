@@ -16,9 +16,9 @@ function HelpButton({ topic, offset, dimensions }: HelpButtonProps) {
   <>
     <div
       id={`help-${topic}`}
-      className='px-1 py-1'
+      className='p-1'
     >
-      <HelpIcon color='text-primary' size={5} />
+      <HelpIcon color='clr-text-primary' size={5} />
     </div>
     <ConceptTooltip clickable
       anchorSelect={`#help-${topic}`}

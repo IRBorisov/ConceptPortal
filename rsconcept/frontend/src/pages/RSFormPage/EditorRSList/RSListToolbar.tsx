@@ -52,13 +52,13 @@ function RSListToolbar({
     />
     <MiniButton
       tooltip='Клонировать конституенту [Alt + V]'
-      icon={<CloneIcon color={isMutable && selectedCount === 1 ? 'text-success': ''} size={5}/>}
+      icon={<CloneIcon color={isMutable && selectedCount === 1 ? 'clr-text-success': ''} size={5}/>}
       disabled={!isMutable || selectedCount !== 1}
       onClick={onClone}
     />
     <MiniButton
       tooltip='Добавить новую конституенту... [Alt + `]'
-      icon={<SmallPlusIcon color={isMutable ? 'text-success': ''} size={5}/>}
+      icon={<SmallPlusIcon color={isMutable ? 'clr-text-success': ''} size={5}/>}
       disabled={!isMutable}
       onClick={() => onCreate()}
     />
@@ -66,7 +66,7 @@ function RSListToolbar({
       <div>
         <MiniButton
           tooltip='Добавить пустую конституенту'
-          icon={<ArrowDropdownIcon color={isMutable ? 'text-success': ''} size={5}/>}
+          icon={<ArrowDropdownIcon color={isMutable ? 'clr-text-success': ''} size={5}/>}
           disabled={!isMutable}
           onClick={insertMenu.toggle}
         />
@@ -89,19 +89,19 @@ function RSListToolbar({
     </div>
     <MiniButton
       tooltip='Создать конституенту из шаблона [Alt + E]'
-      icon={<DiamondIcon color={isMutable ? 'text-primary': ''} size={5}/>}
+      icon={<DiamondIcon color={isMutable ? 'clr-text-primary': ''} size={5}/>}
       disabled={!isMutable}
       onClick={onTemplates}
     />
     <MiniButton
       tooltip='Сброс имен: присвоить порядковые имена [Alt + R]'
-      icon={<UpdateIcon color={isMutable ? 'text-primary': ''} size={5}/>}
+      icon={<UpdateIcon color={isMutable ? 'clr-text-primary': ''} size={5}/>}
       disabled={!isMutable}
       onClick={onReindex}
     />
     <MiniButton
       tooltip='Удалить выбранные [Delete]'
-      icon={<DumpBinIcon color={isMutable && !nothingSelected ? 'text-warning' : ''} size={5}/>}
+      icon={<DumpBinIcon color={isMutable && !nothingSelected ? 'clr-text-warning' : ''} size={5}/>}
       disabled={!isMutable || nothingSelected}
       onClick={onDelete}
     />

@@ -82,8 +82,8 @@ function ConstituentaPicker({
   }], [value, colors]);
 
   return (
-  <>
-    <ConceptSearch dense
+  <div>
+    <ConceptSearch
       value={filterText}
       onChange={newValue => setFilterText(newValue)}
     />
@@ -96,7 +96,7 @@ function ConstituentaPicker({
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
         noDataComponent={
-          <span className='flex flex-col justify-center p-2 text-center min-h-[5rem]'>
+          <span className='p-2 min-h-[5rem] flex flex-col justify-center text-center'>
             <p>Список конституент пуст</p>
             <p>Измените параметры фильтра</p>
           </span>
@@ -104,7 +104,7 @@ function ConstituentaPicker({
         onRowClicked={onSelectValue}
       />
     </div>
-  </>);
+  </div>);
 }
 
 export default ConstituentaPicker;

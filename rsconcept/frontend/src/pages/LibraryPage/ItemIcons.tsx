@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import { EducationIcon, GroupIcon, SubscribedIcon } from '@/components/Icons';
 import { ICurrentUser, ILibraryItem } from '@/models/library';
 import { prefixes } from '@/utils/constants';
@@ -10,7 +12,10 @@ interface ItemIconsProps {
 function ItemIcons({ user, item }: ItemIconsProps) {
   return (
   <div
-    className='inline-flex items-center justify-start gap-1 min-w-[2.75rem]'
+    className={clsx(
+      'min-w-[2.75rem]',
+      'inline-flex gap-1'
+    )}
     id={`${prefixes.library_list}${item.id}`}
   >
     {(user && user.subscriptions.includes(item.id)) ?

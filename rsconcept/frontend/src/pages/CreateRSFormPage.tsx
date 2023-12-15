@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -79,7 +80,10 @@ function CreateRSFormPage() {
   return (
   <RequireAuth>
   <form
-    className='flex flex-col w-full max-w-lg gap-3 px-6 py-3'
+    className={clsx(
+      'w-full max-w-lg',
+      'px-6 py-3 flex flex-col gap-3'
+    )}
     onSubmit={handleSubmit}
   >
     <h1>Создание концептуальной схемы</h1>
@@ -91,7 +95,7 @@ function CreateRSFormPage() {
       />
       <MiniButton
         tooltip='Загрузить из Экстеор'
-        icon={<DownloadIcon size={5} color='text-primary'/>}
+        icon={<DownloadIcon size={5} color='clr-text-primary'/>}
         onClick={() => inputRef.current?.click()}
       />
     </Overlay>

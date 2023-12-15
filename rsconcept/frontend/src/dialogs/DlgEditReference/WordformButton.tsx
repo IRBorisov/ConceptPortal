@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import { Grammeme } from '@/models/language';
 
 interface WordformButtonProps {
@@ -12,7 +14,14 @@ function WordformButton({ text, example, grams, onSelectGrams, isSelected, ...re
   return (
   <button type='button' tabIndex={-1}
     onClick={() => onSelectGrams(grams)}
-    className={`min-w-[6rem] p-1 border rounded-none cursor-pointer clr-btn-clear clr-hover ${isSelected ? 'clr-selected': ''}`}
+    className={clsx(
+      'min-w-[6rem]',
+      'p-1',
+      'border rounded-none',
+      'cursor-pointer',
+      'clr-btn-clear clr-hover',
+      isSelected && 'clr-selected'
+    )}
     {...restProps}
   >
     <p className='font-semibold'>{text}</p>

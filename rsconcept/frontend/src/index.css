@@ -167,6 +167,7 @@
     .divide-x, .divide-y, .divide-x-2, .divide-y-2
   ) {
     border-color: var(--cl-bg-40);
+    @apply divide-inherit;
     .dark & {
       border-color: var(--cd-bg-40);
     }
@@ -264,8 +265,8 @@
     }
   }
 
-  :is(.text-primary,
-    .text-url
+  :is(.clr-text-primary,
+    .clr-text-url
   ) {
     color: var(--cl-prim-fg-80);
     .dark & {
@@ -280,7 +281,7 @@
     }
   }
 
-  :is(.text-controls,
+  :is(.clr-text-controls,
     .clr-btn-nav,
     .clr-btn-clear
   ) {
@@ -303,21 +304,21 @@
     }
   }
 
-  .text-default {
+  .clr-text-default {
     color: var(--cl-fg-100);
     .dark & {
       color: var(--cd-fg-100);
     }
   }
 
-  .text-warning {
+  .clr-text-warning {
     color: var(--cl-red-fg-100);
     .dark & {
       color: var(--cd-red-fg-100);
     }
   }
 
-  .text-success {
+  .clr-text-success {
     color: var(--cl-green-fg-100);
     .dark & {
       color: var(--cd-green-fg-100);
@@ -341,7 +342,7 @@
     border-color: var(--cd-bg-40);
     outline-color: var(--cd-prim-bg-100);
   }
-  @apply border rounded outline-2 outline
+  @apply outline-2 outline
 }
 
 .cm-editor .cm-placeholder {

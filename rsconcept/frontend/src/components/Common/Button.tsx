@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import { IColorsProps, IControlProps } from './commonInterfaces';
 
 interface ButtonProps
@@ -17,21 +19,30 @@ function Button({
   loading,
   ...restProps
 }: ButtonProps) {
-  const borderClass = noBorder ? '' : 'border rounded';
-  const padding = dense ? 'px-1' : 'px-3 py-2';
-  const outlineClass = noOutline ? 'outline-none': 'clr-outline';
-  const cursor = 'disabled:cursor-not-allowed ' + (loading ? 'cursor-progress ' : 'cursor-pointer ');
   return (
-    <button type='button'
-      disabled={disabled ?? loading}
-      title={tooltip}
-      className={`inline-flex items-center gap-2 align-middle justify-center select-none ${padding} ${colors} ${outlineClass} ${borderClass} ${dimensions} ${cursor}`}
-      {...restProps}
-    >
-      {icon ? icon : null}
-      {text ? <span className='font-semibold'>{text}</span> : null}
-    </button>
-  );
+  <button type='button'
+    disabled={disabled ?? loading}
+    title={tooltip}
+    className={clsx(
+      'inline-flex gap-2 items-center justify-center',
+      'select-none disabled:cursor-not-allowed',
+      {
+        'border rounded': !noBorder,
+        'px-1': dense,
+        'px-3 py-2': !dense,
+        'cursor-progress': loading,
+        'cursor-pointer': !loading,
+        'outline-none': noOutline,
+        'clr-outline': !noOutline,
+      },
+      colors,
+      dimensions
+    )}
+    {...restProps}
+  >
+    {icon ? icon : null}
+    {text ? <span className='font-semibold'>{text}</span> : null}
+  </button>);
 }
 
 export default Button;

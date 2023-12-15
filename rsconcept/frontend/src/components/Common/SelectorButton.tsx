@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 interface SelectorButtonProps
 extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'children' | 'title' | 'type'> {
   text?: string
@@ -9,7 +11,6 @@ extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'child
   transparent?: boolean
 }
 
-
 function SelectorButton({
   text, icon, tooltip,
   colors = 'clr-btn-default',
@@ -17,12 +18,20 @@ function SelectorButton({
   transparent,
   ...restProps
 }: SelectorButtonProps) {
-  const cursor = 'disabled:cursor-not-allowed cursor-pointer';
-  const position = `px-1 flex flex-start items-center gap-1 ${dimensions}`;
-  const design = (transparent ? 'clr-hover' : `border ${colors}`) + ' text-btn text-controls';
   return (
   <button type='button'
-    className={`text-sm small-caps select-none ${cursor} ${position} ${design}`}
+    className={clsx(
+      'px-1 flex flex-start items-center gap-1',
+      'text-sm small-caps select-none',
+      'text-btn clr-text-controls',
+      'disabled:cursor-not-allowed cursor-pointer',
+      {
+        'clr-hover': transparent,
+        'border': !transparent,
+      },
+      !transparent && colors,
+      dimensions
+  )}
     title={tooltip}
     {...restProps}
   >

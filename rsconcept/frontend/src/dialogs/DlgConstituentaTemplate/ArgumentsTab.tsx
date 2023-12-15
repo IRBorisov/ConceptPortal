@@ -1,6 +1,7 @@
 'use client';
 
 import { createColumnHelper } from '@tanstack/react-table';
+import clsx from 'clsx';
 import { Dispatch, useCallback, useEffect, useMemo, useState } from 'react';
 
 import MiniButton from '@/components/Common/MiniButton';
@@ -95,7 +96,10 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
       size: 40,
       minSize: 40,
       maxSize: 40,
-      cell: props => <div className='w-full text-center'>{props.getValue()}</div>
+      cell: props => 
+        <div className='w-full text-center'>
+          {props.getValue()}
+        </div>
     }),
     argumentsHelper.accessor(arg => arg.value || 'свободный аргумент', {
       id: 'value',
@@ -111,7 +115,13 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
       minSize: 150,
       maxSize: 150,
       enableHiding: true,
-      cell: props => <div className='text-sm min-w-[9.3rem] max-w-[9.3rem] break-words'>{props.getValue()}</div>
+      cell: props => 
+        <div className={clsx(
+          'min-w-[9.3rem] max-w-[9.3rem]',
+          'text-sm break-words'
+        )}>
+          {props.getValue()}
+        </div>
     }),
     argumentsHelper.display({
       id: 'actions',
@@ -120,13 +130,13 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
       maxSize: 50,
       cell: props => 
         <div className='max-h-[1.2rem]'>
-        {props.row.original.value && 
+        {props.row.original.value ?
         <MiniButton
           tooltip='Очистить значение'
-          icon={<CrossIcon size={3} color='text-warning'/>}
+          icon={<CrossIcon size={3} color='clr-text-warning'/>}
           noHover
           onClick={() => handleClearArgument(props.row.original)}
-        />}
+        /> : null}
         </div>
     })
   ], [handleClearArgument]);
@@ -139,21 +149,35 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
 
   return (
   <div className='flex flex-col gap-3'>
-    <div className='overflow-y-auto text-sm border select-none max-h-[5.8rem] min-h-[5.8rem]'>
+    <div className={clsx(
+      'max-h-[5.8rem] min-h-[5.8rem]',
+      'overflow-y-auto',
+      'text-sm',
+      'border',
+      'select-none'
+    )}>
       <DataTable dense noFooter
         data={state.arguments}
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
         noDataComponent={
-          <span className='flex flex-col justify-center p-2 text-center min-h-[3.6rem]'>
-            <p>Аргументы отсутствуют</p>
-          </span>
+          <p className={clsx(
+            'min-h-[3.6rem] w-full',
+            'p-2',
+            'text-center'
+          )}>
+            Аргументы отсутствуют
+          </p>
         }
         onRowClicked={handleSelectArgument}
       />
     </div>
 
-    <div className='flex items-center justify-center w-full gap-2 py-1 select-none'>
+    <div className={clsx(
+      'py-1 flex gap-2 justify-center items-center',
+      'w-full',
+      'select-none'
+    )}>
       <span title='Выберите аргумент из списка сверху и значение из списка снизу'
         className='font-semibold text-center'
       >
@@ -168,7 +192,7 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
       <div className='flex'>
         <MiniButton
           tooltip='Подставить значение аргумента'
-          icon={<CheckIcon size={5} color={!argumentValue || !selectedArgument ? 'text-disabled' : 'text-success'} />}
+          icon={<CheckIcon size={5} color={!argumentValue || !selectedArgument ? 'text-disabled' : 'clr-text-success'} />}
           disabled={!argumentValue || !selectedArgument}
           onClick={() => handleAssignArgument(selectedArgument!, argumentValue)}
         />
@@ -176,12 +200,12 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
           tooltip='Откатить значение'
           disabled={!isModified}
           onClick={handleReset}
-          icon={<ArrowsRotateIcon size={5} color={isModified ? 'text-primary' : ''} />}
+          icon={<ArrowsRotateIcon size={5} color={isModified ? 'clr-text-primary' : ''} />}
         />
         <MiniButton
           tooltip='Очистить значение аргумента'
           disabled={!selectedClearable}
-          icon={<CrossIcon size={5} color={!selectedClearable ? 'text-disabled' : 'text-warning'}/>}
+          icon={<CrossIcon size={5} color={!selectedClearable ? 'text-disabled' : 'clr-text-warning'}/>}
           onClick={() => selectedArgument ? handleClearArgument(selectedArgument) : undefined}
         />
       </div>

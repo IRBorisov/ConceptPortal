@@ -1,13 +1,13 @@
-interface LabeledTextProps {
+interface LabeledValueProps {
   id?: string
   label: string
   text: string | number
   tooltip?: string
 }
 
-function LabeledText({ id, label, text, tooltip }: LabeledTextProps) {
+function LabeledValue({ id, label, text, tooltip }: LabeledValueProps) {
   return (
-  <div className='flex justify-between gap-4'>
+  <div className='flex justify-between gap-3'>
     <label
       className='font-semibold'
       title={tooltip}
@@ -21,4 +21,4 @@ function LabeledText({ id, label, text, tooltip }: LabeledTextProps) {
   </div>);
 }
 
-export default LabeledText;
+export default LabeledValue;

@@ -6,6 +6,7 @@ import { EditorState } from '@uiw/react-codemirror';
 import { IConstituenta } from '@/models/rsform';
 import { findEnvelopingNodes } from '@/utils/codemirror';
 import { domTooltipConstituenta } from '@/utils/codemirror';
+
 import { GlobalTokens } from './rslang';
 
 function findAliasAt(pos: number, state: EditorState) {

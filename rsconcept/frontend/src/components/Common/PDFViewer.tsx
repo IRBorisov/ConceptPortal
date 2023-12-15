@@ -40,7 +40,10 @@ function PDFViewer({ file }: PDFViewerProps) {
     loading='Загрузка PDF файла...'
     error='Не удалось загрузить файл.'
   >
-    <Overlay position='top-6 left-1/2 -translate-x-1/2' className='flex select-none'>
+    <Overlay
+      position='top-6 left-1/2 -translate-x-1/2'
+      className='flex select-none'
+    >
       <PageControls 
         pageCount={pageCount}
         pageNumber={pageNumber}

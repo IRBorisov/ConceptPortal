@@ -135,7 +135,7 @@ function EditorRSExpression({
       <MiniButton noHover
         tooltip='Дерево разбора выражения'
         onClick={handleShowAST}
-        icon={<ASTNetworkIcon size={5} color='text-primary' />}
+        icon={<ASTNetworkIcon size={5} color='clr-text-primary' />}
       />
      </Overlay>
 

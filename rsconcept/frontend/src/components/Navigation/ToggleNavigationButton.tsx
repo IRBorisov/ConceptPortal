@@ -1,19 +1,32 @@
+import clsx from 'clsx';
 import { useMemo } from 'react';
 
 import { useConceptTheme } from '@/context/ThemeContext';
 
 function ToggleNavigationButton() {
   const { noNavigation, toggleNoNavigation } = useConceptTheme();
-  const dimensions = useMemo(() => (noNavigation ? 'px-1 h-[1.6rem]' : 'w-[1.2rem] h-[3rem]'), [noNavigation]);
   const text = useMemo(() => (
-    noNavigation ? '∨∨∨' : <><p>{'>'}</p><p>{'>'}</p></>), [noNavigation]
+    noNavigation ?
+      '∨∨∨'
+      :
+      <>
+        <p>{'>'}</p>
+        <p>{'>'}</p>
+      </>
+    ), [noNavigation]
   );
-  const tooltip = useMemo(() => (noNavigation ? 'Показать навигацию' : 'Скрыть навигацию'), [noNavigation]);
-
   return (
   <button type='button' tabIndex={-1}
-    title={tooltip}
-    className={`absolute top-0 right-0 border-b-2 border-l-2 rounded-none z-navigation clr-btn-nav ${dimensions}`}
+    title={noNavigation ? 'Показать навигацию' : 'Скрыть навигацию'}
+    className={clsx(
+      'absolute top-0 right-0 z-navigation',
+      'border-b-2 border-l-2 rounded-none',
+      'clr-btn-nav',
+      {
+        'px-1 h-[1.6rem]': noNavigation,
+        'w-[1.2rem] h-[3rem]': !noNavigation
+      }
+    )}
     onClick={toggleNoNavigation}
   >
     {text}

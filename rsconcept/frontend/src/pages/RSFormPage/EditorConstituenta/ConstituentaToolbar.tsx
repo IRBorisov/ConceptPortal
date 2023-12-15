@@ -34,30 +34,30 @@ function ConstituentaToolbar({
     <MiniButton
       tooltip='Сохранить изменения [Ctrl + S]'
       disabled={!canSave}
-      icon={<SaveIcon size={5} color={canSave ? 'text-primary' : ''}/>}
+      icon={<SaveIcon size={5} color={canSave ? 'clr-text-primary' : ''}/>}
       onClick={onSubmit}
     />
     <MiniButton
       tooltip='Сбросить несохраненные изменения'
       disabled={!canSave}
       onClick={onReset}
-      icon={<ArrowsRotateIcon size={5} color={canSave ? 'text-primary' : ''} />}
+      icon={<ArrowsRotateIcon size={5} color={canSave ? 'clr-text-primary' : ''} />}
     />
     <MiniButton
       tooltip='Создать конституенту после данной'
       disabled={!isMutable}
       onClick={onCreate}
-      icon={<SmallPlusIcon size={5} color={isMutable ? 'text-success' : ''} />} 
+      icon={<SmallPlusIcon size={5} color={isMutable ? 'clr-text-success' : ''} />} 
     />
     <MiniButton
       tooltip='Клонировать конституенту [Alt + V]'
       disabled={!isMutable}
       onClick={onClone}
-      icon={<CloneIcon size={5} color={isMutable ? 'text-success' : ''} />} 
+      icon={<CloneIcon size={5} color={isMutable ? 'clr-text-success' : ''} />} 
     />
     <MiniButton
       tooltip='Создать конституенту из шаблона [Alt + E]'
-      icon={<DiamondIcon color={isMutable ? 'text-primary': ''} size={5}/>}
+      icon={<DiamondIcon color={isMutable ? 'clr-text-primary': ''} size={5}/>}
       disabled={!isMutable}
       onClick={onTemplates}
     />
@@ -65,7 +65,7 @@ function ConstituentaToolbar({
       tooltip='Удалить редактируемую конституенту'
       disabled={!isMutable}
       onClick={onDelete}
-      icon={<DumpBinIcon size={5} color={isMutable ? 'text-warning' : ''} />}
+      icon={<DumpBinIcon size={5} color={isMutable ? 'clr-text-warning' : ''} />}
     />
     <HelpButton topic={HelpTopic.CONSTITUENTA} offset={4} />
   </Overlay>);

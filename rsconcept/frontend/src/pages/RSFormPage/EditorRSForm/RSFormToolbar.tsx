@@ -32,22 +32,22 @@ function RSFormToolbar({
     <MiniButton
       tooltip='Сохранить изменения [Ctrl + S]'
       disabled={!canSave}
-      icon={<SaveIcon size={5} color={canSave ? 'text-primary' : ''}/>}
+      icon={<SaveIcon size={5} color={canSave ? 'clr-text-primary' : ''}/>}
       onClick={onSubmit}
     />
     <MiniButton
       tooltip='Поделиться схемой'
-      icon={<ShareIcon size={5} color='text-primary'/>}
+      icon={<ShareIcon size={5} color='clr-text-primary'/>}
       onClick={onShare}
     />
     <MiniButton
       tooltip='Скачать TRS файл'
-      icon={<DownloadIcon size={5} color='text-primary'/>}
+      icon={<DownloadIcon size={5} color='clr-text-primary'/>}
       onClick={onDownload}
     />
     <MiniButton
       tooltip={claimable ? 'Стать владельцем' : 'Невозможно стать владельцем' }
-      icon={<OwnerIcon size={5} color={!claimable ? '' : 'text-success'}/>}
+      icon={<OwnerIcon size={5} color={!claimable ? '' : 'clr-text-success'}/>}
       disabled={!claimable || anonymous}
       onClick={onClaim}
     />
@@ -55,7 +55,7 @@ function RSFormToolbar({
       tooltip='Удалить схему'
       disabled={!isMutable}
       onClick={onDestroy}
-      icon={<DumpBinIcon size={5} color={isMutable ? 'text-warning' : ''} />}
+      icon={<DumpBinIcon size={5} color={isMutable ? 'clr-text-warning' : ''} />}
     />
     <HelpButton topic={HelpTopic.RSFORM} offset={4} />
   </Overlay>);

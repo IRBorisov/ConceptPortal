@@ -51,7 +51,10 @@ function EditorProfile() {
   }
 
   return (
-  <form onSubmit={handleSubmit} className='px-6 py-2 flex flex-col gap-8 min-w-[18rem]'>
+  <form
+    onSubmit={handleSubmit}
+    className='px-6 py-2 flex flex-col gap-8 min-w-[18rem]'
+  >
     <div className='flex flex-col gap-3'>
       <TextInput id='username' disabled
         label='Логин'

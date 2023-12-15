@@ -46,7 +46,7 @@ function DescribeError({error} : {error: ErrorData}) {
 
 function InfoError({ error }: InfoErrorProps) {
   return (
-  <div className='px-3 py-2 min-w-[15rem] text-sm font-semibold select-text text-warning'>
+  <div className='px-3 py-2 min-w-[15rem] text-sm font-semibold select-text clr-text-warning'>
     <DescribeError error={error} />
   </div>);
 }

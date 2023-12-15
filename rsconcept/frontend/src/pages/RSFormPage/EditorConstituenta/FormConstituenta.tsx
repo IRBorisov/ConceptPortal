@@ -109,9 +109,9 @@ function FormConstituenta({
       disabled={!readyForEdit}
       noHover
       onClick={onEditTerm}
-      icon={<EditIcon size={4} color={readyForEdit ? 'text-primary' : ''} />}
+      icon={<EditIcon size={4} color={readyForEdit ? 'clr-text-primary' : ''} />}
     />
-    <div className='pt-1 pl-6 text-sm font-semibold w-fit'>
+    <div className='pt-1 pl-[1.375rem] text-sm font-semibold w-fit'>
       <span>Имя </span>
       <span className='ml-1'>{constituenta?.alias ?? ''}</span>
     </div>
@@ -119,7 +119,7 @@ function FormConstituenta({
       tooltip='Переименовать конституенту'
       disabled={!readyForEdit}
       onClick={handleRename}
-      icon={<EditIcon size={4} color={readyForEdit ? 'text-primary' : ''} />}
+      icon={<EditIcon size={4} color={readyForEdit ? 'clr-text-primary' : ''} />}
     />
   </Overlay>
   <form id={id}

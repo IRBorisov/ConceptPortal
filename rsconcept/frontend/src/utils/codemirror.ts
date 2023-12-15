@@ -4,6 +4,7 @@
 import { syntaxTree } from '@codemirror/language';
 import { NodeType, Tree, TreeCursor } from '@lezer/common';
 import { ReactCodeMirrorRef, SelectionRange } from '@uiw/react-codemirror';
+import clsx from 'clsx';
 
 import { IEntityReference, ISyntacticReference } from '@/models/language';
 import { parseGrammemes } from '@/models/languageAPI';
@@ -134,7 +135,14 @@ export function findContainedNodes(start: number, finish: number, tree: Tree, fi
 */
 export function domTooltipConstituenta(cst: IConstituenta) {
   const dom = document.createElement('div');
-  dom.className = 'overflow-y-auto border shadow-md max-h-[25rem] max-w-[25rem] min-w-[10rem] w-fit z-tooltip text-sm px-2 py-2';
+  dom.className = clsx(
+    'z-tooltip',
+    'max-h-[25rem] max-w-[25rem] min-w-[10rem] w-fit',
+    'p-2',
+    'border shadow-md', 
+    'overflow-y-auto',
+    'text-sm'
+  );
   
   const alias = document.createElement('p');
   alias.innerHTML = `<b>${cst.alias}:</b> ${labelCstTypification(cst)}`;
@@ -170,12 +178,17 @@ export function domTooltipConstituenta(cst: IConstituenta) {
  * Create DOM tooltip for {@link IEntityReference}.
 */
 export function domTooltipEntityReference(ref: IEntityReference, cst: IConstituenta | undefined, colors: IColorTheme) {
-  const DIMENSIONS = 'max-h-[25rem] max-w-[25rem] min-w-[10rem] w-fit z-tooltip px-2 py-2';
-  const LAYOUT = 'flex flex-col overflow-y-auto';
-
   const dom = document.createElement('div');
-  dom.className = `${DIMENSIONS} ${LAYOUT} border shadow-md text-sm select-none cursor-auto`;
-
+  dom.className = clsx(
+    'z-tooltip',
+    'max-h-[25rem] max-w-[25rem] min-w-[10rem] w-fit',
+    'p-2 flex flex-col',
+    'border shadow-md',
+    'overflow-y-auto',
+    'text-sm',
+    'select-none cursor-auto'
+  );
+  
   const title = document.createElement('p');
   title.innerHTML = '<b>Ссылка на конституенту</b>';
   dom.appendChild(title);
@@ -190,7 +203,12 @@ export function domTooltipEntityReference(ref: IEntityReference, cst: IConstitue
   gramStr => {
     const gram = document.createElement('div');
     gram.id =`tooltip-${gramStr}`;
-    gram.className='min-w-[3rem] px-1 text-sm text-center rounded-md whitespace-nowrap';
+    gram.className = clsx(
+      'min-w-[3rem]', 
+      'px-1',
+      'border rounded-md',
+      'text-sm text-center whitespace-nowrap'
+    );
     gram.style.borderWidth = '1px';
     gram.style.borderColor = colorfgGrammeme(gramStr, colors);
     gram.style.color = colorfgGrammeme(gramStr, colors);
@@ -207,11 +225,17 @@ export function domTooltipEntityReference(ref: IEntityReference, cst: IConstitue
  * Create DOM tooltip for {@link ISyntacticReference}.
 */
 export function domTooltipSyntacticReference(ref: ISyntacticReference, masterRef: string | undefined) {
-  const DIMENSIONS = 'max-h-[25rem] max-w-[25rem] min-w-[10rem] w-fit z-tooltip px-2 py-2';
-  const LAYOUT = 'flex flex-col overflow-y-auto'
 
   const dom = document.createElement('div');
-  dom.className = `${DIMENSIONS} ${LAYOUT} border shadow-md text-sm select-none cursor-auto`;
+  dom.className = clsx(
+    'z-tooltip',
+    'max-h-[25rem] max-w-[25rem] min-w-[10rem] w-fit',
+    'p-2 flex flex-col',
+    'border shadow-md',
+    'overflow-y-auto',
+    'text-sm',
+    'select-none cursor-auto'
+  );
 
   const title = document.createElement('p');
   title.innerHTML = '<b>Связывание слов</b>';

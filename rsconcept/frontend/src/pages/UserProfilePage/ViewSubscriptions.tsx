@@ -43,13 +43,16 @@ function ViewSubscriptions({items}: ViewSubscriptionsProps) {
       minSize: 150,
       size: 150,
       maxSize: 150,
-      cell: props => <div className='min-w-[8.25rem]'>{new Date(props.cell.getValue()).toLocaleString(intl.locale)}</div>,
+      cell: props =>
+        <div className='min-w-[8.25rem]'>
+          {new Date(props.cell.getValue()).toLocaleString(intl.locale)}
+        </div>,
       enableSorting: true
     })
   ], [intl]);
 
   return (
-  <div className='max-h-[23.8rem] overflow-auto text-sm border w-fit'>
+  <div className='max-h-[23.8rem] w-fit overflow-auto text-sm border'>
   <DataTable dense noFooter
     columns={columns}
     data={items}

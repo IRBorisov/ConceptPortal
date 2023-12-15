@@ -1,6 +1,7 @@
 'use client';
 
 import axios from 'axios';
+import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
 import SubmitButton from '@/components/Common/SubmitButton';
@@ -18,7 +19,7 @@ import { resources } from '@/utils/constants';
 function ProcessError({error}: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
     return (
-    <div className='text-sm select-text text-warning'>
+    <div className='text-sm select-text clr-text-warning'>
       На Портале отсутствует такое сочетание имени пользователя и пароля
     </div>);
   } else {
@@ -65,7 +66,10 @@ function LoginPage() {
   }
   return (
   <form
-    className='pt-12 pb-6 px-6 flex flex-col gap-3 w-[24rem]'
+    className={clsx(
+      'w-[24rem]', 
+      'pt-12 pb-6 px-6 flex flex-col gap-3'
+    )}
     onSubmit={handleSubmit}
   >
     <img alt='Концепт Портал'

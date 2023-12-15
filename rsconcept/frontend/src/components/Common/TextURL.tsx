@@ -9,7 +9,7 @@ interface TextURLProps {
   onClick?: () => void
 }
 
-function TextURL({ text, href, tooltip, color='text-url', onClick }: TextURLProps) {
+function TextURL({ text, href, tooltip, color='clr-text-url', onClick }: TextURLProps) {
   const design = `cursor-pointer hover:underline ${color}`;
   if (href) {
     return (

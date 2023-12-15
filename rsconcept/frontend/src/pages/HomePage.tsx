@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { useLayoutEffect } from 'react';
 
 import { useAuth } from '@/context/AuthContext';
@@ -21,7 +22,10 @@ function HomePage() {
   }, [router, user])
 
   return (
-  <div className='flex flex-col items-center justify-center w-full px-4 py-2'>
+  <div className={clsx(
+    'w-full',
+    'px-4 py-2 flex flex-col justify-center items-center'
+  )}>
     {user?.is_staff ?
     <p>
       Лендинг находится в разработке. Данная страница видна только пользователям с правами администратора.

@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 interface DropdownButtonProps {
   tooltip?: string | undefined
   onClick?: () => void
@@ -6,14 +8,21 @@ interface DropdownButtonProps {
 }
 
 function DropdownButton({ tooltip, onClick, disabled, children }: DropdownButtonProps) {
-  const behavior = onClick ? 'cursor-pointer disabled:cursor-not-allowed clr-hover' : 'cursor-default';
-  const text = disabled ? 'text-controls' : '';
   return (
   <button type='button'
     disabled={disabled}
     title={tooltip}
     onClick={onClick}
-    className={`px-3 py-1 text-left overflow-ellipsis whitespace-nowrap ${behavior} ${text}`}
+    className={clsx(
+      'px-3 py-1',
+      'text-left overflow-ellipsis whitespace-nowrap',
+      'disabled:clr-text-controls',
+      {
+        'clr-hover': onClick,
+        'cursor-pointer disabled:cursor-not-allowed': onClick,
+        'cursor-default': !onClick
+      }
+    )}
   >
     {children}
   </button>);

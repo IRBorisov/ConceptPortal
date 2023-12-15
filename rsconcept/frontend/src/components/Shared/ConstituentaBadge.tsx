@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import ConceptTooltip from '@/components/Common/ConceptTooltip';
 import ConstituentaTooltip from '@/components/Help/ConstituentaTooltip';
 import { IConstituenta } from '@/models/rsform';
@@ -17,13 +19,16 @@ function ConstituentaBadge({ value, prefixID, shortTooltip, theme }: Constituent
   <div className='w-fit'>
     <div
       id={`${prefixID}${value.alias}`}
-      className='min-w-[3.1rem] max-w-[3.1rem] px-1 text-center rounded-md whitespace-nowrap'
+      className={clsx(
+        'min-w-[3.1rem] max-w-[3.1rem]',
+        'px-1',
+        'border rounded-md',
+        'text-center font-semibold whitespace-nowrap'
+      )}
       style={{
-        borderWidth: '1px', 
         borderColor: colorfgCstStatus(value.status, theme),
         color: colorfgCstStatus(value.status, theme),
-        backgroundColor: isMockCst(value) ? theme.bgWarning : theme.bgInput,
-        fontWeight: 600
+        backgroundColor: isMockCst(value) ? theme.bgWarning : theme.bgInput
       }}
     >
       {value.alias}
@@ -38,7 +43,7 @@ function ConstituentaBadge({ value, prefixID, shortTooltip, theme }: Constituent
       anchorSelect={`#${prefixID}${value.alias}`}
       place='right'
     >
-      <p><span className='font-semibold'>Статус</span>: {describeExpressionStatus(value.status)}</p>
+      <p><b>Статус</b>: {describeExpressionStatus(value.status)}</p>
     </ConceptTooltip> : null}
   </div>);
 }

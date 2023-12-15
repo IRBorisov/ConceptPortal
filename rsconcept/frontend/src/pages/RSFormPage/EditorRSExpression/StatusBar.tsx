@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useMemo } from 'react';
 
 import { useConceptTheme } from '@/context/ThemeContext';
@@ -31,7 +32,12 @@ function StatusBar({ isModified, constituenta, parseData }: StatusBarProps) {
 
   return (
   <div title={describeExpressionStatus(status)}
-    className='inline-flex items-center justify-center w-full h-full text-sm font-semibold align-middle border rounded-none select-none small-caps'
+    className={clsx(
+      'w-full h-full',
+      'border rounded-none',
+      'text-sm font-semibold small-caps text-center',
+      'select-none'
+    )}
     style={{backgroundColor: colorbgCstStatus(status, colors)}}
   >
     {labelExpressionStatus(status)}

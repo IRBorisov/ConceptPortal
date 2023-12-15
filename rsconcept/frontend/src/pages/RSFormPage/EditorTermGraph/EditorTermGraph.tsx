@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { GraphEdge, GraphNode, LayoutTypes } from 'reagraph';
 
@@ -230,16 +231,28 @@ function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGra
 
     {hoverCst ?
     <Overlay
-      position='top-[1.6rem] left-[2.6rem] px-3 w-[25rem] h-fit min-h-[11rem] overflow-y-auto'
       layer='z-tooltip'
-      className='border shadow-md clr-app'
+      position='top-[1.6rem] left-[2.6rem]'
+      className={clsx(
+        'w-[25rem] h-fit min-h-[11rem]',
+        'px-3',
+        'overflow-y-auto',
+        'border shadow-md',
+        'clr-app'
+      )}
     >
       <InfoConstituenta
         data={hoverCst}
       />
     </Overlay> : null}
     
-    <Overlay position='top-0 left-0 max-w-[13.5rem] min-w-[13.5rem]' className='flex flex-col gap-3'>
+    <Overlay
+      position='top-0 left-0'
+      className={clsx(
+        'max-w-[13.5rem] min-w-[13.5rem]',
+        'flex flex-col gap-3'
+      )}
+    >
       <GraphSidebar 
         coloring={coloringScheme}
         layout={layout}

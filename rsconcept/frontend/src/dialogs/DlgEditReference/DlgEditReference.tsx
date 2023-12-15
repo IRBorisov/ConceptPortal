@@ -50,7 +50,7 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
     hideWindow={hideWindow}
     canSubmit={isValid}
     onSubmit={handleSubmit}
-    className='items-center min-w-[40rem] max-w-[40rem] px-6 min-h-[34rem]'
+    className='min-w-[40rem] max-w-[40rem] px-6 min-h-[34rem]'
   >
   <Tabs defaultFocus
     selectedTabClassName='clr-selected'
@@ -62,15 +62,15 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
     </Overlay>
 
     <TabList className='flex justify-center mb-3'>
-      <div className='flex border w-fit'>
+      <div className='flex border divide-x rounded-none w-fit'>
         <ConceptTab
-          label={labelReferenceType(ReferenceType.ENTITY)}
           tooltip='Отсылка на термин в заданной словоформе'
-          className='w-[12rem] border-r-2'
+          label={labelReferenceType(ReferenceType.ENTITY)}
+          className='w-[12rem]'
         />
         <ConceptTab
-          label={labelReferenceType(ReferenceType.SYNTACTIC)}
           tooltip='Установление синтаксической связи с отсылкой на термин'
+          label={labelReferenceType(ReferenceType.SYNTACTIC)}
           className='w-[12rem]'
         />
       </div>

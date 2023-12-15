@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
 import DataTable, { createColumnHelper,IConditionalStyle, VisibilityState } from '@/components/DataTable';
@@ -67,7 +68,7 @@ function ConstituentsTable({
         <ConstituentaBadge 
           theme={colors}
           value={props.row.original}
-          prefixID={prefixes.cst_list}
+          prefixID={prefixes.cst_sidetable}
         />
     }),
     columnHelper.accessor(cst => describeConstituenta(cst), {
@@ -123,10 +124,15 @@ function ConstituentsTable({
     onColumnVisibilityChange={setColumnVisibility}
 
     noDataComponent={
-      <span className='flex flex-col justify-center p-2 text-center min-h-[5rem] select-none'>
+      <div className={clsx(
+        'min-h-[5rem]',
+        'p-2 flex flex-col justify-center',
+        'text-center',
+        'select-none'
+      )}>
         <p>Список конституент пуст</p>
         <p>Измените параметры фильтра</p>
-      </span>
+      </div>
     }
 
     onRowDoubleClicked={handleDoubleClick}

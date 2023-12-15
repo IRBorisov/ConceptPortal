@@ -11,7 +11,7 @@ import useDropdown from '@/hooks/useDropdown';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { CstMatchMode, DependencyMode } from '@/models/miscelanious';
 import { applyGraphFilter } from '@/models/miscelaniousAPI';
-import { CstType, IConstituenta, IRSForm } from '@/models/rsform';
+import { IConstituenta, IRSForm } from '@/models/rsform';
 import { createMockConstituenta, matchConstituenta } from '@/models/rsformAPI';
 import { extractGlobals } from '@/models/rslangAPI';
 import { prefixes } from '@/utils/constants';
@@ -42,18 +42,12 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
     if (filterSource === DependencyMode.EXPRESSION) {
       const aliases = extractGlobals(activeExpression);
       result = schema.items.filter((cst) => aliases.has(cst.alias));
-      const names = result.map(cst => cst.alias)
+      const names = result.map(cst => cst.alias);
       const diff = Array.from(aliases).filter(name => !names.includes(name));
       if (diff.length > 0) {
         diff.forEach(
           (alias, index) => result.push(
-            createMockConstituenta(
-              -1,
-              -index,
-              alias,
-              CstType.BASE,
-              'Конституента отсутствует'
-            )
+            createMockConstituenta(-index, alias, 'Конституента отсутствует')
           )
         );
       }
@@ -83,9 +77,9 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
   return (
   <div className='flex items-stretch border-b clr-input'>
     <ConceptSearch noBorder
+      dimensions='min-w-[6rem] pr-2 w-full'
       value={filterText}
       onChange={setFilterText}
-      dimensions='min-w-[6rem] pr-2 w-full'
     />
    
     <div ref={matchModeMenu.ref}>

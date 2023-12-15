@@ -12,14 +12,14 @@ function PageControls({
   return (
   <>
     <button type='button'
-      className='clr-hover text-controls'
+      className='clr-hover clr-text-controls'
       onClick={() => setPageNumber(1)}
       disabled={pageNumber < 2}
     >
       <GotoFirstIcon />
     </button>
     <button type='button'
-      className='clr-hover text-controls'
+      className='clr-hover clr-text-controls'
       onClick={() => setPageNumber(prev => prev - 1)}
       disabled={pageNumber < 2}
     >
@@ -27,14 +27,14 @@ function PageControls({
     </button>
     <p className='px-3 text-black'>Страница {pageNumber} из {pageCount}</p>
     <button type='button'
-      className='clr-hover text-controls'
+      className='clr-hover clr-text-controls'
       onClick={() => setPageNumber(prev => prev + 1)}
       disabled={pageNumber >= pageCount}
     >
       <GotoNextIcon />
     </button>
     <button type='button'
-      className='clr-hover text-controls'
+      className='clr-hover clr-text-controls'
       onClick={() => setPageNumber(pageCount)}
       disabled={pageNumber >= pageCount}
     >

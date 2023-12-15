@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { useMemo } from 'react';
 
 import { CheckboxCheckedIcon } from '../Icons';
@@ -25,14 +26,10 @@ function Checkbox({
     } else if (setValue) {
       return 'cursor-pointer';
     } else {
-      return ''
+      return '';
     }
   }, [disabled, setValue]);
-  const bgColor = useMemo(
-  () => {
-    return value !== false ? 'clr-primary' : 'clr-app'
-  }, [value]);
-  
+
   function handleClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
     event.preventDefault();
     if (disabled || !setValue) {
@@ -42,27 +39,31 @@ function Checkbox({
   }
 
   return (
-    <button type='button' id={id}
-      className={`flex items-center outline-none ${dimensions}`}
-      title={tooltip}
-      disabled={disabled}
-      onClick={handleClick}
-      {...restProps}
-    >
-      <div className={`max-w-[1rem] min-w-[1rem] h-4 mt-0.5 border rounded-sm ${bgColor} ${cursor}`} >
-        {value ?
-        <div className='mt-[1px] ml-[1px]'>
-          <CheckboxCheckedIcon />
-        </div> : null}
-      </div>
-      {label ?
-      <Label
-        className={`${cursor} px-2 text-start`}
-        text={label}
-        htmlFor={id}
-      /> : null}
-    </button>
-  );
+  <button type='button' id={id}
+    className={clsx(
+      'flex items-center gap-2',
+      'outline-none',
+      'text-start',
+      dimensions,
+      cursor
+    )}
+    title={tooltip}
+    disabled={disabled}
+    onClick={handleClick}
+    {...restProps}
+  >
+    <div className={clsx(
+      'max-w-[1rem] min-w-[1rem] h-4',
+      'border rounded-sm',
+      {
+        'clr-primary': value !== false,
+        'clr-app': value === false
+      }
+    )}>
+      {value ? <div className='mt-[1px] ml-[1px]'><CheckboxCheckedIcon /></div> : null}
+    </div>
+    <Label className={cursor} text={label} htmlFor={id} />
+  </button>);
 }
 
 export default Checkbox;

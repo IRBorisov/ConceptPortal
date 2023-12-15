@@ -195,19 +195,17 @@ export function inferClass(type: CstType, isTemplate: boolean): CstClass {
  * Creates a mock {@link IConstituenta} object with the provided parameters and default values for other properties.
  */
 export function createMockConstituenta(
-  schema: number,
   id: number,
   alias: string,
-  type: CstType,
   comment: string
 ): IConstituenta {
   return {
     id: id,
     order: -1,
-    schema: schema,
+    schema: -1,
     alias: alias,
     convention: comment,
-    cst_type: type,
+    cst_type: CstType.BASE,
     term_raw: '',
     term_resolved: '',
     term_forms: [],

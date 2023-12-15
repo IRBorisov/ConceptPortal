@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 interface MiniButtonProps
 extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'title' | 'children' > {
   icon: React.ReactNode
@@ -15,7 +17,17 @@ function MiniButton({
   <button type='button'
     title={tooltip}
     tabIndex={tabIndex ?? -1}
-    className={`px-1 py-1 rounded-full cursor-pointer disabled:cursor-not-allowed clr-btn-clear ${noHover ? 'outline-none' : 'clr-hover'} ${dimensions}`}
+    className={clsx(
+      'px-1 py-1',
+      'rounded-full',
+      'clr-btn-clear',
+      'cursor-pointer disabled:cursor-not-allowed',
+      {
+        'outline-none': noHover,
+        'clr-hover': !noHover
+      },
+      dimensions
+    )}
     {...restProps}
   >
     {icon}

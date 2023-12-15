@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import { IColorsProps, IEditorProps } from './commonInterfaces';
 import Label from './Label';
 
@@ -14,24 +16,37 @@ function preventEnterCapture(event: React.KeyboardEvent<HTMLInputElement>) {
 }
 
 function TextInput({
-  id, label, dense, tooltip, noBorder, noOutline, allowEnter, onKeyDown,
+  id, label, dense, tooltip, noBorder, noOutline, allowEnter, disabled,
   dimensions = 'w-full',
   colors = 'clr-input',
+  onKeyDown,
   ...restProps
 }: TextInputProps) {
-  const borderClass = noBorder ? '' : 'border px-3';
-  const outlineClass = noOutline ? '' : 'clr-outline';
   return (
-  <div className={`flex ${dense ? 'items-center gap-4 ' + dimensions : 'flex-col items-start gap-2'}`}>
-    {label ?
-    <Label
-      text={label}
-      htmlFor={id}
-    /> : null}
+  <div className={clsx(
+    {
+      'flex flex-col items-start gap-2': !dense,
+      'flex items-center gap-3': dense,
+    },
+    dense && dimensions
+  )}>
+    <Label text={label} htmlFor={id} />
     <input id={id}
       title={tooltip}
+      className={clsx(
+        'py-2',
+        'leading-tight truncate hover:text-clip',
+        {
+          'px-3': !noBorder || !disabled,
+          'w-full': dense,
+          'border': !noBorder,
+          'clr-outline': !noOutline
+        },
+        colors, 
+        !dense && dimensions
+      )}
       onKeyDown={!allowEnter && !onKeyDown ? preventEnterCapture : onKeyDown}
-      className={`py-2 leading-tight truncate hover:text-clip ${colors} ${outlineClass} ${borderClass} ${dense ? 'w-full' : dimensions}`}
+      disabled={disabled}
       {...restProps}
     />
   </div>);

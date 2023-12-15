@@ -1,7 +1,9 @@
+import clsx from 'clsx';
+
+import { EducationIcon, LibraryIcon, PlusIcon } from '@/components/Icons';
 import { useConceptNavigation } from '@/context/NagivationContext';
 import { useConceptTheme } from '@/context/ThemeContext';
 
-import { EducationIcon, LibraryIcon, PlusIcon } from '@/components/Icons';
 import Logo from './Logo';
 import NavigationButton from './NavigationButton';
 import ToggleNavigationButton from './ToggleNavigationButton';
@@ -17,14 +19,25 @@ function Navigation () {
   const navigateCreateNew = () => router.push('/library/create');
 
   return (
-  <nav className='sticky top-0 left-0 right-0 select-none clr-app z-navigation'>
+  <nav className={clsx(
+    'z-navigation',
+    'sticky top-0 left-0 right-0', 
+    'clr-app',
+    'select-none'
+  )}>
     <ToggleNavigationButton />
     {!noNavigation ?
-    <div className='flex items-stretch justify-between pl-2 pr-[0.8rem] border-b-2 rounded-none h-[3rem]'>
+    <div
+      className={clsx(
+        'pl-2 pr-[0.8rem] h-[3rem]',
+        'flex justify-between',
+        'border-b-2 rounded-none'
+      )}
+    >
       <div className='flex items-center mr-2 cursor-pointer' onClick={navigateHome} tabIndex={-1}>
         <Logo />
       </div>
-      <div className='flex items-center h-full'>
+      <div className='flex'>
         <NavigationButton
           text='Новая схема'
           description='Создать новую схему'

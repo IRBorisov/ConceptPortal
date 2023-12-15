@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import { useConceptTheme } from '@/context/ThemeContext';
 import { ExpressionStatus } from '@/models/rsform';
 import { colorbgCstStatus } from '@/utils/color';
@@ -17,11 +19,16 @@ function InfoCstStatus({ title }: InfoCstStatusProps) {
     {Object.values(ExpressionStatus)
       .filter(status => status !== ExpressionStatus.UNDEFINED)
       .map(
-      (status, index) => {
-        return (
+      (status, index) =>
         <p key={`${prefixes.cst_status_list}${index}`}>
           <span
-            className='px-1 inline-block font-semibold min-w-[7rem] text-center border text-sm small-caps'
+            className={clsx(
+              'inline-block',
+              'min-w-[7rem]',
+              'px-1',
+              'border',
+              'text-center text-sm small-caps font-semibold'
+            )}
             style={{backgroundColor: colorbgCstStatus(status, colors)}}
           >
             {labelExpressionStatus(status)}
@@ -30,8 +37,7 @@ function InfoCstStatus({ title }: InfoCstStatusProps) {
           <span>
             {describeExpressionStatus(status)}
           </span>
-        </p>);
-      }
+        </p>
     )}
   </div>);
 }

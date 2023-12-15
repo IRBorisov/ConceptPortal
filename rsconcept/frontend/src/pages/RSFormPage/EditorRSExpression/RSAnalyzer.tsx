@@ -27,7 +27,7 @@ function RSAnalyzer({
 }: RSAnalyzerProps) {
   return (
   <div className='w-full max-h-[4.5rem] min-h-[4.5rem] flex'>
-    <div className='flex flex-col text-sm'>
+    <div className='flex flex-col'>
       <Button noOutline
         text='Проверить'
         tooltip='Проверить формальное определение'

@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import type { TabProps } from 'react-tabs';
 import { Tab } from 'react-tabs';
 
@@ -11,7 +12,14 @@ extends Omit<TabProps, 'title' | 'children'> {
 function ConceptTab({ label, tooltip, className, ...otherProps }: ConceptTabProps) {
   return (
   <Tab
-    className={`px-2 py-1 h-full min-w-[6rem] flex justify-center text-sm hover:cursor-pointer clr-tab whitespace-nowrap small-caps select-none font-semibold ${className}`}
+    className={clsx(
+      'h-full min-w-[6rem]',
+      'px-2 py-1 flex justify-center',
+      'clr-tab',
+      'text-sm whitespace-nowrap small-caps font-semibold',
+      'select-none hover:cursor-pointer',
+      className
+    )}
     title={tooltip}
     {...otherProps}
   >

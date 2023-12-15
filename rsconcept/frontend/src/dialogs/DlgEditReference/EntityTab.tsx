@@ -73,11 +73,11 @@ function EntityTab({ initial, items, setIsValid, setReference }: EntityTabProps)
       rows={8}
     />
 
-    <div className='flex gap-4 flex-start'>
+    <div className='flex gap-6 flex-start'>
       <TextInput dense
         label='Отсылаемая конституента'
         placeholder='Имя'
-        dimensions='max-w-[16rem] min-w-[16rem] whitespace-nowrap'
+        dimensions='max-w-[17rem] min-w-[17rem]'
         value={alias}
         onChange={event => setAlias(event.target.value)}
       />

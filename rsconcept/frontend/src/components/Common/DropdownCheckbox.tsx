@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import Checkbox from './Checkbox';
 
 interface DropdownCheckboxProps {
@@ -9,11 +11,15 @@ interface DropdownCheckboxProps {
 }
 
 function DropdownCheckbox({ tooltip, setValue, disabled, ...restProps }: DropdownCheckboxProps) {
-  const behavior = (setValue && !disabled) ? 'clr-hover' : '';
   return (
   <div
     title={tooltip}
-    className={`px-4 py-1 text-left overflow-ellipsis ${behavior} w-full whitespace-nowrap`}
+    className={clsx(
+      'px-3 py-1',
+      'text-left overflow-ellipsis whitespace-nowrap',
+      'disabled:clr-text-controls',
+      !!setValue && !disabled && 'clr-hover'
+    )}
   >
     <Checkbox 
       dimensions='w-full'

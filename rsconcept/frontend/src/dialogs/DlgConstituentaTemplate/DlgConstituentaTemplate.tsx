@@ -117,7 +117,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     canSubmit={validated}
     onSubmit={handleSubmit}
     submitText='Создать'
-    className='max-w-[43rem] min-w-[43rem] min-h-[35rem] px-6'
+    className='max-w-[43rem] min-w-[43rem] min-h-[36rem] px-6'
   >
   <Tabs defaultFocus forceRenderTabPanel
     selectedTabClassName='clr-selected'
@@ -129,16 +129,16 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     </Overlay>
     
     <TabList className='flex justify-center mb-3'>
-      <div className='flex border w-fit'>
+      <div className='flex border divide-x rounded-none w-fit'>
         <ConceptTab
           label='Шаблон'
           tooltip='Выбор шаблона выражения'
-          className='border-r w-[8rem]'
+          className='w-[8rem]'
         />
         <ConceptTab
           label='Аргументы'
           tooltip='Подстановка аргументов шаблона'
-          className='border-r w-[8rem]'
+          className='w-[8rem]'
         />
         <ConceptTab
           label='Конституента'

@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import { useConceptTheme } from '@/context/ThemeContext';
 import { CstClass } from '@/models/rsform';
 import { colorbgCstClass } from '@/utils/color';
@@ -19,7 +21,13 @@ function InfoCstClass({ title }: InfoCstClassProps) {
       return (
       <p key={`${prefixes.cst_status_list}${index}`}>
         <span
-          className='px-1 inline-block font-semibold min-w-[7rem] text-center border text-sm small-caps'
+          className={clsx(
+            'inline-block',
+            'min-w-[7rem]',
+            'px-1',
+            'border',
+            'text-center text-sm small-caps font-semibold'
+          )}
           style={{backgroundColor: colorbgCstClass(cclass, colors)}}
         >
           {labelCstClass(cclass)}

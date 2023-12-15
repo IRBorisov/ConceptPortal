@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 interface SwitchButtonProps<ValueType> {
   id?: string
   value: ValueType
@@ -19,7 +21,15 @@ function SwitchButton<ValueType>({
   <button type='button' tabIndex={-1}
     title={tooltip}
     onClick={() => onSelect(value)}
-    className={`px-2 py-1 border font-semibold small-caps rounded-none cursor-pointer clr-btn-clear clr-hover ${dimensions} ${isSelected ? 'clr-selected': ''}`}
+    className={clsx(
+      'px-2 py-1',
+      'border rounded-none',
+      'font-semibold small-caps',
+      'clr-btn-clear clr-hover',
+      'cursor-pointer',
+      isSelected && 'clr-selected',
+      dimensions
+    )}
     {...restProps}
   >
     {icon ? icon : null}

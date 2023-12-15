@@ -146,7 +146,7 @@ function RSTable({
       <span className='flex flex-col justify-center p-2 text-center'>
         <p>Список пуст</p>
         <p 
-          className='cursor-pointer text-primary hover:underline'
+          className='cursor-pointer clr-text-primary hover:underline'
           onClick={() => onCreateNew()}
         >
           Создать новую конституенту

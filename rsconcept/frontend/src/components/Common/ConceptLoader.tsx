@@ -10,15 +10,13 @@ interface ConceptLoaderProps {
 
 export function ConceptLoader({size=10}: ConceptLoaderProps) {
   const {colors} = useConceptTheme();
-
   return (
-    <div className='flex justify-center w-full h-full'>
-      <ThreeDots
-        color={colors.bgSelected}
-        height={size*10}
-        width={size*10}
-        radius={size}
-      />
-    </div>
-  );
+  <div className='flex justify-center w-full h-full'>
+    <ThreeDots
+      color={colors.bgSelected}
+      height={size*10}
+      width={size*10}
+      radius={size}
+    />
+  </div>);
 }

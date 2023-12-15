@@ -76,7 +76,7 @@ function RSTabsMenu({
     <div ref={schemaMenu.ref}>
       <Button noBorder dense tabIndex={-1}
         tooltip='Действия'
-        icon={<MenuIcon color='text-controls' size={5}/>}
+        icon={<MenuIcon color='clr-text-controls' size={5}/>}
         dimensions='h-full w-fit pl-2'
         style={{outlineColor: 'transparent'}}
         onClick={schemaMenu.toggle}
@@ -85,37 +85,37 @@ function RSTabsMenu({
       <Dropdown>
         <DropdownButton onClick={handleShare}>
           <div className='inline-flex items-center justify-start gap-2'>
-            <ShareIcon color='text-primary' size={4}/>
+            <ShareIcon color='clr-text-primary' size={4}/>
             <p>Поделиться</p>
           </div>
         </DropdownButton>
         <DropdownButton onClick={handleClone} disabled={!user} >
           <div className='inline-flex items-center justify-start gap-2'>
-            <CloneIcon color='text-primary' size={4}/>
+            <CloneIcon color='clr-text-primary' size={4}/>
             <p>Клонировать</p>
           </div>
         </DropdownButton>
         <DropdownButton onClick={handleDownload}>
           <div className='inline-flex items-center justify-start gap-2'>
-            <DownloadIcon color='text-primary' size={4}/>
+            <DownloadIcon color='clr-text-primary' size={4}/>
             <p>Выгрузить в Экстеор</p>
           </div>
         </DropdownButton>
         <DropdownButton disabled={!isMutable} onClick={handleUpload}>
           <div className='inline-flex items-center justify-start gap-2'>
-            <UploadIcon color={isMutable ? 'text-warning' : ''} size={4}/>
+            <UploadIcon color={isMutable ? 'clr-text-warning' : ''} size={4}/>
             <p>Загрузить из Экстеора</p>
           </div>
         </DropdownButton>
         <DropdownButton disabled={!isMutable} onClick={handleDelete}>
           <span className='inline-flex items-center justify-start gap-2'>
-            <DumpBinIcon color={isMutable ? 'text-warning' : ''} size={4} />
+            <DumpBinIcon color={isMutable ? 'clr-text-warning' : ''} size={4} />
             <p>Удалить схему</p>
           </span>
         </DropdownButton>
         <DropdownButton onClick={handleCreateNew}>
           <span className='inline-flex items-center justify-start gap-2'>
-            <SmallPlusIcon color='text-url' size={4} />
+            <SmallPlusIcon color='clr-text-url' size={4} />
             <p>Создать новую схему</p>
           </span>
         </DropdownButton>
@@ -126,7 +126,7 @@ function RSTabsMenu({
         tooltip={'измнение: ' + (isMutable ? '[доступно]' : '[запрещено]')}
         dimensions='h-full w-fit'
         style={{outlineColor: 'transparent'}}
-        icon={<EditIcon size={5} color={isMutable ? 'text-success' : 'text-warning'}/>}
+        icon={<EditIcon size={5} color={isMutable ? 'clr-text-success' : 'clr-text-warning'}/>}
         onClick={editMenu.toggle}
       />
       {editMenu.isActive ?
@@ -136,12 +136,12 @@ function RSTabsMenu({
           onClick={!isOwned ? handleClaimOwner : undefined}
           tooltip={!user || !isClaimable ? 'Взять во владение можно общую изменяемую схему' : ''}
         >
-          <div className='flex items-center gap-2 pl-1 text-default'>
+          <div className='flex items-center gap-2 clr-text-default'>
             <span>
-              <OwnerIcon size={4} color={isOwned ? 'text-success' : 'text-controls'} />
+              <OwnerIcon size={4} color={isOwned ? 'clr-text-success' : 'clr-text-controls'} />
             </span>
             <div>
-              {isOwned ? <b className='text-default'>Вы — владелец</b> : null}
+              {isOwned ? <b className='clr-text-default'>Вы — владелец</b> : null}
               {!isOwned ? <b>Стать владельцем</b>  : null}
             </div>
           </div>
@@ -167,8 +167,8 @@ function RSTabsMenu({
         tooltip={'отслеживание: ' + (isTracking ? '[включено]' : '[выключено]')}
         disabled={processing}
         icon={isTracking
-          ? <SubscribedIcon color='text-primary' size={5}/>
-          : <NotSubscribedIcon color='text-controls' size={5}/>
+          ? <SubscribedIcon color='clr-text-primary' size={5}/>
+          : <NotSubscribedIcon color='clr-text-controls' size={5}/>
         }
         dimensions='h-full w-fit pr-2'
         style={{outlineColor: 'transparent'}}

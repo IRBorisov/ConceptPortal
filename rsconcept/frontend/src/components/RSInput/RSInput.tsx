@@ -1,8 +1,10 @@
+'use client';
 
 import { Extension } from '@codemirror/state';
 import { tags } from '@lezer/highlight';
 import { createTheme } from '@uiw/codemirror-themes';
 import CodeMirror, { BasicSetupOptions, ReactCodeMirrorProps, ReactCodeMirrorRef } from '@uiw/react-codemirror';
+import clsx from 'clsx';
 import { EditorView } from 'codemirror';
 import { RefObject, useCallback, useMemo, useRef } from 'react';
 
@@ -122,12 +124,12 @@ function RSInput({
   }, [thisRef]);
 
   return (
-  <div className={`flex flex-col gap-2 ${dimensions} ${cursor}`}>
-    {label ?
-    <Label
-      text={label}
-      htmlFor={id}
-    /> : null}
+  <div className={clsx(
+    'flex flex-col gap-2',
+    dimensions,
+    cursor
+  )}>
+    <Label text={label} htmlFor={id}/>
     <CodeMirror id={id}
       ref={thisRef}
       basicSetup={editorSetup}

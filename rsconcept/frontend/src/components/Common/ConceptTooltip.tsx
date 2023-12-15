@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { createPortal } from 'react-dom';
 import { ITooltip, Tooltip } from 'react-tooltip';
 
@@ -26,7 +27,12 @@ function ConceptTooltip({
   <Tooltip
     opacity={0.97}
     style={{...{ paddingTop: '2px', paddingBottom: '2px'}, ...style}}
-    className={`overflow-auto border shadow-md ${layer} ${className}`}
+    className={clsx(
+      'overflow-auto',
+      'border shadow-md',
+      layer,
+      className
+    )}
     variant={(darkMode ? 'dark' : 'light')}
     place={place}
     {...restProps}

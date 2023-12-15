@@ -22,7 +22,7 @@ function ExpectedAnonymous() {
       <TextURL text='Справка' href='/manuals'/>
       <span> | </span>
       <span
-        className='cursor-pointer hover:underline text-url'
+        className='cursor-pointer hover:underline clr-text-url'
         onClick={logoutAndRedirect}
       >
         Выйти

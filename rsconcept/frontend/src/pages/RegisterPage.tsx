@@ -77,7 +77,7 @@ function RegisterPage() {
             id={globalIDs.password_tooltip}
             position='top-[4.8rem] left-[3.4rem] absolute'
           >
-            <HelpIcon color='text-primary' size={5} />
+            <HelpIcon color='clr-text-primary' size={5} />
           </Overlay>
           <ConceptTooltip
             anchorSelect={`#${globalIDs.password_tooltip}`}

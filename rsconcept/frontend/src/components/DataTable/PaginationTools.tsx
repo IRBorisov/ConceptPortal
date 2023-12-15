@@ -1,6 +1,7 @@
 'use client';
 
 import { Table } from '@tanstack/react-table';
+import clsx from 'clsx';
 import { useCallback } from 'react';
 
 import { prefixes } from '@/utils/constants';
@@ -24,7 +25,13 @@ function PaginationTools<TData>({ table, paginationOptions, onChangePaginationOp
   }, [onChangePaginationOption, table]);
   
   return (
-  <div className='flex items-center justify-end w-full my-2 text-sm select-none text-controls'>
+  <div className={clsx(
+    'flex justify-end items-center',
+    'w-full my-2',
+    'text-sm', 
+    'clr-text-controls',
+    'select-none'
+  )}>
     <div className='flex items-center gap-1 mr-3'>
       <div className=''>
         {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
@@ -36,14 +43,14 @@ function PaginationTools<TData>({ table, paginationOptions, onChangePaginationOp
     </div>
     <div className='flex'>
       <button type='button'
-        className='clr-hover text-controls'
+        className='clr-hover clr-text-controls'
         onClick={() => table.setPageIndex(0)}
         disabled={!table.getCanPreviousPage()}
       >
         <GotoFirstIcon />
       </button>
       <button type='button'
-        className='clr-hover text-controls'
+        className='clr-hover clr-text-controls'
         onClick={() => table.previousPage()}
         disabled={!table.getCanPreviousPage()}
       >
@@ -61,14 +68,14 @@ function PaginationTools<TData>({ table, paginationOptions, onChangePaginationOp
         }}
       />
       <button type='button'
-        className='clr-hover text-controls'
+        className='clr-hover clr-text-controls'
         onClick={() => table.nextPage()}
         disabled={!table.getCanNextPage()}
       >
         <GotoNextIcon />
       </button>
       <button type='button'
-        className='clr-hover text-controls'
+        className='clr-hover clr-text-controls'
         onClick={() => table.setPageIndex(table.getPageCount() - 1)}
         disabled={!table.getCanNextPage()}
       >

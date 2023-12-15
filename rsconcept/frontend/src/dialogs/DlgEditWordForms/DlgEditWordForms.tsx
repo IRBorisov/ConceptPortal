@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
 
 import Label from '@/components/Common/Label';
@@ -151,7 +152,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         <div className='max-w-min'>
           <MiniButton
             tooltip='Генерировать словоформу'
-            icon={<ArrowLeftIcon size={5} color={inputGrams.length == 0 ? 'text-disabled' : 'text-primary'} />}
+            icon={<ArrowLeftIcon size={5} color={inputGrams.length == 0 ? 'text-disabled' : 'clr-text-primary'} />}
             disabled={textProcessor.loading || inputGrams.length == 0}
             onClick={handleInflect}
           />
@@ -159,7 +160,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
             tooltip='Определить граммемы'
             icon={<ArrowRightIcon
               size={5}
-              color={!inputText ? 'text-disabled' : 'text-primary'}
+              color={!inputText ? 'text-disabled' : 'clr-text-primary'}
             />}
             disabled={textProcessor.loading || !inputText}
             onClick={handleParse}
@@ -180,7 +181,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         tooltip='Внести словоформу'
         icon={<CheckIcon
           size={5}
-          color={!inputText || inputGrams.length == 0 ? 'text-disabled' : 'text-success'}
+          color={!inputText || inputGrams.length == 0 ? 'text-disabled' : 'clr-text-success'}
         />}
         disabled={textProcessor.loading || !inputText || inputGrams.length == 0}
         onClick={handleAddForm}
@@ -189,16 +190,26 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         tooltip='Генерировать стандартные словоформы'
         icon={<ChevronDoubleDownIcon
           size={5}
-          color={!inputText ? 'text-disabled' : 'text-primary'}
+          color={!inputText ? 'text-disabled' : 'clr-text-primary'}
         />}
         disabled={textProcessor.loading || !inputText}
         onClick={handleGenerateLexeme}
       />
     </Overlay>
     
-    <h1 className='mt-3 mb-2 text-sm'>Заданные вручную словоформы [{forms.length}]</h1>
+    <div className={clsx(
+      'mt-3 mb-2', 
+      'text-sm text-center font-semibold'
+    )}>
+      Заданные вручную словоформы [{forms.length}]
+    </div>
     
-    <div className='border overflow-y-auto max-h-[17.4rem] min-h-[17.4rem] mb-2'>
+    <div className={clsx(
+      'mb-2',
+      'max-h-[17.4rem] min-h-[17.4rem]',
+      'border',
+      'overflow-y-auto'
+    )}>
     <WordFormsTable
       forms={forms}
       setForms={setForms}

@@ -1,6 +1,7 @@
 'use client';
 
 import axios from 'axios';
+import clsx from 'clsx';
 import fileDownload from 'js-file-download';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
@@ -377,7 +378,11 @@ function RSTabs() {
     className='flex flex-col w-full'
   >
     <div className='flex justify-center w-[100vw]'>
-    <TabList className='flex border-b-2 border-x-2 justify-stretch w-fit h-[1.9rem]'>
+    <TabList className={clsx(
+      'w-fit h-[1.9rem]',
+      'flex justify-stretch', 
+      'border-b-2 border-x-2 divide-x-2'
+    )}>
       <RSTabsMenu 
         onDownload={onDownloadSchema}
         onDestroy={onDestroySchema}
@@ -389,25 +394,28 @@ function RSTabs() {
       />
       <ConceptTab
         label='Карточка'
-        className='border-x-2'
         tooltip={`Название схемы: ${schema.title ?? ''}`}
       />
       <ConceptTab
         label='Содержание'
-        className='border-r-2'
-        tooltip={`Всего конституент: ${schema.stats?.count_all ?? 0}\nКоличество ошибок: ${schema.stats?.count_errors ?? 0}`}
+        tooltip={[
+          `Всего конституент: ${schema.stats?.count_all ?? 0}`,
+          `Количество ошибок: ${schema.stats?.count_errors ?? 0}`
+        ].join('\n')}
       />
-      <ConceptTab
-        label='Редактор'
-        className='border-r-2'
-      />
-      <ConceptTab
-        label='Граф термов'
-      />
+      <ConceptTab label='Редактор' />
+      <ConceptTab label='Граф термов' />
     </TabList>
     </div>
 
-    <div className='overflow-y-auto min-w-[48rem] w-[100vw] flex justify-center' style={{ maxHeight: panelHeight}}>
+    <div
+      className={clsx(
+        'min-w-[48rem] w-[100vw]',
+        'flex justify-center',
+        'overflow-y-auto'
+      )}
+      style={{ maxHeight: panelHeight}}
+    >
       <TabPanel forceRender style={{ display: activeTab === RSTabID.CARD ? '': 'none' }}>
         <EditorRSForm
           isModified={isModified}

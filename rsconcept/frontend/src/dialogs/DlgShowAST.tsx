@@ -68,7 +68,7 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
         <span>{expression.slice(hoverNode.finish)}</span>
       </div> : null}
     </div>
-    <div className='flex-wrap w-full h-full overflow-auto'>
+    <div className='w-full h-full overflow-auto'>
     <div 
       className='relative'
       style={{

@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 
 import ConceptToaster from './components/ConceptToaster';
@@ -21,7 +22,11 @@ function Root() {
   const { noNavigation, noFooter, viewportHeight, mainHeight, showScroll } = useConceptTheme();
   return (
   <NavigationState>
-  <div className='w-screen antialiased clr-app min-w-[30rem] overflow-hidden'>
+  <div className={clsx(
+    'w-screen min-w-[30rem]',
+    'clr-app',
+    'antialiased'
+  )}>
 
     <ConceptToaster
       className='mt-[4rem] text-sm'
@@ -39,7 +44,13 @@ function Root() {
         overflowY: showScroll ? 'scroll': 'auto'
       }}
     >
-      <main className='flex flex-col items-center w-full h-full min-w-fit' style={{minHeight: mainHeight}}>
+      <main
+        className={clsx(
+          'w-full h-full min-w-fit',
+          'flex flex-col items-center'
+        )}
+        style={{minHeight: mainHeight}}
+      >
         <Outlet />
       </main>
       

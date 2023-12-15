@@ -1,6 +1,7 @@
 'use client';
 
 import axios from 'axios';
+import clsx from 'clsx';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -14,7 +15,7 @@ import { IUserUpdatePassword } from '@/models/library';
 function ProcessError({error}: {error: ErrorData}): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
     return (
-    <div className='text-sm select-text text-warning'>
+    <div className='text-sm select-text clr-text-warning'>
       Неверно введен старый пароль
     </div>);
   } else {
@@ -70,7 +71,11 @@ function EditorPassword() {
 
   return (
   <form
-    className='flex flex-col justify-between px-6 border-l-2 max-w-[14rem] py-2'
+    className={clsx(
+      'max-w-[14rem]',
+      'px-6 py-2 flex flex-col justify-between',
+      'border-l-2'
+    )}
     onSubmit={handleSubmit}
   >
     <div className='flex flex-col gap-3'>

@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useEffect, useLayoutEffect, useState } from 'react';
 
 import Modal, { ModalProps } from '@/components/Common/Modal';
@@ -54,7 +55,10 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
     canSubmit={validated}
     onSubmit={handleSubmit}
     submitText='Создать'
-    className='h-fit min-w-[35rem] py-2 flex flex-col justify-stretch gap-3 px-6'
+    className={clsx(
+      'h-fit min-w-[35rem]',
+      'py-2 px-6 flex flex-col gap-3 justify-stretch'
+    )}
   >
     <div className='flex justify-center w-full gap-6'>
       <SelectSingle
