@@ -145,6 +145,10 @@
     @apply text-lg font-semibold text-center
   }
 
+  h2 {
+    @apply font-semibold text-center
+  }
+
   b {
     @apply font-semibold
   }

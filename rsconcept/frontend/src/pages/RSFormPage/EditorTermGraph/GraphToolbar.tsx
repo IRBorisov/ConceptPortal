@@ -1,9 +1,11 @@
 'use client';
 
+import { BiCollapse, BiFilterAlt, BiPlanet, BiPlusCircle, BiTrash } from 'react-icons/bi';
+
 import MiniButton from '@/components/Common/MiniButton';
 import Overlay from '@/components/Common/Overlay';
 import HelpButton from '@/components/Help/HelpButton';
-import { ArrowsFocusIcon, DumpBinIcon, FilterIcon, LetterAIcon, LetterALinesIcon, PlanetIcon, SmallPlusIcon } from '@/components/Icons';
+import { LetterAIcon, LetterALinesIcon } from '@/components/Icons';
 import { HelpTopic } from '@/models/miscelanious';
 
 interface GraphToolbarProps {
@@ -34,37 +36,37 @@ function GraphToolbar({
   <Overlay position='w-full top-1 right-0 flex items-start justify-center'>
     <MiniButton
       tooltip='Настройки фильтрации узлов и связей'
-      icon={<FilterIcon color='clr-text-primary' size={5} />}
+      icon={<BiFilterAlt size='1.25rem' className='clr-text-primary' />}
       onClick={showParamsDialog}
     />
     <MiniButton
       tooltip={!noText ? 'Скрыть текст' : 'Отобразить текст'}
       icon={
         !noText
-        ? <LetterALinesIcon color='clr-text-success' size={5} />
-        : <LetterAIcon color='clr-text-primary' size={5} />
+        ? <LetterALinesIcon size='1.25rem' className='clr-text-success' />
+        : <LetterAIcon size='1.25rem' className='clr-text-primary' />
       }
       onClick={toggleNoText}
     />
     <MiniButton
       tooltip='Новая конституента'
-      icon={<SmallPlusIcon color={isMutable ? 'clr-text-success' : ''} size={5} />}
+      icon={<BiPlusCircle size='1.25rem' className={isMutable ? 'clr-text-success' : ''} />}
       disabled={!isMutable}
       onClick={onCreate}
     />
     <MiniButton
       tooltip='Удалить выбранные'
-      icon={<DumpBinIcon color={isMutable && !nothingSelected ? 'clr-text-warning' : ''} size={5} />}
+      icon={<BiTrash size='1.25rem' className={isMutable && !nothingSelected ? 'clr-text-warning' : ''} />}
       disabled={!isMutable || nothingSelected}
       onClick={onDelete}
     />
     <MiniButton
-      icon={<ArrowsFocusIcon color='clr-text-primary' size={5} />}
+      icon={<BiCollapse size='1.25rem' className='clr-text-primary' />}
       tooltip='Восстановить камеру'
       onClick={onResetViewpoint}
     />
     <MiniButton
-      icon={<PlanetIcon color={!is3D ? '' : orbit ? 'clr-text-success' : 'clr-text-primary'} size={5} />}
+      icon={<BiPlanet size='1.25rem' className={!is3D ? '' : orbit ? 'clr-text-success' : 'clr-text-primary'} />}
       tooltip='Анимация вращения'
       disabled={!is3D}
       onClick={toggleOrbit}

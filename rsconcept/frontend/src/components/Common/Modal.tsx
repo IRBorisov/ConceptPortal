@@ -2,10 +2,10 @@
 
 import clsx from 'clsx';
 import { useRef } from 'react';
+import { BiX } from 'react-icons/bi';
 
 import useEscapeKey from '@/hooks/useEscapeKey';
 
-import { CrossIcon } from '../Icons';
 import Button from './Button';
 import MiniButton from './MiniButton';
 import Overlay from './Overlay';
@@ -62,7 +62,7 @@ function Modal({
       <Overlay position='right-[0.3rem] top-2' className='text-disabled'>
         <MiniButton
           tooltip='Закрыть диалоговое окно [ESC]'
-          icon={<CrossIcon size={5}/>}
+          icon={<BiX size='1.25rem'/>}
           onClick={handleCancel}
         />
       </Overlay>

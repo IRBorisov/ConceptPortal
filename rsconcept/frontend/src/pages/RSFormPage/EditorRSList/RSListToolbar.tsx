@@ -1,13 +1,13 @@
 'use client';
 
 import { useMemo } from 'react';
+import { BiAnalyse, BiDiamond, BiDownArrowCircle, BiDownvote, BiDuplicate, BiPlusCircle, BiTrash, BiUpvote } from "react-icons/bi";
 
 import Dropdown from '@/components/Common/Dropdown';
 import DropdownButton from '@/components/Common/DropdownButton';
 import MiniButton from '@/components/Common/MiniButton';
 import Overlay from '@/components/Common/Overlay';
 import HelpButton from '@/components/Help/HelpButton';
-import { ArrowDownIcon, ArrowDropdownIcon, ArrowUpIcon, CloneIcon, DiamondIcon, DumpBinIcon, SmallPlusIcon, UpdateIcon } from '@/components/Icons';
 import useDropdown from '@/hooks/useDropdown';
 import { HelpTopic } from '@/models/miscelanious';
 import { CstType } from '@/models/rsform';
@@ -40,25 +40,25 @@ function RSListToolbar({
   <Overlay position='w-full top-1 flex items-start justify-center'>
     <MiniButton
       tooltip='Переместить вверх [Alt + вверх]'
-      icon={<ArrowUpIcon size={5}/>}
+      icon={<BiUpvote size='1.25rem'/>}
       disabled={!isMutable || nothingSelected}
       onClick={onMoveUp}
     />
     <MiniButton
       tooltip='Переместить вниз [Alt + вниз]'
-      icon={<ArrowDownIcon size={5}/>}
+      icon={<BiDownvote size='1.25rem'/>}
       disabled={!isMutable || nothingSelected}
       onClick={onMoveDown}
     />
     <MiniButton
       tooltip='Клонировать конституенту [Alt + V]'
-      icon={<CloneIcon color={isMutable && selectedCount === 1 ? 'clr-text-success': ''} size={5}/>}
+      icon={<BiDuplicate size='1.25rem' className={isMutable && selectedCount === 1 ? 'clr-text-success': ''} />}
       disabled={!isMutable || selectedCount !== 1}
       onClick={onClone}
     />
     <MiniButton
       tooltip='Добавить новую конституенту... [Alt + `]'
-      icon={<SmallPlusIcon color={isMutable ? 'clr-text-success': ''} size={5}/>}
+      icon={<BiPlusCircle size='1.25rem' className={isMutable ? 'clr-text-success': ''} />}
       disabled={!isMutable}
       onClick={() => onCreate()}
     />
@@ -66,42 +66,39 @@ function RSListToolbar({
       <div>
         <MiniButton
           tooltip='Добавить пустую конституенту'
-          icon={<ArrowDropdownIcon color={isMutable ? 'clr-text-success': ''} size={5}/>}
+          icon={<BiDownArrowCircle size='1.25rem' className={isMutable ? 'clr-text-success': ''} />}
           disabled={!isMutable}
           onClick={insertMenu.toggle}
         />
         {insertMenu.isActive ?
         <Dropdown>
         {(Object.values(CstType)).map(
-        (typeStr) => {
-          const type = typeStr as CstType;
-          return (
+        (typeStr) => 
           <DropdownButton
             key={`${prefixes.csttype_list}${typeStr}`}
-            onClick={() => onCreate(type)}
-            tooltip={getCstTypeShortcut(type)}
-          >
-            {`${getCstTypePrefix(type)}1 — ${labelCstType(type)}`}
-          </DropdownButton>);
-        })}
+            text={`${getCstTypePrefix(typeStr as CstType)}1 — ${labelCstType(typeStr as CstType)}`}
+            onClick={() => onCreate(typeStr as CstType)}
+            tooltip={getCstTypeShortcut(typeStr as CstType)}
+          />
+        )}
         </Dropdown> : null}
       </div>
     </div>
     <MiniButton
       tooltip='Создать конституенту из шаблона [Alt + E]'
-      icon={<DiamondIcon color={isMutable ? 'clr-text-primary': ''} size={5}/>}
+      icon={<BiDiamond size='1.25rem' className={isMutable ? 'clr-text-primary': ''} />}
       disabled={!isMutable}
       onClick={onTemplates}
     />
     <MiniButton
-      tooltip='Сброс имен: присвоить порядковые имена [Alt + R]'
-      icon={<UpdateIcon color={isMutable ? 'clr-text-primary': ''} size={5}/>}
+      tooltip='Сброс имён: присвоить порядковые имена [Alt + R]'
+      icon={<BiAnalyse size='1.25rem' className={isMutable ? 'clr-text-primary': ''} />}
       disabled={!isMutable}
       onClick={onReindex}
     />
     <MiniButton
       tooltip='Удалить выбранные [Delete]'
-      icon={<DumpBinIcon color={isMutable && !nothingSelected ? 'clr-text-warning' : ''} size={5}/>}
+      icon={<BiTrash size='1.25rem' className={isMutable && !nothingSelected ? 'clr-text-warning' : ''} />}
       disabled={!isMutable || nothingSelected}
       onClick={onDelete}
     />

@@ -1,6 +1,7 @@
+import { BiInfoCircle } from 'react-icons/bi';
+
 import ConceptTooltip from '@/components/Common/ConceptTooltip';
 import TextURL from '@/components/Common/TextURL';
-import { HelpIcon } from '@/components/Icons';
 import { HelpTopic } from '@/models/miscelanious';
 
 import InfoTopic from './InfoTopic';
@@ -18,7 +19,7 @@ function HelpButton({ topic, offset, dimensions }: HelpButtonProps) {
       id={`help-${topic}`}
       className='p-1'
     >
-      <HelpIcon color='clr-text-primary' size={5} />
+      <BiInfoCircle size='1.25rem' className='clr-text-primary' />
     </div>
     <ConceptTooltip clickable
       anchorSelect={`#help-${topic}`}

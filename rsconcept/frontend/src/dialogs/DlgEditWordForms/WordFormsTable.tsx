@@ -1,11 +1,11 @@
 'use client';
 
 import { useCallback, useMemo } from 'react';
+import { BiX } from 'react-icons/bi';
 
 import MiniButton from '@/components/Common/MiniButton';
 import Overlay from '@/components/Common/Overlay';
 import DataTable, { createColumnHelper } from '@/components/DataTable';
-import { CrossIcon } from '@/components/Icons';
 import WordFormBadge from '@/components/Shared/WordFormBadge';
 import { IWordForm } from '@/models/language';
 
@@ -68,7 +68,7 @@ function WordFormsTable({ forms, setForms, onFormSelect, loading }: WordFormsTab
       cell: props => 
         <MiniButton noHover
           tooltip='Удалить словоформу'
-          icon={<CrossIcon size={4} color='text-warning'/>}
+          icon={<BiX size='1rem' className='text-warning'/>}
           onClick={() => handleDeleteRow(props.row.index)}
         />
     })
@@ -79,7 +79,7 @@ function WordFormsTable({ forms, setForms, onFormSelect, loading }: WordFormsTab
     <Overlay position='top-1 right-4'>
     <MiniButton
         tooltip='Сбросить все словоформы'
-        icon={<CrossIcon size={4} color={forms.length === 0 ? 'text-disabled' : 'text-warning'} />}
+        icon={<BiX size='1rem' className={forms.length === 0 ? 'text-disabled' : 'text-warning'} />}
         disabled={loading || forms.length === 0}
         onClick={handleResetAll}
       />

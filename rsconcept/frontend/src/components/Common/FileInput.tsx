@@ -2,8 +2,8 @@
 
 import clsx from 'clsx';
 import { useRef, useState } from 'react';
+import { BiUpload } from 'react-icons/bi';
 
-import { UploadIcon } from '../Icons';
 import Button from './Button';
 import Label from './Label';
 
@@ -55,7 +55,7 @@ function FileInput({
     />
     <Button
       text={label}
-      icon={<UploadIcon/>}
+      icon={<BiUpload size='1.5rem' />}
       onClick={handleUploadClick}
       tooltip={tooltip}
     />

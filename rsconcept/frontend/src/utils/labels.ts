@@ -5,7 +5,7 @@
  * Description is a long description used in tooltips.
  */
 import { GramData,Grammeme, ReferenceType } from '@/models/language';
-import { CstMatchMode, DependencyMode, HelpTopic, LibraryFilterStrategy } from '@/models/miscelanious';
+import { CstMatchMode, DependencyMode, HelpTopic, LibraryFilterStrategy, UserAccessMode } from '@/models/miscelanious';
 import { CstClass, CstType, ExpressionStatus, IConstituenta } from '@/models/rsform';
 import { IArgumentInfo, IRSErrorDescription, ISyntaxTreeNode, ParsingStatus, RSErrorType, TokenID } from '@/models/rslang';
 
@@ -652,4 +652,29 @@ export function describeRSError(error: IRSErrorDescription): string {
     return `Типизация выражения не соответствует типу конституенты`;
   }
   return 'UNKNOWN ERROR';
+}
+
+/**
+ * Retrieves label for {@link UserAccessMode}.
+ */
+export function labelAccessMode(mode: UserAccessMode): string {
+  switch (mode) {
+    case UserAccessMode.READER:     return 'Читатель';
+    case UserAccessMode.OWNER:      return 'Владелец';
+    case UserAccessMode.ADMIN:      return 'Администратор';
+  }
+}
+
+/**
+ * Retrieves description for {@link UserAccessMode}.
+ */
+export function describeAccessMode(mode: UserAccessMode): string {
+  switch (mode) {
+    case UserAccessMode.READER:
+      return 'Режим запрещает редактирование';
+    case UserAccessMode.OWNER:
+      return 'Режим редактирования владельцем';
+    case UserAccessMode.ADMIN:
+      return 'Режим редактирования администратором';
+  }
 }

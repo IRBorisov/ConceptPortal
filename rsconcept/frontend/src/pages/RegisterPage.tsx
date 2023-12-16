@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { BiInfoCircle } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 
 import Button from '@/components/Common/Button';
@@ -11,7 +12,6 @@ import SubmitButton from '@/components/Common/SubmitButton';
 import TextInput from '@/components/Common/TextInput';
 import TextURL from '@/components/Common/TextURL';
 import ExpectedAnonymous from '@/components/ExpectedAnonymous';
-import { HelpIcon } from '@/components/Icons';
 import InfoError from '@/components/InfoError';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NagivationContext';
@@ -77,7 +77,7 @@ function RegisterPage() {
             id={globalIDs.password_tooltip}
             position='top-[4.8rem] left-[3.4rem] absolute'
           >
-            <HelpIcon color='clr-text-primary' size={5} />
+            <BiInfoCircle size='1.25rem' className='clr-text-primary' />
           </Overlay>
           <ConceptTooltip
             anchorSelect={`#${globalIDs.password_tooltip}`}

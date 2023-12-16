@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
 import DataTable, { createColumnHelper,RowSelectionState,VisibilityState } from '@/components/DataTable';
@@ -71,7 +72,6 @@ function RSTable({
           theme={colors}
           value={props.row.original}
           prefixID={prefixes.cst_list}
-          shortTooltip
         />
     }),
     columnHelper.accessor(cst => labelCstTypification(cst), {
@@ -125,7 +125,15 @@ function RSTable({
   }, [noNavigation]);
 
   return (
-  <div className='w-full h-full overflow-auto text-sm min-h-[20rem]' style={{maxHeight: tableHeight}}>
+  <div 
+    className={clsx(
+      'w-full h-full min-h-[20rem]',
+      'overflow-auto',
+      'text-sm',
+      'select-none'
+    )}
+    style={{maxHeight: tableHeight}}
+  >
   <DataTable dense noFooter
     data={items ?? []}
     columns={columns}

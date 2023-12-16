@@ -1,4 +1,4 @@
-import { GotoFirstIcon, GotoLastIcon, GotoNextIcon, GotoPrevIcon } from '@/components/Icons';
+import { BiChevronLeft, BiChevronRight, BiFirstPage, BiLastPage } from 'react-icons/bi';
 
 interface PageControlsProps {
   pageNumber: number
@@ -16,14 +16,14 @@ function PageControls({
       onClick={() => setPageNumber(1)}
       disabled={pageNumber < 2}
     >
-      <GotoFirstIcon />
+      <BiFirstPage size='1.5rem' />
     </button>
     <button type='button'
       className='clr-hover clr-text-controls'
       onClick={() => setPageNumber(prev => prev - 1)}
       disabled={pageNumber < 2}
     >
-      <GotoPrevIcon />
+      <BiChevronLeft size='1.5rem' />
     </button>
     <p className='px-3 text-black'>Страница {pageNumber} из {pageCount}</p>
     <button type='button'
@@ -31,14 +31,14 @@ function PageControls({
       onClick={() => setPageNumber(prev => prev + 1)}
       disabled={pageNumber >= pageCount}
     >
-      <GotoNextIcon />
+      <BiChevronRight size='1.5rem' />
     </button>
     <button type='button'
       className='clr-hover clr-text-controls'
       onClick={() => setPageNumber(pageCount)}
       disabled={pageNumber >= pageCount}
     >
-      <GotoLastIcon />
+      <BiLastPage size='1.5rem' />
     </button>
   </>);
 }

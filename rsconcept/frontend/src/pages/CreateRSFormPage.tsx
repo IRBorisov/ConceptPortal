@@ -2,6 +2,7 @@
 
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
+import { BiDownload } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 
 import Button from '@/components/Common/Button';
@@ -12,7 +13,6 @@ import Overlay from '@/components/Common/Overlay';
 import SubmitButton from '@/components/Common/SubmitButton';
 import TextArea from '@/components/Common/TextArea';
 import TextInput from '@/components/Common/TextInput';
-import { DownloadIcon } from '@/components/Icons';
 import InfoError from '@/components/InfoError';
 import RequireAuth from '@/components/RequireAuth';
 import { useLibrary } from '@/context/LibraryContext';
@@ -95,7 +95,7 @@ function CreateRSFormPage() {
       />
       <MiniButton
         tooltip='Загрузить из Экстеор'
-        icon={<DownloadIcon size={5} color='clr-text-primary'/>}
+        icon={<BiDownload size='1.25rem' className='clr-text-primary'/>}
         onClick={() => inputRef.current?.click()}
       />
     </Overlay>

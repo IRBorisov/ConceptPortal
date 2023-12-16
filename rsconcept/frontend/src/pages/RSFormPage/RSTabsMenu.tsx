@@ -1,19 +1,24 @@
 'use client';
 
+import { BiAnalyse, BiDiamond, BiDownload, BiDuplicate, BiMenu, BiMeteor, BiPlusCircle, BiTrash, BiUpload } from 'react-icons/bi';
+import { FiEdit } from 'react-icons/fi';
+import { LuCrown, LuGlasses } from 'react-icons/lu';
+
 import Button from '@/components/Common/Button';
 import Dropdown from '@/components/Common/Dropdown';
 import DropdownButton from '@/components/Common/DropdownButton';
-import DropdownCheckbox from '@/components/Common/DropdownCheckbox';
-import {
-  CloneIcon, DownloadIcon, DumpBinIcon, EditIcon, MenuIcon, NotSubscribedIcon,
-  OwnerIcon, ShareIcon, SmallPlusIcon, SubscribedIcon, UploadIcon
-} from '@/components/Icons';
+import { ShareIcon } from '@/components/Icons';
+import { useAccessMode } from '@/context/AccessModeContext';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NagivationContext';
 import { useRSForm } from '@/context/RSFormContext';
 import useDropdown from '@/hooks/useDropdown';
+import { UserAccessMode } from '@/models/miscelanious';
+import { describeAccessMode, labelAccessMode } from '@/utils/labels';
 
 interface RSTabsMenuProps {
+  isMutable: boolean
+
   showUploadDialog: () => void
   showCloneDialog: () => void
   
@@ -21,21 +26,25 @@ interface RSTabsMenuProps {
   onClaim: () => void
   onShare: () => void
   onDownload: () => void
-  onToggleSubscribe: () => void
+  onReindex: () => void
+  onTemplates: () => void
 }
 
 function RSTabsMenu({
+  isMutable,
   showUploadDialog, showCloneDialog,
-  onDestroy, onShare, onDownload, onClaim, onToggleSubscribe
+  onDestroy, onShare, onDownload,
+  onClaim, onReindex, onTemplates
 }: RSTabsMenuProps) {
   const router = useConceptNavigation();
   const { user } = useAuth();
-  const {
-    isOwned, isMutable, isTracking, readerMode, isClaimable, adminMode,
-    toggleAdminMode, toggleReaderMode, processing
-  } = useRSForm();
+  const { isOwned, isClaimable } = useRSForm();
+
+  const { mode, setMode } = useAccessMode();
+
   const schemaMenu = useDropdown();
   const editMenu = useDropdown();
+  const accessMenu = useDropdown();
 
   function handleClaimOwner() {
     editMenu.hide();
@@ -67,6 +76,21 @@ function RSTabsMenu({
     onShare();
   }
 
+  function handleReindex() {
+    editMenu.hide();
+    onReindex();
+  }
+
+  function handleTemplates() {
+    editMenu.hide();
+    onTemplates();
+  }
+
+  function handleChangeMode(newMode: UserAccessMode) {
+    accessMenu.hide();
+    setMode(newMode);
+  }
+
   function handleCreateNew() {
     router.push('/rsform-create');
   }
@@ -75,105 +99,111 @@ function RSTabsMenu({
   <div className='flex items-stretch h-full w-fit'>
     <div ref={schemaMenu.ref}>
       <Button noBorder dense tabIndex={-1}
-        tooltip='Действия'
-        icon={<MenuIcon color='clr-text-controls' size={5}/>}
+        tooltip='Меню'
+        icon={<BiMenu size='1.25rem' className='clr-text-controls' />}
         dimensions='h-full w-fit pl-2'
         style={{outlineColor: 'transparent'}}
         onClick={schemaMenu.toggle}
       />
       {schemaMenu.isActive ?
       <Dropdown>
-        <DropdownButton onClick={handleShare}>
-          <div className='inline-flex items-center justify-start gap-2'>
-            <ShareIcon color='clr-text-primary' size={4}/>
-            <p>Поделиться</p>
-          </div>
-        </DropdownButton>
-        <DropdownButton onClick={handleClone} disabled={!user} >
-          <div className='inline-flex items-center justify-start gap-2'>
-            <CloneIcon color='clr-text-primary' size={4}/>
-            <p>Клонировать</p>
-          </div>
-        </DropdownButton>
-        <DropdownButton onClick={handleDownload}>
-          <div className='inline-flex items-center justify-start gap-2'>
-            <DownloadIcon color='clr-text-primary' size={4}/>
-            <p>Выгрузить в Экстеор</p>
-          </div>
-        </DropdownButton>
-        <DropdownButton disabled={!isMutable} onClick={handleUpload}>
-          <div className='inline-flex items-center justify-start gap-2'>
-            <UploadIcon color={isMutable ? 'clr-text-warning' : ''} size={4}/>
-            <p>Загрузить из Экстеора</p>
-          </div>
-        </DropdownButton>
-        <DropdownButton disabled={!isMutable} onClick={handleDelete}>
-          <span className='inline-flex items-center justify-start gap-2'>
-            <DumpBinIcon color={isMutable ? 'clr-text-warning' : ''} size={4} />
-            <p>Удалить схему</p>
-          </span>
-        </DropdownButton>
-        <DropdownButton onClick={handleCreateNew}>
-          <span className='inline-flex items-center justify-start gap-2'>
-            <SmallPlusIcon color='clr-text-url' size={4} />
-            <p>Создать новую схему</p>
-          </span>
-        </DropdownButton>
+        <DropdownButton
+          text={isOwned ? 'Вы — владелец' : 'Стать владельцем'}
+          tooltip={!user || !isClaimable ? 'Взять во владение можно общую изменяемую схему' : ''}
+          icon={<LuCrown size='1rem' className={isOwned ? 'clr-text-success' : 'clr-text-controls'} />}
+          onClick={(!isOwned && user && isClaimable) ? handleClaimOwner : undefined}
+        />
+        <DropdownButton
+          text='Поделиться'
+          icon={<ShareIcon size='1rem' className='clr-text-primary' />}
+          onClick={handleShare}
+        />
+        <DropdownButton disabled={!user}
+          text='Клонировать'
+          icon={<BiDuplicate size='1rem' className='clr-text-primary' />}
+          onClick={handleClone}
+        />
+        <DropdownButton
+          text='Выгрузить в Экстеор'
+          icon={<BiDownload size='1rem' className='clr-text-primary'/>}
+          onClick={handleDownload}
+        />
+        <DropdownButton disabled={!isMutable}
+          text='Загрузить из Экстеора'
+          icon={<BiUpload size='1rem' className={isMutable ? 'clr-text-warning' : ''} />}
+          onClick={handleUpload}
+        />
+        <DropdownButton disabled={!isMutable}
+          text='Удалить схему'
+          icon={<BiTrash size='1rem' className={isMutable ? 'clr-text-warning' : ''} />}
+          onClick={handleDelete}
+        />
+        <DropdownButton
+          text='Создать новую схему'
+          icon={<BiPlusCircle size='1rem' className='clr-text-url' />}
+          onClick={handleCreateNew}
+        />
       </Dropdown> : null}
     </div>
+    
     <div ref={editMenu.ref}>
       <Button dense noBorder tabIndex={-1}
-        tooltip={'измнение: ' + (isMutable ? '[доступно]' : '[запрещено]')}
+        tooltip={'Редактирование'}
         dimensions='h-full w-fit'
         style={{outlineColor: 'transparent'}}
-        icon={<EditIcon size={5} color={isMutable ? 'clr-text-success' : 'clr-text-warning'}/>}
+        icon={<FiEdit size='1.25rem' className={isMutable ? 'clr-text-success' : 'clr-text-warning'}/>}
         onClick={editMenu.toggle}
       />
       {editMenu.isActive ?
       <Dropdown>
-        <DropdownButton 
-          disabled={!user || !isClaimable}
-          onClick={!isOwned ? handleClaimOwner : undefined}
-          tooltip={!user || !isClaimable ? 'Взять во владение можно общую изменяемую схему' : ''}
-        >
-          <div className='flex items-center gap-2 clr-text-default'>
-            <span>
-              <OwnerIcon size={4} color={isOwned ? 'clr-text-success' : 'clr-text-controls'} />
-            </span>
-            <div>
-              {isOwned ? <b className='clr-text-default'>Вы — владелец</b> : null}
-              {!isOwned ? <b>Стать владельцем</b>  : null}
-            </div>
-          </div>
-        </DropdownButton>
-        {(isOwned || user?.is_staff) ?
-        <DropdownCheckbox
-          value={readerMode}
-          setValue={toggleReaderMode}
-          label='Я — читатель!'
-          tooltip='Режим чтения'
-        /> : null}
-        {user?.is_staff ?
-        <DropdownCheckbox
-          value={adminMode}
-          setValue={toggleAdminMode}
-          label='Я — администратор!'
-          tooltip='Режим редактирования для администраторов'
-        /> : null}
+        <DropdownButton disabled={!isMutable}
+          text='Сброс имён'
+          tooltip='Присвоить порядковые имена и обновить выражения'
+          icon={<BiAnalyse size='1rem' className={isMutable ? 'clr-text-primary': ''} />}
+          onClick={handleReindex}
+        />
+        <DropdownButton disabled={!isMutable}
+          text='Банк выражений'
+          tooltip='Создать конституенту из шаблона'
+          icon={<BiDiamond size='1rem' className={isMutable ? 'clr-text-success': ''} />}
+          onClick={handleTemplates}
+        />
       </Dropdown>: null}
     </div>
-    <div>
+
+    <div ref={accessMenu.ref}>
       <Button dense noBorder tabIndex={-1}
-        tooltip={'отслеживание: ' + (isTracking ? '[включено]' : '[выключено]')}
-        disabled={processing}
-        icon={isTracking
-          ? <SubscribedIcon color='clr-text-primary' size={5}/>
-          : <NotSubscribedIcon color='clr-text-controls' size={5}/>
-        }
+        tooltip={`режим ${labelAccessMode(mode)}`}
         dimensions='h-full w-fit pr-2'
         style={{outlineColor: 'transparent'}}
-        onClick={onToggleSubscribe}
+        icon={
+          mode === UserAccessMode.ADMIN ? <BiMeteor size='1.25rem' className='clr-text-primary'/>
+          : mode === UserAccessMode.OWNER ? <LuCrown size='1.25rem' className='clr-text-primary'/>
+          : <LuGlasses size='1.25rem' className='clr-text-primary'/>
+        }
+        onClick={accessMenu.toggle}
+      />
+      {accessMenu.isActive ?
+      <Dropdown>
+        <DropdownButton
+          text={labelAccessMode(UserAccessMode.READER)}
+          tooltip={describeAccessMode(UserAccessMode.READER)}
+          icon={<LuGlasses size='1rem' className='clr-text-primary' />}
+          onClick={() => handleChangeMode(UserAccessMode.READER)}
         />
+        <DropdownButton disabled={!isOwned}
+          text={labelAccessMode(UserAccessMode.OWNER)}
+          tooltip={describeAccessMode(UserAccessMode.OWNER)}
+          icon={<LuCrown size='1rem' className={isOwned ? 'clr-text-primary': ''} />}
+          onClick={() => handleChangeMode(UserAccessMode.OWNER)}
+        />
+        <DropdownButton disabled={!user?.is_staff}
+          text={labelAccessMode(UserAccessMode.ADMIN)}
+          tooltip={describeAccessMode(UserAccessMode.ADMIN)}
+          icon={<BiMeteor size='1rem' className={user?.is_staff ? 'clr-text-primary': ''} />}
+          onClick={() => handleChangeMode(UserAccessMode.ADMIN)}
+        />
+      </Dropdown>: null}
     </div>
   </div>);
 }

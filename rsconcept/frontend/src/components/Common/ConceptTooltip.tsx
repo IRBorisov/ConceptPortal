@@ -25,14 +25,15 @@ function ConceptTooltip({
   }
   return createPortal(
   <Tooltip
+    delayShow={500}
     opacity={0.97}
-    style={{...{ paddingTop: '2px', paddingBottom: '2px'}, ...style}}
     className={clsx(
       'overflow-auto',
       'border shadow-md',
       layer,
       className
     )}
+    style={{...{ paddingTop: '2px', paddingBottom: '2px'}, ...style}}
     variant={(darkMode ? 'dark' : 'light')}
     place={place}
     {...restProps}

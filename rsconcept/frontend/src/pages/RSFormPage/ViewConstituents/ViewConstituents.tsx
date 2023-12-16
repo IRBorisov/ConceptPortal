@@ -42,7 +42,7 @@ function ViewConstituents({ expression, baseHeight, schema, activeID, onOpenEdit
       activeExpression={expression}
       setFiltered={setFilteredData}
     />
-    <div className='overflow-y-auto text-sm overscroll-none' style={{maxHeight : `${maxHeight}`}}>
+    <div className='overflow-y-auto text-sm select-none overscroll-none' style={{maxHeight : `${maxHeight}`}}>
     <ConstituentsTable 
       items={filteredData}
       activeID={activeID}

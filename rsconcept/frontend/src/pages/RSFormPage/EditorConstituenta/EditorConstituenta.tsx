@@ -18,6 +18,8 @@ const UNFOLDED_HEIGHT = '59.1rem';
 const SIDELIST_HIDE_THRESHOLD = 1100; // px
 
 interface EditorConstituentaProps {
+  isMutable: boolean
+
   activeID?: number
   activeCst?: IConstituenta | undefined
   isModified: boolean
@@ -32,15 +34,15 @@ interface EditorConstituentaProps {
 }
 
 function EditorConstituenta({
-  isModified, setIsModified, activeID, activeCst, onEditTerm,
+  isMutable, isModified, setIsModified, activeID, activeCst, onEditTerm,
   onCreateCst, onRenameCst, onOpenEdit, onDeleteCst, onTemplates
 }: EditorConstituentaProps) {
   const windowSize = useWindowSize();
-  const { schema, isMutable } = useRSForm();
+  const { schema } = useRSForm();
 
   const [toggleReset, setToggleReset] = useState(false);
 
-  const readyForEdit = useMemo(() => (!!activeCst && isMutable), [activeCst, isMutable]);
+  const disabled = useMemo(() => (!activeCst || !isMutable), [activeCst, isMutable]);
 
   function handleDelete() {
     if (!schema || !activeID) {
@@ -84,7 +86,7 @@ function EditorConstituenta({
   }
 
   function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
-    if (!isMutable) {
+    if (disabled) {
       return;
     }
     if (event.ctrlKey && event.code === 'KeyS') {
@@ -120,7 +122,7 @@ function EditorConstituenta({
 
   return (<>
     <ConstituentaToolbar
-      isMutable={readyForEdit}
+      isMutable={!disabled}
       isModified={isModified}
     
       onSubmit={initiateSubmit}
@@ -136,7 +138,8 @@ function EditorConstituenta({
       onKeyDown={handleInput}
     >
       <div className='min-w-[47.8rem] max-w-[47.8rem] px-4 py-1'>
-        <FormConstituenta id={globalIDs.constituenta_editor}
+        <FormConstituenta disabled={disabled}
+          id={globalIDs.constituenta_editor}
           constituenta={activeCst}
           isModified={isModified}
           toggleReset={toggleReset}

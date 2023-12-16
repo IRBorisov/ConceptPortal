@@ -1,13 +1,14 @@
 'use client';
 
 import { Dispatch, SetStateAction, useLayoutEffect, useState } from 'react';
+import { FiSave } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 
 import Checkbox from '@/components/Common/Checkbox';
 import SubmitButton from '@/components/Common/SubmitButton';
 import TextArea from '@/components/Common/TextArea';
 import TextInput from '@/components/Common/TextInput';
-import { SaveIcon } from '@/components/Icons';
+import { useAuth } from '@/context/AuthContext';
 import { useRSForm } from '@/context/RSFormContext';
 import { LibraryItemType } from '@/models/library';
 import { IRSFormCreateData } from '@/models/rsform';
@@ -15,17 +16,16 @@ import { limits, patterns } from '@/utils/constants';
 
 interface FormRSFormProps {
   id?: string
+  disabled: boolean
   isModified: boolean
   setIsModified: Dispatch<SetStateAction<boolean>>
 }
 
 function FormRSForm({
-  id, isModified, setIsModified,
+  id, disabled, isModified, setIsModified,
 }: FormRSFormProps) {
-  const {
-    schema, update, adminMode: adminMode,
-    isMutable: isMutable, processing
-  } = useRSForm();
+  const { schema, update, processing } = useRSForm();
+  const { user } = useAuth();
   
   const [title, setTitle] = useState('');
   const [alias, setAlias] = useState('');
@@ -85,7 +85,7 @@ function FormRSForm({
     <TextInput required
       label='Полное название'
       value={title}
-      disabled={!isMutable}
+      disabled={disabled}
       onChange={event => setTitle(event.target.value)}
     />
     <TextInput required
@@ -93,14 +93,14 @@ function FormRSForm({
       dimensions='w-[14rem]'
       pattern={patterns.alias}
       tooltip={`не более ${limits.alias_len} символов`}
-      disabled={!isMutable}
+      disabled={disabled}
       value={alias}
       onChange={event => setAlias(event.target.value)}
     />
     <TextArea
       label='Комментарий'
       value={comment}
-      disabled={!isMutable}
+      disabled={disabled}
       onChange={event => setComment(event.target.value)}
     />
     <div className='flex justify-between whitespace-nowrap'>
@@ -108,7 +108,7 @@ function FormRSForm({
         label='Общедоступная схема'
         tooltip='Общедоступные схемы видны всем пользователям и могут быть изменены'
         dimensions='w-fit'
-        disabled={!isMutable}
+        disabled={disabled}
         value={common}
         setValue={value => setCommon(value)}
       />
@@ -116,7 +116,7 @@ function FormRSForm({
         label='Неизменная схема'
         tooltip='Только администраторы могут присваивать схемам неизменный статус'
         dimensions='w-fit'
-        disabled={!isMutable || !adminMode}
+        disabled={disabled || !user?.is_staff}
         value={canonical}
         setValue={value => setCanonical(value)}
       />
@@ -125,8 +125,8 @@ function FormRSForm({
       <SubmitButton
         text='Сохранить изменения'
         loading={processing}
-        disabled={!isModified || !isMutable}
-        icon={<SaveIcon size={6} />}
+        disabled={!isModified || disabled}
+        icon={<FiSave size='1.5rem' />}
         dimensions='my-2 w-fit'
       />
     </div>

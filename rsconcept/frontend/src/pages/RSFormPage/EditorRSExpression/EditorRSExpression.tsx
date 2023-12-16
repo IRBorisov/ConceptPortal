@@ -2,11 +2,11 @@
 
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { PiGraphLight } from "react-icons/pi";
 import { toast } from 'react-toastify';
 
 import MiniButton from '@/components/Common/MiniButton';
 import Overlay from '@/components/Common/Overlay';
-import { ASTNetworkIcon } from '@/components/Icons';
 import RSInput from '@/components/RSInput';
 import { RSTextWrapper } from '@/components/RSInput/textEditing';
 import { useRSForm } from '@/context/RSFormContext';
@@ -131,11 +131,11 @@ function EditorRSExpression({
       syntaxTree={syntaxTree}
       hideWindow={() => setShowAST(false)}
     /> : null}
-    <Overlay position='top-[-0.2rem] left-[11rem]'>
+    <Overlay position='top-[-0.375rem] left-[11rem]'>
       <MiniButton noHover
         tooltip='Дерево разбора выражения'
         onClick={handleShowAST}
-        icon={<ASTNetworkIcon size={5} color='clr-text-primary' />}
+        icon={<PiGraphLight size='1.25rem' className='clr-text-primary' />}
       />
      </Overlay>
 

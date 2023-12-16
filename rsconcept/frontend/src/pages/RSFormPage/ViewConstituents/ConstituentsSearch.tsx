@@ -1,12 +1,12 @@
 'use client';
 
 import { useCallback, useLayoutEffect } from 'react';
+import { BiCog, BiFilterAlt } from 'react-icons/bi';
 
 import ConceptSearch from '@/components/Common/ConceptSearch';
 import Dropdown from '@/components/Common/Dropdown';
 import DropdownButton from '@/components/Common/DropdownButton';
 import SelectorButton from '@/components/Common/SelectorButton';
-import { CogIcon, FilterIcon } from '@/components/Icons';
 import useDropdown from '@/hooks/useDropdown';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { CstMatchMode, DependencyMode } from '@/models/miscelanious';
@@ -86,7 +86,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
       <SelectorButton transparent tabIndex={-1}
         tooltip='Настройка атрибутов для фильтрации'
         dimensions='w-fit h-full'
-        icon={<FilterIcon size={5} />}
+        icon={<BiFilterAlt size='1.25rem' />}
         text={labelCstMathchMode(filterMatch)}
         onClick={matchModeMenu.toggle}
       />
@@ -100,7 +100,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
             key={`${prefixes.cst_match_mode_list}${index}`}
             onClick={() => handleMatchModeChange(matchMode)}
           >
-            <p><span className='font-semibold'>{labelCstMathchMode(matchMode)}:</span> {describeCstMathchMode(matchMode)}</p>
+            <p><b>{labelCstMathchMode(matchMode)}:</b> {describeCstMathchMode(matchMode)}</p>
           </DropdownButton>);
         })}
       </Dropdown> : null}
@@ -110,7 +110,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
       <SelectorButton transparent tabIndex={-1}
         tooltip='Настройка фильтрации по графу термов'
         dimensions='w-fit h-full pr-2'
-        icon={<CogIcon size={4} />}
+        icon={<BiCog size='1.25rem' />}
         text={labelCstSource(filterSource)}
         onClick={sourceMenu.toggle}
       />
@@ -124,7 +124,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
             key={`${prefixes.cst_source_list}${index}`}
             onClick={() => handleSourceChange(source)}
           >
-            <p><span className='font-semibold'>{labelCstSource(source)}:</span> {describeCstSource(source)}</p>
+            <p><b>{labelCstSource(source)}:</b> {describeCstSource(source)}</p>
           </DropdownButton>);
         })}
       </Dropdown> : null}

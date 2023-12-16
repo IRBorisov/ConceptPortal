@@ -1,11 +1,11 @@
 'use client';
 
 import { useCallback } from 'react';
+import { BiFilterAlt } from 'react-icons/bi';
 
 import Dropdown from '@/components/Common/Dropdown';
 import DropdownCheckbox from '@/components/Common/DropdownCheckbox';
 import SelectorButton from '@/components/Common/SelectorButton';
-import { FilterIcon } from '@/components/Icons';
 import { useAuth } from '@/context/AuthContext';
 import useDropdown from '@/hooks/useDropdown';
 import { LibraryFilterStrategy } from '@/models/miscelanious';
@@ -44,7 +44,7 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
     <SelectorButton transparent tabIndex={-1}
       tooltip='Список фильтров'
       dimensions='w-fit h-full'
-      icon={<FilterIcon size={5} />}
+      icon={<BiFilterAlt size='1.25rem' />}
       text={labelLibraryFilter(value)}
       onClick={strategyMenu.toggle}
     />

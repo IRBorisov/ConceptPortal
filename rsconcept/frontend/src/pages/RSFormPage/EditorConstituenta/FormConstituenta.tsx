@@ -1,13 +1,14 @@
 'use client';
 
-import { Dispatch, SetStateAction, useLayoutEffect, useMemo, useState } from 'react';
+import { Dispatch, SetStateAction, useLayoutEffect, useState } from 'react';
+import { FiSave } from 'react-icons/fi';
+import { LiaEdit } from 'react-icons/lia';
 import { toast } from 'react-toastify';
 
 import MiniButton from '@/components/Common/MiniButton';
 import Overlay from '@/components/Common/Overlay';
 import SubmitButton from '@/components/Common/SubmitButton';
 import TextArea from '@/components/Common/TextArea';
-import { EditIcon, SaveIcon } from '@/components/Icons';
 import RefsInput from '@/components/RefsInput';
 import { useRSForm } from '@/context/RSFormContext';
 import { IConstituenta, ICstRenameData, ICstUpdateData } from '@/models/rsform';
@@ -16,6 +17,8 @@ import { labelCstTypification } from '@/utils/labels';
 import EditorRSExpression from '../EditorRSExpression';
 
 interface FormConstituentaProps {
+  disabled?: boolean
+  
   id?: string
   constituenta?: IConstituenta
   
@@ -28,13 +31,12 @@ interface FormConstituentaProps {
 }
 
 function FormConstituenta({
+  disabled,
   id, isModified, setIsModified,
   constituenta, toggleReset,
   onRenameCst, onEditTerm
 }: FormConstituentaProps) {
-  const { schema, cstUpdate, isMutable, processing } = useRSForm();
-
-  const readyForEdit = useMemo(() => (!!constituenta && isMutable), [constituenta, isMutable]);
+  const { schema, cstUpdate, processing } = useRSForm();
   
   const [alias, setAlias] = useState('');
   const [term, setTerm] = useState('');
@@ -106,10 +108,10 @@ function FormConstituenta({
   <Overlay position='top-0 left-[3rem]' className='flex justify-start select-none' >
     <MiniButton
       tooltip={`Редактировать словоформы термина: ${constituenta?.term_forms.length ?? 0}`}
-      disabled={!readyForEdit}
+      disabled={disabled}
       noHover
       onClick={onEditTerm}
-      icon={<EditIcon size={4} color={readyForEdit ? 'clr-text-primary' : ''} />}
+      icon={<LiaEdit size='1rem' className={!disabled ? 'clr-text-primary' : ''} />}
     />
     <div className='pt-1 pl-[1.375rem] text-sm font-semibold w-fit'>
       <span>Имя </span>
@@ -117,9 +119,9 @@ function FormConstituenta({
     </div>
     <MiniButton noHover
       tooltip='Переименовать конституенту'
-      disabled={!readyForEdit}
+      disabled={disabled}
       onClick={handleRename}
-      icon={<EditIcon size={4} color={readyForEdit ? 'clr-text-primary' : ''} />}
+      icon={<LiaEdit size='1rem' className={!disabled ? 'clr-text-primary' : ''} />}
     />
   </Overlay>
   <form id={id}
@@ -133,7 +135,7 @@ function FormConstituenta({
       value={term}
       initialValue={constituenta?.term_raw ?? ''}
       resolved={constituenta?.term_resolved ?? ''}
-      disabled={!readyForEdit}
+      disabled={disabled}
       onChange={newValue => setTerm(newValue)}
     />
     <TextArea dense noBorder
@@ -152,7 +154,7 @@ function FormConstituenta({
       activeCst={constituenta}
       placeholder='Родоструктурное выражение, задающее формальное определение'
       value={expression}
-      disabled={!readyForEdit}
+      disabled={disabled}
       toggleReset={toggleReset}
       onChange={newValue => setExpression(newValue)}
       setTypification={setTypification}
@@ -164,21 +166,21 @@ function FormConstituenta({
       value={textDefinition}
       initialValue={constituenta?.definition_raw ?? ''}
       resolved={constituenta?.definition_resolved ?? ''}
-      disabled={!readyForEdit}
+      disabled={disabled}
       onChange={newValue => setTextDefinition(newValue)}
     />
     <TextArea spellCheck
       label='Конвенция / Комментарий'
       placeholder='Договоренность об интерпретации или пояснение'
       value={convention}
-      disabled={!readyForEdit}
+      disabled={disabled}
       onChange={event => setConvention(event.target.value)}
     />
     <div className='flex justify-center w-full'>
       <SubmitButton
         text='Сохранить изменения'
-        disabled={!isModified || !readyForEdit}
-        icon={<SaveIcon size={6} />}
+        disabled={!isModified || disabled}
+        icon={<FiSave size='1.5rem' />}
       />
     </div>
   </form>

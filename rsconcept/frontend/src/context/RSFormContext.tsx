@@ -30,15 +30,9 @@ interface IRSFormContext {
   loading: boolean
   processing: boolean
 
-  isMutable: boolean
   isOwned: boolean
   isClaimable: boolean
-  isTracking: boolean
-  
-  adminMode: boolean
-  toggleAdminMode: () => void
-  readerMode: boolean
-  toggleReaderMode: () => void
+  isSubscribed: boolean
   
   update: (data: ILibraryUpdateData, callback?: DataCallback<ILibraryItem>) => void
   claim: (callback?: DataCallback<ILibraryItem>) => void
@@ -76,8 +70,6 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
   const { schema, reload, error, setError, setSchema, loading } = useRSFormDetails({ target: schemaID });
   const [processing, setProcessing] = useState(false);
 
-  const [adminMode, setAdminMode] = useState(false);
-  const [readerMode, setReaderMode] = useState(false);
   const [toggleTracking, setToggleTracking] = useState(false);
 
   const isOwned = useMemo(
@@ -90,15 +82,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
     return (user?.id !== schema?.owner && schema?.is_common && !schema?.is_canonical) ?? false;
   }, [user, schema?.owner, schema?.is_common, schema?.is_canonical]);
 
-  const isMutable = useMemo(
-  () => {
-    return (
-      !loading && !processing && !readerMode &&
-      ((isOwned || (adminMode && user?.is_staff)) ?? false)
-    );
-  }, [user?.is_staff, readerMode, adminMode, isOwned, loading, processing]);
-
-  const isTracking = useMemo(
+  const isSubscribed = useMemo(
   () => {
     if (!user || !schema || !user.id) {
       return false;
@@ -324,12 +308,10 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
   <RSFormContext.Provider value={{
     schema,
     error, loading, processing,
-    adminMode, readerMode, isOwned, isMutable,
-    isClaimable, isTracking,
+    isOwned,
+    isClaimable, isSubscribed,
     update, download, upload, claim, resetAliases, subscribe, unsubscribe,
     cstUpdate, cstCreate, cstRename, cstDelete, cstMoveTo,
-    toggleAdminMode: () => setAdminMode(prev => !prev),
-    toggleReaderMode: () => setReaderMode(prev => !prev)
   }}>
     { children }
   </RSFormContext.Provider>);

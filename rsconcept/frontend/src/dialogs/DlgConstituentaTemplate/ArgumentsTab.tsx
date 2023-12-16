@@ -3,10 +3,10 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import clsx from 'clsx';
 import { Dispatch, useCallback, useEffect, useMemo, useState } from 'react';
+import { BiCheck, BiRefresh, BiX } from 'react-icons/bi';
 
 import MiniButton from '@/components/Common/MiniButton';
 import DataTable, { IConditionalStyle } from '@/components/DataTable';
-import { ArrowsRotateIcon, CheckIcon, CrossIcon } from '@/components/Icons';
 import RSInput from '@/components/RSInput';
 import ConstituentaPicker from '@/components/Shared/ConstituentaPicker';
 import { useConceptTheme } from '@/context/ThemeContext';
@@ -133,7 +133,7 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
         {props.row.original.value ?
         <MiniButton
           tooltip='Очистить значение'
-          icon={<CrossIcon size={3} color='clr-text-warning'/>}
+          icon={<BiX size='0.75rem' className='clr-text-warning'/>}
           noHover
           onClick={() => handleClearArgument(props.row.original)}
         /> : null}
@@ -192,7 +192,7 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
       <div className='flex'>
         <MiniButton
           tooltip='Подставить значение аргумента'
-          icon={<CheckIcon size={5} color={!argumentValue || !selectedArgument ? 'text-disabled' : 'clr-text-success'} />}
+          icon={<BiCheck size='1.25rem' className={!argumentValue || !selectedArgument ? 'text-disabled' : 'clr-text-success'} />}
           disabled={!argumentValue || !selectedArgument}
           onClick={() => handleAssignArgument(selectedArgument!, argumentValue)}
         />
@@ -200,12 +200,12 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
           tooltip='Откатить значение'
           disabled={!isModified}
           onClick={handleReset}
-          icon={<ArrowsRotateIcon size={5} color={isModified ? 'clr-text-primary' : ''} />}
+          icon={<BiRefresh size='1.25rem' className={isModified ? 'clr-text-primary' : ''} />}
         />
         <MiniButton
           tooltip='Очистить значение аргумента'
           disabled={!selectedClearable}
-          icon={<CrossIcon size={5} color={!selectedClearable ? 'text-disabled' : 'clr-text-warning'}/>}
+          icon={<BiX size='1.25rem' className={!selectedClearable ? 'text-disabled' : 'clr-text-warning'}/>}
           onClick={() => selectedArgument ? handleClearArgument(selectedArgument) : undefined}
         />
       </div>

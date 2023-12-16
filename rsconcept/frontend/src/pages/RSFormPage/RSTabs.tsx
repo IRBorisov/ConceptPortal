@@ -11,6 +11,8 @@ import { ConceptLoader } from '@/components/Common/ConceptLoader';
 import ConceptTab from '@/components/Common/ConceptTab';
 import TextURL from '@/components/Common/TextURL';
 import InfoError, { ErrorData } from '@/components/InfoError';
+import { useAccessMode } from '@/context/AccessModeContext';
+import { useAuth } from '@/context/AuthContext';
 import { useLibrary } from '@/context/LibraryContext';
 import { useBlockNavigation, useConceptNavigation } from '@/context/NagivationContext';
 import { useRSForm } from '@/context/RSFormContext';
@@ -23,6 +25,7 @@ import DlgEditWordForms from '@/dialogs/DlgEditWordForms';
 import DlgRenameCst from '@/dialogs/DlgRenameCst';
 import DlgUploadRSForm from '@/dialogs/DlgUploadRSForm';
 import useQueryStrings from '@/hooks/useQueryStrings';
+import { UserAccessMode } from '@/models/miscelanious';
 import { IConstituenta, ICstCreateData, ICstRenameData, ICstUpdateData, TermForm } from '@/models/rsform';
 import { EXTEOR_TRS_FILE, prefixes, TIMEOUT_UI_REFRESH } from '@/utils/constants';
 import { createAliasFor } from '@/utils/misc';
@@ -56,20 +59,30 @@ function ProcessError({error}: {error: ErrorData}): React.ReactElement {
 function RSTabs() {
   const router = useConceptNavigation();
   const query = useQueryStrings();
-  const tabQuery = (Number(query.get('tab')) ?? RSTabID.CARD) as RSTabID;
+  const activeTab = (Number(query.get('tab')) ?? RSTabID.CARD) as RSTabID;
   const cstQuery = query.get('active');
 
-  const { 
-    error, schema, loading, claim, download, isTracking,
-    cstCreate, cstDelete, cstRename, subscribe, unsubscribe, cstUpdate
+  const {
+    error, schema, loading, processing, isOwned,
+    claim, download, isSubscribed,
+    cstCreate, cstDelete, cstRename, subscribe, unsubscribe, cstUpdate, resetAliases
   } = useRSForm();
   const { destroyItem } = useLibrary();
   const { setNoFooter, noNavigation } = useConceptTheme();
+  const { user } = useAuth();
+  const { mode, setMode } = useAccessMode();
 
   const [isModified, setIsModified] = useState(false);
   useBlockNavigation(isModified);
 
-  const [activeTab, setActiveTab] = useState(RSTabID.CARD);
+  const isMutable = useMemo(
+  () => {
+    return (
+      !loading && !processing && mode !== UserAccessMode.READER &&
+      ((isOwned || (mode === UserAccessMode.ADMIN && user?.is_staff)) ?? false)
+    );
+  }, [user?.is_staff, mode, isOwned, loading, processing]);
+
   const [activeID, setActiveID] = useState<number | undefined>(undefined);
   const activeCst = useMemo(
     () => schema?.items?.find(cst => cst.id === activeID)
@@ -111,12 +124,22 @@ function RSTabs() {
   }, [schema, schema?.title]);
 
   useLayoutEffect(() => {
-    setActiveTab(tabQuery);
-    setNoFooter(tabQuery === RSTabID.CST_EDIT || tabQuery === RSTabID.CST_LIST);
+    setNoFooter(activeTab === RSTabID.CST_EDIT || activeTab === RSTabID.CST_LIST);
     setActiveID(Number(cstQuery) ?? ((schema && schema?.items.length > 0) ? schema.items[0].id : undefined));
     setIsModified(false);
     return () => setNoFooter(false);
-  }, [tabQuery, cstQuery, setActiveTab, setActiveID, schema, setNoFooter, setIsModified]);
+  }, [activeTab, cstQuery, setActiveID, schema, setNoFooter, setIsModified]);
+
+  useLayoutEffect(
+  () => setMode((prev) => {
+    if (prev === UserAccessMode.ADMIN) {
+      return prev;
+    } else if(isOwned) {
+      return UserAccessMode.OWNER;
+    } else {
+      return UserAccessMode.READER;
+    }
+  }), [schema, setMode, isOwned]);
 
   function onSelectTab(index: number) {
     navigateTab(index, activeID);
@@ -185,6 +208,11 @@ function RSTabs() {
     setRenameInitialData(initialData);
     setShowRenameCst(true);
   }, []);
+
+  const onReindex = useCallback(
+  () => resetAliases(
+    () => toast.success('Имена конституент обновлены')
+  ), [resetAliases]);
 
   const handleDeleteCst = useCallback(
   (deleted: number[]) => {
@@ -290,12 +318,12 @@ function RSTabs() {
 
   const handleToggleSubscribe = useCallback(
   () => {
-    if (isTracking) {
+    if (isSubscribed) {
       unsubscribe(() => toast.success('Отслеживание отключено'));
     } else {
       subscribe(() => toast.success('Отслеживание включено'));
     }
-  }, [isTracking, subscribe, unsubscribe]);
+  }, [isSubscribed, subscribe, unsubscribe]);
 
   const promptShowEditTerm = useCallback(
   () => {
@@ -383,12 +411,13 @@ function RSTabs() {
       'flex justify-stretch', 
       'border-b-2 border-x-2 divide-x-2'
     )}>
-      <RSTabsMenu 
+      <RSTabsMenu isMutable={isMutable}
+        onTemplates={onShowTemplates}
         onDownload={onDownloadSchema}
         onDestroy={onDestroySchema}
         onClaim={onClaimSchema}
         onShare={onShareSchema}
-        onToggleSubscribe={handleToggleSubscribe}
+        onReindex={onReindex}
         showCloneDialog={promptClone} 
         showUploadDialog={() => setShowUpload(true)}
       />
@@ -418,8 +447,10 @@ function RSTabs() {
     >
       <TabPanel forceRender style={{ display: activeTab === RSTabID.CARD ? '': 'none' }}>
         <EditorRSForm
+          isMutable={isMutable}
           isModified={isModified}
           setIsModified={setIsModified}
+          onToggleSubscribe={handleToggleSubscribe}
           onDownload={onDownloadSchema}
           onDestroy={onDestroySchema}
           onClaim={onClaimSchema}
@@ -429,15 +460,18 @@ function RSTabs() {
 
       <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_LIST ? '': 'none' }}>
         <EditorRSList
+          isMutable={isMutable}
           onOpenEdit={onOpenCst}
           onCreateCst={promptCreateCst}
           onDeleteCst={promptDeleteCst}
           onTemplates={onShowTemplates}
+          onReindex={onReindex}
         />
       </TabPanel>
 
       <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_EDIT ? '': 'none' }}>
         <EditorConstituenta
+          isMutable={isMutable}
           isModified={isModified}
           setIsModified={setIsModified}
           activeID={activeID}
@@ -452,7 +486,8 @@ function RSTabs() {
       </TabPanel>
 
       <TabPanel style={{ display: activeTab === RSTabID.TERM_GRAPH ? '': 'none' }}>
-        <EditorTermGraph 
+        <EditorTermGraph
+          isMutable={isMutable}
           onOpenEdit={onOpenCst}
           onCreateCst={promptCreateCst}
           onDeleteCst={promptDeleteCst}

@@ -2,6 +2,7 @@
 
 import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
+import { BiCheck, BiChevronsDown } from 'react-icons/bi';
 
 import Label from '@/components/Common/Label';
 import MiniButton from '@/components/Common/MiniButton';
@@ -9,7 +10,7 @@ import Modal from '@/components/Common/Modal';
 import Overlay from '@/components/Common/Overlay';
 import TextArea from '@/components/Common/TextArea';
 import HelpButton from '@/components/Help/HelpButton';
-import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, ChevronDoubleDownIcon } from '@/components/Icons';
+import { ArrowLeftIcon, ArrowRightIcon } from '@/components/Icons';
 import SelectGrammeme from '@/components/Shared/SelectGrammeme';
 import useConceptText from '@/hooks/useConceptText';
 import { Grammeme, ITextRequest, IWordForm, IWordFormPlain } from '@/models/language';
@@ -152,15 +153,15 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         <div className='max-w-min'>
           <MiniButton
             tooltip='Генерировать словоформу'
-            icon={<ArrowLeftIcon size={5} color={inputGrams.length == 0 ? 'text-disabled' : 'clr-text-primary'} />}
+            icon={<ArrowLeftIcon size='1.25rem' className={inputGrams.length == 0 ? 'text-disabled' : 'clr-text-primary'} />}
             disabled={textProcessor.loading || inputGrams.length == 0}
             onClick={handleInflect}
           />
           <MiniButton
             tooltip='Определить граммемы'
             icon={<ArrowRightIcon
-              size={5}
-              color={!inputText ? 'text-disabled' : 'clr-text-primary'}
+              size='1.25rem'
+              className={!inputText ? 'text-disabled' : 'clr-text-primary'}
             />}
             disabled={textProcessor.loading || !inputText}
             onClick={handleParse}
@@ -179,18 +180,16 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
     <Overlay position='top-2 left-0'>
       <MiniButton
         tooltip='Внести словоформу'
-        icon={<CheckIcon
-          size={5}
-          color={!inputText || inputGrams.length == 0 ? 'text-disabled' : 'clr-text-success'}
+        icon={<BiCheck
+          size='1.25rem'
+          className={!inputText || inputGrams.length == 0 ? 'text-disabled' : 'clr-text-success'}
         />}
         disabled={textProcessor.loading || !inputText || inputGrams.length == 0}
         onClick={handleAddForm}
       />
       <MiniButton
         tooltip='Генерировать стандартные словоформы'
-        icon={<ChevronDoubleDownIcon
-          size={5}
-          color={!inputText ? 'text-disabled' : 'clr-text-primary'}
+        icon={<BiChevronsDown size='1.25rem' className={!inputText ? 'text-disabled' : 'clr-text-primary'}
         />}
         disabled={textProcessor.loading || !inputText}
         onClick={handleGenerateLexeme}

@@ -43,13 +43,6 @@ function ConstituentsTable({
   }, [windowSize, denseThreshold]);
 
   const handleRowClicked = useCallback(
-  (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
-    if (event.altKey && !isMockCst(cst)) {
-      onOpenEdit(cst.id);
-    }
-  }, [onOpenEdit]);
-
-  const handleDoubleClick = useCallback(
   (cst: IConstituenta) => {
     if (!isMockCst(cst)) {
       onOpenEdit(cst.id);
@@ -135,7 +128,6 @@ function ConstituentsTable({
       </div>
     }
 
-    onRowDoubleClicked={handleDoubleClick}
     onRowClicked={handleRowClicked}
   />);
 }

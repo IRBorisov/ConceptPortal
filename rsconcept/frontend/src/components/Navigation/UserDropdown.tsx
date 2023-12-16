@@ -27,20 +27,20 @@ function UserDropdown({ hideDropdown }: UserDropdownProps) {
   return (
   <Dropdown dimensions='w-36' stretchLeft>
     <DropdownButton
+      text={user?.username}
       tooltip='Профиль пользователя'
       onClick={navigateProfile}
-    >
-      {user?.username}
-    </DropdownButton>
+    />
     <DropdownButton
+      text={darkMode ? 'Светлая тема' : 'Темная тема'}
       tooltip='Переключение темы оформления'
       onClick={toggleDarkMode}
-    >
-      {darkMode ? 'Светлая тема' : 'Темная тема'}
-    </DropdownButton>
-    <DropdownButton onClick={logoutAndRedirect}>
-      <b>Выйти...</b>
-    </DropdownButton>
+    />
+    <DropdownButton
+      text='Выйти...'
+      className='font-semibold'
+      onClick={logoutAndRedirect}
+    />
   </Dropdown>);
 }
 

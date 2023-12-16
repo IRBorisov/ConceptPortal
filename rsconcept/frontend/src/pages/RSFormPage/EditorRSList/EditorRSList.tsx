@@ -1,7 +1,6 @@
 'use client';
 
 import { useLayoutEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import { type RowSelectionState } from '@/components/DataTable';
 import SelectedCounter from '@/components/Shared/SelectedCounter';
@@ -12,14 +11,20 @@ import RSListToolbar from './RSListToolbar';
 import RSTable from './RSTable';
 
 interface EditorRSListProps {
+  isMutable: boolean
   onOpenEdit: (cstID: number) => void
   onTemplates: (insertAfter?: number) => void
   onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void
   onDeleteCst: (selected: number[], callback: (items: number[]) => void) => void
+  onReindex: () => void
 }
 
-function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: EditorRSListProps) {
-  const { schema, isMutable, cstMoveTo, resetAliases } = useRSForm();
+function EditorRSList({
+  isMutable,
+  onOpenEdit, onCreateCst, 
+  onDeleteCst, onTemplates, onReindex
+}: EditorRSListProps) {
+  const { schema, cstMoveTo } = useRSForm();
   const [selected, setSelected] = useState<number[]>([]);
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -107,11 +112,6 @@ function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edi
     });
   }
 
-  // Generate new names for all constituents
-  function handleReindex() {
-    resetAliases(() => toast.success('Имена конституент обновлены'));
-  }
-
   function handleCreateCst(type?: CstType) {
     if (!schema) {
       return;
@@ -186,7 +186,7 @@ function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edi
     switch (code) {
       case 'Backquote': handleCreateCst(); return true;
       case 'KeyE':      onTemplates(); return true;
-      case 'KeyR':      handleReindex(); return true;
+      case 'KeyR':      onReindex(); return true;
       
       case 'Digit1':    handleCreateCst(CstType.BASE); return true;
       case 'Digit2':    handleCreateCst(CstType.STRUCTURED); return true;
@@ -214,7 +214,7 @@ function EditorRSList({ onOpenEdit, onCreateCst, onDeleteCst, onTemplates }: Edi
       onCreate={handleCreateCst}
       onDelete={handleDelete}
       onTemplates={() => onTemplates(selected.length !== 0 ? selected[selected.length-1] : undefined)}
-      onReindex={handleReindex}
+      onReindex={onReindex}
     />
     <SelectedCounter 
       total={schema?.stats?.count_all ?? 0}

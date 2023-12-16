@@ -38,8 +38,8 @@ function UserTabs() {
           <MiniButton
             tooltip='Показать/Скрыть список отслеживаний'
             icon={showSubs
-              ? <SubscribedIcon color='clr-text-primary' size={5}/>
-              : <NotSubscribedIcon color='clr-text-primary' size={5}/>
+              ? <SubscribedIcon size='1.25rem' className='clr-text-primary' />
+              : <NotSubscribedIcon size='1.25rem' className='clr-text-primary' />
             }
             onClick={() => setShowSubs(prev => !prev)}
           />

@@ -13,6 +13,7 @@ This readme file is used mostly to document project dependencies
   <pre>
   - axios
   - clsx
+  - react-icons
   - react-router-dom 
   - react-toastify
   - react-loader-spinner

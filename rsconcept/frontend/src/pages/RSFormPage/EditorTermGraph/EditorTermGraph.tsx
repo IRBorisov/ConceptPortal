@@ -23,13 +23,14 @@ import useGraphFilter from './useGraphFilter';
 import ViewHidden from './ViewHidden';
 
 interface EditorTermGraphProps {
+  isMutable: boolean
   onOpenEdit: (cstID: number) => void
   onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void
   onDeleteCst: (selected: number[], callback: (items: number[]) => void) => void
 }
 
-function EditorTermGraph({ onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGraphProps) {
-  const { schema, isMutable } = useRSForm();
+function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGraphProps) {
+  const { schema } = useRSForm();
   const { colors } = useConceptTheme();
 
   const [toggleDataUpdate, setToggleDataUpdate] = useState(false);

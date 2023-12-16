@@ -13,16 +13,23 @@ import RSFormStats from './RSFormStats';
 import RSFormToolbar from './RSFormToolbar';
 
 interface EditorRSFormProps {
+  isModified: boolean
+  isMutable: boolean
+  
+  setIsModified: Dispatch<SetStateAction<boolean>>
   onDestroy: () => void
   onClaim: () => void
   onShare: () => void
   onDownload: () => void
-  isModified: boolean
-  setIsModified: Dispatch<SetStateAction<boolean>>
+  onToggleSubscribe: () => void
 }
 
-function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, onDownload }: EditorRSFormProps) {
-  const { schema, isMutable, isClaimable } = useRSForm();
+function EditorRSForm({
+  isModified, isMutable,
+  onDestroy, onClaim, onShare, setIsModified,
+  onDownload, onToggleSubscribe
+}: EditorRSFormProps) {
+  const { schema, isClaimable, isSubscribed, processing } = useRSForm();
   const { user } = useAuth();
 
   function initiateSubmit() {
@@ -45,6 +52,8 @@ function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, 
   <div tabIndex={-1} onKeyDown={handleInput}>
     <RSFormToolbar 
       isMutable={isMutable}
+      processing={processing}
+      isSubscribed={isSubscribed}
       modified={isModified}
       claimable={isClaimable}
       anonymous={!user}
@@ -54,11 +63,13 @@ function EditorRSForm({ onDestroy, onClaim, onShare, isModified, setIsModified, 
       onDownload={onDownload}
       onClaim={onClaim}
       onDestroy={onDestroy}
+      onToggleSubscribe={onToggleSubscribe}
     />
     <div className='flex w-full'>
       <div className='flex-grow max-w-[40rem] min-w-[30rem] px-4 pb-2'>
         <div className='flex flex-col gap-3'>
-          <FormRSForm id={globalIDs.library_item_editor}
+          <FormRSForm disabled={!isMutable}
+            id={globalIDs.library_item_editor}
             isModified={isModified}
             setIsModified={setIsModified}
           />

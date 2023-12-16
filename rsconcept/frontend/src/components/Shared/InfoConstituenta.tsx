@@ -9,7 +9,7 @@ extends React.HTMLAttributes<HTMLDivElement> {
 function InfoConstituenta({ data, ...restProps }: InfoConstituentaProps) {
   return (
   <div {...restProps}>
-    <h1>Конституента {data.alias}</h1>
+    <h2>Конституента {data.alias}</h2>
     <p>
       <b>Типизация: </b>
       {labelCstTypification(data)}

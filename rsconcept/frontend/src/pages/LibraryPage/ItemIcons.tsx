@@ -20,15 +20,15 @@ function ItemIcons({ user, item }: ItemIconsProps) {
   >
     {(user && user.subscriptions.includes(item.id)) ?
     <span title='Отслеживаемая'>
-      <SubscribedIcon size={3} />
+      <SubscribedIcon size='0.75rem' />
     </span> : null}
     {item.is_common ?
     <span title='Общедоступная'>
-      <GroupIcon size={3}/>
+      <GroupIcon size='0.75rem'/>
     </span> : null}
     {item.is_canonical ?
     <span title='Неизменная'>
-      <EducationIcon size={3}/>
+      <EducationIcon size='0.75rem'/>
     </span> : null}
   </div>);
 }

@@ -29,7 +29,7 @@ function Navigation () {
     {!noNavigation ?
     <div
       className={clsx(
-        'pl-2 pr-[0.8rem] h-[3rem]',
+        'pl-2 pr-[0.9rem] h-[3rem]',
         'flex justify-between',
         'border-b-2 rounded-none'
       )}

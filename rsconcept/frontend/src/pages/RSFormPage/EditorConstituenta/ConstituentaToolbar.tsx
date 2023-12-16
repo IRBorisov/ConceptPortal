@@ -1,13 +1,12 @@
 'use client';
 
 import { useMemo } from 'react';
+import { BiDiamond, BiDuplicate, BiPlusCircle, BiReset, BiTrash } from 'react-icons/bi';
+import { FiSave } from "react-icons/fi";
 
 import MiniButton from '@/components/Common/MiniButton';
 import Overlay from '@/components/Common/Overlay';
 import HelpButton from '@/components/Help/HelpButton';
-import { 
-  ArrowsRotateIcon, CloneIcon, DiamondIcon, DumpBinIcon, SaveIcon, SmallPlusIcon
-} from '@/components/Icons';
 import { HelpTopic } from '@/models/miscelanious';
 
 interface ConstituentaToolbarProps {
@@ -34,30 +33,30 @@ function ConstituentaToolbar({
     <MiniButton
       tooltip='Сохранить изменения [Ctrl + S]'
       disabled={!canSave}
-      icon={<SaveIcon size={5} color={canSave ? 'clr-text-primary' : ''}/>}
+      icon={<FiSave size='1.25rem' className={canSave ? 'clr-text-primary' : ''}/>}
       onClick={onSubmit}
     />
     <MiniButton
       tooltip='Сбросить несохраненные изменения'
       disabled={!canSave}
       onClick={onReset}
-      icon={<ArrowsRotateIcon size={5} color={canSave ? 'clr-text-primary' : ''} />}
+      icon={<BiReset size='1.25rem' className={canSave ? 'clr-text-primary' : ''} />}
     />
     <MiniButton
       tooltip='Создать конституенту после данной'
       disabled={!isMutable}
       onClick={onCreate}
-      icon={<SmallPlusIcon size={5} color={isMutable ? 'clr-text-success' : ''} />} 
+      icon={<BiPlusCircle size={'1.25rem'} className={isMutable ? 'clr-text-success' : ''} />} 
     />
     <MiniButton
       tooltip='Клонировать конституенту [Alt + V]'
       disabled={!isMutable}
       onClick={onClone}
-      icon={<CloneIcon size={5} color={isMutable ? 'clr-text-success' : ''} />} 
+      icon={<BiDuplicate size='1.25rem' className={isMutable ? 'clr-text-success' : ''} />} 
     />
     <MiniButton
       tooltip='Создать конституенту из шаблона [Alt + E]'
-      icon={<DiamondIcon color={isMutable ? 'clr-text-primary': ''} size={5}/>}
+      icon={<BiDiamond className={isMutable ? 'clr-text-primary': ''} size={'1.25rem'}/>}
       disabled={!isMutable}
       onClick={onTemplates}
     />
@@ -65,7 +64,7 @@ function ConstituentaToolbar({
       tooltip='Удалить редактируемую конституенту'
       disabled={!isMutable}
       onClick={onDelete}
-      icon={<DumpBinIcon size={5} color={isMutable ? 'clr-text-warning' : ''} />}
+      icon={<BiTrash size='1.25rem' className={isMutable ? 'clr-text-warning' : ''} />}
     />
     <HelpButton topic={HelpTopic.CONSTITUENTA} offset={4} />
   </Overlay>);

@@ -3,10 +3,9 @@
 import { Table } from '@tanstack/react-table';
 import clsx from 'clsx';
 import { useCallback } from 'react';
+import { BiChevronLeft, BiChevronRight, BiFirstPage, BiLastPage } from 'react-icons/bi';
 
 import { prefixes } from '@/utils/constants';
-
-import { GotoFirstIcon, GotoLastIcon, GotoNextIcon, GotoPrevIcon } from '../Icons';
 
 interface PaginationToolsProps<TData> {
   table: Table<TData>
@@ -47,14 +46,14 @@ function PaginationTools<TData>({ table, paginationOptions, onChangePaginationOp
         onClick={() => table.setPageIndex(0)}
         disabled={!table.getCanPreviousPage()}
       >
-        <GotoFirstIcon />
+        <BiFirstPage size='1.5rem' />
       </button>
       <button type='button'
         className='clr-hover clr-text-controls'
         onClick={() => table.previousPage()}
         disabled={!table.getCanPreviousPage()}
       >
-        <GotoPrevIcon />
+        <BiChevronLeft size='1.5rem' />
       </button>
       <input
         title='Номер страницы. Выделите для ручного ввода'
@@ -72,14 +71,14 @@ function PaginationTools<TData>({ table, paginationOptions, onChangePaginationOp
         onClick={() => table.nextPage()}
         disabled={!table.getCanNextPage()}
       >
-        <GotoNextIcon />
+        <BiChevronRight size='1.5rem' />
       </button>
       <button type='button'
         className='clr-hover clr-text-controls'
         onClick={() => table.setPageIndex(table.getPageCount() - 1)}
         disabled={!table.getCanNextPage()}
       >
-        <GotoLastIcon />
+        <BiLastPage size='1.5rem' />
       </button>
     </div>
     <select
