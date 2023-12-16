@@ -49,6 +49,17 @@ function GraphToolbar({
       onClick={toggleNoText}
     />
     <MiniButton
+      icon={<BiCollapse size='1.25rem' className='clr-text-primary' />}
+      tooltip='Восстановить камеру'
+      onClick={onResetViewpoint}
+    />
+    <MiniButton
+      icon={<BiPlanet size='1.25rem' className={!is3D ? '' : orbit ? 'clr-text-success' : 'clr-text-primary'} />}
+      tooltip='Анимация вращения'
+      disabled={!is3D}
+      onClick={toggleOrbit}
+    />
+    <MiniButton
       tooltip='Новая конституента'
       icon={<BiPlusCircle size='1.25rem' className={isMutable ? 'clr-text-success' : ''} />}
       disabled={!isMutable}
@@ -59,17 +70,6 @@ function GraphToolbar({
       icon={<BiTrash size='1.25rem' className={isMutable && !nothingSelected ? 'clr-text-warning' : ''} />}
       disabled={!isMutable || nothingSelected}
       onClick={onDelete}
-    />
-    <MiniButton
-      icon={<BiCollapse size='1.25rem' className='clr-text-primary' />}
-      tooltip='Восстановить камеру'
-      onClick={onResetViewpoint}
-    />
-    <MiniButton
-      icon={<BiPlanet size='1.25rem' className={!is3D ? '' : orbit ? 'clr-text-success' : 'clr-text-primary'} />}
-      tooltip='Анимация вращения'
-      disabled={!is3D}
-      onClick={toggleOrbit}
     />
     <HelpButton topic={HelpTopic.GRAPH_TERM} dimensions='max-w-[calc(100vw-20rem)]' offset={4} />
   </Overlay>);
