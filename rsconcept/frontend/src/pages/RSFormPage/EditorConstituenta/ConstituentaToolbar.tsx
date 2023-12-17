@@ -1,8 +1,8 @@
 'use client';
 
 import { useMemo } from 'react';
-import { BiDiamond, BiDuplicate, BiPlusCircle, BiReset, BiTrash } from 'react-icons/bi';
-import { FiSave } from "react-icons/fi";
+import { BiDuplicate, BiPlusCircle, BiReset, BiTrash } from 'react-icons/bi';
+import { FiSave } from 'react-icons/fi';
 
 import MiniButton from '@/components/Common/MiniButton';
 import Overlay from '@/components/Common/Overlay';
@@ -19,17 +19,16 @@ interface ConstituentaToolbarProps {
   onDelete: () => void
   onClone: () => void
   onCreate: () => void
-  onTemplates: () => void
 }
 
 function ConstituentaToolbar({
   isMutable, isModified,
   onSubmit, onReset,
-  onDelete, onClone, onCreate, onTemplates
+  onDelete, onClone, onCreate
 }: ConstituentaToolbarProps) {
   const canSave = useMemo(() => (isModified && isMutable), [isModified, isMutable]);
   return (
-  <Overlay position='right-1/2 translate-x-1/2 top-1 flex items-start'>
+    <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex'>
     <MiniButton
       tooltip='Сохранить изменения [Ctrl + S]'
       disabled={!canSave}
@@ -53,12 +52,6 @@ function ConstituentaToolbar({
       disabled={!isMutable}
       onClick={onClone}
       icon={<BiDuplicate size='1.25rem' className={isMutable ? 'clr-text-success' : ''} />} 
-    />
-    <MiniButton
-      tooltip='Создать конституенту из шаблона [Alt + E]'
-      icon={<BiDiamond className={isMutable ? 'clr-text-primary': ''} size={'1.25rem'}/>}
-      disabled={!isMutable}
-      onClick={onTemplates}
     />
     <MiniButton
       tooltip='Удалить редактируемую конституенту'

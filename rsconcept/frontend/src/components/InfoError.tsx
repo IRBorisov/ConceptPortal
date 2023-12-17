@@ -23,7 +23,7 @@ function DescribeError({error} : {error: ErrorData}) {
   }
   if (error.response.status === 404) {
     return (
-    <div className='flex flex-col justify-start'>
+    <div>
       <p>{'Обращение к несуществующему API'}</p>
       <PrettyJson data={error} />
     </div>);
@@ -32,7 +32,7 @@ function DescribeError({error} : {error: ErrorData}) {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   const isHtml = isResponseHtml(error.response);
   return (
-    <div className='flex flex-col justify-start'>
+    <div>
       <p className='underline'>Ошибка</p>
       <p>{error.message}</p>
       {error.response.data && (<>

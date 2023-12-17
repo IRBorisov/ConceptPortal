@@ -87,14 +87,13 @@ function LoginPage() {
       onChange={event => setPassword(event.target.value)}
     />
 
-    <div className='flex justify-center w-full py-2'>
-      <SubmitButton
-        text='Войти'
-        dimensions='w-[12rem]'
-        loading={loading}
-        disabled={!username || !password}
-      />
-    </div>
+    <SubmitButton
+      text='Войти'
+      dimensions='w-[12rem] mt-3'
+      className='self-center'
+      loading={loading}
+      disabled={!username || !password}
+    />
     <div className='flex flex-col text-sm'>
       <TextURL text='Восстановить пароль...' href='/restore-password' />
       <TextURL text='Нет аккаунта? Зарегистрируйтесь...' href='/signup' />

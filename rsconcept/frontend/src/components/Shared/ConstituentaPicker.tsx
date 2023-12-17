@@ -87,23 +87,20 @@ function ConstituentaPicker({
       value={filterText}
       onChange={newValue => setFilterText(newValue)}
     />
-    <div
+    <DataTable dense noHeader noFooter
       className='overflow-y-auto text-sm border select-none' 
       style={{ maxHeight: size, minHeight: size }}
-    >
-      <DataTable dense noHeader noFooter
-        data={filteredData}
-        columns={columns}
-        conditionalRowStyles={conditionalRowStyles}
-        noDataComponent={
-          <span className='p-2 min-h-[5rem] flex flex-col justify-center text-center'>
-            <p>Список конституент пуст</p>
-            <p>Измените параметры фильтра</p>
-          </span>
-        }
-        onRowClicked={onSelectValue}
-      />
-    </div>
+      data={filteredData}
+      columns={columns}
+      conditionalRowStyles={conditionalRowStyles}
+      noDataComponent={
+        <span className='p-2 min-h-[5rem] flex flex-col justify-center text-center'>
+          <p>Список конституент пуст</p>
+          <p>Измените параметры фильтра</p>
+        </span>
+      }
+      onRowClicked={onSelectValue}
+    />
   </div>);
 }
 

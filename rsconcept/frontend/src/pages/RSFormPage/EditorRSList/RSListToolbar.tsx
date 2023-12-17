@@ -1,7 +1,10 @@
 'use client';
 
 import { useMemo } from 'react';
-import { BiAnalyse, BiDiamond, BiDownArrowCircle, BiDownvote, BiDuplicate, BiPlusCircle, BiTrash, BiUpvote } from "react-icons/bi";
+import {
+  BiDownArrowCircle, BiDownvote, BiDuplicate,
+  BiPlusCircle, BiTrash, BiUpvote
+} from 'react-icons/bi';
 
 import Dropdown from '@/components/Common/Dropdown';
 import DropdownButton from '@/components/Common/DropdownButton';
@@ -24,29 +27,27 @@ interface RSListToolbarProps {
   onDelete: () => void
   onClone: () => void
   onCreate: (type?: CstType) => void
-  onTemplates: () => void
-  onReindex: () => void
 }
 
 function RSListToolbar({
   selectedCount, isMutable,
   onMoveUp, onMoveDown, onDelete, onClone,
-  onCreate, onTemplates, onReindex
+  onCreate
 }: RSListToolbarProps) {
   const insertMenu = useDropdown();
   const nothingSelected = useMemo(() => selectedCount === 0, [selectedCount]);
   
   return (
-  <Overlay position='w-full top-1 flex items-start justify-center'>
+  <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex'>
     <MiniButton
       tooltip='Переместить вверх [Alt + вверх]'
-      icon={<BiUpvote size='1.25rem'/>}
+      icon={<BiUpvote size='1.25rem' className={isMutable && !nothingSelected ? 'clr-text-primary': ''}/>}
       disabled={!isMutable || nothingSelected}
       onClick={onMoveUp}
     />
     <MiniButton
       tooltip='Переместить вниз [Alt + вниз]'
-      icon={<BiDownvote size='1.25rem'/>}
+      icon={<BiDownvote size='1.25rem' className={isMutable && !nothingSelected ? 'clr-text-primary': ''}/>}
       disabled={!isMutable || nothingSelected}
       onClick={onMoveDown}
     />
@@ -84,18 +85,6 @@ function RSListToolbar({
         </Dropdown> : null}
       </div>
     </div>
-    <MiniButton
-      tooltip='Создать конституенту из шаблона [Alt + E]'
-      icon={<BiDiamond size='1.25rem' className={isMutable ? 'clr-text-primary': ''} />}
-      disabled={!isMutable}
-      onClick={onTemplates}
-    />
-    <MiniButton
-      tooltip='Сброс имён: присвоить порядковые имена [Alt + R]'
-      icon={<BiAnalyse size='1.25rem' className={isMutable ? 'clr-text-primary': ''} />}
-      disabled={!isMutable}
-      onClick={onReindex}
-    />
     <MiniButton
       tooltip='Удалить выбранные [Delete]'
       icon={<BiTrash size='1.25rem' className={isMutable && !nothingSelected ? 'clr-text-warning' : ''} />}

@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 
 import ConceptToaster from './components/ConceptToaster';
@@ -19,14 +18,10 @@ import UserProfilePage from './pages/UserProfilePage';
 import { globalIDs } from './utils/constants';
 
 function Root() {
-  const { noNavigation, noFooter, viewportHeight, mainHeight, showScroll } = useConceptTheme();
+  const { viewportHeight, mainHeight, showScroll } = useConceptTheme();
   return (
   <NavigationState>
-  <div className={clsx(
-    'w-screen min-w-[30rem]',
-    'clr-app',
-    'antialiased'
-  )}>
+  <div className='min-w-[30rem] clr-app antialiased'>
 
     <ConceptToaster
       className='mt-[4rem] text-sm'
@@ -38,23 +33,20 @@ function Root() {
     <Navigation />
 
     <div id={globalIDs.main_scroll}
-      className='w-full overflow-x-auto overscroll-none'
+      className='overflow-x-auto overscroll-none'
       style={{
         maxHeight: viewportHeight,
         overflowY: showScroll ? 'scroll': 'auto'
       }}
     >
       <main
-        className={clsx(
-          'w-full h-full min-w-fit',
-          'flex flex-col items-center'
-        )}
+        className='flex flex-col items-center'
         style={{minHeight: mainHeight}}
       >
         <Outlet />
       </main>
       
-    {(!noNavigation && !noFooter) ? <Footer /> : null}
+    <Footer />
     </div>
   </div>
   </NavigationState>);

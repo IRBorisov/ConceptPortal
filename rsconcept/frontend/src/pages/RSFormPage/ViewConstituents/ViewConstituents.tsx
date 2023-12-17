@@ -35,22 +35,21 @@ function ViewConstituents({ expression, baseHeight, schema, activeID, onOpenEdit
     : `calc(min(100vh - 11.7rem, ${siblingHeight}))`);
   }, [noNavigation, baseHeight]);
 
-  return (<>
+  return (
+  <div className='mt-[2.25rem] border'>
     <ConstituentsSearch 
       schema={schema}
       activeID={activeID}
       activeExpression={expression}
       setFiltered={setFilteredData}
     />
-    <div className='overflow-y-auto text-sm select-none overscroll-none' style={{maxHeight : `${maxHeight}`}}>
-    <ConstituentsTable 
+    <ConstituentsTable maxHeight={maxHeight}
       items={filteredData}
       activeID={activeID}
       onOpenEdit={onOpenEdit}
       denseThreshold={COLUMN_EXPRESSION_HIDE_THRESHOLD}
     />
-    </div>
-  </>);
+  </div>);
 }
 
 export default ViewConstituents;

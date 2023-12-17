@@ -1,4 +1,5 @@
-import { EducationIcon, GroupIcon,SubscribedIcon } from '@/components/Icons';
+import { BiCheckShield, BiShareAlt } from 'react-icons/bi';
+import { FiBell } from 'react-icons/fi';
 
 function HelpLibrary() {
   return (
@@ -9,15 +10,15 @@ function HelpLibrary() {
     <p>На текущем этапе происходит наполнение Библиотеки концептуальными схемами.</p>
     <p>Поиск осуществлеяется с помощью инструментов в верхней части страницы.</p>
     <div className='flex items-center gap-2'>
-      <SubscribedIcon size='1rem'/>
+      <FiBell size='1rem'/>
       <p>Аттрибут <b>отслеживаемая</b> обозначает отслеживание схемы.</p>
     </div>
     <div className='flex items-center gap-2'>
-      <GroupIcon size='1rem'/>
+      <BiShareAlt size='1rem'/>
       <p>Аттрибут <b>общедоступная</b> делает схему видимой в разделе библиотека.</p>
     </div>
     <div className='flex items-center gap-2'>
-      <EducationIcon size='1rem'/>
+      <BiCheckShield size='1rem'/>
       <p>Аттрибут <b>неизменная</b> выделяет стандартные схемы.</p>
     </div>
   </div>);

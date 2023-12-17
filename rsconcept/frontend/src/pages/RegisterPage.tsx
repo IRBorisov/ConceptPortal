@@ -130,7 +130,7 @@ function RegisterPage() {
       </div>
     </div>
     
-    <div className='flex text-sm'>
+    <div className='flex gap-1 text-sm'>
       <Checkbox
         label='Принимаю условия'
         value={acceptPrivacy}
@@ -142,7 +142,7 @@ function RegisterPage() {
       />
     </div>
 
-    <div className='flex items-center justify-around w-full my-3'>
+    <div className='flex justify-around my-3'>
       <SubmitButton
         text='Регистрировать' 
         dimensions='min-w-[10rem]'

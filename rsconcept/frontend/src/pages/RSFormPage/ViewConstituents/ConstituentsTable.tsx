@@ -17,12 +17,14 @@ interface ConstituentsTableProps {
   activeID?: number
   onOpenEdit: (cstID: number) => void
   denseThreshold?: number
+  maxHeight: string
 }
 
 const columnHelper = createColumnHelper<IConstituenta>();
 
 function ConstituentsTable({
   items, activeID, onOpenEdit,
+  maxHeight,
   denseThreshold = 9999
 }: ConstituentsTableProps) {
   const { colors } = useConceptTheme();
@@ -107,6 +109,8 @@ function ConstituentsTable({
     
   return (
   <DataTable dense noFooter
+    className='overflow-y-auto text-sm select-none overscroll-none'
+    style={{maxHeight : maxHeight}}
     data={items}
     columns={columns}
     conditionalRowStyles={conditionalRowStyles}
@@ -119,7 +123,7 @@ function ConstituentsTable({
     noDataComponent={
       <div className={clsx(
         'min-h-[5rem]',
-        'p-2 flex flex-col justify-center',
+        'p-2',
         'text-center',
         'select-none'
       )}>

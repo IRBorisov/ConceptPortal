@@ -33,7 +33,7 @@ function StatusBar({ isModified, constituenta, parseData }: StatusBarProps) {
   return (
   <div title={describeExpressionStatus(status)}
     className={clsx(
-      'w-full h-full',
+      'h-full',
       'border rounded-none',
       'text-sm font-semibold small-caps text-center',
       'select-none'

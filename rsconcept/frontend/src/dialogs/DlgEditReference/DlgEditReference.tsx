@@ -76,24 +76,22 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
       </div>
     </TabList>
     
-    <div className='w-full'>
-      <TabPanel>
-      <EntityTab
-        initial={initial}
-        items={items}
-        setReference={setReference}
-        setIsValid={setIsValid}
-      />
-      </TabPanel>
+    <TabPanel>
+    <EntityTab
+      initial={initial}
+      items={items}
+      setReference={setReference}
+      setIsValid={setIsValid}
+    />
+    </TabPanel>
 
-      <TabPanel>
-      <SyntacticTab 
-        initial={initial}
-        setReference={setReference}
-        setIsValid={setIsValid}
-      />
-      </TabPanel>
-    </div>
+    <TabPanel>
+    <SyntacticTab 
+      initial={initial}
+      setReference={setReference}
+      setIsValid={setIsValid}
+    />
+    </TabPanel>
   </Tabs>
   </Modal>);
 }

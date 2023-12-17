@@ -46,7 +46,7 @@ export enum RSTabID {
 function ProcessError({error}: {error: ErrorData}): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 404) {
     return (
-      <div className='flex flex-col items-center justify-center w-full p-2'>
+      <div className='p-2 text-center'>
         <p>Схема с указанным идентификатором отсутствует на портале.</p>
         <TextURL text='Перейти в Библиотеку' href='/library'/>
       </div>
@@ -403,11 +403,10 @@ function RSTabs() {
     onSelect={onSelectTab}
     defaultFocus
     selectedTabClassName='clr-selected'
-    className='flex flex-col w-full'
+    className='flex flex-col items-center min-w-[45rem]'
   >
-    <div className='flex justify-center w-[100vw]'>
     <TabList className={clsx(
-      'w-fit h-[1.9rem]',
+      'h-[1.9rem]',
       'flex justify-stretch', 
       'border-b-2 border-x-2 divide-x-2'
     )}>
@@ -435,63 +434,52 @@ function RSTabs() {
       <ConceptTab label='Редактор' />
       <ConceptTab label='Граф термов' />
     </TabList>
-    </div>
 
-    <div
-      className={clsx(
-        'min-w-[48rem] w-[100vw]',
-        'flex justify-center',
-        'overflow-y-auto'
-      )}
-      style={{ maxHeight: panelHeight}}
-    >
+    <div className='overflow-y-auto' style={{ maxHeight: panelHeight}}>
       <TabPanel forceRender style={{ display: activeTab === RSTabID.CARD ? '': 'none' }}>
-        <EditorRSForm
-          isMutable={isMutable}
-          isModified={isModified}
-          setIsModified={setIsModified}
-          onToggleSubscribe={handleToggleSubscribe}
-          onDownload={onDownloadSchema}
-          onDestroy={onDestroySchema}
-          onClaim={onClaimSchema}
-          onShare={onShareSchema}
-        />
+      <EditorRSForm
+        isMutable={isMutable}
+        isModified={isModified}
+        setIsModified={setIsModified}
+        onToggleSubscribe={handleToggleSubscribe}
+        onDownload={onDownloadSchema}
+        onDestroy={onDestroySchema}
+        onClaim={onClaimSchema}
+        onShare={onShareSchema}
+      />
       </TabPanel>
 
       <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_LIST ? '': 'none' }}>
-        <EditorRSList
-          isMutable={isMutable}
-          onOpenEdit={onOpenCst}
-          onCreateCst={promptCreateCst}
-          onDeleteCst={promptDeleteCst}
-          onTemplates={onShowTemplates}
-          onReindex={onReindex}
-        />
+      <EditorRSList
+        isMutable={isMutable}
+        onOpenEdit={onOpenCst}
+        onCreateCst={promptCreateCst}
+        onDeleteCst={promptDeleteCst}
+      />
       </TabPanel>
 
       <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_EDIT ? '': 'none' }}>
-        <EditorConstituenta
-          isMutable={isMutable}
-          isModified={isModified}
-          setIsModified={setIsModified}
-          activeID={activeID}
-          activeCst={activeCst}
-          onOpenEdit={onOpenCst}
-          onCreateCst={promptCreateCst}
-          onDeleteCst={promptDeleteCst}
-          onRenameCst={promptRenameCst}
-          onEditTerm={promptShowEditTerm}
-          onTemplates={onShowTemplates}
-        />
+      <EditorConstituenta
+        isMutable={isMutable}
+        isModified={isModified}
+        setIsModified={setIsModified}
+        activeID={activeID}
+        activeCst={activeCst}
+        onOpenEdit={onOpenCst}
+        onCreateCst={promptCreateCst}
+        onDeleteCst={promptDeleteCst}
+        onRenameCst={promptRenameCst}
+        onEditTerm={promptShowEditTerm}
+      />
       </TabPanel>
 
       <TabPanel style={{ display: activeTab === RSTabID.TERM_GRAPH ? '': 'none' }}>
-        <EditorTermGraph
-          isMutable={isMutable}
-          onOpenEdit={onOpenCst}
-          onCreateCst={promptCreateCst}
-          onDeleteCst={promptDeleteCst}
-        />
+      <EditorTermGraph
+        isMutable={isMutable}
+        onOpenEdit={onOpenCst}
+        onCreateCst={promptCreateCst}
+        onDeleteCst={promptDeleteCst}
+      />
       </TabPanel>
     </div>
   </Tabs> : null}

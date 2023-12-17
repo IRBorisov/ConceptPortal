@@ -1,6 +1,6 @@
 'use client';
 
-import { Dispatch, SetStateAction, useLayoutEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useLayoutEffect, useState } from 'react';
 import { FiSave } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 
@@ -33,7 +33,7 @@ function FormRSForm({
   const [common, setCommon] = useState(false);
   const [canonical, setCanonical] = useState(false);
 
-  useLayoutEffect(
+  useEffect(
   () => {
     if (!schema) {
       setIsModified(false);
@@ -79,7 +79,7 @@ function FormRSForm({
 
   return (
   <form id={id}
-    className='flex flex-col gap-3 mt-2'
+    className='flex flex-col gap-3 mt-1 py-1 min-w-[22rem] w-[30rem]'
     onSubmit={handleSubmit}
   >
     <TextInput required
@@ -121,15 +121,14 @@ function FormRSForm({
         setValue={value => setCanonical(value)}
       />
     </div>
-    <div className='flex justify-center w-full'>
-      <SubmitButton
-        text='Сохранить изменения'
-        loading={processing}
-        disabled={!isModified || disabled}
-        icon={<FiSave size='1.5rem' />}
-        dimensions='my-2 w-fit'
-      />
-    </div>
+    <SubmitButton
+      text='Сохранить изменения'
+      className='self-center'
+      dimensions='my-2 w-fit'
+      loading={processing}
+      disabled={!isModified || disabled}
+      icon={<FiSave size='1.5rem' />}
+    />
   </form>);
 }
 

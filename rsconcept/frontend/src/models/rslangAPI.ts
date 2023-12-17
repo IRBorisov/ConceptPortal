@@ -39,7 +39,7 @@ export function inferTemplatedType(templateType: CstType, args: IArgumentValue[]
  * closing bracket ']' to determine the head and body parts.
  *
  * @example
- * const template = "[header] body content";
+ * const template = '[header] body content';
  * const result = splitTemplateDefinition(template);
  * // result: `{ head: 'header', body: 'body content' }`
  */

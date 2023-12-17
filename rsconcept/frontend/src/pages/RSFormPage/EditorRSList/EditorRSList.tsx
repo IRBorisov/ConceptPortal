@@ -13,16 +13,14 @@ import RSTable from './RSTable';
 interface EditorRSListProps {
   isMutable: boolean
   onOpenEdit: (cstID: number) => void
-  onTemplates: (insertAfter?: number) => void
   onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void
   onDeleteCst: (selected: number[], callback: (items: number[]) => void) => void
-  onReindex: () => void
 }
 
 function EditorRSList({
   isMutable,
   onOpenEdit, onCreateCst, 
-  onDeleteCst, onTemplates, onReindex
+  onDeleteCst
 }: EditorRSListProps) {
   const { schema, cstMoveTo } = useRSForm();
   const [selected, setSelected] = useState<number[]>([]);
@@ -185,8 +183,6 @@ function EditorRSList({
     }
     switch (code) {
       case 'Backquote': handleCreateCst(); return true;
-      case 'KeyE':      onTemplates(); return true;
-      case 'KeyR':      onReindex(); return true;
       
       case 'Digit1':    handleCreateCst(CstType.BASE); return true;
       case 'Digit2':    handleCreateCst(CstType.STRUCTURED); return true;
@@ -202,7 +198,7 @@ function EditorRSList({
 
   return (
   <div tabIndex={-1}
-    className='w-full outline-none'
+    className='outline-none'
     onKeyDown={handleTableKey}
   > 
     <RSListToolbar
@@ -213,8 +209,6 @@ function EditorRSList({
       onClone={handleClone}
       onCreate={handleCreateCst}
       onDelete={handleDelete}
-      onTemplates={() => onTemplates(selected.length !== 0 ? selected[selected.length-1] : undefined)}
-      onReindex={onReindex}
     />
     <SelectedCounter 
       total={schema?.stats?.count_all ?? 0}

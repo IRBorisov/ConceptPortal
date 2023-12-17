@@ -18,7 +18,7 @@ function GraphSidebar({
   layout, setLayout
 } : GraphSidebarProps) {
   return (
-    <div className='flex flex-col px-2 text-sm select-none mt-9 h-fit'>        
+  <div className='px-2 text-sm select-none mt-9'>        
     <SelectSingle
       placeholder='Выберите цвет'
       options={SelectorGraphColoring}
@@ -28,7 +28,6 @@ function GraphSidebar({
     />
     <SelectSingle
       placeholder='Способ расположения'
-      className='w-full'
       options={SelectorGraphLayout}
       isSearchable={false}
       value={layout ? { value: layout, label: mapLableLayout.get(layout) } : null}

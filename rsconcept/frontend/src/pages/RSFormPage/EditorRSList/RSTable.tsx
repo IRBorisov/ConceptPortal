@@ -125,16 +125,15 @@ function RSTable({
   }, [noNavigation]);
 
   return (
-  <div 
+  <DataTable dense noFooter
     className={clsx(
-      'w-full h-full min-h-[20rem]',
+      'min-h-[20rem]',
       'overflow-auto',
       'text-sm',
       'select-none'
     )}
     style={{maxHeight: tableHeight}}
-  >
-  <DataTable dense noFooter
+
     data={items ?? []}
     columns={columns}
     headPosition='0rem'
@@ -161,8 +160,7 @@ function RSTable({
         </p>
       </span>
     }
-    />
-  </div>);
+  />);
 }
 
 export default RSTable;

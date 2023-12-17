@@ -99,16 +99,15 @@ function EditorPassword() {
         onChange={event => {
           setNewPasswordRepeat(event.target.value); 
         }}
-      />          
-    </div>
-    {error ? <ProcessError error={error} /> : null}
-    <div className='flex justify-center w-full'>
-      <SubmitButton
-        text='Сменить пароль'
-        disabled={!canSubmit}
-        loading={loading}
       />
+      {error ? <ProcessError error={error} /> : null}
     </div>
+    <SubmitButton
+      text='Сменить пароль'
+      className='self-center'
+      disabled={!canSubmit}
+      loading={loading}
+    />
   </form>);
 }
 

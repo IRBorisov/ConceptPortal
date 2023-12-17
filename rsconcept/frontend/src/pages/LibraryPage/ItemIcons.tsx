@@ -1,6 +1,7 @@
 import clsx from 'clsx';
+import { BiCheckShield, BiShareAlt } from 'react-icons/bi';
+import { FiBell } from 'react-icons/fi';
 
-import { EducationIcon, GroupIcon, SubscribedIcon } from '@/components/Icons';
 import { ICurrentUser, ILibraryItem } from '@/models/library';
 import { prefixes } from '@/utils/constants';
 
@@ -20,15 +21,15 @@ function ItemIcons({ user, item }: ItemIconsProps) {
   >
     {(user && user.subscriptions.includes(item.id)) ?
     <span title='Отслеживаемая'>
-      <SubscribedIcon size='0.75rem' />
+      <FiBell size='0.75rem' />
     </span> : null}
     {item.is_common ?
     <span title='Общедоступная'>
-      <GroupIcon size='0.75rem'/>
+      <BiShareAlt size='0.75rem'/>
     </span> : null}
     {item.is_canonical ?
     <span title='Неизменная'>
-      <EducationIcon size='0.75rem'/>
+      <BiCheckShield size='0.75rem'/>
     </span> : null}
   </div>);
 }

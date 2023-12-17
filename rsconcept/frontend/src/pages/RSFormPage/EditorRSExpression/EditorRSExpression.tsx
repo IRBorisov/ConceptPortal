@@ -123,14 +123,15 @@ function EditorRSExpression({
     });
   }
 
-  return (
-  <div className='flex flex-col items-start w-full'>
-    {showAST ? 
-    <DlgShowAST
-      expression={expression}
-      syntaxTree={syntaxTree}
-      hideWindow={() => setShowAST(false)}
-    /> : null}
+  return (<>
+  {showAST ? 
+  <DlgShowAST
+    expression={expression}
+    syntaxTree={syntaxTree}
+    hideWindow={() => setShowAST(false)}
+  /> : null}
+  
+  <div>
     <Overlay position='top-[-0.375rem] left-[11rem]'>
       <MiniButton noHover
         tooltip='Дерево разбора выражения'
@@ -160,7 +161,8 @@ function EditorRSExpression({
       onCheckExpression={handleCheckExpression}
       onShowError={onShowError}
     />
-  </div>);
+  </div>
+  </>);
 }
 
 export default EditorRSExpression;

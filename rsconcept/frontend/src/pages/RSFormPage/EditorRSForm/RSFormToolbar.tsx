@@ -1,14 +1,13 @@
 'use client';
 
 import { useMemo } from 'react';
-import { BiDownload, BiTrash } from 'react-icons/bi';
-import { FiSave } from 'react-icons/fi';
+import { BiDownload, BiShareAlt, BiTrash } from 'react-icons/bi';
+import { FiBell, FiBellOff, FiSave } from 'react-icons/fi';
 import { LuCrown } from 'react-icons/lu';
 
 import MiniButton from '@/components/Common/MiniButton';
 import Overlay from '@/components/Common/Overlay';
 import HelpButton from '@/components/Help/HelpButton';
-import { NotSubscribedIcon, ShareIcon, SubscribedIcon } from '@/components/Icons';
 import { HelpTopic } from '@/models/miscelanious';
 
 interface RSFormToolbarProps {
@@ -35,7 +34,7 @@ function RSFormToolbar({
 }: RSFormToolbarProps) {
   const canSave = useMemo(() => (modified && isMutable), [modified, isMutable]);
   return (    
-  <Overlay position='w-full top-1 flex items-start justify-center'>
+  <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex'>
     <MiniButton
       tooltip='Сохранить изменения [Ctrl + S]'
       disabled={!canSave}
@@ -44,7 +43,7 @@ function RSFormToolbar({
     />
     <MiniButton
       tooltip='Поделиться схемой'
-      icon={<ShareIcon size='1.25rem' className='clr-text-primary'/>}
+      icon={<BiShareAlt size='1.25rem' className='clr-text-primary'/>}
       onClick={onShare}
     />
     <MiniButton
@@ -56,10 +55,10 @@ function RSFormToolbar({
       tooltip={'отслеживание: ' + (isSubscribed ? '[включено]' : '[выключено]')}
       disabled={anonymous || processing}
       icon={isSubscribed
-        ? <SubscribedIcon size='1.25rem' className='clr-text-primary' />
-        : <NotSubscribedIcon size='1.25rem' className='clr-text-controls' />
+        ? <FiBell size='1.25rem' className='clr-text-primary' />
+        : <FiBellOff size='1.25rem' className='clr-text-controls' />
       }
-      dimensions='h-full w-fit pr-2'
+      dimensions='h-full w-fit'
       style={{outlineColor: 'transparent'}}
       onClick={onToggleSubscribe}
       />

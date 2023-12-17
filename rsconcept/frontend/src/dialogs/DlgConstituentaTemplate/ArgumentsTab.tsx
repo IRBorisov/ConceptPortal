@@ -149,29 +149,28 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
 
   return (
   <div className='flex flex-col gap-3'>
-    <div className={clsx(
-      'max-h-[5.8rem] min-h-[5.8rem]',
-      'overflow-y-auto',
-      'text-sm',
-      'border',
-      'select-none'
-    )}>
-      <DataTable dense noFooter
-        data={state.arguments}
-        columns={columns}
-        conditionalRowStyles={conditionalRowStyles}
-        noDataComponent={
-          <p className={clsx(
-            'min-h-[3.6rem] w-full',
-            'p-2',
-            'text-center'
-          )}>
-            Аргументы отсутствуют
-          </p>
-        }
-        onRowClicked={handleSelectArgument}
-      />
-    </div>
+    <DataTable dense noFooter
+      className={clsx(
+        'max-h-[5.8rem] min-h-[5.8rem]',
+        'overflow-y-auto',
+        'text-sm',
+        'border',
+        'select-none'
+      )}
+      data={state.arguments}
+      columns={columns}
+      conditionalRowStyles={conditionalRowStyles}
+      noDataComponent={
+        <p className={clsx(
+          'min-h-[3.6rem] w-full',
+          'p-2',
+          'text-center'
+        )}>
+          Аргументы отсутствуют
+        </p>
+      }
+      onRowClicked={handleSelectArgument}
+    />
 
     <div className={clsx(
       'py-1 flex gap-2 justify-center items-center',
@@ -192,7 +191,7 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
       <div className='flex'>
         <MiniButton
           tooltip='Подставить значение аргумента'
-          icon={<BiCheck size='1.25rem' className={!argumentValue || !selectedArgument ? 'text-disabled' : 'clr-text-success'} />}
+          icon={<BiCheck size='1.25rem' className={!!argumentValue && !!selectedArgument ? 'clr-text-success' : ''} />}
           disabled={!argumentValue || !selectedArgument}
           onClick={() => handleAssignArgument(selectedArgument!, argumentValue)}
         />
@@ -205,7 +204,7 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
         <MiniButton
           tooltip='Очистить значение аргумента'
           disabled={!selectedClearable}
-          icon={<BiX size='1.25rem' className={!selectedClearable ? 'text-disabled' : 'clr-text-warning'}/>}
+          icon={<BiX size='1.25rem' className={selectedClearable ? 'clr-text-warning': ''}/>}
           onClick={() => selectedArgument ? handleClearArgument(selectedArgument) : undefined}
         />
       </div>

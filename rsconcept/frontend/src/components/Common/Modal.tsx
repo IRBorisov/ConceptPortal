@@ -59,7 +59,7 @@ function Modal({
         'clr-app'
       )}
     >
-      <Overlay position='right-[0.3rem] top-2' className='text-disabled'>
+      <Overlay position='right-[0.3rem] top-2'>
         <MiniButton
           tooltip='Закрыть диалоговое окно [ESC]'
           icon={<BiX size='1.25rem'/>}

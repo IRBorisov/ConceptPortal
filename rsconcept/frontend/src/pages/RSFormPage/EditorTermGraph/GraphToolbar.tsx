@@ -1,11 +1,10 @@
 'use client';
 
-import { BiCollapse, BiFilterAlt, BiPlanet, BiPlusCircle, BiTrash } from 'react-icons/bi';
+import { BiCollapse, BiFilterAlt, BiFont, BiFontFamily, BiPlanet, BiPlusCircle, BiTrash } from 'react-icons/bi';
 
 import MiniButton from '@/components/Common/MiniButton';
 import Overlay from '@/components/Common/Overlay';
 import HelpButton from '@/components/Help/HelpButton';
-import { LetterAIcon, LetterALinesIcon } from '@/components/Icons';
 import { HelpTopic } from '@/models/miscelanious';
 
 interface GraphToolbarProps {
@@ -33,7 +32,7 @@ function GraphToolbar({
   onCreate, onDelete, onResetViewpoint
 } : GraphToolbarProps) {
   return (
-  <Overlay position='w-full top-1 right-0 flex items-start justify-center'>
+  <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex'>
     <MiniButton
       tooltip='Настройки фильтрации узлов и связей'
       icon={<BiFilterAlt size='1.25rem' className='clr-text-primary' />}
@@ -43,8 +42,8 @@ function GraphToolbar({
       tooltip={!noText ? 'Скрыть текст' : 'Отобразить текст'}
       icon={
         !noText
-        ? <LetterALinesIcon size='1.25rem' className='clr-text-success' />
-        : <LetterAIcon size='1.25rem' className='clr-text-primary' />
+        ? <BiFontFamily size='1.25rem' className='clr-text-success' />
+        : <BiFont size='1.25rem' className='clr-text-primary' />
       }
       onClick={toggleNoText}
     />

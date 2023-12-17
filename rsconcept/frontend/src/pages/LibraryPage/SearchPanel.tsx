@@ -45,7 +45,7 @@ function SearchPanel({ total, filtered, query, setQuery, strategy, setFilter }: 
   <div className={clsx(
     'sticky top-0',
     'w-full max-h-[2.3rem]',
-    'pr-40 flex justify-start items-stretch',
+    'pr-40 flex items-stretch',
     'border-b',
     'clr-input'
   )}>
@@ -61,7 +61,7 @@ function SearchPanel({ total, filtered, query, setQuery, strategy, setFilter }: 
       </span>
     </div>
     <div className={clsx(
-      'w-full',
+      'flex-grow',
       'flex gap-1 justify-center items-center'
     )}>
       <ConceptSearch noBorder

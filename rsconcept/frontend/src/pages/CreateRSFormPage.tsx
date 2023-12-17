@@ -127,7 +127,7 @@ function CreateRSFormPage() {
       value={common}
       setValue={value => setCommon(value ?? false)}
     />
-    <div className='flex items-center justify-around py-2'>
+    <div className='flex justify-around gap-6 py-3'>
       <SubmitButton 
         text='Создать схему'
         loading={processing}

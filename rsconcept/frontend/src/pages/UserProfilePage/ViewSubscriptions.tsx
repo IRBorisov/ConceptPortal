@@ -52,8 +52,8 @@ function ViewSubscriptions({items}: ViewSubscriptionsProps) {
   ], [intl]);
 
   return (
-  <div className='max-h-[23.8rem] w-fit overflow-auto text-sm border'>
   <DataTable dense noFooter
+    className='max-h-[23.8rem] overflow-auto text-sm border'
     columns={columns}
     data={items}
     headPosition='0'
@@ -63,11 +63,14 @@ function ViewSubscriptions({items}: ViewSubscriptionsProps) {
       id: 'time_update',
       desc: true
     }}
-    noDataComponent={<div className='h-[10rem]'>Отслеживаемые схемы отсутствуют</div>}
+    noDataComponent={
+      <div className='h-[10rem]'>
+        Отслеживаемые схемы отсутствуют
+      </div>
+    }
 
     onRowClicked={openRSForm}
-  />
-  </div>);
+  />);
 }
 
 export default ViewSubscriptions;

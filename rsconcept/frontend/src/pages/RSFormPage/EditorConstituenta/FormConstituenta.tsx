@@ -1,6 +1,7 @@
 'use client';
 
-import { Dispatch, SetStateAction, useLayoutEffect, useState } from 'react';
+import clsx from 'clsx';
+import { Dispatch, SetStateAction, useEffect, useLayoutEffect, useState } from 'react';
 import { FiSave } from 'react-icons/fi';
 import { LiaEdit } from 'react-icons/lia';
 import { toast } from 'react-toastify';
@@ -45,7 +46,7 @@ function FormConstituenta({
   const [convention, setConvention] = useState('');
   const [typification, setTypification] = useState('N/A');
   
-  useLayoutEffect(
+  useEffect(
   () => {
     if (!constituenta) {
       setIsModified(false);
@@ -105,7 +106,10 @@ function FormConstituenta({
   }
 
   return (<>
-  <Overlay position='top-0 left-[3rem]' className='flex justify-start select-none' >
+  <Overlay
+    position='top-1 left-[4rem]'
+    className='flex select-none'
+  >
     <MiniButton
       tooltip={`Редактировать словоформы термина: ${constituenta?.term_forms.length ?? 0}`}
       disabled={disabled}
@@ -113,7 +117,7 @@ function FormConstituenta({
       onClick={onEditTerm}
       icon={<LiaEdit size='1rem' className={!disabled ? 'clr-text-primary' : ''} />}
     />
-    <div className='pt-1 pl-[1.375rem] text-sm font-semibold w-fit'>
+    <div className='pt-1 pl-[1.375rem] text-sm font-semibold whitespace-nowrap w-fit'>
       <span>Имя </span>
       <span className='ml-1'>{constituenta?.alias ?? ''}</span>
     </div>
@@ -125,7 +129,10 @@ function FormConstituenta({
     />
   </Overlay>
   <form id={id}
-    className='flex flex-col gap-3 mt-1'
+    className={clsx(
+      'mt-1 min-w-[47.8rem] max-w-[47.8rem]',
+      'px-4 py-1 flex flex-col gap-3'
+    )}
     onSubmit={handleSubmit}
   >
     <RefsInput
@@ -138,16 +145,14 @@ function FormConstituenta({
       disabled={disabled}
       onChange={newValue => setTerm(newValue)}
     />
-    <TextArea dense noBorder
+    <TextArea dense noBorder disabled
       label='Типизация'
       rows={typification.length > 70 ? 2 : 1}
       value={typification}
       colors='clr-app'
-      dimensions='w-full'
       style={{
         resize: 'none'
       }}
-      disabled
     />
     <EditorRSExpression
       label='Формальное определение'
@@ -176,13 +181,12 @@ function FormConstituenta({
       disabled={disabled}
       onChange={event => setConvention(event.target.value)}
     />
-    <div className='flex justify-center w-full'>
-      <SubmitButton
-        text='Сохранить изменения'
-        disabled={!isModified || disabled}
-        icon={<FiSave size='1.5rem' />}
-      />
-    </div>
+    <SubmitButton
+      text='Сохранить изменения'
+      className='self-center'
+      disabled={!isModified || disabled}
+      icon={<FiSave size='1.5rem' />}
+    />
   </form>
   </>);
 }

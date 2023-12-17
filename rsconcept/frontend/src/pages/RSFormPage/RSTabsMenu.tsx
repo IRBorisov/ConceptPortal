@@ -1,13 +1,12 @@
 'use client';
 
-import { BiAnalyse, BiDiamond, BiDownload, BiDuplicate, BiMenu, BiMeteor, BiPlusCircle, BiTrash, BiUpload } from 'react-icons/bi';
+import { BiAnalyse, BiDiamond, BiDownload, BiDuplicate, BiMenu, BiMeteor, BiPlusCircle, BiShareAlt, BiTrash, BiUpload } from 'react-icons/bi';
 import { FiEdit } from 'react-icons/fi';
 import { LuCrown, LuGlasses } from 'react-icons/lu';
 
 import Button from '@/components/Common/Button';
 import Dropdown from '@/components/Common/Dropdown';
 import DropdownButton from '@/components/Common/DropdownButton';
-import { ShareIcon } from '@/components/Icons';
 import { useAccessMode } from '@/context/AccessModeContext';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NagivationContext';
@@ -115,7 +114,7 @@ function RSTabsMenu({
         />
         <DropdownButton
           text='Поделиться'
-          icon={<ShareIcon size='1rem' className='clr-text-primary' />}
+          icon={<BiShareAlt size='1rem' className='clr-text-primary' />}
           onClick={handleShare}
         />
         <DropdownButton disabled={!user}

@@ -1,14 +1,19 @@
 import clsx from 'clsx';
 
+import { useConceptTheme } from '@/context/ThemeContext';
 import { urls } from '@/utils/constants';
 
 import TextURL from './Common/TextURL';
 
 function Footer() {
+  const { noNavigation, noFooter } = useConceptTheme();
+  if (noNavigation || noFooter) {
+    return null;
+  }
   return (
   <footer tabIndex={-1}
     className={clsx(
-      'w-full z-navigation',
+      'z-navigation',
       'px-4 py-2 flex flex-col items-center gap-1',
       'text-sm select-none whitespace-nowrap'
     )}

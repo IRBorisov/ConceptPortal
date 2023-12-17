@@ -49,7 +49,7 @@ function EditorRSForm({
   }
 
   return (
-  <div tabIndex={-1} onKeyDown={handleInput}>
+  <>
     <RSFormToolbar 
       isMutable={isMutable}
       processing={processing}
@@ -65,26 +65,25 @@ function EditorRSForm({
       onDestroy={onDestroy}
       onToggleSubscribe={onToggleSubscribe}
     />
-    <div className='flex w-full'>
-      <div className='flex-grow max-w-[40rem] min-w-[30rem] px-4 pb-2'>
-        <div className='flex flex-col gap-3'>
-          <FormRSForm disabled={!isMutable}
-            id={globalIDs.library_item_editor}
-            isModified={isModified}
-            setIsModified={setIsModified}
-          />
+    <div tabIndex={-1}
+      className='flex'
+      onKeyDown={handleInput}
+    >
+      <div className='flex flex-col gap-3 px-4 pb-2'>
+        <FormRSForm disabled={!isMutable}
+          id={globalIDs.library_item_editor}
+          isModified={isModified}
+          setIsModified={setIsModified}
+        />
 
-          <Divider margins='my-2' />
-          
-          <InfoLibraryItem item={schema} />
-        </div>
+        <Divider margins='my-2' />
+        
+        <InfoLibraryItem item={schema} />
       </div>
 
-      <Divider vertical />
-      
       <RSFormStats stats={schema?.stats}/>
     </div>
-  </div>);
+  </>);
 }
 
 export default EditorRSForm;

@@ -18,7 +18,7 @@ function Dropdown({
     layer='z-modal-tooltip'
     position='mt-3'
     className={clsx(
-      'flex flex-col items-stretch justify-start',
+      'flex flex-col items-stretch',
       'border rounded-md shadow-lg',
       'text-sm',
       'clr-input',

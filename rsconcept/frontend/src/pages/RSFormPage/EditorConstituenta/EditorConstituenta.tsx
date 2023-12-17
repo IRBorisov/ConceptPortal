@@ -30,12 +30,11 @@ interface EditorConstituentaProps {
   onRenameCst: (initial: ICstRenameData) => void
   onEditTerm: () => void
   onDeleteCst: (selected: number[], callback?: (items: number[]) => void) => void
-  onTemplates: (insertAfter?: number) => void
 }
 
 function EditorConstituenta({
   isMutable, isModified, setIsModified, activeID, activeCst, onEditTerm,
-  onCreateCst, onRenameCst, onOpenEdit, onDeleteCst, onTemplates
+  onCreateCst, onRenameCst, onOpenEdit, onDeleteCst
 }: EditorConstituentaProps) {
   const windowSize = useWindowSize();
   const { schema } = useRSForm();
@@ -114,13 +113,13 @@ function EditorConstituenta({
 
   function processAltKey(code: string): boolean {
     switch (code) {
-      case 'KeyE':   onTemplates(); return true;
       case 'KeyV':   handleClone(); return true;
     }
     return false;
   }
 
-  return (<>
+  return (
+  <>
     <ConstituentaToolbar
       isMutable={!disabled}
       isModified={isModified}
@@ -131,34 +130,29 @@ function EditorConstituenta({
       onDelete={handleDelete}
       onClone={handleClone}
       onCreate={handleCreate}
-      onTemplates={() => onTemplates(activeID)}
     />
     <div tabIndex={-1}
-      className='max-w-[1500px] flex justify-start w-full'
+      className='flex max-w-[95rem]'
       onKeyDown={handleInput}
     >
-      <div className='min-w-[47.8rem] max-w-[47.8rem] px-4 py-1'>
-        <FormConstituenta disabled={disabled}
-          id={globalIDs.constituenta_editor}
-          constituenta={activeCst}
-          isModified={isModified}
-          toggleReset={toggleReset}
-          
-          setIsModified={setIsModified}
-          onEditTerm={onEditTerm}
-          onRenameCst={onRenameCst}
-        />
-      </div>
+      <FormConstituenta disabled={disabled}
+        id={globalIDs.constituenta_editor}
+        constituenta={activeCst}
+        isModified={isModified}
+        toggleReset={toggleReset}
+        
+        setIsModified={setIsModified}
+        onEditTerm={onEditTerm}
+        onRenameCst={onRenameCst}
+      />
       {(windowSize.width && windowSize.width >= SIDELIST_HIDE_THRESHOLD) ?
-      <div className='w-full mt-[2.25rem] border h-fit'>
-        <ViewConstituents
-          schema={schema}
-          expression={activeCst?.definition_formal ?? ''}
-          baseHeight={UNFOLDED_HEIGHT}
-          activeID={activeID}
-          onOpenEdit={onOpenEdit}
-        />
-      </div> : null}
+      <ViewConstituents
+        schema={schema}
+        expression={activeCst?.definition_formal ?? ''}
+        baseHeight={UNFOLDED_HEIGHT}
+        activeID={activeID}
+        onOpenEdit={onOpenEdit}
+      />: null}
     </div>
   </>);
 }

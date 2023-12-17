@@ -1,10 +1,10 @@
 'use client';
 
+import clsx from 'clsx';
 import { useCallback, useMemo } from 'react';
 import { BiX } from 'react-icons/bi';
 
 import MiniButton from '@/components/Common/MiniButton';
-import Overlay from '@/components/Common/Overlay';
 import DataTable, { createColumnHelper } from '@/components/DataTable';
 import WordFormBadge from '@/components/Shared/WordFormBadge';
 import { IWordForm } from '@/models/language';
@@ -13,12 +13,11 @@ interface WordFormsTableProps {
   forms: IWordForm[]
   setForms: React.Dispatch<React.SetStateAction<IWordForm[]>>
   onFormSelect?: (form: IWordForm) => void
-  loading?: boolean
 }
 
 const columnHelper = createColumnHelper<IWordForm>();
 
-function WordFormsTable({ forms, setForms, onFormSelect, loading }: WordFormsTableProps) {
+function WordFormsTable({ forms, setForms, onFormSelect }: WordFormsTableProps) {
   const handleDeleteRow = useCallback(
   (row: number) => {
     setForms(
@@ -33,10 +32,6 @@ function WordFormsTable({ forms, setForms, onFormSelect, loading }: WordFormsTab
       return newForms;
     });
   }, [setForms]);
-
-  function handleResetAll() {
-    setForms([]);
-  }
 
   const columns = useMemo(
   () => [
@@ -68,35 +63,31 @@ function WordFormsTable({ forms, setForms, onFormSelect, loading }: WordFormsTab
       cell: props => 
         <MiniButton noHover
           tooltip='Удалить словоформу'
-          icon={<BiX size='1rem' className='text-warning'/>}
+          icon={<BiX size='1rem' className='clr-text-warning'/>}
           onClick={() => handleDeleteRow(props.row.index)}
         />
     })
   ], [handleDeleteRow]);
     
   return (
-  <>
-    <Overlay position='top-1 right-4'>
-    <MiniButton
-        tooltip='Сбросить все словоформы'
-        icon={<BiX size='1rem' className={forms.length === 0 ? 'text-disabled' : 'text-warning'} />}
-        disabled={loading || forms.length === 0}
-        onClick={handleResetAll}
-      />
-    </Overlay>
-    <DataTable dense noFooter
-      data={forms}
-      columns={columns}
-      headPosition='0'
-      noDataComponent={
-        <span className='p-2 text-center min-h-[2rem]'>
-          <p>Список пуст</p>
-          <p>Добавьте словоформу</p>
-        </span>
-      }
-      onRowClicked={onFormSelect}
-    />
-  </>);
+  <DataTable dense noFooter
+    className={clsx(
+      'mb-2',
+      'max-h-[17.4rem] min-h-[17.4rem]',
+      'border',
+      'overflow-y-auto'
+    )}
+    data={forms}
+    columns={columns}
+    headPosition='0'
+    noDataComponent={
+      <span className='p-2 text-center min-h-[2rem]'>
+        <p>Список пуст</p>
+        <p>Добавьте словоформу</p>
+      </span>
+    }
+    onRowClicked={onFormSelect}
+  />);
 }
 
 export default WordFormsTable;

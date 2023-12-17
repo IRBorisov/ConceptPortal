@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
-import { BiCheck, BiChevronsDown } from 'react-icons/bi';
+import { BiCheck, BiChevronsDown, BiLeftArrow, BiRightArrow, BiX } from 'react-icons/bi';
 
 import Label from '@/components/Common/Label';
 import MiniButton from '@/components/Common/MiniButton';
@@ -10,7 +10,6 @@ import Modal from '@/components/Common/Modal';
 import Overlay from '@/components/Common/Overlay';
 import TextArea from '@/components/Common/TextArea';
 import HelpButton from '@/components/Help/HelpButton';
-import { ArrowLeftIcon, ArrowRightIcon } from '@/components/Icons';
 import SelectGrammeme from '@/components/Shared/SelectGrammeme';
 import useConceptText from '@/hooks/useConceptText';
 import { Grammeme, ITextRequest, IWordForm, IWordFormPlain } from '@/models/language';
@@ -118,6 +117,10 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
     });
   }
 
+  function handleResetAll() {
+    setForms([]);
+  }
+
   return (
   <Modal canSubmit
     title='Редактирование словоформ'
@@ -150,21 +153,21 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
           value={inputText}
           onChange={event => setInputText(event.target.value)}
         />
-        <div className='max-w-min'>
-          <MiniButton
-            tooltip='Генерировать словоформу'
-            icon={<ArrowLeftIcon size='1.25rem' className={inputGrams.length == 0 ? 'text-disabled' : 'clr-text-primary'} />}
-            disabled={textProcessor.loading || inputGrams.length == 0}
-            onClick={handleInflect}
-          />
+        <div className='flex flex-col gap-1'>
           <MiniButton
             tooltip='Определить граммемы'
-            icon={<ArrowRightIcon
+            icon={<BiRightArrow
               size='1.25rem'
-              className={!inputText ? 'text-disabled' : 'clr-text-primary'}
+              className={inputText ? 'clr-text-primary' : ''}
             />}
             disabled={textProcessor.loading || !inputText}
             onClick={handleParse}
+          />
+          <MiniButton
+            tooltip='Генерировать словоформу'
+            icon={<BiLeftArrow size='1.25rem' className={inputGrams.length !== 0 ? 'clr-text-primary' : ''} />}
+            disabled={textProcessor.loading || inputGrams.length == 0}
+            onClick={handleInflect}
           />
         </div>
       </div>
@@ -182,14 +185,14 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         tooltip='Внести словоформу'
         icon={<BiCheck
           size='1.25rem'
-          className={!inputText || inputGrams.length == 0 ? 'text-disabled' : 'clr-text-success'}
+          className={inputText && inputGrams.length !== 0 ? 'clr-text-success' : ''}
         />}
         disabled={textProcessor.loading || !inputText || inputGrams.length == 0}
         onClick={handleAddForm}
       />
       <MiniButton
         tooltip='Генерировать стандартные словоформы'
-        icon={<BiChevronsDown size='1.25rem' className={!inputText ? 'text-disabled' : 'clr-text-primary'}
+        icon={<BiChevronsDown size='1.25rem' className={inputText ? 'clr-text-primary' : ''}
         />}
         disabled={textProcessor.loading || !inputText}
         onClick={handleGenerateLexeme}
@@ -197,25 +200,24 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
     </Overlay>
     
     <div className={clsx(
-      'mt-3 mb-2', 
+      'mt-3 mb-2',
+      'flex justify-center items-center',
       'text-sm text-center font-semibold'
     )}>
-      Заданные вручную словоформы [{forms.length}]
+      <span>Заданные вручную словоформы [{forms.length}]</span>
+      <MiniButton noHover
+        tooltip='Сбросить все словоформы'
+        icon={<BiX size='1rem' className={forms.length !== 0 ? 'clr-text-warning' : ''} />}
+        disabled={textProcessor.loading || forms.length === 0}
+        onClick={handleResetAll}
+      />
     </div>
     
-    <div className={clsx(
-      'mb-2',
-      'max-h-[17.4rem] min-h-[17.4rem]',
-      'border',
-      'overflow-y-auto'
-    )}>
     <WordFormsTable
       forms={forms}
       setForms={setForms}
       onFormSelect={handleSelectForm}
-      loading={textProcessor.loading}
     />
-    </div>
   </Modal>);
 }
 

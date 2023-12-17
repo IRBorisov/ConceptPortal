@@ -1,4 +1,6 @@
-import { InDoorIcon, UserIcon } from '@/components/Icons';
+import { FaCircleUser } from 'react-icons/fa6';
+
+import { InDoorIcon } from '@/components/Icons';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NagivationContext';
 import useDropdown from '@/hooks/useDropdown';
@@ -24,7 +26,7 @@ function UserMenu() {
     {user ?
     <NavigationButton
       description={`Пользователь ${user?.username}`}
-      icon={<UserIcon />}
+      icon={<FaCircleUser size='1.5rem' />}
       onClick={menu.toggle}
     /> : null}
     </div>
