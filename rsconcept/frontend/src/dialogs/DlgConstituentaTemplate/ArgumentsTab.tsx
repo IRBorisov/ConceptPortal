@@ -97,7 +97,7 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
       minSize: 40,
       maxSize: 40,
       cell: props => 
-        <div className='w-full text-center'>
+        <div className='text-center'>
           {props.getValue()}
         </div>
     }),
@@ -162,7 +162,7 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
       conditionalRowStyles={conditionalRowStyles}
       noDataComponent={
         <p className={clsx(
-          'min-h-[3.6rem] w-full',
+          'min-h-[3.6rem]',
           'p-2',
           'text-center'
         )}>

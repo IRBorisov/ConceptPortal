@@ -38,7 +38,7 @@ function RSListToolbar({
   const nothingSelected = useMemo(() => selectedCount === 0, [selectedCount]);
   
   return (
-  <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex'>
+  <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex items-start'>
     <MiniButton
       title='Переместить вверх [Alt + вверх]'
       icon={<BiUpvote size='1.25rem' className={isMutable && !nothingSelected ? 'clr-text-primary': ''}/>}
@@ -63,27 +63,25 @@ function RSListToolbar({
       disabled={!isMutable}
       onClick={() => onCreate()}
     />
-    <div ref={insertMenu.ref} className='flex justify-center'>
-      <div>
-        <MiniButton
-          title='Добавить пустую конституенту'
-          icon={<BiDownArrowCircle size='1.25rem' className={isMutable ? 'clr-text-success': ''} />}
-          disabled={!isMutable}
-          onClick={insertMenu.toggle}
+    <div ref={insertMenu.ref}>
+      <MiniButton
+        title='Добавить пустую конституенту'
+        icon={<BiDownArrowCircle size='1.25rem' className={isMutable ? 'clr-text-success': ''} />}
+        disabled={!isMutable}
+        onClick={insertMenu.toggle}
+      />
+      {insertMenu.isActive ?
+      <Dropdown>
+      {(Object.values(CstType)).map(
+      (typeStr) => 
+        <DropdownButton
+          key={`${prefixes.csttype_list}${typeStr}`}
+          text={`${getCstTypePrefix(typeStr as CstType)}1 — ${labelCstType(typeStr as CstType)}`}
+          onClick={() => onCreate(typeStr as CstType)}
+          title={getCstTypeShortcut(typeStr as CstType)}
         />
-        {insertMenu.isActive ?
-        <Dropdown>
-        {(Object.values(CstType)).map(
-        (typeStr) => 
-          <DropdownButton
-            key={`${prefixes.csttype_list}${typeStr}`}
-            text={`${getCstTypePrefix(typeStr as CstType)}1 — ${labelCstType(typeStr as CstType)}`}
-            onClick={() => onCreate(typeStr as CstType)}
-            title={getCstTypeShortcut(typeStr as CstType)}
-          />
-        )}
-        </Dropdown> : null}
-      </div>
+      )}
+      </Dropdown> : null}
     </div>
     <MiniButton
       title='Удалить выбранные [Delete]'

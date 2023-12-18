@@ -19,7 +19,7 @@ function TopicsList({ activeTopic, onChangeTopic }: TopicsListProps) {
     'small-caps',
     'select-none'
   )}>
-    <h1 className='mt-2 mb-1'>Справка</h1>
+    <h1 className='my-1'>Справка</h1>
     {Object.values(HelpTopic).map(
     (topic, index) => 
         <div key={`${prefixes.topic_list}${index}`}

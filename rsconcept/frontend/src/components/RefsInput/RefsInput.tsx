@@ -178,7 +178,6 @@ function RefsInput({
     onSave={handleInputReference}
   /> : null}
   <div className={clsx(
-    'w-full',
     'flex flex-col gap-2',
     cursor
   )}>

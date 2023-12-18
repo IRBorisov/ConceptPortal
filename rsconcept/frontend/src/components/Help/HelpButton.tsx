@@ -15,13 +15,11 @@ extends CProps.Styling {
 
 function HelpButton({ topic, ...restProps }: HelpButtonProps) {
   return (
-  <>
-    <div
-      id={`help-${topic}`}
-      className='p-1'
-    >
-      <BiInfoCircle size='1.25rem' className='clr-text-primary' />
-    </div>
+  <div
+    id={`help-${topic}`}
+    className='p-1'
+  >
+    <BiInfoCircle size='1.25rem' className='clr-text-primary' />
     <ConceptTooltip clickable
       anchorSelect={`#help-${topic}`}
       layer='z-modal-tooltip'
@@ -34,7 +32,7 @@ function HelpButton({ topic, ...restProps }: HelpButtonProps) {
       </div>
       <InfoTopic topic={topic} />
     </ConceptTooltip>
-  </>);
+  </div>);
 }
 
 export default HelpButton;

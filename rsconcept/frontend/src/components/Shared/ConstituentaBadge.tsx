@@ -16,23 +16,21 @@ interface ConstituentaBadgeProps {
 
 function ConstituentaBadge({ value, prefixID, shortTooltip, theme }: ConstituentaBadgeProps) {
   return (
-  <div className='w-fit'>
-    <div
-      id={`${prefixID}${value.alias}`}
-      className={clsx(
-        'min-w-[3.1rem] max-w-[3.1rem]',
-        'px-1',
-        'border rounded-md',
-        'text-center font-semibold whitespace-nowrap'
-      )}
-      style={{
-        borderColor: colorfgCstStatus(value.status, theme),
-        color: colorfgCstStatus(value.status, theme),
-        backgroundColor: isMockCst(value) ? theme.bgWarning : theme.bgInput
-      }}
-    >
-      {value.alias}
-    </div>
+  <div
+    id={`${prefixID}${value.alias}`}
+    className={clsx(
+      'min-w-[3.1rem] max-w-[3.1rem]',
+      'px-1',
+      'border rounded-md',
+      'text-center font-semibold whitespace-nowrap'
+    )}
+    style={{
+      borderColor: colorfgCstStatus(value.status, theme),
+      color: colorfgCstStatus(value.status, theme),
+      backgroundColor: isMockCst(value) ? theme.bgWarning : theme.bgInput
+    }}
+  >
+    {value.alias}
     {!shortTooltip ?
     <ConstituentaTooltip
       anchor={`#${prefixID}${value.alias}`}

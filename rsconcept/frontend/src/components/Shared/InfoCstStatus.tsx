@@ -14,7 +14,7 @@ function InfoCstStatus({ title }: InfoCstStatusProps) {
   const { colors } = useConceptTheme();
 
   return (
-  <div className='flex flex-col gap-1 mb-2 h-fit'>
+  <div className='flex flex-col gap-1 mb-2'>
     {title ? <h1>{title}</h1> : null}
     {Object.values(ExpressionStatus)
       .filter(status => status !== ExpressionStatus.UNDEFINED)

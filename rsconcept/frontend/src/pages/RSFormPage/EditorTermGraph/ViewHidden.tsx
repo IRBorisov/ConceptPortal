@@ -54,7 +54,7 @@ function ViewHidden({
       return (
       <div key={`wrap-${id}`}>
         <div key={id} id={id}
-          className='w-fit min-w-[3rem] rounded-md text-center cursor-pointer select-none'
+          className='min-w-[3rem] rounded-md text-center cursor-pointer select-none'
           style={{
             backgroundColor: colorbgGraphNode(cst, adjustedColoring, colors),
             ...dismissedStyle(cstID)

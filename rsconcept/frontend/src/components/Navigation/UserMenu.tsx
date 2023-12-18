@@ -16,7 +16,6 @@ function UserMenu() {
   const navigateLogin = () => router.push('/login');
   return (
   <div ref={menu.ref} className='h-full'>
-    <div className='flex items-center justify-end h-full w-fit'>
     {!user ?
     <NavigationButton
       description='Перейти на страницу логина'
@@ -29,7 +28,6 @@ function UserMenu() {
       icon={<FaCircleUser size='1.5rem' />}
       onClick={menu.toggle}
     /> : null}
-    </div>
     {(user && menu.isActive) ?
     <UserDropdown
       hideDropdown={() => menu.hide()}

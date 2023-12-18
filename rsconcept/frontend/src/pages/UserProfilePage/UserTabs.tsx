@@ -45,7 +45,7 @@ function UserTabs() {
           />
         </Overlay>
         <h1 className='mb-4'>Учетные данные пользователя</h1>
-        <div className='flex py-2 max-w-fit'>
+        <div className='flex py-2'>
           <EditorProfile />
           <EditorPassword />
         </div>   

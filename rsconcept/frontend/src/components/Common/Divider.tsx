@@ -10,8 +10,8 @@ function Divider({ vertical, margins = 'mx-2' }: DividerProps) {
   <div className={clsx(
     margins, 
     {
-      'border-x h-full': vertical,
-      'border-y w-full': !vertical
+      'border-x': vertical,
+      'border-y': !vertical
     }
   )}/>);
 }

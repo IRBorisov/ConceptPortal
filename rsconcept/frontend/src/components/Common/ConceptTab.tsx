@@ -11,7 +11,7 @@ function ConceptTab({ label, className, ...otherProps }: ConceptTabProps) {
   return (
   <Tab
     className={clsx(
-      'h-full min-w-[6rem]',
+      'min-w-[6rem]',
       'px-2 py-1 flex justify-center',
       'clr-tab',
       'text-sm whitespace-nowrap small-caps font-semibold',

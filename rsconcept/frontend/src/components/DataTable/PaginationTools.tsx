@@ -26,20 +26,18 @@ function PaginationTools<TData>({ table, paginationOptions, onChangePaginationOp
   return (
   <div className={clsx(
     'flex justify-end items-center',
-    'w-full my-2',
+    'my-2',
     'text-sm', 
     'clr-text-controls',
     'select-none'
   )}>
-    <div className='flex items-center gap-1 mr-3'>
-      <div className=''>
-        {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
-        -
-        {Math.min(table.getFilteredRowModel().rows.length, (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize)}
-      </div>
-      <span>из</span>
-      <div className=''>{table.getFilteredRowModel().rows.length}</div>
-    </div>
+    <span className='mr-3'>
+      {`${table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
+      -
+      ${Math.min(table.getFilteredRowModel().rows.length, (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize)}
+      из
+      ${table.getFilteredRowModel().rows.length}`}
+    </span>
     <div className='flex'>
       <button type='button'
         className='clr-hover clr-text-controls'

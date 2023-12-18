@@ -17,7 +17,7 @@ function HelpRSLang() {
   }, [windowSize]);
 
   return (
-  <div className='flex flex-col w-full gap-4'>
+  <div className='flex flex-col gap-4'>
     <div>
       <h1>Родоструктурная экспликация концептуальных схем</h1>
       <p>Формальная запись (<i>экспликация</i>) концептуальных схем осуществляется с помощью языка родов структур.</p>
@@ -29,7 +29,7 @@ function HelpRSLang() {
         <li>3. <a className='underline' href={urls.full_course}>Видео: лекции для 4 курса (второй семестр 2022-23 год)</a></li>
       </ul>
     </div>
-    <div className='justify-center hidden w-full md:flex fleex-col'>
+    <div className='justify-center hidden w-full md:flex'>
     <EmbedYoutube
       videoID={youtube.intro}
       pxHeight={videoHeight}

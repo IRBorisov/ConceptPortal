@@ -36,7 +36,7 @@ function PDFViewer({ file }: PDFViewerProps) {
   <Document
     file={file}
     onLoadSuccess={onDocumentLoadSuccess}
-    className='px-3 w-fit'
+    className='px-3'
     loading='Загрузка PDF файла...'
     error='Не удалось загрузить файл.'
   >
