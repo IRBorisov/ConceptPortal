@@ -131,7 +131,7 @@ function FormConstituenta({
   </Overlay>
   <form id={id}
     className={clsx(
-      'mt-1 min-w-[47.8rem] max-w-[47.8rem]',
+      'mt-1 w-[47.8rem] shrink-0',
       'px-4 py-1',
       classnames.flex_col
     )}

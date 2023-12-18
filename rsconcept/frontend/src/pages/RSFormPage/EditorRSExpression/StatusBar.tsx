@@ -2,7 +2,6 @@
 
 import clsx from 'clsx';
 import { useMemo } from 'react';
-import { BiBug } from 'react-icons/bi';
 
 import { ConceptLoader } from '@/components/Common/ConceptLoader';
 import { useConceptTheme } from '@/context/ThemeContext';
@@ -12,6 +11,8 @@ import { inferStatus } from '@/models/rsformAPI';
 import { IExpressionParse, ParsingStatus } from '@/models/rslang';
 import { colorbgCstStatus } from '@/utils/color';
 import { labelExpressionStatus } from '@/utils/labels';
+
+import StatusIcon from './StatusIcon';
 
 interface StatusBarProps {
   processing?: boolean
@@ -39,7 +40,7 @@ function StatusBar({ isModified, processing, constituenta, parseData, onAnalyze 
     title='Проверить определение [Ctrl + Q]'
     className={clsx(
       'w-[10rem] h-[1.75rem]',
-      'px-3',
+      'px-2 flex items-center justify-center gap-2',
       'border',
       'select-none',
       'cursor-pointer',
@@ -50,12 +51,12 @@ function StatusBar({ isModified, processing, constituenta, parseData, onAnalyze 
   >
     {processing ?
       <ConceptLoader size={3} /> :
-      <div className='flex items-center justify-center h-full gap-2'>
-        <BiBug size='1rem' className='translate-y-[0.1rem]' />
-        <span className='font-semibold small-caps'>
+      <>
+        <StatusIcon status={status} />
+        <span className='pb-[0.125rem] font-semibold small-caps pr-2'>
           {labelExpressionStatus(status)}
         </span>
-      </div>
+      </>
     }
   </div>);
 }

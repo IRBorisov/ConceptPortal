@@ -399,7 +399,7 @@ function RSTabs() {
     className='flex flex-col min-w-[45rem]'
   >
     <TabList className={clsx(
-      'h-[1.9rem] mx-auto',
+      'mx-auto',
       'flex', 
       'border-b-2 border-x-2 divide-x-2'
     )}>
