@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { IColorsProps, IControlProps } from './commonInterfaces';
 
 interface ButtonProps
-extends IControlProps, IColorsProps, Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'children' | 'title'| 'type'> {
+extends IControlProps, IColorsProps, Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'title'| 'type'> {
   text?: string
   icon?: React.ReactNode
 
@@ -12,11 +12,10 @@ extends IControlProps, IColorsProps, Omit<React.ButtonHTMLAttributes<HTMLButtonE
 }
 
 function Button({
-  text, icon, tooltip,
+  text, icon, tooltip, loading,
   dense, disabled, noBorder, noOutline,
   colors = 'clr-btn-default',
-  dimensions = 'w-fit h-fit',
-  loading,
+  className,
   ...restProps
 }: ButtonProps) {
   return (
@@ -36,7 +35,7 @@ function Button({
         'clr-outline': !noOutline,
       },
       colors,
-      dimensions
+      className
     )}
     {...restProps}
   >

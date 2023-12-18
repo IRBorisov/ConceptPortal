@@ -56,21 +56,21 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
     onSubmit={handleSubmit}
     submitText='Создать'
     className={clsx(
-      'h-fit min-w-[35rem]',
-      'py-2 px-6 flex flex-col gap-3 justify-stretch'
+      'w-[35rem]',
+      'py-2 px-6 flex flex-col gap-3'
     )}
   >
-    <div className='flex justify-center w-full gap-6'>
+    <div className='flex self-center gap-6'>
       <SelectSingle
         placeholder='Выберите тип'
-        className='min-w-[15rem] self-center'
+        className='min-w-[15rem]'
         options={SelectorCstType}
         value={{ value: cstData.cst_type, label: labelCstType(cstData.cst_type) }}
         onChange={data => updateCstData({ cst_type: data?.value ?? CstType.BASE})}
       />
       <TextInput dense
         label='Имя'
-        dimensions='w-[7rem]'
+        className='w-[7rem]'
         value={cstData.alias}
         onChange={event => updateCstData({ alias: event.target.value})}
       />

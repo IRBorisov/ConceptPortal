@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
@@ -119,17 +120,20 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     submitText='Создать'
     className='max-w-[43rem] min-w-[43rem] min-h-[36rem] px-6'
   >
-  <Tabs defaultFocus forceRenderTabPanel
-    selectedTabClassName='clr-selected'
-    selectedIndex={activeTab}
-    onSelect={setActiveTab}
-  >
     <Overlay position='top-0 right-[6rem]'>
       <HelpButton topic={HelpTopic.RSTEMPLATES} dimensions='max-w-[35rem]' />
     </Overlay>
-    
-    <TabList className='flex justify-center mb-3'>
-      <div className='flex border divide-x rounded-none w-fit'>
+    <Tabs forceRenderTabPanel
+      selectedTabClassName='clr-selected'
+      className='flex flex-col'
+      selectedIndex={activeTab}
+      onSelect={setActiveTab}
+    >
+      <TabList className={clsx(
+        'mb-3 self-center',
+        'flex',
+        'border divide-x rounded-none'
+      )}>
         <ConceptTab
           label='Шаблон'
           tooltip='Выбор шаблона выражения'
@@ -145,33 +149,30 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
           tooltip='Редактирование атрибутов конституенты'
           className='w-[8rem]'
         />
-      </div>
-    </TabList>
-    
-    <div className='w-full'>
+      </TabList>
+      
       <TabPanel style={{ display: activeTab === TabID.TEMPLATE ? '': 'none' }}>
-        <TemplateTab
-          state={template}
-          partialUpdate={updateTemplate}
-        />
+      <TemplateTab
+        state={template}
+        partialUpdate={updateTemplate}
+      />
       </TabPanel>
 
       <TabPanel style={{ display: activeTab === TabID.ARGUMENTS ? '': 'none' }}>
-        <ArgumentsTab
-          schema={schema}
-          state={substitutes}
-          partialUpdate={updateSubstitutes}
-        />
+      <ArgumentsTab
+        schema={schema}
+        state={substitutes}
+        partialUpdate={updateSubstitutes}
+      />
       </TabPanel>
 
       <TabPanel style={{ display: activeTab === TabID.CONSTITUENTA ? '': 'none' }}>
-        <ConstituentaTab 
-          state={constituenta}
-          partialUpdate={updateConstituenta}
-        />
+      <ConstituentaTab 
+        state={constituenta}
+        partialUpdate={updateConstituenta}
+      />
       </TabPanel>
-    </div>
-  </Tabs>
+    </Tabs>
   </Modal>);
 }
 

@@ -4,7 +4,7 @@ import { IColorsProps, IEditorProps } from './commonInterfaces';
 import Label from './Label';
 
 interface TextInputProps 
-extends IEditorProps, IColorsProps, Omit<React.InputHTMLAttributes<HTMLInputElement>, 'className' | 'title'> {
+extends IEditorProps, IColorsProps, Omit<React.InputHTMLAttributes<HTMLInputElement>, 'title'> {
   dense?: boolean
   allowEnter?: boolean
 }
@@ -17,7 +17,7 @@ function preventEnterCapture(event: React.KeyboardEvent<HTMLInputElement>) {
 
 function TextInput({
   id, label, dense, tooltip, noBorder, noOutline, allowEnter, disabled,
-  dimensions = 'w-full',
+  className,
   colors = 'clr-input',
   onKeyDown,
   ...restProps
@@ -25,10 +25,10 @@ function TextInput({
   return (
   <div className={clsx(
     {
-      'flex flex-col items-start gap-2': !dense,
-      'flex items-center gap-3': dense,
+      'flex flex-col gap-2': !dense,
+      'flex justify-stretch items-center gap-3': dense,
     },
-    dense && dimensions
+    dense && className
   )}>
     <Label text={label} htmlFor={id} />
     <input id={id}
@@ -38,12 +38,12 @@ function TextInput({
         'leading-tight truncate hover:text-clip',
         {
           'px-3': !noBorder || !disabled,
-          'w-full': dense,
+          'flex-grow': dense,
           'border': !noBorder,
           'clr-outline': !noOutline
         },
         colors, 
-        !dense && dimensions
+        !dense && className
       )}
       onKeyDown={!allowEnter && !onKeyDown ? preventEnterCapture : onKeyDown}
       disabled={disabled}

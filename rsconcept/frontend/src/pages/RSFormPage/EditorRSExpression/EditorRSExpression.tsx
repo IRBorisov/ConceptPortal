@@ -2,7 +2,8 @@
 
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
-import { PiGraphLight } from "react-icons/pi";
+import { FaRegKeyboard } from 'react-icons/fa6';
+import { RiNodeTree } from 'react-icons/ri'
 import { toast } from 'react-toastify';
 
 import MiniButton from '@/components/Common/MiniButton';
@@ -12,14 +13,16 @@ import { RSTextWrapper } from '@/components/RSInput/textEditing';
 import { useRSForm } from '@/context/RSFormContext';
 import DlgShowAST from '@/dialogs/DlgShowAST';
 import useCheckExpression from '@/hooks/useCheckExpression';
+import useLocalStorage from '@/hooks/useLocalStorage';
 import { IConstituenta } from '@/models/rsform';
 import { IExpressionParse, IRSErrorDescription, SyntaxTree } from '@/models/rslang';
 import { TokenID } from '@/models/rslang';
 import { labelTypification } from '@/utils/labels';
 import { getCstExpressionPrefix } from '@/utils/misc';
 
-import RSAnalyzer from './RSAnalyzer';
+import ParsingResult from './ParsingResult';
 import RSEditorControls from './RSEditControls';
+import StatusBar from './StatusBar';
 
 interface EditorRSExpressionProps {
   id?: string
@@ -46,6 +49,7 @@ function EditorRSExpression({
   const [syntaxTree, setSyntaxTree] = useState<SyntaxTree>([]);
   const [expression, setExpression] = useState('');
   const [showAST, setShowAST] = useState(false);
+  const [showControls, setShowControls] = useLocalStorage('rseditor-show-controls', true);
 
   useLayoutEffect(() => {
     setIsModified(false);
@@ -132,35 +136,52 @@ function EditorRSExpression({
   /> : null}
   
   <div>
-    <Overlay position='top-[-0.375rem] left-[11rem]'>
+    <Overlay position='top-0 right-0 flex'>
+      <MiniButton noHover
+        tooltip='Включение специальной клавиатуры'
+        onClick={() => setShowControls(prev => !prev)}
+        icon={<FaRegKeyboard size='1.25rem' className={showControls ? 'clr-text-primary': ''} />}
+      />
       <MiniButton noHover
         tooltip='Дерево разбора выражения'
         onClick={handleShowAST}
-        icon={<PiGraphLight size='1.25rem' className='clr-text-primary' />}
+        icon={<RiNodeTree size='1.25rem' className='clr-text-primary' />}
       />
-     </Overlay>
+    </Overlay>
+
+    <Overlay position='top-[-0.5rem] right-1/2 translate-x-1/2'>
+      <StatusBar
+        processing={loading}
+        isModified={isModified}
+        constituenta={activeCst}
+        parseData={parseData}
+        onAnalyze={() => handleCheckExpression()}
+      />
+    </Overlay>
 
     <RSInput innerref={rsInput}
       value={value}
       minHeight='3.8rem'
       disabled={disabled}
       onChange={handleChange}
+      onAnalyze={handleCheckExpression}
       {...restProps}
     />
 
+    {showControls ?
     <RSEditorControls 
       disabled={disabled}
       onEdit={handleEdit}
-    />
+    /> : null}
     
-    <RSAnalyzer 
-      parseData={parseData}
-      processing={loading}
-      isModified={isModified}
-      activeCst={activeCst}
-      onCheckExpression={handleCheckExpression}
-      onShowError={onShowError}
-    />
+    {(parseData && parseData.errors.length > 0) ? 
+    <div className='flex-grow text-sm border overflow-y-auto max-h-[4.5rem] min-h-[4.5rem]'>
+      <ParsingResult
+        data={parseData}
+        disabled={disabled}
+        onShowError={onShowError}
+      />
+    </div> : null}
   </div>
   </>);
 }

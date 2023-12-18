@@ -93,18 +93,18 @@ function RegisterPage() {
           pattern={patterns.login}
           tooltip='Минимум 3 знака. Латинские буквы и цифры. Не может начинаться с цифры'
           value={username}
-          dimensions='w-[15rem]'
+          className='w-[15rem]'
           onChange={event => setUsername(event.target.value)}
         />
         <TextInput id='password' type='password' required
           label='Пароль'
-          dimensions='w-[15rem]'
+          className='w-[15rem]'
           value={password}
           onChange={event => setPassword(event.target.value)}
         />
         <TextInput id='password2' required type='password'
           label='Повторите пароль'
-          dimensions='w-[15rem]'
+          className='w-[15rem]'
           value={password2}
           onChange={event => setPassword2(event.target.value)}
         />
@@ -145,13 +145,13 @@ function RegisterPage() {
     <div className='flex justify-around my-3'>
       <SubmitButton
         text='Регистрировать' 
-        dimensions='min-w-[10rem]'
+        className='min-w-[10rem]'
         loading={loading}
         disabled={!acceptPrivacy}
       />
       <Button 
         text='Назад'
-        dimensions='min-w-[10rem]'
+        className='min-w-[10rem]'
         onClick={() => handleCancel()}
       />
     </div>

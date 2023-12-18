@@ -650,6 +650,8 @@ export function describeRSError(error: IRSErrorDescription): string {
     return `Непустое выражение базисного/константного множества`;
   case RSErrorType.globalUnexpectedType:
     return `Типизация выражения не соответствует типу конституенты`;
+  case RSErrorType.globalEmptyDerived:
+    return `Пустое выражение для выводимого понятия или утверждения`;
   }
   return 'UNKNOWN ERROR';
 }

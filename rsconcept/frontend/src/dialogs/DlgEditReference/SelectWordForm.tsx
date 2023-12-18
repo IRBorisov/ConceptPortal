@@ -20,9 +20,8 @@ function SelectWordForm({ selected, setSelected }: SelectWordFormProps) {
   }, [setSelected]);
 
   return (
-  <div className='flex flex-col items-center w-full text-sm'>
-    <div className='flex flex-start'>
-    {PremadeWordForms.slice(0, 6).map(
+  <div className='text-sm'>
+    {PremadeWordForms.slice(0, 12).map(
     (data, index) => 
       <WordformButton key={`${prefixes.wordform_list}${index}`}
         text={data.text} example={data.example} grams={data.grams}
@@ -30,18 +29,6 @@ function SelectWordForm({ selected, setSelected }: SelectWordFormProps) {
         onSelectGrams={handleSelect}
       />
     )}
-    </div>
-
-    <div className='flex flex-start'>
-    {PremadeWordForms.slice(6, 12).map(
-    (data, index) => 
-      <WordformButton key={`${prefixes.wordform_list}${index}`}
-        text={data.text} example={data.example} grams={data.grams}
-        isSelected={data.grams.every(gram => selected.find(item => item.value as Grammeme === gram))}
-        onSelectGrams={handleSelect}
-      />
-    )}
-    </div>
   </div>);
 }
 

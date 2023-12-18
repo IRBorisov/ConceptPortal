@@ -16,7 +16,8 @@ Omit<SelectMultiProps<IGrammemeOption>, 'value' | 'onChange'> {
 
 function SelectGrammeme({
   value, setValue,
-  dimensions, className, placeholder
+  dimensions, className, placeholder,
+  ...restProps
 }: SelectGrammemeProps) {
   const [options, setOptions] = useState<IGrammemeOption[]>([]);
 
@@ -37,6 +38,7 @@ function SelectGrammeme({
     placeholder={placeholder}
     value={value}
     onChange={newValue => setValue([...newValue].sort(compareGrammemeOptions))}
+    {...restProps}
   />);
 }
 

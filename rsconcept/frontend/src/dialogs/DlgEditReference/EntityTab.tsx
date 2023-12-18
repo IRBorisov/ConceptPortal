@@ -73,19 +73,19 @@ function EntityTab({ initial, items, setIsValid, setReference }: EntityTabProps)
       rows={8}
     />
 
-    <div className='flex gap-6 flex-start'>
+    <div className='flex gap-3'>
       <TextInput dense
-        label='Отсылаемая конституента'
+        label='Конституента'
         placeholder='Имя'
-        dimensions='max-w-[17rem] min-w-[17rem]'
+        className='max-w-[11rem] min-w-[11rem]'
         value={alias}
         onChange={event => setAlias(event.target.value)}
       />
       <TextInput disabled dense noBorder
         label='Термин'
+        className='flex-grow text-sm'
         value={term}
         tooltip={term}
-        dimensions='w-full text-sm'
       />
     </div>
 
@@ -94,11 +94,10 @@ function EntityTab({ initial, items, setIsValid, setReference }: EntityTabProps)
       setSelected={setSelectedGrams}
     />
     
-    <div className='flex items-center gap-4 flex-start'>
-      <Label text='Отсылаемая словоформа'/>
+    <div className='flex items-center gap-4'>
+      <Label text='Словоформа'/>
       <SelectGrammeme
         placeholder='Выберите граммемы'
-        dimensions='h-full '
         className='flex-grow'
         menuPlacement='top'
         value={selectedGrams}

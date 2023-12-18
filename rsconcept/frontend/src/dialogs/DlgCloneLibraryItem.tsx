@@ -72,7 +72,7 @@ function DlgCloneLibraryItem({ hideWindow, base }: DlgCloneLibraryItemProps) {
     <TextInput
       label='Сокращение'
       value={alias}
-      dimensions='max-w-sm'
+      className='max-w-sm'
       onChange={event => setAlias(event.target.value)}
     />
     <TextArea

@@ -14,7 +14,7 @@ extends Omit<CheckboxProps, 'value' | 'setValue'> {
 
 function Tristate({
   id, disabled, tooltip, label, 
-  dimensions = 'w-fit',
+  className,
   value, setValue,
   ...restProps
 }: TristateProps) {
@@ -48,8 +48,8 @@ function Tristate({
   className={clsx(
       'flex items-center gap-2 text-start',
       'outline-none',
-      dimensions,
-      cursor
+      cursor,
+      className
     )}
     title={tooltip}
     disabled={disabled}

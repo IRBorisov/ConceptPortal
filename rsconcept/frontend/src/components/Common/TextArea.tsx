@@ -5,24 +5,24 @@ import { IColorsProps, IEditorProps } from './commonInterfaces';
 import Label from './Label';
 
 export interface TextAreaProps 
-extends IEditorProps, IColorsProps, Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'className' | 'title'> {
+extends IEditorProps, IColorsProps, Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'title'> {
   dense?: boolean
 }
 
 function TextArea({
   id, label, required, tooltip, rows,
   dense, noBorder, noOutline,
-  dimensions = 'w-full',
+  className,
   colors = 'clr-input',
   ...restProps
 }: TextAreaProps) {
   return (
   <div className={clsx(
     {
-      'flex items-center gap-3': dense,
-      'flex flex-col items-start gap-2': !dense
+      'flex flex-col gap-2': !dense,
+      'flex justify-stretch items-center gap-3': dense
     },
-    dense && dimensions,
+    dense && className,
   )}>
     <Label text={label} htmlFor={id} />
     <textarea id={id}
@@ -31,12 +31,12 @@ function TextArea({
         'px-3 py-2',
         'leading-tight',
         {
-          'w-full': dense,
           'border': !noBorder,
+          'flex-grow': dense,
           'clr-outline': !noOutline
         },
         colors, 
-        !dense && dimensions
+        !dense && className
       )}
       rows={rows}
       required={required}

@@ -85,54 +85,39 @@ interface RSEditorControlsProps {
 
 function RSEditorControls({ onEdit, disabled }: RSEditorControlsProps) {
   return (
-  <div className='flex items-center justify-start w-full text-sm'>
-    <div className='w-fit'>
-      <div className='flex justify-start'>
-        {MAIN_FIRST_ROW.map(
-        (token) => 
-        <RSTokenButton key={`${prefixes.rsedit_btn}${token}`}
-          token={token} onInsert={onEdit} disabled={disabled}
-        />)}
-      </div>
-      <div className='flex justify-start'>
-        {MAIN_SECOND_ROW.map(
-        (token) => 
-        <RSTokenButton key={`${prefixes.rsedit_btn}${token}`}
-          token={token} onInsert={onEdit} disabled={disabled}
-        />)}
-      </div>
-      <div className='flex justify-start'>
-        {MAIN_THIRD_ROW.map(
-        (token) => 
-        <RSTokenButton key={`${prefixes.rsedit_btn}${token}`}
-          token={token} onInsert={onEdit} disabled={disabled}
-        />)}
-      </div>
-    </div>
+  <div className='flex-wrap text-sm divide-solid'>
+    {MAIN_FIRST_ROW.map(
+    (token) => 
+    <RSTokenButton key={`${prefixes.rsedit_btn}${token}`}
+      token={token} onInsert={onEdit} disabled={disabled}
+    />)}
+    {SECONDARY_FIRST_ROW.map(
+    ({text, tooltip}) => 
+    <RSLocalButton key={`${prefixes.rsedit_btn}${tooltip}`}
+      text={text} tooltip={tooltip} onInsert={onEdit} disabled={disabled}
+    />)}
 
-    <div className='w-fit'>
-      <div className='flex justify-start'>
-        {SECONDARY_FIRST_ROW.map(
-        ({text, tooltip}) => 
-        <RSLocalButton key={`${prefixes.rsedit_btn}${tooltip}`}
-          text={text} tooltip={tooltip} onInsert={onEdit} disabled={disabled}
-        />)}
-      </div>
-      <div className='flex justify-start'>
-        {SECONDARY_SECOND_ROW.map(
-        ({text, tooltip}) => 
-        <RSLocalButton key={`${prefixes.rsedit_btn}${tooltip}`}
-          text={text} tooltip={tooltip} onInsert={onEdit} disabled={disabled}
-        />)}
-      </div>
-      <div className='flex justify-start'>
-        {SECONDARY_THIRD_ROW.map(
-        ({text, tooltip}) => 
-        <RSLocalButton key={`${prefixes.rsedit_btn}${tooltip}`}
-          text={text} tooltip={tooltip} onInsert={onEdit} disabled={disabled}
-        />)}
-      </div>
-    </div>
+    {MAIN_SECOND_ROW.map(
+    (token) => 
+    <RSTokenButton key={`${prefixes.rsedit_btn}${token}`}
+      token={token} onInsert={onEdit} disabled={disabled}
+    />)}
+    {SECONDARY_SECOND_ROW.map(
+    ({text, tooltip}) => 
+    <RSLocalButton key={`${prefixes.rsedit_btn}${tooltip}`}
+      text={text} tooltip={tooltip} onInsert={onEdit} disabled={disabled}
+    />)}
+
+    {MAIN_THIRD_ROW.map(
+    (token) => 
+    <RSTokenButton key={`${prefixes.rsedit_btn}${token}`}
+      token={token} onInsert={onEdit} disabled={disabled}
+    />)}
+    {SECONDARY_THIRD_ROW.map(
+    ({text, tooltip}) => 
+    <RSLocalButton key={`${prefixes.rsedit_btn}${tooltip}`}
+      text={text} tooltip={tooltip} onInsert={onEdit} disabled={disabled}
+    />)}
   </div>);
 }
 

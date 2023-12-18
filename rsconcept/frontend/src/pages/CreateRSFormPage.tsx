@@ -110,7 +110,7 @@ function CreateRSFormPage() {
     <TextInput required={!file}
       label='Сокращение'
       placeholder={file && 'Загрузить из файла'}
-      dimensions='w-[14rem]'
+      className='w-[14rem]'
       pattern={patterns.alias}
       tooltip={`не более ${limits.alias_len} символов`}
       value={alias}
@@ -131,11 +131,11 @@ function CreateRSFormPage() {
       <SubmitButton 
         text='Создать схему'
         loading={processing}
-        dimensions='min-w-[10rem]'
+        className='min-w-[10rem]'
       />
       <Button
         text='Отмена'
-        dimensions='min-w-[10rem]'
+        className='min-w-[10rem]'
         onClick={() => handleCancel()}
       />
     </div>

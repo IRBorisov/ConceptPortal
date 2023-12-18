@@ -56,7 +56,7 @@ function DlgUploadRSForm({ hideWindow }: DlgUploadRSFormProps) {
     />
     <Checkbox
       label='Загружать название и комментарий'
-      dimensions='w-fit py-2'
+      className='py-2'
       value={loadMetadata}
       setValue={value => setLoadMetadata(value)}
     />

@@ -6,12 +6,13 @@ extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'title'
   tooltip?: string
   loading?: boolean
   icon?: React.ReactNode
-  dimensions?: string
 }
 
 function SubmitButton({
-  text = 'ОК', icon, disabled, tooltip, loading, className,
-  dimensions = 'w-fit h-fit', ...restProps
+  text = 'ОК',
+  icon, disabled, tooltip, loading,
+  className,
+  ...restProps
 }: SubmitButtonProps) {
   return (
   <button type='submit'
@@ -23,7 +24,6 @@ function SubmitButton({
       'clr-btn-primary',
       'select-none disabled:cursor-not-allowed',
       loading && 'cursor-progress',
-      dimensions,
       className
     )}
     disabled={disabled ?? loading}

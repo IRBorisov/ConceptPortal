@@ -49,7 +49,7 @@ function SyntacticTab({ initial, setIsValid, setReference }: SyntacticTabProps) 
   <div className='flex flex-col gap-2'>
     <TextInput type='number' dense
       label='Смещение'
-      dimensions='max-w-[10rem]'
+      className='max-w-[10rem]'
       value={offset}
       onChange={event => setOffset(event.target.valueAsNumber)}
     />

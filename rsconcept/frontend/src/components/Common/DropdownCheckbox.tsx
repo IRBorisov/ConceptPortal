@@ -21,8 +21,7 @@ function DropdownCheckbox({ tooltip, setValue, disabled, ...restProps }: Dropdow
       !!setValue && !disabled && 'clr-hover'
     )}
   >
-    <Checkbox 
-      dimensions='w-full'
+    <Checkbox
       disabled={disabled}
       setValue={setValue}
       {...restProps}

@@ -33,7 +33,7 @@ function Root() {
     <Navigation />
 
     <div id={globalIDs.main_scroll}
-      className='overflow-x-auto overscroll-none'
+      className='overscroll-none min-w-fit overflow-y-auto'
       style={{
         maxHeight: viewportHeight,
         overflowY: showScroll ? 'scroll': 'auto'
@@ -45,8 +45,7 @@ function Root() {
       >
         <Outlet />
       </main>
-      
-    <Footer />
+      <Footer />
     </div>
   </div>
   </NavigationState>);

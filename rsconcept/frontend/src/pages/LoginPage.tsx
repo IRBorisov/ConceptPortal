@@ -89,8 +89,7 @@ function LoginPage() {
 
     <SubmitButton
       text='Войти'
-      dimensions='w-[12rem] mt-3'
-      className='self-center'
+      className='self-center w-[12rem] mt-3'
       loading={loading}
       disabled={!username || !password}
     />

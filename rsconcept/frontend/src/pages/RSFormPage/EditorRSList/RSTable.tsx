@@ -128,7 +128,7 @@ function RSTable({
   <DataTable dense noFooter
     className={clsx(
       'min-h-[20rem]',
-      'overflow-auto',
+      'overflow-y-auto',
       'text-sm',
       'select-none'
     )}

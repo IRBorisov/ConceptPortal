@@ -53,7 +53,7 @@ function ViewSubscriptions({items}: ViewSubscriptionsProps) {
 
   return (
   <DataTable dense noFooter
-    className='max-h-[23.8rem] overflow-auto text-sm border'
+    className='max-h-[23.8rem] overflow-y-auto text-sm border'
     columns={columns}
     data={items}
     headPosition='0'

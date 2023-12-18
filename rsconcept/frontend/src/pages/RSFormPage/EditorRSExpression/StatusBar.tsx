@@ -2,22 +2,26 @@
 
 import clsx from 'clsx';
 import { useMemo } from 'react';
+import { BiBug } from 'react-icons/bi';
 
+import { ConceptLoader } from '@/components/Common/ConceptLoader';
 import { useConceptTheme } from '@/context/ThemeContext';
 import { ExpressionStatus } from '@/models/rsform';
 import { type IConstituenta } from '@/models/rsform';
 import { inferStatus } from '@/models/rsformAPI';
 import { IExpressionParse, ParsingStatus } from '@/models/rslang';
 import { colorbgCstStatus } from '@/utils/color';
-import { describeExpressionStatus, labelExpressionStatus } from '@/utils/labels';
+import { labelExpressionStatus } from '@/utils/labels';
 
 interface StatusBarProps {
+  processing?: boolean
   isModified?: boolean
   parseData?: IExpressionParse
   constituenta?: IConstituenta
+  onAnalyze: () => void
 }
 
-function StatusBar({ isModified, constituenta, parseData }: StatusBarProps) {
+function StatusBar({ isModified, processing, constituenta, parseData, onAnalyze }: StatusBarProps) {
   const { colors } = useConceptTheme();
   const status = useMemo(() => {
     if (isModified) {
@@ -31,16 +35,28 @@ function StatusBar({ isModified, constituenta, parseData }: StatusBarProps) {
   }, [isModified, constituenta, parseData]);
 
   return (
-  <div title={describeExpressionStatus(status)}
+  <div 
+    title='Проверить определение [Ctrl + Q]'
     className={clsx(
-      'h-full',
-      'border rounded-none',
-      'text-sm font-semibold small-caps text-center',
-      'select-none'
+      'w-[10rem] h-[1.75rem]',
+      'px-3',
+      'border',
+      'select-none',
+      'cursor-pointer',
+      'duration-500 transition-colors'
     )}
-    style={{backgroundColor: colorbgCstStatus(status, colors)}}
+    style={{backgroundColor: processing ? colors.bgDefault : colorbgCstStatus(status, colors)}}
+    onClick={onAnalyze}
   >
-    {labelExpressionStatus(status)}
+    {processing ?
+      <ConceptLoader size={3} /> :
+      <div className='flex items-center justify-center h-full gap-2'>
+        <BiBug size='1rem' className='translate-y-[0.1rem]' />
+        <span className='font-semibold small-caps'>
+          {labelExpressionStatus(status)}
+        </span>
+      </div>
+    }
   </div>);
 }
 

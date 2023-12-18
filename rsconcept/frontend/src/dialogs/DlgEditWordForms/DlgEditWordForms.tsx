@@ -127,7 +127,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
     hideWindow={hideWindow}
     submitText='Сохранить'
     onSubmit={handleSubmit}
-    className='min-w-[40rem] max-w-[40rem] px-6'
+    className='flex flex-col min-w-[40rem] max-w-[40rem] px-6'
   >
     <Overlay position='top-[-0.2rem] left-[7.5rem]'>
       <HelpButton topic={HelpTopic.TERM_CONTROL} dimensions='max-w-[38rem]' offset={3} />
@@ -144,44 +144,41 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
       <Label text='Параметры словоформы' />
     </div>
 
-    <div className='flex items-start justify-between w-full'>
-      <div className='flex items-center'>
-        <TextArea
-          placeholder='Введите текст'
-          dimensions='min-w-[20rem] w-full min-h-[5rem]'
-          rows={2}
-          value={inputText}
-          onChange={event => setInputText(event.target.value)}
+    <div className='flex justify-stretch'>
+      <TextArea
+        placeholder='Введите текст'
+        className='min-w-[20rem] min-h-[5rem] flex-grow'
+        rows={2}
+        value={inputText}
+        onChange={event => setInputText(event.target.value)}
+      />
+      <div className='flex flex-col self-center gap-1'>
+        <MiniButton noHover
+          tooltip='Определить граммемы'
+          icon={<BiRightArrow
+            size='1.25rem'
+            className={inputText ? 'clr-text-primary' : ''}
+          />}
+          disabled={textProcessor.loading || !inputText}
+          onClick={handleParse}
         />
-        <div className='flex flex-col gap-1'>
-          <MiniButton
-            tooltip='Определить граммемы'
-            icon={<BiRightArrow
-              size='1.25rem'
-              className={inputText ? 'clr-text-primary' : ''}
-            />}
-            disabled={textProcessor.loading || !inputText}
-            onClick={handleParse}
-          />
-          <MiniButton
-            tooltip='Генерировать словоформу'
-            icon={<BiLeftArrow size='1.25rem' className={inputGrams.length !== 0 ? 'clr-text-primary' : ''} />}
-            disabled={textProcessor.loading || inputGrams.length == 0}
-            onClick={handleInflect}
-          />
-        </div>
+        <MiniButton noHover
+          tooltip='Генерировать словоформу'
+          icon={<BiLeftArrow size='1.25rem' className={inputGrams.length !== 0 ? 'clr-text-primary' : ''} />}
+          disabled={textProcessor.loading || inputGrams.length == 0}
+          onClick={handleInflect}
+        />
       </div>
       <SelectGrammeme
         placeholder='Выберите граммемы'
-        dimensions='min-w-[15rem] max-w-[15rem] h-full '
-        className='flex-grow'
+        dimensions='min-w-[15rem] max-w-[15rem]'
         value={inputGrams}
         setValue={setInputGrams}
       />
     </div>
 
     <Overlay position='top-2 left-0'>
-      <MiniButton
+      <MiniButton noHover
         tooltip='Внести словоформу'
         icon={<BiCheck
           size='1.25rem'
@@ -190,7 +187,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         disabled={textProcessor.loading || !inputText || inputGrams.length == 0}
         onClick={handleAddForm}
       />
-      <MiniButton
+      <MiniButton noHover
         tooltip='Генерировать стандартные словоформы'
         icon={<BiChevronsDown size='1.25rem' className={inputText ? 'clr-text-primary' : ''}
         />}
@@ -201,7 +198,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
     
     <div className={clsx(
       'mt-3 mb-2',
-      'flex justify-center items-center',
+      'flex self-center items-center',
       'text-sm text-center font-semibold'
     )}>
       <span>Заданные вручную словоформы [{forms.length}]</span>

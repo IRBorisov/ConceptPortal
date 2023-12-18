@@ -5,10 +5,9 @@ import { CheckboxCheckedIcon } from '../Icons';
 import Label from './Label';
 
 export interface CheckboxProps
-extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'children' | 'title' | 'value' | 'onClick' > {
+extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'title' | 'value' | 'onClick' > {
   label?: string
   disabled?: boolean
-  dimensions?: string
   tooltip?: string
 
   value: boolean
@@ -17,7 +16,7 @@ extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'child
 
 function Checkbox({
   id, disabled, tooltip, label, 
-  dimensions = 'w-fit', value, setValue, ...restProps
+  className, value, setValue, ...restProps
 }: CheckboxProps) {
   const cursor = useMemo(
   () => {
@@ -44,8 +43,8 @@ function Checkbox({
       'flex items-center gap-2',
       'outline-none',
       'text-start',
-      dimensions,
-      cursor
+      cursor,
+      className
     )}
     title={tooltip}
     disabled={disabled}

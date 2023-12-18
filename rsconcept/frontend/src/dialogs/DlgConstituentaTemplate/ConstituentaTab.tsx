@@ -18,46 +18,48 @@ interface ConstituentaTabProps {
 function ConstituentaTab({state, partialUpdate}: ConstituentaTabProps) {
   return (
   <div className='flex flex-col gap-3'>
-    <div className='flex justify-center w-full gap-3 pr-2'>
+    <div className='flex self-center gap-3 pr-2'>
       <SelectSingle
-        className='min-w-[14rem] self-center'
+        className='min-w-[14rem]'
         options={SelectorCstType}
         placeholder='Выберите тип'
         value={{ value: state.cst_type, label: labelCstType(state.cst_type) }}
         onChange={data => partialUpdate({ cst_type: data?.value ?? CstType.TERM})}
       />
-      <TextInput id='alias' label='Имя'
-        dense
-        dimensions='w-[7rem]'
+      <TextInput dense
+        label='Имя'
+        className='w-[7rem]'
         value={state.alias}
         onChange={event => partialUpdate({ alias: event.target.value})}
       />
     </div>
-    <TextArea id='term' label='Термин'
+    <TextArea spellCheck
+      label='Термин'
       placeholder='Схемный или предметный термин, обозначающий данное понятие или утверждение'
       rows={2}
       value={state.term_raw}
-      spellCheck
       onChange={event => partialUpdate({ term_raw: event.target.value })}
     />
-    <RSInput id='expression' label='Формальное определение'
+    <RSInput
+      label='Формальное определение'
       placeholder='Родоструктурное выражение, задающее формальное определение'
       height='5.1rem'
       value={state.definition_formal}
       onChange={value => partialUpdate({definition_formal: value})}
     />
-    <TextArea id='definition' label='Текстовое определение'
+    <TextArea
+      label='Текстовое определение'
       placeholder='Лингвистическая интерпретация формального выражения'
       rows={2}
       value={state.definition_raw}
       spellCheck
       onChange={event => partialUpdate({ definition_raw: event.target.value })}
     />
-    <TextArea id='convention' label='Конвенция / Комментарий'
+    <TextArea spellCheck
+      label='Конвенция / Комментарий'
       placeholder='Договоренность об интерпретации или пояснение к схеме'
       rows={2}
       value={state.convention}
-      spellCheck
       onChange={event => partialUpdate({ convention: event.target.value })}
     />
   </div>);

@@ -90,7 +90,7 @@ function FormRSForm({
     />
     <TextInput required
       label='Сокращение' 
-      dimensions='w-[14rem]'
+      className='w-[14rem]'
       pattern={patterns.alias}
       tooltip={`не более ${limits.alias_len} символов`}
       disabled={disabled}
@@ -107,7 +107,6 @@ function FormRSForm({
       <Checkbox
         label='Общедоступная схема'
         tooltip='Общедоступные схемы видны всем пользователям и могут быть изменены'
-        dimensions='w-fit'
         disabled={disabled}
         value={common}
         setValue={value => setCommon(value)}
@@ -115,7 +114,6 @@ function FormRSForm({
       <Checkbox
         label='Неизменная схема'
         tooltip='Только администраторы могут присваивать схемам неизменный статус'
-        dimensions='w-fit'
         disabled={disabled || !user?.is_staff}
         value={canonical}
         setValue={value => setCanonical(value)}
@@ -123,8 +121,7 @@ function FormRSForm({
     </div>
     <SubmitButton
       text='Сохранить изменения'
-      className='self-center'
-      dimensions='my-2 w-fit'
+      className='self-center my-2'
       loading={processing}
       disabled={!isModified || disabled}
       icon={<FiSave size='1.5rem' />}

@@ -71,7 +71,6 @@ function Modal({
 
       <div
         className={clsx(
-          'w-full h-fit',
           'overflow-auto',
           className
         )}
@@ -84,7 +83,6 @@ function Modal({
       </div>
 
       <div className={clsx(
-        'w-full min-w-fit',
         'z-modal-controls',
         'px-6 py-3 flex gap-12 justify-center'
       )}>
@@ -92,14 +90,14 @@ function Modal({
         <Button autoFocus
           text={submitText}
           tooltip={!canSubmit ? submitInvalidTooltip: ''}
-          dimensions='min-w-[8rem] min-h-[2.6rem]'
+          className='min-w-[8rem] min-h-[2.6rem]'
           colors='clr-btn-primary'
           disabled={!canSubmit}
           onClick={handleSubmit}
         /> : null}
         <Button
           text={readonly ? 'Закрыть' : 'Отмена'}
-          dimensions='min-w-[8rem] min-h-[2.6rem]'
+          className='min-w-[8rem] min-h-[2.6rem]'
           onClick={handleCancel}
         />
       </div>

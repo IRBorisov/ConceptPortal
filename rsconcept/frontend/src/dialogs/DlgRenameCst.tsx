@@ -51,13 +51,13 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
     canSubmit={validated}
     onSubmit={handleSubmit}
     className={clsx(
-      'w-full min-w-[24rem]',
+      'w-[30rem]',
       'py-6 px-6 flex gap-6 justify-center items-center'
     )}
   >
     <SelectSingle
       placeholder='Выберите тип'
-      className='min-w-[14rem] self-center'
+      className='min-w-[16rem] self-center'
       options={SelectorCstType}
       value={{
         value: cstData.cst_type,
@@ -65,14 +65,12 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
       }}
       onChange={data => updateData({cst_type: data?.value ?? CstType.BASE})}
     />
-    <div>
     <TextInput dense
       label='Имя'
-      dimensions='w-[7rem]'
+      className='w-[7rem]'
       value={cstData.alias}
       onChange={event => updateData({alias: event.target.value})}
     />
-    </div>
   </Modal>);
 }
 

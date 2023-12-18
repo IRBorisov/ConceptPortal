@@ -21,7 +21,7 @@ function ConceptSearch({ value, onChange, noBorder, dimensions }: ConceptSearchP
     </Overlay>
     <TextInput noOutline
       placeholder='Поиск'
-      dimensions='w-full pl-10'
+      className='pl-10'
       noBorder={noBorder}
       value={value}
       onChange={event => (onChange ? onChange(event.target.value) : undefined)}

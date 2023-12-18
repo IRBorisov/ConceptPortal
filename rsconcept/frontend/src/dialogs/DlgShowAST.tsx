@@ -59,7 +59,7 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
     hideWindow={hideWindow}
     className='px-6'
   >
-    <div className='w-full my-2 text-lg text-center'>
+    <div className='my-2 text-lg text-center'>
       {!hoverNode ? expression : null}
       {hoverNode ?
       <div>
@@ -68,7 +68,6 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
         <span>{expression.slice(hoverNode.finish)}</span>
       </div> : null}
     </div>
-    <div className='w-full h-full overflow-auto'>
     <div 
       className='relative'
       style={{
@@ -85,7 +84,6 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
         onNodePointerOver={handleHoverIn}
         onNodePointerOut={handleHoverOut}
       />
-    </div>
     </div>
   </Modal>);
 }

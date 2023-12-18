@@ -111,7 +111,7 @@ function TermGraph({
   }, [noNavigation]);  
 
   return (
-  <div className='w-full h-full overflow-auto outline-none'>
+  <div className='outline-none'>
   <div className='relative' style={{width: canvasWidth, height: canvasHeight}}>
     <GraphUI
       draggable

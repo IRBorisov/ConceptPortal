@@ -11,7 +11,7 @@ interface ConceptLoaderProps {
 export function ConceptLoader({size=10}: ConceptLoaderProps) {
   const {colors} = useConceptTheme();
   return (
-  <div className='flex justify-center w-full h-full'>
+  <div className='flex justify-center'>
     <ThreeDots
       color={colors.bgSelected}
       height={size*10}

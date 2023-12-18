@@ -23,7 +23,7 @@ function Navigation () {
   return (
   <nav className={clsx(
     'z-navigation',
-    'sticky top-0 left-0 right-0', 
+    'sticky top-0 left-0 right-0',
     'clr-app',
     'select-none'
   )}>

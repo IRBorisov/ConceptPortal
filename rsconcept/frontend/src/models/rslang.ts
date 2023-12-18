@@ -250,6 +250,7 @@ export enum RSErrorType {
   // !!!! Добавлены по сравнению с ConceptCore !!!!!
   globalNonemptyBase = 34855,
   globalUnexpectedType = 34856,
+  globalEmptyDerived = 34857,
 
 
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

@@ -95,12 +95,12 @@ function RSTabsMenu({
   }
 
   return (    
-  <div className='flex items-stretch h-full w-fit'>
+  <div className='flex'>
     <div ref={schemaMenu.ref}>
       <Button noBorder dense tabIndex={-1}
         tooltip='Меню'
         icon={<BiMenu size='1.25rem' className='clr-text-controls' />}
-        dimensions='h-full w-fit pl-2'
+        className='h-full pl-2'
         style={{outlineColor: 'transparent'}}
         onClick={schemaMenu.toggle}
       />
@@ -148,7 +148,7 @@ function RSTabsMenu({
     <div ref={editMenu.ref}>
       <Button dense noBorder tabIndex={-1}
         tooltip={'Редактирование'}
-        dimensions='h-full w-fit'
+        className='h-full'
         style={{outlineColor: 'transparent'}}
         icon={<FiEdit size='1.25rem' className={isMutable ? 'clr-text-success' : 'clr-text-warning'}/>}
         onClick={editMenu.toggle}
@@ -173,7 +173,7 @@ function RSTabsMenu({
     <div ref={accessMenu.ref}>
       <Button dense noBorder tabIndex={-1}
         tooltip={`режим ${labelAccessMode(mode)}`}
-        dimensions='h-full w-fit pr-2'
+        className='h-full pr-2'
         style={{outlineColor: 'transparent'}}
         icon={
           mode === UserAccessMode.ADMIN ? <BiMeteor size='1.25rem' className='clr-text-primary'/>

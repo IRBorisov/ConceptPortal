@@ -68,7 +68,7 @@ function RSTabs() {
     cstCreate, cstDelete, cstRename, subscribe, unsubscribe, cstUpdate, resetAliases
   } = useRSForm();
   const { destroyItem } = useLibrary();
-  const { setNoFooter, noNavigation } = useConceptTheme();
+  const { setNoFooter } = useConceptTheme();
   const { user } = useAuth();
   const { mode, setMode } = useAccessMode();
 
@@ -105,13 +105,6 @@ function RSTabs() {
   
   const [insertCstID, setInsertCstID] = useState<number | undefined>(undefined);
   const [showTemplates, setShowTemplates] = useState(false);
-
-  const panelHeight = useMemo(
-  () => {
-    return !noNavigation ? 
-      'calc(100vh - 4.8rem - 4px)'
-    : 'calc(100vh - 2rem - 4px)';
-  }, [noNavigation]);
 
   useLayoutEffect(() => {
     if (schema) {
@@ -403,11 +396,11 @@ function RSTabs() {
     onSelect={onSelectTab}
     defaultFocus
     selectedTabClassName='clr-selected'
-    className='flex flex-col items-center min-w-[45rem]'
+    className='flex flex-col min-w-[45rem]'
   >
     <TabList className={clsx(
-      'h-[1.9rem]',
-      'flex justify-stretch', 
+      'h-[1.9rem] mx-auto',
+      'flex', 
       'border-b-2 border-x-2 divide-x-2'
     )}>
       <RSTabsMenu isMutable={isMutable}
@@ -435,53 +428,51 @@ function RSTabs() {
       <ConceptTab label='Граф термов' />
     </TabList>
 
-    <div className='overflow-y-auto' style={{ maxHeight: panelHeight}}>
-      <TabPanel forceRender style={{ display: activeTab === RSTabID.CARD ? '': 'none' }}>
-      <EditorRSForm
-        isMutable={isMutable}
-        isModified={isModified}
-        setIsModified={setIsModified}
-        onToggleSubscribe={handleToggleSubscribe}
-        onDownload={onDownloadSchema}
-        onDestroy={onDestroySchema}
-        onClaim={onClaimSchema}
-        onShare={onShareSchema}
-      />
-      </TabPanel>
+    <TabPanel forceRender style={{ display: activeTab === RSTabID.CARD ? '': 'none' }}>
+    <EditorRSForm
+      isMutable={isMutable}
+      isModified={isModified}
+      setIsModified={setIsModified}
+      onToggleSubscribe={handleToggleSubscribe}
+      onDownload={onDownloadSchema}
+      onDestroy={onDestroySchema}
+      onClaim={onClaimSchema}
+      onShare={onShareSchema}
+    />
+    </TabPanel>
 
-      <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_LIST ? '': 'none' }}>
-      <EditorRSList
-        isMutable={isMutable}
-        onOpenEdit={onOpenCst}
-        onCreateCst={promptCreateCst}
-        onDeleteCst={promptDeleteCst}
-      />
-      </TabPanel>
+    <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_LIST ? '': 'none' }}>
+    <EditorRSList
+      isMutable={isMutable}
+      onOpenEdit={onOpenCst}
+      onCreateCst={promptCreateCst}
+      onDeleteCst={promptDeleteCst}
+    />
+    </TabPanel>
 
-      <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_EDIT ? '': 'none' }}>
-      <EditorConstituenta
-        isMutable={isMutable}
-        isModified={isModified}
-        setIsModified={setIsModified}
-        activeID={activeID}
-        activeCst={activeCst}
-        onOpenEdit={onOpenCst}
-        onCreateCst={promptCreateCst}
-        onDeleteCst={promptDeleteCst}
-        onRenameCst={promptRenameCst}
-        onEditTerm={promptShowEditTerm}
-      />
-      </TabPanel>
+    <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_EDIT ? '': 'none' }}>
+    <EditorConstituenta
+      isMutable={isMutable}
+      isModified={isModified}
+      setIsModified={setIsModified}
+      activeID={activeID}
+      activeCst={activeCst}
+      onOpenEdit={onOpenCst}
+      onCreateCst={promptCreateCst}
+      onDeleteCst={promptDeleteCst}
+      onRenameCst={promptRenameCst}
+      onEditTerm={promptShowEditTerm}
+    />
+    </TabPanel>
 
-      <TabPanel style={{ display: activeTab === RSTabID.TERM_GRAPH ? '': 'none' }}>
-      <EditorTermGraph
-        isMutable={isMutable}
-        onOpenEdit={onOpenCst}
-        onCreateCst={promptCreateCst}
-        onDeleteCst={promptDeleteCst}
-      />
-      </TabPanel>
-    </div>
+    <TabPanel style={{ display: activeTab === RSTabID.TERM_GRAPH ? '': 'none' }}>
+    <EditorTermGraph
+      isMutable={isMutable}
+      onOpenEdit={onOpenCst}
+      onCreateCst={promptCreateCst}
+      onDeleteCst={promptDeleteCst}
+    />
+    </TabPanel>
   </Tabs> : null}
   </>);
 }

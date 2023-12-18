@@ -55,10 +55,11 @@ extends Pick<ReactCodeMirrorProps,
   noTooltip?: boolean
   innerref?: RefObject<ReactCodeMirrorRef> | undefined
   onChange?: (newValue: string) => void
+  onAnalyze?: () => void
 }
 
 function RSInput({ 
-  id, label, innerref, onChange,
+  id, label, innerref, onChange, onAnalyze,
   disabled, noTooltip,
   dimensions = 'w-full',
   ...restProps 
@@ -120,8 +121,12 @@ function RSInput({
         event.preventDefault();
         event.stopPropagation();
       }
+    } else if (event.ctrlKey && event.code === 'KeyQ' && onAnalyze) {
+      onAnalyze();
+      event.preventDefault();
+      event.stopPropagation();
     }
-  }, [thisRef]);
+  }, [thisRef, onAnalyze]);
 
   return (
   <div className={clsx(

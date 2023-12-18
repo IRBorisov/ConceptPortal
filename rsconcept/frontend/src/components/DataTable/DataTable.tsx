@@ -10,6 +10,7 @@ import {
 import clsx from 'clsx';
 import { useState } from 'react';
 
+import { IStylingProps } from '../Common/commonInterfaces';
 import DefaultNoData from './DefaultNoData';
 import PaginationTools from './PaginationTools';
 import TableBody from './TableBody';
@@ -24,13 +25,10 @@ export interface IConditionalStyle<TData> {
 }
 
 export interface DataTableProps<TData extends RowData>
-extends Pick<TableOptions<TData>, 
+extends IStylingProps, Pick<TableOptions<TData>, 
   'data' | 'columns' |
   'onRowSelectionChange' | 'onColumnVisibilityChange'
 > {
-  style?: React.CSSProperties
-  className?: string
-
   dense?: boolean
   headPosition?: string
   noHeader?: boolean

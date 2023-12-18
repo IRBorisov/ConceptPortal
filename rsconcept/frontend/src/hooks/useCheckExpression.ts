@@ -11,6 +11,37 @@ import { getCstExpressionPrefix } from '@/utils/misc';
 
 const LOGIC_TYPIIFCATION = 'LOGIC';
 
+function useCheckExpression({ schema }: { schema?: IRSForm }) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<ErrorData>(undefined);
+  const [parseData, setParseData] = useState<IExpressionParse | undefined>(undefined);
+
+  const resetParse = useCallback(() => setParseData(undefined), []);
+
+  function checkExpression(expression: string, activeCst?: IConstituenta, onSuccess?: DataCallback<IExpressionParse>) {
+    setError(undefined);
+    postCheckExpression(String(schema!.id), {
+      data: { expression: expression },
+      showError: true,
+      setLoading,
+      onError: error => setError(error),
+      onSuccess: parse => {
+        if (activeCst) {
+          adjustResults(parse, expression.trim() === getCstExpressionPrefix(activeCst), activeCst.cst_type);
+        }
+        setParseData(parse);
+        if (onSuccess) onSuccess(parse);
+      }
+    });
+  }
+
+  return { parseData, checkExpression, resetParse, error, setError, loading };
+}
+
+export default useCheckExpression;
+
+// ===== Internals ========
+
 function checkTypeConsistency(type: CstType, typification: string, args: IArgumentInfo[]): boolean {
   switch (type) {
   case CstType.BASE:
@@ -45,6 +76,16 @@ function adjustResults(parse: IExpressionParse, emptyExpression: boolean, cstTyp
         position: 0
       });
     }
+  } else {
+    if (emptyExpression) {
+      parse.parseResult = false;
+      parse.errors.push({
+        errorType: RSErrorType.globalEmptyDerived,
+        isCritical: true,
+        params: [],
+        position: 0
+      });
+    }
   }
   if (!checkTypeConsistency(cstType, parse.typification, parse.args)) {
     parse.parseResult = false;
@@ -56,32 +97,3 @@ function adjustResults(parse: IExpressionParse, emptyExpression: boolean, cstTyp
     });
   }
 }
-
-function useCheckExpression({ schema }: { schema?: IRSForm }) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<ErrorData>(undefined);
-  const [parseData, setParseData] = useState<IExpressionParse | undefined>(undefined);
-
-  const resetParse = useCallback(() => setParseData(undefined), []);
-
-  function checkExpression(expression: string, activeCst?: IConstituenta, onSuccess?: DataCallback<IExpressionParse>) {
-    setError(undefined);
-    postCheckExpression(String(schema!.id), {
-      data: { expression: expression },
-      showError: true,
-      setLoading,
-      onError: error => setError(error),
-      onSuccess: parse => {
-        if (activeCst) {
-          adjustResults(parse, expression === getCstExpressionPrefix(activeCst), activeCst.cst_type);
-        }
-        setParseData(parse);
-        if (onSuccess) onSuccess(parse);
-      }
-    });
-  }
-
-  return { parseData, checkExpression, resetParse, error, setError, loading };
-}
-
-export default useCheckExpression;

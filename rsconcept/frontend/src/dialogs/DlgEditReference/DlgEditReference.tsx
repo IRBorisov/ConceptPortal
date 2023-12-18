@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
@@ -52,17 +53,21 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
     onSubmit={handleSubmit}
     className='min-w-[40rem] max-w-[40rem] px-6 min-h-[34rem]'
   >
-  <Tabs defaultFocus
-    selectedTabClassName='clr-selected'
-    selectedIndex={activeTab}
-    onSelect={setActiveTab}
-  >
     <Overlay position='top-0 right-[4rem]'>
       <HelpButton topic={HelpTopic.TERM_CONTROL} dimensions='max-w-[35rem]' offset={14} />
     </Overlay>
-
-    <TabList className='flex justify-center mb-3'>
-      <div className='flex border divide-x rounded-none w-fit'>
+    
+    <Tabs
+      selectedTabClassName='clr-selected'
+      className='flex flex-col'
+      selectedIndex={activeTab}
+      onSelect={setActiveTab}
+    >
+      <TabList className={clsx(
+        'mb-3 self-center',
+        'flex',
+        'border divide-x rounded-none'
+      )}>
         <ConceptTab
           tooltip='Отсылка на термин в заданной словоформе'
           label={labelReferenceType(ReferenceType.ENTITY)}
@@ -73,26 +78,25 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
           label={labelReferenceType(ReferenceType.SYNTACTIC)}
           className='w-[12rem]'
         />
-      </div>
-    </TabList>
-    
-    <TabPanel>
-    <EntityTab
-      initial={initial}
-      items={items}
-      setReference={setReference}
-      setIsValid={setIsValid}
-    />
-    </TabPanel>
+      </TabList>
+      
+      <TabPanel>
+      <EntityTab
+        initial={initial}
+        items={items}
+        setReference={setReference}
+        setIsValid={setIsValid}
+      />
+      </TabPanel>
 
-    <TabPanel>
-    <SyntacticTab 
-      initial={initial}
-      setReference={setReference}
-      setIsValid={setIsValid}
-    />
-    </TabPanel>
-  </Tabs>
+      <TabPanel>
+      <SyntacticTab 
+        initial={initial}
+        setReference={setReference}
+        setIsValid={setIsValid}
+      />
+      </TabPanel>
+    </Tabs>
   </Modal>);
 }
 
