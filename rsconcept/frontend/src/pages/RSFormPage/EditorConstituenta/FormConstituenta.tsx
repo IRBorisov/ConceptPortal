@@ -169,6 +169,7 @@ function FormConstituenta({
     <RefsInput 
       label='Текстовое определение'
       placeholder='Лингвистическая интерпретация формального выражения'
+      height='3.8rem'
       items={schema?.items}
       value={textDefinition}
       initialValue={constituenta?.definition_raw ?? ''}
