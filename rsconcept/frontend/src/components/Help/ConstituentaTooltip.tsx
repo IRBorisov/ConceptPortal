@@ -11,7 +11,7 @@ function ConstituentaTooltip({ data, anchor }: ConstituentaTooltipProps) {
   return (
   <ConceptTooltip clickable
     anchorSelect={anchor}
-    className='max-w-[25rem] min-w-[25rem]'
+    className='w-[25rem]'
   >
     <InfoConstituenta data={data} />
   </ConceptTooltip>);

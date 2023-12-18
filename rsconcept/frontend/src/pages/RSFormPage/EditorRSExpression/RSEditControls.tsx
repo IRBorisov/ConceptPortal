@@ -52,30 +52,30 @@ const MAIN_THIRD_ROW: TokenID[] = [
 ];
 
 const SECONDARY_FIRST_ROW = [
-  {text: 'μ', tooltip: 'q'},
-  {text: 'ω', tooltip: 'w'},
-  {text: 'ε', tooltip: 'e'},
-  {text: 'ρ', tooltip: 'r'},
-  {text: 'τ', tooltip: 't'},
-  {text: 'π', tooltip: 'y'}
+  {text: 'μ', title: 'q'},
+  {text: 'ω', title: 'w'},
+  {text: 'ε', title: 'e'},
+  {text: 'ρ', title: 'r'},
+  {text: 'τ', title: 't'},
+  {text: 'π', title: 'y'}
 ];
 
 const SECONDARY_SECOND_ROW = [
-  {text: 'α', tooltip: 'a'},
-  {text: 'σ', tooltip: 's'},
-  {text: 'δ', tooltip: 'd'},
-  {text: 'φ', tooltip: 'f'},
-  {text: 'γ', tooltip: 'g'},
-  {text: 'λ', tooltip: 'h'}
+  {text: 'α', title: 'a'},
+  {text: 'σ', title: 's'},
+  {text: 'δ', title: 'd'},
+  {text: 'φ', title: 'f'},
+  {text: 'γ', title: 'g'},
+  {text: 'λ', title: 'h'}
 ];
 
 const SECONDARY_THIRD_ROW = [
-  {text: 'ζ', tooltip: 'z'},
-  {text: 'ξ', tooltip: 'x'},
-  {text: 'ψ', tooltip: 'c'},
-  {text: 'θ', tooltip: 'v'},
-  {text: 'β', tooltip: 'b'},
-  {text: 'η', tooltip: 'n'}
+  {text: 'ζ', title: 'z'},
+  {text: 'ξ', title: 'x'},
+  {text: 'ψ', title: 'c'},
+  {text: 'θ', title: 'v'},
+  {text: 'β', title: 'b'},
+  {text: 'η', title: 'n'}
 ];
 
 interface RSEditorControlsProps {
@@ -92,9 +92,9 @@ function RSEditorControls({ onEdit, disabled }: RSEditorControlsProps) {
       token={token} onInsert={onEdit} disabled={disabled}
     />)}
     {SECONDARY_FIRST_ROW.map(
-    ({text, tooltip}) => 
-    <RSLocalButton key={`${prefixes.rsedit_btn}${tooltip}`}
-      text={text} tooltip={tooltip} onInsert={onEdit} disabled={disabled}
+    ({text, title}) => 
+    <RSLocalButton key={`${prefixes.rsedit_btn}${title}`}
+      text={text} title={title} onInsert={onEdit} disabled={disabled}
     />)}
 
     {MAIN_SECOND_ROW.map(
@@ -103,9 +103,9 @@ function RSEditorControls({ onEdit, disabled }: RSEditorControlsProps) {
       token={token} onInsert={onEdit} disabled={disabled}
     />)}
     {SECONDARY_SECOND_ROW.map(
-    ({text, tooltip}) => 
-    <RSLocalButton key={`${prefixes.rsedit_btn}${tooltip}`}
-      text={text} tooltip={tooltip} onInsert={onEdit} disabled={disabled}
+    ({text, title}) => 
+    <RSLocalButton key={`${prefixes.rsedit_btn}${title}`}
+      text={text} title={title} onInsert={onEdit} disabled={disabled}
     />)}
 
     {MAIN_THIRD_ROW.map(
@@ -114,9 +114,9 @@ function RSEditorControls({ onEdit, disabled }: RSEditorControlsProps) {
       token={token} onInsert={onEdit} disabled={disabled}
     />)}
     {SECONDARY_THIRD_ROW.map(
-    ({text, tooltip}) => 
-    <RSLocalButton key={`${prefixes.rsedit_btn}${tooltip}`}
-      text={text} tooltip={tooltip} onInsert={onEdit} disabled={disabled}
+    ({text, title}) => 
+    <RSLocalButton key={`${prefixes.rsedit_btn}${title}`}
+      text={text} title={title} onInsert={onEdit} disabled={disabled}
     />)}
   </div>);
 }

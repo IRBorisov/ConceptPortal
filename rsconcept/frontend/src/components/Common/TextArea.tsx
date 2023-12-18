@@ -1,16 +1,15 @@
 import clsx from 'clsx';
-import { TextareaHTMLAttributes } from 'react';
 
-import { IColorsProps, IEditorProps } from './commonInterfaces';
+import { CProps } from '../props';
 import Label from './Label';
 
 export interface TextAreaProps 
-extends IEditorProps, IColorsProps, Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'title'> {
+extends CProps.Editor, CProps.Colors, CProps.TextArea {
   dense?: boolean
 }
 
 function TextArea({
-  id, label, required, tooltip, rows,
+  id, label, required, rows,
   dense, noBorder, noOutline,
   className,
   colors = 'clr-input',
@@ -26,7 +25,6 @@ function TextArea({
   )}>
     <Label text={label} htmlFor={id} />
     <textarea id={id}
-      title={tooltip}
       className={clsx(
         'px-3 py-2',
         'leading-tight',

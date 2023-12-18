@@ -87,50 +87,46 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
   }, [state.filterCategory, selectedSchema]);
 
   return (
-  <div className='flex flex-col gap-3'>
-    <div>
-      <div className='flex justify-stretch'>
-        <SelectSingle
-          placeholder='Выберите категорию'
-          className='flex-grow border-none'
-          options={categorySelector}
-          value={state.filterCategory && selectedSchema ? {
-            value: state.filterCategory.id,
-            label: state.filterCategory.term_raw
-          } : null}
-          onChange={data => partialUpdate({filterCategory: selectedSchema?.items.find(cst => cst.id === data?.value) })}
-          isClearable
-        />
-        <SelectSingle
-          placeholder='Выберите источник'
-          className='min-w-[12rem]'
-          options={templateSelector}
-          value={state.templateID ? { value: state.templateID, label: templates.find(item => item.id == state.templateID)!.title }: null}
-          onChange={data => partialUpdate({templateID: (data ? data.value : undefined)})}
-        />
-      </div>
-      <ConstituentaPicker
-        value={state.prototype}
-        data={filteredData}
-        onSelectValue={cst => partialUpdate( { prototype: cst } )}
-        prefixID={prefixes.cst_template_ist}
-        rows={9}
+  <>
+    <div className='flex justify-stretch'>
+      <SelectSingle
+        placeholder='Выберите категорию'
+        className='flex-grow border-none'
+        options={categorySelector}
+        value={state.filterCategory && selectedSchema ? {
+          value: state.filterCategory.id,
+          label: state.filterCategory.term_raw
+        } : null}
+        onChange={data => partialUpdate({filterCategory: selectedSchema?.items.find(cst => cst.id === data?.value) })}
+        isClearable
+      />
+      <SelectSingle
+        placeholder='Выберите источник'
+        className='min-w-[12rem]'
+        options={templateSelector}
+        value={state.templateID ? { value: state.templateID, label: templates.find(item => item.id == state.templateID)!.title }: null}
+        onChange={data => partialUpdate({templateID: (data ? data.value : undefined)})}
       />
     </div>
-    <TextArea id='term'
-      rows={2}
-      disabled
-      placeholder='Шаблон конституенты не выбран'
-      value={prototypeInfo}
-      spellCheck
+    <ConstituentaPicker
+      value={state.prototype}
+      data={filteredData}
+      onSelectValue={cst => partialUpdate( { prototype: cst } )}
+      prefixID={prefixes.cst_template_ist}
+      rows={9}
     />
-    <RSInput id='expression'
-      height='5.1rem'
+    <TextArea disabled spellCheck
+      placeholder='Шаблон конституенты не выбран'
+      className='my-3'
+      rows={2}
+      value={prototypeInfo}
+    />
+    <RSInput disabled
       placeholder='Выберите шаблон из списка'
-      disabled
+      height='5.1rem'
       value={state.prototype?.definition_formal}
     />
-  </div>);
+  </>);
 }
 
 export default TemplateTab;

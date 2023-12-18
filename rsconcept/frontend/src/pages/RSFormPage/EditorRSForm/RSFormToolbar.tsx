@@ -36,40 +36,39 @@ function RSFormToolbar({
   return (    
   <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex'>
     <MiniButton
-      tooltip='Сохранить изменения [Ctrl + S]'
+      title='Сохранить изменения [Ctrl + S]'
       disabled={!canSave}
       icon={<FiSave size='1.25rem' className={canSave ? 'clr-text-primary' : ''}/>}
       onClick={onSubmit}
     />
     <MiniButton
-      tooltip='Поделиться схемой'
+      title='Поделиться схемой'
       icon={<BiShareAlt size='1.25rem' className='clr-text-primary'/>}
       onClick={onShare}
     />
     <MiniButton
-      tooltip='Скачать TRS файл'
+      title='Скачать TRS файл'
       icon={<BiDownload size='1.25rem' className='clr-text-primary'/>}
       onClick={onDownload}
     />
     <MiniButton
-      tooltip={'отслеживание: ' + (isSubscribed ? '[включено]' : '[выключено]')}
+      title={'отслеживание: ' + (isSubscribed ? '[включено]' : '[выключено]')}
       disabled={anonymous || processing}
       icon={isSubscribed
         ? <FiBell size='1.25rem' className='clr-text-primary' />
         : <FiBellOff size='1.25rem' className='clr-text-controls' />
       }
-      dimensions='h-full w-fit'
       style={{outlineColor: 'transparent'}}
       onClick={onToggleSubscribe}
       />
     <MiniButton
-      tooltip={claimable ? 'Стать владельцем' : 'Невозможно стать владельцем' }
+      title={claimable ? 'Стать владельцем' : 'Невозможно стать владельцем' }
       icon={<LuCrown size='1.25rem' className={!claimable ? '' : 'clr-text-success'}/>}
       disabled={!claimable || anonymous || processing}
       onClick={onClaim}
     />
     <MiniButton
-      tooltip='Удалить схему'
+      title='Удалить схему'
       disabled={!isMutable}
       onClick={onDestroy}
       icon={<BiTrash size='1.25rem' className={isMutable ? 'clr-text-warning' : ''} />}

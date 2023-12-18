@@ -3,13 +3,11 @@ import type { TabProps } from 'react-tabs';
 import { Tab } from 'react-tabs';
 
 interface ConceptTabProps
-extends Omit<TabProps, 'title' | 'children'> {
-  className?: string
-  tooltip?: string
+extends Omit<TabProps, 'children'> {
   label?: string
 }
 
-function ConceptTab({ label, tooltip, className, ...otherProps }: ConceptTabProps) {
+function ConceptTab({ label, className, ...otherProps }: ConceptTabProps) {
   return (
   <Tab
     className={clsx(
@@ -20,7 +18,6 @@ function ConceptTab({ label, tooltip, className, ...otherProps }: ConceptTabProp
       'select-none hover:cursor-pointer',
       className
     )}
-    title={tooltip}
     {...otherProps}
   >
     {label}

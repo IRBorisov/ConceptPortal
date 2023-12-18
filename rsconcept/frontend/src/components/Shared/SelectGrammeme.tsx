@@ -9,14 +9,12 @@ interface SelectGrammemeProps extends
 Omit<SelectMultiProps<IGrammemeOption>, 'value' | 'onChange'> {
   value: IGrammemeOption[]
   setValue: React.Dispatch<React.SetStateAction<IGrammemeOption[]>>
-  dimensions?: string
   className?: string
   placeholder?: string
 }
 
 function SelectGrammeme({
   value, setValue,
-  dimensions, className, placeholder,
   ...restProps
 }: SelectGrammemeProps) {
   const [options, setOptions] = useState<IGrammemeOption[]>([]);
@@ -33,9 +31,7 @@ function SelectGrammeme({
 
   return (
   <SelectMulti
-    className={`${dimensions} ${className}`}
     options={options}
-    placeholder={placeholder}
     value={value}
     onChange={newValue => setValue([...newValue].sort(compareGrammemeOptions))}
     {...restProps}

@@ -1,18 +1,19 @@
 import { BiSearchAlt2 } from 'react-icons/bi';
 
+import { CProps } from '../props';
 import Overlay from './Overlay';
 import TextInput from './TextInput';
 
-interface ConceptSearchProps  {
+interface ConceptSearchProps
+extends CProps.Styling {
   value: string
   onChange?: (newValue: string) => void
   noBorder?: boolean
-  dimensions?: string
 }
 
-function ConceptSearch({ value, onChange, noBorder, dimensions }: ConceptSearchProps) {
+function ConceptSearch({ value, onChange, noBorder, ...restProps }: ConceptSearchProps) {
   return (
-  <div className={dimensions}>
+  <div {...restProps}>
     <Overlay
       position='top-[-0.125rem] left-3 translate-y-1/2'
       className='pointer-events-none clr-text-controls'

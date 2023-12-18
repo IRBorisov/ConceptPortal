@@ -4,15 +4,16 @@ import ConceptTooltip from '@/components/Common/ConceptTooltip';
 import TextURL from '@/components/Common/TextURL';
 import { HelpTopic } from '@/models/miscelanious';
 
+import { CProps } from '../props';
 import InfoTopic from './InfoTopic';
 
-interface HelpButtonProps {
+interface HelpButtonProps
+extends CProps.Styling {
   topic: HelpTopic
   offset?: number
-  dimensions?: string
 }
 
-function HelpButton({ topic, offset, dimensions }: HelpButtonProps) {
+function HelpButton({ topic, ...restProps }: HelpButtonProps) {
   return (
   <>
     <div
@@ -24,8 +25,7 @@ function HelpButton({ topic, offset, dimensions }: HelpButtonProps) {
     <ConceptTooltip clickable
       anchorSelect={`#help-${topic}`}
       layer='z-modal-tooltip'
-      className={dimensions}
-      offset={offset}
+      {...restProps}
     >
       <div className='relative'>
       <div className='absolute right-0 text-sm top-[0.4rem]'>

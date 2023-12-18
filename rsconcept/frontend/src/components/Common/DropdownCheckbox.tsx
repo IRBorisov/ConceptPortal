@@ -5,15 +5,15 @@ import Checkbox from './Checkbox';
 interface DropdownCheckboxProps {
   value: boolean
   label?: string
-  tooltip?: string
+  title?: string
   disabled?: boolean
   setValue?: (newValue: boolean) => void
 }
 
-function DropdownCheckbox({ tooltip, setValue, disabled, ...restProps }: DropdownCheckboxProps) {
+function DropdownCheckbox({ title, setValue, disabled, ...restProps }: DropdownCheckboxProps) {
   return (
   <div
-    title={tooltip}
+    title={title}
     className={clsx(
       'px-3 py-1',
       'text-left overflow-ellipsis whitespace-nowrap',

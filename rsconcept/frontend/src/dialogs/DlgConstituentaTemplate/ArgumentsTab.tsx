@@ -132,7 +132,7 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
         <div className='max-h-[1.2rem]'>
         {props.row.original.value ?
         <MiniButton
-          tooltip='Очистить значение'
+          title='Очистить значение'
           icon={<BiX size='0.75rem' className='clr-text-warning'/>}
           noHover
           onClick={() => handleClearArgument(props.row.original)}
@@ -148,7 +148,7 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
   }], [selectedArgument, colors]);
 
   return (
-  <div className='flex flex-col gap-3'>
+  <>
     <DataTable dense noFooter
       className={clsx(
         'max-h-[5.8rem] min-h-[5.8rem]',
@@ -173,8 +173,8 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
     />
 
     <div className={clsx(
-      'py-1 flex gap-2 justify-center items-center',
-      'w-full',
+      'my-4',
+      'flex gap-2 justify-center items-center',
       'select-none'
     )}>
       <span title='Выберите аргумент из списка сверху и значение из списка снизу'
@@ -184,25 +184,25 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
       </span>
       <span>=</span>
       <RSInput noTooltip
-        dimensions='max-w-[12rem] w-full'
+        className='w-[12rem]'
         value={argumentValue}
         onChange={newValue => setArgumentValue(newValue)}
       />
       <div className='flex'>
         <MiniButton
-          tooltip='Подставить значение аргумента'
+          title='Подставить значение аргумента'
           icon={<BiCheck size='1.25rem' className={!!argumentValue && !!selectedArgument ? 'clr-text-success' : ''} />}
           disabled={!argumentValue || !selectedArgument}
           onClick={() => handleAssignArgument(selectedArgument!, argumentValue)}
         />
         <MiniButton
-          tooltip='Откатить значение'
+          title='Откатить значение'
           disabled={!isModified}
           onClick={handleReset}
           icon={<BiRefresh size='1.25rem' className={isModified ? 'clr-text-primary' : ''} />}
         />
         <MiniButton
-          tooltip='Очистить значение аргумента'
+          title='Очистить значение аргумента'
           disabled={!selectedClearable}
           icon={<BiX size='1.25rem' className={selectedClearable ? 'clr-text-warning': ''}/>}
           onClick={() => selectedArgument ? handleClearArgument(selectedArgument) : undefined}
@@ -220,12 +220,12 @@ function ArgumentsTab({ state, schema, partialUpdate  }: ArgumentsTabProps) {
 
     <RSInput id='result'
       placeholder='Итоговое определение'
+      className='mt-[1.2rem]'
       height='5.1rem'
-      dimensions='w-full mt-[0.45rem]'
       value={state.definition}
       disabled
     />
-  </div>);
+  </>);
 }
 
 export default ArgumentsTab;

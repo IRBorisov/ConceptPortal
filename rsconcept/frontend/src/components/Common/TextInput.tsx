@@ -1,10 +1,10 @@
 import clsx from 'clsx';
 
-import { IColorsProps, IEditorProps } from './commonInterfaces';
+import { CProps } from '../props';
 import Label from './Label';
 
 interface TextInputProps 
-extends IEditorProps, IColorsProps, Omit<React.InputHTMLAttributes<HTMLInputElement>, 'title'> {
+extends CProps.Editor, CProps.Colors, CProps.Input {
   dense?: boolean
   allowEnter?: boolean
 }
@@ -16,7 +16,7 @@ function preventEnterCapture(event: React.KeyboardEvent<HTMLInputElement>) {
 }
 
 function TextInput({
-  id, label, dense, tooltip, noBorder, noOutline, allowEnter, disabled,
+  id, label, dense, noBorder, noOutline, allowEnter, disabled,
   className,
   colors = 'clr-input',
   onKeyDown,
@@ -32,7 +32,6 @@ function TextInput({
   )}>
     <Label text={label} htmlFor={id} />
     <input id={id}
-      title={tooltip}
       className={clsx(
         'py-2',
         'leading-tight truncate hover:text-clip',

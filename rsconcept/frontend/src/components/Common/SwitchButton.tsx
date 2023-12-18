@@ -1,25 +1,25 @@
 import clsx from 'clsx';
 
-interface SwitchButtonProps<ValueType> {
+import { CProps } from '../props';
+
+interface SwitchButtonProps<ValueType>
+extends CProps.Styling {
   id?: string
   value: ValueType
   label?: string
   icon?: React.ReactNode
-  tooltip?: string
-  dimensions?: string
+  title?: string
 
   isSelected?: boolean
   onSelect: (value: ValueType) => void
 }
 
 function SwitchButton<ValueType>({
-  value, icon, label, tooltip,
-  dimensions='w-fit h-fit',
+  value, icon, label, className,
   isSelected, onSelect, ...restProps
 }: SwitchButtonProps<ValueType>) {
   return (
   <button type='button' tabIndex={-1}
-    title={tooltip}
     onClick={() => onSelect(value)}
     className={clsx(
       'px-2 py-1',
@@ -28,7 +28,7 @@ function SwitchButton<ValueType>({
       'clr-btn-clear clr-hover',
       'cursor-pointer',
       isSelected && 'clr-selected',
-      dimensions
+      className
     )}
     {...restProps}
   >

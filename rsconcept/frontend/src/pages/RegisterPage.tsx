@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { BiInfoCircle } from 'react-icons/bi';
 import { toast } from 'react-toastify';
@@ -7,6 +8,7 @@ import { toast } from 'react-toastify';
 import Button from '@/components/Common/Button';
 import Checkbox from '@/components/Common/Checkbox';
 import ConceptTooltip from '@/components/Common/ConceptTooltip';
+import FlexColumn from '@/components/Common/FlexColumn';
 import Overlay from '@/components/Common/Overlay';
 import SubmitButton from '@/components/Common/SubmitButton';
 import TextInput from '@/components/Common/TextInput';
@@ -16,7 +18,7 @@ import InfoError from '@/components/InfoError';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NagivationContext';
 import { type IUserSignupData } from '@/models/library';
-import { globalIDs, patterns } from '@/utils/constants';
+import { classnames, globalIDs, patterns } from '@/utils/constants';
 
 function RegisterPage() {
   const router = useConceptNavigation();
@@ -66,12 +68,12 @@ function RegisterPage() {
   }
   return (
   <form
-    className='flex flex-col gap-3 px-6 py-3 h-fit'
+    className={clsx('px-6 py-3', classnames.flex_col)}
     onSubmit={handleSubmit}
   >
     <h1>Новый пользователь</h1>
     <div className='flex gap-12'>
-      <div className='flex flex-col gap-3'>
+      <FlexColumn>
         <div className='absolute'>
           <Overlay
             id={globalIDs.password_tooltip}
@@ -91,7 +93,7 @@ function RegisterPage() {
         <TextInput id='username' required
           label='Имя пользователя (логин)'
           pattern={patterns.login}
-          tooltip='Минимум 3 знака. Латинские буквы и цифры. Не может начинаться с цифры'
+          title='Минимум 3 знака. Латинские буквы и цифры. Не может начинаться с цифры'
           value={username}
           className='w-[15rem]'
           onChange={event => setUsername(event.target.value)}
@@ -108,12 +110,12 @@ function RegisterPage() {
           value={password2}
           onChange={event => setPassword2(event.target.value)}
         />
-      </div>
+      </FlexColumn>
 
-      <div className='flex flex-col gap-3 w-[15rem]'>
+      <FlexColumn className='w-[15rem]'>
         <TextInput id='email' required
           label='Электронная почта (email)'
-          tooltip='электронная почта в корректном формате, например: i.petrov@mycompany.ru.com'
+          title='электронная почта в корректном формате, например: i.petrov@mycompany.ru.com'
           value={email}
           onChange={event => setEmail(event.target.value)}
         />
@@ -127,7 +129,7 @@ function RegisterPage() {
           value={lastName}
           onChange={event => setLastName(event.target.value)}
         />
-      </div>
+      </FlexColumn>
     </div>
     
     <div className='flex gap-1 text-sm'>

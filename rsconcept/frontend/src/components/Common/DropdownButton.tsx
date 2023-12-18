@@ -1,27 +1,22 @@
 import clsx from 'clsx';
 
-interface DropdownButtonProps {
+import { CProps } from '../props';
+
+interface DropdownButtonProps
+extends CProps.Button {
   text?: string
   icon?: React.ReactNode
-
-  className?: string
-  tooltip?: string | undefined
-  onClick?: () => void
-  disabled?: boolean
 
   children?: React.ReactNode
 }
 
 function DropdownButton({
-  text, icon, children,
-  tooltip, className,
-  disabled,
-  onClick
+  text, icon, className, onClick,
+  children,
+  ...restProps
 }: DropdownButtonProps) {
   return (
   <button type='button'
-    disabled={disabled}
-    title={tooltip}
     onClick={onClick}
     className={clsx(
       'px-3 py-1 inline-flex items-center gap-2',
@@ -34,6 +29,7 @@ function DropdownButton({
       },
       className
     )}
+    {...restProps}
   >
     {children ? children : null}
     {!children && icon ? icon : null}

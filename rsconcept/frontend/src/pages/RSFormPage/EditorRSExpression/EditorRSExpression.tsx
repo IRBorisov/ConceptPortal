@@ -138,12 +138,12 @@ function EditorRSExpression({
   <div>
     <Overlay position='top-0 right-0 flex'>
       <MiniButton noHover
-        tooltip='Включение специальной клавиатуры'
+        title='Включение специальной клавиатуры'
         onClick={() => setShowControls(prev => !prev)}
         icon={<FaRegKeyboard size='1.25rem' className={showControls ? 'clr-text-primary': ''} />}
       />
       <MiniButton noHover
-        tooltip='Дерево разбора выражения'
+        title='Дерево разбора выражения'
         onClick={handleShowAST}
         icon={<RiNodeTree size='1.25rem' className='clr-text-primary' />}
       />

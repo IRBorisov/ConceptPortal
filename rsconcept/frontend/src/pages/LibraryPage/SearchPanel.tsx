@@ -65,7 +65,7 @@ function SearchPanel({ total, filtered, query, setQuery, strategy, setFilter }: 
       'flex gap-1 justify-center items-center'
     )}>
       <ConceptSearch noBorder
-        dimensions='min-w-[10rem]'
+        className='min-w-[10rem]'
         value={query}
         onChange={handleChangeQuery}
       />

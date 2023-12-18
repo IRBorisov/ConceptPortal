@@ -6,9 +6,7 @@ interface PageControlsProps {
   setPageNumber: React.Dispatch<React.SetStateAction<number>>
 }
 
-function PageControls({
-  pageNumber, pageCount, setPageNumber
-}: PageControlsProps) {
+function PageControls({ pageNumber, pageCount, setPageNumber }: PageControlsProps) {
   return (
   <>
     <button type='button'

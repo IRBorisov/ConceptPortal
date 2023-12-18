@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { Dispatch, SetStateAction, useEffect, useLayoutEffect, useState } from 'react';
 import { FiSave } from 'react-icons/fi';
 import { toast } from 'react-toastify';
@@ -12,7 +13,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useRSForm } from '@/context/RSFormContext';
 import { LibraryItemType } from '@/models/library';
 import { IRSFormCreateData } from '@/models/rsform';
-import { limits, patterns } from '@/utils/constants';
+import { classnames, limits, patterns } from '@/utils/constants';
 
 interface FormRSFormProps {
   id?: string
@@ -79,7 +80,11 @@ function FormRSForm({
 
   return (
   <form id={id}
-    className='flex flex-col gap-3 mt-1 py-1 min-w-[22rem] w-[30rem]'
+    className={clsx(
+      'mt-1 min-w-[22rem] w-[30rem]',
+      'py-1',
+      classnames.flex_col
+    )}
     onSubmit={handleSubmit}
   >
     <TextInput required
@@ -92,7 +97,7 @@ function FormRSForm({
       label='Сокращение' 
       className='w-[14rem]'
       pattern={patterns.alias}
-      tooltip={`не более ${limits.alias_len} символов`}
+      title={`не более ${limits.alias_len} символов`}
       disabled={disabled}
       value={alias}
       onChange={event => setAlias(event.target.value)}
@@ -106,14 +111,14 @@ function FormRSForm({
     <div className='flex justify-between whitespace-nowrap'>
       <Checkbox
         label='Общедоступная схема'
-        tooltip='Общедоступные схемы видны всем пользователям и могут быть изменены'
+        title='Общедоступные схемы видны всем пользователям и могут быть изменены'
         disabled={disabled}
         value={common}
         setValue={value => setCommon(value)}
       />
       <Checkbox
         label='Неизменная схема'
-        tooltip='Только администраторы могут присваивать схемам неизменный статус'
+        title='Только администраторы могут присваивать схемам неизменный статус'
         disabled={disabled || !user?.is_staff}
         value={canonical}
         setValue={value => setCanonical(value)}

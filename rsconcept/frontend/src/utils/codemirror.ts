@@ -137,7 +137,7 @@ export function domTooltipConstituenta(cst: IConstituenta) {
   const dom = document.createElement('div');
   dom.className = clsx(
     'z-tooltip',
-    'max-h-[25rem] max-w-[25rem] min-w-[10rem] w-fit',
+    'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
     'p-2',
     'border shadow-md', 
     'overflow-y-auto',
@@ -181,7 +181,7 @@ export function domTooltipEntityReference(ref: IEntityReference, cst: IConstitue
   const dom = document.createElement('div');
   dom.className = clsx(
     'z-tooltip',
-    'max-h-[25rem] max-w-[25rem] min-w-[10rem] w-fit',
+    'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
     'p-2 flex flex-col',
     'border shadow-md',
     'overflow-y-auto',
@@ -229,7 +229,7 @@ export function domTooltipSyntacticReference(ref: ISyntacticReference, masterRef
   const dom = document.createElement('div');
   dom.className = clsx(
     'z-tooltip',
-    'max-h-[25rem] max-w-[25rem] min-w-[10rem] w-fit',
+    'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
     'p-2 flex flex-col',
     'border shadow-md',
     'overflow-y-auto',

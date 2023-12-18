@@ -123,14 +123,14 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
 
   return (
   <Modal canSubmit
-    title='Редактирование словоформ'
+    header='Редактирование словоформ'
     hideWindow={hideWindow}
     submitText='Сохранить'
     onSubmit={handleSubmit}
-    className='flex flex-col min-w-[40rem] max-w-[40rem] px-6'
+    className='flex flex-col w-[40rem] px-6'
   >
     <Overlay position='top-[-0.2rem] left-[7.5rem]'>
-      <HelpButton topic={HelpTopic.TERM_CONTROL} dimensions='max-w-[38rem]' offset={3} />
+      <HelpButton topic={HelpTopic.TERM_CONTROL} className='max-w-[38rem]' offset={3} />
     </Overlay>
   
     <TextArea disabled spellCheck
@@ -154,7 +154,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
       />
       <div className='flex flex-col self-center gap-1'>
         <MiniButton noHover
-          tooltip='Определить граммемы'
+          title='Определить граммемы'
           icon={<BiRightArrow
             size='1.25rem'
             className={inputText ? 'clr-text-primary' : ''}
@@ -163,7 +163,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
           onClick={handleParse}
         />
         <MiniButton noHover
-          tooltip='Генерировать словоформу'
+          title='Генерировать словоформу'
           icon={<BiLeftArrow size='1.25rem' className={inputGrams.length !== 0 ? 'clr-text-primary' : ''} />}
           disabled={textProcessor.loading || inputGrams.length == 0}
           onClick={handleInflect}
@@ -171,7 +171,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
       </div>
       <SelectGrammeme
         placeholder='Выберите граммемы'
-        dimensions='min-w-[15rem] max-w-[15rem]'
+        className='w-[15rem]'
         value={inputGrams}
         setValue={setInputGrams}
       />
@@ -179,7 +179,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
 
     <Overlay position='top-2 left-0'>
       <MiniButton noHover
-        tooltip='Внести словоформу'
+        title='Внести словоформу'
         icon={<BiCheck
           size='1.25rem'
           className={inputText && inputGrams.length !== 0 ? 'clr-text-success' : ''}
@@ -188,7 +188,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         onClick={handleAddForm}
       />
       <MiniButton noHover
-        tooltip='Генерировать стандартные словоформы'
+        title='Генерировать стандартные словоформы'
         icon={<BiChevronsDown size='1.25rem' className={inputText ? 'clr-text-primary' : ''}
         />}
         disabled={textProcessor.loading || !inputText}
@@ -203,7 +203,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
     )}>
       <span>Заданные вручную словоформы [{forms.length}]</span>
       <MiniButton noHover
-        tooltip='Сбросить все словоформы'
+        title='Сбросить все словоформы'
         icon={<BiX size='1rem' className={forms.length !== 0 ? 'clr-text-warning' : ''} />}
         disabled={textProcessor.loading || forms.length === 0}
         onClick={handleResetAll}

@@ -4,22 +4,22 @@ import clsx from 'clsx';
 import { useRef, useState } from 'react';
 import { BiUpload } from 'react-icons/bi';
 
+import { CProps } from '../props';
 import Button from './Button';
 import Label from './Label';
 
 interface FileInputProps 
-extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'className' | 'title' | 'style' | 'accept' | 'type'> {
+extends Omit<CProps.Input, 'accept' | 'type'> {
   label: string
-  tooltip?: string
-  dimensions?: string
   
   acceptType?: string
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 function FileInput({
-  label, acceptType, tooltip,
-  dimensions = 'w-fit', onChange,
+  label, acceptType, title,
+  className, style,
+  onChange,
   ...restProps 
 }: FileInputProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -31,9 +31,9 @@ function FileInput({
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
-      setFileName(event.target.files[0].name)
+      setFileName(event.target.files[0].name);
     } else {
-      setFileName('')
+      setFileName('');
     }
     if (onChange) {
       onChange(event);
@@ -41,11 +41,14 @@ function FileInput({
   };
 
   return (
-  <div className={clsx(
-    'py-2',
-    'flex flex-col gap-2 items-start',
-    dimensions
-  )}>
+  <div 
+    className={clsx(
+      'py-2',
+      'flex flex-col gap-2 items-center',
+      className
+    )}
+    style={style}
+  >
     <input type='file'
       ref={inputRef}
       style={{ display: 'none' }}
@@ -57,7 +60,7 @@ function FileInput({
       text={label}
       icon={<BiUpload size='1.5rem' />}
       onClick={handleUploadClick}
-      tooltip={tooltip}
+      title={title}
     />
     <Label text={fileName} />
   </div>);

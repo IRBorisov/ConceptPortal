@@ -3,31 +3,29 @@ import { Link } from 'react-router-dom';
 
 interface TextURLProps {
   text: string
-  tooltip?: string
+  title?: string
   href?: string
   color?: string
   onClick?: () => void
 }
 
-function TextURL({ text, href, tooltip, color='clr-text-url', onClick }: TextURLProps) {
+function TextURL({ text, href, title, color='clr-text-url', onClick }: TextURLProps) {
   const design = `cursor-pointer hover:underline ${color}`;
   if (href) {
     return (
-    <Link
+    <Link tabIndex={-1}
       className={design}
-      title={tooltip}
+      title={title}
       to={href}
-      tabIndex={-1}
     >
       {text}
     </Link>
     );
   } else if (onClick) {
     return (
-    <span
+    <span tabIndex={-1}
       className={design}
       onClick={onClick}
-      tabIndex={-1}
     >
       {text}
     </span>);

@@ -13,8 +13,7 @@ function TopicsList({ activeTopic, onChangeTopic }: TopicsListProps) {
   return (
   <div className={clsx(
     'sticky top-0 left-0',
-    'min-w-[13rem] h-fit',
-    'flex flex-col',
+    'min-w-[13rem]',
     'border-x',
     'clr-controls',
     'small-caps',

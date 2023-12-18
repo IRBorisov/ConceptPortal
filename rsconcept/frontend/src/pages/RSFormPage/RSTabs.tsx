@@ -415,11 +415,11 @@ function RSTabs() {
       />
       <ConceptTab
         label='Карточка'
-        tooltip={`Название схемы: ${schema.title ?? ''}`}
+        title={`Название схемы: ${schema.title ?? ''}`}
       />
       <ConceptTab
         label='Содержание'
-        tooltip={[
+        title={[
           `Всего конституент: ${schema.stats?.count_all ?? 0}`,
           `Количество ошибок: ${schema.stats?.count_errors ?? 0}`
         ].join('\n')}

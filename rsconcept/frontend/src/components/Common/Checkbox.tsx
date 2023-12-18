@@ -2,20 +2,20 @@ import clsx from 'clsx';
 import { useMemo } from 'react';
 
 import { CheckboxCheckedIcon } from '../Icons';
+import { CProps } from '../props';
 import Label from './Label';
 
 export interface CheckboxProps
-extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'title' | 'value' | 'onClick' > {
+extends Omit<CProps.Button, 'value' | 'onClick'> {
   label?: string
   disabled?: boolean
-  tooltip?: string
 
   value: boolean
   setValue?: (newValue: boolean) => void
 }
 
 function Checkbox({
-  id, disabled, tooltip, label, 
+  id, disabled, label, 
   className, value, setValue, ...restProps
 }: CheckboxProps) {
   const cursor = useMemo(
@@ -46,7 +46,6 @@ function Checkbox({
       cursor,
       className
     )}
-    title={tooltip}
     disabled={disabled}
     onClick={handleClick}
     {...restProps}

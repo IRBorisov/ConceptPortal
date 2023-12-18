@@ -19,7 +19,7 @@ import { useLibrary } from '@/context/LibraryContext';
 import { useConceptNavigation } from '@/context/NagivationContext';
 import { LibraryItemType } from '@/models/library';
 import { IRSFormCreateData } from '@/models/rsform';
-import { EXTEOR_TRS_FILE, limits, patterns } from '@/utils/constants';
+import { classnames, EXTEOR_TRS_FILE, limits, patterns } from '@/utils/constants';
 
 function CreateRSFormPage() {
   const router = useConceptNavigation();
@@ -81,8 +81,8 @@ function CreateRSFormPage() {
   <RequireAuth>
   <form
     className={clsx(
-      'w-full max-w-lg',
-      'px-6 py-3 flex flex-col gap-3'
+      'px-6 py-3',
+      classnames.flex_col
     )}
     onSubmit={handleSubmit}
   >
@@ -94,7 +94,7 @@ function CreateRSFormPage() {
         onChange={handleFileChange}
       />
       <MiniButton
-        tooltip='Загрузить из Экстеор'
+        title='Загрузить из Экстеор'
         icon={<BiDownload size='1.25rem' className='clr-text-primary'/>}
         onClick={() => inputRef.current?.click()}
       />
@@ -112,7 +112,7 @@ function CreateRSFormPage() {
       placeholder={file && 'Загрузить из файла'}
       className='w-[14rem]'
       pattern={patterns.alias}
-      tooltip={`не более ${limits.alias_len} символов`}
+      title={`не более ${limits.alias_len} символов`}
       value={alias}
       onChange={event => setAlias(event.target.value)}
     />

@@ -41,7 +41,7 @@ function DlgUploadRSForm({ hideWindow }: DlgUploadRSFormProps) {
 
   return (
   <Modal
-    title='Импорт схемы из Экстеора'
+    header='Импорт схемы из Экстеора'
     hideWindow={hideWindow}
     canSubmit={!!file}
     onSubmit={handleSubmit}
@@ -50,7 +50,6 @@ function DlgUploadRSForm({ hideWindow }: DlgUploadRSFormProps) {
   >
     <FileInput
       label='Выбрать файл'
-      dimensions='w-full flex items-center'
       acceptType={EXTEOR_TRS_FILE}
       onChange={handleFile}
     />

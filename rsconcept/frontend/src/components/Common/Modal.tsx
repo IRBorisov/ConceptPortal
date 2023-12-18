@@ -6,29 +6,34 @@ import { BiX } from 'react-icons/bi';
 
 import useEscapeKey from '@/hooks/useEscapeKey';
 
+import { CProps } from '../props';
 import Button from './Button';
 import MiniButton from './MiniButton';
 import Overlay from './Overlay';
 
-export interface ModalProps {
-  title?: string
+export interface ModalProps
+extends CProps.Styling {
+  header?: string
   submitText?: string
   submitInvalidTooltip?: string
+  
   readonly?: boolean
   canSubmit?: boolean
+
   hideWindow: () => void
   onSubmit?: () => void
   onCancel?: () => void
+
   children: React.ReactNode
-  className?: string
 }
 
 function Modal({ 
-  title, hideWindow, onSubmit,
+  header, hideWindow, onSubmit,
   readonly, onCancel, canSubmit,
   submitInvalidTooltip, className,
   children,
-  submitText = 'Продолжить'
+  submitText = 'Продолжить',
+  ...restProps
 }: ModalProps) {
   const ref = useRef(null);
   useEscapeKey(hideWindow);
@@ -58,16 +63,17 @@ function Modal({
         'border shadow-md',
         'clr-app'
       )}
+      {...restProps}
     >
       <Overlay position='right-[0.3rem] top-2'>
         <MiniButton
-          tooltip='Закрыть диалоговое окно [ESC]'
+          title='Закрыть диалоговое окно [ESC]'
           icon={<BiX size='1.25rem'/>}
           onClick={handleCancel}
         />
       </Overlay>
       
-      {title ? <h1 className='px-12 py-2 select-none'>{title}</h1> : null}
+      {header ? <h1 className='px-12 py-2 select-none'>{header}</h1> : null}
 
       <div
         className={clsx(
@@ -89,7 +95,7 @@ function Modal({
         {!readonly ? 
         <Button autoFocus
           text={submitText}
-          tooltip={!canSubmit ? submitInvalidTooltip: ''}
+          title={!canSubmit ? submitInvalidTooltip: ''}
           className='min-w-[8rem] min-h-[2.6rem]'
           colors='clr-btn-primary'
           disabled={!canSubmit}

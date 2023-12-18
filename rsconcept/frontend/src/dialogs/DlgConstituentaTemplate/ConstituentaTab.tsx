@@ -17,7 +17,7 @@ interface ConstituentaTabProps {
 
 function ConstituentaTab({state, partialUpdate}: ConstituentaTabProps) {
   return (
-  <div className='flex flex-col gap-3'>
+  <>
     <div className='flex self-center gap-3 pr-2'>
       <SelectSingle
         className='min-w-[14rem]'
@@ -62,7 +62,7 @@ function ConstituentaTab({state, partialUpdate}: ConstituentaTabProps) {
       value={state.convention}
       onChange={event => partialUpdate({ convention: event.target.value })}
     />
-  </div>);
+  </>);
 }
 
 export default ConstituentaTab;

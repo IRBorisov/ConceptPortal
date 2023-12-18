@@ -3,6 +3,7 @@
 import { Dispatch, SetStateAction } from 'react';
 
 import Divider from '@/components/Common/Divider';
+import FlexColumn from '@/components/Common/FlexColumn';
 import InfoLibraryItem from '@/components/Shared/InfoLibraryItem';
 import { useAuth } from '@/context/AuthContext';
 import { useRSForm } from '@/context/RSFormContext';
@@ -69,7 +70,7 @@ function EditorRSForm({
       className='flex'
       onKeyDown={handleInput}
     >
-      <div className='flex flex-col gap-3 px-4 pb-2'>
+      <FlexColumn className='px-4 pb-2'>
         <FormRSForm disabled={!isMutable}
           id={globalIDs.library_item_editor}
           isModified={isModified}
@@ -79,7 +80,7 @@ function EditorRSForm({
         <Divider margins='my-2' />
         
         <InfoLibraryItem item={schema} />
-      </div>
+      </FlexColumn>
 
       <RSFormStats stats={schema?.stats}/>
     </div>

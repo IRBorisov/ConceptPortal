@@ -1,20 +1,20 @@
 import clsx from 'clsx';
 
+import { CProps } from '../props';
+
 interface SelectorButtonProps
-extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'children' | 'title' | 'type'> {
+extends CProps.Button {
   text?: string
   icon?: React.ReactNode
-  tooltip?: string
-  dimensions?: string
-  borderClass?: string
+
   colors?: string
   transparent?: boolean
 }
 
 function SelectorButton({
-  text, icon, tooltip,
+  text, icon,
   colors = 'clr-btn-default',
-  dimensions = 'w-fit h-fit',
+  className,
   transparent,
   ...restProps
 }: SelectorButtonProps) {
@@ -29,10 +29,9 @@ function SelectorButton({
         'clr-hover': transparent,
         'border': !transparent,
       },
-      !transparent && colors,
-      dimensions
-  )}
-    title={tooltip}
+      className,
+      !transparent && colors
+    )}
     {...restProps}
   >
     {icon ? icon : null}

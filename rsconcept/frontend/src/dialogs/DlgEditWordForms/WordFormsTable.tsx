@@ -62,7 +62,7 @@ function WordFormsTable({ forms, setForms, onFormSelect }: WordFormsTableProps) 
       maxSize: 50,
       cell: props => 
         <MiniButton noHover
-          tooltip='Удалить словоформу'
+          title='Удалить словоформу'
           icon={<BiX size='1rem' className='clr-text-warning'/>}
           onClick={() => handleDeleteRow(props.row.index)}
         />

@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -11,6 +12,7 @@ import { useLibrary } from '@/context/LibraryContext';
 import { useConceptNavigation } from '@/context/NagivationContext';
 import { ILibraryItem } from '@/models/library';
 import { IRSFormCreateData } from '@/models/rsform';
+import { classnames } from '@/utils/constants';
 import { cloneTitle } from '@/utils/misc';
 
 interface DlgCloneLibraryItemProps
@@ -57,12 +59,12 @@ function DlgCloneLibraryItem({ hideWindow, base }: DlgCloneLibraryItemProps) {
 
   return (
   <Modal
-    title='Создание копии концептуальной схемы'
+    header='Создание копии концептуальной схемы'
     hideWindow={hideWindow}
     canSubmit={canSubmit}
     submitText='Создать'
     onSubmit={handleSubmit}
-    className='flex flex-col gap-3 px-6 py-2'
+    className={clsx('px-6 py-2', classnames.flex_col)}
   >
     <TextInput
       label='Полное название'

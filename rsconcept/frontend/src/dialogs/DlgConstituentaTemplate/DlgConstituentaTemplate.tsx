@@ -12,6 +12,7 @@ import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { HelpTopic } from '@/models/miscelanious';
 import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
 import { inferTemplatedType, substituteTemplateArgs } from '@/models/rslangAPI';
+import { classnames } from '@/utils/constants';
 import { createAliasFor, validateCstAlias } from '@/utils/misc';
 
 import ArgumentsTab, { IArgumentsState } from './ArgumentsTab';
@@ -113,15 +114,15 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
 
   return (
   <Modal
-    title='Создание конституенты из шаблона'
+    header='Создание конституенты из шаблона'
+    submitText='Создать'
+    className='w-[43rem] h-[36rem] px-6'
     hideWindow={hideWindow}
     canSubmit={validated}
     onSubmit={handleSubmit}
-    submitText='Создать'
-    className='max-w-[43rem] min-w-[43rem] min-h-[36rem] px-6'
   >
     <Overlay position='top-0 right-[6rem]'>
-      <HelpButton topic={HelpTopic.RSTEMPLATES} dimensions='max-w-[35rem]' />
+      <HelpButton topic={HelpTopic.RSTEMPLATES} className='max-w-[35rem]' />
     </Overlay>
     <Tabs forceRenderTabPanel
       selectedTabClassName='clr-selected'
@@ -136,17 +137,17 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
       )}>
         <ConceptTab
           label='Шаблон'
-          tooltip='Выбор шаблона выражения'
+          title='Выбор шаблона выражения'
           className='w-[8rem]'
         />
         <ConceptTab
           label='Аргументы'
-          tooltip='Подстановка аргументов шаблона'
+          title='Подстановка аргументов шаблона'
           className='w-[8rem]'
         />
         <ConceptTab
           label='Конституента'
-          tooltip='Редактирование атрибутов конституенты'
+          title='Редактирование атрибутов конституенты'
           className='w-[8rem]'
         />
       </TabList>
@@ -166,7 +167,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
       />
       </TabPanel>
 
-      <TabPanel style={{ display: activeTab === TabID.CONSTITUENTA ? '': 'none' }}>
+      <TabPanel className={classnames.flex_col} style={{ display: activeTab === TabID.CONSTITUENTA ? '': 'none' }}>
       <ConstituentaTab 
         state={constituenta}
         partialUpdate={updateConstituenta}

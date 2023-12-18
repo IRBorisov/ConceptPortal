@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -8,6 +9,7 @@ import TextInput from '@/components/Common/TextInput';
 import { useBlockNavigation } from '@/context/NagivationContext';
 import { useUserProfile } from '@/context/UserProfileContext';
 import { IUserUpdateData } from '@/models/library';
+import { classnames } from '@/utils/constants';
 
 function EditorProfile() {
   const { updateUser, user, processing } = useUserProfile();
@@ -53,11 +55,15 @@ function EditorProfile() {
   return (
   <form
     onSubmit={handleSubmit}
-    className='px-6 py-2 flex flex-col gap-3 min-w-[18rem]'
+    className={clsx(
+      'min-w-[18rem]',
+      'px-6 py-2',
+      classnames.flex_col
+    )}
   >
     <TextInput id='username' disabled
       label='Логин'
-      tooltip='Логин изменить нельзя'
+      title='Логин изменить нельзя'
       value={username}
     />
     <TextInput id='first_name' allowEnter

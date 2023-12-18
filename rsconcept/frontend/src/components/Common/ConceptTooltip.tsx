@@ -12,9 +12,9 @@ extends Omit<ITooltip, 'variant'> {
 }
 
 function ConceptTooltip({
-  className,
   layer='z-tooltip',
   place='bottom',
+  className,
   style,
   ...restProps
 }: ConceptTooltipProps) {

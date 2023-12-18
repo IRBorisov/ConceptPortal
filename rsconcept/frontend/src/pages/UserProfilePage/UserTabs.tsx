@@ -36,7 +36,7 @@ function UserTabs() {
       <div>
         <Overlay position='top-0 right-0'>
           <MiniButton
-            tooltip='Показать/Скрыть список отслеживаний'
+            title='Показать/Скрыть список отслеживаний'
             icon={showSubs
               ? <FiBell size='1.25rem' className='clr-text-primary' />
               : <FiBellOff size='1.25rem' className='clr-text-primary' />

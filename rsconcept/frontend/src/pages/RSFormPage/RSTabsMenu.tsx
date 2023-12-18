@@ -98,7 +98,7 @@ function RSTabsMenu({
   <div className='flex'>
     <div ref={schemaMenu.ref}>
       <Button noBorder dense tabIndex={-1}
-        tooltip='Меню'
+        title='Меню'
         icon={<BiMenu size='1.25rem' className='clr-text-controls' />}
         className='h-full pl-2'
         style={{outlineColor: 'transparent'}}
@@ -108,7 +108,7 @@ function RSTabsMenu({
       <Dropdown>
         <DropdownButton
           text={isOwned ? 'Вы — владелец' : 'Стать владельцем'}
-          tooltip={!user || !isClaimable ? 'Взять во владение можно общую изменяемую схему' : ''}
+          title={!user || !isClaimable ? 'Взять во владение можно общую изменяемую схему' : ''}
           icon={<LuCrown size='1rem' className={isOwned ? 'clr-text-success' : 'clr-text-controls'} />}
           onClick={(!isOwned && user && isClaimable) ? handleClaimOwner : undefined}
         />
@@ -147,7 +147,7 @@ function RSTabsMenu({
     
     <div ref={editMenu.ref}>
       <Button dense noBorder tabIndex={-1}
-        tooltip={'Редактирование'}
+        title={'Редактирование'}
         className='h-full'
         style={{outlineColor: 'transparent'}}
         icon={<FiEdit size='1.25rem' className={isMutable ? 'clr-text-success' : 'clr-text-warning'}/>}
@@ -157,13 +157,13 @@ function RSTabsMenu({
       <Dropdown>
         <DropdownButton disabled={!isMutable}
           text='Сброс имён'
-          tooltip='Присвоить порядковые имена и обновить выражения'
+          title='Присвоить порядковые имена и обновить выражения'
           icon={<BiAnalyse size='1rem' className={isMutable ? 'clr-text-primary': ''} />}
           onClick={handleReindex}
         />
         <DropdownButton disabled={!isMutable}
           text='Банк выражений'
-          tooltip='Создать конституенту из шаблона'
+          title='Создать конституенту из шаблона'
           icon={<BiDiamond size='1rem' className={isMutable ? 'clr-text-success': ''} />}
           onClick={handleTemplates}
         />
@@ -172,7 +172,7 @@ function RSTabsMenu({
 
     <div ref={accessMenu.ref}>
       <Button dense noBorder tabIndex={-1}
-        tooltip={`режим ${labelAccessMode(mode)}`}
+        title={`режим ${labelAccessMode(mode)}`}
         className='h-full pr-2'
         style={{outlineColor: 'transparent'}}
         icon={
@@ -186,19 +186,19 @@ function RSTabsMenu({
       <Dropdown>
         <DropdownButton
           text={labelAccessMode(UserAccessMode.READER)}
-          tooltip={describeAccessMode(UserAccessMode.READER)}
+          title={describeAccessMode(UserAccessMode.READER)}
           icon={<LuGlasses size='1rem' className='clr-text-primary' />}
           onClick={() => handleChangeMode(UserAccessMode.READER)}
         />
         <DropdownButton disabled={!isOwned}
           text={labelAccessMode(UserAccessMode.OWNER)}
-          tooltip={describeAccessMode(UserAccessMode.OWNER)}
+          title={describeAccessMode(UserAccessMode.OWNER)}
           icon={<LuCrown size='1rem' className={isOwned ? 'clr-text-primary': ''} />}
           onClick={() => handleChangeMode(UserAccessMode.OWNER)}
         />
         <DropdownButton disabled={!user?.is_staff}
           text={labelAccessMode(UserAccessMode.ADMIN)}
-          tooltip={describeAccessMode(UserAccessMode.ADMIN)}
+          title={describeAccessMode(UserAccessMode.ADMIN)}
           icon={<BiMeteor size='1rem' className={user?.is_staff ? 'clr-text-primary': ''} />}
           onClick={() => handleChangeMode(UserAccessMode.ADMIN)}
         />

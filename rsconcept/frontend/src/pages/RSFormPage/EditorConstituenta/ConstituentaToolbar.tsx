@@ -30,31 +30,31 @@ function ConstituentaToolbar({
   return (
     <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex'>
     <MiniButton
-      tooltip='Сохранить изменения [Ctrl + S]'
+      title='Сохранить изменения [Ctrl + S]'
       disabled={!canSave}
       icon={<FiSave size='1.25rem' className={canSave ? 'clr-text-primary' : ''}/>}
       onClick={onSubmit}
     />
     <MiniButton
-      tooltip='Сбросить несохраненные изменения'
+      title='Сбросить несохраненные изменения'
       disabled={!canSave}
       onClick={onReset}
       icon={<BiReset size='1.25rem' className={canSave ? 'clr-text-primary' : ''} />}
     />
     <MiniButton
-      tooltip='Создать конституенту после данной'
+      title='Создать конституенту после данной'
       disabled={!isMutable}
       onClick={onCreate}
       icon={<BiPlusCircle size={'1.25rem'} className={isMutable ? 'clr-text-success' : ''} />} 
     />
     <MiniButton
-      tooltip='Клонировать конституенту [Alt + V]'
+      title='Клонировать конституенту [Alt + V]'
       disabled={!isMutable}
       onClick={onClone}
       icon={<BiDuplicate size='1.25rem' className={isMutable ? 'clr-text-success' : ''} />} 
     />
     <MiniButton
-      tooltip='Удалить редактируемую конституенту'
+      title='Удалить редактируемую конституенту'
       disabled={!isMutable}
       onClick={onDelete}
       icon={<BiTrash size='1.25rem' className={isMutable ? 'clr-text-warning' : ''} />}

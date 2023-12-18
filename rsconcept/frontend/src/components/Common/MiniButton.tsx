@@ -1,21 +1,20 @@
 import clsx from 'clsx';
 
+import { CProps } from '../props';
+
 interface MiniButtonProps
-extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'title' | 'children' > {
+extends CProps.Button {
   icon: React.ReactNode
-  tooltip?: string
   noHover?: boolean
-  dimensions?: string
 }
 
 function MiniButton({
-  icon, tooltip, noHover, tabIndex,
-  dimensions='w-fit h-fit',
+  icon, noHover, tabIndex,
+  className,
   ...restProps
 }: MiniButtonProps) {
   return (
   <button type='button'
-    title={tooltip}
     tabIndex={tabIndex ?? -1}
     className={clsx(
       'px-1 py-1',
@@ -26,7 +25,7 @@ function MiniButton({
         'outline-none': noHover,
         'clr-hover': !noHover
       },
-      dimensions
+      className
     )}
     {...restProps}
   >

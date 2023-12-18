@@ -13,6 +13,7 @@ import TextArea from '@/components/Common/TextArea';
 import RefsInput from '@/components/RefsInput';
 import { useRSForm } from '@/context/RSFormContext';
 import { IConstituenta, ICstRenameData, ICstUpdateData } from '@/models/rsform';
+import { classnames } from '@/utils/constants';
 import { labelCstTypification } from '@/utils/labels';
 
 import EditorRSExpression from '../EditorRSExpression';
@@ -111,18 +112,18 @@ function FormConstituenta({
     className='flex select-none'
   >
     <MiniButton
-      tooltip={`Редактировать словоформы термина: ${constituenta?.term_forms.length ?? 0}`}
+      title={`Редактировать словоформы термина: ${constituenta?.term_forms.length ?? 0}`}
       disabled={disabled}
       noHover
       onClick={onEditTerm}
       icon={<LiaEdit size='1rem' className={!disabled ? 'clr-text-primary' : ''} />}
     />
-    <div className='pt-1 pl-[1.375rem] text-sm font-semibold whitespace-nowrap w-fit'>
+    <div className='pt-1 pl-[1.375rem] text-sm font-semibold whitespace-nowrap'>
       <span>Имя </span>
       <span className='ml-1'>{constituenta?.alias ?? ''}</span>
     </div>
     <MiniButton noHover
-      tooltip='Переименовать конституенту'
+      title='Переименовать конституенту'
       disabled={disabled}
       onClick={handleRename}
       icon={<LiaEdit size='1rem' className={!disabled ? 'clr-text-primary' : ''} />}
@@ -131,7 +132,8 @@ function FormConstituenta({
   <form id={id}
     className={clsx(
       'mt-1 min-w-[47.8rem] max-w-[47.8rem]',
-      'px-4 py-1 flex flex-col gap-3'
+      'px-4 py-1',
+      classnames.flex_col
     )}
     onSubmit={handleSubmit}
   >

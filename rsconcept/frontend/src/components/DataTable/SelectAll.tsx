@@ -9,7 +9,7 @@ interface SelectAllProps<TData> {
 function SelectAll<TData>({ table }: SelectAllProps<TData>) {  
   return (
   <Tristate tabIndex={-1}
-    tooltip='Выделить все'
+    title='Выделить все'
     value={
       (!table.getIsAllPageRowsSelected() && table.getIsSomePageRowsSelected())
       ? null

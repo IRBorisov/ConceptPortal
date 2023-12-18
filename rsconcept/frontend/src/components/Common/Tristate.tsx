@@ -13,7 +13,7 @@ extends Omit<CheckboxProps, 'value' | 'setValue'> {
 }
 
 function Tristate({
-  id, disabled, tooltip, label, 
+  id, disabled, label, 
   className,
   value, setValue,
   ...restProps
@@ -51,7 +51,6 @@ function Tristate({
       cursor,
       className
     )}
-    title={tooltip}
     disabled={disabled}
     onClick={handleClick}
     {...restProps}

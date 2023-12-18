@@ -1,17 +1,19 @@
 import clsx from 'clsx';
 
+import { CProps } from '../props';
 import Overlay from './Overlay';
 
-interface DropdownProps {
+interface DropdownProps
+extends CProps.Styling {
   stretchLeft?: boolean
-  dimensions?: string
   children: React.ReactNode
 }
 
 function Dropdown({
-  dimensions = 'w-fit',
+  className,
   stretchLeft,
-  children
+  children,
+  ...restProps
 }: DropdownProps) {
   return (
   <Overlay 
@@ -26,8 +28,9 @@ function Dropdown({
         'right-0': stretchLeft,
         'left-0': !stretchLeft
       },
-      dimensions
-  )}
+      className
+    )}
+    {...restProps}
   >
     {children}
   </Overlay>);

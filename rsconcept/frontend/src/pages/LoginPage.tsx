@@ -13,7 +13,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NagivationContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { IUserLoginData } from '@/models/library';
-import { resources } from '@/utils/constants';
+import { classnames, resources } from '@/utils/constants';
 
 
 function ProcessError({error}: { error: ErrorData }): React.ReactElement {
@@ -68,7 +68,8 @@ function LoginPage() {
   <form
     className={clsx(
       'w-[24rem]', 
-      'pt-12 pb-6 px-6 flex flex-col gap-3'
+      'pt-12 pb-6 px-6',
+      classnames.flex_col
     )}
     onSubmit={handleSubmit}
   >

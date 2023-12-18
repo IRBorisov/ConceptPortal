@@ -2,15 +2,15 @@ interface LabeledValueProps {
   id?: string
   label: string
   text: string | number
-  tooltip?: string
+  title?: string
 }
 
-function LabeledValue({ id, label, text, tooltip }: LabeledValueProps) {
+function LabeledValue({ id, label, text, title }: LabeledValueProps) {
   return (
   <div className='flex justify-between gap-3'>
     <label
       className='font-semibold'
-      title={tooltip}
+      title={title}
       htmlFor={id}
     >
       {label}

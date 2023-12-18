@@ -56,6 +56,14 @@ export const youtube = {
 };
 
 /**
+ * Classname combinations.
+ * Note: using clsx in conjunction with tailwindCss is preferred to creating custom CSS
+ */
+export const classnames = {
+  flex_col: 'flex flex-col gap-3'
+};
+
+/**
  * Constant URLs.
  */
 export const urls = {

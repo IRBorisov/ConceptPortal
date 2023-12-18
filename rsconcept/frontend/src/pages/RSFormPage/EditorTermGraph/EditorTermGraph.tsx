@@ -14,7 +14,7 @@ import useLocalStorage from '@/hooks/useLocalStorage';
 import { GraphColoringScheme, GraphFilterParams } from '@/models/miscelanious';
 import { CstType, ICstCreateData } from '@/models/rsform';
 import { colorbgGraphNode } from '@/utils/color';
-import { TIMEOUT_GRAPH_REFRESH } from '@/utils/constants';
+import { classnames, TIMEOUT_GRAPH_REFRESH } from '@/utils/constants';
 
 import GraphSidebar from './GraphSidebar';
 import GraphToolbar from './GraphToolbar';
@@ -235,7 +235,7 @@ function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Ed
       layer='z-tooltip'
       position='top-[1.6rem] left-[2.6rem]'
       className={clsx(
-        'w-[25rem] h-fit min-h-[11rem]',
+        'w-[25rem]',
         'px-3',
         'overflow-y-auto',
         'border shadow-md',
@@ -243,6 +243,7 @@ function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Ed
       )}
     >
       <InfoConstituenta
+        className='pt-1 pb-2'
         data={hoverCst}
       />
     </Overlay> : null}
@@ -250,8 +251,8 @@ function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Ed
     <Overlay
       position='top-0 left-0'
       className={clsx(
-        'max-w-[13.5rem] min-w-[13.5rem]',
-        'flex flex-col gap-3'
+        'w-[13.5rem]',
+        classnames.flex_col
       )}
     >
       <GraphSidebar 

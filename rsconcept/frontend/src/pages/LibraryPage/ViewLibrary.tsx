@@ -101,7 +101,7 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
     )}>
       <HelpButton
         topic={HelpTopic.LIBRARY}
-        dimensions='max-w-[35rem]'
+        className='max-w-[35rem]'
         offset={0}
       />
     </div>

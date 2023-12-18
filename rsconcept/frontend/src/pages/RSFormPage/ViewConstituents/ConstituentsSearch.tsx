@@ -77,15 +77,15 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
   return (
   <div className='flex items-stretch border-b clr-input'>
     <ConceptSearch noBorder
-      dimensions='min-w-[6rem] pr-2 w-full'
+      className='min-w-[6rem] pr-2 flex-grow'
       value={filterText}
       onChange={setFilterText}
     />
    
     <div ref={matchModeMenu.ref}>
       <SelectorButton transparent tabIndex={-1}
-        tooltip='Настройка атрибутов для фильтрации'
-        dimensions='w-fit h-full'
+        title='Настройка атрибутов для фильтрации'
+        className='h-full'
         icon={<BiFilterAlt size='1.25rem' />}
         text={labelCstMathchMode(filterMatch)}
         onClick={matchModeMenu.toggle}
@@ -108,8 +108,8 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
 
     <div ref={sourceMenu.ref}>
       <SelectorButton transparent tabIndex={-1}
-        tooltip='Настройка фильтрации по графу термов'
-        dimensions='w-fit h-full pr-2'
+        title='Настройка фильтрации по графу термов'
+        className='h-full pr-2'
         icon={<BiCog size='1.25rem' />}
         text={labelCstSource(filterSource)}
         onClick={sourceMenu.toggle}

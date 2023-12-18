@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 
-import { IColorsProps, IControlProps } from './commonInterfaces';
+import { CProps } from '../props';
 
 interface ButtonProps
-extends IControlProps, IColorsProps, Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'title'| 'type'> {
+extends CProps.Control, CProps.Colors, CProps.Button {
   text?: string
   icon?: React.ReactNode
 
@@ -12,7 +12,7 @@ extends IControlProps, IColorsProps, Omit<React.ButtonHTMLAttributes<HTMLButtonE
 }
 
 function Button({
-  text, icon, tooltip, loading,
+  text, icon, loading,
   dense, disabled, noBorder, noOutline,
   colors = 'clr-btn-default',
   className,
@@ -21,7 +21,6 @@ function Button({
   return (
   <button type='button'
     disabled={disabled ?? loading}
-    title={tooltip}
     className={clsx(
       'inline-flex gap-2 items-center justify-center',
       'select-none disabled:cursor-not-allowed',
@@ -34,8 +33,8 @@ function Button({
         'outline-none': noOutline,
         'clr-outline': !noOutline,
       },
-      colors,
-      className
+      className,
+      colors
     )}
     {...restProps}
   >

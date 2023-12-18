@@ -10,6 +10,7 @@ import TextInput from '@/components/Common/TextInput';
 import RSInput from '@/components/RSInput';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { CstType,ICstCreateData, IRSForm } from '@/models/rsform';
+import { classnames } from '@/utils/constants';
 import { labelCstType } from '@/utils/labels';
 import { createAliasFor, validateCstAlias } from '@/utils/misc';
 import { SelectorCstType } from '@/utils/selectors';
@@ -50,14 +51,15 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
 
   return (
   <Modal
-    title='Создание конституенты'
+    header='Создание конституенты'
     hideWindow={hideWindow}
     canSubmit={validated}
     onSubmit={handleSubmit}
     submitText='Создать'
     className={clsx(
       'w-[35rem]',
-      'py-2 px-6 flex flex-col gap-3'
+      'py-2 px-6',
+      classnames.flex_col
     )}
   >
     <div className='flex self-center gap-6'>

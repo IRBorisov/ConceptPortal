@@ -47,10 +47,10 @@ const editorSetup: BasicSetupOptions = {
 
 interface RSInputProps 
 extends Pick<ReactCodeMirrorProps, 
-  'id' | 'height' | 'minHeight' | 'maxHeight' | 'value' | 'className' | 'onFocus' | 'onBlur' | 'placeholder'
+  'id' | 'height' | 'minHeight' | 'maxHeight' | 'value' | 
+  'onFocus' | 'onBlur' | 'placeholder' | 'style' | 'className'
 > {
   label?: string
-  dimensions?: string
   disabled?: boolean
   noTooltip?: boolean
   innerref?: RefObject<ReactCodeMirrorRef> | undefined
@@ -61,7 +61,7 @@ extends Pick<ReactCodeMirrorProps,
 function RSInput({ 
   id, label, innerref, onChange, onAnalyze,
   disabled, noTooltip,
-  dimensions = 'w-full',
+  className, style,
   ...restProps 
 }: RSInputProps) {
   const { darkMode, colors } = useConceptTheme();
@@ -129,11 +129,14 @@ function RSInput({
   }, [thisRef, onAnalyze]);
 
   return (
-  <div className={clsx(
-    'flex flex-col gap-2',
-    dimensions,
-    cursor
-  )}>
+  <div 
+    className={clsx(
+      'flex flex-col gap-2',
+      className,
+      cursor
+    )}
+    style={style}
+  >
     <Label text={label} htmlFor={id}/>
     <CodeMirror id={id}
       ref={thisRef}

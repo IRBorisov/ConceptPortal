@@ -1,11 +1,12 @@
 'use client';
 
+import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 
 import Checkbox from '@/components/Common/Checkbox';
 import Modal, { ModalProps } from '@/components/Common/Modal';
 import { IRSForm } from '@/models/rsform';
-import { prefixes } from '@/utils/constants';
+import { classnames, prefixes } from '@/utils/constants';
 
 import ConstituentsList from './ConstituentsList';
 
@@ -31,11 +32,15 @@ function DlgDeleteCst({ hideWindow, selected, schema, onDelete }: DlgDeleteCstPr
 
   return (
   <Modal canSubmit
-    title='Удаление конституент'
+    header='Удаление конституент'
     submitText={expandOut ? 'Удалить с зависимыми' : 'Удалить'}
     hideWindow={hideWindow}
     onSubmit={handleSubmit}
-    className='max-w-[60vw] min-w-[30rem] px-6 flex flex-col gap-3'
+    className={clsx(
+      'max-w-[60vw] min-w-[30rem]',
+      'px-6',
+      classnames.flex_col
+    )}
   >
     <ConstituentsList
       title='Выбраны к удалению'

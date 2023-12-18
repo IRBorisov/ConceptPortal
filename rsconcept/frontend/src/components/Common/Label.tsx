@@ -1,13 +1,13 @@
 import clsx from 'clsx';
-import { LabelHTMLAttributes } from 'react';
+
+import { CProps } from '../props';
 
 interface LabelProps 
-extends Omit<React.DetailedHTMLProps<LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>, 'children' | 'title'> {
+extends CProps.Label {
   text?: string
-  tooltip?: string
 }
 
-function Label({ text, tooltip, className, ...restProps }: LabelProps) {
+function Label({ text, className, ...restProps }: LabelProps) {
   if (!text) {
     return null;
   }
@@ -17,7 +17,6 @@ function Label({ text, tooltip, className, ...restProps }: LabelProps) {
       'text-sm font-semibold whitespace-nowrap',
       className
     )}
-    title={tooltip}
     {...restProps}
   >
     {text}

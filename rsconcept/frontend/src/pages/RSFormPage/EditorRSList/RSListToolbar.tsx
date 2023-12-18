@@ -40,25 +40,25 @@ function RSListToolbar({
   return (
   <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex'>
     <MiniButton
-      tooltip='Переместить вверх [Alt + вверх]'
+      title='Переместить вверх [Alt + вверх]'
       icon={<BiUpvote size='1.25rem' className={isMutable && !nothingSelected ? 'clr-text-primary': ''}/>}
       disabled={!isMutable || nothingSelected}
       onClick={onMoveUp}
     />
     <MiniButton
-      tooltip='Переместить вниз [Alt + вниз]'
+      title='Переместить вниз [Alt + вниз]'
       icon={<BiDownvote size='1.25rem' className={isMutable && !nothingSelected ? 'clr-text-primary': ''}/>}
       disabled={!isMutable || nothingSelected}
       onClick={onMoveDown}
     />
     <MiniButton
-      tooltip='Клонировать конституенту [Alt + V]'
+      title='Клонировать конституенту [Alt + V]'
       icon={<BiDuplicate size='1.25rem' className={isMutable && selectedCount === 1 ? 'clr-text-success': ''} />}
       disabled={!isMutable || selectedCount !== 1}
       onClick={onClone}
     />
     <MiniButton
-      tooltip='Добавить новую конституенту... [Alt + `]'
+      title='Добавить новую конституенту... [Alt + `]'
       icon={<BiPlusCircle size='1.25rem' className={isMutable ? 'clr-text-success': ''} />}
       disabled={!isMutable}
       onClick={() => onCreate()}
@@ -66,7 +66,7 @@ function RSListToolbar({
     <div ref={insertMenu.ref} className='flex justify-center'>
       <div>
         <MiniButton
-          tooltip='Добавить пустую конституенту'
+          title='Добавить пустую конституенту'
           icon={<BiDownArrowCircle size='1.25rem' className={isMutable ? 'clr-text-success': ''} />}
           disabled={!isMutable}
           onClick={insertMenu.toggle}
@@ -79,14 +79,14 @@ function RSListToolbar({
             key={`${prefixes.csttype_list}${typeStr}`}
             text={`${getCstTypePrefix(typeStr as CstType)}1 — ${labelCstType(typeStr as CstType)}`}
             onClick={() => onCreate(typeStr as CstType)}
-            tooltip={getCstTypeShortcut(typeStr as CstType)}
+            title={getCstTypeShortcut(typeStr as CstType)}
           />
         )}
         </Dropdown> : null}
       </div>
     </div>
     <MiniButton
-      tooltip='Удалить выбранные [Delete]'
+      title='Удалить выбранные [Delete]'
       icon={<BiTrash size='1.25rem' className={isMutable && !nothingSelected ? 'clr-text-warning' : ''} />}
       disabled={!isMutable || nothingSelected}
       onClick={onDelete}

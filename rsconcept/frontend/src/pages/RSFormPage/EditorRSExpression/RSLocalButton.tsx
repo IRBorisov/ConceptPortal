@@ -2,16 +2,16 @@ import { TokenID } from '@/models/rslang';
 
 interface RSLocalButtonProps {
   text: string
-  tooltip: string
+  title: string
   disabled?: boolean
   onInsert: (token: TokenID, key?: string) => void
 }
 
-function RSLocalButton({ text, tooltip, disabled, onInsert }: RSLocalButtonProps) {
+function RSLocalButton({ text, title, disabled, onInsert }: RSLocalButtonProps) {
   return (
   <button type='button' tabIndex={-1}
     disabled={disabled}
-    title={tooltip}
+    title={title}
     className='w-[2rem] h-6 cursor-pointer disabled:cursor-default rounded-none clr-hover clr-btn-clear'
     onClick={() => onInsert(TokenID.ID_LOCAL, text)}
   >

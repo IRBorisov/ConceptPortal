@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useState } from 'react';
 
+import FlexColumn from '@/components/Common/FlexColumn';
 import Label from '@/components/Common/Label';
 import TextInput from '@/components/Common/TextInput';
 import ConstituentaPicker from '@/components/Shared/ConstituentaPicker';
@@ -61,7 +62,7 @@ function EntityTab({ initial, items, setIsValid, setReference }: EntityTabProps)
   }
   
   return (
-  <div className='flex flex-col gap-3'>
+  <FlexColumn>
     <ConstituentaPicker 
       value={selectedCst}
       data={items}
@@ -77,7 +78,7 @@ function EntityTab({ initial, items, setIsValid, setReference }: EntityTabProps)
       <TextInput dense
         label='Конституента'
         placeholder='Имя'
-        className='max-w-[11rem] min-w-[11rem]'
+        className='w-[11rem]'
         value={alias}
         onChange={event => setAlias(event.target.value)}
       />
@@ -85,7 +86,7 @@ function EntityTab({ initial, items, setIsValid, setReference }: EntityTabProps)
         label='Термин'
         className='flex-grow text-sm'
         value={term}
-        tooltip={term}
+        title={term}
       />
     </div>
 
@@ -104,7 +105,7 @@ function EntityTab({ initial, items, setIsValid, setReference }: EntityTabProps)
         setValue={setSelectedGrams}
       />
     </div>
-  </div>);
+  </FlexColumn>);
 }
 
 export default EntityTab;

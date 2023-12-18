@@ -1,22 +1,22 @@
 import clsx from 'clsx';
 
+import { CProps } from '../props';
+
 interface SubmitButtonProps
-extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'title'> {
+extends CProps.Button {
   text?: string
-  tooltip?: string
   loading?: boolean
   icon?: React.ReactNode
 }
 
 function SubmitButton({
   text = 'ОК',
-  icon, disabled, tooltip, loading,
+  icon, disabled, loading,
   className,
   ...restProps
 }: SubmitButtonProps) {
   return (
   <button type='submit'
-    title={tooltip}
     className={clsx(
       'px-3 py-2 inline-flex items-center gap-2 align-middle justify-center',
       'border',

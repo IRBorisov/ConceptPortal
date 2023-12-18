@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import FlexColumn from '@/components/Common/FlexColumn';
 import SubmitButton from '@/components/Common/SubmitButton';
 import TextInput from '@/components/Common/TextInput';
 import InfoError, { ErrorData } from '@/components/InfoError';
@@ -78,7 +79,7 @@ function EditorPassword() {
     )}
     onSubmit={handleSubmit}
   >
-    <div className='flex flex-col gap-3'>
+    <FlexColumn>
       <TextInput id='old_password' type='password' allowEnter
         label='Старый пароль'
         value={oldPassword}
@@ -101,7 +102,7 @@ function EditorPassword() {
         }}
       />
       {error ? <ProcessError error={error} /> : null}
-    </div>
+    </FlexColumn>
     <SubmitButton
       text='Сменить пароль'
       className='self-center'

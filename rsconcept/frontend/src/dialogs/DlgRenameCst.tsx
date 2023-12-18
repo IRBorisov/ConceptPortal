@@ -44,7 +44,7 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
 
   return (
   <Modal
-    title='Переименование конституенты'
+    header='Переименование конституенты'
     submitText='Переименовать'
     submitInvalidTooltip={'Введите незанятое имя, соответствующее типу'}
     hideWindow={hideWindow}

@@ -24,7 +24,7 @@ function DlgGraphParams({ hideWindow, initial, onConfirm } : DlgGraphParamsProps
   return (
   <Modal canSubmit
     hideWindow={hideWindow}
-    title='Настройки графа термов'
+    header='Настройки графа термов'
     onSubmit={handleSubmit}
     submitText='Применить'
     className='flex gap-12 px-6 py-2'
@@ -33,25 +33,25 @@ function DlgGraphParams({ hideWindow, initial, onConfirm } : DlgGraphParamsProps
       <h1 className='mb-2'>Преобразования</h1>
       <Checkbox
         label='Скрыть текст'
-        tooltip='Не отображать термины'
+        title='Не отображать термины'
         value={params.noText} 
         setValue={value => updateParams({noText: value})}
       />
       <Checkbox
         label='Скрыть несвязанные'
-        tooltip='Неиспользуемые конституенты'
+        title='Неиспользуемые конституенты'
         value={params.noHermits} 
         setValue={value => updateParams({ noHermits: value})}
       />
       <Checkbox
         label='Скрыть шаблоны'
-        tooltip='Терм-функции и предикат-функции с параметризованными аргументами'
+        title='Терм-функции и предикат-функции с параметризованными аргументами'
         value={params.noTemplates} 
         setValue={value => updateParams({ noTemplates: value})}
       />
       <Checkbox
         label='Транзитивная редукция'
-        tooltip='Удалить связи, образующие транзитивные пути в графе'
+        title='Удалить связи, образующие транзитивные пути в графе'
         value={params.noTransitive} 
         setValue={value => updateParams({ noTransitive: value})}
       />

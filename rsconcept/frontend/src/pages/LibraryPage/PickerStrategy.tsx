@@ -42,8 +42,8 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
   return (
   <div ref={strategyMenu.ref} className='h-full text-right'>
     <SelectorButton transparent tabIndex={-1}
-      tooltip='Список фильтров'
-      dimensions='w-fit h-full'
+      title='Список фильтров'
+      className='h-full'
       icon={<BiFilterAlt size='1.25rem' />}
       text={labelLibraryFilter(value)}
       onClick={strategyMenu.toggle}
@@ -59,7 +59,7 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
           value={value === strategy}
           setValue={() => handleChange(strategy)}
           label={labelLibraryFilter(strategy)}
-          tooltip={describeLibraryFilter(strategy)}
+          title={describeLibraryFilter(strategy)}
           disabled={isStrategyDisabled(strategy)}
         />);
       })}
