@@ -20,6 +20,7 @@ import EditorRSExpression from '../EditorRSExpression';
 
 interface FormConstituentaProps {
   disabled?: boolean
+  showList: boolean
   
   id?: string
   constituenta?: IConstituenta
@@ -28,15 +29,16 @@ interface FormConstituentaProps {
   toggleReset: boolean
   setIsModified: Dispatch<SetStateAction<boolean>>
 
+  onToggleList: () => void
   onRenameCst: (initial: ICstRenameData) => void
   onEditTerm: () => void
 }
 
 function FormConstituenta({
-  disabled,
+  disabled, showList,
   id, isModified, setIsModified,
   constituenta, toggleReset,
-  onRenameCst, onEditTerm
+  onRenameCst, onEditTerm, onToggleList
 }: FormConstituentaProps) {
   const { schema, cstUpdate, processing } = useRSForm();
   
@@ -158,11 +160,13 @@ function FormConstituenta({
     />
     <EditorRSExpression
       label='Формальное определение'
-      activeCst={constituenta}
       placeholder='Родоструктурное выражение, задающее формальное определение'
       value={expression}
+      activeCst={constituenta}
+      showList={showList}
       disabled={disabled}
       toggleReset={toggleReset}
+      onToggleList={onToggleList}
       onChange={newValue => setExpression(newValue)}
       setTypification={setTypification}
     />

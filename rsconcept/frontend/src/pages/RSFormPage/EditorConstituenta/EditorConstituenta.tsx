@@ -3,6 +3,7 @@
 import { Dispatch, SetStateAction, useMemo, useState } from 'react';
 
 import { useRSForm } from '@/context/RSFormContext';
+import useLocalStorage from '@/hooks/useLocalStorage';
 import useWindowSize from '@/hooks/useWindowSize';
 import { CstType, IConstituenta, ICstCreateData, ICstRenameData } from '@/models/rsform';
 import { globalIDs } from '@/utils/constants';
@@ -39,6 +40,7 @@ function EditorConstituenta({
   const windowSize = useWindowSize();
   const { schema } = useRSForm();
 
+  const [showList, setShowList] = useLocalStorage('rseditor-show-list', true);
   const [toggleReset, setToggleReset] = useState(false);
 
   const disabled = useMemo(() => (!activeCst || !isMutable), [activeCst, isMutable]);
@@ -136,16 +138,18 @@ function EditorConstituenta({
       onKeyDown={handleInput}
     >
       <FormConstituenta disabled={disabled}
+        showList={showList}
         id={globalIDs.constituenta_editor}
         constituenta={activeCst}
         isModified={isModified}
         toggleReset={toggleReset}
+        onToggleList={() => setShowList(prev => !prev)}
         
         setIsModified={setIsModified}
         onEditTerm={onEditTerm}
         onRenameCst={onRenameCst}
       />
-      {(windowSize.width && windowSize.width >= SIDELIST_HIDE_THRESHOLD) ?
+      {(showList && windowSize.width && windowSize.width >= SIDELIST_HIDE_THRESHOLD) ?
       <ViewConstituents
         schema={schema}
         expression={activeCst?.definition_formal ?? ''}

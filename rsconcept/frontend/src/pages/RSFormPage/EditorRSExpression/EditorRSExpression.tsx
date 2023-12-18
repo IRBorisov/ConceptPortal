@@ -2,6 +2,7 @@
 
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { BiListUl } from 'react-icons/bi';
 import { FaRegKeyboard } from 'react-icons/fa6';
 import { RiNodeTree } from 'react-icons/ri'
 import { toast } from 'react-toastify';
@@ -27,18 +28,23 @@ import StatusBar from './StatusBar';
 interface EditorRSExpressionProps {
   id?: string
   activeCst?: IConstituenta
+  value: string
   label: string
+  placeholder?: string
+
   disabled?: boolean
   toggleReset?: boolean
-  placeholder?: string
+  showList: boolean
+  
   setTypification: (typificaiton: string) => void
-  value: string
   onChange: (newValue: string) => void
+  onToggleList: () => void
 }
 
 function EditorRSExpression({
-  activeCst, disabled, value, toggleReset,
-  setTypification, onChange, ...restProps
+  activeCst, disabled, value, toggleReset, showList,
+  setTypification, onChange, onToggleList,
+  ...restProps
 }: EditorRSExpressionProps) {
   const { schema } = useRSForm();
 
@@ -138,9 +144,14 @@ function EditorRSExpression({
   <div>
     <Overlay position='top-0 right-0 flex'>
       <MiniButton noHover
-        title='Включение специальной клавиатуры'
+        title='Отображение специальной клавиатуры'
         onClick={() => setShowControls(prev => !prev)}
         icon={<FaRegKeyboard size='1.25rem' className={showControls ? 'clr-text-primary': ''} />}
+      />
+      <MiniButton noHover
+        title='Отображение списка конституент'
+        onClick={onToggleList}
+        icon={<BiListUl size='1.25rem' className={showList ? 'clr-text-primary': ''} />}
       />
       <MiniButton noHover
         title='Дерево разбора выражения'
