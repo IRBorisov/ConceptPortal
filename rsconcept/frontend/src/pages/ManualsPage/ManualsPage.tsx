@@ -21,7 +21,7 @@ function ManualsPage() {
 
   return (
   <div
-    className='flex items-start justify-start w-full max-w-[90rem] gap-2'
+    className='flex items-start w-full max-w-[90rem] gap-2'
     style={{minHeight: mainHeight}}
   >
     <TopicsList 

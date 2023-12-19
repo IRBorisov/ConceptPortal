@@ -144,10 +144,10 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
       <Label text='Параметры словоформы' />
     </div>
 
-    <div className='flex justify-stretch'>
+    <div className='flex'>
       <TextArea
         placeholder='Введите текст'
-        className='min-w-[20rem] min-h-[5rem] flex-grow'
+        className='min-w-[20rem] min-h-[5rem]'
         rows={2}
         value={inputText}
         onChange={event => setInputText(event.target.value)}

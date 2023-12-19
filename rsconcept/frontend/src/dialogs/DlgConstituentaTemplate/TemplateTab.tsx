@@ -88,7 +88,7 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
 
   return (
   <>
-    <div className='flex justify-stretch'>
+    <div className='flex'>
       <SelectSingle
         placeholder='Выберите категорию'
         className='flex-grow border-none'
@@ -102,7 +102,7 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
       />
       <SelectSingle
         placeholder='Выберите источник'
-        className='min-w-[12rem]'
+        className='w-[12rem]'
         options={templateSelector}
         value={state.templateID ? { value: state.templateID, label: templates.find(item => item.id == state.templateID)!.title }: null}
         onChange={data => partialUpdate({templateID: (data ? data.value : undefined)})}

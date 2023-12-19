@@ -186,13 +186,11 @@ function EditorRSExpression({
     /> : null}
     
     {(parseData && parseData.errors.length > 0) ? 
-    <div className='flex-grow text-sm border overflow-y-auto max-h-[4.5rem] min-h-[4.5rem]'>
-      <ParsingResult
-        data={parseData}
-        disabled={disabled}
-        onShowError={onShowError}
-      />
-    </div> : null}
+    <ParsingResult
+      data={parseData}
+      disabled={disabled}
+      onShowError={onShowError}
+    />: null}
   </div>
   </>);
 }

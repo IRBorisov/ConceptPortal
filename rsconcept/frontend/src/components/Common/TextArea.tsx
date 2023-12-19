@@ -19,7 +19,7 @@ function TextArea({
   <div className={clsx(
     {
       'flex flex-col gap-2': !dense,
-      'flex justify-stretch items-center gap-3': dense
+      'flex items-center gap-3': dense
     },
     dense && className,
   )}>

@@ -15,7 +15,7 @@ function ParsingResult({ data, disabled, onShowError }: ParsingResultProps) {
   const warningsCount = data.errors.length - errorCount;
 
   return (
-  <div className='px-2 pt-1 text-sm'>
+  <div className='px-2 pt-1 text-sm border overflow-y-auto h-[4.5rem]'>
     <p>Ошибок: <b>{errorCount}</b> | Предупреждений: <b>{warningsCount}</b></p>
     {data.errors.map(
     (error, index) => {

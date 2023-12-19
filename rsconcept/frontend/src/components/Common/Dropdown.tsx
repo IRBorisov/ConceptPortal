@@ -20,7 +20,7 @@ function Dropdown({
     layer='z-modal-tooltip'
     position='mt-3'
     className={clsx(
-      'flex flex-col items-stretch',
+      'flex flex-col',
       'border rounded-md shadow-lg',
       'text-sm',
       'clr-input',

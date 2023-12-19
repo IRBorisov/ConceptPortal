@@ -75,7 +75,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
   }, [sourceMenu, setFilterSource]);
   
   return (
-  <div className='flex items-stretch border-b clr-input'>
+  <div className='flex border-b clr-input'>
     <ConceptSearch noBorder
       className='min-w-[6rem] pr-2 flex-grow'
       value={filterText}
