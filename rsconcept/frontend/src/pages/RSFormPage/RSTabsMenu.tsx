@@ -91,7 +91,7 @@ function RSTabsMenu({
   }
 
   function handleCreateNew() {
-    router.push('/rsform-create');
+    router.push('/library/create');
   }
 
   return (    

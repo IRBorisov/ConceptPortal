@@ -77,7 +77,7 @@ function EditorRSForm({
           setIsModified={setIsModified}
         />
 
-        <Divider margins='my-2' />
+        <Divider margins='my-1' />
         
         <InfoLibraryItem item={schema} />
       </FlexColumn>

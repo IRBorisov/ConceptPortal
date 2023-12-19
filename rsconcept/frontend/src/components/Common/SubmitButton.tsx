@@ -18,7 +18,7 @@ function SubmitButton({
   return (
   <button type='submit'
     className={clsx(
-      'px-3 py-2 inline-flex items-center gap-2 align-middle justify-center',
+      'px-3 py-2 flex gap-2 items-center justify-center',
       'border',
       'font-semibold',
       'clr-btn-primary',

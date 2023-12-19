@@ -63,7 +63,7 @@ function RSFormToolbar({
       />
     <MiniButton
       title={claimable ? 'Стать владельцем' : 'Невозможно стать владельцем' }
-      icon={<LuCrown size='1.25rem' className={!claimable ? '' : 'clr-text-success'}/>}
+      icon={<LuCrown size='1.25rem' className={!claimable || anonymous ? '' : 'clr-text-success'}/>}
       disabled={!claimable || anonymous || processing}
       onClick={onClaim}
     />

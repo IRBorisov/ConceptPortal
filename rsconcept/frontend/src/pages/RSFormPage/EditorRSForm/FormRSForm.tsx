@@ -126,7 +126,7 @@ function FormRSForm({
     </div>
     <SubmitButton
       text='Сохранить изменения'
-      className='self-center my-2'
+      className='self-center'
       loading={processing}
       disabled={!isModified || disabled}
       icon={<FiSave size='1.5rem' />}
