@@ -1,9 +1,12 @@
 'use client';
 
+import clsx from 'clsx';
 import { createContext, useContext, useLayoutEffect, useMemo, useState } from 'react';
 
+import ConceptTooltip from '@/components/Common/ConceptTooltip';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { darkT, IColorTheme, lightT } from '@/utils/color';
+import { globalIDs } from '@/utils/constants';
 
 interface IThemeContext {
   viewportHeight: string
@@ -85,6 +88,17 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
     setNoFooter, setShowScroll,
     viewportHeight, mainHeight
   }}>
-    {children}
+    <>
+      <ConceptTooltip float
+        id={`${globalIDs.tooltip}`}
+        layer='z-topmost'
+        place='right-start'
+        className={clsx(
+          'mt-3 translate-y-1/2',
+          'max-w-[20rem]'
+        )}
+      />
+      {children}
+    </>
   </ThemeContext.Provider>);
 }

@@ -18,13 +18,12 @@ function UserMenu() {
   <div ref={menu.ref} className='h-full'>
     {!user ?
     <NavigationButton
-      description='Перейти на страницу логина'
-      icon={<InDoorIcon />}
+      title='Перейти на страницу логина'
+      icon={<InDoorIcon size='1.5rem' className='clr-text-primary' />}
       onClick={navigateLogin}
     /> : null}
     {user ?
     <NavigationButton
-      description={`Пользователь ${user?.username}`}
       icon={<FaCircleUser size='1.5rem' />}
       onClick={menu.toggle}
     /> : null}

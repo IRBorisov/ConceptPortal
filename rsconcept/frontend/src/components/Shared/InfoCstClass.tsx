@@ -7,15 +7,15 @@ import { prefixes } from '@/utils/constants';
 import { describeCstClass, labelCstClass } from '@/utils/labels';
 
 interface InfoCstClassProps {
-  title?: string
+  header?: string
 }
 
-function InfoCstClass({ title }: InfoCstClassProps) {
+function InfoCstClass({ header }: InfoCstClassProps) {
   const { colors } = useConceptTheme();
 
   return (
   <div className='flex flex-col gap-1 mb-2'>
-    {title ? <h1>{title}</h1> : null}
+    {header ? <h1>{header}</h1> : null}
     {Object.values(CstClass).map(
     (cclass, index) => {
       return (

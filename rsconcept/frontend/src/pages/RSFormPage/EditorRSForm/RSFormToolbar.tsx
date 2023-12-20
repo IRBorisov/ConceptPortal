@@ -52,7 +52,7 @@ function RSFormToolbar({
       onClick={onDownload}
     />
     <MiniButton
-      title={'отслеживание: ' + (isSubscribed ? '[включено]' : '[выключено]')}
+      title={'Отслеживание ' + (isSubscribed ? 'включено' : 'выключено')}
       disabled={anonymous || processing}
       icon={isSubscribed
         ? <FiBell size='1.25rem' className='clr-text-primary' />
@@ -62,7 +62,7 @@ function RSFormToolbar({
       onClick={onToggleSubscribe}
       />
     <MiniButton
-      title={claimable ? 'Стать владельцем' : 'Невозможно стать владельцем' }
+      title='Стать владельцем'
       icon={<LuCrown size='1.25rem' className={!claimable || anonymous ? '' : 'clr-text-success'}/>}
       disabled={!claimable || anonymous || processing}
       onClick={onClaim}

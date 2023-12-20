@@ -1,5 +1,7 @@
 import clsx from 'clsx';
 
+import { globalIDs } from '@/utils/constants';
+
 import { CProps } from '../props';
 
 interface MiniButtonProps
@@ -10,7 +12,7 @@ extends CProps.Button {
 
 function MiniButton({
   icon, noHover, tabIndex,
-  className,
+  title, className,
   ...restProps
 }: MiniButtonProps) {
   return (
@@ -27,6 +29,8 @@ function MiniButton({
       },
       className
     )}
+    data-tooltip-id={title ? (globalIDs.tooltip) : undefined}
+    data-tooltip-content={title}
     {...restProps}
   >
     {icon}

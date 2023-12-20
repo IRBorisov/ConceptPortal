@@ -189,9 +189,9 @@ export function domTooltipEntityReference(ref: IEntityReference, cst: IConstitue
     'select-none cursor-auto'
   );
   
-  const title = document.createElement('p');
-  title.innerHTML = '<b>Ссылка на конституенту</b>';
-  dom.appendChild(title);
+  const header = document.createElement('p');
+  header.innerHTML = '<b>Ссылка на конституенту</b>';
+  dom.appendChild(header);
 
   const term = document.createElement('p');
   term.innerHTML = `<b>${ref.entity}:</b> ${describeConstituentaTerm(cst)}`;
@@ -237,9 +237,9 @@ export function domTooltipSyntacticReference(ref: ISyntacticReference, masterRef
     'select-none cursor-auto'
   );
 
-  const title = document.createElement('p');
-  title.innerHTML = '<b>Связывание слов</b>';
-  dom.appendChild(title);
+  const header = document.createElement('p');
+  header.innerHTML = '<b>Связывание слов</b>';
+  dom.appendChild(header);
 
   const offset = document.createElement('p');
   offset.innerHTML = `<b>Смещение:</b> ${ref.offset}`;

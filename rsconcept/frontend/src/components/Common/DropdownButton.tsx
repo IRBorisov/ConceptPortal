@@ -1,5 +1,7 @@
 import clsx from 'clsx';
 
+import { globalIDs } from '@/utils/constants';
+
 import { CProps } from '../props';
 
 interface DropdownButtonProps
@@ -11,7 +13,9 @@ extends CProps.Button {
 }
 
 function DropdownButton({
-  text, icon, className, onClick,
+  text, icon,
+  className, title,
+  onClick,
   children,
   ...restProps
 }: DropdownButtonProps) {
@@ -29,6 +33,8 @@ function DropdownButton({
       },
       className
     )}
+    data-tooltip-id={title ? (globalIDs.tooltip) : undefined}
+    data-tooltip-content={title}
     {...restProps}
   >
     {children ? children : null}

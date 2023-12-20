@@ -83,6 +83,9 @@
 .z-modal-tooltip {
   z-index: 90;
 }
+.z-topmost {
+  z-index: 99;
+}
 
 
 :root {

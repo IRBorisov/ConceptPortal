@@ -42,19 +42,19 @@ function Navigation () {
       <div className='flex'>
         <NavigationButton
           text='Новая схема'
-          description='Создать новую схему'
+          title='Создать новую схему'
           icon={<FaSquarePlus size='1.5rem' />}
           onClick={navigateCreateNew}
         />
         <NavigationButton
           text='Библиотека'
-          description='Библиотека концептуальных схем'
+          title='Список схем'
           icon={<IoLibrary size='1.5rem' />}
           onClick={navigateLibrary}
         />
         <NavigationButton
           text='Справка'
-          description='Справочные материалы и обучение'
+          title='Справочные материалы'
           icon={<EducationIcon />}
           onClick={navigateHelp}
         />

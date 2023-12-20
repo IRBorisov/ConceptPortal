@@ -2,12 +2,17 @@ import clsx from 'clsx';
 import type { TabProps } from 'react-tabs';
 import { Tab } from 'react-tabs';
 
+import { globalIDs } from '@/utils/constants';
+
 interface ConceptTabProps
 extends Omit<TabProps, 'children'> {
   label?: string
 }
 
-function ConceptTab({ label, className, ...otherProps }: ConceptTabProps) {
+function ConceptTab({
+  label, title, className,
+  ...otherProps
+}: ConceptTabProps) {
   return (
   <Tab
     className={clsx(
@@ -18,6 +23,8 @@ function ConceptTab({ label, className, ...otherProps }: ConceptTabProps) {
       'select-none hover:cursor-pointer',
       className
     )}
+    data-tooltip-id={title ? (globalIDs.tooltip) : undefined}
+    data-tooltip-content={title}
     {...otherProps}
   >
     {label}

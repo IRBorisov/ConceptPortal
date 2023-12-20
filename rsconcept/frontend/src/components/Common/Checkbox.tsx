@@ -1,6 +1,8 @@
 import clsx from 'clsx';
 import { useMemo } from 'react';
 
+import { globalIDs } from '@/utils/constants';
+
 import { CheckboxCheckedIcon } from '../Icons';
 import { CProps } from '../props';
 import Label from './Label';
@@ -15,7 +17,7 @@ extends Omit<CProps.Button, 'value' | 'onClick'> {
 }
 
 function Checkbox({
-  id, disabled, label, 
+  id, disabled, label, title,
   className, value, setValue, ...restProps
 }: CheckboxProps) {
   const cursor = useMemo(
@@ -48,6 +50,8 @@ function Checkbox({
     )}
     disabled={disabled}
     onClick={handleClick}
+    data-tooltip-id={title ? (globalIDs.tooltip) : undefined}
+    data-tooltip-content={title}
     {...restProps}
   >
     <div className={clsx(

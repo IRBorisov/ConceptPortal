@@ -83,6 +83,7 @@ export const urls = {
  * Global unique IDs.
  */
 export const globalIDs = {
+  tooltip: 'global-tooltip',
   password_tooltip: 'password-tooltip',
   main_scroll: 'main-scroll',
   library_item_editor: 'library-item-editor',

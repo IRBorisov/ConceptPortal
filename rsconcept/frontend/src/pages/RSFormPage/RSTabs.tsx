@@ -419,10 +419,7 @@ function RSTabs() {
       />
       <ConceptTab
         label='Содержание'
-        title={[
-          `Всего конституент: ${schema.stats?.count_all ?? 0}`,
-          `Количество ошибок: ${schema.stats?.count_errors ?? 0}`
-        ].join('\n')}
+        title={`Конституент: ${schema.stats?.count_all ?? 0} | Ошибок: ${schema.stats?.count_errors ?? 0}`}
       />
       <ConceptTab label='Редактор' />
       <ConceptTab label='Граф термов' />

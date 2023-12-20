@@ -1,5 +1,7 @@
 import clsx from 'clsx';
 
+import { globalIDs } from '@/utils/constants';
+
 import { CProps } from '../props';
 
 interface ButtonProps
@@ -12,8 +14,8 @@ extends CProps.Control, CProps.Colors, CProps.Button {
 }
 
 function Button({
-  text, icon, loading,
-  dense, disabled, noBorder, noOutline,
+  text, icon, title,
+  loading, dense, disabled, noBorder, noOutline,
   colors = 'clr-btn-default',
   className,
   ...restProps
@@ -36,6 +38,8 @@ function Button({
       className,
       colors
     )}
+    data-tooltip-id={title ? (globalIDs.tooltip) : undefined}
+    data-tooltip-content={title}
     {...restProps}
   >
     {icon ? icon : null}

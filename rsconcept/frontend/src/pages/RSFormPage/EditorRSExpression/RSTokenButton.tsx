@@ -1,4 +1,7 @@
+import clsx from 'clsx';
+
 import { TokenID } from '@/models/rslang';
+import { globalIDs } from '@/utils/constants';
 import { describeToken, labelToken } from '@/utils/labels';
 
 interface RSTokenButtonProps {
@@ -9,13 +12,23 @@ interface RSTokenButtonProps {
 
 function RSTokenButton({ token, disabled, onInsert }: RSTokenButtonProps) {
   const label = labelToken(token);
-  const width = label.length > 3 ? 'w-[4.5rem]' : 'w-[2.25rem]';
   return (
   <button type='button' tabIndex={-1}
     disabled={disabled}
     onClick={() => onInsert(token)}
-    title={describeToken(token)}
-    className={`px-1 cursor-pointer disabled:cursor-default h-6 ${width} outline-none clr-hover clr-btn-clear`}
+    className={clsx(
+      'h-6',
+      'px-1',
+      'outline-none',
+      'clr-hover clr-btn-clear',
+      'cursor-pointer disabled:cursor-default',
+      {
+        'w-[4.5rem]': label.length > 3,
+        'w-[2.25rem]': label.length <= 3 
+      }
+    )}
+    data-tooltip-id={globalIDs.tooltip}
+    data-tooltip-content={describeToken(token)}
   >
     {label ? <span className='whitespace-nowrap'>{label}</span> : null}
   </button>);

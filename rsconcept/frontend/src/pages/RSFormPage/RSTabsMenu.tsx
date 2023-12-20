@@ -172,7 +172,7 @@ function RSTabsMenu({
 
     <div ref={accessMenu.ref}>
       <Button dense noBorder tabIndex={-1}
-        title={`режим ${labelAccessMode(mode)}`}
+        title={`Режим ${labelAccessMode(mode)}`}
         className='h-full pr-2'
         style={{outlineColor: 'transparent'}}
         icon={

@@ -1,17 +1,19 @@
 import clsx from 'clsx';
 
+import { globalIDs } from '@/utils/constants';
+
 interface NavigationButtonProps {
-  id?: string
   text?: string
   icon: React.ReactNode
-  description?: string
+  title?: string
   onClick?: () => void
 }
 
-function NavigationButton({ id, icon, description, onClick, text }: NavigationButtonProps) {
+function NavigationButton({ icon, title, onClick, text }: NavigationButtonProps) {
   return (
-  <button id={id} type='button' tabIndex={-1}
-    title={description}
+  <button type='button' tabIndex={-1}
+    data-tooltip-id={title ? (globalIDs.tooltip) : undefined}
+    data-tooltip-content={title}
     onClick={onClick}
     className={clsx(
       'mr-1 h-full',

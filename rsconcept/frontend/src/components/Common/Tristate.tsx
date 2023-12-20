@@ -2,6 +2,8 @@
 import clsx from 'clsx';
 import { useMemo } from 'react';
 
+import { globalIDs } from '@/utils/constants';
+
 import { CheckboxCheckedIcon, CheckboxNullIcon } from '../Icons';
 import { CheckboxProps } from './Checkbox';
 import Label from './Label';
@@ -13,7 +15,7 @@ extends Omit<CheckboxProps, 'value' | 'setValue'> {
 }
 
 function Tristate({
-  id, disabled, label, 
+  id, disabled, label, title,
   className,
   value, setValue,
   ...restProps
@@ -53,6 +55,8 @@ function Tristate({
     )}
     disabled={disabled}
     onClick={handleClick}
+    data-tooltip-id={title ? (globalIDs.tooltip) : undefined}
+    data-tooltip-content={title}
     {...restProps}
   >
     <div className={clsx(

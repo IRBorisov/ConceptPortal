@@ -1,5 +1,7 @@
 import clsx from 'clsx';
 
+import { globalIDs } from '@/utils/constants';
+
 import { CProps } from '../props';
 
 interface SelectorButtonProps
@@ -12,7 +14,7 @@ extends CProps.Button {
 }
 
 function SelectorButton({
-  text, icon,
+  text, icon, title,
   colors = 'clr-btn-default',
   className,
   transparent,
@@ -20,6 +22,8 @@ function SelectorButton({
 }: SelectorButtonProps) {
   return (
   <button type='button'
+    data-tooltip-id={title ? (globalIDs.tooltip) : undefined}
+    data-tooltip-content={title}
     className={clsx(
       'px-1 flex flex-start items-center gap-1',
       'text-sm small-caps select-none',

@@ -16,7 +16,8 @@ function preventEnterCapture(event: React.KeyboardEvent<HTMLInputElement>) {
 }
 
 function TextInput({
-  id, label, dense, noBorder, noOutline, allowEnter, disabled,
+  id, label,
+  dense, noBorder, noOutline, allowEnter, disabled,
   className,
   colors = 'clr-input',
   onKeyDown,

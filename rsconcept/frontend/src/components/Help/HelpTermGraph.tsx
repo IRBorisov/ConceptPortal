@@ -28,7 +28,7 @@ function HelpTermGraph() {
 
       <Divider margins='mt-2' />
       
-      <InfoCstClass title='Классы конституент' />
+      <InfoCstClass header='Классы конституент' />
     </div>
   </div>);
 }
