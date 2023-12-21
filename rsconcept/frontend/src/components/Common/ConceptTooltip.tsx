@@ -43,7 +43,7 @@ function ConceptTooltip({
     place={place}
     {...restProps}
   >
-    {text}
+    {text ? text : null}
     {children as ReactNode}
   </Tooltip>), document.body);
 }

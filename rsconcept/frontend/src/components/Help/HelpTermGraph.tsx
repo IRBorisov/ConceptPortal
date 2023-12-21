@@ -4,8 +4,8 @@ import InfoCstStatus from '@/components/Shared/InfoCstStatus';
 
 function HelpTermGraph() {
   return (
-  <div className='flex'>
-    <div> 
+  <div className='flex max-w-[80rem]'>
+    <div>
       <h1>Настройка графа</h1>
       <p><b>Цвет</b> - выбор правила покраски узлов</p>
       <p><b>Граф</b> - выбор модели расположения узлов</p>

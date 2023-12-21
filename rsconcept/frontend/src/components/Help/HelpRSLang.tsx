@@ -13,7 +13,7 @@ function HelpRSLang() {
   () => {
     const viewH = windowSize.height ?? 0;
     const viewW = windowSize.width ?? 0;
-    return Math.min(OPT_VIDEO_H, viewH - 370, Math.floor((viewW - 250)*9/16));
+    return Math.min(OPT_VIDEO_H, viewH - 320, Math.floor((viewW - 290)*9/16));
   }, [windowSize]);
 
   return (
@@ -29,7 +29,7 @@ function HelpRSLang() {
         <li>3. <a className='underline' href={urls.full_course}>Видео: лекции для 4 курса (второй семестр 2022-23 год)</a></li>
       </ul>
     </div>
-    <div className='justify-center hidden w-full md:flex'>
+    <div className='justify-center w-full'>
     <EmbedYoutube
       videoID={youtube.intro}
       pxHeight={videoHeight}
