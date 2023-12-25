@@ -1,6 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
+import { AnimatePresence } from 'framer-motion';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { GraphEdge, GraphNode, LayoutTypes } from 'reagraph';
 
@@ -196,12 +197,14 @@ function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Ed
 
   return (
   <div tabIndex={-1} onKeyDown={handleKeyDown}>
+    <AnimatePresence>
     {showParamsDialog ?
     <DlgGraphParams
       hideWindow={() => setShowParamsDialog(false)}
       initial={filterParams}
       onConfirm={handleChangeParams}
     /> : null}
+    </AnimatePresence>
 
     <SelectedCounter hideZero
       total={schema?.stats?.count_all ?? 0}

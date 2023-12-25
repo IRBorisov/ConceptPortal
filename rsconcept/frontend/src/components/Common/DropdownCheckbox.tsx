@@ -1,4 +1,7 @@
 import clsx from 'clsx';
+import { motion } from 'framer-motion';
+
+import { animateDropdownItem } from '@/utils/animations';
 
 import Checkbox from './Checkbox';
 
@@ -12,7 +15,8 @@ interface DropdownCheckboxProps {
 
 function DropdownCheckbox({ title, setValue, disabled, ...restProps }: DropdownCheckboxProps) {
   return (
-  <div
+  <motion.div
+    variants={animateDropdownItem}
     title={title}
     className={clsx(
       'px-3 py-1',
@@ -26,7 +30,7 @@ function DropdownCheckbox({ title, setValue, disabled, ...restProps }: DropdownC
       setValue={setValue}
       {...restProps}
     /> 
-  </div>);
+  </motion.div>);
 }
 
 export default DropdownCheckbox;

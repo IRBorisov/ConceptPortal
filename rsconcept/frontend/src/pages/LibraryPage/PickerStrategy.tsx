@@ -48,8 +48,7 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
       text={labelLibraryFilter(value)}
       onClick={strategyMenu.toggle}
     />
-    {strategyMenu.isActive ?
-    <Dropdown>
+    <Dropdown isOpen={strategyMenu.isOpen}>
       {Object.values(LibraryFilterStrategy).map(
       (enumValue, index) => {
         const strategy = enumValue as LibraryFilterStrategy;
@@ -63,7 +62,7 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
           disabled={isStrategyDisabled(strategy)}
         />);
       })}
-    </Dropdown> : null}
+    </Dropdown>
   </div>
   );
 }

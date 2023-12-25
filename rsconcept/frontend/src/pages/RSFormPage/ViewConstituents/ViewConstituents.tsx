@@ -1,9 +1,11 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
 
 import { useConceptTheme } from '@/context/ThemeContext';
 import { IConstituenta, IRSForm } from '@/models/rsform';
+import { animateSideView } from '@/utils/animations';
 
 import ConstituentsSearch from './ConstituentsSearch';
 import ConstituentsTable from './ConstituentsTable';
@@ -36,7 +38,12 @@ function ViewConstituents({ expression, baseHeight, schema, activeID, onOpenEdit
   }, [noNavigation, baseHeight]);
 
   return (
-  <div className='mt-[2.25rem] border'>
+  <motion.div
+    className='mt-[2.25rem] border'
+    initial={{...animateSideView.initial}}
+    animate={{...animateSideView.animate}}
+    exit={{...animateSideView.exit}}
+  >
     <ConstituentsSearch 
       schema={schema}
       activeID={activeID}
@@ -49,7 +56,7 @@ function ViewConstituents({ expression, baseHeight, schema, activeID, onOpenEdit
       onOpenEdit={onOpenEdit}
       denseThreshold={COLUMN_EXPRESSION_HIDE_THRESHOLD}
     />
-  </div>);
+  </motion.div>);
 }
 
 export default ViewConstituents;

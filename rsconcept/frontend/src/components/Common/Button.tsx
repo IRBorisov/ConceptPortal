@@ -38,7 +38,7 @@ function Button({
       className,
       colors
     )}
-    data-tooltip-id={title ? (globalIDs.tooltip) : undefined}
+    data-tooltip-id={title ? globalIDs.tooltip : undefined}
     data-tooltip-content={title}
     {...restProps}
   >

@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
+import { AnimatePresence } from 'framer-motion';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { BiListUl } from 'react-icons/bi';
 import { FaRegKeyboard } from 'react-icons/fa6';
@@ -31,7 +32,7 @@ interface EditorRSExpressionProps {
   value: string
   label: string
   placeholder?: string
-
+  
   disabled?: boolean
   toggleReset?: boolean
   showList: boolean
@@ -134,12 +135,14 @@ function EditorRSExpression({
   }
 
   return (<>
+  <AnimatePresence>
   {showAST ? 
   <DlgShowAST
     expression={expression}
     syntaxTree={syntaxTree}
     hideWindow={() => setShowAST(false)}
   /> : null}
+  </AnimatePresence>
   
   <div>
     <Overlay position='top-0 right-0 flex'>
@@ -179,18 +182,18 @@ function EditorRSExpression({
       {...restProps}
     />
 
-    {showControls ?
-    <RSEditorControls 
+    <RSEditorControls
+      isOpen={showControls}
       disabled={disabled}
       onEdit={handleEdit}
-    /> : null}
+    />
     
-    {(parseData && parseData.errors.length > 0) ? 
     <ParsingResult
+      isOpen={!!parseData && parseData.errors.length > 0}
       data={parseData}
       disabled={disabled}
       onShowError={onShowError}
-    />: null}
+    />
   </div>
   </>);
 }

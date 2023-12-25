@@ -90,8 +90,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
         text={labelCstMathchMode(filterMatch)}
         onClick={matchModeMenu.toggle}
       />
-      {matchModeMenu.isActive ?
-      <Dropdown stretchLeft>
+      <Dropdown stretchLeft isOpen={matchModeMenu.isOpen}>
         {Object.values(CstMatchMode).filter(value => !isNaN(Number(value))).map(
         (value, index) => {
           const matchMode = value as CstMatchMode;
@@ -103,7 +102,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
             <p><b>{labelCstMathchMode(matchMode)}:</b> {describeCstMathchMode(matchMode)}</p>
           </DropdownButton>);
         })}
-      </Dropdown> : null}
+      </Dropdown>
     </div>
 
     <div ref={sourceMenu.ref}>
@@ -114,8 +113,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
         text={labelCstSource(filterSource)}
         onClick={sourceMenu.toggle}
       />
-      {sourceMenu.isActive ?
-      <Dropdown stretchLeft>
+      <Dropdown stretchLeft isOpen={sourceMenu.isOpen}>
         {Object.values(DependencyMode).filter(value => !isNaN(Number(value))).map(
         (value, index) => {
           const source = value as DependencyMode;
@@ -127,7 +125,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
             <p><b>{labelCstSource(source)}:</b> {describeCstSource(source)}</p>
           </DropdownButton>);
         })}
-      </Dropdown> : null}
+      </Dropdown>
     </div>
   </div>);
 }

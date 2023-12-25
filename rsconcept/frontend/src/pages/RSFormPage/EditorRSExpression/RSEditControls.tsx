@@ -1,4 +1,7 @@
+import { motion } from 'framer-motion';
+
 import { TokenID } from '@/models/rslang';
+import { animateRSControl } from '@/utils/animations';
 import { prefixes } from '@/utils/constants';
 
 import RSLocalButton from './RSLocalButton';
@@ -79,13 +82,19 @@ const SECONDARY_THIRD_ROW = [
 ];
 
 interface RSEditorControlsProps {
-  onEdit: (id: TokenID, key?: string) => void
+  isOpen: boolean
   disabled?: boolean
+  onEdit: (id: TokenID, key?: string) => void
 }
 
-function RSEditorControls({ onEdit, disabled }: RSEditorControlsProps) {
+function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsProps) {
   return (
-  <div className='flex-wrap text-sm divide-solid'>
+  <motion.div
+    className='flex-wrap text-sm divide-solid'
+    initial={false}
+    animate={isOpen ? 'open' : 'closed'}
+    variants={animateRSControl}
+  >
     {MAIN_FIRST_ROW.map(
     (token) => 
     <RSTokenButton key={`${prefixes.rsedit_btn}${token}`}
@@ -118,7 +127,7 @@ function RSEditorControls({ onEdit, disabled }: RSEditorControlsProps) {
     <RSLocalButton key={`${prefixes.rsedit_btn}${title}`}
       text={text} title={title} onInsert={onEdit} disabled={disabled}
     />)}
-  </div>);
+  </motion.div>);
 }
 
 export default RSEditorControls;

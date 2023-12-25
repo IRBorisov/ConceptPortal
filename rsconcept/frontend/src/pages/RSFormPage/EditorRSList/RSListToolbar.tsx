@@ -70,8 +70,7 @@ function RSListToolbar({
         disabled={!isMutable}
         onClick={insertMenu.toggle}
       />
-      {insertMenu.isActive ?
-      <Dropdown>
+      <Dropdown isOpen={insertMenu.isOpen}>
       {(Object.values(CstType)).map(
       (typeStr) => 
         <DropdownButton
@@ -81,7 +80,7 @@ function RSListToolbar({
           title={getCstTypeShortcut(typeStr as CstType)}
         />
       )}
-      </Dropdown> : null}
+      </Dropdown>
     </div>
     <MiniButton
       title='Удалить выбранные [Delete]'

@@ -2,6 +2,7 @@
 
 import axios from 'axios';
 import clsx from 'clsx';
+import { AnimatePresence } from 'framer-motion';
 import fileDownload from 'js-file-download';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
@@ -346,49 +347,50 @@ function RSTabs() {
   return (<>
   {loading ? <ConceptLoader /> : null}
   {error ? <ProcessError error={error} /> : null}
-
-  {showUpload ? 
-  <DlgUploadRSForm
-    hideWindow={() => setShowUpload(false)}
-  /> : null}
-  {showClone ?
-  <DlgCloneLibraryItem
-    base={schema!}
-    hideWindow={() => setShowClone(false)}
-  /> : null}
-  {showCreateCst ? 
-  <DlgCreateCst
-    hideWindow={() => setShowCreateCst(false)}
-    onCreate={handleCreateCst}
-    schema={schema!}
-    initial={createInitialData}
-  /> : null}
-  {showRenameCst ? 
-  <DlgRenameCst
-    hideWindow={() => setShowRenameCst(false)}
-    onRename={handleRenameCst}
-    initial={renameInitialData!}
-  /> : null}
-  {showDeleteCst ? 
-  <DlgDeleteCst
-    schema={schema!}
-    hideWindow={() => setShowDeleteCst(false)}
-    onDelete={handleDeleteCst}
-    selected={toBeDeleted}
-  /> : null}
-  {showEditTerm ?
-  <DlgEditWordForms
-    hideWindow={() => setShowEditTerm(false)}
-    onSave={handleSaveWordforms}
-    target={activeCst!}
-  /> : null}
-  {showTemplates ? 
-  <DlgConstituentaTemplate
-    schema={schema!}
-    hideWindow={() => setShowTemplates(false)}
-    insertAfter={insertCstID}
-    onCreate={handleCreateCst}
-  /> : null}
+  <AnimatePresence>
+    {showUpload ? 
+    <DlgUploadRSForm
+      hideWindow={() => setShowUpload(false)}
+    /> : null}
+    {showClone ?
+    <DlgCloneLibraryItem
+      base={schema!}
+      hideWindow={() => setShowClone(false)}
+    /> : null}
+    {showCreateCst ? 
+    <DlgCreateCst
+      hideWindow={() => setShowCreateCst(false)}
+      onCreate={handleCreateCst}
+      schema={schema!}
+      initial={createInitialData}
+    /> : null}
+    {showRenameCst ? 
+    <DlgRenameCst
+      hideWindow={() => setShowRenameCst(false)}
+      onRename={handleRenameCst}
+      initial={renameInitialData!}
+    /> : null}
+    {showDeleteCst ? 
+    <DlgDeleteCst
+      schema={schema!}
+      hideWindow={() => setShowDeleteCst(false)}
+      onDelete={handleDeleteCst}
+      selected={toBeDeleted}
+    /> : null}
+    {showEditTerm ?
+    <DlgEditWordForms
+      hideWindow={() => setShowEditTerm(false)}
+      onSave={handleSaveWordforms}
+      target={activeCst!}
+    /> : null}
+    {showTemplates ? 
+    <DlgConstituentaTemplate
+      schema={schema!}
+      hideWindow={() => setShowTemplates(false)}
+      insertAfter={insertCstID}
+      onCreate={handleCreateCst}
+    /> : null}
+  </AnimatePresence>
 
   {(schema && !loading) ?
   <Tabs

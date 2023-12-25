@@ -1,10 +1,12 @@
 import clsx from 'clsx';
+import { motion } from 'framer-motion';
 import { FaSquarePlus } from 'react-icons/fa6';
 import { IoLibrary } from 'react-icons/io5';
 
 import { EducationIcon } from '@/components/Icons';
 import { useConceptNavigation } from '@/context/NagivationContext';
 import { useConceptTheme } from '@/context/ThemeContext';
+import { animateNavigation } from '@/utils/animations';
 
 import Logo from './Logo';
 import NavigationButton from './NavigationButton';
@@ -13,13 +15,13 @@ import UserMenu from './UserMenu';
 
 function Navigation () {
   const router = useConceptNavigation();
-  const { noNavigation } = useConceptTheme();
+  const { noNavigationAnimation } = useConceptTheme();
 
   const navigateHome = () => router.push('/');
   const navigateLibrary = () => router.push('/library');
   const navigateHelp = () => router.push('/manuals');
   const navigateCreateNew = () => router.push('/library/create');
-
+  
   return (
   <nav className={clsx(
     'z-navigation',
@@ -28,13 +30,15 @@ function Navigation () {
     'select-none'
   )}>
     <ToggleNavigationButton />
-    {!noNavigation ?
-    <div
+    <motion.div
       className={clsx(
         'pl-2 pr-[0.9rem] h-[3rem]',
         'flex justify-between',
-        'border-b-2 rounded-none'
+        'shadow-border'
       )}
+      initial={false}
+      animate={!noNavigationAnimation ? 'open' : 'closed'}
+      variants={animateNavigation}
     >
       <div className='flex items-center mr-2 cursor-pointer' onClick={navigateHome} tabIndex={-1}>
         <Logo />
@@ -60,7 +64,7 @@ function Navigation () {
         />
         <UserMenu />
       </div>
-    </div> : null}
+    </motion.div>
   </nav>);
 }
 

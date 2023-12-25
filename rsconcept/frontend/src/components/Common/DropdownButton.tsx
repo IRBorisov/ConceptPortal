@@ -1,11 +1,13 @@
 import clsx from 'clsx';
+import { motion } from 'framer-motion';
 
+import { animateDropdownItem } from '@/utils/animations';
 import { globalIDs } from '@/utils/constants';
 
 import { CProps } from '../props';
 
 interface DropdownButtonProps
-extends CProps.Button {
+extends CProps.AnimatedButton {
   text?: string
   icon?: React.ReactNode
 
@@ -20,7 +22,7 @@ function DropdownButton({
   ...restProps
 }: DropdownButtonProps) {
   return (
-  <button type='button'
+  <motion.button type='button'
     onClick={onClick}
     className={clsx(
       'px-3 py-1 inline-flex items-center gap-2',
@@ -33,6 +35,7 @@ function DropdownButton({
       },
       className
     )}
+    variants={animateDropdownItem}
     data-tooltip-id={title ? (globalIDs.tooltip) : undefined}
     data-tooltip-content={title}
     {...restProps}
@@ -40,7 +43,7 @@ function DropdownButton({
     {children ? children : null}
     {!children && icon ? icon : null}
     {!children && text ? <span>{text}</span> : null}
-  </button>);
+  </motion.button>);
 }
 
 export default DropdownButton;

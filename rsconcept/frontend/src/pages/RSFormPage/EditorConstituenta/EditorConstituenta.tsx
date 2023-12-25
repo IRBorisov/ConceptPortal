@@ -1,5 +1,6 @@
 'use client';
 
+import { AnimatePresence } from 'framer-motion';
 import { Dispatch, SetStateAction, useMemo, useState } from 'react';
 
 import { useRSForm } from '@/context/RSFormContext';
@@ -149,6 +150,7 @@ function EditorConstituenta({
         onEditTerm={onEditTerm}
         onRenameCst={onRenameCst}
       />
+      <AnimatePresence>
       {(showList && windowSize.width && windowSize.width >= SIDELIST_HIDE_THRESHOLD) ?
       <ViewConstituents
         schema={schema}
@@ -157,6 +159,7 @@ function EditorConstituenta({
         activeID={activeID}
         onOpenEdit={onOpenEdit}
       />: null}
+      </AnimatePresence>
     </div>
   </>);
 }

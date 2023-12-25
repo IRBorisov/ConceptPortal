@@ -1,4 +1,6 @@
 // =========== Module contains interfaces for common UI elements. ==========
+import { HTMLMotionProps } from 'framer-motion';
+
 export namespace CProps {
 
 export type Control = {
@@ -32,5 +34,7 @@ export type Label = Omit<
 >;
 export type TextArea = React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>;
 export type Input = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
+
+export type AnimatedButton = Omit<HTMLMotionProps<'button'>, 'type'>;
 
 }

@@ -1,25 +1,29 @@
 import clsx from 'clsx';
+import { motion } from 'framer-motion';
+
+import { animateDropdown } from '@/utils/animations';
 
 import { CProps } from '../props';
-import Overlay from './Overlay';
 
 interface DropdownProps
 extends CProps.Styling {
   stretchLeft?: boolean
+  isOpen: boolean
   children: React.ReactNode
 }
 
 function Dropdown({
+  isOpen, stretchLeft,
   className,
-  stretchLeft,
   children,
   ...restProps
-}: DropdownProps) {
+}: DropdownProps) {  
   return (
-  <Overlay 
-    layer='z-modal-tooltip'
-    position='mt-3'
+  <div className='relative'>
+  <motion.div
     className={clsx(
+      'z-modal-tooltip',
+      'absolute mt-3',
       'flex flex-col',
       'border rounded-md shadow-lg',
       'text-sm',
@@ -30,10 +34,14 @@ function Dropdown({
       },
       className
     )}
+    initial={false}
+    animate={isOpen ? 'open' : 'closed'}
+    variants={animateDropdown}
     {...restProps}
   >
     {children}
-  </Overlay>);
+  </motion.div>
+  </div>);
 }
 
 export default Dropdown;

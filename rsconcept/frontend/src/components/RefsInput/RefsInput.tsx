@@ -6,6 +6,7 @@ import { createTheme } from '@uiw/codemirror-themes';
 import CodeMirror, { BasicSetupOptions, ReactCodeMirrorProps, ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import clsx from 'clsx';
 import { EditorView } from 'codemirror';
+import { AnimatePresence } from 'framer-motion';
 import { RefObject, useCallback, useMemo, useRef, useState } from 'react';
 
 import Label from '@/components/Common/Label';
@@ -164,6 +165,7 @@ function RefsInput({
   }, [thisRef]);
 
   return (<>
+  <AnimatePresence>
   {showEditor ?
   <DlgEditReference
     hideWindow={() => setShowEditor(false)}
@@ -177,6 +179,8 @@ function RefsInput({
     }}
     onSave={handleInputReference}
   /> : null}
+  </AnimatePresence>
+  
   <div className={clsx(
     'flex flex-col gap-2',
     cursor

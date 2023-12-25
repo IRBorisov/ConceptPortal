@@ -104,12 +104,10 @@ function RSTabsMenu({
         style={{outlineColor: 'transparent'}}
         onClick={schemaMenu.toggle}
       />
-      {schemaMenu.isActive ?
-      <Dropdown>
-        <DropdownButton
+      <Dropdown isOpen={schemaMenu.isOpen}>
+        <DropdownButton disabled={(!user || !isClaimable) && !isOwned}
           text={isOwned ? 'Вы — владелец' : 'Стать владельцем'}
-          title={!user || !isClaimable ? 'Взять во владение можно общую изменяемую схему' : ''}
-          icon={<LuCrown size='1rem' className={isOwned ? 'clr-text-success' : 'clr-text-controls'} />}
+          icon={<LuCrown size='1rem' className={isOwned ? 'clr-text-success' : ''} />}
           onClick={(!isOwned && user && isClaimable) ? handleClaimOwner : undefined}
         />
         <DropdownButton
@@ -142,7 +140,7 @@ function RSTabsMenu({
           icon={<BiPlusCircle size='1rem' className='clr-text-url' />}
           onClick={handleCreateNew}
         />
-      </Dropdown> : null}
+      </Dropdown>
     </div>
     
     <div ref={editMenu.ref}>
@@ -153,8 +151,7 @@ function RSTabsMenu({
         icon={<FiEdit size='1.25rem' className={isMutable ? 'clr-text-success' : 'clr-text-warning'}/>}
         onClick={editMenu.toggle}
       />
-      {editMenu.isActive ?
-      <Dropdown>
+      <Dropdown isOpen={editMenu.isOpen}>
         <DropdownButton disabled={!isMutable}
           text='Сброс имён'
           title='Присвоить порядковые имена и обновить выражения'
@@ -167,7 +164,7 @@ function RSTabsMenu({
           icon={<BiDiamond size='1rem' className={isMutable ? 'clr-text-success': ''} />}
           onClick={handleTemplates}
         />
-      </Dropdown>: null}
+      </Dropdown>
     </div>
 
     <div ref={accessMenu.ref}>
@@ -182,8 +179,7 @@ function RSTabsMenu({
         }
         onClick={accessMenu.toggle}
       />
-      {accessMenu.isActive ?
-      <Dropdown>
+      <Dropdown isOpen={accessMenu.isOpen}>
         <DropdownButton
           text={labelAccessMode(UserAccessMode.READER)}
           title={describeAccessMode(UserAccessMode.READER)}
@@ -202,7 +198,7 @@ function RSTabsMenu({
           icon={<BiMeteor size='1rem' className={user?.is_staff ? 'clr-text-primary': ''} />}
           onClick={() => handleChangeMode(UserAccessMode.ADMIN)}
         />
-      </Dropdown>: null}
+      </Dropdown>
     </div>
   </div>);
 }

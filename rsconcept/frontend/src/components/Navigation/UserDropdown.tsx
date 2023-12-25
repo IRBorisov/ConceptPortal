@@ -5,10 +5,11 @@ import { useConceptNavigation } from '@/context/NagivationContext';
 import { useConceptTheme } from '@/context/ThemeContext';
 
 interface UserDropdownProps {
+  isOpen: boolean
   hideDropdown: () => void
 }
 
-function UserDropdown({ hideDropdown }: UserDropdownProps) {
+function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
   const { darkMode, toggleDarkMode } = useConceptTheme();
   const router = useConceptNavigation();
   const { user, logout } = useAuth();
@@ -25,7 +26,7 @@ function UserDropdown({ hideDropdown }: UserDropdownProps) {
   };
 
   return (
-  <Dropdown className='w-36' stretchLeft>
+  <Dropdown className='w-36' stretchLeft isOpen={isOpen}>
     <DropdownButton
       text={user?.username}
       title='Профиль пользователя'

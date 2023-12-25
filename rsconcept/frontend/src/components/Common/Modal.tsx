@@ -1,10 +1,12 @@
 'use client';
 
 import clsx from 'clsx';
+import { motion } from 'framer-motion';
 import { useRef } from 'react';
 import { BiX } from 'react-icons/bi';
 
 import useEscapeKey from '@/hooks/useEscapeKey';
+import { animateModal } from '@/utils/animations';
 
 import { CProps } from '../props';
 import Button from './Button';
@@ -56,13 +58,16 @@ function Modal({
       'w-full h-full',
       'clr-modal-backdrop'
     )}/>
-    <div ref={ref}
+    <motion.div ref={ref}
       className={clsx(
         'z-modal',
         'fixed bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2',
         'border shadow-md',
         'clr-app'
       )}
+      initial={{...animateModal.initial}}
+      animate={{...animateModal.animate}}
+      exit={{...animateModal.exit}}
       {...restProps}
     >
       <Overlay position='right-[0.3rem] top-2'>
@@ -107,7 +112,7 @@ function Modal({
           onClick={handleCancel}
         />
       </div>
-    </div>
+    </motion.div>
   </>);
 }
 

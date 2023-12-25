@@ -1,5 +1,6 @@
 'use client';
 
+import { AnimatePresence } from 'framer-motion';
 import { useMemo, useState } from 'react';
 import { FiBell, FiBellOff } from 'react-icons/fi';
 
@@ -50,11 +51,12 @@ function UserTabs() {
           <EditorPassword />
         </div>   
       </div>
+      <AnimatePresence>
       {(subscriptions.length > 0 && showSubs) ?
-      <div>
-        <h1 className='mb-6'>Отслеживаемые схемы</h1>
-        <ViewSubscriptions items={subscriptions} />
-      </div> : null}
+      <ViewSubscriptions
+        items={subscriptions}
+      /> : null}
+      </AnimatePresence>
     </div> : null}
   </>);
 }

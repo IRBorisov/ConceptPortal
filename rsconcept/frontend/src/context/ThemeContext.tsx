@@ -1,10 +1,11 @@
 'use client';
 
 import clsx from 'clsx';
-import { createContext, useContext, useLayoutEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react';
 
 import ConceptTooltip from '@/components/Common/ConceptTooltip';
 import useLocalStorage from '@/hooks/useLocalStorage';
+import { animationDuration } from '@/utils/animations';
 import { darkT, IColorTheme, lightT } from '@/utils/color';
 import { globalIDs } from '@/utils/constants';
 
@@ -17,6 +18,7 @@ interface IThemeContext {
   darkMode: boolean
   toggleDarkMode: () => void
 
+  noNavigationAnimation: boolean
   noNavigation: boolean
   toggleNoNavigation: () => void
 
@@ -44,6 +46,7 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
   const [darkMode, setDarkMode] = useLocalStorage('darkMode', false);
   const [colors, setColors] = useState<IColorTheme>(lightT);
   const [noNavigation, setNoNavigation] = useState(false);
+  const [noNavigationAnimation, setNoNavigationAnimation] = useState(false);
   const [noFooter, setNoFooter] = useState(false);
   const [showScroll, setShowScroll] = useState(false);
 
@@ -65,6 +68,17 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
     setColors(darkMode ? darkT : lightT)
   }, [darkMode, setColors]);
 
+  const toggleNoNavigation = useCallback(
+  () => {
+    if (noNavigation) {
+      setNoNavigationAnimation(false);
+      setNoNavigation(false);
+    } else {
+      setNoNavigationAnimation(true);
+      setTimeout(() => setNoNavigation(true), animationDuration.navigationToggle);
+    }
+  }, [noNavigation]);
+
   const mainHeight = useMemo(
   () => {
     return !noNavigation ?
@@ -82,9 +96,9 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
   return (
   <ThemeContext.Provider value={{
     darkMode, colors,
-    noNavigation, noFooter, showScroll,
+    noNavigationAnimation, noNavigation, noFooter, showScroll,
     toggleDarkMode: () => setDarkMode(prev => !prev),
-    toggleNoNavigation: () => setNoNavigation(prev => !prev),
+    toggleNoNavigation: toggleNoNavigation,
     setNoFooter, setShowScroll,
     viewportHeight, mainHeight
   }}>

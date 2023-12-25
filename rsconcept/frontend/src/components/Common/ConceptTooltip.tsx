@@ -22,7 +22,6 @@ function ConceptTooltip({
   ...restProps
 }: ConceptTooltipProps) {
   const { darkMode } = useConceptTheme();
-
   if (typeof window === 'undefined') {
     return null;
   }

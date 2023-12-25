@@ -24,6 +24,7 @@ This readme file is used mostly to document project dependencies
   - react-pdf
   - react-tooltip
   - js-file-download
+  - framer-motion
   - reagraph
   - @tanstack/react-table
   - @uiw/react-codemirror

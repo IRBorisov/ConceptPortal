@@ -27,10 +27,10 @@ function UserMenu() {
       icon={<FaCircleUser size='1.5rem' />}
       onClick={menu.toggle}
     /> : null}
-    {(user && menu.isActive) ?
     <UserDropdown
+      isOpen={!!user && menu.isOpen}
       hideDropdown={() => menu.hide()}
-    /> : null}
+    />
   </div>);
 }
 

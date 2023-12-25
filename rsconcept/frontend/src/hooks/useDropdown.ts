@@ -5,17 +5,17 @@ import { useRef, useState } from 'react';
 import useClickedOutside from './useClickedOutside';
 
 function useDropdown() {
-  const [isActive, setIsActive] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
-  useClickedOutside({ ref, callback: () => setIsActive(false) });
+  useClickedOutside({ ref, callback: () => setIsOpen(false) });
 
   return {
     ref,
-    isActive,
-    setIsActive,
-    toggle: () => setIsActive(!isActive),
-    hide: () => setIsActive(false)
+    isOpen,
+    setIsOpen,
+    toggle: () => setIsOpen(!isOpen),
+    hide: () => setIsOpen(false)
   };
 }
 

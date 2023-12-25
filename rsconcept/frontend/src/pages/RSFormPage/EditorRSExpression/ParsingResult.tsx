@@ -1,23 +1,39 @@
 'use client';
 
+import clsx from 'clsx';
+import { motion } from 'framer-motion';
+
 import { IExpressionParse, IRSErrorDescription } from '@/models/rslang';
+import { animateRSControl } from '@/utils/animations';
 import { describeRSError } from '@/utils/labels';
 import { getRSErrorPrefix } from '@/utils/misc';
 
 interface ParsingResultProps {
-  data: IExpressionParse
+  data: IExpressionParse | undefined
   disabled?: boolean
+  isOpen: boolean
   onShowError: (error: IRSErrorDescription) => void
 }
 
-function ParsingResult({ data, disabled, onShowError }: ParsingResultProps) {
-  const errorCount = data.errors.reduce((total, error) => (error.isCritical ? total + 1 : total), 0);
-  const warningsCount = data.errors.length - errorCount;
+function ParsingResult({ isOpen, data, disabled, onShowError }: ParsingResultProps) {
+  const errorCount = data ? data.errors.reduce((total, error) => (error.isCritical ? total + 1 : total), 0) : 0;
+  const warningsCount = data ? data.errors.length - errorCount : 0;
 
   return (
-  <div className='px-2 pt-1 text-sm border overflow-y-auto h-[4.5rem]'>
+  <motion.div 
+    className={clsx(
+      'px-2 pt-1',
+      'h-[4.5rem] mt-3',
+      'text-sm',
+      'border',
+      'overflow-y-auto'
+    )}
+    initial={false}
+    animate={isOpen ? 'open' : 'closed'}
+    variants={animateRSControl}
+  >
     <p>Ошибок: <b>{errorCount}</b> | Предупреждений: <b>{warningsCount}</b></p>
-    {data.errors.map(
+    {data?.errors.map(
     (error, index) => {
       return (
       <p
@@ -31,7 +47,7 @@ function ParsingResult({ data, disabled, onShowError }: ParsingResultProps) {
         <span>{` ${describeRSError(error)}`}</span>
       </p>);
     })}
-  </div>);
+  </motion.div>);
 }
 
 export default ParsingResult;

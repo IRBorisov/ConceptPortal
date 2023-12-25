@@ -1,36 +1,28 @@
 import clsx from 'clsx';
-import { useMemo } from 'react';
+import { motion } from 'framer-motion';
+import { RiPushpinFill, RiUnpinLine } from 'react-icons/ri';
 
 import { useConceptTheme } from '@/context/ThemeContext';
+import { animateNavigationToggle } from '@/utils/animations';
 
 function ToggleNavigationButton() {
-  const { noNavigation, toggleNoNavigation } = useConceptTheme();
-  const text = useMemo(() => (
-    noNavigation ?
-      '∨∨∨'
-      :
-      <>
-        <p>{'>'}</p>
-        <p>{'>'}</p>
-      </>
-    ), [noNavigation]
-  );
+  const { noNavigationAnimation, toggleNoNavigation } = useConceptTheme();
   return (
-  <button type='button' tabIndex={-1}
-    title={noNavigation ? 'Показать навигацию' : 'Скрыть навигацию'}
+  <motion.button type='button' tabIndex={-1}
+    title={noNavigationAnimation ? 'Показать навигацию' : 'Скрыть навигацию'}
     className={clsx(
-      'absolute top-0 right-0 z-navigation',
-      'border-b-2 border-l-2 rounded-none',
+      'absolute top-0 right-0 z-navigation flex items-center justify-center',
       'clr-btn-nav',
-      {
-        'px-1 h-[1.6rem]': noNavigation,
-        'w-[1.2rem] h-[3rem]': !noNavigation
-      }
+      'select-none disabled:cursor-not-allowed'
     )}
     onClick={toggleNoNavigation}
+    initial={false}
+    animate={noNavigationAnimation ? 'off' : 'on'}
+    variants={animateNavigationToggle}
   >
-    {text}
-  </button>);
+    {!noNavigationAnimation ? <RiPushpinFill /> : null}
+    {noNavigationAnimation ? <RiUnpinLine /> : null}
+  </motion.button>);
 }
 
 export default ToggleNavigationButton;

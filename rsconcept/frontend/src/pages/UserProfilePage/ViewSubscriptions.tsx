@@ -1,11 +1,13 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
 import DataTable, { createColumnHelper } from '@/components/DataTable';
 import { useConceptNavigation } from '@/context/NagivationContext';
 import { ILibraryItem } from '@/models/library';
+import { animateSideView } from '@/utils/animations';
 
 interface ViewSubscriptionsProps {
   items: ILibraryItem[]
@@ -52,25 +54,32 @@ function ViewSubscriptions({items}: ViewSubscriptionsProps) {
   ], [intl]);
 
   return (
-  <DataTable dense noFooter
-    className='max-h-[23.8rem] overflow-y-auto text-sm border'
-    columns={columns}
-    data={items}
-    headPosition='0'
+  <motion.div
+    initial={{...animateSideView.initial}}
+    animate={{...animateSideView.animate}}
+    exit={{...animateSideView.exit}}
+  >
+    <h1 className='mb-6'>Отслеживаемые схемы</h1>
+    <DataTable dense noFooter
+      className='max-h-[23.8rem] overflow-y-auto text-sm border'
+      columns={columns}
+      data={items}
+      headPosition='0'
 
-    enableSorting
-    initialSorting={{
-      id: 'time_update',
-      desc: true
-    }}
-    noDataComponent={
-      <div className='h-[10rem]'>
-        Отслеживаемые схемы отсутствуют
-      </div>
-    }
+      enableSorting
+      initialSorting={{
+        id: 'time_update',
+        desc: true
+      }}
+      noDataComponent={
+        <div className='h-[10rem]'>
+          Отслеживаемые схемы отсутствуют
+        </div>
+      }
 
-    onRowClicked={openRSForm}
-  />);
+      onRowClicked={openRSForm}
+    />
+  </motion.div>);
 }
 
 export default ViewSubscriptions;
