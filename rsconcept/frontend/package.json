@@ -67,6 +67,9 @@
     },
     "transformIgnorePatterns": [
       "node_modules/(?!variables/.*)"
-    ]
+    ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    }
   }
 }

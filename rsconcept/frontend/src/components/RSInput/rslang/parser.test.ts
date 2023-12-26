@@ -1,4 +1,5 @@
-import { printTree } from '../../../utils/codemirror';
+import { printTree } from '@/utils/codemirror';
+
 import { parser } from './parser';
 
 const testData = [
