@@ -8,11 +8,11 @@ import TextURL from '@/components/Common/TextURL';
 import DataTable, { createColumnHelper } from '@/components/DataTable';
 import HelpButton from '@/components/Help/HelpButton';
 import { useAuth } from '@/context/AuthContext';
-import { useConceptNavigation } from '@/context/NagivationContext';
+import { useConceptNavigation } from '@/context/NavigationContext';
 import { useUsers } from '@/context/UsersContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { ILibraryItem } from '@/models/library';
-import { HelpTopic } from '@/models/miscelanious';
+import { HelpTopic } from '@/models/miscellaneous';
 
 import ItemIcons from './ItemIcons';
 

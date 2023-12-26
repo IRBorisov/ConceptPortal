@@ -1,4 +1,4 @@
-''' REST API: User profile and Authentification. '''
+''' REST API: User profile and Authorization. '''
 from django.contrib.auth import login, logout
 
 from rest_framework import status as c

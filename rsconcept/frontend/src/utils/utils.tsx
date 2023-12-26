@@ -9,7 +9,7 @@ import { AxiosHeaderValue, AxiosResponse } from 'axios';
  */
 export function assertIsNode(e: EventTarget | null): asserts e is Node {
   if (e === null || !('nodeType' in e)) {
-    throw new TypeError(`Expected 'Node' but recieved '${e?.constructor.name ?? 'null'}'`);
+    throw new TypeError(`Expected 'Node' but received '${e?.constructor.name ?? 'null'}'`);
   }
 }
 
@@ -42,7 +42,7 @@ export class TextMatcher {
 }
 
 /**
- * Text substitution guided by mapping and regular explression.
+ * Text substitution guided by mapping and regular expression.
 */
 export function applyPattern(text: string, mapping: { [key: string]: string }, pattern: RegExp): string {
   if (text === '' || pattern === null) {
@@ -65,7 +65,7 @@ export function applyPattern(text: string, mapping: { [key: string]: string }, p
 }
 
 /**
- * Check if Axios reponse is html.
+ * Check if Axios response is html.
 */
 export function isResponseHtml(response?: AxiosResponse) {
   if (!response) {

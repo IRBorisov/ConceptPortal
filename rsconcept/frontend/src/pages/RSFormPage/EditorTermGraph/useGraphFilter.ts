@@ -1,6 +1,6 @@
 import { useLayoutEffect, useMemo, useState } from 'react';
 
-import { GraphFilterParams } from '@/models/miscelanious';
+import { GraphFilterParams } from '@/models/miscellaneous';
 import { CstType, IRSForm } from '@/models/rsform';
 import { Graph } from '@/utils/Graph';
 

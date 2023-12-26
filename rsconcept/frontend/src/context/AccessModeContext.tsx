@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState } from 'react';
 
-import { UserAccessMode } from '@/models/miscelanious';
+import { UserAccessMode } from '@/models/miscellaneous';
 
 interface IAccessModeContext {
   mode: UserAccessMode

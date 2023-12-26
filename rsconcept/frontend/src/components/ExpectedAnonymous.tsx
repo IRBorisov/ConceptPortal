@@ -1,5 +1,5 @@
 import { useAuth } from '@/context/AuthContext';
-import { useConceptNavigation } from '@/context/NagivationContext';
+import { useConceptNavigation } from '@/context/NavigationContext';
 
 import TextURL from './Common/TextURL';
 

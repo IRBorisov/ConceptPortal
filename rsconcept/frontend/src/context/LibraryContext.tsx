@@ -5,7 +5,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 import { ErrorData } from '@/components/InfoError';
 import { ILibraryItem } from '@/models/library';
 import { matchLibraryItem } from '@/models/libraryAPI';
-import { ILibraryFilter } from '@/models/miscelanious';
+import { ILibraryFilter } from '@/models/miscellaneous';
 import { IRSForm, IRSFormCreateData, IRSFormData } from '@/models/rsform';
 import { loadRSFormData } from '@/models/rsformAPI';
 import { DataCallback, deleteLibraryItem, getLibrary, getRSFormDetails, getTemplates, postCloneLibraryItem, postNewRSForm } from '@/utils/backendAPI';

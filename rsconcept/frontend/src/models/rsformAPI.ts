@@ -5,7 +5,7 @@
 import { Graph } from '@/utils/Graph';
 import { TextMatcher } from '@/utils/utils';
 
-import { CstMatchMode } from './miscelanious';
+import { CstMatchMode } from './miscellaneous';
 import {
   CATEGORY_CST_TYPE, CstClass, CstType, 
   ExpressionStatus, IConstituenta, IRSForm, IRSFormData
@@ -28,9 +28,9 @@ export function loadRSFormData(input: IRSFormData): IRSForm {
       count_all: 0,
       count_errors: 0,
       count_property: 0,
-      count_incalc: 0,
+      count_incalculable: 0,
 
-      count_termin: 0,
+      count_text_term: 0,
       count_definition: 0,
       count_convention: 0,
 
@@ -51,11 +51,11 @@ export function loadRSFormData(input: IRSFormData): IRSForm {
       (sum, cst) => sum + (cst.parse?.status === ParsingStatus.INCORRECT ? 1 : 0) || 0, 0),
     count_property: result.items.reduce(
       (sum, cst) => sum + (cst.parse?.valueClass === ValueClass.PROPERTY ? 1 : 0) || 0, 0),
-    count_incalc: result.items.reduce(
+    count_incalculable: result.items.reduce(
       (sum, cst) => sum +
       ((cst.parse?.status === ParsingStatus.VERIFIED && cst.parse?.valueClass === ValueClass.INVALID) ? 1 : 0) || 0, 0),
 
-    count_termin: result.items.reduce(
+    count_text_term: result.items.reduce(
       (sum, cst) => (sum + (cst.term_raw ? 1 : 0) || 0), 0),
     count_definition: result.items.reduce(
       (sum, cst) => (sum + (cst.definition_raw ? 1 : 0) || 0), 0),

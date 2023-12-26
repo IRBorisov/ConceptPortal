@@ -1,4 +1,4 @@
-''' Application: User profile and Authentification. '''
+''' Application: User profile and Authorization. '''
 from django.apps import AppConfig
 
 

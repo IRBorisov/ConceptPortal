@@ -1,4 +1,4 @@
-''' Russian language synthax incapsulation. '''
+''' Russian language syntax incapsulation. '''
 from __future__ import annotations
 from enum import Enum, unique
 
@@ -56,7 +56,7 @@ class Capitalization(Enum):
 
 
 class RuSyntax:
-    ''' Russian language synthax parser. '''
+    ''' Russian language syntax parser. '''
     def __init__(self):
         pass
 

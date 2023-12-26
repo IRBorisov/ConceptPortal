@@ -404,7 +404,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     )
     @action(detail=True, methods=['post'])
     def resolve(self, request, pk):
-        ''' Endpoint: Resolve refenrces in text against schema terms context. '''
+        ''' Endpoint: Resolve references in text against schema terms context. '''
         serializer = s.TextSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         text = serializer.validated_data['text']

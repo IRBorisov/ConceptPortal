@@ -56,7 +56,7 @@ export const youtube = {
 };
 
 /**
- * Classname combinations.
+ * Tailwind CSS combinations.
  * Note: using clsx in conjunction with tailwindCss is preferred to creating custom CSS
  */
 export const classnames = {
@@ -74,9 +74,9 @@ export const urls = {
   intro_video: 'https://www.youtube.com/watch?v=0Ty9mu9sOJo',
   full_course: 'https://www.youtube.com/playlist?list=PLGe_JiAwpqu1C70ruQmCm_OWTWU3KJwDo',
 
-  gitrepo: 'https://github.com/IRBorisov/ConceptPortal',
-  mailportal: 'mailto:portal@acconcept.ru',
-  restapi: 'https://api.portal.acconcept.ru'
+  git_repo: 'https://github.com/IRBorisov/ConceptPortal',
+  mail_portal: 'mailto:portal@acconcept.ru',
+  restAPI: 'https://api.portal.acconcept.ru'
 };
 
 /**
@@ -96,7 +96,7 @@ export const globalIDs = {
 export const prefixes = {
   page_size: 'page-size-',
   cst_list: 'cst-list-',
-  cst_sidetable: 'cst-sidetable-',
+  cst_side_table: 'cst-side-table-',
   cst_hidden_list: 'cst-hidden-list-',
   cst_modal_list: 'cst-modal-list-',
   cst_template_ist: 'cst-template-list-',

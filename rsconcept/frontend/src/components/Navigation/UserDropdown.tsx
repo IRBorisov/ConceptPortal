@@ -1,7 +1,7 @@
 import Dropdown from '@/components/Common/Dropdown';
 import DropdownButton from '@/components/Common/DropdownButton';
 import { useAuth } from '@/context/AuthContext';
-import { useConceptNavigation } from '@/context/NagivationContext';
+import { useConceptNavigation } from '@/context/NavigationContext';
 import { useConceptTheme } from '@/context/ThemeContext';
 
 interface UserDropdownProps {

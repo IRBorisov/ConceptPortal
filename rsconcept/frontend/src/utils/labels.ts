@@ -5,12 +5,12 @@
  * Description is a long description used in tooltips.
  */
 import { GramData,Grammeme, ReferenceType } from '@/models/language';
-import { CstMatchMode, DependencyMode, HelpTopic, LibraryFilterStrategy, UserAccessMode } from '@/models/miscelanious';
+import { CstMatchMode, DependencyMode, HelpTopic, LibraryFilterStrategy, UserAccessMode } from '@/models/miscellaneous';
 import { CstClass, CstType, ExpressionStatus, IConstituenta } from '@/models/rsform';
 import { IArgumentInfo, IRSErrorDescription, ISyntaxTreeNode, ParsingStatus, RSErrorType, TokenID } from '@/models/rslang';
 
 /**
- * Generates desription for {@link IConstituenta}.
+ * Generates description for {@link IConstituenta}.
  */
 export function describeConstituenta(cst: IConstituenta): string {
   if (cst.cst_type === CstType.STRUCTURED) {
@@ -31,7 +31,7 @@ export function describeConstituenta(cst: IConstituenta): string {
 }
 
 /**
- * Generates desription for term of a given {@link IConstituenta}.
+ * Generates description for term of a given {@link IConstituenta}.
  */
 export function describeConstituentaTerm(cst?: IConstituenta): string {
   if (!cst) {
@@ -145,7 +145,7 @@ export function describeToken(id: TokenID): string {
 /**
  * Retrieves label for {@link CstMatchMode}.
  */
-export function labelCstMathchMode(mode: CstMatchMode): string {
+export function labelCstMatchMode(mode: CstMatchMode): string {
   switch (mode) {
     case CstMatchMode.ALL:  return 'общий';
     case CstMatchMode.EXPR: return 'выражение';
@@ -158,7 +158,7 @@ export function labelCstMathchMode(mode: CstMatchMode): string {
 /**
  * Retrieves description for {@link CstMatchMode}.
  */
-export function describeCstMathchMode(mode: CstMatchMode): string {
+export function describeCstMatchMode(mode: CstMatchMode): string {
   switch (mode) {
     case CstMatchMode.ALL:  return 'искать во всех атрибутах';
     case CstMatchMode.EXPR: return 'искать в формальных выражениях';
@@ -190,7 +190,7 @@ export function describeCstSource(mode: DependencyMode): string {
     case DependencyMode.ALL:            return 'все конституенты';
     case DependencyMode.EXPRESSION:     return 'идентификаторы из выражения';
     case DependencyMode.OUTPUTS:        return 'прямые ссылки на текущую';
-    case DependencyMode.INPUTS:         return 'пярмые ссылки из текущей';
+    case DependencyMode.INPUTS:         return 'прямые ссылки из текущей';
     case DependencyMode.EXPAND_OUTPUTS: return 'опосредованные ссылки на текущую';
     case DependencyMode.EXPAND_INPUTS:  return 'опосредованные ссылки из текущей';
   }
@@ -218,16 +218,16 @@ export function describeLibraryFilter(strategy: LibraryFilterStrategy): string {
     case LibraryFilterStrategy.MANUAL:      return 'Отображать все схемы';
     case LibraryFilterStrategy.COMMON:      return 'Отображать общедоступные схемы';
     case LibraryFilterStrategy.CANONICAL:   return 'Отображать стандартные схемы';
-    case LibraryFilterStrategy.PERSONAL:    return 'Отображать подписки и владеемые схемы';
+    case LibraryFilterStrategy.PERSONAL:    return 'Отображать подписки и собственные схемы';
     case LibraryFilterStrategy.SUBSCRIBE:   return 'Отображать подписки';
-    case LibraryFilterStrategy.OWNED:       return 'Отображать владеемые схемы';
+    case LibraryFilterStrategy.OWNED:       return 'Отображать собственные схемы';
   }
 }
 
 /**
  * Retrieves label for graph layout mode.
  */
-export const mapLableLayout: Map<string, string> = 
+export const mapLabelLayout: Map<string, string> = 
 new Map([
   ['forceatlas2', 'Граф: Атлас 2D'],
   ['forceDirected2d', 'Граф: Силы 2D'],
@@ -263,7 +263,7 @@ export function labelExpressionStatus(status: ExpressionStatus): string {
     case ExpressionStatus.INCORRECT:    return 'ошибка';
     case ExpressionStatus.INCALCULABLE: return 'невычислимо';
     case ExpressionStatus.PROPERTY:     return 'неразмерное';
-    case ExpressionStatus.UNKNOWN:      return 'непроверено';
+    case ExpressionStatus.UNKNOWN:      return 'не проверено';
     case ExpressionStatus.UNDEFINED:    return 'N/A';
   }
 }
@@ -310,7 +310,7 @@ export function describeHelpTopic(topic: HelpTopic): string {
     case HelpTopic.MAIN:          return 'Общая справка по порталу';
     case HelpTopic.LIBRARY:       return 'Описание работы с библиотекой схем';
     case HelpTopic.RSFORM:        return 'Описание работы с описанием схемы';
-    case HelpTopic.CSTLIST:       return 'Описание работы со списком конституентт';
+    case HelpTopic.CSTLIST:       return 'Описание работы со списком конституент';
     case HelpTopic.CONSTITUENTA:  return 'Описание редактирования конституенты';
     case HelpTopic.GRAPH_TERM:    return 'Описание работы с графом термов схемы';
     case HelpTopic.RSTEMPLATES:   return 'Описание работы с Банком выражений>';
@@ -325,8 +325,8 @@ export function describeHelpTopic(topic: HelpTopic): string {
 /**
  * Retrieves label for {@link CstType}.
  */
-export function labelCstType(type: CstType): string {
-  switch (type) {
+export function labelCstType(target: CstType): string {
+  switch (target) {
     case CstType.BASE:          return 'Базисное множество';
     case CstType.CONSTANT:      return 'Константное множество';
     case CstType.STRUCTURED:    return 'Родовая структура';
@@ -341,8 +341,8 @@ export function labelCstType(type: CstType): string {
 /**
  * Retrieves label for {@link ReferenceType}.
  */
-export function labelReferenceType(type: ReferenceType): string {
-  switch(type) {
+export function labelReferenceType(target: ReferenceType): string {
+  switch(target) {
     case ReferenceType.ENTITY:    return 'Использование термина';
     case ReferenceType.SYNTACTIC: return 'Связывание слов';
   }
@@ -351,8 +351,8 @@ export function labelReferenceType(type: ReferenceType): string {
 /**
  * Retrieves label for {@link CstClass}.
  */
-export function labelCstClass(cclass: CstClass): string {
-  switch (cclass) {
+export function labelCstClass(target: CstClass): string {
+  switch (target) {
     case CstClass.BASIC:        return 'базовый';
     case CstClass.DERIVED:      return 'производный';
     case CstClass.STATEMENT:    return 'утверждение';
@@ -363,8 +363,8 @@ export function labelCstClass(cclass: CstClass): string {
 /**
  * Retrieves description for {@link CstClass}.
  */
-export function describeCstClass(cclass: CstClass): string {
-  switch (cclass) {
+export function describeCstClass(target: CstClass): string {
+  switch (target) {
     case CstClass.BASIC:        return 'неопределяемое понятие, требует конвенции';
     case CstClass.DERIVED:      return 'выводимое понятие, задаваемое определением';
     case CstClass.STATEMENT:    return 'утверждение формальной логики';
@@ -562,7 +562,7 @@ export function describeRSError(error: IRSErrorDescription): string {
     return `Неизвестный символ: ${error.params[0]}`;
   case RSErrorType.syntax:
     return 'Неопределенная синтаксическая ошибка';
-  case RSErrorType.missingParanthesis:
+  case RSErrorType.missingParenthesis:
     return 'Некорректная конструкция языка родов структур, проверьте структуру выражения';
   case RSErrorType.missingCurlyBrace:
     return "Пропущен символ '}'";
@@ -608,13 +608,13 @@ export function describeRSError(error: IRSErrorDescription): string {
     return `τ(Pri(a)) = ℬ𝒞i𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
   case RSErrorType.invalidEnumeration:
     return `Типизация аргументов перечисления не совпадает: ${error.params[0]} != ${error.params[1]}`;
-  case RSErrorType.ivalidBinding:
+  case RSErrorType.invalidBinding:
     return `Количество переменных в кортеже не соответствует размерности декартова произведения`;
   case RSErrorType.localOutOfScope:
     return `Использование имени переменной вне области действия: ${error.params[0]}`;
-  case RSErrorType.invalidElementPredicat:
+  case RSErrorType.invalidElementPredicate:
     return `Несоответствие типизаций операндов для оператора: ${error.params[0]}${error.params[1]}${error.params[2]}`;
-  case RSErrorType.invalidArgsArtity:
+  case RSErrorType.invalidArgsArity:
     return `Неверное число аргументов терм-функции: ${error.params[0]} != ${error.params[1]}`;
   case RSErrorType.invalidArgumentType:
     return `Типизация аргумента терм-функции не соответствует объявленной: ${error.params[0]} != ${error.params[1]}`;

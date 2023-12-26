@@ -13,10 +13,10 @@ import ViewConstituents from '../ViewConstituents';
 import ConstituentaToolbar from './ConstituentaToolbar';
 import FormConstituenta from './FormConstituenta';
 
-// Max height of content for left enditor pane.
+// Max height of content for left editor pane.
 const UNFOLDED_HEIGHT = '59.1rem';
 
-// Thershold window width to hide side constituents list.
+// Threshold window width to hide side constituents list.
 const SIDELIST_HIDE_THRESHOLD = 1100; // px
 
 interface EditorConstituentaProps {

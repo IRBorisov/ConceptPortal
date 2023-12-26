@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import { useConceptTheme } from '@/context/ThemeContext';
 import { ExpressionStatus } from '@/models/rsform';
-import { colorbgCstStatus } from '@/utils/color';
+import { colorBgCstStatus } from '@/utils/color';
 import { prefixes } from '@/utils/constants';
 import { describeExpressionStatus, labelExpressionStatus } from '@/utils/labels';
 
@@ -29,7 +29,7 @@ function InfoCstStatus({ title }: InfoCstStatusProps) {
               'border',
               'text-center text-sm small-caps font-semibold'
             )}
-            style={{backgroundColor: colorbgCstStatus(status, colors)}}
+            style={{backgroundColor: colorBgCstStatus(status, colors)}}
           >
             {labelExpressionStatus(status)}
           </span>

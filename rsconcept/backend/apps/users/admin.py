@@ -1,1 +1,1 @@
-''' Admin: User profile and Authentification. '''
+''' Admin: User profile and Authorization. '''

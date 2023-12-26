@@ -4,9 +4,9 @@ import clsx from 'clsx';
 import { useCallback } from 'react';
 
 import ConceptSearch from '@/components/Common/ConceptSearch';
-import { useConceptNavigation } from '@/context/NagivationContext';
-import { ILibraryFilter } from '@/models/miscelanious';
-import { LibraryFilterStrategy } from '@/models/miscelanious';
+import { useConceptNavigation } from '@/context/NavigationContext';
+import { ILibraryFilter } from '@/models/miscellaneous';
+import { LibraryFilterStrategy } from '@/models/miscellaneous';
 
 import PickerStrategy from './PickerStrategy';
 

@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import { useConceptTheme } from '@/context/ThemeContext';
 import { GramData } from '@/models/language';
-import { colorfgGrammeme } from '@/utils/color';
+import { colorFgGrammeme } from '@/utils/color';
 import { labelGrammeme } from '@/utils/labels';
 
 interface GrammemeBadgeProps {
@@ -22,8 +22,8 @@ function GrammemeBadge({ key, grammeme }: GrammemeBadgeProps) {
       'text-sm font-semibold text-center whitespace-nowrap'
     )}
     style={{
-      borderColor: colorfgGrammeme(grammeme, colors),
-      color: colorfgGrammeme(grammeme, colors), 
+      borderColor: colorFgGrammeme(grammeme, colors),
+      color: colorFgGrammeme(grammeme, colors), 
       backgroundColor: colors.bgInput
     }}
   >

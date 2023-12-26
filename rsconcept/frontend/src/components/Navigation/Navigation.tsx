@@ -4,7 +4,7 @@ import { FaSquarePlus } from 'react-icons/fa6';
 import { IoLibrary } from 'react-icons/io5';
 
 import { EducationIcon } from '@/components/Icons';
-import { useConceptNavigation } from '@/context/NagivationContext';
+import { useConceptNavigation } from '@/context/NavigationContext';
 import { useConceptTheme } from '@/context/ThemeContext';
 import { animateNavigation } from '@/utils/animations';
 
@@ -40,7 +40,10 @@ function Navigation () {
       animate={!noNavigationAnimation ? 'open' : 'closed'}
       variants={animateNavigation}
     >
-      <div className='flex items-center mr-2 cursor-pointer' onClick={navigateHome} tabIndex={-1}>
+      <div tabIndex={-1}
+        className='flex items-center mr-2 cursor-pointer'
+        onClick={navigateHome}
+      >
         <Logo />
       </div>
       <div className='flex'>

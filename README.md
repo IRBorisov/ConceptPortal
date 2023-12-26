@@ -49,6 +49,8 @@ This readme file is used mostly to document project dependencies
   <pre>
   - ESLint
   - Colorize
+  - Code Spell Checker (eng + rus)
+  - Backticks
   </pre>
 </details>
 
@@ -102,7 +104,7 @@ This readme file is used mostly to document project dependencies
 - run rsconcept/backend/LocalEnvSetup.ps1
 - use VSCode configs in root folder to start developement
 
-## Developement build
+## Development build
 - this build does not use HTTPS and nginx for networking
 - backend and frontend debugging is supported
 - hmr (hot updates) for frontend

@@ -12,7 +12,7 @@ import MiniButton from '@/components/Common/MiniButton';
 import Overlay from '@/components/Common/Overlay';
 import HelpButton from '@/components/Help/HelpButton';
 import useDropdown from '@/hooks/useDropdown';
-import { HelpTopic } from '@/models/miscelanious';
+import { HelpTopic } from '@/models/miscellaneous';
 import { CstType } from '@/models/rsform';
 import { prefixes } from '@/utils/constants';
 import { labelCstType } from '@/utils/labels';

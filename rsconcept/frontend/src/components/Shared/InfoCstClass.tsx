@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import { useConceptTheme } from '@/context/ThemeContext';
 import { CstClass } from '@/models/rsform';
-import { colorbgCstClass } from '@/utils/color';
+import { colorBgCstClass } from '@/utils/color';
 import { prefixes } from '@/utils/constants';
 import { describeCstClass, labelCstClass } from '@/utils/labels';
 
@@ -28,7 +28,7 @@ function InfoCstClass({ header }: InfoCstClassProps) {
             'border',
             'text-center text-sm small-caps font-semibold'
           )}
-          style={{backgroundColor: colorbgCstClass(cclass, colors)}}
+          style={{backgroundColor: colorBgCstClass(cclass, colors)}}
         >
           {labelCstClass(cclass)}
         </span>

@@ -4,7 +4,7 @@
 
 /**
  * Represents user detailed information.
- * Some information should only be accesible to authorized users
+ * Some information should only be accessible to authorized users
 */
 export interface IUser {
   id: number | null
@@ -23,7 +23,7 @@ export interface ICurrentUser extends Pick<IUser, 'id' | 'username' | 'is_staff'
 }
 
 /**
- * Represents login data, used to authentificate users.
+ * Represents login data, used to authenticate users.
 */
 export interface IUserLoginData extends Pick<IUser, 'username'> {
   password: string

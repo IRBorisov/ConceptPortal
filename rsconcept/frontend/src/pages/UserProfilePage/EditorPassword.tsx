@@ -10,7 +10,7 @@ import SubmitButton from '@/components/Common/SubmitButton';
 import TextInput from '@/components/Common/TextInput';
 import InfoError, { ErrorData } from '@/components/InfoError';
 import { useAuth } from '@/context/AuthContext';
-import { useConceptNavigation } from '@/context/NagivationContext';
+import { useConceptNavigation } from '@/context/NavigationContext';
 import { IUserUpdatePassword } from '@/models/library';
 
 function ProcessError({error}: {error: ErrorData}): React.ReactElement {

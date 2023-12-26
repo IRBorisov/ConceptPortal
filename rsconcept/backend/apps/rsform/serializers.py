@@ -481,7 +481,7 @@ class RSFormTRSSerializer(serializers.Serializer):
                 or self.initial_data['version'] < _TRS_VERSION_MIN  \
                 or self.initial_data['version'] > _TRS_VERSION:
             raise serializers.ValidationError({
-                'version': 'Некорректная версия файла Экстеор. Пересохраните файл в новой версии'
+                'version': 'Некорректная версия файла Экстеор. Сохраните файл в новой версии'
             })
         return attrs
 

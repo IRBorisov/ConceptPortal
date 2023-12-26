@@ -15,8 +15,8 @@ function HelpMain() {
     <p>В меню пользователя (правый верхний угол) доступно редактирование данных пользователя и изменение цветовой темы.</p>
 
     <p className='mt-4 mb-1 text-center'><b>Поддержка</b></p>
-    <p>Портал разрабатывается <TextURL text='Центром Концепт' href={urls.concept}/> и является проектом с открытым исходным кодом, доступным на <TextURL text='Github' href={urls.gitrepo}/>.</p>
-    <p>Ваши пожелания по доработке, найденные ошибки и иные предложения можно направлять по email: <TextURL href={urls.mailportal} text='portal@acconcept.ru'/></p>
+    <p>Портал разрабатывается <TextURL text='Центром Концепт' href={urls.concept}/> и является проектом с открытым исходным кодом, доступным на <TextURL text='Github' href={urls.git_repo}/>.</p>
+    <p>Ваши пожелания по доработке, найденные ошибки и иные предложения можно направлять по email: <TextURL href={urls.mail_portal} text='portal@acconcept.ru'/></p>
   </div>);
 }
 

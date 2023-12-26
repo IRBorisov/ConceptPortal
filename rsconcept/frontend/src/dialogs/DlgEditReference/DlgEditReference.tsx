@@ -9,7 +9,7 @@ import Modal from '@/components/Common/Modal';
 import Overlay from '@/components/Common/Overlay';
 import HelpButton from '@/components/Help/HelpButton';
 import { ReferenceType } from '@/models/language';
-import { HelpTopic } from '@/models/miscelanious';
+import { HelpTopic } from '@/models/miscellaneous';
 import { IConstituenta } from '@/models/rsform';
 import { labelReferenceType } from '@/utils/labels';
 

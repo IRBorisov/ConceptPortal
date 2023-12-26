@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import ConceptSearch from '@/components/Common/ConceptSearch';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/DataTable';
 import { useConceptTheme } from '@/context/ThemeContext';
-import { CstMatchMode } from '@/models/miscelanious';
+import { CstMatchMode } from '@/models/miscellaneous';
 import { IConstituenta } from '@/models/rsform';
 import { matchConstituenta } from '@/models/rsformAPI';
 import { prefixes } from '@/utils/constants';

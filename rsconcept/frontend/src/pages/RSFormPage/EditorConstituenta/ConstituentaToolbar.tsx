@@ -7,7 +7,7 @@ import { FiSave } from 'react-icons/fi';
 import MiniButton from '@/components/Common/MiniButton';
 import Overlay from '@/components/Common/Overlay';
 import HelpButton from '@/components/Help/HelpButton';
-import { HelpTopic } from '@/models/miscelanious';
+import { HelpTopic } from '@/models/miscellaneous';
 
 interface ConstituentaToolbarProps {
   isMutable: boolean

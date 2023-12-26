@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { globalIDs } from '@/utils/constants';
 
-interface INagivationContext{
+interface INavigationContext{
   push: (path: string) => void
   replace: (path: string) => void
   back: () => void
@@ -17,9 +17,9 @@ interface INagivationContext{
   setIsBlocked: (value: boolean) => void
 }
 
-const NagivationContext = createContext<INagivationContext | null>(null);
+const NavigationContext = createContext<INavigationContext | null>(null);
 export const useConceptNavigation = () => {
-  const context = useContext(NagivationContext);
+  const context = useContext(NavigationContext);
   if (!context) {
     throw new Error('useConceptNavigation has to be used within <NavigationState.Provider>');
   }
@@ -95,12 +95,12 @@ export const NavigationState = ({ children }: NavigationStateProps) => {
   }, [pathname, scrollTop]);
 
   return (
-  <NagivationContext.Provider value={{
+  <NavigationContext.Provider value={{
     push, replace, back, forward, 
     canBack, isBlocked, setIsBlocked
   }}>
     {children}
-  </NagivationContext.Provider>);
+  </NavigationContext.Provider>);
 }
 
 export function useBlockNavigation(isBlocked: boolean) {

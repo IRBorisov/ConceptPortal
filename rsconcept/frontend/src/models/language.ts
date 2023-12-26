@@ -67,7 +67,7 @@ export enum Grammeme {
 /**
  * Represents part of speech language concept.
  * 
- * Implemented as a list of mututally exclusive {@link Grammeme}s.
+ * Implemented as a list of mutually exclusive {@link Grammeme}s.
 */
 export const PartOfSpeech = [
   Grammeme.NOUN, Grammeme.ADJF, Grammeme.ADJS, Grammeme.COMP,
@@ -79,7 +79,7 @@ export const PartOfSpeech = [
 /**
  * Represents gender language concept.
  * 
- * Implemented as a list of mututally exclusive {@link Grammeme}s.
+ * Implemented as a list of mutually exclusive {@link Grammeme}s.
 */
 export const Gender = [
   Grammeme.masc, Grammeme.femn, Grammeme.neut
@@ -88,7 +88,7 @@ export const Gender = [
 /**
  * Represents case language concept.
  * 
- * Implemented as a list of mututally exclusive {@link Grammeme}s.
+ * Implemented as a list of mutually exclusive {@link Grammeme}s.
 */
 export const Case = [
   Grammeme.nomn, Grammeme.gent, Grammeme.datv,
@@ -98,49 +98,49 @@ export const Case = [
 /**
  * Represents plurality language concept.
  * 
- * Implemented as a list of mututally exclusive {@link Grammeme}s.
+ * Implemented as a list of mutually exclusive {@link Grammeme}s.
 */
 export const Plurality = [Grammeme.sing, Grammeme.plur];
 
 /**
  * Represents verb perfectivity language concept.
  * 
- * Implemented as a list of mututally exclusive {@link Grammeme}s.
+ * Implemented as a list of mutually exclusive {@link Grammeme}s.
 */
 export const Perfectivity = [Grammeme.perf, Grammeme.impf];
 
 /**
  * Represents verb transitivity language concept.
  * 
- * Implemented as a list of mututally exclusive {@link Grammeme}s.
+ * Implemented as a list of mutually exclusive {@link Grammeme}s.
 */
 export const Transitivity = [Grammeme.tran, Grammeme.intr];
 
 /**
  * Represents verb mood language concept.
  * 
- * Implemented as a list of mututally exclusive {@link Grammeme}s.
+ * Implemented as a list of mutually exclusive {@link Grammeme}s.
 */
 export const Mood = [Grammeme.indc, Grammeme.impr];
 
 /**
  * Represents verb self-inclusion language concept.
  * 
- * Implemented as a list of mututally exclusive {@link Grammeme}s.
+ * Implemented as a list of mutually exclusive {@link Grammeme}s.
 */
 export const Inclusion = [Grammeme.incl, Grammeme.excl];
 
 /**
  * Represents verb voice language concept.
  * 
- * Implemented as a list of mututally exclusive {@link Grammeme}s.
+ * Implemented as a list of mutually exclusive {@link Grammeme}s.
 */
 export const Voice = [Grammeme.actv, Grammeme.pssv];
 
 /**
  * Represents verb tense language concept.
  * 
- * Implemented as a list of mututally exclusive {@link Grammeme}s.
+ * Implemented as a list of mutually exclusive {@link Grammeme}s.
 */
 export const Tense = [
   Grammeme.pres,
@@ -151,7 +151,7 @@ export const Tense = [
 /**
  * Represents verb person language concept.
  * 
- * Implemented as a list of mututally exclusive {@link Grammeme}s.
+ * Implemented as a list of mutually exclusive {@link Grammeme}s.
 */
 export const Person = [
   Grammeme.per1,

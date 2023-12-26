@@ -4,7 +4,7 @@ import ConceptTooltip from '@/components/Common/ConceptTooltip';
 import ConstituentaTooltip from '@/components/Help/ConstituentaTooltip';
 import { IConstituenta } from '@/models/rsform';
 import { isMockCst } from '@/models/rsformAPI';
-import { colorfgCstStatus,IColorTheme } from '@/utils/color';
+import { colorFgCstStatus,IColorTheme } from '@/utils/color';
 import { describeExpressionStatus } from '@/utils/labels';
 
 interface ConstituentaBadgeProps {
@@ -25,8 +25,8 @@ function ConstituentaBadge({ value, prefixID, shortTooltip, theme }: Constituent
       'text-center font-semibold whitespace-nowrap'
     )}
     style={{
-      borderColor: colorfgCstStatus(value.status, theme),
-      color: colorfgCstStatus(value.status, theme),
+      borderColor: colorFgCstStatus(value.status, theme),
+      color: colorFgCstStatus(value.status, theme),
       backgroundColor: isMockCst(value) ? theme.bgWarning : theme.bgInput
     }}
   >

@@ -16,7 +16,7 @@ import TextURL from '@/components/Common/TextURL';
 import ExpectedAnonymous from '@/components/ExpectedAnonymous';
 import InfoError from '@/components/InfoError';
 import { useAuth } from '@/context/AuthContext';
-import { useConceptNavigation } from '@/context/NagivationContext';
+import { useConceptNavigation } from '@/context/NavigationContext';
 import { type IUserSignupData } from '@/models/library';
 import { classnames, globalIDs, patterns } from '@/utils/constants';
 

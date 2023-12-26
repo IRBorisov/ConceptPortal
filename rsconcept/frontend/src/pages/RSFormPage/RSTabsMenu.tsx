@@ -9,10 +9,10 @@ import Dropdown from '@/components/Common/Dropdown';
 import DropdownButton from '@/components/Common/DropdownButton';
 import { useAccessMode } from '@/context/AccessModeContext';
 import { useAuth } from '@/context/AuthContext';
-import { useConceptNavigation } from '@/context/NagivationContext';
+import { useConceptNavigation } from '@/context/NavigationContext';
 import { useRSForm } from '@/context/RSFormContext';
 import useDropdown from '@/hooks/useDropdown';
-import { UserAccessMode } from '@/models/miscelanious';
+import { UserAccessMode } from '@/models/miscellaneous';
 import { describeAccessMode, labelAccessMode } from '@/utils/labels';
 
 interface RSTabsMenuProps {

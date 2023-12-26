@@ -1,9 +1,9 @@
 'use client';
 
-import { useConceptNavigation } from '@/context/NagivationContext';
+import { useConceptNavigation } from '@/context/NavigationContext';
 import { useConceptTheme } from '@/context/ThemeContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
-import { HelpTopic } from '@/models/miscelanious';
+import { HelpTopic } from '@/models/miscellaneous';
 
 import TopicsList from './TopicsList';
 import ViewTopic from './ViewTopic';

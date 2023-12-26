@@ -9,7 +9,7 @@ import ConstituentaPicker from '@/components/Shared/ConstituentaPicker';
 import SelectGrammeme from '@/components/Shared/SelectGrammeme';
 import { ReferenceType } from '@/models/language';
 import { parseEntityReference, parseGrammemes } from '@/models/languageAPI';
-import { CstMatchMode } from '@/models/miscelanious';
+import { CstMatchMode } from '@/models/miscellaneous';
 import { IConstituenta } from '@/models/rsform';
 import { matchConstituenta } from '@/models/rsformAPI';
 import { prefixes } from '@/utils/constants';

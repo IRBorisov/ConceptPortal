@@ -25,17 +25,17 @@ function RSFormStats({ stats }: RSFormStatsProps) {
       label='Неразмерных'
       text={stats.count_property}
     /> : null}
-    {stats.count_incalc !== 0 ? 
-    <LabeledValue id='count_incalc'
+    {stats.count_incalculable !== 0 ? 
+    <LabeledValue id='count_incalculable'
       label='Невычислимых'
-      text={stats.count_incalc}
+      text={stats.count_incalculable}
     /> : null}
 
     <Divider margins='my-2' />
 
-    <LabeledValue id='count_termin'
+    <LabeledValue id='count_text_term'
       label='Термины'
-      text={stats.count_termin}
+      text={stats.count_text_term}
     />
     <LabeledValue id='count_definition'
       label='Определения'

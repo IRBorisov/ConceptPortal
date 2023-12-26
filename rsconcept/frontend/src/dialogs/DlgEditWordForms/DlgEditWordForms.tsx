@@ -14,7 +14,7 @@ import SelectGrammeme from '@/components/Shared/SelectGrammeme';
 import useConceptText from '@/hooks/useConceptText';
 import { Grammeme, ITextRequest, IWordForm, IWordFormPlain } from '@/models/language';
 import { parseGrammemes, wordFormEquals } from '@/models/languageAPI';
-import { HelpTopic } from '@/models/miscelanious';
+import { HelpTopic } from '@/models/miscellaneous';
 import { IConstituenta, TermForm } from '@/models/rsform';
 import { IGrammemeOption, SelectorGrammemesList, SelectorGrammems } from '@/utils/selectors';
 

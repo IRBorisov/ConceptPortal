@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 
 import SubmitButton from '@/components/Common/SubmitButton';
 import TextInput from '@/components/Common/TextInput';
-import { useBlockNavigation } from '@/context/NagivationContext';
+import { useBlockNavigation } from '@/context/NavigationContext';
 import { useUserProfile } from '@/context/UserProfileContext';
 import { IUserUpdateData } from '@/models/library';
 import { classnames } from '@/utils/constants';

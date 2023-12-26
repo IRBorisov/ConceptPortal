@@ -1,5 +1,5 @@
 /**
- * Module: Miscellanious frontend model types. Future tagets for refactoring aimed at extracting modules.
+ * Module: Miscellaneous frontend model types. Future targets for refactoring aimed at extracting modules.
  */
 
 /**

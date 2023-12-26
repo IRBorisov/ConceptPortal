@@ -6,12 +6,12 @@ import { ConceptLoader } from '@/components/Common/ConceptLoader';
 import InfoError from '@/components/InfoError';
 import { useAuth } from '@/context/AuthContext';
 import { useLibrary } from '@/context/LibraryContext';
-import { useConceptNavigation } from '@/context/NagivationContext';
+import { useConceptNavigation } from '@/context/NavigationContext';
 import { useConceptTheme } from '@/context/ThemeContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { ILibraryItem } from '@/models/library';
-import { ILibraryFilter, LibraryFilterStrategy } from '@/models/miscelanious';
+import { ILibraryFilter, LibraryFilterStrategy } from '@/models/miscellaneous';
 
 import SearchPanel from './SearchPanel';
 import ViewLibrary from './ViewLibrary';

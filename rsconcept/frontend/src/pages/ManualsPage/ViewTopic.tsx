@@ -1,5 +1,5 @@
 import InfoTopic from '@/components/Help/InfoTopic';
-import { HelpTopic } from '@/models/miscelanious';
+import { HelpTopic } from '@/models/miscellaneous';
 
 interface ViewTopicProps {
   topic: HelpTopic

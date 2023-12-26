@@ -3,7 +3,7 @@
 import Checkbox from '@/components/Common/Checkbox';
 import Modal, { ModalProps } from '@/components/Common/Modal';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
-import { GraphFilterParams } from '@/models/miscelanious';
+import { GraphFilterParams } from '@/models/miscellaneous';
 import { CstType } from '@/models/rsform';
 import { labelCstType } from '@/utils/labels';
 

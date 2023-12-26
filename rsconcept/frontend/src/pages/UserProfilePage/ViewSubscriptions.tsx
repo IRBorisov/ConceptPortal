@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
 import DataTable, { createColumnHelper } from '@/components/DataTable';
-import { useConceptNavigation } from '@/context/NagivationContext';
+import { useConceptNavigation } from '@/context/NavigationContext';
 import { ILibraryItem } from '@/models/library';
 import { animateSideView } from '@/utils/animations';
 

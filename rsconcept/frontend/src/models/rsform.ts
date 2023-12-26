@@ -21,7 +21,7 @@ export enum CstType {
   THEOREM = 'theorem'
 }
 
-// CstType constant for category dividers in TemplateSchemas. TODO: create separate sctructure for templates
+// CstType constant for category dividers in TemplateSchemas. TODO: create separate structure for templates
 export const CATEGORY_CST_TYPE = CstType.THEOREM;
 
 /**
@@ -47,7 +47,7 @@ export enum ExpressionStatus {
 }
 
 /**
- * Represents word form for natural languange.
+ * Represents word form for natural language.
 */
 export interface TermForm {
   text: string
@@ -143,9 +143,9 @@ export interface IRSFormStats {
   count_all: number
   count_errors: number
   count_property: number
-  count_incalc: number
+  count_incalculable: number
 
-  count_termin: number
+  count_text_term: number
   count_definition: number
   count_convention: number
 

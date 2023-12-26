@@ -3,7 +3,7 @@
  */
 
 import { GramData, Grammeme, NounGrams, PartOfSpeech, VerbGrams } from '@/models/language';
-import { GraphColoringScheme } from '@/models/miscelanious';
+import { GraphColoringScheme } from '@/models/miscellaneous';
 import { CstClass, ExpressionStatus, IConstituenta } from '@/models/rsform';
 import { ISyntaxTreeNode, TokenID } from '@/models/rslang';
 
@@ -301,7 +301,7 @@ export const bracketsDarkT = {
 /**
  * Determines background color for {@link ISyntaxTreeNode} based on its type.
  */
-export function colorbgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): string {
+export function colorBgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): string {
   switch (node.typeID) {
   case TokenID.PUNC_DEFINE:
   case TokenID.PUNC_STRUCT:
@@ -383,7 +383,7 @@ export function colorbgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): s
 /**
  * Determines background color for {@link ExpressionStatus}.
  */
-export function colorbgCstStatus(status: ExpressionStatus, colors: IColorTheme): string {
+export function colorBgCstStatus(status: ExpressionStatus, colors: IColorTheme): string {
   switch (status) {
     case ExpressionStatus.VERIFIED: return colors.bgGreen;
     case ExpressionStatus.INCORRECT: return colors.bgRed;
@@ -397,7 +397,7 @@ export function colorbgCstStatus(status: ExpressionStatus, colors: IColorTheme):
 /**
  * Determines foreground color for {@link ExpressionStatus}.
  */
-export function colorfgCstStatus(status: ExpressionStatus, colors: IColorTheme): string {
+export function colorFgCstStatus(status: ExpressionStatus, colors: IColorTheme): string {
   switch (status) {
     case ExpressionStatus.VERIFIED: return colors.fgGreen;
     case ExpressionStatus.INCORRECT: return colors.fgRed;
@@ -411,7 +411,7 @@ export function colorfgCstStatus(status: ExpressionStatus, colors: IColorTheme):
 /**
  * Determines background color for {@link IConstituenta} depending on its {@link CstClass}.
  */
-export function colorbgCstClass(cstClass: CstClass, colors: IColorTheme): string {
+export function colorBgCstClass(cstClass: CstClass, colors: IColorTheme): string {
   switch (cstClass) {
     case CstClass.BASIC: return colors.bgGreen;
     case CstClass.DERIVED: return colors.bgBlue;
@@ -423,7 +423,7 @@ export function colorbgCstClass(cstClass: CstClass, colors: IColorTheme): string
 /**
  * Determines background color for {@link GramData}.
  */
-export function colorbgGrammeme(gram: GramData, colors: IColorTheme): string {
+export function colorBgGrammeme(gram: GramData, colors: IColorTheme): string {
   if (PartOfSpeech.includes(gram as Grammeme)) {
     return colors.bgBlue;
   }
@@ -439,7 +439,7 @@ export function colorbgGrammeme(gram: GramData, colors: IColorTheme): string {
 /**
  * Determines foreground color for {@link GramData}.
  */
-export function colorfgGrammeme(gram: GramData, colors: IColorTheme): string {
+export function colorFgGrammeme(gram: GramData, colors: IColorTheme): string {
   if (PartOfSpeech.includes(gram as Grammeme)) {
     return colors.fgBlue;
   }
@@ -459,12 +459,12 @@ export function colorfgGrammeme(gram: GramData, colors: IColorTheme): string {
 /**
  * Determines graph color for {@link IConstituenta}.
  */
-export function colorbgGraphNode(cst: IConstituenta, coloringScheme: GraphColoringScheme, colors: IColorTheme): string {
+export function colorBgGraphNode(cst: IConstituenta, coloringScheme: GraphColoringScheme, colors: IColorTheme): string {
   if (coloringScheme === 'type') {
-    return colorbgCstClass(cst.cst_class, colors);
+    return colorBgCstClass(cst.cst_class, colors);
   }
   if (coloringScheme === 'status') {
-    return colorbgCstStatus(cst.status, colors);
+    return colorBgCstStatus(cst.status, colors);
   }
   return '';
 }

@@ -1,4 +1,4 @@
-''' Serializers: User profile and Authentification. '''
+''' Serializers: User profile and Authorization. '''
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
@@ -15,7 +15,7 @@ class NonFieldErrorSerializer(serializers.Serializer):
 
 
 class LoginSerializer(serializers.Serializer):
-    ''' Serializer: User authentification by login/password. '''
+    ''' Serializer: User authentication by login/password. '''
     username = serializers.CharField(
         label='Имя пользователя',
         write_only=True
@@ -49,7 +49,7 @@ class LoginSerializer(serializers.Serializer):
 
 
 class AuthSerializer(serializers.Serializer):
-    ''' Serializer: Authentication data. '''
+    ''' Serializer: Authorization data. '''
     id = serializers.IntegerField()
     username = serializers.CharField()
     is_staff = serializers.BooleanField()

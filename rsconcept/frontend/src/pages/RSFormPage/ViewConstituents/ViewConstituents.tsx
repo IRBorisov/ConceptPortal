@@ -10,7 +10,7 @@ import { animateSideView } from '@/utils/animations';
 import ConstituentsSearch from './ConstituentsSearch';
 import ConstituentsTable from './ConstituentsTable';
 
-// Height that should be left to accomodate navigation panel + bottom margin
+// Height that should be left to accommodate navigation panel + bottom margin
 const LOCAL_NAVIGATION_H = '2.1rem';
 
 // Window width cutoff for expression show

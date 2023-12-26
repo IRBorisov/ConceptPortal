@@ -54,7 +54,7 @@ class Collation:
         return self.words[self.main_word].get_parse()
 
     def get_morpho(self) -> Morphology:
-        ''' Access parsed main mrophology. '''
+        ''' Access parsed main morphology. '''
         return self.words[self.main_word].get_morpho()
 
     def add_word(self, segment, forms: list, main_form: int, need_coordination: bool = True):
@@ -332,8 +332,8 @@ class PhraseParser:
         output.add_word(segment, forms, main_index, needs_coordination)
         return segment_score
         # Alternative: return segment_score
-        # penalty_suspicoius = 0 if local_max == 0 else (1 - local_sum / local_max) * self._PRIORITY_PENALTY
-        # return segment_score - penalty_suspicoius
+        # penalty_suspicious = 0 if local_max == 0 else (1 - local_sum / local_max) * self._PRIORITY_PENALTY
+        # return segment_score - penalty_suspicious
 
     @classmethod
     def _finalize_coordination(cls, target: Collation):

@@ -4,9 +4,9 @@ import { useCallback, useMemo } from 'react';
 
 import ConstituentaTooltip from '@/components/Help/ConstituentaTooltip';
 import { useConceptTheme } from '@/context/ThemeContext';
-import { GraphColoringScheme } from '@/models/miscelanious';
+import { GraphColoringScheme } from '@/models/miscellaneous';
 import { IRSForm } from '@/models/rsform';
-import { colorbgGraphNode } from '@/utils/color';
+import { colorBgGraphNode } from '@/utils/color';
 import { prefixes } from '@/utils/constants';
 
 interface ViewHiddenProps {
@@ -56,7 +56,7 @@ function ViewHidden({
         <div key={id} id={id}
           className='min-w-[3rem] rounded-md text-center cursor-pointer select-none'
           style={{
-            backgroundColor: colorbgGraphNode(cst, adjustedColoring, colors),
+            backgroundColor: colorBgGraphNode(cst, adjustedColoring, colors),
             ...dismissedStyle(cstID)
           }}
           onClick={() => toggleSelection(cstID)}

@@ -2,7 +2,7 @@ import { FaCircleUser } from 'react-icons/fa6';
 
 import { InDoorIcon } from '@/components/Icons';
 import { useAuth } from '@/context/AuthContext';
-import { useConceptNavigation } from '@/context/NagivationContext';
+import { useConceptNavigation } from '@/context/NavigationContext';
 import useDropdown from '@/hooks/useDropdown';
 
 import NavigationButton from './NavigationButton';

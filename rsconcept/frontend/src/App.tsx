@@ -3,7 +3,7 @@ import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 import ConceptToaster from './components/ConceptToaster';
 import Footer from './components/Footer';
 import Navigation from './components/Navigation';
-import { NavigationState } from './context/NagivationContext';
+import { NavigationState } from './context/NavigationContext';
 import { useConceptTheme } from './context/ThemeContext';
 import CreateRSFormPage from './pages/CreateRSFormPage';
 import HomePage from './pages/HomePage';

@@ -8,7 +8,7 @@ import DropdownCheckbox from '@/components/Common/DropdownCheckbox';
 import SelectorButton from '@/components/Common/SelectorButton';
 import { useAuth } from '@/context/AuthContext';
 import useDropdown from '@/hooks/useDropdown';
-import { LibraryFilterStrategy } from '@/models/miscelanious';
+import { LibraryFilterStrategy } from '@/models/miscellaneous';
 import { prefixes } from '@/utils/constants';
 import { describeLibraryFilter, labelLibraryFilter } from '@/utils/labels';
 

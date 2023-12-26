@@ -238,12 +238,12 @@ class Constituenta(Model):
         blank=True
     )
     definition_raw: TextField = TextField(
-        verbose_name='Текстовое определние (с отсылками)',
+        verbose_name='Текстовое определение (с отсылками)',
         default='',
         blank=True
     )
     definition_resolved: TextField = TextField(
-        verbose_name='Текстовое определние',
+        verbose_name='Текстовое определение',
         default='',
         blank=True
     )
@@ -501,8 +501,8 @@ class RSForm:
 
     def _insert_new(self, data: dict, insert_after: Optional[str]=None) -> 'Constituenta':
         if insert_after is not None:
-            cstafter = Constituenta.objects.get(pk=insert_after)
-            return self.insert_at(cstafter.order + 1, data['alias'], data['cst_type'])
+            cst_after = Constituenta.objects.get(pk=insert_after)
+            return self.insert_at(cst_after.order + 1, data['alias'], data['cst_type'])
         else:
             return self.insert_last(data['alias'], data['cst_type'])
 

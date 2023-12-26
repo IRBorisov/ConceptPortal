@@ -10,7 +10,7 @@ import { IEntityReference, ISyntacticReference } from '@/models/language';
 import { parseGrammemes } from '@/models/languageAPI';
 import { IConstituenta } from '@/models/rsform';
 
-import { colorfgGrammeme,IColorTheme } from './color';
+import { colorFgGrammeme,IColorTheme } from './color';
 import { describeConstituentaTerm, labelCstTypification, labelGrammeme } from './labels';
 
 /**
@@ -210,8 +210,8 @@ export function domTooltipEntityReference(ref: IEntityReference, cst: IConstitue
       'text-sm text-center whitespace-nowrap'
     );
     gram.style.borderWidth = '1px';
-    gram.style.borderColor = colorfgGrammeme(gramStr, colors);
-    gram.style.color = colorfgGrammeme(gramStr, colors);
+    gram.style.borderColor = colorFgGrammeme(gramStr, colors);
+    gram.style.color = colorFgGrammeme(gramStr, colors);
     gram.style.fontWeight = '600';
     gram.style.backgroundColor = colors.bgInput;
     gram.innerText = labelGrammeme(gramStr);

@@ -12,9 +12,9 @@ import { useRSForm } from '@/context/RSFormContext';
 import { useConceptTheme } from '@/context/ThemeContext';
 import DlgGraphParams from '@/dialogs/DlgGraphParams';
 import useLocalStorage from '@/hooks/useLocalStorage';
-import { GraphColoringScheme, GraphFilterParams } from '@/models/miscelanious';
+import { GraphColoringScheme, GraphFilterParams } from '@/models/miscellaneous';
 import { CstType, ICstCreateData } from '@/models/rsform';
-import { colorbgGraphNode } from '@/utils/color';
+import { colorBgGraphNode } from '@/utils/color';
 import { classnames, TIMEOUT_GRAPH_REFRESH } from '@/utils/constants';
 
 import GraphSidebar from './GraphSidebar';
@@ -103,7 +103,7 @@ function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Ed
       if (cst) {
         result.push({
           id: String(node.id),
-          fill: colorbgGraphNode(cst, coloringScheme, colors),
+          fill: colorBgGraphNode(cst, coloringScheme, colors),
           label: cst.term_resolved && !filterParams.noText ? `${cst.alias}: ${cst.term_resolved}` : cst.alias
         });
       }

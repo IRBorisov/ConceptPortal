@@ -9,13 +9,13 @@ import DropdownButton from '@/components/Common/DropdownButton';
 import SelectorButton from '@/components/Common/SelectorButton';
 import useDropdown from '@/hooks/useDropdown';
 import useLocalStorage from '@/hooks/useLocalStorage';
-import { CstMatchMode, DependencyMode } from '@/models/miscelanious';
-import { applyGraphFilter } from '@/models/miscelaniousAPI';
+import { CstMatchMode, DependencyMode } from '@/models/miscellaneous';
+import { applyGraphFilter } from '@/models/miscellaneousAPI';
 import { IConstituenta, IRSForm } from '@/models/rsform';
 import { createMockConstituenta, matchConstituenta } from '@/models/rsformAPI';
 import { extractGlobals } from '@/models/rslangAPI';
 import { prefixes } from '@/utils/constants';
-import { describeCstMathchMode, describeCstSource, labelCstMathchMode, labelCstSource } from '@/utils/labels';
+import { describeCstMatchMode, describeCstSource, labelCstMatchMode, labelCstSource } from '@/utils/labels';
 
 interface ConstituentsSearchProps {
   schema?: IRSForm
@@ -87,7 +87,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
         title='Настройка атрибутов для фильтрации'
         className='h-full'
         icon={<BiFilterAlt size='1.25rem' />}
-        text={labelCstMathchMode(filterMatch)}
+        text={labelCstMatchMode(filterMatch)}
         onClick={matchModeMenu.toggle}
       />
       <Dropdown stretchLeft isOpen={matchModeMenu.isOpen}>
@@ -99,7 +99,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
             key={`${prefixes.cst_match_mode_list}${index}`}
             onClick={() => handleMatchModeChange(matchMode)}
           >
-            <p><b>{labelCstMathchMode(matchMode)}:</b> {describeCstMathchMode(matchMode)}</p>
+            <p><b>{labelCstMatchMode(matchMode)}:</b> {describeCstMatchMode(matchMode)}</p>
           </DropdownButton>);
         })}
       </Dropdown>

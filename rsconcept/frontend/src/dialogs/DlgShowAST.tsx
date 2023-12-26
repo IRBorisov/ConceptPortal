@@ -7,7 +7,7 @@ import Modal, { ModalProps } from '@/components/Common/Modal';
 import { useConceptTheme } from '@/context/ThemeContext';
 import { SyntaxTree } from '@/models/rslang';
 import { graphDarkT, graphLightT } from '@/utils/color';
-import { colorbgSyntaxTree } from '@/utils/color';
+import { colorBgSyntaxTree } from '@/utils/color';
 import { resources } from '@/utils/constants';
 import { labelSyntaxTree } from '@/utils/labels';
 
@@ -28,7 +28,7 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
   () => syntaxTree.map(node => ({
     id: String(node.uid),
     label: labelSyntaxTree(node),
-    fill: colorbgSyntaxTree(node, colors),
+    fill: colorBgSyntaxTree(node, colors),
   })), [syntaxTree, colors]);
 
   const edges: GraphEdge[] = useMemo(

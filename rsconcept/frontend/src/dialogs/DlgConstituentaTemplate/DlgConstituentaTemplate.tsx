@@ -9,7 +9,7 @@ import Modal, { ModalProps } from '@/components/Common/Modal';
 import Overlay from '@/components/Common/Overlay';
 import HelpButton from '@/components/Help/HelpButton';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
-import { HelpTopic } from '@/models/miscelanious';
+import { HelpTopic } from '@/models/miscellaneous';
 import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
 import { inferTemplatedType, substituteTemplateArgs } from '@/models/rslangAPI';
 import { classnames } from '@/utils/constants';

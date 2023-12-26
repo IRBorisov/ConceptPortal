@@ -63,9 +63,9 @@ function EditorRSExpression({
     resetParse();
   }, [activeCst, resetParse, toggleReset]);
 
-  function handleChange(newvalue: string) {
-    onChange(newvalue);
-    setIsModified(newvalue !== activeCst?.definition_formal);
+  function handleChange(newValue: string) {
+    onChange(newValue);
+    setIsModified(newValue !== activeCst?.definition_formal);
   }
   
   function handleCheckExpression(callback?: (parse: IExpressionParse) => void) {

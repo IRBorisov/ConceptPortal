@@ -63,7 +63,7 @@ function ConstituentsTable({
         <ConstituentaBadge 
           theme={colors}
           value={props.row.original}
-          prefixID={prefixes.cst_sidetable}
+          prefixID={prefixes.cst_side_table}
         />
     }),
     columnHelper.accessor(cst => describeConstituenta(cst), {

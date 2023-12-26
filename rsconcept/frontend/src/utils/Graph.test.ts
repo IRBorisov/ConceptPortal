@@ -1,6 +1,6 @@
 import { Graph } from './Graph';
 
-describe('Testing Graph constuction', () => {
+describe('Testing Graph construction', () => {
   test('empty Graph should be empty', () => {
     const graph = new Graph();
     expect(graph.nodes.size).toBe(0);
