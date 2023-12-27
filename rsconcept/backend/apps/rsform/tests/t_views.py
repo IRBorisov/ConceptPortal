@@ -85,7 +85,7 @@ class TestConstituentaAPI(APITestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-    def test_update_resolved_norefs(self):
+    def test_update_resolved_no_refs(self):
         data = {
             'term_raw': 'New term',
             'definition_raw': 'New def'
@@ -548,7 +548,7 @@ class TestRSFormViewset(APITestCase):
         schema = self.owned
         data = {'items': [1337]}
         response = self.client.patch(
-            f'/api/rsforms/{schema.item.id}/cst-multidelete',
+            f'/api/rsforms/{schema.item.id}/cst-delete-multiple',
             data=data, format='json'
         )
         self.assertEqual(response.status_code, 400)
@@ -557,7 +557,7 @@ class TestRSFormViewset(APITestCase):
         x2 = Constituenta.objects.create(schema=schema.item, alias='X2', cst_type='basic', order=2)
         data = {'items': [x1.id]}
         response = self.client.patch(
-            f'/api/rsforms/{schema.item.id}/cst-multidelete',
+            f'/api/rsforms/{schema.item.id}/cst-delete-multiple',
             data=data, format='json'
         )
         x2.refresh_from_db()
@@ -571,7 +571,7 @@ class TestRSFormViewset(APITestCase):
         x3 = Constituenta.objects.create(schema=self.unowned.item, alias='X1', cst_type='basic', order=1)
         data = {'items': [x3.id]}
         response = self.client.patch(
-            f'/api/rsforms/{schema.item.id}/cst-multidelete',
+            f'/api/rsforms/{schema.item.id}/cst-delete-multiple',
             data=data, format='json'
         )
         self.assertEqual(response.status_code, 400)
@@ -633,7 +633,7 @@ class TestRSFormViewset(APITestCase):
 
     def test_load_trs(self):
         schema = self.owned
-        schema.item.title = 'Testt11'
+        schema.item.title = 'Test11'
         schema.item.save()
         x1 = Constituenta.objects.create(schema=schema.item, alias='X1', cst_type='basic', order=1)
         work_dir = os.path.dirname(os.path.abspath(__file__))
@@ -645,14 +645,14 @@ class TestRSFormViewset(APITestCase):
             )
         schema.item.refresh_from_db()
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(schema.item.title, 'Testt11')
+        self.assertEqual(schema.item.title, 'Test11')
         self.assertEqual(len(response.data['items']), 25)
         self.assertEqual(schema.constituents().count(), 25)
         self.assertFalse(Constituenta.objects.filter(pk=x1.id).exists())
 
     def test_clone(self):
         item = self.owned.item
-        item.title = 'Testt11'
+        item.title = 'Test11'
         item.save()
         x1 = Constituenta.objects.create(schema=item, alias='X12', cst_type='basic', order=1)
         d1 = Constituenta.objects.create(schema=item, alias='D2', cst_type='term', order=1)

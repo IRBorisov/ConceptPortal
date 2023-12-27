@@ -203,7 +203,7 @@ export function deleteLibraryItem(target: string, request: FrontAction) {
 
 export function postClaimLibraryItem(target: string, request: FrontPull<ILibraryItem>) {
   AxiosPost({
-    title: `Claim on LibrartyItem id=${target}`,
+    title: `Claim on LibraryItem id=${target}`,
     endpoint: `/api/library/${target}/claim`,
     request: request
   });
@@ -211,7 +211,7 @@ export function postClaimLibraryItem(target: string, request: FrontPull<ILibrary
 
 export function postSubscribe(target: string, request: FrontAction) {
   AxiosPost({
-    title: `Subscribe to LibrartyItem id=${target}`,
+    title: `Subscribe to LibraryItem id=${target}`,
     endpoint: `/api/library/${target}/subscribe`,
     request: request
   });
@@ -245,7 +245,7 @@ export function postNewConstituenta(schema: string, request: FrontExchange<ICstC
 export function patchDeleteConstituenta(schema: string, request: FrontExchange<IConstituentaList, IRSFormData>) {
   AxiosPatch({
     title: `Delete Constituents for RSForm id=${schema}: ${request.data.items.map(item => String(item)).join(' ')}`,
-    endpoint: `/api/rsforms/${schema}/cst-multidelete`,
+    endpoint: `/api/rsforms/${schema}/cst-delete-multiple`,
     request: request
   });
 }

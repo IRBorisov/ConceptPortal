@@ -45,7 +45,7 @@ describe('Testing Graph editing', () => {
     expect(graph.hasEdge(4, 1)).toBeFalsy();
   });
 
-  test('folding node redirectes edges', () => {
+  test('folding node redirects edges', () => {
     const graph = new Graph([[1, 3], [2, 3], [3, 4], [3, 5], [3, 3]]);
     graph.foldNode(3);
     expect(graph.hasNode(3)).toBeFalsy();
@@ -73,7 +73,7 @@ describe('Testing Graph editing', () => {
 describe('Testing Graph sort', () => {
   test('topological order', () => {
     const graph = new Graph([[9, 1], [9, 2], [2, 1], [4, 3], [5, 9]]);
-    expect(graph.tolopogicalOrder()).toStrictEqual([5, 4, 3, 9, 2, 1]);
+    expect(graph.topologicalOrder()).toStrictEqual([5, 4, 3, 9, 2, 1]);
   });
 });
 

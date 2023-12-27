@@ -16,7 +16,7 @@ import { Grammeme, ITextRequest, IWordForm, IWordFormPlain } from '@/models/lang
 import { parseGrammemes, wordFormEquals } from '@/models/languageAPI';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IConstituenta, TermForm } from '@/models/rsform';
-import { IGrammemeOption, SelectorGrammemesList, SelectorGrammems } from '@/utils/selectors';
+import { IGrammemeOption, SelectorGrammemes,SelectorGrammemesList } from '@/utils/selectors';
 
 import WordFormsTable from './WordFormsTable';
 
@@ -71,7 +71,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
 
   function handleSelectForm(form: IWordForm) {
     setInputText(form.text);
-    setInputGrams(SelectorGrammems.filter(gram => form.grams.find(test => test === gram.value)));
+    setInputGrams(SelectorGrammemes.filter(gram => form.grams.find(test => test === gram.value)));
   }
 
   function handleInflect() {
@@ -88,7 +88,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
     }
     textProcessor.parse(data, response => {
       const grams = parseGrammemes(response.result);
-      setInputGrams(SelectorGrammems.filter(gram => grams.find(test => test === gram.value)));
+      setInputGrams(SelectorGrammemes.filter(gram => grams.find(test => test === gram.value)));
     });
   }
 

@@ -16,7 +16,7 @@ interface ConstituentaPickerProps {
   data?: IConstituenta[]
   rows?: number
   
-  prefilterFunc?: (cst: IConstituenta) => boolean
+  onBeginFilter?: (cst: IConstituenta) => boolean
   describeFunc?: (cst: IConstituenta) => string
   matchFunc?: (cst: IConstituenta, filter: string) => boolean
   
@@ -32,7 +32,7 @@ function ConstituentaPicker({
   prefixID = prefixes.cst_list,
   describeFunc = describeConstituenta,
   matchFunc = (cst, filter) => matchConstituenta(cst, filter, CstMatchMode.ALL),
-  prefilterFunc,
+  onBeginFilter,
   onSelectValue
 } : ConstituentaPickerProps) {
   const { colors } = useConceptTheme();
@@ -44,7 +44,7 @@ function ConstituentaPicker({
     if (!data) {
       setFilteredData([]);
     } else {
-      const newData = prefilterFunc ? data.filter(prefilterFunc) : data;
+      const newData = onBeginFilter ? data.filter(onBeginFilter) : data;
       if (filterText) {
         setFilteredData(newData.filter(cst => matchFunc(cst, filterText)));
       } else {
@@ -52,7 +52,7 @@ function ConstituentaPicker({
       }
     }
     
-  }, [data, filterText, matchFunc, prefilterFunc]);
+  }, [data, filterText, matchFunc, onBeginFilter]);
 
   const columns = useMemo(
   () => [

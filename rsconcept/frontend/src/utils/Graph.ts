@@ -202,7 +202,7 @@ export class Graph {
     return result;
   }  
 
-  tolopogicalOrder(): number[] {
+  topologicalOrder(): number[] {
     const result: number[] = [];
     const marked = new Map<number, boolean>();
     const toVisit: number[] = [];
@@ -235,7 +235,7 @@ export class Graph {
   }
 
   transitiveReduction() {
-    const order = this.tolopogicalOrder();
+    const order = this.topologicalOrder();
     const marked = new Map<number, boolean>();
     order.forEach(nodeID => {
       if (marked.get(nodeID)) {

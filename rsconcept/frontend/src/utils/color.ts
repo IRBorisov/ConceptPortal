@@ -28,7 +28,7 @@ export interface IColorTheme {
   fgDisabled: string
   fgWarning: string
 
-  // Hightlight syntax accents
+  // Highlight syntax accents
   bgRed: string
   bgGreen: string
   bgBlue: string
@@ -64,7 +64,7 @@ export const lightT: IColorTheme = {
   fgDisabled: 'var(--cl-fg-80)',
   fgWarning:  'var(--cl-red-fg-100)',
 
-  // Hightlight syntax accents
+  // Highlight syntax accents
   bgRed:      'hsl(000, 100%, 089%)',
   bgGreen:    'hsl(100, 100%, 075%)',
   bgBlue:     'hsl(235, 080%, 087%)',
@@ -100,7 +100,7 @@ export const darkT: IColorTheme = {
   fgDisabled: 'var(--cd-fg-80)',
   fgWarning:  'var(--cd-red-fg-100)',
 
-  // Hightlight syntax accents
+  // Highlight syntax accents
   bgRed:      'hsl(000, 080%, 037%)',
   bgGreen:    'hsl(100, 080%, 025%)',
   bgBlue:     'hsl(235, 054%, 049%)',
@@ -303,8 +303,8 @@ export const bracketsDarkT = {
  */
 export function colorBgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): string {
   switch (node.typeID) {
-  case TokenID.PUNC_DEFINE:
-  case TokenID.PUNC_STRUCT:
+  case TokenID.PUNCTUATION_DEFINE:
+  case TokenID.PUNCTUATION_STRUCT:
   case TokenID.ID_LOCAL:
     return colors.bgGreen;
 
@@ -314,27 +314,27 @@ export function colorBgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): s
   case TokenID.ID_RADICAL:
   case TokenID.LIT_INTEGER:
   case TokenID.LIT_EMPTYSET:
-  case TokenID.LIT_INTSET:
+  case TokenID.LIT_WHOLE_NUMBERS:
     return colors.bgTeal;
 
-  case TokenID.FORALL:
-  case TokenID.EXISTS:
-  case TokenID.NOT:
-  case TokenID.AND:
-  case TokenID.OR:
-  case TokenID.IMPLICATION:
-  case TokenID.EQUIVALENT:
+  case TokenID.QUANTOR_UNIVERSAL:
+  case TokenID.QUANTOR_EXISTS:
+  case TokenID.LOGIC_NOT:
+  case TokenID.LOGIC_AND:
+  case TokenID.LOGIC_OR:
+  case TokenID.LOGIC_IMPLICATION:
+  case TokenID.LOGIC_EQUIVALENT:
   case TokenID.GREATER:
   case TokenID.LESSER:
   case TokenID.EQUAL:
   case TokenID.NOTEQUAL:
   case TokenID.GREATER_OR_EQ:
   case TokenID.LESSER_OR_EQ:
-  case TokenID.IN:
-  case TokenID.NOTIN:
+  case TokenID.SET_IN:
+  case TokenID.SET_NOT_IN:
   case TokenID.SUBSET_OR_EQ:
   case TokenID.SUBSET:
-  case TokenID.NOTSUBSET:
+  case TokenID.NOT_SUBSET:
     return colors.bgOrange;
 
   case TokenID.NT_TUPLE:
@@ -347,10 +347,10 @@ export function colorBgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): s
   case TokenID.MULTIPLY:
   case TokenID.BOOLEAN:
   case TokenID.DECART:
-  case TokenID.INTERSECTION:
-  case TokenID.UNION:
+  case TokenID.SET_INTERSECTION:
+  case TokenID.SET_UNION:
   case TokenID.SET_MINUS:
-  case TokenID.SYMMINUS:
+  case TokenID.SET_SYMMETRIC_MINUS:
   case TokenID.REDUCE:
   case TokenID.CARD:
   case TokenID.BOOL:
@@ -372,8 +372,8 @@ export function colorBgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): s
   case TokenID.NT_RECURSIVE_SHORT:
     return '';
 
-  case TokenID.PUNC_ASSIGN:
-  case TokenID.PUNC_ITERATE:
+  case TokenID.PUNCTUATION_ASSIGN:
+  case TokenID.PUNCTUATION_ITERATE:
     return colors.bgRed;
   }
   // node

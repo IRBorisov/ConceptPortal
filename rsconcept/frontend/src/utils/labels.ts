@@ -5,9 +5,15 @@
  * Description is a long description used in tooltips.
  */
 import { GramData,Grammeme, ReferenceType } from '@/models/language';
-import { CstMatchMode, DependencyMode, HelpTopic, LibraryFilterStrategy, UserAccessMode } from '@/models/miscellaneous';
+import {
+  CstMatchMode, DependencyMode, HelpTopic,
+  LibraryFilterStrategy, UserAccessMode
+} from '@/models/miscellaneous';
 import { CstClass, CstType, ExpressionStatus, IConstituenta } from '@/models/rsform';
-import { IArgumentInfo, IRSErrorDescription, ISyntaxTreeNode, ParsingStatus, RSErrorType, TokenID } from '@/models/rslang';
+import {
+  IArgumentInfo, IRSErrorDescription, ISyntaxTreeNode,
+  ParsingStatus, RSErrorType, TokenID
+} from '@/models/rslang';
 
 /**
  * Generates description for {@link IConstituenta}.
@@ -56,88 +62,88 @@ export function labelConstituenta(cst: IConstituenta) {
  */
 export function labelToken(id: TokenID): string {
   switch (id) {
-  case TokenID.BOOLEAN:       return 'ℬ()';
-  case TokenID.DECART:        return '×';
-  case TokenID.PUNC_PL:       return '( )';
-  case TokenID.PUNC_SL:       return '[ ]';
-  case TokenID.FORALL:        return '∀';
-  case TokenID.EXISTS:        return '∃';
-  case TokenID.NOT:           return '¬';
-  case TokenID.AND:           return '&';
-  case TokenID.OR:            return '∨';
-  case TokenID.IMPLICATION:   return '⇒';
-  case TokenID.EQUIVALENT:    return '⇔';
-  case TokenID.LIT_EMPTYSET:  return '∅';
-  case TokenID.LIT_INTSET:    return 'Z';
-  case TokenID.EQUAL:         return '=';
-  case TokenID.NOTEQUAL:      return '≠';
-  case TokenID.GREATER_OR_EQ: return '≥';
-  case TokenID.LESSER_OR_EQ:  return '≤';
-  case TokenID.IN:            return '∈';
-  case TokenID.NOTIN:         return '∉';
-  case TokenID.SUBSET_OR_EQ:  return '⊆';
-  case TokenID.SUBSET:        return '⊂';
-  case TokenID.NOTSUBSET:     return '⊄';
-  case TokenID.INTERSECTION:  return '∩';
-  case TokenID.UNION:         return '∪';
-  case TokenID.SET_MINUS:     return '\\';
-  case TokenID.SYMMINUS:      return '∆';
+  case TokenID.BOOLEAN:             return 'ℬ()';
+  case TokenID.DECART:              return '×';
+  case TokenID.PUNCTUATION_PL:      return '( )';
+  case TokenID.PUNCTUATION_SL:      return '[ ]';
+  case TokenID.QUANTOR_UNIVERSAL:   return '∀';
+  case TokenID.QUANTOR_EXISTS:      return '∃';
+  case TokenID.LOGIC_NOT:           return '¬';
+  case TokenID.LOGIC_AND:           return '&';
+  case TokenID.LOGIC_OR:            return '∨';
+  case TokenID.LOGIC_IMPLICATION:   return '⇒';
+  case TokenID.LOGIC_EQUIVALENT:    return '⇔';
+  case TokenID.LIT_EMPTYSET:        return '∅';
+  case TokenID.LIT_WHOLE_NUMBERS:   return 'Z';
+  case TokenID.EQUAL:               return '=';
+  case TokenID.NOTEQUAL:            return '≠';
+  case TokenID.GREATER_OR_EQ:       return '≥';
+  case TokenID.LESSER_OR_EQ:        return '≤';
+  case TokenID.SET_IN:              return '∈';
+  case TokenID.SET_NOT_IN:          return '∉';
+  case TokenID.SUBSET_OR_EQ:        return '⊆';
+  case TokenID.SUBSET:              return '⊂';
+  case TokenID.NOT_SUBSET:          return '⊄';
+  case TokenID.SET_INTERSECTION:    return '∩';
+  case TokenID.SET_UNION:           return '∪';
+  case TokenID.SET_MINUS:           return '\\';
+  case TokenID.SET_SYMMETRIC_MINUS:   return '∆';
   case TokenID.NT_DECLARATIVE_EXPR:   return 'D{}';
   case TokenID.NT_IMPERATIVE_EXPR:    return 'I{}';
   case TokenID.NT_RECURSIVE_FULL:     return 'R{}';
-  case TokenID.BIGPR:         return 'Pr1()';
-  case TokenID.SMALLPR:       return 'pr1()';
-  case TokenID.FILTER:        return 'Fi1[]()';
-  case TokenID.REDUCE:        return 'red()';
-  case TokenID.CARD:          return 'card()';
-  case TokenID.BOOL:          return 'bool()';
-  case TokenID.DEBOOL:        return 'debool()';
-  case TokenID.PUNC_ASSIGN:   return ':=';
-  case TokenID.PUNC_ITERATE:  return ':∈';
+  case TokenID.BIGPR:               return 'Pr1()';
+  case TokenID.SMALLPR:             return 'pr1()';
+  case TokenID.FILTER:              return 'Fi1[]()';
+  case TokenID.REDUCE:              return 'red()';
+  case TokenID.CARD:                return 'card()';
+  case TokenID.BOOL:                return 'bool()';
+  case TokenID.DEBOOL:              return 'debool()';
+  case TokenID.PUNCTUATION_ASSIGN:  return ':=';
+  case TokenID.PUNCTUATION_ITERATE: return ':∈';
   }
   return `no label: ${id}`;
 }
 
 export function describeToken(id: TokenID): string {
   switch (id) {
-  case TokenID.BOOLEAN:         return 'Булеан [Alt + E / Shift + B]';
-  case TokenID.DECART:          return 'Декартово произведение [Alt + Shift + E / Shift + 8]';
-  case TokenID.PUNC_PL:         return 'Скобки вокруг выражения [Alt + Shift + 9 ]';
-  case TokenID.PUNC_SL:         return 'Скобки вокруг выражения [Alt + [ ]';
-  case TokenID.FORALL:          return 'Квантор всеобщности [`]';
-  case TokenID.EXISTS:          return 'Квантор существования [Shift + `]';
-  case TokenID.NOT:             return 'Отрицание [Alt + `]';
-  case TokenID.AND:             return 'Конъюнкция [Alt + 3 ~ Shift + 7]';
-  case TokenID.OR:              return 'Дизъюнкция [Alt + Shift + 3]';
-  case TokenID.IMPLICATION:     return 'Импликация [Alt + 4]';
-  case TokenID.EQUIVALENT:      return 'Эквивалентность [Alt + Shift + 4]';
-  case TokenID.LIT_EMPTYSET:    return 'Пустое множество [Alt + X]';
-  case TokenID.LIT_INTSET:      return 'Целые числа [Alt + Z]';
-  case TokenID.EQUAL:           return 'Равенство';
-  case TokenID.NOTEQUAL:        return 'Неравенство [Alt + Shift + `]';
-  case TokenID.GREATER_OR_EQ:   return 'Больше или равно [Alt + Shift + 7]';
-  case TokenID.LESSER_OR_EQ:    return 'Меньше или равно [Alt + Shift + 8]';
-  case TokenID.IN:              return 'Быть элементом (принадлежит) [Alt + 1]';
-  case TokenID.NOTIN:           return 'Не принадлежит [Alt + Shift + 1]';
-  case TokenID.SUBSET_OR_EQ:    return 'Быть частью (нестрогое подмножество) [Alt + 2]';
-  case TokenID.SUBSET:          return 'Строгое подмножество [Alt + 7]';
-  case TokenID.NOTSUBSET:       return 'Не подмножество [Alt + Shift + 2]';
-  case TokenID.INTERSECTION:    return 'Пересечение [Alt + A]';
-  case TokenID.UNION:           return 'Объединение [Alt + S]';
-  case TokenID.SET_MINUS:       return 'Разность множеств [Alt + 5]';
-  case TokenID.SYMMINUS:        return 'Симметрическая разность [Alt + Shift + 5]';
-  case TokenID.NT_DECLARATIVE_EXPR: return 'Декларативная форма определения терма [Alt + D]';
-  case TokenID.NT_IMPERATIVE_EXPR: return 'Императивная форма определения терма [Alt + G]';
-  case TokenID.NT_RECURSIVE_FULL: return 'Рекурсивная (цикличная) форма определения терма [Alt + T]';
-  case TokenID.BIGPR:           return 'Большая проекция [Alt + Q]';
-  case TokenID.SMALLPR:         return 'Малая проекция [Alt + W]';
-  case TokenID.FILTER:          return 'Фильтр [Alt + F]';
-  case TokenID.REDUCE:          return 'Множество-сумма [Alt + R]';
-  case TokenID.CARD:            return 'Мощность [Alt + C]';
-  case TokenID.BOOL:            return 'Синглетон [Alt + B]';
-  case TokenID.DEBOOL:          return 'Десинглетон [Alt + V]';
-  case TokenID.PUNC_ASSIGN:     return 'Присвоение (императивный синтаксис) [Alt + Shift + 6]';
-  case TokenID.PUNC_ITERATE:    return 'Перебор элементов множества (императивный синтаксис) [Alt + 6]';
+  case TokenID.BOOLEAN:               return 'Булеан [Alt + E / Shift + B]';
+  case TokenID.DECART:                return 'Декартово произведение [Alt + Shift + E / Shift + 8]';
+  case TokenID.PUNCTUATION_PL:        return 'Скобки вокруг выражения [Alt + Shift + 9 ]';
+  case TokenID.PUNCTUATION_SL:        return 'Скобки вокруг выражения [Alt + [ ]';
+  case TokenID.QUANTOR_UNIVERSAL:     return 'Квантор всеобщности [`]';
+  case TokenID.QUANTOR_EXISTS:        return 'Квантор существования [Shift + `]';
+  case TokenID.LOGIC_NOT:             return 'Отрицание [Alt + `]';
+  case TokenID.LOGIC_AND:             return 'Конъюнкция [Alt + 3 ~ Shift + 7]';
+  case TokenID.LOGIC_OR:              return 'Дизъюнкция [Alt + Shift + 3]';
+  case TokenID.LOGIC_IMPLICATION:     return 'Импликация [Alt + 4]';
+  case TokenID.LOGIC_EQUIVALENT:      return 'Эквивалентность [Alt + Shift + 4]';
+  case TokenID.LIT_EMPTYSET:          return 'Пустое множество [Alt + X]';
+  case TokenID.LIT_WHOLE_NUMBERS:     return 'Целые числа [Alt + Z]';
+  case TokenID.EQUAL:                 return 'Равенство';
+  case TokenID.NOTEQUAL:              return 'Неравенство [Alt + Shift + `]';
+  case TokenID.GREATER_OR_EQ:         return 'Больше или равно [Alt + Shift + 7]';
+  case TokenID.LESSER_OR_EQ:          return 'Меньше или равно [Alt + Shift + 8]';
+  case TokenID.SET_IN:                return 'Быть элементом (принадлежит) [Alt + 1]';
+  case TokenID.SET_NOT_IN:            return 'Не принадлежит [Alt + Shift + 1]';
+  case TokenID.SUBSET_OR_EQ:          return 'Быть частью (нестрогое подмножество) [Alt + 2]';
+  case TokenID.SUBSET:                return 'Строгое подмножество [Alt + 7]';
+  case TokenID.NOT_SUBSET:            return 'Не подмножество [Alt + Shift + 2]';
+  case TokenID.SET_INTERSECTION:      return 'Пересечение [Alt + A]';
+  case TokenID.SET_UNION:             return 'Объединение [Alt + S]';
+  case TokenID.SET_MINUS:             return 'Разность множеств [Alt + 5]';
+  case TokenID.SET_SYMMETRIC_MINUS:   return 'Симметрическая разность [Alt + Shift + 5]';
+  case TokenID.NT_DECLARATIVE_EXPR:   return 'Декларативная форма определения терма [Alt + D]';
+  case TokenID.NT_IMPERATIVE_EXPR:    return 'Императивная форма определения терма [Alt + G]';
+  case TokenID.NT_RECURSIVE_FULL:     return 'Рекурсивная (цикличная) форма определения терма [Alt + T]';
+  case TokenID.BIGPR:                 return 'Большая проекция [Alt + Q]';
+  case TokenID.SMALLPR:               return 'Малая проекция [Alt + W]';
+  case TokenID.FILTER:                return 'Фильтр [Alt + F]';
+  case TokenID.REDUCE:                return 'Множество-сумма [Alt + R]';
+  case TokenID.CARD:                  return 'Мощность [Alt + C]';
+  case TokenID.BOOL:                  return 'Синглетон [Alt + B]';
+  case TokenID.DEBOOL:                return 'Десинглетон [Alt + V]';
+  case TokenID.PUNCTUATION_ASSIGN:    return 'Присвоение (императивный синтаксис) [Alt + Shift + 6]';
+  case TokenID.PUNCTUATION_ITERATE:   return 'Перебор элементов множества (императивный синтаксис) [Alt + 6]';
   }
   return `no description: ${id}`;
 }
@@ -232,14 +238,14 @@ new Map([
   ['forceatlas2', 'Граф: Атлас 2D'],
   ['forceDirected2d', 'Граф: Силы 2D'],
   ['forceDirected3d', 'Граф: Силы 3D'],
-  ['treeTd2d', 'Граф: ДеревоВерт 2D'],
-  ['treeTd3d', 'Граф: ДеревоВерт 3D'],
+  ['treeTd2d', 'Граф: ДеревоВер 2D'],
+  ['treeTd3d', 'Граф: ДеревоВер 3D'],
   ['treeLr2d', 'Граф: ДеревоГор 2D'],
   ['treeLr3d', 'Граф: ДеревоГор 3D'],
   ['radialOut2d', 'Граф: Радиальная 2D'],
   ['radialOut3d', 'Граф: Радиальная 3D'],
   ['circular2d', 'Граф: Круговая'],
-  ['hierarchicalTd', 'Граф: ИерархияВерт'],
+  ['hierarchicalTd', 'Граф: ИерархияВер'],
   ['hierarchicalLr', 'Граф: ИерархияГор'],
   ['nooverlap', 'Граф: Без перекрытия']
 ]);
@@ -430,44 +436,44 @@ export function labelSyntaxTree(node: ISyntaxTreeNode): string {
 
     case TokenID.NT_ENUM_DECL: return 'ENUM_DECLARATION';
     case TokenID.NT_TUPLE_DECL: return 'TUPLE_DECLARATION';
-    case TokenID.PUNC_DEFINE: return 'DEFINITION';
-    case TokenID.PUNC_STRUCT: return 'STRUCTURE_DEFITION';
+    case TokenID.PUNCTUATION_DEFINE: return 'DEFINITION';
+    case TokenID.PUNCTUATION_STRUCT: return 'STRUCTURE_DEFINITION';
 
     case TokenID.NT_ARG_DECL: return 'ARG';
     case TokenID.NT_FUNC_CALL: return 'CALL';
     case TokenID.NT_ARGUMENTS: return 'ARGS';
 
     case TokenID.NT_FUNC_DEFINITION: return 'FUNCTION_DEFINITION';
-    case TokenID.NT_IMP_DECLARE: return 'IDECLARE';
-    case TokenID.NT_IMP_ASSIGN: return 'IASSIGN';
-    case TokenID.NT_IMP_LOGIC: return 'ICHECK';
+    case TokenID.NT_IMP_DECLARE: return 'DECLARE';
+    case TokenID.NT_IMP_ASSIGN: return 'ASSIGN';
+    case TokenID.NT_IMP_LOGIC: return 'CHECK';
 
     case TokenID.NT_RECURSIVE_SHORT: return labelToken(TokenID.NT_RECURSIVE_FULL);
 
     case TokenID.BOOLEAN:
     case TokenID.DECART:
-    case TokenID.FORALL:
-    case TokenID.EXISTS:
-    case TokenID.NOT:
-    case TokenID.AND:
-    case TokenID.OR:
-    case TokenID.IMPLICATION:
-    case TokenID.EQUIVALENT:
+    case TokenID.QUANTOR_UNIVERSAL:
+    case TokenID.QUANTOR_EXISTS:
+    case TokenID.LOGIC_NOT:
+    case TokenID.LOGIC_AND:
+    case TokenID.LOGIC_OR:
+    case TokenID.LOGIC_IMPLICATION:
+    case TokenID.LOGIC_EQUIVALENT:
     case TokenID.LIT_EMPTYSET:
-    case TokenID.LIT_INTSET:
+    case TokenID.LIT_WHOLE_NUMBERS:
     case TokenID.EQUAL:
     case TokenID.NOTEQUAL:
     case TokenID.GREATER_OR_EQ:
     case TokenID.LESSER_OR_EQ:
-    case TokenID.IN:
-    case TokenID.NOTIN:
+    case TokenID.SET_IN:
+    case TokenID.SET_NOT_IN:
     case TokenID.SUBSET_OR_EQ:
     case TokenID.SUBSET:
-    case TokenID.NOTSUBSET:
-    case TokenID.INTERSECTION:
-    case TokenID.UNION:
+    case TokenID.NOT_SUBSET:
+    case TokenID.SET_INTERSECTION:
+    case TokenID.SET_UNION:
     case TokenID.SET_MINUS:
-    case TokenID.SYMMINUS:
+    case TokenID.SET_SYMMETRIC_MINUS:
     case TokenID.NT_DECLARATIVE_EXPR:
     case TokenID.NT_IMPERATIVE_EXPR:
     case TokenID.NT_RECURSIVE_FULL:
@@ -475,8 +481,8 @@ export function labelSyntaxTree(node: ISyntaxTreeNode): string {
     case TokenID.CARD:
     case TokenID.BOOL:
     case TokenID.DEBOOL:
-    case TokenID.PUNC_ASSIGN:
-    case TokenID.PUNC_ITERATE:
+    case TokenID.PUNCTUATION_ASSIGN:
+    case TokenID.PUNCTUATION_ITERATE:
       return labelToken(node.typeID);
   }
   // node
@@ -526,9 +532,9 @@ export function labelGrammeme(gram: GramData): string {
   case Grammeme.tran: return 'Переходный: да';
   case Grammeme.intr: return 'Переходный: нет';
 
-  case Grammeme.pres: return 'Время: наст';
-  case Grammeme.past: return 'Время: прош';
-  case Grammeme.futr: return 'Время: буд';
+  case Grammeme.pres: return 'Время: настоящее';
+  case Grammeme.past: return 'Время: прошедшее';
+  case Grammeme.futr: return 'Время: будущее';
 
   case Grammeme.per1: return 'Лицо: 1';
   case Grammeme.per2: return 'Лицо: 2';

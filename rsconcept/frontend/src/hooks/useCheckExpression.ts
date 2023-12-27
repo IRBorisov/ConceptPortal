@@ -9,7 +9,7 @@ import { RSErrorType } from '@/models/rslang';
 import { DataCallback, postCheckExpression } from '@/utils/backendAPI';
 import { getCstExpressionPrefix } from '@/utils/misc';
 
-const LOGIC_TYPIIFCATION = 'LOGIC';
+const LOGIC_TYPIFICATION = 'LOGIC';
 
 function useCheckExpression({ schema }: { schema?: IRSForm }) {
   const [loading, setLoading] = useState(false);
@@ -18,7 +18,11 @@ function useCheckExpression({ schema }: { schema?: IRSForm }) {
 
   const resetParse = useCallback(() => setParseData(undefined), []);
 
-  function checkExpression(expression: string, activeCst?: IConstituenta, onSuccess?: DataCallback<IExpressionParse>) {
+  function checkExpression(
+    expression: string,
+    activeCst?: IConstituenta,
+    onSuccess?: DataCallback<IExpressionParse>
+  ) {
     setError(undefined);
     postCheckExpression(String(schema!.id), {
       data: { expression: expression },
@@ -41,24 +45,23 @@ function useCheckExpression({ schema }: { schema?: IRSForm }) {
 export default useCheckExpression;
 
 // ===== Internals ========
-
 function checkTypeConsistency(type: CstType, typification: string, args: IArgumentInfo[]): boolean {
   switch (type) {
   case CstType.BASE:
   case CstType.CONSTANT:
   case CstType.STRUCTURED:
   case CstType.TERM:
-    return typification !== LOGIC_TYPIIFCATION && args.length === 0;
+    return typification !== LOGIC_TYPIFICATION && args.length === 0;
 
   case CstType.AXIOM:
   case CstType.THEOREM:
-    return typification === LOGIC_TYPIIFCATION && args.length === 0;
+    return typification === LOGIC_TYPIFICATION && args.length === 0;
 
   case CstType.FUNCTION:
-    return typification !== LOGIC_TYPIIFCATION && args.length !== 0;
+    return typification !== LOGIC_TYPIFICATION && args.length !== 0;
 
   case CstType.PREDICATE:
-    return typification === LOGIC_TYPIIFCATION && args.length !== 0;
+    return typification === LOGIC_TYPIFICATION && args.length !== 0;
   }
 }
 
@@ -75,6 +78,7 @@ function adjustResults(parse: IExpressionParse, emptyExpression: boolean, cstTyp
         params: [],
         position: 0
       });
+      return;
     }
   } else {
     if (emptyExpression) {
@@ -85,6 +89,7 @@ function adjustResults(parse: IExpressionParse, emptyExpression: boolean, cstTyp
         params: [],
         position: 0
       });
+      return;
     }
   }
   if (!checkTypeConsistency(cstType, parse.typification, parse.args)) {

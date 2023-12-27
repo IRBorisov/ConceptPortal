@@ -194,7 +194,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
 
     def get_permissions(self):
         ''' Determine permission class. '''
-        if self.action in ['load_trs', 'cst_create', 'cst_multidelete',
+        if self.action in ['load_trs', 'cst_create', 'cst_delete_multiple',
                            'reset_aliases', 'cst_rename']:
             permission_classes = [utils.ObjectOwnerOrAdmin]
         else:
@@ -262,8 +262,8 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         request=s.CstListSerializer,
         responses={c.HTTP_202_ACCEPTED: s.RSFormParseSerializer}
     )
-    @action(detail=True, methods=['patch'], url_path='cst-multidelete')
-    def cst_multidelete(self, request, pk):
+    @action(detail=True, methods=['patch'], url_path='cst-delete-multiple')
+    def cst_delete_multiple(self, request, pk):
         ''' Endpoint: Delete multiple constituents. '''
         schema = self._get_schema()
         serializer = s.CstListSerializer(

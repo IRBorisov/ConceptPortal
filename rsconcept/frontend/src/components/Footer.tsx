@@ -25,7 +25,7 @@ function Footer() {
       <TextURL text='Экстеор' href='/manuals?topic=exteor' color='clr-footer'/>
     </div>
     <div>
-      <p className='clr-footer'>© 2023 ЦИВТ КОНЦЕПТ</p>
+      <p className='clr-footer'>© 2024 ЦИВТ КОНЦЕПТ</p>
     </div>
   </footer>);
 }

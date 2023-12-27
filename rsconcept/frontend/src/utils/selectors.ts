@@ -77,7 +77,7 @@ export const SelectorGrammemesList = [
 /**
  * Represents options for {@link Grammeme} selector.
 */
-export const SelectorGrammems: IGrammemeOption[] = 
+export const SelectorGrammemes: IGrammemeOption[] = 
 SelectorGrammemesList.map(
 gram => ({
   value: gram,
@@ -98,7 +98,7 @@ export const SelectorReferenceType = (
 /**
  * Represents recommended wordforms data.
 */
-export const PremadeWordForms = [
+export const DefaultWordForms = [
   { text: 'ед им', example: 'ручка', grams: [Grammeme.sing, Grammeme.nomn] },
   { text: 'ед род', example: 'ручки', grams: [Grammeme.sing, Grammeme.gent] },
   { text: 'ед дат', example: 'ручке', grams: [Grammeme.sing, Grammeme.datv] },

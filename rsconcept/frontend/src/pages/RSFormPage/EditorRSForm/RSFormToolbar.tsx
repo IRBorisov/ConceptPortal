@@ -52,7 +52,7 @@ function RSFormToolbar({
       onClick={onDownload}
     />
     <MiniButton
-      title={'Отслеживание ' + (isSubscribed ? 'включено' : 'выключено')}
+      title={`Отслеживание ${isSubscribed ? 'включено' : 'выключено'}`}
       disabled={anonymous || processing}
       icon={isSubscribed
         ? <FiBell size='1.25rem' className='clr-text-primary' />

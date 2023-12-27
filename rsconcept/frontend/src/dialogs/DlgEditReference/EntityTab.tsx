@@ -13,7 +13,7 @@ import { CstMatchMode } from '@/models/miscellaneous';
 import { IConstituenta } from '@/models/rsform';
 import { matchConstituenta } from '@/models/rsformAPI';
 import { prefixes } from '@/utils/constants';
-import { IGrammemeOption, SelectorGrammems } from '@/utils/selectors';
+import { IGrammemeOption, SelectorGrammemes } from '@/utils/selectors';
 
 import { IReferenceInputState } from './DlgEditReference';
 import SelectWordForm from './SelectWordForm';
@@ -38,7 +38,7 @@ function EntityTab({ initial, items, setIsValid, setReference }: EntityTabProps)
       const ref = parseEntityReference(initial.refRaw);
       setAlias(ref.entity);
       const grams = parseGrammemes(ref.form);
-      setSelectedGrams(SelectorGrammems.filter(data => grams.includes(data.value)));
+      setSelectedGrams(SelectorGrammemes.filter(data => grams.includes(data.value)));
     }
   }, [initial, items]);
 
@@ -70,7 +70,7 @@ function EntityTab({ initial, items, setIsValid, setReference }: EntityTabProps)
       prefixID={prefixes.cst_modal_list}
       describeFunc={cst => cst.term_resolved}
       matchFunc={(cst, filter) => matchConstituenta(cst, filter, CstMatchMode.TERM)}
-      prefilterFunc={cst => cst.term_resolved !== ''}
+      onBeginFilter={cst => cst.term_resolved !== ''}
       rows={8}
     />
 

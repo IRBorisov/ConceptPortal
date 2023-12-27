@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 
 import { Grammeme } from '@/models/language';
 import { prefixes } from '@/utils/constants';
-import { IGrammemeOption, PremadeWordForms, SelectorGrammems } from '@/utils/selectors';
+import { IGrammemeOption, DefaultWordForms, SelectorGrammemes } from '@/utils/selectors';
 
 import WordformButton from './WordformButton';
 
@@ -16,12 +16,12 @@ interface SelectWordFormProps {
 function SelectWordForm({ selected, setSelected }: SelectWordFormProps) {
   const handleSelect = useCallback(
   (grams: Grammeme[]) => {
-    setSelected(SelectorGrammems.filter(({value}) => grams.includes(value as Grammeme)));
+    setSelected(SelectorGrammemes.filter(({value}) => grams.includes(value as Grammeme)));
   }, [setSelected]);
 
   return (
   <div className='text-sm'>
-    {PremadeWordForms.slice(0, 12).map(
+    {DefaultWordForms.slice(0, 12).map(
     (data, index) => 
       <WordformButton key={`${prefixes.wordform_list}${index}`}
         text={data.text} example={data.example} grams={data.grams}

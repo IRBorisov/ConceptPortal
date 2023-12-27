@@ -28,9 +28,6 @@ export function getSymbolSubstitute(keyCode: string, shiftPressed: boolean): str
     switch (keyCode) {
     case 'Backquote': return '∀';
 
-    // qwerty = μωερτπ
-    //  asdfgh = ασδφγλ
-    //   zxcvbn = ζξψθβη
     case 'KeyQ': return 'μ';
     case 'KeyW': return 'ω';
     case 'KeyE': return 'ε';
@@ -52,7 +49,6 @@ export function getSymbolSubstitute(keyCode: string, shiftPressed: boolean): str
     case 'KeyB': return 'β';
     case 'KeyN': return 'η';
 
-    // punctuation
     case 'BracketLeft': return '[';
     case 'BracketRight': return ']';
     case 'Comma': return ',';
@@ -110,7 +106,7 @@ export class RSTextWrapper extends CodeMirrorWrapper {
     case TokenID.BOOL: this.envelopeWith('bool(', ')'); return true;
     case TokenID.DEBOOL: this.envelopeWith('debool(', ')'); return true;
 
-    case TokenID.PUNC_PL: {
+    case TokenID.PUNCTUATION_PL: {
       this.envelopeWith('(', ')');
       this.ref.view.dispatch({
         selection: {
@@ -119,7 +115,7 @@ export class RSTextWrapper extends CodeMirrorWrapper {
       });
       return true;
     }
-    case TokenID.PUNC_SL: {
+    case TokenID.PUNCTUATION_SL: {
       this.envelopeWith('[', ']');
       if (hasSelection) {
         this.ref.view.dispatch({
@@ -141,30 +137,30 @@ export class RSTextWrapper extends CodeMirrorWrapper {
     }
 
     case TokenID.DECART: this.replaceWith('×'); return true;
-    case TokenID.FORALL: this.replaceWith('∀'); return true;
-    case TokenID.EXISTS: this.replaceWith('∃'); return true;
-    case TokenID.IN: this.replaceWith('∈'); return true;
-    case TokenID.NOTIN: this.replaceWith('∉'); return true;
-    case TokenID.OR: this.replaceWith('∨'); return true;
-    case TokenID.AND: this.replaceWith('&'); return true;
+    case TokenID.QUANTOR_UNIVERSAL: this.replaceWith('∀'); return true;
+    case TokenID.QUANTOR_EXISTS: this.replaceWith('∃'); return true;
+    case TokenID.SET_IN: this.replaceWith('∈'); return true;
+    case TokenID.SET_NOT_IN: this.replaceWith('∉'); return true;
+    case TokenID.LOGIC_OR: this.replaceWith('∨'); return true;
+    case TokenID.LOGIC_AND: this.replaceWith('&'); return true;
     case TokenID.SUBSET_OR_EQ: this.replaceWith('⊆'); return true;
-    case TokenID.IMPLICATION: this.replaceWith('⇒'); return true;
-    case TokenID.INTERSECTION: this.replaceWith('∩'); return true;
-    case TokenID.UNION: this.replaceWith('∪'); return true;
+    case TokenID.LOGIC_IMPLICATION: this.replaceWith('⇒'); return true;
+    case TokenID.SET_INTERSECTION: this.replaceWith('∩'); return true;
+    case TokenID.SET_UNION: this.replaceWith('∪'); return true;
     case TokenID.SET_MINUS: this.replaceWith('\\'); return true;
-    case TokenID.SYMMINUS: this.replaceWith('∆'); return true;
+    case TokenID.SET_SYMMETRIC_MINUS: this.replaceWith('∆'); return true;
     case TokenID.LIT_EMPTYSET: this.replaceWith('∅'); return true;
-    case TokenID.LIT_INTSET: this.replaceWith('Z'); return true;
+    case TokenID.LIT_WHOLE_NUMBERS: this.replaceWith('Z'); return true;
     case TokenID.SUBSET: this.replaceWith('⊂'); return true;
-    case TokenID.NOTSUBSET: this.replaceWith('⊄'); return true;
+    case TokenID.NOT_SUBSET: this.replaceWith('⊄'); return true;
     case TokenID.EQUAL: this.replaceWith('='); return true;
     case TokenID.NOTEQUAL: this.replaceWith('≠'); return true;
-    case TokenID.NOT: this.replaceWith('¬'); return true;
-    case TokenID.EQUIVALENT: this.replaceWith('⇔'); return true;
+    case TokenID.LOGIC_NOT: this.replaceWith('¬'); return true;
+    case TokenID.LOGIC_EQUIVALENT: this.replaceWith('⇔'); return true;
     case TokenID.GREATER_OR_EQ: this.replaceWith('≥'); return true;
     case TokenID.LESSER_OR_EQ: this.replaceWith('≤'); return true;
-    case TokenID.PUNC_ASSIGN: this.replaceWith(':='); return true;
-    case TokenID.PUNC_ITERATE: this.replaceWith(':∈'); return true;
+    case TokenID.PUNCTUATION_ASSIGN: this.replaceWith(':='); return true;
+    case TokenID.PUNCTUATION_ITERATE: this.replaceWith(':∈'); return true;
     case TokenID.MULTIPLY: this.replaceWith('*'); return true;
     }
     return false;
@@ -173,57 +169,47 @@ export class RSTextWrapper extends CodeMirrorWrapper {
   processAltKey(keyCode: string, shiftPressed: boolean): boolean {
     if (shiftPressed) {
       switch (keyCode) {
-      // qwert
-      //  asdfg
-      //   zxcvb
       case 'KeyE': return this.insertToken(TokenID.DECART);
 
-      // `123456
-      // ~!@#$%^
       case 'Backquote': return this.insertToken(TokenID.NOTEQUAL);
-      case 'Digit1': return this.insertToken(TokenID.NOTIN); // !
-      case 'Digit2': return this.insertToken(TokenID.NOTSUBSET); // @
-      case 'Digit3': return this.insertToken(TokenID.OR); // #
-      case 'Digit4': return this.insertToken(TokenID.EQUIVALENT); // $
-      case 'Digit5': return this.insertToken(TokenID.SYMMINUS); // %
-      case 'Digit6': return this.insertToken(TokenID.PUNC_ASSIGN); // ^
+      case 'Digit1': return this.insertToken(TokenID.SET_NOT_IN); // !
+      case 'Digit2': return this.insertToken(TokenID.NOT_SUBSET); // @
+      case 'Digit3': return this.insertToken(TokenID.LOGIC_OR); // #
+      case 'Digit4': return this.insertToken(TokenID.LOGIC_EQUIVALENT); // $
+      case 'Digit5': return this.insertToken(TokenID.SET_SYMMETRIC_MINUS); // %
+      case 'Digit6': return this.insertToken(TokenID.PUNCTUATION_ASSIGN); // ^
       case 'Digit7': return this.insertToken(TokenID.GREATER_OR_EQ); // &
       case 'Digit8': return this.insertToken(TokenID.LESSER_OR_EQ); // *
-      case 'Digit9': return this.insertToken(TokenID.PUNC_PL); // (
+      case 'Digit9': return this.insertToken(TokenID.PUNCTUATION_PL); // (
       }
     } else {
       switch (keyCode) {
-      // qwert
-      //  asdfg
-      //   zxcvb
       case 'KeyQ': return this.insertToken(TokenID.BIGPR);
       case 'KeyW': return this.insertToken(TokenID.SMALLPR);
       case 'KeyE': return this.insertToken(TokenID.BOOLEAN);
       case 'KeyR': return this.insertToken(TokenID.REDUCE);
       case 'KeyT': return this.insertToken(TokenID.NT_RECURSIVE_FULL);
-      case 'KeyA': return this.insertToken(TokenID.INTERSECTION);
-      case 'KeyS': return this.insertToken(TokenID.UNION);
+      case 'KeyA': return this.insertToken(TokenID.SET_INTERSECTION);
+      case 'KeyS': return this.insertToken(TokenID.SET_UNION);
       case 'KeyD': return this.insertToken(TokenID.NT_DECLARATIVE_EXPR);
       case 'KeyF': return this.insertToken(TokenID.FILTER);
       case 'KeyG': return this.insertToken(TokenID.NT_IMPERATIVE_EXPR);
-      case 'KeyZ': return this.insertToken(TokenID.LIT_INTSET);
+      case 'KeyZ': return this.insertToken(TokenID.LIT_WHOLE_NUMBERS);
       case 'KeyX': return this.insertToken(TokenID.LIT_EMPTYSET);
       case 'KeyC': return this.insertToken(TokenID.CARD);
       case 'KeyV': return this.insertToken(TokenID.DEBOOL);
       case 'KeyB': return this.insertToken(TokenID.BOOL);
 
-      // `123456
-      // ~!@#$%^
-      case 'Backquote': return this.insertToken(TokenID.NOT);
-      case 'Digit1': return this.insertToken(TokenID.IN);
+      case 'Backquote': return this.insertToken(TokenID.LOGIC_NOT);
+      case 'Digit1': return this.insertToken(TokenID.SET_IN);
       case 'Digit2': return this.insertToken(TokenID.SUBSET_OR_EQ);
-      case 'Digit3': return this.insertToken(TokenID.AND);
-      case 'Digit4': return this.insertToken(TokenID.IMPLICATION);
+      case 'Digit3': return this.insertToken(TokenID.LOGIC_AND);
+      case 'Digit4': return this.insertToken(TokenID.LOGIC_IMPLICATION);
       case 'Digit5': return this.insertToken(TokenID.SET_MINUS);
-      case 'Digit6': return this.insertToken(TokenID.PUNC_ITERATE);
+      case 'Digit6': return this.insertToken(TokenID.PUNCTUATION_ITERATE);
       case 'Digit7': return this.insertToken(TokenID.SUBSET);
       case 'Digit8': return this.insertToken(TokenID.MULTIPLY);
-      case 'BracketLeft': return this.insertToken(TokenID.PUNC_SL);
+      case 'BracketLeft': return this.insertToken(TokenID.PUNCTUATION_SL);
       }
     }
     return false;

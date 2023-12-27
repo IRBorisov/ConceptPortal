@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import SelectMulti, { SelectMultiProps } from '@/components/Common/SelectMulti';
 import { Grammeme } from '@/models/language';
 import { getCompatibleGrams } from '@/models/languageAPI';
-import { compareGrammemeOptions,IGrammemeOption, SelectorGrammems } from '@/utils/selectors';
+import { compareGrammemeOptions,IGrammemeOption, SelectorGrammemes } from '@/utils/selectors';
 
 interface SelectGrammemeProps extends
 Omit<SelectMultiProps<IGrammemeOption>, 'value' | 'onChange'> {
@@ -26,7 +26,7 @@ function SelectGrammeme({
         .filter(data => Object.values(Grammeme).includes(data.value as Grammeme))
         .map(data => data.value as Grammeme)
     );
-    setOptions(SelectorGrammems.filter(({value}) => compatible.includes(value as Grammeme)));
+    setOptions(SelectorGrammemes.filter(({value}) => compatible.includes(value as Grammeme)));
   }, [value]);
 
   return (
