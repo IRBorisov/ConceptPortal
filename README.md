@@ -51,6 +51,8 @@ This readme file is used mostly to document project dependencies
   - Colorize
   - Code Spell Checker (eng + rus)
   - Backticks
+  - Svg Preview
+  - TODO Highlight v2
   </pre>
 </details>
 

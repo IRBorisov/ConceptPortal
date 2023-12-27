@@ -89,7 +89,7 @@ export function printTree(tree: Tree): string {
 }
 
 /**
- * Reteives a list of all nodes, containing given range and corresponding to a filter.
+ * Retrieves a list of all nodes, containing given range and corresponding to a filter.
 */
 export function findEnvelopingNodes(start: number, finish: number, tree: Tree, filter?: number[]): SyntaxNode[] {
   const result: SyntaxNode[] = [];
@@ -110,7 +110,7 @@ export function findEnvelopingNodes(start: number, finish: number, tree: Tree, f
 }
 
 /**
- * Reteives a list of all nodes, contained in given range and corresponding to a filter.
+ * Retrieves a list of all nodes, contained in given range and corresponding to a filter.
 */
 export function findContainedNodes(start: number, finish: number, tree: Tree, filter?: number[]): SyntaxNode[] {
   const result: SyntaxNode[] = [];

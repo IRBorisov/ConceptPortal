@@ -37,7 +37,7 @@ interface EditorRSExpressionProps {
   toggleReset?: boolean
   showList: boolean
   
-  setTypification: (typificaiton: string) => void
+  setTypification: (typification: string) => void
   onChange: (newValue: string) => void
   onToggleList: () => void
 }

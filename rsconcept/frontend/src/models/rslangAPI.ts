@@ -99,19 +99,19 @@ export function substituteTemplateArgs(expression: string, args: IArgumentValue[
   }
 }
 
-const ERRCODE_LEXER_MASK = 512;
-const ERRCODE_PARSER_MASK = 1024;
-const ERRCODE_TYPE_MASK = 2048;
+const ERROR_LEXER_MASK = 512;
+const ERROR_PARSER_MASK = 1024;
+const ERROR_SEMANTIC_MASK = 2048;
 
 /**
  * Infers error class from error type (code).
  */
 export function inferErrorClass(error: RSErrorType): RSErrorClass {
-  if ((error & ERRCODE_LEXER_MASK) !== 0) {
+  if ((error & ERROR_LEXER_MASK) !== 0) {
     return RSErrorClass.LEXER;
-  } else if ((error & ERRCODE_PARSER_MASK) !== 0) {
+  } else if ((error & ERROR_PARSER_MASK) !== 0) {
     return RSErrorClass.PARSER;
-  } else if ((error & ERRCODE_TYPE_MASK) !== 0) {
+  } else if ((error & ERROR_SEMANTIC_MASK) !== 0) {
     return RSErrorClass.SEMANTIC;
   } else {
     return RSErrorClass.UNKNOWN;
