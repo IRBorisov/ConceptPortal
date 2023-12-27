@@ -97,6 +97,7 @@ export const animateDropdownItem: Variants = {
 export const animateRSControl: Variants = {
   open: {
     clipPath: 'inset(0% 0% 0% 0%)',
+    marginTop: '0.25rem',
     height: 'max-content',
     transition: {
       type: 'spring',
@@ -106,6 +107,34 @@ export const animateRSControl: Variants = {
   },
   closed: {
     clipPath: 'inset(0% 0% 100% 0%)',
+    marginTop: '0',
+    height: 0,
+    transition: {
+      type: 'spring',
+      bounce: 0,
+      duration: 0.3
+    }
+  }
+};
+
+export const animateParseResults: Variants = {
+  open: {
+    clipPath: 'inset(0% 0% 0% 0%)',
+    marginTop: '0.75rem',
+    padding: '0.25rem 0.5rem 0.25rem 0.5rem',
+    borderWidth: '1px',
+    height: '4.5rem',
+    transition: {
+      type: 'spring',
+      bounce: 0,
+      duration: 0.4
+    }
+  },
+  closed: {
+    clipPath: 'inset(0% 0% 100% 0%)',
+    marginTop: '0',
+    borderWidth: '0',
+    padding: '0 0 0 0',
     height: 0,
     transition: {
       type: 'spring',

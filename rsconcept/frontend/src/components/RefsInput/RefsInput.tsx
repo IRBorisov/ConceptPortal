@@ -7,7 +7,7 @@ import CodeMirror, { BasicSetupOptions, ReactCodeMirrorProps, ReactCodeMirrorRef
 import clsx from 'clsx';
 import { EditorView } from 'codemirror';
 import { AnimatePresence } from 'framer-motion';
-import { RefObject, useCallback, useMemo, useRef, useState } from 'react';
+import { forwardRef, useCallback, useMemo, useRef, useState } from 'react';
 
 import Label from '@/components/Common/Label';
 import { useRSForm } from '@/context/RSFormContext';
@@ -54,7 +54,6 @@ extends Pick<ReactCodeMirrorProps,
   'id'| 'height' | 'value' | 'className' | 'onFocus' | 'onBlur' | 'placeholder'
 > {
   label?: string
-  innerref?: RefObject<ReactCodeMirrorRef> | undefined
   onChange?: (newValue: string) => void
   items?: IConstituenta[]
   disabled?: boolean
@@ -64,12 +63,13 @@ extends Pick<ReactCodeMirrorProps,
   resolved?: string
 }
 
-function RefsInput({ 
-  id, label, innerref, disabled, items,
-  initialValue, value, resolved,
-  onFocus, onBlur, onChange,
-  ...restProps 
-}: RefsInputInputProps) {
+const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
+  ({ 
+    id, label, disabled, items,
+    initialValue, value, resolved,
+    onFocus, onBlur, onChange,
+    ...restProps
+  }, ref) => {
   const { darkMode, colors } = useConceptTheme();
   const { schema } = useRSForm();
 
@@ -83,10 +83,7 @@ function RefsInput({
   const [mainRefs, setMainRefs] = useState<string[]>([]);
 
   const internalRef = useRef<ReactCodeMirrorRef>(null);
-  const thisRef = useMemo(
-  () => {
-    return innerref ?? internalRef;
-  }, [internalRef, innerref]);
+  const thisRef = useMemo(() => (!ref || typeof ref === 'function' ? internalRef : ref), [internalRef, ref]);
 
   const cursor = useMemo(() => !disabled ? 'cursor-text': 'cursor-default', [disabled]);
   const customTheme: Extension = useMemo(
@@ -204,6 +201,6 @@ function RefsInput({
     />
   </div>
   </>);
-}
+});
 
 export default RefsInput;

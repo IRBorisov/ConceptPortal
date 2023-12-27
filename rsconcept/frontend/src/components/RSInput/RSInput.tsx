@@ -6,7 +6,7 @@ import { createTheme } from '@uiw/codemirror-themes';
 import CodeMirror, { BasicSetupOptions, ReactCodeMirrorProps, ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import clsx from 'clsx';
 import { EditorView } from 'codemirror';
-import { RefObject, useCallback, useMemo, useRef } from 'react';
+import { forwardRef, useCallback, useMemo, useRef } from 'react';
 
 import Label from '@/components/Common/Label';
 import { useRSForm } from '@/context/RSFormContext';
@@ -53,25 +53,22 @@ extends Pick<ReactCodeMirrorProps,
   label?: string
   disabled?: boolean
   noTooltip?: boolean
-  innerref?: RefObject<ReactCodeMirrorRef> | undefined
   onChange?: (newValue: string) => void
   onAnalyze?: () => void
 }
 
-function RSInput({ 
-  id, label, innerref, onChange, onAnalyze,
-  disabled, noTooltip,
-  className, style,
-  ...restProps 
-}: RSInputProps) {
+const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
+  ({ 
+    id, label, onChange, onAnalyze,
+    disabled, noTooltip,
+    className, style,
+    ...restProps 
+  }, ref) => {
   const { darkMode, colors } = useConceptTheme();
   const { schema } = useRSForm();
 
   const internalRef = useRef<ReactCodeMirrorRef>(null);
-  const thisRef = useMemo(
-  () => {
-    return innerref ?? internalRef;
-  }, [internalRef, innerref]);
+  const thisRef = useMemo(() => (!ref || typeof ref === 'function' ? internalRef : ref), [internalRef, ref]);
 
   const cursor = useMemo(() => !disabled ? 'cursor-text': 'cursor-default', [disabled]);
   const customTheme: Extension = useMemo(
@@ -90,7 +87,7 @@ function RSInput({
       { tag: tags.keyword, color: colors.fgBlue }, // keywords
       { tag: tags.literal, color: colors.fgBlue }, // literals
       { tag: tags.controlKeyword, fontWeight: '500'}, // R | I | D
-      { tag: tags.unit, fontSize: '0.75rem' }, // indicies
+      { tag: tags.unit, fontSize: '0.75rem' }, // indices
       { tag: tags.brace, color:colors.fgPurple, fontWeight: '700' }, // braces (curly brackets)
     ]
   }), [disabled, colors, darkMode]);
@@ -150,6 +147,6 @@ function RSInput({
       {...restProps}
     />
   </div>);
-}
+});
 
 export default RSInput;

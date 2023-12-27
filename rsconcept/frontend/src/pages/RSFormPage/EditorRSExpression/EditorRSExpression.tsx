@@ -173,7 +173,7 @@ function EditorRSExpression({
       />
     </Overlay>
 
-    <RSInput innerref={rsInput}
+    <RSInput ref={rsInput}
       value={value}
       minHeight='3.8rem'
       disabled={disabled}

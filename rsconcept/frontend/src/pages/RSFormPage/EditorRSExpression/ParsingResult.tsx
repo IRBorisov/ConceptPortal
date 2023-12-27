@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { motion } from 'framer-motion';
 
 import { IExpressionParse, IRSErrorDescription } from '@/models/rslang';
-import { animateRSControl } from '@/utils/animations';
+import { animateParseResults } from '@/utils/animations';
 import { describeRSError } from '@/utils/labels';
 import { getRSErrorPrefix } from '@/utils/misc';
 
@@ -22,15 +22,13 @@ function ParsingResult({ isOpen, data, disabled, onShowError }: ParsingResultPro
   return (
   <motion.div 
     className={clsx(
-      'px-2 pt-1',
-      'h-[4.5rem] mt-3',
-      'text-sm',
       'border',
+      'text-sm',
       'overflow-y-auto'
     )}
     initial={false}
     animate={isOpen ? 'open' : 'closed'}
-    variants={animateRSControl}
+    variants={animateParseResults}
   >
     <p>Ошибок: <b>{errorCount}</b> | Предупреждений: <b>{warningsCount}</b></p>
     {data?.errors.map(
