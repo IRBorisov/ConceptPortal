@@ -1,10 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import {
-  BiDownArrowCircle, BiDownvote, BiDuplicate,
-  BiPlusCircle, BiTrash, BiUpvote
-} from 'react-icons/bi';
+import { BiDownArrowCircle, BiDownvote, BiDuplicate, BiPlusCircle, BiTrash, BiUpvote } from 'react-icons/bi';
 
 import Dropdown from '@/components/Common/Dropdown';
 import DropdownButton from '@/components/Common/DropdownButton';
@@ -19,77 +16,81 @@ import { labelCstType } from '@/utils/labels';
 import { getCstTypePrefix, getCstTypeShortcut } from '@/utils/misc';
 
 interface RSListToolbarProps {
-  isMutable?: boolean
-  selectedCount: number
+  isMutable?: boolean;
+  selectedCount: number;
 
-  onMoveUp: () => void
-  onMoveDown: () => void
-  onDelete: () => void
-  onClone: () => void
-  onCreate: (type?: CstType) => void
+  onMoveUp: () => void;
+  onMoveDown: () => void;
+  onDelete: () => void;
+  onClone: () => void;
+  onCreate: (type?: CstType) => void;
 }
 
 function RSListToolbar({
-  selectedCount, isMutable,
-  onMoveUp, onMoveDown, onDelete, onClone,
+  selectedCount,
+  isMutable,
+  onMoveUp,
+  onMoveDown,
+  onDelete,
+  onClone,
   onCreate
 }: RSListToolbarProps) {
   const insertMenu = useDropdown();
   const nothingSelected = useMemo(() => selectedCount === 0, [selectedCount]);
-  
+
   return (
-  <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex items-start'>
-    <MiniButton
-      title='Переместить вверх [Alt + вверх]'
-      icon={<BiUpvote size='1.25rem' className={isMutable && !nothingSelected ? 'clr-text-primary': ''}/>}
-      disabled={!isMutable || nothingSelected}
-      onClick={onMoveUp}
-    />
-    <MiniButton
-      title='Переместить вниз [Alt + вниз]'
-      icon={<BiDownvote size='1.25rem' className={isMutable && !nothingSelected ? 'clr-text-primary': ''}/>}
-      disabled={!isMutable || nothingSelected}
-      onClick={onMoveDown}
-    />
-    <MiniButton
-      title='Клонировать конституенту [Alt + V]'
-      icon={<BiDuplicate size='1.25rem' className={isMutable && selectedCount === 1 ? 'clr-text-success': ''} />}
-      disabled={!isMutable || selectedCount !== 1}
-      onClick={onClone}
-    />
-    <MiniButton
-      title='Добавить новую конституенту... [Alt + `]'
-      icon={<BiPlusCircle size='1.25rem' className={isMutable ? 'clr-text-success': ''} />}
-      disabled={!isMutable}
-      onClick={() => onCreate()}
-    />
-    <div ref={insertMenu.ref}>
+    <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex items-start'>
       <MiniButton
-        title='Добавить пустую конституенту'
-        icon={<BiDownArrowCircle size='1.25rem' className={isMutable ? 'clr-text-success': ''} />}
-        disabled={!isMutable}
-        onClick={insertMenu.toggle}
+        title='Переместить вверх [Alt + вверх]'
+        icon={<BiUpvote size='1.25rem' className={isMutable && !nothingSelected ? 'clr-text-primary' : ''} />}
+        disabled={!isMutable || nothingSelected}
+        onClick={onMoveUp}
       />
-      <Dropdown isOpen={insertMenu.isOpen}>
-      {(Object.values(CstType)).map(
-      (typeStr) => 
-        <DropdownButton
-          key={`${prefixes.csttype_list}${typeStr}`}
-          text={`${getCstTypePrefix(typeStr as CstType)}1 — ${labelCstType(typeStr as CstType)}`}
-          onClick={() => onCreate(typeStr as CstType)}
-          title={getCstTypeShortcut(typeStr as CstType)}
+      <MiniButton
+        title='Переместить вниз [Alt + вниз]'
+        icon={<BiDownvote size='1.25rem' className={isMutable && !nothingSelected ? 'clr-text-primary' : ''} />}
+        disabled={!isMutable || nothingSelected}
+        onClick={onMoveDown}
+      />
+      <MiniButton
+        title='Клонировать конституенту [Alt + V]'
+        icon={<BiDuplicate size='1.25rem' className={isMutable && selectedCount === 1 ? 'clr-text-success' : ''} />}
+        disabled={!isMutable || selectedCount !== 1}
+        onClick={onClone}
+      />
+      <MiniButton
+        title='Добавить новую конституенту... [Alt + `]'
+        icon={<BiPlusCircle size='1.25rem' className={isMutable ? 'clr-text-success' : ''} />}
+        disabled={!isMutable}
+        onClick={() => onCreate()}
+      />
+      <div ref={insertMenu.ref}>
+        <MiniButton
+          title='Добавить пустую конституенту'
+          icon={<BiDownArrowCircle size='1.25rem' className={isMutable ? 'clr-text-success' : ''} />}
+          disabled={!isMutable}
+          onClick={insertMenu.toggle}
         />
-      )}
-      </Dropdown>
-    </div>
-    <MiniButton
-      title='Удалить выбранные [Delete]'
-      icon={<BiTrash size='1.25rem' className={isMutable && !nothingSelected ? 'clr-text-warning' : ''} />}
-      disabled={!isMutable || nothingSelected}
-      onClick={onDelete}
-    />
-    <HelpButton topic={HelpTopic.CSTLIST} offset={5} />
-  </Overlay>);
+        <Dropdown isOpen={insertMenu.isOpen}>
+          {Object.values(CstType).map(typeStr => (
+            <DropdownButton
+              key={`${prefixes.csttype_list}${typeStr}`}
+              text={`${getCstTypePrefix(typeStr as CstType)}1 — ${labelCstType(typeStr as CstType)}`}
+              onClick={() => onCreate(typeStr as CstType)}
+              title={getCstTypeShortcut(typeStr as CstType)}
+            />
+          ))}
+        </Dropdown>
+      </div>
+      <MiniButton
+        title='Удалить выбранные [Delete]'
+        icon={<BiTrash size='1.25rem' className={isMutable && !nothingSelected ? 'clr-text-warning' : ''} />}
+        disabled={!isMutable || nothingSelected}
+        onClick={onDelete}
+      />
+      <HelpButton topic={HelpTopic.CSTLIST} offset={5} />
+    </Overlay>
+  );
 }
 
 export default RSListToolbar;

@@ -10,23 +10,23 @@ import { darkT, IColorTheme, lightT } from '@/utils/color';
 import { globalIDs } from '@/utils/constants';
 
 interface IThemeContext {
-  viewportHeight: string
-  mainHeight: string
-  
-  colors: IColorTheme
-  
-  darkMode: boolean
-  toggleDarkMode: () => void
+  viewportHeight: string;
+  mainHeight: string;
 
-  noNavigationAnimation: boolean
-  noNavigation: boolean
-  toggleNoNavigation: () => void
+  colors: IColorTheme;
 
-  noFooter: boolean
-  setNoFooter: (value: boolean) => void
+  darkMode: boolean;
+  toggleDarkMode: () => void;
 
-  showScroll: boolean
-  setShowScroll: (value: boolean) => void
+  noNavigationAnimation: boolean;
+  noNavigation: boolean;
+  toggleNoNavigation: () => void;
+
+  noFooter: boolean;
+  setNoFooter: (value: boolean) => void;
+
+  showScroll: boolean;
+  setShowScroll: (value: boolean) => void;
 }
 
 const ThemeContext = createContext<IThemeContext | null>(null);
@@ -36,10 +36,10 @@ export const useConceptTheme = () => {
     throw new Error('useConceptTheme has to be used within <ThemeState.Provider>');
   }
   return context;
-}
+};
 
 interface ThemeStateProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export const ThemeState = ({ children }: ThemeStateProps) => {
@@ -65,11 +65,10 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
   }, [darkMode]);
 
   useLayoutEffect(() => {
-    setColors(darkMode ? darkT : lightT)
+    setColors(darkMode ? darkT : lightT);
   }, [darkMode, setColors]);
 
-  const toggleNoNavigation = useCallback(
-  () => {
+  const toggleNoNavigation = useCallback(() => {
     if (noNavigation) {
       setNoNavigationAnimation(false);
       setNoNavigation(false);
@@ -79,40 +78,41 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
     }
   }, [noNavigation]);
 
-  const mainHeight = useMemo(
-  () => {
-    return !noNavigation ?
-      'calc(100vh - 7rem - 2px)'
-    : '100vh';
+  const mainHeight = useMemo(() => {
+    return !noNavigation ? 'calc(100vh - 7rem - 2px)' : '100vh';
   }, [noNavigation]);
 
-  const viewportHeight = useMemo(
-  () => {
-    return !noNavigation ?
-      'calc(100vh - 3rem - 2px)'
-    : '100vh';
+  const viewportHeight = useMemo(() => {
+    return !noNavigation ? 'calc(100vh - 3rem - 2px)' : '100vh';
   }, [noNavigation]);
 
   return (
-  <ThemeContext.Provider value={{
-    darkMode, colors,
-    noNavigationAnimation, noNavigation, noFooter, showScroll,
-    toggleDarkMode: () => setDarkMode(prev => !prev),
-    toggleNoNavigation: toggleNoNavigation,
-    setNoFooter, setShowScroll,
-    viewportHeight, mainHeight
-  }}>
-    <>
-      <ConceptTooltip float
-        id={`${globalIDs.tooltip}`}
-        layer='z-topmost'
-        place='right-start'
-        className={clsx(
-          'mt-3 translate-y-1/2',
-          'max-w-[20rem]'
-        )}
-      />
-      {children}
-    </>
-  </ThemeContext.Provider>);
-}
+    <ThemeContext.Provider
+      value={{
+        darkMode,
+        colors,
+        noNavigationAnimation,
+        noNavigation,
+        noFooter,
+        showScroll,
+        toggleDarkMode: () => setDarkMode(prev => !prev),
+        toggleNoNavigation: toggleNoNavigation,
+        setNoFooter,
+        setShowScroll,
+        viewportHeight,
+        mainHeight
+      }}
+    >
+      <>
+        <ConceptTooltip
+          float
+          id={`${globalIDs.tooltip}`}
+          layer='z-topmost'
+          place='right-start'
+          className={clsx('mt-3 translate-y-1/2', 'max-w-[20rem]')}
+        />
+        {children}
+      </>
+    </ThemeContext.Provider>
+  );
+};

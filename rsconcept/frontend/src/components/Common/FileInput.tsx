@@ -8,20 +8,14 @@ import { CProps } from '../props';
 import Button from './Button';
 import Label from './Label';
 
-interface FileInputProps 
-extends Omit<CProps.Input, 'accept' | 'type'> {
-  label: string
-  
-  acceptType?: string
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+interface FileInputProps extends Omit<CProps.Input, 'accept' | 'type'> {
+  label: string;
+
+  acceptType?: string;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-function FileInput({
-  label, acceptType, title,
-  className, style,
-  onChange,
-  ...restProps 
-}: FileInputProps) {
+function FileInput({ label, acceptType, title, className, style, onChange, ...restProps }: FileInputProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [fileName, setFileName] = useState('');
 
@@ -41,29 +35,19 @@ function FileInput({
   };
 
   return (
-  <div 
-    className={clsx(
-      'py-2',
-      'flex flex-col gap-2 items-center',
-      className
-    )}
-    style={style}
-  >
-    <input type='file'
-      ref={inputRef}
-      style={{ display: 'none' }}
-      accept={acceptType}
-      onChange={handleFileChange}
-      {...restProps}
-    />
-    <Button
-      text={label}
-      icon={<BiUpload size='1.5rem' />}
-      onClick={handleUploadClick}
-      title={title}
-    />
-    <Label text={fileName} />
-  </div>);
+    <div className={clsx('py-2', 'flex flex-col gap-2 items-center', className)} style={style}>
+      <input
+        type='file'
+        ref={inputRef}
+        style={{ display: 'none' }}
+        accept={acceptType}
+        onChange={handleFileChange}
+        {...restProps}
+      />
+      <Button text={label} icon={<BiUpload size='1.5rem' />} onClick={handleUploadClick} title={title} />
+      <Label text={fileName} />
+    </div>
+  );
 }
 
 export default FileInput;

@@ -37,8 +37,8 @@ export const resources = {
  * Numeric limitations.
  */
 export const limits = {
-  alias_len: 12,
-}
+  alias_len: 12
+};
 
 /**
  * Regex patterns for data validation.
@@ -46,7 +46,7 @@ export const limits = {
 export const patterns = {
   login: '^[a-zA-Z][a-zA-Z0-9_\\-]{1,}[a-zA-Z0-9]$',
   alias: `.{1,${limits.alias_len}}`
-}
+};
 
 /**
  * Youtube IDs for embedding.

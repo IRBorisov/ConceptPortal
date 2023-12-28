@@ -15,19 +15,19 @@ export function assertIsNode(e: EventTarget | null): asserts e is Node {
 
 /**
  * Wrapper class for generalized text matching.
- * 
+ *
  * If possible create regexp, otherwise use symbol matching.
-*/
+ */
 export class TextMatcher {
-  protected query: RegExp | string
-  
+  protected query: RegExp | string;
+
   constructor(query: string, isPlainText?: boolean, isCaseSensitive?: boolean) {
     if (isPlainText) {
       query = query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
     }
     try {
       this.query = new RegExp(query, isCaseSensitive ? '' : 'i');
-    } catch(exception: unknown) {
+    } catch (exception: unknown) {
       this.query = query;
     }
   }
@@ -43,7 +43,7 @@ export class TextMatcher {
 
 /**
  * Text substitution guided by mapping and regular expression.
-*/
+ */
 export function applyPattern(text: string, mapping: { [key: string]: string }, pattern: RegExp): string {
   if (text === '' || pattern === null) {
     return text;
@@ -66,7 +66,7 @@ export function applyPattern(text: string, mapping: { [key: string]: string }, p
 
 /**
  * Check if Axios response is html.
-*/
+ */
 export function isResponseHtml(response?: AxiosResponse) {
   if (!response) {
     return false;

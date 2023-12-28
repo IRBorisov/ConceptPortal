@@ -2,6 +2,7 @@ import Divider from '@/components/Common/Divider';
 import InfoCstStatus from '@/components/Shared/InfoCstStatus';
 
 function HelpConstituenta() {
+  // prettier-ignore
   return (
   <div className='leading-tight'>
     <h1>Редактор конституент</h1>

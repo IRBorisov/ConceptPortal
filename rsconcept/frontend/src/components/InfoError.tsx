@@ -7,10 +7,10 @@ import PrettyJson from './Common/PrettyJSON';
 export type ErrorData = string | Error | AxiosError | undefined;
 
 interface InfoErrorProps {
-  error: ErrorData
+  error: ErrorData;
 }
 
-function DescribeError({error} : {error: ErrorData}) {
+function DescribeError({ error }: { error: ErrorData }) {
   if (!error) {
     return <p>Ошибки отсутствуют</p>;
   } else if (typeof error === 'string') {
@@ -23,10 +23,11 @@ function DescribeError({error} : {error: ErrorData}) {
   }
   if (error.response.status === 404) {
     return (
-    <div>
-      <p>{'Обращение к несуществующему API'}</p>
-      <PrettyJson data={error} />
-    </div>);
+      <div>
+        <p>{'Обращение к несуществующему API'}</p>
+        <PrettyJson data={error} />
+      </div>
+    );
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
@@ -35,20 +36,23 @@ function DescribeError({error} : {error: ErrorData}) {
     <div>
       <p className='underline'>Ошибка</p>
       <p>{error.message}</p>
-      {error.response.data && (<>
-        <p className='mt-2 underline'>Описание</p>
-        {isHtml ? <div dangerouslySetInnerHTML={{ __html: error.response.data as TrustedHTML }} /> : null}
-        {!isHtml ? <PrettyJson data={error.response.data as object} /> : null}
-      </>)}
+      {error.response.data && (
+        <>
+          <p className='mt-2 underline'>Описание</p>
+          {isHtml ? <div dangerouslySetInnerHTML={{ __html: error.response.data as TrustedHTML }} /> : null}
+          {!isHtml ? <PrettyJson data={error.response.data as object} /> : null}
+        </>
+      )}
     </div>
   );
 }
 
 function InfoError({ error }: InfoErrorProps) {
   return (
-  <div className='px-3 py-2 min-w-[15rem] text-sm font-semibold select-text clr-text-warning'>
-    <DescribeError error={error} />
-  </div>);
+    <div className='px-3 py-2 min-w-[15rem] text-sm font-semibold select-text clr-text-warning'>
+      <DescribeError error={error} />
+    </div>
+  );
 }
 
 export default InfoError;

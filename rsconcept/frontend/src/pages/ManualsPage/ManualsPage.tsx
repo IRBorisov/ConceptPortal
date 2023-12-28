@@ -20,16 +20,11 @@ function ManualsPage() {
   }
 
   return (
-  <div
-    className='flex gap-2 w-full'
-    style={{minHeight: mainHeight}}
-  >
-    <TopicsList 
-      activeTopic={topic}
-      onChangeTopic={topic => onSelectTopic(topic)}
-    />
-    <ViewTopic topic={topic} />
-  </div>);
+    <div className='flex w-full gap-2' style={{ minHeight: mainHeight }}>
+      <TopicsList activeTopic={topic} onChangeTopic={topic => onSelectTopic(topic)} />
+      <ViewTopic topic={topic} />
+    </div>
+  );
 }
 
 export default ManualsPage;

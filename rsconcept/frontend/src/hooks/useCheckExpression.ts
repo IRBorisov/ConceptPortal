@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 
 import { type ErrorData } from '@/components/InfoError';
 import { CstType, IConstituenta, type IRSForm } from '@/models/rsform';
-import { IArgumentInfo,IExpressionParse } from '@/models/rslang';
+import { IArgumentInfo, IExpressionParse } from '@/models/rslang';
 import { RSErrorType } from '@/models/rslang';
 import { DataCallback, postCheckExpression } from '@/utils/backendAPI';
 import { getCstExpressionPrefix } from '@/utils/misc';
@@ -18,11 +18,7 @@ function useCheckExpression({ schema }: { schema?: IRSForm }) {
 
   const resetParse = useCallback(() => setParseData(undefined), []);
 
-  function checkExpression(
-    expression: string,
-    activeCst?: IConstituenta,
-    onSuccess?: DataCallback<IExpressionParse>
-  ) {
+  function checkExpression(expression: string, activeCst?: IConstituenta, onSuccess?: DataCallback<IExpressionParse>) {
     setError(undefined);
     postCheckExpression(String(schema!.id), {
       data: { expression: expression },
@@ -47,21 +43,21 @@ export default useCheckExpression;
 // ===== Internals ========
 function checkTypeConsistency(type: CstType, typification: string, args: IArgumentInfo[]): boolean {
   switch (type) {
-  case CstType.BASE:
-  case CstType.CONSTANT:
-  case CstType.STRUCTURED:
-  case CstType.TERM:
-    return typification !== LOGIC_TYPIFICATION && args.length === 0;
+    case CstType.BASE:
+    case CstType.CONSTANT:
+    case CstType.STRUCTURED:
+    case CstType.TERM:
+      return typification !== LOGIC_TYPIFICATION && args.length === 0;
 
-  case CstType.AXIOM:
-  case CstType.THEOREM:
-    return typification === LOGIC_TYPIFICATION && args.length === 0;
+    case CstType.AXIOM:
+    case CstType.THEOREM:
+      return typification === LOGIC_TYPIFICATION && args.length === 0;
 
-  case CstType.FUNCTION:
-    return typification !== LOGIC_TYPIFICATION && args.length !== 0;
+    case CstType.FUNCTION:
+      return typification !== LOGIC_TYPIFICATION && args.length !== 0;
 
-  case CstType.PREDICATE:
-    return typification === LOGIC_TYPIFICATION && args.length !== 0;
+    case CstType.PREDICATE:
+      return typification === LOGIC_TYPIFICATION && args.length !== 0;
   }
 }
 

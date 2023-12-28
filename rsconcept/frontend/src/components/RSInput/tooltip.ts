@@ -1,4 +1,4 @@
-import { syntaxTree } from "@codemirror/language"
+import { syntaxTree } from '@codemirror/language';
 import { Extension } from '@codemirror/state';
 import { hoverTooltip } from '@codemirror/view';
 import { EditorState } from '@uiw/react-codemirror';
@@ -15,15 +15,14 @@ function findAliasAt(pos: number, state: EditorState) {
   let alias = '';
   let start = 0;
   let end = 0;
-  nodes.forEach(
-    node => {
+  nodes.forEach(node => {
     if (node.to <= lineEnd && node.from >= lineStart) {
       alias = text.slice(node.from - lineStart, node.to - lineStart);
       start = node.from;
       end = node.to;
     }
   });
-  return {alias, start, end};
+  return { alias, start, end };
 }
 
 const globalsHoverTooltip = (items: IConstituenta[]) => {
@@ -38,9 +37,9 @@ const globalsHoverTooltip = (items: IConstituenta[]) => {
       end: end,
       above: false,
       create: () => domTooltipConstituenta(cst)
-    }
+    };
   });
-}
+};
 
 export function rsHoverTooltip(items: IConstituenta[]): Extension {
   return [globalsHoverTooltip(items)];

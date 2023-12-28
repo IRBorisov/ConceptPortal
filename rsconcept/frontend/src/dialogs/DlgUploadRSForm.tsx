@@ -11,13 +11,13 @@ import { IRSFormUploadData } from '@/models/rsform';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 
 interface DlgUploadRSFormProps {
-  hideWindow: () => void
+  hideWindow: () => void;
 }
 
 function DlgUploadRSForm({ hideWindow }: DlgUploadRSFormProps) {
   const { upload } = useRSForm();
   const [loadMetadata, setLoadMetadata] = useState(false);
-  const [file, setFile] = useState<File | undefined>()
+  const [file, setFile] = useState<File | undefined>();
 
   const handleSubmit = () => {
     if (!file) {
@@ -37,29 +37,26 @@ function DlgUploadRSForm({ hideWindow }: DlgUploadRSFormProps) {
     } else {
       setFile(undefined);
     }
-  }
+  };
 
   return (
-  <Modal
-    header='Импорт схемы из Экстеора'
-    hideWindow={hideWindow}
-    canSubmit={!!file}
-    onSubmit={handleSubmit}
-    submitText='Загрузить'
-    className='w-[20rem] px-6'
-  >
-    <FileInput
-      label='Выбрать файл'
-      acceptType={EXTEOR_TRS_FILE}
-      onChange={handleFile}
-    />
-    <Checkbox
-      label='Загружать название и комментарий'
-      className='py-2'
-      value={loadMetadata}
-      setValue={value => setLoadMetadata(value)}
-    />
-  </Modal>);
+    <Modal
+      header='Импорт схемы из Экстеора'
+      hideWindow={hideWindow}
+      canSubmit={!!file}
+      onSubmit={handleSubmit}
+      submitText='Загрузить'
+      className='w-[20rem] px-6'
+    >
+      <FileInput label='Выбрать файл' acceptType={EXTEOR_TRS_FILE} onChange={handleFile} />
+      <Checkbox
+        label='Загружать название и комментарий'
+        className='py-2'
+        value={loadMetadata}
+        setValue={value => setLoadMetadata(value)}
+      />
+    </Modal>
+  );
 }
 
 export default DlgUploadRSForm;

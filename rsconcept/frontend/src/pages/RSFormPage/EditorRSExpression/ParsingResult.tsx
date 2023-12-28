@@ -9,10 +9,10 @@ import { describeRSError } from '@/utils/labels';
 import { getRSErrorPrefix } from '@/utils/misc';
 
 interface ParsingResultProps {
-  data: IExpressionParse | undefined
-  disabled?: boolean
-  isOpen: boolean
-  onShowError: (error: IRSErrorDescription) => void
+  data: IExpressionParse | undefined;
+  disabled?: boolean;
+  isOpen: boolean;
+  onShowError: (error: IRSErrorDescription) => void;
 }
 
 function ParsingResult({ isOpen, data, disabled, onShowError }: ParsingResultProps) {
@@ -20,32 +20,31 @@ function ParsingResult({ isOpen, data, disabled, onShowError }: ParsingResultPro
   const warningsCount = data ? data.errors.length - errorCount : 0;
 
   return (
-  <motion.div 
-    className={clsx(
-      'border',
-      'text-sm',
-      'overflow-y-auto'
-    )}
-    initial={false}
-    animate={isOpen ? 'open' : 'closed'}
-    variants={animateParseResults}
-  >
-    <p>Ошибок: <b>{errorCount}</b> | Предупреждений: <b>{warningsCount}</b></p>
-    {data?.errors.map(
-    (error, index) => {
-      return (
-      <p
-        key={`error-${index}`}
-        className={`clr-text-warning ${disabled ? '' : 'cursor-pointer'}`}
-        onClick={disabled ? undefined : () => onShowError(error)}
-      >
-        <span className='mr-1 font-semibold underline'>
-          {error.isCritical ? 'Ошибка' : 'Предупреждение'} {`${getRSErrorPrefix(error)}:`}
-        </span>
-        <span>{` ${describeRSError(error)}`}</span>
-      </p>);
-    })}
-  </motion.div>);
+    <motion.div
+      className={clsx('border', 'text-sm', 'overflow-y-auto')}
+      initial={false}
+      animate={isOpen ? 'open' : 'closed'}
+      variants={animateParseResults}
+    >
+      <p>
+        Ошибок: <b>{errorCount}</b> | Предупреждений: <b>{warningsCount}</b>
+      </p>
+      {data?.errors.map((error, index) => {
+        return (
+          <p
+            key={`error-${index}`}
+            className={`clr-text-warning ${disabled ? '' : 'cursor-pointer'}`}
+            onClick={disabled ? undefined : () => onShowError(error)}
+          >
+            <span className='mr-1 font-semibold underline'>
+              {error.isCritical ? 'Ошибка' : 'Предупреждение'} {`${getRSErrorPrefix(error)}:`}
+            </span>
+            <span>{` ${describeRSError(error)}`}</span>
+          </p>
+        );
+      })}
+    </motion.div>
+  );
 }
 
 export default ParsingResult;

@@ -5,11 +5,12 @@ import UserTabs from './UserTabs';
 
 function UserProfilePage() {
   return (
-  <RequireAuth>
-  <UserProfileState>
-    <UserTabs />
-  </UserProfileState>
-  </RequireAuth>);
+    <RequireAuth>
+      <UserProfileState>
+        <UserTabs />
+      </UserProfileState>
+    </RequireAuth>
+  );
 }
 
 export default UserProfilePage;

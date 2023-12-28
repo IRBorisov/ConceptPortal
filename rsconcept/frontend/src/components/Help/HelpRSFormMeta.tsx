@@ -1,4 +1,5 @@
 function HelpRSFormMeta() {
+  // prettier-ignore
   return (
   <div>
     <h1>Паспорт схемы</h1>

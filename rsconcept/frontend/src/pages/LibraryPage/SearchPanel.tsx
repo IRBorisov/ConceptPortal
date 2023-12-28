@@ -11,12 +11,12 @@ import { LibraryFilterStrategy } from '@/models/miscellaneous';
 import PickerStrategy from './PickerStrategy';
 
 interface SearchPanelProps {
-  total: number
-  filtered: number
-  setFilter: React.Dispatch<React.SetStateAction<ILibraryFilter>>
-  query: string
-  setQuery: React.Dispatch<React.SetStateAction<string>>
-  strategy: LibraryFilterStrategy
+  total: number;
+  filtered: number;
+  setFilter: React.Dispatch<React.SetStateAction<ILibraryFilter>>;
+  query: string;
+  setQuery: React.Dispatch<React.SetStateAction<string>>;
+  strategy: LibraryFilterStrategy;
 }
 
 function SearchPanel({ total, filtered, query, setQuery, strategy, setFilter }: SearchPanelProps) {
@@ -35,46 +35,28 @@ function SearchPanel({ total, filtered, query, setQuery, strategy, setFilter }: 
   }
 
   const handleChangeStrategy = useCallback(
-  (value: LibraryFilterStrategy) => {
-    if (value !== strategy) {
-      router.push(`/library?filter=${value}`);
-    }
-  }, [strategy, router]);
+    (value: LibraryFilterStrategy) => {
+      if (value !== strategy) {
+        router.push(`/library?filter=${value}`);
+      }
+    },
+    [strategy, router]
+  );
 
   return (
-  <div className={clsx(
-    'sticky top-0',
-    'w-full max-h-[2.3rem]',
-    'pr-40 flex',
-    'border-b',
-    'clr-input'
-  )}>
-    <div className={clsx(
-      'min-w-[10rem]',
-      'px-2 self-center',
-      'select-none',
-      'whitespace-nowrap', 
-    )}>
-      Фильтр
-      <span className='ml-2'>
-        {filtered} из {total}
-      </span>
+    <div className={clsx('sticky top-0', 'w-full max-h-[2.3rem]', 'pr-40 flex', 'border-b', 'clr-input')}>
+      <div className={clsx('min-w-[10rem]', 'px-2 self-center', 'select-none', 'whitespace-nowrap')}>
+        Фильтр
+        <span className='ml-2'>
+          {filtered} из {total}
+        </span>
+      </div>
+      <div className={clsx('flex-grow', 'flex gap-1 justify-center items-center')}>
+        <ConceptSearch noBorder className='min-w-[10rem]' value={query} onChange={handleChangeQuery} />
+        <PickerStrategy value={strategy} onChange={handleChangeStrategy} />
+      </div>
     </div>
-    <div className={clsx(
-      'flex-grow',
-      'flex gap-1 justify-center items-center'
-    )}>
-      <ConceptSearch noBorder
-        className='min-w-[10rem]'
-        value={query}
-        onChange={handleChangeQuery}
-      />
-      <PickerStrategy
-        value={strategy}
-        onChange={handleChangeStrategy}
-      />
-    </div>
-  </div>);
+  );
 }
 
 export default SearchPanel;

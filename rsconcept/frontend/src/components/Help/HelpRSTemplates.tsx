@@ -1,4 +1,5 @@
 function HelpRSTemplates() {
+  // prettier-ignore
   return (
   <div className='flex flex-col gap-2 pb-2 max-w-[80rem]'>
     <h1>Банк выражений</h1>

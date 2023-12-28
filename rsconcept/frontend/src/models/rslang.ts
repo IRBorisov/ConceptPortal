@@ -4,14 +4,14 @@
 
 /**
  * Represents formal expression.
-*/
+ */
 export interface IRSExpression {
-  expression: string
+  expression: string;
 }
 
 /**
  * Represents syntax type.
-*/
+ */
 export enum Syntax {
   UNDEF = 'undefined',
   ASCII = 'ascii',
@@ -20,7 +20,7 @@ export enum Syntax {
 
 /**
  * Represents computability class.
-*/
+ */
 export enum ValueClass {
   INVALID = 'invalid', // incalculable
   VALUE = 'value',
@@ -29,7 +29,7 @@ export enum ValueClass {
 
 /**
  * Represents parsing status.
-*/
+ */
 export enum ParsingStatus {
   UNDEF = 'undefined',
   VERIFIED = 'verified',
@@ -38,66 +38,66 @@ export enum ParsingStatus {
 
 /**
  * Represents parsing error description.
-*/
+ */
 export interface IRSErrorDescription {
-  errorType: RSErrorType
-  position: number
-  isCritical: boolean
-  params: string[]
+  errorType: RSErrorType;
+  position: number;
+  isCritical: boolean;
+  params: string[];
 }
 
 /**
  * Represents AST node.
-*/
+ */
 export interface ISyntaxTreeNode {
-  uid: number
-  parent: number
-  typeID: TokenID
-  start: number
-  finish: number
+  uid: number;
+  parent: number;
+  typeID: TokenID;
+  start: number;
+  finish: number;
   data: {
-    dataType: string
-    value: unknown
-  }
+    dataType: string;
+    value: unknown;
+  };
 }
 
 /**
  * Represents Syntax tree for RSLang expression.
-*/
-export type SyntaxTree = ISyntaxTreeNode[]
+ */
+export type SyntaxTree = ISyntaxTreeNode[];
 
 /**
  * Represents function argument definition.
-*/
+ */
 export interface IArgumentInfo {
-  alias: string
-  typification: string
+  alias: string;
+  typification: string;
 }
 
 /**
  * Represents function argument value.
-*/
+ */
 export interface IArgumentValue extends IArgumentInfo {
-  value?: string
+  value?: string;
 }
 
 /**
  * Represents results of expression parse in RSLang.
-*/
+ */
 export interface IExpressionParse {
-  parseResult: boolean
-  syntax: Syntax
-  typification: string
-  valueClass: ValueClass
-  errors: IRSErrorDescription[]
-  astText: string
-  ast: SyntaxTree
-  args: IArgumentInfo[]
+  parseResult: boolean;
+  syntax: Syntax;
+  typification: string;
+  valueClass: ValueClass;
+  errors: IRSErrorDescription[];
+  astText: string;
+  ast: SyntaxTree;
+  args: IArgumentInfo[];
 }
 
 /**
  * Represents RSLang token types.
-*/
+ */
 export enum TokenID {
   // Global, local IDs and literals
   ID_LOCAL = 258,
@@ -197,7 +197,6 @@ export enum TokenID {
   NT_IMP_ASSIGN,
   NT_IMP_LOGIC,
 
-
   // ======= Helper tokens ========
   INTERRUPT,
   END
@@ -246,12 +245,10 @@ export enum RSErrorType {
   typesNotCompatible = 34853,
   orderingNotSupported = 34854,
 
-
   // !!!! Добавлены по сравнению с ConceptCore !!!!!
   globalNonemptyBase = 34855,
   globalUnexpectedType = 34856,
   globalEmptyDerived = 34857,
-
 
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   globalNoValue = 34880,
@@ -262,7 +259,7 @@ export enum RSErrorType {
 
 /**
  * Represents error class.
-*/
+ */
 export enum RSErrorClass {
   LEXER,
   PARSER,

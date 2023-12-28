@@ -4,19 +4,21 @@ import { IConditionalStyle } from '.';
 import SelectRow from './SelectRow';
 
 interface TableBodyProps<TData> {
-  table: Table<TData>
-  dense?: boolean
-  enableRowSelection?: boolean
-  conditionalRowStyles?: IConditionalStyle<TData>[]
-  onRowClicked?: (rowData: TData, event: React.MouseEvent<Element, MouseEvent>) => void
-  onRowDoubleClicked?: (rowData: TData, event: React.MouseEvent<Element, MouseEvent>) => void
+  table: Table<TData>;
+  dense?: boolean;
+  enableRowSelection?: boolean;
+  conditionalRowStyles?: IConditionalStyle<TData>[];
+  onRowClicked?: (rowData: TData, event: React.MouseEvent<Element, MouseEvent>) => void;
+  onRowDoubleClicked?: (rowData: TData, event: React.MouseEvent<Element, MouseEvent>) => void;
 }
 
 function TableBody<TData>({
-  table, dense,
+  table,
+  dense,
   enableRowSelection,
   conditionalRowStyles,
-  onRowClicked, onRowDoubleClicked
+  onRowClicked,
+  onRowDoubleClicked
 }: TableBodyProps<TData>) {
   function handleRowClicked(row: Row<TData>, event: React.MouseEvent<Element, MouseEvent>) {
     if (onRowClicked) {
@@ -28,47 +30,51 @@ function TableBody<TData>({
   }
 
   function getRowStyles(row: Row<TData>) {
-    return ({...conditionalRowStyles!
-      .filter(item => item.when(row.original))
-      .reduce((prev, item) => ({...prev, ...item.style}), {})
-    });
+    return {
+      ...conditionalRowStyles!
+        .filter(item => item.when(row.original))
+        .reduce((prev, item) => ({ ...prev, ...item.style }), {})
+    };
   }
 
   return (
     <tbody>
-    {table.getRowModel().rows.map(
-    (row: Row<TData>, index) => (
-      <tr
-        key={row.id}
-        className={
-          row.getIsSelected() ? 'clr-selected clr-hover' :
-          index % 2 === 0 ? 'clr-controls clr-hover' : 'clr-app clr-hover'
-        }
-        style={conditionalRowStyles && getRowStyles(row)}
-      >
-        {enableRowSelection ?
-        <td key={`select-${row.id}`} className='pl-3 pr-1 border-y'>
-          <SelectRow row={row} />
-        </td> : null}
-        {row.getVisibleCells().map(
-        (cell: Cell<TData, unknown>) => (
-          <td
-            key={cell.id}
-            className='px-2 border-y'
-            style={{
-              cursor: onRowClicked || onRowDoubleClicked ? 'pointer': 'auto',
-              paddingBottom: dense ? '0.25rem': '0.5rem',
-              paddingTop: dense ? '0.25rem': '0.5rem'
-            }}
-            onClick={event => handleRowClicked(row, event)}
-            onDoubleClick={event => onRowDoubleClicked ? onRowDoubleClicked(row.original, event) : undefined}
-          >
-            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-          </td>
-        ))}
-      </tr>
-    ))}
-    </tbody>);
+      {table.getRowModel().rows.map((row: Row<TData>, index) => (
+        <tr
+          key={row.id}
+          className={
+            row.getIsSelected()
+              ? 'clr-selected clr-hover'
+              : index % 2 === 0
+              ? 'clr-controls clr-hover'
+              : 'clr-app clr-hover'
+          }
+          style={conditionalRowStyles && getRowStyles(row)}
+        >
+          {enableRowSelection ? (
+            <td key={`select-${row.id}`} className='pl-3 pr-1 border-y'>
+              <SelectRow row={row} />
+            </td>
+          ) : null}
+          {row.getVisibleCells().map((cell: Cell<TData, unknown>) => (
+            <td
+              key={cell.id}
+              className='px-2 border-y'
+              style={{
+                cursor: onRowClicked || onRowDoubleClicked ? 'pointer' : 'auto',
+                paddingBottom: dense ? '0.25rem' : '0.5rem',
+                paddingTop: dense ? '0.25rem' : '0.5rem'
+              }}
+              onClick={event => handleRowClicked(row, event)}
+              onDoubleClick={event => (onRowDoubleClicked ? onRowDoubleClicked(row.original, event) : undefined)}
+            >
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </td>
+          ))}
+        </tr>
+      ))}
+    </tbody>
+  );
 }
 
 export default TableBody;

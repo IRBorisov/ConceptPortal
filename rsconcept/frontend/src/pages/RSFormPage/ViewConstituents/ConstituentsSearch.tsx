@@ -18,10 +18,10 @@ import { prefixes } from '@/utils/constants';
 import { describeCstMatchMode, describeCstSource, labelCstMatchMode, labelCstSource } from '@/utils/labels';
 
 interface ConstituentsSearchProps {
-  schema?: IRSForm
-  activeID?: number
-  activeExpression: string
-  setFiltered: React.Dispatch<React.SetStateAction<IConstituenta[]>>
+  schema?: IRSForm;
+  activeID?: number;
+  activeExpression: string;
+  setFiltered: React.Dispatch<React.SetStateAction<IConstituenta[]>>;
 }
 
 function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }: ConstituentsSearchProps) {
@@ -32,8 +32,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
   const matchModeMenu = useDropdown();
   const sourceMenu = useDropdown();
 
-  useLayoutEffect(
-  () => {
+  useLayoutEffect(() => {
     if (!schema || schema.items.length === 0) {
       setFiltered([]);
       return;
@@ -41,15 +40,11 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
     let result: IConstituenta[] = [];
     if (filterSource === DependencyMode.EXPRESSION) {
       const aliases = extractGlobals(activeExpression);
-      result = schema.items.filter((cst) => aliases.has(cst.alias));
+      result = schema.items.filter(cst => aliases.has(cst.alias));
       const names = result.map(cst => cst.alias);
       const diff = Array.from(aliases).filter(name => !names.includes(name));
       if (diff.length > 0) {
-        diff.forEach(
-          (alias, index) => result.push(
-            createMockConstituenta(-index, alias, 'Конституента отсутствует')
-          )
-        );
+        diff.forEach((alias, index) => result.push(createMockConstituenta(-index, alias, 'Конституента отсутствует')));
       }
     } else if (!activeID) {
       result = schema.items;
@@ -63,71 +58,81 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
   }, [filterText, setFiltered, filterSource, activeExpression, schema?.items, schema, filterMatch, activeID]);
 
   const handleMatchModeChange = useCallback(
-  (newValue: CstMatchMode) => {
-    matchModeMenu.hide();
-    setFilterMatch(newValue);
-  }, [matchModeMenu, setFilterMatch]);
+    (newValue: CstMatchMode) => {
+      matchModeMenu.hide();
+      setFilterMatch(newValue);
+    },
+    [matchModeMenu, setFilterMatch]
+  );
 
   const handleSourceChange = useCallback(
-  (newValue: DependencyMode) => {
-    sourceMenu.hide();
-    setFilterSource(newValue);
-  }, [sourceMenu, setFilterSource]);
-  
-  return (
-  <div className='flex border-b clr-input'>
-    <ConceptSearch noBorder
-      className='min-w-[6rem] pr-2 flex-grow'
-      value={filterText}
-      onChange={setFilterText}
-    />
-   
-    <div ref={matchModeMenu.ref}>
-      <SelectorButton transparent tabIndex={-1}
-        title='Настройка атрибутов для фильтрации'
-        className='h-full'
-        icon={<BiFilterAlt size='1.25rem' />}
-        text={labelCstMatchMode(filterMatch)}
-        onClick={matchModeMenu.toggle}
-      />
-      <Dropdown stretchLeft isOpen={matchModeMenu.isOpen}>
-        {Object.values(CstMatchMode).filter(value => !isNaN(Number(value))).map(
-        (value, index) => {
-          const matchMode = value as CstMatchMode;
-          return (
-          <DropdownButton
-            key={`${prefixes.cst_match_mode_list}${index}`}
-            onClick={() => handleMatchModeChange(matchMode)}
-          >
-            <p><b>{labelCstMatchMode(matchMode)}:</b> {describeCstMatchMode(matchMode)}</p>
-          </DropdownButton>);
-        })}
-      </Dropdown>
-    </div>
+    (newValue: DependencyMode) => {
+      sourceMenu.hide();
+      setFilterSource(newValue);
+    },
+    [sourceMenu, setFilterSource]
+  );
 
-    <div ref={sourceMenu.ref}>
-      <SelectorButton transparent tabIndex={-1}
-        title='Настройка фильтрации по графу термов'
-        className='h-full pr-2'
-        icon={<BiCog size='1.25rem' />}
-        text={labelCstSource(filterSource)}
-        onClick={sourceMenu.toggle}
-      />
-      <Dropdown stretchLeft isOpen={sourceMenu.isOpen}>
-        {Object.values(DependencyMode).filter(value => !isNaN(Number(value))).map(
-        (value, index) => {
-          const source = value as DependencyMode;
-          return (
-          <DropdownButton
-            key={`${prefixes.cst_source_list}${index}`}
-            onClick={() => handleSourceChange(source)}
-          >
-            <p><b>{labelCstSource(source)}:</b> {describeCstSource(source)}</p>
-          </DropdownButton>);
-        })}
-      </Dropdown>
+  return (
+    <div className='flex border-b clr-input'>
+      <ConceptSearch noBorder className='min-w-[6rem] pr-2 flex-grow' value={filterText} onChange={setFilterText} />
+
+      <div ref={matchModeMenu.ref}>
+        <SelectorButton
+          transparent
+          tabIndex={-1}
+          title='Настройка атрибутов для фильтрации'
+          className='h-full'
+          icon={<BiFilterAlt size='1.25rem' />}
+          text={labelCstMatchMode(filterMatch)}
+          onClick={matchModeMenu.toggle}
+        />
+        <Dropdown stretchLeft isOpen={matchModeMenu.isOpen}>
+          {Object.values(CstMatchMode)
+            .filter(value => !isNaN(Number(value)))
+            .map((value, index) => {
+              const matchMode = value as CstMatchMode;
+              return (
+                <DropdownButton
+                  key={`${prefixes.cst_match_mode_list}${index}`}
+                  onClick={() => handleMatchModeChange(matchMode)}
+                >
+                  <p>
+                    <b>{labelCstMatchMode(matchMode)}:</b> {describeCstMatchMode(matchMode)}
+                  </p>
+                </DropdownButton>
+              );
+            })}
+        </Dropdown>
+      </div>
+
+      <div ref={sourceMenu.ref}>
+        <SelectorButton
+          transparent
+          tabIndex={-1}
+          title='Настройка фильтрации по графу термов'
+          className='h-full pr-2'
+          icon={<BiCog size='1.25rem' />}
+          text={labelCstSource(filterSource)}
+          onClick={sourceMenu.toggle}
+        />
+        <Dropdown stretchLeft isOpen={sourceMenu.isOpen}>
+          {Object.values(DependencyMode)
+            .filter(value => !isNaN(Number(value)))
+            .map((value, index) => {
+              const source = value as DependencyMode;
+              return (
+                <DropdownButton key={`${prefixes.cst_source_list}${index}`} onClick={() => handleSourceChange(source)}>
+                  <p>
+                    <b>{labelCstSource(source)}:</b> {describeCstSource(source)}
+                  </p>
+                </DropdownButton>
+              );
+            })}
+        </Dropdown>
+      </div>
     </div>
-  </div>);
+  );
 }
 
 export default ConstituentsSearch;

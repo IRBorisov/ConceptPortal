@@ -2,10 +2,17 @@
 
 import {
   ColumnSort,
-  createColumnHelper, getCoreRowModel,
-  getPaginationRowModel, getSortedRowModel,
-  PaginationState, RowData, type RowSelectionState,
-  SortingState, TableOptions, useReactTable, type VisibilityState
+  createColumnHelper,
+  getCoreRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  PaginationState,
+  RowData,
+  type RowSelectionState,
+  SortingState,
+  TableOptions,
+  useReactTable,
+  type VisibilityState
 } from '@tanstack/react-table';
 import clsx from 'clsx';
 import { useState } from 'react';
@@ -20,51 +27,56 @@ import TableHeader from './TableHeader';
 export { createColumnHelper, type ColumnSort, type RowSelectionState, type VisibilityState };
 
 export interface IConditionalStyle<TData> {
-  when: (rowData: TData) => boolean
-  style: React.CSSProperties
+  when: (rowData: TData) => boolean;
+  style: React.CSSProperties;
 }
 
 export interface DataTableProps<TData extends RowData>
-extends CProps.Styling, Pick<TableOptions<TData>, 
-  'data' | 'columns' |
-  'onRowSelectionChange' | 'onColumnVisibilityChange'
-> {
-  dense?: boolean
-  headPosition?: string
-  noHeader?: boolean
-  noFooter?: boolean
+  extends CProps.Styling,
+    Pick<TableOptions<TData>, 'data' | 'columns' | 'onRowSelectionChange' | 'onColumnVisibilityChange'> {
+  dense?: boolean;
+  headPosition?: string;
+  noHeader?: boolean;
+  noFooter?: boolean;
 
-  conditionalRowStyles?: IConditionalStyle<TData>[]
-  noDataComponent?: React.ReactNode
+  conditionalRowStyles?: IConditionalStyle<TData>[];
+  noDataComponent?: React.ReactNode;
 
-  onRowClicked?: (rowData: TData, event: React.MouseEvent<Element, MouseEvent>) => void
-  onRowDoubleClicked?: (rowData: TData, event: React.MouseEvent<Element, MouseEvent>) => void
+  onRowClicked?: (rowData: TData, event: React.MouseEvent<Element, MouseEvent>) => void;
+  onRowDoubleClicked?: (rowData: TData, event: React.MouseEvent<Element, MouseEvent>) => void;
 
-  enableRowSelection?: boolean
-  rowSelection?: RowSelectionState
+  enableRowSelection?: boolean;
+  rowSelection?: RowSelectionState;
 
-  enableHiding?: boolean
-  columnVisibility?: VisibilityState
+  enableHiding?: boolean;
+  columnVisibility?: VisibilityState;
 
-  enablePagination?: boolean
-  paginationPerPage?: number
-  paginationOptions?: number[]
-  onChangePaginationOption?: (newValue: number) => void
+  enablePagination?: boolean;
+  paginationPerPage?: number;
+  paginationOptions?: number[];
+  onChangePaginationOption?: (newValue: number) => void;
 
-  enableSorting?: boolean
-  initialSorting?: ColumnSort
+  enableSorting?: boolean;
+  initialSorting?: ColumnSort;
 }
 
 /**
  * UI element: data representation as a table.
- * 
- * @param headPosition - Top position of sticky header (0 if no other sticky elements are present). 
+ *
+ * @param headPosition - Top position of sticky header (0 if no other sticky elements are present).
  * No sticky header if omitted
-*/
+ */
 function DataTable<TData extends RowData>({
-  style, className,
-  dense, headPosition, conditionalRowStyles, noFooter, noHeader,
-  onRowClicked, onRowDoubleClicked, noDataComponent,
+  style,
+  className,
+  dense,
+  headPosition,
+  conditionalRowStyles,
+  noFooter,
+  noHeader,
+  onRowClicked,
+  onRowDoubleClicked,
+  noDataComponent,
 
   enableRowSelection,
   rowSelection,
@@ -76,8 +88,8 @@ function DataTable<TData extends RowData>({
   initialSorting,
 
   enablePagination,
-  paginationPerPage=10,
-  paginationOptions=[10, 20, 30, 40, 50],
+  paginationPerPage = 10,
+  paginationOptions = [10, 20, 30, 40, 50],
   onChangePaginationOption,
 
   ...restProps
@@ -86,14 +98,14 @@ function DataTable<TData extends RowData>({
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: paginationPerPage,
+    pageSize: paginationPerPage
   });
-  
+
   const tableImpl = useReactTable({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: enableSorting ? getSortedRowModel() : undefined,
     getPaginationRowModel: enablePagination ? getPaginationRowModel() : undefined,
-    
+
     state: {
       pagination: pagination,
       sorting: sorting,
@@ -110,39 +122,39 @@ function DataTable<TData extends RowData>({
   const isEmpty = tableImpl.getRowModel().rows.length === 0;
 
   return (
-  <div className={clsx(className)} style={style}>
-    <table className='w-full'>
-      {!noHeader ?
-      <TableHeader 
-        table={tableImpl}
-        enableRowSelection={enableRowSelection}
-        enableSorting={enableSorting}
-        headPosition={headPosition}
-      />: null}
-      
-      <TableBody
-        table={tableImpl}
-        dense={dense}
-        conditionalRowStyles={conditionalRowStyles}
-        enableRowSelection={enableRowSelection}
-        onRowClicked={onRowClicked}
-        onRowDoubleClicked={onRowDoubleClicked}
-      />
-      
-      {!noFooter ?
-      <TableFooter
-        table={tableImpl}
-       />: null}
-    </table>
-    
-    {(enablePagination && !isEmpty) ?
-    <PaginationTools
-      table={tableImpl}
-      paginationOptions={paginationOptions}
-      onChangePaginationOption={onChangePaginationOption}
-    /> : null}
-    {isEmpty ? (noDataComponent ?? <DefaultNoData />) : null}
-  </div>);
+    <div className={clsx(className)} style={style}>
+      <table className='w-full'>
+        {!noHeader ? (
+          <TableHeader
+            table={tableImpl}
+            enableRowSelection={enableRowSelection}
+            enableSorting={enableSorting}
+            headPosition={headPosition}
+          />
+        ) : null}
+
+        <TableBody
+          table={tableImpl}
+          dense={dense}
+          conditionalRowStyles={conditionalRowStyles}
+          enableRowSelection={enableRowSelection}
+          onRowClicked={onRowClicked}
+          onRowDoubleClicked={onRowDoubleClicked}
+        />
+
+        {!noFooter ? <TableFooter table={tableImpl} /> : null}
+      </table>
+
+      {enablePagination && !isEmpty ? (
+        <PaginationTools
+          table={tableImpl}
+          paginationOptions={paginationOptions}
+          onChangePaginationOption={onChangePaginationOption}
+        />
+      ) : null}
+      {isEmpty ? noDataComponent ?? <DefaultNoData /> : null}
+    </div>
+  );
 }
 
 export default DataTable;

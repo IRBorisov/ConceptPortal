@@ -7,9 +7,8 @@ import { Graph } from '@/utils/Graph';
 function useGraphFilter(schema: IRSForm | undefined, params: GraphFilterParams, toggleUpdate: boolean) {
   const [filtered, setFiltered] = useState<Graph>(new Graph());
 
-  const allowedTypes: CstType[] = useMemo(
-  () => {
-    const result: CstType[]  = [];
+  const allowedTypes: CstType[] = useMemo(() => {
+    const result: CstType[] = [];
     if (params.allowBase) result.push(CstType.BASE);
     if (params.allowStruct) result.push(CstType.STRUCTURED);
     if (params.allowTerm) result.push(CstType.TERM);
@@ -20,9 +19,8 @@ function useGraphFilter(schema: IRSForm | undefined, params: GraphFilterParams, 
     if (params.allowTheorem) result.push(CstType.THEOREM);
     return result;
   }, [params]);
-  
-  useLayoutEffect(
-  () => {
+
+  useLayoutEffect(() => {
     if (!schema) {
       setFiltered(new Graph());
       return;

@@ -6,7 +6,7 @@ function usePartialUpdate<ValueType>(initialValue: ValueType) {
   const [value, updateValue] = useReducer(
     (data: ValueType, newData: Partial<ValueType>) => ({
       ...data,
-      ...newData,
+      ...newData
     }),
     initialValue
   );

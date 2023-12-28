@@ -3,6 +3,7 @@ import InfoCstClass from '@/components/Shared/InfoCstClass';
 import InfoCstStatus from '@/components/Shared/InfoCstStatus';
 
 function HelpTermGraph() {
+  // prettier-ignore
   return (
   <div className='flex max-w-[80rem]'>
     <div>

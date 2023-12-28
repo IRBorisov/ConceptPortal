@@ -20,35 +20,33 @@ import { globalIDs } from './utils/constants';
 function Root() {
   const { viewportHeight, mainHeight, showScroll } = useConceptTheme();
   return (
-  <NavigationState>
-  <div className='min-w-[30rem] clr-app antialiased'>
+    <NavigationState>
+      <div className='min-w-[30rem] clr-app antialiased'>
+        <ConceptToaster
+          className='mt-[4rem] text-sm' //
+          autoClose={3000}
+          draggable={false}
+          pauseOnFocusLoss={false}
+        />
 
-    <ConceptToaster
-      className='mt-[4rem] text-sm'
-      autoClose={3000}
-      draggable={false}
-      pauseOnFocusLoss={false}
-    />
-    
-    <Navigation />
+        <Navigation />
 
-    <div id={globalIDs.main_scroll}
-      className='overscroll-none min-w-fit overflow-y-auto'
-      style={{
-        maxHeight: viewportHeight,
-        overflowY: showScroll ? 'scroll': 'auto'
-      }}
-    >
-      <main
-        className='flex flex-col items-center'
-        style={{minHeight: mainHeight}}
-      >
-        <Outlet />
-      </main>
-      <Footer />
-    </div>
-  </div>
-  </NavigationState>);
+        <div
+          id={globalIDs.main_scroll}
+          className='overflow-y-auto overscroll-none min-w-fit'
+          style={{
+            maxHeight: viewportHeight,
+            overflowY: showScroll ? 'scroll' : 'auto'
+          }}
+        >
+          <main className='flex flex-col items-center' style={{ minHeight: mainHeight }}>
+            <Outlet />
+          </main>
+          <Footer />
+        </div>
+      </div>
+    </NavigationState>
+  );
 }
 
 const router = createBrowserRouter([
@@ -59,48 +57,46 @@ const router = createBrowserRouter([
     children: [
       {
         path: '',
-        element: <HomePage />,
+        element: <HomePage />
       },
       {
         path: 'login',
-        element: <LoginPage />,
+        element: <LoginPage />
       },
       {
         path: 'signup',
-        element: <RegisterPage />,
+        element: <RegisterPage />
       },
       {
         path: 'restore-password',
-        element: <RestorePasswordPage />,
+        element: <RestorePasswordPage />
       },
       {
         path: 'profile',
-        element: <UserProfilePage />,
+        element: <UserProfilePage />
       },
       {
         path: 'manuals',
-        element: <ManualsPage />,
+        element: <ManualsPage />
       },
       {
         path: 'library',
-        element: <LibraryPage />,
+        element: <LibraryPage />
       },
       {
         path: 'library/create',
-        element: <CreateRSFormPage />,
+        element: <CreateRSFormPage />
       },
       {
         path: 'rsforms/:id',
-        element: <RSFormPage />,
-      },
+        element: <RSFormPage />
+      }
     ]
-  },
+  }
 ]);
 
-function App () {
-  return (
-    <RouterProvider router={router} />
-  );
+function App() {
+  return <RouterProvider router={router} />;
 }
 
 export default App;

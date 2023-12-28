@@ -6,20 +6,30 @@ import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { toast } from 'react-toastify';
 
 import { type ErrorData } from '@/components/InfoError';
+import { ILexemeData, IResolutionData, ITextRequest, ITextResult, IWordFormPlain } from '@/models/language';
 import {
-  ILexemeData,
-  IResolutionData, ITextRequest,
-  ITextResult, IWordFormPlain
-} from '@/models/language';
-import {
-  ICurrentUser,   ILibraryItem, ILibraryUpdateData,
-  IUserInfo, IUserLoginData, IUserProfile, IUserSignupData,
-  IUserUpdateData, IUserUpdatePassword
+  ICurrentUser,
+  ILibraryItem,
+  ILibraryUpdateData,
+  IUserInfo,
+  IUserLoginData,
+  IUserProfile,
+  IUserSignupData,
+  IUserUpdateData,
+  IUserUpdatePassword
 } from '@/models/library';
 import {
-  IConstituentaList, IConstituentaMeta,
-  ICstCreateData, ICstCreatedResponse, ICstMovetoData, ICstRenameData, ICstUpdateData,
-  IRSFormCreateData, IRSFormData, IRSFormUploadData} from '@/models/rsform';
+  IConstituentaList,
+  IConstituentaMeta,
+  ICstCreateData,
+  ICstCreatedResponse,
+  ICstMovetoData,
+  ICstRenameData,
+  ICstUpdateData,
+  IRSFormCreateData,
+  IRSFormData,
+  IRSFormUploadData
+} from '@/models/rsform';
 import { IExpressionParse, IRSExpression } from '@/models/rslang';
 
 import { buildConstants } from './constants';
@@ -29,13 +39,13 @@ const defaultOptions = {
   xsrfHeaderName: 'x-csrftoken',
   baseURL: `${buildConstants.backend}`,
   withCredentials: true
-}
+};
 
 const axiosInstance = axios.create(defaultOptions);
-axiosInstance.interceptors.request.use(
-(config) => {
-  const token = document.cookie.split('; ')
-    .find((row) => row.startsWith('csrftoken='))
+axiosInstance.interceptors.request.use(config => {
+  const token = document.cookie
+    .split('; ')
+    .find(row => row.startsWith('csrftoken='))
     ?.split('=')[1];
   if (token) {
     config.headers['x-csrftoken'] = token;
@@ -47,32 +57,32 @@ axiosInstance.interceptors.request.use(
 export type DataCallback<ResponseData = undefined> = (data: ResponseData) => void;
 
 interface IFrontRequest<RequestData, ResponseData> {
-  data?: RequestData
-  onSuccess?: DataCallback<ResponseData>
-  onError?: (error: ErrorData) => void
-  setLoading?: (loading: boolean) => void
-  showError?: boolean
+  data?: RequestData;
+  onSuccess?: DataCallback<ResponseData>;
+  onError?: (error: ErrorData) => void;
+  setLoading?: (loading: boolean) => void;
+  showError?: boolean;
 }
 
 export interface FrontPush<DataType> extends IFrontRequest<DataType, undefined> {
-  data: DataType
+  data: DataType;
 }
-export interface FrontPull<DataType> extends IFrontRequest<undefined, DataType>{
-  onSuccess: DataCallback<DataType>
-}
-
-export interface FrontExchange<RequestData, ResponseData> extends IFrontRequest<RequestData, ResponseData>{
-  data: RequestData
-  onSuccess: DataCallback<ResponseData>
+export interface FrontPull<DataType> extends IFrontRequest<undefined, DataType> {
+  onSuccess: DataCallback<DataType>;
 }
 
-export interface FrontAction extends IFrontRequest<undefined, undefined>{}
+export interface FrontExchange<RequestData, ResponseData> extends IFrontRequest<RequestData, ResponseData> {
+  data: RequestData;
+  onSuccess: DataCallback<ResponseData>;
+}
+
+export interface FrontAction extends IFrontRequest<undefined, undefined> {}
 
 interface IAxiosRequest<RequestData, ResponseData> {
-  endpoint: string
-  request: IFrontRequest<RequestData, ResponseData>
-  title: string
-  options?: AxiosRequestConfig
+  endpoint: string;
+  request: IFrontRequest<RequestData, ResponseData>;
+  title: string;
+  options?: AxiosRequestConfig;
 }
 
 // ==================== API ====================
@@ -268,7 +278,9 @@ export function patchRenameConstituenta(schema: string, request: FrontExchange<I
 
 export function patchMoveConstituenta(schema: string, request: FrontExchange<ICstMovetoData, IRSFormData>) {
   AxiosPatch({
-    title: `Moving Constituents for RSForm id=${schema}: ${JSON.stringify(request.data.items)} to ${request.data.move_to}`,
+    title: `Moving Constituents for RSForm id=${schema}: ${JSON.stringify(request.data.items)} to ${
+      request.data.move_to
+    }`,
     endpoint: `/api/rsforms/${schema}/cst-moveto`,
     request: request
   });
@@ -276,7 +288,7 @@ export function patchMoveConstituenta(schema: string, request: FrontExchange<ICs
 
 export function postCheckExpression(schema: string, request: FrontExchange<IRSExpression, IExpressionParse>) {
   AxiosPost({
-    title: `Check expression for RSForm id=${schema}: ${request.data.expression }`,
+    title: `Check expression for RSForm id=${schema}: ${request.data.expression}`,
     endpoint: `/api/rsforms/${schema}/check`,
     request: request
   });
@@ -339,7 +351,8 @@ export function postGenerateLexeme(request: FrontExchange<ITextRequest, ILexemeD
 function AxiosGet<ResponseData>({ endpoint, request, title, options }: IAxiosRequest<undefined, ResponseData>) {
   console.log(`REQUEST: [[${title}]]`);
   if (request.setLoading) request.setLoading(true);
-  axiosInstance.get<ResponseData>(endpoint, options)
+  axiosInstance
+    .get<ResponseData>(endpoint, options)
     .then(response => {
       if (request.setLoading) request.setLoading(false);
       if (request.onSuccess) request.onSuccess(response.data);
@@ -351,12 +364,16 @@ function AxiosGet<ResponseData>({ endpoint, request, title, options }: IAxiosReq
     });
 }
 
-function AxiosPost<RequestData, ResponseData>(
-  { endpoint, request, title, options }: IAxiosRequest<RequestData, ResponseData>
-) {
+function AxiosPost<RequestData, ResponseData>({
+  endpoint,
+  request,
+  title,
+  options
+}: IAxiosRequest<RequestData, ResponseData>) {
   console.log(`POST: [[${title}]]`);
   if (request.setLoading) request.setLoading(true);
-  axiosInstance.post<ResponseData>(endpoint, request.data, options)
+  axiosInstance
+    .post<ResponseData>(endpoint, request.data, options)
     .then(response => {
       if (request.setLoading) request.setLoading(false);
       if (request.onSuccess) request.onSuccess(response.data);
@@ -368,12 +385,16 @@ function AxiosPost<RequestData, ResponseData>(
     });
 }
 
-function AxiosDelete<RequestData, ResponseData>(
-  { endpoint, request, title, options }: IAxiosRequest<RequestData, ResponseData>
-) {
+function AxiosDelete<RequestData, ResponseData>({
+  endpoint,
+  request,
+  title,
+  options
+}: IAxiosRequest<RequestData, ResponseData>) {
   console.log(`DELETE: [[${title}]]`);
   if (request.setLoading) request.setLoading(true);
-  axiosInstance.delete<ResponseData>(endpoint, options)
+  axiosInstance
+    .delete<ResponseData>(endpoint, options)
     .then(response => {
       if (request.setLoading) request.setLoading(false);
       if (request.onSuccess) request.onSuccess(response.data);
@@ -385,12 +406,16 @@ function AxiosDelete<RequestData, ResponseData>(
     });
 }
 
-function AxiosPatch<RequestData, ResponseData>(
-  { endpoint, request, title, options }: IAxiosRequest<RequestData, ResponseData>
-) {
+function AxiosPatch<RequestData, ResponseData>({
+  endpoint,
+  request,
+  title,
+  options
+}: IAxiosRequest<RequestData, ResponseData>) {
   console.log(`PATCH: [[${title}]]`);
   if (request.setLoading) request.setLoading(true);
-  axiosInstance.patch<ResponseData>(endpoint, request.data, options)
+  axiosInstance
+    .patch<ResponseData>(endpoint, request.data, options)
     .then(response => {
       if (request.setLoading) request.setLoading(false);
       if (request.onSuccess) request.onSuccess(response.data);

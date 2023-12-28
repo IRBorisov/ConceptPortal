@@ -55,79 +55,86 @@ const MAIN_THIRD_ROW: TokenID[] = [
 ];
 
 const SECONDARY_FIRST_ROW = [
-  {text: 'μ', title: 'q'},
-  {text: 'ω', title: 'w'},
-  {text: 'ε', title: 'e'},
-  {text: 'ρ', title: 'r'},
-  {text: 'τ', title: 't'},
-  {text: 'π', title: 'y'}
+  { text: 'μ', title: 'q' },
+  { text: 'ω', title: 'w' },
+  { text: 'ε', title: 'e' },
+  { text: 'ρ', title: 'r' },
+  { text: 'τ', title: 't' },
+  { text: 'π', title: 'y' }
 ];
 
 const SECONDARY_SECOND_ROW = [
-  {text: 'α', title: 'a'},
-  {text: 'σ', title: 's'},
-  {text: 'δ', title: 'd'},
-  {text: 'φ', title: 'f'},
-  {text: 'γ', title: 'g'},
-  {text: 'λ', title: 'h'}
+  { text: 'α', title: 'a' },
+  { text: 'σ', title: 's' },
+  { text: 'δ', title: 'd' },
+  { text: 'φ', title: 'f' },
+  { text: 'γ', title: 'g' },
+  { text: 'λ', title: 'h' }
 ];
 
 const SECONDARY_THIRD_ROW = [
-  {text: 'ζ', title: 'z'},
-  {text: 'ξ', title: 'x'},
-  {text: 'ψ', title: 'c'},
-  {text: 'θ', title: 'v'},
-  {text: 'β', title: 'b'},
-  {text: 'η', title: 'n'}
+  { text: 'ζ', title: 'z' },
+  { text: 'ξ', title: 'x' },
+  { text: 'ψ', title: 'c' },
+  { text: 'θ', title: 'v' },
+  { text: 'β', title: 'b' },
+  { text: 'η', title: 'n' }
 ];
 
 interface RSEditorControlsProps {
-  isOpen: boolean
-  disabled?: boolean
-  onEdit: (id: TokenID, key?: string) => void
+  isOpen: boolean;
+  disabled?: boolean;
+  onEdit: (id: TokenID, key?: string) => void;
 }
 
 function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsProps) {
   return (
-  <motion.div
-    className='flex-wrap text-sm divide-solid'
-    initial={false}
-    animate={isOpen ? 'open' : 'closed'}
-    variants={animateRSControl}
-  >
-    {MAIN_FIRST_ROW.map(
-    (token) => 
-    <RSTokenButton key={`${prefixes.rsedit_btn}${token}`}
-      token={token} onInsert={onEdit} disabled={disabled}
-    />)}
-    {SECONDARY_FIRST_ROW.map(
-    ({text, title}) => 
-    <RSLocalButton key={`${prefixes.rsedit_btn}${title}`}
-      text={text} title={title} onInsert={onEdit} disabled={disabled}
-    />)}
+    <motion.div
+      className='flex-wrap text-sm divide-solid'
+      initial={false}
+      animate={isOpen ? 'open' : 'closed'}
+      variants={animateRSControl}
+    >
+      {MAIN_FIRST_ROW.map(token => (
+        <RSTokenButton key={`${prefixes.rsedit_btn}${token}`} token={token} onInsert={onEdit} disabled={disabled} />
+      ))}
+      {SECONDARY_FIRST_ROW.map(({ text, title }) => (
+        <RSLocalButton
+          key={`${prefixes.rsedit_btn}${title}`}
+          text={text}
+          title={title}
+          onInsert={onEdit}
+          disabled={disabled}
+        />
+      ))}
 
-    {MAIN_SECOND_ROW.map(
-    (token) => 
-    <RSTokenButton key={`${prefixes.rsedit_btn}${token}`}
-      token={token} onInsert={onEdit} disabled={disabled}
-    />)}
-    {SECONDARY_SECOND_ROW.map(
-    ({text, title}) => 
-    <RSLocalButton key={`${prefixes.rsedit_btn}${title}`}
-      text={text} title={title} onInsert={onEdit} disabled={disabled}
-    />)}
+      {MAIN_SECOND_ROW.map(token => (
+        <RSTokenButton key={`${prefixes.rsedit_btn}${token}`} token={token} onInsert={onEdit} disabled={disabled} />
+      ))}
+      {SECONDARY_SECOND_ROW.map(({ text, title }) => (
+        <RSLocalButton
+          key={`${prefixes.rsedit_btn}${title}`}
+          text={text}
+          title={title}
+          onInsert={onEdit}
+          disabled={disabled}
+        />
+      ))}
 
-    {MAIN_THIRD_ROW.map(
-    (token) => 
-    <RSTokenButton key={`${prefixes.rsedit_btn}${token}`}
-      token={token} onInsert={onEdit} disabled={disabled}
-    />)}
-    {SECONDARY_THIRD_ROW.map(
-    ({text, title}) => 
-    <RSLocalButton key={`${prefixes.rsedit_btn}${title}`}
-      text={text} title={title} onInsert={onEdit} disabled={disabled}
-    />)}
-  </motion.div>);
+      {MAIN_THIRD_ROW.map(token => (
+        <RSTokenButton key={`${prefixes.rsedit_btn}${token}`} token={token} onInsert={onEdit} disabled={disabled} />
+      ))}
+      {SECONDARY_THIRD_ROW.map(({ text, title }) => (
+        <RSLocalButton
+          key={`${prefixes.rsedit_btn}${title}`}
+          text={text}
+          title={title}
+          onInsert={onEdit}
+          disabled={disabled}
+        />
+      ))}
+    </motion.div>
+  );
 }
 
 export default RSEditorControls;

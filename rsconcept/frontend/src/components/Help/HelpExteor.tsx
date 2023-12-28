@@ -2,6 +2,7 @@ import TextURL from '@/components/Common/TextURL';
 import { urls } from '@/utils/constants';
 
 function HelpExteor() {
+  // prettier-ignore
   return (
   <div>
     <h1>Экстеор</h1>

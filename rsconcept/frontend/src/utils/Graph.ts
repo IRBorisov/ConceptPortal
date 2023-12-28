@@ -18,8 +18,8 @@ export class GraphNode {
 
   clone(): GraphNode {
     const result = new GraphNode(this.id);
-    result.outputs = [... this.outputs];
-    result.inputs = [... this.inputs];
+    result.outputs = [...this.outputs];
+    result.inputs = [...this.inputs];
     return result;
   }
 
@@ -44,7 +44,7 @@ export class GraphNode {
 
 /**
  * Represents a Graph.
- * 
+ *
  * This class is optimized for TermGraph use case and not supposed to be used as generic graph implementation.
  */
 export class Graph {
@@ -103,7 +103,7 @@ export class Graph {
     nodeToRemove.inputs.forEach(input => {
       nodeToRemove.outputs.forEach(output => {
         this.addEdge(input, output);
-      })
+      });
     });
     return this.removeNode(target);
   }
@@ -171,7 +171,7 @@ export class Graph {
     }
     return result;
   }
-  
+
   expandInputs(origin: number[]): number[] {
     const result: number[] = [];
     const marked = new Map<number, boolean>();
@@ -200,7 +200,7 @@ export class Graph {
       position += 1;
     }
     return result;
-  }  
+  }
 
   topologicalOrder(): number[] {
     const result: number[] = [];
@@ -210,13 +210,13 @@ export class Graph {
       if (marked.get(node.id)) {
         return;
       }
-      toVisit.push(node.id)
+      toVisit.push(node.id);
       while (toVisit.length > 0) {
         const item = toVisit[toVisit.length - 1];
         if (marked.get(item)) {
           if (!result.find(id => id === item)) {
             result.push(item);
-          } 
+          }
           toVisit.pop();
         } else {
           marked.set(item, true);
@@ -241,19 +241,19 @@ export class Graph {
       if (marked.get(nodeID)) {
         return;
       }
-      const stack: {id: number, parents: number[]}[] = [];
-      stack.push({id: nodeID, parents: []});
+      const stack: { id: number; parents: number[] }[] = [];
+      stack.push({ id: nodeID, parents: [] });
       while (stack.length > 0) {
         const item = stack.splice(0, 1)[0];
         const node = this.nodes.get(item.id);
         if (node) {
           node.outputs.forEach(child => {
             item.parents.forEach(parent => this.removeEdge(parent, child));
-            stack.push({id: child, parents: [item.id, ...item.parents]})
+            stack.push({ id: child, parents: [item.id, ...item.parents] });
           });
         }
-        marked.set(item.id, true)
+        marked.set(item.id, true);
       }
     });
-  } 
+  }
 }

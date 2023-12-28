@@ -4,7 +4,7 @@
 
 /**
  * Represents user access mode.
-*/
+ */
 export enum UserAccessMode {
   READER = 0,
   OWNER,
@@ -13,7 +13,7 @@ export enum UserAccessMode {
 
 /**
  * Represents graph dependency mode.
-*/
+ */
 export enum DependencyMode {
   ALL = 0,
   EXPRESSION,
@@ -25,12 +25,12 @@ export enum DependencyMode {
 
 /**
  * Represents graph node coloring scheme.
-*/
+ */
 export type GraphColoringScheme = 'none' | 'status' | 'type';
 
 /**
  * Represents manuals topic.
-*/
+ */
 export enum HelpTopic {
   MAIN = 'main',
   LIBRARY = 'library',
@@ -43,12 +43,12 @@ export enum HelpTopic {
   TERM_CONTROL = 'terminology-control',
   EXTEOR = 'exteor',
   API = 'api',
-  PRIVACY = 'privacy',
+  PRIVACY = 'privacy'
 }
 
 /**
  * Represents {@link IConstituenta} matching mode.
-*/
+ */
 export enum CstMatchMode {
   ALL = 1,
   EXPR,
@@ -59,19 +59,19 @@ export enum CstMatchMode {
 
 /**
  * Represents Library filter parameters.
-*/
+ */
 export interface ILibraryFilter {
-  query?: string
-  is_personal?: boolean
-  is_owned?: boolean
-  is_common?: boolean
-  is_canonical?: boolean
-  is_subscribed?: boolean
+  query?: string;
+  is_personal?: boolean;
+  is_owned?: boolean;
+  is_common?: boolean;
+  is_canonical?: boolean;
+  is_subscribed?: boolean;
 }
 
 /**
  * Represents filtering strategy for Library.
-*/
+ */
 export enum LibraryFilterStrategy {
   MANUAL = 'manual',
   PERSONAL = 'personal',
@@ -83,19 +83,19 @@ export enum LibraryFilterStrategy {
 
 /**
  * Represents parameters for GraphEditor.
-*/
+ */
 export interface GraphFilterParams {
-  noHermits: boolean
-  noTransitive: boolean
-  noTemplates: boolean
-  noText: boolean
+  noHermits: boolean;
+  noTransitive: boolean;
+  noTemplates: boolean;
+  noText: boolean;
 
-  allowBase: boolean
-  allowStruct: boolean
-  allowTerm: boolean
-  allowAxiom: boolean
-  allowFunction: boolean
-  allowPredicate: boolean
-  allowConstant: boolean
-  allowTheorem: boolean
+  allowBase: boolean;
+  allowStruct: boolean;
+  allowTerm: boolean;
+  allowAxiom: boolean;
+  allowFunction: boolean;
+  allowPredicate: boolean;
+  allowConstant: boolean;
+  allowTheorem: boolean;
 }

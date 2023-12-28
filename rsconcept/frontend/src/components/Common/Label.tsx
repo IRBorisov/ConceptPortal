@@ -2,9 +2,8 @@ import clsx from 'clsx';
 
 import { CProps } from '../props';
 
-interface LabelProps 
-extends CProps.Label {
-  text?: string
+interface LabelProps extends CProps.Label {
+  text?: string;
 }
 
 function Label({ text, className, ...restProps }: LabelProps) {
@@ -12,15 +11,10 @@ function Label({ text, className, ...restProps }: LabelProps) {
     return null;
   }
   return (
-  <label
-    className={clsx(
-      'text-sm font-semibold whitespace-nowrap',
-      className
-    )}
-    {...restProps}
-  >
-    {text}
-  </label>);
+    <label className={clsx('text-sm font-semibold whitespace-nowrap', className)} {...restProps}>
+      {text}
+    </label>
+  );
 }
 
 export default Label;

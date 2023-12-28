@@ -1,18 +1,19 @@
 /**
  * Module: Text descriptors for UI and model elements.
- * 
+ *
  * Label is a short text used to represent an entity.
  * Description is a long description used in tooltips.
  */
-import { GramData,Grammeme, ReferenceType } from '@/models/language';
-import {
-  CstMatchMode, DependencyMode, HelpTopic,
-  LibraryFilterStrategy, UserAccessMode
-} from '@/models/miscellaneous';
+import { GramData, Grammeme, ReferenceType } from '@/models/language';
+import { CstMatchMode, DependencyMode, HelpTopic, LibraryFilterStrategy, UserAccessMode } from '@/models/miscellaneous';
 import { CstClass, CstType, ExpressionStatus, IConstituenta } from '@/models/rsform';
 import {
-  IArgumentInfo, IRSErrorDescription, ISyntaxTreeNode,
-  ParsingStatus, RSErrorType, TokenID
+  IArgumentInfo,
+  IRSErrorDescription,
+  ISyntaxTreeNode,
+  ParsingStatus,
+  RSErrorType,
+  TokenID
 } from '@/models/rslang';
 
 /**
@@ -21,15 +22,19 @@ import {
 export function describeConstituenta(cst: IConstituenta): string {
   if (cst.cst_type === CstType.STRUCTURED) {
     return (
-      cst.term_resolved || cst.term_raw ||
-      cst.definition_resolved || cst.definition_raw ||
+      cst.term_resolved ||
+      cst.term_raw ||
+      cst.definition_resolved ||
+      cst.definition_raw ||
       cst.convention ||
       cst.definition_formal
     );
   } else {
     return (
-      cst.term_resolved || cst.term_raw ||
-      cst.definition_resolved || cst.definition_raw ||
+      cst.term_resolved ||
+      cst.term_raw ||
+      cst.definition_resolved ||
+      cst.definition_raw ||
       cst.definition_formal ||
       cst.convention
     );
@@ -61,89 +66,94 @@ export function labelConstituenta(cst: IConstituenta) {
  * Retrieves label for {@link TokenID}.
  */
 export function labelToken(id: TokenID): string {
+  // prettier-ignore
   switch (id) {
-  case TokenID.BOOLEAN:             return 'ℬ()';
-  case TokenID.DECART:              return '×';
-  case TokenID.PUNCTUATION_PL:      return '( )';
-  case TokenID.PUNCTUATION_SL:      return '[ ]';
-  case TokenID.QUANTOR_UNIVERSAL:   return '∀';
-  case TokenID.QUANTOR_EXISTS:      return '∃';
-  case TokenID.LOGIC_NOT:           return '¬';
-  case TokenID.LOGIC_AND:           return '&';
-  case TokenID.LOGIC_OR:            return '∨';
-  case TokenID.LOGIC_IMPLICATION:   return '⇒';
-  case TokenID.LOGIC_EQUIVALENT:    return '⇔';
-  case TokenID.LIT_EMPTYSET:        return '∅';
-  case TokenID.LIT_WHOLE_NUMBERS:   return 'Z';
-  case TokenID.EQUAL:               return '=';
-  case TokenID.NOTEQUAL:            return '≠';
-  case TokenID.GREATER_OR_EQ:       return '≥';
-  case TokenID.LESSER_OR_EQ:        return '≤';
-  case TokenID.SET_IN:              return '∈';
-  case TokenID.SET_NOT_IN:          return '∉';
-  case TokenID.SUBSET_OR_EQ:        return '⊆';
-  case TokenID.SUBSET:              return '⊂';
-  case TokenID.NOT_SUBSET:          return '⊄';
-  case TokenID.SET_INTERSECTION:    return '∩';
-  case TokenID.SET_UNION:           return '∪';
-  case TokenID.SET_MINUS:           return '\\';
-  case TokenID.SET_SYMMETRIC_MINUS:   return '∆';
-  case TokenID.NT_DECLARATIVE_EXPR:   return 'D{}';
-  case TokenID.NT_IMPERATIVE_EXPR:    return 'I{}';
-  case TokenID.NT_RECURSIVE_FULL:     return 'R{}';
-  case TokenID.BIGPR:               return 'Pr1()';
-  case TokenID.SMALLPR:             return 'pr1()';
-  case TokenID.FILTER:              return 'Fi1[]()';
-  case TokenID.REDUCE:              return 'red()';
-  case TokenID.CARD:                return 'card()';
-  case TokenID.BOOL:                return 'bool()';
-  case TokenID.DEBOOL:              return 'debool()';
-  case TokenID.PUNCTUATION_ASSIGN:  return ':=';
-  case TokenID.PUNCTUATION_ITERATE: return ':∈';
+    case TokenID.BOOLEAN:             return 'ℬ()';
+    case TokenID.DECART:              return '×';
+    case TokenID.PUNCTUATION_PL:      return '( )';
+    case TokenID.PUNCTUATION_SL:      return '[ ]';
+    case TokenID.QUANTOR_UNIVERSAL:   return '∀';
+    case TokenID.QUANTOR_EXISTS:      return '∃';
+    case TokenID.LOGIC_NOT:           return '¬';
+    case TokenID.LOGIC_AND:           return '&';
+    case TokenID.LOGIC_OR:            return '∨';
+    case TokenID.LOGIC_IMPLICATION:   return '⇒';
+    case TokenID.LOGIC_EQUIVALENT:    return '⇔';
+    case TokenID.LIT_EMPTYSET:        return '∅';
+    case TokenID.LIT_WHOLE_NUMBERS:   return 'Z';
+    case TokenID.EQUAL:               return '=';
+    case TokenID.NOTEQUAL:            return '≠';
+    case TokenID.GREATER_OR_EQ:       return '≥';
+    case TokenID.LESSER_OR_EQ:        return '≤';
+    case TokenID.SET_IN:              return '∈';
+    case TokenID.SET_NOT_IN:          return '∉';
+    case TokenID.SUBSET_OR_EQ:        return '⊆';
+    case TokenID.SUBSET:              return '⊂';
+    case TokenID.NOT_SUBSET:          return '⊄';
+    case TokenID.SET_INTERSECTION:    return '∩';
+    case TokenID.SET_UNION:           return '∪';
+    case TokenID.SET_MINUS:           return '\\';
+    case TokenID.SET_SYMMETRIC_MINUS:   return '∆';
+    case TokenID.NT_DECLARATIVE_EXPR:   return 'D{}';
+    case TokenID.NT_IMPERATIVE_EXPR:    return 'I{}';
+    case TokenID.NT_RECURSIVE_FULL:     return 'R{}';
+    case TokenID.BIGPR:               return 'Pr1()';
+    case TokenID.SMALLPR:             return 'pr1()';
+    case TokenID.FILTER:              return 'Fi1[]()';
+    case TokenID.REDUCE:              return 'red()';
+    case TokenID.CARD:                return 'card()';
+    case TokenID.BOOL:                return 'bool()';
+    case TokenID.DEBOOL:              return 'debool()';
+    case TokenID.PUNCTUATION_ASSIGN:  return ':=';
+    case TokenID.PUNCTUATION_ITERATE: return ':∈';
   }
   return `no label: ${id}`;
 }
 
+/**
+ * Generates description for {@link TokenID}..
+ */
 export function describeToken(id: TokenID): string {
+  // prettier-ignore
   switch (id) {
-  case TokenID.BOOLEAN:               return 'Булеан [Alt + E / Shift + B]';
-  case TokenID.DECART:                return 'Декартово произведение [Alt + Shift + E / Shift + 8]';
-  case TokenID.PUNCTUATION_PL:        return 'Скобки вокруг выражения [Alt + Shift + 9 ]';
-  case TokenID.PUNCTUATION_SL:        return 'Скобки вокруг выражения [Alt + [ ]';
-  case TokenID.QUANTOR_UNIVERSAL:     return 'Квантор всеобщности [`]';
-  case TokenID.QUANTOR_EXISTS:        return 'Квантор существования [Shift + `]';
-  case TokenID.LOGIC_NOT:             return 'Отрицание [Alt + `]';
-  case TokenID.LOGIC_AND:             return 'Конъюнкция [Alt + 3 ~ Shift + 7]';
-  case TokenID.LOGIC_OR:              return 'Дизъюнкция [Alt + Shift + 3]';
-  case TokenID.LOGIC_IMPLICATION:     return 'Импликация [Alt + 4]';
-  case TokenID.LOGIC_EQUIVALENT:      return 'Эквивалентность [Alt + Shift + 4]';
-  case TokenID.LIT_EMPTYSET:          return 'Пустое множество [Alt + X]';
-  case TokenID.LIT_WHOLE_NUMBERS:     return 'Целые числа [Alt + Z]';
-  case TokenID.EQUAL:                 return 'Равенство';
-  case TokenID.NOTEQUAL:              return 'Неравенство [Alt + Shift + `]';
-  case TokenID.GREATER_OR_EQ:         return 'Больше или равно [Alt + Shift + 7]';
-  case TokenID.LESSER_OR_EQ:          return 'Меньше или равно [Alt + Shift + 8]';
-  case TokenID.SET_IN:                return 'Быть элементом (принадлежит) [Alt + 1]';
-  case TokenID.SET_NOT_IN:            return 'Не принадлежит [Alt + Shift + 1]';
-  case TokenID.SUBSET_OR_EQ:          return 'Быть частью (нестрогое подмножество) [Alt + 2]';
-  case TokenID.SUBSET:                return 'Строгое подмножество [Alt + 7]';
-  case TokenID.NOT_SUBSET:            return 'Не подмножество [Alt + Shift + 2]';
-  case TokenID.SET_INTERSECTION:      return 'Пересечение [Alt + A]';
-  case TokenID.SET_UNION:             return 'Объединение [Alt + S]';
-  case TokenID.SET_MINUS:             return 'Разность множеств [Alt + 5]';
-  case TokenID.SET_SYMMETRIC_MINUS:   return 'Симметрическая разность [Alt + Shift + 5]';
-  case TokenID.NT_DECLARATIVE_EXPR:   return 'Декларативная форма определения терма [Alt + D]';
-  case TokenID.NT_IMPERATIVE_EXPR:    return 'Императивная форма определения терма [Alt + G]';
-  case TokenID.NT_RECURSIVE_FULL:     return 'Рекурсивная (цикличная) форма определения терма [Alt + T]';
-  case TokenID.BIGPR:                 return 'Большая проекция [Alt + Q]';
-  case TokenID.SMALLPR:               return 'Малая проекция [Alt + W]';
-  case TokenID.FILTER:                return 'Фильтр [Alt + F]';
-  case TokenID.REDUCE:                return 'Множество-сумма [Alt + R]';
-  case TokenID.CARD:                  return 'Мощность [Alt + C]';
-  case TokenID.BOOL:                  return 'Синглетон [Alt + B]';
-  case TokenID.DEBOOL:                return 'Десинглетон [Alt + V]';
-  case TokenID.PUNCTUATION_ASSIGN:    return 'Присвоение (императивный синтаксис) [Alt + Shift + 6]';
-  case TokenID.PUNCTUATION_ITERATE:   return 'Перебор элементов множества (императивный синтаксис) [Alt + 6]';
+    case TokenID.BOOLEAN:               return 'Булеан [Alt + E / Shift + B]';
+    case TokenID.DECART:                return 'Декартово произведение [Alt + Shift + E / Shift + 8]';
+    case TokenID.PUNCTUATION_PL:        return 'Скобки вокруг выражения [Alt + Shift + 9 ]';
+    case TokenID.PUNCTUATION_SL:        return 'Скобки вокруг выражения [Alt + [ ]';
+    case TokenID.QUANTOR_UNIVERSAL:     return 'Квантор всеобщности [`]';
+    case TokenID.QUANTOR_EXISTS:        return 'Квантор существования [Shift + `]';
+    case TokenID.LOGIC_NOT:             return 'Отрицание [Alt + `]';
+    case TokenID.LOGIC_AND:             return 'Конъюнкция [Alt + 3 ~ Shift + 7]';
+    case TokenID.LOGIC_OR:              return 'Дизъюнкция [Alt + Shift + 3]';
+    case TokenID.LOGIC_IMPLICATION:     return 'Импликация [Alt + 4]';
+    case TokenID.LOGIC_EQUIVALENT:      return 'Эквивалентность [Alt + Shift + 4]';
+    case TokenID.LIT_EMPTYSET:          return 'Пустое множество [Alt + X]';
+    case TokenID.LIT_WHOLE_NUMBERS:     return 'Целые числа [Alt + Z]';
+    case TokenID.EQUAL:                 return 'Равенство';
+    case TokenID.NOTEQUAL:              return 'Неравенство [Alt + Shift + `]';
+    case TokenID.GREATER_OR_EQ:         return 'Больше или равно [Alt + Shift + 7]';
+    case TokenID.LESSER_OR_EQ:          return 'Меньше или равно [Alt + Shift + 8]';
+    case TokenID.SET_IN:                return 'Быть элементом (принадлежит) [Alt + 1]';
+    case TokenID.SET_NOT_IN:            return 'Не принадлежит [Alt + Shift + 1]';
+    case TokenID.SUBSET_OR_EQ:          return 'Быть частью (нестрогое подмножество) [Alt + 2]';
+    case TokenID.SUBSET:                return 'Строгое подмножество [Alt + 7]';
+    case TokenID.NOT_SUBSET:            return 'Не подмножество [Alt + Shift + 2]';
+    case TokenID.SET_INTERSECTION:      return 'Пересечение [Alt + A]';
+    case TokenID.SET_UNION:             return 'Объединение [Alt + S]';
+    case TokenID.SET_MINUS:             return 'Разность множеств [Alt + 5]';
+    case TokenID.SET_SYMMETRIC_MINUS:   return 'Симметрическая разность [Alt + Shift + 5]';
+    case TokenID.NT_DECLARATIVE_EXPR:   return 'Декларативная форма определения терма [Alt + D]';
+    case TokenID.NT_IMPERATIVE_EXPR:    return 'Императивная форма определения терма [Alt + G]';
+    case TokenID.NT_RECURSIVE_FULL:     return 'Рекурсивная (цикличная) форма определения терма [Alt + T]';
+    case TokenID.BIGPR:                 return 'Большая проекция [Alt + Q]';
+    case TokenID.SMALLPR:               return 'Малая проекция [Alt + W]';
+    case TokenID.FILTER:                return 'Фильтр [Alt + F]';
+    case TokenID.REDUCE:                return 'Множество-сумма [Alt + R]';
+    case TokenID.CARD:                  return 'Мощность [Alt + C]';
+    case TokenID.BOOL:                  return 'Синглетон [Alt + B]';
+    case TokenID.DEBOOL:                return 'Десинглетон [Alt + V]';
+    case TokenID.PUNCTUATION_ASSIGN:    return 'Присвоение (императивный синтаксис) [Alt + Shift + 6]';
+    case TokenID.PUNCTUATION_ITERATE:   return 'Перебор элементов множества (императивный синтаксис) [Alt + 6]';
   }
   return `no description: ${id}`;
 }
@@ -152,6 +162,7 @@ export function describeToken(id: TokenID): string {
  * Retrieves label for {@link CstMatchMode}.
  */
 export function labelCstMatchMode(mode: CstMatchMode): string {
+  // prettier-ignore
   switch (mode) {
     case CstMatchMode.ALL:  return 'общий';
     case CstMatchMode.EXPR: return 'выражение';
@@ -165,6 +176,7 @@ export function labelCstMatchMode(mode: CstMatchMode): string {
  * Retrieves description for {@link CstMatchMode}.
  */
 export function describeCstMatchMode(mode: CstMatchMode): string {
+  // prettier-ignore
   switch (mode) {
     case CstMatchMode.ALL:  return 'искать во всех атрибутах';
     case CstMatchMode.EXPR: return 'искать в формальных выражениях';
@@ -178,6 +190,7 @@ export function describeCstMatchMode(mode: CstMatchMode): string {
  * Retrieves label for {@link DependencyMode}.
  */
 export function labelCstSource(mode: DependencyMode): string {
+  // prettier-ignore
   switch (mode) {
     case DependencyMode.ALL:            return 'не ограничен';
     case DependencyMode.EXPRESSION:     return 'выражение';
@@ -192,6 +205,7 @@ export function labelCstSource(mode: DependencyMode): string {
  * Retrieves description for {@link DependencyMode}.
  */
 export function describeCstSource(mode: DependencyMode): string {
+  // prettier-ignore
   switch (mode) {
     case DependencyMode.ALL:            return 'все конституенты';
     case DependencyMode.EXPRESSION:     return 'идентификаторы из выражения';
@@ -206,6 +220,7 @@ export function describeCstSource(mode: DependencyMode): string {
  * Retrieves label for {@link LibraryFilterStrategy}.
  */
 export function labelLibraryFilter(strategy: LibraryFilterStrategy): string {
+  // prettier-ignore
   switch (strategy) {
     case LibraryFilterStrategy.MANUAL:      return 'отображать все';
     case LibraryFilterStrategy.COMMON:      return 'общедоступные';
@@ -220,6 +235,7 @@ export function labelLibraryFilter(strategy: LibraryFilterStrategy): string {
  * Retrieves description for {@link LibraryFilterStrategy}.
  */
 export function describeLibraryFilter(strategy: LibraryFilterStrategy): string {
+  // prettier-ignore
   switch (strategy) {
     case LibraryFilterStrategy.MANUAL:      return 'Отображать все схемы';
     case LibraryFilterStrategy.COMMON:      return 'Отображать общедоступные схемы';
@@ -233,8 +249,7 @@ export function describeLibraryFilter(strategy: LibraryFilterStrategy): string {
 /**
  * Retrieves label for graph layout mode.
  */
-export const mapLabelLayout: Map<string, string> = 
-new Map([
+export const mapLabelLayout: Map<string, string> = new Map([
   ['forceatlas2', 'Граф: Атлас 2D'],
   ['forceDirected2d', 'Граф: Силы 2D'],
   ['forceDirected3d', 'Граф: Силы 3D'],
@@ -253,17 +268,17 @@ new Map([
 /**
  * Retrieves label for graph coloring mode.
  */
-export const mapLabelColoring: Map<string, string> = 
-new Map([
+export const mapLabelColoring: Map<string, string> = new Map([
   ['none', 'Цвет: моно'],
   ['status', 'Цвет: статус'],
-  ['type', 'Цвет: класс'],
+  ['type', 'Цвет: класс']
 ]);
 
 /**
  * Retrieves label for {@link ExpressionStatus}.
  */
 export function labelExpressionStatus(status: ExpressionStatus): string {
+  // prettier-ignore
   switch (status) {
     case ExpressionStatus.VERIFIED:     return 'корректно';
     case ExpressionStatus.INCORRECT:    return 'ошибка';
@@ -278,6 +293,7 @@ export function labelExpressionStatus(status: ExpressionStatus): string {
  * Retrieves description for {@link ExpressionStatus}.
  */
 export function describeExpressionStatus(status: ExpressionStatus): string {
+  // prettier-ignore
   switch (status) {
     case ExpressionStatus.VERIFIED:     return 'выражение корректно и вычислимо';
     case ExpressionStatus.INCORRECT:    return 'ошибка в выражении';
@@ -292,6 +308,7 @@ export function describeExpressionStatus(status: ExpressionStatus): string {
  * Retrieves label for {@link HelpTopic}.
  */
 export function labelHelpTopic(topic: HelpTopic): string {
+  // prettier-ignore
   switch (topic) {
     case HelpTopic.MAIN:          return 'Портал';
     case HelpTopic.LIBRARY:       return 'Библиотека';
@@ -312,6 +329,7 @@ export function labelHelpTopic(topic: HelpTopic): string {
  * Retrieves description for {@link HelpTopic}.
  */
 export function describeHelpTopic(topic: HelpTopic): string {
+  // prettier-ignore
   switch (topic) {
     case HelpTopic.MAIN:          return 'Общая справка по порталу';
     case HelpTopic.LIBRARY:       return 'Описание работы с библиотекой схем';
@@ -332,6 +350,7 @@ export function describeHelpTopic(topic: HelpTopic): string {
  * Retrieves label for {@link CstType}.
  */
 export function labelCstType(target: CstType): string {
+  // prettier-ignore
   switch (target) {
     case CstType.BASE:          return 'Базисное множество';
     case CstType.CONSTANT:      return 'Константное множество';
@@ -348,6 +367,7 @@ export function labelCstType(target: CstType): string {
  * Retrieves label for {@link ReferenceType}.
  */
 export function labelReferenceType(target: ReferenceType): string {
+  // prettier-ignore
   switch(target) {
     case ReferenceType.ENTITY:    return 'Использование термина';
     case ReferenceType.SYNTACTIC: return 'Связывание слов';
@@ -358,6 +378,7 @@ export function labelReferenceType(target: ReferenceType): string {
  * Retrieves label for {@link CstClass}.
  */
 export function labelCstClass(target: CstClass): string {
+  // prettier-ignore
   switch (target) {
     case CstClass.BASIC:        return 'базовый';
     case CstClass.DERIVED:      return 'производный';
@@ -370,6 +391,7 @@ export function labelCstClass(target: CstClass): string {
  * Retrieves description for {@link CstClass}.
  */
 export function describeCstClass(target: CstClass): string {
+  // prettier-ignore
   switch (target) {
     case CstClass.BASIC:        return 'неопределяемое понятие, требует конвенции';
     case CstClass.DERIVED:      return 'выводимое понятие, задаваемое определением';
@@ -381,7 +403,11 @@ export function describeCstClass(target: CstClass): string {
 /**
  * Generates label for typification.
  */
-export function labelTypification({ isValid, resultType, args }: {
+export function labelTypification({
+  isValid,
+  resultType,
+  args
+}: {
   isValid: boolean;
   resultType: string;
   args: IArgumentInfo[];
@@ -411,6 +437,7 @@ export function labelCstTypification(cst: IConstituenta): string {
  * Generates label for {@link ISyntaxTreeNode}.
  */
 export function labelSyntaxTree(node: ISyntaxTreeNode): string {
+  // prettier-ignore
   switch (node.typeID) {
     case TokenID.ID_LOCAL:
     case TokenID.ID_GLOBAL:
@@ -490,72 +517,73 @@ export function labelSyntaxTree(node: ISyntaxTreeNode): string {
 }
 
 export function labelGrammeme(gram: GramData): string {
+  // prettier-ignore
   switch (gram as Grammeme) {
-  default: return `Неизв: ${gram}`;
+    default: return `Неизв: ${gram}`;
 
-  case Grammeme.NOUN: return 'ЧР: сущ';
-  case Grammeme.VERB: return 'ЧР: глагол';
-  case Grammeme.INFN: return 'ЧР: глагол инф';
-  case Grammeme.ADJF: return 'ЧР: прил';
-  case Grammeme.PRTF: return 'ЧР: прич';
-  case Grammeme.ADJS: return 'ЧР: кр прил';
-  case Grammeme.PRTS: return 'ЧР: кр прич';
-  case Grammeme.COMP: return 'ЧР: компаратив';
-  case Grammeme.GRND: return 'ЧР: деепричастие';
-  case Grammeme.NUMR: return 'ЧР: число';
-  case Grammeme.ADVB: return 'ЧР: наречие';
-  case Grammeme.NPRO: return 'ЧР: местоимение';
-  case Grammeme.PRED: return 'ЧР: предикатив';
-  case Grammeme.PREP: return 'ЧР: предлог';
-  case Grammeme.CONJ: return 'ЧР: союз';
-  case Grammeme.PRCL: return 'ЧР: частица';
-  case Grammeme.INTJ: return 'ЧР: междометие';
-  case Grammeme.Abbr: return 'ЧР: аббревиатура';
+    case Grammeme.NOUN: return 'ЧР: сущ';
+    case Grammeme.VERB: return 'ЧР: глагол';
+    case Grammeme.INFN: return 'ЧР: глагол инф';
+    case Grammeme.ADJF: return 'ЧР: прил';
+    case Grammeme.PRTF: return 'ЧР: прич';
+    case Grammeme.ADJS: return 'ЧР: кр прил';
+    case Grammeme.PRTS: return 'ЧР: кр прич';
+    case Grammeme.COMP: return 'ЧР: компаратив';
+    case Grammeme.GRND: return 'ЧР: деепричастие';
+    case Grammeme.NUMR: return 'ЧР: число';
+    case Grammeme.ADVB: return 'ЧР: наречие';
+    case Grammeme.NPRO: return 'ЧР: местоимение';
+    case Grammeme.PRED: return 'ЧР: предикатив';
+    case Grammeme.PREP: return 'ЧР: предлог';
+    case Grammeme.CONJ: return 'ЧР: союз';
+    case Grammeme.PRCL: return 'ЧР: частица';
+    case Grammeme.INTJ: return 'ЧР: междометие';
+    case Grammeme.Abbr: return 'ЧР: аббревиатура';
 
-  case Grammeme.sing: return 'Число: един';
-  case Grammeme.plur: return 'Число: множ';
+    case Grammeme.sing: return 'Число: един';
+    case Grammeme.plur: return 'Число: множ';
 
-  case Grammeme.nomn: return 'Падеж: имен';
-  case Grammeme.gent: return 'Падеж: род';
-  case Grammeme.datv: return 'Падеж: дат';
-  case Grammeme.accs: return 'Падеж: вин';
-  case Grammeme.ablt: return 'Падеж: твор';
-  case Grammeme.loct: return 'Падеж: пред';
+    case Grammeme.nomn: return 'Падеж: имен';
+    case Grammeme.gent: return 'Падеж: род';
+    case Grammeme.datv: return 'Падеж: дат';
+    case Grammeme.accs: return 'Падеж: вин';
+    case Grammeme.ablt: return 'Падеж: твор';
+    case Grammeme.loct: return 'Падеж: пред';
 
-  case Grammeme.masc: return 'Род: муж';
-  case Grammeme.femn: return 'Род: жен';
-  case Grammeme.neut: return 'Род: ср';
+    case Grammeme.masc: return 'Род: муж';
+    case Grammeme.femn: return 'Род: жен';
+    case Grammeme.neut: return 'Род: ср';
 
-  case Grammeme.perf: return 'Совершенный: да';
-  case Grammeme.impf: return 'Совершенный: нет';
+    case Grammeme.perf: return 'Совершенный: да';
+    case Grammeme.impf: return 'Совершенный: нет';
 
-  case Grammeme.tran: return 'Переходный: да';
-  case Grammeme.intr: return 'Переходный: нет';
+    case Grammeme.tran: return 'Переходный: да';
+    case Grammeme.intr: return 'Переходный: нет';
 
-  case Grammeme.pres: return 'Время: настоящее';
-  case Grammeme.past: return 'Время: прошедшее';
-  case Grammeme.futr: return 'Время: будущее';
+    case Grammeme.pres: return 'Время: настоящее';
+    case Grammeme.past: return 'Время: прошедшее';
+    case Grammeme.futr: return 'Время: будущее';
 
-  case Grammeme.per1: return 'Лицо: 1';
-  case Grammeme.per2: return 'Лицо: 2';
-  case Grammeme.per3: return 'Лицо: 3';
+    case Grammeme.per1: return 'Лицо: 1';
+    case Grammeme.per2: return 'Лицо: 2';
+    case Grammeme.per3: return 'Лицо: 3';
 
-  case Grammeme.impr: return 'Повелительный: да';
-  case Grammeme.indc: return 'Повелительный: нет';
+    case Grammeme.impr: return 'Повелительный: да';
+    case Grammeme.indc: return 'Повелительный: нет';
 
-  case Grammeme.incl: return 'Включающий: да';
-  case Grammeme.excl: return 'Включающий: нет';
+    case Grammeme.incl: return 'Включающий: да';
+    case Grammeme.excl: return 'Включающий: нет';
 
-  case Grammeme.pssv: return 'Страдательный: да';
-  case Grammeme.actv: return 'Страдательный: нет';
+    case Grammeme.pssv: return 'Страдательный: да';
+    case Grammeme.actv: return 'Страдательный: нет';
 
-  case Grammeme.anim: return 'Одушевленный: да';
-  case Grammeme.inan: return 'Одушевленный: нет';
+    case Grammeme.anim: return 'Одушевленный: да';
+    case Grammeme.inan: return 'Одушевленный: нет';
 
-  case Grammeme.Infr: return 'Стиль: неформальный';
-  case Grammeme.Slng: return 'Стиль: жаргон';
-  case Grammeme.Arch: return 'Стиль: устаревший';
-  case Grammeme.Litr: return 'Стиль: литературный';
+    case Grammeme.Infr: return 'Стиль: неформальный';
+    case Grammeme.Slng: return 'Стиль: жаргон';
+    case Grammeme.Arch: return 'Стиль: устаревший';
+    case Grammeme.Litr: return 'Стиль: литературный';
   }
 }
 
@@ -563,101 +591,102 @@ export function labelGrammeme(gram: GramData): string {
  * Generates error description for {@link IRSErrorDescription}.
  */
 export function describeRSError(error: IRSErrorDescription): string {
+  // prettier-ignore
   switch (error.errorType) {
-  case RSErrorType.unknownSymbol:
-    return `Неизвестный символ: ${error.params[0]}`;
-  case RSErrorType.syntax:
-    return 'Неопределенная синтаксическая ошибка';
-  case RSErrorType.missingParenthesis:
-    return 'Некорректная конструкция языка родов структур, проверьте структуру выражения';
-  case RSErrorType.missingCurlyBrace:
-    return "Пропущен символ '}'";
-  case RSErrorType.invalidQuantifier:
-    return 'Некорректная кванторная декларация';
-  case RSErrorType.expectedArgDeclaration:
-    return 'Ожидалось объявление аргументов терм-функции';
-  case RSErrorType.expectedLocal:
-    return 'Ожидалось имя локальной переменной';
+    case RSErrorType.unknownSymbol:
+      return `Неизвестный символ: ${error.params[0]}`;
+    case RSErrorType.syntax:
+      return 'Неопределенная синтаксическая ошибка';
+    case RSErrorType.missingParenthesis:
+      return 'Некорректная конструкция языка родов структур, проверьте структуру выражения';
+    case RSErrorType.missingCurlyBrace:
+      return "Пропущен символ '}'";
+    case RSErrorType.invalidQuantifier:
+      return 'Некорректная кванторная декларация';
+    case RSErrorType.expectedArgDeclaration:
+      return 'Ожидалось объявление аргументов терм-функции';
+    case RSErrorType.expectedLocal:
+      return 'Ожидалось имя локальной переменной';
 
-  case RSErrorType.localDoubleDeclare:
-    return `Предупреждение! Повторное объявление локальной переменной ${error.params[0]}`;
-  case RSErrorType.localNotUsed:
-    return `Предупреждение! Переменная объявлена, но не использована: ${error.params[0]}`;
-  case RSErrorType.localUndeclared:
-    return `Использование необъявленной переменной: ${error.params[0]}`;
-  case RSErrorType.localShadowing:
-    return `Повторное объявление переменной: ${error.params[0]}`;
+    case RSErrorType.localDoubleDeclare:
+      return `Предупреждение! Повторное объявление локальной переменной ${error.params[0]}`;
+    case RSErrorType.localNotUsed:
+      return `Предупреждение! Переменная объявлена, но не использована: ${error.params[0]}`;
+    case RSErrorType.localUndeclared:
+      return `Использование необъявленной переменной: ${error.params[0]}`;
+    case RSErrorType.localShadowing:
+      return `Повторное объявление переменной: ${error.params[0]}`;
 
-  case RSErrorType.typesNotEqual:
-    return `Типизация операндов не совпадает! ${error.params[0]} != ${error.params[1]}`;
-  case RSErrorType.globalNotTyped:
-    return `Типизация конституенты не определена: ${error.params[0]}`;
-  case RSErrorType.invalidDecart:
-    return `τ(α×b) = ℬ(𝔇τ(α)×𝔇τ(b)). Некорректная типизация аргумента: ${error.params[0]}`;
-  case RSErrorType.invalidBoolean:
-    return `τ(ℬ(a)) = ℬℬ𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
-  case RSErrorType.invalidTypeOperation:
-    return `Типизация операнда теоретико-множественной операции не корректна: ${error.params[0]}`;
-  case RSErrorType.invalidCard:
-    return `Некорректная типизация аргумента операции мощности: ${error.params[0]}`;
-  case RSErrorType.invalidDebool:
-    return `τ(debool(a)) = 𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
-  case RSErrorType.globalFuncMissing:
-    return `Неизвестное имя функции: ${error.params[0]}`;
-  case RSErrorType.globalFuncWithoutArgs:
-    return `Некорректное использование имени функции без аргументов: ${error.params[0]}`;
-  case RSErrorType.invalidReduce:
-    return `τ(red(a)) = ℬ𝔇𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
-  case RSErrorType.invalidProjectionTuple:
-    return `Проекция не определена: ${error.params[0]} -> ${error.params[1]}`;
-  case RSErrorType.invalidProjectionSet:
-    return `τ(Pri(a)) = ℬ𝒞i𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
-  case RSErrorType.invalidEnumeration:
-    return `Типизация аргументов перечисления не совпадает: ${error.params[0]} != ${error.params[1]}`;
-  case RSErrorType.invalidBinding:
-    return `Количество переменных в кортеже не соответствует размерности декартова произведения`;
-  case RSErrorType.localOutOfScope:
-    return `Использование имени переменной вне области действия: ${error.params[0]}`;
-  case RSErrorType.invalidElementPredicate:
-    return `Несоответствие типизаций операндов для оператора: ${error.params[0]}${error.params[1]}${error.params[2]}`;
-  case RSErrorType.invalidArgsArity:
-    return `Неверное число аргументов терм-функции: ${error.params[0]} != ${error.params[1]}`;
-  case RSErrorType.invalidArgumentType:
-    return `Типизация аргумента терм-функции не соответствует объявленной: ${error.params[0]} != ${error.params[1]}`;
-  case RSErrorType.invalidEqualsEmpty:
-    return `Только множества можно сравнивать с пустым множеством: ${error.params[0]}`;
-  case RSErrorType.globalStructure:
-    return `Выражение родовой структуры должно быть ступенью`;
-  case RSErrorType.globalExpectedFunction:
-    return `Ожидалось выражение объявления функции`;
-  case RSErrorType.emptySetUsage:
-    return `Запрещено использование пустого множества как типизированного выражения`;
-  case RSErrorType.radicalUsage:
-    return `Радикалы запрещены вне деклараций терм-функции: ${error.params[0]}`;
-  case RSErrorType.invalidFilterArgumentType:
-    return `Типизация аргумента фильтра не корректна: ${error.params[0]}(${error.params[1]})`;
-  case RSErrorType.invalidFilterArity:
-    return `Количество параметров фильтра не соответствует количеству индексов`;
-  case RSErrorType.arithmeticNotSupported:
-    return `Тип не поддерживает арифметические операторы: ${error.params[0]}`;
-  case RSErrorType.typesNotCompatible:
-    return `Типы не совместимы для выбранной операции: ${error.params[0]} и ${error.params[1]}`;
-  case RSErrorType.orderingNotSupported:
-    return `Тип не поддерживает предикаты порядка: ${error.params[0]}`;
-  case RSErrorType.globalNoValue:
-    return `Используется неинтерпретируемый глобальный идентификатор: ${error.params[0]}`;
-  case RSErrorType.invalidPropertyUsage:
-    return `Использование неитерируемого множества в качестве значения`;
-  case RSErrorType.globalMissingAST:
-    return `Не удалось получить дерево разбора для глобального идентификатора: ${error.params[0]}`;
-  case RSErrorType.globalFuncNoInterpretation:
-    return `Функция не интерпретируется для данных аргументов`;
-  case RSErrorType.globalNonemptyBase:
-    return `Непустое выражение базисного/константного множества`;
-  case RSErrorType.globalUnexpectedType:
-    return `Типизация выражения не соответствует типу конституенты`;
-  case RSErrorType.globalEmptyDerived:
-    return `Пустое выражение для выводимого понятия или утверждения`;
+    case RSErrorType.typesNotEqual:
+      return `Типизация операндов не совпадает! ${error.params[0]} != ${error.params[1]}`;
+    case RSErrorType.globalNotTyped:
+      return `Типизация конституенты не определена: ${error.params[0]}`;
+    case RSErrorType.invalidDecart:
+      return `τ(α×b) = ℬ(𝔇τ(α)×𝔇τ(b)). Некорректная типизация аргумента: ${error.params[0]}`;
+    case RSErrorType.invalidBoolean:
+      return `τ(ℬ(a)) = ℬℬ𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
+    case RSErrorType.invalidTypeOperation:
+      return `Типизация операнда теоретико-множественной операции не корректна: ${error.params[0]}`;
+    case RSErrorType.invalidCard:
+      return `Некорректная типизация аргумента операции мощности: ${error.params[0]}`;
+    case RSErrorType.invalidDebool:
+      return `τ(debool(a)) = 𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
+    case RSErrorType.globalFuncMissing:
+      return `Неизвестное имя функции: ${error.params[0]}`;
+    case RSErrorType.globalFuncWithoutArgs:
+      return `Некорректное использование имени функции без аргументов: ${error.params[0]}`;
+    case RSErrorType.invalidReduce:
+      return `τ(red(a)) = ℬ𝔇𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
+    case RSErrorType.invalidProjectionTuple:
+      return `Проекция не определена: ${error.params[0]} -> ${error.params[1]}`;
+    case RSErrorType.invalidProjectionSet:
+      return `τ(Pri(a)) = ℬ𝒞i𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
+    case RSErrorType.invalidEnumeration:
+      return `Типизация аргументов перечисления не совпадает: ${error.params[0]} != ${error.params[1]}`;
+    case RSErrorType.invalidBinding:
+      return `Количество переменных в кортеже не соответствует размерности декартова произведения`;
+    case RSErrorType.localOutOfScope:
+      return `Использование имени переменной вне области действия: ${error.params[0]}`;
+    case RSErrorType.invalidElementPredicate:
+      return `Несоответствие типизаций операндов для оператора: ${error.params[0]}${error.params[1]}${error.params[2]}`;
+    case RSErrorType.invalidArgsArity:
+      return `Неверное число аргументов терм-функции: ${error.params[0]} != ${error.params[1]}`;
+    case RSErrorType.invalidArgumentType:
+      return `Типизация аргумента терм-функции не соответствует объявленной: ${error.params[0]} != ${error.params[1]}`;
+    case RSErrorType.invalidEqualsEmpty:
+      return `Только множества можно сравнивать с пустым множеством: ${error.params[0]}`;
+    case RSErrorType.globalStructure:
+      return `Выражение родовой структуры должно быть ступенью`;
+    case RSErrorType.globalExpectedFunction:
+      return `Ожидалось выражение объявления функции`;
+    case RSErrorType.emptySetUsage:
+      return `Запрещено использование пустого множества как типизированного выражения`;
+    case RSErrorType.radicalUsage:
+      return `Радикалы запрещены вне деклараций терм-функции: ${error.params[0]}`;
+    case RSErrorType.invalidFilterArgumentType:
+      return `Типизация аргумента фильтра не корректна: ${error.params[0]}(${error.params[1]})`;
+    case RSErrorType.invalidFilterArity:
+      return `Количество параметров фильтра не соответствует количеству индексов`;
+    case RSErrorType.arithmeticNotSupported:
+      return `Тип не поддерживает арифметические операторы: ${error.params[0]}`;
+    case RSErrorType.typesNotCompatible:
+      return `Типы не совместимы для выбранной операции: ${error.params[0]} и ${error.params[1]}`;
+    case RSErrorType.orderingNotSupported:
+      return `Тип не поддерживает предикаты порядка: ${error.params[0]}`;
+    case RSErrorType.globalNoValue:
+      return `Используется неинтерпретируемый глобальный идентификатор: ${error.params[0]}`;
+    case RSErrorType.invalidPropertyUsage:
+      return `Использование неитерируемого множества в качестве значения`;
+    case RSErrorType.globalMissingAST:
+      return `Не удалось получить дерево разбора для глобального идентификатора: ${error.params[0]}`;
+    case RSErrorType.globalFuncNoInterpretation:
+      return `Функция не интерпретируется для данных аргументов`;
+    case RSErrorType.globalNonemptyBase:
+      return `Непустое выражение базисного/константного множества`;
+    case RSErrorType.globalUnexpectedType:
+      return `Типизация выражения не соответствует типу конституенты`;
+    case RSErrorType.globalEmptyDerived:
+      return `Пустое выражение для выводимого понятия или утверждения`;
   }
   return 'UNKNOWN ERROR';
 }
@@ -666,6 +695,7 @@ export function describeRSError(error: IRSErrorDescription): string {
  * Retrieves label for {@link UserAccessMode}.
  */
 export function labelAccessMode(mode: UserAccessMode): string {
+  // prettier-ignore
   switch (mode) {
     case UserAccessMode.READER:     return 'Читатель';
     case UserAccessMode.OWNER:      return 'Владелец';
@@ -677,6 +707,7 @@ export function labelAccessMode(mode: UserAccessMode): string {
  * Retrieves description for {@link UserAccessMode}.
  */
 export function describeAccessMode(mode: UserAccessMode): string {
+  // prettier-ignore
   switch (mode) {
     case UserAccessMode.READER:
       return 'Режим запрещает редактирование';

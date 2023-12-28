@@ -7,46 +7,46 @@ import { GraphColoringScheme } from '@/models/miscellaneous';
 import { CstClass, ExpressionStatus, IConstituenta } from '@/models/rsform';
 import { ISyntaxTreeNode, TokenID } from '@/models/rslang';
 
-
 /**
  * Represents application color theme configuration.
  */
 export interface IColorTheme {
-  bgDefault: string
-  bgInput: string
-  bgControls: string
-  bgDisabled: string
-  bgPrimary: string
-  bgSelected: string
-  bgHover: string
-  bgWarning: string
-  
-  border: string
+  bgDefault: string;
+  bgInput: string;
+  bgControls: string;
+  bgDisabled: string;
+  bgPrimary: string;
+  bgSelected: string;
+  bgHover: string;
+  bgWarning: string;
 
-  fgDefault: string
-  fgSelected: string
-  fgDisabled: string
-  fgWarning: string
+  border: string;
+
+  fgDefault: string;
+  fgSelected: string;
+  fgDisabled: string;
+  fgWarning: string;
 
   // Highlight syntax accents
-  bgRed: string
-  bgGreen: string
-  bgBlue: string
-  bgPurple: string
-  bgTeal: string
-  bgOrange: string
+  bgRed: string;
+  bgGreen: string;
+  bgBlue: string;
+  bgPurple: string;
+  bgTeal: string;
+  bgOrange: string;
 
-  fgRed: string
-  fgGreen: string
-  fgBlue: string
-  fgPurple: string
-  fgTeal: string
-  fgOrange: string
+  fgRed: string;
+  fgGreen: string;
+  fgBlue: string;
+  fgPurple: string;
+  fgTeal: string;
+  fgOrange: string;
 }
 
 /**
  * Represents application Light theme.
  */
+// prettier-ignore
 export const lightT: IColorTheme = {
   bgDefault:  'var(--cl-bg-100)',
   bgInput:    'var(--cl-bg-120)',
@@ -83,6 +83,7 @@ export const lightT: IColorTheme = {
 /**
  * Represents application Dark theme.
  */
+// prettier-ignore
 export const darkT: IColorTheme = {
   bgDefault:  'var(--cd-bg-100)',
   bgInput:    'var(--cd-bg-120)',
@@ -139,7 +140,7 @@ export const selectLightT = {
   neutral70: lightT.fgWarning,
   neutral80: lightT.fgDefault,
   neutral90: lightT.fgWarning
-}
+};
 
 /**
  * Represents Select component Dark theme.
@@ -164,14 +165,14 @@ export const selectDarkT = {
   neutral70: darkT.fgWarning,
   neutral80: darkT.fgDefault,
   neutral90: darkT.fgWarning
-}
+};
 
 /**
  * Represents Graph component Light theme.
  */
 export const graphLightT = {
   canvas: {
-    background: '#f9fafb',
+    background: '#f9fafb'
   },
   node: {
     fill: '#7ca0ab',
@@ -180,9 +181,9 @@ export const graphLightT = {
     selectedOpacity: 1,
     inactiveOpacity: 0.2,
     label: {
-        color: '#2A6475',
-        stroke: '#fff',
-        activeColor: '#1DE9AC'
+      color: '#2A6475',
+      stroke: '#fff',
+      activeColor: '#1DE9AC'
     }
   },
   lasso: {
@@ -216,7 +217,7 @@ export const graphLightT = {
       color: '#2A6475'
     }
   }
-}
+};
 
 /**
  * Represents Graph component Dark theme.
@@ -268,7 +269,7 @@ export const graphDarkT = {
       color: '#ACBAC7'
     }
   }
-}
+};
 
 /**
  * Represents Brackets highlights Light theme.
@@ -276,12 +277,12 @@ export const graphDarkT = {
 export const bracketsLightT = {
   '.cc-nonmatchingBracket': {
     color: lightT.fgRed,
-    fontWeight: 700,
+    fontWeight: 700
   },
   '&.cm-focused .cc-matchingBracket': {
     backgroundColor: lightT.bgSelected,
     color: lightT.fgSelected
-  },
+  }
 };
 
 /**
@@ -290,12 +291,12 @@ export const bracketsLightT = {
 export const bracketsDarkT = {
   '.cc-nonmatchingBracket': {
     color: darkT.fgRed,
-    fontWeight: 700,
+    fontWeight: 700
   },
   '&.cm-focused .cc-matchingBracket': {
     backgroundColor: darkT.bgSelected,
     color: darkT.fgSelected
-  },
+  }
 };
 
 /**
@@ -303,78 +304,78 @@ export const bracketsDarkT = {
  */
 export function colorBgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): string {
   switch (node.typeID) {
-  case TokenID.PUNCTUATION_DEFINE:
-  case TokenID.PUNCTUATION_STRUCT:
-  case TokenID.ID_LOCAL:
-    return colors.bgGreen;
+    case TokenID.PUNCTUATION_DEFINE:
+    case TokenID.PUNCTUATION_STRUCT:
+    case TokenID.ID_LOCAL:
+      return colors.bgGreen;
 
-  case TokenID.ID_GLOBAL:
-  case TokenID.ID_FUNCTION:
-  case TokenID.ID_PREDICATE:
-  case TokenID.ID_RADICAL:
-  case TokenID.LIT_INTEGER:
-  case TokenID.LIT_EMPTYSET:
-  case TokenID.LIT_WHOLE_NUMBERS:
-    return colors.bgTeal;
+    case TokenID.ID_GLOBAL:
+    case TokenID.ID_FUNCTION:
+    case TokenID.ID_PREDICATE:
+    case TokenID.ID_RADICAL:
+    case TokenID.LIT_INTEGER:
+    case TokenID.LIT_EMPTYSET:
+    case TokenID.LIT_WHOLE_NUMBERS:
+      return colors.bgTeal;
 
-  case TokenID.QUANTOR_UNIVERSAL:
-  case TokenID.QUANTOR_EXISTS:
-  case TokenID.LOGIC_NOT:
-  case TokenID.LOGIC_AND:
-  case TokenID.LOGIC_OR:
-  case TokenID.LOGIC_IMPLICATION:
-  case TokenID.LOGIC_EQUIVALENT:
-  case TokenID.GREATER:
-  case TokenID.LESSER:
-  case TokenID.EQUAL:
-  case TokenID.NOTEQUAL:
-  case TokenID.GREATER_OR_EQ:
-  case TokenID.LESSER_OR_EQ:
-  case TokenID.SET_IN:
-  case TokenID.SET_NOT_IN:
-  case TokenID.SUBSET_OR_EQ:
-  case TokenID.SUBSET:
-  case TokenID.NOT_SUBSET:
-    return colors.bgOrange;
+    case TokenID.QUANTOR_UNIVERSAL:
+    case TokenID.QUANTOR_EXISTS:
+    case TokenID.LOGIC_NOT:
+    case TokenID.LOGIC_AND:
+    case TokenID.LOGIC_OR:
+    case TokenID.LOGIC_IMPLICATION:
+    case TokenID.LOGIC_EQUIVALENT:
+    case TokenID.GREATER:
+    case TokenID.LESSER:
+    case TokenID.EQUAL:
+    case TokenID.NOTEQUAL:
+    case TokenID.GREATER_OR_EQ:
+    case TokenID.LESSER_OR_EQ:
+    case TokenID.SET_IN:
+    case TokenID.SET_NOT_IN:
+    case TokenID.SUBSET_OR_EQ:
+    case TokenID.SUBSET:
+    case TokenID.NOT_SUBSET:
+      return colors.bgOrange;
 
-  case TokenID.NT_TUPLE:
-  case TokenID.NT_ENUMERATION:
-  case TokenID.BIGPR:
-  case TokenID.SMALLPR:
-  case TokenID.FILTER:
-  case TokenID.PLUS:
-  case TokenID.MINUS:
-  case TokenID.MULTIPLY:
-  case TokenID.BOOLEAN:
-  case TokenID.DECART:
-  case TokenID.SET_INTERSECTION:
-  case TokenID.SET_UNION:
-  case TokenID.SET_MINUS:
-  case TokenID.SET_SYMMETRIC_MINUS:
-  case TokenID.REDUCE:
-  case TokenID.CARD:
-  case TokenID.BOOL:
-  case TokenID.DEBOOL:
-    return colors.bgBlue;
+    case TokenID.NT_TUPLE:
+    case TokenID.NT_ENUMERATION:
+    case TokenID.BIGPR:
+    case TokenID.SMALLPR:
+    case TokenID.FILTER:
+    case TokenID.PLUS:
+    case TokenID.MINUS:
+    case TokenID.MULTIPLY:
+    case TokenID.BOOLEAN:
+    case TokenID.DECART:
+    case TokenID.SET_INTERSECTION:
+    case TokenID.SET_UNION:
+    case TokenID.SET_MINUS:
+    case TokenID.SET_SYMMETRIC_MINUS:
+    case TokenID.REDUCE:
+    case TokenID.CARD:
+    case TokenID.BOOL:
+    case TokenID.DEBOOL:
+      return colors.bgBlue;
 
-  case TokenID.NT_FUNC_DEFINITION:
-  case TokenID.NT_DECLARATIVE_EXPR:
-  case TokenID.NT_IMPERATIVE_EXPR:
-  case TokenID.NT_RECURSIVE_FULL:
-  case TokenID.NT_ENUM_DECL:
-  case TokenID.NT_TUPLE_DECL:
-  case TokenID.NT_ARG_DECL:
-  case TokenID.NT_FUNC_CALL:
-  case TokenID.NT_ARGUMENTS:
-  case TokenID.NT_IMP_DECLARE:
-  case TokenID.NT_IMP_ASSIGN:
-  case TokenID.NT_IMP_LOGIC:
-  case TokenID.NT_RECURSIVE_SHORT:
-    return '';
+    case TokenID.NT_FUNC_DEFINITION:
+    case TokenID.NT_DECLARATIVE_EXPR:
+    case TokenID.NT_IMPERATIVE_EXPR:
+    case TokenID.NT_RECURSIVE_FULL:
+    case TokenID.NT_ENUM_DECL:
+    case TokenID.NT_TUPLE_DECL:
+    case TokenID.NT_ARG_DECL:
+    case TokenID.NT_FUNC_CALL:
+    case TokenID.NT_ARGUMENTS:
+    case TokenID.NT_IMP_DECLARE:
+    case TokenID.NT_IMP_ASSIGN:
+    case TokenID.NT_IMP_LOGIC:
+    case TokenID.NT_RECURSIVE_SHORT:
+      return '';
 
-  case TokenID.PUNCTUATION_ASSIGN:
-  case TokenID.PUNCTUATION_ITERATE:
-    return colors.bgRed;
+    case TokenID.PUNCTUATION_ASSIGN:
+    case TokenID.PUNCTUATION_ITERATE:
+      return colors.bgRed;
   }
   // node
   return colors.bgRed;
@@ -384,6 +385,7 @@ export function colorBgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): s
  * Determines background color for {@link ExpressionStatus}.
  */
 export function colorBgCstStatus(status: ExpressionStatus, colors: IColorTheme): string {
+  // prettier-ignore
   switch (status) {
     case ExpressionStatus.VERIFIED: return colors.bgGreen;
     case ExpressionStatus.INCORRECT: return colors.bgRed;
@@ -398,6 +400,7 @@ export function colorBgCstStatus(status: ExpressionStatus, colors: IColorTheme):
  * Determines foreground color for {@link ExpressionStatus}.
  */
 export function colorFgCstStatus(status: ExpressionStatus, colors: IColorTheme): string {
+  // prettier-ignore
   switch (status) {
     case ExpressionStatus.VERIFIED: return colors.fgGreen;
     case ExpressionStatus.INCORRECT: return colors.fgRed;
@@ -412,6 +415,7 @@ export function colorFgCstStatus(status: ExpressionStatus, colors: IColorTheme):
  * Determines background color for {@link IConstituenta} depending on its {@link CstClass}.
  */
 export function colorBgCstClass(cstClass: CstClass, colors: IColorTheme): string {
+  // prettier-ignore
   switch (cstClass) {
     case CstClass.BASIC: return colors.bgGreen;
     case CstClass.DERIVED: return colors.bgBlue;

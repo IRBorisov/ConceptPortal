@@ -1,7 +1,6 @@
 import { ILibraryItem, LibraryItemType } from './library';
 import { matchLibraryItem } from './libraryAPI';
 
-
 describe('Testing matching LibraryItem', () => {
   const item1: ILibraryItem = {
     id: 42,
@@ -29,15 +28,13 @@ describe('Testing matching LibraryItem', () => {
     owner: null
   };
 
-  test('empty input',
-  () => {
+  test('empty input', () => {
     expect(matchLibraryItem(itemEmpty, '')).toEqual(true);
     expect(matchLibraryItem(itemEmpty, '12')).toEqual(false);
     expect(matchLibraryItem(itemEmpty, ' ')).toEqual(false);
   });
 
-  test('regular input',
-  () => {
+  test('regular input', () => {
     expect(matchLibraryItem(item1, item1.title)).toEqual(true);
     expect(matchLibraryItem(item1, item1.alias)).toEqual(true);
     expect(matchLibraryItem(item1, item1.title + '@invalid')).toEqual(false);

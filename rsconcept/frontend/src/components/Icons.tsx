@@ -1,30 +1,31 @@
 // Search new icons at https://reactsvgicons.com/
 
 interface IconSVGProps {
-  viewBox: string
-  size?: string
-  className?: string
-  props?: React.SVGProps<SVGSVGElement>
-  children: React.ReactNode
+  viewBox: string;
+  size?: string;
+  className?: string;
+  props?: React.SVGProps<SVGSVGElement>;
+  children: React.ReactNode;
 }
 
 export interface IconProps {
-  size?: string
-  className?: string
+  size?: string;
+  className?: string;
 }
 
 function IconSVG({ viewBox, size = '1.5rem', className, props, children }: IconSVGProps) {
   return (
-  <svg
-    width={size}
-    height={size}
-    className={`w-[${size}] h-[${size}] ${className}`}
-    fill='currentColor'
-    viewBox={viewBox}
-    {...props}
-  >
-    {children}
-  </svg>);
+    <svg
+      width={size}
+      height={size}
+      className={`w-[${size}] h-[${size}] ${className}`}
+      fill='currentColor'
+      viewBox={viewBox}
+      {...props}
+    >
+      {children}
+    </svg>
+  );
 }
 
 export function EducationIcon(props: IconProps) {
@@ -46,11 +47,7 @@ export function InDoorIcon(props: IconProps) {
 
 export function CheckboxCheckedIcon() {
   return (
-    <svg
-      className='w-3 h-3'
-      viewBox='0 0 512 512'
-      fill='#ffffff'
-    >
+    <svg className='w-3 h-3' viewBox='0 0 512 512' fill='#ffffff'>
       <path d='M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7l233.4-233.3c12.5-12.5 32.8-12.5 45.3 0z' />
     </svg>
   );
@@ -58,11 +55,7 @@ export function CheckboxCheckedIcon() {
 
 export function CheckboxNullIcon() {
   return (
-    <svg
-      className='w-3 h-3'
-      viewBox='0 0 16 16'
-      fill='#ffffff'
-    >
+    <svg className='w-3 h-3' viewBox='0 0 16 16' fill='#ffffff'>
       <path d='M2 7.75A.75.75 0 012.75 7h10a.75.75 0 010 1.5h-10A.75.75 0 012 7.75z' />
     </svg>
   );

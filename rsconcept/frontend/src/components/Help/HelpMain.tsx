@@ -2,6 +2,7 @@ import TextURL from '@/components/Common/TextURL';
 import { urls } from '@/utils/constants';
 
 function HelpMain() {
+  // prettier-ignore
   return (
   <div className='max-w-[60rem]'>
     <h1>Портал</h1>

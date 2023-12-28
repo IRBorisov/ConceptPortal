@@ -45,7 +45,7 @@ function CreateRSFormPage() {
       router.push('/library');
     }
   }
-  
+
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (processing) {
@@ -61,7 +61,7 @@ function CreateRSFormPage() {
       file: file,
       fileName: file?.name
     };
-    createItem(data, (newSchema) => {
+    createItem(data, newSchema => {
       toast.success('Схема успешно создана');
       router.push(`/rsforms/${newSchema.id}`);
     });
@@ -78,70 +78,57 @@ function CreateRSFormPage() {
   }
 
   return (
-  <RequireAuth>
-  <form
-    className={clsx(
-      'px-6 py-3',
-      classnames.flex_col
-    )}
-    onSubmit={handleSubmit}
-  >
-    <h1>Создание концептуальной схемы</h1>
-    <Overlay position='top-[-2.4rem] right-[-1rem]'>
-      <input ref={inputRef} type='file'
-        style={{ display: 'none' }}
-        accept={EXTEOR_TRS_FILE}
-        onChange={handleFileChange}
-      />
-      <MiniButton
-        title='Загрузить из Экстеор'
-        icon={<BiDownload size='1.25rem' className='clr-text-primary'/>}
-        onClick={() => inputRef.current?.click()}
-      />
-    </Overlay>
-    {fileName ? <Label text={`Загружен файл: ${fileName}`} /> : null}
+    <RequireAuth>
+      <form className={clsx('px-6 py-3', classnames.flex_col)} onSubmit={handleSubmit}>
+        <h1>Создание концептуальной схемы</h1>
+        <Overlay position='top-[-2.4rem] right-[-1rem]'>
+          <input
+            ref={inputRef}
+            type='file'
+            style={{ display: 'none' }}
+            accept={EXTEOR_TRS_FILE}
+            onChange={handleFileChange}
+          />
+          <MiniButton
+            title='Загрузить из Экстеор'
+            icon={<BiDownload size='1.25rem' className='clr-text-primary' />}
+            onClick={() => inputRef.current?.click()}
+          />
+        </Overlay>
+        {fileName ? <Label text={`Загружен файл: ${fileName}`} /> : null}
 
-    <TextInput required={!file}
-      label='Полное название'
-      placeholder={file && 'Загрузить из файла'}
-      value={title}
-      onChange={event => setTitle(event.target.value)}
-    />
-    <TextInput required={!file}
-      label='Сокращение'
-      placeholder={file && 'Загрузить из файла'}
-      className='w-[14rem]'
-      pattern={patterns.alias}
-      title={`не более ${limits.alias_len} символов`}
-      value={alias}
-      onChange={event => setAlias(event.target.value)}
-    />
-    <TextArea
-      label='Комментарий'
-      placeholder={file && 'Загрузить из файла'}
-      value={comment}
-      onChange={event => setComment(event.target.value)}
-    />
-    <Checkbox 
-      label='Общедоступная схема'
-      value={common}
-      setValue={value => setCommon(value ?? false)}
-    />
-    <div className='flex justify-around gap-6 py-3'>
-      <SubmitButton 
-        text='Создать схему'
-        loading={processing}
-        className='min-w-[10rem]'
-      />
-      <Button
-        text='Отмена'
-        className='min-w-[10rem]'
-        onClick={() => handleCancel()}
-      />
-    </div>
-    {error ? <InfoError error={error} /> : null}
-  </form>
-  </RequireAuth>);
+        <TextInput
+          required={!file}
+          label='Полное название'
+          placeholder={file && 'Загрузить из файла'}
+          value={title}
+          onChange={event => setTitle(event.target.value)}
+        />
+        <TextInput
+          required={!file}
+          label='Сокращение'
+          placeholder={file && 'Загрузить из файла'}
+          className='w-[14rem]'
+          pattern={patterns.alias}
+          title={`не более ${limits.alias_len} символов`}
+          value={alias}
+          onChange={event => setAlias(event.target.value)}
+        />
+        <TextArea
+          label='Комментарий'
+          placeholder={file && 'Загрузить из файла'}
+          value={comment}
+          onChange={event => setComment(event.target.value)}
+        />
+        <Checkbox label='Общедоступная схема' value={common} setValue={value => setCommon(value ?? false)} />
+        <div className='flex justify-around gap-6 py-3'>
+          <SubmitButton text='Создать схему' loading={processing} className='min-w-[10rem]' />
+          <Button text='Отмена' className='min-w-[10rem]' onClick={() => handleCancel()} />
+        </div>
+        {error ? <InfoError error={error} /> : null}
+      </form>
+    </RequireAuth>
+  );
 }
 
 export default CreateRSFormPage;

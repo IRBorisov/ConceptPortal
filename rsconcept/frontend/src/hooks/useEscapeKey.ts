@@ -6,11 +6,14 @@ const KEY_NAME_ESC = 'Escape';
 const KEY_EVENT_TYPE = 'keyup';
 
 function useEscapeKey(handleClose: () => void) {
-    const handleEscKey = useCallback((event: KeyboardEvent) => {
-    if (event.key === KEY_NAME_ESC) {
-      handleClose();
-    }
-  }, [handleClose]);
+  const handleEscKey = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key === KEY_NAME_ESC) {
+        handleClose();
+      }
+    },
+    [handleClose]
+  );
 
   useEffect(() => {
     document.addEventListener(KEY_EVENT_TYPE, handleEscKey, false);

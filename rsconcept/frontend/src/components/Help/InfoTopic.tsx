@@ -14,7 +14,7 @@ import HelpTermGraph from './HelpTermGraph';
 import HelpTerminologyControl from './HelpTerminologyControl';
 
 interface InfoTopicProps {
-  topic: HelpTopic
+  topic: HelpTopic;
 }
 
 function InfoTopic({ topic }: InfoTopicProps) {

@@ -2,6 +2,7 @@ import Divider from '@/components/Common/Divider';
 import InfoCstStatus from '@/components/Shared/InfoCstStatus';
 
 function HelpRSFormItems() {
+  // prettier-ignore
   return (
   <div>
     <h1>Горячие клавиши</h1>

@@ -8,7 +8,7 @@ import { ILibraryItem } from './library';
 
 /**
  * Checks if a given target {@link ILibraryItem} matches the specified query.
- * 
+ *
  * @param target - item to be matched
  * @param query - text to be found in target attributes
  */

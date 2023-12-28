@@ -11,24 +11,19 @@ import RSListToolbar from './RSListToolbar';
 import RSTable from './RSTable';
 
 interface EditorRSListProps {
-  isMutable: boolean
-  onOpenEdit: (cstID: number) => void
-  onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void
-  onDeleteCst: (selected: number[], callback: (items: number[]) => void) => void
+  isMutable: boolean;
+  onOpenEdit: (cstID: number) => void;
+  onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void;
+  onDeleteCst: (selected: number[], callback: (items: number[]) => void) => void;
 }
 
-function EditorRSList({
-  isMutable,
-  onOpenEdit, onCreateCst, 
-  onDeleteCst
-}: EditorRSListProps) {
+function EditorRSList({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: EditorRSListProps) {
   const { schema, cstMoveTo } = useRSForm();
   const [selected, setSelected] = useState<number[]>([]);
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
-  useLayoutEffect(
-  () => {
+  useLayoutEffect(() => {
     if (!schema || Object.keys(rowSelection).length === 0) {
       setSelected([]);
     } else {
@@ -65,16 +60,16 @@ function EditorRSList({
       }
       return Math.min(prev, index);
     }, -1);
-    const target = Math.max(0, currentIndex - 1) + 1
+    const target = Math.max(0, currentIndex - 1) + 1;
     const data = {
       items: selected,
       move_to: target
-    }
+    };
     cstMoveTo(data, () => {
       const newSelection: RowSelectionState = {};
       selected.forEach((_, index) => {
         newSelection[String(target + index - 1)] = true;
-      })
+      });
       setRowSelection(newSelection);
     });
   }
@@ -96,16 +91,16 @@ function EditorRSList({
         return Math.max(prev, index);
       }
     }, -1);
-    const target = Math.min(schema.items.length - 1, currentIndex - count + 2) + 1
+    const target = Math.min(schema.items.length - 1, currentIndex - count + 2) + 1;
     const data: ICstMovetoData = {
       items: selected,
       move_to: target
-    }
+    };
     cstMoveTo(data, () => {
       const newSelection: RowSelectionState = {};
       selected.forEach((_, index) => {
         newSelection[String(target + index - 1)] = true;
-      })
+      });
       setRowSelection(newSelection);
     });
   }
@@ -175,12 +170,14 @@ function EditorRSList({
 
   function processAltKey(code: string): boolean {
     if (selected.length > 0) {
+      // prettier-ignore
       switch (code) {
         case 'ArrowUp': handleMoveUp(); return true;
         case 'ArrowDown':  handleMoveDown(); return true;
         case 'KeyV':    handleClone(); return true;
       }
     }
+    // prettier-ignore
     switch (code) {
       case 'Backquote': handleCreateCst(); return true;
       
@@ -197,35 +194,29 @@ function EditorRSList({
   }
 
   return (
-  <div tabIndex={-1}
-    className='outline-none'
-    onKeyDown={handleTableKey}
-  > 
-    <RSListToolbar
-      selectedCount={selected.length}
-      isMutable={isMutable}
-      onMoveUp={handleMoveUp}
-      onMoveDown={handleMoveDown}
-      onClone={handleClone}
-      onCreate={handleCreateCst}
-      onDelete={handleDelete}
-    />
-    <SelectedCounter 
-      total={schema?.stats?.count_all ?? 0}
-      selected={selected.length}
-      position='left-0 top-1'
-    />
-    
-    <div className='pt-[2.3rem] border-b' />
+    <div tabIndex={-1} className='outline-none' onKeyDown={handleTableKey}>
+      <RSListToolbar
+        selectedCount={selected.length}
+        isMutable={isMutable}
+        onMoveUp={handleMoveUp}
+        onMoveDown={handleMoveDown}
+        onClone={handleClone}
+        onCreate={handleCreateCst}
+        onDelete={handleDelete}
+      />
+      <SelectedCounter total={schema?.stats?.count_all ?? 0} selected={selected.length} position='left-0 top-1' />
 
-    <RSTable 
-      items={schema?.items}
-      selected={rowSelection}
-      setSelected={setRowSelection}
-      onEdit={onOpenEdit}
-      onCreateNew={() => handleCreateCst()}
-    />
-  </div>);
+      <div className='pt-[2.3rem] border-b' />
+
+      <RSTable
+        items={schema?.items}
+        selected={rowSelection}
+        setSelected={setRowSelection}
+        onEdit={onOpenEdit}
+        onCreateNew={() => handleCreateCst()}
+      />
+    </div>
+  );
 }
 
 export default EditorRSList;

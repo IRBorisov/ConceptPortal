@@ -5,8 +5,8 @@ import { useConceptNavigation } from '@/context/NavigationContext';
 import { useConceptTheme } from '@/context/ThemeContext';
 
 interface UserDropdownProps {
-  isOpen: boolean
-  hideDropdown: () => void
+  isOpen: boolean;
+  hideDropdown: () => void;
 }
 
 function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
@@ -19,30 +19,22 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
     router.push('/profile');
   };
 
-  const logoutAndRedirect =
-  () => {
+  const logoutAndRedirect = () => {
     hideDropdown();
     logout(() => router.push('/login/'));
   };
 
   return (
-  <Dropdown className='w-36' stretchLeft isOpen={isOpen}>
-    <DropdownButton
-      text={user?.username}
-      title='Профиль пользователя'
-      onClick={navigateProfile}
-    />
-    <DropdownButton
-      text={darkMode ? 'Светлая тема' : 'Темная тема'}
-      title='Переключение темы оформления'
-      onClick={toggleDarkMode}
-    />
-    <DropdownButton
-      text='Выйти...'
-      className='font-semibold'
-      onClick={logoutAndRedirect}
-    />
-  </Dropdown>);
+    <Dropdown className='w-36' stretchLeft isOpen={isOpen}>
+      <DropdownButton text={user?.username} title='Профиль пользователя' onClick={navigateProfile} />
+      <DropdownButton
+        text={darkMode ? 'Светлая тема' : 'Темная тема'}
+        title='Переключение темы оформления'
+        onClick={toggleDarkMode}
+      />
+      <DropdownButton text='Выйти...' className='font-semibold' onClick={logoutAndRedirect} />
+    </Dropdown>
+  );
 }
 
 export default UserDropdown;

@@ -6,10 +6,7 @@ import { Graph } from '@/utils/Graph';
 import { TextMatcher } from '@/utils/utils';
 
 import { CstMatchMode } from './miscellaneous';
-import {
-  CATEGORY_CST_TYPE, CstClass, CstType, 
-  ExpressionStatus, IConstituenta, IRSForm, IRSFormData
-} from './rsform';
+import { CATEGORY_CST_TYPE, CstClass, CstType, ExpressionStatus, IConstituenta, IRSForm, IRSFormData } from './rsform';
 import { ParsingStatus, ValueClass } from './rslang';
 import { extractGlobals } from './rslangAPI';
 
@@ -21,8 +18,8 @@ import { extractGlobals } from './rslangAPI';
  * based on the loaded data. It also establishes dependencies between concepts in the graph.
  */
 export function loadRSFormData(input: IRSFormData): IRSForm {
-  const result = input as IRSForm
-  result.graph = new Graph;
+  const result = input as IRSForm;
+  result.graph = new Graph();
   if (!result.items) {
     result.stats = {
       count_all: 0,
@@ -42,43 +39,39 @@ export function loadRSFormData(input: IRSFormData): IRSForm {
       count_function: 0,
       count_predicate: 0,
       count_theorem: 0
-    }
+    };
     return result;
   }
   result.stats = {
     count_all: result.items.length || 0,
     count_errors: result.items.reduce(
-      (sum, cst) => sum + (cst.parse?.status === ParsingStatus.INCORRECT ? 1 : 0) || 0, 0),
+      (sum, cst) => sum + (cst.parse?.status === ParsingStatus.INCORRECT ? 1 : 0) || 0,
+      0
+    ),
     count_property: result.items.reduce(
-      (sum, cst) => sum + (cst.parse?.valueClass === ValueClass.PROPERTY ? 1 : 0) || 0, 0),
+      (sum, cst) => sum + (cst.parse?.valueClass === ValueClass.PROPERTY ? 1 : 0) || 0,
+      0
+    ),
     count_incalculable: result.items.reduce(
-      (sum, cst) => sum +
-      ((cst.parse?.status === ParsingStatus.VERIFIED && cst.parse?.valueClass === ValueClass.INVALID) ? 1 : 0) || 0, 0),
+      (sum, cst) =>
+        sum + (cst.parse?.status === ParsingStatus.VERIFIED && cst.parse?.valueClass === ValueClass.INVALID ? 1 : 0) ||
+        0,
+      0
+    ),
 
-    count_text_term: result.items.reduce(
-      (sum, cst) => (sum + (cst.term_raw ? 1 : 0) || 0), 0),
-    count_definition: result.items.reduce(
-      (sum, cst) => (sum + (cst.definition_raw ? 1 : 0) || 0), 0),
-    count_convention: result.items.reduce(
-      (sum, cst) => (sum + (cst.convention ? 1 : 0) || 0), 0),
+    count_text_term: result.items.reduce((sum, cst) => sum + (cst.term_raw ? 1 : 0) || 0, 0),
+    count_definition: result.items.reduce((sum, cst) => sum + (cst.definition_raw ? 1 : 0) || 0, 0),
+    count_convention: result.items.reduce((sum, cst) => sum + (cst.convention ? 1 : 0) || 0, 0),
 
-    count_base: result.items.reduce(
-      (sum, cst) => sum + (cst.cst_type === CstType.BASE ? 1 : 0), 0),
-    count_constant: result.items?.reduce(
-      (sum, cst) => sum + (cst.cst_type === CstType.CONSTANT ? 1 : 0), 0),
-    count_structured: result.items?.reduce(
-      (sum, cst) => sum + (cst.cst_type === CstType.STRUCTURED ? 1 : 0), 0),
-    count_axiom: result.items?.reduce(
-      (sum, cst) => sum + (cst.cst_type === CstType.AXIOM ? 1 : 0), 0),
-    count_term: result.items.reduce(
-      (sum, cst) => sum + (cst.cst_type === CstType.TERM ? 1 : 0), 0),
-    count_function: result.items.reduce(
-      (sum, cst) => sum + (cst.cst_type === CstType.FUNCTION ? 1 : 0), 0),
-    count_predicate: result.items.reduce(
-      (sum, cst) => sum + (cst.cst_type === CstType.PREDICATE ? 1 : 0), 0),
-    count_theorem: result.items.reduce(
-      (sum, cst) => sum + (cst.cst_type === CstType.THEOREM ? 1 : 0), 0)
-  }
+    count_base: result.items.reduce((sum, cst) => sum + (cst.cst_type === CstType.BASE ? 1 : 0), 0),
+    count_constant: result.items?.reduce((sum, cst) => sum + (cst.cst_type === CstType.CONSTANT ? 1 : 0), 0),
+    count_structured: result.items?.reduce((sum, cst) => sum + (cst.cst_type === CstType.STRUCTURED ? 1 : 0), 0),
+    count_axiom: result.items?.reduce((sum, cst) => sum + (cst.cst_type === CstType.AXIOM ? 1 : 0), 0),
+    count_term: result.items.reduce((sum, cst) => sum + (cst.cst_type === CstType.TERM ? 1 : 0), 0),
+    count_function: result.items.reduce((sum, cst) => sum + (cst.cst_type === CstType.FUNCTION ? 1 : 0), 0),
+    count_predicate: result.items.reduce((sum, cst) => sum + (cst.cst_type === CstType.PREDICATE ? 1 : 0), 0),
+    count_theorem: result.items.reduce((sum, cst) => sum + (cst.cst_type === CstType.THEOREM ? 1 : 0), 0)
+  };
   result.items.forEach(cst => {
     cst.status = inferStatus(cst.parse.status, cst.parse.valueClass);
     cst.is_template = inferTemplate(cst.definition_formal);
@@ -86,7 +79,7 @@ export function loadRSFormData(input: IRSFormData): IRSForm {
     result.graph.addNode(cst.id);
     const dependencies = extractGlobals(cst.definition_formal);
     dependencies.forEach(value => {
-      const source = input.items.find(cst => cst.alias === value)
+      const source = input.items.find(cst => cst.alias === value);
       if (source) {
         result.graph.addEdge(source.id, cst.id);
       }
@@ -104,20 +97,17 @@ export function loadRSFormData(input: IRSFormData): IRSForm {
  */
 export function matchConstituenta(target: IConstituenta, query: string, mode: CstMatchMode): boolean {
   const matcher = new TextMatcher(query);
-  if ((mode === CstMatchMode.ALL || mode === CstMatchMode.NAME) && 
-    matcher.test(target.alias)) {
+  if ((mode === CstMatchMode.ALL || mode === CstMatchMode.NAME) && matcher.test(target.alias)) {
     return true;
   }
-  if ((mode === CstMatchMode.ALL || mode === CstMatchMode.TERM) && 
-    matcher.test(target.term_resolved)) {
+  if ((mode === CstMatchMode.ALL || mode === CstMatchMode.TERM) && matcher.test(target.term_resolved)) {
     return true;
   }
-  if ((mode === CstMatchMode.ALL || mode === CstMatchMode.EXPR) && 
-    matcher.test(target.definition_formal)) {
+  if ((mode === CstMatchMode.ALL || mode === CstMatchMode.EXPR) && matcher.test(target.definition_formal)) {
     return true;
   }
-  if ((mode === CstMatchMode.ALL || mode === CstMatchMode.TEXT)) {
-    return (matcher.test(target.definition_resolved) || matcher.test(target.convention));
+  if (mode === CstMatchMode.ALL || mode === CstMatchMode.TEXT) {
+    return matcher.test(target.definition_resolved) || matcher.test(target.convention);
   }
   return false;
 }
@@ -127,7 +117,7 @@ export function matchConstituenta(target: IConstituenta, query: string, mode: Cs
  *
  * @param parse - parsing status of the expression.
  * @param value - value class of the expression.
- * 
+ *
  * @returns The inferred expression status:
  * - `ExpressionStatus.UNDEFINED` if either parsing or value is not provided.
  * - `ExpressionStatus.UNKNOWN` if parsing status is `ParsingStatus.UNDEF`.
@@ -180,25 +170,29 @@ export function inferClass(type: CstType, isTemplate: boolean): CstClass {
     return CstClass.TEMPLATE;
   }
   switch (type) {
-  case CstType.BASE: return CstClass.BASIC;
-  case CstType.CONSTANT: return CstClass.BASIC;
-  case CstType.STRUCTURED: return CstClass.BASIC;
-  case CstType.TERM: return CstClass.DERIVED;
-  case CstType.FUNCTION: return CstClass.DERIVED;
-  case CstType.AXIOM: return CstClass.STATEMENT;
-  case CstType.PREDICATE: return CstClass.DERIVED;
-  case CstType.THEOREM: return CstClass.STATEMENT;
+    case CstType.BASE:
+      return CstClass.BASIC;
+    case CstType.CONSTANT:
+      return CstClass.BASIC;
+    case CstType.STRUCTURED:
+      return CstClass.BASIC;
+    case CstType.TERM:
+      return CstClass.DERIVED;
+    case CstType.FUNCTION:
+      return CstClass.DERIVED;
+    case CstType.AXIOM:
+      return CstClass.STATEMENT;
+    case CstType.PREDICATE:
+      return CstClass.DERIVED;
+    case CstType.THEOREM:
+      return CstClass.STATEMENT;
   }
 }
 
 /**
  * Creates a mock {@link IConstituenta} object with the provided parameters and default values for other properties.
  */
-export function createMockConstituenta(
-  id: number,
-  alias: string,
-  comment: string
-): IConstituenta {
+export function createMockConstituenta(id: number, alias: string, comment: string): IConstituenta {
   return {
     id: id,
     order: -1,
@@ -236,16 +230,6 @@ export function isMockCst(cst: IConstituenta) {
  * TODO: description
  */
 export function applyFilterCategory(start: IConstituenta, schema: IRSFormData): IConstituenta[] {
-  const nextCategory = schema.items.find(
-    cst => (
-      cst.order > start.order &&
-      cst.cst_type === CATEGORY_CST_TYPE
-    )
-  );
-  return schema.items.filter(
-    cst => (
-      cst.order > start.order &&
-      (!nextCategory || cst.order <= nextCategory.order)
-    )
-  );
+  const nextCategory = schema.items.find(cst => cst.order > start.order && cst.cst_type === CATEGORY_CST_TYPE);
+  return schema.items.filter(cst => cst.order > start.order && (!nextCategory || cst.order <= nextCategory.order));
 }

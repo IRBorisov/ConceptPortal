@@ -22,28 +22,30 @@ function useRSFormDetails({ target }: { target?: string }) {
   }
 
   const reload = useCallback(
-  (setCustomLoading?: typeof setLoading, callback?: () => void) => {
-    setError(undefined);
-    if (!target) {
-      return;
-    }
-    getRSFormDetails(target, {
-      showError: true,
-      setLoading: setCustomLoading ?? setLoading,
-      onError: error => {
-        setInnerSchema(undefined);
-        setError(error);
-      },
-      onSuccess: schema => {
-        setSchema(schema);
-        if (callback) callback();
+    (setCustomLoading?: typeof setLoading, callback?: () => void) => {
+      setError(undefined);
+      if (!target) {
+        return;
       }
-    });
-  }, [target]);
+      getRSFormDetails(target, {
+        showError: true,
+        setLoading: setCustomLoading ?? setLoading,
+        onError: error => {
+          setInnerSchema(undefined);
+          setError(error);
+        },
+        onSuccess: schema => {
+          setSchema(schema);
+          if (callback) callback();
+        }
+      });
+    },
+    [target]
+  );
 
   useEffect(() => {
     reload();
-  }, [reload])
+  }, [reload]);
 
   return { schema, setSchema, reload, error, setError, loading };
 }

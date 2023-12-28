@@ -2,7 +2,16 @@
  * Module: Natural language model API.
  */
 
-import { GramData, Grammeme, GrammemeGroups, IEntityReference, ISyntacticReference, IWordForm, NounGrams, VerbGrams } from './language';
+import {
+  GramData,
+  Grammeme,
+  GrammemeGroups,
+  IEntityReference,
+  ISyntacticReference,
+  IWordForm,
+  NounGrams,
+  VerbGrams
+} from './language';
 
 /**
  * Equality comparator for {@link IWordForm}. Compares a set of Grammemes attached to wordforms
@@ -23,8 +32,8 @@ export function wordFormEquals(left: IWordForm, right: IWordForm): boolean {
  * Compares {@link GramData} based on Grammeme enum and alpha order for strings.
  */
 export function grammemeCompare(left: GramData, right: GramData): number {
-  const indexLeft = Object.values(Grammeme).findIndex(gram => gram === left as Grammeme);
-  const indexRight = Object.values(Grammeme).findIndex(gram => gram === right as Grammeme);
+  const indexLeft = Object.values(Grammeme).findIndex(gram => gram === (left as Grammeme));
+  const indexRight = Object.values(Grammeme).findIndex(gram => gram === (right as Grammeme));
   if (indexLeft === -1 && indexRight === -1) {
     return left.localeCompare(right);
   } else if (indexLeft === -1 && indexRight !== -1) {
@@ -56,8 +65,7 @@ export function parseGrammemes(termForm: string): GramData[] {
  */
 export function getCompatibleGrams(input: Grammeme[]): Grammeme[] {
   let result: Grammeme[] = [];
-  input.forEach(
-  (gram) => {
+  input.forEach(gram => {
     if (!result.includes(gram)) {
       if (NounGrams.includes(gram)) {
         result.push(...NounGrams);
@@ -68,16 +76,16 @@ export function getCompatibleGrams(input: Grammeme[]): Grammeme[] {
     }
   });
 
-  input.forEach(
-  (gram) => GrammemeGroups.forEach(
-  (group) => {
-    if (group.includes(gram)) {
-      result = result.filter(item => !group.includes(item));
-    }
-  }));
-  
+  input.forEach(gram =>
+    GrammemeGroups.forEach(group => {
+      if (group.includes(gram)) {
+        result = result.filter(item => !group.includes(item));
+      }
+    })
+  );
+
   if (result.length === 0) {
-    return [... new Set<Grammeme>([...VerbGrams, ...NounGrams])];
+    return [...new Set<Grammeme>([...VerbGrams, ...NounGrams])];
   } else {
     return result;
   }
@@ -85,7 +93,7 @@ export function getCompatibleGrams(input: Grammeme[]): Grammeme[] {
 
 /**
  * Extracts {@link IEntityReference} from string representation.
- * 
+ *
  * @param text - Reference text in a valid pattern. Must fit format '\@\{GLOBAL_ID|GRAMMEMES\}'
  */
 export function parseEntityReference(text: string): IEntityReference {
@@ -93,12 +101,12 @@ export function parseEntityReference(text: string): IEntityReference {
   return {
     entity: blocks[0].trim(),
     form: blocks[1].trim()
-  }
+  };
 }
 
 /**
  * Extracts {@link ISyntacticReference} from string representation.
- * 
+ *
  * @param text - Reference text in a valid pattern. Must fit format '\@\{OFFSET|NOMINAL_FORM\}'
  */
 export function parseSyntacticReference(text: string): ISyntacticReference {
@@ -106,5 +114,5 @@ export function parseSyntacticReference(text: string): ISyntacticReference {
   return {
     offset: Number(blocks[0].trim()),
     nominal: blocks[1].trim()
-  }
+  };
 }

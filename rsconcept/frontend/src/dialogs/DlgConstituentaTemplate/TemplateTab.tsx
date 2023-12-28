@@ -11,61 +11,60 @@ import { CATEGORY_CST_TYPE, IConstituenta, IRSForm } from '@/models/rsform';
 import { applyFilterCategory } from '@/models/rsformAPI';
 import { prefixes } from '@/utils/constants';
 export interface ITemplateState {
-  templateID?: number
-  prototype?: IConstituenta
-  filterCategory?: IConstituenta
+  templateID?: number;
+  prototype?: IConstituenta;
+  filterCategory?: IConstituenta;
 }
 
 interface TemplateTabProps {
-  state: ITemplateState
-  partialUpdate: Dispatch<Partial<ITemplateState>>
+  state: ITemplateState;
+  partialUpdate: Dispatch<Partial<ITemplateState>>;
 }
 
-function TemplateTab({ state, partialUpdate }: TemplateTabProps) { 
+function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
   const { templates, retrieveTemplate } = useLibrary();
   const [selectedSchema, setSelectedSchema] = useState<IRSForm | undefined>(undefined);
-  
+
   const [filteredData, setFilteredData] = useState<IConstituenta[]>([]);
 
-  const prototypeInfo = useMemo(
-  () => {
+  const prototypeInfo = useMemo(() => {
     if (!state.prototype) {
       return '';
     } else {
-      return `${state.prototype?.term_raw}${state.prototype?.definition_raw ? ` — ${state.prototype?.definition_raw}` : ''}`;
+      return `${state.prototype?.term_raw}${
+        state.prototype?.definition_raw ? ` — ${state.prototype?.definition_raw}` : ''
+      }`;
     }
   }, [state.prototype]);
 
   const templateSelector = useMemo(
-  () => templates.map(
-    (template) => ({
-      value: template.id,
-      label: template.title
-    })
-  ), [templates]);
+    () =>
+      templates.map(template => ({
+        value: template.id,
+        label: template.title
+      })),
+    [templates]
+  );
 
-  const categorySelector = useMemo(
-  (): {value: number, label: string}[] => {
+  const categorySelector = useMemo((): { value: number; label: string }[] => {
     if (!selectedSchema) {
       return [];
     }
     return selectedSchema.items
-    .filter(cst => cst.cst_type === CATEGORY_CST_TYPE)
-    .map(cst => ({
-      value: cst.id,
-      label: cst.term_raw
-    }));
+      .filter(cst => cst.cst_type === CATEGORY_CST_TYPE)
+      .map(cst => ({
+        value: cst.id,
+        label: cst.term_raw
+      }));
   }, [selectedSchema]);
 
-  useEffect(
-  () => {
+  useEffect(() => {
     if (templates.length > 0 && !state.templateID) {
       partialUpdate({ templateID: templates[0].id });
     }
   }, [templates, state.templateID, partialUpdate]);
 
-  useEffect(
-  () => {
+  useEffect(() => {
     if (!state.templateID) {
       setSelectedSchema(undefined);
     } else {
@@ -74,8 +73,7 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
   }, [state.templateID, retrieveTemplate]);
 
   // Filter constituents
-  useEffect(
-  () => {
+  useEffect(() => {
     if (!selectedSchema) {
       return;
     }
@@ -87,46 +85,60 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
   }, [state.filterCategory, selectedSchema]);
 
   return (
-  <>
-    <div className='flex'>
-      <SelectSingle
-        placeholder='Выберите категорию'
-        className='flex-grow border-none'
-        options={categorySelector}
-        value={state.filterCategory && selectedSchema ? {
-          value: state.filterCategory.id,
-          label: state.filterCategory.term_raw
-        } : null}
-        onChange={data => partialUpdate({filterCategory: selectedSchema?.items.find(cst => cst.id === data?.value) })}
-        isClearable
+    <>
+      <div className='flex'>
+        <SelectSingle
+          placeholder='Выберите категорию'
+          className='flex-grow border-none'
+          options={categorySelector}
+          value={
+            state.filterCategory && selectedSchema
+              ? {
+                  value: state.filterCategory.id,
+                  label: state.filterCategory.term_raw
+                }
+              : null
+          }
+          onChange={data =>
+            partialUpdate({ filterCategory: selectedSchema?.items.find(cst => cst.id === data?.value) })
+          }
+          isClearable
+        />
+        <SelectSingle
+          placeholder='Выберите источник'
+          className='w-[12rem]'
+          options={templateSelector}
+          value={
+            state.templateID
+              ? { value: state.templateID, label: templates.find(item => item.id == state.templateID)!.title }
+              : null
+          }
+          onChange={data => partialUpdate({ templateID: data ? data.value : undefined })}
+        />
+      </div>
+      <ConstituentaPicker
+        value={state.prototype}
+        data={filteredData}
+        onSelectValue={cst => partialUpdate({ prototype: cst })}
+        prefixID={prefixes.cst_template_ist}
+        rows={9}
       />
-      <SelectSingle
-        placeholder='Выберите источник'
-        className='w-[12rem]'
-        options={templateSelector}
-        value={state.templateID ? { value: state.templateID, label: templates.find(item => item.id == state.templateID)!.title }: null}
-        onChange={data => partialUpdate({templateID: (data ? data.value : undefined)})}
+      <TextArea
+        disabled
+        spellCheck
+        placeholder='Шаблон конституенты не выбран'
+        className='my-3'
+        rows={2}
+        value={prototypeInfo}
       />
-    </div>
-    <ConstituentaPicker
-      value={state.prototype}
-      data={filteredData}
-      onSelectValue={cst => partialUpdate( { prototype: cst } )}
-      prefixID={prefixes.cst_template_ist}
-      rows={9}
-    />
-    <TextArea disabled spellCheck
-      placeholder='Шаблон конституенты не выбран'
-      className='my-3'
-      rows={2}
-      value={prototypeInfo}
-    />
-    <RSInput disabled
-      placeholder='Выберите шаблон из списка'
-      height='5.1rem'
-      value={state.prototype?.definition_formal}
-    />
-  </>);
+      <RSInput
+        disabled
+        placeholder='Выберите шаблон из списка'
+        height='5.1rem'
+        value={state.prototype?.definition_formal}
+      />
+    </>
+  );
 }
 
 export default TemplateTab;

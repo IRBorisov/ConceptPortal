@@ -16,11 +16,11 @@ import { labelExpressionStatus } from '@/utils/labels';
 import StatusIcon from './StatusIcon';
 
 interface StatusBarProps {
-  processing?: boolean
-  isModified?: boolean
-  parseData?: IExpressionParse
-  constituenta?: IConstituenta
-  onAnalyze: () => void
+  processing?: boolean;
+  isModified?: boolean;
+  parseData?: IExpressionParse;
+  constituenta?: IConstituenta;
+  onAnalyze: () => void;
 }
 
 function StatusBar({ isModified, processing, constituenta, parseData, onAnalyze }: StatusBarProps) {
@@ -37,30 +37,30 @@ function StatusBar({ isModified, processing, constituenta, parseData, onAnalyze 
   }, [isModified, constituenta, parseData]);
 
   return (
-  <div 
-    className={clsx(
-      'w-[10rem] h-[1.75rem]',
-      'px-2 flex items-center justify-center gap-2',
-      'border',
-      'select-none',
-      'cursor-pointer',
-      'duration-500 transition-colors'
-    )}
-    style={{backgroundColor: processing ? colors.bgDefault : colorBgCstStatus(status, colors)}}
-    data-tooltip-id={globalIDs.tooltip}
-    data-tooltip-content='Проверить определение [Ctrl + Q]'
-    onClick={onAnalyze}
-  >
-    {processing ?
-      <ConceptLoader size={3} /> :
-      <>
-        <StatusIcon status={status} />
-        <span className='pb-[0.125rem] font-semibold small-caps pr-2'>
-          {labelExpressionStatus(status)}
-        </span>
-      </>
-    }
-  </div>);
+    <div
+      className={clsx(
+        'w-[10rem] h-[1.75rem]',
+        'px-2 flex items-center justify-center gap-2',
+        'border',
+        'select-none',
+        'cursor-pointer',
+        'duration-500 transition-colors'
+      )}
+      style={{ backgroundColor: processing ? colors.bgDefault : colorBgCstStatus(status, colors) }}
+      data-tooltip-id={globalIDs.tooltip}
+      data-tooltip-content='Проверить определение [Ctrl + Q]'
+      onClick={onAnalyze}
+    >
+      {processing ? (
+        <ConceptLoader size={3} />
+      ) : (
+        <>
+          <StatusIcon status={status} />
+          <span className='pb-[0.125rem] font-semibold small-caps pr-2'>{labelExpressionStatus(status)}</span>
+        </>
+      )}
+    </div>
+  );
 }
 
 export default StatusBar;

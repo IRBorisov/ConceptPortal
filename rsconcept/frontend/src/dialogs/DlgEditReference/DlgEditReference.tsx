@@ -17,18 +17,18 @@ import EntityTab from './EntityTab';
 import SyntacticTab from './SyntacticTab';
 
 export interface IReferenceInputState {
-  type: ReferenceType
-  refRaw?: string
-  text?: string
-  mainRefs: string[]
-  basePosition: number
+  type: ReferenceType;
+  refRaw?: string;
+  text?: string;
+  mainRefs: string[];
+  basePosition: number;
 }
 
 interface DlgEditReferenceProps {
-  hideWindow: () => void
-  items: IConstituenta[]
-  initial: IReferenceInputState
-  onSave: (newRef: string) => void
+  hideWindow: () => void;
+  items: IConstituenta[];
+  initial: IReferenceInputState;
+  onSave: (newRef: string) => void;
 }
 
 export enum TabID {
@@ -41,63 +41,51 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
 
   const [reference, setReference] = useState('');
   const [isValid, setIsValid] = useState(false);
-  
-  const handleSubmit = () => onSave(reference);
-  
-  return (
-  <Modal
-    header='Редактирование ссылки'
-    submitText='Сохранить ссылку'
-    hideWindow={hideWindow}
-    canSubmit={isValid}
-    onSubmit={handleSubmit}
-    className='w-[40rem] px-6 min-h-[34rem]'
-  >
-    <Overlay position='top-0 right-[4rem]'>
-      <HelpButton topic={HelpTopic.TERM_CONTROL} className='max-w-[35rem]' offset={14} />
-    </Overlay>
-    
-    <Tabs
-      selectedTabClassName='clr-selected'
-      className='flex flex-col'
-      selectedIndex={activeTab}
-      onSelect={setActiveTab}
-    >
-      <TabList className={clsx(
-        'mb-3 self-center',
-        'flex',
-        'border divide-x rounded-none'
-      )}>
-        <ConceptTab
-          title='Отсылка на термин в заданной словоформе'
-          label={labelReferenceType(ReferenceType.ENTITY)}
-          className='w-[12rem]'
-        />
-        <ConceptTab
-          title='Установление синтаксической связи с отсылкой на термин'
-          label={labelReferenceType(ReferenceType.SYNTACTIC)}
-          className='w-[12rem]'
-        />
-      </TabList>
-      
-      <TabPanel>
-      <EntityTab
-        initial={initial}
-        items={items}
-        setReference={setReference}
-        setIsValid={setIsValid}
-      />
-      </TabPanel>
 
-      <TabPanel>
-      <SyntacticTab 
-        initial={initial}
-        setReference={setReference}
-        setIsValid={setIsValid}
-      />
-      </TabPanel>
-    </Tabs>
-  </Modal>);
+  const handleSubmit = () => onSave(reference);
+
+  return (
+    <Modal
+      header='Редактирование ссылки'
+      submitText='Сохранить ссылку'
+      hideWindow={hideWindow}
+      canSubmit={isValid}
+      onSubmit={handleSubmit}
+      className='w-[40rem] px-6 min-h-[34rem]'
+    >
+      <Overlay position='top-0 right-[4rem]'>
+        <HelpButton topic={HelpTopic.TERM_CONTROL} className='max-w-[35rem]' offset={14} />
+      </Overlay>
+
+      <Tabs
+        selectedTabClassName='clr-selected'
+        className='flex flex-col'
+        selectedIndex={activeTab}
+        onSelect={setActiveTab}
+      >
+        <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none')}>
+          <ConceptTab
+            title='Отсылка на термин в заданной словоформе'
+            label={labelReferenceType(ReferenceType.ENTITY)}
+            className='w-[12rem]'
+          />
+          <ConceptTab
+            title='Установление синтаксической связи с отсылкой на термин'
+            label={labelReferenceType(ReferenceType.SYNTACTIC)}
+            className='w-[12rem]'
+          />
+        </TabList>
+
+        <TabPanel>
+          <EntityTab initial={initial} items={items} setReference={setReference} setIsValid={setIsValid} />
+        </TabPanel>
+
+        <TabPanel>
+          <SyntacticTab initial={initial} setReference={setReference} setIsValid={setIsValid} />
+        </TabPanel>
+      </Tabs>
+    </Modal>
+  );
 }
 
 export default DlgEditReference;

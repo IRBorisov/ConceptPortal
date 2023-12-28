@@ -11,13 +11,10 @@ import { UsersState } from '@/context/UsersContext';
 
 import ErrorFallback from './components/ErrorFallback';
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url,
-).toString();
+pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.js', import.meta.url).toString();
 
 const resetState = () => {
-  console.log('Resetting state after error fallback')
+  console.log('Resetting state after error fallback');
 };
 
 const logError = (error: Error, info: { componentStack?: string | null | undefined }) => {
@@ -27,6 +24,7 @@ const logError = (error: Error, info: { componentStack?: string | null | undefin
   }
 };
 
+// prettier-ignore
 function GlobalProviders({ children }: { children: React.ReactNode }) {
   return (
   <ErrorBoundary

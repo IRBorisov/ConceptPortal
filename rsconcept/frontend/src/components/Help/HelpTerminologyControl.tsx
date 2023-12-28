@@ -1,5 +1,5 @@
-
 function HelpTerminologyControl() {
+  // prettier-ignore
   return (
   <div className='flex flex-col gap-1 max-w-[80rem]'>
     <h1>Терминологизация</h1>

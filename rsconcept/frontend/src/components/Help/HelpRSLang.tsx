@@ -9,13 +9,13 @@ const OPT_VIDEO_H = 1080;
 function HelpRSLang() {
   const windowSize = useWindowSize();
 
-  const videoHeight = useMemo(
-  () => {
+  const videoHeight = useMemo(() => {
     const viewH = windowSize.height ?? 0;
     const viewW = windowSize.width ?? 0;
-    return Math.min(OPT_VIDEO_H, viewH - 320, Math.floor((viewW - 290)*9/16));
+    return Math.min(OPT_VIDEO_H, viewH - 320, Math.floor(((viewW - 290) * 9) / 16));
   }, [windowSize]);
 
+  // prettier-ignore
   return (
   <div className='flex flex-col gap-4'>
     <div>

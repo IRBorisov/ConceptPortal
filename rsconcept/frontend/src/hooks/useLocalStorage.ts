@@ -2,12 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
-function useLocalStorage<ValueType>(
-  key: string,
-  defaultValue: ValueType | (() => ValueType)
-) {
-  const [value, setValue] = useState<ValueType>(
-  () => {
+function useLocalStorage<ValueType>(key: string, defaultValue: ValueType | (() => ValueType)) {
+  const [value, setValue] = useState<ValueType>(() => {
     const loadedJson = localStorage.getItem(key);
     if (loadedJson != null) {
       return JSON.parse(loadedJson) as ValueType;
@@ -20,7 +16,7 @@ function useLocalStorage<ValueType>(
 
   useEffect(() => {
     if (value === undefined) {
-      localStorage.removeItem(key)
+      localStorage.removeItem(key);
     } else {
       localStorage.setItem(key, JSON.stringify(value));
     }

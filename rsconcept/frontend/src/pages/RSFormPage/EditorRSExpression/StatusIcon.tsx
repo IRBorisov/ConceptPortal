@@ -5,7 +5,7 @@ import { BiBug, BiCheckCircle, BiHelpCircle, BiPauseCircle } from 'react-icons/b
 import { ExpressionStatus } from '@/models/rsform';
 
 interface StatusIconProps {
-  status: ExpressionStatus
+  status: ExpressionStatus;
 }
 
 function StatusIcon({ status }: StatusIconProps) {
@@ -15,7 +15,7 @@ function StatusIcon({ status }: StatusIconProps) {
     return <BiHelpCircle size='1rem' />;
   } else if (status === ExpressionStatus.INCALCULABLE) {
     return <BiPauseCircle size='1rem' />;
-  }else {
+  } else {
     return <BiBug size='1rem' />;
   }
 }

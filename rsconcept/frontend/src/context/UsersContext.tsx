@@ -6,31 +6,31 @@ import { type IUserInfo } from '@/models/library';
 import { getActiveUsers } from '@/utils/backendAPI';
 
 interface IUsersContext {
-  users: IUserInfo[]
-  reload: (callback?: () => void) => void
-  getUserLabel: (userID: number | null) => string
+  users: IUserInfo[];
+  reload: (callback?: () => void) => void;
+  getUserLabel: (userID: number | null) => string;
 }
 
-const UsersContext = createContext<IUsersContext | null>(null)
+const UsersContext = createContext<IUsersContext | null>(null);
 export const useUsers = (): IUsersContext => {
   const context = useContext(UsersContext);
   if (context === null) {
     throw new Error('useUsers has to be used within <UsersState.Provider>');
   }
   return context;
-}
+};
 
 interface UsersStateProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export const UsersState = ({ children }: UsersStateProps) => {
-  const [users, setUsers] = useState<IUserInfo[]>([])
+  const [users, setUsers] = useState<IUserInfo[]>([]);
 
   function getUserLabel(userID: number | null) {
-    const user = users.find(({ id }) => id === userID)
+    const user = users.find(({ id }) => id === userID);
     if (!user) {
-      return (userID ? userID.toString() : 'Отсутствует');
+      return userID ? userID.toString() : 'Отсутствует';
     }
     const hasFirstName = user.first_name !== '';
     const hasLastName = user.last_name !== '';
@@ -47,27 +47,32 @@ export const UsersState = ({ children }: UsersStateProps) => {
   }
 
   const reload = useCallback(
-  (callback?: () => void) => {
-    getActiveUsers({
-      showError: true,
-      onError: () => setUsers([]),
-      onSuccess: newData => {
-        setUsers(newData);
-        if (callback) callback();
-      }
-    });
-  }, [setUsers]);
+    (callback?: () => void) => {
+      getActiveUsers({
+        showError: true,
+        onError: () => setUsers([]),
+        onSuccess: newData => {
+          setUsers(newData);
+          if (callback) callback();
+        }
+      });
+    },
+    [setUsers]
+  );
 
   useEffect(() => {
     reload();
   }, [reload]);
 
   return (
-  <UsersContext.Provider value={{
-    users,
-    reload,
-    getUserLabel
-  }}>
-    { children }
-  </UsersContext.Provider>);
-}
+    <UsersContext.Provider
+      value={{
+        users,
+        reload,
+        getUserLabel
+      }}
+    >
+      {children}
+    </UsersContext.Provider>
+  );
+};

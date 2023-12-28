@@ -13,22 +13,17 @@ import { classnames } from '@/utils/constants';
 
 function EditorProfile() {
   const { updateUser, user, processing } = useUserProfile();
-  
+
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [first_name, setFirstName] = useState('');
   const [last_name, setLastName] = useState('');
 
-  const isModified: boolean = useMemo(
-  () => {
+  const isModified: boolean = useMemo(() => {
     if (!user) {
       return false;
     }
-    return (
-      user.email !== email ||
-      user.first_name !== first_name ||
-      user.last_name !== last_name
-    );
+    return user.email !== email || user.first_name !== first_name || user.last_name !== last_name;
   }, [user, email, first_name, last_name]);
   useBlockNavigation(isModified);
 
@@ -40,54 +35,45 @@ function EditorProfile() {
       setLastName(user.last_name);
     }
   }, [user]);
-  
+
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data: IUserUpdateData = {
       username: username,
       email: email,
       first_name: first_name,
-      last_name: last_name,
+      last_name: last_name
     };
     updateUser(data, () => toast.success('Изменения сохранены'));
   }
 
   return (
-  <form
-    onSubmit={handleSubmit}
-    className={clsx(
-      'min-w-[18rem]',
-      'px-6 py-2',
-      classnames.flex_col
-    )}
-  >
-    <TextInput id='username' disabled
-      label='Логин'
-      title='Логин изменить нельзя'
-      value={username}
-    />
-    <TextInput id='first_name' allowEnter
-      label='Имя'
-      value={first_name}
-      onChange={event => setFirstName(event.target.value)}
-    />
-    <TextInput id='last_name' allowEnter
-      label='Фамилия'
-      value={last_name}
-      onChange={event => setLastName(event.target.value)}
-    />
-    <TextInput id='email' allowEnter
-      label='Электронная почта'
-      value={email}
-      onChange={event => setEmail(event.target.value)}
-    /> 
-    <SubmitButton
-      className='self-center mt-6'
-      text='Сохранить данные'
-      loading={processing}
-      disabled={!isModified}
-    /> 
-  </form>);
+    <form onSubmit={handleSubmit} className={clsx('min-w-[18rem]', 'px-6 py-2', classnames.flex_col)}>
+      <TextInput id='username' disabled label='Логин' title='Логин изменить нельзя' value={username} />
+      <TextInput
+        id='first_name'
+        allowEnter
+        label='Имя'
+        value={first_name}
+        onChange={event => setFirstName(event.target.value)}
+      />
+      <TextInput
+        id='last_name'
+        allowEnter
+        label='Фамилия'
+        value={last_name}
+        onChange={event => setLastName(event.target.value)}
+      />
+      <TextInput
+        id='email'
+        allowEnter
+        label='Электронная почта'
+        value={email}
+        onChange={event => setEmail(event.target.value)}
+      />
+      <SubmitButton className='self-center mt-6' text='Сохранить данные' loading={processing} disabled={!isModified} />
+    </form>
+  );
 }
 
 export default EditorProfile;

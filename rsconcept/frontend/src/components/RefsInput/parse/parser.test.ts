@@ -13,12 +13,11 @@ const testData = [
   ['@{-1| черный }', '[Text[RefSyntactic[Offset][Nominal]]]'],
   ['@{-100| черный слон }', '[Text[RefSyntactic[Offset][Nominal]]]'],
   ['@{X1|VERB,past,sing}', '[Text[RefEntity[Global][Grams]]]'],
-  ['@{X12|VERB,past,sing}', '[Text[RefEntity[Global][Grams]]]'],
+  ['@{X12|VERB,past,sing}', '[Text[RefEntity[Global][Grams]]]']
 ];
 
 describe('Testing NaturalParser', () => {
-  it.each(testData)('Parse %p', 
-  (input: string, expectedTree: string) => {
+  it.each(testData)('Parse %p', (input: string, expectedTree: string) => {
     // NOTE: use strict parser to determine exact error position
     // const tree = parser.configure({strict: true}).parse(input);
     const tree = parser.parse(input);

@@ -10,11 +10,12 @@ import RSTabs from './RSTabs';
 function RSFormPage() {
   const params = useParams();
   return (
-  <AccessModeState>
-  <RSFormState schemaID={params.id ?? ''}>
-    <RSTabs />
-  </RSFormState>
-  </AccessModeState>);
+    <AccessModeState>
+      <RSFormState schemaID={params.id ?? ''}>
+        <RSTabs />
+      </RSFormState>
+    </AccessModeState>
+  );
 }
 
 export default RSFormPage;

@@ -10,34 +10,32 @@ import { IUserSignupData } from '@/models/library';
 import { IUserProfile } from '@/models/library';
 import { IUserInfo } from '@/models/library';
 import { IUserUpdatePassword } from '@/models/library';
-import { type DataCallback, getAuth, patchPassword,postLogin, postLogout, postSignup } from '@/utils/backendAPI';
+import { type DataCallback, getAuth, patchPassword, postLogin, postLogout, postSignup } from '@/utils/backendAPI';
 
 import { useUsers } from './UsersContext';
 
 interface IAuthContext {
-  user: ICurrentUser | undefined
-  login: (data: IUserLoginData, callback?: DataCallback) => void
-  logout: (callback?: DataCallback) => void
-  signup: (data: IUserSignupData, callback?: DataCallback<IUserProfile>) => void
-  updatePassword: (data: IUserUpdatePassword, callback?: () => void) => void
-  loading: boolean
-  error: ErrorData
-  setError: (error: ErrorData) => void
+  user: ICurrentUser | undefined;
+  login: (data: IUserLoginData, callback?: DataCallback) => void;
+  logout: (callback?: DataCallback) => void;
+  signup: (data: IUserSignupData, callback?: DataCallback<IUserProfile>) => void;
+  updatePassword: (data: IUserUpdatePassword, callback?: () => void) => void;
+  loading: boolean;
+  error: ErrorData;
+  setError: (error: ErrorData) => void;
 }
 
 const AuthContext = createContext<IAuthContext | null>(null);
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error(
-      'useAuth has to be used within <AuthState.Provider>'
-    );
+    throw new Error('useAuth has to be used within <AuthState.Provider>');
   }
   return context;
-}
+};
 
 interface AuthStateProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export const AuthState = ({ children }: AuthStateProps) => {
@@ -47,19 +45,21 @@ export const AuthState = ({ children }: AuthStateProps) => {
   const [error, setError] = useState<ErrorData>(undefined);
 
   const reload = useCallback(
-  (callback?: () => void) => {
-    getAuth({
-      onError: () => setUser(undefined),
-      onSuccess: currentUser => {
-        if (currentUser.id) {
-          setUser(currentUser);
-        } else {
-          setUser(undefined);
+    (callback?: () => void) => {
+      getAuth({
+        onError: () => setUser(undefined),
+        onSuccess: currentUser => {
+          if (currentUser.id) {
+            setUser(currentUser);
+          } else {
+            setUser(undefined);
+          }
+          if (callback) callback();
         }
-        if (callback) callback();
-      }
-    });
-  }, [setUser]);
+      });
+    },
+    [setUser]
+  );
 
   function login(data: IUserLoginData, callback?: DataCallback) {
     setError(undefined);
@@ -68,9 +68,10 @@ export const AuthState = ({ children }: AuthStateProps) => {
       showError: true,
       setLoading: setLoading,
       onError: error => setError(error),
-      onSuccess: newData => reload(() => {
-        if (callback) callback(newData);
-      })
+      onSuccess: newData =>
+        reload(() => {
+          if (callback) callback(newData);
+        })
     });
   }
 
@@ -78,9 +79,10 @@ export const AuthState = ({ children }: AuthStateProps) => {
     setError(undefined);
     postLogout({
       showError: true,
-      onSuccess: newData => reload(() => {
-        if (callback) callback(newData);
-      })
+      onSuccess: newData =>
+        reload(() => {
+          if (callback) callback(newData);
+        })
     });
   }
 
@@ -91,35 +93,38 @@ export const AuthState = ({ children }: AuthStateProps) => {
       showError: true,
       setLoading: setLoading,
       onError: error => setError(error),
-      onSuccess: newData => reload(() => {
-        users.push(newData as IUserInfo);
-        if (callback) callback(newData);
-      })
+      onSuccess: newData =>
+        reload(() => {
+          users.push(newData as IUserInfo);
+          if (callback) callback(newData);
+        })
     });
   }
 
   const updatePassword = useCallback(
-  (data: IUserUpdatePassword, callback?: () => void) => {
-    setError(undefined);
-    patchPassword({
-      data: data,
-      showError: true,
-      setLoading: setLoading,
-      onError: error => setError(error),
-      onSuccess: () => reload(() => {
-        if (callback) callback();       
-      })
-    });
-  }, [reload]);
+    (data: IUserUpdatePassword, callback?: () => void) => {
+      setError(undefined);
+      patchPassword({
+        data: data,
+        showError: true,
+        setLoading: setLoading,
+        onError: error => setError(error),
+        onSuccess: () =>
+          reload(() => {
+            if (callback) callback();
+          })
+      });
+    },
+    [reload]
+  );
 
   useLayoutEffect(() => {
     reload();
-  }, [reload])
+  }, [reload]);
 
   return (
-  <AuthContext.Provider
-    value={{ user, login, logout, signup, loading, error, setError, updatePassword }}
-  >
-    {children}
-  </AuthContext.Provider>);
+    <AuthContext.Provider value={{ user, login, logout, signup, loading, error, setError, updatePassword }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

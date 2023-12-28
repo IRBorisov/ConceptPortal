@@ -7,8 +7,6 @@ import GlobalProviders from './GlobalProviders';
 
 createRoot(document.getElementById('root')!).render(
   <GlobalProviders>
-  
     <App />
-  
   </GlobalProviders>
-)
+);

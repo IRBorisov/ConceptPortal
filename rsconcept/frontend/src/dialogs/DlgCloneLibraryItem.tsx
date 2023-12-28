@@ -15,9 +15,8 @@ import { IRSFormCreateData } from '@/models/rsform';
 import { classnames } from '@/utils/constants';
 import { cloneTitle } from '@/utils/misc';
 
-interface DlgCloneLibraryItemProps
-extends Pick<ModalProps, 'hideWindow'> {
-  base: ILibraryItem
+interface DlgCloneLibraryItemProps extends Pick<ModalProps, 'hideWindow'> {
+  base: ILibraryItem;
 }
 
 function DlgCloneLibraryItem({ hideWindow, base }: DlgCloneLibraryItemProps) {
@@ -30,7 +29,7 @@ function DlgCloneLibraryItem({ hideWindow, base }: DlgCloneLibraryItemProps) {
 
   const { cloneItem } = useLibrary();
 
-  const canSubmit = useMemo(() => (title !== '' && alias !== ''), [title, alias]);
+  const canSubmit = useMemo(() => title !== '' && alias !== '', [title, alias]);
 
   useEffect(() => {
     if (base) {
@@ -58,36 +57,25 @@ function DlgCloneLibraryItem({ hideWindow, base }: DlgCloneLibraryItemProps) {
   }
 
   return (
-  <Modal
-    header='Создание копии концептуальной схемы'
-    hideWindow={hideWindow}
-    canSubmit={canSubmit}
-    submitText='Создать'
-    onSubmit={handleSubmit}
-    className={clsx('px-6 py-2', classnames.flex_col)}
-  >
-    <TextInput
-      label='Полное название'
-      value={title}
-      onChange={event => setTitle(event.target.value)}
-    />
-    <TextInput
-      label='Сокращение'
-      value={alias}
-      className='max-w-sm'
-      onChange={event => setAlias(event.target.value)}
-    />
-    <TextArea
-      label='Комментарий'
-      value={comment}
-      onChange={event => setComment(event.target.value)}
-    />
-    <Checkbox
-      label='Общедоступная схема'
-      value={common}
-      setValue={value => setCommon(value)}
-    />
-  </Modal>);
+    <Modal
+      header='Создание копии концептуальной схемы'
+      hideWindow={hideWindow}
+      canSubmit={canSubmit}
+      submitText='Создать'
+      onSubmit={handleSubmit}
+      className={clsx('px-6 py-2', classnames.flex_col)}
+    >
+      <TextInput label='Полное название' value={title} onChange={event => setTitle(event.target.value)} />
+      <TextInput
+        label='Сокращение'
+        value={alias}
+        className='max-w-sm'
+        onChange={event => setAlias(event.target.value)}
+      />
+      <TextArea label='Комментарий' value={comment} onChange={event => setComment(event.target.value)} />
+      <Checkbox label='Общедоступная схема' value={common} setValue={value => setCommon(value)} />
+    </Modal>
+  );
 }
 
 export default DlgCloneLibraryItem;

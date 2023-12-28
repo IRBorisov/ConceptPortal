@@ -2,6 +2,7 @@ import { BiCheckShield, BiShareAlt } from 'react-icons/bi';
 import { FiBell } from 'react-icons/fi';
 
 function HelpLibrary() {
+  // prettier-ignore
   return (
   <div className='max-w-[80rem]'>
     <h1>Библиотека концептуальных схем</h1>

@@ -20,23 +20,31 @@ const UNFOLDED_HEIGHT = '59.1rem';
 const SIDELIST_HIDE_THRESHOLD = 1100; // px
 
 interface EditorConstituentaProps {
-  isMutable: boolean
+  isMutable: boolean;
 
-  activeID?: number
-  activeCst?: IConstituenta | undefined
-  isModified: boolean
-  setIsModified: Dispatch<SetStateAction<boolean>>
+  activeID?: number;
+  activeCst?: IConstituenta | undefined;
+  isModified: boolean;
+  setIsModified: Dispatch<SetStateAction<boolean>>;
 
-  onOpenEdit: (cstID: number) => void
-  onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void
-  onRenameCst: (initial: ICstRenameData) => void
-  onEditTerm: () => void
-  onDeleteCst: (selected: number[], callback?: (items: number[]) => void) => void
+  onOpenEdit: (cstID: number) => void;
+  onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void;
+  onRenameCst: (initial: ICstRenameData) => void;
+  onEditTerm: () => void;
+  onDeleteCst: (selected: number[], callback?: (items: number[]) => void) => void;
 }
 
 function EditorConstituenta({
-  isMutable, isModified, setIsModified, activeID, activeCst, onEditTerm,
-  onCreateCst, onRenameCst, onOpenEdit, onDeleteCst
+  isMutable,
+  isModified,
+  setIsModified,
+  activeID,
+  activeCst,
+  onEditTerm,
+  onCreateCst,
+  onRenameCst,
+  onOpenEdit,
+  onDeleteCst
 }: EditorConstituentaProps) {
   const windowSize = useWindowSize();
   const { schema } = useRSForm();
@@ -44,7 +52,7 @@ function EditorConstituenta({
   const [showList, setShowList] = useLocalStorage('rseditor-show-list', true);
   const [toggleReset, setToggleReset] = useState(false);
 
-  const disabled = useMemo(() => (!activeCst || !isMutable), [activeCst, isMutable]);
+  const disabled = useMemo(() => !activeCst || !isMutable, [activeCst, isMutable]);
 
   function handleDelete() {
     if (!schema || !activeID) {
@@ -116,52 +124,51 @@ function EditorConstituenta({
 
   function processAltKey(code: string): boolean {
     switch (code) {
-      case 'KeyV':   handleClone(); return true;
+      case 'KeyV':
+        handleClone();
+        return true;
     }
     return false;
   }
 
   return (
-  <>
-    <ConstituentaToolbar
-      isMutable={!disabled}
-      isModified={isModified}
-    
-      onSubmit={initiateSubmit}
-      onReset={() => setToggleReset(prev => !prev)}
-    
-      onDelete={handleDelete}
-      onClone={handleClone}
-      onCreate={handleCreate}
-    />
-    <div tabIndex={-1}
-      className='flex max-w-[95rem]'
-      onKeyDown={handleInput}
-    >
-      <FormConstituenta disabled={disabled}
-        showList={showList}
-        id={globalIDs.constituenta_editor}
-        constituenta={activeCst}
+    <>
+      <ConstituentaToolbar
+        isMutable={!disabled}
         isModified={isModified}
-        toggleReset={toggleReset}
-        onToggleList={() => setShowList(prev => !prev)}
-        
-        setIsModified={setIsModified}
-        onEditTerm={onEditTerm}
-        onRenameCst={onRenameCst}
+        onSubmit={initiateSubmit}
+        onReset={() => setToggleReset(prev => !prev)}
+        onDelete={handleDelete}
+        onClone={handleClone}
+        onCreate={handleCreate}
       />
-      <AnimatePresence>
-      {(showList && windowSize.width && windowSize.width >= SIDELIST_HIDE_THRESHOLD) ?
-      <ViewConstituents
-        schema={schema}
-        expression={activeCst?.definition_formal ?? ''}
-        baseHeight={UNFOLDED_HEIGHT}
-        activeID={activeID}
-        onOpenEdit={onOpenEdit}
-      />: null}
-      </AnimatePresence>
-    </div>
-  </>);
+      <div tabIndex={-1} className='flex max-w-[95rem]' onKeyDown={handleInput}>
+        <FormConstituenta
+          disabled={disabled}
+          showList={showList}
+          id={globalIDs.constituenta_editor}
+          constituenta={activeCst}
+          isModified={isModified}
+          toggleReset={toggleReset}
+          onToggleList={() => setShowList(prev => !prev)}
+          setIsModified={setIsModified}
+          onEditTerm={onEditTerm}
+          onRenameCst={onRenameCst}
+        />
+        <AnimatePresence>
+          {showList && windowSize.width && windowSize.width >= SIDELIST_HIDE_THRESHOLD ? (
+            <ViewConstituents
+              schema={schema}
+              expression={activeCst?.definition_formal ?? ''}
+              baseHeight={UNFOLDED_HEIGHT}
+              activeID={activeID}
+              onOpenEdit={onOpenEdit}
+            />
+          ) : null}
+        </AnimatePresence>
+      </div>
+    </>
+  );
 }
 
 export default EditorConstituenta;

@@ -9,23 +9,23 @@ describe('Testing Graph construction', () => {
   test('adding edges should create nodes', () => {
     const graph = new Graph();
     graph.addEdge(13, 37);
-    expect([... graph.nodes.keys()]).toStrictEqual([13, 37]);
+    expect([...graph.nodes.keys()]).toStrictEqual([13, 37]);
 
     graph.addEdge(13, 38);
-    expect([... graph.nodes.keys()]).toStrictEqual([13, 37, 38]);
+    expect([...graph.nodes.keys()]).toStrictEqual([13, 37, 38]);
   });
 
   test('creating from array', () => {
     const graph = new Graph([[1, 2], [3], [4, 1]]);
-    expect([... graph.nodes.keys()]).toStrictEqual([1, 2, 3, 4]);
-    expect([... graph.nodes.get(1)!.outputs]).toStrictEqual([2]);
+    expect([...graph.nodes.keys()]).toStrictEqual([1, 2, 3, 4]);
+    expect([...graph.nodes.get(1)!.outputs]).toStrictEqual([2]);
   });
 
   test('cloning', () => {
     const graph = new Graph([[1, 2], [3], [4, 1]]);
     const clone = graph.clone();
-    expect([... graph.nodes.keys()]).toStrictEqual([... clone.nodes.keys()]);
-    expect([... graph.nodes.values()]).toStrictEqual([... clone.nodes.values()]);
+    expect([...graph.nodes.keys()]).toStrictEqual([...clone.nodes.keys()]);
+    expect([...graph.nodes.values()]).toStrictEqual([...clone.nodes.values()]);
 
     clone.removeNode(3);
     expect(clone.nodes.get(3)).toBeUndefined();
@@ -40,13 +40,19 @@ describe('Testing Graph editing', () => {
 
     graph.removeEdge(5, 0);
     graph.removeEdge(4, 1);
-    
-    expect([... graph.nodes.keys()]).toStrictEqual([1, 2, 3, 4]);
+
+    expect([...graph.nodes.keys()]).toStrictEqual([1, 2, 3, 4]);
     expect(graph.hasEdge(4, 1)).toBeFalsy();
   });
 
   test('folding node redirects edges', () => {
-    const graph = new Graph([[1, 3], [2, 3], [3, 4], [3, 5], [3, 3]]);
+    const graph = new Graph([
+      [1, 3],
+      [2, 3],
+      [3, 4],
+      [3, 5],
+      [3, 3]
+    ]);
     graph.foldNode(3);
     expect(graph.hasNode(3)).toBeFalsy();
     expect(graph.hasEdge(1, 4)).toBeTruthy();
@@ -57,12 +63,16 @@ describe('Testing Graph editing', () => {
 
   test('removing isolated nodes', () => {
     const graph = new Graph([[9, 1], [9, 2], [2, 1], [4, 3], [5, 9], [7], [8]]);
-    graph.removeIsolated()
-    expect([... graph.nodes.keys()]).toStrictEqual([9, 1, 2, 4, 3, 5]);
+    graph.removeIsolated();
+    expect([...graph.nodes.keys()]).toStrictEqual([9, 1, 2, 4, 3, 5]);
   });
 
   test('transitive reduction', () => {
-    const graph = new Graph([[1, 3], [1, 2], [2, 3]]);
+    const graph = new Graph([
+      [1, 3],
+      [1, 2],
+      [2, 3]
+    ]);
     graph.transitiveReduction();
     expect(graph.hasEdge(1, 2)).toBeTruthy();
     expect(graph.hasEdge(2, 3)).toBeTruthy();
@@ -72,7 +82,13 @@ describe('Testing Graph editing', () => {
 
 describe('Testing Graph sort', () => {
   test('topological order', () => {
-    const graph = new Graph([[9, 1], [9, 2], [2, 1], [4, 3], [5, 9]]);
+    const graph = new Graph([
+      [9, 1],
+      [9, 2],
+      [2, 1],
+      [4, 3],
+      [5, 9]
+    ]);
     expect(graph.topologicalOrder()).toStrictEqual([5, 4, 3, 9, 2, 1]);
   });
 });
@@ -87,8 +103,13 @@ describe('Testing Graph queries', () => {
   });
 
   test('expand into unique array', () => {
-    const graph = new Graph([[1, 2], [1, 3], [2, 5], [3, 5]]);
-    expect(graph.expandOutputs([1])).toStrictEqual([2, 3 , 5]);
+    const graph = new Graph([
+      [1, 2],
+      [1, 3],
+      [2, 5],
+      [3, 5]
+    ]);
+    expect(graph.expandOutputs([1])).toStrictEqual([2, 3, 5]);
   });
 
   test('expand inputs', () => {

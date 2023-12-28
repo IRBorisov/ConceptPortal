@@ -24,10 +24,10 @@ import useGraphFilter from './useGraphFilter';
 import ViewHidden from './ViewHidden';
 
 interface EditorTermGraphProps {
-  isMutable: boolean
-  onOpenEdit: (cstID: number) => void
-  onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void
-  onDeleteCst: (selected: number[], callback: (items: number[]) => void) => void
+  isMutable: boolean;
+  onOpenEdit: (cstID: number) => void;
+  onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void;
+  onDeleteCst: (selected: number[], callback: (items: number[]) => void) => void;
 }
 
 function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGraphProps) {
@@ -56,8 +56,7 @@ function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Ed
   const [selectedGraph, setSelectedGraph] = useState<number[]>([]);
   const [hidden, setHidden] = useState<number[]>([]);
   const [selectedHidden, setSelectedHidden] = useState<number[]>([]);
-  const selected: number[] = useMemo(
-  () => {
+  const selected: number[] = useMemo(() => {
     return [...selectedHidden, ...selectedGraph];
   }, [selectedHidden, selectedGraph]);
   const nothingSelected = useMemo(() => selected.length === 0, [selected]);
@@ -66,18 +65,16 @@ function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Ed
   const is3D = useMemo(() => layout.includes('3d'), [layout]);
   const [coloringScheme, setColoringScheme] = useLocalStorage<GraphColoringScheme>('graph_coloring', 'type');
   const [orbit, setOrbit] = useState(false);
-  
+
   const [hoverID, setHoverID] = useState<number | undefined>(undefined);
-  const hoverCst = useMemo(
-  () => {
+  const hoverCst = useMemo(() => {
     return schema?.items.find(cst => cst.id === hoverID);
   }, [schema?.items, hoverID]);
 
   const [toggleResetView, setToggleResetView] = useState(false);
   const [toggleResetSelection, setToggleResetSelection] = useState(false);
 
-  useLayoutEffect(
-  () => {
+  useLayoutEffect(() => {
     if (!schema) {
       return;
     }
@@ -92,8 +89,7 @@ function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Ed
     setHoverID(undefined);
   }, [schema, filtered, toggleDataUpdate]);
 
-  const nodes: GraphNode[] = useMemo(
-  () => {
+  const nodes: GraphNode[] = useMemo(() => {
     const result: GraphNode[] = [];
     if (!schema) {
       return result;
@@ -111,8 +107,7 @@ function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Ed
     return result;
   }, [schema, coloringScheme, filtered.nodes, filterParams.noText, colors]);
 
-  const edges: GraphEdge[] = useMemo(
-  () => {
+  const edges: GraphEdge[] = useMemo(() => {
     const result: GraphEdge[] = [];
     let edgeID = 1;
     filtered.nodes.forEach(source => {
@@ -146,7 +141,7 @@ function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Ed
     }
     const data: ICstCreateData = {
       insert_after: null,
-      cst_type: selected.length === 0 ? CstType.BASE: CstType.TERM,
+      cst_type: selected.length === 0 ? CstType.BASE : CstType.TERM,
       alias: '',
       term_raw: '',
       definition_formal: selected.map(id => schema.items.find(cst => cst.id === id)!.alias).join(' '),
@@ -180,9 +175,11 @@ function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Ed
   }
 
   const handleChangeParams = useCallback(
-  (params: GraphFilterParams) => {
-    setFilterParams(params);
-  }, [setFilterParams]);
+    (params: GraphFilterParams) => {
+      setFilterParams(params);
+    },
+    [setFilterParams]
+  );
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     // Hotkeys implementation
@@ -196,100 +193,85 @@ function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Ed
   }
 
   return (
-  <div tabIndex={-1} onKeyDown={handleKeyDown}>
-    <AnimatePresence>
-    {showParamsDialog ?
-    <DlgGraphParams
-      hideWindow={() => setShowParamsDialog(false)}
-      initial={filterParams}
-      onConfirm={handleChangeParams}
-    /> : null}
-    </AnimatePresence>
+    <div tabIndex={-1} onKeyDown={handleKeyDown}>
+      <AnimatePresence>
+        {showParamsDialog ? (
+          <DlgGraphParams
+            hideWindow={() => setShowParamsDialog(false)}
+            initial={filterParams}
+            onConfirm={handleChangeParams}
+          />
+        ) : null}
+      </AnimatePresence>
 
-    <SelectedCounter hideZero
-      total={schema?.stats?.count_all ?? 0}
-      selected={selected.length}
-      position='top-[0.3rem] left-0'
-    />
-
-    <GraphToolbar
-      isMutable={isMutable}
-      nothingSelected={nothingSelected}
-      is3D={is3D}
-      orbit={orbit}
-      noText={filterParams.noText}
-
-      showParamsDialog={() => setShowParamsDialog(true)}
-      onCreate={handleCreateCst}
-      onDelete={handleDeleteCst}
-      onResetViewpoint={() => setToggleResetView(prev => !prev)}
-
-      toggleOrbit={() => setOrbit(prev => !prev)}
-      toggleNoText={() => setFilterParams(
-        (prev) => ({
-          ...prev,
-          noText: !prev.noText
-        })
-      )}
-    />
-
-    {hoverCst ?
-    <Overlay
-      layer='z-tooltip'
-      position='top-[1.6rem] left-[2.6rem]'
-      className={clsx(
-        'w-[25rem]',
-        'px-3',
-        'overflow-y-auto',
-        'border shadow-md',
-        'clr-app'
-      )}
-    >
-      <InfoConstituenta
-        className='pt-1 pb-2'
-        data={hoverCst}
+      <SelectedCounter
+        hideZero
+        total={schema?.stats?.count_all ?? 0}
+        selected={selected.length}
+        position='top-[0.3rem] left-0'
       />
-    </Overlay> : null}
-    
-    <Overlay
-      position='top-0 left-0'
-      className={clsx(
-        'w-[13.5rem]',
-        classnames.flex_col
-      )}
-    >
-      <GraphSidebar 
-        coloring={coloringScheme}
+
+      <GraphToolbar
+        isMutable={isMutable}
+        nothingSelected={nothingSelected}
+        is3D={is3D}
+        orbit={orbit}
+        noText={filterParams.noText}
+        showParamsDialog={() => setShowParamsDialog(true)}
+        onCreate={handleCreateCst}
+        onDelete={handleDeleteCst}
+        onResetViewpoint={() => setToggleResetView(prev => !prev)}
+        toggleOrbit={() => setOrbit(prev => !prev)}
+        toggleNoText={() =>
+          setFilterParams(prev => ({
+            ...prev,
+            noText: !prev.noText
+          }))
+        }
+      />
+
+      {hoverCst ? (
+        <Overlay
+          layer='z-tooltip'
+          position='top-[1.6rem] left-[2.6rem]'
+          className={clsx('w-[25rem]', 'px-3', 'overflow-y-auto', 'border shadow-md', 'clr-app')}
+        >
+          <InfoConstituenta className='pt-1 pb-2' data={hoverCst} />
+        </Overlay>
+      ) : null}
+
+      <Overlay position='top-0 left-0' className={clsx('w-[13.5rem]', classnames.flex_col)}>
+        <GraphSidebar
+          coloring={coloringScheme}
+          layout={layout}
+          setLayout={handleChangeLayout}
+          setColoring={setColoringScheme}
+        />
+        <ViewHidden
+          items={hidden}
+          selected={selectedHidden}
+          schema={schema!}
+          coloringScheme={coloringScheme}
+          toggleSelection={toggleDismissed}
+          onEdit={onOpenEdit}
+        />
+      </Overlay>
+
+      <TermGraph
+        nodes={nodes}
+        edges={edges}
         layout={layout}
-        setLayout={handleChangeLayout}
-        setColoring={setColoringScheme}
-      />
-      <ViewHidden 
-        items={hidden}
-        selected={selectedHidden}
-        schema={schema!}
-        coloringScheme={coloringScheme}
-        toggleSelection={toggleDismissed}
+        is3D={is3D}
+        orbit={orbit}
+        setSelected={setSelectedGraph}
+        setHoverID={setHoverID}
         onEdit={onOpenEdit}
+        onDeselect={() => setSelectedHidden([])}
+        toggleResetView={toggleResetView}
+        toggleResetSelection={toggleResetSelection}
       />
-    </Overlay>
-
-    <TermGraph 
-      nodes={nodes}
-      edges={edges}
-      layout={layout}
-      is3D={is3D}
-      orbit={orbit}
-
-      setSelected={setSelectedGraph}
-      setHoverID={setHoverID}
-      onEdit={onOpenEdit}
-      onDeselect={() => setSelectedHidden([])}
-      
-      toggleResetView={toggleResetView}
-      toggleResetSelection={toggleResetSelection}
-    />
-    </div>);
+    </div>
+  );
 }
 
 export default EditorTermGraph;

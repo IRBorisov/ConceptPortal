@@ -15,23 +15,18 @@ function UserMenu() {
 
   const navigateLogin = () => router.push('/login');
   return (
-  <div ref={menu.ref} className='h-full'>
-    {!user ?
-    <NavigationButton
-      title='Перейти на страницу логина'
-      icon={<InDoorIcon size='1.5rem' className='clr-text-primary' />}
-      onClick={navigateLogin}
-    /> : null}
-    {user ?
-    <NavigationButton
-      icon={<FaCircleUser size='1.5rem' />}
-      onClick={menu.toggle}
-    /> : null}
-    <UserDropdown
-      isOpen={!!user && menu.isOpen}
-      hideDropdown={() => menu.hide()}
-    />
-  </div>);
+    <div ref={menu.ref} className='h-full'>
+      {!user ? (
+        <NavigationButton
+          title='Перейти на страницу логина'
+          icon={<InDoorIcon size='1.5rem' className='clr-text-primary' />}
+          onClick={navigateLogin}
+        />
+      ) : null}
+      {user ? <NavigationButton icon={<FaCircleUser size='1.5rem' />} onClick={menu.toggle} /> : null}
+      <UserDropdown isOpen={!!user && menu.isOpen} hideDropdown={() => menu.hide()} />
+    </div>
+  );
 }
 
 export default UserMenu;
