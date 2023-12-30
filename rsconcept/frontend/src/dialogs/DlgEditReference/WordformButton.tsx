@@ -26,7 +26,7 @@ function WordformButton({ text, example, grams, onSelectGrams, isSelected, ...re
       )}
       {...restProps}
     >
-      <p className='font-semibold'>{text}</p>
+      <p className='font-medium'>{text}</p>
       <p>{example}</p>
     </button>
   );

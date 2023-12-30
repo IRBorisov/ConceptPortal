@@ -21,7 +21,7 @@ function NavigationButton({ icon, title, onClick, text }: NavigationButtonProps)
         'mr-1 h-full', //
         'flex items-center gap-1',
         'clr-btn-nav',
-        'small-caps whitespace-nowrap',
+        'font-controls whitespace-nowrap',
         {
           'px-2': text,
           'px-4': !text
@@ -29,7 +29,7 @@ function NavigationButton({ icon, title, onClick, text }: NavigationButtonProps)
       )}
     >
       {icon ? <span>{icon}</span> : null}
-      {text ? <span className='font-semibold'>{text}</span> : null}
+      {text ? <span>{text}</span> : null}
     </button>
   );
 }

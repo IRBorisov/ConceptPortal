@@ -28,7 +28,7 @@ function SelectorButton({
       data-tooltip-content={title}
       className={clsx(
         'px-1 flex flex-start items-center gap-1',
-        'text-sm small-caps select-none',
+        'text-sm font-controls select-none',
         'text-btn clr-text-controls',
         'disabled:cursor-not-allowed cursor-pointer',
         {
@@ -41,7 +41,7 @@ function SelectorButton({
       {...restProps}
     >
       {icon ? icon : null}
-      {text ? <div className={'font-semibold whitespace-nowrap pb-1'}>{text}</div> : null}
+      {text ? <div className={'whitespace-nowrap pb-1'}>{text}</div> : null}
     </button>
   );
 }

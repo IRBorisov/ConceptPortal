@@ -13,9 +13,9 @@ function SubmitButton({ text = 'ОК', icon, disabled, loading, className, ...re
     <button
       type='submit'
       className={clsx(
-        'px-3 py-2 flex gap-2 items-center justify-center',
+        'px-3 py-1 flex gap-2 items-center justify-center',
         'border',
-        'font-semibold',
+        'font-medium',
         'clr-btn-primary',
         'select-none disabled:cursor-not-allowed',
         loading && 'cursor-progress',

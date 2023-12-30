@@ -22,7 +22,8 @@ function RSLocalButton({ text, title, disabled, onInsert }: RSLocalButtonProps) 
         'w-[2rem] h-6',
         'cursor-pointer disabled:cursor-default',
         'rounded-none',
-        'clr-hover clr-btn-clear'
+        'clr-hover clr-btn-clear',
+        'font-math'
       )}
       onClick={() => onInsert(TokenID.ID_LOCAL, text)}
     >

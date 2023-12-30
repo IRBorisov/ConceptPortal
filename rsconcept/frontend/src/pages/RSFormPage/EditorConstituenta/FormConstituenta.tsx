@@ -123,7 +123,7 @@ function FormConstituenta({
 
   return (
     <>
-      <Overlay position='top-1 left-[4rem]' className='flex select-none'>
+      <Overlay position='top-1 left-[4.1rem]' className='flex select-none'>
         <MiniButton
           title={`Редактировать словоформы термина: ${constituenta?.term_forms.length ?? 0}`}
           disabled={disabled}
@@ -131,7 +131,7 @@ function FormConstituenta({
           onClick={onEditTerm}
           icon={<LiaEdit size='1rem' className={!disabled ? 'clr-text-primary' : ''} />}
         />
-        <div className='pt-1 pl-[1.375rem] text-sm font-semibold whitespace-nowrap'>
+        <div className='pt-1 pl-[1.375rem] text-sm font-medium whitespace-nowrap'>
           <span>Имя </span>
           <span className='ml-1'>{constituenta?.alias ?? ''}</span>
         </div>
@@ -205,7 +205,7 @@ function FormConstituenta({
           text='Сохранить изменения'
           className='self-center'
           disabled={!isModified || disabled}
-          icon={<FiSave size='1.5rem' />}
+          icon={<FiSave size='1.25rem' />}
         />
       </form>
     </>

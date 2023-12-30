@@ -30,7 +30,7 @@ function SwitchButton<ValueType>({
       className={clsx(
         'px-2 py-1',
         'border rounded-none',
-        'font-semibold small-caps',
+        'font-controls',
         'clr-btn-clear clr-hover',
         'cursor-pointer',
         isSelected && 'clr-selected',

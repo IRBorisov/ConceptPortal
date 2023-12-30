@@ -5,7 +5,6 @@ import { globalIDs } from '@/utils/constants';
 
 import { CheckboxCheckedIcon, CheckboxNullIcon } from '../Icons';
 import { CheckboxProps } from './Checkbox';
-import Label from './Label';
 
 export interface TristateProps extends Omit<CheckboxProps, 'value' | 'setValue'> {
   value: boolean | null;
@@ -65,7 +64,9 @@ function Tristate({ id, disabled, label, title, className, value, setValue, ...r
           </div>
         ) : null}
       </div>
-      <Label className={cursor} text={label} htmlFor={id} />
+      <label className={clsx('text-sm whitespace-nowrap', cursor)} htmlFor={id}>
+        {label}
+      </label>
     </button>
   );
 }

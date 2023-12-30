@@ -56,7 +56,7 @@ function StatusBar({ isModified, processing, constituenta, parseData, onAnalyze 
       ) : (
         <>
           <StatusIcon status={status} />
-          <span className='pb-[0.125rem] font-semibold small-caps pr-2'>{labelExpressionStatus(status)}</span>
+          <span className='pb-[0.125rem] font-controls pr-2'>{labelExpressionStatus(status)}</span>
         </>
       )}
     </div>

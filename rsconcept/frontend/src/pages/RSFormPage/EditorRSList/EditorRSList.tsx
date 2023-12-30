@@ -204,7 +204,7 @@ function EditorRSList({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Edito
         onCreate={handleCreateCst}
         onDelete={handleDelete}
       />
-      <SelectedCounter total={schema?.stats?.count_all ?? 0} selected={selected.length} position='left-0 top-1' />
+      <SelectedCounter total={schema?.stats?.count_all ?? 0} selected={selected.length} position='left-1 top-2' />
 
       <div className='pt-[2.3rem] border-b' />
 

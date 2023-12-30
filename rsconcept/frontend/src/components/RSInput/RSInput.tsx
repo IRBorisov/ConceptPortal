@@ -82,9 +82,9 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
             { tag: tags.propertyName, color: colors.fgTeal }, // Radical
             { tag: tags.keyword, color: colors.fgBlue }, // keywords
             { tag: tags.literal, color: colors.fgBlue }, // literals
-            { tag: tags.controlKeyword, fontWeight: '500' }, // R | I | D
+            { tag: tags.controlKeyword, fontWeight: '400' }, // R | I | D
             { tag: tags.unit, fontSize: '0.75rem' }, // indices
-            { tag: tags.brace, color: colors.fgPurple, fontWeight: '700' } // braces (curly brackets)
+            { tag: tags.brace, color: colors.fgPurple, fontWeight: '600' } // braces (curly brackets)
           ]
         }),
       [disabled, colors, darkMode]
@@ -131,6 +131,7 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
       <div className={clsx('flex flex-col gap-2', className, cursor)} style={style}>
         <Label text={label} htmlFor={id} />
         <CodeMirror
+          className='font-math'
           id={id}
           ref={thisRef}
           basicSetup={editorSetup}

@@ -35,7 +35,7 @@ function Button({
         {
           'border rounded': !noBorder,
           'px-1': dense,
-          'px-3 py-2': !dense,
+          'px-3 py-1': !dense,
           'cursor-progress': loading,
           'cursor-pointer': !loading,
           'outline-none': noOutline,
@@ -49,7 +49,7 @@ function Button({
       {...restProps}
     >
       {icon ? icon : null}
-      {text ? <span className='font-semibold'>{text}</span> : null}
+      {text ? <span className='font-medium'>{text}</span> : null}
     </button>
   );
 }

@@ -5,7 +5,6 @@ import { globalIDs } from '@/utils/constants';
 
 import { CheckboxCheckedIcon } from '../Icons';
 import { CProps } from '../props';
-import Label from './Label';
 
 export interface CheckboxProps extends Omit<CProps.Button, 'value' | 'onClick'> {
   label?: string;
@@ -57,7 +56,9 @@ function Checkbox({ id, disabled, label, title, className, value, setValue, ...r
           </div>
         ) : null}
       </div>
-      <Label className={cursor} text={label} htmlFor={id} />
+      <label className={clsx('text-sm whitespace-nowrap', cursor)} htmlFor={id}>
+        {label}
+      </label>
     </button>
   );
 }

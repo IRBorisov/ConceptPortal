@@ -44,7 +44,7 @@ function FileInput({ label, acceptType, title, className, style, onChange, ...re
         onChange={handleFileChange}
         {...restProps}
       />
-      <Button text={label} icon={<BiUpload size='1.5rem' />} onClick={handleUploadClick} title={title} />
+      <Button text={label} icon={<BiUpload size='1.25rem' />} onClick={handleUploadClick} title={title} />
       <Label text={fileName} />
     </div>
   );

@@ -16,10 +16,10 @@ function GrammemeBadge({ key, grammeme }: GrammemeBadgeProps) {
     <div
       key={key}
       className={clsx(
-        'min-w-[3rem]',
+        'min-w-[3rem]', //
         'px-1',
         'border rounded-md',
-        'text-sm font-semibold text-center whitespace-nowrap'
+        'text-sm font-medium text-center whitespace-nowrap'
       )}
       style={{
         borderColor: colorFgGrammeme(grammeme, colors),

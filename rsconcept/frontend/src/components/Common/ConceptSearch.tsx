@@ -19,7 +19,7 @@ function ConceptSearch({ value, onChange, noBorder, ...restProps }: ConceptSearc
       <TextInput
         noOutline
         placeholder='Поиск'
-        className='pl-10'
+        className='w-full pl-10'
         noBorder={noBorder}
         value={value}
         onChange={event => (onChange ? onChange(event.target.value) : undefined)}

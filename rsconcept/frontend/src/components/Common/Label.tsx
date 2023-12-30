@@ -11,7 +11,7 @@ function Label({ text, className, ...restProps }: LabelProps) {
     return null;
   }
   return (
-    <label className={clsx('text-sm font-semibold whitespace-nowrap', className)} {...restProps}>
+    <label className={clsx('text-sm font-medium whitespace-nowrap', className)} {...restProps}>
       {text}
     </label>
   );

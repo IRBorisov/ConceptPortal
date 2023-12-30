@@ -23,6 +23,7 @@ function RSTokenButton({ token, disabled, onInsert }: RSTokenButtonProps) {
         'px-1',
         'outline-none',
         'clr-hover clr-btn-clear',
+        'font-math',
         'cursor-pointer disabled:cursor-default',
         {
           'w-[4.5rem]': label.length > 3,

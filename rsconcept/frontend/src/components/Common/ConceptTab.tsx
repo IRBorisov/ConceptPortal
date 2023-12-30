@@ -15,7 +15,7 @@ function ConceptTab({ label, title, className, ...otherProps }: ConceptTabProps)
         'min-w-[6rem]',
         'px-2 py-1 flex justify-center',
         'clr-tab',
-        'text-sm whitespace-nowrap small-caps font-semibold',
+        'text-sm whitespace-nowrap font-controls',
         'select-none hover:cursor-pointer',
         className
       )}
