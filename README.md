@@ -51,15 +51,7 @@ This readme file is used mostly to document project dependencies
   </pre>
 </details>
 <details>
-<details>
-  <summary>Google fonts</summary>
-  <pre>
-  - Rubik
-  - Geologica
-  - Noto Sans Math
-  </pre>
-</details>
-<summary>VS Code plugins</summary>
+  <summary>VS Code plugins</summary>
   <pre>
   - ESLint
   - Colorize
@@ -67,6 +59,14 @@ This readme file is used mostly to document project dependencies
   - Backticks
   - Svg Preview
   - TODO Highlight v2
+  </pre>
+</details>
+<details>
+  <summary>Google fonts</summary>
+  <pre>
+  - Rubik
+  - Geologica
+  - Noto Sans Math
   </pre>
 </details>
 
