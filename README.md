@@ -13,7 +13,7 @@ This readme file is used mostly to document project dependencies
 # Frontend stack & Tooling [Vite + React + Typescript]
 
 <details>
-<summary>npm install</summary>
+  <summary>npm install</summary>
   <pre>
   - axios
   - clsx
@@ -37,7 +37,7 @@ This readme file is used mostly to document project dependencies
   </pre>
 </details>
 <details>
-<summary>npm install -D</summary>
+  <summary>npm install -D</summary>
   <pre>
   - tailwindcss
   - postcss
@@ -51,6 +51,14 @@ This readme file is used mostly to document project dependencies
   </pre>
 </details>
 <details>
+<details>
+  <summary>Google fonts</summary>
+  <pre>
+  - Rubik
+  - Geologica
+  - Noto Sans Math
+  </pre>
+</details>
 <summary>VS Code plugins</summary>
   <pre>
   - ESLint
@@ -66,7 +74,7 @@ This readme file is used mostly to document project dependencies
 
 - [ConceptCore](https://github.com/IRBorisov/ConceptCore)
 <details>
-<summary>requirements</summary>
+  <summary>requirements</summary>
   <pre>
   - django
   - djangorestframework
@@ -82,7 +90,7 @@ This readme file is used mostly to document project dependencies
   </pre>
 </details>
 <details>
-<summary>requirements_dev</summary>
+  <summary>requirements_dev</summary>
   <pre>
   - coverage
   - pylint
@@ -91,7 +99,7 @@ This readme file is used mostly to document project dependencies
   </pre>
 </details>
 <details>
-<summary>VS Code plugins</summary>
+  <summary>VS Code plugins</summary>
   <pre>
   - Pylance
   - Pylint
