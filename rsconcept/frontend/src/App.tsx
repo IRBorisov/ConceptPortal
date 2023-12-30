@@ -1,21 +1,21 @@
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 
-import ConceptToaster from './components/ConceptToaster';
-import Footer from './components/Footer';
-import Navigation from './components/Navigation';
-import { NavigationState } from './context/NavigationContext';
-import { useConceptTheme } from './context/ThemeContext';
-import CreateRSFormPage from './pages/CreateRSFormPage';
-import HomePage from './pages/HomePage';
-import LibraryPage from './pages/LibraryPage';
-import LoginPage from './pages/LoginPage';
-import ManualsPage from './pages/ManualsPage';
-import NotFoundPage from './pages/NotFoundPage';
-import RegisterPage from './pages/RegisterPage';
-import RestorePasswordPage from './pages/RestorePasswordPage';
-import RSFormPage from './pages/RSFormPage';
-import UserProfilePage from './pages/UserProfilePage';
-import { globalIDs } from './utils/constants';
+import ConceptToaster from '@/components/ConceptToaster';
+import Footer from '@/components/Footer';
+import Navigation from '@/components/Navigation';
+import { NavigationState } from '@/context/NavigationContext';
+import { useConceptTheme } from '@/context/ThemeContext';
+import CreateRSFormPage from '@/pages/CreateRSFormPage';
+import HomePage from '@/pages/HomePage';
+import LibraryPage from '@/pages/LibraryPage';
+import LoginPage from '@/pages/LoginPage';
+import ManualsPage from '@/pages/ManualsPage';
+import NotFoundPage from '@/pages/NotFoundPage';
+import RegisterPage from '@/pages/RegisterPage';
+import RestorePasswordPage from '@/pages/RestorePasswordPage';
+import RSFormPage from '@/pages/RSFormPage';
+import UserProfilePage from '@/pages/UserProfilePage';
+import { globalIDs } from '@/utils/constants';
 
 function Root() {
   const { viewportHeight, mainHeight, showScroll } = useConceptTheme();
