@@ -7,8 +7,8 @@
 /* prettier-ignore */
 :root {
   --font-ui:  'Geologica', sans-serif;
-  --font-main: 'Rubik', sans-serif, 'Noto Sans Math', 'Segoe UI Symbol';
-  --font-math: 'Noto Sans Math', sans-serif, 'Segoe UI Symbol';
+  --font-main: 'Rubik', 'Noto Sans Math', 'Noto Sans Symbols 2', 'Segoe UI Symbol', sans-serif;
+  --font-math: 'Noto Sans Math', 'Noto Sans Symbols 2', 'Segoe UI Symbol', sans-serif;
 
   /* Light Theme */
   --cl-bg-120:      hsl(000, 000%, 100%);
