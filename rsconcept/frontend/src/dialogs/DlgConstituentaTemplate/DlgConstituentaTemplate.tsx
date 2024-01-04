@@ -4,10 +4,10 @@ import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
-import Modal, { ModalProps } from '@/components/Common/Modal';
-import Overlay from '@/components/Common/Overlay';
-import TabLabel from '@/components/Common/TabLabel';
 import HelpButton from '@/components/Help/HelpButton';
+import Modal, { ModalProps } from '@/components/ui/Modal';
+import Overlay from '@/components/ui/Overlay';
+import TabLabel from '@/components/ui/TabLabel';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { HelpTopic } from '@/models/miscellaneous';
 import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';

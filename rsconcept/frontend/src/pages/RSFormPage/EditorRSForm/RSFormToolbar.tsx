@@ -5,9 +5,9 @@ import { BiDownload, BiShareAlt, BiTrash } from 'react-icons/bi';
 import { FiBell, FiBellOff, FiSave } from 'react-icons/fi';
 import { LuCrown } from 'react-icons/lu';
 
-import MiniButton from '@/components/Common/MiniButton';
-import Overlay from '@/components/Common/Overlay';
 import HelpButton from '@/components/Help/HelpButton';
+import MiniButton from '@/components/ui/MiniButton';
+import Overlay from '@/components/ui/Overlay';
 import { HelpTopic } from '@/models/miscellaneous';
 
 interface RSFormToolbarProps {

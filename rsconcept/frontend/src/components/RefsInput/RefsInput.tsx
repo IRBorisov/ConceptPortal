@@ -9,7 +9,7 @@ import { EditorView } from 'codemirror';
 import { AnimatePresence } from 'framer-motion';
 import { forwardRef, useCallback, useMemo, useRef, useState } from 'react';
 
-import Label from '@/components/Common/Label';
+import Label from '@/components/ui/Label';
 import { useRSForm } from '@/context/RSFormContext';
 import { useConceptTheme } from '@/context/ThemeContext';
 import DlgEditReference from '@/dialogs/DlgEditReference';

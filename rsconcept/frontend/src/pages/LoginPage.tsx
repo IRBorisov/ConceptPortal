@@ -4,11 +4,11 @@ import axios from 'axios';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
-import SubmitButton from '@/components/Common/SubmitButton';
-import TextInput from '@/components/Common/TextInput';
-import TextURL from '@/components/Common/TextURL';
 import ExpectedAnonymous from '@/components/ExpectedAnonymous';
 import InfoError, { ErrorData } from '@/components/InfoError';
+import SubmitButton from '@/components/ui/SubmitButton';
+import TextInput from '@/components/ui/TextInput';
+import TextURL from '@/components/ui/TextURL';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import useQueryStrings from '@/hooks/useQueryStrings';

@@ -5,9 +5,9 @@ import { AnimatePresence } from 'framer-motion';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { GraphEdge, GraphNode, LayoutTypes } from 'reagraph';
 
-import Overlay from '@/components/Common/Overlay';
-import InfoConstituenta from '@/components/Shared/InfoConstituenta';
-import SelectedCounter from '@/components/Shared/SelectedCounter';
+import InfoConstituenta from '@/components/InfoConstituenta';
+import SelectedCounter from '@/components/SelectedCounter';
+import Overlay from '@/components/ui/Overlay';
 import { useRSForm } from '@/context/RSFormContext';
 import { useConceptTheme } from '@/context/ThemeContext';
 import DlgGraphParams from '@/dialogs/DlgGraphParams';

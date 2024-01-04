@@ -4,9 +4,9 @@ import { useMemo } from 'react';
 import { BiDuplicate, BiPlusCircle, BiReset, BiTrash } from 'react-icons/bi';
 import { FiSave } from 'react-icons/fi';
 
-import MiniButton from '@/components/Common/MiniButton';
-import Overlay from '@/components/Common/Overlay';
 import HelpButton from '@/components/Help/HelpButton';
+import MiniButton from '@/components/ui/MiniButton';
+import Overlay from '@/components/ui/Overlay';
 import { HelpTopic } from '@/models/miscellaneous';
 
 interface ConstituentaToolbarProps {

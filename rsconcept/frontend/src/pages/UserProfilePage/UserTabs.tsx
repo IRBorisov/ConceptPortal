@@ -4,10 +4,10 @@ import { AnimatePresence } from 'framer-motion';
 import { useMemo, useState } from 'react';
 import { FiBell, FiBellOff } from 'react-icons/fi';
 
-import { Loader } from '@/components/Common/Loader';
-import MiniButton from '@/components/Common/MiniButton';
-import Overlay from '@/components/Common/Overlay';
 import InfoError from '@/components/InfoError';
+import { Loader } from '@/components/ui/Loader';
+import MiniButton from '@/components/ui/MiniButton';
+import Overlay from '@/components/ui/Overlay';
 import { useAuth } from '@/context/AuthContext';
 import { useLibrary } from '@/context/LibraryContext';
 import { useUserProfile } from '@/context/UserProfileContext';

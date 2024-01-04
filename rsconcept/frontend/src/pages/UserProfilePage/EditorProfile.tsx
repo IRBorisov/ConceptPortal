@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import { useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import SubmitButton from '@/components/Common/SubmitButton';
-import TextInput from '@/components/Common/TextInput';
+import SubmitButton from '@/components/ui/SubmitButton';
+import TextInput from '@/components/ui/TextInput';
 import { useBlockNavigation } from '@/context/NavigationContext';
 import { useUserProfile } from '@/context/UserProfileContext';
 import { IUserUpdateData } from '@/models/library';

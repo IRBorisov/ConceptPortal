@@ -15,9 +15,9 @@ import {
 import { FiEdit } from 'react-icons/fi';
 import { LuCrown, LuGlasses } from 'react-icons/lu';
 
-import Button from '@/components/Common/Button';
-import Dropdown from '@/components/Common/Dropdown';
-import DropdownButton from '@/components/Common/DropdownButton';
+import Button from '@/components/ui/Button';
+import Dropdown from '@/components/ui/Dropdown';
+import DropdownButton from '@/components/ui/DropdownButton';
 import { useAccessMode } from '@/context/AccessModeContext';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';

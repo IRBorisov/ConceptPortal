@@ -8,10 +8,10 @@ import { FaRegKeyboard } from 'react-icons/fa6';
 import { RiNodeTree } from 'react-icons/ri';
 import { toast } from 'react-toastify';
 
-import MiniButton from '@/components/Common/MiniButton';
-import Overlay from '@/components/Common/Overlay';
 import RSInput from '@/components/RSInput';
 import { RSTextWrapper } from '@/components/RSInput/textEditing';
+import MiniButton from '@/components/ui/MiniButton';
+import Overlay from '@/components/ui/Overlay';
 import { useRSForm } from '@/context/RSFormContext';
 import DlgShowAST from '@/dialogs/DlgShowAST';
 import useCheckExpression from '@/hooks/useCheckExpression';

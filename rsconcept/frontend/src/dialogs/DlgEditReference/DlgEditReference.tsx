@@ -4,10 +4,10 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
-import TabLabel from '@/components/Common/TabLabel';
-import Modal from '@/components/Common/Modal';
-import Overlay from '@/components/Common/Overlay';
 import HelpButton from '@/components/Help/HelpButton';
+import Modal from '@/components/ui/Modal';
+import Overlay from '@/components/ui/Overlay';
+import TabLabel from '@/components/ui/TabLabel';
 import { ReferenceType } from '@/models/language';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IConstituenta } from '@/models/rsform';

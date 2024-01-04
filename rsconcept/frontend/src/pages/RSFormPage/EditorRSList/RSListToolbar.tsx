@@ -3,11 +3,11 @@
 import { useMemo } from 'react';
 import { BiDownArrowCircle, BiDownvote, BiDuplicate, BiPlusCircle, BiTrash, BiUpvote } from 'react-icons/bi';
 
-import Dropdown from '@/components/Common/Dropdown';
-import DropdownButton from '@/components/Common/DropdownButton';
-import MiniButton from '@/components/Common/MiniButton';
-import Overlay from '@/components/Common/Overlay';
 import HelpButton from '@/components/Help/HelpButton';
+import Dropdown from '@/components/ui/Dropdown';
+import DropdownButton from '@/components/ui/DropdownButton';
+import MiniButton from '@/components/ui/MiniButton';
+import Overlay from '@/components/ui/Overlay';
 import useDropdown from '@/hooks/useDropdown';
 import { HelpTopic } from '@/models/miscellaneous';
 import { CstType } from '@/models/rsform';

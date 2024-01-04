@@ -1,4 +1,4 @@
-import TextURL from '@/components/Common/TextURL';
+import TextURL from '@/components/ui/TextURL';
 import { urls } from '@/utils/constants';
 
 function HelpAPI() {

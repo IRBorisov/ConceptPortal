@@ -1,5 +1,5 @@
-import Tooltip from '@/components/Common/Tooltip';
-import InfoConstituenta from '@/components/Shared/InfoConstituenta';
+import InfoConstituenta from '@/components/InfoConstituenta';
+import Tooltip from '@/components/ui/Tooltip';
 import { IConstituenta } from '@/models/rsform';
 
 interface ConstituentaTooltipProps {

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import SearchBar from '@/components/Common/SearchBar';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/DataTable';
+import SearchBar from '@/components/ui/SearchBar';
 import { useConceptTheme } from '@/context/ThemeContext';
 import { CstMatchMode } from '@/models/miscellaneous';
 import { IConstituenta } from '@/models/rsform';

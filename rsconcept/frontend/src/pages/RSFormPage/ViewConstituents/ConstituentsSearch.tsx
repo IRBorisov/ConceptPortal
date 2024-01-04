@@ -3,10 +3,10 @@
 import { useCallback, useLayoutEffect } from 'react';
 import { BiCog, BiFilterAlt } from 'react-icons/bi';
 
-import Dropdown from '@/components/Common/Dropdown';
-import DropdownButton from '@/components/Common/DropdownButton';
-import SearchBar from '@/components/Common/SearchBar';
-import SelectorButton from '@/components/Common/SelectorButton';
+import Dropdown from '@/components/ui/Dropdown';
+import DropdownButton from '@/components/ui/DropdownButton';
+import SearchBar from '@/components/ui/SearchBar';
+import SelectorButton from '@/components/ui/SelectorButton';
 import useDropdown from '@/hooks/useDropdown';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { CstMatchMode, DependencyMode } from '@/models/miscellaneous';

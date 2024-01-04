@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { useMemo } from 'react';
 
-import { Loader } from '@/components/Common/Loader';
+import { Loader } from '@/components/ui/Loader';
 import { useConceptTheme } from '@/context/ThemeContext';
 import { ExpressionStatus } from '@/models/rsform';
 import { type IConstituenta } from '@/models/rsform';

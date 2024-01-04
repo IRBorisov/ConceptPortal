@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { EditorView } from 'codemirror';
 import { forwardRef, useCallback, useMemo, useRef } from 'react';
 
-import Label from '@/components/Common/Label';
+import Label from '@/components/ui/Label';
 import { useRSForm } from '@/context/RSFormContext';
 import { useConceptTheme } from '@/context/ThemeContext';
 

@@ -2,11 +2,11 @@
 
 import { useEffect, useLayoutEffect, useState } from 'react';
 
-import FlexColumn from '@/components/Common/FlexColumn';
-import Label from '@/components/Common/Label';
-import TextInput from '@/components/Common/TextInput';
-import ConstituentaPicker from '@/components/Shared/ConstituentaPicker';
-import SelectGrammeme from '@/components/Shared/SelectGrammeme';
+import ConstituentaPicker from '@/components/ConstituentaPicker';
+import SelectGrammeme from '@/components/SelectGrammeme';
+import FlexColumn from '@/components/ui/FlexColumn';
+import Label from '@/components/ui/Label';
+import TextInput from '@/components/ui/TextInput';
 import { ReferenceType } from '@/models/language';
 import { parseEntityReference, parseGrammemes } from '@/models/languageAPI';
 import { CstMatchMode } from '@/models/miscellaneous';

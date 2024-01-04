@@ -1,6 +1,6 @@
 import { LayoutTypes } from 'reagraph';
 
-import SelectSingle from '@/components/Common/SelectSingle';
+import SelectSingle from '@/components/ui/SelectSingle';
 import { GraphColoringScheme } from '@/models/miscellaneous';
 import { mapLabelColoring, mapLabelLayout } from '@/utils/labels';
 import { SelectorGraphColoring, SelectorGraphLayout } from '@/utils/selectors';

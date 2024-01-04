@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react';
 
-import Tooltip from '@/components/Common/Tooltip';
+import Tooltip from '@/components/ui/Tooltip';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { animationDuration } from '@/utils/animations';
 import { darkT, IColorTheme, lightT } from '@/utils/color';

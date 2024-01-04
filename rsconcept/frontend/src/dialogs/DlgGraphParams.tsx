@@ -1,7 +1,7 @@
 'use client';
 
-import Checkbox from '@/components/Common/Checkbox';
-import Modal, { ModalProps } from '@/components/Common/Modal';
+import Checkbox from '@/components/ui/Checkbox';
+import Modal, { ModalProps } from '@/components/ui/Modal';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { GraphFilterParams } from '@/models/miscellaneous';
 import { CstType } from '@/models/rsform';

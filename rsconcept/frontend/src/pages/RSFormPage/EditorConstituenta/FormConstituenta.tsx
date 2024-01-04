@@ -6,11 +6,11 @@ import { FiSave } from 'react-icons/fi';
 import { LiaEdit } from 'react-icons/lia';
 import { toast } from 'react-toastify';
 
-import MiniButton from '@/components/Common/MiniButton';
-import Overlay from '@/components/Common/Overlay';
-import SubmitButton from '@/components/Common/SubmitButton';
-import TextArea from '@/components/Common/TextArea';
 import RefsInput from '@/components/RefsInput';
+import MiniButton from '@/components/ui/MiniButton';
+import Overlay from '@/components/ui/Overlay';
+import SubmitButton from '@/components/ui/SubmitButton';
+import TextArea from '@/components/ui/TextArea';
 import { useRSForm } from '@/context/RSFormContext';
 import { IConstituenta, ICstRenameData, ICstUpdateData } from '@/models/rsform';
 import { classnames } from '@/utils/constants';

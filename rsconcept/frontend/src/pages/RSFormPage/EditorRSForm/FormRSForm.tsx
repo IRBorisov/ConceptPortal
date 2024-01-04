@@ -5,10 +5,10 @@ import { Dispatch, SetStateAction, useEffect, useLayoutEffect, useState } from '
 import { FiSave } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 
-import Checkbox from '@/components/Common/Checkbox';
-import SubmitButton from '@/components/Common/SubmitButton';
-import TextArea from '@/components/Common/TextArea';
-import TextInput from '@/components/Common/TextInput';
+import Checkbox from '@/components/ui/Checkbox';
+import SubmitButton from '@/components/ui/SubmitButton';
+import TextArea from '@/components/ui/TextArea';
+import TextInput from '@/components/ui/TextInput';
 import { useAuth } from '@/context/AuthContext';
 import { useRSForm } from '@/context/RSFormContext';
 import { LibraryItemType } from '@/models/library';

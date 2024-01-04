@@ -2,7 +2,7 @@ import axios, { type AxiosError } from 'axios';
 
 import { isResponseHtml } from '@/utils/utils';
 
-import PrettyJson from './Common/PrettyJSON';
+import PrettyJson from './ui/PrettyJSON';
 
 export type ErrorData = string | Error | AxiosError | undefined;
 

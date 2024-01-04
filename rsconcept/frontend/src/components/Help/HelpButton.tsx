@@ -1,7 +1,7 @@
 import { BiInfoCircle } from 'react-icons/bi';
 
-import TextURL from '@/components/Common/TextURL';
-import Tooltip from '@/components/Common/Tooltip';
+import TextURL from '@/components/ui/TextURL';
+import Tooltip from '@/components/ui/Tooltip';
 import { HelpTopic } from '@/models/miscellaneous';
 
 import { CProps } from '../props';

@@ -1,5 +1,5 @@
-import Dropdown from '@/components/Common/Dropdown';
-import DropdownButton from '@/components/Common/DropdownButton';
+import Dropdown from '@/components/ui/Dropdown';
+import DropdownButton from '@/components/ui/DropdownButton';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useConceptTheme } from '@/context/ThemeContext';

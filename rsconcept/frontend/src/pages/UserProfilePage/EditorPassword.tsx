@@ -5,10 +5,10 @@ import clsx from 'clsx';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import FlexColumn from '@/components/Common/FlexColumn';
-import SubmitButton from '@/components/Common/SubmitButton';
-import TextInput from '@/components/Common/TextInput';
 import InfoError, { ErrorData } from '@/components/InfoError';
+import FlexColumn from '@/components/ui/FlexColumn';
+import SubmitButton from '@/components/ui/SubmitButton';
+import TextInput from '@/components/ui/TextInput';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { IUserUpdatePassword } from '@/models/library';

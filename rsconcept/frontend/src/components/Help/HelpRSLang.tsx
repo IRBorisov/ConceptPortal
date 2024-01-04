@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import EmbedYoutube from '@/components/Common/EmbedYoutube';
+import EmbedYoutube from '@/components/ui/EmbedYoutube';
 import useWindowSize from '@/hooks/useWindowSize';
 import { urls, youtube } from '@/utils/constants';
 

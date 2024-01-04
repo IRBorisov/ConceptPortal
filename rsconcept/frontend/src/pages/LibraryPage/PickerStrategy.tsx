@@ -3,9 +3,9 @@
 import { useCallback } from 'react';
 import { BiFilterAlt } from 'react-icons/bi';
 
-import Dropdown from '@/components/Common/Dropdown';
-import DropdownCheckbox from '@/components/Common/DropdownCheckbox';
-import SelectorButton from '@/components/Common/SelectorButton';
+import Dropdown from '@/components/ui/Dropdown';
+import DropdownCheckbox from '@/components/ui/DropdownCheckbox';
+import SelectorButton from '@/components/ui/SelectorButton';
 import { useAuth } from '@/context/AuthContext';
 import useDropdown from '@/hooks/useDropdown';
 import { LibraryFilterStrategy } from '@/models/miscellaneous';

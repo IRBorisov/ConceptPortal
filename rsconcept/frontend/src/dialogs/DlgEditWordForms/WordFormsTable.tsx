@@ -4,9 +4,9 @@ import clsx from 'clsx';
 import { useCallback, useMemo } from 'react';
 import { BiX } from 'react-icons/bi';
 
-import MiniButton from '@/components/Common/MiniButton';
+import MiniButton from '@/components/ui/MiniButton';
 import DataTable, { createColumnHelper } from '@/components/DataTable';
-import WordFormBadge from '@/components/Shared/WordFormBadge';
+import WordFormBadge from '@/components/WordFormBadge';
 import { IWordForm } from '@/models/language';
 
 interface WordFormsTableProps {

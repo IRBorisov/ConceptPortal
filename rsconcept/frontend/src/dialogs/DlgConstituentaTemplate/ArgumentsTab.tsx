@@ -5,10 +5,10 @@ import clsx from 'clsx';
 import { Dispatch, useCallback, useEffect, useMemo, useState } from 'react';
 import { BiCheck, BiRefresh, BiX } from 'react-icons/bi';
 
-import MiniButton from '@/components/Common/MiniButton';
+import ConstituentaPicker from '@/components/ConstituentaPicker';
 import DataTable, { IConditionalStyle } from '@/components/DataTable';
 import RSInput from '@/components/RSInput';
-import ConstituentaPicker from '@/components/Shared/ConstituentaPicker';
+import MiniButton from '@/components/ui/MiniButton';
 import { useConceptTheme } from '@/context/ThemeContext';
 import { IConstituenta, IRSForm } from '@/models/rsform';
 import { IArgumentValue } from '@/models/rslang';

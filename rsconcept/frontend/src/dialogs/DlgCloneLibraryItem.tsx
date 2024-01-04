@@ -4,10 +4,10 @@ import clsx from 'clsx';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import Checkbox from '@/components/Common/Checkbox';
-import Modal, { ModalProps } from '@/components/Common/Modal';
-import TextArea from '@/components/Common/TextArea';
-import TextInput from '@/components/Common/TextInput';
+import Checkbox from '@/components/ui/Checkbox';
+import Modal, { ModalProps } from '@/components/ui/Modal';
+import TextArea from '@/components/ui/TextArea';
+import TextInput from '@/components/ui/TextInput';
 import { useLibrary } from '@/context/LibraryContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { ILibraryItem } from '@/models/library';

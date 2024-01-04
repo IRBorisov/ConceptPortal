@@ -1,6 +1,6 @@
 import { Row } from '@tanstack/react-table';
 
-import Checkbox from '@/components/Common/Checkbox';
+import Checkbox from '@/components/ui/Checkbox';
 
 interface SelectRowProps<TData> {
   row: Row<TData>;

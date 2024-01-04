@@ -3,9 +3,9 @@
 import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
 
-import Modal, { ModalProps } from '@/components/Common/Modal';
-import SelectSingle from '@/components/Common/SelectSingle';
-import TextInput from '@/components/Common/TextInput';
+import Modal, { ModalProps } from '@/components/ui/Modal';
+import SelectSingle from '@/components/ui/SelectSingle';
+import TextInput from '@/components/ui/TextInput';
 import { useRSForm } from '@/context/RSFormContext';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { CstType, ICstRenameData } from '@/models/rsform';

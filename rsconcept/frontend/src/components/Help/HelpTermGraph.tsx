@@ -1,6 +1,6 @@
-import Divider from '@/components/Common/Divider';
-import InfoCstClass from '@/components/Shared/InfoCstClass';
-import InfoCstStatus from '@/components/Shared/InfoCstStatus';
+import InfoCstClass from '@/components/InfoCstClass';
+import InfoCstStatus from '@/components/InfoCstStatus';
+import Divider from '@/components/ui/Divider';
 
 function HelpTermGraph() {
   // prettier-ignore

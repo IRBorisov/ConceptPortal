@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import SelectMulti, { SelectMultiProps } from '@/components/Common/SelectMulti';
+import SelectMulti, { SelectMultiProps } from '@/components/ui/SelectMulti';
 import { Grammeme } from '@/models/language';
 import { getCompatibleGrams } from '@/models/languageAPI';
 import { compareGrammemeOptions, IGrammemeOption, SelectorGrammemes } from '@/utils/selectors';

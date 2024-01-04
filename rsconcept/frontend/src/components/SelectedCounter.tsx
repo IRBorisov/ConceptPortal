@@ -1,4 +1,4 @@
-import Overlay from '@/components/Common/Overlay';
+import Overlay from '@/components/ui/Overlay';
 
 interface SelectedCounterProps {
   total: number;

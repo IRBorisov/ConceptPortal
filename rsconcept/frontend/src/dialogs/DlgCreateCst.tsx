@@ -3,11 +3,11 @@
 import clsx from 'clsx';
 import { useEffect, useLayoutEffect, useState } from 'react';
 
-import Modal, { ModalProps } from '@/components/Common/Modal';
-import SelectSingle from '@/components/Common/SelectSingle';
-import TextArea from '@/components/Common/TextArea';
-import TextInput from '@/components/Common/TextInput';
 import RSInput from '@/components/RSInput';
+import Modal, { ModalProps } from '@/components/ui/Modal';
+import SelectSingle from '@/components/ui/SelectSingle';
+import TextArea from '@/components/ui/TextArea';
+import TextInput from '@/components/ui/TextInput';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
 import { generateAlias, validateNewAlias } from '@/models/rsformAPI';

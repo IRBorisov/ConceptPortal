@@ -3,7 +3,7 @@
 import { useLayoutEffect, useState } from 'react';
 
 import { type RowSelectionState } from '@/components/DataTable';
-import SelectedCounter from '@/components/Shared/SelectedCounter';
+import SelectedCounter from '@/components/SelectedCounter';
 import { useRSForm } from '@/context/RSFormContext';
 import { CstType, ICstCreateData, ICstMovetoData } from '@/models/rsform';
 

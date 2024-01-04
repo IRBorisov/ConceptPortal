@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { useCallback } from 'react';
 
-import SearchBar from '@/components/Common/SearchBar';
+import SearchBar from '@/components/ui/SearchBar';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { ILibraryFilter } from '@/models/miscellaneous';
 import { LibraryFilterStrategy } from '@/models/miscellaneous';

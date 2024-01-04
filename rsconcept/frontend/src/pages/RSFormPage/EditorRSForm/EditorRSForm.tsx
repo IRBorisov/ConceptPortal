@@ -2,9 +2,9 @@
 
 import { Dispatch, SetStateAction } from 'react';
 
-import Divider from '@/components/Common/Divider';
-import FlexColumn from '@/components/Common/FlexColumn';
-import InfoLibraryItem from '@/components/Shared/InfoLibraryItem';
+import InfoLibraryItem from '@/components/InfoLibraryItem';
+import Divider from '@/components/ui/Divider';
+import FlexColumn from '@/components/ui/FlexColumn';
 import { useAuth } from '@/context/AuthContext';
 import { useRSForm } from '@/context/RSFormContext';
 import { globalIDs } from '@/utils/constants';

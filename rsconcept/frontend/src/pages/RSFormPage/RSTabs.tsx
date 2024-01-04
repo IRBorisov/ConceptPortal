@@ -8,10 +8,10 @@ import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 import { toast } from 'react-toastify';
 
-import { Loader } from '@/components/Common/Loader';
-import TabLabel from '@/components/Common/TabLabel';
-import TextURL from '@/components/Common/TextURL';
 import InfoError, { ErrorData } from '@/components/InfoError';
+import { Loader } from '@/components/ui/Loader';
+import TabLabel from '@/components/ui/TabLabel';
+import TextURL from '@/components/ui/TextURL';
 import { useAccessMode } from '@/context/AccessModeContext';
 import { useAuth } from '@/context/AuthContext';
 import { useLibrary } from '@/context/LibraryContext';

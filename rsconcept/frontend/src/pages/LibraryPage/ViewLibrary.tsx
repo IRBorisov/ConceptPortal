@@ -4,9 +4,9 @@ import clsx from 'clsx';
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
-import TextURL from '@/components/Common/TextURL';
 import DataTable, { createColumnHelper } from '@/components/DataTable';
 import HelpButton from '@/components/Help/HelpButton';
+import TextURL from '@/components/ui/TextURL';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useUsers } from '@/context/UsersContext';

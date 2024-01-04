@@ -2,8 +2,8 @@
 
 import { useCallback, useLayoutEffect, useState } from 'react';
 
-import { Loader } from '@/components/Common/Loader';
 import InfoError from '@/components/InfoError';
+import { Loader } from '@/components/ui/Loader';
 import { useAuth } from '@/context/AuthContext';
 import { useLibrary } from '@/context/LibraryContext';
 import { useConceptNavigation } from '@/context/NavigationContext';

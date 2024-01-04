@@ -1,5 +1,5 @@
-import Divider from '@/components/Common/Divider';
-import InfoCstStatus from '@/components/Shared/InfoCstStatus';
+import InfoCstStatus from '@/components/InfoCstStatus';
+import Divider from '@/components/ui/Divider';
 
 function HelpRSFormItems() {
   // prettier-ignore
