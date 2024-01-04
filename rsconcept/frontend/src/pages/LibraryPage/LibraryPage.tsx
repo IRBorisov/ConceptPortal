@@ -2,7 +2,7 @@
 
 import { useCallback, useLayoutEffect, useState } from 'react';
 
-import { ConceptLoader } from '@/components/Common/ConceptLoader';
+import { Loader } from '@/components/Common/Loader';
 import InfoError from '@/components/InfoError';
 import { useAuth } from '@/context/AuthContext';
 import { useLibrary } from '@/context/LibraryContext';
@@ -65,7 +65,7 @@ function LibraryPage() {
 
   return (
     <>
-      {library.loading ? <ConceptLoader /> : null}
+      {library.loading ? <Loader /> : null}
       {library.error ? <InfoError error={library.error} /> : null}
       {!library.loading && library.items ? (
         <>

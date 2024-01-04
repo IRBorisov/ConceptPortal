@@ -4,13 +4,13 @@ import { CProps } from '../props';
 import Overlay from './Overlay';
 import TextInput from './TextInput';
 
-interface ConceptSearchProps extends CProps.Styling {
+interface SearchBarProps extends CProps.Styling {
   value: string;
   onChange?: (newValue: string) => void;
   noBorder?: boolean;
 }
 
-function ConceptSearch({ value, onChange, noBorder, ...restProps }: ConceptSearchProps) {
+function SearchBar({ value, onChange, noBorder, ...restProps }: SearchBarProps) {
   return (
     <div {...restProps}>
       <Overlay position='top-[-0.125rem] left-3 translate-y-1/2' className='pointer-events-none clr-text-controls'>
@@ -19,6 +19,7 @@ function ConceptSearch({ value, onChange, noBorder, ...restProps }: ConceptSearc
       <TextInput
         noOutline
         placeholder='Поиск'
+        type='search'
         className='w-full pl-10'
         noBorder={noBorder}
         value={value}
@@ -28,4 +29,4 @@ function ConceptSearch({ value, onChange, noBorder, ...restProps }: ConceptSearc
   );
 }
 
-export default ConceptSearch;
+export default SearchBar;

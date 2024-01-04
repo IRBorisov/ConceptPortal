@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react';
 
-import ConceptTooltip from '@/components/Common/ConceptTooltip';
+import Tooltip from '@/components/Common/Tooltip';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { animationDuration } from '@/utils/animations';
 import { darkT, IColorTheme, lightT } from '@/utils/color';
@@ -104,7 +104,7 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
       }}
     >
       <>
-        <ConceptTooltip
+        <Tooltip
           float
           id={`${globalIDs.tooltip}`}
           layer='z-topmost'

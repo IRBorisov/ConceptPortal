@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useConceptTheme } from '@/context/ThemeContext';
 import { urls } from '@/utils/constants';
 
-import TextURL from './Common/TextURL';
+import TextURL from '../components/Common/TextURL';
 
 function Footer() {
   const { noNavigation, noFooter } = useConceptTheme();

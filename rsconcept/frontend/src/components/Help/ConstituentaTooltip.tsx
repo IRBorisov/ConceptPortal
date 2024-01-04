@@ -1,4 +1,4 @@
-import ConceptTooltip from '@/components/Common/ConceptTooltip';
+import Tooltip from '@/components/Common/Tooltip';
 import InfoConstituenta from '@/components/Shared/InfoConstituenta';
 import { IConstituenta } from '@/models/rsform';
 
@@ -9,9 +9,9 @@ interface ConstituentaTooltipProps {
 
 function ConstituentaTooltip({ data, anchor }: ConstituentaTooltipProps) {
   return (
-    <ConceptTooltip clickable anchorSelect={anchor} className='max-w-[30rem]'>
+    <Tooltip clickable anchorSelect={anchor} className='max-w-[30rem]'>
       <InfoConstituenta data={data} />
-    </ConceptTooltip>
+    </Tooltip>
   );
 }
 

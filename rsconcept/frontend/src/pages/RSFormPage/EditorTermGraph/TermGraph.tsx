@@ -2,14 +2,7 @@
 
 import { useCallback, useLayoutEffect, useMemo, useRef } from 'react';
 
-import GraphUI, {
-  GraphCanvasRef,
-  GraphEdge,
-  GraphNode,
-  LayoutTypes,
-  Sphere,
-  useSelection
-} from '@/components/Common/GraphUI';
+import GraphUI, { GraphCanvasRef, GraphEdge, GraphNode, LayoutTypes, Sphere, useSelection } from '@/components/GraphUI';
 import { useConceptTheme } from '@/context/ThemeContext';
 import { graphDarkT, graphLightT } from '@/utils/color';
 import { resources } from '@/utils/constants';

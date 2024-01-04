@@ -3,16 +3,16 @@
 import clsx from 'clsx';
 import { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { ITooltip, Tooltip } from 'react-tooltip';
+import { ITooltip, Tooltip as TooltipImpl } from 'react-tooltip';
 
 import { useConceptTheme } from '@/context/ThemeContext';
 
-interface ConceptTooltipProps extends Omit<ITooltip, 'variant'> {
+interface TooltipProps extends Omit<ITooltip, 'variant'> {
   layer?: string;
   text?: string;
 }
 
-function ConceptTooltip({
+function Tooltip({
   text,
   children,
   layer = 'z-tooltip',
@@ -20,13 +20,13 @@ function ConceptTooltip({
   className,
   style,
   ...restProps
-}: ConceptTooltipProps) {
+}: TooltipProps) {
   const { darkMode } = useConceptTheme();
   if (typeof window === 'undefined') {
     return null;
   }
   return createPortal(
-    <Tooltip
+    <TooltipImpl
       delayShow={1000}
       delayHide={100}
       opacity={0.97}
@@ -39,9 +39,9 @@ function ConceptTooltip({
     >
       {text ? text : null}
       {children as ReactNode}
-    </Tooltip>,
+    </TooltipImpl>,
     document.body
   );
 }
 
-export default ConceptTooltip;
+export default Tooltip;

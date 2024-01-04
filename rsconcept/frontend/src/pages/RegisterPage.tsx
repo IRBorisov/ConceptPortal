@@ -7,12 +7,12 @@ import { toast } from 'react-toastify';
 
 import Button from '@/components/Common/Button';
 import Checkbox from '@/components/Common/Checkbox';
-import ConceptTooltip from '@/components/Common/ConceptTooltip';
 import FlexColumn from '@/components/Common/FlexColumn';
 import Overlay from '@/components/Common/Overlay';
 import SubmitButton from '@/components/Common/SubmitButton';
 import TextInput from '@/components/Common/TextInput';
 import TextURL from '@/components/Common/TextURL';
+import Tooltip from '@/components/Common/Tooltip';
 import ExpectedAnonymous from '@/components/ExpectedAnonymous';
 import InfoError from '@/components/InfoError';
 import { useAuth } from '@/context/AuthContext';
@@ -75,10 +75,10 @@ function RegisterPage() {
             <Overlay id={globalIDs.password_tooltip} position='top-[4.8rem] left-[3.4rem] absolute'>
               <BiInfoCircle size='1.25rem' className='clr-text-primary' />
             </Overlay>
-            <ConceptTooltip anchorSelect={`#${globalIDs.password_tooltip}`} offset={6}>
+            <Tooltip anchorSelect={`#${globalIDs.password_tooltip}`} offset={6}>
               <p>- используйте уникальный пароль</p>
               <p>- портал функционирует в тестовом режиме</p>
-            </ConceptTooltip>
+            </Tooltip>
           </div>
 
           <TextInput

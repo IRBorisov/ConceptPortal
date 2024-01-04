@@ -8,8 +8,8 @@ import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 import { toast } from 'react-toastify';
 
-import { ConceptLoader } from '@/components/Common/ConceptLoader';
-import ConceptTab from '@/components/Common/ConceptTab';
+import { Loader } from '@/components/Common/Loader';
+import TabLabel from '@/components/Common/TabLabel';
 import TextURL from '@/components/Common/TextURL';
 import InfoError, { ErrorData } from '@/components/InfoError';
 import { useAccessMode } from '@/context/AccessModeContext';
@@ -360,7 +360,7 @@ function RSTabs() {
 
   return (
     <>
-      {loading ? <ConceptLoader /> : null}
+      {loading ? <Loader /> : null}
       {error ? <ProcessError error={error} /> : null}
       <AnimatePresence>
         {showUpload ? <DlgUploadRSForm hideWindow={() => setShowUpload(false)} /> : null}
@@ -425,13 +425,13 @@ function RSTabs() {
               showCloneDialog={promptClone}
               showUploadDialog={() => setShowUpload(true)}
             />
-            <ConceptTab label='Карточка' title={`Название схемы: ${schema.title ?? ''}`} />
-            <ConceptTab
+            <TabLabel label='Карточка' title={`Название схемы: ${schema.title ?? ''}`} />
+            <TabLabel
               label='Содержание'
               title={`Конституент: ${schema.stats?.count_all ?? 0} | Ошибок: ${schema.stats?.count_errors ?? 0}`}
             />
-            <ConceptTab label='Редактор' />
-            <ConceptTab label='Граф термов' />
+            <TabLabel label='Редактор' />
+            <TabLabel label='Граф термов' />
           </TabList>
 
           <TabPanel forceRender style={{ display: activeTab === RSTabID.CARD ? '' : 'none' }}>

@@ -9,7 +9,7 @@ import { LibraryState } from '@/context/LibraryContext';
 import { ThemeState } from '@/context/ThemeContext';
 import { UsersState } from '@/context/UsersContext';
 
-import ErrorFallback from './components/ErrorFallback';
+import ErrorFallback from './ErrorFallback';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.js', import.meta.url).toString();
 

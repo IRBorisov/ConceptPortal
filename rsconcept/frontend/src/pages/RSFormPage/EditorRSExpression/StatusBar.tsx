@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { useMemo } from 'react';
 
-import { ConceptLoader } from '@/components/Common/ConceptLoader';
+import { Loader } from '@/components/Common/Loader';
 import { useConceptTheme } from '@/context/ThemeContext';
 import { ExpressionStatus } from '@/models/rsform';
 import { type IConstituenta } from '@/models/rsform';
@@ -52,7 +52,7 @@ function StatusBar({ isModified, processing, constituenta, parseData, onAnalyze 
       onClick={onAnalyze}
     >
       {processing ? (
-        <ConceptLoader size={3} />
+        <Loader size={3} />
       ) : (
         <>
           <StatusIcon status={status} />

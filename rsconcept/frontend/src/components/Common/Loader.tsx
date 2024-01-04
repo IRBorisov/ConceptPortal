@@ -4,11 +4,11 @@ import { ThreeDots } from 'react-loader-spinner';
 
 import { useConceptTheme } from '@/context/ThemeContext';
 
-interface ConceptLoaderProps {
+interface LoaderProps {
   size?: number;
 }
 
-export function ConceptLoader({ size = 10 }: ConceptLoaderProps) {
+export function Loader({ size = 10 }: LoaderProps) {
   const { colors } = useConceptTheme();
   return (
     <div className='flex justify-center'>

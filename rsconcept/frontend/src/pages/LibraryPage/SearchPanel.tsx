@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { useCallback } from 'react';
 
-import ConceptSearch from '@/components/Common/ConceptSearch';
+import SearchBar from '@/components/Common/SearchBar';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { ILibraryFilter } from '@/models/miscellaneous';
 import { LibraryFilterStrategy } from '@/models/miscellaneous';
@@ -67,7 +67,7 @@ function SearchPanel({ total, filtered, query, setQuery, strategy, setFilter }: 
         </span>
       </div>
       <div className={clsx('flex-grow', 'flex gap-1 justify-center items-center')}>
-        <ConceptSearch noBorder className='min-w-[10rem]' value={query} onChange={handleChangeQuery} />
+        <SearchBar noBorder className='min-w-[10rem]' value={query} onChange={handleChangeQuery} />
         <PickerStrategy value={strategy} onChange={handleChangeStrategy} />
       </div>
     </div>

@@ -14,21 +14,26 @@ import RSFormStats from './RSFormStats';
 import RSFormToolbar from './RSFormToolbar';
 
 interface EditorRSFormProps {
-  isModified: boolean
-  isMutable: boolean
-  
-  setIsModified: Dispatch<SetStateAction<boolean>>
-  onDestroy: () => void
-  onClaim: () => void
-  onShare: () => void
-  onDownload: () => void
-  onToggleSubscribe: () => void
+  isModified: boolean;
+  isMutable: boolean;
+
+  setIsModified: Dispatch<SetStateAction<boolean>>;
+  onDestroy: () => void;
+  onClaim: () => void;
+  onShare: () => void;
+  onDownload: () => void;
+  onToggleSubscribe: () => void;
 }
 
 function EditorRSForm({
-  isModified, isMutable,
-  onDestroy, onClaim, onShare, setIsModified,
-  onDownload, onToggleSubscribe
+  isModified,
+  isMutable,
+  onDestroy,
+  onClaim,
+  onShare,
+  setIsModified,
+  onDownload,
+  onToggleSubscribe
 }: EditorRSFormProps) {
   const { schema, isClaimable, isSubscribed, processing } = useRSForm();
   const { user } = useAuth();
@@ -50,41 +55,39 @@ function EditorRSForm({
   }
 
   return (
-  <>
-    <RSFormToolbar 
-      isMutable={isMutable}
-      processing={processing}
-      isSubscribed={isSubscribed}
-      modified={isModified}
-      claimable={isClaimable}
-      anonymous={!user}
-    
-      onSubmit={initiateSubmit}
-      onShare={onShare}
-      onDownload={onDownload}
-      onClaim={onClaim}
-      onDestroy={onDestroy}
-      onToggleSubscribe={onToggleSubscribe}
-    />
-    <div tabIndex={-1}
-      className='flex'
-      onKeyDown={handleInput}
-    >
-      <FlexColumn className='px-4 pb-2'>
-        <FormRSForm disabled={!isMutable}
-          id={globalIDs.library_item_editor}
-          isModified={isModified}
-          setIsModified={setIsModified}
-        />
+    <>
+      <RSFormToolbar
+        isMutable={isMutable}
+        processing={processing}
+        isSubscribed={isSubscribed}
+        modified={isModified}
+        claimable={isClaimable}
+        anonymous={!user}
+        onSubmit={initiateSubmit}
+        onShare={onShare}
+        onDownload={onDownload}
+        onClaim={onClaim}
+        onDestroy={onDestroy}
+        onToggleSubscribe={onToggleSubscribe}
+      />
+      <div tabIndex={-1} className='flex' onKeyDown={handleInput}>
+        <FlexColumn className='px-4 pb-2'>
+          <FormRSForm
+            disabled={!isMutable}
+            id={globalIDs.library_item_editor}
+            isModified={isModified}
+            setIsModified={setIsModified}
+          />
 
-        <Divider margins='my-1' />
-        
-        <InfoLibraryItem item={schema} />
-      </FlexColumn>
+          <Divider margins='my-1' />
 
-      <RSFormStats stats={schema?.stats}/>
-    </div>
-  </>);
+          <InfoLibraryItem item={schema} />
+        </FlexColumn>
+
+        <RSFormStats stats={schema?.stats} />
+      </div>
+    </>
+  );
 }
 
 export default EditorRSForm;

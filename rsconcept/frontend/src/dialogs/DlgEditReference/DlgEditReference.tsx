@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
-import ConceptTab from '@/components/Common/ConceptTab';
+import TabLabel from '@/components/Common/TabLabel';
 import Modal from '@/components/Common/Modal';
 import Overlay from '@/components/Common/Overlay';
 import HelpButton from '@/components/Help/HelpButton';
@@ -64,12 +64,12 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
         onSelect={setActiveTab}
       >
         <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none')}>
-          <ConceptTab
+          <TabLabel
             title='Отсылка на термин в заданной словоформе'
             label={labelReferenceType(ReferenceType.ENTITY)}
             className='w-[12rem]'
           />
-          <ConceptTab
+          <TabLabel
             title='Установление синтаксической связи с отсылкой на термин'
             label={labelReferenceType(ReferenceType.SYNTACTIC)}
             className='w-[12rem]'

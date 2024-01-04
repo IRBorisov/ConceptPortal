@@ -6,12 +6,21 @@ import { globalIDs } from '@/utils/constants';
 import { CheckboxCheckedIcon, CheckboxNullIcon } from '../Icons';
 import { CheckboxProps } from './Checkbox';
 
-export interface TristateProps extends Omit<CheckboxProps, 'value' | 'setValue'> {
+export interface CheckboxTristateProps extends Omit<CheckboxProps, 'value' | 'setValue'> {
   value: boolean | null;
   setValue?: (newValue: boolean | null) => void;
 }
 
-function Tristate({ id, disabled, label, title, className, value, setValue, ...restProps }: TristateProps) {
+function CheckboxTristate({
+  id,
+  disabled,
+  label,
+  title,
+  className,
+  value,
+  setValue,
+  ...restProps
+}: CheckboxTristateProps) {
   const cursor = useMemo(() => {
     if (disabled) {
       return 'cursor-not-allowed';
@@ -71,4 +80,4 @@ function Tristate({ id, disabled, label, title, className, value, setValue, ...r
   );
 }
 
-export default Tristate;
+export default CheckboxTristate;

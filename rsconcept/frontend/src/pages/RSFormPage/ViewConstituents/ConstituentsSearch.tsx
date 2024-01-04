@@ -3,9 +3,9 @@
 import { useCallback, useLayoutEffect } from 'react';
 import { BiCog, BiFilterAlt } from 'react-icons/bi';
 
-import ConceptSearch from '@/components/Common/ConceptSearch';
 import Dropdown from '@/components/Common/Dropdown';
 import DropdownButton from '@/components/Common/DropdownButton';
+import SearchBar from '@/components/Common/SearchBar';
 import SelectorButton from '@/components/Common/SelectorButton';
 import useDropdown from '@/hooks/useDropdown';
 import useLocalStorage from '@/hooks/useLocalStorage';
@@ -75,7 +75,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
 
   return (
     <div className='flex border-b clr-input'>
-      <ConceptSearch noBorder className='min-w-[6rem] pr-2 flex-grow' value={filterText} onChange={setFilterText} />
+      <SearchBar noBorder className='min-w-[6rem] pr-2 flex-grow' value={filterText} onChange={setFilterText} />
 
       <div ref={matchModeMenu.ref}>
         <SelectorButton

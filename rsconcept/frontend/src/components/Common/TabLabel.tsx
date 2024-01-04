@@ -1,16 +1,16 @@
 import clsx from 'clsx';
-import type { TabProps } from 'react-tabs';
-import { Tab } from 'react-tabs';
+import type { TabProps as TabPropsImpl } from 'react-tabs';
+import { Tab as TabImpl } from 'react-tabs';
 
 import { globalIDs } from '@/utils/constants';
 
-interface ConceptTabProps extends Omit<TabProps, 'children'> {
+interface TabLabelProps extends Omit<TabPropsImpl, 'children'> {
   label?: string;
 }
 
-function ConceptTab({ label, title, className, ...otherProps }: ConceptTabProps) {
+function TabLabel({ label, title, className, ...otherProps }: TabLabelProps) {
   return (
-    <Tab
+    <TabImpl
       className={clsx(
         'min-w-[6rem]',
         'px-2 py-1 flex justify-center',
@@ -24,10 +24,10 @@ function ConceptTab({ label, title, className, ...otherProps }: ConceptTabProps)
       {...otherProps}
     >
       {label}
-    </Tab>
+    </TabImpl>
   );
 }
 
-ConceptTab.tabsRole = 'Tab';
+TabLabel.tabsRole = 'Tab';
 
-export default ConceptTab;
+export default TabLabel;

@@ -4,9 +4,9 @@ import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
-import ConceptTab from '@/components/Common/ConceptTab';
 import Modal, { ModalProps } from '@/components/Common/Modal';
 import Overlay from '@/components/Common/Overlay';
+import TabLabel from '@/components/Common/TabLabel';
 import HelpButton from '@/components/Help/HelpButton';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { HelpTopic } from '@/models/miscellaneous';
@@ -125,9 +125,9 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
         onSelect={setActiveTab}
       >
         <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none')}>
-          <ConceptTab label='Шаблон' title='Выбор шаблона выражения' className='w-[8rem]' />
-          <ConceptTab label='Аргументы' title='Подстановка аргументов шаблона' className='w-[8rem]' />
-          <ConceptTab label='Конституента' title='Редактирование атрибутов конституенты' className='w-[8rem]' />
+          <TabLabel label='Шаблон' title='Выбор шаблона выражения' className='w-[8rem]' />
+          <TabLabel label='Аргументы' title='Подстановка аргументов шаблона' className='w-[8rem]' />
+          <TabLabel label='Конституента' title='Редактирование атрибутов конституенты' className='w-[8rem]' />
         </TabList>
 
         <TabPanel style={{ display: activeTab === TabID.TEMPLATE ? '' : 'none' }}>

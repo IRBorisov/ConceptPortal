@@ -1,6 +1,6 @@
 import { Table } from '@tanstack/react-table';
 
-import Tristate from '@/components/Common/Tristate';
+import CheckboxTristate from '@/components/Common/CheckboxTristate';
 
 interface SelectAllProps<TData> {
   table: Table<TData>;
@@ -8,7 +8,7 @@ interface SelectAllProps<TData> {
 
 function SelectAll<TData>({ table }: SelectAllProps<TData>) {
   return (
-    <Tristate
+    <CheckboxTristate
       tabIndex={-1}
       title='Выделить все'
       value={

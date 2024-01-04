@@ -2,8 +2,8 @@ import './index.css';
 
 import { createRoot } from 'react-dom/client';
 
-import App from './App.tsx';
-import GlobalProviders from './GlobalProviders';
+import App from './app';
+import GlobalProviders from './app/GlobalProviders';
 
 createRoot(document.getElementById('root')!).render(
   <GlobalProviders>

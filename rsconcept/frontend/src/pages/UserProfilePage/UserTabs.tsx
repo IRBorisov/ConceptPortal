@@ -4,7 +4,7 @@ import { AnimatePresence } from 'framer-motion';
 import { useMemo, useState } from 'react';
 import { FiBell, FiBellOff } from 'react-icons/fi';
 
-import { ConceptLoader } from '@/components/Common/ConceptLoader';
+import { Loader } from '@/components/Common/Loader';
 import MiniButton from '@/components/Common/MiniButton';
 import Overlay from '@/components/Common/Overlay';
 import InfoError from '@/components/InfoError';
@@ -29,7 +29,7 @@ function UserTabs() {
 
   return (
     <>
-      {loading ? <ConceptLoader /> : null}
+      {loading ? <Loader /> : null}
       {error ? <InfoError error={error} /> : null}
       {user ? (
         <div className='flex gap-6 py-2'>

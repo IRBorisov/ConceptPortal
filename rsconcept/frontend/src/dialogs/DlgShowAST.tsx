@@ -2,8 +2,8 @@
 
 import { useCallback, useMemo, useState } from 'react';
 
-import GraphUI, { GraphEdge, GraphNode } from '@/components/Common/GraphUI';
 import Modal, { ModalProps } from '@/components/Common/Modal';
+import GraphUI, { GraphEdge, GraphNode } from '@/components/GraphUI';
 import { useConceptTheme } from '@/context/ThemeContext';
 import { SyntaxTree } from '@/models/rslang';
 import { graphDarkT, graphLightT } from '@/utils/color';
