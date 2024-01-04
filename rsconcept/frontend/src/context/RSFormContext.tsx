@@ -110,7 +110,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         data: data,
         showError: true,
         setLoading: setProcessing,
-        onError: error => setError(error),
+        onError: setError,
         onSuccess: newData => {
           setSchema(Object.assign(schema, newData));
           library.localUpdateItem(newData);
@@ -131,7 +131,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         data: data,
         showError: true,
         setLoading: setProcessing,
-        onError: error => setError(error),
+        onError: setError,
         onSuccess: newData => {
           setSchema(newData);
           library.localUpdateItem(newData);
@@ -151,7 +151,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       postClaimLibraryItem(schemaID, {
         showError: true,
         setLoading: setProcessing,
-        onError: error => setError(error),
+        onError: setError,
         onSuccess: newData => {
           setSchema(Object.assign(schema, newData));
           library.localUpdateItem(newData);
@@ -174,7 +174,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       postSubscribe(schemaID, {
         showError: true,
         setLoading: setProcessing,
-        onError: error => setError(error),
+        onError: setError,
         onSuccess: () => {
           if (user.id && !schema.subscribers.includes(user.id)) {
             schema.subscribers.push(user.id);
@@ -199,7 +199,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       deleteUnsubscribe(schemaID, {
         showError: true,
         setLoading: setProcessing,
-        onError: error => setError(error),
+        onError: setError,
         onSuccess: () => {
           if (user.id && schema.subscribers.includes(user.id)) {
             schema.subscribers.splice(schema.subscribers.indexOf(user.id), 1);
@@ -224,7 +224,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       patchResetAliases(schemaID, {
         showError: true,
         setLoading: setProcessing,
-        onError: error => setError(error),
+        onError: setError,
         onSuccess: newData => {
           setSchema(Object.assign(schema, newData));
           library.localUpdateTimestamp(newData.id);
@@ -241,7 +241,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
       getTRSFile(schemaID, {
         showError: true,
         setLoading: setProcessing,
-        onError: error => setError(error),
+        onError: setError,
         onSuccess: callback
       });
     },
@@ -255,7 +255,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         data: data,
         showError: true,
         setLoading: setProcessing,
-        onError: error => setError(error),
+        onError: setError,
         onSuccess: newData => {
           setSchema(newData.schema);
           library.localUpdateTimestamp(newData.schema.id);
@@ -273,7 +273,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         data: data,
         showError: true,
         setLoading: setProcessing,
-        onError: error => setError(error),
+        onError: setError,
         onSuccess: newData => {
           setSchema(newData);
           library.localUpdateTimestamp(newData.id);
@@ -291,7 +291,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         data: data,
         showError: true,
         setLoading: setProcessing,
-        onError: error => setError(error),
+        onError: setError,
         onSuccess: newData =>
           reload(setProcessing, () => {
             library.localUpdateTimestamp(Number(schemaID));
@@ -309,7 +309,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         data: data,
         showError: true,
         setLoading: setProcessing,
-        onError: error => setError(error),
+        onError: setError,
         onSuccess: newData => {
           setSchema(newData.schema);
           library.localUpdateTimestamp(newData.schema.id);
@@ -327,7 +327,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         data: data,
         showError: true,
         setLoading: setProcessing,
-        onError: error => setError(error),
+        onError: setError,
         onSuccess: newData => {
           setSchema(newData);
           library.localUpdateTimestamp(Number(schemaID));

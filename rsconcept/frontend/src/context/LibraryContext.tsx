@@ -98,7 +98,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
       getRSFormDetails(String(templateID), {
         showError: true,
         setLoading: setLoading,
-        onError: error => setError(error),
+        onError: setError,
         onSuccess: data => {
           const schema = loadRSFormData(data);
           setCachedTemplates(prev => [...prev, schema]);
@@ -115,7 +115,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
     getLibrary({
       setLoading: setLoading,
       showError: true,
-      onError: error => setError(error),
+      onError: setError,
       onSuccess: newData => {
         setItems(newData);
         if (callback) callback();
@@ -158,7 +158,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
         data: data,
         showError: true,
         setLoading: setProcessing,
-        onError: error => setError(error),
+        onError: setError,
         onSuccess: newSchema =>
           reload(() => {
             if (user && !user.subscriptions.includes(newSchema.id)) {
@@ -177,7 +177,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
       deleteLibraryItem(String(target), {
         showError: true,
         setLoading: setProcessing,
-        onError: error => setError(error),
+        onError: setError,
         onSuccess: () =>
           reload(() => {
             if (user && user.subscriptions.includes(target)) {
@@ -203,7 +203,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
         data: data,
         showError: true,
         setLoading: setProcessing,
-        onError: error => setError(error),
+        onError: setError,
         onSuccess: newSchema =>
           reload(() => {
             if (user && !user.subscriptions.includes(newSchema.id)) {

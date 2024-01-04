@@ -45,7 +45,7 @@ export const UserProfileState = ({ children }: UserProfileStateProps) => {
     getProfile({
       showError: true,
       setLoading: setLoading,
-      onError: error => setError(error),
+      onError: setError,
       onSuccess: newData => setUser(newData)
     });
   }, [setUser]);
@@ -57,7 +57,7 @@ export const UserProfileState = ({ children }: UserProfileStateProps) => {
         data: data,
         showError: true,
         setLoading: setProcessing,
-        onError: error => setError(error),
+        onError: setError,
         onSuccess: newData => {
           setUser(newData);
           const libraryUser = users.find(item => item.id === user?.id);

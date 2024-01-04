@@ -67,7 +67,7 @@ export const AuthState = ({ children }: AuthStateProps) => {
       data: data,
       showError: true,
       setLoading: setLoading,
-      onError: error => setError(error),
+      onError: setError,
       onSuccess: newData =>
         reload(() => {
           if (callback) callback(newData);
@@ -92,7 +92,7 @@ export const AuthState = ({ children }: AuthStateProps) => {
       data: data,
       showError: true,
       setLoading: setLoading,
-      onError: error => setError(error),
+      onError: setError,
       onSuccess: newData =>
         reload(() => {
           users.push(newData as IUserInfo);
@@ -108,7 +108,7 @@ export const AuthState = ({ children }: AuthStateProps) => {
         data: data,
         showError: true,
         setLoading: setLoading,
-        onError: error => setError(error),
+        onError: setError,
         onSuccess: () =>
           reload(() => {
             if (callback) callback();

@@ -24,7 +24,7 @@ function useCheckExpression({ schema }: { schema?: IRSForm }) {
       data: { expression: expression },
       showError: true,
       setLoading,
-      onError: error => setError(error),
+      onError: setError,
       onSuccess: parse => {
         if (activeCst) {
           adjustResults(parse, expression.trim() === getDefinitionPrefix(activeCst), activeCst.cst_type);

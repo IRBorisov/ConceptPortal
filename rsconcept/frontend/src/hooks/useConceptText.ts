@@ -16,7 +16,7 @@ function useConceptText() {
       data: data,
       showError: true,
       setLoading,
-      onError: error => setError(error),
+      onError: setError,
       onSuccess: data => {
         if (onSuccess) onSuccess(data);
       }
@@ -29,7 +29,7 @@ function useConceptText() {
       data: data,
       showError: true,
       setLoading,
-      onError: error => setError(error),
+      onError: setError,
       onSuccess: data => {
         if (onSuccess) onSuccess(data);
       }
@@ -42,7 +42,7 @@ function useConceptText() {
       data: data,
       showError: true,
       setLoading,
-      onError: error => setError(error),
+      onError: setError,
       onSuccess: data => {
         if (onSuccess) onSuccess(data);
       }

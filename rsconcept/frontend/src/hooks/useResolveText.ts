@@ -20,7 +20,7 @@ function useResolveText({ schema }: { schema?: IRSForm }) {
       data: { text: text },
       showError: true,
       setLoading,
-      onError: error => setError(error),
+      onError: setError,
       onSuccess: data => {
         setRefsData(data);
         if (onSuccess) onSuccess(data);
