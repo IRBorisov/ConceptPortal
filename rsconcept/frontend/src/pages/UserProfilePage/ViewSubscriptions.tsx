@@ -46,7 +46,7 @@ function ViewSubscriptions({ items }: ViewSubscriptionsProps) {
         size: 150,
         maxSize: 150,
         cell: props => (
-          <div className='min-w-[8.25rem]'>{new Date(props.cell.getValue()).toLocaleString(intl.locale)}</div>
+          <div className='text-sm whitespace-nowrap'>{new Date(props.cell.getValue()).toLocaleString(intl.locale)}</div>
         ),
         enableSorting: true
       })

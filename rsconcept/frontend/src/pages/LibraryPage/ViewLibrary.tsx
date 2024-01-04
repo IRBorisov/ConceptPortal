@@ -73,11 +73,8 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
       columnHelper.accessor('time_update', {
         id: 'time_update',
         header: 'Обновлена',
-        size: 150,
-        minSize: 150,
-        maxSize: 150,
         cell: props => (
-          <div className='text-sm min-w-[8.25rem]'>{new Date(props.cell.getValue()).toLocaleString(intl.locale)}</div>
+          <div className='text-sm whitespace-nowrap'>{new Date(props.cell.getValue()).toLocaleString(intl.locale)}</div>
         ),
         enableSorting: true,
         sortingFn: 'datetime',
@@ -90,7 +87,14 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
   return (
     <>
       <div className='sticky top-[2.3rem] w-full'>
-        <div className={clsx('z-pop', 'absolute top-[0.125rem] left-[0.25rem]', 'ml-3', 'flex gap-1')}>
+        <div
+          className={clsx(
+            'z-pop', // prettier: split lines
+            'absolute top-[0.125rem] left-[0.25rem]',
+            'ml-3',
+            'flex gap-1'
+          )}
+        >
           <HelpButton topic={HelpTopic.LIBRARY} className='max-w-[35rem]' offset={0} />
         </div>
       </div>

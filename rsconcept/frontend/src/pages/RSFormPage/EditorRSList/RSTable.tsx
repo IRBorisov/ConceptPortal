@@ -72,11 +72,10 @@ function RSTable({ items, selected, setSelected, onEdit, onCreateNew }: RSTableP
       columnHelper.accessor(cst => labelCstTypification(cst), {
         id: 'type',
         header: 'Типизация',
-        size: 150,
-        minSize: 150,
-        maxSize: 150,
         enableHiding: true,
-        cell: props => <div className='text-sm min-w-[9.3rem] max-w-[9.3rem] break-words'>{props.getValue()}</div>
+        cell: props => (
+          <div className={clsx('min-w-[9.3rem] max-w-[9.3rem]', 'text-sm break-words')}>{props.getValue()}</div>
+        )
       }),
       columnHelper.accessor(cst => cst.term_resolved || cst.term_raw || '', {
         id: 'term',

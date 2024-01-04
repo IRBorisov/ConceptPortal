@@ -108,9 +108,6 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
       argumentsHelper.accessor(arg => arg.typification, {
         id: 'type',
         header: 'Типизация',
-        size: 150,
-        minSize: 150,
-        maxSize: 150,
         enableHiding: true,
         cell: props => (
           <div className={clsx('min-w-[9.3rem] max-w-[9.3rem]', 'text-sm break-words')}>{props.getValue()}</div>
