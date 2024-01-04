@@ -22,7 +22,7 @@ function InfoCstStatus({ title }: InfoCstStatusProps) {
           <p key={`${prefixes.cst_status_list}${index}`}>
             <span
               className={clsx(
-                'inline-block', //
+                'inline-block', // prettier: split lines
                 'min-w-[7rem]',
                 'px-1',
                 'border',

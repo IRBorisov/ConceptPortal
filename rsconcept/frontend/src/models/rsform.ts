@@ -2,7 +2,7 @@
  * Module: Models for formal representation for systems of concepts.
  */
 
-import { Graph } from '@/utils/Graph';
+import { Graph } from '@/models/Graph';
 
 import { ILibraryItemEx, ILibraryUpdateData } from './library';
 import { IArgumentInfo, ParsingStatus, ValueClass } from './rslang';

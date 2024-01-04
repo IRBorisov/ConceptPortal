@@ -37,7 +37,7 @@ export const resources = {
  * Numeric limitations.
  */
 export const limits = {
-  alias_len: 12
+  library_alias_len: 12
 };
 
 /**
@@ -45,7 +45,7 @@ export const limits = {
  */
 export const patterns = {
   login: '^[a-zA-Z][a-zA-Z0-9_\\-]{1,}[a-zA-Z0-9]$',
-  alias: `.{1,${limits.alias_len}}`
+  library_alias: `.{1,${limits.library_alias_len}}`
 };
 
 /**

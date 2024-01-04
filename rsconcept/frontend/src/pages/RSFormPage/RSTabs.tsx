@@ -28,8 +28,8 @@ import DlgUploadRSForm from '@/dialogs/DlgUploadRSForm';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { UserAccessMode } from '@/models/miscellaneous';
 import { IConstituenta, ICstCreateData, ICstRenameData, ICstUpdateData, TermForm } from '@/models/rsform';
+import { generateAlias } from '@/models/rsformAPI';
 import { EXTEOR_TRS_FILE, prefixes, TIMEOUT_UI_REFRESH } from '@/utils/constants';
-import { createAliasFor } from '@/utils/misc';
 
 import EditorConstituenta from './EditorConstituenta';
 import EditorRSForm from './EditorRSForm';
@@ -179,7 +179,7 @@ function RSTabs() {
       if (!schema?.items) {
         return;
       }
-      data.alias = data.alias || createAliasFor(data.cst_type, schema);
+      data.alias = data.alias || generateAlias(data.cst_type, schema);
       cstCreate(data, newCst => {
         toast.success(`Конституента добавлена: ${newCst.alias}`);
         navigateTab(activeTab, newCst.id);

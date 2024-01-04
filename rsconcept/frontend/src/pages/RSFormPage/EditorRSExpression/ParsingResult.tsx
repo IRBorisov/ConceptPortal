@@ -4,9 +4,9 @@ import clsx from 'clsx';
 import { motion } from 'framer-motion';
 
 import { IExpressionParse, IRSErrorDescription } from '@/models/rslang';
+import { getRSErrorPrefix } from '@/models/rslangAPI';
 import { animateParseResults } from '@/utils/animations';
 import { describeRSError } from '@/utils/labels';
-import { getRSErrorPrefix } from '@/utils/misc';
 
 interface ParsingResultProps {
   data: IExpressionParse | undefined;

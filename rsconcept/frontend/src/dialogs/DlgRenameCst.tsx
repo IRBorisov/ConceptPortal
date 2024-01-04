@@ -9,8 +9,8 @@ import TextInput from '@/components/Common/TextInput';
 import { useRSForm } from '@/context/RSFormContext';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { CstType, ICstRenameData } from '@/models/rsform';
+import { generateAlias, validateNewAlias } from '@/models/rsformAPI';
 import { labelCstType } from '@/utils/labels';
-import { createAliasFor, validateCstAlias } from '@/utils/misc';
 import { SelectorCstType } from '@/utils/selectors';
 
 interface DlgRenameCstProps extends Pick<ModalProps, 'hideWindow'> {
@@ -27,13 +27,13 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
 
   useLayoutEffect(() => {
     if (schema && initial && cstData.cst_type !== initial.cst_type) {
-      updateData({ alias: createAliasFor(cstData.cst_type, schema) });
+      updateData({ alias: generateAlias(cstData.cst_type, schema) });
     }
   }, [initial, cstData.cst_type, updateData, schema]);
 
   useLayoutEffect(() => {
     setValidated(
-      !!schema && cstData.alias !== initial.alias && validateCstAlias(cstData.alias, cstData.cst_type, schema)
+      !!schema && cstData.alias !== initial.alias && validateNewAlias(cstData.alias, cstData.cst_type, schema)
     );
   }, [cstData.cst_type, cstData.alias, initial, schema]);
 

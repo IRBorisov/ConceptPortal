@@ -53,7 +53,7 @@ function SyntacticTab({ initial, setIsValid, setReference }: SyntacticTabProps) 
         onChange={event => setOffset(event.target.valueAsNumber)}
       />
       <TextInput
-        disabled //
+        disabled // prettier: split lines
         dense
         noBorder
         label='Основная ссылка'

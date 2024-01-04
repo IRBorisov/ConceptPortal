@@ -16,7 +16,7 @@ function ConstituentaBadge({ value, prefixID, theme }: ConstituentaBadgeProps) {
     <div
       id={`${prefixID}${value.alias}`}
       className={clsx(
-        'min-w-[3.1rem] max-w-[3.1rem]', //
+        'min-w-[3.1rem] max-w-[3.1rem]', // prettier: split lines
         'px-1',
         'border rounded-md',
         'text-center font-medium whitespace-nowrap'

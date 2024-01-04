@@ -193,7 +193,12 @@ export function domTooltipEntityReference(ref: IEntityReference, cst: IConstitue
   parseGrammemes(ref.form).forEach(gramStr => {
     const gram = document.createElement('div');
     gram.id = `tooltip-${gramStr}`;
-    gram.className = clsx('min-w-[3rem]', 'px-1', 'border rounded-md', 'text-sm text-center whitespace-nowrap');
+    gram.className = clsx(
+      'min-w-[3rem]', // prettier: split lines
+      'px-1',
+      'border rounded-md',
+      'text-sm text-center whitespace-nowrap'
+    );
     gram.style.borderWidth = '1px';
     gram.style.borderColor = colorFgGrammeme(gramStr, colors);
     gram.style.color = colorFgGrammeme(gramStr, colors);

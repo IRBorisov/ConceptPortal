@@ -109,8 +109,8 @@ function CreateRSFormPage() {
           label='Сокращение'
           placeholder={file && 'Загрузить из файла'}
           className='w-[14rem]'
-          pattern={patterns.alias}
-          title={`не более ${limits.alias_len} символов`}
+          pattern={patterns.library_alias}
+          title={`не более ${limits.library_alias_len} символов`}
           value={alias}
           onChange={event => setAlias(event.target.value)}
         />

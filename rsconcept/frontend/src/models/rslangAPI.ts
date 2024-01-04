@@ -5,7 +5,7 @@
 import { applyPattern } from '@/utils/utils';
 
 import { CstType } from './rsform';
-import { IArgumentValue, RSErrorClass, RSErrorType } from './rslang';
+import { IArgumentValue, IRSErrorDescription, RSErrorClass, RSErrorType } from './rslang';
 
 const LOCALS_REGEXP = /[_a-zα-ω][a-zα-ω]*\d*/g;
 
@@ -13,6 +13,7 @@ const LOCALS_REGEXP = /[_a-zα-ω][a-zα-ω]*\d*/g;
  * Extracts global variable names from a given expression.
  */
 export function extractGlobals(expression: string): Set<string> {
+  // cspell:disable-next-line
   return new Set(expression.match(/[XCSADFPT]\d+/g) ?? []);
 }
 
@@ -117,5 +118,19 @@ export function inferErrorClass(error: RSErrorType): RSErrorClass {
     return RSErrorClass.SEMANTIC;
   } else {
     return RSErrorClass.UNKNOWN;
+  }
+}
+
+/**
+ * Generate ErrorID label.
+ */
+export function getRSErrorPrefix(error: IRSErrorDescription): string {
+  const id = error.errorType.toString(16);
+  // prettier-ignore
+  switch(inferErrorClass(error.errorType)) {
+    case RSErrorClass.LEXER: return 'L' + id;
+    case RSErrorClass.PARSER: return 'P' + id;
+    case RSErrorClass.SEMANTIC: return 'S' + id;
+    case RSErrorClass.UNKNOWN: return 'U' + id;
   }
 }

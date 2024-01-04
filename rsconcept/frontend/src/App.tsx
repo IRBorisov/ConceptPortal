@@ -23,7 +23,7 @@ function Root() {
     <NavigationState>
       <div className='min-w-[30rem] clr-app antialiased'>
         <ConceptToaster
-          className='mt-[4rem] text-sm' //
+          className='mt-[4rem] text-sm' // prettier: split lines
           autoClose={3000}
           draggable={false}
           pauseOnFocusLoss={false}

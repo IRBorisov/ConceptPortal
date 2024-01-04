@@ -18,7 +18,7 @@ function NavigationButton({ icon, title, onClick, text }: NavigationButtonProps)
       data-tooltip-content={title}
       onClick={onClick}
       className={clsx(
-        'mr-1 h-full', //
+        'mr-1 h-full', // prettier: split lines
         'flex items-center gap-1',
         'clr-btn-nav',
         'font-controls whitespace-nowrap',

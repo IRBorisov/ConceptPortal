@@ -4,10 +4,10 @@ import { useCallback, useState } from 'react';
 
 import { type ErrorData } from '@/components/InfoError';
 import { CstType, IConstituenta, type IRSForm } from '@/models/rsform';
+import { getDefinitionPrefix } from '@/models/rsformAPI';
 import { IArgumentInfo, IExpressionParse } from '@/models/rslang';
 import { RSErrorType } from '@/models/rslang';
 import { DataCallback, postCheckExpression } from '@/utils/backendAPI';
-import { getCstExpressionPrefix } from '@/utils/misc';
 
 const LOGIC_TYPIFICATION = 'LOGIC';
 
@@ -27,7 +27,7 @@ function useCheckExpression({ schema }: { schema?: IRSForm }) {
       onError: error => setError(error),
       onSuccess: parse => {
         if (activeCst) {
-          adjustResults(parse, expression.trim() === getCstExpressionPrefix(activeCst), activeCst.cst_type);
+          adjustResults(parse, expression.trim() === getDefinitionPrefix(activeCst), activeCst.cst_type);
         }
         setParseData(parse);
         if (onSuccess) onSuccess(parse);

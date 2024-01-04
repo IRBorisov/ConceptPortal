@@ -2,7 +2,7 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 
 import { GraphFilterParams } from '@/models/miscellaneous';
 import { CstType, IRSForm } from '@/models/rsform';
-import { Graph } from '@/utils/Graph';
+import { Graph } from '@/models/Graph';
 
 function useGraphFilter(schema: IRSForm | undefined, params: GraphFilterParams, toggleUpdate: boolean) {
   const [filtered, setFiltered] = useState<Graph>(new Graph());

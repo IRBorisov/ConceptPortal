@@ -2,7 +2,7 @@
  * Module: API for formal representation for systems of concepts.
  */
 
-import { Graph } from '@/utils/Graph';
+import { Graph } from '@/models/Graph';
 import { TextMatcher } from '@/utils/utils';
 
 import { CstMatchMode } from './miscellaneous';
@@ -169,23 +169,16 @@ export function inferClass(type: CstType, isTemplate: boolean): CstClass {
   if (isTemplate) {
     return CstClass.TEMPLATE;
   }
+  // prettier-ignore
   switch (type) {
-    case CstType.BASE:
-      return CstClass.BASIC;
-    case CstType.CONSTANT:
-      return CstClass.BASIC;
-    case CstType.STRUCTURED:
-      return CstClass.BASIC;
-    case CstType.TERM:
-      return CstClass.DERIVED;
-    case CstType.FUNCTION:
-      return CstClass.DERIVED;
-    case CstType.AXIOM:
-      return CstClass.STATEMENT;
-    case CstType.PREDICATE:
-      return CstClass.DERIVED;
-    case CstType.THEOREM:
-      return CstClass.STATEMENT;
+    case CstType.BASE:        return CstClass.BASIC;
+    case CstType.CONSTANT:    return CstClass.BASIC;
+    case CstType.STRUCTURED:  return CstClass.BASIC;
+    case CstType.TERM:        return CstClass.DERIVED;
+    case CstType.FUNCTION:    return CstClass.DERIVED;
+    case CstType.AXIOM:       return CstClass.STATEMENT;
+    case CstType.PREDICATE:   return CstClass.DERIVED;
+    case CstType.THEOREM:     return CstClass.STATEMENT;
   }
 }
 
@@ -227,9 +220,58 @@ export function isMockCst(cst: IConstituenta) {
 }
 
 /**
- * TODO: description
+ * Apply filter based on start {@link IConstituenta} type.
  */
 export function applyFilterCategory(start: IConstituenta, schema: IRSFormData): IConstituenta[] {
   const nextCategory = schema.items.find(cst => cst.order > start.order && cst.cst_type === CATEGORY_CST_TYPE);
   return schema.items.filter(cst => cst.order > start.order && (!nextCategory || cst.order <= nextCategory.order));
+}
+
+/**
+ * Prefix for alias indicating {@link CstType}.
+ */
+export function getCstTypePrefix(type: CstType) {
+  // prettier-ignore
+  switch (type) {
+    case CstType.BASE: return 'X';
+    case CstType.CONSTANT: return 'C';
+    case CstType.STRUCTURED: return 'S';
+    case CstType.AXIOM: return 'A';
+    case CstType.TERM: return 'D';
+    case CstType.FUNCTION: return 'F';
+    case CstType.PREDICATE: return 'P';
+    case CstType.THEOREM: return 'T';
+  }
+}
+
+/**
+ * Validate new alias against {@link CstType} and {@link IRSForm}.
+ */
+export function validateNewAlias(alias: string, type: CstType, schema: IRSForm): boolean {
+  return alias.length >= 2 && alias[0] == getCstTypePrefix(type) && !schema.items.find(cst => cst.alias === alias);
+}
+
+/**
+ * Definition prefix for {@link IConstituenta}.
+ */
+export function getDefinitionPrefix(cst: IConstituenta): string {
+  return cst.alias + (cst.cst_type === CstType.STRUCTURED ? '::=' : ':==');
+}
+
+/**
+ * Generate alias for new {@link IConstituenta} of a given {@link CstType} for current {@link IRSForm}.
+ */
+export function generateAlias(type: CstType, schema: IRSForm): string {
+  const prefix = getCstTypePrefix(type);
+  if (!schema.items || schema.items.length <= 0) {
+    return `${prefix}1`;
+  }
+  const index = schema.items.reduce((prev, cst, index) => {
+    if (cst.cst_type !== type) {
+      return prev;
+    }
+    index = Number(cst.alias.slice(1 - cst.alias.length)) + 1;
+    return Math.max(prev, index);
+  }, 1);
+  return `${prefix}${index}`;
 }

@@ -16,7 +16,7 @@ function GrammemeBadge({ key, grammeme }: GrammemeBadgeProps) {
     <div
       key={key}
       className={clsx(
-        'min-w-[3rem]', //
+        'min-w-[3rem]', // prettier: split lines
         'px-1',
         'border rounded-md',
         'text-sm font-medium text-center whitespace-nowrap'

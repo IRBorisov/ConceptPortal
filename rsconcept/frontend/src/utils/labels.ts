@@ -111,7 +111,25 @@ export function labelToken(id: TokenID): string {
 }
 
 /**
- * Generates description for {@link TokenID}..
+ * Return shortcut description for {@link CstType}.
+ */
+export function getCstTypeShortcut(type: CstType) {
+  const prefix = labelCstType(type) + ' [Alt + ';
+  // prettier-ignore
+  switch (type) {
+    case CstType.BASE: return prefix + '1]';
+    case CstType.STRUCTURED: return prefix + '2]';
+    case CstType.TERM: return prefix + '3]';
+    case CstType.AXIOM: return prefix + '4]';
+    case CstType.FUNCTION: return prefix + 'Q]';
+    case CstType.PREDICATE: return prefix + 'W]';
+    case CstType.CONSTANT: return prefix + '5]';
+    case CstType.THEOREM: return prefix + '6]';
+  }
+}
+
+/**
+ * Generates description for {@link TokenID}.
  */
 export function describeToken(id: TokenID): string {
   // prettier-ignore

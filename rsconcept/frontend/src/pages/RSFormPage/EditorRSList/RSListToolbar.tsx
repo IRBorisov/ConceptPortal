@@ -11,9 +11,9 @@ import HelpButton from '@/components/Help/HelpButton';
 import useDropdown from '@/hooks/useDropdown';
 import { HelpTopic } from '@/models/miscellaneous';
 import { CstType } from '@/models/rsform';
+import { getCstTypePrefix } from '@/models/rsformAPI';
 import { prefixes } from '@/utils/constants';
-import { labelCstType } from '@/utils/labels';
-import { getCstTypePrefix, getCstTypeShortcut } from '@/utils/misc';
+import { getCstTypeShortcut, labelCstType } from '@/utils/labels';
 
 interface RSListToolbarProps {
   isMutable?: boolean;

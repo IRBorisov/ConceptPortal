@@ -10,9 +10,9 @@ import TextInput from '@/components/Common/TextInput';
 import RSInput from '@/components/RSInput';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
+import { generateAlias, validateNewAlias } from '@/models/rsformAPI';
 import { classnames } from '@/utils/constants';
 import { labelCstType } from '@/utils/labels';
-import { createAliasFor, validateCstAlias } from '@/utils/misc';
 import { SelectorCstType } from '@/utils/selectors';
 
 interface DlgCreateCstProps extends Pick<ModalProps, 'hideWindow'> {
@@ -39,11 +39,11 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
   const handleSubmit = () => onCreate(cstData);
 
   useLayoutEffect(() => {
-    updateCstData({ alias: createAliasFor(cstData.cst_type, schema) });
+    updateCstData({ alias: generateAlias(cstData.cst_type, schema) });
   }, [cstData.cst_type, updateCstData, schema]);
 
   useEffect(() => {
-    setValidated(validateCstAlias(cstData.alias, cstData.cst_type, schema));
+    setValidated(validateNewAlias(cstData.alias, cstData.cst_type, schema));
   }, [cstData.alias, cstData.cst_type, schema]);
 
   return (

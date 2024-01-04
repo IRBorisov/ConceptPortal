@@ -16,3 +16,14 @@ export function matchLibraryItem(target: ILibraryItem, query: string): boolean {
   const matcher = new TextMatcher(query);
   return matcher.test(target.alias) || matcher.test(target.title);
 }
+
+/**
+ * Generate title for clone {@link ILibraryItem}.
+ */
+export function cloneTitle(target: ILibraryItem): string {
+  if (!target.title.includes('[клон]')) {
+    return target.title + ' [клон]';
+  } else {
+    return target.title + '+';
+  }
+}

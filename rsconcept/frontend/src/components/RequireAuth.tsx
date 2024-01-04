@@ -10,7 +10,6 @@ interface RequireAuthProps {
 
 function RequireAuth({ children }: RequireAuthProps) {
   const { user } = useAuth();
-
   if (user) {
     return children;
   } else {

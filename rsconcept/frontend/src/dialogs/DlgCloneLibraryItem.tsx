@@ -11,9 +11,9 @@ import TextInput from '@/components/Common/TextInput';
 import { useLibrary } from '@/context/LibraryContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { ILibraryItem } from '@/models/library';
+import { cloneTitle } from '@/models/libraryAPI';
 import { IRSFormCreateData } from '@/models/rsform';
 import { classnames } from '@/utils/constants';
-import { cloneTitle } from '@/utils/misc';
 
 interface DlgCloneLibraryItemProps extends Pick<ModalProps, 'hideWindow'> {
   base: ILibraryItem;

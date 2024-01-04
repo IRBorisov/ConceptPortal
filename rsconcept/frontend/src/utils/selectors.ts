@@ -1,5 +1,5 @@
 /**
- * Module: Mappings for selector UI elements.
+ * Module: Mappings for selector UI elements. Do not confuse with html selectors
  */
 import { LayoutTypes } from 'reagraph';
 

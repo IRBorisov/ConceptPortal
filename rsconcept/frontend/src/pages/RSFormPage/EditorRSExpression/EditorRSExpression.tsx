@@ -17,10 +17,10 @@ import DlgShowAST from '@/dialogs/DlgShowAST';
 import useCheckExpression from '@/hooks/useCheckExpression';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { IConstituenta } from '@/models/rsform';
+import { getDefinitionPrefix } from '@/models/rsformAPI';
 import { IExpressionParse, IRSErrorDescription, SyntaxTree } from '@/models/rslang';
 import { TokenID } from '@/models/rslang';
 import { labelTypification } from '@/utils/labels';
-import { getCstExpressionPrefix } from '@/utils/misc';
 
 import ParsingResult from './ParsingResult';
 import RSEditorControls from './RSEditControls';
@@ -78,7 +78,7 @@ function EditorRSExpression({
     if (!activeCst) {
       return;
     }
-    const prefix = getCstExpressionPrefix(activeCst);
+    const prefix = getDefinitionPrefix(activeCst);
     const expression = prefix + value;
     checkExpression(expression, activeCst, parse => {
       if (parse.errors.length > 0) {
@@ -103,7 +103,7 @@ function EditorRSExpression({
       if (!activeCst || !rsInput.current) {
         return;
       }
-      const prefix = getCstExpressionPrefix(activeCst);
+      const prefix = getDefinitionPrefix(activeCst);
       let errorPosition = error.position - prefix.length;
       if (errorPosition < 0) errorPosition = 0;
       rsInput.current?.view?.dispatch({
@@ -137,7 +137,7 @@ function EditorRSExpression({
         toast.error('Невозможно построить дерево разбора');
       } else {
         setSyntaxTree(parse.ast);
-        setExpression(getCstExpressionPrefix(activeCst!) + value);
+        setExpression(getDefinitionPrefix(activeCst!) + value);
         setShowAST(true);
       }
     });

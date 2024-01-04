@@ -11,9 +11,9 @@ import HelpButton from '@/components/Help/HelpButton';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { HelpTopic } from '@/models/miscellaneous';
 import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
+import { generateAlias, validateNewAlias } from '@/models/rsformAPI';
 import { inferTemplatedType, substituteTemplateArgs } from '@/models/rslangAPI';
 import { classnames } from '@/utils/constants';
-import { createAliasFor, validateCstAlias } from '@/utils/misc';
 
 import ArgumentsTab, { IArgumentsState } from './ArgumentsTab';
 import ConstituentaTab from './ConstituentaTab';
@@ -54,11 +54,11 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
   const handleSubmit = () => onCreate(constituenta);
 
   useLayoutEffect(() => {
-    updateConstituenta({ alias: createAliasFor(constituenta.cst_type, schema) });
+    updateConstituenta({ alias: generateAlias(constituenta.cst_type, schema) });
   }, [constituenta.cst_type, updateConstituenta, schema]);
 
   useLayoutEffect(() => {
-    setValidated(validateCstAlias(constituenta.alias, constituenta.cst_type, schema));
+    setValidated(validateNewAlias(constituenta.alias, constituenta.cst_type, schema));
   }, [constituenta.alias, constituenta.cst_type, schema]);
 
   useLayoutEffect(() => {
