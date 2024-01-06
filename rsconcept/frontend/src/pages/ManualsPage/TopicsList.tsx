@@ -14,7 +14,6 @@ function TopicsList({ activeTopic, onChangeTopic }: TopicsListProps) {
     <div
       className={clsx('sticky top-0 left-0', 'min-w-[13rem] self-start', 'border-x', 'clr-controls', '', 'select-none')}
     >
-      <h1 className='my-1'>Справка</h1>
       {Object.values(HelpTopic).map((topic, index) => (
         <div
           key={`${prefixes.topic_list}${index}`}

@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 
 import { TokenID } from '@/models/rslang';
-import { animateRSControl } from '@/utils/animations';
+import { animateRSControl } from '@/styling/animations';
 import { prefixes } from '@/utils/constants';
 
 import RSLocalButton from './RSLocalButton';

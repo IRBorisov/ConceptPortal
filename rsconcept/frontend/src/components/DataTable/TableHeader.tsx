@@ -13,7 +13,7 @@ interface TableHeaderProps<TData> {
 function TableHeader<TData>({ table, headPosition, enableRowSelection, enableSorting }: TableHeaderProps<TData>) {
   return (
     <thead
-      className={`clr-app shadow-border`}
+      className='clr-app shadow-border'
       style={{
         top: headPosition,
         position: 'sticky'
@@ -22,7 +22,7 @@ function TableHeader<TData>({ table, headPosition, enableRowSelection, enableSor
       {table.getHeaderGroups().map((headerGroup: HeaderGroup<TData>) => (
         <tr key={headerGroup.id}>
           {enableRowSelection ? (
-            <th className='pl-3 pr-1'>
+            <th className='pl-3 pr-1 align-middle'>
               <SelectAll table={table} />
             </th>
           ) : null}

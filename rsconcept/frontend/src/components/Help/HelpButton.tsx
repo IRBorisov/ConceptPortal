@@ -1,15 +1,16 @@
 import { BiInfoCircle } from 'react-icons/bi';
 
 import TextURL from '@/components/ui/TextURL';
-import Tooltip from '@/components/ui/Tooltip';
+import Tooltip, { PlacesType } from '@/components/ui/Tooltip';
 import { HelpTopic } from '@/models/miscellaneous';
 
+import InfoTopic from '../InfoTopic';
 import { CProps } from '../props';
-import InfoTopic from './InfoTopic';
 
 interface HelpButtonProps extends CProps.Styling {
   topic: HelpTopic;
   offset?: number;
+  place?: PlacesType;
 }
 
 function HelpButton({ topic, ...restProps }: HelpButtonProps) {

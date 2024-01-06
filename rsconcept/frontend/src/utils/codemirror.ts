@@ -10,7 +10,7 @@ import { IEntityReference, ISyntacticReference } from '@/models/language';
 import { parseGrammemes } from '@/models/languageAPI';
 import { IConstituenta } from '@/models/rsform';
 
-import { colorFgGrammeme, IColorTheme } from './color';
+import { colorFgGrammeme, IColorTheme } from '../styling/color';
 import { describeConstituentaTerm, labelCstTypification, labelGrammeme } from './labels';
 
 /**

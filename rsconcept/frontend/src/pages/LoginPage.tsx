@@ -4,6 +4,7 @@ import axios from 'axios';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
+import AnimateFadeIn from '@/components/AnimateFadeIn';
 import ExpectedAnonymous from '@/components/ExpectedAnonymous';
 import InfoError, { ErrorData } from '@/components/InfoError';
 import SubmitButton from '@/components/ui/SubmitButton';
@@ -62,39 +63,41 @@ function LoginPage() {
     return <ExpectedAnonymous />;
   }
   return (
-    <form className={clsx('w-[24rem]', 'pt-12 pb-6 px-6', classnames.flex_col)} onSubmit={handleSubmit}>
-      <img alt='Концепт Портал' src={resources.logo} className='max-h-[2.5rem] min-w-[2.5rem] mb-3' />
-      <TextInput
-        id='username'
-        autoFocus
-        required
-        allowEnter
-        label='Имя пользователя'
-        value={username}
-        onChange={event => setUsername(event.target.value)}
-      />
-      <TextInput
-        id='password'
-        type='password'
-        required
-        allowEnter
-        label='Пароль'
-        value={password}
-        onChange={event => setPassword(event.target.value)}
-      />
+    <AnimateFadeIn>
+      <form className={clsx('w-[24rem]', 'pt-12 pb-6 px-6', classnames.flex_col)} onSubmit={handleSubmit}>
+        <img alt='Концепт Портал' src={resources.logo} className='max-h-[2.5rem] min-w-[2.5rem] mb-3' />
+        <TextInput
+          id='username'
+          autoFocus
+          required
+          allowEnter
+          label='Имя пользователя'
+          value={username}
+          onChange={event => setUsername(event.target.value)}
+        />
+        <TextInput
+          id='password'
+          type='password'
+          required
+          allowEnter
+          label='Пароль'
+          value={password}
+          onChange={event => setPassword(event.target.value)}
+        />
 
-      <SubmitButton
-        text='Войти'
-        className='self-center w-[12rem] mt-3'
-        loading={loading}
-        disabled={!username || !password}
-      />
-      <div className='flex flex-col text-sm'>
-        <TextURL text='Восстановить пароль...' href='/restore-password' />
-        <TextURL text='Нет аккаунта? Зарегистрируйтесь...' href='/signup' />
-      </div>
-      {error ? <ProcessError error={error} /> : null}
-    </form>
+        <SubmitButton
+          text='Войти'
+          className='self-center w-[12rem] mt-3'
+          loading={loading}
+          disabled={!username || !password}
+        />
+        <div className='flex flex-col text-sm'>
+          <TextURL text='Восстановить пароль...' href='/restore-password' />
+          <TextURL text='Нет аккаунта? Зарегистрируйтесь...' href='/signup' />
+        </div>
+        {error ? <ProcessError error={error} /> : null}
+      </form>
+    </AnimateFadeIn>
   );
 }
 

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { RiPushpinFill, RiUnpinLine } from 'react-icons/ri';
 
 import { useConceptTheme } from '@/context/ThemeContext';
-import { animateNavigationToggle } from '@/utils/animations';
+import { animateNavigationToggle } from '@/styling/animations';
 
 function ToggleNavigationButton() {
   const { noNavigationAnimation, toggleNoNavigation } = useConceptTheme();

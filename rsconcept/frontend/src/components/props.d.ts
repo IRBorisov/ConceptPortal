@@ -38,4 +38,5 @@ export namespace CProps {
   export type Input = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
 
   export type AnimatedButton = Omit<HTMLMotionProps<'button'>, 'type'>;
+  export type AnimatedDiv = HTMLMotionProps<'div'>;
 }

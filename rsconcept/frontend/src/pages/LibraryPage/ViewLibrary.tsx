@@ -6,6 +6,7 @@ import { useIntl } from 'react-intl';
 
 import DataTable, { createColumnHelper } from '@/components/DataTable';
 import HelpButton from '@/components/Help/HelpButton';
+import FlexColumn from '@/components/ui/FlexColumn';
 import TextURL from '@/components/ui/TextURL';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
@@ -95,7 +96,7 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
             'flex gap-1'
           )}
         >
-          <HelpButton topic={HelpTopic.LIBRARY} className='max-w-[35rem]' offset={0} />
+          <HelpButton topic={HelpTopic.LIBRARY} className='max-w-[35rem]' offset={5} place='right-start' />
         </div>
       </div>
       <DataTable
@@ -103,13 +104,13 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
         data={items}
         headPosition='2.3rem'
         noDataComponent={
-          <div className='p-3 text-center min-h-[6rem]'>
+          <FlexColumn className='p-3 items-center min-h-[6rem]'>
             <p>Список схем пуст</p>
-            <p className='flex justify-center gap-6 mt-3'>
+            <p className='flex gap-6'>
               <TextURL text='Создать схему' href='/library/create' />
               <TextURL text='Очистить фильтр' onClick={cleanQuery} />
             </p>
-          </div>
+          </FlexColumn>
         }
         onRowClicked={handleOpenItem}
         enableSorting

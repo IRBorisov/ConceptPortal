@@ -6,7 +6,7 @@ import { useRef } from 'react';
 import { BiX } from 'react-icons/bi';
 
 import useEscapeKey from '@/hooks/useEscapeKey';
-import { animateModal } from '@/utils/animations';
+import { animateModal } from '@/styling/animations';
 
 import { CProps } from '../props';
 import Button from './Button';

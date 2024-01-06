@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import { useConceptTheme } from '@/context/ThemeContext';
 import { CstClass } from '@/models/rsform';
-import { colorBgCstClass } from '@/utils/color';
+import { colorBgCstClass } from '@/styling/color';
 import { prefixes } from '@/utils/constants';
 import { describeCstClass, labelCstClass } from '@/utils/labels';
 

@@ -10,7 +10,7 @@ import {
   findContainedNodes,
   findEnvelopingNodes
 } from '@/utils/codemirror';
-import { IColorTheme } from '@/utils/color';
+import { IColorTheme } from '@/styling/color';
 
 import { ReferenceTokens } from './parse';
 import { RefEntity, RefSyntactic } from './parse/parser.terms';

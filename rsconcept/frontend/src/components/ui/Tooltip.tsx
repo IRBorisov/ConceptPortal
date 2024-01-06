@@ -7,6 +7,8 @@ import { ITooltip, Tooltip as TooltipImpl } from 'react-tooltip';
 
 import { useConceptTheme } from '@/context/ThemeContext';
 
+export type { PlacesType } from 'react-tooltip';
+
 interface TooltipProps extends Omit<ITooltip, 'variant'> {
   layer?: string;
   text?: string;

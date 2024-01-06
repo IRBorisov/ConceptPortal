@@ -5,8 +5,8 @@ import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useSt
 
 import Tooltip from '@/components/ui/Tooltip';
 import useLocalStorage from '@/hooks/useLocalStorage';
-import { animationDuration } from '@/utils/animations';
-import { darkT, IColorTheme, lightT } from '@/utils/color';
+import { animationDuration } from '@/styling/animations';
+import { darkT, IColorTheme, lightT } from '@/styling/color';
 import { globalIDs } from '@/utils/constants';
 
 interface IThemeContext {

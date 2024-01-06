@@ -1,0 +1,177 @@
+/**
+ * Module: Custom styling.
+ */
+@import './constants.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .font-controls {
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-variant: small-caps;
+  }
+  .font-math {
+    font-family: var(--font-math);
+  }
+}
+
+@layer components {
+  .clr-modal-backdrop {
+    opacity: 0.75;
+  }
+
+  :is(
+      .clr-border,
+      .border,
+      .border-x,
+      .border-y,
+      .border-b,
+      .border-t,
+      .border-l,
+      .border-r,
+      .border-2,
+      .border-x-2,
+      .border-y-2,
+      .border-b-2,
+      .border-t-2,
+      .border-l-2,
+      .border-r-2,
+      .divide-x,
+      .divide-y,
+      .divide-x-2,
+      .divide-y-2
+    ) {
+    border-color: var(--cl-bg-40);
+    @apply divide-inherit;
+    .dark & {
+      border-color: var(--cd-bg-40);
+    }
+  }
+
+  :is(.clr-app, .clr-footer, .clr-modal-backdrop, .clr-btn-nav, .clr-input:disabled) {
+    background-color: var(--cl-bg-100);
+    .dark & {
+      background-color: var(--cd-bg-100);
+    }
+  }
+
+  :is(.clr-input) {
+    background-color: var(--cl-bg-120);
+    .dark & {
+      background-color: var(--cd-bg-120);
+    }
+  }
+
+  :is(.clr-controls, .clr-tab, .clr-btn-default) {
+    background-color: var(--cl-bg-80);
+    .dark & {
+      background-color: var(--cd-bg-80);
+    }
+  }
+
+  :is(.clr-primary, .clr-btn-primary:hover, .clr-btn-primary:focus) {
+    @apply transition;
+    color: var(--cl-prim-fg-100);
+    background-color: var(--cl-prim-bg-100);
+    .dark & {
+      color: var(--cd-prim-fg-100);
+      background-color: var(--cd-prim-bg-100);
+    }
+  }
+
+  :is(.clr-selected, .clr-btn-primary) {
+    color: var(--cl-fg-100);
+    background-color: var(--cl-prim-bg-80);
+    .dark & {
+      color: var(--cd-fg-100);
+      background-color: var(--cd-prim-bg-80);
+    }
+  }
+
+  :is(.clr-disabled, .clr-btn-default, .clr-btn-primary):disabled {
+    @apply transition;
+    color: var(--cl-fg-80);
+    background-color: var(--cl-bg-60);
+    .dark & {
+      color: var(--cd-fg-80);
+      background-color: var(--cd-bg-60);
+    }
+  }
+
+  :is(.clr-hover, .clr-tab, .clr-btn-nav, .clr-btn-default):hover:not(:disabled) {
+    @apply transition;
+    color: var(--cl-fg-100);
+    background-color: var(--cl-prim-bg-60);
+    .dark & {
+      color: var(--cd-fg-100);
+      background-color: var(--cd-prim-bg-60);
+    }
+  }
+
+  :is(.clr-outline, .clr-btn-primary):focus {
+    outline-width: 2px;
+    outline-style: solid;
+    outline-color: var(--cl-prim-bg-100);
+    .dark & {
+      outline-color: var(--cd-prim-bg-100);
+    }
+  }
+
+  :is(.clr-text-primary, .clr-text-url) {
+    color: var(--cl-prim-fg-80);
+    .dark & {
+      color: var(--cd-prim-fg-80);
+    }
+  }
+
+  .clr-footer {
+    color: var(--cl-fg-60);
+    .dark & {
+      color: var(--cd-fg-60);
+    }
+  }
+
+  :is(.clr-text-controls, .clr-btn-nav, .clr-btn-clear) {
+    color: var(--cl-fg-80);
+    &:disabled {
+      color: var(--cl-fg-60);
+    }
+    .dark & {
+      color: var(--cd-fg-80);
+      &:disabled {
+        color: var(--cd-fg-60);
+      }
+    }
+  }
+
+  .clr-warning {
+    background-color: var(--cl-red-bg-100);
+    .dark & {
+      background-color: var(--cd-red-bg-100);
+    }
+  }
+
+  .clr-text-default {
+    color: var(--cl-fg-100);
+    .dark & {
+      color: var(--cd-fg-100);
+    }
+  }
+
+  .clr-text-warning {
+    color: var(--cl-red-fg-100);
+    .dark & {
+      color: var(--cd-red-fg-100);
+    }
+  }
+
+  .clr-text-success {
+    color: var(--cl-green-fg-100);
+    .dark & {
+      color: var(--cd-green-fg-100);
+    }
+  }
+}

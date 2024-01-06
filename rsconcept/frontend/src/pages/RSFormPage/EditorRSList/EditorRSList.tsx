@@ -195,6 +195,12 @@ function EditorRSList({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Edito
 
   return (
     <div tabIndex={-1} className='outline-none' onKeyDown={handleTableKey}>
+      <SelectedCounter
+        total={schema?.stats?.count_all ?? 0}
+        selected={selected.length}
+        position='top-[0.3rem] left-2'
+      />
+
       <RSListToolbar
         selectedCount={selected.length}
         isMutable={isMutable}
@@ -204,7 +210,6 @@ function EditorRSList({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Edito
         onCreate={handleCreateCst}
         onDelete={handleDelete}
       />
-      <SelectedCounter total={schema?.stats?.count_all ?? 0} selected={selected.length} position='left-1 top-2' />
 
       <div className='pt-[2.3rem] border-b' />
 

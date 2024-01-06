@@ -1,7 +1,7 @@
 function HelpTerminologyControl() {
   // prettier-ignore
   return (
-  <div className='flex flex-col gap-1 max-w-[80rem]'>
+  <div className='flex flex-col gap-2'>
     <h1>Терминологизация</h1>
     <p>Портал позволяет контролировать употребление терминов, привязанных к сущностям в концептуальных схемах.</p>
     <p>Для этого используется механизм текстовых отсылок: <i>использование термина</i> и <i>связывание слов.</i></p>

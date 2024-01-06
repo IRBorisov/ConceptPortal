@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { BiDownload } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 
+import AnimateFadeIn from '@/components/AnimateFadeIn';
 import InfoError from '@/components/InfoError';
 import RequireAuth from '@/components/RequireAuth';
 import Button from '@/components/ui/Button';
@@ -78,56 +79,58 @@ function CreateRSFormPage() {
   }
 
   return (
-    <RequireAuth>
-      <form className={clsx('px-6 py-3', classnames.flex_col)} onSubmit={handleSubmit}>
-        <h1>Создание концептуальной схемы</h1>
-        <Overlay position='top-[-2.4rem] right-[-1rem]'>
-          <input
-            ref={inputRef}
-            type='file'
-            style={{ display: 'none' }}
-            accept={EXTEOR_TRS_FILE}
-            onChange={handleFileChange}
-          />
-          <MiniButton
-            title='Загрузить из Экстеор'
-            icon={<BiDownload size='1.25rem' className='clr-text-primary' />}
-            onClick={() => inputRef.current?.click()}
-          />
-        </Overlay>
-        {fileName ? <Label text={`Загружен файл: ${fileName}`} /> : null}
+    <AnimateFadeIn>
+      <RequireAuth>
+        <form className={clsx('px-6 py-3', classnames.flex_col)} onSubmit={handleSubmit}>
+          <h1>Создание концептуальной схемы</h1>
+          <Overlay position='top-[-2.4rem] right-[-1rem]'>
+            <input
+              ref={inputRef}
+              type='file'
+              style={{ display: 'none' }}
+              accept={EXTEOR_TRS_FILE}
+              onChange={handleFileChange}
+            />
+            <MiniButton
+              title='Загрузить из Экстеор'
+              icon={<BiDownload size='1.25rem' className='clr-text-primary' />}
+              onClick={() => inputRef.current?.click()}
+            />
+          </Overlay>
+          {fileName ? <Label text={`Загружен файл: ${fileName}`} /> : null}
 
-        <TextInput
-          required={!file}
-          label='Полное название'
-          placeholder={file && 'Загрузить из файла'}
-          value={title}
-          onChange={event => setTitle(event.target.value)}
-        />
-        <TextInput
-          required={!file}
-          label='Сокращение'
-          placeholder={file && 'Загрузить из файла'}
-          className='w-[14rem]'
-          pattern={patterns.library_alias}
-          title={`не более ${limits.library_alias_len} символов`}
-          value={alias}
-          onChange={event => setAlias(event.target.value)}
-        />
-        <TextArea
-          label='Комментарий'
-          placeholder={file && 'Загрузить из файла'}
-          value={comment}
-          onChange={event => setComment(event.target.value)}
-        />
-        <Checkbox label='Общедоступная схема' value={common} setValue={value => setCommon(value ?? false)} />
-        <div className='flex justify-around gap-6 py-3'>
-          <SubmitButton text='Создать схему' loading={processing} className='min-w-[10rem]' />
-          <Button text='Отмена' className='min-w-[10rem]' onClick={() => handleCancel()} />
-        </div>
-        {error ? <InfoError error={error} /> : null}
-      </form>
-    </RequireAuth>
+          <TextInput
+            required={!file}
+            label='Полное название'
+            placeholder={file && 'Загрузить из файла'}
+            value={title}
+            onChange={event => setTitle(event.target.value)}
+          />
+          <TextInput
+            required={!file}
+            label='Сокращение'
+            placeholder={file && 'Загрузить из файла'}
+            className='w-[14rem]'
+            pattern={patterns.library_alias}
+            title={`не более ${limits.library_alias_len} символов`}
+            value={alias}
+            onChange={event => setAlias(event.target.value)}
+          />
+          <TextArea
+            label='Комментарий'
+            placeholder={file && 'Загрузить из файла'}
+            value={comment}
+            onChange={event => setComment(event.target.value)}
+          />
+          <Checkbox label='Общедоступная схема' value={common} setValue={value => setCommon(value ?? false)} />
+          <div className='flex justify-around gap-6 py-3'>
+            <SubmitButton text='Создать схему' loading={processing} className='min-w-[10rem]' />
+            <Button text='Отмена' className='min-w-[10rem]' onClick={() => handleCancel()} />
+          </div>
+          {error ? <InfoError error={error} /> : null}
+        </form>
+      </RequireAuth>
+    </AnimateFadeIn>
   );
 }
 

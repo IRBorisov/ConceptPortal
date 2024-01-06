@@ -2,11 +2,11 @@
 
 import { useCallback, useMemo } from 'react';
 
-import ConstituentaTooltip from '@/components/Help/ConstituentaTooltip';
+import ConstituentaTooltip from '@/components/ConstituentaTooltip';
 import { useConceptTheme } from '@/context/ThemeContext';
 import { GraphColoringScheme } from '@/models/miscellaneous';
 import { IRSForm } from '@/models/rsform';
-import { colorBgGraphNode } from '@/utils/color';
+import { colorBgGraphNode } from '@/styling/color';
 import { prefixes } from '@/utils/constants';
 
 interface ViewHiddenProps {

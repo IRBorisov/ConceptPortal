@@ -1,17 +1,17 @@
 import { HelpTopic } from '@/models/miscellaneous';
 
-import HelpAPI from './HelpAPI';
-import HelpConstituenta from './HelpConstituenta';
-import HelpExteor from './HelpExteor';
-import HelpLibrary from './HelpLibrary';
-import HelpMain from './HelpMain';
-import HelpPrivacy from './HelpPrivacy';
-import HelpRSFormItems from './HelpRSFormItems';
-import HelpRSFormMeta from './HelpRSFormMeta';
-import HelpRSLang from './HelpRSLang';
-import HelpRSTemplates from './HelpRSTemplates';
-import HelpTermGraph from './HelpTermGraph';
-import HelpTerminologyControl from './HelpTerminologyControl';
+import HelpAPI from './Help/HelpAPI';
+import HelpConstituenta from './Help/HelpConstituenta';
+import HelpExteor from './Help/HelpExteor';
+import HelpLibrary from './Help/HelpLibrary';
+import HelpMain from './Help/HelpMain';
+import HelpPrivacy from './Help/HelpPrivacy';
+import HelpRSFormItems from './Help/HelpRSFormItems';
+import HelpRSFormMeta from './Help/HelpRSFormMeta';
+import HelpRSLang from './Help/HelpRSLang';
+import HelpRSTemplates from './Help/HelpRSTemplates';
+import HelpTermGraph from './Help/HelpTermGraph';
+import HelpTerminologyControl from './Help/HelpTerminologyControl';
 
 interface InfoTopicProps {
   topic: HelpTopic;

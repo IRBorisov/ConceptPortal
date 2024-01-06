@@ -49,7 +49,12 @@ function CheckboxTristate({
     <button
       type='button'
       id={id}
-      className={clsx('flex items-center gap-2 text-start', 'outline-none', cursor, className)}
+      className={clsx(
+        'flex items-center gap-2 text-start', // prettier: split lines
+        'outline-none',
+        cursor,
+        className
+      )}
       disabled={disabled}
       onClick={handleClick}
       data-tooltip-id={title ? globalIDs.tooltip : undefined}
@@ -57,10 +62,14 @@ function CheckboxTristate({
       {...restProps}
     >
       <div
-        className={clsx('w-4 h-4', 'border rounded-sm', {
-          'clr-primary': value !== false,
-          'clr-app': value === false
-        })}
+        className={clsx(
+          'w-4 h-4', // prettier: split lines
+          'border rounded-sm',
+          {
+            'clr-primary': value !== false,
+            'clr-app': value === false
+          }
+        )}
       >
         {value ? (
           <div className='mt-[1px] ml-[1px]'>

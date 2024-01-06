@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 
-import ConstituentaTooltip from '@/components/Help/ConstituentaTooltip';
+import ConstituentaTooltip from '@/components/ConstituentaTooltip';
 import { IConstituenta } from '@/models/rsform';
 import { isMockCst } from '@/models/rsformAPI';
-import { colorFgCstStatus, IColorTheme } from '@/utils/color';
+import { colorFgCstStatus, IColorTheme } from '@/styling/color';
 
 interface ConstituentaBadgeProps {
   prefixID?: string;

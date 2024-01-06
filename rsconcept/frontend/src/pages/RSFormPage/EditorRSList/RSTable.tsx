@@ -5,6 +5,7 @@ import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
 import ConstituentaBadge from '@/components/ConstituentaBadge';
 import DataTable, { createColumnHelper, RowSelectionState, VisibilityState } from '@/components/DataTable';
+import FlexColumn from '@/components/ui/FlexColumn';
 import { useConceptTheme } from '@/context/ThemeContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { IConstituenta } from '@/models/rsform';
@@ -135,12 +136,12 @@ function RSTable({ items, selected, setSelected, onEdit, onCreateNew }: RSTableP
       rowSelection={selected}
       onRowSelectionChange={setSelected}
       noDataComponent={
-        <span className='flex flex-col justify-center p-2 text-center'>
+        <FlexColumn className='p-3 items-center'>
           <p>Список пуст</p>
           <p className='cursor-pointer clr-text-primary hover:underline' onClick={() => onCreateNew()}>
             Создать новую конституенту
           </p>
-        </span>
+        </FlexColumn>
       }
     />
   );

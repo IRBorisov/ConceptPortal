@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
 
-import { animateDropdown } from '@/utils/animations';
+import { animateDropdown } from '@/styling/animations';
 
 import { CProps } from '../props';
 

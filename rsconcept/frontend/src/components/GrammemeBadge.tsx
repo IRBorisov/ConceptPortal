@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import { useConceptTheme } from '@/context/ThemeContext';
 import { GramData } from '@/models/language';
-import { colorFgGrammeme } from '@/utils/color';
+import { colorFgGrammeme } from '@/styling/color';
 import { labelGrammeme } from '@/utils/labels';
 
 interface GrammemeBadgeProps {

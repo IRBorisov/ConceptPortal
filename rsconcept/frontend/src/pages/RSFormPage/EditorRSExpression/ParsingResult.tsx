@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 import { IExpressionParse, IRSErrorDescription } from '@/models/rslang';
 import { getRSErrorPrefix } from '@/models/rslangAPI';
-import { animateParseResults } from '@/utils/animations';
+import { animateParseResults } from '@/styling/animations';
 import { describeRSError } from '@/utils/labels';
 
 interface ParsingResultProps {

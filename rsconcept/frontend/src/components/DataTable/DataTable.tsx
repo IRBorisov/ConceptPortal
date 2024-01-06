@@ -14,7 +14,6 @@ import {
   useReactTable,
   type VisibilityState
 } from '@tanstack/react-table';
-import clsx from 'clsx';
 import { useState } from 'react';
 
 import { CProps } from '../props';
@@ -122,7 +121,7 @@ function DataTable<TData extends RowData>({
   const isEmpty = tableImpl.getRowModel().rows.length === 0;
 
   return (
-    <div className={clsx(className)} style={style}>
+    <div className={className} style={style}>
       <table className='w-full'>
         {!noHeader ? (
           <TableHeader

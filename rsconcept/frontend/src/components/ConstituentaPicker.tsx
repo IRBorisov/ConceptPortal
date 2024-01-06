@@ -10,6 +10,7 @@ import { prefixes } from '@/utils/constants';
 import { describeConstituenta } from '@/utils/labels';
 
 import ConstituentaBadge from './ConstituentaBadge';
+import FlexColumn from './ui/FlexColumn';
 
 interface ConstituentaPickerProps {
   prefixID?: string;
@@ -94,10 +95,10 @@ function ConstituentaPicker({
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
         noDataComponent={
-          <span className='p-2 min-h-[5rem] flex flex-col justify-center text-center'>
+          <FlexColumn className='p-3 items-center min-h-[6rem]'>
             <p>Список конституент пуст</p>
             <p>Измените параметры фильтра</p>
-          </span>
+          </FlexColumn>
         }
         onRowClicked={onSelectValue}
       />

@@ -190,3 +190,25 @@ export const animateModal = {
     }
   }
 };
+
+export const animateFadeIn = {
+  initial: {
+    opacity: 0
+  },
+  animate: {
+    opacity: 1,
+    transition: {
+      type: 'tween',
+      ease: 'linear',
+      duration: 0.3
+    }
+  },
+  exit: {
+    opacity: 0,
+    transition: {
+      type: 'tween',
+      ease: 'linear',
+      duration: 2
+    }
+  }
+};

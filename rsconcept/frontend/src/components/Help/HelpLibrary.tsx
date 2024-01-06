@@ -4,7 +4,7 @@ import { FiBell } from 'react-icons/fi';
 function HelpLibrary() {
   // prettier-ignore
   return (
-  <div className='max-w-[80rem]'>
+  <div>
     <h1>Библиотека концептуальных схем</h1>
     <p>В библиотеки собраны различные концептуальные схемы.</p>
     <p>Группировка и классификации схем на данный момент не проводится.</p>

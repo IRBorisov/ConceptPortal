@@ -2,6 +2,7 @@
 
 import { useCallback, useLayoutEffect, useState } from 'react';
 
+import AnimateFadeIn from '@/components/AnimateFadeIn';
 import InfoError from '@/components/InfoError';
 import { Loader } from '@/components/ui/Loader';
 import { useAuth } from '@/context/AuthContext';
@@ -68,7 +69,7 @@ function LibraryPage() {
       {library.loading ? <Loader /> : null}
       {library.error ? <InfoError error={library.error} /> : null}
       {!library.loading && library.items ? (
-        <>
+        <AnimateFadeIn>
           <SearchPanel
             query={query}
             setQuery={setQuery}
@@ -78,7 +79,7 @@ function LibraryPage() {
             setFilter={setFilter}
           />
           <ViewLibrary resetQuery={resetQuery} items={items} />
-        </>
+        </AnimateFadeIn>
       ) : null}
     </>
   );

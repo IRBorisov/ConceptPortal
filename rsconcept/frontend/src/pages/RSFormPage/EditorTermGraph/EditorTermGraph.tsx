@@ -14,7 +14,7 @@ import DlgGraphParams from '@/dialogs/DlgGraphParams';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { GraphColoringScheme, GraphFilterParams } from '@/models/miscellaneous';
 import { CstType, ICstCreateData } from '@/models/rsform';
-import { colorBgGraphNode } from '@/utils/color';
+import { colorBgGraphNode } from '@/styling/color';
 import { classnames, TIMEOUT_GRAPH_REFRESH } from '@/utils/constants';
 
 import GraphSidebar from './GraphSidebar';

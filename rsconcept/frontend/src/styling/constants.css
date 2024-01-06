@@ -1,0 +1,54 @@
+/**
+ * Module: Define CSS variables.
+ */
+
+/* prettier-ignore */
+:root {
+  --font-ui:  'Geologica', sans-serif;
+  --font-main: 'Rubik', 'Noto Sans Math', 'Noto Sans Symbols 2', 'Segoe UI Symbol', sans-serif;
+  --font-math: 'Noto Sans Math', 'Noto Sans Symbols 2', 'Segoe UI Symbol', sans-serif;
+
+  /* Light Theme */
+  --cl-bg-120:      hsl(000, 000%, 100%);
+  --cl-bg-100:      hsl(000, 000%, 098%);
+  --cl-bg-80:       hsl(000, 000%, 094%);
+  --cl-bg-60:       hsl(000, 000%, 091%);
+  --cl-bg-40:       hsl(000, 000%, 080%);
+
+  --cl-fg-60:       hsl(000, 000%, 065%);
+  --cl-fg-80:       hsl(000, 000%, 047%);
+  --cl-fg-100:      hsl(000, 000%, 000%);
+
+  --cl-prim-bg-100: hsl(220, 100%, 060%);
+  --cl-prim-bg-80:  hsl(220, 080%, 092%);
+  --cl-prim-bg-60:  hsl(190, 080%, 094%);
+
+  --cl-prim-fg-80:  hsl(220, 100%, 050%);
+  --cl-prim-fg-100: hsl(000, 000%, 100%);
+
+  --cl-red-bg-100:  hsl(000, 100%, 095%);
+  --cl-red-fg-100:  hsl(000, 072%, 051%);
+  --cl-green-fg-100: hsl(120, 080%, 37%);
+
+  /* Dark Theme */
+  --cd-bg-120:      hsl(000, 000%, 005%);
+  --cd-bg-100:      hsl(000, 000%, 009%);
+  --cd-bg-80:       hsl(000, 000%, 015%);
+  --cd-bg-60:       hsl(000, 000%, 022%);
+  --cd-bg-40:       hsl(000, 000%, 035%);
+
+  --cd-fg-60:       hsl(000, 000%, 055%);
+  --cd-fg-80:       hsl(000, 000%, 080%);
+  --cd-fg-100:      hsl(000, 000%, 093%);
+
+  --cd-prim-bg-100: hsl(267, 050%, 050%);
+  --cd-prim-bg-80: hsl(267, 050%, 032%);
+  --cd-prim-bg-60: hsl(269, 030%, 028%);
+
+  --cd-prim-fg-80: hsl(267, 070%, 070%);
+  --cd-prim-fg-100: hsl(000, 000%, 100%);
+
+  --cd-red-bg-100: hsl(000, 100%, 015%);
+  --cd-red-fg-100: hsl(000, 080%, 055%);
+  --cd-green-fg-100: hsl(120, 080%, 042%);
+}

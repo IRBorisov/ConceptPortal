@@ -125,7 +125,7 @@ function ConstituentsTable({ items, activeID, onOpenEdit, maxHeight, denseThresh
       columnVisibility={columnVisibility}
       onColumnVisibilityChange={setColumnVisibility}
       noDataComponent={
-        <div className={clsx('min-h-[5rem]', 'p-2', 'text-center', 'select-none')}>
+        <div className={clsx('min-h-[5rem]', 'p-3', 'text-center', 'select-none')}>
           <p>Список конституент пуст</p>
           <p>Измените параметры фильтра</p>
         </div>

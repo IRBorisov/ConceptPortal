@@ -8,6 +8,7 @@ import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 import { toast } from 'react-toastify';
 
+import AnimateFadeIn from '@/components/AnimateFadeIn';
 import InfoError, { ErrorData } from '@/components/InfoError';
 import { Loader } from '@/components/ui/Loader';
 import TabLabel from '@/components/ui/TabLabel';
@@ -434,51 +435,53 @@ function RSTabs() {
             <TabLabel label='Граф термов' />
           </TabList>
 
-          <TabPanel forceRender style={{ display: activeTab === RSTabID.CARD ? '' : 'none' }}>
-            <EditorRSForm
-              isMutable={isMutable}
-              isModified={isModified}
-              setIsModified={setIsModified}
-              onToggleSubscribe={handleToggleSubscribe}
-              onDownload={onDownloadSchema}
-              onDestroy={onDestroySchema}
-              onClaim={onClaimSchema}
-              onShare={onShareSchema}
-            />
-          </TabPanel>
+          <AnimateFadeIn>
+            <TabPanel forceRender style={{ display: activeTab === RSTabID.CARD ? '' : 'none' }}>
+              <EditorRSForm
+                isMutable={isMutable}
+                isModified={isModified}
+                setIsModified={setIsModified}
+                onToggleSubscribe={handleToggleSubscribe}
+                onDownload={onDownloadSchema}
+                onDestroy={onDestroySchema}
+                onClaim={onClaimSchema}
+                onShare={onShareSchema}
+              />
+            </TabPanel>
 
-          <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_LIST ? '' : 'none' }}>
-            <EditorRSList
-              isMutable={isMutable}
-              onOpenEdit={onOpenCst}
-              onCreateCst={promptCreateCst}
-              onDeleteCst={promptDeleteCst}
-            />
-          </TabPanel>
+            <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_LIST ? '' : 'none' }}>
+              <EditorRSList
+                isMutable={isMutable}
+                onOpenEdit={onOpenCst}
+                onCreateCst={promptCreateCst}
+                onDeleteCst={promptDeleteCst}
+              />
+            </TabPanel>
 
-          <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_EDIT ? '' : 'none' }}>
-            <EditorConstituenta
-              isMutable={isMutable}
-              isModified={isModified}
-              setIsModified={setIsModified}
-              activeID={activeID}
-              activeCst={activeCst}
-              onOpenEdit={onOpenCst}
-              onCreateCst={promptCreateCst}
-              onDeleteCst={promptDeleteCst}
-              onRenameCst={promptRenameCst}
-              onEditTerm={promptShowEditTerm}
-            />
-          </TabPanel>
+            <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_EDIT ? '' : 'none' }}>
+              <EditorConstituenta
+                isMutable={isMutable}
+                isModified={isModified}
+                setIsModified={setIsModified}
+                activeID={activeID}
+                activeCst={activeCst}
+                onOpenEdit={onOpenCst}
+                onCreateCst={promptCreateCst}
+                onDeleteCst={promptDeleteCst}
+                onRenameCst={promptRenameCst}
+                onEditTerm={promptShowEditTerm}
+              />
+            </TabPanel>
 
-          <TabPanel style={{ display: activeTab === RSTabID.TERM_GRAPH ? '' : 'none' }}>
-            <EditorTermGraph
-              isMutable={isMutable}
-              onOpenEdit={onOpenCst}
-              onCreateCst={promptCreateCst}
-              onDeleteCst={promptDeleteCst}
-            />
-          </TabPanel>
+            <TabPanel style={{ display: activeTab === RSTabID.TERM_GRAPH ? '' : 'none' }}>
+              <EditorTermGraph
+                isMutable={isMutable}
+                onOpenEdit={onOpenCst}
+                onCreateCst={promptCreateCst}
+                onDeleteCst={promptDeleteCst}
+              />
+            </TabPanel>
+          </AnimateFadeIn>
         </Tabs>
       ) : null}
     </>

@@ -6,8 +6,8 @@ import GraphUI, { GraphEdge, GraphNode } from '@/components/GraphUI';
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import { useConceptTheme } from '@/context/ThemeContext';
 import { SyntaxTree } from '@/models/rslang';
-import { graphDarkT, graphLightT } from '@/utils/color';
-import { colorBgSyntaxTree } from '@/utils/color';
+import { graphDarkT, graphLightT } from '@/styling/color';
+import { colorBgSyntaxTree } from '@/styling/color';
 import { resources } from '@/utils/constants';
 import { labelSyntaxTree } from '@/utils/labels';
 

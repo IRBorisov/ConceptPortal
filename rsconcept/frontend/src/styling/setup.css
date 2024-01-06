@@ -1,0 +1,113 @@
+/**
+ * Module: Basic styling setup.
+ */
+
+@import './constants.css';
+@import './layers.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  hanging-punctuation: first last;
+  color-scheme: dark light;
+}
+
+[data-color-scheme='dark'] {
+  color-scheme: dark;
+}
+
+[data-color-scheme='light'] {
+  color-scheme: light;
+}
+
+/* Default scroll behavior */
+@media (prefers-reduced-motion: no-preference) {
+  :has(:target) {
+    scroll-behavior: smooth;
+    scroll-padding-top: 3rem;
+  }
+}
+
+:root {
+  font-family: var(--font-main);
+
+  color: var(--cl-fg-100);
+  border-color: var(--cl-bg-40);
+  background-color: var(--cl-bg-100);
+
+  &.dark {
+    color: var(--cd-fg-100);
+    border-color: var(--cd-bg-40);
+    background-color: var(--cd-bg-100);
+  }
+}
+
+:focus {
+  outline-width: 2px;
+  outline-style: solid;
+  outline-color: transparent;
+  .dark & {
+    outline-color: transparent;
+  }
+}
+
+::selection {
+  background: var(--cl-prim-bg-60);
+  .dark & {
+    background: var(--cd-prim-bg-60);
+  }
+  tr :hover& {
+    background: var(--cl-red-bg-100);
+    .dark & {
+      background: var(--cd-red-bg-100);
+    }
+  }
+}
+
+::placeholder {
+  color: var(--cl-fg-60);
+  .dark & {
+    color: var(--cd-fg-60);
+  }
+}
+
+/* Wrapping headers */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+}
+
+/* Limit text lines and setup wrapping */
+p,
+li {
+  max-width: 90ch;
+  text-wrap: pretty;
+}
+
+@layer components {
+  h1 {
+    @apply text-lg font-semibold text-center;
+  }
+
+  h2 {
+    @apply font-semibold text-center;
+  }
+
+  b {
+    @apply font-semibold;
+  }
+
+  .border {
+    @apply rounded;
+  }
+
+  .shadow-border {
+    @apply shadow-sm shadow-[var(--cl-bg-40)] dark:shadow-[var(--cd-bg-40)];
+  }
+}

@@ -1,7 +1,9 @@
 import { IConstituenta } from '@/models/rsform';
 import { labelCstTypification } from '@/utils/labels';
 
-interface InfoConstituentaProps extends React.HTMLAttributes<HTMLDivElement> {
+import { CProps } from './props';
+
+interface InfoConstituentaProps extends CProps.Div {
   data: IConstituenta;
 }
 

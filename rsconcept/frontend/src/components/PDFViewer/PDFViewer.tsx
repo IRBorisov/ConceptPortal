@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react';
 import { Document, Page } from 'react-pdf';
 
 import useWindowSize from '@/hooks/useWindowSize';
-import { graphLightT } from '@/utils/color';
+import { graphLightT } from '@/styling/color';
 
 import Overlay from '../ui/Overlay';
 import PageControls from './PageControls';

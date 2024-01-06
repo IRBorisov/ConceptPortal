@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
 
-import { animateDropdownItem } from '@/utils/animations';
+import { animateDropdownItem } from '@/styling/animations';
 
 import Checkbox from './Checkbox';
 

@@ -52,14 +52,14 @@ function TableBody<TData>({
           style={conditionalRowStyles && getRowStyles(row)}
         >
           {enableRowSelection ? (
-            <td key={`select-${row.id}`} className='pl-3 pr-1 border-y'>
+            <td key={`select-${row.id}`} className='pl-3 pr-1 border-y align-middle'>
               <SelectRow row={row} />
             </td>
           ) : null}
           {row.getVisibleCells().map((cell: Cell<TData, unknown>) => (
             <td
               key={cell.id}
-              className='px-2 border-y'
+              className='px-2 border-y align-middle'
               style={{
                 cursor: onRowClicked || onRowDoubleClicked ? 'pointer' : 'auto',
                 paddingBottom: dense ? '0.25rem' : '0.5rem',

@@ -6,7 +6,7 @@ import { IoLibrary } from 'react-icons/io5';
 import { EducationIcon } from '@/components/Icons';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useConceptTheme } from '@/context/ThemeContext';
-import { animateNavigation } from '@/utils/animations';
+import { animateNavigation } from '@/styling/animations';
 
 import Logo from './Logo';
 import NavigationButton from './NavigationButton';
@@ -23,7 +23,14 @@ function Navigation() {
   const navigateCreateNew = () => router.push('/library/create');
 
   return (
-    <nav className={clsx('z-navigation', 'sticky top-0 left-0 right-0', 'clr-app', 'select-none')}>
+    <nav
+      className={clsx(
+        'z-navigation', // prettier: split lines
+        'sticky top-0 left-0 right-0',
+        'clr-app',
+        'select-none'
+      )}
+    >
       <ToggleNavigationButton />
       <motion.div
         className={clsx('pl-2 pr-[0.9rem] h-[3rem]', 'flex justify-between', 'shadow-border')}

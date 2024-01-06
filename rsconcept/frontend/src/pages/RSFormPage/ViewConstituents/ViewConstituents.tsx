@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react';
 
 import { useConceptTheme } from '@/context/ThemeContext';
 import { IConstituenta, IRSForm } from '@/models/rsform';
-import { animateSideView } from '@/utils/animations';
+import { animateSideView } from '@/styling/animations';
 
 import ConstituentsSearch from './ConstituentsSearch';
 import ConstituentsTable from './ConstituentsTable';

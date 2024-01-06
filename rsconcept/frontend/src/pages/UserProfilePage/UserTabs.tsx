@@ -4,6 +4,7 @@ import { AnimatePresence } from 'framer-motion';
 import { useMemo, useState } from 'react';
 import { FiBell, FiBellOff } from 'react-icons/fi';
 
+import AnimateFadeIn from '@/components/AnimateFadeIn';
 import InfoError from '@/components/InfoError';
 import { Loader } from '@/components/ui/Loader';
 import MiniButton from '@/components/ui/MiniButton';
@@ -32,7 +33,7 @@ function UserTabs() {
       {loading ? <Loader /> : null}
       {error ? <InfoError error={error} /> : null}
       {user ? (
-        <div className='flex gap-6 py-2'>
+        <AnimateFadeIn className='flex gap-6 py-2'>
           <div>
             <Overlay position='top-0 right-0'>
               <MiniButton
@@ -56,7 +57,7 @@ function UserTabs() {
           <AnimatePresence>
             {subscriptions.length > 0 && showSubs ? <ViewSubscriptions items={subscriptions} /> : null}
           </AnimatePresence>
-        </div>
+        </AnimateFadeIn>
       ) : null}
     </>
   );

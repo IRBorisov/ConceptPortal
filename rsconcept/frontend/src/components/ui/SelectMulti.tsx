@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import Select, { GroupBase, Props, StylesConfig } from 'react-select';
 
 import { useConceptTheme } from '@/context/ThemeContext';
-import { selectDarkT, selectLightT } from '@/utils/color';
+import { selectDarkT, selectLightT } from '@/styling/color';
 
 export interface SelectMultiProps<Option, Group extends GroupBase<Option> = GroupBase<Option>>
   extends Omit<Props<Option, true, Group>, 'theme' | 'menuPortalTarget'> {

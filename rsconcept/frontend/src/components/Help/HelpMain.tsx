@@ -4,7 +4,7 @@ import { urls } from '@/utils/constants';
 function HelpMain() {
   // prettier-ignore
   return (
-  <div className='max-w-[60rem]'>
+  <div>
     <h1>Портал</h1>
     <p className=''>Портал позволяет анализировать предметные области, формально записывать системы определений (концептуальные схемы) и синтезировать их с помощью математического аппарата родов структур.</p>
     <p className='mt-4 mb-1 text-center'><b>Основные разделы</b></p>
