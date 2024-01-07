@@ -191,7 +191,7 @@ export const animateModal = {
   }
 };
 
-export const animateFadeIn = {
+export const animateFade = {
   initial: {
     opacity: 0
   },
@@ -208,7 +208,7 @@ export const animateFadeIn = {
     transition: {
       type: 'tween',
       ease: 'linear',
-      duration: 2
+      duration: 0.3
     }
   }
 };

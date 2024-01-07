@@ -8,9 +8,9 @@ import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 import { toast } from 'react-toastify';
 
-import AnimateFadeIn from '@/components/AnimateFadeIn';
+import AnimateFade from '@/components/AnimateFade';
 import InfoError, { ErrorData } from '@/components/InfoError';
-import { Loader } from '@/components/ui/Loader';
+import Loader from '@/components/ui/Loader';
 import TabLabel from '@/components/ui/TabLabel';
 import TextURL from '@/components/ui/TextURL';
 import { useAccessMode } from '@/context/AccessModeContext';
@@ -43,19 +43,6 @@ export enum RSTabID {
   CST_LIST = 1,
   CST_EDIT = 2,
   TERM_GRAPH = 3
-}
-
-function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
-  if (axios.isAxiosError(error) && error.response && error.response.status === 404) {
-    return (
-      <div className='p-2 text-center'>
-        <p>Схема с указанным идентификатором отсутствует на портале.</p>
-        <TextURL text='Перейти в Библиотеку' href='/library' />
-      </div>
-    );
-  } else {
-    return <InfoError error={error} />;
-  }
 }
 
 function RSTabs() {
@@ -361,8 +348,6 @@ function RSTabs() {
 
   return (
     <>
-      {loading ? <Loader /> : null}
-      {error ? <ProcessError error={error} /> : null}
       <AnimatePresence>
         {showUpload ? <DlgUploadRSForm hideWindow={() => setShowUpload(false)} /> : null}
         {showClone ? <DlgCloneLibraryItem base={schema!} hideWindow={() => setShowClone(false)} /> : null}
@@ -406,6 +391,8 @@ function RSTabs() {
         ) : null}
       </AnimatePresence>
 
+      {loading ? <Loader /> : null}
+      {error ? <ProcessError error={error} /> : null}
       {schema && !loading ? (
         <Tabs
           selectedIndex={activeTab}
@@ -435,7 +422,7 @@ function RSTabs() {
             <TabLabel label='Граф термов' />
           </TabList>
 
-          <AnimateFadeIn>
+          <AnimateFade>
             <TabPanel forceRender style={{ display: activeTab === RSTabID.CARD ? '' : 'none' }}>
               <EditorRSForm
                 isMutable={isMutable}
@@ -481,7 +468,7 @@ function RSTabs() {
                 onDeleteCst={promptDeleteCst}
               />
             </TabPanel>
-          </AnimateFadeIn>
+          </AnimateFade>
         </Tabs>
       ) : null}
     </>
@@ -491,6 +478,19 @@ function RSTabs() {
 export default RSTabs;
 
 // ====== Internals =========
+function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
+  if (axios.isAxiosError(error) && error.response && error.response.status === 404) {
+    return (
+      <div className='p-2 text-center'>
+        <p>Схема с указанным идентификатором отсутствует на портале.</p>
+        <TextURL text='Перейти в Библиотеку' href='/library' />
+      </div>
+    );
+  } else {
+    return <InfoError error={error} />;
+  }
+}
+
 function getNextActiveOnDelete(
   activeID: number | undefined,
   items: IConstituenta[],

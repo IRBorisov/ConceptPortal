@@ -4,7 +4,7 @@ import axios from 'axios';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
-import AnimateFadeIn from '@/components/AnimateFadeIn';
+import AnimateFade from '@/components/AnimateFade';
 import ExpectedAnonymous from '@/components/ExpectedAnonymous';
 import InfoError, { ErrorData } from '@/components/InfoError';
 import SubmitButton from '@/components/ui/SubmitButton';
@@ -63,7 +63,7 @@ function LoginPage() {
     return <ExpectedAnonymous />;
   }
   return (
-    <AnimateFadeIn>
+    <AnimateFade>
       <form className={clsx('w-[24rem]', 'pt-12 pb-6 px-6', classnames.flex_col)} onSubmit={handleSubmit}>
         <img alt='Концепт Портал' src={resources.logo} className='max-h-[2.5rem] min-w-[2.5rem] mb-3' />
         <TextInput
@@ -97,7 +97,7 @@ function LoginPage() {
         </div>
         {error ? <ProcessError error={error} /> : null}
       </form>
-    </AnimateFadeIn>
+    </AnimateFade>
   );
 }
 

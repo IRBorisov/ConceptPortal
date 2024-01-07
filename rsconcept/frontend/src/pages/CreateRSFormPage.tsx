@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { BiDownload } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 
-import AnimateFadeIn from '@/components/AnimateFadeIn';
+import AnimateFade from '@/components/AnimateFade';
 import InfoError from '@/components/InfoError';
 import RequireAuth from '@/components/RequireAuth';
 import Button from '@/components/ui/Button';
@@ -79,7 +79,7 @@ function CreateRSFormPage() {
   }
 
   return (
-    <AnimateFadeIn>
+    <AnimateFade>
       <RequireAuth>
         <form className={clsx('px-6 py-3', classnames.flex_col)} onSubmit={handleSubmit}>
           <h1>Создание концептуальной схемы</h1>
@@ -130,7 +130,7 @@ function CreateRSFormPage() {
           {error ? <InfoError error={error} /> : null}
         </form>
       </RequireAuth>
-    </AnimateFadeIn>
+    </AnimateFade>
   );
 }
 

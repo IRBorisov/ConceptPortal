@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { BiInfoCircle } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 
-import AnimateFadeIn from '@/components/AnimateFadeIn';
+import AnimateFade from '@/components/AnimateFade';
 import ExpectedAnonymous from '@/components/ExpectedAnonymous';
 import InfoError from '@/components/InfoError';
 import Button from '@/components/ui/Button';
@@ -68,7 +68,7 @@ function RegisterPage() {
     return <ExpectedAnonymous />;
   }
   return (
-    <AnimateFadeIn>
+    <AnimateFade>
       <form className={clsx('px-6 py-3', classnames.flex_col)} onSubmit={handleSubmit}>
         <h1>Новый пользователь</h1>
         <div className='flex gap-12'>
@@ -148,7 +148,7 @@ function RegisterPage() {
         </div>
         {error ? <InfoError error={error} /> : null}
       </form>
-    </AnimateFadeIn>
+    </AnimateFade>
   );
 }
 

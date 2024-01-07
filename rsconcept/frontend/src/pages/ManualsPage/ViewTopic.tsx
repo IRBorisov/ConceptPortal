@@ -1,4 +1,4 @@
-import AnimateFadeIn from '@/components/AnimateFadeIn';
+import AnimateFade from '@/components/AnimateFade';
 import InfoTopic from '@/components/InfoTopic';
 import { HelpTopic } from '@/models/miscellaneous';
 
@@ -8,9 +8,9 @@ interface ViewTopicProps {
 
 function ViewTopic({ topic }: ViewTopicProps) {
   return (
-    <AnimateFadeIn key={topic} className='px-2 py-2 mx-auto'>
+    <AnimateFade key={topic} className='px-2 py-2 mx-auto'>
       <InfoTopic topic={topic} />
-    </AnimateFadeIn>
+    </AnimateFade>
   );
 }
 

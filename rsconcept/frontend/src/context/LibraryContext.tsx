@@ -97,7 +97,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
       setError(undefined);
       getRSFormDetails(String(templateID), {
         showError: true,
-        setLoading: setLoading,
+        setLoading: setProcessing,
         onError: setError,
         onSuccess: data => {
           const schema = loadRSFormData(data);

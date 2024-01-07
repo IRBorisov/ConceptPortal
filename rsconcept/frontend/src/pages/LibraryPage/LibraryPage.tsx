@@ -2,9 +2,7 @@
 
 import { useCallback, useLayoutEffect, useState } from 'react';
 
-import AnimateFadeIn from '@/components/AnimateFadeIn';
-import InfoError from '@/components/InfoError';
-import { Loader } from '@/components/ui/Loader';
+import DataLoader from '@/components/DataLoader';
 import { useAuth } from '@/context/AuthContext';
 import { useLibrary } from '@/context/LibraryContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
@@ -65,23 +63,25 @@ function LibraryPage() {
   }, []);
 
   return (
-    <>
-      {library.loading ? <Loader /> : null}
-      {library.error ? <InfoError error={library.error} /> : null}
-      {!library.loading && library.items ? (
-        <AnimateFadeIn>
-          <SearchPanel
-            query={query}
-            setQuery={setQuery}
-            strategy={strategy}
-            total={library.items.length ?? 0}
-            filtered={items.length}
-            setFilter={setFilter}
-          />
-          <ViewLibrary resetQuery={resetQuery} items={items} />
-        </AnimateFadeIn>
-      ) : null}
-    </>
+    <DataLoader
+      id='library-page' //
+      isLoading={library.loading}
+      error={library.error}
+      hasNoData={library.items.length === 0}
+    >
+      <SearchPanel
+        query={query}
+        setQuery={setQuery}
+        strategy={strategy}
+        total={library.items.length ?? 0}
+        filtered={items.length}
+        setFilter={setFilter}
+      />
+      <ViewLibrary
+        resetQuery={resetQuery} //
+        items={items}
+      />
+    </DataLoader>
   );
 }
 

@@ -1,9 +1,10 @@
 'use client';
 
 import clsx from 'clsx';
+import { AnimatePresence } from 'framer-motion';
 import { useMemo } from 'react';
 
-import { Loader } from '@/components/ui/Loader';
+import Loader from '@/components/ui/Loader';
 import { useConceptTheme } from '@/context/ThemeContext';
 import { ExpressionStatus } from '@/models/rsform';
 import { type IConstituenta } from '@/models/rsform';
@@ -51,14 +52,15 @@ function StatusBar({ isModified, processing, constituenta, parseData, onAnalyze 
       data-tooltip-content='Проверить определение [Ctrl + Q]'
       onClick={onAnalyze}
     >
-      {processing ? (
-        <Loader size={3} />
-      ) : (
-        <>
-          <StatusIcon status={status} />
-          <span className='pb-[0.125rem] font-controls pr-2'>{labelExpressionStatus(status)}</span>
-        </>
-      )}
+      <AnimatePresence mode='wait'>
+        {processing ? <Loader key='status-loader' size={3} /> : null}
+        {!processing ? (
+          <>
+            <StatusIcon status={status} />
+            <span className='pb-[0.125rem] font-controls pr-2'>{labelExpressionStatus(status)}</span>
+          </>
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 }

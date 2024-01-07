@@ -4,9 +4,8 @@ import { AnimatePresence } from 'framer-motion';
 import { useMemo, useState } from 'react';
 import { FiBell, FiBellOff } from 'react-icons/fi';
 
-import AnimateFadeIn from '@/components/AnimateFadeIn';
-import InfoError from '@/components/InfoError';
-import { Loader } from '@/components/ui/Loader';
+import AnimateFade from '@/components/AnimateFade';
+import DataLoader from '@/components/DataLoader';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { useAuth } from '@/context/AuthContext';
@@ -29,37 +28,38 @@ function UserTabs() {
   }, [auth, items]);
 
   return (
-    <>
-      {loading ? <Loader /> : null}
-      {error ? <InfoError error={error} /> : null}
-      {user ? (
-        <AnimateFadeIn className='flex gap-6 py-2'>
-          <div>
-            <Overlay position='top-0 right-0'>
-              <MiniButton
-                title='Показать/Скрыть отслеживаемые схемы'
-                icon={
-                  showSubs ? (
-                    <FiBell size='1.25rem' className='clr-text-primary' />
-                  ) : (
-                    <FiBellOff size='1.25rem' className='clr-text-primary' />
-                  )
-                }
-                onClick={() => setShowSubs(prev => !prev)}
-              />
-            </Overlay>
-            <h1 className='mb-4'>Учетные данные пользователя</h1>
-            <div className='flex py-2'>
-              <EditorProfile />
-              <EditorPassword />
-            </div>
+    <DataLoader
+      id='profile-page' //
+      isLoading={loading}
+      error={error}
+      hasNoData={!user}
+    >
+      <AnimateFade className='flex gap-6 py-2'>
+        <div>
+          <Overlay position='top-0 right-0'>
+            <MiniButton
+              title='Показать/Скрыть отслеживаемые схемы'
+              icon={
+                showSubs ? (
+                  <FiBell size='1.25rem' className='clr-text-primary' />
+                ) : (
+                  <FiBellOff size='1.25rem' className='clr-text-primary' />
+                )
+              }
+              onClick={() => setShowSubs(prev => !prev)}
+            />
+          </Overlay>
+          <h1 className='mb-4'>Учетные данные пользователя</h1>
+          <div className='flex py-2'>
+            <EditorProfile />
+            <EditorPassword />
           </div>
-          <AnimatePresence>
-            {subscriptions.length > 0 && showSubs ? <ViewSubscriptions items={subscriptions} /> : null}
-          </AnimatePresence>
-        </AnimateFadeIn>
-      ) : null}
-    </>
+        </div>
+        <AnimatePresence>
+          {subscriptions.length > 0 && showSubs ? <ViewSubscriptions items={subscriptions} /> : null}
+        </AnimatePresence>
+      </AnimateFade>
+    </DataLoader>
   );
 }
 
