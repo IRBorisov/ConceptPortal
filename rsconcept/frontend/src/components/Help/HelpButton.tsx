@@ -18,7 +18,7 @@ function HelpButton({ topic, ...restProps }: HelpButtonProps) {
     <div id={`help-${topic}`} className='p-1'>
       <BiInfoCircle size='1.25rem' className='clr-text-primary' />
       <Tooltip clickable anchorSelect={`#help-${topic}`} layer='z-modal-tooltip' {...restProps}>
-        <div className='relative'>
+        <div className='relative' onClick={event => event.stopPropagation()}>
           <div className='absolute right-0 text-sm top-[0.4rem]'>
             <TextURL text='Справка...' href={`/manuals?topic=${topic}`} />
           </div>

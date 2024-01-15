@@ -10,7 +10,7 @@ interface ConstituentaTooltipProps {
 function ConstituentaTooltip({ data, anchor }: ConstituentaTooltipProps) {
   return (
     <Tooltip clickable anchorSelect={anchor} className='max-w-[30rem]'>
-      <InfoConstituenta data={data} />
+      <InfoConstituenta data={data} onClick={event => event.stopPropagation()} />
     </Tooltip>
   );
 }
