@@ -35,7 +35,7 @@ class LibraryActiveView(generics.ListAPIView):
             ).distinct().order_by('-time_update')
         else:
             return m.LibraryItem.objects.filter(is_common=True).order_by('-time_update')
-        
+
 
 @extend_schema(tags=['Library'])
 @extend_schema_view()
@@ -195,7 +195,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     def get_permissions(self):
         ''' Determine permission class. '''
         if self.action in ['load_trs', 'cst_create', 'cst_delete_multiple',
-                           'reset_aliases', 'cst_rename']:
+                           'reset_aliases', 'cst_rename', 'cst_substitute']:
             permission_classes = [utils.ObjectOwnerOrAdmin]
         else:
             permission_classes = [permissions.AllowAny]
@@ -254,6 +254,30 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
                 'new_cst': s.ConstituentaSerializer(cst).data,
                 'schema': s.RSFormParseSerializer(schema.item).data
             }
+        )
+
+    @extend_schema(
+        summary='substitute constituenta',
+        tags=['Constituenta'],
+        request=s.CstSubstituteSerializer,
+        responses={c.HTTP_200_OK: s.RSFormParseSerializer}
+    )
+    @transaction.atomic
+    @action(detail=True, methods=['patch'], url_path='cst-substitute')
+    def cst_substitute(self, request, pk):
+        ''' Substitute occurrences of constituenta with another one. '''
+        schema = self._get_schema()
+        serializer = s.CstSubstituteSerializer(data=request.data, context={'schema': schema})
+        serializer.is_valid(raise_exception=True)
+        schema.substitute(
+            original=serializer.validated_data['original'],
+            substitution=serializer.validated_data['substitution'],
+            transfer_term=serializer.validated_data['transfer_term']
+        )
+        schema.item.refresh_from_db()
+        return Response(
+            status=c.HTTP_200_OK,
+            data=s.RSFormParseSerializer(schema.item).data
         )
 
     @extend_schema(

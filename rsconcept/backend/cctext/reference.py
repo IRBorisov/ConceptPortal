@@ -25,11 +25,11 @@ class EntityReference:
 
 
 class SyntacticReference:
-    ''' Reference to syntactic dependcy on EntityReference. '''
+    ''' Reference to syntactic dependency on EntityReference. '''
 
-    def __init__(self, referal_offset: int, text: str):
+    def __init__(self, referral_offset: int, text: str):
         self.nominal = text
-        self.offset = referal_offset
+        self.offset = referral_offset
 
     def get_type(self) -> ReferenceType:
         return ReferenceType.syntactic

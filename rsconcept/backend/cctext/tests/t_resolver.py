@@ -40,14 +40,14 @@ class TestResolver(unittest.TestCase):
     def test_resolve_syntactic(self):
         ref = ResolvedReference(ref=EntityReference('X1', 'sing,datv'), resolved='человеку')
         allrefs = [ref, ref, ref, ref]
-        self.assertEqual(resolve_syntactic(SyntacticReference(text='умный', referal_offset=-1), 0, allrefs), '!Некорректное смещение: -1!')
-        self.assertEqual(resolve_syntactic(SyntacticReference(text='умный', referal_offset=1), 3, allrefs), '!Некорректное смещение: 1!')
-        self.assertEqual(resolve_syntactic(SyntacticReference(text='умный', referal_offset=1), 0, allrefs), 'умному')
-        self.assertEqual(resolve_syntactic(SyntacticReference(text='умный', referal_offset=2), 0, allrefs), 'умному')
-        self.assertEqual(resolve_syntactic(SyntacticReference(text='умный', referal_offset=3), 0, allrefs), 'умному')
-        self.assertEqual(resolve_syntactic(SyntacticReference(text='умный', referal_offset=-1), 3, allrefs), 'умному')
-        self.assertEqual(resolve_syntactic(SyntacticReference(text='умный', referal_offset=-2), 3, allrefs), 'умному')
-        self.assertEqual(resolve_syntactic(SyntacticReference(text='умный', referal_offset=-3), 3, allrefs), 'умному')
+        self.assertEqual(resolve_syntactic(SyntacticReference(text='умный', referral_offset=-1), 0, allrefs), '!Некорректное смещение: -1!')
+        self.assertEqual(resolve_syntactic(SyntacticReference(text='умный', referral_offset=1), 3, allrefs), '!Некорректное смещение: 1!')
+        self.assertEqual(resolve_syntactic(SyntacticReference(text='умный', referral_offset=1), 0, allrefs), 'умному')
+        self.assertEqual(resolve_syntactic(SyntacticReference(text='умный', referral_offset=2), 0, allrefs), 'умному')
+        self.assertEqual(resolve_syntactic(SyntacticReference(text='умный', referral_offset=3), 0, allrefs), 'умному')
+        self.assertEqual(resolve_syntactic(SyntacticReference(text='умный', referral_offset=-1), 3, allrefs), 'умному')
+        self.assertEqual(resolve_syntactic(SyntacticReference(text='умный', referral_offset=-2), 3, allrefs), 'умному')
+        self.assertEqual(resolve_syntactic(SyntacticReference(text='умный', referral_offset=-3), 3, allrefs), 'умному')
 
     def test_resolve_invalid(self):
         self.assertEqual(self.resolver.resolve(''), '')

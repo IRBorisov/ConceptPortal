@@ -34,31 +34,31 @@ def resolve_entity(ref: EntityReference, context: TermContext) -> str:
         return resolved
 
 
-def resolve_syntactic(ref: SyntacticReference, index: int, allrefs: list['ResolvedReference']) -> str:
+def resolve_syntactic(ref: SyntacticReference, index: int, references: list['ResolvedReference']) -> str:
     ''' Resolve syntactic reference. '''
     offset = ref.offset
-    mainref: Optional['ResolvedReference'] = None
+    master: Optional['ResolvedReference'] = None
     if offset > 0:
         index += 1
-        while index < len(allrefs):
-            if isinstance(allrefs[index].ref, EntityReference):
+        while index < len(references):
+            if isinstance(references[index].ref, EntityReference):
                 if offset == 1:
-                    mainref = allrefs[index]
+                    master = references[index]
                 else:
                     offset -= 1
             index += 1
     else:
         index -= 1
         while index >= 0:
-            if isinstance(allrefs[index].ref, EntityReference):
+            if isinstance(references[index].ref, EntityReference):
                 if offset == -1:
-                    mainref = allrefs[index]
+                    master = references[index]
                 else:
                     offset += 1
             index -= 1
-    if mainref is None:
+    if master is None:
         return f'!Некорректное смещение: {ref.offset}!'
-    return inflect_dependant(ref.nominal, mainref.resolved)
+    return inflect_dependant(ref.nominal, master.resolved)
 
 
 @dataclass

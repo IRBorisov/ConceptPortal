@@ -242,19 +242,44 @@ class TestRSForm(TestCase):
         self.assertEqual(cst2.term_resolved, 'слон')
         self.assertEqual(cst2.definition_resolved, 'слонам слоны')
 
-    def test_delete_cst(self):
+    def test_apply_mapping(self):
+        schema = RSForm.create(title='Test')
+        x1 = schema.insert_last('X1', CstType.BASE)
+        x2 = schema.insert_last('X11', CstType.BASE)
+        d1 = schema.insert_last('D1', CstType.TERM)
+        d1.definition_formal = 'X1 = X11 = X2'
+        d1.definition_raw = '@{X11|sing}'
+        d1.convention = 'X1'
+        d1.term_raw = '@{X1|plur}'
+        d1.save()
+    
+        schema.apply_mapping({x1.alias: 'X3', x2.alias: 'X4'})
+        d1.refresh_from_db()
+        self.assertEqual(d1.definition_formal, 'X3 = X4 = X2', msg='Map IDs in expression')
+        self.assertEqual(d1.definition_raw, '@{X4|sing}', msg='Map IDs in definition')
+        self.assertEqual(d1.convention, 'X3', msg='Map IDs in convention')
+        self.assertEqual(d1.term_raw, '@{X3|plur}', msg='Map IDs in term')
+        self.assertEqual(d1.term_resolved, '', msg='Do not run resolve on mapping')
+        self.assertEqual(d1.definition_resolved, '', msg='Do not run resolve on mapping')
+
+    def test_substitute(self):
         schema = RSForm.create(title='Test')
         x1 = schema.insert_last('X1', CstType.BASE)
         x2 = schema.insert_last('X2', CstType.BASE)
         d1 = schema.insert_last('D1', CstType.TERM)
-        d2 = schema.insert_last('D2', CstType.TERM)
-        schema.delete_cst([x2, d1])
-        x1.refresh_from_db()
-        d2.refresh_from_db()
-        schema.item.refresh_from_db()
+        d1.definition_formal = x1.alias
+        d1.save()
+        x1.term_raw = 'Test'
+        x1.save()
+        x2.term_raw = 'Test2'
+        x2.save()
+
+        schema.substitute(x1, x2, True)
+        x2.refresh_from_db()
+        d1.refresh_from_db()
         self.assertEqual(schema.constituents().count(), 2)
-        self.assertEqual(x1.order, 1)
-        self.assertEqual(d2.order, 2)
+        self.assertEqual(x2.term_raw, 'Test')
+        self.assertEqual(d1.definition_formal, x2.alias)
 
     def test_move_cst(self):
         schema = RSForm.create(title='Test')

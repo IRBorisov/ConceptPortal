@@ -36,16 +36,30 @@ class TestConstituentaAPI(APITestCase):
         self.rsform_owned = RSForm.create(title='Test', alias='T1', owner=self.user)
         self.rsform_unowned = RSForm.create(title='Test2', alias='T2')
         self.cst1 = Constituenta.objects.create(
-            alias='X1', schema=self.rsform_owned.item, order=1, convention='Test',
-            term_raw='Test1', term_resolved='Test1R',
+            alias='X1',
+            schema=self.rsform_owned.item,
+            order=1,
+            convention='Test',
+            term_raw='Test1',
+            term_resolved='Test1R',
             term_forms=[{'text':'form1', 'tags':'sing,datv'}])
         self.cst2 = Constituenta.objects.create(
-            alias='X2', schema=self.rsform_unowned.item, order=1, convention='Test1',
-            term_raw='Test2', term_resolved='Test2R')
+            alias='X2',
+            schema=self.rsform_unowned.item,
+            order=1,
+            convention='Test1',
+            term_raw='Test2',
+            term_resolved='Test2R'
+        )
         self.cst3 = Constituenta.objects.create(
-            alias='X3', schema=self.rsform_owned.item, order=2,
-            term_raw='Test3', term_resolved='Test3',
-            definition_raw='Test1', definition_resolved='Test2')
+            alias='X3',
+            schema=self.rsform_owned.item,
+            order=2,
+            term_raw='Test3',
+            term_resolved='Test3',
+            definition_raw='Test1',
+            definition_resolved='Test2'
+        )
 
     def test_retrieve(self):
         response = self.client.get(f'/api/constituents/{self.cst1.id}')
@@ -421,8 +435,18 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(response.status_code, 403)
 
         item = self.owned.item
-        Constituenta.objects.create(schema=item, alias='X1', cst_type='basic', order=1)
-        x2 = Constituenta.objects.create(schema=item, alias='X2', cst_type='basic', order=2)
+        Constituenta.objects.create(
+            schema=item,
+            alias='X1',
+            cst_type='basic',
+            order=1
+        )
+        x2 = Constituenta.objects.create(
+            schema=item,
+            alias='X2',
+            cst_type='basic',
+            order=2
+        )
         response = self.client.post(
             f'/api/rsforms/{item.id}/cst-create',
             data=data, format='json'
@@ -452,21 +476,29 @@ class TestRSFormViewset(APITestCase):
 
     def test_rename_constituenta(self):
         cst1 = Constituenta.objects.create(
-            alias='X1', schema=self.owned.item, order=1, convention='Test',
-            term_raw='Test1', term_resolved='Test1',
+            alias='X1',
+            schema=self.owned.item,
+            order=1,
+            convention='Test',
+            term_raw='Test1',
+            term_resolved='Test1',
             term_forms=[{'text':'form1', 'tags':'sing,datv'}]
         )
         cst2 = Constituenta.objects.create(
-            alias='X2', schema=self.unowned.item, order=1, convention='Test1',
-            term_raw='Test2', term_resolved='Test2'
+            alias='X2',
+            schema=self.unowned.item,
+            order=1
         )
         cst3 = Constituenta.objects.create(
-            alias='X3', schema=self.owned.item, order=2,
-            term_raw='Test3', term_resolved='Test3',
-            definition_raw='Test1', definition_resolved='Test2'
+            alias='X3',
+            schema=self.owned.item, order=2,
+            term_raw='Test3',
+            term_resolved='Test3',
+            definition_raw='Test1',
+            definition_resolved='Test2'
         )
         
-        data = {'alias': 'D2', 'cst_type': 'term', 'id': cst2.pk}
+        data = {'id': cst2.pk, 'alias': 'D2', 'cst_type': 'term'}
         response = self.client.patch(
             f'/api/rsforms/{self.unowned.item.id}/cst-rename',
             data=data, format='json'
@@ -479,14 +511,14 @@ class TestRSFormViewset(APITestCase):
         )
         self.assertEqual(response.status_code, 400)
 
-        data = {'alias': cst1.alias, 'cst_type': 'term', 'id': cst1.pk}
+        data = {'id': cst1.pk, 'alias': cst1.alias, 'cst_type': 'term'}
         response = self.client.patch(
             f'/api/rsforms/{self.owned.item.id}/cst-rename',
             data=data, format='json'
         )
         self.assertEqual(response.status_code, 400)
 
-        data = {'alias': cst3.alias, 'id': cst1.pk}
+        data = {'id': cst1.pk, 'alias': cst3.alias}
         response = self.client.patch(
             f'/api/rsforms/{self.owned.item.id}/cst-rename',
             data=data, format='json'
@@ -519,6 +551,74 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(cst1.order, 1)
         self.assertEqual(cst1.alias, 'D2')
         self.assertEqual(cst1.cst_type, CstType.TERM)
+
+    def test_substitute_constituenta(self):
+        x1 = Constituenta.objects.create(
+            alias='X1',
+            schema=self.owned.item,
+            order=1,
+            term_raw='Test1',
+            term_resolved='Test1',
+            term_forms=[{'text':'form1', 'tags':'sing,datv'}]
+        )
+        x2 = Constituenta.objects.create(
+            alias='X2',
+            schema=self.owned.item,
+            order=2,
+            term_raw='Test2'
+        )
+        unowned = Constituenta.objects.create(
+            alias='X2',
+            schema=self.unowned.item,
+            order=1
+        )
+        
+        data = {'original': x1.pk, 'substitution': unowned.pk, 'transfer_term': True}
+        response = self.client.patch(
+            f'/api/rsforms/{self.unowned.item.id}/cst-substitute',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, 403)
+
+        response = self.client.patch(
+            f'/api/rsforms/{self.owned.item.id}/cst-substitute',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, 400)
+
+        data = {'original': unowned.pk, 'substitution': x1.pk, 'transfer_term': True}
+        response = self.client.patch(
+            f'/api/rsforms/{self.owned.item.id}/cst-substitute',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, 400)
+
+        data = {'original': x1.pk, 'substitution': x1.pk, 'transfer_term': True}
+        response = self.client.patch(
+            f'/api/rsforms/{self.owned.item.id}/cst-substitute',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, 400)
+
+        d1 = Constituenta.objects.create(
+            alias='D1',
+            schema=self.owned.item,
+            order=3,
+            term_raw='@{X2|sing,datv}',
+            definition_formal='X1'
+        )
+        data = {'original': x1.pk, 'substitution': x2.pk, 'transfer_term': True}
+        response = self.client.patch(
+            f'/api/rsforms/{self.owned.item.id}/cst-substitute',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, 200)
+
+        d1.refresh_from_db()
+        x2.refresh_from_db()
+        self.assertEqual(x2.term_raw, 'Test1')
+        self.assertEqual(d1.term_resolved, 'form1')
+        self.assertEqual(d1.definition_formal, 'X2')
 
     def test_create_constituenta_data(self):
         data = {

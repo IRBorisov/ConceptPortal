@@ -5,6 +5,7 @@ from rest_framework import serializers
 
 from apps.rsform.models import Subscription
 from . import models
+from . import messages as msg
 
 
 class NonFieldErrorSerializer(serializers.Serializer):
@@ -36,16 +37,12 @@ class LoginSerializer(serializers.Serializer):
             password=password
         )
         if not user:
-            msg = 'Неправильное сочетание имени пользователя и пароля.'
-            raise serializers.ValidationError(msg, code='authorization')
+            raise serializers.ValidationError(
+                msg.passwordAuthFailed(),
+                code='authorization'
+            )
         attrs['user'] = user
         return attrs
-
-    def create(self, validated_data):
-        raise NotImplementedError('unexpected `create()` call')
-
-    def update(self, instance, validated_data):
-        raise NotImplementedError('unexpected `update()` call')
 
 
 class AuthSerializer(serializers.Serializer):
@@ -108,12 +105,6 @@ class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
 
-    def create(self, validated_data):
-        raise NotImplementedError('unexpected `create()` call')
-
-    def update(self, instance, validated_data):
-        raise NotImplementedError('unexpected `update()` call')
-
 
 class SignupSerializer(serializers.ModelSerializer):
     ''' Serializer: Create user profile. '''
@@ -136,7 +127,9 @@ class SignupSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
-            raise serializers.ValidationError({"password": "Введенные пароли не совпадают"})
+            raise serializers.ValidationError({
+                'password': msg.passwordsNotMatch()
+            })
         return attrs
 
     def create(self, validated_data):

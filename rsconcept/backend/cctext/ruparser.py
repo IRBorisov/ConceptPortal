@@ -149,7 +149,7 @@ class PhraseParser:
     _SINGLE_SCORE_SEARCH = 0.2
     _PRIORITY_NONE = NO_COORDINATION
 
-    _MAIN_WAIT_LIMIT = 10  # count words untill fixing main
+    _MAIN_WAIT_LIMIT = 10  # count words until fixing main
     _MAIN_MAX_FOLLOWERS = 3  # count words after main as coordination candidates
 
     def parse(self, text: str,
@@ -194,7 +194,7 @@ class PhraseParser:
                     return (start, token.stop)
         return (0, 0)
 
-    def inflect_context(self, text: str, cntxt_before: str = '', cntxt_after: str = '') -> str:
+    def inflect_context(self, text: str, before: str = '', after: str = '') -> str:
         ''' Inflect text in accordance to context before and after. '''
         target = self.parse(text)
         if not target:
@@ -203,8 +203,8 @@ class PhraseParser:
         if not target_morpho or not target_morpho.can_coordinate:
             return text
 
-        model_after = self.parse(cntxt_after)
-        model_before = self.parse(cntxt_before)
+        model_after = self.parse(after)
+        model_before = self.parse(before)
         etalon = PhraseParser._choose_context_etalon(target_morpho, model_before, model_after)
         if not etalon:
             return text

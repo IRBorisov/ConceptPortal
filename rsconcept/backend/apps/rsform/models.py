@@ -15,10 +15,11 @@ from apps.users.models import User
 from cctext import Resolver, Entity, extract_entities, split_grams, TermForm
 from .graph import Graph
 from .utils import apply_pattern
+from . import messages as msg
 
 
 _REF_ENTITY_PATTERN = re.compile(r'@{([^0-9\-].*?)\|.*?}')
-_GLOBAL_ID_PATTERN = re.compile(r'([XCSADFPT][0-9]+)')
+_GLOBAL_ID_PATTERN = re.compile(r'([XCSADFPT][0-9]+)') # cspell:disable-line
 
 
 class LibraryItemType(TextChoices):
@@ -125,7 +126,7 @@ class LibraryItem(Model):
 
     def subscribers(self) -> list[User]:
         ''' Get all subscribers for this item . '''
-        return [s.user for s in Subscription.objects.filter(item=self.pk)]
+        return [subscription.user for subscription in Subscription.objects.filter(item=self.pk)]
 
     @transaction.atomic
     def save(self, *args, **kwargs):
@@ -272,7 +273,7 @@ class RSForm:
     ''' RSForm is a math form of capturing conceptual schema. '''
     def __init__(self, item: LibraryItem):
         if item.item_type != LibraryItemType.RSFORM:
-            raise ValueError('Attempting to use invalid adaptor for non-RSForm item')
+            raise ValueError(msg.libraryTypeUnexpected())
         self.item = item
 
     @staticmethod
@@ -330,11 +331,12 @@ class RSForm:
 
     @transaction.atomic
     def insert_at(self, position: int, alias: str, insert_type: CstType) -> 'Constituenta':
-        ''' Insert new constituenta at given position. All following constituents order is shifted by 1 position '''
+        ''' Insert new constituenta at given position.
+            All following constituents order is shifted by 1 position. '''
         if position <= 0:
-            raise ValidationError('Invalid position: should be positive integer')
+            raise ValidationError(msg.positionNegative())
         if self.constituents().filter(alias=alias).exists():
-            raise ValidationError(f'Alias taken {alias}')
+            raise ValidationError(msg.renameTaken(alias))
         currentSize = self.constituents().count()
         position =  max(1, min(position, currentSize + 1))
         update_list = \
@@ -357,9 +359,9 @@ class RSForm:
 
     @transaction.atomic
     def insert_last(self, alias: str, insert_type: CstType) -> 'Constituenta':
-        ''' Insert new constituenta at last position '''
+        ''' Insert new constituenta at last position. '''
         if self.constituents().filter(alias=alias).exists():
-            raise ValidationError(f'Alias taken {alias}')
+            raise ValidationError(msg.renameTaken(alias))
         position = 1
         if self.constituents().exists():
             position += self.constituents().count()
@@ -398,7 +400,7 @@ class RSForm:
 
     @transaction.atomic
     def delete_cst(self, listCst):
-        ''' Delete multiple constituents. Do not check if listCst are from this schema '''
+        ''' Delete multiple constituents. Do not check if listCst are from this schema. '''
         for cst in listCst:
             cst.delete()
         self._reset_order()
@@ -426,8 +428,26 @@ class RSForm:
         cst.refresh_from_db()
         return cst
 
+    @transaction.atomic
+    def substitute(
+        self,
+        original: 'Constituenta',
+        substitution: 'Constituenta',
+        transfer_term: bool
+    ):
+        ''' Execute constituenta substitution. '''
+        assert original.pk != substitution.pk
+        mapping = { original.alias: substitution.alias }
+        self.apply_mapping(mapping)
+        if transfer_term:
+            substitution.term_raw = original.term_raw
+            substitution.term_forms = original.term_forms
+            substitution.save()
+        original.delete()
+        self.on_term_change([substitution.alias])
+
     def reset_aliases(self):
-        ''' Recreate all aliases based on cst order. '''
+        ''' Recreate all aliases based on constituents order. '''
         mapping = self._create_reset_mapping()
         self.apply_mapping(mapping, change_aliases=True)
 
@@ -508,7 +528,10 @@ class RSForm:
 
     def _term_graph(self) -> Graph:
         result = Graph()
-        cst_list = self.constituents().only('order', 'alias', 'term_raw').order_by('order')
+        cst_list = \
+            self.constituents() \
+                .only('order', 'alias', 'term_raw') \
+                .order_by('order')
         for cst in cst_list:
             result.add_node(cst.alias)
         for cst in cst_list:
@@ -519,7 +542,10 @@ class RSForm:
 
     def _definition_graph(self) -> Graph:
         result = Graph()
-        cst_list = self.constituents().only('order', 'alias', 'definition_raw').order_by('order')
+        cst_list = \
+            self.constituents() \
+                .only('order', 'alias', 'definition_raw') \
+                .order_by('order')
         for cst in cst_list:
             result.add_node(cst.alias)
         for cst in cst_list:

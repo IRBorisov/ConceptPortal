@@ -9,6 +9,7 @@ from cctext import Resolver, Reference, ReferenceType, EntityReference, Syntacti
 
 from .utils import fix_old_references
 from .models import Constituenta, LibraryItem, RSForm
+from . import messages as msg
 
 _CST_TYPE = 'constituenta'
 _TRS_TYPE = 'rsform'
@@ -16,6 +17,8 @@ _TRS_VERSION_MIN = 16
 _TRS_VERSION = 16
 _TRS_HEADER = 'Exteor 4.8.13.1000 - 30/05/2022'
 
+ConstituentaID = serializers.IntegerField
+NodeID = serializers.IntegerField
 
 class FileSerializer(serializers.Serializer):
     ''' Serializer: File input. '''
@@ -99,7 +102,7 @@ class NodeDataSerializer(serializers.Serializer):
 
 class ASTNodeSerializer(serializers.Serializer):
     ''' Serializer: Syntax tree node. '''
-    uid = serializers.IntegerField()
+    uid = NodeID()
     parent = serializers.IntegerField() # type: ignore
     typeID = serializers.IntegerField()
     start = serializers.IntegerField()
@@ -148,7 +151,7 @@ class ConstituentaSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'order', 'alias', 'cst_type', 'definition_resolved', 'term_resolved')
 
     def update(self, instance: Constituenta, validated_data) -> Constituenta:
-        data = validated_data # Note: create alias for better code readability
+        data = validated_data # Note: use alias for better code readability
         schema = RSForm(instance.schema)
         definition: Optional[str] = data['definition_raw'] if 'definition_raw' in data else None
         term: Optional[str] = data['term_raw'] if 'term_raw' in data else None
@@ -175,7 +178,10 @@ class CstCreateSerializer(serializers.ModelSerializer):
     class Meta:
         ''' serializer metadata. '''
         model = Constituenta
-        fields = 'alias', 'cst_type', 'convention', 'term_raw', 'definition_raw', 'definition_formal', 'insert_after', 'term_forms'
+        fields = \
+            'alias', 'cst_type', 'convention', \
+            'term_raw', 'definition_raw', 'definition_formal', \
+            'insert_after', 'term_forms'
 
 
 class CstRenameSerializer(serializers.ModelSerializer):
@@ -191,19 +197,47 @@ class CstRenameSerializer(serializers.ModelSerializer):
         new_alias = self.initial_data['alias']
         if old_cst.schema != schema.item:
             raise serializers.ValidationError({
-                'id': f'Изменяемая конституента должна относиться к изменяемой схеме: {schema.item.title}'
+                'id': msg.constituentaNotOwned(schema.item.title)
             })
         if old_cst.alias == new_alias:
             raise serializers.ValidationError({
-                'alias': f'Имя конституенты должно отличаться от текущего: {new_alias}'
+                'alias': msg.renameTrivial(new_alias)
             })
         if schema.constituents().filter(alias=new_alias).exists():
             raise serializers.ValidationError({
-                'alias': f'Конституента с таким именем уже существует: {new_alias}'
+                'alias': msg.renameTaken(new_alias)
             })
         self.instance = old_cst
         attrs['schema'] = schema.item
         attrs['id'] = self.initial_data['id']
+        return attrs
+
+
+class CstSubstituteSerializer(serializers.Serializer):
+    ''' Serializer: Constituenta substitution. '''
+    original = ConstituentaID()
+    substitution = ConstituentaID()
+    transfer_term = serializers.BooleanField(required=False, default=False)
+
+    def validate(self, attrs):
+        schema = cast(RSForm, self.context['schema'])
+        original_cst = Constituenta.objects.get(pk=self.initial_data['original'])
+        substitution_cst = Constituenta.objects.get(pk=self.initial_data['substitution'])
+        if original_cst.alias == substitution_cst.alias:
+            raise serializers.ValidationError({
+                'alias': msg.substituteTrivial(original_cst.alias)
+            })
+        if original_cst.schema != schema.item:
+            raise serializers.ValidationError({
+                'original': msg.constituentaNotOwned(schema.item.title)
+            })
+        if substitution_cst.schema != schema.item:
+            raise serializers.ValidationError({
+                'substitution': msg.constituentaNotOwned(schema.item.title)
+            })
+        attrs['original'] = original_cst
+        attrs['substitution'] = substitution_cst
+        attrs['transfer_term'] = self.initial_data['transfer_term']
         return attrs
 
 
@@ -220,12 +254,13 @@ class CstListSerializer(serializers.Serializer):
             try:
                 cst = Constituenta.objects.get(pk=item)
             except Constituenta.DoesNotExist as exception:
-                raise serializers.ValidationError(
-                    {f"{item}": 'Конституента не существует'}
-                ) from exception
+                raise serializers.ValidationError({
+                    f'{item}': msg.constituentaNotExists
+                }) from exception
             if cst.schema != schema.item:
-                raise serializers.ValidationError(
-                    {'items': f'Конституенты должны относиться к данной схеме: {item}'})
+                raise serializers.ValidationError({
+                    f'{item}': msg.constituentaNotOwned(schema.item.title)
+                })
             cstList.append(cst)
         attrs['constituents'] = cstList
         return attrs
@@ -310,7 +345,7 @@ class PyConceptAdapter:
             Warning! Does not include texts. '''
         self._produce_response()
         if self._checked_data is None:
-            raise ValueError('Invalid data response from pyconcept')
+            raise ValueError(msg.pyconceptFailure())
         return self._checked_data
 
     def _prepare_request(self) -> dict:
@@ -481,7 +516,7 @@ class RSFormTRSSerializer(serializers.Serializer):
                 or self.initial_data['version'] < _TRS_VERSION_MIN  \
                 or self.initial_data['version'] > _TRS_VERSION:
             raise serializers.ValidationError({
-                'version': 'Некорректная версия файла Экстеор. Сохраните файл в новой версии'
+                'version': msg.exteorFileVersionNotSupported()
             })
         return attrs
 

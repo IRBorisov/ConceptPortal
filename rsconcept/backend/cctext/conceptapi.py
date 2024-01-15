@@ -1,7 +1,7 @@
 '''
 Concept API Python functions.
 
-::guarantee:: doesnt raise exceptions and returns workable outputs
+::guarantee:: doesn't raise exceptions and returns workable outputs
 '''
 from cctext.rumodel import Morphology
 from .syntax import RuSyntax
@@ -56,9 +56,9 @@ def inflect(text: str, target_grams: str) -> str:
     return model.inflect(target_set)
 
 
-def inflect_context(target: str, cntxt_before: str = '', cntxt_after: str = '') -> str:
+def inflect_context(target: str, before: str = '', after: str = '') -> str:
     ''' Inflect text in accordance to context before and after. '''
-    return parser.inflect_context(target, cntxt_before, cntxt_after)
+    return parser.inflect_context(target, before, after)
 
 
 def inflect_substitute(substitute_normal: str, original: str) -> str:
