@@ -442,6 +442,7 @@ class RSForm:
         if transfer_term:
             substitution.term_raw = original.term_raw
             substitution.term_forms = original.term_forms
+            substitution.term_resolved = original.term_resolved
             substitution.save()
         original.delete()
         self.on_term_change([substitution.alias])

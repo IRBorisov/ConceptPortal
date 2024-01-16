@@ -70,7 +70,7 @@ function EditorRSForm({
         onDestroy={onDestroy}
         onToggleSubscribe={onToggleSubscribe}
       />
-      <div tabIndex={-1} className='flex' onKeyDown={handleInput}>
+      <div tabIndex={-1} className='flex flex-col sm:flex-row w-fit' onKeyDown={handleInput}>
         <FlexColumn className='px-4 pb-2'>
           <FormRSForm
             disabled={!isMutable}

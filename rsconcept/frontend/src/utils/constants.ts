@@ -15,6 +15,11 @@ export const buildConstants = {
 export const TIMEOUT_UI_REFRESH = 100;
 
 /**
+ * Threshold for small screen size optimizations.
+ */
+export const SMALL_SCREEN_WIDTH = 640; // == tailwind:xs
+
+/**
  * Timeout [in ms] for graph refresh.
  */
 export const TIMEOUT_GRAPH_REFRESH = 200;

@@ -1,10 +1,10 @@
 'use client';
 
 import clsx from 'clsx';
-import { useMemo } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import DataTable, { createColumnHelper } from '@/components/DataTable';
+import DataTable, { createColumnHelper, VisibilityState } from '@/components/DataTable';
 import HelpButton from '@/components/Help/HelpButton';
 import FlexColumn from '@/components/ui/FlexColumn';
 import TextURL from '@/components/ui/TextURL';
@@ -12,6 +12,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useUsers } from '@/context/UsersContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
+import useWindowSize from '@/hooks/useWindowSize';
 import { ILibraryItem } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
 
@@ -33,6 +34,16 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
 
   const handleOpenItem = (item: ILibraryItem) => router.push(`/rsforms/${item.id}`);
 
+  const windowSize = useWindowSize();
+
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
+  useLayoutEffect(() => {
+    setColumnVisibility({
+      owner: !windowSize.isSmall
+    });
+  }, [windowSize]);
+
   const columns = useMemo(
     () => [
       columnHelper.display({
@@ -46,43 +57,53 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
       columnHelper.accessor('alias', {
         id: 'alias',
         header: 'Шифр',
-        size: 200,
-        minSize: 200,
-        maxSize: 200,
+        size: 150,
+        minSize: 80,
+        maxSize: 150,
         enableSorting: true,
         sortingFn: 'text'
       }),
       columnHelper.accessor('title', {
         id: 'title',
         header: 'Название',
-        size: 2000,
-        minSize: 400,
-        maxSize: 2000,
+        size: 1200,
+        minSize: 200,
+        maxSize: 1200,
         enableSorting: true,
         sortingFn: 'text'
       }),
       columnHelper.accessor(item => item.owner ?? 0, {
         id: 'owner',
         header: 'Владелец',
-        size: 600,
-        minSize: 200,
-        maxSize: 600,
+        size: 400,
+        minSize: 100,
+        maxSize: 400,
         cell: props => getUserLabel(props.cell.getValue()),
         enableSorting: true,
         sortingFn: 'text'
       }),
       columnHelper.accessor('time_update', {
         id: 'time_update',
-        header: 'Обновлена',
+        header: windowSize.isSmall ? 'Дата' : 'Обновлена',
         cell: props => (
-          <div className='text-sm whitespace-nowrap'>{new Date(props.cell.getValue()).toLocaleString(intl.locale)}</div>
+          <div className='whitespace-nowrap'>
+            {new Date(props.cell.getValue()).toLocaleString(intl.locale, {
+              year: '2-digit',
+              month: '2-digit',
+              day: '2-digit',
+              ...(!windowSize.isSmall && {
+                hour: '2-digit',
+                minute: '2-digit'
+              })
+            })}
+          </div>
         ),
         enableSorting: true,
         sortingFn: 'datetime',
         sortDescFirst: true
       })
     ],
-    [intl, getUserLabel, user]
+    [intl, getUserLabel, user, windowSize]
   );
 
   return (
@@ -102,7 +123,8 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
       <DataTable
         columns={columns}
         data={items}
-        headPosition='2.3rem'
+        headPosition='2.2rem'
+        className='text-xs sm:text-sm'
         noDataComponent={
           <FlexColumn className='p-3 items-center min-h-[6rem]'>
             <p>Список схем пуст</p>
@@ -112,6 +134,7 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
             </p>
           </FlexColumn>
         }
+        columnVisibility={columnVisibility}
         onRowClicked={handleOpenItem}
         enableSorting
         initialSorting={{

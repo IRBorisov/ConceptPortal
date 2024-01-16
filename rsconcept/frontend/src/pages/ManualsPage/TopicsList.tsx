@@ -12,7 +12,14 @@ interface TopicsListProps {
 function TopicsList({ activeTopic, onChangeTopic }: TopicsListProps) {
   return (
     <div
-      className={clsx('sticky top-0 left-0', 'min-w-[13rem] self-start', 'border-x', 'clr-controls', '', 'select-none')}
+      className={clsx(
+        'sticky top-0 left-0',
+        'self-start',
+        'border-x',
+        'clr-controls',
+        'text-xs sm:text-sm',
+        'select-none'
+      )}
     >
       {Object.values(HelpTopic).map((topic, index) => (
         <div

@@ -47,9 +47,10 @@ function SearchPanel({ total, filtered, query, setQuery, strategy, setFilter }: 
     <div
       className={clsx(
         'sticky top-0', // prettier: split lines
-        'w-full max-h-[2.3rem]',
-        'pr-40 flex',
+        'w-full max-h-[2.2rem]',
+        'sm:pr-40 flex',
         'border-b',
+        'text-sm',
         'clr-input'
       )}
     >

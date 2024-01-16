@@ -29,7 +29,7 @@ function NavigationButton({ icon, title, onClick, text }: NavigationButtonProps)
       )}
     >
       {icon ? <span>{icon}</span> : null}
-      {text ? <span>{text}</span> : null}
+      {text ? <span className='hidden sm:inline'>{text}</span> : null}
     </button>
   );
 }
