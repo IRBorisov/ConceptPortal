@@ -20,7 +20,7 @@ import { rsHoverTooltip } from './tooltip';
 const editorSetup: BasicSetupOptions = {
   highlightSpecialChars: false,
   history: true,
-  drawSelection: false,
+  drawSelection: true,
   syntaxHighlighting: false,
   defaultKeymap: true,
   historyKeymap: true,
