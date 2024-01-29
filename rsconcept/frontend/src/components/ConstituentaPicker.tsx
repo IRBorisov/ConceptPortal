@@ -17,6 +17,7 @@ interface ConstituentaPickerProps {
   data?: IConstituenta[];
   rows?: number;
 
+  initialFilter?: string;
   onBeginFilter?: (cst: IConstituenta) => boolean;
   describeFunc?: (cst: IConstituenta) => string;
   matchFunc?: (cst: IConstituenta, filter: string) => boolean;
@@ -30,6 +31,7 @@ const columnHelper = createColumnHelper<IConstituenta>();
 function ConstituentaPicker({
   data,
   value,
+  initialFilter = '',
   rows = 4,
   prefixID = prefixes.cst_list,
   describeFunc = describeConstituenta,
@@ -39,7 +41,7 @@ function ConstituentaPicker({
 }: ConstituentaPickerProps) {
   const { colors } = useConceptTheme();
   const [filteredData, setFilteredData] = useState<IConstituenta[]>([]);
-  const [filterText, setFilterText] = useState('');
+  const [filterText, setFilterText] = useState(initialFilter);
 
   useEffect(() => {
     if (!data) {

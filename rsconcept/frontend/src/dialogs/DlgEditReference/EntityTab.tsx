@@ -61,6 +61,7 @@ function EntityTab({ initial, items, setIsValid, setReference }: EntityTabProps)
   return (
     <FlexColumn>
       <ConstituentaPicker
+        initialFilter={initial.text}
         value={selectedCst}
         data={items}
         onSelectValue={handleSelectConstituenta}
