@@ -65,7 +65,7 @@ export const AuthState = ({ children }: AuthStateProps) => {
     setError(undefined);
     postLogin({
       data: data,
-      showError: true,
+      showError: false,
       setLoading: setLoading,
       onError: setError,
       onSuccess: newData =>

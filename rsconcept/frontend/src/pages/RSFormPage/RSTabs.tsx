@@ -192,6 +192,7 @@ function RSTabs() {
       data.alias = data.alias || generateAlias(data.cst_type, schema);
       cstCreate(data, newCst => {
         toast.success(`Конституента добавлена: ${newCst.alias}`);
+        setSelected([newCst.id]);
         navigateTab(activeTab, newCst.id);
         if (activeTab === RSTabID.CST_EDIT || activeTab === RSTabID.CST_LIST) {
           setTimeout(() => {
