@@ -26,6 +26,8 @@ interface EditorConstituentaProps {
   isModified: boolean;
   setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
 
+  onMoveUp: () => void;
+  onMoveDown: () => void;
   onOpenEdit: (cstID: number) => void;
   onClone: () => void;
   onCreate: (type?: CstType) => void;
@@ -40,11 +42,13 @@ function EditorConstituenta({
   isModified,
   setIsModified,
   activeCst,
-  onEditTerm,
+  onMoveUp,
+  onMoveDown,
+  onOpenEdit,
   onClone,
   onCreate,
   onRename,
-  onOpenEdit,
+  onEditTerm,
   onDelete
 }: EditorConstituentaProps) {
   const windowSize = useWindowSize();
@@ -99,6 +103,8 @@ function EditorConstituenta({
       <ConstituentaToolbar
         isMutable={!disabled}
         isModified={isModified}
+        onMoveUp={onMoveUp}
+        onMoveDown={onMoveDown}
         onSubmit={initiateSubmit}
         onReset={() => setToggleReset(prev => !prev)}
         onDelete={onDelete}

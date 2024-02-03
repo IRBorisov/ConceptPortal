@@ -4,16 +4,18 @@ import { useLayoutEffect, useState } from 'react';
 
 import { type RowSelectionState } from '@/components/DataTable';
 import SelectedCounter from '@/components/SelectedCounter';
-import { useRSForm } from '@/context/RSFormContext';
-import { CstType, ICstMovetoData } from '@/models/rsform';
+import { CstType, IRSForm } from '@/models/rsform';
 
 import RSListToolbar from './RSListToolbar';
 import RSTable from './RSTable';
 
 interface EditorRSListProps {
+  schema?: IRSForm;
   isMutable: boolean;
   selected: number[];
   setSelected: React.Dispatch<React.SetStateAction<number[]>>;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
   onOpenEdit: (cstID: number) => void;
   onClone: () => void;
   onCreate: (type?: CstType) => void;
@@ -21,16 +23,17 @@ interface EditorRSListProps {
 }
 
 function EditorRSList({
+  schema,
   selected,
   setSelected,
   isMutable,
+  onMoveUp,
+  onMoveDown,
   onOpenEdit,
   onClone,
   onCreate,
   onDelete
 }: EditorRSListProps) {
-  const { schema, cstMoveTo } = useRSForm();
-
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
   useLayoutEffect(() => {
@@ -60,52 +63,6 @@ function EditorRSList({
     }
   }
 
-  // Move selected cst up
-  function handleMoveUp() {
-    if (!schema?.items || selected.length === 0) {
-      return;
-    }
-    const currentIndex = schema.items.reduce((prev, cst, index) => {
-      if (!selected.includes(cst.id)) {
-        return prev;
-      } else if (prev === -1) {
-        return index;
-      }
-      return Math.min(prev, index);
-    }, -1);
-    const target = Math.max(0, currentIndex - 1) + 1;
-    const data = {
-      items: selected,
-      move_to: target
-    };
-    cstMoveTo(data);
-  }
-
-  // Move selected cst down
-  function handleMoveDown() {
-    if (!schema?.items || selected.length === 0) {
-      return;
-    }
-    let count = 0;
-    const currentIndex = schema.items.reduce((prev, cst, index) => {
-      if (!selected.includes(cst.id)) {
-        return prev;
-      } else {
-        count += 1;
-        if (prev === -1) {
-          return index;
-        }
-        return Math.max(prev, index);
-      }
-    }, -1);
-    const target = Math.min(schema.items.length - 1, currentIndex - count + 2) + 1;
-    const data: ICstMovetoData = {
-      items: selected,
-      move_to: target
-    };
-    cstMoveTo(data);
-  }
-
   // Implement hotkeys for working with constituents table
   function handleTableKey(event: React.KeyboardEvent<HTMLDivElement>) {
     if (!isMutable) {
@@ -129,8 +86,8 @@ function EditorRSList({
     if (selected.length > 0) {
       // prettier-ignore
       switch (code) {
-        case 'ArrowUp': handleMoveUp(); return true;
-        case 'ArrowDown':  handleMoveDown(); return true;
+        case 'ArrowUp': onMoveUp(); return true;
+        case 'ArrowDown':  onMoveDown(); return true;
         case 'KeyV':    onClone(); return true;
       }
     }
@@ -161,8 +118,8 @@ function EditorRSList({
       <RSListToolbar
         selectedCount={selected.length}
         isMutable={isMutable}
-        onMoveUp={handleMoveUp}
-        onMoveDown={handleMoveDown}
+        onMoveUp={onMoveUp}
+        onMoveDown={onMoveDown}
         onClone={onClone}
         onCreate={onCreate}
         onDelete={onDelete}

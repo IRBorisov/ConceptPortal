@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { BiDuplicate, BiPlusCircle, BiReset, BiTrash } from 'react-icons/bi';
+import { BiDownvote, BiDuplicate, BiPlusCircle, BiReset, BiTrash, BiUpvote } from 'react-icons/bi';
 import { FiSave } from 'react-icons/fi';
 
 import HelpButton from '@/components/Help/HelpButton';
@@ -16,6 +16,8 @@ interface ConstituentaToolbarProps {
   onSubmit: () => void;
   onReset: () => void;
 
+  onMoveUp: () => void;
+  onMoveDown: () => void;
   onDelete: () => void;
   onClone: () => void;
   onCreate: () => void;
@@ -26,6 +28,8 @@ function ConstituentaToolbar({
   isModified,
   onSubmit,
   onReset,
+  onMoveUp,
+  onMoveDown,
   onDelete,
   onClone,
   onCreate
@@ -62,6 +66,18 @@ function ConstituentaToolbar({
         disabled={!isMutable}
         onClick={onDelete}
         icon={<BiTrash size='1.25rem' className={isMutable ? 'clr-text-warning' : ''} />}
+      />
+      <MiniButton
+        title='Переместить вверх [Alt + вверх]'
+        icon={<BiUpvote size='1.25rem' className={isMutable ? 'clr-text-primary' : ''} />}
+        disabled={!isMutable}
+        onClick={onMoveUp}
+      />
+      <MiniButton
+        title='Переместить вниз [Alt + вниз]'
+        icon={<BiDownvote size='1.25rem' className={isMutable ? 'clr-text-primary' : ''} />}
+        disabled={!isMutable}
+        onClick={onMoveDown}
       />
       <HelpButton topic={HelpTopic.CONSTITUENTA} offset={4} />
     </Overlay>

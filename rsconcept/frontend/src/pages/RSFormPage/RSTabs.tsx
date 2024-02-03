@@ -28,7 +28,15 @@ import DlgRenameCst from '@/dialogs/DlgRenameCst';
 import DlgUploadRSForm from '@/dialogs/DlgUploadRSForm';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { UserAccessMode } from '@/models/miscellaneous';
-import { CstType, IConstituenta, ICstCreateData, ICstRenameData, ICstUpdateData, TermForm } from '@/models/rsform';
+import {
+  CstType,
+  IConstituenta,
+  ICstCreateData,
+  ICstMovetoData,
+  ICstRenameData,
+  ICstUpdateData,
+  TermForm
+} from '@/models/rsform';
 import { generateAlias } from '@/models/rsformAPI';
 import { EXTEOR_TRS_FILE, prefixes, TIMEOUT_UI_REFRESH } from '@/utils/constants';
 
@@ -66,6 +74,7 @@ function RSTabs() {
     subscribe,
     unsubscribe,
     cstUpdate,
+    cstMoveTo,
     resetAliases
   } = useRSForm();
   const { destroyItem } = useLibrary();
@@ -261,6 +270,52 @@ function RSTabs() {
   }, [activeCst]);
 
   const onReindex = useCallback(() => resetAliases(() => toast.success('Имена конституент обновлены')), [resetAliases]);
+
+  // Move selected cst up
+  function handleMoveUp() {
+    if (!schema?.items || selected.length === 0) {
+      return;
+    }
+    const currentIndex = schema.items.reduce((prev, cst, index) => {
+      if (!selected.includes(cst.id)) {
+        return prev;
+      } else if (prev === -1) {
+        return index;
+      }
+      return Math.min(prev, index);
+    }, -1);
+    const target = Math.max(0, currentIndex - 1) + 1;
+    const data = {
+      items: selected,
+      move_to: target
+    };
+    cstMoveTo(data);
+  }
+
+  // Move selected cst down
+  function handleMoveDown() {
+    if (!schema?.items || selected.length === 0) {
+      return;
+    }
+    let count = 0;
+    const currentIndex = schema.items.reduce((prev, cst, index) => {
+      if (!selected.includes(cst.id)) {
+        return prev;
+      } else {
+        count += 1;
+        if (prev === -1) {
+          return index;
+        }
+        return Math.max(prev, index);
+      }
+    }, -1);
+    const target = Math.min(schema.items.length - 1, currentIndex - count + 2) + 1;
+    const data: ICstMovetoData = {
+      items: selected,
+      move_to: target
+    };
+    cstMoveTo(data);
+  }
 
   const handleDeleteCst = useCallback(
     (deleted: number[]) => {
@@ -479,9 +534,12 @@ function RSTabs() {
 
             <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_LIST ? '' : 'none' }}>
               <EditorRSList
+                schema={schema}
                 selected={selected}
                 setSelected={setSelected}
                 isMutable={isMutable}
+                onMoveUp={handleMoveUp}
+                onMoveDown={handleMoveDown}
                 onOpenEdit={onOpenCst}
                 onClone={handleCloneCst}
                 onCreate={type => promptCreateCst(type, type !== undefined)}
@@ -496,6 +554,8 @@ function RSTabs() {
                 isModified={isModified}
                 setIsModified={setIsModified}
                 activeCst={activeCst}
+                onMoveUp={handleMoveUp}
+                onMoveDown={handleMoveDown}
                 onOpenEdit={onOpenCst}
                 onClone={handleCloneCst}
                 onCreate={type => promptCreateCst(type, false)}
