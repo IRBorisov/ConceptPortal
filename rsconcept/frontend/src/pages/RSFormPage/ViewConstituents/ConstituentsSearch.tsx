@@ -82,6 +82,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
           transparent
           tabIndex={-1}
           title='Настройка атрибутов для фильтрации'
+          hideTitle={matchModeMenu.isOpen}
           className='h-full'
           icon={<BiFilterAlt size='1.25rem' />}
           text={labelCstMatchMode(filterMatch)}
@@ -94,6 +95,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
               const matchMode = value as CstMatchMode;
               return (
                 <DropdownButton
+                  className='w-[22rem]'
                   key={`${prefixes.cst_match_mode_list}${index}`}
                   onClick={() => handleMatchModeChange(matchMode)}
                 >
@@ -111,6 +113,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
           transparent
           tabIndex={-1}
           title='Настройка фильтрации по графу термов'
+          hideTitle={sourceMenu.isOpen}
           className='h-full pr-2'
           icon={<BiCog size='1.25rem' />}
           text={labelCstSource(filterSource)}
@@ -122,7 +125,11 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
             .map((value, index) => {
               const source = value as DependencyMode;
               return (
-                <DropdownButton key={`${prefixes.cst_source_list}${index}`} onClick={() => handleSourceChange(source)}>
+                <DropdownButton
+                  className='w-[23rem]'
+                  key={`${prefixes.cst_source_list}${index}`}
+                  onClick={() => handleSourceChange(source)}
+                >
                   <p>
                     <b>{labelCstSource(source)}:</b> {describeCstSource(source)}
                   </p>

@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { Dispatch, SetStateAction, useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { FiSave } from 'react-icons/fi';
 import { LiaEdit } from 'react-icons/lia';
 import { toast } from 'react-toastify';
@@ -12,7 +12,7 @@ import Overlay from '@/components/ui/Overlay';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
 import { useRSForm } from '@/context/RSFormContext';
-import { IConstituenta, ICstRenameData, ICstUpdateData } from '@/models/rsform';
+import { IConstituenta, ICstUpdateData } from '@/models/rsform';
 import { classnames } from '@/utils/constants';
 import { labelCstTypification } from '@/utils/labels';
 
@@ -27,10 +27,10 @@ interface FormConstituentaProps {
 
   isModified: boolean;
   toggleReset: boolean;
-  setIsModified: Dispatch<SetStateAction<boolean>>;
+  setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
 
   onToggleList: () => void;
-  onRenameCst: (initial: ICstRenameData) => void;
+  onRename: () => void;
   onEditTerm: () => void;
 }
 
@@ -42,7 +42,7 @@ function FormConstituenta({
   setIsModified,
   constituenta,
   toggleReset,
-  onRenameCst,
+  onRename,
   onEditTerm,
   onToggleList
 }: FormConstituentaProps) {
@@ -109,18 +109,6 @@ function FormConstituenta({
     cstUpdate(data, () => toast.success('Изменения сохранены'));
   }
 
-  function handleRename() {
-    if (!constituenta) {
-      return;
-    }
-    const data: ICstRenameData = {
-      id: constituenta.id,
-      alias: constituenta.alias,
-      cst_type: constituenta.cst_type
-    };
-    onRenameCst(data);
-  }
-
   return (
     <>
       <Overlay position='top-1 left-[4.1rem]' className='flex select-none'>
@@ -139,7 +127,7 @@ function FormConstituenta({
           noHover
           title='Переименовать конституенту'
           disabled={disabled}
-          onClick={handleRename}
+          onClick={onRename}
           icon={<LiaEdit size='1rem' className={!disabled ? 'clr-text-primary' : ''} />}
         />
       </Overlay>

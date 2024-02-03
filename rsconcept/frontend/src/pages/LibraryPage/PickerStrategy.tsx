@@ -47,6 +47,7 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
         transparent
         tabIndex={-1}
         title='Список фильтров'
+        hideTitle={strategyMenu.isOpen}
         className='h-full'
         icon={<BiFilterAlt size='1.25rem' />}
         text={labelLibraryFilter(value)}

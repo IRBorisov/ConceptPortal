@@ -10,6 +10,7 @@ interface SelectorButtonProps extends CProps.Button {
 
   colors?: string;
   transparent?: boolean;
+  hideTitle?: boolean;
 }
 
 function SelectorButton({
@@ -19,13 +20,12 @@ function SelectorButton({
   colors = 'clr-btn-default',
   className,
   transparent,
+  hideTitle,
   ...restProps
 }: SelectorButtonProps) {
   return (
     <button
       type='button'
-      data-tooltip-id={title ? globalIDs.tooltip : undefined}
-      data-tooltip-content={title}
       className={clsx(
         'px-1 flex flex-start items-center gap-1',
         'text-sm font-controls select-none',
@@ -38,6 +38,9 @@ function SelectorButton({
         className,
         !transparent && colors
       )}
+      data-tooltip-id={title ? globalIDs.tooltip : undefined}
+      data-tooltip-content={title}
+      data-tooltip-hidden={hideTitle}
       {...restProps}
     >
       {icon ? icon : null}

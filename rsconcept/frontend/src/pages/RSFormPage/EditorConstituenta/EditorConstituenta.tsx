@@ -1,12 +1,11 @@
 'use client';
 
 import { AnimatePresence } from 'framer-motion';
-import { Dispatch, SetStateAction, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
-import { useRSForm } from '@/context/RSFormContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import useWindowSize from '@/hooks/useWindowSize';
-import { CstType, IConstituenta, ICstCreateData, ICstRenameData } from '@/models/rsform';
+import { CstType, IConstituenta, IRSForm } from '@/models/rsform';
 import { globalIDs } from '@/utils/constants';
 
 import ViewConstituents from '../ViewConstituents';
@@ -20,79 +19,43 @@ const UNFOLDED_HEIGHT = '59.1rem';
 const SIDELIST_HIDE_THRESHOLD = 1100; // px
 
 interface EditorConstituentaProps {
+  schema?: IRSForm;
   isMutable: boolean;
 
-  activeID?: number;
-  activeCst?: IConstituenta | undefined;
+  activeCst?: IConstituenta;
   isModified: boolean;
-  setIsModified: Dispatch<SetStateAction<boolean>>;
+  setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
 
   onOpenEdit: (cstID: number) => void;
-  onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void;
-  onRenameCst: (initial: ICstRenameData) => void;
+  onClone: () => void;
+  onCreate: (type?: CstType) => void;
+  onRename: () => void;
   onEditTerm: () => void;
-  onDeleteCst: (selected: number[], callback?: (items: number[]) => void) => void;
+  onDelete: () => void;
 }
 
 function EditorConstituenta({
+  schema,
   isMutable,
   isModified,
   setIsModified,
-  activeID,
   activeCst,
   onEditTerm,
-  onCreateCst,
-  onRenameCst,
+  onClone,
+  onCreate,
+  onRename,
   onOpenEdit,
-  onDeleteCst
+  onDelete
 }: EditorConstituentaProps) {
   const windowSize = useWindowSize();
-  const { schema } = useRSForm();
 
   const [showList, setShowList] = useLocalStorage('rseditor-show-list', true);
   const [toggleReset, setToggleReset] = useState(false);
 
   const disabled = useMemo(() => !activeCst || !isMutable, [activeCst, isMutable]);
 
-  function handleDelete() {
-    if (!schema || !activeID) {
-      return;
-    }
-    onDeleteCst([activeID]);
-  }
-
   function handleCreate() {
-    if (!activeID || !schema) {
-      return;
-    }
-    const data: ICstCreateData = {
-      insert_after: activeID,
-      cst_type: activeCst?.cst_type ?? CstType.BASE,
-      alias: '',
-      term_raw: '',
-      definition_formal: '',
-      definition_raw: '',
-      convention: '',
-      term_forms: []
-    };
-    onCreateCst(data);
-  }
-
-  function handleClone() {
-    if (!activeID || !schema || !activeCst) {
-      return;
-    }
-    const data: ICstCreateData = {
-      insert_after: activeID,
-      cst_type: activeCst.cst_type,
-      alias: '',
-      term_raw: activeCst.term_raw,
-      definition_formal: activeCst.definition_formal,
-      definition_raw: activeCst.definition_raw,
-      convention: activeCst.convention,
-      term_forms: activeCst.term_forms
-    };
-    onCreateCst(data, true);
+    onCreate(activeCst?.cst_type);
   }
 
   function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
@@ -125,7 +88,7 @@ function EditorConstituenta({
   function processAltKey(code: string): boolean {
     switch (code) {
       case 'KeyV':
-        handleClone();
+        onClone();
         return true;
     }
     return false;
@@ -138,8 +101,8 @@ function EditorConstituenta({
         isModified={isModified}
         onSubmit={initiateSubmit}
         onReset={() => setToggleReset(prev => !prev)}
-        onDelete={handleDelete}
-        onClone={handleClone}
+        onDelete={onDelete}
+        onClone={onClone}
         onCreate={handleCreate}
       />
       <div tabIndex={-1} className='flex max-w-[95rem]' onKeyDown={handleInput}>
@@ -153,7 +116,7 @@ function EditorConstituenta({
           onToggleList={() => setShowList(prev => !prev)}
           setIsModified={setIsModified}
           onEditTerm={onEditTerm}
-          onRenameCst={onRenameCst}
+          onRename={onRename}
         />
         <AnimatePresence>
           {showList && windowSize.width && windowSize.width >= SIDELIST_HIDE_THRESHOLD ? (
@@ -161,7 +124,7 @@ function EditorConstituenta({
               schema={schema}
               expression={activeCst?.definition_formal ?? ''}
               baseHeight={UNFOLDED_HEIGHT}
-              activeID={activeID}
+              activeID={activeCst?.id}
               onOpenEdit={onOpenEdit}
             />
           ) : null}

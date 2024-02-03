@@ -67,6 +67,7 @@ function RSListToolbar({
       <div ref={insertMenu.ref}>
         <MiniButton
           title='Добавить пустую конституенту'
+          hideTitle={insertMenu.isOpen}
           icon={<BiDownArrowCircle size='1.25rem' className={isMutable ? 'clr-text-success' : ''} />}
           disabled={!isMutable}
           onClick={insertMenu.toggle}

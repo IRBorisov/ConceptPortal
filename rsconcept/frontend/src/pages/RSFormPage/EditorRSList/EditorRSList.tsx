@@ -5,46 +5,59 @@ import { useLayoutEffect, useState } from 'react';
 import { type RowSelectionState } from '@/components/DataTable';
 import SelectedCounter from '@/components/SelectedCounter';
 import { useRSForm } from '@/context/RSFormContext';
-import { CstType, ICstCreateData, ICstMovetoData } from '@/models/rsform';
+import { CstType, ICstMovetoData } from '@/models/rsform';
 
 import RSListToolbar from './RSListToolbar';
 import RSTable from './RSTable';
 
 interface EditorRSListProps {
   isMutable: boolean;
+  selected: number[];
+  setSelected: React.Dispatch<React.SetStateAction<number[]>>;
   onOpenEdit: (cstID: number) => void;
-  onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void;
-  onDeleteCst: (selected: number[], callback: (items: number[]) => void) => void;
+  onClone: () => void;
+  onCreate: (type?: CstType) => void;
+  onDelete: () => void;
 }
 
-function EditorRSList({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: EditorRSListProps) {
+function EditorRSList({
+  selected,
+  setSelected,
+  isMutable,
+  onOpenEdit,
+  onClone,
+  onCreate,
+  onDelete
+}: EditorRSListProps) {
   const { schema, cstMoveTo } = useRSForm();
-  const [selected, setSelected] = useState<number[]>([]);
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
   useLayoutEffect(() => {
-    if (!schema || Object.keys(rowSelection).length === 0) {
+    if (!schema || selected.length === 0) {
+      setRowSelection({});
+    } else {
+      const newRowSelection: RowSelectionState = {};
+      schema.items.forEach((cst, index) => {
+        newRowSelection[String(index)] = selected.includes(cst.id);
+      });
+      setRowSelection(newRowSelection);
+    }
+  }, [selected, schema]);
+
+  function handleRowSelection(updater: React.SetStateAction<RowSelectionState>) {
+    if (!schema) {
       setSelected([]);
     } else {
-      const selected: number[] = [];
-      schema.items.forEach((cst, index) => {
-        if (rowSelection[String(index)] === true) {
-          selected.push(cst.id);
+      const newRowSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
+      const newSelection: number[] = [];
+      schema?.items.forEach((cst, index) => {
+        if (newRowSelection[String(index)] === true) {
+          newSelection.push(cst.id);
         }
       });
-      setSelected(selected);
+      setSelected(newSelection);
     }
-  }, [rowSelection, schema]);
-
-  // Delete selected constituents
-  function handleDelete() {
-    if (!schema) {
-      return;
-    }
-    onDeleteCst(selected, () => {
-      setRowSelection({});
-    });
   }
 
   // Move selected cst up
@@ -65,13 +78,7 @@ function EditorRSList({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Edito
       items: selected,
       move_to: target
     };
-    cstMoveTo(data, () => {
-      const newSelection: RowSelectionState = {};
-      selected.forEach((_, index) => {
-        newSelection[String(target + index - 1)] = true;
-      });
-      setRowSelection(newSelection);
-    });
+    cstMoveTo(data);
   }
 
   // Move selected cst down
@@ -96,57 +103,7 @@ function EditorRSList({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Edito
       items: selected,
       move_to: target
     };
-    cstMoveTo(data, () => {
-      const newSelection: RowSelectionState = {};
-      selected.forEach((_, index) => {
-        newSelection[String(target + index - 1)] = true;
-      });
-      setRowSelection(newSelection);
-    });
-  }
-
-  function handleCreateCst(type?: CstType) {
-    if (!schema) {
-      return;
-    }
-    const selectedPosition = selected.reduce((prev, cstID) => {
-      const position = schema.items.findIndex(cst => cst.id === cstID);
-      return Math.max(position, prev);
-    }, -1);
-    const insert_where = selectedPosition >= 0 ? schema.items[selectedPosition].id : undefined;
-    const data: ICstCreateData = {
-      insert_after: insert_where ?? null,
-      cst_type: type ?? CstType.BASE,
-      alias: '',
-      term_raw: '',
-      definition_formal: '',
-      definition_raw: '',
-      convention: '',
-      term_forms: []
-    };
-    onCreateCst(data, type !== undefined);
-  }
-
-  // Clone selected
-  function handleClone() {
-    if (selected.length < 1 || !schema) {
-      return;
-    }
-    const activeCst = schema.items.find(cst => cst.id === selected[0]);
-    if (!activeCst) {
-      return;
-    }
-    const data: ICstCreateData = {
-      insert_after: activeCst.id,
-      cst_type: activeCst.cst_type,
-      alias: '',
-      term_raw: activeCst.term_raw,
-      definition_formal: activeCst.definition_formal,
-      definition_raw: activeCst.definition_raw,
-      convention: activeCst.convention,
-      term_forms: activeCst.term_forms
-    };
-    onCreateCst(data, true);
+    cstMoveTo(data);
   }
 
   // Implement hotkeys for working with constituents table
@@ -156,7 +113,7 @@ function EditorRSList({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Edito
     }
     if (event.key === 'Delete' && selected.length > 0) {
       event.preventDefault();
-      handleDelete();
+      onDelete();
       return;
     }
     if (!event.altKey || event.shiftKey) {
@@ -174,21 +131,21 @@ function EditorRSList({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Edito
       switch (code) {
         case 'ArrowUp': handleMoveUp(); return true;
         case 'ArrowDown':  handleMoveDown(); return true;
-        case 'KeyV':    handleClone(); return true;
+        case 'KeyV':    onClone(); return true;
       }
     }
     // prettier-ignore
     switch (code) {
-      case 'Backquote': handleCreateCst(); return true;
+      case 'Backquote': onCreate(); return true;
       
-      case 'Digit1':    handleCreateCst(CstType.BASE); return true;
-      case 'Digit2':    handleCreateCst(CstType.STRUCTURED); return true;
-      case 'Digit3':    handleCreateCst(CstType.TERM); return true;
-      case 'Digit4':    handleCreateCst(CstType.AXIOM); return true;
-      case 'KeyQ':      handleCreateCst(CstType.FUNCTION); return true;
-      case 'KeyW':      handleCreateCst(CstType.PREDICATE); return true;
-      case 'Digit5':    handleCreateCst(CstType.CONSTANT); return true;
-      case 'Digit6':    handleCreateCst(CstType.THEOREM); return true;
+      case 'Digit1':    onCreate(CstType.BASE); return true;
+      case 'Digit2':    onCreate(CstType.STRUCTURED); return true;
+      case 'Digit3':    onCreate(CstType.TERM); return true;
+      case 'Digit4':    onCreate(CstType.AXIOM); return true;
+      case 'KeyQ':      onCreate(CstType.FUNCTION); return true;
+      case 'KeyW':      onCreate(CstType.PREDICATE); return true;
+      case 'Digit5':    onCreate(CstType.CONSTANT); return true;
+      case 'Digit6':    onCreate(CstType.THEOREM); return true;
     }
     return false;
   }
@@ -196,8 +153,8 @@ function EditorRSList({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Edito
   return (
     <div tabIndex={-1} className='outline-none' onKeyDown={handleTableKey}>
       <SelectedCounter
-        total={schema?.stats?.count_all ?? 0}
-        selected={selected.length}
+        totalCount={schema?.stats?.count_all ?? 0}
+        selectedCount={selected.length}
         position='top-[0.3rem] left-2'
       />
 
@@ -206,9 +163,9 @@ function EditorRSList({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Edito
         isMutable={isMutable}
         onMoveUp={handleMoveUp}
         onMoveDown={handleMoveDown}
-        onClone={handleClone}
-        onCreate={handleCreateCst}
-        onDelete={handleDelete}
+        onClone={onClone}
+        onCreate={onCreate}
+        onDelete={onDelete}
       />
 
       <div className='pt-[2.3rem] border-b' />
@@ -216,9 +173,9 @@ function EditorRSList({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Edito
       <RSTable
         items={schema?.items}
         selected={rowSelection}
-        setSelected={setRowSelection}
+        setSelected={handleRowSelection}
         onEdit={onOpenEdit}
-        onCreateNew={() => handleCreateCst()}
+        onCreateNew={onCreate}
       />
     </div>
   );

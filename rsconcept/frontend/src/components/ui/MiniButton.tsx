@@ -7,9 +7,10 @@ import { CProps } from '../props';
 interface MiniButtonProps extends CProps.Button {
   icon: React.ReactNode;
   noHover?: boolean;
+  hideTitle?: boolean;
 }
 
-function MiniButton({ icon, noHover, tabIndex, title, className, ...restProps }: MiniButtonProps) {
+function MiniButton({ icon, noHover, hideTitle, tabIndex, title, className, ...restProps }: MiniButtonProps) {
   return (
     <button
       type='button'
@@ -27,6 +28,7 @@ function MiniButton({ icon, noHover, tabIndex, title, className, ...restProps }:
       )}
       data-tooltip-id={title ? globalIDs.tooltip : undefined}
       data-tooltip-content={title}
+      data-tooltip-hidden={hideTitle}
       {...restProps}
     >
       {icon}

@@ -9,6 +9,7 @@ interface ButtonProps extends CProps.Control, CProps.Colors, CProps.Button {
   icon?: React.ReactNode;
 
   dense?: boolean;
+  hideTitle?: boolean;
   loading?: boolean;
 }
 
@@ -19,6 +20,7 @@ function Button({
   loading,
   dense,
   disabled,
+  hideTitle,
   noBorder,
   noOutline,
   colors = 'clr-btn-default',
@@ -46,6 +48,7 @@ function Button({
       )}
       data-tooltip-id={title ? globalIDs.tooltip : undefined}
       data-tooltip-content={title}
+      data-tooltip-hidden={hideTitle}
       {...restProps}
     >
       {icon ? icon : null}

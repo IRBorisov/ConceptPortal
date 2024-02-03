@@ -1,10 +1,10 @@
 import { useLayoutEffect, useMemo, useState } from 'react';
 
+import { Graph } from '@/models/Graph';
 import { GraphFilterParams } from '@/models/miscellaneous';
 import { CstType, IRSForm } from '@/models/rsform';
-import { Graph } from '@/models/Graph';
 
-function useGraphFilter(schema: IRSForm | undefined, params: GraphFilterParams, toggleUpdate: boolean) {
+function useGraphFilter(schema: IRSForm | undefined, params: GraphFilterParams) {
   const [filtered, setFiltered] = useState<Graph>(new Graph());
 
   const allowedTypes: CstType[] = useMemo(() => {
@@ -47,7 +47,7 @@ function useGraphFilter(schema: IRSForm | undefined, params: GraphFilterParams, 
       });
     }
     setFiltered(graph);
-  }, [schema, params, allowedTypes, toggleUpdate]);
+  }, [schema, params, allowedTypes]);
 
   return filtered;
 }

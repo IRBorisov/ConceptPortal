@@ -8,12 +8,11 @@ import { GraphEdge, GraphNode, LayoutTypes } from 'reagraph';
 import InfoConstituenta from '@/components/InfoConstituenta';
 import SelectedCounter from '@/components/SelectedCounter';
 import Overlay from '@/components/ui/Overlay';
-import { useRSForm } from '@/context/RSFormContext';
 import { useConceptTheme } from '@/context/ThemeContext';
 import DlgGraphParams from '@/dialogs/DlgGraphParams';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { GraphColoringScheme, GraphFilterParams } from '@/models/miscellaneous';
-import { CstType, ICstCreateData } from '@/models/rsform';
+import { CstType, IRSForm } from '@/models/rsform';
 import { colorBgGraphNode } from '@/styling/color';
 import { classnames, TIMEOUT_GRAPH_REFRESH } from '@/utils/constants';
 
@@ -25,16 +24,25 @@ import ViewHidden from './ViewHidden';
 
 interface EditorTermGraphProps {
   isMutable: boolean;
+  selected: number[];
+  schema?: IRSForm;
+  setSelected: React.Dispatch<React.SetStateAction<number[]>>;
   onOpenEdit: (cstID: number) => void;
-  onCreateCst: (initial: ICstCreateData, skipDialog?: boolean) => void;
-  onDeleteCst: (selected: number[], callback: (items: number[]) => void) => void;
+  onCreate: (type: CstType, definition: string) => void;
+  onDelete: () => void;
 }
 
-function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: EditorTermGraphProps) {
-  const { schema } = useRSForm();
+function EditorTermGraph({
+  schema,
+  selected,
+  setSelected,
+  isMutable,
+  onOpenEdit,
+  onCreate,
+  onDelete
+}: EditorTermGraphProps) {
   const { colors } = useConceptTheme();
 
-  const [toggleDataUpdate, setToggleDataUpdate] = useState(false);
   const [filterParams, setFilterParams] = useLocalStorage<GraphFilterParams>('graph_filter', {
     noHermits: true,
     noTemplates: false,
@@ -51,14 +59,10 @@ function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Ed
     allowTheorem: true
   });
   const [showParamsDialog, setShowParamsDialog] = useState(false);
-  const filtered = useGraphFilter(schema, filterParams, toggleDataUpdate);
+  const filtered = useGraphFilter(schema, filterParams);
 
-  const [selectedGraph, setSelectedGraph] = useState<number[]>([]);
   const [hidden, setHidden] = useState<number[]>([]);
-  const [selectedHidden, setSelectedHidden] = useState<number[]>([]);
-  const selected: number[] = useMemo(() => {
-    return [...selectedHidden, ...selectedGraph];
-  }, [selectedHidden, selectedGraph]);
+
   const nothingSelected = useMemo(() => selected.length === 0, [selected]);
 
   const [layout, setLayout] = useLocalStorage<LayoutTypes>('graph_layout', 'treeTd2d');
@@ -72,7 +76,6 @@ function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Ed
   }, [schema?.items, hoverID]);
 
   const [toggleResetView, setToggleResetView] = useState(false);
-  const [toggleResetSelection, setToggleResetSelection] = useState(false);
 
   useLayoutEffect(() => {
     if (!schema) {
@@ -85,9 +88,8 @@ function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Ed
       }
     });
     setHidden(newDismissed);
-    setSelectedHidden([]);
     setHoverID(undefined);
-  }, [schema, filtered, toggleDataUpdate]);
+  }, [schema, filtered]);
 
   const nodes: GraphNode[] = useMemo(() => {
     const result: GraphNode[] = [];
@@ -123,15 +125,20 @@ function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Ed
     return result;
   }, [filtered.nodes]);
 
+  const handleGraphSelection = useCallback(
+    (newID: number) => {
+      setSelected(prev => [...prev, newID]);
+    },
+    [setSelected]
+  );
+
   function toggleDismissed(cstID: number) {
-    setSelectedHidden(prev => {
-      const index = prev.findIndex(id => cstID === id);
-      if (index !== -1) {
-        prev.splice(index, 1);
+    setSelected(prev => {
+      if (prev.includes(cstID)) {
+        return [...prev.filter(id => id !== cstID)];
       } else {
-        prev.push(cstID);
+        return [...prev, cstID];
       }
-      return [...prev];
     });
   }
 
@@ -139,29 +146,15 @@ function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Ed
     if (!schema) {
       return;
     }
-    const data: ICstCreateData = {
-      insert_after: null,
-      cst_type: selected.length === 0 ? CstType.BASE : CstType.TERM,
-      alias: '',
-      term_raw: '',
-      definition_formal: selected.map(id => schema.items.find(cst => cst.id === id)!.alias).join(' '),
-      definition_raw: '',
-      convention: '',
-      term_forms: []
-    };
-    onCreateCst(data);
+    const definition = selected.map(id => schema.items.find(cst => cst.id === id)!.alias).join(' ');
+    onCreate(selected.length === 0 ? CstType.BASE : CstType.TERM, definition);
   }
 
   function handleDeleteCst() {
     if (!schema || selected.length === 0) {
       return;
     }
-    onDeleteCst(selected, () => {
-      setHidden([]);
-      setSelectedHidden([]);
-      setToggleResetSelection(prev => !prev);
-      setToggleDataUpdate(prev => !prev);
-    });
+    onDelete();
   }
 
   function handleChangeLayout(newLayout: LayoutTypes) {
@@ -206,8 +199,8 @@ function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Ed
 
       <SelectedCounter
         hideZero
-        total={schema?.stats?.count_all ?? 0}
-        selected={selected.length}
+        totalCount={schema?.stats?.count_all ?? 0}
+        selectedCount={selected.length}
         position='top-[0.3rem] left-0'
       />
 
@@ -249,7 +242,7 @@ function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Ed
         />
         <ViewHidden
           items={hidden}
-          selected={selectedHidden}
+          selected={selected}
           schema={schema!}
           coloringScheme={coloringScheme}
           toggleSelection={toggleDismissed}
@@ -260,15 +253,15 @@ function EditorTermGraph({ isMutable, onOpenEdit, onCreateCst, onDeleteCst }: Ed
       <TermGraph
         nodes={nodes}
         edges={edges}
+        selectedIDs={selected}
         layout={layout}
         is3D={is3D}
         orbit={orbit}
-        setSelected={setSelectedGraph}
+        onSelect={handleGraphSelection}
         setHoverID={setHoverID}
         onEdit={onOpenEdit}
-        onDeselect={() => setSelectedHidden([])}
+        onDeselectAll={() => setSelected([])}
         toggleResetView={toggleResetView}
-        toggleResetSelection={toggleResetSelection}
       />
     </div>
   );

@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { Dispatch, SetStateAction, useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { FiSave } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 
@@ -19,7 +19,7 @@ interface FormRSFormProps {
   id?: string;
   disabled: boolean;
   isModified: boolean;
-  setIsModified: Dispatch<SetStateAction<boolean>>;
+  setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function FormRSForm({ id, disabled, isModified, setIsModified }: FormRSFormProps) {

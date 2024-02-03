@@ -10,18 +10,18 @@ import { resources } from '@/utils/constants';
 interface TermGraphProps {
   nodes: GraphNode[];
   edges: GraphEdge[];
+  selectedIDs: number[];
 
   layout: LayoutTypes;
   is3D: boolean;
   orbit: boolean;
 
-  setSelected: (selected: number[]) => void;
   setHoverID: (newID: number | undefined) => void;
   onEdit: (cstID: number) => void;
-  onDeselect: () => void;
+  onSelect: (newID: number) => void;
+  onDeselectAll: () => void;
 
   toggleResetView: boolean;
-  toggleResetSelection: boolean;
 }
 
 const TREE_SIZE_MILESTONE = 50;
@@ -29,29 +29,28 @@ const TREE_SIZE_MILESTONE = 50;
 function TermGraph({
   nodes,
   edges,
+  selectedIDs,
   layout,
   is3D,
   orbit,
   toggleResetView,
-  toggleResetSelection,
   setHoverID,
   onEdit,
-  setSelected,
-  onDeselect
+  onSelect,
+  onDeselectAll
 }: TermGraphProps) {
   const { noNavigation, darkMode } = useConceptTheme();
   const graphRef = useRef<GraphCanvasRef | null>(null);
 
-  const { selections, actives, onNodeClick, clearSelections, onCanvasClick, onNodePointerOver, onNodePointerOut } =
-    useSelection({
-      ref: graphRef,
-      nodes,
-      edges,
-      type: 'multi', // 'single' | 'multi' | 'multiModifier'
-      pathSelectionType: 'out',
-      pathHoverType: 'all',
-      focusOnSelect: false
-    });
+  const { selections, actives, setSelections, onCanvasClick, onNodePointerOver, onNodePointerOut } = useSelection({
+    ref: graphRef,
+    nodes,
+    edges,
+    type: 'multi', // 'single' | 'multi' | 'multiModifier'
+    pathSelectionType: 'out',
+    pathHoverType: 'all',
+    focusOnSelect: false
+  });
 
   const handleHoverIn = useCallback(
     (node: GraphNode) => {
@@ -73,19 +72,19 @@ function TermGraph({
     (node: GraphNode) => {
       if (selections.includes(node.id)) {
         onEdit(Number(node.id));
-        return;
+      } else {
+        onSelect(Number(node.id));
       }
-      if (onNodeClick) onNodeClick(node);
     },
-    [onNodeClick, selections, onEdit]
+    [onSelect, selections, onEdit]
   );
 
   const handleCanvasClick = useCallback(
     (event: MouseEvent) => {
-      onDeselect();
+      onDeselectAll();
       if (onCanvasClick) onCanvasClick(event);
     },
-    [onCanvasClick, onDeselect]
+    [onCanvasClick, onDeselectAll]
   );
 
   useLayoutEffect(() => {
@@ -94,12 +93,9 @@ function TermGraph({
   }, [toggleResetView]);
 
   useLayoutEffect(() => {
-    clearSelections();
-  }, [toggleResetSelection, clearSelections]);
-
-  useLayoutEffect(() => {
-    setSelected(selections.map(id => Number(id)));
-  }, [selections, setSelected]);
+    const newSelections = nodes.filter(node => selectedIDs.includes(Number(node.id))).map(node => node.id);
+    setSelections(newSelections);
+  }, [selectedIDs, setSelections, nodes]);
 
   const canvasWidth = useMemo(() => {
     return 'calc(100vw - 1.1rem)';

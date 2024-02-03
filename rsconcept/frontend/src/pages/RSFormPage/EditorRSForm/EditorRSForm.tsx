@@ -1,7 +1,5 @@
 'use client';
 
-import { Dispatch, SetStateAction } from 'react';
-
 import InfoLibraryItem from '@/components/InfoLibraryItem';
 import Divider from '@/components/ui/Divider';
 import FlexColumn from '@/components/ui/FlexColumn';
@@ -17,7 +15,7 @@ interface EditorRSFormProps {
   isModified: boolean;
   isMutable: boolean;
 
-  setIsModified: Dispatch<SetStateAction<boolean>>;
+  setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
   onDestroy: () => void;
   onClaim: () => void;
   onShare: () => void;

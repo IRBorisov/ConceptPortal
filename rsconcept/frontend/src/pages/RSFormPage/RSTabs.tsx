@@ -28,7 +28,7 @@ import DlgRenameCst from '@/dialogs/DlgRenameCst';
 import DlgUploadRSForm from '@/dialogs/DlgUploadRSForm';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { UserAccessMode } from '@/models/miscellaneous';
-import { IConstituenta, ICstCreateData, ICstRenameData, ICstUpdateData, TermForm } from '@/models/rsform';
+import { CstType, IConstituenta, ICstCreateData, ICstRenameData, ICstUpdateData, TermForm } from '@/models/rsform';
 import { generateAlias } from '@/models/rsformAPI';
 import { EXTEOR_TRS_FILE, prefixes, TIMEOUT_UI_REFRESH } from '@/utils/constants';
 
@@ -85,14 +85,18 @@ function RSTabs() {
     );
   }, [user?.is_staff, mode, isOwned, loading, processing]);
 
-  const [activeID, setActiveID] = useState<number | undefined>(undefined);
-  const activeCst = useMemo(() => schema?.items?.find(cst => cst.id === activeID), [schema?.items, activeID]);
+  const [selected, setSelected] = useState<number[]>([]);
+  const activeCst: IConstituenta | undefined = useMemo(() => {
+    if (!schema || selected.length === 0) {
+      return undefined;
+    } else {
+      return schema.items.find(cst => cst.id === selected.at(-1));
+    }
+  }, [schema, selected]);
 
   const [showUpload, setShowUpload] = useState(false);
   const [showClone, setShowClone] = useState(false);
 
-  const [afterDelete, setAfterDelete] = useState<((items: number[]) => void) | undefined>(undefined);
-  const [toBeDeleted, setToBeDeleted] = useState<number[]>([]);
   const [showDeleteCst, setShowDeleteCst] = useState(false);
 
   const [createInitialData, setCreateInitialData] = useState<ICstCreateData>();
@@ -118,10 +122,19 @@ function RSTabs() {
 
   useLayoutEffect(() => {
     setNoFooter(activeTab === RSTabID.CST_EDIT || activeTab === RSTabID.CST_LIST);
-    setActiveID(Number(cstQuery) ?? (schema && schema?.items.length > 0 ? schema.items[0].id : undefined));
     setIsModified(false);
+    if (activeTab === RSTabID.CST_EDIT) {
+      const cstID = Number(cstQuery);
+      if (cstID && schema && schema.items.find(cst => cst.id === cstID)) {
+        setSelected([cstID]);
+      } else if (schema && schema?.items.length > 0) {
+        setSelected([schema.items[0].id]);
+      } else {
+        setSelected([]);
+      }
+    }
     return () => setNoFooter(false);
-  }, [activeTab, cstQuery, setActiveID, schema, setNoFooter, setIsModified]);
+  }, [activeTab, cstQuery, setSelected, schema, setNoFooter, setIsModified]);
 
   useLayoutEffect(
     () =>
@@ -136,10 +149,6 @@ function RSTabs() {
       }),
     [schema, setMode, isOwned]
   );
-
-  function onSelectTab(index: number) {
-    navigateTab(index, activeID);
-  }
 
   const navigateTab = useCallback(
     (tab: RSTabID, activeID?: number) => {
@@ -161,6 +170,10 @@ function RSTabs() {
     },
     [router, schema, activeTab]
   );
+
+  function onSelectTab(index: number) {
+    navigateTab(index, selected.length > 0 ? selected.at(-1) : undefined);
+  }
 
   const handleCreateCst = useCallback(
     (data: ICstCreateData) => {
@@ -189,16 +202,43 @@ function RSTabs() {
   );
 
   const promptCreateCst = useCallback(
-    (initialData: ICstCreateData, skipDialog?: boolean) => {
+    (type: CstType | undefined, skipDialog: boolean, definition?: string) => {
+      const data: ICstCreateData = {
+        insert_after: activeCst?.id ?? null,
+        cst_type: type ?? activeCst?.cst_type ?? CstType.BASE,
+        alias: '',
+        term_raw: '',
+        definition_formal: definition ?? '',
+        definition_raw: '',
+        convention: '',
+        term_forms: []
+      };
       if (skipDialog) {
-        handleCreateCst(initialData);
+        handleCreateCst(data);
       } else {
-        setCreateInitialData(initialData);
+        setCreateInitialData(data);
         setShowCreateCst(true);
       }
     },
-    [handleCreateCst]
+    [handleCreateCst, activeCst]
   );
+
+  const handleCloneCst = useCallback(() => {
+    if (!activeCst) {
+      return;
+    }
+    const data: ICstCreateData = {
+      insert_after: activeCst.id,
+      cst_type: activeCst.cst_type,
+      alias: '',
+      term_raw: activeCst.term_raw,
+      definition_formal: activeCst.definition_formal,
+      definition_raw: activeCst.definition_raw,
+      convention: activeCst.convention,
+      term_forms: activeCst.term_forms
+    };
+    handleCreateCst(data);
+  }, [activeCst, handleCreateCst]);
 
   const handleRenameCst = useCallback(
     (data: ICstRenameData) => {
@@ -207,10 +247,18 @@ function RSTabs() {
     [cstRename, renameInitialData]
   );
 
-  const promptRenameCst = useCallback((initialData: ICstRenameData) => {
-    setRenameInitialData(initialData);
+  const promptRenameCst = useCallback(() => {
+    if (!activeCst) {
+      return;
+    }
+    const data: ICstRenameData = {
+      id: activeCst.id,
+      alias: activeCst.alias,
+      cst_type: activeCst.cst_type
+    };
+    setRenameInitialData(data);
     setShowRenameCst(true);
-  }, []);
+  }, [activeCst]);
 
   const onReindex = useCallback(() => resetAliases(() => toast.success('Имена конституент обновлены')), [resetAliases]);
 
@@ -225,33 +273,26 @@ function RSTabs() {
 
       const deletedNames = deleted.map(id => schema.items.find(cst => cst.id === id)?.alias).join(', ');
       const isEmpty = deleted.length === schema.items.length;
-      const nextActive = isEmpty ? undefined : getNextActiveOnDelete(activeID, schema.items, deleted);
+      const nextActive = isEmpty ? undefined : getNextActiveOnDelete(activeCst?.id, schema.items, deleted);
 
       cstDelete(data, () => {
         toast.success(`Конституенты удалены: ${deletedNames}`);
         if (isEmpty) {
           navigateTab(RSTabID.CST_LIST);
-        } else if (!nextActive) {
-          navigateTab(activeTab);
-        } else {
+        } else if (activeTab === RSTabID.CST_EDIT) {
           navigateTab(activeTab, nextActive);
+        } else {
+          setSelected(nextActive ? [nextActive] : []);
+          navigateTab(activeTab);
         }
-        if (afterDelete) afterDelete(deleted);
       });
     },
-    [afterDelete, cstDelete, schema, activeID, activeTab, navigateTab]
+    [cstDelete, schema, activeTab, activeCst, navigateTab]
   );
-
-  const promptDeleteCst = useCallback((selected: number[], callback?: (items: number[]) => void) => {
-    setAfterDelete(() => (items: number[]) => {
-      if (callback) callback(items);
-    });
-    setToBeDeleted(selected);
-    setShowDeleteCst(true);
-  }, []);
 
   const onOpenCst = useCallback(
     (cstID: number) => {
+      setSelected([cstID]);
       navigateTab(RSTabID.CST_EDIT, cstID);
     },
     [navigateTab]
@@ -334,16 +375,16 @@ function RSTabs() {
 
   const handleSaveWordforms = useCallback(
     (forms: TermForm[]) => {
-      if (!activeID) {
+      if (!activeCst) {
         return;
       }
       const data: ICstUpdateData = {
-        id: activeID,
+        id: activeCst.id,
         term_forms: forms
       };
       cstUpdate(data, () => toast.success('Изменения сохранены'));
     },
-    [cstUpdate, activeID]
+    [cstUpdate, activeCst]
   );
 
   return (
@@ -371,7 +412,7 @@ function RSTabs() {
             schema={schema!}
             hideWindow={() => setShowDeleteCst(false)}
             onDelete={handleDeleteCst}
-            selected={toBeDeleted}
+            selected={selected}
           />
         ) : null}
         {showEditTerm ? (
@@ -438,34 +479,41 @@ function RSTabs() {
 
             <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_LIST ? '' : 'none' }}>
               <EditorRSList
+                selected={selected}
+                setSelected={setSelected}
                 isMutable={isMutable}
                 onOpenEdit={onOpenCst}
-                onCreateCst={promptCreateCst}
-                onDeleteCst={promptDeleteCst}
+                onClone={handleCloneCst}
+                onCreate={type => promptCreateCst(type, type !== undefined)}
+                onDelete={() => setShowDeleteCst(true)}
               />
             </TabPanel>
 
             <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_EDIT ? '' : 'none' }}>
               <EditorConstituenta
+                schema={schema}
                 isMutable={isMutable}
                 isModified={isModified}
                 setIsModified={setIsModified}
-                activeID={activeID}
                 activeCst={activeCst}
                 onOpenEdit={onOpenCst}
-                onCreateCst={promptCreateCst}
-                onDeleteCst={promptDeleteCst}
-                onRenameCst={promptRenameCst}
+                onClone={handleCloneCst}
+                onCreate={type => promptCreateCst(type, false)}
+                onDelete={() => setShowDeleteCst(true)}
+                onRename={promptRenameCst}
                 onEditTerm={promptShowEditTerm}
               />
             </TabPanel>
 
             <TabPanel style={{ display: activeTab === RSTabID.TERM_GRAPH ? '' : 'none' }}>
               <EditorTermGraph
+                schema={schema}
+                selected={selected}
+                setSelected={setSelected}
                 isMutable={isMutable}
                 onOpenEdit={onOpenCst}
-                onCreateCst={promptCreateCst}
-                onDeleteCst={promptDeleteCst}
+                onCreate={(type, definition) => promptCreateCst(type, false, definition)}
+                onDelete={() => setShowDeleteCst(true)}
               />
             </TabPanel>
           </AnimateFade>

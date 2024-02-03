@@ -118,6 +118,7 @@ function RSTabsMenu({
           dense
           tabIndex={-1}
           title='Меню'
+          hideTitle={schemaMenu.isOpen}
           icon={<BiMenu size='1.25rem' className='clr-text-controls' />}
           className='h-full pl-2'
           style={{ outlineColor: 'transparent' }}
@@ -172,6 +173,7 @@ function RSTabsMenu({
           noBorder
           tabIndex={-1}
           title={'Редактирование'}
+          hideTitle={editMenu.isOpen}
           className='h-full'
           style={{ outlineColor: 'transparent' }}
           icon={<FiEdit size='1.25rem' className={isMutable ? 'clr-text-success' : 'clr-text-warning'} />}
@@ -201,6 +203,7 @@ function RSTabsMenu({
           noBorder
           tabIndex={-1}
           title={`Режим ${labelAccessMode(mode)}`}
+          hideTitle={accessMenu.isOpen}
           className='h-full pr-2'
           style={{ outlineColor: 'transparent' }}
           icon={
