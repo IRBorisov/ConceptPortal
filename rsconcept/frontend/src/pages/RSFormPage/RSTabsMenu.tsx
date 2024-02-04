@@ -26,31 +26,14 @@ import useDropdown from '@/hooks/useDropdown';
 import { UserAccessMode } from '@/models/miscellaneous';
 import { describeAccessMode, labelAccessMode } from '@/utils/labels';
 
+import { useRSEdit } from './RSEditContext';
+
 interface RSTabsMenuProps {
-  isMutable: boolean;
-
-  showUploadDialog: () => void;
-  showCloneDialog: () => void;
-
   onDestroy: () => void;
-  onClaim: () => void;
-  onShare: () => void;
-  onDownload: () => void;
-  onReindex: () => void;
-  onTemplates: () => void;
 }
 
-function RSTabsMenu({
-  isMutable,
-  showUploadDialog,
-  showCloneDialog,
-  onDestroy,
-  onShare,
-  onDownload,
-  onClaim,
-  onReindex,
-  onTemplates
-}: RSTabsMenuProps) {
+function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
+  const controller = useRSEdit();
   const router = useConceptNavigation();
   const { user } = useAuth();
   const { isOwned, isClaimable } = useRSForm();
@@ -63,7 +46,7 @@ function RSTabsMenu({
 
   function handleClaimOwner() {
     editMenu.hide();
-    onClaim();
+    controller.claim();
   }
 
   function handleDelete() {
@@ -73,32 +56,32 @@ function RSTabsMenu({
 
   function handleDownload() {
     schemaMenu.hide();
-    onDownload();
+    controller.download();
   }
 
   function handleUpload() {
     schemaMenu.hide();
-    showUploadDialog();
+    controller.promptUpload();
   }
 
   function handleClone() {
     schemaMenu.hide();
-    showCloneDialog();
+    controller.promptClone();
   }
 
   function handleShare() {
     schemaMenu.hide();
-    onShare();
+    controller.share();
   }
 
   function handleReindex() {
     editMenu.hide();
-    onReindex();
+    controller.reindex();
   }
 
   function handleTemplates() {
     editMenu.hide();
-    onTemplates();
+    controller.promptTemplate();
   }
 
   function handleChangeMode(newMode: UserAccessMode) {
@@ -148,15 +131,15 @@ function RSTabsMenu({
             onClick={handleDownload}
           />
           <DropdownButton
-            disabled={!isMutable}
+            disabled={!controller.isMutable}
             text='Загрузить из Экстеора'
-            icon={<BiUpload size='1rem' className={isMutable ? 'clr-text-warning' : ''} />}
+            icon={<BiUpload size='1rem' className={controller.isMutable ? 'clr-text-warning' : ''} />}
             onClick={handleUpload}
           />
           <DropdownButton
-            disabled={!isMutable}
+            disabled={!controller.isMutable}
             text='Удалить схему'
-            icon={<BiTrash size='1rem' className={isMutable ? 'clr-text-warning' : ''} />}
+            icon={<BiTrash size='1rem' className={controller.isMutable ? 'clr-text-warning' : ''} />}
             onClick={handleDelete}
           />
           <DropdownButton
@@ -176,22 +159,22 @@ function RSTabsMenu({
           hideTitle={editMenu.isOpen}
           className='h-full'
           style={{ outlineColor: 'transparent' }}
-          icon={<FiEdit size='1.25rem' className={isMutable ? 'clr-text-success' : 'clr-text-warning'} />}
+          icon={<FiEdit size='1.25rem' className={controller.isMutable ? 'clr-text-success' : 'clr-text-warning'} />}
           onClick={editMenu.toggle}
         />
         <Dropdown isOpen={editMenu.isOpen}>
           <DropdownButton
-            disabled={!isMutable}
+            disabled={!controller.isMutable}
             text='Сброс имён'
             title='Присвоить порядковые имена и обновить выражения'
-            icon={<BiAnalyse size='1rem' className={isMutable ? 'clr-text-primary' : ''} />}
+            icon={<BiAnalyse size='1rem' className={controller.isMutable ? 'clr-text-primary' : ''} />}
             onClick={handleReindex}
           />
           <DropdownButton
-            disabled={!isMutable}
+            disabled={!controller.isMutable}
             text='Банк выражений'
             title='Создать конституенту из шаблона'
-            icon={<BiDiamond size='1rem' className={isMutable ? 'clr-text-success' : ''} />}
+            icon={<BiDiamond size='1rem' className={controller.isMutable ? 'clr-text-success' : ''} />}
             onClick={handleTemplates}
           />
         </Dropdown>

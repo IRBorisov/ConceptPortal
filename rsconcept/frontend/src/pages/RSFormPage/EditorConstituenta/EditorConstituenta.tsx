@@ -5,9 +5,10 @@ import { useMemo, useState } from 'react';
 
 import useLocalStorage from '@/hooks/useLocalStorage';
 import useWindowSize from '@/hooks/useWindowSize';
-import { CstType, IConstituenta, IRSForm } from '@/models/rsform';
+import { IConstituenta } from '@/models/rsform';
 import { globalIDs } from '@/utils/constants';
 
+import { useRSEdit } from '../RSEditContext';
 import ViewConstituents from '../ViewConstituents';
 import ConstituentaToolbar from './ConstituentaToolbar';
 import FormConstituenta from './FormConstituenta';
@@ -19,48 +20,20 @@ const UNFOLDED_HEIGHT = '59.1rem';
 const SIDELIST_HIDE_THRESHOLD = 1100; // px
 
 interface EditorConstituentaProps {
-  schema?: IRSForm;
-  isMutable: boolean;
-
   activeCst?: IConstituenta;
   isModified: boolean;
   setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
-
-  onMoveUp: () => void;
-  onMoveDown: () => void;
   onOpenEdit: (cstID: number) => void;
-  onClone: () => void;
-  onCreate: (type?: CstType) => void;
-  onRename: () => void;
-  onEditTerm: () => void;
-  onDelete: () => void;
 }
 
-function EditorConstituenta({
-  schema,
-  isMutable,
-  isModified,
-  setIsModified,
-  activeCst,
-  onMoveUp,
-  onMoveDown,
-  onOpenEdit,
-  onClone,
-  onCreate,
-  onRename,
-  onEditTerm,
-  onDelete
-}: EditorConstituentaProps) {
+function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }: EditorConstituentaProps) {
+  const controller = useRSEdit();
   const windowSize = useWindowSize();
 
   const [showList, setShowList] = useLocalStorage('rseditor-show-list', true);
   const [toggleReset, setToggleReset] = useState(false);
 
-  const disabled = useMemo(() => !activeCst || !isMutable, [activeCst, isMutable]);
-
-  function handleCreate() {
-    onCreate(activeCst?.cst_type);
-  }
+  const disabled = useMemo(() => !activeCst || !controller.isMutable, [activeCst, controller.isMutable]);
 
   function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
     if (disabled) {
@@ -92,7 +65,7 @@ function EditorConstituenta({
   function processAltKey(code: string): boolean {
     switch (code) {
       case 'KeyV':
-        onClone();
+        controller.cloneCst();
         return true;
     }
     return false;
@@ -103,13 +76,13 @@ function EditorConstituenta({
       <ConstituentaToolbar
         isMutable={!disabled}
         isModified={isModified}
-        onMoveUp={onMoveUp}
-        onMoveDown={onMoveDown}
+        onMoveUp={controller.moveUp}
+        onMoveDown={controller.moveDown}
         onSubmit={initiateSubmit}
         onReset={() => setToggleReset(prev => !prev)}
-        onDelete={onDelete}
-        onClone={onClone}
-        onCreate={handleCreate}
+        onDelete={controller.deleteCst}
+        onClone={controller.cloneCst}
+        onCreate={() => controller.createCst(activeCst?.cst_type, false)}
       />
       <div tabIndex={-1} className='flex max-w-[95rem]' onKeyDown={handleInput}>
         <FormConstituenta
@@ -121,13 +94,13 @@ function EditorConstituenta({
           toggleReset={toggleReset}
           onToggleList={() => setShowList(prev => !prev)}
           setIsModified={setIsModified}
-          onEditTerm={onEditTerm}
-          onRename={onRename}
+          onEditTerm={controller.editTermForms}
+          onRename={controller.renameCst}
         />
         <AnimatePresence>
           {showList && windowSize.width && windowSize.width >= SIDELIST_HIDE_THRESHOLD ? (
             <ViewConstituents
-              schema={schema}
+              schema={controller.schema}
               expression={activeCst?.definition_formal ?? ''}
               baseHeight={UNFOLDED_HEIGHT}
               activeID={activeCst?.id}

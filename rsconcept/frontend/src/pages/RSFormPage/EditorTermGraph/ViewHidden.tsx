@@ -12,7 +12,7 @@ import { prefixes } from '@/utils/constants';
 interface ViewHiddenProps {
   items: number[];
   selected: number[];
-  schema: IRSForm;
+  schema?: IRSForm;
   coloringScheme: GraphColoringScheme;
 
   toggleSelection: (cstID: number) => void;
@@ -43,7 +43,7 @@ function ViewHidden({ items, selected, toggleSelection, schema, coloringScheme, 
       </p>
       <div className='flex flex-wrap justify-center gap-2 py-2 overflow-y-auto' style={{ maxHeight: dismissedHeight }}>
         {items.map(cstID => {
-          const cst = schema.items.find(cst => cst.id === cstID)!;
+          const cst = schema!.items.find(cst => cst.id === cstID)!;
           const adjustedColoring = coloringScheme === 'none' ? 'status' : coloringScheme;
           const id = `${prefixes.cst_hidden_list}${cst.alias}`;
           return (

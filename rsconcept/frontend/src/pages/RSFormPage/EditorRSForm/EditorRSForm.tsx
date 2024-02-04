@@ -7,32 +7,19 @@ import { useAuth } from '@/context/AuthContext';
 import { useRSForm } from '@/context/RSFormContext';
 import { globalIDs } from '@/utils/constants';
 
+import { useRSEdit } from '../RSEditContext';
 import FormRSForm from './FormRSForm';
 import RSFormStats from './RSFormStats';
 import RSFormToolbar from './RSFormToolbar';
 
 interface EditorRSFormProps {
   isModified: boolean;
-  isMutable: boolean;
-
   setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
   onDestroy: () => void;
-  onClaim: () => void;
-  onShare: () => void;
-  onDownload: () => void;
-  onToggleSubscribe: () => void;
 }
 
-function EditorRSForm({
-  isModified,
-  isMutable,
-  onDestroy,
-  onClaim,
-  onShare,
-  setIsModified,
-  onDownload,
-  onToggleSubscribe
-}: EditorRSFormProps) {
+function EditorRSForm({ isModified, onDestroy, setIsModified }: EditorRSFormProps) {
+  const { isMutable } = useRSEdit();
   const { schema, isClaimable, isSubscribed, processing } = useRSForm();
   const { user } = useAuth();
 
@@ -55,18 +42,13 @@ function EditorRSForm({
   return (
     <>
       <RSFormToolbar
-        isMutable={isMutable}
         processing={processing}
-        isSubscribed={isSubscribed}
+        subscribed={isSubscribed}
         modified={isModified}
         claimable={isClaimable}
         anonymous={!user}
         onSubmit={initiateSubmit}
-        onShare={onShare}
-        onDownload={onDownload}
-        onClaim={onClaim}
         onDestroy={onDestroy}
-        onToggleSubscribe={onToggleSubscribe}
       />
       <div tabIndex={-1} className='flex flex-col sm:flex-row w-fit' onKeyDown={handleInput}>
         <FlexColumn className='px-4 pb-2'>

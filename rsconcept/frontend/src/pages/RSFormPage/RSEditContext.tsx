@@ -1,0 +1,466 @@
+'use client';
+
+import axios from 'axios';
+import { AnimatePresence } from 'framer-motion';
+import fileDownload from 'js-file-download';
+import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
+
+import InfoError, { ErrorData } from '@/components/InfoError';
+import Loader from '@/components/ui/Loader';
+import TextURL from '@/components/ui/TextURL';
+import { useAccessMode } from '@/context/AccessModeContext';
+import { useAuth } from '@/context/AuthContext';
+import { useRSForm } from '@/context/RSFormContext';
+import DlgCloneLibraryItem from '@/dialogs/DlgCloneLibraryItem';
+import DlgConstituentaTemplate from '@/dialogs/DlgConstituentaTemplate';
+import DlgCreateCst from '@/dialogs/DlgCreateCst';
+import DlgDeleteCst from '@/dialogs/DlgDeleteCst';
+import DlgEditWordForms from '@/dialogs/DlgEditWordForms';
+import DlgRenameCst from '@/dialogs/DlgRenameCst';
+import DlgUploadRSForm from '@/dialogs/DlgUploadRSForm';
+import { UserAccessMode } from '@/models/miscellaneous';
+import {
+  CstType,
+  IConstituenta,
+  IConstituentaMeta,
+  ICstCreateData,
+  ICstMovetoData,
+  ICstRenameData,
+  ICstUpdateData,
+  IRSForm,
+  TermForm
+} from '@/models/rsform';
+import { generateAlias } from '@/models/rsformAPI';
+import { EXTEOR_TRS_FILE } from '@/utils/constants';
+
+interface IRSEditContext {
+  schema?: IRSForm;
+  isMutable: boolean;
+
+  moveUp: () => void;
+  moveDown: () => void;
+  createCst: (type: CstType | undefined, skipDialog: boolean, definition?: string) => void;
+  renameCst: () => void;
+  cloneCst: () => void;
+  deleteCst: () => void;
+  editTermForms: () => void;
+
+  promptTemplate: () => void;
+  promptClone: () => void;
+  promptUpload: () => void;
+  claim: () => void;
+  share: () => void;
+  toggleSubscribe: () => void;
+  download: () => void;
+  reindex: () => void;
+}
+
+const RSEditContext = createContext<IRSEditContext | null>(null);
+export const useRSEdit = () => {
+  const context = useContext(RSEditContext);
+  if (context === null) {
+    throw new Error('useRSEdit has to be used within <RSEditState.Provider>');
+  }
+  return context;
+};
+
+interface RSEditStateProps {
+  selected: number[];
+  isModified: boolean;
+  setSelected: React.Dispatch<React.SetStateAction<number[]>>;
+  activeCst?: IConstituenta;
+
+  onCreateCst?: (newCst: IConstituentaMeta) => void;
+  onDeleteCst?: (newActive?: number) => void;
+  children: React.ReactNode;
+}
+
+export const RSEditState = ({
+  selected,
+  setSelected,
+  activeCst,
+  isModified,
+  onCreateCst,
+  onDeleteCst,
+  children
+}: RSEditStateProps) => {
+  const { user } = useAuth();
+  const { mode, setMode } = useAccessMode();
+  const model = useRSForm();
+
+  const isMutable = useMemo(() => {
+    return (
+      !model.loading &&
+      !model.processing &&
+      mode !== UserAccessMode.READER &&
+      ((model.isOwned || (mode === UserAccessMode.ADMIN && user?.is_staff)) ?? false)
+    );
+  }, [user?.is_staff, mode, model.isOwned, model.loading, model.processing]);
+
+  const [showUpload, setShowUpload] = useState(false);
+  const [showClone, setShowClone] = useState(false);
+
+  const [showDeleteCst, setShowDeleteCst] = useState(false);
+
+  const [createInitialData, setCreateInitialData] = useState<ICstCreateData>();
+  const [showCreateCst, setShowCreateCst] = useState(false);
+
+  const [renameInitialData, setRenameInitialData] = useState<ICstRenameData>();
+  const [showRenameCst, setShowRenameCst] = useState(false);
+
+  const [showEditTerm, setShowEditTerm] = useState(false);
+
+  const [insertCstID, setInsertCstID] = useState<number | undefined>(undefined);
+  const [showTemplates, setShowTemplates] = useState(false);
+
+  useLayoutEffect(
+    () =>
+      setMode(prev => {
+        if (prev === UserAccessMode.ADMIN) {
+          return prev;
+        } else if (model.isOwned) {
+          return UserAccessMode.OWNER;
+        } else {
+          return UserAccessMode.READER;
+        }
+      }),
+    [model.schema, setMode, model.isOwned]
+  );
+
+  const handleCreateCst = useCallback(
+    (data: ICstCreateData) => {
+      if (!model.schema) {
+        return;
+      }
+      data.alias = data.alias || generateAlias(data.cst_type, model.schema);
+      model.cstCreate(data, newCst => {
+        toast.success(`Конституента добавлена: ${newCst.alias}`);
+        setSelected([newCst.id]);
+        if (onCreateCst) onCreateCst(newCst);
+      });
+    },
+    [model, setSelected, onCreateCst]
+  );
+
+  const handleRenameCst = useCallback(
+    (data: ICstRenameData) => {
+      model.cstRename(data, () => toast.success(`Переименование: ${renameInitialData!.alias} -> ${data.alias}`));
+    },
+    [model, renameInitialData]
+  );
+
+  const handleDeleteCst = useCallback(
+    (deleted: number[]) => {
+      if (!model.schema) {
+        return;
+      }
+      const data = {
+        items: deleted
+      };
+
+      const deletedNames = deleted.map(id => model.schema?.items.find(cst => cst.id === id)?.alias).join(', ');
+      const isEmpty = deleted.length === model.schema.items.length;
+      const nextActive = isEmpty ? undefined : getNextActiveOnDelete(activeCst?.id, model.schema.items, deleted);
+
+      model.cstDelete(data, () => {
+        toast.success(`Конституенты удалены: ${deletedNames}`);
+        setSelected(nextActive ? [nextActive] : []);
+        if (onDeleteCst) onDeleteCst(nextActive);
+      });
+    },
+    [model, activeCst, onDeleteCst, setSelected]
+  );
+
+  const handleSaveWordforms = useCallback(
+    (forms: TermForm[]) => {
+      if (!activeCst) {
+        return;
+      }
+      const data: ICstUpdateData = {
+        id: activeCst.id,
+        term_forms: forms
+      };
+      model.cstUpdate(data, () => toast.success('Изменения сохранены'));
+    },
+    [model, activeCst]
+  );
+
+  const moveUp = useCallback(() => {
+    if (!model.schema?.items || selected.length === 0) {
+      return;
+    }
+    const currentIndex = model.schema.items.reduce((prev, cst, index) => {
+      if (!selected.includes(cst.id)) {
+        return prev;
+      } else if (prev === -1) {
+        return index;
+      }
+      return Math.min(prev, index);
+    }, -1);
+    const target = Math.max(0, currentIndex - 1) + 1;
+    const data = {
+      items: selected,
+      move_to: target
+    };
+    model.cstMoveTo(data);
+  }, [model, selected]);
+
+  const moveDown = useCallback(() => {
+    if (!model.schema?.items || selected.length === 0) {
+      return;
+    }
+    let count = 0;
+    const currentIndex = model.schema.items.reduce((prev, cst, index) => {
+      if (!selected.includes(cst.id)) {
+        return prev;
+      } else {
+        count += 1;
+        if (prev === -1) {
+          return index;
+        }
+        return Math.max(prev, index);
+      }
+    }, -1);
+    const target = Math.min(model.schema.items.length - 1, currentIndex - count + 2) + 1;
+    const data: ICstMovetoData = {
+      items: selected,
+      move_to: target
+    };
+    model.cstMoveTo(data);
+  }, [model, selected]);
+
+  const createCst = useCallback(
+    (type: CstType | undefined, skipDialog: boolean, definition?: string) => {
+      const data: ICstCreateData = {
+        insert_after: activeCst?.id ?? null,
+        cst_type: type ?? activeCst?.cst_type ?? CstType.BASE,
+        alias: '',
+        term_raw: '',
+        definition_formal: definition ?? '',
+        definition_raw: '',
+        convention: '',
+        term_forms: []
+      };
+      if (skipDialog) {
+        handleCreateCst(data);
+      } else {
+        setCreateInitialData(data);
+        setShowCreateCst(true);
+      }
+    },
+    [activeCst, handleCreateCst]
+  );
+
+  const cloneCst = useCallback(() => {
+    if (!activeCst) {
+      return;
+    }
+    const data: ICstCreateData = {
+      insert_after: activeCst.id,
+      cst_type: activeCst.cst_type,
+      alias: '',
+      term_raw: activeCst.term_raw,
+      definition_formal: activeCst.definition_formal,
+      definition_raw: activeCst.definition_raw,
+      convention: activeCst.convention,
+      term_forms: activeCst.term_forms
+    };
+    handleCreateCst(data);
+  }, [activeCst, handleCreateCst]);
+
+  const renameCst = useCallback(() => {
+    if (!activeCst) {
+      return;
+    }
+    const data: ICstRenameData = {
+      id: activeCst.id,
+      alias: activeCst.alias,
+      cst_type: activeCst.cst_type
+    };
+    setRenameInitialData(data);
+    setShowRenameCst(true);
+  }, [activeCst]);
+
+  const editTermForms = useCallback(() => {
+    if (!activeCst) {
+      return;
+    }
+    if (isModified) {
+      if (!window.confirm('Присутствуют несохраненные изменения. Продолжить без их учета?')) {
+        return;
+      }
+    }
+    setShowEditTerm(true);
+  }, [isModified, activeCst]);
+
+  const reindex = useCallback(() => model.resetAliases(() => toast.success('Имена конституент обновлены')), [model]);
+
+  const promptTemplate = useCallback(() => {
+    setInsertCstID(activeCst?.id);
+    setShowTemplates(true);
+  }, [activeCst]);
+
+  const promptClone = useCallback(() => {
+    if (isModified) {
+      if (!window.confirm('Присутствуют несохраненные изменения. Продолжить без их учета?')) {
+        return;
+      }
+    }
+    setShowClone(true);
+  }, [isModified]);
+
+  const download = useCallback(() => {
+    if (isModified) {
+      if (!window.confirm('Присутствуют несохраненные изменения. Продолжить без их учета?')) {
+        return;
+      }
+    }
+    const fileName = (model.schema?.alias ?? 'Schema') + EXTEOR_TRS_FILE;
+    model.download((data: Blob) => {
+      try {
+        fileDownload(data, fileName);
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  }, [model, isModified]);
+
+  const claim = useCallback(() => {
+    if (!window.confirm('Вы уверены, что хотите стать владельцем данной схемы?')) {
+      return;
+    }
+    model.claim(() => toast.success('Вы стали владельцем схемы'));
+  }, [model]);
+
+  const share = useCallback(() => {
+    const url = window.location.href + '&share';
+    navigator.clipboard
+      .writeText(url)
+      .then(() => toast.success(`Ссылка скопирована: ${url}`))
+      .catch(console.error);
+  }, []);
+
+  const toggleSubscribe = useCallback(() => {
+    if (model.isSubscribed) {
+      model.unsubscribe(() => toast.success('Отслеживание отключено'));
+    } else {
+      model.subscribe(() => toast.success('Отслеживание включено'));
+    }
+  }, [model]);
+
+  return (
+    <RSEditContext.Provider
+      value={{
+        schema: model.schema,
+        isMutable,
+
+        moveUp,
+        moveDown,
+        createCst,
+        cloneCst,
+        renameCst,
+        deleteCst: () => setShowDeleteCst(true),
+        editTermForms,
+
+        promptTemplate,
+        promptClone,
+        promptUpload: () => setShowUpload(true),
+        download,
+        claim,
+        share,
+        toggleSubscribe,
+        reindex
+      }}
+    >
+      {model.schema ? (
+        <AnimatePresence>
+          {showUpload ? <DlgUploadRSForm hideWindow={() => setShowUpload(false)} /> : null}
+          {showClone ? <DlgCloneLibraryItem base={model.schema} hideWindow={() => setShowClone(false)} /> : null}
+          {showCreateCst ? (
+            <DlgCreateCst
+              hideWindow={() => setShowCreateCst(false)}
+              onCreate={handleCreateCst}
+              schema={model.schema}
+              initial={createInitialData}
+            />
+          ) : null}
+          {showRenameCst && renameInitialData ? (
+            <DlgRenameCst
+              hideWindow={() => setShowRenameCst(false)}
+              onRename={handleRenameCst}
+              initial={renameInitialData}
+            />
+          ) : null}
+          {showDeleteCst ? (
+            <DlgDeleteCst
+              schema={model.schema}
+              hideWindow={() => setShowDeleteCst(false)}
+              onDelete={handleDeleteCst}
+              selected={selected}
+            />
+          ) : null}
+          {showEditTerm && activeCst ? (
+            <DlgEditWordForms
+              hideWindow={() => setShowEditTerm(false)}
+              onSave={handleSaveWordforms}
+              target={activeCst}
+            />
+          ) : null}
+          {showTemplates ? (
+            <DlgConstituentaTemplate
+              schema={model.schema}
+              hideWindow={() => setShowTemplates(false)}
+              insertAfter={insertCstID}
+              onCreate={handleCreateCst}
+            />
+          ) : null}
+        </AnimatePresence>
+      ) : null}
+
+      {model.loading ? <Loader /> : null}
+      {model.error ? <ProcessError error={model.error} /> : null}
+      {model.schema && !model.loading ? children : null}
+    </RSEditContext.Provider>
+  );
+};
+
+// ====== Internals =========
+function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
+  if (axios.isAxiosError(error) && error.response && error.response.status === 404) {
+    return (
+      <div className='p-2 text-center'>
+        <p>Схема с указанным идентификатором отсутствует на портале.</p>
+        <TextURL text='Перейти в Библиотеку' href='/library' />
+      </div>
+    );
+  } else {
+    return <InfoError error={error} />;
+  }
+}
+
+function getNextActiveOnDelete(
+  activeID: number | undefined,
+  items: IConstituenta[],
+  deleted: number[]
+): number | undefined {
+  if (items.length === deleted.length) {
+    return undefined;
+  }
+
+  let activeIndex = items.findIndex(cst => cst.id === activeID);
+  if (activeIndex === -1) {
+    return undefined;
+  }
+
+  while (activeIndex < items.length && deleted.find(id => id === items[activeIndex].id)) {
+    ++activeIndex;
+  }
+  if (activeIndex >= items.length) {
+    activeIndex = items.length - 1;
+    while (activeIndex >= 0 && deleted.find(id => id === items[activeIndex].id)) {
+      --activeIndex;
+    }
+  }
+  return items[activeIndex].id;
+}

@@ -12,10 +12,11 @@ import { useConceptTheme } from '@/context/ThemeContext';
 import DlgGraphParams from '@/dialogs/DlgGraphParams';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { GraphColoringScheme, GraphFilterParams } from '@/models/miscellaneous';
-import { CstType, IRSForm } from '@/models/rsform';
+import { CstType } from '@/models/rsform';
 import { colorBgGraphNode } from '@/styling/color';
 import { classnames, TIMEOUT_GRAPH_REFRESH } from '@/utils/constants';
 
+import { useRSEdit } from '../RSEditContext';
 import GraphSidebar from './GraphSidebar';
 import GraphToolbar from './GraphToolbar';
 import TermGraph from './TermGraph';
@@ -23,24 +24,13 @@ import useGraphFilter from './useGraphFilter';
 import ViewHidden from './ViewHidden';
 
 interface EditorTermGraphProps {
-  isMutable: boolean;
   selected: number[];
-  schema?: IRSForm;
   setSelected: React.Dispatch<React.SetStateAction<number[]>>;
   onOpenEdit: (cstID: number) => void;
-  onCreate: (type: CstType, definition: string) => void;
-  onDelete: () => void;
 }
 
-function EditorTermGraph({
-  schema,
-  selected,
-  setSelected,
-  isMutable,
-  onOpenEdit,
-  onCreate,
-  onDelete
-}: EditorTermGraphProps) {
+function EditorTermGraph({ selected, setSelected, onOpenEdit }: EditorTermGraphProps) {
+  const controller = useRSEdit();
   const { colors } = useConceptTheme();
 
   const [filterParams, setFilterParams] = useLocalStorage<GraphFilterParams>('graph_filter', {
@@ -59,7 +49,7 @@ function EditorTermGraph({
     allowTheorem: true
   });
   const [showParamsDialog, setShowParamsDialog] = useState(false);
-  const filtered = useGraphFilter(schema, filterParams);
+  const filtered = useGraphFilter(controller.schema, filterParams);
 
   const [hidden, setHidden] = useState<number[]>([]);
 
@@ -72,32 +62,32 @@ function EditorTermGraph({
 
   const [hoverID, setHoverID] = useState<number | undefined>(undefined);
   const hoverCst = useMemo(() => {
-    return schema?.items.find(cst => cst.id === hoverID);
-  }, [schema?.items, hoverID]);
+    return controller.schema?.items.find(cst => cst.id === hoverID);
+  }, [controller.schema?.items, hoverID]);
 
   const [toggleResetView, setToggleResetView] = useState(false);
 
   useLayoutEffect(() => {
-    if (!schema) {
+    if (!controller.schema) {
       return;
     }
     const newDismissed: number[] = [];
-    schema.items.forEach(cst => {
+    controller.schema.items.forEach(cst => {
       if (!filtered.nodes.has(cst.id)) {
         newDismissed.push(cst.id);
       }
     });
     setHidden(newDismissed);
     setHoverID(undefined);
-  }, [schema, filtered]);
+  }, [controller.schema, filtered]);
 
   const nodes: GraphNode[] = useMemo(() => {
     const result: GraphNode[] = [];
-    if (!schema) {
+    if (!controller.schema) {
       return result;
     }
     filtered.nodes.forEach(node => {
-      const cst = schema.items.find(cst => cst.id === node.id);
+      const cst = controller.schema!.items.find(cst => cst.id === node.id);
       if (cst) {
         result.push({
           id: String(node.id),
@@ -107,7 +97,7 @@ function EditorTermGraph({
       }
     });
     return result;
-  }, [schema, coloringScheme, filtered.nodes, filterParams.noText, colors]);
+  }, [controller.schema, coloringScheme, filtered.nodes, filterParams.noText, colors]);
 
   const edges: GraphEdge[] = useMemo(() => {
     const result: GraphEdge[] = [];
@@ -143,18 +133,18 @@ function EditorTermGraph({
   }
 
   function handleCreateCst() {
-    if (!schema) {
+    if (!controller.schema) {
       return;
     }
-    const definition = selected.map(id => schema.items.find(cst => cst.id === id)!.alias).join(' ');
-    onCreate(selected.length === 0 ? CstType.BASE : CstType.TERM, definition);
+    const definition = selected.map(id => controller.schema!.items.find(cst => cst.id === id)!.alias).join(' ');
+    controller.createCst(selected.length === 0 ? CstType.BASE : CstType.TERM, false, definition);
   }
 
   function handleDeleteCst() {
-    if (!schema || selected.length === 0) {
+    if (!controller.schema || selected.length === 0) {
       return;
     }
-    onDelete();
+    controller.deleteCst();
   }
 
   function handleChangeLayout(newLayout: LayoutTypes) {
@@ -176,7 +166,7 @@ function EditorTermGraph({
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     // Hotkeys implementation
-    if (!isMutable) {
+    if (!controller.isMutable) {
       return;
     }
     if (event.key === 'Delete') {
@@ -199,13 +189,13 @@ function EditorTermGraph({
 
       <SelectedCounter
         hideZero
-        totalCount={schema?.stats?.count_all ?? 0}
+        totalCount={controller.schema?.stats?.count_all ?? 0}
         selectedCount={selected.length}
         position='top-[0.3rem] left-0'
       />
 
       <GraphToolbar
-        isMutable={isMutable}
+        isMutable={controller.isMutable}
         nothingSelected={nothingSelected}
         is3D={is3D}
         orbit={orbit}
@@ -243,7 +233,7 @@ function EditorTermGraph({
         <ViewHidden
           items={hidden}
           selected={selected}
-          schema={schema!}
+          schema={controller.schema}
           coloringScheme={coloringScheme}
           toggleSelection={toggleDismissed}
           onEdit={onOpenEdit}
