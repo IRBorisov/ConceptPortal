@@ -3,12 +3,9 @@
 import clsx from 'clsx';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { FiSave } from 'react-icons/fi';
-import { LiaEdit } from 'react-icons/lia';
 import { toast } from 'react-toastify';
 
 import RefsInput from '@/components/RefsInput';
-import MiniButton from '@/components/ui/MiniButton';
-import Overlay from '@/components/ui/Overlay';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
 import { useRSForm } from '@/context/RSFormContext';
@@ -17,6 +14,7 @@ import { classnames } from '@/utils/constants';
 import { labelCstTypification } from '@/utils/labels';
 
 import EditorRSExpression from '../EditorRSExpression';
+import ControlsOverlay from './ControlsOverlay';
 
 interface FormConstituentaProps {
   disabled?: boolean;
@@ -111,29 +109,10 @@ function FormConstituenta({
 
   return (
     <>
-      <Overlay position='top-1 left-[4.1rem]' className='flex select-none'>
-        <MiniButton
-          title={`Редактировать словоформы термина: ${constituenta?.term_forms.length ?? 0}`}
-          disabled={disabled}
-          noHover
-          onClick={onEditTerm}
-          icon={<LiaEdit size='1rem' className={!disabled ? 'clr-text-primary' : ''} />}
-        />
-        <div className='pt-1 pl-[1.375rem] text-sm font-medium whitespace-nowrap'>
-          <span>Имя </span>
-          <span className='ml-1'>{constituenta?.alias ?? ''}</span>
-        </div>
-        <MiniButton
-          noHover
-          title='Переименовать конституенту'
-          disabled={disabled}
-          onClick={onRename}
-          icon={<LiaEdit size='1rem' className={!disabled ? 'clr-text-primary' : ''} />}
-        />
-      </Overlay>
+      <ControlsOverlay disabled={disabled} constituenta={constituenta} onEditTerm={onEditTerm} onRename={onRename} />
       <form
         id={id}
-        className={clsx('mt-1 w-[47.8rem] shrink-0', 'px-4 py-1', classnames.flex_col)}
+        className={clsx('mt-1 w-full md:w-[47.8rem] shrink-0', 'px-4 py-1', classnames.flex_col)}
         onSubmit={handleSubmit}
       >
         <RefsInput
@@ -160,7 +139,7 @@ function FormConstituenta({
         />
         <EditorRSExpression
           label='Формальное определение'
-          placeholder='Родоструктурное выражение, задающее формальное определение'
+          placeholder='Родоструктурное выражение'
           value={expression}
           activeCst={constituenta}
           showList={showList}
@@ -172,7 +151,7 @@ function FormConstituenta({
         />
         <RefsInput
           label='Текстовое определение'
-          placeholder='Лингвистическая интерпретация формального выражения'
+          placeholder='Текстовый вариант формального определения'
           height='3.8rem'
           items={schema?.items}
           value={textDefinition}

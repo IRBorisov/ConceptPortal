@@ -33,7 +33,11 @@ function Navigation() {
     >
       <ToggleNavigationButton />
       <motion.div
-        className={clsx('pl-2 pr-[0.9rem] h-[3rem]', 'flex justify-between', 'shadow-border')}
+        className={clsx(
+          'pl-2 pr-[0.9rem] h-[3rem]', // prettier: split lines
+          'flex justify-between',
+          'shadow-border'
+        )}
         initial={false}
         animate={!noNavigationAnimation ? 'open' : 'closed'}
         variants={animateNavigation}

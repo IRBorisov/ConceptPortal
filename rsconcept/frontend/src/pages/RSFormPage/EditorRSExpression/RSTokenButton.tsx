@@ -19,15 +19,15 @@ function RSTokenButton({ token, disabled, onInsert }: RSTokenButtonProps) {
       disabled={disabled}
       onClick={() => onInsert(token)}
       className={clsx(
-        'h-6',
+        'h-5 sm:h-6',
         'px-1',
         'outline-none',
         'clr-hover clr-btn-clear',
         'font-math',
         'cursor-pointer disabled:cursor-default',
         {
-          'w-[4.5rem]': label.length > 3,
-          'w-[2.25rem]': label.length <= 3
+          'w-[3.4rem] sm:w-[4.5rem]': label.length > 3,
+          'w-[1.7rem] sm:w-[2.25rem]': label.length <= 3
         }
       )}
       data-tooltip-id={globalIDs.tooltip}

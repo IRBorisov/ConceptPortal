@@ -86,7 +86,11 @@ function FormRSForm({ id, disabled, isModified, setIsModified }: FormRSFormProps
   };
 
   return (
-    <form id={id} className={clsx('mt-1 min-w-[22rem] w-[30rem]', 'py-1', classnames.flex_col)} onSubmit={handleSubmit}>
+    <form
+      id={id}
+      className={clsx('mt-1 min-w-[22rem] w-full sm:max-w-[30rem]', 'py-1', classnames.flex_col)}
+      onSubmit={handleSubmit}
+    >
       <TextInput
         required
         label='Полное название'

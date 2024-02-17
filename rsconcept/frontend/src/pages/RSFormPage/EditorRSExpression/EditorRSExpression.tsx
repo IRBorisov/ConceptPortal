@@ -173,7 +173,7 @@ function EditorRSExpression({
           />
         </Overlay>
 
-        <Overlay position='top-[-0.5rem] right-1/2 translate-x-1/2'>
+        <Overlay position='top-[-0.5rem] pl-[6rem] sm:pl-0 right-1/2 translate-x-1/2'>
           <StatusBar
             processing={loading}
             isModified={isModified}

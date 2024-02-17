@@ -36,7 +36,7 @@ function ConstituentaToolbar({
 }: ConstituentaToolbarProps) {
   const canSave = useMemo(() => isModified && isMutable, [isModified, isMutable]);
   return (
-    <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex'>
+    <Overlay position='top-1 right-4 sm:right-1/2 sm:translate-x-1/2' className='flex'>
       <MiniButton
         title='Сохранить изменения [Ctrl + S]'
         disabled={!canSave}

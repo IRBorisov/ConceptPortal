@@ -1,5 +1,7 @@
 'use client';
 
+import clsx from 'clsx';
+
 import InfoLibraryItem from '@/components/InfoLibraryItem';
 import Divider from '@/components/ui/Divider';
 import FlexColumn from '@/components/ui/FlexColumn';
@@ -50,7 +52,7 @@ function EditorRSForm({ isModified, onDestroy, setIsModified }: EditorRSFormProp
         onSubmit={initiateSubmit}
         onDestroy={onDestroy}
       />
-      <div tabIndex={-1} className='flex flex-col sm:flex-row w-fit' onKeyDown={handleInput}>
+      <div tabIndex={-1} onKeyDown={handleInput} className={clsx('flex flex-col sm:flex-row', 'sm:w-fit w-full')}>
         <FlexColumn className='px-4 pb-2'>
           <FormRSForm
             disabled={!isMutable}

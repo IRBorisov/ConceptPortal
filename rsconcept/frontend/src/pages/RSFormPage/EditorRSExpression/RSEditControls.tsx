@@ -90,7 +90,7 @@ interface RSEditorControlsProps {
 function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsProps) {
   return (
     <motion.div
-      className='flex-wrap text-sm divide-solid'
+      className='flex-wrap text-xs sm:text-sm divide-solid'
       initial={false}
       animate={isOpen ? 'open' : 'closed'}
       variants={animateRSControl}

@@ -19,7 +19,7 @@ function RSLocalButton({ text, title, disabled, onInsert }: RSLocalButtonProps) 
       data-tooltip-id={title ? globalIDs.tooltip : undefined}
       data-tooltip-content={title}
       className={clsx(
-        'w-[2rem] h-6',
+        'w-[1.7rem] sm:w-[2rem] h-5 sm:h-6',
         'cursor-pointer disabled:cursor-default',
         'rounded-none',
         'clr-hover clr-btn-clear',

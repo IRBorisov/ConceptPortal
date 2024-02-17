@@ -167,7 +167,7 @@ function RSTabs() {
           onSelect={onSelectTab}
           defaultFocus
           selectedTabClassName='clr-selected'
-          className='flex flex-col min-w-[45rem]'
+          className='flex flex-col min-w-fit'
         >
           <TabList className={clsx('mx-auto', 'flex', 'border-b-2 border-x-2 divide-x-2')}>
             <RSTabsMenu onDestroy={onDestroySchema} />
