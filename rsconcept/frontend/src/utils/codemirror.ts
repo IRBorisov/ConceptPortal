@@ -124,7 +124,7 @@ export function findContainedNodes(start: number, finish: number, tree: Tree, fi
 /**
  * Create DOM tooltip for {@link Constituenta}.
  */
-export function domTooltipConstituenta(cst: IConstituenta) {
+export function domTooltipConstituenta(cst?: IConstituenta) {
   const dom = document.createElement('div');
   dom.className = clsx(
     'z-tooltip',
@@ -135,32 +135,38 @@ export function domTooltipConstituenta(cst: IConstituenta) {
     'text-sm'
   );
 
-  const alias = document.createElement('p');
-  alias.innerHTML = `<b>${cst.alias}:</b> ${labelCstTypification(cst)}`;
-  dom.appendChild(alias);
+  if (cst) {
+    const alias = document.createElement('p');
+    alias.innerHTML = `<b>${cst.alias}:</b> ${labelCstTypification(cst)}`;
+    dom.appendChild(alias);
 
-  if (cst.term_resolved) {
-    const term = document.createElement('p');
-    term.innerHTML = `<b>Термин:</b> ${cst.term_resolved}`;
-    dom.appendChild(term);
-  }
+    if (cst.term_resolved) {
+      const term = document.createElement('p');
+      term.innerHTML = `<b>Термин:</b> ${cst.term_resolved}`;
+      dom.appendChild(term);
+    }
 
-  if (cst.definition_formal) {
-    const expression = document.createElement('p');
-    expression.innerHTML = `<b>Выражение:</b> ${cst.definition_formal}`;
-    dom.appendChild(expression);
-  }
+    if (cst.definition_formal) {
+      const expression = document.createElement('p');
+      expression.innerHTML = `<b>Выражение:</b> ${cst.definition_formal}`;
+      dom.appendChild(expression);
+    }
 
-  if (cst.definition_resolved) {
-    const definition = document.createElement('p');
-    definition.innerHTML = `<b>Определение:</b> ${cst.definition_resolved}`;
-    dom.appendChild(definition);
-  }
+    if (cst.definition_resolved) {
+      const definition = document.createElement('p');
+      definition.innerHTML = `<b>Определение:</b> ${cst.definition_resolved}`;
+      dom.appendChild(definition);
+    }
 
-  if (cst.convention) {
-    const convention = document.createElement('p');
-    convention.innerHTML = `<b>Конвенция:</b> ${cst.convention}`;
-    dom.appendChild(convention);
+    if (cst.convention) {
+      const convention = document.createElement('p');
+      convention.innerHTML = `<b>Конвенция:</b> ${cst.convention}`;
+      dom.appendChild(convention);
+    }
+  } else {
+    const text = document.createElement('p');
+    text.innerText = 'Конституента не определена';
+    dom.appendChild(text);
   }
   return { dom: dom };
 }

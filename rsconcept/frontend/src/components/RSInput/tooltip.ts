@@ -28,10 +28,10 @@ function findAliasAt(pos: number, state: EditorState) {
 const globalsHoverTooltip = (items: IConstituenta[]) => {
   return hoverTooltip((view, pos) => {
     const { alias, start, end } = findAliasAt(pos, view.state);
-    const cst = items.find(cst => cst.alias === alias);
-    if (!cst) {
+    if (!alias) {
       return null;
     }
+    const cst = items.find(cst => cst.alias === alias);
     return {
       pos: start,
       end: end,
