@@ -245,6 +245,27 @@ export function getCstTypePrefix(type: CstType) {
 }
 
 /**
+ * Guess {@link CstType} from user input hint.
+ */
+export function guessCstType(hint: string, defaultType: CstType = CstType.TERM) {
+  if (hint.length !== 1) {
+    return defaultType;
+  }
+  // prettier-ignore
+  switch (hint) {
+    case 'X': return CstType.BASE;
+    case 'C': return CstType.CONSTANT;
+    case 'S': return CstType.STRUCTURED;
+    case 'A': return CstType.AXIOM;
+    case 'D': return CstType.TERM;
+    case 'F': return CstType.FUNCTION;
+    case 'P': return CstType.PREDICATE;
+    case 'T': return CstType.THEOREM;
+  }
+  return defaultType;
+}
+
+/**
  * Validate new alias against {@link CstType} and {@link IRSForm}.
  */
 export function validateNewAlias(alias: string, type: CstType, schema: IRSForm): boolean {
@@ -261,17 +282,22 @@ export function getDefinitionPrefix(cst: IConstituenta): string {
 /**
  * Generate alias for new {@link IConstituenta} of a given {@link CstType} for current {@link IRSForm}.
  */
-export function generateAlias(type: CstType, schema: IRSForm): string {
+export function generateAlias(type: CstType, schema: IRSForm, takenAliases: string[] = []): string {
   const prefix = getCstTypePrefix(type);
   if (!schema.items || schema.items.length <= 0) {
     return `${prefix}1`;
   }
-  const index = schema.items.reduce((prev, cst, index) => {
+  let index = schema.items.reduce((prev, cst, index) => {
     if (cst.cst_type !== type) {
       return prev;
     }
     index = Number(cst.alias.slice(1 - cst.alias.length)) + 1;
     return Math.max(prev, index);
   }, 1);
-  return `${prefix}${index}`;
+  let alias = `${prefix}${index}`;
+  while (takenAliases.includes(alias)) {
+    index = index + 1;
+    alias = `${prefix}${index}`;
+  }
+  return alias;
 }

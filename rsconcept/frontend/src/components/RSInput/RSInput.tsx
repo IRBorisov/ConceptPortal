@@ -11,6 +11,8 @@ import { forwardRef, useCallback, useMemo, useRef } from 'react';
 import Label from '@/components/ui/Label';
 import { useRSForm } from '@/context/RSFormContext';
 import { useConceptTheme } from '@/context/ThemeContext';
+import { generateAlias, getCstTypePrefix, guessCstType } from '@/models/rsformAPI';
+import { extractGlobals } from '@/models/rslangAPI';
 
 import { ccBracketMatching } from './bracketMatching';
 import { RSLanguage } from './rslang';
@@ -106,7 +108,22 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
           return;
         }
         const text = new RSTextWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
-        if (event.altKey) {
+        if (event.ctrlKey && event.code === 'Space') {
+          const selection = text.getSelection();
+          if (!selection.empty || !schema) {
+            return;
+          }
+          const hint = text.getText(selection.from - 1, selection.from);
+          const type = guessCstType(hint);
+          if (hint === getCstTypePrefix(type)) {
+            text.setSelection(selection.from - 1, selection.from);
+          }
+          const takenAliases = [...extractGlobals(thisRef.current.view?.state.doc.toString() ?? '')];
+          const newAlias = generateAlias(type, schema, takenAliases);
+          text.replaceWith(newAlias);
+          event.preventDefault();
+          event.stopPropagation();
+        } else if (event.altKey) {
           if (text.processAltKey(event.code, event.shiftKey)) {
             event.preventDefault();
             event.stopPropagation();
@@ -124,7 +141,7 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
           event.stopPropagation();
         }
       },
-      [thisRef, onAnalyze]
+      [thisRef, onAnalyze, schema]
     );
 
     return (
