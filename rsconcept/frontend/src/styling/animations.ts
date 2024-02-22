@@ -53,6 +53,27 @@ export const animateNavigationToggle: Variants = {
   }
 };
 
+export const animateSlideLeft: Variants = {
+  open: {
+    clipPath: 'inset(0% 0% 0% 0%)',
+    transition: {
+      type: 'spring',
+      bounce: 0,
+      duration: 0.4,
+      delayChildren: 0.2,
+      staggerChildren: 0.05
+    }
+  },
+  closed: {
+    clipPath: 'inset(0% 100% 0% 0%)',
+    transition: {
+      type: 'spring',
+      bounce: 0,
+      duration: 0.3
+    }
+  }
+};
+
 export const animateDropdown: Variants = {
   open: {
     clipPath: 'inset(0% 0% 0% 0%)',

@@ -12,7 +12,8 @@ function HelpRSLang() {
   const videoHeight = useMemo(() => {
     const viewH = windowSize.height ?? 0;
     const viewW = windowSize.width ?? 0;
-    return Math.min(OPT_VIDEO_H, viewH - 320, Math.floor(((viewW - 290) * 9) / 16));
+    const availableWidth = viewW - (windowSize.isSmall ? 35 : 290);
+    return Math.min(OPT_VIDEO_H, viewH - 320, Math.floor((availableWidth * 9) / 16));
   }, [windowSize]);
 
   // prettier-ignore

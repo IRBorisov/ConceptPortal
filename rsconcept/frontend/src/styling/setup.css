@@ -112,11 +112,16 @@ li {
   }
 
   h2 {
-    @apply font-semibold text-center;
+    @apply [&:not(:first-child)]:mt-2 font-semibold text-center;
   }
 
   b {
     @apply font-semibold;
+  }
+
+  li,
+  p {
+    @apply [&:not(:last-child)]:mb-2;
   }
 
   .border {

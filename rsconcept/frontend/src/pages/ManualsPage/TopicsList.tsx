@@ -1,8 +1,10 @@
-import clsx from 'clsx';
+'use client';
 
+import useWindowSize from '@/hooks/useWindowSize';
 import { HelpTopic } from '@/models/miscellaneous';
-import { prefixes } from '@/utils/constants';
-import { describeHelpTopic, labelHelpTopic } from '@/utils/labels';
+
+import TopicsListDropDown from './TopicsListDropdown';
+import TopicsListStatic from './TopicsListStatic';
 
 interface TopicsListProps {
   activeTopic: HelpTopic;
@@ -10,35 +12,13 @@ interface TopicsListProps {
 }
 
 function TopicsList({ activeTopic, onChangeTopic }: TopicsListProps) {
-  return (
-    <div
-      className={clsx(
-        'sticky top-0 left-0',
-        'self-start',
-        'border-x',
-        'clr-controls',
-        'text-xs sm:text-sm',
-        'select-none'
-      )}
-    >
-      {Object.values(HelpTopic).map((topic, index) => (
-        <div
-          key={`${prefixes.topic_list}${index}`}
-          className={clsx(
-            'px-3 py-1',
-            'border-y',
-            'clr-hover',
-            'cursor-pointer',
-            activeTopic === topic && 'clr-selected'
-          )}
-          title={describeHelpTopic(topic)}
-          onClick={() => onChangeTopic(topic)}
-        >
-          {labelHelpTopic(topic)}
-        </div>
-      ))}
-    </div>
-  );
+  const size = useWindowSize();
+
+  if (!size.isSmall) {
+    return <TopicsListStatic activeTopic={activeTopic} onChangeTopic={onChangeTopic} />;
+  } else {
+    return <TopicsListDropDown activeTopic={activeTopic} onChangeTopic={onChangeTopic} />;
+  }
 }
 
 export default TopicsList;

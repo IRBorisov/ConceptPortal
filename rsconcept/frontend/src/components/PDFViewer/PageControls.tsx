@@ -25,7 +25,7 @@ function PageControls({ pageNumber, pageCount, setPageNumber }: PageControlsProp
       >
         <BiChevronLeft size='1.5rem' />
       </button>
-      <p className='px-3 text-black'>
+      <p className='px-3 text-black text-nowrap'>
         Страница {pageNumber} из {pageCount}
       </p>
       <button

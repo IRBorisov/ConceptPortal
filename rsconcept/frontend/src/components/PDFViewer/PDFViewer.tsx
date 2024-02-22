@@ -11,7 +11,7 @@ import Overlay from '../ui/Overlay';
 import PageControls from './PageControls';
 
 const MAXIMUM_WIDTH = 1000;
-const MINIMUM_WIDTH = 600;
+const MINIMUM_WIDTH = 320;
 
 interface PDFViewerProps {
   file?: string | ArrayBuffer | Blob;
@@ -24,7 +24,7 @@ function PDFViewer({ file }: PDFViewerProps) {
   const [pageNumber, setPageNumber] = useState(1);
 
   const pageWidth = useMemo(() => {
-    return Math.max(MINIMUM_WIDTH, Math.min((windowSize?.width ?? 0) - 300, MAXIMUM_WIDTH));
+    return Math.max(MINIMUM_WIDTH, Math.min((windowSize?.width ?? 0) - 10, MAXIMUM_WIDTH));
   }, [windowSize]);
 
   function onDocumentLoadSuccess({ numPages }: PDFDocumentProxy) {
@@ -35,15 +35,14 @@ function PDFViewer({ file }: PDFViewerProps) {
     <Document
       file={file}
       onLoadSuccess={onDocumentLoadSuccess}
-      className='px-3'
       loading='Загрузка PDF файла...'
       error='Не удалось загрузить файл.'
     >
-      <Overlay position='top-6 left-1/2 -translate-x-1/2' className='flex select-none'>
+      <Overlay position='top-3 left-1/2 -translate-x-1/2' className='flex select-none'>
         <PageControls pageCount={pageCount} pageNumber={pageNumber} setPageNumber={setPageNumber} />
       </Overlay>
       <Page
-        className='pointer-events-none select-none'
+        className='pointer-events-none select-none sm:translate-x-0'
         renderTextLayer={false}
         renderAnnotationLayer={false}
         pageNumber={pageNumber}
