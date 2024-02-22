@@ -47,8 +47,8 @@ function SearchPanel({ total, filtered, query, setQuery, strategy, setFilter }: 
     <div
       className={clsx(
         'sticky top-0', // prettier: split lines
-        'w-full max-h-[2.2rem]',
-        'sm:pr-40 flex',
+        'w-full h-[2.2rem]',
+        'sm:pr-[12rem] flex',
         'border-b',
         'text-sm',
         'clr-input'
@@ -67,10 +67,8 @@ function SearchPanel({ total, filtered, query, setQuery, strategy, setFilter }: 
           {filtered} из {total}
         </span>
       </div>
-      <div className={clsx('flex-grow', 'flex gap-1 justify-center items-center')}>
-        <SearchBar noBorder className='min-w-[10rem]' value={query} onChange={handleChangeQuery} />
-        <PickerStrategy value={strategy} onChange={handleChangeStrategy} />
-      </div>
+      <PickerStrategy value={strategy} onChange={handleChangeStrategy} />
+      <SearchBar noBorder className='mx-auto min-w-[10rem]' value={query} onChange={handleChangeQuery} />
     </div>
   );
 }

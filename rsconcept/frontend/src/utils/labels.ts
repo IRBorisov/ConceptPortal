@@ -315,10 +315,10 @@ export function describeExpressionStatus(status: ExpressionStatus): string {
   switch (status) {
     case ExpressionStatus.VERIFIED:     return 'выражение корректно и вычислимо';
     case ExpressionStatus.INCORRECT:    return 'ошибка в выражении';
-    case ExpressionStatus.INCALCULABLE: return 'нельзя использовать для вычисления интерпретации';
-    case ExpressionStatus.PROPERTY:     return 'только для проверки принадлежности';
+    case ExpressionStatus.INCALCULABLE: return 'интерпретация не вычисляется';
+    case ExpressionStatus.PROPERTY:     return 'только проверка принадлежности';
     case ExpressionStatus.UNKNOWN:      return 'требует проверки выражения';
-    case ExpressionStatus.UNDEFINED:    return 'произошла ошибка при проверке выражения';
+    case ExpressionStatus.UNDEFINED:    return 'произошла ошибка при проверке';
   }
 }
 
@@ -411,10 +411,10 @@ export function labelCstClass(target: CstClass): string {
 export function describeCstClass(target: CstClass): string {
   // prettier-ignore
   switch (target) {
-    case CstClass.BASIC:        return 'неопределяемое понятие, требует конвенции';
-    case CstClass.DERIVED:      return 'выводимое понятие, задаваемое определением';
-    case CstClass.STATEMENT:    return 'утверждение формальной логики';
-    case CstClass.TEMPLATE:     return 'параметризованный шаблон определения';
+    case CstClass.BASIC:        return 'неопределяемое понятие';
+    case CstClass.DERIVED:      return 'определяемое понятие';
+    case CstClass.STATEMENT:    return 'логическое утверждение';
+    case CstClass.TEMPLATE:     return 'шаблон определения';
   }
 }
 

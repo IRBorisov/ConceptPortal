@@ -34,7 +34,7 @@ function Tooltip({
       opacity={0.97}
       className={clsx('overflow-hidden', 'border shadow-md', layer, className)}
       classNameArrow={layer}
-      style={{ ...{ paddingTop: '2px', paddingBottom: '2px' }, ...style }}
+      style={{ ...{ paddingTop: '2px', paddingBottom: '2px', overflowX: 'auto', overflowY: 'auto' }, ...style }}
       variant={darkMode ? 'dark' : 'light'}
       place={place}
       {...restProps}

@@ -108,7 +108,7 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
 
   return (
     <>
-      <div className='sticky top-[2.3rem] w-full'>
+      <div className='sticky top-[2.3rem]'>
         <div
           className={clsx(
             'z-pop', // prettier: split lines
@@ -117,7 +117,7 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
             'flex gap-1'
           )}
         >
-          <HelpButton topic={HelpTopic.LIBRARY} className='max-w-[35rem]' offset={5} place='right-start' />
+          <HelpButton topic={HelpTopic.LIBRARY} className='max-w-[30rem] text-sm' offset={5} place='right-start' />
         </div>
       </div>
       <DataTable

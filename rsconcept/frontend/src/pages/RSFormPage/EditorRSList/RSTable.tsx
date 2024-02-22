@@ -122,7 +122,7 @@ function RSTable({ items, selected, setSelected, onEdit, onCreateNew }: RSTableP
     <DataTable
       dense
       noFooter
-      className={clsx('min-h-[20rem]', 'overflow-y-auto', 'text-sm', 'select-none')}
+      className={clsx('min-h-[16rem]', 'overflow-y-auto', 'text-sm', 'select-none')}
       style={{ maxHeight: tableHeight }}
       data={items ?? []}
       columns={columns}
@@ -136,7 +136,7 @@ function RSTable({ items, selected, setSelected, onEdit, onCreateNew }: RSTableP
       rowSelection={selected}
       onRowSelectionChange={setSelected}
       noDataComponent={
-        <FlexColumn className='p-3 items-center'>
+        <FlexColumn className='items-center p-3'>
           <p>Список пуст</p>
           <p className='cursor-pointer clr-text-primary hover:underline' onClick={() => onCreateNew()}>
             Создать новую конституенту

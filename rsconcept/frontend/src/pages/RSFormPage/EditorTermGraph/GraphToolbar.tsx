@@ -78,7 +78,7 @@ function GraphToolbar({
         disabled={!isMutable || nothingSelected}
         onClick={onDelete}
       />
-      <HelpButton topic={HelpTopic.GRAPH_TERM} className='max-w-[calc(100vw-20rem)]' offset={4} />
+      <HelpButton topic={HelpTopic.GRAPH_TERM} className='max-w-[calc(100vw-4rem)]' offset={4} />
     </Overlay>
   );
 }

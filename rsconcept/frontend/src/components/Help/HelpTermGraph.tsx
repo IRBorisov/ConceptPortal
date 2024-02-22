@@ -5,7 +5,7 @@ import Divider from '@/components/ui/Divider';
 function HelpTermGraph() {
   // prettier-ignore
   return (
-  <div className='flex max-w-[80rem]'>
+  <div className='flex max-w-[80rem] min-w-[45rem]'>
     <div>
       <h1>Настройка графа</h1>
       <p><b>Цвет</b> - выбор правила покраски узлов</p>
@@ -21,9 +21,9 @@ function HelpTermGraph() {
     <Divider vertical margins='mx-3' />
     
     <div>
-      <h1>Горячие клавиши</h1>
-      <p><b>Клик на конституенту</b> - выделение, включая скрытые конституенты</p>
-      <p><b>Двойной клик</b> - редактирование конституенты</p>
+      <h1>Клавиши</h1>
+      <p><b>Клик на конституенту</b> - выделение</p>
+      <p><b>Клик на выделенную</b> - редактирование</p>
       <p><b>Delete</b> - удалить выбранные</p>
       <br />
 
