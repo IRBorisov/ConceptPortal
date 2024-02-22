@@ -43,7 +43,7 @@ export const UsersState = ({ children }: UsersStateProps) => {
       }
       return user.first_name + ' ' + user.last_name;
     }
-    return user.username;
+    return `Аноним ${userID}`;
   }
 
   const reload = useCallback(

@@ -78,7 +78,6 @@ class UserInfoSerializer(serializers.ModelSerializer):
         model = models.User
         fields = [
             'id',
-            'username',
             'first_name',
             'last_name',
         ]
@@ -104,6 +103,11 @@ class ChangePasswordSerializer(serializers.Serializer):
     ''' Serializer: Change password. '''
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    ''' Serializer: Change password. '''
+    email = serializers.EmailField(required=True)
 
 
 class SignupSerializer(serializers.ModelSerializer):

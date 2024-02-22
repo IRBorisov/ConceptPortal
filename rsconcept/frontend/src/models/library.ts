@@ -50,7 +50,7 @@ export interface IUserProfile extends Omit<IUser, 'is_staff'> {}
 /**
  * Represents user reference information.
  */
-export interface IUserInfo extends Omit<IUserProfile, 'email'> {}
+export interface IUserInfo extends Omit<IUserProfile, 'email' | 'username'> {}
 
 /**
  * Represents data needed to update password for current user.
