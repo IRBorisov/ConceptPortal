@@ -169,10 +169,10 @@ function RSTabs() {
           selectedTabClassName='clr-selected'
           className='flex flex-col min-w-fit'
         >
-          <TabList className={clsx('mx-auto', 'flex', 'border-b-2 border-x-2 divide-x-2')}>
+          <TabList className={clsx('sm:mx-auto w-fit', 'flex items-stretch', 'border-b-2 border-x-2 divide-x-2')}>
             <RSTabsMenu onDestroy={onDestroySchema} />
 
-            <TabLabel label='Карточка' title={`Название схемы: ${schema.title ?? ''}`} />
+            <TabLabel className='' label='Карточка' title={`Название схемы: ${schema.title ?? ''}`} />
             <TabLabel
               label='Содержание'
               title={`Конституент: ${schema.stats?.count_all ?? 0} | Ошибок: ${schema.stats?.count_errors ?? 0}`}

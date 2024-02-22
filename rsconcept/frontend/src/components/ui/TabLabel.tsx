@@ -12,7 +12,7 @@ function TabLabel({ label, title, className, ...otherProps }: TabLabelProps) {
   return (
     <TabImpl
       className={clsx(
-        'min-w-[6rem]',
+        'min-w-[6rem] h-full',
         'px-2 py-1 flex justify-center',
         'clr-tab',
         'text-sm whitespace-nowrap font-controls',
