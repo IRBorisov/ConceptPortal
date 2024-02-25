@@ -15,11 +15,7 @@ import { classnames } from '@/utils/constants';
 
 function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
-    return (
-      <div className='mt-6 text-sm select-text clr-text-warning'>
-        На Портале отсутствует пользователь с таким email.
-      </div>
-    );
+    return <div className='mt-6 text-sm select-text clr-text-warning'>Данный email не используется на Портале.</div>;
   } else {
     return <InfoError error={error} />;
   }
