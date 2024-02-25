@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 
+_TRUE_VARIANTS = [True, 'True', '1']
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'not-a-secret')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', True) in [True, 'True', '1']
+DEBUG = os.environ.get('DEBUG', True) in _TRUE_VARIANTS
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(';')
 INTERNAL_IPS = ['127.0.0.1'] if DEBUG else []
@@ -32,8 +34,8 @@ INTERNAL_IPS = ['127.0.0.1'] if DEBUG else []
 # MAIL SETUP
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'localhost')
 EMAIL_PORT = os.environ.get('EMAIL_PORT', '1025')
-EMAIL_USE_SSL = os.environ.get('EMAIL_SSL', False)
-EMAIL_USE_TLS = os.environ.get('EMAIL_TLS', False)
+EMAIL_USE_SSL = os.environ.get('EMAIL_SSL', False) in _TRUE_VARIANTS
+EMAIL_USE_TLS = os.environ.get('EMAIL_TLS', False) in _TRUE_VARIANTS
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 EMAIL_BACKEND = \
