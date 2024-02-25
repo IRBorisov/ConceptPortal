@@ -11,6 +11,9 @@ import {
   ICurrentUser,
   ILibraryItem,
   ILibraryUpdateData,
+  IPasswordTokenData,
+  IRequestPasswordData,
+  IResetPasswordData as IResetPasswordData,
   IUserInfo,
   IUserLoginData,
   IUserProfile,
@@ -136,8 +139,32 @@ export function patchProfile(request: FrontExchange<IUserUpdateData, IUserProfil
 
 export function patchPassword(request: FrontPush<IUserUpdatePassword>) {
   AxiosPatch({
-    title: 'Update Password',
+    title: 'Update password',
     endpoint: '/users/api/change-password',
+    request: request
+  });
+}
+
+export function postRequestPasswordReset(request: FrontPush<IRequestPasswordData>) {
+  AxiosPost({
+    title: 'Request password reset',
+    endpoint: '/users/api/password-reset',
+    request: request
+  });
+}
+
+export function postValidatePasswordToken(request: FrontPush<IPasswordTokenData>) {
+  AxiosPost({
+    title: 'Validate password token',
+    endpoint: '/users/api/password-reset/validate',
+    request: request
+  });
+}
+
+export function postResetPassword(request: FrontPush<IResetPasswordData>) {
+  AxiosPost({
+    title: 'Reset password',
+    endpoint: '/users/api/password-reset/confirm',
     request: request
   });
 }

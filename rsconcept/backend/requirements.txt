@@ -9,6 +9,7 @@ pymorphy2==0.9.1
 pymorphy2-dicts-ru==2.4.417127.4579844
 pymorphy2-dicts-uk==2.4.1.1.1460299261
 razdel==0.5.0
+django-rest-passwordreset==1.4.0
 
 psycopg2-binary==2.9.9
 gunicorn==21.2.0

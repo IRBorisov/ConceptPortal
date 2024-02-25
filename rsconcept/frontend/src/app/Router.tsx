@@ -6,6 +6,7 @@ import LibraryPage from '@/pages/LibraryPage';
 import LoginPage from '@/pages/LoginPage';
 import ManualsPage from '@/pages/ManualsPage';
 import NotFoundPage from '@/pages/NotFoundPage';
+import PasswordChangePage from '@/pages/PasswordChangePage';
 import RegisterPage from '@/pages/RegisterPage';
 import RestorePasswordPage from '@/pages/RestorePasswordPage';
 import RSFormPage from '@/pages/RSFormPage';
@@ -34,6 +35,10 @@ export const Router = createBrowserRouter([
       {
         path: 'restore-password',
         element: <RestorePasswordPage />
+      },
+      {
+        path: 'password-change',
+        element: <PasswordChangePage />
       },
       {
         path: 'profile',

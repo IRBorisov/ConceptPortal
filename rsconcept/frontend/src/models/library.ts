@@ -30,6 +30,24 @@ export interface IUserLoginData extends Pick<IUser, 'username'> {
 }
 
 /**
+ * Represents password reset data.
+ */
+export interface IResetPasswordData {
+  password: string;
+  token: string;
+}
+
+/**
+ * Represents password token data.
+ */
+export interface IPasswordTokenData extends Pick<IResetPasswordData, 'token'> {}
+
+/**
+ * Represents password reset request data.
+ */
+export interface IRequestPasswordData extends Pick<IUser, 'email'> {}
+
+/**
  * Represents signup data, used to create new users.
  */
 export interface IUserSignupData extends Omit<IUser, 'is_staff' | 'id'> {

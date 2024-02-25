@@ -9,11 +9,14 @@ For more specific TODOs see comments in code
 - блок организации библиотеки моделей
 - проектный модуль?
 - обратная связь - система баг репортов
-- система обработки ошибок backend
 
 [Tech]
-- multilevel modals / rework modal system
+- rewrite custom password-reset
 
 [deployment]
 - logs collection
 - status dashboard for servers
+
+[security]
+- password-reset leaks info of email being used
+- do not use schemaID for access (prevent enumerating IDs access)

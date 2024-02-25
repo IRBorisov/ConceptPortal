@@ -21,6 +21,12 @@ secrets:
     file: ./secrets/django_key.txt
   db_password:
     file: ./secrets/db_password.txt
+  email_host:
+    file: ./secrets/email_host.txt
+  email_user:
+    file: ./secrets/email_user.txt
+  email_password:
+    file: ./secrets/email_password.txt
 
 services:
   frontend:
@@ -28,14 +34,13 @@ services:
     restart: always
     depends_on:
       - backend
-    build: 
+    build:
       context: ./rsconcept/frontend
       args:
         BUILD_TYPE: production
     expose:
       - 3000
     command: serve -s /home/node -l 3000
-
 
   backend:
     container_name: portal-backend
@@ -45,20 +50,24 @@ services:
     secrets:
       - db_password
       - django_key
+      - email_host
+      - email_user
+      - email_password
     build:
       context: ./rsconcept/backend
     env_file: ./rsconcept/backend/.env.prod
     environment:
       SECRET_KEY: /run/secrets/django_key
       DB_PASSWORD: /run/secrets/db_password
+      EMAIL_HOST: /run/secrets/email_host
+      EMAIL_HOST_USER: /run/secrets/email_user
+      EMAIL_HOST_PASSWORD: /run/secrets/email_password
     expose:
       - 8000
     volumes:
       - django_static_volume:/home/app/web/static
       - django_media_volume:/home/app/web/media
-    command:
-      gunicorn -w 3 project.wsgi --bind 0.0.0.0:8000
-
+    command: gunicorn -w 3 project.wsgi --bind 0.0.0.0:8000
 
   postgresql-db:
     container_name: portal-db
@@ -72,7 +81,6 @@ services:
     volumes:
       - postgres_volume:/var/lib/postgresql/data
 
-
   certbot:
     container_name: portal-certbot
     restart: no
@@ -80,7 +88,6 @@ services:
     volumes:
       - cerbot_www_volume:/var/www/certbot/:rw
       - cerbot_conf_volume:/etc/letsencrypt/:rw
-
 
   nginx:
     container_name: portal-router
@@ -94,7 +101,7 @@ services:
       - 443:443
     depends_on:
       - backend
-    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
     volumes:
       - django_static_volume:/var/www/static
       - django_media_volume:/var/www/media

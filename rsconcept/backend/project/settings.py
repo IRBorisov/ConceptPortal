@@ -29,6 +29,18 @@ DEBUG = os.environ.get('DEBUG', True) in [True, 'True', '1']
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(';')
 INTERNAL_IPS = ['127.0.0.1'] if DEBUG else []
 
+# MAIL SETUP
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'localhost')
+EMAIL_PORT = os.environ.get('EMAIL_PORT', '1025')
+EMAIL_USE_SSL = os.environ.get('EMAIL_SSL', False)
+EMAIL_USE_TLS = os.environ.get('EMAIL_TLS', False)
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_BACKEND = \
+    'django.core.mail.backends.smtp.EmailBackend' \
+    if EMAIL_HOST != '' else \
+    'django.core.mail.backends.console.EmailBackend'
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -40,6 +52,7 @@ INSTALLED_APPS = [
 
     'django_filters',
     'rest_framework',
+    'django_rest_passwordreset',
     'corsheaders',
 
     'apps.users',

@@ -97,8 +97,8 @@ class TestUserUserProfileAPIView(APITestCase):
         self.assertEqual(response.data['last_name'], 'lastName')
 
     def test_edit_profile(self):
-        newmail = 'newmail@gmail.com'
-        data = {'email': newmail}
+        new_mail = 'newmail@gmail.com'
+        data = {'email': new_mail}
         response = self.client.patch(
             '/users/api/profile',
             data=data, format='json'
@@ -112,7 +112,7 @@ class TestUserUserProfileAPIView(APITestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['username'], self.username)
-        self.assertEqual(response.data['email'], newmail)
+        self.assertEqual(response.data['email'], new_mail)
 
     def test_change_password(self):
         newpassword = 'pw2'
@@ -149,6 +149,25 @@ class TestUserUserProfileAPIView(APITestCase):
         self.assertNotEqual(self.user.password, oldHash)
         self.assertTrue(self.client.login(username=self.user.username, password=newpassword))
         self.assertFalse(self.client.login(username=self.user.username, password=self.password))
+
+    def test_password_reset_request(self):
+        data = {
+            'email': 'invalid@gmail.com'
+        }
+        response = self.client.post(
+            '/users/api/password-reset',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, 400)
+
+        data = {
+            'email': self.email
+        }
+        response = self.client.post(
+            '/users/api/password-reset',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, 200)
 
 
 class TestSignupAPIView(APITestCase):

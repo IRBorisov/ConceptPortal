@@ -4,13 +4,23 @@ import { createContext, useCallback, useContext, useLayoutEffect, useState } fro
 
 import { type ErrorData } from '@/components/InfoError';
 import useLocalStorage from '@/hooks/useLocalStorage';
-import { IUserLoginData } from '@/models/library';
+import { IPasswordTokenData, IRequestPasswordData, IResetPasswordData, IUserLoginData } from '@/models/library';
 import { ICurrentUser } from '@/models/library';
 import { IUserSignupData } from '@/models/library';
 import { IUserProfile } from '@/models/library';
 import { IUserInfo } from '@/models/library';
 import { IUserUpdatePassword } from '@/models/library';
-import { type DataCallback, getAuth, patchPassword, postLogin, postLogout, postSignup } from '@/utils/backendAPI';
+import {
+  type DataCallback,
+  getAuth,
+  patchPassword,
+  postLogin,
+  postLogout,
+  postRequestPasswordReset,
+  postResetPassword,
+  postSignup,
+  postValidatePasswordToken
+} from '@/utils/backendAPI';
 
 import { useUsers } from './UsersContext';
 
@@ -20,6 +30,9 @@ interface IAuthContext {
   logout: (callback?: DataCallback) => void;
   signup: (data: IUserSignupData, callback?: DataCallback<IUserProfile>) => void;
   updatePassword: (data: IUserUpdatePassword, callback?: () => void) => void;
+  requestPasswordReset: (data: IRequestPasswordData, callback?: () => void) => void;
+  validateToken: (data: IPasswordTokenData, callback?: () => void) => void;
+  resetPassword: (data: IResetPasswordData, callback?: () => void) => void;
   loading: boolean;
   error: ErrorData;
   setError: (error: ErrorData) => void;
@@ -118,12 +131,77 @@ export const AuthState = ({ children }: AuthStateProps) => {
     [reload]
   );
 
+  const requestPasswordReset = useCallback(
+    (data: IRequestPasswordData, callback?: () => void) => {
+      setError(undefined);
+      postRequestPasswordReset({
+        data: data,
+        showError: false,
+        setLoading: setLoading,
+        onError: setError,
+        onSuccess: () =>
+          reload(() => {
+            if (callback) callback();
+          })
+      });
+    },
+    [reload]
+  );
+
+  const validateToken = useCallback(
+    (data: IPasswordTokenData, callback?: () => void) => {
+      setError(undefined);
+      postValidatePasswordToken({
+        data: data,
+        showError: false,
+        setLoading: setLoading,
+        onError: setError,
+        onSuccess: () =>
+          reload(() => {
+            if (callback) callback();
+          })
+      });
+    },
+    [reload]
+  );
+
+  const resetPassword = useCallback(
+    (data: IResetPasswordData, callback?: () => void) => {
+      setError(undefined);
+      postResetPassword({
+        data: data,
+        showError: false,
+        setLoading: setLoading,
+        onError: setError,
+        onSuccess: () =>
+          reload(() => {
+            if (callback) callback();
+          })
+      });
+    },
+    [reload]
+  );
+
   useLayoutEffect(() => {
     reload();
   }, [reload]);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, signup, loading, error, setError, updatePassword }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        signup,
+        loading,
+        error,
+        setError,
+        updatePassword,
+        requestPasswordReset,
+        validateToken,
+        resetPassword
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
