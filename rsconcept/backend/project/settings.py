@@ -32,8 +32,8 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(';')
 INTERNAL_IPS = ['127.0.0.1'] if DEBUG else []
 
 # MAIL SETUP
-EMAIL_HOST = os.environ.get('EMAIL_HOST', 'localhost')
-EMAIL_PORT = os.environ.get('EMAIL_PORT', '1025')
+EMAIL_HOST = os.environ.get('EMAIL_HOST', '')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '1025'))
 EMAIL_USE_SSL = os.environ.get('EMAIL_SSL', False) in _TRUE_VARIANTS
 EMAIL_USE_TLS = os.environ.get('EMAIL_TLS', False) in _TRUE_VARIANTS
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
