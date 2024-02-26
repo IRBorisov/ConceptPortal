@@ -141,6 +141,7 @@ This readme file is used mostly to document project dependencies
 ## Production build
 
 - provide secrets: 'secrets/db_password.txt', 'django_key.txt', 'email_host.txt', 'email_password.txt', 'email_user.txt'
+- check if you need to change SSL/TLS and PORT in 'rsconcept\backend\.env.prod'
 - setup domain names for application and API in configs: 'frontend\env\.env.production', 'rsconcept\backend\.env.dev', 'nginx\production.conf'
 - provide privacy policy document in PDF: 'frontend/public/privacy.pdf'
 - use certbot to obtain certificates via 'docker compose -f "docker-compose-prod.yml" run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ -d portal.acconcept.ru api.portal.acconcept.ru'

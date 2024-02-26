@@ -77,7 +77,7 @@ services:
       - db_password
     env_file: ./postgresql/.env.prod
     environment:
-      POSTGRES_PASSWORD: /run/secrets/db_password
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
     volumes:
       - postgres_volume:/var/lib/postgresql/data
 

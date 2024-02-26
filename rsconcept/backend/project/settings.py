@@ -13,6 +13,13 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 
+def _get_secret(key: str, default):
+    value = os.environ.get(key, default)
+    if os.path.isfile(value):
+        with open(value, mode='r', encoding='utf-8') as f:
+            return f.read()
+    return value
+
 _TRUE_VARIANTS = [True, 'True', '1']
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,7 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'not-a-secret')
+SECRET_KEY = _get_secret('SECRET_KEY', 'not-a-secret')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', True) in _TRUE_VARIANTS
@@ -32,12 +39,12 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(';')
 INTERNAL_IPS = ['127.0.0.1'] if DEBUG else []
 
 # MAIL SETUP
-EMAIL_HOST = os.environ.get('EMAIL_HOST', '')
+EMAIL_HOST = _get_secret('EMAIL_HOST', '')
 EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '1025'))
 EMAIL_USE_SSL = os.environ.get('EMAIL_SSL', False) in _TRUE_VARIANTS
 EMAIL_USE_TLS = os.environ.get('EMAIL_TLS', False) in _TRUE_VARIANTS
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_HOST_USER = _get_secret('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = _get_secret('EMAIL_HOST_PASSWORD', '')
 EMAIL_BACKEND = \
     'django.core.mail.backends.smtp.EmailBackend' \
     if EMAIL_HOST != '' else \
@@ -143,7 +150,7 @@ DATABASES = {
         'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3'),
         'NAME': os.environ.get('DB_NAME', BASE_DIR / 'db.sqlite3'),
         'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'PASSWORD': _get_secret('DB_PASSWORD', ''),
         'HOST': os.environ.get('DB_HOST'),
         'DB_PORT': os.environ.get('DB_PORT'),
     }
