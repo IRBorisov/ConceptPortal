@@ -33,5 +33,6 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         message=email_plaintext_message,
         from_email=_EMAIL_NOREPLY,
         recipient_list=[context['email']],
-        html_message=email_html_message
+        html_message=email_html_message,
+        fail_silently=False
     )

@@ -45,6 +45,10 @@ EMAIL_USE_SSL = os.environ.get('EMAIL_SSL', False) in _TRUE_VARIANTS
 EMAIL_USE_TLS = os.environ.get('EMAIL_TLS', False) in _TRUE_VARIANTS
 EMAIL_HOST_USER = _get_secret('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = _get_secret('EMAIL_HOST_PASSWORD', '')
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER
+EMAIL_ADMIN = EMAIL_HOST_USER
 EMAIL_BACKEND = \
     'django.core.mail.backends.smtp.EmailBackend' \
     if EMAIL_HOST != '' else \
