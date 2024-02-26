@@ -12,6 +12,7 @@ For more specific TODOs see comments in code
 
 [Tech]
 - rewrite custom password-reset
+- upgrade backend to Python3.12 and Django 5
 
 [deployment]
 - logs collection

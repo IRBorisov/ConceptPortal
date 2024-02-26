@@ -7,7 +7,7 @@ from django.utils.html import strip_tags
 from django_rest_passwordreset.signals import reset_password_token_created # type: ignore
 
 
-_EMAIL_NOREPLY = 'noreply.portal@yandex.ru'
+_EMAIL_NOREPLY = 'noreply.portal@acconcept.ru'
 _EMAIL_SUBJECT = 'Восстановление пароля КонцептПортал'
 _EMAIL_TEMPLATE = 'password_reset_email.html'
 _RECOVERY_URL = 'https://portal.acconcept.ru/password-change'
