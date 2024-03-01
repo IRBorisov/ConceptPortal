@@ -13,9 +13,11 @@ import {
   BiUpload
 } from 'react-icons/bi';
 import { FiEdit } from 'react-icons/fi';
-import { LuCrown, LuGlasses } from 'react-icons/lu';
+import { LuCrown, LuGlasses, LuReplace } from 'react-icons/lu';
+import { VscLibrary } from 'react-icons/vsc';
 
 import Button from '@/components/ui/Button';
+import Divider from '@/components/ui/Divider';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import { useAccessMode } from '@/context/AccessModeContext';
@@ -77,6 +79,11 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
   function handleReindex() {
     editMenu.hide();
     controller.reindex();
+  }
+
+  function handleSubstituteCst() {
+    editMenu.hide();
+    controller.substitute();
   }
 
   function handleTemplates() {
@@ -142,10 +149,18 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
             icon={<BiTrash size='1rem' className={controller.isMutable ? 'clr-text-warning' : ''} />}
             onClick={handleDelete}
           />
+
+          <Divider />
+
           <DropdownButton
             text='Создать новую схему'
             icon={<BiPlusCircle size='1rem' className='clr-text-url' />}
             onClick={handleCreateNew}
+          />
+          <DropdownButton
+            text='Библиотека'
+            icon={<VscLibrary size='1rem' className='clr-text-url' />}
+            onClick={() => router.push('/library')}
           />
         </Dropdown>
       </div>
@@ -176,6 +191,13 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
             title='Создать конституенту из шаблона'
             icon={<BiDiamond size='1rem' className={controller.isMutable ? 'clr-text-success' : ''} />}
             onClick={handleTemplates}
+          />
+          <DropdownButton
+            disabled={!controller.isMutable}
+            text='Отождествление'
+            title='Заменить вхождения одной конституенты на другую'
+            icon={<LuReplace size='1rem' className={controller.isMutable ? 'clr-text-primary' : ''} />}
+            onClick={handleSubstituteCst}
           />
         </Dropdown>
       </div>

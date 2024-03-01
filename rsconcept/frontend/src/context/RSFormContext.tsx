@@ -12,6 +12,7 @@ import {
   ICstCreateData,
   ICstMovetoData,
   ICstRenameData,
+  ICstSubstituteData,
   ICstUpdateData,
   IRSForm,
   IRSFormUploadData
@@ -26,6 +27,7 @@ import {
   patchMoveConstituenta,
   patchRenameConstituenta,
   patchResetAliases,
+  patchSubstituteConstituenta,
   patchUploadTRS,
   postClaimLibraryItem,
   postNewConstituenta,
@@ -57,6 +59,7 @@ interface IRSFormContext {
 
   cstCreate: (data: ICstCreateData, callback?: DataCallback<IConstituentaMeta>) => void;
   cstRename: (data: ICstRenameData, callback?: DataCallback<IConstituentaMeta>) => void;
+  cstSubstitute: (data: ICstSubstituteData, callback?: () => void) => void;
   cstUpdate: (data: ICstUpdateData, callback?: DataCallback<IConstituentaMeta>) => void;
   cstDelete: (data: IConstituentaList, callback?: () => void) => void;
   cstMoveTo: (data: ICstMovetoData, callback?: () => void) => void;
@@ -320,6 +323,24 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
     [setError, setSchema, library, schemaID]
   );
 
+  const cstSubstitute = useCallback(
+    (data: ICstSubstituteData, callback?: () => void) => {
+      setError(undefined);
+      patchSubstituteConstituenta(schemaID, {
+        data: data,
+        showError: true,
+        setLoading: setProcessing,
+        onError: setError,
+        onSuccess: newData => {
+          setSchema(newData);
+          library.localUpdateTimestamp(newData.id);
+          if (callback) callback();
+        }
+      });
+    },
+    [setError, setSchema, library, schemaID]
+  );
+
   const cstMoveTo = useCallback(
     (data: ICstMovetoData, callback?: () => void) => {
       setError(undefined);
@@ -358,6 +379,7 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         cstUpdate,
         cstCreate,
         cstRename,
+        cstSubstitute,
         cstDelete,
         cstMoveTo
       }}

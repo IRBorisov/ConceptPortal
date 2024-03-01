@@ -32,9 +32,9 @@ function Tooltip({
       delayShow={1000}
       delayHide={100}
       opacity={0.97}
-      className={clsx('overflow-hidden', 'border shadow-md', layer, className)}
+      className={clsx('overflow-auto sm:overflow-hidden', 'border shadow-md', layer, className)}
       classNameArrow={layer}
-      style={{ ...{ paddingTop: '2px', paddingBottom: '2px', overflowX: 'auto', overflowY: 'auto' }, ...style }}
+      style={{ ...{ paddingTop: '2px', paddingBottom: '2px' }, ...style }}
       variant={darkMode ? 'dark' : 'light'}
       place={place}
       {...restProps}

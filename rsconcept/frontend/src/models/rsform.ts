@@ -25,6 +25,11 @@ export enum CstType {
 export const CATEGORY_CST_TYPE = CstType.THEOREM;
 
 /**
+ * Represents Entity identifier type.
+ */
+export type EntityID = number;
+
+/**
  * Represents Constituenta classification in terms of system of concepts.
  */
 export enum CstClass {
@@ -58,7 +63,7 @@ export interface TermForm {
  * Represents Constituenta basic persistent data.
  */
 export interface IConstituentaMeta {
-  id: number;
+  id: EntityID;
   schema: number;
   order: number;
   alias: string;
@@ -129,6 +134,15 @@ export interface ICstUpdateData
  * Represents data, used in renaming {@link IConstituenta}.
  */
 export interface ICstRenameData extends Pick<IConstituentaMeta, 'id' | 'alias' | 'cst_type'> {}
+
+/**
+ * Represents data, used in merging {@link IConstituenta}.
+ */
+export interface ICstSubstituteData {
+  original: EntityID;
+  substitution: EntityID;
+  transfer_term: boolean;
+}
 
 /**
  * Represents data response when creating {@link IConstituenta}.

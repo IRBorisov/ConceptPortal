@@ -18,6 +18,7 @@ import DlgCreateCst from '@/dialogs/DlgCreateCst';
 import DlgDeleteCst from '@/dialogs/DlgDeleteCst';
 import DlgEditWordForms from '@/dialogs/DlgEditWordForms';
 import DlgRenameCst from '@/dialogs/DlgRenameCst';
+import DlgSubstituteCst from '@/dialogs/DlgSubstituteCst';
 import DlgUploadRSForm from '@/dialogs/DlgUploadRSForm';
 import { UserAccessMode } from '@/models/miscellaneous';
 import {
@@ -27,6 +28,7 @@ import {
   ICstCreateData,
   ICstMovetoData,
   ICstRenameData,
+  ICstSubstituteData,
   ICstUpdateData,
   IRSForm,
   TermForm
@@ -54,6 +56,7 @@ interface IRSEditContext {
   toggleSubscribe: () => void;
   download: () => void;
   reindex: () => void;
+  substitute: () => void;
 }
 
 const RSEditContext = createContext<IRSEditContext | null>(null);
@@ -100,16 +103,15 @@ export const RSEditState = ({
 
   const [showUpload, setShowUpload] = useState(false);
   const [showClone, setShowClone] = useState(false);
-
   const [showDeleteCst, setShowDeleteCst] = useState(false);
+  const [showEditTerm, setShowEditTerm] = useState(false);
+  const [showSubstitute, setShowSubstitute] = useState(false);
 
   const [createInitialData, setCreateInitialData] = useState<ICstCreateData>();
   const [showCreateCst, setShowCreateCst] = useState(false);
 
   const [renameInitialData, setRenameInitialData] = useState<ICstRenameData>();
   const [showRenameCst, setShowRenameCst] = useState(false);
-
-  const [showEditTerm, setShowEditTerm] = useState(false);
 
   const [insertCstID, setInsertCstID] = useState<number | undefined>(undefined);
   const [showTemplates, setShowTemplates] = useState(false);
@@ -148,6 +150,13 @@ export const RSEditState = ({
       model.cstRename(data, () => toast.success(`Переименование: ${renameInitialData!.alias} -> ${data.alias}`));
     },
     [model, renameInitialData]
+  );
+
+  const handleSubstituteCst = useCallback(
+    (data: ICstSubstituteData) => {
+      model.cstSubstitute(data, () => toast.success('Отождествление завершено'));
+    },
+    [model]
   );
 
   const handleDeleteCst = useCallback(
@@ -282,6 +291,10 @@ export const RSEditState = ({
     setShowRenameCst(true);
   }, [activeCst]);
 
+  const substitute = useCallback(() => {
+    setShowSubstitute(true);
+  }, []);
+
   const editTermForms = useCallback(() => {
     if (!activeCst) {
       return;
@@ -370,7 +383,8 @@ export const RSEditState = ({
         claim,
         share,
         toggleSubscribe,
-        reindex
+        reindex,
+        substitute
       }}
     >
       {model.schema ? (
@@ -390,6 +404,12 @@ export const RSEditState = ({
               hideWindow={() => setShowRenameCst(false)}
               onRename={handleRenameCst}
               initial={renameInitialData}
+            />
+          ) : null}
+          {showSubstitute ? (
+            <DlgSubstituteCst
+              hideWindow={() => setShowSubstitute(false)} // prettier: split lines
+              onSubstitute={handleSubstituteCst}
             />
           ) : null}
           {showDeleteCst ? (
