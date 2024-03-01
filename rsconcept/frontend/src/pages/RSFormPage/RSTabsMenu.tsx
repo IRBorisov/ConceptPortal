@@ -17,7 +17,6 @@ import { LuCrown, LuGlasses, LuReplace } from 'react-icons/lu';
 import { VscLibrary } from 'react-icons/vsc';
 
 import Button from '@/components/ui/Button';
-import Divider from '@/components/ui/Divider';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import { useAccessMode } from '@/context/AccessModeContext';
@@ -150,9 +149,8 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
             onClick={handleDelete}
           />
 
-          <Divider />
-
           <DropdownButton
+            className='border-t-2'
             text='Создать новую схему'
             icon={<BiPlusCircle size='1rem' className='clr-text-url' />}
             onClick={handleCreateNew}
