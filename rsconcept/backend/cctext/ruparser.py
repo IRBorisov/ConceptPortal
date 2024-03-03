@@ -394,8 +394,7 @@ class PhraseParser:
     def _filtered_parse(text: str):
         capital = Capitalization.from_text(text)
         score_filter = PhraseParser._filter_score(morpho.parse(text))
-        for form in PhraseParser._filter_capital(score_filter, capital):
-            yield form
+        yield from PhraseParser._filter_capital(score_filter, capital)
 
     @staticmethod
     def _filter_score(generator):
@@ -412,8 +411,7 @@ class PhraseParser:
                     continue
                 yield form
         else:
-            for form in generator:
-                yield form
+            yield from generator
 
     @staticmethod
     def _parse_word(text: str, require_index: int = INDEX_NONE,

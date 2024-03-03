@@ -4,6 +4,7 @@ import io
 from zipfile import ZipFile
 from rest_framework.test import APITestCase, APIRequestFactory, APIClient
 from rest_framework.exceptions import ErrorDetail
+from rest_framework import status
 
 from cctext import ReferenceType, split_grams
 
@@ -63,7 +64,7 @@ class TestConstituentaAPI(APITestCase):
 
     def test_retrieve(self):
         response = self.client.get(f'/api/constituents/{self.cst1.id}')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['alias'], self.cst1.alias)
         self.assertEqual(response.data['convention'], self.cst1.convention)
 
@@ -73,21 +74,21 @@ class TestConstituentaAPI(APITestCase):
             f'/api/constituents/{self.cst2.id}',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         self.client.logout()
         response = self.client.patch(
             f'/api/constituents/{self.cst1.id}',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         self.client.force_authenticate(user=self.user)
         response = self.client.patch(
             f'/api/constituents/{self.cst1.id}',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.cst1.refresh_from_db()
         self.assertEqual(response.data['convention'], 'tt')
         self.assertEqual(self.cst1.convention, 'tt')
@@ -97,7 +98,7 @@ class TestConstituentaAPI(APITestCase):
             data=data,
             format='json'
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_update_resolved_no_refs(self):
         data = {
@@ -105,7 +106,7 @@ class TestConstituentaAPI(APITestCase):
             'definition_raw': 'New def'
         }
         response = self.client.patch(f'/api/constituents/{self.cst3.id}', data, format='json')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.cst3.refresh_from_db()
         self.assertEqual(response.data['term_resolved'], 'New term')
         self.assertEqual(self.cst3.term_resolved, 'New term')
@@ -121,7 +122,7 @@ class TestConstituentaAPI(APITestCase):
             f'/api/constituents/{self.cst3.id}',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.cst3.refresh_from_db()
         self.assertEqual(self.cst3.term_resolved, self.cst1.term_resolved)
         self.assertEqual(response.data['term_resolved'], self.cst1.term_resolved)
@@ -134,7 +135,7 @@ class TestConstituentaAPI(APITestCase):
             f'/api/constituents/{self.cst1.id}',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['alias'], 'X1')
         self.assertEqual(response.data['alias'], self.cst1.alias)
         self.assertEqual(response.data['order'], self.cst1.order)
@@ -169,12 +170,12 @@ class TestLibraryViewset(APITestCase):
         self.client.logout()
         data = {'title': 'Title'}
         response = self.client.post('/api/library', data=data, format='json')
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_create_populate_user(self):
         data = {'title': 'Title'}
         response = self.client.post('/api/library', data=data, format='json')
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['title'], 'Title')
         self.assertEqual(response.data['owner'], self.user.id)
 
@@ -184,7 +185,7 @@ class TestLibraryViewset(APITestCase):
             f'/api/library/{self.owned.id}',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['title'], 'New title')
         self.assertEqual(response.data['alias'], self.owned.alias)
 
@@ -194,37 +195,37 @@ class TestLibraryViewset(APITestCase):
             f'/api/library/{self.unowned.id}',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_destroy(self):
         response = self.client.delete(f'/api/library/{self.owned.id}')
-        self.assertTrue(response.status_code in [202, 204])
+        self.assertTrue(response.status_code in [status.HTTP_202_ACCEPTED, status.HTTP_204_NO_CONTENT])
 
     def test_destroy_admin_override(self):
         response = self.client.delete(f'/api/library/{self.unowned.id}')
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.user.is_staff = True
         self.user.save()
         response = self.client.delete(f'/api/library/{self.unowned.id}')
-        self.assertTrue(response.status_code in [202, 204])
+        self.assertTrue(response.status_code in [status.HTTP_202_ACCEPTED, status.HTTP_204_NO_CONTENT])
 
     def test_claim(self):
         response = self.client.post(f'/api/library/{self.owned.id}/claim')
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         self.owned.is_common = True
         self.owned.save()
         response = self.client.post(f'/api/library/{self.owned.id}/claim')
-        self.assertEqual(response.status_code, 304)
+        self.assertEqual(response.status_code, status.HTTP_304_NOT_MODIFIED)
 
         response = self.client.post(f'/api/library/{self.unowned.id}/claim')
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         self.assertFalse(self.user in self.unowned.subscribers())
         self.unowned.is_common = True
         self.unowned.save()
         response = self.client.post(f'/api/library/{self.unowned.id}/claim')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.unowned.refresh_from_db()
         self.assertEqual(self.unowned.owner, self.user)
         self.assertEqual(self.unowned.owner, self.user)
@@ -233,26 +234,26 @@ class TestLibraryViewset(APITestCase):
     def test_claim_anonymous(self):
         self.client.logout()
         response = self.client.post(f'/api/library/{self.owned.id}/claim')
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_retrieve_common(self):
         self.client.logout()
         response = self.client.get('/api/library/active')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(_response_contains(response, self.common))
         self.assertFalse(_response_contains(response, self.unowned))
         self.assertFalse(_response_contains(response, self.owned))
 
     def test_retrieve_owned(self):
         response = self.client.get('/api/library/active')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(_response_contains(response, self.common))
         self.assertFalse(_response_contains(response, self.unowned))
         self.assertTrue(_response_contains(response, self.owned))
 
     def test_retrieve_subscribed(self):
         response = self.client.get('/api/library/active')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(_response_contains(response, self.unowned))
 
         user2 =  User.objects.create(username='UserTest2')
@@ -260,37 +261,37 @@ class TestLibraryViewset(APITestCase):
         Subscription.subscribe(user=user2, item=self.unowned)
         Subscription.subscribe(user=user2, item=self.owned)
         response = self.client.get('/api/library/active')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(_response_contains(response, self.unowned))
         self.assertEqual(len(response.data), 3)
 
     def test_subscriptions(self):
         response = self.client.delete(f'/api/library/{self.unowned.id}/unsubscribe')
-        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(self.user in self.unowned.subscribers())
 
         response = self.client.post(f'/api/library/{self.unowned.id}/subscribe')
-        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertTrue(self.user in self.unowned.subscribers())
 
         response = self.client.post(f'/api/library/{self.unowned.id}/subscribe')
-        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertTrue(self.user in self.unowned.subscribers())
 
         response = self.client.delete(f'/api/library/{self.unowned.id}/unsubscribe')
-        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(self.user in self.unowned.subscribers())
 
     def test_retrieve_templates(self):
         response = self.client.get('/api/library/templates')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(_response_contains(response, self.common))
         self.assertFalse(_response_contains(response, self.unowned))
         self.assertFalse(_response_contains(response, self.owned))
 
         LibraryTemplate.objects.create(lib_source=self.unowned)
         response = self.client.get('/api/library/templates')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(_response_contains(response, self.common))
         self.assertTrue(_response_contains(response, self.unowned))
         self.assertFalse(_response_contains(response, self.owned))
@@ -312,13 +313,13 @@ class TestRSFormViewset(APITestCase):
             title='Test3'
         )
         response = self.client.get('/api/rsforms')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(_response_contains(response, non_schema))
         self.assertTrue(_response_contains(response, self.unowned.item))
         self.assertTrue(_response_contains(response, self.owned.item))
 
         response = self.client.get('/api/library')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(_response_contains(response, non_schema))
         self.assertTrue(_response_contains(response, self.unowned.item))
         self.assertTrue(_response_contains(response, self.owned.item))
@@ -327,7 +328,7 @@ class TestRSFormViewset(APITestCase):
         schema = RSForm.create(title='Title1')
         schema.insert_last(alias='X1', insert_type=CstType.BASE)
         response = self.client.get(f'/api/rsforms/{schema.item.id}/contents')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_details(self):
         schema = RSForm.create(title='Test', owner=self.user)
@@ -342,7 +343,7 @@ class TestRSFormViewset(APITestCase):
 
         response = self.client.get(f'/api/rsforms/{schema.item.id}/details')
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['title'], 'Test')
         self.assertEqual(len(response.data['items']), 2)
         self.assertEqual(response.data['items'][0]['id'], x1.id)
@@ -362,7 +363,7 @@ class TestRSFormViewset(APITestCase):
             f'/api/rsforms/{schema.item.id}/check',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['parseResult'], True)
         self.assertEqual(response.data['syntax'], Syntax.MATH)
         self.assertEqual(response.data['astText'], '[=[X1][X1]]')
@@ -373,7 +374,7 @@ class TestRSFormViewset(APITestCase):
             f'/api/rsforms/{self.unowned.item.id}/check',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_resolve(self):
         schema = RSForm.create(title='Test')
@@ -385,7 +386,7 @@ class TestRSFormViewset(APITestCase):
             f'/api/rsforms/{schema.item.id}/resolve',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['input'], '@{1|редкий} @{X1|plur,datv}')
         self.assertEqual(response.data['output'], 'редким синим слонам')
         self.assertEqual(len(response.data['refs']), 2)
@@ -411,7 +412,7 @@ class TestRSFormViewset(APITestCase):
         with open(f'{work_dir}/data/sample-rsform.trs', 'rb') as file:
             data = {'file': file}
             response = self.client.post('/api/rsforms/import-trs', data=data, format='multipart')
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['owner'], self.user.pk)
         self.assertTrue(response.data['title'] != '')
 
@@ -419,7 +420,7 @@ class TestRSFormViewset(APITestCase):
         schema = RSForm.create(title='Test')
         schema.insert_at(1, 'X1', CstType.BASE)
         response = self.client.get(f'/api/rsforms/{schema.item.id}/export-trs')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.headers['Content-Disposition'], 'attachment; filename=Schema.trs')
         with io.BytesIO(response.content) as stream:
             with ZipFile(stream, 'r') as zipped_file:
@@ -432,7 +433,7 @@ class TestRSFormViewset(APITestCase):
             f'/api/rsforms/{self.unowned.item.id}/cst-create',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         item = self.owned.item
         Constituenta.objects.create(
@@ -451,7 +452,7 @@ class TestRSFormViewset(APITestCase):
             f'/api/rsforms/{item.id}/cst-create',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['new_cst']['alias'], 'X3')
         x3 = Constituenta.objects.get(alias=response.data['new_cst']['alias'])
         self.assertEqual(x3.order, 3)
@@ -467,7 +468,7 @@ class TestRSFormViewset(APITestCase):
             f'/api/rsforms/{item.id}/cst-create',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['new_cst']['alias'], data['alias'])
         x4 = Constituenta.objects.get(alias=response.data['new_cst']['alias'])
         self.assertEqual(x4.order, 3)
@@ -503,27 +504,27 @@ class TestRSFormViewset(APITestCase):
             f'/api/rsforms/{self.unowned.item.id}/cst-rename',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         response = self.client.patch(
             f'/api/rsforms/{self.owned.item.id}/cst-rename',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         data = {'id': cst1.pk, 'alias': cst1.alias, 'cst_type': 'term'}
         response = self.client.patch(
             f'/api/rsforms/{self.owned.item.id}/cst-rename',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         data = {'id': cst1.pk, 'alias': cst3.alias}
         response = self.client.patch(
             f'/api/rsforms/{self.owned.item.id}/cst-rename',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         data = {'alias': 'D2', 'cst_type': 'term', 'id': cst1.pk}
         item = self.owned.item
@@ -540,7 +541,7 @@ class TestRSFormViewset(APITestCase):
             f'/api/rsforms/{item.id}/cst-rename',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['new_cst']['alias'], 'D2')
         self.assertEqual(response.data['new_cst']['cst_type'], 'term')
         d1.refresh_from_db()
@@ -578,27 +579,27 @@ class TestRSFormViewset(APITestCase):
             f'/api/rsforms/{self.unowned.item.id}/cst-substitute',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         response = self.client.patch(
             f'/api/rsforms/{self.owned.item.id}/cst-substitute',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         data = {'original': unowned.pk, 'substitution': x1.pk, 'transfer_term': True}
         response = self.client.patch(
             f'/api/rsforms/{self.owned.item.id}/cst-substitute',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         data = {'original': x1.pk, 'substitution': x1.pk, 'transfer_term': True}
         response = self.client.patch(
             f'/api/rsforms/{self.owned.item.id}/cst-substitute',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         d1 = Constituenta.objects.create(
             alias='D1',
@@ -612,7 +613,7 @@ class TestRSFormViewset(APITestCase):
             f'/api/rsforms/{self.owned.item.id}/cst-substitute',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         d1.refresh_from_db()
         x2.refresh_from_db()
@@ -634,7 +635,7 @@ class TestRSFormViewset(APITestCase):
             f'/api/rsforms/{item.id}/cst-create',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['new_cst']['alias'], 'X3')
         self.assertEqual(response.data['new_cst']['cst_type'], 'basic')
         self.assertEqual(response.data['new_cst']['convention'], '1')
@@ -651,7 +652,7 @@ class TestRSFormViewset(APITestCase):
             f'/api/rsforms/{schema.item.id}/cst-delete-multiple',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         x1 = Constituenta.objects.create(schema=schema.item, alias='X1', cst_type='basic', order=1)
         x2 = Constituenta.objects.create(schema=schema.item, alias='X2', cst_type='basic', order=2)
@@ -662,7 +663,7 @@ class TestRSFormViewset(APITestCase):
         )
         x2.refresh_from_db()
         schema.item.refresh_from_db()
-        self.assertEqual(response.status_code, 202)
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
         self.assertEqual(len(response.data['items']), 1)
         self.assertEqual(schema.constituents().count(), 1)
         self.assertEqual(x2.alias, 'X2')
@@ -674,7 +675,7 @@ class TestRSFormViewset(APITestCase):
             f'/api/rsforms/{schema.item.id}/cst-delete-multiple',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_move_constituenta(self):
         item = self.owned.item
@@ -683,7 +684,7 @@ class TestRSFormViewset(APITestCase):
             f'/api/rsforms/{item.id}/cst-moveto',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         x1 = Constituenta.objects.create(schema=item, alias='X1', cst_type='basic', order=1)
         x2 = Constituenta.objects.create(schema=item, alias='X2', cst_type='basic', order=2)
@@ -694,7 +695,7 @@ class TestRSFormViewset(APITestCase):
         )
         x1.refresh_from_db()
         x2.refresh_from_db()
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['id'], item.id)
         self.assertEqual(x1.order, 2)
         self.assertEqual(x2.order, 1)
@@ -705,12 +706,12 @@ class TestRSFormViewset(APITestCase):
             f'/api/rsforms/{item.id}/cst-moveto',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_reset_aliases(self):
         item = self.owned.item
         response = self.client.patch(f'/api/rsforms/{item.id}/reset-aliases')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['id'], item.id)
 
         x2 = Constituenta.objects.create(schema=item, alias='X2', cst_type='basic', order=1)
@@ -720,7 +721,7 @@ class TestRSFormViewset(APITestCase):
         x1.refresh_from_db()
         x2.refresh_from_db()
         d11.refresh_from_db()
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(x2.order, 1)
         self.assertEqual(x2.alias, 'X1')
         self.assertEqual(x1.order, 2)
@@ -729,7 +730,7 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(d11.alias, 'D1')
 
         response = self.client.patch(f'/api/rsforms/{item.id}/reset-aliases')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_load_trs(self):
         schema = self.owned
@@ -744,7 +745,7 @@ class TestRSFormViewset(APITestCase):
                 data=data, format='multipart'
             )
         schema.item.refresh_from_db()
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(schema.item.title, 'Test11')
         self.assertEqual(len(response.data['items']), 25)
         self.assertEqual(schema.constituents().count(), 25)
@@ -769,13 +770,62 @@ class TestRSFormViewset(APITestCase):
             data=data, format='json'
         )
 
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['title'], 'Title')
         self.assertEqual(response.data['items'][0]['alias'], x1.alias)
         self.assertEqual(response.data['items'][0]['term_raw'], x1.term_raw)
         self.assertEqual(response.data['items'][0]['term_resolved'], x1.term_resolved)
         self.assertEqual(response.data['items'][1]['term_raw'], d1.term_raw)
         self.assertEqual(response.data['items'][1]['term_resolved'], d1.term_resolved)
+
+
+class TestVersionViews(APITestCase):
+    ''' Testing versioning endpoints. '''
+    def setUp(self):
+        self.factory = APIRequestFactory()
+        self.user = User.objects.create(username='UserTest')
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+        self.owned = RSForm.create(title='Test', alias='T1', owner=self.user)
+        self.unowned = RSForm.create(title='Test2', alias='T2')
+        self.x1 = Constituenta.objects.create(
+            schema=self.owned.item,
+            alias='X1',
+            cst_type='basic',
+            convention='testStart',
+            order=1
+        )
+
+    def test_create_version(self):
+        invalid_data = {'description': 'test'}
+        data = {'version': '1.0.0', 'description': 'test'}
+        invalid_id = 1338
+        response = self.client.post(
+            f'/api/rsforms/{invalid_id}/versions/create',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        response = self.client.post(
+            f'/api/rsforms/{self.unowned.item.id}/versions/create',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = self.client.post(
+            f'/api/rsforms/{self.owned.item.id}/versions/create',
+            data=invalid_data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        response = self.client.post(
+            f'/api/rsforms/{self.owned.item.id}/versions/create',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue('version' in response.data)
+        self.assertTrue('schema' in response.data)
+        self.assertTrue(response.data['version'] in [v['id'] for v in response.data['schema']['versions']])
 
 
 class TestRSLanguageViews(APITestCase):
@@ -793,7 +843,7 @@ class TestRSLanguageViews(APITestCase):
                 '/api/rsforms/create-detailed',
                 data=data, format='multipart'
             )
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['owner'], self.user.pk)
         self.assertEqual(response.data['title'], 'Test123')
         self.assertEqual(response.data['alias'], 'ks1')
@@ -805,7 +855,7 @@ class TestRSLanguageViews(APITestCase):
             '/api/rsforms/create-detailed',
             data=data, format='json'
         )
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['owner'], self.user.pk)
         self.assertEqual(response.data['title'], 'Test123')
         self.assertEqual(response.data['alias'], 'ks1')
@@ -818,7 +868,7 @@ class TestRSLanguageViews(APITestCase):
             data=data, format='json'
         )
         response = convert_to_ascii(request)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['result'], r'1 \eq 1')
 
     def test_convert_to_ascii_missing_data(self):
@@ -828,7 +878,7 @@ class TestRSLanguageViews(APITestCase):
             data=data, format='json'
         )
         response = convert_to_ascii(request)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIsInstance(response.data['expression'][0], ErrorDetail)
 
     def test_convert_to_math(self):
@@ -838,7 +888,7 @@ class TestRSLanguageViews(APITestCase):
             data=data, format='json'
         )
         response = convert_to_math(request)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['result'], r'1=1')
 
     def test_convert_to_math_missing_data(self):
@@ -848,7 +898,7 @@ class TestRSLanguageViews(APITestCase):
             data=data, format='json'
         )
         response = convert_to_math(request)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIsInstance(response.data['expression'][0], ErrorDetail)
 
     def test_parse_expression(self):
@@ -858,7 +908,7 @@ class TestRSLanguageViews(APITestCase):
             data=data, format='json'
         )
         response = parse_expression(request)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['parseResult'], True)
         self.assertEqual(response.data['syntax'], Syntax.MATH)
         self.assertEqual(response.data['astText'], '[=[1][1]]')
@@ -870,7 +920,7 @@ class TestRSLanguageViews(APITestCase):
             data=data, format='json'
         )
         response = parse_expression(request)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIsInstance(response.data['expression'][0], ErrorDetail)
 
 
@@ -889,7 +939,7 @@ class TestNaturalLanguageViews(APITestCase):
             data=data, format='json'
         )
         response = parse_text(request)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self._assert_tags(response.data['result'], 'datv,NOUN,plur,anim,masc')
 
     def test_inflect(self):
@@ -899,7 +949,7 @@ class TestNaturalLanguageViews(APITestCase):
             data=data, format='json'
         )
         response = inflect(request)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['result'], 'синим слонам')
 
     def test_generate_lexeme(self):
@@ -909,6 +959,6 @@ class TestNaturalLanguageViews(APITestCase):
             data=data, format='json'
         )
         response = generate_lexeme(request)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['items']), 12)
         self.assertEqual(response.data['items'][0]['text'], 'синий слон')

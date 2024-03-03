@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 '''
 
+import sys
+import logging
 import os
 from pathlib import Path
 
@@ -229,6 +231,10 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console'],
-        'level': 'DEBUG',
+        'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO')
     },
 }
+
+
+if len(sys.argv) > 1 and sys.argv[1] == 'test':
+    logging.disable(logging.CRITICAL)

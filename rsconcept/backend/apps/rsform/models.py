@@ -125,8 +125,12 @@ class LibraryItem(Model):
         return f'/api/library/{self.pk}'
 
     def subscribers(self) -> list[User]:
-        ''' Get all subscribers for this item . '''
+        ''' Get all subscribers for this item. '''
         return [subscription.user for subscription in Subscription.objects.filter(item=self.pk)]
+
+    def versions(self) -> list['Version']:
+        ''' Get all Versions of this item. '''
+        return list(Version.objects.filter(item=self.pk))
 
     @transaction.atomic
     def save(self, *args, **kwargs):
@@ -149,6 +153,40 @@ class LibraryTemplate(Model):
         ''' Model metadata. '''
         verbose_name = 'Шаблон'
         verbose_name_plural = 'Шаблоны'
+
+
+class Version(Model):
+    ''' Library item version archive. '''
+    item: ForeignKey = ForeignKey(
+        verbose_name='Схема',
+        to=LibraryItem,
+        on_delete=CASCADE
+    )
+    version = CharField(
+        verbose_name='Версия',
+        max_length=20,
+        blank=False
+    )
+    description: TextField = TextField(
+        verbose_name='Описание',
+        blank=True
+    )
+    data: JSONField = JSONField(
+        verbose_name='Содержание'
+    )
+    time_create: DateTimeField = DateTimeField(
+        verbose_name='Дата создания',
+        auto_now_add=True
+    )
+
+    class Meta:
+        ''' Model metadata. '''
+        verbose_name = 'Версии'
+        verbose_name_plural = 'Версия'
+        unique_together = [['item', 'version']]
+
+    def __str__(self) -> str:
+        return f'{self.item} v{self.version}'
 
 
 class Subscription(Model):
@@ -510,6 +548,16 @@ class RSForm:
             if resolved != cst.definition_resolved:
                 cst.definition_resolved = resolved
                 cst.save()
+
+    @transaction.atomic
+    def create_version(self, version: str, description: str, data) -> Version:
+        ''' Creates version for current state. '''
+        return Version.objects.create(
+            item=self.item,
+            version=version,
+            description=description,
+            data=data
+        )
 
     @transaction.atomic
     def _reset_order(self):

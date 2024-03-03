@@ -87,6 +87,16 @@ export enum LibraryItemType {
 }
 
 /**
+ * Represents library item version information.
+ */
+export interface IVersionInfo {
+  id: number;
+  version: string;
+  description: string;
+  time_create: string;
+}
+
+/**
  * Represents library item common data typical for all item types.
  */
 export interface ILibraryItem {
@@ -107,6 +117,8 @@ export interface ILibraryItem {
  */
 export interface ILibraryItemEx extends ILibraryItem {
   subscribers: number[];
+  version?: number;
+  versions: IVersionInfo[];
 }
 
 /**

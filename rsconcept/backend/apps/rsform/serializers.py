@@ -8,7 +8,7 @@ import pyconcept
 from cctext import Resolver, Reference, ReferenceType, EntityReference, SyntacticReference
 
 from .utils import fix_old_references
-from .models import Constituenta, LibraryItem, RSForm
+from .models import Constituenta, LibraryItem, RSForm, Version
 from . import messages as msg
 
 _CST_TYPE = 'constituenta'
@@ -128,9 +128,27 @@ class ExpressionParseSerializer(serializers.Serializer):
     )
 
 
+class VersionSerializer(serializers.ModelSerializer):
+    ''' Serializer: Version data. '''
+    class Meta:
+        ''' serializer metadata. '''
+        model = Version
+        fields = 'id', 'version', 'description', 'time_create'
+        read_only_fields = ('item', 'id', 'time_create')
+
+
+class VersionCreateSerializer(serializers.ModelSerializer):
+    ''' Serializer: Version create data. '''
+    class Meta:
+        ''' serializer metadata. '''
+        model = Version
+        fields = 'version', 'description'
+
+
 class LibraryItemDetailsSerializer(serializers.ModelSerializer):
     ''' Serializer: LibraryItem detailed data. '''
     subscribers = serializers.SerializerMethodField()
+    versions = serializers.SerializerMethodField()
 
     class Meta:
         ''' serializer metadata. '''
@@ -140,6 +158,9 @@ class LibraryItemDetailsSerializer(serializers.ModelSerializer):
 
     def get_subscribers(self, instance: LibraryItem) -> list[int]:
         return [item.pk for item in instance.subscribers()]
+
+    def get_versions(self, instance: LibraryItem) -> list:
+        return [VersionSerializer(item).data for item in instance.versions()]
 
 
 class ConstituentaSerializer(serializers.ModelSerializer):
@@ -398,13 +419,32 @@ class RSFormSerializer(serializers.ModelSerializer):
         model = LibraryItem
         fields = '__all__'
 
-    def to_representation(self, instance: LibraryItem):
+    def to_representation(self, instance: LibraryItem) -> dict:
         result = LibraryItemDetailsSerializer(instance).data
         schema = RSForm(instance)
         result['items'] = []
         for cst in schema.constituents().order_by('order'):
             result['items'].append(ConstituentaSerializer(cst).data)
         return result
+    
+    def to_versioned_data(self) -> dict:
+        ''' Create serializable version representation without redundant data. '''
+        result = self.to_representation(self.instance)
+        del result['versions']
+        del result['subscribers']
+
+        del result['owner']
+        del result['is_common']
+        del result['is_canonical']
+        del result['time_create']
+        del result['time_update']
+        return result
+
+    def from_versioned_data(self, version: int, data: dict) -> dict:
+        ''' Load data from version. '''
+        result = self.to_representation(self.instance)
+        result['version'] = version
+        return result | data
 
 
 class CstDetailsSerializer(serializers.ModelSerializer):

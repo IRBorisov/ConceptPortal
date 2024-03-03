@@ -44,7 +44,16 @@ class SubscriptionAdmin(admin.ModelAdmin):
     ]
 
 
+class VersionAdmin(admin.ModelAdmin):
+    ''' Admin model: Versions. '''
+    list_display = ['id', 'item', 'version', 'description', 'time_create']
+    search_fields = [
+        'item__title', 'item__alias'
+    ]
+
+
 admin.site.register(models.Constituenta, ConstituentaAdmin)
 admin.site.register(models.LibraryItem, LibraryItemAdmin)
 admin.site.register(models.LibraryTemplate, LibraryTemplateAdmin)
 admin.site.register(models.Subscription, SubscriptionAdmin)
+admin.site.register(models.Version, VersionAdmin)
