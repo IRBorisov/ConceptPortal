@@ -828,6 +828,86 @@ class TestVersionViews(APITestCase):
         self.assertTrue(response.data['version'] in [v['id'] for v in response.data['schema']['versions']])
 
 
+    def test_retrieve_version(self):
+        data = {'version': '1.0.0', 'description': 'test'}
+        response = self.client.post(
+            f'/api/rsforms/{self.owned.item.id}/versions/create',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        version_id = response.data['version']
+
+        invalid_id = 1338
+        response = self.client.get(f'/api/rsforms/{invalid_id}/versions/{invalid_id}')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        response = self.client.get(f'/api/rsforms/{self.owned.item.id}/versions/{invalid_id}')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        response = self.client.get(f'/api/rsforms/{invalid_id}/versions/{version_id}')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        response = self.client.get(f'/api/rsforms/{self.unowned.item.id}/versions/{version_id}')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        self.owned.item.alias = 'NewName'
+        self.owned.item.save()
+        self.x1.alias = 'X33'
+        self.x1.save()
+        
+        response = self.client.get(f'/api/rsforms/{self.owned.item.id}/versions/{version_id}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertNotEqual(response.data['alias'], self.owned.item.alias)
+        self.assertNotEqual(response.data['items'][0]['alias'], self.x1.alias)
+        self.assertEqual(response.data['version'], version_id)
+
+    def test_access_version(self):
+        data = {'version': '1.0.0', 'description': 'test'}
+        response = self.client.post(
+            f'/api/rsforms/{self.owned.item.id}/versions/create',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        version_id = response.data['version']
+        invalid_id = version_id + 1337
+
+        response = self.client.get(f'/api/versions/{invalid_id}')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        self.client.logout()
+        response = self.client.get(f'/api/versions/{version_id}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['version'], data['version'])
+        self.assertEqual(response.data['description'], data['description'])
+        self.assertEqual(response.data['item'], self.owned.item.id)
+
+        response = self.client.patch(
+            f'/api/versions/{version_id}',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = self.client.delete(f'/api/versions/{version_id}')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        self.client.force_authenticate(user=self.user)
+
+        data = {'version': '1.1.0', 'description': 'test1'}
+        response = self.client.patch(
+            f'/api/versions/{version_id}',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.client.get(f'/api/versions/{version_id}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['version'], data['version'])
+        self.assertEqual(response.data['description'], data['description'])
+
+        response = self.client.delete(f'/api/versions/{version_id}')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        response = self.client.get(f'/api/versions/{version_id}')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
 class TestRSLanguageViews(APITestCase):
     def setUp(self):
         self.factory = APIRequestFactory()

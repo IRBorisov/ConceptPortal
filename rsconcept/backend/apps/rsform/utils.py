@@ -34,6 +34,15 @@ class SchemaOwnerOrAdmin(BasePermission):
         return request.user.is_staff # type: ignore
 
 
+class ItemOwnerOrAdmin(BasePermission):
+    ''' Permission for object ownership restriction '''
+    def has_object_permission(self, request, view, obj):
+        if request.user == obj.item.owner:
+            return True
+        if not hasattr(request.user, 'is_staff'):
+            return False
+        return request.user.is_staff # type: ignore
+
 def read_trs(file) -> dict:
     ''' Read JSON from TRS file '''
     with ZipFile(file, 'r') as archive:
@@ -51,7 +60,7 @@ def write_trs(json_data: dict) -> bytes:
     return content.getvalue()
 
 def apply_pattern(text: str, mapping: dict[str, str], pattern: re.Pattern[str]) -> str:
-    ''' Apply mapping to matching in regular expression patter subgroup 1. '''
+    ''' Apply mapping to matching in regular expression patter subgroup 1 '''
     if text == '' or pattern == '':
         return text
     pos_input: int = 0

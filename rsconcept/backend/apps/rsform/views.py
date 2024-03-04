@@ -58,10 +58,26 @@ class ConstituentAPIView(generics.RetrieveUpdateAPIView):
 
     def get_permissions(self):
         result = super().get_permissions()
-        if self.request.method.lower() == 'get':
+        if self.request.method.upper() == 'GET':
             result.append(permissions.AllowAny())
         else:
             result.append(utils.SchemaOwnerOrAdmin())
+        return result
+
+
+@extend_schema(tags=['Version'])
+@extend_schema_view()
+class VersionAPIView(generics.RetrieveUpdateDestroyAPIView):
+    ''' Endpoint: Get / Update Constituenta. '''
+    queryset = m.Version.objects.all()
+    serializer_class = s.VersionSerializer
+
+    def get_permissions(self):
+        result = super().get_permissions()
+        if self.request.method.upper() == 'GET':
+            result.append(permissions.AllowAny())
+        else:
+            result.append(utils.ItemOwnerOrAdmin())
         return result
 
 
@@ -196,10 +212,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         ''' Determine permission class. '''
         if self.action in ['load_trs', 'cst_create', 'cst_delete_multiple',
                            'reset_aliases', 'cst_rename', 'cst_substitute']:
-            permission_classes = [utils.ObjectOwnerOrAdmin]
+            permission_list = [utils.ObjectOwnerOrAdmin]
         else:
-            permission_classes = [permissions.AllowAny]
-        return [permission() for permission in permission_classes]
+            permission_list = [permissions.AllowAny]
+        return [permission() for permission in permission_list]
 
     @extend_schema(
         summary='create constituenta',
@@ -547,10 +563,10 @@ def _prepare_rsform_data(data: dict, request: Request, owner: Union[m.User, None
 
 @extend_schema(
     summary='save version for RSForm copying current content',
-    tags=['Versions'],
+    tags=['Version'],
     request=s.VersionCreateSerializer,
     responses={
-        c.HTTP_201_CREATED: s.RSFormParseSerializer,
+        c.HTTP_201_CREATED: s.NewVersionResponse,
         c.HTTP_403_FORBIDDEN: None,
         c.HTTP_404_NOT_FOUND: None
     }
@@ -581,6 +597,36 @@ def create_version(request: Request, pk_item: int):
             'version': result.pk,
             'schema': s.RSFormParseSerializer(item).data
         }
+    )
+
+
+@extend_schema(
+    summary='retrieve versioned data for RSForm',
+    tags=['Version'],
+    request=None,
+    responses={
+        c.HTTP_200_OK: s.RSFormParseSerializer,
+        c.HTTP_404_NOT_FOUND: None
+    }
+)
+@api_view(['GET'])
+def retrieve_version(request: Request, pk_item: int, pk_version: int):
+    ''' Endpoint: Retrieve version for RSForm. '''
+    try:
+        item = m.LibraryItem.objects.get(pk=pk_item)
+    except m.LibraryItem.DoesNotExist:
+        return Response(status=c.HTTP_404_NOT_FOUND)
+    try:
+        version = m.Version.objects.get(pk=pk_version)
+    except m.Version.DoesNotExist:
+        return Response(status=c.HTTP_404_NOT_FOUND)
+    if version.item != item:
+        return Response(status=c.HTTP_404_NOT_FOUND)
+
+    data = s.RSFormSerializer(item).from_versioned_data(version.pk, version.data)
+    return Response(
+        status=c.HTTP_200_OK,
+        data=data
     )
 
 

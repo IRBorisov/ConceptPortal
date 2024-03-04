@@ -133,8 +133,17 @@ class VersionSerializer(serializers.ModelSerializer):
     class Meta:
         ''' serializer metadata. '''
         model = Version
+        fields = 'id', 'version', 'item', 'description', 'time_create'
+        read_only_fields = ('id', 'item', 'time_create')
+
+
+class VersionInnerSerializer(serializers.ModelSerializer):
+    ''' Serializer: Version data for list of versions. '''
+    class Meta:
+        ''' serializer metadata. '''
+        model = Version
         fields = 'id', 'version', 'description', 'time_create'
-        read_only_fields = ('item', 'id', 'time_create')
+        read_only_fields = ('id', 'item', 'time_create')
 
 
 class VersionCreateSerializer(serializers.ModelSerializer):
@@ -160,7 +169,7 @@ class LibraryItemDetailsSerializer(serializers.ModelSerializer):
         return [item.pk for item in instance.subscribers()]
 
     def get_versions(self, instance: LibraryItem) -> list:
-        return [VersionSerializer(item).data for item in instance.versions()]
+        return [VersionInnerSerializer(item).data for item in instance.versions()]
 
 
 class ConstituentaSerializer(serializers.ModelSerializer):
@@ -426,10 +435,10 @@ class RSFormSerializer(serializers.ModelSerializer):
         for cst in schema.constituents().order_by('order'):
             result['items'].append(ConstituentaSerializer(cst).data)
         return result
-    
+
     def to_versioned_data(self) -> dict:
         ''' Create serializable version representation without redundant data. '''
-        result = self.to_representation(self.instance)
+        result = self.to_representation(cast(LibraryItem, self.instance))
         del result['versions']
         del result['subscribers']
 
@@ -442,7 +451,7 @@ class RSFormSerializer(serializers.ModelSerializer):
 
     def from_versioned_data(self, version: int, data: dict) -> dict:
         ''' Load data from version. '''
-        result = self.to_representation(self.instance)
+        result = self.to_representation(cast(LibraryItem, self.instance))
         result['version'] = version
         return result | data
 
@@ -650,4 +659,9 @@ class ResultTextResponse(serializers.Serializer):
 class NewCstResponse(serializers.Serializer):
     ''' Serializer: Create cst response. '''
     new_cst = ConstituentaSerializer()
+    schema = RSFormParseSerializer()
+
+class NewVersionResponse(serializers.Serializer):
+    ''' Serializer: Create cst response. '''
+    version = serializers.IntegerField()
     schema = RSFormParseSerializer()
