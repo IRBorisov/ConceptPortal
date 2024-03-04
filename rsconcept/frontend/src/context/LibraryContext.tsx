@@ -95,7 +95,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
         return;
       }
       setError(undefined);
-      getRSFormDetails(String(templateID), {
+      getRSFormDetails(String(templateID), '', {
         showError: true,
         setLoading: setProcessing,
         onError: setError,

@@ -4,7 +4,7 @@ import { createContext, useCallback, useContext, useMemo, useState } from 'react
 
 import { type ErrorData } from '@/components/InfoError';
 import useRSFormDetails from '@/hooks/useRSFormDetails';
-import { ILibraryItem } from '@/models/library';
+import { ILibraryItem, IVersionData } from '@/models/library';
 import { ILibraryUpdateData } from '@/models/library';
 import {
   IConstituentaList,
@@ -20,6 +20,7 @@ import {
 import {
   type DataCallback,
   deleteUnsubscribe,
+  deleteVersion,
   getTRSFile,
   patchConstituenta,
   patchDeleteConstituenta,
@@ -29,7 +30,9 @@ import {
   patchResetAliases,
   patchSubstituteConstituenta,
   patchUploadTRS,
+  patchVersion,
   postClaimLibraryItem,
+  postCreateVersion,
   postNewConstituenta,
   postSubscribe
 } from '@/utils/backendAPI';
@@ -39,11 +42,13 @@ import { useLibrary } from './LibraryContext';
 
 interface IRSFormContext {
   schema?: IRSForm;
+  schemaID: string;
 
   error: ErrorData;
   loading: boolean;
   processing: boolean;
 
+  isArchive: boolean;
   isOwned: boolean;
   isClaimable: boolean;
   isSubscribed: boolean;
@@ -63,6 +68,10 @@ interface IRSFormContext {
   cstUpdate: (data: ICstUpdateData, callback?: DataCallback<IConstituentaMeta>) => void;
   cstDelete: (data: IConstituentaList, callback?: () => void) => void;
   cstMoveTo: (data: ICstMovetoData, callback?: () => void) => void;
+
+  versionCreate: (data: IVersionData, callback?: () => void) => void;
+  versionUpdate: (target: number, data: IVersionData, callback?: () => void) => void;
+  versionDelete: (target: number, callback?: () => void) => void;
 }
 
 const RSFormContext = createContext<IRSFormContext | null>(null);
@@ -76,13 +85,24 @@ export const useRSForm = () => {
 
 interface RSFormStateProps {
   schemaID: string;
+  versionID?: string;
   children: React.ReactNode;
 }
 
-export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
+export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps) => {
   const library = useLibrary();
   const { user } = useAuth();
-  const { schema, reload, error, setError, setSchema, loading } = useRSFormDetails({ target: schemaID });
+  const {
+    schema, // prettier: split lines
+    reload,
+    error,
+    setError,
+    setSchema,
+    loading
+  } = useRSFormDetails({
+    target: schemaID,
+    version: versionID
+  });
   const [processing, setProcessing] = useState(false);
 
   const [toggleTracking, setToggleTracking] = useState(false);
@@ -90,6 +110,8 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
   const isOwned = useMemo(() => {
     return user?.id === schema?.owner || false;
   }, [user, schema?.owner]);
+
+  const isArchive = useMemo(() => !!versionID, [versionID]);
 
   const isClaimable = useMemo(() => {
     return (user?.id !== schema?.owner && schema?.is_common && !schema?.is_canonical) ?? false;
@@ -359,16 +381,79 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
     [schemaID, setError, library, setSchema]
   );
 
+  const versionCreate = useCallback(
+    (data: IVersionData, callback?: () => void) => {
+      setError(undefined);
+      postCreateVersion(schemaID, {
+        data: data,
+        showError: true,
+        setLoading: setProcessing,
+        onError: setError,
+        onSuccess: newData => {
+          setSchema(newData.schema);
+          library.localUpdateTimestamp(Number(schemaID));
+          if (callback) callback();
+        }
+      });
+    },
+    [schemaID, setError, library, setSchema]
+  );
+
+  const versionUpdate = useCallback(
+    (target: number, data: IVersionData, callback?: () => void) => {
+      setError(undefined);
+      patchVersion(String(target), {
+        data: data,
+        showError: true,
+        setLoading: setProcessing,
+        onError: setError,
+        onSuccess: () => {
+          schema!.versions = schema!.versions.map(prev => {
+            if (prev.id === target) {
+              prev.description = data.description;
+              prev.version = data.version;
+              return prev;
+            } else {
+              return prev;
+            }
+          });
+          setSchema(schema);
+          if (callback) callback();
+        }
+      });
+    },
+    [setError, schema, setSchema]
+  );
+
+  const versionDelete = useCallback(
+    (target: number, callback?: () => void) => {
+      setError(undefined);
+      deleteVersion(String(target), {
+        showError: true,
+        setLoading: setProcessing,
+        onError: setError,
+        onSuccess: () => {
+          schema!.versions = schema!.versions.filter(prev => prev.id !== target);
+          setSchema(schema);
+          if (callback) callback();
+        }
+      });
+    },
+    [setError, schema, setSchema]
+  );
+
   return (
     <RSFormContext.Provider
       value={{
         schema,
+        schemaID,
         error,
         loading,
         processing,
         isOwned,
         isClaimable,
         isSubscribed,
+        isArchive,
         update,
         download,
         upload,
@@ -381,7 +466,10 @@ export const RSFormState = ({ schemaID, children }: RSFormStateProps) => {
         cstRename,
         cstSubstitute,
         cstDelete,
-        cstMoveTo
+        cstMoveTo,
+        versionCreate,
+        versionUpdate,
+        versionDelete
       }}
     >
       {children}

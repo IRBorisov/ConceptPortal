@@ -205,3 +205,11 @@ export interface IRSFormUploadData {
   file: File;
   fileName: string;
 }
+
+/**
+ * Represents data response when creating {@link IVersionInfo}.
+ */
+export interface IVersionCreatedResponse {
+  version: number;
+  schema: IRSFormData;
+}

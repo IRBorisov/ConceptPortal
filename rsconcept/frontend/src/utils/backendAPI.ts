@@ -19,7 +19,8 @@ import {
   IUserProfile,
   IUserSignupData,
   IUserUpdateData,
-  IUserUpdatePassword
+  IUserUpdatePassword,
+  IVersionData
 } from '@/models/library';
 import {
   IConstituentaList,
@@ -32,7 +33,8 @@ import {
   ICstUpdateData,
   IRSFormCreateData,
   IRSFormData,
-  IRSFormUploadData
+  IRSFormUploadData,
+  IVersionCreatedResponse
 } from '@/models/rsform';
 import { IExpressionParse, IRSExpression } from '@/models/rslang';
 
@@ -215,12 +217,20 @@ export function postCloneLibraryItem(target: string, request: FrontExchange<IRSF
   });
 }
 
-export function getRSFormDetails(target: string, request: FrontPull<IRSFormData>) {
-  AxiosGet({
-    title: `RSForm details for id=${target}`,
-    endpoint: `/api/rsforms/${target}/details`,
-    request: request
-  });
+export function getRSFormDetails(target: string, version: string, request: FrontPull<IRSFormData>) {
+  if (!version) {
+    AxiosGet({
+      title: `RSForm details for id=${target}`,
+      endpoint: `/api/rsforms/${target}/details`,
+      request: request
+    });
+  } else {
+    AxiosGet({
+      title: `RSForm details for id=${target}`,
+      endpoint: `/api/rsforms/${target}/versions/{version}`,
+      request: request
+    });
+  }
 }
 
 export function patchLibraryItem(target: string, request: FrontExchange<ILibraryUpdateData, ILibraryItem>) {
@@ -379,6 +389,30 @@ export function postGenerateLexeme(request: FrontExchange<ITextRequest, ILexemeD
   AxiosPost({
     title: `Parse text ${request.data.text}`,
     endpoint: `/api/cctext/generate-lexeme`,
+    request: request
+  });
+}
+
+export function postCreateVersion(target: string, request: FrontExchange<IVersionData, IVersionCreatedResponse>) {
+  AxiosPost({
+    title: `Create version for RSForm id=${target}`,
+    endpoint: `/api/rsforms/${target}/versions/create`,
+    request: request
+  });
+}
+
+export function patchVersion(target: string, request: FrontPush<IVersionData>) {
+  AxiosPatch({
+    title: `Version id=${target}`,
+    endpoint: `/api/versions/${target}`,
+    request: request
+  });
+}
+
+export function deleteVersion(target: string, request: FrontAction) {
+  AxiosDelete({
+    title: `Version id=${target}`,
+    endpoint: `/api/versions/${target}`,
     request: request
   });
 }

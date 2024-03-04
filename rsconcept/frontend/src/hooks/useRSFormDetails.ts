@@ -7,7 +7,7 @@ import { IRSForm, IRSFormData } from '@/models/rsform';
 import { loadRSFormData } from '@/models/rsformAPI';
 import { getRSFormDetails } from '@/utils/backendAPI';
 
-function useRSFormDetails({ target }: { target?: string }) {
+function useRSFormDetails({ target, version }: { target?: string; version?: string }) {
   const [schema, setInnerSchema] = useState<IRSForm | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ErrorData>(undefined);
@@ -27,7 +27,7 @@ function useRSFormDetails({ target }: { target?: string }) {
       if (!target) {
         return;
       }
-      getRSFormDetails(target, {
+      getRSFormDetails(target, version ?? '', {
         showError: true,
         setLoading: setCustomLoading ?? setLoading,
         onError: error => {
@@ -40,7 +40,7 @@ function useRSFormDetails({ target }: { target?: string }) {
         }
       });
     },
-    [target]
+    [target, version]
   );
 
   useEffect(() => {

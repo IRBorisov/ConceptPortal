@@ -7,6 +7,7 @@ import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useSt
 import { toast } from 'react-toastify';
 
 import InfoError, { ErrorData } from '@/components/InfoError';
+import Divider from '@/components/ui/Divider';
 import Loader from '@/components/ui/Loader';
 import TextURL from '@/components/ui/TextURL';
 import { useAccessMode } from '@/context/AccessModeContext';
@@ -439,19 +440,31 @@ export const RSEditState = ({
       ) : null}
 
       {model.loading ? <Loader /> : null}
-      {model.error ? <ProcessError error={model.error} /> : null}
+      {model.error ? <ProcessError error={model.error} isArchive={model.isArchive} schemaID={model.schemaID} /> : null}
       {model.schema && !model.loading ? children : null}
     </RSEditContext.Provider>
   );
 };
 
 // ====== Internals =========
-function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
+function ProcessError({
+  error,
+  isArchive,
+  schemaID
+}: {
+  error: ErrorData;
+  isArchive: boolean;
+  schemaID: string;
+}): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 404) {
     return (
       <div className='p-2 text-center'>
-        <p>Схема с указанным идентификатором отсутствует на портале.</p>
-        <TextURL text='Перейти в Библиотеку' href='/library' />
+        <p>{`Схема с указанным идентификатором ${isArchive ? 'и версией ' : ''}отсутствует`}</p>
+        <div className='flex justify-center'>
+          <TextURL text='Библиотека' href='/library' />
+          {isArchive ? <Divider vertical margins='mx-3' /> : null}
+          {isArchive ? <TextURL text='Актуальная версия' href={`/rsforms/${schemaID}`} /> : null}
+        </div>
       </div>
     );
   } else {

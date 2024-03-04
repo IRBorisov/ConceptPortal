@@ -97,6 +97,11 @@ export interface IVersionInfo {
 }
 
 /**
+ * Represents user data, intended to create or update version metadata in persistent storage.
+ */
+export interface IVersionData extends Omit<IVersionInfo, 'id' | 'time_create'> {}
+
+/**
  * Represents library item common data typical for all item types.
  */
 export interface ILibraryItem {
