@@ -13,7 +13,7 @@ import {
   BiUpload
 } from 'react-icons/bi';
 import { FiEdit } from 'react-icons/fi';
-import { LuCrown, LuGlasses, LuReplace } from 'react-icons/lu';
+import { LuAlertCircle, LuAlertTriangle, LuCrown, LuGlasses, LuReplace } from 'react-icons/lu';
 import { VscLibrary } from 'react-icons/vsc';
 
 import Button from '@/components/ui/Button';
@@ -37,7 +37,7 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
   const controller = useRSEdit();
   const router = useConceptNavigation();
   const { user } = useAuth();
-  const { isOwned, isClaimable } = useRSForm();
+  const model = useRSForm();
 
   const { mode, setMode } = useAccessMode();
 
@@ -99,26 +99,34 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
     router.push('/library/create');
   }
 
+  function handleLogin() {
+    router.push('/login');
+  }
+
+  function handleGotoCurrent() {
+    router.push(`/rsforms/${model.schemaID}`);
+  }
+
   return (
     <div className='flex'>
       <div ref={schemaMenu.ref}>
         <Button
-          noBorder
           dense
+          noBorder
+          noOutline
           tabIndex={-1}
           title='Меню'
           hideTitle={schemaMenu.isOpen}
           icon={<BiMenu size='1.25rem' className='clr-text-controls' />}
           className='h-full pl-2'
-          style={{ outlineColor: 'transparent' }}
           onClick={schemaMenu.toggle}
         />
         <Dropdown isOpen={schemaMenu.isOpen}>
           <DropdownButton
-            disabled={(!user || !isClaimable) && !isOwned}
-            text={isOwned ? 'Вы — владелец' : 'Стать владельцем'}
-            icon={<LuCrown size='1rem' className={isOwned ? 'clr-text-success' : ''} />}
-            onClick={!isOwned && user && isClaimable ? handleClaimOwner : undefined}
+            disabled={(!user || !model.isClaimable) && !model.isOwned}
+            text={model.isOwned ? 'Вы — владелец' : 'Стать владельцем'}
+            icon={<LuCrown size='1rem' className={model.isOwned ? 'clr-text-success' : ''} />}
+            onClick={!model.isOwned && user && model.isClaimable ? handleClaimOwner : undefined}
           />
           <DropdownButton
             text='Поделиться'
@@ -163,86 +171,121 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
         </Dropdown>
       </div>
 
-      <div ref={editMenu.ref}>
+      {!model.isArchive ? (
+        <div ref={editMenu.ref}>
+          <Button
+            dense
+            noBorder
+            noOutline
+            tabIndex={-1}
+            title={'Редактирование'}
+            hideTitle={editMenu.isOpen}
+            className='h-full'
+            icon={
+              <FiEdit
+                size='1.25rem'
+                className={!user ? 'clr-text-controls' : controller.isMutable ? 'clr-text-success' : 'clr-text-warning'}
+              />
+            }
+            onClick={editMenu.toggle}
+          />
+          <Dropdown isOpen={editMenu.isOpen}>
+            <DropdownButton
+              disabled={!controller.isMutable}
+              text='Сброс имён'
+              title='Присвоить порядковые имена и обновить выражения'
+              icon={<BiAnalyse size='1rem' className={controller.isMutable ? 'clr-text-primary' : ''} />}
+              onClick={handleReindex}
+            />
+            <DropdownButton
+              disabled={!controller.isMutable}
+              text='Банк выражений'
+              title='Создать конституенту из шаблона'
+              icon={<BiDiamond size='1rem' className={controller.isMutable ? 'clr-text-success' : ''} />}
+              onClick={handleTemplates}
+            />
+            <DropdownButton
+              disabled={!controller.isMutable}
+              text='Отождествление'
+              title='Заменить вхождения одной конституенты на другую'
+              icon={<LuReplace size='1rem' className={controller.isMutable ? 'clr-text-primary' : ''} />}
+              onClick={handleSubstituteCst}
+            />
+          </Dropdown>
+        </div>
+      ) : null}
+      {model.isArchive ? (
         <Button
           dense
           noBorder
+          noOutline
           tabIndex={-1}
-          title={'Редактирование'}
-          hideTitle={editMenu.isOpen}
+          title={'Редактирование запрещено - Архив'}
+          hideTitle={accessMenu.isOpen}
           className='h-full'
-          style={{ outlineColor: 'transparent' }}
-          icon={<FiEdit size='1.25rem' className={controller.isMutable ? 'clr-text-success' : 'clr-text-warning'} />}
-          onClick={editMenu.toggle}
+          icon={<LuAlertCircle size='1.25rem' className='clr-text-primary' />}
+          onClick={handleGotoCurrent}
         />
-        <Dropdown isOpen={editMenu.isOpen}>
-          <DropdownButton
-            disabled={!controller.isMutable}
-            text='Сброс имён'
-            title='Присвоить порядковые имена и обновить выражения'
-            icon={<BiAnalyse size='1rem' className={controller.isMutable ? 'clr-text-primary' : ''} />}
-            onClick={handleReindex}
-          />
-          <DropdownButton
-            disabled={!controller.isMutable}
-            text='Банк выражений'
-            title='Создать конституенту из шаблона'
-            icon={<BiDiamond size='1rem' className={controller.isMutable ? 'clr-text-success' : ''} />}
-            onClick={handleTemplates}
-          />
-          <DropdownButton
-            disabled={!controller.isMutable}
-            text='Отождествление'
-            title='Заменить вхождения одной конституенты на другую'
-            icon={<LuReplace size='1rem' className={controller.isMutable ? 'clr-text-primary' : ''} />}
-            onClick={handleSubstituteCst}
-          />
-        </Dropdown>
-      </div>
+      ) : null}
 
-      <div ref={accessMenu.ref}>
+      {user ? (
+        <div ref={accessMenu.ref}>
+          <Button
+            dense
+            noBorder
+            noOutline
+            tabIndex={-1}
+            title={`Режим ${labelAccessMode(mode)}`}
+            hideTitle={accessMenu.isOpen}
+            className='h-full pr-2'
+            icon={
+              mode === UserAccessMode.ADMIN ? (
+                <BiMeteor size='1.25rem' className='clr-text-primary' />
+              ) : mode === UserAccessMode.OWNER ? (
+                <LuCrown size='1.25rem' className='clr-text-primary' />
+              ) : (
+                <LuGlasses size='1.25rem' className='clr-text-primary' />
+              )
+            }
+            onClick={accessMenu.toggle}
+          />
+          <Dropdown isOpen={accessMenu.isOpen}>
+            <DropdownButton
+              text={labelAccessMode(UserAccessMode.READER)}
+              title={describeAccessMode(UserAccessMode.READER)}
+              icon={<LuGlasses size='1rem' className='clr-text-primary' />}
+              onClick={() => handleChangeMode(UserAccessMode.READER)}
+            />
+            <DropdownButton
+              disabled={!model.isOwned}
+              text={labelAccessMode(UserAccessMode.OWNER)}
+              title={describeAccessMode(UserAccessMode.OWNER)}
+              icon={<LuCrown size='1rem' className={model.isOwned ? 'clr-text-primary' : ''} />}
+              onClick={() => handleChangeMode(UserAccessMode.OWNER)}
+            />
+            <DropdownButton
+              disabled={!user?.is_staff}
+              text={labelAccessMode(UserAccessMode.ADMIN)}
+              title={describeAccessMode(UserAccessMode.ADMIN)}
+              icon={<BiMeteor size='1rem' className={user?.is_staff ? 'clr-text-primary' : ''} />}
+              onClick={() => handleChangeMode(UserAccessMode.ADMIN)}
+            />
+          </Dropdown>
+        </div>
+      ) : null}
+      {!user ? (
         <Button
           dense
           noBorder
+          noOutline
           tabIndex={-1}
-          title={`Режим ${labelAccessMode(mode)}`}
+          title={'Анонимный режим. Чтобы использовать все функции войдите в Портал'}
           hideTitle={accessMenu.isOpen}
           className='h-full pr-2'
-          style={{ outlineColor: 'transparent' }}
-          icon={
-            mode === UserAccessMode.ADMIN ? (
-              <BiMeteor size='1.25rem' className='clr-text-primary' />
-            ) : mode === UserAccessMode.OWNER ? (
-              <LuCrown size='1.25rem' className='clr-text-primary' />
-            ) : (
-              <LuGlasses size='1.25rem' className='clr-text-primary' />
-            )
-          }
-          onClick={accessMenu.toggle}
+          icon={<LuAlertTriangle size='1.25rem' className='clr-text-warning' />}
+          onClick={handleLogin}
         />
-        <Dropdown isOpen={accessMenu.isOpen}>
-          <DropdownButton
-            text={labelAccessMode(UserAccessMode.READER)}
-            title={describeAccessMode(UserAccessMode.READER)}
-            icon={<LuGlasses size='1rem' className='clr-text-primary' />}
-            onClick={() => handleChangeMode(UserAccessMode.READER)}
-          />
-          <DropdownButton
-            disabled={!isOwned}
-            text={labelAccessMode(UserAccessMode.OWNER)}
-            title={describeAccessMode(UserAccessMode.OWNER)}
-            icon={<LuCrown size='1rem' className={isOwned ? 'clr-text-primary' : ''} />}
-            onClick={() => handleChangeMode(UserAccessMode.OWNER)}
-          />
-          <DropdownButton
-            disabled={!user?.is_staff}
-            text={labelAccessMode(UserAccessMode.ADMIN)}
-            title={describeAccessMode(UserAccessMode.ADMIN)}
-            icon={<BiMeteor size='1rem' className={user?.is_staff ? 'clr-text-primary' : ''} />}
-            onClick={() => handleChangeMode(UserAccessMode.ADMIN)}
-          />
-        </Dropdown>
-      </div>
+      ) : null}
     </div>
   );
 }
