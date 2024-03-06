@@ -16,6 +16,11 @@ import { labelCstTypification } from '@/utils/labels';
 import EditorRSExpression from '../EditorRSExpression';
 import ControlsOverlay from './ControlsOverlay';
 
+/**
+ * Characters limit to start increasing number of rows.
+ */
+export const ROW_SIZE_IN_CHARACTERS = 70;
+
 interface FormConstituentaProps {
   disabled?: boolean;
   showList: boolean;
@@ -130,7 +135,7 @@ function FormConstituenta({
           noBorder
           disabled
           label='Типизация'
-          rows={typification.length > 70 ? 2 : 1}
+          rows={typification.length > ROW_SIZE_IN_CHARACTERS ? 2 : 1}
           value={typification}
           colors='clr-app'
           style={{
@@ -166,6 +171,7 @@ function FormConstituenta({
           placeholder='Договоренность об интерпретации или пояснение'
           value={convention}
           disabled={disabled}
+          rows={convention.length > ROW_SIZE_IN_CHARACTERS ? 3 : 2}
           onChange={event => setConvention(event.target.value)}
         />
         <SubmitButton

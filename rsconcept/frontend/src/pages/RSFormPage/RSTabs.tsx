@@ -169,7 +169,7 @@ function RSTabs() {
           selectedTabClassName='clr-selected'
           className='flex flex-col min-w-fit'
         >
-          <TabList className={clsx('sm:mx-auto w-fit', 'flex items-stretch', 'border-b-2 border-x-2 divide-x-2')}>
+          <TabList className={clsx('mx-auto w-fit', 'flex items-stretch', 'border-b-2 border-x-2 divide-x-2')}>
             <RSTabsMenu onDestroy={onDestroySchema} />
 
             <TabLabel className='' label='Карточка' title={`Название схемы: ${schema.title ?? ''}`} />

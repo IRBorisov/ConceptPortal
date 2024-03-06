@@ -110,6 +110,7 @@ function FormRSForm({ id, disabled, isModified, setIsModified }: FormRSFormProps
       />
       <TextArea
         label='Комментарий'
+        rows={3}
         value={comment}
         disabled={disabled}
         onChange={event => setComment(event.target.value)}

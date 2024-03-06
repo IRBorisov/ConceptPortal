@@ -87,7 +87,8 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
             fontFamily: 'inherit',
             background: !disabled ? colors.bgInput : colors.bgDefault,
             foreground: colors.fgDefault,
-            selection: colors.bgHover
+            selection: colors.bgHover,
+            caret: colors.fgDefault
           },
           styles: [
             { tag: tags.name, color: colors.fgPurple, cursor: 'default' }, // EntityReference

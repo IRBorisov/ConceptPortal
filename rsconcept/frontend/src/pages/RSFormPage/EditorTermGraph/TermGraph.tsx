@@ -98,7 +98,7 @@ function TermGraph({
   }, [selectedIDs, setSelections, nodes]);
 
   const canvasWidth = useMemo(() => {
-    return 'calc(100vw - 1.1rem)';
+    return 'calc(100vw - 1rem)';
   }, []);
 
   const canvasHeight = useMemo(() => {
