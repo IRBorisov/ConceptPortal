@@ -11,7 +11,7 @@ def load_initial_schemas(apps, schema_editor):
     rootdir = os.path.join(os.getcwd(), 'data')
     for subdir, dirs, files in os.walk(rootdir):
         for file in files:
-            data = utils.read_trs(os.path.join(subdir, file))
+            data = utils.read_zipped_json(os.path.join(subdir, file))
             data['is_common'] = True
             data['is_canonical'] = True
             serializer = RSFormTRSSerializer(data=data, context={'load_meta': True})

@@ -1,6 +1,6 @@
 ''' Serializers for conceptual schema API. '''
 import json
-from typing import Optional, cast
+from typing import Optional, cast, Union
 from rest_framework import serializers
 from django.db import transaction
 
@@ -365,9 +365,14 @@ class ResolverSerializer(serializers.Serializer):
 
 class PyConceptAdapter:
     ''' RSForm adapter for interacting with pyconcept module. '''
-    def __init__(self, instance: RSForm):
-        self.schema = instance
-        self.data = self._prepare_request()
+    def __init__(self, data: Union[RSForm, dict]):
+        try:
+            if 'items' in cast(dict, data):
+                self.data = self._prepare_request_raw(cast(dict, data))
+            else:
+                self.data = self._prepare_request(cast(RSForm, data))
+        except TypeError:
+            self.data = self._prepare_request(cast(RSForm, data))
         self._checked_data: Optional[dict] = None
 
     def parse(self) -> dict:
@@ -378,11 +383,11 @@ class PyConceptAdapter:
             raise ValueError(msg.pyconceptFailure())
         return self._checked_data
 
-    def _prepare_request(self) -> dict:
+    def _prepare_request(self, schema: RSForm) -> dict:
         result: dict = {
             'items': []
         }
-        items = self.schema.constituents().order_by('order')
+        items = schema.constituents().order_by('order')
         for cst in items:
             result['items'].append({
                 'entityUID': cst.pk,
@@ -390,6 +395,21 @@ class PyConceptAdapter:
                 'alias': cst.alias,
                 'definition': {
                     'formal': cst.definition_formal
+                }
+            })
+        return result
+
+    def _prepare_request_raw(self, data: dict) -> dict:
+        result: dict = {
+            'items': []
+        }
+        for cst in data['items']:
+            result['items'].append({
+                'entityUID': cst['id'],
+                'cstType': cst['cst_type'],
+                'alias': cst['alias'],
+                'definition': {
+                    'formal': cst['definition_formal']
                 }
             })
         return result
@@ -482,14 +502,22 @@ class RSFormParseSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance: LibraryItem):
         result = RSFormSerializer(instance).data
-        parse = PyConceptAdapter(RSForm(instance)).parse()
-        for cst_data in result['items']:
+        return self._parse_data(result)
+
+    def from_versioned_data(self, version: int, data: dict) -> dict:
+        ''' Load data from version and parse. '''
+        item = cast(LibraryItem, self.instance)
+        result = RSFormSerializer(item).from_versioned_data(version, data)
+        return self._parse_data(result)
+
+    def _parse_data(self, data: dict) -> dict:
+        parse = PyConceptAdapter(data).parse()
+        for cst_data in data['items']:
             cst_data['parse'] = next(
                 cst['parse'] for cst in parse['items']
                 if cst['id'] == cst_data['id']
             )
-        return result
-
+        return data
 
 class RSFormUploadSerializer(serializers.Serializer):
     ''' Upload data for RSForm serializer. '''
@@ -541,6 +569,41 @@ class RSFormTRSSerializer(serializers.Serializer):
                 },
             },
         }
+
+    def from_versioned_data(self, data: dict) -> dict:
+        ''' Load data from version. '''
+        result = {
+            'type': _TRS_TYPE,
+            'title': data['title'],
+            'alias': data['alias'],
+            'comment': data['comment'],
+            'items': [],
+            'claimed': False,
+            'selection': [],
+            'version': _TRS_VERSION,
+            'versionInfo': _TRS_HEADER
+        }
+        for cst in data['items']:
+            result['items'].append({
+                'entityUID': cst['id'],
+                'type': _CST_TYPE,
+                'cstType': cst['cst_type'],
+                'alias': cst['alias'],
+                'convention': cst['convention'],
+                'term': {
+                    'raw': cst['term_raw'],
+                    'resolved': cst['term_resolved'],
+                    'forms': cst['term_forms']
+                },
+                'definition': {
+                    'formal': cst['definition_formal'],
+                    'text': {
+                        'raw': cst['definition_raw'],
+                        'resolved': cst['definition_resolved']
+                    },
+                },
+            })
+        return result
 
     def to_internal_value(self, data):
         result = super().to_internal_value(data)

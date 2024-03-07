@@ -15,6 +15,7 @@ urlpatterns = [
     path('rsforms/create-detailed', views.create_rsform),
 
     path('versions/<int:pk>', views.VersionAPIView.as_view()),
+    path('versions/<int:pk>/export-file', views.export_file),
     path('rsforms/<int:pk_item>/versions/create', views.create_version),
     path('rsforms/<int:pk_item>/versions/<int:pk_version>', views.retrieve_version),
 

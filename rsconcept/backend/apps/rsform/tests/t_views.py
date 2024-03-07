@@ -907,6 +907,54 @@ class TestVersionViews(APITestCase):
         response = self.client.get(f'/api/versions/{version_id}')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+    def test_retrieve_version_details(self):
+        a1 = Constituenta.objects.create(
+            schema=self.owned.item,
+            alias='A1',
+            cst_type='axiom',
+            definition_formal='X1=X1',
+            order=2
+        )
+
+        data = {'version': '1.0.0', 'description': 'test'}
+        response = self.client.post(
+            f'/api/rsforms/{self.owned.item.id}/versions/create',
+            data=data, format='json'
+        )
+        version_id = response.data['version']
+
+        a1.definition_formal = 'X1=X2'
+        a1.save()
+
+        response = self.client.get(f'/api/rsforms/{self.owned.item.id}/versions/{version_id}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        loaded_a1 = response.data['items'][1]
+        self.assertEqual(loaded_a1['definition_formal'], 'X1=X1')
+        self.assertEqual(loaded_a1['parse']['status'], 'verified')
+
+    def test_export_version(self):
+        invalid_id = 1338
+        response = self.client.get(f'/api/versions/{invalid_id}/export-file')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        data = {'version': '1.0.0', 'description': 'test'}
+        response = self.client.post(
+            f'/api/rsforms/{self.owned.item.id}/versions/create',
+            data=data, format='json'
+        )
+        version_id = response.data['version']
+
+        response = self.client.get(f'/api/versions/{version_id}/export-file')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response.headers['Content-Disposition'],
+            f'attachment; filename={self.owned.item.alias}.trs'
+        )
+        with io.BytesIO(response.content) as stream:
+            with ZipFile(stream, 'r') as zipped_file:
+                self.assertIsNone(zipped_file.testzip())
+                self.assertIn('document.json', zipped_file.namelist())
+
 
 class TestRSLanguageViews(APITestCase):
     def setUp(self):

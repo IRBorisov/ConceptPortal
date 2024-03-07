@@ -372,7 +372,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         input_serializer.is_valid(raise_exception=True)
         schema = self._get_schema()
         load_metadata = input_serializer.validated_data['load_metadata']
-        data = utils.read_trs(request.FILES['file'].file)
+        data = utils.read_zipped_json(request.FILES['file'].file, utils.EXTEOR_INNER_FILENAME)
         data['id'] = schema.item.pk
 
         serializer = s.RSFormTRSSerializer(
@@ -463,16 +463,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     @action(detail=True, methods=['get'], url_path='export-trs')
     def export_trs(self, request: Request, pk):
         ''' Endpoint: Download Exteor compatible file. '''
-        schema = s.RSFormTRSSerializer(self._get_schema()).data
-        trs = utils.write_trs(schema)
-        filename = self._get_schema().item.alias
-        if filename == '' or not filename.isascii():
-            # Note: non-ascii symbols in Content-Disposition
-            # are not supported by some browsers
-            filename = 'Schema'
-        filename += '.trs'
-
-        response = HttpResponse(trs, content_type='application/zip')
+        data = s.RSFormTRSSerializer(self._get_schema()).data
+        file = utils.write_zipped_json(data, utils.EXTEOR_INNER_FILENAME)
+        filename = utils.filename_for_schema(self._get_schema().item.alias)
+        response = HttpResponse(file, content_type='application/zip')
         response['Content-Disposition'] = f'attachment; filename={filename}'
         return response
 
@@ -489,7 +483,7 @@ class TrsImportView(views.APIView):
         responses={c.HTTP_201_CREATED: s.LibraryItemSerializer}
     )
     def post(self, request: Request):
-        data = utils.read_trs(request.FILES['file'].file)
+        data = utils.read_zipped_json(request.FILES['file'].file, utils.EXTEOR_INNER_FILENAME)
         owner = cast(m.User, self.request.user)
         _prepare_rsform_data(data, request, owner)
         serializer = s.RSFormTRSSerializer(
@@ -527,7 +521,7 @@ def create_rsform(request: Request):
             is_canonical=serializer.validated_data.get('is_canonical', False),
         )
     else:
-        data = utils.read_trs(request.FILES['file'].file)
+        data = utils.read_zipped_json(request.FILES['file'].file, utils.EXTEOR_INNER_FILENAME)
         _prepare_rsform_data(data, request, owner)
         serializer_rsform = s.RSFormTRSSerializer(data=data, context={'load_meta': True})
         serializer_rsform.is_valid(raise_exception=True)
@@ -623,11 +617,35 @@ def retrieve_version(request: Request, pk_item: int, pk_version: int):
     if version.item != item:
         return Response(status=c.HTTP_404_NOT_FOUND)
 
-    data = s.RSFormSerializer(item).from_versioned_data(version.pk, version.data)
+    data = s.RSFormParseSerializer(item).from_versioned_data(version.pk, version.data)
     return Response(
         status=c.HTTP_200_OK,
         data=data
     )
+
+
+@extend_schema(
+        summary='export versioned data as file',
+        tags=['Versions'],
+        request=None,
+        responses={
+            (c.HTTP_200_OK, 'application/zip'): bytes,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+@api_view(['GET'])
+def export_file(request: Request, pk: int):
+    ''' Endpoint: Download Exteor compatible file for versioned data. '''
+    try:
+        version = m.Version.objects.get(pk=pk)
+    except m.Version.DoesNotExist:
+        return Response(status=c.HTTP_404_NOT_FOUND)
+    data = s.RSFormTRSSerializer(m.RSForm(version.item)).from_versioned_data(version.data)
+    file = utils.write_zipped_json(data, utils.EXTEOR_INNER_FILENAME)
+    filename = utils.filename_for_schema(data['alias'])
+    response = HttpResponse(file, content_type='application/zip')
+    response['Content-Disposition'] = f'attachment; filename={filename}'
+    return response
 
 
 @extend_schema(
