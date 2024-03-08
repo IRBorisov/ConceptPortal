@@ -48,7 +48,7 @@ function GraphToolbar({
         title={!noText ? 'Скрыть текст' : 'Отобразить текст'}
         icon={
           !noText ? (
-            <BiFontFamily size='1.25rem' className='clr-text-success' />
+            <BiFontFamily size='1.25rem' className='clr-text-green' />
           ) : (
             <BiFont size='1.25rem' className='clr-text-primary' />
           )
@@ -61,23 +61,26 @@ function GraphToolbar({
         onClick={onResetViewpoint}
       />
       <MiniButton
-        icon={<BiPlanet size='1.25rem' className={!is3D ? '' : orbit ? 'clr-text-success' : 'clr-text-primary'} />}
+        icon={<BiPlanet size='1.25rem' className={orbit ? 'icon-green' : 'icon-primary'} />}
         title='Анимация вращения'
         disabled={!is3D}
         onClick={toggleOrbit}
       />
-      <MiniButton
-        title='Новая конституента'
-        icon={<BiPlusCircle size='1.25rem' className={isMutable ? 'clr-text-success' : ''} />}
-        disabled={!isMutable}
-        onClick={onCreate}
-      />
-      <MiniButton
-        title='Удалить выбранные'
-        icon={<BiTrash size='1.25rem' className={isMutable && !nothingSelected ? 'clr-text-warning' : ''} />}
-        disabled={!isMutable || nothingSelected}
-        onClick={onDelete}
-      />
+      {isMutable ? (
+        <MiniButton
+          title='Новая конституента'
+          icon={<BiPlusCircle size='1.25rem' className='icon-green' />}
+          onClick={onCreate}
+        />
+      ) : null}
+      {isMutable ? (
+        <MiniButton
+          title='Удалить выбранные'
+          icon={<BiTrash size='1.25rem' className='icon-red' />}
+          disabled={nothingSelected}
+          onClick={onDelete}
+        />
+      ) : null}
       <HelpButton topic={HelpTopic.GRAPH_TERM} className='max-w-[calc(100vw-4rem)]' offset={4} />
     </Overlay>
   );

@@ -123,7 +123,7 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
             {props.row.original.value ? (
               <MiniButton
                 title='Очистить значение'
-                icon={<BiX size='0.75rem' className='clr-text-warning' />}
+                icon={<BiX size='0.75rem' className='clr-text-red' />}
                 noHover
                 onClick={() => handleClearArgument(props.row.original)}
               />
@@ -175,9 +175,7 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
         <div className='flex'>
           <MiniButton
             title='Подставить значение аргумента'
-            icon={
-              <BiCheck size='1.25rem' className={!!argumentValue && !!selectedArgument ? 'clr-text-success' : ''} />
-            }
+            icon={<BiCheck size='1.25rem' className={!!argumentValue && !!selectedArgument ? 'clr-text-green' : ''} />}
             disabled={!argumentValue || !selectedArgument}
             onClick={() => handleAssignArgument(selectedArgument!, argumentValue)}
           />
@@ -190,7 +188,7 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
           <MiniButton
             title='Очистить значение аргумента'
             disabled={!selectedClearable}
-            icon={<BiX size='1.25rem' className={selectedClearable ? 'clr-text-warning' : ''} />}
+            icon={<BiX size='1.25rem' className={selectedClearable ? 'clr-text-red' : ''} />}
             onClick={() => (selectedArgument ? handleClearArgument(selectedArgument) : undefined)}
           />
         </div>

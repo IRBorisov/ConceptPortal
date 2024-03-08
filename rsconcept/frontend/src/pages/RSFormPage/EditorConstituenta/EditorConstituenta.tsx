@@ -33,7 +33,10 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
   const [showList, setShowList] = useLocalStorage('rseditor-show-list', true);
   const [toggleReset, setToggleReset] = useState(false);
 
-  const disabled = useMemo(() => !activeCst || !controller.isMutable, [activeCst, controller.isMutable]);
+  const disabled = useMemo(
+    () => !activeCst || !controller.isContentEditable,
+    [activeCst, controller.isContentEditable]
+  );
 
   function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
     if (disabled) {
@@ -73,20 +76,22 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
 
   return (
     <>
-      <ConstituentaToolbar
-        isMutable={!disabled}
-        isModified={isModified}
-        onMoveUp={controller.moveUp}
-        onMoveDown={controller.moveDown}
-        onSubmit={initiateSubmit}
-        onReset={() => setToggleReset(prev => !prev)}
-        onDelete={controller.deleteCst}
-        onClone={controller.cloneCst}
-        onCreate={() => controller.createCst(activeCst?.cst_type, false)}
-      />
+      {controller.isContentEditable ? (
+        <ConstituentaToolbar
+          isMutable={!disabled}
+          isModified={isModified}
+          onMoveUp={controller.moveUp}
+          onMoveDown={controller.moveDown}
+          onSubmit={initiateSubmit}
+          onReset={() => setToggleReset(prev => !prev)}
+          onDelete={controller.deleteCst}
+          onClone={controller.cloneCst}
+          onCreate={() => controller.createCst(activeCst?.cst_type, false)}
+        />
+      ) : null}
       <div tabIndex={-1} className='flex max-w-[95rem]' onKeyDown={handleInput}>
         <FormConstituenta
-          disabled={disabled}
+          isMutable={!disabled}
           showList={showList}
           id={globalIDs.constituenta_editor}
           constituenta={activeCst}

@@ -27,3 +27,18 @@ export function cloneTitle(target: ILibraryItem): string {
     return target.title + '+';
   }
 }
+
+/**
+ * Generate next version for {@link IVersionInfo}.
+ */
+export function nextVersion(version: string): string {
+  const dot = version.lastIndexOf('.');
+  if (!dot) {
+    return version;
+  }
+  const lastNumber = Number(version.substring(dot + 1));
+  if (!lastNumber) {
+    return version;
+  }
+  return `${version.substring(0, dot)}.${lastNumber + 1}`;
+}

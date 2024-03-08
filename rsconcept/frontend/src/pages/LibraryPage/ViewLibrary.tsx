@@ -78,7 +78,7 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
         size: 400,
         minSize: 100,
         maxSize: 400,
-        cell: props => getUserLabel(props.cell.getValue()),
+        cell: props => getUserLabel(props.getValue()),
         enableSorting: true,
         sortingFn: 'text'
       }),
@@ -87,7 +87,7 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
         header: windowSize.isSmall ? 'Дата' : 'Обновлена',
         cell: props => (
           <div className='whitespace-nowrap'>
-            {new Date(props.cell.getValue()).toLocaleString(intl.locale, {
+            {new Date(props.getValue()).toLocaleString(intl.locale, {
               year: '2-digit',
               month: '2-digit',
               day: '2-digit',

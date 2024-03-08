@@ -19,7 +19,7 @@ import { classnames, resources } from '@/utils/constants';
 function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
     return (
-      <div className='text-sm select-text clr-text-warning'>
+      <div className='text-sm select-text clr-text-red'>
         На Портале отсутствует такое сочетание имени пользователя и пароля
       </div>
     );

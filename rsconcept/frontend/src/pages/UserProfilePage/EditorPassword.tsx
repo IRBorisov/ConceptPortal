@@ -15,7 +15,7 @@ import { IUserUpdatePassword } from '@/models/library';
 
 function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
-    return <div className='text-sm select-text clr-text-warning'>Неверно введен старый пароль</div>;
+    return <div className='text-sm select-text clr-text-red'>Неверно введен старый пароль</div>;
   } else {
     return <InfoError error={error} />;
   }

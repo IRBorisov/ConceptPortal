@@ -226,8 +226,8 @@ export function getRSFormDetails(target: string, version: string, request: Front
     });
   } else {
     AxiosGet({
-      title: `RSForm details for id=${target}`,
-      endpoint: `/api/rsforms/${target}/versions/{version}`,
+      title: `RSForm details for id=${target} version=${version}`,
+      endpoint: `/api/rsforms/${target}/versions/${version}`,
       request: request
     });
   }
@@ -273,13 +273,22 @@ export function deleteUnsubscribe(target: string, request: FrontAction) {
   });
 }
 
-export function getTRSFile(target: string, request: FrontPull<Blob>) {
-  AxiosGet({
-    title: `RSForm TRS file for id=${target}`,
-    endpoint: `/api/rsforms/${target}/export-trs`,
-    request: request,
-    options: { responseType: 'blob' }
-  });
+export function getTRSFile(target: string, version: string, request: FrontPull<Blob>) {
+  if (!version) {
+    AxiosGet({
+      title: `RSForm TRS file for id=${target}`,
+      endpoint: `/api/rsforms/${target}/export-trs`,
+      request: request,
+      options: { responseType: 'blob' }
+    });
+  } else {
+    AxiosGet({
+      title: `RSForm TRS file for id=${target} version=${version}`,
+      endpoint: `/api/versions/${version}/export-file`,
+      request: request,
+      options: { responseType: 'blob' }
+    });
+  }
 }
 
 export function postNewConstituenta(schema: string, request: FrontExchange<ICstCreateData, ICstCreatedResponse>) {

@@ -130,7 +130,7 @@ class LibraryItem(Model):
 
     def versions(self) -> list['Version']:
         ''' Get all Versions of this item. '''
-        return list(Version.objects.filter(item=self.pk))
+        return list(Version.objects.filter(item=self.pk).order_by('-time_create'))
 
     @transaction.atomic
     def save(self, *args, **kwargs):

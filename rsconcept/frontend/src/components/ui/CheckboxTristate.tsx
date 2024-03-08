@@ -7,6 +7,7 @@ import { CheckboxCheckedIcon, CheckboxNullIcon } from '../Icons';
 import { CheckboxProps } from './Checkbox';
 
 export interface CheckboxTristateProps extends Omit<CheckboxProps, 'value' | 'setValue'> {
+  titleHtml?: string;
   value: boolean | null;
   setValue?: (newValue: boolean | null) => void;
 }
@@ -16,6 +17,7 @@ function CheckboxTristate({
   disabled,
   label,
   title,
+  titleHtml,
   className,
   value,
   setValue,
@@ -57,7 +59,8 @@ function CheckboxTristate({
       )}
       disabled={disabled}
       onClick={handleClick}
-      data-tooltip-id={title ? globalIDs.tooltip : undefined}
+      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
+      data-tooltip-html={titleHtml}
       data-tooltip-content={title}
       {...restProps}
     >

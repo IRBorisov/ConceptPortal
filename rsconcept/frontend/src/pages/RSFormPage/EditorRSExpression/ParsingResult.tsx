@@ -33,7 +33,7 @@ function ParsingResult({ isOpen, data, disabled, onShowError }: ParsingResultPro
         return (
           <p
             key={`error-${index}`}
-            className={`clr-text-warning ${disabled ? '' : 'cursor-pointer'}`}
+            className={`clr-text-red ${disabled ? '' : 'cursor-pointer'}`}
             onClick={disabled ? undefined : () => onShowError(error)}
           >
             <span className='mr-1 font-semibold underline'>

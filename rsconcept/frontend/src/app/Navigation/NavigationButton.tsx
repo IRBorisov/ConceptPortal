@@ -6,15 +6,17 @@ interface NavigationButtonProps {
   text?: string;
   icon: React.ReactNode;
   title?: string;
+  titleHtml?: string;
   onClick?: () => void;
 }
 
-function NavigationButton({ icon, title, onClick, text }: NavigationButtonProps) {
+function NavigationButton({ icon, title, titleHtml, onClick, text }: NavigationButtonProps) {
   return (
     <button
       type='button'
       tabIndex={-1}
-      data-tooltip-id={title ? globalIDs.tooltip : undefined}
+      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
+      data-tooltip-html={titleHtml}
       data-tooltip-content={title}
       onClick={onClick}
       className={clsx(

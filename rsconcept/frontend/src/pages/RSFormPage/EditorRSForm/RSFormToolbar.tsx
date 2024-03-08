@@ -35,47 +35,54 @@ function RSFormToolbar({
   const canSave = useMemo(() => modified && controller.isMutable, [modified, controller.isMutable]);
   return (
     <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex'>
-      <MiniButton
-        title='Сохранить изменения [Ctrl + S]'
-        disabled={!canSave}
-        icon={<FiSave size='1.25rem' className={canSave ? 'clr-text-primary' : ''} />}
-        onClick={onSubmit}
-      />
+      {controller.isContentEditable ? (
+        <MiniButton
+          title='Сохранить изменения [Ctrl + S]'
+          disabled={!canSave}
+          icon={<FiSave size='1.25rem' className='icon-primary' />}
+          onClick={onSubmit}
+        />
+      ) : null}
       <MiniButton
         title='Поделиться схемой'
-        icon={<BiShareAlt size='1.25rem' className='clr-text-primary' />}
+        icon={<BiShareAlt size='1.25rem' className='icon-primary' />}
         onClick={controller.share}
       />
       <MiniButton
         title='Скачать TRS файл'
-        icon={<BiDownload size='1.25rem' className='clr-text-primary' />}
+        icon={<BiDownload size='1.25rem' className='icon-primary' />}
         onClick={controller.download}
       />
-      <MiniButton
-        title={`Отслеживание ${subscribed ? 'включено' : 'выключено'}`}
-        disabled={anonymous || processing}
-        icon={
-          subscribed ? (
-            <FiBell size='1.25rem' className='clr-text-primary' />
-          ) : (
-            <FiBellOff size='1.25rem' className='clr-text-controls' />
-          )
-        }
-        style={{ outlineColor: 'transparent' }}
-        onClick={controller.toggleSubscribe}
-      />
-      <MiniButton
-        title='Стать владельцем'
-        icon={<LuCrown size='1.25rem' className={!claimable || anonymous ? '' : 'clr-text-success'} />}
-        disabled={!claimable || anonymous || processing}
-        onClick={controller.claim}
-      />
-      <MiniButton
-        title='Удалить схему'
-        disabled={!controller.isMutable}
-        onClick={onDestroy}
-        icon={<BiTrash size='1.25rem' className={controller.isMutable ? 'clr-text-warning' : ''} />}
-      />
+      {!anonymous ? (
+        <MiniButton
+          title={`Отслеживание ${subscribed ? 'включено' : 'выключено'}`}
+          disabled={processing}
+          icon={
+            subscribed ? (
+              <FiBell size='1.25rem' className='icon-primary' />
+            ) : (
+              <FiBellOff size='1.25rem' className='clr-text-controls' />
+            )
+          }
+          onClick={controller.toggleSubscribe}
+        />
+      ) : null}
+      {!anonymous && claimable ? (
+        <MiniButton
+          title='Стать владельцем'
+          icon={<LuCrown size='1.25rem' className='icon-green' />}
+          disabled={processing}
+          onClick={controller.claim}
+        />
+      ) : null}
+      {controller.isContentEditable ? (
+        <MiniButton
+          title='Удалить схему'
+          disabled={!controller.isMutable}
+          onClick={onDestroy}
+          icon={<BiTrash size='1.25rem' className='icon-red' />}
+        />
+      ) : null}
       <HelpButton topic={HelpTopic.RSFORM} offset={4} />
     </Overlay>
   );

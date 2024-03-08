@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
 
 import { type RowSelectionState } from '@/components/DataTable';
@@ -92,17 +93,24 @@ function EditorRSList({ selected, setSelected, onOpenEdit }: EditorRSListProps) 
 
   return (
     <div tabIndex={-1} className='outline-none' onKeyDown={handleTableKey}>
-      <SelectedCounter
-        totalCount={controller.schema?.stats?.count_all ?? 0}
-        selectedCount={selected.length}
-        position='top-[0.3rem] left-2'
+      {controller.isContentEditable ? (
+        <SelectedCounter
+          totalCount={controller.schema?.stats?.count_all ?? 0}
+          selectedCount={selected.length}
+          position='top-[0.3rem] left-2'
+        />
+      ) : null}
+
+      {controller.isContentEditable ? <RSListToolbar selectedCount={selected.length} /> : null}
+      <div
+        className={clsx('border-b', {
+          'pt-[2.3rem]': controller.isContentEditable,
+          'relative top-[-1px]': !controller.isContentEditable
+        })}
       />
 
-      <RSListToolbar selectedCount={selected.length} />
-
-      <div className='pt-[2.3rem] border-b' />
-
       <RSTable
+        enableSelection={controller.isContentEditable}
         items={controller.schema?.items}
         selected={rowSelection}
         setSelected={handleRowSelection}

@@ -6,6 +6,7 @@ import { CProps } from '../props';
 
 interface SelectorButtonProps extends CProps.Button {
   text?: string;
+  titleHtml?: string;
   icon?: React.ReactNode;
 
   colors?: string;
@@ -17,6 +18,7 @@ function SelectorButton({
   text,
   icon,
   title,
+  titleHtml,
   colors = 'clr-btn-default',
   className,
   transparent,
@@ -38,7 +40,8 @@ function SelectorButton({
         className,
         !transparent && colors
       )}
-      data-tooltip-id={title ? globalIDs.tooltip : undefined}
+      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
+      data-tooltip-html={titleHtml}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
       {...restProps}

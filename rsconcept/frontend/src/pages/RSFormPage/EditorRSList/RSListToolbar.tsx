@@ -47,17 +47,14 @@ function RSListToolbar({ selectedCount }: RSListToolbarProps) {
       <MiniButton
         title='Клонировать конституенту [Alt + V]'
         icon={
-          <BiDuplicate
-            size='1.25rem'
-            className={controller.isMutable && selectedCount === 1 ? 'clr-text-success' : ''}
-          />
+          <BiDuplicate size='1.25rem' className={controller.isMutable && selectedCount === 1 ? 'clr-text-green' : ''} />
         }
         disabled={!controller.isMutable || selectedCount !== 1}
         onClick={controller.cloneCst}
       />
       <MiniButton
         title='Добавить новую конституенту... [Alt + `]'
-        icon={<BiPlusCircle size='1.25rem' className={controller.isMutable ? 'clr-text-success' : ''} />}
+        icon={<BiPlusCircle size='1.25rem' className={controller.isMutable ? 'clr-text-green' : ''} />}
         disabled={!controller.isMutable}
         onClick={() => controller.createCst(undefined, false)}
       />
@@ -65,7 +62,7 @@ function RSListToolbar({ selectedCount }: RSListToolbarProps) {
         <MiniButton
           title='Добавить пустую конституенту'
           hideTitle={insertMenu.isOpen}
-          icon={<BiDownArrowCircle size='1.25rem' className={controller.isMutable ? 'clr-text-success' : ''} />}
+          icon={<BiDownArrowCircle size='1.25rem' className={controller.isMutable ? 'clr-text-green' : ''} />}
           disabled={!controller.isMutable}
           onClick={insertMenu.toggle}
         />
@@ -82,7 +79,7 @@ function RSListToolbar({ selectedCount }: RSListToolbarProps) {
       </div>
       <MiniButton
         title='Удалить выбранные [Delete]'
-        icon={<BiTrash size='1.25rem' className={controller.isMutable && !nothingSelected ? 'clr-text-warning' : ''} />}
+        icon={<BiTrash size='1.25rem' className={controller.isMutable && !nothingSelected ? 'clr-text-red' : ''} />}
         disabled={!controller.isMutable || nothingSelected}
         onClick={controller.deleteCst}
       />

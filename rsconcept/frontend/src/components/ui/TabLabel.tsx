@@ -6,9 +6,10 @@ import { globalIDs } from '@/utils/constants';
 
 interface TabLabelProps extends Omit<TabPropsImpl, 'children'> {
   label?: string;
+  titleHtml?: string;
 }
 
-function TabLabel({ label, title, className, ...otherProps }: TabLabelProps) {
+function TabLabel({ label, title, titleHtml, className, ...otherProps }: TabLabelProps) {
   return (
     <TabImpl
       className={clsx(
@@ -19,7 +20,8 @@ function TabLabel({ label, title, className, ...otherProps }: TabLabelProps) {
         'select-none hover:cursor-pointer',
         className
       )}
-      data-tooltip-id={title ? globalIDs.tooltip : undefined}
+      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
+      data-tooltip-html={titleHtml}
       data-tooltip-content={title}
       {...otherProps}
     >

@@ -161,17 +161,35 @@
     }
   }
 
-  .clr-text-warning {
+  .clr-text-red {
     color: var(--cl-red-fg-100);
     .dark & {
       color: var(--cd-red-fg-100);
     }
   }
 
-  .clr-text-success {
+  .clr-text-green {
     color: var(--cl-green-fg-100);
     .dark & {
       color: var(--cd-green-fg-100);
+    }
+  }
+
+  .icon-primary {
+    :not([disabled]) > & {
+      @apply clr-text-primary;
+    }
+  }
+
+  .icon-red {
+    :not([disabled]) > & {
+      @apply clr-text-red;
+    }
+  }
+
+  .icon-green {
+    :not([disabled]) > & {
+      @apply clr-text-green;
     }
   }
 }

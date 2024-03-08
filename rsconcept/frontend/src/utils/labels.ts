@@ -6,7 +6,7 @@
  */
 import { GramData, Grammeme, ReferenceType } from '@/models/language';
 import { CstMatchMode, DependencyMode, HelpTopic, LibraryFilterStrategy, UserAccessMode } from '@/models/miscellaneous';
-import { CstClass, CstType, ExpressionStatus, IConstituenta } from '@/models/rsform';
+import { CstClass, CstType, ExpressionStatus, IConstituenta, IRSForm } from '@/models/rsform';
 import {
   IArgumentInfo,
   IRSErrorDescription,
@@ -60,6 +60,14 @@ export function describeConstituentaTerm(cst?: IConstituenta): string {
  */
 export function labelConstituenta(cst: IConstituenta) {
   return `${cst.alias}: ${describeConstituenta(cst)}`;
+}
+
+/**
+ * Generates label for {@link IVersionInfo} of {@link IRSForm}.
+ */
+export function labelVersion(schema?: IRSForm) {
+  const version = schema?.versions.find(ver => ver.id === schema.version);
+  return version ? version.version : 'актуальная';
 }
 
 /**

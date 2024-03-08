@@ -7,6 +7,7 @@ import { CProps } from '../props';
 interface ButtonProps extends CProps.Control, CProps.Colors, CProps.Button {
   text?: string;
   icon?: React.ReactNode;
+  titleHtml?: string;
 
   dense?: boolean;
   hideTitle?: boolean;
@@ -17,6 +18,7 @@ function Button({
   text,
   icon,
   title,
+  titleHtml,
   loading,
   dense,
   disabled,
@@ -46,7 +48,8 @@ function Button({
         className,
         colors
       )}
-      data-tooltip-id={title ? globalIDs.tooltip : undefined}
+      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
+      data-tooltip-html={titleHtml}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
       {...restProps}

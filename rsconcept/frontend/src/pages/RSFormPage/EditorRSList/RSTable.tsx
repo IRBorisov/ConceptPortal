@@ -14,6 +14,7 @@ import { labelCstTypification } from '@/utils/labels';
 
 interface RSTableProps {
   items?: IConstituenta[];
+  enableSelection: boolean;
   selected: RowSelectionState;
   setSelected: React.Dispatch<React.SetStateAction<RowSelectionState>>;
 
@@ -28,7 +29,7 @@ const COLUMN_CONVENTION_HIDE_THRESHOLD = 1800;
 
 const columnHelper = createColumnHelper<IConstituenta>();
 
-function RSTable({ items, selected, setSelected, onEdit, onCreateNew }: RSTableProps) {
+function RSTable({ items, enableSelection, selected, setSelected, onEdit, onCreateNew }: RSTableProps) {
   const { colors, noNavigation } = useConceptTheme();
   const windowSize = useWindowSize();
 
@@ -132,7 +133,7 @@ function RSTable({ items, selected, setSelected, onEdit, onCreateNew }: RSTableP
       enableHiding
       columnVisibility={columnVisibility}
       onColumnVisibilityChange={setColumnVisibility}
-      enableRowSelection
+      enableRowSelection={enableSelection}
       rowSelection={selected}
       onRowSelectionChange={setSelected}
       noDataComponent={

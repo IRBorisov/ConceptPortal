@@ -182,7 +182,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         <MiniButton
           noHover
           title='Внести словоформу'
-          icon={<BiCheck size='1.25rem' className={inputText && inputGrams.length !== 0 ? 'clr-text-success' : ''} />}
+          icon={<BiCheck size='1.25rem' className={inputText && inputGrams.length !== 0 ? 'clr-text-green' : ''} />}
           disabled={textProcessor.loading || !inputText || inputGrams.length == 0}
           onClick={handleAddForm}
         />
@@ -200,7 +200,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         <MiniButton
           noHover
           title='Сбросить все словоформы'
-          icon={<BiX size='1rem' className={forms.length !== 0 ? 'clr-text-warning' : ''} />}
+          icon={<BiX size='1rem' className={forms.length !== 0 ? 'clr-text-red' : ''} />}
           disabled={textProcessor.loading || forms.length === 0}
           onClick={handleResetAll}
         />

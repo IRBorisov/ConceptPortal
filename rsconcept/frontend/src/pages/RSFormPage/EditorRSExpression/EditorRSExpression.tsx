@@ -8,6 +8,7 @@ import { FaRegKeyboard } from 'react-icons/fa6';
 import { RiNodeTree } from 'react-icons/ri';
 import { toast } from 'react-toastify';
 
+import HelpButton from '@/components/Help/HelpButton';
 import RSInput from '@/components/RSInput';
 import { RSTextWrapper } from '@/components/RSInput/textEditing';
 import MiniButton from '@/components/ui/MiniButton';
@@ -16,6 +17,7 @@ import { useRSForm } from '@/context/RSFormContext';
 import DlgShowAST from '@/dialogs/DlgShowAST';
 import useCheckExpression from '@/hooks/useCheckExpression';
 import useLocalStorage from '@/hooks/useLocalStorage';
+import { HelpTopic } from '@/models/miscellaneous';
 import { IConstituenta } from '@/models/rsform';
 import { getDefinitionPrefix } from '@/models/rsformAPI';
 import { IExpressionParse, IRSErrorDescription, SyntaxTree } from '@/models/rslang';
@@ -152,7 +154,7 @@ function EditorRSExpression({
       </AnimatePresence>
 
       <div>
-        <Overlay position='top-0 right-0 flex'>
+        <Overlay position='top-[-0.5rem] right-0 flex'>
           <MiniButton
             noHover
             title='Отображение специальной клавиатуры'
@@ -173,7 +175,7 @@ function EditorRSExpression({
           />
         </Overlay>
 
-        <Overlay position='top-[-0.5rem] pl-[6rem] sm:pl-0 right-1/2 translate-x-1/2'>
+        <Overlay position='top-[-0.5rem] pl-[8rem] sm:pl-[4rem] right-1/2 translate-x-1/2 flex'>
           <StatusBar
             processing={loading}
             isModified={isModified}
@@ -181,6 +183,7 @@ function EditorRSExpression({
             parseData={parseData}
             onAnalyze={() => handleCheckExpression()}
           />
+          <HelpButton topic={HelpTopic.CONSTITUENTA} offset={4} />
         </Overlay>
 
         <RSInput

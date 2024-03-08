@@ -50,7 +50,7 @@ function DescribeError({ error }: { error: ErrorData }) {
 
 function InfoError({ error }: InfoErrorProps) {
   return (
-    <AnimateFade className='px-3 py-2 min-w-[25rem] w-full text-sm font-semibold select-text clr-text-warning'>
+    <AnimateFade className='px-3 py-2 min-w-[25rem] w-full text-sm font-semibold select-text clr-text-red'>
       <DescribeError error={error} />
     </AnimateFade>
   );

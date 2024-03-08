@@ -8,13 +8,14 @@ import { CProps } from '../props';
 
 export interface CheckboxProps extends Omit<CProps.Button, 'value' | 'onClick'> {
   label?: string;
+  titleHtml?: string;
   disabled?: boolean;
 
   value: boolean;
   setValue?: (newValue: boolean) => void;
 }
 
-function Checkbox({ id, disabled, label, title, className, value, setValue, ...restProps }: CheckboxProps) {
+function Checkbox({ id, disabled, label, title, titleHtml, className, value, setValue, ...restProps }: CheckboxProps) {
   const cursor = useMemo(() => {
     if (disabled) {
       return 'cursor-not-allowed';
@@ -46,7 +47,8 @@ function Checkbox({ id, disabled, label, title, className, value, setValue, ...r
       )}
       disabled={disabled}
       onClick={handleClick}
-      data-tooltip-id={title ? globalIDs.tooltip : undefined}
+      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
+      data-tooltip-html={titleHtml}
       data-tooltip-content={title}
       {...restProps}
     >

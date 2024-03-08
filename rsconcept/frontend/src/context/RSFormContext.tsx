@@ -69,7 +69,7 @@ interface IRSFormContext {
   cstDelete: (data: IConstituentaList, callback?: () => void) => void;
   cstMoveTo: (data: ICstMovetoData, callback?: () => void) => void;
 
-  versionCreate: (data: IVersionData, callback?: () => void) => void;
+  versionCreate: (data: IVersionData, callback?: (version: number) => void) => void;
   versionUpdate: (target: number, data: IVersionData, callback?: () => void) => void;
   versionDelete: (target: number, callback?: () => void) => void;
 }
@@ -114,8 +114,8 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
   const isArchive = useMemo(() => !!versionID, [versionID]);
 
   const isClaimable = useMemo(() => {
-    return (user?.id !== schema?.owner && schema?.is_common && !schema?.is_canonical) ?? false;
-  }, [user, schema?.owner, schema?.is_common, schema?.is_canonical]);
+    return isArchive && ((user?.id !== schema?.owner && schema?.is_common && !schema?.is_canonical) ?? false);
+  }, [user, schema?.owner, schema?.is_common, schema?.is_canonical, isArchive]);
 
   const isSubscribed = useMemo(() => {
     if (!user || !schema || !user.id) {
@@ -263,14 +263,14 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
   const download = useCallback(
     (callback: DataCallback<Blob>) => {
       setError(undefined);
-      getTRSFile(schemaID, {
+      getTRSFile(schemaID, String(schema?.version) ?? '', {
         showError: true,
         setLoading: setProcessing,
         onError: setError,
         onSuccess: callback
       });
     },
-    [schemaID, setError]
+    [schemaID, setError, schema]
   );
 
   const cstCreate = useCallback(
@@ -382,7 +382,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
   );
 
   const versionCreate = useCallback(
-    (data: IVersionData, callback?: () => void) => {
+    (data: IVersionData, callback?: (version: number) => void) => {
       setError(undefined);
       postCreateVersion(schemaID, {
         data: data,
@@ -392,7 +392,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         onSuccess: newData => {
           setSchema(newData.schema);
           library.localUpdateTimestamp(Number(schemaID));
-          if (callback) callback();
+          if (callback) callback(newData.version);
         }
       });
     },

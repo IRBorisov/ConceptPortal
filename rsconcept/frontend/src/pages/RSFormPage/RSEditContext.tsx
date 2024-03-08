@@ -12,15 +12,19 @@ import Loader from '@/components/ui/Loader';
 import TextURL from '@/components/ui/TextURL';
 import { useAccessMode } from '@/context/AccessModeContext';
 import { useAuth } from '@/context/AuthContext';
+import { useConceptNavigation } from '@/context/NavigationContext';
 import { useRSForm } from '@/context/RSFormContext';
 import DlgCloneLibraryItem from '@/dialogs/DlgCloneLibraryItem';
 import DlgConstituentaTemplate from '@/dialogs/DlgConstituentaTemplate';
 import DlgCreateCst from '@/dialogs/DlgCreateCst';
+import DlgCreateVersion from '@/dialogs/DlgCreateVersion';
 import DlgDeleteCst from '@/dialogs/DlgDeleteCst';
+import DlgEditVersions from '@/dialogs/DlgEditVersions';
 import DlgEditWordForms from '@/dialogs/DlgEditWordForms';
 import DlgRenameCst from '@/dialogs/DlgRenameCst';
 import DlgSubstituteCst from '@/dialogs/DlgSubstituteCst';
 import DlgUploadRSForm from '@/dialogs/DlgUploadRSForm';
+import { IVersionData } from '@/models/library';
 import { UserAccessMode } from '@/models/miscellaneous';
 import {
   CstType,
@@ -40,6 +44,9 @@ import { EXTEOR_TRS_FILE } from '@/utils/constants';
 interface IRSEditContext {
   schema?: IRSForm;
   isMutable: boolean;
+  isContentEditable: boolean;
+
+  viewVersion: (version?: number) => void;
 
   moveUp: () => void;
   moveDown: () => void;
@@ -58,6 +65,9 @@ interface IRSEditContext {
   download: () => void;
   reindex: () => void;
   substitute: () => void;
+
+  createVersion: () => void;
+  editVersions: () => void;
 }
 
 const RSEditContext = createContext<IRSEditContext | null>(null);
@@ -89,6 +99,7 @@ export const RSEditState = ({
   onDeleteCst,
   children
 }: RSEditStateProps) => {
+  const router = useConceptNavigation();
   const { user } = useAuth();
   const { mode, setMode } = useAccessMode();
   const model = useRSForm();
@@ -102,11 +113,15 @@ export const RSEditState = ({
     );
   }, [user?.is_staff, mode, model.isOwned, model.loading, model.processing]);
 
+  const isContentEditable = useMemo(() => isMutable && !model.isArchive, [isMutable, model.isArchive]);
+
   const [showUpload, setShowUpload] = useState(false);
   const [showClone, setShowClone] = useState(false);
   const [showDeleteCst, setShowDeleteCst] = useState(false);
   const [showEditTerm, setShowEditTerm] = useState(false);
   const [showSubstitute, setShowSubstitute] = useState(false);
+  const [showCreateVersion, setShowCreateVersion] = useState(false);
+  const [showEditVersions, setShowEditVersions] = useState(false);
 
   const [createInitialData, setCreateInitialData] = useState<ICstCreateData>();
   const [showCreateCst, setShowCreateCst] = useState(false);
@@ -129,6 +144,17 @@ export const RSEditState = ({
         }
       }),
     [model.schema, setMode, model.isOwned]
+  );
+
+  const viewVersion = useCallback(
+    (version?: number) => {
+      if (version) {
+        router.push(`/rsforms/${model.schemaID}?v=${version}`);
+      } else {
+        router.push(`/rsforms/${model.schemaID}`);
+      }
+    },
+    [router, model]
   );
 
   const handleCreateCst = useCallback(
@@ -194,6 +220,39 @@ export const RSEditState = ({
       model.cstUpdate(data, () => toast.success('Изменения сохранены'));
     },
     [model, activeCst]
+  );
+
+  const handleCreateVersion = useCallback(
+    (data: IVersionData) => {
+      if (!model.schema) {
+        return;
+      }
+      model.versionCreate(data, newVersion => {
+        toast.success('Версия создана');
+        viewVersion(newVersion);
+      });
+    },
+    [model, viewVersion]
+  );
+
+  const handleDeleteVersion = useCallback(
+    (versionID: number) => {
+      if (!model.schema) {
+        return;
+      }
+      model.versionDelete(versionID, () => toast.success('Версия удалена'));
+    },
+    [model]
+  );
+
+  const handleUpdateVersion = useCallback(
+    (versionID: number, data: IVersionData) => {
+      if (!model.schema) {
+        return;
+      }
+      model.versionUpdate(versionID, data, () => toast.success('Версия обновлена'));
+    },
+    [model]
   );
 
   const moveUp = useCallback(() => {
@@ -348,7 +407,8 @@ export const RSEditState = ({
   }, [model]);
 
   const share = useCallback(() => {
-    const url = window.location.href + '&share';
+    const currentRef = window.location.href;
+    const url = currentRef.includes('?') ? currentRef + '&share' : currentRef + '?share';
     navigator.clipboard
       .writeText(url)
       .then(() => toast.success(`Ссылка скопирована: ${url}`))
@@ -368,6 +428,9 @@ export const RSEditState = ({
       value={{
         schema: model.schema,
         isMutable,
+        isContentEditable,
+
+        viewVersion,
 
         moveUp,
         moveDown,
@@ -385,7 +448,10 @@ export const RSEditState = ({
         share,
         toggleSubscribe,
         reindex,
-        substitute
+        substitute,
+
+        createVersion: () => setShowCreateVersion(true),
+        editVersions: () => setShowEditVersions(true)
       }}
     >
       {model.schema ? (
@@ -434,6 +500,21 @@ export const RSEditState = ({
               hideWindow={() => setShowTemplates(false)}
               insertAfter={insertCstID}
               onCreate={handleCreateCst}
+            />
+          ) : null}
+          {showCreateVersion ? (
+            <DlgCreateVersion
+              versions={model.schema.versions}
+              hideWindow={() => setShowCreateVersion(false)}
+              onCreate={handleCreateVersion}
+            />
+          ) : null}
+          {showEditVersions ? (
+            <DlgEditVersions
+              versions={model.schema.versions}
+              hideWindow={() => setShowEditVersions(false)}
+              onDelete={handleDeleteVersion}
+              onUpdate={handleUpdateVersion}
             />
           ) : null}
         </AnimatePresence>

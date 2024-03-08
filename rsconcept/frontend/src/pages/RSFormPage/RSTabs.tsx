@@ -14,6 +14,7 @@ import { useConceptTheme } from '@/context/ThemeContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { IConstituenta, IConstituentaMeta } from '@/models/rsform';
 import { prefixes, TIMEOUT_UI_REFRESH } from '@/utils/constants';
+import { labelVersion } from '@/utils/labels';
 
 import EditorConstituenta from './EditorConstituenta';
 import EditorRSForm from './EditorRSForm';
@@ -33,6 +34,7 @@ function RSTabs() {
   const router = useConceptNavigation();
   const query = useQueryStrings();
   const activeTab = (Number(query.get('tab')) ?? RSTabID.CARD) as RSTabID;
+  const version = Number(query.get('v')) ?? undefined;
   const cstQuery = query.get('active');
 
   const { schema, loading } = useRSForm();
@@ -82,20 +84,21 @@ function RSTabs() {
       if (!schema) {
         return;
       }
+      const versionStr = version ? `v=${version}&` : '';
       if (activeID) {
         if (tab === activeTab && tab !== RSTabID.CST_EDIT) {
-          router.replace(`/rsforms/${schema.id}?tab=${tab}&active=${activeID}`);
+          router.replace(`/rsforms/${schema.id}?${versionStr}tab=${tab}&active=${activeID}`);
         } else {
-          router.push(`/rsforms/${schema.id}?tab=${tab}&active=${activeID}`);
+          router.push(`/rsforms/${schema.id}?${versionStr}tab=${tab}&active=${activeID}`);
         }
       } else if (tab !== activeTab && tab === RSTabID.CST_EDIT && schema.items.length > 0) {
         activeID = schema.items[0].id;
-        router.replace(`/rsforms/${schema.id}?tab=${tab}&active=${activeID}`);
+        router.replace(`/rsforms/${schema.id}?${versionStr}tab=${tab}&active=${activeID}`);
       } else {
-        router.push(`/rsforms/${schema.id}?tab=${tab}`);
+        router.push(`/rsforms/${schema.id}?${versionStr}tab=${tab}`);
       }
     },
-    [router, schema, activeTab]
+    [router, schema, activeTab, version]
   );
 
   function onSelectTab(index: number) {
@@ -172,10 +175,13 @@ function RSTabs() {
           <TabList className={clsx('mx-auto w-fit', 'flex items-stretch', 'border-b-2 border-x-2 divide-x-2')}>
             <RSTabsMenu onDestroy={onDestroySchema} />
 
-            <TabLabel className='' label='Карточка' title={`Название схемы: ${schema.title ?? ''}`} />
+            <TabLabel
+              label='Карточка'
+              titleHtml={`Название: <b>${schema.title ?? ''}</b><br />Версия: ${labelVersion(schema)}`}
+            />
             <TabLabel
               label='Содержание'
-              title={`Конституент: ${schema.stats?.count_all ?? 0} | Ошибок: ${schema.stats?.count_errors ?? 0}`}
+              titleHtml={`Конституент: ${schema.stats?.count_all ?? 0}<br />Ошибок: ${schema.stats?.count_errors ?? 0}`}
             />
             <TabLabel label='Редактор' />
             <TabLabel label='Граф термов' />

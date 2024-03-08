@@ -22,7 +22,7 @@ import ControlsOverlay from './ControlsOverlay';
 export const ROW_SIZE_IN_CHARACTERS = 70;
 
 interface FormConstituentaProps {
-  disabled?: boolean;
+  isMutable?: boolean;
   showList: boolean;
 
   id?: string;
@@ -38,7 +38,7 @@ interface FormConstituentaProps {
 }
 
 function FormConstituenta({
-  disabled,
+  isMutable,
   showList,
   id,
   isModified,
@@ -114,7 +114,7 @@ function FormConstituenta({
 
   return (
     <>
-      <ControlsOverlay disabled={disabled} constituenta={constituenta} onEditTerm={onEditTerm} onRename={onRename} />
+      <ControlsOverlay isMutable={isMutable} constituenta={constituenta} onEditTerm={onEditTerm} onRename={onRename} />
       <form
         id={id}
         className={clsx('mt-1 w-full md:w-[47.8rem] shrink-0', 'px-4 py-1', classnames.flex_col)}
@@ -127,7 +127,7 @@ function FormConstituenta({
           value={term}
           initialValue={constituenta?.term_raw ?? ''}
           resolved={constituenta?.term_resolved ?? ''}
-          disabled={disabled}
+          disabled={!isMutable}
           onChange={newValue => setTerm(newValue)}
         />
         <TextArea
@@ -148,7 +148,7 @@ function FormConstituenta({
           value={expression}
           activeCst={constituenta}
           showList={showList}
-          disabled={disabled}
+          disabled={!isMutable}
           toggleReset={toggleReset}
           onToggleList={onToggleList}
           onChange={newValue => setExpression(newValue)}
@@ -162,7 +162,7 @@ function FormConstituenta({
           value={textDefinition}
           initialValue={constituenta?.definition_raw ?? ''}
           resolved={constituenta?.definition_resolved ?? ''}
-          disabled={disabled}
+          disabled={!isMutable}
           onChange={newValue => setTextDefinition(newValue)}
         />
         <TextArea
@@ -170,16 +170,18 @@ function FormConstituenta({
           label='Конвенция / Комментарий'
           placeholder='Договоренность об интерпретации или пояснение'
           value={convention}
-          disabled={disabled}
+          disabled={!isMutable}
           rows={convention.length > ROW_SIZE_IN_CHARACTERS ? 3 : 2}
           onChange={event => setConvention(event.target.value)}
         />
-        <SubmitButton
-          text='Сохранить изменения'
-          className='self-center'
-          disabled={!isModified || disabled}
-          icon={<FiSave size='1.25rem' />}
-        />
+        {isMutable ? (
+          <SubmitButton
+            text='Сохранить изменения'
+            className='self-center'
+            disabled={!isModified || !isMutable}
+            icon={<FiSave size='1.25rem' />}
+          />
+        ) : null}
       </form>
     </>
   );

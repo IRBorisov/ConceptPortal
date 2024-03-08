@@ -9,7 +9,6 @@ import { useAuth } from '@/context/AuthContext';
 import { useRSForm } from '@/context/RSFormContext';
 import { globalIDs } from '@/utils/constants';
 
-import { useRSEdit } from '../RSEditContext';
 import FormRSForm from './FormRSForm';
 import RSFormStats from './RSFormStats';
 import RSFormToolbar from './RSFormToolbar';
@@ -21,7 +20,6 @@ interface EditorRSFormProps {
 }
 
 function EditorRSForm({ isModified, onDestroy, setIsModified }: EditorRSFormProps) {
-  const { isMutable } = useRSEdit();
   const { schema, isClaimable, isSubscribed, processing } = useRSForm();
   const { user } = useAuth();
 
@@ -54,12 +52,7 @@ function EditorRSForm({ isModified, onDestroy, setIsModified }: EditorRSFormProp
       />
       <div tabIndex={-1} onKeyDown={handleInput} className={clsx('flex flex-col sm:flex-row', 'sm:w-fit w-full')}>
         <FlexColumn className='px-4 pb-2'>
-          <FormRSForm
-            disabled={!isMutable}
-            id={globalIDs.library_item_editor}
-            isModified={isModified}
-            setIsModified={setIsModified}
-          />
+          <FormRSForm id={globalIDs.library_item_editor} isModified={isModified} setIsModified={setIsModified} />
 
           <Divider margins='my-1' />
 
