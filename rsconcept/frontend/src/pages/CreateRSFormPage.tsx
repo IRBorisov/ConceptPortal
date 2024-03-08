@@ -93,7 +93,7 @@ function CreateRSFormPage() {
             />
             <MiniButton
               title='Загрузить из Экстеор'
-              icon={<BiDownload size='1.25rem' className='clr-text-primary' />}
+              icon={<BiDownload size='1.25rem' className='icon-primary' />}
               onClick={() => inputRef.current?.click()}
             />
           </Overlay>

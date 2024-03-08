@@ -158,14 +158,14 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
           <MiniButton
             noHover
             title='Определить граммемы'
-            icon={<BiRightArrow size='1.25rem' className={inputText ? 'clr-text-primary' : ''} />}
+            icon={<BiRightArrow size='1.25rem' className='icon-primary' />}
             disabled={textProcessor.loading || !inputText}
             onClick={handleParse}
           />
           <MiniButton
             noHover
             title='Генерировать словоформу'
-            icon={<BiLeftArrow size='1.25rem' className={inputGrams.length !== 0 ? 'clr-text-primary' : ''} />}
+            icon={<BiLeftArrow size='1.25rem' className='icon-primary' />}
             disabled={textProcessor.loading || inputGrams.length == 0}
             onClick={handleInflect}
           />
@@ -182,14 +182,14 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         <MiniButton
           noHover
           title='Внести словоформу'
-          icon={<BiCheck size='1.25rem' className={inputText && inputGrams.length !== 0 ? 'clr-text-green' : ''} />}
+          icon={<BiCheck size='1.25rem' className='icon-green' />}
           disabled={textProcessor.loading || !inputText || inputGrams.length == 0}
           onClick={handleAddForm}
         />
         <MiniButton
           noHover
           title='Генерировать стандартные словоформы'
-          icon={<BiChevronsDown size='1.25rem' className={inputText ? 'clr-text-primary' : ''} />}
+          icon={<BiChevronsDown size='1.25rem' className='icon-primary' />}
           disabled={textProcessor.loading || !inputText}
           onClick={handleGenerateLexeme}
         />
@@ -200,7 +200,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         <MiniButton
           noHover
           title='Сбросить все словоформы'
-          icon={<BiX size='1rem' className={forms.length !== 0 ? 'clr-text-red' : ''} />}
+          icon={<BiX size='1rem' className='icon-red' />}
           disabled={textProcessor.loading || forms.length === 0}
           onClick={handleResetAll}
         />

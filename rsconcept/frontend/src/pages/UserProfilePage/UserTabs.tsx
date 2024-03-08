@@ -29,7 +29,7 @@ function UserTabs() {
 
   return (
     <DataLoader
-      id='profile-page' //
+      id='profile-page' // prettier: split lines
       isLoading={loading}
       error={error}
       hasNoData={!user}
@@ -41,9 +41,9 @@ function UserTabs() {
               title='Показать/Скрыть отслеживаемые схемы'
               icon={
                 showSubs ? (
-                  <FiBell size='1.25rem' className='clr-text-primary' />
+                  <FiBell size='1.25rem' className='icon-primary' />
                 ) : (
-                  <FiBellOff size='1.25rem' className='clr-text-primary' />
+                  <FiBellOff size='1.25rem' className='icon-primary' />
                 )
               }
               onClick={() => setShowSubs(prev => !prev)}

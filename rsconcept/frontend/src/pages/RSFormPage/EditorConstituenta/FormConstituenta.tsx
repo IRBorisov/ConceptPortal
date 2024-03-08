@@ -22,7 +22,7 @@ import ControlsOverlay from './ControlsOverlay';
 export const ROW_SIZE_IN_CHARACTERS = 70;
 
 interface FormConstituentaProps {
-  isMutable?: boolean;
+  isMutable: boolean;
   showList: boolean;
 
   id?: string;
@@ -114,7 +114,13 @@ function FormConstituenta({
 
   return (
     <>
-      <ControlsOverlay isMutable={isMutable} constituenta={constituenta} onEditTerm={onEditTerm} onRename={onRename} />
+      <ControlsOverlay
+        isMutable={isMutable}
+        processing={processing}
+        constituenta={constituenta}
+        onEditTerm={onEditTerm}
+        onRename={onRename}
+      />
       <form
         id={id}
         className={clsx('mt-1 w-full md:w-[47.8rem] shrink-0', 'px-4 py-1', classnames.flex_col)}
@@ -174,7 +180,7 @@ function FormConstituenta({
           rows={convention.length > ROW_SIZE_IN_CHARACTERS ? 3 : 2}
           onChange={event => setConvention(event.target.value)}
         />
-        {isMutable ? (
+        {isMutable || processing ? (
           <SubmitButton
             text='Сохранить изменения'
             className='self-center'

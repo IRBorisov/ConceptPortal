@@ -45,6 +45,7 @@ interface IRSEditContext {
   schema?: IRSForm;
   isMutable: boolean;
   isContentEditable: boolean;
+  isProcessing: boolean;
 
   viewVersion: (version?: number) => void;
 
@@ -429,6 +430,7 @@ export const RSEditState = ({
         schema: model.schema,
         isMutable,
         isContentEditable,
+        isProcessing: model.processing,
 
         viewVersion,
 

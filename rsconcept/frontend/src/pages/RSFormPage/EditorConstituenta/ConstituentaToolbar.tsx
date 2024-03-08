@@ -55,7 +55,7 @@ function ConstituentaToolbar({
       />
       <MiniButton
         title='Клонировать конституенту [Alt + V]'
-        disabled={!isMutable}
+        disabled={!isMutable || isModified}
         onClick={onClone}
         icon={<BiDuplicate size='1.25rem' className='icon-green' />}
       />

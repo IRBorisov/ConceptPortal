@@ -195,7 +195,6 @@ function EditorTermGraph({ selected, setSelected, onOpenEdit }: EditorTermGraphP
       />
 
       <GraphToolbar
-        isMutable={controller.isMutable}
         nothingSelected={nothingSelected}
         is3D={is3D}
         orbit={orbit}

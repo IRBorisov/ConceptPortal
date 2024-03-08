@@ -110,7 +110,14 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
         header: 'Типизация',
         enableHiding: true,
         cell: props => (
-          <div className={clsx('min-w-[9.3rem] max-w-[9.3rem]', 'text-sm break-words')}>{props.getValue()}</div>
+          <div
+            className={clsx(
+              'min-w-[9.3rem] max-w-[9.3rem]', // prettier: split lines
+              'text-sm break-words'
+            )}
+          >
+            {props.getValue()}
+          </div>
         )
       }),
       argumentsHelper.display({
@@ -123,7 +130,7 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
             {props.row.original.value ? (
               <MiniButton
                 title='Очистить значение'
-                icon={<BiX size='0.75rem' className='clr-text-red' />}
+                icon={<BiX size='0.75rem' className='icon-red' />}
                 noHover
                 onClick={() => handleClearArgument(props.row.original)}
               />
@@ -150,7 +157,13 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
       <DataTable
         dense
         noFooter
-        className={clsx('max-h-[5.8rem] min-h-[5.8rem]', 'overflow-y-auto', 'text-sm', 'border', 'select-none')}
+        className={clsx(
+          'max-h-[5.8rem] min-h-[5.8rem]', // prettier: split lines
+          'overflow-y-auto',
+          'text-sm',
+          'border',
+          'select-none'
+        )}
         data={state.arguments}
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
@@ -158,7 +171,13 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
         onRowClicked={handleSelectArgument}
       />
 
-      <div className={clsx('my-4', 'flex gap-2 justify-center items-center', 'select-none')}>
+      <div
+        className={clsx(
+          'my-4', // prettier: split lines
+          'flex gap-2 justify-center items-center',
+          'select-none'
+        )}
+      >
         <span
           title='Выберите аргумент из списка сверху и значение из списка снизу'
           className='font-semibold text-center'
@@ -175,7 +194,7 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
         <div className='flex'>
           <MiniButton
             title='Подставить значение аргумента'
-            icon={<BiCheck size='1.25rem' className={!!argumentValue && !!selectedArgument ? 'clr-text-green' : ''} />}
+            icon={<BiCheck size='1.25rem' className='icon-green' />}
             disabled={!argumentValue || !selectedArgument}
             onClick={() => handleAssignArgument(selectedArgument!, argumentValue)}
           />
@@ -183,12 +202,12 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
             title='Откатить значение'
             disabled={!isModified}
             onClick={handleReset}
-            icon={<BiRefresh size='1.25rem' className={isModified ? 'clr-text-primary' : ''} />}
+            icon={<BiRefresh size='1.25rem' className='icon-primary' />}
           />
           <MiniButton
             title='Очистить значение аргумента'
             disabled={!selectedClearable}
-            icon={<BiX size='1.25rem' className={selectedClearable ? 'clr-text-red' : ''} />}
+            icon={<BiX size='1.25rem' className='icon-red' />}
             onClick={() => (selectedArgument ? handleClearArgument(selectedArgument) : undefined)}
           />
         </div>

@@ -122,7 +122,7 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
             <DropdownButton
               disabled={!model.isClaimable && !model.isOwned}
               text={model.isOwned ? 'Вы — владелец' : 'Стать владельцем'}
-              icon={<LuCrown size='1rem' className={model.isOwned ? 'clr-text-green' : ''} />}
+              icon={<LuCrown size='1rem' className='icon-green' />}
               onClick={!model.isOwned && model.isClaimable ? handleClaimOwner : undefined}
             />
           ) : null}

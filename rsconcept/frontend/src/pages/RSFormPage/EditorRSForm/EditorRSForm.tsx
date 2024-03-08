@@ -20,7 +20,7 @@ interface EditorRSFormProps {
 }
 
 function EditorRSForm({ isModified, onDestroy, setIsModified }: EditorRSFormProps) {
-  const { schema, isClaimable, isSubscribed, processing } = useRSForm();
+  const { schema, isClaimable, isSubscribed } = useRSForm();
   const { user } = useAuth();
 
   function initiateSubmit() {
@@ -42,7 +42,6 @@ function EditorRSForm({ isModified, onDestroy, setIsModified }: EditorRSFormProp
   return (
     <>
       <RSFormToolbar
-        processing={processing}
         subscribed={isSubscribed}
         modified={isModified}
         claimable={isClaimable}

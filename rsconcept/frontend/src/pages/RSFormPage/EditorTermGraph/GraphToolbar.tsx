@@ -7,8 +7,9 @@ import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { HelpTopic } from '@/models/miscellaneous';
 
+import { useRSEdit } from '../RSEditContext';
+
 interface GraphToolbarProps {
-  isMutable: boolean;
   nothingSelected: boolean;
   is3D: boolean;
 
@@ -25,7 +26,6 @@ interface GraphToolbarProps {
 }
 
 function GraphToolbar({
-  isMutable,
   nothingSelected,
   is3D,
   noText,
@@ -37,26 +37,28 @@ function GraphToolbar({
   onDelete,
   onResetViewpoint
 }: GraphToolbarProps) {
+  const controller = useRSEdit();
+
   return (
     <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex'>
       <MiniButton
         title='Настройки фильтрации узлов и связей'
-        icon={<BiFilterAlt size='1.25rem' className='clr-text-primary' />}
+        icon={<BiFilterAlt size='1.25rem' className='icon-primary' />}
         onClick={showParamsDialog}
       />
       <MiniButton
         title={!noText ? 'Скрыть текст' : 'Отобразить текст'}
         icon={
           !noText ? (
-            <BiFontFamily size='1.25rem' className='clr-text-green' />
+            <BiFontFamily size='1.25rem' className='icon-green' />
           ) : (
-            <BiFont size='1.25rem' className='clr-text-primary' />
+            <BiFont size='1.25rem' className='icon-primary' />
           )
         }
         onClick={toggleNoText}
       />
       <MiniButton
-        icon={<BiCollapse size='1.25rem' className='clr-text-primary' />}
+        icon={<BiCollapse size='1.25rem' className='icon-primary' />}
         title='Восстановить камеру'
         onClick={onResetViewpoint}
       />
@@ -66,18 +68,19 @@ function GraphToolbar({
         disabled={!is3D}
         onClick={toggleOrbit}
       />
-      {isMutable ? (
+      {controller.isMutable || controller.isProcessing ? (
         <MiniButton
           title='Новая конституента'
           icon={<BiPlusCircle size='1.25rem' className='icon-green' />}
+          disabled={!controller.isMutable}
           onClick={onCreate}
         />
       ) : null}
-      {isMutable ? (
+      {controller.isMutable || controller.isProcessing ? (
         <MiniButton
           title='Удалить выбранные'
           icon={<BiTrash size='1.25rem' className='icon-red' />}
-          disabled={nothingSelected}
+          disabled={nothingSelected || !controller.isMutable}
           onClick={onDelete}
         />
       ) : null}

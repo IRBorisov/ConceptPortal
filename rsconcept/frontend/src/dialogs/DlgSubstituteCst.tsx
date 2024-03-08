@@ -50,9 +50,9 @@ function DlgSubstituteCst({ hideWindow, onSubstitute }: DlgSubstituteCstProps) {
         <Label text='Удаляемая конституента' />
         <ConstituentaSelector items={schema?.items} value={original} onSelectValue={setOriginal} />
       </FlexColumn>
-      <div className=''>
-        <LuReplace size='3rem' className='clr-text-primary' />
-      </div>
+
+      <LuReplace size='3rem' className='icon-primary' />
+
       <FlexColumn>
         <Label text='Подставляемая конституента' />
         <ConstituentaSelector items={schema?.items} value={substitution} onSelectValue={setSubstitution} />

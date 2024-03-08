@@ -75,7 +75,7 @@ function RegisterPage() {
           <FlexColumn>
             <div className='absolute'>
               <Overlay id={globalIDs.password_tooltip} position='top-[4.8rem] left-[3.4rem] absolute'>
-                <BiInfoCircle size='1.25rem' className='clr-text-primary' />
+                <BiInfoCircle size='1.25rem' className='icon-primary' />
               </Overlay>
               <Tooltip anchorSelect={`#${globalIDs.password_tooltip}`} offset={6}>
                 <p>- используйте уникальный пароль</p>

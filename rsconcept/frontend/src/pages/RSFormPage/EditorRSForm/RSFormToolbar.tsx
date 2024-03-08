@@ -17,25 +17,16 @@ interface RSFormToolbarProps {
   subscribed: boolean;
   anonymous: boolean;
   claimable: boolean;
-  processing: boolean;
   onSubmit: () => void;
   onDestroy: () => void;
 }
 
-function RSFormToolbar({
-  modified,
-  anonymous,
-  subscribed,
-  claimable,
-  processing,
-  onSubmit,
-  onDestroy
-}: RSFormToolbarProps) {
+function RSFormToolbar({ modified, anonymous, subscribed, claimable, onSubmit, onDestroy }: RSFormToolbarProps) {
   const controller = useRSEdit();
   const canSave = useMemo(() => modified && controller.isMutable, [modified, controller.isMutable]);
   return (
     <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex'>
-      {controller.isContentEditable ? (
+      {controller.isContentEditable || controller.isProcessing ? (
         <MiniButton
           title='Сохранить изменения [Ctrl + S]'
           disabled={!canSave}
@@ -56,7 +47,7 @@ function RSFormToolbar({
       {!anonymous ? (
         <MiniButton
           title={`Отслеживание ${subscribed ? 'включено' : 'выключено'}`}
-          disabled={processing}
+          disabled={controller.isProcessing}
           icon={
             subscribed ? (
               <FiBell size='1.25rem' className='icon-primary' />
@@ -71,11 +62,11 @@ function RSFormToolbar({
         <MiniButton
           title='Стать владельцем'
           icon={<LuCrown size='1.25rem' className='icon-green' />}
-          disabled={processing}
+          disabled={controller.isProcessing}
           onClick={controller.claim}
         />
       ) : null}
-      {controller.isContentEditable ? (
+      {controller.isContentEditable || controller.isProcessing ? (
         <MiniButton
           title='Удалить схему'
           disabled={!controller.isMutable}

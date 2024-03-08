@@ -76,7 +76,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
 
   return (
     <>
-      {controller.isContentEditable ? (
+      {controller.isContentEditable || controller.isProcessing ? (
         <ConstituentaToolbar
           isMutable={!disabled}
           isModified={isModified}

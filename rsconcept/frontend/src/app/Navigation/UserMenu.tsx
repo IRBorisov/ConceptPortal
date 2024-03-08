@@ -19,7 +19,7 @@ function UserMenu() {
       {!user ? (
         <NavigationButton
           title='Перейти на страницу логина'
-          icon={<InDoorIcon size='1.5rem' className='clr-text-primary' />}
+          icon={<InDoorIcon size='1.5rem' className='icon-primary' />}
           onClick={navigateLogin}
         />
       ) : null}

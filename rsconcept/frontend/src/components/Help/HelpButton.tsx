@@ -16,7 +16,7 @@ interface HelpButtonProps extends CProps.Styling {
 function HelpButton({ topic, ...restProps }: HelpButtonProps) {
   return (
     <div id={`help-${topic}`} className='p-1'>
-      <BiInfoCircle size='1.25rem' className='clr-text-primary' />
+      <BiInfoCircle size='1.25rem' className='icon-primary' />
       <Tooltip clickable anchorSelect={`#help-${topic}`} layer='z-modal-tooltip' {...restProps}>
         <div className='relative' onClick={event => event.stopPropagation()}>
           <div className='absolute right-0 text-sm top-[0.4rem] clr-input'>

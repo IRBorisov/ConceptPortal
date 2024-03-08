@@ -93,7 +93,7 @@ function EditorRSList({ selected, setSelected, onOpenEdit }: EditorRSListProps) 
 
   return (
     <div tabIndex={-1} className='outline-none' onKeyDown={handleTableKey}>
-      {controller.isContentEditable ? (
+      {controller.isContentEditable || controller.isProcessing ? (
         <SelectedCounter
           totalCount={controller.schema?.stats?.count_all ?? 0}
           selectedCount={selected.length}
@@ -101,16 +101,18 @@ function EditorRSList({ selected, setSelected, onOpenEdit }: EditorRSListProps) 
         />
       ) : null}
 
-      {controller.isContentEditable ? <RSListToolbar selectedCount={selected.length} /> : null}
+      {controller.isContentEditable || controller.isProcessing ? (
+        <RSListToolbar selectedCount={selected.length} />
+      ) : null}
       <div
         className={clsx('border-b', {
-          'pt-[2.3rem]': controller.isContentEditable,
-          'relative top-[-1px]': !controller.isContentEditable
+          'pt-[2.3rem]': controller.isContentEditable || controller.isProcessing,
+          'relative top-[-1px]': !controller.isContentEditable && !controller.isProcessing
         })}
       />
 
       <RSTable
-        enableSelection={controller.isContentEditable}
+        enableSelection={controller.isContentEditable || controller.isProcessing}
         items={controller.schema?.items}
         selected={rowSelection}
         setSelected={handleRowSelection}

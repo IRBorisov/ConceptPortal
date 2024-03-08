@@ -159,19 +159,19 @@ function EditorRSExpression({
             noHover
             title='Отображение специальной клавиатуры'
             onClick={() => setShowControls(prev => !prev)}
-            icon={<FaRegKeyboard size='1.25rem' className={showControls ? 'clr-text-primary' : ''} />}
+            icon={<FaRegKeyboard size='1.25rem' className={showControls ? 'icon-primary' : ''} />}
           />
           <MiniButton
             noHover
             title='Отображение списка конституент'
             onClick={onToggleList}
-            icon={<BiListUl size='1.25rem' className={showList ? 'clr-text-primary' : ''} />}
+            icon={<BiListUl size='1.25rem' className={showList ? 'icon-primary' : ''} />}
           />
           <MiniButton
             noHover
             title='Дерево разбора выражения'
             onClick={handleShowAST}
-            icon={<RiNodeTree size='1.25rem' className='clr-text-primary' />}
+            icon={<RiNodeTree size='1.25rem' className='icon-primary' />}
           />
         </Overlay>
 

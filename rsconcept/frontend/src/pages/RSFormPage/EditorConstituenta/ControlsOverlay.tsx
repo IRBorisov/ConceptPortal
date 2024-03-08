@@ -7,16 +7,17 @@ import { IConstituenta } from '@/models/rsform';
 
 interface ControlsOverlayProps {
   constituenta?: IConstituenta;
-  isMutable?: boolean;
+  isMutable: boolean;
+  processing: boolean;
 
   onRename: () => void;
   onEditTerm: () => void;
 }
 
-function ControlsOverlay({ constituenta, isMutable, onRename, onEditTerm }: ControlsOverlayProps) {
+function ControlsOverlay({ constituenta, isMutable, processing, onRename, onEditTerm }: ControlsOverlayProps) {
   return (
     <Overlay position='top-1 left-[4.1rem]' className='flex select-none'>
-      {isMutable ? (
+      {isMutable || processing ? (
         <MiniButton
           title={`Редактировать словоформы термина: ${constituenta?.term_forms.length ?? 0}`}
           noHover
@@ -28,13 +29,13 @@ function ControlsOverlay({ constituenta, isMutable, onRename, onEditTerm }: Cont
         className={clsx(
           'pt-1 pl-[1.375rem]', // prettier: split lines
           'text-sm font-medium whitespace-nowrap',
-          !isMutable && 'pl-[2.8rem]'
+          !isMutable && !processing && 'pl-[2.8rem]'
         )}
       >
         <span>Имя </span>
         <span className='ml-1'>{constituenta?.alias ?? ''}</span>
       </div>
-      {isMutable ? (
+      {isMutable || processing ? (
         <MiniButton
           noHover
           title='Переименовать конституенту'
