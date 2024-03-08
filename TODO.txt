@@ -4,20 +4,52 @@ For more specific TODOs see comments in code
 
 [Functionality]
 - home page
+- export PDF
+- bug report form
 - блок нотификаций пользователей
 - блок синтеза
+
+- статический анализ схемы
+- конфигурации правил для разных статусов
+
 - блок организации библиотеки моделей
-- проектный модуль?
-- обратная связь - система баг репортов
+- Настройка поиска в Библиотеке
+- поиск по содержимому КС в Библиотеке
+- Запрос на поиск вхождений
+
+- private projects and permissions. Consider cooperative editing
+
+- draggable rows in constituents table
+- Clickable IDs in RSEditor tooltips
+
 
 [Tech]
-- rewrite custom password-reset
+- add debounce to some search fields
 - upgrade backend to Python3.12 and Django 5
 
-[deployment]
+
+[Deployment]
 - logs collection
 - status dashboard for servers
 
-[security]
+
+[Security]
 - password-reset leaks info of email being used
 - do not use schemaID for access (prevent enumerating IDs access)
+- improve nginx config. Consider DDOS and other types of attacks on infrastructure
+
+[Research]
+Research and consider integration
+- django-allauth
+- drf-messages
+
+- radix-ui
+- shadcn-ui
+
+- Zod
+- use-debounce
+
+- react-query
+- react-hook-form
+
+- node-based UI
