@@ -31,7 +31,7 @@ function RSTokenButton({ token, disabled, onInsert }: RSTokenButtonProps) {
         }
       )}
       data-tooltip-id={globalIDs.tooltip}
-      data-tooltip-content={describeToken(token)}
+      data-tooltip-html={describeToken(token)}
     >
       {label ? <span className='whitespace-nowrap'>{label}</span> : null}
     </button>

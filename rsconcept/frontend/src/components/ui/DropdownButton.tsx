@@ -8,7 +8,6 @@ import { CProps } from '../props';
 
 interface DropdownButtonProps extends CProps.AnimatedButton {
   text?: string;
-  titleHtml?: string;
   icon?: React.ReactNode;
 
   children?: React.ReactNode;
@@ -20,6 +19,7 @@ function DropdownButton({
   className,
   title,
   titleHtml,
+  hideTitle,
   onClick,
   children,
   ...restProps
@@ -43,6 +43,7 @@ function DropdownButton({
       data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
       data-tooltip-html={titleHtml}
       data-tooltip-content={title}
+      data-tooltip-hidden={hideTitle}
       {...restProps}
     >
       {children ? children : null}

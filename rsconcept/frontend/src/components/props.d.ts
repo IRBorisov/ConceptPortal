@@ -2,8 +2,13 @@
 import { HTMLMotionProps } from 'framer-motion';
 
 export namespace CProps {
-  export type Control = {
+  export type Titled = {
     title?: string;
+    titleHtml?: string;
+    hideTitle?: boolean;
+  };
+
+  export type Control = Titled & {
     disabled?: boolean;
     noBorder?: boolean;
     noOutline?: boolean;
@@ -23,20 +28,19 @@ export namespace CProps {
   };
 
   export type Div = React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
-  export type Button = Omit<
-    React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>,
-    'children' | 'type'
-  >;
+  export type Button = Titled &
+    Omit<
+      React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>,
+      'children' | 'type'
+    >;
   export type Label = Omit<
     React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>,
     'children'
   >;
-  export type TextArea = React.DetailedHTMLProps<
-    React.TextareaHTMLAttributes<HTMLTextAreaElement>,
-    HTMLTextAreaElement
-  >;
-  export type Input = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
+  export type TextArea = Titled &
+    React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>;
+  export type Input = Titled & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
 
-  export type AnimatedButton = Omit<HTMLMotionProps<'button'>, 'type'>;
+  export type AnimatedButton = Titled & Omit<HTMLMotionProps<'button'>, 'type'>;
   export type AnimatedDiv = HTMLMotionProps<'div'>;
 }

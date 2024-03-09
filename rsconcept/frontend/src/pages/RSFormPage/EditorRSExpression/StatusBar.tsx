@@ -12,7 +12,7 @@ import { inferStatus } from '@/models/rsformAPI';
 import { IExpressionParse, ParsingStatus } from '@/models/rslang';
 import { colorBgCstStatus } from '@/styling/color';
 import { globalIDs } from '@/utils/constants';
-import { labelExpressionStatus } from '@/utils/labels';
+import { labelExpressionStatus, prepareTooltip } from '@/utils/labels';
 
 import StatusIcon from './StatusIcon';
 
@@ -49,7 +49,7 @@ function StatusBar({ isModified, processing, constituenta, parseData, onAnalyze 
       )}
       style={{ backgroundColor: processing ? colors.bgDefault : colorBgCstStatus(status, colors) }}
       data-tooltip-id={globalIDs.tooltip}
-      data-tooltip-content='Проверить определение [Ctrl + Q]'
+      data-tooltip-html={prepareTooltip('Проверить определение', 'Ctrl + Q')}
       onClick={onAnalyze}
     >
       <AnimatePresence mode='wait'>

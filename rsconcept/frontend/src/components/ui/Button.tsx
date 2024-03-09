@@ -7,10 +7,8 @@ import { CProps } from '../props';
 interface ButtonProps extends CProps.Control, CProps.Colors, CProps.Button {
   text?: string;
   icon?: React.ReactNode;
-  titleHtml?: string;
 
   dense?: boolean;
-  hideTitle?: boolean;
   loading?: boolean;
 }
 
@@ -19,10 +17,10 @@ function Button({
   icon,
   title,
   titleHtml,
+  hideTitle,
   loading,
   dense,
   disabled,
-  hideTitle,
   noBorder,
   noOutline,
   colors = 'clr-btn-default',

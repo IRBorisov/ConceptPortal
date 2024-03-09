@@ -6,6 +6,7 @@ import { FiSave } from 'react-icons/fi';
 
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
+import { prepareTooltip } from '@/utils/labels';
 
 interface ConstituentaToolbarProps {
   isMutable: boolean;
@@ -36,7 +37,7 @@ function ConstituentaToolbar({
   return (
     <Overlay position='top-1 right-4 sm:right-1/2 sm:translate-x-1/2' className='flex'>
       <MiniButton
-        title='Сохранить изменения [Ctrl + S]'
+        titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
         disabled={!canSave}
         icon={<FiSave size='1.25rem' className='icon-primary' />}
         onClick={onSubmit}
@@ -54,7 +55,7 @@ function ConstituentaToolbar({
         icon={<BiPlusCircle size={'1.25rem'} className='icon-green' />}
       />
       <MiniButton
-        title='Клонировать конституенту [Alt + V]'
+        titleHtml={prepareTooltip('Клонировать конституенту', 'Alt + V]')}
         disabled={!isMutable || isModified}
         onClick={onClone}
         icon={<BiDuplicate size='1.25rem' className='icon-green' />}
@@ -66,13 +67,13 @@ function ConstituentaToolbar({
         icon={<BiTrash size='1.25rem' className='icon-red' />}
       />
       <MiniButton
-        title='Переместить вверх [Alt + вверх]'
+        titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
         icon={<BiUpvote size='1.25rem' className='icon-primary' />}
         disabled={!isMutable}
         onClick={onMoveUp}
       />
       <MiniButton
-        title='Переместить вниз [Alt + вниз]'
+        titleHtml={prepareTooltip('Переместить вниз', 'Alt + вниз')}
         icon={<BiDownvote size='1.25rem' className='icon-primary' />}
         disabled={!isMutable}
         onClick={onMoveDown}

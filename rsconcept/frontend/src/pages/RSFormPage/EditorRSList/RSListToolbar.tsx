@@ -13,7 +13,7 @@ import { HelpTopic } from '@/models/miscellaneous';
 import { CstType } from '@/models/rsform';
 import { getCstTypePrefix } from '@/models/rsformAPI';
 import { prefixes } from '@/utils/constants';
-import { getCstTypeShortcut, labelCstType } from '@/utils/labels';
+import { getCstTypeShortcut, labelCstType, prepareTooltip } from '@/utils/labels';
 
 import { useRSEdit } from '../RSEditContext';
 
@@ -29,25 +29,25 @@ function RSListToolbar({ selectedCount }: RSListToolbarProps) {
   return (
     <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex items-start'>
       <MiniButton
-        title='Переместить вверх [Alt + вверх]'
+        titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
         icon={<BiUpvote size='1.25rem' className='icon-primary' />}
         disabled={!controller.isMutable || nothingSelected}
         onClick={controller.moveUp}
       />
       <MiniButton
-        title='Переместить вниз [Alt + вниз]'
+        titleHtml={prepareTooltip('Переместить вниз', 'Alt + вниз')}
         icon={<BiDownvote size='1.25rem' className='icon-primary' />}
         disabled={!controller.isMutable || nothingSelected}
         onClick={controller.moveDown}
       />
       <MiniButton
-        title='Клонировать конституенту [Alt + V]'
+        titleHtml={prepareTooltip('Клонировать конституенту', 'Alt + V')}
         icon={<BiDuplicate size='1.25rem' className='icon-green' />}
         disabled={!controller.isMutable || selectedCount !== 1}
         onClick={controller.cloneCst}
       />
       <MiniButton
-        title='Добавить новую конституенту... [Alt + `]'
+        titleHtml={prepareTooltip('Добавить новую конституенту...', 'Alt + `')}
         icon={<BiPlusCircle size='1.25rem' className='icon-green' />}
         disabled={!controller.isMutable}
         onClick={() => controller.createCst(undefined, false)}
@@ -66,13 +66,13 @@ function RSListToolbar({ selectedCount }: RSListToolbarProps) {
               key={`${prefixes.csttype_list}${typeStr}`}
               text={`${getCstTypePrefix(typeStr as CstType)}1 — ${labelCstType(typeStr as CstType)}`}
               onClick={() => controller.createCst(typeStr as CstType, true)}
-              title={getCstTypeShortcut(typeStr as CstType)}
+              titleHtml={getCstTypeShortcut(typeStr as CstType)}
             />
           ))}
         </Dropdown>
       </div>
       <MiniButton
-        title='Удалить выбранные [Delete]'
+        titleHtml={prepareTooltip('Удалить выбранные', 'Delete')}
         icon={<BiTrash size='1.25rem' className='icon-red' />}
         disabled={!controller.isMutable || nothingSelected}
         onClick={controller.deleteCst}

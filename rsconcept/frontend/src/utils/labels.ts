@@ -136,50 +136,50 @@ export function getCstTypeShortcut(type: CstType) {
   }
 }
 
-/**
+/** <b></b><br/>
  * Generates description for {@link TokenID}.
  */
 export function describeToken(id: TokenID): string {
   // prettier-ignore
   switch (id) {
-    case TokenID.BOOLEAN:               return 'Булеан [Alt + E / Shift + B]';
-    case TokenID.DECART:                return 'Декартово произведение [Alt + Shift + E / Shift + 8]';
-    case TokenID.PUNCTUATION_PL:        return 'Скобки вокруг выражения [Alt + Shift + 9 ]';
-    case TokenID.PUNCTUATION_SL:        return 'Скобки вокруг выражения [Alt + [ ]';
-    case TokenID.QUANTOR_UNIVERSAL:     return 'Квантор всеобщности [`]';
-    case TokenID.QUANTOR_EXISTS:        return 'Квантор существования [Shift + `]';
-    case TokenID.LOGIC_NOT:             return 'Отрицание [Alt + `]';
-    case TokenID.LOGIC_AND:             return 'Конъюнкция [Alt + 3 ~ Shift + 7]';
-    case TokenID.LOGIC_OR:              return 'Дизъюнкция [Alt + Shift + 3]';
-    case TokenID.LOGIC_IMPLICATION:     return 'Импликация [Alt + 4]';
-    case TokenID.LOGIC_EQUIVALENT:      return 'Эквивалентность [Alt + Shift + 4]';
-    case TokenID.LIT_EMPTYSET:          return 'Пустое множество [Alt + X]';
-    case TokenID.LIT_WHOLE_NUMBERS:     return 'Целые числа [Alt + Z]';
-    case TokenID.EQUAL:                 return 'Равенство';
-    case TokenID.NOTEQUAL:              return 'Неравенство [Alt + Shift + `]';
-    case TokenID.GREATER_OR_EQ:         return 'Больше или равно [Alt + Shift + 7]';
-    case TokenID.LESSER_OR_EQ:          return 'Меньше или равно [Alt + Shift + 8]';
-    case TokenID.SET_IN:                return 'Быть элементом (принадлежит) [Alt + 1]';
-    case TokenID.SET_NOT_IN:            return 'Не принадлежит [Alt + Shift + 1]';
-    case TokenID.SUBSET_OR_EQ:          return 'Быть частью (нестрогое подмножество) [Alt + 2]';
-    case TokenID.SUBSET:                return 'Строгое подмножество [Alt + 7]';
-    case TokenID.NOT_SUBSET:            return 'Не подмножество [Alt + Shift + 2]';
-    case TokenID.SET_INTERSECTION:      return 'Пересечение [Alt + A]';
-    case TokenID.SET_UNION:             return 'Объединение [Alt + S]';
-    case TokenID.SET_MINUS:             return 'Разность множеств [Alt + 5]';
-    case TokenID.SET_SYMMETRIC_MINUS:   return 'Симметрическая разность [Alt + Shift + 5]';
-    case TokenID.NT_DECLARATIVE_EXPR:   return 'Декларативная форма определения терма [Alt + D]';
-    case TokenID.NT_IMPERATIVE_EXPR:    return 'Императивная форма определения терма [Alt + G]';
-    case TokenID.NT_RECURSIVE_FULL:     return 'Рекурсивная (цикличная) форма определения терма [Alt + T]';
-    case TokenID.BIGPR:                 return 'Большая проекция [Alt + Q]';
-    case TokenID.SMALLPR:               return 'Малая проекция [Alt + W]';
-    case TokenID.FILTER:                return 'Фильтр [Alt + F]';
-    case TokenID.REDUCE:                return 'Множество-сумма [Alt + R]';
-    case TokenID.CARD:                  return 'Мощность [Alt + C]';
-    case TokenID.BOOL:                  return 'Синглетон [Alt + B]';
-    case TokenID.DEBOOL:                return 'Десинглетон [Alt + V]';
-    case TokenID.PUNCTUATION_ASSIGN:    return 'Присвоение (императивный синтаксис) [Alt + Shift + 6]';
-    case TokenID.PUNCTUATION_ITERATE:   return 'Перебор элементов множества (императивный синтаксис) [Alt + 6]';
+    case TokenID.BOOLEAN:               return prepareTooltip('Булеан', 'Alt + E / Shift + B');
+    case TokenID.DECART:                return prepareTooltip('Декартово произведение', 'Alt + Shift + E / Shift + 8');
+    case TokenID.PUNCTUATION_PL:        return prepareTooltip('Скобки () вокруг выражения', 'Alt + Shift + 9');
+    case TokenID.PUNCTUATION_SL:        return prepareTooltip('Скобки [] вокруг выражения', 'Alt + [');
+    case TokenID.QUANTOR_UNIVERSAL:     return prepareTooltip('Квантор всеобщности', '`');
+    case TokenID.QUANTOR_EXISTS:        return prepareTooltip('Квантор существования', 'Shift + `');
+    case TokenID.LOGIC_NOT:             return prepareTooltip('Отрицание', 'Alt + `');
+    case TokenID.LOGIC_AND:             return prepareTooltip('Конъюнкция', 'Alt + 3 ~ Shift + 7');
+    case TokenID.LOGIC_OR:              return prepareTooltip('Дизъюнкция', 'Alt + Shift + 3');
+    case TokenID.LOGIC_IMPLICATION:     return prepareTooltip('Импликация', 'Alt + 4');
+    case TokenID.LOGIC_EQUIVALENT:      return prepareTooltip('Эквивалентность', 'Alt + Shift + 4');
+    case TokenID.LIT_EMPTYSET:          return prepareTooltip('Пустое множество', 'Alt + X');
+    case TokenID.LIT_WHOLE_NUMBERS:     return prepareTooltip('Целые числа', 'Alt + Z');
+    case TokenID.EQUAL:                 return prepareTooltip('Равенство');
+    case TokenID.NOTEQUAL:              return prepareTooltip('Неравенство', 'Alt + Shift + `');
+    case TokenID.GREATER_OR_EQ:         return prepareTooltip('Больше или равно', 'Alt + Shift + 7');
+    case TokenID.LESSER_OR_EQ:          return prepareTooltip('Меньше или равно', 'Alt + Shift + 8');
+    case TokenID.SET_IN:                return prepareTooltip('Быть элементом (принадлежит)', 'Alt + 1');
+    case TokenID.SET_NOT_IN:            return prepareTooltip('Не принадлежит', 'Alt + Shift + 1');
+    case TokenID.SUBSET_OR_EQ:          return prepareTooltip('Быть частью (нестрогое подмножество)', 'Alt + 2');
+    case TokenID.SUBSET:                return prepareTooltip('Строгое подмножество', 'Alt + 7');
+    case TokenID.NOT_SUBSET:            return prepareTooltip('Не подмножество', 'Alt + Shift + 2');
+    case TokenID.SET_INTERSECTION:      return prepareTooltip('Пересечение', 'Alt + A');
+    case TokenID.SET_UNION:             return prepareTooltip('Объединение', 'Alt + S');
+    case TokenID.SET_MINUS:             return prepareTooltip('Разность множеств', 'Alt + 5');
+    case TokenID.SET_SYMMETRIC_MINUS:   return prepareTooltip('Симметрическая разность', 'Alt + Shift + 5');
+    case TokenID.NT_DECLARATIVE_EXPR:   return prepareTooltip('Декларативное определение', 'Alt + D');
+    case TokenID.NT_IMPERATIVE_EXPR:    return prepareTooltip('Императивное определение', 'Alt + G');
+    case TokenID.NT_RECURSIVE_FULL:     return prepareTooltip('Рекурсивное определение (цикл)', 'Alt + T');
+    case TokenID.BIGPR:                 return prepareTooltip('Большая проекция', 'Alt + Q');
+    case TokenID.SMALLPR:               return prepareTooltip('Малая проекция', 'Alt + W');
+    case TokenID.FILTER:                return prepareTooltip('Фильтр', 'Alt + F');
+    case TokenID.REDUCE:                return prepareTooltip('Множество-сумма', 'Alt + R');
+    case TokenID.CARD:                  return prepareTooltip('Мощность', 'Alt + C');
+    case TokenID.BOOL:                  return prepareTooltip('Синглетон', 'Alt + B');
+    case TokenID.DEBOOL:                return prepareTooltip('Десинглетон', 'Alt + V');
+    case TokenID.PUNCTUATION_ASSIGN:    return prepareTooltip('Присвоение', 'Alt + Shift + 6');
+    case TokenID.PUNCTUATION_ITERATE:   return prepareTooltip('Перебор элементов множества', 'Alt + 6');
   }
   return `no description: ${id}`;
 }
@@ -742,4 +742,11 @@ export function describeAccessMode(mode: UserAccessMode): string {
     case UserAccessMode.ADMIN:
       return 'Режим редактирования администратором';
   }
+}
+
+/**
+ * Generate HTML wrapper for control description including hotkey.
+ */
+export function prepareTooltip(text: string, hotkey?: string) {
+  return hotkey ? `<b>[${hotkey}]</b><br/>${text}` : text;
 }

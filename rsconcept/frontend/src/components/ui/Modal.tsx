@@ -7,6 +7,7 @@ import { BiX } from 'react-icons/bi';
 
 import useEscapeKey from '@/hooks/useEscapeKey';
 import { animateModal } from '@/styling/animations';
+import { prepareTooltip } from '@/utils/labels';
 
 import { CProps } from '../props';
 import Button from './Button';
@@ -71,7 +72,11 @@ function Modal({
         {...restProps}
       >
         <Overlay position='right-[0.3rem] top-2'>
-          <MiniButton title='Закрыть диалоговое окно [ESC]' icon={<BiX size='1.25rem' />} onClick={handleCancel} />
+          <MiniButton
+            titleHtml={prepareTooltip('Закрыть диалоговое окно', 'ESC')}
+            icon={<BiX size='1.25rem' />}
+            onClick={handleCancel}
+          />
         </Overlay>
 
         {header ? <h1 className='px-12 py-2 select-none'>{header}</h1> : null}

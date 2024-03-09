@@ -6,12 +6,10 @@ import { CProps } from '../props';
 
 interface SelectorButtonProps extends CProps.Button {
   text?: string;
-  titleHtml?: string;
   icon?: React.ReactNode;
 
   colors?: string;
   transparent?: boolean;
-  hideTitle?: boolean;
 }
 
 function SelectorButton({

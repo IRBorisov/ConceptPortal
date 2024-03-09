@@ -1,16 +1,15 @@
 import clsx from 'clsx';
 
+import { CProps } from '@/components/props';
 import { globalIDs } from '@/utils/constants';
 
-interface NavigationButtonProps {
+interface NavigationButtonProps extends CProps.Titled {
   text?: string;
   icon: React.ReactNode;
-  title?: string;
-  titleHtml?: string;
   onClick?: () => void;
 }
 
-function NavigationButton({ icon, title, titleHtml, onClick, text }: NavigationButtonProps) {
+function NavigationButton({ icon, title, titleHtml, hideTitle, onClick, text }: NavigationButtonProps) {
   return (
     <button
       type='button'
@@ -18,6 +17,7 @@ function NavigationButton({ icon, title, titleHtml, onClick, text }: NavigationB
       data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
       data-tooltip-html={titleHtml}
       data-tooltip-content={title}
+      data-tooltip-hidden={hideTitle}
       onClick={onClick}
       className={clsx(
         'mr-1 h-full', // prettier: split lines

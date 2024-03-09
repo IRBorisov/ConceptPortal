@@ -6,18 +6,16 @@ import { CProps } from '../props';
 
 interface MiniButtonProps extends CProps.Button {
   icon: React.ReactNode;
-  titleHtml?: string;
   noHover?: boolean;
-  hideTitle?: boolean;
 }
 
 function MiniButton({
   icon,
   noHover,
-  hideTitle,
   tabIndex,
   title,
   titleHtml,
+  hideTitle,
   className,
   ...restProps
 }: MiniButtonProps) {

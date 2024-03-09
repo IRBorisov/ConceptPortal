@@ -38,7 +38,7 @@ function UserTabs() {
         <div>
           <Overlay position='top-0 right-0'>
             <MiniButton
-              title='Показать/Скрыть отслеживаемые схемы'
+              title='Отслеживаемые схемы'
               icon={
                 showSubs ? (
                   <FiBell size='1.25rem' className='icon-primary' />

@@ -4,12 +4,13 @@ import { Tab as TabImpl } from 'react-tabs';
 
 import { globalIDs } from '@/utils/constants';
 
-interface TabLabelProps extends Omit<TabPropsImpl, 'children'> {
+import { CProps } from '../props';
+
+interface TabLabelProps extends Omit<TabPropsImpl, 'children'>, CProps.Titled {
   label?: string;
-  titleHtml?: string;
 }
 
-function TabLabel({ label, title, titleHtml, className, ...otherProps }: TabLabelProps) {
+function TabLabel({ label, title, titleHtml, hideTitle, className, ...otherProps }: TabLabelProps) {
   return (
     <TabImpl
       className={clsx(
@@ -23,6 +24,7 @@ function TabLabel({ label, title, titleHtml, className, ...otherProps }: TabLabe
       data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
       data-tooltip-html={titleHtml}
       data-tooltip-content={title}
+      data-tooltip-hidden={hideTitle}
       {...otherProps}
     >
       {label}

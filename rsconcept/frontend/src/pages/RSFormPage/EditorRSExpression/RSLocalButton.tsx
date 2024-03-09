@@ -1,23 +1,25 @@
 import clsx from 'clsx';
 
+import { CProps } from '@/components/props';
 import { TokenID } from '@/models/rslang';
 import { globalIDs } from '@/utils/constants';
 
-interface RSLocalButtonProps {
+interface RSLocalButtonProps extends CProps.Titled {
   text: string;
-  title: string;
   disabled?: boolean;
   onInsert: (token: TokenID, key?: string) => void;
 }
 
-function RSLocalButton({ text, title, disabled, onInsert }: RSLocalButtonProps) {
+function RSLocalButton({ text, title, titleHtml, hideTitle, disabled, onInsert }: RSLocalButtonProps) {
   return (
     <button
       type='button'
       tabIndex={-1}
       disabled={disabled}
-      data-tooltip-id={title ? globalIDs.tooltip : undefined}
+      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
+      data-tooltip-html={titleHtml}
       data-tooltip-content={title}
+      data-tooltip-hidden={hideTitle}
       className={clsx(
         'w-[1.7rem] sm:w-[2rem] h-5 sm:h-6',
         'cursor-pointer disabled:cursor-default',

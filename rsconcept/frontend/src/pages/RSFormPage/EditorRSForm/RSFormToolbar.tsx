@@ -9,6 +9,7 @@ import HelpButton from '@/components/Help/HelpButton';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { HelpTopic } from '@/models/miscellaneous';
+import { prepareTooltip } from '@/utils/labels';
 
 import { useRSEdit } from '../RSEditContext';
 
@@ -28,7 +29,7 @@ function RSFormToolbar({ modified, anonymous, subscribed, claimable, onSubmit, o
     <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex'>
       {controller.isContentEditable || controller.isProcessing ? (
         <MiniButton
-          title='Сохранить изменения [Ctrl + S]'
+          titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
           disabled={!canSave}
           icon={<FiSave size='1.25rem' className='icon-primary' />}
           onClick={onSubmit}
@@ -46,7 +47,7 @@ function RSFormToolbar({ modified, anonymous, subscribed, claimable, onSubmit, o
       />
       {!anonymous ? (
         <MiniButton
-          title={`Отслеживание ${subscribed ? 'включено' : 'выключено'}`}
+          titleHtml={`Отслеживание <b>${subscribed ? 'включено' : 'выключено'}</b>`}
           disabled={controller.isProcessing}
           icon={
             subscribed ? (
