@@ -3,7 +3,8 @@ This list only contains global tech refactorings and tech debt
 For more specific TODOs see comments in code
 
 [Functionality]
-- home page
+- landing page
+- home page (user specific)
 - export PDF
 - bug report form
 - блок нотификаций пользователей
@@ -21,6 +22,8 @@ For more specific TODOs see comments in code
 
 - draggable rows in constituents table
 - Clickable IDs in RSEditor tooltips
+
+- ARIA (accessibility considerations) - for now machine reading not supported
 
 
 [Tech]
