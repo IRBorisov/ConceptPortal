@@ -177,7 +177,7 @@ function FormConstituenta({
           placeholder='Договоренность об интерпретации или пояснение'
           value={convention}
           disabled={!isMutable}
-          rows={convention.length > ROW_SIZE_IN_CHARACTERS ? 3 : 2}
+          rows={2 * convention.length > ROW_SIZE_IN_CHARACTERS ? 3 : 2}
           onChange={event => setConvention(event.target.value)}
         />
         {isMutable || processing ? (

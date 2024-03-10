@@ -2,7 +2,7 @@
 
 import { useCallback, useLayoutEffect, useMemo, useRef } from 'react';
 
-import GraphUI, { GraphCanvasRef, GraphEdge, GraphNode, LayoutTypes, Sphere, useSelection } from '@/components/GraphUI';
+import GraphUI, { GraphCanvasRef, GraphEdge, GraphNode, LayoutTypes, useSelection } from '@/components/GraphUI';
 import { useConceptTheme } from '@/context/ThemeContext';
 import { graphDarkT, graphLightT } from '@/styling/color';
 import { resources } from '@/utils/constants';
@@ -126,7 +126,6 @@ function TermGraph({
           }
           labelFontUrl={resources.graph_font}
           theme={darkMode ? graphDarkT : graphLightT}
-          renderNode={({ node, ...rest }) => <Sphere {...rest} node={node} />}
         />
       </div>
     </div>
