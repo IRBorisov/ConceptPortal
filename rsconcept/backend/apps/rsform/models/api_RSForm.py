@@ -1,54 +1,25 @@
-''' Models: RSForms for conceptual schemas. '''
+''' Models: RSForm API. '''
 import re
+
 from typing import Iterable, Optional, cast
 
 from django.db import transaction
-from django.db.models import (
-    CASCADE, SET_NULL, ForeignKey, Model, PositiveIntegerField, QuerySet,
-    TextChoices, TextField, BooleanField, CharField, DateTimeField, JSONField
-)
-from django.core.validators import MinValueValidator
+from django.db.models import QuerySet
 from django.core.exceptions import ValidationError
-from django.urls import reverse
 
-from apps.users.models import User
 from cctext import Resolver, Entity, extract_entities, split_grams, TermForm
-from .graph import Graph
-from .utils import apply_pattern
-from . import messages as msg
+from .LibraryItem import LibraryItem, LibraryItemType
+from .Constituenta import CstType, Constituenta
+from .Version import Version
+
+from ..graph import Graph
+from ..utils import apply_pattern
+from .. import messages as msg
 
 
 _REF_ENTITY_PATTERN = re.compile(r'@{([^0-9\-].*?)\|.*?}')
 _GLOBAL_ID_PATTERN = re.compile(r'([XCSADFPT][0-9]+)') # cspell:disable-line
 
-
-class LibraryItemType(TextChoices):
-    ''' Type of library items '''
-    RSFORM = 'rsform'
-    OPERATIONS_SCHEMA = 'oss'
-
-
-class CstType(TextChoices):
-    ''' Type of constituenta '''
-    BASE = 'basic'
-    CONSTANT = 'constant'
-    STRUCTURED = 'structure'
-    AXIOM = 'axiom'
-    TERM = 'term'
-    FUNCTION = 'function'
-    PREDICATE = 'predicate'
-    THEOREM = 'theorem'
-
-
-class Syntax(TextChoices):
-    ''' Syntax types '''
-    UNDEF = 'undefined'
-    ASCII = 'ascii'
-    MATH = 'math'
-
-
-def _empty_forms():
-    return []
 
 def _get_type_prefix(cst_type: CstType) -> str:
     ''' Get alias prefix. '''
@@ -71,244 +42,8 @@ def _get_type_prefix(cst_type: CstType) -> str:
     return 'X'
 
 
-class LibraryItem(Model):
-    ''' Abstract library item.'''
-    item_type: CharField = CharField(
-        verbose_name='Тип',
-        max_length=50,
-        choices=LibraryItemType.choices
-    )
-    owner: ForeignKey = ForeignKey(
-        verbose_name='Владелец',
-        to=User,
-        on_delete=SET_NULL,
-        null=True
-    )
-    title: TextField = TextField(
-        verbose_name='Название'
-    )
-    alias: CharField = CharField(
-        verbose_name='Шифр',
-        max_length=255,
-        blank=True
-    )
-    comment: TextField = TextField(
-        verbose_name='Комментарий',
-        blank=True
-    )
-    is_common: BooleanField = BooleanField(
-        verbose_name='Общая',
-        default=False
-    )
-    is_canonical: BooleanField = BooleanField(
-        verbose_name='Каноничная',
-        default=False
-    )
-    time_create: DateTimeField = DateTimeField(
-        verbose_name='Дата создания',
-        auto_now_add=True
-    )
-    time_update: DateTimeField = DateTimeField(
-        verbose_name='Дата изменения',
-        auto_now=True
-    )
-
-    class Meta:
-        ''' Model metadata. '''
-        verbose_name = 'Схема'
-        verbose_name_plural = 'Схемы'
-
-    def __str__(self) -> str:
-        return f'{self.title}'
-
-    def get_absolute_url(self):
-        return f'/api/library/{self.pk}'
-
-    def subscribers(self) -> list[User]:
-        ''' Get all subscribers for this item. '''
-        return [subscription.user for subscription in Subscription.objects.filter(item=self.pk)]
-
-    def versions(self) -> list['Version']:
-        ''' Get all Versions of this item. '''
-        return list(Version.objects.filter(item=self.pk).order_by('-time_create'))
-
-    @transaction.atomic
-    def save(self, *args, **kwargs):
-        subscribe = not self.pk and self.owner
-        super().save(*args, **kwargs)
-        if subscribe:
-            Subscription.subscribe(user=self.owner, item=self)
-
-
-class LibraryTemplate(Model):
-    ''' Template for library items and constituents. '''
-    lib_source: ForeignKey = ForeignKey(
-        verbose_name='Источник',
-        to=LibraryItem,
-        on_delete=CASCADE,
-        null=True
-    )
-
-    class Meta:
-        ''' Model metadata. '''
-        verbose_name = 'Шаблон'
-        verbose_name_plural = 'Шаблоны'
-
-
-class Version(Model):
-    ''' Library item version archive. '''
-    item: ForeignKey = ForeignKey(
-        verbose_name='Схема',
-        to=LibraryItem,
-        on_delete=CASCADE
-    )
-    version = CharField(
-        verbose_name='Версия',
-        max_length=20,
-        blank=False
-    )
-    description: TextField = TextField(
-        verbose_name='Описание',
-        blank=True
-    )
-    data: JSONField = JSONField(
-        verbose_name='Содержание'
-    )
-    time_create: DateTimeField = DateTimeField(
-        verbose_name='Дата создания',
-        auto_now_add=True
-    )
-
-    class Meta:
-        ''' Model metadata. '''
-        verbose_name = 'Версии'
-        verbose_name_plural = 'Версия'
-        unique_together = [['item', 'version']]
-
-    def __str__(self) -> str:
-        return f'{self.item} v{self.version}'
-
-
-class Subscription(Model):
-    ''' User subscription to library item. '''
-    user: ForeignKey = ForeignKey(
-        verbose_name='Пользователь',
-        to=User,
-        on_delete=CASCADE
-    )
-    item: ForeignKey = ForeignKey(
-        verbose_name='Элемент',
-        to=LibraryItem,
-        on_delete=CASCADE
-    )
-
-    class Meta:
-        ''' Model metadata. '''
-        verbose_name = 'Подписки'
-        verbose_name_plural = 'Подписка'
-        unique_together = [['user', 'item']]
-
-    def __str__(self) -> str:
-        return f'{self.user} -> {self.item}'
-
-    @staticmethod
-    def subscribe(user: User, item: LibraryItem) -> bool:
-        ''' Add subscription. '''
-        if Subscription.objects.filter(user=user, item=item).exists():
-            return False
-        Subscription.objects.create(user=user, item=item)
-        return True
-
-    @staticmethod
-    def unsubscribe(user: User, item: LibraryItem) -> bool:
-        ''' Remove subscription. '''
-        sub = Subscription.objects.filter(user=user, item=item)
-        if not sub.exists():
-            return False
-        sub.delete()
-        return True
-
-
-class Constituenta(Model):
-    ''' Constituenta is the base unit for every conceptual schema '''
-    schema: ForeignKey = ForeignKey(
-        verbose_name='Концептуальная схема',
-        to=LibraryItem,
-        on_delete=CASCADE
-    )
-    order: PositiveIntegerField = PositiveIntegerField(
-        verbose_name='Позиция',
-        validators=[MinValueValidator(1)],
-        default=-1,
-    )
-    alias: CharField = CharField(
-        verbose_name='Имя',
-        max_length=8,
-        default='undefined'
-    )
-    cst_type: CharField = CharField(
-        verbose_name='Тип',
-        max_length=10,
-        choices=CstType.choices,
-        default=CstType.BASE
-    )
-    convention: TextField = TextField(
-        verbose_name='Комментарий/Конвенция',
-        default='',
-        blank=True
-    )
-    term_raw: TextField = TextField(
-        verbose_name='Термин (с отсылками)',
-        default='',
-        blank=True
-    )
-    term_resolved: TextField = TextField(
-        verbose_name='Термин',
-        default='',
-        blank=True
-    )
-    term_forms: JSONField = JSONField(
-        verbose_name='Словоформы',
-        default=_empty_forms
-    )
-    definition_formal: TextField = TextField(
-        verbose_name='Родоструктурное определение',
-        default='',
-        blank=True
-    )
-    definition_raw: TextField = TextField(
-        verbose_name='Текстовое определение (с отсылками)',
-        default='',
-        blank=True
-    )
-    definition_resolved: TextField = TextField(
-        verbose_name='Текстовое определение',
-        default='',
-        blank=True
-    )
-
-    class Meta:
-        ''' Model metadata. '''
-        verbose_name = 'Конституента'
-        verbose_name_plural = 'Конституенты'
-
-    def get_absolute_url(self):
-        ''' URL access. '''
-        return reverse('constituenta-detail', kwargs={'pk': self.pk})
-
-    def __str__(self) -> str:
-        return f'{self.alias}'
-
-    def set_term_resolved(self, new_term: str):
-        ''' Set term and reset forms if needed. '''
-        if new_term == self.term_resolved:
-            return
-        self.term_resolved = new_term
-        self.term_forms = []
-
-
 class RSForm:
-    ''' RSForm is a math form of capturing conceptual schema. '''
+    ''' RSForm is math form of conceptual schema. '''
     def __init__(self, item: LibraryItem):
         if item.item_type != LibraryItemType.RSFORM:
             raise ValueError(msg.libraryTypeUnexpected())
