@@ -650,25 +650,25 @@ export function describeRSError(error: IRSErrorDescription): string {
     case RSErrorType.globalNotTyped:
       return `Типизация конституенты не определена: ${error.params[0]}`;
     case RSErrorType.invalidDecart:
-      return `τ(α×b) = ℬ(𝔇τ(α)×𝔇τ(b)). Некорректная типизация аргумента: ${error.params[0]}`;
+      return `τ(α×b) = B(Dτ(α)×Dτ(b)). Некорректная типизация аргумента: ${error.params[0]}`;
     case RSErrorType.invalidBoolean:
-      return `τ(ℬ(a)) = ℬℬ𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
+      return `τ(B(a)) = BBDτ(a). Некорректная типизация аргумента: ${error.params[0]}`;
     case RSErrorType.invalidTypeOperation:
       return `Типизация операнда теоретико-множественной операции не корректна: ${error.params[0]}`;
     case RSErrorType.invalidCard:
       return `Некорректная типизация аргумента операции мощности: ${error.params[0]}`;
     case RSErrorType.invalidDebool:
-      return `τ(debool(a)) = 𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
+      return `τ(debool(a)) = Dτ(a). Некорректная типизация аргумента: ${error.params[0]}`;
     case RSErrorType.globalFuncMissing:
       return `Неизвестное имя функции: ${error.params[0]}`;
     case RSErrorType.globalFuncWithoutArgs:
       return `Некорректное использование имени функции без аргументов: ${error.params[0]}`;
     case RSErrorType.invalidReduce:
-      return `τ(red(a)) = ℬ𝔇𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
+      return `τ(red(a)) = BDDτ(a). Некорректная типизация аргумента: ${error.params[0]}`;
     case RSErrorType.invalidProjectionTuple:
       return `Проекция не определена: ${error.params[0]} -> ${error.params[1]}`;
     case RSErrorType.invalidProjectionSet:
-      return `τ(Pri(a)) = ℬ𝒞i𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
+      return `τ(Pri(a)) = BCiDτ(a). Некорректная типизация аргумента: ${error.params[0]}`;
     case RSErrorType.invalidEnumeration:
       return `Типизация аргументов перечисления не совпадает: ${error.params[0]} != ${error.params[1]}`;
     case RSErrorType.invalidBinding:
