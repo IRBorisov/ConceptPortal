@@ -6,6 +6,7 @@ import { FiSave } from 'react-icons/fi';
 import { LuGitBranchPlus, LuPencilLine } from 'react-icons/lu';
 import { toast } from 'react-toastify';
 
+import HelpButton from '@/components/Help/HelpButton';
 import Checkbox from '@/components/ui/Checkbox';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
@@ -17,6 +18,7 @@ import VersionSelector from '@/components/VersionSelector';
 import { useAuth } from '@/context/AuthContext';
 import { useRSForm } from '@/context/RSFormContext';
 import { LibraryItemType } from '@/models/library';
+import { HelpTopic } from '@/models/miscellaneous';
 import { IRSFormCreateData } from '@/models/rsform';
 import { classnames, limits, patterns } from '@/utils/constants';
 
@@ -117,24 +119,27 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
           onChange={event => setAlias(event.target.value)}
         />
         <div className='flex flex-col'>
-          {controller.isMutable || controller.isProcessing ? (
-            <Overlay position='top-[-0.25rem] right-[-0.25rem] flex'>
-              <MiniButton
-                noHover
-                title={controller.isContentEditable ? 'Создать версию' : 'Переключитесь на актуальную версию'}
-                disabled={!controller.isContentEditable}
-                onClick={controller.createVersion}
-                icon={<LuGitBranchPlus size='1.25rem' className='icon-green' />}
-              />
-              <MiniButton
-                noHover
-                title='Редактировать версии'
-                disabled={!schema || schema?.versions.length === 0}
-                onClick={controller.editVersions}
-                icon={<LuPencilLine size='1.25rem' className='icon-primary' />}
-              />
-            </Overlay>
-          ) : null}
+          <Overlay position='top-[-0.25rem] right-[-0.25rem] flex'>
+            {controller.isMutable || controller.isProcessing ? (
+              <>
+                <MiniButton
+                  noHover
+                  title={controller.isContentEditable ? 'Создать версию' : 'Переключитесь на актуальную версию'}
+                  disabled={!controller.isContentEditable}
+                  onClick={controller.createVersion}
+                  icon={<LuGitBranchPlus size='1.25rem' className='icon-green' />}
+                />
+                <MiniButton
+                  noHover
+                  title='Редактировать версии'
+                  disabled={!schema || schema?.versions.length === 0}
+                  onClick={controller.editVersions}
+                  icon={<LuPencilLine size='1.25rem' className='icon-primary' />}
+                />
+              </>
+            ) : null}
+            <HelpButton topic={HelpTopic.VERSIONS} className='max-w-[30rem]' offset={4} />
+          </Overlay>
           <Label text='Версия' className='mb-2' />
           <VersionSelector
             value={schema?.version} // prettier: split lines

@@ -12,6 +12,7 @@ import HelpRSLang from './Help/HelpRSLang';
 import HelpRSTemplates from './Help/HelpRSTemplates';
 import HelpTermGraph from './Help/HelpTermGraph';
 import HelpTerminologyControl from './Help/HelpTerminologyControl';
+import HelpVersions from './Help/HelpVersions';
 
 interface InfoTopicProps {
   topic: HelpTopic;
@@ -27,6 +28,7 @@ function InfoTopic({ topic }: InfoTopicProps) {
   if (topic === HelpTopic.RSTEMPLATES) return <HelpRSTemplates />;
   if (topic === HelpTopic.RSLANG) return <HelpRSLang />;
   if (topic === HelpTopic.TERM_CONTROL) return <HelpTerminologyControl />;
+  if (topic === HelpTopic.VERSIONS) return <HelpVersions />;
   if (topic === HelpTopic.EXTEOR) return <HelpExteor />;
   if (topic === HelpTopic.API) return <HelpAPI />;
   if (topic === HelpTopic.PRIVACY) return <HelpPrivacy />;

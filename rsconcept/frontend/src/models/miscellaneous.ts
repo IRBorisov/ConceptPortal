@@ -41,6 +41,7 @@ export enum HelpTopic {
   RSTEMPLATES = 'rstemplates',
   RSLANG = 'rslang',
   TERM_CONTROL = 'terminology-control',
+  VERSIONS = 'versions',
   EXTEOR = 'exteor',
   API = 'api',
   PRIVACY = 'privacy'

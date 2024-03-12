@@ -345,6 +345,7 @@ export function labelHelpTopic(topic: HelpTopic): string {
     case HelpTopic.RSTEMPLATES:   return '- Банк выражений';
     case HelpTopic.RSLANG:        return 'Экспликация';
     case HelpTopic.TERM_CONTROL:  return 'Терминологизация';
+    case HelpTopic.VERSIONS:      return 'Версионирование';
     case HelpTopic.EXTEOR:        return 'Экстеор';
     case HelpTopic.API:           return 'REST API';
     case HelpTopic.PRIVACY:       return 'Конфиденциальность';
@@ -366,6 +367,7 @@ export function describeHelpTopic(topic: HelpTopic): string {
     case HelpTopic.RSTEMPLATES:   return 'Описание работы с Банком выражений>';
     case HelpTopic.RSLANG:        return 'Справка по языку родов структур и экспликации';
     case HelpTopic.TERM_CONTROL:  return 'Справка по контролю терминов и текстовым отсылкам';
+    case HelpTopic.VERSIONS:      return 'Справка по управлению версиями схем';
     case HelpTopic.EXTEOR:        return 'Справка по программе для экспликации "Экстеор" для Windows';
     case HelpTopic.API:           return 'Описание интерфейса для разработчиков';
     case HelpTopic.PRIVACY:       return 'Политика обработки персональных данных';
