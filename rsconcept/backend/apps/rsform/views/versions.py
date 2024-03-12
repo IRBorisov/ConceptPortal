@@ -99,7 +99,7 @@ def retrieve_version(request: Request, pk_item: int, pk_version: int):
 
 @extend_schema(
         summary='export versioned data as file',
-        tags=['Versions'],
+        tags=['Version'],
         request=None,
         responses={
             (c.HTTP_200_OK, 'application/zip'): bytes,

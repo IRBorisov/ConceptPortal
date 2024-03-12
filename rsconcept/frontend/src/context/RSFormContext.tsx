@@ -263,7 +263,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
   const download = useCallback(
     (callback: DataCallback<Blob>) => {
       setError(undefined);
-      getTRSFile(schemaID, String(schema?.version) ?? '', {
+      getTRSFile(schemaID, String(schema?.version ?? ''), {
         showError: true,
         setLoading: setProcessing,
         onError: setError,
