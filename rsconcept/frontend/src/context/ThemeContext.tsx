@@ -27,6 +27,8 @@ interface IThemeContext {
 
   showScroll: boolean;
   setShowScroll: (value: boolean) => void;
+
+  calculateHeight: (offset: string) => string;
 }
 
 const ThemeContext = createContext<IThemeContext | null>(null);
@@ -78,12 +80,25 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
     }
   }, [noNavigation]);
 
+  const calculateHeight = useCallback(
+    (offset: string) => {
+      if (noNavigation) {
+        return `calc(100vh - (${offset}))`;
+      } else if (noFooter) {
+        return `calc(100vh - 3rem - (${offset}))`;
+      } else {
+        return `calc(100vh - 6.75rem - (${offset}))`;
+      }
+    },
+    [noNavigation, noFooter]
+  );
+
   const mainHeight = useMemo(() => {
-    return !noNavigation ? 'calc(100vh - 7rem - 2px)' : '100vh';
+    return !noNavigation ? 'calc(100vh - 6.75rem)' : '100vh';
   }, [noNavigation]);
 
   const viewportHeight = useMemo(() => {
-    return !noNavigation ? 'calc(100vh - 3rem - 2px)' : '100vh';
+    return !noNavigation ? 'calc(100vh - 3rem)' : '100vh';
   }, [noNavigation]);
 
   return (
@@ -100,7 +115,8 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
         setNoFooter,
         setShowScroll,
         viewportHeight,
-        mainHeight
+        mainHeight,
+        calculateHeight
       }}
     >
       <>

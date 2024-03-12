@@ -37,9 +37,9 @@ function RSTabs() {
   const version = Number(query.get('v')) ?? undefined;
   const cstQuery = query.get('active');
 
+  const { setNoFooter, calculateHeight } = useConceptTheme();
   const { schema, loading } = useRSForm();
   const { destroyItem } = useLibrary();
-  const { setNoFooter } = useConceptTheme();
 
   const [isModified, setIsModified] = useState(false);
   useBlockNavigation(isModified);
@@ -155,6 +155,8 @@ function RSTabs() {
     });
   }, [schema, destroyItem, router]);
 
+  const panelHeight = useMemo(() => calculateHeight('1.75rem + 4px'), [calculateHeight]);
+
   return (
     <RSEditState
       selected={selected}
@@ -187,7 +189,7 @@ function RSTabs() {
             <TabLabel label='Граф термов' />
           </TabList>
 
-          <AnimateFade>
+          <AnimateFade className='overflow-y-auto' style={{ maxHeight: panelHeight }}>
             <TabPanel forceRender style={{ display: activeTab === RSTabID.CARD ? '' : 'none' }}>
               <EditorRSForm
                 isModified={isModified} // prettier: split lines

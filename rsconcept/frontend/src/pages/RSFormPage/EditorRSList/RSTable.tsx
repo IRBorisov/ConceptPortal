@@ -30,7 +30,7 @@ const COLUMN_CONVENTION_HIDE_THRESHOLD = 1800;
 const columnHelper = createColumnHelper<IConstituenta>();
 
 function RSTable({ items, enableSelection, selected, setSelected, onEdit, onCreateNew }: RSTableProps) {
-  const { colors, noNavigation } = useConceptTheme();
+  const { colors, calculateHeight } = useConceptTheme();
   const windowSize = useWindowSize();
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -115,9 +115,7 @@ function RSTable({ items, enableSelection, selected, setSelected, onEdit, onCrea
     [colors]
   );
 
-  const tableHeight = useMemo(() => {
-    return !noNavigation ? 'calc(100vh - 7.2rem - 4px)' : 'calc(100vh - 4.4rem - 4px)';
-  }, [noNavigation]);
+  const tableHeight = useMemo(() => calculateHeight('4.05rem + 5px'), [calculateHeight]);
 
   return (
     <DataTable

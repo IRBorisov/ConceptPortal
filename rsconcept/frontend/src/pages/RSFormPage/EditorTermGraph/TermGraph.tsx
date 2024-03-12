@@ -39,7 +39,7 @@ function TermGraph({
   onSelect,
   onDeselectAll
 }: TermGraphProps) {
-  const { noNavigation, darkMode } = useConceptTheme();
+  const { calculateHeight, darkMode } = useConceptTheme();
   const graphRef = useRef<GraphCanvasRef | null>(null);
 
   const { selections, actives, setSelections, onCanvasClick, onNodePointerOver, onNodePointerOut } = useSelection({
@@ -101,9 +101,7 @@ function TermGraph({
     return 'calc(100vw - 1rem)';
   }, []);
 
-  const canvasHeight = useMemo(() => {
-    return !noNavigation ? 'calc(100vh - 9.8rem - 4px)' : 'calc(100vh - 3rem - 4px)';
-  }, [noNavigation]);
+  const canvasHeight = useMemo(() => calculateHeight('1.75rem + 4px'), [calculateHeight]);
 
   return (
     <div className='outline-none'>
