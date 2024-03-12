@@ -1,10 +1,18 @@
 ''' Models: Constituenta. '''
+import re
+
 from django.db.models import (
     CASCADE, ForeignKey, Model, PositiveIntegerField,
     TextChoices, TextField, CharField, JSONField
 )
 from django.core.validators import MinValueValidator
 from django.urls import reverse
+
+from ..utils import apply_pattern
+
+
+_REF_ENTITY_PATTERN = re.compile(r'@{([^0-9\-].*?)\|.*?}')
+_GLOBAL_ID_PATTERN = re.compile(r'([XCSADFPT][0-9]+)') # cspell:disable-line
 
 
 class CstType(TextChoices):
@@ -99,3 +107,26 @@ class Constituenta(Model):
             return
         self.term_resolved = new_term
         self.term_forms = []
+
+    def apply_mapping(self, mapping: dict[str, str], change_aliases: bool = False):
+        modified = False
+        if change_aliases and self.alias in mapping:
+            modified = True
+            self.alias = mapping[self.alias]
+        expression = apply_pattern(self.definition_formal, mapping, _GLOBAL_ID_PATTERN)
+        if expression != self.definition_formal:
+            modified = True
+            self.definition_formal = expression
+        convention = apply_pattern(self.convention, mapping, _GLOBAL_ID_PATTERN)
+        if convention != self.convention:
+            modified = True
+            self.convention = convention
+        term = apply_pattern(self.term_raw, mapping, _REF_ENTITY_PATTERN)
+        if term != self.term_raw:
+            modified = True
+            self.term_raw = term
+        definition = apply_pattern(self.definition_raw, mapping, _REF_ENTITY_PATTERN)
+        if definition != self.definition_raw:
+            modified = True
+            self.definition_raw = definition
+        return modified

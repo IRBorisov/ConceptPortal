@@ -1,6 +1,4 @@
 ''' Models: RSForm API. '''
-import re
-
 from typing import Iterable, Optional, cast
 
 from django.db import transaction
@@ -13,12 +11,7 @@ from .Constituenta import CstType, Constituenta
 from .Version import Version
 
 from ..graph import Graph
-from ..utils import apply_pattern
 from .. import messages as msg
-
-
-_REF_ENTITY_PATTERN = re.compile(r'@{([^0-9\-].*?)\|.*?}')
-_GLOBAL_ID_PATTERN = re.compile(r'([XCSADFPT][0-9]+)') # cspell:disable-line
 
 
 def _get_type_prefix(cst_type: CstType) -> str:
@@ -243,27 +236,7 @@ class RSForm:
         ''' Apply rename mapping. '''
         cst_list = self.constituents().order_by('order')
         for cst in cst_list:
-            modified = False
-            if change_aliases and cst.alias in mapping:
-                modified = True
-                cst.alias = mapping[cst.alias]
-            expression = apply_pattern(cst.definition_formal, mapping, _GLOBAL_ID_PATTERN)
-            if expression != cst.definition_formal:
-                modified = True
-                cst.definition_formal = expression
-            convention = apply_pattern(cst.convention, mapping, _GLOBAL_ID_PATTERN)
-            if convention != cst.convention:
-                modified = True
-                cst.convention = convention
-            term = apply_pattern(cst.term_raw, mapping, _REF_ENTITY_PATTERN)
-            if term != cst.term_raw:
-                modified = True
-                cst.term_raw = term
-            definition = apply_pattern(cst.definition_raw, mapping, _REF_ENTITY_PATTERN)
-            if definition != cst.definition_raw:
-                modified = True
-                cst.definition_raw = definition
-            if modified:
+            if cst.apply_mapping(mapping, change_aliases):
                 cst.save()
 
     @transaction.atomic
