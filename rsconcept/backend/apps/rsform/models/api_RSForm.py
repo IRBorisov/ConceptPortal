@@ -6,33 +6,13 @@ from django.db.models import QuerySet
 from django.core.exceptions import ValidationError
 
 from cctext import Resolver, Entity, extract_entities, split_grams, TermForm
+from .api_RSLanguage import get_type_prefix, generate_structure
 from .LibraryItem import LibraryItem, LibraryItemType
 from .Constituenta import CstType, Constituenta
 from .Version import Version
 
 from ..graph import Graph
 from .. import messages as msg
-
-
-def _get_type_prefix(cst_type: CstType) -> str:
-    ''' Get alias prefix. '''
-    if cst_type == CstType.BASE:
-        return 'X'
-    if cst_type == CstType.CONSTANT:
-        return 'C'
-    if cst_type == CstType.STRUCTURED:
-        return 'S'
-    if cst_type == CstType.AXIOM:
-        return 'A'
-    if cst_type == CstType.TERM:
-        return 'D'
-    if cst_type == CstType.FUNCTION:
-        return 'F'
-    if cst_type == CstType.PREDICATE:
-        return 'P'
-    if cst_type == CstType.THEOREM:
-        return 'T'
-    return 'X'
 
 
 class RSForm:
@@ -95,6 +75,17 @@ class RSForm:
             cst.definition_resolved = resolved
             cst.save()
 
+    def get_max_index(self, cst_type: CstType) -> int:
+        ''' Get maximum alias index for specific CstType '''
+        result: int = 1
+        items = Constituenta.objects \
+            .filter(schema=self.item, cst_type=cst_type) \
+            .order_by('-alias') \
+            .values_list('alias', flat=True)
+        for alias in items:
+            result = max(result, int(alias[1:]))
+        return result
+
     @transaction.atomic
     def insert_at(self, position: int, alias: str, insert_type: CstType) -> 'Constituenta':
         ''' Insert new constituenta at given position.
@@ -105,13 +96,7 @@ class RSForm:
             raise ValidationError(msg.renameTaken(alias))
         currentSize = self.constituents().count()
         position =  max(1, min(position, currentSize + 1))
-        update_list = \
-            Constituenta.objects \
-                .only('id', 'order', 'schema') \
-                .filter(schema=self.item, order__gte=position)
-        for cst in update_list:
-            cst.order += 1
-        Constituenta.objects.bulk_update(update_list, ['order'])
+        self._shift_positions(position, 1)
 
         result = Constituenta.objects.create(
             schema=self.item,
@@ -225,7 +210,7 @@ class RSForm:
             bases[cst_type] = 1
         cst_list = self.constituents().order_by('order')
         for cst in cst_list:
-            alias = f'{_get_type_prefix(cst.cst_type)}{bases[cst.cst_type]}'
+            alias = f'{get_type_prefix(cst.cst_type)}{bases[cst.cst_type]}'
             bases[cst.cst_type] += 1
             if cst.alias != alias:
                 mapping[cst.alias] = alias
@@ -266,6 +251,50 @@ class RSForm:
             description=description,
             data=data
         )
+
+    @transaction.atomic
+    def produce_structure(self, target: Constituenta, parse: dict) -> list[int]:
+        ''' Add constituents for each structural element of the target. '''
+        expressions = generate_structure(
+            alias=target.alias,
+            expression=target.definition_formal,
+            parse=parse
+        )
+        count_new = len(expressions)
+        if count_new == 0:
+            return []
+        position = target.order + 1
+        self._shift_positions(position, count_new)
+
+        result = []
+        cst_type = CstType.TERM if len(parse['args']) == 0 else CstType.FUNCTION
+        free_index = self.get_max_index(cst_type) + 1
+        prefix = get_type_prefix(cst_type)
+        for text in expressions:
+            new_item = Constituenta.objects.create(
+                schema=self.item,
+                order=position,
+                alias=f'{prefix}{free_index}',
+                definition_formal=text,
+                cst_type=cst_type
+            )
+            result.append(new_item.id)
+            free_index = free_index + 1
+            position = position + 1
+
+        self.item.save()
+        return result
+
+    def _shift_positions(self, start: int, shift: int):
+        if shift == 0:
+            return
+        update_list = \
+            Constituenta.objects \
+                .only('id', 'order', 'schema') \
+                .filter(schema=self.item, order__gte=start)
+        for cst in update_list:
+            cst.order += shift
+        Constituenta.objects.bulk_update(update_list, ['order'])
 
     @transaction.atomic
     def _reset_order(self):

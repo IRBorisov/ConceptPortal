@@ -19,6 +19,9 @@ def renameTaken(name: str):
 def pyconceptFailure():
     return 'Invalid data response from pyconcept'
 
+def typificationInvalidStr():
+    return 'Invalid typification string'
+
 def libraryTypeUnexpected():
     return 'Attempting to use invalid adaptor for non-RSForm item'
 
@@ -27,3 +30,6 @@ def exteorFileVersionNotSupported():
 
 def positionNegative():
     return 'Invalid position: should be positive integer'
+
+def constituentaNoStructure():
+    return 'Указанная конституента не обладает теоретико-множественной типизацией'

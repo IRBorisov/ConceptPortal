@@ -3,28 +3,17 @@ import re
 
 from django.db.models import (
     CASCADE, ForeignKey, Model, PositiveIntegerField,
-    TextChoices, TextField, CharField, JSONField
+    TextField, CharField, JSONField
 )
 from django.core.validators import MinValueValidator
 from django.urls import reverse
 
+from .api_RSLanguage import CstType
 from ..utils import apply_pattern
 
 
 _REF_ENTITY_PATTERN = re.compile(r'@{([^0-9\-].*?)\|.*?}')
 _GLOBAL_ID_PATTERN = re.compile(r'([XCSADFPT][0-9]+)') # cspell:disable-line
-
-
-class CstType(TextChoices):
-    ''' Type of constituenta '''
-    BASE = 'basic'
-    CONSTANT = 'constant'
-    STRUCTURED = 'structure'
-    AXIOM = 'axiom'
-    TERM = 'term'
-    FUNCTION = 'function'
-    PREDICATE = 'predicate'
-    THEOREM = 'theorem'
 
 
 def _empty_forms():

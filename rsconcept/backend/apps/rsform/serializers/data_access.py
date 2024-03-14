@@ -6,8 +6,22 @@ from .basics import ConstituentaID, CstParseSerializer
 
 from .io_pyconcept import PyConceptAdapter
 
-from ..models import Constituenta, LibraryItem, RSForm, Version
+from ..models import Constituenta, LibraryItem, RSForm, Version, CstType
 from .. import messages as msg
+
+
+def _try_access_constituenta(item_id: str, schema: LibraryItem) -> Constituenta:
+    try:
+        cst = Constituenta.objects.get(pk=item_id)
+    except Constituenta.DoesNotExist as exception:
+        raise serializers.ValidationError({
+            f'{item_id}': msg.constituentaNotExists()
+        }) from exception
+    if cst.schema != schema:
+        raise serializers.ValidationError({
+            f'{item_id}': msg.constituentaNotOwned(schema.title)
+        })
+    return cst
 
 
 class LibraryItemSerializer(serializers.ModelSerializer):
@@ -105,6 +119,24 @@ class CstCreateSerializer(serializers.ModelSerializer):
             'insert_after', 'term_forms'
 
 
+class CstStructuredSerializer(serializers.ModelSerializer):
+    ''' Serializer: Constituenta structure production. '''
+    class Meta:
+        ''' serializer metadata. '''
+        model = Constituenta
+        fields = ('id',)
+
+    def validate(self, attrs):
+        schema = cast(LibraryItem, self.context['schema'])
+        cst = _try_access_constituenta(self.initial_data['id'], schema)
+        if cst.cst_type not in [CstType.FUNCTION, CstType.STRUCTURED, CstType.TERM]:
+            raise serializers.ValidationError({
+                f'{cst.id}': msg.constituentaNoStructure()
+            })
+        self.instance = cst
+        return attrs
+
+
 class CstRenameSerializer(serializers.ModelSerializer):
     ''' Serializer: Constituenta renaming. '''
     class Meta:
@@ -113,23 +145,19 @@ class CstRenameSerializer(serializers.ModelSerializer):
         fields = 'id', 'alias', 'cst_type'
 
     def validate(self, attrs):
-        schema = cast(RSForm, self.context['schema'])
-        old_cst = Constituenta.objects.get(pk=self.initial_data['id'])
+        schema = cast(LibraryItem, self.context['schema'])
+        cst = _try_access_constituenta(self.initial_data['id'], schema)
         new_alias = self.initial_data['alias']
-        if old_cst.schema != schema.item:
-            raise serializers.ValidationError({
-                'id': msg.constituentaNotOwned(schema.item.title)
-            })
-        if old_cst.alias == new_alias:
+        if cst.alias == new_alias:
             raise serializers.ValidationError({
                 'alias': msg.renameTrivial(new_alias)
             })
-        if schema.constituents().filter(alias=new_alias).exists():
+        if RSForm(schema).constituents().filter(alias=new_alias).exists():
             raise serializers.ValidationError({
                 'alias': msg.renameTaken(new_alias)
             })
-        self.instance = old_cst
-        attrs['schema'] = schema.item
+        self.instance = cst
+        attrs['schema'] = schema
         attrs['id'] = self.initial_data['id']
         return attrs
 
@@ -227,20 +255,20 @@ class CstSubstituteSerializer(serializers.Serializer):
     transfer_term = serializers.BooleanField(required=False, default=False)
 
     def validate(self, attrs):
-        schema = cast(RSForm, self.context['schema'])
+        schema = cast(LibraryItem, self.context['schema'])
         original_cst = Constituenta.objects.get(pk=self.initial_data['original'])
         substitution_cst = Constituenta.objects.get(pk=self.initial_data['substitution'])
         if original_cst.alias == substitution_cst.alias:
             raise serializers.ValidationError({
                 'alias': msg.substituteTrivial(original_cst.alias)
             })
-        if original_cst.schema != schema.item:
+        if original_cst.schema != schema:
             raise serializers.ValidationError({
-                'original': msg.constituentaNotOwned(schema.item.title)
+                'original': msg.constituentaNotOwned(schema.title)
             })
-        if substitution_cst.schema != schema.item:
+        if substitution_cst.schema != schema:
             raise serializers.ValidationError({
-                'substitution': msg.constituentaNotOwned(schema.item.title)
+                'substitution': msg.constituentaNotOwned(schema.title)
             })
         attrs['original'] = original_cst
         attrs['substitution'] = substitution_cst
@@ -255,19 +283,10 @@ class CstListSerializer(serializers.Serializer):
     )
 
     def validate(self, attrs):
-        schema = self.context['schema']
+        schema = cast(LibraryItem, self.context['schema'])
         cstList = []
         for item in attrs['items']:
-            try:
-                cst = Constituenta.objects.get(pk=item)
-            except Constituenta.DoesNotExist as exception:
-                raise serializers.ValidationError({
-                    f'{item}': msg.constituentaNotExists
-                }) from exception
-            if cst.schema != schema.item:
-                raise serializers.ValidationError({
-                    f'{item}': msg.constituentaNotOwned(schema.item.title)
-                })
+            cst = _try_access_constituenta(item, schema)
             cstList.append(cst)
         attrs['constituents'] = cstList
         return attrs

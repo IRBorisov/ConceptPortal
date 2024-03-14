@@ -384,7 +384,7 @@ class TestRSFormViewset(APITestCase):
         )
         x2.refresh_from_db()
         schema.item.refresh_from_db()
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['items']), 1)
         self.assertEqual(schema.constituents().count(), 1)
         self.assertEqual(x2.alias, 'X2')
@@ -498,3 +498,88 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(response.data['items'][0]['term_resolved'], x1.term_resolved)
         self.assertEqual(response.data['items'][1]['term_raw'], d1.term_raw)
         self.assertEqual(response.data['items'][1]['term_resolved'], d1.term_resolved)
+
+    def test_produce_structure(self):
+        item = self.owned.item
+        x1 = Constituenta.objects.create(schema=item, alias='X1', cst_type='basic', order=1)
+        s1 = Constituenta.objects.create(schema=item, alias='S1', cst_type='structure', order=2)
+        s2 = Constituenta.objects.create(schema=item, alias='S2', cst_type='structure', order=3)
+        s3 = Constituenta.objects.create(schema=item, alias='S3', cst_type='structure', order=4)
+        a1 = Constituenta.objects.create(schema=item, alias='A1', cst_type='axiom', order=5)
+        f1 = Constituenta.objects.create(schema=item, alias='F10', cst_type='function', order=6)
+        invalid_id = f1.id + 1
+        s1.definition_formal = 'ℬ(X1×X1)' # ℬ(X1×X1)
+        s2.definition_formal = 'invalid'
+        s3.definition_formal = 'X1×(X1×ℬℬ(X1))×ℬ(X1×X1)'
+        a1.definition_formal = '1=1'
+        f1.definition_formal = '[α∈X1, β∈X1] Fi1[{α,β}](S1)'
+        s1.save()
+        s2.save()
+        s3.save()
+        a1.save()
+        f1.save()
+
+        data = {'id': invalid_id}
+        response = self.client.patch(
+            f'/api/rsforms/{item.id}/cst-produce-structure',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        data = {'id': x1.id}
+        response = self.client.patch(
+            f'/api/rsforms/{item.id}/cst-produce-structure',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        data = {'id': s2.id}
+        response = self.client.patch(
+            f'/api/rsforms/{item.id}/cst-produce-structure',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        # Testing simple structure
+        s1.refresh_from_db()
+        data = {'id': s1.id}
+        response = self.client.patch(
+            f'/api/rsforms/{item.id}/cst-produce-structure',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = response.data['schema']
+        items = [item for item in result['items'] if item['id'] in response.data['cst_list']]
+        self.assertEqual(len(items), 2)
+        self.assertEqual(items[0]['order'], s1.order + 1)
+        self.assertEqual(items[0]['definition_formal'], 'Pr1(S1)')
+        self.assertEqual(items[1]['order'], s1.order + 2)
+        self.assertEqual(items[1]['definition_formal'], 'Pr2(S1)')
+
+        # Testing complex structure
+        s3.refresh_from_db()
+        data = {'id': s3.id}
+        response = self.client.patch(
+            f'/api/rsforms/{item.id}/cst-produce-structure',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = response.data['schema']
+        items = [item for item in result['items'] if item['id'] in response.data['cst_list']]
+        self.assertEqual(len(items), 8)
+        self.assertEqual(items[0]['order'], s3.order + 1)
+        self.assertEqual(items[0]['definition_formal'], 'pr1(S3)')
+
+        # Testing function
+        f1.refresh_from_db()
+        data = {'id': f1.id}
+        response = self.client.patch(
+            f'/api/rsforms/{item.id}/cst-produce-structure',
+            data=data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = response.data['schema']
+        items = [item for item in result['items'] if item['id'] in response.data['cst_list']]
+        self.assertEqual(len(items), 2)
+        self.assertEqual(items[0]['order'], f1.order + 1)
+        self.assertEqual(items[0]['definition_formal'], '[α∈X1, β∈X1] Pr1(F10[α,β])')

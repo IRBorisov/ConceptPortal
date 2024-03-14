@@ -11,9 +11,11 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status as c
 
 import pyconcept
+
 from .. import models as m
 from .. import serializers as s
 from .. import utils
+from .. import messages as msg
 
 
 @extend_schema(tags=['RSForm'])
@@ -64,6 +66,38 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         return response
 
     @extend_schema(
+        summary='produce the structure of a given constituenta',
+        tags=['RSForm'],
+        request=s.CstStructuredSerializer,
+        responses={c.HTTP_200_OK: s.NewMultiCstResponse}
+    )
+    @action(detail=True, methods=['patch'], url_path='cst-produce-structure')
+    def produce_structure(self, request: Request, pk):
+        ''' Produce a term for every element of the target constituenta typification. '''
+        schema = self._get_schema()
+
+        serializer = s.CstStructuredSerializer(data=request.data, context={'schema': schema.item})
+        serializer.is_valid(raise_exception=True)
+        cst = cast(m.Constituenta, serializer.instance)
+
+        schema_details = s.RSFormParseSerializer(schema.item).data['items']
+        cst_parse = next(item for item in schema_details if item['id']==cst.id)['parse']
+        if not cst_parse['typification']:
+            return Response(
+            status=c.HTTP_400_BAD_REQUEST,
+            data={f'{cst.id}': msg.constituentaNoStructure()}
+        )
+
+        result = schema.produce_structure(cst, cst_parse)
+        return Response(
+            status=c.HTTP_200_OK,
+            data={
+                'cst_list': result,
+                'schema': s.RSFormParseSerializer(schema.item).data
+            }
+        )
+
+    @extend_schema(
         summary='rename constituenta',
         tags=['Constituenta'],
         request=s.CstRenameSerializer,
@@ -74,7 +108,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     def cst_rename(self, request: Request, pk):
         ''' Rename constituenta possibly changing type. '''
         schema = self._get_schema()
-        serializer = s.CstRenameSerializer(data=request.data, context={'schema': schema})
+        serializer = s.CstRenameSerializer(data=request.data, context={'schema': schema.item})
         serializer.is_valid(raise_exception=True)
         old_alias = m.Constituenta.objects.get(pk=request.data['id']).alias
         serializer.save()
@@ -92,7 +126,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
 
     @extend_schema(
         summary='substitute constituenta',
-        tags=['Constituenta'],
+        tags=['RSForm'],
         request=s.CstSubstituteSerializer,
         responses={c.HTTP_200_OK: s.RSFormParseSerializer}
     )
@@ -101,7 +135,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     def cst_substitute(self, request: Request, pk):
         ''' Substitute occurrences of constituenta with another one. '''
         schema = self._get_schema()
-        serializer = s.CstSubstituteSerializer(data=request.data, context={'schema': schema})
+        serializer = s.CstSubstituteSerializer(
+            data=request.data,
+            context={'schema': schema.item}
+        )
         serializer.is_valid(raise_exception=True)
         schema.substitute(
             original=serializer.validated_data['original'],
@@ -116,9 +153,9 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
 
     @extend_schema(
         summary='delete constituents',
-        tags=['Constituenta'],
+        tags=['RSForm'],
         request=s.CstListSerializer,
-        responses={c.HTTP_202_ACCEPTED: s.RSFormParseSerializer}
+        responses={c.HTTP_200_OK: s.RSFormParseSerializer}
     )
     @action(detail=True, methods=['patch'], url_path='cst-delete-multiple')
     def cst_delete_multiple(self, request: Request, pk):
@@ -126,19 +163,19 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         schema = self._get_schema()
         serializer = s.CstListSerializer(
             data=request.data,
-            context={'schema': schema}
+            context={'schema': schema.item}
         )
         serializer.is_valid(raise_exception=True)
         schema.delete_cst(serializer.validated_data['constituents'])
         schema.item.refresh_from_db()
         return Response(
-            status=c.HTTP_202_ACCEPTED,
+            status=c.HTTP_200_OK,
             data=s.RSFormParseSerializer(schema.item).data
         )
 
     @extend_schema(
         summary='move constituenta',
-        tags=['Constituenta'],
+        tags=['RSForm'],
         request=s.CstMoveSerializer,
         responses={c.HTTP_200_OK: s.RSFormParseSerializer}
     )
@@ -148,7 +185,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         schema = self._get_schema()
         serializer = s.CstMoveSerializer(
             data=request.data,
-            context={'schema': schema}
+            context={'schema': schema.item}
         )
         serializer.is_valid(raise_exception=True)
         schema.move_cst(

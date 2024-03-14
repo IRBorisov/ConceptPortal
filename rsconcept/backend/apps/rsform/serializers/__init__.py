@@ -16,12 +16,22 @@ from .data_access import (
     VersionSerializer,
     VersionCreateSerializer,
     ConstituentaSerializer,
+    CstStructuredSerializer,
     CstMoveSerializer,
     CstSubstituteSerializer,
     CstCreateSerializer,
     CstRenameSerializer,
     CstListSerializer
 )
-from .schema_typing import (NewCstResponse, NewVersionResponse, ResultTextResponse)
+from .schema_typing import (
+    NewCstResponse,
+    NewMultiCstResponse,
+    NewVersionResponse,
+    ResultTextResponse
+)
 from .io_pyconcept import PyConceptAdapter
-from .io_files import (FileSerializer, RSFormUploadSerializer, RSFormTRSSerializer)
+from .io_files import (
+    FileSerializer,
+    RSFormUploadSerializer,
+    RSFormTRSSerializer
+)
