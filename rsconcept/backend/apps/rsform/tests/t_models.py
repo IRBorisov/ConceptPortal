@@ -160,6 +160,14 @@ class TestRSForm(TestCase):
         self.assertFalse(schema2.constituents().exists())
         self.assertEqual(schema1.constituents().count(), 2)
 
+    def test_get_max_index(self):
+        schema1 = RSForm.create(title='Test1')
+        Constituenta.objects.create(alias='X1', schema=schema1.item, order=1)
+        Constituenta.objects.create(alias='D2', cst_type=CstType.TERM, schema=schema1.item, order=2)
+        self.assertEqual(schema1.get_max_index(CstType.BASE), 1)
+        self.assertEqual(schema1.get_max_index(CstType.TERM), 2)
+        self.assertEqual(schema1.get_max_index(CstType.AXIOM), 0)
+
     def test_insert_at(self):
         schema = RSForm.create(title='Test')
         cst1 = schema.insert_at(1, 'X1', CstType.BASE)
