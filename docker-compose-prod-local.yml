@@ -18,14 +18,13 @@ services:
     restart: always
     depends_on:
       - backend
-    build: 
+    build:
       context: ./rsconcept/frontend
       args:
         BUILD_TYPE: production.local
     expose:
       - 3001
     command: serve -s /home/node -l 3001
-
 
   backend:
     container_name: local-portal-backend
@@ -40,9 +39,7 @@ services:
     volumes:
       - django_static_volume:/home/app/web/static
       - django_media_volume:/home/app/web/media
-    command:
-      gunicorn -w 3 project.wsgi --bind 0.0.0.0:8001
-
+    command: gunicorn -w 3 project.wsgi --bind 0.0.0.0:8001
 
   postgresql-db:
     container_name: local-portal-db
@@ -51,7 +48,6 @@ services:
     env_file: ./postgresql/.env.prod.local
     volumes:
       - postgres_volume:/var/lib/postgresql/data
-
 
   nginx:
     container_name: local-portal-router
@@ -66,7 +62,8 @@ services:
       - 3001:3001
     depends_on:
       - backend
-    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+      - frontend
+    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
     volumes:
       - django_static_volume:/var/www/static
       - django_media_volume:/var/www/media
