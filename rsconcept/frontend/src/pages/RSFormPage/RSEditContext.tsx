@@ -28,9 +28,11 @@ import { IVersionData } from '@/models/library';
 import { UserAccessMode } from '@/models/miscellaneous';
 import {
   CstType,
+  EntityID,
   IConstituenta,
   IConstituentaMeta,
   ICstCreateData,
+  ICstID,
   ICstMovetoData,
   ICstRenameData,
   ICstSubstituteData,
@@ -46,6 +48,7 @@ interface IRSEditContext {
   isMutable: boolean;
   isContentEditable: boolean;
   isProcessing: boolean;
+  canProduceStructure: boolean;
 
   viewVersion: (version?: number) => void;
 
@@ -65,6 +68,7 @@ interface IRSEditContext {
   toggleSubscribe: () => void;
   download: () => void;
   reindex: () => void;
+  produceStructure: () => void;
   substitute: () => void;
 
   createVersion: () => void;
@@ -81,13 +85,13 @@ export const useRSEdit = () => {
 };
 
 interface RSEditStateProps {
-  selected: number[];
+  selected: EntityID[];
   isModified: boolean;
-  setSelected: React.Dispatch<React.SetStateAction<number[]>>;
+  setSelected: React.Dispatch<React.SetStateAction<EntityID[]>>;
   activeCst?: IConstituenta;
 
   onCreateCst?: (newCst: IConstituentaMeta) => void;
-  onDeleteCst?: (newActive?: number) => void;
+  onDeleteCst?: (newActive?: EntityID) => void;
   children: React.ReactNode;
 }
 
@@ -130,7 +134,7 @@ export const RSEditState = ({
   const [renameInitialData, setRenameInitialData] = useState<ICstRenameData>();
   const [showRenameCst, setShowRenameCst] = useState(false);
 
-  const [insertCstID, setInsertCstID] = useState<number | undefined>(undefined);
+  const [insertCstID, setInsertCstID] = useState<EntityID | undefined>(undefined);
   const [showTemplates, setShowTemplates] = useState(false);
 
   useLayoutEffect(
@@ -188,7 +192,7 @@ export const RSEditState = ({
   );
 
   const handleDeleteCst = useCallback(
-    (deleted: number[]) => {
+    (deleted: EntityID[]) => {
       if (!model.schema) {
         return;
       }
@@ -370,6 +374,30 @@ export const RSEditState = ({
 
   const reindex = useCallback(() => model.resetAliases(() => toast.success('Имена конституент обновлены')), [model]);
 
+  const canProduceStructure = useMemo(() => {
+    return (
+      !!activeCst &&
+      !!activeCst.parse.typification &&
+      activeCst.cst_type !== CstType.BASE &&
+      activeCst.cst_type !== CstType.CONSTANT
+    );
+  }, [activeCst]);
+
+  const produceStructure = useCallback(() => {
+    if (!activeCst) {
+      return;
+    }
+    const data: ICstID = {
+      id: activeCst.id
+    };
+    model.produceStructure(data, cstList => {
+      toast.success(`Добавлены конституенты: ${cstList.length}`);
+      if (cstList.length !== 0) {
+        setSelected(cstList);
+      }
+    });
+  }, [activeCst, setSelected, model]);
+
   const promptTemplate = useCallback(() => {
     setInsertCstID(activeCst?.id);
     setShowTemplates(true);
@@ -431,6 +459,7 @@ export const RSEditState = ({
         isMutable,
         isContentEditable,
         isProcessing: model.processing,
+        canProduceStructure,
 
         viewVersion,
 
@@ -450,6 +479,7 @@ export const RSEditState = ({
         share,
         toggleSubscribe,
         reindex,
+        produceStructure,
         substitute,
 
         createVersion: () => setShowCreateVersion(true),

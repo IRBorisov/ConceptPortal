@@ -27,10 +27,12 @@ import {
   IConstituentaMeta,
   ICstCreateData,
   ICstCreatedResponse,
+  ICstID,
   ICstMovetoData,
   ICstRenameData,
   ICstSubstituteData,
   ICstUpdateData,
+  IProduceStructureResponse,
   IRSFormCreateData,
   IRSFormData,
   IRSFormUploadData,
@@ -319,6 +321,14 @@ export function patchRenameConstituenta(schema: string, request: FrontExchange<I
   AxiosPatch({
     title: `Renaming constituenta id=${request.data.id} for schema id=${schema}`,
     endpoint: `/api/rsforms/${schema}/cst-rename`,
+    request: request
+  });
+}
+
+export function patchProduceStructure(schema: string, request: FrontExchange<ICstID, IProduceStructureResponse>) {
+  AxiosPatch({
+    title: `Producing structure constituenta id=${request.data.id} for schema id=${schema}`,
+    endpoint: `/api/rsforms/${schema}/cst-produce-structure`,
     request: request
   });
 }

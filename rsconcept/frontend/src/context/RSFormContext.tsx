@@ -7,9 +7,11 @@ import useRSFormDetails from '@/hooks/useRSFormDetails';
 import { ILibraryItem, IVersionData } from '@/models/library';
 import { ILibraryUpdateData } from '@/models/library';
 import {
+  EntityID,
   IConstituentaList,
   IConstituentaMeta,
   ICstCreateData,
+  ICstID,
   ICstMovetoData,
   ICstRenameData,
   ICstSubstituteData,
@@ -26,6 +28,7 @@ import {
   patchDeleteConstituenta,
   patchLibraryItem,
   patchMoveConstituenta,
+  patchProduceStructure,
   patchRenameConstituenta,
   patchResetAliases,
   patchSubstituteConstituenta,
@@ -61,6 +64,7 @@ interface IRSFormContext {
   upload: (data: IRSFormUploadData, callback: () => void) => void;
 
   resetAliases: (callback: () => void) => void;
+  produceStructure: (data: ICstID, callback?: DataCallback<EntityID[]>) => void;
 
   cstCreate: (data: ICstCreateData, callback?: DataCallback<IConstituentaMeta>) => void;
   cstRename: (data: ICstRenameData, callback?: DataCallback<IConstituentaMeta>) => void;
@@ -258,6 +262,24 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
       });
     },
     [schemaID, setError, schema, library, user, setSchema]
+  );
+
+  const produceStructure = useCallback(
+    (data: ICstID, callback?: DataCallback<EntityID[]>) => {
+      setError(undefined);
+      patchProduceStructure(schemaID, {
+        data: data,
+        showError: true,
+        setLoading: setProcessing,
+        onError: setError,
+        onSuccess: newData => {
+          setSchema(newData.schema);
+          library.localUpdateTimestamp(newData.schema.id);
+          if (callback) callback(newData.cst_list);
+        }
+      });
+    },
+    [setError, setSchema, library, schemaID]
   );
 
   const download = useCallback(
@@ -459,6 +481,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         upload,
         claim,
         resetAliases,
+        produceStructure,
         subscribe,
         unsubscribe,
         cstUpdate,

@@ -1,11 +1,12 @@
 # Frontend Developer guidelines
 
 Styling conventions
+
 - static > conditional static > props. All dynamic styling should go in styles props
 - dimensions = rectangle + outer layout
 
 <details>
-<summary>clsx className groupind and order</summary>
+<summary>clsx className grouping and order</summary>
   <pre>
   - layer: z-position
   - outer layout: fixed bottom-1/2 left-0 -translate-x-1/2

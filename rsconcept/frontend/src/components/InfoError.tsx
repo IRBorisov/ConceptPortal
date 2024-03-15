@@ -1,9 +1,12 @@
 import axios, { type AxiosError } from 'axios';
+import clsx from 'clsx';
 
+import { urls } from '@/utils/constants';
 import { isResponseHtml } from '@/utils/utils';
 
 import AnimateFade from './AnimateFade';
 import PrettyJson from './ui/PrettyJSON';
+import TextURL from './ui/TextURL';
 
 export type ErrorData = string | Error | AxiosError | undefined;
 
@@ -50,7 +53,21 @@ function DescribeError({ error }: { error: ErrorData }) {
 
 function InfoError({ error }: InfoErrorProps) {
   return (
-    <AnimateFade className='px-3 py-2 min-w-[25rem] w-full text-sm font-semibold select-text clr-text-red'>
+    <AnimateFade
+      className={clsx(
+        'min-w-[25rem] w-full',
+        'px-3 py-2 flex flex-col',
+        'clr-text-red',
+        'text-sm font-semibold',
+        'select-text'
+      )}
+    >
+      <p className='clr-text-default font-normal'>
+        Пожалуйста сделайте скриншот и отправьте вместе с описанием ситуации на почту{' '}
+        <TextURL href={urls.mail_portal} text='portal@acconcept.ru' />
+        <br />
+        Для продолжения работы перезагрузите страницу
+      </p>
       <DescribeError error={error} />
     </AnimateFade>
   );

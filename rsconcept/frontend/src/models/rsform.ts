@@ -78,6 +78,11 @@ export interface IConstituentaMeta {
 }
 
 /**
+ * Represents id for {@link IConstituenta}.
+ */
+export interface ICstID extends Pick<IConstituentaMeta, 'id'> {}
+
+/**
  * Represents Constituenta.
  */
 export interface IConstituenta extends IConstituentaMeta {
@@ -97,7 +102,7 @@ export interface IConstituenta extends IConstituentaMeta {
  * Represents Constituenta list.
  */
 export interface IConstituentaList {
-  items: number[];
+  items: EntityID[];
 }
 
 /**
@@ -149,6 +154,14 @@ export interface ICstSubstituteData {
  */
 export interface ICstCreatedResponse {
   new_cst: IConstituentaMeta;
+  schema: IRSFormData;
+}
+
+/**
+ * Represents data response when creating producing structure of {@link IConstituenta}.
+ */
+export interface IProduceStructureResponse {
+  cst_list: EntityID[];
   schema: IRSFormData;
 }
 

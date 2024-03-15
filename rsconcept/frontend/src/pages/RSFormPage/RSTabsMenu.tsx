@@ -13,7 +13,7 @@ import {
   BiUpload
 } from 'react-icons/bi';
 import { FiEdit } from 'react-icons/fi';
-import { LuAlertTriangle, LuArchive, LuCrown, LuGlasses, LuReplace } from 'react-icons/lu';
+import { LuAlertTriangle, LuArchive, LuCrown, LuGlasses, LuNetwork, LuReplace } from 'react-icons/lu';
 import { VscLibrary } from 'react-icons/vsc';
 
 import Button from '@/components/ui/Button';
@@ -88,6 +88,11 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
   function handleTemplates() {
     editMenu.hide();
     controller.promptTemplate();
+  }
+
+  function handleProduceStructure() {
+    editMenu.hide();
+    controller.produceStructure();
   }
 
   function handleChangeMode(newMode: UserAccessMode) {
@@ -202,6 +207,13 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
               title='Создать конституенту из шаблона'
               icon={<BiDiamond size='1rem' className='icon-green' />}
               onClick={handleTemplates}
+            />
+            <DropdownButton
+              disabled={!controller.isContentEditable || !controller.canProduceStructure}
+              text='Порождение структуры'
+              title='Раскрыть структуру типизации выделенной конституенты'
+              icon={<LuNetwork size='1rem' className='icon-primary' />}
+              onClick={handleProduceStructure}
             />
             <DropdownButton
               disabled={!controller.isContentEditable}
