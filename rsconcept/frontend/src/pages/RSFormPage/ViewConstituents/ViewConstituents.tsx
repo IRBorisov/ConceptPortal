@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
 
@@ -18,13 +19,14 @@ const COLUMN_EXPRESSION_HIDE_THRESHOLD = 1500;
 
 interface ViewConstituentsProps {
   expression: string;
+  isBottom?: boolean;
   baseHeight: string;
   activeID?: number;
   schema?: IRSForm;
   onOpenEdit: (cstID: number) => void;
 }
 
-function ViewConstituents({ expression, baseHeight, schema, activeID, onOpenEdit }: ViewConstituentsProps) {
+function ViewConstituents({ expression, schema, activeID, isBottom, baseHeight, onOpenEdit }: ViewConstituentsProps) {
   const { noNavigation } = useConceptTheme();
 
   const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema?.items ?? []);
@@ -38,7 +40,13 @@ function ViewConstituents({ expression, baseHeight, schema, activeID, onOpenEdit
 
   return (
     <motion.div
-      className='mt-[2.25rem] border'
+      className={clsx(
+        'border', // prettier: split-lines
+        {
+          'mt-[2.25rem]': !isBottom, // prettier: split-lines
+          'mt-3 mx-6': isBottom
+        }
+      )}
       initial={{ ...animateSideView.initial }}
       animate={{ ...animateSideView.animate }}
       exit={{ ...animateSideView.exit }}
@@ -50,7 +58,7 @@ function ViewConstituents({ expression, baseHeight, schema, activeID, onOpenEdit
         setFiltered={setFilteredData}
       />
       <ConstituentsTable
-        maxHeight={maxHeight}
+        maxHeight={isBottom ? '12rem' : maxHeight}
         items={filteredData}
         activeID={activeID}
         onOpenEdit={onOpenEdit}

@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { AnimatePresence } from 'framer-motion';
 import { useMemo, useState } from 'react';
 
@@ -16,8 +17,8 @@ import FormConstituenta from './FormConstituenta';
 // Max height of content for left editor pane.
 const UNFOLDED_HEIGHT = '59.1rem';
 
-// Threshold window width to hide side constituents list.
-const SIDELIST_HIDE_THRESHOLD = 1100; // px
+// Threshold window width to switch layout.
+const SIDELIST_LAYOUT_THRESHOLD = 1100; // px
 
 interface EditorConstituentaProps {
   activeCst?: IConstituenta;
@@ -37,6 +38,8 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
     () => !activeCst || !controller.isContentEditable,
     [activeCst, controller.isContentEditable]
   );
+
+  const isNarrow = useMemo(() => !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD, [windowSize]);
 
   function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
     if (disabled) {
@@ -89,7 +92,15 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
           onCreate={() => controller.createCst(activeCst?.cst_type, false)}
         />
       ) : null}
-      <div tabIndex={-1} className='flex max-w-[95rem]' onKeyDown={handleInput}>
+      <div
+        tabIndex={-1}
+        className={clsx(
+          'max-w-[95rem]', // prettier: split lines
+          'flex',
+          { 'flex-col items-center': isNarrow }
+        )}
+        onKeyDown={handleInput}
+      >
         <FormConstituenta
           isMutable={!disabled}
           showList={showList}
@@ -103,10 +114,11 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
           onRename={controller.renameCst}
         />
         <AnimatePresence>
-          {showList && windowSize.width && windowSize.width >= SIDELIST_HIDE_THRESHOLD ? (
+          {showList ? (
             <ViewConstituents
               schema={controller.schema}
               expression={activeCst?.definition_formal ?? ''}
+              isBottom={isNarrow}
               baseHeight={UNFOLDED_HEIGHT}
               activeID={activeCst?.id}
               onOpenEdit={onOpenEdit}

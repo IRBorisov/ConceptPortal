@@ -113,7 +113,7 @@ function FormConstituenta({
   }
 
   return (
-    <>
+    <div>
       <ControlsOverlay
         isMutable={isMutable}
         processing={processing}
@@ -189,7 +189,7 @@ function FormConstituenta({
           />
         ) : null}
       </form>
-    </>
+    </div>
   );
 }
 

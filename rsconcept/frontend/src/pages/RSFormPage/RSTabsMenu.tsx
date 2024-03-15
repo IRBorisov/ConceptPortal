@@ -196,17 +196,18 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
           <Dropdown isOpen={editMenu.isOpen}>
             <DropdownButton
               disabled={!controller.isContentEditable}
-              text='Сброс имён'
-              title='Присвоить порядковые имена и обновить выражения'
-              icon={<BiAnalyse size='1rem' className='icon-primary' />}
-              onClick={handleReindex}
-            />
-            <DropdownButton
-              disabled={!controller.isContentEditable}
               text='Банк выражений'
               title='Создать конституенту из шаблона'
               icon={<BiDiamond size='1rem' className='icon-green' />}
               onClick={handleTemplates}
+            />
+            <DropdownButton
+              disabled={!controller.isContentEditable}
+              className='border-t-2'
+              text='Сброс имён'
+              title='Присвоить порядковые имена и обновить выражения'
+              icon={<BiAnalyse size='1rem' className='icon-primary' />}
+              onClick={handleReindex}
             />
             <DropdownButton
               disabled={!controller.isContentEditable || !controller.canProduceStructure}
