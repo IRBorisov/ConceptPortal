@@ -7,15 +7,15 @@ import ConstituentaBadge from '@/components/ConstituentaBadge';
 import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } from '@/components/DataTable';
 import { useConceptTheme } from '@/context/ThemeContext';
 import useWindowSize from '@/hooks/useWindowSize';
-import { IConstituenta } from '@/models/rsform';
+import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { isMockCst } from '@/models/rsformAPI';
 import { prefixes } from '@/utils/constants';
 import { describeConstituenta } from '@/utils/labels';
 
 interface ConstituentsTableProps {
   items: IConstituenta[];
-  activeID?: number;
-  onOpenEdit: (cstID: number) => void;
+  activeID?: ConstituentaID;
+  onOpenEdit: (cstID: ConstituentaID) => void;
   denseThreshold?: number;
   maxHeight: string;
 }

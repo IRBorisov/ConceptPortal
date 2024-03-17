@@ -8,7 +8,7 @@ import DataTable, { createColumnHelper, RowSelectionState, VisibilityState } fro
 import FlexColumn from '@/components/ui/FlexColumn';
 import { useConceptTheme } from '@/context/ThemeContext';
 import useWindowSize from '@/hooks/useWindowSize';
-import { IConstituenta } from '@/models/rsform';
+import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { prefixes } from '@/utils/constants';
 import { labelCstTypification } from '@/utils/labels';
 
@@ -18,7 +18,7 @@ interface RSTableProps {
   selected: RowSelectionState;
   setSelected: React.Dispatch<React.SetStateAction<RowSelectionState>>;
 
-  onEdit: (cstID: number) => void;
+  onEdit: (cstID: ConstituentaID) => void;
   onCreateNew: () => void;
 }
 

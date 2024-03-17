@@ -5,16 +5,16 @@ import { useLayoutEffect, useState } from 'react';
 
 import { type RowSelectionState } from '@/components/DataTable';
 import SelectedCounter from '@/components/SelectedCounter';
-import { CstType } from '@/models/rsform';
+import { ConstituentaID, CstType } from '@/models/rsform';
 
 import { useRSEdit } from '../RSEditContext';
 import RSListToolbar from './RSListToolbar';
 import RSTable from './RSTable';
 
 interface EditorRSListProps {
-  selected: number[];
-  setSelected: React.Dispatch<React.SetStateAction<number[]>>;
-  onOpenEdit: (cstID: number) => void;
+  selected: ConstituentaID[];
+  setSelected: React.Dispatch<React.SetStateAction<ConstituentaID[]>>;
+  onOpenEdit: (cstID: ConstituentaID) => void;
 }
 
 function EditorRSList({ selected, setSelected, onOpenEdit }: EditorRSListProps) {
@@ -38,7 +38,7 @@ function EditorRSList({ selected, setSelected, onOpenEdit }: EditorRSListProps) 
       setSelected([]);
     } else {
       const newRowSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
-      const newSelection: number[] = [];
+      const newSelection: ConstituentaID[] = [];
       controller.schema.items.forEach((cst, index) => {
         if (newRowSelection[String(index)] === true) {
           newSelection.push(cst.id);

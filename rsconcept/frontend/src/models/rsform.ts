@@ -4,7 +4,7 @@
 
 import { Graph } from '@/models/Graph';
 
-import { ILibraryItemEx, ILibraryUpdateData } from './library';
+import { ILibraryItemEx, ILibraryUpdateData, LibraryItemID } from './library';
 import { IArgumentInfo, ParsingStatus, ValueClass } from './rslang';
 
 /**
@@ -25,9 +25,14 @@ export enum CstType {
 export const CATEGORY_CST_TYPE = CstType.THEOREM;
 
 /**
- * Represents Entity identifier type.
+ * Represents position in linear order.
  */
-export type EntityID = number;
+export type Position = number;
+
+/**
+ * Represents {@link Constituenta} identifier type.
+ */
+export type ConstituentaID = number;
 
 /**
  * Represents Constituenta classification in terms of system of concepts.
@@ -63,9 +68,9 @@ export interface TermForm {
  * Represents Constituenta basic persistent data.
  */
 export interface IConstituentaMeta {
-  id: EntityID;
-  schema: number;
-  order: number;
+  id: ConstituentaID;
+  schema: LibraryItemID;
+  order: Position;
   alias: string;
   convention: string;
   cst_type: CstType;
@@ -102,7 +107,7 @@ export interface IConstituenta extends IConstituentaMeta {
  * Represents Constituenta list.
  */
 export interface IConstituentaList {
-  items: EntityID[];
+  items: ConstituentaID[];
 }
 
 /**
@@ -113,14 +118,14 @@ export interface ICstCreateData
     IConstituentaMeta,
     'alias' | 'cst_type' | 'definition_raw' | 'term_raw' | 'convention' | 'definition_formal' | 'term_forms'
   > {
-  insert_after: number | null;
+  insert_after: ConstituentaID | null;
 }
 
 /**
  * Represents data, used in ordering constituents in a list.
  */
 export interface ICstMovetoData extends IConstituentaList {
-  move_to: number;
+  move_to: Position;
 }
 
 /**
@@ -144,8 +149,8 @@ export interface ICstRenameData extends Pick<IConstituentaMeta, 'id' | 'alias' |
  * Represents data, used in merging {@link IConstituenta}.
  */
 export interface ICstSubstituteData {
-  original: EntityID;
-  substitution: EntityID;
+  original: ConstituentaID;
+  substitution: ConstituentaID;
   transfer_term: boolean;
 }
 
@@ -161,7 +166,7 @@ export interface ICstCreatedResponse {
  * Represents data response when creating producing structure of {@link IConstituenta}.
  */
 export interface IProduceStructureResponse {
-  cst_list: EntityID[];
+  cst_list: ConstituentaID[];
   schema: IRSFormData;
 }
 
@@ -225,4 +230,14 @@ export interface IRSFormUploadData {
 export interface IVersionCreatedResponse {
   version: number;
   schema: IRSFormData;
+}
+
+/**
+ * Represents input data for inline synthesis.
+ */
+export interface IRSFormInlineData {
+  receiver: LibraryItemID;
+  source: LibraryItemID;
+  items: ConstituentaID[];
+  substitutions: ICstSubstituteData[];
 }

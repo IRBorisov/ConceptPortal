@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
 
 import { useConceptTheme } from '@/context/ThemeContext';
-import { IConstituenta, IRSForm } from '@/models/rsform';
+import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
 import { animateSideView } from '@/styling/animations';
 
 import ConstituentsSearch from './ConstituentsSearch';
@@ -21,9 +21,9 @@ interface ViewConstituentsProps {
   expression: string;
   isBottom?: boolean;
   baseHeight: string;
-  activeID?: number;
+  activeID?: ConstituentaID;
   schema?: IRSForm;
-  onOpenEdit: (cstID: number) => void;
+  onOpenEdit: (cstID: ConstituentaID) => void;
 }
 
 function ViewConstituents({ expression, schema, activeID, isBottom, baseHeight, onOpenEdit }: ViewConstituentsProps) {

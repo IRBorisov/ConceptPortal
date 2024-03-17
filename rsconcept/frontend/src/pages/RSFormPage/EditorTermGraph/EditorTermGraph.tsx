@@ -12,7 +12,7 @@ import { useConceptTheme } from '@/context/ThemeContext';
 import DlgGraphParams from '@/dialogs/DlgGraphParams';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { GraphColoringScheme, GraphFilterParams } from '@/models/miscellaneous';
-import { CstType } from '@/models/rsform';
+import { ConstituentaID, CstType } from '@/models/rsform';
 import { colorBgGraphNode } from '@/styling/color';
 import { classnames, TIMEOUT_GRAPH_REFRESH } from '@/utils/constants';
 
@@ -24,9 +24,9 @@ import useGraphFilter from './useGraphFilter';
 import ViewHidden from './ViewHidden';
 
 interface EditorTermGraphProps {
-  selected: number[];
-  setSelected: React.Dispatch<React.SetStateAction<number[]>>;
-  onOpenEdit: (cstID: number) => void;
+  selected: ConstituentaID[];
+  setSelected: React.Dispatch<React.SetStateAction<ConstituentaID[]>>;
+  onOpenEdit: (cstID: ConstituentaID) => void;
 }
 
 function EditorTermGraph({ selected, setSelected, onOpenEdit }: EditorTermGraphProps) {
@@ -51,7 +51,7 @@ function EditorTermGraph({ selected, setSelected, onOpenEdit }: EditorTermGraphP
   const [showParamsDialog, setShowParamsDialog] = useState(false);
   const filtered = useGraphFilter(controller.schema, filterParams);
 
-  const [hidden, setHidden] = useState<number[]>([]);
+  const [hidden, setHidden] = useState<ConstituentaID[]>([]);
 
   const nothingSelected = useMemo(() => selected.length === 0, [selected]);
 
@@ -60,7 +60,7 @@ function EditorTermGraph({ selected, setSelected, onOpenEdit }: EditorTermGraphP
   const [coloringScheme, setColoringScheme] = useLocalStorage<GraphColoringScheme>('graph_coloring', 'type');
   const [orbit, setOrbit] = useState(false);
 
-  const [hoverID, setHoverID] = useState<number | undefined>(undefined);
+  const [hoverID, setHoverID] = useState<ConstituentaID | undefined>(undefined);
   const hoverCst = useMemo(() => {
     return controller.schema?.items.find(cst => cst.id === hoverID);
   }, [controller.schema?.items, hoverID]);
@@ -71,7 +71,7 @@ function EditorTermGraph({ selected, setSelected, onOpenEdit }: EditorTermGraphP
     if (!controller.schema) {
       return;
     }
-    const newDismissed: number[] = [];
+    const newDismissed: ConstituentaID[] = [];
     controller.schema.items.forEach(cst => {
       if (!filtered.nodes.has(cst.id)) {
         newDismissed.push(cst.id);
@@ -116,13 +116,13 @@ function EditorTermGraph({ selected, setSelected, onOpenEdit }: EditorTermGraphP
   }, [filtered.nodes]);
 
   const handleGraphSelection = useCallback(
-    (newID: number) => {
+    (newID: ConstituentaID) => {
       setSelected(prev => [...prev, newID]);
     },
     [setSelected]
   );
 
-  function toggleDismissed(cstID: number) {
+  function toggleDismissed(cstID: ConstituentaID) {
     setSelected(prev => {
       if (prev.includes(cstID)) {
         return [...prev.filter(id => id !== cstID)];

@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import HelpButton from '@/components/Help/HelpButton';
@@ -32,7 +32,8 @@ export enum TabID {
 }
 
 function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: DlgConstituentaTemplateProps) {
-  const [validated, setValidated] = useState(false);
+  const [activeTab, setActiveTab] = useState(TabID.TEMPLATE);
+
   const [template, updateTemplate] = usePartialUpdate<ITemplateState>({});
   const [substitutes, updateSubstitutes] = usePartialUpdate<IArgumentsState>({
     definition: '',
@@ -49,17 +50,16 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     term_forms: []
   });
 
-  const [activeTab, setActiveTab] = useState(TabID.TEMPLATE);
+  const validated = useMemo(
+    () => validateNewAlias(constituenta.alias, constituenta.cst_type, schema),
+    [constituenta.alias, constituenta.cst_type, schema]
+  );
 
   const handleSubmit = () => onCreate(constituenta);
 
   useLayoutEffect(() => {
     updateConstituenta({ alias: generateAlias(constituenta.cst_type, schema) });
   }, [constituenta.cst_type, updateConstituenta, schema]);
-
-  useLayoutEffect(() => {
-    setValidated(validateNewAlias(constituenta.alias, constituenta.cst_type, schema));
-  }, [constituenta.alias, constituenta.cst_type, schema]);
 
   useLayoutEffect(() => {
     if (!template.prototype) {

@@ -5,18 +5,18 @@ import { useCallback, useMemo } from 'react';
 import ConstituentaTooltip from '@/components/ConstituentaTooltip';
 import { useConceptTheme } from '@/context/ThemeContext';
 import { GraphColoringScheme } from '@/models/miscellaneous';
-import { IRSForm } from '@/models/rsform';
+import { ConstituentaID, IRSForm } from '@/models/rsform';
 import { colorBgGraphNode } from '@/styling/color';
 import { prefixes } from '@/utils/constants';
 
 interface ViewHiddenProps {
-  items: number[];
-  selected: number[];
+  items: ConstituentaID[];
+  selected: ConstituentaID[];
   schema?: IRSForm;
   coloringScheme: GraphColoringScheme;
 
-  toggleSelection: (cstID: number) => void;
-  onEdit: (cstID: number) => void;
+  toggleSelection: (cstID: ConstituentaID) => void;
+  onEdit: (cstID: ConstituentaID) => void;
 }
 
 function ViewHidden({ items, selected, toggleSelection, schema, coloringScheme, onEdit }: ViewHiddenProps) {
@@ -27,7 +27,7 @@ function ViewHidden({ items, selected, toggleSelection, schema, coloringScheme, 
   }, [noNavigation]);
 
   const dismissedStyle = useCallback(
-    (cstID: number) => {
+    (cstID: ConstituentaID) => {
       return selected.includes(cstID) ? { outlineWidth: '2px', outlineStyle: 'solid' } : {};
     },
     [selected]

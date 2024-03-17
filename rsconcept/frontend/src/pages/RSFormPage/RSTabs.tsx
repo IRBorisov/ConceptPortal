@@ -12,7 +12,7 @@ import { useBlockNavigation, useConceptNavigation } from '@/context/NavigationCo
 import { useRSForm } from '@/context/RSFormContext';
 import { useConceptTheme } from '@/context/ThemeContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
-import { IConstituenta, IConstituentaMeta } from '@/models/rsform';
+import { ConstituentaID, IConstituenta, IConstituentaMeta } from '@/models/rsform';
 import { prefixes, TIMEOUT_UI_REFRESH } from '@/utils/constants';
 import { labelVersion } from '@/utils/labels';
 
@@ -44,7 +44,7 @@ function RSTabs() {
   const [isModified, setIsModified] = useState(false);
   useBlockNavigation(isModified);
 
-  const [selected, setSelected] = useState<number[]>([]);
+  const [selected, setSelected] = useState<ConstituentaID[]>([]);
   const activeCst: IConstituenta | undefined = useMemo(() => {
     if (!schema || selected.length === 0) {
       return undefined;
@@ -80,7 +80,7 @@ function RSTabs() {
   }, [activeTab, cstQuery, setSelected, schema, setNoFooter, setIsModified]);
 
   const navigateTab = useCallback(
-    (tab: RSTabID, activeID?: number) => {
+    (tab: RSTabID, activeID?: ConstituentaID) => {
       if (!schema) {
         return;
       }
@@ -125,7 +125,7 @@ function RSTabs() {
   );
 
   const onDeleteCst = useCallback(
-    (newActive?: number) => {
+    (newActive?: ConstituentaID) => {
       if (!newActive) {
         navigateTab(RSTabID.CST_LIST);
       } else if (activeTab === RSTabID.CST_EDIT) {
@@ -138,7 +138,7 @@ function RSTabs() {
   );
 
   const onOpenCst = useCallback(
-    (cstID: number) => {
+    (cstID: ConstituentaID) => {
       setSelected([cstID]);
       navigateTab(RSTabID.CST_EDIT, cstID);
     },

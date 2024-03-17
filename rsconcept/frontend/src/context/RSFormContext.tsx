@@ -7,7 +7,7 @@ import useRSFormDetails from '@/hooks/useRSFormDetails';
 import { ILibraryItem, IVersionData } from '@/models/library';
 import { ILibraryUpdateData } from '@/models/library';
 import {
-  EntityID,
+  ConstituentaID,
   IConstituentaList,
   IConstituentaMeta,
   ICstCreateData,
@@ -64,7 +64,7 @@ interface IRSFormContext {
   upload: (data: IRSFormUploadData, callback: () => void) => void;
 
   resetAliases: (callback: () => void) => void;
-  produceStructure: (data: ICstID, callback?: DataCallback<EntityID[]>) => void;
+  produceStructure: (data: ICstID, callback?: DataCallback<ConstituentaID[]>) => void;
 
   cstCreate: (data: ICstCreateData, callback?: DataCallback<IConstituentaMeta>) => void;
   cstRename: (data: ICstRenameData, callback?: DataCallback<IConstituentaMeta>) => void;
@@ -265,7 +265,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
   );
 
   const produceStructure = useCallback(
-    (data: ICstID, callback?: DataCallback<EntityID[]>) => {
+    (data: ICstID, callback?: DataCallback<ConstituentaID[]>) => {
       setError(undefined);
       patchProduceStructure(schemaID, {
         data: data,

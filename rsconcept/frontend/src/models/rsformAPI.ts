@@ -6,7 +6,16 @@ import { Graph } from '@/models/Graph';
 import { TextMatcher } from '@/utils/utils';
 
 import { CstMatchMode } from './miscellaneous';
-import { CATEGORY_CST_TYPE, CstClass, CstType, ExpressionStatus, IConstituenta, IRSForm, IRSFormData } from './rsform';
+import {
+  CATEGORY_CST_TYPE,
+  ConstituentaID,
+  CstClass,
+  CstType,
+  ExpressionStatus,
+  IConstituenta,
+  IRSForm,
+  IRSFormData
+} from './rsform';
 import { ParsingStatus, ValueClass } from './rslang';
 import { extractGlobals } from './rslangAPI';
 
@@ -185,7 +194,7 @@ export function inferClass(type: CstType, isTemplate: boolean): CstClass {
 /**
  * Creates a mock {@link IConstituenta} object with the provided parameters and default values for other properties.
  */
-export function createMockConstituenta(id: number, alias: string, comment: string): IConstituenta {
+export function createMockConstituenta(id: ConstituentaID, alias: string, comment: string): IConstituenta {
   return {
     id: id,
     order: -1,

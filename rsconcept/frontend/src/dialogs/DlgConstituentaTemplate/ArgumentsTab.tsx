@@ -2,7 +2,7 @@
 
 import { createColumnHelper } from '@tanstack/react-table';
 import clsx from 'clsx';
-import { Dispatch, useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { BiCheck, BiRefresh, BiX } from 'react-icons/bi';
 
 import ConstituentaPicker from '@/components/ConstituentaPicker';
@@ -17,7 +17,7 @@ import { prefixes } from '@/utils/constants';
 interface ArgumentsTabProps {
   state: IArgumentsState;
   schema: IRSForm;
-  partialUpdate: Dispatch<Partial<IArgumentsState>>;
+  partialUpdate: React.Dispatch<Partial<IArgumentsState>>;
 }
 
 export interface IArgumentsState {

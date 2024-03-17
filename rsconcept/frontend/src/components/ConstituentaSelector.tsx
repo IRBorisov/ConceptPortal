@@ -3,7 +3,7 @@
 import { useCallback, useMemo } from 'react';
 
 import { CstMatchMode } from '@/models/miscellaneous';
-import { EntityID, IConstituenta } from '@/models/rsform';
+import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { matchConstituenta } from '@/models/rsformAPI';
 import { describeConstituenta, describeConstituentaTerm } from '@/utils/labels';
 
@@ -26,7 +26,7 @@ function ConstituentaSelector({ items, value, onSelectValue }: ConstituentaSelec
   }, [items]);
 
   const filter = useCallback(
-    (option: { value: EntityID | undefined; label: string }, inputValue: string) => {
+    (option: { value: ConstituentaID | undefined; label: string }, inputValue: string) => {
       const cst = items?.find(item => item.id === option.value);
       return !cst ? false : matchConstituenta(cst, inputValue, CstMatchMode.ALL);
     },

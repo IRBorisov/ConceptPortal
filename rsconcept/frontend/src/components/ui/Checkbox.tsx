@@ -51,7 +51,6 @@ function Checkbox({
       className={clsx(
         'flex items-center gap-2', // prettier: split lines
         'outline-none',
-        'text-start',
         cursor,
         className
       )}
@@ -79,7 +78,7 @@ function Checkbox({
           </div>
         ) : null}
       </div>
-      <label className={clsx('text-sm whitespace-nowrap', cursor)} htmlFor={id}>
+      <label className={clsx('text-start text-sm whitespace-nowrap', cursor)} htmlFor={id}>
         {label}
       </label>
     </button>

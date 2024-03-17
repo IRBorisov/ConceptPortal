@@ -1,7 +1,5 @@
 'use client';
 
-import { Dispatch } from 'react';
-
 import RSInput from '@/components/RSInput';
 import SelectSingle from '@/components/ui/SelectSingle';
 import TextArea from '@/components/ui/TextArea';
@@ -12,7 +10,7 @@ import { SelectorCstType } from '@/utils/selectors';
 
 interface ConstituentaTabProps {
   state: ICstCreateData;
-  partialUpdate: Dispatch<Partial<ICstCreateData>>;
+  partialUpdate: React.Dispatch<Partial<ICstCreateData>>;
 }
 
 function ConstituentaTab({ state, partialUpdate }: ConstituentaTabProps) {

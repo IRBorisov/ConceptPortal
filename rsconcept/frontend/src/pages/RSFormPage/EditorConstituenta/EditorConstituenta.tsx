@@ -6,7 +6,7 @@ import { useMemo, useState } from 'react';
 
 import useLocalStorage from '@/hooks/useLocalStorage';
 import useWindowSize from '@/hooks/useWindowSize';
-import { IConstituenta } from '@/models/rsform';
+import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { globalIDs } from '@/utils/constants';
 
 import { useRSEdit } from '../RSEditContext';
@@ -24,7 +24,7 @@ interface EditorConstituentaProps {
   activeCst?: IConstituenta;
   isModified: boolean;
   setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
-  onOpenEdit: (cstID: number) => void;
+  onOpenEdit: (cstID: ConstituentaID) => void;
 }
 
 function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }: EditorConstituentaProps) {

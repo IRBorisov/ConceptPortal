@@ -11,7 +11,7 @@ import useDropdown from '@/hooks/useDropdown';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { CstMatchMode, DependencyMode } from '@/models/miscellaneous';
 import { applyGraphFilter } from '@/models/miscellaneousAPI';
-import { IConstituenta, IRSForm } from '@/models/rsform';
+import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
 import { createMockConstituenta, matchConstituenta } from '@/models/rsformAPI';
 import { extractGlobals } from '@/models/rslangAPI';
 import { prefixes } from '@/utils/constants';
@@ -19,7 +19,7 @@ import { describeCstMatchMode, describeCstSource, labelCstMatchMode, labelCstSou
 
 interface ConstituentsSearchProps {
   schema?: IRSForm;
-  activeID?: number;
+  activeID?: ConstituentaID;
   activeExpression: string;
   setFiltered: React.Dispatch<React.SetStateAction<IConstituenta[]>>;
 }

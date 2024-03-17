@@ -97,6 +97,11 @@ export interface IVersionInfo {
 }
 
 /**
+ * Represents {@link LibraryItem} identifier type.
+ */
+export type LibraryItemID = number;
+
+/**
  * Represents user data, intended to create or update version metadata in persistent storage.
  */
 export interface IVersionData extends Omit<IVersionInfo, 'id' | 'time_create'> {}
@@ -105,7 +110,7 @@ export interface IVersionData extends Omit<IVersionInfo, 'id' | 'time_create'> {
  * Represents library item common data typical for all item types.
  */
 export interface ILibraryItem {
-  id: number;
+  id: LibraryItemID;
   item_type: LibraryItemType;
   title: string;
   alias: string;

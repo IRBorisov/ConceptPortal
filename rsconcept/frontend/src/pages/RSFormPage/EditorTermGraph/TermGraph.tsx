@@ -4,21 +4,22 @@ import { useCallback, useLayoutEffect, useMemo, useRef } from 'react';
 
 import GraphUI, { GraphCanvasRef, GraphEdge, GraphNode, LayoutTypes, useSelection } from '@/components/GraphUI';
 import { useConceptTheme } from '@/context/ThemeContext';
+import { ConstituentaID } from '@/models/rsform';
 import { graphDarkT, graphLightT } from '@/styling/color';
 import { resources } from '@/utils/constants';
 
 interface TermGraphProps {
   nodes: GraphNode[];
   edges: GraphEdge[];
-  selectedIDs: number[];
+  selectedIDs: ConstituentaID[];
 
   layout: LayoutTypes;
   is3D: boolean;
   orbit: boolean;
 
-  setHoverID: (newID: number | undefined) => void;
-  onEdit: (cstID: number) => void;
-  onSelect: (newID: number) => void;
+  setHoverID: (newID: ConstituentaID | undefined) => void;
+  onEdit: (cstID: ConstituentaID) => void;
+  onSelect: (newID: ConstituentaID) => void;
   onDeselectAll: () => void;
 
   toggleResetView: boolean;
