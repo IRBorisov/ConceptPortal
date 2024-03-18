@@ -68,19 +68,21 @@ function LoginPage() {
         <img alt='Концепт Портал' src={resources.logo} className='max-h-[2.5rem] min-w-[2.5rem] mb-3' />
         <TextInput
           id='username'
+          label='Имя пользователя'
+          autoComplete='username'
           autoFocus
           required
           allowEnter
-          label='Имя пользователя'
           value={username}
           onChange={event => setUsername(event.target.value)}
         />
         <TextInput
           id='password'
           type='password'
+          label='Пароль'
+          autoComplete='current-password'
           required
           allowEnter
-          label='Пароль'
           value={password}
           onChange={event => setPassword(event.target.value)}
         />

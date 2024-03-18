@@ -41,6 +41,7 @@ function DlgCreateVersion({ hideWindow, versions, onCreate }: DlgCreateVersionPr
       className={clsx('w-[30rem]', 'py-2 px-6', classnames.flex_col)}
     >
       <TextInput
+        id='dlg_version'
         dense
         label='Версия'
         className='w-[16rem]'
@@ -48,6 +49,7 @@ function DlgCreateVersion({ hideWindow, versions, onCreate }: DlgCreateVersionPr
         onChange={event => setVersion(event.target.value)}
       />
       <TextArea
+        id='dlg_description'
         spellCheck
         label='Описание'
         rows={3}

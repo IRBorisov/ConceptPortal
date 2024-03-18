@@ -85,6 +85,7 @@ function RegisterPage() {
 
             <TextInput
               id='username'
+              autoComplete='username'
               required
               label='Имя пользователя (логин)'
               pattern={patterns.login}
@@ -96,6 +97,7 @@ function RegisterPage() {
             <TextInput
               id='password'
               type='password'
+              autoComplete='new-password'
               required
               label='Пароль'
               className='w-[15rem]'
@@ -104,9 +106,10 @@ function RegisterPage() {
             />
             <TextInput
               id='password2'
-              required
               type='password'
               label='Повторите пароль'
+              autoComplete='new-password'
+              required
               className='w-[15rem]'
               value={password2}
               onChange={event => setPassword2(event.target.value)}
@@ -116,6 +119,7 @@ function RegisterPage() {
           <FlexColumn className='w-[15rem]'>
             <TextInput
               id='email'
+              autoComplete='email'
               required
               label='Электронная почта (email)'
               title='электронная почта в корректном формате, например: i.petrov@mycompany.ru.com'
@@ -125,12 +129,14 @@ function RegisterPage() {
             <TextInput
               id='first_name'
               label='Отображаемое имя'
+              autoComplete='given-name'
               value={firstName}
               onChange={event => setFirstName(event.target.value)}
             />
             <TextInput
               id='last_name'
               label='Отображаемая фамилия'
+              autoComplete='family-name'
               value={lastName}
               onChange={event => setLastName(event.target.value)}
             />
@@ -138,7 +144,7 @@ function RegisterPage() {
         </div>
 
         <div className='flex gap-1 text-sm'>
-          <Checkbox label='Принимаю условия' value={acceptPrivacy} setValue={setAcceptPrivacy} />
+          <Checkbox id='accept_terms' label='Принимаю условия' value={acceptPrivacy} setValue={setAcceptPrivacy} />
           <TextURL text='обработки персональных данных...' href={'/manuals?topic=privacy'} />
         </div>
 

@@ -45,6 +45,7 @@ function SyntacticTab({ initial, setIsValid, setReference }: SyntacticTabProps) 
   return (
     <div className='flex flex-col gap-2'>
       <TextInput
+        id='dlg_reference_offset'
         type='number'
         dense
         label='Смещение'
@@ -53,6 +54,7 @@ function SyntacticTab({ initial, setIsValid, setReference }: SyntacticTabProps) 
         onChange={event => setOffset(event.target.valueAsNumber)}
       />
       <TextInput
+        id='dlg_main_ref'
         disabled // prettier: split lines
         dense
         noBorder
@@ -60,6 +62,7 @@ function SyntacticTab({ initial, setIsValid, setReference }: SyntacticTabProps) 
         value={mainLink}
       />
       <TextInput
+        id='dlg_reference_nominal'
         spellCheck
         label='Начальная форма'
         placeholder='зависимое слово в начальной форме'

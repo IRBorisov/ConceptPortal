@@ -68,7 +68,13 @@ function SearchPanel({ total, filtered, query, setQuery, strategy, setFilter }: 
         </span>
       </div>
       <PickerStrategy value={strategy} onChange={handleChangeStrategy} />
-      <SearchBar noBorder className='mx-auto min-w-[10rem]' value={query} onChange={handleChangeQuery} />
+      <SearchBar
+        id='library_search'
+        noBorder
+        className='mx-auto min-w-[10rem]'
+        value={query}
+        onChange={handleChangeQuery}
+      />
     </div>
   );
 }

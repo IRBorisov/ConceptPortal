@@ -88,33 +88,33 @@ export const urls = {
  * Global unique IDs.
  */
 export const globalIDs = {
-  tooltip: 'global-tooltip',
-  password_tooltip: 'password-tooltip',
-  main_scroll: 'main-scroll',
-  library_item_editor: 'library-item-editor',
-  constituenta_editor: 'constituenta-editor'
+  tooltip: 'global_tooltip',
+  password_tooltip: 'password_tooltip',
+  main_scroll: 'main_scroll',
+  library_item_editor: 'library_item_editor',
+  constituenta_editor: 'constituenta_editor'
 };
 
 /**
  * Prefixes for generating unique keys for lists.
  */
 export const prefixes = {
-  page_size: 'page-size-',
-  cst_list: 'cst-list-',
-  cst_side_table: 'cst-side-table-',
-  cst_hidden_list: 'cst-hidden-list-',
-  cst_modal_list: 'cst-modal-list-',
-  cst_template_ist: 'cst-template-list-',
-  cst_wordform_list: 'cst-wordform-list-',
-  cst_status_list: 'cst-status-list-',
-  cst_match_mode_list: 'cst-match-mode-list-',
-  cst_source_list: 'cst-source-list-',
-  cst_delete_list: 'cst-delete-list-',
-  cst_dependant_list: 'cst-dependant-list-',
-  csttype_list: 'csttype-',
-  library_filters_list: 'library-filters-list-',
-  topic_list: 'topic-list-',
-  library_list: 'library-list-',
-  wordform_list: 'wordform-list-',
-  rsedit_btn: 'rsedit-btn-'
+  page_size: 'page_size_',
+  cst_list: 'cst_list_',
+  cst_side_table: 'cst_side_table_',
+  cst_hidden_list: 'cst_hidden_list_',
+  cst_modal_list: 'cst_modal_list_',
+  cst_template_ist: 'cst_template_list_',
+  cst_wordform_list: 'cst_wordform_list_',
+  cst_status_list: 'cst_status_list_',
+  cst_match_mode_list: 'cst_match_mode_list_',
+  cst_source_list: 'cst_source_list_',
+  cst_delete_list: 'cst_delete_list_',
+  cst_dependant_list: 'cst_dependant_list_',
+  csttype_list: 'csttype_',
+  library_filters_list: 'library_filters_list_',
+  topic_list: 'topic_list_',
+  library_list: 'library_list_',
+  wordform_list: 'wordform_list_',
+  rsedit_btn: 'rsedit_btn_'
 };

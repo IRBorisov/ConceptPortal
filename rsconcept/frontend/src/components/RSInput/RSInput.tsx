@@ -147,7 +147,7 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
 
     return (
       <div className={clsx('flex flex-col gap-2', className, cursor)} style={style}>
-        <Label text={label} htmlFor={id} />
+        <Label text={label} />
         <CodeMirror
           className='font-math'
           id={id}

@@ -12,7 +12,6 @@ export interface CheckboxTristateProps extends Omit<CheckboxProps, 'value' | 'se
 }
 
 function CheckboxTristate({
-  id,
   disabled,
   label,
   title,
@@ -50,7 +49,6 @@ function CheckboxTristate({
   return (
     <button
       type='button'
-      id={id}
       className={clsx(
         'flex items-center gap-2', // prettier: split lines
         'outline-none',
@@ -86,9 +84,7 @@ function CheckboxTristate({
           </div>
         ) : null}
       </div>
-      <label className={clsx('text-start text-sm whitespace-nowrap', cursor)} htmlFor={id}>
-        {label}
-      </label>
+      {label ? <span className={clsx('text-start text-sm whitespace-nowrap', cursor)}>{label}</span> : null}
     </button>
   );
 }

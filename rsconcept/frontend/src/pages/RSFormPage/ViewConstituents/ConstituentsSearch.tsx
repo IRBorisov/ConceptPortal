@@ -75,7 +75,13 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
 
   return (
     <div className='flex border-b clr-input'>
-      <SearchBar noBorder className='min-w-[6rem] pr-2 flex-grow' value={filterText} onChange={setFilterText} />
+      <SearchBar
+        id='constituents_search'
+        noBorder
+        className='min-w-[6rem] pr-2 flex-grow'
+        value={filterText}
+        onChange={setFilterText}
+      />
 
       <div ref={matchModeMenu.ref}>
         <SelectorButton

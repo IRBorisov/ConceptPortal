@@ -15,7 +15,7 @@ interface FileInputProps extends Omit<CProps.Input, 'accept' | 'type'> {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-function FileInput({ label, acceptType, title, className, style, onChange, ...restProps }: FileInputProps) {
+function FileInput({ id, label, acceptType, title, className, style, onChange, ...restProps }: FileInputProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [fileName, setFileName] = useState('');
 
@@ -37,6 +37,7 @@ function FileInput({ label, acceptType, title, className, style, onChange, ...re
   return (
     <div className={clsx('py-2', 'flex flex-col gap-2 items-center', className)} style={style}>
       <input
+        id={id}
         type='file'
         ref={inputRef}
         style={{ display: 'none' }}
@@ -45,7 +46,7 @@ function FileInput({ label, acceptType, title, className, style, onChange, ...re
         {...restProps}
       />
       <Button text={label} icon={<BiUpload size='1.25rem' />} onClick={handleUploadClick} title={title} />
-      <Label text={fileName} />
+      <Label text={fileName} htmlFor={id} />
     </div>
   );
 }

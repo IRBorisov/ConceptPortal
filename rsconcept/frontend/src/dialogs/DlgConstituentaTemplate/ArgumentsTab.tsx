@@ -214,6 +214,7 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
       </div>
 
       <ConstituentaPicker
+        id='dlg_argument_picker'
         value={selectedCst}
         data={schema?.items}
         onSelectValue={handleSelectConstituenta}

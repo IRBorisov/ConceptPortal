@@ -11,6 +11,7 @@ import useLocalStorage from '@/hooks/useLocalStorage';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { ILibraryItem } from '@/models/library';
 import { ILibraryFilter, LibraryFilterStrategy } from '@/models/miscellaneous';
+import { filterFromStrategy } from '@/models/miscellaneousAPI';
 
 import SearchPanel from './SearchPanel';
 import ViewLibrary from './ViewLibrary';
@@ -45,7 +46,7 @@ function LibraryPage() {
         : LibraryFilterStrategy.MANUAL;
     setQuery('');
     setStrategy(inputStrategy);
-    setFilter(ApplyStrategy(inputStrategy));
+    setFilter(filterFromStrategy(inputStrategy));
   }, [user, router, setQuery, setFilter, setStrategy, strategy, searchFilter]);
 
   useLayoutEffect(() => {
@@ -86,16 +87,3 @@ function LibraryPage() {
 }
 
 export default LibraryPage;
-
-// ====== Internals =======
-function ApplyStrategy(strategy: LibraryFilterStrategy): ILibraryFilter {
-  // prettier-ignore
-  switch (strategy) {
-    case LibraryFilterStrategy.MANUAL: return {};
-    case LibraryFilterStrategy.COMMON: return { is_common: true };
-    case LibraryFilterStrategy.CANONICAL: return { is_canonical: true };
-    case LibraryFilterStrategy.PERSONAL: return { is_personal: true };
-    case LibraryFilterStrategy.SUBSCRIBE: return { is_subscribed: true };
-    case LibraryFilterStrategy.OWNED: return { is_owned: true };
-  }
-}

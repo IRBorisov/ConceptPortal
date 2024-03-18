@@ -127,6 +127,7 @@ function FormConstituenta({
         onSubmit={handleSubmit}
       >
         <RefsInput
+          id='cst_term'
           label='Термин'
           placeholder='Обозначение, используемое в текстовых определениях данной схемы'
           items={schema?.items}
@@ -137,6 +138,7 @@ function FormConstituenta({
           onChange={newValue => setTerm(newValue)}
         />
         <TextArea
+          id='cst_typification'
           dense
           noBorder
           disabled
@@ -149,6 +151,7 @@ function FormConstituenta({
           }}
         />
         <EditorRSExpression
+          id='cst_expression'
           label='Формальное определение'
           placeholder='Родоструктурное выражение'
           value={expression}
@@ -161,6 +164,7 @@ function FormConstituenta({
           setTypification={setTypification}
         />
         <RefsInput
+          id='cst_definition'
           label='Текстовое определение'
           placeholder='Текстовый вариант формального определения'
           height='3.8rem'
@@ -172,6 +176,7 @@ function FormConstituenta({
           onChange={newValue => setTextDefinition(newValue)}
         />
         <TextArea
+          id='cst_convention'
           spellCheck
           label='Конвенция / Комментарий'
           placeholder='Договоренность об интерпретации или пояснение'

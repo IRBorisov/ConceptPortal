@@ -8,7 +8,7 @@ interface LabeledValueProps {
 function LabeledValue({ id, label, text, title }: LabeledValueProps) {
   return (
     <div className='flex justify-between gap-3'>
-      <label title={title}>{label}</label>
+      <span title={title}>{label}</span>
       <span id={id}>{text}</span>
     </div>
   );

@@ -49,9 +49,17 @@ function EditorProfile() {
 
   return (
     <form onSubmit={handleSubmit} className={clsx('min-w-[18rem]', 'px-6 py-2', classnames.flex_col)}>
-      <TextInput id='username' disabled label='Логин' title='Логин изменить нельзя' value={username} />
+      <TextInput
+        id='username'
+        autoComplete='username'
+        disabled
+        label='Логин'
+        title='Логин изменить нельзя'
+        value={username}
+      />
       <TextInput
         id='first_name'
+        autoComplete='off'
         allowEnter
         label='Имя'
         value={first_name}
@@ -59,6 +67,7 @@ function EditorProfile() {
       />
       <TextInput
         id='last_name'
+        autoComplete='off'
         allowEnter
         label='Фамилия'
         value={last_name}
@@ -66,6 +75,7 @@ function EditorProfile() {
       />
       <TextInput
         id='email'
+        autoComplete='off'
         allowEnter
         label='Электронная почта'
         value={email}

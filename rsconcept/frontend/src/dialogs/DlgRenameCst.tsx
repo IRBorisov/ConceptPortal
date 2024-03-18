@@ -48,6 +48,7 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
       className={clsx('w-[30rem]', 'py-6 px-6 flex gap-6 justify-center items-center')}
     >
       <SelectSingle
+        id='dlg_cst_type'
         placeholder='Выберите тип'
         className='min-w-[16rem] self-center'
         options={SelectorCstType}
@@ -58,6 +59,7 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
         onChange={data => updateData({ cst_type: data?.value ?? CstType.BASE })}
       />
       <TextInput
+        id='dlg_cst_alias'
         dense
         label='Имя'
         className='w-[7rem]'

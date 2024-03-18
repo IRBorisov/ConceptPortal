@@ -14,7 +14,7 @@ import {
   useReactTable,
   type VisibilityState
 } from '@tanstack/react-table';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { CProps } from '../props';
 import DefaultNoData from './DefaultNoData';
@@ -33,7 +33,9 @@ export interface IConditionalStyle<TData> {
 export interface DataTableProps<TData extends RowData>
   extends CProps.Styling,
     Pick<TableOptions<TData>, 'data' | 'columns' | 'onRowSelectionChange' | 'onColumnVisibilityChange'> {
+  id?: string;
   dense?: boolean;
+  rows?: number;
   headPosition?: string;
   noHeader?: boolean;
   noFooter?: boolean;
@@ -66,9 +68,11 @@ export interface DataTableProps<TData extends RowData>
  * No sticky header if omitted
  */
 function DataTable<TData extends RowData>({
+  id,
   style,
   className,
   dense,
+  rows,
   headPosition,
   conditionalRowStyles,
   noFooter,
@@ -120,8 +124,20 @@ function DataTable<TData extends RowData>({
 
   const isEmpty = tableImpl.getRowModel().rows.length === 0;
 
+  // TODO: refactor formula for different font sizes and pagination tools
+  const fixedSize = useMemo(() => {
+    if (!rows) {
+      return undefined;
+    }
+    if (dense) {
+      return `calc(2px + (2px + 1.6875rem)*${rows} + ${noHeader ? '0px' : '(2px + 2.1875rem)'})`;
+    } else {
+      return `calc(2px + (2px + 2.1875rem)*${rows + (noHeader ? 0 : 1)})`;
+    }
+  }, [rows, dense, noHeader]);
+
   return (
-    <div className={className} style={style}>
+    <div id={id} className={className} style={{ minHeight: fixedSize, maxHeight: fixedSize, ...style }}>
       <table className='w-full'>
         {!noHeader ? (
           <TableHeader
@@ -146,6 +162,7 @@ function DataTable<TData extends RowData>({
 
       {enablePagination && !isEmpty ? (
         <PaginationTools
+          id={id ? `${id}__pagination` : undefined}
           table={tableImpl}
           paginationOptions={paginationOptions}
           onChangePaginationOption={onChangePaginationOption}

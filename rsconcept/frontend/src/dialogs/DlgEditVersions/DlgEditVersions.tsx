@@ -81,6 +81,7 @@ function DlgEditVersions({ hideWindow, versions, onDelete, onUpdate }: DlgEditVe
       />
       <div className='flex'>
         <TextInput
+          id='dlg_version'
           dense
           label='Версия'
           className='w-[16rem] mr-3'
@@ -101,6 +102,7 @@ function DlgEditVersions({ hideWindow, versions, onDelete, onUpdate }: DlgEditVe
         />
       </div>
       <TextArea
+        id='dlg_description'
         spellCheck
         label='Описание'
         rows={3}

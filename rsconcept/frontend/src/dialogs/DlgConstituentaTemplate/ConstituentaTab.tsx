@@ -18,6 +18,7 @@ function ConstituentaTab({ state, partialUpdate }: ConstituentaTabProps) {
     <>
       <div className='flex self-center gap-3 pr-2'>
         <SelectSingle
+          id='dlg_cst_type'
           className='min-w-[14rem]'
           options={SelectorCstType}
           placeholder='Выберите тип'
@@ -25,6 +26,7 @@ function ConstituentaTab({ state, partialUpdate }: ConstituentaTabProps) {
           onChange={data => partialUpdate({ cst_type: data?.value ?? CstType.TERM })}
         />
         <TextInput
+          id='dlg_cst_alias'
           dense
           label='Имя'
           className='w-[7rem]'
@@ -33,6 +35,7 @@ function ConstituentaTab({ state, partialUpdate }: ConstituentaTabProps) {
         />
       </div>
       <TextArea
+        id='dlg_cst_term'
         spellCheck
         label='Термин'
         placeholder='Схемный или предметный термин, обозначающий данное понятие или утверждение'
@@ -41,6 +44,7 @@ function ConstituentaTab({ state, partialUpdate }: ConstituentaTabProps) {
         onChange={event => partialUpdate({ term_raw: event.target.value })}
       />
       <RSInput
+        id='dlg_cst_expression'
         label='Формальное определение'
         placeholder='Родоструктурное выражение, задающее формальное определение'
         height='5.1rem'
@@ -48,6 +52,7 @@ function ConstituentaTab({ state, partialUpdate }: ConstituentaTabProps) {
         onChange={value => partialUpdate({ definition_formal: value })}
       />
       <TextArea
+        id='dlg_cst_definition'
         label='Текстовое определение'
         placeholder='Лингвистическая интерпретация формального выражения'
         rows={2}
@@ -56,6 +61,7 @@ function ConstituentaTab({ state, partialUpdate }: ConstituentaTabProps) {
         onChange={event => partialUpdate({ definition_raw: event.target.value })}
       />
       <TextArea
+        id='dlg_cst_convention'
         spellCheck
         label='Конвенция / Комментарий'
         placeholder='Договоренность об интерпретации или пояснение к схеме'

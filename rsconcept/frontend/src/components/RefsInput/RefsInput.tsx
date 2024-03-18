@@ -182,7 +182,7 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
         </AnimatePresence>
 
         <div className={clsx('flex flex-col gap-2', cursor)}>
-          <Label text={label} htmlFor={id} />
+          <Label text={label} />
           <CodeMirror
             id={id}
             ref={thisRef}

@@ -105,7 +105,7 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
           isClearable
         />
         <SelectSingle
-          placeholder='Выберите источник'
+          placeholder='Источник'
           className='w-[12rem]'
           options={templateSelector}
           value={
@@ -117,6 +117,7 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
         />
       </div>
       <ConstituentaPicker
+        id='dlg_template_picker'
         value={state.prototype}
         data={filteredData}
         onSelectValue={cst => partialUpdate({ prototype: cst })}
@@ -124,6 +125,7 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
         rows={9}
       />
       <TextArea
+        id='dlg_template_term'
         disabled
         spellCheck
         placeholder='Шаблон конституенты не выбран'
@@ -132,6 +134,7 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
         value={prototypeInfo}
       />
       <RSInput
+        id='dlg_template_expression'
         disabled
         placeholder='Выберите шаблон из списка'
         height='5.1rem'

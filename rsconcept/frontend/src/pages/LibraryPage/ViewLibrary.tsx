@@ -25,7 +25,7 @@ interface ViewLibraryProps {
 
 const columnHelper = createColumnHelper<ILibraryItem>();
 
-function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
+function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
   const router = useConceptNavigation();
   const intl = useIntl();
   const { user } = useAuth();
@@ -121,6 +121,7 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
         </div>
       </div>
       <DataTable
+        id='library_data'
         columns={columns}
         data={items}
         headPosition='2.2rem'
@@ -130,7 +131,7 @@ function ViewLibrary({ items, resetQuery: cleanQuery }: ViewLibraryProps) {
             <p>Список схем пуст</p>
             <p className='flex gap-6'>
               <TextURL text='Создать схему' href='/library/create' />
-              <TextURL text='Очистить фильтр' onClick={cleanQuery} />
+              <TextURL text='Очистить фильтр' onClick={resetQuery} />
             </p>
           </FlexColumn>
         }

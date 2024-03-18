@@ -82,8 +82,9 @@ function PasswordChangePage() {
         <TextInput
           id='new_password'
           type='password'
-          allowEnter
           label='Новый пароль'
+          autoComplete='new-password'
+          allowEnter
           colors={passwordColor}
           value={newPassword}
           onChange={event => {
@@ -93,8 +94,9 @@ function PasswordChangePage() {
         <TextInput
           id='new_password_repeat'
           type='password'
-          allowEnter
           label='Повторите новый'
+          autoComplete='new-password'
+          allowEnter
           colors={passwordColor}
           value={newPasswordRepeat}
           onChange={event => {

@@ -101,6 +101,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
       onSubmit={handleSubmit}
     >
       <TextInput
+        id='schema_title'
         required
         label='Полное название'
         value={title}
@@ -109,6 +110,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
       />
       <div className='flex justify-between w-full gap-3'>
         <TextInput
+          id='schema_alias'
           required
           label='Сокращение'
           className='w-[14rem]'
@@ -149,6 +151,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
         </div>
       </div>
       <TextArea
+        id='schema_comment'
         label='Комментарий'
         rows={3}
         value={comment}
@@ -157,6 +160,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
       />
       <div className='flex justify-between whitespace-nowrap'>
         <Checkbox
+          id='schema_common'
           label='Общедоступная схема'
           title='Общедоступные схемы видны всем пользователям и могут быть изменены'
           disabled={!controller.isContentEditable}
@@ -164,6 +168,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
           setValue={value => setCommon(value)}
         />
         <Checkbox
+          id='schema_immutable'
           label='Неизменная схема'
           title='Только администраторы могут присваивать схемам неизменный статус'
           disabled={!controller.isContentEditable || !user?.is_staff}

@@ -9,7 +9,7 @@ interface ConstituentaTooltipProps {
 
 function ConstituentaTooltip({ data, anchor }: ConstituentaTooltipProps) {
   return (
-    <Tooltip clickable anchorSelect={anchor} className='max-w-[30rem]'>
+    <Tooltip clickable layer='z-modal-tooltip' anchorSelect={anchor} className='max-w-[30rem]'>
       <InfoConstituenta data={data} onClick={event => event.stopPropagation()} />
     </Tooltip>
   );

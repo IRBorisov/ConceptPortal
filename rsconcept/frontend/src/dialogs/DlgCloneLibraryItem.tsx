@@ -65,15 +65,26 @@ function DlgCloneLibraryItem({ hideWindow, base }: DlgCloneLibraryItemProps) {
       onSubmit={handleSubmit}
       className={clsx('px-6 py-2', classnames.flex_col)}
     >
-      <TextInput label='Полное название' value={title} onChange={event => setTitle(event.target.value)} />
       <TextInput
+        id='dlg_full_name'
+        label='Полное название'
+        value={title}
+        onChange={event => setTitle(event.target.value)}
+      />
+      <TextInput
+        id='dlg_alias'
         label='Сокращение'
         value={alias}
         className='max-w-sm'
         onChange={event => setAlias(event.target.value)}
       />
-      <TextArea label='Комментарий' value={comment} onChange={event => setComment(event.target.value)} />
-      <Checkbox label='Общедоступная схема' value={common} setValue={value => setCommon(value)} />
+      <TextArea
+        id='dlg_comment'
+        label='Комментарий'
+        value={comment}
+        onChange={event => setComment(event.target.value)}
+      />
+      <Checkbox id='dlg_is_common' label='Общедоступная схема' value={common} setValue={value => setCommon(value)} />
     </Modal>
   );
 }

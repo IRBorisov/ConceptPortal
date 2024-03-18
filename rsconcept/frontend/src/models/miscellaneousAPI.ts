@@ -1,38 +1,51 @@
 /**
  * Module: API for miscellaneous frontend model types. Future targets for refactoring aimed at extracting modules.
  */
-import { DependencyMode } from './miscellaneous';
+import { DependencyMode, ILibraryFilter, LibraryFilterStrategy } from './miscellaneous';
 import { IConstituenta, IRSForm } from './rsform';
 
 /**
- * Filter list of  {@link ILibraryItem} to a given query.
+ * Filter list of  {@link ILibraryItem} to a given graph query.
  */
 export function applyGraphFilter(target: IRSForm, start: number, mode: DependencyMode): IConstituenta[] {
   if (mode === DependencyMode.ALL) {
     return target.items;
   }
-  let ids: number[] | undefined = undefined;
-  switch (mode) {
-    case DependencyMode.OUTPUTS: {
-      ids = target.graph.nodes.get(start)?.outputs;
-      break;
+  const ids: number[] | undefined = (() => {
+    switch (mode) {
+      case DependencyMode.OUTPUTS: {
+        return target.graph.nodes.get(start)?.outputs;
+      }
+      case DependencyMode.INPUTS: {
+        return target.graph.nodes.get(start)?.inputs;
+      }
+      case DependencyMode.EXPAND_OUTPUTS: {
+        return target.graph.expandOutputs([start]);
+      }
+      case DependencyMode.EXPAND_INPUTS: {
+        return target.graph.expandInputs([start]);
+      }
     }
-    case DependencyMode.INPUTS: {
-      ids = target.graph.nodes.get(start)?.inputs;
-      break;
-    }
-    case DependencyMode.EXPAND_OUTPUTS: {
-      ids = target.graph.expandOutputs([start]);
-      break;
-    }
-    case DependencyMode.EXPAND_INPUTS: {
-      ids = target.graph.expandInputs([start]);
-      break;
-    }
-  }
-  if (!ids) {
-    return target.items;
+    return undefined;
+  })();
+  if (ids) {
+    return target.items.filter(cst => ids.find(id => id === cst.id));
   } else {
-    return target.items.filter(cst => ids!.find(id => id === cst.id));
+    return target.items;
+  }
+}
+
+/**
+ * Filter list of  {@link ILibraryItem} to a given text query.
+ */
+export function filterFromStrategy(strategy: LibraryFilterStrategy): ILibraryFilter {
+  // prettier-ignore
+  switch (strategy) {
+    case LibraryFilterStrategy.MANUAL: return {};
+    case LibraryFilterStrategy.COMMON: return { is_common: true };
+    case LibraryFilterStrategy.CANONICAL: return { is_canonical: true };
+    case LibraryFilterStrategy.PERSONAL: return { is_personal: true };
+    case LibraryFilterStrategy.SUBSCRIBE: return { is_subscribed: true };
+    case LibraryFilterStrategy.OWNED: return { is_owned: true };
   }
 }

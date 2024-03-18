@@ -85,6 +85,7 @@ function CreateRSFormPage() {
           <h1>Создание концептуальной схемы</h1>
           <Overlay position='top-[-2.4rem] right-[-1rem]'>
             <input
+              id='schema_file'
               ref={inputRef}
               type='file'
               style={{ display: 'none' }}
@@ -100,6 +101,7 @@ function CreateRSFormPage() {
           {fileName ? <Label text={`Загружен файл: ${fileName}`} /> : null}
 
           <TextInput
+            id='schema_title'
             required={!file}
             label='Полное название'
             placeholder={file && 'Загрузить из файла'}
@@ -107,6 +109,7 @@ function CreateRSFormPage() {
             onChange={event => setTitle(event.target.value)}
           />
           <TextInput
+            id='schema_alias'
             required={!file}
             label='Сокращение'
             placeholder={file && 'Загрузить из файла'}
@@ -117,12 +120,18 @@ function CreateRSFormPage() {
             onChange={event => setAlias(event.target.value)}
           />
           <TextArea
+            id='schema_comment'
             label='Комментарий'
             placeholder={file && 'Загрузить из файла'}
             value={comment}
             onChange={event => setComment(event.target.value)}
           />
-          <Checkbox label='Общедоступная схема' value={common} setValue={value => setCommon(value ?? false)} />
+          <Checkbox
+            id='schema_common'
+            label='Общедоступная схема'
+            value={common}
+            setValue={value => setCommon(value ?? false)}
+          />
           <div className='flex justify-around gap-6 py-3'>
             <SubmitButton text='Создать схему' loading={processing} className='min-w-[10rem]' />
             <Button text='Отмена' className='min-w-[10rem]' onClick={() => handleCancel()} />

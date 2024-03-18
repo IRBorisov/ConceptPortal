@@ -10,11 +10,19 @@ function Label({ text, className, ...restProps }: LabelProps) {
   if (!text) {
     return null;
   }
-  return (
-    <label className={clsx('text-sm font-medium whitespace-nowrap', className)} {...restProps}>
-      {text}
-    </label>
-  );
+  if (restProps.htmlFor) {
+    return (
+      <label className={clsx('text-sm font-medium whitespace-nowrap', className)} {...restProps}>
+        {text}
+      </label>
+    );
+  } else {
+    return (
+      <span className={clsx('text-sm font-medium whitespace-nowrap', className)} {...restProps}>
+        {text}
+      </span>
+    );
+  }
 }
 
 export default Label;

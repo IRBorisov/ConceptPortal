@@ -13,6 +13,7 @@ import ConstituentaBadge from './ConstituentaBadge';
 import FlexColumn from './ui/FlexColumn';
 
 interface ConstituentaPickerProps {
+  id?: string;
   prefixID?: string;
   data?: IConstituenta[];
   rows?: number;
@@ -29,6 +30,7 @@ interface ConstituentaPickerProps {
 const columnHelper = createColumnHelper<IConstituenta>();
 
 function ConstituentaPicker({
+  id,
   data,
   value,
   initialFilter = '',
@@ -85,13 +87,19 @@ function ConstituentaPicker({
   );
 
   return (
-    <div>
-      <SearchBar value={filterText} onChange={newValue => setFilterText(newValue)} />
+    <div className='border divide-y'>
+      <SearchBar
+        id={id ? `${id}__search` : undefined}
+        noBorder
+        value={filterText}
+        onChange={newValue => setFilterText(newValue)}
+      />
       <DataTable
+        id={id}
         dense
         noHeader
         noFooter
-        className='overflow-y-auto text-sm border select-none'
+        className='overflow-y-auto text-sm select-none'
         style={{ maxHeight: size, minHeight: size }}
         data={filteredData}
         columns={columns}

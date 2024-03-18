@@ -61,6 +61,7 @@ function EntityTab({ initial, items, setIsValid, setReference }: EntityTabProps)
   return (
     <FlexColumn>
       <ConstituentaPicker
+        id='dlg_reference_entity_picker'
         initialFilter={initial.text}
         value={selectedCst}
         data={items}
@@ -74,6 +75,7 @@ function EntityTab({ initial, items, setIsValid, setReference }: EntityTabProps)
 
       <div className='flex gap-3'>
         <TextInput
+          id='dlg_reference_alias'
           dense
           label='Конституента'
           placeholder='Имя'
@@ -81,7 +83,16 @@ function EntityTab({ initial, items, setIsValid, setReference }: EntityTabProps)
           value={alias}
           onChange={event => setAlias(event.target.value)}
         />
-        <TextInput disabled dense noBorder label='Термин' className='flex-grow text-sm' value={term} title={term} />
+        <TextInput
+          id='dlg_reference_term'
+          disabled
+          dense
+          noBorder
+          label='Термин'
+          className='flex-grow text-sm'
+          value={term}
+          title={term}
+        />
       </div>
 
       <SelectWordForm selected={selectedGrams} setSelected={setSelectedGrams} />
@@ -89,6 +100,7 @@ function EntityTab({ initial, items, setIsValid, setReference }: EntityTabProps)
       <div className='flex items-center gap-4'>
         <Label text='Словоформа' />
         <SelectGrammeme
+          id='dlg_reference_grammemes'
           placeholder='Выберите граммемы'
           className='flex-grow'
           menuPlacement='top'

@@ -8,12 +8,18 @@ import { BiChevronLeft, BiChevronRight, BiFirstPage, BiLastPage } from 'react-ic
 import { prefixes } from '@/utils/constants';
 
 interface PaginationToolsProps<TData> {
+  id?: string;
   table: Table<TData>;
   paginationOptions: number[];
   onChangePaginationOption?: (newValue: number) => void;
 }
 
-function PaginationTools<TData>({ table, paginationOptions, onChangePaginationOption }: PaginationToolsProps<TData>) {
+function PaginationTools<TData>({
+  id,
+  table,
+  paginationOptions,
+  onChangePaginationOption
+}: PaginationToolsProps<TData>) {
   const handlePaginationOptionsChange = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
       const perPage = Number(event.target.value);
@@ -55,6 +61,7 @@ function PaginationTools<TData>({ table, paginationOptions, onChangePaginationOp
           <BiChevronLeft size='1.5rem' />
         </button>
         <input
+          id={id ? `${id}__page` : undefined}
           title='Номер страницы. Выделите для ручного ввода'
           className='w-6 text-center clr-app'
           value={table.getState().pagination.pageIndex + 1}
@@ -83,6 +90,7 @@ function PaginationTools<TData>({ table, paginationOptions, onChangePaginationOp
         </button>
       </div>
       <select
+        id={id ? `${id}__per_page` : undefined}
         value={table.getState().pagination.pageSize}
         onChange={handlePaginationOptionsChange}
         className='mx-2 cursor-pointer clr-app'
