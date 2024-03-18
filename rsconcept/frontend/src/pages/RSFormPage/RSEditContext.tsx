@@ -21,14 +21,15 @@ import DlgCreateVersion from '@/dialogs/DlgCreateVersion';
 import DlgDeleteCst from '@/dialogs/DlgDeleteCst';
 import DlgEditVersions from '@/dialogs/DlgEditVersions';
 import DlgEditWordForms from '@/dialogs/DlgEditWordForms';
+import DlgInlineSynthesis from '@/dialogs/DlgInlineSynthesis';
 import DlgRenameCst from '@/dialogs/DlgRenameCst';
 import DlgSubstituteCst from '@/dialogs/DlgSubstituteCst';
 import DlgUploadRSForm from '@/dialogs/DlgUploadRSForm';
 import { IVersionData } from '@/models/library';
 import { UserAccessMode } from '@/models/miscellaneous';
 import {
+  ConstituentaID,
   CstType,
-  EntityID,
   IConstituenta,
   IConstituentaMeta,
   ICstCreateData,
@@ -69,6 +70,7 @@ interface IRSEditContext {
   download: () => void;
   reindex: () => void;
   produceStructure: () => void;
+  inlineSynthesis: () => void;
   substitute: () => void;
 
   createVersion: () => void;
@@ -85,13 +87,13 @@ export const useRSEdit = () => {
 };
 
 interface RSEditStateProps {
-  selected: EntityID[];
+  selected: ConstituentaID[];
   isModified: boolean;
-  setSelected: React.Dispatch<React.SetStateAction<EntityID[]>>;
+  setSelected: React.Dispatch<React.SetStateAction<ConstituentaID[]>>;
   activeCst?: IConstituenta;
 
   onCreateCst?: (newCst: IConstituentaMeta) => void;
-  onDeleteCst?: (newActive?: EntityID) => void;
+  onDeleteCst?: (newActive?: ConstituentaID) => void;
   children: React.ReactNode;
 }
 
@@ -127,6 +129,7 @@ export const RSEditState = ({
   const [showSubstitute, setShowSubstitute] = useState(false);
   const [showCreateVersion, setShowCreateVersion] = useState(false);
   const [showEditVersions, setShowEditVersions] = useState(false);
+  const [showInlineSynthesis, setShowInlineSynthesis] = useState(false);
 
   const [createInitialData, setCreateInitialData] = useState<ICstCreateData>();
   const [showCreateCst, setShowCreateCst] = useState(false);
@@ -134,7 +137,7 @@ export const RSEditState = ({
   const [renameInitialData, setRenameInitialData] = useState<ICstRenameData>();
   const [showRenameCst, setShowRenameCst] = useState(false);
 
-  const [insertCstID, setInsertCstID] = useState<EntityID | undefined>(undefined);
+  const [insertCstID, setInsertCstID] = useState<ConstituentaID | undefined>(undefined);
   const [showTemplates, setShowTemplates] = useState(false);
 
   useLayoutEffect(
@@ -192,7 +195,7 @@ export const RSEditState = ({
   );
 
   const handleDeleteCst = useCallback(
-    (deleted: EntityID[]) => {
+    (deleted: ConstituentaID[]) => {
       if (!model.schema) {
         return;
       }
@@ -479,6 +482,7 @@ export const RSEditState = ({
         share,
         toggleSubscribe,
         reindex,
+        inlineSynthesis: () => setShowInlineSynthesis(true),
         produceStructure,
         substitute,
 
@@ -549,6 +553,13 @@ export const RSEditState = ({
               onUpdate={handleUpdateVersion}
             />
           ) : null}
+          {showInlineSynthesis ? (
+            <DlgInlineSynthesis
+              receiver={model.schema}
+              hideWindow={() => setShowInlineSynthesis(false)}
+              onInlineSynthesis={() => toast('Testing')}
+            />
+          ) : null}
         </AnimatePresence>
       ) : null}
 
@@ -586,10 +597,10 @@ function ProcessError({
 }
 
 function getNextActiveOnDelete(
-  activeID: number | undefined,
+  activeID: ConstituentaID | undefined,
   items: IConstituenta[],
-  deleted: number[]
-): number | undefined {
+  deleted: ConstituentaID[]
+): ConstituentaID | undefined {
   if (items.length === deleted.length) {
     return undefined;
   }

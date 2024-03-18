@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  BiAnalyse,
   BiDiamond,
   BiDownload,
   BiDuplicate,
@@ -13,7 +12,16 @@ import {
   BiUpload
 } from 'react-icons/bi';
 import { FiEdit } from 'react-icons/fi';
-import { LuAlertTriangle, LuArchive, LuCrown, LuGlasses, LuNetwork, LuReplace } from 'react-icons/lu';
+import {
+  LuAlertTriangle,
+  LuArchive,
+  LuBookCopy,
+  LuCrown,
+  LuGlasses,
+  LuNetwork,
+  LuReplace,
+  LuWand2
+} from 'react-icons/lu';
 import { VscLibrary } from 'react-icons/vsc';
 
 import Button from '@/components/ui/Button';
@@ -93,6 +101,11 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
   function handleProduceStructure() {
     editMenu.hide();
     controller.produceStructure();
+  }
+
+  function handleInlineSynthesis() {
+    editMenu.hide();
+    controller.inlineSynthesis();
   }
 
   function handleChangeMode(newMode: UserAccessMode) {
@@ -202,11 +215,18 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
               onClick={handleTemplates}
             />
             <DropdownButton
+              disabled={!controller.isContentEditable || !user.is_staff}
+              text='Применить конструкт'
+              title='Импортировать совокупность конституент из другой схемы'
+              icon={<LuBookCopy size='1rem' className='icon-green' />}
+              onClick={handleInlineSynthesis}
+            />
+            <DropdownButton
               disabled={!controller.isContentEditable}
               className='border-t-2'
               text='Сброс имён'
               title='Присвоить порядковые имена и обновить выражения'
-              icon={<BiAnalyse size='1rem' className='icon-primary' />}
+              icon={<LuWand2 size='1rem' className='icon-primary' />}
               onClick={handleReindex}
             />
             <DropdownButton
@@ -220,7 +240,7 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
               disabled={!controller.isContentEditable}
               text='Отождествление'
               title='Заменить вхождения одной конституенты на другую'
-              icon={<LuReplace size='1rem' className='icon-primary' />}
+              icon={<LuReplace size='1rem' className='icon-red' />}
               onClick={handleSubstituteCst}
             />
           </Dropdown>
