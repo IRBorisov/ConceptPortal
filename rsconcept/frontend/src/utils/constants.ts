@@ -61,14 +61,6 @@ export const youtube = {
 };
 
 /**
- * Tailwind CSS combinations.
- * Note: using clsx in conjunction with tailwindCss is preferred to creating custom CSS
- */
-export const classnames = {
-  flex_col: 'flex flex-col gap-3'
-};
-
-/**
  * Constant URLs.
  */
 export const urls = {
@@ -101,6 +93,7 @@ export const globalIDs = {
 export const prefixes = {
   page_size: 'page_size_',
   cst_list: 'cst_list_',
+  cst_inline_synth_list: 'cst_inline_synth_list',
   cst_side_table: 'cst_side_table_',
   cst_hidden_list: 'cst_hidden_list_',
   cst_modal_list: 'cst_modal_list_',

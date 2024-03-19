@@ -13,7 +13,6 @@ import { useConceptNavigation } from '@/context/NavigationContext';
 import { ILibraryItem } from '@/models/library';
 import { cloneTitle } from '@/models/libraryAPI';
 import { IRSFormCreateData } from '@/models/rsform';
-import { classnames } from '@/utils/constants';
 
 interface DlgCloneLibraryItemProps extends Pick<ModalProps, 'hideWindow'> {
   base: ILibraryItem;
@@ -63,7 +62,7 @@ function DlgCloneLibraryItem({ hideWindow, base }: DlgCloneLibraryItemProps) {
       canSubmit={canSubmit}
       submitText='Создать'
       onSubmit={handleSubmit}
-      className={clsx('px-6 py-2', classnames.flex_col)}
+      className={clsx('px-6 py-2', 'cc-column')}
     >
       <TextInput
         id='dlg_full_name'

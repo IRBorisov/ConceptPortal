@@ -13,7 +13,6 @@ import { HelpTopic } from '@/models/miscellaneous';
 import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
 import { generateAlias, validateNewAlias } from '@/models/rsformAPI';
 import { inferTemplatedType, substituteTemplateArgs } from '@/models/rslangAPI';
-import { classnames } from '@/utils/constants';
 
 import ArgumentsTab, { IArgumentsState } from './ArgumentsTab';
 import ConstituentaTab from './ConstituentaTab';
@@ -138,7 +137,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
           <ArgumentsTab schema={schema} state={substitutes} partialUpdate={updateSubstitutes} />
         </TabPanel>
 
-        <TabPanel className={classnames.flex_col} style={{ display: activeTab === TabID.CONSTITUENTA ? '' : 'none' }}>
+        <TabPanel className='cc-column' style={{ display: activeTab === TabID.CONSTITUENTA ? '' : 'none' }}>
           <ConstituentaTab state={constituenta} partialUpdate={updateConstituenta} />
         </TabPanel>
       </Tabs>

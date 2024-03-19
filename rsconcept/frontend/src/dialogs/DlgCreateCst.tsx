@@ -11,7 +11,6 @@ import TextInput from '@/components/ui/TextInput';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
 import { generateAlias, validateNewAlias } from '@/models/rsformAPI';
-import { classnames } from '@/utils/constants';
 import { labelCstType } from '@/utils/labels';
 import { SelectorCstType } from '@/utils/selectors';
 
@@ -53,7 +52,7 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
       canSubmit={validated}
       onSubmit={handleSubmit}
       submitText='Создать'
-      className={clsx('w-[35rem]', 'py-2 px-6', classnames.flex_col)}
+      className={clsx('cc-column', 'w-[35rem]', 'py-2 px-6')}
     >
       <div className='flex self-center gap-6'>
         <SelectSingle

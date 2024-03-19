@@ -14,7 +14,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { IUserLoginData } from '@/models/library';
-import { classnames, resources } from '@/utils/constants';
+import { resources } from '@/utils/constants';
 
 function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
@@ -64,7 +64,7 @@ function LoginPage() {
   }
   return (
     <AnimateFade>
-      <form className={clsx('w-[24rem]', 'pt-12 pb-6 px-6', classnames.flex_col)} onSubmit={handleSubmit}>
+      <form className={clsx('cc-column', 'w-[24rem]', 'pt-12 pb-6 px-6')} onSubmit={handleSubmit}>
         <img alt='Концепт Портал' src={resources.logo} className='max-h-[2.5rem] min-w-[2.5rem] mb-3' />
         <TextInput
           id='username'

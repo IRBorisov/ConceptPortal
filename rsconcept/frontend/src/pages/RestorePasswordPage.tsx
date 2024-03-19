@@ -11,7 +11,6 @@ import TextInput from '@/components/ui/TextInput';
 import TextURL from '@/components/ui/TextURL';
 import { useAuth } from '@/context/AuthContext';
 import { IRequestPasswordData } from '@/models/library';
-import { classnames } from '@/utils/constants';
 
 function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
@@ -44,7 +43,7 @@ function RestorePasswordPage() {
   return (
     <AnimateFade>
       {!isCompleted ? (
-        <form className={clsx('w-[24rem]', 'px-6 mt-3', classnames.flex_col)} onSubmit={handleSubmit}>
+        <form className={clsx('cc-column', 'w-[24rem]', 'px-6 mt-3')} onSubmit={handleSubmit}>
           <TextInput
             id='email'
             allowEnter

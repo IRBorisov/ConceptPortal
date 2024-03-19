@@ -28,7 +28,7 @@ function SchemaTab({ selected, setSelected }: SchemaTabProps) {
         disabled
         dense
       />
-      <SchemaPicker rows={6} value={selected} onSelectValue={setSelected} />
+      <SchemaPicker rows={16} value={selected} onSelectValue={setSelected} />
     </FlexColumn>
   );
 }

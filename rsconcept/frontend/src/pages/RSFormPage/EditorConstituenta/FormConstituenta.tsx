@@ -10,7 +10,6 @@ import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
 import { useRSForm } from '@/context/RSFormContext';
 import { IConstituenta, ICstUpdateData } from '@/models/rsform';
-import { classnames } from '@/utils/constants';
 import { labelCstTypification } from '@/utils/labels';
 
 import EditorRSExpression from '../EditorRSExpression';
@@ -123,7 +122,7 @@ function FormConstituenta({
       />
       <form
         id={id}
-        className={clsx('mt-1 w-full md:w-[47.8rem] shrink-0', 'px-4 py-1', classnames.flex_col)}
+        className={clsx('cc-column', 'mt-1 w-full md:w-[47.8rem] shrink-0', 'px-4 py-1')}
         onSubmit={handleSubmit}
       >
         <RefsInput

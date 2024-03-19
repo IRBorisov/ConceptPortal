@@ -12,7 +12,6 @@ import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { IPasswordTokenData, IResetPasswordData } from '@/models/library';
-import { classnames } from '@/utils/constants';
 
 function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 404) {
@@ -78,7 +77,7 @@ function PasswordChangePage() {
       isLoading={loading}
       hasNoData={!isTokenValid}
     >
-      <form className={clsx('w-[24rem]', 'px-6 mt-3', classnames.flex_col)} onSubmit={handleSubmit}>
+      <form className={clsx('cc-column', 'w-[24rem]', 'px-6 mt-3')} onSubmit={handleSubmit}>
         <TextInput
           id='new_password'
           type='password'

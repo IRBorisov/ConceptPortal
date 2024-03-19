@@ -19,7 +19,7 @@ import Tooltip from '@/components/ui/Tooltip';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { type IUserSignupData } from '@/models/library';
-import { classnames, globalIDs, patterns } from '@/utils/constants';
+import { globalIDs, patterns } from '@/utils/constants';
 
 function RegisterPage() {
   const router = useConceptNavigation();
@@ -69,7 +69,7 @@ function RegisterPage() {
   }
   return (
     <AnimateFade>
-      <form className={clsx('px-6 py-3', classnames.flex_col)} onSubmit={handleSubmit}>
+      <form className={clsx('cc-column', 'px-6 py-3')} onSubmit={handleSubmit}>
         <h1>Новый пользователь</h1>
         <div className='flex gap-12'>
           <FlexColumn>

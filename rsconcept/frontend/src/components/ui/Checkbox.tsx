@@ -76,7 +76,7 @@ function Checkbox({
           </div>
         ) : null}
       </div>
-      {label ? <span className={clsx('text-start text-sm whitespace-nowrap', cursor)}>{label}</span> : null}
+      {label ? <span className={clsx('text-start text-sm whitespace-nowrap select-text', cursor)}>{label}</span> : null}
     </button>
   );
 }

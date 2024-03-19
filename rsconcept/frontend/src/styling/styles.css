@@ -192,4 +192,12 @@
       @apply clr-text-green;
     }
   }
+
+  .cc-label {
+    @apply text-sm font-medium cursor-default select-text whitespace-nowrap;
+  }
+
+  .cc-column {
+    @apply flex flex-col gap-3;
+  }
 }

@@ -8,7 +8,6 @@ import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
 import { IVersionData, IVersionInfo } from '@/models/library';
 import { nextVersion } from '@/models/libraryAPI';
-import { classnames } from '@/utils/constants';
 
 interface DlgCreateVersionProps extends Pick<ModalProps, 'hideWindow'> {
   versions: IVersionInfo[];
@@ -38,7 +37,7 @@ function DlgCreateVersion({ hideWindow, versions, onCreate }: DlgCreateVersionPr
       canSubmit={canSubmit}
       onSubmit={handleSubmit}
       submitText='Создать'
-      className={clsx('w-[30rem]', 'py-2 px-6', classnames.flex_col)}
+      className={clsx('cc-column', 'w-[30rem]', 'py-2 px-6')}
     >
       <TextInput
         id='dlg_version'

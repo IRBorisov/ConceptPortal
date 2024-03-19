@@ -12,13 +12,13 @@ function Label({ text, className, ...restProps }: LabelProps) {
   }
   if (restProps.htmlFor) {
     return (
-      <label className={clsx('text-sm font-medium whitespace-nowrap', className)} {...restProps}>
+      <label className={clsx('cc-label', className)} {...restProps}>
         {text}
       </label>
     );
   } else {
     return (
-      <span className={clsx('text-sm font-medium whitespace-nowrap', className)} {...restProps}>
+      <span className={clsx('cc-label', className)} {...restProps}>
         {text}
       </span>
     );

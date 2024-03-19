@@ -20,7 +20,7 @@ import { useRSForm } from '@/context/RSFormContext';
 import { LibraryItemType } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IRSFormCreateData } from '@/models/rsform';
-import { classnames, limits, patterns } from '@/utils/constants';
+import { limits, patterns } from '@/utils/constants';
 
 import { useRSEdit } from '../RSEditContext';
 
@@ -95,11 +95,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
   };
 
   return (
-    <form
-      id={id}
-      className={clsx('mt-1 min-w-[22rem] sm:w-[30rem]', 'py-1', classnames.flex_col)}
-      onSubmit={handleSubmit}
-    >
+    <form id={id} className={clsx('cc-column', 'mt-1 min-w-[22rem] sm:w-[30rem]', 'py-1')} onSubmit={handleSubmit}>
       <TextInput
         id='schema_title'
         required

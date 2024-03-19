@@ -29,6 +29,7 @@ function ControlsOverlay({ constituenta, isMutable, processing, onRename, onEdit
         className={clsx(
           'pt-1 pl-[1.375rem]', // prettier: split lines
           'text-sm font-medium whitespace-nowrap',
+          'select-text cursor-default',
           !isMutable && !processing && 'pl-[2.8rem]'
         )}
       >

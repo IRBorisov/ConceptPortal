@@ -9,7 +9,6 @@ import TextInput from '@/components/ui/TextInput';
 import { useBlockNavigation } from '@/context/NavigationContext';
 import { useUserProfile } from '@/context/UserProfileContext';
 import { IUserUpdateData } from '@/models/library';
-import { classnames } from '@/utils/constants';
 
 function EditorProfile() {
   const { updateUser, user, processing } = useUserProfile();
@@ -48,7 +47,7 @@ function EditorProfile() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className={clsx('min-w-[18rem]', 'px-6 py-2', classnames.flex_col)}>
+    <form onSubmit={handleSubmit} className={clsx('cc-column', 'min-w-[18rem]', 'px-6 py-2')}>
       <TextInput
         id='username'
         autoComplete='username'

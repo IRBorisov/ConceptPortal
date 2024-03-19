@@ -20,7 +20,7 @@ import { useLibrary } from '@/context/LibraryContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { LibraryItemType } from '@/models/library';
 import { IRSFormCreateData } from '@/models/rsform';
-import { classnames, EXTEOR_TRS_FILE, limits, patterns } from '@/utils/constants';
+import { EXTEOR_TRS_FILE, limits, patterns } from '@/utils/constants';
 
 function CreateRSFormPage() {
   const router = useConceptNavigation();
@@ -81,7 +81,7 @@ function CreateRSFormPage() {
   return (
     <AnimateFade>
       <RequireAuth>
-        <form className={clsx('px-6 py-3', classnames.flex_col)} onSubmit={handleSubmit}>
+        <form className={clsx('cc-column', 'px-6 py-3')} onSubmit={handleSubmit}>
           <h1>Создание концептуальной схемы</h1>
           <Overlay position='top-[-2.4rem] right-[-1rem]'>
             <input

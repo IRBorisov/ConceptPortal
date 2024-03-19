@@ -14,7 +14,7 @@ import useLocalStorage from '@/hooks/useLocalStorage';
 import { GraphColoringScheme, GraphFilterParams } from '@/models/miscellaneous';
 import { ConstituentaID, CstType } from '@/models/rsform';
 import { colorBgGraphNode } from '@/styling/color';
-import { classnames, TIMEOUT_GRAPH_REFRESH } from '@/utils/constants';
+import { TIMEOUT_GRAPH_REFRESH } from '@/utils/constants';
 
 import { useRSEdit } from '../RSEditContext';
 import GraphSidebar from './GraphSidebar';
@@ -222,7 +222,7 @@ function EditorTermGraph({ selected, setSelected, onOpenEdit }: EditorTermGraphP
         </Overlay>
       ) : null}
 
-      <Overlay position='top-0 left-0' className={clsx('w-[13.5rem]', classnames.flex_col)}>
+      <Overlay position='top-0 left-0' className='cc-column w-[13.5rem]'>
         <GraphSidebar
           coloring={coloringScheme}
           layout={layout}

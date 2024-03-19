@@ -6,7 +6,7 @@ import { useMemo, useState } from 'react';
 import Checkbox from '@/components/ui/Checkbox';
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import { IRSForm } from '@/models/rsform';
-import { classnames, prefixes } from '@/utils/constants';
+import { prefixes } from '@/utils/constants';
 
 import ConstituentsList from './ConstituentsList';
 
@@ -36,7 +36,7 @@ function DlgDeleteCst({ hideWindow, selected, schema, onDelete }: DlgDeleteCstPr
       submitText={expandOut ? 'Удалить с зависимыми' : 'Удалить'}
       hideWindow={hideWindow}
       onSubmit={handleSubmit}
-      className={clsx('max-w-[60vw] min-w-[30rem]', 'px-6', classnames.flex_col)}
+      className={clsx('cc-column', 'max-w-[60vw] min-w-[30rem]', 'px-6')}
     >
       <ConstituentsList
         title='Выбраны к удалению'

@@ -55,7 +55,7 @@ function ConstituentaToolbar({
         icon={<BiPlusCircle size={'1.25rem'} className='icon-green' />}
       />
       <MiniButton
-        titleHtml={prepareTooltip('Клонировать конституенту', 'Alt + V]')}
+        titleHtml={prepareTooltip('Клонировать конституенту', 'Alt + V')}
         disabled={!isMutable || isModified}
         onClick={onClone}
         icon={<BiDuplicate size='1.25rem' className='icon-green' />}

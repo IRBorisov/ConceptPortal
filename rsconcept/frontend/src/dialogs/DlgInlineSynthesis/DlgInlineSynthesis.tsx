@@ -53,7 +53,7 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
     <Modal
       header='Импорт концептуальной схем'
       submitText='Добавить конституенты'
-      className='w-[35rem] h-[30rem] px-6'
+      className='w-[40rem] h-[40rem] px-6'
       hideWindow={hideWindow}
       canSubmit={validated}
       onSubmit={handleSubmit}
@@ -66,9 +66,9 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
         onSelect={setActiveTab}
       >
         <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none')}>
-          <TabLabel label='Схема' title='Выбор импортируемой схемы' className='w-[8rem]' />
-          <TabLabel label='Содержание' title='Выбор переносимого содержания' className='w-[8rem]' />
-          <TabLabel label='Отождествления' title='Отождествление добавляемый конституент' className='w-[8rem]' />
+          <TabLabel label='Схема' title='Источник конституент' className='w-[8rem]' />
+          <TabLabel label='Содержание' title='Перечень конституент' className='w-[8rem]' />
+          <TabLabel label='Отождествления' title='Таблица отождествлений' className='w-[8rem]' />
         </TabList>
 
         <TabPanel style={{ display: activeTab === TabID.SCHEMA ? '' : 'none' }}>
