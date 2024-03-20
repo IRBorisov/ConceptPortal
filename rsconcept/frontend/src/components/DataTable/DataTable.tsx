@@ -36,6 +36,7 @@ export interface DataTableProps<TData extends RowData>
   id?: string;
   dense?: boolean;
   rows?: number;
+  contentHeight?: string;
   headPosition?: string;
   noHeader?: boolean;
   noFooter?: boolean;
@@ -73,6 +74,7 @@ function DataTable<TData extends RowData>({
   className,
   dense,
   rows,
+  contentHeight = '1.1875rem',
   headPosition,
   conditionalRowStyles,
   noFooter,
@@ -130,11 +132,11 @@ function DataTable<TData extends RowData>({
       return undefined;
     }
     if (dense) {
-      return `calc(2px + (2px + 1.6875rem)*${rows} + ${noHeader ? '0px' : '(2px + 2.1875rem)'})`;
+      return `calc(2px + (2px + ${contentHeight} + 0.5rem)*${rows} + ${noHeader ? '0px' : '(2px + 2.1875rem)'})`;
     } else {
-      return `calc(2px + (2px + 2.1875rem)*${rows + (noHeader ? 0 : 1)})`;
+      return `calc(2px + (2px + ${contentHeight} + 1rem)*${rows + (noHeader ? 0 : 1)})`;
     }
-  }, [rows, dense, noHeader]);
+  }, [rows, dense, noHeader, contentHeight]);
 
   return (
     <div id={id} className={className} style={{ minHeight: fixedSize, maxHeight: fixedSize, ...style }}>

@@ -15,6 +15,7 @@ import { labelCstTypification } from '@/utils/labels';
 interface RSTableProps {
   items?: IConstituenta[];
   enableSelection: boolean;
+  maxHeight?: string;
   selected: RowSelectionState;
   setSelected: React.Dispatch<React.SetStateAction<RowSelectionState>>;
 
@@ -29,8 +30,8 @@ const COLUMN_CONVENTION_HIDE_THRESHOLD = 1800;
 
 const columnHelper = createColumnHelper<IConstituenta>();
 
-function RSTable({ items, enableSelection, selected, setSelected, onEdit, onCreateNew }: RSTableProps) {
-  const { colors, calculateHeight } = useConceptTheme();
+function RSTable({ items, maxHeight, enableSelection, selected, setSelected, onEdit, onCreateNew }: RSTableProps) {
+  const { colors } = useConceptTheme();
   const windowSize = useWindowSize();
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -115,14 +116,12 @@ function RSTable({ items, enableSelection, selected, setSelected, onEdit, onCrea
     [colors]
   );
 
-  const tableHeight = useMemo(() => calculateHeight('4.05rem + 5px'), [calculateHeight]);
-
   return (
     <DataTable
       dense
       noFooter
       className={clsx('min-h-[16rem]', 'overflow-y-auto', 'text-sm', 'select-none')}
-      style={{ maxHeight: tableHeight }}
+      style={{ maxHeight: maxHeight }}
       data={items ?? []}
       columns={columns}
       headPosition='0rem'

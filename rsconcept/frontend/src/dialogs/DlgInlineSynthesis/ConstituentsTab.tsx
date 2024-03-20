@@ -1,18 +1,31 @@
 'use client';
 
-import { LibraryItemID } from '@/models/library';
-import { IRSForm } from '@/models/rsform';
+import ConstituentaMultiPicker from '@/components/ConstituentaMultiPicker';
+import DataLoader from '@/components/DataLoader';
+import { ErrorData } from '@/components/InfoError';
+import { ConstituentaID, IRSForm } from '@/models/rsform';
+import { prefixes } from '@/utils/constants';
 
 interface ConstituentsTabProps {
   schema?: IRSForm;
   loading?: boolean;
-  selected: LibraryItemID[];
-  setSelected: React.Dispatch<LibraryItemID[]>;
+  error?: ErrorData;
+  selected: ConstituentaID[];
+  setSelected: React.Dispatch<ConstituentaID[]>;
 }
 
-// { schema, loading, selected, setSelected }: ConstituentsTabProps
-function ConstituentsTab(props: ConstituentsTabProps) {
-  return <>2 - {props.loading}</>;
+function ConstituentsTab({ schema, error, loading, selected, setSelected }: ConstituentsTabProps) {
+  return (
+    <DataLoader id='dlg-constituents-tab' isLoading={loading} error={error} hasNoData={!schema}>
+      <ConstituentaMultiPicker
+        schema={schema}
+        rows={16}
+        prefixID={prefixes.cst_inline_synth_list}
+        selected={selected}
+        setSelected={setSelected}
+      />
+    </DataLoader>
+  );
 }
 
 export default ConstituentsTab;

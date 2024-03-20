@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useMemo, useState } from 'react';
 
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/DataTable';
@@ -14,7 +16,7 @@ import FlexColumn from './ui/FlexColumn';
 
 interface ConstituentaPickerProps {
   id?: string;
-  prefixID?: string;
+  prefixID: string;
   data?: IConstituenta[];
   rows?: number;
 
@@ -74,8 +76,6 @@ function ConstituentaPicker({
     [colors, prefixID, describeFunc]
   );
 
-  const size = useMemo(() => `calc(2px + (2px + 1.8rem)*${rows})`, [rows]);
-
   const conditionalRowStyles = useMemo(
     (): IConditionalStyle<IConstituenta>[] => [
       {
@@ -96,11 +96,12 @@ function ConstituentaPicker({
       />
       <DataTable
         id={id}
+        rows={rows}
+        contentHeight='1.3rem'
         dense
         noHeader
         noFooter
         className='overflow-y-auto text-sm select-none'
-        style={{ maxHeight: size, minHeight: size }}
         data={filteredData}
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}

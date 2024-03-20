@@ -76,7 +76,7 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
         id='dlg_cst_term'
         spellCheck
         label='Термин'
-        placeholder='Схемный или предметный термин, обозначающий данное понятие или утверждение'
+        placeholder='Обозначение, используемое в текстовых определениях'
         rows={2}
         value={cstData.term_raw}
         onChange={event => updateCstData({ term_raw: event.target.value })}
@@ -84,8 +84,7 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
       <RSInput
         id='dlg_cst_expression'
         label='Формальное определение'
-        placeholder='Родоструктурное выражение, задающее формальное определение'
-        height='5.1rem'
+        placeholder='Родоструктурное выражение'
         value={cstData.definition_formal}
         onChange={value => updateCstData({ definition_formal: value })}
       />
@@ -93,7 +92,7 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
         id='dlg_cst_definition'
         spellCheck
         label='Текстовое определение'
-        placeholder='Лингвистическая интерпретация формального выражения'
+        placeholder='Текстовая интерпретация формального выражения'
         rows={2}
         value={cstData.definition_raw}
         onChange={event => updateCstData({ definition_raw: event.target.value })}

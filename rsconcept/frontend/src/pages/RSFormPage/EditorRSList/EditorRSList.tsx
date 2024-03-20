@@ -1,10 +1,11 @@
 'use client';
 
 import clsx from 'clsx';
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 
 import { type RowSelectionState } from '@/components/DataTable';
 import SelectedCounter from '@/components/SelectedCounter';
+import { useConceptTheme } from '@/context/ThemeContext';
 import { ConstituentaID, CstType } from '@/models/rsform';
 
 import { useRSEdit } from '../RSEditContext';
@@ -18,6 +19,7 @@ interface EditorRSListProps {
 }
 
 function EditorRSList({ selected, setSelected, onOpenEdit }: EditorRSListProps) {
+  const { calculateHeight } = useConceptTheme();
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const controller = useRSEdit();
 
@@ -91,6 +93,8 @@ function EditorRSList({ selected, setSelected, onOpenEdit }: EditorRSListProps) 
     return false;
   }
 
+  const tableHeight = useMemo(() => calculateHeight('4.05rem + 5px'), [calculateHeight]);
+
   return (
     <div tabIndex={-1} className='outline-none' onKeyDown={handleTableKey}>
       {controller.isContentEditable || controller.isProcessing ? (
@@ -112,8 +116,9 @@ function EditorRSList({ selected, setSelected, onOpenEdit }: EditorRSListProps) 
       />
 
       <RSTable
-        enableSelection={controller.isContentEditable || controller.isProcessing}
         items={controller.schema?.items}
+        maxHeight={tableHeight}
+        enableSelection={controller.isContentEditable || controller.isProcessing}
         selected={rowSelection}
         setSelected={handleRowSelection}
         onEdit={onOpenEdit}

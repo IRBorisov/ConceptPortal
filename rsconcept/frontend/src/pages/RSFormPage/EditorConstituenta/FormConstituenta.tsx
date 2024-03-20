@@ -128,7 +128,7 @@ function FormConstituenta({
         <RefsInput
           id='cst_term'
           label='Термин'
-          placeholder='Обозначение, используемое в текстовых определениях данной схемы'
+          placeholder='Обозначение, используемое в текстовых определениях'
           items={schema?.items}
           value={term}
           initialValue={constituenta?.term_raw ?? ''}
@@ -165,7 +165,7 @@ function FormConstituenta({
         <RefsInput
           id='cst_definition'
           label='Текстовое определение'
-          placeholder='Текстовый вариант формального определения'
+          placeholder='Текстовая интерпретация формального выражения'
           height='3.8rem'
           items={schema?.items}
           value={textDefinition}
