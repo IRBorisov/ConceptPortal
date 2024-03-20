@@ -63,6 +63,13 @@ export function labelConstituenta(cst: IConstituenta) {
 }
 
 /**
+ * Generate HTML wrapper for control description including hotkey.
+ */
+export function prepareTooltip(text: string, hotkey?: string) {
+  return hotkey ? `<b>[${hotkey}]</b><br/>${text}` : text;
+}
+
+/**
  * Generates label for {@link IVersionInfo} of {@link IRSForm}.
  */
 export function labelVersion(schema?: IRSForm) {
@@ -747,8 +754,8 @@ export function describeAccessMode(mode: UserAccessMode): string {
 }
 
 /**
- * Generate HTML wrapper for control description including hotkey.
+ * UI shared messages.
  */
-export function prepareTooltip(text: string, hotkey?: string) {
-  return hotkey ? `<b>[${hotkey}]</b><br/>${text}` : text;
-}
+export const messages = {
+  unsaved: 'Сохраните или отмените изменения'
+};

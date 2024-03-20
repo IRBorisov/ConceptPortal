@@ -129,7 +129,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
                 />
                 <MiniButton
                   noHover
-                  title='Редактировать версии'
+                  title={schema?.versions.length === 0 ? 'Список версий пуст' : 'Редактировать версии'}
                   disabled={!schema || schema?.versions.length === 0}
                   onClick={controller.editVersions}
                   icon={<LuPencilLine size='1.25rem' className='icon-primary' />}

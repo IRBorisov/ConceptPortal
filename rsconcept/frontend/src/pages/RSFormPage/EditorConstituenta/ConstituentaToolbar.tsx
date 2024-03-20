@@ -6,7 +6,7 @@ import { FiSave } from 'react-icons/fi';
 
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
-import { prepareTooltip } from '@/utils/labels';
+import { messages, prepareTooltip } from '@/utils/labels';
 
 interface ConstituentaToolbarProps {
   isMutable: boolean;
@@ -55,7 +55,7 @@ function ConstituentaToolbar({
         icon={<BiPlusCircle size={'1.25rem'} className='icon-green' />}
       />
       <MiniButton
-        titleHtml={prepareTooltip('Клонировать конституенту', 'Alt + V')}
+        titleHtml={isModified ? messages.unsaved : prepareTooltip('Клонировать конституенту', 'Alt + V')}
         disabled={!isMutable || isModified}
         onClick={onClone}
         icon={<BiDuplicate size='1.25rem' className='icon-green' />}

@@ -4,25 +4,37 @@ import { LiaEdit } from 'react-icons/lia';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { IConstituenta } from '@/models/rsform';
+import { messages } from '@/utils/labels';
 
 interface ControlsOverlayProps {
   constituenta?: IConstituenta;
   isMutable: boolean;
+  isModified: boolean;
   processing: boolean;
 
   onRename: () => void;
   onEditTerm: () => void;
 }
 
-function ControlsOverlay({ constituenta, isMutable, processing, onRename, onEditTerm }: ControlsOverlayProps) {
+function ControlsOverlay({
+  constituenta,
+  isMutable,
+  isModified,
+  processing,
+  onRename,
+  onEditTerm
+}: ControlsOverlayProps) {
   return (
     <Overlay position='top-1 left-[4.1rem]' className='flex select-none'>
       {isMutable || processing ? (
         <MiniButton
-          title={`Редактировать словоформы термина: ${constituenta?.term_forms.length ?? 0}`}
+          title={
+            isModified ? messages.unsaved : `Редактировать словоформы термина: ${constituenta?.term_forms.length ?? 0}`
+          }
           noHover
           onClick={onEditTerm}
           icon={<LiaEdit size='1rem' className='icon-primary' />}
+          disabled={isModified}
         />
       ) : null}
       <div
@@ -39,9 +51,10 @@ function ControlsOverlay({ constituenta, isMutable, processing, onRename, onEdit
       {isMutable || processing ? (
         <MiniButton
           noHover
-          title='Переименовать конституенту'
+          title={isModified ? messages.unsaved : 'Переименовать конституенту'}
           onClick={onRename}
           icon={<LiaEdit size='1rem' className='icon-primary' />}
+          disabled={isModified}
         />
       ) : null}
     </Overlay>

@@ -115,6 +115,7 @@ function FormConstituenta({
     <div>
       <ControlsOverlay
         isMutable={isMutable}
+        isModified={isModified}
         processing={processing}
         constituenta={constituenta}
         onEditTerm={onEditTerm}
