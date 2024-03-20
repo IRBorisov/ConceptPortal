@@ -2,8 +2,8 @@
 
 import { useEffect, useLayoutEffect, useState } from 'react';
 
-import ConstituentaPicker from '@/components/ConstituentaPicker';
-import SelectGrammeme from '@/components/SelectGrammeme';
+import ConstituentaPicker from '@/components/select/ConstituentaPicker';
+import SelectGrammeme from '@/components/select/SelectGrammeme';
 import FlexColumn from '@/components/ui/FlexColumn';
 import Label from '@/components/ui/Label';
 import TextInput from '@/components/ui/TextInput';

@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from 'react';
 
-import { ErrorData } from '@/components/InfoError';
+import { ErrorData } from '@/components/info/InfoError';
 import { ILexemeData, ITextRequest, ITextResult, IWordFormPlain } from '@/models/language';
 import { DataCallback, postGenerateLexeme, postInflectText, postParseText } from '@/utils/backendAPI';
 

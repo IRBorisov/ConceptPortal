@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { IVersionInfo } from '@/models/library';
 import { labelVersion } from '@/utils/labels';
 
-import SelectSingle from './ui/SelectSingle';
+import SelectSingle from '../ui/SelectSingle';
 
 interface VersionSelectorProps {
   items?: IVersionInfo[];

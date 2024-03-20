@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 
 import { animateFade } from '@/styling/animations';
 
-import { CProps } from './props';
+import { CProps } from '../props';
 
 interface AnimateFadeProps extends CProps.AnimatedDiv {
   noFadeIn?: boolean;

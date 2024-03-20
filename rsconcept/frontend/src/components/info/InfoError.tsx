@@ -4,9 +4,9 @@ import clsx from 'clsx';
 import { urls } from '@/utils/constants';
 import { isResponseHtml } from '@/utils/utils';
 
-import AnimateFade from './AnimateFade';
-import PrettyJson from './ui/PrettyJSON';
-import TextURL from './ui/TextURL';
+import PrettyJson from '../ui/PrettyJSON';
+import TextURL from '../ui/TextURL';
+import AnimateFade from '../wrap/AnimateFade';
 
 export type ErrorData = string | Error | AxiosError | undefined;
 

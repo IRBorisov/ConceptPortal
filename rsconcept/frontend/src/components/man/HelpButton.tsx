@@ -4,7 +4,7 @@ import TextURL from '@/components/ui/TextURL';
 import Tooltip, { PlacesType } from '@/components/ui/Tooltip';
 import { HelpTopic } from '@/models/miscellaneous';
 
-import InfoTopic from '../InfoTopic';
+import InfoTopic from '../info/InfoTopic';
 import { CProps } from '../props';
 
 interface HelpButtonProps extends CProps.Styling {

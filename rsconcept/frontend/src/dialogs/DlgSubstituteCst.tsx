@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 import { LuReplace } from 'react-icons/lu';
 
-import ConstituentaSelector from '@/components/ConstituentaSelector';
+import ConstituentaSelector from '@/components/select/ConstituentaSelector';
 import Checkbox from '@/components/ui/Checkbox';
 import FlexColumn from '@/components/ui/FlexColumn';
 import Label from '@/components/ui/Label';

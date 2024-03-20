@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { BiDownArrowCircle, BiDownvote, BiDuplicate, BiPlusCircle, BiTrash, BiUpvote } from 'react-icons/bi';
 
-import HelpButton from '@/components/Help/HelpButton';
+import HelpButton from '@/components/man/HelpButton';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import MiniButton from '@/components/ui/MiniButton';

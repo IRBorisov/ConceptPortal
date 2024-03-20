@@ -1,4 +1,4 @@
-import PDFViewer from '@/components/PDFViewer';
+import PDFViewer from '@/components/ui/PDFViewer';
 import { resources } from '@/utils/constants';
 
 function HelpPrivacy() {

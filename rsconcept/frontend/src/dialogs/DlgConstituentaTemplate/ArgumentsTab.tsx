@@ -5,8 +5,8 @@ import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { BiCheck, BiRefresh, BiX } from 'react-icons/bi';
 
-import ConstituentaPicker from '@/components/ConstituentaPicker';
-import DataTable, { IConditionalStyle } from '@/components/DataTable';
+import ConstituentaPicker from '@/components/select/ConstituentaPicker';
+import DataTable, { IConditionalStyle } from '@/components/ui/DataTable';
 import RSInput from '@/components/RSInput';
 import MiniButton from '@/components/ui/MiniButton';
 import { useConceptTheme } from '@/context/ThemeContext';

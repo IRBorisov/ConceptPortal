@@ -8,7 +8,7 @@ import { FaRegKeyboard } from 'react-icons/fa6';
 import { RiNodeTree } from 'react-icons/ri';
 import { toast } from 'react-toastify';
 
-import HelpButton from '@/components/Help/HelpButton';
+import HelpButton from '@/components/man/HelpButton';
 import RSInput from '@/components/RSInput';
 import { RSTextWrapper } from '@/components/RSInput/textEditing';
 import MiniButton from '@/components/ui/MiniButton';

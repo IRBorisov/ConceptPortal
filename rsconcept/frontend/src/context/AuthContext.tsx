@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useLayoutEffect, useState } from 'react';
 
-import { type ErrorData } from '@/components/InfoError';
+import { type ErrorData } from '@/components/info/InfoError';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { IPasswordTokenData, IRequestPasswordData, IResetPasswordData, IUserLoginData } from '@/models/library';
 import { ICurrentUser } from '@/models/library';

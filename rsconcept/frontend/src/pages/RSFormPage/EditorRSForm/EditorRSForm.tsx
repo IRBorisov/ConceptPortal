@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import InfoLibraryItem from '@/components/InfoLibraryItem';
+import InfoLibraryItem from '@/components/info/InfoLibraryItem';
 import Divider from '@/components/ui/Divider';
 import FlexColumn from '@/components/ui/FlexColumn';
 import { useAuth } from '@/context/AuthContext';

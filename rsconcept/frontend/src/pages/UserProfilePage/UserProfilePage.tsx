@@ -1,4 +1,4 @@
-import RequireAuth from '@/components/RequireAuth';
+import RequireAuth from '@/components/wrap/RequireAuth';
 import { UserProfileState } from '@/context/UserProfileContext';
 
 import UserTabs from './UserTabs';

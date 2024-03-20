@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo } from 'react';
 
-import ConstituentaTooltip from '@/components/ConstituentaTooltip';
+import ConstituentaTooltip from '@/components/info/ConstituentaTooltip';
 import { useConceptTheme } from '@/context/ThemeContext';
 import { GraphColoringScheme } from '@/models/miscellaneous';
 import { ConstituentaID, IRSForm } from '@/models/rsform';

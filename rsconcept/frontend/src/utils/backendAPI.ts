@@ -5,7 +5,7 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { toast } from 'react-toastify';
 
-import { type ErrorData } from '@/components/InfoError';
+import { type ErrorData } from '@/components/info/InfoError';
 import { ILexemeData, IResolutionData, ITextRequest, ITextResult, IWordFormPlain } from '@/models/language';
 import {
   ICurrentUser,

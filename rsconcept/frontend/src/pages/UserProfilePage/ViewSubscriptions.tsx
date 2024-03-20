@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
-import DataTable, { createColumnHelper } from '@/components/DataTable';
+import DataTable, { createColumnHelper } from '@/components/ui/DataTable';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { ILibraryItem } from '@/models/library';
 import { animateSideView } from '@/styling/animations';

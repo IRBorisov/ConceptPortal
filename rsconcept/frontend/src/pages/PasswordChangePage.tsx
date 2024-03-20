@@ -4,10 +4,10 @@ import axios from 'axios';
 import clsx from 'clsx';
 import { useEffect, useMemo, useState } from 'react';
 
-import DataLoader from '@/components/DataLoader';
-import InfoError, { ErrorData } from '@/components/InfoError';
+import InfoError, { ErrorData } from '@/components/info/InfoError';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
+import DataLoader from '@/components/wrap/DataLoader';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import useQueryStrings from '@/hooks/useQueryStrings';

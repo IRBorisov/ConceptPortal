@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useLayoutEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
-import HelpButton from '@/components/Help/HelpButton';
+import HelpButton from '@/components/man/HelpButton';
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import Overlay from '@/components/ui/Overlay';
 import TabLabel from '@/components/ui/TabLabel';

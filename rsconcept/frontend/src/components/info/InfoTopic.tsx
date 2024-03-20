@@ -1,18 +1,18 @@
 import { HelpTopic } from '@/models/miscellaneous';
 
-import HelpAPI from './Help/HelpAPI';
-import HelpConstituenta from './Help/HelpConstituenta';
-import HelpExteor from './Help/HelpExteor';
-import HelpLibrary from './Help/HelpLibrary';
-import HelpMain from './Help/HelpMain';
-import HelpPrivacy from './Help/HelpPrivacy';
-import HelpRSFormItems from './Help/HelpRSFormItems';
-import HelpRSFormMeta from './Help/HelpRSFormMeta';
-import HelpRSLang from './Help/HelpRSLang';
-import HelpRSTemplates from './Help/HelpRSTemplates';
-import HelpTermGraph from './Help/HelpTermGraph';
-import HelpTerminologyControl from './Help/HelpTerminologyControl';
-import HelpVersions from './Help/HelpVersions';
+import HelpAPI from '../man/HelpAPI';
+import HelpConstituenta from '../man/HelpConstituenta';
+import HelpExteor from '../man/HelpExteor';
+import HelpLibrary from '../man/HelpLibrary';
+import HelpMain from '../man/HelpMain';
+import HelpPrivacy from '../man/HelpPrivacy';
+import HelpRSFormItems from '../man/HelpRSFormItems';
+import HelpRSFormMeta from '../man/HelpRSFormMeta';
+import HelpRSLang from '../man/HelpRSLang';
+import HelpRSTemplates from '../man/HelpRSTemplates';
+import HelpTermGraph from '../man/HelpTermGraph';
+import HelpTerminologyControl from '../man/HelpTerminologyControl';
+import HelpVersions from '../man/HelpVersions';
 
 interface InfoTopicProps {
   topic: HelpTopic;

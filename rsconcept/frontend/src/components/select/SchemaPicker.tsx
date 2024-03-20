@@ -1,14 +1,14 @@
 import { useLayoutEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/DataTable';
+import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
 import SearchBar from '@/components/ui/SearchBar';
 import { useLibrary } from '@/context/LibraryContext';
 import { useConceptTheme } from '@/context/ThemeContext';
 import { ILibraryItem, LibraryItemID } from '@/models/library';
 import { ILibraryFilter } from '@/models/miscellaneous';
 
-import FlexColumn from './ui/FlexColumn';
+import FlexColumn from '../ui/FlexColumn';
 
 interface SchemaPickerProps {
   id?: string;

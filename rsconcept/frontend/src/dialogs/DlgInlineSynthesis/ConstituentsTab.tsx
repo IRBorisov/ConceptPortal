@@ -1,8 +1,8 @@
 'use client';
 
-import ConstituentaMultiPicker from '@/components/ConstituentaMultiPicker';
-import DataLoader from '@/components/DataLoader';
-import { ErrorData } from '@/components/InfoError';
+import { ErrorData } from '@/components/info/InfoError';
+import ConstituentaMultiPicker from '@/components/select/ConstituentaMultiPicker';
+import DataLoader from '@/components/wrap/DataLoader';
 import { ConstituentaID, IRSForm } from '@/models/rsform';
 import { prefixes } from '@/utils/constants';
 

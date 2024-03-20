@@ -5,8 +5,8 @@ import { AnimatePresence } from 'framer-motion';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { GraphEdge, GraphNode, LayoutTypes } from 'reagraph';
 
-import InfoConstituenta from '@/components/InfoConstituenta';
-import SelectedCounter from '@/components/SelectedCounter';
+import InfoConstituenta from '@/components/info/InfoConstituenta';
+import SelectedCounter from '@/components/info/SelectedCounter';
 import Overlay from '@/components/ui/Overlay';
 import { useConceptTheme } from '@/context/ThemeContext';
 import DlgGraphParams from '@/dialogs/DlgGraphParams';

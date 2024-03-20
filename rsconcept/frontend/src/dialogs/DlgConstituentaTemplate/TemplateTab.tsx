@@ -2,8 +2,8 @@
 
 import { Dispatch, useEffect, useMemo, useState } from 'react';
 
-import ConstituentaPicker from '@/components/ConstituentaPicker';
 import RSInput from '@/components/RSInput';
+import ConstituentaPicker from '@/components/select/ConstituentaPicker';
 import SelectSingle from '@/components/ui/SelectSingle';
 import TextArea from '@/components/ui/TextArea';
 import { useLibrary } from '@/context/LibraryContext';

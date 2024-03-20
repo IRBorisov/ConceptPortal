@@ -3,8 +3,8 @@
 import clsx from 'clsx';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
-import ConstituentaBadge from '@/components/ConstituentaBadge';
-import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } from '@/components/DataTable';
+import ConstituentaBadge from '@/components/info/ConstituentaBadge';
+import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } from '@/components/ui/DataTable';
 import { useConceptTheme } from '@/context/ThemeContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';

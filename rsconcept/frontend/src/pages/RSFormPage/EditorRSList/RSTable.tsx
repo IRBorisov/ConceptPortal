@@ -3,8 +3,8 @@
 import clsx from 'clsx';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
-import ConstituentaBadge from '@/components/ConstituentaBadge';
-import DataTable, { createColumnHelper, RowSelectionState, VisibilityState } from '@/components/DataTable';
+import ConstituentaBadge from '@/components/info/ConstituentaBadge';
+import DataTable, { createColumnHelper, RowSelectionState, VisibilityState } from '@/components/ui/DataTable';
 import FlexColumn from '@/components/ui/FlexColumn';
 import { useConceptTheme } from '@/context/ThemeContext';
 import useWindowSize from '@/hooks/useWindowSize';

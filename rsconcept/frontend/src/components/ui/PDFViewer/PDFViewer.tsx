@@ -7,7 +7,7 @@ import { Document, Page } from 'react-pdf';
 import useWindowSize from '@/hooks/useWindowSize';
 import { graphLightT } from '@/styling/color';
 
-import Overlay from '../ui/Overlay';
+import Overlay from '../Overlay';
 import PageControls from './PageControls';
 
 const MAXIMUM_WIDTH = 1000;

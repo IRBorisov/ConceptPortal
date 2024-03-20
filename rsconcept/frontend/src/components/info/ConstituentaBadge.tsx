@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import ConstituentaTooltip from '@/components/ConstituentaTooltip';
+import ConstituentaTooltip from '@/components/info/ConstituentaTooltip';
 import { IConstituenta } from '@/models/rsform';
 import { isMockCst } from '@/models/rsformAPI';
 import { colorFgCstStatus, IColorTheme } from '@/styling/color';

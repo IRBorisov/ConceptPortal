@@ -1,9 +1,9 @@
 import { AnimatePresence } from 'framer-motion';
 
 import AnimateFade from './AnimateFade';
-import InfoError, { ErrorData } from './InfoError';
-import { CProps } from './props';
-import Loader from './ui/Loader';
+import InfoError, { ErrorData } from '../info/InfoError';
+import { CProps } from '../props';
+import Loader from '../ui/Loader';
 
 interface DataLoaderProps extends CProps.AnimatedDiv {
   id: string;

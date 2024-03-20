@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
-import { type ErrorData } from '@/components/InfoError';
+import { type ErrorData } from '@/components/info/InfoError';
 import { IRSForm, IRSFormData } from '@/models/rsform';
 import { loadRSFormData } from '@/models/rsformAPI';
 import { getRSFormDetails } from '@/utils/backendAPI';

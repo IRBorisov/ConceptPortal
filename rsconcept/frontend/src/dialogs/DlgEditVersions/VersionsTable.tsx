@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { BiX } from 'react-icons/bi';
 import { useIntl } from 'react-intl';
 
-import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/DataTable';
+import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
 import MiniButton from '@/components/ui/MiniButton';
 import { useConceptTheme } from '@/context/ThemeContext';
 import { IVersionInfo } from '@/models/library';

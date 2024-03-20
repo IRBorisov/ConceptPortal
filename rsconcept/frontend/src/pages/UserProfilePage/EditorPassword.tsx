@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import InfoError, { ErrorData } from '@/components/InfoError';
+import InfoError, { ErrorData } from '@/components/info/InfoError';
 import FlexColumn from '@/components/ui/FlexColumn';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';

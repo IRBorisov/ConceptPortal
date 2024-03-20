@@ -16,7 +16,7 @@ import {
 } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
 
-import { CProps } from '../props';
+import { CProps } from '../../props';
 import DefaultNoData from './DefaultNoData';
 import PaginationTools from './PaginationTools';
 import TableBody from './TableBody';

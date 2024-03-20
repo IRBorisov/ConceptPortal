@@ -2,7 +2,7 @@
 
 import { BiCollapse, BiFilterAlt, BiFont, BiFontFamily, BiPlanet, BiPlusCircle, BiTrash } from 'react-icons/bi';
 
-import HelpButton from '@/components/Help/HelpButton';
+import HelpButton from '@/components/man/HelpButton';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { HelpTopic } from '@/models/miscellaneous';

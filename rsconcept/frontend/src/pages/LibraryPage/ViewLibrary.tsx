@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import { useLayoutEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import DataTable, { createColumnHelper, VisibilityState } from '@/components/DataTable';
-import HelpButton from '@/components/Help/HelpButton';
+import HelpButton from '@/components/man/HelpButton';
+import DataTable, { createColumnHelper, VisibilityState } from '@/components/ui/DataTable';
 import FlexColumn from '@/components/ui/FlexColumn';
 import TextURL from '@/components/ui/TextURL';
 import { useAuth } from '@/context/AuthContext';

@@ -6,7 +6,8 @@ import { FiSave } from 'react-icons/fi';
 import { LuGitBranchPlus, LuPencilLine } from 'react-icons/lu';
 import { toast } from 'react-toastify';
 
-import HelpButton from '@/components/Help/HelpButton';
+import HelpButton from '@/components/man/HelpButton';
+import VersionSelector from '@/components/select/VersionSelector';
 import Checkbox from '@/components/ui/Checkbox';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
@@ -14,7 +15,6 @@ import Overlay from '@/components/ui/Overlay';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
-import VersionSelector from '@/components/VersionSelector';
 import { useAuth } from '@/context/AuthContext';
 import { useRSForm } from '@/context/RSFormContext';
 import { LibraryItemType } from '@/models/library';

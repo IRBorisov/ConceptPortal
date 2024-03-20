@@ -4,12 +4,12 @@ import axios from 'axios';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
-import AnimateFade from '@/components/AnimateFade';
-import ExpectedAnonymous from '@/components/ExpectedAnonymous';
-import InfoError, { ErrorData } from '@/components/InfoError';
+import InfoError, { ErrorData } from '@/components/info/InfoError';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
 import TextURL from '@/components/ui/TextURL';
+import AnimateFade from '@/components/wrap/AnimateFade';
+import ExpectedAnonymous from '@/components/wrap/ExpectedAnonymous';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import useQueryStrings from '@/hooks/useQueryStrings';

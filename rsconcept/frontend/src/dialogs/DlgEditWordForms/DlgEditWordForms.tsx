@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
 import { BiCheck, BiChevronsDown, BiLeftArrow, BiRightArrow, BiX } from 'react-icons/bi';
 
-import HelpButton from '@/components/Help/HelpButton';
-import SelectGrammeme from '@/components/SelectGrammeme';
+import HelpButton from '@/components/man/HelpButton';
+import SelectGrammeme from '@/components/select/SelectGrammeme';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
 import Modal from '@/components/ui/Modal';

@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from 'react';
 
-import { ErrorData } from '@/components/InfoError';
+import { ErrorData } from '@/components/info/InfoError';
 import { IResolutionData } from '@/models/language';
 import { IRSForm } from '@/models/rsform';
 import { DataCallback, postResolveText } from '@/utils/backendAPI';

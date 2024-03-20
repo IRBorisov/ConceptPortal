@@ -4,7 +4,7 @@ import { ThreeDots } from 'react-loader-spinner';
 
 import { useConceptTheme } from '@/context/ThemeContext';
 
-import AnimateFade from '../AnimateFade';
+import AnimateFade from '../wrap/AnimateFade';
 
 interface LoaderProps {
   size?: number;

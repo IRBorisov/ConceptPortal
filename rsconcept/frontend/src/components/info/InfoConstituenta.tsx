@@ -1,7 +1,7 @@
 import { IConstituenta } from '@/models/rsform';
 import { labelCstTypification } from '@/utils/labels';
 
-import { CProps } from './props';
+import { CProps } from '../props';
 
 interface InfoConstituentaProps extends CProps.Div {
   data: IConstituenta;

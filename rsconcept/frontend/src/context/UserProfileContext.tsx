@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
-import { ErrorData } from '@/components/InfoError';
+import { ErrorData } from '@/components/info/InfoError';
 import { IUserProfile } from '@/models/library';
 import { IUserUpdateData } from '@/models/library';
 import { DataCallback, getProfile, patchProfile } from '@/utils/backendAPI';

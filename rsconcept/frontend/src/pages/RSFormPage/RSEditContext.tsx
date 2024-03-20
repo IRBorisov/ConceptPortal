@@ -6,7 +6,7 @@ import fileDownload from 'js-file-download';
 import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import InfoError, { ErrorData } from '@/components/InfoError';
+import InfoError, { ErrorData } from '@/components/info/InfoError';
 import Divider from '@/components/ui/Divider';
 import Loader from '@/components/ui/Loader';
 import TextURL from '@/components/ui/TextURL';

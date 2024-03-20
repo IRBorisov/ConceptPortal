@@ -1,5 +1,5 @@
-import AnimateFade from '@/components/AnimateFade';
-import InfoTopic from '@/components/InfoTopic';
+import InfoTopic from '@/components/info/InfoTopic';
+import AnimateFade from '@/components/wrap/AnimateFade';
 import { HelpTopic } from '@/models/miscellaneous';
 
 interface ViewTopicProps {

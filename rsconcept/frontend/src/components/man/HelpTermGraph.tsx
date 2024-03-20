@@ -1,5 +1,5 @@
-import InfoCstClass from '@/components/InfoCstClass';
-import InfoCstStatus from '@/components/InfoCstStatus';
+import InfoCstClass from '@/components/info/InfoCstClass';
+import InfoCstStatus from '@/components/info/InfoCstStatus';
 import Divider from '@/components/ui/Divider';
 
 function HelpTermGraph() {

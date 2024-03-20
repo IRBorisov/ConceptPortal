@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { useUsers } from '@/context/UsersContext';
 import { ILibraryItemEx } from '@/models/library';
 
-import LabeledValue from './ui/LabeledValue';
+import LabeledValue from '../ui/LabeledValue';
 
 interface InfoLibraryItemProps {
   item?: ILibraryItemEx;

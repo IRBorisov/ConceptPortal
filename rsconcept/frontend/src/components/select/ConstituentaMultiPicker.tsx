@@ -3,14 +3,14 @@
 import clsx from 'clsx';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
-import DataTable, { createColumnHelper, RowSelectionState } from '@/components/DataTable';
+import DataTable, { createColumnHelper, RowSelectionState } from '@/components/ui/DataTable';
 import { useConceptTheme } from '@/context/ThemeContext';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
 import { describeConstituenta } from '@/utils/labels';
 
-import ConstituentaBadge from './ConstituentaBadge';
-import Button from './ui/Button';
-import FlexColumn from './ui/FlexColumn';
+import ConstituentaBadge from '../info/ConstituentaBadge';
+import Button from '../ui/Button';
+import FlexColumn from '../ui/FlexColumn';
 
 interface ConstituentaMultiPickerProps {
   id?: string;

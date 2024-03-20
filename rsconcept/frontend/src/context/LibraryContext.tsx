@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
-import { ErrorData } from '@/components/InfoError';
+import { ErrorData } from '@/components/info/InfoError';
 import { ILibraryItem } from '@/models/library';
 import { matchLibraryItem } from '@/models/libraryAPI';
 import { ILibraryFilter } from '@/models/miscellaneous';

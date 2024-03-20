@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 
-import SchemaPicker from '@/components/SchemaPicker';
+import SchemaPicker from '@/components/select/SchemaPicker';
 import TextInput from '@/components/ui/TextInput';
 import { useLibrary } from '@/context/LibraryContext';
 import { LibraryItemID } from '@/models/library';

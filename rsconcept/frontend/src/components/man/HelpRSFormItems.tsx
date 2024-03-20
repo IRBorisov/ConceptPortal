@@ -1,4 +1,4 @@
-import InfoCstStatus from '@/components/InfoCstStatus';
+import InfoCstStatus from '@/components/info/InfoCstStatus';
 import Divider from '@/components/ui/Divider';
 
 function HelpRSFormItems() {

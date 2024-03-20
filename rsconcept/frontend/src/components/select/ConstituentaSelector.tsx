@@ -7,7 +7,7 @@ import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { matchConstituenta } from '@/models/rsformAPI';
 import { describeConstituenta, describeConstituentaTerm } from '@/utils/labels';
 
-import SelectSingle from './ui/SelectSingle';
+import SelectSingle from '../ui/SelectSingle';
 
 interface ConstituentaSelectorProps {
   items?: IConstituenta[];

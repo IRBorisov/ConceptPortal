@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
-import { type ErrorData } from '@/components/InfoError';
+import { type ErrorData } from '@/components/info/InfoError';
 import useRSFormDetails from '@/hooks/useRSFormDetails';
 import { ILibraryItem, IVersionData } from '@/models/library';
 import { ILibraryUpdateData } from '@/models/library';

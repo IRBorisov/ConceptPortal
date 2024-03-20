@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
-import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/DataTable';
+import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
 import SearchBar from '@/components/ui/SearchBar';
 import { useConceptTheme } from '@/context/ThemeContext';
 import { CstMatchMode } from '@/models/miscellaneous';
@@ -11,8 +11,8 @@ import { matchConstituenta } from '@/models/rsformAPI';
 import { prefixes } from '@/utils/constants';
 import { describeConstituenta } from '@/utils/labels';
 
-import ConstituentaBadge from './ConstituentaBadge';
-import FlexColumn from './ui/FlexColumn';
+import ConstituentaBadge from '../info/ConstituentaBadge';
+import FlexColumn from '../ui/FlexColumn';
 
 interface ConstituentaPickerProps {
   id?: string;

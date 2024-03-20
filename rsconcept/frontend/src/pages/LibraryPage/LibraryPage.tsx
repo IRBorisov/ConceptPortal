@@ -2,7 +2,7 @@
 
 import { useCallback, useLayoutEffect, useState } from 'react';
 
-import DataLoader from '@/components/DataLoader';
+import DataLoader from '@/components/wrap/DataLoader';
 import { useAuth } from '@/context/AuthContext';
 import { useLibrary } from '@/context/LibraryContext';
 import { useConceptNavigation } from '@/context/NavigationContext';

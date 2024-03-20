@@ -1,4 +1,4 @@
-import InfoConstituenta from '@/components/InfoConstituenta';
+import InfoConstituenta from '@/components/info/InfoConstituenta';
 import Tooltip from '@/components/ui/Tooltip';
 import { IConstituenta } from '@/models/rsform';
 
