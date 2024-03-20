@@ -33,6 +33,14 @@ function DescribeError({ error }: { error: ErrorData }) {
       </div>
     );
   }
+  if (error.response.status === 403 && error.message.includes('CSRF')) {
+    return (
+      <div>
+        <p>{'Соединение с сервером потеряно. Перезагрузите страницу'}</p>
+        <PrettyJson data={error} />
+      </div>
+    );
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   const isHtml = isResponseHtml(error.response);
@@ -62,7 +70,7 @@ function InfoError({ error }: InfoErrorProps) {
         'select-text'
       )}
     >
-      <p className='clr-text-default font-normal'>
+      <p className='font-normal clr-text-default'>
         Пожалуйста сделайте скриншот и отправьте вместе с описанием ситуации на почту{' '}
         <TextURL href={urls.mail_portal} text='portal@acconcept.ru' />
         <br />
