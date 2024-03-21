@@ -93,7 +93,8 @@ export const globalIDs = {
 export const prefixes = {
   page_size: 'page_size_',
   cst_list: 'cst_list_',
-  cst_inline_synth_list: 'cst_inline_synth_list',
+  cst_inline_synth_list: 'cst_inline_synth_list_',
+  cst_inline_synth_substitutes: 'cst_inline_synth_substitutes_',
   cst_side_table: 'cst_side_table_',
   cst_hidden_list: 'cst_hidden_list_',
   cst_modal_list: 'cst_modal_list_',

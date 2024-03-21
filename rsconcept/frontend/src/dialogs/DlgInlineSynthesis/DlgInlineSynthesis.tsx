@@ -1,14 +1,14 @@
 'use client';
 
 import clsx from 'clsx';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import TabLabel from '@/components/ui/TabLabel';
 import useRSFormDetails from '@/hooks/useRSFormDetails';
 import { LibraryItemID } from '@/models/library';
-import { ICstSubstituteData, IRSForm, IRSFormInlineData } from '@/models/rsform';
+import { IRSForm, IRSFormInlineData, ISubstitution } from '@/models/rsform';
 
 import ConstituentsTab from './ConstituentsTab';
 import SchemaTab from './SchemaTab';
@@ -30,11 +30,11 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
 
   const [donorID, setDonorID] = useState<LibraryItemID | undefined>(undefined);
   const [selected, setSelected] = useState<LibraryItemID[]>([]);
-  const [substitutions, setSubstitutions] = useState<ICstSubstituteData[]>([]);
+  const [substitutions, setSubstitutions] = useState<ISubstitution[]>([]);
 
   const source = useRSFormDetails({ target: donorID ? String(donorID) : undefined });
 
-  const validated = useMemo(() => false, []);
+  const validated = useMemo(() => !!source.schema && selected.length > 0, [source.schema, selected]);
 
   function handleSubmit() {
     if (!source.schema) {
@@ -44,16 +44,22 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
       source: source.schema?.id,
       receiver: receiver.id,
       items: selected,
-      substitutions: substitutions
+      substitutions: substitutions.map(item => ({
+        original: item.deleteRight ? item.rightCst.id : item.leftCst.id,
+        substitution: item.deleteRight ? item.leftCst.id : item.rightCst.id,
+        transfer_term: !item.deleteRight && item.takeLeftTerm
+      }))
     };
     onInlineSynthesis(data);
   }
+
+  useEffect(() => setSelected(source.schema ? source.schema?.items.map(cst => cst.id) : []), [source.schema]);
 
   return (
     <Modal
       header='Импорт концептуальной схем'
       submitText='Добавить конституенты'
-      className='w-[40rem] h-[40rem] px-6'
+      className='w-[40rem] h-[36rem] px-6'
       hideWindow={hideWindow}
       canSubmit={validated}
       onSubmit={handleSubmit}
@@ -88,6 +94,7 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
           <SubstitutionsTab
             receiver={receiver}
             source={source.schema}
+            selected={selected}
             loading={source.loading}
             substitutions={substitutions}
             setSubstitutions={setSubstitutions}

@@ -9,7 +9,7 @@ import { LibraryItemID } from '@/models/library';
 
 interface SchemaTabProps {
   selected?: LibraryItemID;
-  setSelected: React.Dispatch<LibraryItemID | undefined>;
+  setSelected: (newValue: LibraryItemID) => void;
 }
 
 function SchemaTab({ selected, setSelected }: SchemaTabProps) {
@@ -18,7 +18,7 @@ function SchemaTab({ selected, setSelected }: SchemaTabProps) {
 
   return (
     <div className='flex flex-col'>
-      <div className='flex gap-6 items-center'>
+      <div className='flex items-center gap-6'>
         <span className='select-none'>Выбрана</span>
         <TextInput
           id='dlg_selected_schema_title'
@@ -30,7 +30,7 @@ function SchemaTab({ selected, setSelected }: SchemaTabProps) {
           dense
         />
       </div>
-      <SchemaPicker rows={16} value={selected} onSelectValue={setSelected} />
+      <SchemaPicker rows={15} value={selected} onSelectValue={setSelected} />
     </div>
   );
 }

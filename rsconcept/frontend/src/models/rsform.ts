@@ -155,6 +155,16 @@ export interface ICstSubstituteData {
 }
 
 /**
+ * Represents single substitution for synthesis table.
+ */
+export interface ISubstitution {
+  leftCst: IConstituenta;
+  rightCst: IConstituenta;
+  deleteRight: boolean;
+  takeLeftTerm: boolean;
+}
+
+/**
  * Represents data response when creating {@link IConstituenta}.
  */
 export interface ICstCreatedResponse {

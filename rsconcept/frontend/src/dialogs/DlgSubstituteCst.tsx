@@ -44,18 +44,28 @@ function DlgSubstituteCst({ hideWindow, onSubstitute }: DlgSubstituteCstProps) {
       hideWindow={hideWindow}
       canSubmit={canSubmit}
       onSubmit={handleSubmit}
-      className={clsx('w-[30rem]', 'px-6 py-3 flex flex-col gap-3 justify-center items-center')}
+      className={clsx('w-[25rem]', 'px-6 py-3 flex flex-col gap-3 justify-center items-center')}
     >
       <FlexColumn>
         <Label text='Удаляемая конституента' />
-        <ConstituentaSelector items={schema?.items} value={original} onSelectValue={setOriginal} />
+        <ConstituentaSelector
+          className='w-[20rem]'
+          items={schema?.items}
+          value={original}
+          onSelectValue={setOriginal}
+        />
       </FlexColumn>
 
       <LuReplace size='3rem' className='icon-primary' />
 
       <FlexColumn>
         <Label text='Подставляемая конституента' />
-        <ConstituentaSelector items={schema?.items} value={substitution} onSelectValue={setSubstitution} />
+        <ConstituentaSelector
+          className='w-[20rem]'
+          items={schema?.items}
+          value={substitution}
+          onSelectValue={setSubstitution}
+        />
       </FlexColumn>
       <Checkbox
         className='mt-3'

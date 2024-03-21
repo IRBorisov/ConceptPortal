@@ -19,7 +19,7 @@ function ConstituentsTab({ schema, error, loading, selected, setSelected }: Cons
     <DataLoader id='dlg-constituents-tab' isLoading={loading} error={error} hasNoData={!schema}>
       <ConstituentaMultiPicker
         schema={schema}
-        rows={16}
+        rows={14}
         prefixID={prefixes.cst_inline_synth_list}
         selected={selected}
         setSelected={setSelected}

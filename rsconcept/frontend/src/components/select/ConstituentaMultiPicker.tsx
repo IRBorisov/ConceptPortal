@@ -94,11 +94,11 @@ function ConstituentaMultiPicker({ id, schema, prefixID, rows, selected, setSele
 
   return (
     <div>
-      <div className='flex gap-3 items-end mb-3'>
+      <div className='flex items-end gap-3 mb-3'>
         <span className='w-[24ch] select-none whitespace-nowrap'>
           Выбраны {selected.length} из {schema?.items.length ?? 0}
         </span>
-        <div className='flex gap-6 w-full text-sm'>
+        <div className='flex w-full gap-6 text-sm'>
           <Button
             text='Поставщики'
             title='Добавить все конституенты, от которых зависят выбранные'
