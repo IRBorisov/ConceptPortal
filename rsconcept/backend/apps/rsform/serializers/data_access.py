@@ -1,27 +1,14 @@
 ''' Serializers for persistent data manipulation. '''
 from typing import Optional, cast
 from rest_framework import serializers
+from rest_framework.serializers import PrimaryKeyRelatedField as PKField
 
-from .basics import ConstituentaID, CstParseSerializer
+from .basics import CstParseSerializer
 
 from .io_pyconcept import PyConceptAdapter
 
 from ..models import Constituenta, LibraryItem, RSForm, Version, CstType
 from .. import messages as msg
-
-
-def _try_access_constituenta(item_id: str, schema: LibraryItem) -> Constituenta:
-    try:
-        cst = Constituenta.objects.get(pk=item_id)
-    except Constituenta.DoesNotExist as exception:
-        raise serializers.ValidationError({
-            f'{item_id}': msg.constituentaNotExists()
-        }) from exception
-    if cst.schema != schema:
-        raise serializers.ValidationError({
-            f'{item_id}': msg.constituentaNotOwned(schema.title)
-        })
-    return cst
 
 
 class LibraryItemSerializer(serializers.ModelSerializer):
@@ -106,6 +93,16 @@ class ConstituentaSerializer(serializers.ModelSerializer):
         return result
 
 
+class CstDetailsSerializer(serializers.ModelSerializer):
+    ''' Serializer: Constituenta data including parse. '''
+    parse = CstParseSerializer()
+
+    class Meta:
+        ''' serializer metadata. '''
+        model = Constituenta
+        fields = '__all__'
+
+
 class CstCreateSerializer(serializers.ModelSerializer):
     ''' Serializer: Constituenta creation. '''
     insert_after = serializers.IntegerField(required=False, allow_null=True)
@@ -117,49 +114,6 @@ class CstCreateSerializer(serializers.ModelSerializer):
             'alias', 'cst_type', 'convention', \
             'term_raw', 'definition_raw', 'definition_formal', \
             'insert_after', 'term_forms'
-
-
-class CstStructuredSerializer(serializers.ModelSerializer):
-    ''' Serializer: Constituenta structure production. '''
-    class Meta:
-        ''' serializer metadata. '''
-        model = Constituenta
-        fields = ('id',)
-
-    def validate(self, attrs):
-        schema = cast(LibraryItem, self.context['schema'])
-        cst = _try_access_constituenta(self.initial_data['id'], schema)
-        if cst.cst_type not in [CstType.FUNCTION, CstType.STRUCTURED, CstType.TERM]:
-            raise serializers.ValidationError({
-                f'{cst.id}': msg.constituentaNoStructure()
-            })
-        self.instance = cst
-        return attrs
-
-
-class CstRenameSerializer(serializers.ModelSerializer):
-    ''' Serializer: Constituenta renaming. '''
-    class Meta:
-        ''' serializer metadata. '''
-        model = Constituenta
-        fields = 'id', 'alias', 'cst_type'
-
-    def validate(self, attrs):
-        schema = cast(LibraryItem, self.context['schema'])
-        cst = _try_access_constituenta(self.initial_data['id'], schema)
-        new_alias = self.initial_data['alias']
-        if cst.alias == new_alias:
-            raise serializers.ValidationError({
-                'alias': msg.renameTrivial(new_alias)
-            })
-        if RSForm(schema).constituents().filter(alias=new_alias).exists():
-            raise serializers.ValidationError({
-                'alias': msg.renameTaken(new_alias)
-            })
-        self.instance = cst
-        attrs['schema'] = schema
-        attrs['id'] = self.initial_data['id']
-        return attrs
 
 
 class RSFormSerializer(serializers.ModelSerializer):
@@ -204,16 +158,6 @@ class RSFormSerializer(serializers.ModelSerializer):
         return result | data
 
 
-class CstDetailsSerializer(serializers.ModelSerializer):
-    ''' Serializer: Constituenta data including parse. '''
-    parse = CstParseSerializer()
-
-    class Meta:
-        ''' serializer metadata. '''
-        model = Constituenta
-        fields = '__all__'
-
-
 class RSFormParseSerializer(serializers.ModelSerializer):
     ''' Serializer: Detailed data for RSForm including parse. '''
     subscribers = serializers.ListField(
@@ -250,14 +194,14 @@ class RSFormParseSerializer(serializers.ModelSerializer):
 
 class CstSubstituteSerializer(serializers.Serializer):
     ''' Serializer: Constituenta substitution. '''
-    original = ConstituentaID()
-    substitution = ConstituentaID()
+    original = PKField(many=False, queryset=Constituenta.objects.all())
+    substitution = PKField(many=False, queryset=Constituenta.objects.all())
     transfer_term = serializers.BooleanField(required=False, default=False)
 
     def validate(self, attrs):
         schema = cast(LibraryItem, self.context['schema'])
-        original_cst = Constituenta.objects.get(pk=self.initial_data['original'])
-        substitution_cst = Constituenta.objects.get(pk=self.initial_data['substitution'])
+        original_cst = cast(Constituenta, attrs['original'])
+        substitution_cst = cast(Constituenta, attrs['substitution'])
         if original_cst.alias == substitution_cst.alias:
             raise serializers.ValidationError({
                 'alias': msg.substituteTrivial(original_cst.alias)
@@ -276,22 +220,81 @@ class CstSubstituteSerializer(serializers.Serializer):
         return attrs
 
 
-class CstListSerializer(serializers.Serializer):
-    ''' Serializer: List of constituents from one origin. '''
-    items = serializers.ListField(
-        child=serializers.IntegerField()
-    )
+class CstTargetSerializer(serializers.Serializer):
+    ''' Serializer: Target single Constituenta. '''
+    target = PKField(many=False, queryset=Constituenta.objects.all())
 
     def validate(self, attrs):
         schema = cast(LibraryItem, self.context['schema'])
-        cstList = []
+        cst = cast(Constituenta, attrs['target'])
+        if schema and cst.schema != schema:
+            raise serializers.ValidationError({
+                f'{cst.id}': msg.constituentaNotOwned(schema.title)
+            })
+        if cst.cst_type not in [CstType.FUNCTION, CstType.STRUCTURED, CstType.TERM]:
+            raise serializers.ValidationError({
+                f'{cst.id}': msg.constituentaNoStructure()
+            })
+        self.instance = cst
+        return attrs
+
+
+class CstRenameSerializer(serializers.Serializer):
+    ''' Serializer: Constituenta renaming. '''
+    target = PKField(many=False, queryset=Constituenta.objects.all())
+    alias = serializers.CharField()
+    cst_type = serializers.CharField()
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        schema = cast(LibraryItem, self.context['schema'])
+        cst = cast(Constituenta, attrs['target'])
+        if cst.schema != schema:
+            raise serializers.ValidationError({
+                f'{cst.id}': msg.constituentaNotOwned(schema.title)
+            })
+        new_alias = self.initial_data['alias']
+        if cst.alias == new_alias:
+            raise serializers.ValidationError({
+                'alias': msg.renameTrivial(new_alias)
+            })
+        if RSForm(schema).constituents().filter(alias=new_alias).exists():
+            raise serializers.ValidationError({
+                'alias': msg.renameTaken(new_alias)
+            })
+        return attrs
+
+
+class CstListSerializer(serializers.Serializer):
+    ''' Serializer: List of constituents from one origin. '''
+    items = PKField(many=True, queryset=Constituenta.objects.all())
+
+    def validate(self, attrs):
+        schema = cast(LibraryItem, self.context['schema'])
+        if not schema:
+            return attrs
+
         for item in attrs['items']:
-            cst = _try_access_constituenta(item, schema)
-            cstList.append(cst)
-        attrs['constituents'] = cstList
+            if item.schema != schema:
+                raise serializers.ValidationError({
+                    f'{item.id}': msg.constituentaNotOwned(schema.title)
+                })
         return attrs
 
 
 class CstMoveSerializer(CstListSerializer):
     ''' Serializer: Change constituenta position. '''
     move_to = serializers.IntegerField()
+
+
+class InlineSynthesisSerializer(serializers.Serializer):
+    ''' Serializer: Inline synthesis operation input. '''
+    receiver = PKField(many=False, queryset=LibraryItem.objects.all())
+    source = PKField(many=False, queryset=LibraryItem.objects.all()) # type: ignore
+    items = PKField(many=True, queryset=Constituenta.objects.all())
+    substitutions = serializers.ListField(
+        child=CstSubstituteSerializer()
+    )
+
+    def validate(self, attrs):
+        return attrs

@@ -15,6 +15,7 @@ from .rsforms import (
     RSFormViewSet, TrsImportView,
     create_rsform
 )
+from .operations import inline_synthesis
 from .cctext import (
     parse_text,
     generate_lexeme,

@@ -68,7 +68,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     @extend_schema(
         summary='produce the structure of a given constituenta',
         tags=['RSForm'],
-        request=s.CstStructuredSerializer,
+        request=s.CstTargetSerializer,
         responses={c.HTTP_200_OK: s.NewMultiCstResponse}
     )
     @action(detail=True, methods=['patch'], url_path='cst-produce-structure')
@@ -76,9 +76,9 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         ''' Produce a term for every element of the target constituenta typification. '''
         schema = self._get_schema()
 
-        serializer = s.CstStructuredSerializer(data=request.data, context={'schema': schema.item})
+        serializer = s.CstTargetSerializer(data=request.data, context={'schema': schema.item})
         serializer.is_valid(raise_exception=True)
-        cst = cast(m.Constituenta, serializer.instance)
+        cst = cast(m.Constituenta, serializer.validated_data['target'])
 
         schema_details = s.RSFormParseSerializer(schema.item).data['items']
         cst_parse = next(item for item in schema_details if item['id']==cst.id)['parse']
@@ -110,12 +110,19 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         schema = self._get_schema()
         serializer = s.CstRenameSerializer(data=request.data, context={'schema': schema.item})
         serializer.is_valid(raise_exception=True)
-        old_alias = m.Constituenta.objects.get(pk=request.data['id']).alias
-        serializer.save()
-        mapping = { old_alias: serializer.validated_data['alias'] }
+
+        cst = cast(m.Constituenta, serializer.validated_data['target'])
+        old_alias = cst.alias
+
+        cst.alias = serializer.validated_data['alias']
+        cst.cst_type = serializer.validated_data['cst_type']
+        cst.save()
+
+        mapping = { old_alias: cst.alias }
         schema.apply_mapping(mapping, change_aliases=False)
         schema.item.refresh_from_db()
-        cst = m.Constituenta.objects.get(pk=serializer.validated_data['id'])
+        cst.refresh_from_db()
+
         return Response(
             status=c.HTTP_200_OK,
             data={
@@ -166,7 +173,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             context={'schema': schema.item}
         )
         serializer.is_valid(raise_exception=True)
-        schema.delete_cst(serializer.validated_data['constituents'])
+        schema.delete_cst(serializer.validated_data['items'])
         schema.item.refresh_from_db()
         return Response(
             status=c.HTTP_200_OK,
@@ -189,7 +196,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         )
         serializer.is_valid(raise_exception=True)
         schema.move_cst(
-            listCst=serializer.validated_data['constituents'],
+            listCst=serializer.validated_data['items'],
             target=serializer.validated_data['move_to']
         )
         schema.item.refresh_from_db()

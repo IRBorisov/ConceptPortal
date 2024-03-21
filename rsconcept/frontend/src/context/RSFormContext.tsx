@@ -11,10 +11,10 @@ import {
   IConstituentaList,
   IConstituentaMeta,
   ICstCreateData,
-  ICstID,
   ICstMovetoData,
   ICstRenameData,
   ICstSubstituteData,
+  ICstTarget,
   ICstUpdateData,
   IRSForm,
   IRSFormUploadData
@@ -64,7 +64,7 @@ interface IRSFormContext {
   upload: (data: IRSFormUploadData, callback: () => void) => void;
 
   resetAliases: (callback: () => void) => void;
-  produceStructure: (data: ICstID, callback?: DataCallback<ConstituentaID[]>) => void;
+  produceStructure: (data: ICstTarget, callback?: DataCallback<ConstituentaID[]>) => void;
 
   cstCreate: (data: ICstCreateData, callback?: DataCallback<IConstituentaMeta>) => void;
   cstRename: (data: ICstRenameData, callback?: DataCallback<IConstituentaMeta>) => void;
@@ -265,7 +265,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
   );
 
   const produceStructure = useCallback(
-    (data: ICstID, callback?: DataCallback<ConstituentaID[]>) => {
+    (data: ICstTarget, callback?: DataCallback<ConstituentaID[]>) => {
       setError(undefined);
       patchProduceStructure(schemaID, {
         data: data,

@@ -33,10 +33,10 @@ import {
   IConstituenta,
   IConstituentaMeta,
   ICstCreateData,
-  ICstID,
   ICstMovetoData,
   ICstRenameData,
   ICstSubstituteData,
+  ICstTarget,
   ICstUpdateData,
   IRSForm,
   TermForm
@@ -351,7 +351,7 @@ export const RSEditState = ({
       return;
     }
     const data: ICstRenameData = {
-      id: activeCst.id,
+      target: activeCst.id,
       alias: activeCst.alias,
       cst_type: activeCst.cst_type
     };
@@ -390,8 +390,8 @@ export const RSEditState = ({
     if (!activeCst) {
       return;
     }
-    const data: ICstID = {
-      id: activeCst.id
+    const data: ICstTarget = {
+      target: activeCst.id
     };
     model.produceStructure(data, cstList => {
       toast.success(`Добавлены конституенты: ${cstList.length}`);

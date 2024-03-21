@@ -16,12 +16,13 @@ from .data_access import (
     VersionSerializer,
     VersionCreateSerializer,
     ConstituentaSerializer,
-    CstStructuredSerializer,
+    CstTargetSerializer,
     CstMoveSerializer,
     CstSubstituteSerializer,
     CstCreateSerializer,
     CstRenameSerializer,
-    CstListSerializer
+    CstListSerializer,
+    InlineSynthesisSerializer
 )
 from .schema_typing import (
     NewCstResponse,

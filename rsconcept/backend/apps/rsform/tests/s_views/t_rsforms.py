@@ -220,7 +220,7 @@ class TestRSFormViewset(APITestCase):
             definition_resolved='Test2'
         )
         
-        data = {'id': cst2.pk, 'alias': 'D2', 'cst_type': 'term'}
+        data = {'target': cst2.pk, 'alias': 'D2', 'cst_type': 'term'}
         response = self.client.patch(
             f'/api/rsforms/{self.unowned.item.id}/cst-rename',
             data=data, format='json'
@@ -233,21 +233,21 @@ class TestRSFormViewset(APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        data = {'id': cst1.pk, 'alias': cst1.alias, 'cst_type': 'term'}
+        data = {'target': cst1.pk, 'alias': cst1.alias, 'cst_type': 'term'}
         response = self.client.patch(
             f'/api/rsforms/{self.owned.item.id}/cst-rename',
             data=data, format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        data = {'id': cst1.pk, 'alias': cst3.alias}
+        data = {'target': cst1.pk, 'alias': cst3.alias}
         response = self.client.patch(
             f'/api/rsforms/{self.owned.item.id}/cst-rename',
             data=data, format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        data = {'alias': 'D2', 'cst_type': 'term', 'id': cst1.pk}
+        data = {'target': cst1.pk, 'alias': 'D2', 'cst_type': 'term'}
         item = self.owned.item
         d1 = Constituenta.objects.create(schema=item, alias='D1', cst_type='term', order=4)
         d1.term_raw = '@{X1|plur}'
@@ -519,21 +519,21 @@ class TestRSFormViewset(APITestCase):
         a1.save()
         f1.save()
 
-        data = {'id': invalid_id}
+        data = {'target': invalid_id}
         response = self.client.patch(
             f'/api/rsforms/{item.id}/cst-produce-structure',
             data=data, format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        data = {'id': x1.id}
+        data = {'target': x1.id}
         response = self.client.patch(
             f'/api/rsforms/{item.id}/cst-produce-structure',
             data=data, format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        data = {'id': s2.id}
+        data = {'target': s2.id}
         response = self.client.patch(
             f'/api/rsforms/{item.id}/cst-produce-structure',
             data=data, format='json'
@@ -542,7 +542,7 @@ class TestRSFormViewset(APITestCase):
 
         # Testing simple structure
         s1.refresh_from_db()
-        data = {'id': s1.id}
+        data = {'target': s1.id}
         response = self.client.patch(
             f'/api/rsforms/{item.id}/cst-produce-structure',
             data=data, format='json'
@@ -558,7 +558,7 @@ class TestRSFormViewset(APITestCase):
 
         # Testing complex structure
         s3.refresh_from_db()
-        data = {'id': s3.id}
+        data = {'target': s3.id}
         response = self.client.patch(
             f'/api/rsforms/{item.id}/cst-produce-structure',
             data=data, format='json'
@@ -572,7 +572,7 @@ class TestRSFormViewset(APITestCase):
 
         # Testing function
         f1.refresh_from_db()
-        data = {'id': f1.id}
+        data = {'target': f1.id}
         response = self.client.patch(
             f'/api/rsforms/{item.id}/cst-produce-structure',
             data=data, format='json'

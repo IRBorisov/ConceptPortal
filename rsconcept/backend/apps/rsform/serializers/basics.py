@@ -5,10 +5,6 @@ from rest_framework import serializers
 from cctext import Resolver, Reference, ReferenceType, EntityReference, SyntacticReference
 
 
-ConstituentaID = serializers.IntegerField
-NodeID = serializers.IntegerField
-
-
 class ExpressionSerializer(serializers.Serializer):
     ''' Serializer: RSLang expression. '''
     expression = serializers.CharField()
@@ -77,7 +73,7 @@ class NodeDataSerializer(serializers.Serializer):
 
 class ASTNodeSerializer(serializers.Serializer):
     ''' Serializer: Syntax tree node. '''
-    uid = NodeID()
+    uid = serializers.IntegerField()
     parent = serializers.IntegerField() # type: ignore
     typeID = serializers.IntegerField()
     start = serializers.IntegerField()

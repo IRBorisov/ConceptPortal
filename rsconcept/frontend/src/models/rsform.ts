@@ -83,9 +83,11 @@ export interface IConstituentaMeta {
 }
 
 /**
- * Represents id for {@link IConstituenta}.
+ * Represents target {@link IConstituenta}.
  */
-export interface ICstID extends Pick<IConstituentaMeta, 'id'> {}
+export interface ICstTarget {
+  target: ConstituentaID;
+}
 
 /**
  * Represents Constituenta.
@@ -143,7 +145,7 @@ export interface ICstUpdateData
 /**
  * Represents data, used in renaming {@link IConstituenta}.
  */
-export interface ICstRenameData extends Pick<IConstituentaMeta, 'id' | 'alias' | 'cst_type'> {}
+export interface ICstRenameData extends ICstTarget, Pick<IConstituentaMeta, 'alias' | 'cst_type'> {}
 
 /**
  * Represents data, used in merging {@link IConstituenta}.

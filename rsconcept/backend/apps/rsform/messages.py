@@ -4,9 +4,6 @@
 def constituentaNotOwned(title: str):
     return f'Конституента не принадлежит схеме: {title}'
 
-def constituentaNotExists():
-    return 'Конституента не существует'
-
 def renameTrivial(name: str):
     return f'Имя должно отличаться от текущего: {name}'
 

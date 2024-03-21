@@ -19,6 +19,8 @@ urlpatterns = [
     path('rsforms/<int:pk_item>/versions/create', views.create_version),
     path('rsforms/<int:pk_item>/versions/<int:pk_version>', views.retrieve_version),
 
+    path('operations/inline-synthesis', views.inline_synthesis),
+
     path('rslang/parse-expression', views.parse_expression),
     path('rslang/to-ascii', views.convert_to_ascii),
     path('rslang/to-math', views.convert_to_math),
