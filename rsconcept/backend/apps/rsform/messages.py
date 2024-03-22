@@ -10,7 +10,7 @@ def renameTrivial(name: str):
 def substituteTrivial(name: str):
     return f'Отождествление конституенты с собой не корректно: {name}'
 
-def renameTaken(name: str):
+def aliasTaken(name: str):
     return f'Имя уже используется: {name}'
 
 def pyconceptFailure():
@@ -25,7 +25,7 @@ def libraryTypeUnexpected():
 def exteorFileVersionNotSupported():
     return 'Некорректный формат файла Экстеор. Сохраните файл в новой версии'
 
-def positionNegative():
+def invalidPosition():
     return 'Invalid position: should be positive integer'
 
 def constituentaNoStructure():

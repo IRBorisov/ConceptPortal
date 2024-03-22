@@ -260,7 +260,7 @@ class CstRenameSerializer(serializers.Serializer):
             })
         if RSForm(schema).constituents().filter(alias=new_alias).exists():
             raise serializers.ValidationError({
-                'alias': msg.renameTaken(new_alias)
+                'alias': msg.aliasTaken(new_alias)
             })
         return attrs
 

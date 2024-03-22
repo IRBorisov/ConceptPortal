@@ -1,5 +1,5 @@
 ''' Models: RSForm API. '''
-from typing import Iterable, Optional, cast
+from typing import Dict, Iterable, Optional, cast
 
 from django.db import transaction
 from django.db.models import QuerySet
@@ -13,6 +13,9 @@ from .Version import Version
 
 from ..graph import Graph
 from .. import messages as msg
+
+
+_INSERT_LAST: int = -1
 
 
 class RSForm:
@@ -87,17 +90,13 @@ class RSForm:
         return result
 
     @transaction.atomic
-    def insert_at(self, position: int, alias: str, insert_type: CstType) -> 'Constituenta':
+    def insert_new(self, alias: str, insert_type: CstType, position: int = _INSERT_LAST) -> Constituenta:
         ''' Insert new constituenta at given position.
             All following constituents order is shifted by 1 position. '''
-        if position <= 0:
-            raise ValidationError(msg.positionNegative())
         if self.constituents().filter(alias=alias).exists():
-            raise ValidationError(msg.renameTaken(alias))
-        currentSize = self.constituents().count()
-        position =  max(1, min(position, currentSize + 1))
+            raise ValidationError(msg.aliasTaken(alias))
+        position = self._get_insert_position(position)
         self._shift_positions(position, 1)
-
         result = Constituenta.objects.create(
             schema=self.item,
             order=position,
@@ -109,25 +108,49 @@ class RSForm:
         return result
 
     @transaction.atomic
-    def insert_last(self, alias: str, insert_type: CstType) -> 'Constituenta':
-        ''' Insert new constituenta at last position. '''
-        if self.constituents().filter(alias=alias).exists():
-            raise ValidationError(msg.renameTaken(alias))
-        position = 1
-        if self.constituents().exists():
-            position += self.constituents().count()
-        result = Constituenta.objects.create(
-            schema=self.item,
-            order=position,
-            alias=alias,
-            cst_type=insert_type
-        )
+    def insert_copy(self, items: list[Constituenta], position: int = _INSERT_LAST) -> list[Constituenta]:
+        ''' Insert copy of target constituents updating references. '''
+        count = len(items)
+        if count == 0:
+            return []
+
+        position = self._get_insert_position(position)
+        self._shift_positions(position, count)
+
+        indices: Dict[str, int] = {}
+        for (value, _) in CstType.choices:
+            indices[value] = self.get_max_index(cast(CstType, value))
+
+        mapping: Dict[str, str]  = {}
+        for cst in items:
+            indices[cst.cst_type] = indices[cst.cst_type] + 1
+            newAlias = f'{get_type_prefix(cst.cst_type)}{indices[cst.cst_type]}'
+            mapping[cst.alias] = newAlias
+
+        result: list[Constituenta] = []
+        for cst in items:
+            newCst = Constituenta.objects.create(
+                schema=self.item,
+                order=position,
+                alias=mapping[cst.alias],
+                cst_type=cst.cst_type,
+                convention=cst.convention,
+                term_raw=cst.term_raw,
+                term_resolved=cst.term_resolved,
+                term_forms=cst.term_forms,
+                definition_raw=cst.definition_raw,
+                definition_formal=cst.definition_formal,
+                definition_resolved=cst.definition_resolved
+            )
+            newCst.apply_mapping(mapping)
+            newCst.save()
+            position = position + 1
+            result.append(newCst)
         self.item.save()
-        result.refresh_from_db()
         return result
 
     @transaction.atomic
-    def move_cst(self, listCst: list['Constituenta'], target: int):
+    def move_cst(self, listCst: list[Constituenta], target: int):
         ''' Move list of constituents to specific position '''
         count_moved = 0
         count_top = 0
@@ -159,7 +182,7 @@ class RSForm:
         self.item.save()
 
     @transaction.atomic
-    def create_cst(self, data: dict, insert_after: Optional[str]=None) -> 'Constituenta':
+    def create_cst(self, data: dict, insert_after: Optional[str]=None) -> Constituenta:
         ''' Create new cst from data. '''
         resolver = self.resolver()
         cst = self._insert_new(data, insert_after)
@@ -182,8 +205,8 @@ class RSForm:
     @transaction.atomic
     def substitute(
         self,
-        original: 'Constituenta',
-        substitution: 'Constituenta',
+        original: Constituenta,
+        substitution: Constituenta,
         transfer_term: bool
     ):
         ''' Execute constituenta substitution. '''
@@ -296,6 +319,22 @@ class RSForm:
             cst.order += shift
         Constituenta.objects.bulk_update(update_list, ['order'])
 
+    def _get_last_position(self):
+        if self.constituents().exists():
+            return self.constituents().count()
+        else:
+            return 0
+
+    def _get_insert_position(self, position: int) -> int:
+        if position <= 0 and position != _INSERT_LAST:
+            raise ValidationError(msg.invalidPosition())
+        lastPosition = self._get_last_position()
+        if position == _INSERT_LAST:
+            position = lastPosition + 1
+        else:
+            position =  max(1, min(position, lastPosition + 1))
+        return position
+
     @transaction.atomic
     def _reset_order(self):
         order = 1
@@ -305,12 +344,12 @@ class RSForm:
                 cst.save()
             order += 1
 
-    def _insert_new(self, data: dict, insert_after: Optional[str]=None) -> 'Constituenta':
+    def _insert_new(self, data: dict, insert_after: Optional[str]=None) -> Constituenta:
         if insert_after is not None:
             cst_after = Constituenta.objects.get(pk=insert_after)
-            return self.insert_at(cst_after.order + 1, data['alias'], data['cst_type'])
+            return self.insert_new(data['alias'], data['cst_type'], cst_after.order + 1)
         else:
-            return self.insert_last(data['alias'], data['cst_type'])
+            return self.insert_new(data['alias'], data['cst_type'])
 
     def _term_graph(self) -> Graph:
         result = Graph()

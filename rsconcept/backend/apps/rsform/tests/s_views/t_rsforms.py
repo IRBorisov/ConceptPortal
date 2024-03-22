@@ -47,14 +47,14 @@ class TestRSFormViewset(APITestCase):
 
     def test_contents(self):
         schema = RSForm.create(title='Title1')
-        schema.insert_last(alias='X1', insert_type=CstType.BASE)
+        schema.insert_new(alias='X1', insert_type=CstType.BASE)
         response = self.client.get(f'/api/rsforms/{schema.item.id}/contents')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_details(self):
         schema = RSForm.create(title='Test', owner=self.user)
-        x1 = schema.insert_at(1, 'X1', CstType.BASE)
-        x2 = schema.insert_at(2, 'X2', CstType.BASE)
+        x1 = schema.insert_new('X1', CstType.BASE, 1)
+        x2 = schema.insert_new('X2', CstType.BASE, 2)
         x1.term_raw = 'человек'
         x1.term_resolved = 'человек'
         x2.term_raw = '@{X1|plur}'
@@ -78,7 +78,7 @@ class TestRSFormViewset(APITestCase):
 
     def test_check(self):
         schema = RSForm.create(title='Test')
-        schema.insert_at(1, 'X1', CstType.BASE)
+        schema.insert_new('X1', CstType.BASE, 1)
         data = {'expression': 'X1=X1'}
         response = self.client.post(
             f'/api/rsforms/{schema.item.id}/check',
@@ -99,7 +99,7 @@ class TestRSFormViewset(APITestCase):
 
     def test_resolve(self):
         schema = RSForm.create(title='Test')
-        x1 = schema.insert_at(1, 'X1', CstType.BASE)
+        x1 = schema.insert_new('X1', CstType.BASE, 1)
         x1.term_resolved = 'синий слон'
         x1.save()
         data = {'text': '@{1|редкий} @{X1|plur,datv}'}
@@ -139,7 +139,7 @@ class TestRSFormViewset(APITestCase):
 
     def test_export_trs(self):
         schema = RSForm.create(title='Test')
-        schema.insert_at(1, 'X1', CstType.BASE)
+        schema.insert_new('X1', CstType.BASE, 1)
         response = self.client.get(f'/api/rsforms/{schema.item.id}/export-trs')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.headers['Content-Disposition'], 'attachment; filename=Schema.trs')

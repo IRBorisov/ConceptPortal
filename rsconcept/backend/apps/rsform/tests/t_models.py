@@ -170,17 +170,17 @@ class TestRSForm(TestCase):
 
     def test_insert_at(self):
         schema = RSForm.create(title='Test')
-        cst1 = schema.insert_at(1, 'X1', CstType.BASE)
+        cst1 = schema.insert_new('X1', CstType.BASE, 1)
         self.assertEqual(cst1.order, 1)
         self.assertEqual(cst1.schema, schema.item)
 
-        cst2 = schema.insert_at(1, 'X2', CstType.BASE)
+        cst2 = schema.insert_new('X2', CstType.BASE, 1)
         cst1.refresh_from_db()
         self.assertEqual(cst2.order, 1)
         self.assertEqual(cst2.schema, schema.item)
         self.assertEqual(cst1.order, 2)
 
-        cst3 = schema.insert_at(4, 'X3', CstType.BASE)
+        cst3 = schema.insert_new('X3', CstType.BASE, 4)
         cst2.refresh_from_db()
         cst1.refresh_from_db()
         self.assertEqual(cst3.order, 3)
@@ -188,7 +188,7 @@ class TestRSForm(TestCase):
         self.assertEqual(cst2.order, 1)
         self.assertEqual(cst1.order, 2)
 
-        cst4 = schema.insert_at(3, 'X4', CstType.BASE)
+        cst4 = schema.insert_new('X4', CstType.BASE, 3)
         cst3.refresh_from_db()
         cst2.refresh_from_db()
         cst1.refresh_from_db()
@@ -201,40 +201,40 @@ class TestRSForm(TestCase):
     def test_insert_at_invalid_position(self):
         schema = RSForm.create(title='Test')
         with self.assertRaises(ValidationError):
-            schema.insert_at(0, 'X5', CstType.BASE)
+            schema.insert_new('X5', CstType.BASE, 0)
 
     def test_insert_at_invalid_alias(self):
         schema = RSForm.create(title='Test')
-        schema.insert_at(1, 'X1', CstType.BASE)
+        schema.insert_new('X1', CstType.BASE, 1)
         with self.assertRaises(ValidationError):
-            schema.insert_at(2, 'X1', CstType.BASE)
+            schema.insert_new('X1', CstType.BASE, 2)
 
     def test_insert_at_reorder(self):
         schema = RSForm.create(title='Test')
-        schema.insert_at(1, 'X1', CstType.BASE)
-        d1 = schema.insert_at(2, 'D1', CstType.TERM)
-        d2 = schema.insert_at(1, 'D2', CstType.TERM)
+        schema.insert_new('X1', CstType.BASE, 1)
+        d1 = schema.insert_new('D1', CstType.TERM, 2)
+        d2 = schema.insert_new('D2', CstType.TERM, 1)
         d1.refresh_from_db()
         self.assertEqual(d1.order, 3)
         self.assertEqual(d2.order, 1)
 
-        x2 = schema.insert_at(4, 'X2', CstType.BASE)
+        x2 = schema.insert_new('X2', CstType.BASE, 4)
         self.assertEqual(x2.order, 4)
 
     def test_insert_last(self):
         schema = RSForm.create(title='Test')
-        cst1 = schema.insert_last('X1', CstType.BASE)
+        cst1 = schema.insert_new('X1', CstType.BASE)
         self.assertEqual(cst1.order, 1)
         self.assertEqual(cst1.schema, schema.item)
 
-        cst2 = schema.insert_last('X2', CstType.BASE)
+        cst2 = schema.insert_new('X2', CstType.BASE)
         self.assertEqual(cst2.order, 2)
         self.assertEqual(cst2.schema, schema.item)
         self.assertEqual(cst1.order, 1)
 
     def test_create_cst_resolve(self):
         schema = RSForm.create(title='Test')
-        cst1 = schema.insert_last('X1', CstType.BASE)
+        cst1 = schema.insert_new('X1', CstType.BASE)
         cst1.term_raw = '@{X2|datv}'
         cst1.definition_raw = '@{X1|datv} @{X2|datv}'
         cst1.save()
@@ -250,11 +250,40 @@ class TestRSForm(TestCase):
         self.assertEqual(cst2.term_resolved, 'слон')
         self.assertEqual(cst2.definition_resolved, 'слонам слоны')
 
+    def test_insert_copy(self):
+        schema = RSForm.create(title='Test')
+        x1 = schema.insert_new('X10', CstType.BASE)
+        s1 = schema.insert_new('S11', CstType.STRUCTURED)
+        x1.convention = 'Test'
+        s1.definition_formal = x1.alias
+        s1.definition_raw = '@{X10|plur}'
+        x1.save()
+        s1.save()
+
+        result = schema.insert_copy([s1, x1], 2)
+        self.assertEqual(len(result), 2)
+
+        s1.refresh_from_db()
+        self.assertEqual(s1.order, 4)
+
+        x2 = result[1]
+        self.assertEqual(x2.order, 3)
+        self.assertEqual(x2.alias, 'X11')
+        self.assertEqual(x2.cst_type, CstType.BASE)
+        self.assertEqual(x2.convention, x1.convention)
+
+        s2 = result[0]
+        self.assertEqual(s2.order, 2)
+        self.assertEqual(s2.alias, 'S12')
+        self.assertEqual(s2.cst_type, CstType.STRUCTURED)
+        self.assertEqual(s2.definition_formal, x2.alias)
+        self.assertEqual(s2.definition_raw, '@{X11|plur}')
+
     def test_apply_mapping(self):
         schema = RSForm.create(title='Test')
-        x1 = schema.insert_last('X1', CstType.BASE)
-        x2 = schema.insert_last('X11', CstType.BASE)
-        d1 = schema.insert_last('D1', CstType.TERM)
+        x1 = schema.insert_new('X1', CstType.BASE)
+        x2 = schema.insert_new('X11', CstType.BASE)
+        d1 = schema.insert_new('D1', CstType.TERM)
         d1.definition_formal = 'X1 = X11 = X2'
         d1.definition_raw = '@{X11|sing}'
         d1.convention = 'X1'
@@ -272,9 +301,9 @@ class TestRSForm(TestCase):
 
     def test_substitute(self):
         schema = RSForm.create(title='Test')
-        x1 = schema.insert_last('X1', CstType.BASE)
-        x2 = schema.insert_last('X2', CstType.BASE)
-        d1 = schema.insert_last('D1', CstType.TERM)
+        x1 = schema.insert_new('X1', CstType.BASE)
+        x2 = schema.insert_new('X2', CstType.BASE)
+        d1 = schema.insert_new('D1', CstType.TERM)
         d1.definition_formal = x1.alias
         d1.save()
         x1.term_raw = 'Test'
@@ -291,10 +320,10 @@ class TestRSForm(TestCase):
 
     def test_move_cst(self):
         schema = RSForm.create(title='Test')
-        x1 = schema.insert_last('X1', CstType.BASE)
-        x2 = schema.insert_last('X2', CstType.BASE)
-        d1 = schema.insert_last('D1', CstType.TERM)
-        d2 = schema.insert_last('D2', CstType.TERM)
+        x1 = schema.insert_new('X1', CstType.BASE)
+        x2 = schema.insert_new('X2', CstType.BASE)
+        d1 = schema.insert_new('D1', CstType.TERM)
+        d2 = schema.insert_new('D2', CstType.TERM)
         schema.move_cst([x2, d2], 1)
         x1.refresh_from_db()
         x2.refresh_from_db()
@@ -307,8 +336,8 @@ class TestRSForm(TestCase):
 
     def test_move_cst_down(self):
         schema = RSForm.create(title='Test')
-        x1 = schema.insert_last('X1', CstType.BASE)
-        x2 = schema.insert_last('X2', CstType.BASE)
+        x1 = schema.insert_new('X1', CstType.BASE)
+        x2 = schema.insert_new('X2', CstType.BASE)
         schema.move_cst([x1], 2)
         x1.refresh_from_db()
         x2.refresh_from_db()
@@ -317,9 +346,9 @@ class TestRSForm(TestCase):
 
     def test_reset_aliases(self):
         schema = RSForm.create(title='Test')
-        x1 = schema.insert_last('X11', CstType.BASE)
-        x2 = schema.insert_last('X21', CstType.BASE)
-        d1 = schema.insert_last('D11', CstType.TERM)
+        x1 = schema.insert_new('X11', CstType.BASE)
+        x2 = schema.insert_new('X21', CstType.BASE)
+        d1 = schema.insert_new('D11', CstType.TERM)
         x1.term_raw = 'человек'
         x1.term_resolved = 'человек'
         d1.convention = 'D11 - cool'
