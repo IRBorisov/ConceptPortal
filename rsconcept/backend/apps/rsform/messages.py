@@ -4,6 +4,12 @@
 def constituentaNotOwned(title: str):
     return f'Конституента не принадлежит схеме: {title}'
 
+def substitutionNotInList():
+    return 'Отождествляемая конституента отсутствует в списке'
+
+def schemaNotOwned():
+    return 'Нет доступа к схеме'
+
 def renameTrivial(name: str):
     return f'Имя должно отличаться от текущего: {name}'
 

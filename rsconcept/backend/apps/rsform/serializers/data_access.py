@@ -1,5 +1,7 @@
 ''' Serializers for persistent data manipulation. '''
 from typing import Optional, cast
+from django.contrib.auth.models import User
+from django.core.exceptions import PermissionDenied
 from rest_framework import serializers
 from rest_framework.serializers import PrimaryKeyRelatedField as PKField
 
@@ -297,4 +299,39 @@ class InlineSynthesisSerializer(serializers.Serializer):
     )
 
     def validate(self, attrs):
+        user = cast(User, self.context['user'])
+        schema_in = cast(LibraryItem, attrs['source'])
+        schema_out = cast(LibraryItem, attrs['receiver'])
+        if user.is_anonymous or (schema_out.owner != user and not user.is_staff):
+            raise PermissionDenied({
+                'message': msg.schemaNotOwned(),
+                'object_id': schema_in.id
+            })
+        constituents = cast(list[Constituenta], attrs['items'])
+        for cst in constituents:
+            if cst.schema != schema_in:
+                raise serializers.ValidationError({
+                    f'{cst.id}': msg.constituentaNotOwned(schema_in.title)
+                })
+        for item in attrs['substitutions']:
+            original_cst = cast(Constituenta, item['original'])
+            substitution_cst = cast(Constituenta, item['substitution'])
+            if original_cst.schema == schema_in:
+                if original_cst not in constituents:
+                    raise serializers.ValidationError({
+                        f'{original_cst.id}': msg.substitutionNotInList()
+                    })
+                if substitution_cst.schema != schema_out:
+                    raise serializers.ValidationError({
+                        f'{substitution_cst.id}': msg.constituentaNotOwned(schema_out.title)
+                    })
+            else:
+                if substitution_cst not in constituents:
+                    raise serializers.ValidationError({
+                        f'{substitution_cst.id}': msg.substitutionNotInList()
+                    })
+                if original_cst.schema != schema_out:
+                    raise serializers.ValidationError({
+                        f'{original_cst.id}': msg.constituentaNotOwned(schema_out.title)
+                    })
         return attrs
