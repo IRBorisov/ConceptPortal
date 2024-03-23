@@ -64,7 +64,7 @@ def write_zipped_json(json_data: dict, json_filename: str) -> bytes:
     return content.getvalue()
 
 def apply_pattern(text: str, mapping: dict[str, str], pattern: re.Pattern[str]) -> str:
-    ''' Apply mapping to matching in regular expression patter subgroup 1 '''
+    ''' Apply mapping to matching in regular expression pattern subgroup 1 '''
     if text == '' or pattern == '':
         return text
     pos_input: int = 0

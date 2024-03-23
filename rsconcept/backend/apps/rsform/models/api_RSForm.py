@@ -1,12 +1,12 @@
 ''' Models: RSForm API. '''
-from typing import Dict, Iterable, Optional, cast
+from typing import Dict, Iterable, Optional, Union, cast
 
 from django.db import transaction
 from django.db.models import QuerySet
 from django.core.exceptions import ValidationError
 
 from cctext import Resolver, Entity, extract_entities, split_grams, TermForm
-from .api_RSLanguage import get_type_prefix, generate_structure
+from .api_RSLanguage import get_type_prefix, generate_structure, guess_type
 from .LibraryItem import LibraryItem, LibraryItemType
 from .Constituenta import CstType, Constituenta
 from .Version import Version
@@ -90,18 +90,27 @@ class RSForm:
         return result
 
     @transaction.atomic
-    def insert_new(self, alias: str, insert_type: CstType, position: int = _INSERT_LAST) -> Constituenta:
+    def insert_new(
+        self,
+        alias: str,
+        cst_type: Union[CstType, None] = None,
+        position: int = _INSERT_LAST,
+        **kwargs
+    ) -> Constituenta:
         ''' Insert new constituenta at given position.
             All following constituents order is shifted by 1 position. '''
         if self.constituents().filter(alias=alias).exists():
             raise ValidationError(msg.aliasTaken(alias))
         position = self._get_insert_position(position)
+        if cst_type is None:
+            cst_type = guess_type(alias)
         self._shift_positions(position, 1)
         result = Constituenta.objects.create(
             schema=self.item,
             order=position,
             alias=alias,
-            cst_type=insert_type
+            cst_type=cst_type,
+            **kwargs
         )
         self.item.save()
         result.refresh_from_db()

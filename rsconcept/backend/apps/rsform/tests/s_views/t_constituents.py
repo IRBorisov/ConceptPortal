@@ -1,22 +1,20 @@
 ''' Testing API: Constituents. '''
-from rest_framework.test import APITestCase, APIRequestFactory, APIClient
 from rest_framework import status
 
-from apps.users.models import User
 from apps.rsform.models import RSForm, Constituenta, CstType
 
+from .EndpointTester import decl_endpoint, EndpointTester
 
-class TestConstituentaAPI(APITestCase):
+
+class TestConstituentaAPI(EndpointTester):
     ''' Testing Constituenta view. '''
     def setUp(self):
-        self.factory = APIRequestFactory()
-        self.user = User.objects.create(username='UserTest')
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.user)
+        super().setUp()
         self.rsform_owned = RSForm.create(title='Test', alias='T1', owner=self.user)
         self.rsform_unowned = RSForm.create(title='Test2', alias='T2')
         self.cst1 = Constituenta.objects.create(
             alias='X1',
+            cst_type=CstType.BASE,
             schema=self.rsform_owned.item,
             order=1,
             convention='Test',
@@ -25,6 +23,7 @@ class TestConstituentaAPI(APITestCase):
             term_forms=[{'text':'form1', 'tags':'sing,datv'}])
         self.cst2 = Constituenta.objects.create(
             alias='X2',
+            cst_type=CstType.BASE,
             schema=self.rsform_unowned.item,
             order=1,
             convention='Test1',
@@ -40,51 +39,40 @@ class TestConstituentaAPI(APITestCase):
             definition_raw='Test1',
             definition_resolved='Test2'
         )
+        self.invalid_cst = self.cst3.pk + 1337
 
+    @decl_endpoint('/api/constituents/{item}', method='get')
     def test_retrieve(self):
-        response = self.client.get(f'/api/constituents/{self.cst1.id}')
+        self.assertNotFound(item=self.invalid_cst)
+        response = self.execute(item=self.cst1.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['alias'], self.cst1.alias)
         self.assertEqual(response.data['convention'], self.cst1.convention)
 
+    @decl_endpoint('/api/constituents/{item}', method='patch')
     def test_partial_update(self):
         data = {'convention': 'tt'}
-        response = self.client.patch(
-            f'/api/constituents/{self.cst2.id}',
-            data=data, format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertForbidden(data, item=self.cst2.id)
 
-        self.client.logout()
-        response = self.client.patch(
-            f'/api/constituents/{self.cst1.id}',
-            data=data, format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.logout()
+        self.assertForbidden(data, item=self.cst1.id)
 
-        self.client.force_authenticate(user=self.user)
-        response = self.client.patch(
-            f'/api/constituents/{self.cst1.id}',
-            data=data, format='json'
-        )
+        self.login()
+        response = self.execute(data, item=self.cst1.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.cst1.refresh_from_db()
         self.assertEqual(response.data['convention'], 'tt')
         self.assertEqual(self.cst1.convention, 'tt')
 
-        response = self.client.patch(
-            f'/api/constituents/{self.cst1.id}',
-            data=data,
-            format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertOK(data, item=self.cst1.id)
 
+    @decl_endpoint('/api/constituents/{item}', method='patch')
     def test_update_resolved_no_refs(self):
         data = {
             'term_raw': 'New term',
             'definition_raw': 'New def'
         }
-        response = self.client.patch(f'/api/constituents/{self.cst3.id}', data, format='json')
+        response = self.execute(data, item=self.cst3.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.cst3.refresh_from_db()
         self.assertEqual(response.data['term_resolved'], 'New term')
@@ -92,15 +80,13 @@ class TestConstituentaAPI(APITestCase):
         self.assertEqual(response.data['definition_resolved'], 'New def')
         self.assertEqual(self.cst3.definition_resolved, 'New def')
 
+    @decl_endpoint('/api/constituents/{item}', method='patch')
     def test_update_resolved_refs(self):
         data = {
             'term_raw': '@{X1|nomn,sing}',
             'definition_raw': '@{X1|nomn,sing} @{X1|sing,datv}'
         }
-        response = self.client.patch(
-            f'/api/constituents/{self.cst3.id}',
-            data=data, format='json'
-        )
+        response = self.execute(data, item=self.cst3.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.cst3.refresh_from_db()
         self.assertEqual(self.cst3.term_resolved, self.cst1.term_resolved)
@@ -108,12 +94,10 @@ class TestConstituentaAPI(APITestCase):
         self.assertEqual(self.cst3.definition_resolved, f'{self.cst1.term_resolved} form1')
         self.assertEqual(response.data['definition_resolved'], f'{self.cst1.term_resolved} form1')
 
+    @decl_endpoint('/api/constituents/{item}', method='patch')
     def test_readonly_cst_fields(self):
         data = {'alias': 'X33', 'order': 10}
-        response = self.client.patch(
-            f'/api/constituents/{self.cst1.id}',
-            data=data, format='json'
-        )
+        response = self.execute(data, item=self.cst1.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['alias'], 'X1')
         self.assertEqual(response.data['alias'], self.cst1.alias)

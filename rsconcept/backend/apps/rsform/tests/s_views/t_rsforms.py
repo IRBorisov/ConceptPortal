@@ -2,10 +2,8 @@
 import os
 import io
 from zipfile import ZipFile
-from rest_framework.test import APITestCase, APIRequestFactory, APIClient
 from rest_framework import status
 
-from apps.users.models import User
 from apps.rsform.models import (
   RSForm,
   Constituenta,
@@ -17,44 +15,69 @@ from apps.rsform.models import (
 from cctext import ReferenceType
 from ..utils import response_contains
 
+from .EndpointTester import decl_endpoint, EndpointTester
 
-class TestRSFormViewset(APITestCase):
+
+class TestRSFormViewset(EndpointTester):
     ''' Testing RSForm view. '''
     def setUp(self):
-        self.factory = APIRequestFactory()
-        self.user = User.objects.create(username='UserTest')
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.user)
-        self.owned = RSForm.create(title='Test', alias='T1', owner=self.user)
+        super().setUp()
+        self.schema = RSForm.create(title='Test', alias='T1', owner=self.user)
+        self.schema_id = self.schema.item.id
         self.unowned = RSForm.create(title='Test2', alias='T2')
+        self.unowned_id = self.unowned.item.id
 
+    @decl_endpoint('/api/rsforms/create-detailed', method='post')
+    def test_create_rsform_file(self):
+        work_dir = os.path.dirname(os.path.abspath(__file__))
+        with open(f'{work_dir}/data/sample-rsform.trs', 'rb') as file:
+            data = {'file': file, 'title': 'Test123', 'comment': '123', 'alias': 'ks1'}
+            response = self.client.post(self.endpoint, data=data, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['owner'], self.user.pk)
+        self.assertEqual(response.data['title'], 'Test123')
+        self.assertEqual(response.data['alias'], 'ks1')
+        self.assertEqual(response.data['comment'], '123')
+
+    @decl_endpoint('/api/rsforms/create-detailed', method='post')
+    def test_create_rsform_json(self):
+        data = {'title': 'Test123', 'comment': '123', 'alias': 'ks1'}
+        response = self.execute(data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['owner'], self.user.pk)
+        self.assertEqual(response.data['title'], 'Test123')
+        self.assertEqual(response.data['alias'], 'ks1')
+        self.assertEqual(response.data['comment'], '123')
+
+    @decl_endpoint('/api/rsforms', method='get')
     def test_list(self):
         non_schema = LibraryItem.objects.create(
             item_type=LibraryItemType.OPERATIONS_SCHEMA,
             title='Test3'
         )
-        response = self.client.get('/api/rsforms')
+        response = self.execute()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(response_contains(response, non_schema))
         self.assertTrue(response_contains(response, self.unowned.item))
-        self.assertTrue(response_contains(response, self.owned.item))
+        self.assertTrue(response_contains(response, self.schema.item))
 
         response = self.client.get('/api/library')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(response_contains(response, non_schema))
         self.assertTrue(response_contains(response, self.unowned.item))
-        self.assertTrue(response_contains(response, self.owned.item))
+        self.assertTrue(response_contains(response, self.schema.item))
 
+    @decl_endpoint('/api/rsforms/{item}/contents', method='get')
     def test_contents(self):
         schema = RSForm.create(title='Title1')
-        schema.insert_new(alias='X1', insert_type=CstType.BASE)
-        response = self.client.get(f'/api/rsforms/{schema.item.id}/contents')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        schema.insert_new('X1')
+        self.assertOK(item=schema.item.id)
 
+    @decl_endpoint('/api/rsforms/{item}/details', method='get')
     def test_details(self):
         schema = RSForm.create(title='Test', owner=self.user)
-        x1 = schema.insert_new('X1', CstType.BASE, 1)
-        x2 = schema.insert_new('X2', CstType.BASE, 2)
+        x1 = schema.insert_new('X1')
+        x2 = schema.insert_new('X2')
         x1.term_raw = 'человек'
         x1.term_resolved = 'человек'
         x2.term_raw = '@{X1|plur}'
@@ -62,8 +85,7 @@ class TestRSFormViewset(APITestCase):
         x1.save()
         x2.save()
 
-        response = self.client.get(f'/api/rsforms/{schema.item.id}/details')
-
+        response = self.execute(item=schema.item.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['title'], 'Test')
         self.assertEqual(len(response.data['items']), 2)
@@ -76,14 +98,12 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(response.data['items'][1]['term_resolved'], x2.term_resolved)
         self.assertEqual(response.data['subscribers'], [self.user.pk])
 
+    @decl_endpoint('/api/rsforms/{item}/check', method='post')
     def test_check(self):
         schema = RSForm.create(title='Test')
-        schema.insert_new('X1', CstType.BASE, 1)
+        schema.insert_new('X1')
         data = {'expression': 'X1=X1'}
-        response = self.client.post(
-            f'/api/rsforms/{schema.item.id}/check',
-            data=data, format='json'
-        )
+        response = self.execute(data, item=schema.item.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['parseResult'], True)
         self.assertEqual(response.data['syntax'], 'math')
@@ -91,22 +111,17 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(response.data['typification'], 'LOGIC')
         self.assertEqual(response.data['valueClass'], 'value')
 
-        response = self.client.post(
-            f'/api/rsforms/{self.unowned.item.id}/check',
-            data=data, format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertOK(data, item=self.unowned_id)
 
+    @decl_endpoint('/api/rsforms/{item}/resolve', method='post')
     def test_resolve(self):
         schema = RSForm.create(title='Test')
-        x1 = schema.insert_new('X1', CstType.BASE, 1)
+        x1 = schema.insert_new('X1')
         x1.term_resolved = 'синий слон'
         x1.save()
+
         data = {'text': '@{1|редкий} @{X1|plur,datv}'}
-        response = self.client.post(
-            f'/api/rsforms/{schema.item.id}/resolve',
-            data=data, format='json'
-        )
+        response = self.execute(data, item=schema.item.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['input'], '@{1|редкий} @{X1|plur,datv}')
         self.assertEqual(response.data['output'], 'редким синим слонам')
@@ -128,19 +143,21 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(response.data['refs'][1]['pos_output']['start'], 7)
         self.assertEqual(response.data['refs'][1]['pos_output']['finish'], 19)
 
+    @decl_endpoint('/api/rsforms/import-trs', method='post')
     def test_import_trs(self):
         work_dir = os.path.dirname(os.path.abspath(__file__))
         with open(f'{work_dir}/data/sample-rsform.trs', 'rb') as file:
             data = {'file': file}
-            response = self.client.post('/api/rsforms/import-trs', data=data, format='multipart')
+            response = self.client.post(self.endpoint, data=data, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['owner'], self.user.pk)
         self.assertTrue(response.data['title'] != '')
 
+    @decl_endpoint('/api/rsforms/{item}/export-trs', method='get')
     def test_export_trs(self):
         schema = RSForm.create(title='Test')
-        schema.insert_new('X1', CstType.BASE, 1)
-        response = self.client.get(f'/api/rsforms/{schema.item.id}/export-trs')
+        schema.insert_new('X1')
+        response = self.execute(item=schema.item.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.headers['Content-Disposition'], 'attachment; filename=Schema.trs')
         with io.BytesIO(response.content) as stream:
@@ -148,31 +165,15 @@ class TestRSFormViewset(APITestCase):
                 self.assertIsNone(zipped_file.testzip())
                 self.assertIn('document.json', zipped_file.namelist())
 
+    @decl_endpoint('/api/rsforms/{item}/cst-create', method='post')
     def test_create_constituenta(self):
-        data = {'alias': 'X3', 'cst_type': 'basic'}
-        response = self.client.post(
-            f'/api/rsforms/{self.unowned.item.id}/cst-create',
-            data=data, format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        data = {'alias': 'X3', 'cst_type':  CstType.BASE}
+        self.assertForbidden(data, item=self.unowned_id)
 
-        item = self.owned.item
-        Constituenta.objects.create(
-            schema=item,
-            alias='X1',
-            cst_type='basic',
-            order=1
-        )
-        x2 = Constituenta.objects.create(
-            schema=item,
-            alias='X2',
-            cst_type='basic',
-            order=2
-        )
-        response = self.client.post(
-            f'/api/rsforms/{item.id}/cst-create',
-            data=data, format='json'
-        )
+        self.schema.insert_new('X1')
+        x2 = self.schema.insert_new('X2')
+
+        response = self.execute(data, item=self.schema_id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['new_cst']['alias'], 'X3')
         x3 = Constituenta.objects.get(alias=response.data['new_cst']['alias'])
@@ -180,15 +181,12 @@ class TestRSFormViewset(APITestCase):
 
         data = {
             'alias': 'X4',
-            'cst_type': 'basic',
+            'cst_type': CstType.BASE,
             'insert_after': x2.id,
             'term_raw': 'test',
             'term_forms': [{'text':'form1', 'tags':'sing,datv'}]
         }
-        response = self.client.post(
-            f'/api/rsforms/{item.id}/cst-create',
-            data=data, format='json'
-        )
+        response = self.execute(data, item=self.schema_id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['new_cst']['alias'], data['alias'])
         x4 = Constituenta.objects.get(alias=response.data['new_cst']['alias'])
@@ -196,144 +194,87 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(x4.term_raw, data['term_raw'])
         self.assertEqual(x4.term_forms, data['term_forms'])
 
+    @decl_endpoint('/api/rsforms/{item}/cst-rename', method='patch')
     def test_rename_constituenta(self):
-        cst1 = Constituenta.objects.create(
+        x1 = self.schema.insert_new(
             alias='X1',
-            schema=self.owned.item,
-            order=1,
             convention='Test',
             term_raw='Test1',
             term_resolved='Test1',
             term_forms=[{'text':'form1', 'tags':'sing,datv'}]
         )
-        cst2 = Constituenta.objects.create(
-            alias='X2',
-            schema=self.unowned.item,
-            order=1
-        )
-        cst3 = Constituenta.objects.create(
+        x2_2 = self.unowned.insert_new('X2')
+        x3 = self.schema.insert_new(
             alias='X3',
-            schema=self.owned.item, order=2,
             term_raw='Test3',
             term_resolved='Test3',
             definition_raw='Test1',
             definition_resolved='Test2'
         )
         
-        data = {'target': cst2.pk, 'alias': 'D2', 'cst_type': 'term'}
-        response = self.client.patch(
-            f'/api/rsforms/{self.unowned.item.id}/cst-rename',
-            data=data, format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        data = {'target': x2_2.pk, 'alias': 'D2', 'cst_type': CstType.TERM}
+        self.assertForbidden(data, item=self.unowned_id)
+        self.assertBadData(data, item=self.schema_id)
 
-        response = self.client.patch(
-            f'/api/rsforms/{self.owned.item.id}/cst-rename',
-            data=data, format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        data = {'target': x1.pk, 'alias': x1.alias, 'cst_type': CstType.TERM}
+        self.assertBadData(data, item=self.schema_id)
 
-        data = {'target': cst1.pk, 'alias': cst1.alias, 'cst_type': 'term'}
-        response = self.client.patch(
-            f'/api/rsforms/{self.owned.item.id}/cst-rename',
-            data=data, format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        data = {'target': x1.pk, 'alias': x3.alias}
+        self.assertBadData(data, item=self.schema_id)
 
-        data = {'target': cst1.pk, 'alias': cst3.alias}
-        response = self.client.patch(
-            f'/api/rsforms/{self.owned.item.id}/cst-rename',
-            data=data, format='json'
+        d1 = self.schema.insert_new(
+            alias='D1',
+            term_raw = '@{X1|plur}',
+            definition_formal = 'X1'
         )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(x1.order, 1)
+        self.assertEqual(x1.alias, 'X1')
+        self.assertEqual(x1.cst_type, CstType.BASE)
 
-        data = {'target': cst1.pk, 'alias': 'D2', 'cst_type': 'term'}
-        item = self.owned.item
-        d1 = Constituenta.objects.create(schema=item, alias='D1', cst_type='term', order=4)
-        d1.term_raw = '@{X1|plur}'
-        d1.definition_formal = 'X1'
-        d1.save()
-        
-        self.assertEqual(d1.order, 4)
-        self.assertEqual(cst1.order, 1)
-        self.assertEqual(cst1.alias, 'X1')
-        self.assertEqual(cst1.cst_type, CstType.BASE)
-        response = self.client.patch(
-            f'/api/rsforms/{item.id}/cst-rename',
-            data=data, format='json'
-        )
+        data = {'target': x1.pk, 'alias': 'D2', 'cst_type': CstType.TERM}
+        response = self.execute(data, item=self.schema_id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['new_cst']['alias'], 'D2')
-        self.assertEqual(response.data['new_cst']['cst_type'], 'term')
+        self.assertEqual(response.data['new_cst']['cst_type'], CstType.TERM)
         d1.refresh_from_db()
-        cst1.refresh_from_db()
-        self.assertEqual(d1.order, 4)
+        x1.refresh_from_db()
         self.assertEqual(d1.term_resolved, '')
         self.assertEqual(d1.term_raw,  '@{D2|plur}')
-        self.assertEqual(cst1.order, 1)
-        self.assertEqual(cst1.alias, 'D2')
-        self.assertEqual(cst1.cst_type, CstType.TERM)
+        self.assertEqual(x1.order, 1)
+        self.assertEqual(x1.alias, 'D2')
+        self.assertEqual(x1.cst_type, CstType.TERM)
 
+    @decl_endpoint('/api/rsforms/{item}/cst-substitute', method='patch')
     def test_substitute_constituenta(self):
-        x1 = Constituenta.objects.create(
+        x1 = self.schema.insert_new(
             alias='X1',
-            schema=self.owned.item,
-            order=1,
             term_raw='Test1',
             term_resolved='Test1',
             term_forms=[{'text':'form1', 'tags':'sing,datv'}]
         )
-        x2 = Constituenta.objects.create(
+        x2 = self.schema.insert_new(
             alias='X2',
-            schema=self.owned.item,
-            order=2,
             term_raw='Test2'
         )
-        unowned = Constituenta.objects.create(
-            alias='X2',
-            schema=self.unowned.item,
-            order=1
-        )
+        unowned = self.unowned.insert_new('X2')
         
         data = {'original': x1.pk, 'substitution': unowned.pk, 'transfer_term': True}
-        response = self.client.patch(
-            f'/api/rsforms/{self.unowned.item.id}/cst-substitute',
-            data=data, format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        response = self.client.patch(
-            f'/api/rsforms/{self.owned.item.id}/cst-substitute',
-            data=data, format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertForbidden(data, item=self.unowned_id)
+        self.assertBadData(data, item=self.schema_id)
 
         data = {'original': unowned.pk, 'substitution': x1.pk, 'transfer_term': True}
-        response = self.client.patch(
-            f'/api/rsforms/{self.owned.item.id}/cst-substitute',
-            data=data, format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertBadData(data, item=self.schema_id)
 
         data = {'original': x1.pk, 'substitution': x1.pk, 'transfer_term': True}
-        response = self.client.patch(
-            f'/api/rsforms/{self.owned.item.id}/cst-substitute',
-            data=data, format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertBadData(data, item=self.schema_id)
 
-        d1 = Constituenta.objects.create(
+        d1 = self.schema.insert_new(
             alias='D1',
-            schema=self.owned.item,
-            order=3,
             term_raw='@{X2|sing,datv}',
             definition_formal='X1'
         )
         data = {'original': x1.pk, 'substitution': x2.pk, 'transfer_term': True}
-        response = self.client.patch(
-            f'/api/rsforms/{self.owned.item.id}/cst-substitute',
-            data=data, format='json'
-        )
+        response = self.execute(data, item=self.schema_id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         d1.refresh_from_db()
@@ -342,23 +283,20 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(d1.term_resolved, 'form1')
         self.assertEqual(d1.definition_formal, 'X2')
 
+    @decl_endpoint('/api/rsforms/{item}/cst-create', method='post')
     def test_create_constituenta_data(self):
         data = {
             'alias': 'X3',
-            'cst_type': 'basic',
+            'cst_type': CstType.BASE,
             'convention': '1',
             'term_raw': '2',
             'definition_formal': '3',
             'definition_raw': '4'
         }
-        item = self.owned.item
-        response = self.client.post(
-            f'/api/rsforms/{item.id}/cst-create',
-            data=data, format='json'
-        )
+        response = self.execute(data, item=self.schema_id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['new_cst']['alias'], 'X3')
-        self.assertEqual(response.data['new_cst']['cst_type'], 'basic')
+        self.assertEqual(response.data['new_cst']['cst_type'], CstType.BASE)
         self.assertEqual(response.data['new_cst']['convention'], '1')
         self.assertEqual(response.data['new_cst']['term_raw'], '2')
         self.assertEqual(response.data['new_cst']['term_resolved'], '2')
@@ -366,79 +304,66 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(response.data['new_cst']['definition_raw'], '4')
         self.assertEqual(response.data['new_cst']['definition_resolved'], '4')
 
+    @decl_endpoint('/api/rsforms/{item}/cst-delete-multiple', method='patch')
     def test_delete_constituenta(self):
-        schema = self.owned
-        data = {'items': [1337]}
-        response = self.client.patch(
-            f'/api/rsforms/{schema.item.id}/cst-delete-multiple',
-            data=data, format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.set_params(item=self.schema_id)
 
-        x1 = Constituenta.objects.create(schema=schema.item, alias='X1', cst_type='basic', order=1)
-        x2 = Constituenta.objects.create(schema=schema.item, alias='X2', cst_type='basic', order=2)
+        data = {'items': [1337]}
+        self.assertBadData(data)
+
+        x1 = self.schema.insert_new('X1')
+        x2 = self.schema.insert_new('X2')
+
         data = {'items': [x1.id]}
-        response = self.client.patch(
-            f'/api/rsforms/{schema.item.id}/cst-delete-multiple',
-            data=data, format='json'
-        )
+        response = self.execute(data)
         x2.refresh_from_db()
-        schema.item.refresh_from_db()
+        self.schema.item.refresh_from_db()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['items']), 1)
-        self.assertEqual(schema.constituents().count(), 1)
+        self.assertEqual(self.schema.constituents().count(), 1)
         self.assertEqual(x2.alias, 'X2')
         self.assertEqual(x2.order, 1)
 
-        x3 = Constituenta.objects.create(schema=self.unowned.item, alias='X1', cst_type='basic', order=1)
+        x3 = self.unowned.insert_new('X1')
         data = {'items': [x3.id]}
-        response = self.client.patch(
-            f'/api/rsforms/{schema.item.id}/cst-delete-multiple',
-            data=data, format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertBadData(data, item=self.schema_id)
 
+    @decl_endpoint('/api/rsforms/{item}/cst-moveto', method='patch')
     def test_move_constituenta(self):
-        item = self.owned.item
-        data = {'items': [1337], 'move_to': 1}
-        response = self.client.patch(
-            f'/api/rsforms/{item.id}/cst-moveto',
-            data=data, format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.set_params(item=self.schema_id)
 
-        x1 = Constituenta.objects.create(schema=item, alias='X1', cst_type='basic', order=1)
-        x2 = Constituenta.objects.create(schema=item, alias='X2', cst_type='basic', order=2)
+        data = {'items': [1337], 'move_to': 1}
+        self.assertBadData(data)
+
+        x1 = self.schema.insert_new('X1')
+        x2 = self.schema.insert_new('X2')
+
         data = {'items': [x2.id], 'move_to': 1}
-        response = self.client.patch(
-            f'/api/rsforms/{item.id}/cst-moveto',
-            data=data, format='json'
-        )
+        response = self.execute(data)
         x1.refresh_from_db()
         x2.refresh_from_db()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['id'], item.id)
+        self.assertEqual(response.data['id'], self.schema_id)
         self.assertEqual(x1.order, 2)
         self.assertEqual(x2.order, 1)
 
-        x3 = Constituenta.objects.create(schema=self.unowned.item, alias='X1', cst_type='basic', order=1)
+        x3 = self.unowned.insert_new('X1')
         data = {'items': [x3.id], 'move_to': 1}
-        response = self.client.patch(
-            f'/api/rsforms/{item.id}/cst-moveto',
-            data=data, format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertBadData(data)
 
+    @decl_endpoint('/api/rsforms/{item}/reset-aliases', method='patch')
     def test_reset_aliases(self):
-        item = self.owned.item
-        response = self.client.patch(f'/api/rsforms/{item.id}/reset-aliases')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['id'], item.id)
+        self.set_params(item=self.schema_id)
 
-        x2 = Constituenta.objects.create(schema=item, alias='X2', cst_type='basic', order=1)
-        x1 = Constituenta.objects.create(schema=item, alias='X1', cst_type='basic', order=2)
-        d11 = Constituenta.objects.create(schema=item, alias='D11', cst_type='term', order=3)
-        response = self.client.patch(f'/api/rsforms/{item.id}/reset-aliases')
+        response = self.execute()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['id'], self.schema_id)
+
+        x2 = self.schema.insert_new('X2')
+        x1 = self.schema.insert_new('X1')
+        d11 = self.schema.insert_new('D11')
+
+        response = self.execute()
         x1.refresh_from_db()
         x2.refresh_from_db()
         d11.refresh_from_db()
@@ -450,103 +375,57 @@ class TestRSFormViewset(APITestCase):
         self.assertEqual(d11.order, 3)
         self.assertEqual(d11.alias, 'D1')
 
-        response = self.client.patch(f'/api/rsforms/{item.id}/reset-aliases')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertOK()
 
+    @decl_endpoint('/api/rsforms/{item}/load-trs', method='patch')
     def test_load_trs(self):
-        schema = self.owned
-        schema.item.title = 'Test11'
-        schema.item.save()
-        x1 = Constituenta.objects.create(schema=schema.item, alias='X1', cst_type='basic', order=1)
+        self.set_params(item=self.schema_id)
+        self.schema.item.title = 'Test11'
+        self.schema.item.save()
+        x1 = self.schema.insert_new('X1')
         work_dir = os.path.dirname(os.path.abspath(__file__))
         with open(f'{work_dir}/data/sample-rsform.trs', 'rb') as file:
             data = {'file': file, 'load_metadata': False}
-            response = self.client.patch(
-                f'/api/rsforms/{schema.item.id}/load-trs',
-                data=data, format='multipart'
-            )
-        schema.item.refresh_from_db()
+            response = self.client.patch(self.endpoint, data=data, format='multipart')
+        self.schema.item.refresh_from_db()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(schema.item.title, 'Test11')
+        self.assertEqual(self.schema.item.title, 'Test11')
         self.assertEqual(len(response.data['items']), 25)
-        self.assertEqual(schema.constituents().count(), 25)
+        self.assertEqual(self.schema.constituents().count(), 25)
         self.assertFalse(Constituenta.objects.filter(pk=x1.id).exists())
 
-    def test_clone(self):
-        item = self.owned.item
-        item.title = 'Test11'
-        item.save()
-        x1 = Constituenta.objects.create(schema=item, alias='X12', cst_type='basic', order=1)
-        d1 = Constituenta.objects.create(schema=item, alias='D2', cst_type='term', order=1)
-        x1.term_raw = 'человек'
-        x1.term_resolved = 'человек'
-        d1.term_raw = '@{X12|plur}'
-        d1.term_resolved = 'люди'
-        x1.save()
-        d1.save()
-
-        data = {'title': 'Title'}
-        response = self.client.post(
-            f'/api/library/{item.id}/clone',
-            data=data, format='json'
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['title'], 'Title')
-        self.assertEqual(response.data['items'][0]['alias'], x1.alias)
-        self.assertEqual(response.data['items'][0]['term_raw'], x1.term_raw)
-        self.assertEqual(response.data['items'][0]['term_resolved'], x1.term_resolved)
-        self.assertEqual(response.data['items'][1]['term_raw'], d1.term_raw)
-        self.assertEqual(response.data['items'][1]['term_resolved'], d1.term_resolved)
-
+    @decl_endpoint('/api/rsforms/{item}/cst-produce-structure', method='patch')
     def test_produce_structure(self):
-        item = self.owned.item
-        x1 = Constituenta.objects.create(schema=item, alias='X1', cst_type='basic', order=1)
-        s1 = Constituenta.objects.create(schema=item, alias='S1', cst_type='structure', order=2)
-        s2 = Constituenta.objects.create(schema=item, alias='S2', cst_type='structure', order=3)
-        s3 = Constituenta.objects.create(schema=item, alias='S3', cst_type='structure', order=4)
-        a1 = Constituenta.objects.create(schema=item, alias='A1', cst_type='axiom', order=5)
-        f1 = Constituenta.objects.create(schema=item, alias='F10', cst_type='function', order=6)
-        invalid_id = f1.id + 1
-        s1.definition_formal = 'ℬ(X1×X1)' # ℬ(X1×X1)
-        s2.definition_formal = 'invalid'
-        s3.definition_formal = 'X1×(X1×ℬℬ(X1))×ℬ(X1×X1)'
-        a1.definition_formal = '1=1'
-        f1.definition_formal = '[α∈X1, β∈X1] Fi1[{α,β}](S1)'
-        s1.save()
-        s2.save()
-        s3.save()
-        a1.save()
-        f1.save()
-
-        data = {'target': invalid_id}
-        response = self.client.patch(
-            f'/api/rsforms/{item.id}/cst-produce-structure',
-            data=data, format='json'
+        self.set_params(item=self.schema_id)
+        x1 = self.schema.insert_new('X1')
+        s1 = self.schema.insert_new(
+            alias='S1',
+            definition_formal='ℬ(X1×X1)'
         )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-        data = {'target': x1.id}
-        response = self.client.patch(
-            f'/api/rsforms/{item.id}/cst-produce-structure',
-            data=data, format='json'
+        s2 = self.schema.insert_new(
+            alias='S2',
+            definition_formal='invalid'
         )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-        data = {'target': s2.id}
-        response = self.client.patch(
-            f'/api/rsforms/{item.id}/cst-produce-structure',
-            data=data, format='json'
+        s3 = self.schema.insert_new(
+            alias='S3',
+            definition_formal='X1×(X1×ℬℬ(X1))×ℬ(X1×X1)'
         )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-        # Testing simple structure
-        s1.refresh_from_db()
-        data = {'target': s1.id}
-        response = self.client.patch(
-            f'/api/rsforms/{item.id}/cst-produce-structure',
-            data=data, format='json'
+        a1 = self.schema.insert_new(
+            alias='A1',
+            definition_formal='1=1'
         )
+        f1 = self.schema.insert_new(
+            alias='F10',
+            definition_formal='[α∈X1, β∈X1] Fi1[{α,β}](S1)'
+        )
+        invalid_id = f1.pk + 1337
+
+        self.assertBadData({'target': invalid_id})
+        self.assertBadData({'target': x1.id})
+        self.assertBadData({'target': s2.id})
+
+        # Testing simple structure        
+        response = self.execute({'target': s1.id})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         result = response.data['schema']
         items = [item for item in result['items'] if item['id'] in response.data['cst_list']]
@@ -558,11 +437,7 @@ class TestRSFormViewset(APITestCase):
 
         # Testing complex structure
         s3.refresh_from_db()
-        data = {'target': s3.id}
-        response = self.client.patch(
-            f'/api/rsforms/{item.id}/cst-produce-structure',
-            data=data, format='json'
-        )
+        response = self.execute({'target': s3.id})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         result = response.data['schema']
         items = [item for item in result['items'] if item['id'] in response.data['cst_list']]
@@ -572,11 +447,7 @@ class TestRSFormViewset(APITestCase):
 
         # Testing function
         f1.refresh_from_db()
-        data = {'target': f1.id}
-        response = self.client.patch(
-            f'/api/rsforms/{item.id}/cst-produce-structure',
-            data=data, format='json'
-        )
+        response = self.execute({'target': f1.id})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         result = response.data['schema']
         items = [item for item in result['items'] if item['id'] in response.data['cst_list']]

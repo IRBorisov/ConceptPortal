@@ -1,6 +1,6 @@
 ''' Models: Definitions and utility function for RSLanguage. '''
 import json
-from typing import Tuple
+from typing import Tuple, cast
 from enum import IntEnum , unique
 
 from django.db.models import TextChoices
@@ -53,6 +53,14 @@ def get_type_prefix(cst_type: CstType) -> str:
     if cst_type == CstType.THEOREM:
         return 'T'
     return 'X'
+
+def guess_type(alias: str) -> CstType:
+    ''' Get CstType for alias. '''
+    prefix = alias[0]
+    for (value, _) in CstType.choices:
+        if prefix == get_type_prefix(cast(CstType, value)):
+            return cast(CstType, value)
+    return CstType.BASE
 
 def _get_structure_prefix(alias: str, expression: str, parse: dict) -> Tuple[str, str]:
     ''' Generate prefix and alias for structure generation. '''
