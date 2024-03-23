@@ -32,6 +32,7 @@ import {
   ICstSubstituteData,
   ICstTarget,
   ICstUpdateData,
+  IInlineSynthesisData,
   IProduceStructureResponse,
   IRSFormCreateData,
   IRSFormData,
@@ -377,6 +378,13 @@ export function patchUploadTRS(target: string, request: FrontExchange<IRSFormUpl
         'Content-Type': 'multipart/form-data'
       }
     }
+  });
+}
+export function patchInlineSynthesis(request: FrontExchange<IInlineSynthesisData, IRSFormData>) {
+  AxiosPatch({
+    title: 'Processing inline synthesis',
+    endpoint: `/api/operations/inline-synthesis`,
+    request: request
   });
 }
 

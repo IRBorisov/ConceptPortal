@@ -247,7 +247,7 @@ export interface IVersionCreatedResponse {
 /**
  * Represents input data for inline synthesis.
  */
-export interface IRSFormInlineData {
+export interface IInlineSynthesisData {
   receiver: LibraryItemID;
   source: LibraryItemID;
   items: ConstituentaID[];

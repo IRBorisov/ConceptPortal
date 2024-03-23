@@ -16,7 +16,9 @@ import {
   ICstSubstituteData,
   ICstTarget,
   ICstUpdateData,
+  IInlineSynthesisData,
   IRSForm,
+  IRSFormData,
   IRSFormUploadData
 } from '@/models/rsform';
 import {
@@ -26,6 +28,7 @@ import {
   getTRSFile,
   patchConstituenta,
   patchDeleteConstituenta,
+  patchInlineSynthesis,
   patchLibraryItem,
   patchMoveConstituenta,
   patchProduceStructure,
@@ -65,6 +68,7 @@ interface IRSFormContext {
 
   resetAliases: (callback: () => void) => void;
   produceStructure: (data: ICstTarget, callback?: DataCallback<ConstituentaID[]>) => void;
+  inlineSynthesis: (data: IInlineSynthesisData, callback?: DataCallback<IRSFormData>) => void;
 
   cstCreate: (data: ICstCreateData, callback?: DataCallback<IConstituentaMeta>) => void;
   cstRename: (data: ICstRenameData, callback?: DataCallback<IConstituentaMeta>) => void;
@@ -464,6 +468,24 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
     [setError, schema, setSchema]
   );
 
+  const inlineSynthesis = useCallback(
+    (data: IInlineSynthesisData, callback?: DataCallback<IRSFormData>) => {
+      setError(undefined);
+      patchInlineSynthesis({
+        data: data,
+        showError: true,
+        setLoading: setProcessing,
+        onError: setError,
+        onSuccess: newData => {
+          setSchema(newData);
+          library.localUpdateTimestamp(Number(schemaID));
+          if (callback) callback(newData);
+        }
+      });
+    },
+    [setError, library, schemaID, setSchema]
+  );
+
   return (
     <RSFormContext.Provider
       value={{
@@ -482,6 +504,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         claim,
         resetAliases,
         produceStructure,
+        inlineSynthesis,
         subscribe,
         unsubscribe,
         cstUpdate,

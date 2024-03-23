@@ -215,7 +215,7 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
               onClick={handleTemplates}
             />
             <DropdownButton
-              disabled={!controller.isContentEditable || !user.is_staff}
+              disabled={!controller.isContentEditable}
               text='Применить конструкт'
               title='Импортировать совокупность конституент из другой схемы'
               icon={<LuBookCopy size='1rem' className='icon-green' />}

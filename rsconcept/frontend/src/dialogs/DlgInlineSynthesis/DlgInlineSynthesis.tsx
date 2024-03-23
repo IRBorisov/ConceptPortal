@@ -8,7 +8,7 @@ import Modal, { ModalProps } from '@/components/ui/Modal';
 import TabLabel from '@/components/ui/TabLabel';
 import useRSFormDetails from '@/hooks/useRSFormDetails';
 import { LibraryItemID } from '@/models/library';
-import { IRSForm, IRSFormInlineData, ISubstitution } from '@/models/rsform';
+import { IInlineSynthesisData, IRSForm, ISubstitution } from '@/models/rsform';
 
 import ConstituentsTab from './ConstituentsTab';
 import SchemaTab from './SchemaTab';
@@ -16,7 +16,7 @@ import SubstitutionsTab from './SubstitutionsTab';
 
 interface DlgInlineSynthesisProps extends Pick<ModalProps, 'hideWindow'> {
   receiver: IRSForm;
-  onInlineSynthesis: (data: IRSFormInlineData) => void;
+  onInlineSynthesis: (data: IInlineSynthesisData) => void;
 }
 
 export enum TabID {
@@ -40,7 +40,7 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
     if (!source.schema) {
       return;
     }
-    const data: IRSFormInlineData = {
+    const data: IInlineSynthesisData = {
       source: source.schema?.id,
       receiver: receiver.id,
       items: selected,

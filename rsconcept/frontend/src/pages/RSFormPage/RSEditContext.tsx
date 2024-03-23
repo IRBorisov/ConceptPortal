@@ -38,6 +38,7 @@ import {
   ICstSubstituteData,
   ICstTarget,
   ICstUpdateData,
+  IInlineSynthesisData,
   IRSForm,
   TermForm
 } from '@/models/rsform';
@@ -259,6 +260,19 @@ export const RSEditState = ({
         return;
       }
       model.versionUpdate(versionID, data, () => toast.success('Версия обновлена'));
+    },
+    [model]
+  );
+
+  const handleInlineSynthesis = useCallback(
+    (data: IInlineSynthesisData) => {
+      if (!model.schema) {
+        return;
+      }
+      const oldCount = model.schema.items.length;
+      model.inlineSynthesis(data, newSchema =>
+        toast.success(`Конституенты добавлены: ${newSchema['items'].length - oldCount}`)
+      );
     },
     [model]
   );
@@ -557,7 +571,7 @@ export const RSEditState = ({
             <DlgInlineSynthesis
               receiver={model.schema}
               hideWindow={() => setShowInlineSynthesis(false)}
-              onInlineSynthesis={() => toast('Testing')}
+              onInlineSynthesis={handleInlineSynthesis}
             />
           ) : null}
         </AnimatePresence>
