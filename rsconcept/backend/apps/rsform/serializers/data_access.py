@@ -194,12 +194,15 @@ class RSFormParseSerializer(serializers.ModelSerializer):
         return data
 
 
-class CstSubstituteSerializer(serializers.Serializer):
-    ''' Serializer: Constituenta substitution. '''
+class CstSubstituteSerializerBase(serializers.Serializer):
+    ''' Serializer: Basic substitution. '''
     original = PKField(many=False, queryset=Constituenta.objects.all())
     substitution = PKField(many=False, queryset=Constituenta.objects.all())
     transfer_term = serializers.BooleanField(required=False, default=False)
 
+
+class CstSubstituteSerializer(CstSubstituteSerializerBase):
+    ''' Serializer: Constituenta substitution. '''
     def validate(self, attrs):
         schema = cast(LibraryItem, self.context['schema'])
         original_cst = cast(Constituenta, attrs['original'])
@@ -216,9 +219,6 @@ class CstSubstituteSerializer(serializers.Serializer):
             raise serializers.ValidationError({
                 'substitution': msg.constituentaNotOwned(schema.title)
             })
-        attrs['original'] = original_cst
-        attrs['substitution'] = substitution_cst
-        attrs['transfer_term'] = self.initial_data['transfer_term']
         return attrs
 
 
@@ -295,7 +295,7 @@ class InlineSynthesisSerializer(serializers.Serializer):
     source = PKField(many=False, queryset=LibraryItem.objects.all()) # type: ignore
     items = PKField(many=True, queryset=Constituenta.objects.all())
     substitutions = serializers.ListField(
-        child=CstSubstituteSerializer()
+        child=CstSubstituteSerializerBase()
     )
 
     def validate(self, attrs):

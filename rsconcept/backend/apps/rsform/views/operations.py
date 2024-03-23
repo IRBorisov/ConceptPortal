@@ -39,7 +39,7 @@ def inline_synthesis(request: Request):
         else:
             index = next(i for (i, cst) in enumerate(items) if cst == replacement)
             replacement = new_items[index]
-        schema.substitute(original, replacement, serializer.validated_data['transfer_term'])
+        schema.substitute(original, replacement, substitution['transfer_term'])
     return Response(
         status=c.HTTP_200_OK,
         data=s.RSFormParseSerializer(schema.item).data
