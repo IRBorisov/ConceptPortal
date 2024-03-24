@@ -53,7 +53,10 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
     onInlineSynthesis(data);
   }
 
-  useEffect(() => setSelected(source.schema ? source.schema?.items.map(cst => cst.id) : []), [source.schema]);
+  useEffect(() => {
+    setSelected(source.schema ? source.schema?.items.map(cst => cst.id) : []);
+    setSubstitutions([]);
+  }, [source.schema]);
 
   return (
     <Modal

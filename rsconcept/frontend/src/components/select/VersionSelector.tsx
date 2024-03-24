@@ -1,19 +1,22 @@
 'use client';
 
+import clsx from 'clsx';
 import { useMemo } from 'react';
 
 import { IVersionInfo } from '@/models/library';
 import { labelVersion } from '@/utils/labels';
 
+import { CProps } from '../props';
 import SelectSingle from '../ui/SelectSingle';
 
-interface VersionSelectorProps {
+interface VersionSelectorProps extends CProps.Styling {
+  id?: string;
   items?: IVersionInfo[];
   value?: number;
   onSelectValue: (newValue?: number) => void;
 }
 
-function VersionSelector({ items, value, onSelectValue }: VersionSelectorProps) {
+function VersionSelector({ id, className, items, value, onSelectValue, ...restProps }: VersionSelectorProps) {
   const options = useMemo(() => {
     return [
       {
@@ -33,10 +36,12 @@ function VersionSelector({ items, value, onSelectValue }: VersionSelectorProps) 
 
   return (
     <SelectSingle
-      className='w-full min-w-[12rem] text-ellipsis'
+      id={id}
+      className={clsx('w-full min-w-[12rem] text-ellipsis', className)}
       options={options}
       value={{ value: value, label: valueLabel }}
       onChange={data => onSelectValue(data?.value)}
+      {...restProps}
     />
   );
 }

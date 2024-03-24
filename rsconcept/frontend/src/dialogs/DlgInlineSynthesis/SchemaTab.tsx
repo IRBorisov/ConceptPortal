@@ -30,7 +30,12 @@ function SchemaTab({ selected, setSelected }: SchemaTabProps) {
           dense
         />
       </div>
-      <SchemaPicker rows={15} value={selected} onSelectValue={setSelected} />
+      <SchemaPicker
+        id='dlg_schema_picker' // prettier: split lines
+        rows={15}
+        value={selected}
+        onSelectValue={setSelected}
+      />
     </div>
   );
 }

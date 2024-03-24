@@ -119,13 +119,7 @@ function ConstituentaMultiPicker({ id, schema, prefixID, rows, selected, setSele
         noFooter
         rows={rows}
         contentHeight='1.3rem'
-        className={clsx(
-          'min-h-[16rem]', // prettier: split lines
-          'overflow-y-auto',
-          'border',
-          'text-sm',
-          'select-none'
-        )}
+        className={clsx('overflow-y-auto', 'border', 'text-sm', 'select-none')}
         data={schema?.items ?? []}
         columns={columns}
         headPosition='0rem'

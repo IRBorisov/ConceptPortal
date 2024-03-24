@@ -6,15 +6,13 @@ import { colorFgGrammeme } from '@/styling/color';
 import { labelGrammeme } from '@/utils/labels';
 
 interface GrammemeBadgeProps {
-  key?: string;
   grammeme: GramData;
 }
 
-function GrammemeBadge({ key, grammeme }: GrammemeBadgeProps) {
+function GrammemeBadge({ grammeme }: GrammemeBadgeProps) {
   const { colors } = useConceptTheme();
   return (
     <div
-      key={key}
       className={clsx(
         'min-w-[3rem]', // prettier: split lines
         'px-1',

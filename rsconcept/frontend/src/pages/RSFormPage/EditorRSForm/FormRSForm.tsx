@@ -140,6 +140,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
           </Overlay>
           <Label text='Версия' className='mb-2' />
           <VersionSelector
+            id='schema_version'
             value={schema?.version} // prettier: split lines
             items={schema?.versions}
             onSelectValue={controller.viewVersion}
