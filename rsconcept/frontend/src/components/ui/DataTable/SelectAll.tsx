@@ -4,9 +4,15 @@ import CheckboxTristate from '@/components/ui/CheckboxTristate';
 
 interface SelectAllProps<TData> {
   table: Table<TData>;
+  setLastSelected: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
-function SelectAll<TData>({ table }: SelectAllProps<TData>) {
+function SelectAll<TData>({ table, setLastSelected }: SelectAllProps<TData>) {
+  function handleChange(value: boolean | null) {
+    setLastSelected(undefined);
+    table.toggleAllPageRowsSelected(value !== false);
+  }
+
   return (
     <CheckboxTristate
       tabIndex={-1}
@@ -14,7 +20,7 @@ function SelectAll<TData>({ table }: SelectAllProps<TData>) {
       value={
         !table.getIsAllPageRowsSelected() && table.getIsSomePageRowsSelected() ? null : table.getIsAllPageRowsSelected()
       }
-      setValue={value => table.toggleAllPageRowsSelected(value !== false)}
+      setValue={handleChange}
     />
   );
 }

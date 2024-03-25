@@ -8,6 +8,10 @@ interface TableBodyProps<TData> {
   dense?: boolean;
   enableRowSelection?: boolean;
   conditionalRowStyles?: IConditionalStyle<TData>[];
+
+  lastSelected: string | undefined;
+  setLastSelected: React.Dispatch<React.SetStateAction<string | undefined>>;
+
   onRowClicked?: (rowData: TData, event: React.MouseEvent<Element, MouseEvent>) => void;
   onRowDoubleClicked?: (rowData: TData, event: React.MouseEvent<Element, MouseEvent>) => void;
 }
@@ -17,15 +21,34 @@ function TableBody<TData>({
   dense,
   enableRowSelection,
   conditionalRowStyles,
+  lastSelected,
+  setLastSelected,
   onRowClicked,
   onRowDoubleClicked
 }: TableBodyProps<TData>) {
-  function handleRowClicked(row: Row<TData>, event: React.MouseEvent<Element, MouseEvent>) {
+  function handleRowClicked(target: Row<TData>, event: React.MouseEvent<Element, MouseEvent>) {
     if (onRowClicked) {
-      onRowClicked(row.original, event);
+      onRowClicked(target.original, event);
     }
-    if (enableRowSelection && row.getCanSelect()) {
-      row.getToggleSelectedHandler()(!row.getIsSelected());
+    if (enableRowSelection && target.getCanSelect()) {
+      if (event.shiftKey && !!lastSelected && lastSelected !== target.id) {
+        const { rows, rowsById } = table.getRowModel();
+        const lastIndex = rowsById[lastSelected].index;
+        const currentIndex = target.index;
+        const toggleRows = rows.slice(
+          lastIndex > currentIndex ? currentIndex : lastIndex + 1,
+          lastIndex > currentIndex ? lastIndex : currentIndex + 1
+        );
+        const newSelection: { [key: string]: boolean } = {};
+        toggleRows.forEach(row => {
+          newSelection[row.id] = !target.getIsSelected();
+        });
+        table.setRowSelection(prev => ({ ...prev, ...newSelection }));
+        setLastSelected(undefined);
+      } else {
+        setLastSelected(target.id);
+        target.toggleSelected(!target.getIsSelected());
+      }
     }
   }
 
@@ -53,7 +76,7 @@ function TableBody<TData>({
         >
           {enableRowSelection ? (
             <td key={`select-${row.id}`} className='pl-3 pr-1 align-middle border-y'>
-              <SelectRow row={row} />
+              <SelectRow row={row} setLastSelected={setLastSelected} />
             </td>
           ) : null}
           {row.getVisibleCells().map((cell: Cell<TData, unknown>) => (

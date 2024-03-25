@@ -3,8 +3,8 @@
 import clsx from 'clsx';
 import { useLayoutEffect, useMemo, useState } from 'react';
 
-import { type RowSelectionState } from '@/components/ui/DataTable';
 import SelectedCounter from '@/components/info/SelectedCounter';
+import { type RowSelectionState } from '@/components/ui/DataTable';
 import { useConceptTheme } from '@/context/ThemeContext';
 import { ConstituentaID, CstType } from '@/models/rsform';
 

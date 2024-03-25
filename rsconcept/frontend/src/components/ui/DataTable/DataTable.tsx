@@ -100,6 +100,7 @@ function DataTable<TData extends RowData>({
   ...restProps
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = useState<SortingState>(initialSorting ? [initialSorting] : []);
+  const [lastSelected, setLastSelected] = useState<string | undefined>(undefined);
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -147,6 +148,7 @@ function DataTable<TData extends RowData>({
             enableRowSelection={enableRowSelection}
             enableSorting={enableSorting}
             headPosition={headPosition}
+            setLastSelected={setLastSelected}
           />
         ) : null}
 
@@ -155,6 +157,8 @@ function DataTable<TData extends RowData>({
           dense={dense}
           conditionalRowStyles={conditionalRowStyles}
           enableRowSelection={enableRowSelection}
+          lastSelected={lastSelected}
+          setLastSelected={setLastSelected}
           onRowClicked={onRowClicked}
           onRowDoubleClicked={onRowDoubleClicked}
         />
