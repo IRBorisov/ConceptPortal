@@ -139,7 +139,6 @@ function RSTabs() {
 
   const onOpenCst = useCallback(
     (cstID: ConstituentaID) => {
-      setSelected([cstID]);
       navigateTab(RSTabID.CST_EDIT, cstID);
     },
     [navigateTab]
