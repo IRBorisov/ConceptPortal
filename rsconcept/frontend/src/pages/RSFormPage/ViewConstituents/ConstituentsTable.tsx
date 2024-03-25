@@ -69,6 +69,7 @@ function ConstituentsTable({ items, activeID, onOpenEdit, maxHeight, denseThresh
         cell: props => (
           <div
             style={{
+              textWrap: 'pretty',
               fontSize: 12,
               color: isMockCst(props.row.original) ? colors.fgWarning : undefined
             }}
@@ -87,6 +88,7 @@ function ConstituentsTable({ items, activeID, onOpenEdit, maxHeight, denseThresh
         cell: props => (
           <div
             style={{
+              textWrap: 'pretty',
               fontSize: 12,
               color: isMockCst(props.row.original) ? colors.fgWarning : undefined
             }}

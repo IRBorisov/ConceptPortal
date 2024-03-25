@@ -122,7 +122,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
   const isArchive = useMemo(() => !!versionID, [versionID]);
 
   const isClaimable = useMemo(() => {
-    return isArchive && ((user?.id !== schema?.owner && schema?.is_common && !schema?.is_canonical) ?? false);
+    return !isArchive && ((user?.id !== schema?.owner && schema?.is_common && !schema?.is_canonical) ?? false);
   }, [user, schema?.owner, schema?.is_common, schema?.is_canonical, isArchive]);
 
   const isSubscribed = useMemo(() => {

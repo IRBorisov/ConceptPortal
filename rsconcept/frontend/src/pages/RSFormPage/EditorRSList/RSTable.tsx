@@ -93,7 +93,7 @@ function RSTable({ items, maxHeight, enableSelection, selected, setSelected, onE
         size: 1000,
         minSize: 300,
         maxSize: 1000,
-        cell: props => <div className='break-words'>{props.getValue()}</div>
+        cell: props => <div className='break-words text-pretty'>{props.getValue()}</div>
       }),
       columnHelper.accessor(cst => cst.definition_resolved || cst.definition_raw || '', {
         id: 'definition',
@@ -101,7 +101,7 @@ function RSTable({ items, maxHeight, enableSelection, selected, setSelected, onE
         size: 1000,
         minSize: 200,
         maxSize: 1000,
-        cell: props => <div className='text-xs'>{props.getValue()}</div>
+        cell: props => <div className='text-xs text-pretty'>{props.getValue()}</div>
       }),
       columnHelper.accessor('convention', {
         id: 'convention',
@@ -110,7 +110,7 @@ function RSTable({ items, maxHeight, enableSelection, selected, setSelected, onE
         minSize: 100,
         maxSize: 500,
         enableHiding: true,
-        cell: props => <div className='text-xs'>{props.getValue()}</div>
+        cell: props => <div className='text-xs text-pretty'>{props.getValue()}</div>
       })
     ],
     [colors]

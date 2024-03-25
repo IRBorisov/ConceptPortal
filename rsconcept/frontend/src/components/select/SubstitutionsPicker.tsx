@@ -133,7 +133,7 @@ function SubstitutionsPicker({
         id: 'right_text',
         header: 'Описание',
         size: 1000,
-        cell: props => <div className='text-xs text-ellipsis'>{props.getValue()}</div>
+        cell: props => <div className='text-xs text-ellipsis text-pretty'>{props.getValue()}</div>
       }),
       columnHelper.display({
         id: 'actions',
