@@ -9,10 +9,12 @@ export function getSymbolSubstitute(keyCode: string, shiftPressed: boolean): str
   // prettier-ignore
   if (shiftPressed) {
     switch (keyCode) {
-    case 'Backquote': return '∃';
-    case 'Backslash': return '|';
-    case 'BracketLeft': return '{';
-    case 'BracketRight': return '}';
+    case 'Backquote':     return '∃';
+    case 'Backslash':     return '|';
+    case 'BracketLeft':   return '{';
+    case 'BracketRight':  return '}';
+    case 'Comma':         return '<';
+    case 'Period':        return '>';
 
     case 'Digit8': return '×';
     case 'KeyB': return 'ℬ';
