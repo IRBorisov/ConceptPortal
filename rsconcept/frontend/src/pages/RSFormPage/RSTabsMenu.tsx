@@ -216,7 +216,7 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
             />
             <DropdownButton
               disabled={!controller.isContentEditable}
-              text='Применить конструкт'
+              text='Встраивание'
               title='Импортировать совокупность конституент из другой схемы'
               icon={<LuBookCopy size='1rem' className='icon-green' />}
               onClick={handleInlineSynthesis}
@@ -224,7 +224,7 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
             <DropdownButton
               disabled={!controller.isContentEditable}
               className='border-t-2'
-              text='Сброс имён'
+              text='Порядковые имена'
               title='Присвоить порядковые имена и обновить выражения'
               icon={<LuWand2 size='1rem' className='icon-primary' />}
               onClick={handleReindex}
