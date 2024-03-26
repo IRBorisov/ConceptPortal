@@ -11,6 +11,7 @@ import { forwardRef, useCallback, useMemo, useRef } from 'react';
 import Label from '@/components/ui/Label';
 import { useRSForm } from '@/context/RSFormContext';
 import { useConceptTheme } from '@/context/ThemeContext';
+import { getFontClassName } from '@/models/miscellaneousAPI';
 import { generateAlias, getCstTypePrefix, guessCstType } from '@/models/rsformAPI';
 import { extractGlobals } from '@/models/rslangAPI';
 
@@ -48,7 +49,7 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
     },
     ref
   ) => {
-    const { darkMode, colors } = useConceptTheme();
+    const { darkMode, colors, mathFont } = useConceptTheme();
     const { schema } = useRSForm();
 
     const internalRef = useRef<ReactCodeMirrorRef>(null);
@@ -136,7 +137,7 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
       <div className={clsx('flex flex-col gap-2', className, cursor)} style={style}>
         <Label text={label} />
         <CodeMirror
-          className='font-math'
+          className={getFontClassName(mathFont)}
           id={id}
           ref={thisRef}
           basicSetup={editorSetup}

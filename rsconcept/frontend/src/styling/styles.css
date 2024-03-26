@@ -8,6 +8,9 @@
 @tailwind utilities;
 
 @layer utilities {
+  .font-main {
+    font-family: var(--font-main);
+  }
   .font-controls {
     font-family: var(--font-ui);
     font-weight: 600;
@@ -15,6 +18,9 @@
   }
   .font-math {
     font-family: var(--font-math);
+  }
+  .font-math2 {
+    font-family: var(--font-math2);
   }
 }
 

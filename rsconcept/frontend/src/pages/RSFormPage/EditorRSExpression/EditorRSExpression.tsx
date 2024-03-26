@@ -3,7 +3,7 @@
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { AnimatePresence } from 'framer-motion';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
-import { BiListUl } from 'react-icons/bi';
+import { BiFontFamily, BiListUl } from 'react-icons/bi';
 import { FaRegKeyboard } from 'react-icons/fa6';
 import { RiNodeTree } from 'react-icons/ri';
 import { toast } from 'react-toastify';
@@ -14,6 +14,7 @@ import { RSTextWrapper } from '@/components/RSInput/textEditing';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { useRSForm } from '@/context/RSFormContext';
+import { useConceptTheme } from '@/context/ThemeContext';
 import DlgShowAST from '@/dialogs/DlgShowAST';
 import useCheckExpression from '@/hooks/useCheckExpression';
 import useLocalStorage from '@/hooks/useLocalStorage';
@@ -56,6 +57,7 @@ function EditorRSExpression({
   ...restProps
 }: EditorRSExpressionProps) {
   const { schema } = useRSForm();
+  const { mathFont, setMathFont } = useConceptTheme();
 
   const [isModified, setIsModified] = useState(false);
   const { parseData, checkExpression, resetParse, loading } = useCheckExpression({ schema });
@@ -145,6 +147,10 @@ function EditorRSExpression({
     });
   }
 
+  function toggleFont() {
+    setMathFont(mathFont === 'math' ? 'math2' : 'math');
+  }
+
   return (
     <>
       <AnimatePresence>
@@ -155,6 +161,11 @@ function EditorRSExpression({
 
       <div>
         <Overlay position='top-[-0.5rem] right-0 flex'>
+          <MiniButton
+            title='Изменить шрифт'
+            icon={<BiFontFamily size='1.25rem' className={mathFont === 'math' ? 'icon-primary' : ''} />}
+            onClick={toggleFont}
+          />
           <MiniButton
             noHover
             title='Отображение специальной клавиатуры'

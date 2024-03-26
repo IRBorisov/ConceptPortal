@@ -5,6 +5,7 @@ import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useSt
 
 import Tooltip from '@/components/ui/Tooltip';
 import useLocalStorage from '@/hooks/useLocalStorage';
+import { FontStyle } from '@/models/miscellaneous';
 import { animationDuration } from '@/styling/animations';
 import { darkT, IColorTheme, lightT } from '@/styling/color';
 import { globalIDs } from '@/utils/constants';
@@ -17,6 +18,9 @@ interface IThemeContext {
 
   darkMode: boolean;
   toggleDarkMode: () => void;
+
+  mathFont: FontStyle;
+  setMathFont: (value: FontStyle) => void;
 
   noNavigationAnimation: boolean;
   noNavigation: boolean;
@@ -46,6 +50,7 @@ interface ThemeStateProps {
 
 export const ThemeState = ({ children }: ThemeStateProps) => {
   const [darkMode, setDarkMode] = useLocalStorage('darkMode', false);
+  const [mathFont, setMathFont] = useLocalStorage<FontStyle>('editor_font_math', 'math');
   const [colors, setColors] = useState<IColorTheme>(lightT);
   const [noNavigation, setNoNavigation] = useState(false);
   const [noNavigationAnimation, setNoNavigationAnimation] = useState(false);
@@ -106,6 +111,8 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
       value={{
         darkMode,
         colors,
+        mathFont,
+        setMathFont,
         noNavigationAnimation,
         noNavigation,
         noFooter,

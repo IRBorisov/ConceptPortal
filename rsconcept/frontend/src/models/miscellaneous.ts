@@ -29,6 +29,11 @@ export enum DependencyMode {
 export type GraphColoringScheme = 'none' | 'status' | 'type';
 
 /**
+ * Represents font styles.
+ */
+export type FontStyle = 'controls' | 'main' | 'math' | 'math2';
+
+/**
  * Represents manuals topic.
  */
 export enum HelpTopic {
