@@ -86,7 +86,6 @@ This readme file is used mostly to document project dependencies
   - coreapi
   - psycopg2-binary
   - pymorphy3
-  - pymorphy3-dicts-ru
   - razdel
   </pre>
 </details>
