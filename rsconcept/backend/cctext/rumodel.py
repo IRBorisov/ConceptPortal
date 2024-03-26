@@ -3,8 +3,8 @@ from __future__ import annotations
 from enum import Enum, unique
 from typing import Iterable, Optional
 
-from pymorphy2 import MorphAnalyzer
-from pymorphy2.tagset import OpencorporaTag as WordTag
+from pymorphy3 import MorphAnalyzer
+from pymorphy3.tagset import OpencorporaTag as WordTag
 
 # ''' Morphology parser. '''
 morpho = MorphAnalyzer()

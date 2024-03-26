@@ -1,13 +1,11 @@
 tzdata==2024.1
-Django==4.2.10
-djangorestframework==3.14.0
+Django==4.2.11
+djangorestframework==3.15.1
 django-cors-headers==4.3.1
-django-filter==23.5
+django-filter==24.1
 drf-spectacular==0.27.1
 coreapi==2.3.3
-pymorphy2==0.9.1
-pymorphy2-dicts-ru==2.4.417127.4579844
-pymorphy2-dicts-uk==2.4.1.1.1460299261
+pymorphy3==2.0.1
 razdel==0.5.0
 django-rest-passwordreset==1.4.0
 

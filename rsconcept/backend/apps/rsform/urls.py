@@ -4,8 +4,8 @@ from rest_framework import routers
 from . import views
 
 library_router = routers.SimpleRouter(trailing_slash=False)
-library_router.register('library', views.LibraryViewSet)
-library_router.register('rsforms', views.RSFormViewSet)
+library_router.register('library', views.LibraryViewSet, 'Library')
+library_router.register('rsforms', views.RSFormViewSet, 'RSForm')
 
 urlpatterns = [
     path('library/active', views.LibraryActiveView.as_view(), name='library'),

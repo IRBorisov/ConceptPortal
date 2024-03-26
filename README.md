@@ -85,7 +85,8 @@ This readme file is used mostly to document project dependencies
   - gunicorn
   - coreapi
   - psycopg2-binary
-  - pymorphy2
+  - pymorphy3
+  - pymorphy3-dicts-ru
   - razdel
   </pre>
 </details>

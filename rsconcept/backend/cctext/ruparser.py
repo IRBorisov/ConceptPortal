@@ -1,9 +1,9 @@
-''' Parsing russian language using pymorphy2 and natasha libraries. '''
+''' Parsing russian language using pymorphy3 and natasha libraries. '''
 from __future__ import annotations
 from typing import Optional
 
 from razdel.substring import Substring as Segment
-from pymorphy2.analyzer import Parse as WordParse
+from pymorphy3.analyzer import Parse as WordParse
 
 from .syntax import RuSyntax, Capitalization
 from .rumodel import SemanticRole, Morphology, WordTag, morpho, Grammemes
