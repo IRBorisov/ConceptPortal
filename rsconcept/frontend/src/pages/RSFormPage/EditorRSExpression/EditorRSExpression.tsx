@@ -56,11 +56,12 @@ function EditorRSExpression({
   onToggleList,
   ...restProps
 }: EditorRSExpressionProps) {
-  const { schema } = useRSForm();
+  const model = useRSForm();
   const { mathFont, setMathFont } = useConceptTheme();
 
   const [isModified, setIsModified] = useState(false);
-  const { parseData, checkExpression, resetParse, loading } = useCheckExpression({ schema });
+  const parser = useCheckExpression({ schema: model.schema });
+  const { resetParse } = parser;
   const rsInput = useRef<ReactCodeMirrorRef>(null);
 
   const [syntaxTree, setSyntaxTree] = useState<SyntaxTree>([]);
@@ -84,7 +85,7 @@ function EditorRSExpression({
     }
     const prefix = getDefinitionPrefix(activeCst);
     const expression = prefix + value;
-    checkExpression(expression, activeCst, parse => {
+    parser.checkExpression(expression, activeCst, parse => {
       if (parse.errors.length > 0) {
         onShowError(parse.errors[0]);
       } else {
@@ -163,15 +164,17 @@ function EditorRSExpression({
         <Overlay position='top-[-0.5rem] right-0 flex'>
           <MiniButton
             title='Изменить шрифт'
-            icon={<BiFontFamily size='1.25rem' className={mathFont === 'math' ? 'icon-primary' : ''} />}
             onClick={toggleFont}
+            icon={<BiFontFamily size='1.25rem' className={mathFont === 'math' ? 'icon-primary' : ''} />}
           />
-          <MiniButton
-            noHover
-            title='Отображение специальной клавиатуры'
-            onClick={() => setShowControls(prev => !prev)}
-            icon={<FaRegKeyboard size='1.25rem' className={showControls ? 'icon-primary' : ''} />}
-          />
+          {!disabled || model.processing ? (
+            <MiniButton
+              noHover
+              title='Отображение специальной клавиатуры'
+              onClick={() => setShowControls(prev => !prev)}
+              icon={<FaRegKeyboard size='1.25rem' className={showControls ? 'icon-primary' : ''} />}
+            />
+          ) : null}
           <MiniButton
             noHover
             title='Отображение списка конституент'
@@ -188,10 +191,10 @@ function EditorRSExpression({
 
         <Overlay position='top-[-0.5rem] pl-[8rem] sm:pl-[4rem] right-1/2 translate-x-1/2 flex'>
           <StatusBar
-            processing={loading}
+            processing={parser.loading}
             isModified={isModified}
             constituenta={activeCst}
-            parseData={parseData}
+            parseData={parser.parseData}
             onAnalyze={() => handleCheckExpression()}
           />
           <HelpButton topic={HelpTopic.CONSTITUENTA} offset={4} />
@@ -207,11 +210,15 @@ function EditorRSExpression({
           {...restProps}
         />
 
-        <RSEditorControls isOpen={showControls} disabled={disabled} onEdit={handleEdit} />
+        <RSEditorControls
+          isOpen={showControls && (!disabled || model.processing)}
+          disabled={disabled}
+          onEdit={handleEdit}
+        />
 
         <ParsingResult
-          isOpen={!!parseData && parseData.errors.length > 0}
-          data={parseData}
+          isOpen={!!parser.parseData && parser.parseData.errors.length > 0}
+          data={parser.parseData}
           disabled={disabled}
           onShowError={onShowError}
         />

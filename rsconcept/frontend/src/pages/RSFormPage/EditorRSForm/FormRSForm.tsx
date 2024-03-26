@@ -118,7 +118,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
         />
         <div className='flex flex-col'>
           <Overlay position='top-[-0.25rem] right-[-0.25rem] flex'>
-            {controller.isMutable || controller.isProcessing ? (
+            {controller.isMutable || (controller.isMutable && controller.isProcessing) ? (
               <>
                 <MiniButton
                   noHover
@@ -173,7 +173,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
           setValue={value => setCanonical(value)}
         />
       </div>
-      {controller.isContentEditable || controller.isProcessing ? (
+      {controller.isContentEditable || (controller.isMutable && controller.isProcessing) ? (
         <SubmitButton
           text='Сохранить изменения'
           className='self-center'

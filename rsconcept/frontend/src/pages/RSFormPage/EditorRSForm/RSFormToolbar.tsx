@@ -27,7 +27,7 @@ function RSFormToolbar({ modified, anonymous, subscribed, claimable, onSubmit, o
   const canSave = useMemo(() => modified && controller.isMutable, [modified, controller.isMutable]);
   return (
     <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex'>
-      {controller.isContentEditable || controller.isProcessing ? (
+      {controller.isContentEditable || (controller.isMutable && controller.isProcessing) ? (
         <MiniButton
           titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
           disabled={!canSave}
@@ -67,7 +67,7 @@ function RSFormToolbar({ modified, anonymous, subscribed, claimable, onSubmit, o
           onClick={controller.claim}
         />
       ) : null}
-      {controller.isContentEditable || controller.isProcessing ? (
+      {controller.isContentEditable || (controller.isMutable && controller.isProcessing) ? (
         <MiniButton
           title='Удалить схему'
           disabled={!controller.isMutable}

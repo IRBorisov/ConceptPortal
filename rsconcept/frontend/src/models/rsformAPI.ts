@@ -233,7 +233,7 @@ export function isMockCst(cst: IConstituenta) {
  */
 export function applyFilterCategory(start: IConstituenta, schema: IRSFormData): IConstituenta[] {
   const nextCategory = schema.items.find(cst => cst.order > start.order && cst.cst_type === CATEGORY_CST_TYPE);
-  return schema.items.filter(cst => cst.order > start.order && (!nextCategory || cst.order <= nextCategory.order));
+  return schema.items.filter(cst => cst.order >= start.order && (!nextCategory || cst.order < nextCategory.order));
 }
 
 /**

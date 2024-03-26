@@ -8,7 +8,6 @@ import { IConstituenta, IRSForm } from './rsform';
  * Create style name from  {@link FontStyle}.
  */
 export function getFontClassName(style: FontStyle): string {
-  console.log(style);
   return `font-${style}`;
 }
 

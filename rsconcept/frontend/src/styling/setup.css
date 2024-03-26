@@ -106,7 +106,7 @@ li {
   text-wrap: pretty;
 }
 
-div > p {
+div:not(.dense) > p {
   @apply [&:not(:last-child)]:mb-2;
 }
 

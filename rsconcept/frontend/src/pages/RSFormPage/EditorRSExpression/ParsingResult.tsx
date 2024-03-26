@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import { motion } from 'framer-motion';
 
 import { IExpressionParse, IRSErrorDescription } from '@/models/rslang';
@@ -19,7 +18,7 @@ function ParsingResult({ isOpen, data, disabled, onShowError }: ParsingResultPro
 
   return (
     <motion.div
-      className={clsx('border', 'text-sm', 'overflow-y-auto')}
+      className='dense border text-sm overflow-y-auto'
       initial={false}
       animate={isOpen ? 'open' : 'closed'}
       variants={animateParseResults}
