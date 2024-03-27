@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { globalIDs } from '@/utils/constants';
+import { globals } from '@/utils/constants';
 
 import { CProps } from '../props';
 
@@ -46,7 +46,7 @@ function Button({
         className,
         colors
       )}
-      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
+      data-tooltip-id={!!title || !!titleHtml ? globals.tooltip : undefined}
       data-tooltip-html={titleHtml}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}

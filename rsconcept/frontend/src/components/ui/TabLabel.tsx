@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import type { TabProps as TabPropsImpl } from 'react-tabs';
 import { Tab as TabImpl } from 'react-tabs';
 
-import { globalIDs } from '@/utils/constants';
+import { globals } from '@/utils/constants';
 
 import { CProps } from '../props';
 
@@ -21,7 +21,7 @@ function TabLabel({ label, title, titleHtml, hideTitle, className, ...otherProps
         'select-none hover:cursor-pointer',
         className
       )}
-      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
+      data-tooltip-id={!!title || !!titleHtml ? globals.tooltip : undefined}
       data-tooltip-html={titleHtml}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}

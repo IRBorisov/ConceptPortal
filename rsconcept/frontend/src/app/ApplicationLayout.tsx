@@ -5,7 +5,7 @@ import Footer from '@/app/Footer';
 import Navigation from '@/app/Navigation';
 import { NavigationState } from '@/context/NavigationContext';
 import { useConceptTheme } from '@/context/ThemeContext';
-import { globalIDs } from '@/utils/constants';
+import { globals } from '@/utils/constants';
 
 function ApplicationLayout() {
   const { viewportHeight, mainHeight, showScroll } = useConceptTheme();
@@ -22,7 +22,7 @@ function ApplicationLayout() {
         <Navigation />
 
         <div
-          id={globalIDs.main_scroll}
+          id={globals.main_scroll}
           className='overflow-y-auto overscroll-none min-w-fit'
           style={{
             maxHeight: viewportHeight,

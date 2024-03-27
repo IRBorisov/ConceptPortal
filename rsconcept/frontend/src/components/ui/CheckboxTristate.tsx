@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { useMemo } from 'react';
 
-import { globalIDs } from '@/utils/constants';
+import { globals } from '@/utils/constants';
 
 import { CheckboxCheckedIcon, CheckboxNullIcon } from '../Icons';
 import { CheckboxProps } from './Checkbox';
@@ -57,7 +57,7 @@ function CheckboxTristate({
       )}
       disabled={disabled}
       onClick={handleClick}
-      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
+      data-tooltip-id={!!title || !!titleHtml ? globals.tooltip : undefined}
       data-tooltip-html={titleHtml}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}

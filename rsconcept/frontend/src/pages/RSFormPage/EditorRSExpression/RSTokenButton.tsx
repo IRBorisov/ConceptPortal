@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
 import { TokenID } from '@/models/rslang';
-import { globalIDs } from '@/utils/constants';
+import { globals } from '@/utils/constants';
 import { describeToken, labelToken } from '@/utils/labels';
 
 interface RSTokenButtonProps {
@@ -30,7 +30,7 @@ function RSTokenButton({ token, disabled, onInsert }: RSTokenButtonProps) {
           'w-[1.7rem] sm:w-[2.25rem]': label.length <= 3
         }
       )}
-      data-tooltip-id={globalIDs.tooltip}
+      data-tooltip-id={globals.tooltip}
       data-tooltip-html={describeToken(token)}
     >
       {label ? <span className='whitespace-nowrap'>{label}</span> : null}

@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
 import { CProps } from '@/components/props';
-import { globalIDs } from '@/utils/constants';
+import { globals } from '@/utils/constants';
 
 interface NavigationButtonProps extends CProps.Titled {
   text?: string;
@@ -14,7 +14,7 @@ function NavigationButton({ icon, title, titleHtml, hideTitle, onClick, text }: 
     <button
       type='button'
       tabIndex={-1}
-      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
+      data-tooltip-id={!!title || !!titleHtml ? globals.tooltip : undefined}
       data-tooltip-html={titleHtml}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}

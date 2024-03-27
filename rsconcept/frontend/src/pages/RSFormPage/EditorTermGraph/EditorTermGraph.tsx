@@ -14,7 +14,7 @@ import useLocalStorage from '@/hooks/useLocalStorage';
 import { GraphColoringScheme, GraphFilterParams } from '@/models/miscellaneous';
 import { ConstituentaID, CstType } from '@/models/rsform';
 import { colorBgGraphNode } from '@/styling/color';
-import { TIMEOUT_GRAPH_REFRESH } from '@/utils/constants';
+import { storage, TIMEOUT_GRAPH_REFRESH } from '@/utils/constants';
 
 import { useRSEdit } from '../RSEditContext';
 import GraphSidebar from './GraphSidebar';
@@ -33,7 +33,7 @@ function EditorTermGraph({ selected, setSelected, onOpenEdit }: EditorTermGraphP
   const controller = useRSEdit();
   const { colors } = useConceptTheme();
 
-  const [filterParams, setFilterParams] = useLocalStorage<GraphFilterParams>('graph_filter', {
+  const [filterParams, setFilterParams] = useLocalStorage<GraphFilterParams>(storage.rsgraphFilter, {
     noHermits: true,
     noTemplates: false,
     noTransitive: true,
@@ -55,10 +55,13 @@ function EditorTermGraph({ selected, setSelected, onOpenEdit }: EditorTermGraphP
 
   const nothingSelected = useMemo(() => selected.length === 0, [selected]);
 
-  const [layout, setLayout] = useLocalStorage<LayoutTypes>('graph_layout', 'treeTd2d');
-  const is3D = useMemo(() => layout.includes('3d'), [layout]);
-  const [coloringScheme, setColoringScheme] = useLocalStorage<GraphColoringScheme>('graph_coloring', 'type');
+  const [layout, setLayout] = useLocalStorage<LayoutTypes>(storage.rsgraphLayout, 'treeTd2d');
+  const [coloringScheme, setColoringScheme] = useLocalStorage<GraphColoringScheme>(
+    storage.rsgraphColoringScheme,
+    'type'
+  );
   const [orbit, setOrbit] = useState(false);
+  const is3D = useMemo(() => layout.includes('3d'), [layout]);
 
   const [hoverID, setHoverID] = useState<ConstituentaID | undefined>(undefined);
   const hoverCst = useMemo(() => {

@@ -3,7 +3,6 @@
 import { createContext, useCallback, useContext, useLayoutEffect, useState } from 'react';
 
 import { type ErrorData } from '@/components/info/InfoError';
-import useLocalStorage from '@/hooks/useLocalStorage';
 import { IPasswordTokenData, IRequestPasswordData, IResetPasswordData, IUserLoginData } from '@/models/library';
 import { ICurrentUser } from '@/models/library';
 import { IUserSignupData } from '@/models/library';
@@ -53,7 +52,7 @@ interface AuthStateProps {
 
 export const AuthState = ({ children }: AuthStateProps) => {
   const { users } = useUsers();
-  const [user, setUser] = useLocalStorage<ICurrentUser | undefined>('user', undefined);
+  const [user, setUser] = useState<ICurrentUser | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ErrorData>(undefined);
 

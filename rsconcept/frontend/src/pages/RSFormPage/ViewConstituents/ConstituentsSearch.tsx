@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useLayoutEffect } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 import { BiCog, BiFilterAlt } from 'react-icons/bi';
 
 import Dropdown from '@/components/ui/Dropdown';
@@ -14,7 +14,7 @@ import { applyGraphFilter } from '@/models/miscellaneousAPI';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
 import { createMockConstituenta, matchConstituenta } from '@/models/rsformAPI';
 import { extractGlobals } from '@/models/rslangAPI';
-import { prefixes } from '@/utils/constants';
+import { prefixes, storage } from '@/utils/constants';
 import { describeCstMatchMode, describeCstSource, labelCstMatchMode, labelCstSource } from '@/utils/labels';
 
 interface ConstituentsSearchProps {
@@ -25,9 +25,9 @@ interface ConstituentsSearchProps {
 }
 
 function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }: ConstituentsSearchProps) {
-  const [filterMatch, setFilterMatch] = useLocalStorage('side-filter-match', CstMatchMode.ALL);
-  const [filterText, setFilterText] = useLocalStorage('side-filter-text', '');
-  const [filterSource, setFilterSource] = useLocalStorage('side-filter-dependency', DependencyMode.ALL);
+  const [filterMatch, setFilterMatch] = useLocalStorage(storage.cstFilterMatch, CstMatchMode.ALL);
+  const [filterSource, setFilterSource] = useLocalStorage(storage.cstFilterGraph, DependencyMode.ALL);
+  const [filterText, setFilterText] = useState('');
 
   const matchModeMenu = useDropdown();
   const sourceMenu = useDropdown();

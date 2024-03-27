@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import { CProps } from '@/components/props';
 import { TokenID } from '@/models/rslang';
-import { globalIDs } from '@/utils/constants';
+import { globals } from '@/utils/constants';
 
 interface RSLocalButtonProps extends CProps.Titled {
   text: string;
@@ -16,7 +16,7 @@ function RSLocalButton({ text, title, titleHtml, hideTitle, disabled, onInsert }
       type='button'
       tabIndex={-1}
       disabled={disabled}
-      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
+      data-tooltip-id={!!title || !!titleHtml ? globals.tooltip : undefined}
       data-tooltip-html={titleHtml}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}

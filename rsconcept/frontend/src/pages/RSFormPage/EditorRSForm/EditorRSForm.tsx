@@ -7,7 +7,7 @@ import Divider from '@/components/ui/Divider';
 import FlexColumn from '@/components/ui/FlexColumn';
 import { useAuth } from '@/context/AuthContext';
 import { useRSForm } from '@/context/RSFormContext';
-import { globalIDs } from '@/utils/constants';
+import { globals } from '@/utils/constants';
 
 import FormRSForm from './FormRSForm';
 import RSFormStats from './RSFormStats';
@@ -24,7 +24,7 @@ function EditorRSForm({ isModified, onDestroy, setIsModified }: EditorRSFormProp
   const { user } = useAuth();
 
   function initiateSubmit() {
-    const element = document.getElementById(globalIDs.library_item_editor) as HTMLFormElement;
+    const element = document.getElementById(globals.library_item_editor) as HTMLFormElement;
     if (element) {
       element.requestSubmit();
     }
@@ -51,7 +51,7 @@ function EditorRSForm({ isModified, onDestroy, setIsModified }: EditorRSFormProp
       />
       <div tabIndex={-1} onKeyDown={handleInput} className={clsx('flex flex-col sm:flex-row', 'sm:w-fit w-full')}>
         <FlexColumn className='px-4 pb-2'>
-          <FormRSForm id={globalIDs.library_item_editor} isModified={isModified} setIsModified={setIsModified} />
+          <FormRSForm id={globals.library_item_editor} isModified={isModified} setIsModified={setIsModified} />
 
           <Divider margins='my-1' />
 

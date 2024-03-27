@@ -23,6 +23,7 @@ import { IConstituenta } from '@/models/rsform';
 import { getDefinitionPrefix } from '@/models/rsformAPI';
 import { IExpressionParse, IRSErrorDescription, SyntaxTree } from '@/models/rslang';
 import { TokenID } from '@/models/rslang';
+import { storage } from '@/utils/constants';
 import { labelTypification } from '@/utils/labels';
 
 import ParsingResult from './ParsingResult';
@@ -67,7 +68,7 @@ function EditorRSExpression({
   const [syntaxTree, setSyntaxTree] = useState<SyntaxTree>([]);
   const [expression, setExpression] = useState('');
   const [showAST, setShowAST] = useState(false);
-  const [showControls, setShowControls] = useLocalStorage('rseditor-show-controls', true);
+  const [showControls, setShowControls] = useLocalStorage(storage.rseditShowControls, true);
 
   useLayoutEffect(() => {
     setIsModified(false);

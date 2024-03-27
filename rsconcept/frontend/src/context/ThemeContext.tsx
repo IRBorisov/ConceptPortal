@@ -8,7 +8,7 @@ import useLocalStorage from '@/hooks/useLocalStorage';
 import { FontStyle } from '@/models/miscellaneous';
 import { animationDuration } from '@/styling/animations';
 import { darkT, IColorTheme, lightT } from '@/styling/color';
-import { globalIDs } from '@/utils/constants';
+import { globals, storage } from '@/utils/constants';
 
 interface IThemeContext {
   viewportHeight: string;
@@ -49,8 +49,8 @@ interface ThemeStateProps {
 }
 
 export const ThemeState = ({ children }: ThemeStateProps) => {
-  const [darkMode, setDarkMode] = useLocalStorage('darkMode', false);
-  const [mathFont, setMathFont] = useLocalStorage<FontStyle>('editor_font_math', 'math');
+  const [darkMode, setDarkMode] = useLocalStorage(storage.themeDark, false);
+  const [mathFont, setMathFont] = useLocalStorage<FontStyle>(storage.rseditFont, 'math');
   const [colors, setColors] = useState<IColorTheme>(lightT);
   const [noNavigation, setNoNavigation] = useState(false);
   const [noNavigationAnimation, setNoNavigationAnimation] = useState(false);
@@ -129,7 +129,7 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
       <>
         <Tooltip
           float
-          id={`${globalIDs.tooltip}`}
+          id={`${globals.tooltip}`}
           layer='z-topmost'
           place='right-start'
           className={clsx('mt-3 translate-y-1/2', 'max-w-[20rem]')}

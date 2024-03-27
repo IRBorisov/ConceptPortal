@@ -2,9 +2,12 @@
 
 import { useEffect, useState } from 'react';
 
+import { storage } from '@/utils/constants';
+
 function useLocalStorage<ValueType>(key: string, defaultValue: ValueType | (() => ValueType)) {
+  const prefixedKey = `${storage.PREFIX}${key}`;
   const [value, setValue] = useState<ValueType>(() => {
-    const loadedJson = localStorage.getItem(key);
+    const loadedJson = localStorage.getItem(prefixedKey);
     if (loadedJson != null) {
       return JSON.parse(loadedJson) as ValueType;
     } else if (typeof defaultValue === 'function') {
@@ -16,11 +19,11 @@ function useLocalStorage<ValueType>(key: string, defaultValue: ValueType | (() =
 
   useEffect(() => {
     if (value === undefined) {
-      localStorage.removeItem(key);
+      localStorage.removeItem(prefixedKey);
     } else {
-      localStorage.setItem(key, JSON.stringify(value));
+      localStorage.setItem(prefixedKey, JSON.stringify(value));
     }
-  }, [key, value]);
+  }, [prefixedKey, value]);
 
   return [value, setValue] as [ValueType, typeof setValue];
 }

@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { globalIDs } from '@/utils/constants';
+import { globals } from '@/utils/constants';
 
 interface INavigationContext {
   push: (path: string) => void;
@@ -43,7 +43,7 @@ export const NavigationState = ({ children }: NavigationStateProps) => {
 
   const scrollTop = useCallback(() => {
     window.scrollTo(0, 0);
-    const mainScroll = document.getElementById(globalIDs.main_scroll);
+    const mainScroll = document.getElementById(globals.main_scroll);
     if (mainScroll) {
       mainScroll.scroll(0, 0);
     }

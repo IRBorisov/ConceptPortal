@@ -19,7 +19,7 @@ import ExpectedAnonymous from '@/components/wrap/ExpectedAnonymous';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { type IUserSignupData } from '@/models/library';
-import { globalIDs, patterns } from '@/utils/constants';
+import { globals, patterns } from '@/utils/constants';
 
 function RegisterPage() {
   const router = useConceptNavigation();
@@ -74,10 +74,10 @@ function RegisterPage() {
         <div className='flex gap-12'>
           <FlexColumn>
             <div className='absolute'>
-              <Overlay id={globalIDs.password_tooltip} position='top-[4.8rem] left-[3.4rem] absolute'>
+              <Overlay id={globals.password_tooltip} position='top-[4.8rem] left-[3.4rem] absolute'>
                 <BiInfoCircle size='1.25rem' className='icon-primary' />
               </Overlay>
-              <Tooltip anchorSelect={`#${globalIDs.password_tooltip}`} offset={6}>
+              <Tooltip anchorSelect={`#${globals.password_tooltip}`} offset={6}>
                 <p>- используйте уникальный пароль</p>
                 <p>- портал функционирует в тестовом режиме</p>
               </Tooltip>

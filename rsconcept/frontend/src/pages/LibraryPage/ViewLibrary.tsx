@@ -15,6 +15,7 @@ import useLocalStorage from '@/hooks/useLocalStorage';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ILibraryItem } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
+import { storage } from '@/utils/constants';
 
 import ItemIcons from './ItemIcons';
 
@@ -30,7 +31,7 @@ function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
   const intl = useIntl();
   const { user } = useAuth();
   const { getUserLabel } = useUsers();
-  const [itemsPerPage, setItemsPerPage] = useLocalStorage<number>('library_per_page', 50);
+  const [itemsPerPage, setItemsPerPage] = useLocalStorage<number>(storage.libraryPagination, 50);
 
   const handleOpenItem = (item: ILibraryItem) => router.push(`/rsforms/${item.id}`);
 

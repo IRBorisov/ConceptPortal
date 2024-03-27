@@ -12,6 +12,7 @@ import useQueryStrings from '@/hooks/useQueryStrings';
 import { ILibraryItem } from '@/models/library';
 import { ILibraryFilter, LibraryFilterStrategy } from '@/models/miscellaneous';
 import { filterFromStrategy } from '@/models/miscellaneousAPI';
+import { storage } from '@/utils/constants';
 
 import SearchPanel from './SearchPanel';
 import ViewLibrary from './ViewLibrary';
@@ -19,7 +20,7 @@ import ViewLibrary from './ViewLibrary';
 function LibraryPage() {
   const router = useConceptNavigation();
   const urlParams = useQueryStrings();
-  const searchFilter = (urlParams.get('filter') || null) as LibraryFilterStrategy | null;
+  const queryFilter = (urlParams.get('filter') || null) as LibraryFilterStrategy | null;
 
   const { user } = useAuth();
 
@@ -31,23 +32,19 @@ function LibraryPage() {
 
   const [query, setQuery] = useState('');
   const [strategy, setStrategy] = useLocalStorage<LibraryFilterStrategy>(
-    'search_strategy',
+    storage.librarySearchStrategy,
     LibraryFilterStrategy.MANUAL
   );
 
   useLayoutEffect(() => {
-    if (searchFilter === null) {
+    if (!queryFilter || !Object.values(LibraryFilterStrategy).includes(queryFilter)) {
       router.replace(`/library?filter=${strategy}`);
       return;
     }
-    const inputStrategy =
-      searchFilter && Object.values(LibraryFilterStrategy).includes(searchFilter)
-        ? searchFilter
-        : LibraryFilterStrategy.MANUAL;
     setQuery('');
-    setStrategy(inputStrategy);
-    setFilter(filterFromStrategy(inputStrategy));
-  }, [user, router, setQuery, setFilter, setStrategy, strategy, searchFilter]);
+    setStrategy(queryFilter);
+    setFilter(filterFromStrategy(queryFilter));
+  }, [user, router, setQuery, setFilter, setStrategy, strategy, queryFilter]);
 
   useLayoutEffect(() => {
     setShowScroll(true);

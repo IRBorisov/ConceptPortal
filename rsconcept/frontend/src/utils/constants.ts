@@ -30,15 +30,6 @@ export const TIMEOUT_GRAPH_REFRESH = 200;
 export const EXTEOR_TRS_FILE = '.trs';
 
 /**
- * Resource relative URIs.
- */
-export const resources = {
-  graph_font: '/DejaVu.ttf',
-  privacy_policy: '/privacy.pdf',
-  logo: '/logo_full.svg'
-};
-
-/**
  * Numeric limitations.
  */
 export const limits = {
@@ -54,6 +45,15 @@ export const patterns = {
 };
 
 /**
+ * Local URIs.
+ */
+export const resources = {
+  graph_font: '/DejaVu.ttf',
+  privacy_policy: '/privacy.pdf',
+  logo: '/logo_full.svg'
+};
+
+/**
  * Youtube IDs for embedding.
  */
 export const youtube = {
@@ -61,7 +61,7 @@ export const youtube = {
 };
 
 /**
- * Constant URLs.
+ * External URLs.
  */
 export const urls = {
   concept: 'https://www.acconcept.ru/',
@@ -77,9 +77,32 @@ export const urls = {
 };
 
 /**
- * Global unique IDs.
+ * Local storage ID.
  */
-export const globalIDs = {
+export const storage = {
+  PREFIX: 'portal.',
+
+  themeDark: 'theme.dark',
+
+  rseditFont: 'rsedit.font',
+  rseditShowList: 'rsedit.show_list',
+  rseditShowControls: 'rsedit.show_controls',
+
+  librarySearchStrategy: 'library.search.strategy',
+  libraryPagination: 'library.pagination',
+
+  rsgraphFilter: 'rsgraph.filter',
+  rsgraphLayout: 'rsgraph.layout',
+  rsgraphColoringScheme: 'rsgraph.coloring_scheme',
+
+  cstFilterMatch: 'cst.filter.match',
+  cstFilterGraph: 'cst.filter.graph'
+};
+
+/**
+ * Global element ID.
+ */
+export const globals = {
   tooltip: 'global_tooltip',
   password_tooltip: 'password_tooltip',
   main_scroll: 'main_scroll',

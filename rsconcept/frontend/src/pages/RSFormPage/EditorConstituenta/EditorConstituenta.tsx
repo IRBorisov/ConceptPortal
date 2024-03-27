@@ -7,7 +7,7 @@ import { useMemo, useState } from 'react';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
-import { globalIDs } from '@/utils/constants';
+import { globals, storage } from '@/utils/constants';
 
 import { useRSEdit } from '../RSEditContext';
 import ViewConstituents from '../ViewConstituents';
@@ -31,7 +31,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
   const controller = useRSEdit();
   const windowSize = useWindowSize();
 
-  const [showList, setShowList] = useLocalStorage('rseditor-show-list', true);
+  const [showList, setShowList] = useLocalStorage(storage.rseditShowList, true);
   const [toggleReset, setToggleReset] = useState(false);
 
   const disabled = useMemo(
@@ -62,7 +62,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
   }
 
   function initiateSubmit() {
-    const element = document.getElementById(globalIDs.constituenta_editor) as HTMLFormElement;
+    const element = document.getElementById(globals.constituenta_editor) as HTMLFormElement;
     if (element) {
       element.requestSubmit();
     }
@@ -104,7 +104,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
         <FormConstituenta
           isMutable={!disabled}
           showList={showList}
-          id={globalIDs.constituenta_editor}
+          id={globals.constituenta_editor}
           constituenta={activeCst}
           isModified={isModified}
           toggleReset={toggleReset}
