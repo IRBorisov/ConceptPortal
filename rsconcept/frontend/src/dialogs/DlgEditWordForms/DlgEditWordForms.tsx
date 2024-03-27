@@ -129,7 +129,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
       onSubmit={handleSubmit}
       className='flex flex-col w-[40rem] px-6'
     >
-      <Overlay position='top-[-0.2rem] left-[7.5rem]'>
+      <Overlay position='top-[-0.2rem] left-[8rem]'>
         <HelpButton topic={HelpTopic.TERM_CONTROL} className='max-w-[38rem]' offset={3} />
       </Overlay>
 
@@ -182,14 +182,14 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         <MiniButton
           noHover
           title='Внести словоформу'
-          icon={<BiCheck size='1.25rem' className='icon-green' />}
+          icon={<BiCheck size='1.5rem' className='icon-green' />}
           disabled={textProcessor.loading || !inputText || inputGrams.length == 0}
           onClick={handleAddForm}
         />
         <MiniButton
           noHover
           title='Генерировать стандартные словоформы'
-          icon={<BiChevronsDown size='1.25rem' className='icon-primary' />}
+          icon={<BiChevronsDown size='1.5rem' className='icon-primary' />}
           disabled={textProcessor.loading || !inputText}
           onClick={handleGenerateLexeme}
         />
@@ -200,7 +200,8 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         <MiniButton
           noHover
           title='Сбросить все словоформы'
-          icon={<BiX size='1rem' className='icon-red' />}
+          className='py-0'
+          icon={<BiX size='1.5rem' className='icon-red' />}
           disabled={textProcessor.loading || forms.length === 0}
           onClick={handleResetAll}
         />

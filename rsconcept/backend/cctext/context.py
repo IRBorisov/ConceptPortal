@@ -1,5 +1,5 @@
 ''' Term context for reference resolution. '''
-from typing import Iterable, Dict, Optional, TypedDict
+from typing import Iterable, Optional, TypedDict
 
 from .ruparser import PhraseParser
 from .rumodel import WordTag
@@ -81,4 +81,4 @@ class Entity:
 
 
 # Represents term context for resolving entity references.
-TermContext = Dict[str, Entity]
+TermContext = dict[str, Entity]

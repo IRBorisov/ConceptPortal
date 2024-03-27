@@ -2,15 +2,12 @@
 
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
-import { LuReplace } from 'react-icons/lu';
 
-import ConstituentaSelector from '@/components/select/ConstituentaSelector';
-import Checkbox from '@/components/ui/Checkbox';
-import FlexColumn from '@/components/ui/FlexColumn';
-import Label from '@/components/ui/Label';
+import SubstitutionsPicker from '@/components/select/SubstitutionsPicker';
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import { useRSForm } from '@/context/RSFormContext';
-import { IConstituenta, ICstSubstituteData } from '@/models/rsform';
+import { ICstSubstituteData, ISubstitution } from '@/models/rsform';
+import { prefixes } from '@/utils/constants';
 
 interface DlgSubstituteCstProps extends Pick<ModalProps, 'hideWindow'> {
   onSubstitute: (data: ICstSubstituteData) => void;
@@ -19,59 +16,38 @@ interface DlgSubstituteCstProps extends Pick<ModalProps, 'hideWindow'> {
 function DlgSubstituteCst({ hideWindow, onSubstitute }: DlgSubstituteCstProps) {
   const { schema } = useRSForm();
 
-  const [original, setOriginal] = useState<IConstituenta | undefined>(undefined);
-  const [substitution, setSubstitution] = useState<IConstituenta | undefined>(undefined);
-  const [transferTerm, setTransferTerm] = useState(false);
+  const [substitutions, setSubstitutions] = useState<ISubstitution[]>([]);
 
-  const canSubmit = useMemo(() => {
-    return !!original && !!substitution && substitution.id !== original.id;
-  }, [original, substitution]);
+  const canSubmit = useMemo(() => substitutions.length > 0, [substitutions]);
 
   function handleSubmit() {
     const data: ICstSubstituteData = {
-      original: original!.id,
-      substitution: substitution!.id,
-      transfer_term: transferTerm
+      substitutions: substitutions.map(item => ({
+        original: item.deleteRight ? item.rightCst.id : item.leftCst.id,
+        substitution: item.deleteRight ? item.leftCst.id : item.rightCst.id,
+        transfer_term: !item.deleteRight && item.takeLeftTerm
+      }))
     };
     onSubstitute(data);
   }
 
   return (
     <Modal
-      header='Отождествление конституенты'
+      header='Отождествление'
       submitText='Отождествить'
       submitInvalidTooltip={'Выберите две различные конституенты'}
       hideWindow={hideWindow}
       canSubmit={canSubmit}
       onSubmit={handleSubmit}
-      className={clsx('w-[25rem]', 'px-6 py-3 flex flex-col gap-3 justify-center items-center')}
+      className={clsx('w-[40rem]', 'px-6 pb-3')}
     >
-      <FlexColumn>
-        <Label text='Удаляемая конституента' />
-        <ConstituentaSelector
-          className='w-[20rem]'
-          items={schema?.items}
-          value={original}
-          onSelectValue={setOriginal}
-        />
-      </FlexColumn>
-
-      <LuReplace size='3rem' className='icon-primary' />
-
-      <FlexColumn>
-        <Label text='Подставляемая конституента' />
-        <ConstituentaSelector
-          className='w-[20rem]'
-          items={schema?.items}
-          value={substitution}
-          onSelectValue={setSubstitution}
-        />
-      </FlexColumn>
-      <Checkbox
-        className='mt-3'
-        label='Сохранить термин удаляемой конституенты'
-        value={transferTerm}
-        setValue={setTransferTerm}
+      <SubstitutionsPicker
+        items={substitutions}
+        setItems={setSubstitutions}
+        rows={6}
+        prefixID={prefixes.dlg_cst_substitutes_list}
+        schema1={schema}
+        schema2={schema}
       />
     </Modal>
   );

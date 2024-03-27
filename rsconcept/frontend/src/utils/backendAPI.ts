@@ -334,9 +334,9 @@ export function patchProduceStructure(schema: string, request: FrontExchange<ICs
   });
 }
 
-export function patchSubstituteConstituenta(schema: string, request: FrontExchange<ICstSubstituteData, IRSFormData>) {
+export function patchSubstituteConstituents(schema: string, request: FrontExchange<ICstSubstituteData, IRSFormData>) {
   AxiosPatch({
-    title: `Substitution for constituenta id=${request.data.original} for schema id=${schema}`,
+    title: `Substitution for constituents schema id=${schema}`,
     endpoint: `/api/rsforms/${schema}/cst-substitute`,
     request: request
   });

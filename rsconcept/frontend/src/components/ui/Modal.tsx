@@ -71,8 +71,9 @@ function Modal({
         exit={{ ...animateModal.exit }}
         {...restProps}
       >
-        <Overlay position='right-[0.3rem] top-2'>
+        <Overlay position='right-2 top-2'>
           <MiniButton
+            noPadding
             titleHtml={prepareTooltip('Закрыть диалоговое окно', 'ESC')}
             icon={<BiX size='1.25rem' />}
             onClick={handleCancel}

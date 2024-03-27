@@ -16,6 +16,9 @@ def renameTrivial(name: str):
 def substituteTrivial(name: str):
     return f'Отождествление конституенты с собой не корректно: {name}'
 
+def substituteDouble(name: str):
+    return f'Повторное отождествление: {name}'
+
 def aliasTaken(name: str):
     return f'Имя уже используется: {name}'
 

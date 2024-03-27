@@ -1,12 +1,12 @@
 ''' Utility: Graph implementation. '''
-from typing import Dict, Iterable, Optional, cast
+from typing import Iterable, Optional, cast
 
 
 class Graph:
     ''' Directed graph. '''
-    def __init__(self, graph: Optional[Dict[str, list[str]]]=None):
+    def __init__(self, graph: Optional[dict[str, list[str]]]=None):
         if graph is None:
-            self._graph = cast(Dict[str, list[str]], {})
+            self._graph = cast(dict[str, list[str]], {})
         else:
             self._graph = graph
 

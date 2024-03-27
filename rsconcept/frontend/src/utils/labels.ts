@@ -345,11 +345,11 @@ export function labelHelpTopic(topic: HelpTopic): string {
   switch (topic) {
     case HelpTopic.MAIN:          return 'Портал';
     case HelpTopic.LIBRARY:       return 'Библиотека';
-    case HelpTopic.RSFORM:        return '- паспорт схемы';
+    case HelpTopic.RSFORM:        return '- карточка схемы';
     case HelpTopic.CSTLIST:       return '- список конституент';
     case HelpTopic.CONSTITUENTA:  return '- конституента';
     case HelpTopic.GRAPH_TERM:    return '- граф термов';
-    case HelpTopic.RSTEMPLATES:   return '- Банк выражений';
+    case HelpTopic.RSTEMPLATES:   return '- шаблоны выражений';
     case HelpTopic.RSLANG:        return 'Экспликация';
     case HelpTopic.TERM_CONTROL:  return 'Терминологизация';
     case HelpTopic.VERSIONS:      return 'Версионирование';

@@ -60,13 +60,16 @@ function VersionsTable({ processing, items, onDelete, selected, onSelect }: Vers
         minSize: 50,
         maxSize: 50,
         cell: props => (
-          <MiniButton
-            noHover
-            title='Удалить версию'
-            disabled={processing}
-            icon={<BiX size='1rem' className='icon-red' />}
-            onClick={() => onDelete(props.row.original.id)}
-          />
+          <div className='h-[1.25rem] w-[1.25rem]'>
+            <MiniButton
+              title='Удалить версию'
+              noHover
+              noPadding
+              disabled={processing}
+              icon={<BiX size='1.25rem' className='icon-red' />}
+              onClick={() => onDelete(props.row.original.id)}
+            />
+          </div>
         )
       })
     ],

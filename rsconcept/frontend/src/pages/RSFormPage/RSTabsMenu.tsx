@@ -209,7 +209,7 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
           <Dropdown isOpen={editMenu.isOpen}>
             <DropdownButton
               disabled={!controller.isContentEditable}
-              text='Банк выражений'
+              text='Шаблоны'
               title='Создать конституенту из шаблона'
               icon={<BiDiamond size='1rem' className='icon-green' />}
               onClick={handleTemplates}

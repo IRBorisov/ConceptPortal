@@ -1,5 +1,5 @@
 ''' Models: RSForm API. '''
-from typing import Dict, Iterable, Optional, Union, cast
+from typing import Iterable, Optional, Union, cast
 
 from django.db import transaction
 from django.db.models import QuerySet
@@ -53,6 +53,7 @@ class RSForm:
         ''' Trigger cascade resolutions when term changes. '''
         graph_terms = self._term_graph()
         expansion = graph_terms.expand_outputs(changed)
+        expanded_change = list(changed) + expansion
         resolver = self.resolver()
         if len(expansion) > 0:
             for alias in graph_terms.topological_order():
@@ -67,7 +68,7 @@ class RSForm:
                 resolver.context[cst.alias] = Entity(cst.alias, resolved)
 
         graph_defs = self._definition_graph()
-        update_defs = set(expansion + graph_defs.expand_outputs(expansion + changed)).union(changed)
+        update_defs = set(expansion + graph_defs.expand_outputs(expanded_change)).union(changed)
         if len(update_defs) == 0:
             return
         for alias in update_defs:
@@ -126,11 +127,11 @@ class RSForm:
         position = self._get_insert_position(position)
         self._shift_positions(position, count)
 
-        indices: Dict[str, int] = {}
+        indices: dict[str, int] = {}
         for (value, _) in CstType.choices:
             indices[value] = self.get_max_index(cast(CstType, value))
 
-        mapping: Dict[str, str]  = {}
+        mapping: dict[str, str]  = {}
         for cst in items:
             indices[cst.cst_type] = indices[cst.cst_type] + 1
             newAlias = f'{get_type_prefix(cst.cst_type)}{indices[cst.cst_type]}'

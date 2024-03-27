@@ -260,7 +260,7 @@ class TestRSFormViewset(EndpointTester):
 
 
     @decl_endpoint('/api/rsforms/{item}/cst-substitute', method='patch')
-    def test_substitute_constituenta(self):
+    def test_substitute_single(self):
         x1 = self.schema.insert_new(
             alias='X1',
             term_raw='Test1',
@@ -273,14 +273,14 @@ class TestRSFormViewset(EndpointTester):
         )
         unowned = self.unowned.insert_new('X2')
         
-        data = {'original': x1.pk, 'substitution': unowned.pk, 'transfer_term': True}
+        data = {'substitutions': [{'original': x1.pk, 'substitution': unowned.pk, 'transfer_term': True}]}
         self.assertForbidden(data, item=self.unowned_id)
         self.assertBadData(data, item=self.schema_id)
 
-        data = {'original': unowned.pk, 'substitution': x1.pk, 'transfer_term': True}
+        data = {'substitutions': [{'original': unowned.pk, 'substitution': x1.pk, 'transfer_term': True}]}
         self.assertBadData(data, item=self.schema_id)
 
-        data = {'original': x1.pk, 'substitution': x1.pk, 'transfer_term': True}
+        data = {'substitutions': [{'original': x1.pk, 'substitution': x1.pk, 'transfer_term': True}]}
         self.assertBadData(data, item=self.schema_id)
 
         d1 = self.schema.insert_new(
@@ -288,7 +288,7 @@ class TestRSFormViewset(EndpointTester):
             term_raw='@{X2|sing,datv}',
             definition_formal='X1'
         )
-        data = {'original': x1.pk, 'substitution': x2.pk, 'transfer_term': True}
+        data = {'substitutions': [{'original': x1.pk, 'substitution': x2.pk, 'transfer_term': True}]}
         response = self.execute(data, item=self.schema_id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -297,6 +297,53 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(x2.term_raw, 'Test1')
         self.assertEqual(d1.term_resolved, 'form1')
         self.assertEqual(d1.definition_formal, 'X2')
+
+    @decl_endpoint('/api/rsforms/{item}/cst-substitute', method='patch')
+    def test_substitute_multiple(self):
+        self.set_params(item=self.schema_id)
+        x1 = self.schema.insert_new('X1')
+        x2 = self.schema.insert_new('X2')
+        d1 = self.schema.insert_new('D1')
+        d2 = self.schema.insert_new('D2')
+        d3 = self.schema.insert_new(
+            alias='D3',
+            definition_formal='X1 \ X2'
+        )
+        
+        data = {'substitutions': []}
+        self.assertBadData(data)
+        
+        data = {'substitutions': [
+            {
+                'original': x1.pk,
+                'substitution': d1.pk,
+                'transfer_term': True
+            },
+            {
+                'original': x1.pk,
+                'substitution': d2.pk,
+                'transfer_term': True
+            }
+        ]}
+        self.assertBadData(data)
+
+        data = {'substitutions': [
+            {
+                'original': x1.pk,
+                'substitution': d1.pk,
+                'transfer_term': True
+            },
+            {
+                'original': x2.pk,
+                'substitution': d2.pk,
+                'transfer_term': True
+            }
+        ]}
+        response = self.execute(data, item=self.schema_id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        d3.refresh_from_db()
+        self.assertEqual(d3.definition_formal, 'D1 \ D2')
 
 
     @decl_endpoint('/api/rsforms/{item}/cst-create', method='post')

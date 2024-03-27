@@ -148,12 +148,19 @@ export interface ICstUpdateData
 export interface ICstRenameData extends ICstTarget, Pick<IConstituentaMeta, 'alias' | 'cst_type'> {}
 
 /**
- * Represents data, used in merging {@link IConstituenta}.
+ * Represents data, used in merging single {@link IConstituenta}.
  */
-export interface ICstSubstituteData {
+export interface ICstSubstitute {
   original: ConstituentaID;
   substitution: ConstituentaID;
   transfer_term: boolean;
+}
+
+/**
+ * Represents data, used in merging multiple {@link IConstituenta}.
+ */
+export interface ICstSubstituteData {
+  substitutions: ICstSubstitute[];
 }
 
 /**
@@ -251,5 +258,5 @@ export interface IInlineSynthesisData {
   receiver: LibraryItemID;
   source: LibraryItemID;
   items: ConstituentaID[];
-  substitutions: ICstSubstituteData[];
+  substitutions: ICstSubstitute[];
 }

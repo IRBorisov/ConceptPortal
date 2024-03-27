@@ -147,11 +147,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             context={'schema': schema.item}
         )
         serializer.is_valid(raise_exception=True)
-        schema.substitute(
-            original=serializer.validated_data['original'],
-            substitution=serializer.validated_data['substitution'],
-            transfer_term=serializer.validated_data['transfer_term']
-        )
+        for substitution in serializer.validated_data['substitutions']:
+            original = cast(m.Constituenta, substitution['original'])
+            replacement = cast(m.Constituenta, substitution['substitution'])
+            schema.substitute(original, replacement, substitution['transfer_term'])
         schema.item.refresh_from_db()
         return Response(
             status=c.HTTP_200_OK,

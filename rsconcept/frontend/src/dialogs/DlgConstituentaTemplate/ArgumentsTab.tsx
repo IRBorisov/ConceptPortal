@@ -35,10 +35,6 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
 
   const [argumentValue, setArgumentValue] = useState('');
 
-  const selectedClearable = useMemo(() => {
-    return argumentValue && !!selectedArgument && !!selectedArgument.value;
-  }, [argumentValue, selectedArgument]);
-
   const isModified = useMemo(
     () => selectedArgument && argumentValue !== selectedArgument.value,
     [selectedArgument, argumentValue]
@@ -92,7 +88,6 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
     () => [
       argumentsHelper.accessor('alias', {
         id: 'alias',
-        header: 'Имя',
         size: 40,
         minSize: 40,
         maxSize: 40,
@@ -100,14 +95,12 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
       }),
       argumentsHelper.accessor(arg => arg.value || 'свободный аргумент', {
         id: 'value',
-        header: 'Значение',
         size: 200,
         minSize: 200,
         maxSize: 200
       }),
       argumentsHelper.accessor(arg => arg.typification, {
         id: 'type',
-        header: 'Типизация',
         enableHiding: true,
         cell: props => (
           <div
@@ -122,16 +115,14 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
       }),
       argumentsHelper.display({
         id: 'actions',
-        size: 50,
-        minSize: 50,
-        maxSize: 50,
         cell: props => (
-          <div className='max-h-[1.2rem]'>
+          <div className='h-[1.25rem] w-[1.25rem]'>
             {props.row.original.value ? (
               <MiniButton
                 title='Очистить значение'
-                icon={<BiX size='0.75rem' className='icon-red' />}
+                noPadding
                 noHover
+                icon={<BiX size='1.25rem' className='icon-red' />}
                 onClick={() => handleClearArgument(props.row.original)}
               />
             ) : null}
@@ -157,6 +148,7 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
       <DataTable
         dense
         noFooter
+        noHeader
         className={clsx(
           'max-h-[5.8rem] min-h-[5.8rem]', // prettier: split lines
           'overflow-y-auto',
@@ -194,21 +186,19 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
         <div className='flex'>
           <MiniButton
             title='Подставить значение аргумента'
-            icon={<BiCheck size='1.25rem' className='icon-green' />}
+            noHover
+            className='py-0'
+            icon={<BiCheck size='2rem' className='icon-green' />}
             disabled={!argumentValue || !selectedArgument}
             onClick={() => handleAssignArgument(selectedArgument!, argumentValue)}
           />
           <MiniButton
-            title='Откатить значение'
+            title='Очистить поле'
+            noHover
+            className='py-0'
             disabled={!isModified}
             onClick={handleReset}
-            icon={<BiRefresh size='1.25rem' className='icon-primary' />}
-          />
-          <MiniButton
-            title='Очистить значение аргумента'
-            disabled={!selectedClearable}
-            icon={<BiX size='1.25rem' className='icon-red' />}
-            onClick={() => (selectedArgument ? handleClearArgument(selectedArgument) : undefined)}
+            icon={<BiRefresh size='2rem' className='icon-primary' />}
           />
         </div>
       </div>

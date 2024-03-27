@@ -39,16 +39,14 @@ function WordFormsTable({ forms, setForms, onFormSelect }: WordFormsTableProps) 
         id: 'text',
         header: 'Текст',
         size: 350,
-        minSize: 350,
-        maxSize: 350,
+        minSize: 500,
+        maxSize: 500,
         cell: props => <div className='min-w-[20rem]'>{props.getValue()}</div>
       }),
       columnHelper.accessor('grams', {
         id: 'grams',
         header: 'Граммемы',
-        size: 250,
-        minSize: 250,
-        maxSize: 250,
+        maxSize: 150,
         cell: props => <WordFormBadge keyPrefix={props.cell.id} form={props.row.original} />
       }),
       columnHelper.display({
@@ -57,12 +55,15 @@ function WordFormsTable({ forms, setForms, onFormSelect }: WordFormsTableProps) 
         minSize: 50,
         maxSize: 50,
         cell: props => (
-          <MiniButton
-            noHover
-            title='Удалить словоформу'
-            icon={<BiX size='1rem' className='icon-red' />}
-            onClick={() => handleDeleteRow(props.row.index)}
-          />
+          <div className='h-[1.25rem] w-[1.25rem]'>
+            <MiniButton
+              noHover
+              noPadding
+              title='Удалить словоформу'
+              icon={<BiX size='1.25rem' className='icon-red' />}
+              onClick={() => handleDeleteRow(props.row.index)}
+            />
+          </div>
         )
       })
     ],
@@ -73,7 +74,7 @@ function WordFormsTable({ forms, setForms, onFormSelect }: WordFormsTableProps) 
     <DataTable
       dense
       noFooter
-      className={clsx('mb-2', 'max-h-[17.4rem] min-h-[17.4rem]', 'border', 'overflow-y-auto')}
+      className={clsx('mb-2', 'max-h-[17.4rem] min-h-[17.4rem]', 'border', 'text-sm', 'overflow-y-auto')}
       data={forms}
       columns={columns}
       headPosition='0'

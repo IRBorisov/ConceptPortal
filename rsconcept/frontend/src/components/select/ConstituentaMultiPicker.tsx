@@ -100,15 +100,15 @@ function ConstituentaMultiPicker({ id, schema, prefixID, rows, selected, setSele
         </span>
         <div className='flex w-full gap-6 text-sm'>
           <Button
-            text='Поставщики'
+            text='Влияющие'
             title='Добавить все конституенты, от которых зависят выбранные'
-            className='w-[7rem]'
+            className='w-[7rem] text-sm'
             onClick={selectBasis}
           />
           <Button
-            text='Потребители'
+            text='Зависимые'
             title='Добавить все конституенты, которые зависят от выбранных'
-            className='w-[7rem]'
+            className='w-[7rem] text-sm'
             onClick={selectDependant}
           />
         </div>

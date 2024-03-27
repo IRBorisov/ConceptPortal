@@ -34,7 +34,7 @@ import {
   patchProduceStructure,
   patchRenameConstituenta,
   patchResetAliases,
-  patchSubstituteConstituenta,
+  patchSubstituteConstituents,
   patchUploadTRS,
   patchVersion,
   postClaimLibraryItem,
@@ -374,7 +374,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
   const cstSubstitute = useCallback(
     (data: ICstSubstituteData, callback?: () => void) => {
       setError(undefined);
-      patchSubstituteConstituenta(schemaID, {
+      patchSubstituteConstituents(schemaID, {
         data: data,
         showError: true,
         setLoading: setProcessing,

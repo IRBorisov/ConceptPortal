@@ -154,11 +154,11 @@ function SubstitutionsPicker({
   );
 
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col w-full'>
       <div className='flex items-end gap-3 justify-stretch'>
         <div className='flex-grow basis-1/2'>
           <div className='flex items-center justify-between'>
-            <Label text={schema1?.alias ?? 'Схема 1'} />
+            <Label text={schema1 !== schema2 ? schema1?.alias ?? 'Схема 1' : ''} />
             <div>
               <MiniButton
                 title='Сохранить конституенту'
@@ -204,7 +204,7 @@ function SubstitutionsPicker({
 
         <div className='flex-grow basis-1/2'>
           <div className='flex items-center justify-between'>
-            <Label text={schema2?.alias ?? 'Схема 2'} />
+            <Label text={schema1 !== schema2 ? schema2?.alias ?? 'Схема 2' : ''} />
             <div>
               <MiniButton
                 title='Сохранить конституенту'
@@ -242,8 +242,9 @@ function SubstitutionsPicker({
 
       <DataTable
         dense
+        noHeader
         noFooter
-        className='overflow-y-auto border select-none'
+        className='w-full overflow-y-auto text-sm border select-none'
         rows={rows}
         contentHeight='1.3rem'
         data={items}

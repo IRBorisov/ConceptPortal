@@ -133,5 +133,6 @@ export const prefixes = {
   topic_list: 'topic_list_',
   library_list: 'library_list_',
   wordform_list: 'wordform_list_',
-  rsedit_btn: 'rsedit_btn_'
+  rsedit_btn: 'rsedit_btn_',
+  dlg_cst_substitutes_list: 'dlg_cst_substitutes_list_'
 };

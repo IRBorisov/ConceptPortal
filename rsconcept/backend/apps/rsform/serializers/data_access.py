@@ -194,34 +194,6 @@ class RSFormParseSerializer(serializers.ModelSerializer):
         return data
 
 
-class CstSubstituteSerializerBase(serializers.Serializer):
-    ''' Serializer: Basic substitution. '''
-    original = PKField(many=False, queryset=Constituenta.objects.all())
-    substitution = PKField(many=False, queryset=Constituenta.objects.all())
-    transfer_term = serializers.BooleanField(required=False, default=False)
-
-
-class CstSubstituteSerializer(CstSubstituteSerializerBase):
-    ''' Serializer: Constituenta substitution. '''
-    def validate(self, attrs):
-        schema = cast(LibraryItem, self.context['schema'])
-        original_cst = cast(Constituenta, attrs['original'])
-        substitution_cst = cast(Constituenta, attrs['substitution'])
-        if original_cst.alias == substitution_cst.alias:
-            raise serializers.ValidationError({
-                'alias': msg.substituteTrivial(original_cst.alias)
-            })
-        if original_cst.schema != schema:
-            raise serializers.ValidationError({
-                'original': msg.constituentaNotOwned(schema.title)
-            })
-        if substitution_cst.schema != schema:
-            raise serializers.ValidationError({
-                'substitution': msg.constituentaNotOwned(schema.title)
-            })
-        return attrs
-
-
 class CstTargetSerializer(serializers.Serializer):
     ''' Serializer: Target single Constituenta. '''
     target = PKField(many=False, queryset=Constituenta.objects.all())
@@ -289,6 +261,46 @@ class CstMoveSerializer(CstListSerializer):
     move_to = serializers.IntegerField()
 
 
+class CstSubstituteSerializerBase(serializers.Serializer):
+    ''' Serializer: Basic substitution. '''
+    original = PKField(many=False, queryset=Constituenta.objects.all())
+    substitution = PKField(many=False, queryset=Constituenta.objects.all())
+    transfer_term = serializers.BooleanField(required=False, default=False)
+
+
+class CstSubstituteSerializer(serializers.Serializer):
+    ''' Serializer: Constituenta substitution. '''
+    substitutions = serializers.ListField(
+        child=CstSubstituteSerializerBase(),
+        min_length=1
+    )
+
+    def validate(self, attrs):
+        schema = cast(LibraryItem, self.context['schema'])
+        deleted = set()
+        for item in attrs['substitutions']:
+            original_cst = cast(Constituenta, item['original'])
+            substitution_cst = cast(Constituenta, item['substitution'])
+            if original_cst.pk in deleted:
+                raise serializers.ValidationError({
+                    f'{original_cst.id}': msg.substituteDouble(original_cst.alias)
+                })
+            if original_cst.alias == substitution_cst.alias:
+                raise serializers.ValidationError({
+                    'alias': msg.substituteTrivial(original_cst.alias)
+                })
+            if original_cst.schema != schema:
+                raise serializers.ValidationError({
+                    'original': msg.constituentaNotOwned(schema.title)
+                })
+            if substitution_cst.schema != schema:
+                raise serializers.ValidationError({
+                    'substitution': msg.constituentaNotOwned(schema.title)
+                })
+            deleted.add(original_cst.pk)
+        return attrs
+
+
 class InlineSynthesisSerializer(serializers.Serializer):
     ''' Serializer: Inline synthesis operation input. '''
     receiver = PKField(many=False, queryset=LibraryItem.objects.all())
@@ -313,6 +325,7 @@ class InlineSynthesisSerializer(serializers.Serializer):
                 raise serializers.ValidationError({
                     f'{cst.id}': msg.constituentaNotOwned(schema_in.title)
                 })
+        deleted = set()
         for item in attrs['substitutions']:
             original_cst = cast(Constituenta, item['original'])
             substitution_cst = cast(Constituenta, item['substitution'])
@@ -334,4 +347,9 @@ class InlineSynthesisSerializer(serializers.Serializer):
                     raise serializers.ValidationError({
                         f'{original_cst.id}': msg.constituentaNotOwned(schema_out.title)
                     })
+            if original_cst.pk in deleted:
+                raise serializers.ValidationError({
+                    f'{original_cst.id}': msg.substituteDouble(original_cst.alias)
+                })
+            deleted.add(original_cst.pk)
         return attrs
