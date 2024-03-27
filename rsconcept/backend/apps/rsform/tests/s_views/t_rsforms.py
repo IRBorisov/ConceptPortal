@@ -27,6 +27,7 @@ class TestRSFormViewset(EndpointTester):
         self.unowned = RSForm.create(title='Test2', alias='T2')
         self.unowned_id = self.unowned.item.id
 
+
     @decl_endpoint('/api/rsforms/create-detailed', method='post')
     def test_create_rsform_file(self):
         work_dir = os.path.dirname(os.path.abspath(__file__))
@@ -39,6 +40,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(response.data['alias'], 'ks1')
         self.assertEqual(response.data['comment'], '123')
 
+
     @decl_endpoint('/api/rsforms/create-detailed', method='post')
     def test_create_rsform_json(self):
         data = {'title': 'Test123', 'comment': '123', 'alias': 'ks1'}
@@ -48,6 +50,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(response.data['title'], 'Test123')
         self.assertEqual(response.data['alias'], 'ks1')
         self.assertEqual(response.data['comment'], '123')
+
 
     @decl_endpoint('/api/rsforms', method='get')
     def test_list(self):
@@ -67,23 +70,27 @@ class TestRSFormViewset(EndpointTester):
         self.assertTrue(response_contains(response, self.unowned.item))
         self.assertTrue(response_contains(response, self.schema.item))
 
+
     @decl_endpoint('/api/rsforms/{item}/contents', method='get')
     def test_contents(self):
         schema = RSForm.create(title='Title1')
         schema.insert_new('X1')
         self.assertOK(item=schema.item.id)
 
+
     @decl_endpoint('/api/rsforms/{item}/details', method='get')
     def test_details(self):
         schema = RSForm.create(title='Test', owner=self.user)
-        x1 = schema.insert_new('X1')
-        x2 = schema.insert_new('X2')
-        x1.term_raw = 'человек'
-        x1.term_resolved = 'человек'
-        x2.term_raw = '@{X1|plur}'
-        x2.term_resolved = 'люди'
-        x1.save()
-        x2.save()
+        x1 = schema.insert_new(
+            alias='X1',
+            term_raw='человек',
+            term_resolved = 'человек'
+        )
+        x2 = schema.insert_new(
+            alias='X2',
+            term_raw='@{X1|plur}',
+            term_resolved = 'люди'
+        )
 
         response = self.execute(item=schema.item.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -97,6 +104,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(response.data['items'][1]['term_raw'], x2.term_raw)
         self.assertEqual(response.data['items'][1]['term_resolved'], x2.term_resolved)
         self.assertEqual(response.data['subscribers'], [self.user.pk])
+
 
     @decl_endpoint('/api/rsforms/{item}/check', method='post')
     def test_check(self):
@@ -113,12 +121,14 @@ class TestRSFormViewset(EndpointTester):
 
         self.assertOK(data, item=self.unowned_id)
 
+
     @decl_endpoint('/api/rsforms/{item}/resolve', method='post')
     def test_resolve(self):
         schema = RSForm.create(title='Test')
-        x1 = schema.insert_new('X1')
-        x1.term_resolved = 'синий слон'
-        x1.save()
+        x1 = schema.insert_new(
+            alias='X1',
+            term_resolved='синий слон'
+        )
 
         data = {'text': '@{1|редкий} @{X1|plur,datv}'}
         response = self.execute(data, item=schema.item.id)
@@ -143,6 +153,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(response.data['refs'][1]['pos_output']['start'], 7)
         self.assertEqual(response.data['refs'][1]['pos_output']['finish'], 19)
 
+
     @decl_endpoint('/api/rsforms/import-trs', method='post')
     def test_import_trs(self):
         work_dir = os.path.dirname(os.path.abspath(__file__))
@@ -152,6 +163,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['owner'], self.user.pk)
         self.assertTrue(response.data['title'] != '')
+
 
     @decl_endpoint('/api/rsforms/{item}/export-trs', method='get')
     def test_export_trs(self):
@@ -164,6 +176,7 @@ class TestRSFormViewset(EndpointTester):
             with ZipFile(stream, 'r') as zipped_file:
                 self.assertIsNone(zipped_file.testzip())
                 self.assertIn('document.json', zipped_file.namelist())
+
 
     @decl_endpoint('/api/rsforms/{item}/cst-create', method='post')
     def test_create_constituenta(self):
@@ -193,6 +206,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(x4.order, 3)
         self.assertEqual(x4.term_raw, data['term_raw'])
         self.assertEqual(x4.term_forms, data['term_forms'])
+
 
     @decl_endpoint('/api/rsforms/{item}/cst-rename', method='patch')
     def test_rename_constituenta(self):
@@ -244,6 +258,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(x1.alias, 'D2')
         self.assertEqual(x1.cst_type, CstType.TERM)
 
+
     @decl_endpoint('/api/rsforms/{item}/cst-substitute', method='patch')
     def test_substitute_constituenta(self):
         x1 = self.schema.insert_new(
@@ -283,6 +298,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(d1.term_resolved, 'form1')
         self.assertEqual(d1.definition_formal, 'X2')
 
+
     @decl_endpoint('/api/rsforms/{item}/cst-create', method='post')
     def test_create_constituenta_data(self):
         data = {
@@ -303,6 +319,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(response.data['new_cst']['definition_formal'], '3')
         self.assertEqual(response.data['new_cst']['definition_raw'], '4')
         self.assertEqual(response.data['new_cst']['definition_resolved'], '4')
+
 
     @decl_endpoint('/api/rsforms/{item}/cst-delete-multiple', method='patch')
     def test_delete_constituenta(self):
@@ -328,6 +345,7 @@ class TestRSFormViewset(EndpointTester):
         data = {'items': [x3.id]}
         self.assertBadData(data, item=self.schema_id)
 
+
     @decl_endpoint('/api/rsforms/{item}/cst-moveto', method='patch')
     def test_move_constituenta(self):
         self.set_params(item=self.schema_id)
@@ -350,6 +368,7 @@ class TestRSFormViewset(EndpointTester):
         x3 = self.unowned.insert_new('X1')
         data = {'items': [x3.id], 'move_to': 1}
         self.assertBadData(data)
+
 
     @decl_endpoint('/api/rsforms/{item}/reset-aliases', method='patch')
     def test_reset_aliases(self):
@@ -377,6 +396,7 @@ class TestRSFormViewset(EndpointTester):
 
         self.assertOK()
 
+
     @decl_endpoint('/api/rsforms/{item}/load-trs', method='patch')
     def test_load_trs(self):
         self.set_params(item=self.schema_id)
@@ -393,6 +413,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(len(response.data['items']), 25)
         self.assertEqual(self.schema.constituents().count(), 25)
         self.assertFalse(Constituenta.objects.filter(pk=x1.id).exists())
+
 
     @decl_endpoint('/api/rsforms/{item}/cst-produce-structure', method='patch')
     def test_produce_structure(self):

@@ -7,6 +7,8 @@ from .EndpointTester import decl_endpoint, EndpointTester
 
 class TestRSLanguageViews(EndpointTester):
     ''' Test RS language endpoints. '''
+
+
     @decl_endpoint('/api/rslang/to-ascii', method='post')
     def test_convert_to_ascii(self):
         data = {'data': '1=1'}
@@ -17,6 +19,7 @@ class TestRSLanguageViews(EndpointTester):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['result'], r'1 \eq 1')
 
+
     @decl_endpoint('/api/rslang/to-math', method='post')
     def test_convert_to_math(self):
         data = {'data': r'1 \eq 1'}
@@ -26,6 +29,7 @@ class TestRSLanguageViews(EndpointTester):
         response = self.execute(data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['result'], r'1=1')
+
 
     @decl_endpoint('/api/rslang/parse-expression', method='post')
     def test_parse_expression(self):

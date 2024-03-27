@@ -41,6 +41,7 @@ class TestConstituentaAPI(EndpointTester):
         )
         self.invalid_cst = self.cst3.pk + 1337
 
+
     @decl_endpoint('/api/constituents/{item}', method='get')
     def test_retrieve(self):
         self.assertNotFound(item=self.invalid_cst)
@@ -48,6 +49,7 @@ class TestConstituentaAPI(EndpointTester):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['alias'], self.cst1.alias)
         self.assertEqual(response.data['convention'], self.cst1.convention)
+
 
     @decl_endpoint('/api/constituents/{item}', method='patch')
     def test_partial_update(self):
@@ -66,6 +68,7 @@ class TestConstituentaAPI(EndpointTester):
 
         self.assertOK(data, item=self.cst1.id)
 
+
     @decl_endpoint('/api/constituents/{item}', method='patch')
     def test_update_resolved_no_refs(self):
         data = {
@@ -80,6 +83,7 @@ class TestConstituentaAPI(EndpointTester):
         self.assertEqual(response.data['definition_resolved'], 'New def')
         self.assertEqual(self.cst3.definition_resolved, 'New def')
 
+
     @decl_endpoint('/api/constituents/{item}', method='patch')
     def test_update_resolved_refs(self):
         data = {
@@ -93,6 +97,7 @@ class TestConstituentaAPI(EndpointTester):
         self.assertEqual(response.data['term_resolved'], self.cst1.term_resolved)
         self.assertEqual(self.cst3.definition_resolved, f'{self.cst1.term_resolved} form1')
         self.assertEqual(response.data['definition_resolved'], f'{self.cst1.term_resolved} form1')
+
 
     @decl_endpoint('/api/constituents/{item}', method='patch')
     def test_readonly_cst_fields(self):

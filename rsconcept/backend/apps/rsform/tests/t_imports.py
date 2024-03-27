@@ -6,15 +6,19 @@ import json
 
 
 class TestIntegrations(TestCase):
+
+
     def test_convert_to_ascii(self):
         ''' Test converting to ASCII syntax '''
         self.assertEqual(pc.convert_to_ascii(''), '')
         self.assertEqual(pc.convert_to_ascii('\u212c(X1)'), r'B(X1)')
 
+
     def test_convert_to_math(self):
         ''' Test converting to MATH syntax '''
         self.assertEqual(pc.convert_to_math(''), '')
         self.assertEqual(pc.convert_to_math(r'B(X1)'), '\u212c(X1)')
+
 
     def test_parse_expression(self):
         ''' Test parsing expression '''
@@ -22,13 +26,16 @@ class TestIntegrations(TestCase):
         self.assertEqual(out['parseResult'], True)
         self.assertEqual(out['syntax'], 'math')
 
+
     def test_empty_schema(self):
         with self.assertRaises(RuntimeError):
             pc.check_schema('')
 
+
     def test_check_schema(self):
         schema = self._default_schema()
         self.assertTrue(pc.check_schema(schema) != '')
+
 
     def test_check_expression(self):
         schema = self._default_schema()
@@ -39,12 +46,14 @@ class TestIntegrations(TestCase):
         out2 = json.loads(pc.check_expression(schema, 'X1=X2'))
         self.assertFalse(out2['parseResult'])
 
+
     def test_reset_aliases(self):
         ''' Test reset aliases in schema '''
         schema = self._default_schema()
         fixedSchema = json.loads(pc.reset_aliases(schema))
         self.assertTrue(len(fixedSchema['items']) > 2)
         self.assertEqual(fixedSchema['items'][2]['alias'], 'S1')
+
 
     def _default_schema(self):
         return '''{

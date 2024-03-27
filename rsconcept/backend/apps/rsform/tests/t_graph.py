@@ -26,6 +26,7 @@ class TestGraph(unittest.TestCase):
         self.assertTrue(graph.has_edge('X1', 'X3'))
         self.assertTrue(graph.has_edge('X2', 'X1'))
 
+
     def test_expand_outputs(self):
         graph = Graph({
             'X1': ['X2'],
@@ -39,6 +40,7 @@ class TestGraph(unittest.TestCase):
         self.assertEqual(graph.expand_outputs(['X3']), [])
         self.assertEqual(graph.expand_outputs(['X7']), [])
         self.assertEqual(graph.expand_outputs(['X2', 'X5']), ['X3', 'X6', 'X1'])
+
 
     def test_topological_order(self):
         self.assertEqual(Graph().topological_order(), [])

@@ -24,6 +24,7 @@ class TestVersionViews(EndpointTester):
             order=1
         )
 
+
     @decl_endpoint('/api/rsforms/{schema}/versions/create', method='post')
     def test_create_version(self):
         invalid_data = {'description': 'test'}
@@ -39,7 +40,8 @@ class TestVersionViews(EndpointTester):
         self.assertTrue('version' in response.data)
         self.assertTrue('schema' in response.data)
         self.assertTrue(response.data['version'] in [v['id'] for v in response.data['schema']['versions']])
-        
+
+
     @decl_endpoint('/api/rsforms/{schema}/versions/{version}', method='get')
     def test_retrieve_version(self):
         version_id = self._create_version({'version': '1.0.0', 'description': 'test'})
@@ -60,6 +62,7 @@ class TestVersionViews(EndpointTester):
         self.assertNotEqual(response.data['alias'], self.owned.alias)
         self.assertNotEqual(response.data['items'][0]['alias'], self.x1.alias)
         self.assertEqual(response.data['version'], version_id)
+
 
     @decl_endpoint('/api/versions/{version}', method='get')
     def test_access_version(self):
@@ -96,6 +99,7 @@ class TestVersionViews(EndpointTester):
         response = self.get()
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+
     @decl_endpoint('/api/rsforms/{schema}/versions/{version}', method='get')
     def test_retrieve_version_details(self):
         a1 = Constituenta.objects.create(
@@ -115,6 +119,7 @@ class TestVersionViews(EndpointTester):
         self.assertEqual(loaded_a1['definition_formal'], 'X1=X1')
         self.assertEqual(loaded_a1['parse']['status'], 'verified')
 
+
     @decl_endpoint('/api/versions/{version}/export-file', method='get')
     def test_export_version(self):
         invalid_id = 1338
@@ -131,6 +136,7 @@ class TestVersionViews(EndpointTester):
             with ZipFile(stream, 'r') as zipped_file:
                 self.assertIsNone(zipped_file.testzip())
                 self.assertIn('document.json', zipped_file.namelist())
+
 
     def _create_version(self, data) -> int:
         response = self.client.post(

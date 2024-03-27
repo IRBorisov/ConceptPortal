@@ -11,13 +11,15 @@ from apps.rsform.models import (
 
 class TestInlineSynthesis(EndpointTester):
     ''' Testing Operations endpoints. '''
-    
+
+
     @decl_endpoint('/api/operations/inline-synthesis', method='patch')
     def setUp(self):
         super().setUp()
         self.schema1 = RSForm.create(title='Test1', alias='T1', owner=self.user)
         self.schema2 = RSForm.create(title='Test2', alias='T2', owner=self.user)
         self.unowned = RSForm.create(title='Test3', alias='T3')
+
 
     def test_inline_synthesis_inputs(self):
         invalid_id = 1338
@@ -41,6 +43,7 @@ class TestInlineSynthesis(EndpointTester):
 
         data['items'] = [invalid_id]
         self.assertBadData(data)
+
 
     def test_inline_synthesis(self):
         ks1_x1 = self.schema1.insert_new('X1', term_raw='KS1X1') # -> delete

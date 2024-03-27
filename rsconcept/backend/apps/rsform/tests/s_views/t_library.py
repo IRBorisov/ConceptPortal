@@ -32,6 +32,7 @@ class TestLibraryViewset(EndpointTester):
             is_common=True
         )
 
+
     @decl_endpoint('/api/library', method='post')
     def test_create(self):
         data = {'title': 'Title'}
@@ -44,6 +45,7 @@ class TestLibraryViewset(EndpointTester):
         data = {'title': 'Title2'}
         self.assertForbidden(data)
 
+
     @decl_endpoint('/api/library/{item}', method='patch')
     def test_update(self):
         data = {'id': self.unowned.id, 'title': 'New title'}
@@ -55,6 +57,7 @@ class TestLibraryViewset(EndpointTester):
         self.assertEqual(response.data['title'], 'New title')
         self.assertEqual(response.data['alias'], self.owned.alias)
 
+
     @decl_endpoint('/api/library/{item}', method='delete')
     def test_destroy(self):
         response = self.execute(item=self.owned.id)
@@ -64,6 +67,7 @@ class TestLibraryViewset(EndpointTester):
         self.toggle_staff(True)
         response = self.execute(item=self.unowned.id)
         self.assertTrue(response.status_code in [status.HTTP_202_ACCEPTED, status.HTTP_204_NO_CONTENT])
+
 
     @decl_endpoint('/api/library/{item}/claim', method='post')
     def test_claim(self):
@@ -87,6 +91,7 @@ class TestLibraryViewset(EndpointTester):
         self.logout()
         self.assertForbidden(item=self.owned.id)
 
+
     @decl_endpoint('/api/library/active', method='get')
     def test_retrieve_common(self):
         response = self.execute()
@@ -101,6 +106,7 @@ class TestLibraryViewset(EndpointTester):
         self.assertTrue(response_contains(response, self.common))
         self.assertFalse(response_contains(response, self.unowned))
         self.assertFalse(response_contains(response, self.owned))
+
 
     @decl_endpoint('/api/library/active', method='get')
     def test_retrieve_subscribed(self):
@@ -117,6 +123,7 @@ class TestLibraryViewset(EndpointTester):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(response_contains(response, self.unowned))
         self.assertEqual(len(response.data), 3)
+
 
     @decl_endpoint('/api/library/{item}/subscribe', method='post')
     def test_subscriptions(self):
@@ -136,6 +143,7 @@ class TestLibraryViewset(EndpointTester):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(self.user in self.unowned.subscribers())
 
+
     @decl_endpoint('/api/library/templates', method='get')
     def test_retrieve_templates(self):
         response = self.execute()
@@ -150,6 +158,7 @@ class TestLibraryViewset(EndpointTester):
         self.assertFalse(response_contains(response, self.common))
         self.assertTrue(response_contains(response, self.unowned))
         self.assertFalse(response_contains(response, self.owned))
+
 
     @decl_endpoint('/api/library/{item}/clone', method='post')
     def test_clone_rsform(self):
