@@ -67,7 +67,7 @@ class RSForm:
                 resolver.context[cst.alias] = Entity(cst.alias, resolved)
 
         graph_defs = self._definition_graph()
-        update_defs = set(expansion + graph_defs.expand_outputs(expansion)).union(changed)
+        update_defs = set(expansion + graph_defs.expand_outputs(expansion + changed)).union(changed)
         if len(update_defs) == 0:
             return
         for alias in update_defs:
