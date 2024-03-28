@@ -8,33 +8,26 @@ import { messages } from '@/utils/labels';
 
 interface ControlsOverlayProps {
   constituenta?: IConstituenta;
-  isMutable: boolean;
-  isModified: boolean;
+  disabled: boolean;
+  modified: boolean;
   processing: boolean;
 
   onRename: () => void;
   onEditTerm: () => void;
 }
 
-function ControlsOverlay({
-  constituenta,
-  isMutable,
-  isModified,
-  processing,
-  onRename,
-  onEditTerm
-}: ControlsOverlayProps) {
+function ControlsOverlay({ constituenta, disabled, modified, processing, onRename, onEditTerm }: ControlsOverlayProps) {
   return (
     <Overlay position='top-1 left-[4.1rem]' className='flex select-none'>
-      {isMutable || processing ? (
+      {!disabled || processing ? (
         <MiniButton
           title={
-            isModified ? messages.unsaved : `Редактировать словоформы термина: ${constituenta?.term_forms.length ?? 0}`
+            modified ? messages.unsaved : `Редактировать словоформы термина: ${constituenta?.term_forms.length ?? 0}`
           }
           noHover
           onClick={onEditTerm}
           icon={<LiaEdit size='1rem' className='icon-primary' />}
-          disabled={isModified}
+          disabled={modified}
         />
       ) : null}
       <div
@@ -42,19 +35,19 @@ function ControlsOverlay({
           'pt-1 pl-[1.375rem]', // prettier: split lines
           'text-sm font-medium whitespace-nowrap',
           'select-text cursor-default',
-          !isMutable && !processing && 'pl-[2.8rem]'
+          disabled && !processing && 'pl-[2.8rem]'
         )}
       >
         <span>Имя </span>
         <span className='ml-1'>{constituenta?.alias ?? ''}</span>
       </div>
-      {isMutable || processing ? (
+      {!disabled || processing ? (
         <MiniButton
           noHover
-          title={isModified ? messages.unsaved : 'Переименовать конституенту'}
+          title={modified ? messages.unsaved : 'Переименовать конституенту'}
           onClick={onRename}
           icon={<LiaEdit size='1rem' className='icon-primary' />}
-          disabled={isModified}
+          disabled={modified}
         />
       ) : null}
     </Overlay>

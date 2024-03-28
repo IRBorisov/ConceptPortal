@@ -68,19 +68,19 @@ function GraphToolbar({
         disabled={!is3D}
         onClick={toggleOrbit}
       />
-      {controller.isMutable || controller.isProcessing ? (
+      {controller.isContentEditable ? (
         <MiniButton
           title='Новая конституента'
           icon={<BiPlusCircle size='1.25rem' className='icon-green' />}
-          disabled={!controller.isMutable}
+          disabled={controller.isProcessing}
           onClick={onCreate}
         />
       ) : null}
-      {controller.isMutable || controller.isProcessing ? (
+      {controller.isContentEditable ? (
         <MiniButton
           title='Удалить выбранные'
           icon={<BiTrash size='1.25rem' className='icon-red' />}
-          disabled={nothingSelected || !controller.isMutable}
+          disabled={nothingSelected || controller.isProcessing}
           onClick={onDelete}
         />
       ) : null}

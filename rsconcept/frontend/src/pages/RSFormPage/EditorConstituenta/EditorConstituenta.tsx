@@ -35,8 +35,8 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
   const [toggleReset, setToggleReset] = useState(false);
 
   const disabled = useMemo(
-    () => !activeCst || !controller.isContentEditable,
-    [activeCst, controller.isContentEditable]
+    () => !activeCst || !controller.isContentEditable || controller.isProcessing,
+    [activeCst, controller.isContentEditable, controller.isProcessing]
   );
 
   const isNarrow = useMemo(() => !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD, [windowSize]);
@@ -79,10 +79,10 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
 
   return (
     <>
-      {controller.isContentEditable || controller.isProcessing ? (
+      {controller.isContentEditable ? (
         <ConstituentaToolbar
-          isMutable={!disabled}
-          isModified={isModified}
+          disabled={disabled}
+          modified={isModified}
           onMoveUp={controller.moveUp}
           onMoveDown={controller.moveDown}
           onSubmit={initiateSubmit}
@@ -102,7 +102,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
         onKeyDown={handleInput}
       >
         <FormConstituenta
-          isMutable={!disabled}
+          disabled={disabled}
           showList={showList}
           id={globals.constituenta_editor}
           constituenta={activeCst}

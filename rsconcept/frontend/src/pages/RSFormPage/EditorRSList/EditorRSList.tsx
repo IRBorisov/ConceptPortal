@@ -51,7 +51,7 @@ function EditorRSList({ selected, setSelected, onOpenEdit }: EditorRSListProps) 
   }
 
   function handleTableKey(event: React.KeyboardEvent<HTMLDivElement>) {
-    if (!controller.isMutable) {
+    if (!controller.isContentEditable || controller.isProcessing) {
       return;
     }
     if (event.key === 'Delete' && selected.length > 0) {
@@ -97,7 +97,7 @@ function EditorRSList({ selected, setSelected, onOpenEdit }: EditorRSListProps) 
 
   return (
     <div tabIndex={-1} className='outline-none' onKeyDown={handleTableKey}>
-      {controller.isContentEditable || (controller.isMutable && controller.isProcessing) ? (
+      {controller.isContentEditable ? (
         <SelectedCounter
           totalCount={controller.schema?.stats?.count_all ?? 0}
           selectedCount={selected.length}
@@ -105,20 +105,18 @@ function EditorRSList({ selected, setSelected, onOpenEdit }: EditorRSListProps) 
         />
       ) : null}
 
-      {controller.isContentEditable || (controller.isMutable && controller.isProcessing) ? (
-        <RSListToolbar selectedCount={selected.length} />
-      ) : null}
+      {controller.isContentEditable ? <RSListToolbar selectedCount={selected.length} /> : null}
       <div
         className={clsx('border-b', {
-          'pt-[2.3rem]': controller.isContentEditable || controller.isProcessing,
-          'relative top-[-1px]': !controller.isContentEditable && !controller.isProcessing
+          'pt-[2.3rem]': controller.isContentEditable,
+          'relative top-[-1px]': !controller.isContentEditable
         })}
       />
 
       <RSTable
         items={controller.schema?.items}
         maxHeight={tableHeight}
-        enableSelection={controller.isContentEditable || (controller.isMutable && controller.isProcessing)}
+        enableSelection={controller.isContentEditable}
         selected={rowSelection}
         setSelected={handleRowSelection}
         onEdit={onOpenEdit}

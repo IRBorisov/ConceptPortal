@@ -114,13 +114,9 @@ export const RSEditState = ({
 
   const isMutable = useMemo(() => {
     return (
-      !model.loading &&
-      !model.processing &&
-      mode !== UserAccessMode.READER &&
-      ((model.isOwned || (mode === UserAccessMode.ADMIN && user?.is_staff)) ?? false)
+      mode !== UserAccessMode.READER && ((model.isOwned || (mode === UserAccessMode.ADMIN && user?.is_staff)) ?? false)
     );
-  }, [user?.is_staff, mode, model.isOwned, model.loading, model.processing]);
-
+  }, [user?.is_staff, mode, model.isOwned]);
   const isContentEditable = useMemo(() => isMutable && !model.isArchive, [isMutable, model.isArchive]);
 
   const [showUpload, setShowUpload] = useState(false);

@@ -24,10 +24,10 @@ interface RSFormToolbarProps {
 
 function RSFormToolbar({ modified, anonymous, subscribed, claimable, onSubmit, onDestroy }: RSFormToolbarProps) {
   const controller = useRSEdit();
-  const canSave = useMemo(() => modified && controller.isMutable, [modified, controller.isMutable]);
+  const canSave = useMemo(() => modified && !controller.isProcessing, [modified, controller.isProcessing]);
   return (
     <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex'>
-      {controller.isContentEditable || (controller.isMutable && controller.isProcessing) ? (
+      {controller.isContentEditable ? (
         <MiniButton
           titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
           disabled={!canSave}
@@ -48,7 +48,6 @@ function RSFormToolbar({ modified, anonymous, subscribed, claimable, onSubmit, o
       {!anonymous ? (
         <MiniButton
           titleHtml={`Отслеживание <b>${subscribed ? 'включено' : 'выключено'}</b>`}
-          disabled={controller.isProcessing}
           icon={
             subscribed ? (
               <FiBell size='1.25rem' className='icon-primary' />
@@ -56,6 +55,7 @@ function RSFormToolbar({ modified, anonymous, subscribed, claimable, onSubmit, o
               <FiBellOff size='1.25rem' className='clr-text-controls' />
             )
           }
+          disabled={controller.isProcessing}
           onClick={controller.toggleSubscribe}
         />
       ) : null}
@@ -67,12 +67,12 @@ function RSFormToolbar({ modified, anonymous, subscribed, claimable, onSubmit, o
           onClick={controller.claim}
         />
       ) : null}
-      {controller.isContentEditable || (controller.isMutable && controller.isProcessing) ? (
+      {controller.isMutable ? (
         <MiniButton
           title='Удалить схему'
-          disabled={!controller.isMutable}
-          onClick={onDestroy}
           icon={<BiTrash size='1.25rem' className='icon-red' />}
+          disabled={!controller.isContentEditable || controller.isProcessing}
+          onClick={onDestroy}
         />
       ) : null}
       <HelpButton topic={HelpTopic.RSFORM} offset={4} />

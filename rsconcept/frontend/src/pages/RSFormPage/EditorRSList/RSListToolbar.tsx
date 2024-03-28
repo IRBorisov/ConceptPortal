@@ -31,25 +31,25 @@ function RSListToolbar({ selectedCount }: RSListToolbarProps) {
       <MiniButton
         titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
         icon={<BiUpvote size='1.25rem' className='icon-primary' />}
-        disabled={!controller.isMutable || nothingSelected}
+        disabled={controller.isProcessing || nothingSelected}
         onClick={controller.moveUp}
       />
       <MiniButton
         titleHtml={prepareTooltip('Переместить вниз', 'Alt + вниз')}
         icon={<BiDownvote size='1.25rem' className='icon-primary' />}
-        disabled={!controller.isMutable || nothingSelected}
+        disabled={controller.isProcessing || nothingSelected}
         onClick={controller.moveDown}
       />
       <MiniButton
         titleHtml={prepareTooltip('Клонировать конституенту', 'Alt + V')}
         icon={<BiDuplicate size='1.25rem' className='icon-green' />}
-        disabled={!controller.isMutable || selectedCount !== 1}
+        disabled={controller.isProcessing || selectedCount !== 1}
         onClick={controller.cloneCst}
       />
       <MiniButton
         titleHtml={prepareTooltip('Добавить новую конституенту...', 'Alt + `')}
         icon={<BiPlusCircle size='1.25rem' className='icon-green' />}
-        disabled={!controller.isMutable}
+        disabled={controller.isProcessing}
         onClick={() => controller.createCst(undefined, false)}
       />
       <div ref={insertMenu.ref}>
@@ -57,7 +57,7 @@ function RSListToolbar({ selectedCount }: RSListToolbarProps) {
           title='Добавить пустую конституенту'
           hideTitle={insertMenu.isOpen}
           icon={<BiDownArrowCircle size='1.25rem' className='icon-green' />}
-          disabled={!controller.isMutable}
+          disabled={controller.isProcessing}
           onClick={insertMenu.toggle}
         />
         <Dropdown isOpen={insertMenu.isOpen}>
@@ -74,7 +74,7 @@ function RSListToolbar({ selectedCount }: RSListToolbarProps) {
       <MiniButton
         titleHtml={prepareTooltip('Удалить выбранные', 'Delete')}
         icon={<BiTrash size='1.25rem' className='icon-red' />}
-        disabled={!controller.isMutable || nothingSelected}
+        disabled={controller.isProcessing || nothingSelected}
         onClick={controller.deleteCst}
       />
       <HelpButton topic={HelpTopic.CSTLIST} offset={5} />

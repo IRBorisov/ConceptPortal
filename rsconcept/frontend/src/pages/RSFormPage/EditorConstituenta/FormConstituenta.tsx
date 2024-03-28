@@ -21,7 +21,7 @@ import ControlsOverlay from './ControlsOverlay';
 export const ROW_SIZE_IN_CHARACTERS = 70;
 
 interface FormConstituentaProps {
-  isMutable: boolean;
+  disabled: boolean;
   showList: boolean;
 
   id?: string;
@@ -37,7 +37,7 @@ interface FormConstituentaProps {
 }
 
 function FormConstituenta({
-  isMutable,
+  disabled,
   showList,
   id,
   isModified,
@@ -114,8 +114,8 @@ function FormConstituenta({
   return (
     <div>
       <ControlsOverlay
-        isMutable={isMutable}
-        isModified={isModified}
+        disabled={disabled}
+        modified={isModified}
         processing={processing}
         constituenta={constituenta}
         onEditTerm={onEditTerm}
@@ -134,14 +134,14 @@ function FormConstituenta({
           value={term}
           initialValue={constituenta?.term_raw ?? ''}
           resolved={constituenta?.term_resolved ?? ''}
-          disabled={!isMutable}
+          disabled={disabled}
           onChange={newValue => setTerm(newValue)}
         />
         <TextArea
           id='cst_typification'
           dense
           noBorder
-          disabled
+          disabled={true}
           label='Типизация'
           rows={typification.length > ROW_SIZE_IN_CHARACTERS ? 2 : 1}
           value={typification}
@@ -157,7 +157,7 @@ function FormConstituenta({
           value={expression}
           activeCst={constituenta}
           showList={showList}
-          disabled={!isMutable}
+          disabled={disabled}
           toggleReset={toggleReset}
           onToggleList={onToggleList}
           onChange={newValue => setExpression(newValue)}
@@ -172,7 +172,7 @@ function FormConstituenta({
           value={textDefinition}
           initialValue={constituenta?.definition_raw ?? ''}
           resolved={constituenta?.definition_resolved ?? ''}
-          disabled={!isMutable}
+          disabled={disabled}
           onChange={newValue => setTextDefinition(newValue)}
         />
         <TextArea
@@ -181,15 +181,15 @@ function FormConstituenta({
           label='Конвенция / Комментарий'
           placeholder='Договоренность об интерпретации или пояснение'
           value={convention}
-          disabled={!isMutable}
+          disabled={disabled}
           rows={convention.length > 2 * ROW_SIZE_IN_CHARACTERS ? 3 : 2}
           onChange={event => setConvention(event.target.value)}
         />
-        {isMutable || processing ? (
+        {!disabled || processing ? (
           <SubmitButton
             text='Сохранить изменения'
             className='self-center'
-            disabled={!isModified || !isMutable}
+            disabled={disabled || !isModified}
             icon={<FiSave size='1.25rem' />}
           />
         ) : null}

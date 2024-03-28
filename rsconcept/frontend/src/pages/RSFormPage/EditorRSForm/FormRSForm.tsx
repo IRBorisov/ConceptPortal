@@ -118,7 +118,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
         />
         <div className='flex flex-col'>
           <Overlay position='top-[-0.25rem] right-[-0.25rem] flex'>
-            {controller.isMutable || (controller.isMutable && controller.isProcessing) ? (
+            {controller.isMutable ? (
               <>
                 <MiniButton
                   noHover
@@ -152,7 +152,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
         label='Комментарий'
         rows={3}
         value={comment}
-        disabled={!controller.isContentEditable}
+        disabled={!controller.isContentEditable || controller.isProcessing}
         onChange={event => setComment(event.target.value)}
       />
       <div className='flex justify-between whitespace-nowrap'>
@@ -160,7 +160,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
           id='schema_common'
           label='Общедоступная схема'
           title='Общедоступные схемы видны всем пользователям и могут быть изменены'
-          disabled={!controller.isContentEditable}
+          disabled={!controller.isContentEditable || controller.isProcessing}
           value={common}
           setValue={value => setCommon(value)}
         />
@@ -168,17 +168,17 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
           id='schema_immutable'
           label='Неизменная схема'
           title='Только администраторы могут присваивать схемам неизменный статус'
-          disabled={!controller.isContentEditable || !user?.is_staff}
+          disabled={!controller.isContentEditable || !user?.is_staff || controller.isProcessing}
           value={canonical}
           setValue={value => setCanonical(value)}
         />
       </div>
-      {controller.isContentEditable || (controller.isMutable && controller.isProcessing) ? (
+      {controller.isContentEditable ? (
         <SubmitButton
           text='Сохранить изменения'
           className='self-center'
           loading={processing}
-          disabled={!isModified || controller.isProcessing}
+          disabled={!isModified}
           icon={<FiSave size='1.25rem' />}
         />
       ) : null}

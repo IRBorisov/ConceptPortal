@@ -169,7 +169,7 @@ function EditorTermGraph({ selected, setSelected, onOpenEdit }: EditorTermGraphP
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     // Hotkeys implementation
-    if (!controller.isMutable) {
+    if (!controller.isContentEditable || controller.isProcessing) {
       return;
     }
     if (event.key === 'Delete') {
