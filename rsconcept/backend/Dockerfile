@@ -3,16 +3,26 @@
 # ==========================================
 FROM ubuntu:jammy as python-base
 
-RUN apt-get update -qq && \
-    apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends \
-        python3 \
-        python3-pip \ 
-        python-is-python3 && \
-    rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=noninteractive
 
-RUN pip install --upgrade pip && \
-    pip install wheel
+RUN apt-get update -qq && \
+    apt-get full-upgrade -y && \
+    apt-get install -y --no-install-recommends \
+        curl \
+        gpg-agent \
+        software-properties-common && \
+    add-apt-repository -y ppa:deadsnakes/ppa && \
+    add-apt-repository -y ppa:ubuntu-toolchain-r/test && \
+    apt-get install -y --no-install-recommends \
+        python3.12 \
+        libstdc++6 && \
+    curl -sS https://bootstrap.pypa.io/get-pip.py | python3.12 && \
+    python3.12 -m pip install --upgrade pip && \
+    python3.12 -m pip install wheel && \
+    apt-get autoclean -y && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # ========= Builder ==============
 FROM python-base as builder
@@ -23,7 +33,7 @@ ENV PYTHONUNBUFFERED 1
 
 COPY ./requirements.txt ./
 COPY ./import/*linux*.whl ./wheels/
-RUN pip wheel \
+RUN python3.12 -m pip wheel \
         --no-cache-dir --no-deps \
         --wheel-dir=/wheels -r requirements.txt
 

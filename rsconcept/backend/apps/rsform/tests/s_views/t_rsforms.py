@@ -307,7 +307,7 @@ class TestRSFormViewset(EndpointTester):
         d2 = self.schema.insert_new('D2')
         d3 = self.schema.insert_new(
             alias='D3',
-            definition_formal='X1 \ X2'
+            definition_formal=r'X1 \ X2'
         )
         
         data = {'substitutions': []}
@@ -343,7 +343,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         d3.refresh_from_db()
-        self.assertEqual(d3.definition_formal, 'D1 \ D2')
+        self.assertEqual(d3.definition_formal, r'D1 \ D2')
 
 
     @decl_endpoint('/api/rsforms/{item}/cst-create', method='post')

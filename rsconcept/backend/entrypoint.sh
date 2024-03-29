@@ -12,8 +12,8 @@ then
 fi
 
 cd $APP_HOME
-python $APP_HOME/manage.py collectstatic --noinput --clear
-python $APP_HOME/manage.py migrate
+python3.12 $APP_HOME/manage.py collectstatic --noinput --clear
+python3.12 $APP_HOME/manage.py migrate
 
 # Execute given input command
 exec "$@"

@@ -119,7 +119,7 @@ This readme file is used mostly to document project dependencies
 ## Local build (Windows 10+)
 
 - this is main developers build
-- Install Python 3.9, NodeJS, VSCode, Docker Desktop
+- Install Python 3.12, NodeJS, VSCode, Docker Desktop
 - copy import wheels from ConceptCore to rsconcept/backend/import
 - run rsconcept/backend/LocalEnvSetup.ps1
 - use VSCode configs in root folder to start development
@@ -140,6 +140,7 @@ This readme file is used mostly to document project dependencies
 
 ## Production build
 
+- provide proper pyconcept wheel (ConceptCore) at 'rsconcept/backend/import/\*.whl'
 - provide secrets: 'secrets/db_password.txt', 'django_key.txt', 'email_host.txt', 'email_password.txt', 'email_user.txt'
 - check if you need to change SSL/TLS and PORT in 'rsconcept\backend\.env.prod'
 - setup domain names for application and API in configs: 'frontend\env\.env.production', 'rsconcept\backend\.env.dev', 'nginx\production.conf'

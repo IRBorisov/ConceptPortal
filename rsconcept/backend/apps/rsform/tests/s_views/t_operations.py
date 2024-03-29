@@ -49,11 +49,11 @@ class TestInlineSynthesis(EndpointTester):
         ks1_x1 = self.schema1.insert_new('X1', term_raw='KS1X1') # -> delete
         ks1_x2 = self.schema1.insert_new('X2', term_raw='KS1X2') # -> X2
         ks1_s1 = self.schema1.insert_new('S1', definition_formal='X2', term_raw='KS1S1') # -> S1
-        ks1_d1 = self.schema1.insert_new('D1', definition_formal='S1\X1\X2') # -> D1
+        ks1_d1 = self.schema1.insert_new('D1', definition_formal=r'S1\X1\X2') # -> D1
         ks2_x1 = self.schema2.insert_new('X1', term_raw='KS2X1') # -> delete
         ks2_x2 = self.schema2.insert_new('X2', term_raw='KS2X2') # -> X4
         ks2_s1 = self.schema2.insert_new('S1', definition_formal='X2×X2', term_raw='KS2S1') # -> S2
-        ks2_d1 = self.schema2.insert_new('D1', definition_formal='S1\X1\X2') # -> D2
+        ks2_d1 = self.schema2.insert_new('D1', definition_formal=r'S1\X1\X2') # -> D2
         ks2_a1 = self.schema2.insert_new('A1', definition_formal='1=1') # -> not included in items
 
         data = {
@@ -83,5 +83,5 @@ class TestInlineSynthesis(EndpointTester):
         self.assertEqual(result['S2']['term_raw'], ks2_s1.term_raw)
         self.assertEqual(result['S1']['definition_formal'], 'X2')
         self.assertEqual(result['S2']['definition_formal'], 'X4×X4')
-        self.assertEqual(result['D1']['definition_formal'], 'S1\S2\X2')
-        self.assertEqual(result['D2']['definition_formal'], 'S2\S1\X4')
+        self.assertEqual(result['D1']['definition_formal'], r'S1\S2\X2')
+        self.assertEqual(result['D2']['definition_formal'], r'S2\S1\X4')

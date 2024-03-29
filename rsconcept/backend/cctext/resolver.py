@@ -9,7 +9,9 @@ from .conceptapi import inflect_dependant
 from .context import TermContext
 from .reference import EntityReference, SyntacticReference, parse_reference, Reference
 
+
 _REF_ENTITY_PATTERN = re.compile(r'@{([^0-9\-][^\}\|\{]*?)\|([^\}\|\{]*?)}')
+
 
 def extract_entities(text: str) -> list[str]:
     ''' Extract list of entities that are referenced. '''
@@ -67,6 +69,9 @@ class Position:
     start: int = 0
     finish: int = 0
 
+    def __hash__(self) -> int:
+        return hash((self.start, self.finish))
+
 
 @dataclass
 class ResolvedReference:
@@ -75,6 +80,9 @@ class ResolvedReference:
     resolved: str = ''
     pos_input: Position = Position()
     pos_output: Position = Position()
+
+    def __hash__(self) -> int:
+        return hash((self.resolved, self.pos_input, self.pos_output, self.ref.to_text()))
 
 
 class Resolver:
