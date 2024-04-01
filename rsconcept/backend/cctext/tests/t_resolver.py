@@ -2,8 +2,6 @@
 import unittest
 from typing import cast
 
-from django.test import tag
-
 from cctext import (
     EntityReference, TermContext, Entity, SyntacticReference,
     Resolver, ResolvedReference, Position, TermForm,
