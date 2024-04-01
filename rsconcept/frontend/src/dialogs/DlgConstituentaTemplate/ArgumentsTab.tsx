@@ -9,7 +9,7 @@ import RSInput from '@/components/RSInput';
 import ConstituentaPicker from '@/components/select/ConstituentaPicker';
 import DataTable, { IConditionalStyle } from '@/components/ui/DataTable';
 import MiniButton from '@/components/ui/MiniButton';
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { IConstituenta, IRSForm } from '@/models/rsform';
 import { IArgumentValue } from '@/models/rslang';
 import { prefixes } from '@/utils/constants';
@@ -28,7 +28,7 @@ export interface IArgumentsState {
 const argumentsHelper = createColumnHelper<IArgumentValue>();
 
 function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
-  const { colors } = useConceptTheme();
+  const { colors } = useConceptOptions();
 
   const [selectedCst, setSelectedCst] = useState<IConstituenta | undefined>(undefined);
   const [selectedArgument, setSelectedArgument] = useState<IArgumentValue | undefined>(undefined);

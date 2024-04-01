@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useLayoutEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import HelpButton from '@/components/man/HelpButton';
+import BadgeHelp from '@/components/man/BadgeHelp';
 import DataTable, { createColumnHelper, VisibilityState } from '@/components/ui/DataTable';
 import FlexColumn from '@/components/ui/FlexColumn';
 import TextURL from '@/components/ui/TextURL';
@@ -118,7 +118,7 @@ function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
             'flex gap-1'
           )}
         >
-          <HelpButton topic={HelpTopic.LIBRARY} className='max-w-[30rem] text-sm' offset={5} place='right-start' />
+          <BadgeHelp topic={HelpTopic.LIBRARY} className='max-w-[30rem] text-sm' offset={5} place='right-start' />
         </div>
       </div>
       <DataTable

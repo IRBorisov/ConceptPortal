@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
 import DataTable, { createColumnHelper, RowSelectionState } from '@/components/ui/DataTable';
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
 import { describeConstituenta } from '@/utils/labels';
 
@@ -25,7 +25,7 @@ interface ConstituentaMultiPickerProps {
 const columnHelper = createColumnHelper<IConstituenta>();
 
 function ConstituentaMultiPicker({ id, schema, prefixID, rows, selected, setSelected }: ConstituentaMultiPickerProps) {
-  const { colors } = useConceptTheme();
+  const { colors } = useConceptOptions();
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
   useLayoutEffect(() => {

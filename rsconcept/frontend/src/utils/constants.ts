@@ -83,6 +83,7 @@ export const storage = {
   PREFIX: 'portal.',
 
   themeDark: 'theme.dark',
+  optionsHelp: 'options.help',
 
   rseditFont: 'rsedit.font',
   rseditShowList: 'rsedit.show_list',

@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
 import { BiCheck, BiChevronsDown, BiLeftArrow, BiRightArrow, BiX } from 'react-icons/bi';
 
-import HelpButton from '@/components/man/HelpButton';
+import BadgeHelp from '@/components/man/BadgeHelp';
 import SelectGrammeme from '@/components/select/SelectGrammeme';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
@@ -130,7 +130,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
       className='flex flex-col w-[40rem] px-6'
     >
       <Overlay position='top-[-0.2rem] left-[8rem]'>
-        <HelpButton topic={HelpTopic.TERM_CONTROL} className='max-w-[38rem]' offset={3} />
+        <BadgeHelp topic={HelpTopic.TERM_CONTROL} className='max-w-[38rem]' offset={3} />
       </Overlay>
 
       <TextArea

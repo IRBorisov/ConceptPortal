@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
 
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
 import { animateSideView } from '@/styling/animations';
 
@@ -27,7 +27,7 @@ interface ViewConstituentsProps {
 }
 
 function ViewConstituents({ expression, schema, activeID, isBottom, baseHeight, onOpenEdit }: ViewConstituentsProps) {
-  const { noNavigation } = useConceptTheme();
+  const { noNavigation } = useConceptOptions();
 
   const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema?.items ?? []);
 

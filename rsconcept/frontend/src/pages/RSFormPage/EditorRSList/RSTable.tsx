@@ -6,7 +6,7 @@ import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import ConstituentaBadge from '@/components/info/ConstituentaBadge';
 import DataTable, { createColumnHelper, RowSelectionState, VisibilityState } from '@/components/ui/DataTable';
 import FlexColumn from '@/components/ui/FlexColumn';
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { prefixes } from '@/utils/constants';
@@ -31,7 +31,7 @@ const COLUMN_CONVENTION_HIDE_THRESHOLD = 1800;
 const columnHelper = createColumnHelper<IConstituenta>();
 
 function RSTable({ items, maxHeight, enableSelection, selected, setSelected, onEdit, onCreateNew }: RSTableProps) {
-  const { colors } = useConceptTheme();
+  const { colors } = useConceptOptions();
   const windowSize = useWindowSize();
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});

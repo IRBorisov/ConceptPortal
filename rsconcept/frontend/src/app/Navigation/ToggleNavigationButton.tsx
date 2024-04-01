@@ -2,11 +2,11 @@ import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import { RiPushpinFill, RiUnpinLine } from 'react-icons/ri';
 
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { animateNavigationToggle } from '@/styling/animations';
 
 function ToggleNavigationButton() {
-  const { noNavigationAnimation, toggleNoNavigation } = useConceptTheme();
+  const { noNavigationAnimation, toggleNoNavigation } = useConceptOptions();
   return (
     <motion.button
       type='button'

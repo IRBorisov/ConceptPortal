@@ -6,7 +6,7 @@ import { pdfjs } from 'react-pdf';
 
 import { AuthState } from '@/context/AuthContext';
 import { LibraryState } from '@/context/LibraryContext';
-import { ThemeState } from '@/context/ThemeContext';
+import { OptionsState } from '@/context/OptionsContext';
 import { UsersState } from '@/context/UsersContext';
 
 import ErrorFallback from './ErrorFallback';
@@ -33,7 +33,7 @@ function GlobalProviders({ children }: { children: React.ReactNode }) {
     onError={logError}
   >
   <IntlProvider locale='ru' defaultLocale='ru'>
-  <ThemeState>
+  <OptionsState>
   <UsersState>
   <AuthState>
   <LibraryState>
@@ -43,7 +43,7 @@ function GlobalProviders({ children }: { children: React.ReactNode }) {
   </LibraryState>
   </AuthState>
   </UsersState>
-  </ThemeState>
+  </OptionsState>
   </IntlProvider>
   </ErrorBoundary>);
 }

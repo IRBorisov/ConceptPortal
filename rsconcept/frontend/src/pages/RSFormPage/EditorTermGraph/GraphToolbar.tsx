@@ -2,7 +2,7 @@
 
 import { BiCollapse, BiFilterAlt, BiFont, BiFontFamily, BiPlanet, BiPlusCircle, BiTrash } from 'react-icons/bi';
 
-import HelpButton from '@/components/man/HelpButton';
+import BadgeHelp from '@/components/man/BadgeHelp';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { HelpTopic } from '@/models/miscellaneous';
@@ -84,7 +84,7 @@ function GraphToolbar({
           onClick={onDelete}
         />
       ) : null}
-      <HelpButton topic={HelpTopic.GRAPH_TERM} className='max-w-[calc(100vw-4rem)]' offset={4} />
+      <BadgeHelp topic={HelpTopic.GRAPH_TERM} className='max-w-[calc(100vw-4rem)]' offset={4} />
     </Overlay>
   );
 }

@@ -5,7 +5,7 @@ import { IoLibrary } from 'react-icons/io5';
 
 import { EducationIcon } from '@/components/Icons';
 import { useConceptNavigation } from '@/context/NavigationContext';
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { animateNavigation } from '@/styling/animations';
 
 import Logo from './Logo';
@@ -15,7 +15,7 @@ import UserMenu from './UserMenu';
 
 function Navigation() {
   const router = useConceptNavigation();
-  const { noNavigationAnimation } = useConceptTheme();
+  const { noNavigationAnimation } = useConceptOptions();
 
   const navigateHome = () => router.push('/');
   const navigateLibrary = () => router.push('/library');

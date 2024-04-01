@@ -3,7 +3,7 @@
 import { useCallback, useLayoutEffect, useMemo, useRef } from 'react';
 
 import GraphUI, { GraphCanvasRef, GraphEdge, GraphNode, LayoutTypes, useSelection } from '@/components/ui/GraphUI';
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { ConstituentaID } from '@/models/rsform';
 import { graphDarkT, graphLightT } from '@/styling/color';
 import { resources } from '@/utils/constants';
@@ -40,7 +40,7 @@ function TermGraph({
   onSelect,
   onDeselectAll
 }: TermGraphProps) {
-  const { calculateHeight, darkMode } = useConceptTheme();
+  const { calculateHeight, darkMode } = useConceptOptions();
   const graphRef = useRef<GraphCanvasRef | null>(null);
 
   const { selections, actives, setSelections, onCanvasClick, onNodePointerOver, onNodePointerOut } = useSelection({

@@ -6,7 +6,7 @@ import DataLoader from '@/components/wrap/DataLoader';
 import { useAuth } from '@/context/AuthContext';
 import { useLibrary } from '@/context/LibraryContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { ILibraryItem } from '@/models/library';
@@ -25,7 +25,7 @@ function LibraryPage() {
   const { user } = useAuth();
 
   const library = useLibrary();
-  const { setShowScroll } = useConceptTheme();
+  const { setShowScroll } = useConceptOptions();
 
   const [filter, setFilter] = useState<ILibraryFilter>({});
   const [items, setItems] = useState<ILibraryItem[]>([]);

@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import Select, { GroupBase, Props, StylesConfig } from 'react-select';
 
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { selectDarkT, selectLightT } from '@/styling/color';
 
 export interface SelectMultiProps<Option, Group extends GroupBase<Option> = GroupBase<Option>>
@@ -15,7 +15,7 @@ function SelectMulti<Option, Group extends GroupBase<Option> = GroupBase<Option>
   noPortal,
   ...restProps
 }: SelectMultiProps<Option, Group>) {
-  const { darkMode, colors } = useConceptTheme();
+  const { darkMode, colors } = useConceptOptions();
   const themeColors = useMemo(() => (!darkMode ? selectLightT : selectDarkT), [darkMode]);
 
   const adjustedStyles: StylesConfig<Option, true, Group> = useMemo(

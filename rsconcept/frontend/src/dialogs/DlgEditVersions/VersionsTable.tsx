@@ -7,7 +7,7 @@ import { useIntl } from 'react-intl';
 
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
 import MiniButton from '@/components/ui/MiniButton';
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { IVersionInfo } from '@/models/library';
 
 interface VersionsTableProps {
@@ -22,7 +22,7 @@ const columnHelper = createColumnHelper<IVersionInfo>();
 
 function VersionsTable({ processing, items, onDelete, selected, onSelect }: VersionsTableProps) {
   const intl = useIntl();
-  const { colors } = useConceptTheme();
+  const { colors } = useConceptOptions();
 
   const columns = useMemo(
     () => [

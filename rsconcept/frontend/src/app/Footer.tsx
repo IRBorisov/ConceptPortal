@@ -1,12 +1,12 @@
 import clsx from 'clsx';
 
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { urls } from '@/utils/constants';
 
 import TextURL from '../components/ui/TextURL';
 
 function Footer() {
-  const { noNavigation, noFooter } = useConceptTheme();
+  const { noNavigation, noFooter } = useConceptOptions();
   if (noNavigation || noFooter) {
     return null;
   }

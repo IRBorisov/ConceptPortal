@@ -1,7 +1,7 @@
 'use client';
 
 import { useConceptNavigation } from '@/context/NavigationContext';
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { HelpTopic } from '@/models/miscellaneous';
 
@@ -13,7 +13,7 @@ function ManualsPage() {
   const query = useQueryStrings();
   const topic = (query.get('topic') || HelpTopic.MAIN) as HelpTopic;
 
-  const { mainHeight } = useConceptTheme();
+  const { mainHeight } = useConceptOptions();
 
   function onSelectTopic(newTopic: HelpTopic) {
     router.push(`/manuals?topic=${newTopic}`);

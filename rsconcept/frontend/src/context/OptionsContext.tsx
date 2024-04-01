@@ -10,7 +10,7 @@ import { animationDuration } from '@/styling/animations';
 import { darkT, IColorTheme, lightT } from '@/styling/color';
 import { globals, storage } from '@/utils/constants';
 
-interface IThemeContext {
+interface IOptionsContext {
   viewportHeight: string;
   mainHeight: string;
 
@@ -27,32 +27,38 @@ interface IThemeContext {
   toggleNoNavigation: () => void;
 
   noFooter: boolean;
-  setNoFooter: (value: boolean) => void;
+  setNoFooter: React.Dispatch<React.SetStateAction<boolean>>;
 
   showScroll: boolean;
-  setShowScroll: (value: boolean) => void;
+  setShowScroll: React.Dispatch<React.SetStateAction<boolean>>;
+
+  showHelp: boolean;
+  toggleShowHelp: () => void;
 
   calculateHeight: (offset: string) => string;
 }
 
-const ThemeContext = createContext<IThemeContext | null>(null);
-export const useConceptTheme = () => {
-  const context = useContext(ThemeContext);
+const OptionsContext = createContext<IOptionsContext | null>(null);
+export const useConceptOptions = () => {
+  const context = useContext(OptionsContext);
   if (!context) {
     throw new Error('useConceptTheme has to be used within <ThemeState.Provider>');
   }
   return context;
 };
 
-interface ThemeStateProps {
+interface OptionsStateProps {
   children: React.ReactNode;
 }
 
-export const ThemeState = ({ children }: ThemeStateProps) => {
+export const OptionsState = ({ children }: OptionsStateProps) => {
   const [darkMode, setDarkMode] = useLocalStorage(storage.themeDark, false);
   const [mathFont, setMathFont] = useLocalStorage<FontStyle>(storage.rseditFont, 'math');
-  const [colors, setColors] = useState<IColorTheme>(lightT);
+  const [showHelp, setShowHelp] = useLocalStorage(storage.optionsHelp, true);
   const [noNavigation, setNoNavigation] = useState(false);
+
+  const [colors, setColors] = useState<IColorTheme>(lightT);
+
   const [noNavigationAnimation, setNoNavigationAnimation] = useState(false);
   const [noFooter, setNoFooter] = useState(false);
   const [showScroll, setShowScroll] = useState(false);
@@ -98,6 +104,11 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
     [noNavigation, noFooter]
   );
 
+  const toggleDarkMode = useCallback(() => {
+    setDarkMode(prev => !prev);
+    window.location.reload();
+  }, [setDarkMode]);
+
   const mainHeight = useMemo(() => {
     return !noNavigation ? 'calc(100vh - 6.75rem)' : '100vh';
   }, [noNavigation]);
@@ -107,7 +118,7 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
   }, [noNavigation]);
 
   return (
-    <ThemeContext.Provider
+    <OptionsContext.Provider
       value={{
         darkMode,
         colors,
@@ -117,10 +128,12 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
         noNavigation,
         noFooter,
         showScroll,
-        toggleDarkMode: () => setDarkMode(prev => !prev),
+        showHelp,
+        toggleDarkMode: toggleDarkMode,
         toggleNoNavigation: toggleNoNavigation,
         setNoFooter,
         setShowScroll,
+        toggleShowHelp: () => setShowHelp(prev => !prev),
         viewportHeight,
         mainHeight,
         calculateHeight
@@ -136,6 +149,6 @@ export const ThemeState = ({ children }: ThemeStateProps) => {
         />
         {children}
       </>
-    </ThemeContext.Provider>
+    </OptionsContext.Provider>
   );
 };

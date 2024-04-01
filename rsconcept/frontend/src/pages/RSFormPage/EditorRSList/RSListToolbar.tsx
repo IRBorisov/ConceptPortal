@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { BiDownArrowCircle, BiDownvote, BiDuplicate, BiPlusCircle, BiTrash, BiUpvote } from 'react-icons/bi';
 
-import HelpButton from '@/components/man/HelpButton';
+import BadgeHelp from '@/components/man/BadgeHelp';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import MiniButton from '@/components/ui/MiniButton';
@@ -77,7 +77,7 @@ function RSListToolbar({ selectedCount }: RSListToolbarProps) {
         disabled={controller.isProcessing || nothingSelected}
         onClick={controller.deleteCst}
       />
-      <HelpButton topic={HelpTopic.CSTLIST} offset={5} />
+      <BadgeHelp topic={HelpTopic.CST_LIST} offset={5} />
     </Overlay>
   );
 }

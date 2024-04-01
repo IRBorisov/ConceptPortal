@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
-import HelpButton from '@/components/man/HelpButton';
+import BadgeHelp from '@/components/man/BadgeHelp';
 import Modal from '@/components/ui/Modal';
 import Overlay from '@/components/ui/Overlay';
 import TabLabel from '@/components/ui/TabLabel';
@@ -54,7 +54,7 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
       className='w-[40rem] px-6 min-h-[34rem]'
     >
       <Overlay position='top-0 right-[4rem]'>
-        <HelpButton topic={HelpTopic.TERM_CONTROL} className='max-w-[35rem]' offset={14} />
+        <BadgeHelp topic={HelpTopic.TERM_CONTROL} className='max-w-[35rem]' offset={14} />
       </Overlay>
 
       <Tabs

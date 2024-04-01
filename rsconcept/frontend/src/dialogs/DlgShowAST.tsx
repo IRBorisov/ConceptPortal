@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState } from 'react';
 
 import GraphUI, { GraphEdge, GraphNode } from '@/components/ui/GraphUI';
 import Modal, { ModalProps } from '@/components/ui/Modal';
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { SyntaxTree } from '@/models/rslang';
 import { graphDarkT, graphLightT } from '@/styling/color';
 import { colorBgSyntaxTree } from '@/styling/color';
@@ -17,7 +17,7 @@ interface DlgShowASTProps extends Pick<ModalProps, 'hideWindow'> {
 }
 
 function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
-  const { darkMode, colors } = useConceptTheme();
+  const { darkMode, colors } = useConceptOptions();
   const [hoverID, setHoverID] = useState<number | undefined>(undefined);
   const hoverNode = useMemo(() => syntaxTree.find(node => node.uid === hoverID), [hoverID, syntaxTree]);
 

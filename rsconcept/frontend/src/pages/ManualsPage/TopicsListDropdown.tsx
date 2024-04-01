@@ -6,7 +6,7 @@ import { useCallback } from 'react';
 import { RiMenuFoldFill, RiMenuUnfoldFill } from 'react-icons/ri';
 
 import Button from '@/components/ui/Button';
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import useDropdown from '@/hooks/useDropdown';
 import { HelpTopic } from '@/models/miscellaneous';
 import { animateSlideLeft } from '@/styling/animations';
@@ -20,7 +20,7 @@ interface TopicsListDropDownProps {
 
 function TopicsListDropDown({ activeTopic, onChangeTopic }: TopicsListDropDownProps) {
   const menu = useDropdown();
-  const { noNavigation } = useConceptTheme();
+  const { noNavigation } = useConceptOptions();
 
   const selectTheme = useCallback(
     (topic: HelpTopic) => {

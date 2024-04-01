@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
 import SearchBar from '@/components/ui/SearchBar';
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { CstMatchMode } from '@/models/miscellaneous';
 import { IConstituenta } from '@/models/rsform';
 import { matchConstituenta } from '@/models/rsformAPI';
@@ -43,7 +43,7 @@ function ConstituentaPicker({
   onBeginFilter,
   onSelectValue
 }: ConstituentaPickerProps) {
-  const { colors } = useConceptTheme();
+  const { colors } = useConceptOptions();
   const [filteredData, setFilteredData] = useState<IConstituenta[]>([]);
   const [filterText, setFilterText] = useState(initialFilter);
 

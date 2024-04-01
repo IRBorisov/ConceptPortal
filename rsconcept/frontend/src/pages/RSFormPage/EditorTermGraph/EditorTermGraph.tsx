@@ -8,7 +8,7 @@ import { GraphEdge, GraphNode, LayoutTypes } from 'reagraph';
 import InfoConstituenta from '@/components/info/InfoConstituenta';
 import SelectedCounter from '@/components/info/SelectedCounter';
 import Overlay from '@/components/ui/Overlay';
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import DlgGraphParams from '@/dialogs/DlgGraphParams';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { GraphColoringScheme, GraphFilterParams } from '@/models/miscellaneous';
@@ -31,7 +31,7 @@ interface EditorTermGraphProps {
 
 function EditorTermGraph({ selected, setSelected, onOpenEdit }: EditorTermGraphProps) {
   const controller = useRSEdit();
-  const { colors } = useConceptTheme();
+  const { colors } = useConceptOptions();
 
   const [filterParams, setFilterParams] = useLocalStorage<GraphFilterParams>(storage.rsgraphFilter, {
     noHermits: true,

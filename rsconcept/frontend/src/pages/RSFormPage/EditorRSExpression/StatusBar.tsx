@@ -5,7 +5,7 @@ import { AnimatePresence } from 'framer-motion';
 import { useMemo } from 'react';
 
 import Loader from '@/components/ui/Loader';
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { ExpressionStatus } from '@/models/rsform';
 import { type IConstituenta } from '@/models/rsform';
 import { inferStatus } from '@/models/rsformAPI';
@@ -25,7 +25,7 @@ interface StatusBarProps {
 }
 
 function StatusBar({ isModified, processing, constituenta, parseData, onAnalyze }: StatusBarProps) {
-  const { colors } = useConceptTheme();
+  const { colors } = useConceptOptions();
   const status = useMemo(() => {
     if (isModified) {
       return ExpressionStatus.UNKNOWN;

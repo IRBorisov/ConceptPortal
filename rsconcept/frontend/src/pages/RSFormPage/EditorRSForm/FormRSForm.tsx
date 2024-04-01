@@ -6,7 +6,7 @@ import { FiSave } from 'react-icons/fi';
 import { LuGitBranchPlus, LuPencilLine } from 'react-icons/lu';
 import { toast } from 'react-toastify';
 
-import HelpButton from '@/components/man/HelpButton';
+import BadgeHelp from '@/components/man/BadgeHelp';
 import VersionSelector from '@/components/select/VersionSelector';
 import Checkbox from '@/components/ui/Checkbox';
 import Label from '@/components/ui/Label';
@@ -136,7 +136,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
                 />
               </>
             ) : null}
-            <HelpButton topic={HelpTopic.VERSIONS} className='max-w-[30rem]' offset={4} />
+            <BadgeHelp topic={HelpTopic.VERSIONS} className='max-w-[30rem]' offset={4} />
           </Overlay>
           <Label text='Версия' className='mb-2' />
           <VersionSelector

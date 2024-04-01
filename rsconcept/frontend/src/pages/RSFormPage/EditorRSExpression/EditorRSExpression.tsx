@@ -8,13 +8,13 @@ import { FaRegKeyboard } from 'react-icons/fa6';
 import { RiNodeTree } from 'react-icons/ri';
 import { toast } from 'react-toastify';
 
-import HelpButton from '@/components/man/HelpButton';
+import BadgeHelp from '@/components/man/BadgeHelp';
 import RSInput from '@/components/RSInput';
 import { RSTextWrapper } from '@/components/RSInput/textEditing';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { useRSForm } from '@/context/RSFormContext';
-import { useConceptTheme } from '@/context/ThemeContext';
 import DlgShowAST from '@/dialogs/DlgShowAST';
 import useCheckExpression from '@/hooks/useCheckExpression';
 import useLocalStorage from '@/hooks/useLocalStorage';
@@ -58,7 +58,7 @@ function EditorRSExpression({
   ...restProps
 }: EditorRSExpressionProps) {
   const model = useRSForm();
-  const { mathFont, setMathFont } = useConceptTheme();
+  const { mathFont, setMathFont } = useConceptOptions();
 
   const [isModified, setIsModified] = useState(false);
   const parser = useCheckExpression({ schema: model.schema });
@@ -198,7 +198,7 @@ function EditorRSExpression({
             parseData={parser.parseData}
             onAnalyze={() => handleCheckExpression()}
           />
-          <HelpButton topic={HelpTopic.CONSTITUENTA} offset={4} />
+          <BadgeHelp topic={HelpTopic.CST_EDITOR} offset={4} />
         </Overlay>
 
         <RSInput

@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { GramData } from '@/models/language';
 import { colorFgGrammeme } from '@/styling/color';
 import { labelGrammeme } from '@/utils/labels';
@@ -10,7 +10,7 @@ interface GrammemeBadgeProps {
 }
 
 function GrammemeBadge({ grammeme }: GrammemeBadgeProps) {
-  const { colors } = useConceptTheme();
+  const { colors } = useConceptOptions();
   return (
     <div
       className={clsx(

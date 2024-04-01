@@ -53,7 +53,7 @@ export function applyPattern(text: string, mapping: { [key: string]: string }, p
   const patternMatches = text.matchAll(pattern);
   for (const segment of patternMatches) {
     const entity = segment[0];
-    const start = segment.index!;
+    const start = segment.index ?? 0;
     if (entity in mapping) {
       output += text.substring(posInput, start);
       output += mapping[entity];

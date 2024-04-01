@@ -9,7 +9,7 @@ import ConstituentaSelector from '@/components/select/ConstituentaSelector';
 import DataTable, { createColumnHelper } from '@/components/ui/DataTable';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { IConstituenta, IRSForm, ISubstitution } from '@/models/rsform';
 import { describeConstituenta } from '@/utils/labels';
 
@@ -54,7 +54,7 @@ function SubstitutionsPicker({
   setItems,
   prefixID
 }: SubstitutionsPickerProps) {
-  const { colors } = useConceptTheme();
+  const { colors } = useConceptOptions();
 
   const [leftCst, setLeftCst] = useState<IConstituenta | undefined>(undefined);
   const [rightCst, setRightCst] = useState<IConstituenta | undefined>(undefined);

@@ -5,7 +5,7 @@ import { BiDownload, BiShareAlt, BiTrash } from 'react-icons/bi';
 import { FiBell, FiBellOff, FiSave } from 'react-icons/fi';
 import { LuCrown } from 'react-icons/lu';
 
-import HelpButton from '@/components/man/HelpButton';
+import BadgeHelp from '@/components/man/BadgeHelp';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { HelpTopic } from '@/models/miscellaneous';
@@ -75,7 +75,7 @@ function RSFormToolbar({ modified, anonymous, subscribed, claimable, onSubmit, o
           onClick={onDestroy}
         />
       ) : null}
-      <HelpButton topic={HelpTopic.RSFORM} offset={4} />
+      <BadgeHelp topic={HelpTopic.RSFORM} offset={4} className='max-w-[32rem]' />
     </Overlay>
   );
 }

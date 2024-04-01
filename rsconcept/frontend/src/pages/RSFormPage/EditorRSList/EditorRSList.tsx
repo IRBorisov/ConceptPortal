@@ -5,7 +5,7 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 
 import SelectedCounter from '@/components/info/SelectedCounter';
 import { type RowSelectionState } from '@/components/ui/DataTable';
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { ConstituentaID, CstType } from '@/models/rsform';
 
 import { useRSEdit } from '../RSEditContext';
@@ -19,7 +19,7 @@ interface EditorRSListProps {
 }
 
 function EditorRSList({ selected, setSelected, onOpenEdit }: EditorRSListProps) {
-  const { calculateHeight } = useConceptTheme();
+  const { calculateHeight } = useConceptOptions();
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const controller = useRSEdit();
 

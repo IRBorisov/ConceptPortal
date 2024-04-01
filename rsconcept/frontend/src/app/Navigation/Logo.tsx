@@ -1,10 +1,10 @@
 import clsx from 'clsx';
 
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import useWindowSize from '@/hooks/useWindowSize';
 
 function Logo() {
-  const { darkMode } = useConceptTheme();
+  const { darkMode } = useConceptOptions();
   const size = useWindowSize();
 
   return (

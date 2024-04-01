@@ -6,7 +6,7 @@ function HelpTermGraph() {
   // prettier-ignore
   return (
   <div className='flex max-w-[80rem] min-w-[45rem]'>
-    <div>
+    <div className='dense'>
       <h1>Настройка графа</h1>
       <p><b>Цвет</b> - выбор правила покраски узлов</p>
       <p><b>Граф</b> - выбор модели расположения узлов</p>
@@ -20,7 +20,7 @@ function HelpTermGraph() {
 
     <Divider vertical margins='mx-3' />
     
-    <div>
+    <div className='dense'>
       <h1>Клавиши</h1>
       <p><b>Клик на конституенту</b> - выделение</p>
       <p><b>Клик на выделенную</b> - редактирование</p>

@@ -3,7 +3,7 @@
 import { useCallback, useMemo } from 'react';
 
 import ConstituentaTooltip from '@/components/info/ConstituentaTooltip';
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { GraphColoringScheme } from '@/models/miscellaneous';
 import { ConstituentaID, IRSForm } from '@/models/rsform';
 import { colorBgGraphNode } from '@/styling/color';
@@ -20,7 +20,7 @@ interface ViewHiddenProps {
 }
 
 function ViewHidden({ items, selected, toggleSelection, schema, coloringScheme, onEdit }: ViewHiddenProps) {
-  const { colors, noNavigation } = useConceptTheme();
+  const { colors, noNavigation } = useConceptOptions();
 
   const dismissedHeight = useMemo(() => {
     return !noNavigation ? 'calc(100vh - 28rem - 4px)' : 'calc(100vh - 22.2rem - 4px)';

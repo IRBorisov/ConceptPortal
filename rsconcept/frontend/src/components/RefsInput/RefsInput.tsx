@@ -11,7 +11,7 @@ import { forwardRef, useCallback, useMemo, useRef, useState } from 'react';
 
 import Label from '@/components/ui/Label';
 import { useRSForm } from '@/context/RSFormContext';
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import DlgEditReference from '@/dialogs/DlgEditReference';
 import { ReferenceType } from '@/models/language';
 import { IConstituenta } from '@/models/rsform';
@@ -63,7 +63,7 @@ interface RefsInputInputProps
 
 const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
   ({ id, label, disabled, items, initialValue, value, resolved, onFocus, onBlur, onChange, ...restProps }, ref) => {
-    const { darkMode, colors } = useConceptTheme();
+    const { darkMode, colors } = useConceptOptions();
     const { schema } = useRSForm();
 
     const [isFocused, setIsFocused] = useState(false);

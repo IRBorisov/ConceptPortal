@@ -4,7 +4,7 @@ import Divider from '@/components/ui/Divider';
 function HelpConstituenta() {
   // prettier-ignore
   return (
-  <div className='leading-tight'>
+  <div className='dense'>
     <h1>Редактор конституент</h1>
     <p><b>Сохранить изменения</b>: Ctrl + S или клик по кнопке Сохранить</p>
     <p className='mt-1'><b>Формальное определение</b></p>
@@ -12,7 +12,7 @@ function HelpConstituenta() {
     <p>- специальные конструкции вводятся с помощью кнопок снизу</p>
     <p className='mt-1'><b>Термин и Определение</b></p>
     <p>- Ctrl + Пробел открывает редактирование отсылок</p>
-    <p className='mt-1'><b>Список конституент справа</b></p>
+    <p className='mt-1'><b>Список конституент</b></p>
     <p>- первая настройка - атрибуты конституенты</p>
     <p>- вторая настройка - отбор по графу термов</p>
     <p>- текущая конституента выделена цветом строки</p>

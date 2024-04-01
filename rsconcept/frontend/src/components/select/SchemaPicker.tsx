@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
 import SearchBar from '@/components/ui/SearchBar';
 import { useLibrary } from '@/context/LibraryContext';
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { ILibraryItem, LibraryItemID } from '@/models/library';
 import { ILibraryFilter } from '@/models/miscellaneous';
 
@@ -23,7 +23,7 @@ const columnHelper = createColumnHelper<ILibraryItem>();
 
 function SchemaPicker({ id, initialFilter = '', rows = 4, value, onSelectValue }: SchemaPickerProps) {
   const intl = useIntl();
-  const { colors } = useConceptTheme();
+  const { colors } = useConceptOptions();
 
   const library = useLibrary();
   const [filterText, setFilterText] = useState(initialFilter);

@@ -4,11 +4,11 @@ import ConceptToaster from '@/app/ConceptToaster';
 import Footer from '@/app/Footer';
 import Navigation from '@/app/Navigation';
 import { NavigationState } from '@/context/NavigationContext';
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { globals } from '@/utils/constants';
 
 function ApplicationLayout() {
-  const { viewportHeight, mainHeight, showScroll } = useConceptTheme();
+  const { viewportHeight, mainHeight, showScroll } = useConceptOptions();
   return (
     <NavigationState>
       <div className='min-w-[20rem] clr-app antialiased'>

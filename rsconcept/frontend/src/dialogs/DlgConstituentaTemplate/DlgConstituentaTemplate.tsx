@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
-import HelpButton from '@/components/man/HelpButton';
+import BadgeHelp from '@/components/man/BadgeHelp';
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import Overlay from '@/components/ui/Overlay';
 import TabLabel from '@/components/ui/TabLabel';
@@ -110,7 +110,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
       onSubmit={handleSubmit}
     >
       <Overlay position='top-0 right-[6rem]'>
-        <HelpButton topic={HelpTopic.RSTEMPLATES} className='max-w-[40rem]' offset={12} />
+        <BadgeHelp topic={HelpTopic.RSTEMPLATES} className='max-w-[40rem]' offset={12} />
       </Overlay>
       <Tabs
         forceRenderTabPanel

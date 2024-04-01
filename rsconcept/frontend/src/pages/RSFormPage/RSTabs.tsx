@@ -10,7 +10,7 @@ import AnimateFade from '@/components/wrap/AnimateFade';
 import { useLibrary } from '@/context/LibraryContext';
 import { useBlockNavigation, useConceptNavigation } from '@/context/NavigationContext';
 import { useRSForm } from '@/context/RSFormContext';
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { ConstituentaID, IConstituenta, IConstituentaMeta } from '@/models/rsform';
 import { prefixes, TIMEOUT_UI_REFRESH } from '@/utils/constants';
@@ -37,7 +37,7 @@ function RSTabs() {
   const version = Number(query.get('v')) ?? undefined;
   const cstQuery = query.get('active');
 
-  const { setNoFooter, calculateHeight } = useConceptTheme();
+  const { setNoFooter, calculateHeight } = useConceptOptions();
   const { schema, loading } = useRSForm();
   const { destroyItem } = useLibrary();
 

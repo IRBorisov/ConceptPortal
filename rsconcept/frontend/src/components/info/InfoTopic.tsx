@@ -2,6 +2,7 @@ import { HelpTopic } from '@/models/miscellaneous';
 
 import HelpAPI from '../man/HelpAPI';
 import HelpConstituenta from '../man/HelpConstituenta';
+import HelpCstAttributes from '../man/HelpCstAttributes';
 import HelpExteor from '../man/HelpExteor';
 import HelpLibrary from '../man/HelpLibrary';
 import HelpMain from '../man/HelpMain';
@@ -22,8 +23,9 @@ function InfoTopic({ topic }: InfoTopicProps) {
   if (topic === HelpTopic.MAIN) return <HelpMain />;
   if (topic === HelpTopic.LIBRARY) return <HelpLibrary />;
   if (topic === HelpTopic.RSFORM) return <HelpRSFormMeta />;
-  if (topic === HelpTopic.CSTLIST) return <HelpRSFormItems />;
-  if (topic === HelpTopic.CONSTITUENTA) return <HelpConstituenta />;
+  if (topic === HelpTopic.CST_ATTRIBUTES) return <HelpCstAttributes />;
+  if (topic === HelpTopic.CST_LIST) return <HelpRSFormItems />;
+  if (topic === HelpTopic.CST_EDITOR) return <HelpConstituenta />;
   if (topic === HelpTopic.GRAPH_TERM) return <HelpTermGraph />;
   if (topic === HelpTopic.RSTEMPLATES) return <HelpRSTemplates />;
   if (topic === HelpTopic.RSLANG) return <HelpRSLang />;

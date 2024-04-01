@@ -9,8 +9,8 @@ import { EditorView } from 'codemirror';
 import { forwardRef, useCallback, useMemo, useRef } from 'react';
 
 import Label from '@/components/ui/Label';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { useRSForm } from '@/context/RSFormContext';
-import { useConceptTheme } from '@/context/ThemeContext';
 import { getFontClassName } from '@/models/miscellaneousAPI';
 import { generateAlias, getCstTypePrefix, guessCstType } from '@/models/rsformAPI';
 import { extractGlobals } from '@/models/rslangAPI';
@@ -49,7 +49,7 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
     },
     ref
   ) => {
-    const { darkMode, colors, mathFont } = useConceptTheme();
+    const { darkMode, colors, mathFont } = useConceptOptions();
     const { schema } = useRSForm();
 
     const internalRef = useRef<ReactCodeMirrorRef>(null);

@@ -3,11 +3,13 @@
 import { AnimatePresence } from 'framer-motion';
 import { useLayoutEffect, useMemo, useState } from 'react';
 
+import BadgeHelp from '@/components/man/BadgeHelp';
 import RSInput from '@/components/RSInput';
 import SelectSingle from '@/components/ui/SelectSingle';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
 import AnimateFade from '@/components/wrap/AnimateFade';
+import { HelpTopic } from '@/models/miscellaneous';
 import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
 import { generateAlias, isBaseSet, isBasicConcept, isFunctional, validateNewAlias } from '@/models/rsformAPI';
 import { labelCstType } from '@/utils/labels';
@@ -39,7 +41,7 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
 
   return (
     <AnimatePresence>
-      <div className='flex self-center gap-6'>
+      <div className='flex items-center self-center'>
         <SelectSingle
           id='dlg_cst_type'
           placeholder='Выберите тип'
@@ -48,11 +50,12 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
           value={{ value: state.cst_type, label: labelCstType(state.cst_type) }}
           onChange={data => partialUpdate({ cst_type: data?.value ?? CstType.BASE })}
         />
+        <BadgeHelp topic={HelpTopic.CST_ATTRIBUTES} offset={16} className='max-w-[40rem] max-h-[calc(100vh-2rem)]' />
         <TextInput
           id='dlg_cst_alias'
           dense
           label='Имя'
-          className='w-[7rem]'
+          className='w-[7rem] ml-3'
           value={state.alias}
           onChange={event => partialUpdate({ alias: event.target.value })}
         />

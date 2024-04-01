@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { ExpressionStatus } from '@/models/rsform';
 import { colorBgCstStatus } from '@/styling/color';
 import { prefixes } from '@/utils/constants';
@@ -11,7 +11,7 @@ interface InfoCstStatusProps {
 }
 
 function InfoCstStatus({ title }: InfoCstStatusProps) {
-  const { colors } = useConceptTheme();
+  const { colors } = useConceptOptions();
 
   return (
     <div className='flex flex-col gap-1 mb-2 dense'>

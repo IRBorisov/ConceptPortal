@@ -5,7 +5,7 @@ import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
 import ConstituentaBadge from '@/components/info/ConstituentaBadge';
 import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } from '@/components/ui/DataTable';
-import { useConceptTheme } from '@/context/ThemeContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { isMockCst } from '@/models/rsformAPI';
@@ -23,7 +23,7 @@ interface ConstituentsTableProps {
 const columnHelper = createColumnHelper<IConstituenta>();
 
 function ConstituentsTable({ items, activeID, onOpenEdit, maxHeight, denseThreshold = 9999 }: ConstituentsTableProps) {
-  const { colors } = useConceptTheme();
+  const { colors } = useConceptOptions();
   const windowSize = useWindowSize();
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ expression: true });
