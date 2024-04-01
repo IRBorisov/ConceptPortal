@@ -3,6 +3,7 @@
 import clsx from 'clsx';
 import { useCallback } from 'react';
 
+import { urls } from '@/app/urls';
 import SearchBar from '@/components/ui/SearchBar';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { ILibraryFilter } from '@/models/miscellaneous';
@@ -37,7 +38,7 @@ function SearchPanel({ total, filtered, query, setQuery, strategy, setFilter }: 
   const handleChangeStrategy = useCallback(
     (value: LibraryFilterStrategy) => {
       if (value !== strategy) {
-        router.push(`/library?filter=${value}`);
+        router.push(urls.library_filter(value));
       }
     },
     [strategy, router]

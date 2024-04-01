@@ -10,8 +10,8 @@ import { AnimatePresence } from 'framer-motion';
 import { forwardRef, useCallback, useMemo, useRef, useState } from 'react';
 
 import Label from '@/components/ui/Label';
-import { useRSForm } from '@/context/RSFormContext';
 import { useConceptOptions } from '@/context/OptionsContext';
+import { useRSForm } from '@/context/RSFormContext';
 import DlgEditReference from '@/dialogs/DlgEditReference';
 import { ReferenceType } from '@/models/language';
 import { IConstituenta } from '@/models/rsform';
@@ -163,7 +163,7 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
     );
 
     return (
-      <>
+      <div className={clsx('flex flex-col gap-2', cursor)}>
         <AnimatePresence>
           {showEditor ? (
             <DlgEditReference
@@ -180,27 +180,24 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
             />
           ) : null}
         </AnimatePresence>
-
-        <div className={clsx('flex flex-col gap-2', cursor)}>
-          <Label text={label} />
-          <CodeMirror
-            id={id}
-            ref={thisRef}
-            basicSetup={editorSetup}
-            theme={customTheme}
-            extensions={editorExtensions}
-            value={isFocused ? value : value !== initialValue || showEditor ? value : resolved}
-            indentWithTab={false}
-            onChange={handleChange}
-            editable={!disabled}
-            onKeyDown={handleInput}
-            onFocus={handleFocusIn}
-            onBlur={handleFocusOut}
-            // spellCheck= // TODO: figure out while automatic spellcheck doesn't work or implement with extension
-            {...restProps}
-          />
-        </div>
-      </>
+        <Label text={label} />
+        <CodeMirror
+          id={id}
+          ref={thisRef}
+          basicSetup={editorSetup}
+          theme={customTheme}
+          extensions={editorExtensions}
+          value={isFocused ? value : value !== initialValue || showEditor ? value : resolved}
+          indentWithTab={false}
+          onChange={handleChange}
+          editable={!disabled}
+          onKeyDown={handleInput}
+          onFocus={handleFocusIn}
+          onBlur={handleFocusOut}
+          // spellCheck= // TODO: figure out while automatic spellcheck doesn't work or implement with extension
+          {...restProps}
+        />
+      </div>
     );
   }
 );

@@ -2,6 +2,7 @@
 
 import { useCallback, useLayoutEffect, useState } from 'react';
 
+import { urls } from '@/app/urls';
 import DataLoader from '@/components/wrap/DataLoader';
 import { useAuth } from '@/context/AuthContext';
 import { useLibrary } from '@/context/LibraryContext';
@@ -38,7 +39,7 @@ function LibraryPage() {
 
   useLayoutEffect(() => {
     if (!queryFilter || !Object.values(LibraryFilterStrategy).includes(queryFilter)) {
-      router.replace(`/library?filter=${strategy}`);
+      router.replace(urls.library_filter(strategy));
       return;
     }
     setQuery('');

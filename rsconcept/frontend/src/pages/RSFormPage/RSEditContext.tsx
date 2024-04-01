@@ -6,6 +6,7 @@ import fileDownload from 'js-file-download';
 import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { urls } from '@/app/urls';
 import InfoError, { ErrorData } from '@/components/info/InfoError';
 import Divider from '@/components/ui/Divider';
 import Loader from '@/components/ui/Loader';
@@ -152,13 +153,7 @@ export const RSEditState = ({
   );
 
   const viewVersion = useCallback(
-    (version?: number) => {
-      if (version) {
-        router.push(`/rsforms/${model.schemaID}?v=${version}`);
-      } else {
-        router.push(`/rsforms/${model.schemaID}`);
-      }
-    },
+    (version?: number) => router.push(urls.schema(model.schemaID, version)),
     [router, model]
   );
 

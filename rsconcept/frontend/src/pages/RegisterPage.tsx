@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { BiInfoCircle } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 
+import { urls } from '@/app/urls';
 import InfoError from '@/components/info/InfoError';
 import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/Checkbox';
@@ -42,7 +43,7 @@ function RegisterPage() {
     if (router.canBack()) {
       router.back();
     } else {
-      router.push('/library');
+      router.push(urls.library);
     }
   }
 
@@ -58,7 +59,7 @@ function RegisterPage() {
         last_name: lastName
       };
       signup(data, createdUser => {
-        router.push(`/login?username=${createdUser.username}`);
+        router.push(urls.login_hint(createdUser.username));
         toast.success(`Пользователь успешно создан: ${createdUser.username}`);
       });
     }

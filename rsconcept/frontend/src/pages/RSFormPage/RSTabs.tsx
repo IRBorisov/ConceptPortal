@@ -5,12 +5,13 @@ import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 import { toast } from 'react-toastify';
 
+import { urls } from '@/app/urls';
 import TabLabel from '@/components/ui/TabLabel';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { useLibrary } from '@/context/LibraryContext';
 import { useBlockNavigation, useConceptNavigation } from '@/context/NavigationContext';
-import { useRSForm } from '@/context/RSFormContext';
 import { useConceptOptions } from '@/context/OptionsContext';
+import { useRSForm } from '@/context/RSFormContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { ConstituentaID, IConstituenta, IConstituentaMeta } from '@/models/rsform';
 import { prefixes, TIMEOUT_UI_REFRESH } from '@/utils/constants';
@@ -34,7 +35,7 @@ function RSTabs() {
   const router = useConceptNavigation();
   const query = useQueryStrings();
   const activeTab = (Number(query.get('tab')) ?? RSTabID.CARD) as RSTabID;
-  const version = Number(query.get('v')) ?? undefined;
+  const version = query.get('v') ? Number(query.get('v')) : undefined;
   const cstQuery = query.get('active');
 
   const { setNoFooter, calculateHeight } = useConceptOptions();
@@ -84,18 +85,23 @@ function RSTabs() {
       if (!schema) {
         return;
       }
-      const versionStr = version ? `v=${version}&` : '';
+      const url = urls.schema_props({
+        id: schema.id,
+        tab: tab,
+        active: activeID,
+        version: version
+      });
       if (activeID) {
         if (tab === activeTab && tab !== RSTabID.CST_EDIT) {
-          router.replace(`/rsforms/${schema.id}?${versionStr}tab=${tab}&active=${activeID}`);
+          router.replace(url);
         } else {
-          router.push(`/rsforms/${schema.id}?${versionStr}tab=${tab}&active=${activeID}`);
+          router.push(url);
         }
       } else if (tab !== activeTab && tab === RSTabID.CST_EDIT && schema.items.length > 0) {
         activeID = schema.items[0].id;
-        router.replace(`/rsforms/${schema.id}?${versionStr}tab=${tab}&active=${activeID}`);
+        router.replace(url);
       } else {
-        router.push(`/rsforms/${schema.id}?${versionStr}tab=${tab}`);
+        router.push(url);
       }
     },
     [router, schema, activeTab, version]
@@ -150,7 +156,7 @@ function RSTabs() {
     }
     destroyItem(schema.id, () => {
       toast.success('Схема удалена');
-      router.push('/library');
+      router.push(urls.library);
     });
   }, [schema, destroyItem, router]);
 

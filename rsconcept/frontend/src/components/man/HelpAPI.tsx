@@ -1,5 +1,5 @@
 import TextURL from '@/components/ui/TextURL';
-import { urls } from '@/utils/constants';
+import { external_urls } from '@/utils/constants';
 
 function HelpAPI() {
   return (
@@ -8,10 +8,10 @@ function HelpAPI() {
       <p>В качестве программного интерфейса сервера используется REST API, реализованный с помощью Django.</p>
       <p>На данный момент API находится в разработке, поэтому поддержка внешних запросов не производится.</p>
       <p>
-        С описанием интерфейса можно ознакомиться <TextURL text='по ссылке' href={urls.restAPI} />.
+        С описанием интерфейса можно ознакомиться <TextURL text='по ссылке' href={external_urls.restAPI} />.
       </p>
       <p>
-        <TextURL text='Принять участие в разработке' href={urls.git_repo} />
+        <TextURL text='Принять участие в разработке' href={external_urls.git_repo} />
       </p>
     </div>
   );

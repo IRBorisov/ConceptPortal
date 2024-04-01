@@ -13,6 +13,7 @@ import RSFormPage from '@/pages/RSFormPage';
 import UserProfilePage from '@/pages/UserProfilePage';
 
 import ApplicationLayout from './ApplicationLayout';
+import { routes } from './urls';
 
 export const Router = createBrowserRouter([
   {
@@ -25,40 +26,40 @@ export const Router = createBrowserRouter([
         element: <HomePage />
       },
       {
-        path: 'login',
+        path: routes.login,
         element: <LoginPage />
       },
       {
-        path: 'signup',
+        path: routes.signup,
         element: <RegisterPage />
       },
       {
-        path: 'restore-password',
-        element: <RestorePasswordPage />
-      },
-      {
-        path: 'password-change',
-        element: <PasswordChangePage />
-      },
-      {
-        path: 'profile',
+        path: routes.profile,
         element: <UserProfilePage />
       },
       {
-        path: 'manuals',
-        element: <ManualsPage />
+        path: routes.restore_password,
+        element: <RestorePasswordPage />
       },
       {
-        path: 'library',
+        path: routes.password_change,
+        element: <PasswordChangePage />
+      },
+      {
+        path: routes.library,
         element: <LibraryPage />
       },
       {
-        path: 'library/create',
+        path: routes.create_schema,
         element: <CreateRSFormPage />
       },
       {
-        path: 'rsforms/:id',
+        path: `${routes.rsforms}/:id`,
         element: <RSFormPage />
+      },
+      {
+        path: routes.manuals,
+        element: <ManualsPage />
       }
     ]
   }

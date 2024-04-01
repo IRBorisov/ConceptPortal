@@ -63,7 +63,7 @@ export const youtube = {
 /**
  * External URLs.
  */
-export const urls = {
+export const external_urls = {
   concept: 'https://www.acconcept.ru/',
   exteor32: 'https://drive.google.com/open?id=1IHlMMwaYlAUBRSxU1RU_hXM5mFU9-oyK&usp=drive_fs',
   exteor64: 'https://drive.google.com/open?id=1IJt25ZRQ-ZMA6t7hOqmo5cv05WJCQKMv&usp=drive_fs',

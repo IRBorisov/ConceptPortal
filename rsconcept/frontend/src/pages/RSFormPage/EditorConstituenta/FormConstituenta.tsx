@@ -141,32 +141,33 @@ function FormConstituenta({
         className={clsx('cc-column', 'mt-1 w-full md:w-[47.8rem] shrink-0', 'px-4 py-1')}
         onSubmit={handleSubmit}
       >
+        <RefsInput
+          key='cst_term'
+          id='cst_term'
+          label='Термин'
+          placeholder='Обозначение, используемое в текстовых определениях'
+          items={schema?.items}
+          value={term}
+          initialValue={state?.term_raw ?? ''}
+          resolved={state?.term_resolved ?? ''}
+          disabled={disabled}
+          onChange={newValue => setTerm(newValue)}
+        />
+        <TextArea
+          id='cst_typification'
+          dense
+          noBorder
+          disabled={true}
+          label='Типизация'
+          rows={typification.length > ROW_SIZE_IN_CHARACTERS ? 2 : 1}
+          value={typification}
+          colors='clr-app'
+          style={{
+            resize: 'none'
+          }}
+        />
         <AnimatePresence>
-          <RefsInput
-            id='cst_term'
-            label='Термин'
-            placeholder='Обозначение, используемое в текстовых определениях'
-            items={schema?.items}
-            value={term}
-            initialValue={state?.term_raw ?? ''}
-            resolved={state?.term_resolved ?? ''}
-            disabled={disabled}
-            onChange={newValue => setTerm(newValue)}
-          />
-          <TextArea
-            id='cst_typification'
-            dense
-            noBorder
-            disabled={true}
-            label='Типизация'
-            rows={typification.length > ROW_SIZE_IN_CHARACTERS ? 2 : 1}
-            value={typification}
-            colors='clr-app'
-            style={{
-              resize: 'none'
-            }}
-          />
-          <AnimateFade hideContent={!!state && !state?.definition_formal && isElementary}>
+          <AnimateFade key='cst_expression_fade' hideContent={!!state && !state?.definition_formal && isElementary}>
             <EditorRSExpression
               id='cst_expression'
               label={
@@ -191,7 +192,7 @@ function FormConstituenta({
               setTypification={setTypification}
             />
           </AnimateFade>
-          <AnimateFade hideContent={!!state && !state?.definition_raw && isElementary}>
+          <AnimateFade key='cst_definition_fade' hideContent={!!state && !state?.definition_raw && isElementary}>
             <RefsInput
               id='cst_definition'
               label='Текстовое определение'
@@ -205,7 +206,7 @@ function FormConstituenta({
               onChange={newValue => setTextDefinition(newValue)}
             />
           </AnimateFade>
-          <AnimateFade hideContent={!showConvention}>
+          <AnimateFade key='cst_convention_fade' hideContent={!showConvention}>
             <TextArea
               id='cst_convention'
               spellCheck
@@ -220,6 +221,8 @@ function FormConstituenta({
           </AnimateFade>
           {!showConvention && (!disabled || processing) ? (
             <button
+              key='cst_disable_comment'
+              id='cst_disable_comment'
               type='button'
               className='self-start cc-label clr-text-url hover:underline'
               onClick={() => setForceComment(true)}
@@ -229,6 +232,8 @@ function FormConstituenta({
           ) : null}
           {!disabled || processing ? (
             <SubmitButton
+              key='cst_form_submit'
+              id='cst_form_submit'
               text='Сохранить изменения'
               className='self-center'
               disabled={disabled || !isModified}

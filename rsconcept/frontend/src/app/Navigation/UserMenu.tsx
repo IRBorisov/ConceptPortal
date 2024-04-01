@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import useDropdown from '@/hooks/useDropdown';
 
+import { urls } from '../urls';
 import NavigationButton from './NavigationButton';
 import UserDropdown from './UserDropdown';
 
@@ -13,7 +14,7 @@ function UserMenu() {
   const { user } = useAuth();
   const menu = useDropdown();
 
-  const navigateLogin = () => router.push('/login');
+  const navigateLogin = () => router.push(urls.login);
   return (
     <div ref={menu.ref} className='h-full'>
       {!user ? (

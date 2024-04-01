@@ -24,6 +24,7 @@ import {
 } from 'react-icons/lu';
 import { VscLibrary } from 'react-icons/vsc';
 
+import { urls } from '@/app/urls';
 import Button from '@/components/ui/Button';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
@@ -114,11 +115,11 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
   }
 
   function handleCreateNew() {
-    router.push('/library/create');
+    router.push(urls.create_schema);
   }
 
   function handleLogin() {
-    router.push('/login');
+    router.push(urls.login);
   }
 
   return (
@@ -189,7 +190,7 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
           <DropdownButton
             text='Библиотека'
             icon={<VscLibrary size='1rem' className='icon-primary' />}
-            onClick={() => router.push('/library')}
+            onClick={() => router.push(urls.library)}
           />
         </Dropdown>
       </div>

@@ -1,3 +1,4 @@
+import { urls } from '@/app/urls';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 
@@ -8,7 +9,7 @@ function ExpectedAnonymous() {
   const router = useConceptNavigation();
 
   function logoutAndRedirect() {
-    logout(() => router.push('/login/'));
+    logout(() => router.push(urls.login));
   }
 
   return (

@@ -56,8 +56,10 @@ function StatusBar({ isModified, processing, constituenta, parseData, onAnalyze 
         {processing ? <Loader key='status-loader' size={3} /> : null}
         {!processing ? (
           <>
-            <StatusIcon status={status} />
-            <span className='pb-[0.125rem] font-controls pr-2'>{labelExpressionStatus(status)}</span>
+            <StatusIcon key='status-icon' status={status} />
+            <span key='status-text' className='pb-[0.125rem] font-controls pr-2'>
+              {labelExpressionStatus(status)}
+            </span>
           </>
         ) : null}
       </AnimatePresence>

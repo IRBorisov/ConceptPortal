@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
 import { useConceptOptions } from '@/context/OptionsContext';
-import { urls } from '@/utils/constants';
+import { external_urls } from '@/utils/constants';
 
 import TextURL from '../components/ui/TextURL';
 
@@ -22,7 +22,7 @@ function Footer() {
       <div className='flex gap-3'>
         <TextURL text='Библиотека' href='/library' color='clr-footer' />
         <TextURL text='Справка' href='/manuals' color='clr-footer' />
-        <TextURL text='Центр Концепт' href={urls.concept} color='clr-footer' />
+        <TextURL text='Центр Концепт' href={external_urls.concept} color='clr-footer' />
         <TextURL text='Экстеор' href='/manuals?topic=exteor' color='clr-footer' />
       </div>
       <div>

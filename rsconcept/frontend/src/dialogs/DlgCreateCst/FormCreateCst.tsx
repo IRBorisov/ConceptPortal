@@ -41,7 +41,7 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
 
   return (
     <AnimatePresence>
-      <div className='flex items-center self-center'>
+      <div key='dlg_cst_alias_picker' className='flex items-center self-center'>
         <SelectSingle
           id='dlg_cst_type'
           placeholder='Выберите тип'
@@ -61,6 +61,7 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
         />
       </div>
       <TextArea
+        key='dlg_cst_term'
         id='dlg_cst_term'
         spellCheck
         label='Термин'
@@ -69,7 +70,7 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
         value={state.term_raw}
         onChange={event => partialUpdate({ term_raw: event.target.value })}
       />
-      <AnimateFade hideContent={!state.definition_formal && isElementary}>
+      <AnimateFade key='dlg_cst_expression' hideContent={!state.definition_formal && isElementary}>
         <RSInput
           id='dlg_cst_expression'
           label={
@@ -88,7 +89,7 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
           onChange={value => partialUpdate({ definition_formal: value })}
         />
       </AnimateFade>
-      <AnimateFade hideContent={!state.definition_raw && isElementary}>
+      <AnimateFade key='dlg_cst_definition' hideContent={!state.definition_raw && isElementary}>
         <TextArea
           id='dlg_cst_definition'
           spellCheck
@@ -101,6 +102,8 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
       </AnimateFade>
       {!showConvention ? (
         <button
+          key='dlg_cst_show_comment'
+          id='dlg_cst_show_comment'
           type='button'
           className='self-start cc-label clr-text-url hover:underline'
           onClick={() => setForceComment(true)}
@@ -110,6 +113,7 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
       ) : null}
       <AnimateFade hideContent={!showConvention}>
         <TextArea
+          key='dlg_cst_convention'
           id='dlg_cst_convention'
           spellCheck
           label={isBasic ? 'Конвенция' : 'Комментарий'}

@@ -4,6 +4,7 @@ import axios from 'axios';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
+import { urls } from '@/app/urls';
 import InfoError, { ErrorData } from '@/components/info/InfoError';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
@@ -53,7 +54,7 @@ function LoginPage() {
         if (router.canBack()) {
           router.back();
         } else {
-          router.push('/library');
+          router.push(urls.library);
         }
       });
     }

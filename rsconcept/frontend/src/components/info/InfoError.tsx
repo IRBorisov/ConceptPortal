@@ -1,7 +1,7 @@
 import axios, { type AxiosError } from 'axios';
 import clsx from 'clsx';
 
-import { urls } from '@/utils/constants';
+import { external_urls } from '@/utils/constants';
 import { isResponseHtml } from '@/utils/utils';
 
 import PrettyJson from '../ui/PrettyJSON';
@@ -72,7 +72,7 @@ function InfoError({ error }: InfoErrorProps) {
     >
       <p className='font-normal clr-text-default'>
         Пожалуйста сделайте скриншот и отправьте вместе с описанием ситуации на почту{' '}
-        <TextURL href={urls.mail_portal} text='portal@acconcept.ru' />
+        <TextURL href={external_urls.mail_portal} text='portal@acconcept.ru' />
         <br />
         Для продолжения работы перезагрузите страницу
       </p>

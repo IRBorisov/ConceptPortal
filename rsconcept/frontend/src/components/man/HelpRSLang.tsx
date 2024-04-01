@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import EmbedYoutube from '@/components/ui/EmbedYoutube';
 import useWindowSize from '@/hooks/useWindowSize';
-import { urls, youtube } from '@/utils/constants';
+import { external_urls, youtube } from '@/utils/constants';
 
 const OPT_VIDEO_H = 1080;
 
@@ -25,9 +25,9 @@ function HelpRSLang() {
       <p>Данный математический аппарат основан на аксиоматической теории множеств Цермелло-Френкеля и аппарате родов структур Н.Бурбаки.</p>
       <p>Для ознакомления с основами родов структур можно использовать следующие материалы:</p>
       <ul>
-        <li>1. <a className='underline' href={urls.intro_video}>Видео: Краткое введение в мат. аппарат</a></li>
-        <li>2. <a className='underline' href={urls.ponomarev}>Текст: Учебник И. Н. Пономарева</a></li>
-        <li>3. <a className='underline' href={urls.full_course}>Видео: лекции для 4 курса (второй семестр 2022-23 год)</a></li>
+        <li>1. <a className='underline' href={external_urls.intro_video}>Видео: Краткое введение в мат. аппарат</a></li>
+        <li>2. <a className='underline' href={external_urls.ponomarev}>Текст: Учебник И. Н. Пономарева</a></li>
+        <li>3. <a className='underline' href={external_urls.full_course}>Видео: лекции для 4 курса (второй семестр 2022-23 год)</a></li>
       </ul>
     </div>
     <div className='justify-center w-full'>

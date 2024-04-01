@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { urls } from '@/app/urls';
 import InfoError, { ErrorData } from '@/components/info/InfoError';
 import FlexColumn from '@/components/ui/FlexColumn';
 import SubmitButton from '@/components/ui/SubmitButton';
@@ -53,7 +54,7 @@ function EditorPassword() {
     };
     updatePassword(data, () => {
       toast.success('Изменения сохранены');
-      router.push('/login');
+      router.push(urls.login);
     });
   }
 

@@ -1,5 +1,5 @@
 import TextURL from '@/components/ui/TextURL';
-import { urls } from '@/utils/constants';
+import { external_urls } from '@/utils/constants';
 
 function HelpMain() {
   // prettier-ignore
@@ -16,8 +16,8 @@ function HelpMain() {
     <p>В меню пользователя (правый угол) доступно редактирование пользователя и изменение цветовой темы</p>
 
     <h2>Поддержка</h2>
-    <p>Портал разрабатывается <TextURL text='Центром Концепт' href={urls.concept}/> и является проектом с открытым исходным кодом, доступным на <TextURL text='Github' href={urls.git_repo}/></p>
-    <p>Ваши пожелания по доработке, найденные ошибки и иные предложения можно направлять по email: <TextURL href={urls.mail_portal} text='portal@acconcept.ru'/></p>
+    <p>Портал разрабатывается <TextURL text='Центром Концепт' href={external_urls.concept}/> и является проектом с открытым исходным кодом, доступным на <TextURL text='Github' href={external_urls.git_repo}/></p>
+    <p>Ваши пожелания по доработке, найденные ошибки и иные предложения можно направлять по email: <TextURL href={external_urls.mail_portal} text='portal@acconcept.ru'/></p>
   </div>);
 }
 

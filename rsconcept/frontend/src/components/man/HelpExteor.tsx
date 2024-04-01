@@ -1,5 +1,5 @@
 import TextURL from '@/components/ui/TextURL';
-import { urls } from '@/utils/constants';
+import { external_urls } from '@/utils/constants';
 
 function HelpExteor() {
   // prettier-ignore
@@ -9,7 +9,7 @@ function HelpExteor() {
     <p>Экстеор 4.9 — редактор текстов систем понятий эксплицированных в родах структур</p>
     <p>Портал превосходит Экстеор в части редактирования экспликаций, но функции синтеза и вычисления интерпретации пока доступны только в Экстеоре. Также следует использовать Экстеор для выгрузки экспликаций в Word для последующей печати</p>
     <p>Экстеор доступен на операционной системы Windows 10+</p>
-    <p>Скачать установщик: <TextURL href={urls.exteor64} text='64bit'/> | <TextURL href={urls.exteor32} text='32bit'/></p>
+    <p>Скачать установщик: <TextURL href={external_urls.exteor64} text='64bit'/> | <TextURL href={external_urls.exteor32} text='32bit'/></p>
     <h2>Основные функции</h2>
     <li>Работа с РС-формой системы понятий</li>
     <li>Автоматическое определение типизации выражений</li>

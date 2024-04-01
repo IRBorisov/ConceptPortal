@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { urls } from '@/app/urls';
 import Checkbox from '@/components/ui/Checkbox';
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import TextArea from '@/components/ui/TextArea';
@@ -51,7 +52,7 @@ function DlgCloneLibraryItem({ hideWindow, base }: DlgCloneLibraryItemProps) {
     };
     cloneItem(base.id, data, newSchema => {
       toast.success(`Копия создана: ${newSchema.alias}`);
-      router.push(`/rsforms/${newSchema.id}`);
+      router.push(urls.schema(newSchema.id));
     });
   }
 

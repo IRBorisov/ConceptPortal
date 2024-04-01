@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
+import { urls } from '@/app/urls';
 import DataTable, { createColumnHelper } from '@/components/ui/DataTable';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { ILibraryItem } from '@/models/library';
@@ -19,7 +20,7 @@ function ViewSubscriptions({ items }: ViewSubscriptionsProps) {
   const router = useConceptNavigation();
   const intl = useIntl();
 
-  const openRSForm = (item: ILibraryItem) => router.push(`/rsforms/${item.id}`);
+  const openRSForm = (item: ILibraryItem) => router.push(urls.schema(item.id));
 
   const columns = useMemo(
     () => [

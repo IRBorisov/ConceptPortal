@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { BiDownload } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 
+import { urls } from '@/app/urls';
 import InfoError from '@/components/info/InfoError';
 import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/Checkbox';
@@ -43,7 +44,7 @@ function CreateRSFormPage() {
     if (router.canBack()) {
       router.back();
     } else {
-      router.push('/library');
+      router.push(urls.library);
     }
   }
 
@@ -64,7 +65,7 @@ function CreateRSFormPage() {
     };
     createItem(data, newSchema => {
       toast.success('Схема успешно создана');
-      router.push(`/rsforms/${newSchema.id}`);
+      router.push(urls.schema(newSchema.id));
     });
   }
 

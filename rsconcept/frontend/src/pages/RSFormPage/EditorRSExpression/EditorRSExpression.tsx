@@ -154,77 +154,75 @@ function EditorRSExpression({
   }
 
   return (
-    <>
+    <div>
       <AnimatePresence>
         {showAST ? (
           <DlgShowAST expression={expression} syntaxTree={syntaxTree} hideWindow={() => setShowAST(false)} />
         ) : null}
       </AnimatePresence>
 
-      <div>
-        <Overlay position='top-[-0.5rem] right-0 flex'>
-          <MiniButton
-            title='Изменить шрифт'
-            onClick={toggleFont}
-            icon={<BiFontFamily size='1.25rem' className={mathFont === 'math' ? 'icon-primary' : ''} />}
-          />
-          {!disabled || model.processing ? (
-            <MiniButton
-              noHover
-              title='Отображение специальной клавиатуры'
-              onClick={() => setShowControls(prev => !prev)}
-              icon={<FaRegKeyboard size='1.25rem' className={showControls ? 'icon-primary' : ''} />}
-            />
-          ) : null}
+      <Overlay position='top-[-0.5rem] right-0 flex'>
+        <MiniButton
+          title='Изменить шрифт'
+          onClick={toggleFont}
+          icon={<BiFontFamily size='1.25rem' className={mathFont === 'math' ? 'icon-primary' : ''} />}
+        />
+        {!disabled || model.processing ? (
           <MiniButton
             noHover
-            title='Отображение списка конституент'
-            onClick={onToggleList}
-            icon={<BiListUl size='1.25rem' className={showList ? 'icon-primary' : ''} />}
+            title='Отображение специальной клавиатуры'
+            onClick={() => setShowControls(prev => !prev)}
+            icon={<FaRegKeyboard size='1.25rem' className={showControls ? 'icon-primary' : ''} />}
           />
-          <MiniButton
-            noHover
-            title='Дерево разбора выражения'
-            onClick={handleShowAST}
-            icon={<RiNodeTree size='1.25rem' className='icon-primary' />}
-          />
-        </Overlay>
-
-        <Overlay position='top-[-0.5rem] pl-[8rem] sm:pl-[4rem] right-1/2 translate-x-1/2 flex'>
-          <StatusBar
-            processing={parser.loading}
-            isModified={isModified}
-            constituenta={activeCst}
-            parseData={parser.parseData}
-            onAnalyze={() => handleCheckExpression()}
-          />
-          <BadgeHelp topic={HelpTopic.CST_EDITOR} offset={4} />
-        </Overlay>
-
-        <RSInput
-          ref={rsInput}
-          value={value}
-          minHeight='3.8rem'
-          disabled={disabled}
-          onChange={handleChange}
-          onAnalyze={handleCheckExpression}
-          {...restProps}
+        ) : null}
+        <MiniButton
+          noHover
+          title='Отображение списка конституент'
+          onClick={onToggleList}
+          icon={<BiListUl size='1.25rem' className={showList ? 'icon-primary' : ''} />}
         />
-
-        <RSEditorControls
-          isOpen={showControls && (!disabled || model.processing)}
-          disabled={disabled}
-          onEdit={handleEdit}
+        <MiniButton
+          noHover
+          title='Дерево разбора выражения'
+          onClick={handleShowAST}
+          icon={<RiNodeTree size='1.25rem' className='icon-primary' />}
         />
+      </Overlay>
 
-        <ParsingResult
-          isOpen={!!parser.parseData && parser.parseData.errors.length > 0}
-          data={parser.parseData}
-          disabled={disabled}
-          onShowError={onShowError}
+      <Overlay position='top-[-0.5rem] pl-[8rem] sm:pl-[4rem] right-1/2 translate-x-1/2 flex'>
+        <StatusBar
+          processing={parser.loading}
+          isModified={isModified}
+          constituenta={activeCst}
+          parseData={parser.parseData}
+          onAnalyze={() => handleCheckExpression()}
         />
-      </div>
-    </>
+        <BadgeHelp topic={HelpTopic.CST_EDITOR} offset={4} />
+      </Overlay>
+
+      <RSInput
+        ref={rsInput}
+        value={value}
+        minHeight='3.8rem'
+        disabled={disabled}
+        onChange={handleChange}
+        onAnalyze={handleCheckExpression}
+        {...restProps}
+      />
+
+      <RSEditorControls
+        isOpen={showControls && (!disabled || model.processing)}
+        disabled={disabled}
+        onEdit={handleEdit}
+      />
+
+      <ParsingResult
+        isOpen={!!parser.parseData && parser.parseData.errors.length > 0}
+        data={parser.parseData}
+        disabled={disabled}
+        onShowError={onShowError}
+      />
+    </div>
   );
 }
 

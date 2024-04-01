@@ -6,6 +6,8 @@ import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useConceptOptions } from '@/context/OptionsContext';
 
+import { urls } from '../urls';
+
 interface UserDropdownProps {
   isOpen: boolean;
   hideDropdown: () => void;
@@ -18,12 +20,12 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
 
   function navigateProfile() {
     hideDropdown();
-    router.push('/profile');
+    router.push(urls.profile);
   }
 
   function logoutAndRedirect() {
     hideDropdown();
-    logout(() => router.push('/login/'));
+    logout(() => router.push(urls.login));
   }
 
   function handleToggleDarkMode() {

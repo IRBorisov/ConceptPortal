@@ -4,6 +4,7 @@ import axios from 'axios';
 import clsx from 'clsx';
 import { useEffect, useMemo, useState } from 'react';
 
+import { urls } from '@/app/urls';
 import InfoError, { ErrorData } from '@/components/info/InfoError';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
@@ -51,8 +52,8 @@ function PasswordChangePage() {
         token: token!
       };
       resetPassword(data, () => {
-        router.replace('/');
-        router.push('/login');
+        router.replace(urls.home);
+        router.push(urls.login);
       });
     }
   }

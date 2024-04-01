@@ -1,5 +1,6 @@
 'use client';
 
+import { urls } from '@/app/urls';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useConceptOptions } from '@/context/OptionsContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
@@ -16,7 +17,7 @@ function ManualsPage() {
   const { mainHeight } = useConceptOptions();
 
   function onSelectTopic(newTopic: HelpTopic) {
-    router.push(`/manuals?topic=${newTopic}`);
+    router.push(urls.help_topic(newTopic));
   }
 
   return (

@@ -8,6 +8,7 @@ import { useConceptNavigation } from '@/context/NavigationContext';
 import { useConceptOptions } from '@/context/OptionsContext';
 import { animateNavigation } from '@/styling/animations';
 
+import { urls } from '../urls';
 import Logo from './Logo';
 import NavigationButton from './NavigationButton';
 import ToggleNavigationButton from './ToggleNavigationButton';
@@ -17,10 +18,10 @@ function Navigation() {
   const router = useConceptNavigation();
   const { noNavigationAnimation } = useConceptOptions();
 
-  const navigateHome = () => router.push('/');
-  const navigateLibrary = () => router.push('/library');
-  const navigateHelp = () => router.push('/manuals');
-  const navigateCreateNew = () => router.push('/library/create');
+  const navigateHome = () => router.push(urls.home);
+  const navigateLibrary = () => router.push(urls.library);
+  const navigateHelp = () => router.push(urls.manuals);
+  const navigateCreateNew = () => router.push(urls.create_schema);
 
   return (
     <nav
