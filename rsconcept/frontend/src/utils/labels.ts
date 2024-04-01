@@ -96,6 +96,7 @@ export function labelToken(id: TokenID): string {
     case TokenID.LOGIC_EQUIVALENT:    return '⇔';
     case TokenID.LIT_EMPTYSET:        return '∅';
     case TokenID.LIT_WHOLE_NUMBERS:   return 'Z';
+    case TokenID.MULTIPLY:            return '*';
     case TokenID.EQUAL:               return '=';
     case TokenID.NOTEQUAL:            return '≠';
     case TokenID.GREATER_OR_EQ:       return '≥';
@@ -163,6 +164,7 @@ export function describeToken(id: TokenID): string {
     case TokenID.LIT_EMPTYSET:          return prepareTooltip('Пустое множество', 'Alt + X');
     case TokenID.LIT_WHOLE_NUMBERS:     return prepareTooltip('Целые числа', 'Alt + Z');
     case TokenID.EQUAL:                 return prepareTooltip('Равенство');
+    case TokenID.MULTIPLY:              return prepareTooltip('Умножение чисел', 'Alt + 8');
     case TokenID.NOTEQUAL:              return prepareTooltip('Неравенство', 'Alt + Shift + `');
     case TokenID.GREATER_OR_EQ:         return prepareTooltip('Больше или равно', 'Alt + Shift + 7');
     case TokenID.LESSER_OR_EQ:          return prepareTooltip('Меньше или равно', 'Alt + Shift + 8');

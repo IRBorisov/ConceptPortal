@@ -65,7 +65,11 @@ function RegisterPage() {
   }
 
   if (user) {
-    return <ExpectedAnonymous />;
+    return (
+      <AnimateFade>
+        <ExpectedAnonymous />
+      </AnimateFade>
+    );
   }
   return (
     <AnimateFade>

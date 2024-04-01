@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import { IConstituenta } from '@/models/rsform';
 import { labelCstTypification } from '@/utils/labels';
 
@@ -7,9 +9,9 @@ interface InfoConstituentaProps extends CProps.Div {
   data: IConstituenta;
 }
 
-function InfoConstituenta({ data, ...restProps }: InfoConstituentaProps) {
+function InfoConstituenta({ data, className, ...restProps }: InfoConstituentaProps) {
   return (
-    <div {...restProps}>
+    <div className={clsx('dense', className)} {...restProps}>
       <h2>Конституента {data.alias}</h2>
       <p>
         <b>Типизация: </b>

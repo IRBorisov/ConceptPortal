@@ -129,10 +129,11 @@ export function domTooltipConstituenta(cst?: IConstituenta) {
   dom.className = clsx(
     'z-modal-tooltip',
     'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
+    'dense',
     'p-2',
     'border shadow-md',
     'overflow-y-auto',
-    'text-sm'
+    'text-sm font-main'
   );
 
   if (cst) {
@@ -179,6 +180,7 @@ export function domTooltipEntityReference(ref: IEntityReference, cst: IConstitue
   dom.className = clsx(
     'z-tooltip',
     'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
+    'dense',
     'p-2 flex flex-col',
     'border shadow-md',
     'overflow-y-auto',
@@ -225,6 +227,7 @@ export function domTooltipSyntacticReference(ref: ISyntacticReference, masterRef
   dom.className = clsx(
     'z-tooltip',
     'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
+    'dense',
     'p-2 flex flex-col',
     'border shadow-md',
     'overflow-y-auto',

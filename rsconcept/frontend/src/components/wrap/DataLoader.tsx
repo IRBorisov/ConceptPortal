@@ -1,9 +1,9 @@
 import { AnimatePresence } from 'framer-motion';
 
-import AnimateFade from './AnimateFade';
 import InfoError, { ErrorData } from '../info/InfoError';
 import { CProps } from '../props';
 import Loader from '../ui/Loader';
+import AnimateFade from './AnimateFade';
 
 interface DataLoaderProps extends CProps.AnimatedDiv {
   id: string;
@@ -20,16 +20,12 @@ function DataLoader({ id, isLoading, hasNoData, error, children, ...restProps }:
     <AnimatePresence mode='wait'>
       {isLoading ? <Loader key={`${id}-loader`} /> : null}
       {error ? <InfoError key={`${id}-error`} error={error} /> : null}
-      {!isLoading && !error && !hasNoData ? (
-        <AnimateFade id={id} key={`${id}-data`} {...restProps}>
-          {children}
-        </AnimateFade>
-      ) : null}
-      {!isLoading && !error && hasNoData ? (
-        <AnimateFade id={id} key={`${id}-data`} {...restProps}>
-          Данные не загружены
-        </AnimateFade>
-      ) : null}
+      <AnimateFade id={id} key={`${id}-data`} removeContent={isLoading || !!error || hasNoData} {...restProps}>
+        {children}
+      </AnimateFade>
+      <AnimateFade id={id} key={`${id}-data`} removeContent={isLoading || !!error || !hasNoData} {...restProps}>
+        Данные не загружены
+      </AnimateFade>
     </AnimatePresence>
   );
 }

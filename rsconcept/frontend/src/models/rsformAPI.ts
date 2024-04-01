@@ -239,7 +239,7 @@ export function applyFilterCategory(start: IConstituenta, schema: IRSFormData): 
 /**
  * Prefix for alias indicating {@link CstType}.
  */
-export function getCstTypePrefix(type: CstType) {
+export function getCstTypePrefix(type: CstType): string {
   // prettier-ignore
   switch (type) {
     case CstType.BASE: return 'X';
@@ -256,7 +256,7 @@ export function getCstTypePrefix(type: CstType) {
 /**
  * Guess {@link CstType} from user input hint.
  */
-export function guessCstType(hint: string, defaultType: CstType = CstType.TERM) {
+export function guessCstType(hint: string, defaultType: CstType = CstType.TERM): CstType {
   if (hint.length !== 1) {
     return defaultType;
   }
@@ -272,6 +272,57 @@ export function guessCstType(hint: string, defaultType: CstType = CstType.TERM) 
     case 'T': return CstType.THEOREM;
   }
   return defaultType;
+}
+
+/**
+ * Evaluate if {@link CstType} is basic concept.
+ */
+export function isBasicConcept(type: CstType): boolean {
+  // prettier-ignore
+  switch (type) {
+    case CstType.BASE: return true;
+    case CstType.CONSTANT: return true;
+    case CstType.STRUCTURED: return true;
+    case CstType.AXIOM: return true;
+    case CstType.TERM: return false;
+    case CstType.FUNCTION: return false;
+    case CstType.PREDICATE: return false;
+    case CstType.THEOREM: return false;
+  }
+}
+
+/**
+ * Evaluate if {@link CstType} is base set or constant set.
+ */
+export function isBaseSet(type: CstType): boolean {
+  // prettier-ignore
+  switch (type) {
+    case CstType.BASE: return true;
+    case CstType.CONSTANT: return true;
+    case CstType.STRUCTURED: return false;
+    case CstType.AXIOM: return false;
+    case CstType.TERM: return false;
+    case CstType.FUNCTION: return false;
+    case CstType.PREDICATE: return false;
+    case CstType.THEOREM: return false;
+  }
+}
+
+/**
+ * Evaluate if {@link CstType} is function.
+ */
+export function isFunctional(type: CstType): boolean {
+  // prettier-ignore
+  switch (type) {
+    case CstType.BASE: return false;
+    case CstType.CONSTANT: return false;
+    case CstType.STRUCTURED: return false;
+    case CstType.AXIOM: return false;
+    case CstType.TERM: return false;
+    case CstType.FUNCTION: return true;
+    case CstType.PREDICATE: return true;
+    case CstType.THEOREM: return false;
+  }
 }
 
 /**
