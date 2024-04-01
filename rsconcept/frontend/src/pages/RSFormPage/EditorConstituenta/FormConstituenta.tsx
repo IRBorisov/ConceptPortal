@@ -28,7 +28,7 @@ interface FormConstituentaProps {
   showList: boolean;
 
   id?: string;
-  constituenta?: IConstituenta;
+  state?: IConstituenta;
 
   isModified: boolean;
   toggleReset: boolean;
@@ -43,7 +43,7 @@ function FormConstituenta({
   disabled,
   showList,
   id,
-  constituenta,
+  state,
 
   isModified,
   setIsModified,
@@ -61,33 +61,34 @@ function FormConstituenta({
   const [expression, setExpression] = useState('');
   const [convention, setConvention] = useState('');
   const [typification, setTypification] = useState('N/A');
+
   const [forceComment, setForceComment] = useState(false);
 
-  const isBasic = useMemo(() => !!constituenta && isBasicConcept(constituenta.cst_type), [constituenta]);
-  const isElementary = useMemo(() => !!constituenta && isBaseSet(constituenta.cst_type), [constituenta]);
+  const isBasic = useMemo(() => !!state && isBasicConcept(state.cst_type), [state]);
+  const isElementary = useMemo(() => !!state && isBaseSet(state.cst_type), [state]);
   const showConvention = useMemo(
-    () => !constituenta || !!constituenta.convention || forceComment || isBasic,
-    [constituenta, forceComment, isBasic]
+    () => !state || !!state.convention || forceComment || isBasic,
+    [state, forceComment, isBasic]
   );
 
   useEffect(() => {
-    if (!constituenta) {
+    if (!state) {
       setIsModified(false);
       return;
     }
     setIsModified(
-      constituenta.term_raw !== term ||
-        constituenta.definition_raw !== textDefinition ||
-        constituenta.convention !== convention ||
-        constituenta.definition_formal !== expression
+      state.term_raw !== term ||
+        state.definition_raw !== textDefinition ||
+        state.convention !== convention ||
+        state.definition_formal !== expression
     );
     return () => setIsModified(false);
   }, [
-    constituenta,
-    constituenta?.term_raw,
-    constituenta?.definition_formal,
-    constituenta?.definition_raw,
-    constituenta?.convention,
+    state,
+    state?.term_raw,
+    state?.definition_formal,
+    state?.definition_raw,
+    state?.convention,
     term,
     textDefinition,
     expression,
@@ -96,26 +97,26 @@ function FormConstituenta({
   ]);
 
   useLayoutEffect(() => {
-    if (constituenta) {
-      setAlias(constituenta.alias);
-      setConvention(constituenta.convention || '');
-      setTerm(constituenta.term_raw || '');
-      setTextDefinition(constituenta.definition_raw || '');
-      setExpression(constituenta.definition_formal || '');
-      setTypification(constituenta ? labelCstTypification(constituenta) : 'N/A');
+    if (state) {
+      setAlias(state.alias);
+      setConvention(state.convention || '');
+      setTerm(state.term_raw || '');
+      setTextDefinition(state.definition_raw || '');
+      setExpression(state.definition_formal || '');
+      setTypification(state ? labelCstTypification(state) : 'N/A');
       setForceComment(false);
     }
-  }, [constituenta, schema, toggleReset]);
+  }, [state, schema, toggleReset]);
 
   function handleSubmit(event?: React.FormEvent<HTMLFormElement>) {
     if (event) {
       event.preventDefault();
     }
-    if (!constituenta || processing) {
+    if (!state || processing) {
       return;
     }
     const data: ICstUpdateData = {
-      id: constituenta.id,
+      id: state.id,
       alias: alias,
       convention: convention,
       definition_formal: expression,
@@ -131,7 +132,7 @@ function FormConstituenta({
         disabled={disabled}
         modified={isModified}
         processing={processing}
-        constituenta={constituenta}
+        constituenta={state}
         onEditTerm={onEditTerm}
         onRename={onRename}
       />
@@ -147,8 +148,8 @@ function FormConstituenta({
             placeholder='Обозначение, используемое в текстовых определениях'
             items={schema?.items}
             value={term}
-            initialValue={constituenta?.term_raw ?? ''}
-            resolved={constituenta?.term_resolved ?? ''}
+            initialValue={state?.term_raw ?? ''}
+            resolved={state?.term_resolved ?? ''}
             disabled={disabled}
             onChange={newValue => setTerm(newValue)}
           />
@@ -165,23 +166,23 @@ function FormConstituenta({
               resize: 'none'
             }}
           />
-          <AnimateFade hideContent={!!constituenta && !constituenta?.definition_formal && isElementary}>
+          <AnimateFade hideContent={!!state && !state?.definition_formal && isElementary}>
             <EditorRSExpression
               id='cst_expression'
               label={
-                constituenta?.cst_type === CstType.STRUCTURED
+                state?.cst_type === CstType.STRUCTURED
                   ? 'Область определения'
-                  : !!constituenta && isFunctional(constituenta.cst_type)
+                  : !!state && isFunctional(state.cst_type)
                   ? 'Определение функции'
                   : 'Формальное определение'
               }
               placeholder={
-                constituenta?.cst_type !== CstType.STRUCTURED
+                state?.cst_type !== CstType.STRUCTURED
                   ? 'Родоструктурное выражение'
                   : 'Определение множества, которому принадлежат элементы родовой структуры'
               }
               value={expression}
-              activeCst={constituenta}
+              activeCst={state}
               showList={showList}
               disabled={disabled}
               toggleReset={toggleReset}
@@ -190,7 +191,7 @@ function FormConstituenta({
               setTypification={setTypification}
             />
           </AnimateFade>
-          <AnimateFade hideContent={!!constituenta && !constituenta?.definition_raw && isElementary}>
+          <AnimateFade hideContent={!!state && !state?.definition_raw && isElementary}>
             <RefsInput
               id='cst_definition'
               label='Текстовое определение'
@@ -198,8 +199,8 @@ function FormConstituenta({
               height='3.8rem'
               items={schema?.items}
               value={textDefinition}
-              initialValue={constituenta?.definition_raw ?? ''}
-              resolved={constituenta?.definition_resolved ?? ''}
+              initialValue={state?.definition_raw ?? ''}
+              resolved={state?.definition_resolved ?? ''}
               disabled={disabled}
               onChange={newValue => setTextDefinition(newValue)}
             />
@@ -210,7 +211,7 @@ function FormConstituenta({
               spellCheck
               className='h-[3.8rem]'
               label={isBasic ? 'Конвенция' : 'Комментарий'}
-              placeholder='Договоренность об интерпретации или пояснение'
+              placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
               value={convention}
               disabled={disabled}
               rows={convention.length > 2 * ROW_SIZE_IN_CHARACTERS ? 3 : 2}

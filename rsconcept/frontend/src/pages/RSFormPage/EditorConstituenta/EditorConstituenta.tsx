@@ -105,7 +105,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
           disabled={disabled}
           showList={showList}
           id={globals.constituenta_editor}
-          constituenta={activeCst}
+          state={activeCst}
           isModified={isModified}
           toggleReset={toggleReset}
           onToggleList={() => setShowList(prev => !prev)}

@@ -149,7 +149,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
       </div>
       <TextArea
         id='schema_comment'
-        label='Комментарий'
+        label='Описание'
         rows={3}
         value={comment}
         disabled={!controller.isContentEditable || controller.isProcessing}

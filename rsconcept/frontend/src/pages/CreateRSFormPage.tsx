@@ -121,7 +121,7 @@ function CreateRSFormPage() {
           />
           <TextArea
             id='schema_comment'
-            label='Комментарий'
+            label='Описание'
             placeholder={file && 'Загрузить из файла'}
             value={comment}
             onChange={event => setComment(event.target.value)}

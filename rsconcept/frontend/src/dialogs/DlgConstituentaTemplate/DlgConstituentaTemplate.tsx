@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import HelpButton from '@/components/man/HelpButton';
@@ -11,11 +11,11 @@ import TabLabel from '@/components/ui/TabLabel';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { HelpTopic } from '@/models/miscellaneous';
 import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
-import { generateAlias, validateNewAlias } from '@/models/rsformAPI';
+import { generateAlias } from '@/models/rsformAPI';
 import { inferTemplatedType, substituteTemplateArgs } from '@/models/rslangAPI';
 
+import FormCreateCst from '../DlgCreateCst/FormCreateCst';
 import ArgumentsTab, { IArgumentsState } from './ArgumentsTab';
-import ConstituentaTab from './ConstituentaTab';
 import TemplateTab, { ITemplateState } from './TemplateTab';
 
 interface DlgConstituentaTemplateProps extends Pick<ModalProps, 'hideWindow'> {
@@ -49,11 +49,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     term_forms: []
   });
 
-  const validated = useMemo(
-    () => validateNewAlias(constituenta.alias, constituenta.cst_type, schema),
-    [constituenta.alias, constituenta.cst_type, schema]
-  );
-
+  const [validated, setValidated] = useState(false);
   const handleSubmit = () => onCreate(constituenta);
 
   useLayoutEffect(() => {
@@ -138,7 +134,12 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
         </TabPanel>
 
         <TabPanel className='cc-column' style={{ display: activeTab === TabID.CONSTITUENTA ? '' : 'none' }}>
-          <ConstituentaTab state={constituenta} partialUpdate={updateConstituenta} />
+          <FormCreateCst
+            state={constituenta}
+            partialUpdate={updateConstituenta}
+            schema={schema}
+            setValidated={setValidated}
+          />
         </TabPanel>
       </Tabs>
     </Modal>
