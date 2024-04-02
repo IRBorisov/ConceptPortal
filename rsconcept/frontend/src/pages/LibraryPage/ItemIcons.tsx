@@ -12,20 +12,20 @@ interface ItemIconsProps {
 
 function ItemIcons({ user, item }: ItemIconsProps) {
   return (
-    <div className={clsx('min-w-[2.75rem]', 'inline-flex gap-1')} id={`${prefixes.library_list}${item.id}`}>
+    <div className={clsx('min-w-[3.3rem]', 'inline-flex gap-1 align-middle')} id={`${prefixes.library_list}${item.id}`}>
       {user && user.subscriptions.includes(item.id) ? (
         <span title='Отслеживаемая'>
-          <FiBell size='0.75rem' />
+          <FiBell size='1rem' />
         </span>
       ) : null}
       {item.is_common ? (
         <span title='Общедоступная'>
-          <BiShareAlt size='0.75rem' />
+          <BiShareAlt size='1em' />
         </span>
       ) : null}
       {item.is_canonical ? (
         <span title='Неизменная'>
-          <BiCheckShield size='0.75rem' />
+          <BiCheckShield size='1rem' />
         </span>
       ) : null}
     </div>
