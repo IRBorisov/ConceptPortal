@@ -12,7 +12,7 @@ function SelectedCounter({ totalCount, selectedCount, hideZero, position = 'top-
     return null;
   }
   return (
-    <Overlay position={`px-2 ${position}`} className='select-none whitespace-nowrap clr-app'>
+    <Overlay position={`px-2 ${position}`} className='select-none whitespace-nowrap cc-blur rounded-xl'>
       Выбор {selectedCount} из {totalCount}
     </Overlay>
   );
