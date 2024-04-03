@@ -3,11 +3,13 @@
 import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
 
+import BadgeHelp from '@/components/man/BadgeHelp';
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import SelectSingle from '@/components/ui/SelectSingle';
 import TextInput from '@/components/ui/TextInput';
 import { useRSForm } from '@/context/RSFormContext';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
+import { HelpTopic } from '@/models/miscellaneous';
 import { CstType, ICstRenameData } from '@/models/rsform';
 import { generateAlias, validateNewAlias } from '@/models/rsformAPI';
 import { labelCstType } from '@/utils/labels';
@@ -45,7 +47,7 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
       hideWindow={hideWindow}
       canSubmit={validated}
       onSubmit={handleSubmit}
-      className={clsx('w-[30rem]', 'py-6 px-6 flex gap-6 justify-center items-center')}
+      className={clsx('w-[30rem]', 'py-6 px-6 flex gap-3 justify-center items-center')}
     >
       <SelectSingle
         id='dlg_cst_type'
@@ -58,6 +60,7 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
         }}
         onChange={data => updateData({ cst_type: data?.value ?? CstType.BASE })}
       />
+      <BadgeHelp topic={HelpTopic.CST_ATTRIBUTES} offset={16} className='max-w-[40rem] max-h-[calc(100vh-2rem)]' />
       <TextInput
         id='dlg_cst_alias'
         dense

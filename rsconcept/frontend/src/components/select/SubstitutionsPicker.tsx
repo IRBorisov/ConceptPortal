@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import { BiChevronLeft, BiChevronRight, BiFirstPage, BiLastPage, BiX } from 'react-icons/bi';
-import { LuLocate, LuLocateOff, LuPower, LuPowerOff, LuReplace } from 'react-icons/lu';
+import { LuFlag, LuFlagOff, LuPower, LuPowerOff, LuReplace } from 'react-icons/lu';
 
 import ConstituentaBadge from '@/components/info/ConstituentaBadge';
 import ConstituentaSelector from '@/components/select/ConstituentaSelector';
@@ -132,14 +132,11 @@ function SubstitutionsPicker({
       columnHelper.accessor(item => describeConstituenta(item.rightCst), {
         id: 'right_text',
         header: 'Описание',
-        size: 1000,
+        minSize: 1000,
         cell: props => <div className='text-xs text-ellipsis text-pretty'>{props.getValue()}</div>
       }),
       columnHelper.display({
         id: 'actions',
-        size: 50,
-        minSize: 50,
-        maxSize: 50,
         cell: props => (
           <MiniButton
             noHover
@@ -159,7 +156,7 @@ function SubstitutionsPicker({
         <div className='flex-grow basis-1/2'>
           <div className='flex items-center justify-between'>
             <Label text={schema1 !== schema2 ? schema1?.alias ?? 'Схема 1' : ''} />
-            <div>
+            <div className='cc-icons'>
               <MiniButton
                 title='Сохранить конституенту'
                 noHover
@@ -178,9 +175,9 @@ function SubstitutionsPicker({
                 onClick={toggleTerm}
                 icon={
                   takeLeftTerm ? (
-                    <LuLocate size='1rem' className='clr-text-green' />
+                    <LuFlag size='1rem' className='clr-text-green' />
                   ) : (
-                    <LuLocateOff size='1rem' className='clr-text-red' />
+                    <LuFlagOff size='1rem' className='clr-text-red' />
                   )
                 }
               />
@@ -198,14 +195,14 @@ function SubstitutionsPicker({
           title='Добавить в таблицу отождествлений'
           className='mb-[0.375rem] grow-0'
           icon={<LuReplace size='1.5rem' className='icon-primary' />}
-          disabled={!leftCst || !rightCst}
+          disabled={!leftCst || !rightCst || leftCst === rightCst}
           onClick={addSubstitution}
         />
 
         <div className='flex-grow basis-1/2'>
           <div className='flex items-center justify-between'>
             <Label text={schema1 !== schema2 ? schema2?.alias ?? 'Схема 2' : ''} />
-            <div>
+            <div className='cc-icons'>
               <MiniButton
                 title='Сохранить конституенту'
                 noHover
@@ -224,9 +221,9 @@ function SubstitutionsPicker({
                 onClick={toggleTerm}
                 icon={
                   !takeLeftTerm ? (
-                    <LuLocate size='1rem' className='clr-text-green' />
+                    <LuFlag size='1rem' className='clr-text-green' />
                   ) : (
-                    <LuLocateOff size='1rem' className='clr-text-red' />
+                    <LuFlagOff size='1rem' className='clr-text-red' />
                   )
                 }
               />
