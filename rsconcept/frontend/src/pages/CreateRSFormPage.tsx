@@ -2,10 +2,10 @@
 
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
-import { BiDownload } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 
 import { urls } from '@/app/urls';
+import { IconDownload } from '@/components/Icons';
 import InfoError from '@/components/info/InfoError';
 import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/Checkbox';
@@ -95,7 +95,7 @@ function CreateRSFormPage() {
             />
             <MiniButton
               title='Загрузить из Экстеор'
-              icon={<BiDownload size='1.25rem' className='icon-primary' />}
+              icon={<IconDownload size='1.25rem' className='icon-primary' />}
               onClick={() => inputRef.current?.click()}
             />
           </Overlay>

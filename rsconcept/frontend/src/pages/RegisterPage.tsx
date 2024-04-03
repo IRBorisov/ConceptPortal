@@ -2,10 +2,10 @@
 
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-import { BiInfoCircle } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 
 import { urls } from '@/app/urls';
+import { IconHelp } from '@/components/Icons';
 import InfoError from '@/components/info/InfoError';
 import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/Checkbox';
@@ -80,7 +80,7 @@ function RegisterPage() {
           <FlexColumn>
             <div className='absolute'>
               <Overlay id={globals.password_tooltip} position='top-[4.8rem] left-[3.4rem] absolute'>
-                <BiInfoCircle size='1.25rem' className='icon-primary' />
+                <IconHelp size='1.25rem' className='icon-primary' />
               </Overlay>
               <Tooltip anchorSelect={`#${globals.password_tooltip}`} offset={6}>
                 <p>- используйте уникальный пароль</p>

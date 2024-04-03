@@ -2,8 +2,8 @@
 
 import { AnimatePresence } from 'framer-motion';
 import { useMemo, useState } from 'react';
-import { FiBell, FiBellOff } from 'react-icons/fi';
 
+import { IconFollow, IconFollowOff } from '@/components/Icons';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import AnimateFade from '@/components/wrap/AnimateFade';
@@ -41,9 +41,9 @@ function UserTabs() {
               title='Отслеживаемые схемы'
               icon={
                 showSubs ? (
-                  <FiBell size='1.25rem' className='icon-primary' />
+                  <IconFollow size='1.25rem' className='icon-primary' />
                 ) : (
-                  <FiBellOff size='1.25rem' className='icon-primary' />
+                  <IconFollowOff size='1.25rem' className='icon-primary' />
                 )
               }
               onClick={() => setShowSubs(prev => !prev)}

@@ -2,9 +2,9 @@
 
 import clsx from 'clsx';
 import { useMemo } from 'react';
-import { BiX } from 'react-icons/bi';
 import { useIntl } from 'react-intl';
 
+import { IconRemove } from '@/components/Icons';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
 import MiniButton from '@/components/ui/MiniButton';
 import { useConceptOptions } from '@/context/OptionsContext';
@@ -66,7 +66,7 @@ function VersionsTable({ processing, items, onDelete, selected, onSelect }: Vers
               noHover
               noPadding
               disabled={processing}
-              icon={<BiX size='1.25rem' className='icon-red' />}
+              icon={<IconRemove size='1.25rem' className='icon-red' />}
               onClick={() => onDelete(props.row.original.id)}
             />
           </div>

@@ -1,5 +1,6 @@
-import { LuLightbulb, LuLightbulbOff, LuLogOut, LuMoon, LuSun, LuUserCircle2 } from 'react-icons/lu';
+import { LuLogOut, LuMoon, LuSun } from 'react-icons/lu';
 
+import { IconHelp, IconHelpOff, IconUser } from '@/components/Icons';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import { useAuth } from '@/context/AuthContext';
@@ -38,7 +39,7 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
       <DropdownButton
         text={user?.username}
         title='Профиль пользователя'
-        icon={<LuUserCircle2 size='1rem' />}
+        icon={<IconUser size='1rem' />}
         onClick={navigateProfile}
       />
       <DropdownButton
@@ -49,7 +50,7 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
       />
       <DropdownButton
         text={showHelp ? 'Помощь: Вкл' : 'Помощь: Выкл'}
-        icon={showHelp ? <LuLightbulb size='1rem' /> : <LuLightbulbOff size='1rem' />}
+        icon={showHelp ? <IconHelp size='1rem' /> : <IconHelpOff size='1rem' />}
         title='Отображение иконок подсказок'
         onClick={toggleShowHelp}
       />

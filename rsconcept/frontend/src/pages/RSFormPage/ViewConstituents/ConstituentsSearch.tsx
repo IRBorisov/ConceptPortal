@@ -1,8 +1,8 @@
 'use client';
 
 import { useCallback, useLayoutEffect, useState } from 'react';
-import { BiCog, BiFilterAlt } from 'react-icons/bi';
 
+import { IconFilter, IconSettings } from '@/components/Icons';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import SearchBar from '@/components/ui/SearchBar';
@@ -90,7 +90,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
           title='Настройка атрибутов для фильтрации'
           hideTitle={matchModeMenu.isOpen}
           className='h-full'
-          icon={<BiFilterAlt size='1.25rem' />}
+          icon={<IconFilter size='1.25rem' />}
           text={labelCstMatchMode(filterMatch)}
           onClick={matchModeMenu.toggle}
         />
@@ -121,7 +121,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
           title='Настройка фильтрации по графу термов'
           hideTitle={sourceMenu.isOpen}
           className='h-full pr-2'
-          icon={<BiCog size='1.25rem' />}
+          icon={<IconSettings size='1.25rem' />}
           text={labelCstSource(filterSource)}
           onClick={sourceMenu.toggle}
         />

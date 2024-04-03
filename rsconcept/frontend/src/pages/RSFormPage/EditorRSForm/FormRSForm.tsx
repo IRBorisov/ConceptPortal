@@ -2,10 +2,9 @@
 
 import clsx from 'clsx';
 import { useEffect, useLayoutEffect, useState } from 'react';
-import { FiSave } from 'react-icons/fi';
-import { LuGitBranchPlus, LuPencilLine } from 'react-icons/lu';
 import { toast } from 'react-toastify';
 
+import { IconList, IconNewItem, IconSave } from '@/components/Icons';
 import BadgeHelp from '@/components/man/BadgeHelp';
 import VersionSelector from '@/components/select/VersionSelector';
 import Checkbox from '@/components/ui/Checkbox';
@@ -124,13 +123,13 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
                   title={controller.isContentEditable ? 'Создать версию' : 'Переключитесь на актуальную версию'}
                   disabled={!controller.isContentEditable}
                   onClick={controller.createVersion}
-                  icon={<LuGitBranchPlus size='1.25rem' className='icon-green' />}
+                  icon={<IconNewItem size='1.25rem' className='icon-green' />}
                 />
                 <MiniButton
                   title={schema?.versions.length === 0 ? 'Список версий пуст' : 'Редактировать версии'}
                   disabled={!schema || schema?.versions.length === 0}
                   onClick={controller.editVersions}
-                  icon={<LuPencilLine size='1.25rem' className='icon-primary' />}
+                  icon={<IconList size='1.25rem' className='icon-primary' />}
                 />
               </>
             ) : null}
@@ -177,7 +176,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
           className='self-center'
           loading={processing}
           disabled={!isModified}
-          icon={<FiSave size='1.25rem' />}
+          icon={<IconSave size='1.25rem' />}
         />
       ) : null}
     </form>

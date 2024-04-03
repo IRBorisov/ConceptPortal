@@ -3,8 +3,8 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { BiCheck, BiRefresh, BiX } from 'react-icons/bi';
 
+import { IconAccept, IconRemove, IconReset } from '@/components/Icons';
 import RSInput from '@/components/RSInput';
 import ConstituentaPicker from '@/components/select/ConstituentaPicker';
 import DataTable, { IConditionalStyle } from '@/components/ui/DataTable';
@@ -122,7 +122,7 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
                 title='Очистить значение'
                 noPadding
                 noHover
-                icon={<BiX size='1.25rem' className='icon-red' />}
+                icon={<IconRemove size='1.25rem' className='icon-red' />}
                 onClick={() => handleClearArgument(props.row.original)}
               />
             ) : null}
@@ -188,7 +188,7 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
             title='Подставить значение аргумента'
             noHover
             className='py-0'
-            icon={<BiCheck size='2rem' className='icon-green' />}
+            icon={<IconAccept size='2rem' className='icon-green' />}
             disabled={!argumentValue || !selectedArgument}
             onClick={() => handleAssignArgument(selectedArgument!, argumentValue)}
           />
@@ -198,7 +198,7 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
             className='py-0'
             disabled={!isModified}
             onClick={handleReset}
-            icon={<BiRefresh size='2rem' className='icon-primary' />}
+            icon={<IconReset size='2rem' className='icon-primary' />}
           />
         </div>
       </div>

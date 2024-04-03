@@ -1,10 +1,9 @@
-import { LuLightbulb } from 'react-icons/lu';
-
 import TextURL from '@/components/ui/TextURL';
 import Tooltip, { PlacesType } from '@/components/ui/Tooltip';
 import { useConceptOptions } from '@/context/OptionsContext';
 import { HelpTopic } from '@/models/miscellaneous';
 
+import { IconHelp } from '../Icons';
 import InfoTopic from '../info/InfoTopic';
 import { CProps } from '../props';
 
@@ -22,7 +21,7 @@ function BadgeHelp({ topic, ...restProps }: BadgeHelpProps) {
   }
   return (
     <div id={`help-${topic}`} className='p-1'>
-      <LuLightbulb size='1.25rem' className='icon-primary' />
+      <IconHelp size='1.25rem' className='icon-primary' />
       <Tooltip clickable anchorSelect={`#help-${topic}`} layer='z-modal-tooltip' {...restProps}>
         <div className='relative' onClick={event => event.stopPropagation()}>
           <div className='absolute right-0 text-sm top-[0.4rem] clr-input'>

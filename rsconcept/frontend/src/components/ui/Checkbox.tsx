@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 
 import { globals } from '@/utils/constants';
 
-import { CheckboxCheckedIcon } from '../Icons';
+import { CheckboxChecked } from '../Icons';
 import { CProps } from '../props';
 
 export interface CheckboxProps extends Omit<CProps.Button, 'value' | 'onClick'> {
@@ -72,7 +72,7 @@ function Checkbox({
       >
         {value ? (
           <div className='mt-[1px] ml-[1px]'>
-            <CheckboxCheckedIcon />
+            <CheckboxChecked />
           </div>
         ) : null}
       </div>

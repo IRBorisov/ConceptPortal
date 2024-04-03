@@ -2,8 +2,8 @@
 
 import clsx from 'clsx';
 import { useCallback, useMemo } from 'react';
-import { BiX } from 'react-icons/bi';
 
+import { IconRemove } from '@/components/Icons';
 import WordFormBadge from '@/components/info/WordFormBadge';
 import DataTable, { createColumnHelper } from '@/components/ui/DataTable';
 import MiniButton from '@/components/ui/MiniButton';
@@ -60,7 +60,7 @@ function WordFormsTable({ forms, setForms, onFormSelect }: WordFormsTableProps) 
               noHover
               noPadding
               title='Удалить словоформу'
-              icon={<BiX size='1.25rem' className='icon-red' />}
+              icon={<IconRemove size='1.25rem' className='icon-red' />}
               onClick={() => handleDeleteRow(props.row.index)}
             />
           </div>

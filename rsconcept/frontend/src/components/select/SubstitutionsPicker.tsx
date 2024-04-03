@@ -1,8 +1,8 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import { BiChevronLeft, BiChevronRight, BiFirstPage, BiLastPage, BiX } from 'react-icons/bi';
-import { LuFlag, LuFlagOff, LuPower, LuPowerOff, LuReplace } from 'react-icons/lu';
+import { BiChevronLeft, BiChevronRight, BiFirstPage, BiLastPage } from 'react-icons/bi';
+import { LuFlag, LuFlagOff, LuPower, LuPowerOff } from 'react-icons/lu';
 
 import ConstituentaBadge from '@/components/info/ConstituentaBadge';
 import ConstituentaSelector from '@/components/select/ConstituentaSelector';
@@ -12,6 +12,8 @@ import MiniButton from '@/components/ui/MiniButton';
 import { useConceptOptions } from '@/context/OptionsContext';
 import { IConstituenta, IRSForm, ISubstitution } from '@/models/rsform';
 import { describeConstituenta } from '@/utils/labels';
+
+import { IconRemove, IconReplace } from '../Icons';
 
 interface SubstitutionsPickerProps {
   prefixID: string;
@@ -141,7 +143,7 @@ function SubstitutionsPicker({
           <MiniButton
             noHover
             title='Удалить'
-            icon={<BiX size='1rem' className='icon-red' />}
+            icon={<IconRemove size='1rem' className='icon-red' />}
             onClick={() => handleDeleteRow(props.row.index)}
           />
         )
@@ -194,7 +196,7 @@ function SubstitutionsPicker({
           noHover
           title='Добавить в таблицу отождествлений'
           className='mb-[0.375rem] grow-0'
-          icon={<LuReplace size='1.5rem' className='icon-primary' />}
+          icon={<IconReplace size='1.5rem' className='icon-primary' />}
           disabled={!leftCst || !rightCst || leftCst === rightCst}
           onClick={addSubstitution}
         />

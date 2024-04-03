@@ -1,9 +1,8 @@
 'use client';
 
 import { useLayoutEffect, useMemo, useState } from 'react';
-import { BiReset } from 'react-icons/bi';
-import { FiSave } from 'react-icons/fi';
 
+import { IconReset, IconSave } from '@/components/Icons';
 import MiniButton from '@/components/ui/MiniButton';
 import Modal from '@/components/ui/Modal';
 import TextArea from '@/components/ui/TextArea';
@@ -92,14 +91,14 @@ function DlgEditVersions({ hideWindow, versions, onDelete, onUpdate }: DlgEditVe
           <MiniButton
             title='Сохранить изменения'
             disabled={!isModified || !isValid || processing}
-            icon={<FiSave size='1.25rem' className='icon-primary' />}
+            icon={<IconSave size='1.25rem' className='icon-primary' />}
             onClick={handleUpdate}
           />
           <MiniButton
             title='Сбросить несохраненные изменения'
             disabled={!isModified}
             onClick={handleReset}
-            icon={<BiReset size='1.25rem' className='icon-primary' />}
+            icon={<IconReset size='1.25rem' className='icon-primary' />}
           />
         </div>
       </div>

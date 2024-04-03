@@ -3,12 +3,12 @@
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import { useRef } from 'react';
-import { BiX } from 'react-icons/bi';
 
 import useEscapeKey from '@/hooks/useEscapeKey';
 import { animateModal } from '@/styling/animations';
 import { prepareTooltip } from '@/utils/labels';
 
+import { IconClose } from '../Icons';
 import { CProps } from '../props';
 import Button from './Button';
 import MiniButton from './MiniButton';
@@ -75,7 +75,7 @@ function Modal({
           <MiniButton
             noPadding
             titleHtml={prepareTooltip('Закрыть диалоговое окно', 'ESC')}
-            icon={<BiX size='1.25rem' />}
+            icon={<IconClose size='1.25rem' />}
             onClick={handleCancel}
           />
         </Overlay>

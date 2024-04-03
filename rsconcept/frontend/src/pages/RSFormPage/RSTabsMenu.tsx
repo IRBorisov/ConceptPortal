@@ -1,30 +1,23 @@
 'use client';
 
-import {
-  BiDiamond,
-  BiDownload,
-  BiDuplicate,
-  BiMenu,
-  BiMeteor,
-  BiPlusCircle,
-  BiShareAlt,
-  BiTrash,
-  BiUpload
-} from 'react-icons/bi';
+import { BiDiamond, BiMenu } from 'react-icons/bi';
 import { FiEdit } from 'react-icons/fi';
-import {
-  LuAlertTriangle,
-  LuArchive,
-  LuBookCopy,
-  LuCrown,
-  LuGlasses,
-  LuNetwork,
-  LuReplace,
-  LuWand2
-} from 'react-icons/lu';
+import { LuAlertTriangle, LuArchive, LuBookCopy, LuNetwork, LuWand2 } from 'react-icons/lu';
 import { VscLibrary } from 'react-icons/vsc';
 
 import { urls } from '@/app/urls';
+import {
+  IconAdmin,
+  IconClone,
+  IconDestroy,
+  IconDownload,
+  IconNewItem,
+  IconOwner,
+  IconReader,
+  IconReplace,
+  IconShare,
+  IconUpload
+} from '@/components/Icons';
 import Button from '@/components/ui/Button';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
@@ -140,33 +133,33 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
           {user ? (
             <DropdownButton
               text={model.isOwned ? 'Вы — владелец' : 'Стать владельцем'}
-              icon={<LuCrown size='1rem' className='icon-green' />}
+              icon={<IconOwner size='1rem' className='icon-green' />}
               disabled={!model.isClaimable && !model.isOwned}
               onClick={!model.isOwned && model.isClaimable ? handleClaimOwner : undefined}
             />
           ) : null}
           <DropdownButton
             text='Поделиться'
-            icon={<BiShareAlt size='1rem' className='icon-primary' />}
+            icon={<IconShare size='1rem' className='icon-primary' />}
             onClick={handleShare}
           />
           {user ? (
             <DropdownButton
               text='Клонировать'
-              icon={<BiDuplicate size='1rem' className='icon-primary' />}
+              icon={<IconClone size='1rem' className='icon-primary' />}
               disabled={model.isArchive}
               onClick={handleClone}
             />
           ) : null}
           <DropdownButton
             text='Выгрузить в Экстеор'
-            icon={<BiDownload size='1rem' className='icon-primary' />}
+            icon={<IconDownload size='1rem' className='icon-primary' />}
             onClick={handleDownload}
           />
           {controller.isContentEditable ? (
             <DropdownButton
               text='Загрузить из Экстеора'
-              icon={<BiUpload size='1rem' className='icon-red' />}
+              icon={<IconUpload size='1rem' className='icon-red' />}
               disabled={controller.isProcessing}
               onClick={handleUpload}
             />
@@ -174,7 +167,7 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
           {controller.isMutable ? (
             <DropdownButton
               text='Удалить схему'
-              icon={<BiTrash size='1rem' className='icon-red' />}
+              icon={<IconDestroy size='1rem' className='icon-red' />}
               disabled={controller.isProcessing}
               onClick={handleDelete}
             />
@@ -183,7 +176,7 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
             <DropdownButton
               className='border-t-2'
               text='Создать новую схему'
-              icon={<BiPlusCircle size='1rem' className='icon-primary' />}
+              icon={<IconNewItem size='1rem' className='icon-primary' />}
               onClick={handleCreateNew}
             />
           ) : null}
@@ -241,7 +234,7 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
             <DropdownButton
               text='Отождествление'
               title='Заменить вхождения одной конституенты на другую'
-              icon={<LuReplace size='1rem' className='icon-red' />}
+              icon={<IconReplace size='1rem' className='icon-red' />}
               onClick={handleSubstituteCst}
               disabled={!controller.isContentEditable || controller.isProcessing}
             />
@@ -274,11 +267,11 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
             className='h-full pr-2'
             icon={
               mode === UserAccessMode.ADMIN ? (
-                <BiMeteor size='1.25rem' className='icon-primary' />
+                <IconAdmin size='1.25rem' className='icon-primary' />
               ) : mode === UserAccessMode.OWNER ? (
-                <LuCrown size='1.25rem' className='icon-primary' />
+                <IconOwner size='1.25rem' className='icon-primary' />
               ) : (
-                <LuGlasses size='1.25rem' className='icon-primary' />
+                <IconReader size='1.25rem' className='icon-primary' />
               )
             }
             onClick={accessMenu.toggle}
@@ -287,20 +280,20 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
             <DropdownButton
               text={labelAccessMode(UserAccessMode.READER)}
               title={describeAccessMode(UserAccessMode.READER)}
-              icon={<LuGlasses size='1rem' className='icon-primary' />}
+              icon={<IconReader size='1rem' className='icon-primary' />}
               onClick={() => handleChangeMode(UserAccessMode.READER)}
             />
             <DropdownButton
               text={labelAccessMode(UserAccessMode.OWNER)}
               title={describeAccessMode(UserAccessMode.OWNER)}
-              icon={<LuCrown size='1rem' className='icon-primary' />}
+              icon={<IconOwner size='1rem' className='icon-primary' />}
               disabled={!model.isOwned}
               onClick={() => handleChangeMode(UserAccessMode.OWNER)}
             />
             <DropdownButton
               text={labelAccessMode(UserAccessMode.ADMIN)}
               title={describeAccessMode(UserAccessMode.ADMIN)}
-              icon={<BiMeteor size='1rem' className='icon-primary' />}
+              icon={<IconAdmin size='1rem' className='icon-primary' />}
               disabled={!user?.is_staff}
               onClick={() => handleChangeMode(UserAccessMode.ADMIN)}
             />

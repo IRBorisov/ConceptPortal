@@ -2,8 +2,9 @@
 
 import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
-import { BiCheck, BiChevronsDown, BiLeftArrow, BiRightArrow, BiX } from 'react-icons/bi';
+import { BiChevronsDown, BiLeftArrow, BiRightArrow } from 'react-icons/bi';
 
+import { IconAccept, IconRemove } from '@/components/Icons';
 import BadgeHelp from '@/components/man/BadgeHelp';
 import SelectGrammeme from '@/components/select/SelectGrammeme';
 import Label from '@/components/ui/Label';
@@ -182,7 +183,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         <MiniButton
           noHover
           title='Внести словоформу'
-          icon={<BiCheck size='1.5rem' className='icon-green' />}
+          icon={<IconAccept size='1.5rem' className='icon-green' />}
           disabled={textProcessor.loading || !inputText || inputGrams.length == 0}
           onClick={handleAddForm}
         />
@@ -201,7 +202,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
           noHover
           title='Сбросить все словоформы'
           className='py-0'
-          icon={<BiX size='1.5rem' className='icon-red' />}
+          icon={<IconRemove size='1.5rem' className='icon-red' />}
           disabled={textProcessor.loading || forms.length === 0}
           onClick={handleResetAll}
         />

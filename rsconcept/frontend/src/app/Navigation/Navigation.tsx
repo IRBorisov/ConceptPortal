@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { FaSquarePlus } from 'react-icons/fa6';
 import { IoLibrary } from 'react-icons/io5';
 
-import { EducationIcon } from '@/components/Icons';
+import { IconManuals } from '@/components/Icons';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useConceptOptions } from '@/context/OptionsContext';
 import { animateNavigation } from '@/styling/animations';
@@ -59,12 +59,7 @@ function Navigation() {
             icon={<IoLibrary size='1.5rem' />}
             onClick={navigateLibrary}
           />
-          <NavigationButton
-            text='Справка'
-            title='Справочные материалы'
-            icon={<EducationIcon />}
-            onClick={navigateHelp}
-          />
+          <NavigationButton text='Справка' title='Справочные материалы' icon={<IconManuals />} onClick={navigateHelp} />
           <UserMenu />
         </div>
       </motion.div>

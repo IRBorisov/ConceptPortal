@@ -1,6 +1,4 @@
-import { BiDownvote, BiDuplicate, BiPlusCircle, BiReset, BiTrash, BiUpvote } from 'react-icons/bi';
-import { FiSave } from 'react-icons/fi';
-
+import { IconClone, IconDestroy, IconMoveDown, IconMoveUp, IconNewItem, IconReset, IconSave } from '@/components/Icons';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { messages, prepareTooltip } from '@/utils/labels';
@@ -34,25 +32,25 @@ function ConstituentaToolbar({
     <Overlay position='top-1 right-4 sm:right-1/2 sm:translate-x-1/2' className='cc-icons'>
       <MiniButton
         titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
-        icon={<FiSave size='1.25rem' className='icon-primary' />}
+        icon={<IconSave size='1.25rem' className='icon-primary' />}
         disabled={disabled || !modified}
         onClick={onSubmit}
       />
       <MiniButton
         title='Сбросить несохраненные изменения'
-        icon={<BiReset size='1.25rem' className='icon-primary' />}
+        icon={<IconReset size='1.25rem' className='icon-primary' />}
         disabled={disabled || !modified}
         onClick={onReset}
       />
       <MiniButton
         title='Создать конституенту после данной'
-        icon={<BiPlusCircle size={'1.25rem'} className='icon-green' />}
+        icon={<IconNewItem size={'1.25rem'} className='icon-green' />}
         disabled={disabled}
         onClick={onCreate}
       />
       <MiniButton
         titleHtml={modified ? messages.unsaved : prepareTooltip('Клонировать конституенту', 'Alt + V')}
-        icon={<BiDuplicate size='1.25rem' className='icon-green' />}
+        icon={<IconClone size='1.25rem' className='icon-green' />}
         disabled={disabled || modified}
         onClick={onClone}
       />
@@ -60,17 +58,17 @@ function ConstituentaToolbar({
         title='Удалить редактируемую конституенту'
         disabled={disabled}
         onClick={onDelete}
-        icon={<BiTrash size='1.25rem' className='icon-red' />}
+        icon={<IconDestroy size='1.25rem' className='icon-red' />}
       />
       <MiniButton
         titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
-        icon={<BiUpvote size='1.25rem' className='icon-primary' />}
+        icon={<IconMoveUp size='1.25rem' className='icon-primary' />}
         disabled={disabled || modified}
         onClick={onMoveUp}
       />
       <MiniButton
         titleHtml={prepareTooltip('Переместить вниз', 'Alt + вниз')}
-        icon={<BiDownvote size='1.25rem' className='icon-primary' />}
+        icon={<IconMoveDown size='1.25rem' className='icon-primary' />}
         disabled={disabled || modified}
         onClick={onMoveDown}
       />

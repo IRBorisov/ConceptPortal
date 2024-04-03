@@ -1,5 +1,6 @@
-import { BiDownArrowCircle, BiDownvote, BiDuplicate, BiPlusCircle, BiTrash, BiUpvote } from 'react-icons/bi';
+import { BiDownArrowCircle } from 'react-icons/bi';
 
+import { IconClone, IconDestroy, IconMoveDown, IconMoveUp, IconNewItem } from '@/components/Icons';
 import BadgeHelp from '@/components/man/BadgeHelp';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
@@ -22,25 +23,25 @@ function RSListToolbar() {
     <Overlay position='top-1 right-1/2 translate-x-1/2' className='items-start cc-icons'>
       <MiniButton
         titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
-        icon={<BiUpvote size='1.25rem' className='icon-primary' />}
+        icon={<IconMoveUp size='1.25rem' className='icon-primary' />}
         disabled={controller.isProcessing || controller.nothingSelected}
         onClick={controller.moveUp}
       />
       <MiniButton
         titleHtml={prepareTooltip('Переместить вниз', 'Alt + вниз')}
-        icon={<BiDownvote size='1.25rem' className='icon-primary' />}
+        icon={<IconMoveDown size='1.25rem' className='icon-primary' />}
         disabled={controller.isProcessing || controller.nothingSelected}
         onClick={controller.moveDown}
       />
       <MiniButton
         titleHtml={prepareTooltip('Клонировать конституенту', 'Alt + V')}
-        icon={<BiDuplicate size='1.25rem' className='icon-green' />}
+        icon={<IconClone size='1.25rem' className='icon-green' />}
         disabled={controller.isProcessing || controller.selected.length !== 1}
         onClick={controller.cloneCst}
       />
       <MiniButton
         titleHtml={prepareTooltip('Добавить новую конституенту...', 'Alt + `')}
-        icon={<BiPlusCircle size='1.25rem' className='icon-green' />}
+        icon={<IconNewItem size='1.25rem' className='icon-green' />}
         disabled={controller.isProcessing}
         onClick={() => controller.createCst(undefined, false)}
       />
@@ -65,7 +66,7 @@ function RSListToolbar() {
       </div>
       <MiniButton
         titleHtml={prepareTooltip('Удалить выбранные', 'Delete')}
-        icon={<BiTrash size='1.25rem' className='icon-red' />}
+        icon={<IconDestroy size='1.25rem' className='icon-red' />}
         disabled={controller.isProcessing || controller.nothingSelected}
         onClick={controller.deleteCst}
       />

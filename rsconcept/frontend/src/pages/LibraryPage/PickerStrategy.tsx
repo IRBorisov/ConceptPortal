@@ -1,8 +1,8 @@
 'use client';
 
 import { useCallback } from 'react';
-import { BiFilterAlt } from 'react-icons/bi';
 
+import { IconFilter } from '@/components/Icons';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownCheckbox from '@/components/ui/DropdownCheckbox';
 import SelectorButton from '@/components/ui/SelectorButton';
@@ -49,7 +49,7 @@ function PickerStrategy({ value, onChange }: PickerStrategyProps) {
         title='Список фильтров'
         hideTitle={strategyMenu.isOpen}
         className='h-full'
-        icon={<BiFilterAlt size='1.25rem' />}
+        icon={<IconFilter size='1.25rem' />}
         text={labelLibraryFilter(value)}
         onClick={strategyMenu.toggle}
       />

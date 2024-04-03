@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 
 import { globals } from '@/utils/constants';
 
-import { CheckboxCheckedIcon, CheckboxNullIcon } from '../Icons';
+import { CheckboxChecked, CheckboxNull } from '../Icons';
 import { CheckboxProps } from './Checkbox';
 
 export interface CheckboxTristateProps extends Omit<CheckboxProps, 'value' | 'setValue'> {
@@ -75,12 +75,12 @@ function CheckboxTristate({
       >
         {value ? (
           <div className='mt-[1px] ml-[1px]'>
-            <CheckboxCheckedIcon />
+            <CheckboxChecked />
           </div>
         ) : null}
         {value == null ? (
           <div className='mt-[1px] ml-[1px]'>
-            <CheckboxNullIcon />
+            <CheckboxNull />
           </div>
         ) : null}
       </div>

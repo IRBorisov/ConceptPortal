@@ -1,7 +1,6 @@
 import clsx from 'clsx';
-import { BiCheckShield, BiShareAlt } from 'react-icons/bi';
-import { FiBell } from 'react-icons/fi';
 
+import { IconFollow, IconImmutable, IconPublic } from '@/components/Icons';
 import { ICurrentUser, ILibraryItem } from '@/models/library';
 import { prefixes } from '@/utils/constants';
 
@@ -15,17 +14,17 @@ function ItemIcons({ user, item }: ItemIconsProps) {
     <div className={clsx('min-w-[3.3rem]', 'inline-flex gap-1 align-middle')} id={`${prefixes.library_list}${item.id}`}>
       {user && user.subscriptions.includes(item.id) ? (
         <span title='Отслеживаемая'>
-          <FiBell size='1rem' />
+          <IconFollow size='1rem' />
         </span>
       ) : null}
       {item.is_common ? (
         <span title='Общедоступная'>
-          <BiShareAlt size='1em' />
+          <IconPublic size='1rem' />
         </span>
       ) : null}
       {item.is_canonical ? (
         <span title='Неизменная'>
-          <BiCheckShield size='1rem' />
+          <IconImmutable size='1rem' />
         </span>
       ) : null}
     </div>

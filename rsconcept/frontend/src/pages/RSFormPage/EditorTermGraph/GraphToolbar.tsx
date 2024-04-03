@@ -1,18 +1,20 @@
 'use client';
 
 import {
-  BiFilterAlt,
-  BiFont,
-  BiFontFamily,
-  BiGitBranch,
-  BiGitMerge,
-  BiPlanet,
-  BiPlusCircle,
-  BiReset,
-  BiTrash
-} from 'react-icons/bi';
-import { LuExpand, LuImage, LuMaximize, LuMinimize } from 'react-icons/lu';
-
+  IconDestroy,
+  IconFilter,
+  IconFitImage,
+  IconGraphClosure,
+  IconGraphExpand,
+  IconGraphInputs,
+  IconGraphMaximize,
+  IconGraphOutputs,
+  IconNewItem,
+  IconReset,
+  IconRotate3D,
+  IconText,
+  IconTextOff
+} from '@/components/Icons';
 import BadgeHelp from '@/components/man/BadgeHelp';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
@@ -56,27 +58,27 @@ function GraphToolbar({
       <div className='cc-icons'>
         <MiniButton
           title='Настройки фильтрации узлов и связей'
-          icon={<BiFilterAlt size='1.25rem' className='icon-primary' />}
+          icon={<IconFilter size='1.25rem' className='icon-primary' />}
           onClick={showParamsDialog}
         />
         <MiniButton
           title={!noText ? 'Скрыть текст' : 'Отобразить текст'}
           icon={
             !noText ? (
-              <BiFontFamily size='1.25rem' className='icon-green' />
+              <IconText size='1.25rem' className='icon-green' />
             ) : (
-              <BiFont size='1.25rem' className='icon-primary' />
+              <IconTextOff size='1.25rem' className='icon-primary' />
             )
           }
           onClick={toggleNoText}
         />
         <MiniButton
-          icon={<LuImage size='1.25rem' className='icon-primary' />}
-          title='Восстановить камеру'
+          icon={<IconFitImage size='1.25rem' className='icon-primary' />}
+          title='Граф целиком'
           onClick={onResetViewpoint}
         />
         <MiniButton
-          icon={<BiPlanet size='1.25rem' className={orbit ? 'icon-green' : 'icon-primary'} />}
+          icon={<IconRotate3D size='1.25rem' className={orbit ? 'icon-green' : 'icon-primary'} />}
           title='Анимация вращения'
           disabled={!is3D}
           onClick={toggleOrbit}
@@ -84,7 +86,7 @@ function GraphToolbar({
         {controller.isContentEditable ? (
           <MiniButton
             title='Новая конституента'
-            icon={<BiPlusCircle size='1.25rem' className='icon-green' />}
+            icon={<IconNewItem size='1.25rem' className='icon-green' />}
             disabled={controller.isProcessing}
             onClick={onCreate}
           />
@@ -92,7 +94,7 @@ function GraphToolbar({
         {controller.isContentEditable ? (
           <MiniButton
             title='Удалить выбранные'
-            icon={<BiTrash size='1.25rem' className='icon-red' />}
+            icon={<IconDestroy size='1.25rem' className='icon-red' />}
             disabled={controller.nothingSelected || controller.isProcessing}
             onClick={onDelete}
           />
@@ -102,36 +104,36 @@ function GraphToolbar({
       <div className='cc-icons'>
         <MiniButton
           titleHtml='<b>[ESC]</b><br/>Сбросить выделение'
-          icon={<BiReset size='1.25rem' className='icon-primary' />}
+          icon={<IconReset size='1.25rem' className='icon-primary' />}
           onClick={controller.deselectAll}
         />
         <MiniButton
           titleHtml='<b>Замыкание</b> - дополнение выделения влияющими конституентами'
-          icon={<LuMinimize size='1.25rem' className='icon-primary' />}
+          icon={<IconGraphClosure size='1.25rem' className='icon-primary' />}
           disabled={controller.nothingSelected}
           onClick={controller.selectAllInputs}
         />
         <MiniButton
           titleHtml='<b>Максимизация</b> - дополнение выделения конституентами, зависимыми только от выделенных'
-          icon={<LuMaximize size='1.25rem' className='icon-primary' />}
+          icon={<IconGraphMaximize size='1.25rem' className='icon-primary' />}
           disabled={controller.nothingSelected}
           onClick={controller.selectMax}
         />
         <MiniButton
           titleHtml='Выделить все зависимые'
-          icon={<LuExpand size='1.25rem' className='icon-primary' />}
+          icon={<IconGraphExpand size='1.25rem' className='icon-primary' />}
           disabled={controller.nothingSelected}
           onClick={controller.selectAllOutputs}
         />
         <MiniButton
           titleHtml='Выделить поставщиков'
-          icon={<BiGitBranch size='1.25rem' className='icon-primary' />}
+          icon={<IconGraphInputs size='1.25rem' className='icon-primary' />}
           disabled={controller.nothingSelected}
           onClick={controller.selectInputs}
         />
         <MiniButton
           titleHtml='Выделить потребителей'
-          icon={<BiGitMerge size='1.25rem' className='icon-primary' />}
+          icon={<IconGraphOutputs size='1.25rem' className='icon-primary' />}
           disabled={controller.nothingSelected}
           onClick={controller.selectOutputs}
         />

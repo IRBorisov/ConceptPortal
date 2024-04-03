@@ -2,8 +2,8 @@
 
 import clsx from 'clsx';
 import { useRef, useState } from 'react';
-import { BiUpload } from 'react-icons/bi';
 
+import { IconUpload } from '../Icons';
 import { CProps } from '../props';
 import Button from './Button';
 import Label from './Label';
@@ -45,7 +45,7 @@ function FileInput({ id, label, acceptType, title, className, style, onChange, .
         onChange={handleFileChange}
         {...restProps}
       />
-      <Button text={label} icon={<BiUpload size='1.25rem' />} onClick={handleUploadClick} title={title} />
+      <Button text={label} icon={<IconUpload size='1.25rem' />} onClick={handleUploadClick} title={title} />
       <Label text={fileName} htmlFor={id} />
     </div>
   );

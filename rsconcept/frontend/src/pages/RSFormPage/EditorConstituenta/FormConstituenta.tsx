@@ -3,9 +3,9 @@
 import clsx from 'clsx';
 import { AnimatePresence } from 'framer-motion';
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
-import { FiSave } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 
+import { IconSave } from '@/components/Icons';
 import RefsInput from '@/components/RefsInput';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
@@ -237,7 +237,7 @@ function FormConstituenta({
               text='Сохранить изменения'
               className='self-center'
               disabled={disabled || !isModified}
-              icon={<FiSave size='1.25rem' />}
+              icon={<IconSave size='1.25rem' />}
             />
           ) : null}
         </AnimatePresence>

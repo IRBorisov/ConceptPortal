@@ -3,11 +3,10 @@
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { AnimatePresence } from 'framer-motion';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
-import { BiFontFamily, BiListUl } from 'react-icons/bi';
 import { FaRegKeyboard } from 'react-icons/fa6';
-import { RiNodeTree } from 'react-icons/ri';
 import { toast } from 'react-toastify';
 
+import { IconList, IconText, IconTree } from '@/components/Icons';
 import BadgeHelp from '@/components/man/BadgeHelp';
 import RSInput from '@/components/RSInput';
 import { RSTextWrapper } from '@/components/RSInput/textEditing';
@@ -165,7 +164,7 @@ function EditorRSExpression({
         <MiniButton
           title='Изменить шрифт'
           onClick={toggleFont}
-          icon={<BiFontFamily size='1.25rem' className={mathFont === 'math' ? 'icon-primary' : ''} />}
+          icon={<IconText size='1.25rem' className={mathFont === 'math' ? 'icon-primary' : ''} />}
         />
         {!disabled || model.processing ? (
           <MiniButton
@@ -177,12 +176,12 @@ function EditorRSExpression({
         <MiniButton
           title='Отображение списка конституент'
           onClick={onToggleList}
-          icon={<BiListUl size='1.25rem' className={showList ? 'icon-primary' : ''} />}
+          icon={<IconList size='1.25rem' className={showList ? 'icon-primary' : ''} />}
         />
         <MiniButton
           title='Дерево разбора выражения'
           onClick={handleShowAST}
-          icon={<RiNodeTree size='1.25rem' className='icon-primary' />}
+          icon={<IconTree size='1.25rem' className='icon-primary' />}
         />
       </Overlay>
 

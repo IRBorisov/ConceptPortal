@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import { LiaEdit } from 'react-icons/lia';
 
+import { IconEdit } from '@/components/Icons';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { IConstituenta } from '@/models/rsform';
@@ -26,7 +26,7 @@ function ControlsOverlay({ constituenta, disabled, modified, processing, onRenam
           }
           noHover
           onClick={onEditTerm}
-          icon={<LiaEdit size='1rem' className='icon-primary' />}
+          icon={<IconEdit size='1rem' className='icon-primary' />}
           disabled={modified}
         />
       ) : null}
@@ -46,7 +46,7 @@ function ControlsOverlay({ constituenta, disabled, modified, processing, onRenam
           noHover
           title={modified ? messages.unsaved : 'Переименовать конституенту'}
           onClick={onRename}
-          icon={<LiaEdit size='1rem' className='icon-primary' />}
+          icon={<IconEdit size='1rem' className='icon-primary' />}
           disabled={modified}
         />
       ) : null}

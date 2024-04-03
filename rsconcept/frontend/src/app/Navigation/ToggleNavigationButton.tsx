@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
-import { RiPushpinFill, RiUnpinLine } from 'react-icons/ri';
 
+import { IconPin, IconUnpin } from '@/components/Icons';
 import { useConceptOptions } from '@/context/OptionsContext';
 import { animateNavigationToggle } from '@/styling/animations';
 
@@ -22,8 +22,8 @@ function ToggleNavigationButton() {
       animate={noNavigationAnimation ? 'off' : 'on'}
       variants={animateNavigationToggle}
     >
-      {!noNavigationAnimation ? <RiPushpinFill /> : null}
-      {noNavigationAnimation ? <RiUnpinLine /> : null}
+      {!noNavigationAnimation ? <IconPin /> : null}
+      {noNavigationAnimation ? <IconUnpin /> : null}
     </motion.button>
   );
 }
