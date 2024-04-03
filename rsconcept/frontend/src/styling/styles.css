@@ -25,10 +25,6 @@
 }
 
 @layer components {
-  .clr-modal-backdrop {
-    opacity: 0.75;
-  }
-
   :is(
       .clr-border,
       .border,
@@ -57,7 +53,7 @@
     }
   }
 
-  :is(.clr-app, .clr-footer, .clr-modal-backdrop, .clr-btn-nav, .clr-input:disabled) {
+  :is(.clr-app, .clr-footer, .cc-modal-backdrop, .clr-btn-nav, .clr-input:disabled) {
     background-color: var(--cl-bg-100);
     .dark & {
       background-color: var(--cd-bg-100);
@@ -199,6 +195,15 @@
     }
   }
 
+  .cc-modal-blur {
+    opacity: 0.3;
+    backdrop-filter: blur(2px);
+  }
+
+  .cc-modal-backdrop {
+    opacity: 0.5;
+  }
+
   .cc-label {
     @apply text-sm font-medium cursor-default select-text whitespace-nowrap;
   }
@@ -209,5 +214,9 @@
 
   .cc-icons {
     @apply flex gap-1;
+  }
+
+  .cc-blur {
+    backdrop-filter: blur(3px);
   }
 }

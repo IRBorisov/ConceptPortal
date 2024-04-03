@@ -53,7 +53,7 @@ function GraphToolbar({
   return (
     <Overlay
       position='top-0 pt-1 right-1/2 translate-x-1/2'
-      className='flex flex-col items-center bg-opacity-10 clr-app'
+      className='flex flex-col items-center rounded-b-2xl cc-blur'
     >
       <div className='cc-icons'>
         <MiniButton

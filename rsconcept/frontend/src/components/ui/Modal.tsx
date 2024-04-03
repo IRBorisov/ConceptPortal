@@ -57,7 +57,8 @@ function Modal({
 
   return (
     <>
-      <div className={clsx('z-navigation', 'fixed top-0 left-0', 'w-full h-full', 'clr-modal-backdrop')} />
+      <div className={clsx('z-navigation', 'fixed top-0 left-0', 'w-full h-full', 'cc-modal-blur')} />
+      <div className={clsx('z-navigation', 'fixed top-0 left-0', 'w-full h-full', 'cc-modal-backdrop')} />
       <motion.div
         ref={ref}
         className={clsx(
