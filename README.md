@@ -64,6 +64,7 @@ This readme file is used mostly to document project dependencies
 <details>
   <summary>Google fonts</summary>
   <pre>
+  - Fira Code
   - Rubik
   - Geologica
   - Noto Sans Math
