@@ -6,17 +6,14 @@ For more specific TODOs see comments in code
 - landing page
 - home page (user specific)
 - export PDF
-- bug report form
 - блок нотификаций пользователей
 - блок синтеза
 
 - статический анализ схемы
 - конфигурации правил для разных статусов
 
-- блок организации библиотеки моделей
-- Настройка поиска в Библиотеке
+- Library organization, search and exploration. Consider new user experience
 - поиск по содержимому КС в Библиотеке
-- Запрос на поиск вхождений
 
 - private projects and permissions. Consider cooperative editing
 
@@ -25,10 +22,12 @@ For more specific TODOs see comments in code
 
 - ARIA (accessibility considerations) - for now machine reading not supported
 
+- rework access setup: project-based, user-based, enable sharing. Prevent enumerating access to private schemas by default
+
 
 [Tech]
 - add debounce to some search fields
-- upgrade backend to Python3.12 and Django 5
+- duplicate syntax parsing and type info calculations to client. Consider moving backend to Nodejs or embedding c++ lib
 
 
 [Deployment]
@@ -38,7 +37,6 @@ For more specific TODOs see comments in code
 
 [Security]
 - password-reset leaks info of email being used
-- do not use schemaID for access (prevent enumerating IDs access)
 - improve nginx config. Consider DDOS and other types of attacks on infrastructure
 
 [Research]
