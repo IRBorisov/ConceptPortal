@@ -1,6 +1,3 @@
-'use client';
-
-import { useMemo } from 'react';
 import { BiDownArrowCircle, BiDownvote, BiDuplicate, BiPlusCircle, BiTrash, BiUpvote } from 'react-icons/bi';
 
 import BadgeHelp from '@/components/man/BadgeHelp';
@@ -17,33 +14,28 @@ import { getCstTypeShortcut, labelCstType, prepareTooltip } from '@/utils/labels
 
 import { useRSEdit } from '../RSEditContext';
 
-interface RSListToolbarProps {
-  selectedCount: number;
-}
-
-function RSListToolbar({ selectedCount }: RSListToolbarProps) {
+function RSListToolbar() {
   const controller = useRSEdit();
   const insertMenu = useDropdown();
-  const nothingSelected = useMemo(() => selectedCount === 0, [selectedCount]);
 
   return (
     <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex items-start'>
       <MiniButton
         titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
         icon={<BiUpvote size='1.25rem' className='icon-primary' />}
-        disabled={controller.isProcessing || nothingSelected}
+        disabled={controller.isProcessing || controller.nothingSelected}
         onClick={controller.moveUp}
       />
       <MiniButton
         titleHtml={prepareTooltip('Переместить вниз', 'Alt + вниз')}
         icon={<BiDownvote size='1.25rem' className='icon-primary' />}
-        disabled={controller.isProcessing || nothingSelected}
+        disabled={controller.isProcessing || controller.nothingSelected}
         onClick={controller.moveDown}
       />
       <MiniButton
         titleHtml={prepareTooltip('Клонировать конституенту', 'Alt + V')}
         icon={<BiDuplicate size='1.25rem' className='icon-green' />}
-        disabled={controller.isProcessing || selectedCount !== 1}
+        disabled={controller.isProcessing || controller.selected.length !== 1}
         onClick={controller.cloneCst}
       />
       <MiniButton
@@ -74,7 +66,7 @@ function RSListToolbar({ selectedCount }: RSListToolbarProps) {
       <MiniButton
         titleHtml={prepareTooltip('Удалить выбранные', 'Delete')}
         icon={<BiTrash size='1.25rem' className='icon-red' />}
-        disabled={controller.isProcessing || nothingSelected}
+        disabled={controller.isProcessing || controller.nothingSelected}
         onClick={controller.deleteCst}
       />
       <BadgeHelp topic={HelpTopic.CST_LIST} offset={5} />

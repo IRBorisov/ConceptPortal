@@ -69,6 +69,7 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
         }}
       >
         <GraphUI
+          animated={false}
           nodes={nodes}
           edges={edges}
           layoutType='hierarchicalTd'

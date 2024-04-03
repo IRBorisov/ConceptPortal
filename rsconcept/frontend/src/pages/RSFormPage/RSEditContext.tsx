@@ -48,12 +48,23 @@ import { EXTEOR_TRS_FILE } from '@/utils/constants';
 
 interface IRSEditContext {
   schema?: IRSForm;
+  selected: ConstituentaID[];
+
   isMutable: boolean;
   isContentEditable: boolean;
   isProcessing: boolean;
   canProduceStructure: boolean;
+  nothingSelected: boolean;
+
+  setSelection: (selected: ConstituentaID[]) => void;
+  select: (target: ConstituentaID) => void;
+  deselect: (target: ConstituentaID) => void;
+  toggleSelect: (target: ConstituentaID) => void;
+  deselectAll: () => void;
 
   viewVersion: (version?: number) => void;
+  createVersion: () => void;
+  editVersions: () => void;
 
   moveUp: () => void;
   moveDown: () => void;
@@ -70,13 +81,11 @@ interface IRSEditContext {
   share: () => void;
   toggleSubscribe: () => void;
   download: () => void;
+
   reindex: () => void;
   produceStructure: () => void;
   inlineSynthesis: () => void;
   substitute: () => void;
-
-  createVersion: () => void;
-  editVersions: () => void;
 }
 
 const RSEditContext = createContext<IRSEditContext | null>(null);
@@ -119,6 +128,7 @@ export const RSEditState = ({
     );
   }, [user?.is_staff, mode, model.isOwned]);
   const isContentEditable = useMemo(() => isMutable && !model.isArchive, [isMutable, model.isArchive]);
+  const nothingSelected = useMemo(() => selected.length === 0, [selected]);
 
   const [showUpload, setShowUpload] = useState(false);
   const [showClone, setShowClone] = useState(false);
@@ -464,12 +474,23 @@ export const RSEditState = ({
     <RSEditContext.Provider
       value={{
         schema: model.schema,
+        selected,
         isMutable,
         isContentEditable,
         isProcessing: model.processing,
         canProduceStructure,
+        nothingSelected,
+
+        setSelection: (selected: ConstituentaID[]) => setSelected(selected),
+        select: (target: ConstituentaID) => setSelected(prev => [...prev, target]),
+        deselect: (target: ConstituentaID) => setSelected(prev => prev.filter(id => id !== target)),
+        toggleSelect: (target: ConstituentaID) =>
+          setSelected(prev => (prev.includes(target) ? prev.filter(id => id !== target) : [...prev, target])),
+        deselectAll: () => setSelected([]),
 
         viewVersion,
+        createVersion: () => setShowCreateVersion(true),
+        editVersions: () => setShowEditVersions(true),
 
         moveUp,
         moveDown,
@@ -486,13 +507,11 @@ export const RSEditState = ({
         claim,
         share,
         toggleSubscribe,
+
         reindex,
         inlineSynthesis: () => setShowInlineSynthesis(true),
         produceStructure,
-        substitute,
-
-        createVersion: () => setShowCreateVersion(true),
-        editVersions: () => setShowEditVersions(true)
+        substitute
       }}
     >
       {model.schema ? (

@@ -20,7 +20,7 @@ interface TermGraphProps {
   setHoverID: (newID: ConstituentaID | undefined) => void;
   onEdit: (cstID: ConstituentaID) => void;
   onSelect: (newID: ConstituentaID) => void;
-  onDeselectAll: () => void;
+  onDeselect: (newID: ConstituentaID) => void;
 
   toggleResetView: boolean;
 }
@@ -38,54 +38,45 @@ function TermGraph({
   setHoverID,
   onEdit,
   onSelect,
-  onDeselectAll
+  onDeselect
 }: TermGraphProps) {
   const { calculateHeight, darkMode } = useConceptOptions();
   const graphRef = useRef<GraphCanvasRef | null>(null);
 
-  const { selections, actives, setSelections, onCanvasClick, onNodePointerOver, onNodePointerOut } = useSelection({
+  const { selections, setSelections } = useSelection({
     ref: graphRef,
     nodes,
     edges,
-    type: 'multi', // 'single' | 'multi' | 'multiModifier'
-    pathSelectionType: 'out',
-    pathHoverType: 'all',
-    focusOnSelect: false
+    type: 'multi'
   });
 
   const handleHoverIn = useCallback(
     (node: GraphNode) => {
       setHoverID(Number(node.id));
-      if (onNodePointerOver) onNodePointerOver(node);
     },
-    [onNodePointerOver, setHoverID]
+    [setHoverID]
   );
 
-  const handleHoverOut = useCallback(
-    (node: GraphNode) => {
-      setHoverID(undefined);
-      if (onNodePointerOut) onNodePointerOut(node);
-    },
-    [onNodePointerOut, setHoverID]
-  );
+  const handleHoverOut = useCallback(() => {
+    setHoverID(undefined);
+  }, [setHoverID]);
 
   const handleNodeClick = useCallback(
     (node: GraphNode) => {
       if (selections.includes(node.id)) {
-        onEdit(Number(node.id));
+        onDeselect(Number(node.id));
       } else {
         onSelect(Number(node.id));
       }
     },
-    [onSelect, selections, onEdit]
+    [onSelect, selections, onDeselect]
   );
 
-  const handleCanvasClick = useCallback(
-    (event: MouseEvent) => {
-      onDeselectAll();
-      if (onCanvasClick) onCanvasClick(event);
+  const handleNodeDoubleClick = useCallback(
+    (node: GraphNode) => {
+      onEdit(Number(node.id));
     },
-    [onCanvasClick, onDeselectAll]
+    [onEdit]
   );
 
   useLayoutEffect(() => {
@@ -108,15 +99,15 @@ function TermGraph({
     <div className='outline-none'>
       <div className='relative' style={{ width: canvasWidth, height: canvasHeight }}>
         <GraphUI
-          draggable
-          ref={graphRef}
           nodes={nodes}
           edges={edges}
+          ref={graphRef}
+          animated={false}
+          draggable
           layoutType={layout}
           selections={selections}
-          actives={actives}
+          onNodeDoubleClick={handleNodeDoubleClick}
           onNodeClick={handleNodeClick}
-          onCanvasClick={handleCanvasClick}
           onNodePointerOver={handleHoverIn}
           onNodePointerOut={handleHoverOut}
           cameraMode={orbit ? 'orbit' : is3D ? 'rotate' : 'pan'}

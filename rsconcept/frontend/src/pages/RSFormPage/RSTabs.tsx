@@ -204,7 +204,7 @@ function RSTabs() {
             </TabPanel>
 
             <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_LIST ? '' : 'none' }}>
-              <EditorRSList selected={selected} setSelected={setSelected} onOpenEdit={onOpenCst} />
+              <EditorRSList onOpenEdit={onOpenCst} />
             </TabPanel>
 
             <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_EDIT ? '' : 'none' }}>
@@ -217,7 +217,7 @@ function RSTabs() {
             </TabPanel>
 
             <TabPanel style={{ display: activeTab === RSTabID.TERM_GRAPH ? '' : 'none' }}>
-              <EditorTermGraph selected={selected} setSelected={setSelected} onOpenEdit={onOpenCst} />
+              <EditorTermGraph onOpenEdit={onOpenCst} />
             </TabPanel>
           </AnimateFade>
         </Tabs>

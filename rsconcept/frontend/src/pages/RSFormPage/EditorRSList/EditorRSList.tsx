@@ -13,31 +13,29 @@ import RSListToolbar from './RSListToolbar';
 import RSTable from './RSTable';
 
 interface EditorRSListProps {
-  selected: ConstituentaID[];
-  setSelected: React.Dispatch<React.SetStateAction<ConstituentaID[]>>;
   onOpenEdit: (cstID: ConstituentaID) => void;
 }
 
-function EditorRSList({ selected, setSelected, onOpenEdit }: EditorRSListProps) {
+function EditorRSList({ onOpenEdit }: EditorRSListProps) {
   const { calculateHeight } = useConceptOptions();
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const controller = useRSEdit();
 
   useLayoutEffect(() => {
-    if (!controller.schema || selected.length === 0) {
+    if (!controller.schema || controller.selected.length === 0) {
       setRowSelection({});
     } else {
       const newRowSelection: RowSelectionState = {};
       controller.schema.items.forEach((cst, index) => {
-        newRowSelection[String(index)] = selected.includes(cst.id);
+        newRowSelection[String(index)] = controller.selected.includes(cst.id);
       });
       setRowSelection(newRowSelection);
     }
-  }, [selected, controller.schema]);
+  }, [controller.selected, controller.schema]);
 
   function handleRowSelection(updater: React.SetStateAction<RowSelectionState>) {
     if (!controller.schema) {
-      setSelected([]);
+      controller.deselectAll();
     } else {
       const newRowSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
       const newSelection: ConstituentaID[] = [];
@@ -46,7 +44,7 @@ function EditorRSList({ selected, setSelected, onOpenEdit }: EditorRSListProps) 
           newSelection.push(cst.id);
         }
       });
-      setSelected(newSelection);
+      controller.setSelection(newSelection);
     }
   }
 
@@ -54,7 +52,7 @@ function EditorRSList({ selected, setSelected, onOpenEdit }: EditorRSListProps) 
     if (!controller.isContentEditable || controller.isProcessing) {
       return;
     }
-    if (event.key === 'Delete' && selected.length > 0) {
+    if (event.key === 'Delete' && controller.selected.length > 0) {
       event.preventDefault();
       controller.deleteCst();
       return;
@@ -69,7 +67,7 @@ function EditorRSList({ selected, setSelected, onOpenEdit }: EditorRSListProps) 
   }
 
   function processAltKey(code: string): boolean {
-    if (selected.length > 0) {
+    if (controller.selected.length > 0) {
       // prettier-ignore
       switch (code) {
         case 'ArrowUp': controller.moveUp(); return true;
@@ -100,12 +98,12 @@ function EditorRSList({ selected, setSelected, onOpenEdit }: EditorRSListProps) 
       {controller.isContentEditable ? (
         <SelectedCounter
           totalCount={controller.schema?.stats?.count_all ?? 0}
-          selectedCount={selected.length}
+          selectedCount={controller.selected.length}
           position='top-[0.3rem] left-2'
         />
       ) : null}
 
-      {controller.isContentEditable ? <RSListToolbar selectedCount={selected.length} /> : null}
+      {controller.isContentEditable ? <RSListToolbar /> : null}
       <div
         className={clsx('border-b', {
           'pt-[2.3rem]': controller.isContentEditable,

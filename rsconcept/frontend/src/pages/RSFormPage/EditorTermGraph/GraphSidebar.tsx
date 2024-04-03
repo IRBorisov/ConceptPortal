@@ -1,34 +1,44 @@
-import { LayoutTypes } from 'reagraph';
+import { BiGitBranch, BiGitMerge, BiReset } from 'react-icons/bi';
+import { LuExpand, LuMaximize, LuMinimize } from 'react-icons/lu';
 
-import SelectSingle from '@/components/ui/SelectSingle';
-import { GraphColoringScheme } from '@/models/miscellaneous';
-import { mapLabelColoring, mapLabelLayout } from '@/utils/labels';
-import { SelectorGraphColoring, SelectorGraphLayout } from '@/utils/selectors';
+import MiniButton from '@/components/ui/MiniButton';
 
-interface GraphSidebarProps {
-  coloring: GraphColoringScheme;
-  layout: LayoutTypes;
+import { useRSEdit } from '../RSEditContext';
 
-  setLayout: (newValue: LayoutTypes) => void;
-  setColoring: (newValue: GraphColoringScheme) => void;
-}
+function GraphSidebar() {
+  const controller = useRSEdit();
 
-function GraphSidebar({ coloring, setColoring, layout, setLayout }: GraphSidebarProps) {
   return (
-    <div className='px-2 text-sm select-none mt-9'>
-      <SelectSingle
-        placeholder='Выберите цвет'
-        options={SelectorGraphColoring}
-        isSearchable={false}
-        value={coloring ? { value: coloring, label: mapLabelColoring.get(coloring) } : null}
-        onChange={data => setColoring(data?.value ?? SelectorGraphColoring[0].value)}
+    <div className='flex flex-col gap-1 clr-app'>
+      <MiniButton
+        titleHtml='<b>Сбросить выделение</b>'
+        icon={<BiReset size='1.25rem' className='icon-primary' />}
+        onClick={controller.deselectAll}
       />
-      <SelectSingle
-        placeholder='Способ расположения'
-        options={SelectorGraphLayout}
-        isSearchable={false}
-        value={layout ? { value: layout, label: mapLabelLayout.get(layout) } : null}
-        onChange={data => setLayout(data?.value ?? SelectorGraphLayout[0].value)}
+      <MiniButton
+        titleHtml='<b>Выделение базиса</b> - замыкание выделения влияющими конституентами'
+        icon={<LuMinimize size='1.25rem' className='icon-primary' />}
+        disabled={controller.nothingSelected}
+      />
+      <MiniButton
+        titleHtml='<b>Максимизация части</b> - замыкание выделения конституентами, зависимыми только от выделенных'
+        icon={<LuMaximize size='1.25rem' className='icon-primary' />}
+        disabled={controller.nothingSelected}
+      />
+      <MiniButton
+        title='Выделить все зависимые'
+        icon={<LuExpand size='1.25rem' className='icon-primary' />}
+        disabled={controller.nothingSelected}
+      />
+      <MiniButton
+        title='Выделить поставщиков'
+        icon={<BiGitBranch size='1.25rem' className='icon-primary' />}
+        disabled={controller.nothingSelected}
+      />
+      <MiniButton
+        title='Выделить потребителей'
+        icon={<BiGitMerge size='1.25rem' className='icon-primary' />}
+        disabled={controller.nothingSelected}
       />
     </div>
   );

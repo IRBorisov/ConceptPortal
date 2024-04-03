@@ -179,7 +179,7 @@ export const graphLightT = {
     activeFill: '#1DE9AC',
     opacity: 1,
     selectedOpacity: 1,
-    inactiveOpacity: 0.2,
+    inactiveOpacity: 0.5,
     label: {
       color: '#2A6475',
       stroke: '#fff',
@@ -231,7 +231,7 @@ export const graphDarkT = {
     activeFill: '#1DE9AC',
     opacity: 1,
     selectedOpacity: 1,
-    inactiveOpacity: 0.2,
+    inactiveOpacity: 0.5,
     label: {
       stroke: '#1E2026',
       color: '#ACBAC7',

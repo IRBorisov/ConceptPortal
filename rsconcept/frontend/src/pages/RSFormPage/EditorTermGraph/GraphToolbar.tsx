@@ -1,6 +1,7 @@
 'use client';
 
-import { BiCollapse, BiFilterAlt, BiFont, BiFontFamily, BiPlanet, BiPlusCircle, BiTrash } from 'react-icons/bi';
+import { BiFilterAlt, BiFont, BiFontFamily, BiPlanet, BiPlusCircle, BiTrash } from 'react-icons/bi';
+import { LuImage } from 'react-icons/lu';
 
 import BadgeHelp from '@/components/man/BadgeHelp';
 import MiniButton from '@/components/ui/MiniButton';
@@ -10,7 +11,6 @@ import { HelpTopic } from '@/models/miscellaneous';
 import { useRSEdit } from '../RSEditContext';
 
 interface GraphToolbarProps {
-  nothingSelected: boolean;
   is3D: boolean;
 
   orbit: boolean;
@@ -26,7 +26,6 @@ interface GraphToolbarProps {
 }
 
 function GraphToolbar({
-  nothingSelected,
   is3D,
   noText,
   toggleNoText,
@@ -40,7 +39,7 @@ function GraphToolbar({
   const controller = useRSEdit();
 
   return (
-    <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex'>
+    <Overlay position='top-0 pt-1 right-1/2 translate-x-1/2 clr-app' className='flex'>
       <MiniButton
         title='Настройки фильтрации узлов и связей'
         icon={<BiFilterAlt size='1.25rem' className='icon-primary' />}
@@ -58,7 +57,7 @@ function GraphToolbar({
         onClick={toggleNoText}
       />
       <MiniButton
-        icon={<BiCollapse size='1.25rem' className='icon-primary' />}
+        icon={<LuImage size='1.25rem' className='icon-primary' />}
         title='Восстановить камеру'
         onClick={onResetViewpoint}
       />
@@ -80,7 +79,7 @@ function GraphToolbar({
         <MiniButton
           title='Удалить выбранные'
           icon={<BiTrash size='1.25rem' className='icon-red' />}
-          disabled={nothingSelected || controller.isProcessing}
+          disabled={controller.nothingSelected || controller.isProcessing}
           onClick={onDelete}
         />
       ) : null}

@@ -17,6 +17,7 @@ import { colorBgGraphNode } from '@/styling/color';
 import { storage, TIMEOUT_GRAPH_REFRESH } from '@/utils/constants';
 
 import { useRSEdit } from '../RSEditContext';
+import GraphSelectors from './GraphSelectors';
 import GraphSidebar from './GraphSidebar';
 import GraphToolbar from './GraphToolbar';
 import TermGraph from './TermGraph';
@@ -24,12 +25,10 @@ import useGraphFilter from './useGraphFilter';
 import ViewHidden from './ViewHidden';
 
 interface EditorTermGraphProps {
-  selected: ConstituentaID[];
-  setSelected: React.Dispatch<React.SetStateAction<ConstituentaID[]>>;
   onOpenEdit: (cstID: ConstituentaID) => void;
 }
 
-function EditorTermGraph({ selected, setSelected, onOpenEdit }: EditorTermGraphProps) {
+function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
   const controller = useRSEdit();
   const { colors } = useConceptOptions();
 
@@ -52,8 +51,6 @@ function EditorTermGraph({ selected, setSelected, onOpenEdit }: EditorTermGraphP
   const filtered = useGraphFilter(controller.schema, filterParams);
 
   const [hidden, setHidden] = useState<ConstituentaID[]>([]);
-
-  const nothingSelected = useMemo(() => selected.length === 0, [selected]);
 
   const [layout, setLayout] = useLocalStorage<LayoutTypes>(storage.rsgraphLayout, 'treeTd2d');
   const [coloringScheme, setColoringScheme] = useLocalStorage<GraphColoringScheme>(
@@ -118,33 +115,18 @@ function EditorTermGraph({ selected, setSelected, onOpenEdit }: EditorTermGraphP
     return result;
   }, [filtered.nodes]);
 
-  const handleGraphSelection = useCallback(
-    (newID: ConstituentaID) => {
-      setSelected(prev => [...prev, newID]);
-    },
-    [setSelected]
-  );
-
-  function toggleDismissed(cstID: ConstituentaID) {
-    setSelected(prev => {
-      if (prev.includes(cstID)) {
-        return [...prev.filter(id => id !== cstID)];
-      } else {
-        return [...prev, cstID];
-      }
-    });
-  }
-
   function handleCreateCst() {
     if (!controller.schema) {
       return;
     }
-    const definition = selected.map(id => controller.schema!.items.find(cst => cst.id === id)!.alias).join(' ');
-    controller.createCst(selected.length === 0 ? CstType.BASE : CstType.TERM, false, definition);
+    const definition = controller.selected
+      .map(id => controller.schema!.items.find(cst => cst.id === id)!.alias)
+      .join(' ');
+    controller.createCst(controller.nothingSelected ? CstType.BASE : CstType.TERM, false, definition);
   }
 
   function handleDeleteCst() {
-    if (!controller.schema || selected.length === 0) {
+    if (!controller.schema || controller.nothingSelected) {
       return;
     }
     controller.deleteCst();
@@ -178,6 +160,37 @@ function EditorTermGraph({ selected, setSelected, onOpenEdit }: EditorTermGraphP
     }
   }
 
+  const graph = useMemo(
+    () => (
+      <TermGraph
+        nodes={nodes}
+        edges={edges}
+        selectedIDs={controller.selected}
+        layout={layout}
+        is3D={is3D}
+        orbit={orbit}
+        onSelect={controller.select}
+        onDeselect={controller.deselect}
+        setHoverID={setHoverID}
+        onEdit={onOpenEdit}
+        toggleResetView={toggleResetView}
+      />
+    ),
+    [
+      edges,
+      nodes,
+      controller.selected,
+      layout,
+      is3D,
+      orbit,
+      setHoverID,
+      onOpenEdit,
+      toggleResetView,
+      controller.select,
+      controller.deselect
+    ]
+  );
+
   return (
     <div tabIndex={-1} onKeyDown={handleKeyDown}>
       <AnimatePresence>
@@ -193,12 +206,11 @@ function EditorTermGraph({ selected, setSelected, onOpenEdit }: EditorTermGraphP
       <SelectedCounter
         hideZero
         totalCount={controller.schema?.stats?.count_all ?? 0}
-        selectedCount={selected.length}
+        selectedCount={controller.selected.length}
         position='top-[0.3rem] left-0'
       />
 
       <GraphToolbar
-        nothingSelected={nothingSelected}
         is3D={is3D}
         orbit={orbit}
         noText={filterParams.noText}
@@ -225,36 +237,27 @@ function EditorTermGraph({ selected, setSelected, onOpenEdit }: EditorTermGraphP
         </Overlay>
       ) : null}
 
-      <Overlay position='top-0 left-0' className='cc-column w-[13.5rem]'>
-        <GraphSidebar
-          coloring={coloringScheme}
-          layout={layout}
-          setLayout={handleChangeLayout}
-          setColoring={setColoringScheme}
-        />
-        <ViewHidden
-          items={hidden}
-          selected={selected}
-          schema={controller.schema}
-          coloringScheme={coloringScheme}
-          toggleSelection={toggleDismissed}
-          onEdit={onOpenEdit}
-        />
+      <Overlay position='top-9 left-0' className='flex gap-1'>
+        <div className='cc-column w-[13.5rem]'>
+          <GraphSelectors
+            coloring={coloringScheme}
+            layout={layout}
+            setLayout={handleChangeLayout}
+            setColoring={setColoringScheme}
+          />
+          <ViewHidden
+            items={hidden}
+            selected={controller.selected}
+            schema={controller.schema}
+            coloringScheme={coloringScheme}
+            toggleSelection={controller.toggleSelect}
+            onEdit={onOpenEdit}
+          />
+        </div>
+        <GraphSidebar />
       </Overlay>
 
-      <TermGraph
-        nodes={nodes}
-        edges={edges}
-        selectedIDs={selected}
-        layout={layout}
-        is3D={is3D}
-        orbit={orbit}
-        onSelect={handleGraphSelection}
-        setHoverID={setHoverID}
-        onEdit={onOpenEdit}
-        onDeselectAll={() => setSelected([])}
-        toggleResetView={toggleResetView}
-      />
+      {graph}
     </div>
   );
 }
