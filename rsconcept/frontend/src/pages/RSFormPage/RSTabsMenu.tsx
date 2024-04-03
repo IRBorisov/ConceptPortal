@@ -204,7 +204,7 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
             tabIndex={-1}
             title={'Редактирование'}
             hideTitle={editMenu.isOpen}
-            className='h-full'
+            className='h-full px-2'
             icon={<FiEdit size='1.25rem' className={controller.isContentEditable ? 'icon-green' : 'icon-red'} />}
             onClick={editMenu.toggle}
           />

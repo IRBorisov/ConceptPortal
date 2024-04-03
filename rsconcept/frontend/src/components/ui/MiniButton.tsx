@@ -26,7 +26,7 @@ function MiniButton({
       type='button'
       tabIndex={tabIndex ?? -1}
       className={clsx(
-        'rounded-full',
+        'rounded-lg',
         'clr-btn-clear',
         'cursor-pointer disabled:cursor-not-allowed',
         {

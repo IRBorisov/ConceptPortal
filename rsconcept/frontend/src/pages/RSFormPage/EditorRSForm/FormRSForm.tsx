@@ -117,18 +117,16 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
           onChange={event => setAlias(event.target.value)}
         />
         <div className='flex flex-col'>
-          <Overlay position='top-[-0.25rem] right-[-0.25rem] flex'>
+          <Overlay position='top-[-0.25rem] right-[-0.25rem] cc-icons'>
             {controller.isMutable ? (
               <>
                 <MiniButton
-                  noHover
                   title={controller.isContentEditable ? 'Создать версию' : 'Переключитесь на актуальную версию'}
                   disabled={!controller.isContentEditable}
                   onClick={controller.createVersion}
                   icon={<LuGitBranchPlus size='1.25rem' className='icon-green' />}
                 />
                 <MiniButton
-                  noHover
                   title={schema?.versions.length === 0 ? 'Список версий пуст' : 'Редактировать версии'}
                   disabled={!schema || schema?.versions.length === 0}
                   onClick={controller.editVersions}

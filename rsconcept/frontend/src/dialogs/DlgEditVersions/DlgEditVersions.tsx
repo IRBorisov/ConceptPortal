@@ -88,18 +88,20 @@ function DlgEditVersions({ hideWindow, versions, onDelete, onUpdate }: DlgEditVe
           value={version}
           onChange={event => setVersion(event.target.value)}
         />
-        <MiniButton
-          title='Сохранить изменения'
-          disabled={!isModified || !isValid || processing}
-          icon={<FiSave size='1.25rem' className='icon-primary' />}
-          onClick={handleUpdate}
-        />
-        <MiniButton
-          title='Сбросить несохраненные изменения'
-          disabled={!isModified}
-          onClick={handleReset}
-          icon={<BiReset size='1.25rem' className='icon-primary' />}
-        />
+        <div className='cc-icons'>
+          <MiniButton
+            title='Сохранить изменения'
+            disabled={!isModified || !isValid || processing}
+            icon={<FiSave size='1.25rem' className='icon-primary' />}
+            onClick={handleUpdate}
+          />
+          <MiniButton
+            title='Сбросить несохраненные изменения'
+            disabled={!isModified}
+            onClick={handleReset}
+            icon={<BiReset size='1.25rem' className='icon-primary' />}
+          />
+        </div>
       </div>
       <TextArea
         id='dlg_description'

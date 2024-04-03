@@ -27,10 +27,10 @@ export function applyGraphFilter(target: IRSForm, start: number, mode: Dependenc
         return target.graph.nodes.get(start)?.inputs;
       }
       case DependencyMode.EXPAND_OUTPUTS: {
-        return target.graph.expandOutputs([start]);
+        return target.graph.expandAllOutputs([start]);
       }
       case DependencyMode.EXPAND_INPUTS: {
-        return target.graph.expandInputs([start]);
+        return target.graph.expandAllInputs([start]);
       }
     }
     return undefined;

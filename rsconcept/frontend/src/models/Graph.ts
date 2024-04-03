@@ -144,18 +144,42 @@ export class Graph {
 
   expandOutputs(origin: number[]): number[] {
     const result: number[] = [];
-    const marked = new Map<number, boolean>();
-    origin.forEach(id => marked.set(id, true));
     origin.forEach(id => {
       const node = this.nodes.get(id);
       if (node) {
         node.outputs.forEach(child => {
-          if (!marked.get(child) && !result.find(id => id === child)) {
+          if (!origin.includes(child) && !result.includes(child)) {
             result.push(child);
           }
         });
       }
     });
+    return result;
+  }
+
+  expandInputs(origin: number[]): number[] {
+    const result: number[] = [];
+    origin.forEach(id => {
+      const node = this.nodes.get(id);
+      if (node) {
+        node.inputs.forEach(child => {
+          if (!origin.includes(child) && !result.includes(child)) {
+            result.push(child);
+          }
+        });
+      }
+    });
+    return result;
+  }
+
+  expandAllOutputs(origin: number[]): number[] {
+    const result: number[] = this.expandOutputs(origin);
+    if (result.length === 0) {
+      return [];
+    }
+
+    const marked = new Map<number, boolean>();
+    origin.forEach(id => marked.set(id, true));
     let position = 0;
     while (position < result.length) {
       const node = this.nodes.get(result[position]);
@@ -172,20 +196,14 @@ export class Graph {
     return result;
   }
 
-  expandInputs(origin: number[]): number[] {
-    const result: number[] = [];
+  expandAllInputs(origin: number[]): number[] {
+    const result: number[] = this.expandInputs(origin);
+    if (result.length === 0) {
+      return [];
+    }
+
     const marked = new Map<number, boolean>();
     origin.forEach(id => marked.set(id, true));
-    origin.forEach(id => {
-      const node = this.nodes.get(id);
-      if (node) {
-        node.inputs.forEach(child => {
-          if (!marked.get(child) && !result.find(id => id === child)) {
-            result.push(child);
-          }
-        });
-      }
-    });
     let position = 0;
     while (position < result.length) {
       const node = this.nodes.get(result[position]);
@@ -199,6 +217,20 @@ export class Graph {
       }
       position += 1;
     }
+    return result;
+  }
+
+  maximizePart(origin: number[]): number[] {
+    const outputs: number[] = this.expandAllOutputs(origin);
+    const result = [...origin];
+    this.topologicalOrder()
+      .filter(id => outputs.includes(id))
+      .forEach(id => {
+        const node = this.nodes.get(id);
+        if (node?.inputs.every(parent => result.includes(parent))) {
+          result.push(id);
+        }
+      });
     return result;
   }
 

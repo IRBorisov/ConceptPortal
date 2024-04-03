@@ -95,11 +95,22 @@ describe('Testing Graph sort', () => {
 
 describe('Testing Graph queries', () => {
   test('expand outputs', () => {
-    const graph = new Graph([[1, 2], [2, 3], [2, 5], [5, 6], [6, 1], [7]]);
+    const graph = new Graph([
+      [1, 2], //
+      [2, 3],
+      [2, 5],
+      [5, 6],
+      [6, 1],
+      [7]
+    ]);
     expect(graph.expandOutputs([])).toStrictEqual([]);
+    expect(graph.expandAllOutputs([])).toStrictEqual([]);
     expect(graph.expandOutputs([3])).toStrictEqual([]);
+    expect(graph.expandAllOutputs([3])).toStrictEqual([]);
     expect(graph.expandOutputs([7])).toStrictEqual([]);
-    expect(graph.expandOutputs([2, 5])).toStrictEqual([3, 6, 1]);
+    expect(graph.expandAllOutputs([7])).toStrictEqual([]);
+    expect(graph.expandOutputs([2, 5])).toStrictEqual([3, 6]);
+    expect(graph.expandAllOutputs([2, 5])).toStrictEqual([3, 6, 1]);
   });
 
   test('expand into unique array', () => {
@@ -109,13 +120,43 @@ describe('Testing Graph queries', () => {
       [2, 5],
       [3, 5]
     ]);
-    expect(graph.expandOutputs([1])).toStrictEqual([2, 3, 5]);
+    expect(graph.expandAllOutputs([1])).toStrictEqual([2, 3, 5]);
   });
 
   test('expand inputs', () => {
-    const graph = new Graph([[1, 2], [2, 3], [2, 5], [5, 6], [6, 1], [7]]);
+    const graph = new Graph([
+      [1, 2], //
+      [2, 3],
+      [2, 5],
+      [5, 6],
+      [6, 1],
+      [7]
+    ]);
     expect(graph.expandInputs([])).toStrictEqual([]);
+    expect(graph.expandAllInputs([])).toStrictEqual([]);
     expect(graph.expandInputs([7])).toStrictEqual([]);
-    expect(graph.expandInputs([6])).toStrictEqual([5, 2, 1]);
+    expect(graph.expandAllInputs([7])).toStrictEqual([]);
+    expect(graph.expandInputs([6])).toStrictEqual([5]);
+    expect(graph.expandAllInputs([6])).toStrictEqual([5, 2, 1]);
+  });
+
+  test('maximize part', () => {
+    const graph = new Graph([
+      [1, 7], //
+      [1, 3],
+      [2, 3],
+      [2, 4],
+      [3, 5],
+      [3, 6],
+      [3, 4],
+      [7, 5],
+      [8]
+    ]);
+    expect(graph.maximizePart([])).toStrictEqual([]);
+    expect(graph.maximizePart([8])).toStrictEqual([8]);
+    expect(graph.maximizePart([5])).toStrictEqual([5]);
+    expect(graph.maximizePart([3])).toStrictEqual([3, 6]);
+    expect(graph.maximizePart([3, 2])).toStrictEqual([3, 2, 6, 4]);
+    expect(graph.maximizePart([3, 1])).toStrictEqual([3, 1, 7, 5, 6]);
   });
 });

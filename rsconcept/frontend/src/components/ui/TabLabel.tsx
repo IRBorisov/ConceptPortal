@@ -14,7 +14,7 @@ function TabLabel({ label, title, titleHtml, hideTitle, className, ...otherProps
   return (
     <TabImpl
       className={clsx(
-        'min-w-[6rem] h-full',
+        'min-w-[5.5rem] h-full',
         'px-2 py-1 flex justify-center',
         'clr-tab',
         'text-sm whitespace-nowrap font-controls',

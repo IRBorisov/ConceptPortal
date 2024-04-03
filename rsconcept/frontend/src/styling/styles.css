@@ -206,4 +206,8 @@
   .cc-column {
     @apply flex flex-col gap-3;
   }
+
+  .cc-icons {
+    @apply flex gap-1;
+  }
 }

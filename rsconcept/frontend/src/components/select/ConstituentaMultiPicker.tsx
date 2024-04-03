@@ -59,7 +59,7 @@ function ConstituentaMultiPicker({ id, schema, prefixID, rows, selected, setSele
     if (!schema || selected.length === 0) {
       return;
     }
-    const addition = schema.graph.expandInputs(selected).filter(id => !selected.includes(id));
+    const addition = schema.graph.expandAllInputs(selected).filter(id => !selected.includes(id));
     if (addition.length > 0) {
       setSelected([...selected, ...addition]);
     }
@@ -69,7 +69,7 @@ function ConstituentaMultiPicker({ id, schema, prefixID, rows, selected, setSele
     if (!schema || selected.length === 0) {
       return;
     }
-    const addition = schema.graph.expandOutputs(selected).filter(id => !selected.includes(id));
+    const addition = schema.graph.expandAllOutputs(selected).filter(id => !selected.includes(id));
     if (addition.length > 0) {
       setSelected([...selected, ...addition]);
     }

@@ -179,7 +179,7 @@ export const graphLightT = {
     activeFill: '#1DE9AC',
     opacity: 1,
     selectedOpacity: 1,
-    inactiveOpacity: 0.5,
+    inactiveOpacity: 1,
     label: {
       color: '#2A6475',
       stroke: '#fff',
@@ -199,7 +199,7 @@ export const graphLightT = {
     activeFill: '#1DE9AC',
     opacity: 1,
     selectedOpacity: 1,
-    inactiveOpacity: 0.1,
+    inactiveOpacity: 1,
     label: {
       stroke: '#fff',
       color: '#2A6475',
@@ -209,13 +209,6 @@ export const graphLightT = {
   arrow: {
     fill: '#D8E6EA',
     activeFill: '#1DE9AC'
-  },
-  cluster: {
-    stroke: '#D8E6EA',
-    label: {
-      stroke: '#fff',
-      color: '#2A6475'
-    }
   }
 };
 
@@ -231,7 +224,7 @@ export const graphDarkT = {
     activeFill: '#1DE9AC',
     opacity: 1,
     selectedOpacity: 1,
-    inactiveOpacity: 0.5,
+    inactiveOpacity: 1,
     label: {
       stroke: '#1E2026',
       color: '#ACBAC7',
@@ -251,7 +244,7 @@ export const graphDarkT = {
     activeFill: '#1DE9AC',
     opacity: 1,
     selectedOpacity: 1,
-    inactiveOpacity: 0.1,
+    inactiveOpacity: 1,
     label: {
       stroke: '#1E2026',
       color: '#ACBAC7',
@@ -261,13 +254,6 @@ export const graphDarkT = {
   arrow: {
     fill: '#474B56',
     activeFill: '#1DE9AC'
-  },
-  cluster: {
-    stroke: '#474B56',
-    label: {
-      stroke: '#1E2026',
-      color: '#ACBAC7'
-    }
   }
 };
 

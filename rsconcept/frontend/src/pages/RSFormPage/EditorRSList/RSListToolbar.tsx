@@ -19,7 +19,7 @@ function RSListToolbar() {
   const insertMenu = useDropdown();
 
   return (
-    <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex items-start'>
+    <Overlay position='top-1 right-1/2 translate-x-1/2' className='items-start cc-icons'>
       <MiniButton
         titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
         icon={<BiUpvote size='1.25rem' className='icon-primary' />}

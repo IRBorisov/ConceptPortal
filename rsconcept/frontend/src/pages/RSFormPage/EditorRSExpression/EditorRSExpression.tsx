@@ -161,7 +161,7 @@ function EditorRSExpression({
         ) : null}
       </AnimatePresence>
 
-      <Overlay position='top-[-0.5rem] right-0 flex'>
+      <Overlay position='top-[-0.5rem] right-0 cc-icons'>
         <MiniButton
           title='Изменить шрифт'
           onClick={toggleFont}
@@ -169,20 +169,17 @@ function EditorRSExpression({
         />
         {!disabled || model.processing ? (
           <MiniButton
-            noHover
             title='Отображение специальной клавиатуры'
             onClick={() => setShowControls(prev => !prev)}
             icon={<FaRegKeyboard size='1.25rem' className={showControls ? 'icon-primary' : ''} />}
           />
         ) : null}
         <MiniButton
-          noHover
           title='Отображение списка конституент'
           onClick={onToggleList}
           icon={<BiListUl size='1.25rem' className={showList ? 'icon-primary' : ''} />}
         />
         <MiniButton
-          noHover
           title='Дерево разбора выражения'
           onClick={handleShowAST}
           icon={<RiNodeTree size='1.25rem' className='icon-primary' />}

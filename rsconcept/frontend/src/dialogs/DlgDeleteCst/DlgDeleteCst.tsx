@@ -18,7 +18,7 @@ interface DlgDeleteCstProps extends Pick<ModalProps, 'hideWindow'> {
 
 function DlgDeleteCst({ hideWindow, selected, schema, onDelete }: DlgDeleteCstProps) {
   const [expandOut, setExpandOut] = useState(false);
-  const expansion: number[] = useMemo(() => schema.graph.expandOutputs(selected), [selected, schema.graph]);
+  const expansion: number[] = useMemo(() => schema.graph.expandAllOutputs(selected), [selected, schema.graph]);
 
   function handleSubmit() {
     hideWindow();

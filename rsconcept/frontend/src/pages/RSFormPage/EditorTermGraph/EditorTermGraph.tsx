@@ -18,7 +18,6 @@ import { storage, TIMEOUT_GRAPH_REFRESH } from '@/utils/constants';
 
 import { useRSEdit } from '../RSEditContext';
 import GraphSelectors from './GraphSelectors';
-import GraphSidebar from './GraphSidebar';
 import GraphToolbar from './GraphToolbar';
 import TermGraph from './TermGraph';
 import useGraphFilter from './useGraphFilter';
@@ -158,6 +157,10 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
       event.preventDefault();
       handleDeleteCst();
     }
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      controller.deselectAll();
+    }
   }
 
   const graph = useMemo(
@@ -254,7 +257,6 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
             onEdit={onOpenEdit}
           />
         </div>
-        <GraphSidebar />
       </Overlay>
 
       {graph}

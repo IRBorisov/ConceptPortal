@@ -26,7 +26,7 @@ function RSFormToolbar({ modified, anonymous, subscribed, claimable, onSubmit, o
   const controller = useRSEdit();
   const canSave = useMemo(() => modified && !controller.isProcessing, [modified, controller.isProcessing]);
   return (
-    <Overlay position='top-1 right-1/2 translate-x-1/2' className='flex'>
+    <Overlay position='top-1 right-1/2 translate-x-1/2' className='cc-icons'>
       {controller.isContentEditable ? (
         <MiniButton
           titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
