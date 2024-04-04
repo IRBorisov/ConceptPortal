@@ -27,9 +27,9 @@ export { BiFontFamily as IconText } from 'react-icons/bi';
 export { BiFont as IconTextOff } from 'react-icons/bi';
 export { RiTreeLine as IconTree } from 'react-icons/ri';
 
-export { LuMinimize as IconGraphClosure } from 'react-icons/lu';
+export { BiCollapse as IconGraphCollapse } from 'react-icons/bi';
+export { BiExpand as IconGraphExpand } from 'react-icons/bi';
 export { LuMaximize as IconGraphMaximize } from 'react-icons/lu';
-export { LuExpand as IconGraphExpand } from 'react-icons/lu';
 export { BiGitBranch as IconGraphInputs } from 'react-icons/bi';
 export { BiGitMerge as IconGraphOutputs } from 'react-icons/bi';
 

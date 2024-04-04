@@ -243,11 +243,11 @@ export function describeCstSource(mode: DependencyMode): string {
   // prettier-ignore
   switch (mode) {
     case DependencyMode.ALL:            return 'все конституенты';
-    case DependencyMode.EXPRESSION:     return 'идентификаторы из выражения';
-    case DependencyMode.OUTPUTS:        return 'прямые ссылки на текущую';
-    case DependencyMode.INPUTS:         return 'прямые ссылки из текущей';
-    case DependencyMode.EXPAND_OUTPUTS: return 'опосредованные ссылки на текущую';
-    case DependencyMode.EXPAND_INPUTS:  return 'опосредованные ссылки из текущей';
+    case DependencyMode.EXPRESSION:     return 'имена из выражения';
+    case DependencyMode.OUTPUTS:        return 'прямые исходящие';
+    case DependencyMode.INPUTS:         return 'прямые входящие';
+    case DependencyMode.EXPAND_OUTPUTS: return 'цепочка исходящих';
+    case DependencyMode.EXPAND_INPUTS:  return 'цепочка входящих';
   }
 }
 

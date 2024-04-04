@@ -4,18 +4,13 @@ import {
   IconDestroy,
   IconFilter,
   IconFitImage,
-  IconGraphClosure,
-  IconGraphExpand,
-  IconGraphInputs,
-  IconGraphMaximize,
-  IconGraphOutputs,
   IconNewItem,
-  IconReset,
   IconRotate3D,
   IconText,
   IconTextOff
 } from '@/components/Icons';
 import BadgeHelp from '@/components/man/BadgeHelp';
+import SelectGraphToolbar from '@/components/select/SelectGraphToolbar';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { HelpTopic } from '@/models/miscellaneous';
@@ -101,43 +96,7 @@ function GraphToolbar({
         ) : null}
         <BadgeHelp topic={HelpTopic.GRAPH_TERM} className='max-w-[calc(100vw-4rem)]' offset={4} />
       </div>
-      <div className='cc-icons'>
-        <MiniButton
-          titleHtml='<b>[ESC]</b><br/>Сбросить выделение'
-          icon={<IconReset size='1.25rem' className='icon-primary' />}
-          onClick={controller.deselectAll}
-        />
-        <MiniButton
-          titleHtml='<b>Замыкание</b> - дополнение выделения влияющими конституентами'
-          icon={<IconGraphClosure size='1.25rem' className='icon-primary' />}
-          disabled={controller.nothingSelected}
-          onClick={controller.selectAllInputs}
-        />
-        <MiniButton
-          titleHtml='<b>Максимизация</b> - дополнение выделения конституентами, зависимыми только от выделенных'
-          icon={<IconGraphMaximize size='1.25rem' className='icon-primary' />}
-          disabled={controller.nothingSelected}
-          onClick={controller.selectMax}
-        />
-        <MiniButton
-          titleHtml='Выделить все зависимые'
-          icon={<IconGraphExpand size='1.25rem' className='icon-primary' />}
-          disabled={controller.nothingSelected}
-          onClick={controller.selectAllOutputs}
-        />
-        <MiniButton
-          titleHtml='Выделить поставщиков'
-          icon={<IconGraphInputs size='1.25rem' className='icon-primary' />}
-          disabled={controller.nothingSelected}
-          onClick={controller.selectInputs}
-        />
-        <MiniButton
-          titleHtml='Выделить потребителей'
-          icon={<IconGraphOutputs size='1.25rem' className='icon-primary' />}
-          disabled={controller.nothingSelected}
-          onClick={controller.selectOutputs}
-        />
-      </div>
+      <SelectGraphToolbar graph={controller.schema!.graph} setSelected={controller.setSelected} />
     </Overlay>
   );
 }

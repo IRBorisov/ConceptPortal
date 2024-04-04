@@ -44,7 +44,7 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
           newSelection.push(cst.id);
         }
       });
-      controller.setSelection(newSelection);
+      controller.setSelected(newSelection);
     }
   }
 

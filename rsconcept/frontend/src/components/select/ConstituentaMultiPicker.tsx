@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 
 import DataTable, { createColumnHelper, RowSelectionState } from '@/components/ui/DataTable';
 import { useConceptOptions } from '@/context/OptionsContext';
@@ -9,8 +9,8 @@ import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
 import { describeConstituenta } from '@/utils/labels';
 
 import ConstituentaBadge from '../info/ConstituentaBadge';
-import Button from '../ui/Button';
 import FlexColumn from '../ui/FlexColumn';
+import SelectGraphToolbar from './SelectGraphToolbar';
 
 interface ConstituentaMultiPickerProps {
   id?: string;
@@ -19,7 +19,7 @@ interface ConstituentaMultiPickerProps {
   rows?: number;
 
   selected: ConstituentaID[];
-  setSelected: React.Dispatch<ConstituentaID[]>;
+  setSelected: React.Dispatch<React.SetStateAction<ConstituentaID[]>>;
 }
 
 const columnHelper = createColumnHelper<IConstituenta>();
@@ -55,26 +55,6 @@ function ConstituentaMultiPicker({ id, schema, prefixID, rows, selected, setSele
     }
   }
 
-  const selectBasis = useCallback(() => {
-    if (!schema || selected.length === 0) {
-      return;
-    }
-    const addition = schema.graph.expandAllInputs(selected).filter(id => !selected.includes(id));
-    if (addition.length > 0) {
-      setSelected([...selected, ...addition]);
-    }
-  }, [schema, selected, setSelected]);
-
-  const selectDependant = useCallback(() => {
-    if (!schema || selected.length === 0) {
-      return;
-    }
-    const addition = schema.graph.expandAllOutputs(selected).filter(id => !selected.includes(id));
-    if (addition.length > 0) {
-      setSelected([...selected, ...addition]);
-    }
-  }, [schema, selected, setSelected]);
-
   const columns = useMemo(
     () => [
       columnHelper.accessor('alias', {
@@ -98,20 +78,13 @@ function ConstituentaMultiPicker({ id, schema, prefixID, rows, selected, setSele
         <span className='w-[24ch] select-none whitespace-nowrap'>
           Выбраны {selected.length} из {schema?.items.length ?? 0}
         </span>
-        <div className='flex w-full gap-6 text-sm'>
-          <Button
-            text='Влияющие'
-            title='Добавить все конституенты, от которых зависят выбранные'
-            className='w-[7rem] text-sm'
-            onClick={selectBasis}
+        {schema ? (
+          <SelectGraphToolbar
+            graph={schema.graph} // prettier: split lines
+            setSelected={setSelected}
+            className='w-full ml-8'
           />
-          <Button
-            text='Зависимые'
-            title='Добавить все конституенты, которые зависят от выбранных'
-            className='w-[7rem] text-sm'
-            onClick={selectDependant}
-          />
-        </div>
+        ) : null}
       </div>
       <DataTable
         id={id}

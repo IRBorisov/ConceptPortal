@@ -11,7 +11,7 @@ interface ConstituentsTabProps {
   loading?: boolean;
   error?: ErrorData;
   selected: ConstituentaID[];
-  setSelected: React.Dispatch<ConstituentaID[]>;
+  setSelected: React.Dispatch<React.SetStateAction<ConstituentaID[]>>;
 }
 
 function ConstituentsTab({ schema, error, loading, selected, setSelected }: ConstituentsTabProps) {

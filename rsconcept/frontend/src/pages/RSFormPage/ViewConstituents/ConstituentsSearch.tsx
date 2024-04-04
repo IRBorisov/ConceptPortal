@@ -2,7 +2,15 @@
 
 import { useCallback, useLayoutEffect, useState } from 'react';
 
-import { IconFilter, IconSettings } from '@/components/Icons';
+import {
+  IconFilter,
+  IconGraphCollapse,
+  IconGraphExpand,
+  IconGraphInputs,
+  IconGraphOutputs,
+  IconSettings,
+  IconText
+} from '@/components/Icons';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import SearchBar from '@/components/ui/SearchBar';
@@ -22,6 +30,23 @@ interface ConstituentsSearchProps {
   activeID?: ConstituentaID;
   activeExpression: string;
   setFiltered: React.Dispatch<React.SetStateAction<IConstituenta[]>>;
+}
+
+function DependencyIcon(mode: DependencyMode, size: string) {
+  switch (mode) {
+    case DependencyMode.ALL:
+      return <IconSettings size={size} />;
+    case DependencyMode.EXPRESSION:
+      return <IconText size={size} />;
+    case DependencyMode.OUTPUTS:
+      return <IconGraphOutputs size={size} />;
+    case DependencyMode.INPUTS:
+      return <IconGraphInputs size={size} />;
+    case DependencyMode.EXPAND_OUTPUTS:
+      return <IconGraphExpand size={size} />;
+    case DependencyMode.EXPAND_INPUTS:
+      return <IconGraphCollapse size={size} />;
+  }
 }
 
 function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }: ConstituentsSearchProps) {
@@ -121,7 +146,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
           title='Настройка фильтрации по графу термов'
           hideTitle={sourceMenu.isOpen}
           className='h-full pr-2'
-          icon={<IconSettings size='1.25rem' />}
+          icon={DependencyIcon(filterSource, '1.25rem')}
           text={labelCstSource(filterSource)}
           onClick={sourceMenu.toggle}
         />
@@ -132,13 +157,14 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
               const source = value as DependencyMode;
               return (
                 <DropdownButton
-                  className='w-[23rem]'
+                  className='w-[18rem]'
                   key={`${prefixes.cst_source_list}${index}`}
                   onClick={() => handleSourceChange(source)}
                 >
-                  <p>
+                  <div className='inline-flex items-center gap-1'>
+                    {DependencyIcon(source, '1.25rem')}
                     <b>{labelCstSource(source)}:</b> {describeCstSource(source)}
-                  </p>
+                  </div>
                 </DropdownButton>
               );
             })}

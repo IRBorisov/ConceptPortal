@@ -56,7 +56,7 @@ interface IRSEditContext {
   canProduceStructure: boolean;
   nothingSelected: boolean;
 
-  setSelection: (selected: ConstituentaID[]) => void;
+  setSelected: React.Dispatch<React.SetStateAction<ConstituentaID[]>>;
   select: (target: ConstituentaID) => void;
   selectAllInputs: () => void;
   selectAllOutputs: () => void;
@@ -486,7 +486,7 @@ export const RSEditState = ({
         canProduceStructure,
         nothingSelected,
 
-        setSelection: (selected: ConstituentaID[]) => setSelected(selected),
+        setSelected: setSelected,
         select: (target: ConstituentaID) => setSelected(prev => [...prev, target]),
         deselect: (target: ConstituentaID) => setSelected(prev => prev.filter(id => id !== target)),
         selectAllInputs: () => setSelected(prev => [...prev, ...(model.schema?.graph.expandAllInputs(prev) ?? [])]),
