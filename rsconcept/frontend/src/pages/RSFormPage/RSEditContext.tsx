@@ -58,11 +58,6 @@ interface IRSEditContext {
 
   setSelected: React.Dispatch<React.SetStateAction<ConstituentaID[]>>;
   select: (target: ConstituentaID) => void;
-  selectAllInputs: () => void;
-  selectAllOutputs: () => void;
-  selectMax: () => void;
-  selectInputs: () => void;
-  selectOutputs: () => void;
   deselect: (target: ConstituentaID) => void;
   toggleSelect: (target: ConstituentaID) => void;
   deselectAll: () => void;
@@ -276,11 +271,12 @@ export const RSEditState = ({
         return;
       }
       const oldCount = model.schema.items.length;
-      model.inlineSynthesis(data, newSchema =>
-        toast.success(`Конституенты добавлены: ${newSchema['items'].length - oldCount}`)
-      );
+      model.inlineSynthesis(data, newSchema => {
+        setSelected([]);
+        toast.success(`Конституенты добавлены: ${newSchema['items'].length - oldCount}`);
+      });
     },
-    [model]
+    [model, setSelected]
   );
 
   const moveUp = useCallback(() => {
@@ -489,11 +485,6 @@ export const RSEditState = ({
         setSelected: setSelected,
         select: (target: ConstituentaID) => setSelected(prev => [...prev, target]),
         deselect: (target: ConstituentaID) => setSelected(prev => prev.filter(id => id !== target)),
-        selectAllInputs: () => setSelected(prev => [...prev, ...(model.schema?.graph.expandAllInputs(prev) ?? [])]),
-        selectAllOutputs: () => setSelected(prev => [...prev, ...(model.schema?.graph.expandAllOutputs(prev) ?? [])]),
-        selectOutputs: () => setSelected(prev => [...prev, ...(model.schema?.graph.expandOutputs(prev) ?? [])]),
-        selectInputs: () => setSelected(prev => [...prev, ...(model.schema?.graph.expandInputs(prev) ?? [])]),
-        selectMax: () => setSelected(prev => model.schema?.graph.maximizePart(prev) ?? []),
         toggleSelect: (target: ConstituentaID) =>
           setSelected(prev => (prev.includes(target) ? prev.filter(id => id !== target) : [...prev, target])),
         deselectAll: () => setSelected([]),

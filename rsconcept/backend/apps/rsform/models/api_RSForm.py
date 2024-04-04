@@ -1,4 +1,5 @@
 ''' Models: RSForm API. '''
+from copy import deepcopy
 from typing import Iterable, Optional, Union, cast
 
 from django.db import transaction
@@ -137,25 +138,15 @@ class RSForm:
             newAlias = f'{get_type_prefix(cst.cst_type)}{indices[cst.cst_type]}'
             mapping[cst.alias] = newAlias
 
-        result: list[Constituenta] = []
-        for cst in items:
-            newCst = Constituenta.objects.create(
-                schema=self.item,
-                order=position,
-                alias=mapping[cst.alias],
-                cst_type=cst.cst_type,
-                convention=cst.convention,
-                term_raw=cst.term_raw,
-                term_resolved=cst.term_resolved,
-                term_forms=cst.term_forms,
-                definition_raw=cst.definition_raw,
-                definition_formal=cst.definition_formal,
-                definition_resolved=cst.definition_resolved
-            )
-            newCst.apply_mapping(mapping)
-            newCst.save()
+        result = deepcopy(items)
+        for cst in result:
+            cst.pk = None
+            cst.schema = self.item
+            cst.order = position
+            cst.alias = mapping[cst.alias]
+            cst.apply_mapping(mapping)
+            cst.save()
             position = position + 1
-            result.append(newCst)
         self.item.save()
         return result
 

@@ -1,4 +1,5 @@
 ''' Endpoints for library. '''
+from copy import deepcopy
 from typing import cast
 from django.db import transaction
 from django_filters.rest_framework import DjangoFilterBackend
@@ -96,29 +97,27 @@ class LibraryViewSet(viewsets.ModelViewSet):
         serializer = s.LibraryItemCloneSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         item = self._get_item()
-        if item.item_type == m.LibraryItemType.RSFORM:
-            schema = m.RSForm(item)
-            clone_data = s.RSFormTRSSerializer(schema).data
-            clone_data['item_type'] = item.item_type
-            clone_data['owner'] = self.request.user
-            clone_data['title'] = serializer.validated_data['title']
-            clone_data['alias'] = serializer.validated_data.get('alias', '')
-            clone_data['comment'] = serializer.validated_data.get('comment', '')
-            clone_data['is_common'] = serializer.validated_data.get('is_common', False)
-            clone_data['is_canonical'] = serializer.validated_data.get('is_canonical', False)
-            if 'items' in request.data:
-                filtered_items = []
-                for cst in clone_data['items']:
-                    if cst['entityUID'] in request.data['items']:
-                        filtered_items.append(cst)
-                clone_data['items'] = filtered_items
+        clone = deepcopy(item)
+        clone.pk = None
+        clone.owner = self.request.user
+        clone.title = serializer.validated_data['title']
+        clone.alias = serializer.validated_data.get('alias', '')
+        clone.comment = serializer.validated_data.get('comment', '')
+        clone.is_common = serializer.validated_data.get('is_common', False)
+        clone.is_canonical = False
 
-            clone = s.RSFormTRSSerializer(data=clone_data, context={'load_meta': True})
-            clone.is_valid(raise_exception=True)
-            new_schema = clone.save()
+        if clone.item_type == m.LibraryItemType.RSFORM:
+            clone.save()
+
+            need_filter = 'items' in request.data
+            for cst in m.RSForm(item).constituents():
+                if not need_filter or cst.pk in request.data['items']:
+                    cst.pk = None
+                    cst.schema = clone
+                    cst.save()
             return Response(
                 status=c.HTTP_201_CREATED,
-                data=s.RSFormParseSerializer(new_schema.item).data
+                data=s.RSFormParseSerializer(clone).data
             )
         return Response(status=c.HTTP_400_BAD_REQUEST)
 
