@@ -1,28 +1,27 @@
-!! This is not complete list of todos !!
-This list only contains global tech refactorings and tech debt
+!! This is not complete list of TODOs !!
 For more specific TODOs see comments in code
 
-[Functionality]
-- landing page
-- home page (user specific)
-- export PDF
-- блок нотификаций пользователей
-- блок синтеза
+[Functionality - PROGRESS]
+- Landing page
+- Home page (user specific)
 
-- статический анализ схемы
-- конфигурации правил для разных статусов
+- Operational synthesis schema as LibraryItem ?
 
-- Library organization, search and exploration. Consider new user experience
-- поиск по содержимому КС в Библиотеке
-
-- private projects and permissions. Consider cooperative editing
-
-- draggable rows in constituents table
+- Draggable rows in constituents table
 - Clickable IDs in RSEditor tooltips
 
-- ARIA (accessibility considerations) - for now machine reading not supported
+- Library organization, search and exploration. Consider new user experience
+- Private projects and permissions. Consider cooperative editing
+- Rework access setup: project-based, user-based, enable sharing. Prevent enumerating access to private schemas by default
 
-- rework access setup: project-based, user-based, enable sharing. Prevent enumerating access to private schemas by default
+[functionality - PLANNING]
+- User notifications on edit - consider spam prevention and change aggregation
+- Static analyzer for RSForm
+- Content based search in Library
+
+- Export PDF (Items list, Graph)
+- ARIA (accessibility considerations) - for now machine reading not supported
+- Internationalization - at least english version. Consider react.intl
 
 
 [Tech]
@@ -41,7 +40,7 @@ For more specific TODOs see comments in code
 
 [Research]
 Research and consider integration
-- django-allauth
+- django-allauth - consider supporting popular auth providers
 - drf-messages
 
 - radix-ui

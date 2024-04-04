@@ -235,6 +235,13 @@ export interface IRSFormCreateData extends ILibraryUpdateData {
 }
 
 /**
+ * Represents data, used for cloning {@link IRSForm}.
+ */
+export interface IRSFormCloneData extends ILibraryUpdateData {
+  items?: ConstituentaID[];
+}
+
+/**
  * Represents data, used for uploading {@link IRSForm} as file.
  */
 export interface IRSFormUploadData {

@@ -80,6 +80,10 @@ class EndpointTester(APITestCase):
         response = self.execute(data, **kwargs)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def assertCreated(self, data=None, **kwargs):
+        response = self.execute(data, **kwargs)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
     def assertBadData(self, data=None, **kwargs):
         response = self.execute(data, **kwargs)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

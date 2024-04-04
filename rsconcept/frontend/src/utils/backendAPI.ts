@@ -34,6 +34,7 @@ import {
   ICstUpdateData,
   IInlineSynthesisData,
   IProduceStructureResponse,
+  IRSFormCloneData,
   IRSFormCreateData,
   IRSFormData,
   IRSFormUploadData,
@@ -212,7 +213,7 @@ export function postNewRSForm(request: FrontExchange<IRSFormCreateData, ILibrary
   });
 }
 
-export function postCloneLibraryItem(target: string, request: FrontExchange<IRSFormCreateData, IRSFormData>) {
+export function postCloneLibraryItem(target: string, request: FrontExchange<IRSFormCloneData, IRSFormData>) {
   AxiosPost({
     title: 'Clone RSForm',
     endpoint: `/api/library/${target}/clone`,

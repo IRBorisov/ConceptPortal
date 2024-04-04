@@ -31,6 +31,7 @@ class TestLibraryViewset(EndpointTester):
             alias='T3',
             is_common=True
         )
+        self.invalid_item = 1337 + self.common.pk
 
 
     @decl_endpoint('/api/library', method='post')
@@ -49,6 +50,7 @@ class TestLibraryViewset(EndpointTester):
     @decl_endpoint('/api/library/{item}', method='patch')
     def test_update(self):
         data = {'id': self.unowned.id, 'title': 'New title'}
+        self.assertNotFound(data, item=self.invalid_item)
         self.assertForbidden(data, item=self.unowned.id)
 
         data = {'id': self.owned.id, 'title': 'New title'}
@@ -71,6 +73,7 @@ class TestLibraryViewset(EndpointTester):
 
     @decl_endpoint('/api/library/{item}/claim', method='post')
     def test_claim(self):
+        self.assertNotFound(item=self.invalid_item)
         self.assertForbidden(item=self.owned.id)
 
         self.owned.is_common = True
@@ -127,6 +130,7 @@ class TestLibraryViewset(EndpointTester):
 
     @decl_endpoint('/api/library/{item}/subscribe', method='post')
     def test_subscriptions(self):
+        self.assertNotFound(item=self.invalid_item)
         response = self.client.delete(f'/api/library/{self.unowned.id}/unsubscribe')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(self.user in self.unowned.subscribers())
@@ -174,11 +178,31 @@ class TestLibraryViewset(EndpointTester):
         )
 
         data = {'title': 'Title1337'}
+        self.assertNotFound(data, item=self.invalid_item)
+        self.assertCreated(data, item=self.unowned.id)
+
+        data = {'title': 'Title1338'}
         response = self.execute(data, item=self.owned.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['title'], data['title'])
+        self.assertEqual(len(response.data['items']), 2)
         self.assertEqual(response.data['items'][0]['alias'], x12.alias)
         self.assertEqual(response.data['items'][0]['term_raw'], x12.term_raw)
         self.assertEqual(response.data['items'][0]['term_resolved'], x12.term_resolved)
         self.assertEqual(response.data['items'][1]['term_raw'], d2.term_raw)
         self.assertEqual(response.data['items'][1]['term_resolved'], d2.term_resolved)
+
+        data = {'title': 'Title1340', 'items': []}
+        response = self.execute(data, item=self.owned.id)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['title'], data['title'])
+        self.assertEqual(len(response.data['items']), 0)
+
+        data = {'title': 'Title1341', 'items': [x12.pk]}
+        response = self.execute(data, item=self.owned.id)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['title'], data['title'])
+        self.assertEqual(len(response.data['items']), 1)
+        self.assertEqual(response.data['items'][0]['alias'], x12.alias)
+        self.assertEqual(response.data['items'][0]['term_raw'], x12.term_raw)
+        self.assertEqual(response.data['items'][0]['term_resolved'], x12.term_resolved)

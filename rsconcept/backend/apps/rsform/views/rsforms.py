@@ -41,7 +41,11 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         summary='create constituenta',
         tags=['Constituenta'],
         request=s.CstCreateSerializer,
-        responses={c.HTTP_201_CREATED: s.NewCstResponse}
+        responses={
+            c.HTTP_201_CREATED: s.NewCstResponse,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
     )
     @action(detail=True, methods=['post'], url_path='cst-create')
     def cst_create(self, request: Request, pk):
@@ -69,7 +73,11 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         summary='produce the structure of a given constituenta',
         tags=['RSForm'],
         request=s.CstTargetSerializer,
-        responses={c.HTTP_200_OK: s.NewMultiCstResponse}
+        responses={
+            c.HTTP_200_OK: s.NewMultiCstResponse,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
     )
     @action(detail=True, methods=['patch'], url_path='cst-produce-structure')
     def produce_structure(self, request: Request, pk):
@@ -101,7 +109,11 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         summary='rename constituenta',
         tags=['Constituenta'],
         request=s.CstRenameSerializer,
-        responses={c.HTTP_200_OK: s.NewCstResponse}
+        responses={
+            c.HTTP_200_OK: s.NewCstResponse,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
     )
     @transaction.atomic
     @action(detail=True, methods=['patch'], url_path='cst-rename')
@@ -135,7 +147,11 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         summary='substitute constituenta',
         tags=['RSForm'],
         request=s.CstSubstituteSerializer,
-        responses={c.HTTP_200_OK: s.RSFormParseSerializer}
+        responses={
+            c.HTTP_200_OK: s.RSFormParseSerializer,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
     )
     @transaction.atomic
     @action(detail=True, methods=['patch'], url_path='cst-substitute')
@@ -161,7 +177,11 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         summary='delete constituents',
         tags=['RSForm'],
         request=s.CstListSerializer,
-        responses={c.HTTP_200_OK: s.RSFormParseSerializer}
+        responses={
+            c.HTTP_200_OK: s.RSFormParseSerializer,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
     )
     @action(detail=True, methods=['patch'], url_path='cst-delete-multiple')
     def cst_delete_multiple(self, request: Request, pk):
@@ -183,7 +203,11 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         summary='move constituenta',
         tags=['RSForm'],
         request=s.CstMoveSerializer,
-        responses={c.HTTP_200_OK: s.RSFormParseSerializer}
+        responses={
+            c.HTTP_200_OK: s.RSFormParseSerializer,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
     )
     @action(detail=True, methods=['patch'], url_path='cst-moveto')
     def cst_moveto(self, request: Request, pk):
@@ -208,7 +232,11 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         summary='reset aliases, update expressions and references',
         tags=['RSForm'],
         request=None,
-        responses={c.HTTP_200_OK: s.RSFormParseSerializer}
+        responses={
+            c.HTTP_200_OK: s.RSFormParseSerializer,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
     )
     @action(detail=True, methods=['patch'], url_path='reset-aliases')
     def reset_aliases(self, request: Request, pk):
@@ -224,7 +252,11 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         summary='load data from TRS file',
         tags=['RSForm'],
         request=s.RSFormUploadSerializer,
-        responses={c.HTTP_200_OK: s.RSFormParseSerializer}
+        responses={
+            c.HTTP_200_OK: s.RSFormParseSerializer,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
     )
     @action(detail=True, methods=['patch'], url_path='load-trs')
     def load_trs(self, request: Request, pk):
@@ -251,7 +283,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         summary='get all constituents data from DB',
         tags=['RSForm'],
         request=None,
-        responses={c.HTTP_200_OK: s.RSFormSerializer}
+        responses={
+            c.HTTP_200_OK: s.RSFormSerializer,
+            c.HTTP_404_NOT_FOUND: None
+        }
     )
     @action(detail=True, methods=['get'])
     def contents(self, request: Request, pk):
@@ -266,7 +301,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         summary='get all constituents data and parses',
         tags=['RSForm'],
         request=None,
-        responses={c.HTTP_200_OK: s.RSFormParseSerializer}
+        responses={
+            c.HTTP_200_OK: s.RSFormParseSerializer,
+            c.HTTP_404_NOT_FOUND: None
+        }
     )
     @action(detail=True, methods=['get'])
     def details(self, request: Request, pk):
@@ -281,7 +319,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         summary='check RSLang expression',
         tags=['RSForm', 'FormalLanguage'],
         request=s.ExpressionSerializer,
-        responses={c.HTTP_200_OK: s.ExpressionParseSerializer},
+        responses={
+            c.HTTP_200_OK: s.ExpressionParseSerializer,
+            c.HTTP_404_NOT_FOUND: None
+        },
     )
     @action(detail=True, methods=['post'])
     def check(self, request: Request, pk):
@@ -300,7 +341,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         summary='resolve text with references',
         tags=['RSForm', 'NaturalLanguage'],
         request=s.TextSerializer,
-        responses={c.HTTP_200_OK: s.ResolverSerializer}
+        responses={
+            c.HTTP_200_OK: s.ResolverSerializer,
+            c.HTTP_404_NOT_FOUND: None
+        }
     )
     @action(detail=True, methods=['post'])
     def resolve(self, request: Request, pk):
@@ -319,7 +363,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         summary='export as TRS file',
         tags=['RSForm'],
         request=None,
-        responses={(c.HTTP_200_OK, 'application/zip'): bytes}
+        responses={
+            (c.HTTP_200_OK, 'application/zip'): bytes,
+            c.HTTP_404_NOT_FOUND: None
+        }
     )
     @action(detail=True, methods=['get'], url_path='export-trs')
     def export_trs(self, request: Request, pk):
@@ -341,7 +388,10 @@ class TrsImportView(views.APIView):
         summary='import TRS file into RSForm',
         tags=['RSForm'],
         request=s.FileSerializer,
-        responses={c.HTTP_201_CREATED: s.LibraryItemSerializer}
+        responses={
+            c.HTTP_201_CREATED: s.LibraryItemSerializer,
+            c.HTTP_403_FORBIDDEN: None
+        }
     )
     def post(self, request: Request):
         data = utils.read_zipped_json(request.FILES['file'].file, utils.EXTEOR_INNER_FILENAME)
@@ -364,7 +414,10 @@ class TrsImportView(views.APIView):
     summary='create new RSForm empty or from file',
     tags=['RSForm'],
     request=s.LibraryItemSerializer,
-    responses={c.HTTP_201_CREATED: s.LibraryItemSerializer}
+    responses={
+        c.HTTP_201_CREATED: s.LibraryItemSerializer,
+        c.HTTP_403_FORBIDDEN: None
+    }
 )
 @api_view(['POST'])
 def create_rsform(request: Request):

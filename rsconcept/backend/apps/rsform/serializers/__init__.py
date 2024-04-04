@@ -11,6 +11,7 @@ from .basics import (
 )
 from .data_access import (
     LibraryItemSerializer,
+    LibraryItemCloneSerializer,
     RSFormSerializer,
     RSFormParseSerializer,
     VersionSerializer,

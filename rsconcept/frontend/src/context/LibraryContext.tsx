@@ -6,7 +6,7 @@ import { ErrorData } from '@/components/info/InfoError';
 import { ILibraryItem } from '@/models/library';
 import { matchLibraryItem } from '@/models/libraryAPI';
 import { ILibraryFilter } from '@/models/miscellaneous';
-import { IRSForm, IRSFormCreateData, IRSFormData } from '@/models/rsform';
+import { IRSForm, IRSFormCloneData, IRSFormCreateData, IRSFormData } from '@/models/rsform';
 import { loadRSFormData } from '@/models/rsformAPI';
 import {
   DataCallback,
@@ -31,7 +31,7 @@ interface ILibraryContext {
   applyFilter: (params: ILibraryFilter) => ILibraryItem[];
   retrieveTemplate: (templateID: number, callback: (schema: IRSForm) => void) => void;
   createItem: (data: IRSFormCreateData, callback?: DataCallback<ILibraryItem>) => void;
-  cloneItem: (target: number, data: IRSFormCreateData, callback: DataCallback<IRSFormData>) => void;
+  cloneItem: (target: number, data: IRSFormCloneData, callback: DataCallback<IRSFormData>) => void;
   destroyItem: (target: number, callback?: () => void) => void;
 
   localUpdateItem: (data: ILibraryItem) => void;
@@ -194,7 +194,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   );
 
   const cloneItem = useCallback(
-    (target: number, data: IRSFormCreateData, callback: DataCallback<IRSFormData>) => {
+    (target: number, data: IRSFormCloneData, callback: DataCallback<IRSFormData>) => {
       if (!user) {
         return;
       }

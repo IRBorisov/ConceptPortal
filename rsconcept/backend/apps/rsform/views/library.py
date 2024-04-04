@@ -81,9 +81,11 @@ class LibraryViewSet(viewsets.ModelViewSet):
     @extend_schema(
         summary='clone item including contents',
         tags=['Library'],
-        request=s.LibraryItemSerializer,
+        request=s.LibraryItemCloneSerializer,
         responses={
             c.HTTP_201_CREATED: s.RSFormParseSerializer,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
             c.HTTP_404_NOT_FOUND: None
         }
     )
@@ -91,7 +93,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'], url_path='clone')
     def clone(self, request: Request, pk):
         ''' Endpoint: Create deep copy of library item. '''
-        serializer = s.LibraryItemSerializer(data=request.data)
+        serializer = s.LibraryItemCloneSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         item = self._get_item()
         if item.item_type == m.LibraryItemType.RSFORM:
@@ -104,6 +106,13 @@ class LibraryViewSet(viewsets.ModelViewSet):
             clone_data['comment'] = serializer.validated_data.get('comment', '')
             clone_data['is_common'] = serializer.validated_data.get('is_common', False)
             clone_data['is_canonical'] = serializer.validated_data.get('is_canonical', False)
+            if 'items' in request.data:
+                filtered_items = []
+                for cst in clone_data['items']:
+                    if cst['entityUID'] in request.data['items']:
+                        filtered_items.append(cst)
+                clone_data['items'] = filtered_items
+
             clone = s.RSFormTRSSerializer(data=clone_data, context={'load_meta': True})
             clone.is_valid(raise_exception=True)
             new_schema = clone.save()
@@ -111,13 +120,17 @@ class LibraryViewSet(viewsets.ModelViewSet):
                 status=c.HTTP_201_CREATED,
                 data=s.RSFormParseSerializer(new_schema.item).data
             )
-        return Response(status=c.HTTP_404_NOT_FOUND)
+        return Response(status=c.HTTP_400_BAD_REQUEST)
 
     @extend_schema(
         summary='claim item',
         tags=['Library'],
         request=None,
-        responses={c.HTTP_200_OK: s.LibraryItemSerializer}
+        responses={
+            c.HTTP_200_OK: s.LibraryItemSerializer,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
     )
     @transaction.atomic
     @action(detail=True, methods=['post'])
@@ -139,7 +152,11 @@ class LibraryViewSet(viewsets.ModelViewSet):
         summary='subscribe to item',
         tags=['Library'],
         request=None,
-        responses={c.HTTP_204_NO_CONTENT: None}
+        responses={
+            c.HTTP_204_NO_CONTENT: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
     )
     @action(detail=True, methods=['post'])
     def subscribe(self, request: Request, pk):
@@ -152,7 +169,11 @@ class LibraryViewSet(viewsets.ModelViewSet):
         summary='unsubscribe from item',
         tags=['Library'],
         request=None,
-        responses={c.HTTP_204_NO_CONTENT: None},
+        responses={
+            c.HTTP_204_NO_CONTENT: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        },
     )
     @action(detail=True, methods=['delete'])
     def unsubscribe(self, request: Request, pk):

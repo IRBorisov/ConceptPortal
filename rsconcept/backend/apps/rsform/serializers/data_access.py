@@ -256,6 +256,11 @@ class CstListSerializer(serializers.Serializer):
         return attrs
 
 
+class LibraryItemCloneSerializer(LibraryItemSerializer):
+    ''' Serializer: LibraryItem cloning. '''
+    items = PKField(many=True, required=False, queryset=Constituenta.objects.all())
+
+
 class CstMoveSerializer(CstListSerializer):
     ''' Serializer: Change constituenta position. '''
     move_to = serializers.IntegerField()

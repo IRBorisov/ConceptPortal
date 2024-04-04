@@ -527,7 +527,14 @@ export const RSEditState = ({
       {model.schema ? (
         <AnimatePresence>
           {showUpload ? <DlgUploadRSForm hideWindow={() => setShowUpload(false)} /> : null}
-          {showClone ? <DlgCloneLibraryItem base={model.schema} hideWindow={() => setShowClone(false)} /> : null}
+          {showClone ? (
+            <DlgCloneLibraryItem
+              base={model.schema}
+              hideWindow={() => setShowClone(false)}
+              selected={selected}
+              totalCount={model.schema.items.length}
+            />
+          ) : null}
           {showCreateCst ? (
             <DlgCreateCst
               hideWindow={() => setShowCreateCst(false)}
