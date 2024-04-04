@@ -4,13 +4,13 @@ import { hoverTooltip } from '@codemirror/view';
 
 import { parseEntityReference, parseSyntacticReference } from '@/models/languageAPI';
 import { IConstituenta } from '@/models/rsform';
+import { IColorTheme } from '@/styling/color';
 import {
   domTooltipEntityReference,
   domTooltipSyntacticReference,
   findContainedNodes,
   findEnvelopingNodes
 } from '@/utils/codemirror';
-import { IColorTheme } from '@/styling/color';
 
 import { ReferenceTokens } from './parse';
 import { RefEntity, RefSyntactic } from './parse/parser.terms';

@@ -100,7 +100,12 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
     );
 
     const editorExtensions = useMemo(
-      () => [EditorView.lineWrapping, NaturalLanguage, refsHoverTooltip(schema?.items || [], colors)],
+      () => [
+        EditorView.lineWrapping,
+        EditorView.contentAttributes.of({ spellcheck: 'true' }),
+        NaturalLanguage,
+        refsHoverTooltip(schema?.items || [], colors)
+      ],
       [schema?.items, colors]
     );
 
@@ -194,7 +199,6 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
           onKeyDown={handleInput}
           onFocus={handleFocusIn}
           onBlur={handleFocusOut}
-          // spellCheck= // TODO: figure out while automatic spellcheck doesn't work or implement with extension
           {...restProps}
         />
       </div>
