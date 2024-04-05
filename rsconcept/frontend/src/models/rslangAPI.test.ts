@@ -22,6 +22,7 @@ const simpleExpressionData = [
   ['ℬℬ(X1)', 'false'],
   ['ℬ(X1)', 'false'],
   ['D{(α,β)∈D6×D6 | α≠β & α∩β≠∅}', 'false'],
+  ['D{ξ ∈ X1 | (ξ,ξ)∈S1 }', 'false'],
   ['I{(β,α) | α:∈D2; σ:=F5[α]; β:∈σ}', 'false'],
   ['∀σ∈S1 (F1[σ]×F1[σ])∩D11=∅', 'false']
 ];

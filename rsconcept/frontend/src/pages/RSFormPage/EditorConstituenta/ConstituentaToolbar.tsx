@@ -29,7 +29,7 @@ function ConstituentaToolbar({
   onCreate
 }: ConstituentaToolbarProps) {
   return (
-    <Overlay position='top-1 right-4 sm:right-1/2 sm:translate-x-1/2' className='cc-icons'>
+    <Overlay position='top-1 right-4' className='cc-icons sm:right-1/2 sm:translate-x-1/2'>
       <MiniButton
         titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
         icon={<IconSave size='1.25rem' className='icon-primary' />}

@@ -97,7 +97,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
         className={clsx(
           'max-w-[95rem]', // prettier: split lines
           'flex',
-          { 'flex-col items-center': isNarrow }
+          { 'flex-col md:items-center': isNarrow }
         )}
         onKeyDown={handleInput}
       >

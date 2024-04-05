@@ -53,6 +53,9 @@ export function loadRSFormData(input: IRSFormData): IRSForm {
   // Calculate derivation of constituents based on formal definition analysis
   result.graph.topologicalOrder().forEach(id => {
     const cst = result.items.find(item => item.id === id)!;
+    if (cst.cst_type === CstType.STRUCTURED) {
+      return;
+    }
     const resolvedInput: Set<ConstituentaID> = new Set();
     let definition = '';
     if (!isFunctional(cst.cst_type)) {
@@ -62,13 +65,34 @@ export function loadRSFormData(input: IRSFormData): IRSForm {
     } else {
       const expression = splitTemplateDefinition(cst.definition_formal);
       definition = expression.body;
-      const dependencies = extractGlobals(definition);
-      dependencies.forEach(alias => {
+      const bodyDependencies = extractGlobals(definition);
+      bodyDependencies.forEach(alias => {
         const targetCst = result.items.find(item => item.alias === alias);
         if (targetCst) {
           resolvedInput.add(derivationLookup.get(targetCst.id)!);
         }
       });
+      const needCheckHead = () => {
+        if (resolvedInput.size === 0) {
+          return true;
+        } else if (resolvedInput.size !== 1) {
+          return false;
+        } else {
+          const base = result.items.find(item => item.id === resolvedInput.values().next().value)!;
+          return (
+            !isFunctional(base.cst_type) || splitTemplateDefinition(base.definition_formal).head !== expression.head
+          );
+        }
+      };
+      if (needCheckHead()) {
+        const headDependencies = extractGlobals(expression.head);
+        headDependencies.forEach(alias => {
+          const targetCst = result.items.find(item => item.alias === alias);
+          if (targetCst && !isBaseSet(targetCst.cst_type)) {
+            resolvedInput.add(derivationLookup.get(targetCst.id)!);
+          }
+        });
+      }
     }
     if (resolvedInput.size === 1 && isSimpleExpression(definition)) {
       const parent = result.items.find(item => item.id === resolvedInput.values().next().value)!;
