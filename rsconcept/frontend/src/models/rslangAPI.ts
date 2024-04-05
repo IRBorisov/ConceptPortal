@@ -24,7 +24,7 @@ export function extractGlobals(expression: string): Set<string> {
  * Check if expression is simple derivation.
  */
 export function isSimpleExpression(text: string): boolean {
-  return !COMPLEX_SYMBOLS_REGEXP.test(text);
+  return !text.match(COMPLEX_SYMBOLS_REGEXP);
 }
 
 /**

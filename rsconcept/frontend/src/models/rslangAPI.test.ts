@@ -19,6 +19,8 @@ const simpleExpressionData = [
   ['pr1(S1)', 'true'],
   ['red(S1)', 'true'],
   ['red(Pr1(F1[α,σ]))', 'true'],
+  ['ℬℬ(X1)', 'false'],
+  ['ℬ(X1)', 'false'],
   ['D{(α,β)∈D6×D6 | α≠β & α∩β≠∅}', 'false'],
   ['I{(β,α) | α:∈D2; σ:=F5[α]; β:∈σ}', 'false'],
   ['∀σ∈S1 (F1[σ]×F1[σ])∩D11=∅', 'false']

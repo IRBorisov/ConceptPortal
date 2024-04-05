@@ -57,7 +57,7 @@ function DlgGraphParams({ hideWindow, initial, onConfirm }: DlgGraphParamsProps)
         />
         <Checkbox
           label='Свернуть производные'
-          title='Отображать производные понятия вместе с основным'
+          title='Не отображать производные понятия'
           value={params.foldDerived}
           setValue={value => updateParams({ foldDerived: value })}
         />

@@ -97,8 +97,9 @@ export interface IConstituenta extends IConstituentaMeta {
   status: ExpressionStatus;
   is_template: boolean;
   derived_from: ConstituentaID;
-  derived_alias?: string;
-  derived_children: string[];
+  derived_from_alias?: string;
+  derived_children: number[];
+  derived_children_alias: string[];
   parse: {
     status: ParsingStatus;
     valueClass: ValueClass;

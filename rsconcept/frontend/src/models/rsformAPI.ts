@@ -37,6 +37,7 @@ export function loadRSFormData(input: IRSFormData): IRSForm {
     derivationLookup.set(cst.id, cst.id);
     cst.derived_from = cst.id;
     cst.derived_children = [];
+    cst.derived_children_alias = [];
     cst.status = inferStatus(cst.parse.status, cst.parse.valueClass);
     cst.is_template = inferTemplate(cst.definition_formal);
     cst.cst_class = inferClass(cst.cst_type, cst.is_template);
@@ -72,8 +73,9 @@ export function loadRSFormData(input: IRSFormData): IRSForm {
     if (resolvedInput.size === 1 && isSimpleExpression(definition)) {
       const parent = result.items.find(item => item.id === resolvedInput.values().next().value)!;
       cst.derived_from = parent.id;
-      cst.derived_alias = parent.alias;
-      parent.derived_children.push(cst.alias);
+      cst.derived_from_alias = parent.alias;
+      parent.derived_children_alias.push(cst.alias);
+      parent.derived_children.push(cst.id);
       derivationLookup.set(cst.id, parent.id);
     }
   });
@@ -208,6 +210,7 @@ export function createMockConstituenta(id: ConstituentaID, alias: string, commen
     id: id,
     derived_from: id,
     derived_children: [],
+    derived_children_alias: [],
     order: -1,
     schema: -1,
     alias: alias,

@@ -92,7 +92,9 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         result.push({
           id: String(node.id),
           fill: colorBgGraphNode(cst, coloringScheme, colors),
-          label: cst.term_resolved && !filterParams.noText ? `${cst.alias}: ${cst.term_resolved}` : cst.alias
+          label: cst.alias,
+          subLabel: !filterParams.noText ? cst.term_resolved : undefined,
+          size: cst.derived_from_alias ? 1 : 2
         });
       }
     });
@@ -164,6 +166,16 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     }
   }
 
+  const handleFoldDerived = useCallback(() => {
+    setFilterParams(prev => ({
+      ...prev,
+      foldDerived: !prev.foldDerived
+    }));
+    setTimeout(() => {
+      setToggleResetView(prev => !prev);
+    }, TIMEOUT_GRAPH_REFRESH);
+  }, [setFilterParams, setToggleResetView]);
+
   const graph = useMemo(
     () => (
       <TermGraph
@@ -224,12 +236,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         onDelete={handleDeleteCst}
         onResetViewpoint={() => setToggleResetView(prev => !prev)}
         toggleOrbit={() => setOrbit(prev => !prev)}
-        toggleFoldDerived={() =>
-          setFilterParams(prev => ({
-            ...prev,
-            foldDerived: !prev.foldDerived
-          }))
-        }
+        toggleFoldDerived={handleFoldDerived}
         toggleNoText={() =>
           setFilterParams(prev => ({
             ...prev,

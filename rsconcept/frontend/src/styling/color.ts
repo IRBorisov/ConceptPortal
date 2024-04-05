@@ -35,6 +35,9 @@ export interface IColorTheme {
   bgTeal: string;
   bgOrange: string;
 
+  bgGreen50: string;
+  bgOrange50: string;
+
   fgRed: string;
   fgGreen: string;
   fgBlue: string;
@@ -72,6 +75,9 @@ export const lightT: IColorTheme = {
   bgTeal:     'hsl(192, 089%, 081%)',
   bgOrange:   'hsl(028, 100%, 075%)',
 
+  bgGreen50:  'hsl(100, 100%, 090%)',
+  bgOrange50: 'hsl(028, 100%, 095%)',
+
   fgRed:      'hsl(000, 090%, 045%)',
   fgGreen:    'hsl(100, 090%, 035%)',
   fgBlue:     'hsl(235, 100%, 050%)',
@@ -108,6 +114,9 @@ export const darkT: IColorTheme = {
   bgPurple:   'hsl(270, 080%, 050%)',
   bgTeal:     'hsl(192, 080%, 030%)',
   bgOrange:   'hsl(035, 100%, 035%)',
+
+  bgGreen50:  'hsl(100, 080%, 017%)',
+  bgOrange50: 'hsl(035, 100%, 015%)',
 
   fgRed:      'hsl(000, 080%, 045%)',
   fgGreen:    'hsl(100, 080%, 035%)',

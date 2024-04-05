@@ -74,7 +74,7 @@ function GraphToolbar({
           onClick={toggleNoText}
         />
         <MiniButton
-          title={!foldDerived ? 'Скрыть производные' : 'Отображать производные'}
+          title={!foldDerived ? 'Скрыть производные' : 'Отобразить производные'}
           icon={
             !foldDerived ? (
               <IconClustering size='1.25rem' className='icon-green' />

@@ -45,8 +45,8 @@ function TermGraph({
 
   const { selections, setSelections } = useSelection({
     ref: graphRef,
-    nodes,
-    edges,
+    nodes: nodes,
+    edges: edges,
     type: 'multi'
   });
 
@@ -110,6 +110,8 @@ function TermGraph({
           onNodeClick={handleNodeClick}
           onNodePointerOver={handleHoverIn}
           onNodePointerOut={handleHoverOut}
+          minNodeSize={4}
+          maxNodeSize={8}
           cameraMode={orbit ? 'orbit' : is3D ? 'rotate' : 'pan'}
           layoutOverrides={
             layout.includes('tree') ? { nodeLevelRatio: nodes.length < TREE_SIZE_MILESTONE ? 3 : 1 } : undefined

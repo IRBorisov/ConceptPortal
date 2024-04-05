@@ -48,7 +48,7 @@ function useGraphFilter(schema: IRSForm | undefined, params: GraphFilterParams) 
     }
     if (params.foldDerived) {
       schema.items.forEach(cst => {
-        if (cst.derived_alias) {
+        if (cst.derived_from_alias) {
           graph.foldNode(cst.id);
         }
       });

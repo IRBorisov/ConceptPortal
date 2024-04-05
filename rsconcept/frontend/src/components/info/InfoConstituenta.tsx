@@ -11,18 +11,18 @@ interface InfoConstituentaProps extends CProps.Div {
 
 function InfoConstituenta({ data, className, ...restProps }: InfoConstituentaProps) {
   return (
-    <div className={clsx('dense', className)} {...restProps}>
+    <div className={clsx('dense min-w-[15rem]', className)} {...restProps}>
       <h2>Конституента {data.alias}</h2>
-      {data.derived_alias ? (
+      {data.derived_from_alias ? (
         <p>
-          <b>Основана на: </b>
-          {data.derived_alias}
+          <b>Основание: </b>
+          {data.derived_from_alias}
         </p>
       ) : null}
-      {data.derived_children.length > 0 ? (
+      {data.derived_children_alias.length > 0 ? (
         <p>
           <b>Порождает: </b>
-          {data.derived_children.join(', ')}
+          {data.derived_children_alias.join(', ')}
         </p>
       ) : null}
       <p>

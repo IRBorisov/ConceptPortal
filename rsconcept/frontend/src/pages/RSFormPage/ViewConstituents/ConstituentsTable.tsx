@@ -108,6 +108,18 @@ function ConstituentsTable({ items, activeID, onOpenEdit, maxHeight, denseThresh
         style: {
           backgroundColor: colors.bgSelected
         }
+      },
+      {
+        when: (cst: IConstituenta) => cst.derived_from === activeID && cst.id !== activeID,
+        style: {
+          backgroundColor: colors.bgOrange50
+        }
+      },
+      {
+        when: (cst: IConstituenta) => activeID !== undefined && cst.derived_children.includes(activeID),
+        style: {
+          backgroundColor: colors.bgGreen50
+        }
       }
     ],
     [activeID, colors]
