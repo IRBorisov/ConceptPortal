@@ -36,6 +36,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     noTemplates: false,
     noTransitive: true,
     noText: false,
+    foldDerived: false,
 
     allowBase: true,
     allowStruct: true,
@@ -217,11 +218,18 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         is3D={is3D}
         orbit={orbit}
         noText={filterParams.noText}
+        foldDerived={filterParams.foldDerived}
         showParamsDialog={() => setShowParamsDialog(true)}
         onCreate={handleCreateCst}
         onDelete={handleDeleteCst}
         onResetViewpoint={() => setToggleResetView(prev => !prev)}
         toggleOrbit={() => setOrbit(prev => !prev)}
+        toggleFoldDerived={() =>
+          setFilterParams(prev => ({
+            ...prev,
+            foldDerived: !prev.foldDerived
+          }))
+        }
         toggleNoText={() =>
           setFilterParams(prev => ({
             ...prev,

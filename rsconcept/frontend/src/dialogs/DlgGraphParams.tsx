@@ -55,6 +55,12 @@ function DlgGraphParams({ hideWindow, initial, onConfirm }: DlgGraphParamsProps)
           value={params.noTransitive}
           setValue={value => updateParams({ noTransitive: value })}
         />
+        <Checkbox
+          label='Свернуть производные'
+          title='Отображать производные понятия вместе с основным'
+          value={params.foldDerived}
+          setValue={value => updateParams({ foldDerived: value })}
+        />
       </div>
       <div className='flex flex-col gap-1'>
         <h1 className='mb-2'>Типы конституент</h1>

@@ -7,14 +7,24 @@ import { applyPattern } from '@/utils/utils';
 import { CstType } from './rsform';
 import { IArgumentValue, IRSErrorDescription, RSErrorClass, RSErrorType } from './rslang';
 
+// cspell:disable
 const LOCALS_REGEXP = /[_a-zα-ω][a-zα-ω]*\d*/g;
+const GLOBALS_REGEXP = /[XCSADFPT]\d+/g;
+const COMPLEX_SYMBOLS_REGEXP = /[∀∃×ℬ;|:]/g;
+// cspell:enable
 
 /**
  * Extracts global variable names from a given expression.
  */
 export function extractGlobals(expression: string): Set<string> {
-  // cspell:disable-next-line
-  return new Set(expression.match(/[XCSADFPT]\d+/g) ?? []);
+  return new Set(expression.match(GLOBALS_REGEXP) ?? []);
+}
+
+/**
+ * Check if expression is simple derivation.
+ */
+export function isSimpleExpression(text: string): boolean {
+  return !COMPLEX_SYMBOLS_REGEXP.test(text);
 }
 
 /**

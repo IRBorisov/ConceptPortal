@@ -18,7 +18,7 @@ import {
   IRSFormStats
 } from './rsform';
 import { ParsingStatus, ValueClass } from './rslang';
-import { extractGlobals } from './rslangAPI';
+import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from './rslangAPI';
 
 /**
  * Loads data into an {@link IRSForm} based on {@link IRSFormData}.
@@ -32,7 +32,11 @@ export function loadRSFormData(input: IRSFormData): IRSForm {
   result.graph = new Graph();
   result.stats = calculateStats(result.items);
 
+  const derivationLookup: Map<ConstituentaID, ConstituentaID> = new Map();
   result.items.forEach(cst => {
+    derivationLookup.set(cst.id, cst.id);
+    cst.derived_from = cst.id;
+    cst.derived_children = [];
     cst.status = inferStatus(cst.parse.status, cst.parse.valueClass);
     cst.is_template = inferTemplate(cst.definition_formal);
     cst.cst_class = inferClass(cst.cst_type, cst.is_template);
@@ -44,6 +48,34 @@ export function loadRSFormData(input: IRSFormData): IRSForm {
         result.graph.addEdge(source.id, cst.id);
       }
     });
+  });
+  // Calculate derivation of constituents based on formal definition analysis
+  result.graph.topologicalOrder().forEach(id => {
+    const cst = result.items.find(item => item.id === id)!;
+    const resolvedInput: Set<ConstituentaID> = new Set();
+    let definition = '';
+    if (!isFunctional(cst.cst_type)) {
+      const node = result.graph.at(id)!;
+      node.inputs.forEach(id => resolvedInput.add(derivationLookup.get(id)!));
+      definition = cst.definition_formal;
+    } else {
+      const expression = splitTemplateDefinition(cst.definition_formal);
+      definition = expression.body;
+      const dependencies = extractGlobals(definition);
+      dependencies.forEach(alias => {
+        const targetCst = result.items.find(item => item.alias === alias);
+        if (targetCst) {
+          resolvedInput.add(derivationLookup.get(targetCst.id)!);
+        }
+      });
+    }
+    if (resolvedInput.size === 1 && isSimpleExpression(definition)) {
+      const parent = result.items.find(item => item.id === resolvedInput.values().next().value)!;
+      cst.derived_from = parent.id;
+      cst.derived_alias = parent.alias;
+      parent.derived_children.push(cst.alias);
+      derivationLookup.set(cst.id, parent.id);
+    }
   });
   return result;
 }
@@ -174,6 +206,8 @@ export function inferClass(type: CstType, isTemplate: boolean): CstClass {
 export function createMockConstituenta(id: ConstituentaID, alias: string, comment: string): IConstituenta {
   return {
     id: id,
+    derived_from: id,
+    derived_children: [],
     order: -1,
     schema: -1,
     alias: alias,

@@ -69,6 +69,10 @@ export class Graph {
     return result;
   }
 
+  at(target: number): GraphNode | undefined {
+    return this.nodes.get(target);
+  }
+
   addNode(target: number): GraphNode {
     let node = this.nodes.get(target);
     if (!node) {

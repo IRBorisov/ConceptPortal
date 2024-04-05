@@ -46,6 +46,13 @@ function useGraphFilter(schema: IRSForm | undefined, params: GraphFilterParams) 
         }
       });
     }
+    if (params.foldDerived) {
+      schema.items.forEach(cst => {
+        if (cst.derived_alias) {
+          graph.foldNode(cst.id);
+        }
+      });
+    }
     setFiltered(graph);
   }, [schema, params, allowedTypes]);
 

@@ -96,6 +96,7 @@ export interface GraphFilterParams {
   noTransitive: boolean;
   noTemplates: boolean;
   noText: boolean;
+  foldDerived: boolean;
 
   allowBase: boolean;
   allowStruct: boolean;

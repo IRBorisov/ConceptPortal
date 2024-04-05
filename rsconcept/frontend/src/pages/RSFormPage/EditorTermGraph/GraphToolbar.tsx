@@ -1,6 +1,8 @@
 'use client';
 
 import {
+  IconClustering,
+  IconClusteringOff,
   IconDestroy,
   IconFilter,
   IconFitImage,
@@ -22,12 +24,14 @@ interface GraphToolbarProps {
 
   orbit: boolean;
   noText: boolean;
+  foldDerived: boolean;
 
   showParamsDialog: () => void;
   onCreate: () => void;
   onDelete: () => void;
   onResetViewpoint: () => void;
 
+  toggleFoldDerived: () => void;
   toggleNoText: () => void;
   toggleOrbit: () => void;
 }
@@ -35,7 +39,9 @@ interface GraphToolbarProps {
 function GraphToolbar({
   is3D,
   noText,
+  foldDerived,
   toggleNoText,
+  toggleFoldDerived,
   orbit,
   toggleOrbit,
   showParamsDialog,
@@ -66,6 +72,17 @@ function GraphToolbar({
             )
           }
           onClick={toggleNoText}
+        />
+        <MiniButton
+          title={!foldDerived ? 'Скрыть производные' : 'Отображать производные'}
+          icon={
+            !foldDerived ? (
+              <IconClustering size='1.25rem' className='icon-green' />
+            ) : (
+              <IconClusteringOff size='1.25rem' className='icon-primary' />
+            )
+          }
+          onClick={toggleFoldDerived}
         />
         <MiniButton
           icon={<IconFitImage size='1.25rem' className='icon-primary' />}

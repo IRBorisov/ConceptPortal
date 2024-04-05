@@ -13,6 +13,18 @@ function InfoConstituenta({ data, className, ...restProps }: InfoConstituentaPro
   return (
     <div className={clsx('dense', className)} {...restProps}>
       <h2>Конституента {data.alias}</h2>
+      {data.derived_alias ? (
+        <p>
+          <b>Основана на: </b>
+          {data.derived_alias}
+        </p>
+      ) : null}
+      {data.derived_children.length > 0 ? (
+        <p>
+          <b>Порождает: </b>
+          {data.derived_children.join(', ')}
+        </p>
+      ) : null}
       <p>
         <b>Типизация: </b>
         {labelCstTypification(data)}

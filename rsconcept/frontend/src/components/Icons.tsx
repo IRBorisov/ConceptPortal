@@ -44,6 +44,8 @@ export { BiDownvote as IconMoveDown } from 'react-icons/bi';
 
 export { LuRotate3D as IconRotate3D } from 'react-icons/lu';
 export { MdOutlineFitScreen as IconFitImage } from 'react-icons/md';
+export { LuSparkles as IconClustering } from 'react-icons/lu';
+export { LuSparkle as IconClusteringOff } from 'react-icons/lu';
 
 interface IconSVGProps {
   viewBox: string;

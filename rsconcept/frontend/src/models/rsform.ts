@@ -96,6 +96,9 @@ export interface IConstituenta extends IConstituentaMeta {
   cst_class: CstClass;
   status: ExpressionStatus;
   is_template: boolean;
+  derived_from: ConstituentaID;
+  derived_alias?: string;
+  derived_children: string[];
   parse: {
     status: ParsingStatus;
     valueClass: ValueClass;
