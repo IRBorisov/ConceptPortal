@@ -14,7 +14,8 @@ import {
   ExpressionStatus,
   IConstituenta,
   IRSForm,
-  IRSFormData
+  IRSFormData,
+  IRSFormStats
 } from './rsform';
 import { ParsingStatus, ValueClass } from './rslang';
 import { extractGlobals } from './rslangAPI';
@@ -29,58 +30,8 @@ import { extractGlobals } from './rslangAPI';
 export function loadRSFormData(input: IRSFormData): IRSForm {
   const result = input as IRSForm;
   result.graph = new Graph();
-  if (!result.items) {
-    result.stats = {
-      count_all: 0,
-      count_errors: 0,
-      count_property: 0,
-      count_incalculable: 0,
+  result.stats = calculateStats(result.items);
 
-      count_text_term: 0,
-      count_definition: 0,
-      count_convention: 0,
-
-      count_base: 0,
-      count_constant: 0,
-      count_structured: 0,
-      count_axiom: 0,
-      count_term: 0,
-      count_function: 0,
-      count_predicate: 0,
-      count_theorem: 0
-    };
-    return result;
-  }
-  result.stats = {
-    count_all: result.items.length || 0,
-    count_errors: result.items.reduce(
-      (sum, cst) => sum + (cst.parse?.status === ParsingStatus.INCORRECT ? 1 : 0) || 0,
-      0
-    ),
-    count_property: result.items.reduce(
-      (sum, cst) => sum + (cst.parse?.valueClass === ValueClass.PROPERTY ? 1 : 0) || 0,
-      0
-    ),
-    count_incalculable: result.items.reduce(
-      (sum, cst) =>
-        sum + (cst.parse?.status === ParsingStatus.VERIFIED && cst.parse?.valueClass === ValueClass.INVALID ? 1 : 0) ||
-        0,
-      0
-    ),
-
-    count_text_term: result.items.reduce((sum, cst) => sum + (cst.term_raw ? 1 : 0) || 0, 0),
-    count_definition: result.items.reduce((sum, cst) => sum + (cst.definition_raw ? 1 : 0) || 0, 0),
-    count_convention: result.items.reduce((sum, cst) => sum + (cst.convention ? 1 : 0) || 0, 0),
-
-    count_base: result.items.reduce((sum, cst) => sum + (cst.cst_type === CstType.BASE ? 1 : 0), 0),
-    count_constant: result.items?.reduce((sum, cst) => sum + (cst.cst_type === CstType.CONSTANT ? 1 : 0), 0),
-    count_structured: result.items?.reduce((sum, cst) => sum + (cst.cst_type === CstType.STRUCTURED ? 1 : 0), 0),
-    count_axiom: result.items?.reduce((sum, cst) => sum + (cst.cst_type === CstType.AXIOM ? 1 : 0), 0),
-    count_term: result.items.reduce((sum, cst) => sum + (cst.cst_type === CstType.TERM ? 1 : 0), 0),
-    count_function: result.items.reduce((sum, cst) => sum + (cst.cst_type === CstType.FUNCTION ? 1 : 0), 0),
-    count_predicate: result.items.reduce((sum, cst) => sum + (cst.cst_type === CstType.PREDICATE ? 1 : 0), 0),
-    count_theorem: result.items.reduce((sum, cst) => sum + (cst.cst_type === CstType.THEOREM ? 1 : 0), 0)
-  };
   result.items.forEach(cst => {
     cst.status = inferStatus(cst.parse.status, cst.parse.valueClass);
     cst.is_template = inferTemplate(cst.definition_formal);
@@ -95,6 +46,32 @@ export function loadRSFormData(input: IRSFormData): IRSForm {
     });
   });
   return result;
+}
+
+function calculateStats(items: IConstituenta[]): IRSFormStats {
+  return {
+    count_all: items.length,
+    count_errors: items.reduce((sum, cst) => sum + (cst.parse?.status === ParsingStatus.INCORRECT ? 1 : 0), 0),
+    count_property: items.reduce((sum, cst) => sum + (cst.parse?.valueClass === ValueClass.PROPERTY ? 1 : 0), 0),
+    count_incalculable: items.reduce(
+      (sum, cst) =>
+        sum + (cst.parse.status === ParsingStatus.VERIFIED && cst.parse.valueClass === ValueClass.INVALID ? 1 : 0),
+      0
+    ),
+
+    count_text_term: items.reduce((sum, cst) => sum + (cst.term_raw ? 1 : 0), 0),
+    count_definition: items.reduce((sum, cst) => sum + (cst.definition_raw ? 1 : 0), 0),
+    count_convention: items.reduce((sum, cst) => sum + (cst.convention ? 1 : 0), 0),
+
+    count_base: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.BASE ? 1 : 0), 0),
+    count_constant: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.CONSTANT ? 1 : 0), 0),
+    count_structured: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.STRUCTURED ? 1 : 0), 0),
+    count_axiom: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.AXIOM ? 1 : 0), 0),
+    count_term: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.TERM ? 1 : 0), 0),
+    count_function: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.FUNCTION ? 1 : 0), 0),
+    count_predicate: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.PREDICATE ? 1 : 0), 0),
+    count_theorem: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.THEOREM ? 1 : 0), 0)
+  };
 }
 
 /**
