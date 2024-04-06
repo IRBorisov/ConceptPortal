@@ -9,6 +9,7 @@ import clsx from 'clsx';
 import { IEntityReference, ISyntacticReference } from '@/models/language';
 import { parseGrammemes } from '@/models/languageAPI';
 import { IConstituenta } from '@/models/rsform';
+import { isBasicConcept } from '@/models/rsformAPI';
 
 import { colorFgGrammeme, IColorTheme } from '../styling/color';
 import { describeConstituentaTerm, labelCstTypification, labelGrammeme } from './labels';
@@ -161,8 +162,24 @@ export function domTooltipConstituenta(cst?: IConstituenta) {
 
     if (cst.convention) {
       const convention = document.createElement('p');
-      convention.innerHTML = `<b>Конвенция:</b> ${cst.convention}`;
+      if (isBasicConcept(cst.cst_type)) {
+        convention.innerHTML = `<b>Конвенция:</b> ${cst.convention}`;
+      } else {
+        convention.innerHTML = `<b>Комментарий:</b> ${cst.convention}`;
+      }
       dom.appendChild(convention);
+    }
+
+    if (cst.derived_from_alias) {
+      const derived = document.createElement('p');
+      derived.innerHTML = `<b>Основание:</b> ${cst.derived_from_alias}`;
+      dom.appendChild(derived);
+    }
+
+    if (cst.derived_children_alias.length > 0) {
+      const children = document.createElement('p');
+      children.innerHTML = `<b>Порождает:</b> ${cst.derived_children_alias.join(', ')}`;
+      dom.appendChild(children);
     }
   } else {
     const text = document.createElement('p');

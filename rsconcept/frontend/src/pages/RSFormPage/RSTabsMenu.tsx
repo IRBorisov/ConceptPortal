@@ -249,7 +249,7 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
           tabIndex={-1}
           titleHtml='<b>Архив</b>: Редактирование запрещено<br />Перейти к актуальной версии'
           hideTitle={accessMenu.isOpen}
-          className='h-full'
+          className='h-full px-2'
           icon={<LuArchive size='1.25rem' className='icon-primary' />}
           onClick={() => controller.viewVersion(undefined)}
         />
