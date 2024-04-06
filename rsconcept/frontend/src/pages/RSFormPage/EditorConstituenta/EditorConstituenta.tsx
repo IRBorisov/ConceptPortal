@@ -14,9 +14,6 @@ import ViewConstituents from '../ViewConstituents';
 import ConstituentaToolbar from './ConstituentaToolbar';
 import FormConstituenta from './FormConstituenta';
 
-// Max height of content for left editor pane.
-const UNFOLDED_HEIGHT = '59.1rem';
-
 // Threshold window width to switch layout.
 const SIDELIST_LAYOUT_THRESHOLD = 1100; // px
 
@@ -119,7 +116,6 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
               schema={controller.schema}
               expression={activeCst?.definition_formal ?? ''}
               isBottom={isNarrow}
-              baseHeight={UNFOLDED_HEIGHT}
               activeID={activeCst?.id}
               onOpenEdit={onOpenEdit}
             />

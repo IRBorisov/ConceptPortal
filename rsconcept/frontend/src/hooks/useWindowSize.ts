@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { SMALL_SCREEN_WIDTH } from '@/utils/constants';
+import { PARAMETER } from '@/utils/constants';
 
 function useWindowSize() {
   const isClient = typeof window === 'object';
@@ -11,7 +11,7 @@ function useWindowSize() {
     return {
       width: isClient ? window.innerWidth : undefined,
       height: isClient ? window.innerHeight : undefined,
-      isSmall: isClient && window.innerWidth < SMALL_SCREEN_WIDTH
+      isSmall: isClient && window.innerWidth < PARAMETER.smallScreen
     };
   }
 

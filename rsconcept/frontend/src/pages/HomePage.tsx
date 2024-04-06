@@ -3,7 +3,7 @@ import { useLayoutEffect } from 'react';
 import { urls } from '@/app/urls';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
-import { TIMEOUT_UI_REFRESH } from '@/utils/constants';
+import { PARAMETER } from '@/utils/constants';
 
 function HomePage() {
   const router = useConceptNavigation();
@@ -13,11 +13,11 @@ function HomePage() {
     if (!user) {
       setTimeout(() => {
         router.push(urls.manuals);
-      }, TIMEOUT_UI_REFRESH);
+      }, PARAMETER.refreshTimeout);
     } else {
       setTimeout(() => {
         router.push(urls.library);
-      }, TIMEOUT_UI_REFRESH);
+      }, PARAMETER.refreshTimeout);
     }
   }, [router, user]);
 

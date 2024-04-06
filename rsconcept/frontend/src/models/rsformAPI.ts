@@ -32,9 +32,7 @@ export function loadRSFormData(input: IRSFormData): IRSForm {
   result.graph = new Graph();
   result.stats = calculateStats(result.items);
 
-  const derivationLookup: Map<ConstituentaID, ConstituentaID> = new Map();
   result.items.forEach(cst => {
-    derivationLookup.set(cst.id, cst.id);
     cst.derived_from = cst.id;
     cst.derived_children = [];
     cst.derived_children_alias = [];
@@ -51,7 +49,9 @@ export function loadRSFormData(input: IRSFormData): IRSForm {
     });
   });
   // Calculate derivation of constituents based on formal definition analysis
+  const derivationLookup: Map<ConstituentaID, ConstituentaID> = new Map();
   result.graph.topologicalOrder().forEach(id => {
+    derivationLookup.set(id, id);
     const cst = result.items.find(item => item.id === id)!;
     if (cst.cst_type === CstType.STRUCTURED) {
       return;

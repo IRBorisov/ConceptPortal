@@ -10,24 +10,16 @@ export const buildConstants = {
 };
 
 /**
- * General UI timeout [in ms] for waiting for render.
+ * Global application Parameters. The place where magic numbers are put to rest.
  */
-export const TIMEOUT_UI_REFRESH = 100;
+export const PARAMETER = {
+  smallScreen: 640, // == tailwind:xs
+  smallTreeNodes: 50, // amount of nodes threshold for size increase for large graphs
+  refreshTimeout: 100, // milliseconds delay for post-refresh actions
+  graphRefreshDelay: 10, // milliseconds delay for graph viewpoint reset
 
-/**
- * Threshold for small screen size optimizations.
- */
-export const SMALL_SCREEN_WIDTH = 640; // == tailwind:xs
-
-/**
- * Timeout [in ms] for graph refresh.
- */
-export const TIMEOUT_GRAPH_REFRESH = 200;
-
-/**
- * Exteor file extension for RSForm.
- */
-export const EXTEOR_TRS_FILE = '.trs';
+  logicLabel: 'LOGIC'
+};
 
 /**
  * Numeric limitations.
@@ -35,6 +27,11 @@ export const EXTEOR_TRS_FILE = '.trs';
 export const limits = {
   library_alias_len: 12
 };
+
+/**
+ * Exteor file extension for RSForm.
+ */
+export const EXTEOR_TRS_FILE = '.trs';
 
 /**
  * Regex patterns for data validation.

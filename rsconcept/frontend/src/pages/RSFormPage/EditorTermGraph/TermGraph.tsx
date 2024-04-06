@@ -6,7 +6,7 @@ import GraphUI, { GraphCanvasRef, GraphEdge, GraphNode, LayoutTypes, useSelectio
 import { useConceptOptions } from '@/context/OptionsContext';
 import { ConstituentaID } from '@/models/rsform';
 import { graphDarkT, graphLightT } from '@/styling/color';
-import { resources } from '@/utils/constants';
+import { PARAMETER, resources } from '@/utils/constants';
 
 interface TermGraphProps {
   nodes: GraphNode[];
@@ -24,8 +24,6 @@ interface TermGraphProps {
 
   toggleResetView: boolean;
 }
-
-const TREE_SIZE_MILESTONE = 50;
 
 function TermGraph({
   nodes,
@@ -114,7 +112,7 @@ function TermGraph({
           maxNodeSize={8}
           cameraMode={orbit ? 'orbit' : is3D ? 'rotate' : 'pan'}
           layoutOverrides={
-            layout.includes('tree') ? { nodeLevelRatio: nodes.length < TREE_SIZE_MILESTONE ? 3 : 1 } : undefined
+            layout.includes('tree') ? { nodeLevelRatio: nodes.length < PARAMETER.smallTreeNodes ? 3 : 1 } : undefined
           }
           labelFontUrl={resources.graph_font}
           theme={darkMode ? graphDarkT : graphLightT}

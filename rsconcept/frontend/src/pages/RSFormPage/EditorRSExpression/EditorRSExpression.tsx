@@ -6,7 +6,7 @@ import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { FaRegKeyboard } from 'react-icons/fa6';
 import { toast } from 'react-toastify';
 
-import { IconList, IconText, IconTree } from '@/components/Icons';
+import { IconList, IconListOff, IconText, IconTextOff, IconTree } from '@/components/Icons';
 import BadgeHelp from '@/components/man/BadgeHelp';
 import RSInput from '@/components/RSInput';
 import { RSTextWrapper } from '@/components/RSInput/textEditing';
@@ -164,19 +164,21 @@ function EditorRSExpression({
         <MiniButton
           title='Изменить шрифт'
           onClick={toggleFont}
-          icon={<IconText size='1.25rem' className={mathFont === 'math' ? 'icon-primary' : ''} />}
+          icon={
+            mathFont === 'math' ? <IconText size='1.25rem' className='icon-primary' /> : <IconTextOff size='1.25rem' />
+          }
         />
         {!disabled || model.processing ? (
           <MiniButton
             title='Отображение специальной клавиатуры'
-            onClick={() => setShowControls(prev => !prev)}
             icon={<FaRegKeyboard size='1.25rem' className={showControls ? 'icon-primary' : ''} />}
+            onClick={() => setShowControls(prev => !prev)}
           />
         ) : null}
         <MiniButton
           title='Отображение списка конституент'
+          icon={showList ? <IconList size='1.25rem' className='icon-primary' /> : <IconListOff size='1.25rem' />}
           onClick={onToggleList}
-          icon={<IconList size='1.25rem' className={showList ? 'icon-primary' : ''} />}
         />
         <MiniButton
           title='Дерево разбора выражения'

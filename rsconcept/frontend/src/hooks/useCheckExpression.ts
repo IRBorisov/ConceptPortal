@@ -8,8 +8,7 @@ import { getDefinitionPrefix } from '@/models/rsformAPI';
 import { IArgumentInfo, IExpressionParse } from '@/models/rslang';
 import { RSErrorType } from '@/models/rslang';
 import { DataCallback, postCheckExpression } from '@/utils/backendAPI';
-
-const LOGIC_TYPIFICATION = 'LOGIC';
+import { PARAMETER } from '@/utils/constants';
 
 function useCheckExpression({ schema }: { schema?: IRSForm }) {
   const [loading, setLoading] = useState(false);
@@ -47,17 +46,17 @@ function checkTypeConsistency(type: CstType, typification: string, args: IArgume
     case CstType.CONSTANT:
     case CstType.STRUCTURED:
     case CstType.TERM:
-      return typification !== LOGIC_TYPIFICATION && args.length === 0;
+      return typification !== PARAMETER.logicLabel && args.length === 0;
 
     case CstType.AXIOM:
     case CstType.THEOREM:
-      return typification === LOGIC_TYPIFICATION && args.length === 0;
+      return typification === PARAMETER.logicLabel && args.length === 0;
 
     case CstType.FUNCTION:
-      return typification !== LOGIC_TYPIFICATION && args.length !== 0;
+      return typification !== PARAMETER.logicLabel && args.length !== 0;
 
     case CstType.PREDICATE:
-      return typification === LOGIC_TYPIFICATION && args.length !== 0;
+      return typification === PARAMETER.logicLabel && args.length !== 0;
   }
 }
 

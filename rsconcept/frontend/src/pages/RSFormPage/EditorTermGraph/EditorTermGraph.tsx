@@ -14,7 +14,7 @@ import useLocalStorage from '@/hooks/useLocalStorage';
 import { GraphColoringScheme, GraphFilterParams } from '@/models/miscellaneous';
 import { ConstituentaID, CstType } from '@/models/rsform';
 import { colorBgGraphNode } from '@/styling/color';
-import { storage, TIMEOUT_GRAPH_REFRESH } from '@/utils/constants';
+import { PARAMETER, storage } from '@/utils/constants';
 
 import { useRSEdit } from '../RSEditContext';
 import GraphSelectors from './GraphSelectors';
@@ -141,7 +141,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     setLayout(newLayout);
     setTimeout(() => {
       setToggleResetView(prev => !prev);
-    }, TIMEOUT_GRAPH_REFRESH);
+    }, PARAMETER.graphRefreshDelay);
   }
 
   const handleChangeParams = useCallback(
@@ -173,7 +173,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     }));
     setTimeout(() => {
       setToggleResetView(prev => !prev);
-    }, TIMEOUT_GRAPH_REFRESH);
+    }, PARAMETER.graphRefreshDelay);
   }, [setFilterParams, setToggleResetView]);
 
   const graph = useMemo(

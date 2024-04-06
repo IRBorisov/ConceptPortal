@@ -4,8 +4,6 @@ import EmbedYoutube from '@/components/ui/EmbedYoutube';
 import useWindowSize from '@/hooks/useWindowSize';
 import { external_urls, youtube } from '@/utils/constants';
 
-const OPT_VIDEO_H = 1080;
-
 function HelpRSLang() {
   const windowSize = useWindowSize();
 
@@ -13,7 +11,7 @@ function HelpRSLang() {
     const viewH = windowSize.height ?? 0;
     const viewW = windowSize.width ?? 0;
     const availableWidth = viewW - (windowSize.isSmall ? 35 : 290);
-    return Math.min(OPT_VIDEO_H, viewH - 320, Math.floor((availableWidth * 9) / 16));
+    return Math.min(1080, viewH - 320, Math.floor((availableWidth * 9) / 16));
   }, [windowSize]);
 
   // prettier-ignore

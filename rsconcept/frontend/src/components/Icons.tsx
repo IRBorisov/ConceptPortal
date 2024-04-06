@@ -22,7 +22,8 @@ export { LuGlasses as IconReader } from 'react-icons/lu';
 export { FiBell as IconFollow } from 'react-icons/fi';
 export { FiBellOff as IconFollowOff } from 'react-icons/fi';
 
-export { BiListUl as IconList } from 'react-icons/bi';
+export { TbColumns as IconList } from 'react-icons/tb';
+export { TbColumnsOff as IconListOff } from 'react-icons/tb';
 export { BiFontFamily as IconText } from 'react-icons/bi';
 export { BiFont as IconTextOff } from 'react-icons/bi';
 export { RiTreeLine as IconTree } from 'react-icons/ri';

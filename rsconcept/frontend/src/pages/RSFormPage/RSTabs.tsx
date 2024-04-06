@@ -14,7 +14,7 @@ import { useConceptOptions } from '@/context/OptionsContext';
 import { useRSForm } from '@/context/RSFormContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { ConstituentaID, IConstituenta, IConstituentaMeta } from '@/models/rsform';
-import { prefixes, TIMEOUT_UI_REFRESH } from '@/utils/constants';
+import { PARAMETER, prefixes } from '@/utils/constants';
 import { labelVersion } from '@/utils/labels';
 
 import EditorConstituenta from './EditorConstituenta';
@@ -124,7 +124,7 @@ function RSTabs() {
               inline: 'nearest'
             });
           }
-        }, TIMEOUT_UI_REFRESH);
+        }, PARAMETER.refreshTimeout);
       }
     },
     [activeTab, navigateTab]
