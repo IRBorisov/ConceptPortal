@@ -6,6 +6,7 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 import DataTable, { createColumnHelper, RowSelectionState } from '@/components/ui/DataTable';
 import { useConceptOptions } from '@/context/OptionsContext';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
+import { isBasicConcept } from '@/models/rsformAPI';
 import { describeConstituenta } from '@/utils/labels';
 
 import ConstituentaBadge from '../info/ConstituentaBadge';
@@ -80,7 +81,8 @@ function ConstituentaMultiPicker({ id, schema, prefixID, rows, selected, setSele
         </span>
         {schema ? (
           <SelectGraphToolbar
-            graph={schema.graph} // prettier: split lines
+            graph={schema.graph}
+            core={schema.items.filter(cst => isBasicConcept(cst.cst_type)).map(cst => cst.id)}
             setSelected={setSelected}
             className='w-full ml-8'
           />

@@ -14,10 +14,12 @@ function InfoConstituenta({ data, className, ...restProps }: InfoConstituentaPro
   return (
     <div className={clsx('dense min-w-[15rem]', className)} {...restProps}>
       <h2>Конституента {data.alias}</h2>
-      <p>
-        <b>Термин: </b>
-        {data.term_resolved || data.term_raw}
-      </p>
+      {data.term_resolved ? (
+        <p>
+          <b>Термин: </b>
+          {data.term_resolved || data.term_raw}
+        </p>
+      ) : null}
       <p>
         <b>Типизация: </b>
         {labelCstTypification(data)}

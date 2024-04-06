@@ -16,6 +16,7 @@ import SelectGraphToolbar from '@/components/select/SelectGraphToolbar';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { HelpTopic } from '@/models/miscellaneous';
+import { isBasicConcept } from '@/models/rsformAPI';
 
 import { useRSEdit } from '../RSEditContext';
 
@@ -63,6 +64,11 @@ function GraphToolbar({
           onClick={showParamsDialog}
         />
         <MiniButton
+          icon={<IconFitImage size='1.25rem' className='icon-primary' />}
+          title='Граф целиком'
+          onClick={onResetViewpoint}
+        />
+        <MiniButton
           title={!noText ? 'Скрыть текст' : 'Отобразить текст'}
           icon={
             !noText ? (
@@ -83,11 +89,6 @@ function GraphToolbar({
             )
           }
           onClick={toggleFoldDerived}
-        />
-        <MiniButton
-          icon={<IconFitImage size='1.25rem' className='icon-primary' />}
-          title='Граф целиком'
-          onClick={onResetViewpoint}
         />
         <MiniButton
           icon={<IconRotate3D size='1.25rem' className={orbit ? 'icon-green' : 'icon-primary'} />}
@@ -113,7 +114,11 @@ function GraphToolbar({
         ) : null}
         <BadgeHelp topic={HelpTopic.GRAPH_TERM} className='max-w-[calc(100vw-4rem)]' offset={4} />
       </div>
-      <SelectGraphToolbar graph={controller.schema!.graph} setSelected={controller.setSelected} />
+      <SelectGraphToolbar
+        graph={controller.schema!.graph}
+        core={controller.schema!.items.filter(cst => isBasicConcept(cst.cst_type)).map(cst => cst.id)}
+        setSelected={controller.setSelected}
+      />
     </Overlay>
   );
 }

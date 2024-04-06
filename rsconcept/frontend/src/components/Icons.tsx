@@ -33,6 +33,7 @@ export { BiExpand as IconGraphExpand } from 'react-icons/bi';
 export { LuMaximize as IconGraphMaximize } from 'react-icons/lu';
 export { BiGitBranch as IconGraphInputs } from 'react-icons/bi';
 export { BiGitMerge as IconGraphOutputs } from 'react-icons/bi';
+export { LuAtom as IconGraphCore } from 'react-icons/lu';
 
 export { BiCheckShield as IconImmutable } from 'react-icons/bi';
 export { RiOpenSourceLine as IconPublic } from 'react-icons/ri';

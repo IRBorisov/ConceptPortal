@@ -4,6 +4,7 @@ import { Graph } from '@/models/Graph';
 
 import {
   IconGraphCollapse,
+  IconGraphCore,
   IconGraphExpand,
   IconGraphInputs,
   IconGraphMaximize,
@@ -15,10 +16,11 @@ import MiniButton from '../ui/MiniButton';
 
 interface SelectGraphToolbarProps extends CProps.Styling {
   graph: Graph;
+  core: number[];
   setSelected: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-function SelectGraphToolbar({ className, graph, setSelected, ...restProps }: SelectGraphToolbarProps) {
+function SelectGraphToolbar({ className, graph, core, setSelected, ...restProps }: SelectGraphToolbarProps) {
   return (
     <div className={clsx('cc-icons', className)} {...restProps}>
       <MiniButton
@@ -50,6 +52,11 @@ function SelectGraphToolbar({ className, graph, setSelected, ...restProps }: Sel
         titleHtml='Выделить потребителей'
         icon={<IconGraphOutputs size='1.25rem' className='icon-primary' />}
         onClick={() => setSelected(prev => [...prev, ...graph.expandOutputs(prev)])}
+      />
+      <MiniButton
+        titleHtml='Выделить ядро'
+        icon={<IconGraphCore size='1.25rem' className='icon-primary' />}
+        onClick={() => setSelected([...core, ...graph.expandInputs(core)])}
       />
     </div>
   );
