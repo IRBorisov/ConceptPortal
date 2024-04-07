@@ -1,4 +1,11 @@
-# ConceptPortal
+<div align="center">
+  <a href="https://portal.acconcept.ru/">
+    <img width="650" src="rsconcept/frontend/public/logo_full.svg" />
+  </a>
+</div>
+
+<br />
+<br />
 
 React + Django based web portal for editing RSForm schemas.
 This readme file is used mostly to document project dependencies
