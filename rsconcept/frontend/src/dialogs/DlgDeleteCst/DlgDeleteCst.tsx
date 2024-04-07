@@ -38,16 +38,11 @@ function DlgDeleteCst({ hideWindow, selected, schema, onDelete }: DlgDeleteCstPr
       onSubmit={handleSubmit}
       className={clsx('cc-column', 'max-w-[60vw] min-w-[30rem]', 'px-6')}
     >
-      <ConstituentsList
-        title='Выбраны к удалению'
-        list={selected}
-        items={schema.items}
-        prefix={prefixes.cst_delete_list}
-      />
+      <ConstituentsList title='Выбраны к удалению' list={selected} schema={schema} prefix={prefixes.cst_delete_list} />
       <ConstituentsList
         title='Зависимые конституенты'
         list={expansion}
-        items={schema.items}
+        schema={schema}
         prefix={prefixes.cst_dependant_list}
       />
       <Checkbox label='Удалить зависимые конституенты' value={expandOut} setValue={value => setExpandOut(value)} />

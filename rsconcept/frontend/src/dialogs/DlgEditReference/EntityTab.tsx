@@ -10,7 +10,7 @@ import TextInput from '@/components/ui/TextInput';
 import { ReferenceType } from '@/models/language';
 import { parseEntityReference, parseGrammemes } from '@/models/languageAPI';
 import { CstMatchMode } from '@/models/miscellaneous';
-import { IConstituenta } from '@/models/rsform';
+import { IConstituenta, IRSForm } from '@/models/rsform';
 import { matchConstituenta } from '@/models/rsformAPI';
 import { prefixes } from '@/utils/constants';
 import { IGrammemeOption, SelectorGrammemes } from '@/utils/selectors';
@@ -20,12 +20,12 @@ import SelectWordForm from './SelectWordForm';
 
 interface EntityTabProps {
   initial: IReferenceInputState;
-  items: IConstituenta[];
+  schema: IRSForm;
   setIsValid: React.Dispatch<React.SetStateAction<boolean>>;
   setReference: React.Dispatch<React.SetStateAction<string>>;
 }
 
-function EntityTab({ initial, items, setIsValid, setReference }: EntityTabProps) {
+function EntityTab({ initial, schema, setIsValid, setReference }: EntityTabProps) {
   const [selectedCst, setSelectedCst] = useState<IConstituenta | undefined>(undefined);
   const [alias, setAlias] = useState('');
   const [term, setTerm] = useState('');
@@ -39,7 +39,7 @@ function EntityTab({ initial, items, setIsValid, setReference }: EntityTabProps)
       const grams = parseGrammemes(ref.form);
       setSelectedGrams(SelectorGrammemes.filter(data => grams.includes(data.value)));
     }
-  }, [initial, items]);
+  }, [initial, schema.items]);
 
   // Produce result
   useEffect(() => {
@@ -49,9 +49,9 @@ function EntityTab({ initial, items, setIsValid, setReference }: EntityTabProps)
 
   // Update term when alias changes
   useEffect(() => {
-    const cst = items.find(item => item.alias === alias);
+    const cst = schema.cstByAlias.get(alias);
     setTerm(cst?.term_resolved ?? '');
-  }, [alias, term, items]);
+  }, [alias, term, schema]);
 
   function handleSelectConstituenta(cst: IConstituenta) {
     setAlias(cst.alias);
@@ -64,7 +64,7 @@ function EntityTab({ initial, items, setIsValid, setReference }: EntityTabProps)
         id='dlg_reference_entity_picker'
         initialFilter={initial.text}
         value={selectedCst}
-        data={items}
+        data={schema.items}
         onSelectValue={handleSelectConstituenta}
         prefixID={prefixes.cst_modal_list}
         describeFunc={cst => cst.term_resolved}

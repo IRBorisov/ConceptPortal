@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { type ErrorData } from '@/components/info/InfoError';
 import { IRSForm, IRSFormData } from '@/models/rsform';
-import { loadRSFormData } from '@/models/rsformAPI';
+import { RSFormLoader } from '@/models/RSFormLoader';
 import { getRSFormDetails } from '@/utils/backendAPI';
 
 function useRSFormDetails({ target, version }: { target?: string; version?: string }) {
@@ -17,7 +17,7 @@ function useRSFormDetails({ target, version }: { target?: string; version?: stri
       setInnerSchema(undefined);
       return;
     }
-    const schema = loadRSFormData(data);
+    const schema = new RSFormLoader(data).produceRSForm();
     setInnerSchema(schema);
   }
 

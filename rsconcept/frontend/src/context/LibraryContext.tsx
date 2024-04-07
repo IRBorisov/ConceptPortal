@@ -7,7 +7,7 @@ import { ILibraryItem } from '@/models/library';
 import { matchLibraryItem } from '@/models/libraryAPI';
 import { ILibraryFilter } from '@/models/miscellaneous';
 import { IRSForm, IRSFormCloneData, IRSFormCreateData, IRSFormData } from '@/models/rsform';
-import { loadRSFormData } from '@/models/rsformAPI';
+import { RSFormLoader } from '@/models/RSFormLoader';
 import {
   DataCallback,
   deleteLibraryItem,
@@ -100,7 +100,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
         setLoading: setProcessing,
         onError: setError,
         onSuccess: data => {
-          const schema = loadRSFormData(data);
+          const schema = new RSFormLoader(data).produceRSForm();
           setCachedTemplates(prev => [...prev, schema]);
           callback(schema);
         }

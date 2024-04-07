@@ -50,7 +50,7 @@ function RSTabs() {
     if (!schema || selected.length === 0) {
       return undefined;
     } else {
-      return schema.items.find(cst => cst.id === selected.at(-1));
+      return schema.cstByID.get(selected.at(-1)!);
     }
   }, [schema, selected]);
 
@@ -69,7 +69,7 @@ function RSTabs() {
     setIsModified(false);
     if (activeTab === RSTabID.CST_EDIT) {
       const cstID = Number(cstQuery);
-      if (cstID && schema && schema.items.find(cst => cst.id === cstID)) {
+      if (cstID && schema && schema.cstByID.has(cstID)) {
         setSelected([cstID]);
       } else if (schema && schema?.items.length > 0) {
         setSelected([schema.items[0].id]);

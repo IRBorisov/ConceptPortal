@@ -3,7 +3,7 @@ import { Extension } from '@codemirror/state';
 import { hoverTooltip } from '@codemirror/view';
 import { EditorState } from '@uiw/react-codemirror';
 
-import { IConstituenta } from '@/models/rsform';
+import { IRSForm } from '@/models/rsform';
 import { findEnvelopingNodes } from '@/utils/codemirror';
 import { domTooltipConstituenta } from '@/utils/codemirror';
 
@@ -25,13 +25,13 @@ function findAliasAt(pos: number, state: EditorState) {
   return { alias, start, end };
 }
 
-const globalsHoverTooltip = (items: IConstituenta[]) => {
+const globalsHoverTooltip = (schema: IRSForm) => {
   return hoverTooltip((view, pos) => {
     const { alias, start, end } = findAliasAt(pos, view.state);
     if (!alias) {
       return null;
     }
-    const cst = items.find(cst => cst.alias === alias);
+    const cst = schema.cstByAlias.get(alias);
     return {
       pos: start,
       end: end,
@@ -41,6 +41,6 @@ const globalsHoverTooltip = (items: IConstituenta[]) => {
   });
 };
 
-export function rsHoverTooltip(items: IConstituenta[]): Extension {
-  return [globalsHoverTooltip(items)];
+export function rsHoverTooltip(schema: IRSForm): Extension {
+  return [globalsHoverTooltip(schema)];
 }

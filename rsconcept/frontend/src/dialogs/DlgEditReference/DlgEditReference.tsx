@@ -10,7 +10,7 @@ import Overlay from '@/components/ui/Overlay';
 import TabLabel from '@/components/ui/TabLabel';
 import { ReferenceType } from '@/models/language';
 import { HelpTopic } from '@/models/miscellaneous';
-import { IConstituenta } from '@/models/rsform';
+import { IRSForm } from '@/models/rsform';
 import { labelReferenceType } from '@/utils/labels';
 
 import EntityTab from './EntityTab';
@@ -26,7 +26,7 @@ export interface IReferenceInputState {
 
 interface DlgEditReferenceProps {
   hideWindow: () => void;
-  items: IConstituenta[];
+  schema: IRSForm;
   initial: IReferenceInputState;
   onSave: (newRef: string) => void;
 }
@@ -36,7 +36,7 @@ export enum TabID {
   SYNTACTIC = 1
 }
 
-function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferenceProps) {
+function DlgEditReference({ hideWindow, schema, initial, onSave }: DlgEditReferenceProps) {
   const [activeTab, setActiveTab] = useState(initial.type === ReferenceType.ENTITY ? TabID.ENTITY : TabID.SYNTACTIC);
 
   const [reference, setReference] = useState('');
@@ -77,7 +77,7 @@ function DlgEditReference({ hideWindow, items, initial, onSave }: DlgEditReferen
         </TabList>
 
         <TabPanel>
-          <EntityTab initial={initial} items={items} setReference={setReference} setIsValid={setIsValid} />
+          <EntityTab initial={initial} schema={schema} setReference={setReference} setIsValid={setIsValid} />
         </TabPanel>
 
         <TabPanel>

@@ -98,7 +98,7 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
                 }
               : null
           }
-          onChange={data => partialUpdate({ filterCategory: category?.items.find(cst => cst.id === data?.value) })}
+          onChange={data => partialUpdate({ filterCategory: data ? category?.cstByID.get(data?.value) : undefined })}
           isClearable
         />
         <SelectSingle

@@ -86,9 +86,9 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
         EditorView.lineWrapping,
         RSLanguage,
         ccBracketMatching(darkMode),
-        ...(noTooltip ? [] : [rsHoverTooltip(schema?.items || [])])
+        ...(noTooltip || !schema ? [] : [rsHoverTooltip(schema)])
       ],
-      [darkMode, schema?.items, noTooltip]
+      [darkMode, schema, noTooltip]
     );
 
     const handleInput = useCallback(

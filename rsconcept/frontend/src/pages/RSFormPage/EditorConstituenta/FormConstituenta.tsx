@@ -146,7 +146,7 @@ function FormConstituenta({
           id='cst_term'
           label='Термин'
           placeholder='Обозначение, используемое в текстовых определениях'
-          items={schema?.items}
+          schema={schema}
           value={term}
           initialValue={state?.term_raw ?? ''}
           resolved={state?.term_resolved ?? ''}
@@ -198,7 +198,7 @@ function FormConstituenta({
               label='Текстовое определение'
               placeholder='Текстовая интерпретация формального выражения'
               height='3.8rem'
-              items={schema?.items}
+              schema={schema}
               value={textDefinition}
               initialValue={state?.definition_raw ?? ''}
               resolved={state?.definition_resolved ?? ''}

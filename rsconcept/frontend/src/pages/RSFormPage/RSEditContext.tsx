@@ -205,7 +205,7 @@ export const RSEditState = ({
         items: deleted
       };
 
-      const deletedNames = deleted.map(id => model.schema?.items.find(cst => cst.id === id)?.alias).join(', ');
+      const deletedNames = deleted.map(id => model.schema!.cstByID.get(id)!.alias).join(', ');
       const isEmpty = deleted.length === model.schema.items.length;
       const nextActive = isEmpty ? undefined : getNextActiveOnDelete(activeCst?.id, model.schema.items, deleted);
 

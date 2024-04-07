@@ -62,8 +62,8 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
 
   const [hoverID, setHoverID] = useState<ConstituentaID | undefined>(undefined);
   const hoverCst = useMemo(() => {
-    return controller.schema?.items.find(cst => cst.id === hoverID);
-  }, [controller.schema?.items, hoverID]);
+    return hoverID && controller.schema?.cstByID.get(hoverID);
+  }, [controller.schema?.cstByID, hoverID]);
 
   const [toggleResetView, setToggleResetView] = useState(false);
 
@@ -87,14 +87,14 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
       return result;
     }
     filtered.nodes.forEach(node => {
-      const cst = controller.schema!.items.find(cst => cst.id === node.id);
+      const cst = controller.schema!.cstByID.get(node.id);
       if (cst) {
         result.push({
           id: String(node.id),
           fill: colorBgGraphNode(cst, coloringScheme, colors),
           label: cst.alias,
           subLabel: !filterParams.noText ? cst.term_resolved : undefined,
-          size: cst.derived_from_alias ? 1 : 2
+          size: cst.parent_alias ? 1 : 2
         });
       }
     });
@@ -121,9 +121,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     if (!controller.schema) {
       return;
     }
-    const definition = controller.selected
-      .map(id => controller.schema!.items.find(cst => cst.id === id)!.alias)
-      .join(' ');
+    const definition = controller.selected.map(id => controller.schema!.cstByID.get(id)!.alias).join(' ');
     controller.createCst(controller.nothingSelected ? CstType.BASE : CstType.TERM, false, definition);
   }
 

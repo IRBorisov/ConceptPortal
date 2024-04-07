@@ -36,16 +36,16 @@ function InfoConstituenta({ data, className, ...restProps }: InfoConstituentaPro
           {data.definition_resolved}
         </p>
       ) : null}
-      {data.derived_from_alias ? (
+      {data.parent_alias ? (
         <p>
           <b>Основание: </b>
-          {data.derived_from_alias}
+          {data.parent_alias}
         </p>
       ) : null}
-      {data.derived_children_alias.length > 0 ? (
+      {data.children_alias.length > 0 ? (
         <p>
           <b>Порождает: </b>
-          {data.derived_children_alias.join(', ')}
+          {data.children_alias.join(', ')}
         </p>
       ) : null}
       {data.convention ? (

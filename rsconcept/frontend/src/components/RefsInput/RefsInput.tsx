@@ -11,10 +11,9 @@ import { forwardRef, useCallback, useMemo, useRef, useState } from 'react';
 
 import Label from '@/components/ui/Label';
 import { useConceptOptions } from '@/context/OptionsContext';
-import { useRSForm } from '@/context/RSFormContext';
 import DlgEditReference from '@/dialogs/DlgEditReference';
 import { ReferenceType } from '@/models/language';
-import { IConstituenta } from '@/models/rsform';
+import { IRSForm } from '@/models/rsform';
 import { CodeMirrorWrapper } from '@/utils/codemirror';
 
 import { NaturalLanguage, ReferenceTokens } from './parse';
@@ -53,7 +52,7 @@ interface RefsInputInputProps
   extends Pick<ReactCodeMirrorProps, 'id' | 'height' | 'value' | 'className' | 'onFocus' | 'onBlur' | 'placeholder'> {
   label?: string;
   onChange?: (newValue: string) => void;
-  items?: IConstituenta[];
+  schema?: IRSForm;
   disabled?: boolean;
 
   initialValue?: string;
@@ -62,9 +61,8 @@ interface RefsInputInputProps
 }
 
 const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
-  ({ id, label, disabled, items, initialValue, value, resolved, onFocus, onBlur, onChange, ...restProps }, ref) => {
+  ({ id, label, disabled, schema, initialValue, value, resolved, onFocus, onBlur, onChange, ...restProps }, ref) => {
     const { darkMode, colors } = useConceptOptions();
-    const { schema } = useRSForm();
 
     const [isFocused, setIsFocused] = useState(false);
 
@@ -104,9 +102,9 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
         EditorView.lineWrapping,
         EditorView.contentAttributes.of({ spellcheck: 'true' }),
         NaturalLanguage,
-        refsHoverTooltip(schema?.items || [], colors)
+        ...(schema ? [refsHoverTooltip(schema, colors)] : [])
       ],
-      [schema?.items, colors]
+      [schema, colors]
     );
 
     function handleChange(newValue: string) {
@@ -170,10 +168,10 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
     return (
       <div className={clsx('flex flex-col gap-2', cursor)}>
         <AnimatePresence>
-          {showEditor ? (
+          {showEditor && schema ? (
             <DlgEditReference
               hideWindow={() => setShowEditor(false)}
-              items={items ?? []}
+              schema={schema}
               initial={{
                 type: currentType,
                 refRaw: refText,

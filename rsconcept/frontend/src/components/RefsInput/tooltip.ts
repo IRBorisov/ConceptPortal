@@ -3,7 +3,7 @@ import { Extension } from '@codemirror/state';
 import { hoverTooltip } from '@codemirror/view';
 
 import { parseEntityReference, parseSyntacticReference } from '@/models/languageAPI';
-import { IConstituenta } from '@/models/rsform';
+import { IRSForm } from '@/models/rsform';
 import { IColorTheme } from '@/styling/color';
 import {
   domTooltipEntityReference,
@@ -15,7 +15,7 @@ import {
 import { ReferenceTokens } from './parse';
 import { RefEntity, RefSyntactic } from './parse/parser.terms';
 
-export const globalsHoverTooltip = (items: IConstituenta[], colors: IColorTheme) => {
+export const globalsHoverTooltip = (schema: IRSForm, colors: IColorTheme) => {
   return hoverTooltip((view, pos) => {
     const nodes = findEnvelopingNodes(pos, pos, syntaxTree(view.state), ReferenceTokens);
     if (nodes.length !== 1) {
@@ -26,7 +26,7 @@ export const globalsHoverTooltip = (items: IConstituenta[], colors: IColorTheme)
     const text = view.state.doc.sliceString(start, end);
     if (nodes[0].type.id === RefEntity) {
       const ref = parseEntityReference(text);
-      const cst = items.find(cst => cst.alias === ref.entity);
+      const cst = schema.cstByAlias.get(ref.entity);
       return {
         pos: start,
         end: end,
@@ -61,6 +61,6 @@ export const globalsHoverTooltip = (items: IConstituenta[], colors: IColorTheme)
   });
 };
 
-export function refsHoverTooltip(items: IConstituenta[], colors: IColorTheme): Extension {
-  return [globalsHoverTooltip(items, colors)];
+export function refsHoverTooltip(schema: IRSForm, colors: IColorTheme): Extension {
+  return [globalsHoverTooltip(schema, colors)];
 }

@@ -33,7 +33,7 @@ function ViewHidden({ items, selected, toggleSelection, schema, coloringScheme, 
     [selected]
   );
 
-  if (items.length <= 0) {
+  if (!schema || items.length <= 0) {
     return null;
   }
   return (
@@ -43,7 +43,7 @@ function ViewHidden({ items, selected, toggleSelection, schema, coloringScheme, 
       </p>
       <div className='flex flex-wrap justify-center gap-2 py-2 overflow-y-auto' style={{ maxHeight: dismissedHeight }}>
         {items.map(cstID => {
-          const cst = schema!.items.find(cst => cst.id === cstID)!;
+          const cst = schema.cstByID.get(cstID)!;
           const adjustedColoring = coloringScheme === 'none' ? 'status' : coloringScheme;
           const id = `${prefixes.cst_hidden_list}${cst.alias}`;
           return (

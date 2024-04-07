@@ -90,16 +90,9 @@ export interface ICstTarget {
 }
 
 /**
- * Represents Constituenta.
+ * Represents Constituenta data from server.
  */
-export interface IConstituenta extends IConstituentaMeta {
-  cst_class: CstClass;
-  status: ExpressionStatus;
-  is_template: boolean;
-  derived_from: ConstituentaID;
-  derived_from_alias?: string;
-  derived_children: number[];
-  derived_children_alias: string[];
+export interface IConstituentaData extends IConstituentaMeta {
   parse: {
     status: ParsingStatus;
     valueClass: ValueClass;
@@ -107,6 +100,20 @@ export interface IConstituenta extends IConstituentaMeta {
     syntaxTree: string;
     args: IArgumentInfo[];
   };
+}
+
+/**
+ * Represents Constituenta.
+ */
+export interface IConstituenta extends IConstituentaData {
+  cst_class: CstClass;
+  status: ExpressionStatus;
+  is_template: boolean;
+  is_simple_expression: boolean;
+  parent?: ConstituentaID;
+  parent_alias?: string;
+  children: number[];
+  children_alias: string[];
 }
 
 /**
@@ -223,12 +230,16 @@ export interface IRSForm extends ILibraryItemEx {
   items: IConstituenta[];
   stats: IRSFormStats;
   graph: Graph;
+  cstByAlias: Map<string, IConstituenta>;
+  cstByID: Map<ConstituentaID, IConstituenta>;
 }
 
 /**
  * Represents data for {@link IRSForm} provided by backend.
  */
-export interface IRSFormData extends Omit<IRSForm, 'stats' | 'graph'> {}
+export interface IRSFormData extends ILibraryItemEx {
+  items: IConstituentaData[];
+}
 
 /**
  * Represents data, used for creating {@link IRSForm}.

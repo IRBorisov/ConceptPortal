@@ -45,7 +45,8 @@ function TermGraph({
     ref: graphRef,
     nodes: nodes,
     edges: edges,
-    type: 'multi'
+    type: 'multi',
+    focusOnSelect: false
   });
 
   const handleHoverIn = useCallback(

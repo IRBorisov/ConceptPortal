@@ -22,8 +22,8 @@ export const SelectorGraphLayout: { value: LayoutTypes; label: string }[] = [
   { value: 'forceDirected3d', label: 'Граф: Силы 3D' },
   { value: 'treeLr2d', label: 'Граф: ДеревоГ 2D' },
   { value: 'treeLr3d', label: 'Граф: ДеревоГ 3D' },
-  { value: 'radialOut2d', label: 'Граф: Радиальная 2D' },
-  { value: 'radialOut3d', label: 'Граф: Радиальная 3D' }
+  { value: 'radialOut2d', label: 'Граф: Радиус 2D' },
+  { value: 'radialOut3d', label: 'Граф: Радиус 3D' }
   // { value: 'circular2d', label: 'circular2d'},
   //  { value: 'nooverlap', label: 'nooverlap'},
   //  { value: 'hierarchicalTd', label: 'hierarchicalTd'},

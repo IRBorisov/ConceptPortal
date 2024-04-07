@@ -170,15 +170,15 @@ export function domTooltipConstituenta(cst?: IConstituenta) {
       dom.appendChild(convention);
     }
 
-    if (cst.derived_from_alias) {
+    if (cst.parent_alias) {
       const derived = document.createElement('p');
-      derived.innerHTML = `<b>Основание:</b> ${cst.derived_from_alias}`;
+      derived.innerHTML = `<b>Основание:</b> ${cst.parent_alias}`;
       dom.appendChild(derived);
     }
 
-    if (cst.derived_children_alias.length > 0) {
+    if (cst.children_alias.length > 0) {
       const children = document.createElement('p');
-      children.innerHTML = `<b>Порождает:</b> ${cst.derived_children_alias.join(', ')}`;
+      children.innerHTML = `<b>Порождает:</b> ${cst.children_alias.join(', ')}`;
       dom.appendChild(children);
     }
   } else {
