@@ -1,6 +1,7 @@
 import { LuLogOut, LuMoon, LuSun } from 'react-icons/lu';
 
 import { IconHelp, IconHelpOff, IconUser } from '@/components/Icons';
+import { CProps } from '@/components/props';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import { useAuth } from '@/context/AuthContext';
@@ -19,9 +20,9 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
   const router = useConceptNavigation();
   const { user, logout } = useAuth();
 
-  function navigateProfile() {
+  function navigateProfile(event: CProps.EventMouse) {
     hideDropdown();
-    router.push(urls.profile);
+    router.push(urls.profile, event.ctrlKey);
   }
 
   function logoutAndRedirect() {

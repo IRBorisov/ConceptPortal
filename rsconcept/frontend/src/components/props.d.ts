@@ -43,4 +43,6 @@ export namespace CProps {
 
   export type AnimatedButton = Titled & Omit<HTMLMotionProps<'button'>, 'type'>;
   export type AnimatedDiv = HTMLMotionProps<'div'>;
+
+  export type EventMouse = React.MouseEvent<Element, MouseEvent>;
 }

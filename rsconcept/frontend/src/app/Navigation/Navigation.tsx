@@ -4,6 +4,7 @@ import { FaSquarePlus } from 'react-icons/fa6';
 import { IoLibrary } from 'react-icons/io5';
 
 import { IconManuals } from '@/components/Icons';
+import { CProps } from '@/components/props';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useConceptOptions } from '@/context/OptionsContext';
 import { animateNavigation } from '@/styling/animations';
@@ -18,10 +19,10 @@ function Navigation() {
   const router = useConceptNavigation();
   const { noNavigationAnimation } = useConceptOptions();
 
-  const navigateHome = () => router.push(urls.home);
-  const navigateLibrary = () => router.push(urls.library);
-  const navigateHelp = () => router.push(urls.manuals);
-  const navigateCreateNew = () => router.push(urls.create_schema);
+  const navigateHome = (event: CProps.EventMouse) => router.push(urls.home, event.ctrlKey);
+  const navigateLibrary = (event: CProps.EventMouse) => router.push(urls.library, event.ctrlKey);
+  const navigateHelp = (event: CProps.EventMouse) => router.push(urls.manuals, event.ctrlKey);
+  const navigateCreateNew = (event: CProps.EventMouse) => router.push(urls.create_schema, event.ctrlKey);
 
   return (
     <nav

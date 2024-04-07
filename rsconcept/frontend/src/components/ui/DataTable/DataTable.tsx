@@ -44,8 +44,8 @@ export interface DataTableProps<TData extends RowData>
   conditionalRowStyles?: IConditionalStyle<TData>[];
   noDataComponent?: React.ReactNode;
 
-  onRowClicked?: (rowData: TData, event: React.MouseEvent<Element, MouseEvent>) => void;
-  onRowDoubleClicked?: (rowData: TData, event: React.MouseEvent<Element, MouseEvent>) => void;
+  onRowClicked?: (rowData: TData, event: CProps.EventMouse) => void;
+  onRowDoubleClicked?: (rowData: TData, event: CProps.EventMouse) => void;
 
   enableRowSelection?: boolean;
   rowSelection?: RowSelectionState;

@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
 import ConstituentaBadge from '@/components/info/ConstituentaBadge';
+import { CProps } from '@/components/props';
 import DataTable, { createColumnHelper, RowSelectionState, VisibilityState } from '@/components/ui/DataTable';
 import FlexColumn from '@/components/ui/FlexColumn';
 import { useConceptOptions } from '@/context/OptionsContext';
@@ -45,7 +46,7 @@ function RSTable({ items, maxHeight, enableSelection, selected, setSelected, onE
   }, [windowSize]);
 
   const handleRowClicked = useCallback(
-    (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
+    (cst: IConstituenta, event: CProps.EventMouse) => {
       if (event.altKey) {
         event.preventDefault();
         onEdit(cst.id);
@@ -55,7 +56,7 @@ function RSTable({ items, maxHeight, enableSelection, selected, setSelected, onE
   );
 
   const handleRowDoubleClicked = useCallback(
-    (cst: IConstituenta, event: React.MouseEvent<Element, MouseEvent>) => {
+    (cst: IConstituenta, event: CProps.EventMouse) => {
       event.preventDefault();
       onEdit(cst.id);
     },

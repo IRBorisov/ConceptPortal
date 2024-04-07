@@ -35,7 +35,7 @@ function Checkbox({
     }
   }, [disabled, setValue]);
 
-  function handleClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+  function handleClick(event: CProps.EventMouse): void {
     event.preventDefault();
     if (disabled || !setValue) {
       return;

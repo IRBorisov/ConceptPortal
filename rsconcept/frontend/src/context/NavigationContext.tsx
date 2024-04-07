@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { globals } from '@/utils/constants';
 
 interface INavigationContext {
-  push: (path: string) => void;
+  push: (path: string, newTab?: boolean) => void;
   replace: (path: string) => void;
   back: () => void;
   forward: () => void;
@@ -50,7 +50,11 @@ export const NavigationState = ({ children }: NavigationStateProps) => {
   }, []);
 
   const push = useCallback(
-    (path: string) => {
+    (path: string, newTab?: boolean) => {
+      if (newTab) {
+        window.open(`${path}`, '_blank');
+        return;
+      }
       if (validate()) {
         scrollTop();
         router(path);

@@ -1,5 +1,7 @@
 import { Cell, flexRender, Row, Table } from '@tanstack/react-table';
 
+import { CProps } from '@/components/props';
+
 import { IConditionalStyle } from '.';
 import SelectRow from './SelectRow';
 
@@ -12,8 +14,8 @@ interface TableBodyProps<TData> {
   lastSelected: string | undefined;
   setLastSelected: React.Dispatch<React.SetStateAction<string | undefined>>;
 
-  onRowClicked?: (rowData: TData, event: React.MouseEvent<Element, MouseEvent>) => void;
-  onRowDoubleClicked?: (rowData: TData, event: React.MouseEvent<Element, MouseEvent>) => void;
+  onRowClicked?: (rowData: TData, event: CProps.EventMouse) => void;
+  onRowDoubleClicked?: (rowData: TData, event: CProps.EventMouse) => void;
 }
 
 function TableBody<TData>({
@@ -26,7 +28,7 @@ function TableBody<TData>({
   onRowClicked,
   onRowDoubleClicked
 }: TableBodyProps<TData>) {
-  function handleRowClicked(target: Row<TData>, event: React.MouseEvent<Element, MouseEvent>) {
+  function handleRowClicked(target: Row<TData>, event: CProps.EventMouse) {
     if (onRowClicked) {
       onRowClicked(target.original, event);
     }

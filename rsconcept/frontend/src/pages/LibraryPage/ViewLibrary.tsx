@@ -6,6 +6,7 @@ import { useIntl } from 'react-intl';
 
 import { urls } from '@/app/urls';
 import BadgeHelp from '@/components/man/BadgeHelp';
+import { CProps } from '@/components/props';
 import DataTable, { createColumnHelper, VisibilityState } from '@/components/ui/DataTable';
 import FlexColumn from '@/components/ui/FlexColumn';
 import TextURL from '@/components/ui/TextURL';
@@ -34,7 +35,9 @@ function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
   const { getUserLabel } = useUsers();
   const [itemsPerPage, setItemsPerPage] = useLocalStorage<number>(storage.libraryPagination, 50);
 
-  const handleOpenItem = (item: ILibraryItem) => router.push(urls.schema(item.id));
+  function handleOpenItem(item: ILibraryItem, event: CProps.EventMouse) {
+    router.push(urls.schema(item.id), event.ctrlKey);
+  }
 
   const windowSize = useWindowSize();
 

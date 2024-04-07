@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { globals } from '@/utils/constants';
 
 import { CheckboxChecked, CheckboxNull } from '../Icons';
+import { CProps } from '../props';
 import { CheckboxProps } from './Checkbox';
 
 export interface CheckboxTristateProps extends Omit<CheckboxProps, 'value' | 'setValue'> {
@@ -32,7 +33,7 @@ function CheckboxTristate({
     }
   }, [disabled, setValue]);
 
-  function handleClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+  function handleClick(event: CProps.EventMouse): void {
     event.preventDefault();
     if (disabled || !setValue) {
       return;

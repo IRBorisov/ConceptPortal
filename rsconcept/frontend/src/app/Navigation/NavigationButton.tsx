@@ -6,7 +6,7 @@ import { globals } from '@/utils/constants';
 interface NavigationButtonProps extends CProps.Titled {
   text?: string;
   icon: React.ReactNode;
-  onClick?: () => void;
+  onClick?: (event: CProps.EventMouse) => void;
 }
 
 function NavigationButton({ icon, title, titleHtml, hideTitle, onClick, text }: NavigationButtonProps) {
