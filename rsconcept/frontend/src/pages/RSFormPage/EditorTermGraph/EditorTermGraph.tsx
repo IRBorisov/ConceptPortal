@@ -2,6 +2,7 @@
 
 import clsx from 'clsx';
 import { AnimatePresence } from 'framer-motion';
+import fileDownload from 'js-file-download';
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import InfoConstituenta from '@/components/info/InfoConstituenta';
@@ -16,6 +17,7 @@ import { applyNodeSizing } from '@/models/miscellaneousAPI';
 import { ConstituentaID, CstType } from '@/models/rsform';
 import { colorBgGraphNode } from '@/styling/color';
 import { PARAMETER, storage } from '@/utils/constants';
+import { convertBase64ToBlob } from '@/utils/utils';
 
 import { useRSEdit } from '../RSEditContext';
 import GraphSelectors from './GraphSelectors';
@@ -149,6 +151,18 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     [setFilterParams]
   );
 
+  const handleSaveImage = useCallback(() => {
+    if (!graphRef?.current) {
+      return;
+    }
+    const data = graphRef.current.exportCanvas();
+    try {
+      fileDownload(convertBase64ToBlob(data), 'graph.png', 'data:image/png;base64');
+    } catch (error) {
+      console.error(error);
+    }
+  }, [graphRef]);
+
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     // Hotkeys implementation
     if (!controller.isContentEditable || controller.isProcessing) {
@@ -235,6 +249,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         onCreate={handleCreateCst}
         onDelete={handleDeleteCst}
         onResetViewpoint={() => setToggleResetView(prev => !prev)}
+        onSaveImage={handleSaveImage}
         toggleOrbit={() => setOrbit(prev => !prev)}
         toggleFoldDerived={handleFoldDerived}
         toggleNoText={() =>

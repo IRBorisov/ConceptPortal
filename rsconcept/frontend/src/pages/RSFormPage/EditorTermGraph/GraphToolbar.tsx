@@ -6,6 +6,7 @@ import {
   IconDestroy,
   IconFilter,
   IconFitImage,
+  IconImage,
   IconNewItem,
   IconRotate3D,
   IconText,
@@ -31,6 +32,7 @@ interface GraphToolbarProps {
   onCreate: () => void;
   onDelete: () => void;
   onResetViewpoint: () => void;
+  onSaveImage: () => void;
 
   toggleFoldDerived: () => void;
   toggleNoText: () => void;
@@ -48,7 +50,8 @@ function GraphToolbar({
   showParamsDialog,
   onCreate,
   onDelete,
-  onResetViewpoint
+  onResetViewpoint,
+  onSaveImage
 }: GraphToolbarProps) {
   const controller = useRSEdit();
 
@@ -112,6 +115,11 @@ function GraphToolbar({
             onClick={onDelete}
           />
         ) : null}
+        <MiniButton
+          icon={<IconImage size='1.25rem' className='icon-primary' />}
+          title='Сохранить изображение'
+          onClick={onSaveImage}
+        />
         <BadgeHelp topic={HelpTopic.GRAPH_TERM} className='max-w-[calc(100vw-4rem)]' offset={4} />
       </div>
       <SelectGraphToolbar

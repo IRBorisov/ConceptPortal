@@ -81,3 +81,17 @@ export function isResponseHtml(response?: AxiosResponse) {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
   return header.includes('text/html');
 }
+
+/**
+ * Convert base64 string to Blob uint8.
+ */
+export function convertBase64ToBlob(base64String: string): Uint8Array {
+  const arr = base64String.split(',');
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const uint8Array = new Uint8Array(n);
+  while (n--) {
+    uint8Array[n] = bstr.charCodeAt(n);
+  }
+  return uint8Array;
+}

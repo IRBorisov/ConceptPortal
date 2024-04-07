@@ -25,6 +25,7 @@ export { FiBellOff as IconFollowOff } from 'react-icons/fi';
 export { LuChevronDown as IconDropArrow } from 'react-icons/lu';
 export { LuChevronUp as IconDropArrowUp } from 'react-icons/lu';
 
+export { LuImage as IconImage } from 'react-icons/lu';
 export { TbColumns as IconList } from 'react-icons/tb';
 export { TbColumnsOff as IconListOff } from 'react-icons/tb';
 export { BiFontFamily as IconText } from 'react-icons/bi';
