@@ -10,14 +10,14 @@
 React + Django based web portal for editing RSForm schemas.
 This readme file is used mostly to document project dependencies
 
-# ❤️ Contributing notes
+## ❤️ Contributing notes
 
 !BEFORE PUSHING INTO MAIN!
 
 - use Test config in VSCode to run tests before pushing commits / requests
 - cd rsconcept/frontend & npm run build
 
-# ✨ Frontend stack & Tooling [Vite + React + Typescript]
+## ✨ Frontend [Vite + React + Typescript]
 
 <details>
   <summary>npm install</summary>
@@ -78,7 +78,7 @@ This readme file is used mostly to document project dependencies
   </pre>
 </details>
 
-# ✨ Backend stack & Tooling [Django + PostgreSQL/SQLite]
+## ✨ Backend [Django + PostgreSQL/SQLite]
 
 - [ConceptCore](https://github.com/IRBorisov/ConceptCore)
 <details>
@@ -115,7 +115,7 @@ This readme file is used mostly to document project dependencies
   </pre>
 </details>
 
-# ✨ DevOps
+## ✨ DevOps
 
 - Docker compose
 - PowerShell
