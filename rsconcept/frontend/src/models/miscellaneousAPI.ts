@@ -1,7 +1,7 @@
 /**
  * Module: API for miscellaneous frontend model types. Future targets for refactoring aimed at extracting modules.
  */
-import { DependencyMode, FontStyle, ILibraryFilter, LibraryFilterStrategy } from './miscellaneous';
+import { DependencyMode, FontStyle, GraphSizing, ILibraryFilter, LibraryFilterStrategy } from './miscellaneous';
 import { IConstituenta, IRSForm } from './rsform';
 
 /**
@@ -54,5 +54,18 @@ export function filterFromStrategy(strategy: LibraryFilterStrategy): ILibraryFil
     case LibraryFilterStrategy.PERSONAL: return { is_personal: true };
     case LibraryFilterStrategy.SUBSCRIBE: return { is_subscribed: true };
     case LibraryFilterStrategy.OWNED: return { is_owned: true };
+  }
+}
+
+/**
+ * Apply {@link GraphSizing} to a given {@link IConstituenta}.
+ */
+export function applyNodeSizing(target: IConstituenta, sizing: GraphSizing): number | undefined {
+  if (sizing === 'none') {
+    return undefined;
+  } else if (sizing === 'complex') {
+    return target.is_simple_expression ? 1 : 2;
+  } else {
+    return target.parent ? 1 : 2;
   }
 }

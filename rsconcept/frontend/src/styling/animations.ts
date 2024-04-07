@@ -74,6 +74,27 @@ export const animateSlideLeft: Variants = {
   }
 };
 
+export const animateHiddenHeader: Variants = {
+  open: {
+    translateX: 'calc(6.5rem - 50%)',
+    marginLeft: 0,
+    transition: {
+      type: 'spring',
+      bounce: 0,
+      duration: 0.3
+    }
+  },
+  closed: {
+    translateX: 0,
+    marginLeft: '0.75rem',
+    transition: {
+      type: 'spring',
+      bounce: 0,
+      duration: 0.3
+    }
+  }
+};
+
 export const animateDropdown: Variants = {
   open: {
     clipPath: 'inset(0% 0% 0% 0%)',

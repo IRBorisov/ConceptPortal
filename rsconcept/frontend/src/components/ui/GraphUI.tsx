@@ -3,6 +3,7 @@
 
 import { GraphCanvas as GraphUI } from 'reagraph';
 
-export { type GraphEdge, type GraphNode, type GraphCanvasRef, type LayoutTypes, Sphere, useSelection } from 'reagraph';
+export { type GraphEdge, type GraphNode, type GraphCanvasRef, Sphere, useSelection } from 'reagraph';
+export { type LayoutTypes as GraphLayout } from 'reagraph';
 
 export default GraphUI;

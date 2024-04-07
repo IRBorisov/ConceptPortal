@@ -3,7 +3,7 @@
  */
 
 import { GramData, Grammeme, NounGrams, PartOfSpeech, VerbGrams } from '@/models/language';
-import { GraphColoringScheme } from '@/models/miscellaneous';
+import { GraphColoring } from '@/models/miscellaneous';
 import { CstClass, ExpressionStatus, IConstituenta } from '@/models/rsform';
 import { ISyntaxTreeNode, TokenID } from '@/models/rslang';
 
@@ -458,7 +458,7 @@ export function colorFgGrammeme(gram: GramData, colors: IColorTheme): string {
 /**
  * Determines graph color for {@link IConstituenta}.
  */
-export function colorBgGraphNode(cst: IConstituenta, coloringScheme: GraphColoringScheme, colors: IColorTheme): string {
+export function colorBgGraphNode(cst: IConstituenta, coloringScheme: GraphColoring, colors: IColorTheme): string {
   if (coloringScheme === 'type') {
     return colorBgCstClass(cst.cst_class, colors);
   }

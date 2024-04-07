@@ -91,7 +91,9 @@ export const storage = {
 
   rsgraphFilter: 'rsgraph.filter_options',
   rsgraphLayout: 'rsgraph.layout',
-  rsgraphColoringScheme: 'rsgraph.coloring_scheme',
+  rsgraphColoring: 'rsgraph.coloring',
+  rsgraphSizing: 'rsgraph.sizing',
+  rsgraphFoldHidden: 'rsgraph.fold_hidden',
 
   cstFilterMatch: 'cst.filter.match',
   cstFilterGraph: 'cst.filter.graph'

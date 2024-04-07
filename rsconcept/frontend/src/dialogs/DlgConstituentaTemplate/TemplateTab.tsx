@@ -85,8 +85,9 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
 
   return (
     <>
-      <div className='flex'>
+      <div className='flex divide-x border-x border-t rounded-t-md'>
         <SelectSingle
+          noBorder
           placeholder='Выберите категорию'
           className='flex-grow border-none'
           options={categorySelector}
@@ -102,6 +103,7 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
           isClearable
         />
         <SelectSingle
+          noBorder
           placeholder='Источник'
           className='w-[12rem]'
           options={templateSelector}

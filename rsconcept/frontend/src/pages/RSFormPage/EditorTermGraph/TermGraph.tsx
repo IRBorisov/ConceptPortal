@@ -2,7 +2,7 @@
 
 import { useCallback, useLayoutEffect, useMemo, useRef } from 'react';
 
-import GraphUI, { GraphCanvasRef, GraphEdge, GraphNode, LayoutTypes, useSelection } from '@/components/ui/GraphUI';
+import GraphUI, { GraphCanvasRef, GraphEdge, GraphLayout, GraphNode, useSelection } from '@/components/ui/GraphUI';
 import { useConceptOptions } from '@/context/OptionsContext';
 import { ConstituentaID } from '@/models/rsform';
 import { graphDarkT, graphLightT } from '@/styling/color';
@@ -13,7 +13,7 @@ interface TermGraphProps {
   edges: GraphEdge[];
   selectedIDs: ConstituentaID[];
 
-  layout: LayoutTypes;
+  layout: GraphLayout;
   is3D: boolean;
   orbit: boolean;
 

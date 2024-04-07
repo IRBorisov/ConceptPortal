@@ -26,7 +26,12 @@ export enum DependencyMode {
 /**
  * Represents graph node coloring scheme.
  */
-export type GraphColoringScheme = 'none' | 'status' | 'type';
+export type GraphColoring = 'none' | 'status' | 'type';
+
+/**
+ * Represents graph node sizing scheme.
+ */
+export type GraphSizing = 'none' | 'complex' | 'derived';
 
 /**
  * Represents font styles.

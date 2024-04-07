@@ -1,43 +1,32 @@
 /**
  * Module: Mappings for selector UI elements. Do not confuse with html selectors
  */
-import { LayoutTypes } from 'reagraph';
 
+import { GraphLayout } from '@/components/ui/GraphUI';
 import { type GramData, Grammeme, ReferenceType } from '@/models/language';
 import { grammemeCompare } from '@/models/languageAPI';
-import { GraphColoringScheme } from '@/models/miscellaneous';
+import { GraphColoring, GraphSizing } from '@/models/miscellaneous';
 import { CstType } from '@/models/rsform';
 
-import { labelGrammeme, labelReferenceType } from './labels';
+import { labelGrammeme, labelReferenceType, mapLabelColoring, mapLabelLayout, mapLabelSizing } from './labels';
 import { labelCstType } from './labels';
 
 /**
  * Represents options for GraphLayout selector.
  */
-export const SelectorGraphLayout: { value: LayoutTypes; label: string }[] = [
-  { value: 'treeTd2d', label: 'Граф: ДеревоВ 2D' },
-  { value: 'treeTd3d', label: 'Граф: ДеревоВ 3D' },
-  { value: 'forceatlas2', label: 'Граф: Атлас 2D' },
-  { value: 'forceDirected2d', label: 'Граф: Силы 2D' },
-  { value: 'forceDirected3d', label: 'Граф: Силы 3D' },
-  { value: 'treeLr2d', label: 'Граф: ДеревоГ 2D' },
-  { value: 'treeLr3d', label: 'Граф: ДеревоГ 3D' },
-  { value: 'radialOut2d', label: 'Граф: Радиус 2D' },
-  { value: 'radialOut3d', label: 'Граф: Радиус 3D' }
-  // { value: 'circular2d', label: 'circular2d'},
-  //  { value: 'nooverlap', label: 'nooverlap'},
-  //  { value: 'hierarchicalTd', label: 'hierarchicalTd'},
-  //  { value: 'hierarchicalLr', label: 'hierarchicalLr'}
-];
+export const SelectorGraphLayout: { value: GraphLayout; label: string }[] = //
+  [...mapLabelLayout.entries()].map(item => ({ value: item[0], label: item[1] }));
+/**
+ * Represents options for {@link GraphColoring} selector.
+ */
+export const SelectorGraphColoring: { value: GraphColoring; label: string }[] = //
+  [...mapLabelColoring.entries()].map(item => ({ value: item[0], label: item[1] }));
 
 /**
- * Represents options for {@link GraphColoringScheme} selector.
+ * Represents options for {@link GraphSizing} selector.
  */
-export const SelectorGraphColoring: { value: GraphColoringScheme; label: string }[] = [
-  { value: 'none', label: 'Цвет: моно' },
-  { value: 'status', label: 'Цвет: статус' },
-  { value: 'type', label: 'Цвет: класс' }
-];
+export const SelectorGraphSizing: { value: GraphSizing; label: string }[] = //
+  [...mapLabelSizing.entries()].map(item => ({ value: item[0], label: item[1] }));
 
 /**
  * Represents options for {@link CstType} selector.

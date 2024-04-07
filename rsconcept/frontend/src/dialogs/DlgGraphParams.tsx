@@ -27,7 +27,7 @@ function DlgGraphParams({ hideWindow, initial, onConfirm }: DlgGraphParamsProps)
       header='Настройки графа термов'
       onSubmit={handleSubmit}
       submitText='Применить'
-      className='flex gap-12 px-6 py-2'
+      className='flex gap-6 px-6 py-2 w-[35rem]'
     >
       <div className='flex flex-col gap-1'>
         <h1 className='mb-2'>Преобразования</h1>

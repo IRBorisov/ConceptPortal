@@ -1,34 +1,45 @@
-import { LayoutTypes } from 'reagraph';
-
+import { GraphLayout } from '@/components/ui/GraphUI';
 import SelectSingle from '@/components/ui/SelectSingle';
-import { GraphColoringScheme } from '@/models/miscellaneous';
-import { mapLabelColoring, mapLabelLayout } from '@/utils/labels';
-import { SelectorGraphColoring, SelectorGraphLayout } from '@/utils/selectors';
+import { GraphColoring, GraphSizing } from '@/models/miscellaneous';
+import { mapLabelColoring, mapLabelLayout, mapLabelSizing } from '@/utils/labels';
+import { SelectorGraphColoring, SelectorGraphLayout, SelectorGraphSizing } from '@/utils/selectors';
 
 interface GraphSelectorsProps {
-  coloring: GraphColoringScheme;
-  layout: LayoutTypes;
+  coloring: GraphColoring;
+  layout: GraphLayout;
+  sizing: GraphSizing;
 
-  setLayout: (newValue: LayoutTypes) => void;
-  setColoring: (newValue: GraphColoringScheme) => void;
+  setLayout: (newValue: GraphLayout) => void;
+  setColoring: (newValue: GraphColoring) => void;
+  setSizing: (newValue: GraphSizing) => void;
 }
 
-function GraphSelectors({ coloring, setColoring, layout, setLayout }: GraphSelectorsProps) {
+function GraphSelectors({ coloring, setColoring, layout, setLayout, sizing, setSizing }: GraphSelectorsProps) {
   return (
-    <div className='px-2 text-sm select-none'>
+    <div className='select-none border rounded-t-md rounded-b-none divide-y'>
       <SelectSingle
-        placeholder='Выберите цвет'
+        noBorder
+        placeholder='Способ расположения'
+        options={SelectorGraphLayout}
+        isSearchable={false}
+        value={layout ? { value: layout, label: mapLabelLayout.get(layout) } : null}
+        onChange={data => setLayout(data?.value ?? SelectorGraphLayout[0].value)}
+      />
+      <SelectSingle
+        noBorder
+        placeholder='Цветовая схема'
         options={SelectorGraphColoring}
         isSearchable={false}
         value={coloring ? { value: coloring, label: mapLabelColoring.get(coloring) } : null}
         onChange={data => setColoring(data?.value ?? SelectorGraphColoring[0].value)}
       />
       <SelectSingle
-        placeholder='Способ расположения'
-        options={SelectorGraphLayout}
+        noBorder
+        placeholder='Размер узлов'
+        options={SelectorGraphSizing}
         isSearchable={false}
-        value={layout ? { value: layout, label: mapLabelLayout.get(layout) } : null}
-        onChange={data => setLayout(data?.value ?? SelectorGraphLayout[0].value)}
+        value={layout ? { value: sizing, label: mapLabelSizing.get(sizing) } : null}
+        onChange={data => setSizing(data?.value ?? SelectorGraphSizing[0].value)}
       />
     </div>
   );

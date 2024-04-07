@@ -9,10 +9,12 @@ import { selectDarkT, selectLightT } from '@/styling/color';
 interface SelectSingleProps<Option, Group extends GroupBase<Option> = GroupBase<Option>>
   extends Omit<Props<Option, false, Group>, 'theme' | 'menuPortalTarget'> {
   noPortal?: boolean;
+  noBorder?: boolean;
 }
 
 function SelectSingle<Option, Group extends GroupBase<Option> = GroupBase<Option>>({
   noPortal,
+  noBorder,
   ...restProps
 }: SelectSingleProps<Option, Group>) {
   const { darkMode, colors } = useConceptOptions();
@@ -20,32 +22,33 @@ function SelectSingle<Option, Group extends GroupBase<Option> = GroupBase<Option
 
   const adjustedStyles: StylesConfig<Option, false, Group> = useMemo(
     () => ({
-      control: (styles, { isDisabled }) => ({
-        ...styles,
+      control: (defaultStyles, { isDisabled }) => ({
+        ...defaultStyles,
         borderRadius: '0.25rem',
+        ...(noBorder ? { borderWidth: 0 } : {}),
         cursor: isDisabled ? 'not-allowed' : 'pointer',
         boxShadow: 'none'
       }),
-      menuPortal: styles => ({
-        ...styles,
+      menuPortal: defaultStyles => ({
+        ...defaultStyles,
         zIndex: 9999
       }),
-      menuList: styles => ({
-        ...styles,
+      menuList: defaultStyles => ({
+        ...defaultStyles,
         padding: '0px'
       }),
-      option: (styles, { isSelected }) => ({
-        ...styles,
-        backgroundColor: isSelected ? colors.bgSelected : styles.backgroundColor,
-        color: isSelected ? colors.fgSelected : styles.color,
+      option: (defaultStyles, { isSelected }) => ({
+        ...defaultStyles,
+        backgroundColor: isSelected ? colors.bgSelected : defaultStyles.backgroundColor,
+        color: isSelected ? colors.fgSelected : defaultStyles.color,
         borderWidth: '1px',
         borderColor: colors.border
       }),
-      input: styles => ({ ...styles }),
-      placeholder: styles => ({ ...styles }),
-      singleValue: styles => ({ ...styles })
+      input: defaultStyles => ({ ...defaultStyles }),
+      placeholder: defaultStyles => ({ ...defaultStyles }),
+      singleValue: defaultStyles => ({ ...defaultStyles })
     }),
-    [colors]
+    [colors, noBorder]
   );
 
   return (

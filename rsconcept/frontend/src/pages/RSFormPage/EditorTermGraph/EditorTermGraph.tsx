@@ -3,15 +3,16 @@
 import clsx from 'clsx';
 import { AnimatePresence } from 'framer-motion';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
-import { GraphEdge, GraphNode, LayoutTypes } from 'reagraph';
 
 import InfoConstituenta from '@/components/info/InfoConstituenta';
 import SelectedCounter from '@/components/info/SelectedCounter';
+import { GraphEdge, GraphLayout, GraphNode } from '@/components/ui/GraphUI';
 import Overlay from '@/components/ui/Overlay';
 import { useConceptOptions } from '@/context/OptionsContext';
 import DlgGraphParams from '@/dialogs/DlgGraphParams';
 import useLocalStorage from '@/hooks/useLocalStorage';
-import { GraphColoringScheme, GraphFilterParams } from '@/models/miscellaneous';
+import { GraphColoring, GraphFilterParams, GraphSizing } from '@/models/miscellaneous';
+import { applyNodeSizing } from '@/models/miscellaneousAPI';
 import { ConstituentaID, CstType } from '@/models/rsform';
 import { colorBgGraphNode } from '@/styling/color';
 import { PARAMETER, storage } from '@/utils/constants';
@@ -52,11 +53,9 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
 
   const [hidden, setHidden] = useState<ConstituentaID[]>([]);
 
-  const [layout, setLayout] = useLocalStorage<LayoutTypes>(storage.rsgraphLayout, 'treeTd2d');
-  const [coloringScheme, setColoringScheme] = useLocalStorage<GraphColoringScheme>(
-    storage.rsgraphColoringScheme,
-    'type'
-  );
+  const [layout, setLayout] = useLocalStorage<GraphLayout>(storage.rsgraphLayout, 'treeTd2d');
+  const [coloring, setColoring] = useLocalStorage<GraphColoring>(storage.rsgraphColoring, 'type');
+  const [sizing, setSizing] = useLocalStorage<GraphSizing>(storage.rsgraphSizing, 'derived');
   const [orbit, setOrbit] = useState(false);
   const is3D = useMemo(() => layout.includes('3d'), [layout]);
 
@@ -91,15 +90,15 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
       if (cst) {
         result.push({
           id: String(node.id),
-          fill: colorBgGraphNode(cst, coloringScheme, colors),
+          fill: colorBgGraphNode(cst, coloring, colors),
           label: cst.alias,
           subLabel: !filterParams.noText ? cst.term_resolved : undefined,
-          size: cst.parent_alias ? 1 : 2
+          size: applyNodeSizing(cst, sizing)
         });
       }
     });
     return result;
-  }, [controller.schema, coloringScheme, filtered.nodes, filterParams.noText, colors]);
+  }, [controller.schema, coloring, sizing, filtered.nodes, filterParams.noText, colors]);
 
   const edges: GraphEdge[] = useMemo(() => {
     const result: GraphEdge[] = [];
@@ -132,7 +131,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     controller.deleteCst();
   }
 
-  function handleChangeLayout(newLayout: LayoutTypes) {
+  function handleChangeLayout(newLayout: GraphLayout) {
     if (newLayout === layout) {
       return;
     }
@@ -221,7 +220,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         hideZero
         totalCount={controller.schema?.stats?.count_all ?? 0}
         selectedCount={controller.selected.length}
-        position='top-[0.3rem] left-0'
+        position='top-[4.3rem] sm:top-[0.3rem] left-0'
       />
 
       <GraphToolbar
@@ -253,19 +252,21 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         </Overlay>
       ) : null}
 
-      <Overlay position='top-9 left-0' className='flex gap-1'>
-        <div className='cc-column w-[13.5rem]'>
+      <Overlay position='top-[6.25rem] sm:top-9 left-0' className='flex gap-1'>
+        <div className='flex flex-col ml-2 w-[13.5rem]'>
           <GraphSelectors
-            coloring={coloringScheme}
+            coloring={coloring}
             layout={layout}
+            sizing={sizing}
             setLayout={handleChangeLayout}
-            setColoring={setColoringScheme}
+            setColoring={setColoring}
+            setSizing={setSizing}
           />
           <ViewHidden
             items={hidden}
             selected={controller.selected}
             schema={controller.schema}
-            coloringScheme={coloringScheme}
+            coloringScheme={coloring}
             toggleSelection={controller.toggleSelect}
             onEdit={onOpenEdit}
           />

@@ -4,8 +4,17 @@
  * Label is a short text used to represent an entity.
  * Description is a long description used in tooltips.
  */
+import { GraphLayout } from '@/components/ui/GraphUI';
 import { GramData, Grammeme, ReferenceType } from '@/models/language';
-import { CstMatchMode, DependencyMode, HelpTopic, LibraryFilterStrategy, UserAccessMode } from '@/models/miscellaneous';
+import {
+  CstMatchMode,
+  DependencyMode,
+  GraphColoring,
+  GraphSizing,
+  HelpTopic,
+  LibraryFilterStrategy,
+  UserAccessMode
+} from '@/models/miscellaneous';
 import { CstClass, CstType, ExpressionStatus, IConstituenta, IRSForm } from '@/models/rsform';
 import {
   IArgumentInfo,
@@ -284,29 +293,35 @@ export function describeLibraryFilter(strategy: LibraryFilterStrategy): string {
 /**
  * Retrieves label for graph layout mode.
  */
-export const mapLabelLayout: Map<string, string> = new Map([
+export const mapLabelLayout: Map<GraphLayout, string> = new Map([
+  ['treeTd2d', 'Граф: ДеревоВ 2D'],
+  ['treeTd3d', 'Граф: ДеревоВ 3D'],
   ['forceatlas2', 'Граф: Атлас 2D'],
   ['forceDirected2d', 'Граф: Силы 2D'],
   ['forceDirected3d', 'Граф: Силы 3D'],
-  ['treeTd2d', 'Граф: ДеревоВер 2D'],
-  ['treeTd3d', 'Граф: ДеревоВер 3D'],
-  ['treeLr2d', 'Граф: ДеревоГор 2D'],
-  ['treeLr3d', 'Граф: ДеревоГор 3D'],
+  ['treeLr2d', 'Граф: ДеревоГ 2D'],
+  ['treeLr3d', 'Граф: ДеревоГ 3D'],
   ['radialOut2d', 'Граф: Радиус 2D'],
   ['radialOut3d', 'Граф: Радиус 3D'],
-  ['circular2d', 'Граф: Круговая'],
-  ['hierarchicalTd', 'Граф: ИерархияВер'],
-  ['hierarchicalLr', 'Граф: ИерархияГор'],
-  ['nooverlap', 'Граф: Без перекрытия']
+  ['circular2d', 'Граф: Круговая']
 ]);
 
 /**
- * Retrieves label for graph coloring mode.
+ * Retrieves label for {@link GraphColoring}.
  */
-export const mapLabelColoring: Map<string, string> = new Map([
-  ['none', 'Цвет: моно'],
-  ['status', 'Цвет: статус'],
-  ['type', 'Цвет: класс']
+export const mapLabelColoring: Map<GraphColoring, string> = new Map([
+  ['none', 'Цвет: Моно'],
+  ['status', 'Цвет: Статус'],
+  ['type', 'Цвет: Класс']
+]);
+
+/**
+ * Retrieves label for {@link GraphSizing}.
+ */
+export const mapLabelSizing: Map<GraphSizing, string> = new Map([
+  ['none', 'Узлы: Моно'],
+  ['derived', 'Узлы: Порожденные'],
+  ['complex', 'Узлы: Простые']
 ]);
 
 /**
