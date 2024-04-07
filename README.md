@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://portal.acconcept.ru/">
+  <a href="https://portal.acconcept.ru/" target="_blank">
     <img width="650" src="rsconcept/frontend/public/logo_full.svg" />
   </a>
 </div>
@@ -10,14 +10,14 @@
 React + Django based web portal for editing RSForm schemas.
 This readme file is used mostly to document project dependencies
 
-# Contributing notes
+# ❤️ Contributing notes
 
 !BEFORE PUSHING INTO MAIN!
 
 - use Test config in VSCode to run tests before pushing commits / requests
 - cd rsconcept/frontend & npm run build
 
-# Frontend stack & Tooling [Vite + React + Typescript]
+# ✨ Frontend stack & Tooling [Vite + React + Typescript]
 
 <details>
   <summary>npm install</summary>
@@ -78,7 +78,7 @@ This readme file is used mostly to document project dependencies
   </pre>
 </details>
 
-# Backend stack & Tooling [Django + PostgreSQL/SQLite]
+# ✨ Backend stack & Tooling [Django + PostgreSQL/SQLite]
 
 - [ConceptCore](https://github.com/IRBorisov/ConceptCore)
 <details>
@@ -115,7 +115,7 @@ This readme file is used mostly to document project dependencies
   </pre>
 </details>
 
-# DevOps
+# ✨ DevOps
 
 - Docker compose
 - PowerShell
@@ -124,7 +124,7 @@ This readme file is used mostly to document project dependencies
 
 # Developer Notes
 
-## Local build (Windows 10+)
+## 🔭 Local build (Windows 10+)
 
 - this is main developers build
 - Install Python 3.12, NodeJS, VSCode, Docker Desktop
@@ -132,7 +132,7 @@ This readme file is used mostly to document project dependencies
 - run rsconcept/backend/LocalEnvSetup.ps1
 - use VSCode configs in root folder to start development
 
-## Development build
+## 🔭 Development build
 
 - this build does not use HTTPS and nginx for networking
 - backend and frontend debugging is supported
@@ -146,7 +146,7 @@ This readme file is used mostly to document project dependencies
 - provide TLS certificate (can be self-signed) 'nginx/cert/local-cert.pem' and 'nginx/cert/local-key.pem'
 - run via 'docker compose -f "docker-compose-prod-local.yml" up --build -d'
 
-## Production build
+## 📦 Production build
 
 - provide proper pyconcept wheel (ConceptCore) at 'rsconcept/backend/import/\*.whl'
 - provide secrets: 'secrets/db_password.txt', 'django_key.txt', 'email_host.txt', 'email_password.txt', 'email_user.txt'

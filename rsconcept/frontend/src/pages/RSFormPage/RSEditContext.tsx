@@ -62,7 +62,7 @@ interface IRSEditContext {
   toggleSelect: (target: ConstituentaID) => void;
   deselectAll: () => void;
 
-  viewVersion: (version?: number) => void;
+  viewVersion: (version?: number, newTab?: boolean) => void;
   createVersion: () => void;
   editVersions: () => void;
 
@@ -163,7 +163,7 @@ export const RSEditState = ({
   );
 
   const viewVersion = useCallback(
-    (version?: number) => router.push(urls.schema(model.schemaID, version)),
+    (version?: number, newTab?: boolean) => router.push(urls.schema(model.schemaID, version), newTab),
     [router, model]
   );
 

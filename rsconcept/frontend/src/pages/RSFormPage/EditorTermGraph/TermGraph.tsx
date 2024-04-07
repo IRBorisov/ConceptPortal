@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useLayoutEffect, useMemo, useRef } from 'react';
+import { RefObject, useCallback, useLayoutEffect, useMemo } from 'react';
 
 import GraphUI, { GraphCanvasRef, GraphEdge, GraphLayout, GraphNode, useSelection } from '@/components/ui/GraphUI';
 import { useConceptOptions } from '@/context/OptionsContext';
@@ -9,6 +9,7 @@ import { graphDarkT, graphLightT } from '@/styling/color';
 import { PARAMETER, resources } from '@/utils/constants';
 
 interface TermGraphProps {
+  graphRef: RefObject<GraphCanvasRef>;
   nodes: GraphNode[];
   edges: GraphEdge[];
   selectedIDs: ConstituentaID[];
@@ -26,6 +27,7 @@ interface TermGraphProps {
 }
 
 function TermGraph({
+  graphRef,
   nodes,
   edges,
   selectedIDs,
@@ -39,7 +41,6 @@ function TermGraph({
   onDeselect
 }: TermGraphProps) {
   const { calculateHeight, darkMode } = useConceptOptions();
-  const graphRef = useRef<GraphCanvasRef | null>(null);
 
   const { selections, setSelections } = useSelection({
     ref: graphRef,
@@ -81,7 +82,7 @@ function TermGraph({
   useLayoutEffect(() => {
     graphRef.current?.resetControls(true);
     graphRef.current?.centerGraph();
-  }, [toggleResetView]);
+  }, [toggleResetView, graphRef]);
 
   useLayoutEffect(() => {
     const newSelections = nodes.filter(node => selectedIDs.includes(Number(node.id))).map(node => node.id);

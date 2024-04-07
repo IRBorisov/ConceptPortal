@@ -2,11 +2,11 @@
 
 import clsx from 'clsx';
 import { AnimatePresence } from 'framer-motion';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import InfoConstituenta from '@/components/info/InfoConstituenta';
 import SelectedCounter from '@/components/info/SelectedCounter';
-import { GraphEdge, GraphLayout, GraphNode } from '@/components/ui/GraphUI';
+import { GraphCanvasRef, GraphEdge, GraphLayout, GraphNode } from '@/components/ui/GraphUI';
 import Overlay from '@/components/ui/Overlay';
 import { useConceptOptions } from '@/context/OptionsContext';
 import DlgGraphParams from '@/dialogs/DlgGraphParams';
@@ -51,6 +51,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
   const [showParamsDialog, setShowParamsDialog] = useState(false);
   const filtered = useGraphFilter(controller.schema, filterParams);
 
+  const graphRef = useRef<GraphCanvasRef | null>(null);
   const [hidden, setHidden] = useState<ConstituentaID[]>([]);
 
   const [layout, setLayout] = useLocalStorage<GraphLayout>(storage.rsgraphLayout, 'treeTd2d');
@@ -176,6 +177,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
   const graph = useMemo(
     () => (
       <TermGraph
+        graphRef={graphRef}
         nodes={nodes}
         edges={edges}
         selectedIDs={controller.selected}
@@ -190,6 +192,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
       />
     ),
     [
+      graphRef,
       edges,
       nodes,
       controller.selected,
