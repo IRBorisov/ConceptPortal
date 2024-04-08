@@ -15,6 +15,7 @@ import DlgEditReference from '@/dialogs/DlgEditReference';
 import { ReferenceType } from '@/models/language';
 import { IRSForm } from '@/models/rsform';
 import { CodeMirrorWrapper } from '@/utils/codemirror';
+import { PARAMETER } from '@/utils/constants';
 
 import { NaturalLanguage, ReferenceTokens } from './parse';
 import { RefEntity } from './parse/parser.terms';
@@ -165,12 +166,17 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
       [thisRef]
     );
 
+    const hideEditReference = useCallback(() => {
+      setShowEditor(false);
+      setTimeout(() => thisRef.current?.view?.focus(), PARAMETER.refreshTimeout);
+    }, [thisRef]);
+
     return (
       <div className={clsx('flex flex-col gap-2', cursor)}>
         <AnimatePresence>
           {showEditor && schema ? (
             <DlgEditReference
-              hideWindow={() => setShowEditor(false)}
+              hideWindow={hideEditReference}
               schema={schema}
               initial={{
                 type: currentType,
@@ -193,7 +199,7 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
           value={isFocused ? value : value !== initialValue || showEditor ? value : resolved}
           indentWithTab={false}
           onChange={handleChange}
-          editable={!disabled}
+          editable={!disabled && !showEditor}
           onKeyDown={handleInput}
           onFocus={handleFocusIn}
           onBlur={handleFocusOut}

@@ -16,6 +16,7 @@ export const PARAMETER = {
   smallScreen: 640, // == tailwind:xs
   smallTreeNodes: 50, // amount of nodes threshold for size increase for large graphs
   refreshTimeout: 100, // milliseconds delay for post-refresh actions
+  minimalTimeout: 10, // milliseconds delay for fast updates
   graphRefreshDelay: 10, // milliseconds delay for graph viewpoint reset
 
   logicLabel: 'LOGIC'

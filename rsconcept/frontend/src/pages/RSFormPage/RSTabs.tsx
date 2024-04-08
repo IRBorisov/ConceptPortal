@@ -145,9 +145,11 @@ function RSTabs() {
 
   const onOpenCst = useCallback(
     (cstID: ConstituentaID) => {
-      navigateTab(RSTabID.CST_EDIT, cstID);
+      if (cstID !== activeCst?.id) {
+        navigateTab(RSTabID.CST_EDIT, cstID);
+      }
     },
-    [navigateTab]
+    [navigateTab, activeCst]
   );
 
   const onDestroySchema = useCallback(() => {
