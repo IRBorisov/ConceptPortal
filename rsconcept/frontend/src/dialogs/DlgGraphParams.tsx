@@ -56,8 +56,8 @@ function DlgGraphParams({ hideWindow, initial, onConfirm }: DlgGraphParamsProps)
           setValue={value => updateParams({ noTransitive: value })}
         />
         <Checkbox
-          label='Свернуть производные'
-          title='Не отображать производные понятия'
+          label='Свернуть порожденные'
+          title='Не отображать порожденные понятия'
           value={params.foldDerived}
           setValue={value => updateParams({ foldDerived: value })}
         />

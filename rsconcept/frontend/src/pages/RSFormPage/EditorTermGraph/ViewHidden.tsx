@@ -2,10 +2,11 @@
 
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { IconDropArrow, IconDropArrowUp } from '@/components/Icons';
 import ConstituentaTooltip from '@/components/info/ConstituentaTooltip';
+import { CProps } from '@/components/props';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { useConceptOptions } from '@/context/OptionsContext';
@@ -24,14 +25,26 @@ interface ViewHiddenProps {
   coloringScheme: GraphColoring;
 
   toggleSelection: (cstID: ConstituentaID) => void;
+  setFocus: (cstID: ConstituentaID) => void;
   onEdit: (cstID: ConstituentaID) => void;
 }
 
-function ViewHidden({ items, selected, toggleSelection, schema, coloringScheme, onEdit }: ViewHiddenProps) {
+function ViewHidden({ items, selected, toggleSelection, setFocus, schema, coloringScheme, onEdit }: ViewHiddenProps) {
   const { colors, calculateHeight } = useConceptOptions();
   const windowSize = useWindowSize();
   const localSelected = useMemo(() => items.filter(id => selected.includes(id)), [items, selected]);
   const [isFolded, setIsFolded] = useLocalStorage(storage.rsgraphFoldHidden, false);
+
+  const handleClick = useCallback(
+    (cstID: ConstituentaID, event: CProps.EventMouse) => {
+      if (event.ctrlKey) {
+        setFocus(cstID);
+      } else {
+        toggleSelection(cstID);
+      }
+    },
+    [setFocus, toggleSelection]
+  );
 
   if (!schema || items.length <= 0) {
     return null;
@@ -93,7 +106,7 @@ function ViewHidden({ items, selected, toggleSelection, schema, coloringScheme, 
                   backgroundColor: colorBgGraphNode(cst, adjustedColoring, colors),
                   ...(localSelected.includes(cstID) ? { outlineWidth: '2px', outlineStyle: 'solid' } : {})
                 }}
-                onClick={() => toggleSelection(cstID)}
+                onClick={event => handleClick(cstID, event)}
                 onDoubleClick={() => onEdit(cstID)}
               >
                 {cst.alias}

@@ -90,7 +90,7 @@ export const storage = {
   librarySearchStrategy: 'library.search.strategy',
   libraryPagination: 'library.pagination',
 
-  rsgraphFilter: 'rsgraph.filter_options',
+  rsgraphFilter: 'rsgraph.filter2',
   rsgraphLayout: 'rsgraph.layout',
   rsgraphColoring: 'rsgraph.coloring',
   rsgraphSizing: 'rsgraph.sizing',

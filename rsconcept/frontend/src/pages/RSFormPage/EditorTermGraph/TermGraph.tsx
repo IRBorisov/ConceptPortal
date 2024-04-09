@@ -20,6 +20,7 @@ interface TermGraphProps {
 
   setHoverID: (newID: ConstituentaID | undefined) => void;
   onEdit: (cstID: ConstituentaID) => void;
+  onSelectCentral: (selectedID: ConstituentaID) => void;
   onSelect: (newID: ConstituentaID) => void;
   onDeselect: (newID: ConstituentaID) => void;
 
@@ -37,9 +38,11 @@ function TermGraph({
   toggleResetView,
   setHoverID,
   onEdit,
+  onSelectCentral,
   onSelect,
   onDeselect
 }: TermGraphProps) {
+  let ctrlKey: boolean = false;
   const { calculateHeight, darkMode } = useConceptOptions();
 
   const { selections, setSelections } = useSelection({
@@ -63,13 +66,15 @@ function TermGraph({
 
   const handleNodeClick = useCallback(
     (node: GraphNode) => {
-      if (selections.includes(node.id)) {
+      if (ctrlKey) {
+        onSelectCentral(Number(node.id));
+      } else if (selections.includes(node.id)) {
         onDeselect(Number(node.id));
       } else {
         onSelect(Number(node.id));
       }
     },
-    [onSelect, selections, onDeselect]
+    [onSelect, selections, onDeselect, onSelectCentral, ctrlKey]
   );
 
   const handleNodeDoubleClick = useCallback(
@@ -96,7 +101,13 @@ function TermGraph({
   const canvasHeight = useMemo(() => calculateHeight('1.75rem + 4px'), [calculateHeight]);
 
   return (
-    <div className='outline-none'>
+    <div
+      className='outline-none'
+      tabIndex={-1}
+      // TODO: fix hacky way of tracking CTRL. Expose event from onNodeClick instead
+      onKeyUp={event => (ctrlKey = event.ctrlKey)}
+      onKeyDown={event => (ctrlKey = event.ctrlKey)}
+    >
       <div className='relative' style={{ width: canvasWidth, height: canvasHeight }}>
         <GraphUI
           nodes={nodes}

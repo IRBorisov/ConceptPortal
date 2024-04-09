@@ -2,9 +2,9 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 
 import { Graph } from '@/models/Graph';
 import { GraphFilterParams } from '@/models/miscellaneous';
-import { CstType, IRSForm } from '@/models/rsform';
+import { ConstituentaID, CstType, IConstituenta, IRSForm } from '@/models/rsform';
 
-function useGraphFilter(schema: IRSForm | undefined, params: GraphFilterParams) {
+function useGraphFilter(schema: IRSForm | undefined, params: GraphFilterParams, focusCst: IConstituenta | undefined) {
   const [filtered, setFiltered] = useState<Graph>(new Graph());
 
   const allowedTypes: CstType[] = useMemo(() => {
@@ -29,32 +29,45 @@ function useGraphFilter(schema: IRSForm | undefined, params: GraphFilterParams) 
     if (params.noHermits) {
       graph.removeIsolated();
     }
-    if (params.noTransitive) {
-      graph.transitiveReduction();
-    }
     if (params.noTemplates) {
       schema.items.forEach(cst => {
-        if (cst.is_template) {
+        if (cst !== focusCst && cst.is_template) {
           graph.foldNode(cst.id);
         }
       });
     }
     if (allowedTypes.length < Object.values(CstType).length) {
       schema.items.forEach(cst => {
-        if (!allowedTypes.includes(cst.cst_type)) {
+        if (cst !== focusCst && !allowedTypes.includes(cst.cst_type)) {
           graph.foldNode(cst.id);
         }
       });
     }
-    if (params.foldDerived) {
+    if (!focusCst && params.foldDerived) {
       schema.items.forEach(cst => {
-        if (cst.parent_alias) {
+        if (cst.parent) {
           graph.foldNode(cst.id);
         }
       });
+    }
+    if (focusCst) {
+      const includes: ConstituentaID[] = [
+        focusCst.id,
+        ...focusCst.children,
+        ...(params.focusShowInputs ? schema.graph.expandInputs([focusCst.id]) : []),
+        ...(params.focusShowOutputs ? schema.graph.expandOutputs([focusCst.id]) : [])
+      ];
+      schema.items.forEach(cst => {
+        if (!includes.includes(cst.id)) {
+          graph.foldNode(cst.id);
+        }
+      });
+    }
+    if (params.noTransitive) {
+      graph.transitiveReduction();
     }
     setFiltered(graph);
-  }, [schema, params, allowedTypes]);
+  }, [schema, params, allowedTypes, focusCst]);
 
   return filtered;
 }

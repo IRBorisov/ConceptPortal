@@ -116,6 +116,7 @@ export class Graph {
     const result: GraphNode[] = [];
     this.nodes.forEach(node => {
       if (node.outputs.length === 0 && node.inputs.length === 0) {
+        result.push(node);
         this.nodes.delete(node.id);
       }
     });

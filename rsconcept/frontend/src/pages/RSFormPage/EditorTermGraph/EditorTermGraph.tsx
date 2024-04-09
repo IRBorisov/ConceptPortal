@@ -7,6 +7,7 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import InfoConstituenta from '@/components/info/InfoConstituenta';
 import SelectedCounter from '@/components/info/SelectedCounter';
+import SelectGraphToolbar from '@/components/select/SelectGraphToolbar';
 import { GraphCanvasRef, GraphEdge, GraphLayout, GraphNode } from '@/components/ui/GraphUI';
 import Overlay from '@/components/ui/Overlay';
 import { useConceptOptions } from '@/context/OptionsContext';
@@ -14,12 +15,14 @@ import DlgGraphParams from '@/dialogs/DlgGraphParams';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { GraphColoring, GraphFilterParams, GraphSizing } from '@/models/miscellaneous';
 import { applyNodeSizing } from '@/models/miscellaneousAPI';
-import { ConstituentaID, CstType } from '@/models/rsform';
+import { ConstituentaID, CstType, IConstituenta } from '@/models/rsform';
+import { isBasicConcept } from '@/models/rsformAPI';
 import { colorBgGraphNode } from '@/styling/color';
 import { PARAMETER, storage } from '@/utils/constants';
 import { convertBase64ToBlob } from '@/utils/utils';
 
 import { useRSEdit } from '../RSEditContext';
+import FocusToolbar from './FocusToolbar';
 import GraphSelectors from './GraphSelectors';
 import GraphToolbar from './GraphToolbar';
 import TermGraph from './TermGraph';
@@ -41,6 +44,9 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     noText: false,
     foldDerived: false,
 
+    focusShowInputs: false,
+    focusShowOutputs: false,
+
     allowBase: true,
     allowStruct: true,
     allowTerm: true,
@@ -51,7 +57,8 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     allowTheorem: true
   });
   const [showParamsDialog, setShowParamsDialog] = useState(false);
-  const filtered = useGraphFilter(controller.schema, filterParams);
+  const [focusCst, setFocusCst] = useState<IConstituenta | undefined>(undefined);
+  const filtered = useGraphFilter(controller.schema, filterParams, focusCst);
 
   const graphRef = useRef<GraphCanvasRef | null>(null);
   const [hidden, setHidden] = useState<ConstituentaID[]>([]);
@@ -93,7 +100,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
       if (cst) {
         result.push({
           id: String(node.id),
-          fill: colorBgGraphNode(cst, coloring, colors),
+          fill: focusCst === cst ? colors.bgPurple : colorBgGraphNode(cst, coloring, colors),
           label: cst.alias,
           subLabel: !filterParams.noText ? cst.term_resolved : undefined,
           size: applyNodeSizing(cst, sizing)
@@ -101,23 +108,25 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
       }
     });
     return result;
-  }, [controller.schema, coloring, sizing, filtered.nodes, filterParams.noText, colors]);
+  }, [controller.schema, coloring, sizing, filtered.nodes, filterParams.noText, colors, focusCst]);
 
   const edges: GraphEdge[] = useMemo(() => {
     const result: GraphEdge[] = [];
     let edgeID = 1;
     filtered.nodes.forEach(source => {
       source.outputs.forEach(target => {
-        result.push({
-          id: String(edgeID),
-          source: String(source.id),
-          target: String(target)
-        });
-        edgeID += 1;
+        if (nodes.find(node => node.id === String(target))) {
+          result.push({
+            id: String(edgeID),
+            source: String(source.id),
+            target: String(target)
+          });
+          edgeID += 1;
+        }
       });
     });
     return result;
-  }, [filtered.nodes]);
+  }, [filtered.nodes, nodes]);
 
   function handleCreateCst() {
     if (!controller.schema) {
@@ -174,6 +183,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     }
     if (event.key === 'Escape') {
       event.preventDefault();
+      setFocusCst(undefined);
       controller.deselectAll();
     }
   }
@@ -187,6 +197,17 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
       setToggleResetView(prev => !prev);
     }, PARAMETER.graphRefreshDelay);
   }, [setFilterParams, setToggleResetView]);
+
+  const handleSetFocus = useCallback(
+    (cstID: ConstituentaID | undefined) => {
+      const target = cstID !== undefined ? controller.schema?.cstByID.get(cstID) : cstID;
+      setFocusCst(prev => (prev === target ? undefined : target));
+      if (target) {
+        controller.setSelected([]);
+      }
+    },
+    [controller]
+  );
 
   const graph = useMemo(
     () => (
@@ -202,6 +223,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         onDeselect={controller.deselect}
         setHoverID={setHoverID}
         onEdit={onOpenEdit}
+        onSelectCentral={handleSetFocus}
         toggleResetView={toggleResetView}
       />
     ),
@@ -217,7 +239,8 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
       onOpenEdit,
       toggleResetView,
       controller.select,
-      controller.deselect
+      controller.deselect,
+      handleSetFocus
     ]
   );
 
@@ -240,25 +263,57 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         position='top-[4.3rem] sm:top-[0.3rem] left-0'
       />
 
-      <GraphToolbar
-        is3D={is3D}
-        orbit={orbit}
-        noText={filterParams.noText}
-        foldDerived={filterParams.foldDerived}
-        showParamsDialog={() => setShowParamsDialog(true)}
-        onCreate={handleCreateCst}
-        onDelete={handleDeleteCst}
-        onResetViewpoint={() => setToggleResetView(prev => !prev)}
-        onSaveImage={handleSaveImage}
-        toggleOrbit={() => setOrbit(prev => !prev)}
-        toggleFoldDerived={handleFoldDerived}
-        toggleNoText={() =>
-          setFilterParams(prev => ({
-            ...prev,
-            noText: !prev.noText
-          }))
-        }
-      />
+      <Overlay
+        position='top-0 pt-1 right-1/2 translate-x-1/2'
+        className='flex flex-col items-center rounded-b-2xl cc-blur'
+      >
+        <GraphToolbar
+          is3D={is3D}
+          orbit={orbit}
+          noText={filterParams.noText}
+          foldDerived={filterParams.foldDerived}
+          showParamsDialog={() => setShowParamsDialog(true)}
+          onCreate={handleCreateCst}
+          onDelete={handleDeleteCst}
+          onResetViewpoint={() => setToggleResetView(prev => !prev)}
+          onSaveImage={handleSaveImage}
+          toggleOrbit={() => setOrbit(prev => !prev)}
+          toggleFoldDerived={handleFoldDerived}
+          toggleNoText={() =>
+            setFilterParams(prev => ({
+              ...prev,
+              noText: !prev.noText
+            }))
+          }
+        />
+        {!focusCst ? (
+          <SelectGraphToolbar
+            graph={controller.schema!.graph}
+            core={controller.schema!.items.filter(cst => isBasicConcept(cst.cst_type)).map(cst => cst.id)}
+            setSelected={controller.setSelected}
+          />
+        ) : null}
+        {focusCst ? (
+          <FocusToolbar
+            center={focusCst}
+            reset={() => handleSetFocus(undefined)}
+            showInputs={filterParams.focusShowInputs}
+            showOutputs={filterParams.focusShowOutputs}
+            toggleShowInputs={() =>
+              setFilterParams(prev => ({
+                ...prev,
+                focusShowInputs: !prev.focusShowInputs
+              }))
+            }
+            toggleShowOutputs={() =>
+              setFilterParams(prev => ({
+                ...prev,
+                focusShowOutputs: !prev.focusShowOutputs
+              }))
+            }
+          />
+        ) : null}
+      </Overlay>
 
       {hoverCst ? (
         <Overlay
@@ -286,6 +341,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
             schema={controller.schema}
             coloringScheme={coloring}
             toggleSelection={controller.toggleSelect}
+            setFocus={handleSetFocus}
             onEdit={onOpenEdit}
           />
         </div>

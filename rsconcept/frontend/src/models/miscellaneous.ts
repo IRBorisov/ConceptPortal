@@ -103,6 +103,9 @@ export interface GraphFilterParams {
   noText: boolean;
   foldDerived: boolean;
 
+  focusShowInputs: boolean;
+  focusShowOutputs: boolean;
+
   allowBase: boolean;
   allowStruct: boolean;
   allowTerm: boolean;
