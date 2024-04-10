@@ -2,7 +2,16 @@
 
 import { RefObject, useCallback, useLayoutEffect, useMemo } from 'react';
 
-import GraphUI, { GraphCanvasRef, GraphEdge, GraphLayout, GraphNode, useSelection } from '@/components/ui/GraphUI';
+import GraphUI, {
+  CollapseProps,
+  GraphCanvasRef,
+  GraphEdge,
+  GraphLayout,
+  GraphMouseEvent,
+  GraphNode,
+  GraphPointerEvent,
+  useSelection
+} from '@/components/ui/GraphUI';
 import { useConceptOptions } from '@/context/OptionsContext';
 import { ConstituentaID } from '@/models/rsform';
 import { graphDarkT, graphLightT } from '@/styling/color';
@@ -19,6 +28,7 @@ interface TermGraphProps {
   orbit: boolean;
 
   setHoverID: (newID: ConstituentaID | undefined) => void;
+  setHoverLeft: (value: boolean) => void;
   onEdit: (cstID: ConstituentaID) => void;
   onSelectCentral: (selectedID: ConstituentaID) => void;
   onSelect: (newID: ConstituentaID) => void;
@@ -37,12 +47,12 @@ function TermGraph({
   orbit,
   toggleResetView,
   setHoverID,
+  setHoverLeft,
   onEdit,
   onSelectCentral,
   onSelect,
   onDeselect
 }: TermGraphProps) {
-  let ctrlKey: boolean = false;
   const { calculateHeight, darkMode } = useConceptOptions();
 
   const { selections, setSelections } = useSelection({
@@ -54,10 +64,14 @@ function TermGraph({
   });
 
   const handleHoverIn = useCallback(
-    (node: GraphNode) => {
+    (node: GraphNode, event: GraphPointerEvent) => {
       setHoverID(Number(node.id));
+      setHoverLeft(
+        event.clientX / window.innerWidth >= PARAMETER.graphHoverXLimit ||
+          event.clientY / window.innerHeight >= PARAMETER.graphHoverYLimit
+      );
     },
-    [setHoverID]
+    [setHoverID, setHoverLeft]
   );
 
   const handleHoverOut = useCallback(() => {
@@ -65,8 +79,8 @@ function TermGraph({
   }, [setHoverID]);
 
   const handleNodeClick = useCallback(
-    (node: GraphNode) => {
-      if (ctrlKey) {
+    (node: GraphNode, _?: CollapseProps, event?: GraphMouseEvent) => {
+      if (event?.ctrlKey) {
         onSelectCentral(Number(node.id));
       } else if (selections.includes(node.id)) {
         onDeselect(Number(node.id));
@@ -74,7 +88,7 @@ function TermGraph({
         onSelect(Number(node.id));
       }
     },
-    [onSelect, selections, onDeselect, onSelectCentral, ctrlKey]
+    [onSelect, selections, onDeselect, onSelectCentral]
   );
 
   const handleNodeDoubleClick = useCallback(
@@ -101,13 +115,7 @@ function TermGraph({
   const canvasHeight = useMemo(() => calculateHeight('1.75rem + 4px'), [calculateHeight]);
 
   return (
-    <div
-      className='outline-none'
-      tabIndex={-1}
-      // TODO: fix hacky way of tracking CTRL. Expose event from onNodeClick instead
-      onKeyUp={event => (ctrlKey = event.ctrlKey)}
-      onKeyDown={event => (ctrlKey = event.ctrlKey)}
-    >
+    <div className='outline-none'>
       <div className='relative' style={{ width: canvasWidth, height: canvasHeight }}>
         <GraphUI
           nodes={nodes}

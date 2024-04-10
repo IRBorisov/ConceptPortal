@@ -15,9 +15,12 @@ export const buildConstants = {
 export const PARAMETER = {
   smallScreen: 640, // == tailwind:xs
   smallTreeNodes: 50, // amount of nodes threshold for size increase for large graphs
-  graphPopupDelay: 500, // milliseconds delay for graph popup selections
   refreshTimeout: 100, // milliseconds delay for post-refresh actions
   minimalTimeout: 10, // milliseconds delay for fast updates
+
+  graphHoverXLimit: 0.4, // ratio to clientWidth used to determine which side of screen popup should be
+  graphHoverYLimit: 0.6, // ratio to clientHeight used to determine which side of screen popup should be
+  graphPopupDelay: 500, // milliseconds delay for graph popup selections
   graphRefreshDelay: 10, // milliseconds delay for graph viewpoint reset
 
   logicLabel: 'LOGIC'

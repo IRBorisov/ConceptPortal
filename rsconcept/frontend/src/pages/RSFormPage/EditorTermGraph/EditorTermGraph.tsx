@@ -75,6 +75,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     return hoverID && controller.schema?.cstByID.get(hoverID);
   }, [controller.schema?.cstByID, hoverID]);
   const [hoverCstDebounced] = useDebounce(hoverCst, PARAMETER.graphPopupDelay);
+  const [hoverLeft, setHoverLeft] = useState(true);
 
   const [toggleResetView, setToggleResetView] = useState(false);
 
@@ -227,6 +228,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         onEdit={onOpenEdit}
         onSelectCentral={handleSetFocus}
         toggleResetView={toggleResetView}
+        setHoverLeft={setHoverLeft}
       />
     ),
     [
@@ -320,7 +322,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
       {hoverCst && hoverCstDebounced && hoverCst === hoverCstDebounced ? (
         <Overlay
           layer='z-tooltip'
-          position='top-[1.6rem] left-[2.6rem]'
+          position={clsx('top-[1.6rem]', { 'left-[2.6rem]': hoverLeft, 'right-[2.6rem]': !hoverLeft })}
           className={clsx('w-[25rem]', 'px-3', 'overflow-y-auto', 'border shadow-md', 'clr-app')}
         >
           <InfoConstituenta className='pt-1 pb-2' data={hoverCstDebounced} />
