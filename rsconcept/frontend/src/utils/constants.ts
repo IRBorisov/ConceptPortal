@@ -15,6 +15,7 @@ export const buildConstants = {
 export const PARAMETER = {
   smallScreen: 640, // == tailwind:xs
   smallTreeNodes: 50, // amount of nodes threshold for size increase for large graphs
+  graphPopupDelay: 500, // milliseconds delay for graph popup selections
   refreshTimeout: 100, // milliseconds delay for post-refresh actions
   minimalTimeout: 10, // milliseconds delay for fast updates
   graphRefreshDelay: 10, // milliseconds delay for graph viewpoint reset

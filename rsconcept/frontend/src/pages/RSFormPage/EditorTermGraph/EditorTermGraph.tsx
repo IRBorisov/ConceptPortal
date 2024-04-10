@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { AnimatePresence } from 'framer-motion';
 import fileDownload from 'js-file-download';
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useDebounce } from 'use-debounce';
 
 import InfoConstituenta from '@/components/info/InfoConstituenta';
 import SelectedCounter from '@/components/info/SelectedCounter';
@@ -73,6 +74,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
   const hoverCst = useMemo(() => {
     return hoverID && controller.schema?.cstByID.get(hoverID);
   }, [controller.schema?.cstByID, hoverID]);
+  const [hoverCstDebounced] = useDebounce(hoverCst, PARAMETER.graphPopupDelay);
 
   const [toggleResetView, setToggleResetView] = useState(false);
 
@@ -315,13 +317,13 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         ) : null}
       </Overlay>
 
-      {hoverCst ? (
+      {hoverCst && hoverCstDebounced && hoverCst === hoverCstDebounced ? (
         <Overlay
           layer='z-tooltip'
           position='top-[1.6rem] left-[2.6rem]'
           className={clsx('w-[25rem]', 'px-3', 'overflow-y-auto', 'border shadow-md', 'clr-app')}
         >
-          <InfoConstituenta className='pt-1 pb-2' data={hoverCst} />
+          <InfoConstituenta className='pt-1 pb-2' data={hoverCstDebounced} />
         </Overlay>
       ) : null}
 

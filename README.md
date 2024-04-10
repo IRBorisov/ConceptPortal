@@ -35,6 +35,7 @@ This readme file is used mostly to document project dependencies
   - react-pdf
   - react-tooltip
   - js-file-download
+  - use-debounce
   - framer-motion
   - reagraph
   - @tanstack/react-table
