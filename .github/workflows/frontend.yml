@@ -10,6 +10,8 @@ defaults:
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - rsconcept/frontend/**
   pull_request:
     branches: [ "main" ]
 
