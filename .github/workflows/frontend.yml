@@ -19,7 +19,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-jammy
+    runs-on: ubuntu-22.04
 
     strategy:
       matrix:
