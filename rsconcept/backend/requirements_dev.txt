@@ -5,8 +5,7 @@ django-cors-headers
 django-filter
 drf-spectacular
 coreapi
-pymorphy3
-razdel
+cctext
 
 mypy
 pylint
