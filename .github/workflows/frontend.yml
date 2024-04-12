@@ -12,6 +12,7 @@ on:
     branches: [ "main" ]
     paths:
       - rsconcept/frontend/**
+      - .github/workflows/frontend.yml
   pull_request:
     branches: [ "main" ]
 
