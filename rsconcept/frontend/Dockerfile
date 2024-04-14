@@ -13,7 +13,7 @@ WORKDIR /result
 COPY ./ ./
 COPY ./env/.env.$BUILD_TYPE ./
 RUN rm -rf ./env
-RUN npm install
+RUN npm ci
 ENV NODE_ENV production
 RUN npm run build
 
