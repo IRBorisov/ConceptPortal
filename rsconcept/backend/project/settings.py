@@ -95,6 +95,8 @@ REST_FRAMEWORK = {
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:3000').split(';')
 CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'http://localhost:3000').split(';')
+CSRF_COOKIE_AGE = 365 * 24 * 60 * 60
+SESSION_COOKIE_AGE = 365 * 24 * 60 * 60 * 2
 
 _domain = os.environ.get('CSRF_COOKIE_DOMAIN', '')
 if _domain != '':
