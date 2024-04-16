@@ -272,7 +272,7 @@ export const graphDarkT = {
 export const bracketsLightT = {
   '.cc-nonmatchingBracket': {
     color: lightT.fgRed,
-    fontWeight: 700
+    fontWeight: 600
   },
   '&.cm-focused .cc-matchingBracket': {
     backgroundColor: lightT.bgSelected,
@@ -286,7 +286,7 @@ export const bracketsLightT = {
 export const bracketsDarkT = {
   '.cc-nonmatchingBracket': {
     color: darkT.fgRed,
-    fontWeight: 700
+    fontWeight: 600
   },
   '&.cm-focused .cc-matchingBracket': {
     backgroundColor: darkT.bgSelected,

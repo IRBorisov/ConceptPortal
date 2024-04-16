@@ -6,6 +6,7 @@
   "python.testing.unittestArgs": ["-v", "-s", "./tests", "-p", "test*.py"],
   "python.testing.pytestEnabled": false,
   "python.testing.unittestEnabled": true,
+  "typescript.tsdk": "rsconcept/frontend/node_modules/typescript/lib",
   "python.analysis.typeCheckingMode": "off",
   "python.analysis.ignore": ["**/tests/**", "**/node_modules/**", "**/venv/**"],
   "python.analysis.packageIndexDepths": [
