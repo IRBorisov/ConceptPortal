@@ -2,7 +2,7 @@
 *.ps1
 
 # Dev specific
-requirements_dev.txt
+requirements-dev.txt
 .gitignore
 
 

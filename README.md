@@ -95,10 +95,11 @@ This readme file is used mostly to document project dependencies
   - coreapi
   - psycopg2-binary
   - cctext
+  - pyconcept
   </pre>
 </details>
 <details>
-  <summary>requirements_dev</summary>
+  <summary>requirements-dev</summary>
   <pre>
   - coverage
   - pylint
@@ -148,7 +149,6 @@ This readme file is used mostly to document project dependencies
 
 ## 📦 Production build
 
-- provide proper pyconcept wheel (ConceptCore) at 'rsconcept/backend/import/\*.whl'
 - provide secrets: 'secrets/db_password.txt', 'django_key.txt', 'email_host.txt', 'email_password.txt', 'email_user.txt'
 - check if you need to change SSL/TLS and PORT in 'rsconcept\backend\.env.prod'
 - setup domain names for application and API in configs: 'frontend\env\.env.production', 'rsconcept\backend\.env.dev', 'nginx\production.conf'

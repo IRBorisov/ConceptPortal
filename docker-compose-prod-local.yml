@@ -15,7 +15,7 @@ networks:
 services:
   frontend:
     container_name: local-portal-frontend
-    restart: always
+    restart: no
     depends_on:
       - backend
     build:
@@ -28,7 +28,7 @@ services:
 
   backend:
     container_name: local-portal-backend
-    restart: always
+    restart: no
     depends_on:
       - postgresql-db
     build:
@@ -43,7 +43,7 @@ services:
 
   postgresql-db:
     container_name: local-portal-db
-    restart: always
+    restart: no
     image: postgres:alpine
     env_file: ./postgresql/.env.prod.local
     volumes:
@@ -51,7 +51,7 @@ services:
 
   nginx:
     container_name: local-portal-router
-    restart: always
+    restart: no
     build:
       context: ./nginx
       dockerfile: Dockerfile.local

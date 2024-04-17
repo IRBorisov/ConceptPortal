@@ -21,7 +21,6 @@ function BackendSetup() {
     ClearPrevious
     CreateEnv
     InstallPips
-    InstallImports
 }
 
 function ClearPrevious() {
@@ -38,18 +37,7 @@ function CreateEnv() {
 
 function InstallPips() {
     & $python -m pip install --upgrade pip
-    & $python -m pip install -r requirements_dev.txt --no-warn-script-location
-}
-
-function InstallImports() {
-    $wheel = Get-Childitem -Path import\*win*.whl -Name
-    if (-not $wheel) {
-        Write-Error 'Missing import wheel'
-        Exit 1
-    }
-    
-    Write-Host "Installing wheel: $wheel`n" -ForegroundColor DarkGreen
-    & $python -m pip install -I import\$wheel
+    & $python -m pip install -r requirements-dev.txt --no-warn-script-location
 }
 
 LocalDevelopmentSetup
