@@ -15,7 +15,6 @@ RUN apt-get update -qq && \
     add-apt-repository -y ppa:ubuntu-toolchain-r/test && \
     apt-get install -y --no-install-recommends \
         python3.12 \
-        python3.12-dev \
         libstdc++6 && \
     curl -sS https://bootstrap.pypa.io/get-pip.py | python3.12 && \
     python3.12 -m pip install --upgrade pip && \
@@ -31,25 +30,6 @@ FROM python-base as builder
 # Set env variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-
-# Setup additional dev tools
-RUN apt-get update -qq && \
-    apt-get full-upgrade -y && \
-    apt-get install -y --no-install-recommends \
-        software-properties-common \
-        build-essential && \
-    rm -rf /var/lib/apt/lists/*
-
-# Add GCC compiler
-ARG GCC_VER="13"
-RUN add-apt-repository -y ppa:ubuntu-toolchain-r/test && \
-    apt-get update -qq && \
-    apt-get install -y --no-install-recommends \
-        gcc-${GCC_VER} \
-        g++-${GCC_VER} && \
-    update-alternatives --install /usr/bin/gcc gcc $(which gcc-${GCC_VER}) 100 && \
-    update-alternatives --install /usr/bin/g++ g++ $(which g++-${GCC_VER}) 100 && \
-    rm -rf /var/lib/apt/lists/*
 
 COPY ./requirements.txt ./
 RUN python3.12 -m pip wheel \
