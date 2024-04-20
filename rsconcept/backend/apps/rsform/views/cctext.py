@@ -5,7 +5,7 @@ from rest_framework.request import Request
 from drf_spectacular.utils import extend_schema
 from rest_framework import status as c
 
-import cctext
+import cctext as ct
 from .. import serializers as s
 
 
@@ -23,7 +23,7 @@ def inflect(request: Request):
     serializer.is_valid(raise_exception=True)
     text = serializer.validated_data['text']
     grams = serializer.validated_data['grams']
-    result = cctext.inflect(text, grams)
+    result = ct.inflect(text, grams)
     return Response(
         status=c.HTTP_200_OK,
         data={'result': result}
@@ -43,7 +43,7 @@ def generate_lexeme(request: Request):
     serializer = s.TextSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     nominal = serializer.validated_data['text']
-    result = cctext.generate_lexeme(nominal)
+    result = ct.generate_lexeme(nominal)
     return Response(
         status=c.HTTP_200_OK,
         data=s.MultiFormSerializer.from_list(result)
@@ -63,7 +63,7 @@ def parse_text(request: Request):
     serializer = s.TextSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     text = serializer.validated_data['text']
-    result = cctext.parse(text)
+    result = ct.parse(text)
     return Response(
         status=c.HTTP_200_OK,
         data={'result': result}
