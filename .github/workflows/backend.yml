@@ -34,8 +34,8 @@ jobs:
         pip install -r requirements-dev.txt
     - name: Lint
       run: |
-        pylint cctext
-        mypy cctext
+        pylint project apps
+        mypy project apps
     - name: Run Tests
       if: '!cancelled()'
       run: |
