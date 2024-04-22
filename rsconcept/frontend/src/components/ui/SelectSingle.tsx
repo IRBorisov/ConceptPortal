@@ -1,12 +1,46 @@
 'use client';
 
 import { useMemo } from 'react';
-import Select, { GroupBase, Props, StylesConfig } from 'react-select';
+import Select, {
+  ClearIndicatorProps,
+  components,
+  DropdownIndicatorProps,
+  GroupBase,
+  Props,
+  StylesConfig
+} from 'react-select';
 
 import { useConceptOptions } from '@/context/OptionsContext';
+import useWindowSize from '@/hooks/useWindowSize';
 import { selectDarkT, selectLightT } from '@/styling/color';
 
-interface SelectSingleProps<Option, Group extends GroupBase<Option> = GroupBase<Option>>
+import { IconClose, IconDropArrow, IconDropArrowUp } from '../Icons';
+
+function DropdownIndicator<Option, Group extends GroupBase<Option> = GroupBase<Option>>(
+  props: DropdownIndicatorProps<Option, false, Group>
+) {
+  return (
+    components.DropdownIndicator && (
+      <components.DropdownIndicator {...props}>
+        {props.selectProps.menuIsOpen ? <IconDropArrow size='1.25rem' /> : <IconDropArrowUp size='1.25rem' />}
+      </components.DropdownIndicator>
+    )
+  );
+}
+
+function ClearIndicator<Option, Group extends GroupBase<Option> = GroupBase<Option>>(
+  props: ClearIndicatorProps<Option, false, Group>
+) {
+  return (
+    components.ClearIndicator && (
+      <components.ClearIndicator {...props}>
+        <IconClose size='1.25rem' />
+      </components.ClearIndicator>
+    )
+  );
+}
+
+export interface SelectSingleProps<Option, Group extends GroupBase<Option> = GroupBase<Option>>
   extends Omit<Props<Option, false, Group>, 'theme' | 'menuPortalTarget'> {
   noPortal?: boolean;
   noBorder?: boolean;
@@ -18,6 +52,7 @@ function SelectSingle<Option, Group extends GroupBase<Option> = GroupBase<Option
   ...restProps
 }: SelectSingleProps<Option, Group>) {
   const { darkMode, colors } = useConceptOptions();
+  const size = useWindowSize();
   const themeColors = useMemo(() => (!darkMode ? selectLightT : selectDarkT), [darkMode]);
 
   const adjustedStyles: StylesConfig<Option, false, Group> = useMemo(
@@ -35,7 +70,7 @@ function SelectSingle<Option, Group extends GroupBase<Option> = GroupBase<Option
       }),
       menuList: defaultStyles => ({
         ...defaultStyles,
-        padding: '0px'
+        padding: 0
       }),
       option: (defaultStyles, { isSelected }) => ({
         ...defaultStyles,
@@ -46,7 +81,17 @@ function SelectSingle<Option, Group extends GroupBase<Option> = GroupBase<Option
       }),
       input: defaultStyles => ({ ...defaultStyles }),
       placeholder: defaultStyles => ({ ...defaultStyles }),
-      singleValue: defaultStyles => ({ ...defaultStyles })
+      singleValue: defaultStyles => ({ ...defaultStyles }),
+      dropdownIndicator: base => ({
+        ...base,
+        paddingTop: 0,
+        paddingBottom: 0
+      }),
+      clearIndicator: base => ({
+        ...base,
+        paddingTop: 0,
+        paddingBottom: 0
+      })
     }),
     [colors, noBorder]
   );
@@ -54,9 +99,16 @@ function SelectSingle<Option, Group extends GroupBase<Option> = GroupBase<Option
   return (
     <Select
       noOptionsMessage={() => 'Список пуст'}
+      components={{ DropdownIndicator, ClearIndicator }}
       theme={theme => ({
         ...theme,
         borderRadius: 0,
+        spacing: {
+          ...theme.spacing, // prettier: split-lines
+          baseUnit: size.isSmall ? 2 : 4,
+          menuGutter: size.isSmall ? 4 : 8,
+          controlHeight: size.isSmall ? 28 : 38
+        },
         colors: {
           ...theme.colors,
           ...themeColors

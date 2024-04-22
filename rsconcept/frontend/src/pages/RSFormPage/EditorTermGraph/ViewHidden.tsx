@@ -51,7 +51,7 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
   }
   return (
     <div className='flex flex-col'>
-      <Overlay position='right-[calc(0.5rem+1px)] top-2'>
+      <Overlay position='right-[calc(0.7rem-2px)] top-2'>
         <MiniButton
           noPadding
           noHover
