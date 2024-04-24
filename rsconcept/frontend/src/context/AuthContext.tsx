@@ -19,7 +19,7 @@ import {
   postResetPassword,
   postSignup,
   postValidatePasswordToken
-} from '@/utils/backendAPI';
+} from '@/app/backendAPI';
 
 import { useUsers } from './UsersContext';
 

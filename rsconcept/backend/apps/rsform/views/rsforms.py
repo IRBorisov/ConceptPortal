@@ -222,7 +222,6 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             listCst=serializer.validated_data['items'],
             target=serializer.validated_data['move_to']
         )
-        schema.item.refresh_from_db()
         return Response(
             status=c.HTTP_200_OK,
             data=s.RSFormParseSerializer(schema.item).data
@@ -243,6 +242,27 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         ''' Endpoint: Recreate all aliases based on order. '''
         schema = self._get_schema()
         schema.reset_aliases()
+        return Response(
+            status=c.HTTP_200_OK,
+            data=s.RSFormParseSerializer(schema.item).data
+        )
+    
+    @extend_schema(
+        summary='restore order based on types and term graph',
+        tags=['RSForm'],
+        request=None,
+        responses={
+            c.HTTP_200_OK: s.RSFormParseSerializer,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='restore-order')
+    def restore_order(self, request: Request, pk):
+        ''' Endpoint: Restore order based on types and term graph. '''
+        schema = self._get_schema()
+        # TODO: implement reordering
+        # schema.reset_aliases()
         return Response(
             status=c.HTTP_200_OK,
             data=s.RSFormParseSerializer(schema.item).data

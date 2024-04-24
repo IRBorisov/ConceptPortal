@@ -83,6 +83,7 @@ interface IRSEditContext {
   download: () => void;
 
   reindex: () => void;
+  reorder: () => void;
   produceStructure: () => void;
   inlineSynthesis: () => void;
   substitute: () => void;
@@ -392,6 +393,7 @@ export const RSEditState = ({
   }, [isModified, activeCst]);
 
   const reindex = useCallback(() => model.resetAliases(() => toast.success('Имена конституент обновлены')), [model]);
+  const reorder = useCallback(() => model.restoreOrder(() => toast.success('Конституенты упорядочены')), [model]);
 
   const canProduceStructure = useMemo(() => {
     return (
@@ -510,6 +512,7 @@ export const RSEditState = ({
         toggleSubscribe,
 
         reindex,
+        reorder,
         inlineSynthesis: () => setShowInlineSynthesis(true),
         produceStructure,
         substitute

@@ -16,6 +16,7 @@ import {
   IconReader,
   IconReplace,
   IconShare,
+  IconSortText,
   IconUpload
 } from '@/components/Icons';
 import Button from '@/components/ui/Button';
@@ -80,6 +81,11 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
   function handleReindex() {
     editMenu.hide();
     controller.reindex();
+  }
+
+  function handleRestoreOrder() {
+    editMenu.hide();
+    controller.reorder();
   }
 
   function handleSubstituteCst() {
@@ -218,6 +224,13 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
             />
             <DropdownButton
               className='border-t-2'
+              text='Упорядочить список'
+              title='Упорядочить список конституент исходя из логики типов и связей конституент'
+              icon={<IconSortText size='1rem' className='icon-primary' />}
+              disabled={!controller.isContentEditable || controller.isProcessing}
+              onClick={handleRestoreOrder}
+            />
+            <DropdownButton
               text='Порядковые имена'
               title='Присвоить порядковые имена и обновить выражения'
               icon={<LuWand2 size='1rem' className='icon-primary' />}

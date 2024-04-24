@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { type ErrorData } from '@/components/info/InfoError';
 import { IRSForm, IRSFormData } from '@/models/rsform';
 import { RSFormLoader } from '@/models/RSFormLoader';
-import { getRSFormDetails } from '@/utils/backendAPI';
+import { getRSFormDetails } from '@/app/backendAPI';
 
 function useRSFormDetails({ target, version }: { target?: string; version?: string }) {
   const [schema, setInnerSchema] = useState<IRSForm | undefined>(undefined);

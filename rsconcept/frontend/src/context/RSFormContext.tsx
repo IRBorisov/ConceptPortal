@@ -2,6 +2,28 @@
 
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
+import {
+  type DataCallback,
+  deleteUnsubscribe,
+  deleteVersion,
+  getTRSFile,
+  patchConstituenta,
+  patchDeleteConstituenta,
+  patchInlineSynthesis,
+  patchLibraryItem,
+  patchMoveConstituenta,
+  patchProduceStructure,
+  patchRenameConstituenta,
+  patchResetAliases,
+  patchRestoreOrder,
+  patchSubstituteConstituents,
+  patchUploadTRS,
+  patchVersion,
+  postClaimLibraryItem,
+  postCreateVersion,
+  postNewConstituenta,
+  postSubscribe
+} from '@/app/backendAPI';
 import { type ErrorData } from '@/components/info/InfoError';
 import useRSFormDetails from '@/hooks/useRSFormDetails';
 import { ILibraryItem, IVersionData } from '@/models/library';
@@ -21,27 +43,6 @@ import {
   IRSFormData,
   IRSFormUploadData
 } from '@/models/rsform';
-import {
-  type DataCallback,
-  deleteUnsubscribe,
-  deleteVersion,
-  getTRSFile,
-  patchConstituenta,
-  patchDeleteConstituenta,
-  patchInlineSynthesis,
-  patchLibraryItem,
-  patchMoveConstituenta,
-  patchProduceStructure,
-  patchRenameConstituenta,
-  patchResetAliases,
-  patchSubstituteConstituents,
-  patchUploadTRS,
-  patchVersion,
-  postClaimLibraryItem,
-  postCreateVersion,
-  postNewConstituenta,
-  postSubscribe
-} from '@/utils/backendAPI';
 
 import { useAuth } from './AuthContext';
 import { useLibrary } from './LibraryContext';
@@ -67,6 +68,7 @@ interface IRSFormContext {
   upload: (data: IRSFormUploadData, callback: () => void) => void;
 
   resetAliases: (callback: () => void) => void;
+  restoreOrder: (callback: () => void) => void;
   produceStructure: (data: ICstTarget, callback?: DataCallback<ConstituentaID[]>) => void;
   inlineSynthesis: (data: IInlineSynthesisData, callback?: DataCallback<IRSFormData>) => void;
 
@@ -255,6 +257,26 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
       }
       setError(undefined);
       patchResetAliases(schemaID, {
+        showError: true,
+        setLoading: setProcessing,
+        onError: setError,
+        onSuccess: newData => {
+          setSchema(Object.assign(schema, newData));
+          library.localUpdateTimestamp(newData.id);
+          if (callback) callback();
+        }
+      });
+    },
+    [schemaID, setError, schema, library, user, setSchema]
+  );
+
+  const restoreOrder = useCallback(
+    (callback?: () => void) => {
+      if (!schema || !user) {
+        return;
+      }
+      setError(undefined);
+      patchRestoreOrder(schemaID, {
         showError: true,
         setLoading: setProcessing,
         onError: setError,
@@ -502,6 +524,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         download,
         upload,
         claim,
+        restoreOrder,
         resetAliases,
         produceStructure,
         inlineSynthesis,

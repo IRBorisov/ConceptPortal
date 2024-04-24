@@ -42,7 +42,7 @@ import {
 } from '@/models/rsform';
 import { IExpressionParse, IRSExpression } from '@/models/rslang';
 
-import { buildConstants } from './constants';
+import { buildConstants } from '../utils/constants';
 
 const defaultOptions = {
   xsrfCookieName: 'csrftoken',
@@ -365,6 +365,14 @@ export function patchResetAliases(target: string, request: FrontPull<IRSFormData
   AxiosPatch({
     title: `Reset alias for RSForm id=${target}`,
     endpoint: `/api/rsforms/${target}/reset-aliases`,
+    request: request
+  });
+}
+
+export function patchRestoreOrder(target: string, request: FrontPull<IRSFormData>) {
+  AxiosPatch({
+    title: `Restore order for RSForm id=${target}`,
+    endpoint: `/api/rsforms/${target}/restore-order`,
     request: request
   });
 }

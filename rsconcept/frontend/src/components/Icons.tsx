@@ -21,6 +21,7 @@ export { BiMeteor as IconAdmin } from 'react-icons/bi';
 export { LuGlasses as IconReader } from 'react-icons/lu';
 export { FiBell as IconFollow } from 'react-icons/fi';
 export { FiBellOff as IconFollowOff } from 'react-icons/fi';
+export { FaSortAmountDownAlt as IconSortText } from 'react-icons/fa';
 
 export { LuChevronDown as IconDropArrow } from 'react-icons/lu';
 export { LuChevronUp as IconDropArrowUp } from 'react-icons/lu';

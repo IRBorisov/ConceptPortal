@@ -7,7 +7,7 @@ import { CstType, IConstituenta, type IRSForm } from '@/models/rsform';
 import { getDefinitionPrefix } from '@/models/rsformAPI';
 import { IArgumentInfo, IExpressionParse } from '@/models/rslang';
 import { RSErrorType } from '@/models/rslang';
-import { DataCallback, postCheckExpression } from '@/utils/backendAPI';
+import { DataCallback, postCheckExpression } from '@/app/backendAPI';
 import { PARAMETER } from '@/utils/constants';
 
 function useCheckExpression({ schema }: { schema?: IRSForm }) {
