@@ -9,6 +9,9 @@ from rest_framework.permissions import BasePermission, IsAuthenticated
 # Name for JSON inside Exteor files archive
 EXTEOR_INNER_FILENAME = 'document.json'
 
+# Old style reference pattern
+_REF_OLD_PATTERN = re.compile(r'@{([^0-9\-][^\}\|\{]*?)\|([^\}\|\{]*?)\|([^\}\|\{]*?)}')
+
 
 class ObjectOwnerOrAdmin(BasePermission):
     ''' Permission for object ownership restriction '''
@@ -47,6 +50,7 @@ class ItemOwnerOrAdmin(BasePermission):
             return False
         return request.user.is_staff # type: ignore
 
+
 def read_zipped_json(data, json_filename: str) -> dict:
     ''' Read JSON from zipped data '''
     with ZipFile(data, 'r') as archive:
@@ -62,6 +66,7 @@ def write_zipped_json(json_data: dict, json_filename: str) -> bytes:
     with ZipFile(content, 'w') as archive:
         archive.writestr(json_filename, data=data)
     return content.getvalue()
+
 
 def apply_pattern(text: str, mapping: dict[str, str], pattern: re.Pattern[str]) -> str:
     ''' Apply mapping to matching in regular expression pattern subgroup 1 '''
@@ -79,7 +84,6 @@ def apply_pattern(text: str, mapping: dict[str, str], pattern: re.Pattern[str]) 
     output += text[pos_input : len(text)]
     return output
 
-_REF_OLD_PATTERN = re.compile(r'@{([^0-9\-][^\}\|\{]*?)\|([^\}\|\{]*?)\|([^\}\|\{]*?)}')
 
 def fix_old_references(text: str) -> str:
     ''' Fix reference format: @{X1|nomn|sing} -> {X1|nomn,sing} '''
@@ -93,6 +97,7 @@ def fix_old_references(text: str) -> str:
         pos_input = segment.end(0)
     output += text[pos_input : len(text)]
     return output
+
 
 def filename_for_schema(alias: str) -> str:
     ''' Generate filename for schema from alias. '''

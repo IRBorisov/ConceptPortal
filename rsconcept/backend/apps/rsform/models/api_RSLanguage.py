@@ -1,13 +1,18 @@
 ''' Models: Definitions and utility function for RSLanguage. '''
 import json
-from typing import Tuple, cast
+import re
+from typing import Set, Tuple, cast
 from enum import IntEnum , unique
-
-from django.db.models import TextChoices
 
 import pyconcept
 
 from .. import messages as msg
+from .Constituenta import CstType
+
+
+_RE_GLOBALS = r'[XCSADFPT]\d+' # cspell:disable-line
+_RE_TEMPLATE = r'R\d+'
+_RE_COMPLEX_SYMBOLS = r'[∀∃×ℬ;|:]'
 
 
 @unique
@@ -22,37 +27,50 @@ class TokenType(IntEnum):
     REDUCE = 299
 
 
-class CstType(TextChoices):
-    ''' Type of constituenta '''
-    BASE = 'basic'
-    CONSTANT = 'constant'
-    STRUCTURED = 'structure'
-    AXIOM = 'axiom'
-    TERM = 'term'
-    FUNCTION = 'function'
-    PREDICATE = 'predicate'
-    THEOREM = 'theorem'
-
-
 def get_type_prefix(cst_type: CstType) -> str:
     ''' Get alias prefix. '''
-    if cst_type == CstType.BASE:
-        return 'X'
-    if cst_type == CstType.CONSTANT:
-        return 'C'
-    if cst_type == CstType.STRUCTURED:
-        return 'S'
-    if cst_type == CstType.AXIOM:
-        return 'A'
-    if cst_type == CstType.TERM:
-        return 'D'
-    if cst_type == CstType.FUNCTION:
-        return 'F'
-    if cst_type == CstType.PREDICATE:
-        return 'P'
-    if cst_type == CstType.THEOREM:
-        return 'T'
+    match cst_type:
+        case CstType.BASE: return 'X'
+        case CstType.CONSTANT: return 'C'
+        case CstType.STRUCTURED: return 'S'
+        case CstType.AXIOM: return 'A'
+        case CstType.TERM: return 'D'
+        case CstType.FUNCTION:  return 'F'
+        case CstType.PREDICATE: return 'P'
+        case CstType.THEOREM: return 'T'
     return 'X'
+
+
+def is_basic_concept(cst_type: CstType) -> bool:
+    ''' Evaluate if CstType is basic concept.'''
+    return cst_type in [
+        CstType.BASE,
+        CstType.CONSTANT,
+        CstType.STRUCTURED,
+        CstType.AXIOM
+    ]
+
+
+def is_base_set(cst_type: CstType) -> bool:
+    ''' Evaluate if CstType is base set or constant set.'''
+    return cst_type in [
+        CstType.BASE,
+        CstType.CONSTANT
+    ]
+
+
+def is_functional(cst_type: CstType) -> bool:
+    ''' Evaluate if CstType is function.'''
+    return cst_type in [
+        CstType.FUNCTION,
+        CstType.PREDICATE
+    ]
+
+
+def extract_globals(expression: str) -> Set[str]:
+    ''' Extract all global aliases from expression. '''
+    return set(re.findall(_RE_GLOBALS, expression))
+
 
 def guess_type(alias: str) -> CstType:
     ''' Get CstType for alias. '''
@@ -62,6 +80,7 @@ def guess_type(alias: str) -> CstType:
             return cast(CstType, value)
     return CstType.BASE
 
+
 def _get_structure_prefix(alias: str, expression: str, parse: dict) -> Tuple[str, str]:
     ''' Generate prefix and alias for structure generation. '''
     args = parse['args']
@@ -70,6 +89,43 @@ def _get_structure_prefix(alias: str, expression: str, parse: dict) -> Tuple[str
     prefix = expression[0:expression.find(']')] + '] '
     newAlias = alias + '[' + ','.join([arg['alias'] for arg in args]) + ']'
     return (newAlias, prefix)
+
+
+def infer_template(expression: str) -> bool:
+    ''' Checks if given expression is a template. '''
+    return bool(re.search(_RE_TEMPLATE, expression))
+
+
+def is_simple_expression(expression: str) -> bool:
+    ''' Checks if given expression is "simple". '''
+    return not bool(re.search(_RE_COMPLEX_SYMBOLS, expression))
+
+
+def split_template(expression: str):
+    ''' Splits a string containing a template definition into its head and body parts. '''
+    start = 0
+    for index, char in enumerate(expression):
+        start = index
+        if char == '[':
+            break
+    if start < len(expression):
+        counter = 0
+        for end in range(start + 1, len(expression)):
+            if expression[end] == '[':
+                counter += 1
+            elif expression[end] == ']':
+                if counter != 0:
+                    counter -= 1
+                else:
+                    return {
+                        'head': expression[start + 1:end].strip(),
+                        'body': expression[end + 1:].strip()
+                    }
+    return {
+        'head': '',
+        'body': expression
+    }
+
 
 def generate_structure(alias: str, expression: str, parse: dict) -> list:
     ''' Generate list of expressions for target structure. '''

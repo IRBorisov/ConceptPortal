@@ -1,165 +1,11 @@
-''' Testing models '''
-import json
+''' Testing models: api_RSForm. '''
 from django.test import TestCase
-from django.db.utils import IntegrityError
 from django.forms import ValidationError
 
 from apps.rsform.models import (
     RSForm, Constituenta, CstType,
-    User,
-    LibraryItem, LibraryItemType, Subscription
+    User
 )
-
-
-class TestConstituenta(TestCase):
-    ''' Testing Constituenta model. '''
-    def setUp(self):
-        self.schema1 = LibraryItem.objects.create(item_type=LibraryItemType.RSFORM, title='Test1')
-        self.schema2 = LibraryItem.objects.create(item_type=LibraryItemType.RSFORM, title='Test2')
-
-    def test_str(self):
-        testStr = 'X1'
-        cst = Constituenta.objects.create(alias=testStr, schema=self.schema1, order=1, convention='Test')
-        self.assertEqual(str(cst), testStr)
-
-
-    def test_url(self):
-        testStr = 'X1'
-        cst = Constituenta.objects.create(alias=testStr, schema=self.schema1, order=1, convention='Test')
-        self.assertEqual(cst.get_absolute_url(), f'/api/constituents/{cst.id}')
-
-
-    def test_order_not_null(self):
-        with self.assertRaises(IntegrityError):
-            Constituenta.objects.create(alias='X1', schema=self.schema1)
-
-
-    def test_order_positive_integer(self):
-        with self.assertRaises(IntegrityError):
-            Constituenta.objects.create(alias='X1', schema=self.schema1, order=-1)
-
-
-    def test_order_min_value(self):
-        with self.assertRaises(ValidationError):
-            cst = Constituenta.objects.create(alias='X1', schema=self.schema1, order=0)
-            cst.full_clean()
-
-
-    def test_schema_not_null(self):
-        with self.assertRaises(IntegrityError):
-            Constituenta.objects.create(alias='X1', order=1)
-
-
-    def test_create_default(self):
-        cst = Constituenta.objects.create(
-            alias='X1',
-            schema=self.schema1,
-            order=1
-        )
-        self.assertEqual(cst.schema, self.schema1)
-        self.assertEqual(cst.order, 1)
-        self.assertEqual(cst.alias, 'X1')
-        self.assertEqual(cst.cst_type, CstType.BASE)
-        self.assertEqual(cst.convention, '')
-        self.assertEqual(cst.definition_formal, '')
-        self.assertEqual(cst.term_raw, '')
-        self.assertEqual(cst.term_resolved, '')
-        self.assertEqual(cst.term_forms, [])
-        self.assertEqual(cst.definition_resolved, '')
-        self.assertEqual(cst.definition_raw, '')
-
-
-class TestLibraryItem(TestCase):
-    ''' Testing LibraryItem model. '''
-    def setUp(self):
-        self.user1 = User.objects.create(username='User1')
-        self.user2 = User.objects.create(username='User2')
-        self.assertNotEqual(self.user1, self.user2)
-
-
-    def test_str(self):
-        testStr = 'Test123'
-        item = LibraryItem.objects.create(
-            item_type=LibraryItemType.RSFORM,
-            title=testStr,
-            owner=self.user1,
-            alias='КС1'
-        )
-        self.assertEqual(str(item), testStr)
-
-
-    def test_url(self):
-        testStr = 'Test123'
-        item = LibraryItem.objects.create(
-            item_type=LibraryItemType.RSFORM,
-            title=testStr,
-            owner=self.user1,
-            alias='КС1'
-        )
-        self.assertEqual(item.get_absolute_url(), f'/api/library/{item.id}')
-
-
-    def test_create_default(self):
-        item = LibraryItem.objects.create(item_type=LibraryItemType.RSFORM, title='Test')
-        self.assertIsNone(item.owner)
-        self.assertEqual(item.title, 'Test')
-        self.assertEqual(item.alias, '')
-        self.assertEqual(item.comment, '')
-        self.assertEqual(item.is_common, False)
-        self.assertEqual(item.is_canonical, False)
-
-
-    def test_create(self):
-        item = LibraryItem.objects.create(
-            item_type=LibraryItemType.RSFORM,
-            title='Test',
-            owner=self.user1,
-            alias='KS1',
-            comment='Test comment',
-            is_common=True,
-            is_canonical=True
-        )
-        self.assertEqual(item.owner, self.user1)
-        self.assertEqual(item.title, 'Test')
-        self.assertEqual(item.alias, 'KS1')
-        self.assertEqual(item.comment, 'Test comment')
-        self.assertEqual(item.is_common, True)
-        self.assertEqual(item.is_canonical, True)
-        self.assertTrue(Subscription.objects.filter(user=item.owner, item=item).exists())
-
-
-    def test_subscribe(self):
-        item = LibraryItem.objects.create(item_type=LibraryItemType.RSFORM, title='Test')
-        self.assertEqual(len(item.subscribers()), 0)
-
-        self.assertTrue(Subscription.subscribe(self.user1, item))
-        self.assertEqual(len(item.subscribers()), 1)
-        self.assertTrue(self.user1 in item.subscribers())
-
-        self.assertFalse(Subscription.subscribe(self.user1, item))
-        self.assertEqual(len(item.subscribers()), 1)
-
-        self.assertTrue(Subscription.subscribe(self.user2, item))
-        self.assertEqual(len(item.subscribers()), 2)
-        self.assertTrue(self.user1 in item.subscribers())
-        self.assertTrue(self.user2 in item.subscribers())
-
-        self.user1.delete()
-        self.assertEqual(len(item.subscribers()), 1)
-
-
-    def test_unsubscribe(self):
-        item = LibraryItem.objects.create(item_type=LibraryItemType.RSFORM, title='Test')
-        self.assertFalse(Subscription.unsubscribe(self.user1, item))
-        Subscription.subscribe(self.user1, item)
-        Subscription.subscribe(self.user2, item)
-        self.assertEqual(len(item.subscribers()), 2)
-
-        self.assertTrue(Subscription.unsubscribe(self.user1, item))
-        self.assertEqual(len(item.subscribers()), 1)
-        self.assertTrue(self.user2 in item.subscribers())
-
-        self.assertFalse(Subscription.unsubscribe(self.user1, item))
 
 
 class TestRSForm(TestCase):
@@ -377,6 +223,69 @@ class TestRSForm(TestCase):
         self.assertEqual(x2.order, 1)
 
 
+    def test_restore_order(self):
+        d2 = self.schema.insert_new(
+            alias='D2',
+            definition_formal=r'D{ξ∈S1 | 1=1}',
+        )
+        d1 = self.schema.insert_new(
+            alias='D1',
+            definition_formal=r'Pr1(S1)\X1',
+        )
+        x1 = self.schema.insert_new('X1')
+        x2 = self.schema.insert_new('X2')
+        s1 = self.schema.insert_new(
+            alias='S1',
+            definition_formal='ℬ(X1×X1)'
+        )
+        c1 = self.schema.insert_new('C1')
+        s2 = self.schema.insert_new(
+            alias='S2',
+            definition_formal='ℬ(X2×D1)'
+        )
+        a1 = self.schema.insert_new(
+            alias='A1',
+            definition_formal=r'D3=∅',
+        )
+        d3 = self.schema.insert_new(
+            alias='D3',
+            definition_formal=r'Pr2(S2)',
+        )
+        f1 = self.schema.insert_new(
+            alias='F1',
+            definition_formal=r'[α∈ℬ(X1)] D{σ∈S1 | α⊆pr1(σ)}',
+        )
+        d4 = self.schema.insert_new(
+            alias='D4',
+            definition_formal=r'Pr2(D3)',
+        )
+        
+        self.schema.restore_order()
+        x1.refresh_from_db()
+        x2.refresh_from_db()
+        c1.refresh_from_db()
+        s1.refresh_from_db()
+        s2.refresh_from_db()
+        d1.refresh_from_db()
+        d2.refresh_from_db()
+        d3.refresh_from_db()
+        d4.refresh_from_db()
+        f1.refresh_from_db()
+        a1.refresh_from_db()
+
+        self.assertEqual(x1.order, 1)
+        self.assertEqual(x2.order, 2)
+        self.assertEqual(c1.order, 3)
+        self.assertEqual(s1.order, 4)
+        self.assertEqual(d1.order, 5)
+        self.assertEqual(s2.order, 6)
+        self.assertEqual(d3.order, 7)
+        self.assertEqual(a1.order, 8)
+        self.assertEqual(d4.order, 9)
+        self.assertEqual(d2.order, 10)
+        self.assertEqual(f1.order, 11)
+
+
     def test_reset_aliases(self):
         x1 = self.schema.insert_new(
             alias='X11',
@@ -437,7 +346,7 @@ class TestRSForm(TestCase):
         x1.term_resolved='слон'
         x1.save()
 
-        self.schema.on_term_change([x1.alias])
+        self.schema.on_term_change([x1.id])
         x1.refresh_from_db()
         x2.refresh_from_db()
         x3.refresh_from_db()

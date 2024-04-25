@@ -246,7 +246,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             status=c.HTTP_200_OK,
             data=s.RSFormParseSerializer(schema.item).data
         )
-    
+
     @extend_schema(
         summary='restore order based on types and term graph',
         tags=['RSForm'],
@@ -261,8 +261,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     def restore_order(self, request: Request, pk):
         ''' Endpoint: Restore order based on types and term graph. '''
         schema = self._get_schema()
-        # TODO: implement reordering
-        # schema.reset_aliases()
+        schema.restore_order()
         return Response(
             status=c.HTTP_200_OK,
             data=s.RSFormParseSerializer(schema.item).data

@@ -2,13 +2,12 @@
 import re
 
 from django.db.models import (
-    CASCADE, ForeignKey, Model, PositiveIntegerField,
+    CASCADE, ForeignKey, Model, PositiveIntegerField, TextChoices,
     TextField, CharField, JSONField
 )
 from django.core.validators import MinValueValidator
 from django.urls import reverse
 
-from .api_RSLanguage import CstType
 from ..utils import apply_pattern
 
 
@@ -20,8 +19,20 @@ def _empty_forms():
     return []
 
 
+class CstType(TextChoices):
+    ''' Type of constituenta. '''
+    BASE = 'basic'
+    CONSTANT = 'constant'
+    STRUCTURED = 'structure'
+    AXIOM = 'axiom'
+    TERM = 'term'
+    FUNCTION = 'function'
+    PREDICATE = 'predicate'
+    THEOREM = 'theorem'
+
+
 class Constituenta(Model):
-    ''' Constituenta is the base unit for every conceptual schema '''
+    ''' Constituenta is the base unit for every conceptual schema. '''
     schema: ForeignKey = ForeignKey(
         verbose_name='Концептуальная схема',
         to='rsform.LibraryItem',

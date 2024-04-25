@@ -1,13 +1,29 @@
 ''' Models: RSForm API. '''
 from copy import deepcopy
-from typing import Iterable, Optional, Union, cast
+from typing import Optional, Union, cast
 
 from django.db import transaction
 from django.db.models import QuerySet
 from django.core.exceptions import ValidationError
 
-from cctext import Resolver, Entity, extract_entities, split_grams, TermForm
-from .api_RSLanguage import get_type_prefix, generate_structure, guess_type
+from cctext import (
+    Resolver,
+    Entity,
+    extract_entities,
+    split_grams,
+    TermForm
+)
+from .api_RSLanguage import (
+    extract_globals,
+    get_type_prefix,
+    generate_structure,
+    guess_type,
+    infer_template,
+    is_base_set,
+    is_functional,
+    is_simple_expression,
+    split_template
+)
 from .LibraryItem import LibraryItem, LibraryItemType
 from .Constituenta import CstType, Constituenta
 from .Version import Version
@@ -49,18 +65,22 @@ class RSForm:
             result.context[cst.alias] = entity
         return result
 
+    def semantic(self) -> 'SemanticInfo':
+        ''' Access semantic information on constituents. '''
+        return SemanticInfo(self)
+
     @transaction.atomic
-    def on_term_change(self, changed: Iterable[str]):
+    def on_term_change(self, changed: list[int]):
         ''' Trigger cascade resolutions when term changes. '''
-        graph_terms = self._term_graph()
+        graph_terms = self._graph_term()
         expansion = graph_terms.expand_outputs(changed)
-        expanded_change = list(changed) + expansion
+        expanded_change = changed + expansion
         resolver = self.resolver()
         if len(expansion) > 0:
-            for alias in graph_terms.topological_order():
-                if alias not in expansion:
+            for cst_id in graph_terms.topological_order():
+                if cst_id not in expansion:
                     continue
-                cst = self.constituents().get(alias=alias)
+                cst = self.constituents().get(id=cst_id)
                 resolved = resolver.resolve(cst.term_raw)
                 if resolved == cst.term_resolved:
                     continue
@@ -68,12 +88,12 @@ class RSForm:
                 cst.save()
                 resolver.context[cst.alias] = Entity(cst.alias, resolved)
 
-        graph_defs = self._definition_graph()
+        graph_defs = self._graph_text()
         update_defs = set(expansion + graph_defs.expand_outputs(expanded_change)).union(changed)
         if len(update_defs) == 0:
             return
-        for alias in update_defs:
-            cst = self.constituents().get(alias=alias)
+        for cst_id in update_defs:
+            cst = self.constituents().get(id=cst_id)
             resolved = resolver.resolve(cst.definition_raw)
             if resolved == cst.definition_resolved:
                 continue
@@ -199,7 +219,7 @@ class RSForm:
         if cst.definition_raw != '':
             cst.definition_resolved = resolver.resolve(cst.definition_raw)
         cst.save()
-        self.on_term_change([cst.alias])
+        self.on_term_change([cst.id])
         cst.refresh_from_db()
         return cst
 
@@ -220,7 +240,12 @@ class RSForm:
             substitution.term_resolved = original.term_resolved
             substitution.save()
         original.delete()
-        self.on_term_change([substitution.alias])
+        self.on_term_change([substitution.id])
+
+    def restore_order(self):
+        ''' Restore order based on types and term graph. '''
+        manager = _OrderManager(self)
+        manager.restore_order()
 
     def reset_aliases(self):
         ''' Recreate all aliases based on constituents order. '''
@@ -251,10 +276,10 @@ class RSForm:
     @transaction.atomic
     def resolve_all_text(self):
         ''' Trigger reference resolution for all texts. '''
-        graph_terms = self._term_graph()
+        graph_terms = self._graph_term()
         resolver = Resolver({})
-        for alias in graph_terms.topological_order():
-            cst = self.constituents().get(alias=alias)
+        for cst_id in graph_terms.topological_order():
+            cst = self.constituents().get(id=cst_id)
             resolved = resolver.resolve(cst.term_raw)
             resolver.context[cst.alias] = Entity(cst.alias, resolved)
             if resolved != cst.term_resolved:
@@ -352,30 +377,241 @@ class RSForm:
         else:
             return self.insert_new(data['alias'], data['cst_type'])
 
-    def _term_graph(self) -> Graph:
-        result = Graph()
+    def _graph_formal(self) -> Graph[int]:
+        ''' Graph based on formal definitions. '''
+        result: Graph[int] = Graph()
         cst_list = \
             self.constituents() \
-                .only('order', 'alias', 'term_raw') \
+                .only('id', 'order', 'alias', 'definition_formal') \
                 .order_by('order')
         for cst in cst_list:
-            result.add_node(cst.alias)
+            result.add_node(cst.id)
         for cst in cst_list:
-            for alias in extract_entities(cst.term_raw):
-                if result.contains(alias):
-                    result.add_edge(id_from=alias, id_to=cst.alias)
+            for alias in extract_globals(cst.definition_formal):
+                try:
+                    child = cst_list.get(alias=alias)
+                    result.add_edge(src=child.id, dest=cst.id)
+                except Constituenta.DoesNotExist:
+                    pass
         return result
 
-    def _definition_graph(self) -> Graph:
-        result = Graph()
+    def _graph_term(self) -> Graph[int]:
+        ''' Graph based on term texts. '''
+        result: Graph[int] = Graph()
         cst_list = \
             self.constituents() \
-                .only('order', 'alias', 'definition_raw') \
+                .only('id', 'order', 'alias', 'term_raw') \
                 .order_by('order')
         for cst in cst_list:
-            result.add_node(cst.alias)
+            result.add_node(cst.id)
+        for cst in cst_list:
+            for alias in extract_entities(cst.term_raw):
+                try:
+                    child = cst_list.get(alias=alias)
+                    result.add_edge(src=child.id, dest=cst.id)
+                except Constituenta.DoesNotExist:
+                    pass
+        return result
+
+    def _graph_text(self) -> Graph[int]:
+        ''' Graph based on definition texts. '''
+        result: Graph[int] = Graph()
+        cst_list = \
+            self.constituents() \
+                .only('id', 'order', 'alias', 'definition_raw') \
+                .order_by('order')
+        for cst in cst_list:
+            result.add_node(cst.id)
         for cst in cst_list:
             for alias in extract_entities(cst.definition_raw):
-                if result.contains(alias):
-                    result.add_edge(id_from=alias, id_to=cst.alias)
+                try:
+                    child = cst_list.get(alias=alias)
+                    result.add_edge(src=child.id, dest=cst.id)
+                except Constituenta.DoesNotExist:
+                    pass
         return result
+
+
+class SemanticInfo:
+    ''' Semantic information derived from constituents. '''
+    def __init__(self, schema: RSForm):
+        self._graph = schema._graph_formal()
+        self._items = list(
+            schema.constituents() \
+                .only('id', 'alias', 'cst_type', 'definition_formal') \
+                .order_by('order')
+        )
+        self._cst_by_alias = { cst.alias : cst for cst in self._items }
+        self._cst_by_ID = { cst.id : cst for cst in self._items }
+        self.info = {
+            cst.id: {
+                'is_simple' : False, \
+                'is_template' : False, \
+                'parent' : cst.id, \
+                'children' : [] 
+            }
+            for cst in self._items
+        }
+        self._calculate_attributes()
+
+    def __getitem__(self, key: int) -> dict:
+        return self.info[key]
+
+    def is_simple_expression(self, target: int) -> bool:
+        ''' Access "is_simple" attribute. '''
+        return cast(bool, self.info[target]['is_simple'])
+
+    def is_template(self, target: int) -> bool:
+        ''' Access "is_template" attribute. '''
+        return cast(bool, self.info[target]['is_template'])
+
+    def parent(self, target: int) -> int:
+        ''' Access "parent" attribute. '''
+        return cast(int, self.info[target]['parent'])
+
+    def children(self, target: int) -> list[int]:
+        ''' Access "children" attribute. '''
+        return cast(list[int], self.info[target]['children'])
+
+    def _calculate_attributes(self):
+        for cst_id in self._graph.topological_order():
+            cst = self._cst_by_ID[cst_id]
+            self.info[cst_id]['is_template'] = infer_template(cst.definition_formal)
+            self.info[cst_id]['is_simple'] = self._infer_simple_expression(cst)
+            if not self.info[cst_id]['is_simple'] or cst.cst_type == CstType.STRUCTURED:
+                continue
+            parent = self._infer_parent(cst)
+            self.info[cst_id]['parent'] = parent
+            if parent != cst_id:
+                self.info[parent]['children'].append(cst_id)
+
+    def _infer_simple_expression(self, target: Constituenta) -> bool:
+        if target.cst_type == CstType.STRUCTURED or is_base_set(target.cst_type):
+            return False
+
+        dependencies = self._graph.inputs[target.id]
+        has_complex_dependency = any(
+            self.is_template(cst_id) and \
+                not self.is_simple_expression(cst_id) for cst_id in dependencies
+        )
+        if has_complex_dependency:
+            return False
+
+        if is_functional(target.cst_type):
+            return is_simple_expression(split_template(target.definition_formal)['body'])
+        else:
+            return is_simple_expression(target.definition_formal)
+
+    def _infer_parent(self, target: Constituenta) -> int:
+        sources = self._extract_sources(target)
+        if len(sources) != 1:
+            return target.id
+        return next(iter(sources))
+
+    def _extract_sources(self, target: Constituenta) -> set[int]:
+        sources: set[int] = set()
+        if not is_functional(target.cst_type):
+            for parent_id in self._graph.inputs[target.id]:
+                parent_info = self[parent_id]
+                if not parent_info['is_template'] or not parent_info['is_simple']:
+                    sources.add(parent_info['parent'])
+            return sources
+
+        expression = split_template(target.definition_formal)
+        body_dependencies = extract_globals(expression['body'])
+        for alias in body_dependencies:
+            parent = self._cst_by_alias.get(alias)
+            if not parent:
+                continue
+
+            parent_info = self[parent.id]
+            if not parent_info['is_template'] or not parent_info['is_simple']:
+                sources.add(parent_info['parent'])
+
+        if self._need_check_head(sources, expression['head']):
+            head_dependencies = extract_globals(expression['head'])
+            for alias in head_dependencies:
+                parent = self._cst_by_alias.get(alias)
+                if not parent:
+                    continue
+
+                parent_info = self[parent.id]
+                if not is_base_set(parent.cst_type) and \
+                    (not parent_info['is_template'] or not parent_info['is_simple']):
+                    sources.add(parent_info['parent'])
+        return sources
+
+    def _need_check_head(self, sources: set[int], head: str)-> bool:
+        if len(sources) == 0:
+            return True
+        elif len(sources) != 1:
+            return False
+        else:
+            base = self._cst_by_ID[next(iter(sources))]
+            return not is_functional(base.cst_type) or \
+                split_template(base.definition_formal)['head'] != head
+
+
+class _OrderManager:
+    ''' Ordering helper class '''
+    def __init__(self, schema: RSForm):
+        self._semantic = schema.semantic()
+        self._graph = schema._graph_formal()
+        self._items = list(
+            schema.constituents() \
+                .only('id', 'order', 'alias', 'cst_type', 'definition_formal') \
+                .order_by('order')
+        )
+        self._cst_by_ID = { cst.id : cst for cst in self._items }
+
+    def restore_order(self) -> None:
+        ''' Implement order restoration process. '''
+        if len(self._items) <= 1:
+            return
+        self._fix_kernel()
+        self._fix_topological()
+        self._fix_semantic_children()
+        self._save_order()
+
+    def _fix_topological(self) -> None:
+        sorted_ids = self._graph.sort_stable([cst.id for cst in self._items])
+        sorted_items = [next(cst for cst in self._items if cst.id == id) for id in sorted_ids]
+        self._items = sorted_items
+
+    def _fix_kernel(self) -> None:
+        result = [cst for cst in self._items if cst.cst_type == CstType.BASE]
+        result = result + [cst for cst in self._items if cst.cst_type == CstType.CONSTANT]
+        kernel = [
+            cst.id for cst in self._items if \
+                cst.cst_type in [CstType.STRUCTURED, CstType.AXIOM] or \
+                    self._cst_by_ID[self._semantic.parent(cst.id)].cst_type == CstType.STRUCTURED
+        ]
+        kernel = kernel + self._graph.expand_inputs(kernel)
+        result = result + [cst for cst in self._items if result.count(cst) == 0 and cst.id in kernel]
+        result = result + [cst for cst in self._items if result.count(cst) == 0]
+        self._items = result
+
+    def _fix_semantic_children(self) -> None:
+        result: list[Constituenta] = []
+        marked: set[Constituenta] = set()
+        for cst in self._items:
+            if cst in marked:
+                continue
+            result.append(cst)
+            children = self._semantic[cst.id]['children']
+            if len(children) == 0:
+                continue
+            for child in self._items:
+                if child.id in children:
+                    marked.add(child)
+                    result.append(child)
+        self._items = result
+
+
+    @transaction.atomic
+    def _save_order(self) -> None:
+        order = 1
+        for cst in self._items:
+            cst.order = order
+            cst.save()
+            order += 1

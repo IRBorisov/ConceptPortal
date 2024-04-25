@@ -13,7 +13,7 @@ from apps.rsform.models import (
 )
 
 from cctext import ReferenceType
-from ..utils import response_contains
+from ..testing_utils import response_contains
 
 from .EndpointTester import decl_endpoint, EndpointTester
 

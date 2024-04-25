@@ -4,7 +4,7 @@ from rest_framework import status
 from apps.users.models import User
 from apps.rsform.models import LibraryItem, LibraryItemType, Subscription, LibraryTemplate, RSForm
 
-from ..utils import response_contains
+from ..testing_utils import response_contains
 
 from .EndpointTester import decl_endpoint, EndpointTester
 
