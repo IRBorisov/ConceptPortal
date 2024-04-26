@@ -103,7 +103,12 @@ export class RSFormLoader {
     if (sources.size !== 1 || sources.has(target.id)) {
       return undefined;
     }
-    return sources.values().next().value as ConstituentaID;
+    const parent_id = sources.values().next().value as ConstituentaID;
+    const parent = this.cstByID.get(parent_id);
+    if (parent && isBaseSet(parent.cst_type)) {
+      return undefined;
+    }
+    return parent_id;
   }
 
   private extractSources(target: IConstituenta): Set<ConstituentaID> {

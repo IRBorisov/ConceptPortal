@@ -506,7 +506,12 @@ class SemanticInfo:
         sources = self._extract_sources(target)
         if len(sources) != 1:
             return target.id
-        return next(iter(sources))
+
+        parent_id = next(iter(sources))
+        parent = self._cst_by_ID[parent_id]
+        if is_base_set(parent.cst_type):
+            return target.id
+        return parent_id
 
     def _extract_sources(self, target: Constituenta) -> set[int]:
         sources: set[int] = set()

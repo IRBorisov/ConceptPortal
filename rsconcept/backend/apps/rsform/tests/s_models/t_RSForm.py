@@ -259,6 +259,10 @@ class TestRSForm(TestCase):
             alias='D4',
             definition_formal=r'Pr2(D3)',
         )
+        f2 = self.schema.insert_new(
+            alias='F2',
+            definition_formal=r'[α∈ℬ(X1)] X1\α',
+        )
         
         self.schema.restore_order()
         x1.refresh_from_db()
@@ -271,6 +275,7 @@ class TestRSForm(TestCase):
         d3.refresh_from_db()
         d4.refresh_from_db()
         f1.refresh_from_db()
+        f2.refresh_from_db()
         a1.refresh_from_db()
 
         self.assertEqual(x1.order, 1)
@@ -284,6 +289,7 @@ class TestRSForm(TestCase):
         self.assertEqual(d4.order, 9)
         self.assertEqual(d2.order, 10)
         self.assertEqual(f1.order, 11)
+        self.assertEqual(f2.order, 12)
 
 
     def test_reset_aliases(self):
