@@ -243,7 +243,7 @@ export const animateFade = {
       transition: {
         type: 'tween',
         ease: 'linear',
-        duration: 0.3
+        duration: 0.4
       }
     },
     hidden: {
@@ -251,7 +251,7 @@ export const animateFade = {
       transition: {
         type: 'tween',
         ease: 'linear',
-        duration: 0.3
+        duration: 0.4
       }
     }
   },
@@ -260,7 +260,7 @@ export const animateFade = {
     transition: {
       type: 'tween',
       ease: 'linear',
-      duration: 0.3
+      duration: 0.4
     }
   }
 };

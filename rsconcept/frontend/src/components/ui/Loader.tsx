@@ -1,6 +1,6 @@
 'use client';
 
-import { ThreeDots } from 'react-loader-spinner';
+import { ThreeCircles, ThreeDots } from 'react-loader-spinner';
 
 import { useConceptOptions } from '@/context/OptionsContext';
 
@@ -8,13 +8,18 @@ import AnimateFade from '../wrap/AnimateFade';
 
 interface LoaderProps {
   size?: number;
+  circular?: boolean;
 }
 
-function Loader({ size = 10 }: LoaderProps) {
+function Loader({ size = 10, circular }: LoaderProps) {
   const { colors } = useConceptOptions();
   return (
     <AnimateFade noFadeIn className='flex justify-center'>
-      <ThreeDots color={colors.bgPrimary} height={size * 10} width={size * 10} radius={size} />
+      {circular ? (
+        <ThreeCircles color={colors.bgPrimary} height={size * 10} width={size * 10} />
+      ) : (
+        <ThreeDots color={colors.bgPrimary} height={size * 10} width={size * 10} radius={size} />
+      )}
     </AnimateFade>
   );
 }

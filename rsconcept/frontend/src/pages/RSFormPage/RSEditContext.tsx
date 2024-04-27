@@ -14,6 +14,7 @@ import TextURL from '@/components/ui/TextURL';
 import { useAccessMode } from '@/context/AccessModeContext';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { useRSForm } from '@/context/RSFormContext';
 import DlgCloneLibraryItem from '@/dialogs/DlgCloneLibraryItem';
 import DlgConstituentaTemplate from '@/dialogs/DlgConstituentaTemplate';
@@ -120,6 +121,7 @@ export const RSEditState = ({
 }: RSEditStateProps) => {
   const router = useConceptNavigation();
   const { user } = useAuth();
+  const { adminMode } = useConceptOptions();
   const { mode, setMode } = useAccessMode();
   const model = useRSForm();
 
@@ -152,15 +154,15 @@ export const RSEditState = ({
   useLayoutEffect(
     () =>
       setMode(prev => {
-        if (prev === UserAccessMode.ADMIN) {
-          return prev;
+        if (user?.is_staff && (prev === UserAccessMode.ADMIN || adminMode)) {
+          return UserAccessMode.ADMIN;
         } else if (model.isOwned) {
           return UserAccessMode.OWNER;
         } else {
           return UserAccessMode.READER;
         }
       }),
-    [model.schema, setMode, model.isOwned]
+    [model.schema, setMode, model.isOwned, user, adminMode]
   );
 
   const viewVersion = useCallback(

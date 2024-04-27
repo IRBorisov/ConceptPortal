@@ -2,6 +2,8 @@
  * Module: Internal navigation constants.
  */
 
+import { buildConstants } from '@/utils/constants';
+
 /**
  * Routes.
  */
@@ -29,6 +31,7 @@ interface SchemaProps {
  * Internal navigation URLs.
  */
 export const urls = {
+  admin: `${buildConstants.backend}/admin`,
   home: '/',
   login: `/${routes.login}`,
   login_hint: (userName: string) => `/login?username=${userName}`,

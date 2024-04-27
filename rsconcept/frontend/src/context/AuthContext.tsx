@@ -2,13 +2,6 @@
 
 import { createContext, useCallback, useContext, useLayoutEffect, useState } from 'react';
 
-import { type ErrorData } from '@/components/info/InfoError';
-import { IPasswordTokenData, IRequestPasswordData, IResetPasswordData, IUserLoginData } from '@/models/library';
-import { ICurrentUser } from '@/models/library';
-import { IUserSignupData } from '@/models/library';
-import { IUserProfile } from '@/models/library';
-import { IUserInfo } from '@/models/library';
-import { IUserUpdatePassword } from '@/models/library';
 import {
   type DataCallback,
   getAuth,
@@ -20,6 +13,13 @@ import {
   postSignup,
   postValidatePasswordToken
 } from '@/app/backendAPI';
+import { type ErrorData } from '@/components/info/InfoError';
+import { IPasswordTokenData, IRequestPasswordData, IResetPasswordData, IUserLoginData } from '@/models/library';
+import { ICurrentUser } from '@/models/library';
+import { IUserSignupData } from '@/models/library';
+import { IUserProfile } from '@/models/library';
+import { IUserInfo } from '@/models/library';
+import { IUserUpdatePassword } from '@/models/library';
 
 import { useUsers } from './UsersContext';
 
@@ -53,13 +53,14 @@ interface AuthStateProps {
 export const AuthState = ({ children }: AuthStateProps) => {
   const { users } = useUsers();
   const [user, setUser] = useState<ICurrentUser | undefined>(undefined);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<ErrorData>(undefined);
 
   const reload = useCallback(
     (callback?: () => void) => {
       getAuth({
         onError: () => setUser(undefined),
+        setLoading: setLoading,
         onSuccess: currentUser => {
           if (currentUser.id) {
             setUser(currentUser);

@@ -19,6 +19,9 @@ interface IOptionsContext {
   darkMode: boolean;
   toggleDarkMode: () => void;
 
+  adminMode: boolean;
+  toggleAdminMode: () => void;
+
   mathFont: FontStyle;
   setMathFont: (value: FontStyle) => void;
 
@@ -53,6 +56,7 @@ interface OptionsStateProps {
 
 export const OptionsState = ({ children }: OptionsStateProps) => {
   const [darkMode, setDarkMode] = useLocalStorage(storage.themeDark, false);
+  const [adminMode, setAdminMode] = useLocalStorage(storage.themeDark, false);
   const [mathFont, setMathFont] = useLocalStorage<FontStyle>(storage.rseditFont, 'math');
   const [showHelp, setShowHelp] = useLocalStorage(storage.optionsHelp, true);
   const [noNavigation, setNoNavigation] = useState(false);
@@ -121,6 +125,7 @@ export const OptionsState = ({ children }: OptionsStateProps) => {
     <OptionsContext.Provider
       value={{
         darkMode,
+        adminMode,
         colors,
         mathFont,
         setMathFont,
@@ -130,6 +135,7 @@ export const OptionsState = ({ children }: OptionsStateProps) => {
         showScroll,
         showHelp,
         toggleDarkMode: toggleDarkMode,
+        toggleAdminMode: () => setAdminMode(prev => !prev),
         toggleNoNavigation: toggleNoNavigation,
         setNoFooter,
         setShowScroll,

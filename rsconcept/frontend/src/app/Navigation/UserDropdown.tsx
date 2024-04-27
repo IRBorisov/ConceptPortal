@@ -1,6 +1,6 @@
-import { LuLogOut, LuMoon, LuSun } from 'react-icons/lu';
+import { LuMoon, LuSun } from 'react-icons/lu';
 
-import { IconHelp, IconHelpOff, IconUser } from '@/components/Icons';
+import { IconAdmin, IconAdminOff, IconDatabase, IconHelp, IconHelpOff, IconLogout, IconUser } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
@@ -16,7 +16,7 @@ interface UserDropdownProps {
 }
 
 function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
-  const { darkMode, toggleDarkMode, showHelp, toggleShowHelp } = useConceptOptions();
+  const { darkMode, adminMode, toggleAdminMode, toggleDarkMode, showHelp, toggleShowHelp } = useConceptOptions();
   const router = useConceptNavigation();
   const { user, logout } = useAuth();
 
@@ -30,13 +30,18 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
     logout(() => router.push(urls.login));
   }
 
+  function gotoAdmin() {
+    hideDropdown();
+    logout(() => router.push(urls.admin, true));
+  }
+
   function handleToggleDarkMode() {
     hideDropdown();
     toggleDarkMode();
   }
 
   return (
-    <Dropdown className='min-w-[18ch] max-w-[12rem]' stretchLeft isOpen={isOpen}>
+    <Dropdown className='mt-[1.5rem] min-w-[18ch] max-w-[12rem]' stretchLeft isOpen={isOpen}>
       <DropdownButton
         text={user?.username}
         title='Профиль пользователя'
@@ -55,10 +60,21 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
         title='Отображение иконок подсказок'
         onClick={toggleShowHelp}
       />
+      {user?.is_staff ? (
+        <DropdownButton
+          text={adminMode ? 'Админ: Вкл' : 'Админ: Выкл'}
+          icon={adminMode ? <IconAdmin size='1rem' /> : <IconAdminOff size='1rem' />}
+          title='Работа в режиме администратора'
+          onClick={toggleAdminMode}
+        />
+      ) : null}
+      {user?.is_staff ? (
+        <DropdownButton text='База данных' icon={<IconDatabase size='1rem' />} onClick={gotoAdmin} />
+      ) : null}
       <DropdownButton
         text='Выйти...'
         className='font-semibold'
-        icon={<LuLogOut size='1rem' />}
+        icon={<IconLogout size='1rem' />}
         onClick={logoutAndRedirect}
       />
     </Dropdown>

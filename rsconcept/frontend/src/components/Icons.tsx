@@ -1,5 +1,6 @@
 // Search new icons at https://reactsvgicons.com/
 
+export { LuLogOut as IconLogout } from 'react-icons/lu';
 export { FiSave as IconSave } from 'react-icons/fi';
 export { BiCheck as IconAccept } from 'react-icons/bi';
 export { BiX as IconClose } from 'react-icons/bi';
@@ -17,7 +18,8 @@ export { RiUnpinLine as IconUnpin } from 'react-icons/ri';
 export { BiCog as IconSettings } from 'react-icons/bi';
 export { LuUserCircle2 as IconUser } from 'react-icons/lu';
 export { LuCrown as IconOwner } from 'react-icons/lu';
-export { BiMeteor as IconAdmin } from 'react-icons/bi';
+export { TbMeteor as IconAdmin } from 'react-icons/tb';
+export { TbMeteorOff as IconAdminOff } from 'react-icons/tb';
 export { LuGlasses as IconReader } from 'react-icons/lu';
 export { FiBell as IconFollow } from 'react-icons/fi';
 export { FiBellOff as IconFollowOff } from 'react-icons/fi';
@@ -26,6 +28,7 @@ export { FaSortAmountDownAlt as IconSortText } from 'react-icons/fa';
 export { LuChevronDown as IconDropArrow } from 'react-icons/lu';
 export { LuChevronUp as IconDropArrowUp } from 'react-icons/lu';
 
+export { LuDatabase as IconDatabase } from 'react-icons/lu';
 export { LuImage as IconImage } from 'react-icons/lu';
 export { TbColumns as IconList } from 'react-icons/tb';
 export { TbColumnsOff as IconListOff } from 'react-icons/tb';
