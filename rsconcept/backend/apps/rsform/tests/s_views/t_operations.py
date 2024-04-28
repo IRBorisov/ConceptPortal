@@ -78,7 +78,9 @@ class TestInlineSynthesis(EndpointTester):
         result = {item['alias']: item for item in response.data['items']}
         self.assertEqual(len(result), 6)
         self.assertEqual(result['X2']['term_raw'], ks1_x2.term_raw)
+        self.assertEqual(result['X2']['order'], 1)
         self.assertEqual(result['X4']['term_raw'], ks2_x2.term_raw)
+        self.assertEqual(result['X4']['order'], 2)
         self.assertEqual(result['S1']['term_raw'], ks2_x1.term_raw)
         self.assertEqual(result['S2']['term_raw'], ks2_s1.term_raw)
         self.assertEqual(result['S1']['definition_formal'], 'X2')
