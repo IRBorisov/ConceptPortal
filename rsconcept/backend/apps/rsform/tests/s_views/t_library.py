@@ -66,7 +66,7 @@ class TestLibraryViewset(EndpointTester):
         self.assertTrue(response.status_code in [status.HTTP_202_ACCEPTED, status.HTTP_204_NO_CONTENT])
 
         self.assertForbidden(item=self.unowned.id)
-        self.toggle_staff(True)
+        self.toggle_admin(True)
         response = self.execute(item=self.unowned.id)
         self.assertTrue(response.status_code in [status.HTTP_202_ACCEPTED, status.HTTP_204_NO_CONTENT])
 
@@ -109,6 +109,21 @@ class TestLibraryViewset(EndpointTester):
         self.assertTrue(response_contains(response, self.common))
         self.assertFalse(response_contains(response, self.unowned))
         self.assertFalse(response_contains(response, self.owned))
+
+
+    @decl_endpoint('/api/library/all', method='get')
+    def test_retrieve_all(self):
+        self.toggle_admin(False)
+        self.assertForbidden()
+        self.toggle_admin(True)
+        response = self.execute()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response_contains(response, self.common))
+        self.assertTrue(response_contains(response, self.unowned))
+        self.assertTrue(response_contains(response, self.owned))
+
+        self.logout()
+        self.assertForbidden()
 
 
     @decl_endpoint('/api/library/active', method='get')

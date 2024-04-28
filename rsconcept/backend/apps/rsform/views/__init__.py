@@ -1,6 +1,7 @@
 ''' REST API: Endpoint processors. '''
 from .library import (
     LibraryActiveView,
+    LibraryAdminView,
     LibraryTemplatesView,
     LibraryViewSet
 )

@@ -29,7 +29,7 @@ class EndpointTester(APITestCase):
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
 
-    def toggle_staff(self, value: bool = True):
+    def toggle_admin(self, value: bool = True):
         self.user.is_staff = value
         self.user.save()
 

@@ -192,6 +192,14 @@ export function getLibrary(request: FrontPull<ILibraryItem[]>) {
   });
 }
 
+export function getAdminLibrary(request: FrontPull<ILibraryItem[]>) {
+  AxiosGet({
+    title: 'All LibraryItems list',
+    endpoint: '/api/library/all',
+    request: request
+  });
+}
+
 export function getTemplates(request: FrontPull<ILibraryItem[]>) {
   AxiosGet({
     title: 'Available LibraryItems list',

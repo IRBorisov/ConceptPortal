@@ -36,6 +36,17 @@ class LibraryActiveView(generics.ListAPIView):
 
 @extend_schema(tags=['Library'])
 @extend_schema_view()
+class LibraryAdminView(generics.ListAPIView):
+    ''' Endpoint: Get list of all library items. Admin only '''
+    permission_classes = (permissions.IsAdminUser,)
+    serializer_class = s.LibraryItemSerializer
+
+    def get_queryset(self):
+        return m.LibraryItem.objects.all().order_by('-time_update')
+
+
+@extend_schema(tags=['Library'])
+@extend_schema_view()
 class LibraryTemplatesView(generics.ListAPIView):
     ''' Endpoint: Get list of templates. '''
     permission_classes = (permissions.AllowAny,)

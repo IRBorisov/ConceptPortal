@@ -2,23 +2,25 @@
 
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
-import { ErrorData } from '@/components/info/InfoError';
-import { ILibraryItem } from '@/models/library';
-import { matchLibraryItem } from '@/models/libraryAPI';
-import { ILibraryFilter } from '@/models/miscellaneous';
-import { IRSForm, IRSFormCloneData, IRSFormCreateData, IRSFormData } from '@/models/rsform';
-import { RSFormLoader } from '@/models/RSFormLoader';
 import {
   DataCallback,
   deleteLibraryItem,
+  getAdminLibrary,
   getLibrary,
   getRSFormDetails,
   getTemplates,
   postCloneLibraryItem,
   postNewRSForm
 } from '@/app/backendAPI';
+import { ErrorData } from '@/components/info/InfoError';
+import { ILibraryItem } from '@/models/library';
+import { matchLibraryItem } from '@/models/libraryAPI';
+import { ILibraryFilter } from '@/models/miscellaneous';
+import { IRSForm, IRSFormCloneData, IRSFormCreateData, IRSFormData } from '@/models/rsform';
+import { RSFormLoader } from '@/models/RSFormLoader';
 
 import { useAuth } from './AuthContext';
+import { useConceptOptions } from './OptionsContext';
 
 interface ILibraryContext {
   items: ILibraryItem[];
@@ -53,6 +55,7 @@ interface LibraryStateProps {
 
 export const LibraryState = ({ children }: LibraryStateProps) => {
   const { user } = useAuth();
+  const { adminMode } = useConceptOptions();
 
   const [items, setItems] = useState<ILibraryItem[]>([]);
   const [templates, setTemplates] = useState<ILibraryItem[]>([]);
@@ -109,19 +112,36 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
     [cachedTemplates]
   );
 
-  const reload = useCallback((callback?: () => void) => {
-    setItems([]);
-    setError(undefined);
-    getLibrary({
-      setLoading: setLoading,
-      showError: true,
-      onError: setError,
-      onSuccess: newData => {
-        setItems(newData);
-        if (callback) callback();
+  const reloadItems = useCallback(
+    (callback?: () => void) => {
+      setItems([]);
+      setError(undefined);
+      if (user?.is_staff && adminMode) {
+        getAdminLibrary({
+          setLoading: setLoading,
+          showError: true,
+          onError: setError,
+          onSuccess: newData => {
+            setItems(newData);
+            if (callback) callback();
+          }
+        });
+      } else {
+        getLibrary({
+          setLoading: setLoading,
+          showError: true,
+          onError: setError,
+          onSuccess: newData => {
+            setItems(newData);
+            if (callback) callback();
+          }
+        });
       }
-    });
+    },
+    [user, adminMode]
+  );
 
+  const reloadTemplates = useCallback(() => {
     setTemplates([]);
     getTemplates({
       showError: true,
@@ -130,8 +150,12 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   }, []);
 
   useEffect(() => {
-    reload();
-  }, [reload, user]);
+    reloadItems();
+  }, [reloadItems]);
+
+  useEffect(() => {
+    reloadTemplates();
+  }, [reloadTemplates]);
 
   const localUpdateItem = useCallback(
     (data: ILibraryItem) => {
@@ -160,7 +184,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
         setLoading: setProcessing,
         onError: setError,
         onSuccess: newSchema =>
-          reload(() => {
+          reloadItems(() => {
             if (user && !user.subscriptions.includes(newSchema.id)) {
               user.subscriptions.push(newSchema.id);
             }
@@ -168,7 +192,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
           })
       });
     },
-    [reload, user]
+    [reloadItems, user]
   );
 
   const destroyItem = useCallback(
@@ -179,7 +203,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
         setLoading: setProcessing,
         onError: setError,
         onSuccess: () =>
-          reload(() => {
+          reloadItems(() => {
             if (user && user.subscriptions.includes(target)) {
               user.subscriptions.splice(
                 user.subscriptions.findIndex(item => item === target),
@@ -190,7 +214,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
           })
       });
     },
-    [setError, reload, user]
+    [setError, reloadItems, user]
   );
 
   const cloneItem = useCallback(
@@ -205,7 +229,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
         setLoading: setProcessing,
         onError: setError,
         onSuccess: newSchema =>
-          reload(() => {
+          reloadItems(() => {
             if (user && !user.subscriptions.includes(newSchema.id)) {
               user.subscriptions.push(newSchema.id);
             }
@@ -213,7 +237,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
           })
       });
     },
-    [reload, setError, user]
+    [reloadItems, setError, user]
   );
 
   return (

@@ -8,7 +8,8 @@ library_router.register('library', views.LibraryViewSet, 'Library')
 library_router.register('rsforms', views.RSFormViewSet, 'RSForm')
 
 urlpatterns = [
-    path('library/active', views.LibraryActiveView.as_view(), name='library'),
+    path('library/active', views.LibraryActiveView.as_view()),
+    path('library/all', views.LibraryAdminView.as_view()),
     path('library/templates', views.LibraryTemplatesView.as_view(), name='templates'),
     path('constituents/<int:pk>', views.ConstituentAPIView.as_view(), name='constituenta-detail'),
     path('rsforms/import-trs', views.TrsImportView.as_view()),
