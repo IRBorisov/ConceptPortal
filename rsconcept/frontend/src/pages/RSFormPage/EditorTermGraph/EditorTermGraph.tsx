@@ -45,8 +45,8 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     noText: false,
     foldDerived: false,
 
-    focusShowInputs: false,
-    focusShowOutputs: false,
+    focusShowInputs: true,
+    focusShowOutputs: true,
 
     allowBase: true,
     allowStruct: true,
