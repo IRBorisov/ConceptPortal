@@ -177,17 +177,22 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     // Hotkeys implementation
-    if (!controller.isContentEditable || controller.isProcessing) {
+    if (controller.isProcessing) {
       return;
-    }
-    if (event.key === 'Delete') {
-      event.preventDefault();
-      handleDeleteCst();
     }
     if (event.key === 'Escape') {
       event.preventDefault();
       setFocusCst(undefined);
       controller.deselectAll();
+      return;
+    }
+    if (!controller.isContentEditable) {
+      return;
+    }
+    if (event.key === 'Delete') {
+      event.preventDefault();
+      handleDeleteCst();
+      return;
     }
   }
 
