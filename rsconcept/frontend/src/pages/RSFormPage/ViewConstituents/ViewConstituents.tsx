@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { useConceptOptions } from '@/context/OptionsContext';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
@@ -27,6 +27,19 @@ function ViewConstituents({ expression, schema, activeID, isBottom, onOpenEdit }
 
   const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema?.items ?? []);
 
+  const table = useMemo(
+    () => (
+      <ConstituentsTable
+        maxHeight={isBottom ? '12rem' : calculateHeight('8.2rem')}
+        items={filteredData}
+        activeID={activeID}
+        onOpenEdit={onOpenEdit}
+        denseThreshold={COLUMN_EXPRESSION_HIDE_THRESHOLD}
+      />
+    ),
+    [isBottom, filteredData, activeID, onOpenEdit, calculateHeight]
+  );
+
   return (
     <motion.div
       className={clsx(
@@ -46,13 +59,7 @@ function ViewConstituents({ expression, schema, activeID, isBottom, onOpenEdit }
         activeExpression={expression}
         setFiltered={setFilteredData}
       />
-      <ConstituentsTable
-        maxHeight={isBottom ? '12rem' : calculateHeight('8.2rem')}
-        items={filteredData}
-        activeID={activeID}
-        onOpenEdit={onOpenEdit}
-        denseThreshold={COLUMN_EXPRESSION_HIDE_THRESHOLD}
-      />
+      {table}
     </motion.div>
   );
 }

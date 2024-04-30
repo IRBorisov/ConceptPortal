@@ -164,6 +164,30 @@ function RSTabs() {
 
   const panelHeight = useMemo(() => calculateHeight('1.75rem + 4px'), [calculateHeight]);
 
+  const cardPanel = useMemo(
+    () => (
+      <EditorRSForm
+        isModified={isModified} // prettier: split lines
+        setIsModified={setIsModified}
+        onDestroy={onDestroySchema}
+      />
+    ),
+    [isModified, onDestroySchema]
+  );
+
+  const listPanel = useMemo(() => <EditorRSList onOpenEdit={onOpenCst} />, [onOpenCst]);
+  const editorPanel = useMemo(
+    () => (
+      <EditorConstituenta
+        isModified={isModified}
+        setIsModified={setIsModified}
+        activeCst={activeCst}
+        onOpenEdit={onOpenCst}
+      />
+    ),
+    [isModified, setIsModified, activeCst, onOpenCst]
+  );
+
   return (
     <RSEditState
       selected={selected}
@@ -198,24 +222,15 @@ function RSTabs() {
 
           <AnimateFade className='overflow-y-auto' style={{ maxHeight: panelHeight }}>
             <TabPanel forceRender style={{ display: activeTab === RSTabID.CARD ? '' : 'none' }}>
-              <EditorRSForm
-                isModified={isModified} // prettier: split lines
-                setIsModified={setIsModified}
-                onDestroy={onDestroySchema}
-              />
+              {cardPanel}
             </TabPanel>
 
             <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_LIST ? '' : 'none' }}>
-              <EditorRSList onOpenEdit={onOpenCst} />
+              {listPanel}
             </TabPanel>
 
             <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_EDIT ? '' : 'none' }}>
-              <EditorConstituenta
-                isModified={isModified}
-                setIsModified={setIsModified}
-                activeCst={activeCst}
-                onOpenEdit={onOpenCst}
-              />
+              {editorPanel}
             </TabPanel>
 
             <TabPanel style={{ display: activeTab === RSTabID.TERM_GRAPH ? '' : 'none' }}>

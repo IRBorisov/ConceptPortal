@@ -64,13 +64,8 @@ function DlgEditVersions({ hideWindow, versions, onDelete, onUpdate }: DlgEditVe
     setDescription(selected?.description ?? '');
   }, [selected]);
 
-  return (
-    <Modal
-      readonly
-      header='Редактирование версий'
-      hideWindow={hideWindow}
-      className='flex flex-col w-[40rem] px-6 gap-3 pb-6'
-    >
+  const versionsTable = useMemo(
+    () => (
       <VersionsTable
         processing={processing}
         items={versions}
@@ -78,6 +73,18 @@ function DlgEditVersions({ hideWindow, versions, onDelete, onUpdate }: DlgEditVe
         onSelect={versionID => setSelected(versions.find(ver => ver.id === versionID))}
         selected={selected?.id}
       />
+    ),
+    [processing, versions, onDelete, selected?.id]
+  );
+
+  return (
+    <Modal
+      readonly
+      header='Редактирование версий'
+      hideWindow={hideWindow}
+      className='flex flex-col w-[40rem] px-6 gap-3 pb-6'
+    >
+      {versionsTable}
       <div className='flex'>
         <TextInput
           id='dlg_version'

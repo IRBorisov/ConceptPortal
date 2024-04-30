@@ -2,7 +2,7 @@
 
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { AnimatePresence } from 'framer-motion';
-import { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { FaRegKeyboard } from 'react-icons/fa6';
 import { toast } from 'react-toastify';
 
@@ -152,6 +152,17 @@ function EditorRSExpression({
     setMathFont(mathFont === 'math' ? 'math2' : 'math');
   }
 
+  const controls = useMemo(
+    () => (
+      <RSEditorControls
+        isOpen={showControls && (!disabled || model.processing)}
+        disabled={disabled}
+        onEdit={handleEdit}
+      />
+    ),
+    [showControls, disabled, model.processing, handleEdit]
+  );
+
   return (
     <div>
       <AnimatePresence>
@@ -208,11 +219,7 @@ function EditorRSExpression({
         {...restProps}
       />
 
-      <RSEditorControls
-        isOpen={showControls && (!disabled || model.processing)}
-        disabled={disabled}
-        onEdit={handleEdit}
-      />
+      {controls}
 
       <ParsingResult
         isOpen={!!parser.parseData && parser.parseData.errors.length > 0}

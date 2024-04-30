@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import BadgeHelp from '@/components/man/BadgeHelp';
@@ -100,6 +100,28 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     });
   }, [substitutes.arguments, template.prototype, updateConstituenta, updateSubstitutes]);
 
+  const templatePanel = useMemo(
+    () => <TemplateTab state={template} partialUpdate={updateTemplate} />,
+    [template, updateTemplate]
+  );
+
+  const argumentsPanel = useMemo(
+    () => <ArgumentsTab schema={schema} state={substitutes} partialUpdate={updateSubstitutes} />,
+    [schema, substitutes, updateSubstitutes]
+  );
+
+  const editorPanel = useMemo(
+    () => (
+      <FormCreateCst
+        state={constituenta}
+        partialUpdate={updateConstituenta}
+        schema={schema}
+        setValidated={setValidated}
+      />
+    ),
+    [constituenta, updateConstituenta, schema]
+  );
+
   return (
     <Modal
       header='Создание конституенты из шаблона'
@@ -125,21 +147,12 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
           <TabLabel label='Конституента' title='Редактирование атрибутов конституенты' className='w-[8rem]' />
         </TabList>
 
-        <TabPanel style={{ display: activeTab === TabID.TEMPLATE ? '' : 'none' }}>
-          <TemplateTab state={template} partialUpdate={updateTemplate} />
-        </TabPanel>
+        <TabPanel style={{ display: activeTab === TabID.TEMPLATE ? '' : 'none' }}>{templatePanel}</TabPanel>
 
-        <TabPanel style={{ display: activeTab === TabID.ARGUMENTS ? '' : 'none' }}>
-          <ArgumentsTab schema={schema} state={substitutes} partialUpdate={updateSubstitutes} />
-        </TabPanel>
+        <TabPanel style={{ display: activeTab === TabID.ARGUMENTS ? '' : 'none' }}>{argumentsPanel}</TabPanel>
 
         <TabPanel className='cc-column' style={{ display: activeTab === TabID.CONSTITUENTA ? '' : 'none' }}>
-          <FormCreateCst
-            state={constituenta}
-            partialUpdate={updateConstituenta}
-            schema={schema}
-            setValidated={setValidated}
-          />
+          {editorPanel}
         </TabPanel>
       </Tabs>
     </Modal>

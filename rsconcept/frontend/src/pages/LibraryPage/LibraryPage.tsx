@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
 import { urls } from '@/app/urls';
 import DataLoader from '@/components/wrap/DataLoader';
@@ -61,6 +61,16 @@ function LibraryPage() {
     setFilter({});
   }, []);
 
+  const view = useMemo(
+    () => (
+      <ViewLibrary
+        resetQuery={resetQuery} //
+        items={items}
+      />
+    ),
+    [resetQuery, items]
+  );
+
   return (
     <DataLoader
       id='library-page' //
@@ -76,10 +86,7 @@ function LibraryPage() {
         filtered={items.length}
         setFilter={setFilter}
       />
-      <ViewLibrary
-        resetQuery={resetQuery} //
-        items={items}
-      />
+      {view}
     </DataLoader>
   );
 }
