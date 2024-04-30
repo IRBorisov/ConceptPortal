@@ -127,7 +127,7 @@ function FormConstituenta({
   }
 
   return (
-    <div>
+    <AnimateFade>
       <ControlsOverlay
         disabled={disabled}
         modified={isModified}
@@ -242,7 +242,7 @@ function FormConstituenta({
           ) : null}
         </AnimatePresence>
       </form>
-    </div>
+    </AnimateFade>
   );
 }
 

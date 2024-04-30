@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import InfoLibraryItem from '@/components/info/InfoLibraryItem';
 import Divider from '@/components/ui/Divider';
 import FlexColumn from '@/components/ui/FlexColumn';
+import AnimateFade from '@/components/wrap/AnimateFade';
 import { useAuth } from '@/context/AuthContext';
 import { useRSForm } from '@/context/RSFormContext';
 import { globals } from '@/utils/constants';
@@ -49,7 +50,11 @@ function EditorRSForm({ isModified, onDestroy, setIsModified }: EditorRSFormProp
         onSubmit={initiateSubmit}
         onDestroy={onDestroy}
       />
-      <div tabIndex={-1} onKeyDown={handleInput} className={clsx('flex flex-col sm:flex-row', 'sm:w-fit w-full')}>
+      <AnimateFade
+        tabIndex={-1}
+        onKeyDown={handleInput}
+        className={clsx('flex flex-col sm:flex-row', 'sm:w-fit w-full')}
+      >
         <FlexColumn className='px-4 pb-2'>
           <FormRSForm id={globals.library_item_editor} isModified={isModified} setIsModified={setIsModified} />
 
@@ -59,7 +64,7 @@ function EditorRSForm({ isModified, onDestroy, setIsModified }: EditorRSFormProp
         </FlexColumn>
 
         <RSFormStats stats={schema?.stats} />
-      </div>
+      </AnimateFade>
     </>
   );
 }

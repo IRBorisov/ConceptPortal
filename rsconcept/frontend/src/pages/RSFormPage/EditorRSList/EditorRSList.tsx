@@ -5,6 +5,7 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 
 import SelectedCounter from '@/components/info/SelectedCounter';
 import { type RowSelectionState } from '@/components/ui/DataTable';
+import AnimateFade from '@/components/wrap/AnimateFade';
 import { useConceptOptions } from '@/context/OptionsContext';
 import { ConstituentaID, CstType } from '@/models/rsform';
 
@@ -94,33 +95,35 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
   const tableHeight = useMemo(() => calculateHeight('4.05rem + 5px'), [calculateHeight]);
 
   return (
-    <div tabIndex={-1} className='outline-none' onKeyDown={handleTableKey}>
-      {controller.isContentEditable ? (
-        <SelectedCounter
-          totalCount={controller.schema?.stats?.count_all ?? 0}
-          selectedCount={controller.selected.length}
-          position='top-[0.3rem] left-2'
-        />
-      ) : null}
-
+    <>
       {controller.isContentEditable ? <RSListToolbar /> : null}
-      <div
-        className={clsx('border-b', {
-          'pt-[2.3rem]': controller.isContentEditable,
-          'relative top-[-1px]': !controller.isContentEditable
-        })}
-      />
+      <AnimateFade tabIndex={-1} className='outline-none' onKeyDown={handleTableKey}>
+        {controller.isContentEditable ? (
+          <SelectedCounter
+            totalCount={controller.schema?.stats?.count_all ?? 0}
+            selectedCount={controller.selected.length}
+            position='top-[0.3rem] left-2'
+          />
+        ) : null}
 
-      <RSTable
-        items={controller.schema?.items}
-        maxHeight={tableHeight}
-        enableSelection={controller.isContentEditable}
-        selected={rowSelection}
-        setSelected={handleRowSelection}
-        onEdit={onOpenEdit}
-        onCreateNew={() => controller.createCst(undefined, false)}
-      />
-    </div>
+        <div
+          className={clsx('border-b', {
+            'pt-[2.3rem]': controller.isContentEditable,
+            'relative top-[-1px]': !controller.isContentEditable
+          })}
+        />
+
+        <RSTable
+          items={controller.schema?.items}
+          maxHeight={tableHeight}
+          enableSelection={controller.isContentEditable}
+          selected={rowSelection}
+          setSelected={handleRowSelection}
+          onEdit={onOpenEdit}
+          onCreateNew={() => controller.createCst(undefined, false)}
+        />
+      </AnimateFade>
+    </>
   );
 }
 

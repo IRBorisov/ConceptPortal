@@ -221,19 +221,13 @@ function RSTabs() {
           </TabList>
 
           <AnimateFade className='overflow-y-auto' style={{ maxHeight: panelHeight }}>
-            <TabPanel forceRender style={{ display: activeTab === RSTabID.CARD ? '' : 'none' }}>
-              {cardPanel}
-            </TabPanel>
+            <TabPanel>{cardPanel}</TabPanel>
 
-            <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_LIST ? '' : 'none' }}>
-              {listPanel}
-            </TabPanel>
+            <TabPanel>{listPanel}</TabPanel>
 
-            <TabPanel forceRender style={{ display: activeTab === RSTabID.CST_EDIT ? '' : 'none' }}>
-              {editorPanel}
-            </TabPanel>
+            <TabPanel>{editorPanel}</TabPanel>
 
-            <TabPanel style={{ display: activeTab === RSTabID.TERM_GRAPH ? '' : 'none' }}>
+            <TabPanel>
               <EditorTermGraph onOpenEdit={onOpenCst} />
             </TabPanel>
           </AnimateFade>

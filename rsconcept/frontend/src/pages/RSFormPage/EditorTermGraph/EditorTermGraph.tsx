@@ -11,6 +11,7 @@ import SelectedCounter from '@/components/info/SelectedCounter';
 import SelectGraphToolbar from '@/components/select/SelectGraphToolbar';
 import { GraphCanvasRef, GraphEdge, GraphLayout, GraphNode } from '@/components/ui/GraphUI';
 import Overlay from '@/components/ui/Overlay';
+import AnimateFade from '@/components/wrap/AnimateFade';
 import { useConceptOptions } from '@/context/OptionsContext';
 import DlgGraphParams from '@/dialogs/DlgGraphParams';
 import useLocalStorage from '@/hooks/useLocalStorage';
@@ -146,15 +147,18 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     controller.deleteCst();
   }
 
-  function handleChangeLayout(newLayout: GraphLayout) {
-    if (newLayout === layout) {
-      return;
-    }
-    setLayout(newLayout);
-    setTimeout(() => {
-      setToggleResetView(prev => !prev);
-    }, PARAMETER.graphRefreshDelay);
-  }
+  const handleChangeLayout = useCallback(
+    (newLayout: GraphLayout) => {
+      if (newLayout === layout) {
+        return;
+      }
+      setLayout(newLayout);
+      setTimeout(() => {
+        setToggleResetView(prev => !prev);
+      }, PARAMETER.graphRefreshDelay);
+    },
+    [layout, setLayout]
+  );
 
   const handleChangeParams = useCallback(
     (params: GraphFilterParams) => {
@@ -253,25 +257,36 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     ]
   );
 
-  return (
-    <div tabIndex={-1} onKeyDown={handleKeyDown}>
-      <AnimatePresence>
-        {showParamsDialog ? (
-          <DlgGraphParams
-            hideWindow={() => setShowParamsDialog(false)}
-            initial={filterParams}
-            onConfirm={handleChangeParams}
-          />
-        ) : null}
-      </AnimatePresence>
-
-      <SelectedCounter
-        hideZero
-        totalCount={controller.schema?.stats?.count_all ?? 0}
-        selectedCount={controller.selected.length}
-        position='top-[4.3rem] sm:top-[0.3rem] left-0'
+  const selectors = useMemo(
+    () => (
+      <GraphSelectors
+        coloring={coloring}
+        layout={layout}
+        sizing={sizing}
+        setLayout={handleChangeLayout}
+        setColoring={setColoring}
+        setSizing={setSizing}
       />
+    ),
+    [coloring, layout, sizing, handleChangeLayout, setColoring, setSizing]
+  );
+  const viewHidden = useMemo(
+    () => (
+      <ViewHidden
+        items={hidden}
+        selected={controller.selected}
+        schema={controller.schema}
+        coloringScheme={coloring}
+        toggleSelection={controller.toggleSelect}
+        setFocus={handleSetFocus}
+        onEdit={onOpenEdit}
+      />
+    ),
+    [hidden, controller.selected, controller.schema, coloring, controller.toggleSelect, handleSetFocus, onOpenEdit]
+  );
 
+  return (
+    <>
       <Overlay
         position='top-0 pt-1 right-1/2 translate-x-1/2'
         className='flex flex-col items-center rounded-b-2xl cc-blur'
@@ -323,41 +338,44 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
           />
         ) : null}
       </Overlay>
+      <AnimateFade tabIndex={-1} onKeyDown={handleKeyDown}>
+        <AnimatePresence>
+          {showParamsDialog ? (
+            <DlgGraphParams
+              hideWindow={() => setShowParamsDialog(false)}
+              initial={filterParams}
+              onConfirm={handleChangeParams}
+            />
+          ) : null}
+        </AnimatePresence>
 
-      {hoverCst && hoverCstDebounced && hoverCst === hoverCstDebounced ? (
-        <Overlay
-          layer='z-tooltip'
-          position={clsx('top-[1.6rem]', { 'left-[2.6rem]': hoverLeft, 'right-[2.6rem]': !hoverLeft })}
-          className={clsx('w-[25rem]', 'px-3', 'overflow-y-auto', 'border shadow-md', 'clr-app')}
-        >
-          <InfoConstituenta className='pt-1 pb-2' data={hoverCstDebounced} />
+        <SelectedCounter
+          hideZero
+          totalCount={controller.schema?.stats?.count_all ?? 0}
+          selectedCount={controller.selected.length}
+          position='top-[4.3rem] sm:top-[0.3rem] left-0'
+        />
+
+        {hoverCst && hoverCstDebounced && hoverCst === hoverCstDebounced ? (
+          <Overlay
+            layer='z-tooltip'
+            position={clsx('top-[1.6rem]', { 'left-[2.6rem]': hoverLeft, 'right-[2.6rem]': !hoverLeft })}
+            className={clsx('w-[25rem]', 'px-3', 'overflow-y-auto', 'border shadow-md', 'clr-app')}
+          >
+            <InfoConstituenta className='pt-1 pb-2' data={hoverCstDebounced} />
+          </Overlay>
+        ) : null}
+
+        <Overlay position='top-[6.25rem] sm:top-9 left-0' className='flex gap-1'>
+          <div className='flex flex-col ml-2 w-[13.5rem]'>
+            {selectors}
+            {viewHidden}
+          </div>
         </Overlay>
-      ) : null}
 
-      <Overlay position='top-[6.25rem] sm:top-9 left-0' className='flex gap-1'>
-        <div className='flex flex-col ml-2 w-[13.5rem]'>
-          <GraphSelectors
-            coloring={coloring}
-            layout={layout}
-            sizing={sizing}
-            setLayout={handleChangeLayout}
-            setColoring={setColoring}
-            setSizing={setSizing}
-          />
-          <ViewHidden
-            items={hidden}
-            selected={controller.selected}
-            schema={controller.schema}
-            coloringScheme={coloring}
-            toggleSelection={controller.toggleSelect}
-            setFocus={handleSetFocus}
-            onEdit={onOpenEdit}
-          />
-        </div>
-      </Overlay>
-
-      {graph}
-    </div>
+        {graph}
+      </AnimateFade>
+    </>
   );
 }
 
