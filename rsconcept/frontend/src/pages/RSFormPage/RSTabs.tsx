@@ -166,26 +166,47 @@ function RSTabs() {
 
   const cardPanel = useMemo(
     () => (
-      <EditorRSForm
-        isModified={isModified} // prettier: split lines
-        setIsModified={setIsModified}
-        onDestroy={onDestroySchema}
-      />
+      <TabPanel>
+        <EditorRSForm
+          isModified={isModified} // prettier: split lines
+          setIsModified={setIsModified}
+          onDestroy={onDestroySchema}
+        />
+      </TabPanel>
     ),
     [isModified, onDestroySchema]
   );
 
-  const listPanel = useMemo(() => <EditorRSList onOpenEdit={onOpenCst} />, [onOpenCst]);
+  const listPanel = useMemo(
+    () => (
+      <TabPanel>
+        <EditorRSList onOpenEdit={onOpenCst} />
+      </TabPanel>
+    ),
+    [onOpenCst]
+  );
+
   const editorPanel = useMemo(
     () => (
-      <EditorConstituenta
-        isModified={isModified}
-        setIsModified={setIsModified}
-        activeCst={activeCst}
-        onOpenEdit={onOpenCst}
-      />
+      <TabPanel>
+        <EditorConstituenta
+          isModified={isModified}
+          setIsModified={setIsModified}
+          activeCst={activeCst}
+          onOpenEdit={onOpenCst}
+        />
+      </TabPanel>
     ),
     [isModified, setIsModified, activeCst, onOpenCst]
+  );
+
+  const graphPanel = useMemo(
+    () => (
+      <TabPanel>
+        <EditorTermGraph onOpenEdit={onOpenCst} />
+      </TabPanel>
+    ),
+    [onOpenCst]
   );
 
   return (
@@ -221,15 +242,10 @@ function RSTabs() {
           </TabList>
 
           <AnimateFade className='overflow-y-auto' style={{ maxHeight: panelHeight }}>
-            <TabPanel>{cardPanel}</TabPanel>
-
-            <TabPanel>{listPanel}</TabPanel>
-
-            <TabPanel>{editorPanel}</TabPanel>
-
-            <TabPanel>
-              <EditorTermGraph onOpenEdit={onOpenCst} />
-            </TabPanel>
+            {cardPanel}
+            {listPanel}
+            {editorPanel}
+            {graphPanel}
           </AnimateFade>
         </Tabs>
       ) : null}

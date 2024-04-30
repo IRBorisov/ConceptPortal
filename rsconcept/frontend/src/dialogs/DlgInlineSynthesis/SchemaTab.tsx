@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 
 import SchemaPicker from '@/components/select/SchemaPicker';
 import TextInput from '@/components/ui/TextInput';
+import AnimateFade from '@/components/wrap/AnimateFade';
 import { useLibrary } from '@/context/LibraryContext';
 import { LibraryItemID } from '@/models/library';
 
@@ -17,7 +18,7 @@ function SchemaTab({ selected, setSelected }: SchemaTabProps) {
   const selectedInfo = useMemo(() => library.items.find(item => item.id === selected), [selected, library.items]);
 
   return (
-    <div className='flex flex-col'>
+    <AnimateFade className='flex flex-col'>
       <div className='flex items-center gap-6'>
         <span className='select-none'>Выбрана</span>
         <TextInput
@@ -36,7 +37,7 @@ function SchemaTab({ selected, setSelected }: SchemaTabProps) {
         value={selected}
         onSelectValue={setSelected}
       />
-    </div>
+    </AnimateFade>
   );
 }
 

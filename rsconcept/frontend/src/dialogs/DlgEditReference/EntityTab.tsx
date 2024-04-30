@@ -4,9 +4,9 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 
 import ConstituentaPicker from '@/components/select/ConstituentaPicker';
 import SelectGrammeme from '@/components/select/SelectGrammeme';
-import FlexColumn from '@/components/ui/FlexColumn';
 import Label from '@/components/ui/Label';
 import TextInput from '@/components/ui/TextInput';
+import AnimateFade from '@/components/wrap/AnimateFade';
 import { ReferenceType } from '@/models/language';
 import { parseEntityReference, parseGrammemes } from '@/models/languageAPI';
 import { CstMatchMode } from '@/models/miscellaneous';
@@ -59,7 +59,7 @@ function EntityTab({ initial, schema, setIsValid, setReference }: EntityTabProps
   }
 
   return (
-    <FlexColumn>
+    <AnimateFade className='cc-column'>
       <ConstituentaPicker
         id='dlg_reference_entity_picker'
         initialFilter={initial.text}
@@ -108,7 +108,7 @@ function EntityTab({ initial, schema, setIsValid, setReference }: EntityTabProps
           setValue={setSelectedGrams}
         />
       </div>
-    </FlexColumn>
+    </AnimateFade>
   );
 }
 

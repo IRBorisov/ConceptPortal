@@ -58,23 +58,39 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
     setSubstitutions([]);
   }, [source.schema]);
 
-  const schemaPanel = useMemo(() => <SchemaTab selected={donorID} setSelected={setDonorID} />, [donorID]);
+  const schemaPanel = useMemo(
+    () => (
+      <TabPanel>
+        <SchemaTab selected={donorID} setSelected={setDonorID} />
+      </TabPanel>
+    ),
+    [donorID]
+  );
   const itemsPanel = useMemo(
     () => (
-      <ConstituentsTab schema={source.schema} loading={source.loading} selected={selected} setSelected={setSelected} />
+      <TabPanel>
+        <ConstituentsTab
+          schema={source.schema}
+          loading={source.loading}
+          selected={selected}
+          setSelected={setSelected}
+        />
+      </TabPanel>
     ),
     [source.schema, source.loading, selected]
   );
   const substitutesPanel = useMemo(
     () => (
-      <SubstitutionsTab
-        receiver={receiver}
-        source={source.schema}
-        selected={selected}
-        loading={source.loading}
-        substitutions={substitutions}
-        setSubstitutions={setSubstitutions}
-      />
+      <TabPanel>
+        <SubstitutionsTab
+          receiver={receiver}
+          source={source.schema}
+          selected={selected}
+          loading={source.loading}
+          substitutions={substitutions}
+          setSubstitutions={setSubstitutions}
+        />
+      </TabPanel>
     ),
     [source.schema, source.loading, receiver, selected, substitutions]
   );
@@ -89,7 +105,6 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
       onSubmit={handleSubmit}
     >
       <Tabs
-        forceRenderTabPanel
         selectedTabClassName='clr-selected'
         className='flex flex-col'
         selectedIndex={activeTab}
@@ -101,9 +116,9 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
           <TabLabel label='Отождествления' title='Таблица отождествлений' className='w-[8rem]' />
         </TabList>
 
-        <TabPanel style={{ display: activeTab === TabID.SCHEMA ? '' : 'none' }}>{schemaPanel}</TabPanel>
-        <TabPanel style={{ display: activeTab === TabID.SELECTIONS ? '' : 'none' }}>{itemsPanel}</TabPanel>
-        <TabPanel style={{ display: activeTab === TabID.SUBSTITUTIONS ? '' : 'none' }}>{substitutesPanel}</TabPanel>
+        {schemaPanel}
+        {itemsPanel}
+        {substitutesPanel}
       </Tabs>
     </Modal>
   );

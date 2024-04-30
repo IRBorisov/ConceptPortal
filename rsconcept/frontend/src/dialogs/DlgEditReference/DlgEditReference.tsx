@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import BadgeHelp from '@/components/man/BadgeHelp';
@@ -44,6 +44,24 @@ function DlgEditReference({ hideWindow, schema, initial, onSave }: DlgEditRefere
 
   const handleSubmit = () => onSave(reference);
 
+  const entityPanel = useMemo(
+    () => (
+      <TabPanel>
+        <EntityTab initial={initial} schema={schema} setReference={setReference} setIsValid={setIsValid} />
+      </TabPanel>
+    ),
+    [initial, schema]
+  );
+
+  const syntacticPanel = useMemo(
+    () => (
+      <TabPanel>
+        <SyntacticTab initial={initial} setReference={setReference} setIsValid={setIsValid} />
+      </TabPanel>
+    ),
+    [initial]
+  );
+
   return (
     <Modal
       header='Редактирование ссылки'
@@ -76,13 +94,8 @@ function DlgEditReference({ hideWindow, schema, initial, onSave }: DlgEditRefere
           />
         </TabList>
 
-        <TabPanel>
-          <EntityTab initial={initial} schema={schema} setReference={setReference} setIsValid={setIsValid} />
-        </TabPanel>
-
-        <TabPanel>
-          <SyntacticTab initial={initial} setReference={setReference} setIsValid={setIsValid} />
-        </TabPanel>
+        {entityPanel}
+        {syntacticPanel}
       </Tabs>
     </Modal>
   );

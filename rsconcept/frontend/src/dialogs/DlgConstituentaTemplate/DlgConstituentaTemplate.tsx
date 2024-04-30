@@ -8,6 +8,7 @@ import BadgeHelp from '@/components/man/BadgeHelp';
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import Overlay from '@/components/ui/Overlay';
 import TabLabel from '@/components/ui/TabLabel';
+import AnimateFade from '@/components/wrap/AnimateFade';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { HelpTopic } from '@/models/miscellaneous';
 import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
@@ -101,23 +102,35 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
   }, [substitutes.arguments, template.prototype, updateConstituenta, updateSubstitutes]);
 
   const templatePanel = useMemo(
-    () => <TemplateTab state={template} partialUpdate={updateTemplate} />,
+    () => (
+      <TabPanel>
+        <TemplateTab state={template} partialUpdate={updateTemplate} />
+      </TabPanel>
+    ),
     [template, updateTemplate]
   );
 
   const argumentsPanel = useMemo(
-    () => <ArgumentsTab schema={schema} state={substitutes} partialUpdate={updateSubstitutes} />,
+    () => (
+      <TabPanel>
+        <ArgumentsTab schema={schema} state={substitutes} partialUpdate={updateSubstitutes} />
+      </TabPanel>
+    ),
     [schema, substitutes, updateSubstitutes]
   );
 
   const editorPanel = useMemo(
     () => (
-      <FormCreateCst
-        state={constituenta}
-        partialUpdate={updateConstituenta}
-        schema={schema}
-        setValidated={setValidated}
-      />
+      <TabPanel>
+        <AnimateFade className='cc-column'>
+          <FormCreateCst
+            state={constituenta}
+            partialUpdate={updateConstituenta}
+            schema={schema}
+            setValidated={setValidated}
+          />
+        </AnimateFade>
+      </TabPanel>
     ),
     [constituenta, updateConstituenta, schema]
   );
@@ -135,7 +148,6 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
         <BadgeHelp topic={HelpTopic.RSTEMPLATES} className='max-w-[40rem]' offset={12} />
       </Overlay>
       <Tabs
-        forceRenderTabPanel
         selectedTabClassName='clr-selected'
         className='flex flex-col'
         selectedIndex={activeTab}
@@ -147,13 +159,9 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
           <TabLabel label='Конституента' title='Редактирование атрибутов конституенты' className='w-[8rem]' />
         </TabList>
 
-        <TabPanel style={{ display: activeTab === TabID.TEMPLATE ? '' : 'none' }}>{templatePanel}</TabPanel>
-
-        <TabPanel style={{ display: activeTab === TabID.ARGUMENTS ? '' : 'none' }}>{argumentsPanel}</TabPanel>
-
-        <TabPanel className='cc-column' style={{ display: activeTab === TabID.CONSTITUENTA ? '' : 'none' }}>
-          {editorPanel}
-        </TabPanel>
+        {templatePanel}
+        {argumentsPanel}
+        {editorPanel}
       </Tabs>
     </Modal>
   );

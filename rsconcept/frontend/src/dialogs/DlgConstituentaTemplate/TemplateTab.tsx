@@ -6,6 +6,7 @@ import RSInput from '@/components/RSInput';
 import ConstituentaPicker from '@/components/select/ConstituentaPicker';
 import SelectSingle from '@/components/ui/SelectSingle';
 import TextArea from '@/components/ui/TextArea';
+import AnimateFade from '@/components/wrap/AnimateFade';
 import { useLibrary } from '@/context/LibraryContext';
 import { CATEGORY_CST_TYPE, IConstituenta, IRSForm } from '@/models/rsform';
 import { applyFilterCategory } from '@/models/rsformAPI';
@@ -84,8 +85,8 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
   }, [state.filterCategory, category]);
 
   return (
-    <>
-      <div className='flex divide-x border-x border-t rounded-t-md'>
+    <AnimateFade>
+      <div className='flex border-t divide-x border-x rounded-t-md'>
         <SelectSingle
           noBorder
           placeholder='Выберите категорию'
@@ -139,7 +140,7 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
         height='5.1rem'
         value={state.prototype?.definition_formal}
       />
-    </>
+    </AnimateFade>
   );
 }
 
