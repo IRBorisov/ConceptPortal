@@ -1,8 +1,6 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import { BiChevronLeft, BiChevronRight, BiFirstPage, BiLastPage } from 'react-icons/bi';
-import { LuFlag, LuFlagOff, LuPower, LuPowerOff } from 'react-icons/lu';
 
 import ConstituentaBadge from '@/components/info/ConstituentaBadge';
 import ConstituentaSelector from '@/components/select/ConstituentaSelector';
@@ -13,7 +11,18 @@ import { useConceptOptions } from '@/context/OptionsContext';
 import { IConstituenta, IRSForm, ISubstitution } from '@/models/rsform';
 import { describeConstituenta } from '@/utils/labels';
 
-import { IconRemove, IconReplace } from '../Icons';
+import {
+  IconKeepAliasOff,
+  IconKeepAliasOn,
+  IconKeepTermOff,
+  IconKeepTermOn,
+  IconPageFirst,
+  IconPageLast,
+  IconPageLeft,
+  IconPageRight,
+  IconRemove,
+  IconReplace
+} from '../Icons';
 
 interface SubstitutionsPickerProps {
   prefixID: string;
@@ -31,15 +40,15 @@ interface SubstitutionsPickerProps {
 function SubstitutionIcon({ item }: { item: ISubstitution }) {
   if (item.deleteRight) {
     if (item.takeLeftTerm) {
-      return <BiChevronRight size='1.2rem' />;
+      return <IconPageRight size='1.2rem' />;
     } else {
-      return <BiLastPage size='1.2rem' />;
+      return <IconPageLast size='1.2rem' />;
     }
   } else {
     if (item.takeLeftTerm) {
-      return <BiFirstPage size='1.2rem' />;
+      return <IconPageFirst size='1.2rem' />;
     } else {
-      return <BiChevronLeft size='1.2rem' />;
+      return <IconPageLeft size='1.2rem' />;
     }
   }
 }
@@ -165,9 +174,9 @@ function SubstitutionsPicker({
                 onClick={toggleDelete}
                 icon={
                   deleteRight ? (
-                    <LuPower size='1rem' className='clr-text-green' />
+                    <IconKeepAliasOn size='1rem' className='clr-text-green' />
                   ) : (
-                    <LuPowerOff size='1rem' className='clr-text-red' />
+                    <IconKeepAliasOff size='1rem' className='clr-text-red' />
                   )
                 }
               />
@@ -177,9 +186,9 @@ function SubstitutionsPicker({
                 onClick={toggleTerm}
                 icon={
                   takeLeftTerm ? (
-                    <LuFlag size='1rem' className='clr-text-green' />
+                    <IconKeepTermOn size='1rem' className='clr-text-green' />
                   ) : (
-                    <LuFlagOff size='1rem' className='clr-text-red' />
+                    <IconKeepTermOff size='1rem' className='clr-text-red' />
                   )
                 }
               />
@@ -211,9 +220,9 @@ function SubstitutionsPicker({
                 onClick={toggleDelete}
                 icon={
                   !deleteRight ? (
-                    <LuPower size='1rem' className='clr-text-green' />
+                    <IconKeepAliasOn size='1rem' className='clr-text-green' />
                   ) : (
-                    <LuPowerOff size='1rem' className='clr-text-red' />
+                    <IconKeepAliasOff size='1rem' className='clr-text-red' />
                   )
                 }
               />
@@ -223,9 +232,9 @@ function SubstitutionsPicker({
                 onClick={toggleTerm}
                 icon={
                   !takeLeftTerm ? (
-                    <LuFlag size='1rem' className='clr-text-green' />
+                    <IconKeepTermOn size='1rem' className='clr-text-green' />
                   ) : (
-                    <LuFlagOff size='1rem' className='clr-text-red' />
+                    <IconKeepTermOff size='1rem' className='clr-text-red' />
                   )
                 }
               />

@@ -1,4 +1,4 @@
-import { BiChevronLeft, BiChevronRight, BiFirstPage, BiLastPage } from 'react-icons/bi';
+import { IconPageFirst, IconPageLast, IconPageLeft, IconPageRight } from '@/components/Icons';
 
 interface PageControlsProps {
   pageNumber: number;
@@ -15,7 +15,7 @@ function PageControls({ pageNumber, pageCount, setPageNumber }: PageControlsProp
         onClick={() => setPageNumber(1)}
         disabled={pageNumber < 2}
       >
-        <BiFirstPage size='1.5rem' />
+        <IconPageFirst size='1.5rem' />
       </button>
       <button
         type='button'
@@ -23,7 +23,7 @@ function PageControls({ pageNumber, pageCount, setPageNumber }: PageControlsProp
         onClick={() => setPageNumber(prev => prev - 1)}
         disabled={pageNumber < 2}
       >
-        <BiChevronLeft size='1.5rem' />
+        <IconPageLeft size='1.5rem' />
       </button>
       <p className='px-3 text-black text-nowrap'>
         Страница {pageNumber} из {pageCount}
@@ -34,7 +34,7 @@ function PageControls({ pageNumber, pageCount, setPageNumber }: PageControlsProp
         onClick={() => setPageNumber(prev => prev + 1)}
         disabled={pageNumber >= pageCount}
       >
-        <BiChevronRight size='1.5rem' />
+        <IconPageRight size='1.5rem' />
       </button>
       <button
         type='button'
@@ -42,7 +42,7 @@ function PageControls({ pageNumber, pageCount, setPageNumber }: PageControlsProp
         onClick={() => setPageNumber(pageCount)}
         disabled={pageNumber >= pageCount}
       >
-        <BiLastPage size='1.5rem' />
+        <IconPageLast size='1.5rem' />
       </button>
     </>
   );

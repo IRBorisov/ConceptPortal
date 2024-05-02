@@ -1,22 +1,26 @@
 'use client';
 
-import { BiDiamond, BiMenu } from 'react-icons/bi';
-import { FiEdit } from 'react-icons/fi';
-import { LuAlertTriangle, LuArchive, LuBookCopy, LuNetwork, LuWand2 } from 'react-icons/lu';
-import { VscLibrary } from 'react-icons/vsc';
-
 import { urls } from '@/app/urls';
 import {
   IconAdmin,
+  IconAlert,
+  IconArchive,
   IconClone,
   IconDestroy,
   IconDownload,
+  IconEdit2,
+  IconGenerateNames,
+  IconGenerateStructure,
+  IconInlineSynthesis,
+  IconLibrary,
+  IconMenu,
   IconNewItem,
   IconOwner,
   IconReader,
   IconReplace,
   IconShare,
   IconSortList,
+  IconTemplates,
   IconUpload
 } from '@/components/Icons';
 import Button from '@/components/ui/Button';
@@ -131,7 +135,7 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
           tabIndex={-1}
           title='Меню'
           hideTitle={schemaMenu.isOpen}
-          icon={<BiMenu size='1.25rem' className='clr-text-controls' />}
+          icon={<IconMenu size='1.25rem' className='clr-text-controls' />}
           className='h-full pl-2'
           onClick={schemaMenu.toggle}
         />
@@ -188,7 +192,7 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
           ) : null}
           <DropdownButton
             text='Библиотека'
-            icon={<VscLibrary size='1rem' className='icon-primary' />}
+            icon={<IconLibrary size='1rem' className='icon-primary' />}
             onClick={() => router.push(urls.library)}
           />
         </Dropdown>
@@ -204,21 +208,21 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
             title={'Редактирование'}
             hideTitle={editMenu.isOpen}
             className='h-full px-2'
-            icon={<FiEdit size='1.25rem' className={controller.isContentEditable ? 'icon-green' : 'icon-red'} />}
+            icon={<IconEdit2 size='1.25rem' className={controller.isContentEditable ? 'icon-green' : 'icon-red'} />}
             onClick={editMenu.toggle}
           />
           <Dropdown isOpen={editMenu.isOpen}>
             <DropdownButton
               text='Шаблоны'
               title='Создать конституенту из шаблона'
-              icon={<BiDiamond size='1rem' className='icon-green' />}
+              icon={<IconTemplates size='1rem' className='icon-green' />}
               disabled={!controller.isContentEditable || controller.isProcessing}
               onClick={handleTemplates}
             />
             <DropdownButton
               text='Встраивание'
               title='Импортировать совокупность конституент из другой схемы'
-              icon={<LuBookCopy size='1rem' className='icon-green' />}
+              icon={<IconInlineSynthesis size='1rem' className='icon-green' />}
               disabled={!controller.isContentEditable || controller.isProcessing}
               onClick={handleInlineSynthesis}
             />
@@ -233,14 +237,14 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
             <DropdownButton
               text='Порядковые имена'
               title='Присвоить порядковые имена и обновить выражения'
-              icon={<LuWand2 size='1rem' className='icon-primary' />}
+              icon={<IconGenerateNames size='1rem' className='icon-primary' />}
               disabled={!controller.isContentEditable || controller.isProcessing}
               onClick={handleReindex}
             />
             <DropdownButton
               text='Порождение структуры'
               title='Раскрыть структуру типизации выделенной конституенты'
-              icon={<LuNetwork size='1rem' className='icon-primary' />}
+              icon={<IconGenerateStructure size='1rem' className='icon-primary' />}
               disabled={!controller.isContentEditable || !controller.canProduceStructure}
               onClick={handleProduceStructure}
             />
@@ -263,7 +267,7 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
           titleHtml='<b>Архив</b>: Редактирование запрещено<br />Перейти к актуальной версии'
           hideTitle={accessMenu.isOpen}
           className='h-full px-2'
-          icon={<LuArchive size='1.25rem' className='icon-primary' />}
+          icon={<IconArchive size='1.25rem' className='icon-primary' />}
           onClick={event => controller.viewVersion(undefined, event.ctrlKey)}
         />
       ) : null}
@@ -322,7 +326,7 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
           titleHtml='<b>Анонимный режим</b><br />Войти в Портал'
           hideTitle={accessMenu.isOpen}
           className='h-full pr-2'
-          icon={<LuAlertTriangle size='1.25rem' className='icon-red' />}
+          icon={<IconAlert size='1.25rem' className='icon-red' />}
           onClick={handleLogin}
         />
       ) : null}

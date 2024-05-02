@@ -1,7 +1,6 @@
 'use client';
 
-import { BiBug, BiCheckCircle, BiHelpCircle, BiPauseCircle } from 'react-icons/bi';
-
+import { IconStatusError, IconStatusIncalculable, IconStatusOK, IconStatusUnknown } from '@/components/Icons';
 import { ExpressionStatus } from '@/models/rsform';
 
 interface StatusIconProps {
@@ -10,13 +9,13 @@ interface StatusIconProps {
 
 function StatusIcon({ status }: StatusIconProps) {
   if (status === ExpressionStatus.VERIFIED || status === ExpressionStatus.PROPERTY) {
-    return <BiCheckCircle size='1rem' />;
+    return <IconStatusOK size='1rem' />;
   } else if (status === ExpressionStatus.UNKNOWN) {
-    return <BiHelpCircle size='1rem' />;
+    return <IconStatusUnknown size='1rem' />;
   } else if (status === ExpressionStatus.INCALCULABLE) {
-    return <BiPauseCircle size='1rem' />;
+    return <IconStatusIncalculable size='1rem' />;
   } else {
-    return <BiBug size='1rem' />;
+    return <IconStatusError size='1rem' />;
   }
 }
 

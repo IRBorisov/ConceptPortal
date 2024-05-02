@@ -3,8 +3,8 @@
 import { Table } from '@tanstack/react-table';
 import clsx from 'clsx';
 import { useCallback } from 'react';
-import { BiChevronLeft, BiChevronRight, BiFirstPage, BiLastPage } from 'react-icons/bi';
 
+import { IconPageFirst, IconPageLast, IconPageLeft, IconPageRight } from '@/components/Icons';
 import { prefixes } from '@/utils/constants';
 
 interface PaginationToolsProps<TData> {
@@ -50,7 +50,7 @@ function PaginationTools<TData>({
           onClick={() => table.setPageIndex(0)}
           disabled={!table.getCanPreviousPage()}
         >
-          <BiFirstPage size='1.5rem' />
+          <IconPageFirst size='1.5rem' />
         </button>
         <button
           type='button'
@@ -58,7 +58,7 @@ function PaginationTools<TData>({
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          <BiChevronLeft size='1.5rem' />
+          <IconPageLeft size='1.5rem' />
         </button>
         <input
           id={id ? `${id}__page` : undefined}
@@ -78,7 +78,7 @@ function PaginationTools<TData>({
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
-          <BiChevronRight size='1.5rem' />
+          <IconPageRight size='1.5rem' />
         </button>
         <button
           type='button'
@@ -86,7 +86,7 @@ function PaginationTools<TData>({
           onClick={() => table.setPageIndex(table.getPageCount() - 1)}
           disabled={!table.getCanNextPage()}
         >
-          <BiLastPage size='1.5rem' />
+          <IconPageLast size='1.5rem' />
         </button>
       </div>
       <select

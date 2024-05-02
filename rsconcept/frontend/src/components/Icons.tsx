@@ -1,6 +1,7 @@
 // Search new icons at https://reactsvgicons.com/
 
 // ==== General actions =======
+export { BiMenu as IconMenu } from 'react-icons/bi';
 export { LuLogOut as IconLogout } from 'react-icons/lu';
 export { FiSave as IconSave } from 'react-icons/fi';
 export { BiCheck as IconAccept } from 'react-icons/bi';
@@ -8,6 +9,7 @@ export { BiX as IconRemove } from 'react-icons/bi';
 export { BiTrash as IconDestroy } from 'react-icons/bi';
 export { BiReset as IconReset } from 'react-icons/bi';
 export { LiaEdit as IconEdit } from 'react-icons/lia';
+export { FiEdit as IconEdit2 } from 'react-icons/fi';
 export { BiSearchAlt2 as IconSearch } from 'react-icons/bi';
 export { BiDownload as IconDownload } from 'react-icons/bi';
 export { BiUpload as IconUpload } from 'react-icons/bi';
@@ -15,6 +17,7 @@ export { BiCog as IconSettings } from 'react-icons/bi';
 export { BiShareAlt as IconShare } from 'react-icons/bi';
 export { BiFilterAlt as IconFilter } from 'react-icons/bi';
 export { BiDownArrowCircle as IconOpenList } from 'react-icons/bi';
+export { LuAlertTriangle as IconAlert } from 'react-icons/lu';
 
 // ===== UI elements =======
 export { BiX as IconClose } from 'react-icons/bi';
@@ -30,6 +33,10 @@ export { RiPushpinFill as IconPin } from 'react-icons/ri';
 export { RiUnpinLine as IconUnpin } from 'react-icons/ri';
 export { BiCaretDown as IconSortDesc } from 'react-icons/bi';
 export { BiCaretUp as IconSortAsc } from 'react-icons/bi';
+export { BiChevronLeft as IconPageLeft } from 'react-icons/bi';
+export { BiChevronRight as IconPageRight } from 'react-icons/bi';
+export { BiFirstPage as IconPageFirst } from 'react-icons/bi';
+export { BiLastPage as IconPageLast } from 'react-icons/bi';
 
 // ==== User status =======
 export { LuUserCircle2 as IconUser } from 'react-icons/lu';
@@ -40,7 +47,10 @@ export { TbMeteorOff as IconAdminOff } from 'react-icons/tb';
 export { LuGlasses as IconReader } from 'react-icons/lu';
 
 // ===== Domain entities =======
+export { VscLibrary as IconLibrary } from 'react-icons/vsc';
 export { IoLibrary as IconLibrary2 } from 'react-icons/io5';
+export { BiDiamond as IconTemplates } from 'react-icons/bi';
+export { LuArchive as IconArchive } from 'react-icons/lu';
 export { LuDatabase as IconDatabase } from 'react-icons/lu';
 export { LuImage as IconImage } from 'react-icons/lu';
 export { TbColumns as IconList } from 'react-icons/tb';
@@ -54,6 +64,14 @@ export { RiTreeLine as IconTree } from 'react-icons/ri';
 export { FaRegKeyboard as IconControls } from 'react-icons/fa6';
 export { BiCheckShield as IconImmutable } from 'react-icons/bi';
 export { RiOpenSourceLine as IconPublic } from 'react-icons/ri';
+export { BiBug as IconStatusError } from 'react-icons/bi';
+export { BiCheckCircle as IconStatusOK } from 'react-icons/bi';
+export { BiHelpCircle as IconStatusUnknown } from 'react-icons/bi';
+export { BiPauseCircle as IconStatusIncalculable } from 'react-icons/bi';
+export { LuPower as IconKeepAliasOn } from 'react-icons/lu';
+export { LuPowerOff as IconKeepAliasOff } from 'react-icons/lu';
+export { LuFlag as IconKeepTermOn } from 'react-icons/lu';
+export { LuFlagOff as IconKeepTermOff } from 'react-icons/lu';
 
 // ===== Domain actions =====
 export { BiUpvote as IconMoveUp } from 'react-icons/bi';
@@ -67,6 +85,9 @@ export { BiPlusCircle as IconNewItem } from 'react-icons/bi';
 export { FaSquarePlus as IconNewItem2 } from 'react-icons/fa6';
 export { BiDuplicate as IconClone } from 'react-icons/bi';
 export { LuReplace as IconReplace } from 'react-icons/lu';
+export { LuNetwork as IconGenerateStructure } from 'react-icons/lu';
+export { LuBookCopy as IconInlineSynthesis } from 'react-icons/lu';
+export { LuWand2 as IconGenerateNames } from 'react-icons/lu';
 
 // ======== Graph UI =======
 export { BiCollapse as IconGraphCollapse } from 'react-icons/bi';
