@@ -1,5 +1,4 @@
-import { BiSearchAlt2 } from 'react-icons/bi';
-
+import { IconSearch } from '../Icons';
 import { CProps } from '../props';
 import Overlay from './Overlay';
 import TextInput from './TextInput';
@@ -15,7 +14,7 @@ function SearchBar({ id, value, onChange, noBorder, ...restProps }: SearchBarPro
   return (
     <div {...restProps}>
       <Overlay position='top-[-0.125rem] left-3 translate-y-1/2' className='pointer-events-none clr-text-controls'>
-        <BiSearchAlt2 size='1.25rem' />
+        <IconSearch size='1.25rem' />
       </Overlay>
       <TextInput
         id={id}

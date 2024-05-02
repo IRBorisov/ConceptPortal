@@ -1,4 +1,4 @@
-import { IconFollow, IconImmutable, IconPublic } from '../Icons';
+import { IconImmutable, IconPublic } from '../Icons';
 
 function HelpLibrary() {
   // prettier-ignore
@@ -9,10 +9,6 @@ function HelpLibrary() {
     <p>Фильтрация с помощью инструментов в верхней части страницы</p>
     <p>Сортировка по клику на заголовок таблицы</p>
     <h2>Отображение статусов</h2>
-    <div className='flex items-center gap-2'>
-      <IconFollow size='1rem'/>
-      <p><b>отслеживаемая</b> обозначает отслеживание схемы</p>
-    </div>
     <div className='flex items-center gap-2'>
       <IconPublic size='1rem'/>
       <p><b>общедоступная</b> отображает схему всем пользователям</p>

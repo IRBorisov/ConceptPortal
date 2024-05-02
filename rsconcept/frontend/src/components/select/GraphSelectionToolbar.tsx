@@ -14,13 +14,13 @@ import {
 import { CProps } from '../props';
 import MiniButton from '../ui/MiniButton';
 
-interface SelectGraphToolbarProps extends CProps.Styling {
+interface GraphSelectionToolbarProps extends CProps.Styling {
   graph: Graph;
   core: number[];
   setSelected: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-function SelectGraphToolbar({ className, graph, core, setSelected, ...restProps }: SelectGraphToolbarProps) {
+function GraphSelectionToolbar({ className, graph, core, setSelected, ...restProps }: GraphSelectionToolbarProps) {
   return (
     <div className={clsx('cc-icons', className)} {...restProps}>
       <MiniButton
@@ -62,4 +62,4 @@ function SelectGraphToolbar({ className, graph, core, setSelected, ...restProps 
   );
 }
 
-export default SelectGraphToolbar;
+export default GraphSelectionToolbar;

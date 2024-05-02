@@ -16,7 +16,7 @@ import {
   IconReader,
   IconReplace,
   IconShare,
-  IconSortText,
+  IconSortList,
   IconUpload
 } from '@/components/Icons';
 import Button from '@/components/ui/Button';
@@ -226,7 +226,7 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
               className='border-t-2'
               text='Упорядочить список'
               title='Упорядочить список конституент исходя из логики типов и связей конституент'
-              icon={<IconSortText size='1rem' className='icon-primary' />}
+              icon={<IconSortList size='1rem' className='icon-primary' />}
               disabled={!controller.isContentEditable || controller.isProcessing}
               onClick={handleRestoreOrder}
             />

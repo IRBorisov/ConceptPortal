@@ -11,7 +11,7 @@ import { describeConstituenta } from '@/utils/labels';
 
 import ConstituentaBadge from '../info/ConstituentaBadge';
 import FlexColumn from '../ui/FlexColumn';
-import SelectGraphToolbar from './SelectGraphToolbar';
+import GraphSelectionToolbar from './GraphSelectionToolbar';
 
 interface ConstituentaMultiPickerProps {
   id?: string;
@@ -80,7 +80,7 @@ function ConstituentaMultiPicker({ id, schema, prefixID, rows, selected, setSele
           Выбраны {selected.length} из {schema?.items.length ?? 0}
         </span>
         {schema ? (
-          <SelectGraphToolbar
+          <GraphSelectionToolbar
             graph={schema.graph}
             core={schema.items.filter(cst => isBasicConcept(cst.cst_type)).map(cst => cst.id)}
             setSelected={setSelected}

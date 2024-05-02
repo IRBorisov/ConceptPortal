@@ -1,6 +1,4 @@
-import { BiDownArrowCircle } from 'react-icons/bi';
-
-import { IconClone, IconDestroy, IconMoveDown, IconMoveUp, IconNewItem } from '@/components/Icons';
+import { IconClone, IconDestroy, IconMoveDown, IconMoveUp, IconNewItem, IconOpenList } from '@/components/Icons';
 import BadgeHelp from '@/components/man/BadgeHelp';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
@@ -49,7 +47,7 @@ function RSListToolbar() {
         <MiniButton
           title='Добавить пустую конституенту'
           hideTitle={insertMenu.isOpen}
-          icon={<BiDownArrowCircle size='1.25rem' className='icon-green' />}
+          icon={<IconOpenList size='1.25rem' className='icon-green' />}
           disabled={controller.isProcessing}
           onClick={insertMenu.toggle}
         />

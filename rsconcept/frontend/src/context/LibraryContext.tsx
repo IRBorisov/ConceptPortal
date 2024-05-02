@@ -13,7 +13,7 @@ import {
   postNewRSForm
 } from '@/app/backendAPI';
 import { ErrorData } from '@/components/info/InfoError';
-import { ILibraryItem } from '@/models/library';
+import { ILibraryItem, LibraryItemID } from '@/models/library';
 import { matchLibraryItem } from '@/models/libraryAPI';
 import { ILibraryFilter } from '@/models/miscellaneous';
 import { IRSForm, IRSFormCloneData, IRSFormCreateData, IRSFormData } from '@/models/rsform';
@@ -31,13 +31,13 @@ interface ILibraryContext {
   setError: (error: ErrorData) => void;
 
   applyFilter: (params: ILibraryFilter) => ILibraryItem[];
-  retrieveTemplate: (templateID: number, callback: (schema: IRSForm) => void) => void;
+  retrieveTemplate: (templateID: LibraryItemID, callback: (schema: IRSForm) => void) => void;
   createItem: (data: IRSFormCreateData, callback?: DataCallback<ILibraryItem>) => void;
-  cloneItem: (target: number, data: IRSFormCloneData, callback: DataCallback<IRSFormData>) => void;
-  destroyItem: (target: number, callback?: () => void) => void;
+  cloneItem: (target: LibraryItemID, data: IRSFormCloneData, callback: DataCallback<IRSFormData>) => void;
+  destroyItem: (target: LibraryItemID, callback?: () => void) => void;
 
   localUpdateItem: (data: ILibraryItem) => void;
-  localUpdateTimestamp: (target: number) => void;
+  localUpdateTimestamp: (target: LibraryItemID) => void;
 }
 
 const LibraryContext = createContext<ILibraryContext | null>(null);
@@ -79,9 +79,6 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
       if (params.is_subscribed !== undefined) {
         result = result.filter(item => user?.subscriptions.includes(item.id));
       }
-      if (params.is_personal !== undefined) {
-        result = result.filter(item => user?.subscriptions.includes(item.id) || item.owner === user?.id);
-      }
       if (params.query) {
         result = result.filter(item => matchLibraryItem(item, params.query!));
       }
@@ -91,7 +88,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   );
 
   const retrieveTemplate = useCallback(
-    (templateID: number, callback: (schema: IRSForm) => void) => {
+    (templateID: LibraryItemID, callback: (schema: IRSForm) => void) => {
       const cached = cachedTemplates.find(schema => schema.id == templateID);
       if (cached) {
         callback(cached);
@@ -166,7 +163,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   );
 
   const localUpdateTimestamp = useCallback(
-    (target: number) => {
+    (target: LibraryItemID) => {
       const libraryItem = items.find(item => item.id === target);
       if (libraryItem) {
         libraryItem.time_update = Date();
@@ -196,7 +193,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   );
 
   const destroyItem = useCallback(
-    (target: number, callback?: () => void) => {
+    (target: LibraryItemID, callback?: () => void) => {
       setError(undefined);
       deleteLibraryItem(String(target), {
         showError: true,
@@ -218,7 +215,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   );
 
   const cloneItem = useCallback(
-    (target: number, data: IRSFormCloneData, callback: DataCallback<IRSFormData>) => {
+    (target: LibraryItemID, data: IRSFormCloneData, callback: DataCallback<IRSFormData>) => {
       if (!user) {
         return;
       }

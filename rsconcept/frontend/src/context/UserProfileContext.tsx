@@ -2,10 +2,10 @@
 
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
+import { DataCallback, getProfile, patchProfile } from '@/app/backendAPI';
 import { ErrorData } from '@/components/info/InfoError';
 import { IUserProfile } from '@/models/library';
 import { IUserUpdateData } from '@/models/library';
-import { DataCallback, getProfile, patchProfile } from '@/app/backendAPI';
 
 import { useUsers } from './UsersContext';
 

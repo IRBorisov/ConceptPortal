@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { IconFollow, IconImmutable, IconPublic } from '@/components/Icons';
+import { IconImmutable, IconPublic } from '@/components/Icons';
 import { ICurrentUser, ILibraryItem } from '@/models/library';
 import { prefixes } from '@/utils/constants';
 
@@ -9,14 +9,9 @@ interface ItemIconsProps {
   item: ILibraryItem;
 }
 
-function ItemIcons({ user, item }: ItemIconsProps) {
+function ItemIcons({ item }: ItemIconsProps) {
   return (
-    <div className={clsx('min-w-[3.3rem]', 'inline-flex gap-1 align-middle')} id={`${prefixes.library_list}${item.id}`}>
-      {user && user.subscriptions.includes(item.id) ? (
-        <span title='Отслеживаемая'>
-          <IconFollow size='1rem' />
-        </span>
-      ) : null}
+    <div className={clsx('min-w-[2.2rem]', 'inline-flex gap-1 align-middle')} id={`${prefixes.library_list}${item.id}`}>
       {item.is_common ? (
         <span title='Общедоступная'>
           <IconPublic size='1rem' />

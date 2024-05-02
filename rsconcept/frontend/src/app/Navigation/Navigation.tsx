@@ -1,9 +1,7 @@
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
-import { FaSquarePlus } from 'react-icons/fa6';
-import { IoLibrary } from 'react-icons/io5';
 
-import { IconManuals } from '@/components/Icons';
+import { IconLibrary2, IconManuals, IconNewItem2 } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useConceptOptions } from '@/context/OptionsContext';
@@ -51,13 +49,13 @@ function Navigation() {
           <NavigationButton
             text='Новая схема'
             title='Создать новую схему'
-            icon={<FaSquarePlus size='1.5rem' />}
+            icon={<IconNewItem2 size='1.5rem' />}
             onClick={navigateCreateNew}
           />
           <NavigationButton
             text='Библиотека'
             title='Список схем'
-            icon={<IoLibrary size='1.5rem' />}
+            icon={<IconLibrary2 size='1.5rem' />}
             onClick={navigateLibrary}
           />
           <NavigationButton text='Справка' title='Справочные материалы' icon={<IconManuals />} onClick={navigateHelp} />

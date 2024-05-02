@@ -3,10 +3,9 @@
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { AnimatePresence } from 'framer-motion';
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { FaRegKeyboard } from 'react-icons/fa6';
 import { toast } from 'react-toastify';
 
-import { IconList, IconListOff, IconText, IconTextOff, IconTree } from '@/components/Icons';
+import { IconControls, IconList, IconListOff, IconText, IconTextOff, IconTree } from '@/components/Icons';
 import BadgeHelp from '@/components/man/BadgeHelp';
 import RSInput from '@/components/RSInput';
 import { RSTextWrapper } from '@/components/RSInput/textEditing';
@@ -182,7 +181,7 @@ function EditorRSExpression({
         {!disabled || model.processing ? (
           <MiniButton
             title='Отображение специальной клавиатуры'
-            icon={<FaRegKeyboard size='1.25rem' className={showControls ? 'icon-primary' : ''} />}
+            icon={<IconControls size='1.25rem' className={showControls ? 'icon-primary' : ''} />}
             onClick={() => setShowControls(prev => !prev)}
           />
         ) : null}

@@ -49,7 +49,7 @@ function UserTabs() {
               onClick={() => setShowSubs(prev => !prev)}
             />
           </Overlay>
-          <h1 className='mb-4'>Учетные данные пользователя</h1>
+          <h1 className='mb-4 select-none'>Учетные данные пользователя</h1>
           <div className='flex py-2'>
             <EditorProfile />
             <EditorPassword />

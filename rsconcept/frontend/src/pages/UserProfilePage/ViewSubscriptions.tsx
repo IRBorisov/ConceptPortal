@@ -36,8 +36,8 @@ function ViewSubscriptions({ items }: ViewSubscriptionsProps) {
         id: 'title',
         header: 'Название',
         minSize: 200,
-        size: 800,
-        maxSize: 800,
+        size: 2000,
+        maxSize: 2000,
         enableSorting: true
       }),
       columnHelper.accessor('time_update', {
@@ -61,7 +61,7 @@ function ViewSubscriptions({ items }: ViewSubscriptionsProps) {
       animate={{ ...animateSideView.animate }}
       exit={{ ...animateSideView.exit }}
     >
-      <h1 className='mb-6'>Отслеживаемые схемы</h1>
+      <h1 className='mb-6 select-none'>Отслеживаемые схемы</h1>
       <DataTable
         dense
         noFooter

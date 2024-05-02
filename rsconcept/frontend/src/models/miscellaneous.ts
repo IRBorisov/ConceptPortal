@@ -74,7 +74,6 @@ export enum CstMatchMode {
  */
 export interface ILibraryFilter {
   query?: string;
-  is_personal?: boolean;
   is_owned?: boolean;
   is_common?: boolean;
   is_canonical?: boolean;
@@ -86,7 +85,6 @@ export interface ILibraryFilter {
  */
 export enum LibraryFilterStrategy {
   MANUAL = 'manual',
-  PERSONAL = 'personal',
   COMMON = 'common',
   SUBSCRIBE = 'subscribe',
   CANONICAL = 'canonical',

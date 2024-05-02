@@ -1,7 +1,6 @@
 import { AnimatePresence } from 'framer-motion';
-import { FaCircleUser } from 'react-icons/fa6';
 
-import { IconLogin } from '@/components/Icons';
+import { IconLogin, IconUser2 } from '@/components/Icons';
 import Loader from '@/components/ui/Loader';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { useAuth } from '@/context/AuthContext';
@@ -40,7 +39,7 @@ function UserMenu() {
         {user ? (
           <AnimateFade key='nav_user_badge_profile' className='h-full'>
             <NavigationButton
-              icon={<FaCircleUser size='1.5rem' className={adminMode && user.is_staff ? 'icon-primary' : ''} />}
+              icon={<IconUser2 size='1.5rem' className={adminMode && user.is_staff ? 'icon-primary' : ''} />}
               onClick={menu.toggle}
             />
           </AnimateFade>

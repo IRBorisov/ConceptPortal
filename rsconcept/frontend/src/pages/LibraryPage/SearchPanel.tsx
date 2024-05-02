@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { urls } from '@/app/urls';
 import SearchBar from '@/components/ui/SearchBar';
@@ -9,7 +9,7 @@ import { useConceptNavigation } from '@/context/NavigationContext';
 import { ILibraryFilter } from '@/models/miscellaneous';
 import { LibraryFilterStrategy } from '@/models/miscellaneous';
 
-import PickerStrategy from './PickerStrategy';
+import SelectFilterStrategy from '../../components/select/SelectFilterStrategy';
 
 interface SearchPanelProps {
   total: number;
@@ -30,8 +30,7 @@ function SearchPanel({ total, filtered, query, setQuery, strategy, setFilter }: 
       is_owned: prev.is_owned,
       is_common: prev.is_common,
       is_canonical: prev.is_canonical,
-      is_subscribed: prev.is_subscribed,
-      is_personal: prev.is_personal
+      is_subscribed: prev.is_subscribed
     }));
   }
 
@@ -42,6 +41,11 @@ function SearchPanel({ total, filtered, query, setQuery, strategy, setFilter }: 
       }
     },
     [strategy, router]
+  );
+
+  const selectStrategy = useMemo(
+    () => <SelectFilterStrategy value={strategy} onChange={handleChangeStrategy} />,
+    [strategy, handleChangeStrategy]
   );
 
   return (
@@ -68,7 +72,7 @@ function SearchPanel({ total, filtered, query, setQuery, strategy, setFilter }: 
           {filtered} из {total}
         </span>
       </div>
-      <PickerStrategy value={strategy} onChange={handleChangeStrategy} />
+      {selectStrategy}
       <SearchBar
         id='library_search'
         noBorder

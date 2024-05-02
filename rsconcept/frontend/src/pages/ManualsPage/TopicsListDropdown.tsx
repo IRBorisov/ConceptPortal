@@ -3,8 +3,8 @@
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import { useCallback } from 'react';
-import { RiMenuFoldFill, RiMenuUnfoldFill } from 'react-icons/ri';
 
+import { IconMenuFold, IconMenuUnfold } from '@/components/Icons';
 import Button from '@/components/ui/Button';
 import { useConceptOptions } from '@/context/OptionsContext';
 import useDropdown from '@/hooks/useDropdown';
@@ -50,7 +50,7 @@ function TopicsListDropDown({ activeTopic, onChangeTopic }: TopicsListDropDownPr
         tabIndex={-1}
         title='Список тем'
         hideTitle={menu.isOpen}
-        icon={!menu.isOpen ? <RiMenuUnfoldFill size='1.25rem' /> : <RiMenuFoldFill size='1.25rem' />}
+        icon={!menu.isOpen ? <IconMenuUnfold size='1.25rem' /> : <IconMenuFold size='1.25rem' />}
         className='w-[3rem] h-7'
         onClick={menu.toggle}
       />

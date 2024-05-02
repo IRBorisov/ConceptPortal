@@ -10,7 +10,6 @@ import { CProps } from '@/components/props';
 import DataTable, { createColumnHelper, VisibilityState } from '@/components/ui/DataTable';
 import FlexColumn from '@/components/ui/FlexColumn';
 import TextURL from '@/components/ui/TextURL';
-import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useUsers } from '@/context/UsersContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
@@ -31,7 +30,6 @@ const columnHelper = createColumnHelper<ILibraryItem>();
 function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
   const router = useConceptNavigation();
   const intl = useIntl();
-  const { user } = useAuth();
   const { getUserLabel } = useUsers();
   const [itemsPerPage, setItemsPerPage] = useLocalStorage<number>(storage.libraryPagination, 50);
 
@@ -57,7 +55,7 @@ function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
         size: 60,
         minSize: 60,
         maxSize: 60,
-        cell: props => <ItemIcons item={props.row.original} user={user} />
+        cell: props => <ItemIcons item={props.row.original} />
       }),
       columnHelper.accessor('alias', {
         id: 'alias',
@@ -108,7 +106,7 @@ function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
         sortDescFirst: true
       })
     ],
-    [intl, getUserLabel, user, windowSize]
+    [intl, getUserLabel, windowSize]
   );
 
   return (

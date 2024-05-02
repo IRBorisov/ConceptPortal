@@ -51,7 +51,6 @@ export function filterFromStrategy(strategy: LibraryFilterStrategy): ILibraryFil
     case LibraryFilterStrategy.MANUAL: return {};
     case LibraryFilterStrategy.COMMON: return { is_common: true };
     case LibraryFilterStrategy.CANONICAL: return { is_canonical: true };
-    case LibraryFilterStrategy.PERSONAL: return { is_personal: true };
     case LibraryFilterStrategy.SUBSCRIBE: return { is_subscribed: true };
     case LibraryFilterStrategy.OWNED: return { is_owned: true };
   }

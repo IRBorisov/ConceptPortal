@@ -2,9 +2,8 @@
 
 import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
-import { BiChevronsDown, BiLeftArrow, BiRightArrow } from 'react-icons/bi';
 
-import { IconAccept, IconRemove } from '@/components/Icons';
+import { IconAccept, IconMoveDown, IconMoveLeft, IconMoveRight, IconRemove } from '@/components/Icons';
 import BadgeHelp from '@/components/man/BadgeHelp';
 import SelectGrammeme from '@/components/select/SelectGrammeme';
 import Label from '@/components/ui/Label';
@@ -159,14 +158,14 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
           <MiniButton
             noHover
             title='Определить граммемы'
-            icon={<BiRightArrow size='1.25rem' className='icon-primary' />}
+            icon={<IconMoveRight size='1.25rem' className='icon-primary' />}
             disabled={textProcessor.loading || !inputText}
             onClick={handleParse}
           />
           <MiniButton
             noHover
             title='Генерировать словоформу'
-            icon={<BiLeftArrow size='1.25rem' className='icon-primary' />}
+            icon={<IconMoveLeft size='1.25rem' className='icon-primary' />}
             disabled={textProcessor.loading || inputGrams.length == 0}
             onClick={handleInflect}
           />
@@ -190,7 +189,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         <MiniButton
           noHover
           title='Генерировать стандартные словоформы'
-          icon={<BiChevronsDown size='1.5rem' className='icon-primary' />}
+          icon={<IconMoveDown size='1.5rem' className='icon-primary' />}
           disabled={textProcessor.loading || !inputText}
           onClick={handleGenerateLexeme}
         />

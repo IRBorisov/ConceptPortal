@@ -222,11 +222,11 @@ export function labelCstMatchMode(mode: CstMatchMode): string {
 export function describeCstMatchMode(mode: CstMatchMode): string {
   // prettier-ignore
   switch (mode) {
-    case CstMatchMode.ALL:  return 'искать во всех атрибутах';
-    case CstMatchMode.EXPR: return 'искать в формальных выражениях';
-    case CstMatchMode.TERM: return 'искать в терминах';
-    case CstMatchMode.TEXT: return 'искать в определениях и конвенциях';
-    case CstMatchMode.NAME: return 'искать в идентификаторах конституент';
+    case CstMatchMode.ALL:  return 'все атрибуты';
+    case CstMatchMode.EXPR: return 'формальное определение';
+    case CstMatchMode.TERM: return 'термин';
+    case CstMatchMode.TEXT: return 'определение и конвенция';
+    case CstMatchMode.NAME: return 'только имена';
   }
 }
 
@@ -269,7 +269,6 @@ export function labelLibraryFilter(strategy: LibraryFilterStrategy): string {
     case LibraryFilterStrategy.MANUAL:      return 'отображать все';
     case LibraryFilterStrategy.COMMON:      return 'общедоступные';
     case LibraryFilterStrategy.CANONICAL:   return 'неизменные';
-    case LibraryFilterStrategy.PERSONAL:    return 'личные';
     case LibraryFilterStrategy.SUBSCRIBE:   return 'подписки';
     case LibraryFilterStrategy.OWNED:       return 'владелец';
   }
@@ -284,7 +283,6 @@ export function describeLibraryFilter(strategy: LibraryFilterStrategy): string {
     case LibraryFilterStrategy.MANUAL:      return 'Отображать все схемы';
     case LibraryFilterStrategy.COMMON:      return 'Отображать общедоступные схемы';
     case LibraryFilterStrategy.CANONICAL:   return 'Отображать стандартные схемы';
-    case LibraryFilterStrategy.PERSONAL:    return 'Отображать подписки и собственные схемы';
     case LibraryFilterStrategy.SUBSCRIBE:   return 'Отображать подписки';
     case LibraryFilterStrategy.OWNED:       return 'Отображать собственные схемы';
   }

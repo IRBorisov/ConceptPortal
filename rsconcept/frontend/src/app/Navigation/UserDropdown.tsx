@@ -1,6 +1,14 @@
-import { LuMoon, LuSun } from 'react-icons/lu';
-
-import { IconAdmin, IconAdminOff, IconDatabase, IconHelp, IconHelpOff, IconLogout, IconUser } from '@/components/Icons';
+import {
+  IconAdmin,
+  IconAdminOff,
+  IconDarkTheme,
+  IconDatabase,
+  IconHelp,
+  IconHelpOff,
+  IconLightTheme,
+  IconLogout,
+  IconUser
+} from '@/components/Icons';
 import { CProps } from '@/components/props';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
@@ -50,7 +58,7 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
       />
       <DropdownButton
         text={darkMode ? 'Тема: Темная' : 'Тема: Светлая'}
-        icon={darkMode ? <LuMoon size='1rem' /> : <LuSun size='1rem' />}
+        icon={darkMode ? <IconDarkTheme size='1rem' /> : <IconLightTheme size='1rem' />}
         title='Переключение темы оформления'
         onClick={handleToggleDarkMode}
       />

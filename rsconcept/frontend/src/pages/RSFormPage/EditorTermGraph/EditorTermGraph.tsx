@@ -8,7 +8,7 @@ import { useDebounce } from 'use-debounce';
 
 import InfoConstituenta from '@/components/info/InfoConstituenta';
 import SelectedCounter from '@/components/info/SelectedCounter';
-import SelectGraphToolbar from '@/components/select/SelectGraphToolbar';
+import GraphSelectionToolbar from '@/components/select/GraphSelectionToolbar';
 import { GraphCanvasRef, GraphEdge, GraphLayout, GraphNode } from '@/components/ui/GraphUI';
 import Overlay from '@/components/ui/Overlay';
 import AnimateFade from '@/components/wrap/AnimateFade';
@@ -311,7 +311,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
           }
         />
         {!focusCst ? (
-          <SelectGraphToolbar
+          <GraphSelectionToolbar
             graph={controller.schema!.graph}
             core={controller.schema!.items.filter(cst => isBasicConcept(cst.cst_type)).map(cst => cst.id)}
             setSelected={controller.setSelected}
