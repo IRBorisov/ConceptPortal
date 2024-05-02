@@ -56,7 +56,7 @@ interface OptionsStateProps {
 
 export const OptionsState = ({ children }: OptionsStateProps) => {
   const [darkMode, setDarkMode] = useLocalStorage(storage.themeDark, false);
-  const [adminMode, setAdminMode] = useLocalStorage(storage.themeDark, false);
+  const [adminMode, setAdminMode] = useLocalStorage(storage.optionsAdmin, false);
   const [mathFont, setMathFont] = useLocalStorage<FontStyle>(storage.rseditFont, 'math');
   const [showHelp, setShowHelp] = useLocalStorage(storage.optionsHelp, true);
   const [noNavigation, setNoNavigation] = useState(false);
