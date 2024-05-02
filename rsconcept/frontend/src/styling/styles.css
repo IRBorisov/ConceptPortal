@@ -216,6 +216,16 @@
     @apply flex gap-1;
   }
 
+  .cc-table-row {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  .cc-scroll-y {
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+  }
+
   .cc-blur {
     backdrop-filter: blur(3px);
   }

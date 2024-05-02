@@ -155,6 +155,7 @@ function DataTable<TData extends RowData>({
         <TableBody
           table={tableImpl}
           dense={dense}
+          noHeader={noHeader}
           conditionalRowStyles={conditionalRowStyles}
           enableRowSelection={enableRowSelection}
           lastSelected={lastSelected}

@@ -152,7 +152,7 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
         noHeader
         className={clsx(
           'max-h-[5.8rem] min-h-[5.8rem]', // prettier: split lines
-          'overflow-y-auto',
+          'cc-scroll-y',
           'text-sm',
           'border',
           'select-none'

@@ -7,7 +7,6 @@ import DataLoader from '@/components/wrap/DataLoader';
 import { useAuth } from '@/context/AuthContext';
 import { useLibrary } from '@/context/LibraryContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
-import { useConceptOptions } from '@/context/OptionsContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { ILibraryItem } from '@/models/library';
@@ -26,7 +25,6 @@ function LibraryPage() {
   const { user } = useAuth();
 
   const library = useLibrary();
-  const { setShowScroll } = useConceptOptions();
 
   const [filter, setFilter] = useState<ILibraryFilter>({});
   const [items, setItems] = useState<ILibraryItem[]>([]);
@@ -46,11 +44,6 @@ function LibraryPage() {
     setStrategy(queryFilter);
     setFilter(filterFromStrategy(queryFilter));
   }, [user, router, setQuery, setFilter, setStrategy, strategy, queryFilter]);
-
-  useLayoutEffect(() => {
-    setShowScroll(true);
-    return () => setShowScroll(false);
-  }, [setShowScroll]);
 
   useLayoutEffect(() => {
     setItems(library.applyFilter(filter));

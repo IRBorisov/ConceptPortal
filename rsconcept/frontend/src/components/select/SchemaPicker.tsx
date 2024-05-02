@@ -98,7 +98,7 @@ function SchemaPicker({ id, initialFilter = '', rows = 4, value, onSelectValue }
         dense
         noHeader
         noFooter
-        className='overflow-y-auto text-sm select-none'
+        className='text-sm select-none cc-scroll-y'
         data={items}
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}

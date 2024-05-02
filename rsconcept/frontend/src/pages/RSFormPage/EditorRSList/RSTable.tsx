@@ -121,7 +121,7 @@ function RSTable({ items, maxHeight, enableSelection, selected, setSelected, onE
     <DataTable
       dense
       noFooter
-      className={clsx('min-h-[16rem]', 'overflow-y-auto', 'text-sm', 'select-none')}
+      className={clsx('min-h-[16rem]', 'cc-scroll-y', 'text-sm', 'select-none')}
       style={{ maxHeight: maxHeight }}
       data={items ?? []}
       columns={columns}

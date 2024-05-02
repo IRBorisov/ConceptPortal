@@ -129,7 +129,7 @@ function ConstituentsTable({ items, activeID, onOpenEdit, maxHeight, denseThresh
     <DataTable
       dense
       noFooter
-      className='overflow-y-auto text-sm select-none overscroll-none'
+      className='text-sm select-none cc-scroll-y overscroll-none'
       style={{ maxHeight: maxHeight }}
       data={items}
       columns={columns}

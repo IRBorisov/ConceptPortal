@@ -37,7 +37,6 @@ function WordFormsTable({ forms, setForms, onFormSelect }: WordFormsTableProps) 
     () => [
       columnHelper.accessor('text', {
         id: 'text',
-        header: 'Текст',
         size: 350,
         minSize: 500,
         maxSize: 500,
@@ -45,7 +44,6 @@ function WordFormsTable({ forms, setForms, onFormSelect }: WordFormsTableProps) 
       }),
       columnHelper.accessor('grams', {
         id: 'grams',
-        header: 'Граммемы',
         maxSize: 150,
         cell: props => <WordFormBadge keyPrefix={props.cell.id} form={props.row.original} />
       }),
@@ -74,7 +72,8 @@ function WordFormsTable({ forms, setForms, onFormSelect }: WordFormsTableProps) 
     <DataTable
       dense
       noFooter
-      className={clsx('mb-2', 'max-h-[17.4rem] min-h-[17.4rem]', 'border', 'text-sm', 'overflow-y-auto')}
+      noHeader
+      className={clsx('mb-2', 'max-h-[17.4rem] min-h-[17.4rem]', 'border', 'text-sm', 'cc-scroll-y')}
       data={forms}
       columns={columns}
       headPosition='0'

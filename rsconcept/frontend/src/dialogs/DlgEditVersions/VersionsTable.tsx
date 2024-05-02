@@ -92,10 +92,10 @@ function VersionsTable({ processing, items, onDelete, selected, onSelect }: Vers
     <DataTable
       dense
       noFooter
-      className={clsx('mb-2', 'max-h-[17.4rem] min-h-[17.4rem]', 'border', 'overflow-y-auto')}
+      headPosition='0'
+      className={clsx('mb-2', 'max-h-[17.4rem] min-h-[17.4rem]', 'border', 'cc-scroll-y')}
       data={items}
       columns={columns}
-      headPosition='0'
       onRowClicked={rowData => onSelect(rowData.id)}
       conditionalRowStyles={conditionalRowStyles}
     />

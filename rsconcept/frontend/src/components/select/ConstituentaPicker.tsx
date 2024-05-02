@@ -101,7 +101,7 @@ function ConstituentaPicker({
         dense
         noHeader
         noFooter
-        className='overflow-y-auto text-sm select-none'
+        className='text-sm select-none cc-scroll-y'
         data={filteredData}
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}

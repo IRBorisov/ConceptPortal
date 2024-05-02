@@ -1,4 +1,5 @@
 import { Cell, flexRender, Row, Table } from '@tanstack/react-table';
+import clsx from 'clsx';
 
 import { CProps } from '@/components/props';
 
@@ -8,6 +9,7 @@ import SelectRow from './SelectRow';
 interface TableBodyProps<TData> {
   table: Table<TData>;
   dense?: boolean;
+  noHeader?: boolean;
   enableRowSelection?: boolean;
   conditionalRowStyles?: IConditionalStyle<TData>[];
 
@@ -21,6 +23,7 @@ interface TableBodyProps<TData> {
 function TableBody<TData>({
   table,
   dense,
+  noHeader,
   enableRowSelection,
   conditionalRowStyles,
   lastSelected,
@@ -67,14 +70,16 @@ function TableBody<TData>({
       {table.getRowModel().rows.map((row: Row<TData>, index) => (
         <tr
           key={row.id}
-          className={
+          className={clsx(
+            'cc-table-row',
+            !noHeader && 'scroll-mt-[calc(2px+2rem)]',
             row.getIsSelected()
               ? 'clr-selected clr-hover'
               : index % 2 === 0
               ? 'clr-controls clr-hover'
               : 'clr-app clr-hover'
-          }
-          style={conditionalRowStyles && getRowStyles(row)}
+          )}
+          style={{ ...(conditionalRowStyles ? getRowStyles(row) : []) }}
         >
           {enableRowSelection ? (
             <td key={`select-${row.id}`} className='pl-3 pr-1 align-middle border-y'>

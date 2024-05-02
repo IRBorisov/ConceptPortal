@@ -11,6 +11,7 @@ import DataTable, { createColumnHelper, VisibilityState } from '@/components/ui/
 import FlexColumn from '@/components/ui/FlexColumn';
 import TextURL from '@/components/ui/TextURL';
 import { useConceptNavigation } from '@/context/NavigationContext';
+import { useConceptOptions } from '@/context/OptionsContext';
 import { useUsers } from '@/context/UsersContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import useWindowSize from '@/hooks/useWindowSize';
@@ -31,6 +32,7 @@ function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
   const router = useConceptNavigation();
   const intl = useIntl();
   const { getUserLabel } = useUsers();
+  const { calculateHeight } = useConceptOptions();
   const [itemsPerPage, setItemsPerPage] = useLocalStorage<number>(storage.libraryPagination, 50);
 
   function handleOpenItem(item: ILibraryItem, event: CProps.EventMouse) {
@@ -109,6 +111,8 @@ function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
     [intl, getUserLabel, windowSize]
   );
 
+  const tableHeight = useMemo(() => calculateHeight('2.2rem'), [calculateHeight]);
+
   return (
     <>
       <div className='sticky top-[2.3rem]'>
@@ -127,8 +131,9 @@ function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
         id='library_data'
         columns={columns}
         data={items}
-        headPosition='2.2rem'
-        className='text-xs sm:text-sm'
+        headPosition='0'
+        className='text-xs sm:text-sm cc-scroll-y'
+        style={{ maxHeight: tableHeight }}
         noDataComponent={
           <FlexColumn className='p-3 items-center min-h-[6rem]'>
             <p>Список схем пуст</p>
