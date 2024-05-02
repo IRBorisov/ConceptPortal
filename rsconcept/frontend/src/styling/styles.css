@@ -223,6 +223,7 @@
 
   .cc-scroll-y {
     overflow-y: auto;
+    overscroll-behavior-y: contain;
     scroll-snap-type: y mandatory;
   }
 

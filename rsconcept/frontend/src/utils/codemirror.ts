@@ -133,7 +133,7 @@ export function domTooltipConstituenta(cst?: IConstituenta) {
     'dense',
     'p-2',
     'border shadow-md',
-    'overflow-y-auto',
+    'cc-scroll-y',
     'text-sm font-main'
   );
 
@@ -200,7 +200,7 @@ export function domTooltipEntityReference(ref: IEntityReference, cst: IConstitue
     'dense',
     'p-2 flex flex-col',
     'border shadow-md',
-    'overflow-y-auto',
+    'cc-scroll-y',
     'text-sm',
     'select-none cursor-auto'
   );
@@ -247,7 +247,7 @@ export function domTooltipSyntacticReference(ref: ISyntacticReference, masterRef
     'dense',
     'p-2 flex flex-col',
     'border shadow-md',
-    'overflow-y-auto',
+    'cc-scroll-y',
     'text-sm',
     'select-none cursor-auto'
   );

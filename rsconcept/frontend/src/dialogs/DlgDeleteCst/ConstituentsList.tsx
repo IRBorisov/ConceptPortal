@@ -18,7 +18,7 @@ function ConstituentsList({ list, schema, title, prefix }: ConstituentsListProps
           {title}: <b>{list.length}</b>
         </p>
       ) : null}
-      <div className={clsx('h-[9rem]', 'px-3', 'overflow-y-auto', 'border', 'whitespace-nowrap')}>
+      <div className={clsx('h-[9rem]', 'px-3', 'cc-scroll-y', 'border', 'whitespace-nowrap')}>
         {list.map(id => {
           const cst = schema.cstByID.get(id);
           return cst ? <p key={`${prefix}${cst.id}`}>{labelConstituenta(cst)}</p> : null;

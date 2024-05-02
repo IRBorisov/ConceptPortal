@@ -252,7 +252,7 @@ function SubstitutionsPicker({
         dense
         noHeader
         noFooter
-        className='w-full overflow-y-auto text-sm border select-none'
+        className='w-full text-sm border select-none cc-scroll-y'
         rows={rows}
         contentHeight='1.3rem'
         data={items}

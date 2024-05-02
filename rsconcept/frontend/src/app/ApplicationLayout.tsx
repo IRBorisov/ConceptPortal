@@ -23,7 +23,7 @@ function ApplicationLayout() {
 
         <div
           id={globals.main_scroll}
-          className='overflow-y-auto overscroll-none min-w-fit'
+          className='cc-scroll-y min-w-fit'
           style={{
             maxHeight: viewportHeight,
             overflowY: showScroll ? 'scroll' : 'auto'

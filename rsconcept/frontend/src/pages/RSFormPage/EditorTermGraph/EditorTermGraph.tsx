@@ -360,7 +360,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
           <Overlay
             layer='z-tooltip'
             position={clsx('top-[1.6rem]', { 'left-[2.6rem]': hoverLeft, 'right-[2.6rem]': !hoverLeft })}
-            className={clsx('w-[25rem]', 'px-3', 'overflow-y-auto', 'border shadow-md', 'clr-app')}
+            className={clsx('w-[25rem]', 'px-3', 'cc-scroll-y', 'border shadow-md', 'clr-app')}
           >
             <InfoConstituenta className='pt-1 pb-2' data={hoverCstDebounced} />
           </Overlay>

@@ -84,7 +84,7 @@ function Modal({
         {header ? <h1 className='px-12 py-2 select-none'>{header}</h1> : null}
 
         <div
-          className={clsx('overflow-auto', className)}
+          className={clsx('overflow-auto overscroll-contain', className)}
           style={{
             maxHeight: 'calc(100vh - 8rem)',
             maxWidth: 'calc(100vw - 2rem)'

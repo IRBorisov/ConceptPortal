@@ -85,7 +85,7 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
           'border-x border-b rounded-b-md',
           'clr-input',
           'text-sm',
-          'overflow-y-auto'
+          'cc-scroll-y'
         )}
         style={{ maxHeight: calculateHeight(windowSize.isSmall ? '12.rem + 2px' : '16.4rem + 2px') }}
         initial={false}

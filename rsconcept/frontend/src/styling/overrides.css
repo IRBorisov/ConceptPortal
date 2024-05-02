@@ -10,6 +10,7 @@
 .cm-editor {
   resize: vertical;
   overflow-y: auto;
+  overscroll-behavior-y: contain;
   border-color: var(--cl-bg-40);
   .dark & {
     border-color: var(--cd-bg-40);

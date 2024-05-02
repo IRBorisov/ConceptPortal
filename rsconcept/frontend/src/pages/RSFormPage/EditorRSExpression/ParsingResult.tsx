@@ -18,7 +18,7 @@ function ParsingResult({ isOpen, data, disabled, onShowError }: ParsingResultPro
 
   return (
     <motion.div
-      className='dense border text-sm overflow-y-auto'
+      className='text-sm border dense cc-scroll-y'
       initial={false}
       animate={isOpen ? 'open' : 'closed'}
       variants={animateParseResults}
