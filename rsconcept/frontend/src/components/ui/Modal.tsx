@@ -61,12 +61,7 @@ function Modal({
       <div className={clsx('z-navigation', 'fixed top-0 left-0', 'w-full h-full', 'cc-modal-backdrop')} />
       <motion.div
         ref={ref}
-        className={clsx(
-          'z-modal',
-          'fixed bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2',
-          'border shadow-md',
-          'clr-app'
-        )}
+        className={clsx('z-modal', 'fixed m-auto', 'border shadow-md', 'clr-app')}
         initial={{ ...animateModal.initial }}
         animate={{ ...animateModal.animate }}
         exit={{ ...animateModal.exit }}
