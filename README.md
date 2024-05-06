@@ -135,6 +135,7 @@ This is the build for local Development
 - copy import wheels from ConceptCore to rsconcept/backend/import
 - run rsconcept/backend/LocalEnvSetup.ps1
 - use VSCode configs in root folder to start development
+- use 'npm run prepare' to regenerate frontend parsers (if you change grammar files)
 
 ## 🔭 Local docker build
 

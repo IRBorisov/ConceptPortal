@@ -1,3 +1,12 @@
+///////////////////////////////////////////////////////////
+// ------------- Generator Definitions --------------------
+///////////////////////////////////////////////////////////
+@detectDelim
+@external propSource highlighting from "./highlight"
+
+///////////////////////////////////////////////////////////
+// ------------- Precedence Definitions --------------------
+///////////////////////////////////////////////////////////
 @precedence {
   plus @left minus @left,
   times @left,
@@ -12,36 +21,32 @@
   p1, p2
 }
 
-@top Expression {
-  term_or_logic |
-  FunctionDeclaration
-}
-
-@skip { space }
-
+///////////////////////////////////////////////////////////
+// ------------- Terminal Tokens --------------------------
+///////////////////////////////////////////////////////////
 @tokens {
-  space { @whitespace+ }
-  ComplexIndex { $[1-9]$[0-9]*(","$[1-9]$[0-9]*)* }
-  integer { $[0-9]+ }
-  emptySet { "∅" }
-  integerSet { "Z" }
+  space             { @whitespace+ }
+  ComplexIndex      { $[1-9]$[0-9]*(","$[1-9]$[0-9]*)* }
+  integer           { $[0-9]+ }
+  emptySet          { "∅" }
+  integerSet        { "Z" }
 
-  bigPr { "Pr" }
-  smallPr { "pr" }
-  filter { "Fi" }
-  card { "card" }
-  bool { "bool" }
-  debool { "debool" }
-  red { "red" }
+  bigPr             { "Pr" }
+  smallPr           { "pr" }
+  Filter            { "Fi" }
+  card              { "card" }
+  bool              { "bool" }
+  debool            { "debool" }
+  red               { "red" }
 
-  Global { $[XCSDAT]$[0-9]+ }
-  Function { "F"$[0-9]+ }
-  Predicate { "P"$[0-9]+ }
-  Radical { "R"$[0-9]+ }
-  local { $[_a-zα-ω]($[a-zα-ω])* }
-  PrefixR { "R" }
-  PrefixI { "I" }
-  PrefixD { "D" }
+  Global            { $[XCSDAT]$[0-9]+ }
+  Function          { "F"$[0-9]+ }
+  Predicate         { "P"$[0-9]+ }
+  Radical           { "R"$[0-9]+ }
+  local             { $[_a-zα-ω]($[a-zα-ω])* }
+  PrefixR           { "R" }
+  PrefixI           { "I" }
+  PrefixD           { "D" }
 
   "¬"
   "∀" "∃" "⇔" "⇒" "∨" "&"
@@ -55,146 +60,207 @@
   "{" "}"
   "(" ")"
   
-  @precedence { filter bigPr Predicate Function Global Radical PrefixR PrefixI PrefixD }
-  @precedence { card bool debool red smallPr local }
+  @precedence {
+    Filter
+    bigPr
+    Predicate
+    Function
+    Global
+    Radical
+    PrefixR
+    PrefixI
+    PrefixD
+  }
+  @precedence {
+    card
+    bool
+    debool
+    red
+    smallPr
+    local
+  }
 }
 
-Index { integer }
+@skip { space }
+
+
+///////////////////////////////////////////////////////////////////////////////
+// ------------------------- Grammar Rules ------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+
+// ------------------------- Language Expression ------------------------------
+@top Expression {
+  logic_or_setexpr |
+  function_decl
+}
+logic_or_setexpr	{
+  logic |
+  setexpr
+}
+function_decl {
+  "[" arguments "]" logic_or_setexpr
+}
+
+
+// -------------------------  Variables and arguments -------------------------
+arguments {
+  declaration |
+  arguments "," declaration
+}
+declaration {
+  Local "∈" setexpr
+}
 Local { 
   !p1 local |
   !p2 local Index
 }
-
-Literal { integer | emptySet | integerSet }
-
-TextFunction {
-  bigPr ComplexIndex |
-  smallPr ComplexIndex |
-  card | bool | debool | red
+Index {
+  integer
+}
+variable {
+  Local |
+  "(" variableComposite ")"
+}
+variableComposite {
+  var_all "," variable
+}
+var_all {
+  variable |
+  variableComposite
 }
 
-Filter { filter ComplexIndex }
 
-term_or_logic	{ logic | term }
-
-FunctionDeclaration { "[" arg_declaration "]" term_or_logic }
-arg_declaration {
-  declaration |
-  arg_declaration "," declaration
-}
-declaration { Local "∈" term }
-
+// ------------------------- Logic Expressions --------------------------------
 logic {
-  LogicPredicate |
-  logicUnary |
-  LogicBinary |
-  logic_par
-}
-logic_par { "(" logic ")" }
-logicUnary {
-  PredicateCall { Predicate "[" term_enum "]" } |
-  LogicNegation { !not "¬" logic } |
-  LogicQuantor
-}
-LogicQuantor {
-  "∀" QuantorVariable "∈" term !quant logic |
-  "∃" QuantorVariable "∈" term !quant logic
+  logic_predicates |
+  logic_unary |
+  logic_binary |
+  "(" logic ")"
 }
 
-LogicPredicate {
-  term "∈" term |
-  term "∉" term |
-  term "⊆" term |
-  term "⊄" term |
-  term "⊂" term |
-  term ">" term |
-  term "≥" term |
-  term "<" term |
-  term "≤" term |
-  term "≠" term |
-  term "=" term
+logic_predicates {
+  setexpr "∈" setexpr |
+  setexpr "∉" setexpr |
+  setexpr "⊆" setexpr |
+  setexpr "⊄" setexpr |
+  setexpr "⊂" setexpr |
+  setexpr ">" setexpr |
+  setexpr "≥" setexpr |
+  setexpr "<" setexpr |
+  setexpr "≤" setexpr |
+  setexpr "≠" setexpr |
+  setexpr "=" setexpr
 }
 
-LogicBinary {
+logic_unary {
+  !not "¬" logic |
+  Predicate "[" setexpr_enum "]" |
+  "∀" quant_var "∈" setexpr !quant logic |
+  "∃" quant_var "∈" setexpr !quant logic
+}
+quant_var {
+  variable |
+  quant_var_enum
+}
+quant_var_enum {
+  quant_var "," variable
+}
+
+logic_binary {
   logic !log_equiv "⇔" logic |
   logic !log_impl "⇒" logic |
   logic !log_or "∨" logic |
   logic !log_and "&" logic
 }
 
-QuantorVariable { Variable | quant_var_enum }
-quant_var_enum { QuantorVariable "," Variable }
-Variable { Local |  "(" VariableComposite ")" }
-VariableComposite { var_all "," Variable }
-var_all { Variable | VariableComposite }
 
-term {
-  Literal | Local | Global | Radical |
-  BinaryOperation |
-  typed_constructors |
-  FunctionCall |
-  TextFunctionExpression
+// ------------------------- Set Expressions ----------------------------------
+setexpr {
+  Literal |
+  identifier |
+  setexpr_binary |
+  setexpr_generators |
+  Function "[" setexpr_enum "]" |
+  TextFunction "(" setexpr ")"
 }
-FunctionCall { Function "[" term_enum "]" }
-
-TextFunctionExpression {
-  TextFunction "(" term ")" |
-  Filter "[" term_enum "]" "(" term ")"
+TextFunction {
+  bigPr ComplexIndex |
+  smallPr ComplexIndex |
+  card |
+  bool |
+  debool |
+  red
 }
-
-BinaryOperation {
-  term !plus "+" term |
-  term !minus "-" term |
-  term !times "*" term |
-  term !set_union "∪" term |
-  term !set_minus "\\" term |
-  term !set_symminus "∆" term |
-  term !set_intersect "∩" term |
-  term !set_decart "×" term |
-  "(" BinaryOperation ")"
+setexpr_enum {
+  setexpr |
+  setexpr_enum_min2
+}
+setexpr_enum_min2 {
+  setexpr_enum "," setexpr
 }
 
-typed_constructors {
-  Enumeration |
-  Tuple |
-  Boolean |
-  Declarative |
-  Imperative |
-  Recursion
+Literal {
+  integer |
+  emptySet |
+  integerSet
 }
-Enumeration { "{" term_enum "}"}
-Tuple { "(" term_enum_min2 ")"}
-Boolean {
-  !set_bool "ℬ" "(" term ")" |
-  !set_bool "ℬ" Boolean
+identifier {
+  Local |
+  Global |
+  Radical
 }
 
-term_enum { term | term_enum_min2 }
-term_enum_min2 { term_enum "," term }
+setexpr_binary {
+  setexpr !plus "+" setexpr |
+  setexpr !minus "-" setexpr |
+  setexpr !times "*" setexpr |
+  setexpr !set_union "∪" setexpr |
+  setexpr !set_minus "\\" setexpr |
+  setexpr !set_symminus "∆" setexpr |
+  setexpr !set_intersect "∩" setexpr |
+  setexpr !set_decart "×" setexpr |
+  "(" setexpr_binary ")"
+}
 
-Declarative {
-  "{" Local "∈" term "|" logic "}" |
-  PrefixD "{" Variable "∈" term "|" logic "}"
+setexpr_generators {
+  enumeration |
+  tuple |
+  boolean |
+  filter_expression |
+  declarative |
+  imperative |
+  recursion
 }
-Recursion {
-  PrefixR "{" Variable ":=" term ("|" logic)? "|" term "}"
+enumeration {
+  "{" setexpr_enum "}"
 }
-Imperative {
-  PrefixI "{" term "|" ImperativeBlocks "}"
+tuple {
+  "(" setexpr_enum_min2 ")"
 }
-ImperativeBlocks {
+boolean {
+  !set_bool "ℬ" "(" setexpr ")" |
+  !set_bool "ℬ" boolean
+}
+filter_expression {
+  Filter ComplexIndex "[" setexpr_enum "]" "(" setexpr ")"
+}
+
+declarative {
+  "{" Local "∈" setexpr "|" logic "}" |
+  PrefixD "{" variable "∈" setexpr "|" logic "}"
+}
+recursion {
+  PrefixR "{" variable ":=" setexpr ("|" logic)? "|" setexpr "}"
+}
+imperative {
+  PrefixI "{" setexpr "|" imp_blocks "}"
+}
+imp_blocks {
   imp_block |
-  ImperativeBlocks ";" imp_block
+  imp_blocks ";" imp_block
 }
 imp_block {
-  ImperativeIteration |
-  ImperativeAssignment |
-  ImperativeCondition
+  Local ":∈" setexpr |
+  Local ":=" setexpr |
+  logic
 }
-ImperativeIteration { Local ":∈" term }
-ImperativeAssignment { Local ":=" term }
-ImperativeCondition { logic }
-
-@detectDelim
-
-@external propSource highlighting from "./highlight"
