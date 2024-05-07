@@ -705,14 +705,10 @@ export function describeRSError(error: IRSErrorDescription): string {
       return `Неверное число аргументов терм-функции: ${error.params[0]} != ${error.params[1]}`;
     case RSErrorType.invalidArgumentType:
       return `Типизация аргумента терм-функции не соответствует объявленной: ${error.params[0]} != ${error.params[1]}`;
-    case RSErrorType.invalidEqualsEmpty:
-      return `Только множества можно сравнивать с пустым множеством: ${error.params[0]}`;
     case RSErrorType.globalStructure:
       return `Выражение родовой структуры должно быть ступенью`;
     case RSErrorType.globalExpectedFunction:
       return `Ожидалось выражение объявления функции`;
-    case RSErrorType.emptySetUsage:
-      return `Запрещено использование пустого множества как типизированного выражения`;
     case RSErrorType.radicalUsage:
       return `Радикалы запрещены вне деклараций терм-функции: ${error.params[0]}`;
     case RSErrorType.invalidFilterArgumentType:
