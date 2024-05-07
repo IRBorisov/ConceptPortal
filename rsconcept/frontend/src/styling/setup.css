@@ -54,7 +54,7 @@ html {
   }
 }
 
-@media only screen and (max-width: 640px) {
+@media only screen and (max-width: 639px) {
   :root {
     font-size: 12px;
   }
