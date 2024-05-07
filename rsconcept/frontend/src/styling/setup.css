@@ -123,6 +123,10 @@ div:not(.dense) > p {
     @apply font-semibold;
   }
 
+  li::marker {
+    content: '– ';
+  }
+
   .border {
     @apply rounded;
   }

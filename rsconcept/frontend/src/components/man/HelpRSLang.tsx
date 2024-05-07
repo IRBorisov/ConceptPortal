@@ -17,16 +17,15 @@ function HelpRSLang() {
   // prettier-ignore
   return (
   <div className='flex flex-col gap-4'>
-    <div>
+    <div className='dense'>
       <h1>Родоструктурная экспликация концептуальных схем</h1>
       <p>Формальная запись (<i>экспликация</i>) концептуальных схем осуществляется с помощью языка родов структур.</p>
       <p>Данный математический аппарат основан на аксиоматической теории множеств Цермелло-Френкеля и аппарате родов структур Н.Бурбаки.</p>
+      <br />
       <p>Для ознакомления с основами родов структур можно использовать следующие материалы:</p>
-      <ul>
-        <li>1. <a className='underline' href={external_urls.intro_video}>Видео: Краткое введение в мат. аппарат</a></li>
-        <li>2. <a className='underline' href={external_urls.ponomarev}>Текст: Учебник И. Н. Пономарева</a></li>
-        <li>3. <a className='underline' href={external_urls.full_course}>Видео: лекции для 4 курса (второй семестр 2022-23 год)</a></li>
-      </ul>
+      <p>1. <a className='underline' href={external_urls.intro_video}>Видео: Краткое введение в мат. аппарат</a></p>
+      <p>2. <a className='underline' href={external_urls.ponomarev}>Текст: Учебник И. Н. Пономарева</a></p>
+      <p>3. <a className='underline' href={external_urls.full_course}>Видео: лекции для 4 курса (второй семестр 2022-23 год)</a></p>
     </div>
     <div className='justify-center w-full'>
     <EmbedYoutube

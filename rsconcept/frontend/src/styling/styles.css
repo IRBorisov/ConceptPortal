@@ -195,6 +195,15 @@
     }
   }
 
+  .inline-icon {
+    display: inline-block;
+    font-size: 1.25rem;
+    margin-left: 0.1rem;
+    margin-right: 0.1rem;
+    transform: translate(0, -0.2rem);
+    @apply clr-text-primary;
+  }
+
   .cc-modal-blur {
     opacity: 0.3;
     backdrop-filter: blur(2px);

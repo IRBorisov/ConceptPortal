@@ -1,18 +1,26 @@
+import { urls } from '@/app/urls';
+import { HelpTopic } from '@/models/miscellaneous';
+
+import { IconClone, IconDownload, IconFollow, IconImmutable, IconOwner, IconPublic, IconSave } from '../Icons';
+import TextURL from '../ui/TextURL';
+
 function HelpRSFormMeta() {
   // prettier-ignore
   return (
   <div className='dense'>
     <h1>Карточка схемы</h1>
-    <p>Концептуальная схема содержит конституенты, формирующие систему терминов и определений</p>
+    
     <p>Карточка схемы содержит общую информацию и статистику схемы</p>
+    <p>Карточка схемы позволяет управлять атрибутами схемы и ее <TextURL text='версиями' href={urls.help_topic(HelpTopic.VERSIONS)}/></p>
+
     <h2>Управление</h2>
-    <p><b>Сохранить изменения</b>: Ctrl + S или кнопка Сохранить</p>
-    <p><b>Владелец</b> обладает правом редактирования</p>
-    <p><b>Общедоступные</b> схемы доступны для всех</p>
-    <p><b>Неизменные</b> схемы редактируют только администраторы</p>
-    <p><b>Клонировать</b> - создать копию схемы под своим именем</p>
-    <p><b>Отслеживание</b> - схема в персональном списке</p>
-    <p><b>Загрузить/Выгрузить схему</b> - взаимодействие с Экстеор</p>
+    <li><IconSave className='inline-icon'/> сохранить изменения: Ctrl + S</li>
+    <li><IconOwner className='inline-icon'/> Владелец обладает правом редактирования</li>
+    <li><IconPublic className='inline-icon'/> Общедоступные схемы доступны для всех</li>
+    <li><IconImmutable className='inline-icon'/> Неизменные схемы редактируют только администраторы</li>
+    <li><IconClone className='inline-icon'/> Клонировать – создать копию схемы</li>
+    <li><IconFollow className='inline-icon'/> Отслеживание – схема в персональном списке</li>
+    <li><IconDownload className='inline-icon'/> Загрузить/Выгрузить схему – взаимодействие с Экстеор</li>
   </div>);
 }
 

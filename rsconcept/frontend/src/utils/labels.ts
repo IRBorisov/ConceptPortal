@@ -361,12 +361,12 @@ export function labelHelpTopic(topic: HelpTopic): string {
     case HelpTopic.MAIN:            return 'Портал';
     case HelpTopic.LIBRARY:         return 'Библиотека';
     case HelpTopic.RSFORM:          return '- карточка схемы';
-    case HelpTopic.CST_ATTRIBUTES:  return '- конституента';
     case HelpTopic.CST_LIST:        return '- список конституент';
     case HelpTopic.CST_EDITOR:      return '- редактор конституенты';
     case HelpTopic.GRAPH_TERM:      return '- граф термов';
     case HelpTopic.RSTEMPLATES:     return '- шаблоны выражений';
     case HelpTopic.RSLANG:          return 'Экспликация';
+    case HelpTopic.CST_ATTRIBUTES:  return '- конституента';
     case HelpTopic.TERM_CONTROL:    return 'Терминологизация';
     case HelpTopic.VERSIONS:        return 'Версионирование';
     case HelpTopic.EXTEOR:          return 'Экстеор';
@@ -384,12 +384,12 @@ export function describeHelpTopic(topic: HelpTopic): string {
     case HelpTopic.MAIN:            return 'Общая справка по порталу';
     case HelpTopic.LIBRARY:         return 'Описание работы с библиотекой схем';
     case HelpTopic.RSFORM:          return 'Описание работы с описанием схемы';
-    case HelpTopic.CST_ATTRIBUTES:  return 'Описание типов и свойств конституент';
     case HelpTopic.CST_LIST:        return 'Описание работы со списком конституент';
     case HelpTopic.CST_EDITOR:      return 'Описание редактирования конституенты';
     case HelpTopic.GRAPH_TERM:      return 'Описание работы с графом термов схемы';
     case HelpTopic.RSTEMPLATES:     return 'Описание работы с Банком выражений>';
     case HelpTopic.RSLANG:          return 'Справка по языку родов структур и экспликации';
+    case HelpTopic.CST_ATTRIBUTES:  return 'Описание типов и свойств конституент';
     case HelpTopic.TERM_CONTROL:    return 'Справка по контролю терминов и текстовым отсылкам';
     case HelpTopic.VERSIONS:        return 'Справка по управлению версиями схем';
     case HelpTopic.EXTEOR:          return 'Справка по программе для экспликации "Экстеор" для Windows';

@@ -76,7 +76,7 @@ export const lightT: IColorTheme = {
   bgOrange:   'hsl(028, 100%, 075%)',
 
   bgGreen50:  'hsl(100, 100%, 090%)',
-  bgOrange50: 'hsl(028, 100%, 095%)',
+  bgOrange50: 'hsl(028, 100%, 090%)',
 
   fgRed:      'hsl(000, 090%, 045%)',
   fgGreen:    'hsl(100, 090%, 035%)',
@@ -116,7 +116,7 @@ export const darkT: IColorTheme = {
   bgOrange:   'hsl(035, 100%, 035%)',
 
   bgGreen50:  'hsl(100, 080%, 017%)',
-  bgOrange50: 'hsl(035, 100%, 015%)',
+  bgOrange50: 'hsl(035, 100%, 016%)',
 
   fgRed:      'hsl(000, 080%, 045%)',
   fgGreen:    'hsl(100, 080%, 035%)',
