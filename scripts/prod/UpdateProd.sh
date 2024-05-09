@@ -1,8 +1,8 @@
 COMPOSE_FILE="docker-compose-prod.yml"
 BACKUP_SCRIPT="./scripts/prod/CreateBackup.sh"
 
-git reset --hard
-git pull
+git fetch --all
+git reset --hard origin/main
 
 /bin/bash "${BACKUP_SCRIPT}"
 
