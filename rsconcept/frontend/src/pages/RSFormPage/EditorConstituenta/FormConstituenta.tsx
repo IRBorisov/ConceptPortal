@@ -145,6 +145,7 @@ function FormConstituenta({
           key='cst_term'
           id='cst_term'
           label='Термин'
+          maxHeight='7.5rem'
           placeholder='Обозначение, используемое в текстовых определениях'
           schema={schema}
           value={term}
@@ -197,7 +198,8 @@ function FormConstituenta({
               id='cst_definition'
               label='Текстовое определение'
               placeholder='Текстовая интерпретация формального выражения'
-              height='3.8rem'
+              minHeight='3.75rem'
+              maxHeight='7.5rem'
               schema={schema}
               value={textDefinition}
               initialValue={state?.definition_raw ?? ''}
@@ -210,7 +212,7 @@ function FormConstituenta({
             <TextArea
               id='cst_convention'
               spellCheck
-              className='h-[3.8rem]'
+              className='h-[3.75rem]'
               label={isBasic ? 'Конвенция' : 'Комментарий'}
               placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
               value={convention}

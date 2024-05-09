@@ -23,7 +23,16 @@ import { rsHoverTooltip } from './tooltip';
 interface RSInputProps
   extends Pick<
     ReactCodeMirrorProps,
-    'id' | 'height' | 'minHeight' | 'maxHeight' | 'value' | 'onFocus' | 'onBlur' | 'placeholder' | 'style' | 'className'
+    | 'id' // prettier: split-lines
+    | 'height'
+    | 'minHeight'
+    | 'maxHeight'
+    | 'value'
+    | 'onFocus'
+    | 'onBlur'
+    | 'placeholder'
+    | 'style'
+    | 'className'
   > {
   label?: string;
   disabled?: boolean;

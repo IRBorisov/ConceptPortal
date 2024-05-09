@@ -211,7 +211,8 @@ function EditorRSExpression({
       <RSInput
         ref={rsInput}
         value={value}
-        minHeight='3.8rem'
+        minHeight='3.75rem'
+        maxHeight='7.5rem'
         disabled={disabled}
         onChange={handleChange}
         onAnalyze={handleCheckExpression}

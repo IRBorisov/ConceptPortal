@@ -50,7 +50,18 @@ const editorSetup: BasicSetupOptions = {
 };
 
 interface RefsInputInputProps
-  extends Pick<ReactCodeMirrorProps, 'id' | 'height' | 'value' | 'className' | 'onFocus' | 'onBlur' | 'placeholder'> {
+  extends Pick<
+    ReactCodeMirrorProps,
+    | 'id' // prettier: split-lines
+    | 'height'
+    | 'minHeight'
+    | 'maxHeight'
+    | 'value'
+    | 'className'
+    | 'onFocus'
+    | 'onBlur'
+    | 'placeholder'
+  > {
   label?: string;
   onChange?: (newValue: string) => void;
   schema?: IRSForm;
