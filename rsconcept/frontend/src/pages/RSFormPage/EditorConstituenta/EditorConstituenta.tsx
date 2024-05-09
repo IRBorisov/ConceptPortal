@@ -66,10 +66,11 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
   }
 
   function processAltKey(code: string): boolean {
+    // prettier-ignore
     switch (code) {
-      case 'KeyV':
-        controller.cloneCst();
-        return true;
+      case 'ArrowUp': controller.moveUp(); return true;
+      case 'ArrowDown': controller.moveDown(); return true;
+      case 'KeyV': controller.cloneCst(); return true;
     }
     return false;
   }

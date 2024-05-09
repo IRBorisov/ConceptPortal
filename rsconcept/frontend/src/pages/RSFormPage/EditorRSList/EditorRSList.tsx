@@ -49,7 +49,7 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
     }
   }
 
-  function handleTableKey(event: React.KeyboardEvent<HTMLDivElement>) {
+  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (!controller.isContentEditable || controller.isProcessing) {
       return;
     }
@@ -97,7 +97,7 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
   return (
     <>
       {controller.isContentEditable ? <RSListToolbar /> : null}
-      <AnimateFade tabIndex={-1} className='outline-none' onKeyDown={handleTableKey}>
+      <AnimateFade tabIndex={-1} className='outline-none' onKeyDown={handleKeyDown}>
         {controller.isContentEditable ? (
           <SelectedCounter
             totalCount={controller.schema?.stats?.count_all ?? 0}
