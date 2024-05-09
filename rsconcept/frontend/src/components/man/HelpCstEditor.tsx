@@ -1,10 +1,8 @@
-import InfoCstStatus from '@/components/info/InfoCstStatus';
-import Divider from '@/components/ui/Divider';
 import { useConceptOptions } from '@/context/OptionsContext';
 
 import { IconControls, IconEdit, IconList, IconSave, IconStatusOK, IconText, IconTree } from '../Icons';
 
-function HelpConstituenta() {
+function HelpCstEditor() {
   const { colors } = useConceptOptions();
   // prettier-ignore
   return (
@@ -31,11 +29,7 @@ function HelpConstituenta() {
     <li><span style={{backgroundColor: colors.bgSelected}}>цветом фона</span> выделена текущая конституента</li>
     <li><span style={{backgroundColor: colors.bgGreen50}}>цветом фона</span> выделена основа текущей</li>
     <li><span style={{backgroundColor: colors.bgOrange50}}>цветом фона</span> выделены порожденные текущей</li>
-
-    <Divider margins='my-2' />
-    
-    <InfoCstStatus title='Статусы' />
   </div>);
 }
 
-export default HelpConstituenta;
+export default HelpCstEditor;

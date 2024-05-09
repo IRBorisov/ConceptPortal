@@ -1,8 +1,10 @@
 import { HelpTopic } from '@/models/miscellaneous';
 
 import HelpAPI from '../man/HelpAPI';
-import HelpConstituenta from '../man/HelpConstituenta';
 import HelpCstAttributes from '../man/HelpCstAttributes';
+import HelpCstClass from '../man/HelpCstClass';
+import HelpCstEditor from '../man/HelpCstEditor';
+import HelpCstStatus from '../man/HelpCstStatus';
 import HelpExteor from '../man/HelpExteor';
 import HelpLibrary from '../man/HelpLibrary';
 import HelpMain from '../man/HelpMain';
@@ -23,12 +25,14 @@ function InfoTopic({ topic }: InfoTopicProps) {
   if (topic === HelpTopic.MAIN) return <HelpMain />;
   if (topic === HelpTopic.LIBRARY) return <HelpLibrary />;
   if (topic === HelpTopic.RSFORM) return <HelpRSFormMeta />;
-  if (topic === HelpTopic.CST_ATTRIBUTES) return <HelpCstAttributes />;
   if (topic === HelpTopic.CST_LIST) return <HelpRSFormItems />;
-  if (topic === HelpTopic.CST_EDITOR) return <HelpConstituenta />;
+  if (topic === HelpTopic.CST_EDITOR) return <HelpCstEditor />;
   if (topic === HelpTopic.GRAPH_TERM) return <HelpTermGraph />;
-  if (topic === HelpTopic.RSTEMPLATES) return <HelpRSTemplates />;
+  if (topic === HelpTopic.CST_STATUS) return <HelpCstStatus />;
+  if (topic === HelpTopic.CST_CLASS) return <HelpCstClass />;
   if (topic === HelpTopic.RSLANG) return <HelpRSLang />;
+  if (topic === HelpTopic.CONSTITUENTA) return <HelpCstAttributes />;
+  if (topic === HelpTopic.RSTEMPLATES) return <HelpRSTemplates />;
   if (topic === HelpTopic.TERM_CONTROL) return <HelpTerminologyControl />;
   if (topic === HelpTopic.VERSIONS) return <HelpVersions />;
   if (topic === HelpTopic.EXTEOR) return <HelpExteor />;

@@ -359,14 +359,19 @@ export function labelHelpTopic(topic: HelpTopic): string {
   // prettier-ignore
   switch (topic) {
     case HelpTopic.MAIN:            return 'Портал';
+
     case HelpTopic.LIBRARY:         return 'Библиотека';
     case HelpTopic.RSFORM:          return '- карточка схемы';
     case HelpTopic.CST_LIST:        return '- список конституент';
     case HelpTopic.CST_EDITOR:      return '- редактор конституенты';
     case HelpTopic.GRAPH_TERM:      return '- граф термов';
-    case HelpTopic.RSTEMPLATES:     return '- шаблоны выражений';
+    case HelpTopic.CST_STATUS:      return '- статус конституенты';
+    case HelpTopic.CST_CLASS:       return '- класс конституенты';
+
     case HelpTopic.RSLANG:          return 'Экспликация';
-    case HelpTopic.CST_ATTRIBUTES:  return '- конституента';
+    case HelpTopic.CONSTITUENTA:    return '- конституента';
+    case HelpTopic.RSTEMPLATES:     return '- шаблоны выражений';
+
     case HelpTopic.TERM_CONTROL:    return 'Терминологизация';
     case HelpTopic.VERSIONS:        return 'Версионирование';
     case HelpTopic.EXTEOR:          return 'Экстеор';
@@ -382,18 +387,23 @@ export function describeHelpTopic(topic: HelpTopic): string {
   // prettier-ignore
   switch (topic) {
     case HelpTopic.MAIN:            return 'Общая справка по порталу';
-    case HelpTopic.LIBRARY:         return 'Описание работы с библиотекой схем';
-    case HelpTopic.RSFORM:          return 'Описание работы с описанием схемы';
-    case HelpTopic.CST_LIST:        return 'Описание работы со списком конституент';
-    case HelpTopic.CST_EDITOR:      return 'Описание редактирования конституенты';
-    case HelpTopic.GRAPH_TERM:      return 'Описание работы с графом термов схемы';
-    case HelpTopic.RSTEMPLATES:     return 'Описание работы с Банком выражений>';
+
+    case HelpTopic.LIBRARY:         return 'Интерфейс Библиотеки схем';
+    case HelpTopic.RSFORM:          return 'Интерфейс Карточки схемы';
+    case HelpTopic.CST_LIST:        return 'Интерфейс Списка конституент';
+    case HelpTopic.CST_EDITOR:      return 'Интерфейс редактирования конституенты';
+    case HelpTopic.GRAPH_TERM:      return 'Интерфейс графа термов';
+    case HelpTopic.CST_STATUS:      return 'Нотация отображения статуса конституенты';
+    case HelpTopic.CST_CLASS:       return 'Нотация отображения класса конституенты';
+
     case HelpTopic.RSLANG:          return 'Справка по языку родов структур и экспликации';
-    case HelpTopic.CST_ATTRIBUTES:  return 'Описание типов и свойств конституент';
+    case HelpTopic.CONSTITUENTA:    return 'Понятия конституенты и ее атрибутов';
+    case HelpTopic.RSTEMPLATES:     return 'Работа с шаблонными выражениями';
+
     case HelpTopic.TERM_CONTROL:    return 'Справка по контролю терминов и текстовым отсылкам';
     case HelpTopic.VERSIONS:        return 'Справка по управлению версиями схем';
     case HelpTopic.EXTEOR:          return 'Справка по программе для экспликации "Экстеор" для Windows';
-    case HelpTopic.API:             return 'Описание интерфейса для разработчиков';
+    case HelpTopic.API:             return 'Интерфейс для разработчиков';
     case HelpTopic.PRIVACY:         return 'Политика обработки персональных данных';
   }
 }

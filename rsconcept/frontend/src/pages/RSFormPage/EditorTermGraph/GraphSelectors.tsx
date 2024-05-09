@@ -1,6 +1,8 @@
+import BadgeHelp from '@/components/man/BadgeHelp';
 import { GraphLayout } from '@/components/ui/GraphUI';
+import Overlay from '@/components/ui/Overlay';
 import SelectSingle from '@/components/ui/SelectSingle';
-import { GraphColoring, GraphSizing } from '@/models/miscellaneous';
+import { GraphColoring, GraphSizing, HelpTopic } from '@/models/miscellaneous';
 import { mapLabelColoring, mapLabelLayout, mapLabelSizing } from '@/utils/labels';
 import { SelectorGraphColoring, SelectorGraphLayout, SelectorGraphSizing } from '@/utils/selectors';
 
@@ -25,6 +27,10 @@ function GraphSelectors({ coloring, setColoring, layout, setLayout, sizing, setS
         value={layout ? { value: layout, label: mapLabelLayout.get(layout) } : null}
         onChange={data => setLayout(data?.value ?? SelectorGraphLayout[0].value)}
       />
+      <Overlay position='right-[2.5rem] top-[0.3rem]'>
+        {coloring === 'status' ? <BadgeHelp topic={HelpTopic.CST_STATUS} className='min-w-[25rem]' /> : null}
+        {coloring === 'type' ? <BadgeHelp topic={HelpTopic.CST_CLASS} className='min-w-[25rem]' /> : null}
+      </Overlay>
       <SelectSingle
         noBorder
         placeholder='Цветовая схема'

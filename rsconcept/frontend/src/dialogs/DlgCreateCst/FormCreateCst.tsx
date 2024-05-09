@@ -50,7 +50,7 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
           value={{ value: state.cst_type, label: labelCstType(state.cst_type) }}
           onChange={data => partialUpdate({ cst_type: data?.value ?? CstType.BASE })}
         />
-        <BadgeHelp topic={HelpTopic.CST_ATTRIBUTES} offset={16} className='max-w-[40rem] max-h-[calc(100vh-2rem)]' />
+        <BadgeHelp topic={HelpTopic.CONSTITUENTA} offset={16} className='max-w-[40rem] max-h-[calc(100vh-2rem)]' />
         <TextInput
           id='dlg_cst_alias'
           dense

@@ -1,6 +1,8 @@
 import { IconClone, IconDestroy, IconMoveDown, IconMoveUp, IconNewItem, IconReset, IconSave } from '@/components/Icons';
+import BadgeHelp from '@/components/man/BadgeHelp';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
+import { HelpTopic } from '@/models/miscellaneous';
 import { messages, prepareTooltip } from '@/utils/labels';
 
 interface ConstituentaToolbarProps {
@@ -72,6 +74,7 @@ function ConstituentaToolbar({
         disabled={disabled || modified}
         onClick={onMoveDown}
       />
+      <BadgeHelp topic={HelpTopic.CST_EDITOR} offset={4} />
     </Overlay>
   );
 }
