@@ -61,13 +61,7 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
           </div>
         ) : null}
       </div>
-      <div
-        className='relative'
-        style={{
-          width: 'calc(100vw - 6rem - 2px)',
-          height: 'calc(100vh - 14rem - 2px)'
-        }}
-      >
+      <div className='relative w-[calc(100vw-6rem-2px)] h-[calc(100vh-14rem-2px)]'>
         <GraphUI
           animated={false}
           nodes={nodes}
