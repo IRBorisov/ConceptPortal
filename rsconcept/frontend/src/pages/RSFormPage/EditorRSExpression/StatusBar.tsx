@@ -39,6 +39,7 @@ function StatusBar({ isModified, processing, constituenta, parseData, onAnalyze 
 
   return (
     <div
+      tabIndex={-1}
       className={clsx(
         'w-[10rem] h-[1.75rem]',
         'px-2 flex items-center justify-center gap-2',

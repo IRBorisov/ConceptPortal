@@ -104,6 +104,7 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
         <button
           key='dlg_cst_show_comment'
           id='dlg_cst_show_comment'
+          tabIndex={-1}
           type='button'
           className='self-start cc-label clr-text-url hover:underline'
           onClick={() => setForceComment(true)}

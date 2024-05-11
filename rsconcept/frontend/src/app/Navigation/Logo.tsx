@@ -10,7 +10,7 @@ function Logo() {
   return (
     <img
       alt='Логотип КонцептПортал'
-      className={clsx('max-h-[1.6rem] min-w-fit', {
+      className={clsx('max-h-[1.6rem] w-fit', {
         'min-w-[11.5rem]': size.isSmall
       })}
       src={size.isSmall ? '/logo_sign.svg' : !darkMode ? '/logo_full.svg' : '/logo_full_dark.svg'}

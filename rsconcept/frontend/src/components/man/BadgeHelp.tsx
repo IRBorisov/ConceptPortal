@@ -20,7 +20,7 @@ function BadgeHelp({ topic, ...restProps }: BadgeHelpProps) {
     return null;
   }
   return (
-    <div id={`help-${topic}`} className='p-1'>
+    <div tabIndex={-1} id={`help-${topic}`} className='p-1'>
       <IconHelp size='1.25rem' className='icon-primary' />
       <Tooltip clickable anchorSelect={`#help-${topic}`} layer='z-modal-tooltip' {...restProps}>
         <div className='relative' onClick={event => event.stopPropagation()}>

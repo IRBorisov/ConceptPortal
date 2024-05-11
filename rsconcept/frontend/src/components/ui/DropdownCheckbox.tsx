@@ -25,7 +25,7 @@ function DropdownCheckbox({ title, setValue, disabled, ...restProps }: DropdownC
         !!setValue && !disabled && 'clr-hover'
       )}
     >
-      <Checkbox disabled={disabled} setValue={setValue} {...restProps} />
+      <Checkbox tabIndex={-1} disabled={disabled} setValue={setValue} {...restProps} />
     </motion.div>
   );
 }

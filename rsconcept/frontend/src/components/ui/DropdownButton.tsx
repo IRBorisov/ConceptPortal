@@ -26,6 +26,7 @@ function DropdownButton({
 }: DropdownButtonProps) {
   return (
     <motion.button
+      tabIndex={-1}
       type='button'
       onClick={onClick}
       className={clsx(

@@ -22,7 +22,7 @@ function DropdownIndicator<Option, Group extends GroupBase<Option> = GroupBase<O
   return (
     components.DropdownIndicator && (
       <components.DropdownIndicator {...props}>
-        {props.selectProps.menuIsOpen ? <IconDropArrow size='1.25rem' /> : <IconDropArrowUp size='1.25rem' />}
+        {props.selectProps.menuIsOpen ? <IconDropArrowUp size='1.25rem' /> : <IconDropArrow size='1.25rem' />}
       </components.DropdownIndicator>
     )
   );

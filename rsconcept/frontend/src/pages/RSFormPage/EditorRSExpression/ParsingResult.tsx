@@ -18,6 +18,7 @@ function ParsingResult({ isOpen, data, disabled, onShowError }: ParsingResultPro
 
   return (
     <motion.div
+      tabIndex={-1}
       className='text-sm border dense cc-scroll-y'
       initial={false}
       animate={isOpen ? 'open' : 'closed'}
@@ -29,6 +30,7 @@ function ParsingResult({ isOpen, data, disabled, onShowError }: ParsingResultPro
       {data?.errors.map((error, index) => {
         return (
           <p
+            tabIndex={-1}
             key={`error-${index}`}
             className={`clr-text-red ${disabled ? '' : 'cursor-pointer'}`}
             onClick={disabled ? undefined : () => onShowError(error)}

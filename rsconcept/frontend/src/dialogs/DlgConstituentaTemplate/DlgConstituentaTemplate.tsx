@@ -139,7 +139,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     <Modal
       header='Создание конституенты из шаблона'
       submitText='Создать'
-      className='w-[43rem] h-[36rem] px-6'
+      className='w-[43rem] h-[36.5rem] px-6'
       hideWindow={hideWindow}
       canSubmit={validated}
       onSubmit={handleSubmit}

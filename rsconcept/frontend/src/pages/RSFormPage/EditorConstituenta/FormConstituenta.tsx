@@ -9,6 +9,7 @@ import { IconSave } from '@/components/Icons';
 import RefsInput from '@/components/RefsInput';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
+import TextInput from '@/components/ui/TextInput';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { useRSForm } from '@/context/RSFormContext';
 import { CstType, IConstituenta, ICstUpdateData } from '@/models/rsform';
@@ -154,18 +155,14 @@ function FormConstituenta({
           disabled={disabled}
           onChange={newValue => setTerm(newValue)}
         />
-        <TextArea
+        <TextInput
           id='cst_typification'
           dense
           noBorder
           disabled={true}
           label='Типизация'
-          rows={typification.length > ROW_SIZE_IN_CHARACTERS ? 2 : 1}
           value={typification}
           colors='clr-app'
-          style={{
-            resize: 'none'
-          }}
         />
         <AnimatePresence>
           <AnimateFade key='cst_expression_fade' hideContent={!!state && !state?.definition_formal && isElementary}>
@@ -225,6 +222,7 @@ function FormConstituenta({
             <button
               key='cst_disable_comment'
               id='cst_disable_comment'
+              tabIndex={-1}
               type='button'
               className='self-start cc-label clr-text-url hover:underline'
               onClick={() => setForceComment(true)}

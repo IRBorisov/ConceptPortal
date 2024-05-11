@@ -140,7 +140,7 @@ function DataTable<TData extends RowData>({
   }, [rows, dense, noHeader, contentHeight]);
 
   return (
-    <div id={id} className={className} style={{ minHeight: fixedSize, maxHeight: fixedSize, ...style }}>
+    <div tabIndex={-1} id={id} className={className} style={{ minHeight: fixedSize, maxHeight: fixedSize, ...style }}>
       <table className='w-full'>
         {!noHeader ? (
           <TableHeader

@@ -45,7 +45,7 @@ function TextInput({
           'leading-tight truncate hover:text-clip',
           {
             'px-3': !noBorder || !disabled,
-            'flex-grow': dense,
+            'flex-grow max-w-full': dense,
             'border': !noBorder,
             'clr-outline': !noOutline
           },

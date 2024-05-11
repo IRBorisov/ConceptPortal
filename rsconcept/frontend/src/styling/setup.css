@@ -41,6 +41,7 @@ html {
 
 :root {
   font-size: 16px;
+  line-height: 24px;
   font-family: var(--font-main);
 
   color: var(--cl-fg-100);
@@ -57,6 +58,7 @@ html {
 @media only screen and (max-width: 639px) {
   :root {
     font-size: 12px;
+    line-height: 18px;
   }
 }
 
@@ -64,9 +66,10 @@ html {
   outline-width: 2px;
   outline-style: solid;
   outline-color: transparent;
-  .dark & {
-    outline-color: transparent;
-  }
+}
+
+:focus-visible {
+  outline: 0;
 }
 
 ::selection {
@@ -121,6 +124,10 @@ div:not(.dense) > p {
 
   b {
     @apply font-semibold;
+  }
+
+  li {
+    list-style-position: inside;
   }
 
   li::marker {

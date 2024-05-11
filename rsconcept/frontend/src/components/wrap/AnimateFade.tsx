@@ -25,6 +25,7 @@ function AnimateFade({
   }
   return (
     <motion.div
+      tabIndex={-1}
       initial={{ ...(!noFadeIn ? animateFade.initial : {}) }}
       animate={hideContent ? 'hidden' : 'active'}
       variants={animateFade.variants}
