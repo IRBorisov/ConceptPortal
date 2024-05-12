@@ -62,14 +62,12 @@ html {
   }
 }
 
-:focus {
+:focus,
+:focus-visible,
+:focus-within {
   outline-width: 2px;
   outline-style: solid;
   outline-color: transparent;
-}
-
-:focus-visible {
-  outline: 0;
 }
 
 ::selection {

@@ -21,7 +21,7 @@ function SearchBar({ id, value, onChange, noBorder, ...restProps }: SearchBarPro
         noOutline
         placeholder='Поиск'
         type='search'
-        className='w-full pl-10'
+        className='w-full pl-10 outline-none'
         noBorder={noBorder}
         value={value}
         onChange={event => (onChange ? onChange(event.target.value) : undefined)}

@@ -16,6 +16,11 @@
     font-weight: 600;
     font-variant: small-caps;
   }
+  @supports (-moz-appearance: none) {
+    .font-controls {
+      font-size: 0.85rem;
+    }
+  }
   .font-math {
     font-family: var(--font-math);
   }
@@ -113,7 +118,8 @@
     }
   }
 
-  :is(.clr-outline, .clr-btn-primary):focus-visible {
+  :is(.clr-outline, .clr-btn-primary, .focus-frame):focus-visible,
+  .focus-frame:has(:focus-visible) {
     outline-width: 2px;
     outline-style: solid;
     outline-color: var(--cl-prim-bg-100);

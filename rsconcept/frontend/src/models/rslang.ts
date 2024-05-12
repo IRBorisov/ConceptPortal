@@ -208,6 +208,7 @@ export enum RSErrorType {
   missingParenthesis = 33798,
   missingCurlyBrace = 33799,
   invalidQuantifier = 33800,
+  invalidImperative = 33801,
   expectedArgDeclaration = 33812,
   expectedLocal = 33813,
   localDoubleDeclare = 10241,

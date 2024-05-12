@@ -19,8 +19,10 @@ function TabLabel({ label, title, titleHtml, hideTitle, className, ...otherProps
         'clr-tab',
         'text-sm whitespace-nowrap font-controls',
         'select-none hover:cursor-pointer',
+        'outline-none',
         className
       )}
+      tabIndex='-1'
       data-tooltip-id={!!title || !!titleHtml ? globals.tooltip : undefined}
       data-tooltip-html={titleHtml}
       data-tooltip-content={title}

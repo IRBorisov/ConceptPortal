@@ -57,6 +57,10 @@ function SelectSingle<Option, Group extends GroupBase<Option> = GroupBase<Option
 
   const adjustedStyles: StylesConfig<Option, false, Group> = useMemo(
     () => ({
+      container: defaultStyles => ({
+        ...defaultStyles,
+        borderRadius: '0.25rem'
+      }),
       control: (defaultStyles, { isDisabled }) => ({
         ...defaultStyles,
         borderRadius: '0.25rem',
@@ -116,6 +120,7 @@ function SelectSingle<Option, Group extends GroupBase<Option> = GroupBase<Option
       })}
       menuPortalTarget={!noPortal ? document.body : null}
       styles={adjustedStyles}
+      classNames={{ container: () => 'focus-frame' }}
       {...restProps}
     />
   );

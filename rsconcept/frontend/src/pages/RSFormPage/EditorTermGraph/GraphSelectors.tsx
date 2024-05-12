@@ -18,7 +18,7 @@ interface GraphSelectorsProps {
 
 function GraphSelectors({ coloring, setColoring, layout, setLayout, sizing, setSizing }: GraphSelectorsProps) {
   return (
-    <div className='select-none border rounded-t-md rounded-b-none divide-y'>
+    <div className='border rounded-b-none select-none clr-input rounded-t-md'>
       <SelectSingle
         noBorder
         placeholder='Способ расположения'
@@ -27,11 +27,12 @@ function GraphSelectors({ coloring, setColoring, layout, setLayout, sizing, setS
         value={layout ? { value: layout, label: mapLabelLayout.get(layout) } : null}
         onChange={data => setLayout(data?.value ?? SelectorGraphLayout[0].value)}
       />
-      <Overlay position='right-[2.5rem] top-[0.3rem]'>
+      <Overlay position='right-[2.5rem] top-[0.5rem]'>
         {coloring === 'status' ? <BadgeHelp topic={HelpTopic.CST_STATUS} className='min-w-[25rem]' /> : null}
         {coloring === 'type' ? <BadgeHelp topic={HelpTopic.CST_CLASS} className='min-w-[25rem]' /> : null}
       </Overlay>
       <SelectSingle
+        className='my-1'
         noBorder
         placeholder='Цветовая схема'
         options={SelectorGraphColoring}

@@ -53,6 +53,7 @@ function CheckboxTristate({
       className={clsx(
         'flex items-center gap-2', // prettier: split lines
         'outline-none',
+        'focus-frame',
         cursor,
         className
       )}

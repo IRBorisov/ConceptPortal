@@ -665,6 +665,8 @@ export function describeRSError(error: IRSErrorDescription): string {
       return "Пропущен символ '}'";
     case RSErrorType.invalidQuantifier:
       return 'Некорректная кванторная декларация';
+    case RSErrorType.invalidImperative:
+      return 'Использование императивного синтаксиса вне императивного блока';
     case RSErrorType.expectedArgDeclaration:
       return 'Ожидалось объявление аргументов терм-функции';
     case RSErrorType.expectedLocal:

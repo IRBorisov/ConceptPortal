@@ -5,6 +5,7 @@ import Label from './Label';
 
 export interface TextAreaProps extends CProps.Editor, CProps.Colors, CProps.TextArea {
   dense?: boolean;
+  noResize?: boolean;
 }
 
 function TextArea({
@@ -15,6 +16,7 @@ function TextArea({
   dense,
   noBorder,
   noOutline,
+  noResize,
   className,
   colors = 'clr-input',
   ...restProps
@@ -35,7 +37,9 @@ function TextArea({
         className={clsx(
           'px-3 py-2',
           'leading-tight',
+          'overflow-x-hidden overflow-y-auto',
           {
+            'resize-none': noResize,
             'border': !noBorder,
             'flex-grow max-w-full': dense,
             'clr-outline': !noOutline

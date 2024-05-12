@@ -43,10 +43,10 @@ function ViewConstituents({ expression, schema, activeID, isBottom, onOpenEdit }
   return (
     <motion.div
       className={clsx(
-        'border', // prettier: split-lines
+        'border overflow-hidden', // prettier: split-lines
         {
-          'mt-[2.25rem]': !isBottom, // prettier: split-lines
-          'mt-3 mx-6': isBottom
+          'mt-[2.2rem] rounded-l-md rounded-r-none': !isBottom, // prettier: split-lines
+          'mt-3 mx-6 rounded-md': isBottom
         }
       )}
       initial={{ ...animateSideView.initial }}

@@ -154,7 +154,6 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
       />
       <div className='flex justify-between whitespace-nowrap'>
         <Checkbox
-          tabIndex={-1}
           id='schema_common'
           label='Общедоступная схема'
           title='Общедоступные схемы видны всем пользователям и могут быть изменены'
@@ -163,7 +162,6 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
           setValue={value => setCommon(value)}
         />
         <Checkbox
-          tabIndex={-1}
           id='schema_immutable'
           label='Неизменная схема'
           title='Только администраторы могут присваивать схемам неизменный статус'
