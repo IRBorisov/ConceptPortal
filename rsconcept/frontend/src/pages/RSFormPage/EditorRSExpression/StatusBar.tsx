@@ -39,13 +39,14 @@ function StatusBar({ isModified, processing, constituenta, parseData, onAnalyze 
 
   return (
     <div
-      tabIndex={-1}
+      tabIndex={0}
       className={clsx(
         'w-[10rem] h-[1.75rem]',
         'px-2 flex items-center justify-center gap-2',
         'border',
         'select-none',
         'cursor-pointer',
+        'focus-frame',
         'duration-500 transition-colors'
       )}
       style={{ backgroundColor: processing ? colors.bgDefault : colorBgCstStatus(status, colors) }}
