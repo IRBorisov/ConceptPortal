@@ -222,10 +222,10 @@ export class RSTextWrapper extends CodeMirrorWrapper {
       case TokenID.LESSER_OR_EQ:
         this.replaceWith('≤');
         return true;
-      case TokenID.PUNCTUATION_ASSIGN:
+      case TokenID.ASSIGN:
         this.replaceWith(':=');
         return true;
-      case TokenID.PUNCTUATION_ITERATE:
+      case TokenID.ITERATE:
         this.replaceWith(':∈');
         return true;
       case TokenID.MULTIPLY:
@@ -247,7 +247,7 @@ export class RSTextWrapper extends CodeMirrorWrapper {
         case 'Digit3': return this.insertToken(TokenID.LOGIC_OR); // #
         case 'Digit4': return this.insertToken(TokenID.LOGIC_EQUIVALENT); // $
         case 'Digit5': return this.insertToken(TokenID.SET_SYMMETRIC_MINUS); // %
-        case 'Digit6': return this.insertToken(TokenID.PUNCTUATION_ASSIGN); // ^
+        case 'Digit6': return this.insertToken(TokenID.ASSIGN); // ^
         case 'Digit7': return this.insertToken(TokenID.GREATER_OR_EQ); // &
         case 'Digit8': return this.insertToken(TokenID.LESSER_OR_EQ); // *
         case 'Digit9': return this.insertToken(TokenID.PUNCTUATION_PL); // (
@@ -276,7 +276,7 @@ export class RSTextWrapper extends CodeMirrorWrapper {
         case 'Digit3': return this.insertToken(TokenID.LOGIC_AND);
         case 'Digit4': return this.insertToken(TokenID.LOGIC_IMPLICATION);
         case 'Digit5': return this.insertToken(TokenID.SET_MINUS);
-        case 'Digit6': return this.insertToken(TokenID.PUNCTUATION_ITERATE);
+        case 'Digit6': return this.insertToken(TokenID.ITERATE);
         case 'Digit7': return this.insertToken(TokenID.SUBSET);
         case 'Digit8': return this.insertToken(TokenID.MULTIPLY);
         case 'BracketLeft': return this.insertToken(TokenID.PUNCTUATION_SL);

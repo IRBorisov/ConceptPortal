@@ -362,14 +362,11 @@ export function colorBgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): s
     case TokenID.NT_ARG_DECL:
     case TokenID.NT_FUNC_CALL:
     case TokenID.NT_ARGUMENTS:
-    case TokenID.NT_IMP_DECLARE:
-    case TokenID.NT_IMP_ASSIGN:
-    case TokenID.NT_IMP_LOGIC:
     case TokenID.NT_RECURSIVE_SHORT:
       return '';
 
-    case TokenID.PUNCTUATION_ASSIGN:
-    case TokenID.PUNCTUATION_ITERATE:
+    case TokenID.ASSIGN:
+    case TokenID.ITERATE:
       return colors.bgRed;
   }
   // node

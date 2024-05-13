@@ -129,8 +129,8 @@ export function labelToken(id: TokenID): string {
     case TokenID.CARD:                return 'card()';
     case TokenID.BOOL:                return 'bool()';
     case TokenID.DEBOOL:              return 'debool()';
-    case TokenID.PUNCTUATION_ASSIGN:  return ':=';
-    case TokenID.PUNCTUATION_ITERATE: return ':∈';
+    case TokenID.ASSIGN:              return ':=';
+    case TokenID.ITERATE:             return ':∈';
   }
   return `no label: ${id}`;
 }
@@ -196,8 +196,8 @@ export function describeToken(id: TokenID): string {
     case TokenID.CARD:                  return prepareTooltip('Мощность', 'Alt + C');
     case TokenID.BOOL:                  return prepareTooltip('Синглетон', 'Alt + B');
     case TokenID.DEBOOL:                return prepareTooltip('Десинглетон', 'Alt + V');
-    case TokenID.PUNCTUATION_ASSIGN:    return prepareTooltip('Присвоение', 'Alt + Shift + 6');
-    case TokenID.PUNCTUATION_ITERATE:   return prepareTooltip('Перебор элементов множества', 'Alt + 6');
+    case TokenID.ASSIGN:                return prepareTooltip('Присвоение', 'Alt + Shift + 6');
+    case TokenID.ITERATE:               return prepareTooltip('Перебор элементов множества', 'Alt + 6');
   }
   return `no description: ${id}`;
 }
@@ -533,9 +533,6 @@ export function labelSyntaxTree(node: ISyntaxTreeNode): string {
     case TokenID.NT_ARGUMENTS: return 'ARGS';
 
     case TokenID.NT_FUNC_DEFINITION: return 'FUNCTION_DEFINITION';
-    case TokenID.NT_IMP_DECLARE: return 'DECLARE';
-    case TokenID.NT_IMP_ASSIGN: return 'ASSIGN';
-    case TokenID.NT_IMP_LOGIC: return 'CHECK';
 
     case TokenID.NT_RECURSIVE_SHORT: return labelToken(TokenID.NT_RECURSIVE_FULL);
 
@@ -570,8 +567,8 @@ export function labelSyntaxTree(node: ISyntaxTreeNode): string {
     case TokenID.CARD:
     case TokenID.BOOL:
     case TokenID.DEBOOL:
-    case TokenID.PUNCTUATION_ASSIGN:
-    case TokenID.PUNCTUATION_ITERATE:
+    case TokenID.ASSIGN:
+    case TokenID.ITERATE:
       return labelToken(node.typeID);
   }
   // node

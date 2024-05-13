@@ -119,14 +119,11 @@ Index {
 }
 variable {
   Local |
-  "(" variableComposite ")"
+  tuple
 }
-variableComposite {
-  var_all "," variable
-}
-var_all {
+variable_pack {
   variable |
-  variableComposite
+  variable_pack "," variable
 }
 
 
@@ -139,6 +136,8 @@ logic {
 }
 
 logic_predicates {
+  variable ":∈" setexpr |
+  variable ":=" setexpr |
   setexpr "∈" setexpr |
   setexpr "∉" setexpr |
   setexpr "⊆" setexpr |
@@ -155,15 +154,8 @@ logic_predicates {
 logic_unary {
   !not "¬" logic |
   Predicate "[" setexpr_enum "]" |
-  "∀" quant_var "∈" setexpr !quant logic |
-  "∃" quant_var "∈" setexpr !quant logic
-}
-quant_var {
-  variable |
-  quant_var_enum
-}
-quant_var_enum {
-  quant_var "," variable
+  "∀" variable_pack "∈" setexpr !quant logic |
+  "∃" variable_pack "∈" setexpr !quant logic
 }
 
 logic_binary {
@@ -256,11 +248,6 @@ imperative {
   PrefixI "{" setexpr "|" imp_blocks "}"
 }
 imp_blocks {
-  imp_block |
-  imp_blocks ";" imp_block
-}
-imp_block {
-  Local ":∈" setexpr |
-  Local ":=" setexpr |
-  logic
+  logic |
+  imp_blocks ";" logic
 }
