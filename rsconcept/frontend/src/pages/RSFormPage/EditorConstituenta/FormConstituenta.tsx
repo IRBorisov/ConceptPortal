@@ -145,7 +145,7 @@ function FormConstituenta({
           key='cst_term'
           id='cst_term'
           label='Термин'
-          maxHeight='7.5rem'
+          maxHeight='8rem'
           placeholder='Обозначение, используемое в текстовых определениях'
           schema={schema}
           value={term}
@@ -197,7 +197,7 @@ function FormConstituenta({
               label='Текстовое определение'
               placeholder='Текстовая интерпретация формального выражения'
               minHeight='3.75rem'
-              maxHeight='7.5rem'
+              maxHeight='8rem'
               schema={schema}
               value={textDefinition}
               initialValue={state?.definition_raw ?? ''}
