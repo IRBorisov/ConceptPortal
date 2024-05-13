@@ -74,7 +74,7 @@ function ConstituentaToolbar({
         disabled={disabled || modified}
         onClick={onMoveDown}
       />
-      <BadgeHelp topic={HelpTopic.CST_EDITOR} offset={4} />
+      <BadgeHelp topic={HelpTopic.RSFORM_EDITOR} offset={4} />
     </Overlay>
   );
 }

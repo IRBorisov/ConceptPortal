@@ -1,17 +1,25 @@
 import { HelpTopic } from '@/models/miscellaneous';
 
 import HelpAPI from '../man/HelpAPI';
+import HelpConceptRelations from '../man/HelpConceptRelations';
+import HelpConceptSystem from '../man/HelpConceptSystem';
 import HelpCstAttributes from '../man/HelpCstAttributes';
 import HelpCstClass from '../man/HelpCstClass';
 import HelpCstEditor from '../man/HelpCstEditor';
 import HelpCstStatus from '../man/HelpCstStatus';
 import HelpExteor from '../man/HelpExteor';
+import HelpInterface from '../man/HelpInterface';
 import HelpLibrary from '../man/HelpLibrary';
 import HelpMain from '../man/HelpMain';
 import HelpPrivacy from '../man/HelpPrivacy';
 import HelpRSFormItems from '../man/HelpRSFormItems';
 import HelpRSFormMeta from '../man/HelpRSFormMeta';
+import HelpRSFormUI from '../man/HelpRSFormUI';
 import HelpRSLang from '../man/HelpRSLang';
+import HelpRSLangCorrect from '../man/HelpRSLangCorrect';
+import HelpRSLangInterpret from '../man/HelpRSLangInterpret';
+import HelpRSLangOperations from '../man/HelpRSLangOperations';
+import HelpRSLangTypes from '../man/HelpRSLangTypes';
 import HelpRSTemplates from '../man/HelpRSTemplates';
 import HelpTermGraph from '../man/HelpTermGraph';
 import HelpTerminologyControl from '../man/HelpTerminologyControl';
@@ -23,16 +31,27 @@ interface InfoTopicProps {
 
 function InfoTopic({ topic }: InfoTopicProps) {
   if (topic === HelpTopic.MAIN) return <HelpMain />;
+
+  if (topic === HelpTopic.INTERFACE) return <HelpInterface />;
   if (topic === HelpTopic.LIBRARY) return <HelpLibrary />;
-  if (topic === HelpTopic.RSFORM) return <HelpRSFormMeta />;
-  if (topic === HelpTopic.CST_LIST) return <HelpRSFormItems />;
-  if (topic === HelpTopic.CST_EDITOR) return <HelpCstEditor />;
+  if (topic === HelpTopic.RSFORM_UI) return <HelpRSFormUI />;
+  if (topic === HelpTopic.RSFORM_CARD) return <HelpRSFormMeta />;
+  if (topic === HelpTopic.RSFORM_LIST) return <HelpRSFormItems />;
+  if (topic === HelpTopic.RSFORM_EDITOR) return <HelpCstEditor />;
   if (topic === HelpTopic.GRAPH_TERM) return <HelpTermGraph />;
   if (topic === HelpTopic.CST_STATUS) return <HelpCstStatus />;
   if (topic === HelpTopic.CST_CLASS) return <HelpCstClass />;
+
   if (topic === HelpTopic.RSLANG) return <HelpRSLang />;
-  if (topic === HelpTopic.CONSTITUENTA) return <HelpCstAttributes />;
-  if (topic === HelpTopic.RSTEMPLATES) return <HelpRSTemplates />;
+  if (topic === HelpTopic.CC_SYSTEM) return <HelpConceptSystem />;
+  if (topic === HelpTopic.CC_CONSTITUENTA) return <HelpCstAttributes />;
+  if (topic === HelpTopic.CC_RELATIONS) return <HelpConceptRelations />;
+  if (topic === HelpTopic.RSL_TYPES) return <HelpRSLangTypes />;
+  if (topic === HelpTopic.RSL_CORRECT) return <HelpRSLangCorrect />;
+  if (topic === HelpTopic.RSL_INTERPRET) return <HelpRSLangInterpret />;
+  if (topic === HelpTopic.RSL_TEMPLATES) return <HelpRSTemplates />;
+  if (topic === HelpTopic.RSL_OPERATIONS) return <HelpRSLangOperations />;
+
   if (topic === HelpTopic.TERM_CONTROL) return <HelpTerminologyControl />;
   if (topic === HelpTopic.VERSIONS) return <HelpVersions />;
   if (topic === HelpTopic.EXTEOR) return <HelpExteor />;

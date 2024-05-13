@@ -11,7 +11,7 @@ function HelpRSFormItems() {
   return (
   <div className='dense'>
     <h1>Список конституент</h1>
-    <p><IconAlias className='inline-icon'/>Конституенты обладают уникальным <TextURL text='Именем' href={urls.help_topic(HelpTopic.CONSTITUENTA)}/></p>
+    <p><IconAlias className='inline-icon'/>Конституенты обладают уникальным <TextURL text='Именем' href={urls.help_topic(HelpTopic.CC_CONSTITUENTA)}/></p>
     <p><IconMoveUp className='inline-icon'/><IconMoveDown className='inline-icon'/> Список поддерживает выделение и перемещение </p>
 
     <h2>Управление списком</h2>

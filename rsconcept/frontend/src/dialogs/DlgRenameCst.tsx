@@ -60,7 +60,7 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
         }}
         onChange={data => updateData({ cst_type: data?.value ?? CstType.BASE })}
       />
-      <BadgeHelp topic={HelpTopic.CONSTITUENTA} offset={16} className='max-w-[40rem] max-h-[calc(100vh-2rem)]' />
+      <BadgeHelp topic={HelpTopic.CC_CONSTITUENTA} offset={16} className='max-w-[40rem] max-h-[calc(100vh-2rem)]' />
       <TextInput
         id='dlg_cst_alias'
         dense

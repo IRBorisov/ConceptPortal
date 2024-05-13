@@ -145,7 +145,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
       onSubmit={handleSubmit}
     >
       <Overlay position='top-0 right-[6rem]'>
-        <BadgeHelp topic={HelpTopic.RSTEMPLATES} className='max-w-[40rem]' offset={12} />
+        <BadgeHelp topic={HelpTopic.RSL_TEMPLATES} className='max-w-[40rem]' offset={12} />
       </Overlay>
       <Tabs
         selectedTabClassName='clr-selected'

@@ -360,17 +360,27 @@ export function labelHelpTopic(topic: HelpTopic): string {
   switch (topic) {
     case HelpTopic.MAIN:            return 'Портал';
 
-    case HelpTopic.LIBRARY:         return 'Библиотека';
-    case HelpTopic.RSFORM:          return '- карточка схемы';
-    case HelpTopic.CST_LIST:        return '- список конституент';
-    case HelpTopic.CST_EDITOR:      return '- редактор конституенты';
-    case HelpTopic.GRAPH_TERM:      return '- граф термов';
-    case HelpTopic.CST_STATUS:      return '- статус конституенты';
-    case HelpTopic.CST_CLASS:       return '- класс конституенты';
+    case HelpTopic.INTERFACE:       return 'Интерфейс';
+    case HelpTopic.LIBRARY:         return '- библиотека';
+    case HelpTopic.RSFORM_UI:       return '- концептуальная схема';
+    case HelpTopic.RSFORM_CARD:     return '= карточка схемы';
+    case HelpTopic.RSFORM_LIST:     return '= список конституент';
+    case HelpTopic.RSFORM_EDITOR:   return '= редактор конституенты';
+    case HelpTopic.GRAPH_TERM:      return '= граф термов';
+    case HelpTopic.CST_STATUS:      return '= статус конституенты';
+    case HelpTopic.CST_CLASS:       return '= класс конституенты';
+
+    case HelpTopic.CONCEPTUAL:      return 'Концептуализация';
+    case HelpTopic.CC_SYSTEM:       return '- система определений';
+    case HelpTopic.CC_CONSTITUENTA: return '- конституента';
+    case HelpTopic.CC_RELATIONS:    return '- связи понятий';
 
     case HelpTopic.RSLANG:          return 'Экспликация';
-    case HelpTopic.CONSTITUENTA:    return '- конституента';
-    case HelpTopic.RSTEMPLATES:     return '- шаблоны выражений';
+    case HelpTopic.RSL_TYPES:       return '- типизация';
+    case HelpTopic.RSL_CORRECT:     return '- переносимость';
+    case HelpTopic.RSL_INTERPRET:   return '- интерпретируемость';
+    case HelpTopic.RSL_TEMPLATES:   return '- шаблоны выражений';
+    case HelpTopic.RSL_OPERATIONS:  return '- операции';
 
     case HelpTopic.TERM_CONTROL:    return 'Терминологизация';
     case HelpTopic.VERSIONS:        return 'Версионирование';
@@ -388,17 +398,27 @@ export function describeHelpTopic(topic: HelpTopic): string {
   switch (topic) {
     case HelpTopic.MAIN:            return 'Общая справка по порталу';
 
+    case HelpTopic.INTERFACE:       return 'Описание интерфейса пользователя';
     case HelpTopic.LIBRARY:         return 'Интерфейс Библиотеки схем';
-    case HelpTopic.RSFORM:          return 'Интерфейс Карточки схемы';
-    case HelpTopic.CST_LIST:        return 'Интерфейс Списка конституент';
-    case HelpTopic.CST_EDITOR:      return 'Интерфейс редактирования конституенты';
+    case HelpTopic.RSFORM_UI:       return 'Просмотр и редактирование концептуальной схемы';
+    case HelpTopic.RSFORM_CARD:     return 'Интерфейс Карточки схемы';
+    case HelpTopic.RSFORM_LIST:     return 'Интерфейс Списка конституент';
+    case HelpTopic.RSFORM_EDITOR:   return 'Интерфейс редактирования конституенты';
     case HelpTopic.GRAPH_TERM:      return 'Интерфейс графа термов';
     case HelpTopic.CST_STATUS:      return 'Нотация отображения статуса конституенты';
     case HelpTopic.CST_CLASS:       return 'Нотация отображения класса конституенты';
 
+    case HelpTopic.CONCEPTUAL:      return 'Основы концептуализации и концептуального мышления';
+    case HelpTopic.CC_SYSTEM:       return 'Концептуальная схема как система понятий';
+    case HelpTopic.CC_CONSTITUENTA: return 'Понятия конституенты и ее атрибутов';
+    case HelpTopic.CC_RELATIONS:    return 'Отношения между конституентами';
+
     case HelpTopic.RSLANG:          return 'Справка по языку родов структур и экспликации';
-    case HelpTopic.CONSTITUENTA:    return 'Понятия конституенты и ее атрибутов';
-    case HelpTopic.RSTEMPLATES:     return 'Работа с шаблонными выражениями';
+    case HelpTopic.RSL_TYPES:       return 'Система типов в родоструктурной экспликации';
+    case HelpTopic.RSL_CORRECT:     return 'Корректность и переносимость определений';
+    case HelpTopic.RSL_INTERPRET:   return 'Интерпретация формальных определений';
+    case HelpTopic.RSL_TEMPLATES:   return 'Работа с шаблонными выражениями';
+    case HelpTopic.RSL_OPERATIONS:  return 'Операции над концептуальными схемами';
 
     case HelpTopic.TERM_CONTROL:    return 'Справка по контролю терминов и текстовым отсылкам';
     case HelpTopic.VERSIONS:        return 'Справка по управлению версиями схем';

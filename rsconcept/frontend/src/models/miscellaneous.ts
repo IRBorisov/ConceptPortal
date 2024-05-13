@@ -43,16 +43,29 @@ export type FontStyle = 'controls' | 'main' | 'math' | 'math2';
  */
 export enum HelpTopic {
   MAIN = 'main',
-  LIBRARY = 'library',
-  RSFORM = 'rsform',
-  CST_LIST = 'cst-list',
-  CST_EDITOR = 'cst-editor',
-  GRAPH_TERM = 'graph-term',
-  CST_STATUS = 'cst-status',
-  CST_CLASS = 'cst-class',
+
+  INTERFACE = 'user-interface',
+  LIBRARY = 'ui-library',
+  RSFORM_UI = 'ui-rsform',
+  RSFORM_CARD = 'ui-rsform-card',
+  RSFORM_LIST = 'ui-rsform-list',
+  RSFORM_EDITOR = 'ui-rsform-editor',
+  GRAPH_TERM = 'ui-rsform-graph',
+  CST_STATUS = 'ui-rsform-cst-status',
+  CST_CLASS = 'ui-rsform-cst-class',
+
+  CONCEPTUAL = 'concept',
+  CC_SYSTEM = 'rslang-rsform',
+  CC_CONSTITUENTA = 'rslang-cst',
+  CC_RELATIONS = 'rslang-relations',
+
   RSLANG = 'rslang',
-  CONSTITUENTA = 'constituenta',
-  RSTEMPLATES = 'rstemplates',
+  RSL_TYPES = 'rslang-types',
+  RSL_CORRECT = 'rslang-correctness',
+  RSL_INTERPRET = 'rslang-interpretation',
+  RSL_TEMPLATES = 'rslang-templates',
+  RSL_OPERATIONS = 'rslang-operations',
+
   TERM_CONTROL = 'terminology-control',
   VERSIONS = 'versions',
   EXTEOR = 'exteor',
