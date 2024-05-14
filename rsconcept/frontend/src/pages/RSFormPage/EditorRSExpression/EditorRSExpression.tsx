@@ -205,7 +205,7 @@ function EditorRSExpression({
           parseData={parser.parseData}
           onAnalyze={() => handleCheckExpression()}
         />
-        <BadgeHelp topic={HelpTopic.CST_STATUS} offset={4} />
+        <BadgeHelp topic={HelpTopic.UI_CST_STATUS} offset={4} />
       </Overlay>
 
       <RSInput

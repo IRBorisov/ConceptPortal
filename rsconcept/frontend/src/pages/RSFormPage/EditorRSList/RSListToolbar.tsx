@@ -68,7 +68,7 @@ function RSListToolbar() {
         disabled={controller.isProcessing || controller.nothingSelected}
         onClick={controller.deleteCst}
       />
-      <BadgeHelp topic={HelpTopic.RSFORM_LIST} offset={5} />
+      <BadgeHelp topic={HelpTopic.UI_RSFORM_LIST} offset={5} />
     </Overlay>
   );
 }

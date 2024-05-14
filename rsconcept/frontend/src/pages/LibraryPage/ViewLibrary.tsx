@@ -124,7 +124,7 @@ function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
             'flex gap-1'
           )}
         >
-          <BadgeHelp topic={HelpTopic.LIBRARY} className='max-w-[30rem] text-sm' offset={5} place='right-start' />
+          <BadgeHelp topic={HelpTopic.UI_LIBRARY} className='max-w-[30rem] text-sm' offset={5} place='right-start' />
         </div>
       </div>
       <DataTable

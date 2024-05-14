@@ -45,14 +45,14 @@ export enum HelpTopic {
   MAIN = 'main',
 
   INTERFACE = 'user-interface',
-  LIBRARY = 'ui-library',
-  RSFORM_UI = 'ui-rsform',
-  RSFORM_CARD = 'ui-rsform-card',
-  RSFORM_LIST = 'ui-rsform-list',
-  RSFORM_EDITOR = 'ui-rsform-editor',
-  GRAPH_TERM = 'ui-rsform-graph',
-  CST_STATUS = 'ui-rsform-cst-status',
-  CST_CLASS = 'ui-rsform-cst-class',
+  UI_LIBRARY = 'ui-library',
+  UI_RSFORM = 'ui-rsform',
+  UI_RSFORM_CARD = 'ui-rsform-card',
+  UI_RSFORM_LIST = 'ui-rsform-list',
+  UI_RSFORM_EDITOR = 'ui-rsform-editor',
+  UI_GRAPH_TERM = 'ui-rsform-graph',
+  UI_CST_STATUS = 'ui-rsform-cst-status',
+  UI_CST_CLASS = 'ui-rsform-cst-class',
 
   CONCEPTUAL = 'concept',
   CC_SYSTEM = 'rslang-rsform',
@@ -72,6 +72,46 @@ export enum HelpTopic {
   API = 'api',
   PRIVACY = 'privacy'
 }
+
+/**
+ *  Manual topics hierarchy.
+ */
+export const topicParent: Map<HelpTopic, HelpTopic> = new Map([
+  [HelpTopic.MAIN, HelpTopic.MAIN],
+
+  [HelpTopic.INTERFACE, HelpTopic.INTERFACE],
+  [HelpTopic.UI_LIBRARY, HelpTopic.INTERFACE],
+  [HelpTopic.UI_RSFORM, HelpTopic.INTERFACE],
+  [HelpTopic.UI_RSFORM_CARD, HelpTopic.UI_RSFORM],
+  [HelpTopic.UI_RSFORM_LIST, HelpTopic.UI_RSFORM],
+  [HelpTopic.UI_RSFORM_EDITOR, HelpTopic.UI_RSFORM],
+  [HelpTopic.UI_GRAPH_TERM, HelpTopic.UI_RSFORM],
+  [HelpTopic.UI_CST_STATUS, HelpTopic.UI_RSFORM],
+  [HelpTopic.UI_CST_CLASS, HelpTopic.UI_RSFORM],
+
+  [HelpTopic.CONCEPTUAL, HelpTopic.CONCEPTUAL],
+  [HelpTopic.CC_SYSTEM, HelpTopic.CONCEPTUAL],
+  [HelpTopic.CC_CONSTITUENTA, HelpTopic.CONCEPTUAL],
+  [HelpTopic.CC_RELATIONS, HelpTopic.CONCEPTUAL],
+
+  [HelpTopic.RSLANG, HelpTopic.RSLANG],
+  [HelpTopic.RSL_TYPES, HelpTopic.RSLANG],
+  [HelpTopic.RSL_CORRECT, HelpTopic.RSLANG],
+  [HelpTopic.RSL_INTERPRET, HelpTopic.RSLANG],
+  [HelpTopic.RSL_TEMPLATES, HelpTopic.RSLANG],
+  [HelpTopic.RSL_OPERATIONS, HelpTopic.RSLANG],
+
+  [HelpTopic.TERM_CONTROL, HelpTopic.TERM_CONTROL],
+  [HelpTopic.VERSIONS, HelpTopic.VERSIONS],
+  [HelpTopic.EXTEOR, HelpTopic.EXTEOR],
+  [HelpTopic.API, HelpTopic.API],
+  [HelpTopic.PRIVACY, HelpTopic.PRIVACY]
+]);
+
+/**
+ *  Topics that can be folded.
+ */
+export const foldableTopics = [HelpTopic.INTERFACE, HelpTopic.UI_RSFORM, HelpTopic.RSLANG];
 
 /**
  * Represents {@link IConstituenta} matching mode.

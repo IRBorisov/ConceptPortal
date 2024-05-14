@@ -361,14 +361,14 @@ export function labelHelpTopic(topic: HelpTopic): string {
     case HelpTopic.MAIN:            return 'Портал';
 
     case HelpTopic.INTERFACE:       return 'Интерфейс';
-    case HelpTopic.LIBRARY:         return '- библиотека';
-    case HelpTopic.RSFORM_UI:       return '- концептуальная схема';
-    case HelpTopic.RSFORM_CARD:     return '= карточка схемы';
-    case HelpTopic.RSFORM_LIST:     return '= список конституент';
-    case HelpTopic.RSFORM_EDITOR:   return '= редактор конституенты';
-    case HelpTopic.GRAPH_TERM:      return '= граф термов';
-    case HelpTopic.CST_STATUS:      return '= статус конституенты';
-    case HelpTopic.CST_CLASS:       return '= класс конституенты';
+    case HelpTopic.UI_LIBRARY:      return '- библиотека';
+    case HelpTopic.UI_RSFORM:       return '- концептуальная схема';
+    case HelpTopic.UI_RSFORM_CARD:  return '= карточка схемы';
+    case HelpTopic.UI_RSFORM_LIST:  return '= список конституент';
+    case HelpTopic.UI_RSFORM_EDITOR: return '= редактор конституенты';
+    case HelpTopic.UI_GRAPH_TERM:   return '= граф термов';
+    case HelpTopic.UI_CST_STATUS:   return '= статус конституенты';
+    case HelpTopic.UI_CST_CLASS:    return '= класс конституенты';
 
     case HelpTopic.CONCEPTUAL:      return 'Концептуализация';
     case HelpTopic.CC_SYSTEM:       return '- система определений';
@@ -399,14 +399,14 @@ export function describeHelpTopic(topic: HelpTopic): string {
     case HelpTopic.MAIN:            return 'Общая справка по порталу';
 
     case HelpTopic.INTERFACE:       return 'Описание интерфейса пользователя';
-    case HelpTopic.LIBRARY:         return 'Интерфейс Библиотеки схем';
-    case HelpTopic.RSFORM_UI:       return 'Просмотр и редактирование концептуальной схемы';
-    case HelpTopic.RSFORM_CARD:     return 'Интерфейс Карточки схемы';
-    case HelpTopic.RSFORM_LIST:     return 'Интерфейс Списка конституент';
-    case HelpTopic.RSFORM_EDITOR:   return 'Интерфейс редактирования конституенты';
-    case HelpTopic.GRAPH_TERM:      return 'Интерфейс графа термов';
-    case HelpTopic.CST_STATUS:      return 'Нотация отображения статуса конституенты';
-    case HelpTopic.CST_CLASS:       return 'Нотация отображения класса конституенты';
+    case HelpTopic.UI_LIBRARY:      return 'Интерфейс Библиотеки схем';
+    case HelpTopic.UI_RSFORM:       return 'Просмотр и редактирование концептуальной схемы';
+    case HelpTopic.UI_RSFORM_CARD:  return 'Интерфейс Карточки схемы';
+    case HelpTopic.UI_RSFORM_LIST:  return 'Интерфейс Списка конституент';
+    case HelpTopic.UI_RSFORM_EDITOR: return 'Интерфейс редактирования конституенты';
+    case HelpTopic.UI_GRAPH_TERM:   return 'Интерфейс графа термов';
+    case HelpTopic.UI_CST_STATUS:   return 'Нотация отображения статуса конституенты';
+    case HelpTopic.UI_CST_CLASS:    return 'Нотация отображения класса конституенты';
 
     case HelpTopic.CONCEPTUAL:      return 'Основы концептуализации и концептуального мышления';
     case HelpTopic.CC_SYSTEM:       return 'Концептуальная схема как система понятий';

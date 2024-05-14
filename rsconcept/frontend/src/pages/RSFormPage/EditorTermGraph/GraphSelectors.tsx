@@ -28,8 +28,8 @@ function GraphSelectors({ coloring, setColoring, layout, setLayout, sizing, setS
         onChange={data => setLayout(data?.value ?? SelectorGraphLayout[0].value)}
       />
       <Overlay position='right-[2.5rem] top-[0.5rem]'>
-        {coloring === 'status' ? <BadgeHelp topic={HelpTopic.CST_STATUS} className='min-w-[25rem]' /> : null}
-        {coloring === 'type' ? <BadgeHelp topic={HelpTopic.CST_CLASS} className='min-w-[25rem]' /> : null}
+        {coloring === 'status' ? <BadgeHelp topic={HelpTopic.UI_CST_STATUS} className='min-w-[25rem]' /> : null}
+        {coloring === 'type' ? <BadgeHelp topic={HelpTopic.UI_CST_CLASS} className='min-w-[25rem]' /> : null}
       </Overlay>
       <SelectSingle
         className='my-1'

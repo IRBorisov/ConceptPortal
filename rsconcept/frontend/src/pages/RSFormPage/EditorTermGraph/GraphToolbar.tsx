@@ -111,7 +111,7 @@ function GraphToolbar({
         title='Сохранить изображение'
         onClick={onSaveImage}
       />
-      <BadgeHelp topic={HelpTopic.GRAPH_TERM} className='max-w-[calc(100vw-4rem)]' offset={4} />
+      <BadgeHelp topic={HelpTopic.UI_GRAPH_TERM} className='max-w-[calc(100vw-4rem)]' offset={4} />
     </div>
   );
 }

@@ -208,6 +208,28 @@ export const animateSideView = {
   }
 };
 
+export const animateSideAppear = {
+  initial: {
+    clipPath: 'inset(0% 100% 0% 0%)'
+  },
+  animate: {
+    clipPath: 'inset(0% 0% 0% 0%)',
+    transition: {
+      type: 'spring',
+      bounce: 0,
+      duration: 0.3
+    }
+  },
+  exit: {
+    clipPath: 'inset(0% 100% 0% 0%)',
+    transition: {
+      type: 'spring',
+      bounce: 0,
+      duration: 0.3
+    }
+  }
+};
+
 export const animateModal = {
   initial: {
     clipPath: 'inset(50% 50% 50% 50%)',

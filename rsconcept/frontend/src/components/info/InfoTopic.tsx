@@ -34,14 +34,14 @@ function InfoTopic({ topic }: InfoTopicProps) {
   if (topic === HelpTopic.MAIN) return <HelpMain />;
 
   if (topic === HelpTopic.INTERFACE) return <HelpInterface />;
-  if (topic === HelpTopic.LIBRARY) return <HelpLibrary />;
-  if (topic === HelpTopic.RSFORM_UI) return <HelpRSFormUI />;
-  if (topic === HelpTopic.RSFORM_CARD) return <HelpRSFormMeta />;
-  if (topic === HelpTopic.RSFORM_LIST) return <HelpRSFormItems />;
-  if (topic === HelpTopic.RSFORM_EDITOR) return <HelpCstEditor />;
-  if (topic === HelpTopic.GRAPH_TERM) return <HelpTermGraph />;
-  if (topic === HelpTopic.CST_STATUS) return <HelpCstStatus />;
-  if (topic === HelpTopic.CST_CLASS) return <HelpCstClass />;
+  if (topic === HelpTopic.UI_LIBRARY) return <HelpLibrary />;
+  if (topic === HelpTopic.UI_RSFORM) return <HelpRSFormUI />;
+  if (topic === HelpTopic.UI_RSFORM_CARD) return <HelpRSFormMeta />;
+  if (topic === HelpTopic.UI_RSFORM_LIST) return <HelpRSFormItems />;
+  if (topic === HelpTopic.UI_RSFORM_EDITOR) return <HelpCstEditor />;
+  if (topic === HelpTopic.UI_GRAPH_TERM) return <HelpTermGraph />;
+  if (topic === HelpTopic.UI_CST_STATUS) return <HelpCstStatus />;
+  if (topic === HelpTopic.UI_CST_CLASS) return <HelpCstClass />;
 
   if (topic === HelpTopic.CONCEPTUAL) return <HelpConcept />;
   if (topic === HelpTopic.CC_SYSTEM) return <HelpConceptSystem />;

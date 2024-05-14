@@ -81,7 +81,7 @@ function RSFormToolbar({ modified, anonymous, subscribed, claimable, onSubmit, o
           onClick={onDestroy}
         />
       ) : null}
-      <BadgeHelp topic={HelpTopic.RSFORM_CARD} offset={4} className='max-w-[32rem]' />
+      <BadgeHelp topic={HelpTopic.UI_RSFORM_CARD} offset={4} className='max-w-[32rem]' />
     </Overlay>
   );
 }

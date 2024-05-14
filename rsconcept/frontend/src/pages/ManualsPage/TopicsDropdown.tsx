@@ -15,10 +15,12 @@ import TopicsTree from './TopicsTree';
 
 interface TopicsDropdownProps {
   activeTopic: HelpTopic;
+  topicFolded: Map<HelpTopic, boolean>;
   onChangeTopic: (newTopic: HelpTopic) => void;
+  onFoldTopic: (target: HelpTopic, showChildren: boolean) => void;
 }
 
-function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownProps) {
+function TopicsDropdown({ activeTopic, topicFolded, onChangeTopic, onFoldTopic }: TopicsDropdownProps) {
   const menu = useDropdown();
   const { noNavigation, calculateHeight } = useConceptOptions();
 
@@ -34,7 +36,7 @@ function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownProps) {
     <div
       ref={menu.ref}
       className={clsx(
-        'absolute left-0 w-[13rem]', // prettier: split-lines
+        'absolute left-0 w-[13.5rem]', // prettier: split-lines
         'flex flex-col',
         'z-modal-tooltip',
         'text-xs sm:text-sm',
@@ -55,13 +57,22 @@ function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownProps) {
         onClick={menu.toggle}
       />
       <motion.div
-        className='border divide-y rounded-none cc-scroll-y'
+        className={clsx(
+          'border divide-y rounded-none', // prettier: split-lines
+          'cc-scroll-y',
+          'clr-controls'
+        )}
         style={{ maxHeight: calculateHeight('4rem + 2px') }}
         initial={false}
         animate={menu.isOpen ? 'open' : 'closed'}
         variants={animateSlideLeft}
       >
-        <TopicsTree activeTopic={activeTopic} onChangeTopic={selectTheme} />
+        <TopicsTree
+          activeTopic={activeTopic}
+          onChangeTopic={selectTheme}
+          topicFolded={topicFolded}
+          onFoldTopic={onFoldTopic}
+        />
       </motion.div>
     </div>
   );
