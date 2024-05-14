@@ -19,7 +19,7 @@ For more specific TODOs see comments in code
 - User notifications on edit - consider spam prevention and change aggregation
 - Static analyzer for RSForm
 - Content based search in Library
-- User profile: Settings
+- User profile: Settings + settings persistency
 
 - Export PDF (Items list, Graph)
 - ARIA (accessibility considerations) - for now machine reading not supported

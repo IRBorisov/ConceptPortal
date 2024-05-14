@@ -71,7 +71,7 @@ function TableBody<TData>({
         <tr
           key={row.id}
           className={clsx(
-            'cc-table-row',
+            'cc-scroll-row',
             !noHeader && 'scroll-mt-[calc(2px+2rem)]',
             row.getIsSelected()
               ? 'clr-selected clr-hover'

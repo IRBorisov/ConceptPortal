@@ -10,17 +10,17 @@ import { useConceptOptions } from '@/context/OptionsContext';
 import useDropdown from '@/hooks/useDropdown';
 import { HelpTopic } from '@/models/miscellaneous';
 import { animateSlideLeft } from '@/styling/animations';
-import { prefixes } from '@/utils/constants';
-import { describeHelpTopic, labelHelpTopic } from '@/utils/labels';
 
-interface TopicsListDropDownProps {
+import TopicsTree from './TopicsTree';
+
+interface TopicsDropdownProps {
   activeTopic: HelpTopic;
   onChangeTopic: (newTopic: HelpTopic) => void;
 }
 
-function TopicsListDropDown({ activeTopic, onChangeTopic }: TopicsListDropDownProps) {
+function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownProps) {
   const menu = useDropdown();
-  const { noNavigation } = useConceptOptions();
+  const { noNavigation, calculateHeight } = useConceptOptions();
 
   const selectTheme = useCallback(
     (topic: HelpTopic) => {
@@ -34,7 +34,7 @@ function TopicsListDropDown({ activeTopic, onChangeTopic }: TopicsListDropDownPr
     <div
       ref={menu.ref}
       className={clsx(
-        'absolute left-0', // prettier: split-lines
+        'absolute left-0 w-[13rem]', // prettier: split-lines
         'flex flex-col',
         'z-modal-tooltip',
         'text-xs sm:text-sm',
@@ -51,34 +51,20 @@ function TopicsListDropDown({ activeTopic, onChangeTopic }: TopicsListDropDownPr
         title='Список тем'
         hideTitle={menu.isOpen}
         icon={!menu.isOpen ? <IconMenuUnfold size='1.25rem' /> : <IconMenuFold size='1.25rem' />}
-        className='w-[3rem] h-7'
+        className='w-[3rem] h-7 rounded-none'
         onClick={menu.toggle}
       />
       <motion.div
-        className='border-x'
+        className='border divide-y rounded-none cc-scroll-y'
+        style={{ maxHeight: calculateHeight('4rem + 2px') }}
         initial={false}
         animate={menu.isOpen ? 'open' : 'closed'}
         variants={animateSlideLeft}
       >
-        {Object.values(HelpTopic).map((topic, index) => (
-          <div
-            key={`${prefixes.topic_list}${index}`}
-            className={clsx(
-              'px-3 py-1',
-              'border-y',
-              'clr-controls clr-hover',
-              'cursor-pointer',
-              activeTopic === topic && 'clr-selected'
-            )}
-            title={describeHelpTopic(topic)}
-            onClick={() => selectTheme(topic)}
-          >
-            {labelHelpTopic(topic)}
-          </div>
-        ))}
+        <TopicsTree activeTopic={activeTopic} onChangeTopic={selectTheme} />
       </motion.div>
     </div>
   );
 }
 
-export default TopicsListDropDown;
+export default TopicsDropdown;

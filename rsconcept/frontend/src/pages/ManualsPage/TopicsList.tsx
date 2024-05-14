@@ -3,8 +3,8 @@
 import useWindowSize from '@/hooks/useWindowSize';
 import { HelpTopic } from '@/models/miscellaneous';
 
-import TopicsListDropDown from './TopicsListDropdown';
-import TopicsListStatic from './TopicsListStatic';
+import TopicsDropdown from './TopicsDropdown';
+import TopicsStatic from './TopicsStatic';
 
 interface TopicsListProps {
   activeTopic: HelpTopic;
@@ -15,9 +15,9 @@ function TopicsList({ activeTopic, onChangeTopic }: TopicsListProps) {
   const size = useWindowSize();
 
   if (!size.isSmall) {
-    return <TopicsListStatic activeTopic={activeTopic} onChangeTopic={onChangeTopic} />;
+    return <TopicsStatic activeTopic={activeTopic} onChangeTopic={onChangeTopic} />;
   } else {
-    return <TopicsListDropDown activeTopic={activeTopic} onChangeTopic={onChangeTopic} />;
+    return <TopicsDropdown activeTopic={activeTopic} onChangeTopic={onChangeTopic} />;
   }
 }
 

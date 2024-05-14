@@ -1,6 +1,7 @@
 import { HelpTopic } from '@/models/miscellaneous';
 
 import HelpAPI from '../man/HelpAPI';
+import HelpConcept from '../man/HelpConcept';
 import HelpConceptRelations from '../man/HelpConceptRelations';
 import HelpConceptSystem from '../man/HelpConceptSystem';
 import HelpCstAttributes from '../man/HelpCstAttributes';
@@ -42,10 +43,12 @@ function InfoTopic({ topic }: InfoTopicProps) {
   if (topic === HelpTopic.CST_STATUS) return <HelpCstStatus />;
   if (topic === HelpTopic.CST_CLASS) return <HelpCstClass />;
 
-  if (topic === HelpTopic.RSLANG) return <HelpRSLang />;
+  if (topic === HelpTopic.CONCEPTUAL) return <HelpConcept />;
   if (topic === HelpTopic.CC_SYSTEM) return <HelpConceptSystem />;
   if (topic === HelpTopic.CC_CONSTITUENTA) return <HelpCstAttributes />;
   if (topic === HelpTopic.CC_RELATIONS) return <HelpConceptRelations />;
+
+  if (topic === HelpTopic.RSLANG) return <HelpRSLang />;
   if (topic === HelpTopic.RSL_TYPES) return <HelpRSLangTypes />;
   if (topic === HelpTopic.RSL_CORRECT) return <HelpRSLangCorrect />;
   if (topic === HelpTopic.RSL_INTERPRET) return <HelpRSLangInterpret />;

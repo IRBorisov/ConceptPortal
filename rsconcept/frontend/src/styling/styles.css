@@ -231,7 +231,7 @@
     @apply flex gap-1;
   }
 
-  .cc-table-row {
+  .cc-scroll-row {
     scroll-snap-align: start;
     scroll-snap-stop: always;
   }

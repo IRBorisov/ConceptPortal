@@ -1,33 +1,26 @@
+'use client';
+
 import clsx from 'clsx';
+import { AnimatePresence } from 'framer-motion';
 
 import { HelpTopic } from '@/models/miscellaneous';
 import { prefixes } from '@/utils/constants';
 import { describeHelpTopic, labelHelpTopic } from '@/utils/labels';
 
-interface TopicsListStaticProps {
+interface TopicsTreeProps {
   activeTopic: HelpTopic;
   onChangeTopic: (newTopic: HelpTopic) => void;
 }
 
-function TopicsListStatic({ activeTopic, onChangeTopic }: TopicsListStaticProps) {
+function TopicsTree({ activeTopic, onChangeTopic }: TopicsTreeProps) {
   return (
-    <div
-      className={clsx(
-        'sticky top-0 left-0',
-        'self-start',
-        'border-x',
-        'clr-controls',
-        'text-xs sm:text-sm',
-        'select-none'
-      )}
-    >
+    <AnimatePresence initial={false}>
       {Object.values(HelpTopic).map((topic, index) => (
         <div
           key={`${prefixes.topic_list}${index}`}
           className={clsx(
-            'px-3 py-1',
-            'border-y',
-            'clr-hover',
+            'px-3 py-1 cc-scroll-row',
+            'clr-controls clr-hover',
             'cursor-pointer',
             activeTopic === topic && 'clr-selected'
           )}
@@ -37,8 +30,8 @@ function TopicsListStatic({ activeTopic, onChangeTopic }: TopicsListStaticProps)
           {labelHelpTopic(topic)}
         </div>
       ))}
-    </div>
+    </AnimatePresence>
   );
 }
 
-export default TopicsListStatic;
+export default TopicsTree;
