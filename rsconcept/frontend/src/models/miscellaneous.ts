@@ -111,7 +111,7 @@ export const topicParent: Map<HelpTopic, HelpTopic> = new Map([
 /**
  *  Topics that can be folded.
  */
-export const foldableTopics = [HelpTopic.INTERFACE, HelpTopic.UI_RSFORM, HelpTopic.RSLANG];
+export const foldableTopics = [HelpTopic.INTERFACE, HelpTopic.UI_RSFORM, HelpTopic.RSLANG, HelpTopic.CONCEPTUAL];
 
 /**
  * Represents {@link IConstituenta} matching mode.
