@@ -10,7 +10,7 @@ import {
   IconText,
   IconTextOff
 } from '@/components/Icons';
-import BadgeHelp from '@/components/man/BadgeHelp';
+import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniButton from '@/components/ui/MiniButton';
 import { HelpTopic } from '@/models/miscellaneous';
 

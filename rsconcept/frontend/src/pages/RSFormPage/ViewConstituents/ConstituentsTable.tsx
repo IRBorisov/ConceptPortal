@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
-import ConstituentaBadge from '@/components/info/ConstituentaBadge';
+import BadgeConstituenta from '@/components/info/BadgeConstituenta';
 import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } from '@/components/ui/DataTable';
 import { useConceptOptions } from '@/context/OptionsContext';
 import useWindowSize from '@/hooks/useWindowSize';
@@ -57,7 +57,7 @@ function ConstituentsTable({ items, activeID, onOpenEdit, maxHeight, denseThresh
         minSize: 65,
         footer: undefined,
         cell: props => (
-          <ConstituentaBadge theme={colors} value={props.row.original} prefixID={prefixes.cst_side_table} />
+          <BadgeConstituenta theme={colors} value={props.row.original} prefixID={prefixes.cst_side_table} />
         )
       }),
       columnHelper.accessor(cst => describeConstituenta(cst), {

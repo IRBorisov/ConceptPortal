@@ -2,8 +2,8 @@
 
 import { useCallback, useMemo, useState } from 'react';
 
-import ConstituentaBadge from '@/components/info/ConstituentaBadge';
-import ConstituentaSelector from '@/components/select/ConstituentaSelector';
+import BadgeConstituenta from '@/components/info/BadgeConstituenta';
+import SelectConstituenta from '@/components/select/SelectConstituenta';
 import DataTable, { createColumnHelper } from '@/components/ui/DataTable';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
@@ -24,7 +24,7 @@ import {
   IconReplace
 } from '../Icons';
 
-interface SubstitutionsPickerProps {
+interface PickSubstitutionsProps {
   prefixID: string;
   rows?: number;
 
@@ -55,7 +55,7 @@ function SubstitutionIcon({ item }: { item: ISubstitution }) {
 
 const columnHelper = createColumnHelper<ISubstitution>();
 
-function SubstitutionsPicker({
+function PickSubstitutions({
   items,
   schema1,
   schema2,
@@ -64,7 +64,7 @@ function SubstitutionsPicker({
   rows,
   setItems,
   prefixID
-}: SubstitutionsPickerProps) {
+}: PickSubstitutionsProps) {
   const { colors } = useConceptOptions();
 
   const [leftCst, setLeftCst] = useState<IConstituenta | undefined>(undefined);
@@ -123,7 +123,7 @@ function SubstitutionsPicker({
         header: 'Имя',
         size: 65,
         cell: props => (
-          <ConstituentaBadge theme={colors} value={props.row.original.leftCst} prefixID={`${prefixID}_1_`} />
+          <BadgeConstituenta theme={colors} value={props.row.original.leftCst} prefixID={`${prefixID}_1_`} />
         )
       }),
       columnHelper.display({
@@ -137,7 +137,7 @@ function SubstitutionsPicker({
         header: 'Имя',
         size: 65,
         cell: props => (
-          <ConstituentaBadge theme={colors} value={props.row.original.rightCst} prefixID={`${prefixID}_2_`} />
+          <BadgeConstituenta theme={colors} value={props.row.original.rightCst} prefixID={`${prefixID}_2_`} />
         )
       }),
       columnHelper.accessor(item => describeConstituenta(item.rightCst), {
@@ -194,7 +194,7 @@ function SubstitutionsPicker({
               />
             </div>
           </div>
-          <ConstituentaSelector
+          <SelectConstituenta
             items={schema1?.items.filter(cst => !filter1 || filter1(cst))}
             value={leftCst}
             onSelectValue={setLeftCst}
@@ -240,7 +240,7 @@ function SubstitutionsPicker({
               />
             </div>
           </div>
-          <ConstituentaSelector
+          <SelectConstituenta
             items={schema2?.items.filter(cst => !filter2 || filter2(cst))}
             value={rightCst}
             onSelectValue={setRightCst}
@@ -269,4 +269,4 @@ function SubstitutionsPicker({
   );
 }
 
-export default SubstitutionsPicker;
+export default PickSubstitutions;

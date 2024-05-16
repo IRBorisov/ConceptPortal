@@ -11,10 +11,10 @@ import { matchConstituenta } from '@/models/rsformAPI';
 import { prefixes } from '@/utils/constants';
 import { describeConstituenta } from '@/utils/labels';
 
-import ConstituentaBadge from '../info/ConstituentaBadge';
+import BadgeConstituenta from '../info/BadgeConstituenta';
 import FlexColumn from '../ui/FlexColumn';
 
-interface ConstituentaPickerProps {
+interface PickConstituentaProps {
   id?: string;
   prefixID: string;
   data?: IConstituenta[];
@@ -31,7 +31,7 @@ interface ConstituentaPickerProps {
 
 const columnHelper = createColumnHelper<IConstituenta>();
 
-function ConstituentaPicker({
+function PickConstituenta({
   id,
   data,
   value,
@@ -42,7 +42,7 @@ function ConstituentaPicker({
   matchFunc = (cst, filter) => matchConstituenta(cst, filter, CstMatchMode.ALL),
   onBeginFilter,
   onSelectValue
-}: ConstituentaPickerProps) {
+}: PickConstituentaProps) {
   const { colors } = useConceptOptions();
   const [filteredData, setFilteredData] = useState<IConstituenta[]>([]);
   const [filterText, setFilterText] = useState(initialFilter);
@@ -67,7 +67,7 @@ function ConstituentaPicker({
         size: 65,
         minSize: 65,
         maxSize: 65,
-        cell: props => <ConstituentaBadge theme={colors} value={props.row.original} prefixID={prefixID} />
+        cell: props => <BadgeConstituenta theme={colors} value={props.row.original} prefixID={prefixID} />
       }),
       columnHelper.accessor(cst => describeFunc(cst), {
         id: 'description'
@@ -117,4 +117,4 @@ function ConstituentaPicker({
   );
 }
 
-export default ConstituentaPicker;
+export default PickConstituenta;

@@ -1,6 +1,14 @@
 import { useConceptOptions } from '@/context/OptionsContext';
 
-import { IconControls, IconEdit, IconList, IconSave, IconStatusOK, IconText, IconTree } from '../Icons';
+import {
+  IconControls,
+  IconEdit,
+  IconList,
+  IconSave,
+  IconStatusOK,
+  IconText,
+  IconTree
+} from '../../../components/Icons';
 
 function HelpCstEditor() {
   const { colors } = useConceptOptions();

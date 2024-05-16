@@ -3,7 +3,7 @@
 import { AnimatePresence } from 'framer-motion';
 import { useLayoutEffect, useMemo, useState } from 'react';
 
-import BadgeHelp from '@/components/man/BadgeHelp';
+import BadgeHelp from '@/components/info/BadgeHelp';
 import RSInput from '@/components/RSInput';
 import SelectSingle from '@/components/ui/SelectSingle';
 import TextArea from '@/components/ui/TextArea';

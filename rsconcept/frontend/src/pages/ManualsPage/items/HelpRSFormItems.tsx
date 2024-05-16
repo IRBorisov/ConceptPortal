@@ -2,8 +2,8 @@ import InfoCstStatus from '@/components/info/InfoCstStatus';
 import Divider from '@/components/ui/Divider';
 import { HelpTopic } from '@/models/miscellaneous';
 
-import { IconAlias, IconMoveDown, IconMoveUp } from '../Icons';
-import LinkTopic from '../ui/LinkTopic';
+import { IconAlias, IconMoveDown, IconMoveUp } from '../../../components/Icons';
+import LinkTopic from '../../../components/ui/LinkTopic';
 
 function HelpRSFormItems() {
   // prettier-ignore

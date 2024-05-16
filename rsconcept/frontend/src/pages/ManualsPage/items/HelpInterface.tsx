@@ -1,6 +1,6 @@
 import { HelpTopic } from '@/models/miscellaneous';
 
-import Subtopics from './Subtopics';
+import Subtopics from '../Subtopics';
 
 function HelpInterface() {
   // prettier-ignore

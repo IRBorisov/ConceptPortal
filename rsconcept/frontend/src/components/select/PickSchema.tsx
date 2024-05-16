@@ -10,7 +10,7 @@ import { ILibraryFilter } from '@/models/miscellaneous';
 
 import FlexColumn from '../ui/FlexColumn';
 
-interface SchemaPickerProps {
+interface PickSchemaProps {
   id?: string;
   initialFilter?: string;
   rows?: number;
@@ -21,7 +21,7 @@ interface SchemaPickerProps {
 
 const columnHelper = createColumnHelper<ILibraryItem>();
 
-function SchemaPicker({ id, initialFilter = '', rows = 4, value, onSelectValue }: SchemaPickerProps) {
+function PickSchema({ id, initialFilter = '', rows = 4, value, onSelectValue }: PickSchemaProps) {
   const intl = useIntl();
   const { colors } = useConceptOptions();
 
@@ -114,4 +114,4 @@ function SchemaPicker({ id, initialFilter = '', rows = 4, value, onSelectValue }
   );
 }
 
-export default SchemaPicker;
+export default PickSchema;

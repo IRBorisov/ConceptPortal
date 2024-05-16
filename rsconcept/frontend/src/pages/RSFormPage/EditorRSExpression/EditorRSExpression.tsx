@@ -6,7 +6,7 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { IconControls, IconList, IconListOff, IconText, IconTextOff, IconTree } from '@/components/Icons';
-import BadgeHelp from '@/components/man/BadgeHelp';
+import BadgeHelp from '@/components/info/BadgeHelp';
 import RSInput from '@/components/RSInput';
 import { RSTextWrapper } from '@/components/RSInput/textEditing';
 import MiniButton from '@/components/ui/MiniButton';

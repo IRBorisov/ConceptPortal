@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useState } from 'react';
 
-import ConstituentaPicker from '@/components/select/ConstituentaPicker';
+import PickConstituenta from '@/components/select/PickConstituenta';
 import SelectGrammeme from '@/components/select/SelectGrammeme';
 import Label from '@/components/ui/Label';
 import TextInput from '@/components/ui/TextInput';
@@ -60,7 +60,7 @@ function EntityTab({ initial, schema, setIsValid, setReference }: EntityTabProps
 
   return (
     <AnimateFade className='cc-column'>
-      <ConstituentaPicker
+      <PickConstituenta
         id='dlg_reference_entity_picker'
         initialFilter={initial.text}
         value={selectedCst}

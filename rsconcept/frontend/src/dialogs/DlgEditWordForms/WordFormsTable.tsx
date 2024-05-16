@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useCallback, useMemo } from 'react';
 
 import { IconRemove } from '@/components/Icons';
-import WordFormBadge from '@/components/info/WordFormBadge';
+import BadgeWordForm from '@/components/info/BadgeWordForm';
 import DataTable, { createColumnHelper } from '@/components/ui/DataTable';
 import MiniButton from '@/components/ui/MiniButton';
 import { IWordForm } from '@/models/language';
@@ -45,7 +45,7 @@ function WordFormsTable({ forms, setForms, onFormSelect }: WordFormsTableProps) 
       columnHelper.accessor('grams', {
         id: 'grams',
         maxSize: 150,
-        cell: props => <WordFormBadge keyPrefix={props.cell.id} form={props.row.original} />
+        cell: props => <BadgeWordForm keyPrefix={props.cell.id} form={props.row.original} />
       }),
       columnHelper.display({
         id: 'actions',

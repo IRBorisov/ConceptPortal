@@ -3,7 +3,7 @@
 import { Dispatch, useEffect, useMemo, useState } from 'react';
 
 import RSInput from '@/components/RSInput';
-import ConstituentaPicker from '@/components/select/ConstituentaPicker';
+import PickConstituenta from '@/components/select/PickConstituenta';
 import SelectSingle from '@/components/ui/SelectSingle';
 import TextArea from '@/components/ui/TextArea';
 import AnimateFade from '@/components/wrap/AnimateFade';
@@ -116,7 +116,7 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
           onChange={data => partialUpdate({ templateID: data ? data.value : undefined })}
         />
       </div>
-      <ConstituentaPicker
+      <PickConstituenta
         id='dlg_template_picker'
         value={state.prototype}
         data={filteredData}

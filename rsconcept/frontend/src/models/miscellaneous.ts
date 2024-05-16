@@ -46,10 +46,12 @@ export enum HelpTopic {
 
   INTERFACE = 'user-interface',
   UI_LIBRARY = 'ui-library',
+  UI_RS_MENU = 'ui-rsform-menu',
   UI_RS_CARD = 'ui-rsform-card',
   UI_RS_LIST = 'ui-rsform-list',
   UI_RS_EDITOR = 'ui-rsform-editor',
-  UI_GRAPH_TERM = 'ui-rsform-graph',
+  UI_GRAPH_TERM = 'ui-graph-term',
+  UI_FORMULA_TREE = 'ui-formula-tree',
   UI_CST_STATUS = 'ui-rsform-cst-status',
   UI_CST_CLASS = 'ui-rsform-cst-class',
 
@@ -57,6 +59,7 @@ export enum HelpTopic {
   CC_SYSTEM = 'rslang-rsform',
   CC_CONSTITUENTA = 'rslang-cst',
   CC_RELATIONS = 'rslang-relations',
+  CC_SYNTHESIS = 'rslang-synthesis',
 
   RSLANG = 'rslang',
   RSL_TYPES = 'rslang-types',
@@ -80,10 +83,12 @@ export const topicParent: Map<HelpTopic, HelpTopic> = new Map([
 
   [HelpTopic.INTERFACE, HelpTopic.INTERFACE],
   [HelpTopic.UI_LIBRARY, HelpTopic.INTERFACE],
+  [HelpTopic.UI_RS_MENU, HelpTopic.INTERFACE],
   [HelpTopic.UI_RS_CARD, HelpTopic.INTERFACE],
   [HelpTopic.UI_RS_LIST, HelpTopic.INTERFACE],
   [HelpTopic.UI_RS_EDITOR, HelpTopic.INTERFACE],
   [HelpTopic.UI_GRAPH_TERM, HelpTopic.INTERFACE],
+  [HelpTopic.UI_FORMULA_TREE, HelpTopic.INTERFACE],
   [HelpTopic.UI_CST_STATUS, HelpTopic.INTERFACE],
   [HelpTopic.UI_CST_CLASS, HelpTopic.INTERFACE],
 
@@ -91,6 +96,7 @@ export const topicParent: Map<HelpTopic, HelpTopic> = new Map([
   [HelpTopic.CC_SYSTEM, HelpTopic.CONCEPTUAL],
   [HelpTopic.CC_CONSTITUENTA, HelpTopic.CONCEPTUAL],
   [HelpTopic.CC_RELATIONS, HelpTopic.CONCEPTUAL],
+  [HelpTopic.CC_SYNTHESIS, HelpTopic.CONCEPTUAL],
 
   [HelpTopic.RSLANG, HelpTopic.RSLANG],
   [HelpTopic.RSL_TYPES, HelpTopic.RSLANG],

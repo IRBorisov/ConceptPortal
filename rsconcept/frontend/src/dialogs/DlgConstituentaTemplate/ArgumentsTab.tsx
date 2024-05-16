@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { IconAccept, IconRemove, IconReset } from '@/components/Icons';
 import RSInput from '@/components/RSInput';
-import ConstituentaPicker from '@/components/select/ConstituentaPicker';
+import PickConstituenta from '@/components/select/PickConstituenta';
 import DataTable, { IConditionalStyle } from '@/components/ui/DataTable';
 import MiniButton from '@/components/ui/MiniButton';
 import AnimateFade from '@/components/wrap/AnimateFade';
@@ -204,7 +204,7 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
         </div>
       </div>
 
-      <ConstituentaPicker
+      <PickConstituenta
         id='dlg_argument_picker'
         value={selectedCst}
         data={schema?.items}

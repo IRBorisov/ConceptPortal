@@ -1,4 +1,4 @@
-import InfoTopic from '@/components/info/InfoTopic';
+import TopicPage from '@/pages/ManualsPage/TopicPage';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { HelpTopic } from '@/models/miscellaneous';
 
@@ -9,7 +9,7 @@ interface ViewTopicProps {
 function ViewTopic({ topic }: ViewTopicProps) {
   return (
     <AnimateFade key={topic} className='py-2 pl-6 pr-3 mx-auto'>
-      <InfoTopic topic={topic} />
+      <TopicPage topic={topic} />
     </AnimateFade>
   );
 }

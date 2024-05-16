@@ -4,8 +4,8 @@ import { useConceptOptions } from '@/context/OptionsContext';
 import { HelpTopic } from '@/models/miscellaneous';
 
 import { IconHelp } from '../Icons';
-import InfoTopic from '../info/InfoTopic';
 import { CProps } from '../props';
+import TopicPage from '../../pages/ManualsPage/TopicPage';
 
 interface BadgeHelpProps extends CProps.Styling {
   topic: HelpTopic;
@@ -28,7 +28,7 @@ function BadgeHelp({ topic, ...restProps }: BadgeHelpProps) {
             <TextURL text='Справка...' href={`/manuals?topic=${topic}`} />
           </div>
         </div>
-        <InfoTopic topic={topic} />
+        <TopicPage topic={topic} />
       </Tooltip>
     </div>
   );

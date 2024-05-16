@@ -1,7 +1,7 @@
 import { HelpTopic } from '@/models/miscellaneous';
 import { describeHelpTopic, labelHelpTopic } from '@/utils/labels';
 
-import LinkTopic from '../ui/LinkTopic';
+import LinkTopic from '../../components/ui/LinkTopic';
 
 interface TopicItemProps {
   topic: HelpTopic;

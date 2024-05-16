@@ -9,11 +9,11 @@ import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
 import { isBasicConcept } from '@/models/rsformAPI';
 import { describeConstituenta } from '@/utils/labels';
 
-import ConstituentaBadge from '../info/ConstituentaBadge';
+import BadgeConstituenta from '../info/BadgeConstituenta';
 import FlexColumn from '../ui/FlexColumn';
 import GraphSelectionToolbar from './GraphSelectionToolbar';
 
-interface ConstituentaMultiPickerProps {
+interface PickMultiConstituentaProps {
   id?: string;
   schema?: IRSForm;
   prefixID: string;
@@ -25,7 +25,7 @@ interface ConstituentaMultiPickerProps {
 
 const columnHelper = createColumnHelper<IConstituenta>();
 
-function ConstituentaMultiPicker({ id, schema, prefixID, rows, selected, setSelected }: ConstituentaMultiPickerProps) {
+function PickMultiConstituenta({ id, schema, prefixID, rows, selected, setSelected }: PickMultiConstituentaProps) {
   const { colors } = useConceptOptions();
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
@@ -62,7 +62,7 @@ function ConstituentaMultiPicker({ id, schema, prefixID, rows, selected, setSele
         id: 'alias',
         header: 'Имя',
         size: 65,
-        cell: props => <ConstituentaBadge theme={colors} value={props.row.original} prefixID={prefixID} />
+        cell: props => <BadgeConstituenta theme={colors} value={props.row.original} prefixID={prefixID} />
       }),
       columnHelper.accessor(cst => describeConstituenta(cst), {
         id: 'description',
@@ -111,4 +111,4 @@ function ConstituentaMultiPicker({ id, schema, prefixID, rows, selected, setSele
   );
 }
 
-export default ConstituentaMultiPicker;
+export default PickMultiConstituenta;

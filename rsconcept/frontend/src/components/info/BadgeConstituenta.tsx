@@ -5,13 +5,13 @@ import { IConstituenta } from '@/models/rsform';
 import { isMockCst } from '@/models/rsformAPI';
 import { colorFgCstStatus, IColorTheme } from '@/styling/color';
 
-interface ConstituentaBadgeProps {
+interface BadgeConstituentaProps {
   prefixID?: string;
   value: IConstituenta;
   theme: IColorTheme;
 }
 
-function ConstituentaBadge({ value, prefixID, theme }: ConstituentaBadgeProps) {
+function BadgeConstituenta({ value, prefixID, theme }: BadgeConstituentaProps) {
   return (
     <div
       id={`${prefixID}${value.alias}`}
@@ -33,4 +33,4 @@ function ConstituentaBadge({ value, prefixID, theme }: ConstituentaBadgeProps) {
   );
 }
 
-export default ConstituentaBadge;
+export default BadgeConstituenta;

@@ -9,14 +9,14 @@ import { labelVersion } from '@/utils/labels';
 import { CProps } from '../props';
 import SelectSingle from '../ui/SelectSingle';
 
-interface VersionSelectorProps extends CProps.Styling {
+interface SelectVersionProps extends CProps.Styling {
   id?: string;
   items?: IVersionInfo[];
   value?: number;
   onSelectValue: (newValue?: number) => void;
 }
 
-function VersionSelector({ id, className, items, value, onSelectValue, ...restProps }: VersionSelectorProps) {
+function SelectVersion({ id, className, items, value, onSelectValue, ...restProps }: SelectVersionProps) {
   const options = useMemo(() => {
     return [
       {
@@ -46,4 +46,4 @@ function VersionSelector({ id, className, items, value, onSelectValue, ...restPr
   );
 }
 
-export default VersionSelector;
+export default SelectVersion;

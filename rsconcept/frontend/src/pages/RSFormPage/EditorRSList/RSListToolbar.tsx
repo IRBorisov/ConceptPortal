@@ -1,5 +1,5 @@
 import { IconClone, IconDestroy, IconMoveDown, IconMoveUp, IconNewItem, IconOpenList } from '@/components/Icons';
-import BadgeHelp from '@/components/man/BadgeHelp';
+import BadgeHelp from '@/components/info/BadgeHelp';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import MiniButton from '@/components/ui/MiniButton';

@@ -1,7 +1,15 @@
 import { HelpTopic } from '@/models/miscellaneous';
 
-import { IconClone, IconDownload, IconFollow, IconImmutable, IconOwner, IconPublic, IconSave } from '../Icons';
-import LinkTopic from '../ui/LinkTopic';
+import {
+  IconClone,
+  IconDownload,
+  IconFollow,
+  IconImmutable,
+  IconOwner,
+  IconPublic,
+  IconSave
+} from '../../../components/Icons';
+import LinkTopic from '../../../components/ui/LinkTopic';
 
 function HelpRSFormMeta() {
   // prettier-ignore

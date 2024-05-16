@@ -5,7 +5,7 @@ import useWindowSize from '@/hooks/useWindowSize';
 import { HelpTopic } from '@/models/miscellaneous';
 import { external_urls, youtube } from '@/utils/constants';
 
-import Subtopics from './Subtopics';
+import Subtopics from '../Subtopics';
 
 function HelpRSLang() {
   const windowSize = useWindowSize();

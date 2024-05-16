@@ -5,7 +5,7 @@ import DataLoader from '@/components/wrap/DataLoader';
 import { ConstituentaID, IRSForm, ISubstitution } from '@/models/rsform';
 import { prefixes } from '@/utils/constants';
 
-import SubstitutionsPicker from '../../components/select/SubstitutionsPicker';
+import PickSubstitutions from '../../components/select/PickSubstitutions';
 
 interface SubstitutionsTabProps {
   receiver?: IRSForm;
@@ -32,7 +32,7 @@ function SubstitutionsTab({
 }: SubstitutionsTabProps) {
   return (
     <DataLoader id='dlg-substitutions-tab' className='cc-column' isLoading={loading} error={error} hasNoData={!source}>
-      <SubstitutionsPicker
+      <PickSubstitutions
         items={substitutions}
         setItems={setSubstitutions}
         rows={10}

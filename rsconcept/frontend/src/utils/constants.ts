@@ -72,6 +72,8 @@ export const external_urls = {
   ponomarev: 'https://inponomarev.ru/textbook',
   intro_video: 'https://www.youtube.com/watch?v=0Ty9mu9sOJo',
   full_course: 'https://www.youtube.com/playlist?list=PLGe_JiAwpqu1C70ruQmCm_OWTWU3KJwDo',
+  zak_lectures:
+    'https://www.acconcept.ru/product/metody-konceptualnogo-analiza-i-sinteza-v-teoreticheskom-issledovanii-i-proektirovanii-socialno-jekonomicheskih-sistem-3-e-izdanie/',
 
   git_repo: 'https://github.com/IRBorisov/ConceptPortal',
   mail_portal: 'mailto:portal@acconcept.ru',

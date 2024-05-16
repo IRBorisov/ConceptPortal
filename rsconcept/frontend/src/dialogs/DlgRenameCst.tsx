@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
 
-import BadgeHelp from '@/components/man/BadgeHelp';
+import BadgeHelp from '@/components/info/BadgeHelp';
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import SelectSingle from '@/components/ui/SelectSingle';
 import TextInput from '@/components/ui/TextInput';

@@ -11,13 +11,13 @@ import { describeConstituenta, describeConstituentaTerm } from '@/utils/labels';
 import { CProps } from '../props';
 import SelectSingle from '../ui/SelectSingle';
 
-interface ConstituentaSelectorProps extends CProps.Styling {
+interface SelectConstituentaProps extends CProps.Styling {
   items?: IConstituenta[];
   value?: IConstituenta;
   onSelectValue: (newValue?: IConstituenta) => void;
 }
 
-function ConstituentaSelector({ className, items, value, onSelectValue, ...restProps }: ConstituentaSelectorProps) {
+function SelectConstituenta({ className, items, value, onSelectValue, ...restProps }: SelectConstituentaProps) {
   const options = useMemo(() => {
     return (
       items?.map(cst => ({
@@ -48,4 +48,4 @@ function ConstituentaSelector({ className, items, value, onSelectValue, ...restP
   );
 }
 
-export default ConstituentaSelector;
+export default SelectConstituenta;

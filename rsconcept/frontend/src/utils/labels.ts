@@ -362,10 +362,12 @@ export function labelHelpTopic(topic: HelpTopic): string {
 
     case HelpTopic.INTERFACE:       return 'Интерфейс';
     case HelpTopic.UI_LIBRARY:      return 'Библиотека';
+    case HelpTopic.UI_RS_MENU:      return 'Меню схемы';
     case HelpTopic.UI_RS_CARD:      return 'Карточка схемы';
     case HelpTopic.UI_RS_LIST:      return 'Список конституент';
     case HelpTopic.UI_RS_EDITOR:    return 'Редактор конституенты';
     case HelpTopic.UI_GRAPH_TERM:   return 'Граф термов';
+    case HelpTopic.UI_FORMULA_TREE: return 'Дерево разбора';
     case HelpTopic.UI_CST_STATUS:   return 'Статус конституенты';
     case HelpTopic.UI_CST_CLASS:    return 'Класс конституенты';
 
@@ -373,6 +375,7 @@ export function labelHelpTopic(topic: HelpTopic): string {
     case HelpTopic.CC_SYSTEM:       return 'Система определений';
     case HelpTopic.CC_CONSTITUENTA: return 'Конституента';
     case HelpTopic.CC_RELATIONS:    return 'Связи понятий';
+    case HelpTopic.CC_SYNTHESIS:    return 'Синтез схем';
 
     case HelpTopic.RSLANG:          return 'Экспликация';
     case HelpTopic.RSL_TYPES:       return 'Типизация';
@@ -399,10 +402,12 @@ export function describeHelpTopic(topic: HelpTopic): string {
 
     case HelpTopic.INTERFACE:       return 'описание интерфейса пользователя';
     case HelpTopic.UI_LIBRARY:      return 'интерфейс Библиотеки схем';
+    case HelpTopic.UI_RS_MENU:      return 'меню редактирования схемы';
     case HelpTopic.UI_RS_CARD:      return 'интерфейс Карточки схемы';
     case HelpTopic.UI_RS_LIST:      return 'интерфейс Списка конституент';
     case HelpTopic.UI_RS_EDITOR:    return 'интерфейс редактирования конституенты';
     case HelpTopic.UI_GRAPH_TERM:   return 'интерфейс графа термов';
+    case HelpTopic.UI_FORMULA_TREE: return 'интерфейс дерева разбора родоструктурного выражения';
     case HelpTopic.UI_CST_STATUS:   return 'нотация отображения статуса конституенты';
     case HelpTopic.UI_CST_CLASS:    return 'нотация отображения класса конституенты';
 
@@ -410,6 +415,7 @@ export function describeHelpTopic(topic: HelpTopic): string {
     case HelpTopic.CC_SYSTEM:       return 'концептуальная схема как система понятий';
     case HelpTopic.CC_CONSTITUENTA: return 'понятия конституенты и ее атрибутов';
     case HelpTopic.CC_RELATIONS:    return 'отношения между конституентами';
+    case HelpTopic.CC_SYNTHESIS:    return 'операция синтеза концептуальных схем';
 
     case HelpTopic.RSLANG:          return 'справка по языку родов структур и экспликации';
     case HelpTopic.RSL_TYPES:       return 'система типов в родоструктурной экспликации';

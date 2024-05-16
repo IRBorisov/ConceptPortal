@@ -3,8 +3,8 @@ import TextURL from '@/components/ui/TextURL';
 import { HelpTopic } from '@/models/miscellaneous';
 import { external_urls, prefixes } from '@/utils/constants';
 
-import LinkTopic from '../ui/LinkTopic';
-import TopicItem from './TopicItem';
+import LinkTopic from '../../../components/ui/LinkTopic';
+import TopicItem from '../TopicItem';
 
 function HelpMain() {
   // prettier-ignore

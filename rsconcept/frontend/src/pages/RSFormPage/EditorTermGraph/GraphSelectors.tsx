@@ -1,4 +1,4 @@
-import BadgeHelp from '@/components/man/BadgeHelp';
+import BadgeHelp from '@/components/info/BadgeHelp';
 import { GraphLayout } from '@/components/ui/GraphUI';
 import Overlay from '@/components/ui/Overlay';
 import SelectSingle from '@/components/ui/SelectSingle';

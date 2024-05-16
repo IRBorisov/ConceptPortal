@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
-import ConstituentaBadge from '@/components/info/ConstituentaBadge';
+import BadgeConstituenta from '@/components/info/BadgeConstituenta';
 import { CProps } from '@/components/props';
 import DataTable, { createColumnHelper, RowSelectionState, VisibilityState } from '@/components/ui/DataTable';
 import FlexColumn from '@/components/ui/FlexColumn';
@@ -71,7 +71,7 @@ function RSTable({ items, maxHeight, enableSelection, selected, setSelected, onE
         size: 65,
         minSize: 65,
         maxSize: 65,
-        cell: props => <ConstituentaBadge theme={colors} value={props.row.original} prefixID={prefixes.cst_list} />
+        cell: props => <BadgeConstituenta theme={colors} value={props.row.original} prefixID={prefixes.cst_list} />
       }),
       columnHelper.accessor(cst => labelCstTypification(cst), {
         id: 'type',

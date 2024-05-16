@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
 
 import { IconAccept, IconMoveDown, IconMoveLeft, IconMoveRight, IconRemove } from '@/components/Icons';
-import BadgeHelp from '@/components/man/BadgeHelp';
+import BadgeHelp from '@/components/info/BadgeHelp';
 import SelectGrammeme from '@/components/select/SelectGrammeme';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';

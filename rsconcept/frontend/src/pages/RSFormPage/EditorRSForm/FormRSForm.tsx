@@ -5,8 +5,8 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { IconList, IconNewItem, IconSave } from '@/components/Icons';
-import BadgeHelp from '@/components/man/BadgeHelp';
-import VersionSelector from '@/components/select/VersionSelector';
+import BadgeHelp from '@/components/info/BadgeHelp';
+import SelectVersion from '@/components/select/SelectVersion';
 import Checkbox from '@/components/ui/Checkbox';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
@@ -136,7 +136,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
             <BadgeHelp topic={HelpTopic.VERSIONS} className='max-w-[30rem]' offset={4} />
           </Overlay>
           <Label text='Версия' className='mb-2' />
-          <VersionSelector
+          <SelectVersion
             id='schema_version'
             value={schema?.version} // prettier: split lines
             items={schema?.versions}

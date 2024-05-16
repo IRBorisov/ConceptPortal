@@ -5,7 +5,7 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { urls } from '@/app/urls';
-import BadgeHelp from '@/components/man/BadgeHelp';
+import BadgeHelp from '@/components/info/BadgeHelp';
 import { CProps } from '@/components/props';
 import DataTable, { createColumnHelper, VisibilityState } from '@/components/ui/DataTable';
 import FlexColumn from '@/components/ui/FlexColumn';

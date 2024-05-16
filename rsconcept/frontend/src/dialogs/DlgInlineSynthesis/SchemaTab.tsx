@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 
-import SchemaPicker from '@/components/select/SchemaPicker';
+import PickSchema from '@/components/select/PickSchema';
 import TextInput from '@/components/ui/TextInput';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { useLibrary } from '@/context/LibraryContext';
@@ -31,7 +31,7 @@ function SchemaTab({ selected, setSelected }: SchemaTabProps) {
           dense
         />
       </div>
-      <SchemaPicker
+      <PickSchema
         id='dlg_schema_picker' // prettier: split lines
         rows={15}
         value={selected}

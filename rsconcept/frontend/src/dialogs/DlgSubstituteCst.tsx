@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 
-import SubstitutionsPicker from '@/components/select/SubstitutionsPicker';
+import PickSubstitutions from '@/components/select/PickSubstitutions';
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import { useRSForm } from '@/context/RSFormContext';
 import { ICstSubstituteData, ISubstitution } from '@/models/rsform';
@@ -41,7 +41,7 @@ function DlgSubstituteCst({ hideWindow, onSubstitute }: DlgSubstituteCstProps) {
       onSubmit={handleSubmit}
       className={clsx('w-[40rem]', 'px-6 pb-3')}
     >
-      <SubstitutionsPicker
+      <PickSubstitutions
         items={substitutions}
         setItems={setSubstitutions}
         rows={6}

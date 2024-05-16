@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
-import BadgeHelp from '@/components/man/BadgeHelp';
+import BadgeHelp from '@/components/info/BadgeHelp';
 import Modal from '@/components/ui/Modal';
 import Overlay from '@/components/ui/Overlay';
 import TabLabel from '@/components/ui/TabLabel';

@@ -1,4 +1,4 @@
-import { IconImmutable, IconPublic } from '../Icons';
+import { IconImmutable, IconPublic } from '../../../components/Icons';
 
 function HelpLibrary() {
   // prettier-ignore

@@ -1,7 +1,7 @@
 'use client';
 
 import { ErrorData } from '@/components/info/InfoError';
-import ConstituentaMultiPicker from '@/components/select/ConstituentaMultiPicker';
+import PickMultiConstituenta from '@/components/select/PickMultiConstituenta';
 import DataLoader from '@/components/wrap/DataLoader';
 import { ConstituentaID, IRSForm } from '@/models/rsform';
 import { prefixes } from '@/utils/constants';
@@ -17,7 +17,7 @@ interface ConstituentsTabProps {
 function ConstituentsTab({ schema, error, loading, selected, setSelected }: ConstituentsTabProps) {
   return (
     <DataLoader id='dlg-constituents-tab' isLoading={loading} error={error} hasNoData={!schema}>
-      <ConstituentaMultiPicker
+      <PickMultiConstituenta
         schema={schema}
         rows={14}
         prefixID={prefixes.cst_inline_synth_list}

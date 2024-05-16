@@ -1,6 +1,6 @@
 import { HelpTopic } from '@/models/miscellaneous';
 
-import LinkTopic from '../ui/LinkTopic';
+import LinkTopic from '../../../components/ui/LinkTopic';
 
 function HelpRSLangCorrect() {
   return (
