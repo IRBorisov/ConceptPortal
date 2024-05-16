@@ -1,8 +1,7 @@
-import { urls } from '@/app/urls';
 import { HelpTopic } from '@/models/miscellaneous';
 
 import { IconClone, IconDownload, IconFollow, IconImmutable, IconOwner, IconPublic, IconSave } from '../Icons';
-import TextURL from '../ui/TextURL';
+import LinkTopic from '../ui/LinkTopic';
 
 function HelpRSFormMeta() {
   // prettier-ignore
@@ -11,7 +10,7 @@ function HelpRSFormMeta() {
     <h1>Карточка схемы</h1>
     
     <p>Карточка схемы содержит общую информацию и статистику схемы</p>
-    <p>Карточка схемы позволяет управлять атрибутами схемы и ее <TextURL text='версиями' href={urls.help_topic(HelpTopic.VERSIONS)}/></p>
+    <p>Карточка схемы позволяет управлять атрибутами схемы и ее <LinkTopic text='версиями' topic={HelpTopic.VERSIONS}/></p>
 
     <h2>Управление</h2>
     <li><IconSave className='inline-icon'/> сохранить изменения: Ctrl + S</li>

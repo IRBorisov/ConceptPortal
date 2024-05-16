@@ -10,7 +10,7 @@ import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { foldableTopics, HelpTopic, topicParent } from '@/models/miscellaneous';
 import { animateSideAppear } from '@/styling/animations';
-import { prefixes } from '@/utils/constants';
+import { globals, prefixes } from '@/utils/constants';
 import { describeHelpTopic, labelHelpTopic } from '@/utils/labels';
 
 interface TopicsTreeProps {
@@ -49,7 +49,8 @@ function TopicsTree({ activeTopic, topicFolded, onChangeTopic, onFoldTopic }: To
               'cursor-pointer',
               activeTopic === topic && 'clr-selected'
             )}
-            title={describeHelpTopic(topic)}
+            data-tooltip-id={globals.tooltip}
+            data-tooltip-content={describeHelpTopic(topic)}
             onClick={() => onChangeTopic(topic)}
             initial={{ ...animateSideAppear.initial }}
             animate={{ ...animateSideAppear.animate }}
@@ -66,7 +67,7 @@ function TopicsTree({ activeTopic, topicFolded, onChangeTopic, onFoldTopic }: To
                 />
               </Overlay>
             ) : null}
-            {labelHelpTopic(topic)}
+            {topicParent.get(topic) === topic ? labelHelpTopic(topic) : `- ${labelHelpTopic(topic).toLowerCase()}`}
           </motion.div>
         );
       })}

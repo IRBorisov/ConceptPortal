@@ -15,7 +15,6 @@ import HelpMain from '../man/HelpMain';
 import HelpPrivacy from '../man/HelpPrivacy';
 import HelpRSFormItems from '../man/HelpRSFormItems';
 import HelpRSFormMeta from '../man/HelpRSFormMeta';
-import HelpRSFormUI from '../man/HelpRSFormUI';
 import HelpRSLang from '../man/HelpRSLang';
 import HelpRSLangCorrect from '../man/HelpRSLangCorrect';
 import HelpRSLangInterpret from '../man/HelpRSLangInterpret';
@@ -35,10 +34,9 @@ function InfoTopic({ topic }: InfoTopicProps) {
 
   if (topic === HelpTopic.INTERFACE) return <HelpInterface />;
   if (topic === HelpTopic.UI_LIBRARY) return <HelpLibrary />;
-  if (topic === HelpTopic.UI_RSFORM) return <HelpRSFormUI />;
-  if (topic === HelpTopic.UI_RSFORM_CARD) return <HelpRSFormMeta />;
-  if (topic === HelpTopic.UI_RSFORM_LIST) return <HelpRSFormItems />;
-  if (topic === HelpTopic.UI_RSFORM_EDITOR) return <HelpCstEditor />;
+  if (topic === HelpTopic.UI_RS_CARD) return <HelpRSFormMeta />;
+  if (topic === HelpTopic.UI_RS_LIST) return <HelpRSFormItems />;
+  if (topic === HelpTopic.UI_RS_EDITOR) return <HelpCstEditor />;
   if (topic === HelpTopic.UI_GRAPH_TERM) return <HelpTermGraph />;
   if (topic === HelpTopic.UI_CST_STATUS) return <HelpCstStatus />;
   if (topic === HelpTopic.UI_CST_CLASS) return <HelpCstClass />;

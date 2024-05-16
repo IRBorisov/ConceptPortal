@@ -361,26 +361,25 @@ export function labelHelpTopic(topic: HelpTopic): string {
     case HelpTopic.MAIN:            return 'Портал';
 
     case HelpTopic.INTERFACE:       return 'Интерфейс';
-    case HelpTopic.UI_LIBRARY:      return '- библиотека';
-    case HelpTopic.UI_RSFORM:       return '- концептуальная схема';
-    case HelpTopic.UI_RSFORM_CARD:  return '= карточка схемы';
-    case HelpTopic.UI_RSFORM_LIST:  return '= список конституент';
-    case HelpTopic.UI_RSFORM_EDITOR: return '= редактор конституенты';
-    case HelpTopic.UI_GRAPH_TERM:   return '= граф термов';
-    case HelpTopic.UI_CST_STATUS:   return '= статус конституенты';
-    case HelpTopic.UI_CST_CLASS:    return '= класс конституенты';
+    case HelpTopic.UI_LIBRARY:      return 'Библиотека';
+    case HelpTopic.UI_RS_CARD:      return 'Карточка схемы';
+    case HelpTopic.UI_RS_LIST:      return 'Список конституент';
+    case HelpTopic.UI_RS_EDITOR:    return 'Редактор конституенты';
+    case HelpTopic.UI_GRAPH_TERM:   return 'Граф термов';
+    case HelpTopic.UI_CST_STATUS:   return 'Статус конституенты';
+    case HelpTopic.UI_CST_CLASS:    return 'Класс конституенты';
 
     case HelpTopic.CONCEPTUAL:      return 'Концептуализация';
-    case HelpTopic.CC_SYSTEM:       return '- система определений';
-    case HelpTopic.CC_CONSTITUENTA: return '- конституента';
-    case HelpTopic.CC_RELATIONS:    return '- связи понятий';
+    case HelpTopic.CC_SYSTEM:       return 'Система определений';
+    case HelpTopic.CC_CONSTITUENTA: return 'Конституента';
+    case HelpTopic.CC_RELATIONS:    return 'Связи понятий';
 
     case HelpTopic.RSLANG:          return 'Экспликация';
-    case HelpTopic.RSL_TYPES:       return '- типизация';
-    case HelpTopic.RSL_CORRECT:     return '- переносимость';
-    case HelpTopic.RSL_INTERPRET:   return '- интерпретируемость';
-    case HelpTopic.RSL_TEMPLATES:   return '- шаблоны выражений';
-    case HelpTopic.RSL_OPERATIONS:  return '- операции';
+    case HelpTopic.RSL_TYPES:       return 'Типизация';
+    case HelpTopic.RSL_CORRECT:     return 'Переносимость';
+    case HelpTopic.RSL_INTERPRET:   return 'Интерпретируемость';
+    case HelpTopic.RSL_TEMPLATES:   return 'Шаблоны выражений';
+    case HelpTopic.RSL_OPERATIONS:  return 'Операции';
 
     case HelpTopic.TERM_CONTROL:    return 'Терминологизация';
     case HelpTopic.VERSIONS:        return 'Версионирование';
@@ -396,35 +395,34 @@ export function labelHelpTopic(topic: HelpTopic): string {
 export function describeHelpTopic(topic: HelpTopic): string {
   // prettier-ignore
   switch (topic) {
-    case HelpTopic.MAIN:            return 'Общая справка по порталу';
+    case HelpTopic.MAIN:            return 'общая справка по порталу';
 
-    case HelpTopic.INTERFACE:       return 'Описание интерфейса пользователя';
-    case HelpTopic.UI_LIBRARY:      return 'Интерфейс Библиотеки схем';
-    case HelpTopic.UI_RSFORM:       return 'Просмотр и редактирование концептуальной схемы';
-    case HelpTopic.UI_RSFORM_CARD:  return 'Интерфейс Карточки схемы';
-    case HelpTopic.UI_RSFORM_LIST:  return 'Интерфейс Списка конституент';
-    case HelpTopic.UI_RSFORM_EDITOR: return 'Интерфейс редактирования конституенты';
-    case HelpTopic.UI_GRAPH_TERM:   return 'Интерфейс графа термов';
-    case HelpTopic.UI_CST_STATUS:   return 'Нотация отображения статуса конституенты';
-    case HelpTopic.UI_CST_CLASS:    return 'Нотация отображения класса конституенты';
+    case HelpTopic.INTERFACE:       return 'описание интерфейса пользователя';
+    case HelpTopic.UI_LIBRARY:      return 'интерфейс Библиотеки схем';
+    case HelpTopic.UI_RS_CARD:      return 'интерфейс Карточки схемы';
+    case HelpTopic.UI_RS_LIST:      return 'интерфейс Списка конституент';
+    case HelpTopic.UI_RS_EDITOR:    return 'интерфейс редактирования конституенты';
+    case HelpTopic.UI_GRAPH_TERM:   return 'интерфейс графа термов';
+    case HelpTopic.UI_CST_STATUS:   return 'нотация отображения статуса конституенты';
+    case HelpTopic.UI_CST_CLASS:    return 'нотация отображения класса конституенты';
 
-    case HelpTopic.CONCEPTUAL:      return 'Основы концептуализации и концептуального мышления';
-    case HelpTopic.CC_SYSTEM:       return 'Концептуальная схема как система понятий';
-    case HelpTopic.CC_CONSTITUENTA: return 'Понятия конституенты и ее атрибутов';
-    case HelpTopic.CC_RELATIONS:    return 'Отношения между конституентами';
+    case HelpTopic.CONCEPTUAL:      return 'основы концептуализации и концептуального мышления';
+    case HelpTopic.CC_SYSTEM:       return 'концептуальная схема как система понятий';
+    case HelpTopic.CC_CONSTITUENTA: return 'понятия конституенты и ее атрибутов';
+    case HelpTopic.CC_RELATIONS:    return 'отношения между конституентами';
 
-    case HelpTopic.RSLANG:          return 'Справка по языку родов структур и экспликации';
-    case HelpTopic.RSL_TYPES:       return 'Система типов в родоструктурной экспликации';
-    case HelpTopic.RSL_CORRECT:     return 'Корректность и переносимость определений';
-    case HelpTopic.RSL_INTERPRET:   return 'Интерпретация формальных определений';
-    case HelpTopic.RSL_TEMPLATES:   return 'Работа с шаблонными выражениями';
-    case HelpTopic.RSL_OPERATIONS:  return 'Операции над концептуальными схемами';
+    case HelpTopic.RSLANG:          return 'справка по языку родов структур и экспликации';
+    case HelpTopic.RSL_TYPES:       return 'система типов в родоструктурной экспликации';
+    case HelpTopic.RSL_CORRECT:     return 'корректность и переносимость определений';
+    case HelpTopic.RSL_INTERPRET:   return 'интерпретация формальных определений';
+    case HelpTopic.RSL_TEMPLATES:   return 'работа с шаблонными выражениями';
+    case HelpTopic.RSL_OPERATIONS:  return 'операции над концептуальными схемами';
 
-    case HelpTopic.TERM_CONTROL:    return 'Справка по контролю терминов и текстовым отсылкам';
-    case HelpTopic.VERSIONS:        return 'Справка по управлению версиями схем';
-    case HelpTopic.EXTEOR:          return 'Справка по программе для экспликации "Экстеор" для Windows';
-    case HelpTopic.API:             return 'Интерфейс для разработчиков';
-    case HelpTopic.PRIVACY:         return 'Политика обработки персональных данных';
+    case HelpTopic.TERM_CONTROL:    return 'справка по контролю терминов и текстовым отсылкам';
+    case HelpTopic.VERSIONS:        return 'справка по управлению версиями схем';
+    case HelpTopic.EXTEOR:          return 'справка по программе для экспликации "Экстеор" для Windows';
+    case HelpTopic.API:             return 'интерфейс для разработчиков';
+    case HelpTopic.PRIVACY:         return 'политика обработки персональных данных';
   }
 }
 

@@ -2,7 +2,10 @@ import { useMemo } from 'react';
 
 import EmbedYoutube from '@/components/ui/EmbedYoutube';
 import useWindowSize from '@/hooks/useWindowSize';
+import { HelpTopic } from '@/models/miscellaneous';
 import { external_urls, youtube } from '@/utils/constants';
+
+import Subtopics from './Subtopics';
 
 function HelpRSLang() {
   const windowSize = useWindowSize();
@@ -20,7 +23,6 @@ function HelpRSLang() {
     <div className='dense'>
       <h1>Родоструктурная экспликация концептуальных схем</h1>
       <p>Формальная запись (<i>экспликация</i>) концептуальных схем осуществляется с помощью языка родов структур.</p>
-      <p>Данный математический аппарат основан на аксиоматической теории множеств Цермелло-Френкеля и аппарате родов структур Н.Бурбаки.</p>
       <br />
       <p>Для ознакомления с основами родов структур можно использовать следующие материалы:</p>
       <p>1. <a className='underline' href={external_urls.intro_video}>Видео: Краткое введение в мат. аппарат</a></p>
@@ -28,10 +30,13 @@ function HelpRSLang() {
       <p>3. <a className='underline' href={external_urls.full_course}>Видео: лекции для 4 курса (второй семестр 2022-23 год)</a></p>
     </div>
     <div className='justify-center w-full'>
-    <EmbedYoutube
-      videoID={youtube.intro}
-      pxHeight={videoHeight}
-    />
+      <EmbedYoutube
+        videoID={youtube.intro}
+        pxHeight={videoHeight}
+      />
+    </div>
+    <div className='dense'>
+      <Subtopics headTopic={HelpTopic.RSLANG} />
     </div>
   </div>);
 }

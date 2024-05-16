@@ -40,6 +40,7 @@ def inline_synthesis(request: Request):
             index = next(i for (i, cst) in enumerate(items) if cst == replacement)
             replacement = new_items[index]
         schema.substitute(original, replacement, substitution['transfer_term'])
+
     schema.restore_order()
     return Response(
         status=c.HTTP_200_OK,

@@ -46,10 +46,9 @@ export enum HelpTopic {
 
   INTERFACE = 'user-interface',
   UI_LIBRARY = 'ui-library',
-  UI_RSFORM = 'ui-rsform',
-  UI_RSFORM_CARD = 'ui-rsform-card',
-  UI_RSFORM_LIST = 'ui-rsform-list',
-  UI_RSFORM_EDITOR = 'ui-rsform-editor',
+  UI_RS_CARD = 'ui-rsform-card',
+  UI_RS_LIST = 'ui-rsform-list',
+  UI_RS_EDITOR = 'ui-rsform-editor',
   UI_GRAPH_TERM = 'ui-rsform-graph',
   UI_CST_STATUS = 'ui-rsform-cst-status',
   UI_CST_CLASS = 'ui-rsform-cst-class',
@@ -81,13 +80,12 @@ export const topicParent: Map<HelpTopic, HelpTopic> = new Map([
 
   [HelpTopic.INTERFACE, HelpTopic.INTERFACE],
   [HelpTopic.UI_LIBRARY, HelpTopic.INTERFACE],
-  [HelpTopic.UI_RSFORM, HelpTopic.INTERFACE],
-  [HelpTopic.UI_RSFORM_CARD, HelpTopic.UI_RSFORM],
-  [HelpTopic.UI_RSFORM_LIST, HelpTopic.UI_RSFORM],
-  [HelpTopic.UI_RSFORM_EDITOR, HelpTopic.UI_RSFORM],
-  [HelpTopic.UI_GRAPH_TERM, HelpTopic.UI_RSFORM],
-  [HelpTopic.UI_CST_STATUS, HelpTopic.UI_RSFORM],
-  [HelpTopic.UI_CST_CLASS, HelpTopic.UI_RSFORM],
+  [HelpTopic.UI_RS_CARD, HelpTopic.INTERFACE],
+  [HelpTopic.UI_RS_LIST, HelpTopic.INTERFACE],
+  [HelpTopic.UI_RS_EDITOR, HelpTopic.INTERFACE],
+  [HelpTopic.UI_GRAPH_TERM, HelpTopic.INTERFACE],
+  [HelpTopic.UI_CST_STATUS, HelpTopic.INTERFACE],
+  [HelpTopic.UI_CST_CLASS, HelpTopic.INTERFACE],
 
   [HelpTopic.CONCEPTUAL, HelpTopic.CONCEPTUAL],
   [HelpTopic.CC_SYSTEM, HelpTopic.CONCEPTUAL],
@@ -111,7 +109,7 @@ export const topicParent: Map<HelpTopic, HelpTopic> = new Map([
 /**
  *  Topics that can be folded.
  */
-export const foldableTopics = [HelpTopic.INTERFACE, HelpTopic.UI_RSFORM, HelpTopic.RSLANG, HelpTopic.CONCEPTUAL];
+export const foldableTopics = [HelpTopic.INTERFACE, HelpTopic.RSLANG, HelpTopic.CONCEPTUAL];
 
 /**
  * Represents {@link IConstituenta} matching mode.

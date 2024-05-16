@@ -101,7 +101,7 @@ class RSForm:
             cst.save()
 
     def get_max_index(self, cst_type: CstType) -> int:
-        ''' Get maximum alias index for specific CstType '''
+        ''' Get maximum alias index for specific CstType. '''
         result: int = 0
         items = Constituenta.objects \
             .filter(schema=self.item, cst_type=cst_type) \
