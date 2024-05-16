@@ -378,8 +378,8 @@ export function labelHelpTopic(topic: HelpTopic): string {
     case HelpTopic.RSL_TYPES:       return 'Типизация';
     case HelpTopic.RSL_CORRECT:     return 'Переносимость';
     case HelpTopic.RSL_INTERPRET:   return 'Интерпретируемость';
-    case HelpTopic.RSL_TEMPLATES:   return 'Шаблоны выражений';
     case HelpTopic.RSL_OPERATIONS:  return 'Операции';
+    case HelpTopic.RSL_TEMPLATES:   return 'Шаблоны выражений';
 
     case HelpTopic.TERM_CONTROL:    return 'Терминологизация';
     case HelpTopic.VERSIONS:        return 'Версионирование';
@@ -415,8 +415,8 @@ export function describeHelpTopic(topic: HelpTopic): string {
     case HelpTopic.RSL_TYPES:       return 'система типов в родоструктурной экспликации';
     case HelpTopic.RSL_CORRECT:     return 'корректность и переносимость определений';
     case HelpTopic.RSL_INTERPRET:   return 'интерпретация формальных определений';
-    case HelpTopic.RSL_TEMPLATES:   return 'работа с шаблонными выражениями';
     case HelpTopic.RSL_OPERATIONS:  return 'операции над концептуальными схемами';
+    case HelpTopic.RSL_TEMPLATES:   return 'работа с шаблонными выражениями';
 
     case HelpTopic.TERM_CONTROL:    return 'справка по контролю терминов и текстовым отсылкам';
     case HelpTopic.VERSIONS:        return 'справка по управлению версиями схем';

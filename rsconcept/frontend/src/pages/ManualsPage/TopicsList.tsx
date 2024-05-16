@@ -8,32 +8,16 @@ import TopicsStatic from './TopicsStatic';
 
 interface TopicsListProps {
   activeTopic: HelpTopic;
-  topicFolded: Map<HelpTopic, boolean>;
   onChangeTopic: (newTopic: HelpTopic) => void;
-  onFoldTopic: (target: HelpTopic, showChildren: boolean) => void;
 }
 
-function TopicsList({ activeTopic, topicFolded, onChangeTopic, onFoldTopic }: TopicsListProps) {
+function TopicsList({ activeTopic, onChangeTopic }: TopicsListProps) {
   const size = useWindowSize();
 
   if (!size.isSmall) {
-    return (
-      <TopicsStatic
-        activeTopic={activeTopic}
-        onChangeTopic={onChangeTopic}
-        topicFolded={topicFolded}
-        onFoldTopic={onFoldTopic}
-      />
-    );
+    return <TopicsStatic activeTopic={activeTopic} onChangeTopic={onChangeTopic} />;
   } else {
-    return (
-      <TopicsDropdown
-        activeTopic={activeTopic}
-        onChangeTopic={onChangeTopic}
-        topicFolded={topicFolded}
-        onFoldTopic={onFoldTopic}
-      />
-    );
+    return <TopicsDropdown activeTopic={activeTopic} onChangeTopic={onChangeTopic} />;
   }
 }
 

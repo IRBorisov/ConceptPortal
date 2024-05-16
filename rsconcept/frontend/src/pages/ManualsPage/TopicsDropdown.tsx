@@ -15,12 +15,10 @@ import TopicsTree from './TopicsTree';
 
 interface TopicsDropdownProps {
   activeTopic: HelpTopic;
-  topicFolded: Map<HelpTopic, boolean>;
   onChangeTopic: (newTopic: HelpTopic) => void;
-  onFoldTopic: (target: HelpTopic, showChildren: boolean) => void;
 }
 
-function TopicsDropdown({ activeTopic, topicFolded, onChangeTopic, onFoldTopic }: TopicsDropdownProps) {
+function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownProps) {
   const menu = useDropdown();
   const { noNavigation, calculateHeight } = useConceptOptions();
 
@@ -67,12 +65,7 @@ function TopicsDropdown({ activeTopic, topicFolded, onChangeTopic, onFoldTopic }
         animate={menu.isOpen ? 'open' : 'closed'}
         variants={animateSlideLeft}
       >
-        <TopicsTree
-          activeTopic={activeTopic}
-          onChangeTopic={selectTheme}
-          topicFolded={topicFolded}
-          onFoldTopic={onFoldTopic}
-        />
+        <TopicsTree activeTopic={activeTopic} onChangeTopic={selectTheme} />
       </motion.div>
     </div>
   );

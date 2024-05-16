@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 
 import { IconDropArrow, IconPageRight } from '@/components/Icons';
 import { CProps } from '@/components/props';
@@ -15,12 +15,60 @@ import { describeHelpTopic, labelHelpTopic } from '@/utils/labels';
 
 interface TopicsTreeProps {
   activeTopic: HelpTopic;
-  topicFolded: Map<HelpTopic, boolean>;
   onChangeTopic: (newTopic: HelpTopic) => void;
-  onFoldTopic: (target: HelpTopic, showChildren: boolean) => void;
 }
 
-function TopicsTree({ activeTopic, topicFolded, onChangeTopic, onFoldTopic }: TopicsTreeProps) {
+function TopicsTree({ activeTopic, onChangeTopic }: TopicsTreeProps) {
+  const [topicFolded, setFolded] = useState<Map<HelpTopic, boolean>>(
+    new Map(
+      Object.values(HelpTopic).map(value => {
+        const topic = value as HelpTopic;
+        return [topic, true];
+      })
+    )
+  );
+
+  useLayoutEffect(() => {
+    setFolded(
+      new Map(
+        Object.values(HelpTopic).map(value => {
+          const topic = value as HelpTopic;
+          return [
+            topic,
+            topicParent.get(activeTopic) !== topic && topicParent.get(topicParent.get(activeTopic)!) !== topic
+          ];
+        })
+      )
+    );
+  }, [activeTopic]);
+
+  const onFoldTopic = useCallback(
+    (target: HelpTopic, showChildren: boolean) => {
+      if (topicFolded.get(target) === !showChildren) {
+        return;
+      }
+      setFolded(
+        new Map(
+          Object.values(HelpTopic).map(value => {
+            const topic = value as HelpTopic;
+            if (topic === target) {
+              return [topic, !showChildren];
+            }
+            if (
+              !showChildren &&
+              (topicParent.get(topic) === target || topicParent.get(topicParent.get(topic)!) === target)
+            ) {
+              return [topic, true];
+            }
+            const oldValue = topicFolded.get(topic)!;
+            return [topic, oldValue];
+          })
+        )
+      );
+    },
+    [topicFolded]
+  );
+
   const handleClickFold = useCallback(
     (event: CProps.EventMouse, topic: HelpTopic, showChildren: boolean) => {
       event.preventDefault();
@@ -29,6 +77,7 @@ function TopicsTree({ activeTopic, topicFolded, onChangeTopic, onFoldTopic }: To
     },
     [onFoldTopic]
   );
+
   return (
     <AnimatePresence initial={false}>
       {Object.values(HelpTopic).map((topic, index) => {

@@ -62,8 +62,8 @@ export enum HelpTopic {
   RSL_TYPES = 'rslang-types',
   RSL_CORRECT = 'rslang-correctness',
   RSL_INTERPRET = 'rslang-interpretation',
-  RSL_TEMPLATES = 'rslang-templates',
   RSL_OPERATIONS = 'rslang-operations',
+  RSL_TEMPLATES = 'rslang-templates',
 
   TERM_CONTROL = 'terminology-control',
   VERSIONS = 'versions',
@@ -96,8 +96,8 @@ export const topicParent: Map<HelpTopic, HelpTopic> = new Map([
   [HelpTopic.RSL_TYPES, HelpTopic.RSLANG],
   [HelpTopic.RSL_CORRECT, HelpTopic.RSLANG],
   [HelpTopic.RSL_INTERPRET, HelpTopic.RSLANG],
-  [HelpTopic.RSL_TEMPLATES, HelpTopic.RSLANG],
   [HelpTopic.RSL_OPERATIONS, HelpTopic.RSLANG],
+  [HelpTopic.RSL_TEMPLATES, HelpTopic.RSLANG],
 
   [HelpTopic.TERM_CONTROL, HelpTopic.TERM_CONTROL],
   [HelpTopic.VERSIONS, HelpTopic.VERSIONS],

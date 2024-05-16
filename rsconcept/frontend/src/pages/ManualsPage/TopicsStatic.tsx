@@ -7,12 +7,10 @@ import TopicsTree from './TopicsTree';
 
 interface TopicsStaticProps {
   activeTopic: HelpTopic;
-  topicFolded: Map<HelpTopic, boolean>;
   onChangeTopic: (newTopic: HelpTopic) => void;
-  onFoldTopic: (target: HelpTopic, showChildren: boolean) => void;
 }
 
-function TopicsStatic({ activeTopic, topicFolded, onChangeTopic, onFoldTopic }: TopicsStaticProps) {
+function TopicsStatic({ activeTopic, onChangeTopic }: TopicsStaticProps) {
   const { calculateHeight } = useConceptOptions();
   return (
     <div
@@ -27,12 +25,7 @@ function TopicsStatic({ activeTopic, topicFolded, onChangeTopic, onFoldTopic }: 
       )}
       style={{ maxHeight: calculateHeight('2.25rem + 2px') }}
     >
-      <TopicsTree
-        activeTopic={activeTopic}
-        onChangeTopic={onChangeTopic}
-        topicFolded={topicFolded}
-        onFoldTopic={onFoldTopic}
-      />
+      <TopicsTree activeTopic={activeTopic} onChangeTopic={onChangeTopic} />
     </div>
   );
 }
