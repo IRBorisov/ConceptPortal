@@ -21,9 +21,7 @@ function ControlsOverlay({ constituenta, disabled, modified, processing, onRenam
     <Overlay position='top-1 left-[4.3rem]' className='flex select-none'>
       {!disabled || processing ? (
         <MiniButton
-          title={
-            modified ? messages.unsaved : `Редактировать словоформы термина: ${constituenta?.term_forms.length ?? 0}`
-          }
+          title={modified ? messages.unsaved : `Редактировать словоформы термина`}
           noHover
           onClick={onEditTerm}
           icon={<IconEdit size='1rem' className='icon-primary' />}

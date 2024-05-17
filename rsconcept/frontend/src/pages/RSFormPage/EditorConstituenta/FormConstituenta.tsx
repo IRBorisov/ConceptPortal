@@ -118,10 +118,10 @@ function FormConstituenta({
     const data: ICstUpdateData = {
       id: state.id,
       alias: alias,
-      convention: convention,
+      term_raw: term,
       definition_formal: expression,
       definition_raw: textDefinition,
-      term_raw: term
+      convention: convention
     };
     cstUpdate(data, () => toast.success('Изменения сохранены'));
   }

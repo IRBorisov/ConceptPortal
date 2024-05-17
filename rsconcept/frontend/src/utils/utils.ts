@@ -95,3 +95,10 @@ export function convertBase64ToBlob(base64String: string): Uint8Array {
   }
   return uint8Array;
 }
+
+/**
+ * Prompt user of confirming discarding changes before continue.
+ */
+export function promptUnsaved(): boolean {
+  return window.confirm('Присутствуют несохраненные изменения. Продолжить без их учета?');
+}

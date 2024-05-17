@@ -46,6 +46,7 @@ import {
 } from '@/models/rsform';
 import { generateAlias } from '@/models/rsformAPI';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
+import { promptUnsaved } from '@/utils/utils';
 
 interface IRSEditContext {
   schema?: IRSForm;
@@ -379,17 +380,25 @@ export const RSEditState = ({
   }, [activeCst]);
 
   const substitute = useCallback(() => {
+    if (isModified && !promptUnsaved()) {
+      return;
+    }
     setShowSubstitute(true);
-  }, []);
+  }, [isModified]);
+
+  const inlineSynthesis = useCallback(() => {
+    if (isModified && !promptUnsaved()) {
+      return;
+    }
+    setShowInlineSynthesis(true);
+  }, [isModified]);
 
   const editTermForms = useCallback(() => {
     if (!activeCst) {
       return;
     }
-    if (isModified) {
-      if (!window.confirm('Присутствуют несохраненные изменения. Продолжить без их учета?')) {
-        return;
-      }
+    if (isModified && !promptUnsaved()) {
+      return;
     }
     setShowEditTerm(true);
   }, [isModified, activeCst]);
@@ -410,6 +419,9 @@ export const RSEditState = ({
     if (!activeCst) {
       return;
     }
+    if (isModified && !promptUnsaved()) {
+      return;
+    }
     const data: ICstTarget = {
       target: activeCst.id
     };
@@ -419,27 +431,26 @@ export const RSEditState = ({
         setSelected(cstList);
       }
     });
-  }, [activeCst, setSelected, model]);
+  }, [activeCst, setSelected, model, isModified]);
 
   const promptTemplate = useCallback(() => {
+    if (isModified && !promptUnsaved()) {
+      return;
+    }
     setInsertCstID(activeCst?.id);
     setShowTemplates(true);
-  }, [activeCst]);
+  }, [activeCst, isModified]);
 
   const promptClone = useCallback(() => {
-    if (isModified) {
-      if (!window.confirm('Присутствуют несохраненные изменения. Продолжить без их учета?')) {
-        return;
-      }
+    if (isModified && !promptUnsaved()) {
+      return;
     }
     setShowClone(true);
   }, [isModified]);
 
   const download = useCallback(() => {
-    if (isModified) {
-      if (!window.confirm('Присутствуют несохраненные изменения. Продолжить без их учета?')) {
-        return;
-      }
+    if (isModified && !promptUnsaved()) {
+      return;
     }
     const fileName = (model.schema?.alias ?? 'Schema') + EXTEOR_TRS_FILE;
     model.download((data: Blob) => {
@@ -515,7 +526,7 @@ export const RSEditState = ({
 
         reindex,
         reorder,
-        inlineSynthesis: () => setShowInlineSynthesis(true),
+        inlineSynthesis,
         produceStructure,
         substitute
       }}
