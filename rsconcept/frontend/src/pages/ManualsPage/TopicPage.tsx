@@ -13,17 +13,17 @@ import HelpExteor from './items/HelpExteor';
 import HelpFormulaTree from './items/HelpFormulaTree';
 import HelpInterface from './items/HelpInterface';
 import HelpLibrary from './items/HelpLibrary';
-import HelpMain from './items/HelpMain';
+import HelpPortal from './items/HelpPortal';
 import HelpPrivacy from './items/HelpPrivacy';
+import HelpRSFormCard from './items/HelpRSFormCard';
 import HelpRSFormItems from './items/HelpRSFormItems';
 import HelpRSFormMenu from './items/HelpRSFormMenu';
-import HelpRSFormMeta from './items/HelpRSFormMeta';
 import HelpRSLang from './items/HelpRSLang';
 import HelpRSLangCorrect from './items/HelpRSLangCorrect';
 import HelpRSLangInterpret from './items/HelpRSLangInterpret';
 import HelpRSLangOperations from './items/HelpRSLangOperations';
+import HelpRSLangTemplates from './items/HelpRSLangTemplates';
 import HelpRSLangTypes from './items/HelpRSLangTypes';
-import HelpRSTemplates from './items/HelpRSTemplates';
 import HelpTermGraph from './items/HelpTermGraph';
 import HelpTerminologyControl from './items/HelpTerminologyControl';
 import HelpVersions from './items/HelpVersions';
@@ -33,12 +33,12 @@ interface TopicPageProps {
 }
 
 function TopicPage({ topic }: TopicPageProps) {
-  if (topic === HelpTopic.MAIN) return <HelpMain />;
+  if (topic === HelpTopic.MAIN) return <HelpPortal />;
 
   if (topic === HelpTopic.INTERFACE) return <HelpInterface />;
   if (topic === HelpTopic.UI_LIBRARY) return <HelpLibrary />;
   if (topic === HelpTopic.UI_RS_MENU) return <HelpRSFormMenu />;
-  if (topic === HelpTopic.UI_RS_CARD) return <HelpRSFormMeta />;
+  if (topic === HelpTopic.UI_RS_CARD) return <HelpRSFormCard />;
   if (topic === HelpTopic.UI_RS_LIST) return <HelpRSFormItems />;
   if (topic === HelpTopic.UI_RS_EDITOR) return <HelpCstEditor />;
   if (topic === HelpTopic.UI_GRAPH_TERM) return <HelpTermGraph />;
@@ -57,7 +57,7 @@ function TopicPage({ topic }: TopicPageProps) {
   if (topic === HelpTopic.RSL_CORRECT) return <HelpRSLangCorrect />;
   if (topic === HelpTopic.RSL_INTERPRET) return <HelpRSLangInterpret />;
   if (topic === HelpTopic.RSL_OPERATIONS) return <HelpRSLangOperations />;
-  if (topic === HelpTopic.RSL_TEMPLATES) return <HelpRSTemplates />;
+  if (topic === HelpTopic.RSL_TEMPLATES) return <HelpRSLangTemplates />;
 
   if (topic === HelpTopic.TERM_CONTROL) return <HelpTerminologyControl />;
   if (topic === HelpTopic.VERSIONS) return <HelpVersions />;

@@ -2,6 +2,7 @@ import { HelpTopic } from '@/models/miscellaneous';
 
 import {
   IconClone,
+  IconDestroy,
   IconDownload,
   IconFollow,
   IconImmutable,
@@ -11,7 +12,7 @@ import {
 } from '../../../components/Icons';
 import LinkTopic from '../../../components/ui/LinkTopic';
 
-function HelpRSFormMeta() {
+function HelpRSFormCard() {
   // prettier-ignore
   return (
   <div className='dense'>
@@ -27,8 +28,9 @@ function HelpRSFormMeta() {
     <li><IconImmutable className='inline-icon'/> Неизменные схемы редактируют только администраторы</li>
     <li><IconClone className='inline-icon'/> Клонировать – создать копию схемы</li>
     <li><IconFollow className='inline-icon'/> Отслеживание – схема в персональном списке</li>
-    <li><IconDownload className='inline-icon'/> Загрузить/Выгрузить схему – взаимодействие с Экстеор</li>
+    <li><IconDownload className='inline-icon'/> Загрузить/Выгрузить – взаимодействие с Экстеор</li>
+    <li><IconDestroy className='inline-icon icon-red'/> Удалить – полностью удаляет схему из базы Портала</li>
   </div>);
 }
 
-export default HelpRSFormMeta;
+export default HelpRSFormCard;

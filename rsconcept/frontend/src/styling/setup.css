@@ -124,6 +124,10 @@ div:not(.dense) > p {
     @apply font-semibold;
   }
 
+  code {
+    font-family: var(--font-math);
+  }
+
   li {
     list-style-position: inside;
   }
