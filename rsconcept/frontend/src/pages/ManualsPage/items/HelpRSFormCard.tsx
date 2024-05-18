@@ -21,8 +21,8 @@ function HelpRSFormCard() {
   <div className='dense'>
     <h1>Карточка схемы</h1>
     
-    <p>Карточка схемы содержит общую информацию и статистику схемы</p>
-    <p>Карточка схемы позволяет управлять атрибутами схемы и ее <LinkTopic text='версиями' topic={HelpTopic.VERSIONS}/></p>
+    <p>Карточка содержит общую информацию и статистику</p>
+    <p>Карточка позволяет управлять атрибутами схемы и <LinkTopic text='версиями' topic={HelpTopic.VERSIONS}/></p>
 
     <h2>Управление</h2>
     <li><IconSave className='inline-icon'/> сохранить изменения: Ctrl + S</li>

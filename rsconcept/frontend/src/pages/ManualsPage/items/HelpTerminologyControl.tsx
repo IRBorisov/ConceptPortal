@@ -1,6 +1,6 @@
 function HelpTerminologyControl() {
   return (
-    <div className='flex flex-col gap-2'>
+    <div>
       <h1>Терминологизация</h1>
       <p>Портал позволяет контролировать употребление терминов, привязанных к сущностям в концептуальных схемах.</p>
       <p>
