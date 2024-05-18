@@ -12,7 +12,7 @@ from .. import utils
 class ConstituentAPIView(generics.RetrieveUpdateAPIView):
     ''' Endpoint: Get / Update Constituenta. '''
     queryset = m.Constituenta.objects.all()
-    serializer_class = s.ConstituentaSerializer
+    serializer_class = s.CstSerializer
 
     def get_permissions(self):
         result = super().get_permissions()

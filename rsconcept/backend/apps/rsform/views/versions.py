@@ -1,7 +1,8 @@
 ''' Endpoints for versions. '''
+from typing import cast
 from django.http import HttpResponse
-from rest_framework import generics, permissions
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework import generics, permissions, viewsets
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.request import Request
 from drf_spectacular.utils import extend_schema, extend_schema_view
@@ -14,7 +15,7 @@ from .. import utils
 
 @extend_schema(tags=['Version'])
 @extend_schema_view()
-class VersionAPIView(generics.RetrieveUpdateDestroyAPIView):
+class VersionViewset(viewsets.GenericViewSet, generics.RetrieveUpdateDestroyAPIView):
     ''' Endpoint: Get / Update Constituenta. '''
     queryset = m.Version.objects.all()
     serializer_class = s.VersionSerializer
@@ -26,6 +27,26 @@ class VersionAPIView(generics.RetrieveUpdateDestroyAPIView):
         else:
             result.append(utils.ItemOwnerOrAdmin())
         return result
+
+    @extend_schema(
+        summary='restore version data into current item',
+        request=None,
+        responses={
+            c.HTTP_200_OK: s.RSFormParseSerializer,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='restore')
+    def restore(self, request: Request, pk):
+        ''' Restore version data into current item. '''
+        version = cast(m.Version, self.get_object())
+        item = cast(m.LibraryItem, version.item)
+        s.RSFormSerializer(item).restore_from_version(version.data)
+        return Response(
+            status=c.HTTP_200_OK,
+            data=s.RSFormParseSerializer(item).data
+        )
 
 
 @extend_schema(

@@ -66,6 +66,7 @@ interface IRSEditContext {
 
   viewVersion: (version?: number, newTab?: boolean) => void;
   createVersion: () => void;
+  restoreVersion: () => void;
   editVersions: () => void;
 
   moveUp: () => void;
@@ -171,6 +172,26 @@ export const RSEditState = ({
     [router, model]
   );
 
+  const createVersion = useCallback(() => {
+    if (isModified && !promptUnsaved()) {
+      return;
+    }
+    setShowCreateVersion(true);
+  }, [isModified]);
+
+  const restoreVersion = useCallback(() => {
+    if (
+      !model.versionID ||
+      !window.confirm('При восстановлении архивной версии актуальная схему будет заменена. Продолжить?')
+    ) {
+      return;
+    }
+    model.versionRestore(model.versionID, () => {
+      toast.success('Загрузка версии завершена');
+      viewVersion(undefined);
+    });
+  }, [model, viewVersion]);
+
   const handleCreateCst = useCallback(
     (data: ICstCreateData) => {
       if (!model.schema) {
@@ -254,9 +275,14 @@ export const RSEditState = ({
       if (!model.schema) {
         return;
       }
-      model.versionDelete(versionID, () => toast.success('Версия удалена'));
+      model.versionDelete(versionID, () => {
+        toast.success('Версия удалена');
+        if (String(versionID) === model.versionID) {
+          viewVersion(undefined);
+        }
+      });
     },
-    [model]
+    [model, viewVersion]
   );
 
   const handleUpdateVersion = useCallback(
@@ -505,7 +531,8 @@ export const RSEditState = ({
         deselectAll: () => setSelected([]),
 
         viewVersion,
-        createVersion: () => setShowCreateVersion(true),
+        createVersion,
+        restoreVersion,
         editVersions: () => setShowEditVersions(true),
 
         moveUp,

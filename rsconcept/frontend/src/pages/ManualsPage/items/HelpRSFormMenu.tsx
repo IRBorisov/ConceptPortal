@@ -50,7 +50,7 @@ function HelpRSFormMenu() {
             <IconShare className='inline-icon' /> Поделиться – скопировать ссылку на схему
           </li>
           <li>
-            <IconClone className='inline-icon' /> Клонировать – создать копию схемы
+            <IconClone className='inline-icon icon-green' /> Клонировать – создать копию схемы
           </li>
           <li>
             <IconDownload className='inline-icon' /> Выгрузить – сохранить в файле формата Экстеор
@@ -87,7 +87,7 @@ function HelpRSFormMenu() {
       </div>
 
       <p>
-        <IconEdit2 size='1.25rem' className='inline-icon' /> операции над концептуальной схемой описаны в{' '}
+        <IconEdit2 size='1.25rem' className='inline-icon icon-green' /> операции над концептуальной схемой описаны в{' '}
         <LinkTopic text='разделе Экспликация' topic={HelpTopic.RSL_OPERATIONS} />.
       </p>
     </div>

@@ -62,7 +62,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         response = Response(
             status=c.HTTP_201_CREATED,
             data={
-                'new_cst': s.ConstituentaSerializer(new_cst).data,
+                'new_cst': s.CstSerializer(new_cst).data,
                 'schema': s.RSFormParseSerializer(schema.item).data
             }
         )
@@ -138,7 +138,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         return Response(
             status=c.HTTP_200_OK,
             data={
-                'new_cst': s.ConstituentaSerializer(cst).data,
+                'new_cst': s.CstSerializer(cst).data,
                 'schema': s.RSFormParseSerializer(schema.item).data
             }
         )

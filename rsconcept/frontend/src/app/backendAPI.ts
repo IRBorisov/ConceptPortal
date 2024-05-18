@@ -453,6 +453,14 @@ export function patchVersion(target: string, request: FrontPush<IVersionData>) {
   });
 }
 
+export function patchRestoreVersion(target: string, request: FrontPull<IRSFormData>) {
+  AxiosPatch({
+    title: `Restore version id=${target}`,
+    endpoint: `/api/versions/${target}/restore`,
+    request: request
+  });
+}
+
 export function deleteVersion(target: string, request: FrontAction) {
   AxiosDelete({
     title: `Version id=${target}`,

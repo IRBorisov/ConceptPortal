@@ -16,6 +16,7 @@ import {
   patchRenameConstituenta,
   patchResetAliases,
   patchRestoreOrder,
+  patchRestoreVersion,
   patchSubstituteConstituents,
   patchUploadTRS,
   patchVersion,
@@ -50,6 +51,7 @@ import { useLibrary } from './LibraryContext';
 interface IRSFormContext {
   schema?: IRSForm;
   schemaID: string;
+  versionID?: string;
 
   error: ErrorData;
   loading: boolean;
@@ -82,6 +84,7 @@ interface IRSFormContext {
   versionCreate: (data: IVersionData, callback?: (version: number) => void) => void;
   versionUpdate: (target: number, data: IVersionData, callback?: () => void) => void;
   versionDelete: (target: number, callback?: () => void) => void;
+  versionRestore: (target: string, callback?: () => void) => void;
 }
 
 const RSFormContext = createContext<IRSFormContext | null>(null);
@@ -490,6 +493,22 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
     [setError, schema, setSchema]
   );
 
+  const versionRestore = useCallback(
+    (target: string, callback?: () => void) => {
+      setError(undefined);
+      patchRestoreVersion(target, {
+        showError: true,
+        setLoading: setProcessing,
+        onError: setError,
+        onSuccess: () => {
+          setSchema(schema);
+          if (callback) callback();
+        }
+      });
+    },
+    [setError, schema, setSchema]
+  );
+
   const inlineSynthesis = useCallback(
     (data: IInlineSynthesisData, callback?: DataCallback<IRSFormData>) => {
       setError(undefined);
@@ -513,6 +532,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
       value={{
         schema,
         schemaID,
+        versionID,
         error,
         loading,
         processing,
@@ -538,7 +558,8 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         cstMoveTo,
         versionCreate,
         versionUpdate,
-        versionDelete
+        versionDelete,
+        versionRestore
       }}
     >
       {children}

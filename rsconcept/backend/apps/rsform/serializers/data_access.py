@@ -2,6 +2,7 @@
 from typing import Optional, cast
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
+from django.db import transaction
 from rest_framework import serializers
 from rest_framework.serializers import PrimaryKeyRelatedField as PKField
 
@@ -19,7 +20,7 @@ class LibraryItemSerializer(serializers.ModelSerializer):
         ''' serializer metadata. '''
         model = LibraryItem
         fields = '__all__'
-        read_only_fields = ('owner', 'id', 'item_type')
+        read_only_fields = ('id', 'item_type')
 
 
 class VersionSerializer(serializers.ModelSerializer):
@@ -66,7 +67,16 @@ class LibraryItemDetailsSerializer(serializers.ModelSerializer):
         return [VersionInnerSerializer(item).data for item in instance.versions()]
 
 
-class ConstituentaSerializer(serializers.ModelSerializer):
+class CstBaseSerializer(serializers.ModelSerializer):
+    ''' Serializer: Constituenta all data. '''
+    class Meta:
+        ''' serializer metadata. '''
+        model = Constituenta
+        fields = '__all__'
+        read_only_fields = ('id',)
+
+
+class CstSerializer(serializers.ModelSerializer):
     ''' Serializer: Constituenta data. '''
     class Meta:
         ''' serializer metadata. '''
@@ -124,7 +134,7 @@ class RSFormSerializer(serializers.ModelSerializer):
         child=serializers.IntegerField()
     )
     items = serializers.ListField(
-        child=ConstituentaSerializer()
+        child=CstSerializer()
     )
 
     class Meta:
@@ -137,7 +147,7 @@ class RSFormSerializer(serializers.ModelSerializer):
         schema = RSForm(instance)
         result['items'] = []
         for cst in schema.constituents().order_by('order'):
-            result['items'].append(ConstituentaSerializer(cst).data)
+            result['items'].append(CstSerializer(cst).data)
         return result
 
     def to_versioned_data(self) -> dict:
@@ -158,6 +168,45 @@ class RSFormSerializer(serializers.ModelSerializer):
         result = self.to_representation(cast(LibraryItem, self.instance))
         result['version'] = version
         return result | data
+
+    @transaction.atomic
+    def restore_from_version(self, data: dict):
+        ''' Load data from version. '''
+        schema = RSForm(cast(LibraryItem, self.instance))
+        items: list[dict] = data['items']
+        ids: list[int] = [item['id'] for item in items]
+        processed: list[int] = []
+
+        for cst in schema.constituents():
+            if not cst.pk in ids:
+                cst.delete()
+            else:
+                cst_data = next(x for x in items if x['id'] == cst.pk)
+                new_cst = CstBaseSerializer(data=cst_data)
+                new_cst.is_valid(raise_exception=True)
+                new_cst.update(
+                    instance=cst,
+                    validated_data=new_cst.validated_data
+                )
+                processed.append(cst.pk)
+
+        for cst_data in items:
+            if cst_data['id'] not in processed:
+                cst = schema.insert_new(cst_data['alias'])
+                cst_data['id'] = cst.pk
+                new_cst = CstBaseSerializer(data=cst_data)
+                new_cst.is_valid(raise_exception=True)
+                new_cst.update(
+                    instance=cst,
+                    validated_data=new_cst.validated_data
+                )
+
+        loaded_item = LibraryItemSerializer(data=data)
+        loaded_item.is_valid(raise_exception=True)
+        loaded_item.update(
+            instance=cast(LibraryItem, self.instance),
+            validated_data=loaded_item.validated_data
+        )
 
 
 class RSFormParseSerializer(serializers.ModelSerializer):

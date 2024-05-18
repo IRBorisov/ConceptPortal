@@ -16,7 +16,7 @@ from .data_access import (
     RSFormParseSerializer,
     VersionSerializer,
     VersionCreateSerializer,
-    ConstituentaSerializer,
+    CstSerializer,
     CstTargetSerializer,
     CstMoveSerializer,
     CstSubstituteSerializer,

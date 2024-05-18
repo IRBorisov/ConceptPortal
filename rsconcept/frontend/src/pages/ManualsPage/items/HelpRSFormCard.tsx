@@ -6,9 +6,12 @@ import {
   IconDownload,
   IconFollow,
   IconImmutable,
+  IconList,
+  IconNewItem,
   IconOwner,
   IconPublic,
-  IconSave
+  IconSave,
+  IconUpload
 } from '../../../components/Icons';
 import LinkTopic from '../../../components/ui/LinkTopic';
 
@@ -26,10 +29,15 @@ function HelpRSFormCard() {
     <li><IconOwner className='inline-icon'/> Владелец обладает правом редактирования</li>
     <li><IconPublic className='inline-icon'/> Общедоступные схемы доступны для всех</li>
     <li><IconImmutable className='inline-icon'/> Неизменные схемы редактируют только администраторы</li>
-    <li><IconClone className='inline-icon'/> Клонировать – создать копию схемы</li>
+    <li><IconClone className='inline-icon icon-green'/> Клонировать – создать копию схемы</li>
     <li><IconFollow className='inline-icon'/> Отслеживание – схема в персональном списке</li>
     <li><IconDownload className='inline-icon'/> Загрузить/Выгрузить – взаимодействие с Экстеор</li>
     <li><IconDestroy className='inline-icon icon-red'/> Удалить – полностью удаляет схему из базы Портала</li>
+
+    <h2>Версионирование</h2>
+    <li><IconNewItem className='inline-icon icon-green'/> Создать версию можно только из актуальной схемы</li>
+    <li><IconUpload className='inline-icon icon-red'/> Загрузить версию в актуальную схему</li>
+    <li><IconList className='inline-icon'/> Редактировать атрибуты версий</li>
   </div>);
 }
 

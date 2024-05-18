@@ -7,7 +7,7 @@ from .library import (
 )
 from .constituents import ConstituentAPIView
 from .versions import (
-    VersionAPIView,
+    VersionViewset,
     create_version,
     export_file,
     retrieve_version

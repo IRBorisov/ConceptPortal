@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { IconList, IconNewItem, IconSave } from '@/components/Icons';
+import { IconList, IconNewItem, IconSave, IconUpload } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import SelectVersion from '@/components/select/SelectVersion';
 import Checkbox from '@/components/ui/Checkbox';
@@ -119,6 +119,12 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
           <Overlay position='top-[-0.25rem] right-[-0.25rem] cc-icons'>
             {controller.isMutable ? (
               <>
+                <MiniButton
+                  title={!controller.isContentEditable ? 'Откатить к версии' : 'Переключитесь на неактуальную версию'}
+                  disabled={controller.isContentEditable}
+                  onClick={() => controller.restoreVersion()}
+                  icon={<IconUpload size='1.25rem' className='icon-red' />}
+                />
                 <MiniButton
                   title={controller.isContentEditable ? 'Создать версию' : 'Переключитесь на актуальную версию'}
                   disabled={!controller.isContentEditable}

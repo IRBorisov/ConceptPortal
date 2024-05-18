@@ -6,6 +6,7 @@ from . import views
 library_router = routers.SimpleRouter(trailing_slash=False)
 library_router.register('library', views.LibraryViewSet, 'Library')
 library_router.register('rsforms', views.RSFormViewSet, 'RSForm')
+library_router.register('versions', views.VersionViewset, 'Version')
 
 urlpatterns = [
     path('library/active', views.LibraryActiveView.as_view()),
@@ -15,7 +16,6 @@ urlpatterns = [
     path('rsforms/import-trs', views.TrsImportView.as_view()),
     path('rsforms/create-detailed', views.create_rsform),
 
-    path('versions/<int:pk>', views.VersionAPIView.as_view()),
     path('versions/<int:pk>/export-file', views.export_file),
     path('rsforms/<int:pk_item>/versions/create', views.create_version),
     path('rsforms/<int:pk_item>/versions/<int:pk_version>', views.retrieve_version),

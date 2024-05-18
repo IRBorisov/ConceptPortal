@@ -15,13 +15,11 @@ class TestVersionViews(EndpointTester):
     def setUp(self):
         super().setUp()
         self.owned = RSForm.create(title='Test', alias='T1', owner=self.user).item
+        self.schema = RSForm(self.owned)
         self.unowned = RSForm.create(title='Test2', alias='T2').item
-        self.x1 = Constituenta.objects.create(
-            schema=self.owned,
+        self.x1 = self.schema.insert_new(
             alias='X1',
-            cst_type='basic',
-            convention='testStart',
-            order=1
+            convention='testStart'
         )
 
 
@@ -136,6 +134,39 @@ class TestVersionViews(EndpointTester):
             with ZipFile(stream, 'r') as zipped_file:
                 self.assertIsNone(zipped_file.testzip())
                 self.assertIn('document.json', zipped_file.namelist())
+
+
+    @decl_endpoint('/api/versions/{version}/restore', method='patch')
+    def test_restore_version(self):
+        x1 = self.x1
+        x2 = self.schema.insert_new('X2')
+        d1 = self.schema.insert_new('D1', term_raw='TestTerm')
+        data = {'version': '1.0.0', 'description': 'test'}
+        version_id = self._create_version(data)
+        invalid_id = version_id + 1337
+
+        d1.delete()
+        x3 = self.schema.insert_new('X3')
+        x1.order = x3.order
+        x1.convention = 'Test2'
+        x1.term_raw = 'Test'
+        x1.save()
+        x3.order = 1
+        x3.save()
+
+        self.assertNotFound(version=invalid_id)
+
+        response = self.execute(version=version_id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        x1.refresh_from_db()
+        x2.refresh_from_db()
+        self.assertEqual(len(response.data['items']), 3)
+        self.assertEqual(x1.order, 1)
+        self.assertEqual(x1.convention, 'testStart')
+        self.assertEqual(x1.term_raw, '')
+        self.assertEqual(x2.order, 2)
+        self.assertEqual(response.data['items'][2]['alias'], 'D1')
+        self.assertEqual(response.data['items'][2]['term_raw'], 'TestTerm')
 
 
     def _create_version(self, data) -> int:
