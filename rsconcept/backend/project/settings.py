@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     'apps.rsform',
 
     'drf_spectacular',
+    'drf_spectacular_sidecar',
 ]
 
 
@@ -184,7 +185,10 @@ SPECTACULAR_SETTINGS = {
         'deepLinking': True,
         'persistAuthorization': True,
         'withCredentials': True
-    }
+    },
+    'SWAGGER_UI_DIST': 'SIDECAR',
+    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    'REDOC_DIST': 'SIDECAR'
 }
 
 
