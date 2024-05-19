@@ -91,14 +91,12 @@ export interface FrontAction extends IFrontRequest<undefined, undefined> {}
 interface IAxiosRequest<RequestData, ResponseData> {
   endpoint: string;
   request: IFrontRequest<RequestData, ResponseData>;
-  title: string;
   options?: AxiosRequestConfig;
 }
 
 // ==================== API ====================
 export function getAuth(request: FrontPull<ICurrentUser>) {
   AxiosGet({
-    title: 'Current user',
     endpoint: `/users/api/auth`,
     request: request
   });
@@ -106,7 +104,6 @@ export function getAuth(request: FrontPull<ICurrentUser>) {
 
 export function postLogin(request: FrontPush<IUserLoginData>) {
   AxiosPost({
-    title: 'Login',
     endpoint: '/users/api/login',
     request: request
   });
@@ -114,7 +111,6 @@ export function postLogin(request: FrontPush<IUserLoginData>) {
 
 export function postLogout(request: FrontAction) {
   AxiosPost({
-    title: 'Logout',
     endpoint: '/users/api/logout',
     request: request
   });
@@ -122,7 +118,6 @@ export function postLogout(request: FrontAction) {
 
 export function postSignup(request: FrontExchange<IUserSignupData, IUserProfile>) {
   AxiosPost({
-    title: 'Register user',
     endpoint: '/users/api/signup',
     request: request
   });
@@ -130,7 +125,6 @@ export function postSignup(request: FrontExchange<IUserSignupData, IUserProfile>
 
 export function getProfile(request: FrontPull<IUserProfile>) {
   AxiosGet({
-    title: 'Current user profile',
     endpoint: '/users/api/profile',
     request: request
   });
@@ -138,7 +132,6 @@ export function getProfile(request: FrontPull<IUserProfile>) {
 
 export function patchProfile(request: FrontExchange<IUserUpdateData, IUserProfile>) {
   AxiosPatch({
-    title: 'Current user profile',
     endpoint: '/users/api/profile',
     request: request
   });
@@ -146,55 +139,54 @@ export function patchProfile(request: FrontExchange<IUserUpdateData, IUserProfil
 
 export function patchPassword(request: FrontPush<IUserUpdatePassword>) {
   AxiosPatch({
-    title: 'Update password',
     endpoint: '/users/api/change-password',
     request: request
   });
 }
 
 export function postRequestPasswordReset(request: FrontPush<IRequestPasswordData>) {
+  // title: 'Request password reset',
   AxiosPost({
-    title: 'Request password reset',
     endpoint: '/users/api/password-reset',
     request: request
   });
 }
 
 export function postValidatePasswordToken(request: FrontPush<IPasswordTokenData>) {
+  // title: 'Validate password token',
   AxiosPost({
-    title: 'Validate password token',
     endpoint: '/users/api/password-reset/validate',
     request: request
   });
 }
 
 export function postResetPassword(request: FrontPush<IResetPasswordData>) {
+  // title: 'Reset password',
   AxiosPost({
-    title: 'Reset password',
     endpoint: '/users/api/password-reset/confirm',
     request: request
   });
 }
 
 export function getActiveUsers(request: FrontPull<IUserInfo[]>) {
+  // title: 'Active users list',
   AxiosGet({
-    title: 'Active users list',
     endpoint: '/users/api/active-users',
     request: request
   });
 }
 
 export function getLibrary(request: FrontPull<ILibraryItem[]>) {
+  // title: 'Available LibraryItems list',
   AxiosGet({
-    title: 'Available LibraryItems list',
     endpoint: '/api/library/active',
     request: request
   });
 }
 
 export function getAdminLibrary(request: FrontPull<ILibraryItem[]>) {
+  // title: 'All LibraryItems list',
   AxiosGet({
-    title: 'All LibraryItems list',
     endpoint: '/api/library/all',
     request: request
   });
@@ -202,7 +194,6 @@ export function getAdminLibrary(request: FrontPull<ILibraryItem[]>) {
 
 export function getTemplates(request: FrontPull<ILibraryItem[]>) {
   AxiosGet({
-    title: 'Available LibraryItems list',
     endpoint: '/api/library/templates',
     request: request
   });
@@ -210,7 +201,6 @@ export function getTemplates(request: FrontPull<ILibraryItem[]>) {
 
 export function postNewRSForm(request: FrontExchange<IRSFormCreateData, ILibraryItem>) {
   AxiosPost({
-    title: 'New RSForm',
     endpoint: '/api/rsforms/create-detailed',
     request: request,
     options: {
@@ -223,7 +213,6 @@ export function postNewRSForm(request: FrontExchange<IRSFormCreateData, ILibrary
 
 export function postCloneLibraryItem(target: string, request: FrontExchange<IRSFormCloneData, IRSFormData>) {
   AxiosPost({
-    title: 'Clone RSForm',
     endpoint: `/api/library/${target}/clone`,
     request: request
   });
@@ -232,13 +221,11 @@ export function postCloneLibraryItem(target: string, request: FrontExchange<IRSF
 export function getRSFormDetails(target: string, version: string, request: FrontPull<IRSFormData>) {
   if (!version) {
     AxiosGet({
-      title: `RSForm details for id=${target}`,
       endpoint: `/api/rsforms/${target}/details`,
       request: request
     });
   } else {
     AxiosGet({
-      title: `RSForm details for id=${target} version=${version}`,
       endpoint: `/api/rsforms/${target}/versions/${version}`,
       request: request
     });
@@ -247,7 +234,6 @@ export function getRSFormDetails(target: string, version: string, request: Front
 
 export function patchLibraryItem(target: string, request: FrontExchange<ILibraryUpdateData, ILibraryItem>) {
   AxiosPatch({
-    title: `LibraryItem id=${target}`,
     endpoint: `/api/library/${target}`,
     request: request
   });
@@ -255,7 +241,6 @@ export function patchLibraryItem(target: string, request: FrontExchange<ILibrary
 
 export function deleteLibraryItem(target: string, request: FrontAction) {
   AxiosDelete({
-    title: `LibraryItem id=${target}`,
     endpoint: `/api/library/${target}`,
     request: request
   });
@@ -263,7 +248,6 @@ export function deleteLibraryItem(target: string, request: FrontAction) {
 
 export function postClaimLibraryItem(target: string, request: FrontPull<ILibraryItem>) {
   AxiosPost({
-    title: `Claim on LibraryItem id=${target}`,
     endpoint: `/api/library/${target}/claim`,
     request: request
   });
@@ -271,7 +255,6 @@ export function postClaimLibraryItem(target: string, request: FrontPull<ILibrary
 
 export function postSubscribe(target: string, request: FrontAction) {
   AxiosPost({
-    title: `Subscribe to LibraryItem id=${target}`,
     endpoint: `/api/library/${target}/subscribe`,
     request: request
   });
@@ -279,7 +262,6 @@ export function postSubscribe(target: string, request: FrontAction) {
 
 export function deleteUnsubscribe(target: string, request: FrontAction) {
   AxiosDelete({
-    title: `Unsubscribe from LibraryItem id=${target}`,
     endpoint: `/api/library/${target}/unsubscribe`,
     request: request
   });
@@ -288,14 +270,12 @@ export function deleteUnsubscribe(target: string, request: FrontAction) {
 export function getTRSFile(target: string, version: string, request: FrontPull<Blob>) {
   if (!version) {
     AxiosGet({
-      title: `RSForm TRS file for id=${target}`,
       endpoint: `/api/rsforms/${target}/export-trs`,
       request: request,
       options: { responseType: 'blob' }
     });
   } else {
     AxiosGet({
-      title: `RSForm TRS file for id=${target} version=${version}`,
       endpoint: `/api/versions/${version}/export-file`,
       request: request,
       options: { responseType: 'blob' }
@@ -305,7 +285,6 @@ export function getTRSFile(target: string, version: string, request: FrontPull<B
 
 export function postNewConstituenta(schema: string, request: FrontExchange<ICstCreateData, ICstCreatedResponse>) {
   AxiosPost({
-    title: `New Constituenta for RSForm id=${schema}: ${request.data.alias}`,
     endpoint: `/api/rsforms/${schema}/cst-create`,
     request: request
   });
@@ -313,7 +292,6 @@ export function postNewConstituenta(schema: string, request: FrontExchange<ICstC
 
 export function patchDeleteConstituenta(schema: string, request: FrontExchange<IConstituentaList, IRSFormData>) {
   AxiosPatch({
-    title: `Delete Constituents for RSForm id=${schema}: ${request.data.items.map(item => String(item)).join(' ')}`,
     endpoint: `/api/rsforms/${schema}/cst-delete-multiple`,
     request: request
   });
@@ -321,7 +299,6 @@ export function patchDeleteConstituenta(schema: string, request: FrontExchange<I
 
 export function patchConstituenta(target: string, request: FrontExchange<ICstUpdateData, IConstituentaMeta>) {
   AxiosPatch({
-    title: `Constituenta id=${target}`,
     endpoint: `/api/constituents/${target}`,
     request: request
   });
@@ -329,7 +306,6 @@ export function patchConstituenta(target: string, request: FrontExchange<ICstUpd
 
 export function patchRenameConstituenta(schema: string, request: FrontExchange<ICstRenameData, ICstCreatedResponse>) {
   AxiosPatch({
-    title: `Renaming constituenta id=${request.data.target} for schema id=${schema}`,
     endpoint: `/api/rsforms/${schema}/cst-rename`,
     request: request
   });
@@ -337,7 +313,6 @@ export function patchRenameConstituenta(schema: string, request: FrontExchange<I
 
 export function patchProduceStructure(schema: string, request: FrontExchange<ICstTarget, IProduceStructureResponse>) {
   AxiosPatch({
-    title: `Producing structure constituenta id=${request.data.target} for schema id=${schema}`,
     endpoint: `/api/rsforms/${schema}/cst-produce-structure`,
     request: request
   });
@@ -345,7 +320,6 @@ export function patchProduceStructure(schema: string, request: FrontExchange<ICs
 
 export function patchSubstituteConstituents(schema: string, request: FrontExchange<ICstSubstituteData, IRSFormData>) {
   AxiosPatch({
-    title: `Substitution for constituents schema id=${schema}`,
     endpoint: `/api/rsforms/${schema}/cst-substitute`,
     request: request
   });
@@ -353,9 +327,6 @@ export function patchSubstituteConstituents(schema: string, request: FrontExchan
 
 export function patchMoveConstituenta(schema: string, request: FrontExchange<ICstMovetoData, IRSFormData>) {
   AxiosPatch({
-    title: `Moving Constituents for RSForm id=${schema}: ${JSON.stringify(request.data.items)} to ${
-      request.data.move_to
-    }`,
     endpoint: `/api/rsforms/${schema}/cst-moveto`,
     request: request
   });
@@ -363,7 +334,6 @@ export function patchMoveConstituenta(schema: string, request: FrontExchange<ICs
 
 export function postCheckExpression(schema: string, request: FrontExchange<IRSExpression, IExpressionParse>) {
   AxiosPost({
-    title: `Check expression for RSForm id=${schema}: ${request.data.expression}`,
     endpoint: `/api/rsforms/${schema}/check`,
     request: request
   });
@@ -371,7 +341,6 @@ export function postCheckExpression(schema: string, request: FrontExchange<IRSEx
 
 export function patchResetAliases(target: string, request: FrontPull<IRSFormData>) {
   AxiosPatch({
-    title: `Reset alias for RSForm id=${target}`,
     endpoint: `/api/rsforms/${target}/reset-aliases`,
     request: request
   });
@@ -379,7 +348,6 @@ export function patchResetAliases(target: string, request: FrontPull<IRSFormData
 
 export function patchRestoreOrder(target: string, request: FrontPull<IRSFormData>) {
   AxiosPatch({
-    title: `Restore order for RSForm id=${target}`,
     endpoint: `/api/rsforms/${target}/restore-order`,
     request: request
   });
@@ -387,7 +355,6 @@ export function patchRestoreOrder(target: string, request: FrontPull<IRSFormData
 
 export function patchUploadTRS(target: string, request: FrontExchange<IRSFormUploadData, IRSFormData>) {
   AxiosPatch({
-    title: `Replacing data with trs file for RSForm id=${target}`,
     endpoint: `/api/rsforms/${target}/load-trs`,
     request: request,
     options: {
@@ -399,7 +366,6 @@ export function patchUploadTRS(target: string, request: FrontExchange<IRSFormUpl
 }
 export function patchInlineSynthesis(request: FrontExchange<IInlineSynthesisData, IRSFormData>) {
   AxiosPatch({
-    title: 'Processing inline synthesis',
     endpoint: `/api/operations/inline-synthesis`,
     request: request
   });
@@ -407,7 +373,6 @@ export function patchInlineSynthesis(request: FrontExchange<IInlineSynthesisData
 
 export function postResolveText(schema: string, request: FrontExchange<ITextRequest, IResolutionData>) {
   AxiosPost({
-    title: `Resolve text references for RSForm id=${schema}: ${request.data.text}`,
     endpoint: `/api/rsforms/${schema}/resolve`,
     request: request
   });
@@ -415,7 +380,6 @@ export function postResolveText(schema: string, request: FrontExchange<ITextRequ
 
 export function postInflectText(request: FrontExchange<IWordFormPlain, ITextResult>) {
   AxiosPost({
-    title: `Inflect text ${request.data.text} to ${request.data.grams}`,
     endpoint: `/api/cctext/inflect`,
     request: request
   });
@@ -423,31 +387,30 @@ export function postInflectText(request: FrontExchange<IWordFormPlain, ITextResu
 
 export function postParseText(request: FrontExchange<ITextRequest, ITextResult>) {
   AxiosPost({
-    title: `Parse text ${request.data.text}`,
     endpoint: `/api/cctext/parse`,
     request: request
   });
 }
 
 export function postGenerateLexeme(request: FrontExchange<ITextRequest, ILexemeData>) {
+  // title: `Parse text ${request.data.text}`,
   AxiosPost({
-    title: `Parse text ${request.data.text}`,
     endpoint: `/api/cctext/generate-lexeme`,
     request: request
   });
 }
 
 export function postCreateVersion(target: string, request: FrontExchange<IVersionData, IVersionCreatedResponse>) {
+  // title: `Create version for RSForm id=${target}`,
   AxiosPost({
-    title: `Create version for RSForm id=${target}`,
     endpoint: `/api/rsforms/${target}/versions/create`,
     request: request
   });
 }
 
 export function patchVersion(target: string, request: FrontPush<IVersionData>) {
+  // title: `Version id=${target}`,
   AxiosPatch({
-    title: `Version id=${target}`,
     endpoint: `/api/versions/${target}`,
     request: request
   });
@@ -455,7 +418,6 @@ export function patchVersion(target: string, request: FrontPush<IVersionData>) {
 
 export function patchRestoreVersion(target: string, request: FrontPull<IRSFormData>) {
   AxiosPatch({
-    title: `Restore version id=${target}`,
     endpoint: `/api/versions/${target}/restore`,
     request: request
   });
@@ -463,15 +425,13 @@ export function patchRestoreVersion(target: string, request: FrontPull<IRSFormDa
 
 export function deleteVersion(target: string, request: FrontAction) {
   AxiosDelete({
-    title: `Version id=${target}`,
     endpoint: `/api/versions/${target}`,
     request: request
   });
 }
 
 // ============ Helper functions =============
-function AxiosGet<ResponseData>({ endpoint, request, title, options }: IAxiosRequest<undefined, ResponseData>) {
-  console.log(`REQUEST: [[${title}]]`);
+function AxiosGet<ResponseData>({ endpoint, request, options }: IAxiosRequest<undefined, ResponseData>) {
   if (request.setLoading) request.setLoading(true);
   axiosInstance
     .get<ResponseData>(endpoint, options)
@@ -489,10 +449,8 @@ function AxiosGet<ResponseData>({ endpoint, request, title, options }: IAxiosReq
 function AxiosPost<RequestData, ResponseData>({
   endpoint,
   request,
-  title,
   options
 }: IAxiosRequest<RequestData, ResponseData>) {
-  console.log(`POST: [[${title}]]`);
   if (request.setLoading) request.setLoading(true);
   axiosInstance
     .post<ResponseData>(endpoint, request.data, options)
@@ -510,10 +468,8 @@ function AxiosPost<RequestData, ResponseData>({
 function AxiosDelete<RequestData, ResponseData>({
   endpoint,
   request,
-  title,
   options
 }: IAxiosRequest<RequestData, ResponseData>) {
-  console.log(`DELETE: [[${title}]]`);
   if (request.setLoading) request.setLoading(true);
   axiosInstance
     .delete<ResponseData>(endpoint, options)
@@ -531,10 +487,8 @@ function AxiosDelete<RequestData, ResponseData>({
 function AxiosPatch<RequestData, ResponseData>({
   endpoint,
   request,
-  title,
   options
 }: IAxiosRequest<RequestData, ResponseData>) {
-  console.log(`PATCH: [[${title}]]`);
   if (request.setLoading) request.setLoading(true);
   axiosInstance
     .patch<ResponseData>(endpoint, request.data, options)
