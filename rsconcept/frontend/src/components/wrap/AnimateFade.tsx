@@ -7,22 +7,10 @@ import { CProps } from '../props';
 interface AnimateFadeProps extends CProps.AnimatedDiv {
   noFadeIn?: boolean;
   noFadeOut?: boolean;
-  removeContent?: boolean;
   hideContent?: boolean;
 }
 
-function AnimateFade({
-  style,
-  noFadeIn,
-  noFadeOut,
-  children,
-  removeContent,
-  hideContent,
-  ...restProps
-}: AnimateFadeProps) {
-  if (removeContent) {
-    return null;
-  }
+function AnimateFade({ style, noFadeIn, noFadeOut, children, hideContent, ...restProps }: AnimateFadeProps) {
   return (
     <motion.div
       tabIndex={-1}

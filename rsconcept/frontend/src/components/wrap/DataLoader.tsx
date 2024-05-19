@@ -18,12 +18,16 @@ interface DataLoaderProps extends CProps.AnimatedDiv {
 function DataLoader({ id, isLoading, hasNoData, error, children, ...restProps }: DataLoaderProps) {
   return (
     <AnimatePresence mode='wait'>
-      <AnimateFade id={id} key={`${id}-data`} removeContent={isLoading || !!error || hasNoData} {...restProps}>
-        {children}
-      </AnimateFade>
-      <AnimateFade key={`${id}-no-data`} removeContent={isLoading || !!error || !hasNoData} {...restProps}>
-        Данные не загружены
-      </AnimateFade>
+      {!isLoading && !error && !hasNoData ? (
+        <AnimateFade id={id} key={`${id}-data`} {...restProps}>
+          {children}
+        </AnimateFade>
+      ) : null}
+      {!isLoading && !error && hasNoData ? (
+        <AnimateFade key={`${id}-no-data`} {...restProps}>
+          Данные не загружены
+        </AnimateFade>
+      ) : null}
       {isLoading ? <Loader key={`${id}-loader`} /> : null}
       {error ? <InfoError key={`${id}-error`} error={error} /> : null}
     </AnimatePresence>
