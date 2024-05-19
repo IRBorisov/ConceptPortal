@@ -170,7 +170,7 @@ DATABASES = {
 SPECTACULAR_SETTINGS = {
     'TITLE': 'ConceptPortal API',
     'DESCRIPTION': 'Портал для работы с экспликациями концептуальных схем',
-    'VERSION': '0.1.0',
+    'VERSION': '0.1.1',
     'SERVE_INCLUDE_SCHEMA': False,
 
     'COMPONENT_SPLIT_PATCH': True,
@@ -184,7 +184,8 @@ SPECTACULAR_SETTINGS = {
     'SWAGGER_UI_SETTINGS': {
         'deepLinking': True,
         'persistAuthorization': True,
-        'withCredentials': True
+        'tryItOutEnabled': False,
+        'supportedSubmitMethods': [''],
     },
     'SWAGGER_UI_DIST': 'SIDECAR',
     'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',

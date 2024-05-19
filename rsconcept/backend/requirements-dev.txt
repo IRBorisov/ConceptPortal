@@ -4,6 +4,7 @@ djangorestframework
 django-cors-headers
 django-filter
 drf-spectacular
+drf-spectacular[sidecar]
 coreapi
 cctext
 pyconcept
