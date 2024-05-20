@@ -1,9 +1,10 @@
 import clsx from 'clsx';
 
+import SelectTree from '@/components/ui/SelectTree';
 import { useConceptOptions } from '@/context/OptionsContext';
-import { HelpTopic } from '@/models/miscellaneous';
-
-import TopicsTree from './TopicsTree';
+import { HelpTopic, topicParent } from '@/models/miscellaneous';
+import { prefixes } from '@/utils/constants';
+import { describeHelpTopic, labelHelpTopic } from '@/utils/labels';
 
 interface TopicsStaticProps {
   activeTopic: HelpTopic;
@@ -13,7 +14,14 @@ interface TopicsStaticProps {
 function TopicsStatic({ activeTopic, onChangeTopic }: TopicsStaticProps) {
   const { calculateHeight } = useConceptOptions();
   return (
-    <div
+    <SelectTree
+      items={Object.values(HelpTopic).map(item => item as HelpTopic)}
+      value={activeTopic}
+      setValue={onChangeTopic}
+      prefix={prefixes.topic_list}
+      getParent={item => topicParent.get(item) ?? item}
+      getLabel={labelHelpTopic}
+      getDescription={describeHelpTopic}
       className={clsx(
         'sticky top-0 left-0',
         'w-[14.5rem] cc-scroll-y',
@@ -24,9 +32,7 @@ function TopicsStatic({ activeTopic, onChangeTopic }: TopicsStaticProps) {
         'select-none'
       )}
       style={{ maxHeight: calculateHeight('2.25rem + 2px') }}
-    >
-      <TopicsTree activeTopic={activeTopic} onChangeTopic={onChangeTopic} />
-    </div>
+    />
   );
 }
 

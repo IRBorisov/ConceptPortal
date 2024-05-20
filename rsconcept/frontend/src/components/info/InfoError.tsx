@@ -1,11 +1,9 @@
 import axios, { type AxiosError } from 'axios';
 import clsx from 'clsx';
 
-import { external_urls } from '@/utils/constants';
 import { isResponseHtml } from '@/utils/utils';
 
 import PrettyJson from '../ui/PrettyJSON';
-import TextURL from '../ui/TextURL';
 import AnimateFade from '../wrap/AnimateFade';
 
 export type ErrorData = string | Error | AxiosError | undefined;
@@ -70,12 +68,12 @@ function InfoError({ error }: InfoErrorProps) {
         'select-text'
       )}
     >
-      <p className='font-normal clr-text-default'>
-        Пожалуйста сделайте скриншот и отправьте вместе с описанием ситуации на почту{' '}
-        <TextURL href={external_urls.mail_portal} text='portal@acconcept.ru' />
+      <div className='font-normal clr-text-default'>
+        <p>Пожалуйста сделайте скриншот и отправьте вместе с описанием ситуации на почту portal@acconcept.ru</p>
         <br />
-        Для продолжения работы перезагрузите страницу
-      </p>
+        <p>Для продолжения работы перезагрузите страницу</p>
+      </div>
+
       <DescribeError error={error} />
     </AnimateFade>
   );

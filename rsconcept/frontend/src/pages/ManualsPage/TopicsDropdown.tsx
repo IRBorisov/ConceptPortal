@@ -6,12 +6,13 @@ import { useCallback } from 'react';
 
 import { IconMenuFold, IconMenuUnfold } from '@/components/Icons';
 import Button from '@/components/ui/Button';
+import SelectTree from '@/components/ui/SelectTree';
 import { useConceptOptions } from '@/context/OptionsContext';
 import useDropdown from '@/hooks/useDropdown';
-import { HelpTopic } from '@/models/miscellaneous';
+import { HelpTopic, topicParent } from '@/models/miscellaneous';
 import { animateSlideLeft } from '@/styling/animations';
-
-import TopicsTree from './TopicsTree';
+import { prefixes } from '@/utils/constants';
+import { describeHelpTopic, labelHelpTopic } from '@/utils/labels';
 
 interface TopicsDropdownProps {
   activeTopic: HelpTopic;
@@ -22,7 +23,7 @@ function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownProps) {
   const menu = useDropdown();
   const { noNavigation, calculateHeight } = useConceptOptions();
 
-  const selectTheme = useCallback(
+  const handleSelectTopic = useCallback(
     (topic: HelpTopic) => {
       menu.hide();
       onChangeTopic(topic);
@@ -65,7 +66,15 @@ function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownProps) {
         animate={menu.isOpen ? 'open' : 'closed'}
         variants={animateSlideLeft}
       >
-        <TopicsTree activeTopic={activeTopic} onChangeTopic={selectTheme} />
+        <SelectTree
+          items={Object.values(HelpTopic).map(item => item as HelpTopic)}
+          value={activeTopic}
+          setValue={handleSelectTopic}
+          prefix={prefixes.topic_list}
+          getParent={item => topicParent.get(item) ?? item}
+          getLabel={labelHelpTopic}
+          getDescription={describeHelpTopic}
+        />
       </motion.div>
     </div>
   );

@@ -210,22 +210,32 @@ export const animateSideView = {
 
 export const animateSideAppear = {
   initial: {
-    clipPath: 'inset(0% 100% 0% 0%)'
+    height: 0,
+    opacity: 0
   },
   animate: {
-    clipPath: 'inset(0% 0% 0% 0%)',
+    height: 'auto',
+    opacity: 1,
     transition: {
-      type: 'spring',
-      bounce: 0,
-      duration: 0.3
+      height: {
+        duration: 0.25
+      },
+      opacity: {
+        delay: 0.25,
+        duration: 0
+      }
     }
   },
   exit: {
-    clipPath: 'inset(0% 100% 0% 0%)',
+    height: 0,
+    opacity: 0,
     transition: {
-      type: 'spring',
-      bounce: 0,
-      duration: 0.3
+      height: {
+        duration: 0.25
+      },
+      opacity: {
+        duration: 0
+      }
     }
   }
 };
