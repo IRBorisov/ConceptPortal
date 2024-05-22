@@ -28,6 +28,7 @@ function Navigation() {
       className={clsx(
         'z-navigation', // prettier: split lines
         'sticky top-0 left-0 right-0',
+        'w-full',
         'clr-app',
         'select-none'
       )}
@@ -35,9 +36,9 @@ function Navigation() {
       <ToggleNavigationButton />
       <motion.div
         className={clsx(
-          'pl-2 pr-[0.9rem] h-[3rem]', // prettier: split lines
+          'pl-2 pr-[0.9rem] h-[3rem] w-full', // prettier: split lines
           'flex justify-between',
-          'shadow-border'
+          'cc-shadow-border'
         )}
         initial={false}
         animate={!noNavigationAnimation ? 'open' : 'closed'}

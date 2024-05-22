@@ -20,7 +20,7 @@ function TableHeader<TData>({
 }: TableHeaderProps<TData>) {
   return (
     <thead
-      className='clr-app shadow-border'
+      className='clr-app cc-shadow-border'
       style={{
         top: headPosition,
         position: 'sticky'

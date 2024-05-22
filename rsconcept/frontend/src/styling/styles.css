@@ -14,12 +14,6 @@
   .font-controls {
     font-family: var(--font-ui);
     font-weight: 600;
-    font-variant: small-caps;
-  }
-  @supports (-moz-appearance: none) {
-    .font-controls {
-      font-size: 0.85rem;
-    }
   }
   .font-math {
     font-family: var(--font-math);
@@ -244,5 +238,9 @@
 
   .cc-blur {
     backdrop-filter: blur(3px);
+  }
+
+  .cc-shadow-border {
+    @apply shadow-sm shadow-[var(--cl-bg-40)] dark:shadow-[var(--cd-bg-40)];
   }
 }
