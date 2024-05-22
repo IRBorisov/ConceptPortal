@@ -210,7 +210,7 @@ function FormConstituenta({
             <TextArea
               id='cst_convention'
               spellCheck
-              className='h-[3.75rem]'
+              className='min-h-[3.75rem]'
               label={isBasic ? 'Конвенция' : 'Комментарий'}
               placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
               value={convention}
