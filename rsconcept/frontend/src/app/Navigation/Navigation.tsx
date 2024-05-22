@@ -17,10 +17,11 @@ function Navigation() {
   const router = useConceptNavigation();
   const { noNavigationAnimation } = useConceptOptions();
 
-  const navigateHome = (event: CProps.EventMouse) => router.push(urls.home, event.ctrlKey);
-  const navigateLibrary = (event: CProps.EventMouse) => router.push(urls.library, event.ctrlKey);
-  const navigateHelp = (event: CProps.EventMouse) => router.push(urls.manuals, event.ctrlKey);
-  const navigateCreateNew = (event: CProps.EventMouse) => router.push(urls.create_schema, event.ctrlKey);
+  const navigateHome = (event: CProps.EventMouse) => router.push(urls.home, event.ctrlKey || event.metaKey);
+  const navigateLibrary = (event: CProps.EventMouse) => router.push(urls.library, event.ctrlKey || event.metaKey);
+  const navigateHelp = (event: CProps.EventMouse) => router.push(urls.manuals, event.ctrlKey || event.metaKey);
+  const navigateCreateNew = (event: CProps.EventMouse) =>
+    router.push(urls.create_schema, event.ctrlKey || event.metaKey);
 
   return (
     <nav

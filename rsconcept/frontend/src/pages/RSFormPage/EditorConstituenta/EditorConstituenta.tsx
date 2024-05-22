@@ -42,7 +42,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
     if (disabled) {
       return;
     }
-    if (event.ctrlKey && event.code === 'KeyS') {
+    if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
       if (isModified) {
         initiateSubmit();
       }

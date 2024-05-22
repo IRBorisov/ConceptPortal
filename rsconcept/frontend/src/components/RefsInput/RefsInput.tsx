@@ -139,7 +139,7 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
           event.preventDefault();
           return;
         }
-        if (event.ctrlKey && event.code === 'Space') {
+        if ((event.ctrlKey || event.metaKey) && event.code === 'Space') {
           const wrap = new CodeMirrorWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
           wrap.fixSelection(ReferenceTokens);
           const nodes = wrap.getEnvelopingNodes(ReferenceTokens);

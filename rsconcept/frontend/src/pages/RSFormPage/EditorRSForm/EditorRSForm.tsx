@@ -32,7 +32,7 @@ function EditorRSForm({ isModified, onDestroy, setIsModified }: EditorRSFormProp
   }
 
   function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
-    if (event.ctrlKey && event.code === 'KeyS') {
+    if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
       if (isModified) {
         initiateSubmit();
       }

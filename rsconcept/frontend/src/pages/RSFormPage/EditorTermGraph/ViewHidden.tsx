@@ -37,7 +37,7 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
 
   const handleClick = useCallback(
     (cstID: ConstituentaID, event: CProps.EventMouse) => {
-      if (event.ctrlKey) {
+      if (event.ctrlKey || event.metaKey) {
         setFocus(cstID);
       } else {
         toggleSelection(cstID);

@@ -268,7 +268,7 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
           hideTitle={accessMenu.isOpen}
           className='h-full px-2'
           icon={<IconArchive size='1.25rem' className='icon-primary' />}
-          onClick={event => controller.viewVersion(undefined, event.ctrlKey)}
+          onClick={event => controller.viewVersion(undefined, event.ctrlKey || event.metaKey)}
         />
       ) : null}
 

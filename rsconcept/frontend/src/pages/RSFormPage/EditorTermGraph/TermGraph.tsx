@@ -80,7 +80,7 @@ function TermGraph({
 
   const handleNodeClick = useCallback(
     (node: GraphNode, _?: CollapseProps, event?: GraphMouseEvent) => {
-      if (event?.ctrlKey) {
+      if (event?.ctrlKey || event?.metaKey) {
         onSelectCentral(Number(node.id));
       } else if (selections.includes(node.id)) {
         onDeselect(Number(node.id));

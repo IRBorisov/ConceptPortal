@@ -106,7 +106,7 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
           return;
         }
         const text = new RSTextWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
-        if (event.ctrlKey && event.code === 'Space') {
+        if ((event.ctrlKey || event.metaKey) && event.code === 'Space') {
           const selection = text.getSelection();
           if (!selection.empty || !schema) {
             return;
@@ -126,14 +126,14 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
             event.preventDefault();
             event.stopPropagation();
           }
-        } else if (!event.ctrlKey) {
+        } else if (!(event.ctrlKey || event.metaKey)) {
           const newSymbol = getSymbolSubstitute(event.code, event.shiftKey);
           if (newSymbol) {
             text.replaceWith(newSymbol);
             event.preventDefault();
             event.stopPropagation();
           }
-        } else if (event.ctrlKey && event.code === 'KeyQ' && onAnalyze) {
+        } else if (event.code === 'KeyQ' && onAnalyze) {
           onAnalyze();
           event.preventDefault();
           event.stopPropagation();

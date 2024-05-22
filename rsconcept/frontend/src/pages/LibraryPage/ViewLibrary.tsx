@@ -36,7 +36,7 @@ function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
   const [itemsPerPage, setItemsPerPage] = useLocalStorage<number>(storage.libraryPagination, 50);
 
   function handleOpenItem(item: ILibraryItem, event: CProps.EventMouse) {
-    router.push(urls.schema(item.id), event.ctrlKey);
+    router.push(urls.schema(item.id), event.ctrlKey || event.metaKey);
   }
 
   const windowSize = useWindowSize();

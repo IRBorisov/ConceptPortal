@@ -30,7 +30,7 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
 
   function navigateProfile(event: CProps.EventMouse) {
     hideDropdown();
-    router.push(urls.profile, event.ctrlKey);
+    router.push(urls.profile, event.ctrlKey || event.metaKey);
   }
 
   function logoutAndRedirect() {
