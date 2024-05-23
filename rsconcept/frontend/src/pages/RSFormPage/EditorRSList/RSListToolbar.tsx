@@ -1,4 +1,12 @@
-import { IconClone, IconDestroy, IconMoveDown, IconMoveUp, IconNewItem, IconOpenList } from '@/components/Icons';
+import {
+  IconClone,
+  IconDestroy,
+  IconMoveDown,
+  IconMoveUp,
+  IconNewItem,
+  IconOpenList,
+  IconReset
+} from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
@@ -19,6 +27,12 @@ function RSListToolbar() {
 
   return (
     <Overlay position='top-1 right-1/2 translate-x-1/2' className='items-start cc-icons'>
+      <MiniButton
+        titleHtml={prepareTooltip('Сбросить выделение', 'ESC')}
+        icon={<IconReset size='1.25rem' className='icon-primary' />}
+        disabled={controller.selected.length === 0}
+        onClick={controller.deselectAll}
+      />
       <MiniButton
         titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
         icon={<IconMoveUp size='1.25rem' className='icon-primary' />}

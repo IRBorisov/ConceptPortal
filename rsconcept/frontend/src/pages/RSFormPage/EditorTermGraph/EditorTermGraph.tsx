@@ -186,6 +186,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     }
     if (event.key === 'Escape') {
       event.preventDefault();
+      event.stopPropagation();
       setFocusCst(undefined);
       controller.deselectAll();
       return;
@@ -195,6 +196,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
     }
     if (event.key === 'Delete') {
       event.preventDefault();
+      event.stopPropagation();
       handleDeleteCst();
       return;
     }
@@ -286,7 +288,17 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
   );
 
   return (
-    <>
+    <AnimateFade tabIndex={-1} onKeyDown={handleKeyDown}>
+      <AnimatePresence>
+        {showParamsDialog ? (
+          <DlgGraphParams
+            hideWindow={() => setShowParamsDialog(false)}
+            initial={filterParams}
+            onConfirm={handleChangeParams}
+          />
+        ) : null}
+      </AnimatePresence>
+
       <Overlay
         position='top-0 pt-1 right-1/2 translate-x-1/2'
         className='flex flex-col items-center rounded-b-2xl cc-blur'
@@ -315,6 +327,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
             graph={controller.schema!.graph}
             core={controller.schema!.items.filter(cst => isBasicConcept(cst.cst_type)).map(cst => cst.id)}
             setSelected={controller.setSelected}
+            emptySelection={controller.selected.length === 0}
           />
         ) : null}
         {focusCst ? (
@@ -338,44 +351,33 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
           />
         ) : null}
       </Overlay>
-      <AnimateFade tabIndex={-1} onKeyDown={handleKeyDown}>
-        <AnimatePresence>
-          {showParamsDialog ? (
-            <DlgGraphParams
-              hideWindow={() => setShowParamsDialog(false)}
-              initial={filterParams}
-              onConfirm={handleChangeParams}
-            />
-          ) : null}
-        </AnimatePresence>
 
-        <SelectedCounter
-          hideZero
-          totalCount={controller.schema?.stats?.count_all ?? 0}
-          selectedCount={controller.selected.length}
-          position='top-[4.3rem] sm:top-[0.3rem] left-0'
-        />
+      <SelectedCounter
+        hideZero
+        totalCount={controller.schema?.stats?.count_all ?? 0}
+        selectedCount={controller.selected.length}
+        position='top-[4.3rem] sm:top-[0.3rem] left-0'
+      />
 
-        {hoverCst && hoverCstDebounced && hoverCst === hoverCstDebounced ? (
-          <Overlay
-            layer='z-tooltip'
-            position={clsx('top-[1.6rem]', { 'left-[2.6rem]': hoverLeft, 'right-[2.6rem]': !hoverLeft })}
-            className={clsx('w-[25rem]', 'px-3', 'cc-scroll-y', 'border shadow-md', 'clr-app')}
-          >
-            <InfoConstituenta className='pt-1 pb-2' data={hoverCstDebounced} />
-          </Overlay>
-        ) : null}
-
-        <Overlay position='top-[6.25rem] sm:top-9 left-0' className='flex gap-1'>
-          <div className='flex flex-col ml-2 w-[13.5rem]'>
-            {selectors}
-            {viewHidden}
-          </div>
+      {hoverCst && hoverCstDebounced && hoverCst === hoverCstDebounced ? (
+        <Overlay
+          layer='z-tooltip'
+          position={clsx('top-[1.6rem]', { 'left-[2.6rem]': hoverLeft, 'right-[2.6rem]': !hoverLeft })}
+          className={clsx('w-[25rem]', 'px-3', 'cc-scroll-y', 'border shadow-md', 'clr-app')}
+        >
+          <InfoConstituenta className='pt-1 pb-2' data={hoverCstDebounced} />
         </Overlay>
+      ) : null}
 
-        {graph}
-      </AnimateFade>
-    </>
+      <Overlay position='top-[6.25rem] sm:top-9 left-0' className='flex gap-1'>
+        <div className='flex flex-col ml-2 w-[13.5rem]'>
+          {selectors}
+          {viewHidden}
+        </div>
+      </Overlay>
+
+      {graph}
+    </AnimateFade>
   );
 }
 

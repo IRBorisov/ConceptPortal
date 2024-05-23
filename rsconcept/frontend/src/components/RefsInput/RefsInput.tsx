@@ -137,9 +137,13 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
       (event: React.KeyboardEvent<HTMLDivElement>) => {
         if (!thisRef.current?.view) {
           event.preventDefault();
+          event.stopPropagation();
           return;
         }
         if ((event.ctrlKey || event.metaKey) && event.code === 'Space') {
+          event.preventDefault();
+          event.stopPropagation();
+
           const wrap = new CodeMirrorWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
           wrap.fixSelection(ReferenceTokens);
           const nodes = wrap.getEnvelopingNodes(ReferenceTokens);

@@ -117,7 +117,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
               schema={controller.schema}
               expression={activeCst?.definition_formal ?? ''}
               isBottom={isNarrow}
-              activeID={activeCst?.id}
+              activeCst={activeCst}
               onOpenEdit={onOpenEdit}
             />
           ) : null}

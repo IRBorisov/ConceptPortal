@@ -17,12 +17,12 @@ const COLUMN_EXPRESSION_HIDE_THRESHOLD = 1500;
 interface ViewConstituentsProps {
   expression: string;
   isBottom?: boolean;
-  activeID?: ConstituentaID;
+  activeCst?: IConstituenta;
   schema?: IRSForm;
   onOpenEdit: (cstID: ConstituentaID) => void;
 }
 
-function ViewConstituents({ expression, schema, activeID, isBottom, onOpenEdit }: ViewConstituentsProps) {
+function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit }: ViewConstituentsProps) {
   const { calculateHeight } = useConceptOptions();
 
   const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema?.items ?? []);
@@ -32,12 +32,12 @@ function ViewConstituents({ expression, schema, activeID, isBottom, onOpenEdit }
       <ConstituentsTable
         maxHeight={isBottom ? '12rem' : calculateHeight('8.2rem')}
         items={filteredData}
-        activeID={activeID}
+        activeCst={activeCst}
         onOpenEdit={onOpenEdit}
         denseThreshold={COLUMN_EXPRESSION_HIDE_THRESHOLD}
       />
     ),
-    [isBottom, filteredData, activeID, onOpenEdit, calculateHeight]
+    [isBottom, filteredData, activeCst, onOpenEdit, calculateHeight]
   );
 
   return (
@@ -55,7 +55,7 @@ function ViewConstituents({ expression, schema, activeID, isBottom, onOpenEdit }
     >
       <ConstituentsSearch
         schema={schema}
-        activeID={activeID}
+        activeID={activeCst?.id}
         activeExpression={expression}
         setFiltered={setFilteredData}
       />

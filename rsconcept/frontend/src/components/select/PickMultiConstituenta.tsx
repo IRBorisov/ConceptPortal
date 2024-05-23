@@ -84,6 +84,7 @@ function PickMultiConstituenta({ id, schema, prefixID, rows, selected, setSelect
             graph={schema.graph}
             core={schema.items.filter(cst => isBasicConcept(cst.cst_type)).map(cst => cst.id)}
             setSelected={setSelected}
+            emptySelection={selected.length === 0}
             className='w-full ml-8'
           />
         ) : null}

@@ -37,6 +37,7 @@ function Checkbox({
 
   function handleClick(event: CProps.EventMouse): void {
     event.preventDefault();
+    event.stopPropagation();
     if (disabled || !setValue) {
       return;
     }

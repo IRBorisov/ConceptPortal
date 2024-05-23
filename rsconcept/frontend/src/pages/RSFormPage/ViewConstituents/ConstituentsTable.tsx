@@ -9,12 +9,12 @@ import { useConceptOptions } from '@/context/OptionsContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { isMockCst } from '@/models/rsformAPI';
-import { prefixes } from '@/utils/constants';
+import { PARAMETER, prefixes } from '@/utils/constants';
 import { describeConstituenta } from '@/utils/labels';
 
 interface ConstituentsTableProps {
   items: IConstituenta[];
-  activeID?: ConstituentaID;
+  activeCst?: IConstituenta;
   onOpenEdit: (cstID: ConstituentaID) => void;
   denseThreshold?: number;
   maxHeight: string;
@@ -22,11 +22,28 @@ interface ConstituentsTableProps {
 
 const columnHelper = createColumnHelper<IConstituenta>();
 
-function ConstituentsTable({ items, activeID, onOpenEdit, maxHeight, denseThreshold = 9999 }: ConstituentsTableProps) {
+function ConstituentsTable({ items, activeCst, onOpenEdit, maxHeight, denseThreshold = 9999 }: ConstituentsTableProps) {
   const { colors } = useConceptOptions();
   const windowSize = useWindowSize();
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ expression: true });
+
+  useLayoutEffect(() => {
+    if (!activeCst) {
+      return;
+    }
+    setTimeout(() => {
+      const element = document.getElementById(`${prefixes.cst_side_table}${activeCst.alias}`);
+      console.log(element);
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'end'
+        });
+      }
+    }, PARAMETER.refreshTimeout);
+  }, [activeCst]);
 
   useLayoutEffect(() => {
     setColumnVisibility(prev => {
@@ -104,25 +121,25 @@ function ConstituentsTable({ items, activeID, onOpenEdit, maxHeight, denseThresh
   const conditionalRowStyles = useMemo(
     (): IConditionalStyle<IConstituenta>[] => [
       {
-        when: (cst: IConstituenta) => cst.id === activeID,
+        when: (cst: IConstituenta) => cst.id === activeCst?.id,
         style: {
           backgroundColor: colors.bgSelected
         }
       },
       {
-        when: (cst: IConstituenta) => cst.parent === activeID && cst.id !== activeID,
+        when: (cst: IConstituenta) => cst.parent === activeCst?.id && cst.id !== activeCst?.id,
         style: {
           backgroundColor: colors.bgOrange50
         }
       },
       {
-        when: (cst: IConstituenta) => activeID !== undefined && cst.children.includes(activeID),
+        when: (cst: IConstituenta) => activeCst?.id !== undefined && cst.children.includes(activeCst.id),
         style: {
           backgroundColor: colors.bgGreen50
         }
       }
     ],
-    [activeID, colors]
+    [activeCst, colors]
   );
 
   return (

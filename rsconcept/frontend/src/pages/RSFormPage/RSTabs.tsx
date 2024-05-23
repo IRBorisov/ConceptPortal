@@ -114,14 +114,14 @@ function RSTabs() {
   const onCreateCst = useCallback(
     (newCst: IConstituentaMeta) => {
       navigateTab(activeTab, newCst.id);
-      if (activeTab === RSTabID.CST_EDIT || activeTab === RSTabID.CST_LIST) {
+      if (activeTab === RSTabID.CST_LIST) {
         setTimeout(() => {
           const element = document.getElementById(`${prefixes.cst_list}${newCst.alias}`);
           if (element) {
             element.scrollIntoView({
               behavior: 'smooth',
               block: 'nearest',
-              inline: 'nearest'
+              inline: 'end'
             });
           }
         }, PARAMETER.refreshTimeout);

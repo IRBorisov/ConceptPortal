@@ -50,11 +50,18 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
+      controller.deselectAll();
+      return;
+    }
     if (!controller.isContentEditable || controller.isProcessing) {
       return;
     }
     if (event.key === 'Delete' && controller.selected.length > 0) {
       event.preventDefault();
+      event.stopPropagation();
       controller.deleteCst();
       return;
     }
@@ -63,6 +70,7 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
     }
     if (processAltKey(event.code)) {
       event.preventDefault();
+      event.stopPropagation();
       return;
     }
   }
