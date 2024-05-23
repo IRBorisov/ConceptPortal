@@ -20,7 +20,7 @@ interface FormCreateCstProps {
   state: ICstCreateData;
 
   partialUpdate: React.Dispatch<Partial<ICstCreateData>>;
-  setValidated: React.Dispatch<React.SetStateAction<boolean>>;
+  setValidated?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreateCstProps) {
@@ -36,7 +36,9 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
   }, [state.cst_type, partialUpdate, schema]);
 
   useLayoutEffect(() => {
-    setValidated(validateNewAlias(state.alias, state.cst_type, schema));
+    if (setValidated) {
+      setValidated(validateNewAlias(state.alias, state.cst_type, schema));
+    }
   }, [state.alias, state.cst_type, schema, setValidated]);
 
   return (

@@ -12,7 +12,7 @@ import AnimateFade from '@/components/wrap/AnimateFade';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { HelpTopic } from '@/models/miscellaneous';
 import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
-import { generateAlias } from '@/models/rsformAPI';
+import { generateAlias, validateNewAlias } from '@/models/rsformAPI';
 import { inferTemplatedType, substituteTemplateArgs } from '@/models/rslangAPI';
 
 import FormCreateCst from '../DlgCreateCst/FormCreateCst';
@@ -101,6 +101,10 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     });
   }, [substitutes.arguments, template.prototype, updateConstituenta, updateSubstitutes]);
 
+  useLayoutEffect(() => {
+    setValidated(!!template.prototype && validateNewAlias(constituenta.alias, constituenta.cst_type, schema));
+  }, [constituenta.alias, constituenta.cst_type, schema, template.prototype]);
+
   const templatePanel = useMemo(
     () => (
       <TabPanel>
@@ -123,12 +127,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     () => (
       <TabPanel>
         <AnimateFade className='cc-column'>
-          <FormCreateCst
-            state={constituenta}
-            partialUpdate={updateConstituenta}
-            schema={schema}
-            setValidated={setValidated}
-          />
+          <FormCreateCst state={constituenta} partialUpdate={updateConstituenta} schema={schema} />
         </AnimateFade>
       </TabPanel>
     ),
