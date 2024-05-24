@@ -7,13 +7,14 @@ ItemType = TypeVar("ItemType")
 
 class Graph(Generic[ItemType]):
     ''' Directed graph. '''
-    def __init__(self, graph: Optional[dict[ItemType, list[ItemType]]]=None):
+
+    def __init__(self, graph: Optional[dict[ItemType, list[ItemType]]] = None):
         if graph is None:
             self.outputs: dict[ItemType, list[ItemType]] = {}
             self.inputs: dict[ItemType, list[ItemType]] = {}
         else:
             self.outputs = graph
-            self.inputs: dict[ItemType, list[ItemType]] = {id : [] for id in graph.keys()} #type: ignore[no-redef]
+            self.inputs: dict[ItemType, list[ItemType]] = {id: [] for id in graph.keys()}  # type: ignore[no-redef]
             for parent in graph.keys():
                 for child in graph[parent]:
                     self.inputs[child].append(parent)

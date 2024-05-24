@@ -14,12 +14,14 @@ class NewCstResponse(serializers.Serializer):
     new_cst = serializers.IntegerField()
     schema = RSFormParseSerializer()
 
+
 class NewMultiCstResponse(serializers.Serializer):
     ''' Serializer: Create multiple cst response. '''
     cst_list = serializers.ListField(
         child=serializers.IntegerField()
     )
     schema = RSFormParseSerializer()
+
 
 class NewVersionResponse(serializers.Serializer):
     ''' Serializer: Create cst response. '''

@@ -65,6 +65,7 @@ class ErrorDescriptionSerializer(serializers.Serializer):
         child=serializers.CharField()
     )
 
+
 class NodeDataSerializer(serializers.Serializer):
     ''' Serializer: Node data. '''
     dataType = serializers.CharField()
@@ -74,11 +75,11 @@ class NodeDataSerializer(serializers.Serializer):
 class ASTNodeSerializer(serializers.Serializer):
     ''' Serializer: Syntax tree node. '''
     uid = serializers.IntegerField()
-    parent = serializers.IntegerField() # type: ignore
+    parent = serializers.IntegerField()  # type: ignore
     typeID = serializers.IntegerField()
     start = serializers.IntegerField()
     finish = serializers.IntegerField()
-    data = NodeDataSerializer() # type: ignore
+    data = NodeDataSerializer()  # type: ignore
 
 
 class ExpressionParseSerializer(serializers.Serializer):
@@ -91,7 +92,7 @@ class ExpressionParseSerializer(serializers.Serializer):
     ast = serializers.ListField(
         child=ASTNodeSerializer()
     )
-    errors = serializers.ListField( # type: ignore
+    errors = serializers.ListField(  # type: ignore
         child=ErrorDescriptionSerializer()
     )
     args = serializers.ListField(
@@ -116,7 +117,7 @@ class ReferenceDataSerializer(serializers.Serializer):
 class ReferenceSerializer(serializers.Serializer):
     ''' Serializer: Language reference. '''
     type = serializers.CharField()
-    data = ReferenceDataSerializer() # type: ignore
+    data = ReferenceDataSerializer()  # type: ignore
     pos_input = TextPositionSerializer()
     pos_output = TextPositionSerializer()
 

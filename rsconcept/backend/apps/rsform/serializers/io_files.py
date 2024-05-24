@@ -12,6 +12,7 @@ _TRS_VERSION_MIN = 16
 _TRS_VERSION = 16
 _TRS_HEADER = 'Exteor 4.8.13.1000 - 30/05/2022'
 
+
 class FileSerializer(serializers.Serializer):
     ''' Serializer: File input. '''
     file = serializers.FileField(allow_empty_file=False)
@@ -25,6 +26,7 @@ class RSFormUploadSerializer(serializers.Serializer):
 
 class RSFormTRSSerializer(serializers.Serializer):
     ''' Serializer: TRS file production and loading for RSForm. '''
+
     def to_representation(self, instance: RSForm) -> dict:
         result = self._prepare_json_rsform(instance)
         items = instance.constituents().order_by('order')
@@ -115,7 +117,7 @@ class RSFormTRSSerializer(serializers.Serializer):
         if self.context['load_meta']:
             result['title'] = data.get('title', 'Без названия')
             result['alias'] = data.get('alias', '')
-            result['comment']= data.get('comment', '')
+            result['comment'] = data.get('comment', '')
         if 'id' in data:
             result['id'] = data['id']
             self.instance = RSForm(LibraryItem.objects.get(pk=result['id']))

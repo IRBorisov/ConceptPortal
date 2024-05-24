@@ -10,6 +10,7 @@ from ..models import RSForm
 
 class PyConceptAdapter:
     ''' RSForm adapter for interacting with pyconcept module. '''
+
     def __init__(self, data: Union[RSForm, dict]):
         try:
             if 'items' in cast(dict, data):

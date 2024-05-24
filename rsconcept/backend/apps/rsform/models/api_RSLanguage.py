@@ -9,7 +9,7 @@ import pyconcept
 from .. import messages as msg
 from .Constituenta import CstType
 
-_RE_GLOBALS = r'[XCSADFPT]\d+' # cspell:disable-line
+_RE_GLOBALS = r'[XCSADFPT]\d+'  # cspell:disable-line
 _RE_TEMPLATE = r'R\d+'
 _RE_COMPLEX_SYMBOLS = r'[∀∃×ℬ;|:]'
 
@@ -34,7 +34,7 @@ def get_type_prefix(cst_type: CstType) -> str:
         case CstType.STRUCTURED: return 'S'
         case CstType.AXIOM: return 'A'
         case CstType.TERM: return 'D'
-        case CstType.FUNCTION:  return 'F'
+        case CstType.FUNCTION: return 'F'
         case CstType.PREDICATE: return 'P'
         case CstType.THEOREM: return 'T'
     return 'X'
@@ -140,9 +140,9 @@ def generate_structure(alias: str, expression: str, parse: dict) -> list:
     for (n, item) in enumerate(ast):
         if n == 0:
             generated.append({
-                'text': link, # generated text
-                'operation': None, # applied operation. None if text should be skipped
-                'is_boolean': False # is the result of operation has an additional boolean
+                'text': link,  # generated text
+                'operation': None,  # applied operation. None if text should be skipped
+                'is_boolean': False  # is the result of operation has an additional boolean
             })
             continue
 
@@ -150,7 +150,7 @@ def generate_structure(alias: str, expression: str, parse: dict) -> list:
         parent_type = ast[parent_index]['typeID']
         parent_text = generated[parent_index]['text']
         parent_is_boolean = generated[parent_index]['is_boolean']
-        assert(parent_type in [TokenType.BOOLEAN, TokenType.DECART])
+        assert parent_type in [TokenType.BOOLEAN, TokenType.DECART]
 
         if parent_is_boolean:
             if parent_type == TokenType.BOOLEAN:

@@ -6,6 +6,7 @@ from apps.rsform.models import LibraryItem, LibraryItemType, Subscription, User
 
 class TestLibraryItem(TestCase):
     ''' Testing LibraryItem model. '''
+
     def setUp(self):
         self.user1 = User.objects.create(username='User1')
         self.user2 = User.objects.create(username='User2')

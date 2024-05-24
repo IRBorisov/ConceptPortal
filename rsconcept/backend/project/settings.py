@@ -23,6 +23,7 @@ def _get_secret(key: str, default):
             return f.read()
     return value
 
+
 _TRUE_VARIANTS = [True, 'True', '1']
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

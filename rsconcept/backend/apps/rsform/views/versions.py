@@ -121,14 +121,14 @@ def retrieve_version(request: Request, pk_item: int, pk_version: int):
 
 
 @extend_schema(
-        summary='export versioned data as file',
-        tags=['Version'],
-        request=None,
-        responses={
-            (c.HTTP_200_OK, 'application/zip'): bytes,
-            c.HTTP_404_NOT_FOUND: None
-        }
-    )
+    summary='export versioned data as file',
+    tags=['Version'],
+    request=None,
+    responses={
+        (c.HTTP_200_OK, 'application/zip'): bytes,
+        c.HTTP_404_NOT_FOUND: None
+    }
+)
 @api_view(['GET'])
 def export_file(request: Request, pk: int):
     ''' Endpoint: Download Exteor compatible file for versioned data. '''

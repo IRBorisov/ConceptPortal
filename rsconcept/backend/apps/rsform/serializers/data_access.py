@@ -88,12 +88,12 @@ class CstSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'order', 'alias', 'cst_type', 'definition_resolved', 'term_resolved')
 
     def update(self, instance: Constituenta, validated_data) -> Constituenta:
-        data = validated_data # Note: use alias for better code readability
+        data = validated_data  # Note: use alias for better code readability
         schema = RSForm(instance.schema)
         definition: Optional[str] = data['definition_raw'] if 'definition_raw' in data else None
         term: Optional[str] = data['term_raw'] if 'term_raw' in data else None
         term_changed = 'term_forms' in data
-        if definition is not None and definition != instance.definition_raw :
+        if definition is not None and definition != instance.definition_raw:
             data['definition_resolved'] = schema.resolver().resolve(definition)
         if term is not None and term != instance.term_raw:
             data['term_resolved'] = schema.resolver().resolve(term)
@@ -368,7 +368,7 @@ class CstSubstituteSerializer(serializers.Serializer):
 class InlineSynthesisSerializer(serializers.Serializer):
     ''' Serializer: Inline synthesis operation input. '''
     receiver = PKField(many=False, queryset=LibraryItem.objects.all())
-    source = PKField(many=False, queryset=LibraryItem.objects.all()) # type: ignore
+    source = PKField(many=False, queryset=LibraryItem.objects.all())  # type: ignore
     items = PKField(many=True, queryset=Constituenta.objects.all())
     substitutions = serializers.ListField(
         child=CstSubstituteSerializerBase()

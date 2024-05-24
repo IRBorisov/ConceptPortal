@@ -90,12 +90,12 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         cst = cast(m.Constituenta, serializer.validated_data['target'])
 
         schema_details = s.RSFormParseSerializer(schema.item).data['items']
-        cst_parse = next(item for item in schema_details if item['id']==cst.id)['parse']
+        cst_parse = next(item for item in schema_details if item['id'] == cst.id)['parse']
         if not cst_parse['typification']:
             return Response(
-            status=c.HTTP_400_BAD_REQUEST,
-            data={f'{cst.id}': msg.constituentaNoStructure()}
-        )
+                status=c.HTTP_400_BAD_REQUEST,
+                data={f'{cst.id}': msg.constituentaNoStructure()}
+            )
 
         result = schema.produce_structure(cst, cst_parse)
         return Response(
@@ -131,7 +131,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         cst.cst_type = serializer.validated_data['cst_type']
         cst.save()
 
-        mapping = { old_alias: cst.alias }
+        mapping = {old_alias: cst.alias}
         schema.apply_mapping(mapping, change_aliases=False)
         schema.item.refresh_from_db()
         cst.refresh_from_db()
@@ -350,7 +350,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         serializer = s.ExpressionSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         expression = serializer.validated_data['expression']
-        schema =  s.PyConceptAdapter(self._get_schema())
+        schema = s.PyConceptAdapter(self._get_schema())
         result = pyconcept.check_expression(json.dumps(schema.data), expression)
         return Response(
             status=c.HTTP_200_OK,

@@ -4,6 +4,7 @@
     ".pytest_cache/": true
   },
   "typescript.tsdk": "rsconcept/frontend/node_modules/typescript/lib",
+  "eslint.workingDirectories": ["rsconcept/frontend"],
   "isort.args": [
     "--line-length",
     "100",
@@ -12,10 +13,16 @@
     "--project",
     "apps"
   ],
-  "eslint.workingDirectories": ["rsconcept/frontend"],
+  "autopep8.args": [
+    "--max-line-length",
+    "120",
+    "--aggressive",
+    "--ignore",
+    "E303"
+  ],
   "[python]": {
-    "editor.formatOnSave": false,
     "editor.defaultFormatter": "ms-python.autopep8",
+    "editor.formatOnSave": true,
     "editor.tabSize": 4,
     "editor.insertSpaces": true,
     "editor.codeActionsOnSave": {

@@ -17,7 +17,7 @@ from django.urls import reverse
 from ..utils import apply_pattern
 
 _REF_ENTITY_PATTERN = re.compile(r'@{([^0-9\-].*?)\|.*?}')
-_GLOBAL_ID_PATTERN = re.compile(r'([XCSADFPT][0-9]+)') # cspell:disable-line
+_GLOBAL_ID_PATTERN = re.compile(r'([XCSADFPT][0-9]+)')  # cspell:disable-line
 
 
 def _empty_forms():

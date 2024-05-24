@@ -6,7 +6,7 @@ from apps.rsform.graph import Graph
 
 class TestGraph(unittest.TestCase):
     ''' Test class for graph. '''
-    
+
     def test_construction(self):
         graph = Graph()
         self.assertFalse(graph.contains(1))

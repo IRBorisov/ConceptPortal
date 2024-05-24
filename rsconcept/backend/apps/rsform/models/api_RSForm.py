@@ -29,6 +29,7 @@ _INSERT_LAST: int = -1
 
 class RSForm:
     ''' RSForm is math form of conceptual schema. '''
+
     def __init__(self, item: LibraryItem):
         if item.item_type != LibraryItemType.RSFORM:
             raise ValueError(msg.libraryTypeUnexpected())
@@ -144,7 +145,7 @@ class RSForm:
         for (value, _) in CstType.choices:
             indices[value] = self.get_max_index(cast(CstType, value))
 
-        mapping: dict[str, str]  = {}
+        mapping: dict[str, str] = {}
         for cst in items:
             indices[cst.cst_type] = indices[cst.cst_type] + 1
             newAlias = f'{get_type_prefix(cst.cst_type)}{indices[cst.cst_type]}'
@@ -195,7 +196,7 @@ class RSForm:
         self.item.save()
 
     @transaction.atomic
-    def create_cst(self, data: dict, insert_after: Optional[str]=None) -> Constituenta:
+    def create_cst(self, data: dict, insert_after: Optional[str] = None) -> Constituenta:
         ''' Create new cst from data. '''
         resolver = self.resolver()
         cst = self._insert_new(data, insert_after)
@@ -224,7 +225,7 @@ class RSForm:
     ):
         ''' Execute constituenta substitution. '''
         assert original.pk != substitution.pk
-        mapping = { original.alias: substitution.alias }
+        mapping = {original.alias: substitution.alias}
         self.apply_mapping(mapping)
         if transfer_term:
             substitution.term_raw = original.term_raw
@@ -331,8 +332,8 @@ class RSForm:
             return
         update_list = \
             Constituenta.objects \
-                .only('id', 'order', 'schema') \
-                .filter(schema=self.item, order__gte=start)
+            .only('id', 'order', 'schema') \
+            .filter(schema=self.item, order__gte=start)
         for cst in update_list:
             cst.order += shift
         Constituenta.objects.bulk_update(update_list, ['order'])
@@ -350,7 +351,7 @@ class RSForm:
         if position == _INSERT_LAST:
             position = lastPosition + 1
         else:
-            position =  max(1, min(position, lastPosition + 1))
+            position = max(1, min(position, lastPosition + 1))
         return position
 
     @transaction.atomic
@@ -362,7 +363,7 @@ class RSForm:
                 cst.save()
             order += 1
 
-    def _insert_new(self, data: dict, insert_after: Optional[str]=None) -> Constituenta:
+    def _insert_new(self, data: dict, insert_after: Optional[str] = None) -> Constituenta:
         if insert_after is not None:
             cst_after = Constituenta.objects.get(pk=insert_after)
             return self.insert_new(data['alias'], data['cst_type'], cst_after.order + 1)
@@ -426,21 +427,22 @@ class RSForm:
 
 class SemanticInfo:
     ''' Semantic information derived from constituents. '''
+
     def __init__(self, schema: RSForm):
         self._graph = schema._graph_formal()
         self._items = list(
-            schema.constituents() \
-                .only('id', 'alias', 'cst_type', 'definition_formal') \
-                .order_by('order')
+            schema.constituents()
+            .only('id', 'alias', 'cst_type', 'definition_formal')
+            .order_by('order')
         )
-        self._cst_by_alias = { cst.alias : cst for cst in self._items }
-        self._cst_by_ID = { cst.id : cst for cst in self._items }
+        self._cst_by_alias = {cst.alias: cst for cst in self._items}
+        self._cst_by_ID = {cst.id: cst for cst in self._items}
         self.info = {
             cst.id: {
-                'is_simple' : False, \
-                'is_template' : False, \
-                'parent' : cst.id, \
-                'children' : [] 
+                'is_simple': False,
+                'is_template': False,
+                'parent': cst.id,
+                'children': []
             }
             for cst in self._items
         }
@@ -483,8 +485,8 @@ class SemanticInfo:
 
         dependencies = self._graph.inputs[target.id]
         has_complex_dependency = any(
-            self.is_template(cst_id) and \
-                not self.is_simple_expression(cst_id) for cst_id in dependencies
+            self.is_template(cst_id) and
+            not self.is_simple_expression(cst_id) for cst_id in dependencies
         )
         if has_complex_dependency:
             return False
@@ -534,11 +536,11 @@ class SemanticInfo:
 
                 parent_info = self[parent.id]
                 if not is_base_set(parent.cst_type) and \
-                    (not parent_info['is_template'] or not parent_info['is_simple']):
+                        (not parent_info['is_template'] or not parent_info['is_simple']):
                     sources.add(parent_info['parent'])
         return sources
 
-    def _need_check_head(self, sources: set[int], head: str)-> bool:
+    def _need_check_head(self, sources: set[int], head: str) -> bool:
         if len(sources) == 0:
             return True
         elif len(sources) != 1:
@@ -551,15 +553,16 @@ class SemanticInfo:
 
 class _OrderManager:
     ''' Ordering helper class '''
+
     def __init__(self, schema: RSForm):
         self._semantic = schema.semantic()
         self._graph = schema._graph_formal()
         self._items = list(
-            schema.constituents() \
-                .only('id', 'order', 'alias', 'cst_type', 'definition_formal') \
-                .order_by('order')
+            schema.constituents()
+            .only('id', 'order', 'alias', 'cst_type', 'definition_formal')
+            .order_by('order')
         )
-        self._cst_by_ID = { cst.id : cst for cst in self._items }
+        self._cst_by_ID = {cst.id: cst for cst in self._items}
 
     def restore_order(self) -> None:
         ''' Implement order restoration process. '''
@@ -579,9 +582,9 @@ class _OrderManager:
         result = [cst for cst in self._items if cst.cst_type == CstType.BASE]
         result = result + [cst for cst in self._items if cst.cst_type == CstType.CONSTANT]
         kernel = [
-            cst.id for cst in self._items if \
-                cst.cst_type in [CstType.STRUCTURED, CstType.AXIOM] or \
-                    self._cst_by_ID[self._semantic.parent(cst.id)].cst_type == CstType.STRUCTURED
+            cst.id for cst in self._items if
+            cst.cst_type in [CstType.STRUCTURED, CstType.AXIOM] or
+            self._cst_by_ID[self._semantic.parent(cst.id)].cst_type == CstType.STRUCTURED
         ]
         kernel = kernel + self._graph.expand_inputs(kernel)
         result = result + [cst for cst in self._items if result.count(cst) == 0 and cst.id in kernel]
@@ -603,7 +606,6 @@ class _OrderManager:
                     marked.add(child)
                     result.append(child)
         self._items = result
-
 
     @transaction.atomic
     def _save_order(self) -> None:

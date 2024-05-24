@@ -7,6 +7,7 @@ from apps.rsform.models import Constituenta, CstType, RSForm, User
 
 class TestRSForm(TestCase):
     ''' Testing RSForm wrapper. '''
+
     def setUp(self):
         self.user1 = User.objects.create(username='User1')
         self.user2 = User.objects.create(username='User2')
@@ -81,7 +82,7 @@ class TestRSForm(TestCase):
     def test_insert_at_reorder(self):
         self.schema.insert_new('X1')
         d1 = self.schema.insert_new('D1')
-        d2 = self.schema.insert_new('D2',position=1)
+        d2 = self.schema.insert_new('D2', position=1)
         d1.refresh_from_db()
         self.assertEqual(d1.order, 3)
         self.assertEqual(d2.order, 1)
@@ -108,7 +109,7 @@ class TestRSForm(TestCase):
             definition_raw='@{X1|datv} @{X2|datv}'
         )
         x2 = self.schema.create_cst({
-            'alias': 'X2', 
+            'alias': 'X2',
             'cst_type': CstType.BASE,
             'term_raw': 'слон',
             'definition_raw': '@{X1|plur} @{X2|plur}'
@@ -161,7 +162,7 @@ class TestRSForm(TestCase):
             convention='X1',
             term_raw='@{X1|plur}'
         )
-    
+
         self.schema.apply_mapping({x1.alias: 'X3', x2.alias: 'X4'})
         d1.refresh_from_db()
         self.assertEqual(d1.definition_formal, 'X3 = X4 = X2', msg='Map IDs in expression')
@@ -260,7 +261,7 @@ class TestRSForm(TestCase):
             alias='F2',
             definition_formal=r'[α∈ℬ(X1)] X1\α',
         )
-        
+
         self.schema.restore_order()
         x1.refresh_from_db()
         x2.refresh_from_db()
@@ -345,8 +346,8 @@ class TestRSForm(TestCase):
             definition_resolved='очень сильный человек'
         )
 
-        x1.term_raw='слон'
-        x1.term_resolved='слон'
+        x1.term_raw = 'слон'
+        x1.term_resolved = 'слон'
         x1.save()
 
         self.schema.on_term_change([x1.id])

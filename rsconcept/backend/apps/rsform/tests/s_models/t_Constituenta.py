@@ -8,6 +8,7 @@ from apps.rsform.models import Constituenta, CstType, LibraryItem, LibraryItemTy
 
 class TestConstituenta(TestCase):
     ''' Testing Constituenta model. '''
+
     def setUp(self):
         self.schema1 = LibraryItem.objects.create(item_type=LibraryItemType.RSFORM, title='Test1')
         self.schema2 = LibraryItem.objects.create(item_type=LibraryItemType.RSFORM, title='Test2')
