@@ -1,6 +1,6 @@
 ''' Endpoints for Constituenta. '''
-from rest_framework import generics, permissions
 from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework import generics, permissions
 
 from .. import models as m
 from .. import serializers as s

@@ -8,4 +8,4 @@ class UsersConfig(AppConfig):
     name = 'apps.users'
 
     def ready(self):
-        import apps.users.signals # pylint: disable=unused-import,import-outside-toplevel
+        import apps.users.signals  # pylint: disable=unused-import,import-outside-toplevel

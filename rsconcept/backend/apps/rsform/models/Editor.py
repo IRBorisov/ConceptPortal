@@ -1,13 +1,9 @@
 ''' Models: Editor. '''
 from typing import TYPE_CHECKING
 
-from django.db.models import (
-    Model, ForeignKey,
-    CASCADE, DateTimeField
-)
+from django.db.models import CASCADE, DateTimeField, ForeignKey, Model
 
 from apps.users.models import User
-
 
 if TYPE_CHECKING:
     from .LibraryItem import LibraryItem

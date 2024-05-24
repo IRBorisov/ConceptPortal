@@ -1,8 +1,8 @@
 ''' Testing views '''
-from rest_framework.test import APITestCase, APIClient
+from rest_framework.test import APIClient, APITestCase
 
-from apps.users.models import User
 from apps.rsform.models import LibraryItem, LibraryItemType
+from apps.users.models import User
 
 
 class TestUserAPIViews(APITestCase):

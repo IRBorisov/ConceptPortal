@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 from .data_access import RSFormParseSerializer
 
+
 class ResultTextResponse(serializers.Serializer):
     ''' Serializer: Text result of a function call. '''
     result = serializers.CharField()

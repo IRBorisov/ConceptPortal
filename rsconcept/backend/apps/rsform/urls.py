@@ -1,6 +1,7 @@
 ''' Routing: RSForms for conceptual schemas. '''
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework import routers
+
 from . import views
 
 library_router = routers.SimpleRouter(trailing_slash=False)

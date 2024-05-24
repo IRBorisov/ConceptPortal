@@ -1,7 +1,7 @@
 ''' Testing models: Editor. '''
 from django.test import TestCase
 
-from apps.rsform.models import LibraryItem, LibraryItemType, User, Editor
+from apps.rsform.models import Editor, LibraryItem, LibraryItemType, User
 
 
 class TestEditor(TestCase):

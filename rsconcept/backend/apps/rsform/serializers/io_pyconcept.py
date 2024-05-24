@@ -1,11 +1,11 @@
 ''' Data adapter to interface with pyconcept module. '''
 import json
-from typing import Optional, cast, Union
+from typing import Optional, Union, cast
 
 import pyconcept
 
-from ..models import RSForm
 from .. import messages as msg
+from ..models import RSForm
 
 
 class PyConceptAdapter:

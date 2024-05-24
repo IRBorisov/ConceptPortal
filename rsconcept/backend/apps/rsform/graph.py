@@ -2,7 +2,6 @@
 import copy
 from typing import Generic, Iterable, Optional, TypeVar
 
-
 ItemType = TypeVar("ItemType")
 
 

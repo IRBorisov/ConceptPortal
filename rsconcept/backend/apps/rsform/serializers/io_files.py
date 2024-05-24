@@ -1,10 +1,10 @@
 ''' Serializers for file interaction. '''
-from rest_framework import serializers
 from django.db import transaction
+from rest_framework import serializers
 
-from ..utils import fix_old_references
-from ..models import Constituenta, LibraryItem, RSForm
 from .. import messages as msg
+from ..models import Constituenta, LibraryItem, RSForm
+from ..utils import fix_old_references
 
 _CST_TYPE = 'constituenta'
 _TRS_TYPE = 'rsform'

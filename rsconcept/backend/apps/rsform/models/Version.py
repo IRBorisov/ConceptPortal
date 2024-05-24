@@ -1,7 +1,12 @@
 ''' Models: Version. '''
 from django.db.models import (
-    CASCADE, ForeignKey, Model,
-    TextField, CharField, DateTimeField, JSONField
+    CASCADE,
+    CharField,
+    DateTimeField,
+    ForeignKey,
+    JSONField,
+    Model,
+    TextField
 )
 
 

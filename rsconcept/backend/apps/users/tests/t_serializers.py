@@ -1,5 +1,5 @@
 ''' Testing serializers '''
-from rest_framework.test import APITestCase, APIRequestFactory, APIClient
+from rest_framework.test import APIClient, APIRequestFactory, APITestCase
 
 from apps.users.models import User
 from apps.users.serializers import LoginSerializer

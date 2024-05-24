@@ -4,8 +4,9 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
 from apps.rsform.models import Subscription
-from . import models
+
 from . import messages as msg
+from . import models
 
 
 class NonFieldErrorSerializer(serializers.Serializer):

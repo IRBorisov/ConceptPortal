@@ -1,11 +1,10 @@
 ''' Models: Subscription. '''
 from typing import TYPE_CHECKING
 
-from django.db.models import (
-    CASCADE, ForeignKey, Model
-)
+from django.db.models import CASCADE, ForeignKey, Model
 
 from apps.users.models import User
+
 if TYPE_CHECKING:
     from .LibraryItem import LibraryItem
 

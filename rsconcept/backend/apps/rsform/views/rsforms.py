@@ -1,21 +1,22 @@
 ''' Endpoints for RSForm. '''
 import json
-from typing import cast, Union
-from django.db import transaction
-from django.http import HttpResponse
-from rest_framework import views, viewsets, generics, permissions
-from rest_framework.decorators import action, api_view
-from rest_framework.response import Response
-from rest_framework.request import Request
-from drf_spectacular.utils import extend_schema, extend_schema_view
-from rest_framework import status as c
+from typing import Union, cast
 
 import pyconcept
+from django.db import transaction
+from django.http import HttpResponse
+from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework import generics, permissions
+from rest_framework import status as c
+from rest_framework import views, viewsets
+from rest_framework.decorators import action, api_view
+from rest_framework.request import Request
+from rest_framework.response import Response
 
+from .. import messages as msg
 from .. import models as m
 from .. import serializers as s
 from .. import utils
-from .. import messages as msg
 
 
 @extend_schema(tags=['RSForm'])

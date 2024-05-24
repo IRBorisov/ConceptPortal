@@ -1,11 +1,11 @@
 ''' Testing imported pyconcept functionality '''
-from unittest import TestCase
+import json
+from unittest import TestCase as RegularTest
 
 import pyconcept as pc
-import json
 
 
-class TestIntegrations(TestCase):
+class TestIntegrations(RegularTest):
 
 
     def test_convert_to_ascii(self):

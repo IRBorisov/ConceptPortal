@@ -1,14 +1,13 @@
 ''' Models: Definitions and utility function for RSLanguage. '''
 import json
 import re
+from enum import IntEnum, unique
 from typing import Set, Tuple, cast
-from enum import IntEnum , unique
 
 import pyconcept
 
 from .. import messages as msg
 from .Constituenta import CstType
-
 
 _RE_GLOBALS = r'[XCSADFPT]\d+' # cspell:disable-line
 _RE_TEMPLATE = r'R\d+'

@@ -1,8 +1,8 @@
 ''' Basic serializers that do not interact with database. '''
 from typing import cast
-from rest_framework import serializers
 
-from cctext import Resolver, Reference, ReferenceType, EntityReference, SyntacticReference
+from cctext import EntityReference, Reference, ReferenceType, Resolver, SyntacticReference
+from rest_framework import serializers
 
 
 class ExpressionSerializer(serializers.Serializer):

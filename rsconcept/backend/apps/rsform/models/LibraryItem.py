@@ -1,14 +1,21 @@
 ''' Models: LibraryItem. '''
 from django.db import transaction
 from django.db.models import (
-    SET_NULL, ForeignKey, Model,
-    TextChoices, TextField, BooleanField, CharField, DateTimeField
+    SET_NULL,
+    BooleanField,
+    CharField,
+    DateTimeField,
+    ForeignKey,
+    Model,
+    TextChoices,
+    TextField
 )
 
 from apps.users.models import User
-from .Version import Version
-from .Subscription import Subscription
+
 from .Editor import Editor
+from .Subscription import Subscription
+from .Version import Version
 
 
 class LibraryItemType(TextChoices):

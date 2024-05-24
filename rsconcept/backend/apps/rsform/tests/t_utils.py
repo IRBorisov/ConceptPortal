@@ -1,6 +1,6 @@
 ''' Unit tests: utils. '''
-import unittest
 import re
+import unittest
 
 from apps.rsform.utils import apply_pattern, fix_old_references
 

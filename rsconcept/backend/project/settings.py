@@ -10,10 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 '''
 
-import sys
 import logging
 import os
+import sys
 from pathlib import Path
+
 
 def _get_secret(key: str, default):
     value = os.environ.get(key, default)

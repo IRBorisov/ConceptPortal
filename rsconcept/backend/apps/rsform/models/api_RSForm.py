@@ -2,21 +2,17 @@
 from copy import deepcopy
 from typing import Optional, Union, cast
 
+from cctext import Entity, Resolver, TermForm, extract_entities, split_grams
+from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.db.models import QuerySet
-from django.core.exceptions import ValidationError
 
-from cctext import (
-    Resolver,
-    Entity,
-    extract_entities,
-    split_grams,
-    TermForm
-)
+from .. import messages as msg
+from ..graph import Graph
 from .api_RSLanguage import (
     extract_globals,
-    get_type_prefix,
     generate_structure,
+    get_type_prefix,
     guess_type,
     infer_template,
     is_base_set,
@@ -24,13 +20,9 @@ from .api_RSLanguage import (
     is_simple_expression,
     split_template
 )
+from .Constituenta import Constituenta, CstType
 from .LibraryItem import LibraryItem, LibraryItemType
-from .Constituenta import CstType, Constituenta
 from .Version import Version
-
-from ..graph import Graph
-from .. import messages as msg
-
 
 _INSERT_LAST: int = -1
 

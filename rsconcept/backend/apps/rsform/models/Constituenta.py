@@ -1,15 +1,20 @@
 ''' Models: Constituenta. '''
 import re
 
-from django.db.models import (
-    CASCADE, ForeignKey, Model, PositiveIntegerField, TextChoices,
-    TextField, CharField, JSONField
-)
 from django.core.validators import MinValueValidator
+from django.db.models import (
+    CASCADE,
+    CharField,
+    ForeignKey,
+    JSONField,
+    Model,
+    PositiveIntegerField,
+    TextChoices,
+    TextField
+)
 from django.urls import reverse
 
 from ..utils import apply_pattern
-
 
 _REF_ENTITY_PATTERN = re.compile(r'@{([^0-9\-].*?)\|.*?}')
 _GLOBAL_ID_PATTERN = re.compile(r'([XCSADFPT][0-9]+)') # cspell:disable-line

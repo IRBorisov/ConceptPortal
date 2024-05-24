@@ -1,10 +1,10 @@
 ''' Routing: User profile and Authorization. '''
 from django.urls import path
-from django_rest_passwordreset.views import reset_password_confirm # type: ignore
-from django_rest_passwordreset.views import reset_password_request_token # type: ignore
-from django_rest_passwordreset.views import reset_password_validate_token # type: ignore
-from . import views
+from django_rest_passwordreset.views import reset_password_confirm  # type: ignore
+from django_rest_passwordreset.views import reset_password_request_token  # type: ignore
+from django_rest_passwordreset.views import reset_password_validate_token  # type: ignore
 
+from . import views
 
 urlpatterns = [
     path('api/auth', views.AuthAPIView.as_view()),

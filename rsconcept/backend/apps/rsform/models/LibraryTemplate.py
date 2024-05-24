@@ -1,7 +1,5 @@
 ''' Models: LibraryTemplate. '''
-from django.db.models import (
-    CASCADE, ForeignKey, Model
-)
+from django.db.models import CASCADE, ForeignKey, Model
 
 
 class LibraryTemplate(Model):

@@ -3,9 +3,7 @@ from django.core.mail import send_mail
 from django.dispatch import receiver
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-
-from django_rest_passwordreset.signals import reset_password_token_created # type: ignore
-
+from django_rest_passwordreset.signals import reset_password_token_created  # type: ignore
 
 _EMAIL_NOREPLY = 'noreply.portal@yandex.ru'
 _EMAIL_SUBJECT = 'Восстановление пароля КонцептПортал'

@@ -1,11 +1,8 @@
 ''' Testing models: api_RSForm. '''
-from django.test import TestCase
 from django.forms import ValidationError
+from django.test import TestCase
 
-from apps.rsform.models import (
-    RSForm, Constituenta, CstType,
-    User
-)
+from apps.rsform.models import Constituenta, CstType, RSForm, User
 
 
 class TestRSForm(TestCase):

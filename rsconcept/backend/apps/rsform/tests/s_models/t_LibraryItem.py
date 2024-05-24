@@ -1,10 +1,7 @@
 ''' Testing models: LibraryItem. '''
 from django.test import TestCase
 
-from apps.rsform.models import (
-    LibraryItem, LibraryItemType, Subscription,
-    User
-)
+from apps.rsform.models import LibraryItem, LibraryItemType, Subscription, User
 
 
 class TestLibraryItem(TestCase):

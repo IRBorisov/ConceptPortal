@@ -1,10 +1,10 @@
 ''' Utility functions '''
 import json
-from io import BytesIO
 import re
+from io import BytesIO
 from zipfile import ZipFile
-from rest_framework.permissions import BasePermission, IsAuthenticated
 
+from rest_framework.permissions import BasePermission, IsAuthenticated
 
 # Name for JSON inside Exteor files archive
 EXTEOR_INNER_FILENAME = 'document.json'

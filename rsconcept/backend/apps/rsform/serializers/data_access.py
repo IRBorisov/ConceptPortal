@@ -1,17 +1,16 @@
 ''' Serializers for persistent data manipulation. '''
 from typing import Optional, cast
+
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from rest_framework import serializers
 from rest_framework.serializers import PrimaryKeyRelatedField as PKField
 
-from .basics import CstParseSerializer
-
-from .io_pyconcept import PyConceptAdapter
-
-from ..models import Constituenta, LibraryItem, RSForm, Version, CstType
 from .. import messages as msg
+from ..models import Constituenta, CstType, LibraryItem, RSForm, Version
+from .basics import CstParseSerializer
+from .io_pyconcept import PyConceptAdapter
 
 
 class LibraryItemSerializer(serializers.ModelSerializer):

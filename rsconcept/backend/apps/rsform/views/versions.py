@@ -1,12 +1,14 @@
 ''' Endpoints for versions. '''
 from typing import cast
+
 from django.http import HttpResponse
-from rest_framework import generics, permissions, viewsets
-from rest_framework.decorators import action, api_view, permission_classes
-from rest_framework.response import Response
-from rest_framework.request import Request
 from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework import generics, permissions
 from rest_framework import status as c
+from rest_framework import viewsets
+from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.request import Request
+from rest_framework.response import Response
 
 from .. import models as m
 from .. import serializers as s

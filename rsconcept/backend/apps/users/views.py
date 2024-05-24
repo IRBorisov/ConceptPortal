@@ -1,13 +1,13 @@
 ''' REST API: User profile and Authorization. '''
 from django.contrib.auth import login, logout
-
-from rest_framework import status as c
-from rest_framework import permissions, views, generics
-from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework import generics, permissions
+from rest_framework import status as c
+from rest_framework import views
+from rest_framework.response import Response
 
-from . import serializers as s
 from . import models as m
+from . import serializers as s
 
 
 class LoginAPIView(views.APIView):

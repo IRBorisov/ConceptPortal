@@ -1,12 +1,9 @@
 ''' Testing models: Constituenta. '''
-from django.test import TestCase
 from django.db.utils import IntegrityError
 from django.forms import ValidationError
+from django.test import TestCase
 
-from apps.rsform.models import (
-    Constituenta, CstType,
-    LibraryItem, LibraryItemType
-)
+from apps.rsform.models import Constituenta, CstType, LibraryItem, LibraryItemType
 
 
 class TestConstituenta(TestCase):
