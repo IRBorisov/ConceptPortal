@@ -25,8 +25,8 @@ class Subscription(Model):
 
     class Meta:
         ''' Model metadata. '''
-        verbose_name = 'Подписки'
-        verbose_name_plural = 'Подписка'
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
         unique_together = [['user', 'item']]
 
     def __str__(self) -> str:

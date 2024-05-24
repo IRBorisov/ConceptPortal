@@ -8,6 +8,7 @@ from django.db.models import (
 from apps.users.models import User
 from .Version import Version
 from .Subscription import Subscription
+from .Editor import Editor
 
 
 class LibraryItemType(TextChoices):
@@ -64,7 +65,7 @@ class LibraryItem(Model):
         verbose_name_plural = 'Схемы'
 
     def __str__(self) -> str:
-        return f'{self.title}'
+        return f'{self.alias}'
 
     def get_absolute_url(self):
         return f'/api/library/{self.pk}'
@@ -76,6 +77,10 @@ class LibraryItem(Model):
     def versions(self) -> list[Version]:
         ''' Get all Versions of this item. '''
         return list(Version.objects.filter(item=self.pk).order_by('-time_create'))
+
+    def editors(self) -> list[Editor]:
+        ''' Get all Editors of this item. '''
+        return [item.editor for item in Editor.objects.filter(item=self.pk).order_by('-time_create')]
 
     @transaction.atomic
     def save(self, *args, **kwargs):

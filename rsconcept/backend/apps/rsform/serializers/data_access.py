@@ -52,6 +52,7 @@ class VersionCreateSerializer(serializers.ModelSerializer):
 class LibraryItemDetailsSerializer(serializers.ModelSerializer):
     ''' Serializer: LibraryItem detailed data. '''
     subscribers = serializers.SerializerMethodField()
+    editors = serializers.SerializerMethodField()
     versions = serializers.SerializerMethodField()
 
     class Meta:
@@ -62,6 +63,9 @@ class LibraryItemDetailsSerializer(serializers.ModelSerializer):
 
     def get_subscribers(self, instance: LibraryItem) -> list[int]:
         return [item.pk for item in instance.subscribers()]
+
+    def get_editors(self, instance: LibraryItem) -> list[int]:
+        return [item.pk for item in instance.editors()]
 
     def get_versions(self, instance: LibraryItem) -> list:
         return [VersionInnerSerializer(item).data for item in instance.versions()]
@@ -133,6 +137,9 @@ class RSFormSerializer(serializers.ModelSerializer):
     subscribers = serializers.ListField(
         child=serializers.IntegerField()
     )
+    editors = serializers.ListField(
+        child=serializers.IntegerField()
+    )
     items = serializers.ListField(
         child=CstSerializer()
     )
@@ -155,6 +162,7 @@ class RSFormSerializer(serializers.ModelSerializer):
         result = self.to_representation(cast(LibraryItem, self.instance))
         del result['versions']
         del result['subscribers']
+        del result['editors']
 
         del result['owner']
         del result['is_common']
@@ -212,6 +220,9 @@ class RSFormSerializer(serializers.ModelSerializer):
 class RSFormParseSerializer(serializers.ModelSerializer):
     ''' Serializer: Detailed data for RSForm including parse. '''
     subscribers = serializers.ListField(
+        child=serializers.IntegerField()
+    )
+    editors = serializers.ListField(
         child=serializers.IntegerField()
     )
     items = serializers.ListField(

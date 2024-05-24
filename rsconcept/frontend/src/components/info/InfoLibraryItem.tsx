@@ -15,6 +15,7 @@ function InfoLibraryItem({ item }: InfoLibraryItemProps) {
   return (
     <div className='flex flex-col gap-1'>
       <LabeledValue label='Владелец' text={getUserLabel(item?.owner ?? null)} />
+      <LabeledValue label='Редакторы' text={item?.editors.length ?? 0} />
       <LabeledValue label='Отслеживают' text={item?.subscribers.length ?? 0} />
       <LabeledValue
         label='Дата обновления'

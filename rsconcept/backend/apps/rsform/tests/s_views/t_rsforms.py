@@ -104,6 +104,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(response.data['items'][1]['term_raw'], x2.term_raw)
         self.assertEqual(response.data['items'][1]['term_resolved'], x2.term_resolved)
         self.assertEqual(response.data['subscribers'], [self.user.pk])
+        self.assertEqual(response.data['editors'], [])
 
 
     @decl_endpoint('/api/rsforms/{item}/check', method='post')

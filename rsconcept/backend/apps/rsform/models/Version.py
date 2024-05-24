@@ -31,8 +31,8 @@ class Version(Model):
 
     class Meta:
         ''' Model metadata. '''
-        verbose_name = 'Версии'
-        verbose_name_plural = 'Версия'
+        verbose_name = 'Версия'
+        verbose_name_plural = 'Версии'
         unique_together = [['item', 'version']]
 
     def __str__(self) -> str:

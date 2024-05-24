@@ -76,7 +76,7 @@ This readme file is used mostly to document project dependencies
   <pre>
   - Fira Code
   - Rubik
-  - Geologica
+  - Alegreya Sans SC
   - Noto Sans Math
   </pre>
 </details>
@@ -115,6 +115,7 @@ This readme file is used mostly to document project dependencies
   - Pylance
   - Pylint
   - Django
+  - autopep8
   </pre>
 </details>
 

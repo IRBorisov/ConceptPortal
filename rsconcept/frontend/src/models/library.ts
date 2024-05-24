@@ -127,6 +127,7 @@ export interface ILibraryItem {
  */
 export interface ILibraryItemEx extends ILibraryItem {
   subscribers: number[];
+  editors: number[];
   version?: number;
   versions: IVersionInfo[];
 }

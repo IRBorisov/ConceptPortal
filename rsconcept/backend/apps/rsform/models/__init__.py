@@ -5,4 +5,5 @@ from .Constituenta import Constituenta, CstType, _empty_forms
 from .LibraryItem import User, LibraryItem, LibraryItemType
 from .LibraryTemplate import LibraryTemplate
 from .Version import Version
+from .Editor import Editor
 from .Subscription import Subscription
