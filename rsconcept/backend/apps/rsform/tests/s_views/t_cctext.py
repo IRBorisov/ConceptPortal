@@ -1,13 +1,13 @@
 ''' Testing views '''
+from cctext import split_grams
 from rest_framework import status
 
-from cctext import split_grams
-
-from .EndpointTester import decl_endpoint, EndpointTester
+from .EndpointTester import EndpointTester, decl_endpoint
 
 
 class TestNaturalLanguageViews(EndpointTester):
     ''' Test natural language endpoints. '''
+
     def _assert_tags(self, actual: str, expected: str):
         self.assertEqual(set(split_grams(actual)), set(split_grams(expected)))
 

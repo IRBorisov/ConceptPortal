@@ -1,12 +1,9 @@
 ''' Testing API: Operations. '''
 from rest_framework import status
-from .EndpointTester import decl_endpoint, EndpointTester
 
-from apps.rsform.models import (
-  RSForm,
-  Constituenta,
-  CstType
-)
+from apps.rsform.models import Constituenta, CstType, RSForm
+
+from .EndpointTester import EndpointTester, decl_endpoint
 
 
 class TestInlineSynthesis(EndpointTester):
@@ -24,8 +21,8 @@ class TestInlineSynthesis(EndpointTester):
     def test_inline_synthesis_inputs(self):
         invalid_id = 1338
         data = {
-            'receiver': self.unowned.item.id,
-            'source': self.schema1.item.id,
+            'receiver': self.unowned.item.pk,
+            'source': self.schema1.item.pk,
             'items': [],
             'substitutions': []
         }
@@ -34,11 +31,11 @@ class TestInlineSynthesis(EndpointTester):
         data['receiver'] = invalid_id
         self.assertBadData(data)
 
-        data['receiver'] = self.schema1.item.id
+        data['receiver'] = self.schema1.item.pk
         data['source'] = invalid_id
         self.assertBadData(data)
 
-        data['source'] = self.schema1.item.id
+        data['source'] = self.schema1.item.pk
         self.assertOK(data)
 
         data['items'] = [invalid_id]
@@ -46,28 +43,28 @@ class TestInlineSynthesis(EndpointTester):
 
 
     def test_inline_synthesis(self):
-        ks1_x1 = self.schema1.insert_new('X1', term_raw='KS1X1') # -> delete
-        ks1_x2 = self.schema1.insert_new('X2', term_raw='KS1X2') # -> X2
-        ks1_s1 = self.schema1.insert_new('S1', definition_formal='X2', term_raw='KS1S1') # -> S1
-        ks1_d1 = self.schema1.insert_new('D1', definition_formal=r'S1\X1\X2') # -> D1
-        ks2_x1 = self.schema2.insert_new('X1', term_raw='KS2X1') # -> delete
-        ks2_x2 = self.schema2.insert_new('X2', term_raw='KS2X2') # -> X4
-        ks2_s1 = self.schema2.insert_new('S1', definition_formal='X2×X2', term_raw='KS2S1') # -> S2
-        ks2_d1 = self.schema2.insert_new('D1', definition_formal=r'S1\X1\X2') # -> D2
-        ks2_a1 = self.schema2.insert_new('A1', definition_formal='1=1') # -> not included in items
+        ks1_x1 = self.schema1.insert_new('X1', term_raw='KS1X1')  # -> delete
+        ks1_x2 = self.schema1.insert_new('X2', term_raw='KS1X2')  # -> X2
+        ks1_s1 = self.schema1.insert_new('S1', definition_formal='X2', term_raw='KS1S1')  # -> S1
+        ks1_d1 = self.schema1.insert_new('D1', definition_formal=r'S1\X1\X2')  # -> D1
+        ks2_x1 = self.schema2.insert_new('X1', term_raw='KS2X1')  # -> delete
+        ks2_x2 = self.schema2.insert_new('X2', term_raw='KS2X2')  # -> X4
+        ks2_s1 = self.schema2.insert_new('S1', definition_formal='X2×X2', term_raw='KS2S1')  # -> S2
+        ks2_d1 = self.schema2.insert_new('D1', definition_formal=r'S1\X1\X2')  # -> D2
+        ks2_a1 = self.schema2.insert_new('A1', definition_formal='1=1')  # -> not included in items
 
         data = {
-            'receiver': self.schema1.item.id,
-            'source': self.schema2.item.id,
+            'receiver': self.schema1.item.pk,
+            'source': self.schema2.item.pk,
             'items': [ks2_x1.pk, ks2_x2.pk, ks2_s1.pk, ks2_d1.pk],
             'substitutions': [
                 {
-                    'original': ks1_x1.pk, 
+                    'original': ks1_x1.pk,
                     'substitution': ks2_s1.pk,
                     'transfer_term': False
                 },
                 {
-                    'original': ks2_x1.pk, 
+                    'original': ks2_x1.pk,
                     'substitution': ks1_s1.pk,
                     'transfer_term': True
                 }

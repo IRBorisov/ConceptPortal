@@ -79,10 +79,13 @@ class LibraryViewSet(viewsets.ModelViewSet):
             return serializer.save()
 
     def get_permissions(self):
-        if self.action in ['destroy']:
-            permission_list = [permissions.ItemOwner]
-        elif self.action in ['update', 'partial_update']:
+        if self.action in ['update', 'partial_update']:
             permission_list = [permissions.ItemEditor]
+        elif self.action in [
+            'destroy', 'set_owner',
+            'editors_add', 'editors_remove', 'editors_set'
+        ]:
+            permission_list = [permissions.ItemOwner]
         elif self.action in ['create', 'clone', 'subscribe', 'unsubscribe']:
             permission_list = [permissions.GlobalUser]
         else:
@@ -139,7 +142,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
         tags=['Library'],
         request=None,
         responses={
-            c.HTTP_204_NO_CONTENT: None,
+            c.HTTP_200_OK: None,
             c.HTTP_403_FORBIDDEN: None,
             c.HTTP_404_NOT_FOUND: None
         }
@@ -149,14 +152,14 @@ class LibraryViewSet(viewsets.ModelViewSet):
         ''' Endpoint: Subscribe current user to item. '''
         item = self._get_item()
         m.Subscription.subscribe(user=cast(m.User, self.request.user), item=item)
-        return Response(status=c.HTTP_204_NO_CONTENT)
+        return Response(status=c.HTTP_200_OK)
 
     @extend_schema(
         summary='unsubscribe from item',
         tags=['Library'],
         request=None,
         responses={
-            c.HTTP_204_NO_CONTENT: None,
+            c.HTTP_200_OK: None,
             c.HTTP_403_FORBIDDEN: None,
             c.HTTP_404_NOT_FOUND: None
         },
@@ -166,4 +169,84 @@ class LibraryViewSet(viewsets.ModelViewSet):
         ''' Endpoint: Unsubscribe current user from item. '''
         item = self._get_item()
         m.Subscription.unsubscribe(user=cast(m.User, self.request.user), item=item)
-        return Response(status=c.HTTP_204_NO_CONTENT)
+        return Response(status=c.HTTP_200_OK)
+
+    @extend_schema(
+        summary='set owner for item',
+        tags=['Library'],
+        request=s.UserTargetSerializer,
+        responses={
+            c.HTTP_200_OK: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='set-owner')
+    def set_owner(self, request: Request, pk):
+        ''' Endpoint: Set item owner. '''
+        item = self._get_item()
+        serializer = s.UserTargetSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        new_owner = serializer.validated_data['user']
+        m.LibraryItem.objects.filter(pk=item.pk).update(owner=new_owner)
+        return Response(status=c.HTTP_200_OK)
+
+    @extend_schema(
+        summary='add editor for item',
+        tags=['Library'],
+        request=s.UserTargetSerializer,
+        responses={
+            c.HTTP_200_OK: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='editors-add')
+    def editors_add(self, request: Request, pk):
+        ''' Endpoint: Add editor for item. '''
+        item = self._get_item()
+        serializer = s.UserTargetSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        new_editor = serializer.validated_data['user']
+        m.Editor.add(item=item, user=new_editor)
+        return Response(status=c.HTTP_200_OK)
+
+    @extend_schema(
+        summary='remove editor for item',
+        tags=['Library'],
+        request=s.UserTargetSerializer,
+        responses={
+            c.HTTP_200_OK: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='editors-remove')
+    def editors_remove(self, request: Request, pk):
+        ''' Endpoint: Remove editor for item. '''
+        item = self._get_item()
+        serializer = s.UserTargetSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        editor = serializer.validated_data['user']
+        m.Editor.remove(item=item, user=editor)
+        return Response(status=c.HTTP_200_OK)
+
+    @extend_schema(
+        summary='set list of editors for item',
+        tags=['Library'],
+        request=s.UsersListSerializer,
+        responses={
+            c.HTTP_200_OK: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='editors-set')
+    def editors_set(self, request: Request, pk):
+        ''' Endpoint: Set list of editors for item. '''
+        item = self._get_item()
+        serializer = s.UsersListSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        editors = serializer.validated_data['users']
+        m.Editor.set(item=item, users=editors)
+        return Response(status=c.HTTP_200_OK)

@@ -87,7 +87,7 @@ class LibraryItem(Model):
 
     def editors(self) -> list[Editor]:
         ''' Get all Editors of this item. '''
-        return [item.editor for item in Editor.objects.filter(item=self.pk).order_by('-time_create')]
+        return [item.editor for item in Editor.objects.filter(item=self.pk)]
 
     @transaction.atomic
     def save(self, *args, **kwargs):

@@ -1,6 +1,6 @@
 ''' Utils: base tester class for endpoints. '''
-from rest_framework.test import APITestCase, APIRequestFactory, APIClient
 from rest_framework import status
+from rest_framework.test import APIClient, APIRequestFactory, APITestCase
 
 from apps.users.models import User
 
@@ -23,6 +23,7 @@ def decl_endpoint(endpoint: str, method: str):
 
 class EndpointTester(APITestCase):
     ''' Abstract base class for Testing endpoints. '''
+
     def setUp(self):
         self.factory = APIRequestFactory()
         self.user = User.objects.create(username='UserTest')
@@ -129,15 +130,15 @@ def _resolve_url(url: str, **kwargs) -> str:
         pos_end = url.find('}', pos_start)
         if pos_end == -1:
             break
-        name = url[(pos_start + 1) : pos_end]
+        name = url[(pos_start + 1): pos_end]
         arg_names.add(name)
         if not name in kwargs:
             raise KeyError(f'Missing argument: {name} | Mask: {url}')
-        output += url[pos_input : pos_start]
+        output += url[pos_input: pos_start]
         output += str(kwargs[name])
         pos_input = pos_end + 1
     if pos_input < len(url):
-        output += url[pos_input : len(url)]
+        output += url[pos_input: len(url)]
     for (key, _) in kwargs.items():
         if key not in arg_names:
             raise KeyError(f'Unused argument: {name} | Mask: {url}')

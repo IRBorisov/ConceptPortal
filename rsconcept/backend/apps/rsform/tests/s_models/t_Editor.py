@@ -33,14 +33,14 @@ class TestEditor(TestCase):
 
 
     def test_add_editor(self):
-        self.assertTrue(Editor.add(self.user1, self.item))
+        self.assertTrue(Editor.add(self.item, self.user1))
         self.assertEqual(len(self.item.editors()), 1)
         self.assertTrue(self.user1 in self.item.editors())
 
-        self.assertFalse(Editor.add(self.user1, self.item))
+        self.assertFalse(Editor.add(self.item, self.user1))
         self.assertEqual(len(self.item.editors()), 1)
 
-        self.assertTrue(Editor.add(self.user2, self.item))
+        self.assertTrue(Editor.add(self.item, self.user2))
         self.assertEqual(len(self.item.editors()), 2)
         self.assertTrue(self.user1 in self.item.editors())
         self.assertTrue(self.user2 in self.item.editors())
@@ -50,13 +50,27 @@ class TestEditor(TestCase):
 
 
     def test_remove_editor(self):
-        self.assertFalse(Editor.remove(self.user1, self.item))
-        Editor.add(self.user1, self.item)
-        Editor.add(self.user2, self.item)
+        self.assertFalse(Editor.remove(self.item, self.user1))
+        Editor.add(self.item, self.user1)
+        Editor.add(self.item, self.user2)
         self.assertEqual(len(self.item.editors()), 2)
 
-        self.assertTrue(Editor.remove(self.user1, self.item))
+        self.assertTrue(Editor.remove(self.item, self.user1))
         self.assertEqual(len(self.item.editors()), 1)
         self.assertTrue(self.user2 in self.item.editors())
 
-        self.assertFalse(Editor.remove(self.user1, self.item))
+        self.assertFalse(Editor.remove(self.item, self.user1))
+
+
+    def test_set_editors(self):
+        Editor.set(self.item, [self.user1])
+        self.assertEqual(self.item.editors(), [self.user1])
+
+        Editor.set(self.item, [self.user1, self.user1])
+        self.assertEqual(self.item.editors(), [self.user1])
+
+        Editor.set(self.item, [])
+        self.assertEqual(self.item.editors(), [])
+
+        Editor.set(self.item, [self.user1, self.user2])
+        self.assertEqual(set(self.item.editors()), set([self.user1, self.user2]))

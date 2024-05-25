@@ -350,7 +350,7 @@ class TestRSForm(TestCase):
         x1.term_resolved = 'слон'
         x1.save()
 
-        self.schema.on_term_change([x1.id])
+        self.schema.on_term_change([x1.pk])
         x1.refresh_from_db()
         x2.refresh_from_db()
         x3.refresh_from_db()

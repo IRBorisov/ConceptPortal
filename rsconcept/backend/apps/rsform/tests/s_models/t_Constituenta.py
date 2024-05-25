@@ -23,7 +23,7 @@ class TestConstituenta(TestCase):
     def test_url(self):
         testStr = 'X1'
         cst = Constituenta.objects.create(alias=testStr, schema=self.schema1, order=1, convention='Test')
-        self.assertEqual(cst.get_absolute_url(), f'/api/constituents/{cst.id}')
+        self.assertEqual(cst.get_absolute_url(), f'/api/constituents/{cst.pk}')
 
 
     def test_order_not_null(self):

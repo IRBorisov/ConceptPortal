@@ -1,13 +1,14 @@
 ''' Testing API: Constituents. '''
 from rest_framework import status
 
-from apps.rsform.models import RSForm, Constituenta, CstType
+from apps.rsform.models import Constituenta, CstType, RSForm
 
-from .EndpointTester import decl_endpoint, EndpointTester
+from .EndpointTester import EndpointTester, decl_endpoint
 
 
 class TestConstituentaAPI(EndpointTester):
     ''' Testing Constituenta view. '''
+
     def setUp(self):
         super().setUp()
         self.rsform_owned = RSForm.create(title='Test', alias='T1', owner=self.user)
@@ -20,7 +21,7 @@ class TestConstituentaAPI(EndpointTester):
             convention='Test',
             term_raw='Test1',
             term_resolved='Test1R',
-            term_forms=[{'text':'form1', 'tags':'sing,datv'}])
+            term_forms=[{'text': 'form1', 'tags': 'sing,datv'}])
         self.cst2 = Constituenta.objects.create(
             alias='X2',
             cst_type=CstType.BASE,
@@ -45,7 +46,7 @@ class TestConstituentaAPI(EndpointTester):
     @decl_endpoint('/api/constituents/{item}', method='get')
     def test_retrieve(self):
         self.assertNotFound(item=self.invalid_cst)
-        response = self.execute(item=self.cst1.id)
+        response = self.execute(item=self.cst1.pk)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['alias'], self.cst1.alias)
         self.assertEqual(response.data['convention'], self.cst1.convention)
@@ -54,19 +55,19 @@ class TestConstituentaAPI(EndpointTester):
     @decl_endpoint('/api/constituents/{item}', method='patch')
     def test_partial_update(self):
         data = {'convention': 'tt'}
-        self.assertForbidden(data, item=self.cst2.id)
+        self.assertForbidden(data, item=self.cst2.pk)
 
         self.logout()
-        self.assertForbidden(data, item=self.cst1.id)
+        self.assertForbidden(data, item=self.cst1.pk)
 
         self.login()
-        response = self.execute(data, item=self.cst1.id)
+        response = self.execute(data, item=self.cst1.pk)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.cst1.refresh_from_db()
         self.assertEqual(response.data['convention'], 'tt')
         self.assertEqual(self.cst1.convention, 'tt')
 
-        self.assertOK(data, item=self.cst1.id)
+        self.assertOK(data, item=self.cst1.pk)
 
 
     @decl_endpoint('/api/constituents/{item}', method='patch')
@@ -75,7 +76,7 @@ class TestConstituentaAPI(EndpointTester):
             'term_raw': 'New term',
             'definition_raw': 'New def'
         }
-        response = self.execute(data, item=self.cst3.id)
+        response = self.execute(data, item=self.cst3.pk)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.cst3.refresh_from_db()
         self.assertEqual(response.data['term_resolved'], 'New term')
@@ -90,7 +91,7 @@ class TestConstituentaAPI(EndpointTester):
             'term_raw': '@{X1|nomn,sing}',
             'definition_raw': '@{X1|nomn,sing} @{X1|sing,datv}'
         }
-        response = self.execute(data, item=self.cst3.id)
+        response = self.execute(data, item=self.cst3.pk)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.cst3.refresh_from_db()
         self.assertEqual(self.cst3.term_resolved, self.cst1.term_resolved)
@@ -102,7 +103,7 @@ class TestConstituentaAPI(EndpointTester):
     @decl_endpoint('/api/constituents/{item}', method='patch')
     def test_readonly_cst_fields(self):
         data = {'alias': 'X33', 'order': 10}
-        response = self.execute(data, item=self.cst1.id)
+        response = self.execute(data, item=self.cst1.pk)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['alias'], 'X1')
         self.assertEqual(response.data['alias'], self.cst1.alias)

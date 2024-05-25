@@ -1,31 +1,26 @@
 ''' Testing API: RSForms. '''
-import os
 import io
+import os
 from zipfile import ZipFile
-from rest_framework import status
-
-from apps.rsform.models import (
-  RSForm,
-  Constituenta,
-  CstType,
-  LibraryItem,
-  LibraryItemType
-)
 
 from cctext import ReferenceType
-from ..testing_utils import response_contains
+from rest_framework import status
 
-from .EndpointTester import decl_endpoint, EndpointTester
+from apps.rsform.models import Constituenta, CstType, LibraryItem, LibraryItemType, RSForm
+
+from ..testing_utils import response_contains
+from .EndpointTester import EndpointTester, decl_endpoint
 
 
 class TestRSFormViewset(EndpointTester):
     ''' Testing RSForm view. '''
+
     def setUp(self):
         super().setUp()
         self.schema = RSForm.create(title='Test', alias='T1', owner=self.user)
-        self.schema_id = self.schema.item.id
+        self.schema_id = self.schema.item.pk
         self.unowned = RSForm.create(title='Test2', alias='T2')
-        self.unowned_id = self.unowned.item.id
+        self.unowned_id = self.unowned.item.pk
 
 
     @decl_endpoint('/api/rsforms/create-detailed', method='post')
@@ -75,7 +70,7 @@ class TestRSFormViewset(EndpointTester):
     def test_contents(self):
         schema = RSForm.create(title='Title1')
         schema.insert_new('X1')
-        self.assertOK(item=schema.item.id)
+        self.assertOK(item=schema.item.pk)
 
 
     @decl_endpoint('/api/rsforms/{item}/details', method='get')
@@ -84,23 +79,23 @@ class TestRSFormViewset(EndpointTester):
         x1 = schema.insert_new(
             alias='X1',
             term_raw='человек',
-            term_resolved = 'человек'
+            term_resolved='человек'
         )
         x2 = schema.insert_new(
             alias='X2',
             term_raw='@{X1|plur}',
-            term_resolved = 'люди'
+            term_resolved='люди'
         )
 
-        response = self.execute(item=schema.item.id)
+        response = self.execute(item=schema.item.pk)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['title'], 'Test')
         self.assertEqual(len(response.data['items']), 2)
-        self.assertEqual(response.data['items'][0]['id'], x1.id)
+        self.assertEqual(response.data['items'][0]['id'], x1.pk)
         self.assertEqual(response.data['items'][0]['parse']['status'], 'verified')
         self.assertEqual(response.data['items'][0]['term_raw'], x1.term_raw)
         self.assertEqual(response.data['items'][0]['term_resolved'], x1.term_resolved)
-        self.assertEqual(response.data['items'][1]['id'], x2.id)
+        self.assertEqual(response.data['items'][1]['id'], x2.pk)
         self.assertEqual(response.data['items'][1]['term_raw'], x2.term_raw)
         self.assertEqual(response.data['items'][1]['term_resolved'], x2.term_resolved)
         self.assertEqual(response.data['subscribers'], [self.user.pk])
@@ -112,7 +107,7 @@ class TestRSFormViewset(EndpointTester):
         schema = RSForm.create(title='Test')
         schema.insert_new('X1')
         data = {'expression': 'X1=X1'}
-        response = self.execute(data, item=schema.item.id)
+        response = self.execute(data, item=schema.item.pk)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['parseResult'], True)
         self.assertEqual(response.data['syntax'], 'math')
@@ -132,7 +127,7 @@ class TestRSFormViewset(EndpointTester):
         )
 
         data = {'text': '@{1|редкий} @{X1|plur,datv}'}
-        response = self.execute(data, item=schema.item.id)
+        response = self.execute(data, item=schema.item.pk)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['input'], '@{1|редкий} @{X1|plur,datv}')
         self.assertEqual(response.data['output'], 'редким синим слонам')
@@ -170,7 +165,7 @@ class TestRSFormViewset(EndpointTester):
     def test_export_trs(self):
         schema = RSForm.create(title='Test')
         schema.insert_new('X1')
-        response = self.execute(item=schema.item.id)
+        response = self.execute(item=schema.item.pk)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.headers['Content-Disposition'], 'attachment; filename=Schema.trs')
         with io.BytesIO(response.content) as stream:
@@ -181,7 +176,7 @@ class TestRSFormViewset(EndpointTester):
 
     @decl_endpoint('/api/rsforms/{item}/cst-create', method='post')
     def test_create_constituenta(self):
-        data = {'alias': 'X3', 'cst_type':  CstType.BASE}
+        data = {'alias': 'X3', 'cst_type': CstType.BASE}
         self.assertForbidden(data, item=self.unowned_id)
 
         self.schema.insert_new('X1')
@@ -196,9 +191,9 @@ class TestRSFormViewset(EndpointTester):
         data = {
             'alias': 'X4',
             'cst_type': CstType.BASE,
-            'insert_after': x2.id,
+            'insert_after': x2.pk,
             'term_raw': 'test',
-            'term_forms': [{'text':'form1', 'tags':'sing,datv'}]
+            'term_forms': [{'text': 'form1', 'tags': 'sing,datv'}]
         }
         response = self.execute(data, item=self.schema_id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -216,7 +211,7 @@ class TestRSFormViewset(EndpointTester):
             convention='Test',
             term_raw='Test1',
             term_resolved='Test1',
-            term_forms=[{'text':'form1', 'tags':'sing,datv'}]
+            term_forms=[{'text': 'form1', 'tags': 'sing,datv'}]
         )
         x2_2 = self.unowned.insert_new('X2')
         x3 = self.schema.insert_new(
@@ -226,7 +221,7 @@ class TestRSFormViewset(EndpointTester):
             definition_raw='Test1',
             definition_resolved='Test2'
         )
-        
+
         data = {'target': x2_2.pk, 'alias': 'D2', 'cst_type': CstType.TERM}
         self.assertForbidden(data, item=self.unowned_id)
         self.assertBadData(data, item=self.schema_id)
@@ -239,8 +234,8 @@ class TestRSFormViewset(EndpointTester):
 
         d1 = self.schema.insert_new(
             alias='D1',
-            term_raw = '@{X1|plur}',
-            definition_formal = 'X1'
+            term_raw='@{X1|plur}',
+            definition_formal='X1'
         )
         self.assertEqual(x1.order, 1)
         self.assertEqual(x1.alias, 'X1')
@@ -254,7 +249,7 @@ class TestRSFormViewset(EndpointTester):
         d1.refresh_from_db()
         x1.refresh_from_db()
         self.assertEqual(d1.term_resolved, '')
-        self.assertEqual(d1.term_raw,  '@{D2|plur}')
+        self.assertEqual(d1.term_raw, '@{D2|plur}')
         self.assertEqual(x1.order, 1)
         self.assertEqual(x1.alias, 'D2')
         self.assertEqual(x1.cst_type, CstType.TERM)
@@ -266,14 +261,14 @@ class TestRSFormViewset(EndpointTester):
             alias='X1',
             term_raw='Test1',
             term_resolved='Test1',
-            term_forms=[{'text':'form1', 'tags':'sing,datv'}]
+            term_forms=[{'text': 'form1', 'tags': 'sing,datv'}]
         )
         x2 = self.schema.insert_new(
             alias='X2',
             term_raw='Test2'
         )
         unowned = self.unowned.insert_new('X2')
-        
+
         data = {'substitutions': [{'original': x1.pk, 'substitution': unowned.pk, 'transfer_term': True}]}
         self.assertForbidden(data, item=self.unowned_id)
         self.assertBadData(data, item=self.schema_id)
@@ -310,10 +305,10 @@ class TestRSFormViewset(EndpointTester):
             alias='D3',
             definition_formal=r'X1 \ X2'
         )
-        
+
         data = {'substitutions': []}
         self.assertBadData(data)
-        
+
         data = {'substitutions': [
             {
                 'original': x1.pk,
@@ -379,7 +374,7 @@ class TestRSFormViewset(EndpointTester):
         x1 = self.schema.insert_new('X1')
         x2 = self.schema.insert_new('X2')
 
-        data = {'items': [x1.id]}
+        data = {'items': [x1.pk]}
         response = self.execute(data)
         x2.refresh_from_db()
         self.schema.item.refresh_from_db()
@@ -390,7 +385,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(x2.order, 1)
 
         x3 = self.unowned.insert_new('X1')
-        data = {'items': [x3.id]}
+        data = {'items': [x3.pk]}
         self.assertBadData(data, item=self.schema_id)
 
 
@@ -404,7 +399,7 @@ class TestRSFormViewset(EndpointTester):
         x1 = self.schema.insert_new('X1')
         x2 = self.schema.insert_new('X2')
 
-        data = {'items': [x2.id], 'move_to': 1}
+        data = {'items': [x2.pk], 'move_to': 1}
         response = self.execute(data)
         x1.refresh_from_db()
         x2.refresh_from_db()
@@ -414,7 +409,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(x2.order, 1)
 
         x3 = self.unowned.insert_new('X1')
-        data = {'items': [x3.id], 'move_to': 1}
+        data = {'items': [x3.pk], 'move_to': 1}
         self.assertBadData(data)
 
 
@@ -460,7 +455,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(self.schema.item.title, 'Test11')
         self.assertEqual(len(response.data['items']), 25)
         self.assertEqual(self.schema.constituents().count(), 25)
-        self.assertFalse(Constituenta.objects.filter(pk=x1.id).exists())
+        self.assertFalse(Constituenta.objects.filter(pk=x1.pk).exists())
 
 
     @decl_endpoint('/api/rsforms/{item}/cst-produce-structure', method='patch')
@@ -490,11 +485,11 @@ class TestRSFormViewset(EndpointTester):
         invalid_id = f1.pk + 1337
 
         self.assertBadData({'target': invalid_id})
-        self.assertBadData({'target': x1.id})
-        self.assertBadData({'target': s2.id})
+        self.assertBadData({'target': x1.pk})
+        self.assertBadData({'target': s2.pk})
 
-        # Testing simple structure        
-        response = self.execute({'target': s1.id})
+        # Testing simple structure
+        response = self.execute({'target': s1.pk})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         result = response.data['schema']
         items = [item for item in result['items'] if item['id'] in response.data['cst_list']]
@@ -506,7 +501,7 @@ class TestRSFormViewset(EndpointTester):
 
         # Testing complex structure
         s3.refresh_from_db()
-        response = self.execute({'target': s3.id})
+        response = self.execute({'target': s3.pk})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         result = response.data['schema']
         items = [item for item in result['items'] if item['id'] in response.data['cst_list']]
@@ -516,7 +511,7 @@ class TestRSFormViewset(EndpointTester):
 
         # Testing function
         f1.refresh_from_db()
-        response = self.execute({'target': f1.id})
+        response = self.execute({'target': f1.pk})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         result = response.data['schema']
         items = [item for item in result['items'] if item['id'] in response.data['cst_list']]

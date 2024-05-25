@@ -1,6 +1,7 @@
 ''' Models: Editor. '''
 from typing import TYPE_CHECKING
 
+from django.db import transaction
 from django.db.models import CASCADE, DateTimeField, ForeignKey, Model
 
 from apps.users.models import User
@@ -37,18 +38,34 @@ class Editor(Model):
         return f'{self.item}: {self.editor}'
 
     @staticmethod
-    def add(user: User, item: 'LibraryItem') -> bool:
+    def add(item: 'LibraryItem', user: User) -> bool:
         ''' Add Editor for item. '''
-        if Editor.objects.filter(editor=user, item=item).exists():
+        if Editor.objects.filter(item=item, editor=user).exists():
             return False
-        Editor.objects.create(editor=user, item=item)
+        Editor.objects.create(item=item, editor=user)
         return True
 
     @staticmethod
-    def remove(user: User, item: 'LibraryItem') -> bool:
+    def remove(item: 'LibraryItem', user: User) -> bool:
         ''' Remove Editor. '''
-        editor = Editor.objects.filter(editor=user, item=item)
+        editor = Editor.objects.filter(item=item, editor=user)
         if not editor.exists():
             return False
         editor.delete()
         return True
+
+    @staticmethod
+    @transaction.atomic
+    def set(item: 'LibraryItem', users: list[User]):
+        ''' Set editors for item. '''
+        processed: list[User] = []
+        for editor_item in Editor.objects.filter(item=item):
+            if not editor_item.editor in users:
+                editor_item.delete()
+            else:
+                processed.append(editor_item.editor)
+
+        for user in users:
+            if not user in processed:
+                processed.append(user)
+                Editor.objects.create(item=item, editor=user)

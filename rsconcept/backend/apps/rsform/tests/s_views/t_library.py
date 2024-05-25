@@ -1,7 +1,14 @@
 ''' Testing API: Library. '''
 from rest_framework import status
 
-from apps.rsform.models import LibraryItem, LibraryItemType, LibraryTemplate, RSForm, Subscription
+from apps.rsform.models import (
+    Editor,
+    LibraryItem,
+    LibraryItemType,
+    LibraryTemplate,
+    RSForm,
+    Subscription
+)
 from apps.users.models import User
 
 from ..testing_utils import response_contains
@@ -13,6 +20,7 @@ class TestLibraryViewset(EndpointTester):
 
     def setUp(self):
         super().setUp()
+        self.user2 = User.objects.create(username='UserTest2')
         self.owned = LibraryItem.objects.create(
             item_type=LibraryItemType.RSFORM,
             title='Test',
@@ -31,6 +39,7 @@ class TestLibraryViewset(EndpointTester):
             alias='T3',
             is_common=True
         )
+        self.invalid_user = 1337 + self.user2.pk
         self.invalid_item = 1337 + self.common.pk
 
 
@@ -40,7 +49,7 @@ class TestLibraryViewset(EndpointTester):
         response = self.post(data=data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['title'], 'Title')
-        self.assertEqual(response.data['owner'], self.user.id)
+        self.assertEqual(response.data['owner'], self.user.pk)
 
         self.logout()
         data = {'title': 'Title2'}
@@ -49,25 +58,132 @@ class TestLibraryViewset(EndpointTester):
 
     @decl_endpoint('/api/library/{item}', method='patch')
     def test_update(self):
-        data = {'id': self.unowned.id, 'title': 'New title'}
+        data = {'id': self.unowned.pk, 'title': 'New title'}
         self.assertNotFound(data, item=self.invalid_item)
-        self.assertForbidden(data, item=self.unowned.id)
+        self.assertForbidden(data, item=self.unowned.pk)
 
-        data = {'id': self.owned.id, 'title': 'New title'}
-        response = self.execute(data, item=self.owned.id)
+        data = {'id': self.owned.pk, 'title': 'New title'}
+        response = self.execute(data, item=self.owned.pk)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['title'], 'New title')
         self.assertEqual(response.data['alias'], self.owned.alias)
 
 
+    @decl_endpoint('/api/library/{item}/set-owner', method='patch')
+    def test_set_owner(self):
+        time_update = self.owned.time_update
+
+        data = {'user': self.user.pk}
+        self.assertNotFound(data, item=self.invalid_item)
+        self.assertForbidden(data, item=self.unowned.pk)
+        self.assertOK(data, item=self.owned.pk)
+        self.owned.refresh_from_db()
+        self.assertEqual(self.owned.owner, self.user)
+
+        data = {'user': self.user2.pk}
+        self.assertOK(data, item=self.owned.pk)
+        self.owned.refresh_from_db()
+        self.assertEqual(self.owned.owner, self.user2)
+        self.assertEqual(self.owned.time_update, time_update)
+        self.assertForbidden(data, item=self.owned.pk)
+
+        self.toggle_admin(True)
+        data = {'user': self.user.pk}
+        self.assertOK(data, item=self.owned.pk)
+        self.owned.refresh_from_db()
+        self.assertEqual(self.owned.owner, self.user)
+
+    @decl_endpoint('/api/library/{item}/editors-add', method='patch')
+    def test_add_editor(self):
+        time_update = self.owned.time_update
+
+        data = {'user': self.invalid_user}
+        self.assertBadData(data, item=self.owned.pk)
+
+        data = {'user': self.user.pk}
+        self.assertNotFound(data, item=self.invalid_item)
+        self.assertForbidden(data, item=self.unowned.pk)
+
+        self.assertOK(data, item=self.owned.pk)
+        self.owned.refresh_from_db()
+        self.assertEqual(self.owned.time_update, time_update)
+        self.assertEqual(self.owned.editors(), [self.user])
+
+        self.assertOK(data)
+        self.assertEqual(self.owned.editors(), [self.user])
+
+        data = {'user': self.user2.pk}
+        self.assertOK(data)
+        self.assertEqual(set(self.owned.editors()), set([self.user, self.user2]))
+
+
+    @decl_endpoint('/api/library/{item}/editors-remove', method='patch')
+    def test_remove_editor(self):
+        time_update = self.owned.time_update
+
+        data = {'user': self.invalid_user}
+        self.assertBadData(data, item=self.owned.pk)
+
+        data = {'user': self.user.pk}
+        self.assertNotFound(data, item=self.invalid_item)
+        self.assertForbidden(data, item=self.unowned.pk)
+
+        self.assertOK(data, item=self.owned.pk)
+        self.owned.refresh_from_db()
+        self.assertEqual(self.owned.time_update, time_update)
+        self.assertEqual(self.owned.editors(), [])
+
+        Editor.add(item=self.owned, user=self.user)
+        self.assertOK(data)
+        self.assertEqual(self.owned.editors(), [])
+
+        Editor.add(item=self.owned, user=self.user)
+        Editor.add(item=self.owned, user=self.user2)
+        data = {'user': self.user2.pk}
+        self.assertOK(data)
+        self.assertEqual(self.owned.editors(), [self.user])
+
+
+    @decl_endpoint('/api/library/{item}/editors-set', method='patch')
+    def test_set_editors(self):
+        time_update = self.owned.time_update
+
+        data = {'users': [self.invalid_user]}
+        self.assertBadData(data, item=self.owned.pk)
+
+        data = {'users': [self.user.pk]}
+        self.assertNotFound(data, item=self.invalid_item)
+        self.assertForbidden(data, item=self.unowned.pk)
+
+        self.assertOK(data, item=self.owned.pk)
+        self.owned.refresh_from_db()
+        self.assertEqual(self.owned.time_update, time_update)
+        self.assertEqual(self.owned.editors(), [self.user])
+
+        self.assertOK(data)
+        self.assertEqual(self.owned.editors(), [self.user])
+
+        data = {'users': [self.user2.pk]}
+        self.assertOK(data)
+        self.assertEqual(self.owned.editors(), [self.user2])
+
+        data = {'users': []}
+        self.assertOK(data)
+        self.assertEqual(self.owned.editors(), [])
+
+        data = {'users': [self.user2.pk, self.user.pk]}
+        self.assertOK(data)
+        self.assertEqual(set(self.owned.editors()), set([self.user2, self.user]))
+
+
     @decl_endpoint('/api/library/{item}', method='delete')
     def test_destroy(self):
-        response = self.execute(item=self.owned.id)
+        response = self.execute(item=self.owned.pk)
         self.assertTrue(response.status_code in [status.HTTP_202_ACCEPTED, status.HTTP_204_NO_CONTENT])
 
-        self.assertForbidden(item=self.unowned.id)
+        self.assertForbidden(item=self.unowned.pk)
         self.toggle_admin(True)
-        response = self.execute(item=self.unowned.id)
+        response = self.execute(item=self.unowned.pk)
         self.assertTrue(response.status_code in [status.HTTP_202_ACCEPTED, status.HTTP_204_NO_CONTENT])
 
 
@@ -108,10 +224,9 @@ class TestLibraryViewset(EndpointTester):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(response_contains(response, self.unowned))
 
-        user2 = User.objects.create(username='UserTest2')
         Subscription.subscribe(user=self.user, item=self.unowned)
-        Subscription.subscribe(user=user2, item=self.unowned)
-        Subscription.subscribe(user=user2, item=self.owned)
+        Subscription.subscribe(user=self.user2, item=self.unowned)
+        Subscription.subscribe(user=self.user2, item=self.owned)
 
         response = self.execute()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -122,20 +237,20 @@ class TestLibraryViewset(EndpointTester):
     @decl_endpoint('/api/library/{item}/subscribe', method='post')
     def test_subscriptions(self):
         self.assertNotFound(item=self.invalid_item)
-        response = self.client.delete(f'/api/library/{self.unowned.id}/unsubscribe')
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        response = self.client.delete(f'/api/library/{self.unowned.pk}/unsubscribe')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(self.user in self.unowned.subscribers())
 
-        response = self.execute(item=self.unowned.id)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        response = self.execute(item=self.unowned.pk)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(self.user in self.unowned.subscribers())
 
-        response = self.execute(item=self.unowned.id)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        response = self.execute(item=self.unowned.pk)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(self.user in self.unowned.subscribers())
 
-        response = self.client.delete(f'/api/library/{self.unowned.id}/unsubscribe')
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        response = self.client.delete(f'/api/library/{self.unowned.pk}/unsubscribe')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(self.user in self.unowned.subscribers())
 
 
@@ -170,10 +285,10 @@ class TestLibraryViewset(EndpointTester):
 
         data = {'title': 'Title1337'}
         self.assertNotFound(data, item=self.invalid_item)
-        self.assertCreated(data, item=self.unowned.id)
+        self.assertCreated(data, item=self.unowned.pk)
 
         data = {'title': 'Title1338'}
-        response = self.execute(data, item=self.owned.id)
+        response = self.execute(data, item=self.owned.pk)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['title'], data['title'])
         self.assertEqual(len(response.data['items']), 2)
@@ -184,13 +299,13 @@ class TestLibraryViewset(EndpointTester):
         self.assertEqual(response.data['items'][1]['term_resolved'], d2.term_resolved)
 
         data = {'title': 'Title1340', 'items': []}
-        response = self.execute(data, item=self.owned.id)
+        response = self.execute(data, item=self.owned.pk)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['title'], data['title'])
         self.assertEqual(len(response.data['items']), 0)
 
         data = {'title': 'Title1341', 'items': [x12.pk]}
-        response = self.execute(data, item=self.owned.id)
+        response = self.execute(data, item=self.owned.pk)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['title'], data['title'])
         self.assertEqual(len(response.data['items']), 1)

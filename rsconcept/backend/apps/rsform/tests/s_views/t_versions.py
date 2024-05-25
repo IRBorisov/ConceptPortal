@@ -1,17 +1,19 @@
 ''' Testing API: Versions. '''
 import io
-from typing import cast
 from sys import version
+from typing import cast
 from zipfile import ZipFile
+
 from rest_framework import status
 
-from apps.rsform.models import RSForm, Constituenta
+from apps.rsform.models import Constituenta, RSForm
 
-from .EndpointTester import decl_endpoint, EndpointTester
+from .EndpointTester import EndpointTester, decl_endpoint
 
 
 class TestVersionViews(EndpointTester):
     ''' Testing versioning endpoints. '''
+
     def setUp(self):
         super().setUp()
         self.owned = RSForm.create(title='Test', alias='T1', owner=self.user).item
@@ -30,10 +32,10 @@ class TestVersionViews(EndpointTester):
         data = {'version': '1.0.0', 'description': 'test'}
 
         self.assertNotFound(data, schema=invalid_id)
-        self.assertForbidden(data, schema=self.unowned.id)
-        self.assertBadData(invalid_data, schema=self.owned.id)
+        self.assertForbidden(data, schema=self.unowned.pk)
+        self.assertBadData(invalid_data, schema=self.owned.pk)
 
-        response = self.execute(data, schema=self.owned.id)
+        response = self.execute(data, schema=self.owned.pk)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue('version' in response.data)
         self.assertTrue('schema' in response.data)
@@ -46,16 +48,16 @@ class TestVersionViews(EndpointTester):
         invalid_id = version_id + 1337
 
         self.assertNotFound(schema=invalid_id, version=invalid_id)
-        self.assertNotFound(schema=self.owned.id, version=invalid_id)
+        self.assertNotFound(schema=self.owned.pk, version=invalid_id)
         self.assertNotFound(schema=invalid_id, version=version_id)
-        self.assertNotFound(schema=self.unowned.id, version=version_id)
+        self.assertNotFound(schema=self.unowned.pk, version=version_id)
 
         self.owned.alias = 'NewName'
         self.owned.save()
         self.x1.alias = 'X33'
         self.x1.save()
-        
-        response = self.execute(schema=self.owned.id, version=version_id)
+
+        response = self.execute(schema=self.owned.pk, version=version_id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertNotEqual(response.data['alias'], self.owned.alias)
         self.assertNotEqual(response.data['items'][0]['alias'], self.x1.alias)
@@ -76,7 +78,7 @@ class TestVersionViews(EndpointTester):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['version'], data['version'])
         self.assertEqual(response.data['description'], data['description'])
-        self.assertEqual(response.data['item'], self.owned.id)
+        self.assertEqual(response.data['item'], self.owned.pk)
 
         data = {'version': '1.2.0', 'description': 'test1'}
         self.method = 'patch'
@@ -111,7 +113,7 @@ class TestVersionViews(EndpointTester):
         a1.definition_formal = 'X1=X2'
         a1.save()
 
-        response = self.get(schema=self.owned.id, version=version_id)
+        response = self.get(schema=self.owned.pk, version=version_id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         loaded_a1 = response.data['items'][1]
         self.assertEqual(loaded_a1['definition_formal'], 'X1=X1')
@@ -171,8 +173,8 @@ class TestVersionViews(EndpointTester):
 
     def _create_version(self, data) -> int:
         response = self.client.post(
-            f'/api/rsforms/{self.owned.id}/versions/create',
+            f'/api/rsforms/{self.owned.pk}/versions/create',
             data=data, format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        return response.data['version'] # type: ignore
+        return response.data['version']  # type: ignore

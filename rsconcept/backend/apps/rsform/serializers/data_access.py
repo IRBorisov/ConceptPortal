@@ -272,6 +272,16 @@ class CstTargetSerializer(serializers.Serializer):
         return attrs
 
 
+class UserTargetSerializer(serializers.Serializer):
+    ''' Serializer: Target single User. '''
+    user = PKField(many=False, queryset=User.objects.all())
+
+
+class UsersListSerializer(serializers.Serializer):
+    ''' Serializer: List of Users. '''
+    users = PKField(many=True, queryset=User.objects.all())
+
+
 class CstRenameSerializer(serializers.Serializer):
     ''' Serializer: Constituenta renaming. '''
     target = PKField(many=False, queryset=Constituenta.objects.all())

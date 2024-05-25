@@ -22,6 +22,8 @@ from .data_access import (
     LibraryItemSerializer,
     RSFormParseSerializer,
     RSFormSerializer,
+    UsersListSerializer,
+    UserTargetSerializer,
     VersionCreateSerializer,
     VersionSerializer
 )

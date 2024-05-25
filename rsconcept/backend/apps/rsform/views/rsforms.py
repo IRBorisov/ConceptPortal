@@ -32,8 +32,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
 
     def get_permissions(self):
         ''' Determine permission class. '''
-        if self.action in ['load_trs', 'cst_create', 'cst_delete_multiple',
-                           'reset_aliases', 'cst_rename', 'cst_substitute']:
+        if self.action in [
+            'load_trs', 'cst_create', 'cst_delete_multiple',
+            'reset_aliases', 'cst_rename', 'cst_substitute'
+        ]:
             permission_list = [permissions.ItemOwner]
         else:
             permission_list = [permissions.Anyone]

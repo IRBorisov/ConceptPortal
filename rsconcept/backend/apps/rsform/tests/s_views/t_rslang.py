@@ -1,8 +1,8 @@
 ''' Testing views '''
-from rest_framework.exceptions import ErrorDetail
 from rest_framework import status
+from rest_framework.exceptions import ErrorDetail
 
-from .EndpointTester import decl_endpoint, EndpointTester
+from .EndpointTester import EndpointTester, decl_endpoint
 
 
 class TestRSLanguageViews(EndpointTester):
@@ -42,4 +42,3 @@ class TestRSLanguageViews(EndpointTester):
         self.assertEqual(response.data['parseResult'], True)
         self.assertEqual(response.data['syntax'], 'math')
         self.assertEqual(response.data['astText'], '[=[1][1]]')
-
