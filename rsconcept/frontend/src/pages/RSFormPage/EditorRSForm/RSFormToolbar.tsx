@@ -2,15 +2,7 @@
 
 import { useMemo } from 'react';
 
-import {
-  IconDestroy,
-  IconDownload,
-  IconFollow,
-  IconFollowOff,
-  IconOwner,
-  IconSave,
-  IconShare
-} from '@/components/Icons';
+import { IconDestroy, IconDownload, IconFollow, IconFollowOff, IconSave, IconShare } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
@@ -28,7 +20,7 @@ interface RSFormToolbarProps {
   onDestroy: () => void;
 }
 
-function RSFormToolbar({ modified, anonymous, subscribed, claimable, onSubmit, onDestroy }: RSFormToolbarProps) {
+function RSFormToolbar({ modified, anonymous, subscribed, onSubmit, onDestroy }: RSFormToolbarProps) {
   const controller = useRSEdit();
   const canSave = useMemo(() => modified && !controller.isProcessing, [modified, controller.isProcessing]);
   return (
@@ -63,14 +55,6 @@ function RSFormToolbar({ modified, anonymous, subscribed, claimable, onSubmit, o
           }
           disabled={controller.isProcessing}
           onClick={controller.toggleSubscribe}
-        />
-      ) : null}
-      {!anonymous && claimable ? (
-        <MiniButton
-          title='Стать владельцем'
-          icon={<IconOwner size='1.25rem' className='icon-green' />}
-          disabled={controller.isProcessing}
-          onClick={controller.claim}
         />
       ) : null}
       {controller.isMutable ? (

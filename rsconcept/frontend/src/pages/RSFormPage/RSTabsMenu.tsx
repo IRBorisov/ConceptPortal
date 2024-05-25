@@ -52,11 +52,6 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
   const editMenu = useDropdown();
   const accessMenu = useDropdown();
 
-  function handleClaimOwner() {
-    editMenu.hide();
-    controller.claim();
-  }
-
   function handleDelete() {
     schemaMenu.hide();
     onDestroy();
@@ -140,14 +135,6 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
           onClick={schemaMenu.toggle}
         />
         <Dropdown isOpen={schemaMenu.isOpen}>
-          {user ? (
-            <DropdownButton
-              text={model.isOwned ? 'Вы — владелец' : 'Стать владельцем'}
-              icon={<IconOwner size='1rem' className='icon-green' />}
-              disabled={!model.isClaimable && !model.isOwned}
-              onClick={!model.isOwned && model.isClaimable ? handleClaimOwner : undefined}
-            />
-          ) : null}
           <DropdownButton
             text='Поделиться'
             icon={<IconShare size='1rem' className='icon-primary' />}

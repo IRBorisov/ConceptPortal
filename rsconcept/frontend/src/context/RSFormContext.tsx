@@ -20,7 +20,6 @@ import {
   patchSubstituteConstituents,
   patchUploadTRS,
   patchVersion,
-  postClaimLibraryItem,
   postCreateVersion,
   postNewConstituenta,
   postSubscribe
@@ -63,7 +62,6 @@ interface IRSFormContext {
   isSubscribed: boolean;
 
   update: (data: ILibraryUpdateData, callback?: DataCallback<ILibraryItem>) => void;
-  claim: (callback?: DataCallback<ILibraryItem>) => void;
   subscribe: (callback?: () => void) => void;
   unsubscribe: (callback?: () => void) => void;
   download: (callback: DataCallback<Blob>) => void;
@@ -178,29 +176,6 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
       });
     },
     [schemaID, setError, setSchema, schema, library]
-  );
-
-  const claim = useCallback(
-    (callback?: DataCallback<ILibraryItem>) => {
-      if (!schema || !user) {
-        return;
-      }
-      setError(undefined);
-      postClaimLibraryItem(schemaID, {
-        showError: true,
-        setLoading: setProcessing,
-        onError: setError,
-        onSuccess: newData => {
-          setSchema(Object.assign(schema, newData));
-          library.localUpdateItem(newData);
-          if (!user.subscriptions.includes(newData.id)) {
-            user.subscriptions.push(newData.id);
-          }
-          if (callback) callback(newData);
-        }
-      });
-    },
-    [schemaID, setError, schema, user, setSchema, library]
   );
 
   const subscribe = useCallback(
@@ -543,7 +518,6 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         update,
         download,
         upload,
-        claim,
         restoreOrder,
         resetAliases,
         produceStructure,

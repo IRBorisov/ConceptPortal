@@ -246,13 +246,6 @@ export function deleteLibraryItem(target: string, request: FrontAction) {
   });
 }
 
-export function postClaimLibraryItem(target: string, request: FrontPull<ILibraryItem>) {
-  AxiosPost({
-    endpoint: `/api/library/${target}/claim`,
-    request: request
-  });
-}
-
 export function postSubscribe(target: string, request: FrontAction) {
   AxiosPost({
     endpoint: `/api/library/${target}/subscribe`,

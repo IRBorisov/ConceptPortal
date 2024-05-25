@@ -6,7 +6,7 @@ import pyconcept
 from django.db import transaction
 from django.http import HttpResponse
 from drf_spectacular.utils import extend_schema, extend_schema_view
-from rest_framework import generics, permissions
+from rest_framework import generics
 from rest_framework import status as c
 from rest_framework import views, viewsets
 from rest_framework.decorators import action, api_view
@@ -15,6 +15,7 @@ from rest_framework.response import Response
 
 from .. import messages as msg
 from .. import models as m
+from .. import permissions
 from .. import serializers as s
 from .. import utils
 
@@ -33,9 +34,9 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         ''' Determine permission class. '''
         if self.action in ['load_trs', 'cst_create', 'cst_delete_multiple',
                            'reset_aliases', 'cst_rename', 'cst_substitute']:
-            permission_list = [utils.ObjectOwnerOrAdmin]
+            permission_list = [permissions.ItemOwner]
         else:
-            permission_list = [permissions.AllowAny]
+            permission_list = [permissions.Anyone]
         return [permission() for permission in permission_list]
 
     @extend_schema(
@@ -402,7 +403,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
 class TrsImportView(views.APIView):
     ''' Endpoint: Upload RS form in Exteor format. '''
     serializer_class = s.FileSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.GlobalUser]
 
     @extend_schema(
         summary='import TRS file into RSForm',

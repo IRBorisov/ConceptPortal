@@ -3,7 +3,7 @@ from typing import cast
 
 from django.http import HttpResponse
 from drf_spectacular.utils import extend_schema, extend_schema_view
-from rest_framework import generics, permissions
+from rest_framework import generics
 from rest_framework import status as c
 from rest_framework import viewsets
 from rest_framework.decorators import action, api_view, permission_classes
@@ -11,24 +11,21 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from .. import models as m
+from .. import permissions
 from .. import serializers as s
 from .. import utils
 
 
 @extend_schema(tags=['Version'])
 @extend_schema_view()
-class VersionViewset(viewsets.GenericViewSet, generics.RetrieveUpdateDestroyAPIView):
+class VersionViewset(
+    viewsets.GenericViewSet,
+    generics.RetrieveUpdateDestroyAPIView,
+    permissions.EditorMixin
+):
     ''' Endpoint: Get / Update Constituenta. '''
     queryset = m.Version.objects.all()
     serializer_class = s.VersionSerializer
-
-    def get_permissions(self):
-        result = super().get_permissions()
-        if self.request.method.upper() == 'GET':
-            result.append(permissions.AllowAny())
-        else:
-            result.append(utils.ItemOwnerOrAdmin())
-        return result
 
     @extend_schema(
         summary='restore version data into current item',
@@ -62,7 +59,7 @@ class VersionViewset(viewsets.GenericViewSet, generics.RetrieveUpdateDestroyAPIV
     }
 )
 @api_view(['POST'])
-@permission_classes([permissions.IsAuthenticated])
+@permission_classes([permissions.GlobalUser])
 def create_version(request: Request, pk_item: int):
     ''' Endpoint: Create new version for RSForm copying current content. '''
     try:

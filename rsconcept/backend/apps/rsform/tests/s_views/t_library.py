@@ -1,16 +1,16 @@
 ''' Testing API: Library. '''
 from rest_framework import status
 
+from apps.rsform.models import LibraryItem, LibraryItemType, LibraryTemplate, RSForm, Subscription
 from apps.users.models import User
-from apps.rsform.models import LibraryItem, LibraryItemType, Subscription, LibraryTemplate, RSForm
 
 from ..testing_utils import response_contains
-
-from .EndpointTester import decl_endpoint, EndpointTester
+from .EndpointTester import EndpointTester, decl_endpoint
 
 
 class TestLibraryViewset(EndpointTester):
     ''' Testing Library view. '''
+
     def setUp(self):
         super().setUp()
         self.owned = LibraryItem.objects.create(
@@ -71,30 +71,6 @@ class TestLibraryViewset(EndpointTester):
         self.assertTrue(response.status_code in [status.HTTP_202_ACCEPTED, status.HTTP_204_NO_CONTENT])
 
 
-    @decl_endpoint('/api/library/{item}/claim', method='post')
-    def test_claim(self):
-        self.assertNotFound(item=self.invalid_item)
-        self.assertForbidden(item=self.owned.id)
-
-        self.owned.is_common = True
-        self.owned.save()
-        self.assertNotModified(item=self.owned.id)
-        self.assertForbidden(item=self.unowned.id)
-
-        self.assertFalse(self.user in self.unowned.subscribers())
-        self.unowned.is_common = True
-        self.unowned.save()
-
-        self.assertOK(item=self.unowned.id)
-        self.unowned.refresh_from_db()
-        self.assertEqual(self.unowned.owner, self.user)
-        self.assertEqual(self.unowned.owner, self.user)
-        self.assertTrue(self.user in self.unowned.subscribers())
-
-        self.logout()
-        self.assertForbidden(item=self.owned.id)
-
-
     @decl_endpoint('/api/library/active', method='get')
     def test_retrieve_common(self):
         response = self.execute()
@@ -132,7 +108,7 @@ class TestLibraryViewset(EndpointTester):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(response_contains(response, self.unowned))
 
-        user2 =  User.objects.create(username='UserTest2')
+        user2 = User.objects.create(username='UserTest2')
         Subscription.subscribe(user=self.user, item=self.unowned)
         Subscription.subscribe(user=user2, item=self.unowned)
         Subscription.subscribe(user=user2, item=self.owned)
@@ -183,13 +159,13 @@ class TestLibraryViewset(EndpointTester):
     def test_clone_rsform(self):
         x12 = self.schema.insert_new(
             alias='X12',
-            term_raw = 'человек',
-            term_resolved = 'человек'
+            term_raw='человек',
+            term_resolved='человек'
         )
         d2 = self.schema.insert_new(
             alias='D2',
-            term_raw = '@{X12|plur}',
-            term_resolved = 'люди'
+            term_raw='@{X12|plur}',
+            term_resolved='люди'
         )
 
         data = {'title': 'Title1337'}

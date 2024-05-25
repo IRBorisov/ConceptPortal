@@ -4,55 +4,11 @@ import re
 from io import BytesIO
 from zipfile import ZipFile
 
-from rest_framework.permissions import BasePermission, IsAuthenticated
-
 # Name for JSON inside Exteor files archive
 EXTEOR_INNER_FILENAME = 'document.json'
 
 # Old style reference pattern
 _REF_OLD_PATTERN = re.compile(r'@{([^0-9\-][^\}\|\{]*?)\|([^\}\|\{]*?)\|([^\}\|\{]*?)}')
-
-
-class ObjectOwnerOrAdmin(BasePermission):
-    ''' Permission for object ownership restriction '''
-
-    def has_object_permission(self, request, view, obj):
-        if request.user == obj.owner:
-            return True
-        if not hasattr(request.user, 'is_staff'):
-            return False
-        return request.user.is_staff  # type: ignore
-
-
-class IsClaimable(IsAuthenticated):
-    ''' Permission for object ownership restriction '''
-
-    def has_object_permission(self, request, view, obj):
-        if not super().has_permission(request, view):
-            return False
-        return obj.is_common
-
-
-class SchemaOwnerOrAdmin(BasePermission):
-    ''' Permission for object ownership restriction '''
-
-    def has_object_permission(self, request, view, obj):
-        if request.user == obj.schema.owner:
-            return True
-        if not hasattr(request.user, 'is_staff'):
-            return False
-        return request.user.is_staff  # type: ignore
-
-
-class ItemOwnerOrAdmin(BasePermission):
-    ''' Permission for object ownership restriction '''
-
-    def has_object_permission(self, request, view, obj):
-        if request.user == obj.item.owner:
-            return True
-        if not hasattr(request.user, 'is_staff'):
-            return False
-        return request.user.is_staff  # type: ignore
 
 
 def read_zipped_json(data, json_filename: str) -> dict:

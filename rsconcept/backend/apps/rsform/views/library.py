@@ -6,7 +6,7 @@ from django.db import transaction
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, extend_schema_view
-from rest_framework import filters, generics, permissions
+from rest_framework import filters, generics
 from rest_framework import status as c
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -14,15 +14,15 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from .. import models as m
+from .. import permissions
 from .. import serializers as s
-from .. import utils
 
 
 @extend_schema(tags=['Library'])
 @extend_schema_view()
 class LibraryActiveView(generics.ListAPIView):
     ''' Endpoint: Get list of library items available for active user. '''
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.Anyone,)
     serializer_class = s.LibraryItemSerializer
 
     def get_queryset(self):
@@ -40,7 +40,7 @@ class LibraryActiveView(generics.ListAPIView):
 @extend_schema_view()
 class LibraryAdminView(generics.ListAPIView):
     ''' Endpoint: Get list of all library items. Admin only '''
-    permission_classes = (permissions.IsAdminUser,)
+    permission_classes = (permissions.GlobalAdmin,)
     serializer_class = s.LibraryItemSerializer
 
     def get_queryset(self):
@@ -51,7 +51,7 @@ class LibraryAdminView(generics.ListAPIView):
 @extend_schema_view()
 class LibraryTemplatesView(generics.ListAPIView):
     ''' Endpoint: Get list of templates. '''
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.Anyone,)
     serializer_class = s.LibraryItemSerializer
 
     def get_queryset(self):
@@ -79,14 +79,14 @@ class LibraryViewSet(viewsets.ModelViewSet):
             return serializer.save()
 
     def get_permissions(self):
-        if self.action in ['update', 'destroy', 'partial_update']:
-            permission_list = [utils.ObjectOwnerOrAdmin]
+        if self.action in ['destroy']:
+            permission_list = [permissions.ItemOwner]
+        elif self.action in ['update', 'partial_update']:
+            permission_list = [permissions.ItemEditor]
         elif self.action in ['create', 'clone', 'subscribe', 'unsubscribe']:
-            permission_list = [permissions.IsAuthenticated]
-        elif self.action in ['claim']:
-            permission_list = [utils.IsClaimable]
+            permission_list = [permissions.GlobalUser]
         else:
-            permission_list = [permissions.AllowAny]
+            permission_list = [permissions.Anyone]
         return [permission() for permission in permission_list]
 
     def _get_item(self) -> m.LibraryItem:
@@ -133,32 +133,6 @@ class LibraryViewSet(viewsets.ModelViewSet):
                 data=s.RSFormParseSerializer(clone).data
             )
         return Response(status=c.HTTP_400_BAD_REQUEST)
-
-    @extend_schema(
-        summary='claim item',
-        tags=['Library'],
-        request=None,
-        responses={
-            c.HTTP_200_OK: s.LibraryItemSerializer,
-            c.HTTP_403_FORBIDDEN: None,
-            c.HTTP_404_NOT_FOUND: None
-        }
-    )
-    @transaction.atomic
-    @action(detail=True, methods=['post'])
-    def claim(self, request: Request, pk=None):
-        ''' Endpoint: Claim ownership of LibraryItem. '''
-        item = self._get_item()
-        if item.owner == self.request.user:
-            return Response(status=c.HTTP_304_NOT_MODIFIED)
-        else:
-            item.owner = cast(m.User, self.request.user)
-            item.save()
-            m.Subscription.subscribe(user=item.owner, item=item)
-            return Response(
-                status=c.HTTP_200_OK,
-                data=s.LibraryItemSerializer(item).data
-            )
 
     @extend_schema(
         summary='subscribe to item',

@@ -80,7 +80,6 @@ interface IRSEditContext {
   promptTemplate: () => void;
   promptClone: () => void;
   promptUpload: () => void;
-  claim: () => void;
   share: () => void;
   toggleSubscribe: () => void;
   download: () => void;
@@ -488,13 +487,6 @@ export const RSEditState = ({
     });
   }, [model, isModified]);
 
-  const claim = useCallback(() => {
-    if (!window.confirm('Вы уверены, что хотите стать владельцем данной схемы?')) {
-      return;
-    }
-    model.claim(() => toast.success('Вы стали владельцем схемы'));
-  }, [model]);
-
   const share = useCallback(() => {
     const currentRef = window.location.href;
     const url = currentRef.includes('?') ? currentRef + '&share' : currentRef + '?share';
@@ -547,7 +539,6 @@ export const RSEditState = ({
         promptClone,
         promptUpload: () => setShowUpload(true),
         download,
-        claim,
         share,
         toggleSubscribe,
 
