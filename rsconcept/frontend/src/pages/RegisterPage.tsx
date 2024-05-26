@@ -19,7 +19,7 @@ import AnimateFade from '@/components/wrap/AnimateFade';
 import ExpectedAnonymous from '@/components/wrap/ExpectedAnonymous';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
-import { type IUserSignupData } from '@/models/library';
+import { IUserSignupData } from '@/models/user';
 import { globals, patterns } from '@/utils/constants';
 
 function RegisterPage() {

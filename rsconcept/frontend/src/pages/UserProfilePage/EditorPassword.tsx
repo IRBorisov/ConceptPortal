@@ -12,7 +12,7 @@ import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
-import { IUserUpdatePassword } from '@/models/library';
+import { IUserUpdatePassword } from '@/models/user';
 
 function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {

@@ -1,6 +1,6 @@
-import TopicPage from '@/pages/ManualsPage/TopicPage';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { HelpTopic } from '@/models/miscellaneous';
+import TopicPage from '@/pages/ManualsPage/TopicPage';
 
 interface ViewTopicProps {
   topic: HelpTopic;

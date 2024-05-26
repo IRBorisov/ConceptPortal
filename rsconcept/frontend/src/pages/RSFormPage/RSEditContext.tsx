@@ -38,10 +38,10 @@ import {
   ICstMovetoData,
   ICstRenameData,
   ICstSubstituteData,
-  ICstTarget,
   ICstUpdateData,
   IInlineSynthesisData,
   IRSForm,
+  ITargetCst,
   TermForm
 } from '@/models/rsform';
 import { generateAlias } from '@/models/rsformAPI';
@@ -447,7 +447,7 @@ export const RSEditState = ({
     if (isModified && !promptUnsaved()) {
       return;
     }
-    const data: ICstTarget = {
+    const data: ITargetCst = {
       target: activeCst.id
     };
     model.produceStructure(data, cstList => {

@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 import { getActiveUsers } from '@/app/backendAPI';
-import { type IUserInfo } from '@/models/library';
+import { IUserInfo } from '@/models/user';
 
 interface IUsersContext {
   users: IUserInfo[];

@@ -36,12 +36,12 @@ import {
   ICstMovetoData,
   ICstRenameData,
   ICstSubstituteData,
-  ICstTarget,
   ICstUpdateData,
   IInlineSynthesisData,
   IRSForm,
   IRSFormData,
-  IRSFormUploadData
+  IRSFormUploadData,
+  ITargetCst
 } from '@/models/rsform';
 
 import { useAuth } from './AuthContext';
@@ -69,7 +69,7 @@ interface IRSFormContext {
 
   resetAliases: (callback: () => void) => void;
   restoreOrder: (callback: () => void) => void;
-  produceStructure: (data: ICstTarget, callback?: DataCallback<ConstituentaID[]>) => void;
+  produceStructure: (data: ITargetCst, callback?: DataCallback<ConstituentaID[]>) => void;
   inlineSynthesis: (data: IInlineSynthesisData, callback?: DataCallback<IRSFormData>) => void;
 
   cstCreate: (data: ICstCreateData, callback?: DataCallback<IConstituentaMeta>) => void;
@@ -269,7 +269,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
   );
 
   const produceStructure = useCallback(
-    (data: ICstTarget, callback?: DataCallback<ConstituentaID[]>) => {
+    (data: ITargetCst, callback?: DataCallback<ConstituentaID[]>) => {
       setError(undefined);
       patchProduceStructure(schemaID, {
         data: data,

@@ -85,7 +85,7 @@ export interface IConstituentaMeta {
 /**
  * Represents target {@link IConstituenta}.
  */
-export interface ICstTarget {
+export interface ITargetCst {
   target: ConstituentaID;
 }
 
@@ -156,7 +156,7 @@ export interface ICstUpdateData
 /**
  * Represents data, used in renaming {@link IConstituenta}.
  */
-export interface ICstRenameData extends ICstTarget, Pick<IConstituentaMeta, 'alias' | 'cst_type'> {}
+export interface ICstRenameData extends ITargetCst, Pick<IConstituentaMeta, 'alias' | 'cst_type'> {}
 
 /**
  * Represents data, used in merging single {@link IConstituenta}.

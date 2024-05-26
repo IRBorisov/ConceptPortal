@@ -4,8 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 
 import { DataCallback, getProfile, patchProfile } from '@/app/backendAPI';
 import { ErrorData } from '@/components/info/InfoError';
-import { IUserProfile } from '@/models/library';
-import { IUserUpdateData } from '@/models/library';
+import { IUserProfile, IUserUpdateData } from '@/models/user';
 
 import { useUsers } from './UsersContext';
 

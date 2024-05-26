@@ -14,7 +14,7 @@ import ExpectedAnonymous from '@/components/wrap/ExpectedAnonymous';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
-import { IUserLoginData } from '@/models/library';
+import { IUserLoginData } from '@/models/user';
 import { resources } from '@/utils/constants';
 
 function ProcessError({ error }: { error: ErrorData }): React.ReactElement {

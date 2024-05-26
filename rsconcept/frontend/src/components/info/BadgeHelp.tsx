@@ -3,9 +3,9 @@ import Tooltip, { PlacesType } from '@/components/ui/Tooltip';
 import { useConceptOptions } from '@/context/OptionsContext';
 import { HelpTopic } from '@/models/miscellaneous';
 
+import TopicPage from '../../pages/ManualsPage/TopicPage';
 import { IconHelp } from '../Icons';
 import { CProps } from '../props';
-import TopicPage from '../../pages/ManualsPage/TopicPage';
 
 interface BadgeHelpProps extends CProps.Styling {
   topic: HelpTopic;

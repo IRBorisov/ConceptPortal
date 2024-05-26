@@ -8,7 +8,7 @@ import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
 import { useBlockNavigation } from '@/context/NavigationContext';
 import { useUserProfile } from '@/context/UserProfileContext';
-import { IUserUpdateData } from '@/models/library';
+import { IUserUpdateData } from '@/models/user';
 
 function EditorProfile() {
   const { updateUser, user, processing } = useUserProfile();

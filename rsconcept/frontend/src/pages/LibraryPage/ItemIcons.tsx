@@ -1,7 +1,8 @@
 import clsx from 'clsx';
 
 import { IconImmutable, IconPublic } from '@/components/Icons';
-import { ICurrentUser, ILibraryItem } from '@/models/library';
+import { ILibraryItem } from '@/models/library';
+import { ICurrentUser } from '@/models/user';
 import { prefixes } from '@/utils/constants';
 
 interface ItemIconsProps {

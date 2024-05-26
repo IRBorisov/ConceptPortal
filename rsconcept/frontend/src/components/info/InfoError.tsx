@@ -40,7 +40,7 @@ function DescribeError({ error }: { error: ErrorData }) {
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const isHtml = isResponseHtml(error.response);
   return (
     <div>

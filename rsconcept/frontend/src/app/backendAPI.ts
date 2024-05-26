@@ -7,21 +7,7 @@ import { toast } from 'react-toastify';
 
 import { type ErrorData } from '@/components/info/InfoError';
 import { ILexemeData, IResolutionData, ITextRequest, ITextResult, IWordFormPlain } from '@/models/language';
-import {
-  ICurrentUser,
-  ILibraryItem,
-  ILibraryUpdateData,
-  IPasswordTokenData,
-  IRequestPasswordData,
-  IResetPasswordData as IResetPasswordData,
-  IUserInfo,
-  IUserLoginData,
-  IUserProfile,
-  IUserSignupData,
-  IUserUpdateData,
-  IUserUpdatePassword,
-  IVersionData
-} from '@/models/library';
+import { ILibraryItem, ILibraryUpdateData, IVersionData } from '@/models/library';
 import {
   IConstituentaList,
   IConstituentaMeta,
@@ -30,7 +16,6 @@ import {
   ICstMovetoData,
   ICstRenameData,
   ICstSubstituteData,
-  ICstTarget,
   ICstUpdateData,
   IInlineSynthesisData,
   IProduceStructureResponse,
@@ -38,9 +23,24 @@ import {
   IRSFormCreateData,
   IRSFormData,
   IRSFormUploadData,
+  ITargetCst,
   IVersionCreatedResponse
 } from '@/models/rsform';
 import { IExpressionParse, IRSExpression } from '@/models/rslang';
+import {
+  ICurrentUser,
+  IPasswordTokenData,
+  IRequestPasswordData,
+  IResetPasswordData,
+  ITargetUser,
+  ITargetUsers,
+  IUserInfo,
+  IUserLoginData,
+  IUserProfile,
+  IUserSignupData,
+  IUserUpdateData,
+  IUserUpdatePassword
+} from '@/models/user';
 
 import { buildConstants } from '../utils/constants';
 
@@ -246,6 +246,34 @@ export function deleteLibraryItem(target: string, request: FrontAction) {
   });
 }
 
+export function patchSetOwner(target: string, request: FrontPush<ITargetUser>) {
+  AxiosPatch({
+    endpoint: `/api/library/${target}/set-owner`,
+    request: request
+  });
+}
+
+export function patchEditorsAdd(target: string, request: FrontPush<ITargetUser>) {
+  AxiosPatch({
+    endpoint: `/api/library/${target}/editors-add`,
+    request: request
+  });
+}
+
+export function patchEditorsRemove(target: string, request: FrontPush<ITargetUser>) {
+  AxiosPatch({
+    endpoint: `/api/library/${target}/editors-remove`,
+    request: request
+  });
+}
+
+export function patchEditorsSet(target: string, request: FrontPush<ITargetUsers>) {
+  AxiosPatch({
+    endpoint: `/api/library/${target}/editors-set`,
+    request: request
+  });
+}
+
 export function postSubscribe(target: string, request: FrontAction) {
   AxiosPost({
     endpoint: `/api/library/${target}/subscribe`,
@@ -304,7 +332,7 @@ export function patchRenameConstituenta(schema: string, request: FrontExchange<I
   });
 }
 
-export function patchProduceStructure(schema: string, request: FrontExchange<ICstTarget, IProduceStructureResponse>) {
+export function patchProduceStructure(schema: string, request: FrontExchange<ITargetCst, IProduceStructureResponse>) {
   AxiosPatch({
     endpoint: `/api/rsforms/${schema}/cst-produce-structure`,
     request: request

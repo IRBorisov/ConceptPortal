@@ -10,7 +10,7 @@ import { CstMatchMode } from '@/models/miscellaneous';
 import { prefixes } from '@/utils/constants';
 import { describeCstMatchMode, labelCstMatchMode } from '@/utils/labels';
 
-import { IconAlias, IconTerm, IconFilter, IconFormula, IconText } from '../Icons';
+import { IconAlias, IconFilter, IconFormula, IconTerm, IconText } from '../Icons';
 import DropdownButton from '../ui/DropdownButton';
 
 function MatchModeIcon(mode: CstMatchMode, size: string, color?: string) {

@@ -10,7 +10,7 @@ import TextInput from '@/components/ui/TextInput';
 import TextURL from '@/components/ui/TextURL';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { useAuth } from '@/context/AuthContext';
-import { IRequestPasswordData } from '@/models/library';
+import { IRequestPasswordData } from '@/models/user';
 
 function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {

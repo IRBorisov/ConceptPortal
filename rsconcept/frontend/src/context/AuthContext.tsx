@@ -14,12 +14,17 @@ import {
   postValidatePasswordToken
 } from '@/app/backendAPI';
 import { type ErrorData } from '@/components/info/InfoError';
-import { IPasswordTokenData, IRequestPasswordData, IResetPasswordData, IUserLoginData } from '@/models/library';
-import { ICurrentUser } from '@/models/library';
-import { IUserSignupData } from '@/models/library';
-import { IUserProfile } from '@/models/library';
-import { IUserInfo } from '@/models/library';
-import { IUserUpdatePassword } from '@/models/library';
+import {
+  ICurrentUser,
+  IPasswordTokenData,
+  IRequestPasswordData,
+  IResetPasswordData,
+  IUserInfo,
+  IUserLoginData,
+  IUserProfile,
+  IUserSignupData,
+  IUserUpdatePassword
+} from '@/models/user';
 
 import { useUsers } from './UsersContext';
 
