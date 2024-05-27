@@ -1,19 +1,30 @@
-import LinkTopic from '@/components/ui/LinkTopic';
-import { HelpTopic } from '@/models/miscellaneous';
+import { IconEditor, IconList, IconNewItem, IconShare, IconUpload } from '@/components/Icons';
 
 function HelpVersions() {
   return (
-    <div className='text-justify'>
+    <div className=''>
       <h1>Версионирование схем</h1>
       <p>
-        Версионирование позволяет сохранить текущее состояние схемы под определенным именем (версией) и использовать
-        ссылку на него для совместной работы. После создания версии ее содержание изменить нельзя
+        Версионирование доступно <IconEditor size='1rem' className='inline-icon' /> Редакторам.
       </p>
-      <li>Владелец обладает правом редактирования названий и создания новых версий</li>
+      <p>Версионирование сохраняет текущее состояние схемы под определенным именем (версией) с доступом по ссылке.</p>
+      <p>После создания версии ее содержание изменить нельзя.</p>
+
+      <h2>Действия</h2>
       <li>
-        Управление версиями происходит в <LinkTopic text='Карточке схемы' topic={HelpTopic.UI_RS_CARD} />
+        <IconShare size='1.25rem' className='inline-icon' /> Поделиться включает версию в ссылку
       </li>
-      <li>Функция Поделиться включает версию в ссылку</li>
+      <li>
+        <IconUpload size='1.25rem' className='inline-icon icon-red' /> Загрузить версию в актуальную схему
+      </li>
+      <li>
+        <IconNewItem size='1.25rem' className='inline-icon icon-green' /> Создать версию можно только из актуальной
+        схемы
+      </li>
+
+      <li>
+        <IconList size='1.25rem' className='inline-icon' /> Редактировать атрибуты версий
+      </li>
     </div>
   );
 }

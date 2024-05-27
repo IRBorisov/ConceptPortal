@@ -6,7 +6,9 @@ import { IconDestroy, IconDownload, IconFollow, IconFollowOff, IconSave, IconSha
 import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
+import { useAccessMode } from '@/context/AccessModeContext';
 import { HelpTopic } from '@/models/miscellaneous';
+import { UserLevel } from '@/models/user';
 import { prepareTooltip } from '@/utils/labels';
 
 import { useRSEdit } from '../RSEditContext';
@@ -22,6 +24,7 @@ interface RSFormToolbarProps {
 
 function RSFormToolbar({ modified, anonymous, subscribed, onSubmit, onDestroy }: RSFormToolbarProps) {
   const controller = useRSEdit();
+  const { accessLevel } = useAccessMode();
   const canSave = useMemo(() => modified && !controller.isProcessing, [modified, controller.isProcessing]);
   return (
     <Overlay position='top-1 right-1/2 translate-x-1/2' className='cc-icons'>
@@ -61,7 +64,7 @@ function RSFormToolbar({ modified, anonymous, subscribed, onSubmit, onDestroy }:
         <MiniButton
           title='Удалить схему'
           icon={<IconDestroy size='1.25rem' className='icon-red' />}
-          disabled={!controller.isContentEditable || controller.isProcessing}
+          disabled={!controller.isContentEditable || controller.isProcessing || accessLevel < UserLevel.OWNER}
           onClick={onDestroy}
         />
       ) : null}

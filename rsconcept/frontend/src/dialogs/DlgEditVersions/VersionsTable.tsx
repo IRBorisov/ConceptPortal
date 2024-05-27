@@ -8,14 +8,14 @@ import { IconRemove } from '@/components/Icons';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
 import MiniButton from '@/components/ui/MiniButton';
 import { useConceptOptions } from '@/context/OptionsContext';
-import { IVersionInfo } from '@/models/library';
+import { IVersionInfo, VersionID } from '@/models/library';
 
 interface VersionsTableProps {
   processing: boolean;
   items: IVersionInfo[];
-  selected?: number;
-  onDelete: (versionID: number) => void;
-  onSelect: (versionID: number) => void;
+  selected?: VersionID;
+  onDelete: (versionID: VersionID) => void;
+  onSelect: (versionID: VersionID) => void;
 }
 
 const columnHelper = createColumnHelper<IVersionInfo>();

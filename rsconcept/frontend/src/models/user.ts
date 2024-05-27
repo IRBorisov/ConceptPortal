@@ -3,11 +3,16 @@
  */
 
 /**
+ * Represents {@link User} identifier type.
+ */
+export type UserID = number;
+
+/**
  * Represents user detailed information.
  * Some information should only be accessible to authorized users
  */
 export interface IUser {
-  id: number;
+  id: UserID;
   username: string;
   is_staff: boolean;
   email: string;
@@ -19,7 +24,7 @@ export interface IUser {
  * Represents CurrentUser information.
  */
 export interface ICurrentUser extends Pick<IUser, 'id' | 'username' | 'is_staff'> {
-  subscriptions: number[];
+  subscriptions: UserID[];
 }
 
 /**
@@ -82,12 +87,22 @@ export interface IUserUpdatePassword {
  * Represents target {@link User}.
  */
 export interface ITargetUser {
-  user: number;
+  user: UserID;
 }
 
 /**
  * Represents target multiple {@link User}.
  */
 export interface ITargetUsers {
-  users: number[];
+  users: UserID[];
+}
+
+/**
+ * Represents user access mode.
+ */
+export enum UserLevel {
+  READER = 0,
+  EDITOR,
+  OWNER,
+  ADMIN
 }

@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { useMemo } from 'react';
 
-import { IVersionInfo } from '@/models/library';
+import { IVersionInfo, VersionID } from '@/models/library';
 import { labelVersion } from '@/utils/labels';
 
 import { CProps } from '../props';
@@ -12,8 +12,8 @@ import SelectSingle from '../ui/SelectSingle';
 interface SelectVersionProps extends CProps.Styling {
   id?: string;
   items?: IVersionInfo[];
-  value?: number;
-  onSelectValue: (newValue?: number) => void;
+  value?: VersionID;
+  onSelectValue: (newValue?: VersionID) => void;
 }
 
 function SelectVersion({ id, className, items, value, onSelectValue, ...restProps }: SelectVersionProps) {

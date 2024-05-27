@@ -3,7 +3,7 @@
 import { useEffect, useLayoutEffect, useState } from 'react';
 
 import PickConstituenta from '@/components/select/PickConstituenta';
-import SelectGrammeme from '@/components/select/SelectGrammeme';
+import SelectMultiGrammeme from '@/components/select/SelectMultiGrammeme';
 import Label from '@/components/ui/Label';
 import TextInput from '@/components/ui/TextInput';
 import AnimateFade from '@/components/wrap/AnimateFade';
@@ -99,7 +99,7 @@ function EntityTab({ initial, schema, setIsValid, setReference }: EntityTabProps
 
       <div className='flex items-center gap-4'>
         <Label text='Словоформа' />
-        <SelectGrammeme
+        <SelectMultiGrammeme
           id='dlg_reference_grammemes'
           placeholder='Выберите граммемы'
           className='flex-grow'

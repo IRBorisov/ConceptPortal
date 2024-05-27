@@ -12,8 +12,7 @@ import {
   GraphColoring,
   GraphSizing,
   HelpTopic,
-  LibraryFilterStrategy,
-  UserAccessMode
+  LibraryFilterStrategy
 } from '@/models/miscellaneous';
 import { CstClass, CstType, ExpressionStatus, IConstituenta, IRSForm } from '@/models/rsform';
 import {
@@ -24,6 +23,7 @@ import {
   RSErrorType,
   TokenID
 } from '@/models/rslang';
+import { UserLevel } from '@/models/user';
 
 /**
  * Generates description for {@link IConstituenta}.
@@ -773,29 +773,32 @@ export function describeRSError(error: IRSErrorDescription): string {
 }
 
 /**
- * Retrieves label for {@link UserAccessMode}.
+ * Retrieves label for {@link UserLevel}.
  */
-export function labelAccessMode(mode: UserAccessMode): string {
+export function labelAccessMode(mode: UserLevel): string {
   // prettier-ignore
   switch (mode) {
-    case UserAccessMode.READER:     return 'Читатель';
-    case UserAccessMode.OWNER:      return 'Владелец';
-    case UserAccessMode.ADMIN:      return 'Администратор';
+    case UserLevel.READER:     return 'Читатель';
+    case UserLevel.EDITOR:     return 'Редактор';
+    case UserLevel.OWNER:      return 'Владелец';
+    case UserLevel.ADMIN:      return 'Администратор';
   }
 }
 
 /**
- * Retrieves description for {@link UserAccessMode}.
+ * Retrieves description for {@link UserLevel}.
  */
-export function describeAccessMode(mode: UserAccessMode): string {
+export function describeAccessMode(mode: UserLevel): string {
   // prettier-ignore
   switch (mode) {
-    case UserAccessMode.READER:
+    case UserLevel.READER:
       return 'Режим запрещает редактирование';
-    case UserAccessMode.OWNER:
-      return 'Режим редактирования владельцем';
-    case UserAccessMode.ADMIN:
-      return 'Режим редактирования администратором';
+    case UserLevel.EDITOR:
+      return 'Режим редактирования';
+    case UserLevel.OWNER:
+      return 'Режим владельца';
+    case UserLevel.ADMIN:
+      return 'Режим администратора';
   }
 }
 

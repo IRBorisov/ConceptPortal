@@ -6,6 +6,7 @@ import {
   IconDestroy,
   IconDownload,
   IconEdit2,
+  IconEditor,
   IconMenu,
   IconOwner,
   IconReader,
@@ -75,16 +76,21 @@ function HelpRSFormMenu() {
             <IconArchive size='1.25rem' className='inline-icon' /> просмотр архивной версии. Переход к актуальной версии
           </li>
           <li>
-            <IconReader size='1.25rem' className='inline-icon' /> режим "только чтение"
+            <IconReader size='1.25rem' className='inline-icon' /> режим Читатель
           </li>
           <li>
-            <IconOwner size='1.25rem' className='inline-icon' /> режим "редактор"
+            <IconEditor size='1.25rem' className='inline-icon' /> режим Редактор
           </li>
           <li>
-            <IconAdmin size='1.25rem' className='inline-icon' /> режим "администратор"
+            <IconOwner size='1.25rem' className='inline-icon' /> режим Владелец
+          </li>
+          <li>
+            <IconAdmin size='1.25rem' className='inline-icon' /> режим Администратор
           </li>
         </div>
       </div>
+
+      <p>Нижестоящие в списке режимы работы включают все права и доступные функции вышестоящих</p>
 
       <p>
         <IconEdit2 size='1.25rem' className='inline-icon icon-green' /> операции над концептуальной схемой описаны в{' '}

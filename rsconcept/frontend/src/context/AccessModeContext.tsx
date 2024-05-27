@@ -2,11 +2,11 @@
 
 import { createContext, useContext, useState } from 'react';
 
-import { UserAccessMode } from '@/models/miscellaneous';
+import { UserLevel } from '@/models/user';
 
 interface IAccessModeContext {
-  mode: UserAccessMode;
-  setMode: React.Dispatch<React.SetStateAction<UserAccessMode>>;
+  accessLevel: UserLevel;
+  setAccessLevel: React.Dispatch<React.SetStateAction<UserLevel>>;
 }
 
 const AccessContext = createContext<IAccessModeContext | null>(null);
@@ -23,7 +23,7 @@ interface AccessModeStateProps {
 }
 
 export const AccessModeState = ({ children }: AccessModeStateProps) => {
-  const [mode, setMode] = useState<UserAccessMode>(UserAccessMode.READER);
+  const [accessLevel, setAccessLevel] = useState<UserLevel>(UserLevel.READER);
 
-  return <AccessContext.Provider value={{ mode, setMode }}>{children}</AccessContext.Provider>;
+  return <AccessContext.Provider value={{ accessLevel, setAccessLevel }}>{children}</AccessContext.Provider>;
 };

@@ -3,15 +3,6 @@
  */
 
 /**
- * Represents user access mode.
- */
-export enum UserAccessMode {
-  READER = 0,
-  OWNER,
-  ADMIN
-}
-
-/**
  * Represents graph dependency mode.
  */
 export enum DependencyMode {

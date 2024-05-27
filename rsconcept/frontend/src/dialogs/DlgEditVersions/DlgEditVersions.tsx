@@ -8,15 +8,15 @@ import Modal from '@/components/ui/Modal';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
 import { useRSForm } from '@/context/RSFormContext';
-import { IVersionData, IVersionInfo } from '@/models/library';
+import { IVersionData, IVersionInfo, VersionID } from '@/models/library';
 
 import VersionsTable from './VersionsTable';
 
 interface DlgEditVersionsProps {
   hideWindow: () => void;
   versions: IVersionInfo[];
-  onDelete: (versionID: number) => void;
-  onUpdate: (versionID: number, data: IVersionData) => void;
+  onDelete: (versionID: VersionID) => void;
+  onUpdate: (versionID: VersionID, data: IVersionData) => void;
 }
 
 function DlgEditVersions({ hideWindow, versions, onDelete, onUpdate }: DlgEditVersionsProps) {

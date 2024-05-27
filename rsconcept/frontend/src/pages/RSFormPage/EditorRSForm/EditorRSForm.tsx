@@ -2,7 +2,6 @@
 
 import clsx from 'clsx';
 
-import InfoLibraryItem from '@/components/info/InfoLibraryItem';
 import Divider from '@/components/ui/Divider';
 import FlexColumn from '@/components/ui/FlexColumn';
 import AnimateFade from '@/components/wrap/AnimateFade';
@@ -10,6 +9,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useRSForm } from '@/context/RSFormContext';
 import { globals } from '@/utils/constants';
 
+import EditorLibraryItem from './EditorLibraryItem';
 import FormRSForm from './FormRSForm';
 import RSFormStats from './RSFormStats';
 import RSFormToolbar from './RSFormToolbar';
@@ -56,7 +56,7 @@ function EditorRSForm({ isModified, onDestroy, setIsModified }: EditorRSFormProp
 
           <Divider margins='my-1' />
 
-          <InfoLibraryItem item={schema} />
+          <EditorLibraryItem item={schema} isModified={isModified} />
         </FlexColumn>
 
         <RSFormStats stats={schema?.stats} />

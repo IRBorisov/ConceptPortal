@@ -21,14 +21,14 @@ import DlgConstituentaTemplate from '@/dialogs/DlgConstituentaTemplate';
 import DlgCreateCst from '@/dialogs/DlgCreateCst';
 import DlgCreateVersion from '@/dialogs/DlgCreateVersion';
 import DlgDeleteCst from '@/dialogs/DlgDeleteCst';
+import DlgEditEditors from '@/dialogs/DlgEditEditors';
 import DlgEditVersions from '@/dialogs/DlgEditVersions';
 import DlgEditWordForms from '@/dialogs/DlgEditWordForms';
 import DlgInlineSynthesis from '@/dialogs/DlgInlineSynthesis';
 import DlgRenameCst from '@/dialogs/DlgRenameCst';
 import DlgSubstituteCst from '@/dialogs/DlgSubstituteCst';
 import DlgUploadRSForm from '@/dialogs/DlgUploadRSForm';
-import { IVersionData } from '@/models/library';
-import { UserAccessMode } from '@/models/miscellaneous';
+import { IVersionData, VersionID } from '@/models/library';
 import {
   ConstituentaID,
   CstType,
@@ -45,6 +45,7 @@ import {
   TermForm
 } from '@/models/rsform';
 import { generateAlias } from '@/models/rsformAPI';
+import { UserID, UserLevel } from '@/models/user';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 import { promptUnsaved } from '@/utils/utils';
 
@@ -58,13 +59,17 @@ interface IRSEditContext {
   canProduceStructure: boolean;
   nothingSelected: boolean;
 
+  setOwner: (newOwner: UserID) => void;
+  promptEditors: () => void;
+  toggleSubscribe: () => void;
+
   setSelected: React.Dispatch<React.SetStateAction<ConstituentaID[]>>;
   select: (target: ConstituentaID) => void;
   deselect: (target: ConstituentaID) => void;
   toggleSelect: (target: ConstituentaID) => void;
   deselectAll: () => void;
 
-  viewVersion: (version?: number, newTab?: boolean) => void;
+  viewVersion: (version?: VersionID, newTab?: boolean) => void;
   createVersion: () => void;
   restoreVersion: () => void;
   editVersions: () => void;
@@ -81,7 +86,6 @@ interface IRSEditContext {
   promptClone: () => void;
   promptUpload: () => void;
   share: () => void;
-  toggleSubscribe: () => void;
   download: () => void;
 
   reindex: () => void;
@@ -123,20 +127,17 @@ export const RSEditState = ({
   const router = useConceptNavigation();
   const { user } = useAuth();
   const { adminMode } = useConceptOptions();
-  const { mode, setMode } = useAccessMode();
+  const { accessLevel, setAccessLevel } = useAccessMode();
   const model = useRSForm();
 
-  const isMutable = useMemo(() => {
-    return (
-      mode !== UserAccessMode.READER && ((model.isOwned || (mode === UserAccessMode.ADMIN && user?.is_staff)) ?? false)
-    );
-  }, [user?.is_staff, mode, model.isOwned]);
+  const isMutable = useMemo(() => accessLevel > UserLevel.READER, [accessLevel]);
   const isContentEditable = useMemo(() => isMutable && !model.isArchive, [isMutable, model.isArchive]);
   const nothingSelected = useMemo(() => selected.length === 0, [selected]);
 
   const [showUpload, setShowUpload] = useState(false);
   const [showClone, setShowClone] = useState(false);
   const [showDeleteCst, setShowDeleteCst] = useState(false);
+  const [showEditEditors, setShowEditEditors] = useState(false);
   const [showEditTerm, setShowEditTerm] = useState(false);
   const [showSubstitute, setShowSubstitute] = useState(false);
   const [showCreateVersion, setShowCreateVersion] = useState(false);
@@ -154,20 +155,27 @@ export const RSEditState = ({
 
   useLayoutEffect(
     () =>
-      setMode(prev => {
-        if (user?.is_staff && (prev === UserAccessMode.ADMIN || adminMode)) {
-          return UserAccessMode.ADMIN;
+      setAccessLevel(prev => {
+        if (
+          prev === UserLevel.EDITOR &&
+          (model.isOwned || user?.is_staff || (user && model.schema?.editors.includes(user.id)))
+        ) {
+          return UserLevel.EDITOR;
+        } else if (user?.is_staff && (prev === UserLevel.ADMIN || adminMode)) {
+          return UserLevel.ADMIN;
         } else if (model.isOwned) {
-          return UserAccessMode.OWNER;
+          return UserLevel.OWNER;
+        } else if (user?.id && model.schema?.editors.includes(user?.id)) {
+          return UserLevel.EDITOR;
         } else {
-          return UserAccessMode.READER;
+          return UserLevel.READER;
         }
       }),
-    [model.schema, setMode, model.isOwned, user, adminMode]
+    [model.schema, setAccessLevel, model.isOwned, user, adminMode]
   );
 
   const viewVersion = useCallback(
-    (version?: number, newTab?: boolean) => router.push(urls.schema(model.schemaID, version), newTab),
+    (version?: VersionID, newTab?: boolean) => router.push(urls.schema(model.schemaID, version), newTab),
     [router, model]
   );
 
@@ -270,7 +278,7 @@ export const RSEditState = ({
   );
 
   const handleDeleteVersion = useCallback(
-    (versionID: number) => {
+    (versionID: VersionID) => {
       if (!model.schema) {
         return;
       }
@@ -285,7 +293,7 @@ export const RSEditState = ({
   );
 
   const handleUpdateVersion = useCallback(
-    (versionID: number, data: IVersionData) => {
+    (versionID: VersionID, data: IVersionData) => {
       if (!model.schema) {
         return;
       }
@@ -473,6 +481,10 @@ export const RSEditState = ({
     setShowClone(true);
   }, [isModified]);
 
+  const promptEditors = useCallback(() => {
+    setShowEditEditors(true);
+  }, []);
+
   const download = useCallback(() => {
     if (isModified && !promptUnsaved()) {
       return;
@@ -504,6 +516,20 @@ export const RSEditState = ({
     }
   }, [model]);
 
+  const setOwner = useCallback(
+    (newOwner: UserID) => {
+      model.setOwner(newOwner, () => toast.success('Владелец обновлен'));
+    },
+    [model]
+  );
+
+  const setEditors = useCallback(
+    (newEditors: UserID[]) => {
+      model.setEditors(newEditors, () => toast.success('Редакторы обновлены'));
+    },
+    [model]
+  );
+
   return (
     <RSEditContext.Provider
       value={{
@@ -514,6 +540,10 @@ export const RSEditState = ({
         isProcessing: model.processing,
         canProduceStructure,
         nothingSelected,
+
+        toggleSubscribe,
+        setOwner,
+        promptEditors,
 
         setSelected: setSelected,
         select: (target: ConstituentaID) => setSelected(prev => [...prev, target]),
@@ -540,7 +570,6 @@ export const RSEditState = ({
         promptUpload: () => setShowUpload(true),
         download,
         share,
-        toggleSubscribe,
 
         reindex,
         reorder,
@@ -617,6 +646,13 @@ export const RSEditState = ({
               hideWindow={() => setShowEditVersions(false)}
               onDelete={handleDeleteVersion}
               onUpdate={handleUpdateVersion}
+            />
+          ) : null}
+          {showEditEditors ? (
+            <DlgEditEditors
+              hideWindow={() => setShowEditEditors(false)}
+              editors={model.schema.editors}
+              setEditors={setEditors}
             />
           ) : null}
           {showInlineSynthesis ? (

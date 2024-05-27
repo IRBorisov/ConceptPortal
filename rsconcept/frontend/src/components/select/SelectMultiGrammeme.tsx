@@ -5,14 +5,17 @@ import { Grammeme } from '@/models/language';
 import { getCompatibleGrams } from '@/models/languageAPI';
 import { compareGrammemeOptions, IGrammemeOption, SelectorGrammemes } from '@/utils/selectors';
 
-interface SelectGrammemeProps extends Omit<SelectMultiProps<IGrammemeOption>, 'value' | 'onChange'> {
+import { CProps } from '../props';
+
+interface SelectMultiGrammemeProps
+  extends Omit<SelectMultiProps<IGrammemeOption>, 'value' | 'onChange'>,
+    CProps.Styling {
   value: IGrammemeOption[];
   setValue: React.Dispatch<React.SetStateAction<IGrammemeOption[]>>;
-  className?: string;
   placeholder?: string;
 }
 
-function SelectGrammeme({ value, setValue, ...restProps }: SelectGrammemeProps) {
+function SelectMultiGrammeme({ value, setValue, ...restProps }: SelectMultiGrammemeProps) {
   const [options, setOptions] = useState<IGrammemeOption[]>([]);
 
   useEffect(() => {
@@ -32,4 +35,4 @@ function SelectGrammeme({ value, setValue, ...restProps }: SelectGrammemeProps) 
   );
 }
 
-export default SelectGrammeme;
+export default SelectMultiGrammeme;

@@ -2,9 +2,9 @@
 
 import { useCallback, useState } from 'react';
 
+import { DataCallback, postGenerateLexeme, postInflectText, postParseText } from '@/app/backendAPI';
 import { ErrorData } from '@/components/info/InfoError';
 import { ILexemeData, ITextRequest, ITextResult, IWordFormPlain } from '@/models/language';
-import { DataCallback, postGenerateLexeme, postInflectText, postParseText } from '@/app/backendAPI';
 
 function useConceptText() {
   const [loading, setLoading] = useState(false);

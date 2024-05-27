@@ -5,20 +5,23 @@ import { useMemo, useState } from 'react';
 
 import Checkbox from '@/components/ui/Checkbox';
 import Modal, { ModalProps } from '@/components/ui/Modal';
-import { IRSForm } from '@/models/rsform';
+import { ConstituentaID, IRSForm } from '@/models/rsform';
 import { prefixes } from '@/utils/constants';
 
 import ConstituentsList from './ConstituentsList';
 
 interface DlgDeleteCstProps extends Pick<ModalProps, 'hideWindow'> {
-  selected: number[];
-  onDelete: (items: number[]) => void;
+  selected: ConstituentaID[];
+  onDelete: (items: ConstituentaID[]) => void;
   schema: IRSForm;
 }
 
 function DlgDeleteCst({ hideWindow, selected, schema, onDelete }: DlgDeleteCstProps) {
   const [expandOut, setExpandOut] = useState(false);
-  const expansion: number[] = useMemo(() => schema.graph.expandAllOutputs(selected), [selected, schema.graph]);
+  const expansion: ConstituentaID[] = useMemo(
+    () => schema.graph.expandAllOutputs(selected), // prettier: split-lines
+    [selected, schema.graph]
+  );
 
   function handleSubmit() {
     hideWindow();

@@ -5,7 +5,7 @@ import { useLayoutEffect, useState } from 'react';
 
 import { IconAccept, IconMoveDown, IconMoveLeft, IconMoveRight, IconRemove } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
-import SelectGrammeme from '@/components/select/SelectGrammeme';
+import SelectMultiGrammeme from '@/components/select/SelectMultiGrammeme';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
 import Modal from '@/components/ui/Modal';
@@ -170,7 +170,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
             onClick={handleInflect}
           />
         </div>
-        <SelectGrammeme
+        <SelectMultiGrammeme
           placeholder='Выберите граммемы'
           className='w-[15rem]'
           value={inputGrams}

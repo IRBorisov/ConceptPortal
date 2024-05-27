@@ -9,6 +9,7 @@ import {
   getTRSFile,
   patchConstituenta,
   patchDeleteConstituenta,
+  patchEditorsSet as patchSetEditors,
   patchInlineSynthesis,
   patchLibraryItem,
   patchMoveConstituenta,
@@ -17,6 +18,7 @@ import {
   patchResetAliases,
   patchRestoreOrder,
   patchRestoreVersion,
+  patchSetOwner,
   patchSubstituteConstituents,
   patchUploadTRS,
   patchVersion,
@@ -26,7 +28,7 @@ import {
 } from '@/app/backendAPI';
 import { type ErrorData } from '@/components/info/InfoError';
 import useRSFormDetails from '@/hooks/useRSFormDetails';
-import { ILibraryItem, IVersionData } from '@/models/library';
+import { ILibraryItem, IVersionData, VersionID } from '@/models/library';
 import { ILibraryUpdateData } from '@/models/library';
 import {
   ConstituentaID,
@@ -43,6 +45,7 @@ import {
   IRSFormUploadData,
   ITargetCst
 } from '@/models/rsform';
+import { UserID } from '@/models/user';
 
 import { useAuth } from './AuthContext';
 import { useLibrary } from './LibraryContext';
@@ -62,10 +65,13 @@ interface IRSFormContext {
   isSubscribed: boolean;
 
   update: (data: ILibraryUpdateData, callback?: DataCallback<ILibraryItem>) => void;
-  subscribe: (callback?: () => void) => void;
-  unsubscribe: (callback?: () => void) => void;
   download: (callback: DataCallback<Blob>) => void;
   upload: (data: IRSFormUploadData, callback: () => void) => void;
+
+  subscribe: (callback?: () => void) => void;
+  unsubscribe: (callback?: () => void) => void;
+  setOwner: (newOwner: UserID, callback?: () => void) => void;
+  setEditors: (newEditors: UserID[], callback?: () => void) => void;
 
   resetAliases: (callback: () => void) => void;
   restoreOrder: (callback: () => void) => void;
@@ -79,9 +85,9 @@ interface IRSFormContext {
   cstDelete: (data: IConstituentaList, callback?: () => void) => void;
   cstMoveTo: (data: ICstMovetoData, callback?: () => void) => void;
 
-  versionCreate: (data: IVersionData, callback?: (version: number) => void) => void;
-  versionUpdate: (target: number, data: IVersionData, callback?: () => void) => void;
-  versionDelete: (target: number, callback?: () => void) => void;
+  versionCreate: (data: IVersionData, callback?: (version: VersionID) => void) => void;
+  versionUpdate: (target: VersionID, data: IVersionData, callback?: () => void) => void;
+  versionDelete: (target: VersionID, callback?: () => void) => void;
   versionRestore: (target: string, callback?: () => void) => void;
 }
 
@@ -226,6 +232,50 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
       });
     },
     [schemaID, setError, schema, user]
+  );
+
+  const setOwner = useCallback(
+    (newOwner: UserID, callback?: () => void) => {
+      if (!schema) {
+        return;
+      }
+      setError(undefined);
+      patchSetOwner(schemaID, {
+        data: {
+          user: newOwner
+        },
+        showError: true,
+        setLoading: setProcessing,
+        onError: setError,
+        onSuccess: () => {
+          schema.owner = newOwner;
+          if (callback) callback();
+        }
+      });
+    },
+    [schemaID, setError, schema]
+  );
+
+  const setEditors = useCallback(
+    (newEditors: UserID[], callback?: () => void) => {
+      if (!schema) {
+        return;
+      }
+      setError(undefined);
+      patchSetEditors(schemaID, {
+        data: {
+          users: newEditors
+        },
+        showError: true,
+        setLoading: setProcessing,
+        onError: setError,
+        onSuccess: () => {
+          schema.editors = newEditors;
+          if (callback) callback();
+        }
+      });
+    },
+    [schemaID, setError, schema]
   );
 
   const resetAliases = useCallback(
@@ -522,8 +572,12 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         resetAliases,
         produceStructure,
         inlineSynthesis,
+
         subscribe,
         unsubscribe,
+        setOwner,
+        setEditors,
+
         cstUpdate,
         cstCreate,
         cstRename,

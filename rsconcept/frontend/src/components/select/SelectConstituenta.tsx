@@ -15,9 +15,17 @@ interface SelectConstituentaProps extends CProps.Styling {
   items?: IConstituenta[];
   value?: IConstituenta;
   onSelectValue: (newValue?: IConstituenta) => void;
+  placeholder?: string;
 }
 
-function SelectConstituenta({ className, items, value, onSelectValue, ...restProps }: SelectConstituentaProps) {
+function SelectConstituenta({
+  className,
+  items,
+  value,
+  onSelectValue,
+  placeholder = 'Выберите конституенту',
+  ...restProps
+}: SelectConstituentaProps) {
   const options = useMemo(() => {
     return (
       items?.map(cst => ({
@@ -39,10 +47,11 @@ function SelectConstituenta({ className, items, value, onSelectValue, ...restPro
     <SelectSingle
       className={clsx('text-ellipsis', className)}
       options={options}
-      value={{ value: value?.id, label: value ? `${value.alias}: ${describeConstituentaTerm(value)}` : '' }}
+      value={value ? { value: value.id, label: `${value.alias}: ${describeConstituentaTerm(value)}` } : undefined}
       onChange={data => onSelectValue(items?.find(cst => cst.id === data?.value))}
       // @ts-expect-error: TODO: use type definitions from react-select in filter object
       filterOption={filter}
+      placeholder={placeholder}
       {...restProps}
     />
   );
