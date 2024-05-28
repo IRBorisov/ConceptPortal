@@ -17,15 +17,15 @@ const columnHelper = createColumnHelper<IUserInfo>();
 function UsersTable({ items, onDelete }: UsersTableProps) {
   const columns = useMemo(
     () => [
-      columnHelper.accessor('first_name', {
-        id: 'first_name',
-        size: 400,
-        header: 'Имя'
-      }),
       columnHelper.accessor('last_name', {
         id: 'last_name',
         size: 400,
         header: 'Фамилия'
+      }),
+      columnHelper.accessor('first_name', {
+        id: 'first_name',
+        size: 400,
+        header: 'Имя'
       }),
       columnHelper.display({
         id: 'actions',
