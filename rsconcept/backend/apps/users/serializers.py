@@ -1,4 +1,6 @@
 ''' Serializers: User profile and Authorization. '''
+from urllib import request
+
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
@@ -99,6 +101,17 @@ class UserSerializer(serializers.ModelSerializer):
             'last_name',
         ]
 
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        if 'email' in attrs:
+            maybe_user = models.User.objects.filter(email=attrs['email'])
+            if maybe_user.exists():
+                if maybe_user.count() > 1 or maybe_user.first().pk != self.context['request'].user.pk:
+                    raise serializers.ValidationError({
+                        'email': msg.emailAlreadyTaken()
+                    })
+        return attrs
+
 
 class ChangePasswordSerializer(serializers.Serializer):
     ''' Serializer: Change password. '''
@@ -130,11 +143,17 @@ class SignupSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({
                 'password': msg.passwordsNotMatch()
             })
+        if models.User.objects.filter(email=attrs['email']).exists():
+            raise serializers.ValidationError({
+                'email': msg.emailAlreadyTaken()
+            })
         return attrs
 
     def create(self, validated_data):
         user = models.User.objects.create_user(
-            validated_data['username'],  validated_data['email'],  validated_data['password']
+            username=validated_data['username'],
+            email=validated_data['email'],
+            password=validated_data['password']
         )
         user.first_name = validated_data['first_name']
         user.last_name = validated_data['last_name']

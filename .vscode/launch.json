@@ -33,12 +33,12 @@
       "args": []
     },
     {
-      "name": "BE-DebugTest",
+      "name": "BE-DebugTestFile",
       "type": "debugpy",
       "request": "launch",
       "cwd": "${workspaceFolder}/rsconcept/backend",
       "program": "${workspaceFolder}/rsconcept/backend/manage.py",
-      "args": ["test"],
+      "args": ["test", "-k", "${fileBasenameNoExtension}"],
       "django": true
     },
     {

@@ -1,9 +1,7 @@
 ''' Testing API: Operations. '''
-from rest_framework import status
-
 from apps.rsform.models import Constituenta, CstType, RSForm
 
-from .EndpointTester import EndpointTester, decl_endpoint
+from ..EndpointTester import EndpointTester, decl_endpoint
 
 
 class TestInlineSynthesis(EndpointTester):
@@ -26,20 +24,20 @@ class TestInlineSynthesis(EndpointTester):
             'items': [],
             'substitutions': []
         }
-        self.assertForbidden(data)
+        self.executeForbidden(data)
 
         data['receiver'] = invalid_id
-        self.assertBadData(data)
+        self.executeBadData(data)
 
         data['receiver'] = self.schema1.item.pk
         data['source'] = invalid_id
-        self.assertBadData(data)
+        self.executeBadData(data)
 
         data['source'] = self.schema1.item.pk
-        self.assertOK(data)
+        self.executeOK(data)
 
         data['items'] = [invalid_id]
-        self.assertBadData(data)
+        self.executeBadData(data)
 
 
     def test_inline_synthesis(self):
@@ -70,8 +68,7 @@ class TestInlineSynthesis(EndpointTester):
                 }
             ]
         }
-        response = self.execute(data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.executeOK(data)
         result = {item['alias']: item for item in response.data['items']}
         self.assertEqual(len(result), 6)
         self.assertEqual(result['X2']['term_raw'], ks1_x2.term_raw)

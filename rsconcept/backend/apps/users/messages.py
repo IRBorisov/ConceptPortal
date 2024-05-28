@@ -8,3 +8,7 @@ def passwordAuthFailed():
 
 def passwordsNotMatch():
     return 'Введенные пароли не совпадают'
+
+
+def emailAlreadyTaken():
+    return 'Пользователь с данным email уже существует'

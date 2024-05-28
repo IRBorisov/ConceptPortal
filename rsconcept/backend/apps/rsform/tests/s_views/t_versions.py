@@ -8,7 +8,7 @@ from rest_framework import status
 
 from apps.rsform.models import Constituenta, RSForm
 
-from .EndpointTester import EndpointTester, decl_endpoint
+from ..EndpointTester import EndpointTester, decl_endpoint
 
 
 class TestVersionViews(EndpointTester):
@@ -31,12 +31,11 @@ class TestVersionViews(EndpointTester):
         invalid_id = 1338
         data = {'version': '1.0.0', 'description': 'test'}
 
-        self.assertNotFound(data, schema=invalid_id)
-        self.assertForbidden(data, schema=self.unowned.pk)
-        self.assertBadData(invalid_data, schema=self.owned.pk)
+        self.executeNotFound(data, schema=invalid_id)
+        self.executeForbidden(data, schema=self.unowned.pk)
+        self.executeBadData(invalid_data, schema=self.owned.pk)
 
-        response = self.execute(data, schema=self.owned.pk)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        response = self.executeCreated(data, schema=self.owned.pk)
         self.assertTrue('version' in response.data)
         self.assertTrue('schema' in response.data)
         self.assertTrue(response.data['version'] in [v['id'] for v in response.data['schema']['versions']])
@@ -47,18 +46,17 @@ class TestVersionViews(EndpointTester):
         version_id = self._create_version({'version': '1.0.0', 'description': 'test'})
         invalid_id = version_id + 1337
 
-        self.assertNotFound(schema=invalid_id, version=invalid_id)
-        self.assertNotFound(schema=self.owned.pk, version=invalid_id)
-        self.assertNotFound(schema=invalid_id, version=version_id)
-        self.assertNotFound(schema=self.unowned.pk, version=version_id)
+        self.executeNotFound(schema=invalid_id, version=invalid_id)
+        self.executeNotFound(schema=self.owned.pk, version=invalid_id)
+        self.executeNotFound(schema=invalid_id, version=version_id)
+        self.executeNotFound(schema=self.unowned.pk, version=version_id)
 
         self.owned.alias = 'NewName'
         self.owned.save()
         self.x1.alias = 'X33'
         self.x1.save()
 
-        response = self.execute(schema=self.owned.pk, version=version_id)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.executeOK(schema=self.owned.pk, version=version_id)
         self.assertNotEqual(response.data['alias'], self.owned.alias)
         self.assertNotEqual(response.data['items'][0]['alias'], self.x1.alias)
         self.assertEqual(response.data['version'], version_id)
@@ -70,26 +68,25 @@ class TestVersionViews(EndpointTester):
         version_id = self._create_version(data)
         invalid_id = version_id + 1337
 
-        self.assertNotFound(version=invalid_id)
+        self.executeNotFound(version=invalid_id)
 
         self.set_params(version=version_id)
         self.logout()
-        response = self.execute()
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.executeOK()
         self.assertEqual(response.data['version'], data['version'])
         self.assertEqual(response.data['description'], data['description'])
         self.assertEqual(response.data['item'], self.owned.pk)
 
         data = {'version': '1.2.0', 'description': 'test1'}
         self.method = 'patch'
-        self.assertForbidden(data)
+        self.executeForbidden(data)
 
         self.method = 'delete'
-        self.assertForbidden()
+        self.executeForbidden()
 
         self.client.force_authenticate(user=self.user)
         self.method = 'patch'
-        self.assertOK(data)
+        self.executeOK(data)
         response = self.get()
         self.assertEqual(response.data['version'], data['version'])
         self.assertEqual(response.data['description'], data['description'])
@@ -113,8 +110,7 @@ class TestVersionViews(EndpointTester):
         a1.definition_formal = 'X1=X2'
         a1.save()
 
-        response = self.get(schema=self.owned.pk, version=version_id)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.executeOK(schema=self.owned.pk, version=version_id)
         loaded_a1 = response.data['items'][1]
         self.assertEqual(loaded_a1['definition_formal'], 'X1=X1')
         self.assertEqual(loaded_a1['parse']['status'], 'verified')
@@ -123,11 +119,10 @@ class TestVersionViews(EndpointTester):
     @decl_endpoint('/api/versions/{version}/export-file', method='get')
     def test_export_version(self):
         invalid_id = 1338
-        self.assertNotFound(version=invalid_id)
+        self.executeNotFound(version=invalid_id)
 
         version_id = self._create_version({'version': '1.0.0', 'description': 'test'})
-        response = self.get(version=version_id)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.executeOK(version=version_id)
         self.assertEqual(
             response.headers['Content-Disposition'],
             f'attachment; filename={self.owned.alias}.trs'
@@ -156,10 +151,9 @@ class TestVersionViews(EndpointTester):
         x3.order = 1
         x3.save()
 
-        self.assertNotFound(version=invalid_id)
+        self.executeNotFound(version=invalid_id)
 
-        response = self.execute(version=version_id)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.executeOK(version=version_id)
         x1.refresh_from_db()
         x2.refresh_from_db()
         self.assertEqual(len(response.data['items']), 3)

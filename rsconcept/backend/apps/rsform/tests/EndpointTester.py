@@ -26,7 +26,16 @@ class EndpointTester(APITestCase):
 
     def setUp(self):
         self.factory = APIRequestFactory()
-        self.user = User.objects.create(username='UserTest')
+        self.user = User.objects.create_user(
+            username='UserTest',
+            email='blank@test.com',
+            password='password'
+        )
+        self.user2 = User.objects.create_user(
+            username='UserTest2',
+            email='another@test.com',
+            password='password'
+        )
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
 
@@ -77,30 +86,6 @@ class EndpointTester(APITestCase):
         else:
             return self.client.delete(self.endpoint)
 
-    def assertOK(self, data=None, **kwargs):
-        response = self.execute(data, **kwargs)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def assertCreated(self, data=None, **kwargs):
-        response = self.execute(data, **kwargs)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-    def assertBadData(self, data=None, **kwargs):
-        response = self.execute(data, **kwargs)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def assertForbidden(self, data=None, **kwargs):
-        response = self.execute(data, **kwargs)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def assertNotModified(self, data=None, **kwargs):
-        response = self.execute(data, **kwargs)
-        self.assertEqual(response.status_code, status.HTTP_304_NOT_MODIFIED)
-
-    def assertNotFound(self, data=None, **kwargs):
-        response = self.execute(data, **kwargs)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
     def execute(self, data=None, **kwargs):
         if self.method == 'get':
             return self.get(**kwargs)
@@ -113,6 +98,46 @@ class EndpointTester(APITestCase):
         if self.method == 'delete':
             return self.delete(data, **kwargs)
         return None
+
+    def executeOK(self, data=None, **kwargs):
+        response = self.execute(data, **kwargs)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        return response
+
+    def executeCreated(self, data=None, **kwargs):
+        response = self.execute(data, **kwargs)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        return response
+
+    def executeAccepted(self, data=None, **kwargs):
+        response = self.execute(data, **kwargs)
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+        return response
+
+    def executeNoContent(self, data=None, **kwargs):
+        response = self.execute(data, **kwargs)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        return response
+
+    def executeBadData(self, data=None, **kwargs):
+        response = self.execute(data, **kwargs)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        return response
+
+    def executeForbidden(self, data=None, **kwargs):
+        response = self.execute(data, **kwargs)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        return response
+
+    def executeNotModified(self, data=None, **kwargs):
+        response = self.execute(data, **kwargs)
+        self.assertEqual(response.status_code, status.HTTP_304_NOT_MODIFIED)
+        return response
+
+    def executeNotFound(self, data=None, **kwargs):
+        response = self.execute(data, **kwargs)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        return response
 
 
 def _resolve_url(url: str, **kwargs) -> str:
