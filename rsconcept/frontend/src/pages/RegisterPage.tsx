@@ -1,16 +1,18 @@
 'use client';
 
+import axios from 'axios';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { urls } from '@/app/urls';
 import { IconHelp } from '@/components/Icons';
-import InfoError from '@/components/info/InfoError';
+import InfoError, { ErrorData } from '@/components/info/InfoError';
 import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/Checkbox';
 import FlexColumn from '@/components/ui/FlexColumn';
 import Overlay from '@/components/ui/Overlay';
+import PrettyJson from '@/components/ui/PrettyJSON';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
 import TextURL from '@/components/ui/TextURL';
@@ -21,6 +23,24 @@ import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { IUserSignupData } from '@/models/user';
 import { globals, patterns } from '@/utils/constants';
+
+function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
+  if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
+    if ('email' in error.response.data) {
+      return (
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        <div className='w-full text-sm text-center select-text clr-text-red'>{error.response.data.email}.</div>
+      );
+    } else {
+      return (
+        <div className='text-sm select-text clr-text-red'>
+          <PrettyJson data={error.response} />
+        </div>
+      );
+    }
+  }
+  return <InfoError error={error} />;
+}
 
 function RegisterPage() {
   const router = useConceptNavigation();
@@ -34,6 +54,8 @@ function RegisterPage() {
   const [lastName, setLastName] = useState('');
 
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
+
+  const isValid = useMemo(() => acceptPrivacy && !!email && !!username, [acceptPrivacy, email, username]);
 
   useEffect(() => {
     setError(undefined);
@@ -83,8 +105,7 @@ function RegisterPage() {
                 <IconHelp size='1.25rem' className='icon-primary' />
               </Overlay>
               <Tooltip anchorSelect={`#${globals.password_tooltip}`} offset={6}>
-                <p>- используйте уникальный пароль</p>
-                <p>- портал функционирует в тестовом режиме</p>
+                используйте уникальный пароль для каждого сайта
               </Tooltip>
             </div>
 
@@ -122,6 +143,15 @@ function RegisterPage() {
           </FlexColumn>
 
           <FlexColumn className='w-[15rem]'>
+            <div className='absolute'>
+              <Overlay id={globals.email_tooltip} position='top-[0rem] right-[-15rem]'>
+                <IconHelp size='1.25rem' className='icon-primary' />
+              </Overlay>
+              <Tooltip anchorSelect={`#${globals.email_tooltip}`} offset={6}>
+                электронная почта используется для восстановления пароля
+              </Tooltip>
+            </div>
+
             <TextInput
               id='email'
               autoComplete='email'
@@ -154,10 +184,10 @@ function RegisterPage() {
         </div>
 
         <div className='flex justify-around my-3'>
-          <SubmitButton text='Регистрировать' className='min-w-[10rem]' loading={loading} disabled={!acceptPrivacy} />
+          <SubmitButton text='Регистрировать' className='min-w-[10rem]' loading={loading} disabled={!isValid} />
           <Button text='Назад' className='min-w-[10rem]' onClick={() => handleCancel()} />
         </div>
-        {error ? <InfoError error={error} /> : null}
+        {error ? <ProcessError error={error} /> : null}
       </form>
     </AnimateFade>
   );

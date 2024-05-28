@@ -13,6 +13,7 @@ interface IUserProfileContext {
   loading: boolean;
   processing: boolean;
   error: ErrorData;
+  errorProcessing: ErrorData;
   setError: (error: ErrorData) => void;
   updateUser: (data: IUserUpdateData, callback?: DataCallback<IUserProfile>) => void;
 }
@@ -37,6 +38,7 @@ export const UserProfileState = ({ children }: UserProfileStateProps) => {
   const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<ErrorData>(undefined);
+  const [errorProcessing, setErrorProcessing] = useState<ErrorData>(undefined);
 
   const reload = useCallback(() => {
     setError(undefined);
@@ -51,12 +53,12 @@ export const UserProfileState = ({ children }: UserProfileStateProps) => {
 
   const updateUser = useCallback(
     (data: IUserUpdateData, callback?: DataCallback<IUserProfile>) => {
-      setError(undefined);
+      setErrorProcessing(undefined);
       patchProfile({
         data: data,
         showError: true,
         setLoading: setProcessing,
-        onError: setError,
+        onError: setErrorProcessing,
         onSuccess: newData => {
           setUser(newData);
           const libraryUser = users.find(item => item.id === user?.id);
@@ -76,7 +78,7 @@ export const UserProfileState = ({ children }: UserProfileStateProps) => {
   }, [reload]);
 
   return (
-    <ProfileContext.Provider value={{ user, updateUser, error, loading, setError, processing }}>
+    <ProfileContext.Provider value={{ user, updateUser, error, loading, setError, processing, errorProcessing }}>
       {children}
     </ProfileContext.Provider>
   );

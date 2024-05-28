@@ -1,17 +1,31 @@
 'use client';
 
+import axios from 'axios';
 import clsx from 'clsx';
 import { useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import InfoError, { ErrorData } from '@/components/info/InfoError';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
 import { useBlockNavigation } from '@/context/NavigationContext';
 import { useUserProfile } from '@/context/UserProfileContext';
 import { IUserUpdateData } from '@/models/user';
 
+function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
+  if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
+    if ('email' in error.response.data) {
+      return (
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        <div className='text-sm select-text clr-text-red'>{error.response.data.email}.</div>
+      );
+    }
+  }
+  return <InfoError error={error} />;
+}
+
 function EditorProfile() {
-  const { updateUser, user, processing } = useUserProfile();
+  const { updateUser, user, errorProcessing, processing } = useUserProfile();
 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -47,7 +61,7 @@ function EditorProfile() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className={clsx('cc-column', 'min-w-[18rem]', 'px-6 py-2')}>
+    <form onSubmit={handleSubmit} className={clsx('cc-column', 'w-[18rem]', 'px-6 py-2')}>
       <TextInput
         id='username'
         autoComplete='username'
@@ -80,7 +94,13 @@ function EditorProfile() {
         value={email}
         onChange={event => setEmail(event.target.value)}
       />
-      <SubmitButton className='self-center mt-6' text='Сохранить данные' loading={processing} disabled={!isModified} />
+      {errorProcessing ? <ProcessError error={errorProcessing} /> : null}
+      <SubmitButton
+        className='self-center mt-6'
+        text='Сохранить данные'
+        loading={processing}
+        disabled={!isModified || email == ''}
+      />
     </form>
   );
 }
