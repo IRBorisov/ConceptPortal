@@ -22,6 +22,10 @@ class TestUserAPIViews(EndpointTester):
         self.executeAccepted(data)
         self.executeAccepted(data)
 
+        self.logout()
+        data = {'username': self.user.email, 'password': 'password'}
+        self.executeAccepted(data)
+
 
     @decl_endpoint('/users/api/logout', method='post')
     def test_logout(self):

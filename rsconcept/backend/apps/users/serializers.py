@@ -1,6 +1,4 @@
 ''' Serializers: User profile and Authorization. '''
-from urllib import request
-
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
@@ -32,19 +30,27 @@ class LoginSerializer(serializers.Serializer):
     )
 
     def validate(self, attrs):
-        username = attrs.get('username')
-        password = attrs.get('password')
-        user = authenticate(
+        username = attrs['username']
+        if '@' in username:
+            user = models.User.objects.filter(email=username)
+            if not user.exists() or user.count() > 1:
+                raise serializers.ValidationError(
+                    msg.passwordAuthFailed(),
+                    code='authorization'
+                )
+            username = user.first().username
+        password = attrs['password']
+        authenticated = authenticate(
             request=self.context.get('request'),
             username=username,
             password=password
         )
-        if not user:
+        if not authenticated:
             raise serializers.ValidationError(
                 msg.passwordAuthFailed(),
                 code='authorization'
             )
-        attrs['user'] = user
+        attrs['user'] = authenticated
         return attrs
 
 

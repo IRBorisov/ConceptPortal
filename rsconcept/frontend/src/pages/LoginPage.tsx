@@ -69,7 +69,7 @@ function LoginPage() {
         <img alt='Концепт Портал' src={resources.logo} className='max-h-[2.5rem] min-w-[2.5rem] mb-3' />
         <TextInput
           id='username'
-          label='Имя пользователя'
+          label='Логин или email'
           autoComplete='username'
           autoFocus
           required

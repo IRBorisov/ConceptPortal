@@ -3,7 +3,7 @@
 
 
 def passwordAuthFailed():
-    return 'Неизвестное сочетание имени пользователя и пароля'
+    return 'Неизвестное сочетание имени пользователя (email) и пароля'
 
 
 def passwordsNotMatch():
