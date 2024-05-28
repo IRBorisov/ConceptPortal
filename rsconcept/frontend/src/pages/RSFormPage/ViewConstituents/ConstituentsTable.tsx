@@ -34,7 +34,6 @@ function ConstituentsTable({ items, activeCst, onOpenEdit, maxHeight, denseThres
     }
     setTimeout(() => {
       const element = document.getElementById(`${prefixes.cst_side_table}${activeCst.alias}`);
-      console.log(element);
       if (element) {
         element.scrollIntoView({
           behavior: 'smooth',

@@ -31,9 +31,15 @@ function EditorLibraryItem({ item, isModified }: EditorLibraryItemProps) {
   const ownerSelector = useDropdown();
   const onSelectUser = useCallback(
     (newValue: UserID) => {
-      console.log(newValue);
       ownerSelector.hide();
       if (newValue === item?.owner) {
+        return;
+      }
+      if (
+        !window.confirm(
+          'Вы уверены, что хотите изменить владельца? Вы потеряете право управления данной схемой. Данное действие отменить нельзя'
+        )
+      ) {
         return;
       }
       controller.setOwner(newValue);
