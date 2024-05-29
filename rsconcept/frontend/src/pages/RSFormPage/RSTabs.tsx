@@ -107,7 +107,22 @@ function RSTabs() {
     [router, schema, activeTab, version]
   );
 
-  function onSelectTab(index: number) {
+  function onSelectTab(index: number, last: number, event: Event) {
+    if (last === index) {
+      return;
+    }
+    if (event.type == 'keydown') {
+      const kbEvent = event as KeyboardEvent;
+      if (kbEvent.altKey) {
+        if (kbEvent.code === 'ArrowLeft') {
+          router.back();
+          return;
+        } else if (kbEvent.code === 'ArrowRight') {
+          router.forward();
+          return;
+        }
+      }
+    }
     navigateTab(index, selected.length > 0 ? selected.at(-1) : undefined);
   }
 
