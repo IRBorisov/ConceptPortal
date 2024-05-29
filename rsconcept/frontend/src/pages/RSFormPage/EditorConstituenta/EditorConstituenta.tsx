@@ -81,6 +81,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
         <ConstituentaToolbar
           disabled={disabled}
           modified={isModified}
+          showList={showList}
           onMoveUp={controller.moveUp}
           onMoveDown={controller.moveDown}
           onSubmit={initiateSubmit}
@@ -88,6 +89,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
           onDelete={controller.deleteCst}
           onClone={controller.cloneCst}
           onCreate={() => controller.createCst(activeCst?.cst_type, false)}
+          onToggleList={() => setShowList(prev => !prev)}
         />
       ) : null}
       <div
@@ -101,12 +103,10 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
       >
         <FormConstituenta
           disabled={disabled}
-          showList={showList}
           id={globals.constituenta_editor}
           state={activeCst}
           isModified={isModified}
           toggleReset={toggleReset}
-          onToggleList={() => setShowList(prev => !prev)}
           setIsModified={setIsModified}
           onEditTerm={controller.editTermForms}
           onRename={controller.renameCst}

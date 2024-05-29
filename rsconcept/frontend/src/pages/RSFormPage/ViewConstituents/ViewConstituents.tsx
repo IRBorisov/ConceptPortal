@@ -30,7 +30,7 @@ function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit 
   const table = useMemo(
     () => (
       <ConstituentsTable
-        maxHeight={isBottom ? '12rem' : calculateHeight('8.2rem')}
+        maxHeight={isBottom ? calculateHeight('42rem') : calculateHeight('8.2rem')}
         items={filteredData}
         activeCst={activeCst}
         onOpenEdit={onOpenEdit}
@@ -46,7 +46,7 @@ function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit 
         'border overflow-hidden', // prettier: split-lines
         {
           'mt-[2.2rem] rounded-l-md rounded-r-none': !isBottom, // prettier: split-lines
-          'mt-3 mx-6 rounded-md': isBottom
+          'mt-3 mx-6 rounded-md md:w-[45.8rem]': isBottom
         }
       )}
       initial={{ ...animateSideView.initial }}

@@ -5,13 +5,10 @@ import { AnimatePresence } from 'framer-motion';
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { IconControls, IconList, IconListOff, IconText, IconTextOff, IconTree } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import RSInput from '@/components/RSInput';
 import { RSTextWrapper } from '@/components/RSInput/textEditing';
-import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
-import { useConceptOptions } from '@/context/OptionsContext';
 import { useRSForm } from '@/context/RSFormContext';
 import DlgShowAST from '@/dialogs/DlgShowAST';
 import useCheckExpression from '@/hooks/useCheckExpression';
@@ -24,6 +21,7 @@ import { TokenID } from '@/models/rslang';
 import { storage } from '@/utils/constants';
 import { labelTypification } from '@/utils/labels';
 
+import ExpressionToolbar from './ExpressionToolbar';
 import ParsingResult from './ParsingResult';
 import RSEditorControls from './RSEditControls';
 import StatusBar from './StatusBar';
@@ -37,11 +35,9 @@ interface EditorRSExpressionProps {
 
   disabled?: boolean;
   toggleReset?: boolean;
-  showList: boolean;
 
   setTypification: (typification: string) => void;
   onChange: (newValue: string) => void;
-  onToggleList: () => void;
 }
 
 function EditorRSExpression({
@@ -49,14 +45,11 @@ function EditorRSExpression({
   disabled,
   value,
   toggleReset,
-  showList,
   setTypification,
   onChange,
-  onToggleList,
   ...restProps
 }: EditorRSExpressionProps) {
   const model = useRSForm();
-  const { mathFont, setMathFont } = useConceptOptions();
 
   const [isModified, setIsModified] = useState(false);
   const parser = useCheckExpression({ schema: model.schema });
@@ -147,10 +140,6 @@ function EditorRSExpression({
     });
   }
 
-  function toggleFont() {
-    setMathFont(mathFont === 'math' ? 'math2' : 'math');
-  }
-
   const controls = useMemo(
     () => (
       <RSEditorControls
@@ -170,32 +159,12 @@ function EditorRSExpression({
         ) : null}
       </AnimatePresence>
 
-      <Overlay position='top-[-0.5rem] right-0 cc-icons'>
-        <MiniButton
-          title='Изменить шрифт'
-          onClick={toggleFont}
-          icon={
-            mathFont === 'math' ? <IconText size='1.25rem' className='icon-primary' /> : <IconTextOff size='1.25rem' />
-          }
-        />
-        {!disabled || model.processing ? (
-          <MiniButton
-            title='Отображение специальной клавиатуры'
-            icon={<IconControls size='1.25rem' className={showControls ? 'icon-primary' : ''} />}
-            onClick={() => setShowControls(prev => !prev)}
-          />
-        ) : null}
-        <MiniButton
-          title='Отображение списка конституент'
-          icon={showList ? <IconList size='1.25rem' className='icon-primary' /> : <IconListOff size='1.25rem' />}
-          onClick={onToggleList}
-        />
-        <MiniButton
-          title='Дерево разбора выражения'
-          onClick={handleShowAST}
-          icon={<IconTree size='1.25rem' className='icon-primary' />}
-        />
-      </Overlay>
+      <ExpressionToolbar
+        disabled={disabled}
+        showControls={showControls}
+        showAST={handleShowAST}
+        toggleControls={() => setShowControls(prev => !prev)}
+      />
 
       <Overlay position='top-[-0.5rem] pl-[8rem] sm:pl-[4rem] right-1/2 translate-x-1/2 flex'>
         <StatusBar

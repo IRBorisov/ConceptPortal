@@ -25,7 +25,6 @@ export const ROW_SIZE_IN_CHARACTERS = 70;
 
 interface FormConstituentaProps {
   disabled: boolean;
-  showList: boolean;
 
   id?: string;
   state?: IConstituenta;
@@ -34,14 +33,12 @@ interface FormConstituentaProps {
   toggleReset: boolean;
   setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
 
-  onToggleList: () => void;
   onRename: () => void;
   onEditTerm: () => void;
 }
 
 function FormConstituenta({
   disabled,
-  showList,
   id,
   state,
 
@@ -50,8 +47,7 @@ function FormConstituenta({
 
   toggleReset,
   onRename,
-  onEditTerm,
-  onToggleList
+  onEditTerm
 }: FormConstituentaProps) {
   const { schema, cstUpdate, processing } = useRSForm();
 
@@ -138,7 +134,7 @@ function FormConstituenta({
       />
       <form
         id={id}
-        className={clsx('cc-column', 'mt-1 w-full md:w-[47.8rem] shrink-0', 'px-4 py-1')}
+        className={clsx('cc-column', 'mt-1 w-full md:w-[48.8rem] shrink-0', 'px-6 py-1')}
         onSubmit={handleSubmit}
       >
         <RefsInput
@@ -183,10 +179,8 @@ function FormConstituenta({
               }
               value={expression}
               activeCst={state}
-              showList={showList}
               disabled={disabled}
               toggleReset={toggleReset}
-              onToggleList={onToggleList}
               onChange={newValue => setExpression(newValue)}
               setTypification={setTypification}
             />

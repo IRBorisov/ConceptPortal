@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { motion } from 'framer-motion';
 
 import { TokenID } from '@/models/rslang';
@@ -90,7 +91,13 @@ interface RSEditorControlsProps {
 function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsProps) {
   return (
     <motion.div
-      className='flex-wrap text-xs select-none sm:text-sm divide-solid'
+      className={clsx(
+        'max-w-[38.5rem] sm:max-w-[40rem] sm:min-w-[40rem] md:max-w-fit mx-1 sm:mx-0',
+        'flex-wrap',
+        'divide-solid',
+        'text-xs md:text-sm',
+        'select-none'
+      )}
       initial={false}
       animate={isOpen ? 'open' : 'closed'}
       variants={animateRSControl}

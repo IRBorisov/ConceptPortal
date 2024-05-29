@@ -2,7 +2,16 @@ import InfoCstStatus from '@/components/info/InfoCstStatus';
 import Divider from '@/components/ui/Divider';
 import { HelpTopic } from '@/models/miscellaneous';
 
-import { IconAlias, IconDestroy, IconMoveDown, IconMoveUp, IconOpenList, IconReset } from '../../../components/Icons';
+import {
+  IconAlias,
+  IconClone,
+  IconDestroy,
+  IconMoveDown,
+  IconMoveUp,
+  IconNewItem,
+  IconOpenList,
+  IconReset
+} from '../../../components/Icons';
 import LinkTopic from '../../../components/ui/LinkTopic';
 
 function HelpRSFormItems() {
@@ -26,11 +35,18 @@ function HelpRSFormItems() {
         <IconMoveUp className='inline-icon' />
         <IconMoveDown className='inline-icon' /> Alt + вверх/вниз – перемещение
       </li>
+
       <li>
-        <IconDestroy className='inline-icon icon-red' /> удаление: Delete
+        <IconClone className='inline-icon icon-green' /> клонировать выделенную: Alt + V
       </li>
       <li>
-        <IconOpenList className='inline-icon icon-green' /> добавление: Alt + 1-6,Q,W –{' '}
+        <IconNewItem className='inline-icon icon-green' /> новая конституента: Alt + `
+      </li>
+      <li>
+        <IconOpenList className='inline-icon icon-green' /> быстрое добавление: Alt + 1-6,Q,W
+      </li>
+      <li>
+        <IconDestroy className='inline-icon icon-red' /> удаление выделенных: Delete
       </li>
 
       <Divider margins='my-2' />

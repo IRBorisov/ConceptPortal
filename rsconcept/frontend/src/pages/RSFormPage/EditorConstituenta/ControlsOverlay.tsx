@@ -18,7 +18,7 @@ interface ControlsOverlayProps {
 
 function ControlsOverlay({ constituenta, disabled, modified, processing, onRename, onEditTerm }: ControlsOverlayProps) {
   return (
-    <Overlay position='top-1 left-[4.3rem]' className='flex select-none'>
+    <Overlay position='top-1 left-[4.7rem]' className='flex select-none'>
       {!disabled || processing ? (
         <MiniButton
           title={modified ? messages.unsaved : `Редактировать словоформы термина`}

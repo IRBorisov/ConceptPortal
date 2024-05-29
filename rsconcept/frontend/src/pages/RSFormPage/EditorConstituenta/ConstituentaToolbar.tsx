@@ -1,4 +1,14 @@
-import { IconClone, IconDestroy, IconMoveDown, IconMoveUp, IconNewItem, IconReset, IconSave } from '@/components/Icons';
+import {
+  IconClone,
+  IconDestroy,
+  IconList,
+  IconListOff,
+  IconMoveDown,
+  IconMoveUp,
+  IconNewItem,
+  IconReset,
+  IconSave
+} from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
@@ -8,6 +18,7 @@ import { messages, prepareTooltip } from '@/utils/labels';
 interface ConstituentaToolbarProps {
   disabled: boolean;
   modified: boolean;
+  showList: boolean;
 
   onSubmit: () => void;
   onReset: () => void;
@@ -17,18 +28,22 @@ interface ConstituentaToolbarProps {
   onDelete: () => void;
   onClone: () => void;
   onCreate: () => void;
+  onToggleList: () => void;
 }
 
 function ConstituentaToolbar({
   disabled,
   modified,
+  showList,
+
   onSubmit,
   onReset,
   onMoveUp,
   onMoveDown,
   onDelete,
   onClone,
-  onCreate
+  onCreate,
+  onToggleList
 }: ConstituentaToolbarProps) {
   return (
     <Overlay position='top-1 right-4' className='cc-icons sm:right-1/2 sm:translate-x-1/2'>
@@ -61,6 +76,11 @@ function ConstituentaToolbar({
         disabled={disabled}
         onClick={onDelete}
         icon={<IconDestroy size='1.25rem' className='icon-red' />}
+      />
+      <MiniButton
+        title='Отображение списка конституент'
+        icon={showList ? <IconList size='1.25rem' className='icon-primary' /> : <IconListOff size='1.25rem' />}
+        onClick={onToggleList}
       />
       <MiniButton
         titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
