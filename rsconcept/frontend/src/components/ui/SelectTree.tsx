@@ -67,6 +67,15 @@ function SelectTree<ItemType>({
     [onFoldItem]
   );
 
+  const handleSetValue = useCallback(
+    (event: CProps.EventMouse, target: ItemType) => {
+      event.preventDefault();
+      event.stopPropagation();
+      setValue(target);
+    },
+    [setValue]
+  );
+
   return (
     <div {...restProps}>
       <AnimatePresence initial={false}>
@@ -84,7 +93,7 @@ function SelectTree<ItemType>({
               )}
               data-tooltip-id={globals.tooltip}
               data-tooltip-content={getDescription(item)}
-              onClick={() => setValue(item)}
+              onClick={event => handleSetValue(event, item)}
               initial={{ ...animateSideAppear.initial }}
               animate={{ ...animateSideAppear.animate }}
               exit={{ ...animateSideAppear.exit }}

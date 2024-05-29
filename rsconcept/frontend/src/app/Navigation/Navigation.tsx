@@ -37,14 +37,14 @@ function Navigation() {
       <motion.div
         className={clsx(
           'pl-2 pr-[0.9rem] h-[3rem] w-full', // prettier: split lines
-          'flex justify-between',
+          'flex',
           'cc-shadow-border'
         )}
         initial={false}
         animate={!noNavigationAnimation ? 'open' : 'closed'}
         variants={animateNavigation}
       >
-        <div tabIndex={-1} className='flex items-center mr-2 cursor-pointer' onClick={navigateHome}>
+        <div tabIndex={-1} className='flex items-center mr-auto cursor-pointer' onClick={navigateHome}>
           <Logo />
         </div>
         <div className='flex'>

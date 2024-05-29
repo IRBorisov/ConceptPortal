@@ -24,14 +24,15 @@ function TopicsStatic({ activeTopic, onChangeTopic }: TopicsStaticProps) {
       getDescription={describeHelpTopic}
       className={clsx(
         'sticky top-0 left-0',
-        'w-[14.5rem] cc-scroll-y',
+        'min-w-[14.5rem] max-w-[14.5rem] sm:min-w-[12.5rem] sm:max-w-[12.5rem] md:min-w-[14.5rem] md:max-w-[14.5rem]',
+        'cc-scroll-y',
         'self-start',
         'border divide-y rounded-none',
         'clr-controls',
         'text-xs sm:text-sm',
         'select-none'
       )}
-      style={{ maxHeight: calculateHeight('2.25rem + 2px') }}
+      style={{ maxHeight: calculateHeight('1rem + 2px') }}
     />
   );
 }
