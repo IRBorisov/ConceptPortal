@@ -2,7 +2,7 @@
  * Module: Internal navigation constants.
  */
 
-import { buildConstants } from '@/utils/constants';
+import { buildConstants } from '@/utils/buildConstants';
 
 /**
  * Routes.

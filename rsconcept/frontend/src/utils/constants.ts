@@ -3,13 +3,6 @@
  */
 
 /**
- * Variable constants depending on build type.
- */
-export const buildConstants = {
-  backend: import.meta.env.VITE_PORTAL_BACKEND as string
-};
-
-/**
  * Global application Parameters. The place where magic numbers are put to rest.
  */
 export const PARAMETER = {

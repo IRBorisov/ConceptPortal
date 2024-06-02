@@ -41,8 +41,7 @@ import {
   IUserUpdateData,
   IUserUpdatePassword
 } from '@/models/user';
-
-import { buildConstants } from '../utils/constants';
+import { buildConstants } from '@/utils/buildConstants';
 
 const defaultOptions = {
   xsrfCookieName: 'csrftoken',
