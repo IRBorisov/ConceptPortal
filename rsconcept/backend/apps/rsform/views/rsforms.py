@@ -36,7 +36,9 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             'load_trs', 'cst_create', 'cst_delete_multiple',
             'reset_aliases', 'cst_rename', 'cst_substitute'
         ]:
-            permission_list = [permissions.ItemOwner]
+            permission_list = [permissions.ItemEditor]
+        elif self.action in ['contents', 'details', 'export_trs', 'resolve', 'check']:
+            permission_list = [permissions.ItemAnyone]
         else:
             permission_list = [permissions.Anyone]
         return [permission() for permission in permission_list]

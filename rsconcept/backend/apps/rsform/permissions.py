@@ -1,5 +1,5 @@
 ''' Custom Permission classes.
-    Hierarchy: Anonymous -> User -> Editor -> Owner -> Admin
+    Hierarchy: Anyone -> User -> Editor -> Owner -> Admin
 '''
 from typing import Any, cast
 
@@ -62,6 +62,16 @@ class ItemEditor(ItemOwner):
             item=item,
             editor=cast(m.User, request.user)
         ).exists() and item.access_policy != m.AccessPolicy.PRIVATE:
+            return True
+        return super().has_object_permission(request, view, obj)
+
+
+class ItemAnyone(ItemEditor):
+    ''' Item permission: Anyone if public. '''
+
+    def has_object_permission(self, request: Request, view: APIView, obj: Any) -> bool:
+        item = _extract_item(obj)
+        if item.access_policy == m.AccessPolicy.PUBLIC:
             return True
         return super().has_object_permission(request, view, obj)
 

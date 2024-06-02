@@ -81,7 +81,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
         result = result.filter(item => filter.isSubscribed == user?.subscriptions.includes(item.id));
       }
       if (filter.isEditor !== undefined) {
-        // TODO: load editors from backend
+        result = result.filter(item => filter.isEditor == user?.editor.includes(item.id));
       }
       if (filter.query) {
         result = result.filter(item => matchLibraryItem(item, filter.query!));

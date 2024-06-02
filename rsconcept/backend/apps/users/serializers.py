@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
-from apps.rsform.models import Subscription
+from apps.rsform.models import Editor, Subscription
 
 from . import messages as msg
 from . import models
@@ -69,14 +69,16 @@ class AuthSerializer(serializers.Serializer):
                 'id': None,
                 'username': '',
                 'is_staff': False,
-                'subscriptions': []
+                'subscriptions': [],
+                'editor': []
             }
         else:
             return {
                 'id': instance.pk,
                 'username': instance.username,
                 'is_staff': instance.is_staff,
-                'subscriptions': [sub.item.pk for sub in Subscription.objects.filter(user=instance)]
+                'subscriptions': [sub.item.pk for sub in Subscription.objects.filter(user=instance)],
+                'editor': [edit.item.pk for edit in Editor.objects.filter(editor=instance)]
             }
 
 

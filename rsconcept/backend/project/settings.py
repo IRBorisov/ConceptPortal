@@ -172,7 +172,7 @@ DATABASES = {
 SPECTACULAR_SETTINGS = {
     'TITLE': 'ConceptPortal API',
     'DESCRIPTION': 'Портал для работы с экспликациями концептуальных схем',
-    'VERSION': '0.1.1',
+    'VERSION': '0.1.2',
     'SERVE_INCLUDE_SCHEMA': False,
 
     'COMPONENT_SPLIT_PATCH': True,

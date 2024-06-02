@@ -27,6 +27,7 @@ export interface IUser {
  */
 export interface ICurrentUser extends Pick<IUser, 'id' | 'username' | 'is_staff'> {
   subscriptions: LibraryItemID[];
+  editor: LibraryItemID[];
 }
 
 /**

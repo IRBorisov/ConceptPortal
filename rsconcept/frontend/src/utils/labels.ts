@@ -262,7 +262,7 @@ export function labelLocationHead(head: LocationHead): string {
   switch (head) {
     case LocationHead.USER:      return 'личные (/U)';
     case LocationHead.COMMON:    return 'общие (/S)';
-    case LocationHead.LIBRARY:   return 'неизменные (/L)';
+    case LocationHead.LIBRARY:   return 'примеры (/L)';
     case LocationHead.PROJECTS:  return 'проекты (/P)';
   }
 }
@@ -275,7 +275,7 @@ export function describeLocationHead(head: LocationHead): string {
   switch (head) {
     case LocationHead.USER:      return 'Личные схемы пользователя';
     case LocationHead.COMMON:    return 'Рабочий каталог публичных схем';
-    case LocationHead.LIBRARY:   return 'Каталог неизменных схем';
+    case LocationHead.LIBRARY:   return 'Каталог неизменных схем-примеров';
     case LocationHead.PROJECTS:  return 'Рабочий каталог проектных схем';
   }
 }
