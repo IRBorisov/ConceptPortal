@@ -7,7 +7,8 @@ import { toast } from 'react-toastify';
 
 import { type ErrorData } from '@/components/info/InfoError';
 import { ILexemeData, IResolutionData, ITextRequest, ITextResult, IWordFormPlain } from '@/models/language';
-import { ILibraryItem, ILibraryUpdateData, IVersionData } from '@/models/library';
+import { ILibraryItem, ILibraryUpdateData, ITargetAccessPolicy, ITargetLocation, IVersionData } from '@/models/library';
+import { ILibraryCreateData } from '@/models/library';
 import {
   IConstituentaList,
   IConstituentaMeta,
@@ -20,7 +21,6 @@ import {
   IInlineSynthesisData,
   IProduceStructureResponse,
   IRSFormCloneData,
-  IRSFormCreateData,
   IRSFormData,
   IRSFormUploadData,
   ITargetCst,
@@ -199,7 +199,7 @@ export function getTemplates(request: FrontPull<ILibraryItem[]>) {
   });
 }
 
-export function postNewRSForm(request: FrontExchange<IRSFormCreateData, ILibraryItem>) {
+export function postNewRSForm(request: FrontExchange<ILibraryCreateData, ILibraryItem>) {
   AxiosPost({
     endpoint: '/api/rsforms/create-detailed',
     request: request,
@@ -249,6 +249,20 @@ export function deleteLibraryItem(target: string, request: FrontAction) {
 export function patchSetOwner(target: string, request: FrontPush<ITargetUser>) {
   AxiosPatch({
     endpoint: `/api/library/${target}/set-owner`,
+    request: request
+  });
+}
+
+export function patchSetAccessPolicy(target: string, request: FrontPush<ITargetAccessPolicy>) {
+  AxiosPatch({
+    endpoint: `/api/library/${target}/set-access-policy`,
+    request: request
+  });
+}
+
+export function patchSetLocation(target: string, request: FrontPush<ITargetLocation>) {
+  AxiosPatch({
+    endpoint: `/api/library/${target}/set-location`,
     request: request
   });
 }

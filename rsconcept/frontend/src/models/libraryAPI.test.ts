@@ -1,5 +1,5 @@
-import { ILibraryItem, LibraryItemType } from './library';
-import { matchLibraryItem } from './libraryAPI';
+import { AccessPolicy, ILibraryItem, LibraryItemType, LocationHead } from './library';
+import { matchLibraryItem, validateLocation } from './libraryAPI';
 
 describe('Testing matching LibraryItem', () => {
   const item1: ILibraryItem = {
@@ -8,11 +8,13 @@ describe('Testing matching LibraryItem', () => {
     title: 'Item1',
     alias: 'I1',
     comment: 'comment',
-    is_common: true,
-    is_canonical: true,
     time_create: 'I2',
     time_update: '',
-    owner: null
+    owner: null,
+    access_policy: AccessPolicy.PUBLIC,
+    location: LocationHead.COMMON,
+    read_only: false,
+    visible: true
   };
 
   const itemEmpty: ILibraryItem = {
@@ -21,11 +23,13 @@ describe('Testing matching LibraryItem', () => {
     title: '',
     alias: '',
     comment: '',
-    is_common: true,
-    is_canonical: true,
     time_create: '',
     time_update: '',
-    owner: null
+    owner: null,
+    access_policy: AccessPolicy.PUBLIC,
+    location: LocationHead.COMMON,
+    read_only: false,
+    visible: true
   };
 
   test('empty input', () => {
@@ -41,5 +45,33 @@ describe('Testing matching LibraryItem', () => {
     expect(matchLibraryItem(item1, item1.alias + '@invalid')).toEqual(false);
     expect(matchLibraryItem(item1, item1.time_create)).toEqual(false);
     expect(matchLibraryItem(item1, item1.comment)).toEqual(false);
+  });
+});
+
+const validateLocationData = [
+  ['', 'false'],
+  ['U/U', 'false'],
+  ['/A', 'false'],
+  ['/U/user@mail', 'false'],
+  ['U/u\\asdf', 'false'],
+  ['/U/ asdf', 'false'],
+  ['/User', 'false'],
+  ['//', 'false'],
+  ['/S/1 ', 'false'],
+  ['/S/1/2 /3', 'false'],
+
+  ['/P', 'true'],
+  ['/L', 'true'],
+  ['/U', 'true'],
+  ['/S', 'true'],
+  ['/S/Вася пупки', 'true'],
+  ['/S/123', 'true'],
+  ['/S/1234', 'true'],
+  ['/S/1/!asdf/тест тест', 'true']
+];
+describe('Testing location validation', () => {
+  it.each(validateLocationData)('isValid %p', (input: string, expected: string) => {
+    const result = validateLocation(input);
+    expect(String(result)).toBe(expected);
   });
 });

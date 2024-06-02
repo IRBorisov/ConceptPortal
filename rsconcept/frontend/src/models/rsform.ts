@@ -4,7 +4,7 @@
 
 import { Graph } from '@/models/Graph';
 
-import { ILibraryItemEx, ILibraryUpdateData, LibraryItemID } from './library';
+import { ILibraryItem, ILibraryItemEx, LibraryItemID } from './library';
 import { IArgumentInfo, ParsingStatus, ValueClass } from './rslang';
 
 /**
@@ -242,17 +242,9 @@ export interface IRSFormData extends ILibraryItemEx {
 }
 
 /**
- * Represents data, used for creating {@link IRSForm}.
- */
-export interface IRSFormCreateData extends ILibraryUpdateData {
-  file?: File;
-  fileName?: string;
-}
-
-/**
  * Represents data, used for cloning {@link IRSForm}.
  */
-export interface IRSFormCloneData extends ILibraryUpdateData {
+export interface IRSFormCloneData extends Omit<ILibraryItem, 'time_create' | 'time_update' | 'id' | 'owner'> {
   items?: ConstituentaID[];
 }
 

@@ -16,11 +16,11 @@ class LibraryItemAdmin(admin.ModelAdmin):
     date_hierarchy = 'time_update'
     list_display = [
         'alias', 'title', 'owner',
-        'is_common', 'is_canonical',
+        'visible', 'read_only', 'access_policy', 'location',
         'time_update'
     ]
-    list_filter = ['is_common', 'is_canonical', 'time_update']
-    search_fields = ['alias', 'title']
+    list_filter = ['visible', 'read_only', 'access_policy', 'location', 'time_update']
+    search_fields = ['alias', 'title', 'location']
 
 
 class LibraryTemplateAdmin(admin.ModelAdmin):
@@ -44,6 +44,15 @@ class SubscriptionAdmin(admin.ModelAdmin):
     ]
 
 
+class EditorAdmin(admin.ModelAdmin):
+    ''' Admin model: Editors. '''
+    list_display = ['id', 'item', 'editor']
+    search_fields = [
+        'item__title', 'item__alias',
+        'editor__username', 'editor__first_name', 'editor__last_name'
+    ]
+
+
 class VersionAdmin(admin.ModelAdmin):
     ''' Admin model: Versions. '''
     list_display = ['id', 'item', 'version', 'description', 'time_create']
@@ -57,3 +66,4 @@ admin.site.register(models.LibraryItem, LibraryItemAdmin)
 admin.site.register(models.LibraryTemplate, LibraryTemplateAdmin)
 admin.site.register(models.Subscription, SubscriptionAdmin)
 admin.site.register(models.Version, VersionAdmin)
+admin.site.register(models.Editor, EditorAdmin)

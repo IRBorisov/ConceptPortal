@@ -2,6 +2,8 @@
  * Module: Miscellaneous frontend model types. Future targets for refactoring aimed at extracting modules.
  */
 
+import { LocationHead } from './library';
+
 /**
  * Represents graph dependency mode.
  */
@@ -124,21 +126,13 @@ export enum CstMatchMode {
  */
 export interface ILibraryFilter {
   query?: string;
-  is_owned?: boolean;
-  is_common?: boolean;
-  is_canonical?: boolean;
-  is_subscribed?: boolean;
-}
+  path?: string;
+  head?: LocationHead;
 
-/**
- * Represents filtering strategy for Library.
- */
-export enum LibraryFilterStrategy {
-  MANUAL = 'manual',
-  COMMON = 'common',
-  SUBSCRIBE = 'subscribe',
-  CANONICAL = 'canonical',
-  OWNED = 'owned'
+  isVisible?: boolean;
+  isOwned?: boolean;
+  isSubscribed?: boolean;
+  isEditor?: boolean;
 }
 
 /**

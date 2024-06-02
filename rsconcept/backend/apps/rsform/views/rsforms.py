@@ -447,15 +447,17 @@ def create_rsform(request: Request):
     ''' Endpoint: Create RSForm from user input and/or trs file. '''
     owner = cast(m.User, request.user) if not request.user.is_anonymous else None
     if 'file' not in request.FILES:
-        serializer = s.LibraryItemSerializer(data=request.data)
+        serializer = s.LibraryItemBase(data=request.data)
         serializer.is_valid(raise_exception=True)
         schema = m.RSForm.create(
             title=serializer.validated_data['title'],
             owner=owner,
             alias=serializer.validated_data.get('alias', ''),
             comment=serializer.validated_data.get('comment', ''),
-            is_common=serializer.validated_data.get('is_common', False),
-            is_canonical=serializer.validated_data.get('is_canonical', False),
+            visible=serializer.validated_data.get('visible', True),
+            read_only=serializer.validated_data.get('read_only', False),
+            access_policy=serializer.validated_data.get('access_policy', m.AccessPolicy.PUBLIC),
+            location=serializer.validated_data.get('location', m.LocationHead.USER),
         )
     else:
         data = utils.read_zipped_json(request.FILES['file'].file, utils.EXTEOR_INNER_FILENAME)
@@ -481,12 +483,15 @@ def _prepare_rsform_data(data: dict, request: Request, owner: Union[m.User, None
     if 'comment' in request.data and request.data['comment'] != '':
         data['comment'] = request.data['comment']
 
-    is_common = True
-    if 'is_common' in request.data:
-        is_common = request.data['is_common'] == 'true'
-    data['is_common'] = is_common
+    visible = True
+    if 'visible' in request.data:
+        visible = request.data['visible'] == 'true'
+    data['visible'] = visible
 
-    is_canonical = False
-    if 'is_canonical' in request.data:
-        is_canonical = request.data['is_canonical'] == 'true'
-    data['is_canonical'] = is_canonical
+    read_only = False
+    if 'read_only' in request.data:
+        read_only = request.data['read_only'] == 'true'
+    data['read_only'] = read_only
+
+    data['access_policy'] = request.data.get('access_policy', m.AccessPolicy.PUBLIC)
+    data['location'] = request.data.get('location', m.LocationHead.USER)

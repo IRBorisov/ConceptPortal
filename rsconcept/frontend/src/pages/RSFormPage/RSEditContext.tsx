@@ -16,6 +16,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useConceptOptions } from '@/context/OptionsContext';
 import { useRSForm } from '@/context/RSFormContext';
+import DlgChangeLocation from '@/dialogs/DlgChangeLocation';
 import DlgCloneLibraryItem from '@/dialogs/DlgCloneLibraryItem';
 import DlgConstituentaTemplate from '@/dialogs/DlgConstituentaTemplate';
 import DlgCreateCst from '@/dialogs/DlgCreateCst';
@@ -28,7 +29,7 @@ import DlgInlineSynthesis from '@/dialogs/DlgInlineSynthesis';
 import DlgRenameCst from '@/dialogs/DlgRenameCst';
 import DlgSubstituteCst from '@/dialogs/DlgSubstituteCst';
 import DlgUploadRSForm from '@/dialogs/DlgUploadRSForm';
-import { IVersionData, VersionID } from '@/models/library';
+import { AccessPolicy, IVersionData, LocationHead, VersionID } from '@/models/library';
 import {
   ConstituentaID,
   CstType,
@@ -60,7 +61,9 @@ interface IRSEditContext {
   nothingSelected: boolean;
 
   setOwner: (newOwner: UserID) => void;
+  setAccessPolicy: (newPolicy: AccessPolicy) => void;
   promptEditors: () => void;
+  promptLocation: () => void;
   toggleSubscribe: () => void;
 
   setSelected: React.Dispatch<React.SetStateAction<ConstituentaID[]>>;
@@ -130,7 +133,10 @@ export const RSEditState = ({
   const { accessLevel, setAccessLevel } = useAccessMode();
   const model = useRSForm();
 
-  const isMutable = useMemo(() => accessLevel > UserLevel.READER, [accessLevel]);
+  const isMutable = useMemo(
+    () => accessLevel > UserLevel.READER && !model.schema?.read_only,
+    [accessLevel, model.schema?.read_only]
+  );
   const isContentEditable = useMemo(() => isMutable && !model.isArchive, [isMutable, model.isArchive]);
   const nothingSelected = useMemo(() => selected.length === 0, [selected]);
 
@@ -138,6 +144,7 @@ export const RSEditState = ({
   const [showClone, setShowClone] = useState(false);
   const [showDeleteCst, setShowDeleteCst] = useState(false);
   const [showEditEditors, setShowEditEditors] = useState(false);
+  const [showEditLocation, setShowEditLocation] = useState(false);
   const [showEditTerm, setShowEditTerm] = useState(false);
   const [showSubstitute, setShowSubstitute] = useState(false);
   const [showCreateVersion, setShowCreateVersion] = useState(false);
@@ -198,6 +205,21 @@ export const RSEditState = ({
       viewVersion(undefined);
     });
   }, [model, viewVersion]);
+
+  function calculateCloneLocation(): string {
+    if (!model.schema) {
+      return LocationHead.USER;
+    }
+    const location = model.schema.location;
+    const head = model.schema.location.substring(0, 2) as LocationHead;
+    if (head === LocationHead.LIBRARY) {
+      return user?.is_staff ? location : LocationHead.USER;
+    }
+    if (model.schema.owner === user?.id) {
+      return location;
+    }
+    return head === LocationHead.USER ? LocationHead.USER : location;
+  }
 
   const handleCreateCst = useCallback(
     (data: ICstCreateData) => {
@@ -298,6 +320,16 @@ export const RSEditState = ({
         return;
       }
       model.versionUpdate(versionID, data, () => toast.success('Версия обновлена'));
+    },
+    [model]
+  );
+
+  const handleSetLocation = useCallback(
+    (newLocation: string) => {
+      if (!model.schema) {
+        return;
+      }
+      model.setLocation(newLocation, () => toast.success('Схема перемещена'));
     },
     [model]
   );
@@ -485,6 +517,10 @@ export const RSEditState = ({
     setShowEditEditors(true);
   }, []);
 
+  const promptLocation = useCallback(() => {
+    setShowEditLocation(true);
+  }, []);
+
   const download = useCallback(() => {
     if (isModified && !promptUnsaved()) {
       return;
@@ -523,6 +559,13 @@ export const RSEditState = ({
     [model]
   );
 
+  const setAccessPolicy = useCallback(
+    (newPolicy: AccessPolicy) => {
+      model.setAccessPolicy(newPolicy, () => toast.success('Политика доступа изменена'));
+    },
+    [model]
+  );
+
   const setEditors = useCallback(
     (newEditors: UserID[]) => {
       model.setEditors(newEditors, () => toast.success('Редакторы обновлены'));
@@ -543,7 +586,9 @@ export const RSEditState = ({
 
         toggleSubscribe,
         setOwner,
+        setAccessPolicy,
         promptEditors,
+        promptLocation,
 
         setSelected: setSelected,
         select: (target: ConstituentaID) => setSelected(prev => [...prev, target]),
@@ -584,6 +629,7 @@ export const RSEditState = ({
           {showClone ? (
             <DlgCloneLibraryItem
               base={model.schema}
+              initialLocation={calculateCloneLocation()}
               hideWindow={() => setShowClone(false)}
               selected={selected}
               totalCount={model.schema.items.length}
@@ -655,6 +701,14 @@ export const RSEditState = ({
               setEditors={setEditors}
             />
           ) : null}
+          {showEditLocation ? (
+            <DlgChangeLocation
+              hideWindow={() => setShowEditLocation(false)}
+              initial={model.schema.location}
+              onChangeLocation={handleSetLocation}
+            />
+          ) : null}
+
           {showInlineSynthesis ? (
             <DlgInlineSynthesis
               receiver={model.schema}
@@ -666,7 +720,9 @@ export const RSEditState = ({
       ) : null}
 
       {model.loading ? <Loader /> : null}
-      {model.error ? <ProcessError error={model.error} isArchive={model.isArchive} schemaID={model.schemaID} /> : null}
+      {model.errorLoading ? (
+        <ProcessError error={model.errorLoading} isArchive={model.isArchive} schemaID={model.schemaID} />
+      ) : null}
       {model.schema && !model.loading ? children : null}
     </RSEditContext.Provider>
   );

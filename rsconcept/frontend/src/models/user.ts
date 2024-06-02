@@ -2,6 +2,8 @@
  * Module: Models for Users.
  */
 
+import { LibraryItemID } from './library';
+
 /**
  * Represents {@link User} identifier type.
  */
@@ -24,7 +26,7 @@ export interface IUser {
  * Represents CurrentUser information.
  */
 export interface ICurrentUser extends Pick<IUser, 'id' | 'username' | 'is_staff'> {
-  subscriptions: UserID[];
+  subscriptions: LibraryItemID[];
 }
 
 /**

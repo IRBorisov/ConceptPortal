@@ -27,12 +27,26 @@ class LibraryActiveView(generics.ListAPIView):
 
     def get_queryset(self):
         if self.request.user.is_anonymous:
-            return m.LibraryItem.objects.filter(is_common=True).order_by('-time_update')
+            return m.LibraryItem.objects.filter(
+                Q(access_policy=m.AccessPolicy.PUBLIC),
+            ).filter(
+                Q(location__startswith=m.LocationHead.COMMON) |
+                Q(location__startswith=m.LocationHead.LIBRARY)
+            ).order_by('-time_update')
         else:
             user = cast(m.User, self.request.user)
             # pylint: disable=unsupported-binary-operation
             return m.LibraryItem.objects.filter(
-                Q(is_common=True) | Q(owner=user) | Q(subscription__user=user)
+                (
+                    Q(access_policy=m.AccessPolicy.PUBLIC) &
+                    (
+                        Q(location__startswith=m.LocationHead.COMMON) |
+                        Q(location__startswith=m.LocationHead.LIBRARY)
+                    )
+                ) |
+                Q(owner=user) |
+                Q(editor__editor=user) |
+                Q(subscription__user=user)
             ).distinct().order_by('-time_update')
 
 
@@ -68,8 +82,8 @@ class LibraryViewSet(viewsets.ModelViewSet):
     serializer_class = s.LibraryItemSerializer
 
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
-    filterset_fields = ['item_type', 'owner', 'is_common', 'is_canonical']
-    ordering_fields = ('item_type', 'owner', 'title', 'time_update')
+    filterset_fields = ['item_type', 'owner']
+    ordering_fields = ('item_type', 'owner', 'alias', 'title', 'time_update')
     ordering = '-time_update'
 
     def perform_create(self, serializer):
@@ -82,7 +96,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
         if self.action in ['update', 'partial_update']:
             permission_list = [permissions.ItemEditor]
         elif self.action in [
-            'destroy', 'set_owner',
+            'destroy', 'set_owner', 'set_access_policy', 'set_location',
             'editors_add', 'editors_remove', 'editors_set'
         ]:
             permission_list = [permissions.ItemOwner]
@@ -119,12 +133,13 @@ class LibraryViewSet(viewsets.ModelViewSet):
         clone.title = serializer.validated_data['title']
         clone.alias = serializer.validated_data.get('alias', '')
         clone.comment = serializer.validated_data.get('comment', '')
-        clone.is_common = serializer.validated_data.get('is_common', False)
-        clone.is_canonical = False
+        clone.visible = serializer.validated_data.get('visible', True)
+        clone.read_only = False
+        clone.access_policy = serializer.validated_data.get('access_policy', m.AccessPolicy.PUBLIC)
+        clone.location = serializer.validated_data.get('location', m.LocationHead.USER)
+        clone.save()
 
         if clone.item_type == m.LibraryItemType.RSFORM:
-            clone.save()
-
             need_filter = 'items' in request.data
             for cst in m.RSForm(item).constituents():
                 if not need_filter or cst.pk in request.data['items']:
@@ -189,6 +204,49 @@ class LibraryViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         new_owner = serializer.validated_data['user']
         m.LibraryItem.objects.filter(pk=item.pk).update(owner=new_owner)
+        return Response(status=c.HTTP_200_OK)
+
+    @extend_schema(
+        summary='set AccessPolicy for item',
+        tags=['Library'],
+        request=s.AccessPolicySerializer,
+        responses={
+            c.HTTP_200_OK: None,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='set-access-policy')
+    def set_access_policy(self, request: Request, pk):
+        ''' Endpoint: Set item AccessPolicy. '''
+        item = self._get_item()
+        serializer = s.AccessPolicySerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        m.LibraryItem.objects.filter(pk=item.pk).update(access_policy=serializer.validated_data['access_policy'])
+        return Response(status=c.HTTP_200_OK)
+
+    @extend_schema(
+        summary='set location for item',
+        tags=['Library'],
+        request=s.LocationSerializer,
+        responses={
+            c.HTTP_200_OK: None,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='set-location')
+    def set_location(self, request: Request, pk):
+        ''' Endpoint: Set item location. '''
+        item = self._get_item()
+        serializer = s.LocationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        location: str = serializer.validated_data['location']
+        if location.startswith(m.LocationHead.LIBRARY) and not self.request.user.is_staff:
+            return Response(status=c.HTTP_403_FORBIDDEN)
+        m.LibraryItem.objects.filter(pk=item.pk).update(location=location)
         return Response(status=c.HTTP_200_OK)
 
     @extend_schema(

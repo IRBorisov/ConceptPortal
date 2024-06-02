@@ -3,7 +3,6 @@
  */
 
 @import './constants.css';
-@import './layers.css';
 
 @tailwind base;
 @tailwind components;
@@ -138,5 +137,9 @@ div:not(.dense) > p {
 
   .border {
     @apply rounded;
+  }
+
+  :is(.sticky) {
+    z-index: 20;
   }
 }

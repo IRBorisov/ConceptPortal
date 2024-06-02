@@ -2,9 +2,12 @@
  * Module: API for Library entities and Users.
  */
 
+import { limits } from '@/utils/constants';
 import { TextMatcher } from '@/utils/utils';
 
 import { ILibraryItem } from './library';
+
+const LOCATION_REGEXP = /^\/[PLUS]((\/[!\d\p{L}]([!\d\p{L} ]*[!\d\p{L}])?)*)?$/u; // cspell:disable-line
 
 /**
  * Checks if a given target {@link ILibraryItem} matches the specified query.
@@ -15,6 +18,17 @@ import { ILibraryItem } from './library';
 export function matchLibraryItem(target: ILibraryItem, query: string): boolean {
   const matcher = new TextMatcher(query);
   return matcher.test(target.alias) || matcher.test(target.title);
+}
+
+/**
+ * Checks if a given target {@link ILibraryItem} location matches the specified query.
+ *
+ * @param target - item to be matched
+ * @param query - text to be found
+ */
+export function matchLibraryItemLocation(target: ILibraryItem, path: string): boolean {
+  const matcher = new TextMatcher(path);
+  return matcher.test(target.location);
 }
 
 /**
@@ -41,4 +55,18 @@ export function nextVersion(version: string): string {
     return version;
   }
   return `${version.substring(0, dot)}.${lastNumber + 1}`;
+}
+
+/**
+ * Validation location against regexp.
+ */
+export function validateLocation(location: string): boolean {
+  return location.length <= limits.location_len && LOCATION_REGEXP.test(location);
+}
+
+/**
+ * Combining head and body into location.
+ */
+export function combineLocation(head: string, body?: string): string {
+  return body ? `${head}/${body}` : head;
 }

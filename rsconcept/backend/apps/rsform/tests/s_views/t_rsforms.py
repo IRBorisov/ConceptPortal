@@ -6,7 +6,15 @@ from zipfile import ZipFile
 from cctext import ReferenceType
 from rest_framework import status
 
-from apps.rsform.models import Constituenta, CstType, LibraryItem, LibraryItemType, RSForm
+from apps.rsform.models import (
+    AccessPolicy,
+    Constituenta,
+    CstType,
+    LibraryItem,
+    LibraryItemType,
+    LocationHead,
+    RSForm
+)
 
 from ..EndpointTester import EndpointTester, decl_endpoint
 from ..testing_utils import response_contains
@@ -38,12 +46,21 @@ class TestRSFormViewset(EndpointTester):
 
     @decl_endpoint('/api/rsforms/create-detailed', method='post')
     def test_create_rsform_json(self):
-        data = {'title': 'Test123', 'comment': '123', 'alias': 'ks1'}
+        data = {
+            'title': 'Test123',
+            'comment': '123',
+            'alias': 'ks1',
+            'location': LocationHead.PROJECTS,
+            'access_policy': AccessPolicy.PROTECTED,
+            'visible': False
+        }
         response = self.executeCreated(data)
         self.assertEqual(response.data['owner'], self.user.pk)
-        self.assertEqual(response.data['title'], 'Test123')
-        self.assertEqual(response.data['alias'], 'ks1')
-        self.assertEqual(response.data['comment'], '123')
+        self.assertEqual(response.data['title'], data['title'])
+        self.assertEqual(response.data['alias'], data['alias'])
+        self.assertEqual(response.data['location'], data['location'])
+        self.assertEqual(response.data['access_policy'], data['access_policy'])
+        self.assertEqual(response.data['visible'], data['visible'])
 
 
     @decl_endpoint('/api/rsforms', method='get')

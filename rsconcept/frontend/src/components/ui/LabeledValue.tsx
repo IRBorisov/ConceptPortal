@@ -11,7 +11,7 @@ interface LabeledValueProps extends CProps.Styling {
 
 function LabeledValue({ id, label, text, title, className, ...restProps }: LabeledValueProps) {
   return (
-    <div className={clsx('flex justify-between gap-3', className)} {...restProps}>
+    <div className={clsx('flex justify-between gap-6', className)} {...restProps}>
       <span title={title}>{label}</span>
       <span id={id}>{text}</span>
     </div>

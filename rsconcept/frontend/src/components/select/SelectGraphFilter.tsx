@@ -10,32 +10,9 @@ import { DependencyMode } from '@/models/miscellaneous';
 import { prefixes } from '@/utils/constants';
 import { describeCstSource, labelCstSource } from '@/utils/labels';
 
-import {
-  IconGraphCollapse,
-  IconGraphExpand,
-  IconGraphInputs,
-  IconGraphOutputs,
-  IconSettings,
-  IconText
-} from '../Icons';
+import { DependencyIcon } from '../DomainIcons';
 import DropdownButton from '../ui/DropdownButton';
 
-function DependencyIcon(mode: DependencyMode, size: string, color?: string) {
-  switch (mode) {
-    case DependencyMode.ALL:
-      return <IconSettings size={size} className={color} />;
-    case DependencyMode.EXPRESSION:
-      return <IconText size={size} className={color} />;
-    case DependencyMode.OUTPUTS:
-      return <IconGraphOutputs size={size} className={color} />;
-    case DependencyMode.INPUTS:
-      return <IconGraphInputs size={size} className={color} />;
-    case DependencyMode.EXPAND_OUTPUTS:
-      return <IconGraphExpand size={size} className={color} />;
-    case DependencyMode.EXPAND_INPUTS:
-      return <IconGraphCollapse size={size} className={color} />;
-  }
-}
 interface SelectGraphFilterProps {
   value: DependencyMode;
   onChange: (value: DependencyMode) => void;

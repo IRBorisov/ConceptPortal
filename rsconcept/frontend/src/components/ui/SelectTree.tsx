@@ -101,7 +101,6 @@ function SelectTree<ItemType>({
               {foldable.has(item) ? (
                 <Overlay position='left-[-1.3rem]' className={clsx(!folded.includes(item) && 'top-[0.1rem]')}>
                   <MiniButton
-                    tabIndex={-1}
                     noPadding
                     noHover
                     icon={!folded.includes(item) ? <IconDropArrow size='1rem' /> : <IconPageRight size='1.25rem' />}

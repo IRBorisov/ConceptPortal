@@ -13,13 +13,22 @@ from .basics import CstParseSerializer
 from .io_pyconcept import PyConceptAdapter
 
 
-class LibraryItemSerializer(serializers.ModelSerializer):
-    ''' Serializer: LibraryItem entry. '''
+class LibraryItemBase(serializers.ModelSerializer):
+    ''' Serializer: LibraryItem entry full access. '''
     class Meta:
         ''' serializer metadata. '''
         model = LibraryItem
         fields = '__all__'
         read_only_fields = ('id', 'item_type')
+
+
+class LibraryItemSerializer(serializers.ModelSerializer):
+    ''' Serializer: LibraryItem entry limited access. '''
+    class Meta:
+        ''' serializer metadata. '''
+        model = LibraryItem
+        fields = '__all__'
+        read_only_fields = ('id', 'item_type', 'owner', 'location', 'access_policy')
 
 
 class VersionSerializer(serializers.ModelSerializer):
@@ -164,8 +173,11 @@ class RSFormSerializer(serializers.ModelSerializer):
         del result['editors']
 
         del result['owner']
-        del result['is_common']
-        del result['is_canonical']
+        del result['visible']
+        del result['read_only']
+        del result['access_policy']
+        del result['location']
+
         del result['time_create']
         del result['time_update']
         return result
@@ -208,7 +220,7 @@ class RSFormSerializer(serializers.ModelSerializer):
                     validated_data=new_cst.validated_data
                 )
 
-        loaded_item = LibraryItemSerializer(data=data)
+        loaded_item = LibraryItemBase(data=data)
         loaded_item.is_valid(raise_exception=True)
         loaded_item.update(
             instance=cast(LibraryItem, self.instance),
@@ -325,7 +337,7 @@ class CstListSerializer(serializers.Serializer):
         return attrs
 
 
-class LibraryItemCloneSerializer(LibraryItemSerializer):
+class LibraryItemCloneSerializer(LibraryItemBase):
     ''' Serializer: LibraryItem cloning. '''
     items = PKField(many=True, required=False, queryset=Constituenta.objects.all())
 

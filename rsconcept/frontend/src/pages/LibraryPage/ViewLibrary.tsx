@@ -1,11 +1,9 @@
 'use client';
 
-import clsx from 'clsx';
 import { useLayoutEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { urls } from '@/app/urls';
-import BadgeHelp from '@/components/info/BadgeHelp';
 import { CProps } from '@/components/props';
 import DataTable, { createColumnHelper, VisibilityState } from '@/components/ui/DataTable';
 import FlexColumn from '@/components/ui/FlexColumn';
@@ -16,10 +14,7 @@ import { useUsers } from '@/context/UsersContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ILibraryItem } from '@/models/library';
-import { HelpTopic } from '@/models/miscellaneous';
 import { storage } from '@/utils/constants';
-
-import ItemIcons from './ItemIcons';
 
 interface ViewLibraryProps {
   items: ILibraryItem[];
@@ -51,14 +46,6 @@ function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
 
   const columns = useMemo(
     () => [
-      columnHelper.display({
-        id: 'status',
-        header: '',
-        size: 60,
-        minSize: 60,
-        maxSize: 60,
-        cell: props => <ItemIcons item={props.row.original} />
-      }),
       columnHelper.accessor('alias', {
         id: 'alias',
         header: 'Шифр',
@@ -66,6 +53,7 @@ function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
         minSize: 80,
         maxSize: 150,
         enableSorting: true,
+        cell: props => <div className='pl-2'>{props.getValue()}</div>,
         sortingFn: 'text'
       }),
       columnHelper.accessor('title', {
@@ -114,48 +102,34 @@ function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
   const tableHeight = useMemo(() => calculateHeight('2.2rem'), [calculateHeight]);
 
   return (
-    <>
-      <div className='sticky top-[2.3rem]'>
-        <div
-          className={clsx(
-            'z-pop', // prettier: split lines
-            'absolute top-[0.125rem] left-[0.25rem]',
-            'ml-3',
-            'flex gap-1'
-          )}
-        >
-          <BadgeHelp topic={HelpTopic.UI_LIBRARY} className='max-w-[30rem] text-sm' offset={5} place='right-start' />
-        </div>
-      </div>
-      <DataTable
-        id='library_data'
-        columns={columns}
-        data={items}
-        headPosition='0'
-        className='text-xs sm:text-sm cc-scroll-y'
-        style={{ maxHeight: tableHeight }}
-        noDataComponent={
-          <FlexColumn className='p-3 items-center min-h-[6rem]'>
-            <p>Список схем пуст</p>
-            <p className='flex gap-6'>
-              <TextURL text='Создать схему' href='/library/create' />
-              <TextURL text='Очистить фильтр' onClick={resetQuery} />
-            </p>
-          </FlexColumn>
-        }
-        columnVisibility={columnVisibility}
-        onRowClicked={handleOpenItem}
-        enableSorting
-        initialSorting={{
-          id: 'time_update',
-          desc: true
-        }}
-        enablePagination
-        paginationPerPage={itemsPerPage}
-        onChangePaginationOption={setItemsPerPage}
-        paginationOptions={[10, 20, 30, 50, 100]}
-      />
-    </>
+    <DataTable
+      id='library_data'
+      columns={columns}
+      data={items}
+      headPosition='0'
+      className='text-xs sm:text-sm cc-scroll-y'
+      style={{ maxHeight: tableHeight }}
+      noDataComponent={
+        <FlexColumn className='p-3 items-center min-h-[6rem]'>
+          <p>Список схем пуст</p>
+          <p className='flex gap-6'>
+            <TextURL text='Создать схему' href='/library/create' />
+            <TextURL text='Очистить фильтр' onClick={resetQuery} />
+          </p>
+        </FlexColumn>
+      }
+      columnVisibility={columnVisibility}
+      onRowClicked={handleOpenItem}
+      enableSorting
+      initialSorting={{
+        id: 'time_update',
+        desc: true
+      }}
+      enablePagination
+      paginationPerPage={itemsPerPage}
+      onChangePaginationOption={setItemsPerPage}
+      paginationOptions={[10, 20, 30, 50, 100]}
+    />
   );
 }
 

@@ -50,7 +50,20 @@ function EditorLibraryItem({ item, isModified }: EditorLibraryItemProps) {
   return (
     <div className='flex flex-col'>
       {accessLevel >= UserLevel.OWNER ? (
-        <Overlay position='top-[-0.5rem] left-[6rem] cc-icons'>
+        <Overlay position='top-[-0.5rem] left-[2.3rem] cc-icons'>
+          <MiniButton
+            title='Изменить путь'
+            noHover
+            onClick={() => controller.promptLocation()}
+            icon={<IconEdit size='1rem' className='mt-1 icon-primary' />}
+            disabled={isModified || controller.isProcessing}
+          />
+        </Overlay>
+      ) : null}
+      <LabeledValue className='sm:mb-1 text-ellipsis max-w-[30rem]' label='Путь' text={item?.location ?? ''} />
+
+      {accessLevel >= UserLevel.OWNER ? (
+        <Overlay position='top-[-0.5rem] left-[5.5rem] cc-icons'>
           <div className='flex items-start'>
             <MiniButton
               title='Изменить владельца'
@@ -61,7 +74,7 @@ function EditorLibraryItem({ item, isModified }: EditorLibraryItemProps) {
             />
             {ownerSelector.isOpen ? (
               <SelectUser
-                className='w-[20rem] sm:w-[22.5rem] text-sm'
+                className='w-[21rem] sm:w-[23rem] text-sm'
                 items={users}
                 value={item?.owner ?? undefined}
                 onSelectValue={onSelectUser}
@@ -73,7 +86,7 @@ function EditorLibraryItem({ item, isModified }: EditorLibraryItemProps) {
       <LabeledValue className='sm:mb-1' label='Владелец' text={getUserLabel(item?.owner ?? null)} />
 
       {accessLevel >= UserLevel.OWNER ? (
-        <Overlay position='top-[-0.5rem] left-[6rem] cc-icons'>
+        <Overlay position='top-[-0.5rem] left-[5.5rem] cc-icons'>
           <div className='flex items-start'>
             <MiniButton
               title='Изменить редакторов'
@@ -86,12 +99,12 @@ function EditorLibraryItem({ item, isModified }: EditorLibraryItemProps) {
         </Overlay>
       ) : null}
       <LabeledValue id='editor_stats' className='sm:mb-1' label='Редакторы' text={item?.editors.length ?? 0} />
-      <Tooltip anchorSelect='#editor_stats' layer='z-modal-tooltip'>
+      <Tooltip anchorSelect='#editor_stats' layer='z-modalTooltip'>
         <InfoUsers items={item?.editors ?? []} prefix={prefixes.user_editors} />
       </Tooltip>
 
       <LabeledValue id='sub_stats' className='sm:mb-1' label='Отслеживают' text={item?.subscribers.length ?? 0} />
-      <Tooltip anchorSelect='#sub_stats' layer='z-modal-tooltip'>
+      <Tooltip anchorSelect='#sub_stats' layer='z-modalTooltip'>
         <InfoUsers items={item?.subscribers ?? []} prefix={prefixes.user_subs} />
       </Tooltip>
 

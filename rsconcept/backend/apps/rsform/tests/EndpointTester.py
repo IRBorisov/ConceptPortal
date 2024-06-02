@@ -2,6 +2,7 @@
 from rest_framework import status
 from rest_framework.test import APIClient, APIRequestFactory, APITestCase
 
+from apps.rsform.models import Editor, LibraryItem
 from apps.users.models import User
 
 
@@ -42,6 +43,12 @@ class EndpointTester(APITestCase):
     def toggle_admin(self, value: bool = True):
         self.user.is_staff = value
         self.user.save()
+
+    def toggle_editor(self, item: LibraryItem, value: bool = True):
+        if value:
+            Editor.add(item, self.user)
+        else:
+            Editor.remove(item, self.user)
 
     def login(self):
         self.client.force_authenticate(user=self.user)

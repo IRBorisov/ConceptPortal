@@ -17,7 +17,7 @@ function Dropdown({ isOpen, stretchLeft, className, children, ...restProps }: Dr
       <motion.div
         tabIndex={-1}
         className={clsx(
-          'z-modal-tooltip',
+          'z-modalTooltip',
           'absolute mt-3',
           'flex flex-col',
           'border rounded-md shadow-lg',

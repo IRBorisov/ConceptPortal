@@ -30,7 +30,8 @@ export const PARAMETER = {
  * Numeric limitations.
  */
 export const limits = {
-  library_alias_len: 12
+  library_alias_len: 12,
+  location_len: 500
 };
 
 /**
@@ -94,7 +95,11 @@ export const storage = {
   rseditShowList: 'rsedit.show_list',
   rseditShowControls: 'rsedit.show_controls',
 
-  librarySearchStrategy: 'library.search.strategy',
+  librarySearchHead: 'library.search.head',
+  librarySearchVisible: 'library.search.visible',
+  librarySearchOwned: 'library.search.owned',
+  librarySearchSubscribed: 'library.search.subscribed',
+  librarySearchEditor: 'library.search.editor',
   libraryPagination: 'library.pagination',
 
   rsgraphFilter: 'rsgraph.filter2',
@@ -138,7 +143,9 @@ export const prefixes = {
   cst_delete_list: 'cst_delete_list_',
   cst_dependant_list: 'cst_dependant_list_',
   csttype_list: 'csttype_',
+  policy_list: 'policy_list_',
   library_filters_list: 'library_filters_list_',
+  location_head_list: 'location_head_list_',
   topic_list: 'topic_list_',
   topic_item: 'topic_item_',
   library_list: 'library_list_',

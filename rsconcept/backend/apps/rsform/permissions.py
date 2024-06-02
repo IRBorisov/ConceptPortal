@@ -57,10 +57,11 @@ class ItemEditor(ItemOwner):
     ''' Item permission: Editor or higher. '''
 
     def has_object_permission(self, request: Request, view: APIView, obj: Any) -> bool:
+        item = _extract_item(obj)
         if m.Editor.objects.filter(
-            item=_extract_item(obj),
+            item=item,
             editor=cast(m.User, request.user)
-        ).exists():
+        ).exists() and item.access_policy != m.AccessPolicy.PRIVATE:
             return True
         return super().has_object_permission(request, view, obj)
 

@@ -6,14 +6,8 @@
  */
 import { GraphLayout } from '@/components/ui/GraphUI';
 import { GramData, Grammeme, ReferenceType } from '@/models/language';
-import {
-  CstMatchMode,
-  DependencyMode,
-  GraphColoring,
-  GraphSizing,
-  HelpTopic,
-  LibraryFilterStrategy
-} from '@/models/miscellaneous';
+import { AccessPolicy, LocationHead } from '@/models/library';
+import { CstMatchMode, DependencyMode, GraphColoring, GraphSizing, HelpTopic } from '@/models/miscellaneous';
 import { CstClass, CstType, ExpressionStatus, IConstituenta, IRSForm } from '@/models/rsform';
 import {
   IArgumentInfo,
@@ -261,30 +255,28 @@ export function describeCstSource(mode: DependencyMode): string {
 }
 
 /**
- * Retrieves label for {@link LibraryFilterStrategy}.
+ * Retrieves label for {@link LocationHead}.
  */
-export function labelLibraryFilter(strategy: LibraryFilterStrategy): string {
+export function labelLocationHead(head: LocationHead): string {
   // prettier-ignore
-  switch (strategy) {
-    case LibraryFilterStrategy.MANUAL:      return 'отображать все';
-    case LibraryFilterStrategy.COMMON:      return 'общедоступные';
-    case LibraryFilterStrategy.CANONICAL:   return 'неизменные';
-    case LibraryFilterStrategy.SUBSCRIBE:   return 'подписки';
-    case LibraryFilterStrategy.OWNED:       return 'владелец';
+  switch (head) {
+    case LocationHead.USER:      return 'личные (/U)';
+    case LocationHead.COMMON:    return 'общие (/S)';
+    case LocationHead.LIBRARY:   return 'неизменные (/L)';
+    case LocationHead.PROJECTS:  return 'проекты (/P)';
   }
 }
 
 /**
- * Retrieves description for {@link LibraryFilterStrategy}.
+ * Retrieves description for {@link LocationHead}.
  */
-export function describeLibraryFilter(strategy: LibraryFilterStrategy): string {
+export function describeLocationHead(head: LocationHead): string {
   // prettier-ignore
-  switch (strategy) {
-    case LibraryFilterStrategy.MANUAL:      return 'Отображать все схемы';
-    case LibraryFilterStrategy.COMMON:      return 'Отображать общедоступные схемы';
-    case LibraryFilterStrategy.CANONICAL:   return 'Отображать стандартные схемы';
-    case LibraryFilterStrategy.SUBSCRIBE:   return 'Отображать подписки';
-    case LibraryFilterStrategy.OWNED:       return 'Отображать собственные схемы';
+  switch (head) {
+    case LocationHead.USER:      return 'Личные схемы пользователя';
+    case LocationHead.COMMON:    return 'Рабочий каталог публичных схем';
+    case LocationHead.LIBRARY:   return 'Каталог неизменных схем';
+    case LocationHead.PROJECTS:  return 'Рабочий каталог проектных схем';
   }
 }
 
@@ -803,8 +795,36 @@ export function describeAccessMode(mode: UserLevel): string {
 }
 
 /**
+ * Retrieves label for {@link AccessPolicy}.
+ */
+export function labelAccessPolicy(policy: AccessPolicy): string {
+  // prettier-ignore
+  switch (policy) {
+    case AccessPolicy.PRIVATE:     return 'Личный';
+    case AccessPolicy.PROTECTED:   return 'Защищенный';
+    case AccessPolicy.PUBLIC:      return 'Открытый';
+  }
+}
+
+/**
+ * Retrieves description for {@link AccessPolicy}.
+ */
+export function describeAccessPolicy(policy: AccessPolicy): string {
+  // prettier-ignore
+  switch (policy) {
+    case AccessPolicy.PRIVATE:
+      return 'Доступ только для владельца';
+    case AccessPolicy.PROTECTED:
+      return 'Доступ для владельца и редакторов';
+    case AccessPolicy.PUBLIC:
+      return 'Открытый доступ';
+  }
+}
+
+/**
  * UI shared messages.
  */
 export const messages = {
-  unsaved: 'Сохраните или отмените изменения'
+  unsaved: 'Сохраните или отмените изменения',
+  promptUnsaved: 'Присутствуют несохраненные изменения. Продолжить без их учета?'
 };

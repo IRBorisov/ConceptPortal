@@ -15,6 +15,7 @@ function Footer() {
       tabIndex={-1}
       className={clsx(
         'z-navigation',
+        'w-full',
         'sm:px-4 sm:py-2 flex flex-col items-center gap-1',
         'text-xs sm:text-sm select-none whitespace-nowrap'
       )}

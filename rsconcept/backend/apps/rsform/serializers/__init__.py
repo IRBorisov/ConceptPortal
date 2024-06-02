@@ -1,9 +1,11 @@
 ''' REST API: Serializers. '''
 
 from .basics import (
+    AccessPolicySerializer,
     ASTNodeSerializer,
     ExpressionParseSerializer,
     ExpressionSerializer,
+    LocationSerializer,
     MultiFormSerializer,
     ResolverSerializer,
     TextSerializer,
@@ -18,6 +20,7 @@ from .data_access import (
     CstSubstituteSerializer,
     CstTargetSerializer,
     InlineSynthesisSerializer,
+    LibraryItemBase,
     LibraryItemCloneSerializer,
     LibraryItemSerializer,
     RSFormParseSerializer,

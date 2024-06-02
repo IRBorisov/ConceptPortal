@@ -105,7 +105,7 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
   return (
     <>
       {controller.isContentEditable ? <RSListToolbar /> : null}
-      <AnimateFade tabIndex={-1} className='outline-none' onKeyDown={handleKeyDown}>
+      <AnimateFade tabIndex={-1} onKeyDown={handleKeyDown}>
         {controller.isContentEditable ? (
           <SelectedCounter
             totalCount={controller.schema?.stats?.count_all ?? 0}

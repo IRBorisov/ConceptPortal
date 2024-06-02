@@ -2,7 +2,8 @@
 
 import { useMemo } from 'react';
 
-import { IconDestroy, IconDownload, IconFollow, IconFollowOff, IconSave, IconShare } from '@/components/Icons';
+import { SubscribeIcon } from '@/components/DomainIcons';
+import { IconDestroy, IconDownload, IconSave, IconShare } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
@@ -17,7 +18,6 @@ interface RSFormToolbarProps {
   modified: boolean;
   subscribed: boolean;
   anonymous: boolean;
-  claimable: boolean;
   onSubmit: () => void;
   onDestroy: () => void;
 }
@@ -28,7 +28,7 @@ function RSFormToolbar({ modified, anonymous, subscribed, onSubmit, onDestroy }:
   const canSave = useMemo(() => modified && !controller.isProcessing, [modified, controller.isProcessing]);
   return (
     <Overlay position='top-1 right-1/2 translate-x-1/2' className='cc-icons'>
-      {controller.isContentEditable ? (
+      {controller.isContentEditable || modified ? (
         <MiniButton
           titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
           disabled={!canSave}
@@ -49,13 +49,7 @@ function RSFormToolbar({ modified, anonymous, subscribed, onSubmit, onDestroy }:
       {!anonymous ? (
         <MiniButton
           titleHtml={`Отслеживание <b>${subscribed ? 'включено' : 'выключено'}</b>`}
-          icon={
-            subscribed ? (
-              <IconFollow size='1.25rem' className='icon-primary' />
-            ) : (
-              <IconFollowOff size='1.25rem' className='clr-text-controls' />
-            )
-          }
+          icon={<SubscribeIcon value={subscribed} className={subscribed ? 'icon-primary' : 'clr-text-controls'} />}
           disabled={controller.isProcessing}
           onClick={controller.toggleSubscribe}
         />

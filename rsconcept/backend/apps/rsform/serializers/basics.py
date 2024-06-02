@@ -4,6 +4,9 @@ from typing import cast
 from cctext import EntityReference, Reference, ReferenceType, Resolver, SyntacticReference
 from rest_framework import serializers
 
+from .. import messages as msg
+from ..models import AccessPolicy, validate_location
+
 
 class ExpressionSerializer(serializers.Serializer):
     ''' Serializer: RSLang expression. '''
@@ -14,6 +17,32 @@ class WordFormSerializer(serializers.Serializer):
     ''' Serializer: inflect request. '''
     text = serializers.CharField()
     grams = serializers.CharField()
+
+
+class LocationSerializer(serializers.Serializer):
+    ''' Serializer: Item location. '''
+    location = serializers.CharField(max_length=500)
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        if not validate_location(attrs['location']):
+            raise serializers.ValidationError({
+                'location': msg.invalidLocation()
+            })
+        return attrs
+
+
+class AccessPolicySerializer(serializers.Serializer):
+    ''' Serializer: Constituenta renaming. '''
+    access_policy = serializers.CharField(max_length=500)
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        if not attrs['access_policy'] in AccessPolicy.values:
+            raise serializers.ValidationError({
+                'access_policy': msg.invalidEnum(attrs['access_policy'])
+            })
+        return attrs
 
 
 class MultiFormSerializer(serializers.Serializer):

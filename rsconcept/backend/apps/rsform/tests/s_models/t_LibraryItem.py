@@ -1,7 +1,15 @@
 ''' Testing models: LibraryItem. '''
 from django.test import TestCase
 
-from apps.rsform.models import LibraryItem, LibraryItemType, Subscription, User
+from apps.rsform.models import (
+    AccessPolicy,
+    LibraryItem,
+    LibraryItemType,
+    LocationHead,
+    Subscription,
+    User,
+    validate_location
+)
 
 
 class TestLibraryItem(TestCase):
@@ -40,8 +48,10 @@ class TestLibraryItem(TestCase):
         self.assertEqual(item.title, 'Test')
         self.assertEqual(item.alias, '')
         self.assertEqual(item.comment, '')
-        self.assertEqual(item.is_common, False)
-        self.assertEqual(item.is_canonical, False)
+        self.assertEqual(item.visible, True)
+        self.assertEqual(item.read_only, False)
+        self.assertEqual(item.access_policy, AccessPolicy.PUBLIC)
+        self.assertEqual(item.location, LocationHead.USER)
 
 
     def test_create(self):
@@ -51,13 +61,39 @@ class TestLibraryItem(TestCase):
             owner=self.user1,
             alias='KS1',
             comment='Test comment',
-            is_common=True,
-            is_canonical=True
+            location=LocationHead.COMMON
         )
         self.assertEqual(item.owner, self.user1)
         self.assertEqual(item.title, 'Test')
         self.assertEqual(item.alias, 'KS1')
         self.assertEqual(item.comment, 'Test comment')
-        self.assertEqual(item.is_common, True)
-        self.assertEqual(item.is_canonical, True)
+        self.assertEqual(item.location, LocationHead.COMMON)
         self.assertTrue(Subscription.objects.filter(user=item.owner, item=item).exists())
+
+
+class TestLocation(TestCase):
+    ''' Testing Location model. '''
+
+    def test_validate_location(self):
+        self.assertFalse(validate_location(''))
+        self.assertFalse(validate_location('/A'))
+        self.assertFalse(validate_location('U/U'))
+        self.assertFalse(validate_location('/U/'))
+        self.assertFalse(validate_location('/U/user@mail'))
+        self.assertFalse(validate_location('/U/u\\asdf'))
+        self.assertFalse(validate_location('/U/ asdf'))
+        self.assertFalse(validate_location('/User'))
+        self.assertFalse(validate_location('//'))
+        self.assertFalse(validate_location('/S/1/'))
+        self.assertFalse(validate_location('/S/1 '))
+        self.assertFalse(validate_location('/S/1/2 /3'))
+
+        self.assertTrue(validate_location('/P'))
+        self.assertTrue(validate_location('/L'))
+        self.assertTrue(validate_location('/U'))
+        self.assertTrue(validate_location('/S'))
+        self.assertTrue(validate_location('/S/1'))
+        self.assertTrue(validate_location('/S/12'))
+        self.assertTrue(validate_location('/S/12/3'))
+        self.assertTrue(validate_location('/S/Вася пупки'))
+        self.assertTrue(validate_location('/S/1/!asdf/тест тест'))

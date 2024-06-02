@@ -1,7 +1,7 @@
 /**
  * Module: API for miscellaneous frontend model types. Future targets for refactoring aimed at extracting modules.
  */
-import { DependencyMode, FontStyle, GraphSizing, ILibraryFilter, LibraryFilterStrategy } from './miscellaneous';
+import { DependencyMode, FontStyle, GraphSizing } from './miscellaneous';
 import { IConstituenta, IRSForm } from './rsform';
 
 /**
@@ -39,20 +39,6 @@ export function applyGraphFilter(target: IRSForm, start: number, mode: Dependenc
     return target.items.filter(cst => ids.find(id => id === cst.id));
   } else {
     return target.items;
-  }
-}
-
-/**
- * Filter list of  {@link ILibraryItem} to a given text query.
- */
-export function filterFromStrategy(strategy: LibraryFilterStrategy): ILibraryFilter {
-  // prettier-ignore
-  switch (strategy) {
-    case LibraryFilterStrategy.MANUAL: return {};
-    case LibraryFilterStrategy.COMMON: return { is_common: true };
-    case LibraryFilterStrategy.CANONICAL: return { is_canonical: true };
-    case LibraryFilterStrategy.SUBSCRIBE: return { is_subscribed: true };
-    case LibraryFilterStrategy.OWNED: return { is_owned: true };
   }
 }
 

@@ -1,4 +1,6 @@
 ''' Models: LibraryItem. '''
+import re
+
 from django.db import transaction
 from django.db.models import (
     SET_NULL,
@@ -22,6 +24,28 @@ class LibraryItemType(TextChoices):
     ''' Type of library items '''
     RSFORM = 'rsform'
     OPERATIONS_SCHEMA = 'oss'
+
+
+class AccessPolicy(TextChoices):
+    ''' Type of item access policy. '''
+    PUBLIC = 'public'
+    PROTECTED = 'protected'
+    PRIVATE = 'private'
+
+
+class LocationHead(TextChoices):
+    ''' Location prefixes. '''
+    PROJECTS = '/P'
+    LIBRARY = '/L'
+    USER = '/U'
+    COMMON = '/S'
+
+
+_RE_LOCATION = r'^/[PLUS]((/[!\d\w]([!\d\w ]*[!\d\w])?)*)?$'  # cspell:disable-line
+
+
+def validate_location(target: str) -> bool:
+    return bool(re.search(_RE_LOCATION, target))
 
 
 class LibraryItem(Model):
@@ -49,14 +73,26 @@ class LibraryItem(Model):
         verbose_name='Комментарий',
         blank=True
     )
-    is_common: BooleanField = BooleanField(
-        verbose_name='Общая',
+    visible: BooleanField = BooleanField(
+        verbose_name='Отображаемая',
+        default=True
+    )
+    read_only: BooleanField = BooleanField(
+        verbose_name='Запретить редактирование',
         default=False
     )
-    is_canonical: BooleanField = BooleanField(
-        verbose_name='Каноничная',
-        default=False
+    access_policy: CharField = CharField(
+        verbose_name='Политика доступа',
+        max_length=500,
+        choices=AccessPolicy.choices,
+        default=AccessPolicy.PUBLIC
     )
+    location: TextField = TextField(
+        verbose_name='Расположение',
+        max_length=500,
+        default=LocationHead.USER
+    )
+
     time_create: DateTimeField = DateTimeField(
         verbose_name='Дата создания',
         auto_now_add=True

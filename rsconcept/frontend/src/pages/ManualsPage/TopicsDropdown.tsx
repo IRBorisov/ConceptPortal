@@ -37,7 +37,7 @@ function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownProps) {
       className={clsx(
         'absolute left-0 w-[13.5rem]', // prettier: split-lines
         'flex flex-col',
-        'z-modal-tooltip',
+        'z-modalTooltip',
         'text-xs sm:text-sm',
         'select-none',
         {

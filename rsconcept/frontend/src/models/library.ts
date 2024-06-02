@@ -13,6 +13,25 @@ export enum LibraryItemType {
 }
 
 /**
+ * Represents Access policy for library items.
+ */
+export enum AccessPolicy {
+  PUBLIC = 'public',
+  PROTECTED = 'protected',
+  PRIVATE = 'private'
+}
+
+/**
+ * Represents valid location headers.
+ */
+export enum LocationHead {
+  USER = '/U',
+  COMMON = '/S',
+  LIBRARY = '/L',
+  PROJECTS = '/P'
+}
+
+/**
  * Represents {@link LibraryItem} identifier type.
  */
 export type LibraryItemID = number;
@@ -46,8 +65,10 @@ export interface ILibraryItem {
   title: string;
   alias: string;
   comment: string;
-  is_common: boolean;
-  is_canonical: boolean;
+  visible: boolean;
+  read_only: boolean;
+  location: string;
+  access_policy: AccessPolicy;
   time_create: string;
   time_update: string;
   owner: UserID | null;
@@ -66,4 +87,27 @@ export interface ILibraryItemEx extends ILibraryItem {
 /**
  * Represents update data for editing {@link ILibraryItem}.
  */
-export interface ILibraryUpdateData extends Omit<ILibraryItem, 'time_create' | 'time_update' | 'id' | 'owner'> {}
+export interface ILibraryUpdateData
+  extends Omit<ILibraryItem, 'time_create' | 'time_update' | 'access_policy' | 'location' | 'id' | 'owner'> {}
+
+/**
+ * Represents update data for editing {@link AccessPolicy} of a {@link ILibraryItem}.
+ */
+export interface ITargetAccessPolicy {
+  access_policy: AccessPolicy;
+}
+
+/**
+ * Represents update data for editing Location of a {@link ILibraryItem}.
+ */
+export interface ITargetLocation {
+  location: string;
+}
+
+/**
+ * Represents data, used for creating {@link IRSForm}.
+ */
+export interface ILibraryCreateData extends Omit<ILibraryItem, 'time_create' | 'time_update' | 'id' | 'owner'> {
+  file?: File;
+  fileName?: string;
+}

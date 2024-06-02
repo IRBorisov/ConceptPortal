@@ -1,4 +1,4 @@
-import { IconEditor, IconList, IconNewItem, IconShare, IconUpload } from '@/components/Icons';
+import { IconEditor, IconNewItem, IconShare, IconUpload, IconVersions } from '@/components/Icons';
 
 function HelpVersions() {
   return (
@@ -23,7 +23,7 @@ function HelpVersions() {
       </li>
 
       <li>
-        <IconList size='1.25rem' className='inline-icon' /> Редактировать атрибуты версий
+        <IconVersions size='1.25rem' className='inline-icon' /> Редактировать атрибуты версий
       </li>
     </div>
   );

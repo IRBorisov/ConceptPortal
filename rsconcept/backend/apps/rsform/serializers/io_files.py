@@ -109,10 +109,14 @@ class RSFormTRSSerializer(serializers.Serializer):
         result = super().to_internal_value(data)
         if 'owner' in data:
             result['owner'] = data['owner']
-        if 'is_common' in data:
-            result['is_common'] = data['is_common']
-        if 'is_canonical' in data:
-            result['is_canonical'] = data['is_canonical']
+        if 'visible' in data:
+            result['visible'] = data['visible']
+        if 'read_only' in data:
+            result['read_only'] = data['read_only']
+        if 'access_policy' in data:
+            result['access_policy'] = data['access_policy']
+        if 'location' in data:
+            result['location'] = data['location']
         result['items'] = data.get('items', [])
         if self.context['load_meta']:
             result['title'] = data.get('title', 'Без названия')
@@ -139,8 +143,10 @@ class RSFormTRSSerializer(serializers.Serializer):
             alias=validated_data['alias'],
             title=validated_data['title'],
             comment=validated_data['comment'],
-            is_common=validated_data['is_common'],
-            is_canonical=validated_data['is_canonical']
+            visible=validated_data['visible'],
+            read_only=validated_data['read_only'],
+            access_policy=validated_data['access_policy'],
+            location=validated_data['location']
         )
         self.instance.item.save()
         order = 1

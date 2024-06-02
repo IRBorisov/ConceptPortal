@@ -2,10 +2,12 @@
 from rest_framework import status
 
 from apps.rsform.models import (
+    AccessPolicy,
     Editor,
     LibraryItem,
     LibraryItemType,
     LibraryTemplate,
+    LocationHead,
     RSForm,
     Subscription
 )
@@ -35,7 +37,7 @@ class TestLibraryViewset(EndpointTester):
             item_type=LibraryItemType.RSFORM,
             title='Test3',
             alias='T3',
-            is_common=True
+            location=LocationHead.COMMON
         )
         self.invalid_user = 1337 + self.user2.pk
         self.invalid_item = 1337 + self.common.pk
@@ -55,14 +57,36 @@ class TestLibraryViewset(EndpointTester):
 
     @decl_endpoint('/api/library/{item}', method='patch')
     def test_update(self):
-        data = {'id': self.unowned.pk, 'title': 'New title'}
+        data = {'id': self.unowned.pk, 'title': 'New Title'}
         self.executeNotFound(data, item=self.invalid_item)
         self.executeForbidden(data, item=self.unowned.pk)
 
-        data = {'id': self.owned.pk, 'title': 'New title'}
+        self.toggle_editor(self.unowned, True)
+        response = self.executeOK(data, item=self.unowned.pk)
+        self.assertEqual(response.data['title'], data['title'])
+
+        self.unowned.access_policy = AccessPolicy.PRIVATE
+        self.unowned.save()
+        self.executeForbidden(data, item=self.unowned.pk)
+
+        data = {'id': self.owned.pk, 'title': 'New Title'}
         response = self.executeOK(data, item=self.owned.pk)
-        self.assertEqual(response.data['title'], 'New title')
+        self.assertEqual(response.data['title'], data['title'])
         self.assertEqual(response.data['alias'], self.owned.alias)
+
+        data = {
+            'id': self.owned.pk,
+            'title': 'Another Title',
+            'owner': self.user2.pk,
+            'access_policy': AccessPolicy.PROTECTED,
+            'location': LocationHead.LIBRARY
+        }
+        response = self.executeOK(data, item=self.owned.pk)
+        self.assertEqual(response.data['title'], data['title'])
+        self.assertEqual(response.data['owner'], self.owned.owner.pk)
+        self.assertEqual(response.data['access_policy'], self.owned.access_policy)
+        self.assertEqual(response.data['location'], self.owned.location)
+        self.assertNotEqual(response.data['location'], LocationHead.LIBRARY)
 
 
     @decl_endpoint('/api/library/{item}/set-owner', method='patch')
@@ -88,6 +112,59 @@ class TestLibraryViewset(EndpointTester):
         self.executeOK(data, item=self.owned.pk)
         self.owned.refresh_from_db()
         self.assertEqual(self.owned.owner, self.user)
+
+    @decl_endpoint('/api/library/{item}/set-access-policy', method='patch')
+    def test_set_access_policy(self):
+        time_update = self.owned.time_update
+
+        data = {'access_policy': 'invalid'}
+        self.executeBadData(data, item=self.owned.pk)
+
+        data = {'access_policy': AccessPolicy.PRIVATE}
+        self.executeNotFound(data, item=self.invalid_item)
+        self.executeForbidden(data, item=self.unowned.pk)
+        self.executeOK(data, item=self.owned.pk)
+        self.owned.refresh_from_db()
+        self.assertEqual(self.owned.access_policy, data['access_policy'])
+
+        self.toggle_editor(self.unowned, True)
+        self.executeForbidden(data, item=self.unowned.pk)
+
+        self.toggle_admin(True)
+        self.executeOK(data, item=self.unowned.pk)
+        self.unowned.refresh_from_db()
+        self.assertEqual(self.unowned.access_policy, data['access_policy'])
+
+    @decl_endpoint('/api/library/{item}/set-location', method='patch')
+    def test_set_location(self):
+        time_update = self.owned.time_update
+
+        data = {'location': 'invalid'}
+        self.executeBadData(data, item=self.owned.pk)
+
+        data = {'location': '/U/temp'}
+        self.executeNotFound(data, item=self.invalid_item)
+        self.executeForbidden(data, item=self.unowned.pk)
+        self.executeOK(data, item=self.owned.pk)
+        self.owned.refresh_from_db()
+        self.assertEqual(self.owned.location, data['location'])
+
+        data = {'location': LocationHead.LIBRARY}
+        self.executeForbidden(data, item=self.owned.pk)
+
+        data = {'location': '/U/temp'}
+        self.toggle_editor(self.unowned, True)
+        self.executeForbidden(data, item=self.unowned.pk)
+
+        self.toggle_admin(True)
+        data = {'location': LocationHead.LIBRARY}
+        self.executeOK(data, item=self.owned.pk)
+        self.owned.refresh_from_db()
+        self.assertEqual(self.owned.location, data['location'])
+
+        self.executeOK(data, item=self.unowned.pk)
+        self.unowned.refresh_from_db()
+        self.assertEqual(self.unowned.location, data['location'])
 
     @decl_endpoint('/api/library/{item}/editors-add', method='patch')
     def test_add_editor(self):

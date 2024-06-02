@@ -4,6 +4,8 @@
 
 import { AxiosHeaderValue, AxiosResponse } from 'axios';
 
+import { messages } from './labels';
+
 /**
  * Checks if arguments is Node.
  */
@@ -100,5 +102,25 @@ export function convertBase64ToBlob(base64String: string): Uint8Array {
  * Prompt user of confirming discarding changes before continue.
  */
 export function promptUnsaved(): boolean {
-  return window.confirm('Присутствуют несохраненные изменения. Продолжить без их учета?');
+  return window.confirm(messages.promptUnsaved);
+}
+
+/**
+ * Toggle tristate flag: undefined - true - false.
+ */
+export function toggleTristateFlag(prev: boolean | undefined): boolean | undefined {
+  if (prev === undefined) {
+    return true;
+  }
+  return prev ? false : undefined;
+}
+
+/**
+ * Toggle tristate color: gray - green - red .
+ */
+export function tripleToggleColor(value: boolean | undefined): string {
+  if (value === undefined) {
+    return 'clr-text-controls';
+  }
+  return value ? 'clr-text-green' : 'clr-text-red';
 }

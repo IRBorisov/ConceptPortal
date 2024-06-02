@@ -14,9 +14,10 @@ import {
 } from '@/app/backendAPI';
 import { ErrorData } from '@/components/info/InfoError';
 import { ILibraryItem, LibraryItemID } from '@/models/library';
-import { matchLibraryItem } from '@/models/libraryAPI';
+import { ILibraryCreateData } from '@/models/library';
+import { matchLibraryItem, matchLibraryItemLocation } from '@/models/libraryAPI';
 import { ILibraryFilter } from '@/models/miscellaneous';
-import { IRSForm, IRSFormCloneData, IRSFormCreateData, IRSFormData } from '@/models/rsform';
+import { IRSForm, IRSFormCloneData, IRSFormData } from '@/models/rsform';
 import { RSFormLoader } from '@/models/RSFormLoader';
 
 import { useAuth } from './AuthContext';
@@ -32,7 +33,7 @@ interface ILibraryContext {
 
   applyFilter: (params: ILibraryFilter) => ILibraryItem[];
   retrieveTemplate: (templateID: LibraryItemID, callback: (schema: IRSForm) => void) => void;
-  createItem: (data: IRSFormCreateData, callback?: DataCallback<ILibraryItem>) => void;
+  createItem: (data: ILibraryCreateData, callback?: DataCallback<ILibraryItem>) => void;
   cloneItem: (target: LibraryItemID, data: IRSFormCloneData, callback: DataCallback<IRSFormData>) => void;
   destroyItem: (target: LibraryItemID, callback?: () => void) => void;
 
@@ -65,22 +66,28 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   const [cachedTemplates, setCachedTemplates] = useState<IRSForm[]>([]);
 
   const applyFilter = useCallback(
-    (params: ILibraryFilter) => {
+    (filter: ILibraryFilter) => {
       let result = items;
-      if (params.is_owned) {
-        result = result.filter(item => item.owner === user?.id);
+      if (filter.head) {
+        result = result.filter(item => item.location.startsWith(filter.head!));
       }
-      if (params.is_common !== undefined) {
-        result = result.filter(item => item.is_common === params.is_common);
+      if (filter.isVisible !== undefined) {
+        result = result.filter(item => filter.isVisible === item.visible);
       }
-      if (params.is_canonical !== undefined) {
-        result = result.filter(item => item.is_canonical === params.is_canonical);
+      if (filter.isOwned !== undefined) {
+        result = result.filter(item => filter.isOwned === (item.owner === user?.id));
       }
-      if (params.is_subscribed !== undefined) {
-        result = result.filter(item => user?.subscriptions.includes(item.id));
+      if (filter.isSubscribed !== undefined) {
+        result = result.filter(item => filter.isSubscribed == user?.subscriptions.includes(item.id));
       }
-      if (params.query) {
-        result = result.filter(item => matchLibraryItem(item, params.query!));
+      if (filter.isEditor !== undefined) {
+        // TODO: load editors from backend
+      }
+      if (filter.query) {
+        result = result.filter(item => matchLibraryItem(item, filter.query!));
+      }
+      if (filter.path) {
+        result = result.filter(item => matchLibraryItemLocation(item, filter.path!));
       }
       return result;
     },
@@ -173,7 +180,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   );
 
   const createItem = useCallback(
-    (data: IRSFormCreateData, callback?: DataCallback<ILibraryItem>) => {
+    (data: ILibraryCreateData, callback?: DataCallback<ILibraryItem>) => {
       setError(undefined);
       postNewRSForm({
         data: data,

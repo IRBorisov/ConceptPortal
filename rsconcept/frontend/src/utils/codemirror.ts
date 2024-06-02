@@ -128,7 +128,7 @@ export function findContainedNodes(start: number, finish: number, tree: Tree, fi
 export function domTooltipConstituenta(cst?: IConstituenta) {
   const dom = document.createElement('div');
   dom.className = clsx(
-    'z-modal-tooltip',
+    'z-modalTooltip',
     'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
     'dense',
     'p-2',

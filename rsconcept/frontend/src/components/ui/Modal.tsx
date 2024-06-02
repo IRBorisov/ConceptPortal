@@ -93,7 +93,7 @@ function Modal({
           {children}
         </div>
 
-        <div className={clsx('z-modal-controls', 'px-6 py-3 flex gap-12 justify-center')}>
+        <div className={clsx('z-modalControls', 'px-6 py-3 flex gap-12 justify-center')}>
           {!readonly ? (
             <Button
               autoFocus

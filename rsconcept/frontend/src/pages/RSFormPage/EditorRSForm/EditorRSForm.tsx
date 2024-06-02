@@ -21,7 +21,7 @@ interface EditorRSFormProps {
 }
 
 function EditorRSForm({ isModified, onDestroy, setIsModified }: EditorRSFormProps) {
-  const { schema, isClaimable, isSubscribed } = useRSForm();
+  const { schema, isSubscribed } = useRSForm();
   const { user } = useAuth();
 
   function initiateSubmit() {
@@ -45,13 +45,12 @@ function EditorRSForm({ isModified, onDestroy, setIsModified }: EditorRSFormProp
       <RSFormToolbar
         subscribed={isSubscribed}
         modified={isModified}
-        claimable={isClaimable}
         anonymous={!user}
         onSubmit={initiateSubmit}
         onDestroy={onDestroy}
       />
-      <AnimateFade onKeyDown={handleInput} className={clsx('sm:w-fit w-full', 'flex flex-col sm:flex-row')}>
-        <FlexColumn className='px-4 pb-2'>
+      <AnimateFade onKeyDown={handleInput} className={clsx('sm:w-fit mx-auto', 'flex flex-col sm:flex-row')}>
+        <FlexColumn className='px-3'>
           <FormRSForm id={globals.library_item_editor} isModified={isModified} setIsModified={setIsModified} />
 
           <Divider margins='my-1' />

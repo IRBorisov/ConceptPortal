@@ -30,6 +30,14 @@ def aliasTaken(name: str):
     return f'Имя уже используется: {name}'
 
 
+def invalidLocation():
+    return f'Некорректная строка расположения'
+
+
+def invalidEnum(value: str):
+    return f'Неподдерживаемое значение параметра: {value}'
+
+
 def pyconceptFailure():
     return 'Invalid data response from pyconcept'
 

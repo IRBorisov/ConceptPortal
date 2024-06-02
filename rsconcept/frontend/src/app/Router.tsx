@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import CreateRSFormPage from '@/pages/CreateRSFormPage';
+import CreateItemPage from '@/pages/CreateRSFormPage';
 import HomePage from '@/pages/HomePage';
 import LibraryPage from '@/pages/LibraryPage';
 import LoginPage from '@/pages/LoginPage';
@@ -51,7 +51,7 @@ export const Router = createBrowserRouter([
       },
       {
         path: routes.create_schema,
-        element: <CreateRSFormPage />
+        element: <CreateItemPage />
       },
       {
         path: `${routes.rsforms}/:id`,
