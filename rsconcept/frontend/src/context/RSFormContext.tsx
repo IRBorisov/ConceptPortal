@@ -249,11 +249,12 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         onError: setProcessingError,
         onSuccess: () => {
           schema.owner = newOwner;
+          library.localUpdateItem(schema);
           if (callback) callback();
         }
       });
     },
-    [schemaID, schema]
+    [schemaID, schema, library]
   );
 
   const setAccessPolicy = useCallback(
@@ -271,11 +272,12 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         onError: setProcessingError,
         onSuccess: () => {
           schema.access_policy = newPolicy;
+          library.localUpdateItem(schema);
           if (callback) callback();
         }
       });
     },
-    [schemaID, schema]
+    [schemaID, schema, library]
   );
 
   const setLocation = useCallback(
@@ -293,11 +295,12 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         onError: setProcessingError,
         onSuccess: () => {
           schema.location = newLocation;
+          library.localUpdateItem(schema);
           if (callback) callback();
         }
       });
     },
-    [schemaID, schema]
+    [schemaID, schema, library]
   );
 
   const setEditors = useCallback(
@@ -571,11 +574,12 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         onError: setProcessingError,
         onSuccess: () => {
           setSchema(schema);
+          library.localUpdateItem(schema!);
           if (callback) callback();
         }
       });
     },
-    [schema, setSchema]
+    [schema, setSchema, library]
   );
 
   const inlineSynthesis = useCallback(
