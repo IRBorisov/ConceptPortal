@@ -12,7 +12,7 @@ function PopulateDevData() {
 function ImportInitialData() {
     docker exec `
         -it $container `
-        python manage.py loaddata $backend\fixtures\InitialData.json
+        python3.12 manage.py loaddata $backend\fixtures\InitialData.json
 }
 
 function CreateAdmin() {
@@ -20,7 +20,7 @@ function CreateAdmin() {
         -e DJANGO_SUPERUSER_USERNAME=admin `
         -e DJANGO_SUPERUSER_PASSWORD=1234 `
         -e DJANGO_SUPERUSER_EMAIL=admin@admin.com `
-        -it $container python manage.py createsuperuser --noinput
+        -it $container python3.12 manage.py createsuperuser --noinput
 }
 
 PopulateDevData

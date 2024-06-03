@@ -72,7 +72,7 @@ services:
   postgresql-db:
     container_name: portal-db
     restart: always
-    image: postgres:alpine
+    image: postgres:16-alpine
     secrets:
       - db_password
     env_file: ./postgresql/.env.prod

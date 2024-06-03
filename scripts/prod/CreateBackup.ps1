@@ -60,7 +60,7 @@ function DjangoDump() {
   $local_dataDump = "/home/app/web/backup/$_formatDate-data.json"
   $local_archiveDump = "/home/app/web/backup/$_formatDate-data.json.gz"
   & docker exec $containerBackend `
-    python manage.py dumpdata `
+    python3.12 manage.py dumpdata `
       --indent=2 `
       --exclude=admin.LogEntry `
       --exclude=sessions `

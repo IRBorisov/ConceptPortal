@@ -29,7 +29,7 @@ dump_postgre() {
 dump_django() {
   DATA_DUMP_FILE="${DESTINATION}/${DATE_FORMATTED}-data.json"
   docker exec $CONTAINER_BACK \
-    python manage.py dumpdata \
+    python3.12 manage.py dumpdata \
       --indent=2 \
       --exclude=admin.LogEntry \
       --exclude=sessions \

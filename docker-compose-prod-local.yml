@@ -44,7 +44,7 @@ services:
   postgresql-db:
     container_name: local-portal-db
     restart: no
-    image: postgres:alpine
+    image: postgres:16-alpine
     env_file: ./postgresql/.env.prod.local
     volumes:
       - postgres_volume:/var/lib/postgresql/data
