@@ -20,7 +20,7 @@ from .data_access import (
     CstSubstituteSerializer,
     CstTargetSerializer,
     InlineSynthesisSerializer,
-    LibraryItemBase,
+    LibraryItemBaseSerializer,
     LibraryItemCloneSerializer,
     LibraryItemSerializer,
     RSFormParseSerializer,

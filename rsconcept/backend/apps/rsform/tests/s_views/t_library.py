@@ -45,10 +45,28 @@ class TestLibraryViewset(EndpointTester):
 
     @decl_endpoint('/api/library', method='post')
     def test_create(self):
-        data = {'title': 'Title'}
+        data = {
+            'title': 'Title',
+            'alias': 'alias',
+        }
+        self.executeBadData(data)
+
+        data = {
+            'item_type': LibraryItemType.OPERATIONS_SCHEMA,
+            'title': 'Title',
+            'alias': 'alias',
+            'access_policy': AccessPolicy.PROTECTED,
+            'visible': False,
+            'read_only': True
+        }
         response = self.executeCreated(data)
-        self.assertEqual(response.data['title'], 'Title')
         self.assertEqual(response.data['owner'], self.user.pk)
+        self.assertEqual(response.data['item_type'], data['item_type'])
+        self.assertEqual(response.data['title'], data['title'])
+        self.assertEqual(response.data['alias'], data['alias'])
+        self.assertEqual(response.data['access_policy'], data['access_policy'])
+        self.assertEqual(response.data['visible'], data['visible'])
+        self.assertEqual(response.data['read_only'], data['read_only'])
 
         self.logout()
         data = {'title': 'Title2'}
@@ -273,6 +291,16 @@ class TestLibraryViewset(EndpointTester):
         self.assertFalse(response_contains(response, self.unowned))
         self.assertFalse(response_contains(response, self.owned))
 
+    @decl_endpoint('/api/library', method='get')
+    def test_library_get(self):
+        non_schema = LibraryItem.objects.create(
+            item_type=LibraryItemType.OPERATIONS_SCHEMA,
+            title='Test4'
+        )
+        response = self.executeOK()
+        self.assertTrue(response_contains(response, non_schema))
+        self.assertTrue(response_contains(response, self.unowned))
+        self.assertTrue(response_contains(response, self.owned))
 
     @decl_endpoint('/api/library/all', method='get')
     def test_retrieve_all(self):

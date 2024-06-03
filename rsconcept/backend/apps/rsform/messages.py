@@ -60,3 +60,7 @@ def invalidPosition():
 
 def constituentaNoStructure():
     return 'Указанная конституента не обладает теоретико-множественной типизацией'
+
+
+def missingFile():
+    return 'Отсутствует прикрепленный файл'

@@ -198,7 +198,7 @@ export function getTemplates(request: FrontPull<ILibraryItem[]>) {
   });
 }
 
-export function postNewRSForm(request: FrontExchange<ILibraryCreateData, ILibraryItem>) {
+export function postRSFormFromFile(request: FrontExchange<ILibraryCreateData, ILibraryItem>) {
   AxiosPost({
     endpoint: '/api/rsforms/create-detailed',
     request: request,
@@ -207,6 +207,13 @@ export function postNewRSForm(request: FrontExchange<ILibraryCreateData, ILibrar
         'Content-Type': 'multipart/form-data'
       }
     }
+  });
+}
+
+export function postCreateLibraryItem(request: FrontExchange<ILibraryCreateData, ILibraryItem>) {
+  AxiosPost({
+    endpoint: '/api/library',
+    request: request
   });
 }
 

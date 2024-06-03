@@ -13,13 +13,13 @@ from .basics import CstParseSerializer
 from .io_pyconcept import PyConceptAdapter
 
 
-class LibraryItemBase(serializers.ModelSerializer):
+class LibraryItemBaseSerializer(serializers.ModelSerializer):
     ''' Serializer: LibraryItem entry full access. '''
     class Meta:
         ''' serializer metadata. '''
         model = LibraryItem
         fields = '__all__'
-        read_only_fields = ('id', 'item_type')
+        read_only_fields = ('id',)
 
 
 class LibraryItemSerializer(serializers.ModelSerializer):
@@ -29,6 +29,16 @@ class LibraryItemSerializer(serializers.ModelSerializer):
         model = LibraryItem
         fields = '__all__'
         read_only_fields = ('id', 'item_type', 'owner', 'location', 'access_policy')
+
+
+class LibraryItemCloneSerializer(serializers.ModelSerializer):
+    ''' Serializer: LibraryItem cloning. '''
+    items = PKField(many=True, required=False, queryset=Constituenta.objects.all())
+
+    class Meta:
+        ''' serializer metadata. '''
+        model = LibraryItem
+        exclude = ['id', 'item_type', 'owner']
 
 
 class VersionSerializer(serializers.ModelSerializer):
@@ -220,7 +230,7 @@ class RSFormSerializer(serializers.ModelSerializer):
                     validated_data=new_cst.validated_data
                 )
 
-        loaded_item = LibraryItemBase(data=data)
+        loaded_item = LibraryItemBaseSerializer(data=data)
         loaded_item.is_valid(raise_exception=True)
         loaded_item.update(
             instance=cast(LibraryItem, self.instance),
@@ -335,11 +345,6 @@ class CstListSerializer(serializers.Serializer):
                     f'{item.id}': msg.constituentaNotOwned(schema.title)
                 })
         return attrs
-
-
-class LibraryItemCloneSerializer(LibraryItemBase):
-    ''' Serializer: LibraryItem cloning. '''
-    items = PKField(many=True, required=False, queryset=Constituenta.objects.all())
 
 
 class CstMoveSerializer(CstListSerializer):

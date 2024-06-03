@@ -20,71 +20,19 @@ from .. import serializers as s
 
 @extend_schema(tags=['Library'])
 @extend_schema_view()
-class LibraryActiveView(generics.ListAPIView):
-    ''' Endpoint: Get list of library items available for active user. '''
-    permission_classes = (permissions.Anyone,)
-    serializer_class = s.LibraryItemSerializer
-
-    def get_queryset(self):
-        if self.request.user.is_anonymous:
-            return m.LibraryItem.objects.filter(
-                Q(access_policy=m.AccessPolicy.PUBLIC),
-            ).filter(
-                Q(location__startswith=m.LocationHead.COMMON) |
-                Q(location__startswith=m.LocationHead.LIBRARY)
-            ).order_by('-time_update')
-        else:
-            user = cast(m.User, self.request.user)
-            # pylint: disable=unsupported-binary-operation
-            return m.LibraryItem.objects.filter(
-                (
-                    Q(access_policy=m.AccessPolicy.PUBLIC) &
-                    (
-                        Q(location__startswith=m.LocationHead.COMMON) |
-                        Q(location__startswith=m.LocationHead.LIBRARY)
-                    )
-                ) |
-                Q(owner=user) |
-                Q(editor__editor=user) |
-                Q(subscription__user=user)
-            ).distinct().order_by('-time_update')
-
-
-@extend_schema(tags=['Library'])
-@extend_schema_view()
-class LibraryAdminView(generics.ListAPIView):
-    ''' Endpoint: Get list of all library items. Admin only '''
-    permission_classes = (permissions.GlobalAdmin,)
-    serializer_class = s.LibraryItemSerializer
-
-    def get_queryset(self):
-        return m.LibraryItem.objects.all().order_by('-time_update')
-
-
-@extend_schema(tags=['Library'])
-@extend_schema_view()
-class LibraryTemplatesView(generics.ListAPIView):
-    ''' Endpoint: Get list of templates. '''
-    permission_classes = (permissions.Anyone,)
-    serializer_class = s.LibraryItemSerializer
-
-    def get_queryset(self):
-        template_ids = m.LibraryTemplate.objects.values_list('lib_source', flat=True)
-        return m.LibraryItem.objects.filter(pk__in=template_ids)
-
-
-# pylint: disable=too-many-ancestors
-@extend_schema(tags=['Library'])
-@extend_schema_view()
 class LibraryViewSet(viewsets.ModelViewSet):
     ''' Endpoint: Library operations. '''
     queryset = m.LibraryItem.objects.all()
-    serializer_class = s.LibraryItemSerializer
 
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
     filterset_fields = ['item_type', 'owner']
     ordering_fields = ('item_type', 'owner', 'alias', 'title', 'time_update')
     ordering = '-time_update'
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return s.LibraryItemBaseSerializer
+        return s.LibraryItemSerializer
 
     def perform_create(self, serializer):
         if not self.request.user.is_anonymous and 'owner' not in self.request.POST:
@@ -103,7 +51,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
         elif self.action in ['create', 'clone', 'subscribe', 'unsubscribe']:
             permission_list = [permissions.GlobalUser]
         else:
-            permission_list = [permissions.Anyone]
+            permission_list = [permissions.ItemAnyone]
         return [permission() for permission in permission_list]
 
     def _get_item(self) -> m.LibraryItem:
@@ -308,3 +256,58 @@ class LibraryViewSet(viewsets.ModelViewSet):
         editors = serializer.validated_data['users']
         m.Editor.set(item=item, users=editors)
         return Response(status=c.HTTP_200_OK)
+
+
+@extend_schema(tags=['Library'])
+@extend_schema_view()
+class LibraryActiveView(generics.ListAPIView):
+    ''' Endpoint: Get list of library items available for active user. '''
+    permission_classes = (permissions.Anyone,)
+    serializer_class = s.LibraryItemSerializer
+
+    def get_queryset(self):
+        if self.request.user.is_anonymous:
+            return m.LibraryItem.objects.filter(
+                Q(access_policy=m.AccessPolicy.PUBLIC),
+            ).filter(
+                Q(location__startswith=m.LocationHead.COMMON) |
+                Q(location__startswith=m.LocationHead.LIBRARY)
+            ).order_by('-time_update')
+        else:
+            user = cast(m.User, self.request.user)
+            # pylint: disable=unsupported-binary-operation
+            return m.LibraryItem.objects.filter(
+                (
+                    Q(access_policy=m.AccessPolicy.PUBLIC) &
+                    (
+                        Q(location__startswith=m.LocationHead.COMMON) |
+                        Q(location__startswith=m.LocationHead.LIBRARY)
+                    )
+                ) |
+                Q(owner=user) |
+                Q(editor__editor=user) |
+                Q(subscription__user=user)
+            ).distinct().order_by('-time_update')
+
+
+@extend_schema(tags=['Library'])
+@extend_schema_view()
+class LibraryAdminView(generics.ListAPIView):
+    ''' Endpoint: Get list of all library items. Admin only '''
+    permission_classes = (permissions.GlobalAdmin,)
+    serializer_class = s.LibraryItemSerializer
+
+    def get_queryset(self):
+        return m.LibraryItem.objects.all().order_by('-time_update')
+
+
+@extend_schema(tags=['Library'])
+@extend_schema_view()
+class LibraryTemplatesView(generics.ListAPIView):
+    ''' Endpoint: Get list of templates. '''
+    permission_classes = (permissions.Anyone,)
+    serializer_class = s.LibraryItemSerializer
+
+    def get_queryset(self):
+        template_ids = m.LibraryTemplate.objects.values_list('lib_source', flat=True)
+        return m.LibraryItem.objects.filter(pk__in=template_ids)

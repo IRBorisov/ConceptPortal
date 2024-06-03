@@ -34,7 +34,6 @@ function SelectMatchMode({ value, onChange }: SelectMatchModeProps) {
     <div ref={menu.ref}>
       <SelectorButton
         transparent
-        tabIndex={-1}
         title='Настройка фильтрации по проверяемым атрибутам'
         hideTitle={menu.isOpen}
         className='h-full pr-2'

@@ -6,7 +6,7 @@
  */
 import { GraphLayout } from '@/components/ui/GraphUI';
 import { GramData, Grammeme, ReferenceType } from '@/models/language';
-import { AccessPolicy, LocationHead } from '@/models/library';
+import { AccessPolicy, LibraryItemType, LocationHead } from '@/models/library';
 import { CstMatchMode, DependencyMode, GraphColoring, GraphSizing, HelpTopic } from '@/models/miscellaneous';
 import { CstClass, CstType, ExpressionStatus, IConstituenta, IRSForm } from '@/models/rsform';
 import {
@@ -818,6 +818,28 @@ export function describeAccessPolicy(policy: AccessPolicy): string {
       return 'Доступ для владельца и редакторов';
     case AccessPolicy.PUBLIC:
       return 'Открытый доступ';
+  }
+}
+
+/**
+ * Retrieves label for {@link LibraryItemType}.
+ */
+export function labelLibraryItemType(itemType: LibraryItemType): string {
+  // prettier-ignore
+  switch (itemType) {
+    case LibraryItemType.RSFORM:  return 'КС';
+    case LibraryItemType.OSS:     return 'ОСС';
+  }
+}
+
+/**
+ * Retrieves description for {@link LibraryItemType}.
+ */
+export function describeLibraryItemType(itemType: LibraryItemType): string {
+  // prettier-ignore
+  switch (itemType) {
+    case LibraryItemType.RSFORM:  return 'Концептуальная схема';
+    case LibraryItemType.OSS:     return 'Операционная схема синтеза';
   }
 }
 

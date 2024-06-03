@@ -1,4 +1,4 @@
-import { AccessPolicy, LocationHead } from '@/models/library';
+import { AccessPolicy, LibraryItemType, LocationHead } from '@/models/library';
 import { CstMatchMode, DependencyMode } from '@/models/miscellaneous';
 
 import {
@@ -13,10 +13,12 @@ import {
   IconGraphInputs,
   IconGraphOutputs,
   IconHide,
+  IconOSS,
   IconPrivate,
   IconProps,
   IconProtected,
   IconPublic,
+  IconRSForm,
   IconSettings,
   IconShow,
   IconTemplates,
@@ -27,6 +29,15 @@ import {
 
 export interface DomIconProps<RequestData> extends IconProps {
   value: RequestData;
+}
+
+export function ItemTypeIcon({ value, size = '1.25rem', className }: DomIconProps<LibraryItemType>) {
+  switch (value) {
+    case LibraryItemType.RSFORM:
+      return <IconRSForm size={size} className={className ?? 'clr-text-primary'} />;
+    case LibraryItemType.OSS:
+      return <IconOSS size={size} className={className ?? 'clr-text-green'} />;
+  }
 }
 
 export function PolicyIcon({ value, size = '1.25rem', className }: DomIconProps<AccessPolicy>) {

@@ -9,7 +9,7 @@ import { UserID } from './user';
  */
 export enum LibraryItemType {
   RSFORM = 'rsform',
-  OPERATIONS_SCHEMA = 'oss'
+  OSS = 'oss'
 }
 
 /**

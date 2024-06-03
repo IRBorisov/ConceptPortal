@@ -26,6 +26,7 @@ function SelectorButton({
   return (
     <button
       type='button'
+      tabIndex={-1}
       className={clsx(
         'px-1 flex flex-start items-center gap-1',
         'text-sm font-controls select-none',

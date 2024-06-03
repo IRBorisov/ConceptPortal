@@ -441,6 +441,7 @@ class TrsImportView(views.APIView):
     request=s.LibraryItemSerializer,
     responses={
         c.HTTP_201_CREATED: s.LibraryItemSerializer,
+        c.HTTP_400_BAD_REQUEST: None,
         c.HTTP_403_FORBIDDEN: None
     }
 )
@@ -449,17 +450,9 @@ def create_rsform(request: Request):
     ''' Endpoint: Create RSForm from user input and/or trs file. '''
     owner = cast(m.User, request.user) if not request.user.is_anonymous else None
     if 'file' not in request.FILES:
-        serializer = s.LibraryItemBase(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        schema = m.RSForm.create(
-            title=serializer.validated_data['title'],
-            owner=owner,
-            alias=serializer.validated_data.get('alias', ''),
-            comment=serializer.validated_data.get('comment', ''),
-            visible=serializer.validated_data.get('visible', True),
-            read_only=serializer.validated_data.get('read_only', False),
-            access_policy=serializer.validated_data.get('access_policy', m.AccessPolicy.PUBLIC),
-            location=serializer.validated_data.get('location', m.LocationHead.USER),
+        return Response(
+            status=c.HTTP_400_BAD_REQUEST,
+            data={f'file': msg.missingFile()}
         )
     else:
         data = utils.read_zipped_json(request.FILES['file'].file, utils.EXTEOR_INNER_FILENAME)

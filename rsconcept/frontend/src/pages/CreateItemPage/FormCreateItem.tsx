@@ -9,6 +9,7 @@ import { VisibilityIcon } from '@/components/DomainIcons';
 import { IconDownload } from '@/components/Icons';
 import InfoError from '@/components/info/InfoError';
 import SelectAccessPolicy from '@/components/select/SelectAccessPolicy';
+import SelectItemType from '@/components/select/SelectItemType';
 import SelectLocationHead from '@/components/select/SelectLocationHead';
 import Button from '@/components/ui/Button';
 import Label from '@/components/ui/Label';
@@ -30,6 +31,7 @@ function FormCreateItem() {
   const { user } = useAuth();
   const { createItem, error, setError, processing } = useLibrary();
 
+  const [itemType, setItemType] = useState(LibraryItemType.RSFORM);
   const [title, setTitle] = useState('');
   const [alias, setAlias] = useState('');
   const [comment, setComment] = useState('');
@@ -64,7 +66,7 @@ function FormCreateItem() {
       return;
     }
     const data: ILibraryCreateData = {
-      item_type: LibraryItemType.RSFORM,
+      item_type: itemType,
       title: title,
       alias: alias,
       comment: comment,
@@ -75,9 +77,13 @@ function FormCreateItem() {
       file: file,
       fileName: file?.name
     };
-    createItem(data, newSchema => {
+    createItem(data, newItem => {
       toast.success('Схема успешно создана');
-      router.push(urls.schema(newSchema.id));
+      if (itemType == LibraryItemType.RSFORM) {
+        router.push(urls.schema(newItem.id));
+      } else {
+        router.push(urls.oss(newItem.id));
+      }
     });
   }
 
@@ -109,8 +115,8 @@ function FormCreateItem() {
         />
       </Overlay>
 
-      <form className={clsx('cc-column', 'min-w-[30rem]', 'px-6 py-3')} onSubmit={handleSubmit}>
-        <h1>Создание концептуальной схемы</h1>
+      <form className={clsx('cc-column', 'min-w-[30rem] max-w-[30rem]', 'px-6 py-3')} onSubmit={handleSubmit}>
+        <h1>Создание схемы</h1>
 
         {fileName ? <Label text={`Загружен файл: ${fileName}`} /> : null}
 
@@ -135,11 +141,14 @@ function FormCreateItem() {
             value={alias}
             onChange={event => setAlias(event.target.value)}
           />
+          <div className='flex flex-col items-center gap-2'>
+            <Label text='Тип схемы' className='self-center select-none' />
+            <SelectItemType value={itemType} onChange={setItemType} />
+          </div>
           <div className='flex flex-col gap-2'>
             <Label text='Доступ' className='self-center select-none' />
             <div className='ml-auto cc-icons'>
-              <SelectAccessPolicy value={policy} onChange={newPolicy => setPolicy(newPolicy)} />
-
+              <SelectAccessPolicy value={policy} onChange={setPolicy} />
               <MiniButton
                 className='disabled:cursor-auto'
                 title={visible ? 'Библиотека: отображать' : 'Библиотека: скрывать'}

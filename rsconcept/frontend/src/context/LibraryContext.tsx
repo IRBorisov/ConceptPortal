@@ -10,7 +10,8 @@ import {
   getRSFormDetails,
   getTemplates,
   postCloneLibraryItem,
-  postNewRSForm
+  postCreateLibraryItem,
+  postRSFormFromFile
 } from '@/app/backendAPI';
 import { ErrorData } from '@/components/info/InfoError';
 import { ILibraryItem, LibraryItemID } from '@/models/library';
@@ -181,20 +182,31 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
 
   const createItem = useCallback(
     (data: ILibraryCreateData, callback?: DataCallback<ILibraryItem>) => {
+      const onSuccess = (newSchema: ILibraryItem) =>
+        reloadItems(() => {
+          if (user && !user.subscriptions.includes(newSchema.id)) {
+            user.subscriptions.push(newSchema.id);
+          }
+          if (callback) callback(newSchema);
+        });
       setError(undefined);
-      postNewRSForm({
-        data: data,
-        showError: true,
-        setLoading: setProcessing,
-        onError: setError,
-        onSuccess: newSchema =>
-          reloadItems(() => {
-            if (user && !user.subscriptions.includes(newSchema.id)) {
-              user.subscriptions.push(newSchema.id);
-            }
-            if (callback) callback(newSchema);
-          })
-      });
+      if (data.file) {
+        postRSFormFromFile({
+          data: data,
+          showError: true,
+          setLoading: setProcessing,
+          onError: setError,
+          onSuccess: onSuccess
+        });
+      } else {
+        postCreateLibraryItem({
+          data: data,
+          showError: true,
+          setLoading: setProcessing,
+          onError: setError,
+          onSuccess: onSuccess
+        });
+      }
     },
     [reloadItems, user]
   );
