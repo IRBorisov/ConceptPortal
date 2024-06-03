@@ -12,7 +12,7 @@ function LoadDjangoBackup() {
   & docker cp ${dataArchive} ${target}:$local_archiveDump
   & docker exec $target gzip --decompress --force $local_dataDump
   docker exec $target `
-    python manage.py loaddata $local_dataDump
+    python3.12 manage.py loaddata $local_dataDump
   & docker exec $target rm $local_dataDump
 }
 

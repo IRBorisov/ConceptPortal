@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
             else:
                 location = m.LocationHead.USER
             item.location = location
-            item.save()
+            item.save(update_fields=['location'])
 
     operations = [
         migrations.AddField(
