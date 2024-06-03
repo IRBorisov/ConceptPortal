@@ -3,11 +3,16 @@
 # Create a copy in secure location @production host. Update backup scripts from repository manually
 # ========================================
 
+# Create local backup: 
+# python -Xutf8 manage.py dumpdata 
+# --exclude=admin.LogEntry --exclude=sessions --exclude=contenttypes --exclude=auth.permission 
+# --indent 4 -o InitialData_LI.json
+
 # Input params
 $backupLocation = "D:\DEV\backup\portal"
 
-$containerDB = "dev-portal-db"
-$containerBackend = "dev-portal-backend"
+$containerDB = "local-portal-db"
+$containerBackend = "local-portal-backend"
 $pgUser = "portal-admin"
 $pgDB = "portal-db"
 

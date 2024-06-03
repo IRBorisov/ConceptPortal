@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 
 import { SubscribeIcon } from '@/components/DomainIcons';
-import { IconDestroy, IconDownload, IconSave, IconShare } from '@/components/Icons';
+import { IconDestroy, IconSave, IconShare } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
@@ -40,11 +40,6 @@ function RSFormToolbar({ modified, anonymous, subscribed, onSubmit, onDestroy }:
         title='Поделиться схемой'
         icon={<IconShare size='1.25rem' className='icon-primary' />}
         onClick={controller.share}
-      />
-      <MiniButton
-        title='Скачать TRS файл'
-        icon={<IconDownload size='1.25rem' className='icon-primary' />}
-        onClick={controller.download}
       />
       {!anonymous ? (
         <MiniButton

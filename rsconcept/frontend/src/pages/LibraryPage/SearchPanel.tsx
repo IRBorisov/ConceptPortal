@@ -113,9 +113,9 @@ function SearchPanel({
       <div className='flex items-center h-full mx-auto'>
         <SearchBar
           id='library_search'
-          placeholder='Аттрибуты'
+          placeholder='Атрибуты'
           noBorder
-          className='min-w-[10rem]'
+          className='min-w-[8rem]'
           value={query}
           onChange={setQuery}
         />
@@ -167,7 +167,7 @@ function SearchPanel({
           placeholder='Путь'
           noIcon
           noBorder
-          className='min-w-[10rem]'
+          className='min-w-[5rem]'
           value={path}
           onChange={setPath}
         />
