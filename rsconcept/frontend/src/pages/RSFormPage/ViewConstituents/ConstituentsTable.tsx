@@ -68,7 +68,7 @@ function ConstituentsTable({ items, activeCst, onOpenEdit, maxHeight, denseThres
     () => [
       columnHelper.accessor('alias', {
         id: 'alias',
-        header: 'Имя',
+        header: () => <span className='pl-3'>Имя</span>,
         size: 65,
         minSize: 65,
         footer: undefined,

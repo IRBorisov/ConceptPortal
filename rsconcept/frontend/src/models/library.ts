@@ -26,8 +26,8 @@ export enum AccessPolicy {
  */
 export enum LocationHead {
   USER = '/U',
-  COMMON = '/S',
   LIBRARY = '/L',
+  COMMON = '/S',
   PROJECTS = '/P'
 }
 

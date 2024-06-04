@@ -120,7 +120,7 @@ function PickSubstitutions({
       }),
       columnHelper.accessor(item => item.leftCst.alias, {
         id: 'left_alias',
-        header: 'Имя',
+        header: () => <span className='pl-3'>Имя</span>,
         size: 65,
         cell: props => (
           <BadgeConstituenta theme={colors} value={props.row.original.leftCst} prefixID={`${prefixID}_1_`} />
@@ -134,7 +134,7 @@ function PickSubstitutions({
       }),
       columnHelper.accessor(item => item.rightCst.alias, {
         id: 'right_alias',
-        header: 'Имя',
+        header: () => <span className='pl-3'>Имя</span>,
         size: 65,
         cell: props => (
           <BadgeConstituenta theme={colors} value={props.row.original.rightCst} prefixID={`${prefixID}_2_`} />

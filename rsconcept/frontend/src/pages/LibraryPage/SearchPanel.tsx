@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { useCallback } from 'react';
 
-import { LocationHeadIcon, SubscribeIcon, VisibilityIcon } from '@/components/DomainIcons';
+import { LocationIcon, SubscribeIcon, VisibilityIcon } from '@/components/DomainIcons';
 import { IconEditor, IconFolder, IconOwner } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import Dropdown from '@/components/ui/Dropdown';
@@ -128,7 +128,7 @@ function SearchPanel({
             hideTitle={headMenu.isOpen}
             icon={
               head ? (
-                <LocationHeadIcon value={head} size='1.25rem' />
+                <LocationIcon value={head} size='1.25rem' />
               ) : (
                 <IconFolder size='1.25rem' className='clr-text-controls' />
               )
@@ -153,7 +153,7 @@ function SearchPanel({
                   title={describeLocationHead(head)}
                 >
                   <div className='inline-flex items-center gap-3'>
-                    <LocationHeadIcon value={head} size='1rem' />
+                    <LocationIcon value={head} size='1rem' />
                     {labelLocationHead(head)}
                   </div>
                 </DropdownButton>

@@ -67,18 +67,16 @@ export function SubscribeIcon({ value, size = '1.25rem', className }: DomIconPro
   }
 }
 
-export function LocationHeadIcon({ value: value, size = '1.25rem', className }: DomIconProps<LocationHead>) {
-  switch (value) {
-    case undefined:
-      return <IconFilter size={size} className={className ?? 'clr-text-primary'} />;
+export function LocationIcon({ value, size = '1.25rem', className }: DomIconProps<string>) {
+  switch (value.substring(0, 2) as LocationHead) {
     case LocationHead.COMMON:
       return <IconPublic size={size} className={className ?? 'clr-text-primary'} />;
     case LocationHead.LIBRARY:
-      return <IconTemplates size={size} className={className ?? 'clr-text-primary'} />;
+      return <IconTemplates size={size} className={className ?? 'clr-text-red'} />;
     case LocationHead.PROJECTS:
       return <IconBusiness size={size} className={className ?? 'clr-text-primary'} />;
     case LocationHead.USER:
-      return <IconUser size={size} className={className ?? 'clr-text-primary'} />;
+      return <IconUser size={size} className={className ?? 'clr-text-green'} />;
   }
 }
 

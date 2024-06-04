@@ -60,7 +60,7 @@ function PickMultiConstituenta({ id, schema, prefixID, rows, selected, setSelect
     () => [
       columnHelper.accessor('alias', {
         id: 'alias',
-        header: 'Имя',
+        header: () => <span className='pl-3'>Имя</span>,
         size: 65,
         cell: props => <BadgeConstituenta theme={colors} value={props.row.original} prefixID={prefixID} />
       }),

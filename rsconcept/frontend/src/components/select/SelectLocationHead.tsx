@@ -9,7 +9,7 @@ import { LocationHead } from '@/models/library';
 import { prefixes } from '@/utils/constants';
 import { describeLocationHead, labelLocationHead } from '@/utils/labels';
 
-import { LocationHeadIcon } from '../DomainIcons';
+import { LocationIcon } from '../DomainIcons';
 import DropdownButton from '../ui/DropdownButton';
 
 interface SelectLocationHeadProps {
@@ -37,7 +37,7 @@ function SelectLocationHead({ value, excluded = [], onChange }: SelectLocationHe
         title={describeLocationHead(value)}
         hideTitle={menu.isOpen}
         className='h-full'
-        icon={<LocationHeadIcon value={value} size='1rem' />}
+        icon={<LocationIcon value={value} size='1rem' />}
         text={labelLocationHead(value)}
         onClick={menu.toggle}
       />
@@ -54,7 +54,7 @@ function SelectLocationHead({ value, excluded = [], onChange }: SelectLocationHe
                 title={describeLocationHead(head)}
               >
                 <div className='inline-flex items-center gap-3'>
-                  <LocationHeadIcon value={head} size='1rem' />
+                  <LocationIcon value={head} size='1rem' />
                   {labelLocationHead(head)}
                 </div>
               </DropdownButton>

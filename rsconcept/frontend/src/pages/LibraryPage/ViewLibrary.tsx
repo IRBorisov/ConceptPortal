@@ -4,6 +4,8 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { urls } from '@/app/urls';
+import { IconFolder } from '@/components/Icons';
+import BadgeLocation from '@/components/info/BadgeLocation';
 import { CProps } from '@/components/props';
 import DataTable, { createColumnHelper, VisibilityState } from '@/components/ui/DataTable';
 import FlexColumn from '@/components/ui/FlexColumn';
@@ -46,6 +48,20 @@ function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
 
   const columns = useMemo(
     () => [
+      columnHelper.accessor('location', {
+        id: 'location',
+        header: () => (
+          <span className='pl-2'>
+            <IconFolder size='1.25rem' className='clr-text-controls' />
+          </span>
+        ),
+        size: 50,
+        minSize: 50,
+        maxSize: 50,
+        enableSorting: true,
+        cell: props => <BadgeLocation location={props.getValue()} />,
+        sortingFn: 'text'
+      }),
       columnHelper.accessor('alias', {
         id: 'alias',
         header: 'Шифр',
@@ -53,7 +69,7 @@ function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
         minSize: 80,
         maxSize: 150,
         enableSorting: true,
-        cell: props => <div className='pl-2'>{props.getValue()}</div>,
+        cell: props => <div className='min-w-[5rem]'>{props.getValue()}</div>,
         sortingFn: 'text'
       }),
       columnHelper.accessor('title', {
