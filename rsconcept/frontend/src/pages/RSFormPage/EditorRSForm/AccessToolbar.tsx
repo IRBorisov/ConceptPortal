@@ -61,7 +61,7 @@ function AccessToolbar({ visible, toggleVisible, readOnly, toggleReadOnly }: Acc
           disabled={accessLevel === UserLevel.READER || controller.isProcessing}
         />
 
-        <BadgeHelp topic={HelpTopic.VERSIONS} className='max-w-[30rem]' offset={4} />
+        <BadgeHelp topic={HelpTopic.ACCESS} className='max-w-[30rem]' offset={4} />
       </div>
     </Overlay>
   );

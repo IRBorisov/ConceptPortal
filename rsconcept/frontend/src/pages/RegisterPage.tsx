@@ -21,6 +21,7 @@ import AnimateFade from '@/components/wrap/AnimateFade';
 import ExpectedAnonymous from '@/components/wrap/ExpectedAnonymous';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
+import { HelpTopic } from '@/models/miscellaneous';
 import { IUserSignupData } from '@/models/user';
 import { globals, patterns } from '@/utils/constants';
 
@@ -54,8 +55,12 @@ function RegisterPage() {
   const [lastName, setLastName] = useState('');
 
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
+  const [acceptRules, setAcceptRules] = useState(false);
 
-  const isValid = useMemo(() => acceptPrivacy && !!email && !!username, [acceptPrivacy, email, username]);
+  const isValid = useMemo(
+    () => acceptPrivacy && acceptRules && !!email && !!username,
+    [acceptPrivacy, acceptRules, email, username]
+  );
 
   useEffect(() => {
     setError(undefined);
@@ -180,7 +185,11 @@ function RegisterPage() {
 
         <div className='flex gap-1 text-sm'>
           <Checkbox id='accept_terms' label='Принимаю условия' value={acceptPrivacy} setValue={setAcceptPrivacy} />
-          <TextURL text='обработки персональных данных...' href={'/manuals?topic=privacy'} />
+          <TextURL text='обработки персональных данных...' href={urls.help_topic(HelpTopic.PRIVACY)} />
+        </div>
+        <div className='flex gap-1 text-sm'>
+          <Checkbox id='accept_rules' label='Принимаю ' value={acceptRules} setValue={setAcceptRules} />
+          <TextURL text='правила поведения на Портале...' href={urls.help_topic(HelpTopic.RULES)} />
         </div>
 
         <div className='flex justify-around my-3'>

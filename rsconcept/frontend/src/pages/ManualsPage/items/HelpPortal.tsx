@@ -39,14 +39,14 @@ function HelpPortal() {
 
       <h2>Разделы Справки</h2>
       {[
+        HelpTopic.DOCS,
         HelpTopic.INTERFACE,
         HelpTopic.CONCEPTUAL,
         HelpTopic.RSLANG,
         HelpTopic.TERM_CONTROL,
+        HelpTopic.ACCESS,
         HelpTopic.VERSIONS,
-        HelpTopic.EXTEOR,
-        HelpTopic.API,
-        HelpTopic.PRIVACY
+        HelpTopic.EXTEOR
       ].map(topic => (
         <TopicItem key={`${prefixes.topic_item}${topic}`} topic={topic} />
       ))}

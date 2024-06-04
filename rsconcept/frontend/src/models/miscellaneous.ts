@@ -37,6 +37,11 @@ export type FontStyle = 'controls' | 'main' | 'math' | 'math2';
 export enum HelpTopic {
   MAIN = 'main',
 
+  DOCS = 'documentation',
+  RULES = 'rules',
+  PRIVACY = 'privacy',
+  API = 'api',
+
   INTERFACE = 'user-interface',
   UI_LIBRARY = 'ui-library',
   UI_RS_MENU = 'ui-rsform-menu',
@@ -62,10 +67,9 @@ export enum HelpTopic {
   RSL_TEMPLATES = 'rslang-templates',
 
   TERM_CONTROL = 'terminology-control',
+  ACCESS = 'access',
   VERSIONS = 'versions',
-  EXTEOR = 'exteor',
-  API = 'api',
-  PRIVACY = 'privacy'
+  EXTEOR = 'exteor'
 }
 
 /**
@@ -73,6 +77,11 @@ export enum HelpTopic {
  */
 export const topicParent: Map<HelpTopic, HelpTopic> = new Map([
   [HelpTopic.MAIN, HelpTopic.MAIN],
+
+  [HelpTopic.DOCS, HelpTopic.DOCS],
+  [HelpTopic.RULES, HelpTopic.DOCS],
+  [HelpTopic.API, HelpTopic.DOCS],
+  [HelpTopic.PRIVACY, HelpTopic.DOCS],
 
   [HelpTopic.INTERFACE, HelpTopic.INTERFACE],
   [HelpTopic.UI_LIBRARY, HelpTopic.INTERFACE],
@@ -99,16 +108,15 @@ export const topicParent: Map<HelpTopic, HelpTopic> = new Map([
   [HelpTopic.RSL_TEMPLATES, HelpTopic.RSLANG],
 
   [HelpTopic.TERM_CONTROL, HelpTopic.TERM_CONTROL],
+  [HelpTopic.ACCESS, HelpTopic.ACCESS],
   [HelpTopic.VERSIONS, HelpTopic.VERSIONS],
-  [HelpTopic.EXTEOR, HelpTopic.EXTEOR],
-  [HelpTopic.API, HelpTopic.API],
-  [HelpTopic.PRIVACY, HelpTopic.PRIVACY]
+  [HelpTopic.EXTEOR, HelpTopic.EXTEOR]
 ]);
 
 /**
  *  Topics that can be folded.
  */
-export const foldableTopics = [HelpTopic.INTERFACE, HelpTopic.RSLANG, HelpTopic.CONCEPTUAL];
+export const foldableTopics = [HelpTopic.INTERFACE, HelpTopic.RSLANG, HelpTopic.CONCEPTUAL, HelpTopic.DOCS];
 
 /**
  * Represents {@link IConstituenta} matching mode.

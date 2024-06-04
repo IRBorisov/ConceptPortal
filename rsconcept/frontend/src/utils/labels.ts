@@ -352,6 +352,11 @@ export function labelHelpTopic(topic: HelpTopic): string {
   switch (topic) {
     case HelpTopic.MAIN:            return 'Портал';
 
+    case HelpTopic.DOCS:            return 'Документы';
+    case HelpTopic.RULES:           return 'Правила';
+    case HelpTopic.PRIVACY:         return 'Обработка данных';
+    case HelpTopic.API:             return 'REST API';
+
     case HelpTopic.INTERFACE:       return 'Интерфейс';
     case HelpTopic.UI_LIBRARY:      return 'Библиотека';
     case HelpTopic.UI_RS_MENU:      return 'Меню схемы';
@@ -377,10 +382,9 @@ export function labelHelpTopic(topic: HelpTopic): string {
     case HelpTopic.RSL_TEMPLATES:   return 'Шаблоны выражений';
 
     case HelpTopic.TERM_CONTROL:    return 'Терминологизация';
+    case HelpTopic.ACCESS:          return 'Доступы';
     case HelpTopic.VERSIONS:        return 'Версионирование';
     case HelpTopic.EXTEOR:          return 'Экстеор';
-    case HelpTopic.API:             return 'REST API';
-    case HelpTopic.PRIVACY:         return 'Конфиденциальность';
   }
 }
 
@@ -391,6 +395,11 @@ export function describeHelpTopic(topic: HelpTopic): string {
   // prettier-ignore
   switch (topic) {
     case HelpTopic.MAIN:            return 'общая справка по порталу';
+
+    case HelpTopic.DOCS:            return 'нормативные и технические документы';
+    case HelpTopic.RULES:           return 'правила пользования Порталом';
+    case HelpTopic.PRIVACY:         return 'политика обработки персональных данных';
+    case HelpTopic.API:             return 'интерфейс для разработчиков';
 
     case HelpTopic.INTERFACE:       return 'описание интерфейса пользователя';
     case HelpTopic.UI_LIBRARY:      return 'интерфейс Библиотеки схем';
@@ -417,10 +426,9 @@ export function describeHelpTopic(topic: HelpTopic): string {
     case HelpTopic.RSL_TEMPLATES:   return 'работа с шаблонными выражениями';
 
     case HelpTopic.TERM_CONTROL:    return 'справка по контролю терминов и текстовым отсылкам';
+    case HelpTopic.ACCESS:          return 'организация доступов к схемам';
     case HelpTopic.VERSIONS:        return 'справка по управлению версиями схем';
     case HelpTopic.EXTEOR:          return 'справка по программе для экспликации "Экстеор" для Windows';
-    case HelpTopic.API:             return 'интерфейс для разработчиков';
-    case HelpTopic.PRIVACY:         return 'политика обработки персональных данных';
   }
 }
 

@@ -1,5 +1,6 @@
 import { HelpTopic } from '@/models/miscellaneous';
 
+import HelpAccess from './items/HelpAccess';
 import HelpAPI from './items/HelpAPI';
 import HelpConcept from './items/HelpConcept';
 import HelpConceptRelations from './items/HelpConceptRelations';
@@ -9,6 +10,7 @@ import HelpCstAttributes from './items/HelpCstAttributes';
 import HelpCstClass from './items/HelpCstClass';
 import HelpCstEditor from './items/HelpCstEditor';
 import HelpCstStatus from './items/HelpCstStatus';
+import HelpDocs from './items/HelpDocs';
 import HelpExteor from './items/HelpExteor';
 import HelpFormulaTree from './items/HelpFormulaTree';
 import HelpInterface from './items/HelpInterface';
@@ -24,6 +26,7 @@ import HelpRSLangInterpret from './items/HelpRSLangInterpret';
 import HelpRSLangOperations from './items/HelpRSLangOperations';
 import HelpRSLangTemplates from './items/HelpRSLangTemplates';
 import HelpRSLangTypes from './items/HelpRSLangTypes';
+import HelpRules from './items/HelpRules';
 import HelpTermGraph from './items/HelpTermGraph';
 import HelpTerminologyControl from './items/HelpTerminologyControl';
 import HelpVersions from './items/HelpVersions';
@@ -34,6 +37,11 @@ interface TopicPageProps {
 
 function TopicPage({ topic }: TopicPageProps) {
   if (topic === HelpTopic.MAIN) return <HelpPortal />;
+
+  if (topic === HelpTopic.DOCS) return <HelpDocs />;
+  if (topic === HelpTopic.RULES) return <HelpRules />;
+  if (topic === HelpTopic.PRIVACY) return <HelpPrivacy />;
+  if (topic === HelpTopic.API) return <HelpAPI />;
 
   if (topic === HelpTopic.INTERFACE) return <HelpInterface />;
   if (topic === HelpTopic.UI_LIBRARY) return <HelpLibrary />;
@@ -60,10 +68,9 @@ function TopicPage({ topic }: TopicPageProps) {
   if (topic === HelpTopic.RSL_TEMPLATES) return <HelpRSLangTemplates />;
 
   if (topic === HelpTopic.TERM_CONTROL) return <HelpTerminologyControl />;
+  if (topic === HelpTopic.ACCESS) return <HelpAccess />;
   if (topic === HelpTopic.VERSIONS) return <HelpVersions />;
   if (topic === HelpTopic.EXTEOR) return <HelpExteor />;
-  if (topic === HelpTopic.API) return <HelpAPI />;
-  if (topic === HelpTopic.PRIVACY) return <HelpPrivacy />;
   return null;
 }
 
