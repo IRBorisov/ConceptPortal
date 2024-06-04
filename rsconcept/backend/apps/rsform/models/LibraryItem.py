@@ -41,7 +41,7 @@ class LocationHead(TextChoices):
     COMMON = '/S'
 
 
-_RE_LOCATION = r'^/[PLUS]((/[!\d\w]([!\d\w ]*[!\d\w])?)*)?$'  # cspell:disable-line
+_RE_LOCATION = r'^/[PLUS]((/[!\d\w]([!\d\w\- ]*[!\d\w])?)*)?$'  # cspell:disable-line
 
 
 def validate_location(target: str) -> bool:

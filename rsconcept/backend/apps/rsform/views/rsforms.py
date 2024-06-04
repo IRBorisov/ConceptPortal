@@ -452,7 +452,7 @@ def create_rsform(request: Request):
     if 'file' not in request.FILES:
         return Response(
             status=c.HTTP_400_BAD_REQUEST,
-            data={f'file': msg.missingFile()}
+            data={'file': msg.missingFile()}
         )
     else:
         data = utils.read_zipped_json(request.FILES['file'].file, utils.EXTEOR_INNER_FILENAME)

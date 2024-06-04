@@ -7,7 +7,7 @@ import { TextMatcher } from '@/utils/utils';
 
 import { ILibraryItem } from './library';
 
-const LOCATION_REGEXP = /^\/[PLUS]((\/[!\d\p{L}]([!\d\p{L} ]*[!\d\p{L}])?)*)?$/u; // cspell:disable-line
+const LOCATION_REGEXP = /^\/[PLUS]((\/[!\d\p{L}]([!\d\p{L}\- ]*[!\d\p{L}])?)*)?$/u; // cspell:disable-line
 
 /**
  * Checks if a given target {@link ILibraryItem} matches the specified query.
