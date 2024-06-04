@@ -51,9 +51,9 @@ function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
       columnHelper.accessor('location', {
         id: 'location',
         header: () => (
-          <span className='pl-2'>
+          <div className='pl-2 max-h-[1rem] translate-y-[-0.125rem]'>
             <IconFolder size='1.25rem' className='clr-text-controls' />
-          </span>
+          </div>
         ),
         size: 50,
         minSize: 50,

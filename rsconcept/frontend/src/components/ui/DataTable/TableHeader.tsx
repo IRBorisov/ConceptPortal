@@ -46,7 +46,7 @@ function TableHeader<TData>({
               onClick={enableSorting ? header.column.getToggleSortingHandler() : undefined}
             >
               {!header.isPlaceholder ? (
-                <span className='inline-flex gap-1'>
+                <span className='inline-flex align-middle gap-1'>
                   {flexRender(header.column.columnDef.header, header.getContext())}
                   {enableSorting && header.column.getCanSort() ? <SortingIcon column={header.column} /> : null}
                 </span>
