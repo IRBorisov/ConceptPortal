@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { AnimatePresence } from 'framer-motion';
 import { useMemo, useState } from 'react';
 
+import { useConceptOptions } from '@/context/OptionsContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
@@ -15,7 +16,7 @@ import ConstituentaToolbar from './ConstituentaToolbar';
 import FormConstituenta from './FormConstituenta';
 
 // Threshold window width to switch layout.
-const SIDELIST_LAYOUT_THRESHOLD = 1100; // px
+const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
 
 interface EditorConstituentaProps {
   activeCst?: IConstituenta;
@@ -27,6 +28,7 @@ interface EditorConstituentaProps {
 function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }: EditorConstituentaProps) {
   const controller = useRSEdit();
   const windowSize = useWindowSize();
+  const { calculateHeight } = useConceptOptions();
 
   const [showList, setShowList] = useLocalStorage(storage.rseditShowList, true);
   const [toggleReset, setToggleReset] = useState(false);
@@ -37,6 +39,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
   );
 
   const isNarrow = useMemo(() => !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD, [windowSize]);
+  const panelHeight = useMemo(() => calculateHeight('1.75rem + 4px'), [calculateHeight]);
 
   function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
     if (disabled) {
@@ -76,7 +79,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
   }
 
   return (
-    <>
+    <div className='overflow-y-auto' style={{ maxHeight: panelHeight }}>
       {controller.isContentEditable ? (
         <ConstituentaToolbar
           disabled={disabled}
@@ -123,7 +126,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
           ) : null}
         </AnimatePresence>
       </div>
-    </>
+    </div>
   );
 }
 

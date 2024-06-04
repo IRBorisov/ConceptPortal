@@ -38,7 +38,7 @@ interface IOptionsContext {
   showHelp: boolean;
   toggleShowHelp: () => void;
 
-  calculateHeight: (offset: string) => string;
+  calculateHeight: (offset: string, minimum?: string) => string;
 }
 
 const OptionsContext = createContext<IOptionsContext | null>(null);
@@ -96,13 +96,13 @@ export const OptionsState = ({ children }: OptionsStateProps) => {
   }, [noNavigation]);
 
   const calculateHeight = useCallback(
-    (offset: string) => {
+    (offset: string, minimum: string = '0px') => {
       if (noNavigation) {
-        return `calc(100vh - (${offset}))`;
+        return `max(calc(100vh - (${offset})), ${minimum})`;
       } else if (noFooter) {
-        return `calc(100vh - 3rem - (${offset}))`;
+        return `max(calc(100vh - 3rem - (${offset})), ${minimum})`;
       } else {
-        return `calc(100vh - 6.75rem - (${offset}))`;
+        return `max(calc(100vh - 6.75rem - (${offset})), ${minimum})`;
       }
     },
     [noNavigation, noFooter]

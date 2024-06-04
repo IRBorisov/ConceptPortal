@@ -15,10 +15,11 @@ import DropdownButton from '../ui/DropdownButton';
 
 interface SelectMatchModeProps {
   value: CstMatchMode;
+  dense?: boolean;
   onChange: (value: CstMatchMode) => void;
 }
 
-function SelectMatchMode({ value, onChange }: SelectMatchModeProps) {
+function SelectMatchMode({ value, dense, onChange }: SelectMatchModeProps) {
   const menu = useDropdown();
   const size = useWindowSize();
 
@@ -38,7 +39,7 @@ function SelectMatchMode({ value, onChange }: SelectMatchModeProps) {
         hideTitle={menu.isOpen}
         className='h-full pr-2'
         icon={MatchModeIcon(value, '1rem', value !== CstMatchMode.ALL ? 'icon-primary' : '')}
-        text={size.isSmall ? undefined : labelCstMatchMode(value)}
+        text={dense || size.isSmall ? undefined : labelCstMatchMode(value)}
         onClick={menu.toggle}
       />
       <Dropdown stretchLeft isOpen={menu.isOpen}>
@@ -48,13 +49,17 @@ function SelectMatchMode({ value, onChange }: SelectMatchModeProps) {
             const matchMode = value as CstMatchMode;
             return (
               <DropdownButton
-                className='w-[20rem]'
+                className={!dense ? 'w-[20rem]' : undefined}
                 key={`${prefixes.cst_source_list}${index}`}
                 onClick={() => handleChange(matchMode)}
               >
                 <div className='inline-flex items-center gap-1'>
                   {MatchModeIcon(matchMode, '1rem')}
-                  <b>{labelCstMatchMode(matchMode)}:</b> {describeCstMatchMode(matchMode)}
+                  {!dense ? (
+                    <span>
+                      <b>{labelCstMatchMode(matchMode)}:</b> {describeCstMatchMode(matchMode)}
+                    </span>
+                  ) : null}
                 </div>
               </DropdownButton>
             );

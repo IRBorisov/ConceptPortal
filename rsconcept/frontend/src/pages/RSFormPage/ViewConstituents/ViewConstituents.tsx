@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
 
 import { useConceptOptions } from '@/context/OptionsContext';
+import useWindowSize from '@/hooks/useWindowSize';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
 import { animateSideView } from '@/styling/animations';
 
@@ -13,6 +14,9 @@ import ConstituentsTable from './ConstituentsTable';
 
 // Window width cutoff for expression show
 const COLUMN_EXPRESSION_HIDE_THRESHOLD = 1500;
+
+// Window width cutoff for dense search bar
+const COLUMN_DENSE_SEARCH_THRESHOLD = 1100;
 
 interface ViewConstituentsProps {
   expression: string;
@@ -24,13 +28,14 @@ interface ViewConstituentsProps {
 
 function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit }: ViewConstituentsProps) {
   const { calculateHeight } = useConceptOptions();
+  const windowSize = useWindowSize();
 
   const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema?.items ?? []);
 
   const table = useMemo(
     () => (
       <ConstituentsTable
-        maxHeight={isBottom ? calculateHeight('42rem') : calculateHeight('8.2rem')}
+        maxHeight={isBottom ? calculateHeight('42rem', '10rem') : calculateHeight('8.2rem')}
         items={filteredData}
         activeCst={activeCst}
         onOpenEdit={onOpenEdit}
@@ -54,6 +59,7 @@ function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit 
       exit={{ ...animateSideView.exit }}
     >
       <ConstituentsSearch
+        dense={windowSize.width && windowSize.width < COLUMN_DENSE_SEARCH_THRESHOLD ? true : undefined}
         schema={schema}
         activeID={activeCst?.id}
         activeExpression={expression}

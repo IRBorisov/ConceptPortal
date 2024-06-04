@@ -15,12 +15,13 @@ import { storage } from '@/utils/constants';
 
 interface ConstituentsSearchProps {
   schema?: IRSForm;
+  dense?: boolean;
   activeID?: ConstituentaID;
   activeExpression: string;
   setFiltered: React.Dispatch<React.SetStateAction<IConstituenta[]>>;
 }
 
-function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }: ConstituentsSearchProps) {
+function ConstituentsSearch({ schema, activeID, activeExpression, dense, setFiltered }: ConstituentsSearchProps) {
   const [filterMatch, setFilterMatch] = useLocalStorage(storage.cstFilterMatch, CstMatchMode.ALL);
   const [filterSource, setFilterSource] = useLocalStorage(storage.cstFilterGraph, DependencyMode.ALL);
   const [filterText, setFilterText] = useState('');
@@ -51,13 +52,13 @@ function ConstituentsSearch({ schema, activeID, activeExpression, setFiltered }:
   }, [filterText, setFiltered, filterSource, activeExpression, schema?.items, schema, filterMatch, activeID]);
 
   const selectGraph = useMemo(
-    () => <SelectGraphFilter value={filterSource} onChange={newValue => setFilterSource(newValue)} />,
-    [filterSource, setFilterSource]
+    () => <SelectGraphFilter value={filterSource} onChange={newValue => setFilterSource(newValue)} dense={dense} />,
+    [filterSource, setFilterSource, dense]
   );
 
   const selectMatchMode = useMemo(
-    () => <SelectMatchMode value={filterMatch} onChange={newValue => setFilterMatch(newValue)} />,
-    [filterMatch, setFilterMatch]
+    () => <SelectMatchMode value={filterMatch} onChange={newValue => setFilterMatch(newValue)} dense={dense} />,
+    [filterMatch, setFilterMatch, dense]
   );
 
   return (

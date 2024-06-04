@@ -15,10 +15,11 @@ import DropdownButton from '../ui/DropdownButton';
 
 interface SelectGraphFilterProps {
   value: DependencyMode;
+  dense?: boolean;
   onChange: (value: DependencyMode) => void;
 }
 
-function SelectGraphFilter({ value, onChange }: SelectGraphFilterProps) {
+function SelectGraphFilter({ value, dense, onChange }: SelectGraphFilterProps) {
   const menu = useDropdown();
   const size = useWindowSize();
 
@@ -39,7 +40,7 @@ function SelectGraphFilter({ value, onChange }: SelectGraphFilterProps) {
         hideTitle={menu.isOpen}
         className='h-full pr-2'
         icon={DependencyIcon(value, '1rem', value !== DependencyMode.ALL ? 'icon-primary' : '')}
-        text={size.isSmall ? undefined : labelCstSource(value)}
+        text={dense || size.isSmall ? undefined : labelCstSource(value)}
         onClick={menu.toggle}
       />
       <Dropdown stretchLeft isOpen={menu.isOpen}>
@@ -49,13 +50,17 @@ function SelectGraphFilter({ value, onChange }: SelectGraphFilterProps) {
             const source = value as DependencyMode;
             return (
               <DropdownButton
-                className='w-[18rem]'
+                className={!dense ? 'w-[18rem]' : undefined}
                 key={`${prefixes.cst_source_list}${index}`}
                 onClick={() => handleChange(source)}
               >
                 <div className='inline-flex items-center gap-1'>
                   {DependencyIcon(source, '1rem')}
-                  <b>{labelCstSource(source)}:</b> {describeCstSource(source)}
+                  {!dense ? (
+                    <span>
+                      <b>{labelCstSource(source)}:</b> {describeCstSource(source)}
+                    </span>
+                  ) : null}
                 </div>
               </DropdownButton>
             );
