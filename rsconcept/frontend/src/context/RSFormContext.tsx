@@ -54,7 +54,7 @@ import { useLibrary } from './LibraryContext';
 
 interface IRSFormContext {
   schema?: IRSForm;
-  schemaID: string;
+  itemID: string;
   versionID?: string;
 
   loading: boolean;
@@ -105,12 +105,12 @@ export const useRSForm = () => {
 };
 
 interface RSFormStateProps {
-  schemaID: string;
+  itemID: string;
   versionID?: string;
   children: React.ReactNode;
 }
 
-export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps) => {
+export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) => {
   const library = useLibrary();
   const { user } = useAuth();
   const {
@@ -120,7 +120,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
     setSchema,
     loading
   } = useRSFormDetails({
-    target: schemaID,
+    target: itemID,
     version: versionID
   });
   const [processing, setProcessing] = useState(false);
@@ -148,7 +148,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         return;
       }
       setProcessingError(undefined);
-      patchLibraryItem(schemaID, {
+      patchLibraryItem(itemID, {
         data: data,
         showError: true,
         setLoading: setProcessing,
@@ -160,7 +160,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         }
       });
     },
-    [schemaID, setSchema, schema, library]
+    [itemID, setSchema, schema, library]
   );
 
   const upload = useCallback(
@@ -169,7 +169,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         return;
       }
       setProcessingError(undefined);
-      patchUploadTRS(schemaID, {
+      patchUploadTRS(itemID, {
         data: data,
         showError: true,
         setLoading: setProcessing,
@@ -181,7 +181,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         }
       });
     },
-    [schemaID, setSchema, schema, library]
+    [itemID, setSchema, schema, library]
   );
 
   const subscribe = useCallback(
@@ -190,7 +190,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         return;
       }
       setProcessingError(undefined);
-      postSubscribe(schemaID, {
+      postSubscribe(itemID, {
         showError: true,
         setLoading: setProcessing,
         onError: setProcessingError,
@@ -206,7 +206,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         }
       });
     },
-    [schemaID, schema, user]
+    [itemID, schema, user]
   );
 
   const unsubscribe = useCallback(
@@ -215,7 +215,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         return;
       }
       setProcessingError(undefined);
-      deleteUnsubscribe(schemaID, {
+      deleteUnsubscribe(itemID, {
         showError: true,
         setLoading: setProcessing,
         onError: setProcessingError,
@@ -231,7 +231,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         }
       });
     },
-    [schemaID, schema, user]
+    [itemID, schema, user]
   );
 
   const setOwner = useCallback(
@@ -240,7 +240,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         return;
       }
       setProcessingError(undefined);
-      patchSetOwner(schemaID, {
+      patchSetOwner(itemID, {
         data: {
           user: newOwner
         },
@@ -254,7 +254,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         }
       });
     },
-    [schemaID, schema, library]
+    [itemID, schema, library]
   );
 
   const setAccessPolicy = useCallback(
@@ -263,7 +263,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         return;
       }
       setProcessingError(undefined);
-      patchSetAccessPolicy(schemaID, {
+      patchSetAccessPolicy(itemID, {
         data: {
           access_policy: newPolicy
         },
@@ -277,7 +277,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         }
       });
     },
-    [schemaID, schema, library]
+    [itemID, schema, library]
   );
 
   const setLocation = useCallback(
@@ -286,7 +286,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         return;
       }
       setProcessingError(undefined);
-      patchSetLocation(schemaID, {
+      patchSetLocation(itemID, {
         data: {
           location: newLocation
         },
@@ -300,7 +300,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         }
       });
     },
-    [schemaID, schema, library]
+    [itemID, schema, library]
   );
 
   const setEditors = useCallback(
@@ -309,7 +309,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         return;
       }
       setProcessingError(undefined);
-      patchSetEditors(schemaID, {
+      patchSetEditors(itemID, {
         data: {
           users: newEditors
         },
@@ -322,7 +322,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         }
       });
     },
-    [schemaID, schema]
+    [itemID, schema]
   );
 
   const resetAliases = useCallback(
@@ -331,7 +331,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         return;
       }
       setProcessingError(undefined);
-      patchResetAliases(schemaID, {
+      patchResetAliases(itemID, {
         showError: true,
         setLoading: setProcessing,
         onError: setProcessingError,
@@ -342,7 +342,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         }
       });
     },
-    [schemaID, schema, library, user, setSchema]
+    [itemID, schema, library, user, setSchema]
   );
 
   const restoreOrder = useCallback(
@@ -351,7 +351,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         return;
       }
       setProcessingError(undefined);
-      patchRestoreOrder(schemaID, {
+      patchRestoreOrder(itemID, {
         showError: true,
         setLoading: setProcessing,
         onError: setProcessingError,
@@ -362,13 +362,13 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         }
       });
     },
-    [schemaID, schema, library, user, setSchema]
+    [itemID, schema, library, user, setSchema]
   );
 
   const produceStructure = useCallback(
     (data: ITargetCst, callback?: DataCallback<ConstituentaID[]>) => {
       setProcessingError(undefined);
-      patchProduceStructure(schemaID, {
+      patchProduceStructure(itemID, {
         data: data,
         showError: true,
         setLoading: setProcessing,
@@ -380,26 +380,26 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         }
       });
     },
-    [setSchema, library, schemaID]
+    [setSchema, library, itemID]
   );
 
   const download = useCallback(
     (callback: DataCallback<Blob>) => {
       setProcessingError(undefined);
-      getTRSFile(schemaID, String(schema?.version ?? ''), {
+      getTRSFile(itemID, String(schema?.version ?? ''), {
         showError: true,
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: callback
       });
     },
-    [schemaID, schema]
+    [itemID, schema]
   );
 
   const cstCreate = useCallback(
     (data: ICstCreateData, callback?: DataCallback<IConstituentaMeta>) => {
       setProcessingError(undefined);
-      postNewConstituenta(schemaID, {
+      postNewConstituenta(itemID, {
         data: data,
         showError: true,
         setLoading: setProcessing,
@@ -411,13 +411,13 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         }
       });
     },
-    [schemaID, library, setSchema]
+    [itemID, library, setSchema]
   );
 
   const cstDelete = useCallback(
     (data: IConstituentaList, callback?: () => void) => {
       setProcessingError(undefined);
-      patchDeleteConstituenta(schemaID, {
+      patchDeleteConstituenta(itemID, {
         data: data,
         showError: true,
         setLoading: setProcessing,
@@ -429,7 +429,7 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         }
       });
     },
-    [schemaID, library, setSchema]
+    [itemID, library, setSchema]
   );
 
   const cstUpdate = useCallback(
@@ -442,18 +442,18 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         onError: setProcessingError,
         onSuccess: newData =>
           reload(setProcessing, () => {
-            library.localUpdateTimestamp(Number(schemaID));
+            library.localUpdateTimestamp(Number(itemID));
             if (callback) callback(newData);
           })
       });
     },
-    [schemaID, library, reload]
+    [itemID, library, reload]
   );
 
   const cstRename = useCallback(
     (data: ICstRenameData, callback?: DataCallback<IConstituentaMeta>) => {
       setProcessingError(undefined);
-      patchRenameConstituenta(schemaID, {
+      patchRenameConstituenta(itemID, {
         data: data,
         showError: true,
         setLoading: setProcessing,
@@ -465,13 +465,13 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         }
       });
     },
-    [setSchema, library, schemaID]
+    [setSchema, library, itemID]
   );
 
   const cstSubstitute = useCallback(
     (data: ICstSubstituteData, callback?: () => void) => {
       setProcessingError(undefined);
-      patchSubstituteConstituents(schemaID, {
+      patchSubstituteConstituents(itemID, {
         data: data,
         showError: true,
         setLoading: setProcessing,
@@ -483,43 +483,43 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         }
       });
     },
-    [setSchema, library, schemaID]
+    [setSchema, library, itemID]
   );
 
   const cstMoveTo = useCallback(
     (data: ICstMovetoData, callback?: () => void) => {
       setProcessingError(undefined);
-      patchMoveConstituenta(schemaID, {
+      patchMoveConstituenta(itemID, {
         data: data,
         showError: true,
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
           setSchema(newData);
-          library.localUpdateTimestamp(Number(schemaID));
+          library.localUpdateTimestamp(Number(itemID));
           if (callback) callback();
         }
       });
     },
-    [schemaID, library, setSchema]
+    [itemID, library, setSchema]
   );
 
   const versionCreate = useCallback(
     (data: IVersionData, callback?: (version: number) => void) => {
       setProcessingError(undefined);
-      postCreateVersion(schemaID, {
+      postCreateVersion(itemID, {
         data: data,
         showError: true,
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
           setSchema(newData.schema);
-          library.localUpdateTimestamp(Number(schemaID));
+          library.localUpdateTimestamp(Number(itemID));
           if (callback) callback(newData.version);
         }
       });
     },
-    [schemaID, library, setSchema]
+    [itemID, library, setSchema]
   );
 
   const versionUpdate = useCallback(
@@ -592,19 +592,19 @@ export const RSFormState = ({ schemaID, versionID, children }: RSFormStateProps)
         onError: setProcessingError,
         onSuccess: newData => {
           setSchema(newData);
-          library.localUpdateTimestamp(Number(schemaID));
+          library.localUpdateTimestamp(Number(itemID));
           if (callback) callback(newData);
         }
       });
     },
-    [library, schemaID, setSchema]
+    [library, itemID, setSchema]
   );
 
   return (
     <RSFormContext.Provider
       value={{
         schema,
-        schemaID,
+        itemID,
         versionID,
         loading,
         errorLoading,

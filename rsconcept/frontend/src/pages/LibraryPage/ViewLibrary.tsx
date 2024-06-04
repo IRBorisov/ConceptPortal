@@ -15,7 +15,7 @@ import { useConceptOptions } from '@/context/OptionsContext';
 import { useUsers } from '@/context/UsersContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import useWindowSize from '@/hooks/useWindowSize';
-import { ILibraryItem } from '@/models/library';
+import { ILibraryItem, LibraryItemType } from '@/models/library';
 import { storage } from '@/utils/constants';
 
 interface ViewLibraryProps {
@@ -33,7 +33,11 @@ function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
   const [itemsPerPage, setItemsPerPage] = useLocalStorage<number>(storage.libraryPagination, 50);
 
   function handleOpenItem(item: ILibraryItem, event: CProps.EventMouse) {
-    router.push(urls.schema(item.id), event.ctrlKey || event.metaKey);
+    if (item.item_type === LibraryItemType.RSFORM) {
+      router.push(urls.schema(item.id), event.ctrlKey || event.metaKey);
+    } else if (item.item_type === LibraryItemType.OSS) {
+      router.push(urls.oss(item.id), event.ctrlKey || event.metaKey);
+    }
   }
 
   const windowSize = useWindowSize();

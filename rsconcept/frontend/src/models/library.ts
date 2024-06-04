@@ -75,13 +75,37 @@ export interface ILibraryItem {
 }
 
 /**
- * Represents library item extended data.
+ * Represents library item constant data loaded for both OSS and RSForm.
  */
-export interface ILibraryItemEx extends ILibraryItem {
+export interface ILibraryItemData extends ILibraryItem {
   subscribers: UserID[];
   editors: UserID[];
+}
+
+/**
+ * Represents library item extended data with versions.
+ */
+export interface ILibraryItemVersioned extends ILibraryItemData {
   version?: VersionID;
   versions: IVersionInfo[];
+}
+
+/**
+ * Represents common library item editor controller.
+ */
+export interface ILibraryItemEditor {
+  schema?: ILibraryItemData;
+
+  isMutable: boolean;
+  isProcessing: boolean;
+
+  setOwner: (newOwner: UserID) => void;
+  setAccessPolicy: (newPolicy: AccessPolicy) => void;
+  promptEditors: () => void;
+  promptLocation: () => void;
+  toggleSubscribe: () => void;
+
+  share: () => void;
 }
 
 /**

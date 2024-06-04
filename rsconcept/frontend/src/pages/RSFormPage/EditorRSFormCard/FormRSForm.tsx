@@ -117,6 +117,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
             toggleVisible={() => setVisible(prev => !prev)}
             readOnly={readOnly}
             toggleReadOnly={() => setReadOnly(prev => !prev)}
+            controller={controller}
           />
           <Label text='Версия' className='mb-2' />
           <SelectVersion

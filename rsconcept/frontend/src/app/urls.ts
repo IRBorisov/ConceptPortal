@@ -17,7 +17,8 @@ export const routes = {
   create_schema: 'library/create',
   manuals: 'manuals',
   help: 'manuals',
-  rsforms: 'rsforms'
+  rsforms: 'rsforms',
+  oss: 'oss'
 };
 
 interface SchemaProps {
@@ -25,6 +26,11 @@ interface SchemaProps {
   tab: number;
   version?: number | string;
   active?: number | string;
+}
+
+interface OssProps {
+  id: number | string;
+  tab: number;
 }
 
 /**
@@ -49,5 +55,8 @@ export const urls = {
     const versionStr = version !== undefined ? `v=${version}&` : '';
     const activeStr = active !== undefined ? `&active=${active}` : '';
     return `/rsforms/${id}?${versionStr}tab=${tab}${activeStr}`;
+  },
+  oss_props: ({ id, tab }: OssProps) => {
+    return `/oss/${id}?tab=${tab}`;
   }
 };

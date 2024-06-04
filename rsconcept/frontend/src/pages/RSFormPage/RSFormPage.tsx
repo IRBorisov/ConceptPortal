@@ -14,7 +14,7 @@ function RSFormPage() {
   const version = query.get('v') ?? undefined;
   return (
     <AccessModeState>
-      <RSFormState schemaID={params.id ?? ''} versionID={version}>
+      <RSFormState itemID={params.id ?? ''} versionID={version}>
         <RSTabs />
       </RSFormState>
     </AccessModeState>

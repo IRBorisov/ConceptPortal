@@ -8,21 +8,19 @@ import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { useAccessMode } from '@/context/AccessModeContext';
-import { AccessPolicy } from '@/models/library';
+import { AccessPolicy, ILibraryItemEditor } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
 import { UserLevel } from '@/models/user';
-
-import { useRSEdit } from '../RSEditContext';
 
 interface AccessToolbarProps {
   visible: boolean;
   toggleVisible: () => void;
   readOnly: boolean;
   toggleReadOnly: () => void;
+  controller: ILibraryItemEditor;
 }
 
-function AccessToolbar({ visible, toggleVisible, readOnly, toggleReadOnly }: AccessToolbarProps) {
-  const controller = useRSEdit();
+function AccessToolbar({ visible, toggleVisible, readOnly, toggleReadOnly, controller }: AccessToolbarProps) {
   const { accessLevel } = useAccessMode();
   const policy = useMemo(
     () => controller.schema?.access_policy ?? AccessPolicy.PRIVATE,

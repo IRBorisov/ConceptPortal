@@ -6,6 +6,7 @@ import LibraryPage from '@/pages/LibraryPage';
 import LoginPage from '@/pages/LoginPage';
 import ManualsPage from '@/pages/ManualsPage';
 import NotFoundPage from '@/pages/NotFoundPage';
+import OssPage from '@/pages/OssPage';
 import PasswordChangePage from '@/pages/PasswordChangePage';
 import RegisterPage from '@/pages/RegisterPage';
 import RestorePasswordPage from '@/pages/RestorePasswordPage';
@@ -56,6 +57,10 @@ export const Router = createBrowserRouter([
       {
         path: `${routes.rsforms}/:id`,
         element: <RSFormPage />
+      },
+      {
+        path: `${routes.oss}/:id`,
+        element: <OssPage />
       },
       {
         path: routes.manuals,

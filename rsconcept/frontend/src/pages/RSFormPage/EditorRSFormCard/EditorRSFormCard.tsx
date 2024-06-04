@@ -8,20 +8,22 @@ import { useAuth } from '@/context/AuthContext';
 import { useRSForm } from '@/context/RSFormContext';
 import { globals } from '@/utils/constants';
 
+import { useRSEdit } from '../RSEditContext';
 import EditorLibraryItem from './EditorLibraryItem';
 import FormRSForm from './FormRSForm';
 import RSFormStats from './RSFormStats';
 import RSFormToolbar from './RSFormToolbar';
 
-interface EditorRSFormProps {
+interface EditorRSFormCardProps {
   isModified: boolean;
   setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
   onDestroy: () => void;
 }
 
-function EditorRSForm({ isModified, onDestroy, setIsModified }: EditorRSFormProps) {
+function EditorRSFormCard({ isModified, onDestroy, setIsModified }: EditorRSFormCardProps) {
   const { schema, isSubscribed } = useRSForm();
   const { user } = useAuth();
+  const controller = useRSEdit();
 
   function initiateSubmit() {
     const element = document.getElementById(globals.library_item_editor) as HTMLFormElement;
@@ -51,7 +53,7 @@ function EditorRSForm({ isModified, onDestroy, setIsModified }: EditorRSFormProp
       <AnimateFade onKeyDown={handleInput} className={clsx('sm:w-fit mx-auto', 'flex flex-col sm:flex-row')}>
         <FlexColumn className='px-3'>
           <FormRSForm id={globals.library_item_editor} isModified={isModified} setIsModified={setIsModified} />
-          <EditorLibraryItem item={schema} isModified={isModified} />
+          <EditorLibraryItem item={schema} isModified={isModified} controller={controller} />
         </FlexColumn>
 
         <RSFormStats stats={schema?.stats} />
@@ -60,4 +62,4 @@ function EditorRSForm({ isModified, onDestroy, setIsModified }: EditorRSFormProp
   );
 }
 
-export default EditorRSForm;
+export default EditorRSFormCard;

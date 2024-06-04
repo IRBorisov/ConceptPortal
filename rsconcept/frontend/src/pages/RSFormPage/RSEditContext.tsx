@@ -182,7 +182,7 @@ export const RSEditState = ({
   );
 
   const viewVersion = useCallback(
-    (version?: VersionID, newTab?: boolean) => router.push(urls.schema(model.schemaID, version), newTab),
+    (version?: VersionID, newTab?: boolean) => router.push(urls.schema(model.itemID, version), newTab),
     [router, model]
   );
 
@@ -721,7 +721,7 @@ export const RSEditState = ({
 
       {model.loading ? <Loader /> : null}
       {model.errorLoading ? (
-        <ProcessError error={model.errorLoading} isArchive={model.isArchive} schemaID={model.schemaID} />
+        <ProcessError error={model.errorLoading} isArchive={model.isArchive} itemID={model.itemID} />
       ) : null}
       {model.schema && !model.loading ? children : null}
     </RSEditContext.Provider>
@@ -732,11 +732,11 @@ export const RSEditState = ({
 function ProcessError({
   error,
   isArchive,
-  schemaID
+  itemID
 }: {
   error: ErrorData;
   isArchive: boolean;
-  schemaID: string;
+  itemID: string;
 }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 404) {
     return (
@@ -745,7 +745,7 @@ function ProcessError({
         <div className='flex justify-center'>
           <TextURL text='Библиотека' href='/library' />
           {isArchive ? <Divider vertical margins='mx-3' /> : null}
-          {isArchive ? <TextURL text='Актуальная версия' href={`/rsforms/${schemaID}`} /> : null}
+          {isArchive ? <TextURL text='Актуальная версия' href={`/rsforms/${itemID}`} /> : null}
         </div>
       </div>
     );

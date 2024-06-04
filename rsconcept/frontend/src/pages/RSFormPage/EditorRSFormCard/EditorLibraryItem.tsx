@@ -10,21 +10,20 @@ import Tooltip from '@/components/ui/Tooltip';
 import { useAccessMode } from '@/context/AccessModeContext';
 import { useUsers } from '@/context/UsersContext';
 import useDropdown from '@/hooks/useDropdown';
-import { ILibraryItemEx } from '@/models/library';
+import { ILibraryItemData, ILibraryItemEditor } from '@/models/library';
 import { UserID, UserLevel } from '@/models/user';
 import { prefixes } from '@/utils/constants';
 
 import LabeledValue from '../../../components/ui/LabeledValue';
-import { useRSEdit } from '../RSEditContext';
 
 interface EditorLibraryItemProps {
-  item?: ILibraryItemEx;
+  item?: ILibraryItemData;
   isModified?: boolean;
+  controller: ILibraryItemEditor;
 }
 
-function EditorLibraryItem({ item, isModified }: EditorLibraryItemProps) {
+function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemProps) {
   const { getUserLabel, users } = useUsers();
-  const controller = useRSEdit();
   const { accessLevel } = useAccessMode();
   const intl = useIntl();
 

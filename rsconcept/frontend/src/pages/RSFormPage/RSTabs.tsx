@@ -18,7 +18,7 @@ import { PARAMETER, prefixes } from '@/utils/constants';
 import { labelVersion } from '@/utils/labels';
 
 import EditorConstituenta from './EditorConstituenta';
-import EditorRSForm from './EditorRSForm';
+import EditorRSForm from './EditorRSFormCard';
 import EditorRSList from './EditorRSList';
 import EditorTermGraph from './EditorTermGraph';
 import { RSEditState } from './RSEditContext';

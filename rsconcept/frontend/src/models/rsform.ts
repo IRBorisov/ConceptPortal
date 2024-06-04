@@ -4,7 +4,7 @@
 
 import { Graph } from '@/models/Graph';
 
-import { ILibraryItem, ILibraryItemEx, LibraryItemID } from './library';
+import { ILibraryItem, ILibraryItemVersioned, LibraryItemID } from './library';
 import { IArgumentInfo, ParsingStatus, ValueClass } from './rslang';
 
 /**
@@ -226,7 +226,7 @@ export interface IRSFormStats {
 /**
  * Represents formal explication for set of concepts.
  */
-export interface IRSForm extends ILibraryItemEx {
+export interface IRSForm extends ILibraryItemVersioned {
   items: IConstituenta[];
   stats: IRSFormStats;
   graph: Graph;
@@ -237,7 +237,7 @@ export interface IRSForm extends ILibraryItemEx {
 /**
  * Represents data for {@link IRSForm} provided by backend.
  */
-export interface IRSFormData extends ILibraryItemEx {
+export interface IRSFormData extends ILibraryItemVersioned {
   items: IConstituentaData[];
 }
 
