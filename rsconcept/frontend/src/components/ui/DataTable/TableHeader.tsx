@@ -37,8 +37,9 @@ function TableHeader<TData>({
             <th
               key={header.id}
               colSpan={header.colSpan}
-              className='px-2 py-2 text-xs font-medium select-none whitespace-nowrap'
+              className='pl-2 py-2 text-xs font-medium select-none whitespace-nowrap'
               style={{
+                paddingRight: enableSorting && header.column.getCanSort() ? '0px' : '2px',
                 textAlign: 'start',
                 width: header.getSize(),
                 cursor: enableSorting && header.column.getCanSort() ? 'pointer' : 'auto'
