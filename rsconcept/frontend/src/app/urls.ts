@@ -18,7 +18,8 @@ export const routes = {
   manuals: 'manuals',
   help: 'manuals',
   rsforms: 'rsforms',
-  oss: 'oss'
+  oss: 'oss',
+  icons: 'icons'
 };
 
 interface SchemaProps {

@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import CreateItemPage from '@/pages/CreateItemPage';
 import HomePage from '@/pages/HomePage';
+import IconsPage from '@/pages/IconsPage';
 import LibraryPage from '@/pages/LibraryPage';
 import LoginPage from '@/pages/LoginPage';
 import ManualsPage from '@/pages/ManualsPage';
@@ -61,6 +62,10 @@ export const Router = createBrowserRouter([
       {
         path: `${routes.oss}/:id`,
         element: <OssPage />
+      },
+      {
+        path: `${routes.icons}`,
+        element: <IconsPage />
       },
       {
         path: routes.manuals,

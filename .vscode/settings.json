@@ -98,6 +98,7 @@
     "moprho",
     "multiword",
     "mypy",
+    "nocheck",
     "nomn",
     "nooverlap",
     "NPRO",
