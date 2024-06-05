@@ -119,7 +119,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
             toggleReadOnly={() => setReadOnly(prev => !prev)}
             controller={controller}
           />
-          <Label text='Версия' className='mb-2' />
+          <Label text='Версия' className='mb-2 select-none' />
           <SelectVersion
             id='schema_version'
             className='select-none'
