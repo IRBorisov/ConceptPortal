@@ -70,7 +70,7 @@ function PasswordChangePage() {
       isLoading={loading}
       hasNoData={!isTokenValid}
     >
-      <form className={clsx('cc-column', 'w-[24rem]', 'px-6 mt-3')} onSubmit={handleSubmit}>
+      <form className={clsx('cc-column', 'w-[24rem] mx-auto', 'px-6 mt-3')} onSubmit={handleSubmit}>
         <TextInput
           id='new_password'
           type='password'
@@ -113,7 +113,7 @@ export default PasswordChangePage;
 // ====== Internals =========
 function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 404) {
-    return <div className='mt-6 text-sm select-text clr-text-red'>Данная ссылка не действительна</div>;
+    return <div className='mx-auto mt-6 text-sm select-text clr-text-red'>Данная ссылка не действительна</div>;
   } else {
     return <InfoError error={error} />;
   }

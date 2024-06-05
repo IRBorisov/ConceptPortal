@@ -34,8 +34,8 @@ function UserTabs() {
       error={error}
       hasNoData={!user}
     >
-      <AnimateFade className='flex gap-6 py-2'>
-        <div>
+      <AnimateFade className='flex gap-6 py-2 mx-auto w-fit'>
+        <div className='w-fit'>
           <Overlay position='top-0 right-0'>
             <MiniButton
               title='Отслеживаемые схемы'

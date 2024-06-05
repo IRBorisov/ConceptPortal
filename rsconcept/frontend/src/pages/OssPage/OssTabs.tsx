@@ -153,7 +153,7 @@ function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response) {
     if (error.response.status === 404) {
       return (
-        <div className='p-2 text-center'>
+        <div className='flex flex-col items-center p-2 mx-auto'>
           <p>{`Операционная схема с указанным идентификатором отсутствует`}</p>
           <div className='flex justify-center'>
             <TextURL text='Библиотека' href='/library' />
@@ -162,7 +162,7 @@ function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
       );
     } else if (error.response.status === 403) {
       return (
-        <div className='p-2 text-center'>
+        <div className='flex flex-col items-center p-2 mx-auto'>
           <p>Владелец ограничил доступ к данной схеме</p>
           <TextURL text='Библиотека' href='/library' />
         </div>

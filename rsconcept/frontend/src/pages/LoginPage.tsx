@@ -53,7 +53,7 @@ function LoginPage() {
   }
   return (
     <AnimateFade>
-      <form className={clsx('cc-column', 'w-[24rem]', 'pt-12 pb-6 px-6')} onSubmit={handleSubmit}>
+      <form className={clsx('cc-column', 'w-[24rem] mx-auto', 'pt-12 pb-6 px-6')} onSubmit={handleSubmit}>
         <img alt='Концепт Портал' src={resources.logo} className='max-h-[2.5rem] min-w-[2.5rem] mb-3' />
         <TextInput
           id='username'

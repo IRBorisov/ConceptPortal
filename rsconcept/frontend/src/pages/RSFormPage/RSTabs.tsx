@@ -290,7 +290,7 @@ function ProcessError({
   if (axios.isAxiosError(error) && error.response) {
     if (error.response.status === 404) {
       return (
-        <div className='p-2 text-center'>
+        <div className='flex flex-col items-center p-2 mx-auto'>
           <p>{`Концептуальная схема с указанным идентификатором ${isArchive ? 'и версией ' : ''}отсутствует`}</p>
           <div className='flex justify-center'>
             <TextURL text='Библиотека' href='/library' />
@@ -301,7 +301,7 @@ function ProcessError({
       );
     } else if (error.response.status === 403) {
       return (
-        <div className='p-2 text-center'>
+        <div className='flex flex-col items-center p-2 mx-auto'>
           <p>Владелец ограничил доступ к данной схеме</p>
           <TextURL text='Библиотека' href='/library' />
         </div>

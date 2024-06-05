@@ -83,19 +83,24 @@ function RegisterPage() {
   }
   return (
     <AnimateFade>
-      <form className={clsx('cc-column', 'px-6 py-3')} onSubmit={handleSubmit}>
-        <h1>Новый пользователь</h1>
+      <form className={clsx('cc-column', 'mx-auto w-[36rem]', 'px-6 py-3')} onSubmit={handleSubmit}>
+        <h1>
+          <span>Новый пользователь</span>
+          <Overlay id={globals.password_tooltip} position='top-[5.4rem] left-[3.5rem]'>
+            <IconHelp size='1.25rem' className='icon-primary' />
+          </Overlay>
+          <Tooltip anchorSelect={`#${globals.password_tooltip}`} offset={6}>
+            используйте уникальный пароль для каждого сайта
+          </Tooltip>
+          <Overlay id={globals.email_tooltip} position='top-[0.5rem] right-[1.75rem]'>
+            <IconHelp size='1.25rem' className='icon-primary' />
+          </Overlay>
+          <Tooltip anchorSelect={`#${globals.email_tooltip}`} offset={6}>
+            электронная почта используется для восстановления пароля
+          </Tooltip>
+        </h1>
         <div className='flex gap-12'>
           <FlexColumn>
-            <div className='absolute'>
-              <Overlay id={globals.password_tooltip} position='top-[4.8rem] left-[3.4rem] absolute'>
-                <IconHelp size='1.25rem' className='icon-primary' />
-              </Overlay>
-              <Tooltip anchorSelect={`#${globals.password_tooltip}`} offset={6}>
-                используйте уникальный пароль для каждого сайта
-              </Tooltip>
-            </div>
-
             <TextInput
               id='username'
               autoComplete='username'
@@ -130,15 +135,6 @@ function RegisterPage() {
           </FlexColumn>
 
           <FlexColumn className='w-[15rem]'>
-            <div className='absolute'>
-              <Overlay id={globals.email_tooltip} position='top-[0rem] right-[-15rem]'>
-                <IconHelp size='1.25rem' className='icon-primary' />
-              </Overlay>
-              <Tooltip anchorSelect={`#${globals.email_tooltip}`} offset={6}>
-                электронная почта используется для восстановления пароля
-              </Tooltip>
-            </div>
-
             <TextInput
               id='email'
               autoComplete='email'
@@ -192,11 +188,16 @@ function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
     if ('email' in error.response.data) {
       return (
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        <div className='w-full text-sm text-center select-text clr-text-red'>{error.response.data.email}.</div>
+        <div className='mx-auto text-sm select-text clr-text-red'>{error.response.data.email}.</div>
+      );
+    } else if ('username' in error.response.data) {
+      return (
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        <div className='mx-auto text-sm select-text clr-text-red'>{error.response.data.username}.</div>
       );
     } else {
       return (
-        <div className='text-sm select-text clr-text-red'>
+        <div className='mx-auto text-sm select-text clr-text-red'>
           <PrettyJson data={error.response} />
         </div>
       );

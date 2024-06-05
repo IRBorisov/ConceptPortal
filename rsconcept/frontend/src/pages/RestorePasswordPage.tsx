@@ -35,9 +35,11 @@ function RestorePasswordPage() {
   return (
     <AnimateFade>
       {!isCompleted ? (
-        <form className={clsx('cc-column', 'w-[24rem]', 'px-6 mt-3')} onSubmit={handleSubmit}>
+        <form className={clsx('cc-column', 'w-[24rem] mx-auto', 'px-6 mt-3')} onSubmit={handleSubmit}>
           <TextInput
             id='email'
+            autoComplete='email'
+            required
             allowEnter
             label='Электронная почта'
             value={email}
@@ -69,7 +71,9 @@ export default RestorePasswordPage;
 // ====== Internals =========
 function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
-    return <div className='mt-6 text-sm select-text clr-text-red'>Данный email не используется на Портале.</div>;
+    return (
+      <div className='mx-auto mt-6 text-sm select-text clr-text-red'>Данный email не используется на Портале.</div>
+    );
   } else {
     return <InfoError error={error} />;
   }

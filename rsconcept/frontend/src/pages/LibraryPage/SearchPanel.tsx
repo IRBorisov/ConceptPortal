@@ -73,17 +73,14 @@ function SearchPanel({
       className={clsx(
         'sticky top-0', // prettier: split lines
         'w-full h-[2.2rem]',
-        'pr-3 flex items-center',
+        'flex items-center',
         'border-b',
         'text-sm',
         'clr-input'
       )}
     >
-      <div className={clsx('px-2 self-center', 'min-w-[9rem]', 'select-none', 'whitespace-nowrap')}>
-        Фильтр
-        <span className='ml-2'>
-          {filtered} из {total}
-        </span>
+      <div className={clsx('px-3 self-center', 'min-w-[5.5rem]', 'select-none', 'whitespace-nowrap')}>
+        {filtered} из {total}
       </div>
 
       <div className='cc-icons'>
@@ -113,9 +110,9 @@ function SearchPanel({
       <div className='flex items-center h-full mx-auto'>
         <SearchBar
           id='library_search'
-          placeholder='Атрибуты'
+          placeholder='Поиск'
           noBorder
-          className='min-w-[8rem]'
+          className='min-w-[7rem] sm:min-w-[10rem]'
           value={query}
           onChange={setQuery}
         />
@@ -137,7 +134,7 @@ function SearchPanel({
             text={head ?? '//'}
           />
 
-          <Dropdown isOpen={headMenu.isOpen} className='z-modalTooltip'>
+          <Dropdown isOpen={headMenu.isOpen} stretchLeft className='z-modalTooltip'>
             <DropdownButton className='w-[10rem]' onClick={() => handleChange(undefined)}>
               <div className='inline-flex items-center gap-3'>
                 <IconFolder size='1rem' className='clr-text-controls' />
@@ -173,7 +170,7 @@ function SearchPanel({
         />
       </div>
 
-      <BadgeHelp topic={HelpTopic.UI_LIBRARY} className='max-w-[30rem] text-sm' offset={5} place='right-start' />
+      <BadgeHelp topic={HelpTopic.UI_LIBRARY} className='max-w-[28rem] text-sm' offset={5} place='right-start' />
     </div>
   );
 }
