@@ -98,11 +98,11 @@ export const OptionsState = ({ children }: OptionsStateProps) => {
   const calculateHeight = useCallback(
     (offset: string, minimum: string = '0px') => {
       if (noNavigation) {
-        return `max(calc(100vh - (${offset})), ${minimum})`;
+        return `max(calc(100dvh - (${offset})), ${minimum})`;
       } else if (noFooter) {
-        return `max(calc(100vh - 3rem - (${offset})), ${minimum})`;
+        return `max(calc(100dvh - 3rem - (${offset})), ${minimum})`;
       } else {
-        return `max(calc(100vh - 6.75rem - (${offset})), ${minimum})`;
+        return `max(calc(100dvh - 6.75rem - (${offset})), ${minimum})`;
       }
     },
     [noNavigation, noFooter]
@@ -114,11 +114,11 @@ export const OptionsState = ({ children }: OptionsStateProps) => {
   }, [setDarkMode]);
 
   const mainHeight = useMemo(() => {
-    return !noNavigation ? 'calc(100vh - 6.75rem)' : '100vh';
+    return !noNavigation ? 'calc(100dvh - 6.75rem)' : '100dvh';
   }, [noNavigation]);
 
   const viewportHeight = useMemo(() => {
-    return !noNavigation ? 'calc(100vh - 3rem)' : '100vh';
+    return !noNavigation ? 'calc(100dvh - 3rem)' : '100dvh';
   }, [noNavigation]);
 
   return (

@@ -12,10 +12,9 @@ function Footer() {
   }
   return (
     <footer
-      tabIndex={-1}
       className={clsx(
         'z-navigation',
-        'w-full',
+        'mx-auto',
         'sm:px-4 sm:py-2 flex flex-col items-center gap-1',
         'text-xs sm:text-sm select-none whitespace-nowrap'
       )}

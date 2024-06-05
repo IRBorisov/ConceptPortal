@@ -89,8 +89,8 @@ function Modal({
           className={clsx('overflow-auto overscroll-contain', className)}
           style={{
             overflow: overflowVisible ? 'visible' : 'auto',
-            maxHeight: 'calc(100vh - 8rem)',
-            maxWidth: 'calc(100vw - 2rem)'
+            maxHeight: 'calc(100svh - 8rem)',
+            maxWidth: 'calc(100svw - 2rem)'
           }}
         >
           {children}
