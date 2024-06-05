@@ -17,18 +17,6 @@ import useQueryStrings from '@/hooks/useQueryStrings';
 import { IUserLoginData } from '@/models/user';
 import { resources } from '@/utils/constants';
 
-function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
-  if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
-    return (
-      <div className='text-sm select-text clr-text-red'>
-        На Портале отсутствует такое сочетание имени пользователя и пароля
-      </div>
-    );
-  } else {
-    return <InfoError error={error} />;
-  }
-}
-
 function LoginPage() {
   const router = useConceptNavigation();
   const query = useQueryStrings();
@@ -105,3 +93,16 @@ function LoginPage() {
 }
 
 export default LoginPage;
+
+// ====== Internals =========
+function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
+  if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
+    return (
+      <div className='text-sm select-text clr-text-red'>
+        На Портале отсутствует такое сочетание имени пользователя и пароля
+      </div>
+    );
+  } else {
+    return <InfoError error={error} />;
+  }
+}

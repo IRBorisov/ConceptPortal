@@ -12,14 +12,6 @@ import AnimateFade from '@/components/wrap/AnimateFade';
 import { useAuth } from '@/context/AuthContext';
 import { IRequestPasswordData } from '@/models/user';
 
-function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
-  if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
-    return <div className='mt-6 text-sm select-text clr-text-red'>Данный email не используется на Портале.</div>;
-  } else {
-    return <InfoError error={error} />;
-  }
-}
-
 function RestorePasswordPage() {
   const { requestPasswordReset, loading, error, setError } = useAuth();
 
@@ -73,3 +65,12 @@ function RestorePasswordPage() {
 }
 
 export default RestorePasswordPage;
+
+// ====== Internals =========
+function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
+  if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
+    return <div className='mt-6 text-sm select-text clr-text-red'>Данный email не используется на Портале.</div>;
+  } else {
+    return <InfoError error={error} />;
+  }
+}

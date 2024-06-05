@@ -12,18 +12,6 @@ import { useBlockNavigation } from '@/context/NavigationContext';
 import { useUserProfile } from '@/context/UserProfileContext';
 import { IUserUpdateData } from '@/models/user';
 
-function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
-  if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
-    if ('email' in error.response.data) {
-      return (
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        <div className='text-sm select-text clr-text-red'>{error.response.data.email}.</div>
-      );
-    }
-  }
-  return <InfoError error={error} />;
-}
-
 function EditorProfile() {
   const { updateUser, user, errorProcessing, processing } = useUserProfile();
 
@@ -106,3 +94,16 @@ function EditorProfile() {
 }
 
 export default EditorProfile;
+
+// ====== Internals =========
+function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
+  if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
+    if ('email' in error.response.data) {
+      return (
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        <div className='text-sm select-text clr-text-red'>{error.response.data.email}.</div>
+      );
+    }
+  }
+  return <InfoError error={error} />;
+}

@@ -1,12 +1,17 @@
 'use client';
 
+import axios from 'axios';
 import clsx from 'clsx';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 import { toast } from 'react-toastify';
 
 import { urls } from '@/app/urls';
+import InfoError, { ErrorData } from '@/components/info/InfoError';
+import Divider from '@/components/ui/Divider';
+import Loader from '@/components/ui/Loader';
 import TabLabel from '@/components/ui/TabLabel';
+import TextURL from '@/components/ui/TextURL';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { useLibrary } from '@/context/LibraryContext';
 import { useBlockNavigation, useConceptNavigation } from '@/context/NavigationContext';
@@ -39,7 +44,7 @@ function RSTabs() {
   const cstQuery = query.get('active');
 
   const { setNoFooter, calculateHeight } = useConceptOptions();
-  const { schema, loading } = useRSForm();
+  const { schema, loading, errorLoading, isArchive, itemID } = useRSForm();
   const { destroyItem } = useLibrary();
 
   const [isModified, setIsModified] = useState(false);
@@ -233,13 +238,15 @@ function RSTabs() {
       onCreateCst={onCreateCst}
       onDeleteCst={onDeleteCst}
     >
+      {loading ? <Loader /> : null}
+      {errorLoading ? <ProcessError error={errorLoading} isArchive={isArchive} itemID={itemID} /> : null}
       {schema && !loading ? (
         <Tabs
           selectedIndex={activeTab}
           onSelect={onSelectTab}
           defaultFocus
           selectedTabClassName='clr-selected'
-          className='flex flex-col min-w-fit mx-auto'
+          className='flex flex-col mx-auto min-w-fit'
         >
           <TabList className={clsx('mx-auto w-fit', 'flex items-stretch', 'border-b-2 border-x-2 divide-x-2')}>
             <RSTabsMenu onDestroy={onDestroySchema} />
@@ -269,3 +276,37 @@ function RSTabs() {
 }
 
 export default RSTabs;
+
+// ====== Internals =========
+function ProcessError({
+  error,
+  isArchive,
+  itemID
+}: {
+  error: ErrorData;
+  isArchive: boolean;
+  itemID: string;
+}): React.ReactElement {
+  if (axios.isAxiosError(error) && error.response) {
+    if (error.response.status === 404) {
+      return (
+        <div className='p-2 text-center'>
+          <p>{`Схема с указанным идентификатором ${isArchive ? 'и версией ' : ''}отсутствует`}</p>
+          <div className='flex justify-center'>
+            <TextURL text='Библиотека' href='/library' />
+            {isArchive ? <Divider vertical margins='mx-3' /> : null}
+            {isArchive ? <TextURL text='Актуальная версия' href={`/rsforms/${itemID}`} /> : null}
+          </div>
+        </div>
+      );
+    } else if (error.response.status === 403) {
+      return (
+        <div className='p-2 text-center'>
+          <p>Владелец ограничил доступ к данной схеме</p>
+          <TextURL text='Библиотека' href='/library' />
+        </div>
+      );
+    }
+  }
+  return <InfoError error={error} />;
+}

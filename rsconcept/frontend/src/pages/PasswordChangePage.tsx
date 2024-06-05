@@ -14,14 +14,6 @@ import { useConceptNavigation } from '@/context/NavigationContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { IPasswordTokenData, IResetPasswordData } from '@/models/user';
 
-function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
-  if (axios.isAxiosError(error) && error.response && error.response.status === 404) {
-    return <div className='mt-6 text-sm select-text clr-text-red'>Данная ссылка не действительна</div>;
-  } else {
-    return <InfoError error={error} />;
-  }
-}
-
 function PasswordChangePage() {
   const router = useConceptNavigation();
   const token = useQueryStrings().get('token');
@@ -117,3 +109,12 @@ function PasswordChangePage() {
 }
 
 export default PasswordChangePage;
+
+// ====== Internals =========
+function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
+  if (axios.isAxiosError(error) && error.response && error.response.status === 404) {
+    return <div className='mt-6 text-sm select-text clr-text-red'>Данная ссылка не действительна</div>;
+  } else {
+    return <InfoError error={error} />;
+  }
+}

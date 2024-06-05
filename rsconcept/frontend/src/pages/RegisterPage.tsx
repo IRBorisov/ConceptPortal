@@ -25,24 +25,6 @@ import { HelpTopic } from '@/models/miscellaneous';
 import { IUserSignupData } from '@/models/user';
 import { globals, patterns } from '@/utils/constants';
 
-function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
-  if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
-    if ('email' in error.response.data) {
-      return (
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        <div className='w-full text-sm text-center select-text clr-text-red'>{error.response.data.email}.</div>
-      );
-    } else {
-      return (
-        <div className='text-sm select-text clr-text-red'>
-          <PrettyJson data={error.response} />
-        </div>
-      );
-    }
-  }
-  return <InfoError error={error} />;
-}
-
 function RegisterPage() {
   const router = useConceptNavigation();
   const { user, signup, loading, error, setError } = useAuth();
@@ -203,3 +185,22 @@ function RegisterPage() {
 }
 
 export default RegisterPage;
+
+// ====== Internals =========
+function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
+  if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
+    if ('email' in error.response.data) {
+      return (
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        <div className='w-full text-sm text-center select-text clr-text-red'>{error.response.data.email}.</div>
+      );
+    } else {
+      return (
+        <div className='text-sm select-text clr-text-red'>
+          <PrettyJson data={error.response} />
+        </div>
+      );
+    }
+  }
+  return <InfoError error={error} />;
+}

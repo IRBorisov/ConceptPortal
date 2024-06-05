@@ -14,14 +14,6 @@ import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { IUserUpdatePassword } from '@/models/user';
 
-function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
-  if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
-    return <div className='text-sm select-text clr-text-red'>Неверно введен старый пароль</div>;
-  } else {
-    return <InfoError error={error} />;
-  }
-}
-
 function EditorPassword() {
   const router = useConceptNavigation();
   const { updatePassword, error, setError, loading } = useAuth();
@@ -109,3 +101,12 @@ function EditorPassword() {
 }
 
 export default EditorPassword;
+
+// ====== Internals =========
+function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
+  if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
+    return <div className='text-sm select-text clr-text-red'>Неверно введен старый пароль</div>;
+  } else {
+    return <InfoError error={error} />;
+  }
+}

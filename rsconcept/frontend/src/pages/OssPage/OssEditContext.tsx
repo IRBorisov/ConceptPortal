@@ -1,13 +1,9 @@
 'use client';
 
-import axios from 'axios';
 import { AnimatePresence } from 'framer-motion';
 import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import InfoError, { ErrorData } from '@/components/info/InfoError';
-import Loader from '@/components/ui/Loader';
-import TextURL from '@/components/ui/TextURL';
 import { useAccessMode } from '@/context/AccessModeContext';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptOptions } from '@/context/OptionsContext';
@@ -174,25 +170,7 @@ export const OssEditState = ({ children }: OssEditStateProps) => {
         </AnimatePresence>
       ) : null}
 
-      {model.loading ? <Loader /> : null}
-      {model.errorLoading ? <ProcessError error={model.errorLoading} /> : null}
-      {model.schema && !model.loading ? children : null}
+      {children}
     </OssEditContext.Provider>
   );
 };
-
-// ====== Internals =========
-function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
-  if (axios.isAxiosError(error) && error.response && error.response.status === 404) {
-    return (
-      <div className='p-2 text-center'>
-        <p>{`Схема с указанным идентификатором отсутствует`}</p>
-        <div className='flex justify-center'>
-          <TextURL text='Библиотека' href='/library' />
-        </div>
-      </div>
-    );
-  } else {
-    return <InfoError error={error} />;
-  }
-}
