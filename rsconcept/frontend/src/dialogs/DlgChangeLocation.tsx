@@ -31,13 +31,14 @@ function DlgChangeLocation({ hideWindow, initial, onChangeLocation }: DlgChangeL
 
   return (
     <Modal
+      overflowVisible
       header='Изменение расположения'
       submitText='Переместить'
       submitInvalidTooltip={`Допустимы буквы, цифры, подчерк, пробел и "!". Сегмент пути не может начинаться и заканчиваться пробелом. Общая длина (с корнем) не должна превышать ${limits.location_len}`}
       hideWindow={hideWindow}
       canSubmit={isValid}
       onSubmit={handleSubmit}
-      className={clsx('w-[35rem]', 'pb-12 px-6 flex gap-3')}
+      className={clsx('w-[35rem]', 'pb-3 px-6 flex gap-3')}
     >
       <div className='flex flex-col gap-2 w-[7rem] h-min'>
         <Label text='Корень' />
@@ -51,7 +52,7 @@ function DlgChangeLocation({ hideWindow, initial, onChangeLocation }: DlgChangeL
         id='dlg_cst_body'
         label='Путь'
         className='w-[23rem]'
-        rows={5}
+        rows={3}
         value={body}
         onChange={event => setBody(event.target.value)}
       />

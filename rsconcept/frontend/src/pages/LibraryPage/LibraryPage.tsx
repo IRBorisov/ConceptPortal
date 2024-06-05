@@ -10,8 +10,8 @@ import { ILibraryFilter } from '@/models/miscellaneous';
 import { storage } from '@/utils/constants';
 import { toggleTristateFlag } from '@/utils/utils';
 
+import LibraryTable from './LibraryTable';
 import SearchPanel from './SearchPanel';
-import ViewLibrary from './ViewLibrary';
 
 function LibraryPage() {
   const library = useLibrary();
@@ -63,7 +63,7 @@ function LibraryPage() {
 
   const view = useMemo(
     () => (
-      <ViewLibrary
+      <LibraryTable
         resetQuery={resetFilter} // prettier: split lines
         items={items}
       />

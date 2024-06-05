@@ -7,7 +7,7 @@ import { urls } from '@/app/urls';
 import { IconFolder } from '@/components/Icons';
 import BadgeLocation from '@/components/info/BadgeLocation';
 import { CProps } from '@/components/props';
-import DataTable, { createColumnHelper, VisibilityState } from '@/components/ui/DataTable';
+import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } from '@/components/ui/DataTable';
 import FlexColumn from '@/components/ui/FlexColumn';
 import TextURL from '@/components/ui/TextURL';
 import { useConceptNavigation } from '@/context/NavigationContext';
@@ -18,18 +18,18 @@ import useWindowSize from '@/hooks/useWindowSize';
 import { ILibraryItem, LibraryItemType } from '@/models/library';
 import { storage } from '@/utils/constants';
 
-interface ViewLibraryProps {
+interface LibraryTableProps {
   items: ILibraryItem[];
   resetQuery: () => void;
 }
 
 const columnHelper = createColumnHelper<ILibraryItem>();
 
-function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
+function LibraryTable({ items, resetQuery }: LibraryTableProps) {
   const router = useConceptNavigation();
   const intl = useIntl();
   const { getUserLabel } = useUsers();
-  const { calculateHeight } = useConceptOptions();
+  const { calculateHeight, colors } = useConceptOptions();
   const [itemsPerPage, setItemsPerPage] = useLocalStorage<number>(storage.libraryPagination, 50);
 
   function handleOpenItem(item: ILibraryItem, event: CProps.EventMouse) {
@@ -121,6 +121,18 @@ function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
 
   const tableHeight = useMemo(() => calculateHeight('2.2rem'), [calculateHeight]);
 
+  const conditionalRowStyles = useMemo(
+    (): IConditionalStyle<ILibraryItem>[] => [
+      {
+        when: (item: ILibraryItem) => item.item_type === LibraryItemType.OSS,
+        style: {
+          backgroundColor: colors.bgGreen50
+        }
+      }
+    ],
+    [colors]
+  );
+
   return (
     <DataTable
       id='library_data'
@@ -149,8 +161,9 @@ function ViewLibrary({ items, resetQuery }: ViewLibraryProps) {
       paginationPerPage={itemsPerPage}
       onChangePaginationOption={setItemsPerPage}
       paginationOptions={[10, 20, 30, 50, 100]}
+      conditionalRowStyles={conditionalRowStyles}
     />
   );
 }
 
-export default ViewLibrary;
+export default LibraryTable;

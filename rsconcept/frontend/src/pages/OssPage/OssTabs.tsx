@@ -154,7 +154,7 @@ function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
     if (error.response.status === 404) {
       return (
         <div className='p-2 text-center'>
-          <p>{`Схема с указанным идентификатором отсутствует`}</p>
+          <p>{`Операционная схема с указанным идентификатором отсутствует`}</p>
           <div className='flex justify-center'>
             <TextURL text='Библиотека' href='/library' />
           </div>

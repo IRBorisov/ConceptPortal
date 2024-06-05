@@ -21,6 +21,7 @@ export interface ModalProps extends CProps.Styling {
 
   readonly?: boolean;
   canSubmit?: boolean;
+  overflowVisible?: boolean;
 
   hideWindow: () => void;
   onSubmit?: () => void;
@@ -39,6 +40,7 @@ function Modal({
   submitInvalidTooltip,
   className,
   children,
+  overflowVisible,
   submitText = 'Продолжить',
   ...restProps
 }: ModalProps) {
@@ -86,6 +88,7 @@ function Modal({
         <div
           className={clsx('overflow-auto overscroll-contain', className)}
           style={{
+            overflow: overflowVisible ? 'visible' : 'auto',
             maxHeight: 'calc(100vh - 8rem)',
             maxWidth: 'calc(100vw - 2rem)'
           }}

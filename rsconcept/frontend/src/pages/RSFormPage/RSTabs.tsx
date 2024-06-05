@@ -291,7 +291,7 @@ function ProcessError({
     if (error.response.status === 404) {
       return (
         <div className='p-2 text-center'>
-          <p>{`Схема с указанным идентификатором ${isArchive ? 'и версией ' : ''}отсутствует`}</p>
+          <p>{`Концептуальная схема с указанным идентификатором ${isArchive ? 'и версией ' : ''}отсутствует`}</p>
           <div className='flex justify-center'>
             <TextURL text='Библиотека' href='/library' />
             {isArchive ? <Divider vertical margins='mx-3' /> : null}

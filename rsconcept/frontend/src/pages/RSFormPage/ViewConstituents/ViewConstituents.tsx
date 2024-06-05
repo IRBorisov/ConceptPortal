@@ -48,7 +48,7 @@ function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit 
   return (
     <motion.div
       className={clsx(
-        'border overflow-hidden', // prettier: split-lines
+        'border overflow-visible', // prettier: split-lines
         {
           'mt-[2.2rem] rounded-l-md rounded-r-none': !isBottom, // prettier: split-lines
           'mt-3 mx-6 rounded-md md:w-[45.8rem]': isBottom
