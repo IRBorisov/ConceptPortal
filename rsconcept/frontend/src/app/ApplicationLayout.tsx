@@ -23,13 +23,15 @@ function ApplicationLayout() {
 
         <div
           id={globals.main_scroll}
-          className='cc-scroll-y flex flex-col items-start overflow-x-auto max-w-[100vw]'
+          className='flex flex-col items-start overflow-x-auto max-w-[100vw]'
           style={{
-            maxHeight: viewportHeight,
-            overflowY: showScroll ? 'scroll' : 'auto'
+            maxHeight: viewportHeight
           }}
         >
-          <main className='flex flex-col items-center w-full' style={{ minHeight: mainHeight }}>
+          <main
+            className='w-full cc-scroll-y'
+            style={{ overflowY: showScroll ? 'scroll' : 'auto', minHeight: mainHeight }}
+          >
             <Outlet />
           </main>
           <Footer />

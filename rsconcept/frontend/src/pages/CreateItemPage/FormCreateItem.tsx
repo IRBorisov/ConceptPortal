@@ -98,104 +98,103 @@ function FormCreateItem() {
   }
 
   return (
-    <>
-      <Overlay position='top-[0.5rem] right-[0.5rem]'>
-        <input
-          id='schema_file'
-          ref={inputRef}
-          type='file'
-          style={{ display: 'none' }}
-          accept={EXTEOR_TRS_FILE}
-          onChange={handleFileChange}
-        />
-        <MiniButton
-          title='Загрузить из Экстеор'
-          icon={<IconDownload size='1.25rem' className='icon-primary' />}
-          onClick={() => inputRef.current?.click()}
-        />
-      </Overlay>
-
-      <form className={clsx('cc-column', 'min-w-[30rem] max-w-[30rem]', 'px-6 py-3')} onSubmit={handleSubmit}>
-        <h1>Создание схемы</h1>
-
-        {fileName ? <Label text={`Загружен файл: ${fileName}`} /> : null}
-
-        <TextInput
-          id='schema_title'
-          required={!file}
-          label='Полное название'
-          placeholder={file && 'Загрузить из файла'}
-          value={title}
-          onChange={event => setTitle(event.target.value)}
-        />
-
-        <div className='flex justify-between gap-3'>
-          <TextInput
-            id='schema_alias'
-            required={!file}
-            label='Сокращение'
-            placeholder={file && 'Загрузить из файла'}
-            className='w-[14rem]'
-            pattern={patterns.library_alias}
-            title={`не более ${limits.library_alias_len} символов`}
-            value={alias}
-            onChange={event => setAlias(event.target.value)}
+    <form className={clsx('cc-column', 'min-w-[30rem] max-w-[30rem] mx-auto', 'px-6 py-3')} onSubmit={handleSubmit}>
+      <h1>
+        <Overlay position='top-0 right-[0.5rem]'>
+          <input
+            id='schema_file'
+            ref={inputRef}
+            type='file'
+            style={{ display: 'none' }}
+            accept={EXTEOR_TRS_FILE}
+            onChange={handleFileChange}
           />
-          {user?.is_staff ? (
-            <div className='flex flex-col items-center gap-2'>
-              <Label text='Тип схемы' className='self-center select-none' />
-              <SelectItemType value={itemType} onChange={setItemType} />
-            </div>
-          ) : null}
+          <MiniButton
+            title='Загрузить из Экстеор'
+            icon={<IconDownload size='1.25rem' className='icon-primary' />}
+            onClick={() => inputRef.current?.click()}
+          />
+        </Overlay>
+        Создание схемы
+      </h1>
 
-          <div className='flex flex-col gap-2'>
-            <Label text='Доступ' className='self-center select-none' />
-            <div className='ml-auto cc-icons'>
-              <SelectAccessPolicy value={policy} onChange={setPolicy} />
-              <MiniButton
-                className='disabled:cursor-auto'
-                title={visible ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
-                icon={<VisibilityIcon value={visible} />}
-                onClick={() => setVisible(prev => !prev)}
-              />
-            </div>
-          </div>
-        </div>
+      {fileName ? <Label text={`Загружен файл: ${fileName}`} /> : null}
 
-        <TextArea
-          id='schema_comment'
-          label='Описание'
+      <TextInput
+        id='schema_title'
+        required={!file}
+        label='Полное название'
+        placeholder={file && 'Загрузить из файла'}
+        value={title}
+        onChange={event => setTitle(event.target.value)}
+      />
+
+      <div className='flex justify-between gap-3'>
+        <TextInput
+          id='schema_alias'
+          required={!file}
+          label='Сокращение'
           placeholder={file && 'Загрузить из файла'}
-          value={comment}
-          onChange={event => setComment(event.target.value)}
+          className='w-[14rem]'
+          pattern={patterns.library_alias}
+          title={`не более ${limits.library_alias_len} символов`}
+          value={alias}
+          onChange={event => setAlias(event.target.value)}
         />
+        {user?.is_staff ? (
+          <div className='flex flex-col items-center gap-2'>
+            <Label text='Тип схемы' className='self-center select-none' />
+            <SelectItemType value={itemType} onChange={setItemType} />
+          </div>
+        ) : null}
 
-        <div className='flex justify-between gap-3'>
-          <div className='flex flex-col gap-2 w-[7rem] h-min'>
-            <Label text='Корень' />
-            <SelectLocationHead
-              value={head}
-              onChange={setHead}
-              excluded={!user?.is_staff ? [LocationHead.LIBRARY] : []}
+        <div className='flex flex-col gap-2'>
+          <Label text='Доступ' className='self-center select-none' />
+          <div className='ml-auto cc-icons'>
+            <SelectAccessPolicy value={policy} onChange={setPolicy} />
+            <MiniButton
+              className='disabled:cursor-auto'
+              title={visible ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
+              icon={<VisibilityIcon value={visible} />}
+              onClick={() => setVisible(prev => !prev)}
             />
           </div>
-          <TextArea
-            id='dlg_cst_body'
-            label='Путь'
-            className='w-[18rem]'
-            rows={4}
-            value={body}
-            onChange={event => setBody(event.target.value)}
+        </div>
+      </div>
+
+      <TextArea
+        id='schema_comment'
+        label='Описание'
+        placeholder={file && 'Загрузить из файла'}
+        value={comment}
+        onChange={event => setComment(event.target.value)}
+      />
+
+      <div className='flex justify-between gap-3'>
+        <div className='flex flex-col gap-2 w-[7rem] h-min'>
+          <Label text='Корень' />
+          <SelectLocationHead
+            value={head}
+            onChange={setHead}
+            excluded={!user?.is_staff ? [LocationHead.LIBRARY] : []}
           />
         </div>
+        <TextArea
+          id='dlg_cst_body'
+          label='Путь'
+          className='w-[18rem]'
+          rows={4}
+          value={body}
+          onChange={event => setBody(event.target.value)}
+        />
+      </div>
 
-        <div className='flex justify-around gap-6 py-3'>
-          <SubmitButton text='Создать схему' loading={processing} className='min-w-[10rem]' disabled={!isValid} />
-          <Button text='Отмена' className='min-w-[10rem]' onClick={() => handleCancel()} />
-        </div>
-        {error ? <InfoError error={error} /> : null}
-      </form>
-    </>
+      <div className='flex justify-around gap-6 py-3'>
+        <SubmitButton text='Создать схему' loading={processing} className='min-w-[10rem]' disabled={!isValid} />
+        <Button text='Отмена' className='min-w-[10rem]' onClick={() => handleCancel()} />
+      </div>
+      {error ? <InfoError error={error} /> : null}
+    </form>
   );
 }
 

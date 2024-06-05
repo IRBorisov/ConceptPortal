@@ -50,8 +50,11 @@ function EditorRSFormCard({ isModified, onDestroy, setIsModified }: EditorRSForm
         onSubmit={initiateSubmit}
         onDestroy={onDestroy}
       />
-      <AnimateFade onKeyDown={handleInput} className={clsx('sm:w-fit mx-auto', 'flex flex-col sm:flex-row')}>
-        <FlexColumn className='px-3'>
+      <AnimateFade
+        onKeyDown={handleInput}
+        className={clsx('sm:w-fit sm:max-w-fit max-w-[32rem]', 'mx-auto ', 'flex flex-col sm:flex-row px-6')}
+      >
+        <FlexColumn>
           <FormRSForm id={globals.library_item_editor} isModified={isModified} setIsModified={setIsModified} />
           <EditorLibraryItem item={schema} isModified={isModified} controller={controller} />
         </FlexColumn>

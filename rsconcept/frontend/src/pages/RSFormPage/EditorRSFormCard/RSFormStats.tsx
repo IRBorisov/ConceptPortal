@@ -11,7 +11,7 @@ function RSFormStats({ stats }: RSFormStatsProps) {
     return null;
   }
   return (
-    <div className='flex flex-col sm:gap-1 px-4 sm:mt-8 sm:w-[16rem]'>
+    <div className='flex flex-col sm:gap-1 sm:ml-6 sm:mt-8 sm:w-[16rem]'>
       <Divider margins='my-2' className='sm:hidden' />
 
       <LabeledValue id='count_all' label='Всего конституент ' text={stats.count_all} />
