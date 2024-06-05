@@ -17,6 +17,7 @@
     "@uiw/codemirror-themes": "^4.22.1",
     "@uiw/react-codemirror": "^4.22.1",
     "axios": "^1.7.2",
+    "@reactflow/core": "^11.8.3",
     "clsx": "^2.1.1",
     "framer-motion": "^10.18.0",
     "js-file-download": "^0.4.12",

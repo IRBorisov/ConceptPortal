@@ -405,11 +405,11 @@ class InlineSynthesisSerializer(serializers.Serializer):
         user = cast(User, self.context['user'])
         schema_in = cast(LibraryItem, attrs['source'])
         schema_out = cast(LibraryItem, attrs['receiver'])
-        if user.is_anonymous or (schema_out.owner != user and not user.is_staff):
-            raise PermissionDenied({
-                'message': msg.schemaNotOwned(),
-                'object_id': schema_in.id
-            })
+        #if user.is_anonymous or (schema_out.owner != user and not user.is_staff):
+        #    raise PermissionDenied({
+        #        'message': msg.schemaNotOwned(),
+        #        'object_id': schema_in.id
+        #    })
         constituents = cast(list[Constituenta], attrs['items'])
         for cst in constituents:
             if cst.schema != schema_in:

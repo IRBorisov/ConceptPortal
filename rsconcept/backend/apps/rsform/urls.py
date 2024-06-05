@@ -30,6 +30,7 @@ urlpatterns = [
     path('cctext/inflect', views.inflect),
     path('cctext/generate-lexeme', views.generate_lexeme),
     path('cctext/parse', views.parse_text),
-
+    path('synthesis/single', views.run_synthesis_view),
+    path('synthesis/graph', views.run_sythesis_graph_view),
     path('', include(library_router.urls)),
 ]

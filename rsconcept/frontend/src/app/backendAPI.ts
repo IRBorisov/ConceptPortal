@@ -51,6 +51,7 @@ import {
   IUserUpdatePassword
 } from '@/models/user';
 import { buildConstants } from '@/utils/buildConstants';
+import {ISynthesisData} from "@/models/synthesis.ts";
 
 const defaultOptions = {
   xsrfCookieName: 'csrftoken',
@@ -440,6 +441,13 @@ export function patchUploadTRS(target: string, request: FrontExchange<IRSFormUpl
 export function patchInlineSynthesis(request: FrontExchange<IInlineSynthesisData, IRSFormData>) {
   AxiosPatch({
     endpoint: `/api/operations/inline-synthesis`,
+    request: request
+  });
+}
+
+export function postSynthesis(request: FrontExchange<ISynthesisData, IRSFormData>){
+  AxiosPatch({
+    endpoint: `/api/synthesis/single`,
     request: request
   });
 }
