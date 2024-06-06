@@ -20,7 +20,7 @@ import { useRSForm } from '@/context/RSFormContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { ConstituentaID, IConstituenta, IConstituentaMeta } from '@/models/rsform';
 import { PARAMETER, prefixes } from '@/utils/constants';
-import { labelVersion } from '@/utils/labels';
+import { information, labelVersion, prompts } from '@/utils/labels';
 
 import EditorConstituenta from './EditorConstituenta';
 import EditorRSForm from './EditorRSFormCard';
@@ -173,11 +173,11 @@ function RSTabs() {
   );
 
   const onDestroySchema = useCallback(() => {
-    if (!schema || !window.confirm('Вы уверены, что хотите удалить данную схему?')) {
+    if (!schema || !window.confirm(prompts.deleteLibraryItem)) {
       return;
     }
     destroyItem(schema.id, () => {
-      toast.success('Схема удалена');
+      toast.success(information.itemDestroyed);
       router.push(urls.library);
     });
   }, [schema, destroyItem, router]);

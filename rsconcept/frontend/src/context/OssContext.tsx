@@ -18,6 +18,7 @@ import { AccessPolicy, ILibraryItem } from '@/models/library';
 import { ILibraryUpdateData } from '@/models/library';
 import { IOperationSchema } from '@/models/oss';
 import { UserID } from '@/models/user';
+import { contextOutsideScope } from '@/utils/labels';
 
 import { useAuth } from './AuthContext';
 import { useLibrary } from './LibraryContext';
@@ -48,7 +49,7 @@ const OssContext = createContext<IOssContext | null>(null);
 export const useOSS = () => {
   const context = useContext(OssContext);
   if (context === null) {
-    throw new Error('useOSS has to be used within <OssState.Provider>');
+    throw new Error(contextOutsideScope('useOSS', 'OssState'));
   }
   return context;
 };

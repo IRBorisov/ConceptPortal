@@ -25,6 +25,7 @@ import {
   IUserSignupData,
   IUserUpdatePassword
 } from '@/models/user';
+import { contextOutsideScope } from '@/utils/labels';
 
 import { useUsers } from './UsersContext';
 
@@ -46,7 +47,7 @@ const AuthContext = createContext<IAuthContext | null>(null);
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth has to be used within <AuthState.Provider>');
+    throw new Error(contextOutsideScope('useAuth', 'AuthState'));
   }
   return context;
 };

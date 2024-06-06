@@ -48,6 +48,7 @@ import {
   ITargetCst
 } from '@/models/rsform';
 import { UserID } from '@/models/user';
+import { contextOutsideScope } from '@/utils/labels';
 
 import { useAuth } from './AuthContext';
 import { useLibrary } from './LibraryContext';
@@ -99,7 +100,7 @@ const RSFormContext = createContext<IRSFormContext | null>(null);
 export const useRSForm = () => {
   const context = useContext(RSFormContext);
   if (context === null) {
-    throw new Error('useRSForm has to be used within <RSFormState.Provider>');
+    throw new Error(contextOutsideScope('useRSForm', 'RSFormState'));
   }
   return context;
 };

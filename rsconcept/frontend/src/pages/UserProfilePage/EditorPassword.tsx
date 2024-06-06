@@ -13,6 +13,7 @@ import TextInput from '@/components/ui/TextInput';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { IUserUpdatePassword } from '@/models/user';
+import { errors, information } from '@/utils/labels';
 
 function EditorPassword() {
   const router = useConceptNavigation();
@@ -37,7 +38,7 @@ function EditorPassword() {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (newPassword !== newPasswordRepeat) {
-      toast.error('Пароли не совпадают');
+      toast.error(errors.passwordsMismatch);
       return;
     }
     const data: IUserUpdatePassword = {
@@ -45,7 +46,7 @@ function EditorPassword() {
       new_password: newPassword
     };
     updatePassword(data, () => {
-      toast.success('Изменения сохранены');
+      toast.success(information.changesSaved);
       router.push(urls.login);
     });
   }

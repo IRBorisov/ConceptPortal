@@ -5,6 +5,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 import { DataCallback, getProfile, patchProfile } from '@/app/backendAPI';
 import { ErrorData } from '@/components/info/InfoError';
 import { IUserProfile, IUserUpdateData } from '@/models/user';
+import { contextOutsideScope } from '@/utils/labels';
 
 import { useUsers } from './UsersContext';
 
@@ -23,7 +24,7 @@ const ProfileContext = createContext<IUserProfileContext | null>(null);
 export const useUserProfile = () => {
   const context = useContext(ProfileContext);
   if (!context) {
-    throw new Error('useUserProfile has to be used within <UserProfileState.Provider>');
+    throw new Error(contextOutsideScope('useUserProfile', 'UserProfileState'));
   }
   return context;
 };

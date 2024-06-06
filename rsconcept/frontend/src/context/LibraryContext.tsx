@@ -20,6 +20,7 @@ import { matchLibraryItem, matchLibraryItemLocation } from '@/models/libraryAPI'
 import { ILibraryFilter } from '@/models/miscellaneous';
 import { IRSForm, IRSFormCloneData, IRSFormData } from '@/models/rsform';
 import { RSFormLoader } from '@/models/RSFormLoader';
+import { contextOutsideScope } from '@/utils/labels';
 
 import { useAuth } from './AuthContext';
 import { useConceptOptions } from './OptionsContext';
@@ -46,7 +47,7 @@ const LibraryContext = createContext<ILibraryContext | null>(null);
 export const useLibrary = (): ILibraryContext => {
   const context = useContext(LibraryContext);
   if (context === null) {
-    throw new Error('useLibrary has to be used within <LibraryState.Provider>');
+    throw new Error(contextOutsideScope('useLibrary', 'LibraryState'));
   }
   return context;
 };

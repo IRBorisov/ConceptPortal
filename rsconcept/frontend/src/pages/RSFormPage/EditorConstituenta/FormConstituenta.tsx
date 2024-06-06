@@ -13,7 +13,7 @@ import AnimateFade from '@/components/wrap/AnimateFade';
 import { useRSForm } from '@/context/RSFormContext';
 import { CstType, IConstituenta, ICstUpdateData } from '@/models/rsform';
 import { isBaseSet, isBasicConcept, isFunctional } from '@/models/rsformAPI';
-import { labelCstTypification } from '@/utils/labels';
+import { information, labelCstTypification } from '@/utils/labels';
 
 import EditorRSExpression from '../EditorRSExpression';
 import ControlsOverlay from './ControlsOverlay';
@@ -119,7 +119,7 @@ function FormConstituenta({
       definition_raw: textDefinition,
       convention: convention
     };
-    cstUpdate(data, () => toast.success('Изменения сохранены'));
+    cstUpdate(data, () => toast.success(information.changesSaved));
   }
 
   return (

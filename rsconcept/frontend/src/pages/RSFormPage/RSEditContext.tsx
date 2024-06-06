@@ -43,6 +43,7 @@ import {
 import { generateAlias } from '@/models/rsformAPI';
 import { UserID, UserLevel } from '@/models/user';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
+import { information, prompts } from '@/utils/labels';
 import { promptUnsaved } from '@/utils/utils';
 
 interface IRSEditContext {
@@ -189,14 +190,11 @@ export const RSEditState = ({
   }, [isModified]);
 
   const restoreVersion = useCallback(() => {
-    if (
-      !model.versionID ||
-      !window.confirm('При восстановлении архивной версии актуальная схему будет заменена. Продолжить?')
-    ) {
+    if (!model.versionID || !window.confirm(prompts.restoreArchive)) {
       return;
     }
     model.versionRestore(model.versionID, () => {
-      toast.success('Загрузка версии завершена');
+      toast.success(information.versionRestored);
       viewVersion(undefined);
     });
   }, [model, viewVersion]);
@@ -223,7 +221,7 @@ export const RSEditState = ({
       }
       data.alias = data.alias || generateAlias(data.cst_type, model.schema);
       model.cstCreate(data, newCst => {
-        toast.success(`Конституента добавлена: ${newCst.alias}`);
+        toast.success(information.newConstituent(newCst.alias));
         setSelected([newCst.id]);
         if (onCreateCst) onCreateCst(newCst);
       });
@@ -233,14 +231,15 @@ export const RSEditState = ({
 
   const handleRenameCst = useCallback(
     (data: ICstRenameData) => {
-      model.cstRename(data, () => toast.success(`Переименование: ${renameInitialData!.alias} -> ${data.alias}`));
+      const oldAlias = renameInitialData!.alias;
+      model.cstRename(data, () => toast.success(information.renameComplete(oldAlias, data.alias)));
     },
     [model, renameInitialData]
   );
 
   const handleSubstituteCst = useCallback(
     (data: ICstSubstituteData) => {
-      model.cstSubstitute(data, () => toast.success('Отождествление завершено'));
+      model.cstSubstitute(data, () => toast.success(information.substituteSingle));
     },
     [model]
   );
@@ -259,7 +258,7 @@ export const RSEditState = ({
       const nextActive = isEmpty ? undefined : getNextActiveOnDelete(activeCst?.id, model.schema.items, deleted);
 
       model.cstDelete(data, () => {
-        toast.success(`Конституенты удалены: ${deletedNames}`);
+        toast.success(information.constituentsDestroyed(deletedNames));
         setSelected(nextActive ? [nextActive] : []);
         if (onDeleteCst) onDeleteCst(nextActive);
       });
@@ -276,7 +275,7 @@ export const RSEditState = ({
         id: activeCst.id,
         term_forms: forms
       };
-      model.cstUpdate(data, () => toast.success('Изменения сохранены'));
+      model.cstUpdate(data, () => toast.success(information.changesSaved));
     },
     [model, activeCst]
   );
@@ -287,7 +286,7 @@ export const RSEditState = ({
         return;
       }
       model.versionCreate(data, newVersion => {
-        toast.success('Версия создана');
+        toast.success(information.newVersion(data.version));
         viewVersion(newVersion);
       });
     },
@@ -300,7 +299,7 @@ export const RSEditState = ({
         return;
       }
       model.versionDelete(versionID, () => {
-        toast.success('Версия удалена');
+        toast.success(information.versionDestroyed);
         if (String(versionID) === model.versionID) {
           viewVersion(undefined);
         }
@@ -314,7 +313,7 @@ export const RSEditState = ({
       if (!model.schema) {
         return;
       }
-      model.versionUpdate(versionID, data, () => toast.success('Версия обновлена'));
+      model.versionUpdate(versionID, data, () => toast.success(information.changesSaved));
     },
     [model]
   );
@@ -324,7 +323,7 @@ export const RSEditState = ({
       if (!model.schema) {
         return;
       }
-      model.setLocation(newLocation, () => toast.success('Схема перемещена'));
+      model.setLocation(newLocation, () => toast.success(information.moveComplete));
     },
     [model]
   );
@@ -337,7 +336,7 @@ export const RSEditState = ({
       const oldCount = model.schema.items.length;
       model.inlineSynthesis(data, newSchema => {
         setSelected([]);
-        toast.success(`Конституенты добавлены: ${newSchema['items'].length - oldCount}`);
+        toast.success(information.addedConstituents(newSchema['items'].length - oldCount));
       });
     },
     [model, setSelected]
@@ -463,8 +462,8 @@ export const RSEditState = ({
     setShowEditTerm(true);
   }, [isModified, activeCst]);
 
-  const reindex = useCallback(() => model.resetAliases(() => toast.success('Имена конституент обновлены')), [model]);
-  const reorder = useCallback(() => model.restoreOrder(() => toast.success('Конституенты упорядочены')), [model]);
+  const reindex = useCallback(() => model.resetAliases(() => toast.success(information.reindexComplete)), [model]);
+  const reorder = useCallback(() => model.restoreOrder(() => toast.success(information.reorderComplete)), [model]);
 
   const canProduceStructure = useMemo(() => {
     return (
@@ -486,7 +485,7 @@ export const RSEditState = ({
       target: activeCst.id
     };
     model.produceStructure(data, cstList => {
-      toast.success(`Добавлены конституенты: ${cstList.length}`);
+      toast.success(information.addedConstituents(cstList.length));
       if (cstList.length !== 0) {
         setSelected(cstList);
       }
@@ -535,35 +534,35 @@ export const RSEditState = ({
     const url = currentRef.includes('?') ? currentRef + '&share' : currentRef + '?share';
     navigator.clipboard
       .writeText(url)
-      .then(() => toast.success(`Ссылка скопирована: ${url}`))
+      .then(() => toast.success(information.linkReady))
       .catch(console.error);
   }, []);
 
   const toggleSubscribe = useCallback(() => {
     if (model.isSubscribed) {
-      model.unsubscribe(() => toast.success('Отслеживание отключено'));
+      model.unsubscribe(() => toast.success(information.unsubscribed));
     } else {
-      model.subscribe(() => toast.success('Отслеживание включено'));
+      model.subscribe(() => toast.success(information.subscribed));
     }
   }, [model]);
 
   const setOwner = useCallback(
     (newOwner: UserID) => {
-      model.setOwner(newOwner, () => toast.success('Владелец обновлен'));
+      model.setOwner(newOwner, () => toast.success(information.changesSaved));
     },
     [model]
   );
 
   const setAccessPolicy = useCallback(
     (newPolicy: AccessPolicy) => {
-      model.setAccessPolicy(newPolicy, () => toast.success('Политика доступа изменена'));
+      model.setAccessPolicy(newPolicy, () => toast.success(information.changesSaved));
     },
     [model]
   );
 
   const setEditors = useCallback(
     (newEditors: UserID[]) => {
-      model.setEditors(newEditors, () => toast.success('Редакторы обновлены'));
+      model.setEditors(newEditors, () => toast.success(information.changesSaved));
     },
     [model]
   );

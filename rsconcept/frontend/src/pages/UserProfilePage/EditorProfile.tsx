@@ -11,6 +11,7 @@ import TextInput from '@/components/ui/TextInput';
 import { useBlockNavigation } from '@/context/NavigationContext';
 import { useUserProfile } from '@/context/UserProfileContext';
 import { IUserUpdateData } from '@/models/user';
+import { information } from '@/utils/labels';
 
 function EditorProfile() {
   const { updateUser, user, errorProcessing, processing } = useUserProfile();
@@ -45,7 +46,7 @@ function EditorProfile() {
       first_name: first_name,
       last_name: last_name
     };
-    updateUser(data, () => toast.success('Изменения сохранены'));
+    updateUser(data, () => toast.success(information.changesSaved));
   }
 
   return (

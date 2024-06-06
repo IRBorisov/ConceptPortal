@@ -852,9 +852,59 @@ export function describeLibraryItemType(itemType: LibraryItemType): string {
 }
 
 /**
- * UI shared messages.
+ * UI info descriptors.
  */
-export const messages = {
-  unsaved: 'Сохраните или отмените изменения',
-  promptUnsaved: 'Присутствуют несохраненные изменения. Продолжить без их учета?'
+export const information = {
+  changesSaved: 'Изменения сохранены',
+
+  subscribed: 'Отслеживание отключено',
+  unsubscribed: 'Отслеживание выключено',
+
+  substituteSingle: 'Отождествление завершено',
+  reorderComplete: 'Упорядочение завершено',
+  reindexComplete: 'Имена конституент обновлены',
+  moveComplete: 'Перемещение завершено',
+  linkReady: 'Ссылка скопирована',
+  versionRestored: 'Загрузка версии завершена',
+  cloneComplete: (alias: string) => `Копия создана: ${alias}`,
+
+  addedConstituents: (count: number) => `Добавлены конституенты: ${count}`,
+  newLibraryItem: 'Схема успешно создана',
+  newConstituent: (alias: string) => `Конституента добавлена: ${alias}`,
+  newVersion: (version: string) => `Версия создана: ${version}`,
+  renameComplete: (oldAlias: string, newAlias: string) => `Переименование: ${oldAlias} -> ${newAlias}`,
+
+  versionDestroyed: 'Версия удалена',
+  itemDestroyed: 'Схема удалена',
+  constituentsDestroyed: (aliases: string) => `Конституенты удалены: ${aliases}`
 };
+
+/**
+ * UI error descriptors.
+ */
+export const errors = {
+  astFailed: 'Невозможно построить дерево разбора',
+  passwordsMismatch: 'Пароли не совпадают'
+};
+
+/**
+ * UI tooltip descriptors.
+ */
+export const tooltips = {
+  unsaved: 'Сохраните или отмените изменения'
+};
+
+/**
+ * UI prompt messages.
+ */
+export const prompts = {
+  promptUnsaved: 'Присутствуют несохраненные изменения. Продолжить без их учета?',
+  deleteLibraryItem: 'Вы уверены, что хотите удалить данную схему?',
+  generateWordforms: 'Данное действие приведет к перезаписи словоформ при совпадении граммем. Продолжить?',
+  restoreArchive: 'При восстановлении архивной версии актуальная схему будет заменена. Продолжить?'
+};
+
+// ============== INTERNAL LABELS FOR DEVELOPERS TEXT ================
+export function contextOutsideScope(contextName: string, contextState: string): string {
+  return `${contextName} has to be used within <${contextState}.Provider>`;
+}

@@ -16,6 +16,7 @@ import { Grammeme, ITextRequest, IWordForm, IWordFormPlain } from '@/models/lang
 import { parseGrammemes, wordFormEquals } from '@/models/languageAPI';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IConstituenta, TermForm } from '@/models/rsform';
+import { prompts } from '@/utils/labels';
 import { IGrammemeOption, SelectorGrammemes, SelectorGrammemesList } from '@/utils/selectors';
 
 import WordFormsTable from './WordFormsTable';
@@ -92,7 +93,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
 
   function handleGenerateLexeme() {
     if (forms.length > 0) {
-      if (!window.confirm('Данное действие приведет к перезаписи словоформ при совпадении граммем. Продолжить?')) {
+      if (!window.confirm(prompts.generateWordforms)) {
         return;
       }
     }

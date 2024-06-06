@@ -4,7 +4,7 @@
 
 import { AxiosHeaderValue, AxiosResponse } from 'axios';
 
-import { messages } from './labels';
+import { prompts } from './labels';
 
 /**
  * Checks if arguments is Node.
@@ -102,7 +102,7 @@ export function convertBase64ToBlob(base64String: string): Uint8Array {
  * Prompt user of confirming discarding changes before continue.
  */
 export function promptUnsaved(): boolean {
-  return window.confirm(messages.promptUnsaved);
+  return window.confirm(prompts.promptUnsaved);
 }
 
 /**

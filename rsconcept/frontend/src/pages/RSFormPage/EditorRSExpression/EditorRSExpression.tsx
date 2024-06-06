@@ -19,7 +19,7 @@ import { getDefinitionPrefix } from '@/models/rsformAPI';
 import { IExpressionParse, IRSErrorDescription, SyntaxTree } from '@/models/rslang';
 import { TokenID } from '@/models/rslang';
 import { storage } from '@/utils/constants';
-import { labelTypification } from '@/utils/labels';
+import { errors, labelTypification } from '@/utils/labels';
 
 import ExpressionToolbar from './ExpressionToolbar';
 import ParsingResult from './ParsingResult';
@@ -131,7 +131,7 @@ function EditorRSExpression({
   function handleShowAST() {
     handleCheckExpression(parse => {
       if (!parse.astText) {
-        toast.error('Невозможно построить дерево разбора');
+        toast.error(errors.astFailed);
       } else {
         setSyntaxTree(parse.ast);
         setExpression(getDefinitionPrefix(activeCst!) + value);

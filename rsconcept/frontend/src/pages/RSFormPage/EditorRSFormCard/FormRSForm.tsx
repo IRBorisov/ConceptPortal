@@ -13,6 +13,7 @@ import TextInput from '@/components/ui/TextInput';
 import { useRSForm } from '@/context/RSFormContext';
 import { ILibraryUpdateData, LibraryItemType } from '@/models/library';
 import { limits, patterns } from '@/utils/constants';
+import { information } from '@/utils/labels';
 
 import { useRSEdit } from '../RSEditContext';
 import AccessToolbar from './AccessToolbar';
@@ -84,7 +85,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
       visible: visible,
       read_only: readOnly
     };
-    update(data, () => toast.success('Изменения сохранены'));
+    update(data, () => toast.success(information.changesSaved));
   };
 
   return (

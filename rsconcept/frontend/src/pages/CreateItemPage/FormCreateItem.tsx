@@ -25,6 +25,7 @@ import { AccessPolicy, LibraryItemType, LocationHead } from '@/models/library';
 import { ILibraryCreateData } from '@/models/library';
 import { combineLocation, validateLocation } from '@/models/libraryAPI';
 import { EXTEOR_TRS_FILE, limits, patterns } from '@/utils/constants';
+import { information } from '@/utils/labels';
 
 function FormCreateItem() {
   const router = useConceptNavigation();
@@ -78,7 +79,7 @@ function FormCreateItem() {
       fileName: file?.name
     };
     createItem(data, newItem => {
-      toast.success('Схема успешно создана');
+      toast.success(information.newLibraryItem);
       if (itemType == LibraryItemType.RSFORM) {
         router.push(urls.schema(newItem.id));
       } else {

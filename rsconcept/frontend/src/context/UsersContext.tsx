@@ -4,6 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 
 import { getActiveUsers } from '@/app/backendAPI';
 import { IUserInfo } from '@/models/user';
+import { contextOutsideScope } from '@/utils/labels';
 
 interface IUsersContext {
   users: IUserInfo[];
@@ -15,7 +16,7 @@ const UsersContext = createContext<IUsersContext | null>(null);
 export const useUsers = (): IUsersContext => {
   const context = useContext(UsersContext);
   if (context === null) {
-    throw new Error('useUsers has to be used within <UsersState.Provider>');
+    throw new Error(contextOutsideScope('useUsers', 'UsersState'));
   }
   return context;
 };
