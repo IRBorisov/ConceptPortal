@@ -15,7 +15,7 @@ function Footer() {
       className={clsx(
         'z-navigation',
         'mx-auto',
-        'sm:px-4 sm:py-2 flex flex-col items-center gap-1',
+        'px-3 py-2 flex flex-col items-center gap-1',
         'text-xs sm:text-sm select-none whitespace-nowrap'
       )}
     >

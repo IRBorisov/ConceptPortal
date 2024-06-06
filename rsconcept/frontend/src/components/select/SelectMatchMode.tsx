@@ -38,7 +38,7 @@ function SelectMatchMode({ value, dense, onChange }: SelectMatchModeProps) {
         title='Настройка фильтрации по проверяемым атрибутам'
         hideTitle={menu.isOpen}
         className='h-full pr-2'
-        icon={MatchModeIcon(value, '1rem', value !== CstMatchMode.ALL ? 'icon-primary' : '')}
+        icon={<MatchModeIcon value={value} size='1rem' />}
         text={dense || size.isSmall ? undefined : labelCstMatchMode(value)}
         onClick={menu.toggle}
       />
@@ -54,7 +54,7 @@ function SelectMatchMode({ value, dense, onChange }: SelectMatchModeProps) {
                 onClick={() => handleChange(matchMode)}
               >
                 <div className='inline-flex items-center gap-1'>
-                  {MatchModeIcon(matchMode, '1rem')}
+                  {<MatchModeIcon value={matchMode} size='1rem' />}
                   {!dense ? (
                     <span>
                       <b>{labelCstMatchMode(matchMode)}:</b> {describeCstMatchMode(matchMode)}
