@@ -1,10 +1,15 @@
 import PDFViewer from '@/components/ui/PDFViewer';
 import { resources } from '@/utils/constants';
 
-function HelpPrivacy() {
+interface HelpPrivacyProps {
+  offsetXpx: number;
+  minWidth: number;
+}
+
+function HelpPrivacy({ offsetXpx, minWidth }: HelpPrivacyProps) {
   return (
     <div>
-      <PDFViewer file={resources.privacy_policy} />
+      <PDFViewer file={resources.privacy_policy} offsetXpx={offsetXpx} minWidth={minWidth} />
     </div>
   );
 }

@@ -11,7 +11,7 @@ import { UsersState } from '@/context/UsersContext';
 
 import ErrorFallback from './ErrorFallback';
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.js', import.meta.url).toString();
+pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString();
 
 const resetState = () => {
   console.log('Resetting state after error fallback');
