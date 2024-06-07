@@ -23,6 +23,7 @@ function NavigationButton({ icon, title, titleHtml, hideTitle, onClick, text }: 
         'mr-1 h-full', // prettier: split lines
         'flex items-center gap-1',
         'clr-btn-nav',
+        'rounded-xl',
         'font-controls whitespace-nowrap',
         {
           'px-2': text,

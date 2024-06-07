@@ -47,7 +47,7 @@ function Navigation() {
         <div tabIndex={-1} className='flex items-center mr-auto cursor-pointer' onClick={navigateHome}>
           <Logo />
         </div>
-        <div className='flex'>
+        <div className='flex gap-1 py-[0.3rem]'>
           <NavigationButton
             text='Новая схема'
             title='Создать новую схему'
