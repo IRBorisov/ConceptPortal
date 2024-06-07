@@ -98,7 +98,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
       <div
         tabIndex={-1}
         className={clsx(
-          'max-w-[95rem]', // prettier: split lines
+          'max-w-[95rem] mx-auto', // prettier: split lines
           'flex',
           { 'flex-col md:items-center': isNarrow }
         )}
