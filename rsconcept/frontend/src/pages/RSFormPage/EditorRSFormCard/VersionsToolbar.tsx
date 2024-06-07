@@ -13,13 +13,15 @@ function VersionsToolbar() {
       {controller.isMutable ? (
         <>
           <MiniButton
-            title={!controller.isContentEditable ? 'Откатить к версии' : 'Переключитесь на неактуальную версию'}
+            titleHtml={
+              !controller.isContentEditable ? 'Откатить к версии' : 'Переключитесь на <br/>неактуальную версию'
+            }
             disabled={controller.isContentEditable}
             onClick={() => controller.restoreVersion()}
             icon={<IconUpload size='1.25rem' className='icon-red' />}
           />
           <MiniButton
-            title={controller.isContentEditable ? 'Создать версию' : 'Переключитесь на актуальную версию'}
+            titleHtml={controller.isContentEditable ? 'Создать версию' : 'Переключитесь <br/>на актуальную версию'}
             disabled={!controller.isContentEditable}
             onClick={controller.createVersion}
             icon={<IconNewItem size='1.25rem' className='icon-green' />}

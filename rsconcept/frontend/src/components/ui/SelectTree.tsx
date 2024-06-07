@@ -92,7 +92,7 @@ function SelectTree<ItemType>({
                 value === item && 'clr-selected'
               )}
               data-tooltip-id={globals.tooltip}
-              data-tooltip-content={getDescription(item)}
+              data-tooltip-html={getDescription(item)}
               onClick={event => handleSetValue(event, item)}
               initial={{ ...animateSideAppear.initial }}
               animate={{ ...animateSideAppear.animate }}

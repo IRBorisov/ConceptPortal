@@ -35,7 +35,7 @@ function SelectMatchMode({ value, dense, onChange }: SelectMatchModeProps) {
     <div ref={menu.ref}>
       <SelectorButton
         transparent
-        title='Настройка фильтрации по проверяемым атрибутам'
+        titleHtml='Настройка фильтрации <br/>по проверяемым атрибутам'
         hideTitle={menu.isOpen}
         className='h-full pr-2'
         icon={<MatchModeIcon value={value} size='1rem' />}

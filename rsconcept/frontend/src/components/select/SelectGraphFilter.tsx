@@ -36,7 +36,7 @@ function SelectGraphFilter({ value, dense, onChange }: SelectGraphFilterProps) {
       <SelectorButton
         transparent
         tabIndex={-1}
-        title='Настройка фильтрации по графу термов'
+        titleHtml='Настройка фильтрации <br/>по графу термов'
         hideTitle={menu.isOpen}
         className='h-full pr-2'
         icon={<DependencyIcon value={value} size='1rem' />}

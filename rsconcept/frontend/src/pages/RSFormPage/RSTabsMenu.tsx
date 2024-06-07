@@ -209,7 +209,7 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
             />
             <DropdownButton
               text='Встраивание'
-              title='Импортировать совокупность конституент из другой схемы'
+              titleHtml='Импортировать совокупность <br/>конституент из другой схемы'
               icon={<IconInlineSynthesis size='1rem' className='icon-green' />}
               disabled={!controller.isContentEditable || controller.isProcessing}
               onClick={handleInlineSynthesis}
@@ -217,28 +217,28 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
             <DropdownButton
               className='border-t-2'
               text='Упорядочить список'
-              title='Упорядочить список конституент исходя из логики типов и связей конституент'
+              titleHtml='Упорядочить список, исходя из <br/>логики типов и связей конституент'
               icon={<IconSortList size='1rem' className='icon-primary' />}
               disabled={!controller.isContentEditable || controller.isProcessing}
               onClick={handleRestoreOrder}
             />
             <DropdownButton
               text='Порядковые имена'
-              title='Присвоить порядковые имена и обновить выражения'
+              titleHtml='Присвоить порядковые имена <br/>и обновить выражения'
               icon={<IconGenerateNames size='1rem' className='icon-primary' />}
               disabled={!controller.isContentEditable || controller.isProcessing}
               onClick={handleReindex}
             />
             <DropdownButton
               text='Порождение структуры'
-              title='Раскрыть структуру типизации выделенной конституенты'
+              titleHtml='Раскрыть структуру типизации <br/>выделенной конституенты'
               icon={<IconGenerateStructure size='1rem' className='icon-primary' />}
               disabled={!controller.isContentEditable || !controller.canProduceStructure}
               onClick={handleProduceStructure}
             />
             <DropdownButton
               text='Отождествление'
-              title='Заменить вхождения одной конституенты на другую'
+              titleHtml='Заменить вхождения <br/>одной конституенты на другую'
               icon={<IconReplace size='1rem' className='icon-red' />}
               onClick={handleSubstituteCst}
               disabled={!controller.isContentEditable || controller.isProcessing}

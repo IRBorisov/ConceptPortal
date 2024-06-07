@@ -163,11 +163,11 @@ function RegisterPage() {
 
         <div className='flex gap-1 text-sm'>
           <Checkbox id='accept_terms' label='Принимаю условия' value={acceptPrivacy} setValue={setAcceptPrivacy} />
-          <TextURL text='обработки персональных данных...' href={urls.help_topic(HelpTopic.PRIVACY)} />
+          <TextURL text='обработки персональных данных...' href={urls.help_topic(HelpTopic.INFO_PRIVACY)} />
         </div>
         <div className='flex gap-1 text-sm'>
           <Checkbox id='accept_rules' label='Принимаю ' value={acceptRules} setValue={setAcceptRules} />
-          <TextURL text='правила поведения на Портале...' href={urls.help_topic(HelpTopic.RULES)} />
+          <TextURL text='правила поведения на Портале...' href={urls.help_topic(HelpTopic.INFO_RULES)} />
         </div>
 
         <div className='flex justify-around my-3'>

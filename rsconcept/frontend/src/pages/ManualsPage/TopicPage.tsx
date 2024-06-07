@@ -6,15 +6,17 @@ import HelpConcept from './items/HelpConcept';
 import HelpConceptRelations from './items/HelpConceptRelations';
 import HelpConceptSynthesis from './items/HelpConceptSynthesis';
 import HelpConceptSystem from './items/HelpConceptSystem';
+import HelpContributors from './items/HelpContributors';
 import HelpCstAttributes from './items/HelpCstAttributes';
 import HelpCstClass from './items/HelpCstClass';
 import HelpCstEditor from './items/HelpCstEditor';
 import HelpCstStatus from './items/HelpCstStatus';
-import HelpDocs from './items/HelpDocs';
 import HelpExteor from './items/HelpExteor';
 import HelpFormulaTree from './items/HelpFormulaTree';
+import HelpInfo from './items/HelpInfo';
 import HelpInterface from './items/HelpInterface';
 import HelpLibrary from './items/HelpLibrary';
+import HelpOSS from './items/HelpOSS';
 import HelpPortal from './items/HelpPortal';
 import HelpPrivacy from './items/HelpPrivacy';
 import HelpRSFormCard from './items/HelpRSFormCard';
@@ -38,11 +40,6 @@ interface TopicPageProps {
 function TopicPage({ topic }: TopicPageProps) {
   if (topic === HelpTopic.MAIN) return <HelpPortal />;
 
-  if (topic === HelpTopic.DOCS) return <HelpDocs />;
-  if (topic === HelpTopic.RULES) return <HelpRules />;
-  if (topic === HelpTopic.PRIVACY) return <HelpPrivacy />;
-  if (topic === HelpTopic.API) return <HelpAPI />;
-
   if (topic === HelpTopic.INTERFACE) return <HelpInterface />;
   if (topic === HelpTopic.UI_LIBRARY) return <HelpLibrary />;
   if (topic === HelpTopic.UI_RS_MENU) return <HelpRSFormMenu />;
@@ -59,6 +56,7 @@ function TopicPage({ topic }: TopicPageProps) {
   if (topic === HelpTopic.CC_CONSTITUENTA) return <HelpCstAttributes />;
   if (topic === HelpTopic.CC_RELATIONS) return <HelpConceptRelations />;
   if (topic === HelpTopic.CC_SYNTHESIS) return <HelpConceptSynthesis />;
+  if (topic === HelpTopic.CC_OSS) return <HelpOSS />;
 
   if (topic === HelpTopic.RSLANG) return <HelpRSLang />;
   if (topic === HelpTopic.RSL_TYPES) return <HelpRSLangTypes />;
@@ -70,6 +68,13 @@ function TopicPage({ topic }: TopicPageProps) {
   if (topic === HelpTopic.TERM_CONTROL) return <HelpTerminologyControl />;
   if (topic === HelpTopic.ACCESS) return <HelpAccess />;
   if (topic === HelpTopic.VERSIONS) return <HelpVersions />;
+
+  if (topic === HelpTopic.INFO) return <HelpInfo />;
+  if (topic === HelpTopic.INFO_RULES) return <HelpRules />;
+  if (topic === HelpTopic.INFO_CONTRIB) return <HelpContributors />;
+  if (topic === HelpTopic.INFO_PRIVACY) return <HelpPrivacy />;
+  if (topic === HelpTopic.INFO_API) return <HelpAPI />;
+
   if (topic === HelpTopic.EXTEOR) return <HelpExteor />;
   return null;
 }

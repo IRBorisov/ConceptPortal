@@ -27,7 +27,7 @@ function DlgGraphParams({ hideWindow, initial, onConfirm }: DlgGraphParamsProps)
       header='Настройки графа термов'
       onSubmit={handleSubmit}
       submitText='Применить'
-      className='flex gap-6 px-6 py-2 w-[35rem]'
+      className='flex gap-6 justify-between px-6 pb-3 w-[30rem]'
     >
       <div className='flex flex-col gap-1'>
         <h1 className='mb-2'>Преобразования</h1>
@@ -45,13 +45,13 @@ function DlgGraphParams({ hideWindow, initial, onConfirm }: DlgGraphParamsProps)
         />
         <Checkbox
           label='Скрыть шаблоны'
-          title='Терм-функции и предикат-функции с параметризованными аргументами'
+          titleHtml='Терм-функции и предикат-функции <br/>с параметризованными аргументами'
           value={params.noTemplates}
           setValue={value => updateParams({ noTemplates: value })}
         />
         <Checkbox
           label='Транзитивная редукция'
-          title='Удалить связи, образующие транзитивные пути в графе'
+          titleHtml='Удалить связи, образующие <br/>транзитивные пути в графе'
           value={params.noTransitive}
           setValue={value => updateParams({ noTransitive: value })}
         />

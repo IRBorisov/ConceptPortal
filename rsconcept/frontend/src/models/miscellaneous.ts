@@ -37,11 +37,6 @@ export type FontStyle = 'controls' | 'main' | 'math' | 'math2';
 export enum HelpTopic {
   MAIN = 'main',
 
-  DOCS = 'documentation',
-  RULES = 'rules',
-  PRIVACY = 'privacy',
-  API = 'api',
-
   INTERFACE = 'user-interface',
   UI_LIBRARY = 'ui-library',
   UI_RS_MENU = 'ui-rsform-menu',
@@ -54,10 +49,11 @@ export enum HelpTopic {
   UI_CST_CLASS = 'ui-rsform-cst-class',
 
   CONCEPTUAL = 'concept',
-  CC_SYSTEM = 'rslang-rsform',
-  CC_CONSTITUENTA = 'rslang-cst',
-  CC_RELATIONS = 'rslang-relations',
-  CC_SYNTHESIS = 'rslang-synthesis',
+  CC_SYSTEM = 'concept-rsform',
+  CC_CONSTITUENTA = 'concept-constituenta',
+  CC_RELATIONS = 'concept-relations',
+  CC_SYNTHESIS = 'concept-synthesis',
+  CC_OSS = 'concept-operations-schema',
 
   RSLANG = 'rslang',
   RSL_TYPES = 'rslang-types',
@@ -69,6 +65,13 @@ export enum HelpTopic {
   TERM_CONTROL = 'terminology-control',
   ACCESS = 'access',
   VERSIONS = 'versions',
+
+  INFO = 'documentation',
+  INFO_RULES = 'rules',
+  INFO_CONTRIB = 'contributors',
+  INFO_PRIVACY = 'privacy',
+  INFO_API = 'api',
+
   EXTEOR = 'exteor'
 }
 
@@ -77,11 +80,6 @@ export enum HelpTopic {
  */
 export const topicParent: Map<HelpTopic, HelpTopic> = new Map([
   [HelpTopic.MAIN, HelpTopic.MAIN],
-
-  [HelpTopic.DOCS, HelpTopic.DOCS],
-  [HelpTopic.RULES, HelpTopic.DOCS],
-  [HelpTopic.API, HelpTopic.DOCS],
-  [HelpTopic.PRIVACY, HelpTopic.DOCS],
 
   [HelpTopic.INTERFACE, HelpTopic.INTERFACE],
   [HelpTopic.UI_LIBRARY, HelpTopic.INTERFACE],
@@ -99,6 +97,7 @@ export const topicParent: Map<HelpTopic, HelpTopic> = new Map([
   [HelpTopic.CC_CONSTITUENTA, HelpTopic.CONCEPTUAL],
   [HelpTopic.CC_RELATIONS, HelpTopic.CONCEPTUAL],
   [HelpTopic.CC_SYNTHESIS, HelpTopic.CONCEPTUAL],
+  [HelpTopic.CC_OSS, HelpTopic.CONCEPTUAL],
 
   [HelpTopic.RSLANG, HelpTopic.RSLANG],
   [HelpTopic.RSL_TYPES, HelpTopic.RSLANG],
@@ -110,13 +109,20 @@ export const topicParent: Map<HelpTopic, HelpTopic> = new Map([
   [HelpTopic.TERM_CONTROL, HelpTopic.TERM_CONTROL],
   [HelpTopic.ACCESS, HelpTopic.ACCESS],
   [HelpTopic.VERSIONS, HelpTopic.VERSIONS],
+
+  [HelpTopic.INFO, HelpTopic.INFO],
+  [HelpTopic.INFO_RULES, HelpTopic.INFO],
+  [HelpTopic.INFO_CONTRIB, HelpTopic.INFO],
+  [HelpTopic.INFO_PRIVACY, HelpTopic.INFO],
+  [HelpTopic.INFO_API, HelpTopic.INFO],
+
   [HelpTopic.EXTEOR, HelpTopic.EXTEOR]
 ]);
 
 /**
  *  Topics that can be folded.
  */
-export const foldableTopics = [HelpTopic.INTERFACE, HelpTopic.RSLANG, HelpTopic.CONCEPTUAL, HelpTopic.DOCS];
+export const foldableTopics = [HelpTopic.INTERFACE, HelpTopic.RSLANG, HelpTopic.CONCEPTUAL, HelpTopic.INFO];
 
 /**
  * Represents {@link IConstituenta} matching mode.
