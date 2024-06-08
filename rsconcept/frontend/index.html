@@ -22,11 +22,14 @@
     <title>Концепт Портал</title>
 
     <script>
-      if (
-        localStorage.getItem('darkMode') === 'true' ||
-        localStorage.getItem('color-theme') === 'dark' ||
-        (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
-      ) {
+      let isDark = false;
+      if ('portal.theme.dark' in localStorage) {
+        isDark = localStorage.getItem('portal.theme.dark') === 'true';
+      } else if (window.matchMedia) {
+        isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        localStorage.setItem('portal.theme.dark', isDark ? 'true' : 'false');
+      }
+      if (isDark) {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');
