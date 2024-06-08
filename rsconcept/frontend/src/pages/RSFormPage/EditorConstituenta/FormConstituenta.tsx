@@ -204,12 +204,11 @@ function FormConstituenta({
             <TextArea
               id='cst_convention'
               spellCheck
-              className='min-h-[3.75rem]'
               label={isBasic ? 'Конвенция' : 'Комментарий'}
               placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
               value={convention}
               disabled={disabled}
-              rows={convention.length > 2 * ROW_SIZE_IN_CHARACTERS ? 3 : 2}
+              rows={convention.length > 2 * ROW_SIZE_IN_CHARACTERS || convention.includes('\n') ? 4 : 2}
               onChange={event => setConvention(event.target.value)}
             />
           </AnimateFade>
