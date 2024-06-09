@@ -4,9 +4,11 @@ import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
 
+import { useAccessMode } from '@/context/AccessModeContext';
 import { useConceptOptions } from '@/context/OptionsContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
+import { UserLevel } from '@/models/user';
 import { animateSideView } from '@/styling/animations';
 
 import ConstituentsSearch from './ConstituentsSearch';
@@ -29,20 +31,25 @@ interface ViewConstituentsProps {
 function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit }: ViewConstituentsProps) {
   const { calculateHeight } = useConceptOptions();
   const windowSize = useWindowSize();
+  const { accessLevel } = useAccessMode();
 
   const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema?.items ?? []);
 
   const table = useMemo(
     () => (
       <ConstituentsTable
-        maxHeight={isBottom ? calculateHeight('42rem', '10rem') : calculateHeight('8.2rem')}
+        maxHeight={
+          isBottom
+            ? calculateHeight(accessLevel !== UserLevel.READER ? '42rem' : '35rem', '10rem')
+            : calculateHeight('8.2rem')
+        }
         items={filteredData}
         activeCst={activeCst}
         onOpenEdit={onOpenEdit}
         denseThreshold={COLUMN_EXPRESSION_HIDE_THRESHOLD}
       />
     ),
-    [isBottom, filteredData, activeCst, onOpenEdit, calculateHeight]
+    [isBottom, filteredData, activeCst, onOpenEdit, calculateHeight, accessLevel]
   );
 
   return (
