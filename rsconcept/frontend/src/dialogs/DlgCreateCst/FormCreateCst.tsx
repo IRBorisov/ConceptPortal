@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { AnimatePresence } from 'framer-motion';
 import { useLayoutEffect, useMemo, useState } from 'react';
 
@@ -12,6 +13,7 @@ import AnimateFade from '@/components/wrap/AnimateFade';
 import { HelpTopic } from '@/models/miscellaneous';
 import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
 import { generateAlias, isBaseSet, isBasicConcept, isFunctional, validateNewAlias } from '@/models/rsformAPI';
+import { PARAMETER } from '@/utils/constants';
 import { labelCstType } from '@/utils/labels';
 import { SelectorCstType } from '@/utils/selectors';
 
@@ -52,7 +54,11 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
           value={{ value: state.cst_type, label: labelCstType(state.cst_type) }}
           onChange={data => partialUpdate({ cst_type: data?.value ?? CstType.BASE })}
         />
-        <BadgeHelp topic={HelpTopic.CC_CONSTITUENTA} offset={16} className='max-w-[40rem] max-h-[calc(100svh-2rem)]' />
+        <BadgeHelp
+          topic={HelpTopic.CC_CONSTITUENTA}
+          offset={16}
+          className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')}
+        />
         <TextInput
           id='dlg_cst_alias'
           dense

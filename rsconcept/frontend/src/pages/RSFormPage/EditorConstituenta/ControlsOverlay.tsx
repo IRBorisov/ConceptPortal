@@ -30,10 +30,10 @@ function ControlsOverlay({ constituenta, disabled, modified, processing, onRenam
       ) : null}
       <div
         className={clsx(
-          'pt-1 pl-[1.375rem]', // prettier: split lines
+          'pt-1 sm:pl-[1.375rem] pl-1', // prettier: split lines
           'text-sm font-medium whitespace-nowrap',
           'select-text cursor-default',
-          disabled && !processing && 'pl-[2.8rem]'
+          disabled && !processing && 'pl-[1.6rem] sm:pl-[2.8rem]'
         )}
       >
         <span>Имя </span>

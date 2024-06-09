@@ -10,6 +10,7 @@ import Overlay from '@/components/ui/Overlay';
 import { useAccessMode } from '@/context/AccessModeContext';
 import { HelpTopic } from '@/models/miscellaneous';
 import { UserLevel } from '@/models/user';
+import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/labels';
 
 import { useOssEdit } from '../OssEditContext';
@@ -57,7 +58,7 @@ function RSFormToolbar({ modified, anonymous, subscribed, onSubmit, onDestroy }:
           onClick={onDestroy}
         />
       ) : null}
-      <BadgeHelp topic={HelpTopic.UI_RS_CARD} offset={4} className='max-w-[30rem]' />
+      <BadgeHelp topic={HelpTopic.UI_RS_CARD} offset={4} className={PARAMETER.TOOLTIP_WIDTH} />
     </Overlay>
   );
 }

@@ -11,7 +11,7 @@ import { HelpTopic } from '@/models/miscellaneous';
 import { SyntaxTree } from '@/models/rslang';
 import { graphDarkT, graphLightT } from '@/styling/color';
 import { colorBgSyntaxTree } from '@/styling/color';
-import { resources } from '@/utils/constants';
+import { PARAMETER, resources } from '@/utils/constants';
 import { labelSyntaxTree } from '@/utils/labels';
 
 interface DlgShowASTProps extends Pick<ModalProps, 'hideWindow'> {
@@ -55,7 +55,7 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
   return (
     <Modal readonly hideWindow={hideWindow} className='px-6'>
       <Overlay position='left-[-1rem] top-[0.25rem]'>
-        <BadgeHelp topic={HelpTopic.UI_FORMULA_TREE} className='max-w-[32rem]' />
+        <BadgeHelp topic={HelpTopic.UI_FORMULA_TREE} className={PARAMETER.TOOLTIP_WIDTH} />
       </Overlay>
       <div className='my-2 text-lg text-center'>
         {!hoverNode ? expression : null}

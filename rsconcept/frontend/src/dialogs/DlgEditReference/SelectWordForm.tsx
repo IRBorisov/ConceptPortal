@@ -22,7 +22,7 @@ function SelectWordForm({ selected, setSelected }: SelectWordFormProps) {
   );
 
   return (
-    <div className='text-sm'>
+    <div className='text-xs sm:text-sm'>
       {DefaultWordForms.slice(0, 12).map((data, index) => (
         <WordformButton
           key={`${prefixes.wordform_list}${index}`}

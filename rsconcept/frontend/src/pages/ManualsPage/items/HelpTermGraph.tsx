@@ -26,8 +26,8 @@ function HelpTermGraph() {
   const { colors } = useConceptOptions();
   return (
     <div className='flex flex-col'>
-      <div className='flex'>
-        <div className='dense w-[14rem]'>
+      <div className='flex flex-col sm:flex-row'>
+        <div className='w-full sm:w-[14rem]'>
           <h1>Настройка графа</h1>
           <li>Цвет – покраска узлов</li>
           <li>Граф – расположение</li>
@@ -43,9 +43,9 @@ function HelpTermGraph() {
           </li>
         </div>
 
-        <Divider vertical margins='mx-3 mt-3' />
+        <Divider vertical margins='mx-3 mt-3' className='hidden sm:block' />
 
-        <div className='dense w-[21rem]'>
+        <div className='w-full sm:w-[21rem]'>
           <h1>Изменение узлов</h1>
           <li>Клик на конституенту – выделение</li>
           <li>
@@ -66,10 +66,10 @@ function HelpTermGraph() {
         </div>
       </div>
 
-      <Divider margins='my-3' />
+      <Divider margins='my-3' className='hidden sm:block' />
 
-      <div className='flex mb-3'>
-        <div className='dense w-[14rem]'>
+      <div className='flex mb-3 flex-col-reverse sm:flex-row'>
+        <div className='w-full sm:w-[14rem]'>
           <h1>Общие</h1>
           <li>
             <IconFilter className='inline-icon' /> Открыть настройки
@@ -82,7 +82,7 @@ function HelpTermGraph() {
           </li>
         </div>
 
-        <Divider vertical margins='mx-3' />
+        <Divider vertical margins='mx-3' className='hidden sm:block' />
 
         <div className='dense w-[21rem]'>
           <h1>Выделение</h1>

@@ -16,7 +16,9 @@ export const PARAMETER = {
   graphPopupDelay: 500, // milliseconds delay for graph popup selections
   graphRefreshDelay: 10, // milliseconds delay for graph viewpoint reset
 
-  logicLabel: 'LOGIC'
+  logicLabel: 'LOGIC',
+
+  TOOLTIP_WIDTH: 'max-w-[29rem]'
 };
 
 /**

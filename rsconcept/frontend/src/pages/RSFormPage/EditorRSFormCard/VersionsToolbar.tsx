@@ -3,6 +3,7 @@ import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { HelpTopic } from '@/models/miscellaneous';
+import { PARAMETER } from '@/utils/constants';
 
 import { useRSEdit } from '../RSEditContext';
 
@@ -34,7 +35,7 @@ function VersionsToolbar() {
           />
         </>
       ) : null}
-      <BadgeHelp topic={HelpTopic.VERSIONS} className='max-w-[30rem]' offset={4} />
+      <BadgeHelp topic={HelpTopic.VERSIONS} className={PARAMETER.TOOLTIP_WIDTH} offset={4} />
     </Overlay>
   );
 }

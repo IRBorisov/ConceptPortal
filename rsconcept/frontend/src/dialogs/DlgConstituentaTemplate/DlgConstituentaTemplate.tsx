@@ -14,6 +14,7 @@ import { HelpTopic } from '@/models/miscellaneous';
 import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
 import { generateAlias, validateNewAlias } from '@/models/rsformAPI';
 import { inferTemplatedType, substituteTemplateArgs } from '@/models/rslangAPI';
+import { PARAMETER } from '@/utils/constants';
 
 import FormCreateCst from '../DlgCreateCst/FormCreateCst';
 import ArgumentsTab, { IArgumentsState } from './ArgumentsTab';
@@ -144,7 +145,11 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
       onSubmit={handleSubmit}
     >
       <Overlay position='top-0 right-[6rem]'>
-        <BadgeHelp topic={HelpTopic.RSL_TEMPLATES} className='max-w-[40rem]' offset={12} />
+        <BadgeHelp
+          topic={HelpTopic.RSL_TEMPLATES}
+          className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')}
+          offset={12}
+        />
       </Overlay>
       <Tabs
         selectedTabClassName='clr-selected'

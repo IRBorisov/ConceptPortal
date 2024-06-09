@@ -17,7 +17,7 @@ function WordformButton({ text, example, grams, onSelectGrams, isSelected, ...re
       tabIndex={-1}
       onClick={() => onSelectGrams(grams)}
       className={clsx(
-        'min-w-[6.15rem]',
+        'min-w-[4.15rem] sm:min-w-[6.15rem]',
         'p-1',
         'border rounded-none',
         'cursor-pointer',

@@ -14,7 +14,7 @@ import SelectorButton from '@/components/ui/SelectorButton';
 import useDropdown from '@/hooks/useDropdown';
 import { LocationHead } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
-import { prefixes } from '@/utils/constants';
+import { PARAMETER, prefixes } from '@/utils/constants';
 import { describeLocationHead, labelLocationHead } from '@/utils/labels';
 import { tripleToggleColor } from '@/utils/utils';
 
@@ -170,7 +170,12 @@ function SearchPanel({
         />
       </div>
 
-      <BadgeHelp topic={HelpTopic.UI_LIBRARY} className='max-w-[28rem] text-sm' offset={5} place='right-start' />
+      <BadgeHelp
+        topic={HelpTopic.UI_LIBRARY}
+        className={clsx(PARAMETER.TOOLTIP_WIDTH, 'text-sm')}
+        offset={5}
+        place='right-start'
+      />
     </div>
   );
 }

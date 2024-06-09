@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import {
   IconClustering,
   IconClusteringOff,
@@ -13,6 +15,7 @@ import {
 import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniButton from '@/components/ui/MiniButton';
 import { HelpTopic } from '@/models/miscellaneous';
+import { PARAMETER } from '@/utils/constants';
 
 import { useRSEdit } from '../RSEditContext';
 
@@ -111,7 +114,11 @@ function GraphToolbar({
         title='Сохранить изображение'
         onClick={onSaveImage}
       />
-      <BadgeHelp topic={HelpTopic.UI_GRAPH_TERM} className='max-w-[calc(100vw-4rem)]' offset={4} />
+      <BadgeHelp
+        topic={HelpTopic.UI_GRAPH_TERM}
+        className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')}
+        offset={4}
+      />
     </div>
   );
 }
