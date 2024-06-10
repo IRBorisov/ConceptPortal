@@ -47,6 +47,7 @@ export enum HelpTopic {
   UI_FORMULA_TREE = 'ui-formula-tree',
   UI_CST_STATUS = 'ui-rsform-cst-status',
   UI_CST_CLASS = 'ui-rsform-cst-class',
+  UI_OSS_GRAPH = 'ui-oss-graph',
 
   CONCEPTUAL = 'concept',
   CC_SYSTEM = 'concept-rsform',
@@ -91,6 +92,7 @@ export const topicParent: Map<HelpTopic, HelpTopic> = new Map([
   [HelpTopic.UI_FORMULA_TREE, HelpTopic.INTERFACE],
   [HelpTopic.UI_CST_STATUS, HelpTopic.INTERFACE],
   [HelpTopic.UI_CST_CLASS, HelpTopic.INTERFACE],
+  [HelpTopic.UI_OSS_GRAPH, HelpTopic.INTERFACE],
 
   [HelpTopic.CONCEPTUAL, HelpTopic.CONCEPTUAL],
   [HelpTopic.CC_SYSTEM, HelpTopic.CONCEPTUAL],

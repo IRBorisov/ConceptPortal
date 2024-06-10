@@ -372,6 +372,7 @@ export function labelHelpTopic(topic: HelpTopic): string {
     case HelpTopic.UI_FORMULA_TREE: return 'Дерево разбора';
     case HelpTopic.UI_CST_STATUS:   return 'Статус конституенты';
     case HelpTopic.UI_CST_CLASS:    return 'Класс конституенты';
+    case HelpTopic.UI_OSS_GRAPH:    return 'Граф синтеза';
 
     case HelpTopic.CONCEPTUAL:      return 'Концептуализация';
     case HelpTopic.CC_SYSTEM:       return 'Система определений';
@@ -419,6 +420,7 @@ export function describeHelpTopic(topic: HelpTopic): string {
     case HelpTopic.UI_FORMULA_TREE: return 'просмотр дерева разбора <br/>родоструктурного выражения';
     case HelpTopic.UI_CST_STATUS:   return 'нотация статуса конституенты';
     case HelpTopic.UI_CST_CLASS:    return 'нотация класса конституенты';
+    case HelpTopic.UI_OSS_GRAPH:    return 'графическая форма <br/>операционной схемы синтеза';
 
     case HelpTopic.CONCEPTUAL:      return 'основы концептуализации';
     case HelpTopic.CC_SYSTEM:       return 'концептуальная схема <br/>как система понятий';

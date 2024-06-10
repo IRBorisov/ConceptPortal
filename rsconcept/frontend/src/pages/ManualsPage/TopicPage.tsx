@@ -4,6 +4,7 @@ import { HelpTopic } from '@/models/miscellaneous';
 import HelpAccess from './items/HelpAccess';
 import HelpAPI from './items/HelpAPI';
 import HelpConcept from './items/HelpConcept';
+import HelpConceptOSS from './items/HelpConceptOSS';
 import HelpConceptRelations from './items/HelpConceptRelations';
 import HelpConceptSynthesis from './items/HelpConceptSynthesis';
 import HelpConceptSystem from './items/HelpConceptSystem';
@@ -17,7 +18,7 @@ import HelpFormulaTree from './items/HelpFormulaTree';
 import HelpInfo from './items/HelpInfo';
 import HelpInterface from './items/HelpInterface';
 import HelpLibrary from './items/HelpLibrary';
-import HelpOSS from './items/HelpOSS';
+import HelpOssGraph from './items/HelpOssGraph';
 import HelpPortal from './items/HelpPortal';
 import HelpPrivacy from './items/HelpPrivacy';
 import HelpRSFormCard from './items/HelpRSFormCard';
@@ -60,13 +61,14 @@ function TopicPage({ topic }: TopicPageProps) {
   if (topic === HelpTopic.UI_FORMULA_TREE) return <HelpFormulaTree />;
   if (topic === HelpTopic.UI_CST_STATUS) return <HelpCstStatus />;
   if (topic === HelpTopic.UI_CST_CLASS) return <HelpCstClass />;
+  if (topic === HelpTopic.UI_OSS_GRAPH) return <HelpOssGraph />;
 
   if (topic === HelpTopic.CONCEPTUAL) return <HelpConcept />;
   if (topic === HelpTopic.CC_SYSTEM) return <HelpConceptSystem />;
   if (topic === HelpTopic.CC_CONSTITUENTA) return <HelpCstAttributes />;
   if (topic === HelpTopic.CC_RELATIONS) return <HelpConceptRelations />;
   if (topic === HelpTopic.CC_SYNTHESIS) return <HelpConceptSynthesis />;
-  if (topic === HelpTopic.CC_OSS) return <HelpOSS />;
+  if (topic === HelpTopic.CC_OSS) return <HelpConceptOSS />;
 
   if (topic === HelpTopic.RSLANG) return <HelpRSLang />;
   if (topic === HelpTopic.RSL_TYPES) return <HelpRSLangTypes />;
