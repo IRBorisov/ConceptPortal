@@ -156,9 +156,13 @@
     }
   }
 
-  .clr-text-default {
+  :is(.clr-text-default, input:disabled, textarea:disabled) {
+    opacity: 1;
+    -webkit-text-fill-color: var(--cl-fg-100);
     color: var(--cl-fg-100);
     .dark & {
+      opacity: 1;
+      -webkit-text-fill-color: var(--cd-fg-100);
       color: var(--cd-fg-100);
     }
   }

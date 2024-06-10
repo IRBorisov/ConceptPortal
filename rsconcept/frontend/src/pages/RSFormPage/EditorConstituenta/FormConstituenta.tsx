@@ -159,7 +159,7 @@ function FormConstituenta({
           disabled={true}
           label='Типизация'
           value={typification}
-          colors='clr-app'
+          colors='clr-app clr-text-default'
         />
         <AnimatePresence>
           <AnimateFade key='cst_expression_fade' hideContent={!!state && !state?.definition_formal && isElementary}>
