@@ -11,6 +11,7 @@ import DropdownButton from '@/components/ui/DropdownButton';
 import MiniButton from '@/components/ui/MiniButton';
 import SearchBar from '@/components/ui/SearchBar';
 import SelectorButton from '@/components/ui/SelectorButton';
+import { useAuth } from '@/context/AuthContext';
 import useDropdown from '@/hooks/useDropdown';
 import { LocationHead } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
@@ -58,6 +59,7 @@ function SearchPanel({
   isEditor,
   toggleEditor
 }: SearchPanelProps) {
+  const { user } = useAuth();
   const headMenu = useDropdown();
 
   const handleChange = useCallback(
@@ -83,29 +85,32 @@ function SearchPanel({
         {filtered} из {total}
       </div>
 
-      <div className='cc-icons'>
-        <MiniButton
-          title='Видимость'
-          icon={<VisibilityIcon value={true} className={tripleToggleColor(isVisible)} />}
-          onClick={toggleVisible}
-        />
-        <MiniButton
-          title='Я - Подписчик'
-          icon={<SubscribeIcon value={true} className={tripleToggleColor(isSubscribed)} />}
-          onClick={toggleSubscribed}
-        />
-        <MiniButton
-          title='Я - Владелец'
-          icon={<IconOwner size='1.25rem' className={tripleToggleColor(isOwned)} />}
-          onClick={toggleOwned}
-        />
+      {user ? (
+        <div className='cc-icons'>
+          <MiniButton
+            title='Видимость'
+            icon={<VisibilityIcon value={true} className={tripleToggleColor(isVisible)} />}
+            onClick={toggleVisible}
+          />
+          <MiniButton
+            title='Я - Подписчик'
+            icon={<SubscribeIcon value={true} className={tripleToggleColor(isSubscribed)} />}
+            onClick={toggleSubscribed}
+          />
 
-        <MiniButton
-          title='Я - Редактор'
-          icon={<IconEditor size='1.25rem' className={tripleToggleColor(isEditor)} />}
-          onClick={toggleEditor}
-        />
-      </div>
+          <MiniButton
+            title='Я - Владелец'
+            icon={<IconOwner size='1.25rem' className={tripleToggleColor(isOwned)} />}
+            onClick={toggleOwned}
+          />
+
+          <MiniButton
+            title='Я - Редактор'
+            icon={<IconEditor size='1.25rem' className={tripleToggleColor(isEditor)} />}
+            onClick={toggleEditor}
+          />
+        </div>
+      ) : null}
 
       <div className='flex items-center h-full mx-auto'>
         <SearchBar

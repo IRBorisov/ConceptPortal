@@ -3,6 +3,7 @@
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
 import DataLoader from '@/components/wrap/DataLoader';
+import { useAuth } from '@/context/AuthContext';
 import { useLibrary } from '@/context/LibraryContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { ILibraryItem, LocationHead } from '@/models/library';
@@ -15,6 +16,7 @@ import SearchPanel from './SearchPanel';
 
 function LibraryPage() {
   const library = useLibrary();
+  const { user } = useAuth();
   const [items, setItems] = useState<ILibraryItem[]>([]);
 
   const [query, setQuery] = useState('');
@@ -34,12 +36,12 @@ function LibraryPage() {
       head: head,
       path: path,
       query: query,
-      isEditor: isEditor,
-      isOwned: isOwned,
-      isSubscribed: isSubscribed,
-      isVisible: isVisible
+      isEditor: user ? isEditor : undefined,
+      isOwned: user ? isOwned : undefined,
+      isSubscribed: user ? isSubscribed : undefined,
+      isVisible: user ? isVisible : true
     }),
-    [head, path, query, isEditor, isOwned, isSubscribed, isVisible]
+    [head, path, query, isEditor, isOwned, isSubscribed, isVisible, user]
   );
 
   useLayoutEffect(() => {
