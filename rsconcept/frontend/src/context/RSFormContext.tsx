@@ -337,7 +337,7 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          setSchema(Object.assign(schema, newData));
+          setSchema(newData);
           library.localUpdateTimestamp(newData.id);
           if (callback) callback();
         }
@@ -357,7 +357,7 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          setSchema(Object.assign(schema, newData));
+          setSchema(newData);
           library.localUpdateTimestamp(newData.id);
           if (callback) callback();
         }
@@ -573,14 +573,14 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         showError: true,
         setLoading: setProcessing,
         onError: setProcessingError,
-        onSuccess: () => {
-          setSchema(schema);
-          library.localUpdateItem(schema!);
+        onSuccess: newData => {
+          setSchema(newData);
+          library.localUpdateItem(newData);
           if (callback) callback();
         }
       });
     },
-    [schema, setSchema, library]
+    [setSchema, library]
   );
 
   const inlineSynthesis = useCallback(
