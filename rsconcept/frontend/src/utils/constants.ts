@@ -17,6 +17,7 @@ export const PARAMETER = {
   graphRefreshDelay: 10, // milliseconds delay for graph viewpoint reset
 
   logicLabel: 'LOGIC',
+  exteorVersion: '4.9.3',
 
   TOOLTIP_WIDTH: 'max-w-[29rem]'
 };

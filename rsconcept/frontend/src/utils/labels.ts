@@ -394,7 +394,7 @@ export function labelHelpTopic(topic: HelpTopic): string {
 
     case HelpTopic.INFO:            return 'Информация';
     case HelpTopic.INFO_RULES:      return 'Правила';
-    case HelpTopic.INFO_CONTRIB:    return 'Участники';
+    case HelpTopic.INFO_CONTRIB:    return 'Разработчики';
     case HelpTopic.INFO_PRIVACY:    return 'Обработка данных';
     case HelpTopic.INFO_API:        return 'REST API';
 
@@ -442,7 +442,7 @@ export function describeHelpTopic(topic: HelpTopic): string {
 
     case HelpTopic.INFO:            return 'справочные, нормативные <br/>и технические документы';
     case HelpTopic.INFO_RULES:      return 'правила пользования Порталом';
-    case HelpTopic.INFO_CONTRIB:    return 'признание вклада участников <br/>в создание Портала';
+    case HelpTopic.INFO_CONTRIB:    return 'признание вклада <br/>в создание Портала';
     case HelpTopic.INFO_PRIVACY:    return 'политика обработки <br/>персональных данных';
     case HelpTopic.INFO_API:        return 'интерфейс для разработчиков';
 
