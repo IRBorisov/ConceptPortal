@@ -3,9 +3,10 @@
  */
 import { syntaxTree } from '@codemirror/language';
 import { NodeType, Tree, TreeCursor } from '@lezer/common';
-import { ReactCodeMirrorRef, SelectionRange } from '@uiw/react-codemirror';
+import { EditorState, ReactCodeMirrorRef, SelectionRange } from '@uiw/react-codemirror';
 import clsx from 'clsx';
 
+import { GlobalTokens } from '@/components/RSInput/rslang';
 import { IEntityReference, ISyntacticReference } from '@/models/language';
 import { parseGrammemes } from '@/models/languageAPI';
 import { IConstituenta } from '@/models/rsform';
@@ -123,6 +124,25 @@ export function findContainedNodes(start: number, finish: number, tree: Tree, fi
 }
 
 /**
+ * Retrieves globalID from position in Editor.
+ */
+export function findAliasAt(pos: number, state: EditorState) {
+  const { from: lineStart, to: lineEnd, text } = state.doc.lineAt(pos);
+  const nodes = findEnvelopingNodes(pos, pos, syntaxTree(state), GlobalTokens);
+  let alias = '';
+  let start = 0;
+  let end = 0;
+  nodes.forEach(node => {
+    if (node.to <= lineEnd && node.from >= lineStart) {
+      alias = text.slice(node.from - lineStart, node.to - lineStart);
+      start = node.from;
+      end = node.to;
+    }
+  });
+  return { alias, start, end };
+}
+
+/**
  * Create DOM tooltip for {@link Constituenta}.
  */
 export function domTooltipConstituenta(cst?: IConstituenta) {
@@ -137,7 +157,11 @@ export function domTooltipConstituenta(cst?: IConstituenta) {
     'text-sm font-main'
   );
 
-  if (cst) {
+  if (!cst) {
+    const text = document.createElement('p');
+    text.innerText = 'Конституента не определена';
+    dom.appendChild(text);
+  } else {
     const alias = document.createElement('p');
     alias.innerHTML = `<b>${cst.alias}:</b> ${labelCstTypification(cst)}`;
     dom.appendChild(alias);
@@ -181,10 +205,11 @@ export function domTooltipConstituenta(cst?: IConstituenta) {
       children.innerHTML = `<b>Порождает:</b> ${cst.children_alias.join(', ')}`;
       dom.appendChild(children);
     }
-  } else {
-    const text = document.createElement('p');
-    text.innerText = 'Конституента не определена';
-    dom.appendChild(text);
+
+    const clickTip = document.createElement('p');
+    clickTip.className = 'w-full text-center text-xs mt-2';
+    clickTip.innerText = 'Ctrl + клик для перехода';
+    dom.appendChild(clickTip);
   }
   return { dom: dom };
 }

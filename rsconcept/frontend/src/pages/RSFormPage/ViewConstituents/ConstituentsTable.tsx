@@ -37,7 +37,7 @@ function ConstituentsTable({ items, activeCst, onOpenEdit, maxHeight, denseThres
       if (element) {
         element.scrollIntoView({
           behavior: 'smooth',
-          block: 'nearest',
+          block: 'center',
           inline: 'end'
         });
       }

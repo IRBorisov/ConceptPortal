@@ -4,8 +4,6 @@ For more specific TODOs see comments in code
 [Functionality - PROGRESS]
 - Operational synthesis schema as LibraryItem ?
 
-- Clickable IDs in RSEditor tooltips
-
 - Library organization, search and exploration. Consider new user experience
 - Private projects and permissions. Consider cooperative editing
 

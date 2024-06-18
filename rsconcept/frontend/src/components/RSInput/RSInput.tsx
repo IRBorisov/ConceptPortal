@@ -10,12 +10,13 @@ import { forwardRef, useCallback, useMemo, useRef } from 'react';
 
 import Label from '@/components/ui/Label';
 import { useConceptOptions } from '@/context/OptionsContext';
-import { useRSForm } from '@/context/RSFormContext';
 import { getFontClassName } from '@/models/miscellaneousAPI';
+import { ConstituentaID, IRSForm } from '@/models/rsform';
 import { generateAlias, getCstTypePrefix, guessCstType } from '@/models/rsformAPI';
 import { extractGlobals } from '@/models/rslangAPI';
 
 import { ccBracketMatching } from './bracketMatching';
+import { rsNavigation } from './clickNavigation';
 import { RSLanguage } from './rslang';
 import { getSymbolSubstitute, RSTextWrapper } from './textEditing';
 import { rsHoverTooltip } from './tooltip';
@@ -39,6 +40,8 @@ interface RSInputProps
   noTooltip?: boolean;
   onChange?: (newValue: string) => void;
   onAnalyze?: () => void;
+  schema?: IRSForm;
+  onOpenEdit?: (cstID: ConstituentaID) => void;
 }
 
 const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
@@ -48,6 +51,9 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
       label,
       disabled,
       noTooltip,
+
+      schema,
+      onOpenEdit,
 
       className,
       style,
@@ -59,7 +65,6 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
     ref
   ) => {
     const { darkMode, colors, mathFont } = useConceptOptions();
-    const { schema } = useRSForm();
 
     const internalRef = useRef<ReactCodeMirrorRef>(null);
     const thisRef = useMemo(() => (!ref || typeof ref === 'function' ? internalRef : ref), [internalRef, ref]);
@@ -77,7 +82,7 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
             caret: colors.fgDefault
           },
           styles: [
-            { tag: tags.name, color: colors.fgPurple, cursor: 'default' }, // GlobalID
+            { tag: tags.name, color: colors.fgPurple, cursor: schema ? 'default' : 'text' }, // GlobalID
             { tag: tags.variableName, color: colors.fgGreen }, // LocalID
             { tag: tags.propertyName, color: colors.fgTeal }, // Radical
             { tag: tags.keyword, color: colors.fgBlue }, // keywords
@@ -87,7 +92,7 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
             { tag: tags.brace, color: colors.fgPurple, fontWeight: '600' } // braces (curly brackets)
           ]
         }),
-      [disabled, colors, darkMode]
+      [disabled, colors, darkMode, schema]
     );
 
     const editorExtensions = useMemo(
@@ -95,9 +100,10 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
         EditorView.lineWrapping,
         RSLanguage,
         ccBracketMatching(darkMode),
+        ...(!schema || !onOpenEdit ? [] : [rsNavigation(schema, onOpenEdit)]),
         ...(noTooltip || !schema ? [] : [rsHoverTooltip(schema)])
       ],
-      [darkMode, schema, noTooltip]
+      [darkMode, schema, noTooltip, onOpenEdit]
     );
 
     const handleInput = useCallback(

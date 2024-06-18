@@ -11,7 +11,7 @@ import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { useRSForm } from '@/context/RSFormContext';
-import { CstType, IConstituenta, ICstUpdateData } from '@/models/rsform';
+import { ConstituentaID, CstType, IConstituenta, ICstUpdateData } from '@/models/rsform';
 import { isBaseSet, isBasicConcept, isFunctional } from '@/models/rsformAPI';
 import { information, labelCstTypification } from '@/utils/labels';
 
@@ -35,6 +35,7 @@ interface FormConstituentaProps {
 
   onRename: () => void;
   onEditTerm: () => void;
+  onOpenEdit?: (cstID: ConstituentaID) => void;
 }
 
 function FormConstituenta({
@@ -47,7 +48,8 @@ function FormConstituenta({
 
   toggleReset,
   onRename,
-  onEditTerm
+  onEditTerm,
+  onOpenEdit
 }: FormConstituentaProps) {
   const { schema, cstUpdate, processing } = useRSForm();
 
@@ -183,6 +185,7 @@ function FormConstituenta({
               toggleReset={toggleReset}
               onChange={newValue => setExpression(newValue)}
               setTypification={setTypification}
+              onOpenEdit={onOpenEdit}
             />
           </AnimateFade>
           <AnimateFade key='cst_definition_fade' hideContent={!!state && !state?.definition_raw && isElementary}>

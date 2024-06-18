@@ -95,6 +95,7 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
           }
           value={state.definition_formal}
           onChange={value => partialUpdate({ definition_formal: value })}
+          schema={schema}
         />
       </AnimateFade>
       <AnimateFade key='dlg_cst_definition' hideContent={!state.definition_raw && isElementary}>

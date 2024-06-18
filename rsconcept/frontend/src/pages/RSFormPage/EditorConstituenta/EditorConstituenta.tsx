@@ -113,6 +113,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
           setIsModified={setIsModified}
           onEditTerm={controller.editTermForms}
           onRename={controller.renameCst}
+          onOpenEdit={onOpenEdit}
         />
         <AnimatePresence>
           {showList ? (
