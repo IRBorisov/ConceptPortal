@@ -59,7 +59,7 @@ function HelpPortal() {
       </li>
       <li>
         Портал является проектом с открытым исходным кодом, доступным на{' '}
-        <TextURL text='Github' href={external_urls.git_repo} />
+        <TextURL text='Github' href={external_urls.git_portal} />
       </li>
       <li>
         Данный сайт использует доменное имя и серверные мощности{' '}

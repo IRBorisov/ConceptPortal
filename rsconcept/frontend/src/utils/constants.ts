@@ -72,7 +72,9 @@ export const external_urls = {
   zak_lectures:
     'https://www.acconcept.ru/product/metody-konceptualnogo-analiza-i-sinteza-v-teoreticheskom-issledovanii-i-proektirovanii-socialno-jekonomicheskih-sistem-3-e-izdanie/',
 
-  git_repo: 'https://github.com/IRBorisov/ConceptPortal',
+  git_portal: 'https://github.com/IRBorisov/ConceptPortal',
+  git_core: 'https://github.com/IRBorisov/ConceptCore',
+  git_cctext: 'https://github.com/IRBorisov/cctext',
   mail_portal: 'mailto:portal@acconcept.ru',
   restAPI: 'https://api.portal.acconcept.ru'
 };
