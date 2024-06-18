@@ -4,11 +4,12 @@ import clsx from 'clsx';
 import { useCallback } from 'react';
 
 import { LocationIcon, SubscribeIcon, VisibilityIcon } from '@/components/DomainIcons';
-import { IconEditor, IconFolder, IconOwner } from '@/components/Icons';
+import { IconEditor, IconFilterReset, IconFolder, IconOwner } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import MiniButton from '@/components/ui/MiniButton';
+import Overlay from '@/components/ui/Overlay';
 import SearchBar from '@/components/ui/SearchBar';
 import SelectorButton from '@/components/ui/SelectorButton';
 import { useAuth } from '@/context/AuthContext';
@@ -22,6 +23,7 @@ import { tripleToggleColor } from '@/utils/utils';
 interface SearchPanelProps {
   total: number;
   filtered: number;
+  hasCustomFilter: boolean;
 
   query: string;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
@@ -38,11 +40,14 @@ interface SearchPanelProps {
   toggleSubscribed: () => void;
   isEditor: boolean | undefined;
   toggleEditor: () => void;
+  resetFilter: () => void;
 }
 
 function SearchPanel({
   total,
   filtered,
+  hasCustomFilter,
+
   query,
   setQuery,
   path,
@@ -57,7 +62,8 @@ function SearchPanel({
   isSubscribed,
   toggleSubscribed,
   isEditor,
-  toggleEditor
+  toggleEditor,
+  resetFilter
 }: SearchPanelProps) {
   const { user } = useAuth();
   const headMenu = useDropdown();
@@ -108,6 +114,13 @@ function SearchPanel({
             title='Я - Редактор'
             icon={<IconEditor size='1.25rem' className={tripleToggleColor(isEditor)} />}
             onClick={toggleEditor}
+          />
+
+          <MiniButton
+            title='Сбросить фильтры'
+            icon={<IconFilterReset size='1.25rem' className='icon-primary' />}
+            onClick={resetFilter}
+            disabled={!hasCustomFilter}
           />
         </div>
       ) : null}
@@ -169,18 +182,19 @@ function SearchPanel({
           placeholder='Путь'
           noIcon
           noBorder
-          className='min-w-[5rem]'
+          className='min-w-[4.5rem] sm:min-w-[5rem]'
           value={path}
           onChange={setPath}
         />
       </div>
-
-      <BadgeHelp
-        topic={HelpTopic.UI_LIBRARY}
-        className={clsx(PARAMETER.TOOLTIP_WIDTH, 'text-sm')}
-        offset={5}
-        place='right-start'
-      />
+      <Overlay position='top-[-0.75rem] right-0'>
+        <BadgeHelp
+          topic={HelpTopic.UI_LIBRARY}
+          className={clsx(PARAMETER.TOOLTIP_WIDTH, 'text-sm')}
+          offset={5}
+          place='right-start'
+        />
+      </Overlay>
     </div>
   );
 }

@@ -18,7 +18,8 @@ export { BiCog            as IconSettings }       from 'react-icons/bi';
 export { TbEye            as IconShow }           from 'react-icons/tb';
 export { TbEyeX           as IconHide }           from 'react-icons/tb';
 export { BiShareAlt       as IconShare }          from 'react-icons/bi';
-export { BiFilterAlt      as IconFilter }         from 'react-icons/bi';
+export { LuFilter         as IconFilter }         from 'react-icons/lu';
+export { LuFilterX        as IconFilterReset }    from 'react-icons/lu';
 export {BiDownArrowCircle as IconOpenList }       from 'react-icons/bi';
 export { LuAlertTriangle  as IconAlert }          from 'react-icons/lu';
 

@@ -909,7 +909,9 @@ export const errors = {
  * UI tooltip descriptors.
  */
 export const tooltips = {
-  unsaved: 'Сохраните или отмените изменения'
+  unsaved: 'Сохраните или отмените изменения',
+  shareItem: (policy?: AccessPolicy) =>
+    policy === AccessPolicy.PUBLIC ? 'Поделиться схемой' : 'Поделиться можно только <br/>открытой схемой'
 };
 
 /**

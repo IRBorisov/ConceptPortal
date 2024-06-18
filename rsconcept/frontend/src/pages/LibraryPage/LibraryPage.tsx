@@ -44,6 +44,18 @@ function LibraryPage() {
     [head, path, query, isEditor, isOwned, isSubscribed, isVisible, user]
   );
 
+  const hasCustomFilter = useMemo(
+    () =>
+      !!filter.path ||
+      !!filter.query ||
+      filter.head !== undefined ||
+      filter.isEditor !== undefined ||
+      filter.isOwned !== undefined ||
+      filter.isSubscribed !== undefined ||
+      filter.isVisible !== true,
+    [filter]
+  );
+
   useLayoutEffect(() => {
     setItems(library.applyFilter(filter));
   }, [library, filter, filter.query]);
@@ -81,14 +93,15 @@ function LibraryPage() {
       hasNoData={library.items.length === 0}
     >
       <SearchPanel
+        total={library.items.length ?? 0}
+        filtered={items.length}
+        hasCustomFilter={hasCustomFilter}
         query={query}
         setQuery={setQuery}
         path={path}
         setPath={setPath}
         head={head}
         setHead={setHead}
-        total={library.items.length ?? 0}
-        filtered={items.length}
         isVisible={isVisible}
         isOwned={isOwned}
         toggleOwned={toggleOwned}
@@ -97,6 +110,7 @@ function LibraryPage() {
         toggleSubscribed={toggleSubscribed}
         isEditor={isEditor}
         toggleEditor={toggleEditor}
+        resetFilter={resetFilter}
       />
       {view}
     </DataLoader>

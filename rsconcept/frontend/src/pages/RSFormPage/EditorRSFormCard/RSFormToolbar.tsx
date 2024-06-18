@@ -8,10 +8,11 @@ import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { useAccessMode } from '@/context/AccessModeContext';
+import { AccessPolicy } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
 import { UserLevel } from '@/models/user';
 import { PARAMETER } from '@/utils/constants';
-import { prepareTooltip } from '@/utils/labels';
+import { prepareTooltip, tooltips } from '@/utils/labels';
 
 import { useRSEdit } from '../RSEditContext';
 
@@ -38,9 +39,10 @@ function RSFormToolbar({ modified, anonymous, subscribed, onSubmit, onDestroy }:
         />
       ) : null}
       <MiniButton
-        title='Поделиться схемой'
+        titleHtml={tooltips.shareItem(controller.schema?.access_policy)}
         icon={<IconShare size='1.25rem' className='icon-primary' />}
         onClick={controller.share}
+        disabled={controller.schema?.access_policy !== AccessPolicy.PUBLIC}
       />
       {!anonymous ? (
         <MiniButton

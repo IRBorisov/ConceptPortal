@@ -32,8 +32,9 @@ import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useRSForm } from '@/context/RSFormContext';
 import useDropdown from '@/hooks/useDropdown';
+import { AccessPolicy } from '@/models/library';
 import { UserLevel } from '@/models/user';
-import { describeAccessMode, labelAccessMode } from '@/utils/labels';
+import { describeAccessMode, labelAccessMode, tooltips } from '@/utils/labels';
 
 import { useRSEdit } from './RSEditContext';
 
@@ -138,8 +139,10 @@ function RSTabsMenu({ onDestroy }: RSTabsMenuProps) {
         <Dropdown isOpen={schemaMenu.isOpen}>
           <DropdownButton
             text='Поделиться'
+            titleHtml={tooltips.shareItem(controller.schema?.access_policy)}
             icon={<IconShare size='1rem' className='icon-primary' />}
             onClick={handleShare}
+            disabled={controller.schema?.access_policy !== AccessPolicy.PUBLIC}
           />
           {user ? (
             <DropdownButton

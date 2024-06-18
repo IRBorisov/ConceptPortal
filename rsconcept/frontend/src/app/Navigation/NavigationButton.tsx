@@ -24,6 +24,7 @@ function NavigationButton({ icon, title, titleHtml, hideTitle, onClick, text }: 
         'flex items-center gap-1',
         'clr-btn-nav',
         'rounded-xl',
+        'transition duration-500',
         'font-controls whitespace-nowrap',
         {
           'px-2': text,
