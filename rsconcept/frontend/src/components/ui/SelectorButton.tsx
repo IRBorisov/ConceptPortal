@@ -31,7 +31,7 @@ function SelectorButton({
         'px-1 flex flex-start items-center gap-1',
         'text-sm font-controls select-none',
         'text-btn clr-text-controls',
-        'disabled:cursor-not-allowed cursor-pointer',
+        'disabled:cursor-auto cursor-pointer',
         {
           'clr-hover': transparent,
           'border': !transparent

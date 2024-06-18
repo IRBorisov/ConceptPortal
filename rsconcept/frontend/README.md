@@ -16,7 +16,7 @@ Styling conventions
   - border: borer-2 outline-none shadow-md
   - colors: clr-controls
   - text: text-start text-sm font-semibold whitespace-nowrap
-  - behavior modifiers: select-none disabled:cursor-not-allowed
+  - behavior modifiers: select-none disabled:cursor-auto
   - transitions: 
   </pre>
 </details>

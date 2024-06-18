@@ -50,7 +50,7 @@ function GraphSelectionToolbar({
         disabled={emptySelection}
       />
       <MiniButton
-        titleHtml='<b>Максимизация</b> - дополнение выделения конституентами, зависимыми только от выделенных'
+        titleHtml='<b>Максимизация</b> <br/>дополнение выделения конституентами, <br/>зависимыми только от выделенных'
         icon={<IconGraphMaximize size='1.25rem' className='icon-primary' />}
         onClick={() => setSelected(prev => graph.maximizePart(prev))}
         disabled={emptySelection}

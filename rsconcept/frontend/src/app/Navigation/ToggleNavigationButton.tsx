@@ -15,7 +15,7 @@ function ToggleNavigationButton() {
       className={clsx(
         'absolute top-0 right-0 z-navigation flex items-center justify-center',
         'clr-btn-nav',
-        'select-none disabled:cursor-not-allowed'
+        'select-none'
       )}
       onClick={toggleNoNavigation}
       initial={false}
