@@ -127,7 +127,7 @@ function LibraryPage() {
       />
 
       <div className='flex'>
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           {folderMode ? (
             <LibraryFolders
               currentFolder={folder} // prettier: split-lines

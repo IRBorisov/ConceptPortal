@@ -23,7 +23,7 @@ function LibraryFolders({ folders, currentFolder, setFolder, toggleFolderMode }:
   const activeNode = useMemo(() => folders.at(currentFolder), [folders, currentFolder]);
 
   const items = useMemo(() => folders.getTree(), [folders]);
-  const [folded, setFolded] = useState<FolderNode[]>([]);
+  const [folded, setFolded] = useState<FolderNode[]>(items);
 
   useLayoutEffect(() => {
     setFolded(items.filter(item => item !== activeNode && (!activeNode || !activeNode.hasPredecessor(item))));
@@ -86,7 +86,7 @@ function LibraryFolders({ folders, currentFolder, setFolder, toggleFolderMode }:
           'cc-scroll-y'
         )}
       >
-        <AnimatePresence initial={false}>
+        <AnimatePresence>
           {items.map((item, index) =>
             !item.parent || !folded.includes(item.parent) ? (
               <motion.div
