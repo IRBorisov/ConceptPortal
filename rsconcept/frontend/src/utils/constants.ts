@@ -94,6 +94,8 @@ export const storage = {
   rseditShowControls: 'rsedit.show_controls',
 
   librarySearchHead: 'library.search.head',
+  librarySearchFolderMode: 'library.search.folder_mode',
+  librarySearchFolder: 'library.search.folder',
   librarySearchVisible: 'library.search.visible',
   librarySearchOwned: 'library.search.owned',
   librarySearchSubscribed: 'library.search.subscribed',
@@ -144,6 +146,7 @@ export const prefixes = {
   policy_list: 'policy_list_',
   library_filters_list: 'library_filters_list_',
   location_head_list: 'location_head_list_',
+  folders_list: 'folders_list_',
   topic_list: 'topic_list_',
   topic_item: 'topic_item_',
   library_list: 'library_list_',

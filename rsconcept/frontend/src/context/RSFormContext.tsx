@@ -296,8 +296,7 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         onError: setProcessingError,
         onSuccess: () => {
           schema.location = newLocation;
-          library.localUpdateItem(schema);
-          if (callback) callback();
+          library.reloadItems(callback);
         }
       });
     },

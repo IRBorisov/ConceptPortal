@@ -5,7 +5,7 @@ import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/u
 import SearchBar from '@/components/ui/SearchBar';
 import { useLibrary } from '@/context/LibraryContext';
 import { useConceptOptions } from '@/context/OptionsContext';
-import { ILibraryItem, LibraryItemID } from '@/models/library';
+import { ILibraryItem, LibraryItemID, LibraryItemType } from '@/models/library';
 import { ILibraryFilter } from '@/models/miscellaneous';
 
 import FlexColumn from '../ui/FlexColumn';
@@ -32,7 +32,8 @@ function PickSchema({ id, initialFilter = '', rows = 4, value, onSelectValue }: 
 
   useLayoutEffect(() => {
     setFilter({
-      query: filterText
+      query: filterText,
+      type: LibraryItemType.RSFORM
     });
   }, [filterText]);
 

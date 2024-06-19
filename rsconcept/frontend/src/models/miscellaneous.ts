@@ -2,7 +2,7 @@
  * Module: Miscellaneous frontend model types. Future targets for refactoring aimed at extracting modules.
  */
 
-import { LocationHead } from './library';
+import { LibraryItemType, LocationHead } from './library';
 
 /**
  * Represents graph dependency mode.
@@ -141,9 +141,14 @@ export enum CstMatchMode {
  * Represents Library filter parameters.
  */
 export interface ILibraryFilter {
+  type?: LibraryItemType;
   query?: string;
+
   path?: string;
   head?: LocationHead;
+
+  folderMode?: boolean;
+  folder?: string;
 
   isVisible?: boolean;
   isOwned?: boolean;

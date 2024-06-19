@@ -1,6 +1,7 @@
 'use client';
 
-import { useLayoutEffect, useMemo, useState } from 'react';
+import clsx from 'clsx';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { urls } from '@/app/urls';
@@ -9,6 +10,7 @@ import BadgeLocation from '@/components/info/BadgeLocation';
 import { CProps } from '@/components/props';
 import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } from '@/components/ui/DataTable';
 import FlexColumn from '@/components/ui/FlexColumn';
+import MiniButton from '@/components/ui/MiniButton';
 import TextURL from '@/components/ui/TextURL';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useConceptOptions } from '@/context/OptionsContext';
@@ -21,11 +23,13 @@ import { storage } from '@/utils/constants';
 interface LibraryTableProps {
   items: ILibraryItem[];
   resetQuery: () => void;
+  folderMode: boolean;
+  toggleFolderMode: () => void;
 }
 
 const columnHelper = createColumnHelper<ILibraryItem>();
 
-function LibraryTable({ items, resetQuery }: LibraryTableProps) {
+function LibraryTable({ items, resetQuery, folderMode, toggleFolderMode }: LibraryTableProps) {
   const router = useConceptNavigation();
   const intl = useIntl();
   const { getUserLabel } = useUsers();
@@ -50,22 +54,42 @@ function LibraryTable({ items, resetQuery }: LibraryTableProps) {
     });
   }, [windowSize]);
 
+  const handleToggleFolder = useCallback(
+    (event: CProps.EventMouse) => {
+      if (event.ctrlKey) {
+        event.preventDefault();
+        event.stopPropagation();
+        toggleFolderMode();
+      }
+    },
+    [toggleFolderMode]
+  );
+
   const columns = useMemo(
     () => [
-      columnHelper.accessor('location', {
-        id: 'location',
-        header: () => (
-          <div className='pl-2 max-h-[1rem] translate-y-[-0.125rem]'>
-            <IconFolder size='1.25rem' className='clr-text-controls' />
-          </div>
-        ),
-        size: 50,
-        minSize: 50,
-        maxSize: 50,
-        enableSorting: true,
-        cell: props => <BadgeLocation location={props.getValue()} />,
-        sortingFn: 'text'
-      }),
+      ...(folderMode
+        ? []
+        : [
+            columnHelper.accessor('location', {
+              id: 'location',
+              header: () => (
+                <MiniButton
+                  noHover
+                  noPadding
+                  className='pl-2 max-h-[1rem] translate-y-[-0.125rem]'
+                  onClick={handleToggleFolder}
+                  titleHtml='Ctrl + клик для переключения </br>в режим папок'
+                  icon={<IconFolder size='1.25rem' className='clr-text-controls' />}
+                />
+              ),
+              size: 50,
+              minSize: 50,
+              maxSize: 50,
+              enableSorting: true,
+              cell: props => <BadgeLocation location={props.getValue()} />,
+              sortingFn: 'text'
+            })
+          ]),
       columnHelper.accessor('alias', {
         id: 'alias',
         header: 'Шифр',
@@ -116,7 +140,7 @@ function LibraryTable({ items, resetQuery }: LibraryTableProps) {
         sortDescFirst: true
       })
     ],
-    [intl, getUserLabel, windowSize]
+    [intl, getUserLabel, windowSize, handleToggleFolder, folderMode]
   );
 
   const tableHeight = useMemo(() => calculateHeight('2.2rem'), [calculateHeight]);
@@ -139,7 +163,7 @@ function LibraryTable({ items, resetQuery }: LibraryTableProps) {
       columns={columns}
       data={items}
       headPosition='0'
-      className='text-xs sm:text-sm cc-scroll-y'
+      className={clsx('text-xs sm:text-sm cc-scroll-y', { 'border-l border-b': folderMode })}
       style={{ maxHeight: tableHeight }}
       noDataComponent={
         <FlexColumn className='p-3 items-center min-h-[6rem]'>

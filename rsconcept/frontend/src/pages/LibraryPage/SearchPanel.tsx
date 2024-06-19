@@ -4,8 +4,9 @@ import clsx from 'clsx';
 import { useCallback } from 'react';
 
 import { LocationIcon, SubscribeIcon, VisibilityIcon } from '@/components/DomainIcons';
-import { IconEditor, IconFilterReset, IconFolder, IconOwner } from '@/components/Icons';
+import { IconEditor, IconFilterReset, IconFolder, IconFolderTree, IconOwner } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
+import { CProps } from '@/components/props';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import MiniButton from '@/components/ui/MiniButton';
@@ -32,6 +33,9 @@ interface SearchPanelProps {
   head: LocationHead | undefined;
   setHead: React.Dispatch<React.SetStateAction<LocationHead | undefined>>;
 
+  folderMode: boolean;
+  toggleFolderMode: () => void;
+
   isVisible: boolean | undefined;
   toggleVisible: () => void;
   isOwned: boolean | undefined;
@@ -55,6 +59,9 @@ function SearchPanel({
   head,
   setHead,
 
+  folderMode,
+  toggleFolderMode,
+
   isVisible,
   toggleVisible,
   isOwned,
@@ -74,6 +81,22 @@ function SearchPanel({
       setHead(newValue);
     },
     [headMenu, setHead]
+  );
+
+  const handleToggleFolder = useCallback(() => {
+    headMenu.hide();
+    toggleFolderMode();
+  }, [headMenu, toggleFolderMode]);
+
+  const handleFolderClick = useCallback(
+    (event: CProps.EventMouse) => {
+      if (event.ctrlKey) {
+        toggleFolderMode();
+      } else {
+        headMenu.toggle();
+      }
+    },
+    [headMenu, toggleFolderMode]
   );
 
   return (
@@ -134,58 +157,70 @@ function SearchPanel({
           value={query}
           onChange={setQuery}
         />
+        {!folderMode ? (
+          <div ref={headMenu.ref} className='flex items-center h-full py-1 select-none'>
+            <SelectorButton
+              transparent
+              className='h-full rounded-lg'
+              titleHtml={(head ? describeLocationHead(head) : 'Выберите каталог') + '<br/>Ctrl + клик - Проводник'}
+              hideTitle={headMenu.isOpen}
+              icon={
+                head ? (
+                  <LocationIcon value={head} size='1.25rem' />
+                ) : (
+                  <IconFolder size='1.25rem' className='clr-text-controls' />
+                )
+              }
+              onClick={handleFolderClick}
+              text={head ?? '//'}
+            />
 
-        <div ref={headMenu.ref} className='flex items-center h-full py-1 select-none'>
-          <SelectorButton
-            transparent
-            className='h-full rounded-lg'
-            title={head ? describeLocationHead(head) : 'Выберите каталог'}
-            hideTitle={headMenu.isOpen}
-            icon={
-              head ? (
-                <LocationIcon value={head} size='1.25rem' />
-              ) : (
-                <IconFolder size='1.25rem' className='clr-text-controls' />
-              )
-            }
-            onClick={headMenu.toggle}
-            text={head ?? '//'}
+            <Dropdown isOpen={headMenu.isOpen} stretchLeft className='z-modalTooltip'>
+              <DropdownButton className='w-[10rem]' onClick={() => handleChange(undefined)}>
+                <div className='inline-flex items-center gap-3'>
+                  <IconFolder size='1rem' className='clr-text-controls' />
+                  <span>отображать все</span>
+                </div>
+              </DropdownButton>
+              {Object.values(LocationHead).map((head, index) => {
+                return (
+                  <DropdownButton
+                    className='w-[10rem]'
+                    key={`${prefixes.location_head_list}${index}`}
+                    onClick={() => handleChange(head)}
+                    title={describeLocationHead(head)}
+                  >
+                    <div className='inline-flex items-center gap-3'>
+                      <LocationIcon value={head} size='1rem' />
+                      {labelLocationHead(head)}
+                    </div>
+                  </DropdownButton>
+                );
+              })}
+              <DropdownButton
+                className='w-[10rem]'
+                title='переключение в режим выбора папок'
+                onClick={handleToggleFolder}
+              >
+                <div className='inline-flex items-center gap-3'>
+                  <IconFolderTree size='1rem' className='clr-text-controls' />
+                  <span>проводник...</span>
+                </div>
+              </DropdownButton>
+            </Dropdown>
+          </div>
+        ) : null}
+        {!folderMode ? (
+          <SearchBar
+            id='path_search'
+            placeholder='Путь'
+            noIcon
+            noBorder
+            className='min-w-[4.5rem] sm:min-w-[5rem]'
+            value={path}
+            onChange={setPath}
           />
-
-          <Dropdown isOpen={headMenu.isOpen} stretchLeft className='z-modalTooltip'>
-            <DropdownButton className='w-[10rem]' onClick={() => handleChange(undefined)}>
-              <div className='inline-flex items-center gap-3'>
-                <IconFolder size='1rem' className='clr-text-controls' />
-                <span>отображать все</span>
-              </div>
-            </DropdownButton>
-            {Object.values(LocationHead).map((head, index) => {
-              return (
-                <DropdownButton
-                  className='w-[10rem]'
-                  key={`${prefixes.location_head_list}${index}`}
-                  onClick={() => handleChange(head)}
-                  title={describeLocationHead(head)}
-                >
-                  <div className='inline-flex items-center gap-3'>
-                    <LocationIcon value={head} size='1rem' />
-                    {labelLocationHead(head)}
-                  </div>
-                </DropdownButton>
-              );
-            })}
-          </Dropdown>
-        </div>
-
-        <SearchBar
-          id='path_search'
-          placeholder='Путь'
-          noIcon
-          noBorder
-          className='min-w-[4.5rem] sm:min-w-[5rem]'
-          value={path}
-          onChange={setPath}
-        />
+        ) : null}
       </div>
       <Overlay position='top-[-0.75rem] right-0'>
         <BadgeHelp

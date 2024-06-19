@@ -30,7 +30,7 @@ import { information } from '@/utils/labels';
 function FormCreateItem() {
   const router = useConceptNavigation();
   const { user } = useAuth();
-  const { createItem, error, setError, processing } = useLibrary();
+  const { createItem, processingError, setProcessingError, processing } = useLibrary();
 
   const [itemType, setItemType] = useState(LibraryItemType.RSFORM);
   const [title, setTitle] = useState('');
@@ -50,8 +50,8 @@ function FormCreateItem() {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    setError(undefined);
-  }, [title, alias, setError]);
+    setProcessingError(undefined);
+  }, [title, alias, setProcessingError]);
 
   function handleCancel() {
     if (router.canBack()) {
@@ -194,7 +194,7 @@ function FormCreateItem() {
         <SubmitButton text='Создать схему' loading={processing} className='min-w-[10rem]' disabled={!isValid} />
         <Button text='Отмена' className='min-w-[10rem]' onClick={() => handleCancel()} />
       </div>
-      {error ? <InfoError error={error} /> : null}
+      {processingError ? <InfoError error={processingError} /> : null}
     </form>
   );
 }

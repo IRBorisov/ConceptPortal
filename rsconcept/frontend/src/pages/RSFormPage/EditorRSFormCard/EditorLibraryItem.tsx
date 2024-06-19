@@ -59,7 +59,7 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
           />
         </Overlay>
       ) : null}
-      <LabeledValue className='sm:mb-1 text-ellipsis' label='Путь' text={item?.location ?? ''} />
+      <LabeledValue className='max-w-[30rem] sm:mb-1 text-ellipsis' label='Путь' text={item?.location ?? ''} />
 
       {accessLevel >= UserLevel.OWNER ? (
         <Overlay position='top-[-0.5rem] left-[5.5rem] cc-icons'>

@@ -5,6 +5,7 @@
  * Description is a long description used in tooltips.
  */
 import { GraphLayout } from '@/components/ui/GraphUI';
+import { FolderNode } from '@/models/FolderTree';
 import { GramData, Grammeme, ReferenceType } from '@/models/language';
 import { AccessPolicy, LibraryItemType, LocationHead } from '@/models/library';
 import { CstMatchMode, DependencyMode, GraphColoring, GraphSizing, HelpTopic } from '@/models/miscellaneous';
@@ -818,6 +819,20 @@ export function describeAccessMode(mode: UserLevel): string {
     case UserLevel.ADMIN:
       return 'Режим администратора';
   }
+}
+
+/**
+ * Retrieves label for {@link FolderNode}.
+ */
+export function labelFolderNode(node: FolderNode): string {
+  return node.text;
+}
+
+/**
+ * Retrieves description for {@link FolderNode}.
+ */
+export function describeFolderNode(node: FolderNode): string {
+  return `${node.filesInside} | ${node.filesTotal}`;
 }
 
 /**

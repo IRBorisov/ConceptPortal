@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import {
   DataCallback,
@@ -14,7 +14,8 @@ import {
   postRSFormFromFile
 } from '@/app/backendAPI';
 import { ErrorData } from '@/components/info/InfoError';
-import { ILibraryItem, LibraryItemID } from '@/models/library';
+import { FolderTree } from '@/models/FolderTree';
+import { ILibraryItem, LibraryItemID, LocationHead } from '@/models/library';
 import { ILibraryCreateData } from '@/models/library';
 import { matchLibraryItem, matchLibraryItemLocation } from '@/models/libraryAPI';
 import { ILibraryFilter } from '@/models/miscellaneous';
@@ -28,10 +29,17 @@ import { useConceptOptions } from './OptionsContext';
 interface ILibraryContext {
   items: ILibraryItem[];
   templates: ILibraryItem[];
+  folders: FolderTree;
+
   loading: boolean;
+  loadingError: ErrorData;
+  setLoadingError: (error: ErrorData) => void;
+
   processing: boolean;
-  error: ErrorData;
-  setError: (error: ErrorData) => void;
+  processingError: ErrorData;
+  setProcessingError: (error: ErrorData) => void;
+
+  reloadItems: (callback?: () => void) => void;
 
   applyFilter: (params: ILibraryFilter) => ILibraryItem[];
   retrieveTemplate: (templateID: LibraryItemID, callback: (schema: IRSForm) => void) => void;
@@ -64,14 +72,30 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   const [templates, setTemplates] = useState<ILibraryItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const [error, setError] = useState<ErrorData>(undefined);
+  const [loadingError, setLoadingError] = useState<ErrorData>(undefined);
+  const [processingError, setProcessingError] = useState<ErrorData>(undefined);
   const [cachedTemplates, setCachedTemplates] = useState<IRSForm[]>([]);
+
+  const folders = useMemo(() => {
+    const result = new FolderTree(items.map(item => item.location));
+    result.addPath(LocationHead.USER, 0);
+    result.addPath(LocationHead.COMMON, 0);
+    result.addPath(LocationHead.LIBRARY, 0);
+    result.addPath(LocationHead.PROJECTS, 0);
+    return result;
+  }, [items]);
 
   const applyFilter = useCallback(
     (filter: ILibraryFilter) => {
       let result = items;
-      if (filter.head) {
+      if (!filter.folderMode && filter.head) {
         result = result.filter(item => item.location.startsWith(filter.head!));
+      }
+      if (filter.folderMode && filter.folder) {
+        result = result.filter(item => item.location == filter.folder);
+      }
+      if (filter.type) {
+        result = result.filter(item => item.item_type === filter.type);
       }
       if (filter.isVisible !== undefined) {
         result = result.filter(item => filter.isVisible === item.visible);
@@ -85,11 +109,11 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
       if (filter.isEditor !== undefined) {
         result = result.filter(item => filter.isEditor == user?.editor.includes(item.id));
       }
+      if (!filter.folderMode && filter.path) {
+        result = result.filter(item => matchLibraryItemLocation(item, filter.path!));
+      }
       if (filter.query) {
         result = result.filter(item => matchLibraryItem(item, filter.query!));
-      }
-      if (filter.path) {
-        result = result.filter(item => matchLibraryItemLocation(item, filter.path!));
       }
       return result;
     },
@@ -103,11 +127,11 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
         callback(cached);
         return;
       }
-      setError(undefined);
+      setProcessingError(undefined);
       getRSFormDetails(String(templateID), '', {
         showError: true,
         setLoading: setProcessing,
-        onError: setError,
+        onError: setProcessingError,
         onSuccess: data => {
           const schema = new RSFormLoader(data).produceRSForm();
           setCachedTemplates(prev => [...prev, schema]);
@@ -121,12 +145,12 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   const reloadItems = useCallback(
     (callback?: () => void) => {
       setItems([]);
-      setError(undefined);
+      setLoadingError(undefined);
       if (user?.is_staff && adminMode) {
         getAdminLibrary({
           setLoading: setLoading,
           showError: true,
-          onError: setError,
+          onError: setLoadingError,
           onSuccess: newData => {
             setItems(newData);
             if (callback) callback();
@@ -136,7 +160,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
         getLibrary({
           setLoading: setLoading,
           showError: true,
-          onError: setError,
+          onError: setLoadingError,
           onSuccess: newData => {
             setItems(newData);
             if (callback) callback();
@@ -150,6 +174,8 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   const reloadTemplates = useCallback(() => {
     setTemplates([]);
     getTemplates({
+      setLoading: setLoading,
+      onError: setLoadingError,
       showError: true,
       onSuccess: newData => setTemplates(newData)
     });
@@ -190,13 +216,13 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
           }
           if (callback) callback(newSchema);
         });
-      setError(undefined);
+      setProcessingError(undefined);
       if (data.file) {
         postRSFormFromFile({
           data: data,
           showError: true,
           setLoading: setProcessing,
-          onError: setError,
+          onError: setProcessingError,
           onSuccess: onSuccess
         });
       } else {
@@ -204,7 +230,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
           data: data,
           showError: true,
           setLoading: setProcessing,
-          onError: setError,
+          onError: setProcessingError,
           onSuccess: onSuccess
         });
       }
@@ -214,11 +240,11 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
 
   const destroyItem = useCallback(
     (target: LibraryItemID, callback?: () => void) => {
-      setError(undefined);
+      setProcessingError(undefined);
       deleteLibraryItem(String(target), {
         showError: true,
         setLoading: setProcessing,
-        onError: setError,
+        onError: setProcessingError,
         onSuccess: () =>
           reloadItems(() => {
             if (user && user.subscriptions.includes(target)) {
@@ -231,7 +257,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
           })
       });
     },
-    [setError, reloadItems, user]
+    [reloadItems, user]
   );
 
   const cloneItem = useCallback(
@@ -239,12 +265,12 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
       if (!user) {
         return;
       }
-      setError(undefined);
+      setProcessingError(undefined);
       postCloneLibraryItem(String(target), {
         data: data,
         showError: true,
         setLoading: setProcessing,
-        onError: setError,
+        onError: setProcessingError,
         onSuccess: newSchema =>
           reloadItems(() => {
             if (user && !user.subscriptions.includes(newSchema.id)) {
@@ -254,18 +280,26 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
           })
       });
     },
-    [reloadItems, setError, user]
+    [reloadItems, user]
   );
 
   return (
     <LibraryContext.Provider
       value={{
         items,
+        folders,
         templates,
+
         loading,
+        loadingError,
+        setLoadingError,
+
         processing,
-        error,
-        setError,
+        processingError,
+        setProcessingError,
+
+        reloadItems,
+
         applyFilter,
         createItem,
         cloneItem,
