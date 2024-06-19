@@ -2,7 +2,7 @@ import { Extension } from '@codemirror/state';
 import { EditorView } from '@uiw/react-codemirror';
 
 import { ConstituentaID, IRSForm } from '@/models/rsform';
-import { findAliasAt } from '@/utils/codemirror';
+import { findReferenceAt } from '@/utils/codemirror';
 
 const navigationProducer = (schema: IRSForm, onOpenEdit: (cstID: ConstituentaID) => void) => {
   return EditorView.domEventHandlers({
@@ -16,12 +16,12 @@ const navigationProducer = (schema: IRSForm, onOpenEdit: (cstID: ConstituentaID)
         return;
       }
 
-      const { alias } = findAliasAt(pos, view.state);
-      if (!alias) {
+      const parse = findReferenceAt(pos, view.state);
+      if (!parse || !('entity' in parse.ref)) {
         return;
       }
 
-      const cst = schema.cstByAlias.get(alias);
+      const cst = schema.cstByAlias.get(parse.ref.entity);
       if (!cst) {
         return;
       }
@@ -33,6 +33,6 @@ const navigationProducer = (schema: IRSForm, onOpenEdit: (cstID: ConstituentaID)
   });
 };
 
-export function rsNavigation(schema: IRSForm, onOpenEdit: (cstID: ConstituentaID) => void): Extension {
+export function refsNavigation(schema: IRSForm, onOpenEdit: (cstID: ConstituentaID) => void): Extension {
   return [navigationProducer(schema, onOpenEdit)];
 }

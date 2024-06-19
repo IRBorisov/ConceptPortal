@@ -5,7 +5,7 @@ import { IRSForm } from '@/models/rsform';
 import { findAliasAt } from '@/utils/codemirror';
 import { domTooltipConstituenta } from '@/utils/codemirror';
 
-const globalsHoverTooltip = (schema: IRSForm) => {
+const tooltipProducer = (schema: IRSForm, canClick?: boolean) => {
   return hoverTooltip((view, pos) => {
     const { alias, start, end } = findAliasAt(pos, view.state);
     if (!alias) {
@@ -16,11 +16,11 @@ const globalsHoverTooltip = (schema: IRSForm) => {
       pos: start,
       end: end,
       above: false,
-      create: () => domTooltipConstituenta(cst)
+      create: () => domTooltipConstituenta(cst, canClick)
     };
   });
 };
 
-export function rsHoverTooltip(schema: IRSForm): Extension {
-  return [globalsHoverTooltip(schema)];
+export function rsHoverTooltip(schema: IRSForm, canClick?: boolean): Extension {
+  return [tooltipProducer(schema, canClick)];
 }

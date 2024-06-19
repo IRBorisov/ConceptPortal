@@ -13,10 +13,11 @@ import Label from '@/components/ui/Label';
 import { useConceptOptions } from '@/context/OptionsContext';
 import DlgEditReference from '@/dialogs/DlgEditReference';
 import { ReferenceType } from '@/models/language';
-import { IRSForm } from '@/models/rsform';
+import { ConstituentaID, IRSForm } from '@/models/rsform';
 import { CodeMirrorWrapper } from '@/utils/codemirror';
 import { PARAMETER } from '@/utils/constants';
 
+import { refsNavigation } from './clickNavigation';
 import { NaturalLanguage, ReferenceTokens } from './parse';
 import { RefEntity } from './parse/parser.terms';
 import { refsHoverTooltip } from './tooltip';
@@ -65,6 +66,7 @@ interface RefsInputInputProps
   label?: string;
   onChange?: (newValue: string) => void;
   schema?: IRSForm;
+  onOpenEdit?: (cstID: ConstituentaID) => void;
   disabled?: boolean;
 
   initialValue?: string;
@@ -73,7 +75,23 @@ interface RefsInputInputProps
 }
 
 const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
-  ({ id, label, disabled, schema, initialValue, value, resolved, onFocus, onBlur, onChange, ...restProps }, ref) => {
+  (
+    {
+      id, // prettier: split-lines
+      label,
+      disabled,
+      schema,
+      onOpenEdit,
+      initialValue,
+      value,
+      resolved,
+      onFocus,
+      onBlur,
+      onChange,
+      ...restProps
+    },
+    ref
+  ) => {
     const { darkMode, colors } = useConceptOptions();
 
     const [isFocused, setIsFocused] = useState(false);
@@ -114,9 +132,10 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
         EditorView.lineWrapping,
         EditorView.contentAttributes.of({ spellcheck: 'true' }),
         NaturalLanguage,
-        ...(schema ? [refsHoverTooltip(schema, colors)] : [])
+        ...(!schema || !onOpenEdit ? [] : [refsNavigation(schema, onOpenEdit)]),
+        ...(schema ? [refsHoverTooltip(schema, colors, onOpenEdit !== undefined)] : [])
       ],
-      [schema, colors]
+      [schema, colors, onOpenEdit]
     );
 
     function handleChange(newValue: string) {

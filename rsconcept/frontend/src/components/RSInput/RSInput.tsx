@@ -82,7 +82,7 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
             caret: colors.fgDefault
           },
           styles: [
-            { tag: tags.name, color: colors.fgPurple, cursor: schema ? 'default' : 'text' }, // GlobalID
+            { tag: tags.name, color: colors.fgPurple, cursor: schema ? 'default' : cursor }, // GlobalID
             { tag: tags.variableName, color: colors.fgGreen }, // LocalID
             { tag: tags.propertyName, color: colors.fgTeal }, // Radical
             { tag: tags.keyword, color: colors.fgBlue }, // keywords
@@ -92,7 +92,7 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
             { tag: tags.brace, color: colors.fgPurple, fontWeight: '600' } // braces (curly brackets)
           ]
         }),
-      [disabled, colors, darkMode, schema]
+      [disabled, colors, darkMode, schema, cursor]
     );
 
     const editorExtensions = useMemo(
@@ -101,7 +101,7 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
         RSLanguage,
         ccBracketMatching(darkMode),
         ...(!schema || !onOpenEdit ? [] : [rsNavigation(schema, onOpenEdit)]),
-        ...(noTooltip || !schema ? [] : [rsHoverTooltip(schema)])
+        ...(noTooltip || !schema ? [] : [rsHoverTooltip(schema, onOpenEdit !== undefined)])
       ],
       [darkMode, schema, noTooltip, onOpenEdit]
     );

@@ -146,6 +146,7 @@ function FormConstituenta({
           maxHeight='8rem'
           placeholder='Обозначение, используемое в текстовых определениях'
           schema={schema}
+          onOpenEdit={onOpenEdit}
           value={term}
           initialValue={state?.term_raw ?? ''}
           resolved={state?.term_resolved ?? ''}
@@ -196,6 +197,7 @@ function FormConstituenta({
               minHeight='3.75rem'
               maxHeight='8rem'
               schema={schema}
+              onOpenEdit={onOpenEdit}
               value={textDefinition}
               initialValue={state?.definition_raw ?? ''}
               resolved={state?.definition_resolved ?? ''}

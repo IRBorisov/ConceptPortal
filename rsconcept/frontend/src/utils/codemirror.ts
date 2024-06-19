@@ -6,9 +6,11 @@ import { NodeType, Tree, TreeCursor } from '@lezer/common';
 import { EditorState, ReactCodeMirrorRef, SelectionRange } from '@uiw/react-codemirror';
 import clsx from 'clsx';
 
+import { ReferenceTokens } from '@/components/RefsInput/parse';
+import { RefEntity } from '@/components/RefsInput/parse/parser.terms';
 import { GlobalTokens } from '@/components/RSInput/rslang';
 import { IEntityReference, ISyntacticReference } from '@/models/language';
-import { parseGrammemes } from '@/models/languageAPI';
+import { parseEntityReference, parseGrammemes, parseSyntacticReference } from '@/models/languageAPI';
 import { IConstituenta } from '@/models/rsform';
 import { isBasicConcept } from '@/models/rsformAPI';
 
@@ -143,12 +145,29 @@ export function findAliasAt(pos: number, state: EditorState) {
 }
 
 /**
+ * Retrieves reference from position in Editor.
+ */
+export function findReferenceAt(pos: number, state: EditorState) {
+  const nodes = findEnvelopingNodes(pos, pos, syntaxTree(state), ReferenceTokens);
+  if (nodes.length !== 1) {
+    return undefined;
+  }
+  const start = nodes[0].from;
+  const end = nodes[0].to;
+  const text = state.doc.sliceString(start, end);
+  if (nodes[0].type.id === RefEntity) {
+    return { ref: parseEntityReference(text), start, end };
+  } else {
+    return { ref: parseSyntacticReference(text), start, end };
+  }
+}
+
+/**
  * Create DOM tooltip for {@link Constituenta}.
  */
-export function domTooltipConstituenta(cst?: IConstituenta) {
+export function domTooltipConstituenta(cst?: IConstituenta, canClick?: boolean) {
   const dom = document.createElement('div');
   dom.className = clsx(
-    'z-modalTooltip',
     'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
     'dense',
     'p-2',
@@ -206,10 +225,12 @@ export function domTooltipConstituenta(cst?: IConstituenta) {
       dom.appendChild(children);
     }
 
-    const clickTip = document.createElement('p');
-    clickTip.className = 'w-full text-center text-xs mt-2';
-    clickTip.innerText = 'Ctrl + клик для перехода';
-    dom.appendChild(clickTip);
+    if (canClick) {
+      const clickTip = document.createElement('p');
+      clickTip.className = 'w-full text-center text-xs mt-2';
+      clickTip.innerText = 'Ctrl + клик для перехода';
+      dom.appendChild(clickTip);
+    }
   }
   return { dom: dom };
 }
@@ -217,10 +238,14 @@ export function domTooltipConstituenta(cst?: IConstituenta) {
 /**
  * Create DOM tooltip for {@link IEntityReference}.
  */
-export function domTooltipEntityReference(ref: IEntityReference, cst: IConstituenta | undefined, colors: IColorTheme) {
+export function domTooltipEntityReference(
+  ref: IEntityReference,
+  cst: IConstituenta | undefined,
+  colors: IColorTheme,
+  canClick?: boolean
+) {
   const dom = document.createElement('div');
   dom.className = clsx(
-    'z-tooltip',
     'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
     'dense',
     'p-2 flex flex-col',
@@ -258,16 +283,27 @@ export function domTooltipEntityReference(ref: IEntityReference, cst: IConstitue
     grams.appendChild(gram);
   });
   dom.appendChild(grams);
+
+  if (canClick) {
+    const clickTip = document.createElement('p');
+    clickTip.className = 'w-full text-center text-xs mt-2';
+    clickTip.innerHTML = 'Ctrl + клик для перехода</br>Ctrl + пробел для редактирования';
+    dom.appendChild(clickTip);
+  }
+
   return { dom: dom };
 }
 
 /**
  * Create DOM tooltip for {@link ISyntacticReference}.
  */
-export function domTooltipSyntacticReference(ref: ISyntacticReference, masterRef: string | undefined) {
+export function domTooltipSyntacticReference(
+  ref: ISyntacticReference,
+  masterRef: string | undefined,
+  canClick?: boolean
+) {
   const dom = document.createElement('div');
   dom.className = clsx(
-    'z-tooltip',
     'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
     'dense',
     'p-2 flex flex-col',
@@ -292,6 +328,13 @@ export function domTooltipSyntacticReference(ref: ISyntacticReference, masterRef
   const nominal = document.createElement('p');
   nominal.innerHTML = `<b>Начальная форма:</b> ${ref.nominal}`;
   dom.appendChild(nominal);
+
+  if (canClick) {
+    const clickTip = document.createElement('p');
+    clickTip.className = 'w-full text-center text-xs mt-2';
+    clickTip.innerHTML = 'Ctrl + пробел для редактирования';
+    dom.appendChild(clickTip);
+  }
 
   return { dom: dom };
 }
