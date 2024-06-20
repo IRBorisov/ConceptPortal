@@ -125,7 +125,7 @@ function FormConstituenta({
   }
 
   return (
-    <AnimateFade>
+    <AnimateFade className='mx-0 md:mx-auto'>
       <ControlsOverlay
         disabled={disabled}
         modified={isModified}
