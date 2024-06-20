@@ -115,7 +115,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
           onRename={controller.renameCst}
           onOpenEdit={onOpenEdit}
         />
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           {showList ? (
             <ViewConstituents
               schema={controller.schema}
