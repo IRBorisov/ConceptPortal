@@ -12,8 +12,8 @@ import MiniButton from '@/components/ui/MiniButton';
 import { FolderNode, FolderTree } from '@/models/FolderTree';
 import { HelpTopic } from '@/models/miscellaneous';
 import { animateSideAppear, animateSideView } from '@/styling/animations';
-import { globals, PARAMETER, prefixes } from '@/utils/constants';
-import { describeFolderNode, information, labelFolderNode } from '@/utils/labels';
+import { PARAMETER, prefixes } from '@/utils/constants';
+import { information, labelFolderNode } from '@/utils/labels';
 
 interface LibraryTableProps {
   folders: FolderTree;
@@ -117,8 +117,6 @@ function LibraryFolders({ folders, currentFolder, setFolder, toggleFolderMode }:
                   activeNode === item && 'clr-selected'
                 )}
                 style={{ paddingLeft: `${(item.rank > 5 ? 5 : item.rank) * 0.5 + 0.5}rem` }}
-                data-tooltip-id={globals.tooltip}
-                data-tooltip-html={describeFolderNode(item)}
                 onClick={event => handleClickFolder(event, item)}
                 initial={{ ...animateSideAppear.initial }}
                 animate={{ ...animateSideAppear.animate }}
