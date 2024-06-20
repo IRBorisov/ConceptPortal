@@ -1,4 +1,14 @@
-import { IconFolder, IconSearch, IconShow, IconSortAsc, IconSortDesc } from '@/components/Icons';
+import {
+  IconFolder,
+  IconFolderClosed,
+  IconFolderEmpty,
+  IconFolderOpened,
+  IconFolderTree,
+  IconSearch,
+  IconShow,
+  IconSortAsc,
+  IconSortDesc
+} from '@/components/Icons';
 
 function HelpLibrary() {
   return (
@@ -20,6 +30,25 @@ function HelpLibrary() {
       </li>
       <li>
         <IconFolder size='1rem' className='inline-icon' /> фильтр по расположению
+      </li>
+
+      <h2>Проводник</h2>
+      <li>клик по папке отображает справа файлы в ней</li>
+      <li>клик по иконке сворачивает/разворачивает вложенные</li>
+      <li>
+        <IconFolderTree size='1rem' className='inline-icon' /> скрыть / отобразить Проводник
+      </li>
+      <li>
+        <IconFolderEmpty size='1rem' className='inline-icon' /> папка без файлов
+      </li>
+      <li>
+        <IconFolder size='1rem' className='inline-icon' /> папка без вложенных
+      </li>
+      <li>
+        <IconFolderClosed size='1rem' className='inline-icon' /> папка с вложенными
+      </li>
+      <li>
+        <IconFolderOpened size='1rem' className='inline-icon icon-green' /> развернутая папка
       </li>
     </div>
   );

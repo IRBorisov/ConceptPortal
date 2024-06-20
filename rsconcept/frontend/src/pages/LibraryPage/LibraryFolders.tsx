@@ -4,12 +4,14 @@ import clsx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
-import { IconFolder, IconFolderClosed, IconFolderOpened, IconFolderTree } from '@/components/Icons';
+import { IconFolder, IconFolderClosed, IconFolderEmpty, IconFolderOpened, IconFolderTree } from '@/components/Icons';
+import BadgeHelp from '@/components/info/BadgeHelp';
 import { CProps } from '@/components/props';
 import MiniButton from '@/components/ui/MiniButton';
 import { FolderNode, FolderTree } from '@/models/FolderTree';
+import { HelpTopic } from '@/models/miscellaneous';
 import { animateSideAppear, animateSideView } from '@/styling/animations';
-import { globals, prefixes } from '@/utils/constants';
+import { globals, PARAMETER, prefixes } from '@/utils/constants';
 import { describeFolderNode, labelFolderNode } from '@/utils/labels';
 
 interface LibraryTableProps {
@@ -72,7 +74,13 @@ function LibraryFolders({ folders, currentFolder, setFolder, toggleFolderMode }:
       animate={{ ...animateSideView.animate }}
       exit={{ ...animateSideView.exit }}
     >
-      <div className='h-[2.08rem] flex justify-end pr-1'>
+      <div className='h-[2.08rem] flex justify-between items-center pr-1'>
+        <BadgeHelp
+          topic={HelpTopic.UI_LIBRARY}
+          className={clsx(PARAMETER.TOOLTIP_WIDTH, 'text-sm')}
+          offset={5}
+          place='right-start'
+        />
         <MiniButton
           icon={<IconFolderTree size='1.25rem' className='icon-green' />}
           title='Режим: проводник'
@@ -114,7 +122,11 @@ function LibraryFolders({ folders, currentFolder, setFolder, toggleFolderMode }:
                     noHover
                     icon={
                       folded.includes(item) ? (
-                        <IconFolderClosed size='1rem' className='icon-primary' />
+                        item.filesInside ? (
+                          <IconFolderClosed size='1rem' className='icon-primary' />
+                        ) : (
+                          <IconFolderEmpty size='1rem' className='icon-primary' />
+                        )
                       ) : (
                         <IconFolderOpened size='1rem' className='icon-green' />
                       )
@@ -123,7 +135,11 @@ function LibraryFolders({ folders, currentFolder, setFolder, toggleFolderMode }:
                   />
                 ) : (
                   <div>
-                    <IconFolder size='1rem' />
+                    {item.filesInside ? (
+                      <IconFolder size='1rem' className='clr-text-default' />
+                    ) : (
+                      <IconFolderEmpty size='1rem' className='clr-text-controls' />
+                    )}
                   </div>
                 )}
                 <div className='self-center'>{labelFolderNode(item)}</div>
