@@ -8,6 +8,7 @@ import { GraphLayout } from '@/components/ui/GraphUI';
 import { FolderNode } from '@/models/FolderTree';
 import { GramData, Grammeme, ReferenceType } from '@/models/language';
 import { AccessPolicy, LibraryItemType, LocationHead } from '@/models/library';
+import { validateLocation } from '@/models/libraryAPI';
 import { CstMatchMode, DependencyMode, GraphColoring, GraphSizing, HelpTopic } from '@/models/miscellaneous';
 import { CstClass, CstType, ExpressionStatus, IConstituenta, IRSForm } from '@/models/rsform';
 import {
@@ -271,10 +272,10 @@ export function describeCstSource(mode: DependencyMode): string {
 export function labelLocationHead(head: LocationHead): string {
   // prettier-ignore
   switch (head) {
-    case LocationHead.USER:      return 'личные (/U)';
-    case LocationHead.COMMON:    return 'общие (/S)';
-    case LocationHead.LIBRARY:   return 'примеры (/L)';
-    case LocationHead.PROJECTS:  return 'проекты (/P)';
+    case LocationHead.USER:      return '/U : личные';
+    case LocationHead.COMMON:    return '/S : общие';
+    case LocationHead.LIBRARY:   return '/L : примеры';
+    case LocationHead.PROJECTS:  return '/P : проекты';
   }
 }
 
@@ -825,7 +826,11 @@ export function describeAccessMode(mode: UserLevel): string {
  * Retrieves label for {@link FolderNode}.
  */
 export function labelFolderNode(node: FolderNode): string {
-  return node.text;
+  if (node.parent || !validateLocation('/' + node.text)) {
+    return node.text;
+  } else {
+    return labelLocationHead(('/' + node.text) as LocationHead);
+  }
 }
 
 /**

@@ -77,11 +77,12 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   const [cachedTemplates, setCachedTemplates] = useState<IRSForm[]>([]);
 
   const folders = useMemo(() => {
-    const result = new FolderTree(items.map(item => item.location));
+    const result = new FolderTree();
     result.addPath(LocationHead.USER, 0);
     result.addPath(LocationHead.COMMON, 0);
     result.addPath(LocationHead.LIBRARY, 0);
     result.addPath(LocationHead.PROJECTS, 0);
+    items.forEach(item => result.addPath(item.location));
     return result;
   }, [items]);
 

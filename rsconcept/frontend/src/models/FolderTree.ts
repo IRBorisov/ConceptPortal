@@ -102,7 +102,9 @@ export class FolderTree {
 
   private visitNode(target: FolderNode, result: FolderNode[]) {
     result.push(target);
-    target.children.forEach(child => this.visitNode(child, result));
+    [...target.children.keys()]
+      .sort((a, b) => a.localeCompare(b))
+      .forEach(key => this.visitNode(target.children.get(key)!, result));
   }
 
   addPath(path: string, filesCount: number = 1): FolderNode {
