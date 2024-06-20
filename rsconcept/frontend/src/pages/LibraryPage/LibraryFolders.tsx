@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -11,7 +11,7 @@ import { CProps } from '@/components/props';
 import MiniButton from '@/components/ui/MiniButton';
 import { FolderNode, FolderTree } from '@/models/FolderTree';
 import { HelpTopic } from '@/models/miscellaneous';
-import { animateSideAppear, animateSideView } from '@/styling/animations';
+import { animateSideView } from '@/styling/animations';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { information, labelFolderNode } from '@/utils/labels';
 
@@ -102,57 +102,52 @@ function LibraryFolders({ folders, currentFolder, setFolder, toggleFolderMode }:
           'cc-scroll-y'
         )}
       >
-        <AnimatePresence>
-          {items.map((item, index) =>
-            !item.parent || !folded.includes(item.parent) ? (
-              <motion.div
-                tabIndex={-1}
-                key={`${prefixes.folders_list}${index}`}
-                className={clsx(
-                  'min-h-[2.0825rem] sm:min-h-[2.3125rem]',
-                  'pr-3 flex items-center gap-2',
-                  'cc-scroll-row',
-                  'clr-hover',
-                  'cursor-pointer',
-                  activeNode === item && 'clr-selected'
-                )}
-                style={{ paddingLeft: `${(item.rank > 5 ? 5 : item.rank) * 0.5 + 0.5}rem` }}
-                onClick={event => handleClickFolder(event, item)}
-                initial={{ ...animateSideAppear.initial }}
-                animate={{ ...animateSideAppear.animate }}
-                exit={{ ...animateSideAppear.exit }}
-              >
-                {item.children.size > 0 ? (
-                  <MiniButton
-                    noPadding
-                    noHover
-                    icon={
-                      folded.includes(item) ? (
-                        item.filesInside ? (
-                          <IconFolderClosed size='1rem' className='icon-primary' />
-                        ) : (
-                          <IconFolderEmpty size='1rem' className='icon-primary' />
-                        )
+        {items.map((item, index) =>
+          !item.parent || !folded.includes(item.parent) ? (
+            <div
+              tabIndex={-1}
+              key={`${prefixes.folders_list}${index}`}
+              className={clsx(
+                'min-h-[2.0825rem] sm:min-h-[2.3125rem]',
+                'pr-3 flex items-center gap-2',
+                'cc-scroll-row',
+                'clr-hover',
+                'cursor-pointer',
+                activeNode === item && 'clr-selected'
+              )}
+              style={{ paddingLeft: `${(item.rank > 5 ? 5 : item.rank) * 0.5 + 0.5}rem` }}
+              onClick={event => handleClickFolder(event, item)}
+            >
+              {item.children.size > 0 ? (
+                <MiniButton
+                  noPadding
+                  noHover
+                  icon={
+                    folded.includes(item) ? (
+                      item.filesInside ? (
+                        <IconFolderClosed size='1rem' className='icon-primary' />
                       ) : (
-                        <IconFolderOpened size='1rem' className='icon-green' />
+                        <IconFolderEmpty size='1rem' className='icon-primary' />
                       )
-                    }
-                    onClick={event => handleClickFold(event, item, folded.includes(item))}
-                  />
-                ) : (
-                  <div>
-                    {item.filesInside ? (
-                      <IconFolder size='1rem' className='clr-text-default' />
                     ) : (
-                      <IconFolderEmpty size='1rem' className='clr-text-controls' />
-                    )}
-                  </div>
-                )}
-                <div className='self-center'>{labelFolderNode(item)}</div>
-              </motion.div>
-            ) : null
-          )}
-        </AnimatePresence>
+                      <IconFolderOpened size='1rem' className='icon-green' />
+                    )
+                  }
+                  onClick={event => handleClickFold(event, item, folded.includes(item))}
+                />
+              ) : (
+                <div>
+                  {item.filesInside ? (
+                    <IconFolder size='1rem' className='clr-text-default' />
+                  ) : (
+                    <IconFolderEmpty size='1rem' className='clr-text-controls' />
+                  )}
+                </div>
+              )}
+              <div className='self-center'>{labelFolderNode(item)}</div>
+            </div>
+          ) : null
+        )}
       </div>
     </motion.div>
   );
