@@ -3,6 +3,7 @@
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
 
 import { IconFolder, IconFolderClosed, IconFolderEmpty, IconFolderOpened, IconFolderTree } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
@@ -12,7 +13,7 @@ import { FolderNode, FolderTree } from '@/models/FolderTree';
 import { HelpTopic } from '@/models/miscellaneous';
 import { animateSideAppear, animateSideView } from '@/styling/animations';
 import { globals, PARAMETER, prefixes } from '@/utils/constants';
-import { describeFolderNode, labelFolderNode } from '@/utils/labels';
+import { describeFolderNode, information, labelFolderNode } from '@/utils/labels';
 
 interface LibraryTableProps {
   folders: FolderTree;
@@ -49,11 +50,18 @@ function LibraryFolders({ folders, currentFolder, setFolder, toggleFolderMode }:
     [items]
   );
 
-  const handleSetValue = useCallback(
+  const handleClickFolder = useCallback(
     (event: CProps.EventMouse, target: FolderNode) => {
       event.preventDefault();
       event.stopPropagation();
-      setFolder(target.getPath());
+      if (event.ctrlKey) {
+        navigator.clipboard
+          .writeText(target.getPath())
+          .then(() => toast.success(information.pathReady))
+          .catch(console.error);
+      } else {
+        setFolder(target.getPath());
+      }
     },
     [setFolder]
   );
@@ -69,7 +77,7 @@ function LibraryFolders({ folders, currentFolder, setFolder, toggleFolderMode }:
 
   return (
     <motion.div
-      className='flex flex-col text:xs sm:text-sm'
+      className='flex flex-col select-none text:xs sm:text-sm'
       initial={{ ...animateSideView.initial }}
       animate={{ ...animateSideView.animate }}
       exit={{ ...animateSideView.exit }}
@@ -111,7 +119,7 @@ function LibraryFolders({ folders, currentFolder, setFolder, toggleFolderMode }:
                 style={{ paddingLeft: `${(item.rank > 5 ? 5 : item.rank) * 0.5 + 0.5}rem` }}
                 data-tooltip-id={globals.tooltip}
                 data-tooltip-html={describeFolderNode(item)}
-                onClick={event => handleSetValue(event, item)}
+                onClick={event => handleClickFolder(event, item)}
                 initial={{ ...animateSideAppear.initial }}
                 animate={{ ...animateSideAppear.animate }}
                 exit={{ ...animateSideAppear.exit }}

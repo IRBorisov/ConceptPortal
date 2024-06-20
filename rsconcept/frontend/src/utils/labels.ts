@@ -898,6 +898,7 @@ export const information = {
   subscribed: 'Отслеживание отключено',
   unsubscribed: 'Отслеживание выключено',
 
+  pathReady: 'Путь скопирован',
   substituteSingle: 'Отождествление завершено',
   reorderComplete: 'Упорядочение завершено',
   reindexComplete: 'Имена конституент обновлены',
