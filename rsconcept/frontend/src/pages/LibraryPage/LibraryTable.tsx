@@ -5,7 +5,7 @@ import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { urls } from '@/app/urls';
-import { IconFolder } from '@/components/Icons';
+import { IconFolderTree } from '@/components/Icons';
 import BadgeLocation from '@/components/info/BadgeLocation';
 import { CProps } from '@/components/props';
 import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } from '@/components/ui/DataTable';
@@ -56,11 +56,9 @@ function LibraryTable({ items, resetQuery, folderMode, toggleFolderMode }: Libra
 
   const handleToggleFolder = useCallback(
     (event: CProps.EventMouse) => {
-      if (event.ctrlKey) {
-        event.preventDefault();
-        event.stopPropagation();
-        toggleFolderMode();
-      }
+      event.preventDefault();
+      event.stopPropagation();
+      toggleFolderMode();
     },
     [toggleFolderMode]
   );
@@ -74,12 +72,12 @@ function LibraryTable({ items, resetQuery, folderMode, toggleFolderMode }: Libra
               id: 'location',
               header: () => (
                 <MiniButton
-                  noHover
                   noPadding
+                  noHover
                   className='pl-2 max-h-[1rem] translate-y-[-0.125rem]'
                   onClick={handleToggleFolder}
-                  titleHtml='Ctrl + клик для переключения </br>в режим папок'
-                  icon={<IconFolder size='1.25rem' className='clr-text-controls' />}
+                  titleHtml='Переключение в режим Проводник'
+                  icon={<IconFolderTree size='1.25rem' className='clr-text-controls' />}
                 />
               ),
               size: 50,

@@ -83,7 +83,7 @@ function LibraryFolders({ folders, currentFolder, setFolder, toggleFolderMode }:
         />
         <MiniButton
           icon={<IconFolderTree size='1.25rem' className='icon-green' />}
-          title='Режим: проводник'
+          title='Переключение в режим Поиск'
           onClick={toggleFolderMode}
         />
       </div>

@@ -176,6 +176,12 @@ function SearchPanel({
             />
 
             <Dropdown isOpen={headMenu.isOpen} stretchLeft className='z-modalTooltip'>
+              <DropdownButton className='w-[10rem]' title='Переключение в режим Проводник' onClick={handleToggleFolder}>
+                <div className='inline-flex items-center gap-3'>
+                  <IconFolderTree size='1rem' className='clr-text-controls' />
+                  <span>проводник...</span>
+                </div>
+              </DropdownButton>
               <DropdownButton className='w-[10rem]' onClick={() => handleChange(undefined)}>
                 <div className='inline-flex items-center gap-3'>
                   <IconFolder size='1rem' className='clr-text-controls' />
@@ -197,16 +203,6 @@ function SearchPanel({
                   </DropdownButton>
                 );
               })}
-              <DropdownButton
-                className='w-[10rem]'
-                title='переключение в режим выбора папок'
-                onClick={handleToggleFolder}
-              >
-                <div className='inline-flex items-center gap-3'>
-                  <IconFolderTree size='1rem' className='clr-text-controls' />
-                  <span>проводник...</span>
-                </div>
-              </DropdownButton>
             </Dropdown>
           </div>
         ) : null}

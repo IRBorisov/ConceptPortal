@@ -36,16 +36,19 @@ function HelpLibrary() {
       <li>клик по папке отображает справа файлы в ней</li>
       <li>клик по иконке сворачивает/разворачивает вложенные</li>
       <li>
-        <IconFolderTree size='1rem' className='inline-icon' /> скрыть / отобразить Проводник
+        <IconFolderTree size='1rem' className='inline-icon' /> переключение между Проводник и Поиск
       </li>
       <li>
-        <IconFolderEmpty size='1rem' className='inline-icon' /> папка без файлов
+        <IconFolderEmpty size='1rem' className='inline-icon clr-text-default' /> папка без файлов
+      </li>
+      <li>
+        <IconFolderEmpty size='1rem' className='inline-icon' /> папка с вложенными без файлов
       </li>
       <li>
         <IconFolder size='1rem' className='inline-icon' /> папка без вложенных
       </li>
       <li>
-        <IconFolderClosed size='1rem' className='inline-icon' /> папка с вложенными
+        <IconFolderClosed size='1rem' className='inline-icon' /> папка с вложенными и файлами
       </li>
       <li>
         <IconFolderOpened size='1rem' className='inline-icon icon-green' /> развернутая папка
