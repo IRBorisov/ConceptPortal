@@ -54,7 +54,7 @@ function LibraryFolders({ folders, currentFolder, setFolder, toggleFolderMode }:
     (event: CProps.EventMouse, target: FolderNode) => {
       event.preventDefault();
       event.stopPropagation();
-      if (event.ctrlKey) {
+      if (event.ctrlKey || event.metaKey) {
         navigator.clipboard
           .writeText(target.getPath())
           .then(() => toast.success(information.pathReady))

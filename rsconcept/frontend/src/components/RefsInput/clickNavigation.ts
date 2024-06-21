@@ -7,7 +7,7 @@ import { findReferenceAt } from '@/utils/codemirror';
 const navigationProducer = (schema: IRSForm, onOpenEdit: (cstID: ConstituentaID) => void) => {
   return EditorView.domEventHandlers({
     click: (event: MouseEvent, view: EditorView) => {
-      if (!event.ctrlKey) {
+      if (!event.ctrlKey && !event.metaKey) {
         return;
       }
 

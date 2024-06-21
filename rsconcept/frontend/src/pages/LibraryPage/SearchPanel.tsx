@@ -5,19 +5,16 @@ import { useCallback } from 'react';
 
 import { LocationIcon, SubscribeIcon, VisibilityIcon } from '@/components/DomainIcons';
 import { IconEditor, IconFilterReset, IconFolder, IconFolderTree, IconOwner } from '@/components/Icons';
-import BadgeHelp from '@/components/info/BadgeHelp';
 import { CProps } from '@/components/props';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import MiniButton from '@/components/ui/MiniButton';
-import Overlay from '@/components/ui/Overlay';
 import SearchBar from '@/components/ui/SearchBar';
 import SelectorButton from '@/components/ui/SelectorButton';
 import { useAuth } from '@/context/AuthContext';
 import useDropdown from '@/hooks/useDropdown';
 import { LocationHead } from '@/models/library';
-import { HelpTopic } from '@/models/miscellaneous';
-import { PARAMETER, prefixes } from '@/utils/constants';
+import { prefixes } from '@/utils/constants';
 import { describeLocationHead, labelLocationHead } from '@/utils/labels';
 import { tripleToggleColor } from '@/utils/utils';
 
@@ -90,7 +87,7 @@ function SearchPanel({
 
   const handleFolderClick = useCallback(
     (event: CProps.EventMouse) => {
-      if (event.ctrlKey) {
+      if (event.ctrlKey || event.metaKey) {
         toggleFolderMode();
       } else {
         headMenu.toggle();
@@ -218,14 +215,6 @@ function SearchPanel({
           />
         ) : null}
       </div>
-      <Overlay position='top-[-0.75rem] right-0'>
-        <BadgeHelp
-          topic={HelpTopic.UI_LIBRARY}
-          className={clsx(PARAMETER.TOOLTIP_WIDTH, 'text-sm')}
-          offset={5}
-          place='right-start'
-        />
-      </Overlay>
     </div>
   );
 }
