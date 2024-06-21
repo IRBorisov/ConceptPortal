@@ -24,7 +24,7 @@ interface TemplateTabProps {
 
 function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
   const { templates, retrieveTemplate } = useLibrary();
-  const [category, setCategory] = useState<IRSForm | undefined>(undefined);
+  const [templateSchema, setTemplateSchema] = useState<IRSForm | undefined>(undefined);
 
   const [filteredData, setFilteredData] = useState<IConstituenta[]>([]);
 
@@ -48,16 +48,16 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
   );
 
   const categorySelector = useMemo((): { value: number; label: string }[] => {
-    if (!category) {
+    if (!templateSchema) {
       return [];
     }
-    return category.items
+    return templateSchema.items
       .filter(cst => cst.cst_type === CATEGORY_CST_TYPE)
       .map(cst => ({
         value: cst.id,
         label: cst.term_raw
       }));
-  }, [category]);
+  }, [templateSchema]);
 
   useEffect(() => {
     if (templates.length > 0 && !state.templateID) {
@@ -67,22 +67,22 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
 
   useEffect(() => {
     if (!state.templateID) {
-      setCategory(undefined);
+      setTemplateSchema(undefined);
     } else {
-      retrieveTemplate(state.templateID, setCategory);
+      retrieveTemplate(state.templateID, setTemplateSchema);
     }
   }, [state.templateID, retrieveTemplate]);
 
   useEffect(() => {
-    if (!category) {
+    if (!templateSchema) {
       return;
     }
-    let data = category.items;
+    let data = templateSchema.items;
     if (state.filterCategory) {
-      data = applyFilterCategory(state.filterCategory, category);
+      data = applyFilterCategory(state.filterCategory, templateSchema);
     }
     setFilteredData(data);
-  }, [state.filterCategory, category]);
+  }, [state.filterCategory, templateSchema]);
 
   return (
     <AnimateFade>
@@ -93,14 +93,16 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
           className='flex-grow border-none'
           options={categorySelector}
           value={
-            state.filterCategory && category
+            state.filterCategory && templateSchema
               ? {
                   value: state.filterCategory.id,
                   label: state.filterCategory.term_raw
                 }
               : null
           }
-          onChange={data => partialUpdate({ filterCategory: data ? category?.cstByID.get(data?.value) : undefined })}
+          onChange={data =>
+            partialUpdate({ filterCategory: data ? templateSchema?.cstByID.get(data?.value) : undefined })
+          }
           isClearable
         />
         <SelectSingle

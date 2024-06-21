@@ -2,9 +2,7 @@ import clsx from 'clsx';
 
 import { CProps } from '../props';
 
-export interface FlexColumnProps extends CProps.Div {}
-
-function FlexColumn({ className, children, ...restProps }: FlexColumnProps) {
+function FlexColumn({ className, children, ...restProps }: CProps.Div) {
   return (
     <div className={clsx('cc-column', className)} {...restProps}>
       {children}

@@ -18,9 +18,9 @@ function TextURL({ text, href, title, color = 'clr-text-url', onClick }: TextURL
     );
   } else if (onClick) {
     return (
-      <span tabIndex={-1} className={design} onClick={onClick}>
+      <button type='button' tabIndex={-1} className={design} onClick={onClick}>
         {text}
-      </span>
+      </button>
     );
   } else {
     return null;

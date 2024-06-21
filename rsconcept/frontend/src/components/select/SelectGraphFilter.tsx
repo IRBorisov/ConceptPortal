@@ -36,10 +36,10 @@ function SelectGraphFilter({ value, dense, onChange }: SelectGraphFilterProps) {
       <SelectorButton
         transparent
         tabIndex={-1}
-        title='Настройка фильтрации по графу термов'
+        titleHtml='Настройка фильтрации <br/>по графу термов'
         hideTitle={menu.isOpen}
         className='h-full pr-2'
-        icon={DependencyIcon(value, '1rem', value !== DependencyMode.ALL ? 'icon-primary' : '')}
+        icon={<DependencyIcon value={value} size='1rem' />}
         text={dense || size.isSmall ? undefined : labelCstSource(value)}
         onClick={menu.toggle}
       />
@@ -55,7 +55,7 @@ function SelectGraphFilter({ value, dense, onChange }: SelectGraphFilterProps) {
                 onClick={() => handleChange(source)}
               >
                 <div className='inline-flex items-center gap-1'>
-                  {DependencyIcon(source, '1rem')}
+                  {<DependencyIcon value={source} size='1rem' />}
                   {!dense ? (
                     <span>
                       <b>{labelCstSource(source)}:</b> {describeCstSource(source)}

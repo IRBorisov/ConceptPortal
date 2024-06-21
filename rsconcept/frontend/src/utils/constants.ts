@@ -16,7 +16,10 @@ export const PARAMETER = {
   graphPopupDelay: 500, // milliseconds delay for graph popup selections
   graphRefreshDelay: 10, // milliseconds delay for graph viewpoint reset
 
-  logicLabel: 'LOGIC'
+  logicLabel: 'LOGIC',
+  exteorVersion: '4.9.3',
+
+  TOOLTIP_WIDTH: 'max-w-[29rem]'
 };
 
 /**
@@ -69,7 +72,9 @@ export const external_urls = {
   zak_lectures:
     'https://www.acconcept.ru/product/metody-konceptualnogo-analiza-i-sinteza-v-teoreticheskom-issledovanii-i-proektirovanii-socialno-jekonomicheskih-sistem-3-e-izdanie/',
 
-  git_repo: 'https://github.com/IRBorisov/ConceptPortal',
+  git_portal: 'https://github.com/IRBorisov/ConceptPortal',
+  git_core: 'https://github.com/IRBorisov/ConceptCore',
+  git_cctext: 'https://github.com/IRBorisov/cctext',
   mail_portal: 'mailto:portal@acconcept.ru',
   restAPI: 'https://api.portal.acconcept.ru'
 };
@@ -89,6 +94,8 @@ export const storage = {
   rseditShowControls: 'rsedit.show_controls',
 
   librarySearchHead: 'library.search.head',
+  librarySearchFolderMode: 'library.search.folder_mode',
+  librarySearchFolder: 'library.search.folder',
   librarySearchVisible: 'library.search.visible',
   librarySearchOwned: 'library.search.owned',
   librarySearchSubscribed: 'library.search.subscribed',
@@ -139,6 +146,7 @@ export const prefixes = {
   policy_list: 'policy_list_',
   library_filters_list: 'library_filters_list_',
   location_head_list: 'location_head_list_',
+  folders_list: 'folders_list_',
   topic_list: 'topic_list_',
   topic_item: 'topic_item_',
   library_list: 'library_list_',

@@ -11,9 +11,9 @@ import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { useRSForm } from '@/context/RSFormContext';
-import { CstType, IConstituenta, ICstUpdateData } from '@/models/rsform';
+import { ConstituentaID, CstType, IConstituenta, ICstUpdateData } from '@/models/rsform';
 import { isBaseSet, isBasicConcept, isFunctional } from '@/models/rsformAPI';
-import { labelCstTypification } from '@/utils/labels';
+import { information, labelCstTypification } from '@/utils/labels';
 
 import EditorRSExpression from '../EditorRSExpression';
 import ControlsOverlay from './ControlsOverlay';
@@ -35,6 +35,7 @@ interface FormConstituentaProps {
 
   onRename: () => void;
   onEditTerm: () => void;
+  onOpenEdit?: (cstID: ConstituentaID) => void;
 }
 
 function FormConstituenta({
@@ -47,7 +48,8 @@ function FormConstituenta({
 
   toggleReset,
   onRename,
-  onEditTerm
+  onEditTerm,
+  onOpenEdit
 }: FormConstituentaProps) {
   const { schema, cstUpdate, processing } = useRSForm();
 
@@ -119,11 +121,11 @@ function FormConstituenta({
       definition_raw: textDefinition,
       convention: convention
     };
-    cstUpdate(data, () => toast.success('Изменения сохранены'));
+    cstUpdate(data, () => toast.success(information.changesSaved));
   }
 
   return (
-    <AnimateFade>
+    <AnimateFade className='mx-0 md:mx-auto'>
       <ControlsOverlay
         disabled={disabled}
         modified={isModified}
@@ -144,6 +146,7 @@ function FormConstituenta({
           maxHeight='8rem'
           placeholder='Обозначение, используемое в текстовых определениях'
           schema={schema}
+          onOpenEdit={onOpenEdit}
           value={term}
           initialValue={state?.term_raw ?? ''}
           resolved={state?.term_resolved ?? ''}
@@ -159,7 +162,7 @@ function FormConstituenta({
           disabled={true}
           label='Типизация'
           value={typification}
-          colors='clr-app'
+          colors='clr-app clr-text-default'
         />
         <AnimatePresence>
           <AnimateFade key='cst_expression_fade' hideContent={!!state && !state?.definition_formal && isElementary}>
@@ -183,6 +186,7 @@ function FormConstituenta({
               toggleReset={toggleReset}
               onChange={newValue => setExpression(newValue)}
               setTypification={setTypification}
+              onOpenEdit={onOpenEdit}
             />
           </AnimateFade>
           <AnimateFade key='cst_definition_fade' hideContent={!!state && !state?.definition_raw && isElementary}>
@@ -193,6 +197,7 @@ function FormConstituenta({
               minHeight='3.75rem'
               maxHeight='8rem'
               schema={schema}
+              onOpenEdit={onOpenEdit}
               value={textDefinition}
               initialValue={state?.definition_raw ?? ''}
               resolved={state?.definition_resolved ?? ''}
@@ -204,12 +209,11 @@ function FormConstituenta({
             <TextArea
               id='cst_convention'
               spellCheck
-              className='min-h-[3.75rem]'
               label={isBasic ? 'Конвенция' : 'Комментарий'}
               placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
               value={convention}
               disabled={disabled}
-              rows={convention.length > 2 * ROW_SIZE_IN_CHARACTERS ? 3 : 2}
+              rows={convention.length > 2 * ROW_SIZE_IN_CHARACTERS || convention.includes('\n') ? 4 : 2}
               onChange={event => setConvention(event.target.value)}
             />
           </AnimateFade>
@@ -217,8 +221,8 @@ function FormConstituenta({
             <button
               key='cst_disable_comment'
               id='cst_disable_comment'
-              tabIndex={-1}
               type='button'
+              tabIndex={-1}
               className='self-start cc-label clr-text-url hover:underline'
               onClick={() => setForceComment(true)}
             >

@@ -48,6 +48,7 @@ import {
   ITargetCst
 } from '@/models/rsform';
 import { UserID } from '@/models/user';
+import { contextOutsideScope } from '@/utils/labels';
 
 import { useAuth } from './AuthContext';
 import { useLibrary } from './LibraryContext';
@@ -99,7 +100,7 @@ const RSFormContext = createContext<IRSFormContext | null>(null);
 export const useRSForm = () => {
   const context = useContext(RSFormContext);
   if (context === null) {
-    throw new Error('useRSForm has to be used within <RSFormState.Provider>');
+    throw new Error(contextOutsideScope('useRSForm', 'RSFormState'));
   }
   return context;
 };
@@ -295,8 +296,7 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         onError: setProcessingError,
         onSuccess: () => {
           schema.location = newLocation;
-          library.localUpdateItem(schema);
-          if (callback) callback();
+          library.reloadItems(callback);
         }
       });
     },
@@ -336,7 +336,7 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          setSchema(Object.assign(schema, newData));
+          setSchema(newData);
           library.localUpdateTimestamp(newData.id);
           if (callback) callback();
         }
@@ -356,7 +356,7 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          setSchema(Object.assign(schema, newData));
+          setSchema(newData);
           library.localUpdateTimestamp(newData.id);
           if (callback) callback();
         }
@@ -572,14 +572,14 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         showError: true,
         setLoading: setProcessing,
         onError: setProcessingError,
-        onSuccess: () => {
-          setSchema(schema);
-          library.localUpdateItem(schema!);
+        onSuccess: newData => {
+          setSchema(newData);
+          library.localUpdateItem(newData);
           if (callback) callback();
         }
       });
     },
-    [schema, setSchema, library]
+    [setSchema, library]
   );
 
   const inlineSynthesis = useCallback(

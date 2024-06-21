@@ -2,24 +2,23 @@
 For more specific TODOs see comments in code
 
 [Functionality - PROGRESS]
-- Landing page
-- Home page (user specific)
-
 - Operational synthesis schema as LibraryItem ?
-
-- Draggable rows in constituents table
-- Clickable IDs in RSEditor tooltips
 
 - Library organization, search and exploration. Consider new user experience
 - Private projects and permissions. Consider cooperative editing
-- Rework access setup: project-based, user-based, enable sharing. Prevent enumerating access to private schemas by default
 
 
 [Functionality - PENDING]
+- Search functionality for manuals
 - User notifications on edit - consider spam prevention and change aggregation
 - Static analyzer for RSForm
 - Content based search in Library
 - User profile: Settings + settings persistency
+
+- Landing page
+- Home page (user specific)
+
+- Draggable rows in constituents table
 
 - Export PDF (Items list, Graph)
 - ARIA (accessibility considerations) - for now machine reading not supported
@@ -42,6 +41,8 @@ For more specific TODOs see comments in code
 [Security]
 - password-reset leaks info of email being used
 - improve nginx config. Consider DDOS and other types of attacks on infrastructure
+- recaptcha for create user and rest password
+https://yandex.cloud/ru/docs/smartcaptcha
 
 
 [Research]

@@ -23,6 +23,7 @@ import {
   IconRemove,
   IconReplace
 } from '../Icons';
+import NoData from '../ui/NoData';
 
 interface PickSubstitutionsProps {
   prefixID: string;
@@ -259,10 +260,10 @@ function PickSubstitutions({
         columns={columns}
         headPosition='0'
         noDataComponent={
-          <span className='p-2 text-center min-h-[2rem]'>
+          <NoData className='min-h-[2rem]'>
             <p>Список пуст</p>
             <p>Добавьте отождествление</p>
-          </span>
+          </NoData>
         }
       />
     </div>

@@ -5,8 +5,10 @@
  * Description is a long description used in tooltips.
  */
 import { GraphLayout } from '@/components/ui/GraphUI';
+import { FolderNode } from '@/models/FolderTree';
 import { GramData, Grammeme, ReferenceType } from '@/models/language';
 import { AccessPolicy, LibraryItemType, LocationHead } from '@/models/library';
+import { validateLocation } from '@/models/libraryAPI';
 import { CstMatchMode, DependencyMode, GraphColoring, GraphSizing, HelpTopic } from '@/models/miscellaneous';
 import { CstClass, CstType, ExpressionStatus, IConstituenta, IRSForm } from '@/models/rsform';
 import {
@@ -18,6 +20,16 @@ import {
   TokenID
 } from '@/models/rslang';
 import { UserLevel } from '@/models/user';
+
+/**
+ * Remove html tags from target string.
+ */
+export function removeTags(target?: string): string {
+  if (!target) {
+    return '';
+  }
+  return target.toString().replace(/(<([^>]+)>)/gi, '');
+}
 
 /**
  * Generates description for {@link IConstituenta}.
@@ -260,10 +272,10 @@ export function describeCstSource(mode: DependencyMode): string {
 export function labelLocationHead(head: LocationHead): string {
   // prettier-ignore
   switch (head) {
-    case LocationHead.USER:      return 'личные (/U)';
-    case LocationHead.COMMON:    return 'общие (/S)';
-    case LocationHead.LIBRARY:   return 'примеры (/L)';
-    case LocationHead.PROJECTS:  return 'проекты (/P)';
+    case LocationHead.USER:      return '/U : личные';
+    case LocationHead.COMMON:    return '/S : общие';
+    case LocationHead.LIBRARY:   return '/L : примеры';
+    case LocationHead.PROJECTS:  return '/P : проекты';
   }
 }
 
@@ -352,11 +364,6 @@ export function labelHelpTopic(topic: HelpTopic): string {
   switch (topic) {
     case HelpTopic.MAIN:            return 'Портал';
 
-    case HelpTopic.DOCS:            return 'Документы';
-    case HelpTopic.RULES:           return 'Правила';
-    case HelpTopic.PRIVACY:         return 'Обработка данных';
-    case HelpTopic.API:             return 'REST API';
-
     case HelpTopic.INTERFACE:       return 'Интерфейс';
     case HelpTopic.UI_LIBRARY:      return 'Библиотека';
     case HelpTopic.UI_RS_MENU:      return 'Меню схемы';
@@ -367,23 +374,32 @@ export function labelHelpTopic(topic: HelpTopic): string {
     case HelpTopic.UI_FORMULA_TREE: return 'Дерево разбора';
     case HelpTopic.UI_CST_STATUS:   return 'Статус конституенты';
     case HelpTopic.UI_CST_CLASS:    return 'Класс конституенты';
+    case HelpTopic.UI_OSS_GRAPH:    return 'Граф синтеза';
 
     case HelpTopic.CONCEPTUAL:      return 'Концептуализация';
     case HelpTopic.CC_SYSTEM:       return 'Система определений';
     case HelpTopic.CC_CONSTITUENTA: return 'Конституента';
     case HelpTopic.CC_RELATIONS:    return 'Связи понятий';
     case HelpTopic.CC_SYNTHESIS:    return 'Синтез схем';
+    case HelpTopic.CC_OSS:          return 'Операционная схема';
 
     case HelpTopic.RSLANG:          return 'Экспликация';
     case HelpTopic.RSL_TYPES:       return 'Типизация';
     case HelpTopic.RSL_CORRECT:     return 'Переносимость';
     case HelpTopic.RSL_INTERPRET:   return 'Интерпретируемость';
     case HelpTopic.RSL_OPERATIONS:  return 'Операции';
-    case HelpTopic.RSL_TEMPLATES:   return 'Шаблоны выражений';
+    case HelpTopic.RSL_TEMPLATES:   return 'Банк выражений';
 
     case HelpTopic.TERM_CONTROL:    return 'Терминологизация';
     case HelpTopic.ACCESS:          return 'Доступы';
     case HelpTopic.VERSIONS:        return 'Версионирование';
+
+    case HelpTopic.INFO:            return 'Информация';
+    case HelpTopic.INFO_RULES:      return 'Правила';
+    case HelpTopic.INFO_CONTRIB:    return 'Разработчики';
+    case HelpTopic.INFO_PRIVACY:    return 'Обработка данных';
+    case HelpTopic.INFO_API:        return 'REST API';
+
     case HelpTopic.EXTEOR:          return 'Экстеор';
   }
 }
@@ -396,39 +412,43 @@ export function describeHelpTopic(topic: HelpTopic): string {
   switch (topic) {
     case HelpTopic.MAIN:            return 'общая справка по порталу';
 
-    case HelpTopic.DOCS:            return 'нормативные и технические документы';
-    case HelpTopic.RULES:           return 'правила пользования Порталом';
-    case HelpTopic.PRIVACY:         return 'политика обработки персональных данных';
-    case HelpTopic.API:             return 'интерфейс для разработчиков';
-
     case HelpTopic.INTERFACE:       return 'описание интерфейса пользователя';
-    case HelpTopic.UI_LIBRARY:      return 'интерфейс Библиотеки схем';
+    case HelpTopic.UI_LIBRARY:      return 'поиск и просмотр схем';
     case HelpTopic.UI_RS_MENU:      return 'меню редактирования схемы';
-    case HelpTopic.UI_RS_CARD:      return 'интерфейс Карточки схемы';
-    case HelpTopic.UI_RS_LIST:      return 'интерфейс Списка конституент';
-    case HelpTopic.UI_RS_EDITOR:    return 'интерфейс редактирования конституенты';
+    case HelpTopic.UI_RS_CARD:      return 'общие атрибуты схемы';
+    case HelpTopic.UI_RS_LIST:      return 'концептуальная схема <br/>в форме таблицы';
+    case HelpTopic.UI_RS_EDITOR:    return 'редактирование конституенты';
     case HelpTopic.UI_GRAPH_TERM:   return 'интерфейс графа термов';
-    case HelpTopic.UI_FORMULA_TREE: return 'интерфейс дерева разбора родоструктурного выражения';
-    case HelpTopic.UI_CST_STATUS:   return 'нотация отображения статуса конституенты';
-    case HelpTopic.UI_CST_CLASS:    return 'нотация отображения класса конституенты';
+    case HelpTopic.UI_FORMULA_TREE: return 'просмотр дерева разбора <br/>родоструктурного выражения';
+    case HelpTopic.UI_CST_STATUS:   return 'нотация статуса конституенты';
+    case HelpTopic.UI_CST_CLASS:    return 'нотация класса конституенты';
+    case HelpTopic.UI_OSS_GRAPH:    return 'графическая форма <br/>операционной схемы синтеза';
 
-    case HelpTopic.CONCEPTUAL:      return 'основы концептуализации и концептуального мышления';
-    case HelpTopic.CC_SYSTEM:       return 'концептуальная схема как система понятий';
+    case HelpTopic.CONCEPTUAL:      return 'основы концептуализации';
+    case HelpTopic.CC_SYSTEM:       return 'концептуальная схема <br/>как система понятий';
     case HelpTopic.CC_CONSTITUENTA: return 'понятия конституенты и ее атрибутов';
     case HelpTopic.CC_RELATIONS:    return 'отношения между конституентами';
     case HelpTopic.CC_SYNTHESIS:    return 'операция синтеза концептуальных схем';
+    case HelpTopic.CC_OSS:          return 'операционная схема синтеза <br/>и протаскивание изменений';
 
-    case HelpTopic.RSLANG:          return 'справка по языку родов структур и экспликации';
-    case HelpTopic.RSL_TYPES:       return 'система типов в родоструктурной экспликации';
-    case HelpTopic.RSL_CORRECT:     return 'корректность и переносимость определений';
-    case HelpTopic.RSL_INTERPRET:   return 'интерпретация формальных определений';
-    case HelpTopic.RSL_OPERATIONS:  return 'операции над концептуальными схемами';
-    case HelpTopic.RSL_TEMPLATES:   return 'работа с шаблонными выражениями';
+    case HelpTopic.RSLANG:          return 'экспликация и язык родов структур';
+    case HelpTopic.RSL_TYPES:       return 'система типов в <br/>родоструктурной экспликации';
+    case HelpTopic.RSL_CORRECT:     return 'биективная переносимость';
+    case HelpTopic.RSL_INTERPRET:   return 'интерпретация определений <br/>и утверждений';
+    case HelpTopic.RSL_OPERATIONS:  return 'формальные операции';
+    case HelpTopic.RSL_TEMPLATES:   return 'применение Банка выражений';
 
-    case HelpTopic.TERM_CONTROL:    return 'справка по контролю терминов и текстовым отсылкам';
+    case HelpTopic.TERM_CONTROL:    return 'контроль терминов и текстовых отсылок';
     case HelpTopic.ACCESS:          return 'организация доступов к схемам';
     case HelpTopic.VERSIONS:        return 'справка по управлению версиями схем';
-    case HelpTopic.EXTEOR:          return 'справка по программе для экспликации "Экстеор" для Windows';
+
+    case HelpTopic.INFO:            return 'справочные, нормативные <br/>и технические документы';
+    case HelpTopic.INFO_RULES:      return 'правила пользования Порталом';
+    case HelpTopic.INFO_CONTRIB:    return 'признание вклада <br/>в создание Портала';
+    case HelpTopic.INFO_PRIVACY:    return 'политика обработки <br/>персональных данных';
+    case HelpTopic.INFO_API:        return 'интерфейс для разработчиков';
+
+    case HelpTopic.EXTEOR:          return 'программа экспликации теорий <br/>"Экстеор" для Windows';
   }
 }
 
@@ -803,6 +823,24 @@ export function describeAccessMode(mode: UserLevel): string {
 }
 
 /**
+ * Retrieves label for {@link FolderNode}.
+ */
+export function labelFolderNode(node: FolderNode): string {
+  if (node.parent || !validateLocation('/' + node.text)) {
+    return node.text;
+  } else {
+    return labelLocationHead(('/' + node.text) as LocationHead);
+  }
+}
+
+/**
+ * Retrieves description for {@link FolderNode}.
+ */
+export function describeFolderNode(node: FolderNode): string {
+  return `${node.filesInside} | ${node.filesTotal}`;
+}
+
+/**
  * Retrieves label for {@link AccessPolicy}.
  */
 export function labelAccessPolicy(policy: AccessPolicy): string {
@@ -852,9 +890,64 @@ export function describeLibraryItemType(itemType: LibraryItemType): string {
 }
 
 /**
- * UI shared messages.
+ * UI info descriptors.
  */
-export const messages = {
-  unsaved: 'Сохраните или отмените изменения',
-  promptUnsaved: 'Присутствуют несохраненные изменения. Продолжить без их учета?'
+export const information = {
+  changesSaved: 'Изменения сохранены',
+
+  subscribed: 'Отслеживание отключено',
+  unsubscribed: 'Отслеживание выключено',
+
+  pathReady: 'Путь скопирован',
+  substituteSingle: 'Отождествление завершено',
+  reorderComplete: 'Упорядочение завершено',
+  reindexComplete: 'Имена конституент обновлены',
+  moveComplete: 'Перемещение завершено',
+  linkReady: 'Ссылка скопирована',
+  versionRestored: 'Загрузка версии завершена',
+  cloneComplete: (alias: string) => `Копия создана: ${alias}`,
+
+  addedConstituents: (count: number) => `Добавлены конституенты: ${count}`,
+  newLibraryItem: 'Схема успешно создана',
+  newConstituent: (alias: string) => `Конституента добавлена: ${alias}`,
+  newVersion: (version: string) => `Версия создана: ${version}`,
+  renameComplete: (oldAlias: string, newAlias: string) => `Переименование: ${oldAlias} -> ${newAlias}`,
+
+  versionDestroyed: 'Версия удалена',
+  itemDestroyed: 'Схема удалена',
+  constituentsDestroyed: (aliases: string) => `Конституенты удалены: ${aliases}`
 };
+
+/**
+ * UI error descriptors.
+ */
+export const errors = {
+  astFailed: 'Невозможно построить дерево разбора',
+  passwordsMismatch: 'Пароли не совпадают'
+};
+
+/**
+ * UI tooltip descriptors.
+ */
+export const tooltips = {
+  unsaved: 'Сохраните или отмените изменения',
+  shareItem: (policy?: AccessPolicy) =>
+    policy === AccessPolicy.PUBLIC ? 'Поделиться схемой' : 'Поделиться можно только <br/>открытой схемой'
+};
+
+/**
+ * UI prompt messages.
+ */
+export const prompts = {
+  promptUnsaved: 'Присутствуют несохраненные изменения. Продолжить без их учета?',
+  deleteLibraryItem: 'Вы уверены, что хотите удалить данную схему?',
+  generateWordforms: 'Данное действие приведет к перезаписи словоформ при совпадении граммем. Продолжить?',
+  restoreArchive: 'При восстановлении архивной версии актуальная схему будет заменена. Продолжить?',
+  ownerChange:
+    'Вы уверены, что хотите изменить владельца? Вы потеряете право управления данной схемой. Данное действие отменить нельзя'
+};
+
+// ============== INTERNAL LABELS FOR DEVELOPERS TEXT ================
+export function contextOutsideScope(contextName: string, contextState: string): string {
+  return `${contextName} has to be used within <${contextState}.Provider>`;
+}

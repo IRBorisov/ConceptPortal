@@ -17,6 +17,7 @@ import { useBlockNavigation, useConceptNavigation } from '@/context/NavigationCo
 import { useConceptOptions } from '@/context/OptionsContext';
 import { useOSS } from '@/context/OssContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
+import { information, prompts } from '@/utils/labels';
 
 import EditorRSForm from './EditorOssCard';
 import EditorTermGraph from './EditorOssGraph';
@@ -84,11 +85,11 @@ function OssTabs() {
   }
 
   const onDestroySchema = useCallback(() => {
-    if (!schema || !window.confirm('Вы уверены, что хотите удалить данную схему?')) {
+    if (!schema || !window.confirm(prompts.deleteLibraryItem)) {
       return;
     }
     destroyItem(schema.id, () => {
-      toast.success('Схема удалена');
+      toast.success(information.itemDestroyed);
       router.push(urls.library);
     });
   }, [schema, destroyItem, router]);

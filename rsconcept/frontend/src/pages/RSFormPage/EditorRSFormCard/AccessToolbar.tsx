@@ -11,6 +11,7 @@ import { useAccessMode } from '@/context/AccessModeContext';
 import { AccessPolicy, ILibraryItemEditor } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
 import { UserLevel } from '@/models/user';
+import { PARAMETER } from '@/utils/constants';
 
 interface AccessToolbarProps {
   visible: boolean;
@@ -38,7 +39,6 @@ function AccessToolbar({ visible, toggleVisible, readOnly, toggleReadOnly, contr
         />
 
         <MiniButton
-          className='disabled:cursor-auto'
           title={visible ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
           icon={<VisibilityIcon value={visible} />}
           onClick={toggleVisible}
@@ -46,7 +46,6 @@ function AccessToolbar({ visible, toggleVisible, readOnly, toggleReadOnly, contr
         />
 
         <MiniButton
-          className='disabled:cursor-auto'
           title={readOnly ? 'Изменение: запрещено' : 'Изменение: разрешено'}
           icon={
             readOnly ? (
@@ -59,7 +58,7 @@ function AccessToolbar({ visible, toggleVisible, readOnly, toggleReadOnly, contr
           disabled={accessLevel === UserLevel.READER || controller.isProcessing}
         />
 
-        <BadgeHelp topic={HelpTopic.ACCESS} className='max-w-[30rem]' offset={4} />
+        <BadgeHelp topic={HelpTopic.ACCESS} className={PARAMETER.TOOLTIP_WIDTH} offset={4} />
       </div>
     </Overlay>
   );

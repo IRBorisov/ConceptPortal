@@ -4,6 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { globals } from '@/utils/constants';
+import { contextOutsideScope } from '@/utils/labels';
 
 interface INavigationContext {
   push: (path: string, newTab?: boolean) => void;
@@ -21,7 +22,7 @@ const NavigationContext = createContext<INavigationContext | null>(null);
 export const useConceptNavigation = () => {
   const context = useContext(NavigationContext);
   if (!context) {
-    throw new Error('useConceptNavigation has to be used within <NavigationState.Provider>');
+    throw new Error(contextOutsideScope('useConceptNavigation', 'NavigationState'));
   }
   return context;
 };

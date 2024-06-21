@@ -28,7 +28,7 @@ function MiniButton({
       className={clsx(
         'rounded-lg',
         'clr-btn-clear',
-        'cursor-pointer disabled:cursor-not-allowed',
+        'cursor-pointer disabled:cursor-auto',
         {
           'px-1 py-1': !noPadding,
           'outline-none': noHover,

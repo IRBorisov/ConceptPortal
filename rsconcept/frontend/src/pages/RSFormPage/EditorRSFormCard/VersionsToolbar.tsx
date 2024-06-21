@@ -3,6 +3,7 @@ import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { HelpTopic } from '@/models/miscellaneous';
+import { PARAMETER } from '@/utils/constants';
 
 import { useRSEdit } from '../RSEditContext';
 
@@ -13,13 +14,15 @@ function VersionsToolbar() {
       {controller.isMutable ? (
         <>
           <MiniButton
-            title={!controller.isContentEditable ? 'Откатить к версии' : 'Переключитесь на неактуальную версию'}
+            titleHtml={
+              !controller.isContentEditable ? 'Откатить к версии' : 'Переключитесь на <br/>неактуальную версию'
+            }
             disabled={controller.isContentEditable}
             onClick={() => controller.restoreVersion()}
             icon={<IconUpload size='1.25rem' className='icon-red' />}
           />
           <MiniButton
-            title={controller.isContentEditable ? 'Создать версию' : 'Переключитесь на актуальную версию'}
+            titleHtml={controller.isContentEditable ? 'Создать версию' : 'Переключитесь <br/>на актуальную версию'}
             disabled={!controller.isContentEditable}
             onClick={controller.createVersion}
             icon={<IconNewItem size='1.25rem' className='icon-green' />}
@@ -32,7 +35,7 @@ function VersionsToolbar() {
           />
         </>
       ) : null}
-      <BadgeHelp topic={HelpTopic.VERSIONS} className='max-w-[30rem]' offset={4} />
+      <BadgeHelp topic={HelpTopic.VERSIONS} className={PARAMETER.TOOLTIP_WIDTH} offset={4} />
     </Overlay>
   );
 }

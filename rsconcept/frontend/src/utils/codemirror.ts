@@ -3,11 +3,14 @@
  */
 import { syntaxTree } from '@codemirror/language';
 import { NodeType, Tree, TreeCursor } from '@lezer/common';
-import { ReactCodeMirrorRef, SelectionRange } from '@uiw/react-codemirror';
+import { EditorState, ReactCodeMirrorRef, SelectionRange } from '@uiw/react-codemirror';
 import clsx from 'clsx';
 
+import { ReferenceTokens } from '@/components/RefsInput/parse';
+import { RefEntity } from '@/components/RefsInput/parse/parser.terms';
+import { GlobalTokens } from '@/components/RSInput/rslang';
 import { IEntityReference, ISyntacticReference } from '@/models/language';
-import { parseGrammemes } from '@/models/languageAPI';
+import { parseEntityReference, parseGrammemes, parseSyntacticReference } from '@/models/languageAPI';
 import { IConstituenta } from '@/models/rsform';
 import { isBasicConcept } from '@/models/rsformAPI';
 
@@ -123,12 +126,48 @@ export function findContainedNodes(start: number, finish: number, tree: Tree, fi
 }
 
 /**
+ * Retrieves globalID from position in Editor.
+ */
+export function findAliasAt(pos: number, state: EditorState) {
+  const { from: lineStart, to: lineEnd, text } = state.doc.lineAt(pos);
+  const nodes = findEnvelopingNodes(pos, pos, syntaxTree(state), GlobalTokens);
+  let alias = '';
+  let start = 0;
+  let end = 0;
+  nodes.forEach(node => {
+    if (node.to <= lineEnd && node.from >= lineStart) {
+      alias = text.slice(node.from - lineStart, node.to - lineStart);
+      start = node.from;
+      end = node.to;
+    }
+  });
+  return { alias, start, end };
+}
+
+/**
+ * Retrieves reference from position in Editor.
+ */
+export function findReferenceAt(pos: number, state: EditorState) {
+  const nodes = findEnvelopingNodes(pos, pos, syntaxTree(state), ReferenceTokens);
+  if (nodes.length !== 1) {
+    return undefined;
+  }
+  const start = nodes[0].from;
+  const end = nodes[0].to;
+  const text = state.doc.sliceString(start, end);
+  if (nodes[0].type.id === RefEntity) {
+    return { ref: parseEntityReference(text), start, end };
+  } else {
+    return { ref: parseSyntacticReference(text), start, end };
+  }
+}
+
+/**
  * Create DOM tooltip for {@link Constituenta}.
  */
-export function domTooltipConstituenta(cst?: IConstituenta) {
+export function domTooltipConstituenta(cst?: IConstituenta, canClick?: boolean) {
   const dom = document.createElement('div');
   dom.className = clsx(
-    'z-modalTooltip',
     'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
     'dense',
     'p-2',
@@ -137,7 +176,11 @@ export function domTooltipConstituenta(cst?: IConstituenta) {
     'text-sm font-main'
   );
 
-  if (cst) {
+  if (!cst) {
+    const text = document.createElement('p');
+    text.innerText = 'Конституента не определена';
+    dom.appendChild(text);
+  } else {
     const alias = document.createElement('p');
     alias.innerHTML = `<b>${cst.alias}:</b> ${labelCstTypification(cst)}`;
     dom.appendChild(alias);
@@ -181,10 +224,13 @@ export function domTooltipConstituenta(cst?: IConstituenta) {
       children.innerHTML = `<b>Порождает:</b> ${cst.children_alias.join(', ')}`;
       dom.appendChild(children);
     }
-  } else {
-    const text = document.createElement('p');
-    text.innerText = 'Конституента не определена';
-    dom.appendChild(text);
+
+    if (canClick) {
+      const clickTip = document.createElement('p');
+      clickTip.className = 'w-full text-center text-xs mt-2';
+      clickTip.innerText = 'Ctrl + клик для перехода';
+      dom.appendChild(clickTip);
+    }
   }
   return { dom: dom };
 }
@@ -192,10 +238,14 @@ export function domTooltipConstituenta(cst?: IConstituenta) {
 /**
  * Create DOM tooltip for {@link IEntityReference}.
  */
-export function domTooltipEntityReference(ref: IEntityReference, cst: IConstituenta | undefined, colors: IColorTheme) {
+export function domTooltipEntityReference(
+  ref: IEntityReference,
+  cst: IConstituenta | undefined,
+  colors: IColorTheme,
+  canClick?: boolean
+) {
   const dom = document.createElement('div');
   dom.className = clsx(
-    'z-tooltip',
     'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
     'dense',
     'p-2 flex flex-col',
@@ -233,16 +283,27 @@ export function domTooltipEntityReference(ref: IEntityReference, cst: IConstitue
     grams.appendChild(gram);
   });
   dom.appendChild(grams);
+
+  if (canClick) {
+    const clickTip = document.createElement('p');
+    clickTip.className = 'w-full text-center text-xs mt-2';
+    clickTip.innerHTML = 'Ctrl + клик для перехода</br>Ctrl + пробел для редактирования';
+    dom.appendChild(clickTip);
+  }
+
   return { dom: dom };
 }
 
 /**
  * Create DOM tooltip for {@link ISyntacticReference}.
  */
-export function domTooltipSyntacticReference(ref: ISyntacticReference, masterRef: string | undefined) {
+export function domTooltipSyntacticReference(
+  ref: ISyntacticReference,
+  masterRef: string | undefined,
+  canClick?: boolean
+) {
   const dom = document.createElement('div');
   dom.className = clsx(
-    'z-tooltip',
     'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
     'dense',
     'p-2 flex flex-col',
@@ -267,6 +328,13 @@ export function domTooltipSyntacticReference(ref: ISyntacticReference, masterRef
   const nominal = document.createElement('p');
   nominal.innerHTML = `<b>Начальная форма:</b> ${ref.nominal}`;
   dom.appendChild(nominal);
+
+  if (canClick) {
+    const clickTip = document.createElement('p');
+    clickTip.className = 'w-full text-center text-xs mt-2';
+    clickTip.innerHTML = 'Ctrl + пробел для редактирования';
+    dom.appendChild(clickTip);
+  }
 
   return { dom: dom };
 }

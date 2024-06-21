@@ -33,7 +33,7 @@ function Button({
       disabled={disabled ?? loading}
       className={clsx(
         'inline-flex gap-2 items-center justify-center',
-        'select-none disabled:cursor-not-allowed',
+        'select-none disabled:cursor-auto',
         {
           'border rounded': !noBorder,
           'px-1': dense,

@@ -13,7 +13,8 @@ import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { HelpTopic } from '@/models/miscellaneous';
-import { messages, prepareTooltip } from '@/utils/labels';
+import { PARAMETER } from '@/utils/constants';
+import { prepareTooltip, tooltips } from '@/utils/labels';
 
 interface ConstituentaToolbarProps {
   disabled: boolean;
@@ -66,7 +67,7 @@ function ConstituentaToolbar({
         onClick={onCreate}
       />
       <MiniButton
-        titleHtml={modified ? messages.unsaved : prepareTooltip('Клонировать конституенту', 'Alt + V')}
+        titleHtml={modified ? tooltips.unsaved : prepareTooltip('Клонировать конституенту', 'Alt + V')}
         icon={<IconClone size='1.25rem' className='icon-green' />}
         disabled={disabled || modified}
         onClick={onClone}
@@ -94,7 +95,7 @@ function ConstituentaToolbar({
         disabled={disabled || modified}
         onClick={onMoveDown}
       />
-      <BadgeHelp topic={HelpTopic.UI_RS_EDITOR} offset={4} />
+      <BadgeHelp topic={HelpTopic.UI_RS_EDITOR} offset={4} className={PARAMETER.TOOLTIP_WIDTH} />
     </Overlay>
   );
 }

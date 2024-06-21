@@ -48,7 +48,12 @@ function DlgDeleteCst({ hideWindow, selected, schema, onDelete }: DlgDeleteCstPr
         schema={schema}
         prefix={prefixes.cst_dependant_list}
       />
-      <Checkbox label='Удалить зависимые конституенты' value={expandOut} setValue={value => setExpandOut(value)} />
+      <Checkbox
+        label='Удалить зависимые конституенты'
+        className='my-2'
+        value={expandOut}
+        setValue={value => setExpandOut(value)}
+      />
     </Modal>
   );
 }

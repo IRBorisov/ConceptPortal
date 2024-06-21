@@ -1,10 +1,10 @@
 'use client';
 
-import clsx from 'clsx';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
 import BadgeConstituenta from '@/components/info/BadgeConstituenta';
 import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } from '@/components/ui/DataTable';
+import NoData from '@/components/ui/NoData';
 import { useConceptOptions } from '@/context/OptionsContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
@@ -37,7 +37,7 @@ function ConstituentsTable({ items, activeCst, onOpenEdit, maxHeight, denseThres
       if (element) {
         element.scrollIntoView({
           behavior: 'smooth',
-          block: 'nearest',
+          block: 'center',
           inline: 'end'
         });
       }
@@ -155,10 +155,10 @@ function ConstituentsTable({ items, activeCst, onOpenEdit, maxHeight, denseThres
       columnVisibility={columnVisibility}
       onColumnVisibilityChange={setColumnVisibility}
       noDataComponent={
-        <div className={clsx('min-h-[5rem]', 'p-3', 'text-center', 'select-none')}>
+        <NoData className='min-h-[5rem]'>
           <p>Список конституент пуст</p>
           <p>Измените параметры фильтра</p>
-        </div>
+        </NoData>
       }
       onRowClicked={handleRowClicked}
     />

@@ -3,6 +3,7 @@
 import { createContext, useContext, useState } from 'react';
 
 import { UserLevel } from '@/models/user';
+import { contextOutsideScope } from '@/utils/labels';
 
 interface IAccessModeContext {
   accessLevel: UserLevel;
@@ -13,7 +14,7 @@ const AccessContext = createContext<IAccessModeContext | null>(null);
 export const useAccessMode = () => {
   const context = useContext(AccessContext);
   if (!context) {
-    throw new Error('useAccessMode has to be used within <AccessModeState.Provider>');
+    throw new Error(contextOutsideScope('useAccessMode', 'AccessModeState'));
   }
   return context;
 };

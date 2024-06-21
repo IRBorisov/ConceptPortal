@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { urls } from '@/app/urls';
@@ -10,6 +10,7 @@ import { IconDownload } from '@/components/Icons';
 import InfoError from '@/components/info/InfoError';
 import SelectAccessPolicy from '@/components/select/SelectAccessPolicy';
 import SelectItemType from '@/components/select/SelectItemType';
+import SelectLocation from '@/components/select/SelectLocation';
 import SelectLocationHead from '@/components/select/SelectLocationHead';
 import Button from '@/components/ui/Button';
 import Label from '@/components/ui/Label';
@@ -25,11 +26,12 @@ import { AccessPolicy, LibraryItemType, LocationHead } from '@/models/library';
 import { ILibraryCreateData } from '@/models/library';
 import { combineLocation, validateLocation } from '@/models/libraryAPI';
 import { EXTEOR_TRS_FILE, limits, patterns } from '@/utils/constants';
+import { information } from '@/utils/labels';
 
 function FormCreateItem() {
   const router = useConceptNavigation();
   const { user } = useAuth();
-  const { createItem, error, setError, processing } = useLibrary();
+  const { createItem, processingError, setProcessingError, processing, folders } = useLibrary();
 
   const [itemType, setItemType] = useState(LibraryItemType.RSFORM);
   const [title, setTitle] = useState('');
@@ -49,8 +51,8 @@ function FormCreateItem() {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    setError(undefined);
-  }, [title, alias, setError]);
+    setProcessingError(undefined);
+  }, [title, alias, setProcessingError]);
 
   function handleCancel() {
     if (router.canBack()) {
@@ -78,7 +80,7 @@ function FormCreateItem() {
       fileName: file?.name
     };
     createItem(data, newItem => {
-      toast.success('Схема успешно создана');
+      toast.success(information.newLibraryItem);
       if (itemType == LibraryItemType.RSFORM) {
         router.push(urls.schema(newItem.id));
       } else {
@@ -96,6 +98,11 @@ function FormCreateItem() {
       setFile(undefined);
     }
   }
+
+  const handleSelectLocation = useCallback((newValue: string) => {
+    setHead(newValue.substring(0, 2) as LocationHead);
+    setBody(newValue.length > 3 ? newValue.substring(3) : '');
+  }, []);
 
   return (
     <form className={clsx('cc-column', 'min-w-[30rem] max-w-[30rem] mx-auto', 'px-6 py-3')} onSubmit={handleSubmit}>
@@ -153,7 +160,6 @@ function FormCreateItem() {
           <div className='ml-auto cc-icons'>
             <SelectAccessPolicy value={policy} onChange={setPolicy} />
             <MiniButton
-              className='disabled:cursor-auto'
               title={visible ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
               icon={<VisibilityIcon value={visible} />}
               onClick={() => setVisible(prev => !prev)}
@@ -179,6 +185,11 @@ function FormCreateItem() {
             excluded={!user?.is_staff ? [LocationHead.LIBRARY] : []}
           />
         </div>
+        {user?.is_staff ? (
+          <div className='self-start mt-[-0.25rem] ml-[-1.5rem]'>
+            <SelectLocation folderTree={folders} value={location} onChange={handleSelectLocation} />
+          </div>
+        ) : null}
         <TextArea
           id='dlg_cst_body'
           label='Путь'
@@ -193,7 +204,7 @@ function FormCreateItem() {
         <SubmitButton text='Создать схему' loading={processing} className='min-w-[10rem]' disabled={!isValid} />
         <Button text='Отмена' className='min-w-[10rem]' onClick={() => handleCancel()} />
       </div>
-      {error ? <InfoError error={error} /> : null}
+      {processingError ? <InfoError error={processingError} /> : null}
     </form>
   );
 }

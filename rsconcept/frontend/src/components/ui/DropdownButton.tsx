@@ -35,7 +35,7 @@ function DropdownButton({
         'disabled:clr-text-controls',
         {
           'clr-hover': onClick,
-          'cursor-pointer disabled:cursor-not-allowed': onClick,
+          'cursor-pointer disabled:cursor-auto': onClick,
           'cursor-default': !onClick
         },
         className

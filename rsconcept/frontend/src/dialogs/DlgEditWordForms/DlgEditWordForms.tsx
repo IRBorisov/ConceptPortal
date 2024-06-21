@@ -16,6 +16,8 @@ import { Grammeme, ITextRequest, IWordForm, IWordFormPlain } from '@/models/lang
 import { parseGrammemes, wordFormEquals } from '@/models/languageAPI';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IConstituenta, TermForm } from '@/models/rsform';
+import { PARAMETER } from '@/utils/constants';
+import { prompts } from '@/utils/labels';
 import { IGrammemeOption, SelectorGrammemes, SelectorGrammemesList } from '@/utils/selectors';
 
 import WordFormsTable from './WordFormsTable';
@@ -92,7 +94,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
 
   function handleGenerateLexeme() {
     if (forms.length > 0) {
-      if (!window.confirm('Данное действие приведет к перезаписи словоформ при совпадении граммем. Продолжить?')) {
+      if (!window.confirm(prompts.generateWordforms)) {
         return;
       }
     }
@@ -130,7 +132,11 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
       className='flex flex-col w-[40rem] px-6'
     >
       <Overlay position='top-[-0.2rem] left-[8rem]'>
-        <BadgeHelp topic={HelpTopic.TERM_CONTROL} className='max-w-[38rem]' offset={3} />
+        <BadgeHelp
+          topic={HelpTopic.TERM_CONTROL}
+          className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')}
+          offset={3}
+        />
       </Overlay>
 
       <TextArea
@@ -178,33 +184,36 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         />
       </div>
 
-      <Overlay position='top-2 left-0'>
-        <MiniButton
-          noHover
-          title='Внести словоформу'
-          icon={<IconAccept size='1.5rem' className='icon-green' />}
-          disabled={textProcessor.loading || !inputText || inputGrams.length == 0}
-          onClick={handleAddForm}
-        />
-        <MiniButton
-          noHover
-          title='Генерировать стандартные словоформы'
-          icon={<IconMoveDown size='1.5rem' className='icon-primary' />}
-          disabled={textProcessor.loading || !inputText}
-          onClick={handleGenerateLexeme}
-        />
-      </Overlay>
-
-      <div className={clsx('mt-3 mb-2', 'flex self-center items-center', 'text-sm text-center font-semibold')}>
-        <span>Заданные вручную словоформы [{forms.length}]</span>
-        <MiniButton
-          noHover
-          title='Сбросить все словоформы'
-          className='py-0'
-          icon={<IconRemove size='1.5rem' className='icon-red' />}
-          disabled={textProcessor.loading || forms.length === 0}
-          onClick={handleResetAll}
-        />
+      <div className='flex justify-between'>
+        <div className='cc-icons'>
+          <MiniButton
+            noHover
+            title='Внести словоформу'
+            icon={<IconAccept size='1.5rem' className='icon-green' />}
+            disabled={textProcessor.loading || !inputText || inputGrams.length == 0}
+            onClick={handleAddForm}
+          />
+          <MiniButton
+            noHover
+            title='Генерировать стандартные словоформы'
+            icon={<IconMoveDown size='1.5rem' className='icon-primary' />}
+            disabled={textProcessor.loading || !inputText}
+            onClick={handleGenerateLexeme}
+          />
+        </div>
+        <div
+          className={clsx('mt-3 mb-2', 'w-full flex justify-center items-center', 'text-sm text-center font-semibold')}
+        >
+          <div>Заданные вручную словоформы [{forms.length}]</div>
+          <MiniButton
+            noHover
+            title='Сбросить все словоформы'
+            className='py-0'
+            icon={<IconRemove size='1.5rem' className='icon-red' />}
+            disabled={textProcessor.loading || forms.length === 0}
+            onClick={handleResetAll}
+          />
+        </div>
       </div>
 
       <WordFormsTable forms={forms} setForms={setForms} onFormSelect={handleSelectForm} />

@@ -21,7 +21,7 @@ function ExpressionToolbar({ disabled, showControls, toggleControls, showAST }: 
   }
 
   return (
-    <Overlay position='top-[-0.5rem] right-0 cc-icons'>
+    <Overlay position='top-[-0.5rem] right-0' className='cc-icons'>
       <MiniButton
         title='Изменить шрифт'
         onClick={toggleFont}

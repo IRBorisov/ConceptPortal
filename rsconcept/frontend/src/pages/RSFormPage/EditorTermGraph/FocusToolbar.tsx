@@ -36,7 +36,7 @@ function FocusToolbar({
   }, [reset, controller]);
 
   return (
-    <div className='cc-icons items-center'>
+    <div className='items-center cc-icons'>
       <div className='w-[7.8rem] text-right select-none' style={{ color: colors.fgPurple }}>
         Фокус
         <b className='px-1'> {center.alias} </b>
@@ -48,24 +48,12 @@ function FocusToolbar({
       />
       <MiniButton
         title={showInputs ? 'Скрыть поставщиков' : 'Отобразить поставщиков'}
-        icon={
-          showInputs ? (
-            <IconGraphInputs size='1.25rem' className='icon-green' />
-          ) : (
-            <IconGraphInputs size='1.25rem' className='icon-primary' />
-          )
-        }
+        icon={<IconGraphInputs size='1.25rem' className={showInputs ? 'icon-green' : 'icon-primary'} />}
         onClick={toggleShowInputs}
       />
       <MiniButton
         title={showOutputs ? 'Скрыть потребителей' : 'Отобразить потребителей'}
-        icon={
-          showOutputs ? (
-            <IconGraphOutputs size='1.25rem' className='icon-green' />
-          ) : (
-            <IconGraphOutputs size='1.25rem' className='icon-primary' />
-          )
-        }
+        icon={<IconGraphOutputs size='1.25rem' className={showOutputs ? 'icon-green' : 'icon-primary'} />}
         onClick={toggleShowOutputs}
       />
     </div>

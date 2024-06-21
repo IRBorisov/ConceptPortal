@@ -12,6 +12,7 @@ import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { HelpTopic } from '@/models/miscellaneous';
 import { CstType, ICstRenameData } from '@/models/rsform';
 import { generateAlias, validateNewAlias } from '@/models/rsformAPI';
+import { PARAMETER } from '@/utils/constants';
 import { labelCstType } from '@/utils/labels';
 import { SelectorCstType } from '@/utils/selectors';
 
@@ -47,7 +48,7 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
       hideWindow={hideWindow}
       canSubmit={validated}
       onSubmit={handleSubmit}
-      className={clsx('w-[30rem]', 'py-6 px-6 flex gap-3 justify-center items-center')}
+      className={clsx('w-[30rem]', 'py-6 pr-3 pl-6 flex justify-center items-center')}
     >
       <SelectSingle
         id='dlg_cst_type'
@@ -60,14 +61,19 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
         }}
         onChange={data => updateData({ cst_type: data?.value ?? CstType.BASE })}
       />
-      <BadgeHelp topic={HelpTopic.CC_CONSTITUENTA} offset={16} className='max-w-[40rem] max-h-[calc(100svh-2rem)]' />
+
       <TextInput
         id='dlg_cst_alias'
         dense
         label='Имя'
-        className='w-[7rem]'
+        className='w-[7rem] ml-3'
         value={cstData.alias}
         onChange={event => updateData({ alias: event.target.value })}
+      />
+      <BadgeHelp
+        topic={HelpTopic.CC_CONSTITUENTA}
+        offset={16}
+        className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')}
       />
     </Modal>
   );

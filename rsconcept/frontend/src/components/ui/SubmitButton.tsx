@@ -17,7 +17,7 @@ function SubmitButton({ text = 'ОК', icon, disabled, loading, className, ...re
         'border',
         'font-medium',
         'clr-btn-primary',
-        'select-none disabled:cursor-not-allowed',
+        'select-none disabled:cursor-auto',
         loading && 'cursor-progress',
         className
       )}

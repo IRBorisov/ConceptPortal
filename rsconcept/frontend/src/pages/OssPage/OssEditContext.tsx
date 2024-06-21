@@ -13,6 +13,7 @@ import DlgEditEditors from '@/dialogs/DlgEditEditors';
 import { AccessPolicy } from '@/models/library';
 import { IOperationSchema } from '@/models/oss';
 import { UserID, UserLevel } from '@/models/user';
+import { information } from '@/utils/labels';
 
 interface IOssEditContext {
   schema?: IOperationSchema;
@@ -84,7 +85,7 @@ export const OssEditState = ({ children }: OssEditStateProps) => {
       if (!model.schema) {
         return;
       }
-      model.setLocation(newLocation, () => toast.success('Схема перемещена'));
+      model.setLocation(newLocation, () => toast.success(information.moveComplete));
     },
     [model]
   );
@@ -102,35 +103,35 @@ export const OssEditState = ({ children }: OssEditStateProps) => {
     const url = currentRef.includes('?') ? currentRef + '&share' : currentRef + '?share';
     navigator.clipboard
       .writeText(url)
-      .then(() => toast.success(`Ссылка скопирована: ${url}`))
+      .then(() => toast.success(information.linkReady))
       .catch(console.error);
   }, []);
 
   const toggleSubscribe = useCallback(() => {
     if (model.isSubscribed) {
-      model.unsubscribe(() => toast.success('Отслеживание отключено'));
+      model.unsubscribe(() => toast.success(information.unsubscribed));
     } else {
-      model.subscribe(() => toast.success('Отслеживание включено'));
+      model.subscribe(() => toast.success(information.subscribed));
     }
   }, [model]);
 
   const setOwner = useCallback(
     (newOwner: UserID) => {
-      model.setOwner(newOwner, () => toast.success('Владелец обновлен'));
+      model.setOwner(newOwner, () => toast.success(information.changesSaved));
     },
     [model]
   );
 
   const setAccessPolicy = useCallback(
     (newPolicy: AccessPolicy) => {
-      model.setAccessPolicy(newPolicy, () => toast.success('Политика доступа изменена'));
+      model.setAccessPolicy(newPolicy, () => toast.success(information.changesSaved));
     },
     [model]
   );
 
   const setEditors = useCallback(
     (newEditors: UserID[]) => {
-      model.setEditors(newEditors, () => toast.success('Редакторы обновлены'));
+      model.setEditors(newEditors, () => toast.success(information.changesSaved));
     },
     [model]
   );

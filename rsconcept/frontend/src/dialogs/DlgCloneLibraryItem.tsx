@@ -20,6 +20,7 @@ import { useConceptNavigation } from '@/context/NavigationContext';
 import { AccessPolicy, ILibraryItem, LocationHead } from '@/models/library';
 import { cloneTitle, combineLocation, validateLocation } from '@/models/libraryAPI';
 import { ConstituentaID, IRSFormCloneData } from '@/models/rsform';
+import { information } from '@/utils/labels';
 
 interface DlgCloneLibraryItemProps extends Pick<ModalProps, 'hideWindow'> {
   base: ILibraryItem;
@@ -62,7 +63,7 @@ function DlgCloneLibraryItem({ hideWindow, base, initialLocation, selected, tota
       data.items = selected;
     }
     cloneItem(base.id, data, newSchema => {
-      toast.success(`Копия создана: ${newSchema.alias}`);
+      toast.success(information.cloneComplete(newSchema.alias));
       router.push(urls.schema(newSchema.id));
     });
   }
@@ -100,7 +101,6 @@ function DlgCloneLibraryItem({ hideWindow, base, initialLocation, selected, tota
             />
 
             <MiniButton
-              className='disabled:cursor-auto'
               title={visible ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
               icon={<VisibilityIcon value={visible} />}
               onClick={() => setVisible(prev => !prev)}

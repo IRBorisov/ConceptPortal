@@ -12,6 +12,7 @@ import { useOSS } from '@/context/OssContext';
 import { ILibraryUpdateData, LibraryItemType } from '@/models/library';
 import AccessToolbar from '@/pages/RSFormPage/EditorRSFormCard/AccessToolbar';
 import { limits, patterns } from '@/utils/constants';
+import { information } from '@/utils/labels';
 
 import { useOssEdit } from '../OssEditContext';
 
@@ -81,7 +82,7 @@ function FormOSS({ id, isModified, setIsModified }: FormOSSProps) {
       visible: visible,
       read_only: readOnly
     };
-    update(data, () => toast.success('Изменения сохранены'));
+    update(data, () => toast.success(information.changesSaved));
   };
 
   return (

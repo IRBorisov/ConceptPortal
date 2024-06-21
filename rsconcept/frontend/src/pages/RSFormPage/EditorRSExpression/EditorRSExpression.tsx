@@ -14,12 +14,12 @@ import DlgShowAST from '@/dialogs/DlgShowAST';
 import useCheckExpression from '@/hooks/useCheckExpression';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { HelpTopic } from '@/models/miscellaneous';
-import { IConstituenta } from '@/models/rsform';
+import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { getDefinitionPrefix } from '@/models/rsformAPI';
 import { IExpressionParse, IRSErrorDescription, SyntaxTree } from '@/models/rslang';
 import { TokenID } from '@/models/rslang';
 import { storage } from '@/utils/constants';
-import { labelTypification } from '@/utils/labels';
+import { errors, labelTypification } from '@/utils/labels';
 
 import ExpressionToolbar from './ExpressionToolbar';
 import ParsingResult from './ParsingResult';
@@ -38,6 +38,7 @@ interface EditorRSExpressionProps {
 
   setTypification: (typification: string) => void;
   onChange: (newValue: string) => void;
+  onOpenEdit?: (cstID: ConstituentaID) => void;
 }
 
 function EditorRSExpression({
@@ -47,6 +48,7 @@ function EditorRSExpression({
   toggleReset,
   setTypification,
   onChange,
+  onOpenEdit,
   ...restProps
 }: EditorRSExpressionProps) {
   const model = useRSForm();
@@ -131,7 +133,7 @@ function EditorRSExpression({
   function handleShowAST() {
     handleCheckExpression(parse => {
       if (!parse.astText) {
-        toast.error('Невозможно построить дерево разбора');
+        toast.error(errors.astFailed);
       } else {
         setSyntaxTree(parse.ast);
         setExpression(getDefinitionPrefix(activeCst!) + value);
@@ -185,6 +187,8 @@ function EditorRSExpression({
         disabled={disabled}
         onChange={handleChange}
         onAnalyze={handleCheckExpression}
+        schema={model.schema}
+        onOpenEdit={onOpenEdit}
         {...restProps}
       />
 

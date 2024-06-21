@@ -9,6 +9,7 @@ import RSInput from '@/components/RSInput';
 import PickConstituenta from '@/components/select/PickConstituenta';
 import DataTable, { IConditionalStyle } from '@/components/ui/DataTable';
 import MiniButton from '@/components/ui/MiniButton';
+import NoData from '@/components/ui/NoData';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { useConceptOptions } from '@/context/OptionsContext';
 import { IConstituenta, IRSForm } from '@/models/rsform';
@@ -160,7 +161,7 @@ function ArgumentsTab({ state, schema, partialUpdate }: ArgumentsTabProps) {
         data={state.arguments}
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
-        noDataComponent={<p className={clsx('min-h-[3.6rem]', 'p-2', 'text-center')}>Аргументы отсутствуют</p>}
+        noDataComponent={<NoData className='min-h-[3.6rem]'>Аргументы отсутствуют</NoData>}
         onRowClicked={handleSelectArgument}
       />
 

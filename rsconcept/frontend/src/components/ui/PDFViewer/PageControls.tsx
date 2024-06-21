@@ -8,7 +8,7 @@ interface PageControlsProps {
 
 function PageControls({ pageNumber, pageCount, setPageNumber }: PageControlsProps) {
   return (
-    <>
+    <div className='flex items-center'>
       <button
         type='button'
         className='clr-hover clr-text-controls'
@@ -25,9 +25,9 @@ function PageControls({ pageNumber, pageCount, setPageNumber }: PageControlsProp
       >
         <IconPageLeft size='1.5rem' />
       </button>
-      <p className='px-3 text-black text-nowrap'>
+      <div className='px-3 text-nowrap'>
         Страница {pageNumber} из {pageCount}
-      </p>
+      </div>
       <button
         type='button'
         className='clr-hover clr-text-controls'
@@ -44,7 +44,7 @@ function PageControls({ pageNumber, pageCount, setPageNumber }: PageControlsProp
       >
         <IconPageLast size='1.5rem' />
       </button>
-    </>
+    </div>
   );
 }
 

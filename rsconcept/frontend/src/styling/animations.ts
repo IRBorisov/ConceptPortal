@@ -188,22 +188,32 @@ export const animateParseResults: Variants = {
 
 export const animateSideView = {
   initial: {
-    clipPath: 'inset(0% 100% 0% 0%)'
+    width: 0,
+    opacity: 0
   },
   animate: {
-    clipPath: 'inset(0% 0% 0% 0%)',
+    width: 'auto',
+    opacity: 1,
     transition: {
-      type: 'spring',
-      bounce: 0,
-      duration: 1
+      width: {
+        duration: 0.4
+      },
+      opacity: {
+        delay: 0.4,
+        duration: 0
+      }
     }
   },
   exit: {
-    clipPath: 'inset(0% 100% 0% 0%)',
+    width: 0,
+    opacity: 0,
     transition: {
-      type: 'spring',
-      bounce: 0,
-      duration: 1
+      width: {
+        duration: 0.4
+      },
+      opacity: {
+        duration: 0
+      }
     }
   }
 };

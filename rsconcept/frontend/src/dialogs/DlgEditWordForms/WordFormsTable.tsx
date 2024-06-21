@@ -7,6 +7,7 @@ import { IconRemove } from '@/components/Icons';
 import BadgeWordForm from '@/components/info/BadgeWordForm';
 import DataTable, { createColumnHelper } from '@/components/ui/DataTable';
 import MiniButton from '@/components/ui/MiniButton';
+import NoData from '@/components/ui/NoData';
 import { IWordForm } from '@/models/language';
 
 interface WordFormsTableProps {
@@ -78,10 +79,10 @@ function WordFormsTable({ forms, setForms, onFormSelect }: WordFormsTableProps) 
       columns={columns}
       headPosition='0'
       noDataComponent={
-        <span className='p-2 text-center min-h-[2rem]'>
+        <NoData className='min-h-[2rem]'>
           <p>Список пуст</p>
           <p>Добавьте словоформу</p>
-        </span>
+        </NoData>
       }
       onRowClicked={onFormSelect}
     />

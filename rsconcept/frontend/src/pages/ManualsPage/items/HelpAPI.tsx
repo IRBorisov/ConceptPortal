@@ -11,7 +11,7 @@ function HelpAPI() {
         С описанием интерфейса можно ознакомиться <TextURL text='по ссылке' href={external_urls.restAPI} />.
       </p>
       <p>
-        <TextURL text='Принять участие в разработке' href={external_urls.git_repo} />
+        <TextURL text='Принять участие в разработке' href={external_urls.git_portal} />
       </p>
     </div>
   );

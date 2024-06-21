@@ -39,7 +39,7 @@ function HelpPortal() {
 
       <h2>Разделы Справки</h2>
       {[
-        HelpTopic.DOCS,
+        HelpTopic.INFO,
         HelpTopic.INTERFACE,
         HelpTopic.CONCEPTUAL,
         HelpTopic.RSLANG,
@@ -55,11 +55,11 @@ function HelpPortal() {
       <h2>Лицензирование и раскрытие информации</h2>
       <li>Пользователи Портала сохраняют авторские права на создаваемый ими контент</li>
       <li>
-        Политика обработки данных доступна по <LinkTopic text='ссылке' topic={HelpTopic.PRIVACY} />
+        Политика обработки данных доступна по <LinkTopic text='ссылке' topic={HelpTopic.INFO_PRIVACY} />
       </li>
       <li>
         Портал является проектом с открытым исходным кодом, доступным на{' '}
-        <TextURL text='Github' href={external_urls.git_repo} />
+        <TextURL text='Github' href={external_urls.git_portal} />
       </li>
       <li>
         Данный сайт использует доменное имя и серверные мощности{' '}

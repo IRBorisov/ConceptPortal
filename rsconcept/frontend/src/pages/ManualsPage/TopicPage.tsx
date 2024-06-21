@@ -1,20 +1,24 @@
+import useWindowSize from '@/hooks/useWindowSize';
 import { HelpTopic } from '@/models/miscellaneous';
 
 import HelpAccess from './items/HelpAccess';
 import HelpAPI from './items/HelpAPI';
 import HelpConcept from './items/HelpConcept';
+import HelpConceptOSS from './items/HelpConceptOSS';
 import HelpConceptRelations from './items/HelpConceptRelations';
 import HelpConceptSynthesis from './items/HelpConceptSynthesis';
 import HelpConceptSystem from './items/HelpConceptSystem';
+import HelpContributors from './items/HelpContributors';
 import HelpCstAttributes from './items/HelpCstAttributes';
 import HelpCstClass from './items/HelpCstClass';
 import HelpCstEditor from './items/HelpCstEditor';
 import HelpCstStatus from './items/HelpCstStatus';
-import HelpDocs from './items/HelpDocs';
 import HelpExteor from './items/HelpExteor';
 import HelpFormulaTree from './items/HelpFormulaTree';
+import HelpInfo from './items/HelpInfo';
 import HelpInterface from './items/HelpInterface';
 import HelpLibrary from './items/HelpLibrary';
+import HelpOssGraph from './items/HelpOssGraph';
 import HelpPortal from './items/HelpPortal';
 import HelpPrivacy from './items/HelpPrivacy';
 import HelpRSFormCard from './items/HelpRSFormCard';
@@ -31,17 +35,21 @@ import HelpTermGraph from './items/HelpTermGraph';
 import HelpTerminologyControl from './items/HelpTerminologyControl';
 import HelpVersions from './items/HelpVersions';
 
+// PDF Viewer setup
+const OFFSET_X_SMALL = 32;
+const OFFSET_X_LARGE = 280;
+
+const MIN_SIZE_SMALL = 300;
+const MIN_SIZE_LARGE = 600;
+
 interface TopicPageProps {
   topic: HelpTopic;
 }
 
 function TopicPage({ topic }: TopicPageProps) {
-  if (topic === HelpTopic.MAIN) return <HelpPortal />;
+  const size = useWindowSize();
 
-  if (topic === HelpTopic.DOCS) return <HelpDocs />;
-  if (topic === HelpTopic.RULES) return <HelpRules />;
-  if (topic === HelpTopic.PRIVACY) return <HelpPrivacy />;
-  if (topic === HelpTopic.API) return <HelpAPI />;
+  if (topic === HelpTopic.MAIN) return <HelpPortal />;
 
   if (topic === HelpTopic.INTERFACE) return <HelpInterface />;
   if (topic === HelpTopic.UI_LIBRARY) return <HelpLibrary />;
@@ -53,12 +61,14 @@ function TopicPage({ topic }: TopicPageProps) {
   if (topic === HelpTopic.UI_FORMULA_TREE) return <HelpFormulaTree />;
   if (topic === HelpTopic.UI_CST_STATUS) return <HelpCstStatus />;
   if (topic === HelpTopic.UI_CST_CLASS) return <HelpCstClass />;
+  if (topic === HelpTopic.UI_OSS_GRAPH) return <HelpOssGraph />;
 
   if (topic === HelpTopic.CONCEPTUAL) return <HelpConcept />;
   if (topic === HelpTopic.CC_SYSTEM) return <HelpConceptSystem />;
   if (topic === HelpTopic.CC_CONSTITUENTA) return <HelpCstAttributes />;
   if (topic === HelpTopic.CC_RELATIONS) return <HelpConceptRelations />;
   if (topic === HelpTopic.CC_SYNTHESIS) return <HelpConceptSynthesis />;
+  if (topic === HelpTopic.CC_OSS) return <HelpConceptOSS />;
 
   if (topic === HelpTopic.RSLANG) return <HelpRSLang />;
   if (topic === HelpTopic.RSL_TYPES) return <HelpRSLangTypes />;
@@ -70,6 +80,19 @@ function TopicPage({ topic }: TopicPageProps) {
   if (topic === HelpTopic.TERM_CONTROL) return <HelpTerminologyControl />;
   if (topic === HelpTopic.ACCESS) return <HelpAccess />;
   if (topic === HelpTopic.VERSIONS) return <HelpVersions />;
+
+  if (topic === HelpTopic.INFO) return <HelpInfo />;
+  if (topic === HelpTopic.INFO_RULES) return <HelpRules />;
+  if (topic === HelpTopic.INFO_CONTRIB) return <HelpContributors />;
+  if (topic === HelpTopic.INFO_PRIVACY)
+    return (
+      <HelpPrivacy
+        offsetXpx={size.isSmall ? OFFSET_X_SMALL : OFFSET_X_LARGE}
+        minWidth={size.isSmall ? MIN_SIZE_SMALL : MIN_SIZE_LARGE}
+      />
+    );
+  if (topic === HelpTopic.INFO_API) return <HelpAPI />;
+
   if (topic === HelpTopic.EXTEOR) return <HelpExteor />;
   return null;
 }

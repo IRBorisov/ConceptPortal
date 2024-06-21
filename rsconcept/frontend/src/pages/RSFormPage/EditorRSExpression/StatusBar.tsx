@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { AnimatePresence } from 'framer-motion';
 import { useMemo } from 'react';
 
+import { StatusIcon } from '@/components/DomainIcons';
 import Loader from '@/components/ui/Loader';
 import { useConceptOptions } from '@/context/OptionsContext';
 import { ExpressionStatus } from '@/models/rsform';
@@ -13,8 +14,6 @@ import { IExpressionParse, ParsingStatus } from '@/models/rslang';
 import { colorBgCstStatus } from '@/styling/color';
 import { globals } from '@/utils/constants';
 import { labelExpressionStatus, prepareTooltip } from '@/utils/labels';
-
-import StatusIcon from './StatusIcon';
 
 interface StatusBarProps {
   processing?: boolean;
@@ -42,10 +41,12 @@ function StatusBar({ isModified, processing, constituenta, parseData, onAnalyze 
       tabIndex={0}
       className={clsx(
         'w-[10rem] h-[1.75rem]',
+        'scale-75 sm:scale-100 mx-[-2.5rem] sm:m-0',
         'px-2 flex items-center justify-center gap-2',
         'border',
         'select-none',
         'cursor-pointer',
+        'translate-x-[-1.5rem]',
         'focus-frame',
         'duration-500 transition-colors'
       )}
@@ -58,7 +59,7 @@ function StatusBar({ isModified, processing, constituenta, parseData, onAnalyze 
         {processing ? <Loader key='status-loader' size={3} /> : null}
         {!processing ? (
           <>
-            <StatusIcon key='status-icon' status={status} />
+            <StatusIcon key='status-icon' size='1rem' value={status} />
             <span key='status-text' className='pb-[0.125rem] font-controls pr-2'>
               {labelExpressionStatus(status)}
             </span>

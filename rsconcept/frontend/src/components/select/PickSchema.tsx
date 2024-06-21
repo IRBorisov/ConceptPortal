@@ -5,7 +5,7 @@ import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/u
 import SearchBar from '@/components/ui/SearchBar';
 import { useLibrary } from '@/context/LibraryContext';
 import { useConceptOptions } from '@/context/OptionsContext';
-import { ILibraryItem, LibraryItemID } from '@/models/library';
+import { ILibraryItem, LibraryItemID, LibraryItemType } from '@/models/library';
 import { ILibraryFilter } from '@/models/miscellaneous';
 
 import FlexColumn from '../ui/FlexColumn';
@@ -32,7 +32,8 @@ function PickSchema({ id, initialFilter = '', rows = 4, value, onSelectValue }: 
 
   useLayoutEffect(() => {
     setFilter({
-      query: filterText
+      query: filterText,
+      type: LibraryItemType.RSFORM
     });
   }, [filterText]);
 
@@ -103,7 +104,7 @@ function PickSchema({ id, initialFilter = '', rows = 4, value, onSelectValue }: 
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
         noDataComponent={
-          <FlexColumn className='p-3 items-center min-h-[6rem]'>
+          <FlexColumn className='dense p-3 items-center min-h-[6rem]'>
             <p>Список схем пуст</p>
             <p>Измените параметры фильтра</p>
           </FlexColumn>

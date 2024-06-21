@@ -98,7 +98,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
       <div
         tabIndex={-1}
         className={clsx(
-          'max-w-[95rem]', // prettier: split lines
+          'max-w-[95rem] mx-auto', // prettier: split lines
           'flex',
           { 'flex-col md:items-center': isNarrow }
         )}
@@ -113,8 +113,9 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
           setIsModified={setIsModified}
           onEditTerm={controller.editTermForms}
           onRename={controller.renameCst}
+          onOpenEdit={onOpenEdit}
         />
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           {showList ? (
             <ViewConstituents
               schema={controller.schema}

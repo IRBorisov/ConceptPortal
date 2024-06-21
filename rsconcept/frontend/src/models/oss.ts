@@ -65,6 +65,3 @@ export interface IRunSynthesisResponse {
 export interface IOperationSchema extends IOperationSchemaData {
   subscribers: UserID[];
   editors: UserID[];
-
-  //producedData: number[]; // TODO: modify this to store calculated state on load
-}

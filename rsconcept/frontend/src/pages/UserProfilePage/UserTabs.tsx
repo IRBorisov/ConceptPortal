@@ -3,7 +3,7 @@
 import { AnimatePresence } from 'framer-motion';
 import { useMemo, useState } from 'react';
 
-import { IconFollow, IconFollowOff } from '@/components/Icons';
+import { SubscribeIcon } from '@/components/DomainIcons';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import AnimateFade from '@/components/wrap/AnimateFade';
@@ -39,13 +39,7 @@ function UserTabs() {
           <Overlay position='top-0 right-0'>
             <MiniButton
               title='Отслеживаемые схемы'
-              icon={
-                showSubs ? (
-                  <IconFollow size='1.25rem' className='icon-primary' />
-                ) : (
-                  <IconFollowOff size='1.25rem' className='icon-primary' />
-                )
-              }
+              icon={<SubscribeIcon value={showSubs} className='icon-primary' />}
               onClick={() => setShowSubs(prev => !prev)}
             />
           </Overlay>

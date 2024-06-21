@@ -1,5 +1,6 @@
 import { AccessPolicy, LibraryItemType, LocationHead } from '@/models/library';
 import { CstMatchMode, DependencyMode } from '@/models/miscellaneous';
+import { ExpressionStatus } from '@/models/rsform';
 
 import {
   IconAlias,
@@ -21,6 +22,10 @@ import {
   IconRSForm,
   IconSettings,
   IconShow,
+  IconStatusError,
+  IconStatusIncalculable,
+  IconStatusOK,
+  IconStatusUnknown,
   IconTemplates,
   IconTerm,
   IconText,
@@ -80,34 +85,51 @@ export function LocationIcon({ value, size = '1.25rem', className }: DomIconProp
   }
 }
 
-export function DependencyIcon(mode: DependencyMode, size: string, color?: string) {
-  switch (mode) {
+export function DependencyIcon({ value, size = '1.25rem', className }: DomIconProps<DependencyMode>) {
+  switch (value) {
     case DependencyMode.ALL:
-      return <IconSettings size={size} className={color} />;
+      return <IconSettings size={size} className={className} />;
     case DependencyMode.EXPRESSION:
-      return <IconText size={size} className={color} />;
+      return <IconText size={size} className={className ?? 'clr-text-primary'} />;
     case DependencyMode.OUTPUTS:
-      return <IconGraphOutputs size={size} className={color} />;
+      return <IconGraphOutputs size={size} className={className ?? 'clr-text-primary'} />;
     case DependencyMode.INPUTS:
-      return <IconGraphInputs size={size} className={color} />;
+      return <IconGraphInputs size={size} className={className ?? 'clr-text-primary'} />;
     case DependencyMode.EXPAND_OUTPUTS:
-      return <IconGraphExpand size={size} className={color} />;
+      return <IconGraphExpand size={size} className={className ?? 'clr-text-primary'} />;
     case DependencyMode.EXPAND_INPUTS:
-      return <IconGraphCollapse size={size} className={color} />;
+      return <IconGraphCollapse size={size} className={className ?? 'clr-text-primary'} />;
   }
 }
 
-export function MatchModeIcon(mode: CstMatchMode, size: string, color?: string) {
-  switch (mode) {
+export function MatchModeIcon({ value, size = '1.25rem', className }: DomIconProps<CstMatchMode>) {
+  switch (value) {
     case CstMatchMode.ALL:
-      return <IconFilter size={size} className={color} />;
+      return <IconFilter size={size} className={className} />;
     case CstMatchMode.TEXT:
-      return <IconText size={size} className={color} />;
+      return <IconText size={size} className={className ?? 'clr-text-primary'} />;
     case CstMatchMode.EXPR:
-      return <IconFormula size={size} className={color} />;
+      return <IconFormula size={size} className={className ?? 'clr-text-primary'} />;
     case CstMatchMode.TERM:
-      return <IconTerm size={size} className={color} />;
+      return <IconTerm size={size} className={className ?? 'clr-text-primary'} />;
     case CstMatchMode.NAME:
-      return <IconAlias size={size} className={color} />;
+      return <IconAlias size={size} className={className ?? 'clr-text-primary'} />;
+  }
+}
+
+export function StatusIcon({ value, size = '1.25rem', className }: DomIconProps<ExpressionStatus>) {
+  switch (value) {
+    case ExpressionStatus.VERIFIED:
+    case ExpressionStatus.PROPERTY:
+      return <IconStatusOK size={size} className={className} />;
+
+    case ExpressionStatus.UNKNOWN:
+      return <IconStatusUnknown size={size} className={className} />;
+    case ExpressionStatus.INCALCULABLE:
+      return <IconStatusIncalculable size={size} className={className} />;
+
+    case ExpressionStatus.INCORRECT:
+    case ExpressionStatus.UNDEFINED:
+      return <IconStatusError size={size} className={className} />;
   }
 }

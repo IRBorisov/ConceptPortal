@@ -9,6 +9,7 @@ import { FontStyle } from '@/models/miscellaneous';
 import { animationDuration } from '@/styling/animations';
 import { darkT, IColorTheme, lightT } from '@/styling/color';
 import { globals, storage } from '@/utils/constants';
+import { contextOutsideScope } from '@/utils/labels';
 
 interface IOptionsContext {
   viewportHeight: string;
@@ -45,7 +46,7 @@ const OptionsContext = createContext<IOptionsContext | null>(null);
 export const useConceptOptions = () => {
   const context = useContext(OptionsContext);
   if (!context) {
-    throw new Error('useConceptTheme has to be used within <ThemeState.Provider>');
+    throw new Error(contextOutsideScope('useConceptTheme', 'ThemeState'));
   }
   return context;
 };
