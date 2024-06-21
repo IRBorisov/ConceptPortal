@@ -1,9 +1,5 @@
-
-
-
-function SynthesisOperation = () => {
-    return (<div>
-
-        </div>
-    )
+function SynthesisOperation() {
+  return <div></div>;
 }
+
+export default SynthesisOperation;

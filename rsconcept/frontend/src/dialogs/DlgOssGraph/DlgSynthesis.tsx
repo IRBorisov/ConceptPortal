@@ -1,15 +1,15 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import clsx from 'clsx';
+import { useCallback, useMemo, useState } from 'react';
+import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import Modal, { ModalProps } from '@/components/ui/Modal.tsx';
-import { TabList, TabPanel, Tabs } from 'react-tabs';
-import clsx from 'clsx';
 import TabLabel from '@/components/ui/TabLabel.tsx';
 import useRSFormDetails from '@/hooks/useRSFormDetails.ts';
-import SynthesisSubstitutionsTab from '@/pages/OssPage/SynthesisSubstitutionsTab.tsx';
-import { useSynthesis } from '@/pages/OssPage/SynthesisContext.tsx';
 import { ISynthesisSubstitution } from '@/models/oss.ts';
+import { useSynthesis } from '@/pages/OssPage/SynthesisContext.tsx';
+import SynthesisSubstitutionsTab from '@/pages/OssPage/SynthesisSubstitutionsTab.tsx';
 
 interface DlgCreateSynthesisProps extends Pick<ModalProps, 'hideWindow'> {
   nodeId: string;
@@ -25,24 +25,24 @@ function DlgSynthesis({ hideWindow, nodeId, onSynthesis }: DlgCreateSynthesisPro
   const controller = useSynthesis();
 
   const [activeTab, setActiveTab] = useState(SynthesisTabID.SCHEMA);
+
   const sourceLeft = useRSFormDetails({
-    target: controller.getNodeParentsRsform(nodeId)[0] ?
-      String(controller.getNodeParentsRsform(nodeId)[0]) : undefined
+    target: controller.getNodeParentsRsform(nodeId)[0] ? String(controller.getNodeParentsRsform(nodeId)[0]) : undefined
   });
+
   const sourceRight = useRSFormDetails({
-    target: controller.getNodeParentsRsform(nodeId)[1] ?
-      String(controller.getNodeParentsRsform(nodeId)[1]) : undefined
+    target: controller.getNodeParentsRsform(nodeId)[1] ? String(controller.getNodeParentsRsform(nodeId)[1]) : undefined
   });
 
+  const validated = useMemo(() => controller.getNodeParentsRsform(nodeId).length == 2, [controller, nodeId]);
 
-  //const validated = useMemo(() => !!source.schema && selected.length > 0, [source.schema, selected]);
   function handleSubmit() {
     const parents = controller.getNodeParentsRsform(nodeId);
 
     if (parents.length != 2) {
       return;
     }
-    const data: ISynthesisSubstitution[] = controller.substitutions.map((item) => ({
+    const data: ISynthesisSubstitution[] = controller.substitutions.map(item => ({
       id: null,
       operation_id: nodeId,
       leftCst: item.leftCst,
@@ -53,26 +53,16 @@ function DlgSynthesis({ hideWindow, nodeId, onSynthesis }: DlgCreateSynthesisPro
     controller.setSubstitutions(data);
   }
 
-  function validated() {
-    const parents = controller.getNodeParentsRsform(nodeId);
-    return parents.length == 2;
-  }
+  const schemaPanel = useMemo(() => <TabPanel></TabPanel>, []);
 
-  const schemaPanel = useMemo(
-    () => (
-      <TabPanel></TabPanel>
-    ), []
-  );
+  const selectedSubstitutions = useMemo(() => controller.getSubstitution(nodeId), [controller, nodeId]);
 
-  const selectedSubstitutions = useMemo(
-    () => controller.getSubstitution(nodeId),
+  const setSelectedSubstitutions = useCallback(
+    (newElement: ISynthesisSubstitution[]) => {
+      controller.updateSubstitution(nodeId, newElement);
+    },
     [controller, nodeId]
   );
-
-  const setSelectedSubstitutions = (newElement: ISynthesisSubstitution[]) => {
-    controller.updateSubstitution(nodeId, newElement, controller.setSubstitutions);
-  };
-
 
   const substitutesPanel = useMemo(
     () => (
@@ -85,34 +75,31 @@ function DlgSynthesis({ hideWindow, nodeId, onSynthesis }: DlgCreateSynthesisPro
         />
       </TabPanel>
     ),
-    [sourceLeft.schema, sourceRight.schema, controller]
+    [sourceLeft.schema, sourceRight.schema, selectedSubstitutions, setSelectedSubstitutions]
   );
 
   return (
     <Modal
-      header="Синтез концептуальных схем"
+      header='Синтез концептуальных схем'
       hideWindow={hideWindow}
-      submitText="Сохранить"
-      className="w-[25rem] px-6"
+      submitText='Сохранить'
+      className='w-[35rem] px-6'
       canSubmit={validated}
-
       onSubmit={handleSubmit}
-
     >
       <Tabs
-        selectedTabClassName="clr-selected"
-        className="flex flex-col"
+        selectedTabClassName='clr-selected'
+        className='flex flex-col'
         selectedIndex={activeTab}
         onSelect={setActiveTab}
       >
         <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none')}>
-          <TabLabel label="Схема" title="Источник конституент" className="w-[8rem]" />
-          <TabLabel label="Отождествления" title="Таблица отождествлений" className="w-[8rem]" />
+          <TabLabel label='Схема' title='Источник конституент' className='w-[8rem]' />
+          <TabLabel label='Отождествления' title='Таблица отождествлений' className='w-[8rem]' />
         </TabList>
         {schemaPanel}
         {substitutesPanel}
       </Tabs>
-
     </Modal>
   );
 }

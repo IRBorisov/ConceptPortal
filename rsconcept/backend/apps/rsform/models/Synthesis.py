@@ -1,10 +1,19 @@
+''' Models: Synthesis. '''
+
 from django.db.models import (
-    CASCADE, SET_NULL, ForeignKey, Model, PositiveIntegerField, QuerySet,
-    TextChoices, TextField, BooleanField, CharField, DateTimeField, JSONField, IntegerField, AutoField
+    CASCADE,
+    SET_NULL,
+    BooleanField,
+    CharField,
+    ForeignKey,
+    IntegerField,
+    Model,
+    TextChoices
 )
 
 
 class OperationStatus(TextChoices):
+    ''' Operation status enumeration. '''
     DRAFT = 'Draft',
     COMPLETED = 'Completed',
     WARNING = 'Warning',
@@ -12,6 +21,7 @@ class OperationStatus(TextChoices):
 
 
 class GraphStatus(TextChoices):
+    ''' Graph status enumeration. '''
     DRAFT = 'Draft',
     COMPLETED = 'Completed',
     WARNING = 'Warning',

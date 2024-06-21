@@ -31,7 +31,7 @@ urlpatterns = [
     path('cctext/generate-lexeme', views.generate_lexeme),
     path('cctext/parse', views.parse_text),
     path('synthesis/run_single', views.run_synthesis_view),
-    path('synthesis/run_all', views.run_sythesis_graph_view),
+    path('synthesis/run_all', views.run_synthesis_graph_view),
     path('synthesis/save', views.save_synthesis_graph),
     path('synthesis/<int:pk_item>', views.get_synthesis_graph),
     path('', include(library_router.urls)),

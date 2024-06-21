@@ -1,42 +1,31 @@
-import { useCallback, useMemo } from 'react';
-import {
-  ReactFlow,
-  addEdge,
-  useNodesState,
-  useEdgesState,
-  type Connection,
-  type Edge,
-  type Node, OnSelectionChangeParams
-} from '@reactflow/core';
-
-
-import OperationNode from './OperationNode';
-import InputNode from './InputNode';
-
 // this is important! You need to import the styles from the lib to make it work
 import '@reactflow/core/dist/style.css';
-
 import './SynthesisFlow.css';
-import { useState } from 'react';
-import { useSynthesis } from '@/pages/OssPage/SynthesisContext.tsx';
+
+import { NodeTypes, ReactFlow } from '@reactflow/core';
+import { useMemo } from 'react';
+
 import { useConceptOptions } from '@/context/OptionsContext.tsx';
+import { useSynthesis } from '@/pages/OssPage/SynthesisContext.tsx';
 
+import InputNode from './InputNode';
+import OperationNode from './OperationNode';
 
-const nodeTypes = {
+const nodeTypes: NodeTypes = {
   custom: OperationNode,
   input: InputNode
 };
 
 function Flow() {
   const controller = useSynthesis();
-  const { calculateHeight, darkMode } = useConceptOptions();
+  const { calculateHeight } = useConceptOptions();
   const canvasWidth = useMemo(() => {
     return 'calc(100vw - 1rem)';
   }, []);
 
   const canvasHeight = useMemo(() => calculateHeight('1.75rem + 4px'), [calculateHeight]);
   return (
-    <div className="relative" style={{ height: canvasHeight, width: canvasWidth }}>
+    <div className='relative' style={{ height: canvasHeight, width: canvasWidth }}>
       <ReactFlow
         nodes={controller.getNodes()}
         onNodesChange={controller.onNodesChange}

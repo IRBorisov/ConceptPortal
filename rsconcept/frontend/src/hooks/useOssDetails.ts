@@ -4,9 +4,9 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { getOssDetails } from '@/app/backendAPI';
 import { type ErrorData } from '@/components/info/InfoError';
+import { AccessPolicy, LibraryItemType } from '@/models/library.ts';
 import { IOperationSchema, IOperationSchemaData } from '@/models/oss';
 import { OssLoader } from '@/models/OssLoader';
-import { AccessPolicy, LibraryItemType } from '@/models/library.ts';
 
 function useOssDetails({ target }: { target?: string }) {
   const [schema, setInner] = useState<IOperationSchema | undefined>(undefined);
@@ -57,7 +57,7 @@ function useOssDetails({ target }: { target?: string }) {
           const combinedData = {
             ...staticData,
             ...schema
-          }
+          };
           setSchema(combinedData);
           if (callback) callback();
         }

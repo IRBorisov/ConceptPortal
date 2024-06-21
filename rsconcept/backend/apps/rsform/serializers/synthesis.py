@@ -1,9 +1,14 @@
-from rest_framework import serializers
-from .data_access import CstSubstituteSerializerBase
-from rest_framework.serializers import PrimaryKeyRelatedField as PKField
+''' Synthesis serializers. '''
 
-from ..models import Constituenta, LibraryItem
-from ..models.Synthesis import SynthesisGraph, SynthesisEdge, InputNode, OperationNode, SynthesisSubstitution
+from rest_framework import serializers
+
+from ..models.Synthesis import (
+    InputNode,
+    OperationNode,
+    SynthesisEdge,
+    SynthesisGraph,
+    SynthesisSubstitution
+)
 
 
 class SynthesisGraphSerializer(serializers.ModelSerializer):

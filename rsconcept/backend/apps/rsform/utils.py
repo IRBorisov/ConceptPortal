@@ -76,6 +76,6 @@ def clone_rsform(rsform):
     rsform_copy.item.comment = "Temporary cloned rsform"
     rsform_copy.item.save()
 
-    rsform_copy.insert_copy(items=[cst for cst in rsform.item.constituenta_set.all()], position=1)
+    rsform_copy.insert_copy(items=rsform.item.constituenta_set.all(), position=1)
     rsform_copy.item.save()
     return rsform_copy

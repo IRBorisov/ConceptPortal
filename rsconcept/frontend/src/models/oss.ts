@@ -2,9 +2,10 @@
  * Module: Schema of Synthesis Operations.
  */
 
+import { ISubstitution } from '@/models/rsform.ts';
+
 import { ILibraryItemData } from './library';
 import { UserID } from './user';
-import { IConstituenta, ISubstitution } from '@/models/rsform.ts';
 
 /**
  * Represents backend data for Schema of Synthesis Operations.
@@ -65,3 +66,4 @@ export interface IRunSynthesisResponse {
 export interface IOperationSchema extends IOperationSchemaData {
   subscribers: UserID[];
   editors: UserID[];
+}

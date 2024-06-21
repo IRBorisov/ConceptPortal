@@ -7,17 +7,10 @@ import { toast } from 'react-toastify';
 
 import { type ErrorData } from '@/components/info/InfoError';
 import { ILexemeData, IResolutionData, ITextRequest, ITextResult, IWordFormPlain } from '@/models/language';
-import {
-  AccessPolicy,
-  ILibraryItem,
-  ILibraryUpdateData,
-  ITargetAccessPolicy,
-  ITargetLocation,
-  IVersionData,
-  LibraryItemType
-} from '@/models/library';
+import { ILibraryItem, ILibraryUpdateData, ITargetAccessPolicy, ITargetLocation, IVersionData } from '@/models/library';
 import { ILibraryCreateData } from '@/models/library';
 import { IOperationSchemaData, IRunSynthesis, IRunSynthesisResponse } from '@/models/oss';
+import { ISynthesisGraphData } from '@/models/oss.ts';
 import {
   IConstituentaList,
   IConstituentaMeta,
@@ -51,7 +44,6 @@ import {
   IUserUpdatePassword
 } from '@/models/user';
 import { buildConstants } from '@/utils/buildConstants';
-import { ISynthesisGraphData } from '@/models/oss.ts';
 
 const defaultOptions = {
   xsrfCookieName: 'csrftoken',
@@ -96,8 +88,7 @@ export interface FrontExchange<RequestData, ResponseData> extends IFrontRequest<
   onSuccess: DataCallback<ResponseData>;
 }
 
-export interface FrontAction extends IFrontRequest<undefined, undefined> {
-}
+export interface FrontAction extends IFrontRequest<undefined, undefined> {}
 
 interface IAxiosRequest<RequestData, ResponseData> {
   endpoint: string;
@@ -522,10 +513,10 @@ function AxiosGet<ResponseData>({ endpoint, request, options }: IAxiosRequest<un
 }
 
 function AxiosPost<RequestData, ResponseData>({
-                                                endpoint,
-                                                request,
-                                                options
-                                              }: IAxiosRequest<RequestData, ResponseData>) {
+  endpoint,
+  request,
+  options
+}: IAxiosRequest<RequestData, ResponseData>) {
   if (request.setLoading) request.setLoading(true);
   axiosInstance
     .post<ResponseData>(endpoint, request.data, options)
@@ -541,10 +532,10 @@ function AxiosPost<RequestData, ResponseData>({
 }
 
 function AxiosDelete<RequestData, ResponseData>({
-                                                  endpoint,
-                                                  request,
-                                                  options
-                                                }: IAxiosRequest<RequestData, ResponseData>) {
+  endpoint,
+  request,
+  options
+}: IAxiosRequest<RequestData, ResponseData>) {
   if (request.setLoading) request.setLoading(true);
   axiosInstance
     .delete<ResponseData>(endpoint, options)
@@ -560,10 +551,10 @@ function AxiosDelete<RequestData, ResponseData>({
 }
 
 function AxiosPatch<RequestData, ResponseData>({
-                                                 endpoint,
-                                                 request,
-                                                 options
-                                               }: IAxiosRequest<RequestData, ResponseData>) {
+  endpoint,
+  request,
+  options
+}: IAxiosRequest<RequestData, ResponseData>) {
   if (request.setLoading) request.setLoading(true);
   axiosInstance
     .patch<ResponseData>(endpoint, request.data, options)

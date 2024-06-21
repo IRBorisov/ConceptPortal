@@ -4,6 +4,7 @@ import { ErrorData } from '@/components/info/InfoError.tsx';
 import DataLoader from '@/components/wrap/DataLoader.tsx';
 import { IRSForm, ISubstitution } from '@/models/rsform.ts';
 import { prefixes } from '@/utils/constants.ts';
+
 import PickSubstitutions from '../../components/select/PickSubstitutions';
 
 interface SynthesisSubstitutionsTabProps {
@@ -17,14 +18,14 @@ interface SynthesisSubstitutionsTabProps {
 }
 
 function SynthesisSubstitutionsTab({
-                                     source,
-                                     receiver,
-                                     error,
-                                     substitutions,
-                                     setSubstitutions
-                                   }: SynthesisSubstitutionsTabProps) {
+  source,
+  receiver,
+  error,
+  substitutions,
+  setSubstitutions
+}: SynthesisSubstitutionsTabProps) {
   return (
-    <DataLoader id="dlg-substitutions-tab" className="cc-column" isLoading={false} error={error} hasNoData={!source}>
+    <DataLoader id='dlg-substitutions-tab' className='cc-column' isLoading={false} error={error} hasNoData={!source}>
       <PickSubstitutions
         items={substitutions}
         setItems={setSubstitutions}
