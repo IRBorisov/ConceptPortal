@@ -37,7 +37,7 @@ function SelectAccessPolicy({ value, disabled, stretchLeft, onChange }: SelectAc
       <MiniButton
         title={`Доступ: ${labelAccessPolicy(value)}`}
         hideTitle={menu.isOpen}
-        className='h-full disabled:cursor-auto'
+        className='h-full'
         icon={<PolicyIcon value={value} size='1.25rem' />}
         onClick={menu.toggle}
         disabled={disabled}

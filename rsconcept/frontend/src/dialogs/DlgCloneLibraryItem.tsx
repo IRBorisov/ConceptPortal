@@ -101,7 +101,6 @@ function DlgCloneLibraryItem({ hideWindow, base, initialLocation, selected, tota
             />
 
             <MiniButton
-              className='disabled:cursor-auto'
               title={visible ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
               icon={<VisibilityIcon value={visible} />}
               onClick={() => setVisible(prev => !prev)}

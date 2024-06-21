@@ -39,7 +39,6 @@ function AccessToolbar({ visible, toggleVisible, readOnly, toggleReadOnly, contr
         />
 
         <MiniButton
-          className='disabled:cursor-auto'
           title={visible ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
           icon={<VisibilityIcon value={visible} />}
           onClick={toggleVisible}
@@ -47,7 +46,6 @@ function AccessToolbar({ visible, toggleVisible, readOnly, toggleReadOnly, contr
         />
 
         <MiniButton
-          className='disabled:cursor-auto'
           title={readOnly ? 'Изменение: запрещено' : 'Изменение: разрешено'}
           icon={
             readOnly ? (

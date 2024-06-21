@@ -38,7 +38,7 @@ function SelectItemType({ value, disabled, stretchLeft, onChange }: SelectItemTy
         transparent
         title={describeLibraryItemType(value)}
         hideTitle={menu.isOpen}
-        className='h-full py-1 px-2 disabled:cursor-auto rounded-lg'
+        className='h-full px-2 py-1 rounded-lg'
         icon={<ItemTypeIcon value={value} size='1.25rem' />}
         text={labelLibraryItemType(value)}
         onClick={menu.toggle}
