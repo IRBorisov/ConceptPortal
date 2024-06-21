@@ -6,6 +6,7 @@ import { useIntl } from 'react-intl';
 
 import { urls } from '@/app/urls';
 import DataTable, { createColumnHelper } from '@/components/ui/DataTable';
+import NoData from '@/components/ui/NoData';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { ILibraryItem } from '@/models/library';
 import { animateSideView } from '@/styling/animations';
@@ -74,7 +75,7 @@ function ViewSubscriptions({ items }: ViewSubscriptionsProps) {
           id: 'time_update',
           desc: true
         }}
-        noDataComponent={<div className='h-[10rem]'>Отслеживаемые схемы отсутствуют</div>}
+        noDataComponent={<NoData className='h-[10rem]'>Отслеживаемые схемы отсутствуют</NoData>}
         onRowClicked={openRSForm}
       />
     </motion.div>

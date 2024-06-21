@@ -104,7 +104,7 @@ function PickSchema({ id, initialFilter = '', rows = 4, value, onSelectValue }: 
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
         noDataComponent={
-          <FlexColumn className='p-3 items-center min-h-[6rem]'>
+          <FlexColumn className='dense p-3 items-center min-h-[6rem]'>
             <p>Список схем пуст</p>
             <p>Измените параметры фильтра</p>
           </FlexColumn>

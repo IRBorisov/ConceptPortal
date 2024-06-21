@@ -13,6 +13,7 @@ import useDropdown from '@/hooks/useDropdown';
 import { ILibraryItemData, ILibraryItemEditor } from '@/models/library';
 import { UserID, UserLevel } from '@/models/user';
 import { prefixes } from '@/utils/constants';
+import { prompts } from '@/utils/labels';
 
 import LabeledValue from '../../../components/ui/LabeledValue';
 
@@ -34,11 +35,7 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
       if (newValue === item?.owner) {
         return;
       }
-      if (
-        !window.confirm(
-          'Вы уверены, что хотите изменить владельца? Вы потеряете право управления данной схемой. Данное действие отменить нельзя'
-        )
-      ) {
+      if (!window.confirm(prompts.ownerChange)) {
         return;
       }
       controller.setOwner(newValue);
@@ -59,7 +56,11 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
           />
         </Overlay>
       ) : null}
-      <LabeledValue className='max-w-[30rem] sm:mb-1 text-ellipsis' label='Путь' text={item?.location ?? ''} />
+      <LabeledValue
+        className='max-w-[30rem] sm:mb-1 text-ellipsis' //
+        label='Путь'
+        text={item?.location ?? ''}
+      />
 
       {accessLevel >= UserLevel.OWNER ? (
         <Overlay position='top-[-0.5rem] left-[5.5rem] cc-icons'>
@@ -82,7 +83,11 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
           </div>
         </Overlay>
       ) : null}
-      <LabeledValue className='sm:mb-1' label='Владелец' text={getUserLabel(item?.owner ?? null)} />
+      <LabeledValue
+        className='sm:mb-1' //
+        label='Владелец'
+        text={getUserLabel(item?.owner ?? null)}
+      />
 
       {accessLevel >= UserLevel.OWNER ? (
         <Overlay position='top-[-0.5rem] left-[5.5rem] cc-icons'>
@@ -97,12 +102,22 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
           </div>
         </Overlay>
       ) : null}
-      <LabeledValue id='editor_stats' className='sm:mb-1' label='Редакторы' text={item?.editors.length ?? 0} />
+      <LabeledValue
+        id='editor_stats' //
+        className='sm:mb-1'
+        label='Редакторы'
+        text={item?.editors.length ?? 0}
+      />
       <Tooltip anchorSelect='#editor_stats' layer='z-modalTooltip'>
         <InfoUsers items={item?.editors ?? []} prefix={prefixes.user_editors} />
       </Tooltip>
 
-      <LabeledValue id='sub_stats' className='sm:mb-1' label='Отслеживают' text={item?.subscribers.length ?? 0} />
+      <LabeledValue
+        id='sub_stats' //
+        className='sm:mb-1'
+        label='Отслеживают'
+        text={item?.subscribers.length ?? 0}
+      />
       <Tooltip anchorSelect='#sub_stats' layer='z-modalTooltip'>
         <InfoUsers items={item?.subscribers ?? []} prefix={prefixes.user_subs} />
       </Tooltip>

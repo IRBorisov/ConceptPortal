@@ -14,7 +14,7 @@ import DropdownButton from '../ui/DropdownButton';
 
 interface SelectLocationHeadProps {
   value: LocationHead;
-  onChange: (value: LocationHead) => void;
+  onChange: (newValue: LocationHead) => void;
   excluded?: LocationHead[];
 }
 

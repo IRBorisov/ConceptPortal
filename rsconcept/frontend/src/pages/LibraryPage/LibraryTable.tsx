@@ -164,7 +164,7 @@ function LibraryTable({ items, resetQuery, folderMode, toggleFolderMode }: Libra
       className={clsx('text-xs sm:text-sm cc-scroll-y', { 'border-l border-b': folderMode })}
       style={{ maxHeight: tableHeight }}
       noDataComponent={
-        <FlexColumn className='p-3 items-center min-h-[6rem]'>
+        <FlexColumn className='dense p-3 items-center min-h-[6rem]'>
           <p>Список схем пуст</p>
           <p className='flex gap-6'>
             <TextURL text='Создать схему' href='/library/create' />

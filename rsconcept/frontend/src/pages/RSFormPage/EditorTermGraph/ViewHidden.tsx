@@ -98,10 +98,11 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
           const id = `${prefixes.cst_hidden_list}${cst.alias}`;
           return (
             <div key={`wrap-${id}`}>
-              <div
+              <button
+                type='button'
                 key={id}
                 id={id}
-                className='min-w-[3rem] rounded-md text-center cursor-pointer select-none'
+                className='min-w-[3rem] rounded-md text-center select-none'
                 style={{
                   backgroundColor: colorBgGraphNode(cst, adjustedColoring, colors),
                   ...(localSelected.includes(cstID) ? { outlineWidth: '2px', outlineStyle: 'solid' } : {})
@@ -110,7 +111,7 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
                 onDoubleClick={() => onEdit(cstID)}
               >
                 {cst.alias}
-              </div>
+              </button>
               <ConstituentaTooltip data={cst} anchor={`#${id}`} />
             </div>
           );

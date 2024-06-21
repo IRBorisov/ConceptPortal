@@ -10,7 +10,7 @@ import { isBasicConcept } from '@/models/rsformAPI';
 import { describeConstituenta } from '@/utils/labels';
 
 import BadgeConstituenta from '../info/BadgeConstituenta';
-import FlexColumn from '../ui/FlexColumn';
+import NoData from '../ui/NoData';
 import GraphSelectionToolbar from './GraphSelectionToolbar';
 
 interface PickMultiConstituentaProps {
@@ -103,9 +103,9 @@ function PickMultiConstituenta({ id, schema, prefixID, rows, selected, setSelect
         rowSelection={rowSelection}
         onRowSelectionChange={handleRowSelection}
         noDataComponent={
-          <FlexColumn className='items-center p-3'>
+          <NoData>
             <p>Список пуст</p>
-          </FlexColumn>
+          </NoData>
         }
       />
     </div>

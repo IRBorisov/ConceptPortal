@@ -221,8 +221,8 @@ function FormConstituenta({
             <button
               key='cst_disable_comment'
               id='cst_disable_comment'
-              tabIndex={-1}
               type='button'
+              tabIndex={-1}
               className='self-start cc-label clr-text-url hover:underline'
               onClick={() => setForceComment(true)}
             >

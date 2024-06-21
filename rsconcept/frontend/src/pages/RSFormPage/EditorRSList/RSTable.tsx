@@ -6,7 +6,8 @@ import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import BadgeConstituenta from '@/components/info/BadgeConstituenta';
 import { CProps } from '@/components/props';
 import DataTable, { createColumnHelper, RowSelectionState, VisibilityState } from '@/components/ui/DataTable';
-import FlexColumn from '@/components/ui/FlexColumn';
+import NoData from '@/components/ui/NoData';
+import TextURL from '@/components/ui/TextURL';
 import { useConceptOptions } from '@/context/OptionsContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
@@ -135,12 +136,12 @@ function RSTable({ items, maxHeight, enableSelection, selected, setSelected, onE
       rowSelection={selected}
       onRowSelectionChange={setSelected}
       noDataComponent={
-        <FlexColumn className='items-center p-3'>
+        <NoData>
           <p>Список пуст</p>
-          <p className='cursor-pointer clr-text-primary hover:underline' onClick={() => onCreateNew()}>
-            Создать новую конституенту
+          <p>
+            <TextURL text='Создать конституенту...' onClick={onCreateNew} />
           </p>
-        </FlexColumn>
+        </NoData>
       }
     />
   );
