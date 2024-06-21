@@ -1,13 +1,14 @@
-import {useCallback} from 'react';
+import { useCallback, useMemo } from 'react';
 import {
-    ReactFlow,
-    addEdge,
-    useNodesState,
-    useEdgesState,
-    type Connection,
-    type Edge,
-    type Node,
+  ReactFlow,
+  addEdge,
+  useNodesState,
+  useEdgesState,
+  type Connection,
+  type Edge,
+  type Node, OnSelectionChangeParams
 } from '@reactflow/core';
+
 
 import OperationNode from './OperationNode';
 import InputNode from './InputNode';
@@ -16,68 +17,38 @@ import InputNode from './InputNode';
 import '@reactflow/core/dist/style.css';
 
 import './SynthesisFlow.css';
-import DlgSynthesis from "@/dialogs/DlgSynthesis.tsx";
+import { useState } from 'react';
+import { useSynthesis } from '@/pages/OssPage/SynthesisContext.tsx';
+import { useConceptOptions } from '@/context/OptionsContext.tsx';
+
 
 const nodeTypes = {
-    custom: OperationNode,
-    input: InputNode,
+  custom: OperationNode,
+  input: InputNode
 };
 
-const initialNodes: Node[] = [
-    {
-        id: '1',
-        type: 'input',
-        data: {label: 'Node 1'},
-        position: {x: 250, y: 5},
-    },
-    {
-        type: 'input',
-        id: '2',
-        data: {label: 'Node 2'},
-        position: {x: 100, y: 100},
-    },
-    {
-        id: '3',
-        data: {label: 'Node 3'},
-        position: {x: 400, y: 100},
-        type: 'custom',
-
-    },
-    {
-        id: '4',
-        data: {label: 'Node 4'},
-        position: {x: 400, y: 200},
-        type: 'custom',
-    },
-];
-
-const initialEdges: Edge[] = [
-    //{ id: 'e1-2', source: '1', target: '2', animated: true },
-    //{ id: 'e1-3', source: '1', target: '3', animated: true },
-];
-
 function Flow() {
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-    const onConnect = useCallback(
-        (params: Connection | Edge) => setEdges((eds) => addEdge(params, eds)),
-        [setEdges]
-    );
+  const controller = useSynthesis();
+  const { calculateHeight, darkMode } = useConceptOptions();
+  const canvasWidth = useMemo(() => {
+    return 'calc(100vw - 1rem)';
+  }, []);
 
-
-    return (
-        <div className="Flow" style={{height: 800, width: 1000}}>
-            <ReactFlow
-                nodes={nodes}
-                onNodesChange={onNodesChange}
-                edges={edges}
-                onEdgesChange={onEdgesChange}
-                onConnect={onConnect}
-                fitView
-                nodeTypes={nodeTypes}
-            />
-        </div>
-    );
+  const canvasHeight = useMemo(() => calculateHeight('1.75rem + 4px'), [calculateHeight]);
+  return (
+    <div className="relative" style={{ height: canvasHeight, width: canvasWidth }}>
+      <ReactFlow
+        nodes={controller.getNodes()}
+        onNodesChange={controller.onNodesChange}
+        onNodesDelete={controller.onNodesDelete}
+        edges={controller.getEdges()}
+        onEdgesChange={controller.onEdgesChange}
+        onConnect={controller.onConnect}
+        fitView
+        nodeTypes={nodeTypes}
+      />
+    </div>
+  );
 }
 
 export default Flow;

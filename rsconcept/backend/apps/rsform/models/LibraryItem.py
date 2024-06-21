@@ -102,10 +102,6 @@ class LibraryItem(Model):
         auto_now=True
     )
 
-    #is_hidden: BooleanField = BooleanField(
-    #    default=False
-    #)
-
     class Meta:
         ''' Model metadata. '''
         verbose_name = 'Схема'

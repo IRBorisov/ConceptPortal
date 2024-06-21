@@ -17,7 +17,7 @@ import {
   LibraryItemType
 } from '@/models/library';
 import { ILibraryCreateData } from '@/models/library';
-import { IOperationSchemaData } from '@/models/oss';
+import { IOperationSchemaData, IRunSynthesis, IRunSynthesisResponse } from '@/models/oss';
 import {
   IConstituentaList,
   IConstituentaMeta,
@@ -51,7 +51,7 @@ import {
   IUserUpdatePassword
 } from '@/models/user';
 import { buildConstants } from '@/utils/buildConstants';
-import {ISynthesisData} from "@/models/synthesis.ts";
+import { ISynthesisGraphData } from '@/models/oss.ts';
 
 const defaultOptions = {
   xsrfCookieName: 'csrftoken',
@@ -86,6 +86,7 @@ interface IFrontRequest<RequestData, ResponseData> {
 export interface FrontPush<DataType> extends IFrontRequest<DataType, undefined> {
   data: DataType;
 }
+
 export interface FrontPull<DataType> extends IFrontRequest<undefined, DataType> {
   onSuccess: DataCallback<DataType>;
 }
@@ -95,7 +96,8 @@ export interface FrontExchange<RequestData, ResponseData> extends IFrontRequest<
   onSuccess: DataCallback<ResponseData>;
 }
 
-export interface FrontAction extends IFrontRequest<undefined, undefined> {}
+export interface FrontAction extends IFrontRequest<undefined, undefined> {
+}
 
 interface IAxiosRequest<RequestData, ResponseData> {
   endpoint: string;
@@ -235,26 +237,10 @@ export function postCloneLibraryItem(target: string, request: FrontExchange<IRSF
 }
 
 export function getOssDetails(target: string, request: FrontPull<IOperationSchemaData>) {
-  request.onSuccess({
-    id: Number(target),
-    comment: '123',
-    alias: 'oss1',
-    access_policy: AccessPolicy.PUBLIC,
-    editors: [],
-    owner: 1,
-    item_type: LibraryItemType.OSS,
-    location: '/U',
-    read_only: false,
-    subscribers: [],
-    time_create: '0',
-    time_update: '0',
-    title: 'TestOss',
-    visible: false
+  AxiosGet({
+    endpoint: `/api/synthesis/${target}`,
+    request: request
   });
-  // AxiosGet({
-  //   endpoint: `/api/oss/${target}`, // TODO: endpoint to access OSS
-  //   request: request
-  // });
 }
 
 export function getRSFormDetails(target: string, version: string, request: FrontPull<IRSFormData>) {
@@ -438,16 +424,24 @@ export function patchUploadTRS(target: string, request: FrontExchange<IRSFormUpl
     }
   });
 }
-export function patchInlineSynthesis(request: FrontExchange<IInlineSynthesisData, IRSFormData>) {
+
+export function patchInlineSynthesis(request: FrontExchange<ISynthesisGraphData, ISynthesisGraphData>) {
   AxiosPatch({
     endpoint: `/api/operations/inline-synthesis`,
     request: request
   });
 }
 
-export function postSynthesis(request: FrontExchange<ISynthesisData, IRSFormData>){
-  AxiosPatch({
-    endpoint: `/api/synthesis/single`,
+export function runSingleSynthesis(request: FrontExchange<IRunSynthesis, IRunSynthesisResponse>) {
+  AxiosPost({
+    endpoint: `/api/synthesis/run_single`,
+    request: request
+  });
+}
+
+export function postSynthesisGraph(request: FrontExchange<ISynthesisGraphData, ISynthesisGraphData>) {
+  AxiosPost({
+    endpoint: `/api/synthesis/save`,
     request: request
   });
 }
@@ -528,10 +522,10 @@ function AxiosGet<ResponseData>({ endpoint, request, options }: IAxiosRequest<un
 }
 
 function AxiosPost<RequestData, ResponseData>({
-  endpoint,
-  request,
-  options
-}: IAxiosRequest<RequestData, ResponseData>) {
+                                                endpoint,
+                                                request,
+                                                options
+                                              }: IAxiosRequest<RequestData, ResponseData>) {
   if (request.setLoading) request.setLoading(true);
   axiosInstance
     .post<ResponseData>(endpoint, request.data, options)
@@ -547,10 +541,10 @@ function AxiosPost<RequestData, ResponseData>({
 }
 
 function AxiosDelete<RequestData, ResponseData>({
-  endpoint,
-  request,
-  options
-}: IAxiosRequest<RequestData, ResponseData>) {
+                                                  endpoint,
+                                                  request,
+                                                  options
+                                                }: IAxiosRequest<RequestData, ResponseData>) {
   if (request.setLoading) request.setLoading(true);
   axiosInstance
     .delete<ResponseData>(endpoint, options)
@@ -566,10 +560,10 @@ function AxiosDelete<RequestData, ResponseData>({
 }
 
 function AxiosPatch<RequestData, ResponseData>({
-  endpoint,
-  request,
-  options
-}: IAxiosRequest<RequestData, ResponseData>) {
+                                                 endpoint,
+                                                 request,
+                                                 options
+                                               }: IAxiosRequest<RequestData, ResponseData>) {
   if (request.setLoading) request.setLoading(true);
   axiosInstance
     .patch<ResponseData>(endpoint, request.data, options)

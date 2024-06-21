@@ -9,5 +9,7 @@ from .versions import VersionViewset, create_version, export_file, retrieve_vers
 
 from .synthesis import (
     run_synthesis_view,
-    run_sythesis_graph_view
+    run_sythesis_graph_view,
+    save_synthesis_graph,
+    get_synthesis_graph,
 )

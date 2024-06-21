@@ -11,31 +11,23 @@ import {BsDownload, BsUpload} from 'react-icons/bs';
 import {useCallback, useState} from 'react';
 //import PropTypes from "prop-types";
 //import {useConceptNavigation} from "@/context/NavigationContext.tsx";
-import DlgSynthesis from "@/dialogs/DlgSynthesis.tsx";
+import DlgSynthesis from "@/dialogs/DlgOssGraph/DlgSynthesis.tsx";
 import SynthesisFlow from "@/components/ui/Synthesis/SynthesisFlow.tsx";
 import {IRSFormData} from "@/models/rsform.ts";
 import {toast} from "react-toastify";
 import {useRSForm} from "@/context/RSFormContext.tsx";
-import {DataCallback, postSynthesis} from "@/app/backendAPI.ts";
+import {DataCallback, runSingleSynthesis} from "@/app/backendAPI.ts";
 import {ISynthesisData} from "@/models/synthesis.ts";
 import useRSFormDetails from "@/hooks/useRSFormDetails.ts";
 import {useLibrary} from "@/context/LibraryContext.tsx";
-import {SynthesisState, useSynthesis} from "@/pages/SynthesisPage/SynthesisContext.tsx";
-import SynthesisToolbar from "@/pages/SynthesisPage/SynthesisToolbar.tsx";
+import {SynthesisState, useSynthesis} from "@/pages/OssPage/SynthesisContext.tsx";
+import SynthesisToolbar from "@/pages/OssPage/SynthesisToolbar.tsx";
 import {useParams} from "react-router-dom";
 
 export const SynthesisPage = () => {
-    const params = useParams();
-
     //const router = useConceptNavigation();
     //const [sampleData, setSampleData] = useState([[1, 2, 3], [4, 5, 6]])
 
-    return (
-        <SynthesisState synthesisSchemaID="1">
-            <SynthesisToolbar/>
-            <SynthesisFlow/>
-        </SynthesisState>
-    )
 }
 
 export default SynthesisPage;

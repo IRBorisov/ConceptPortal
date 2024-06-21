@@ -6,6 +6,7 @@ import { ConstituentaID, IRSForm, ISubstitution } from '@/models/rsform';
 import { prefixes } from '@/utils/constants';
 
 import PickSubstitutions from '../../components/select/PickSubstitutions';
+import { ISynthesisSubstitution } from '@/models/oss.ts';
 
 interface SubstitutionsTabProps {
   receiver?: IRSForm;
@@ -16,7 +17,7 @@ interface SubstitutionsTabProps {
   error?: ErrorData;
 
   substitutions: ISubstitution[];
-  setSubstitutions: React.Dispatch<React.SetStateAction<ISubstitution[]>>;
+  setSubstitutions: React.Dispatch<React.SetStateAction<ISubstitution[] | ISynthesisSubstitution[]>>;
 }
 
 function SubstitutionsTab({

@@ -6,6 +6,7 @@ import { getOssDetails } from '@/app/backendAPI';
 import { type ErrorData } from '@/components/info/InfoError';
 import { IOperationSchema, IOperationSchemaData } from '@/models/oss';
 import { OssLoader } from '@/models/OssLoader';
+import { AccessPolicy, LibraryItemType } from '@/models/library.ts';
 
 function useOssDetails({ target }: { target?: string }) {
   const [schema, setInner] = useState<IOperationSchema | undefined>(undefined);
@@ -27,6 +28,24 @@ function useOssDetails({ target }: { target?: string }) {
       if (!target) {
         return;
       }
+
+      const staticData = {
+        id: Number(target),
+        comment: '123',
+        alias: 'oss1',
+        access_policy: AccessPolicy.PUBLIC,
+        editors: [],
+        owner: 1,
+        item_type: LibraryItemType.OSS,
+        location: '/U',
+        read_only: false,
+        subscribers: [],
+        time_create: '0',
+        time_update: '0',
+        title: 'TestOss',
+        visible: false
+      };
+
       getOssDetails(target, {
         showError: true,
         setLoading: setCustomLoading ?? setLoading,
@@ -35,7 +54,11 @@ function useOssDetails({ target }: { target?: string }) {
           setError(error);
         },
         onSuccess: schema => {
-          setSchema(schema);
+          const combinedData = {
+            ...staticData,
+            ...schema
+          }
+          setSchema(combinedData);
           if (callback) callback();
         }
       });

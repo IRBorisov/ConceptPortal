@@ -1,90 +1,139 @@
 from django.db.models import (
     CASCADE, SET_NULL, ForeignKey, Model, PositiveIntegerField, QuerySet,
-    TextChoices, TextField, BooleanField, CharField, DateTimeField, JSONField, IntegerField
+    TextChoices, TextField, BooleanField, CharField, DateTimeField, JSONField, IntegerField, AutoField
 )
-
-from rsconcept.backend.apps.rsform.models.api_RSForm import RSForm, LibraryItem, LibraryItemType
-import rsconcept.backend.apps.rsform.messages as messages
-
-
-class GraphStatus(TextChoices):
-    DRAFT = 'Draft',
-    IN_PROGRESS = 'In progress',
-    COMPLETED = 'Completed',
-    FAILED = 'Failed'
 
 
 class OperationStatus(TextChoices):
     DRAFT = 'Draft',
-    # IN_PROGRESS = 'In progress',
     COMPLETED = 'Completed',
     WARNING = 'Warning',
     FAILED = 'Failed'
 
 
-class SynthesisNodeType:
-    LIBRARY = 'Library',
-    SYNTHESIZED = 'Synthesized'
+class GraphStatus(TextChoices):
+    DRAFT = 'Draft',
+    COMPLETED = 'Completed',
+    WARNING = 'Warning',
+    FAILED = 'Failed'
 
 
-class ConceptOperation(Model):
+class SynthesisGraph(Model):
+    status: CharField = CharField(
+        verbose_name='Статус операции слияния',
+        max_length=20,
+        choices=GraphStatus
+    )
+
+
+class InputNode(Model):
+    graph_id: ForeignKey = ForeignKey(
+        verbose_name='Схема синтеза',
+        to=SynthesisGraph,
+        on_delete=CASCADE
+    )
+
+    vertical_coordinate: IntegerField = IntegerField(
+        verbose_name='Вертикальная координата звена',
+    )
+
+    horizontal_coordinate: IntegerField = IntegerField(
+        verbose_name='Горизонтальная координата звена',
+    )
+
+    rsform_id: IntegerField = IntegerField(
+        verbose_name='Схема',
+        null=True
+    )
+
+
+class OperationNode(InputNode):
     name: CharField = CharField(
         verbose_name='Название',
         max_length=20
     )
 
-    node_type: CharField = CharField(
-        verbose_name='Тип звена операции слияния',
-        max_length=20,
-        choices=SynthesisNodeType
-    )
-
-    status: CharField(
+    status: CharField = CharField(
         verbose_name='Статус операции слияния',
         max_length=20,
         choices=OperationStatus
     )
 
-    vertical_coordinate = IntegerField(
-        verbose_name='Вертикальная координата звена',
+    left_parent: ForeignKey = ForeignKey(
+        verbose_name='Левый предок',
+        to='rsform.LibraryItem',
+        related_name='rsform_library_item_left',
+        on_delete=SET_NULL,
+        null=True
     )
 
-    horizontal_coordinate = IntegerField(
-        verbose_name='Горизонтальная координата звена',
+    right_parent: ForeignKey = ForeignKey(
+        verbose_name='Правый предок',
+        to='rsform.LibraryItem',
+        related_name='rsform_library_item_right',
+        on_delete=SET_NULL,
+        null=True
     )
 
-    rsform = ForeignKey(
-        verbose_name='Схема',
-        to='rsform.LibraryItem'
+
+class SynthesisSubstitution(Model):
+    graph_id: ForeignKey = ForeignKey(
+        verbose_name='Схема синтеза',
+        to=SynthesisGraph,
+        on_delete=CASCADE
     )
 
-    operation_type = CharField()
-
-
-class SynthesisGraph(Model):
-    name: CharField = CharField(
-        verbose_name='Название',
-        max_length=20
+    operation_id: ForeignKey = ForeignKey(
+        verbose_name='Операция синтеза',
+        to=OperationNode,
+        on_delete=CASCADE
     )
-    status: CharField = CharField(
-        verbose_name='Статус схемы слияния',
-        max_length=20,
-        choices=GraphStatus,
+
+    leftCst: ForeignKey = ForeignKey(
+        verbose_name='Конституента',
+        to='Constituenta',
+        related_name='constituenta_original',
+        on_delete=SET_NULL,
+        null=True
+    )
+
+    rightCst: ForeignKey = ForeignKey(
+        verbose_name='Подстановка',
+        to='Constituenta',
+        related_name='constituenta_substitution',
+        on_delete=SET_NULL,
+        null=True
+    )
+
+    deleteRight: BooleanField = BooleanField(
+        verbose_name='Удалить правую'
+    )
+
+    takeLeftTerm: BooleanField = BooleanField(
+        verbose_name='Использовать термин левой'
     )
 
 
 class SynthesisEdge(Model):
-    synthesis_graph: ForeignKey(
+    decoded_id: CharField = CharField(
+        verbose_name='Id ребра на фронте',
+        max_length=30,
+    )
+
+    source_handle: CharField = CharField(
+        verbose_name='',
+        max_length=30,
+    )
+    graph_id: ForeignKey = ForeignKey(
         verbose_name='Схема синтеза',
         to=SynthesisGraph,
+        on_delete=CASCADE
     )
 
-    node_from: ForeignKey(
+    node_from: IntegerField = IntegerField(
         verbose_name='Звено-предок',
-        to='rsform.LibraryItem'
     )
 
-    node_to: ForeignKey(
+    node_to: IntegerField = IntegerField(
         verbose_name='Звено-наследник',
-        to='rsform.LibraryItem'
     )
