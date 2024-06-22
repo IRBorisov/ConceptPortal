@@ -86,11 +86,24 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
 
   return (
     <AnimateFade>
-      <div className='flex border-t divide-x border-x rounded-t-md'>
+      <div className='flex border-t border-x rounded-t-md clr-input'>
         <SelectSingle
           noBorder
+          placeholder='Источник'
+          className='w-[12rem]'
+          options={templateSelector}
+          value={
+            state.templateID
+              ? { value: state.templateID, label: templates.find(item => item.id == state.templateID)!.title }
+              : null
+          }
+          onChange={data => partialUpdate({ templateID: data ? data.value : undefined })}
+        />
+        <SelectSingle
+          noBorder
+          isSearchable={false}
           placeholder='Выберите категорию'
-          className='flex-grow border-none'
+          className='flex-grow ml-1 border-none'
           options={categorySelector}
           value={
             state.filterCategory && templateSchema
@@ -104,18 +117,6 @@ function TemplateTab({ state, partialUpdate }: TemplateTabProps) {
             partialUpdate({ filterCategory: data ? templateSchema?.cstByID.get(data?.value) : undefined })
           }
           isClearable
-        />
-        <SelectSingle
-          noBorder
-          placeholder='Источник'
-          className='w-[12rem]'
-          options={templateSelector}
-          value={
-            state.templateID
-              ? { value: state.templateID, label: templates.find(item => item.id == state.templateID)!.title }
-              : null
-          }
-          onChange={data => partialUpdate({ templateID: data ? data.value : undefined })}
         />
       </div>
       <PickConstituenta

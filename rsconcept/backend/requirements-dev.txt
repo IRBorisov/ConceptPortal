@@ -1,19 +1,19 @@
 tzdata
-django
+Django
 djangorestframework
 django-cors-headers
 django-filter
 drf-spectacular
-drf-spectacular[sidecar]
+drf-spectacular-sidecar
 coreapi
+django-rest-passwordreset
 cctext
 pyconcept
 
+psycopg2-binary
+gunicorn
+
+djangorestframework-stubs[compatible-mypy]
 mypy
 pylint
 coverage
-djangorestframework-stubs[compatible-mypy]
-django-rest-passwordreset
-
-psycopg2-binary
-gunicorn
