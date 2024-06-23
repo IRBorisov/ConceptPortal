@@ -60,12 +60,12 @@ class Editor(Model):
         ''' Set editors for item. '''
         processed: list[User] = []
         for editor_item in Editor.objects.filter(item=item):
-            if not editor_item.editor in users:
+            if editor_item.editor not in users:
                 editor_item.delete()
             else:
                 processed.append(editor_item.editor)
 
         for user in users:
-            if not user in processed:
+            if user not in processed:
                 processed.append(user)
                 Editor.objects.create(item=item, editor=user)

@@ -48,19 +48,9 @@ function Navigation() {
           <Logo />
         </div>
         <div className='flex gap-1 py-[0.3rem]'>
-          <NavigationButton
-            text='Новая схема'
-            title='Создать новую схему'
-            icon={<IconNewItem2 size='1.5rem' />}
-            onClick={navigateCreateNew}
-          />
-          <NavigationButton
-            text='Библиотека'
-            title='Список схем'
-            icon={<IconLibrary2 size='1.5rem' />}
-            onClick={navigateLibrary}
-          />
-          <NavigationButton text='Справка' title='Справочные материалы' icon={<IconManuals />} onClick={navigateHelp} />
+          <NavigationButton text='Новая схема' icon={<IconNewItem2 size='1.5rem' />} onClick={navigateCreateNew} />
+          <NavigationButton text='Библиотека' icon={<IconLibrary2 size='1.5rem' />} onClick={navigateLibrary} />
+          <NavigationButton text='Справка' icon={<IconManuals size='1.5rem' />} onClick={navigateHelp} />
           <UserMenu />
         </div>
       </motion.div>
