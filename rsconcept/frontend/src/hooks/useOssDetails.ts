@@ -9,7 +9,7 @@ import { OssLoader } from '@/models/OssLoader';
 
 function useOssDetails({ target }: { target?: string }) {
   const [schema, setInner] = useState<IOperationSchema | undefined>(undefined);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<ErrorData>(undefined);
 
   function setSchema(data?: IOperationSchemaData) {

@@ -70,7 +70,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
 
   const [items, setItems] = useState<ILibraryItem[]>([]);
   const [templates, setTemplates] = useState<ILibraryItem[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [loadingError, setLoadingError] = useState<ErrorData>(undefined);
   const [processingError, setProcessingError] = useState<ErrorData>(undefined);

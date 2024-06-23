@@ -165,14 +165,14 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
             noHover
             title='Определить граммемы'
             icon={<IconMoveRight size='1.25rem' className='icon-primary' />}
-            disabled={textProcessor.loading || !inputText}
+            disabled={textProcessor.processing || !inputText}
             onClick={handleParse}
           />
           <MiniButton
             noHover
             title='Генерировать словоформу'
             icon={<IconMoveLeft size='1.25rem' className='icon-primary' />}
-            disabled={textProcessor.loading || inputGrams.length == 0}
+            disabled={textProcessor.processing || inputGrams.length == 0}
             onClick={handleInflect}
           />
         </div>
@@ -190,14 +190,14 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
             noHover
             title='Внести словоформу'
             icon={<IconAccept size='1.5rem' className='icon-green' />}
-            disabled={textProcessor.loading || !inputText || inputGrams.length == 0}
+            disabled={textProcessor.processing || !inputText || inputGrams.length == 0}
             onClick={handleAddForm}
           />
           <MiniButton
             noHover
             title='Генерировать стандартные словоформы'
             icon={<IconMoveDown size='1.5rem' className='icon-primary' />}
-            disabled={textProcessor.loading || !inputText}
+            disabled={textProcessor.processing || !inputText}
             onClick={handleGenerateLexeme}
           />
         </div>
@@ -210,7 +210,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
             title='Сбросить все словоформы'
             className='py-0'
             icon={<IconRemove size='1.5rem' className='icon-red' />}
-            disabled={textProcessor.loading || forms.length === 0}
+            disabled={textProcessor.processing || forms.length === 0}
             onClick={handleResetAll}
           />
         </div>

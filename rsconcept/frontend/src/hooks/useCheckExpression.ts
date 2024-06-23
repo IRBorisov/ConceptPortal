@@ -11,7 +11,7 @@ import { RSErrorType } from '@/models/rslang';
 import { PARAMETER } from '@/utils/constants';
 
 function useCheckExpression({ schema }: { schema?: IRSForm }) {
-  const [loading, setLoading] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<ErrorData>(undefined);
   const [parseData, setParseData] = useState<IExpressionParse | undefined>(undefined);
 
@@ -22,7 +22,7 @@ function useCheckExpression({ schema }: { schema?: IRSForm }) {
     postCheckExpression(String(schema!.id), {
       data: { expression: expression },
       showError: true,
-      setLoading,
+      setLoading: setProcessing,
       onError: setError,
       onSuccess: parse => {
         if (activeCst) {
@@ -34,7 +34,7 @@ function useCheckExpression({ schema }: { schema?: IRSForm }) {
     });
   }
 
-  return { parseData, checkExpression, resetParse, error, setError, loading };
+  return { parseData, checkExpression, resetParse, error, setError, processing };
 }
 
 export default useCheckExpression;

@@ -8,7 +8,7 @@ import { IResolutionData } from '@/models/language';
 import { IRSForm } from '@/models/rsform';
 
 function useResolveText({ schema }: { schema?: IRSForm }) {
-  const [loading, setLoading] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<ErrorData>(undefined);
   const [refsData, setRefsData] = useState<IResolutionData | undefined>(undefined);
 
@@ -19,7 +19,7 @@ function useResolveText({ schema }: { schema?: IRSForm }) {
     postResolveText(String(schema!.id), {
       data: { text: text },
       showError: true,
-      setLoading,
+      setLoading: setProcessing,
       onError: setError,
       onSuccess: data => {
         setRefsData(data);
@@ -28,7 +28,7 @@ function useResolveText({ schema }: { schema?: IRSForm }) {
     });
   }
 
-  return { refsData, resolveText, resetData, error, setError, loading };
+  return { refsData, resolveText, resetData, error, setError, processing };
 }
 
 export default useResolveText;
