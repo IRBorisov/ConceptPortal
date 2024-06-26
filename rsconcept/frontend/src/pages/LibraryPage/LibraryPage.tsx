@@ -65,7 +65,7 @@ function LibraryPage() {
 
   useLayoutEffect(() => {
     setItems(library.applyFilter(filter));
-  }, [library, filter, filter.query]);
+  }, [library, library.items.length, filter]);
 
   const toggleVisible = useCallback(() => setIsVisible(prev => toggleTristateFlag(prev)), [setIsVisible]);
   const toggleOwned = useCallback(() => setIsOwned(prev => toggleTristateFlag(prev)), [setIsOwned]);
