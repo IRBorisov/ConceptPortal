@@ -16,8 +16,8 @@ import { limits, patterns } from '@/utils/constants';
 import { information } from '@/utils/labels';
 
 import { useRSEdit } from '../RSEditContext';
-import AccessToolbar from './AccessToolbar';
-import VersionsToolbar from './VersionsToolbar';
+import ToolbarItemAccess from './ToolbarItemAccess';
+import ToolbarVersioning from './ToolbarVersioning';
 
 interface FormRSFormProps {
   id?: string;
@@ -112,8 +112,8 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
           onChange={event => setAlias(event.target.value)}
         />
         <div className='flex flex-col'>
-          <VersionsToolbar />
-          <AccessToolbar
+          <ToolbarVersioning />
+          <ToolbarItemAccess
             visible={visible}
             toggleVisible={() => setVisible(prev => !prev)}
             readOnly={readOnly}

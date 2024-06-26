@@ -13,9 +13,9 @@ import Loader from '@/components/ui/Loader';
 import TabLabel from '@/components/ui/TabLabel';
 import TextURL from '@/components/ui/TextURL';
 import AnimateFade from '@/components/wrap/AnimateFade';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useLibrary } from '@/context/LibraryContext';
 import { useBlockNavigation, useConceptNavigation } from '@/context/NavigationContext';
-import { useConceptOptions } from '@/context/OptionsContext';
 import { useRSForm } from '@/context/RSFormContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { ConstituentaID, IConstituenta, IConstituentaMeta } from '@/models/rsform';
@@ -26,8 +26,8 @@ import EditorConstituenta from './EditorConstituenta';
 import EditorRSForm from './EditorRSFormCard';
 import EditorRSList from './EditorRSList';
 import EditorTermGraph from './EditorTermGraph';
+import MenuRSTabs from './MenuRSTabs';
 import { RSEditState } from './RSEditContext';
-import RSTabsMenu from './RSTabsMenu';
 
 export enum RSTabID {
   CARD = 0,
@@ -249,7 +249,7 @@ function RSTabs() {
           className='flex flex-col mx-auto min-w-fit'
         >
           <TabList className={clsx('mx-auto w-fit', 'flex items-stretch', 'border-b-2 border-x-2 divide-x-2')}>
-            <RSTabsMenu onDestroy={onDestroySchema} />
+            <MenuRSTabs onDestroy={onDestroySchema} />
 
             <TabLabel
               label='Карточка'

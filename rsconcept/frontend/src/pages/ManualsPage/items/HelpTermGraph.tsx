@@ -1,6 +1,6 @@
 import Divider from '@/components/ui/Divider';
 import LinkTopic from '@/components/ui/LinkTopic';
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { HelpTopic } from '@/models/miscellaneous';
 
 import {
@@ -68,7 +68,7 @@ function HelpTermGraph() {
 
       <Divider margins='my-3' className='hidden sm:block' />
 
-      <div className='flex mb-3 flex-col-reverse sm:flex-row'>
+      <div className='flex flex-col-reverse mb-3 sm:flex-row'>
         <div className='w-full sm:w-[14rem]'>
           <h1>Общие</h1>
           <li>

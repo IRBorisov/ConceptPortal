@@ -9,7 +9,7 @@ import { EditorView } from 'codemirror';
 import { forwardRef, useCallback, useMemo, useRef } from 'react';
 
 import Label from '@/components/ui/Label';
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { getFontClassName } from '@/models/miscellaneousAPI';
 import { ConstituentaID, IRSForm } from '@/models/rsform';
 import { generateAlias, getCstTypePrefix, guessCstType } from '@/models/rsformAPI';

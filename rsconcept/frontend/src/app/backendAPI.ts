@@ -6,7 +6,7 @@ import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { toast } from 'react-toastify';
 
 import { type ErrorData } from '@/components/info/InfoError';
-import { ILexemeData, IResolutionData, ITextRequest, ITextResult, IWordFormPlain } from '@/models/language';
+import { ILexemeData, ITextRequest, ITextResult, IWordFormPlain } from '@/models/language';
 import {
   AccessPolicy,
   ILibraryItem,
@@ -440,13 +440,6 @@ export function patchUploadTRS(target: string, request: FrontExchange<IRSFormUpl
 export function patchInlineSynthesis(request: FrontExchange<IInlineSynthesisData, IRSFormData>) {
   AxiosPatch({
     endpoint: `/api/operations/inline-synthesis`,
-    request: request
-  });
-}
-
-export function postResolveText(schema: string, request: FrontExchange<ITextRequest, IResolutionData>) {
-  AxiosPost({
-    endpoint: `/api/rsforms/${schema}/resolve`,
     request: request
   });
 }

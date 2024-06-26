@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { ITooltip, Tooltip as TooltipImpl } from 'react-tooltip';
 
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 
 export type { PlacesType } from 'react-tooltip';
 

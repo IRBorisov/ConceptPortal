@@ -10,7 +10,7 @@ import { AnimatePresence } from 'framer-motion';
 import { forwardRef, useCallback, useMemo, useRef, useState } from 'react';
 
 import Label from '@/components/ui/Label';
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import DlgEditReference from '@/dialogs/DlgEditReference';
 import { ReferenceType } from '@/models/language';
 import { ConstituentaID, IRSForm } from '@/models/rsform';

@@ -12,7 +12,7 @@ import { useRSEdit } from '../RSEditContext';
 import EditorLibraryItem from './EditorLibraryItem';
 import FormRSForm from './FormRSForm';
 import RSFormStats from './RSFormStats';
-import RSFormToolbar from './RSFormToolbar';
+import ToolbarRSFormCard from './ToolbarRSFormCard';
 
 interface EditorRSFormCardProps {
   isModified: boolean;
@@ -43,7 +43,7 @@ function EditorRSFormCard({ isModified, onDestroy, setIsModified }: EditorRSForm
 
   return (
     <>
-      <RSFormToolbar
+      <ToolbarRSFormCard
         subscribed={isSubscribed}
         modified={isModified}
         anonymous={!user}

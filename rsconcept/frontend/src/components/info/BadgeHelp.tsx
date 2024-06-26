@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import TextURL from '@/components/ui/TextURL';
 import Tooltip, { PlacesType } from '@/components/ui/Tooltip';
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { HelpTopic } from '@/models/miscellaneous';
 
 import TopicPage from '../../pages/ManualsPage/TopicPage';

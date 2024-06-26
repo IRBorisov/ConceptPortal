@@ -7,7 +7,7 @@ import { useCallback } from 'react';
 import { IconMenuFold, IconMenuUnfold } from '@/components/Icons';
 import Button from '@/components/ui/Button';
 import SelectTree from '@/components/ui/SelectTree';
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import useDropdown from '@/hooks/useDropdown';
 import { HelpTopic, topicParent } from '@/models/miscellaneous';
 import { animateSlideLeft } from '@/styling/animations';

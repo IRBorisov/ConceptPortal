@@ -6,12 +6,12 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 import SelectedCounter from '@/components/info/SelectedCounter';
 import { type RowSelectionState } from '@/components/ui/DataTable';
 import AnimateFade from '@/components/wrap/AnimateFade';
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { ConstituentaID, CstType } from '@/models/rsform';
 
 import { useRSEdit } from '../RSEditContext';
-import RSListToolbar from './RSListToolbar';
-import RSTable from './RSTable';
+import TableRSList from './TableRSList';
+import ToolbarRSList from './ToolbarRSList';
 
 interface EditorRSListProps {
   onOpenEdit: (cstID: ConstituentaID) => void;
@@ -104,7 +104,7 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
 
   return (
     <>
-      {controller.isContentEditable ? <RSListToolbar /> : null}
+      {controller.isContentEditable ? <ToolbarRSList /> : null}
       <AnimateFade tabIndex={-1} onKeyDown={handleKeyDown}>
         {controller.isContentEditable ? (
           <SelectedCounter
@@ -121,7 +121,7 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
           })}
         />
 
-        <RSTable
+        <TableRSList
           items={controller.schema?.items}
           maxHeight={tableHeight}
           enableSelection={controller.isContentEditable}

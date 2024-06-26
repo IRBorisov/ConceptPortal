@@ -3,14 +3,14 @@ import { motion } from 'framer-motion';
 
 import { IconLibrary2, IconManuals, IconNewItem2 } from '@/components/Icons';
 import { CProps } from '@/components/props';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
-import { useConceptOptions } from '@/context/OptionsContext';
 import { animateNavigation } from '@/styling/animations';
 
 import { urls } from '../urls';
 import Logo from './Logo';
 import NavigationButton from './NavigationButton';
-import ToggleNavigationButton from './ToggleNavigationButton';
+import ToggleNavigation from './ToggleNavigation';
 import UserMenu from './UserMenu';
 
 function Navigation() {
@@ -33,7 +33,7 @@ function Navigation() {
         'select-none'
       )}
     >
-      <ToggleNavigationButton />
+      <ToggleNavigation />
       <motion.div
         className={clsx(
           'pl-2 pr-[0.9rem] h-[3rem] w-full', // prettier: split lines

@@ -12,9 +12,9 @@ import { ILibraryFilter } from '@/models/miscellaneous';
 import { storage } from '@/utils/constants';
 import { toggleTristateFlag } from '@/utils/utils';
 
-import LibraryFolders from './LibraryFolders';
-import LibraryTable from './LibraryTable';
-import SearchPanel from './SearchPanel';
+import TableLibraryItems from './TableLibraryItems';
+import ToolbarSearch from './ToolbarSearch';
+import ViewSideFolders from './ViewSideFolders';
 
 function LibraryPage() {
   const library = useLibrary();
@@ -86,7 +86,7 @@ function LibraryPage() {
 
   const view = useMemo(
     () => (
-      <LibraryTable
+      <TableLibraryItems
         resetQuery={resetFilter} // prettier: split lines
         items={items}
         folderMode={folderMode}
@@ -103,7 +103,7 @@ function LibraryPage() {
       error={library.loadingError}
       hasNoData={library.items.length === 0}
     >
-      <SearchPanel
+      <ToolbarSearch
         total={library.items.length ?? 0}
         filtered={items.length}
         hasCustomFilter={hasCustomFilter}
@@ -129,7 +129,7 @@ function LibraryPage() {
       <div className='flex'>
         <AnimatePresence initial={false}>
           {folderMode ? (
-            <LibraryFolders
+            <ViewSideFolders
               currentFolder={folder} // prettier: split-lines
               setFolder={setFolder}
               folders={library.folders}

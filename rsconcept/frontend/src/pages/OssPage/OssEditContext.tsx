@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 
 import { useAccessMode } from '@/context/AccessModeContext';
 import { useAuth } from '@/context/AuthContext';
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useOSS } from '@/context/OssContext';
 import DlgChangeLocation from '@/dialogs/DlgChangeLocation';
 import DlgEditEditors from '@/dialogs/DlgEditEditors';

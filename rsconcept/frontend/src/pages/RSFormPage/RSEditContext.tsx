@@ -9,7 +9,7 @@ import { urls } from '@/app/urls';
 import { useAccessMode } from '@/context/AccessModeContext';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useRSForm } from '@/context/RSFormContext';
 import DlgChangeLocation from '@/dialogs/DlgChangeLocation';
 import DlgCloneLibraryItem from '@/dialogs/DlgCloneLibraryItem';

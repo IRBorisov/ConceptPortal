@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
 import SearchBar from '@/components/ui/SearchBar';
 import { useLibrary } from '@/context/LibraryContext';
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { ILibraryItem, LibraryItemID, LibraryItemType } from '@/models/library';
 import { ILibraryFilter } from '@/models/miscellaneous';
 

@@ -2,7 +2,7 @@
 
 import { ThreeCircles, ThreeDots } from 'react-loader-spinner';
 
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 
 import AnimateFade from '../wrap/AnimateFade';
 

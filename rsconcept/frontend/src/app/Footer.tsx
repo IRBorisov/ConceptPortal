@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { external_urls } from '@/utils/constants';
 
 import TextURL from '../components/ui/TextURL';

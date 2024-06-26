@@ -7,7 +7,7 @@ import SelectConstituenta from '@/components/select/SelectConstituenta';
 import DataTable, { createColumnHelper } from '@/components/ui/DataTable';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { IConstituenta, IRSForm, ISubstitution } from '@/models/rsform';
 import { describeConstituenta } from '@/utils/labels';
 

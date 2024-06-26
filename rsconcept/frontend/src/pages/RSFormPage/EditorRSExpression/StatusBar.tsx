@@ -6,7 +6,7 @@ import { useMemo } from 'react';
 
 import { StatusIcon } from '@/components/DomainIcons';
 import Loader from '@/components/ui/Loader';
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { ExpressionStatus } from '@/models/rsform';
 import { type IConstituenta } from '@/models/rsform';
 import { inferStatus } from '@/models/rsformAPI';

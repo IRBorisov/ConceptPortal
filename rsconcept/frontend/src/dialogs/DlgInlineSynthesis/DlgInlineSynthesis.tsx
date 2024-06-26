@@ -10,9 +10,9 @@ import useRSFormDetails from '@/hooks/useRSFormDetails';
 import { LibraryItemID } from '@/models/library';
 import { IInlineSynthesisData, IRSForm, ISubstitution } from '@/models/rsform';
 
-import ConstituentsTab from './ConstituentsTab';
-import SchemaTab from './SchemaTab';
-import SubstitutionsTab from './SubstitutionsTab';
+import TabConstituents from './TabConstituents';
+import TabSchema from './TabSchema';
+import TabSubstitutions from './TabSubstitutions';
 
 interface DlgInlineSynthesisProps extends Pick<ModalProps, 'hideWindow'> {
   receiver: IRSForm;
@@ -61,7 +61,7 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
   const schemaPanel = useMemo(
     () => (
       <TabPanel>
-        <SchemaTab selected={donorID} setSelected={setDonorID} />
+        <TabSchema selected={donorID} setSelected={setDonorID} />
       </TabPanel>
     ),
     [donorID]
@@ -69,7 +69,7 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
   const itemsPanel = useMemo(
     () => (
       <TabPanel>
-        <ConstituentsTab
+        <TabConstituents
           schema={source.schema}
           loading={source.loading}
           selected={selected}
@@ -82,7 +82,7 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
   const substitutesPanel = useMemo(
     () => (
       <TabPanel>
-        <SubstitutionsTab
+        <TabSubstitutions
           receiver={receiver}
           source={source.schema}
           selected={selected}

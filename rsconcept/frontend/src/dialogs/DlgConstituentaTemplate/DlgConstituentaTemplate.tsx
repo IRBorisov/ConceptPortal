@@ -17,8 +17,8 @@ import { inferTemplatedType, substituteTemplateArgs } from '@/models/rslangAPI';
 import { PARAMETER } from '@/utils/constants';
 
 import FormCreateCst from '../DlgCreateCst/FormCreateCst';
-import ArgumentsTab, { IArgumentsState } from './ArgumentsTab';
-import TemplateTab, { ITemplateState } from './TemplateTab';
+import TabArguments, { IArgumentsState } from './TabArguments';
+import TabTemplate, { ITemplateState } from './TabTemplate';
 
 interface DlgConstituentaTemplateProps extends Pick<ModalProps, 'hideWindow'> {
   schema: IRSForm;
@@ -109,7 +109,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
   const templatePanel = useMemo(
     () => (
       <TabPanel>
-        <TemplateTab state={template} partialUpdate={updateTemplate} />
+        <TabTemplate state={template} partialUpdate={updateTemplate} />
       </TabPanel>
     ),
     [template, updateTemplate]
@@ -118,7 +118,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
   const argumentsPanel = useMemo(
     () => (
       <TabPanel>
-        <ArgumentsTab schema={schema} state={substitutes} partialUpdate={updateSubstitutes} />
+        <TabArguments schema={schema} state={substitutes} partialUpdate={updateSubstitutes} />
       </TabPanel>
     ),
     [schema, substitutes, updateSubstitutes]

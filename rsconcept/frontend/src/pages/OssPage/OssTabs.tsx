@@ -12,17 +12,17 @@ import Loader from '@/components/ui/Loader';
 import TabLabel from '@/components/ui/TabLabel';
 import TextURL from '@/components/ui/TextURL';
 import AnimateFade from '@/components/wrap/AnimateFade';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useLibrary } from '@/context/LibraryContext';
 import { useBlockNavigation, useConceptNavigation } from '@/context/NavigationContext';
-import { useConceptOptions } from '@/context/OptionsContext';
 import { useOSS } from '@/context/OssContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { information, prompts } from '@/utils/labels';
 
 import EditorRSForm from './EditorOssCard';
 import EditorTermGraph from './EditorOssGraph';
+import MenuOssTabs from './MenuOssTabs';
 import { OssEditState } from './OssEditContext';
-import OssTabsMenu from './OssTabsMenu';
 
 export enum OssTabID {
   CARD = 0,
@@ -131,7 +131,7 @@ function OssTabs() {
           className='flex flex-col mx-auto min-w-fit'
         >
           <TabList className={clsx('mx-auto w-fit', 'flex items-stretch', 'border-b-2 border-x-2 divide-x-2')}>
-            <OssTabsMenu onDestroy={onDestroySchema} />
+            <MenuOssTabs onDestroy={onDestroySchema} />
 
             <TabLabel label='Карточка' titleHtml={`Название: <b>${schema.title ?? ''}</b>`} />
             <TabLabel label='Граф' />

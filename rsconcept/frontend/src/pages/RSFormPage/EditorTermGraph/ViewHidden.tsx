@@ -5,11 +5,11 @@ import { motion } from 'framer-motion';
 import { useCallback, useMemo } from 'react';
 
 import { IconDropArrow, IconDropArrowUp } from '@/components/Icons';
-import ConstituentaTooltip from '@/components/info/ConstituentaTooltip';
+import TooltipConstituenta from '@/components/info/TooltipConstituenta';
 import { CProps } from '@/components/props';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import useWindowSize from '@/hooks/useWindowSize';
 import { GraphColoring } from '@/models/miscellaneous';
@@ -112,7 +112,7 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
               >
                 {cst.alias}
               </button>
-              <ConstituentaTooltip data={cst} anchor={`#${id}`} />
+              <TooltipConstituenta data={cst} anchor={`#${id}`} />
             </div>
           );
         })}

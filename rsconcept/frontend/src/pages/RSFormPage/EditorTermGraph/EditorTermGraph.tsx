@@ -8,11 +8,11 @@ import { useDebounce } from 'use-debounce';
 
 import InfoConstituenta from '@/components/info/InfoConstituenta';
 import SelectedCounter from '@/components/info/SelectedCounter';
-import GraphSelectionToolbar from '@/components/select/GraphSelectionToolbar';
+import ToolbarGraphSelection from '@/components/select/ToolbarGraphSelection';
 import { GraphCanvasRef, GraphEdge, GraphLayout, GraphNode } from '@/components/ui/GraphUI';
 import Overlay from '@/components/ui/Overlay';
 import AnimateFade from '@/components/wrap/AnimateFade';
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import DlgGraphParams from '@/dialogs/DlgGraphParams';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { GraphColoring, GraphFilterParams, GraphSizing } from '@/models/miscellaneous';
@@ -24,10 +24,10 @@ import { PARAMETER, storage } from '@/utils/constants';
 import { convertBase64ToBlob } from '@/utils/utils';
 
 import { useRSEdit } from '../RSEditContext';
-import FocusToolbar from './FocusToolbar';
 import GraphSelectors from './GraphSelectors';
-import GraphToolbar from './GraphToolbar';
 import TermGraph from './TermGraph';
+import ToolbarFocusedCst from './ToolbarFocusedCst';
+import ToolbarTermGraph from './ToolbarTermGraph';
 import useGraphFilter from './useGraphFilter';
 import ViewHidden from './ViewHidden';
 
@@ -303,7 +303,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         position='top-0 pt-1 right-1/2 translate-x-1/2'
         className='flex flex-col items-center rounded-b-2xl cc-blur'
       >
-        <GraphToolbar
+        <ToolbarTermGraph
           is3D={is3D}
           orbit={orbit}
           noText={filterParams.noText}
@@ -323,7 +323,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
           }
         />
         {!focusCst ? (
-          <GraphSelectionToolbar
+          <ToolbarGraphSelection
             graph={controller.schema!.graph}
             core={controller.schema!.items.filter(cst => isBasicConcept(cst.cst_type)).map(cst => cst.id)}
             setSelected={controller.setSelected}
@@ -331,7 +331,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
           />
         ) : null}
         {focusCst ? (
-          <FocusToolbar
+          <ToolbarFocusedCst
             center={focusCst}
             reset={() => handleSetFocus(undefined)}
             showInputs={filterParams.focusShowInputs}

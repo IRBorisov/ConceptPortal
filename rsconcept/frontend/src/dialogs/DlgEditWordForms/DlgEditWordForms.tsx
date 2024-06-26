@@ -20,7 +20,7 @@ import { PARAMETER } from '@/utils/constants';
 import { prompts } from '@/utils/labels';
 import { IGrammemeOption, SelectorGrammemes, SelectorGrammemesList } from '@/utils/selectors';
 
-import WordFormsTable from './WordFormsTable';
+import TableWordForms from './TableWordForms';
 
 interface DlgEditWordFormsProps {
   hideWindow: () => void;
@@ -216,7 +216,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         </div>
       </div>
 
-      <WordFormsTable forms={forms} setForms={setForms} onFormSelect={handleSelectForm} />
+      <TableWordForms forms={forms} setForms={setForms} onFormSelect={handleSelectForm} />
     </Modal>
   );
 }

@@ -11,7 +11,7 @@ import Modal from '@/components/ui/Modal';
 import { useUsers } from '@/context/UsersContext';
 import { UserID } from '@/models/user';
 
-import UsersTable from './UsersTable';
+import TableUsers from './TableUsers';
 
 interface DlgEditEditorsProps {
   editors: UserID[];
@@ -33,7 +33,7 @@ function DlgEditEditors({ hideWindow, editors, setEditors }: DlgEditEditorsProps
   const onAddEditor = useCallback((target: UserID) => setSelected(prev => [...prev, target]), []);
 
   const usersTable = useMemo(
-    () => <UsersTable items={users.filter(user => selected.includes(user.id))} onDelete={onDeleteEditor} />,
+    () => <TableUsers items={users.filter(user => selected.includes(user.id))} onDelete={onDeleteEditor} />,
     [users, selected, onDeleteEditor]
   );
 

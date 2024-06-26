@@ -14,7 +14,7 @@ import {
   IconTree
 } from '@/components/Icons';
 import LinkTopic from '@/components/ui/LinkTopic';
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { HelpTopic } from '@/models/miscellaneous';
 
 function HelpCstEditor() {

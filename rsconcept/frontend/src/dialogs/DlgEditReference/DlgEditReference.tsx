@@ -14,8 +14,8 @@ import { IRSForm } from '@/models/rsform';
 import { PARAMETER } from '@/utils/constants';
 import { labelReferenceType } from '@/utils/labels';
 
-import EntityTab from './EntityTab';
-import SyntacticTab from './SyntacticTab';
+import TabEntityReference from './TabEntityReference';
+import TabSyntacticReference from './TabSyntacticReference';
 
 export interface IReferenceInputState {
   type: ReferenceType;
@@ -48,7 +48,7 @@ function DlgEditReference({ hideWindow, schema, initial, onSave }: DlgEditRefere
   const entityPanel = useMemo(
     () => (
       <TabPanel>
-        <EntityTab initial={initial} schema={schema} setReference={setReference} setIsValid={setIsValid} />
+        <TabEntityReference initial={initial} schema={schema} setReference={setReference} setIsValid={setIsValid} />
       </TabPanel>
     ),
     [initial, schema]
@@ -57,7 +57,7 @@ function DlgEditReference({ hideWindow, schema, initial, onSave }: DlgEditRefere
   const syntacticPanel = useMemo(
     () => (
       <TabPanel>
-        <SyntacticTab initial={initial} setReference={setReference} setIsValid={setIsValid} />
+        <TabSyntacticReference initial={initial} setReference={setReference} setIsValid={setIsValid} />
       </TabPanel>
     ),
     [initial]
