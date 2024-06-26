@@ -4,10 +4,12 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { getOssDetails } from '@/app/backendAPI';
 import { type ErrorData } from '@/components/info/InfoError';
+import { useAuth } from '@/context/AuthContext';
 import { IOperationSchema, IOperationSchemaData } from '@/models/oss';
 import { OssLoader } from '@/models/OssLoader';
 
 function useOssDetails({ target }: { target?: string }) {
+  const { loading: userLoading } = useAuth();
   const [schema, setInner] = useState<IOperationSchema | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<ErrorData>(undefined);
@@ -44,8 +46,10 @@ function useOssDetails({ target }: { target?: string }) {
   );
 
   useEffect(() => {
-    reload();
-  }, [reload]);
+    if (!userLoading) {
+      reload();
+    }
+  }, [reload, userLoading]);
 
   return { schema, setSchema, reload, error, setError, loading };
 }

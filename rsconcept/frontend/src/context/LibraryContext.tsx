@@ -65,7 +65,7 @@ interface LibraryStateProps {
 }
 
 export const LibraryState = ({ children }: LibraryStateProps) => {
-  const { user } = useAuth();
+  const { user, loading: userLoading } = useAuth();
   const { adminMode } = useConceptOptions();
 
   const [items, setItems] = useState<ILibraryItem[]>([]);
@@ -175,16 +175,18 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   const reloadTemplates = useCallback(() => {
     setTemplates([]);
     getTemplates({
-      setLoading: setLoading,
-      onError: setLoadingError,
+      setLoading: setProcessing,
+      onError: setProcessingError,
       showError: true,
       onSuccess: newData => setTemplates(newData)
     });
   }, []);
 
   useEffect(() => {
-    reloadItems();
-  }, [reloadItems]);
+    if (!userLoading) {
+      reloadItems();
+    }
+  }, [reloadItems, userLoading]);
 
   useEffect(() => {
     reloadTemplates();
