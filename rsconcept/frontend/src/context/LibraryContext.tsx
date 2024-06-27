@@ -92,8 +92,8 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
       if (!filter.folderMode && filter.head) {
         result = result.filter(item => item.location.startsWith(filter.head!));
       }
-      if (filter.folderMode && filter.folder) {
-        result = result.filter(item => item.location == filter.folder);
+      if (filter.folderMode && filter.location) {
+        result = result.filter(item => item.location == filter.location);
       }
       if (filter.type) {
         result = result.filter(item => item.item_type === filter.type);

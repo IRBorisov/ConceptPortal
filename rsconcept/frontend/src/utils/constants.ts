@@ -95,7 +95,7 @@ export const storage = {
 
   librarySearchHead: 'library.search.head',
   librarySearchFolderMode: 'library.search.folder_mode',
-  librarySearchFolder: 'library.search.folder',
+  librarySearchLocation: 'library.search.location',
   librarySearchVisible: 'library.search.visible',
   librarySearchOwned: 'library.search.owned',
   librarySearchSubscribed: 'library.search.subscribed',

@@ -144,11 +144,10 @@ export interface ILibraryFilter {
   type?: LibraryItemType;
   query?: string;
 
+  folderMode?: boolean;
   path?: string;
   head?: LocationHead;
-
-  folderMode?: boolean;
-  folder?: string;
+  location?: string;
 
   isVisible?: boolean;
   isOwned?: boolean;

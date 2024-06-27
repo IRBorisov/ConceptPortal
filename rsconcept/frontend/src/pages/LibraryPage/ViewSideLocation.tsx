@@ -14,14 +14,14 @@ import { animateSideView } from '@/styling/animations';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { information } from '@/utils/labels';
 
-interface ViewSideFoldersProps {
-  folders: FolderTree;
-  currentFolder: string;
-  setFolder: React.Dispatch<React.SetStateAction<string>>;
+interface ViewSideLocationProps {
+  folderTree: FolderTree;
+  active: string;
+  setActive: React.Dispatch<React.SetStateAction<string>>;
   toggleFolderMode: () => void;
 }
 
-function ViewSideFolders({ folders, currentFolder, setFolder, toggleFolderMode }: ViewSideFoldersProps) {
+function ViewSideLocation({ folderTree, active, setActive: setActive, toggleFolderMode }: ViewSideLocationProps) {
   const handleClickFolder = useCallback(
     (event: CProps.EventMouse, target: FolderNode) => {
       event.preventDefault();
@@ -32,10 +32,10 @@ function ViewSideFolders({ folders, currentFolder, setFolder, toggleFolderMode }
           .then(() => toast.success(information.pathReady))
           .catch(console.error);
       } else {
-        setFolder(target.getPath());
+        setActive(target.getPath());
       }
     },
-    [setFolder]
+    [setActive]
   );
 
   return (
@@ -59,8 +59,8 @@ function ViewSideFolders({ folders, currentFolder, setFolder, toggleFolderMode }
         />
       </div>
       <SelectLocation
-        value={currentFolder}
-        folderTree={folders}
+        value={active}
+        folderTree={folderTree}
         prefix={prefixes.folders_list}
         onClick={handleClickFolder}
       />
@@ -68,4 +68,4 @@ function ViewSideFolders({ folders, currentFolder, setFolder, toggleFolderMode }
   );
 }
 
-export default ViewSideFolders;
+export default ViewSideLocation;
