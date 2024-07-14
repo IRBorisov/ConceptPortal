@@ -8,13 +8,11 @@ import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { useAccessMode } from '@/context/AccessModeContext';
-import { AccessPolicy } from '@/models/library';
+import { AccessPolicy, ILibraryItemEditor } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
 import { UserLevel } from '@/models/user';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip, tooltips } from '@/utils/labels';
-
-import { useRSEdit } from '../RSEditContext';
 
 interface ToolbarRSFormCardProps {
   modified: boolean;
@@ -22,15 +20,22 @@ interface ToolbarRSFormCardProps {
   anonymous: boolean;
   onSubmit: () => void;
   onDestroy: () => void;
+  controller: ILibraryItemEditor;
 }
 
-function ToolbarRSFormCard({ modified, anonymous, subscribed, onSubmit, onDestroy }: ToolbarRSFormCardProps) {
-  const controller = useRSEdit();
+function ToolbarRSFormCard({
+  modified,
+  anonymous,
+  controller,
+  subscribed,
+  onSubmit,
+  onDestroy
+}: ToolbarRSFormCardProps) {
   const { accessLevel } = useAccessMode();
   const canSave = useMemo(() => modified && !controller.isProcessing, [modified, controller.isProcessing]);
   return (
     <Overlay position='top-1 right-1/2 translate-x-1/2' className='cc-icons'>
-      {controller.isContentEditable || modified ? (
+      {controller.isMutable || modified ? (
         <MiniButton
           titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
           disabled={!canSave}
@@ -56,7 +61,7 @@ function ToolbarRSFormCard({ modified, anonymous, subscribed, onSubmit, onDestro
         <MiniButton
           title='Удалить схему'
           icon={<IconDestroy size='1.25rem' className='icon-red' />}
-          disabled={!controller.isContentEditable || controller.isProcessing || accessLevel < UserLevel.OWNER}
+          disabled={!controller.isMutable || controller.isProcessing || accessLevel < UserLevel.OWNER}
           onClick={onDestroy}
         />
       ) : null}

@@ -48,6 +48,7 @@ function EditorOssCard({ isModified, onDestroy, setIsModified }: EditorOssCardPr
         anonymous={!user}
         onSubmit={initiateSubmit}
         onDestroy={onDestroy}
+        controller={controller}
       />
       <AnimateFade onKeyDown={handleInput} className={clsx('sm:w-fit mx-auto', 'flex flex-col sm:flex-row')}>
         <FlexColumn className='px-3'>

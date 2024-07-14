@@ -49,6 +49,7 @@ function EditorRSFormCard({ isModified, onDestroy, setIsModified }: EditorRSForm
         anonymous={!user}
         onSubmit={initiateSubmit}
         onDestroy={onDestroy}
+        controller={controller}
       />
       <AnimateFade
         onKeyDown={handleInput}

@@ -234,6 +234,7 @@ export function postCloneLibraryItem(target: string, request: FrontExchange<IRSF
 }
 
 export function getOssDetails(target: string, request: FrontPull<IOperationSchemaData>) {
+  request.setLoading!(false);
   request.onSuccess({
     id: Number(target),
     comment: '123',

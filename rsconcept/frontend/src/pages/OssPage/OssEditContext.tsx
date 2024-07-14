@@ -15,7 +15,7 @@ import { IOperationSchema } from '@/models/oss';
 import { UserID, UserLevel } from '@/models/user';
 import { information } from '@/utils/labels';
 
-interface IOssEditContext {
+export interface IOssEditContext {
   schema?: IOperationSchema;
 
   isMutable: boolean;

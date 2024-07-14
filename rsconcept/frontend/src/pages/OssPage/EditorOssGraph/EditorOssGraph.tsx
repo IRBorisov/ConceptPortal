@@ -1,14 +1,21 @@
 'use client';
 
+import { ReactFlowProvider } from 'reactflow';
+
 import AnimateFade from '@/components/wrap/AnimateFade';
 
+import { useOssEdit } from '../OssEditContext';
+import OssFlow from './OssFlow';
+
 function EditorOssGraph() {
-  // TODO: Implement OSS editing UI here
+  const controller = useOssEdit();
 
   return (
-    <AnimateFade>
-      <div className='py-3'>Реализация графического интерфейса</div>
-    </AnimateFade>
+    <ReactFlowProvider>
+      <AnimateFade>
+        <OssFlow controller={controller} />
+      </AnimateFade>
+    </ReactFlowProvider>
   );
 }
 
