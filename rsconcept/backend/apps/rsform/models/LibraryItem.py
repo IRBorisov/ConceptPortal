@@ -23,7 +23,7 @@ from .Version import Version
 class LibraryItemType(TextChoices):
     ''' Type of library items '''
     RSFORM = 'rsform'
-    OPERATIONS_SCHEMA = 'oss'
+    OPERATION_SCHEMA = 'oss'
 
 
 class AccessPolicy(TextChoices):
@@ -115,7 +115,7 @@ class LibraryItem(Model):
 
     def subscribers(self) -> list[Subscription]:
         ''' Get all subscribers for this item. '''
-        return [subscription.user for subscription in Subscription.objects.filter(item=self.pk)]
+        return [subscription.user for subscription in Subscription.objects.filter(item=self.pk).only('user')]
 
     def versions(self) -> list[Version]:
         ''' Get all Versions of this item. '''
@@ -123,7 +123,7 @@ class LibraryItem(Model):
 
     def editors(self) -> list[Editor]:
         ''' Get all Editors of this item. '''
-        return [item.editor for item in Editor.objects.filter(item=self.pk)]
+        return [item.editor for item in Editor.objects.filter(item=self.pk).only('editor')]
 
     @transaction.atomic
     def save(self, *args, **kwargs):

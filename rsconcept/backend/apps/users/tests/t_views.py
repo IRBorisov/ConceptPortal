@@ -9,7 +9,7 @@ class TestUserAPIViews(EndpointTester):
     ''' Testing Authentication views. '''
 
     def setUp(self):
-        super().setUp()
+        super().setUpFullUsers()
 
 
     @decl_endpoint('/users/api/login', method='post')
@@ -59,7 +59,7 @@ class TestUserUserProfileAPIView(EndpointTester):
     ''' Testing User profile views. '''
 
     def setUp(self):
-        super().setUp()
+        super().setUpFullUsers()
         self.user.first_name = 'John'
         self.user.second_name = 'Smith'
         self.user.save()

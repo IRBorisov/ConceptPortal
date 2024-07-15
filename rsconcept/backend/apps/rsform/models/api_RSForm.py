@@ -1,6 +1,6 @@
 ''' Models: RSForm API. '''
 from copy import deepcopy
-from typing import Optional, Union, cast
+from typing import Optional, cast
 
 from cctext import Entity, Resolver, TermForm, extract_entities, split_grams
 from django.core.exceptions import ValidationError
@@ -39,7 +39,7 @@ class RSForm:
     def create(**kwargs) -> 'RSForm':
         return RSForm(LibraryItem.objects.create(item_type=LibraryItemType.RSFORM, **kwargs))
 
-    def constituents(self) -> QuerySet['Constituenta']:
+    def constituents(self) -> QuerySet[Constituenta]:
         ''' Get QuerySet containing all constituents of current RSForm. '''
         return Constituenta.objects.filter(schema=self.item)
 
@@ -105,10 +105,38 @@ class RSForm:
         return result
 
     @transaction.atomic
+    def create_cst(self, data: dict, insert_after: Optional[Constituenta] = None) -> Constituenta:
+        ''' Create new cst from data. '''
+        if insert_after is None:
+            position = _INSERT_LAST
+        else:
+            position = insert_after.order + 1
+        result = self.insert_new(data['alias'], data['cst_type'], position)
+        result.convention = data.get('convention', '')
+        result.definition_formal = data.get('definition_formal', '')
+        result.term_forms = data.get('term_forms', [])
+        result.term_raw = data.get('term_raw', '')
+        result.definition_raw = data.get('definition_raw', '')
+
+        if result.term_raw != '' or result.definition_raw != '':
+            resolver = self.resolver()
+            if result.term_raw != '':
+                resolved = resolver.resolve(result.term_raw)
+                result.term_resolved = resolved
+                resolver.context[result.alias] = Entity(result.alias, resolved)
+            if result.definition_raw != '':
+                result.definition_resolved = resolver.resolve(result.definition_raw)
+
+        result.save()
+        self.on_term_change([result.id])
+        result.refresh_from_db()
+        return result
+
+    @transaction.atomic
     def insert_new(
         self,
         alias: str,
-        cst_type: Union[CstType, None] = None,
+        cst_type: Optional[CstType] = None,
         position: int = _INSERT_LAST,
         **kwargs
     ) -> Constituenta:
@@ -194,27 +222,6 @@ class RSForm:
         self._reset_order()
         self.resolve_all_text()
         self.item.save()
-
-    @transaction.atomic
-    def create_cst(self, data: dict, insert_after: Optional[str] = None) -> Constituenta:
-        ''' Create new cst from data. '''
-        resolver = self.resolver()
-        cst = self._insert_new(data, insert_after)
-        cst.convention = data.get('convention', '')
-        cst.definition_formal = data.get('definition_formal', '')
-        cst.term_forms = data.get('term_forms', [])
-        cst.term_raw = data.get('term_raw', '')
-        if cst.term_raw != '':
-            resolved = resolver.resolve(cst.term_raw)
-            cst.term_resolved = resolved
-            resolver.context[cst.alias] = Entity(cst.alias, resolved)
-        cst.definition_raw = data.get('definition_raw', '')
-        if cst.definition_raw != '':
-            cst.definition_resolved = resolver.resolve(cst.definition_raw)
-        cst.save()
-        self.on_term_change([cst.id])
-        cst.refresh_from_db()
-        return cst
 
     @transaction.atomic
     def substitute(
@@ -362,13 +369,6 @@ class RSForm:
                 cst.order = order
                 cst.save()
             order += 1
-
-    def _insert_new(self, data: dict, insert_after: Optional[str] = None) -> Constituenta:
-        if insert_after is not None:
-            cst_after = Constituenta.objects.get(pk=insert_after)
-            return self.insert_new(data['alias'], data['cst_type'], cst_after.order + 1)
-        else:
-            return self.insert_new(data['alias'], data['cst_type'])
 
     def _graph_formal(self) -> Graph[int]:
         ''' Graph based on formal definitions. '''

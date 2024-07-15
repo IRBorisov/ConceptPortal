@@ -27,6 +27,21 @@ class EndpointTester(APITestCase):
 
     def setUp(self):
         self.factory = APIRequestFactory()
+        self.user = User.objects.create(
+            username='UserTest',
+            email='blank@test.com',
+            password='password'
+        )
+        self.user2 = User.objects.create(
+            username='UserTest2',
+            email='another@test.com',
+            password='password'
+        )
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+
+    def setUpFullUsers(self):
+        self.factory = APIRequestFactory()
         self.user = User.objects.create_user(
             username='UserTest',
             email='blank@test.com',

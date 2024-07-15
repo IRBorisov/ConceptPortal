@@ -59,7 +59,7 @@ class TestRSFormViewset(EndpointTester):
     @decl_endpoint('/api/rsforms', method='get')
     def test_list_rsforms(self):
         non_schema = LibraryItem.objects.create(
-            item_type=LibraryItemType.OPERATIONS_SCHEMA,
+            item_type=LibraryItemType.OPERATION_SCHEMA,
             title='Test3'
         )
         response = self.executeOK()

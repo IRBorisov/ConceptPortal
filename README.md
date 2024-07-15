@@ -116,6 +116,7 @@ This readme file is used mostly to document project dependencies
   - Pylint
   - Django
   - autopep8
+  - SQLite
   </pre>
 </details>
 

@@ -52,7 +52,7 @@ class TestLibraryViewset(EndpointTester):
         self.executeBadData(data)
 
         data = {
-            'item_type': LibraryItemType.OPERATIONS_SCHEMA,
+            'item_type': LibraryItemType.OPERATION_SCHEMA,
             'title': 'Title',
             'alias': 'alias',
             'access_policy': AccessPolicy.PROTECTED,
@@ -294,7 +294,7 @@ class TestLibraryViewset(EndpointTester):
     @decl_endpoint('/api/library', method='get')
     def test_library_get(self):
         non_schema = LibraryItem.objects.create(
-            item_type=LibraryItemType.OPERATIONS_SCHEMA,
+            item_type=LibraryItemType.OPERATION_SCHEMA,
             title='Test4'
         )
         response = self.executeOK()

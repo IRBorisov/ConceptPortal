@@ -1,6 +1,24 @@
 [
 {
     "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$gFZkaBswurtL0naQKiUnW7$3b6SUN3fY2Xl1H7erAszVpQl2LpoKusan+yJP7Bp3JA=",
+        "last_login": "2024-06-03T20:57:02.522Z",
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "Администратор",
+        "last_name": "",
+        "email": "admin@mail.ru",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2024-05-27T18:31:48.913Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
     "pk": 3,
     "fields": {
         "password": "pbkdf2_sha256$720000$UrGOcoUoKyC5A0nCXwNszp$UR3FdvkB9EkQ8PT+mJ7CtCyrwbmmz3tYZcZKTaxyzoM=",
