@@ -11,7 +11,7 @@ import { OssLoader } from '@/models/OssLoader';
 function useOssDetails({ target }: { target?: string }) {
   const { loading: userLoading } = useAuth();
   const [schema, setInner] = useState<IOperationSchema | undefined>(undefined);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(target != undefined);
   const [error, setError] = useState<ErrorData>(undefined);
 
   function setSchema(data?: IOperationSchemaData) {
