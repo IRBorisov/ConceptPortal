@@ -69,6 +69,7 @@ This readme file is used mostly to document project dependencies
   - Backticks
   - Svg Preview
   - TODO Highlight v2
+  - Prettier
   </pre>
 </details>
 <details>
@@ -114,8 +115,9 @@ This readme file is used mostly to document project dependencies
   <pre>
   - Pylance
   - Pylint
-  - Django
   - autopep8
+  - isort
+  - Django
   - SQLite
   </pre>
 </details>
