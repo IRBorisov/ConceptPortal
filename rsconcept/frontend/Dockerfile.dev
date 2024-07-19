@@ -1,11 +1,11 @@
 # ======== Multi-stage base ==========
-FROM node:bullseye-slim as node-base
+FROM node:bullseye-slim AS node-base
 RUN apt-get update -qq && \
     apt-get upgrade -y && \
     rm -rf /var/lib/apt/lists/*
 
 # ========= Server =======
-FROM node-base as product-server
+FROM node-base AS product-server
 ARG BUILD_TYPE=production
 
 WORKDIR /home

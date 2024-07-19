@@ -1,7 +1,7 @@
 # ==========================================
 # ============ Multi-stage build ===========
 # ==========================================
-FROM ubuntu:jammy as python-base
+FROM ubuntu:jammy AS python-base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -25,7 +25,7 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists/*
 
 # ========= Builder ==============
-FROM python-base as builder
+FROM python-base AS builder
 
 # Set env variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -65,9 +65,10 @@ RUN pip install --no-cache /wheels/* && \
     rm -rf /wheels
 
 # Copy application sources and setup permissions
-COPY apps/ ./apps
 COPY project/ ./project
+COPY shared/ ./shared
 COPY fixtures/ ./fixtures
+COPY apps/ ./apps
 COPY manage.py entrypoint.sh ./
 RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.sh && \
     chmod +x $APP_HOME/entrypoint.sh && \

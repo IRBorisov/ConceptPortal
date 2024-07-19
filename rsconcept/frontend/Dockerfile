@@ -1,12 +1,12 @@
 # ======== Multi-stage base ==========
-FROM node:bullseye-slim as node-base
+FROM node:20-bullseye-slim AS node-base
 RUN apt-get update -qq && \
     apt-get upgrade -y && \
     rm -rf /var/lib/apt/lists/*
 
 # ======= Build =======
 ARG BUILD_TYPE=production
-FROM node-base as builder
+FROM node-base AS builder
 
 WORKDIR /result
 
@@ -18,7 +18,7 @@ ENV NODE_ENV production
 RUN npm run build
 
 # ========= Server =======
-FROM node-base as product-server
+FROM node-base AS product-server
 
 ENV NODE_ENV production
 
