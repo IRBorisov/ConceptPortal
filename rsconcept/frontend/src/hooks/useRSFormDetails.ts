@@ -11,7 +11,7 @@ import { RSFormLoader } from '@/models/RSFormLoader';
 function useRSFormDetails({ target, version }: { target?: string; version?: string }) {
   const { loading: userLoading } = useAuth();
   const [schema, setInnerSchema] = useState<IRSForm | undefined>(undefined);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(target != undefined);
   const [error, setError] = useState<ErrorData>(undefined);
 
   function setSchema(data?: IRSFormData) {

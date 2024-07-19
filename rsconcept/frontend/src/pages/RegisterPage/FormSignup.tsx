@@ -95,6 +95,7 @@ function FormSignup() {
             autoComplete='username'
             required
             label='Имя пользователя (логин)'
+            spellCheck={false}
             pattern={patterns.login}
             title='Минимум 3 знака. Латинские буквы и цифры. Не может начинаться с цифры'
             value={username}
@@ -128,6 +129,7 @@ function FormSignup() {
             id='email'
             autoComplete='email'
             required
+            spellCheck={false}
             label='Электронная почта (email)'
             title='электронная почта в корректном формате, например: i.petrov@mycompany.ru.com'
             value={email}

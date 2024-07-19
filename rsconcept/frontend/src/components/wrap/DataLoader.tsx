@@ -15,16 +15,16 @@ interface DataLoaderProps extends CProps.AnimatedDiv {
   children: React.ReactNode;
 }
 
-function DataLoader({ id, isLoading, hasNoData, error, children, ...restProps }: DataLoaderProps) {
+function DataLoader({ id, isLoading, hasNoData, error, className, children, ...restProps }: DataLoaderProps) {
   return (
     <AnimatePresence mode='wait'>
       {!isLoading && !error && !hasNoData ? (
-        <AnimateFade id={id} key={`${id}-data`} {...restProps}>
+        <AnimateFade id={id} key={`${id}-data`} className={className} {...restProps}>
           {children}
         </AnimateFade>
       ) : null}
       {!isLoading && !error && hasNoData ? (
-        <AnimateFade key={`${id}-no-data`} {...restProps}>
+        <AnimateFade key={`${id}-no-data`} className='w-full text-center p-1' {...restProps}>
           Данные не загружены
         </AnimateFade>
       ) : null}
