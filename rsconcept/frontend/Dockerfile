@@ -18,13 +18,13 @@ RUN rm -rf ./env
 
 RUN npm ci
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 RUN npm run build
 
 # ========= Server =======
 FROM node-base AS product-server
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 # Install serve util
 RUN npm install -g serve
