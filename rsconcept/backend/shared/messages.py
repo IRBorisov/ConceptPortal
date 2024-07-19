@@ -6,6 +6,10 @@ def constituentaNotOwned(title: str):
     return f'Конституента не принадлежит схеме: {title}'
 
 
+def operationNotOwned(title: str):
+    return f'Операция не принадлежит схеме: {title}'
+
+
 def substitutionNotInList():
     return 'Отождествляемая конституента отсутствует в списке'
 
@@ -64,3 +68,15 @@ def constituentaNoStructure():
 
 def missingFile():
     return 'Отсутствует прикрепленный файл'
+
+
+def passwordAuthFailed():
+    return 'Неизвестное сочетание имени пользователя (email) и пароля'
+
+
+def passwordsNotMatch():
+    return 'Введенные пароли не совпадают'
+
+
+def emailAlreadyTaken():
+    return 'Пользователь с данным email уже существует'

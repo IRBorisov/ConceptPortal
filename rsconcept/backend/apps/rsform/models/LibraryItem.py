@@ -9,6 +9,7 @@ from django.db.models import (
     DateTimeField,
     ForeignKey,
     Model,
+    QuerySet,
     TextChoices,
     TextField
 )
@@ -113,17 +114,17 @@ class LibraryItem(Model):
     def get_absolute_url(self):
         return f'/api/library/{self.pk}'
 
-    def subscribers(self) -> list[Subscription]:
+    def subscribers(self) -> list[User]:
         ''' Get all subscribers for this item. '''
         return [subscription.user for subscription in Subscription.objects.filter(item=self.pk).only('user')]
 
-    def versions(self) -> list[Version]:
-        ''' Get all Versions of this item. '''
-        return list(Version.objects.filter(item=self.pk).order_by('-time_create'))
-
-    def editors(self) -> list[Editor]:
+    def editors(self) -> list[User]:
         ''' Get all Editors of this item. '''
         return [item.editor for item in Editor.objects.filter(item=self.pk).only('editor')]
+
+    def versions(self) -> QuerySet[Version]:
+        ''' Get all Versions of this item. '''
+        return Version.objects.filter(item=self.pk).order_by('-time_create')
 
     @transaction.atomic
     def save(self, *args, **kwargs):

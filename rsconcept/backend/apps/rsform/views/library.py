@@ -13,8 +13,9 @@ from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
 
+from shared import permissions
+
 from .. import models as m
-from .. import permissions
 from .. import serializers as s
 
 
@@ -42,17 +43,27 @@ class LibraryViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action in ['update', 'partial_update']:
-            permission_list = [permissions.ItemEditor]
+            access_level = permissions.ItemEditor
         elif self.action in [
-            'destroy', 'set_owner', 'set_access_policy', 'set_location',
-            'editors_add', 'editors_remove', 'editors_set'
+            'destroy',
+            'set_owner',
+            'set_access_policy',
+            'set_location',
+            'editors_add',
+            'editors_remove',
+            'editors_set'
         ]:
-            permission_list = [permissions.ItemOwner]
-        elif self.action in ['create', 'clone', 'subscribe', 'unsubscribe']:
-            permission_list = [permissions.GlobalUser]
+            access_level = permissions.ItemOwner
+        elif self.action in [
+            'create',
+            'clone',
+            'subscribe',
+            'unsubscribe'
+        ]:
+            access_level = permissions.GlobalUser
         else:
-            permission_list = [permissions.ItemAnyone]
-        return [permission() for permission in permission_list]
+            access_level = permissions.ItemAnyone
+        return [access_level()]
 
     def _get_item(self) -> m.LibraryItem:
         return cast(m.LibraryItem, self.get_object())
@@ -68,7 +79,6 @@ class LibraryViewSet(viewsets.ModelViewSet):
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @transaction.atomic
     @action(detail=True, methods=['post'], url_path='clone')
     def clone(self, request: Request, pk):
         ''' Endpoint: Create deep copy of library item. '''
@@ -85,19 +95,20 @@ class LibraryViewSet(viewsets.ModelViewSet):
         clone.read_only = False
         clone.access_policy = serializer.validated_data.get('access_policy', m.AccessPolicy.PUBLIC)
         clone.location = serializer.validated_data.get('location', m.LocationHead.USER)
-        clone.save()
 
-        if clone.item_type == m.LibraryItemType.RSFORM:
-            need_filter = 'items' in request.data
-            for cst in m.RSForm(item).constituents():
-                if not need_filter or cst.pk in request.data['items']:
-                    cst.pk = None
-                    cst.schema = clone
-                    cst.save()
-            return Response(
-                status=c.HTTP_201_CREATED,
-                data=s.RSFormParseSerializer(clone).data
-            )
+        with transaction.atomic():
+            clone.save()
+            if clone.item_type == m.LibraryItemType.RSFORM:
+                need_filter = 'items' in request.data
+                for cst in m.RSForm(item).constituents():
+                    if not need_filter or cst.pk in request.data['items']:
+                        cst.pk = None
+                        cst.schema = clone
+                        cst.save()
+                return Response(
+                    status=c.HTTP_201_CREATED,
+                    data=s.RSFormParseSerializer(clone).data
+                )
         return Response(status=c.HTTP_400_BAD_REQUEST)
 
     @extend_schema(
@@ -266,24 +277,17 @@ class LibraryActiveView(generics.ListAPIView):
     serializer_class = s.LibraryItemSerializer
 
     def get_queryset(self):
+        common_location = Q(location__startswith=m.LocationHead.COMMON) | Q(location__startswith=m.LocationHead.LIBRARY)
+        is_public = Q(access_policy=m.AccessPolicy.PUBLIC)
         if self.request.user.is_anonymous:
-            return m.LibraryItem.objects.filter(
-                Q(access_policy=m.AccessPolicy.PUBLIC),
-            ).filter(
-                Q(location__startswith=m.LocationHead.COMMON) |
-                Q(location__startswith=m.LocationHead.LIBRARY)
-            ).order_by('-time_update')
+            return m.LibraryItem.objects \
+                .filter(is_public) \
+                .filter(common_location).order_by('-time_update')
         else:
             user = cast(m.User, self.request.user)
             # pylint: disable=unsupported-binary-operation
             return m.LibraryItem.objects.filter(
-                (
-                    Q(access_policy=m.AccessPolicy.PUBLIC) &
-                    (
-                        Q(location__startswith=m.LocationHead.COMMON) |
-                        Q(location__startswith=m.LocationHead.LIBRARY)
-                    )
-                ) |
+                (is_public & common_location) |
                 Q(owner=user) |
                 Q(editor__editor=user) |
                 Q(subscription__user=user)

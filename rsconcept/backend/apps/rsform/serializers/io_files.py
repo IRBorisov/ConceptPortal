@@ -2,7 +2,8 @@
 from django.db import transaction
 from rest_framework import serializers
 
-from .. import messages as msg
+from shared import messages as msg
+
 from ..models import Constituenta, LibraryItem, RSForm
 from ..utils import fix_old_references
 

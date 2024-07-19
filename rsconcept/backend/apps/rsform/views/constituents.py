@@ -2,8 +2,9 @@
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import generics
 
+from shared import permissions
+
 from .. import models as m
-from .. import permissions
 from .. import serializers as s
 
 

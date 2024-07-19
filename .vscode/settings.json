@@ -11,7 +11,9 @@
     "--multi-line",
     "3",
     "--project",
-    "apps"
+    "apps",
+    "--project",
+    "shared"
   ],
   "autopep8.args": [
     "--max-line-length",

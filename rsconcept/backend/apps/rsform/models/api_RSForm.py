@@ -7,7 +7,8 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.db.models import QuerySet
 
-from .. import messages as msg
+from shared import messages as msg
+
 from ..graph import Graph
 from .api_RSLanguage import (
     extract_globals,

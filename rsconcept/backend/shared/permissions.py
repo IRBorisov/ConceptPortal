@@ -11,16 +11,27 @@ from rest_framework.permissions import \
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
-from . import models as m
+from apps.oss.models import Operation
+from apps.rsform.models import (
+    AccessPolicy,
+    Constituenta,
+    Editor,
+    LibraryItem,
+    Subscription,
+    Version
+)
+from apps.users.models import User
 
 
-def _extract_item(obj: Any) -> m.LibraryItem:
-    if isinstance(obj, m.LibraryItem):
+def _extract_item(obj: Any) -> LibraryItem:
+    if isinstance(obj, LibraryItem):
         return obj
-    elif isinstance(obj, m.Constituenta):
-        return cast(m.LibraryItem, obj.schema)
-    elif isinstance(obj, (m.Version, m.Subscription, m.Editor)):
-        return cast(m.LibraryItem, obj.item)
+    elif isinstance(obj, Constituenta):
+        return cast(LibraryItem, obj.schema)
+    elif isinstance(obj, Operation):
+        return cast(LibraryItem, obj.oss)
+    elif isinstance(obj, (Version, Subscription, Editor)):
+        return cast(LibraryItem, obj.item)
     raise PermissionDenied({
         'message': 'Invalid type error. Please contact developers',
         'object_id': obj.id
@@ -60,10 +71,10 @@ class ItemEditor(ItemOwner):
         if request.user.is_anonymous:
             return False
         item = _extract_item(obj)
-        if m.Editor.objects.filter(
+        if Editor.objects.filter(
             item=item,
-            editor=cast(m.User, request.user)
-        ).exists() and item.access_policy != m.AccessPolicy.PRIVATE:
+            editor=cast(User, request.user)
+        ).exists() and item.access_policy != AccessPolicy.PRIVATE:
             return True
         return super().has_object_permission(request, view, obj)
 
@@ -76,7 +87,7 @@ class ItemAnyone(ItemEditor):
 
     def has_object_permission(self, request: Request, view: APIView, obj: Any) -> bool:
         item = _extract_item(obj)
-        if item.access_policy == m.AccessPolicy.PUBLIC:
+        if item.access_policy == AccessPolicy.PUBLIC:
             return True
         return super().has_object_permission(request, view, obj)
 

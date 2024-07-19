@@ -7,7 +7,8 @@ from django.db import transaction
 from rest_framework import serializers
 from rest_framework.serializers import PrimaryKeyRelatedField as PKField
 
-from .. import messages as msg
+from shared import messages as msg
+
 from ..models import Constituenta, CstType, LibraryItem, RSForm, Version
 from .basics import CstParseSerializer
 from .io_pyconcept import PyConceptAdapter
@@ -140,6 +141,8 @@ class CstDetailsSerializer(serializers.ModelSerializer):
 class CstCreateSerializer(serializers.ModelSerializer):
     ''' Serializer: Constituenta creation. '''
     insert_after = serializers.IntegerField(required=False, allow_null=True)
+    alias = serializers.CharField(max_length=8)
+    cst_type = serializers.ChoiceField(CstType.choices)
 
     class Meta:
         ''' serializer metadata. '''
