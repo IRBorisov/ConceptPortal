@@ -16,13 +16,11 @@ export default ({ mode }: { mode: string }) => {
     ...process.env,
     ...loadEnv(mode, process.cwd())
   };
-  const enableHttps = process.env.VITE_PORTAL_FRONT_HTTPS === 'true';
   return defineConfig({
     appType: 'spa',
     plugins: [react(), muteWarningsPlugin(warningsToIgnore)],
     server: {
-      port: Number(process.env.VITE_PORTAL_FRONT_PORT),
-      https: enableHttps
+      port: Number(process.env.VITE_PORTAL_FRONT_PORT)
     },
     publicDir: 'public',
     build: {

@@ -4,14 +4,14 @@ import clsx from 'clsx';
 import { useLayoutEffect, useMemo, useState } from 'react';
 
 import DataTable, { createColumnHelper, RowSelectionState } from '@/components/ui/DataTable';
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
 import { isBasicConcept } from '@/models/rsformAPI';
 import { describeConstituenta } from '@/utils/labels';
 
 import BadgeConstituenta from '../info/BadgeConstituenta';
 import NoData from '../ui/NoData';
-import GraphSelectionToolbar from './GraphSelectionToolbar';
+import ToolbarGraphSelection from './ToolbarGraphSelection';
 
 interface PickMultiConstituentaProps {
   id?: string;
@@ -80,7 +80,7 @@ function PickMultiConstituenta({ id, schema, prefixID, rows, selected, setSelect
           Выбраны {selected.length} из {schema?.items.length ?? 0}
         </span>
         {schema ? (
-          <GraphSelectionToolbar
+          <ToolbarGraphSelection
             graph={schema.graph}
             core={schema.items.filter(cst => isBasicConcept(cst.cst_type)).map(cst => cst.id)}
             setSelected={setSelected}

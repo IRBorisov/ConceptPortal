@@ -12,9 +12,9 @@ import { ILibraryFilter } from '@/models/miscellaneous';
 import { storage } from '@/utils/constants';
 import { toggleTristateFlag } from '@/utils/utils';
 
-import LibraryFolders from './LibraryFolders';
-import LibraryTable from './LibraryTable';
-import SearchPanel from './SearchPanel';
+import TableLibraryItems from './TableLibraryItems';
+import ToolbarSearch from './ToolbarSearch';
+import ViewSideLocation from './ViewSideLocation';
 
 function LibraryPage() {
   const library = useLibrary();
@@ -26,7 +26,7 @@ function LibraryPage() {
 
   const [head, setHead] = useLocalStorage<LocationHead | undefined>(storage.librarySearchHead, undefined);
   const [folderMode, setFolderMode] = useLocalStorage<boolean>(storage.librarySearchFolderMode, true);
-  const [folder, setFolder] = useLocalStorage<string>(storage.librarySearchFolder, '');
+  const [location, setLocation] = useLocalStorage<string>(storage.librarySearchLocation, '');
   const [isVisible, setIsVisible] = useLocalStorage<boolean | undefined>(storage.librarySearchVisible, true);
   const [isSubscribed, setIsSubscribed] = useLocalStorage<boolean | undefined>(
     storage.librarySearchSubscribed,
@@ -45,9 +45,9 @@ function LibraryPage() {
       isSubscribed: user ? isSubscribed : undefined,
       isVisible: user ? isVisible : true,
       folderMode: folderMode,
-      folder: folder
+      location: location
     }),
-    [head, path, query, isEditor, isOwned, isSubscribed, isVisible, user, folderMode, folder]
+    [head, path, query, isEditor, isOwned, isSubscribed, isVisible, user, folderMode, location]
   );
 
   const hasCustomFilter = useMemo(
@@ -59,13 +59,13 @@ function LibraryPage() {
       filter.isOwned !== undefined ||
       filter.isSubscribed !== undefined ||
       filter.isVisible !== true ||
-      !!filter.folder,
+      !!filter.location,
     [filter]
   );
 
   useLayoutEffect(() => {
     setItems(library.applyFilter(filter));
-  }, [library, filter, filter.query]);
+  }, [library, library.items.length, filter]);
 
   const toggleVisible = useCallback(() => setIsVisible(prev => toggleTristateFlag(prev)), [setIsVisible]);
   const toggleOwned = useCallback(() => setIsOwned(prev => toggleTristateFlag(prev)), [setIsOwned]);
@@ -81,19 +81,31 @@ function LibraryPage() {
     setIsSubscribed(undefined);
     setIsOwned(undefined);
     setIsEditor(undefined);
-    setFolder('');
-  }, [setHead, setIsVisible, setIsSubscribed, setIsOwned, setIsEditor, setFolder]);
+    setLocation('');
+  }, [setHead, setIsVisible, setIsSubscribed, setIsOwned, setIsEditor, setLocation]);
 
-  const view = useMemo(
+  const viewLibrary = useMemo(
     () => (
-      <LibraryTable
-        resetQuery={resetFilter} // prettier: split lines
+      <TableLibraryItems
+        resetQuery={resetFilter}
         items={items}
         folderMode={folderMode}
         toggleFolderMode={toggleFolderMode}
       />
     ),
     [resetFilter, items, folderMode, toggleFolderMode]
+  );
+
+  const viewLocations = useMemo(
+    () => (
+      <ViewSideLocation
+        active={location}
+        setActive={setLocation}
+        folderTree={library.folders}
+        toggleFolderMode={toggleFolderMode}
+      />
+    ),
+    [location, library.folders, setLocation, toggleFolderMode]
   );
 
   return (
@@ -103,7 +115,7 @@ function LibraryPage() {
       error={library.loadingError}
       hasNoData={library.items.length === 0}
     >
-      <SearchPanel
+      <ToolbarSearch
         total={library.items.length ?? 0}
         filtered={items.length}
         hasCustomFilter={hasCustomFilter}
@@ -127,17 +139,8 @@ function LibraryPage() {
       />
 
       <div className='flex'>
-        <AnimatePresence initial={false}>
-          {folderMode ? (
-            <LibraryFolders
-              currentFolder={folder} // prettier: split-lines
-              setFolder={setFolder}
-              folders={library.folders}
-              toggleFolderMode={toggleFolderMode}
-            />
-          ) : null}
-        </AnimatePresence>
-        {view}
+        <AnimatePresence initial={false}>{folderMode ? viewLocations : null}</AnimatePresence>
+        {viewLibrary}
       </div>
     </DataLoader>
   );

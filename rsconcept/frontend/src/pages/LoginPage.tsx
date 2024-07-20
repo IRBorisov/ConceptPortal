@@ -62,6 +62,7 @@ function LoginPage() {
           autoFocus
           required
           allowEnter
+          spellCheck={false}
           value={username}
           onChange={event => setUsername(event.target.value)}
         />

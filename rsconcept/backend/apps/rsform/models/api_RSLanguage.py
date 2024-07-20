@@ -6,7 +6,8 @@ from typing import Set, Tuple, cast
 
 import pyconcept
 
-from .. import messages as msg
+from shared import messages as msg
+
 from .Constituenta import CstType
 
 _RE_GLOBALS = r'[XCSADFPT]\d+'  # cspell:disable-line

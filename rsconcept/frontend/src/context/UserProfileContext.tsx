@@ -36,7 +36,7 @@ interface UserProfileStateProps {
 export const UserProfileState = ({ children }: UserProfileStateProps) => {
   const { users } = useUsers();
   const [user, setUser] = useState<IUserProfile | undefined>(undefined);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<ErrorData>(undefined);
   const [errorProcessing, setErrorProcessing] = useState<ErrorData>(undefined);

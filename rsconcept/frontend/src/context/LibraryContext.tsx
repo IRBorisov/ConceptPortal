@@ -24,7 +24,7 @@ import { RSFormLoader } from '@/models/RSFormLoader';
 import { contextOutsideScope } from '@/utils/labels';
 
 import { useAuth } from './AuthContext';
-import { useConceptOptions } from './OptionsContext';
+import { useConceptOptions } from './ConceptOptionsContext';
 
 interface ILibraryContext {
   items: ILibraryItem[];
@@ -65,12 +65,12 @@ interface LibraryStateProps {
 }
 
 export const LibraryState = ({ children }: LibraryStateProps) => {
-  const { user } = useAuth();
+  const { user, loading: userLoading } = useAuth();
   const { adminMode } = useConceptOptions();
 
   const [items, setItems] = useState<ILibraryItem[]>([]);
   const [templates, setTemplates] = useState<ILibraryItem[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [loadingError, setLoadingError] = useState<ErrorData>(undefined);
   const [processingError, setProcessingError] = useState<ErrorData>(undefined);
@@ -92,8 +92,8 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
       if (!filter.folderMode && filter.head) {
         result = result.filter(item => item.location.startsWith(filter.head!));
       }
-      if (filter.folderMode && filter.folder) {
-        result = result.filter(item => item.location == filter.folder);
+      if (filter.folderMode && filter.location) {
+        result = result.filter(item => item.location == filter.location);
       }
       if (filter.type) {
         result = result.filter(item => item.item_type === filter.type);
@@ -175,16 +175,18 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   const reloadTemplates = useCallback(() => {
     setTemplates([]);
     getTemplates({
-      setLoading: setLoading,
-      onError: setLoadingError,
+      setLoading: setProcessing,
+      onError: setProcessingError,
       showError: true,
       onSuccess: newData => setTemplates(newData)
     });
   }, []);
 
   useEffect(() => {
-    reloadItems();
-  }, [reloadItems]);
+    if (!userLoading) {
+      reloadItems();
+    }
+  }, [reloadItems, userLoading]);
 
   useEffect(() => {
     reloadTemplates();

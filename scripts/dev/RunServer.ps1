@@ -25,7 +25,6 @@ function BackendRun() {
         DoMigrations
         PrepareStatic -clearPrevious
         AddInitialData
-        AddAdmin
     } else {
         DoMigrations
         PrepareStatic
@@ -48,13 +47,15 @@ function FlushData {
 }
 
 function AddInitialData {
-    & $pyExec manage.py loaddata $initialData
-}
-function AddAdmin {
-    $env:DJANGO_SUPERUSER_USERNAME = 'admin'
-    $env:DJANGO_SUPERUSER_PASSWORD = '1234'
-    $env:DJANGO_SUPERUSER_EMAIL = 'admin@admin.com'
-    & $pyExec $djangoSrc createsuperuser --noinput
+    if (Test-Path -Path $initialData -PathType Leaf) {
+        & $pyExec $djangoSrc flush --noinput
+        & $pyExec $djangoSrc loaddata $initialData
+    } else {
+        $env:DJANGO_SUPERUSER_USERNAME = 'admin'
+        $env:DJANGO_SUPERUSER_PASSWORD = '1234'
+        $env:DJANGO_SUPERUSER_EMAIL = 'admin@admin.com'
+        & $pyExec $djangoSrc createsuperuser --noinput
+    }
 }
 
 function DoMigrations {

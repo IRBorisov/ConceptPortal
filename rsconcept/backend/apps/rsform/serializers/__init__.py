@@ -22,6 +22,7 @@ from .data_access import (
     InlineSynthesisSerializer,
     LibraryItemBaseSerializer,
     LibraryItemCloneSerializer,
+    LibraryItemDetailsSerializer,
     LibraryItemSerializer,
     RSFormParseSerializer,
     RSFormSerializer,

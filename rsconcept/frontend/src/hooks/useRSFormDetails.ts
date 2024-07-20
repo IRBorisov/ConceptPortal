@@ -4,12 +4,14 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { getRSFormDetails } from '@/app/backendAPI';
 import { type ErrorData } from '@/components/info/InfoError';
+import { useAuth } from '@/context/AuthContext';
 import { IRSForm, IRSFormData } from '@/models/rsform';
 import { RSFormLoader } from '@/models/RSFormLoader';
 
 function useRSFormDetails({ target, version }: { target?: string; version?: string }) {
+  const { loading: userLoading } = useAuth();
   const [schema, setInnerSchema] = useState<IRSForm | undefined>(undefined);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(target != undefined);
   const [error, setError] = useState<ErrorData>(undefined);
 
   function setSchema(data?: IRSFormData) {
@@ -44,8 +46,10 @@ function useRSFormDetails({ target, version }: { target?: string; version?: stri
   );
 
   useEffect(() => {
-    reload();
-  }, [reload]);
+    if (!userLoading) {
+      reload();
+    }
+  }, [reload, userLoading]);
 
   return { schema, setSchema, reload, error, setError, loading };
 }

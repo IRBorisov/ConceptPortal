@@ -6,11 +6,18 @@ import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { toast } from 'react-toastify';
 
 import { type ErrorData } from '@/components/info/InfoError';
-import { ILexemeData, IResolutionData, ITextRequest, ITextResult, IWordFormPlain } from '@/models/language';
-import { ILibraryItem, ILibraryUpdateData, ITargetAccessPolicy, ITargetLocation, IVersionData } from '@/models/library';
+import { ILexemeData, ITextRequest, ITextResult, IWordFormPlain } from '@/models/language';
+import {
+  AccessPolicy,
+  ILibraryItem,
+  ILibraryUpdateData,
+  ITargetAccessPolicy,
+  ITargetLocation,
+  IVersionData,
+  LibraryItemType
+} from '@/models/library';
 import { ILibraryCreateData } from '@/models/library';
-import { IOperationSchemaData, IRunSynthesis, IRunSynthesisResponse } from '@/models/oss';
-import { ISynthesisGraphData } from '@/models/oss.ts';
+import { IOperationSchemaData } from '@/models/oss';
 import {
   IConstituentaList,
   IConstituentaMeta,
@@ -78,7 +85,6 @@ interface IFrontRequest<RequestData, ResponseData> {
 export interface FrontPush<DataType> extends IFrontRequest<DataType, undefined> {
   data: DataType;
 }
-
 export interface FrontPull<DataType> extends IFrontRequest<undefined, DataType> {
   onSuccess: DataCallback<DataType>;
 }
@@ -228,10 +234,27 @@ export function postCloneLibraryItem(target: string, request: FrontExchange<IRSF
 }
 
 export function getOssDetails(target: string, request: FrontPull<IOperationSchemaData>) {
-  AxiosGet({
-    endpoint: `/api/synthesis/${target}`,
-    request: request
+  request.setLoading!(false);
+  request.onSuccess({
+    id: Number(target),
+    comment: '123',
+    alias: 'oss1',
+    access_policy: AccessPolicy.PUBLIC,
+    editors: [],
+    owner: 1,
+    item_type: LibraryItemType.OSS,
+    location: '/U',
+    read_only: false,
+    subscribers: [],
+    time_create: '0',
+    time_update: '0',
+    title: 'TestOss',
+    visible: false
   });
+  // AxiosGet({
+  //   endpoint: `/api/oss/${target}`, // TODO: endpoint to access OSS
+  //   request: request
+  // });
 }
 
 export function getRSFormDetails(target: string, version: string, request: FrontPull<IRSFormData>) {
@@ -415,31 +438,9 @@ export function patchUploadTRS(target: string, request: FrontExchange<IRSFormUpl
     }
   });
 }
-
-export function patchInlineSynthesis(request: FrontExchange<ISynthesisGraphData, ISynthesisGraphData>) {
+export function patchInlineSynthesis(request: FrontExchange<IInlineSynthesisData, IRSFormData>) {
   AxiosPatch({
     endpoint: `/api/operations/inline-synthesis`,
-    request: request
-  });
-}
-
-export function runSingleSynthesis(request: FrontExchange<IRunSynthesis, IRunSynthesisResponse>) {
-  AxiosPost({
-    endpoint: `/api/synthesis/run_single`,
-    request: request
-  });
-}
-
-export function postSynthesisGraph(request: FrontExchange<ISynthesisGraphData, ISynthesisGraphData>) {
-  AxiosPost({
-    endpoint: `/api/synthesis/save`,
-    request: request
-  });
-}
-
-export function postResolveText(schema: string, request: FrontExchange<ITextRequest, IResolutionData>) {
-  AxiosPost({
-    endpoint: `/api/rsforms/${schema}/resolve`,
     request: request
   });
 }

@@ -291,12 +291,3 @@ export interface IResolvedReference extends IReference {
   pos_input: ITextPosition;
   pos_output: ITextPosition;
 }
-
-/**
- * Represents resolved references data for the whole text.
- */
-export interface IResolutionData {
-  input: string;
-  output: string;
-  refs: IResolvedReference[];
-}

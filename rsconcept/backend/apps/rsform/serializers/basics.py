@@ -4,7 +4,8 @@ from typing import cast
 from cctext import EntityReference, Reference, ReferenceType, Resolver, SyntacticReference
 from rest_framework import serializers
 
-from .. import messages as msg
+from shared import messages as msg
+
 from ..models import AccessPolicy, validate_location
 
 
@@ -34,7 +35,7 @@ class LocationSerializer(serializers.Serializer):
 
 class AccessPolicySerializer(serializers.Serializer):
     ''' Serializer: Constituenta renaming. '''
-    access_policy = serializers.CharField(max_length=500)
+    access_policy = serializers.CharField()
 
     def validate(self, attrs):
         attrs = super().validate(attrs)

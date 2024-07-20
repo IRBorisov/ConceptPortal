@@ -18,7 +18,6 @@ from .. import serializers as s
     request=s.InlineSynthesisSerializer,
     responses={c.HTTP_200_OK: s.RSFormParseSerializer}
 )
-@transaction.atomic
 @api_view(['PATCH'])
 def inline_synthesis(request: Request):
     ''' Endpoint: Inline synthesis. '''
@@ -30,20 +29,21 @@ def inline_synthesis(request: Request):
 
     schema = m.RSForm(serializer.validated_data['receiver'])
     items = cast(list[m.Constituenta], serializer.validated_data['items'])
-    new_items = schema.insert_copy(items)
 
-    for substitution in serializer.validated_data['substitutions']:
-        original = cast(m.Constituenta, substitution['original'])
-        replacement = cast(m.Constituenta, substitution['substitution'])
-        if original in items:
-            index = next(i for (i, cst) in enumerate(items) if cst == original)
-            original = new_items[index]
-        else:
-            index = next(i for (i, cst) in enumerate(items) if cst == replacement)
-            replacement = new_items[index]
-        schema.substitute(original, replacement, substitution['transfer_term'])
+    with transaction.atomic():
+        new_items = schema.insert_copy(items)
+        for substitution in serializer.validated_data['substitutions']:
+            original = cast(m.Constituenta, substitution['original'])
+            replacement = cast(m.Constituenta, substitution['substitution'])
+            if original in items:
+                index = next(i for (i, cst) in enumerate(items) if cst == original)
+                original = new_items[index]
+            else:
+                index = next(i for (i, cst) in enumerate(items) if cst == replacement)
+                replacement = new_items[index]
+            schema.substitute(original, replacement, substitution['transfer_term'])
+        schema.restore_order()
 
-    schema.restore_order()
     return Response(
         status=c.HTTP_200_OK,
         data=s.RSFormParseSerializer(schema.item).data

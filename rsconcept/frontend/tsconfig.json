@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "ES2022",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "dom", "dom.iterable"],
-    "module": "esnext",
+    "lib": ["ES2022", "dom", "dom.iterable"],
+    "module": "ES2022",
     "skipLibCheck": true,
     "esModuleInterop": true,
 

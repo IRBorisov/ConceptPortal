@@ -21,10 +21,10 @@ import { TokenID } from '@/models/rslang';
 import { storage } from '@/utils/constants';
 import { errors, labelTypification } from '@/utils/labels';
 
-import ExpressionToolbar from './ExpressionToolbar';
 import ParsingResult from './ParsingResult';
 import RSEditorControls from './RSEditControls';
 import StatusBar from './StatusBar';
+import ToolbarRSExpression from './ToolbarRSExpression';
 
 interface EditorRSExpressionProps {
   id?: string;
@@ -161,7 +161,7 @@ function EditorRSExpression({
         ) : null}
       </AnimatePresence>
 
-      <ExpressionToolbar
+      <ToolbarRSExpression
         disabled={disabled}
         showControls={showControls}
         showAST={handleShowAST}
@@ -170,7 +170,7 @@ function EditorRSExpression({
 
       <Overlay position='top-[-0.5rem] pl-[8rem] sm:pl-[4rem] right-1/2 translate-x-1/2 flex'>
         <StatusBar
-          processing={parser.loading}
+          processing={parser.processing}
           isModified={isModified}
           constituenta={activeCst}
           parseData={parser.parseData}

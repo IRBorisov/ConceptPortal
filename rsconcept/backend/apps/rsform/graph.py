@@ -91,7 +91,7 @@ class Graph(Generic[ItemType]):
             if len(self.inputs[node_id]) == 0:
                 continue
             for parent in self.inputs[node_id]:
-                result[parent] = result[parent] + [id for id in result[node_id] if not id in result[parent]]
+                result[parent] = result[parent] + [id for id in result[node_id] if id not in result[parent]]
         return result
 
     def topological_order(self) -> list[ItemType]:

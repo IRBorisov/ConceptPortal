@@ -8,8 +8,8 @@ import { toast } from 'react-toastify';
 import { urls } from '@/app/urls';
 import { useAccessMode } from '@/context/AccessModeContext';
 import { useAuth } from '@/context/AuthContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
-import { useConceptOptions } from '@/context/OptionsContext';
 import { useRSForm } from '@/context/RSFormContext';
 import DlgChangeLocation from '@/dialogs/DlgChangeLocation';
 import DlgCloneLibraryItem from '@/dialogs/DlgCloneLibraryItem';
@@ -46,7 +46,7 @@ import { EXTEOR_TRS_FILE } from '@/utils/constants';
 import { information, prompts } from '@/utils/labels';
 import { promptUnsaved } from '@/utils/utils';
 
-interface IRSEditContext {
+export interface IRSEditContext {
   schema?: IRSForm;
   selected: ConstituentaID[];
 

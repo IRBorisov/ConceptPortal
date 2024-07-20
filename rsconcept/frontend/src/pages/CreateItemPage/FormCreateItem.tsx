@@ -10,7 +10,7 @@ import { IconDownload } from '@/components/Icons';
 import InfoError from '@/components/info/InfoError';
 import SelectAccessPolicy from '@/components/select/SelectAccessPolicy';
 import SelectItemType from '@/components/select/SelectItemType';
-import SelectLocation from '@/components/select/SelectLocation';
+import SelectLocationContext from '@/components/select/SelectLocationContext';
 import SelectLocationHead from '@/components/select/SelectLocationHead';
 import Button from '@/components/ui/Button';
 import Label from '@/components/ui/Label';
@@ -185,11 +185,7 @@ function FormCreateItem() {
             excluded={!user?.is_staff ? [LocationHead.LIBRARY] : []}
           />
         </div>
-        {user?.is_staff ? (
-          <div className='self-start mt-[-0.25rem] ml-[-1.5rem]'>
-            <SelectLocation folderTree={folders} value={location} onChange={handleSelectLocation} />
-          </div>
-        ) : null}
+        <SelectLocationContext folderTree={folders} value={location} onChange={handleSelectLocation} />
         <TextArea
           id='dlg_cst_body'
           label='Путь'

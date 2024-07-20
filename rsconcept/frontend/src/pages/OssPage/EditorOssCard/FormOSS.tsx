@@ -10,7 +10,7 @@ import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
 import { useOSS } from '@/context/OssContext';
 import { ILibraryUpdateData, LibraryItemType } from '@/models/library';
-import AccessToolbar from '@/pages/RSFormPage/EditorRSFormCard/AccessToolbar';
+import ToolbarItemAccess from '@/pages/RSFormPage/EditorRSFormCard/ToolbarItemAccess';
 import { limits, patterns } from '@/utils/constants';
 import { information } from '@/utils/labels';
 
@@ -108,7 +108,7 @@ function FormOSS({ id, isModified, setIsModified }: FormOSSProps) {
           value={alias}
           onChange={event => setAlias(event.target.value)}
         />
-        <AccessToolbar
+        <ToolbarItemAccess
           visible={visible}
           toggleVisible={() => setVisible(prev => !prev)}
           readOnly={readOnly}

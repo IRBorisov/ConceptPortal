@@ -3,8 +3,8 @@ import { Outlet } from 'react-router-dom';
 import ConceptToaster from '@/app/ConceptToaster';
 import Footer from '@/app/Footer';
 import Navigation from '@/app/Navigation';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { NavigationState } from '@/context/NavigationContext';
-import { useConceptOptions } from '@/context/OptionsContext';
 import { globals } from '@/utils/constants';
 
 function ApplicationLayout() {

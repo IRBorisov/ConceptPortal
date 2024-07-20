@@ -12,7 +12,7 @@ import GraphUI, {
   GraphPointerEvent,
   useSelection
 } from '@/components/ui/GraphUI';
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { ConstituentaID } from '@/models/rsform';
 import { graphDarkT, graphLightT } from '@/styling/color';
 import { PARAMETER, resources } from '@/utils/constants';

@@ -1,13 +1,13 @@
 import RequireAuth from '@/components/wrap/RequireAuth';
 import { UserProfileState } from '@/context/UserProfileContext';
 
-import UserTabs from './UserTabs';
+import UserContents from './UserContents';
 
 function UserProfilePage() {
   return (
     <RequireAuth>
       <UserProfileState>
-        <UserTabs />
+        <UserContents />
       </UserProfileState>
     </RequireAuth>
   );

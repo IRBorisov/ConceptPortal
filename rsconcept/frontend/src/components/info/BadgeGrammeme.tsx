@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { GramData } from '@/models/language';
 import { colorFgGrammeme } from '@/styling/color';
 import { labelGrammeme } from '@/utils/labels';

@@ -11,7 +11,7 @@ For more specific TODOs see comments in code
 [Functionality - PENDING]
 - Search functionality for manuals
 - User notifications on edit - consider spam prevention and change aggregation
-- Static analyzer for RSForm
+- Static analyzer for RSForm as a whole: check term duplication and empty conventions
 - Content based search in Library
 - User profile: Settings + settings persistency
 
@@ -25,12 +25,18 @@ For more specific TODOs see comments in code
 - Internationalization - at least english version. Consider react.intl
 - Focus on codemirror editor when label is clicked (need React 19 ref for clean code solution)
 
+- Sitemap for better SEO and crawler optimization
+
 
 [Tech]
-- add debounce to some search fields
 - duplicate syntax parsing and type info calculations to client. Consider moving backend to Nodejs or embedding c++ lib
-
+- add debounce to some search fields
 - DataTable: fixed percentage columns, especially for SubstituteTable. Rework column sizing mechanics
+- move autopep8 and isort settings from vscode settings to pyproject.toml
+- Test UI for #enable-force-dark Chrome setting
+
+- Testing: frontend react components, testplane / playwright?
+- Documentation: frontend base components at least
 
 
 [Deployment]
@@ -39,7 +45,6 @@ For more specific TODOs see comments in code
 
 
 [Security]
-- password-reset leaks info of email being used
 - improve nginx config. Consider DDOS and other types of attacks on infrastructure
 - recaptcha for create user and rest password
 https://yandex.cloud/ru/docs/smartcaptcha
@@ -50,8 +55,16 @@ Research and consider integration
 - django-allauth - consider supporting popular auth providers
 - drf-messages
 
+- skeleton loading
+https://react.dev/reference/react/Suspense
+
 - backend error message unification
 https://drf-standardized-errors.readthedocs.io/en/latest/error_response.html
+
+- semantic json diff
+https://stackoverflow.com/questions/28838170/multilevel-json-diff-in-python
+
+- Documentation platform. Consider diplodoc
 
 - radix-ui
 - shadcn-ui
@@ -61,5 +74,3 @@ https://drf-standardized-errors.readthedocs.io/en/latest/error_response.html
 
 - react-query
 - react-hook-form
-
-- node-based UI

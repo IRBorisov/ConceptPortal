@@ -8,7 +8,7 @@ import Modal, { ModalProps } from '@/components/ui/Modal';
 import { ConstituentaID, IRSForm } from '@/models/rsform';
 import { prefixes } from '@/utils/constants';
 
-import ConstituentsList from './ConstituentsList';
+import ListConstituents from './ListConstituents';
 
 interface DlgDeleteCstProps extends Pick<ModalProps, 'hideWindow'> {
   selected: ConstituentaID[];
@@ -41,8 +41,8 @@ function DlgDeleteCst({ hideWindow, selected, schema, onDelete }: DlgDeleteCstPr
       onSubmit={handleSubmit}
       className={clsx('cc-column', 'max-w-[60vw] min-w-[30rem]', 'px-6')}
     >
-      <ConstituentsList title='Выбраны к удалению' list={selected} schema={schema} prefix={prefixes.cst_delete_list} />
-      <ConstituentsList
+      <ListConstituents title='Выбраны к удалению' list={selected} schema={schema} prefix={prefixes.cst_delete_list} />
+      <ListConstituents
         title='Зависимые конституенты'
         list={expansion}
         schema={schema}

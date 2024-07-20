@@ -7,7 +7,7 @@ import { ErrorData } from '@/components/info/InfoError';
 import { ILexemeData, ITextRequest, ITextResult, IWordFormPlain } from '@/models/language';
 
 function useConceptText() {
-  const [loading, setLoading] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<ErrorData>(undefined);
 
   const inflect = useCallback((data: IWordFormPlain, onSuccess: DataCallback<ITextResult>) => {
@@ -15,7 +15,7 @@ function useConceptText() {
     postInflectText({
       data: data,
       showError: true,
-      setLoading,
+      setLoading: setProcessing,
       onError: setError,
       onSuccess: data => {
         if (onSuccess) onSuccess(data);
@@ -28,7 +28,7 @@ function useConceptText() {
     postParseText({
       data: data,
       showError: true,
-      setLoading,
+      setLoading: setProcessing,
       onError: setError,
       onSuccess: data => {
         if (onSuccess) onSuccess(data);
@@ -41,7 +41,7 @@ function useConceptText() {
     postGenerateLexeme({
       data: data,
       showError: true,
-      setLoading,
+      setLoading: setProcessing,
       onError: setError,
       onSuccess: data => {
         if (onSuccess) onSuccess(data);
@@ -49,7 +49,7 @@ function useConceptText() {
     });
   }, []);
 
-  return { inflect, parse, generateLexeme, error, setError, loading };
+  return { inflect, parse, generateLexeme, error, setError, processing };
 }
 
 export default useConceptText;

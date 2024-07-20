@@ -1,12 +1,13 @@
 'use client';
 
 import clsx from 'clsx';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { urls } from '@/app/urls';
 import { VisibilityIcon } from '@/components/DomainIcons';
 import SelectAccessPolicy from '@/components/select/SelectAccessPolicy';
+import SelectLocationContext from '@/components/select/SelectLocationContext';
 import SelectLocationHead from '@/components/select/SelectLocationHead';
 import Checkbox from '@/components/ui/Checkbox';
 import Label from '@/components/ui/Label';
@@ -44,9 +45,14 @@ function DlgCloneLibraryItem({ hideWindow, base, initialLocation, selected, tota
   const [body, setBody] = useState(initialLocation.substring(3));
   const location = useMemo(() => combineLocation(head, body), [head, body]);
 
-  const { cloneItem } = useLibrary();
+  const { cloneItem, folders } = useLibrary();
 
   const canSubmit = useMemo(() => title !== '' && alias !== '' && validateLocation(location), [title, alias, location]);
+
+  const handleSelectLocation = useCallback((newValue: string) => {
+    setHead(newValue.substring(0, 2) as LocationHead);
+    setBody(newValue.length > 3 ? newValue.substring(3) : '');
+  }, []);
 
   function handleSubmit() {
     const data: IRSFormCloneData = {
@@ -118,6 +124,7 @@ function DlgCloneLibraryItem({ hideWindow, base, initialLocation, selected, tota
             excluded={!user?.is_staff ? [LocationHead.LIBRARY] : []}
           />
         </div>
+        <SelectLocationContext folderTree={folders} value={location} onChange={handleSelectLocation} />
         <TextArea
           id='dlg_cst_body'
           label='Путь'

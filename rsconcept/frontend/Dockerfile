@@ -1,26 +1,30 @@
 # ======== Multi-stage base ==========
-FROM node:bullseye-slim as node-base
+FROM node:22-bookworm-slim AS node-base
 RUN apt-get update -qq && \
     apt-get upgrade -y && \
     rm -rf /var/lib/apt/lists/*
 
 # ======= Build =======
 ARG BUILD_TYPE=production
-FROM node-base as builder
+FROM node-base AS builder
 
 WORKDIR /result
+
+RUN npm install -g typescript vite
 
 COPY ./ ./
 COPY ./env/.env.$BUILD_TYPE ./
 RUN rm -rf ./env
+
 RUN npm ci
-ENV NODE_ENV production
+
+ENV NODE_ENV=production
 RUN npm run build
 
 # ========= Server =======
-FROM node-base as product-server
+FROM node-base AS product-server
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 # Install serve util
 RUN npm install -g serve

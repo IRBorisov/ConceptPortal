@@ -10,8 +10,9 @@ from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
 
+from shared import permissions
+
 from .. import models as m
-from .. import permissions
 from .. import serializers as s
 from .. import utils
 
@@ -54,6 +55,7 @@ class VersionViewset(
     request=s.VersionCreateSerializer,
     responses={
         c.HTTP_201_CREATED: s.NewVersionResponse,
+        c.HTTP_400_BAD_REQUEST: None,
         c.HTTP_403_FORBIDDEN: None,
         c.HTTP_404_NOT_FOUND: None
     }

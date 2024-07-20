@@ -1,24 +1,21 @@
 'use client';
 
-import { ReactFlowProvider } from '@reactflow/core';
+import { ReactFlowProvider } from 'reactflow';
 
-import SynthesisFlow from '@/components/ui/Synthesis/SynthesisFlow.tsx';
 import AnimateFade from '@/components/wrap/AnimateFade';
-import { SynthesisState } from '@/pages/OssPage/SynthesisContext.tsx';
-import SynthesisToolbar from '@/pages/OssPage/SynthesisToolbar.tsx';
+
+import { useOssEdit } from '../OssEditContext';
+import OssFlow from './OssFlow';
 
 function EditorOssGraph() {
-  // TODO: Implement OSS editing UI here
+  const controller = useOssEdit();
 
   return (
-    <AnimateFade>
-      <ReactFlowProvider>
-        <SynthesisState synthesisSchemaID='1'>
-          <SynthesisToolbar />
-          <SynthesisFlow />
-        </SynthesisState>
-      </ReactFlowProvider>
-    </AnimateFade>
+    <ReactFlowProvider>
+      <AnimateFade>
+        <OssFlow controller={controller} />
+      </AnimateFade>
+    </ReactFlowProvider>
   );
 }
 

@@ -13,9 +13,10 @@ from rest_framework.decorators import action, api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from .. import messages as msg
+from shared import messages as msg
+from shared import permissions
+
 from .. import models as m
-from .. import permissions
 from .. import serializers as s
 from .. import utils
 
@@ -33,11 +34,21 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     def get_permissions(self):
         ''' Determine permission class. '''
         if self.action in [
-            'load_trs', 'cst_create', 'cst_delete_multiple',
-            'reset_aliases', 'cst_rename', 'cst_substitute'
+            'load_trs',
+            'reset_aliases',
+            'cst_create',
+            'cst_delete_multiple',
+            'cst_rename',
+            'cst_substitute'
         ]:
             permission_list = [permissions.ItemEditor]
-        elif self.action in ['contents', 'details', 'export_trs', 'resolve', 'check']:
+        elif self.action in [
+            'contents',
+            'details',
+            'export_trs',
+            'resolve',
+            'check'
+        ]:
             permission_list = [permissions.ItemAnyone]
         else:
             permission_list = [permissions.Anyone]
@@ -49,6 +60,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         request=s.CstCreateSerializer,
         responses={
             c.HTTP_201_CREATED: s.NewCstResponse,
+            c.HTTP_400_BAD_REQUEST: None,
             c.HTTP_403_FORBIDDEN: None,
             c.HTTP_404_NOT_FOUND: None
         }
@@ -60,10 +72,15 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         serializer = s.CstCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
-        new_cst = schema.create_cst(
-            data=data,
-            insert_after=data['insert_after'] if 'insert_after' in data else None
-        )
+        if 'insert_after' in data:
+            try:
+                insert_after = m.Constituenta.objects.get(pk=data['insert_after'])
+            except m.LibraryItem.DoesNotExist:
+                return Response(status=c.HTTP_404_NOT_FOUND)
+        else:
+            insert_after = None
+        new_cst = schema.create_cst(data, insert_after)
+
         schema.item.refresh_from_db()
         response = Response(
             status=c.HTTP_201_CREATED,
@@ -81,6 +98,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         request=s.CstTargetSerializer,
         responses={
             c.HTTP_200_OK: s.NewMultiCstResponse,
+            c.HTTP_400_BAD_REQUEST: None,
             c.HTTP_403_FORBIDDEN: None,
             c.HTTP_404_NOT_FOUND: None
         }
@@ -117,11 +135,11 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         request=s.CstRenameSerializer,
         responses={
             c.HTTP_200_OK: s.NewCstResponse,
+            c.HTTP_400_BAD_REQUEST: None,
             c.HTTP_403_FORBIDDEN: None,
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @transaction.atomic
     @action(detail=True, methods=['patch'], url_path='cst-rename')
     def cst_rename(self, request: Request, pk):
         ''' Rename constituenta possibly changing type. '''
@@ -134,12 +152,12 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
 
         cst.alias = serializer.validated_data['alias']
         cst.cst_type = serializer.validated_data['cst_type']
-        cst.save()
 
-        mapping = {old_alias: cst.alias}
-        schema.apply_mapping(mapping, change_aliases=False)
-        schema.item.refresh_from_db()
-        cst.refresh_from_db()
+        with transaction.atomic():
+            cst.save()
+            schema.apply_mapping(mapping={old_alias: cst.alias}, change_aliases=False)
+            schema.item.refresh_from_db()
+            cst.refresh_from_db()
 
         return Response(
             status=c.HTTP_200_OK,
@@ -155,11 +173,11 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         request=s.CstSubstituteSerializer,
         responses={
             c.HTTP_200_OK: s.RSFormParseSerializer,
+            c.HTTP_400_BAD_REQUEST: None,
             c.HTTP_403_FORBIDDEN: None,
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @transaction.atomic
     @action(detail=True, methods=['patch'], url_path='cst-substitute')
     def cst_substitute(self, request: Request, pk):
         ''' Substitute occurrences of constituenta with another one. '''
@@ -169,11 +187,13 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             context={'schema': schema.item}
         )
         serializer.is_valid(raise_exception=True)
-        for substitution in serializer.validated_data['substitutions']:
-            original = cast(m.Constituenta, substitution['original'])
-            replacement = cast(m.Constituenta, substitution['substitution'])
-            schema.substitute(original, replacement, substitution['transfer_term'])
-        schema.item.refresh_from_db()
+
+        with transaction.atomic():
+            for substitution in serializer.validated_data['substitutions']:
+                original = cast(m.Constituenta, substitution['original'])
+                replacement = cast(m.Constituenta, substitution['substitution'])
+                schema.substitute(original, replacement, substitution['transfer_term'])
+            schema.item.refresh_from_db()
         return Response(
             status=c.HTTP_200_OK,
             data=s.RSFormParseSerializer(schema.item).data
@@ -185,6 +205,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         request=s.CstListSerializer,
         responses={
             c.HTTP_200_OK: s.RSFormParseSerializer,
+            c.HTTP_400_BAD_REQUEST: None,
             c.HTTP_403_FORBIDDEN: None,
             c.HTTP_404_NOT_FOUND: None
         }
@@ -211,6 +232,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         request=s.CstMoveSerializer,
         responses={
             c.HTTP_200_OK: s.RSFormParseSerializer,
+            c.HTTP_400_BAD_REQUEST: None,
             c.HTTP_403_FORBIDDEN: None,
             c.HTTP_404_NOT_FOUND: None
         }
@@ -279,6 +301,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         request=s.RSFormUploadSerializer,
         responses={
             c.HTTP_200_OK: s.RSFormParseSerializer,
+            c.HTTP_400_BAD_REQUEST: None,
             c.HTTP_403_FORBIDDEN: None,
             c.HTTP_404_NOT_FOUND: None
         }
@@ -313,7 +336,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @action(detail=True, methods=['get'])
+    @action(detail=True, methods=['get'], url_path='contents')
     def contents(self, request: Request, pk):
         ''' Endpoint: View schema db contents (including constituents). '''
         schema = s.RSFormSerializer(self.get_object())
@@ -331,7 +354,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @action(detail=True, methods=['get'])
+    @action(detail=True, methods=['get'], url_path='details')
     def details(self, request: Request, pk):
         ''' Endpoint: Detailed schema view including statuses and parse. '''
         serializer = s.RSFormParseSerializer(cast(m.LibraryItem, self.get_object()))
@@ -349,7 +372,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             c.HTTP_404_NOT_FOUND: None
         },
     )
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], url_path='check')
     def check(self, request: Request, pk):
         ''' Endpoint: Check RSLang expression against schema context. '''
         serializer = s.ExpressionSerializer(data=request.data)
@@ -371,7 +394,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], url_path='resolve')
     def resolve(self, request: Request, pk):
         ''' Endpoint: Resolve references in text against schema terms context. '''
         serializer = s.TextSerializer(data=request.data)

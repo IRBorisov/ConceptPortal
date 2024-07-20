@@ -1,4 +1,4 @@
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 
 function HelpFormulaTree() {
   const { colors } = useConceptOptions();

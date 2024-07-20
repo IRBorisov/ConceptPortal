@@ -7,8 +7,7 @@ from zipfile import ZipFile
 from rest_framework import status
 
 from apps.rsform.models import Constituenta, RSForm
-
-from ..EndpointTester import EndpointTester, decl_endpoint
+from shared.EndpointTester import EndpointTester, decl_endpoint
 
 
 class TestVersionViews(EndpointTester):
@@ -31,11 +30,11 @@ class TestVersionViews(EndpointTester):
         invalid_id = 1338
         data = {'version': '1.0.0', 'description': 'test'}
 
-        self.executeNotFound(data, schema=invalid_id)
-        self.executeForbidden(data, schema=self.unowned.pk)
-        self.executeBadData(invalid_data, schema=self.owned.pk)
+        self.executeNotFound(data=data, schema=invalid_id)
+        self.executeForbidden(data=data, schema=self.unowned.pk)
+        self.executeBadData(data=invalid_data, schema=self.owned.pk)
 
-        response = self.executeCreated(data, schema=self.owned.pk)
+        response = self.executeCreated(data=data, schema=self.owned.pk)
         self.assertTrue('version' in response.data)
         self.assertTrue('schema' in response.data)
         self.assertTrue(response.data['version'] in [v['id'] for v in response.data['schema']['versions']])
@@ -65,7 +64,7 @@ class TestVersionViews(EndpointTester):
     @decl_endpoint('/api/versions/{version}', method='get')
     def test_access_version(self):
         data = {'version': '1.0.0', 'description': 'test'}
-        version_id = self._create_version(data)
+        version_id = self._create_version(data=data)
         invalid_id = version_id + 1337
 
         self.executeNotFound(version=invalid_id)
@@ -79,14 +78,14 @@ class TestVersionViews(EndpointTester):
 
         data = {'version': '1.2.0', 'description': 'test1'}
         self.method = 'patch'
-        self.executeForbidden(data)
+        self.executeForbidden(data=data)
 
         self.method = 'delete'
         self.executeForbidden()
 
         self.client.force_authenticate(user=self.user)
         self.method = 'patch'
-        self.executeOK(data)
+        self.executeOK(data=data)
         response = self.get()
         self.assertEqual(response.data['version'], data['version'])
         self.assertEqual(response.data['description'], data['description'])
@@ -139,7 +138,7 @@ class TestVersionViews(EndpointTester):
         x2 = self.schema.insert_new('X2')
         d1 = self.schema.insert_new('D1', term_raw='TestTerm')
         data = {'version': '1.0.0', 'description': 'test'}
-        version_id = self._create_version(data)
+        version_id = self._create_version(data=data)
         invalid_id = version_id + 1337
 
         d1.delete()

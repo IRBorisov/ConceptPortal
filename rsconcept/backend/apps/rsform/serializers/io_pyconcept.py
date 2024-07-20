@@ -4,7 +4,8 @@ from typing import Optional, Union, cast
 
 import pyconcept
 
-from .. import messages as msg
+from shared import messages as msg
+
 from ..models import RSForm
 
 

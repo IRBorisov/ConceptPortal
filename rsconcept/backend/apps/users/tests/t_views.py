@@ -1,30 +1,30 @@
 ''' Testing API: users. '''
 from rest_framework.test import APIClient, APITestCase
 
-from apps.rsform.tests.EndpointTester import EndpointTester, decl_endpoint
 from apps.users.models import User
+from shared.EndpointTester import EndpointTester, decl_endpoint
 
 
 class TestUserAPIViews(EndpointTester):
     ''' Testing Authentication views. '''
 
     def setUp(self):
-        super().setUp()
+        super().setUpFullUsers()
 
 
     @decl_endpoint('/users/api/login', method='post')
     def test_login(self):
         self.logout()
         data = {'username': self.user.username, 'password': 'invalid'}
-        self.executeBadData(data)
+        self.executeBadData(data=data)
 
         data = {'username': self.user.username, 'password': 'password'}
-        self.executeAccepted(data)
-        self.executeAccepted(data)
+        self.executeAccepted(data=data)
+        self.executeAccepted(data=data)
 
         self.logout()
         data = {'username': self.user.email, 'password': 'password'}
-        self.executeAccepted(data)
+        self.executeAccepted(data=data)
 
 
     @decl_endpoint('/users/api/logout', method='post')
@@ -59,7 +59,7 @@ class TestUserUserProfileAPIView(EndpointTester):
     ''' Testing User profile views. '''
 
     def setUp(self):
-        super().setUp()
+        super().setUpFullUsers()
         self.user.first_name = 'John'
         self.user.second_name = 'Smith'
         self.user.save()
@@ -84,7 +84,7 @@ class TestUserUserProfileAPIView(EndpointTester):
             'first_name': 'firstName',
             'last_name': 'lastName',
         }
-        response = self.executeOK(data)
+        response = self.executeOK(data=data)
         self.user.refresh_from_db()
         self.assertEqual(response.data['email'], '123@mail.ru')
         self.assertEqual(self.user.email, '123@mail.ru')
@@ -98,10 +98,10 @@ class TestUserUserProfileAPIView(EndpointTester):
             'first_name': 'new',
             'last_name': 'new2',
         }
-        self.executeOK(data)
+        self.executeOK(data=data)
 
         data = {'email': self.user2.email}
-        self.executeBadData(data)
+        self.executeBadData(data=data)
 
         self.logout()
         self.executeForbidden()
@@ -113,14 +113,14 @@ class TestUserUserProfileAPIView(EndpointTester):
             'old_password': 'invalid',
             'new_password': 'password2'
         }
-        self.executeBadData(data)
+        self.executeBadData(data=data)
 
         data = {
             'old_password': 'password',
             'new_password': 'password2'
         }
         oldHash = self.user.password
-        response = self.executeNoContent(data)
+        response = self.executeNoContent(data=data)
         self.user.refresh_from_db()
         self.assertNotEqual(self.user.password, oldHash)
         self.assertTrue(self.client.login(username=self.user.username, password='password2'))
@@ -154,7 +154,7 @@ class TestSignupAPIView(EndpointTester):
             'first_name': 'firstName',
             'last_name': 'lastName'
         }
-        self.executeBadData(data)
+        self.executeBadData(data=data)
 
         data = {
             'username': 'NewUser',
@@ -164,7 +164,7 @@ class TestSignupAPIView(EndpointTester):
             'first_name': 'firstName',
             'last_name': 'lastName'
         }
-        response = self.executeCreated(data)
+        response = self.executeCreated(data=data)
         self.assertTrue('id' in response.data)
         self.assertEqual(response.data['username'], data['username'])
         self.assertEqual(response.data['email'], data['email'])
@@ -179,7 +179,7 @@ class TestSignupAPIView(EndpointTester):
             'first_name': 'firstName',
             'last_name': 'lastName'
         }
-        self.executeBadData(data)
+        self.executeBadData(data=data)
 
         data = {
             'username': 'NewUser2',
@@ -189,4 +189,4 @@ class TestSignupAPIView(EndpointTester):
             'first_name': 'firstName',
             'last_name': 'lastName'
         }
-        self.executeBadData(data)
+        self.executeBadData(data=data)

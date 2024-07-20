@@ -7,11 +7,11 @@ import AnimateFade from '@/components/wrap/AnimateFade';
 import { useAuth } from '@/context/AuthContext';
 import { useOSS } from '@/context/OssContext';
 import EditorLibraryItem from '@/pages/RSFormPage/EditorRSFormCard/EditorLibraryItem';
+import ToolbarRSFormCard from '@/pages/RSFormPage/EditorRSFormCard/ToolbarRSFormCard';
 import { globals } from '@/utils/constants';
 
 import { useOssEdit } from '../OssEditContext';
 import FormOSS from './FormOSS';
-import RSFormToolbar from './OssFormToolbar';
 
 interface EditorOssCardProps {
   isModified: boolean;
@@ -42,12 +42,13 @@ function EditorOssCard({ isModified, onDestroy, setIsModified }: EditorOssCardPr
 
   return (
     <>
-      <RSFormToolbar
+      <ToolbarRSFormCard
         subscribed={isSubscribed}
         modified={isModified}
         anonymous={!user}
         onSubmit={initiateSubmit}
         onDestroy={onDestroy}
+        controller={controller}
       />
       <AnimateFade onKeyDown={handleInput} className={clsx('sm:w-fit mx-auto', 'flex flex-col sm:flex-row')}>
         <FlexColumn className='px-3'>

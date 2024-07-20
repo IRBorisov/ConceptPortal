@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { ExpressionStatus } from '@/models/rsform';
 import { colorBgCstStatus } from '@/styling/color';
 import { prefixes } from '@/utils/constants';

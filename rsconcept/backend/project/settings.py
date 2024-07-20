@@ -74,6 +74,7 @@ INSTALLED_APPS = [
 
     'apps.users',
     'apps.rsform',
+    'apps.oss',
 
     'drf_spectacular',
     'drf_spectacular_sidecar',

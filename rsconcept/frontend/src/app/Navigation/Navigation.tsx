@@ -3,14 +3,14 @@ import { motion } from 'framer-motion';
 
 import { IconLibrary2, IconManuals, IconNewItem2 } from '@/components/Icons';
 import { CProps } from '@/components/props';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
-import { useConceptOptions } from '@/context/OptionsContext';
 import { animateNavigation } from '@/styling/animations';
 
 import { urls } from '../urls';
 import Logo from './Logo';
 import NavigationButton from './NavigationButton';
-import ToggleNavigationButton from './ToggleNavigationButton';
+import ToggleNavigation from './ToggleNavigation';
 import UserMenu from './UserMenu';
 
 function Navigation() {
@@ -33,7 +33,7 @@ function Navigation() {
         'select-none'
       )}
     >
-      <ToggleNavigationButton />
+      <ToggleNavigation />
       <motion.div
         className={clsx(
           'pl-2 pr-[0.9rem] h-[3rem] w-full', // prettier: split lines
@@ -48,19 +48,9 @@ function Navigation() {
           <Logo />
         </div>
         <div className='flex gap-1 py-[0.3rem]'>
-          <NavigationButton
-            text='Новая схема'
-            title='Создать новую схему'
-            icon={<IconNewItem2 size='1.5rem' />}
-            onClick={navigateCreateNew}
-          />
-          <NavigationButton
-            text='Библиотека'
-            title='Список схем'
-            icon={<IconLibrary2 size='1.5rem' />}
-            onClick={navigateLibrary}
-          />
-          <NavigationButton text='Справка' title='Справочные материалы' icon={<IconManuals />} onClick={navigateHelp} />
+          <NavigationButton text='Новая схема' icon={<IconNewItem2 size='1.5rem' />} onClick={navigateCreateNew} />
+          <NavigationButton text='Библиотека' icon={<IconLibrary2 size='1.5rem' />} onClick={navigateLibrary} />
+          <NavigationButton text='Справка' icon={<IconManuals size='1.5rem' />} onClick={navigateHelp} />
           <UserMenu />
         </div>
       </motion.div>

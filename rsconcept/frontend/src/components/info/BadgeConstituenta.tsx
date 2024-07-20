@@ -1,9 +1,10 @@
 import clsx from 'clsx';
 
-import ConstituentaTooltip from '@/components/info/ConstituentaTooltip';
 import { IConstituenta } from '@/models/rsform';
 import { isMockCst } from '@/models/rsformAPI';
 import { colorFgCstStatus, IColorTheme } from '@/styling/color';
+
+import TooltipConstituenta from './TooltipConstituenta';
 
 interface BadgeConstituentaProps {
   prefixID?: string;
@@ -28,7 +29,7 @@ function BadgeConstituenta({ value, prefixID, theme }: BadgeConstituentaProps) {
       }}
     >
       {value.alias}
-      <ConstituentaTooltip anchor={`#${prefixID}${value.alias}`} data={value} />
+      <TooltipConstituenta anchor={`#${prefixID}${value.alias}`} data={value} />
     </div>
   );
 }

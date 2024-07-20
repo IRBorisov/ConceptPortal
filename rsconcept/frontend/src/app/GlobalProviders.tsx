@@ -5,8 +5,8 @@ import { IntlProvider } from 'react-intl';
 import { pdfjs } from 'react-pdf';
 
 import { AuthState } from '@/context/AuthContext';
+import { OptionsState } from '@/context/ConceptOptionsContext';
 import { LibraryState } from '@/context/LibraryContext';
-import { OptionsState } from '@/context/OptionsContext';
 import { UsersState } from '@/context/UsersContext';
 
 import ErrorFallback from './ErrorFallback';

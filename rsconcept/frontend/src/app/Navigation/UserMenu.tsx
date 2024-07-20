@@ -4,8 +4,8 @@ import { IconLogin, IconUser2 } from '@/components/Icons';
 import Loader from '@/components/ui/Loader';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { useAuth } from '@/context/AuthContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
-import { useConceptOptions } from '@/context/OptionsContext';
 import useDropdown from '@/hooks/useDropdown';
 
 import { urls } from '../urls';

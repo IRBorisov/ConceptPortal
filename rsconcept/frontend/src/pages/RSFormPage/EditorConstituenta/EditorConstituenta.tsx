@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { AnimatePresence } from 'framer-motion';
 import { useMemo, useState } from 'react';
 
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
@@ -12,8 +12,8 @@ import { globals, storage } from '@/utils/constants';
 
 import { useRSEdit } from '../RSEditContext';
 import ViewConstituents from '../ViewConstituents';
-import ConstituentaToolbar from './ConstituentaToolbar';
 import FormConstituenta from './FormConstituenta';
+import ToolbarConstituenta from './ToolbarConstituenta';
 
 // Threshold window width to switch layout.
 const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
@@ -81,7 +81,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
   return (
     <div className='overflow-y-auto' style={{ maxHeight: panelHeight }}>
       {controller.isContentEditable ? (
-        <ConstituentaToolbar
+        <ToolbarConstituenta
           disabled={disabled}
           modified={isModified}
           showList={showList}

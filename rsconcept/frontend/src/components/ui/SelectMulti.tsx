@@ -10,7 +10,7 @@ import Select, {
   StylesConfig
 } from 'react-select';
 
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { selectDarkT, selectLightT } from '@/styling/color';
 

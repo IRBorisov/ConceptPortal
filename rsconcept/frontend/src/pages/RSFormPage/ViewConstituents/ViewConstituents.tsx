@@ -5,14 +5,14 @@ import { motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
 
 import { useAccessMode } from '@/context/AccessModeContext';
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
 import { UserLevel } from '@/models/user';
 import { animateSideView } from '@/styling/animations';
 
 import ConstituentsSearch from './ConstituentsSearch';
-import ConstituentsTable from './ConstituentsTable';
+import TableSideConstituents from './TableSideConstituents';
 
 // Window width cutoff for expression show
 const COLUMN_EXPRESSION_HIDE_THRESHOLD = 1500;
@@ -37,7 +37,7 @@ function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit 
 
   const table = useMemo(
     () => (
-      <ConstituentsTable
+      <TableSideConstituents
         maxHeight={
           isBottom
             ? calculateHeight(accessLevel !== UserLevel.READER ? '42rem' : '35rem', '10rem')

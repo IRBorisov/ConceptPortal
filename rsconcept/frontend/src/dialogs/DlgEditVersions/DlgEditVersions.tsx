@@ -10,7 +10,7 @@ import TextInput from '@/components/ui/TextInput';
 import { useRSForm } from '@/context/RSFormContext';
 import { IVersionData, IVersionInfo, VersionID } from '@/models/library';
 
-import VersionsTable from './VersionsTable';
+import TableVersions from './TableVersions';
 
 interface DlgEditVersionsProps {
   hideWindow: () => void;
@@ -66,7 +66,7 @@ function DlgEditVersions({ hideWindow, versions, onDelete, onUpdate }: DlgEditVe
 
   const versionsTable = useMemo(
     () => (
-      <VersionsTable
+      <TableVersions
         processing={processing}
         items={versions}
         onDelete={onDelete}

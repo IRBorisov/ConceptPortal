@@ -1,7 +1,6 @@
 ''' Testing API: Operations. '''
 from apps.rsform.models import Constituenta, CstType, RSForm
-
-from ..EndpointTester import EndpointTester, decl_endpoint
+from shared.EndpointTester import EndpointTester, decl_endpoint
 
 
 class TestInlineSynthesis(EndpointTester):
@@ -24,20 +23,20 @@ class TestInlineSynthesis(EndpointTester):
             'items': [],
             'substitutions': []
         }
-        self.executeForbidden(data)
+        self.executeForbidden(data=data)
 
         data['receiver'] = invalid_id
-        self.executeBadData(data)
+        self.executeBadData(data=data)
 
         data['receiver'] = self.schema1.item.pk
         data['source'] = invalid_id
-        self.executeBadData(data)
+        self.executeBadData(data=data)
 
         data['source'] = self.schema1.item.pk
-        self.executeOK(data)
+        self.executeOK(data=data)
 
         data['items'] = [invalid_id]
-        self.executeBadData(data)
+        self.executeBadData(data=data)
 
 
     def test_inline_synthesis(self):
@@ -68,7 +67,7 @@ class TestInlineSynthesis(EndpointTester):
                 }
             ]
         }
-        response = self.executeOK(data)
+        response = self.executeOK(data=data)
         result = {item['alias']: item for item in response.data['items']}
         self.assertEqual(len(result), 6)
         self.assertEqual(result['X2']['term_raw'], ks1_x2.term_raw)

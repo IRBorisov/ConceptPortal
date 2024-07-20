@@ -101,6 +101,26 @@ class TestRSForm(TestCase):
         self.assertEqual(x2.schema, self.schema.item)
         self.assertEqual(x1.order, 1)
 
+    def test_create_cst(self):
+        data = {
+            'alias': 'X3',
+            'cst_type': CstType.BASE,
+            'term_raw': 'слон',
+            'definition_raw': 'test',
+            'convention': 'convention'
+        }
+
+        x1 = self.schema.insert_new('X1')
+        x2 = self.schema.insert_new('X2')
+        x3 = self.schema.create_cst(data=data, insert_after=x1)
+        x2.refresh_from_db()
+
+        self.assertEqual(x3.alias, data['alias'])
+        self.assertEqual(x3.term_raw, data['term_raw'])
+        self.assertEqual(x3.definition_raw, data['definition_raw'])
+        self.assertEqual(x2.order, 3)
+        self.assertEqual(x3.order, 2)
+
 
     def test_create_cst_resolve(self):
         x1 = self.schema.insert_new(

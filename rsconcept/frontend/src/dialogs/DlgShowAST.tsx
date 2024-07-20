@@ -6,7 +6,7 @@ import BadgeHelp from '@/components/info/BadgeHelp';
 import GraphUI, { GraphEdge, GraphNode } from '@/components/ui/GraphUI';
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import Overlay from '@/components/ui/Overlay';
-import { useConceptOptions } from '@/context/OptionsContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { HelpTopic } from '@/models/miscellaneous';
 import { SyntaxTree } from '@/models/rslang';
 import { graphDarkT, graphLightT } from '@/styling/color';

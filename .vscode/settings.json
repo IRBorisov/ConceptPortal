@@ -11,7 +11,9 @@
     "--multi-line",
     "3",
     "--project",
-    "apps"
+    "apps",
+    "--project",
+    "shared"
   ],
   "autopep8.args": [
     "--max-line-length",
@@ -38,6 +40,10 @@
     {
       "name": "django",
       "depth": 5
+    },
+    {
+      "name": "djangorestframework",
+      "depth": 2
     }
   ],
   "colorize.include": [".tsx", ".jsx", ".ts", ".js"],
