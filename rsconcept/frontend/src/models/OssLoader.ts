@@ -17,7 +17,7 @@ export class OssLoader {
 
   produceOSS(): IOperationSchema {
     const result = this.schema as IOperationSchema;
-    // TODO: put data processing here
+    result.producedData = [1, 2, 3]; // TODO: put data processing here
     return result;
   }
 }

@@ -16,7 +16,6 @@ import UserProfilePage from '@/pages/UserProfilePage';
 
 import ApplicationLayout from './ApplicationLayout';
 import { routes } from './urls';
-import SynthesisPage from "@/pages/SynthesisPage";
 
 export const Router = createBrowserRouter([
   {
@@ -71,10 +70,6 @@ export const Router = createBrowserRouter([
       {
         path: routes.manuals,
         element: <ManualsPage />
-      },
-      {
-        path: routes.synthesis,
-        element: <SynthesisPage />
       }
     ]
   }

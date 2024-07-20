@@ -1,5 +1,4 @@
 ''' Utility functions '''
-import copy
 import json
 import re
 from io import BytesIO
@@ -67,15 +66,3 @@ def filename_for_schema(alias: str) -> str:
         # are not supported by some browsers
         return 'Schema.trs'
     return alias + '.trs'
-
-
-def clone_rsform(rsform):
-    rsform_copy = copy.deepcopy(rsform)
-    rsform_copy.item.pk = None
-    # rsform_copy.item.owner = "System"
-    rsform_copy.item.comment = "Temporary cloned rsform"
-    rsform_copy.item.save()
-
-    rsform_copy.insert_copy(items=rsform.item.constituenta_set.all(), position=1)
-    rsform_copy.item.save()
-    return rsform_copy
