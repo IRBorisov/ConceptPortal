@@ -25,6 +25,7 @@ import DlgRenameCst from '@/dialogs/DlgRenameCst';
 import DlgSubstituteCst from '@/dialogs/DlgSubstituteCst';
 import DlgUploadRSForm from '@/dialogs/DlgUploadRSForm';
 import { AccessPolicy, IVersionData, LocationHead, VersionID } from '@/models/library';
+import { ICstSubstituteData } from '@/models/oss';
 import {
   ConstituentaID,
   CstType,
@@ -33,7 +34,6 @@ import {
   ICstCreateData,
   ICstMovetoData,
   ICstRenameData,
-  ICstSubstituteData,
   ICstUpdateData,
   IInlineSynthesisData,
   IRSForm,

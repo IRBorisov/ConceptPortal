@@ -8,9 +8,12 @@ import { useOssEdit } from '../OssEditContext';
 
 interface InputNodeProps {
   id: string;
+  data: {
+    label: string;
+  };
 }
 
-function InputNode({ id }: InputNodeProps) {
+function InputNode({ id, data }: InputNodeProps) {
   const controller = useOssEdit();
   console.log(controller.isMutable);
 
@@ -26,29 +29,21 @@ function InputNode({ id }: InputNodeProps) {
   return (
     <>
       <Handle type='target' position={Position.Bottom} />
-      <div>
-        <MiniButton
-          className='float-right'
-          icon={<CiSquareRemove className='icon-red' />}
-          title='Удалить'
-          onClick={handleDelete}
-          color={'red'}
-        />
-        <div>
-          Тип: <strong>Ввод</strong>
-        </div>
-        <div>
-          {/* Схема:{controller.getBind(id) === undefined ? '' : controller.getBind(id)} */}
-          <strong>
-            <MiniButton
-              className='float-right'
-              icon={<PiPlugsConnected className='icon-green' />}
-              title='Привязать схему'
-              onClick={() => {
-                handleClick();
-              }}
-            />
-          </strong>
+      <div className='flex justify-between'>
+        <div className='flex-grow text-center'>{data.label}</div>
+        <div className='cc-icons'>
+          <MiniButton
+            icon={<PiPlugsConnected className='icon-green' />}
+            title='Привязать схему'
+            onClick={() => {
+              handleClick();
+            }}
+          />
+          <MiniButton
+            icon={<CiSquareRemove className='icon-red' size='1rem' />}
+            title='Удалить'
+            onClick={handleDelete}
+          />
         </div>
       </div>
     </>

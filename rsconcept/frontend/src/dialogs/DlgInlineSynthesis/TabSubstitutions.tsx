@@ -2,7 +2,7 @@
 
 import { ErrorData } from '@/components/info/InfoError';
 import DataLoader from '@/components/wrap/DataLoader';
-import { ConstituentaID, IRSForm, ISubstitution } from '@/models/rsform';
+import { ConstituentaID, IRSForm, ISingleSubstitution } from '@/models/rsform';
 import { prefixes } from '@/utils/constants';
 
 import PickSubstitutions from '../../components/select/PickSubstitutions';
@@ -15,8 +15,8 @@ interface TabSubstitutionsProps {
   loading?: boolean;
   error?: ErrorData;
 
-  substitutions: ISubstitution[];
-  setSubstitutions: React.Dispatch<React.SetStateAction<ISubstitution[]>>;
+  substitutions: ISingleSubstitution[];
+  setSubstitutions: React.Dispatch<React.SetStateAction<ISingleSubstitution[]>>;
 }
 
 function TabSubstitutions({

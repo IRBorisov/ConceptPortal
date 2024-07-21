@@ -10,6 +10,7 @@ import { GramData, Grammeme, ReferenceType } from '@/models/language';
 import { AccessPolicy, LibraryItemType, LocationHead } from '@/models/library';
 import { validateLocation } from '@/models/libraryAPI';
 import { CstMatchMode, DependencyMode, GraphColoring, GraphSizing, HelpTopic } from '@/models/miscellaneous';
+import { OperationType } from '@/models/oss';
 import { CstClass, CstType, ExpressionStatus, IConstituenta, IRSForm } from '@/models/rsform';
 import {
   IArgumentInfo,
@@ -890,6 +891,28 @@ export function describeLibraryItemType(itemType: LibraryItemType): string {
 }
 
 /**
+ * Retrieves label for {@link OperationType}.
+ */
+export function labelOperationType(itemType: OperationType): string {
+  // prettier-ignore
+  switch (itemType) {
+    case OperationType.INPUT:     return 'Загрузка';
+    case OperationType.SYNTHESIS: return 'Синтез';
+  }
+}
+
+/**
+ * Retrieves description for {@link OperationType}.
+ */
+export function describeOperationType(itemType: OperationType): string {
+  // prettier-ignore
+  switch (itemType) {
+    case OperationType.INPUT:     return 'Загрузка концептуальной схемы в ОСС';
+    case OperationType.SYNTHESIS: return 'Синтез концептуальных схем';
+  }
+}
+
+/**
  * UI info descriptors.
  */
 export const information = {
@@ -909,8 +932,9 @@ export const information = {
 
   addedConstituents: (count: number) => `Добавлены конституенты: ${count}`,
   newLibraryItem: 'Схема успешно создана',
-  newConstituent: (alias: string) => `Конституента добавлена: ${alias}`,
   newVersion: (version: string) => `Версия создана: ${version}`,
+  newConstituent: (alias: string) => `Конституента добавлена: ${alias}`,
+  newOperation: (alias: string) => `Операция добавлена: ${alias}`,
   renameComplete: (oldAlias: string, newAlias: string) => `Переименование: ${oldAlias} -> ${newAlias}`,
 
   versionDestroyed: 'Версия удалена',

@@ -12,11 +12,12 @@ WORKDIR /result
 
 RUN npm install -g typescript vite
 
+COPY package.json package-lock.json ./
+RUN npm ci
+
 COPY ./ ./
 COPY ./env/.env.$BUILD_TYPE ./
 RUN rm -rf ./env
-
-RUN npm ci
 
 ENV NODE_ENV=production
 RUN npm run build

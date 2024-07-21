@@ -77,12 +77,12 @@ class TestOssViewset(EndpointTester):
         self.assertEqual(sub['substitution_alias'], self.ks2x1.alias)
         self.assertEqual(sub['substitution_term'], self.ks2x1.term_resolved)
 
-        graph = response.data['graph']
-        self.assertEqual(len(graph), 2)
-        self.assertEqual(graph[0]['operation'], self.operation3.pk)
-        self.assertEqual(graph[0]['argument'], self.operation1.pk)
-        self.assertEqual(graph[1]['operation'], self.operation3.pk)
-        self.assertEqual(graph[1]['argument'], self.operation2.pk)
+        arguments = response.data['arguments']
+        self.assertEqual(len(arguments), 2)
+        self.assertEqual(arguments[0]['operation'], self.operation3.pk)
+        self.assertEqual(arguments[0]['argument'], self.operation1.pk)
+        self.assertEqual(arguments[1]['operation'], self.operation3.pk)
+        self.assertEqual(arguments[1]['argument'], self.operation2.pk)
 
         self.executeOK(item=self.unowned_id)
         self.executeForbidden(item=self.private_id)
@@ -158,6 +158,7 @@ class TestOssViewset(EndpointTester):
         self.assertEqual(new_operation['comment'], data['item_data']['comment'])
         self.assertEqual(new_operation['position_x'], data['item_data']['position_x'])
         self.assertEqual(new_operation['position_y'], data['item_data']['position_y'])
+        self.assertEqual(new_operation['result'], None)
         self.operation1.refresh_from_db()
         self.assertEqual(self.operation1.position_x, data['positions'][0]['position_x'])
         self.assertEqual(self.operation1.position_y, data['positions'][0]['position_y'])
@@ -165,6 +166,42 @@ class TestOssViewset(EndpointTester):
         self.executeForbidden(data=data, item=self.unowned_id)
         self.toggle_admin(True)
         self.executeCreated(data=data, item=self.unowned_id)
+
+    @decl_endpoint('/api/oss/{item}/create-operation', method='post')
+    def test_create_operation_arguments(self):
+        self.populateData()
+        data = {
+            'item_data': {
+                'alias': 'Test4',
+                'operation_type': OperationType.SYNTHESIS
+            },
+            'positions': [],
+            'arguments': [self.operation1.pk, self.operation3.pk]
+        }
+        response = self.executeCreated(data=data, item=self.owned_id)
+        self.owned.item.refresh_from_db()
+        new_operation = response.data['new_operation']
+        arguments = self.owned.arguments()
+        self.assertTrue(arguments.filter(operation__id=new_operation['id'], argument=self.operation1))
+        self.assertTrue(arguments.filter(operation__id=new_operation['id'], argument=self.operation3))
+
+    @decl_endpoint('/api/oss/{item}/create-operation', method='post')
+    def test_create_operation_result(self):
+        self.populateData()
+
+        data = {
+            'item_data': {
+                'alias': 'Test4',
+                'operation_type': OperationType.INPUT,
+                'result': self.ks1.item.pk
+            },
+            'positions': [],
+        }
+        response = self.executeCreated(data=data, item=self.owned_id)
+        self.owned.item.refresh_from_db()
+        new_operation = response.data['new_operation']
+        self.assertEqual(new_operation['result'], self.ks1.item.pk)
+
 
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
     def test_delete_operation(self):

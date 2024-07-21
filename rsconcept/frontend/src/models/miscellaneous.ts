@@ -177,3 +177,11 @@ export interface GraphFilterParams {
   allowConstant: boolean;
   allowTheorem: boolean;
 }
+
+/**
+ * Represents XY Position.
+ */
+export interface Position2D {
+  x: number;
+  y: number;
+}

@@ -10,7 +10,7 @@ from apps.rsform.serializers import LibraryItemDetailsSerializer
 from shared import messages as msg
 
 from ..models import Argument, Operation, OperationSchema, OperationType
-from .basics import OperationPositionSerializer
+from .basics import OperationPositionSerializer, SubstitutionExSerializer
 
 
 class OperationSerializer(serializers.ModelSerializer):
@@ -42,9 +42,10 @@ class OperationCreateSerializer(serializers.Serializer):
             model = Operation
             fields = \
                 'alias', 'operation_type', 'title', \
-                'comment', 'position_x', 'position_y'
+                'comment', 'result', 'position_x', 'position_y'
 
     item_data = OperationData()
+    arguments = PKField(many=True, queryset=Operation.objects.all(), required=False)
     positions = serializers.ListField(
         child=OperationPositionSerializer(),
         default=[]
@@ -75,8 +76,11 @@ class OperationSchemaSerializer(serializers.ModelSerializer):
     items = serializers.ListField(
         child=OperationSerializer()
     )
-    graph = serializers.ListField(
+    arguments = serializers.ListField(
         child=ArgumentSerializer()
+    )
+    substitutions = serializers.ListField(
+        child=SubstitutionExSerializer()
     )
 
     class Meta:
@@ -90,15 +94,15 @@ class OperationSchemaSerializer(serializers.ModelSerializer):
         result['items'] = []
         for operation in oss.operations():
             result['items'].append(OperationSerializer(operation).data)
-        result['graph'] = []
+        result['arguments'] = []
         for argument in oss.arguments():
-            result['graph'].append(ArgumentSerializer(argument).data)
+            result['arguments'].append(ArgumentSerializer(argument).data)
         result['substitutions'] = []
         for substitution in oss.substitutions().values(
             'operation',
             'original',
-            'transfer_term',
             'substitution',
+            'transfer_term',
             original_alias=F('original__alias'),
             original_term=F('original__term_resolved'),
             substitution_alias=F('substitution__alias'),

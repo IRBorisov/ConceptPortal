@@ -10,13 +10,14 @@ import {
   patchSetAccessPolicy,
   patchSetLocation,
   patchSetOwner,
+  postCreateOperation,
   postSubscribe
 } from '@/app/backendAPI';
 import { type ErrorData } from '@/components/info/InfoError';
 import useOssDetails from '@/hooks/useOssDetails';
 import { AccessPolicy, ILibraryItem } from '@/models/library';
 import { ILibraryUpdateData } from '@/models/library';
-import { IOperationSchema } from '@/models/oss';
+import { IOperation, IOperationCreateData, IOperationSchema } from '@/models/oss';
 import { UserID } from '@/models/user';
 import { contextOutsideScope } from '@/utils/labels';
 
@@ -43,6 +44,8 @@ interface IOssContext {
   setAccessPolicy: (newPolicy: AccessPolicy, callback?: () => void) => void;
   setLocation: (newLocation: string, callback?: () => void) => void;
   setEditors: (newEditors: UserID[], callback?: () => void) => void;
+
+  createOperation: (data: IOperationCreateData, callback?: DataCallback<IOperation>) => void;
 }
 
 const OssContext = createContext<IOssContext | null>(null);
@@ -63,13 +66,11 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
   const library = useLibrary();
   const { user } = useAuth();
   const {
-    schema: schema, // prettier: split lines
+    schema, // prettier: split lines
     error: errorLoading,
     setSchema,
     loading
-  } = useOssDetails({
-    target: itemID
-  });
+  } = useOssDetails({ target: itemID });
   const [processing, setProcessing] = useState(false);
   const [processingError, setProcessingError] = useState<ErrorData>(undefined);
 
@@ -249,6 +250,24 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
     [itemID, schema]
   );
 
+  const createOperation = useCallback(
+    (data: IOperationCreateData, callback?: DataCallback<IOperation>) => {
+      setProcessingError(undefined);
+      postCreateOperation(itemID, {
+        data: data,
+        showError: true,
+        setLoading: setProcessing,
+        onError: setProcessingError,
+        onSuccess: newData => {
+          setSchema(newData.oss);
+          library.localUpdateTimestamp(newData.oss.id);
+          if (callback) callback(newData.new_operation);
+        }
+      });
+    },
+    [itemID, library, setSchema]
+  );
+
   return (
     <OssContext.Provider
       value={{
@@ -267,7 +286,9 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         setOwner,
         setEditors,
         setAccessPolicy,
-        setLocation
+        setLocation,
+
+        createOperation
       }}
     >
       {children}

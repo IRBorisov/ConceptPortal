@@ -24,14 +24,15 @@ import {
   patchSubstituteConstituents,
   patchUploadTRS,
   patchVersion,
+  postCreateConstituenta,
   postCreateVersion,
-  postNewConstituenta,
   postSubscribe
 } from '@/app/backendAPI';
 import { type ErrorData } from '@/components/info/InfoError';
 import useRSFormDetails from '@/hooks/useRSFormDetails';
 import { AccessPolicy, ILibraryItem, IVersionData, VersionID } from '@/models/library';
 import { ILibraryUpdateData } from '@/models/library';
+import { ICstSubstituteData } from '@/models/oss';
 import {
   ConstituentaID,
   IConstituentaList,
@@ -39,7 +40,6 @@ import {
   ICstCreateData,
   ICstMovetoData,
   ICstRenameData,
-  ICstSubstituteData,
   ICstUpdateData,
   IInlineSynthesisData,
   IRSForm,
@@ -399,7 +399,7 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
   const cstCreate = useCallback(
     (data: ICstCreateData, callback?: DataCallback<IConstituentaMeta>) => {
       setProcessingError(undefined);
-      postNewConstituenta(itemID, {
+      postCreateConstituenta(itemID, {
         data: data,
         showError: true,
         setLoading: setProcessing,

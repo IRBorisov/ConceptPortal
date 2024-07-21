@@ -2,7 +2,7 @@
 
 from apps.rsform.serializers import LibraryItemSerializer
 
-from .basics import OperationPositionSerializer, PositionsSerializer
+from .basics import OperationPositionSerializer, PositionsSerializer, SubstitutionExSerializer
 from .data_access import (
     ArgumentSerializer,
     OperationCreateSerializer,

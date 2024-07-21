@@ -9,9 +9,11 @@ import { useAuth } from '@/context/AuthContext';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useOSS } from '@/context/OssContext';
 import DlgChangeLocation from '@/dialogs/DlgChangeLocation';
+import DlgCreateOperation from '@/dialogs/DlgCreateOperation';
 import DlgEditEditors from '@/dialogs/DlgEditEditors';
 import { AccessPolicy } from '@/models/library';
-import { IOperationSchema } from '@/models/oss';
+import { Position2D } from '@/models/miscellaneous';
+import { IOperationCreateData, IOperationPosition, IOperationSchema } from '@/models/oss';
 import { UserID, UserLevel } from '@/models/user';
 import { information } from '@/utils/labels';
 
@@ -28,6 +30,8 @@ export interface IOssEditContext {
   toggleSubscribe: () => void;
 
   share: () => void;
+
+  promptCreateOperation: (x: number, y: number, positions: IOperationPosition[]) => void;
 }
 
 const OssEditContext = createContext<IOssEditContext | null>(null);
@@ -58,6 +62,10 @@ export const OssEditState = ({ children }: OssEditStateProps) => {
 
   const [showEditEditors, setShowEditEditors] = useState(false);
   const [showEditLocation, setShowEditLocation] = useState(false);
+
+  const [showCreateOperation, setShowCreateOperation] = useState(false);
+  const [insertPosition, setInsertPosition] = useState<Position2D>({ x: 0, y: 0 });
+  const [positions, setPositions] = useState<IOperationPosition[]>([]);
 
   useLayoutEffect(
     () =>
@@ -136,6 +144,19 @@ export const OssEditState = ({ children }: OssEditStateProps) => {
     [model]
   );
 
+  const promptCreateOperation = useCallback((x: number, y: number, positions: IOperationPosition[]) => {
+    setInsertPosition({ x: x, y: y });
+    setPositions(positions);
+    setShowCreateOperation(true);
+  }, []);
+
+  const handleCreateOperation = useCallback(
+    (data: IOperationCreateData) => {
+      model.createOperation(data, operation => toast.success(information.newOperation(operation.alias)));
+    },
+    [model]
+  );
+
   return (
     <OssEditContext.Provider
       value={{
@@ -149,7 +170,9 @@ export const OssEditState = ({ children }: OssEditStateProps) => {
         promptEditors,
         promptLocation,
 
-        share
+        share,
+
+        promptCreateOperation
       }}
     >
       {model.schema ? (
@@ -166,6 +189,15 @@ export const OssEditState = ({ children }: OssEditStateProps) => {
               hideWindow={() => setShowEditLocation(false)}
               initial={model.schema.location}
               onChangeLocation={handleSetLocation}
+            />
+          ) : null}
+          {showCreateOperation ? (
+            <DlgCreateOperation
+              hideWindow={() => setShowCreateOperation(false)}
+              oss={model.schema}
+              positions={positions}
+              insertPosition={insertPosition}
+              onCreate={handleCreateOperation}
             />
           ) : null}
         </AnimatePresence>

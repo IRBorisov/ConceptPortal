@@ -34,21 +34,22 @@
   }
 }
 
-.Flow {
-  flex-grow: 1;
-  font-size: 12px;
-}
-
-.react-flow__node-input {
-  border: 1px solid #555;
-  padding: 10px;
-  width: 150px;
-  border-radius: 5px;
-}
-
+.react-flow__node-input,
 .react-flow__node-synthesis {
-  border: 1px solid #555;
-  padding: 10px;
-  width: 250px;
+  border: 1px solid;
+  padding: 2px;
+  width: 120px;
+
   border-radius: 5px;
+  background-color: var(--cl-bg-120);
+
+  color: var(--cl-fg-100);
+  border-color: var(--cl-bg-40);
+  background-color: var(--cl-bg-120);
+
+  &.dark {
+    color: var(--cd-fg-100);
+    border-color: var(--cd-bg-40);
+    background-color: var(--cd-bg-120);
+  }
 }

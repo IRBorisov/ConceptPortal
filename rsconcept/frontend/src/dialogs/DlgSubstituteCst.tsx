@@ -6,7 +6,8 @@ import { useMemo, useState } from 'react';
 import PickSubstitutions from '@/components/select/PickSubstitutions';
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import { useRSForm } from '@/context/RSFormContext';
-import { ICstSubstituteData, ISubstitution } from '@/models/rsform';
+import { ICstSubstituteData } from '@/models/oss';
+import { ISingleSubstitution } from '@/models/rsform';
 import { prefixes } from '@/utils/constants';
 
 interface DlgSubstituteCstProps extends Pick<ModalProps, 'hideWindow'> {
@@ -16,7 +17,7 @@ interface DlgSubstituteCstProps extends Pick<ModalProps, 'hideWindow'> {
 function DlgSubstituteCst({ hideWindow, onSubstitute }: DlgSubstituteCstProps) {
   const { schema } = useRSForm();
 
-  const [substitutions, setSubstitutions] = useState<ISubstitution[]>([]);
+  const [substitutions, setSubstitutions] = useState<ISingleSubstitution[]>([]);
 
   const canSubmit = useMemo(() => substitutions.length > 0, [substitutions]);
 

@@ -21,6 +21,8 @@ This readme file is used mostly to document project dependencies
 
 ## ✨ Frontend [Vite + React + Typescript]
 
+- to regenerate parsers use 'npm run generate' script
+
 <details>
   <summary>npm install</summary>
   <pre>
@@ -36,6 +38,7 @@ This readme file is used mostly to document project dependencies
   - react-error-boundary
   - react-pdf
   - react-tooltip
+  - reactflow
   - js-file-download
   - use-debounce
   - framer-motion
@@ -54,6 +57,7 @@ This readme file is used mostly to document project dependencies
   - autoprefixer
   - eslint-plugin-simple-import-sort
   - eslint-plugin-tsdoc
+  - vite
   - jest
   - ts-jest
   - @types/jest
@@ -65,6 +69,7 @@ This readme file is used mostly to document project dependencies
   <pre>
   - ESLint
   - Colorize
+  - Tailwind CSS IntelliSense
   - Code Spell Checker (eng + rus)
   - Backticks
   - Svg Preview

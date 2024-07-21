@@ -98,6 +98,9 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         with transaction.atomic():
             schema.update_positions(serializer.validated_data['positions'])
             new_operation = schema.create_operation(**serializer.validated_data['item_data'])
+            if new_operation.operation_type != m.OperationType.INPUT and 'arguments' in serializer.validated_data:
+                for argument in serializer.validated_data['arguments']:
+                    schema.add_argument(operation=new_operation, argument=argument)
             schema.item.refresh_from_db()
 
         response = Response(

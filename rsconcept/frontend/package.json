@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "prepare": "lezer-generator src/components/RSInput/rslang/rslangFull.grammar -o src/components/RSInput/rslang/parser.ts && lezer-generator src/components/RefsInput/parse/refsText.grammar -o src/components/RefsInput/parse/parser.ts",
+    "generate": "lezer-generator src/components/RSInput/rslang/rslangFull.grammar -o src/components/RSInput/rslang/parser.ts && lezer-generator src/components/RefsInput/parse/refsText.grammar -o src/components/RefsInput/parse/parser.ts",
     "test": "jest",
     "dev": "vite --host",
     "build": "tsc && vite build",

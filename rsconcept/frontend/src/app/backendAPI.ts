@@ -7,17 +7,14 @@ import { toast } from 'react-toastify';
 
 import { type ErrorData } from '@/components/info/InfoError';
 import { ILexemeData, ITextRequest, ITextResult, IWordFormPlain } from '@/models/language';
-import {
-  AccessPolicy,
-  ILibraryItem,
-  ILibraryUpdateData,
-  ITargetAccessPolicy,
-  ITargetLocation,
-  IVersionData,
-  LibraryItemType
-} from '@/models/library';
+import { ILibraryItem, ILibraryUpdateData, ITargetAccessPolicy, ITargetLocation, IVersionData } from '@/models/library';
 import { ILibraryCreateData } from '@/models/library';
-import { IOperationSchemaData } from '@/models/oss';
+import {
+  ICstSubstituteData,
+  IOperationCreateData,
+  IOperationCreatedResponse,
+  IOperationSchemaData
+} from '@/models/oss';
 import {
   IConstituentaList,
   IConstituentaMeta,
@@ -25,7 +22,6 @@ import {
   ICstCreatedResponse,
   ICstMovetoData,
   ICstRenameData,
-  ICstSubstituteData,
   ICstUpdateData,
   IInlineSynthesisData,
   IProduceStructureResponse,
@@ -233,30 +229,6 @@ export function postCloneLibraryItem(target: string, request: FrontExchange<IRSF
   });
 }
 
-export function getOssDetails(target: string, request: FrontPull<IOperationSchemaData>) {
-  request.setLoading!(false);
-  request.onSuccess({
-    id: Number(target),
-    comment: '123',
-    alias: 'oss1',
-    access_policy: AccessPolicy.PUBLIC,
-    editors: [],
-    owner: 1,
-    item_type: LibraryItemType.OSS,
-    location: '/U',
-    read_only: false,
-    subscribers: [],
-    time_create: '0',
-    time_update: '0',
-    title: 'TestOss',
-    visible: false
-  });
-  // AxiosGet({
-  //   endpoint: `/api/oss/${target}`, // TODO: endpoint to access OSS
-  //   request: request
-  // });
-}
-
 export function getRSFormDetails(target: string, version: string, request: FrontPull<IRSFormData>) {
   if (!version) {
     AxiosGet({
@@ -357,7 +329,7 @@ export function getTRSFile(target: string, version: string, request: FrontPull<B
   }
 }
 
-export function postNewConstituenta(schema: string, request: FrontExchange<ICstCreateData, ICstCreatedResponse>) {
+export function postCreateConstituenta(schema: string, request: FrontExchange<ICstCreateData, ICstCreatedResponse>) {
   AxiosPost({
     endpoint: `/api/rsforms/${schema}/cst-create`,
     request: request
@@ -441,6 +413,23 @@ export function patchUploadTRS(target: string, request: FrontExchange<IRSFormUpl
 export function patchInlineSynthesis(request: FrontExchange<IInlineSynthesisData, IRSFormData>) {
   AxiosPatch({
     endpoint: `/api/operations/inline-synthesis`,
+    request: request
+  });
+}
+
+export function getOssDetails(target: string, request: FrontPull<IOperationSchemaData>) {
+  AxiosGet({
+    endpoint: `/api/oss/${target}/details`,
+    request: request
+  });
+}
+
+export function postCreateOperation(
+  schema: string,
+  request: FrontExchange<IOperationCreateData, IOperationCreatedResponse>
+) {
+  AxiosPost({
+    endpoint: `/api/oss/${schema}/create-operation`,
     request: request
   });
 }

@@ -5,10 +5,11 @@
 import { Graph } from '@/models/Graph';
 
 import { ILibraryItem, ILibraryItemVersioned, LibraryItemID } from './library';
+import { ICstSubstitute } from './oss';
 import { IArgumentInfo, ParsingStatus, ValueClass } from './rslang';
 
 /**
- * Represents Constituenta type.
+ * Represents {@link IConstituenta} type.
  */
 export enum CstType {
   BASE = 'basic',
@@ -21,7 +22,7 @@ export enum CstType {
   THEOREM = 'theorem'
 }
 
-// CstType constant for category dividers in TemplateSchemas. TODO: create separate structure for templates
+// CstType constant for category dividers in TemplateSchemas
 export const CATEGORY_CST_TYPE = CstType.THEOREM;
 
 /**
@@ -30,7 +31,7 @@ export const CATEGORY_CST_TYPE = CstType.THEOREM;
 export type Position = number;
 
 /**
- * Represents {@link Constituenta} identifier type.
+ * Represents {@link IConstituenta} identifier type.
  */
 export type ConstituentaID = number;
 
@@ -124,7 +125,7 @@ export interface IConstituentaList {
 }
 
 /**
- * Represents constituenta data, used in creation process.
+ * Represents {@link IConstituenta} data, used in creation process.
  */
 export interface ICstCreateData
   extends Pick<
@@ -135,7 +136,7 @@ export interface ICstCreateData
 }
 
 /**
- * Represents data, used in ordering constituents in a list.
+ * Represents data, used in ordering a list of {@link IConstituenta}.
  */
 export interface ICstMovetoData extends IConstituentaList {
   move_to: Position;
@@ -157,32 +158,6 @@ export interface ICstUpdateData
  * Represents data, used in renaming {@link IConstituenta}.
  */
 export interface ICstRenameData extends ITargetCst, Pick<IConstituentaMeta, 'alias' | 'cst_type'> {}
-
-/**
- * Represents data, used in merging single {@link IConstituenta}.
- */
-export interface ICstSubstitute {
-  original: ConstituentaID;
-  substitution: ConstituentaID;
-  transfer_term: boolean;
-}
-
-/**
- * Represents data, used in merging multiple {@link IConstituenta}.
- */
-export interface ICstSubstituteData {
-  substitutions: ICstSubstitute[];
-}
-
-/**
- * Represents single substitution for synthesis table.
- */
-export interface ISubstitution {
-  leftCst: IConstituenta;
-  rightCst: IConstituenta;
-  deleteRight: boolean;
-  takeLeftTerm: boolean;
-}
 
 /**
  * Represents data response when creating {@link IConstituenta}.
@@ -263,6 +238,16 @@ export interface IRSFormUploadData {
 export interface IVersionCreatedResponse {
   version: number;
   schema: IRSFormData;
+}
+
+/**
+ * Represents single substitution for synthesis table.
+ */
+export interface ISingleSubstitution {
+  leftCst: IConstituenta;
+  rightCst: IConstituenta;
+  deleteRight: boolean;
+  takeLeftTerm: boolean;
 }
 
 /**

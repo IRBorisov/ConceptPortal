@@ -14,3 +14,15 @@ class PositionsSerializer(serializers.Serializer):
     positions = serializers.ListField(
         child=OperationPositionSerializer()
     )
+
+
+class SubstitutionExSerializer(serializers.Serializer):
+    ''' Serializer: Substitution extended data. '''
+    operation = serializers.IntegerField()
+    original = serializers.IntegerField()
+    substitution = serializers.IntegerField()
+    transfer_term = serializers.BooleanField()
+    original_alias = serializers.CharField()
+    original_term = serializers.CharField()
+    substitution_alias = serializers.CharField()
+    substitution_term = serializers.CharField()

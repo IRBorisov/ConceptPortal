@@ -8,7 +8,7 @@ import DataTable, { createColumnHelper } from '@/components/ui/DataTable';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
-import { IConstituenta, IRSForm, ISubstitution } from '@/models/rsform';
+import { IConstituenta, IRSForm, ISingleSubstitution } from '@/models/rsform';
 import { describeConstituenta } from '@/utils/labels';
 
 import {
@@ -34,11 +34,11 @@ interface PickSubstitutionsProps {
   filter1?: (cst: IConstituenta) => boolean;
   filter2?: (cst: IConstituenta) => boolean;
 
-  items: ISubstitution[];
-  setItems: React.Dispatch<React.SetStateAction<ISubstitution[]>>;
+  items: ISingleSubstitution[];
+  setItems: React.Dispatch<React.SetStateAction<ISingleSubstitution[]>>;
 }
 
-function SubstitutionIcon({ item }: { item: ISubstitution }) {
+function SubstitutionIcon({ item }: { item: ISingleSubstitution }) {
   if (item.deleteRight) {
     if (item.takeLeftTerm) {
       return <IconPageRight size='1.2rem' />;
@@ -54,7 +54,7 @@ function SubstitutionIcon({ item }: { item: ISubstitution }) {
   }
 }
 
-const columnHelper = createColumnHelper<ISubstitution>();
+const columnHelper = createColumnHelper<ISingleSubstitution>();
 
 function PickSubstitutions({
   items,
@@ -80,7 +80,7 @@ function PickSubstitutions({
     if (!leftCst || !rightCst) {
       return;
     }
-    const newSubstitution: ISubstitution = {
+    const newSubstitution: ISingleSubstitution = {
       leftCst: leftCst,
       rightCst: rightCst,
       deleteRight: deleteRight,
@@ -99,7 +99,7 @@ function PickSubstitutions({
   const handleDeleteRow = useCallback(
     (row: number) => {
       setItems(prev => {
-        const newItems: ISubstitution[] = [];
+        const newItems: ISingleSubstitution[] = [];
         prev.forEach((item, index) => {
           if (index !== row) {
             newItems.push(item);
