@@ -3,7 +3,7 @@ from typing import Optional
 
 from django.core.exceptions import ValidationError
 from django.db import transaction
-from django.db.models import QuerySet
+from django.db.models import Manager, QuerySet
 
 from apps.rsform.models import LibraryItem, LibraryItemType
 from shared import messages as msg
@@ -13,30 +13,37 @@ from .Operation import Operation
 from .SynthesisSubstitution import SynthesisSubstitution
 
 
-class OperationSchema:
+class OperationSchema(LibraryItem):
     ''' Operations schema API. '''
 
-    def __init__(self, item: LibraryItem):
-        if item.item_type != LibraryItemType.OPERATION_SCHEMA:
-            raise ValueError(msg.libraryTypeUnexpected())
-        self.item = item
+    class Meta:
+        ''' Model metadata. '''
+        proxy = True
 
-    @staticmethod
-    def create(**kwargs) -> 'OperationSchema':
-        item = LibraryItem.objects.create(item_type=LibraryItemType.OPERATION_SCHEMA, **kwargs)
-        return OperationSchema(item=item)
+    class InternalManager(Manager):
+        ''' Object manager. '''
+
+        def get_queryset(self) -> QuerySet:
+            return super().get_queryset().filter(item_type=LibraryItemType.OPERATION_SCHEMA)
+
+        def create(self, **kwargs):
+            kwargs.update({'item_type': LibraryItemType.OPERATION_SCHEMA})
+            return super().create(**kwargs)
+
+    # Legit overriding object manager
+    objects = InternalManager()  # type: ignore[misc]
 
     def operations(self) -> QuerySet[Operation]:
         ''' Get QuerySet containing all operations of current OSS. '''
-        return Operation.objects.filter(oss=self.item)
+        return Operation.objects.filter(oss=self)
 
     def arguments(self) -> QuerySet[Argument]:
         ''' Operation arguments. '''
-        return Argument.objects.filter(operation__oss=self.item)
+        return Argument.objects.filter(operation__oss=self)
 
     def substitutions(self) -> QuerySet[SynthesisSubstitution]:
         ''' Operation substitutions. '''
-        return SynthesisSubstitution.objects.filter(operation__oss=self.item)
+        return SynthesisSubstitution.objects.filter(operation__oss=self)
 
     def update_positions(self, data: list[dict]):
         ''' Update positions. '''
@@ -53,11 +60,8 @@ class OperationSchema:
         ''' Insert new operation. '''
         if kwargs['alias'] != '' and self.operations().filter(alias=kwargs['alias']).exists():
             raise ValidationError(msg.aliasTaken(kwargs['alias']))
-        result = Operation.objects.create(
-            oss=self.item,
-            **kwargs
-        )
-        self.item.save()
+        result = Operation.objects.create(oss=self, **kwargs)
+        self.save()
         result.refresh_from_db()
         return result
 
@@ -69,7 +73,7 @@ class OperationSchema:
         # deal with attached schema
         # trigger on_change effects
 
-        self.item.save()
+        self.save()
 
     @transaction.atomic
     def set_input(self, target: Operation, schema: Optional[LibraryItem]):
@@ -87,7 +91,7 @@ class OperationSchema:
 
         # trigger on_change effects
 
-        self.item.save()
+        self.save()
 
     @transaction.atomic
     def add_argument(self, operation: Operation, argument: Operation) -> Optional[Argument]:
@@ -95,7 +99,7 @@ class OperationSchema:
         if Argument.objects.filter(operation=operation, argument=argument).exists():
             return None
         result = Argument.objects.create(operation=operation, argument=argument)
-        self.item.save()
+        self.save()
         return result
 
     @transaction.atomic
@@ -109,7 +113,7 @@ class OperationSchema:
 
         # trigger on_change effects
 
-        self.item.save()
+        self.save()
 
     @transaction.atomic
     def set_substitutions(self, target: Operation, substitutes: list[dict]):
@@ -125,4 +129,4 @@ class OperationSchema:
 
         # trigger on_change effects
 
-        self.item.save()
+        self.save()

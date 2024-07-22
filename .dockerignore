@@ -47,6 +47,7 @@ cover/
 # Django
 rsconcept/frontend/static
 rsconcept/frontend/media
+visualizeDB.dot
 *.log
 db.sqlite3
 db.sqlite3-journal

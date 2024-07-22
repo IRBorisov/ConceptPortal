@@ -109,22 +109,21 @@ class CstSerializer(serializers.ModelSerializer):
 
     def update(self, instance: Constituenta, validated_data) -> Constituenta:
         data = validated_data  # Note: use alias for better code readability
-        schema = RSForm(instance.schema)
         definition: Optional[str] = data['definition_raw'] if 'definition_raw' in data else None
         term: Optional[str] = data['term_raw'] if 'term_raw' in data else None
         term_changed = 'term_forms' in data
         if definition is not None and definition != instance.definition_raw:
-            data['definition_resolved'] = schema.resolver().resolve(definition)
+            data['definition_resolved'] = instance.schema.resolver().resolve(definition)
         if term is not None and term != instance.term_raw:
-            data['term_resolved'] = schema.resolver().resolve(term)
+            data['term_resolved'] = instance.schema.resolver().resolve(term)
             if data['term_resolved'] != instance.term_resolved and 'term_forms' not in data:
                 data['term_forms'] = []
             term_changed = data['term_resolved'] != instance.term_resolved
         result: Constituenta = super().update(instance, data)
         if term_changed:
-            schema.on_term_change([result.id])
+            instance.schema.on_term_change([result.id])
             result.refresh_from_db()
-        schema.item.save()
+        instance.schema.save()
         return result
 
 
@@ -170,17 +169,16 @@ class RSFormSerializer(serializers.ModelSerializer):
         model = LibraryItem
         fields = '__all__'
 
-    def to_representation(self, instance: LibraryItem) -> dict:
+    def to_representation(self, instance: RSForm) -> dict:
         result = LibraryItemDetailsSerializer(instance).data
-        schema = RSForm(instance)
         result['items'] = []
-        for cst in schema.constituents().order_by('order'):
+        for cst in instance.constituents().order_by('order'):
             result['items'].append(CstSerializer(cst).data)
         return result
 
     def to_versioned_data(self) -> dict:
         ''' Create serializable version representation without redundant data. '''
-        result = self.to_representation(cast(LibraryItem, self.instance))
+        result = self.to_representation(cast(RSForm, self.instance))
         del result['versions']
         del result['subscribers']
         del result['editors']
@@ -197,14 +195,14 @@ class RSFormSerializer(serializers.ModelSerializer):
 
     def from_versioned_data(self, version: int, data: dict) -> dict:
         ''' Load data from version. '''
-        result = self.to_representation(cast(LibraryItem, self.instance))
+        result = self.to_representation(cast(RSForm, self.instance))
         result['version'] = version
         return result | data
 
     @transaction.atomic
     def restore_from_version(self, data: dict):
         ''' Load data from version. '''
-        schema = RSForm(cast(LibraryItem, self.instance))
+        schema = cast(RSForm, self.instance)
         items: list[dict] = data['items']
         ids: list[int] = [item['id'] for item in items]
         processed: list[int] = []
@@ -258,13 +256,13 @@ class RSFormParseSerializer(serializers.ModelSerializer):
         model = LibraryItem
         fields = '__all__'
 
-    def to_representation(self, instance: LibraryItem):
+    def to_representation(self, instance: RSForm):
         result = RSFormSerializer(instance).data
         return self._parse_data(result)
 
     def from_versioned_data(self, version: int, data: dict) -> dict:
         ''' Load data from version and parse. '''
-        item = cast(LibraryItem, self.instance)
+        item = cast(RSForm, self.instance)
         result = RSFormSerializer(item).from_versioned_data(version, data)
         return self._parse_data(result)
 
@@ -283,7 +281,7 @@ class CstTargetSerializer(serializers.Serializer):
     target = PKField(many=False, queryset=Constituenta.objects.all())
 
     def validate(self, attrs):
-        schema = cast(LibraryItem, self.context['schema'])
+        schema = cast(RSForm, self.context['schema'])
         cst = cast(Constituenta, attrs['target'])
         if schema and cst.schema != schema:
             raise serializers.ValidationError({
@@ -315,7 +313,7 @@ class CstRenameSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
-        schema = cast(LibraryItem, self.context['schema'])
+        schema = cast(RSForm, self.context['schema'])
         cst = cast(Constituenta, attrs['target'])
         if cst.schema != schema:
             raise serializers.ValidationError({
@@ -326,7 +324,7 @@ class CstRenameSerializer(serializers.Serializer):
             raise serializers.ValidationError({
                 'alias': msg.renameTrivial(new_alias)
             })
-        if RSForm(schema).constituents().filter(alias=new_alias).exists():
+        if schema.constituents().filter(alias=new_alias).exists():
             raise serializers.ValidationError({
                 'alias': msg.aliasTaken(new_alias)
             })
@@ -338,7 +336,7 @@ class CstListSerializer(serializers.Serializer):
     items = PKField(many=True, queryset=Constituenta.objects.all())
 
     def validate(self, attrs):
-        schema = cast(LibraryItem, self.context['schema'])
+        schema = cast(RSForm, self.context['schema'])
         if not schema:
             return attrs
 
@@ -370,7 +368,7 @@ class CstSubstituteSerializer(serializers.Serializer):
     )
 
     def validate(self, attrs):
-        schema = cast(LibraryItem, self.context['schema'])
+        schema = cast(RSForm, self.context['schema'])
         deleted = set()
         for item in attrs['substitutions']:
             original_cst = cast(Constituenta, item['original'])
@@ -397,8 +395,8 @@ class CstSubstituteSerializer(serializers.Serializer):
 
 class InlineSynthesisSerializer(serializers.Serializer):
     ''' Serializer: Inline synthesis operation input. '''
-    receiver = PKField(many=False, queryset=LibraryItem.objects.all())
-    source = PKField(many=False, queryset=LibraryItem.objects.all())  # type: ignore
+    receiver = PKField(many=False, queryset=RSForm.objects.all())
+    source = PKField(many=False, queryset=RSForm.objects.all())  # type: ignore
     items = PKField(many=True, queryset=Constituenta.objects.all())
     substitutions = serializers.ListField(
         child=CstSubstituteSerializerBase()
@@ -406,8 +404,8 @@ class InlineSynthesisSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         user = cast(User, self.context['user'])
-        schema_in = cast(LibraryItem, attrs['source'])
-        schema_out = cast(LibraryItem, attrs['receiver'])
+        schema_in = cast(RSForm, attrs['source'])
+        schema_out = cast(RSForm, attrs['receiver'])
         if user.is_anonymous or (schema_out.owner != user and not user.is_staff):
             raise PermissionDenied({
                 'message': msg.schemaNotOwned(),

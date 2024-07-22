@@ -2,7 +2,7 @@
 
 $backend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\backend"
 
-function RunLinters() {
+function RunCoverage() {
   BackendCoverage
 }
 
@@ -20,4 +20,4 @@ function BackendCoverage() {
   Start-Process "$backend\htmlcov\index.html"
 }
 
-RunLinters
+RunCoverage

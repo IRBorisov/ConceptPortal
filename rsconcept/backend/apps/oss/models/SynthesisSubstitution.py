@@ -33,4 +33,4 @@ class SynthesisSubstitution(Model):
         verbose_name_plural = 'Таблицы отождествлений'
 
     def __str__(self) -> str:
-        return f'{self.original.pk} -> {self.substitution.pk}'
+        return f'{self.original} -> {self.substitution}'

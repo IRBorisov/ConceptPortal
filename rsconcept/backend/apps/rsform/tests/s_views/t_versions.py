@@ -15,10 +15,9 @@ class TestVersionViews(EndpointTester):
 
     def setUp(self):
         super().setUp()
-        self.owned = RSForm.create(title='Test', alias='T1', owner=self.user).item
-        self.schema = RSForm(self.owned)
-        self.unowned = RSForm.create(title='Test2', alias='T2').item
-        self.x1 = self.schema.insert_new(
+        self.owned = RSForm.objects.create(title='Test', alias='T1', owner=self.user)
+        self.unowned = RSForm.objects.create(title='Test2', alias='T2')
+        self.x1 = self.owned.insert_new(
             alias='X1',
             convention='testStart'
         )
@@ -135,14 +134,14 @@ class TestVersionViews(EndpointTester):
     @decl_endpoint('/api/versions/{version}/restore', method='patch')
     def test_restore_version(self):
         x1 = self.x1
-        x2 = self.schema.insert_new('X2')
-        d1 = self.schema.insert_new('D1', term_raw='TestTerm')
+        x2 = self.owned.insert_new('X2')
+        d1 = self.owned.insert_new('D1', term_raw='TestTerm')
         data = {'version': '1.0.0', 'description': 'test'}
         version_id = self._create_version(data=data)
         invalid_id = version_id + 1337
 
         d1.delete()
-        x3 = self.schema.insert_new('X3')
+        x3 = self.owned.insert_new('X3')
         x1.order = x3.order
         x1.convention = 'Test2'
         x1.term_raw = 'Test'

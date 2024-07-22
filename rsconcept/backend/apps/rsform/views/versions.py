@@ -42,10 +42,11 @@ class VersionViewset(
         ''' Restore version data into current item. '''
         version = cast(m.Version, self.get_object())
         item = cast(m.LibraryItem, version.item)
-        s.RSFormSerializer(item).restore_from_version(version.data)
+        schema = m.RSForm.objects.get(pk=item.pk)
+        s.RSFormSerializer(schema).restore_from_version(version.data)
         return Response(
             status=c.HTTP_200_OK,
-            data=s.RSFormParseSerializer(item).data
+            data=s.RSFormParseSerializer(schema).data
         )
 
 
@@ -65,7 +66,7 @@ class VersionViewset(
 def create_version(request: Request, pk_item: int):
     ''' Endpoint: Create new version for RSForm copying current content. '''
     try:
-        item = m.LibraryItem.objects.get(pk=pk_item)
+        item = m.RSForm.objects.get(pk=pk_item)
     except m.LibraryItem.DoesNotExist:
         return Response(status=c.HTTP_404_NOT_FOUND)
     creator = request.user
@@ -75,7 +76,7 @@ def create_version(request: Request, pk_item: int):
     version_input = s.VersionCreateSerializer(data=request.data)
     version_input.is_valid(raise_exception=True)
     data = s.RSFormSerializer(item).to_versioned_data()
-    result = m.RSForm(item).create_version(
+    result = item.create_version(
         version=version_input.validated_data['version'],
         description=version_input.validated_data['description'],
         data=data
@@ -102,8 +103,8 @@ def create_version(request: Request, pk_item: int):
 def retrieve_version(request: Request, pk_item: int, pk_version: int):
     ''' Endpoint: Retrieve version for RSForm. '''
     try:
-        item = m.LibraryItem.objects.get(pk=pk_item)
-    except m.LibraryItem.DoesNotExist:
+        item = m.RSForm.objects.get(pk=pk_item)
+    except m.RSForm.DoesNotExist:
         return Response(status=c.HTTP_404_NOT_FOUND)
     try:
         version = m.Version.objects.get(pk=pk_version)
@@ -135,7 +136,8 @@ def export_file(request: Request, pk: int):
         version = m.Version.objects.get(pk=pk)
     except m.Version.DoesNotExist:
         return Response(status=c.HTTP_404_NOT_FOUND)
-    data = s.RSFormTRSSerializer(m.RSForm(version.item)).from_versioned_data(version.data)
+    schema = m.RSForm.objects.get(pk=version.item.pk)
+    data = s.RSFormTRSSerializer(schema).from_versioned_data(version.data)
     file = utils.write_zipped_json(data, utils.EXTEOR_INNER_FILENAME)
     filename = utils.filename_for_schema(data['alias'])
     response = HttpResponse(file, content_type='application/zip')

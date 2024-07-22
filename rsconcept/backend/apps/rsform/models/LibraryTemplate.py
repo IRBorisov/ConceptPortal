@@ -6,7 +6,7 @@ class LibraryTemplate(Model):
     ''' Template for library items and constituents. '''
     lib_source: ForeignKey = ForeignKey(
         verbose_name='Источник',
-        to='rsform.LibraryItem',
+        to='rsform.RSForm',
         on_delete=CASCADE,
         null=True
     )

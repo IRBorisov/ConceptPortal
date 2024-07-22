@@ -27,7 +27,7 @@ def inline_synthesis(request: Request):
     )
     serializer.is_valid(raise_exception=True)
 
-    schema = m.RSForm(serializer.validated_data['receiver'])
+    schema = cast(m.RSForm, serializer.validated_data['receiver'])
     items = cast(list[m.Constituenta], serializer.validated_data['items'])
 
     with transaction.atomic():
@@ -46,5 +46,5 @@ def inline_synthesis(request: Request):
 
     return Response(
         status=c.HTTP_200_OK,
-        data=s.RSFormParseSerializer(schema.item).data
+        data=s.RSFormParseSerializer(schema).data
     )

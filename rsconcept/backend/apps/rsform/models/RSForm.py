@@ -5,7 +5,7 @@ from typing import Optional, cast
 from cctext import Entity, Resolver, TermForm, extract_entities, split_grams
 from django.core.exceptions import ValidationError
 from django.db import transaction
-from django.db.models import QuerySet
+from django.db.models import Manager, QuerySet
 
 from shared import messages as msg
 
@@ -28,21 +28,29 @@ from .Version import Version
 _INSERT_LAST: int = -1
 
 
-class RSForm:
+class RSForm(LibraryItem):
     ''' RSForm is math form of conceptual schema. '''
 
-    def __init__(self, item: LibraryItem):
-        if item.item_type != LibraryItemType.RSFORM:
-            raise ValueError(msg.libraryTypeUnexpected())
-        self.item = item
+    class Meta:
+        ''' Model metadata. '''
+        proxy = True
 
-    @staticmethod
-    def create(**kwargs) -> 'RSForm':
-        return RSForm(LibraryItem.objects.create(item_type=LibraryItemType.RSFORM, **kwargs))
+    class InternalManager(Manager):
+        ''' Object manager. '''
+
+        def get_queryset(self) -> QuerySet:
+            return super().get_queryset().filter(item_type=LibraryItemType.RSFORM)
+
+        def create(self, **kwargs):
+            kwargs.update({'item_type': LibraryItemType.RSFORM})
+            return super().create(**kwargs)
+
+    # Legit overriding object manager
+    objects = InternalManager()  # type: ignore[misc]
 
     def constituents(self) -> QuerySet[Constituenta]:
         ''' Get QuerySet containing all constituents of current RSForm. '''
-        return Constituenta.objects.filter(schema=self.item)
+        return Constituenta.objects.filter(schema=self.pk)
 
     def resolver(self) -> Resolver:
         ''' Create resolver for text references based on schema terms. '''
@@ -98,7 +106,7 @@ class RSForm:
         ''' Get maximum alias index for specific CstType. '''
         result: int = 0
         items = Constituenta.objects \
-            .filter(schema=self.item, cst_type=cst_type) \
+            .filter(schema=self, cst_type=cst_type) \
             .order_by('-alias') \
             .values_list('alias', flat=True)
         for alias in items:
@@ -150,13 +158,13 @@ class RSForm:
             cst_type = guess_type(alias)
         self._shift_positions(position, 1)
         result = Constituenta.objects.create(
-            schema=self.item,
+            schema=self,
             order=position,
             alias=alias,
             cst_type=cst_type,
             **kwargs
         )
-        self.item.save()
+        self.save()
         result.refresh_from_db()
         return result
 
@@ -183,13 +191,13 @@ class RSForm:
         result = deepcopy(items)
         for cst in result:
             cst.pk = None
-            cst.schema = self.item
+            cst.schema = self
             cst.order = position
             cst.alias = mapping[cst.alias]
             cst.apply_mapping(mapping)
             cst.save()
             position = position + 1
-        self.item.save()
+        self.save()
         return result
 
     @transaction.atomic
@@ -213,7 +221,7 @@ class RSForm:
                 count_moved += 1
             update_list.append(cst)
         Constituenta.objects.bulk_update(update_list, ['order'])
-        self.item.save()
+        self.save()
 
     @transaction.atomic
     def delete_cst(self, listCst):
@@ -222,7 +230,7 @@ class RSForm:
             cst.delete()
         self._reset_order()
         self.resolve_all_text()
-        self.item.save()
+        self.save()
 
     @transaction.atomic
     def substitute(
@@ -296,7 +304,7 @@ class RSForm:
     def create_version(self, version: str, description: str, data) -> Version:
         ''' Creates version for current state. '''
         return Version.objects.create(
-            item=self.item,
+            item=self,
             version=version,
             description=description,
             data=data
@@ -322,7 +330,7 @@ class RSForm:
         prefix = get_type_prefix(cst_type)
         for text in expressions:
             new_item = Constituenta.objects.create(
-                schema=self.item,
+                schema=self,
                 order=position,
                 alias=f'{prefix}{free_index}',
                 definition_formal=text,
@@ -332,7 +340,7 @@ class RSForm:
             free_index = free_index + 1
             position = position + 1
 
-        self.item.save()
+        self.save()
         return result
 
     def _shift_positions(self, start: int, shift: int):
@@ -341,7 +349,7 @@ class RSForm:
         update_list = \
             Constituenta.objects \
             .only('id', 'order', 'schema') \
-            .filter(schema=self.item, order__gte=start)
+            .filter(schema=self.pk, order__gte=start)
         for cst in update_list:
             cst.order += shift
         Constituenta.objects.bulk_update(update_list, ['order'])

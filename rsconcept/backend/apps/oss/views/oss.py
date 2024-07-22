@@ -20,11 +20,11 @@ from .. import serializers as s
 @extend_schema_view()
 class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.RetrieveAPIView):
     ''' Endpoint: OperationSchema. '''
-    queryset = m.LibraryItem.objects.filter(item_type=m.LibraryItemType.OPERATION_SCHEMA)
+    queryset = m.OperationSchema.objects.all()
     serializer_class = s.LibraryItemSerializer
 
     def _get_schema(self) -> m.OperationSchema:
-        return m.OperationSchema(cast(m.LibraryItem, self.get_object()))
+        return cast(m.OperationSchema, self.get_object())
 
     def get_permissions(self):
         ''' Determine permission class. '''
@@ -52,7 +52,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['get'], url_path='details')
     def details(self, request: Request, pk):
         ''' Endpoint: Detailed OSS data. '''
-        serializer = s.OperationSchemaSerializer(cast(m.LibraryItem, self.get_object()))
+        serializer = s.OperationSchemaSerializer(self._get_schema())
         return Response(
             status=c.HTTP_200_OK,
             data=serializer.data
@@ -101,13 +101,13 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             if new_operation.operation_type != m.OperationType.INPUT and 'arguments' in serializer.validated_data:
                 for argument in serializer.validated_data['arguments']:
                     schema.add_argument(operation=new_operation, argument=argument)
-            schema.item.refresh_from_db()
+            schema.refresh_from_db()
 
         response = Response(
             status=c.HTTP_201_CREATED,
             data={
                 'new_operation': s.OperationSerializer(new_operation).data,
-                'oss': s.OperationSchemaSerializer(schema.item).data
+                'oss': s.OperationSchemaSerializer(schema).data
             }
         )
         return response
@@ -129,16 +129,16 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         schema = self._get_schema()
         serializer = s.OperationDeleteSerializer(
             data=request.data,
-            context={'oss': schema.item}
+            context={'oss': schema}
         )
         serializer.is_valid(raise_exception=True)
 
         with transaction.atomic():
             schema.update_positions(serializer.validated_data['positions'])
             schema.delete_operation(serializer.validated_data['target'])
-            schema.item.refresh_from_db()
+            schema.refresh_from_db()
 
         return Response(
             status=c.HTTP_200_OK,
-            data=s.OperationSchemaSerializer(schema.item).data
+            data=s.OperationSchemaSerializer(schema).data
         )

@@ -21,7 +21,7 @@ class Operation(Model):
     ''' Operational schema Unit.'''
     oss: ForeignKey = ForeignKey(
         verbose_name='Схема синтеза',
-        to='rsform.LibraryItem',
+        to='oss.OperationSchema',
         on_delete=CASCADE,
         related_name='items'
     )

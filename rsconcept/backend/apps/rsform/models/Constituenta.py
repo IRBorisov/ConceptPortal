@@ -40,7 +40,7 @@ class Constituenta(Model):
     ''' Constituenta is the base unit for every conceptual schema. '''
     schema: ForeignKey = ForeignKey(
         verbose_name='Концептуальная схема',
-        to='rsform.LibraryItem',
+        to='rsform.RSForm',
         on_delete=CASCADE
     )
     order: PositiveIntegerField = PositiveIntegerField(

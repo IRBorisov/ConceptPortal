@@ -24,4 +24,4 @@ class Argument(Model):
         unique_together = [['operation', 'argument']]
 
     def __str__(self) -> str:
-        return f'{self.argument.pk} -> {self.operation.pk}'
+        return f'{self.argument} -> {self.operation}'

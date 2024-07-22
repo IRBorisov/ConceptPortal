@@ -5,6 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
+      // Run Frontend + Backend with current Database
       "name": "Run",
       "type": "PowerShell",
       "request": "launch",
@@ -12,6 +13,7 @@
       "args": []
     },
     {
+      // Run Linters
       "name": "Lint",
       "type": "PowerShell",
       "request": "launch",
@@ -19,6 +21,7 @@
       "args": []
     },
     {
+      // Run Tests
       "name": "Test",
       "type": "PowerShell",
       "request": "launch",
@@ -26,6 +29,7 @@
       "args": []
     },
     {
+      // Run Tests for backend for current file in Debug mode
       "name": "BE-DebugTestFile",
       "type": "debugpy",
       "request": "launch",
@@ -35,6 +39,7 @@
       "django": true
     },
     {
+      // Run Tests for frontned in Debug mode
       "name": "FE-DebugTestAll",
       "type": "node",
       "request": "launch",
@@ -55,6 +60,7 @@
       }
     },
     {
+      // Run Browser in Debug mode (Backend should be running)
       "name": "FE-Debug",
       "type": "chrome",
       "request": "launch",
@@ -62,6 +68,7 @@
       "webRoot": "${workspaceFolder}/rsconcept/frontend"
     },
     {
+      // Run Backend in Debug mode
       "name": "BE-Debug",
       "type": "debugpy",
       "request": "launch",
@@ -70,6 +77,7 @@
       "django": true
     },
     {
+      // Run Backend test coverage
       "name": "BE-Coverage",
       "type": "PowerShell",
       "request": "launch",
@@ -77,11 +85,20 @@
       "args": []
     },
     {
+      // Recreate database, fill with initial data and Run Backend + Frontend
       "name": "Restart",
       "type": "PowerShell",
       "request": "launch",
       "script": "${workspaceFolder}/scripts/dev/RunServer.ps1",
       "args": ["-freshStart"]
+    },
+    {
+      // Create DOT file for visualizing database
+      "name": "BE-GraphDB",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "${workspaceFolder}/scripts/dev/GraphDB.ps1",
+      "args": []
     }
   ]
 }

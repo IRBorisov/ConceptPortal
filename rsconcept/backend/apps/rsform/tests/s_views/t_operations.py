@@ -10,16 +10,16 @@ class TestInlineSynthesis(EndpointTester):
     @decl_endpoint('/api/operations/inline-synthesis', method='patch')
     def setUp(self):
         super().setUp()
-        self.schema1 = RSForm.create(title='Test1', alias='T1', owner=self.user)
-        self.schema2 = RSForm.create(title='Test2', alias='T2', owner=self.user)
-        self.unowned = RSForm.create(title='Test3', alias='T3')
+        self.schema1 = RSForm.objects.create(title='Test1', alias='T1', owner=self.user)
+        self.schema2 = RSForm.objects.create(title='Test2', alias='T2', owner=self.user)
+        self.unowned = RSForm.objects.create(title='Test3', alias='T3')
 
 
     def test_inline_synthesis_inputs(self):
         invalid_id = 1338
         data = {
-            'receiver': self.unowned.item.pk,
-            'source': self.schema1.item.pk,
+            'receiver': self.unowned.pk,
+            'source': self.schema1.pk,
             'items': [],
             'substitutions': []
         }
@@ -28,11 +28,11 @@ class TestInlineSynthesis(EndpointTester):
         data['receiver'] = invalid_id
         self.executeBadData(data=data)
 
-        data['receiver'] = self.schema1.item.pk
+        data['receiver'] = self.schema1.pk
         data['source'] = invalid_id
         self.executeBadData(data=data)
 
-        data['source'] = self.schema1.item.pk
+        data['source'] = self.schema1.pk
         self.executeOK(data=data)
 
         data['items'] = [invalid_id]
@@ -51,8 +51,8 @@ class TestInlineSynthesis(EndpointTester):
         ks2_a1 = self.schema2.insert_new('A1', definition_formal='1=1')  # -> not included in items
 
         data = {
-            'receiver': self.schema1.item.pk,
-            'source': self.schema2.item.pk,
+            'receiver': self.schema1.pk,
+            'source': self.schema2.pk,
             'items': [ks2_x1.pk, ks2_x2.pk, ks2_s1.pk, ks2_d1.pk],
             'substitutions': [
                 {

@@ -1,6 +1,6 @@
 ''' Django: Models. '''
 
-from .api_RSForm import RSForm
+from .RSForm import RSForm
 from .Constituenta import Constituenta, CstType, _empty_forms
 from .Editor import Editor
 from .LibraryItem import (

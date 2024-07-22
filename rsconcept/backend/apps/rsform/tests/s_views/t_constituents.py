@@ -8,12 +8,12 @@ class TestConstituentaAPI(EndpointTester):
 
     def setUp(self):
         super().setUp()
-        self.rsform_owned = RSForm.create(title='Test', alias='T1', owner=self.user)
-        self.rsform_unowned = RSForm.create(title='Test2', alias='T2')
+        self.rsform_owned = RSForm.objects.create(title='Test', alias='T1', owner=self.user)
+        self.rsform_unowned = RSForm.objects.create(title='Test2', alias='T2')
         self.cst1 = Constituenta.objects.create(
             alias='X1',
             cst_type=CstType.BASE,
-            schema=self.rsform_owned.item,
+            schema=self.rsform_owned,
             order=1,
             convention='Test',
             term_raw='Test1',
@@ -22,7 +22,7 @@ class TestConstituentaAPI(EndpointTester):
         self.cst2 = Constituenta.objects.create(
             alias='X2',
             cst_type=CstType.BASE,
-            schema=self.rsform_unowned.item,
+            schema=self.rsform_unowned,
             order=1,
             convention='Test1',
             term_raw='Test2',
@@ -30,7 +30,7 @@ class TestConstituentaAPI(EndpointTester):
         )
         self.cst3 = Constituenta.objects.create(
             alias='X3',
-            schema=self.rsform_owned.item,
+            schema=self.rsform_owned,
             order=2,
             term_raw='Test3',
             term_resolved='Test3',

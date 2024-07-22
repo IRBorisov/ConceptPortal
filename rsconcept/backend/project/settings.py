@@ -79,6 +79,8 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'drf_spectacular_sidecar',
 ]
+if DEBUG:
+    INSTALLED_APPS.append('django_extensions')
 
 
 REST_FRAMEWORK = {
@@ -128,7 +130,6 @@ APPEND_SLASH = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
-
 STATIC_ROOT = os.environ.get('STATIC_ROOT', os.path.join(BASE_DIR, 'static'))
 STATIC_URL = 'static/'
 MEDIA_ROOT = os.environ.get('MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))
@@ -156,7 +157,6 @@ WSGI_APPLICATION = 'project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3'),
@@ -198,7 +198,6 @@ SPECTACULAR_SETTINGS = {
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS: list[str] = [
     # NOTE: Password validators disabled
     # {
@@ -229,6 +228,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Graph model settings for visualization
+# https://django-extensions.readthedocs.io/en/latest/graph_models.html
+GRAPH_MODELS = {
+    'all_applications': True,
+    'group_models': True,
+}
 
 
 LOGGING = {

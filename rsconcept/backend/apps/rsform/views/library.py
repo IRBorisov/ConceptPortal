@@ -85,7 +85,11 @@ class LibraryViewSet(viewsets.ModelViewSet):
         serializer = s.LibraryItemCloneSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         item = self._get_item()
-        clone = deepcopy(item)
+        if item.item_type != m.LibraryItemType.RSFORM:
+            return Response(status=c.HTTP_400_BAD_REQUEST)
+
+        schema = m.RSForm.objects.get(pk=item.pk)
+        clone = deepcopy(schema)
         clone.pk = None
         clone.owner = self.request.user
         clone.title = serializer.validated_data['title']
@@ -98,18 +102,16 @@ class LibraryViewSet(viewsets.ModelViewSet):
 
         with transaction.atomic():
             clone.save()
-            if clone.item_type == m.LibraryItemType.RSFORM:
-                need_filter = 'items' in request.data
-                for cst in m.RSForm(item).constituents():
-                    if not need_filter or cst.pk in request.data['items']:
-                        cst.pk = None
-                        cst.schema = clone
-                        cst.save()
-                return Response(
-                    status=c.HTTP_201_CREATED,
-                    data=s.RSFormParseSerializer(clone).data
-                )
-        return Response(status=c.HTTP_400_BAD_REQUEST)
+            need_filter = 'items' in request.data
+            for cst in schema.constituents():
+                if not need_filter or cst.pk in request.data['items']:
+                    cst.pk = None
+                    cst.schema = clone
+                    cst.save()
+            return Response(
+                status=c.HTTP_201_CREATED,
+                data=s.RSFormParseSerializer(clone).data
+            )
 
     @extend_schema(
         summary='subscribe to item',

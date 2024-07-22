@@ -50,10 +50,6 @@ def typificationInvalidStr():
     return 'Invalid typification string'
 
 
-def libraryTypeUnexpected():
-    return 'Attempting to use invalid adaptor for non-RSForm item'
-
-
 def exteorFileVersionNotSupported():
     return 'Некорректный формат файла Экстеор. Сохраните файл в новой версии'
 

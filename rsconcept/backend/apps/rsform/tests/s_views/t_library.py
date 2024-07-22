@@ -20,20 +20,16 @@ class TestLibraryViewset(EndpointTester):
 
     def setUp(self):
         super().setUp()
-        self.owned = LibraryItem.objects.create(
-            item_type=LibraryItemType.RSFORM,
+        self.owned = RSForm.objects.create(
             title='Test',
             alias='T1',
             owner=self.user
         )
-        self.schema = RSForm(self.owned)
-        self.unowned = LibraryItem.objects.create(
-            item_type=LibraryItemType.RSFORM,
+        self.unowned = RSForm.objects.create(
             title='Test2',
             alias='T2'
         )
-        self.common = LibraryItem.objects.create(
-            item_type=LibraryItemType.RSFORM,
+        self.common = RSForm.objects.create(
             title='Test3',
             alias='T3',
             location=LocationHead.COMMON
@@ -363,12 +359,12 @@ class TestLibraryViewset(EndpointTester):
 
     @decl_endpoint('/api/library/{item}/clone', method='post')
     def test_clone_rsform(self):
-        x12 = self.schema.insert_new(
+        x12 = self.owned.insert_new(
             alias='X12',
             term_raw='человек',
             term_resolved='человек'
         )
-        d2 = self.schema.insert_new(
+        d2 = self.owned.insert_new(
             alias='D2',
             term_raw='@{X12|plur}',
             term_resolved='люди'

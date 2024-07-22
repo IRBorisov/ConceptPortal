@@ -85,20 +85,19 @@ class OperationSchemaSerializer(serializers.ModelSerializer):
 
     class Meta:
         ''' serializer metadata. '''
-        model = LibraryItem
+        model = OperationSchema
         fields = '__all__'
 
-    def to_representation(self, instance: LibraryItem):
+    def to_representation(self, instance: OperationSchema):
         result = LibraryItemDetailsSerializer(instance).data
-        oss = OperationSchema(instance)
         result['items'] = []
-        for operation in oss.operations():
+        for operation in instance.operations():
             result['items'].append(OperationSerializer(operation).data)
         result['arguments'] = []
-        for argument in oss.arguments():
+        for argument in instance.arguments():
             result['arguments'].append(ArgumentSerializer(argument).data)
         result['substitutions'] = []
-        for substitution in oss.substitutions().values(
+        for substitution in instance.substitutions().values(
             'operation',
             'original',
             'substitution',

@@ -12,29 +12,29 @@ class TestOssViewset(EndpointTester):
 
     def setUp(self):
         super().setUp()
-        self.owned = OperationSchema.create(title='Test', alias='T1', owner=self.user)
-        self.owned_id = self.owned.item.pk
-        self.unowned = OperationSchema.create(title='Test2', alias='T2')
-        self.unowned_id = self.unowned.item.pk
-        self.private = OperationSchema.create(title='Test2', alias='T2', access_policy=AccessPolicy.PRIVATE)
-        self.private_id = self.private.item.pk
-        self.invalid_id = self.private.item.pk + 1337
+        self.owned = OperationSchema.objects.create(title='Test', alias='T1', owner=self.user)
+        self.owned_id = self.owned.pk
+        self.unowned = OperationSchema.objects.create(title='Test2', alias='T2')
+        self.unowned_id = self.unowned.pk
+        self.private = OperationSchema.objects.create(title='Test2', alias='T2', access_policy=AccessPolicy.PRIVATE)
+        self.private_id = self.private.pk
+        self.invalid_id = self.private.pk + 1337
 
 
     def populateData(self):
-        self.ks1 = RSForm.create(alias='KS1', title='Test1')
+        self.ks1 = RSForm.objects.create(alias='KS1', title='Test1')
         self.ks1x1 = self.ks1.insert_new('X1', term_resolved='X1_1')
-        self.ks2 = RSForm.create(alias='KS2', title='Test2')
+        self.ks2 = RSForm.objects.create(alias='KS2', title='Test2')
         self.ks2x1 = self.ks2.insert_new('X2', term_resolved='X1_2')
         self.operation1 = self.owned.create_operation(
             alias='1',
             operation_type=OperationType.INPUT,
-            result=self.ks1.item
+            result=self.ks1
         )
         self.operation2 = self.owned.create_operation(
             alias='2',
             operation_type=OperationType.INPUT,
-            result=self.ks2.item
+            result=self.ks2
         )
         self.operation3 = self.owned.create_operation(
             alias='3',
@@ -53,12 +53,12 @@ class TestOssViewset(EndpointTester):
         self.populateData()
 
         response = self.executeOK(item=self.owned_id)
-        self.assertEqual(response.data['owner'], self.owned.item.owner.pk)
-        self.assertEqual(response.data['title'], self.owned.item.title)
-        self.assertEqual(response.data['alias'], self.owned.item.alias)
-        self.assertEqual(response.data['location'], self.owned.item.location)
-        self.assertEqual(response.data['access_policy'], self.owned.item.access_policy)
-        self.assertEqual(response.data['visible'], self.owned.item.visible)
+        self.assertEqual(response.data['owner'], self.owned.owner.pk)
+        self.assertEqual(response.data['title'], self.owned.title)
+        self.assertEqual(response.data['alias'], self.owned.alias)
+        self.assertEqual(response.data['location'], self.owned.location)
+        self.assertEqual(response.data['access_policy'], self.owned.access_policy)
+        self.assertEqual(response.data['visible'], self.owned.visible)
 
         self.assertEqual(response.data['item_type'], LibraryItemType.OPERATION_SCHEMA)
 
@@ -179,7 +179,7 @@ class TestOssViewset(EndpointTester):
             'arguments': [self.operation1.pk, self.operation3.pk]
         }
         response = self.executeCreated(data=data, item=self.owned_id)
-        self.owned.item.refresh_from_db()
+        self.owned.refresh_from_db()
         new_operation = response.data['new_operation']
         arguments = self.owned.arguments()
         self.assertTrue(arguments.filter(operation__id=new_operation['id'], argument=self.operation1))
@@ -193,14 +193,14 @@ class TestOssViewset(EndpointTester):
             'item_data': {
                 'alias': 'Test4',
                 'operation_type': OperationType.INPUT,
-                'result': self.ks1.item.pk
+                'result': self.ks1.pk
             },
             'positions': [],
         }
         response = self.executeCreated(data=data, item=self.owned_id)
-        self.owned.item.refresh_from_db()
+        self.owned.refresh_from_db()
         new_operation = response.data['new_operation']
-        self.assertEqual(new_operation['result'], self.ks1.item.pk)
+        self.assertEqual(new_operation['result'], self.ks1.pk)
 
 
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')

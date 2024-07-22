@@ -3,15 +3,15 @@ from django.db.utils import IntegrityError
 from django.forms import ValidationError
 from django.test import TestCase
 
-from apps.rsform.models import Constituenta, CstType, LibraryItem, LibraryItemType
+from apps.rsform.models import Constituenta, CstType, LibraryItemType, RSForm
 
 
 class TestConstituenta(TestCase):
     ''' Testing Constituenta model. '''
 
     def setUp(self):
-        self.schema1 = LibraryItem.objects.create(item_type=LibraryItemType.RSFORM, title='Test1')
-        self.schema2 = LibraryItem.objects.create(item_type=LibraryItemType.RSFORM, title='Test2')
+        self.schema1 = RSForm.objects.create(title='Test1')
+        self.schema2 = RSForm.objects.create(title='Test2')
 
 
     def test_str(self):
