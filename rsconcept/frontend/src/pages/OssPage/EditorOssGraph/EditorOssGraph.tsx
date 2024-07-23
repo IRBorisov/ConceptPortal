@@ -4,10 +4,15 @@ import { ReactFlowProvider } from 'reactflow';
 
 import OssFlow from './OssFlow';
 
-function EditorOssGraph() {
+interface EditorOssGraphProps {
+  isModified: boolean;
+  setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function EditorOssGraph({ isModified, setIsModified }: EditorOssGraphProps) {
   return (
     <ReactFlowProvider>
-      <OssFlow />
+      <OssFlow isModified={isModified} setIsModified={setIsModified} />
     </ReactFlowProvider>
   );
 }

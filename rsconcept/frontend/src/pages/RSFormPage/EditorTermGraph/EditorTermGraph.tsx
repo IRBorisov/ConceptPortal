@@ -311,7 +311,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
           showParamsDialog={() => setShowParamsDialog(true)}
           onCreate={handleCreateCst}
           onDelete={handleDeleteCst}
-          onResetViewpoint={() => setToggleResetView(prev => !prev)}
+          onFitView={() => setToggleResetView(prev => !prev)}
           onSaveImage={handleSaveImage}
           toggleOrbit={() => setOrbit(prev => !prev)}
           toggleFoldDerived={handleFoldDerived}

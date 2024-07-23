@@ -939,6 +939,7 @@ export const information = {
 
   versionDestroyed: 'Версия удалена',
   itemDestroyed: 'Схема удалена',
+  operationDestroyed: 'Операция удалена',
   constituentsDestroyed: (aliases: string) => `Конституенты удалены: ${aliases}`
 };
 

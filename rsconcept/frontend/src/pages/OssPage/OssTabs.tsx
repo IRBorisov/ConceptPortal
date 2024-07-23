@@ -17,6 +17,7 @@ import { useLibrary } from '@/context/LibraryContext';
 import { useBlockNavigation, useConceptNavigation } from '@/context/NavigationContext';
 import { useOSS } from '@/context/OssContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
+import { OperationID } from '@/models/oss';
 import { information, prompts } from '@/utils/labels';
 
 import EditorRSForm from './EditorOssCard';
@@ -39,6 +40,7 @@ function OssTabs() {
   const { destroyItem } = useLibrary();
 
   const [isModified, setIsModified] = useState(false);
+  const [selected, setSelected] = useState<OperationID[]>([]);
   useBlockNavigation(isModified);
 
   useLayoutEffect(() => {
@@ -112,14 +114,14 @@ function OssTabs() {
   const graphPanel = useMemo(
     () => (
       <TabPanel>
-        <EditorTermGraph />
+        <EditorTermGraph isModified={isModified} setIsModified={setIsModified} />
       </TabPanel>
     ),
-    []
+    [isModified]
   );
 
   return (
-    <OssEditState>
+    <OssEditState selected={selected} setSelected={setSelected}>
       {loading ? <Loader /> : null}
       {errorLoading ? <ProcessError error={errorLoading} /> : null}
       {schema && !loading ? (

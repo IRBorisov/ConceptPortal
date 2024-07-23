@@ -1,7 +1,6 @@
-import { CiSquareRemove } from 'react-icons/ci';
-import { PiPlugsConnected } from 'react-icons/pi';
 import { Handle, Position } from 'reactflow';
 
+import { IconDestroy, IconEdit2 } from '@/components/Icons';
 import MiniButton from '@/components/ui/MiniButton.tsx';
 
 import { useOssEdit } from '../OssEditContext';
@@ -21,27 +20,30 @@ function InputNode({ id, data }: InputNodeProps) {
     console.log('delete node ' + id);
   };
 
-  const handleClick = () => {
-    // controller.selectNode(id);
-    // controller.showSelectInput();
+  const handleEditOperation = () => {
+    console.log('edit operation ' + id);
+    //controller.selectNode(id);
+    //controller.showSynthesis();
   };
 
   return (
     <>
-      <Handle type='target' position={Position.Bottom} />
-      <div className='flex justify-between'>
+      <Handle type='source' position={Position.Bottom} />
+      <div className='flex justify-between items-center'>
         <div className='flex-grow text-center'>{data.label}</div>
         <div className='cc-icons'>
           <MiniButton
-            icon={<PiPlugsConnected className='icon-green' />}
-            title='Привязать схему'
+            icon={<IconEdit2 className='icon-primary' size='0.75rem' />}
+            noPadding
+            title='Редактировать'
             onClick={() => {
-              handleClick();
+              handleEditOperation();
             }}
           />
           <MiniButton
-            icon={<CiSquareRemove className='icon-red' size='1rem' />}
-            title='Удалить'
+            noPadding
+            icon={<IconDestroy className='icon-red' size='0.75rem' />}
+            title='Удалить операцию'
             onClick={handleDelete}
           />
         </div>

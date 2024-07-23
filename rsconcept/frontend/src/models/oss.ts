@@ -42,15 +42,28 @@ export interface IOperation {
 export interface IOperationPosition extends Pick<IOperation, 'id' | 'position_x' | 'position_y'> {}
 
 /**
+ * Represents all {@link IOperation} positions in {@link IOperationSchema}.
+ */
+export interface IPositionsData {
+  positions: IOperationPosition[];
+}
+
+/**
+ * Represents target {@link IOperation}.
+ */
+export interface ITargetOperation extends IPositionsData {
+  target: OperationID;
+}
+
+/**
  * Represents {@link IOperation} data, used in creation process.
  */
-export interface IOperationCreateData {
+export interface IOperationCreateData extends IPositionsData {
   item_data: Pick<
     IOperation,
     'alias' | 'operation_type' | 'title' | 'comment' | 'position_x' | 'position_y' | 'result'
   >;
   arguments: OperationID[] | undefined;
-  positions: IOperationPosition[];
 }
 
 /**

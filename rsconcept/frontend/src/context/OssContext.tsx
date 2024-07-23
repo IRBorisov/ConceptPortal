@@ -5,11 +5,13 @@ import { createContext, useCallback, useContext, useMemo, useState } from 'react
 import {
   type DataCallback,
   deleteUnsubscribe,
+  patchDeleteOperation,
   patchEditorsSet as patchSetEditors,
   patchLibraryItem,
   patchSetAccessPolicy,
   patchSetLocation,
   patchSetOwner,
+  patchUpdatePositions,
   postCreateOperation,
   postSubscribe
 } from '@/app/backendAPI';
@@ -17,7 +19,7 @@ import { type ErrorData } from '@/components/info/InfoError';
 import useOssDetails from '@/hooks/useOssDetails';
 import { AccessPolicy, ILibraryItem } from '@/models/library';
 import { ILibraryUpdateData } from '@/models/library';
-import { IOperation, IOperationCreateData, IOperationSchema } from '@/models/oss';
+import { IOperation, IOperationCreateData, IOperationSchema, IPositionsData, ITargetOperation } from '@/models/oss';
 import { UserID } from '@/models/user';
 import { contextOutsideScope } from '@/utils/labels';
 
@@ -45,7 +47,9 @@ interface IOssContext {
   setLocation: (newLocation: string, callback?: () => void) => void;
   setEditors: (newEditors: UserID[], callback?: () => void) => void;
 
+  savePositions: (data: IPositionsData, callback?: () => void) => void;
   createOperation: (data: IOperationCreateData, callback?: DataCallback<IOperation>) => void;
+  deleteOperation: (data: ITargetOperation, callback?: () => void) => void;
 }
 
 const OssContext = createContext<IOssContext | null>(null);
@@ -250,6 +254,23 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
     [itemID, schema]
   );
 
+  const savePositions = useCallback(
+    (data: IPositionsData, callback?: () => void) => {
+      setProcessingError(undefined);
+      patchUpdatePositions(itemID, {
+        data: data,
+        showError: true,
+        setLoading: setProcessing,
+        onError: setProcessingError,
+        onSuccess: () => {
+          library.localUpdateTimestamp(Number(itemID));
+          if (callback) callback();
+        }
+      });
+    },
+    [itemID, library]
+  );
+
   const createOperation = useCallback(
     (data: IOperationCreateData, callback?: DataCallback<IOperation>) => {
       setProcessingError(undefined);
@@ -262,6 +283,24 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
           setSchema(newData.oss);
           library.localUpdateTimestamp(newData.oss.id);
           if (callback) callback(newData.new_operation);
+        }
+      });
+    },
+    [itemID, library, setSchema]
+  );
+
+  const deleteOperation = useCallback(
+    (data: ITargetOperation, callback?: () => void) => {
+      setProcessingError(undefined);
+      patchDeleteOperation(itemID, {
+        data: data,
+        showError: true,
+        setLoading: setProcessing,
+        onError: setProcessingError,
+        onSuccess: newData => {
+          setSchema(newData);
+          library.localUpdateTimestamp(newData.id);
+          if (callback) callback();
         }
       });
     },
@@ -288,7 +327,9 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         setAccessPolicy,
         setLocation,
 
-        createOperation
+        savePositions,
+        createOperation,
+        deleteOperation
       }}
     >
       {children}

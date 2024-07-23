@@ -11,6 +11,8 @@ export const PARAMETER = {
   refreshTimeout: 100, // milliseconds delay for post-refresh actions
   minimalTimeout: 10, // milliseconds delay for fast updates
 
+  zoomDuration: 500, // milliseconds animation duration
+
   graphHoverXLimit: 0.4, // ratio to clientWidth used to determine which side of screen popup should be
   graphHoverYLimit: 0.6, // ratio to clientHeight used to determine which side of screen popup should be
   graphPopupDelay: 500, // milliseconds delay for graph popup selections

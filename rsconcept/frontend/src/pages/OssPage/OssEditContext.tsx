@@ -13,12 +13,13 @@ import DlgCreateOperation from '@/dialogs/DlgCreateOperation';
 import DlgEditEditors from '@/dialogs/DlgEditEditors';
 import { AccessPolicy } from '@/models/library';
 import { Position2D } from '@/models/miscellaneous';
-import { IOperationCreateData, IOperationPosition, IOperationSchema } from '@/models/oss';
+import { IOperationCreateData, IOperationPosition, IOperationSchema, OperationID } from '@/models/oss';
 import { UserID, UserLevel } from '@/models/user';
 import { information } from '@/utils/labels';
 
 export interface IOssEditContext {
   schema?: IOperationSchema;
+  selected: OperationID[];
 
   isMutable: boolean;
   isProcessing: boolean;
@@ -29,9 +30,13 @@ export interface IOssEditContext {
   promptLocation: () => void;
   toggleSubscribe: () => void;
 
+  setSelected: React.Dispatch<React.SetStateAction<OperationID[]>>;
+
   share: () => void;
 
+  savePositions: (positions: IOperationPosition[], callback?: () => void) => void;
   promptCreateOperation: (x: number, y: number, positions: IOperationPosition[]) => void;
+  deleteOperation: (target: OperationID, positions: IOperationPosition[]) => void;
 }
 
 const OssEditContext = createContext<IOssEditContext | null>(null);
@@ -45,10 +50,12 @@ export const useOssEdit = () => {
 
 interface OssEditStateProps {
   // isModified: boolean;
+  selected: OperationID[];
+  setSelected: React.Dispatch<React.SetStateAction<OperationID[]>>;
   children: React.ReactNode;
 }
 
-export const OssEditState = ({ children }: OssEditStateProps) => {
+export const OssEditState = ({ selected, setSelected, children }: OssEditStateProps) => {
   // const router = useConceptNavigation();
   const { user } = useAuth();
   const { adminMode } = useConceptOptions();
@@ -144,6 +151,23 @@ export const OssEditState = ({ children }: OssEditStateProps) => {
     [model]
   );
 
+  const savePositions = useCallback(
+    (positions: IOperationPosition[], callback?: () => void) => {
+      model.savePositions({ positions: positions }, () => {
+        positions.forEach(item => {
+          const operation = model.schema?.operationByID.get(item.id);
+          if (operation) {
+            operation.position_x = item.position_x;
+            operation.position_y = item.position_y;
+          }
+        });
+        toast.success(information.changesSaved);
+        if (callback) callback();
+      });
+    },
+    [model]
+  );
+
   const promptCreateOperation = useCallback((x: number, y: number, positions: IOperationPosition[]) => {
     setInsertPosition({ x: x, y: y });
     setPositions(positions);
@@ -157,10 +181,21 @@ export const OssEditState = ({ children }: OssEditStateProps) => {
     [model]
   );
 
+  const deleteOperation = useCallback(
+    (target: OperationID, positions: IOperationPosition[]) => {
+      model.deleteOperation({ target: target, positions: positions }, () =>
+        toast.success(information.operationDestroyed)
+      );
+    },
+    [model]
+  );
+
   return (
     <OssEditContext.Provider
       value={{
         schema: model.schema,
+        selected,
+
         isMutable,
         isProcessing: model.processing,
 
@@ -171,8 +206,11 @@ export const OssEditState = ({ children }: OssEditStateProps) => {
         promptLocation,
 
         share,
+        setSelected,
 
-        promptCreateOperation
+        savePositions,
+        promptCreateOperation,
+        deleteOperation
       }}
     >
       {model.schema ? (

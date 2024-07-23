@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from shared import messages as msg
 
-from ..models import Constituenta, LibraryItem, RSForm
+from ..models import Constituenta, RSForm
 from ..utils import fix_old_references
 
 _CST_TYPE = 'constituenta'

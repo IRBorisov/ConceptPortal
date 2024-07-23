@@ -13,7 +13,9 @@ import {
   ICstSubstituteData,
   IOperationCreateData,
   IOperationCreatedResponse,
-  IOperationSchemaData
+  IOperationSchemaData,
+  IPositionsData,
+  ITargetOperation
 } from '@/models/oss';
 import {
   IConstituentaList,
@@ -424,12 +426,26 @@ export function getOssDetails(target: string, request: FrontPull<IOperationSchem
   });
 }
 
+export function patchUpdatePositions(schema: string, request: FrontPush<IPositionsData>) {
+  AxiosPatch({
+    endpoint: `/api/oss/${schema}/update-positions`,
+    request: request
+  });
+}
+
 export function postCreateOperation(
   schema: string,
   request: FrontExchange<IOperationCreateData, IOperationCreatedResponse>
 ) {
   AxiosPost({
     endpoint: `/api/oss/${schema}/create-operation`,
+    request: request
+  });
+}
+
+export function patchDeleteOperation(schema: string, request: FrontExchange<ITargetOperation, IOperationSchemaData>) {
+  AxiosPatch({
+    endpoint: `/api/oss/${schema}/delete-operation`,
     request: request
   });
 }

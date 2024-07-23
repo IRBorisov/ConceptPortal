@@ -29,7 +29,7 @@ interface ToolbarTermGraphProps {
   showParamsDialog: () => void;
   onCreate: () => void;
   onDelete: () => void;
-  onResetViewpoint: () => void;
+  onFitView: () => void;
   onSaveImage: () => void;
 
   toggleFoldDerived: () => void;
@@ -48,7 +48,7 @@ function ToolbarTermGraph({
   showParamsDialog,
   onCreate,
   onDelete,
-  onResetViewpoint,
+  onFitView,
   onSaveImage
 }: ToolbarTermGraphProps) {
   const controller = useRSEdit();
@@ -63,7 +63,7 @@ function ToolbarTermGraph({
       <MiniButton
         icon={<IconFitImage size='1.25rem' className='icon-primary' />}
         title='Граф целиком'
-        onClick={onResetViewpoint}
+        onClick={onFitView}
       />
       <MiniButton
         title={!noText ? 'Скрыть текст' : 'Отобразить текст'}

@@ -1,16 +1,18 @@
-import { CiSquareRemove } from 'react-icons/ci';
-import { IoGitNetworkSharp } from 'react-icons/io5';
 import { VscDebugStart } from 'react-icons/vsc';
 import { Handle, Position } from 'reactflow';
 
+import { IconDestroy, IconEdit2 } from '@/components/Icons';
 import MiniButton from '@/components/ui/MiniButton.tsx';
 
 import { useOssEdit } from '../OssEditContext';
 interface OperationNodeProps {
   id: string;
+  data: {
+    label: string;
+  };
 }
 
-function OperationNode({ id }: OperationNodeProps) {
+function OperationNode({ id, data }: OperationNodeProps) {
   const controller = useOssEdit();
   console.log(controller.isMutable);
 
@@ -32,37 +34,33 @@ function OperationNode({ id }: OperationNodeProps) {
 
   return (
     <>
-      <Handle type='target' position={Position.Bottom} />
-      <div>
-        <MiniButton
-          className='float-right'
-          icon={<CiSquareRemove className='icon-red' />}
-          title='Удалить'
-          onClick={handleDelete}
-          color={'red'}
-        />
-        <div>
-          Тип: <strong>Отождествление</strong>
-        </div>
-        <div>
-          Схема: <strong></strong>
+      <Handle type='source' position={Position.Bottom} />
+      <div className='flex justify-between'>
+        <div className='flex-grow text-center'>{data.label}</div>
+        <div className='cc-icons'>
+          <MiniButton
+            icon={<IconEdit2 className='icon-primary' size='1rem' />}
+            title='Редактировать'
+            onClick={() => {
+              handleEditOperation();
+            }}
+          />
           <MiniButton
             className='float-right'
-            icon={<VscDebugStart className='icon-green' />}
+            icon={<VscDebugStart className='icon-green' size='1rem' />}
             title='Синтез'
             onClick={() => handleRunOperation()}
           />
           <MiniButton
-            className='float-right'
-            icon={<IoGitNetworkSharp className='icon-green' />}
-            title='Отождествления'
-            onClick={() => handleEditOperation()}
+            icon={<IconDestroy className='icon-red' size='1rem' />}
+            title='Удалить операцию'
+            onClick={handleDelete}
           />
         </div>
       </div>
 
-      <Handle type='source' position={Position.Top} id='a' style={{ left: 50 }} />
-      <Handle type='source' position={Position.Top} id='b' style={{ right: 50, left: 'auto' }} />
+      <Handle type='target' position={Position.Top} id='left' style={{ left: 40 }} />
+      <Handle type='target' position={Position.Top} id='right' style={{ right: 40, left: 'auto' }} />
     </>
   );
 }
