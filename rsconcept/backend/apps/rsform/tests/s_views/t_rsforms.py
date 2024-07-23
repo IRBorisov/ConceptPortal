@@ -219,6 +219,15 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(x4.term_raw, data['term_raw'])
         self.assertEqual(x4.term_forms, data['term_forms'])
 
+        data = {
+            'alias': 'X5',
+            'cst_type': CstType.BASE,
+            'insert_after': None,
+            'term_raw': 'test5'
+        }
+        response = self.executeCreated(data=data, item=self.owned_id)
+        self.assertEqual(response.data['new_cst']['alias'], data['alias'])
+
 
     @decl_endpoint('/api/rsforms/{item}/cst-rename', method='patch')
     def test_rename_constituenta(self):

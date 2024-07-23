@@ -72,7 +72,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         serializer = s.CstCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
-        if 'insert_after' in data:
+        if 'insert_after' in data and data['insert_after'] is not None:
             try:
                 insert_after = m.Constituenta.objects.get(pk=data['insert_after'])
             except m.LibraryItem.DoesNotExist:
