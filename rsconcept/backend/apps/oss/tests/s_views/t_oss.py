@@ -136,6 +136,7 @@ class TestOssViewset(EndpointTester):
                 'alias': 'Test3',
                 'title': 'Test title',
                 'comment': 'Тест кириллицы',
+                'sync_text': False,
                 'position_x': 1,
                 'position_y': 1,
             },
@@ -158,6 +159,7 @@ class TestOssViewset(EndpointTester):
         self.assertEqual(new_operation['comment'], data['item_data']['comment'])
         self.assertEqual(new_operation['position_x'], data['item_data']['position_x'])
         self.assertEqual(new_operation['position_y'], data['item_data']['position_y'])
+        self.assertEqual(new_operation['sync_text'], data['item_data']['sync_text'])
         self.assertEqual(new_operation['result'], None)
         self.operation1.refresh_from_db()
         self.assertEqual(self.operation1.position_x, data['positions'][0]['position_x'])

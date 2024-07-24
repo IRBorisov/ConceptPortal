@@ -128,7 +128,30 @@ class LibraryItem(Model):
 
     @transaction.atomic
     def save(self, *args, **kwargs):
-        subscribe = not self.pk and self.owner
+        ''' Save updating subscriptions and connected operations. '''
+        if not self._state.adding:
+            self._update_connected_operations()
+        subscribe = self._state.adding and self.owner
         super().save(*args, **kwargs)
         if subscribe:
             Subscription.subscribe(user=self.owner, item=self)
+
+    def _update_connected_operations(self):
+        # using method level import to prevent circular dependency
+        from apps.oss.models import Operation  # pylint: disable=import-outside-toplevel
+        operations = Operation.objects.filter(result__pk=self.pk, sync_text=True)
+        if not operations.exists():
+            return
+        for operation in operations:
+            changed = False
+            if operation.alias != self.alias:
+                operation.alias = self.alias
+                changed = True
+            if operation.title != self.title:
+                operation.title = self.title
+                changed = True
+            if operation.comment != self.comment:
+                operation.comment = self.comment
+                changed = True
+            if changed:
+                operation.save()

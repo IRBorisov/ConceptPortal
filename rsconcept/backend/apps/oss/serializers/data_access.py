@@ -41,7 +41,7 @@ class OperationCreateSerializer(serializers.Serializer):
             ''' serializer metadata. '''
             model = Operation
             fields = \
-                'alias', 'operation_type', 'title', \
+                'alias', 'operation_type', 'title', 'sync_text', \
                 'comment', 'result', 'position_x', 'position_y'
 
     item_data = OperationData()

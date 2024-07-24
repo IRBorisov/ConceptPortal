@@ -40,6 +40,7 @@ function DlgCreateOperation({ hideWindow, oss, insertPosition, positions, onCrea
   const [comment, setComment] = useState('');
   const [inputs, setInputs] = useState<OperationID[]>([]);
   const [attachedID, setAttachedID] = useState<LibraryItemID | undefined>(undefined);
+  const [syncText, setSyncText] = useState(true);
 
   const isValid = useMemo(() => alias !== '', [alias]);
 
@@ -62,6 +63,7 @@ function DlgCreateOperation({ hideWindow, oss, insertPosition, positions, onCrea
         alias: alias,
         title: title,
         comment: comment,
+        sync_text: activeTab === TabID.INPUT ? syncText : true,
         operation_type: activeTab === TabID.INPUT ? OperationType.INPUT : OperationType.SYNTHESIS,
         result: activeTab === TabID.INPUT ? attachedID ?? null : null
       },
@@ -83,10 +85,12 @@ function DlgCreateOperation({ hideWindow, oss, insertPosition, positions, onCrea
           setTitle={setTitle}
           attachedID={attachedID}
           setAttachedID={setAttachedID}
+          syncText={syncText}
+          setSyncText={setSyncText}
         />
       </TabPanel>
     ),
-    [alias, comment, title, attachedID]
+    [alias, comment, title, attachedID, syncText]
   );
 
   const synthesisPanel = useMemo(

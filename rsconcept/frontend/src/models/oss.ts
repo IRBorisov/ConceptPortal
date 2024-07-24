@@ -30,6 +30,8 @@ export interface IOperation {
   alias: string;
   title: string;
   comment: string;
+  sync_text: boolean;
+
   position_x: number;
   position_y: number;
 
@@ -61,7 +63,7 @@ export interface ITargetOperation extends IPositionsData {
 export interface IOperationCreateData extends IPositionsData {
   item_data: Pick<
     IOperation,
-    'alias' | 'operation_type' | 'title' | 'comment' | 'position_x' | 'position_y' | 'result'
+    'alias' | 'operation_type' | 'title' | 'comment' | 'position_x' | 'position_y' | 'result' | 'sync_text'
   >;
   arguments: OperationID[] | undefined;
 }
