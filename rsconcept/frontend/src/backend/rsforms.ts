@@ -64,42 +64,42 @@ export function getTRSFile(target: string, version: string, request: FrontPull<B
 
 export function postCreateConstituenta(schema: string, request: FrontExchange<ICstCreateData, ICstCreatedResponse>) {
   AxiosPost({
-    endpoint: `/api/rsforms/${schema}/cst-create`,
+    endpoint: `/api/rsforms/${schema}/create-cst`,
     request: request
   });
 }
 
 export function patchDeleteConstituenta(schema: string, request: FrontExchange<IConstituentaList, IRSFormData>) {
   AxiosPatch({
-    endpoint: `/api/rsforms/${schema}/cst-delete-multiple`,
+    endpoint: `/api/rsforms/${schema}/delete-multiple-cst`,
     request: request
   });
 }
 
 export function patchRenameConstituenta(schema: string, request: FrontExchange<ICstRenameData, ICstCreatedResponse>) {
   AxiosPatch({
-    endpoint: `/api/rsforms/${schema}/cst-rename`,
+    endpoint: `/api/rsforms/${schema}/rename-cst`,
     request: request
   });
 }
 
 export function patchProduceStructure(schema: string, request: FrontExchange<ITargetCst, IProduceStructureResponse>) {
   AxiosPatch({
-    endpoint: `/api/rsforms/${schema}/cst-produce-structure`,
+    endpoint: `/api/rsforms/${schema}/produce-structure`,
     request: request
   });
 }
 
 export function patchSubstituteConstituents(schema: string, request: FrontExchange<ICstSubstituteData, IRSFormData>) {
   AxiosPatch({
-    endpoint: `/api/rsforms/${schema}/cst-substitute`,
+    endpoint: `/api/rsforms/${schema}/substitute`,
     request: request
   });
 }
 
 export function patchMoveConstituenta(schema: string, request: FrontExchange<ICstMovetoData, IRSFormData>) {
   AxiosPatch({
-    endpoint: `/api/rsforms/${schema}/cst-moveto`,
+    endpoint: `/api/rsforms/${schema}/move-cst`,
     request: request
   });
 }

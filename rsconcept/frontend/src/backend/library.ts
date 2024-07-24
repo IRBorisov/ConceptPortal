@@ -24,7 +24,6 @@ import {
 } from './apiTransport';
 
 export function getLibrary(request: FrontPull<ILibraryItem[]>) {
-  // title: 'Available LibraryItems list',
   AxiosGet({
     endpoint: '/api/library/active',
     request: request
@@ -32,7 +31,6 @@ export function getLibrary(request: FrontPull<ILibraryItem[]>) {
 }
 
 export function getAdminLibrary(request: FrontPull<ILibraryItem[]>) {
-  // title: 'All LibraryItems list',
   AxiosGet({
     endpoint: '/api/library/all',
     request: request
@@ -95,23 +93,9 @@ export function patchSetLocation(target: string, request: FrontPush<ITargetLocat
   });
 }
 
-export function patchEditorsAdd(target: string, request: FrontPush<ITargetUser>) {
+export function patchSetEditors(target: string, request: FrontPush<ITargetUsers>) {
   AxiosPatch({
-    endpoint: `/api/library/${target}/editors-add`,
-    request: request
-  });
-}
-
-export function patchEditorsRemove(target: string, request: FrontPush<ITargetUser>) {
-  AxiosPatch({
-    endpoint: `/api/library/${target}/editors-remove`,
-    request: request
-  });
-}
-
-export function patchEditorsSet(target: string, request: FrontPush<ITargetUsers>) {
-  AxiosPatch({
-    endpoint: `/api/library/${target}/editors-set`,
+    endpoint: `/api/library/${target}/set-editors`,
     request: request
   });
 }

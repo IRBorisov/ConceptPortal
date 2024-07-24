@@ -5,9 +5,9 @@ import { createContext, useCallback, useContext, useMemo, useState } from 'react
 import { DataCallback } from '@/backend/apiTransport';
 import {
   deleteUnsubscribe,
-  patchEditorsSet,
   patchLibraryItem,
   patchSetAccessPolicy,
+  patchSetEditors,
   patchSetLocation,
   patchSetOwner,
   postSubscribe
@@ -236,7 +236,7 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         return;
       }
       setProcessingError(undefined);
-      patchEditorsSet(itemID, {
+      patchSetEditors(itemID, {
         data: {
           users: newEditors
         },

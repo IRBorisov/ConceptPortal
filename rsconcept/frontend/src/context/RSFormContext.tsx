@@ -6,9 +6,9 @@ import { DataCallback } from '@/backend/apiTransport';
 import { patchConstituenta } from '@/backend/constituents';
 import {
   deleteUnsubscribe,
-  patchEditorsSet,
   patchLibraryItem,
   patchSetAccessPolicy,
+  patchSetEditors,
   patchSetLocation,
   patchSetOwner,
   postSubscribe
@@ -309,7 +309,7 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         return;
       }
       setProcessingError(undefined);
-      patchEditorsSet(itemID, {
+      patchSetEditors(itemID, {
         data: {
           users: newEditors
         },

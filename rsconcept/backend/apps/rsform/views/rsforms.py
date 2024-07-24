@@ -35,11 +35,14 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         ''' Determine permission class. '''
         if self.action in [
             'load_trs',
+            'create_cst',
+            'delete_multiple_cst',
+            'rename_cst',
+            'move_cst',
+            'substitute',
+            'restore_order',
             'reset_aliases',
-            'cst_create',
-            'cst_delete_multiple',
-            'cst_rename',
-            'cst_substitute'
+            'produce_structure'
         ]:
             permission_list = [permissions.ItemEditor]
         elif self.action in [
@@ -65,8 +68,8 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @action(detail=True, methods=['post'], url_path='cst-create')
-    def cst_create(self, request: Request, pk):
+    @action(detail=True, methods=['post'], url_path='create-cst')
+    def create_cst(self, request: Request, pk):
         ''' Create new constituenta. '''
         schema = self._get_schema()
         serializer = s.CstCreateSerializer(data=request.data)
@@ -103,7 +106,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @action(detail=True, methods=['patch'], url_path='cst-produce-structure')
+    @action(detail=True, methods=['patch'], url_path='produce-structure')
     def produce_structure(self, request: Request, pk):
         ''' Produce a term for every element of the target constituenta typification. '''
         schema = self._get_schema()
@@ -140,8 +143,8 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @action(detail=True, methods=['patch'], url_path='cst-rename')
-    def cst_rename(self, request: Request, pk):
+    @action(detail=True, methods=['patch'], url_path='rename-cst')
+    def rename_cst(self, request: Request, pk):
         ''' Rename constituenta possibly changing type. '''
         schema = self._get_schema()
         serializer = s.CstRenameSerializer(data=request.data, context={'schema': schema})
@@ -178,8 +181,8 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @action(detail=True, methods=['patch'], url_path='cst-substitute')
-    def cst_substitute(self, request: Request, pk):
+    @action(detail=True, methods=['patch'], url_path='substitute')
+    def substitute(self, request: Request, pk):
         ''' Substitute occurrences of constituenta with another one. '''
         schema = self._get_schema()
         serializer = s.CstSubstituteSerializer(
@@ -210,8 +213,8 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @action(detail=True, methods=['patch'], url_path='cst-delete-multiple')
-    def cst_delete_multiple(self, request: Request, pk):
+    @action(detail=True, methods=['patch'], url_path='delete-multiple-cst')
+    def delete_multiple_cst(self, request: Request, pk):
         ''' Endpoint: Delete multiple constituents. '''
         schema = self._get_schema()
         serializer = s.CstListSerializer(
@@ -237,8 +240,8 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @action(detail=True, methods=['patch'], url_path='cst-moveto')
-    def cst_moveto(self, request: Request, pk):
+    @action(detail=True, methods=['patch'], url_path='move-cst')
+    def move_cst(self, request: Request, pk):
         ''' Endpoint: Move multiple constituents. '''
         schema = self._get_schema()
         serializer = s.CstMoveSerializer(

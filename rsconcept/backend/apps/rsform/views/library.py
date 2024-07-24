@@ -49,9 +49,9 @@ class LibraryViewSet(viewsets.ModelViewSet):
             'set_owner',
             'set_access_policy',
             'set_location',
-            'editors_add',
-            'editors_remove',
-            'editors_set'
+            'add_editor',
+            'remove_editor',
+            'set_editors'
         ]:
             access_level = permissions.ItemOwner
         elif self.action in [
@@ -220,8 +220,8 @@ class LibraryViewSet(viewsets.ModelViewSet):
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @action(detail=True, methods=['patch'], url_path='editors-add')
-    def editors_add(self, request: Request, pk):
+    @action(detail=True, methods=['patch'], url_path='add-editor')
+    def add_editor(self, request: Request, pk):
         ''' Endpoint: Add editor for item. '''
         item = self._get_item()
         serializer = s.UserTargetSerializer(data=request.data)
@@ -240,8 +240,8 @@ class LibraryViewSet(viewsets.ModelViewSet):
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @action(detail=True, methods=['patch'], url_path='editors-remove')
-    def editors_remove(self, request: Request, pk):
+    @action(detail=True, methods=['patch'], url_path='remove-editor')
+    def remove_editor(self, request: Request, pk):
         ''' Endpoint: Remove editor for item. '''
         item = self._get_item()
         serializer = s.UserTargetSerializer(data=request.data)
@@ -260,8 +260,8 @@ class LibraryViewSet(viewsets.ModelViewSet):
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @action(detail=True, methods=['patch'], url_path='editors-set')
-    def editors_set(self, request: Request, pk):
+    @action(detail=True, methods=['patch'], url_path='set-editors')
+    def set_editors(self, request: Request, pk):
         ''' Endpoint: Set list of editors for item. '''
         item = self._get_item()
         serializer = s.UsersListSerializer(data=request.data)

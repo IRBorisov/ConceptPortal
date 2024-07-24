@@ -179,7 +179,7 @@ class TestLibraryViewset(EndpointTester):
         self.unowned.refresh_from_db()
         self.assertEqual(self.unowned.location, data['location'])
 
-    @decl_endpoint('/api/library/{item}/editors-add', method='patch')
+    @decl_endpoint('/api/library/{item}/add-editor', method='patch')
     def test_add_editor(self):
         time_update = self.owned.time_update
 
@@ -203,7 +203,7 @@ class TestLibraryViewset(EndpointTester):
         self.assertEqual(set(self.owned.editors()), set([self.user, self.user2]))
 
 
-    @decl_endpoint('/api/library/{item}/editors-remove', method='patch')
+    @decl_endpoint('/api/library/{item}/remove-editor', method='patch')
     def test_remove_editor(self):
         time_update = self.owned.time_update
 
@@ -230,7 +230,7 @@ class TestLibraryViewset(EndpointTester):
         self.assertEqual(self.owned.editors(), [self.user])
 
 
-    @decl_endpoint('/api/library/{item}/editors-set', method='patch')
+    @decl_endpoint('/api/library/{item}/set-editors', method='patch')
     def test_set_editors(self):
         time_update = self.owned.time_update
 

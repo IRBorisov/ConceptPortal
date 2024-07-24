@@ -186,7 +186,7 @@ class TestRSFormViewset(EndpointTester):
                 self.assertIn('document.json', zipped_file.namelist())
 
 
-    @decl_endpoint('/api/rsforms/{item}/cst-create', method='post')
+    @decl_endpoint('/api/rsforms/{item}/create-cst', method='post')
     def test_create_constituenta(self):
         data = {'alias': 'X3'}
         self.executeForbidden(data=data, item=self.unowned_id)
@@ -229,7 +229,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(response.data['new_cst']['alias'], data['alias'])
 
 
-    @decl_endpoint('/api/rsforms/{item}/cst-rename', method='patch')
+    @decl_endpoint('/api/rsforms/{item}/rename-cst', method='patch')
     def test_rename_constituenta(self):
         x1 = self.owned.insert_new(
             alias='X1',
@@ -279,7 +279,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(x1.cst_type, CstType.TERM)
 
 
-    @decl_endpoint('/api/rsforms/{item}/cst-substitute', method='patch')
+    @decl_endpoint('/api/rsforms/{item}/substitute', method='patch')
     def test_substitute_single(self):
         x1 = self.owned.insert_new(
             alias='X1',
@@ -316,7 +316,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(d1.term_resolved, 'form1')
         self.assertEqual(d1.definition_formal, 'X2')
 
-    @decl_endpoint('/api/rsforms/{item}/cst-substitute', method='patch')
+    @decl_endpoint('/api/rsforms/{item}/substitute', method='patch')
     def test_substitute_multiple(self):
         self.set_params(item=self.owned_id)
         x1 = self.owned.insert_new('X1')
@@ -362,7 +362,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(d3.definition_formal, r'D1 \ D2')
 
 
-    @decl_endpoint('/api/rsforms/{item}/cst-create', method='post')
+    @decl_endpoint('/api/rsforms/{item}/create-cst', method='post')
     def test_create_constituenta_data(self):
         data = {
             'alias': 'X3',
@@ -383,7 +383,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(response.data['new_cst']['definition_resolved'], '4')
 
 
-    @decl_endpoint('/api/rsforms/{item}/cst-delete-multiple', method='patch')
+    @decl_endpoint('/api/rsforms/{item}/delete-multiple-cst', method='patch')
     def test_delete_constituenta(self):
         self.set_params(item=self.owned_id)
 
@@ -407,7 +407,7 @@ class TestRSFormViewset(EndpointTester):
         self.executeBadData(data=data, item=self.owned_id)
 
 
-    @decl_endpoint('/api/rsforms/{item}/cst-moveto', method='patch')
+    @decl_endpoint('/api/rsforms/{item}/move-cst', method='patch')
     def test_move_constituenta(self):
         self.set_params(item=self.owned_id)
 
@@ -473,7 +473,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertFalse(Constituenta.objects.filter(pk=x1.pk).exists())
 
 
-    @decl_endpoint('/api/rsforms/{item}/cst-produce-structure', method='patch')
+    @decl_endpoint('/api/rsforms/{item}/produce-structure', method='patch')
     def test_produce_structure(self):
         self.set_params(item=self.owned_id)
         x1 = self.owned.insert_new('X1')
