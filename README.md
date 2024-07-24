@@ -75,6 +75,7 @@ This readme file is used mostly to document project dependencies
   - Svg Preview
   - TODO Highlight v2
   - Prettier
+  - PowerShell (for Windows dev env)
   </pre>
 </details>
 <details>
