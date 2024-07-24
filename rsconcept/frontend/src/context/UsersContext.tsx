@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
-import { getActiveUsers } from '@/app/backendAPI';
+import { getActiveUsers } from '@/backend/users';
 import { IUserInfo } from '@/models/user';
 import { contextOutsideScope } from '@/utils/labels';
 

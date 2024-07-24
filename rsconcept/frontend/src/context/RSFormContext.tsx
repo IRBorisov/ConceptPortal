@@ -2,32 +2,32 @@
 
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
+import { DataCallback } from '@/backend/apiTransport';
+import { patchConstituenta } from '@/backend/constituents';
 import {
-  type DataCallback,
   deleteUnsubscribe,
-  deleteVersion,
-  getTRSFile,
-  patchConstituenta,
-  patchDeleteConstituenta,
-  patchEditorsSet as patchSetEditors,
-  patchInlineSynthesis,
+  patchEditorsSet,
   patchLibraryItem,
+  patchSetAccessPolicy,
+  patchSetLocation,
+  patchSetOwner,
+  postSubscribe
+} from '@/backend/library';
+import { patchInlineSynthesis } from '@/backend/operations';
+import {
+  getTRSFile,
+  patchDeleteConstituenta,
   patchMoveConstituenta,
   patchProduceStructure,
   patchRenameConstituenta,
   patchResetAliases,
   patchRestoreOrder,
-  patchRestoreVersion,
-  patchSetAccessPolicy,
-  patchSetLocation,
-  patchSetOwner,
   patchSubstituteConstituents,
   patchUploadTRS,
-  patchVersion,
   postCreateConstituenta,
-  postCreateVersion,
-  postSubscribe
-} from '@/app/backendAPI';
+  postCreateVersion
+} from '@/backend/rsforms';
+import { deleteVersion, patchRestoreVersion, patchVersion } from '@/backend/versions';
 import { type ErrorData } from '@/components/info/InfoError';
 import useRSFormDetails from '@/hooks/useRSFormDetails';
 import { AccessPolicy, ILibraryItem, IVersionData, VersionID } from '@/models/library';
@@ -309,7 +309,7 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         return;
       }
       setProcessingError(undefined);
-      patchSetEditors(itemID, {
+      patchEditorsSet(itemID, {
         data: {
           users: newEditors
         },

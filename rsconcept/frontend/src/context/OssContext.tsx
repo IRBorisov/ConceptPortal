@@ -2,19 +2,17 @@
 
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
+import { DataCallback } from '@/backend/apiTransport';
 import {
-  type DataCallback,
   deleteUnsubscribe,
-  patchDeleteOperation,
-  patchEditorsSet as patchSetEditors,
+  patchEditorsSet,
   patchLibraryItem,
   patchSetAccessPolicy,
   patchSetLocation,
   patchSetOwner,
-  patchUpdatePositions,
-  postCreateOperation,
   postSubscribe
-} from '@/app/backendAPI';
+} from '@/backend/library';
+import { patchDeleteOperation, patchUpdatePositions, postCreateOperation } from '@/backend/oss';
 import { type ErrorData } from '@/components/info/InfoError';
 import useOssDetails from '@/hooks/useOssDetails';
 import { AccessPolicy, ILibraryItem } from '@/models/library';
@@ -238,7 +236,7 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         return;
       }
       setProcessingError(undefined);
-      patchSetEditors(itemID, {
+      patchEditorsSet(itemID, {
         data: {
           users: newEditors
         },

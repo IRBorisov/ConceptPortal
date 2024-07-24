@@ -2,7 +2,8 @@
 
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
-import { DataCallback, getProfile, patchProfile } from '@/app/backendAPI';
+import { DataCallback } from '@/backend/apiTransport';
+import { getProfile, patchProfile } from '@/backend/users';
 import { ErrorData } from '@/components/info/InfoError';
 import { IUserProfile, IUserUpdateData } from '@/models/user';
 import { contextOutsideScope } from '@/utils/labels';

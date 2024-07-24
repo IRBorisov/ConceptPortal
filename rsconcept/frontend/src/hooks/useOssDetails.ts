@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
-import { getOssDetails } from '@/app/backendAPI';
+import { getOssDetails } from '@/backend/oss';
 import { type ErrorData } from '@/components/info/InfoError';
 import { useAuth } from '@/context/AuthContext';
 import { IOperationSchema, IOperationSchemaData } from '@/models/oss';

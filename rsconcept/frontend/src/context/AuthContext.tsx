@@ -2,8 +2,8 @@
 
 import { createContext, useCallback, useContext, useLayoutEffect, useState } from 'react';
 
+import { DataCallback } from '@/backend/apiTransport';
 import {
-  type DataCallback,
   getAuth,
   patchPassword,
   postLogin,
@@ -12,7 +12,7 @@ import {
   postResetPassword,
   postSignup,
   postValidatePasswordToken
-} from '@/app/backendAPI';
+} from '@/backend/users';
 import { type ErrorData } from '@/components/info/InfoError';
 import {
   ICurrentUser,

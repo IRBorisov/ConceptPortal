@@ -2,7 +2,8 @@
 
 import { useCallback, useState } from 'react';
 
-import { DataCallback, postCheckExpression } from '@/app/backendAPI';
+import { DataCallback } from '@/backend/apiTransport';
+import { postCheckExpression } from '@/backend/rsforms';
 import { type ErrorData } from '@/components/info/InfoError';
 import { CstType, IConstituenta, type IRSForm } from '@/models/rsform';
 import { getDefinitionPrefix } from '@/models/rsformAPI';
