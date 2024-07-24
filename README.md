@@ -43,6 +43,7 @@ This readme file is used mostly to document project dependencies
   - use-debounce
   - framer-motion
   - reagraph
+  - html-to-image
   - @tanstack/react-table
   - @uiw/react-codemirror
   - @uiw/codemirror-themes

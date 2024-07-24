@@ -1,8 +1,9 @@
-import { VscDebugStart } from 'react-icons/vsc';
 import { Handle, Position } from 'reactflow';
 
-import { IconDestroy, IconEdit2 } from '@/components/Icons';
+import { IconRSForm } from '@/components/Icons';
 import MiniButton from '@/components/ui/MiniButton.tsx';
+import Overlay from '@/components/ui/Overlay';
+import { useOSS } from '@/context/OssContext';
 
 import { useOssEdit } from '../OssEditContext';
 interface OperationNodeProps {
@@ -14,50 +15,30 @@ interface OperationNodeProps {
 
 function OperationNode({ id, data }: OperationNodeProps) {
   const controller = useOssEdit();
-  console.log(controller.isMutable);
+  const model = useOSS();
 
-  const handleDelete = () => {
-    console.log('delete node ' + id);
-    // onDelete(id);
-  };
+  const hasFile = !!model.schema?.operationByID.get(Number(id))?.result;
 
-  const handleEditOperation = () => {
-    console.log('edit operation ' + id);
-    //controller.selectNode(id);
-    //controller.showSynthesis();
-  };
-
-  const handleRunOperation = () => {
-    console.log('run operation');
-    // controller.singleSynthesis(id);
+  const handleOpenSchema = () => {
+    controller.openOperationSchema(Number(id));
   };
 
   return (
     <>
       <Handle type='source' position={Position.Bottom} />
-      <div className='flex justify-between'>
-        <div className='flex-grow text-center'>{data.label}</div>
-        <div className='cc-icons'>
-          <MiniButton
-            icon={<IconEdit2 className='icon-primary' size='1rem' />}
-            title='Редактировать'
-            onClick={() => {
-              handleEditOperation();
-            }}
-          />
-          <MiniButton
-            className='float-right'
-            icon={<VscDebugStart className='icon-green' size='1rem' />}
-            title='Синтез'
-            onClick={() => handleRunOperation()}
-          />
-          <MiniButton
-            icon={<IconDestroy className='icon-red' size='1rem' />}
-            title='Удалить операцию'
-            onClick={handleDelete}
-          />
-        </div>
-      </div>
+
+      <Overlay position='top-[-0.2rem] right-[-0.2rem]' className='cc-icons'>
+        <MiniButton
+          icon={<IconRSForm className={hasFile ? 'clr-text-green' : 'clr-text-red'} size='0.75rem' />}
+          noHover
+          title='Связанная КС'
+          onClick={() => {
+            handleOpenSchema();
+          }}
+          disabled={!hasFile}
+        />
+      </Overlay>
+      <div className='flex-grow text-center text-sm'>{data.label}</div>
 
       <Handle type='target' position={Position.Top} id='left' style={{ left: 40 }} />
       <Handle type='target' position={Position.Top} id='right' style={{ right: 40, left: 'auto' }} />

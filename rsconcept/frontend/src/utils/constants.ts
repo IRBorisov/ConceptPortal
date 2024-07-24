@@ -12,6 +12,8 @@ export const PARAMETER = {
   minimalTimeout: 10, // milliseconds delay for fast updates
 
   zoomDuration: 500, // milliseconds animation duration
+  ossImageWidth: 1280, // pixels - size of OSS image
+  ossImageHeight: 960, // pixels - size of OSS image
 
   graphHoverXLimit: 0.4, // ratio to clientWidth used to determine which side of screen popup should be
   graphHoverYLimit: 0.6, // ratio to clientHeight used to determine which side of screen popup should be
@@ -109,6 +111,8 @@ export const storage = {
   rsgraphColoring: 'rsgraph.coloring',
   rsgraphSizing: 'rsgraph.sizing',
   rsgraphFoldHidden: 'rsgraph.fold_hidden',
+
+  ossShowGrid: 'oss.show_grid',
 
   cstFilterMatch: 'cst.filter.match',
   cstFilterGraph: 'cst.filter.graph'

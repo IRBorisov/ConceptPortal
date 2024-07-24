@@ -2,6 +2,9 @@
 
 import { ReactFlowProvider } from 'reactflow';
 
+import useLocalStorage from '@/hooks/useLocalStorage';
+import { storage } from '@/utils/constants';
+
 import OssFlow from './OssFlow';
 
 interface EditorOssGraphProps {
@@ -10,9 +13,11 @@ interface EditorOssGraphProps {
 }
 
 function EditorOssGraph({ isModified, setIsModified }: EditorOssGraphProps) {
+  const [showGrid, setShowGrid] = useLocalStorage<boolean>(storage.ossShowGrid, false);
+
   return (
     <ReactFlowProvider>
-      <OssFlow isModified={isModified} setIsModified={setIsModified} />
+      <OssFlow isModified={isModified} setIsModified={setIsModified} showGrid={showGrid} setShowGrid={setShowGrid} />
     </ReactFlowProvider>
   );
 }

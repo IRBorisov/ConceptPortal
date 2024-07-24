@@ -4,9 +4,11 @@ import { AnimatePresence } from 'framer-motion';
 import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { urls } from '@/app/urls';
 import { useAccessMode } from '@/context/AccessModeContext';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
+import { useConceptNavigation } from '@/context/NavigationContext';
 import { useOSS } from '@/context/OssContext';
 import DlgChangeLocation from '@/dialogs/DlgChangeLocation';
 import DlgCreateOperation from '@/dialogs/DlgCreateOperation';
@@ -34,6 +36,8 @@ export interface IOssEditContext {
 
   share: () => void;
 
+  openOperationSchema: (target: OperationID) => void;
+
   savePositions: (positions: IOperationPosition[], callback?: () => void) => void;
   promptCreateOperation: (x: number, y: number, positions: IOperationPosition[]) => void;
   deleteOperation: (target: OperationID, positions: IOperationPosition[]) => void;
@@ -56,7 +60,7 @@ interface OssEditStateProps {
 }
 
 export const OssEditState = ({ selected, setSelected, children }: OssEditStateProps) => {
-  // const router = useConceptNavigation();
+  const router = useConceptNavigation();
   const { user } = useAuth();
   const { adminMode } = useConceptOptions();
   const { accessLevel, setAccessLevel } = useAccessMode();
@@ -151,6 +155,17 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
     [model]
   );
 
+  const openOperationSchema = useCallback(
+    (target: OperationID) => {
+      const node = model.schema?.operationByID.get(target);
+      if (!node || !node.result) {
+        return;
+      }
+      router.push(urls.schema(node.result));
+    },
+    [router, model]
+  );
+
   const savePositions = useCallback(
     (positions: IOperationPosition[], callback?: () => void) => {
       model.savePositions({ positions: positions }, () => {
@@ -208,6 +223,7 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
         share,
         setSelected,
 
+        openOperationSchema,
         savePositions,
         promptCreateOperation,
         deleteOperation

@@ -1,7 +1,9 @@
 import { Handle, Position } from 'reactflow';
 
-import { IconDestroy, IconEdit2 } from '@/components/Icons';
+import { IconRSForm } from '@/components/Icons';
 import MiniButton from '@/components/ui/MiniButton.tsx';
+import Overlay from '@/components/ui/Overlay';
+import { useOSS } from '@/context/OssContext';
 
 import { useOssEdit } from '../OssEditContext';
 
@@ -14,40 +16,30 @@ interface InputNodeProps {
 
 function InputNode({ id, data }: InputNodeProps) {
   const controller = useOssEdit();
-  console.log(controller.isMutable);
+  const model = useOSS();
 
-  const handleDelete = () => {
-    console.log('delete node ' + id);
-  };
+  const hasFile = !!model.schema?.operationByID.get(Number(id))?.result;
 
-  const handleEditOperation = () => {
-    console.log('edit operation ' + id);
-    //controller.selectNode(id);
-    //controller.showSynthesis();
+  const handleOpenSchema = () => {
+    controller.openOperationSchema(Number(id));
   };
 
   return (
     <>
       <Handle type='source' position={Position.Bottom} />
-      <div className='flex justify-between items-center'>
-        <div className='flex-grow text-center'>{data.label}</div>
-        <div className='cc-icons'>
-          <MiniButton
-            icon={<IconEdit2 className='icon-primary' size='0.75rem' />}
-            noPadding
-            title='Редактировать'
-            onClick={() => {
-              handleEditOperation();
-            }}
-          />
-          <MiniButton
-            noPadding
-            icon={<IconDestroy className='icon-red' size='0.75rem' />}
-            title='Удалить операцию'
-            onClick={handleDelete}
-          />
-        </div>
-      </div>
+
+      <Overlay position='top-[-0.2rem] right-[-0.2rem]' className='cc-icons'>
+        <MiniButton
+          icon={<IconRSForm className={hasFile ? 'clr-text-green' : 'clr-text-red'} size='0.75rem' />}
+          noHover
+          title='Связанная КС'
+          onClick={() => {
+            handleOpenSchema();
+          }}
+          disabled={!hasFile}
+        />
+      </Overlay>
+      <div className='flex-grow text-center text-sm'>{data.label}</div>
     </>
   );
 }

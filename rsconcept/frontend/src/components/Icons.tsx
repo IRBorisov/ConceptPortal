@@ -38,6 +38,7 @@ export { LuFolderClosed   as IconFolderClosed }   from 'react-icons/lu';
 export { LuFolderDot      as IconFolderEmpty }    from 'react-icons/lu';
 export { LuLightbulb      as IconHelp }           from 'react-icons/lu';
 export { LuLightbulbOff   as IconHelpOff }        from 'react-icons/lu';
+export { TbGridDots       as IconGrid }           from 'react-icons/tb';
 export { RiPushpinFill    as IconPin }            from 'react-icons/ri';
 export { RiUnpinLine      as IconUnpin }          from 'react-icons/ri';
 export { BiCaretDown      as IconSortDesc }       from 'react-icons/bi';

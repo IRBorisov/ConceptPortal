@@ -1,7 +1,12 @@
 'use client';
 
+import { toSvg } from 'html-to-image';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
 import {
+  Background,
+  getNodesBounds,
+  getViewportForBounds,
   Node,
   NodeChange,
   NodeTypes,
@@ -18,6 +23,7 @@ import AnimateFade from '@/components/wrap/AnimateFade';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useOSS } from '@/context/OssContext';
 import { PARAMETER } from '@/utils/constants';
+import { errors } from '@/utils/labels';
 
 import { useOssEdit } from '../OssEditContext';
 import InputNode from './InputNode';
@@ -27,10 +33,12 @@ import ToolbarOssGraph from './ToolbarOssGraph';
 interface OssFlowProps {
   isModified: boolean;
   setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
+  showGrid: boolean;
+  setShowGrid: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function OssFlow({ isModified, setIsModified }: OssFlowProps) {
-  const { calculateHeight } = useConceptOptions();
+function OssFlow({ isModified, setIsModified, showGrid, setShowGrid }: OssFlowProps) {
+  const { calculateHeight, colors } = useConceptOptions();
   const model = useOSS();
   const controller = useOssEdit();
   const flow = useReactFlow();
@@ -119,12 +127,59 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     controller.deleteOperation(controller.selected[0], getPositions());
   }, [controller, getPositions]);
 
+  const handleFitView = useCallback(() => {
+    flow.fitView({ duration: PARAMETER.zoomDuration });
+  }, [flow]);
+
+  const handleResetPositions = useCallback(() => {
+    setToggleReset(prev => !prev);
+  }, []);
+
+  const handleSaveImage = useCallback(() => {
+    const canvas: HTMLElement | null = document.querySelector('.react-flow__viewport');
+    if (canvas === null) {
+      toast.error(errors.imageFailed);
+      return;
+    }
+
+    const imageWidth = PARAMETER.ossImageWidth;
+    const imageHeight = PARAMETER.ossImageHeight;
+    const nodesBounds = getNodesBounds(nodes);
+    const viewport = getViewportForBounds(nodesBounds, imageWidth, imageHeight, 0.5, 2);
+    toSvg(canvas, {
+      backgroundColor: colors.bgDefault,
+      width: imageWidth,
+      height: imageHeight,
+      style: {
+        width: String(imageWidth),
+        height: String(imageHeight),
+        transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})`
+      }
+    })
+      .then(dataURL => {
+        const a = document.createElement('a');
+        a.setAttribute('download', 'reactflow.svg');
+        a.setAttribute('href', dataURL);
+        a.click();
+      })
+      .catch(error => {
+        console.error(error);
+        toast.error(errors.imageFailed);
+      });
+  }, [colors, nodes]);
+
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     // Hotkeys implementation
     if (controller.isProcessing) {
       return;
     }
     if (!controller.isMutable) {
+      return;
+    }
+    if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+      event.preventDefault();
+      event.stopPropagation();
+      handleSavePositions();
       return;
     }
     if (event.key === 'Delete') {
@@ -160,9 +215,13 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
         maxZoom={2}
         minZoom={0.75}
         nodesConnectable={false}
-      />
+        snapToGrid={true}
+        snapGrid={[10, 10]}
+      >
+        {showGrid ? <Background gap={10} /> : null}
+      </ReactFlow>
     ),
-    [nodes, edges, proOptions, handleNodesChange, onEdgesChange, OssNodeTypes]
+    [nodes, edges, proOptions, handleNodesChange, onEdgesChange, OssNodeTypes, showGrid]
   );
 
   return (
@@ -170,11 +229,14 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
       <Overlay position='top-0 pt-1 right-1/2 translate-x-1/2' className='rounded-b-2xl cc-blur'>
         <ToolbarOssGraph
           isModified={isModified}
-          onFitView={() => flow.fitView({ duration: PARAMETER.zoomDuration })}
+          showGrid={showGrid}
+          onFitView={handleFitView}
           onCreate={handleCreateOperation}
           onDelete={handleDeleteOperation}
-          onResetPositions={() => setToggleReset(prev => !prev)}
+          onResetPositions={handleResetPositions}
           onSavePositions={handleSavePositions}
+          onSaveImage={handleSaveImage}
+          toggleShowGrid={() => setShowGrid(prev => !prev)}
         />
       </Overlay>
       <div className='relative' style={{ height: canvasHeight, width: canvasWidth }}>
