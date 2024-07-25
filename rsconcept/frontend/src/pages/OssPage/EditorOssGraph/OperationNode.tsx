@@ -1,23 +1,25 @@
 import { Handle, Position } from 'reactflow';
 
 import { IconRSForm } from '@/components/Icons';
+import TooltipOperation from '@/components/info/TooltipOperation';
 import MiniButton from '@/components/ui/MiniButton.tsx';
 import Overlay from '@/components/ui/Overlay';
-import { useOSS } from '@/context/OssContext';
+import { IOperation } from '@/models/oss';
+import { prefixes } from '@/utils/constants';
 
 import { useOssEdit } from '../OssEditContext';
 interface OperationNodeProps {
   id: string;
   data: {
     label: string;
+    operation: IOperation;
   };
 }
 
 function OperationNode({ id, data }: OperationNodeProps) {
   const controller = useOssEdit();
-  const model = useOSS();
 
-  const hasFile = !!model.schema?.operationByID.get(Number(id))?.result;
+  const hasFile = !!data.operation.result;
 
   const handleOpenSchema = () => {
     controller.openOperationSchema(Number(id));
@@ -38,7 +40,11 @@ function OperationNode({ id, data }: OperationNodeProps) {
           disabled={!hasFile}
         />
       </Overlay>
-      <div className='flex-grow text-center text-sm'>{data.label}</div>
+
+      <div id={`${prefixes.operation_list}${id}`} className='flex-grow text-center text-sm'>
+        {data.label}
+        <TooltipOperation anchor={`#${prefixes.operation_list}${id}`} data={data.operation} />
+      </div>
 
       <Handle type='target' position={Position.Top} id='left' style={{ left: 40 }} />
       <Handle type='target' position={Position.Top} id='right' style={{ right: 40, left: 'auto' }} />

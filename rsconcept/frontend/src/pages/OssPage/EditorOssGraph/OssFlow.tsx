@@ -50,7 +50,6 @@ function OssFlow({ isModified, setIsModified, showGrid, setShowGrid }: OssFlowPr
   const onSelectionChange = useCallback(
     ({ nodes }: { nodes: Node[] }) => {
       controller.setSelected(nodes.map(node => Number(node.id)));
-      console.log(nodes);
     },
     [controller]
   );
@@ -67,7 +66,7 @@ function OssFlow({ isModified, setIsModified, showGrid, setShowGrid }: OssFlowPr
       setNodes(
         model.schema.items.map(operation => ({
           id: String(operation.id),
-          data: { label: operation.alias },
+          data: { label: operation.alias, operation: operation },
           position: { x: operation.position_x, y: operation.position_y },
           type: operation.operation_type.toString()
         }))
@@ -116,7 +115,6 @@ function OssFlow({ isModified, setIsModified, showGrid, setShowGrid }: OssFlowPr
 
   const handleCreateOperation = useCallback(() => {
     const center = flow.project({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
-    console.log(center);
     controller.promptCreateOperation(center.x, center.y, getPositions());
   }, [controller, getPositions, flow]);
 
@@ -168,8 +166,17 @@ function OssFlow({ isModified, setIsModified, showGrid, setShowGrid }: OssFlowPr
       });
   }, [colors, nodes]);
 
+  const handleContextMenu = useCallback(
+    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      event.preventDefault();
+      event.stopPropagation();
+      controller.setShowTooltip(prev => !prev);
+      // setShowContextMenu(true);
+    },
+    [controller]
+  );
+
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
-    // Hotkeys implementation
     if (controller.isProcessing) {
       return;
     }
@@ -217,11 +224,12 @@ function OssFlow({ isModified, setIsModified, showGrid, setShowGrid }: OssFlowPr
         nodesConnectable={false}
         snapToGrid={true}
         snapGrid={[10, 10]}
+        onContextMenu={handleContextMenu}
       >
         {showGrid ? <Background gap={10} /> : null}
       </ReactFlow>
     ),
-    [nodes, edges, proOptions, handleNodesChange, onEdgesChange, OssNodeTypes, showGrid]
+    [nodes, edges, proOptions, handleNodesChange, handleContextMenu, onEdgesChange, OssNodeTypes, showGrid]
   );
 
   return (

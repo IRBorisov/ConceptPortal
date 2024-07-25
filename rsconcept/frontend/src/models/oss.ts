@@ -103,6 +103,16 @@ export interface ICstSubstituteEx extends ICstSubstitute {
 }
 
 /**
+ * Represents {@link IOperationSchema} statistics.
+ */
+export interface IOperationSchemaStats {
+  count_operations: number;
+  count_inputs: number;
+  count_synthesis: number;
+  count_schemas: number;
+}
+
+/**
  * Represents backend data for {@link IOperationSchema}.
  */
 export interface IOperationSchemaData extends ILibraryItemData {
@@ -116,6 +126,8 @@ export interface IOperationSchemaData extends ILibraryItemData {
  */
 export interface IOperationSchema extends IOperationSchemaData {
   graph: Graph;
+  schemas: LibraryItemID[];
+  stats: IOperationSchemaStats;
   operationByID: Map<OperationID, IOperation>;
 }
 

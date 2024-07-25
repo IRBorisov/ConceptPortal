@@ -180,7 +180,6 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
   }, [graphRef]);
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
-    // Hotkeys implementation
     if (controller.isProcessing) {
       return;
     }

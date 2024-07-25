@@ -12,6 +12,7 @@ import { globals } from '@/utils/constants';
 
 import { useOssEdit } from '../OssEditContext';
 import FormOSS from './FormOSS';
+import OssStats from './OssStats';
 
 interface EditorOssCardProps {
   isModified: boolean;
@@ -50,11 +51,13 @@ function EditorOssCard({ isModified, onDestroy, setIsModified }: EditorOssCardPr
         onDestroy={onDestroy}
         controller={controller}
       />
-      <AnimateFade onKeyDown={handleInput} className={clsx('sm:w-fit mx-auto', 'flex flex-col sm:flex-row')}>
+      <AnimateFade onKeyDown={handleInput} className={clsx('sm:w-fit mx-auto', 'flex flex-col sm:flex-row px-6')}>
         <FlexColumn className='px-3'>
           <FormOSS id={globals.library_item_editor} isModified={isModified} setIsModified={setIsModified} />
           <EditorLibraryItem item={schema} isModified={isModified} controller={controller} />
         </FlexColumn>
+
+        <OssStats stats={schema?.stats} />
       </AnimateFade>
     </>
   );

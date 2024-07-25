@@ -16,12 +16,13 @@ interface PickSchemaProps {
   rows?: number;
 
   value?: LibraryItemID;
+  baseFilter?: (target: ILibraryItem) => boolean;
   onSelectValue: (newValue: LibraryItemID) => void;
 }
 
 const columnHelper = createColumnHelper<ILibraryItem>();
 
-function PickSchema({ id, initialFilter = '', rows = 4, value, onSelectValue }: PickSchemaProps) {
+function PickSchema({ id, initialFilter = '', rows = 4, value, onSelectValue, baseFilter }: PickSchemaProps) {
   const intl = useIntl();
   const { colors } = useConceptOptions();
 
@@ -38,8 +39,13 @@ function PickSchema({ id, initialFilter = '', rows = 4, value, onSelectValue }: 
   }, [filterText]);
 
   useLayoutEffect(() => {
-    setItems(library.applyFilter(filter));
-  }, [library, filter, filter.query]);
+    const filtered = library.applyFilter(filter);
+    if (baseFilter) {
+      setItems(filtered.filter(baseFilter));
+    } else {
+      setItems(filtered);
+    }
+  }, [library, filter, filter.query, baseFilter]);
 
   const columns = useMemo(
     () => [

@@ -77,6 +77,7 @@ function DlgCreateOperation({ hideWindow, oss, insertPosition, positions, onCrea
     () => (
       <TabPanel>
         <TabInputOperation
+          oss={oss}
           alias={alias}
           setAlias={setAlias}
           comment={comment}
@@ -90,7 +91,7 @@ function DlgCreateOperation({ hideWindow, oss, insertPosition, positions, onCrea
         />
       </TabPanel>
     ),
-    [alias, comment, title, attachedID, syncText]
+    [alias, comment, title, attachedID, syncText, oss]
   );
 
   const synthesisPanel = useMemo(

@@ -26,6 +26,9 @@ export interface IOssEditContext {
   isMutable: boolean;
   isProcessing: boolean;
 
+  showTooltip: boolean;
+  setShowTooltip: React.Dispatch<React.SetStateAction<boolean>>;
+
   setOwner: (newOwner: UserID) => void;
   setAccessPolicy: (newPolicy: AccessPolicy) => void;
   promptEditors: () => void;
@@ -70,6 +73,8 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
     () => accessLevel > UserLevel.READER && !model.schema?.read_only,
     [accessLevel, model.schema?.read_only]
   );
+
+  const [showTooltip, setShowTooltip] = useState(true);
 
   const [showEditEditors, setShowEditEditors] = useState(false);
   const [showEditLocation, setShowEditLocation] = useState(false);
@@ -210,6 +215,9 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
       value={{
         schema: model.schema,
         selected,
+
+        showTooltip,
+        setShowTooltip,
 
         isMutable,
         isProcessing: model.processing,

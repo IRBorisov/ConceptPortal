@@ -1,3 +1,7 @@
+'use client';
+
+import { useCallback } from 'react';
+
 import { IconReset } from '@/components/Icons';
 import PickSchema from '@/components/select/PickSchema';
 import Checkbox from '@/components/ui/Checkbox';
@@ -7,10 +11,12 @@ import MiniButton from '@/components/ui/MiniButton';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
 import AnimateFade from '@/components/wrap/AnimateFade';
-import { LibraryItemID } from '@/models/library';
+import { ILibraryItem, LibraryItemID } from '@/models/library';
+import { IOperationSchema } from '@/models/oss';
 import { limits, patterns } from '@/utils/constants';
 
 interface TabInputOperationProps {
+  oss: IOperationSchema;
   alias: string;
   setAlias: React.Dispatch<React.SetStateAction<string>>;
   title: string;
@@ -24,6 +30,7 @@ interface TabInputOperationProps {
 }
 
 function TabInputOperation({
+  oss,
   alias,
   setAlias,
   title,
@@ -35,6 +42,8 @@ function TabInputOperation({
   syncText,
   setSyncText
 }: TabInputOperationProps) {
+  const baseFilter = useCallback((item: ILibraryItem) => !oss.schemas.includes(item.id), [oss]);
+
   return (
     <AnimateFade className='cc-column'>
       <TextInput
@@ -87,7 +96,12 @@ function TabInputOperation({
         />
       </div>
 
-      <PickSchema value={attachedID} onSelectValue={setAttachedID} rows={8} />
+      <PickSchema
+        value={attachedID} // prettier: split-line
+        onSelectValue={setAttachedID}
+        rows={8}
+        baseFilter={baseFilter}
+      />
     </AnimateFade>
   );
 }

@@ -148,6 +148,7 @@ export const prefixes = {
   cst_source_list: 'cst_source_list_',
   cst_delete_list: 'cst_delete_list_',
   cst_dependant_list: 'cst_dependant_list_',
+  operation_list: 'operation_list_',
   csttype_list: 'csttype_',
   policy_list: 'policy_list_',
   library_filters_list: 'library_filters_list_',
