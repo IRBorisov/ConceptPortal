@@ -11,13 +11,14 @@
 [![Frontend CI](https://github.com/IRBorisov/ConceptPortal/actions/workflows/frontend.yml/badge.svg?branch=main)](https://github.com/IRBorisov/ConceptPortal/actions/workflows/frontend.yml)
 
 React + Django based web portal for editing RSForm schemas.
-This readme file is used mostly to document project dependencies
+This readme file is used mostly to document project dependencies and conventions.
 
 ## ❤️ Contributing notes
 
 - feel free to open issues, discussion topics, contact maintainer directly
 - use Test config in VSCode to run tests before pushing commits / requests
 - use github actions to setup linter checks and test builds
+- use conventional commits to describe changes
 
 ## ✨ Frontend [Vite + React + Typescript]
 
@@ -137,6 +138,14 @@ This readme file is used mostly to document project dependencies
 - Docker VSCode extension
 
 # Developer Notes
+
+## 📝 Commit conventions
+
+- 🚀 F: major feature implementation
+- 💄 D: UI design
+- 🚑 B: bug fix
+- 🔧 R: refactoring and code improvement
+- 📝 I: documentation
 
 ## 🖥️ Local build (Windows 10+)
 
