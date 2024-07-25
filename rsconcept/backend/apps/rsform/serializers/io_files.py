@@ -2,6 +2,7 @@
 from django.db import transaction
 from rest_framework import serializers
 
+from apps.library.models import LibraryItem
 from shared import messages as msg
 
 from ..models import Constituenta, RSForm
@@ -29,14 +30,14 @@ class RSFormTRSSerializer(serializers.Serializer):
     ''' Serializer: TRS file production and loading for RSForm. '''
 
     def to_representation(self, instance: RSForm) -> dict:
-        result = self._prepare_json_rsform(instance)
+        result = self._prepare_json_rsform(instance.model)
         items = instance.constituents().order_by('order')
         for cst in items:
             result['items'].append(self._prepare_json_constituenta(cst))
         return result
 
     @staticmethod
-    def _prepare_json_rsform(schema: RSForm) -> dict:
+    def _prepare_json_rsform(schema: LibraryItem) -> dict:
         return {
             'type': _TRS_TYPE,
             'title': schema.title,
@@ -125,7 +126,7 @@ class RSFormTRSSerializer(serializers.Serializer):
             result['comment'] = data.get('comment', '')
         if 'id' in data:
             result['id'] = data['id']
-            self.instance = RSForm.objects.get(pk=result['id'])
+            self.instance = RSForm.from_id(result['id'])
         return result
 
     def validate(self, attrs: dict):
@@ -139,7 +140,7 @@ class RSFormTRSSerializer(serializers.Serializer):
 
     @transaction.atomic
     def create(self, validated_data: dict) -> RSForm:
-        self.instance: RSForm = RSForm.objects.create(
+        self.instance: RSForm = RSForm.create(
             owner=validated_data.get('owner', None),
             alias=validated_data['alias'],
             title=validated_data['title'],
@@ -154,7 +155,7 @@ class RSFormTRSSerializer(serializers.Serializer):
         for cst_data in validated_data['items']:
             cst = Constituenta(
                 alias=cst_data['alias'],
-                schema=self.instance,
+                schema=self.instance.model,
                 order=order,
                 cst_type=cst_data['cstType'],
             )
@@ -167,11 +168,11 @@ class RSFormTRSSerializer(serializers.Serializer):
     @transaction.atomic
     def update(self, instance: RSForm, validated_data) -> RSForm:
         if 'alias' in validated_data:
-            instance.alias = validated_data['alias']
+            instance.model.alias = validated_data['alias']
         if 'title' in validated_data:
-            instance.title = validated_data['title']
+            instance.model.title = validated_data['title']
         if 'comment' in validated_data:
-            instance.comment = validated_data['comment']
+            instance.model.comment = validated_data['comment']
 
         order = 1
         prev_constituents = instance.constituents()
@@ -188,7 +189,7 @@ class RSFormTRSSerializer(serializers.Serializer):
             else:
                 cst = Constituenta(
                     alias=cst_data['alias'],
-                    schema=instance,
+                    schema=instance.model,
                     order=order,
                     cst_type=cst_data['cstType'],
                 )

@@ -5,21 +5,13 @@ from rest_framework import routers
 from . import views
 
 library_router = routers.SimpleRouter(trailing_slash=False)
-library_router.register('library', views.LibraryViewSet, 'Library')
 library_router.register('rsforms', views.RSFormViewSet, 'RSForm')
-library_router.register('versions', views.VersionViewset, 'Version')
+
 
 urlpatterns = [
-    path('library/active', views.LibraryActiveView.as_view()),
-    path('library/all', views.LibraryAdminView.as_view()),
-    path('library/templates', views.LibraryTemplatesView.as_view(), name='templates'),
     path('constituents/<int:pk>', views.ConstituentAPIView.as_view(), name='constituenta-detail'),
     path('rsforms/import-trs', views.TrsImportView.as_view()),
     path('rsforms/create-detailed', views.create_rsform),
-
-    path('versions/<int:pk>/export-file', views.export_file),
-    path('rsforms/<int:pk_item>/versions/create', views.create_version),
-    path('rsforms/<int:pk_item>/versions/<int:pk_version>', views.retrieve_version),
 
     path('operations/inline-synthesis', views.inline_synthesis),
 

@@ -22,7 +22,7 @@ class Operation(Model):
     ''' Operational schema Unit.'''
     oss: ForeignKey = ForeignKey(
         verbose_name='Схема синтеза',
-        to='oss.OperationSchema',
+        to='library.LibraryItem',
         on_delete=CASCADE,
         related_name='items'
     )
@@ -34,7 +34,7 @@ class Operation(Model):
     )
     result: ForeignKey = ForeignKey(
         verbose_name='Связанная КС',
-        to='rsform.RSForm',
+        to='library.LibraryItem',
         null=True,
         on_delete=SET_NULL,
         related_name='producer'

@@ -54,7 +54,8 @@ class LibraryItem(Model):
     item_type: CharField = CharField(
         verbose_name='Тип',
         max_length=50,
-        choices=LibraryItemType.choices
+        choices=LibraryItemType.choices,
+        default=LibraryItemType.RSFORM
     )
     owner: ForeignKey = ForeignKey(
         verbose_name='Владелец',

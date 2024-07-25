@@ -14,7 +14,7 @@ class Version(Model):
     ''' Library item version archive. '''
     item: ForeignKey = ForeignKey(
         verbose_name='Схема',
-        to='rsform.LibraryItem',
+        to='library.LibraryItem',
         on_delete=CASCADE
     )
     version = CharField(

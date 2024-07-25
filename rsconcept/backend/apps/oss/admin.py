@@ -27,4 +27,4 @@ class SynthesisSubstitutionAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Operation, OperationAdmin)
 admin.site.register(models.Argument, ArgumentAdmin)
-admin.site.register(models.SynthesisSubstitution, SynthesisSubstitutionAdmin)
+admin.site.register(models.Substitution, SynthesisSubstitutionAdmin)

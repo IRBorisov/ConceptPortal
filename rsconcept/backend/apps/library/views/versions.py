@@ -10,11 +10,13 @@ from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from shared import permissions
+from apps.rsform import utils
+from apps.rsform.models import RSForm
+from apps.rsform.serializers import RSFormParseSerializer, RSFormSerializer, RSFormTRSSerializer
+from shared import permissions, utility
 
 from .. import models as m
 from .. import serializers as s
-from .. import utils
 
 
 @extend_schema(tags=['Version'])
@@ -32,7 +34,7 @@ class VersionViewset(
         summary='restore version data into current item',
         request=None,
         responses={
-            c.HTTP_200_OK: s.RSFormParseSerializer,
+            c.HTTP_200_OK: RSFormParseSerializer,
             c.HTTP_403_FORBIDDEN: None,
             c.HTTP_404_NOT_FOUND: None
         }
@@ -42,82 +44,11 @@ class VersionViewset(
         ''' Restore version data into current item. '''
         version = cast(m.Version, self.get_object())
         item = cast(m.LibraryItem, version.item)
-        schema = m.RSForm.objects.get(pk=item.pk)
-        s.RSFormSerializer(schema).restore_from_version(version.data)
+        RSFormSerializer(item).restore_from_version(version.data)
         return Response(
             status=c.HTTP_200_OK,
-            data=s.RSFormParseSerializer(schema).data
+            data=RSFormParseSerializer(item).data
         )
-
-
-@extend_schema(
-    summary='save version for RSForm copying current content',
-    tags=['Version'],
-    request=s.VersionCreateSerializer,
-    responses={
-        c.HTTP_201_CREATED: s.NewVersionResponse,
-        c.HTTP_400_BAD_REQUEST: None,
-        c.HTTP_403_FORBIDDEN: None,
-        c.HTTP_404_NOT_FOUND: None
-    }
-)
-@api_view(['POST'])
-@permission_classes([permissions.GlobalUser])
-def create_version(request: Request, pk_item: int):
-    ''' Endpoint: Create new version for RSForm copying current content. '''
-    try:
-        item = m.RSForm.objects.get(pk=pk_item)
-    except m.LibraryItem.DoesNotExist:
-        return Response(status=c.HTTP_404_NOT_FOUND)
-    creator = request.user
-    if not creator.is_staff and creator != item.owner:
-        return Response(status=c.HTTP_403_FORBIDDEN)
-
-    version_input = s.VersionCreateSerializer(data=request.data)
-    version_input.is_valid(raise_exception=True)
-    data = s.RSFormSerializer(item).to_versioned_data()
-    result = item.create_version(
-        version=version_input.validated_data['version'],
-        description=version_input.validated_data['description'],
-        data=data
-    )
-    return Response(
-        status=c.HTTP_201_CREATED,
-        data={
-            'version': result.pk,
-            'schema': s.RSFormParseSerializer(item).data
-        }
-    )
-
-
-@extend_schema(
-    summary='retrieve versioned data for RSForm',
-    tags=['Version'],
-    request=None,
-    responses={
-        c.HTTP_200_OK: s.RSFormParseSerializer,
-        c.HTTP_404_NOT_FOUND: None
-    }
-)
-@api_view(['GET'])
-def retrieve_version(request: Request, pk_item: int, pk_version: int):
-    ''' Endpoint: Retrieve version for RSForm. '''
-    try:
-        item = m.RSForm.objects.get(pk=pk_item)
-    except m.RSForm.DoesNotExist:
-        return Response(status=c.HTTP_404_NOT_FOUND)
-    try:
-        version = m.Version.objects.get(pk=pk_version)
-    except m.Version.DoesNotExist:
-        return Response(status=c.HTTP_404_NOT_FOUND)
-    if version.item != item:
-        return Response(status=c.HTTP_404_NOT_FOUND)
-
-    data = s.RSFormParseSerializer(item).from_versioned_data(version.pk, version.data)
-    return Response(
-        status=c.HTTP_200_OK,
-        data=data
-    )
 
 
 @extend_schema(
@@ -136,10 +67,79 @@ def export_file(request: Request, pk: int):
         version = m.Version.objects.get(pk=pk)
     except m.Version.DoesNotExist:
         return Response(status=c.HTTP_404_NOT_FOUND)
-    schema = m.RSForm.objects.get(pk=version.item.pk)
-    data = s.RSFormTRSSerializer(schema).from_versioned_data(version.data)
-    file = utils.write_zipped_json(data, utils.EXTEOR_INNER_FILENAME)
+    data = RSFormTRSSerializer(version.item).from_versioned_data(version.data)
+    file = utility.write_zipped_json(data, utils.EXTEOR_INNER_FILENAME)
     filename = utils.filename_for_schema(data['alias'])
     response = HttpResponse(file, content_type='application/zip')
     response['Content-Disposition'] = f'attachment; filename={filename}'
     return response
+
+
+@extend_schema(
+    summary='save version for RSForm copying current content',
+    tags=['Version'],
+    request=s.VersionCreateSerializer,
+    responses={
+        c.HTTP_201_CREATED: s.NewVersionResponse,
+        c.HTTP_400_BAD_REQUEST: None,
+        c.HTTP_403_FORBIDDEN: None,
+        c.HTTP_404_NOT_FOUND: None
+    }
+)
+@api_view(['POST'])
+@permission_classes([permissions.GlobalUser])
+def create_version(request: Request, pk_item: int):
+    ''' Endpoint: Create new version for RSForm copying current content. '''
+    try:
+        item = m.LibraryItem.objects.get(pk=pk_item)
+    except m.LibraryItem.DoesNotExist:
+        return Response(status=c.HTTP_404_NOT_FOUND)
+    creator = request.user
+    if not creator.is_staff and creator != item.owner:
+        return Response(status=c.HTTP_403_FORBIDDEN)
+
+    version_input = s.VersionCreateSerializer(data=request.data)
+    version_input.is_valid(raise_exception=True)
+    data = RSFormSerializer(item).to_versioned_data()
+    result = RSForm(item).create_version(
+        version=version_input.validated_data['version'],
+        description=version_input.validated_data['description'],
+        data=data
+    )
+    return Response(
+        status=c.HTTP_201_CREATED,
+        data={
+            'version': result.pk,
+            'schema': RSFormParseSerializer(item).data
+        }
+    )
+
+
+@extend_schema(
+    summary='retrieve versioned data for RSForm',
+    tags=['Version'],
+    request=None,
+    responses={
+        c.HTTP_200_OK: RSFormParseSerializer,
+        c.HTTP_404_NOT_FOUND: None
+    }
+)
+@api_view(['GET'])
+def retrieve_version(request: Request, pk_item: int, pk_version: int):
+    ''' Endpoint: Retrieve version for RSForm. '''
+    try:
+        item = m.LibraryItem.objects.get(pk=pk_item)
+    except m.LibraryItem.DoesNotExist:
+        return Response(status=c.HTTP_404_NOT_FOUND)
+    try:
+        version = m.Version.objects.get(pk=pk_version)
+    except m.Version.DoesNotExist:
+        return Response(status=c.HTTP_404_NOT_FOUND)
+    if version.item != item:
+        return Response(status=c.HTTP_404_NOT_FOUND)
+
+    data = RSFormParseSerializer(item).from_versioned_data(version.pk, version.data)
+    return Response(
+        status=c.HTTP_200_OK,
+        data=data
+    )

@@ -7,9 +7,10 @@ import {
   ILibraryItem,
   ILibraryUpdateData,
   ITargetAccessPolicy,
-  ITargetLocation
+  ITargetLocation,
+  IVersionData
 } from '@/models/library';
-import { IRSFormCloneData, IRSFormData } from '@/models/rsform';
+import { IRSFormCloneData, IRSFormData, IVersionCreatedResponse } from '@/models/rsform';
 import { ITargetUser, ITargetUsers } from '@/models/user';
 
 import {
@@ -110,6 +111,13 @@ export function postSubscribe(target: string, request: FrontAction) {
 export function deleteUnsubscribe(target: string, request: FrontAction) {
   AxiosDelete({
     endpoint: `/api/library/${target}/unsubscribe`,
+    request: request
+  });
+}
+
+export function postCreateVersion(target: string, request: FrontExchange<IVersionData, IVersionCreatedResponse>) {
+  AxiosPost({
+    endpoint: `/api/library/${target}/create-version`,
     request: request
   });
 }

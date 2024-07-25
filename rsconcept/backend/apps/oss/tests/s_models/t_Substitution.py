@@ -1,40 +1,40 @@
-''' Testing models: SynthesisSubstitution. '''
+''' Testing models: Synthesis Substitution. '''
 from unittest import result
 
 from django.test import TestCase
 
-from apps.oss.models import (
-    Argument,
-    Operation,
-    OperationSchema,
-    OperationType,
-    SynthesisSubstitution
-)
+from apps.oss.models import Argument, Operation, OperationSchema, OperationType, Substitution
 from apps.rsform.models import RSForm
 
 
 class TestSynthesisSubstitution(TestCase):
-    ''' Testing SynthesisSubstitution model. '''
+    ''' Testing Synthesis Substitution model. '''
 
     def setUp(self):
-        self.oss = OperationSchema.objects.create(alias='T1')
+        self.oss = OperationSchema.create(alias='T1')
 
-        self.ks1 = RSForm.objects.create(alias='KS1', title='Test1')
+        self.ks1 = RSForm.create(alias='KS1', title='Test1')
         self.ks1x1 = self.ks1.insert_new('X1', term_resolved='X1_1')
-        self.ks2 = RSForm.objects.create(alias='KS2', title='Test2')
+        self.ks2 = RSForm.create(alias='KS2', title='Test2')
         self.ks2x1 = self.ks2.insert_new('X2', term_resolved='X1_2')
 
         self.operation1 = Operation.objects.create(
-            oss=self.oss,
+            oss=self.oss.model,
             alias='KS1',
             operation_type=OperationType.INPUT,
-            result=self.ks1)
+            result=self.ks1.model
+        )
         self.operation2 = Operation.objects.create(
-            oss=self.oss,
+            oss=self.oss.model,
             alias='KS2',
             operation_type=OperationType.INPUT,
-            result=self.ks1)
-        self.operation3 = Operation.objects.create(oss=self.oss, alias='KS3', operation_type=OperationType.SYNTHESIS)
+            result=self.ks1.model
+        )
+        self.operation3 = Operation.objects.create(
+            oss=self.oss.model,
+            alias='KS3',
+            operation_type=OperationType.SYNTHESIS
+        )
         Argument.objects.create(
             operation=self.operation3,
             argument=self.operation1
@@ -44,7 +44,7 @@ class TestSynthesisSubstitution(TestCase):
             argument=self.operation2
         )
 
-        self.substitution = SynthesisSubstitution.objects.create(
+        self.substitution = Substitution.objects.create(
             operation=self.operation3,
             original=self.ks1x1,
             substitution=self.ks2x1,
@@ -58,18 +58,18 @@ class TestSynthesisSubstitution(TestCase):
 
 
     def test_cascade_delete_operation(self):
-        self.assertEqual(SynthesisSubstitution.objects.count(), 1)
+        self.assertEqual(Substitution.objects.count(), 1)
         self.operation3.delete()
-        self.assertEqual(SynthesisSubstitution.objects.count(), 0)
+        self.assertEqual(Substitution.objects.count(), 0)
 
 
     def test_cascade_delete_original(self):
-        self.assertEqual(SynthesisSubstitution.objects.count(), 1)
+        self.assertEqual(Substitution.objects.count(), 1)
         self.ks1x1.delete()
-        self.assertEqual(SynthesisSubstitution.objects.count(), 0)
+        self.assertEqual(Substitution.objects.count(), 0)
 
 
     def test_cascade_delete_substitution(self):
-        self.assertEqual(SynthesisSubstitution.objects.count(), 1)
+        self.assertEqual(Substitution.objects.count(), 1)
         self.ks2x1.delete()
-        self.assertEqual(SynthesisSubstitution.objects.count(), 0)
+        self.assertEqual(Substitution.objects.count(), 0)

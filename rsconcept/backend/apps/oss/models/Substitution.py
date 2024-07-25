@@ -1,8 +1,8 @@
-''' Models: SynthesisSubstitution. '''
+''' Models: Synthesis Substitution. '''
 from django.db.models import CASCADE, BooleanField, ForeignKey, Model
 
 
-class SynthesisSubstitution(Model):
+class Substitution(Model):
     ''' Substitutions as part of Synthesis operation in OSS.'''
     operation: ForeignKey = ForeignKey(
         verbose_name='Операция',

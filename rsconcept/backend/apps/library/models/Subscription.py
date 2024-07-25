@@ -18,7 +18,7 @@ class Subscription(Model):
     )
     item: ForeignKey = ForeignKey(
         verbose_name='Элемент',
-        to='rsform.LibraryItem',
+        to='library.LibraryItem',
         on_delete=CASCADE
     )
 

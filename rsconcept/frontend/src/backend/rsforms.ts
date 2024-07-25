@@ -2,7 +2,7 @@
  * Endpoints: rsforms.
  */
 
-import { ILibraryCreateData, ILibraryItem, IVersionData } from '@/models/library';
+import { ILibraryCreateData, ILibraryItem } from '@/models/library';
 import { ICstSubstituteData } from '@/models/oss';
 import {
   IConstituentaList,
@@ -13,8 +13,7 @@ import {
   IProduceStructureResponse,
   IRSFormData,
   IRSFormUploadData,
-  ITargetCst,
-  IVersionCreatedResponse
+  ITargetCst
 } from '@/models/rsform';
 import { IExpressionParse, IRSExpression } from '@/models/rslang';
 
@@ -40,7 +39,7 @@ export function getRSFormDetails(target: string, version: string, request: Front
     });
   } else {
     AxiosGet({
-      endpoint: `/api/rsforms/${target}/versions/${version}`,
+      endpoint: `/api/library/${target}/versions/${version}`,
       request: request
     });
   }
@@ -134,12 +133,5 @@ export function patchUploadTRS(target: string, request: FrontExchange<IRSFormUpl
         'Content-Type': 'multipart/form-data'
       }
     }
-  });
-}
-
-export function postCreateVersion(target: string, request: FrontExchange<IVersionData, IVersionCreatedResponse>) {
-  AxiosPost({
-    endpoint: `/api/rsforms/${target}/versions/create`,
-    request: request
   });
 }

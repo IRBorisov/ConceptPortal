@@ -1,16 +1,16 @@
 ''' Testing API: Library. '''
 from rest_framework import status
 
-from apps.rsform.models import (
+from apps.library.models import (
     AccessPolicy,
     Editor,
     LibraryItem,
     LibraryItemType,
     LibraryTemplate,
     LocationHead,
-    RSForm,
     Subscription
 )
+from apps.rsform.models import RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 from shared.testing_utils import response_contains
 
@@ -20,16 +20,16 @@ class TestLibraryViewset(EndpointTester):
 
     def setUp(self):
         super().setUp()
-        self.owned = RSForm.objects.create(
+        self.owned = LibraryItem.objects.create(
             title='Test',
             alias='T1',
             owner=self.user
         )
-        self.unowned = RSForm.objects.create(
+        self.unowned = LibraryItem.objects.create(
             title='Test2',
             alias='T2'
         )
-        self.common = RSForm.objects.create(
+        self.common = LibraryItem.objects.create(
             title='Test3',
             alias='T3',
             location=LocationHead.COMMON
@@ -44,12 +44,16 @@ class TestLibraryViewset(EndpointTester):
             'title': 'Title',
             'alias': 'alias',
         }
-        self.executeBadData(data=data)
+        response = self.executeCreated(data=data)
+        self.assertEqual(response.data['owner'], self.user.pk)
+        self.assertEqual(response.data['item_type'], LibraryItemType.RSFORM)
+        self.assertEqual(response.data['title'], data['title'])
+        self.assertEqual(response.data['alias'], data['alias'])
 
         data = {
             'item_type': LibraryItemType.OPERATION_SCHEMA,
-            'title': 'Title',
-            'alias': 'alias',
+            'title': 'Title2',
+            'alias': 'alias2',
             'access_policy': AccessPolicy.PROTECTED,
             'visible': False,
             'read_only': True
@@ -359,12 +363,13 @@ class TestLibraryViewset(EndpointTester):
 
     @decl_endpoint('/api/library/{item}/clone', method='post')
     def test_clone_rsform(self):
-        x12 = self.owned.insert_new(
+        schema = RSForm(self.owned)
+        x12 = schema.insert_new(
             alias='X12',
             term_raw='человек',
             term_resolved='человек'
         )
-        d2 = self.owned.insert_new(
+        d2 = schema.insert_new(
             alias='D2',
             term_raw='@{X12|plur}',
             term_resolved='люди'

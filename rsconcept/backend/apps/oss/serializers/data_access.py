@@ -5,8 +5,8 @@ from django.db.models import F
 from rest_framework import serializers
 from rest_framework.serializers import PrimaryKeyRelatedField as PKField
 
-from apps.rsform.models import LibraryItem
-from apps.rsform.serializers import LibraryItemDetailsSerializer
+from apps.library.models import LibraryItem
+from apps.library.serializers import LibraryItemDetailsSerializer
 from shared import messages as msg
 
 from ..models import Argument, Operation, OperationSchema, OperationType
@@ -85,19 +85,20 @@ class OperationSchemaSerializer(serializers.ModelSerializer):
 
     class Meta:
         ''' serializer metadata. '''
-        model = OperationSchema
+        model = LibraryItem
         fields = '__all__'
 
-    def to_representation(self, instance: OperationSchema):
+    def to_representation(self, instance: LibraryItem):
         result = LibraryItemDetailsSerializer(instance).data
+        oss = OperationSchema(instance)
         result['items'] = []
-        for operation in instance.operations():
+        for operation in oss.operations():
             result['items'].append(OperationSerializer(operation).data)
         result['arguments'] = []
-        for argument in instance.arguments():
+        for argument in oss.arguments():
             result['arguments'].append(ArgumentSerializer(argument).data)
         result['substitutions'] = []
-        for substitution in instance.substitutions().values(
+        for substitution in oss.substitutions().values(
             'operation',
             'original',
             'substitution',

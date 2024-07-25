@@ -11,6 +11,7 @@ import {
   patchSetEditors,
   patchSetLocation,
   patchSetOwner,
+  postCreateVersion,
   postSubscribe
 } from '@/backend/library';
 import { patchInlineSynthesis } from '@/backend/operations';
@@ -24,8 +25,7 @@ import {
   patchRestoreOrder,
   patchSubstituteConstituents,
   patchUploadTRS,
-  postCreateConstituenta,
-  postCreateVersion
+  postCreateConstituenta
 } from '@/backend/rsforms';
 import { deleteVersion, patchRestoreVersion, patchVersion } from '@/backend/versions';
 import { type ErrorData } from '@/components/info/InfoError';

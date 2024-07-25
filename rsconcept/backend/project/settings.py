@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'corsheaders',
 
     'apps.users',
+    'apps.library',
     'apps.rsform',
     'apps.oss',
 

@@ -10,6 +10,8 @@ from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
 
+from apps.library.models import LibraryItem, LibraryItemType
+from apps.library.serializers import LibraryItemSerializer
 from shared import permissions
 
 from .. import models as m
@@ -20,11 +22,11 @@ from .. import serializers as s
 @extend_schema_view()
 class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.RetrieveAPIView):
     ''' Endpoint: OperationSchema. '''
-    queryset = m.OperationSchema.objects.all()
-    serializer_class = s.LibraryItemSerializer
+    queryset = LibraryItem.objects.filter(item_type=LibraryItemType.OPERATION_SCHEMA)
+    serializer_class = LibraryItemSerializer
 
-    def _get_schema(self) -> m.OperationSchema:
-        return cast(m.OperationSchema, self.get_object())
+    def _get_item(self) -> LibraryItem:
+        return cast(LibraryItem, self.get_object())
 
     def get_permissions(self):
         ''' Determine permission class. '''
@@ -52,7 +54,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['get'], url_path='details')
     def details(self, request: Request, pk):
         ''' Endpoint: Detailed OSS data. '''
-        serializer = s.OperationSchemaSerializer(self._get_schema())
+        serializer = s.OperationSchemaSerializer(self._get_item())
         return Response(
             status=c.HTTP_200_OK,
             data=serializer.data
@@ -71,10 +73,9 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['patch'], url_path='update-positions')
     def update_positions(self, request: Request, pk):
         ''' Endpoint: Update operations positions. '''
-        schema = self._get_schema()
         serializer = s.PositionsSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        schema.update_positions(serializer.validated_data['positions'])
+        m.OperationSchema(self.get_object()).update_positions(serializer.validated_data['positions'])
         return Response(status=c.HTTP_200_OK)
 
     @extend_schema(
@@ -91,23 +92,23 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['post'], url_path='create-operation')
     def create_operation(self, request: Request, pk):
         ''' Create new operation. '''
-        schema = self._get_schema()
         serializer = s.OperationCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
+        oss = m.OperationSchema(self.get_object())
         with transaction.atomic():
-            schema.update_positions(serializer.validated_data['positions'])
-            new_operation = schema.create_operation(**serializer.validated_data['item_data'])
+            oss.update_positions(serializer.validated_data['positions'])
+            new_operation = oss.create_operation(**serializer.validated_data['item_data'])
             if new_operation.operation_type != m.OperationType.INPUT and 'arguments' in serializer.validated_data:
                 for argument in serializer.validated_data['arguments']:
-                    schema.add_argument(operation=new_operation, argument=argument)
-            schema.refresh_from_db()
+                    oss.add_argument(operation=new_operation, argument=argument)
 
+        oss.refresh_from_db()
         response = Response(
             status=c.HTTP_201_CREATED,
             data={
                 'new_operation': s.OperationSerializer(new_operation).data,
-                'oss': s.OperationSchemaSerializer(schema).data
+                'oss': s.OperationSchemaSerializer(oss.model).data
             }
         )
         return response
@@ -126,19 +127,19 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['patch'], url_path='delete-operation')
     def delete_operation(self, request: Request, pk):
         ''' Endpoint: Delete operation. '''
-        schema = self._get_schema()
         serializer = s.OperationDeleteSerializer(
             data=request.data,
-            context={'oss': schema}
+            context={'oss': self.get_object()}
         )
         serializer.is_valid(raise_exception=True)
 
+        oss = m.OperationSchema(self.get_object())
         with transaction.atomic():
-            schema.update_positions(serializer.validated_data['positions'])
-            schema.delete_operation(serializer.validated_data['target'])
-            schema.refresh_from_db()
+            oss.update_positions(serializer.validated_data['positions'])
+            oss.delete_operation(serializer.validated_data['target'])
 
+        oss.refresh_from_db()
         return Response(
             status=c.HTTP_200_OK,
-            data=s.OperationSchemaSerializer(schema).data
+            data=s.OperationSchemaSerializer(oss.model).data
         )

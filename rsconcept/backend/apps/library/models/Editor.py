@@ -14,7 +14,7 @@ class Editor(Model):
     ''' Editor list. '''
     item: ForeignKey = ForeignKey(
         verbose_name='Схема',
-        to='rsform.LibraryItem',
+        to='library.LibraryItem',
         on_delete=CASCADE
     )
     editor: ForeignKey = ForeignKey(

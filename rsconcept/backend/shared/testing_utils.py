@@ -1,6 +1,6 @@
 ''' Utilities for testing. '''
 
-from apps.rsform.models import LibraryItem
+from apps.library.models import LibraryItem
 
 
 def response_contains(response, item: LibraryItem) -> bool:

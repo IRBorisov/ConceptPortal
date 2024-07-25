@@ -21,9 +21,3 @@ class NewMultiCstResponse(serializers.Serializer):
         child=serializers.IntegerField()
     )
     schema = RSFormParseSerializer()
-
-
-class NewVersionResponse(serializers.Serializer):
-    ''' Serializer: Create cst response. '''
-    version = serializers.IntegerField()
-    schema = RSFormParseSerializer()

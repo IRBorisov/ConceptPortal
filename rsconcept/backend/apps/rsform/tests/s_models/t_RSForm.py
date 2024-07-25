@@ -2,7 +2,8 @@
 from django.forms import ValidationError
 from django.test import TestCase
 
-from apps.rsform.models import Constituenta, CstType, RSForm, User
+from apps.rsform.models import Constituenta, CstType, RSForm
+from apps.users.models import User
 
 
 class TestRSForm(TestCase):
@@ -11,49 +12,49 @@ class TestRSForm(TestCase):
     def setUp(self):
         self.user1 = User.objects.create(username='User1')
         self.user2 = User.objects.create(username='User2')
-        self.schema = RSForm.objects.create(title='Test')
+        self.schema = RSForm.create(title='Test')
         self.assertNotEqual(self.user1, self.user2)
 
 
     def test_constituents(self):
-        schema1 = RSForm.objects.create(title='Test1')
-        schema2 = RSForm.objects.create(title='Test2')
+        schema1 = RSForm.create(title='Test1')
+        schema2 = RSForm.create(title='Test2')
         self.assertFalse(schema1.constituents().exists())
         self.assertFalse(schema2.constituents().exists())
 
-        Constituenta.objects.create(alias='X1', schema=schema1, order=1)
-        Constituenta.objects.create(alias='X2', schema=schema1, order=2)
+        Constituenta.objects.create(alias='X1', schema=schema1.model, order=1)
+        Constituenta.objects.create(alias='X2', schema=schema1.model, order=2)
         self.assertTrue(schema1.constituents().exists())
         self.assertFalse(schema2.constituents().exists())
         self.assertEqual(schema1.constituents().count(), 2)
 
 
     def test_get_max_index(self):
-        schema1 = RSForm.objects.create(title='Test1')
-        Constituenta.objects.create(alias='X1', schema=schema1, order=1)
-        Constituenta.objects.create(alias='D2', cst_type=CstType.TERM, schema=schema1, order=2)
+        schema1 = RSForm.create(title='Test1')
+        Constituenta.objects.create(alias='X1', schema=schema1.model, order=1)
+        Constituenta.objects.create(alias='D2', cst_type=CstType.TERM, schema=schema1.model, order=2)
         self.assertEqual(schema1.get_max_index(CstType.BASE), 1)
         self.assertEqual(schema1.get_max_index(CstType.TERM), 2)
         self.assertEqual(schema1.get_max_index(CstType.AXIOM), 0)
 
 
     def test_insert_at(self):
-        schema = RSForm.objects.create(title='Test')
+        schema = RSForm.create(title='Test')
         x1 = schema.insert_new('X1')
         self.assertEqual(x1.order, 1)
-        self.assertEqual(x1.schema, schema)
+        self.assertEqual(x1.schema, schema.model)
 
         x2 = schema.insert_new('X2', position=1)
         x1.refresh_from_db()
         self.assertEqual(x2.order, 1)
-        self.assertEqual(x2.schema, schema)
+        self.assertEqual(x2.schema, schema.model)
         self.assertEqual(x1.order, 2)
 
         x3 = schema.insert_new('X3', position=4)
         x2.refresh_from_db()
         x1.refresh_from_db()
         self.assertEqual(x3.order, 3)
-        self.assertEqual(x3.schema, schema)
+        self.assertEqual(x3.schema, schema.model)
         self.assertEqual(x2.order, 1)
         self.assertEqual(x1.order, 2)
 
@@ -62,7 +63,7 @@ class TestRSForm(TestCase):
         x2.refresh_from_db()
         x1.refresh_from_db()
         self.assertEqual(x4.order, 3)
-        self.assertEqual(x4.schema, schema)
+        self.assertEqual(x4.schema, schema.model)
         self.assertEqual(x3.order, 4)
         self.assertEqual(x2.order, 1)
         self.assertEqual(x1.order, 2)
@@ -94,11 +95,11 @@ class TestRSForm(TestCase):
     def test_insert_last(self):
         x1 = self.schema.insert_new('X1')
         self.assertEqual(x1.order, 1)
-        self.assertEqual(x1.schema, self.schema)
+        self.assertEqual(x1.schema, self.schema.model)
 
         x2 = self.schema.insert_new('X2')
         self.assertEqual(x2.order, 2)
-        self.assertEqual(x2.schema, self.schema)
+        self.assertEqual(x2.schema, self.schema.model)
         self.assertEqual(x1.order, 1)
 
     def test_create_cst(self):

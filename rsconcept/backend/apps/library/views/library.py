@@ -13,6 +13,9 @@ from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
 
+from apps.rsform.models import RSForm
+from apps.rsform.serializers import RSFormParseSerializer
+from apps.users.models import User
 from shared import permissions
 
 from .. import models as m
@@ -73,7 +76,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
         tags=['Library'],
         request=s.LibraryItemCloneSerializer,
         responses={
-            c.HTTP_201_CREATED: s.RSFormParseSerializer,
+            c.HTTP_201_CREATED: RSFormParseSerializer,
             c.HTTP_400_BAD_REQUEST: None,
             c.HTTP_403_FORBIDDEN: None,
             c.HTTP_404_NOT_FOUND: None
@@ -88,8 +91,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
         if item.item_type != m.LibraryItemType.RSFORM:
             return Response(status=c.HTTP_400_BAD_REQUEST)
 
-        schema = m.RSForm.objects.get(pk=item.pk)
-        clone = deepcopy(schema)
+        clone = deepcopy(item)
         clone.pk = None
         clone.owner = self.request.user
         clone.title = serializer.validated_data['title']
@@ -103,14 +105,14 @@ class LibraryViewSet(viewsets.ModelViewSet):
         with transaction.atomic():
             clone.save()
             need_filter = 'items' in request.data
-            for cst in schema.constituents():
+            for cst in RSForm(item).constituents():
                 if not need_filter or cst.pk in request.data['items']:
                     cst.pk = None
                     cst.schema = clone
                     cst.save()
             return Response(
                 status=c.HTTP_201_CREATED,
-                data=s.RSFormParseSerializer(clone).data
+                data=RSFormParseSerializer(clone).data
             )
 
     @extend_schema(
@@ -127,7 +129,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
     def subscribe(self, request: Request, pk):
         ''' Endpoint: Subscribe current user to item. '''
         item = self._get_item()
-        m.Subscription.subscribe(user=cast(m.User, self.request.user), item=item)
+        m.Subscription.subscribe(user=cast(User, self.request.user), item=item)
         return Response(status=c.HTTP_200_OK)
 
     @extend_schema(
@@ -144,7 +146,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
     def unsubscribe(self, request: Request, pk):
         ''' Endpoint: Unsubscribe current user from item. '''
         item = self._get_item()
-        m.Subscription.unsubscribe(user=cast(m.User, self.request.user), item=item)
+        m.Subscription.unsubscribe(user=cast(User, self.request.user), item=item)
         return Response(status=c.HTTP_200_OK)
 
     @extend_schema(
@@ -184,7 +186,8 @@ class LibraryViewSet(viewsets.ModelViewSet):
         item = self._get_item()
         serializer = s.AccessPolicySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        m.LibraryItem.objects.filter(pk=item.pk).update(access_policy=serializer.validated_data['access_policy'])
+        new_policy = serializer.validated_data['access_policy']
+        m.LibraryItem.objects.filter(pk=item.pk).update(access_policy=new_policy)
         return Response(status=c.HTTP_200_OK)
 
     @extend_schema(
@@ -286,7 +289,7 @@ class LibraryActiveView(generics.ListAPIView):
                 .filter(is_public) \
                 .filter(common_location).order_by('-time_update')
         else:
-            user = cast(m.User, self.request.user)
+            user = cast(User, self.request.user)
             # pylint: disable=unsupported-binary-operation
             return m.LibraryItem.objects.filter(
                 (is_public & common_location) |

@@ -1,7 +1,8 @@
 ''' Testing models: Subscription. '''
 from django.test import TestCase
 
-from apps.rsform.models import LibraryItem, LibraryItemType, Subscription, User
+from apps.library.models import LibraryItem, LibraryItemType, Subscription
+from apps.users.models import User
 
 
 class TestSubscription(TestCase):

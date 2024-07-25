@@ -20,10 +20,6 @@ _REF_ENTITY_PATTERN = re.compile(r'@{([^0-9\-].*?)\|.*?}')
 _GLOBAL_ID_PATTERN = re.compile(r'([XCSADFPT][0-9]+)')  # cspell:disable-line
 
 
-def _empty_forms():
-    return []
-
-
 class CstType(TextChoices):
     ''' Type of constituenta. '''
     BASE = 'basic'
@@ -40,7 +36,7 @@ class Constituenta(Model):
     ''' Constituenta is the base unit for every conceptual schema. '''
     schema: ForeignKey = ForeignKey(
         verbose_name='Концептуальная схема',
-        to='rsform.RSForm',
+        to='library.LibraryItem',
         on_delete=CASCADE
     )
     order: PositiveIntegerField = PositiveIntegerField(
@@ -76,7 +72,7 @@ class Constituenta(Model):
     )
     term_forms: JSONField = JSONField(
         verbose_name='Словоформы',
-        default=_empty_forms
+        default=list
     )
     definition_formal: TextField = TextField(
         verbose_name='Родоструктурное определение',

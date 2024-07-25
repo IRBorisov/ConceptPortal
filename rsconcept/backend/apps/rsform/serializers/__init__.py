@@ -1,11 +1,9 @@
 ''' REST API: Serializers. '''
 
 from .basics import (
-    AccessPolicySerializer,
     ASTNodeSerializer,
     ExpressionParseSerializer,
     ExpressionSerializer,
-    LocationSerializer,
     MultiFormSerializer,
     ResolverSerializer,
     TextSerializer,
@@ -20,22 +18,9 @@ from .data_access import (
     CstSubstituteSerializer,
     CstTargetSerializer,
     InlineSynthesisSerializer,
-    LibraryItemBaseSerializer,
-    LibraryItemCloneSerializer,
-    LibraryItemDetailsSerializer,
-    LibraryItemSerializer,
     RSFormParseSerializer,
-    RSFormSerializer,
-    UsersListSerializer,
-    UserTargetSerializer,
-    VersionCreateSerializer,
-    VersionSerializer
+    RSFormSerializer
 )
 from .io_files import FileSerializer, RSFormTRSSerializer, RSFormUploadSerializer
 from .io_pyconcept import PyConceptAdapter
-from .schema_typing import (
-    NewCstResponse,
-    NewMultiCstResponse,
-    NewVersionResponse,
-    ResultTextResponse
-)
+from .responses import NewCstResponse, NewMultiCstResponse, ResultTextResponse

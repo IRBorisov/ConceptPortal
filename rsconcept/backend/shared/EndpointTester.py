@@ -2,7 +2,7 @@
 from rest_framework import status
 from rest_framework.test import APIClient, APIRequestFactory, APITestCase
 
-from apps.rsform.models import Editor, LibraryItem
+from apps.library.models import Editor, LibraryItem
 from apps.users.models import User
 
 

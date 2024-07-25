@@ -6,15 +6,8 @@ from zipfile import ZipFile
 from cctext import ReferenceType
 from rest_framework import status
 
-from apps.rsform.models import (
-    AccessPolicy,
-    Constituenta,
-    CstType,
-    LibraryItem,
-    LibraryItemType,
-    LocationHead,
-    RSForm
-)
+from apps.library.models import AccessPolicy, LibraryItem, LibraryItemType, LocationHead
+from apps.rsform.models import Constituenta, CstType, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 from shared.testing_utils import response_contains
 
@@ -24,12 +17,12 @@ class TestRSFormViewset(EndpointTester):
 
     def setUp(self):
         super().setUp()
-        self.owned = RSForm.objects.create(title='Test', alias='T1', owner=self.user)
-        self.owned_id = self.owned.pk
-        self.unowned = RSForm.objects.create(title='Test2', alias='T2')
-        self.unowned_id = self.unowned.pk
-        self.private = RSForm.objects.create(title='Test2', alias='T2', access_policy=AccessPolicy.PRIVATE)
-        self.private_id = self.private.pk
+        self.owned = RSForm.create(title='Test', alias='T1', owner=self.user)
+        self.owned_id = self.owned.model.pk
+        self.unowned = RSForm.create(title='Test2', alias='T2')
+        self.unowned_id = self.unowned.model.pk
+        self.private = RSForm.create(title='Test2', alias='T2', access_policy=AccessPolicy.PRIVATE)
+        self.private_id = self.private.model.pk
 
 
     @decl_endpoint('/api/rsforms/create-detailed', method='post')
@@ -57,25 +50,25 @@ class TestRSFormViewset(EndpointTester):
 
     @decl_endpoint('/api/rsforms', method='get')
     def test_list_rsforms(self):
-        non_schema = LibraryItem.objects.create(
+        oss = LibraryItem.objects.create(
             item_type=LibraryItemType.OPERATION_SCHEMA,
             title='Test3'
         )
         response = self.executeOK()
-        self.assertFalse(response_contains(response, non_schema))
-        self.assertTrue(response_contains(response, self.unowned))
-        self.assertTrue(response_contains(response, self.owned))
+        self.assertFalse(response_contains(response, oss))
+        self.assertTrue(response_contains(response, self.unowned.model))
+        self.assertTrue(response_contains(response, self.owned.model))
 
 
     @decl_endpoint('/api/rsforms/{item}/contents', method='get')
     def test_contents(self):
         response = self.executeOK(item=self.owned_id)
-        self.assertEqual(response.data['owner'], self.owned.owner.pk)
-        self.assertEqual(response.data['title'], self.owned.title)
-        self.assertEqual(response.data['alias'], self.owned.alias)
-        self.assertEqual(response.data['location'], self.owned.location)
-        self.assertEqual(response.data['access_policy'], self.owned.access_policy)
-        self.assertEqual(response.data['visible'], self.owned.visible)
+        self.assertEqual(response.data['owner'], self.owned.model.owner.pk)
+        self.assertEqual(response.data['title'], self.owned.model.title)
+        self.assertEqual(response.data['alias'], self.owned.model.alias)
+        self.assertEqual(response.data['location'], self.owned.model.location)
+        self.assertEqual(response.data['access_policy'], self.owned.model.access_policy)
+        self.assertEqual(response.data['visible'], self.owned.model.visible)
 
 
     @decl_endpoint('/api/rsforms/{item}/details', method='get')
@@ -92,12 +85,12 @@ class TestRSFormViewset(EndpointTester):
         )
 
         response = self.executeOK(item=self.owned_id)
-        self.assertEqual(response.data['owner'], self.owned.owner.pk)
-        self.assertEqual(response.data['title'], self.owned.title)
-        self.assertEqual(response.data['alias'], self.owned.alias)
-        self.assertEqual(response.data['location'], self.owned.location)
-        self.assertEqual(response.data['access_policy'], self.owned.access_policy)
-        self.assertEqual(response.data['visible'], self.owned.visible)
+        self.assertEqual(response.data['owner'], self.owned.model.owner.pk)
+        self.assertEqual(response.data['title'], self.owned.model.title)
+        self.assertEqual(response.data['alias'], self.owned.model.alias)
+        self.assertEqual(response.data['location'], self.owned.model.location)
+        self.assertEqual(response.data['access_policy'], self.owned.model.access_policy)
+        self.assertEqual(response.data['visible'], self.owned.model.visible)
 
         self.assertEqual(len(response.data['items']), 2)
         self.assertEqual(response.data['items'][0]['id'], x1.pk)
@@ -176,9 +169,9 @@ class TestRSFormViewset(EndpointTester):
 
     @decl_endpoint('/api/rsforms/{item}/export-trs', method='get')
     def test_export_trs(self):
-        schema = RSForm.objects.create(title='Test')
+        schema = RSForm.create(title='Test')
         schema.insert_new('X1')
-        response = self.executeOK(item=schema.pk)
+        response = self.executeOK(item=schema.model.pk)
         self.assertEqual(response.headers['Content-Disposition'], 'attachment; filename=Schema.trs')
         with io.BytesIO(response.content) as stream:
             with ZipFile(stream, 'r') as zipped_file:
@@ -458,7 +451,7 @@ class TestRSFormViewset(EndpointTester):
     @decl_endpoint('/api/rsforms/{item}/load-trs', method='patch')
     def test_load_trs(self):
         self.set_params(item=self.owned_id)
-        self.owned.title = 'Test11'
+        self.owned.model.title = 'Test11'
         self.owned.save()
         x1 = self.owned.insert_new('X1')
         work_dir = os.path.dirname(os.path.abspath(__file__))
@@ -467,7 +460,7 @@ class TestRSFormViewset(EndpointTester):
             response = self.client.patch(self.endpoint, data=data, format='multipart')
         self.owned.refresh_from_db()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(self.owned.title, 'Test11')
+        self.assertEqual(self.owned.model.title, 'Test11')
         self.assertEqual(len(response.data['items']), 25)
         self.assertEqual(self.owned.constituents().count(), 25)
         self.assertFalse(Constituenta.objects.filter(pk=x1.pk).exists())

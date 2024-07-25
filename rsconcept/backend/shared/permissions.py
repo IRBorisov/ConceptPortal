@@ -11,15 +11,9 @@ from rest_framework.permissions import \
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
+from apps.library.models import AccessPolicy, Editor, LibraryItem, Subscription, Version
 from apps.oss.models import Operation
-from apps.rsform.models import (
-    AccessPolicy,
-    Constituenta,
-    Editor,
-    LibraryItem,
-    Subscription,
-    Version
-)
+from apps.rsform.models import Constituenta
 from apps.users.models import User
 
 

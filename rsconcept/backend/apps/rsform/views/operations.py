@@ -27,11 +27,11 @@ def inline_synthesis(request: Request):
     )
     serializer.is_valid(raise_exception=True)
 
-    schema = cast(m.RSForm, serializer.validated_data['receiver'])
+    receiver = m.RSForm(serializer.validated_data['receiver'])
     items = cast(list[m.Constituenta], serializer.validated_data['items'])
 
     with transaction.atomic():
-        new_items = schema.insert_copy(items)
+        new_items = receiver.insert_copy(items)
         for substitution in serializer.validated_data['substitutions']:
             original = cast(m.Constituenta, substitution['original'])
             replacement = cast(m.Constituenta, substitution['substitution'])
@@ -41,10 +41,10 @@ def inline_synthesis(request: Request):
             else:
                 index = next(i for (i, cst) in enumerate(items) if cst == replacement)
                 replacement = new_items[index]
-            schema.substitute(original, replacement, substitution['transfer_term'])
-        schema.restore_order()
+            receiver.substitute(original, replacement, substitution['transfer_term'])
+        receiver.restore_order()
 
     return Response(
         status=c.HTTP_200_OK,
-        data=s.RSFormParseSerializer(schema).data
+        data=s.RSFormParseSerializer(receiver.model).data
     )

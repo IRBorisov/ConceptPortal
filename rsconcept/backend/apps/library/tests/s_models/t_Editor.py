@@ -1,7 +1,8 @@
 ''' Testing models: Editor. '''
 from django.test import TestCase
 
-from apps.rsform.models import Editor, LibraryItemType, RSForm, User
+from apps.library.models import Editor, LibraryItem, LibraryItemType
+from apps.users.models import User
 
 
 class TestEditor(TestCase):
@@ -10,7 +11,8 @@ class TestEditor(TestCase):
     def setUp(self):
         self.user1 = User.objects.create(username='User1')
         self.user2 = User.objects.create(username='User2')
-        self.item = RSForm.objects.create(
+        self.item = LibraryItem.objects.create(
+            item_type=LibraryItemType.RSFORM,
             title='Test',
             alias='КС1',
             owner=self.user1
