@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { toast } from 'react-toastify';
 
 import { IconFolderTree } from '@/components/Icons';
@@ -8,9 +8,10 @@ import BadgeHelp from '@/components/info/BadgeHelp';
 import { CProps } from '@/components/props';
 import SelectLocation from '@/components/select/SelectLocation';
 import MiniButton from '@/components/ui/MiniButton';
+import useWindowSize from '@/hooks/useWindowSize';
 import { FolderNode, FolderTree } from '@/models/FolderTree';
 import { HelpTopic } from '@/models/miscellaneous';
-import { animateSideView } from '@/styling/animations';
+import { animateSideMinWidth } from '@/styling/animations';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { information } from '@/utils/labels';
 
@@ -22,6 +23,7 @@ interface ViewSideLocationProps {
 }
 
 function ViewSideLocation({ folderTree, active, setActive: setActive, toggleFolderMode }: ViewSideLocationProps) {
+  const windowSize = useWindowSize();
   const handleClickFolder = useCallback(
     (event: CProps.EventMouse, target: FolderNode) => {
       event.preventDefault();
@@ -38,12 +40,14 @@ function ViewSideLocation({ folderTree, active, setActive: setActive, toggleFold
     [setActive]
   );
 
+  const animations = useMemo(() => animateSideMinWidth(windowSize.isSmall ? '10rem' : '15rem'), [windowSize]);
+
   return (
     <motion.div
-      className='flex flex-col select-none text:xs sm:text-sm max-w-[10rem] sm:max-w-[15rem] min-w-[10rem] sm:min-w-[15rem]'
-      initial={{ ...animateSideView.initial }}
-      animate={{ ...animateSideView.animate }}
-      exit={{ ...animateSideView.exit }}
+      className={clsx('max-w-[10rem] sm:max-w-[15rem]', 'flex flex-col', 'text:xs sm:text-sm', 'select-none')}
+      initial={{ ...animations.initial }}
+      animate={{ ...animations.animate }}
+      exit={{ ...animations.exit }}
     >
       <div className='h-[2.08rem] flex justify-between items-center pr-1 pl-[0.125rem]'>
         <BadgeHelp

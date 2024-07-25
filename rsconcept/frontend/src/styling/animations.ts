@@ -218,6 +218,38 @@ export const animateSideView = {
   }
 };
 
+export const animateSideMinWidth = (width: string) => ({
+  initial: {
+    minWidth: 0,
+    opacity: 0
+  },
+  animate: {
+    minWidth: width,
+    opacity: 1,
+    transition: {
+      width: {
+        duration: 0.4
+      },
+      opacity: {
+        delay: 0.4,
+        duration: 0
+      }
+    }
+  },
+  exit: {
+    minWidth: 0,
+    opacity: 0,
+    transition: {
+      width: {
+        duration: 0.4
+      },
+      opacity: {
+        duration: 0
+      }
+    }
+  }
+});
+
 export const animateSideAppear = {
   initial: {
     height: 0,
