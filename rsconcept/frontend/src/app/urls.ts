@@ -43,6 +43,7 @@ export const urls = {
   login: `/${routes.login}`,
   login_hint: (userName: string) => `/login?username=${userName}`,
   profile: `/${routes.profile}`,
+  icons: `/icons`,
   signup: `/${routes.signup}`,
   library: `/${routes.library}`,
   library_filter: (strategy: string) => `/library?filter=${strategy}`,

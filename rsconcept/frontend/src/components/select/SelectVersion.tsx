@@ -14,6 +14,9 @@ interface SelectVersionProps extends CProps.Styling {
   items?: IVersionInfo[];
   value?: VersionID;
   onSelectValue: (newValue?: VersionID) => void;
+
+  placeholder?: string;
+  noBorder?: boolean;
 }
 
 function SelectVersion({ id, className, items, value, onSelectValue, ...restProps }: SelectVersionProps) {

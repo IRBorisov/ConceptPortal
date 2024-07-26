@@ -36,7 +36,9 @@ function OperationNode(node: OssNodeInternal) {
 
       <div id={`${prefixes.operation_list}${node.id}`} className='flex-grow text-center text-sm'>
         {node.data.label}
-        <TooltipOperation anchor={`#${prefixes.operation_list}${node.id}`} node={node} />
+        {controller.showTooltip && !node.dragging ? (
+          <TooltipOperation anchor={`#${prefixes.operation_list}${node.id}`} node={node} />
+        ) : null}
       </div>
 
       <Handle type='target' position={Position.Top} id='left' style={{ left: 40 }} />

@@ -5,6 +5,7 @@ import {
   IconDatabase,
   IconHelp,
   IconHelpOff,
+  IconImage,
   IconLightTheme,
   IconLogout,
   IconUser
@@ -43,6 +44,11 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
     logout(() => router.push(urls.admin, true));
   }
 
+  function gotoIcons(event: CProps.EventMouse) {
+    hideDropdown();
+    router.push(urls.icons, event.ctrlKey || event.metaKey);
+  }
+
   function handleToggleDarkMode() {
     hideDropdown();
     toggleDarkMode();
@@ -77,7 +83,18 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
         />
       ) : null}
       {user?.is_staff ? (
-        <DropdownButton text='База данных' icon={<IconDatabase size='1rem' />} onClick={gotoAdmin} />
+        <DropdownButton
+          text='База данных' // prettier: split-line
+          icon={<IconDatabase size='1rem' />}
+          onClick={gotoAdmin}
+        />
+      ) : null}
+      {user?.is_staff ? (
+        <DropdownButton
+          text='Иконки' // prettier: split-line
+          icon={<IconImage size='1rem' />}
+          onClick={gotoIcons}
+        />
       ) : null}
       <DropdownButton
         text='Выйти...'

@@ -40,6 +40,7 @@ export interface OssNodeInternal {
     label: string;
     operation: IOperation;
   };
+  dragging: boolean;
   xPos: number;
   yPos: number;
 }

@@ -38,7 +38,6 @@ export { LuFolderClosed   as IconFolderClosed }   from 'react-icons/lu';
 export { LuFolderDot      as IconFolderEmpty }    from 'react-icons/lu';
 export { LuLightbulb      as IconHelp }           from 'react-icons/lu';
 export { LuLightbulbOff   as IconHelpOff }        from 'react-icons/lu';
-export { TbGridDots       as IconGrid }           from 'react-icons/tb';
 export { RiPushpinFill    as IconPin }            from 'react-icons/ri';
 export { RiUnpinLine      as IconUnpin }          from 'react-icons/ri';
 export { BiCaretDown      as IconSortDesc }       from 'react-icons/bi';
@@ -118,6 +117,11 @@ export { LuRotate3D       as IconRotate3D }       from 'react-icons/lu';
 export { MdOutlineFitScreen as IconFitImage }     from 'react-icons/md';
 export { LuSparkles       as IconClustering }     from 'react-icons/lu';
 export { LuSparkle        as IconClusteringOff }  from 'react-icons/lu';
+export { TbGridDots       as IconGrid }           from 'react-icons/tb';
+export { FaSlash          as IconLineStraight }   from 'react-icons/fa6';
+export { PiWaveSineLight  as IconLineWave }       from 'react-icons/pi';
+export { LuCircleDashed   as IconAnimation }      from 'react-icons/lu';
+export { LuCircle         as IconAnimationOff }   from 'react-icons/lu';
 
 // ===== Custom elements ======
 interface IconSVGProps {

@@ -10,7 +10,6 @@ import {
   Node,
   NodeChange,
   NodeTypes,
-  ProOptions,
   ReactFlow,
   useEdgesState,
   useNodesState,
@@ -23,9 +22,10 @@ import Overlay from '@/components/ui/Overlay';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useOSS } from '@/context/OssContext';
+import useLocalStorage from '@/hooks/useLocalStorage';
 import { OssNode } from '@/models/miscellaneous';
 import { OperationID } from '@/models/oss';
-import { PARAMETER } from '@/utils/constants';
+import { PARAMETER, storage } from '@/utils/constants';
 import { errors } from '@/utils/labels';
 
 import { useOssEdit } from '../OssEditContext';
@@ -37,15 +37,17 @@ import ToolbarOssGraph from './ToolbarOssGraph';
 interface OssFlowProps {
   isModified: boolean;
   setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
-  showGrid: boolean;
-  setShowGrid: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function OssFlow({ isModified, setIsModified, showGrid, setShowGrid }: OssFlowProps) {
+function OssFlow({ isModified, setIsModified }: OssFlowProps) {
   const { calculateHeight, colors } = useConceptOptions();
   const model = useOSS();
   const controller = useOssEdit();
   const flow = useReactFlow();
+
+  const [showGrid, setShowGrid] = useLocalStorage<boolean>(storage.ossShowGrid, false);
+  const [edgeAnimate, setEdgeAnimate] = useLocalStorage<boolean>(storage.ossEdgeAnimate, false);
+  const [edgeStraight, setEdgeStraight] = useLocalStorage<boolean>(storage.ossEdgeStraight, false);
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -81,6 +83,8 @@ function OssFlow({ isModified, setIsModified, showGrid, setShowGrid }: OssFlowPr
           id: String(index),
           source: String(argument.argument),
           target: String(argument.operation),
+          type: edgeStraight ? 'straight' : 'bezier',
+          animated: edgeAnimate,
           targetHandle:
             model.schema!.operationByID.get(argument.argument)!.position_x >
             model.schema!.operationByID.get(argument.operation)!.position_x
@@ -92,7 +96,7 @@ function OssFlow({ isModified, setIsModified, showGrid, setShowGrid }: OssFlowPr
     setTimeout(() => {
       setIsModified(false);
     }, PARAMETER.graphRefreshDelay);
-  }, [model.schema, setNodes, setEdges, setIsModified, toggleReset]);
+  }, [model.schema, setNodes, setEdges, setIsModified, toggleReset, edgeStraight, edgeAnimate]);
 
   const getPositions = useCallback(
     () =>
@@ -224,7 +228,6 @@ function OssFlow({ isModified, setIsModified, showGrid, setShowGrid }: OssFlowPr
     }
   }
 
-  const proOptions: ProOptions = useMemo(() => ({ hideAttribution: true }), []);
   const canvasWidth = useMemo(() => 'calc(100vw - 1rem)', []);
   const canvasHeight = useMemo(() => calculateHeight('1.75rem + 4px'), [calculateHeight]);
 
@@ -244,7 +247,7 @@ function OssFlow({ isModified, setIsModified, showGrid, setShowGrid }: OssFlowPr
         onNodesChange={handleNodesChange}
         onEdgesChange={onEdgesChange}
         fitView
-        proOptions={proOptions}
+        proOptions={{ hideAttribution: true }}
         nodeTypes={OssNodeTypes}
         maxZoom={2}
         minZoom={0.75}
@@ -257,17 +260,7 @@ function OssFlow({ isModified, setIsModified, showGrid, setShowGrid }: OssFlowPr
         {showGrid ? <Background gap={10} /> : null}
       </ReactFlow>
     ),
-    [
-      nodes,
-      edges,
-      proOptions,
-      handleNodesChange,
-      handleContextMenu,
-      handleClickCanvas,
-      onEdgesChange,
-      OssNodeTypes,
-      showGrid
-    ]
+    [nodes, edges, handleNodesChange, handleContextMenu, handleClickCanvas, onEdgesChange, OssNodeTypes, showGrid]
   );
 
   return (
@@ -276,6 +269,8 @@ function OssFlow({ isModified, setIsModified, showGrid, setShowGrid }: OssFlowPr
         <ToolbarOssGraph
           isModified={isModified}
           showGrid={showGrid}
+          edgeAnimate={edgeAnimate}
+          edgeStraight={edgeStraight}
           onFitView={handleFitView}
           onCreate={handleCreateOperation}
           onDelete={handleDeleteSelected}
@@ -283,6 +278,8 @@ function OssFlow({ isModified, setIsModified, showGrid, setShowGrid }: OssFlowPr
           onSavePositions={handleSavePositions}
           onSaveImage={handleSaveImage}
           toggleShowGrid={() => setShowGrid(prev => !prev)}
+          toggleEdgeAnimate={() => setEdgeAnimate(prev => !prev)}
+          toggleEdgeStraight={() => setEdgeStraight(prev => !prev)}
         />
       </Overlay>
       {menuProps ? (

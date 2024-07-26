@@ -1,15 +1,12 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-
-import SelectOperation from '@/components/select/SelectOperation';
 import FlexColumn from '@/components/ui/FlexColumn';
 import Label from '@/components/ui/Label';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
 import AnimateFade from '@/components/wrap/AnimateFade';
-import { IOperation, IOperationSchema, OperationID } from '@/models/oss';
+import { IOperationSchema, OperationID } from '@/models/oss';
 import { limits, patterns } from '@/utils/constants';
+
+import PickMultiOperation from '../../components/select/PickMultiOperation';
 
 interface TabSynthesisOperationProps {
   oss: IOperationSchema;
@@ -34,22 +31,6 @@ function TabSynthesisOperation({
   inputs,
   setInputs
 }: TabSynthesisOperationProps) {
-  const [left, setLeft] = useState<IOperation | undefined>(undefined);
-  const [right, setRight] = useState<IOperation | undefined>(undefined);
-
-  console.log(inputs);
-
-  useEffect(() => {
-    const inputs: OperationID[] = [];
-    if (left) {
-      inputs.push(left.id);
-    }
-    if (right) {
-      inputs.push(right.id);
-    }
-    setInputs(inputs);
-  }, [setInputs, left, right]);
-
   return (
     <AnimateFade className='cc-column'>
       <TextInput
@@ -79,16 +60,10 @@ function TabSynthesisOperation({
         />
       </div>
 
-      <div className='flex justify-between'>
-        <FlexColumn>
-          <Label text='Аргумент 1' />
-          <SelectOperation items={oss.items} value={left} onSelectValue={setLeft} />
-        </FlexColumn>
-        <FlexColumn>
-          <Label text='Аргумент 2' className='text-right' />
-          <SelectOperation items={oss.items} value={right} onSelectValue={setRight} />
-        </FlexColumn>
-      </div>
+      <FlexColumn>
+        <Label text={`Выбор аргументов: [ ${inputs.length} ]`} />
+        <PickMultiOperation items={oss.items} selected={inputs} setSelected={setInputs} rows={6} />
+      </FlexColumn>
     </AnimateFade>
   );
 }

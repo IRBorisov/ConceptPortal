@@ -114,6 +114,8 @@ export const storage = {
   rsgraphFoldHidden: 'rsgraph.fold_hidden',
 
   ossShowGrid: 'oss.show_grid',
+  ossEdgeStraight: 'oss.edge_straight',
+  ossEdgeAnimate: 'oss.edge_animate',
 
   cstFilterMatch: 'cst.filter.match',
   cstFilterGraph: 'cst.filter.graph'

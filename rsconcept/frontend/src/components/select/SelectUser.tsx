@@ -13,8 +13,10 @@ import SelectSingle from '../ui/SelectSingle';
 interface SelectUserProps extends CProps.Styling {
   items?: IUserInfo[];
   value?: UserID;
-  placeholder?: string;
   onSelectValue: (newValue: UserID) => void;
+
+  placeholder?: string;
+  noBorder?: boolean;
 }
 
 function SelectUser({

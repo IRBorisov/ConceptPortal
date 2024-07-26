@@ -15,7 +15,9 @@ interface SelectConstituentaProps extends CProps.Styling {
   items?: IConstituenta[];
   value?: IConstituenta;
   onSelectValue: (newValue?: IConstituenta) => void;
+
   placeholder?: string;
+  noBorder?: boolean;
 }
 
 function SelectConstituenta({

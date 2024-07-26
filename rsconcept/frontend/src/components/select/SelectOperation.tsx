@@ -13,7 +13,9 @@ interface SelectOperationProps extends CProps.Styling {
   items?: IOperation[];
   value?: IOperation;
   onSelectValue: (newValue?: IOperation) => void;
+
   placeholder?: string;
+  noBorder?: boolean;
 }
 
 function SelectOperation({
