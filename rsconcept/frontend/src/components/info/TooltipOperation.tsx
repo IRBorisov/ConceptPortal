@@ -1,31 +1,34 @@
 import Tooltip from '@/components/ui/Tooltip';
-import { IOperation } from '@/models/oss';
+import { OssNodeInternal } from '@/models/miscellaneous';
 import { labelOperationType } from '@/utils/labels';
 
 interface TooltipOperationProps {
-  data: IOperation;
+  node: OssNodeInternal;
   anchor: string;
 }
 
-function TooltipOperation({ data, anchor }: TooltipOperationProps) {
+function TooltipOperation({ node, anchor }: TooltipOperationProps) {
   return (
-    <Tooltip layer='z-modalTooltip' anchorSelect={anchor} className='max-w-[30rem] dense'>
-      <h2>Операция {data.alias}</h2>
+    <Tooltip layer='z-modalTooltip' anchorSelect={anchor} className='max-w-[35rem] max-h-[40rem] dense my-3'>
+      <h2>{node.data.operation.alias}</h2>
       <p>
-        <b>Тип:</b> {labelOperationType(data.operation_type)}
+        <b>Тип:</b> {labelOperationType(node.data.operation.operation_type)}
       </p>
-      {data.title ? (
+      {node.data.operation.title ? (
         <p>
           <b>Название: </b>
-          {data.title}
+          {node.data.operation.title}
         </p>
       ) : null}
-      {data.comment ? (
+      {node.data.operation.comment ? (
         <p>
           <b>Комментарий: </b>
-          {data.comment}
+          {node.data.operation.comment}
         </p>
       ) : null}
+      <p>
+        <b>Положение:</b> [{node.xPos}, {node.yPos}]
+      </p>
     </Tooltip>
   );
 }

@@ -66,6 +66,7 @@ export interface IOperationCreateData extends IPositionsData {
     'alias' | 'operation_type' | 'title' | 'comment' | 'position_x' | 'position_y' | 'result' | 'sync_text'
   >;
   arguments: OperationID[] | undefined;
+  create_schema: boolean;
 }
 
 /**

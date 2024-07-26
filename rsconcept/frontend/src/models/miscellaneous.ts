@@ -2,7 +2,10 @@
  * Module: Miscellaneous frontend model types. Future targets for refactoring aimed at extracting modules.
  */
 
+import { Node } from 'reactflow';
+
 import { LibraryItemType, LocationHead } from './library';
+import { IOperation } from './oss';
 
 /**
  * Represents graph dependency mode.
@@ -14,6 +17,31 @@ export enum DependencyMode {
   INPUTS,
   EXPAND_OUTPUTS,
   EXPAND_INPUTS
+}
+
+/**
+ * Represents graph OSS node data.
+ */
+export interface OssNode extends Node {
+  id: string;
+  data: {
+    label: string;
+    operation: IOperation;
+  };
+  position: { x: number; y: number };
+}
+
+/**
+ * Represents graph OSS node internal data.
+ */
+export interface OssNodeInternal {
+  id: string;
+  data: {
+    label: string;
+    operation: IOperation;
+  };
+  xPos: number;
+  yPos: number;
 }
 
 /**

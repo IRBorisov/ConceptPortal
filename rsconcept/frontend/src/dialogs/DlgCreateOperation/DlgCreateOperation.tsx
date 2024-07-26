@@ -41,8 +41,12 @@ function DlgCreateOperation({ hideWindow, oss, insertPosition, positions, onCrea
   const [inputs, setInputs] = useState<OperationID[]>([]);
   const [attachedID, setAttachedID] = useState<LibraryItemID | undefined>(undefined);
   const [syncText, setSyncText] = useState(true);
+  const [createSchema, setCreateSchema] = useState(false);
 
-  const isValid = useMemo(() => alias !== '', [alias]);
+  const isValid = useMemo(
+    () => (alias !== '' && activeTab === TabID.INPUT) || inputs.length != 1,
+    [alias, activeTab, inputs]
+  );
 
   useLayoutEffect(() => {
     if (attachedID) {
@@ -68,7 +72,8 @@ function DlgCreateOperation({ hideWindow, oss, insertPosition, positions, onCrea
         result: activeTab === TabID.INPUT ? attachedID ?? null : null
       },
       positions: positions,
-      arguments: activeTab === TabID.INPUT ? undefined : inputs.length > 0 ? inputs : undefined
+      arguments: activeTab === TabID.INPUT ? undefined : inputs.length > 0 ? inputs : undefined,
+      create_schema: createSchema
     };
     onCreate(data);
   };
@@ -88,10 +93,12 @@ function DlgCreateOperation({ hideWindow, oss, insertPosition, positions, onCrea
           setAttachedID={setAttachedID}
           syncText={syncText}
           setSyncText={setSyncText}
+          createSchema={createSchema}
+          setCreateSchema={setCreateSchema}
         />
       </TabPanel>
     ),
-    [alias, comment, title, attachedID, syncText, oss]
+    [alias, comment, title, attachedID, syncText, oss, createSchema]
   );
 
   const synthesisPanel = useMemo(
@@ -105,11 +112,12 @@ function DlgCreateOperation({ hideWindow, oss, insertPosition, positions, onCrea
           setComment={setComment}
           title={title}
           setTitle={setTitle}
+          inputs={inputs}
           setInputs={setInputs}
         />
       </TabPanel>
     ),
-    [oss, alias, comment, title]
+    [oss, alias, comment, title, inputs]
   );
 
   return (

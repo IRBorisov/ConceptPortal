@@ -98,7 +98,20 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         oss = m.OperationSchema(self.get_object())
         with transaction.atomic():
             oss.update_positions(serializer.validated_data['positions'])
-            new_operation = oss.create_operation(**serializer.validated_data['item_data'])
+            data: dict = serializer.validated_data['item_data']
+            if data['operation_type'] == m.OperationType.INPUT and serializer.validated_data['create_schema']:
+                schema = LibraryItem.objects.create(
+                    item_type=LibraryItemType.RSFORM,
+                    owner=oss.model.owner,
+                    alias=data['alias'],
+                    title=data['title'],
+                    comment=data['comment'],
+                    visible=False,
+                    access_policy=oss.model.access_policy,
+                    location=oss.model.location
+                )
+                data['result'] = schema
+            new_operation = oss.create_operation(**data)
             if new_operation.operation_type != m.OperationType.INPUT and 'arguments' in serializer.validated_data:
                 for argument in serializer.validated_data['arguments']:
                     oss.add_argument(operation=new_operation, argument=argument)

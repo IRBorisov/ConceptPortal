@@ -19,6 +19,7 @@ interface TabSynthesisOperationProps {
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   comment: string;
   setComment: React.Dispatch<React.SetStateAction<string>>;
+  inputs: OperationID[];
   setInputs: React.Dispatch<React.SetStateAction<OperationID[]>>;
 }
 
@@ -30,10 +31,13 @@ function TabSynthesisOperation({
   setTitle,
   comment,
   setComment,
+  inputs,
   setInputs
 }: TabSynthesisOperationProps) {
   const [left, setLeft] = useState<IOperation | undefined>(undefined);
   const [right, setRight] = useState<IOperation | undefined>(undefined);
+
+  console.log(inputs);
 
   useEffect(() => {
     const inputs: OperationID[] = [];

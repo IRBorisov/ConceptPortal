@@ -62,7 +62,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, dense, setFilt
   );
 
   return (
-    <div className='flex border-b clr-input'>
+    <div className='flex border-b clr-input overflow-hidden'>
       <SearchBar
         id='constituents_search'
         noBorder

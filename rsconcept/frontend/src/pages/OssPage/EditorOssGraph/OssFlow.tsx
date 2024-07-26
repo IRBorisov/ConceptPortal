@@ -18,15 +18,19 @@ import {
   useReactFlow
 } from 'reactflow';
 
+import { CProps } from '@/components/props';
 import Overlay from '@/components/ui/Overlay';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useOSS } from '@/context/OssContext';
+import { OssNode } from '@/models/miscellaneous';
+import { OperationID } from '@/models/oss';
 import { PARAMETER } from '@/utils/constants';
 import { errors } from '@/utils/labels';
 
 import { useOssEdit } from '../OssEditContext';
 import InputNode from './InputNode';
+import NodeContextMenu, { ContextMenuData } from './NodeContextMenu';
 import OperationNode from './OperationNode';
 import ToolbarOssGraph from './ToolbarOssGraph';
 
@@ -46,6 +50,7 @@ function OssFlow({ isModified, setIsModified, showGrid, setShowGrid }: OssFlowPr
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [toggleReset, setToggleReset] = useState(false);
+  const [menuProps, setMenuProps] = useState<ContextMenuData | undefined>(undefined);
 
   const onSelectionChange = useCallback(
     ({ nodes }: { nodes: Node[] }) => {
@@ -118,12 +123,19 @@ function OssFlow({ isModified, setIsModified, showGrid, setShowGrid }: OssFlowPr
     controller.promptCreateOperation(center.x, center.y, getPositions());
   }, [controller, getPositions, flow]);
 
-  const handleDeleteOperation = useCallback(() => {
+  const handleDeleteSelected = useCallback(() => {
     if (controller.selected.length !== 1) {
       return;
     }
     controller.deleteOperation(controller.selected[0], getPositions());
   }, [controller, getPositions]);
+
+  const handleDeleteOperation = useCallback(
+    (target: OperationID) => {
+      controller.deleteOperation(target, getPositions());
+    },
+    [controller, getPositions]
+  );
 
   const handleFitView = useCallback(() => {
     flow.fitView({ duration: PARAMETER.zoomDuration });
@@ -167,14 +179,29 @@ function OssFlow({ isModified, setIsModified, showGrid, setShowGrid }: OssFlowPr
   }, [colors, nodes]);
 
   const handleContextMenu = useCallback(
-    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    (event: CProps.EventMouse, node: OssNode) => {
+      console.log(node);
       event.preventDefault();
       event.stopPropagation();
-      controller.setShowTooltip(prev => !prev);
-      // setShowContextMenu(true);
+
+      setMenuProps({
+        operation: node.data.operation,
+        cursorX: event.clientX,
+        cursorY: event.clientY
+      });
+      controller.setShowTooltip(false);
     },
     [controller]
   );
+
+  const handleContextMenuHide = useCallback(() => {
+    controller.setShowTooltip(true);
+    setMenuProps(undefined);
+  }, [controller]);
+
+  const handleClickCanvas = useCallback(() => {
+    handleContextMenuHide();
+  }, [handleContextMenuHide]);
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (controller.isProcessing) {
@@ -192,7 +219,7 @@ function OssFlow({ isModified, setIsModified, showGrid, setShowGrid }: OssFlowPr
     if (event.key === 'Delete') {
       event.preventDefault();
       event.stopPropagation();
-      handleDeleteOperation();
+      handleDeleteSelected();
       return;
     }
   }
@@ -224,12 +251,23 @@ function OssFlow({ isModified, setIsModified, showGrid, setShowGrid }: OssFlowPr
         nodesConnectable={false}
         snapToGrid={true}
         snapGrid={[10, 10]}
-        onContextMenu={handleContextMenu}
+        onNodeContextMenu={handleContextMenu}
+        onClick={handleClickCanvas}
       >
         {showGrid ? <Background gap={10} /> : null}
       </ReactFlow>
     ),
-    [nodes, edges, proOptions, handleNodesChange, handleContextMenu, onEdgesChange, OssNodeTypes, showGrid]
+    [
+      nodes,
+      edges,
+      proOptions,
+      handleNodesChange,
+      handleContextMenu,
+      handleClickCanvas,
+      onEdgesChange,
+      OssNodeTypes,
+      showGrid
+    ]
   );
 
   return (
@@ -240,13 +278,16 @@ function OssFlow({ isModified, setIsModified, showGrid, setShowGrid }: OssFlowPr
           showGrid={showGrid}
           onFitView={handleFitView}
           onCreate={handleCreateOperation}
-          onDelete={handleDeleteOperation}
+          onDelete={handleDeleteSelected}
           onResetPositions={handleResetPositions}
           onSavePositions={handleSavePositions}
           onSaveImage={handleSaveImage}
           toggleShowGrid={() => setShowGrid(prev => !prev)}
         />
       </Overlay>
+      {menuProps ? (
+        <NodeContextMenu onHide={handleContextMenuHide} onDelete={handleDeleteOperation} {...menuProps} />
+      ) : null}
       <div className='relative' style={{ height: canvasHeight, width: canvasWidth }}>
         {graph}
       </div>

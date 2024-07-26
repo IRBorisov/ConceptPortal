@@ -44,6 +44,7 @@ class OperationCreateSerializer(serializers.Serializer):
                 'alias', 'operation_type', 'title', 'sync_text', \
                 'comment', 'result', 'position_x', 'position_y'
 
+    create_schema = serializers.BooleanField(default=False, required=False)
     item_data = OperationData()
     arguments = PKField(many=True, queryset=Operation.objects.all(), required=False)
     positions = serializers.ListField(

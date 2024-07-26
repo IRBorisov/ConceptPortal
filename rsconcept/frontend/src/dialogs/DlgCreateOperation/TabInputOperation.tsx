@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { IconReset } from '@/components/Icons';
 import PickSchema from '@/components/select/PickSchema';
@@ -27,6 +27,8 @@ interface TabInputOperationProps {
   setAttachedID: React.Dispatch<React.SetStateAction<LibraryItemID | undefined>>;
   syncText: boolean;
   setSyncText: React.Dispatch<React.SetStateAction<boolean>>;
+  createSchema: boolean;
+  setCreateSchema: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function TabInputOperation({
@@ -40,9 +42,18 @@ function TabInputOperation({
   attachedID,
   setAttachedID,
   syncText,
-  setSyncText
+  setSyncText,
+  createSchema,
+  setCreateSchema
 }: TabInputOperationProps) {
   const baseFilter = useCallback((item: ILibraryItem) => !oss.schemas.includes(item.id), [oss]);
+
+  useEffect(() => {
+    if (createSchema) {
+      setAttachedID(undefined);
+      setSyncText(true);
+    }
+  }, [createSchema, setAttachedID, setSyncText]);
 
   return (
     <AnimateFade className='cc-column'>
@@ -84,24 +95,33 @@ function TabInputOperation({
         />
       </div>
 
-      <div className='flex gap-3 items-center'>
-        <Label text='Загружаемая концептуальная схема' />
-        <MiniButton
-          title='Сбросить выбор схемы'
-          noHover
-          noPadding
-          icon={<IconReset size='1.25rem' className='icon-primary' />}
-          onClick={() => setAttachedID(undefined)}
-          disabled={attachedID == undefined}
+      <div className='flex justify-between gap-3 items-center'>
+        <div className='flex gap-3'>
+          <Label text='Загружаемая концептуальная схема' />
+          <MiniButton
+            title='Сбросить выбор схемы'
+            noHover
+            noPadding
+            icon={<IconReset size='1.25rem' className='icon-primary' />}
+            onClick={() => setAttachedID(undefined)}
+            disabled={attachedID == undefined}
+          />
+        </div>
+        <Checkbox
+          value={createSchema}
+          setValue={setCreateSchema}
+          label='Создать новую схему'
+          titleHtml='Создать пустую схему для загрузки'
         />
       </div>
-
-      <PickSchema
-        value={attachedID} // prettier: split-line
-        onSelectValue={setAttachedID}
-        rows={8}
-        baseFilter={baseFilter}
-      />
+      {!createSchema ? (
+        <PickSchema
+          value={attachedID} // prettier: split-line
+          onSelectValue={setAttachedID}
+          rows={8}
+          baseFilter={baseFilter}
+        />
+      ) : null}
     </AnimateFade>
   );
 }

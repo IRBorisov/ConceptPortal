@@ -14,6 +14,7 @@ export const PARAMETER = {
   zoomDuration: 500, // milliseconds animation duration
   ossImageWidth: 1280, // pixels - size of OSS image
   ossImageHeight: 960, // pixels - size of OSS image
+  ossContextMenuWidth: 200, // pixels - width of OSS context menu
 
   graphHoverXLimit: 0.4, // ratio to clientWidth used to determine which side of screen popup should be
   graphHoverYLimit: 0.6, // ratio to clientHeight used to determine which side of screen popup should be

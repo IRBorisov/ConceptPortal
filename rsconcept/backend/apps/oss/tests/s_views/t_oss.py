@@ -207,6 +207,46 @@ class TestOssViewset(EndpointTester):
         new_operation = response.data['new_operation']
         self.assertEqual(new_operation['result'], self.ks1.model.pk)
 
+    @decl_endpoint('/api/oss/{item}/create-operation', method='post')
+    def test_create_operation_schema(self):
+        self.populateData()
+        data = {
+            'item_data': {
+                'alias': 'Test4',
+                'title': 'Test title',
+                'comment': 'Comment',
+                'operation_type': OperationType.INPUT
+            },
+            'create_schema': True,
+            'positions': [],
+        }
+        response = self.executeCreated(data=data, item=self.owned_id)
+        self.owned.refresh_from_db()
+        new_operation = response.data['new_operation']
+        schema = LibraryItem.objects.get(pk=new_operation['result'])
+        self.assertEqual(schema.alias, data['item_data']['alias'])
+        self.assertEqual(schema.title, data['item_data']['title'])
+        self.assertEqual(schema.comment, data['item_data']['comment'])
+        self.assertEqual(schema.visible, False)
+        self.assertEqual(schema.access_policy, self.owned.model.access_policy)
+        self.assertEqual(schema.location, self.owned.model.location)
+
+    @decl_endpoint('/api/oss/{item}/create-operation', method='post')
+    def test_create_operation_result(self):
+        self.populateData()
+
+        data = {
+            'item_data': {
+                'alias': 'Test4',
+                'operation_type': OperationType.INPUT,
+                'result': self.ks1.model.pk
+            },
+            'positions': [],
+        }
+        response = self.executeCreated(data=data, item=self.owned_id)
+        self.owned.refresh_from_db()
+        new_operation = response.data['new_operation']
+        self.assertEqual(new_operation['result'], self.ks1.model.pk)
 
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
     def test_delete_operation(self):

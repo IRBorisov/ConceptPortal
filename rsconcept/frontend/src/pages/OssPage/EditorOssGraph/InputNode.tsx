@@ -4,26 +4,17 @@ import { IconRSForm } from '@/components/Icons';
 import TooltipOperation from '@/components/info/TooltipOperation';
 import MiniButton from '@/components/ui/MiniButton.tsx';
 import Overlay from '@/components/ui/Overlay';
-import { IOperation } from '@/models/oss';
+import { OssNodeInternal } from '@/models/miscellaneous';
 import { prefixes } from '@/utils/constants';
 
 import { useOssEdit } from '../OssEditContext';
 
-interface InputNodeProps {
-  id: string;
-  data: {
-    label: string;
-    operation: IOperation;
-  };
-}
-
-function InputNode({ id, data }: InputNodeProps) {
+function InputNode(node: OssNodeInternal) {
   const controller = useOssEdit();
-
-  const hasFile = !!data.operation.result;
+  const hasFile = !!node.data.operation.result;
 
   const handleOpenSchema = () => {
-    controller.openOperationSchema(Number(id));
+    controller.openOperationSchema(Number(node.id));
   };
 
   return (
@@ -41,10 +32,10 @@ function InputNode({ id, data }: InputNodeProps) {
           disabled={!hasFile}
         />
       </Overlay>
-      <div id={`${prefixes.operation_list}${id}`} className='flex-grow text-center text-sm'>
-        {data.label}
+      <div id={`${prefixes.operation_list}${node.id}`} className='flex-grow text-center text-sm'>
+        {node.data.label}
         {controller.showTooltip ? (
-          <TooltipOperation anchor={`#${prefixes.operation_list}${id}`} data={data.operation} />
+          <TooltipOperation anchor={`#${prefixes.operation_list}${node.id}`} node={node} />
         ) : null}
       </div>
     </>
