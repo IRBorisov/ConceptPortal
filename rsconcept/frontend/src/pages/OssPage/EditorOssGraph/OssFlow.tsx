@@ -83,7 +83,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
           id: String(index),
           source: String(argument.argument),
           target: String(argument.operation),
-          type: edgeStraight ? 'straight' : 'bezier',
+          type: edgeStraight ? 'straight' : 'simplebezier',
           animated: edgeAnimate,
           targetHandle:
             model.schema!.operationByID.get(argument.argument)!.position_x >

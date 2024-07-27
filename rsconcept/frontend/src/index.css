@@ -1,4 +1,3 @@
 @import 'styling/setup.css';
-@import 'styling/styles.css';
-@import 'styling/imports.css';
 @import 'styling/overrides.css';
+@import 'styling/styles.css';

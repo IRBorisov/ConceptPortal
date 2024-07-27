@@ -143,7 +143,8 @@ This readme file is used mostly to document project dependencies and conventions
 
 - 🚀 F: major feature implementation
 - 💄 D: UI design
-- 🚑 B: bug fix
+- 🔥 B: bug fix
+- 🚑 M: Minor fixes
 - 🔧 R: refactoring and code improvement
 - 📝 I: documentation
 
