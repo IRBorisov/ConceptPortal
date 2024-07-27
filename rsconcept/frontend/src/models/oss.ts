@@ -3,7 +3,7 @@
  */
 
 import { Graph } from './Graph';
-import { ILibraryItemData, LibraryItemID } from './library';
+import { ILibraryItem, ILibraryItemData, LibraryItemID } from './library';
 import { ConstituentaID } from './rsform';
 
 /**
@@ -137,5 +137,13 @@ export interface IOperationSchema extends IOperationSchemaData {
  */
 export interface IOperationCreatedResponse {
   new_operation: IOperation;
+  oss: IOperationSchemaData;
+}
+
+/**
+ * Represents data response when creating {@link IRSForm} for Input {@link IOperation}.
+ */
+export interface IInputCreatedResponse {
+  new_schema: ILibraryItem;
   oss: IOperationSchemaData;
 }

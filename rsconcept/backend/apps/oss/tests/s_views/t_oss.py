@@ -127,8 +127,6 @@ class TestOssViewset(EndpointTester):
 
     @decl_endpoint('/api/oss/{item}/create-operation', method='post')
     def test_create_operation(self):
-
-
         self.populateData()
         self.executeBadData(item=self.owned_id)
 
@@ -231,23 +229,6 @@ class TestOssViewset(EndpointTester):
         self.assertEqual(schema.access_policy, self.owned.model.access_policy)
         self.assertEqual(schema.location, self.owned.model.location)
 
-    @decl_endpoint('/api/oss/{item}/create-operation', method='post')
-    def test_create_operation_result(self):
-        self.populateData()
-
-        data = {
-            'item_data': {
-                'alias': 'Test4',
-                'operation_type': OperationType.INPUT,
-                'result': self.ks1.model.pk
-            },
-            'positions': [],
-        }
-        response = self.executeCreated(data=data, item=self.owned_id)
-        self.owned.refresh_from_db()
-        new_operation = response.data['new_operation']
-        self.assertEqual(new_operation['result'], self.ks1.model.pk)
-
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
     def test_delete_operation(self):
         self.executeNotFound(item=self.invalid_id)
@@ -269,3 +250,40 @@ class TestOssViewset(EndpointTester):
         self.login()
         response = self.executeOK(data=data)
         self.assertEqual(len(response.data['items']), 2)
+
+    @decl_endpoint('/api/oss/{item}/create-input', method='patch')
+    def test_create_input(self):
+        self.populateData()
+        self.executeBadData(item=self.owned_id)
+
+        data = {
+            'positions': []
+        }
+        self.executeBadData(data=data)
+
+        data['target'] = self.operation1.pk
+        self.toggle_admin(True)
+        self.executeBadData(data=data, item=self.unowned_id)
+        self.logout()
+        self.executeForbidden(data=data, item=self.owned_id)
+
+        self.login()
+        self.executeBadData(data=data, item=self.owned_id)
+
+        self.operation1.result = None
+        self.operation1.comment = 'TestComment'
+        self.operation1.title = 'TestTitle'
+        self.operation1.sync_text = False
+        self.operation1.save()
+        response = self.executeOK(data=data)
+        self.operation1.refresh_from_db()
+
+        new_schema = response.data['new_schema']
+        self.assertEqual(self.operation1.sync_text, True)
+        self.assertEqual(new_schema['id'], self.operation1.result.pk)
+        self.assertEqual(new_schema['alias'], self.operation1.alias)
+        self.assertEqual(new_schema['title'], self.operation1.title)
+        self.assertEqual(new_schema['comment'], self.operation1.comment)
+
+        data['target'] = self.operation3.pk
+        self.executeBadData(data=data)

@@ -26,6 +26,7 @@ function InputNode(node: OssNodeInternal) {
           icon={<IconRSForm className={hasFile ? 'clr-text-green' : 'clr-text-red'} size='0.75rem' />}
           noHover
           title='Связанная КС'
+          hideTitle={!controller.showTooltip}
           onClick={() => {
             handleOpenSchema();
           }}

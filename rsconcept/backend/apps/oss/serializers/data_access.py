@@ -53,7 +53,7 @@ class OperationCreateSerializer(serializers.Serializer):
     )
 
 
-class OperationDeleteSerializer(serializers.Serializer):
+class OperationTargetSerializer(serializers.Serializer):
     ''' Serializer: Delete operation. '''
     target = PKField(many=False, queryset=Operation.objects.all())
     positions = serializers.ListField(

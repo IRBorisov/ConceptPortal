@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { IconDestroy, IconEdit2, IconNewItem, IconRSForm } from '@/components/Icons';
+import { IconConnect, IconDestroy, IconEdit2, IconExecute, IconNewItem, IconRSForm } from '@/components/Icons';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import useClickedOutside from '@/hooks/useClickedOutside';
@@ -22,9 +22,10 @@ export interface ContextMenuData {
 interface NodeContextMenuProps extends ContextMenuData {
   onHide: () => void;
   onDelete: (target: OperationID) => void;
+  onCreateInput: (target: OperationID) => void;
 }
 
-function NodeContextMenu({ operation, cursorX, cursorY, onHide, onDelete }: NodeContextMenuProps) {
+function NodeContextMenu({ operation, cursorX, cursorY, onHide, onDelete, onCreateInput }: NodeContextMenuProps) {
   const controller = useOssEdit();
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
@@ -57,11 +58,21 @@ function NodeContextMenu({ operation, cursorX, cursorY, onHide, onDelete }: Node
     onDelete(operation.id);
   };
 
+  const handleCreateSchema = () => {
+    handleHide();
+    onCreateInput(operation.id);
+  };
+
+  const handleRunSynthesis = () => {
+    toast.error('Not implemented');
+    handleHide();
+  };
+
   return (
     <div ref={ref} className='absolute' style={{ top: cursorY, left: cursorX, width: 10, height: 10 }}>
       <Dropdown isOpen={isOpen} stretchLeft={cursorX >= window.innerWidth - PARAMETER.ossContextMenuWidth}>
         <DropdownButton
-          text='Свойства операции'
+          text='Редактировать'
           titleHtml={prepareTooltip('Редактировать операцию', 'Ctrl + клик')}
           icon={<IconEdit2 size='1rem' className='icon-primary' />}
           disabled={controller.isProcessing}
@@ -83,16 +94,25 @@ function NodeContextMenu({ operation, cursorX, cursorY, onHide, onDelete }: Node
             title='Создать пустую схему для загрузки'
             icon={<IconNewItem size='1rem' className='icon-green' />}
             disabled={controller.isProcessing}
+            onClick={handleCreateSchema}
+          />
+        ) : null}
+        {controller.isMutable && !operation.result && operation.operation_type === OperationType.INPUT ? (
+          <DropdownButton
+            text='Загрузить схему'
+            title='Выбрать схему для загрузки'
+            icon={<IconConnect size='1rem' className='icon-primary' />}
+            disabled={controller.isProcessing}
             onClick={handleEditSchema}
           />
         ) : null}
-        {controller.isMutable && operation.operation_type === OperationType.INPUT ? (
+        {controller.isMutable && !operation.result && operation.operation_type === OperationType.SYNTHESIS ? (
           <DropdownButton
-            text='Привязать схему'
-            title='Выбрать схему для загрузки'
-            icon={<IconRSForm size='1rem' className='icon-primary' />}
+            text='Выполнить синтез'
+            title='Выполнить операцию и получить синтезированную КС'
+            icon={<IconExecute size='1rem' className='icon-green' />}
             disabled={controller.isProcessing}
-            onClick={handleEditSchema}
+            onClick={handleRunSynthesis}
           />
         ) : null}
 

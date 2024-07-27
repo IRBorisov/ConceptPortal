@@ -141,6 +141,13 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     [controller, getPositions]
   );
 
+  const handleCreateInput = useCallback(
+    (target: OperationID) => {
+      controller.createInput(target, getPositions());
+    },
+    [controller, getPositions]
+  );
+
   const handleFitView = useCallback(() => {
     flow.fitView({ duration: PARAMETER.zoomDuration });
   }, [flow]);
@@ -184,7 +191,6 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
 
   const handleContextMenu = useCallback(
     (event: CProps.EventMouse, node: OssNode) => {
-      console.log(node);
       event.preventDefault();
       event.stopPropagation();
 
@@ -283,7 +289,12 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
         />
       </Overlay>
       {menuProps ? (
-        <NodeContextMenu onHide={handleContextMenuHide} onDelete={handleDeleteOperation} {...menuProps} />
+        <NodeContextMenu
+          onHide={handleContextMenuHide}
+          onDelete={handleDeleteOperation}
+          onCreateInput={handleCreateInput}
+          {...menuProps}
+        />
       ) : null}
       <div className='relative' style={{ height: canvasHeight, width: canvasWidth }}>
         {graph}

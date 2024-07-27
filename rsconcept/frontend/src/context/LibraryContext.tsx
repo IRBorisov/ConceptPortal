@@ -46,6 +46,7 @@ interface ILibraryContext {
   processingError: ErrorData;
   setProcessingError: (error: ErrorData) => void;
 
+  reloadOSS: (callback?: () => void) => void;
   reloadItems: (callback?: () => void) => void;
 
   applyFilter: (params: ILibraryFilter) => ILibraryItem[];
@@ -88,8 +89,16 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
     schema: globalOSS, // prettier: split lines
     error: ossError,
     setSchema: setGlobalOSS,
-    loading: ossLoading
+    loading: ossLoading,
+    reload: reloadOssInternal
   } = useOssDetails({ target: ossID });
+
+  const reloadOSS = useCallback(
+    (callback?: () => void) => {
+      reloadOssInternal(setProcessing, callback);
+    },
+    [reloadOssInternal]
+  );
 
   const folders = useMemo(() => {
     const result = new FolderTree();
@@ -271,11 +280,17 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
                 1
               );
             }
-            if (callback) callback();
+            if (globalOSS?.schemas.includes(target)) {
+              reloadOSS(() => {
+                if (callback) callback();
+              });
+            } else {
+              if (callback) callback();
+            }
           })
       });
     },
-    [reloadItems, user]
+    [reloadItems, reloadOSS, user, globalOSS]
   );
 
   const cloneItem = useCallback(
@@ -321,6 +336,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
         setGlobalOSS,
         ossLoading,
         ossError,
+        reloadOSS,
 
         reloadItems,
 

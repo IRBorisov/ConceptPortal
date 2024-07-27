@@ -44,6 +44,7 @@ export interface IOssEditContext {
   savePositions: (positions: IOperationPosition[], callback?: () => void) => void;
   promptCreateOperation: (x: number, y: number, positions: IOperationPosition[]) => void;
   deleteOperation: (target: OperationID, positions: IOperationPosition[]) => void;
+  createInput: (target: OperationID, positions: IOperationPosition[]) => void;
 }
 
 const OssEditContext = createContext<IOssEditContext | null>(null);
@@ -210,6 +211,16 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
     [model]
   );
 
+  const createInput = useCallback(
+    (target: OperationID, positions: IOperationPosition[]) => {
+      model.createInput({ target: target, positions: positions }, new_schema => {
+        toast.success(information.newLibraryItem);
+        router.push(urls.schema(new_schema.id));
+      });
+    },
+    [model, router]
+  );
+
   return (
     <OssEditContext.Provider
       value={{
@@ -234,7 +245,8 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
         openOperationSchema,
         savePositions,
         promptCreateOperation,
-        deleteOperation
+        deleteOperation,
+        createInput
       }}
     >
       {model.schema ? (

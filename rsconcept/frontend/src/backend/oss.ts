@@ -3,6 +3,7 @@
  */
 
 import {
+  IInputCreatedResponse,
   IOperationCreateData,
   IOperationCreatedResponse,
   IOperationSchemaData,
@@ -19,26 +20,33 @@ export function getOssDetails(target: string, request: FrontPull<IOperationSchem
   });
 }
 
-export function patchUpdatePositions(schema: string, request: FrontPush<IPositionsData>) {
+export function patchUpdatePositions(oss: string, request: FrontPush<IPositionsData>) {
   AxiosPatch({
-    endpoint: `/api/oss/${schema}/update-positions`,
+    endpoint: `/api/oss/${oss}/update-positions`,
     request: request
   });
 }
 
 export function postCreateOperation(
-  schema: string,
+  oss: string,
   request: FrontExchange<IOperationCreateData, IOperationCreatedResponse>
 ) {
   AxiosPost({
-    endpoint: `/api/oss/${schema}/create-operation`,
+    endpoint: `/api/oss/${oss}/create-operation`,
     request: request
   });
 }
 
-export function patchDeleteOperation(schema: string, request: FrontExchange<ITargetOperation, IOperationSchemaData>) {
+export function patchDeleteOperation(oss: string, request: FrontExchange<ITargetOperation, IOperationSchemaData>) {
   AxiosPatch({
-    endpoint: `/api/oss/${schema}/delete-operation`,
+    endpoint: `/api/oss/${oss}/delete-operation`,
+    request: request
+  });
+}
+
+export function patchCreateInput(oss: string, request: FrontExchange<ITargetOperation, IInputCreatedResponse>) {
+  AxiosPatch({
+    endpoint: `/api/oss/${oss}/create-input`,
     request: request
   });
 }

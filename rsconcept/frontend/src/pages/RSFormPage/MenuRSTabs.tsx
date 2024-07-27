@@ -16,6 +16,7 @@ import {
   IconLibrary,
   IconMenu,
   IconNewItem,
+  IconOSS,
   IconOwner,
   IconReader,
   IconReplace,
@@ -29,6 +30,7 @@ import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import { useAccessMode } from '@/context/AccessModeContext';
 import { useAuth } from '@/context/AuthContext';
+import { useLibrary } from '@/context/LibraryContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useRSForm } from '@/context/RSFormContext';
 import useDropdown from '@/hooks/useDropdown';
@@ -36,6 +38,7 @@ import { AccessPolicy } from '@/models/library';
 import { UserLevel } from '@/models/user';
 import { describeAccessMode, labelAccessMode, tooltips } from '@/utils/labels';
 
+import { OssTabID } from '../OssPage/OssTabs';
 import { useRSEdit } from './RSEditContext';
 
 interface MenuRSTabsProps {
@@ -47,6 +50,7 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
   const router = useConceptNavigation();
   const { user } = useAuth();
   const model = useRSForm();
+  const library = useLibrary();
 
   const { accessLevel, setAccessLevel } = useAccessMode();
 
@@ -179,6 +183,13 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
               text='Создать новую схему'
               icon={<IconNewItem size='1rem' className='icon-primary' />}
               onClick={handleCreateNew}
+            />
+          ) : null}
+          {library.globalOSS ? (
+            <DropdownButton
+              text='Перейти к ОСС'
+              icon={<IconOSS size='1rem' className='icon-primary' />}
+              onClick={() => router.push(urls.oss(library.globalOSS!.id, OssTabID.GRAPH))}
             />
           ) : null}
           <DropdownButton

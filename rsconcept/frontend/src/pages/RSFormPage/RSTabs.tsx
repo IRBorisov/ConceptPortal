@@ -22,6 +22,7 @@ import { ConstituentaID, IConstituenta, IConstituentaMeta } from '@/models/rsfor
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { information, labelVersion, prompts } from '@/utils/labels';
 
+import { OssTabID } from '../OssPage/OssTabs';
 import EditorConstituenta from './EditorConstituenta';
 import EditorRSForm from './EditorRSFormCard';
 import EditorRSList from './EditorRSList';
@@ -45,7 +46,7 @@ function RSTabs() {
 
   const { setNoFooter, calculateHeight } = useConceptOptions();
   const { schema, loading, errorLoading, isArchive, itemID } = useRSForm();
-  const { destroyItem } = useLibrary();
+  const library = useLibrary();
 
   const [isModified, setIsModified] = useState(false);
   useBlockNavigation(isModified);
@@ -176,11 +177,16 @@ function RSTabs() {
     if (!schema || !window.confirm(prompts.deleteLibraryItem)) {
       return;
     }
-    destroyItem(schema.id, () => {
+    const backToOSS = library.globalOSS?.schemas.includes(schema.id);
+    library.destroyItem(schema.id, () => {
       toast.success(information.itemDestroyed);
-      router.push(urls.library);
+      if (backToOSS) {
+        router.push(urls.oss(library.globalOSS!.id, OssTabID.GRAPH));
+      } else {
+        router.push(urls.library);
+      }
     });
-  }, [schema, destroyItem, router]);
+  }, [schema, library, router]);
 
   const panelHeight = useMemo(() => calculateHeight('1.75rem + 4px'), [calculateHeight]);
 

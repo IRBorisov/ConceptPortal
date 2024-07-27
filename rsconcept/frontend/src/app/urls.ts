@@ -52,7 +52,7 @@ export const urls = {
   help_topic: (topic: string) => `/manuals?topic=${topic}`,
   schema: (id: number | string, version?: number | string) =>
     `/rsforms/${id}` + (version !== undefined ? `?v=${version}` : ''),
-  oss: (id: number | string) => `/oss/${id}`,
+  oss: (id: number | string, tab?: number) => `/oss/${id}` + (tab !== undefined ? `?tab=${tab}` : ''),
   schema_props: ({ id, tab, version, active }: SchemaProps) => {
     const versionStr = version !== undefined ? `v=${version}&` : '';
     const activeStr = active !== undefined ? `&active=${active}` : '';

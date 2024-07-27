@@ -12,7 +12,7 @@ import {
   patchSetOwner,
   postSubscribe
 } from '@/backend/library';
-import { patchDeleteOperation, patchUpdatePositions, postCreateOperation } from '@/backend/oss';
+import { patchCreateInput, patchDeleteOperation, patchUpdatePositions, postCreateOperation } from '@/backend/oss';
 import { type ErrorData } from '@/components/info/InfoError';
 import { AccessPolicy, ILibraryItem } from '@/models/library';
 import { ILibraryUpdateData } from '@/models/library';
@@ -54,6 +54,7 @@ interface IOssContext {
   savePositions: (data: IPositionsData, callback?: () => void) => void;
   createOperation: (data: IOperationCreateData, callback?: DataCallback<IOperation>) => void;
   deleteOperation: (data: ITargetOperation, callback?: () => void) => void;
+  createInput: (data: ITargetOperation, callback?: DataCallback<ILibraryItem>) => void;
 }
 
 const OssContext = createContext<IOssContext | null>(null);
@@ -313,6 +314,25 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
     [itemID, library]
   );
 
+  const createInput = useCallback(
+    (data: ITargetOperation, callback?: DataCallback<ILibraryItem>) => {
+      setProcessingError(undefined);
+      patchCreateInput(itemID, {
+        data: data,
+        showError: true,
+        setLoading: setProcessing,
+        onError: setProcessingError,
+        onSuccess: newData => {
+          library.setGlobalOSS(newData.oss);
+          library.reloadItems(() => {
+            if (callback) callback(newData.new_schema);
+          });
+        }
+      });
+    },
+    [itemID, library]
+  );
+
   return (
     <OssContext.Provider
       value={{
@@ -335,7 +355,8 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
 
         savePositions,
         createOperation,
-        deleteOperation
+        deleteOperation,
+        createInput
       }}
     >
       {children}

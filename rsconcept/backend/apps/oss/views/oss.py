@@ -3,7 +3,7 @@ from typing import cast
 
 from django.db import transaction
 from drf_spectacular.utils import extend_schema, extend_schema_view
-from rest_framework import generics
+from rest_framework import generics, serializers
 from rest_framework import status as c
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -12,6 +12,7 @@ from rest_framework.response import Response
 
 from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemSerializer
+from shared import messages as msg
 from shared import permissions
 
 from .. import models as m
@@ -33,7 +34,8 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         if self.action in [
             'create_operation',
             'delete_operation',
-            'update_positions'
+            'update_positions',
+            'create_input'
         ]:
             permission_list = [permissions.ItemEditor]
         elif self.action in ['details']:
@@ -117,19 +119,18 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                     oss.add_argument(operation=new_operation, argument=argument)
 
         oss.refresh_from_db()
-        response = Response(
+        return Response(
             status=c.HTTP_201_CREATED,
             data={
                 'new_operation': s.OperationSerializer(new_operation).data,
                 'oss': s.OperationSchemaSerializer(oss.model).data
             }
         )
-        return response
 
     @extend_schema(
         summary='delete operation',
         tags=['OSS'],
-        request=s.OperationDeleteSerializer,
+        request=s.OperationTargetSerializer,
         responses={
             c.HTTP_200_OK: s.OperationSchemaSerializer,
             c.HTTP_400_BAD_REQUEST: None,
@@ -140,7 +141,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['patch'], url_path='delete-operation')
     def delete_operation(self, request: Request, pk):
         ''' Endpoint: Delete operation. '''
-        serializer = s.OperationDeleteSerializer(
+        serializer = s.OperationTargetSerializer(
             data=request.data,
             context={'oss': self.get_object()}
         )
@@ -155,4 +156,60 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         return Response(
             status=c.HTTP_200_OK,
             data=s.OperationSchemaSerializer(oss.model).data
+        )
+
+    @extend_schema(
+        summary='create input schema for target operation',
+        tags=['OSS'],
+        request=s.OperationTargetSerializer(),
+        responses={
+            c.HTTP_200_OK: s.NewSchemaResponse,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='create-input')
+    def create_input(self, request: Request, pk):
+        ''' Create new input RSForm. '''
+        serializer = s.OperationTargetSerializer(
+            data=request.data,
+            context={'oss': self.get_object()}
+        )
+        serializer.is_valid(raise_exception=True)
+
+        operation: m.Operation = cast(m.Operation, serializer.validated_data['target'])
+        if operation.operation_type != m.OperationType.INPUT:
+            raise serializers.ValidationError({
+                'target': msg.operationNotInput(operation.alias)
+            })
+        if operation.result is not None:
+            raise serializers.ValidationError({
+                'target': msg.operationResultNotEmpty(operation.alias)
+            })
+
+        oss = m.OperationSchema(self.get_object())
+        with transaction.atomic():
+            oss.update_positions(serializer.validated_data['positions'])
+            schema = LibraryItem.objects.create(
+                item_type=LibraryItemType.RSFORM,
+                owner=oss.model.owner,
+                alias=operation.alias,
+                title=operation.title,
+                comment=operation.comment,
+                visible=False,
+                access_policy=oss.model.access_policy,
+                location=oss.model.location
+            )
+            operation.result = schema
+            operation.sync_text = True
+            operation.save()
+
+        oss.refresh_from_db()
+        return Response(
+            status=c.HTTP_200_OK,
+            data={
+                'new_schema': LibraryItemSerializer(schema).data,
+                'oss': s.OperationSchemaSerializer(oss.model).data
+            }
         )

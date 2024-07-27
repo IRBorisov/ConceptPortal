@@ -4,8 +4,8 @@ from .basics import OperationPositionSerializer, PositionsSerializer, Substituti
 from .data_access import (
     ArgumentSerializer,
     OperationCreateSerializer,
-    OperationDeleteSerializer,
     OperationSchemaSerializer,
-    OperationSerializer
+    OperationSerializer,
+    OperationTargetSerializer
 )
-from .responses import NewOperationResponse
+from .responses import NewOperationResponse, NewSchemaResponse

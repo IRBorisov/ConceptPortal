@@ -61,7 +61,7 @@ export { TbBriefcase      as IconBusiness }       from 'react-icons/tb';
 export { VscLibrary       as IconLibrary }        from 'react-icons/vsc';
 export { IoLibrary        as IconLibrary2 }       from 'react-icons/io5';
 export { BiDiamond        as IconTemplates }      from 'react-icons/bi';
-export { FaRegObjectGroup as IconOSS }            from 'react-icons/fa';
+export { GiHoneycomb      as IconOSS }            from 'react-icons/gi';
 export { RiHexagonLine    as IconRSForm }         from 'react-icons/ri';
 export { LuArchive        as IconArchive }        from 'react-icons/lu';
 export { LuDatabase       as IconDatabase }       from 'react-icons/lu';
@@ -105,6 +105,8 @@ export { FaSortAmountDownAlt as IconSortList }    from 'react-icons/fa';
 export { LuNetwork        as IconGenerateStructure } from 'react-icons/lu';
 export { LuBookCopy       as IconInlineSynthesis } from 'react-icons/lu';
 export { LuWand2          as IconGenerateNames }  from 'react-icons/lu';
+export { GrConnect        as IconConnect }        from 'react-icons/gr';
+export { BsPlay           as IconExecute }        from 'react-icons/bs';
 
 // ======== Graph UI =======
 export { BiCollapse       as IconGraphCollapse }  from 'react-icons/bi';

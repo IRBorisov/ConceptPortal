@@ -18,6 +18,14 @@ def schemaNotOwned():
     return 'Нет доступа к схеме'
 
 
+def operationNotInput(title: str):
+    return f'Операция не является Загрузкой: {title}'
+
+
+def operationResultNotEmpty(title: str):
+    return f'Результат операции не пуст: {title}'
+
+
 def renameTrivial(name: str):
     return f'Имя должно отличаться от текущего: {name}'
 
