@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { DataCallback } from '@/backend/apiTransport';
 import {
@@ -14,10 +14,16 @@ import {
 } from '@/backend/library';
 import { patchDeleteOperation, patchUpdatePositions, postCreateOperation } from '@/backend/oss';
 import { type ErrorData } from '@/components/info/InfoError';
-import useOssDetails from '@/hooks/useOssDetails';
 import { AccessPolicy, ILibraryItem } from '@/models/library';
 import { ILibraryUpdateData } from '@/models/library';
-import { IOperation, IOperationCreateData, IOperationSchema, IPositionsData, ITargetOperation } from '@/models/oss';
+import {
+  IOperation,
+  IOperationCreateData,
+  IOperationSchema,
+  IOperationSchemaData,
+  IPositionsData,
+  ITargetOperation
+} from '@/models/oss';
 import { UserID } from '@/models/user';
 import { contextOutsideScope } from '@/utils/labels';
 
@@ -66,13 +72,8 @@ interface OssStateProps {
 
 export const OssState = ({ itemID, children }: OssStateProps) => {
   const library = useLibrary();
+  const schema = library.globalOSS;
   const { user } = useAuth();
-  const {
-    schema, // prettier: split lines
-    error: errorLoading,
-    setSchema,
-    loading
-  } = useOssDetails({ target: itemID });
   const [processing, setProcessing] = useState(false);
   const [processingError, setProcessingError] = useState<ErrorData>(undefined);
 
@@ -90,6 +91,12 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, schema, toggleTracking]);
 
+  useEffect(() => {
+    if (schema?.id !== Number(itemID)) {
+      library.setGlobalID(itemID);
+    }
+  }, [itemID, schema, library]);
+
   const update = useCallback(
     (data: ILibraryUpdateData, callback?: DataCallback<ILibraryItem>) => {
       if (!schema) {
@@ -102,13 +109,14 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          setSchema(Object.assign(schema, newData));
+          const fullData: IOperationSchemaData = Object.assign(schema, newData);
+          library.setGlobalOSS(fullData);
           library.localUpdateItem(newData);
           if (callback) callback(newData);
         }
       });
     },
-    [itemID, setSchema, schema, library]
+    [itemID, schema, library]
   );
 
   const subscribe = useCallback(
@@ -133,7 +141,7 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         }
       });
     },
-    [itemID, schema, user]
+    [itemID, user, schema]
   );
 
   const unsubscribe = useCallback(
@@ -278,13 +286,13 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          setSchema(newData.oss);
+          library.setGlobalOSS(newData.oss);
           library.localUpdateTimestamp(newData.oss.id);
           if (callback) callback(newData.new_operation);
         }
       });
     },
-    [itemID, library, setSchema]
+    [itemID, library]
   );
 
   const deleteOperation = useCallback(
@@ -296,13 +304,13 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          setSchema(newData);
+          library.setGlobalOSS(newData);
           library.localUpdateTimestamp(newData.id);
           if (callback) callback();
         }
       });
     },
-    [itemID, library, setSchema]
+    [itemID, library]
   );
 
   return (
@@ -310,8 +318,8 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
       value={{
         schema,
         itemID,
-        loading,
-        errorLoading,
+        loading: library.ossLoading,
+        errorLoading: library.ossError,
         processing,
         processingError,
         isOwned,

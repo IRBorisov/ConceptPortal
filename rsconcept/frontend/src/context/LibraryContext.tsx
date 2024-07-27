@@ -13,11 +13,13 @@ import {
 } from '@/backend/library';
 import { getRSFormDetails, postRSFormFromFile } from '@/backend/rsforms';
 import { ErrorData } from '@/components/info/InfoError';
+import useOssDetails from '@/hooks/useOssDetails';
 import { FolderTree } from '@/models/FolderTree';
 import { ILibraryItem, LibraryItemID, LocationHead } from '@/models/library';
 import { ILibraryCreateData } from '@/models/library';
 import { matchLibraryItem, matchLibraryItemLocation } from '@/models/libraryAPI';
 import { ILibraryFilter } from '@/models/miscellaneous';
+import { IOperationSchema, IOperationSchemaData } from '@/models/oss';
 import { IRSForm, IRSFormCloneData, IRSFormData } from '@/models/rsform';
 import { RSFormLoader } from '@/models/RSFormLoader';
 import { contextOutsideScope } from '@/utils/labels';
@@ -33,6 +35,12 @@ interface ILibraryContext {
   loading: boolean;
   loadingError: ErrorData;
   setLoadingError: (error: ErrorData) => void;
+
+  globalOSS: IOperationSchema | undefined;
+  setGlobalID: (id: string | undefined) => void;
+  setGlobalOSS: (data: IOperationSchemaData) => void;
+  ossLoading: boolean;
+  ossError: ErrorData;
 
   processing: boolean;
   processingError: ErrorData;
@@ -74,6 +82,14 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   const [loadingError, setLoadingError] = useState<ErrorData>(undefined);
   const [processingError, setProcessingError] = useState<ErrorData>(undefined);
   const [cachedTemplates, setCachedTemplates] = useState<IRSForm[]>([]);
+
+  const [ossID, setGlobalID] = useState<string | undefined>(undefined);
+  const {
+    schema: globalOSS, // prettier: split lines
+    error: ossError,
+    setSchema: setGlobalOSS,
+    loading: ossLoading
+  } = useOssDetails({ target: ossID });
 
   const folders = useMemo(() => {
     const result = new FolderTree();
@@ -299,6 +315,12 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
         processing,
         processingError,
         setProcessingError,
+
+        globalOSS,
+        setGlobalID,
+        setGlobalOSS,
+        ossLoading,
+        ossError,
 
         reloadItems,
 
