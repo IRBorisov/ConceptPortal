@@ -40,7 +40,7 @@ export enum RSTabID {
 function RSTabs() {
   const router = useConceptNavigation();
   const query = useQueryStrings();
-  const activeTab = (Number(query.get('tab')) ?? RSTabID.CARD) as RSTabID;
+  const activeTab = query.get('tab') ? (Number(query.get('tab')) as RSTabID) : RSTabID.CARD;
   const version = query.get('v') ? Number(query.get('v')) : undefined;
   const cstQuery = query.get('active');
 

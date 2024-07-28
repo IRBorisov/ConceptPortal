@@ -33,7 +33,7 @@ export enum OssTabID {
 function OssTabs() {
   const router = useConceptNavigation();
   const query = useQueryStrings();
-  const activeTab = (Number(query.get('tab')) ?? OssTabID.GRAPH) as OssTabID;
+  const activeTab = query.get('tab') ? (Number(query.get('tab')) as OssTabID) : OssTabID.GRAPH;
 
   const { calculateHeight } = useConceptOptions();
   const { schema, loading, errorLoading } = useOSS();
