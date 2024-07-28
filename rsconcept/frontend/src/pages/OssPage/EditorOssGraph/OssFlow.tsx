@@ -148,6 +148,13 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     [controller, getPositions]
   );
 
+  const handleEditSchema = useCallback(
+    (target: OperationID) => {
+      controller.promptEditInput(target, getPositions());
+    },
+    [controller, getPositions]
+  );
+
   const handleFitView = useCallback(() => {
     flow.fitView({ duration: PARAMETER.zoomDuration });
   }, [flow]);
@@ -293,6 +300,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
           onHide={handleContextMenuHide}
           onDelete={handleDeleteOperation}
           onCreateInput={handleCreateInput}
+          onEditSchema={handleEditSchema}
           {...menuProps}
         />
       ) : null}

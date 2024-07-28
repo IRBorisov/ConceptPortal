@@ -70,6 +70,14 @@ export interface IOperationCreateData extends IPositionsData {
 }
 
 /**
+ * Represents {@link IOperation} data, used in setInput process.
+ */
+export interface IOperationSetInputData extends ITargetOperation {
+  sync_text: boolean;
+  input: LibraryItemID | null;
+}
+
+/**
  * Represents {@link IOperation} Argument.
  */
 export interface IArgument {

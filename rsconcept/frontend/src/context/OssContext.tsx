@@ -12,7 +12,13 @@ import {
   patchSetOwner,
   postSubscribe
 } from '@/backend/library';
-import { patchCreateInput, patchDeleteOperation, patchUpdatePositions, postCreateOperation } from '@/backend/oss';
+import {
+  patchCreateInput,
+  patchDeleteOperation,
+  patchSetInput,
+  patchUpdatePositions,
+  postCreateOperation
+} from '@/backend/oss';
 import { type ErrorData } from '@/components/info/InfoError';
 import { AccessPolicy, ILibraryItem } from '@/models/library';
 import { ILibraryUpdateData } from '@/models/library';
@@ -21,6 +27,7 @@ import {
   IOperationCreateData,
   IOperationSchema,
   IOperationSchemaData,
+  IOperationSetInputData,
   IPositionsData,
   ITargetOperation
 } from '@/models/oss';
@@ -55,6 +62,7 @@ interface IOssContext {
   createOperation: (data: IOperationCreateData, callback?: DataCallback<IOperation>) => void;
   deleteOperation: (data: ITargetOperation, callback?: () => void) => void;
   createInput: (data: ITargetOperation, callback?: DataCallback<ILibraryItem>) => void;
+  setInput: (data: IOperationSetInputData, callback?: () => void) => void;
 }
 
 const OssContext = createContext<IOssContext | null>(null);
@@ -333,6 +341,27 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
     [itemID, library]
   );
 
+  const setInput = useCallback(
+    (data: IOperationSetInputData, callback?: () => void) => {
+      if (!schema) {
+        return;
+      }
+      setProcessingError(undefined);
+      patchSetInput(itemID, {
+        data: data,
+        showError: true,
+        setLoading: setProcessing,
+        onError: setProcessingError,
+        onSuccess: newData => {
+          library.setGlobalOSS(newData);
+          library.localUpdateTimestamp(newData.id);
+          if (callback) callback();
+        }
+      });
+    },
+    [itemID, schema, library]
+  );
+
   return (
     <OssContext.Provider
       value={{
@@ -356,7 +385,8 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         savePositions,
         createOperation,
         deleteOperation,
-        createInput
+        createInput,
+        setInput
       }}
     >
       {children}

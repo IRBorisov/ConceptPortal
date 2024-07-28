@@ -10,7 +10,7 @@ from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from apps.library.models import LibraryItem, LibraryItemType
+from apps.library.models import Editor, LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemSerializer
 from shared import messages as msg
 from shared import permissions
@@ -35,7 +35,8 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             'create_operation',
             'delete_operation',
             'update_positions',
-            'create_input'
+            'create_input',
+            'set_input'
         ]:
             permission_list = [permissions.ItemEditor]
         elif self.action in ['details']:
@@ -112,6 +113,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                     access_policy=oss.model.access_policy,
                     location=oss.model.location
                 )
+                Editor.set(schema, oss.model.editors())
                 data['result'] = schema
             new_operation = oss.create_operation(**data)
             if new_operation.operation_type != m.OperationType.INPUT and 'arguments' in serializer.validated_data:
@@ -201,6 +203,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                 access_policy=oss.model.access_policy,
                 location=oss.model.location
             )
+            Editor.set(schema, oss.model.editors())
             operation.result = schema
             operation.sync_text = True
             operation.save()
@@ -212,4 +215,45 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                 'new_schema': LibraryItemSerializer(schema).data,
                 'oss': s.OperationSchemaSerializer(oss.model).data
             }
+        )
+
+    @extend_schema(
+        summary='set input schema for target operation',
+        tags=['OSS'],
+        request=s.SetOperationInputSerializer(),
+        responses={
+            c.HTTP_200_OK: s.OperationSchemaSerializer,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='set-input')
+    def set_input(self, request: Request, pk):
+        ''' Set input schema for target operation. '''
+        serializer = s.SetOperationInputSerializer(
+            data=request.data,
+            context={'oss': self.get_object()}
+        )
+        serializer.is_valid(raise_exception=True)
+
+        operation: m.Operation = cast(m.Operation, serializer.validated_data['target'])
+        result = serializer.validated_data['input']
+        oss = m.OperationSchema(self.get_object())
+        with transaction.atomic():
+            oss.update_positions(serializer.validated_data['positions'])
+            operation.result = result
+            operation.sync_text = serializer.validated_data['sync_text']
+            if result is not None and operation.sync_text:
+                operation.title = result.title
+                operation.comment = result.comment
+                operation.alias = result.alias
+            operation.save()
+
+            # update arguments
+
+        oss.refresh_from_db()
+        return Response(
+            status=c.HTTP_200_OK,
+            data=s.OperationSchemaSerializer(oss.model).data
         )

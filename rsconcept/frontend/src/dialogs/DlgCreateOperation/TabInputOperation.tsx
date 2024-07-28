@@ -80,7 +80,7 @@ function TabInputOperation({
             value={syncText}
             setValue={setSyncText}
             label='Синхронизировать текст'
-            title='Брать текст из концептуальной схемы'
+            titleHtml='Загрузить текстовые поля<br/> из концептуальной схемы'
           />
         </FlexColumn>
 

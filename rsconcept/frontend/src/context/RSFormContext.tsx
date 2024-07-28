@@ -157,7 +157,11 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         onSuccess: newData => {
           setSchema(Object.assign(schema, newData));
           library.localUpdateItem(newData);
-          if (callback) callback(newData);
+          if (library.globalOSS?.schemas.includes(newData.id)) {
+            library.reloadOSS(() => {
+              if (callback) callback(newData);
+            });
+          } else if (callback) callback(newData);
         }
       });
     },

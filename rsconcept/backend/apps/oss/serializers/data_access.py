@@ -5,7 +5,7 @@ from django.db.models import F
 from rest_framework import serializers
 from rest_framework.serializers import PrimaryKeyRelatedField as PKField
 
-from apps.library.models import LibraryItem
+from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemDetailsSerializer
 from shared import messages as msg
 
@@ -66,9 +66,37 @@ class OperationTargetSerializer(serializers.Serializer):
         operation = cast(Operation, attrs['target'])
         if oss and operation.oss != oss:
             raise serializers.ValidationError({
-                f'{operation.id}': msg.operationNotOwned(oss.title)
+                'target': msg.operationNotInOSS(oss.title)
             })
-        self.instance = operation
+        return attrs
+
+
+class SetOperationInputSerializer(serializers.Serializer):
+    ''' Serializer: Set input schema for operation. '''
+    target = PKField(many=False, queryset=Operation.objects.all())
+    input = PKField(
+        many=False,
+        queryset=LibraryItem.objects.filter(item_type=LibraryItemType.RSFORM),
+        allow_null=True,
+        default=None
+    )
+    sync_text = serializers.BooleanField(default=False, required=False)
+    positions = serializers.ListField(
+        child=OperationPositionSerializer(),
+        default=[]
+    )
+
+    def validate(self, attrs):
+        oss = cast(LibraryItem, self.context['oss'])
+        operation = cast(Operation, attrs['target'])
+        if oss and operation.oss != oss:
+            raise serializers.ValidationError({
+                'target': msg.operationNotInOSS(oss.title)
+            })
+        if operation.operation_type != OperationType.INPUT:
+            raise serializers.ValidationError({
+                'target': msg.operationNotInput(operation.alias)
+            })
         return attrs
 
 

@@ -2,11 +2,11 @@
 # pylint: skip-file
 
 
-def constituentaNotOwned(title: str):
+def constituentaNotInRSform(title: str):
     return f'Конституента не принадлежит схеме: {title}'
 
 
-def operationNotOwned(title: str):
+def operationNotInOSS(title: str):
     return f'Операция не принадлежит схеме: {title}'
 
 
@@ -14,7 +14,7 @@ def substitutionNotInList():
     return 'Отождествляемая конституента отсутствует в списке'
 
 
-def schemaNotOwned():
+def schemaForbidden():
     return 'Нет доступа к схеме'
 
 

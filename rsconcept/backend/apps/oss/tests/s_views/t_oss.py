@@ -2,7 +2,7 @@
 
 from rest_framework import status
 
-from apps.library.models import AccessPolicy, LibraryItem, LibraryItemType, LocationHead
+from apps.library.models import AccessPolicy, Editor, LibraryItem, LibraryItemType, LocationHead
 from apps.oss.models import Operation, OperationSchema, OperationType
 from apps.rsform.models import RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
@@ -208,6 +208,7 @@ class TestOssViewset(EndpointTester):
     @decl_endpoint('/api/oss/{item}/create-operation', method='post')
     def test_create_operation_schema(self):
         self.populateData()
+        Editor.add(self.owned.model, self.user2)
         data = {
             'item_data': {
                 'alias': 'Test4',
@@ -228,6 +229,7 @@ class TestOssViewset(EndpointTester):
         self.assertEqual(schema.visible, False)
         self.assertEqual(schema.access_policy, self.owned.model.access_policy)
         self.assertEqual(schema.location, self.owned.model.location)
+        self.assertIn(self.user2, schema.editors())
 
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
     def test_delete_operation(self):
@@ -287,3 +289,58 @@ class TestOssViewset(EndpointTester):
 
         data['target'] = self.operation3.pk
         self.executeBadData(data=data)
+
+    @decl_endpoint('/api/oss/{item}/set-input', method='patch')
+    def test_set_input_null(self):
+        self.populateData()
+        self.executeBadData(item=self.owned_id)
+
+        data = {
+            'sync_text': True,
+            'positions': []
+        }
+        self.executeBadData(data=data)
+
+        data['target'] = self.operation1.pk
+        data['input'] = None
+
+        data['target'] = self.operation1.pk
+        self.toggle_admin(True)
+        self.executeBadData(data=data, item=self.unowned_id)
+        self.logout()
+        self.executeForbidden(data=data, item=self.owned_id)
+
+        self.login()
+        response = self.executeOK(data=data)
+        self.operation1.refresh_from_db()
+        self.assertEqual(self.operation1.sync_text, True)
+        self.assertEqual(self.operation1.result, None)
+
+        data['input'] = self.ks1.model.pk
+        self.ks1.model.alias = 'Test42'
+        self.ks1.model.title = 'Test421'
+        self.ks1.model.comment = 'TestComment42'
+        self.ks1.save()
+        response = self.executeOK(data=data)
+        self.operation1.refresh_from_db()
+        self.assertEqual(self.operation1.sync_text, True)
+        self.assertEqual(self.operation1.result, self.ks1.model)
+        self.assertEqual(self.operation1.alias, self.ks1.model.alias)
+        self.assertEqual(self.operation1.title, self.ks1.model.title)
+        self.assertEqual(self.operation1.comment, self.ks1.model.comment)
+
+    @decl_endpoint('/api/oss/{item}/set-input', method='patch')
+    def test_set_input_change_schema(self):
+        self.populateData()
+        self.operation2.result = None
+
+        data = {
+            'sync_text': True,
+            'positions': [],
+            'target': self.operation1.pk,
+            'input': self.ks2.model.pk
+        }
+        response = self.executeOK(data=data, item=self.owned_id)
+        self.operation2.refresh_from_db()
+        self.assertEqual(self.operation2.sync_text, True)
+        self.assertEqual(self.operation2.result, self.ks2.model)

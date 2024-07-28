@@ -212,7 +212,7 @@ class CstTargetSerializer(serializers.Serializer):
         cst = cast(Constituenta, attrs['target'])
         if schema and cst.schema != schema:
             raise serializers.ValidationError({
-                f'{cst.id}': msg.constituentaNotOwned(schema.title)
+                f'{cst.id}': msg.constituentaNotInRSform(schema.title)
             })
         if cst.cst_type not in [CstType.FUNCTION, CstType.STRUCTURED, CstType.TERM]:
             raise serializers.ValidationError({
@@ -234,7 +234,7 @@ class CstRenameSerializer(serializers.Serializer):
         cst = cast(Constituenta, attrs['target'])
         if cst.schema != schema:
             raise serializers.ValidationError({
-                f'{cst.id}': msg.constituentaNotOwned(schema.title)
+                f'{cst.id}': msg.constituentaNotInRSform(schema.title)
             })
         new_alias = self.initial_data['alias']
         if cst.alias == new_alias:
@@ -260,7 +260,7 @@ class CstListSerializer(serializers.Serializer):
         for item in attrs['items']:
             if item.schema != schema:
                 raise serializers.ValidationError({
-                    f'{item.id}': msg.constituentaNotOwned(schema.title)
+                    f'{item.id}': msg.constituentaNotInRSform(schema.title)
                 })
         return attrs
 
@@ -300,11 +300,11 @@ class CstSubstituteSerializer(serializers.Serializer):
                 })
             if original_cst.schema != schema:
                 raise serializers.ValidationError({
-                    'original': msg.constituentaNotOwned(schema.title)
+                    'original': msg.constituentaNotInRSform(schema.title)
                 })
             if substitution_cst.schema != schema:
                 raise serializers.ValidationError({
-                    'substitution': msg.constituentaNotOwned(schema.title)
+                    'substitution': msg.constituentaNotInRSform(schema.title)
                 })
             deleted.add(original_cst.pk)
         return attrs
@@ -325,14 +325,14 @@ class InlineSynthesisSerializer(serializers.Serializer):
         schema_out = cast(LibraryItem, attrs['receiver'])
         if user.is_anonymous or (schema_out.owner != user and not user.is_staff):
             raise PermissionDenied({
-                'message': msg.schemaNotOwned(),
+                'message': msg.schemaForbidden(),
                 'object_id': schema_in.id
             })
         constituents = cast(list[Constituenta], attrs['items'])
         for cst in constituents:
             if cst.schema != schema_in:
                 raise serializers.ValidationError({
-                    f'{cst.id}': msg.constituentaNotOwned(schema_in.title)
+                    f'{cst.id}': msg.constituentaNotInRSform(schema_in.title)
                 })
         deleted = set()
         for item in attrs['substitutions']:
@@ -345,7 +345,7 @@ class InlineSynthesisSerializer(serializers.Serializer):
                     })
                 if substitution_cst.schema != schema_out:
                     raise serializers.ValidationError({
-                        f'{substitution_cst.id}': msg.constituentaNotOwned(schema_out.title)
+                        f'{substitution_cst.id}': msg.constituentaNotInRSform(schema_out.title)
                     })
             else:
                 if substitution_cst not in constituents:
@@ -354,7 +354,7 @@ class InlineSynthesisSerializer(serializers.Serializer):
                     })
                 if original_cst.schema != schema_out:
                     raise serializers.ValidationError({
-                        f'{original_cst.id}': msg.constituentaNotOwned(schema_out.title)
+                        f'{original_cst.id}': msg.constituentaNotInRSform(schema_out.title)
                     })
             if original_cst.pk in deleted:
                 raise serializers.ValidationError({

@@ -28,9 +28,7 @@ function OperationNode(node: OssNodeInternal) {
           noHover
           title='Связанная КС'
           hideTitle={!controller.showTooltip}
-          onClick={() => {
-            handleOpenSchema();
-          }}
+          onClick={handleOpenSchema}
           disabled={!hasFile}
         />
       </Overlay>

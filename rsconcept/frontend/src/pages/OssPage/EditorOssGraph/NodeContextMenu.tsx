@@ -23,9 +23,18 @@ interface NodeContextMenuProps extends ContextMenuData {
   onHide: () => void;
   onDelete: (target: OperationID) => void;
   onCreateInput: (target: OperationID) => void;
+  onEditSchema: (target: OperationID) => void;
 }
 
-function NodeContextMenu({ operation, cursorX, cursorY, onHide, onDelete, onCreateInput }: NodeContextMenuProps) {
+function NodeContextMenu({
+  operation,
+  cursorX,
+  cursorY,
+  onHide,
+  onDelete,
+  onCreateInput,
+  onEditSchema
+}: NodeContextMenuProps) {
   const controller = useOssEdit();
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
@@ -44,8 +53,8 @@ function NodeContextMenu({ operation, cursorX, cursorY, onHide, onDelete, onCrea
   };
 
   const handleEditSchema = () => {
-    toast.error('Not implemented');
     handleHide();
+    onEditSchema(operation.id);
   };
 
   const handleEditOperation = () => {
@@ -97,9 +106,9 @@ function NodeContextMenu({ operation, cursorX, cursorY, onHide, onDelete, onCrea
             onClick={handleCreateSchema}
           />
         ) : null}
-        {controller.isMutable && !operation.result && operation.operation_type === OperationType.INPUT ? (
+        {controller.isMutable && operation.operation_type === OperationType.INPUT ? (
           <DropdownButton
-            text='Загрузить схему'
+            text={!operation.result ? 'Загрузить схему' : 'Изменить схему'}
             title='Выбрать схему для загрузки'
             icon={<IconConnect size='1rem' className='icon-primary' />}
             disabled={controller.isProcessing}

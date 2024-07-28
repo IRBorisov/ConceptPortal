@@ -10,12 +10,19 @@ import { useAuth } from '@/context/AuthContext';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useOSS } from '@/context/OssContext';
+import DlgChangeInputSchema from '@/dialogs/DlgChangeInputSchema';
 import DlgChangeLocation from '@/dialogs/DlgChangeLocation';
 import DlgCreateOperation from '@/dialogs/DlgCreateOperation';
 import DlgEditEditors from '@/dialogs/DlgEditEditors';
-import { AccessPolicy } from '@/models/library';
+import { AccessPolicy, LibraryItemID } from '@/models/library';
 import { Position2D } from '@/models/miscellaneous';
-import { IOperationCreateData, IOperationPosition, IOperationSchema, OperationID } from '@/models/oss';
+import {
+  IOperationCreateData,
+  IOperationPosition,
+  IOperationSchema,
+  IOperationSetInputData,
+  OperationID
+} from '@/models/oss';
 import { UserID, UserLevel } from '@/models/user';
 import { information } from '@/utils/labels';
 
@@ -45,6 +52,7 @@ export interface IOssEditContext {
   promptCreateOperation: (x: number, y: number, positions: IOperationPosition[]) => void;
   deleteOperation: (target: OperationID, positions: IOperationPosition[]) => void;
   createInput: (target: OperationID, positions: IOperationPosition[]) => void;
+  promptEditInput: (target: OperationID, positions: IOperationPosition[]) => void;
 }
 
 const OssEditContext = createContext<IOssEditContext | null>(null);
@@ -79,10 +87,16 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
 
   const [showEditEditors, setShowEditEditors] = useState(false);
   const [showEditLocation, setShowEditLocation] = useState(false);
+  const [showEditInput, setShowEditInput] = useState(false);
 
   const [showCreateOperation, setShowCreateOperation] = useState(false);
   const [insertPosition, setInsertPosition] = useState<Position2D>({ x: 0, y: 0 });
   const [positions, setPositions] = useState<IOperationPosition[]>([]);
+  const [targetOperationID, setTargetOperationID] = useState<OperationID | undefined>(undefined);
+  const targetOperation = useMemo(
+    () => (targetOperationID ? model.schema?.operationByID.get(targetOperationID) : undefined),
+    [model, targetOperationID]
+  );
 
   useLayoutEffect(
     () =>
@@ -221,6 +235,28 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
     [model, router]
   );
 
+  const promptEditInput = useCallback((target: OperationID, positions: IOperationPosition[]) => {
+    setPositions(positions);
+    setTargetOperationID(target);
+    setShowEditInput(true);
+  }, []);
+
+  const setTargetInput = useCallback(
+    (newInput: LibraryItemID | undefined, syncText: boolean) => {
+      if (!targetOperationID) {
+        return;
+      }
+      const data: IOperationSetInputData = {
+        target: targetOperationID,
+        positions: positions,
+        sync_text: syncText,
+        input: newInput ?? null
+      };
+      model.setInput(data, () => toast.success(information.changesSaved));
+    },
+    [model, targetOperationID, positions]
+  );
+
   return (
     <OssEditContext.Provider
       value={{
@@ -246,7 +282,8 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
         savePositions,
         promptCreateOperation,
         deleteOperation,
-        createInput
+        createInput,
+        promptEditInput
       }}
     >
       {model.schema ? (
@@ -272,6 +309,14 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
               positions={positions}
               insertPosition={insertPosition}
               onCreate={handleCreateOperation}
+            />
+          ) : null}
+          {showEditInput ? (
+            <DlgChangeInputSchema
+              hideWindow={() => setShowEditInput(false)}
+              oss={model.schema}
+              target={targetOperation!}
+              onSubmit={setTargetInput}
             />
           ) : null}
         </AnimatePresence>
