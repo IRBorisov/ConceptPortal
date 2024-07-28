@@ -65,6 +65,8 @@ export { GiHoneycomb      as IconOSS }            from 'react-icons/gi';
 export { RiHexagonLine    as IconRSForm }         from 'react-icons/ri';
 export { LuArchive        as IconArchive }        from 'react-icons/lu';
 export { LuDatabase       as IconDatabase }       from 'react-icons/lu';
+export { LuView           as IconDBStructure }    from 'react-icons/lu';  
+export { LuPlaneTakeoff   as IconRESTapi }        from 'react-icons/lu';
 export { LuImage          as IconImage }          from 'react-icons/lu';
 export { TbColumns        as IconList }           from 'react-icons/tb';
 export { ImStack          as IconVersions }       from 'react-icons/im';

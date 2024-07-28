@@ -54,7 +54,8 @@ export const patterns = {
 export const resources = {
   graph_font: '/DejaVu.ttf',
   privacy_policy: '/privacy.pdf',
-  logo: '/logo_full.svg'
+  logo: '/logo_full.svg',
+  db_schema: '/db_schema.svg'
 };
 
 /**

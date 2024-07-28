@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import CreateItemPage from '@/pages/CreateItemPage';
+import DatabaseSchemaPage from '@/pages/DatabaseSchemaPage';
 import HomePage from '@/pages/HomePage';
 import IconsPage from '@/pages/IconsPage';
 import LibraryPage from '@/pages/LibraryPage';
@@ -64,12 +65,16 @@ export const Router = createBrowserRouter([
         element: <OssPage />
       },
       {
+        path: routes.manuals,
+        element: <ManualsPage />
+      },
+      {
         path: `${routes.icons}`,
         element: <IconsPage />
       },
       {
-        path: routes.manuals,
-        element: <ManualsPage />
+        path: `${routes.database_schema}`,
+        element: <DatabaseSchemaPage />
       }
     ]
   }

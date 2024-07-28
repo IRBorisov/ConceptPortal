@@ -3,11 +3,13 @@ import {
   IconAdminOff,
   IconDarkTheme,
   IconDatabase,
+  IconDBStructure,
   IconHelp,
   IconHelpOff,
   IconImage,
   IconLightTheme,
   IconLogout,
+  IconRESTapi,
   IconUser
 } from '@/components/Icons';
 import { CProps } from '@/components/props';
@@ -49,6 +51,16 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
     router.push(urls.icons, event.ctrlKey || event.metaKey);
   }
 
+  function gotoRestApi() {
+    hideDropdown();
+    router.push(urls.rest_api, true);
+  }
+
+  function gotoDatabaseSchema(event: CProps.EventMouse) {
+    hideDropdown();
+    router.push(urls.database_schema, event.ctrlKey || event.metaKey);
+  }
+
   function handleToggleDarkMode() {
     hideDropdown();
     toggleDarkMode();
@@ -84,6 +96,14 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
       ) : null}
       {user?.is_staff ? (
         <DropdownButton
+          text='REST API' // prettier: split-line
+          icon={<IconRESTapi size='1rem' />}
+          className='border-t'
+          onClick={gotoRestApi}
+        />
+      ) : null}
+      {user?.is_staff ? (
+        <DropdownButton
           text='База данных' // prettier: split-line
           icon={<IconDatabase size='1rem' />}
           onClick={gotoAdmin}
@@ -94,6 +114,14 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
           text='Иконки' // prettier: split-line
           icon={<IconImage size='1rem' />}
           onClick={gotoIcons}
+        />
+      ) : null}
+      {user?.is_staff ? (
+        <DropdownButton
+          text='Структура БД' // prettier: split-line
+          icon={<IconDBStructure size='1rem' />}
+          onClick={gotoDatabaseSchema}
+          className='border-b'
         />
       ) : null}
       <DropdownButton

@@ -39,6 +39,7 @@ This readme file is used mostly to document project dependencies and conventions
   - react-error-boundary
   - react-pdf
   - react-tooltip
+  - react-zoom-pan-pinch
   - reactflow
   - js-file-download
   - use-debounce

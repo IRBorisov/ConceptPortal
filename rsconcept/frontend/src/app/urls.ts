@@ -19,7 +19,8 @@ export const routes = {
   help: 'manuals',
   rsforms: 'rsforms',
   oss: 'oss',
-  icons: 'icons'
+  icons: 'icons',
+  database_schema: 'database-schema'
 };
 
 interface SchemaProps {
@@ -39,11 +40,13 @@ interface OssProps {
  */
 export const urls = {
   admin: `${buildConstants.backend}/admin`,
+  rest_api: `${buildConstants.backend}/`,
   home: '/',
   login: `/${routes.login}`,
   login_hint: (userName: string) => `/login?username=${userName}`,
   profile: `/${routes.profile}`,
-  icons: `/icons`,
+  icons: `/${routes.icons}`,
+  database_schema: `/${routes.database_schema}`,
   signup: `/${routes.signup}`,
   library: `/${routes.library}`,
   library_filter: (strategy: string) => `/library?filter=${strategy}`,
