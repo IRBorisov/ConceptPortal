@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { IconConnect, IconDestroy, IconEdit2, IconExecute, IconNewItem, IconRSForm } from '@/components/Icons';
@@ -24,6 +24,7 @@ interface NodeContextMenuProps extends ContextMenuData {
   onDelete: (target: OperationID) => void;
   onCreateInput: (target: OperationID) => void;
   onEditSchema: (target: OperationID) => void;
+  onEditOperation: (target: OperationID) => void;
 }
 
 function NodeContextMenu({
@@ -33,11 +34,32 @@ function NodeContextMenu({
   onHide,
   onDelete,
   onCreateInput,
-  onEditSchema
+  onEditSchema,
+  onEditOperation
 }: NodeContextMenuProps) {
   const controller = useOssEdit();
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
+  const readyForSynthesis = useMemo(() => {
+    if (operation.operation_type !== OperationType.SYNTHESIS) {
+      return false;
+    }
+    if (!controller.schema || operation.result) {
+      return false;
+    }
+
+    const argumentIDs = controller.schema.graph.expandInputs([operation.id]);
+    if (!argumentIDs || argumentIDs.length < 2) {
+      return false;
+    }
+
+    const argumentOperations = argumentIDs.map(id => controller.schema!.operationByID.get(id)!);
+    if (argumentOperations.some(item => item.result === null)) {
+      return false;
+    }
+
+    return true;
+  }, [operation, controller.schema]);
 
   const handleHide = useCallback(() => {
     setIsOpen(false);
@@ -58,8 +80,8 @@ function NodeContextMenu({
   };
 
   const handleEditOperation = () => {
-    toast.error('Not implemented');
     handleHide();
+    onEditOperation(operation.id);
   };
 
   const handleDeleteOperation = () => {
@@ -118,9 +140,13 @@ function NodeContextMenu({
         {controller.isMutable && !operation.result && operation.operation_type === OperationType.SYNTHESIS ? (
           <DropdownButton
             text='Выполнить синтез'
-            title='Выполнить операцию и получить синтезированную КС'
+            title={
+              readyForSynthesis
+                ? 'Выполнить операцию и получить синтезированную КС'
+                : 'Необходимо предоставить все аргументы'
+            }
             icon={<IconExecute size='1rem' className='icon-green' />}
-            disabled={controller.isProcessing}
+            disabled={controller.isProcessing || !readyForSynthesis}
             onClick={handleRunSynthesis}
           />
         ) : null}

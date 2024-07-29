@@ -3,11 +3,11 @@
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 
-import PickSubstitutions from '@/components/select/PickSubstitutions';
+import PickInlineSubstitutions from '@/components/select/PickInlineSubstitutions';
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import { useRSForm } from '@/context/RSFormContext';
 import { ICstSubstituteData } from '@/models/oss';
-import { ISingleSubstitution } from '@/models/rsform';
+import { IBinarySubstitution } from '@/models/rsform';
 import { prefixes } from '@/utils/constants';
 
 interface DlgSubstituteCstProps extends Pick<ModalProps, 'hideWindow'> {
@@ -17,7 +17,7 @@ interface DlgSubstituteCstProps extends Pick<ModalProps, 'hideWindow'> {
 function DlgSubstituteCst({ hideWindow, onSubstitute }: DlgSubstituteCstProps) {
   const { schema } = useRSForm();
 
-  const [substitutions, setSubstitutions] = useState<ISingleSubstitution[]>([]);
+  const [substitutions, setSubstitutions] = useState<IBinarySubstitution[]>([]);
 
   const canSubmit = useMemo(() => substitutions.length > 0, [substitutions]);
 
@@ -42,7 +42,7 @@ function DlgSubstituteCst({ hideWindow, onSubstitute }: DlgSubstituteCstProps) {
       onSubmit={handleSubmit}
       className={clsx('w-[40rem]', 'px-6 pb-3')}
     >
-      <PickSubstitutions
+      <PickInlineSubstitutions
         items={substitutions}
         setItems={setSubstitutions}
         rows={6}

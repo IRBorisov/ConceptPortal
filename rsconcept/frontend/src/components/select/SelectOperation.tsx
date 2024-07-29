@@ -47,7 +47,7 @@ function SelectOperation({
     <SelectSingle
       className={clsx('text-ellipsis', className)}
       options={options}
-      value={value ? { value: value.id, label: `${value.alias}: ${value.title}` } : undefined}
+      value={value ? { value: value.id, label: `${value.alias}: ${value.title}` } : null}
       onChange={data => onSelectValue(items?.find(cst => cst.id === data?.value))}
       // @ts-expect-error: TODO: use type definitions from react-select in filter object
       filterOption={filter}

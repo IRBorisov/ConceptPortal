@@ -5,73 +5,99 @@ import { useCallback, useMemo, useState } from 'react';
 import BadgeConstituenta from '@/components/info/BadgeConstituenta';
 import SelectConstituenta from '@/components/select/SelectConstituenta';
 import DataTable, { createColumnHelper } from '@/components/ui/DataTable';
-import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
-import { IConstituenta, IRSForm, ISingleSubstitution } from '@/models/rsform';
-import { describeConstituenta } from '@/utils/labels';
+import { LibraryItemID } from '@/models/library';
+import { ICstSubstitute, IMultiSubstitution, IOperation } from '@/models/oss';
+import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
 
 import {
   IconKeepAliasOff,
   IconKeepAliasOn,
   IconKeepTermOff,
   IconKeepTermOn,
-  IconPageFirst,
   IconPageLast,
-  IconPageLeft,
   IconPageRight,
   IconRemove,
   IconReplace
 } from '../Icons';
 import NoData from '../ui/NoData';
+import SelectOperation from './SelectOperation';
+
+function SubstitutionIcon({ item, className }: { item: IMultiSubstitution; className?: string }) {
+  if (!item.transfer_term) {
+    return <IconPageRight size='1.2rem' className={className} />;
+  } else {
+    return <IconPageLast size='1.2rem' className={className} />;
+  }
+}
 
 interface PickSubstitutionsProps {
   prefixID: string;
   rows?: number;
 
-  schema1?: IRSForm;
-  schema2?: IRSForm;
-  filter1?: (cst: IConstituenta) => boolean;
-  filter2?: (cst: IConstituenta) => boolean;
-
-  items: ISingleSubstitution[];
-  setItems: React.Dispatch<React.SetStateAction<ISingleSubstitution[]>>;
+  operations: IOperation[];
+  getSchema: (id: LibraryItemID) => IRSForm | undefined;
+  getConstituenta: (id: ConstituentaID) => IConstituenta | undefined;
+  getSchemaByCst: (id: ConstituentaID) => IRSForm | undefined;
+  substitutions: ICstSubstitute[];
+  setSubstitutions: React.Dispatch<React.SetStateAction<ICstSubstitute[]>>;
 }
 
-function SubstitutionIcon({ item }: { item: ISingleSubstitution }) {
-  if (item.deleteRight) {
-    if (item.takeLeftTerm) {
-      return <IconPageRight size='1.2rem' />;
-    } else {
-      return <IconPageLast size='1.2rem' />;
-    }
-  } else {
-    if (item.takeLeftTerm) {
-      return <IconPageFirst size='1.2rem' />;
-    } else {
-      return <IconPageLeft size='1.2rem' />;
-    }
-  }
-}
-
-const columnHelper = createColumnHelper<ISingleSubstitution>();
+const columnHelper = createColumnHelper<IMultiSubstitution>();
 
 function PickSubstitutions({
-  items,
-  schema1,
-  schema2,
-  filter1,
-  filter2,
+  prefixID,
   rows,
-  setItems,
-  prefixID
+  operations,
+  getSchema,
+  getConstituenta,
+  getSchemaByCst,
+  substitutions,
+  setSubstitutions
 }: PickSubstitutionsProps) {
   const { colors } = useConceptOptions();
 
+  const [leftArgument, setLeftArgument] = useState<IOperation | undefined>(undefined);
+  const [rightArgument, setRightArgument] = useState<IOperation | undefined>(undefined);
+  const leftSchema = useMemo(
+    () => (leftArgument?.result ? getSchema(leftArgument.result) : undefined),
+    [leftArgument, getSchema]
+  );
+
+  const rightSchema = useMemo(
+    () => (rightArgument?.result ? getSchema(rightArgument.result) : undefined),
+    [rightArgument, getSchema]
+  );
   const [leftCst, setLeftCst] = useState<IConstituenta | undefined>(undefined);
   const [rightCst, setRightCst] = useState<IConstituenta | undefined>(undefined);
+
   const [deleteRight, setDeleteRight] = useState(true);
   const [takeLeftTerm, setTakeLeftTerm] = useState(true);
+
+  const operationByConstituenta = useCallback(
+    (cst: ConstituentaID): IOperation | undefined => {
+      const schema = getSchemaByCst(cst);
+      if (!schema) {
+        return undefined;
+      }
+      const cstOperations = operations.filter(item => item.result === schema.id);
+      return cstOperations.length === 1 ? cstOperations[0] : undefined;
+    },
+    [getSchemaByCst, operations]
+  );
+
+  const substitutionData: IMultiSubstitution[] = useMemo(
+    () =>
+      substitutions.map(item => ({
+        original_operation: operationByConstituenta(item.original),
+        original: getConstituenta(item.original),
+        substitution: getConstituenta(item.substitution),
+        substitution_operation: operationByConstituenta(item.substitution),
+        transfer_term: item.transfer_term
+      })),
+    [getConstituenta, operationByConstituenta, substitutions]
+  );
 
   const toggleDelete = () => setDeleteRight(prev => !prev);
   const toggleTerm = () => setTakeLeftTerm(prev => !prev);
@@ -80,26 +106,20 @@ function PickSubstitutions({
     if (!leftCst || !rightCst) {
       return;
     }
-    const newSubstitution: ISingleSubstitution = {
-      leftCst: leftCst,
-      rightCst: rightCst,
-      deleteRight: deleteRight,
-      takeLeftTerm: takeLeftTerm
+    const newSubstitution: ICstSubstitute = {
+      original: deleteRight ? rightCst.id : leftCst.id,
+      substitution: deleteRight ? leftCst.id : rightCst.id,
+      transfer_term: deleteRight != takeLeftTerm
     };
-    setItems([
-      newSubstitution,
-      ...items.filter(
-        item =>
-          (!item.deleteRight && item.leftCst.id !== leftCst.id) ||
-          (item.deleteRight && item.rightCst.id !== rightCst.id)
-      )
-    ]);
+    setSubstitutions(prev => [...prev, newSubstitution]);
+    setLeftCst(undefined);
+    setRightCst(undefined);
   }
 
   const handleDeleteRow = useCallback(
     (row: number) => {
-      setItems(prev => {
-        const newItems: ISingleSubstitution[] = [];
+      setSubstitutions(prev => {
+        const newItems: ICstSubstitute[] = [];
         prev.forEach((item, index) => {
           if (index !== row) {
             newItems.push(item);
@@ -108,24 +128,27 @@ function PickSubstitutions({
         return newItems;
       });
     },
-    [setItems]
+    [setSubstitutions]
   );
 
   const columns = useMemo(
     () => [
-      columnHelper.accessor(item => describeConstituenta(item.leftCst), {
-        id: 'left_text',
-        header: 'Описание',
-        size: 1000,
-        cell: props => <div className='text-xs text-ellipsis'>{props.getValue()}</div>
+      columnHelper.accessor(item => item.substitution_operation?.alias ?? 'N/A', {
+        id: 'left_schema',
+        header: 'Операция',
+        size: 100,
+        cell: props => <div className='min-w-[10rem] text-ellipsis text-right'>{props.getValue()}</div>
       }),
-      columnHelper.accessor(item => item.leftCst.alias, {
+      columnHelper.accessor(item => item.substitution?.alias ?? 'N/A', {
         id: 'left_alias',
         header: () => <span className='pl-3'>Имя</span>,
         size: 65,
-        cell: props => (
-          <BadgeConstituenta theme={colors} value={props.row.original.leftCst} prefixID={`${prefixID}_1_`} />
-        )
+        cell: props =>
+          props.row.original.substitution ? (
+            <BadgeConstituenta theme={colors} value={props.row.original.substitution} prefixID={`${prefixID}_1_`} />
+          ) : (
+            'N/A'
+          )
       }),
       columnHelper.display({
         id: 'status',
@@ -133,29 +156,34 @@ function PickSubstitutions({
         size: 40,
         cell: props => <SubstitutionIcon item={props.row.original} />
       }),
-      columnHelper.accessor(item => item.rightCst.alias, {
+      columnHelper.accessor(item => item.original?.alias ?? 'N/A', {
         id: 'right_alias',
         header: () => <span className='pl-3'>Имя</span>,
         size: 65,
-        cell: props => (
-          <BadgeConstituenta theme={colors} value={props.row.original.rightCst} prefixID={`${prefixID}_2_`} />
-        )
+        cell: props =>
+          props.row.original.original ? (
+            <BadgeConstituenta theme={colors} value={props.row.original.original} prefixID={`${prefixID}_1_`} />
+          ) : (
+            'N/A'
+          )
       }),
-      columnHelper.accessor(item => describeConstituenta(item.rightCst), {
-        id: 'right_text',
-        header: 'Описание',
-        minSize: 1000,
-        cell: props => <div className='text-xs text-ellipsis text-pretty'>{props.getValue()}</div>
+      columnHelper.accessor(item => item.original_operation?.alias ?? 'N/A', {
+        id: 'right_schema',
+        header: 'Операция',
+        size: 100,
+        cell: props => <div className='min-w-[8rem] text-ellipsis'>{props.getValue()}</div>
       }),
       columnHelper.display({
         id: 'actions',
         cell: props => (
-          <MiniButton
-            noHover
-            title='Удалить'
-            icon={<IconRemove size='1rem' className='icon-red' />}
-            onClick={() => handleDeleteRow(props.row.index)}
-          />
+          <div className='max-w-fit'>
+            <MiniButton
+              noHover
+              title='Удалить'
+              icon={<IconRemove size='1rem' className='icon-red' />}
+              onClick={() => handleDeleteRow(props.row.index)}
+            />
+          </div>
         )
       })
     ],
@@ -165,41 +193,47 @@ function PickSubstitutions({
   return (
     <div className='flex flex-col w-full'>
       <div className='flex items-end gap-3 justify-stretch'>
-        <div className='flex-grow basis-1/2'>
-          <div className='flex items-center justify-between'>
-            <Label text={schema1 !== schema2 ? schema1?.alias ?? 'Схема 1' : ''} />
-            <div className='cc-icons'>
-              <MiniButton
-                title='Сохранить конституенту'
-                noHover
-                onClick={toggleDelete}
-                icon={
-                  deleteRight ? (
-                    <IconKeepAliasOn size='1rem' className='clr-text-green' />
-                  ) : (
-                    <IconKeepAliasOff size='1rem' className='clr-text-red' />
-                  )
-                }
-              />
-              <MiniButton
-                title='Сохранить термин'
-                noHover
-                onClick={toggleTerm}
-                icon={
-                  takeLeftTerm ? (
-                    <IconKeepTermOn size='1rem' className='clr-text-green' />
-                  ) : (
-                    <IconKeepTermOff size='1rem' className='clr-text-red' />
-                  )
-                }
-              />
-            </div>
+        <div className='flex-grow flex flex-col basis-1/2'>
+          <div className='cc-icons mb-1 w-fit mx-auto'>
+            <MiniButton
+              title='Сохранить конституенту'
+              noHover
+              onClick={toggleDelete}
+              icon={
+                deleteRight ? (
+                  <IconKeepAliasOn size='1rem' className='clr-text-green' />
+                ) : (
+                  <IconKeepAliasOff size='1rem' className='clr-text-red' />
+                )
+              }
+            />
+            <MiniButton
+              title='Сохранить термин'
+              noHover
+              onClick={toggleTerm}
+              icon={
+                takeLeftTerm ? (
+                  <IconKeepTermOn size='1rem' className='clr-text-green' />
+                ) : (
+                  <IconKeepTermOff size='1rem' className='clr-text-red' />
+                )
+              }
+            />
           </div>
-          <SelectConstituenta
-            items={schema1?.items.filter(cst => !filter1 || filter1(cst))}
-            value={leftCst}
-            onSelectValue={setLeftCst}
-          />
+          <div className='flex flex-col gap-[0.125rem] border-x border-t clr-input'>
+            <SelectOperation
+              noBorder
+              items={operations.filter(item => item.id !== rightArgument?.id)}
+              value={leftArgument}
+              onSelectValue={setLeftArgument}
+            />
+            <SelectConstituenta
+              noBorder
+              items={leftSchema?.items.filter(cst => !substitutions.find(item => item.original === cst.id))}
+              value={leftCst}
+              onSelectValue={setLeftCst}
+            />
+          </div>
         </div>
 
         <MiniButton
@@ -212,40 +246,46 @@ function PickSubstitutions({
         />
 
         <div className='flex-grow basis-1/2'>
-          <div className='flex items-center justify-between'>
-            <Label text={schema1 !== schema2 ? schema2?.alias ?? 'Схема 2' : ''} />
-            <div className='cc-icons'>
-              <MiniButton
-                title='Сохранить конституенту'
-                noHover
-                onClick={toggleDelete}
-                icon={
-                  !deleteRight ? (
-                    <IconKeepAliasOn size='1rem' className='clr-text-green' />
-                  ) : (
-                    <IconKeepAliasOff size='1rem' className='clr-text-red' />
-                  )
-                }
-              />
-              <MiniButton
-                title='Сохранить термин'
-                noHover
-                onClick={toggleTerm}
-                icon={
-                  !takeLeftTerm ? (
-                    <IconKeepTermOn size='1rem' className='clr-text-green' />
-                  ) : (
-                    <IconKeepTermOff size='1rem' className='clr-text-red' />
-                  )
-                }
-              />
-            </div>
+          <div className='cc-icons mb-1 w-fit mx-auto'>
+            <MiniButton
+              title='Сохранить конституенту'
+              noHover
+              onClick={toggleDelete}
+              icon={
+                !deleteRight ? (
+                  <IconKeepAliasOn size='1rem' className='clr-text-green' />
+                ) : (
+                  <IconKeepAliasOff size='1rem' className='clr-text-red' />
+                )
+              }
+            />
+            <MiniButton
+              title='Сохранить термин'
+              noHover
+              onClick={toggleTerm}
+              icon={
+                !takeLeftTerm ? (
+                  <IconKeepTermOn size='1rem' className='clr-text-green' />
+                ) : (
+                  <IconKeepTermOff size='1rem' className='clr-text-red' />
+                )
+              }
+            />
           </div>
-          <SelectConstituenta
-            items={schema2?.items.filter(cst => !filter2 || filter2(cst))}
-            value={rightCst}
-            onSelectValue={setRightCst}
-          />
+          <div className='flex flex-col gap-[0.125rem] border-x border-t clr-input'>
+            <SelectOperation
+              noBorder
+              items={operations.filter(item => item.id !== leftArgument?.id)}
+              value={rightArgument}
+              onSelectValue={setRightArgument}
+            />
+            <SelectConstituenta
+              noBorder
+              items={rightSchema?.items.filter(cst => !substitutions.find(item => item.original === cst.id))}
+              value={rightCst}
+              onSelectValue={setRightCst}
+            />
+          </div>
         </div>
       </div>
 
@@ -256,7 +296,7 @@ function PickSubstitutions({
         className='w-full text-sm border select-none cc-scroll-y'
         rows={rows}
         contentHeight='1.3rem'
-        data={items}
+        data={substitutionData}
         columns={columns}
         headPosition='0'
         noDataComponent={

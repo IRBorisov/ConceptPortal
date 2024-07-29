@@ -49,7 +49,7 @@ function SelectConstituenta({
     <SelectSingle
       className={clsx('text-ellipsis', className)}
       options={options}
-      value={value ? { value: value.id, label: `${value.alias}: ${describeConstituentaTerm(value)}` } : undefined}
+      value={value ? { value: value.id, label: `${value.alias}: ${describeConstituentaTerm(value)}` } : null}
       onChange={data => onSelectValue(items?.find(cst => cst.id === data?.value))}
       // @ts-expect-error: TODO: use type definitions from react-select in filter object
       filterOption={filter}

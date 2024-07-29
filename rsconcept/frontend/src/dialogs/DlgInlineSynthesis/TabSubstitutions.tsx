@@ -2,10 +2,10 @@
 
 import { ErrorData } from '@/components/info/InfoError';
 import DataLoader from '@/components/wrap/DataLoader';
-import { ConstituentaID, IRSForm, ISingleSubstitution } from '@/models/rsform';
+import { ConstituentaID, IBinarySubstitution, IRSForm } from '@/models/rsform';
 import { prefixes } from '@/utils/constants';
 
-import PickSubstitutions from '../../components/select/PickSubstitutions';
+import PickInlineSubstitutions from '../../components/select/PickInlineSubstitutions';
 
 interface TabSubstitutionsProps {
   receiver?: IRSForm;
@@ -15,8 +15,8 @@ interface TabSubstitutionsProps {
   loading?: boolean;
   error?: ErrorData;
 
-  substitutions: ISingleSubstitution[];
-  setSubstitutions: React.Dispatch<React.SetStateAction<ISingleSubstitution[]>>;
+  substitutions: IBinarySubstitution[];
+  setSubstitutions: React.Dispatch<React.SetStateAction<IBinarySubstitution[]>>;
 }
 
 function TabSubstitutions({
@@ -32,7 +32,7 @@ function TabSubstitutions({
 }: TabSubstitutionsProps) {
   return (
     <DataLoader id='dlg-substitutions-tab' className='cc-column' isLoading={loading} error={error} hasNoData={!source}>
-      <PickSubstitutions
+      <PickInlineSubstitutions
         items={substitutions}
         setItems={setSubstitutions}
         rows={10}

@@ -8,7 +8,7 @@ import Modal, { ModalProps } from '@/components/ui/Modal';
 import TabLabel from '@/components/ui/TabLabel';
 import useRSFormDetails from '@/hooks/useRSFormDetails';
 import { LibraryItemID } from '@/models/library';
-import { IInlineSynthesisData, IRSForm, ISingleSubstitution } from '@/models/rsform';
+import { IBinarySubstitution, IInlineSynthesisData, IRSForm } from '@/models/rsform';
 
 import TabConstituents from './TabConstituents';
 import TabSchema from './TabSchema';
@@ -30,7 +30,7 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
 
   const [donorID, setDonorID] = useState<LibraryItemID | undefined>(undefined);
   const [selected, setSelected] = useState<LibraryItemID[]>([]);
-  const [substitutions, setSubstitutions] = useState<ISingleSubstitution[]>([]);
+  const [substitutions, setSubstitutions] = useState<IBinarySubstitution[]>([]);
 
   const source = useRSFormDetails({ target: donorID ? String(donorID) : undefined });
 

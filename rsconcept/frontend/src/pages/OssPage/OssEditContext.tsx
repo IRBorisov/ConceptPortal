@@ -14,6 +14,7 @@ import DlgChangeInputSchema from '@/dialogs/DlgChangeInputSchema';
 import DlgChangeLocation from '@/dialogs/DlgChangeLocation';
 import DlgCreateOperation from '@/dialogs/DlgCreateOperation';
 import DlgEditEditors from '@/dialogs/DlgEditEditors';
+import DlgEditOperation from '@/dialogs/DlgEditOperation';
 import { AccessPolicy, LibraryItemID } from '@/models/library';
 import { Position2D } from '@/models/miscellaneous';
 import {
@@ -53,6 +54,7 @@ export interface IOssEditContext {
   deleteOperation: (target: OperationID, positions: IOperationPosition[]) => void;
   createInput: (target: OperationID, positions: IOperationPosition[]) => void;
   promptEditInput: (target: OperationID, positions: IOperationPosition[]) => void;
+  promptEditOperation: (target: OperationID, positions: IOperationPosition[]) => void;
 }
 
 const OssEditContext = createContext<IOssEditContext | null>(null);
@@ -88,6 +90,7 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
   const [showEditEditors, setShowEditEditors] = useState(false);
   const [showEditLocation, setShowEditLocation] = useState(false);
   const [showEditInput, setShowEditInput] = useState(false);
+  const [showEditOperation, setShowEditOperation] = useState(false);
 
   const [showCreateOperation, setShowCreateOperation] = useState(false);
   const [insertPosition, setInsertPosition] = useState<Position2D>({ x: 0, y: 0 });
@@ -211,10 +214,31 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
 
   const handleCreateOperation = useCallback(
     (data: IOperationCreateData) => {
+      data.positions = positions;
+      data.item_data.position_x = insertPosition.x;
+      data.item_data.position_y = insertPosition.y;
       model.createOperation(data, operation => toast.success(information.newOperation(operation.alias)));
     },
-    [model]
+    [model, positions, insertPosition]
   );
+
+  const promptEditOperation = useCallback((target: OperationID, positions: IOperationPosition[]) => {
+    setPositions(positions);
+    setTargetOperationID(target);
+    setShowEditOperation(true);
+  }, []);
+
+  const handleEditOperation = useCallback(() => {
+    // TODO: проверить наличие всех аргументов
+    // TODO: проверить наличие синтеза
+    // TODO: проверить полноту синтеза
+    // TODO: проверить правильность синтеза
+    // TODO: сохранить позиции
+    // TODO: обновить схему
+    // model.setInput(data, () => toast.success(information.changesSaved));
+
+    toast.error('Not implemented');
+  }, []);
 
   const deleteOperation = useCallback(
     (target: OperationID, positions: IOperationPosition[]) => {
@@ -283,7 +307,8 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
         promptCreateOperation,
         deleteOperation,
         createInput,
-        promptEditInput
+        promptEditInput,
+        promptEditOperation
       }}
     >
       {model.schema ? (
@@ -306,8 +331,6 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
             <DlgCreateOperation
               hideWindow={() => setShowCreateOperation(false)}
               oss={model.schema}
-              positions={positions}
-              insertPosition={insertPosition}
               onCreate={handleCreateOperation}
             />
           ) : null}
@@ -317,6 +340,14 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
               oss={model.schema}
               target={targetOperation!}
               onSubmit={setTargetInput}
+            />
+          ) : null}
+          {showEditOperation ? (
+            <DlgEditOperation
+              hideWindow={() => setShowEditOperation(false)}
+              oss={model.schema}
+              target={targetOperation!}
+              onSubmit={handleEditOperation}
             />
           ) : null}
         </AnimatePresence>

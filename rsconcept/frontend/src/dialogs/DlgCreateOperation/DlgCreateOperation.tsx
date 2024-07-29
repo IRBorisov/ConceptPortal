@@ -10,8 +10,8 @@ import Overlay from '@/components/ui/Overlay';
 import TabLabel from '@/components/ui/TabLabel';
 import { useLibrary } from '@/context/LibraryContext';
 import { LibraryItemID } from '@/models/library';
-import { HelpTopic, Position2D } from '@/models/miscellaneous';
-import { IOperationCreateData, IOperationPosition, IOperationSchema, OperationID, OperationType } from '@/models/oss';
+import { HelpTopic } from '@/models/miscellaneous';
+import { IOperationCreateData, IOperationSchema, OperationID, OperationType } from '@/models/oss';
 import { PARAMETER } from '@/utils/constants';
 import { describeOperationType, labelOperationType } from '@/utils/labels';
 
@@ -21,8 +21,6 @@ import TabSynthesisOperation from './TabSynthesisOperation';
 interface DlgCreateOperationProps {
   hideWindow: () => void;
   oss: IOperationSchema;
-  positions: IOperationPosition[];
-  insertPosition: Position2D;
   onCreate: (data: IOperationCreateData) => void;
 }
 
@@ -31,7 +29,7 @@ export enum TabID {
   SYNTHESIS = 1
 }
 
-function DlgCreateOperation({ hideWindow, oss, insertPosition, positions, onCreate }: DlgCreateOperationProps) {
+function DlgCreateOperation({ hideWindow, oss, onCreate }: DlgCreateOperationProps) {
   const library = useLibrary();
   const [activeTab, setActiveTab] = useState(TabID.INPUT);
 
@@ -62,8 +60,8 @@ function DlgCreateOperation({ hideWindow, oss, insertPosition, positions, onCrea
   const handleSubmit = () => {
     const data: IOperationCreateData = {
       item_data: {
-        position_x: insertPosition.x,
-        position_y: insertPosition.y,
+        position_x: 0,
+        position_y: 0,
         alias: alias,
         title: title,
         comment: comment,
@@ -71,7 +69,7 @@ function DlgCreateOperation({ hideWindow, oss, insertPosition, positions, onCrea
         operation_type: activeTab === TabID.INPUT ? OperationType.INPUT : OperationType.SYNTHESIS,
         result: activeTab === TabID.INPUT ? attachedID ?? null : null
       },
-      positions: positions,
+      positions: [],
       arguments: activeTab === TabID.INPUT ? undefined : inputs.length > 0 ? inputs : undefined,
       create_schema: createSchema
     };

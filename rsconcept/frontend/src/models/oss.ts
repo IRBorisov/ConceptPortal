@@ -4,7 +4,7 @@
 
 import { Graph } from './Graph';
 import { ILibraryItem, ILibraryItemData, LibraryItemID } from './library';
-import { ConstituentaID } from './rsform';
+import { ConstituentaID, IConstituenta } from './rsform';
 
 /**
  * Represents {@link IOperation} identifier type.
@@ -99,6 +99,17 @@ export interface ICstSubstitute {
  */
 export interface ICstSubstituteData {
   substitutions: ICstSubstitute[];
+}
+
+/**
+ * Represents substitution for multi synthesis table.
+ */
+export interface IMultiSubstitution {
+  original_operation: IOperation | undefined;
+  original: IConstituenta | undefined;
+  substitution: IConstituenta | undefined;
+  substitution_operation: IOperation | undefined;
+  transfer_term: boolean;
 }
 
 /**

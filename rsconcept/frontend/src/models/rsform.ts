@@ -241,9 +241,9 @@ export interface IVersionCreatedResponse {
 }
 
 /**
- * Represents single substitution for synthesis table.
+ * Represents single substitution for binary synthesis table.
  */
-export interface ISingleSubstitution {
+export interface IBinarySubstitution {
   leftCst: IConstituenta;
   rightCst: IConstituenta;
   deleteRight: boolean;

@@ -49,7 +49,7 @@ function SelectUser({
     <SelectSingle
       className={clsx('text-ellipsis', className)}
       options={options}
-      value={value ? { value: value, label: getUserLabel(value) } : undefined}
+      value={value ? { value: value, label: getUserLabel(value) } : null}
       onChange={data => {
         if (data !== null && data.value !== undefined) onSelectValue(data.value);
       }}
