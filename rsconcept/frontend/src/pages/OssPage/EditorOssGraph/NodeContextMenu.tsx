@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import { IconConnect, IconDestroy, IconEdit2, IconExecute, IconNewItem, IconRSForm } from '@/components/Icons';
 import Dropdown from '@/components/ui/Dropdown';
@@ -25,6 +24,7 @@ interface NodeContextMenuProps extends ContextMenuData {
   onCreateInput: (target: OperationID) => void;
   onEditSchema: (target: OperationID) => void;
   onEditOperation: (target: OperationID) => void;
+  onRunOperation: (target: OperationID) => void;
 }
 
 function NodeContextMenu({
@@ -35,7 +35,8 @@ function NodeContextMenu({
   onDelete,
   onCreateInput,
   onEditSchema,
-  onEditOperation
+  onEditOperation,
+  onRunOperation
 }: NodeContextMenuProps) {
   const controller = useOssEdit();
   const [isOpen, setIsOpen] = useState(false);
@@ -95,8 +96,8 @@ function NodeContextMenu({
   };
 
   const handleRunSynthesis = () => {
-    toast.error('Not implemented');
     handleHide();
+    onRunOperation(operation.id);
   };
 
   return (

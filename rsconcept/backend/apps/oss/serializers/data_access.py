@@ -1,4 +1,5 @@
 ''' Serializers for persistent data manipulation. '''
+import re
 from typing import cast
 
 from django.db.models import F
@@ -7,6 +8,8 @@ from rest_framework.serializers import PrimaryKeyRelatedField as PKField
 
 from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemDetailsSerializer
+from apps.rsform.models import Constituenta
+from apps.rsform.serializers import SubstitutionSerializerBase
 from shared import messages as msg
 
 from ..models import Argument, Operation, OperationSchema, OperationType
@@ -47,10 +50,73 @@ class OperationCreateSerializer(serializers.Serializer):
     create_schema = serializers.BooleanField(default=False, required=False)
     item_data = OperationData()
     arguments = PKField(many=True, queryset=Operation.objects.all(), required=False)
+
     positions = serializers.ListField(
         child=OperationPositionSerializer(),
         default=[]
     )
+
+
+class OperationUpdateSerializer(serializers.Serializer):
+    ''' Serializer: Operation creation. '''
+    class OperationData(serializers.ModelSerializer):
+        ''' Serializer: Operation creation data. '''
+        class Meta:
+            ''' serializer metadata. '''
+            model = Operation
+            fields = 'alias', 'title', 'sync_text', 'comment'
+
+    target = PKField(many=False, queryset=Operation.objects.all())
+    item_data = OperationData()
+    arguments = PKField(many=True, queryset=Operation.objects.all(), required=False)
+    substitutions = serializers.ListField(
+        child=SubstitutionSerializerBase(),
+        required=False
+    )
+
+    positions = serializers.ListField(
+        child=OperationPositionSerializer(),
+        default=[]
+    )
+
+    def validate(self, attrs):
+        if 'arguments' not in attrs:
+            return attrs
+
+        oss = cast(LibraryItem, self.context['oss'])
+        for operation in attrs['arguments']:
+            if operation.oss != oss:
+                raise serializers.ValidationError({
+                    'arguments': msg.operationNotInOSS(oss.title)
+                })
+
+        if 'substitutions' not in attrs:
+            return attrs
+        schemas = [arg.result.pk for arg in attrs['arguments'] if arg.result is not None]
+        deleted = set()
+        for item in attrs['substitutions']:
+            original_cst = cast(Constituenta, item['original'])
+            substitution_cst = cast(Constituenta, item['substitution'])
+            if original_cst.schema.pk not in schemas:
+                raise serializers.ValidationError({
+                    f'{original_cst.id}': msg.constituentaNotFromOperation()
+                })
+            if substitution_cst.schema.pk not in schemas:
+                raise serializers.ValidationError({
+                    f'{substitution_cst.id}': msg.constituentaNotFromOperation()
+                })
+            if original_cst.pk in deleted:
+                raise serializers.ValidationError({
+                    f'{original_cst.id}': msg.substituteDouble(original_cst.alias)
+                })
+            if original_cst.schema == substitution_cst.schema:
+                raise serializers.ValidationError({
+                    'alias': msg.substituteTrivial(original_cst.alias)
+                })
+            deleted.add(original_cst.pk)
+        return attrs
+
+
 
 
 class OperationTargetSerializer(serializers.Serializer):

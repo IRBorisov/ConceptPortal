@@ -8,6 +8,7 @@ import {
   IOperationCreatedResponse,
   IOperationSchemaData,
   IOperationSetInputData,
+  IOperationUpdateData,
   IPositionsData,
   ITargetOperation
 } from '@/models/oss';
@@ -55,6 +56,20 @@ export function patchCreateInput(oss: string, request: FrontExchange<ITargetOper
 export function patchSetInput(oss: string, request: FrontExchange<IOperationSetInputData, IOperationSchemaData>) {
   AxiosPatch({
     endpoint: `/api/oss/${oss}/set-input`,
+    request: request
+  });
+}
+
+export function patchUpdateOperation(oss: string, request: FrontExchange<IOperationUpdateData, IOperationSchemaData>) {
+  AxiosPatch({
+    endpoint: `/api/oss/${oss}/update-operation`,
+    request: request
+  });
+}
+
+export function postExecuteOperation(oss: string, request: FrontExchange<ITargetOperation, IOperationSchemaData>) {
+  AxiosPost({
+    endpoint: `/api/oss/${oss}/execute-operation`,
     request: request
   });
 }

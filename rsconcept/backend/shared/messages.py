@@ -6,8 +6,12 @@ def constituentaNotInRSform(title: str):
     return f'Конституента не принадлежит схеме: {title}'
 
 
+def constituentaNotFromOperation():
+    return f'Конституента не соответствую аргументам операции'
+
+
 def operationNotInOSS(title: str):
-    return f'Операция не принадлежит схеме: {title}'
+    return f'Операция не принадлежит ОСС: {title}'
 
 
 def substitutionNotInList():
@@ -20,6 +24,10 @@ def schemaForbidden():
 
 def operationNotInput(title: str):
     return f'Операция не является Загрузкой: {title}'
+
+
+def operationNotSynthesis(title: str):
+    return f'Операция не является Синтезом: {title}'
 
 
 def operationResultNotEmpty(title: str):

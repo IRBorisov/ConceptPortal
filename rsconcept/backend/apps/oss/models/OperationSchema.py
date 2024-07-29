@@ -100,39 +100,59 @@ class OperationSchema:
         self.save()
 
     @transaction.atomic
-    def add_argument(self, operation: Operation, argument: Operation) -> Optional[Argument]:
-        ''' Add Argument to operation. '''
-        if Argument.objects.filter(operation=operation, argument=argument).exists():
-            return None
-        result = Argument.objects.create(operation=operation, argument=argument)
-        self.save()
-        return result
-
-    @transaction.atomic
-    def clear_arguments(self, target: Operation):
-        ''' Clear all arguments for operation. '''
-        if not Argument.objects.filter(operation=target).exists():
+    def set_arguments(self, operation: Operation, arguments: list[Operation]):
+        ''' Set arguments to operation. '''
+        processed: list[Operation] = []
+        changed = False
+        for current in operation.getArguments():
+            if current.argument not in arguments:
+                changed = True
+                current.delete()
+            else:
+                processed.append(current.argument)
+        for arg in arguments:
+            if arg not in processed:
+                changed = True
+                processed.append(arg)
+                Argument.objects.create(operation=operation, argument=arg)
+        if not changed:
             return
-
-        Argument.objects.filter(operation=target).delete()
-        Substitution.objects.filter(operation=target).delete()
-
         # trigger on_change effects
-
         self.save()
 
     @transaction.atomic
     def set_substitutions(self, target: Operation, substitutes: list[dict]):
         ''' Clear all arguments for operation. '''
-        Substitution.objects.filter(operation=target).delete()
-        for sub in substitutes:
-            Substitution.objects.create(
-                operation=target,
-                original=sub['original'],
-                substitution=sub['substitution'],
-                transfer_term=sub['transfer_term']
-            )
+        processed: list[dict] = []
+        changed = False
 
+        for current in target.getSubstitutions():
+            subs = [
+                x for x in substitutes
+                if x['original'] == current.original and x['substitution'] == current.substitution
+            ]
+            if len(subs) == 0:
+                changed = True
+                current.delete()
+                continue
+            if current.transfer_term != subs[0]['transfer_term']:
+                current.transfer_term = subs[0]['transfer_term']
+                current.save()
+                continue
+            processed.append(subs[0])
+
+        for sub in substitutes:
+            if sub not in processed:
+                changed = True
+                Substitution.objects.create(
+                    operation=target,
+                    original=sub['original'],
+                    substitution=sub['substitution'],
+                    transfer_term=sub['transfer_term']
+                )
+
+        if not changed:
+            return
         # trigger on_change effects
 
         self.save()

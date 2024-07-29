@@ -32,6 +32,24 @@ def _extract_item(obj: Any) -> LibraryItem:
     })
 
 
+def can_edit_item(user, obj: Any) -> bool:
+    if user.is_anonymous:
+        return False
+    if hasattr(user, 'is_staff') and user.is_staff:
+        return True
+
+    item = _extract_item(obj)
+    if item.owner == user:
+        return True
+
+    if Editor.objects.filter(
+        item=item,
+        editor=cast(User, user)
+    ).exists() and item.access_policy != AccessPolicy.PRIVATE:
+        return True
+    return False
+
+
 class GlobalAdmin(_Base):
     ''' Item permission: Admin or higher. '''
 

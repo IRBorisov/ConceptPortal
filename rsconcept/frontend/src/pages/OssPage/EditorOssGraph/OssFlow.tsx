@@ -162,6 +162,13 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     [controller, getPositions]
   );
 
+  const handleRunOperation = useCallback(
+    (target: OperationID) => {
+      controller.runOperation(target, getPositions());
+    },
+    [controller, getPositions]
+  );
+
   const handleFitView = useCallback(() => {
     flow.fitView({ duration: PARAMETER.zoomDuration });
   }, [flow]);
@@ -227,6 +234,17 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     handleContextMenuHide();
   }, [handleContextMenuHide]);
 
+  const handleNodeClick = useCallback(
+    (event: CProps.EventMouse, node: OssNode) => {
+      if (event.ctrlKey || event.metaKey) {
+        event.preventDefault();
+        event.stopPropagation();
+        handleEditOperation(Number(node.id));
+      }
+    },
+    [handleEditOperation]
+  );
+
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (controller.isProcessing) {
       return;
@@ -266,6 +284,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
         edges={edges}
         onNodesChange={handleNodesChange}
         onEdgesChange={onEdgesChange}
+        onNodeClick={handleNodeClick}
         fitView
         proOptions={{ hideAttribution: true }}
         nodeTypes={OssNodeTypes}
@@ -309,6 +328,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
           onCreateInput={handleCreateInput}
           onEditSchema={handleEditSchema}
           onEditOperation={handleEditOperation}
+          onRunOperation={handleRunOperation}
           {...menuProps}
         />
       ) : null}

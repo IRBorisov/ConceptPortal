@@ -22,6 +22,7 @@ import {
   IOperationPosition,
   IOperationSchema,
   IOperationSetInputData,
+  IOperationUpdateData,
   OperationID
 } from '@/models/oss';
 import { UserID, UserLevel } from '@/models/user';
@@ -55,6 +56,7 @@ export interface IOssEditContext {
   createInput: (target: OperationID, positions: IOperationPosition[]) => void;
   promptEditInput: (target: OperationID, positions: IOperationPosition[]) => void;
   promptEditOperation: (target: OperationID, positions: IOperationPosition[]) => void;
+  runOperation: (target: OperationID, positions: IOperationPosition[]) => void;
 }
 
 const OssEditContext = createContext<IOssEditContext | null>(null);
@@ -228,17 +230,13 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
     setShowEditOperation(true);
   }, []);
 
-  const handleEditOperation = useCallback(() => {
-    // TODO: проверить наличие всех аргументов
-    // TODO: проверить наличие синтеза
-    // TODO: проверить полноту синтеза
-    // TODO: проверить правильность синтеза
-    // TODO: сохранить позиции
-    // TODO: обновить схему
-    // model.setInput(data, () => toast.success(information.changesSaved));
-
-    toast.error('Not implemented');
-  }, []);
+  const handleEditOperation = useCallback(
+    (data: IOperationUpdateData) => {
+      data.positions = positions;
+      model.updateOperation(data, () => toast.success(information.changesSaved));
+    },
+    [model, positions]
+  );
 
   const deleteOperation = useCallback(
     (target: OperationID, positions: IOperationPosition[]) => {
@@ -281,6 +279,19 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
     [model, targetOperationID, positions]
   );
 
+  const runOperation = useCallback(
+    (target: OperationID, positions: IOperationPosition[]) => {
+      model.executeOperation(
+        {
+          target: target,
+          positions: positions
+        },
+        () => toast.success(information.changesSaved)
+      );
+    },
+    [model]
+  );
+
   return (
     <OssEditContext.Provider
       value={{
@@ -308,7 +319,8 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
         deleteOperation,
         createInput,
         promptEditInput,
-        promptEditOperation
+        promptEditOperation,
+        runOperation
       }}
     >
       {model.schema ? (

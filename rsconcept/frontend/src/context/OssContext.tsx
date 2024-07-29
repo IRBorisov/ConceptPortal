@@ -16,8 +16,10 @@ import {
   patchCreateInput,
   patchDeleteOperation,
   patchSetInput,
+  patchUpdateOperation,
   patchUpdatePositions,
-  postCreateOperation
+  postCreateOperation,
+  postExecuteOperation
 } from '@/backend/oss';
 import { type ErrorData } from '@/components/info/InfoError';
 import { AccessPolicy, ILibraryItem } from '@/models/library';
@@ -28,6 +30,7 @@ import {
   IOperationSchema,
   IOperationSchemaData,
   IOperationSetInputData,
+  IOperationUpdateData,
   IPositionsData,
   ITargetOperation
 } from '@/models/oss';
@@ -63,6 +66,8 @@ interface IOssContext {
   deleteOperation: (data: ITargetOperation, callback?: () => void) => void;
   createInput: (data: ITargetOperation, callback?: DataCallback<ILibraryItem>) => void;
   setInput: (data: IOperationSetInputData, callback?: () => void) => void;
+  updateOperation: (data: IOperationUpdateData, callback?: () => void) => void;
+  executeOperation: (data: ITargetOperation, callback?: () => void) => void;
 }
 
 const OssContext = createContext<IOssContext | null>(null);
@@ -362,6 +367,50 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
     [itemID, schema, library]
   );
 
+  const updateOperation = useCallback(
+    (data: IOperationUpdateData, callback?: () => void) => {
+      if (!schema) {
+        return;
+      }
+      setProcessingError(undefined);
+      patchUpdateOperation(itemID, {
+        data: data,
+        showError: true,
+        setLoading: setProcessing,
+        onError: setProcessingError,
+        onSuccess: newData => {
+          library.setGlobalOSS(newData);
+          library.reloadItems(() => {
+            if (callback) callback();
+          });
+        }
+      });
+    },
+    [itemID, schema, library]
+  );
+
+  const executeOperation = useCallback(
+    (data: ITargetOperation, callback?: () => void) => {
+      if (!schema) {
+        return;
+      }
+      setProcessingError(undefined);
+      postExecuteOperation(itemID, {
+        data: data,
+        showError: true,
+        setLoading: setProcessing,
+        onError: setProcessingError,
+        onSuccess: newData => {
+          library.setGlobalOSS(newData);
+          library.reloadItems(() => {
+            if (callback) callback();
+          });
+        }
+      });
+    },
+    [itemID, schema, library]
+  );
+
   return (
     <OssContext.Provider
       value={{
@@ -386,7 +435,9 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         createOperation,
         deleteOperation,
         createInput,
-        setInput
+        setInput,
+        updateOperation,
+        executeOperation
       }}
     >
       {children}

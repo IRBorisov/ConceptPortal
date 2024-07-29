@@ -36,7 +36,9 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             'delete_operation',
             'update_positions',
             'create_input',
-            'set_input'
+            'set_input',
+            'update_operation',
+            'execute_operation',
         ]:
             permission_list = [permissions.ItemEditor]
         elif self.action in ['details']:
@@ -117,8 +119,10 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                 data['result'] = schema
             new_operation = oss.create_operation(**data)
             if new_operation.operation_type != m.OperationType.INPUT and 'arguments' in serializer.validated_data:
-                for argument in serializer.validated_data['arguments']:
-                    oss.add_argument(operation=new_operation, argument=argument)
+                oss.set_arguments(
+                    operation=new_operation,
+                    arguments=serializer.validated_data['arguments']
+                )
 
         oss.refresh_from_db()
         return Response(
@@ -251,6 +255,99 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             operation.save()
 
             # update arguments
+
+        oss.refresh_from_db()
+        return Response(
+            status=c.HTTP_200_OK,
+            data=s.OperationSchemaSerializer(oss.model).data
+        )
+
+    @extend_schema(
+        summary='update operation',
+        tags=['OSS'],
+        request=s.OperationUpdateSerializer(),
+        responses={
+            c.HTTP_200_OK: s.OperationSchemaSerializer,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='update-operation')
+    def update_operation(self, request: Request, pk):
+        ''' Update operation arguments and parameters. '''
+        serializer = s.OperationUpdateSerializer(
+            data=request.data,
+            context={'oss': self.get_object()}
+        )
+        serializer.is_valid(raise_exception=True)
+
+        operation: m.Operation = cast(m.Operation, serializer.validated_data['target'])
+        oss = m.OperationSchema(self.get_object())
+        with transaction.atomic():
+            oss.update_positions(serializer.validated_data['positions'])
+            operation.alias = serializer.validated_data['item_data']['alias']
+            operation.title = serializer.validated_data['item_data']['title']
+            operation.comment = serializer.validated_data['item_data']['comment']
+            operation.sync_text = serializer.validated_data['item_data']['sync_text']
+            operation.save()
+
+            if operation.sync_text and operation.result is not None:
+                can_edit = permissions.can_edit_item(request.user, operation.result)
+                if can_edit:
+                    operation.result.alias = operation.alias
+                    operation.result.title = operation.title
+                    operation.result.comment = operation.comment
+                    operation.result.save()
+            if 'arguments' in serializer.validated_data:
+                oss.set_arguments(operation, serializer.validated_data['arguments'])
+            if 'substitutions' in serializer.validated_data:
+                oss.set_substitutions(operation, serializer.validated_data['substitutions'])
+        return Response(
+            status=c.HTTP_200_OK,
+            data=s.OperationSchemaSerializer(oss.model).data
+        )
+
+    @extend_schema(
+        summary='execute operation',
+        tags=['OSS'],
+        request=s.OperationTargetSerializer(),
+        responses={
+            c.HTTP_200_OK: s.OperationSchemaSerializer,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['post'], url_path='execute-operation')
+    def execute_operation(self, request: Request, pk):
+        ''' Execute operation. '''
+        serializer = s.OperationTargetSerializer(
+            data=request.data,
+            context={'oss': self.get_object()}
+        )
+        serializer.is_valid(raise_exception=True)
+
+        operation: m.Operation = cast(m.Operation, serializer.validated_data['target'])
+        if operation.operation_type != m.OperationType.SYNTHESIS:
+            raise serializers.ValidationError({
+                'target': msg.operationNotSynthesis(operation.alias)
+            })
+        if operation.result is not None:
+            raise serializers.ValidationError({
+                'target': msg.operationResultNotEmpty(operation.alias)
+            })
+
+        oss = m.OperationSchema(self.get_object())
+        # with transaction.atomic():
+        #     oss.update_positions(serializer.validated_data['positions'])
+        #     operation.result.refresh_from_db()
+        #     operation.result.title = operation.title
+        #     operation.result.comment = operation.comment
+        #     operation.result.alias = operation.alias
+        #     operation.result.save()
+
+        # update arguments
 
         oss.refresh_from_db()
         return Response(

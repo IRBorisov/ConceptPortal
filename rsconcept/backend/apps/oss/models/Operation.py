@@ -7,9 +7,13 @@ from django.db.models import (
     FloatField,
     ForeignKey,
     Model,
+    QuerySet,
     TextChoices,
     TextField
 )
+
+from .Argument import Argument
+from .Substitution import Substitution
 
 
 class OperationType(TextChoices):
@@ -74,3 +78,11 @@ class Operation(Model):
 
     def __str__(self) -> str:
         return f'Операция {self.alias}'
+
+    def getArguments(self) -> QuerySet[Argument]:
+        ''' Operation arguments. '''
+        return Argument.objects.filter(operation=self)
+
+    def getSubstitutions(self) -> QuerySet[Substitution]:
+        ''' Operation substitutions. '''
+        return Substitution.objects.filter(operation=self)

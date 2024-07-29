@@ -41,8 +41,7 @@ class TestOssViewset(EndpointTester):
             alias='3',
             operation_type=OperationType.SYNTHESIS
         )
-        self.owned.add_argument(self.operation3, self.operation1)
-        self.owned.add_argument(self.operation3, self.operation2)
+        self.owned.set_arguments(self.operation3, [self.operation1, self.operation2])
         self.owned.set_substitutions(self.operation3, [{
             'original': self.ks1x1,
             'substitution': self.ks2x1,
@@ -344,3 +343,76 @@ class TestOssViewset(EndpointTester):
         self.operation2.refresh_from_db()
         self.assertEqual(self.operation2.sync_text, True)
         self.assertEqual(self.operation2.result, self.ks2.model)
+
+    @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
+    def test_update_operation(self):
+        self.populateData()
+        self.executeBadData(item=self.owned_id)
+
+        ks3 = RSForm.create(alias='KS3', title='Test3', owner=self.user)
+        ks3x1 = ks3.insert_new('X1', term_resolved='X1_1')
+
+        data = {
+            'target': self.operation3.pk,
+            'item_data': {
+                'alias': 'Test3 mod',
+                'title': 'Test title mod',
+                'comment': 'Comment mod',
+                'sync_text': True
+            },
+            'positions': [],
+            'arguments': [self.operation1.pk, self.operation2.pk],
+            'substitutions': [
+                {
+                    'original': self.ks1x1.pk,
+                    'substitution': ks3x1.pk,
+                    'transfer_term': False
+                }
+            ]
+        }
+        self.executeBadData(data=data)
+
+        data['substitutions'][0]['substitution'] = self.ks2x1.pk
+        self.toggle_admin(True)
+        self.executeBadData(data=data, item=self.unowned_id)
+        self.logout()
+        self.executeForbidden(data=data, item=self.owned_id)
+
+        self.login()
+        response = self.executeOK(data=data)
+        self.operation3.refresh_from_db()
+        self.assertEqual(self.operation3.sync_text, data['item_data']['sync_text'])
+        self.assertEqual(self.operation3.alias, data['item_data']['alias'])
+        self.assertEqual(self.operation3.title, data['item_data']['title'])
+        self.assertEqual(self.operation3.comment, data['item_data']['comment'])
+        self.assertEqual(set([argument.pk for argument in self.operation3.getArguments()]), set(data['arguments']))
+        sub = self.operation3.getSubstitutions()[0]
+        self.assertEqual(sub.original.pk, data['substitutions'][0]['original'])
+        self.assertEqual(sub.substitution.pk, data['substitutions'][0]['substitution'])
+        self.assertEqual(sub.transfer_term, data['substitutions'][0]['transfer_term'])
+
+    @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
+    def test_update_operation_sync(self):
+        self.populateData()
+        self.executeBadData(item=self.owned_id)
+
+        data = {
+            'target': self.operation1.pk,
+            'item_data': {
+                'alias': 'Test3 mod',
+                'title': 'Test title mod',
+                'comment': 'Comment mod',
+                'sync_text': True
+            },
+            'positions': [],
+        }
+
+        response = self.executeOK(data=data)
+        self.operation1.refresh_from_db()
+        self.assertEqual(self.operation1.sync_text, data['item_data']['sync_text'])
+        self.assertEqual(self.operation1.alias, data['item_data']['alias'])
+        self.assertEqual(self.operation1.title, data['item_data']['title'])
+        self.assertEqual(self.operation1.comment, data['item_data']['comment'])
+        self.assertEqual(self.operation1.result.alias, data['item_data']['alias'])
+        self.assertEqual(self.operation1.result.title, data['item_data']['title'])
+        self.assertEqual(self.operation1.result.comment, data['item_data']['comment'])

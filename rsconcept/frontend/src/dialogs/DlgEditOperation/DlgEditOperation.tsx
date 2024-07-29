@@ -10,7 +10,14 @@ import Overlay from '@/components/ui/Overlay';
 import TabLabel from '@/components/ui/TabLabel';
 import useRSFormCache from '@/hooks/useRSFormCache';
 import { HelpTopic } from '@/models/miscellaneous';
-import { ICstSubstitute, IOperation, IOperationSchema, OperationID, OperationType } from '@/models/oss';
+import {
+  ICstSubstitute,
+  IOperation,
+  IOperationSchema,
+  IOperationUpdateData,
+  OperationID,
+  OperationType
+} from '@/models/oss';
 import { PARAMETER } from '@/utils/constants';
 
 import TabArguments from './TabArguments';
@@ -21,8 +28,7 @@ interface DlgEditOperationProps {
   hideWindow: () => void;
   oss: IOperationSchema;
   target: IOperation;
-  // onSubmit: (data: IOperationEditData) => void;
-  onSubmit: () => void;
+  onSubmit: (data: IOperationUpdateData) => void;
 }
 
 export enum TabID {
@@ -56,22 +62,19 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
   }, [schemasIDs]);
 
   const handleSubmit = () => {
-    // const data: IOperationCreateData = {
-    //   item_data: {
-    //     position_x: insertPosition.x,
-    //     position_y: insertPosition.y,
-    //     alias: alias,
-    //     title: title,
-    //     comment: comment,
-    //     sync_text: activeTab === TabID.INPUT ? syncText : true,
-    //     operation_type: activeTab === TabID.INPUT ? OperationType.INPUT : OperationType.SYNTHESIS,
-    //     result: activeTab === TabID.INPUT ? attachedID ?? null : null
-    //   },
-    //   positions: positions,
-    //   arguments: activeTab === TabID.INPUT ? undefined : inputs.length > 0 ? inputs : undefined,
-    //   create_schema: createSchema
-    // };
-    onSubmit();
+    const data: IOperationUpdateData = {
+      target: target.id,
+      item_data: {
+        alias: alias,
+        title: title,
+        comment: comment,
+        sync_text: syncText
+      },
+      positions: [],
+      arguments: target.operation_type !== OperationType.SYNTHESIS ? undefined : inputs,
+      substitutions: target.operation_type !== OperationType.SYNTHESIS ? undefined : substitutions
+    };
+    onSubmit(data);
   };
 
   const cardPanel = useMemo(

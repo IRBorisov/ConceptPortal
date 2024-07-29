@@ -270,7 +270,7 @@ class CstMoveSerializer(CstListSerializer):
     move_to = serializers.IntegerField()
 
 
-class CstSubstituteSerializerBase(serializers.Serializer):
+class SubstitutionSerializerBase(serializers.Serializer):
     ''' Serializer: Basic substitution. '''
     original = PKField(many=False, queryset=Constituenta.objects.all())
     substitution = PKField(many=False, queryset=Constituenta.objects.all())
@@ -280,7 +280,7 @@ class CstSubstituteSerializerBase(serializers.Serializer):
 class CstSubstituteSerializer(serializers.Serializer):
     ''' Serializer: Constituenta substitution. '''
     substitutions = serializers.ListField(
-        child=CstSubstituteSerializerBase(),
+        child=SubstitutionSerializerBase(),
         min_length=1
     )
 
@@ -316,7 +316,7 @@ class InlineSynthesisSerializer(serializers.Serializer):
     source = PKField(many=False, queryset=LibraryItem.objects.all())  # type: ignore
     items = PKField(many=True, queryset=Constituenta.objects.all())
     substitutions = serializers.ListField(
-        child=CstSubstituteSerializerBase()
+        child=SubstitutionSerializerBase()
     )
 
     def validate(self, attrs):

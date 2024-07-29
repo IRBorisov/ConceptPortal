@@ -70,6 +70,15 @@ export interface IOperationCreateData extends IPositionsData {
 }
 
 /**
+ * Represents {@link IOperation} data, used in update process.
+ */
+export interface IOperationUpdateData extends ITargetOperation {
+  item_data: Pick<IOperation, 'alias' | 'title' | 'comment' | 'sync_text'>;
+  arguments: OperationID[] | undefined;
+  substitutions: ICstSubstitute[] | undefined;
+}
+
+/**
  * Represents {@link IOperation} data, used in setInput process.
  */
 export interface IOperationSetInputData extends ITargetOperation {

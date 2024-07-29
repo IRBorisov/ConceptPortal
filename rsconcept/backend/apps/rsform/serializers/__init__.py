@@ -19,7 +19,8 @@ from .data_access import (
     CstTargetSerializer,
     InlineSynthesisSerializer,
     RSFormParseSerializer,
-    RSFormSerializer
+    RSFormSerializer,
+    SubstitutionSerializerBase
 )
 from .io_files import FileSerializer, RSFormTRSSerializer, RSFormUploadSerializer
 from .io_pyconcept import PyConceptAdapter

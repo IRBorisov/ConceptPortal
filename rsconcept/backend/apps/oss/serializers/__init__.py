@@ -7,6 +7,7 @@ from .data_access import (
     OperationSchemaSerializer,
     OperationSerializer,
     OperationTargetSerializer,
+    OperationUpdateSerializer,
     SetOperationInputSerializer
 )
 from .responses import NewOperationResponse, NewSchemaResponse
