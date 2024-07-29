@@ -24,7 +24,7 @@ interface NodeContextMenuProps extends ContextMenuData {
   onCreateInput: (target: OperationID) => void;
   onEditSchema: (target: OperationID) => void;
   onEditOperation: (target: OperationID) => void;
-  onRunOperation: (target: OperationID) => void;
+  onExecuteOperation: (target: OperationID) => void;
 }
 
 function NodeContextMenu({
@@ -36,7 +36,7 @@ function NodeContextMenu({
   onCreateInput,
   onEditSchema,
   onEditOperation,
-  onRunOperation
+  onExecuteOperation
 }: NodeContextMenuProps) {
   const controller = useOssEdit();
   const [isOpen, setIsOpen] = useState(false);
@@ -97,7 +97,7 @@ function NodeContextMenu({
 
   const handleRunSynthesis = () => {
     handleHide();
-    onRunOperation(operation.id);
+    onExecuteOperation(operation.id);
   };
 
   return (

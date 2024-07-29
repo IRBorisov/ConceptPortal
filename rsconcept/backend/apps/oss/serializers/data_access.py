@@ -1,5 +1,4 @@
 ''' Serializers for persistent data manipulation. '''
-import re
 from typing import cast
 
 from django.db.models import F

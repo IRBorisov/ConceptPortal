@@ -108,7 +108,7 @@ export { LuNetwork        as IconGenerateStructure } from 'react-icons/lu';
 export { LuBookCopy       as IconInlineSynthesis } from 'react-icons/lu';
 export { LuWand2          as IconGenerateNames }  from 'react-icons/lu';
 export { GrConnect        as IconConnect }        from 'react-icons/gr';
-export { BsPlay           as IconExecute }        from 'react-icons/bs';
+export { BiPlayCircle     as IconExecute }        from 'react-icons/bi';
 
 // ======== Graph UI =======
 export { BiCollapse       as IconGraphCollapse }  from 'react-icons/bi';

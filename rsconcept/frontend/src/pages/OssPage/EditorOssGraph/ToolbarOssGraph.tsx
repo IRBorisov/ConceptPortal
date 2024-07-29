@@ -4,6 +4,8 @@ import {
   IconAnimation,
   IconAnimationOff,
   IconDestroy,
+  IconEdit2,
+  IconExecute,
   IconFitImage,
   IconGrid,
   IconImage,
@@ -28,6 +30,8 @@ interface ToolbarOssGraphProps {
   edgeStraight: boolean;
   onCreate: () => void;
   onDelete: () => void;
+  onEdit: () => void;
+  onExecute: () => void;
   onFitView: () => void;
   onSaveImage: () => void;
   onSavePositions: () => void;
@@ -44,6 +48,8 @@ function ToolbarOssGraph({
   edgeStraight,
   onCreate,
   onDelete,
+  onEdit,
+  onExecute,
   onFitView,
   onSaveImage,
   onSavePositions,
@@ -57,6 +63,12 @@ function ToolbarOssGraph({
   return (
     <div className='flex flex-col items-center'>
       <div className='cc-icons'>
+        <MiniButton
+          title='Сбросить изменения'
+          icon={<IconReset size='1.25rem' className='icon-primary' />}
+          disabled={!isModified}
+          onClick={onResetPositions}
+        />
         <MiniButton
           icon={<IconFitImage size='1.25rem' className='icon-primary' />}
           title='Сбросить вид'
@@ -116,19 +128,30 @@ function ToolbarOssGraph({
             onClick={onSavePositions}
           />
           <MiniButton
-            title='Сбросить изменения'
-            icon={<IconReset size='1.25rem' className='icon-primary' />}
-            disabled={!isModified}
-            onClick={onResetPositions}
-          />
-          <MiniButton
-            title='Новая операция'
+            title={prepareTooltip('Новая операция', 'Ctrl + Q')}
             icon={<IconNewItem size='1.25rem' className='icon-green' />}
             disabled={controller.isProcessing}
             onClick={onCreate}
           />
           <MiniButton
-            title='Удалить выбранную'
+            title='Выполнить выбранную / все операции'
+            icon={
+              <IconExecute
+                size='1.25rem'
+                className={controller.selected.length === 1 ? 'icon-primary' : 'icon-green'}
+              />
+            }
+            disabled={controller.isProcessing}
+            onClick={onExecute}
+          />
+          <MiniButton
+            titleHtml={prepareTooltip('Редактировать выбранную', 'Ctrl + клик')}
+            icon={<IconEdit2 size='1.25rem' className='icon-primary' />}
+            disabled={controller.selected.length !== 1 || controller.isProcessing}
+            onClick={onEdit}
+          />
+          <MiniButton
+            titleHtml={prepareTooltip('Удалить выбранную', 'Delete')}
             icon={<IconDestroy size='1.25rem' className='icon-red' />}
             disabled={controller.selected.length !== 1 || controller.isProcessing}
             onClick={onDelete}
@@ -138,5 +161,5 @@ function ToolbarOssGraph({
     </div>
   );
 }
-
+//IconExecute
 export default ToolbarOssGraph;

@@ -223,6 +223,7 @@ function PickSubstitutions({
           <div className='flex flex-col gap-[0.125rem] border-x border-t clr-input'>
             <SelectOperation
               noBorder
+              placeholder='Выберите аргумент'
               items={operations.filter(item => item.id !== rightArgument?.id)}
               value={leftArgument}
               onSelectValue={setLeftArgument}
@@ -275,6 +276,7 @@ function PickSubstitutions({
           <div className='flex flex-col gap-[0.125rem] border-x border-t clr-input'>
             <SelectOperation
               noBorder
+              placeholder='Выберите аргумент'
               items={operations.filter(item => item.id !== leftArgument?.id)}
               value={rightArgument}
               onSelectValue={setRightArgument}

@@ -162,12 +162,20 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     [controller, getPositions]
   );
 
-  const handleRunOperation = useCallback(
+  const handleExecuteOperation = useCallback(
     (target: OperationID) => {
-      controller.runOperation(target, getPositions());
+      controller.executeOperation(target, getPositions());
     },
     [controller, getPositions]
   );
+
+  const handleExecuteSelected = useCallback(() => {
+    if (controller.selected.length === 1) {
+      handleExecuteOperation(controller.selected[0]);
+    } else {
+      controller.executeAll(getPositions());
+    }
+  }, [controller, handleExecuteOperation, getPositions]);
 
   const handleFitView = useCallback(() => {
     flow.fitView({ duration: PARAMETER.zoomDuration });
@@ -285,8 +293,8 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
         onNodesChange={handleNodesChange}
         onEdgesChange={onEdgesChange}
         onNodeClick={handleNodeClick}
-        fitView
         proOptions={{ hideAttribution: true }}
+        fitView
         nodeTypes={OssNodeTypes}
         maxZoom={2}
         minZoom={0.75}
@@ -299,7 +307,17 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
         {showGrid ? <Background gap={10} /> : null}
       </ReactFlow>
     ),
-    [nodes, edges, handleNodesChange, handleContextMenu, handleClickCanvas, onEdgesChange, OssNodeTypes, showGrid]
+    [
+      nodes,
+      edges,
+      handleNodesChange,
+      handleContextMenu,
+      handleClickCanvas,
+      onEdgesChange,
+      handleNodeClick,
+      OssNodeTypes,
+      showGrid
+    ]
   );
 
   return (
@@ -313,6 +331,8 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
           onFitView={handleFitView}
           onCreate={handleCreateOperation}
           onDelete={handleDeleteSelected}
+          onEdit={() => handleEditOperation(controller.selected[0])}
+          onExecute={handleExecuteSelected}
           onResetPositions={handleResetPositions}
           onSavePositions={handleSavePositions}
           onSaveImage={handleSaveImage}
@@ -328,7 +348,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
           onCreateInput={handleCreateInput}
           onEditSchema={handleEditSchema}
           onEditOperation={handleEditOperation}
-          onRunOperation={handleRunOperation}
+          onExecuteOperation={handleExecuteOperation}
           {...menuProps}
         />
       ) : null}

@@ -19,6 +19,7 @@ import {
   patchUpdateOperation,
   patchUpdatePositions,
   postCreateOperation,
+  postExecuteAll,
   postExecuteOperation
 } from '@/backend/oss';
 import { type ErrorData } from '@/components/info/InfoError';
@@ -68,6 +69,7 @@ interface IOssContext {
   setInput: (data: IOperationSetInputData, callback?: () => void) => void;
   updateOperation: (data: IOperationUpdateData, callback?: () => void) => void;
   executeOperation: (data: ITargetOperation, callback?: () => void) => void;
+  executeAll: (data: IPositionsData, callback?: () => void) => void;
 }
 
 const OssContext = createContext<IOssContext | null>(null);
@@ -411,6 +413,28 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
     [itemID, schema, library]
   );
 
+  const executeAll = useCallback(
+    (data: IPositionsData, callback?: () => void) => {
+      if (!schema) {
+        return;
+      }
+      setProcessingError(undefined);
+      postExecuteAll(itemID, {
+        data: data,
+        showError: true,
+        setLoading: setProcessing,
+        onError: setProcessingError,
+        onSuccess: newData => {
+          library.setGlobalOSS(newData);
+          library.reloadItems(() => {
+            if (callback) callback();
+          });
+        }
+      });
+    },
+    [itemID, schema, library]
+  );
+
   return (
     <OssContext.Provider
       value={{
@@ -437,7 +461,8 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         createInput,
         setInput,
         updateOperation,
-        executeOperation
+        executeOperation,
+        executeAll
       }}
     >
       {children}
