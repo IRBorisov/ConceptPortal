@@ -274,7 +274,6 @@ class SubstitutionSerializerBase(serializers.Serializer):
     ''' Serializer: Basic substitution. '''
     original = PKField(many=False, queryset=Constituenta.objects.all())
     substitution = PKField(many=False, queryset=Constituenta.objects.all())
-    transfer_term = serializers.BooleanField(required=False, default=False)
 
 
 class CstSubstituteSerializer(serializers.Serializer):

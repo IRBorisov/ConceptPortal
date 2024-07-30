@@ -209,7 +209,6 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             )
             Editor.set(schema, oss.model.editors())
             operation.result = schema
-            operation.sync_text = True
             operation.save()
 
         oss.refresh_from_db()
@@ -247,8 +246,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         with transaction.atomic():
             oss.update_positions(serializer.validated_data['positions'])
             operation.result = result
-            operation.sync_text = serializer.validated_data['sync_text']
-            if result is not None and operation.sync_text:
+            if result is not None:
                 operation.title = result.title
                 operation.comment = result.comment
                 operation.alias = result.alias
@@ -289,10 +287,9 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             operation.alias = serializer.validated_data['item_data']['alias']
             operation.title = serializer.validated_data['item_data']['title']
             operation.comment = serializer.validated_data['item_data']['comment']
-            operation.sync_text = serializer.validated_data['item_data']['sync_text']
             operation.save()
 
-            if operation.sync_text and operation.result is not None:
+            if operation.result is not None:
                 can_edit = permissions.can_edit_item(request.user, operation.result)
                 if can_edit:
                     operation.result.alias = operation.alias

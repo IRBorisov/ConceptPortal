@@ -247,7 +247,6 @@ export interface IBinarySubstitution {
   leftCst: IConstituenta;
   rightCst: IConstituenta;
   deleteRight: boolean;
-  takeLeftTerm: boolean;
 }
 
 /**

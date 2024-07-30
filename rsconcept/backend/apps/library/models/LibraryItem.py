@@ -140,7 +140,7 @@ class LibraryItem(Model):
     def _update_connected_operations(self):
         # using method level import to prevent circular dependency
         from apps.oss.models import Operation  # pylint: disable=import-outside-toplevel
-        operations = Operation.objects.filter(result__pk=self.pk, sync_text=True)
+        operations = Operation.objects.filter(result__pk=self.pk)
         if not operations.exists():
             return
         for operation in operations:

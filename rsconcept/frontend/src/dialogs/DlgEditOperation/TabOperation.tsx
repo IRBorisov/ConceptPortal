@@ -1,5 +1,3 @@
-import Checkbox from '@/components/ui/Checkbox';
-import FlexColumn from '@/components/ui/FlexColumn';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
 import AnimateFade from '@/components/wrap/AnimateFade';
@@ -12,20 +10,9 @@ interface TabOperationProps {
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   comment: string;
   setComment: React.Dispatch<React.SetStateAction<string>>;
-  syncText: boolean;
-  setSyncText: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function TabOperation({
-  alias,
-  setAlias,
-  title,
-  setTitle,
-  comment,
-  setComment,
-  syncText,
-  setSyncText
-}: TabOperationProps) {
+function TabOperation({ alias, setAlias, title, setTitle, comment, setComment }: TabOperationProps) {
   return (
     <AnimateFade className='cc-column'>
       <TextInput
@@ -35,23 +22,15 @@ function TabOperation({
         onChange={event => setTitle(event.target.value)}
       />
       <div className='flex gap-6'>
-        <FlexColumn>
-          <TextInput
-            id='operation_alias'
-            label='Сокращение'
-            className='w-[14rem]'
-            pattern={patterns.library_alias}
-            title={`не более ${limits.library_alias_len} символов`}
-            value={alias}
-            onChange={event => setAlias(event.target.value)}
-          />
-          <Checkbox
-            value={syncText}
-            setValue={setSyncText}
-            label='Синхронизировать текст'
-            titleHtml='Загрузить текстовые поля<br/> из концептуальной схемы'
-          />
-        </FlexColumn>
+        <TextInput
+          id='operation_alias'
+          label='Сокращение'
+          className='w-[14rem]'
+          pattern={patterns.library_alias}
+          title={`не более ${limits.library_alias_len} символов`}
+          value={alias}
+          onChange={event => setAlias(event.target.value)}
+        />
 
         <TextArea
           id='operation_comment'

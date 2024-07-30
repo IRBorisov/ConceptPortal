@@ -34,7 +34,7 @@ class ArgumentSerializer(serializers.ModelSerializer):
 
 class OperationCreateSerializer(serializers.Serializer):
     ''' Serializer: Operation creation. '''
-    class OperationData(serializers.ModelSerializer):
+    class OperationCreateData(serializers.ModelSerializer):
         ''' Serializer: Operation creation data. '''
         alias = serializers.CharField()
         operation_type = serializers.ChoiceField(OperationType.choices)
@@ -43,11 +43,11 @@ class OperationCreateSerializer(serializers.Serializer):
             ''' serializer metadata. '''
             model = Operation
             fields = \
-                'alias', 'operation_type', 'title', 'sync_text', \
+                'alias', 'operation_type', 'title', \
                 'comment', 'result', 'position_x', 'position_y'
 
     create_schema = serializers.BooleanField(default=False, required=False)
-    item_data = OperationData()
+    item_data = OperationCreateData()
     arguments = PKField(many=True, queryset=Operation.objects.all(), required=False)
 
     positions = serializers.ListField(
@@ -58,15 +58,15 @@ class OperationCreateSerializer(serializers.Serializer):
 
 class OperationUpdateSerializer(serializers.Serializer):
     ''' Serializer: Operation creation. '''
-    class OperationData(serializers.ModelSerializer):
+    class OperationUpdateData(serializers.ModelSerializer):
         ''' Serializer: Operation creation data. '''
         class Meta:
             ''' serializer metadata. '''
             model = Operation
-            fields = 'alias', 'title', 'sync_text', 'comment'
+            fields = 'alias', 'title', 'comment'
 
     target = PKField(many=False, queryset=Operation.objects.all())
-    item_data = OperationData()
+    item_data = OperationUpdateData()
     arguments = PKField(many=True, queryset=Operation.objects.all(), required=False)
     substitutions = serializers.ListField(
         child=SubstitutionSerializerBase(),
@@ -145,7 +145,6 @@ class SetOperationInputSerializer(serializers.Serializer):
         allow_null=True,
         default=None
     )
-    sync_text = serializers.BooleanField(default=False, required=False)
     positions = serializers.ListField(
         child=OperationPositionSerializer(),
         default=[]
@@ -196,7 +195,6 @@ class OperationSchemaSerializer(serializers.ModelSerializer):
             'operation',
             'original',
             'substitution',
-            'transfer_term',
             original_alias=F('original__alias'),
             original_term=F('original__term_resolved'),
             substitution_alias=F('substitution__alias'),

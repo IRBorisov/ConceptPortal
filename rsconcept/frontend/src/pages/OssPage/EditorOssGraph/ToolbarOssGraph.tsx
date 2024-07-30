@@ -128,7 +128,7 @@ function ToolbarOssGraph({
             onClick={onSavePositions}
           />
           <MiniButton
-            title={prepareTooltip('Новая операция', 'Ctrl + Q')}
+            titleHtml={prepareTooltip('Новая операция', 'Ctrl + Q')}
             icon={<IconNewItem size='1.25rem' className='icon-green' />}
             disabled={controller.isProcessing}
             onClick={onCreate}

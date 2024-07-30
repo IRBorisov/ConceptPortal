@@ -8,7 +8,8 @@ import Modal, { ModalProps } from '@/components/ui/Modal';
 import TabLabel from '@/components/ui/TabLabel';
 import useRSFormDetails from '@/hooks/useRSFormDetails';
 import { LibraryItemID } from '@/models/library';
-import { IBinarySubstitution, IInlineSynthesisData, IRSForm } from '@/models/rsform';
+import { ICstSubstitute } from '@/models/oss';
+import { IInlineSynthesisData, IRSForm } from '@/models/rsform';
 
 import TabConstituents from './TabConstituents';
 import TabSchema from './TabSchema';
@@ -30,7 +31,7 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
 
   const [donorID, setDonorID] = useState<LibraryItemID | undefined>(undefined);
   const [selected, setSelected] = useState<LibraryItemID[]>([]);
-  const [substitutions, setSubstitutions] = useState<IBinarySubstitution[]>([]);
+  const [substitutions, setSubstitutions] = useState<ICstSubstitute[]>([]);
 
   const source = useRSFormDetails({ target: donorID ? String(donorID) : undefined });
 
@@ -44,11 +45,7 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
       source: source.schema?.id,
       receiver: receiver.id,
       items: selected,
-      substitutions: substitutions.map(item => ({
-        original: item.deleteRight ? item.rightCst.id : item.leftCst.id,
-        substitution: item.deleteRight ? item.leftCst.id : item.rightCst.id,
-        transfer_term: !item.deleteRight && item.takeLeftTerm
-      }))
+      substitutions: substitutions
     };
     onInlineSynthesis(data);
   }

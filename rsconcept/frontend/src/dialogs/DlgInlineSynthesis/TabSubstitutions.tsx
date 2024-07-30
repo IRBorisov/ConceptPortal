@@ -1,11 +1,13 @@
 'use client';
 
-import { ErrorData } from '@/components/info/InfoError';
-import DataLoader from '@/components/wrap/DataLoader';
-import { ConstituentaID, IBinarySubstitution, IRSForm } from '@/models/rsform';
-import { prefixes } from '@/utils/constants';
+import { useCallback, useMemo } from 'react';
 
-import PickInlineSubstitutions from '../../components/select/PickInlineSubstitutions';
+import { ErrorData } from '@/components/info/InfoError';
+import PickSubstitutions from '@/components/select/PickSubstitutions';
+import DataLoader from '@/components/wrap/DataLoader';
+import { ICstSubstitute } from '@/models/oss';
+import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
+import { prefixes } from '@/utils/constants';
 
 interface TabSubstitutionsProps {
   receiver?: IRSForm;
@@ -15,8 +17,8 @@ interface TabSubstitutionsProps {
   loading?: boolean;
   error?: ErrorData;
 
-  substitutions: IBinarySubstitution[];
-  setSubstitutions: React.Dispatch<React.SetStateAction<IBinarySubstitution[]>>;
+  substitutions: ICstSubstitute[];
+  setSubstitutions: React.Dispatch<React.SetStateAction<ICstSubstitute[]>>;
 }
 
 function TabSubstitutions({
@@ -30,16 +32,22 @@ function TabSubstitutions({
   substitutions,
   setSubstitutions
 }: TabSubstitutionsProps) {
+  const filter = useCallback(
+    (cst: IConstituenta) => cst.id !== source?.id || selected.includes(cst.id),
+    [selected, source]
+  );
+
+  const schemas = useMemo(() => [...(source ? [source] : []), ...(receiver ? [receiver] : [])], [source, receiver]);
+
   return (
     <DataLoader id='dlg-substitutions-tab' className='cc-column' isLoading={loading} error={error} hasNoData={!source}>
-      <PickInlineSubstitutions
-        items={substitutions}
-        setItems={setSubstitutions}
+      <PickSubstitutions
+        substitutions={substitutions}
+        setSubstitutions={setSubstitutions}
         rows={10}
         prefixID={prefixes.cst_inline_synth_substitutes}
-        schema1={receiver}
-        schema2={source}
-        filter2={cst => selected.includes(cst.id)}
+        schemas={schemas}
+        filter={filter}
       />
     </DataLoader>
   );

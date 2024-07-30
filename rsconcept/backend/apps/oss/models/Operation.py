@@ -2,7 +2,6 @@
 from django.db.models import (
     CASCADE,
     SET_NULL,
-    BooleanField,
     CharField,
     FloatField,
     ForeignKey,
@@ -42,10 +41,6 @@ class Operation(Model):
         null=True,
         on_delete=SET_NULL,
         related_name='producer'
-    )
-    sync_text: BooleanField = BooleanField(
-        verbose_name='Синхронизация',
-        default=True
     )
 
     alias: CharField = CharField(

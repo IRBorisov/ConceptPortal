@@ -273,43 +273,6 @@ class TestRSFormViewset(EndpointTester):
 
 
     @decl_endpoint('/api/rsforms/{item}/substitute', method='patch')
-    def test_substitute_single(self):
-        x1 = self.owned.insert_new(
-            alias='X1',
-            term_raw='Test1',
-            term_resolved='Test1',
-            term_forms=[{'text': 'form1', 'tags': 'sing,datv'}]
-        )
-        x2 = self.owned.insert_new(
-            alias='X2',
-            term_raw='Test2'
-        )
-        unowned = self.unowned.insert_new('X2')
-
-        data = {'substitutions': [{'original': x1.pk, 'substitution': unowned.pk, 'transfer_term': True}]}
-        self.executeForbidden(data=data, item=self.unowned_id)
-        self.executeBadData(data=data, item=self.owned_id)
-
-        data = {'substitutions': [{'original': unowned.pk, 'substitution': x1.pk, 'transfer_term': True}]}
-        self.executeBadData(data=data, item=self.owned_id)
-
-        data = {'substitutions': [{'original': x1.pk, 'substitution': x1.pk, 'transfer_term': True}]}
-        self.executeBadData(data=data, item=self.owned_id)
-
-        d1 = self.owned.insert_new(
-            alias='D1',
-            term_raw='@{X2|sing,datv}',
-            definition_formal='X1'
-        )
-        data = {'substitutions': [{'original': x1.pk, 'substitution': x2.pk, 'transfer_term': True}]}
-        response = self.executeOK(data=data, item=self.owned_id)
-        d1.refresh_from_db()
-        x2.refresh_from_db()
-        self.assertEqual(x2.term_raw, 'Test1')
-        self.assertEqual(d1.term_resolved, 'form1')
-        self.assertEqual(d1.definition_formal, 'X2')
-
-    @decl_endpoint('/api/rsforms/{item}/substitute', method='patch')
     def test_substitute_multiple(self):
         self.set_params(item=self.owned_id)
         x1 = self.owned.insert_new('X1')
@@ -327,13 +290,11 @@ class TestRSFormViewset(EndpointTester):
         data = {'substitutions': [
             {
                 'original': x1.pk,
-                'substitution': d1.pk,
-                'transfer_term': True
+                'substitution': d1.pk
             },
             {
                 'original': x1.pk,
-                'substitution': d2.pk,
-                'transfer_term': True
+                'substitution': d2.pk
             }
         ]}
         self.executeBadData(data=data)
@@ -341,13 +302,11 @@ class TestRSFormViewset(EndpointTester):
         data = {'substitutions': [
             {
                 'original': x1.pk,
-                'substitution': d1.pk,
-                'transfer_term': True
+                'substitution': d1.pk
             },
             {
                 'original': x2.pk,
-                'substitution': d2.pk,
-                'transfer_term': True
+                'substitution': d2.pk
             }
         ]}
         response = self.executeOK(data=data, item=self.owned_id)

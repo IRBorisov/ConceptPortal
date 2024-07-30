@@ -5,7 +5,6 @@ import { useCallback, useEffect } from 'react';
 import { IconReset } from '@/components/Icons';
 import PickSchema from '@/components/select/PickSchema';
 import Checkbox from '@/components/ui/Checkbox';
-import FlexColumn from '@/components/ui/FlexColumn';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
 import TextArea from '@/components/ui/TextArea';
@@ -25,8 +24,6 @@ interface TabInputOperationProps {
   setComment: React.Dispatch<React.SetStateAction<string>>;
   attachedID: LibraryItemID | undefined;
   setAttachedID: React.Dispatch<React.SetStateAction<LibraryItemID | undefined>>;
-  syncText: boolean;
-  setSyncText: React.Dispatch<React.SetStateAction<boolean>>;
   createSchema: boolean;
   setCreateSchema: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -41,8 +38,6 @@ function TabInputOperation({
   setComment,
   attachedID,
   setAttachedID,
-  syncText,
-  setSyncText,
   createSchema,
   setCreateSchema
 }: TabInputOperationProps) {
@@ -51,9 +46,8 @@ function TabInputOperation({
   useEffect(() => {
     if (createSchema) {
       setAttachedID(undefined);
-      setSyncText(true);
     }
-  }, [createSchema, setAttachedID, setSyncText]);
+  }, [createSchema, setAttachedID]);
 
   return (
     <AnimateFade className='cc-column'>
@@ -62,27 +56,19 @@ function TabInputOperation({
         label='Полное название'
         value={title}
         onChange={event => setTitle(event.target.value)}
-        disabled={syncText && attachedID !== undefined}
+        disabled={attachedID !== undefined}
       />
       <div className='flex gap-6'>
-        <FlexColumn>
-          <TextInput
-            id='operation_alias'
-            label='Сокращение'
-            className='w-[14rem]'
-            pattern={patterns.library_alias}
-            title={`не более ${limits.library_alias_len} символов`}
-            value={alias}
-            onChange={event => setAlias(event.target.value)}
-            disabled={syncText && attachedID !== undefined}
-          />
-          <Checkbox
-            value={syncText}
-            setValue={setSyncText}
-            label='Синхронизировать текст'
-            titleHtml='Загрузить текстовые поля<br/> из концептуальной схемы'
-          />
-        </FlexColumn>
+        <TextInput
+          id='operation_alias'
+          label='Сокращение'
+          className='w-[14rem]'
+          pattern={patterns.library_alias}
+          title={`не более ${limits.library_alias_len} символов`}
+          value={alias}
+          onChange={event => setAlias(event.target.value)}
+          disabled={attachedID !== undefined}
+        />
 
         <TextArea
           id='operation_comment'
@@ -91,7 +77,7 @@ function TabInputOperation({
           rows={3}
           value={comment}
           onChange={event => setComment(event.target.value)}
-          disabled={syncText && attachedID !== undefined}
+          disabled={attachedID !== undefined}
         />
       </div>
 

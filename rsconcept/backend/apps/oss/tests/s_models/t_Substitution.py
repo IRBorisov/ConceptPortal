@@ -47,8 +47,7 @@ class TestSynthesisSubstitution(TestCase):
         self.substitution = Substitution.objects.create(
             operation=self.operation3,
             original=self.ks1x1,
-            substitution=self.ks2x1,
-            transfer_term=False
+            substitution=self.ks2x1
         )
 
 

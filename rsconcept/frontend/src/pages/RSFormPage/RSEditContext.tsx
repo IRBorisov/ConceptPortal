@@ -646,6 +646,7 @@ export const RSEditState = ({
           ) : null}
           {showSubstitute ? (
             <DlgSubstituteCst
+              schema={model.schema}
               hideWindow={() => setShowSubstitute(false)} // prettier: split lines
               onSubstitute={handleSubstituteCst}
             />

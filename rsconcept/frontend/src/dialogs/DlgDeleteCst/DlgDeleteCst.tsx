@@ -11,9 +11,9 @@ import { prefixes } from '@/utils/constants';
 import ListConstituents from './ListConstituents';
 
 interface DlgDeleteCstProps extends Pick<ModalProps, 'hideWindow'> {
+  schema: IRSForm;
   selected: ConstituentaID[];
   onDelete: (items: ConstituentaID[]) => void;
-  schema: IRSForm;
 }
 
 function DlgDeleteCst({ hideWindow, selected, schema, onDelete }: DlgDeleteCstProps) {

@@ -29,7 +29,6 @@ class TestOperation(TestCase):
         self.assertEqual(self.operation.alias, 'KS1')
         self.assertEqual(self.operation.title, '')
         self.assertEqual(self.operation.comment, '')
-        self.assertEqual(self.operation.sync_text, True)
         self.assertEqual(self.operation.position_x, 0)
         self.assertEqual(self.operation.position_y, 0)
 
@@ -49,15 +48,6 @@ class TestOperation(TestCase):
         self.assertEqual(self.operation.alias, schema.model.alias)
         self.assertEqual(self.operation.title, schema.model.title)
         self.assertEqual(self.operation.comment, schema.model.comment)
-
-        self.operation.sync_text = False
-        self.operation.save()
-
-        schema.model.alias = 'KS3'
-        schema.save()
-        self.operation.refresh_from_db()
-        self.assertEqual(self.operation.result, schema.model)
-        self.assertNotEqual(self.operation.alias, schema.model.alias)
 
     def test_sync_from_library_item(self):
         schema = LibraryItem.objects.create(alias=self.operation.alias, item_type=LibraryItemType.RSFORM)

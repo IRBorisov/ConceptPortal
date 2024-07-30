@@ -21,7 +21,6 @@ class SubstitutionExSerializer(serializers.Serializer):
     operation = serializers.IntegerField()
     original = serializers.IntegerField()
     substitution = serializers.IntegerField()
-    transfer_term = serializers.BooleanField()
     original_alias = serializers.CharField()
     original_term = serializers.CharField()
     substitution_alias = serializers.CharField()

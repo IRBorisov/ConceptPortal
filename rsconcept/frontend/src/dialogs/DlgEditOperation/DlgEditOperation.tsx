@@ -43,7 +43,6 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
   const [alias, setAlias] = useState(target.alias);
   const [title, setTitle] = useState(target.title);
   const [comment, setComment] = useState(target.comment);
-  const [syncText, setSyncText] = useState(true);
 
   const [inputs, setInputs] = useState<OperationID[]>(oss.graph.expandInputs([target.id]));
   const inputOperations = useMemo(() => inputs.map(id => oss.operationByID.get(id)!), [inputs, oss.operationByID]);
@@ -53,6 +52,10 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
   );
   const [substitutions, setSubstitutions] = useState<ICstSubstitute[]>(oss.substitutions);
   const cache = useRSFormCache();
+  const schemas = useMemo(
+    () => schemasIDs.map(id => cache.getSchema(id)).filter(item => item !== undefined),
+    [schemasIDs, cache]
+  );
 
   const isValid = useMemo(() => alias !== '', [alias]);
 
@@ -67,8 +70,7 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
       item_data: {
         alias: alias,
         title: title,
-        comment: comment,
-        sync_text: syncText
+        comment: comment
       },
       positions: [],
       arguments: target.operation_type !== OperationType.SYNTHESIS ? undefined : inputs,
@@ -87,12 +89,10 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
           setComment={setComment}
           title={title}
           setTitle={setTitle}
-          syncText={syncText}
-          setSyncText={setSyncText}
         />
       </TabPanel>
     ),
-    [alias, comment, title, syncText]
+    [alias, comment, title]
   );
 
   const argumentsPanel = useMemo(
@@ -113,26 +113,15 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
     () => (
       <TabPanel>
         <TabSynthesis
-          operations={inputOperations}
+          schemas={schemas}
           loading={cache.loading}
           error={cache.error}
-          getSchema={cache.getSchema}
-          getConstituenta={cache.getConstituenta}
-          getSchemaByCst={cache.getSchemaByCst}
           substitutions={substitutions}
           setSubstitutions={setSubstitutions}
         />
       </TabPanel>
     ),
-    [
-      inputOperations,
-      cache.loading,
-      cache.error,
-      cache.getSchema,
-      cache.getConstituenta,
-      substitutions,
-      cache.getSchemaByCst
-    ]
+    [cache.loading, cache.error, substitutions, schemas]
   );
 
   return (

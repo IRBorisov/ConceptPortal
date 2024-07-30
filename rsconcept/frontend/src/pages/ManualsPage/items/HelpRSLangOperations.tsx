@@ -4,8 +4,6 @@ import {
   IconGenerateNames,
   IconGenerateStructure,
   IconInlineSynthesis,
-  IconKeepAliasOn,
-  IconKeepTermOn,
   IconReplace,
   IconSortList,
   IconTemplates
@@ -60,13 +58,7 @@ function HelpRSLangOperations() {
       </h2>
       <p>
         Формирование таблицы отождествлений и ее применение к текущей схеме. В результате будет удален ряд конституент и
-        их вхождения заменены на другие. Возможна настройка какой термин использовать для оставшихся конституент
-        <li>
-          <IconKeepAliasOn size='1.25rem' className='inline-icon' /> выбор сохраняемой конституенты
-        </li>
-        <li>
-          <IconKeepTermOn size='1.25rem' className='inline-icon' /> выбор сохраняемого термина
-        </li>
+        их вхождения заменены на другие.
       </p>
 
       <h2>

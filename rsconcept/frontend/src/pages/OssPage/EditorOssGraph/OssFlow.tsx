@@ -266,6 +266,12 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
       handleSavePositions();
       return;
     }
+    if ((event.ctrlKey || event.metaKey) && event.key === 'q') {
+      event.preventDefault();
+      event.stopPropagation();
+      handleCreateOperation();
+      return;
+    }
     if (event.key === 'Delete') {
       event.preventDefault();
       event.stopPropagation();

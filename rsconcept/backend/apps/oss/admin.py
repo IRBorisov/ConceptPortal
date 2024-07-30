@@ -21,7 +21,7 @@ class ArgumentAdmin(admin.ModelAdmin):
 class SynthesisSubstitutionAdmin(admin.ModelAdmin):
     ''' Admin model:  Substitutions as part of Synthesis operation. '''
     ordering = ['operation']
-    list_display = ['id', 'operation', 'original', 'substitution', 'transfer_term']
+    list_display = ['id', 'operation', 'original', 'substitution']
     search_fields = ['id', 'operation', 'original', 'substitution']
 
 

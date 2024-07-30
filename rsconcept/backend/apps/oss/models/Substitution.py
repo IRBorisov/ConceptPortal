@@ -1,5 +1,5 @@
 ''' Models: Synthesis Substitution. '''
-from django.db.models import CASCADE, BooleanField, ForeignKey, Model
+from django.db.models import CASCADE, ForeignKey, Model
 
 
 class Substitution(Model):
@@ -21,10 +21,6 @@ class Substitution(Model):
         to='rsform.Constituenta',
         on_delete=CASCADE,
         related_name='as_substitute'
-    )
-    transfer_term: BooleanField = BooleanField(
-        verbose_name='Перенос термина',
-        default=False
     )
 
     class Meta:

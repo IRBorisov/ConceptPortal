@@ -89,8 +89,6 @@ export { BiHelpCircle     as IconStatusUnknown }  from 'react-icons/bi';
 export { BiPauseCircle    as IconStatusIncalculable } from 'react-icons/bi';
 export { LuPower          as IconKeepAliasOn }    from 'react-icons/lu';
 export { LuPowerOff       as IconKeepAliasOff }   from 'react-icons/lu';
-export { LuFlag           as IconKeepTermOn }     from 'react-icons/lu';
-export { LuFlagOff        as IconKeepTermOff }    from 'react-icons/lu';
 
 // ===== Domain actions =====
 export { BiUpvote         as IconMoveUp }         from 'react-icons/bi';

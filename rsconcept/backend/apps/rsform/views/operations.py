@@ -41,7 +41,7 @@ def inline_synthesis(request: Request):
             else:
                 index = next(i for (i, cst) in enumerate(items) if cst == replacement)
                 replacement = new_items[index]
-            receiver.substitute(original, replacement, substitution['transfer_term'])
+            receiver.substitute(original, replacement)
         receiver.restore_order()
 
     return Response(

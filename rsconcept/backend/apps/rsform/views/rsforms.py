@@ -174,7 +174,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         )
 
     @extend_schema(
-        summary='substitute constituenta',
+        summary='execute substitutions',
         tags=['RSForm'],
         request=s.CstSubstituteSerializer,
         responses={
@@ -198,7 +198,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             for substitution in serializer.validated_data['substitutions']:
                 original = cast(m.Constituenta, substitution['original'])
                 replacement = cast(m.Constituenta, substitution['substitution'])
-                m.RSForm(schema).substitute(original, replacement, substitution['transfer_term'])
+                m.RSForm(schema).substitute(original, replacement)
 
         schema.refresh_from_db()
         return Response(

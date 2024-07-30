@@ -241,18 +241,12 @@ class RSForm:
     def substitute(
         self,
         original: Constituenta,
-        substitution: Constituenta,
-        transfer_term: bool
+        substitution: Constituenta
     ):
         ''' Execute constituenta substitution. '''
         assert original.pk != substitution.pk
         mapping = {original.alias: substitution.alias}
         self.apply_mapping(mapping)
-        if transfer_term:
-            substitution.term_raw = original.term_raw
-            substitution.term_forms = original.term_forms
-            substitution.term_resolved = original.term_resolved
-            substitution.save()
         original.delete()
         self.on_term_change([substitution.id])
 

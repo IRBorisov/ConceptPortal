@@ -57,13 +57,11 @@ class TestInlineSynthesis(EndpointTester):
             'substitutions': [
                 {
                     'original': ks1_x1.pk,
-                    'substitution': ks2_s1.pk,
-                    'transfer_term': False
+                    'substitution': ks2_s1.pk
                 },
                 {
                     'original': ks2_x1.pk,
-                    'substitution': ks1_s1.pk,
-                    'transfer_term': True
+                    'substitution': ks1_s1.pk
                 }
             ]
         }

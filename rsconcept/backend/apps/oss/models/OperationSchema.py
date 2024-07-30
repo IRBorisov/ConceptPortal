@@ -134,12 +134,8 @@ class OperationSchema:
             if len(subs) == 0:
                 changed = True
                 current.delete()
-                continue
-            if current.transfer_term != subs[0]['transfer_term']:
-                current.transfer_term = subs[0]['transfer_term']
-                current.save()
-                continue
-            processed.append(subs[0])
+            else:
+                processed.append(subs[0])
 
         for sub in substitutes:
             if sub not in processed:
@@ -147,8 +143,7 @@ class OperationSchema:
                 Substitution.objects.create(
                     operation=target,
                     original=sub['original'],
-                    substitution=sub['substitution'],
-                    transfer_term=sub['transfer_term']
+                    substitution=sub['substitution']
                 )
 
         if not changed:

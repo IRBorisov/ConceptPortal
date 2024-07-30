@@ -44,8 +44,7 @@ class TestOssViewset(EndpointTester):
         self.owned.set_arguments(self.operation3, [self.operation1, self.operation2])
         self.owned.set_substitutions(self.operation3, [{
             'original': self.ks1x1,
-            'substitution': self.ks2x1,
-            'transfer_term': False
+            'substitution': self.ks2x1
         }])
 
     @decl_endpoint('/api/oss/{item}/details', method='get')
@@ -71,7 +70,6 @@ class TestOssViewset(EndpointTester):
         self.assertEqual(sub['operation'], self.operation3.pk)
         self.assertEqual(sub['original'], self.ks1x1.pk)
         self.assertEqual(sub['substitution'], self.ks2x1.pk)
-        self.assertEqual(sub['transfer_term'], False)
         self.assertEqual(sub['original_alias'], self.ks1x1.alias)
         self.assertEqual(sub['original_term'], self.ks1x1.term_resolved)
         self.assertEqual(sub['substitution_alias'], self.ks2x1.alias)
@@ -134,7 +132,6 @@ class TestOssViewset(EndpointTester):
                 'alias': 'Test3',
                 'title': 'Test title',
                 'comment': 'Тест кириллицы',
-                'sync_text': False,
                 'position_x': 1,
                 'position_y': 1,
             },
@@ -159,7 +156,6 @@ class TestOssViewset(EndpointTester):
         self.assertEqual(new_operation['comment'], data['item_data']['comment'])
         self.assertEqual(new_operation['position_x'], data['item_data']['position_x'])
         self.assertEqual(new_operation['position_y'], data['item_data']['position_y'])
-        self.assertEqual(new_operation['sync_text'], data['item_data']['sync_text'])
         self.assertEqual(new_operation['result'], None)
         self.operation1.refresh_from_db()
         self.assertEqual(self.operation1.position_x, data['positions'][0]['position_x'])
@@ -274,13 +270,11 @@ class TestOssViewset(EndpointTester):
         self.operation1.result = None
         self.operation1.comment = 'TestComment'
         self.operation1.title = 'TestTitle'
-        self.operation1.sync_text = False
         self.operation1.save()
         response = self.executeOK(data=data)
         self.operation1.refresh_from_db()
 
         new_schema = response.data['new_schema']
-        self.assertEqual(self.operation1.sync_text, True)
         self.assertEqual(new_schema['id'], self.operation1.result.pk)
         self.assertEqual(new_schema['alias'], self.operation1.alias)
         self.assertEqual(new_schema['title'], self.operation1.title)
@@ -295,7 +289,6 @@ class TestOssViewset(EndpointTester):
         self.executeBadData(item=self.owned_id)
 
         data = {
-            'sync_text': True,
             'positions': []
         }
         self.executeBadData(data=data)
@@ -312,7 +305,6 @@ class TestOssViewset(EndpointTester):
         self.login()
         response = self.executeOK(data=data)
         self.operation1.refresh_from_db()
-        self.assertEqual(self.operation1.sync_text, True)
         self.assertEqual(self.operation1.result, None)
 
         data['input'] = self.ks1.model.pk
@@ -322,7 +314,6 @@ class TestOssViewset(EndpointTester):
         self.ks1.save()
         response = self.executeOK(data=data)
         self.operation1.refresh_from_db()
-        self.assertEqual(self.operation1.sync_text, True)
         self.assertEqual(self.operation1.result, self.ks1.model)
         self.assertEqual(self.operation1.alias, self.ks1.model.alias)
         self.assertEqual(self.operation1.title, self.ks1.model.title)
@@ -334,14 +325,12 @@ class TestOssViewset(EndpointTester):
         self.operation2.result = None
 
         data = {
-            'sync_text': True,
             'positions': [],
             'target': self.operation1.pk,
             'input': self.ks2.model.pk
         }
         response = self.executeOK(data=data, item=self.owned_id)
         self.operation2.refresh_from_db()
-        self.assertEqual(self.operation2.sync_text, True)
         self.assertEqual(self.operation2.result, self.ks2.model)
 
     @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
@@ -357,16 +346,14 @@ class TestOssViewset(EndpointTester):
             'item_data': {
                 'alias': 'Test3 mod',
                 'title': 'Test title mod',
-                'comment': 'Comment mod',
-                'sync_text': True
+                'comment': 'Comment mod'
             },
             'positions': [],
             'arguments': [self.operation1.pk, self.operation2.pk],
             'substitutions': [
                 {
                     'original': self.ks1x1.pk,
-                    'substitution': ks3x1.pk,
-                    'transfer_term': False
+                    'substitution': ks3x1.pk
                 }
             ]
         }
@@ -381,7 +368,6 @@ class TestOssViewset(EndpointTester):
         self.login()
         response = self.executeOK(data=data)
         self.operation3.refresh_from_db()
-        self.assertEqual(self.operation3.sync_text, data['item_data']['sync_text'])
         self.assertEqual(self.operation3.alias, data['item_data']['alias'])
         self.assertEqual(self.operation3.title, data['item_data']['title'])
         self.assertEqual(self.operation3.comment, data['item_data']['comment'])
@@ -389,7 +375,6 @@ class TestOssViewset(EndpointTester):
         sub = self.operation3.getSubstitutions()[0]
         self.assertEqual(sub.original.pk, data['substitutions'][0]['original'])
         self.assertEqual(sub.substitution.pk, data['substitutions'][0]['substitution'])
-        self.assertEqual(sub.transfer_term, data['substitutions'][0]['transfer_term'])
 
     @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
     def test_update_operation_sync(self):
@@ -401,15 +386,13 @@ class TestOssViewset(EndpointTester):
             'item_data': {
                 'alias': 'Test3 mod',
                 'title': 'Test title mod',
-                'comment': 'Comment mod',
-                'sync_text': True
+                'comment': 'Comment mod'
             },
             'positions': [],
         }
 
         response = self.executeOK(data=data)
         self.operation1.refresh_from_db()
-        self.assertEqual(self.operation1.sync_text, data['item_data']['sync_text'])
         self.assertEqual(self.operation1.alias, data['item_data']['alias'])
         self.assertEqual(self.operation1.title, data['item_data']['title'])
         self.assertEqual(self.operation1.comment, data['item_data']['comment'])

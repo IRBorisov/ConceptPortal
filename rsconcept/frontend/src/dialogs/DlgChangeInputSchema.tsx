@@ -5,7 +5,6 @@ import { useCallback, useMemo, useState } from 'react';
 
 import { IconReset } from '@/components/Icons';
 import PickSchema from '@/components/select/PickSchema';
-import Checkbox from '@/components/ui/Checkbox';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
 import Modal, { ModalProps } from '@/components/ui/Modal';
@@ -15,12 +14,11 @@ import { IOperation, IOperationSchema } from '@/models/oss';
 interface DlgChangeInputSchemaProps extends Pick<ModalProps, 'hideWindow'> {
   oss: IOperationSchema;
   target: IOperation;
-  onSubmit: (newSchema: LibraryItemID | undefined, syncText: boolean) => void;
+  onSubmit: (newSchema: LibraryItemID | undefined) => void;
 }
 
 function DlgChangeInputSchema({ oss, hideWindow, target, onSubmit }: DlgChangeInputSchemaProps) {
   const [selected, setSelected] = useState<LibraryItemID | undefined>(target.result ?? undefined);
-  const [syncText, setSyncText] = useState(target.sync_text);
 
   const baseFilter = useCallback(
     (item: ILibraryItem) => !oss.schemas.includes(item.id) || item.id === selected || item.id === target.result,
@@ -34,7 +32,7 @@ function DlgChangeInputSchema({ oss, hideWindow, target, onSubmit }: DlgChangeIn
   }, []);
 
   function handleSubmit() {
-    onSubmit(selected, syncText);
+    onSubmit(selected);
   }
 
   return (
@@ -65,12 +63,6 @@ function DlgChangeInputSchema({ oss, hideWindow, target, onSubmit }: DlgChangeIn
         onSelectValue={handleSelectLocation}
         rows={8}
         baseFilter={baseFilter}
-      />
-      <Checkbox
-        value={syncText}
-        setValue={setSyncText}
-        label='Синхронизировать текст'
-        titleHtml='Загрузить текстовые поля<br/> из концептуальной схемы'
       />
     </Modal>
   );

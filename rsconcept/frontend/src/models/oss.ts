@@ -30,7 +30,6 @@ export interface IOperation {
   alias: string;
   title: string;
   comment: string;
-  sync_text: boolean;
 
   position_x: number;
   position_y: number;
@@ -63,7 +62,7 @@ export interface ITargetOperation extends IPositionsData {
 export interface IOperationCreateData extends IPositionsData {
   item_data: Pick<
     IOperation,
-    'alias' | 'operation_type' | 'title' | 'comment' | 'position_x' | 'position_y' | 'result' | 'sync_text'
+    'alias' | 'operation_type' | 'title' | 'comment' | 'position_x' | 'position_y' | 'result'
   >;
   arguments: OperationID[] | undefined;
   create_schema: boolean;
@@ -73,7 +72,7 @@ export interface IOperationCreateData extends IPositionsData {
  * Represents {@link IOperation} data, used in update process.
  */
 export interface IOperationUpdateData extends ITargetOperation {
-  item_data: Pick<IOperation, 'alias' | 'title' | 'comment' | 'sync_text'>;
+  item_data: Pick<IOperation, 'alias' | 'title' | 'comment'>;
   arguments: OperationID[] | undefined;
   substitutions: ICstSubstitute[] | undefined;
 }
@@ -82,7 +81,6 @@ export interface IOperationUpdateData extends ITargetOperation {
  * Represents {@link IOperation} data, used in setInput process.
  */
 export interface IOperationSetInputData extends ITargetOperation {
-  sync_text: boolean;
   input: LibraryItemID | null;
 }
 
@@ -100,7 +98,6 @@ export interface IArgument {
 export interface ICstSubstitute {
   original: ConstituentaID;
   substitution: ConstituentaID;
-  transfer_term: boolean;
 }
 
 /**
@@ -114,11 +111,10 @@ export interface ICstSubstituteData {
  * Represents substitution for multi synthesis table.
  */
 export interface IMultiSubstitution {
-  original_operation: IOperation | undefined;
+  original_source: ILibraryItem | undefined;
   original: IConstituenta | undefined;
   substitution: IConstituenta | undefined;
-  substitution_operation: IOperation | undefined;
-  transfer_term: boolean;
+  substitution_source: ILibraryItem | undefined;
 }
 
 /**

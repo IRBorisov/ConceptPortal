@@ -265,14 +265,13 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
   }, []);
 
   const setTargetInput = useCallback(
-    (newInput: LibraryItemID | undefined, syncText: boolean) => {
+    (newInput: LibraryItemID | undefined) => {
       if (!targetOperationID) {
         return;
       }
       const data: IOperationSetInputData = {
         target: targetOperationID,
         positions: positions,
-        sync_text: syncText,
         input: newInput ?? null
       };
       model.setInput(data, () => toast.success(information.changesSaved));
