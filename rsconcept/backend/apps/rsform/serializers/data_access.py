@@ -31,7 +31,7 @@ class CstSerializer(serializers.ModelSerializer):
         ''' serializer metadata. '''
         model = Constituenta
         fields = '__all__'
-        read_only_fields = ('id', 'order', 'alias', 'cst_type', 'definition_resolved', 'term_resolved')
+        read_only_fields = ('id', 'schema', 'order', 'alias', 'cst_type', 'definition_resolved', 'term_resolved')
 
     def update(self, instance: Constituenta, validated_data) -> Constituenta:
         data = validated_data  # Note: use alias for better code readability

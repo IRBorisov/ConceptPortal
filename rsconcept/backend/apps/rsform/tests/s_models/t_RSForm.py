@@ -208,11 +208,11 @@ class TestRSForm(TestCase):
             definition_formal=x1.alias
         )
 
-        self.schema.substitute(x1, x2, True)
+        self.schema.substitute(x1, x2)
         x2.refresh_from_db()
         d1.refresh_from_db()
         self.assertEqual(self.schema.constituents().count(), 2)
-        self.assertEqual(x2.term_raw, 'Test')
+        self.assertEqual(x2.term_raw, 'Test2')
         self.assertEqual(d1.definition_formal, x2.alias)
 
 

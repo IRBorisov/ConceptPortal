@@ -6,10 +6,13 @@ import { ILibraryCreateData, ILibraryItem } from '@/models/library';
 import { ICstSubstituteData } from '@/models/oss';
 import {
   IConstituentaList,
+  IConstituentaMeta,
   ICstCreateData,
   ICstCreatedResponse,
   ICstMovetoData,
   ICstRenameData,
+  ICstUpdateData,
+  IInlineSynthesisData,
   IProduceStructureResponse,
   IRSFormData,
   IRSFormUploadData,
@@ -64,6 +67,13 @@ export function getTRSFile(target: string, version: string, request: FrontPull<B
 export function postCreateConstituenta(schema: string, request: FrontExchange<ICstCreateData, ICstCreatedResponse>) {
   AxiosPost({
     endpoint: `/api/rsforms/${schema}/create-cst`,
+    request: request
+  });
+}
+
+export function patchUpdateConstituenta(schema: string, request: FrontExchange<ICstUpdateData, IConstituentaMeta>) {
+  AxiosPatch({
+    endpoint: `/api/rsforms/${schema}/update-cst`,
     request: request
   });
 }
@@ -133,5 +143,12 @@ export function patchUploadTRS(target: string, request: FrontExchange<IRSFormUpl
         'Content-Type': 'multipart/form-data'
       }
     }
+  });
+}
+
+export function patchInlineSynthesis(request: FrontExchange<IInlineSynthesisData, IRSFormData>) {
+  AxiosPatch({
+    endpoint: `/api/rsforms/inline-synthesis`,
+    request: request
   });
 }

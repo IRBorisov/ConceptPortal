@@ -95,10 +95,6 @@ class Constituenta(Model):
         verbose_name = 'Конституента'
         verbose_name_plural = 'Конституенты'
 
-    def get_absolute_url(self):
-        ''' URL access. '''
-        return reverse('constituenta-detail', kwargs={'pk': self.pk})
-
     def __str__(self) -> str:
         return f'{self.alias}'
 

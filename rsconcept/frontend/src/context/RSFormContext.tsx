@@ -3,7 +3,6 @@
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
 import { DataCallback } from '@/backend/apiTransport';
-import { patchConstituenta } from '@/backend/constituents';
 import {
   deleteUnsubscribe,
   patchLibraryItem,
@@ -14,16 +13,17 @@ import {
   postCreateVersion,
   postSubscribe
 } from '@/backend/library';
-import { patchInlineSynthesis } from '@/backend/operations';
 import {
   getTRSFile,
   patchDeleteConstituenta,
+  patchInlineSynthesis,
   patchMoveConstituenta,
   patchProduceStructure,
   patchRenameConstituenta,
   patchResetAliases,
   patchRestoreOrder,
   patchSubstituteConstituents,
+  patchUpdateConstituenta,
   patchUploadTRS,
   postCreateConstituenta
 } from '@/backend/rsforms';
@@ -439,7 +439,7 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
   const cstUpdate = useCallback(
     (data: ICstUpdateData, callback?: DataCallback<IConstituentaMeta>) => {
       setProcessingError(undefined);
-      patchConstituenta(String(data.id), {
+      patchUpdateConstituenta(itemID, {
         data: data,
         showError: true,
         setLoading: setProcessing,

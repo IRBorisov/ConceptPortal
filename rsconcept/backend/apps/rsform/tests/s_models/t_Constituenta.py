@@ -20,12 +20,6 @@ class TestConstituenta(TestCase):
         self.assertEqual(str(cst), testStr)
 
 
-    def test_url(self):
-        testStr = 'X1'
-        cst = Constituenta.objects.create(alias=testStr, schema=self.schema1.model, order=1, convention='Test')
-        self.assertEqual(cst.get_absolute_url(), f'/api/constituents/{cst.pk}')
-
-
     def test_order_not_null(self):
         with self.assertRaises(IntegrityError):
             Constituenta.objects.create(alias='X1', schema=self.schema1.model)
