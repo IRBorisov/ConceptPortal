@@ -4,7 +4,7 @@
 
 import { Graph } from '@/models/Graph';
 
-import { ILibraryItem, ILibraryItemVersioned, LibraryItemID } from './library';
+import { ILibraryItem, ILibraryItemReference, ILibraryItemVersioned, LibraryItemID } from './library';
 import { ICstSubstitute } from './oss';
 import { IArgumentInfo, ParsingStatus, ValueClass } from './rslang';
 
@@ -111,6 +111,8 @@ export interface IConstituenta extends IConstituentaData {
   status: ExpressionStatus;
   is_template: boolean;
   is_simple_expression: boolean;
+  is_inherited: boolean;
+  is_inherited_parent: boolean;
   parent?: ConstituentaID;
   parent_alias?: string;
   children: number[];
@@ -183,6 +185,7 @@ export interface IRSFormStats {
   count_errors: number;
   count_property: number;
   count_incalculable: number;
+  count_inherited: number;
 
   count_text_term: number;
   count_definition: number;
@@ -199,21 +202,23 @@ export interface IRSFormStats {
 }
 
 /**
+ * Represents data for {@link IRSForm} provided by backend.
+ */
+export interface IRSFormData extends ILibraryItemVersioned {
+  items: IConstituentaData[];
+  inheritance: ConstituentaID[][];
+  oss: ILibraryItemReference[];
+}
+
+/**
  * Represents formal explication for set of concepts.
  */
-export interface IRSForm extends ILibraryItemVersioned {
+export interface IRSForm extends IRSFormData {
   items: IConstituenta[];
   stats: IRSFormStats;
   graph: Graph;
   cstByAlias: Map<string, IConstituenta>;
   cstByID: Map<ConstituentaID, IConstituenta>;
-}
-
-/**
- * Represents data for {@link IRSForm} provided by backend.
- */
-export interface IRSFormData extends ILibraryItemVersioned {
-  items: IConstituentaData[];
 }
 
 /**

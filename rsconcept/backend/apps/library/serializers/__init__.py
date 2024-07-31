@@ -5,6 +5,7 @@ from .data_access import (
     LibraryItemBaseSerializer,
     LibraryItemCloneSerializer,
     LibraryItemDetailsSerializer,
+    LibraryItemReferenceSerializer,
     LibraryItemSerializer,
     UsersListSerializer,
     UserTargetSerializer,

@@ -20,6 +20,7 @@ function BadgeConstituenta({ value, prefixID, theme }: BadgeConstituentaProps) {
         'min-w-[3.1rem] max-w-[3.1rem]', // prettier: split lines
         'px-1',
         'border rounded-md',
+        value.is_inherited && 'border-dashed',
         'text-center font-medium whitespace-nowrap'
       )}
       style={{

@@ -17,6 +17,14 @@ class LibraryItemBaseSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
+class LibraryItemReferenceSerializer(serializers.ModelSerializer):
+    ''' Serializer: reference to LibraryItem. '''
+    class Meta:
+        ''' serializer metadata. '''
+        model = LibraryItem
+        fields = 'id', 'alias'
+
+
 class LibraryItemSerializer(serializers.ModelSerializer):
     ''' Serializer: LibraryItem entry limited access. '''
     class Meta:

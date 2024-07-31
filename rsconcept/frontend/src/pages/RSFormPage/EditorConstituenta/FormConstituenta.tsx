@@ -5,8 +5,10 @@ import { AnimatePresence } from 'framer-motion';
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { IconSave } from '@/components/Icons';
+import { IconChild, IconSave } from '@/components/Icons';
 import RefsInput from '@/components/RefsInput';
+import MiniButton from '@/components/ui/MiniButton';
+import Overlay from '@/components/ui/Overlay';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
 import AnimateFade from '@/components/wrap/AnimateFade';
@@ -182,7 +184,7 @@ function FormConstituenta({
               }
               value={expression}
               activeCst={state}
-              disabled={disabled}
+              disabled={disabled || state?.is_inherited}
               toggleReset={toggleReset}
               onChange={newValue => setExpression(newValue)}
               setTypification={setTypification}
@@ -229,15 +231,26 @@ function FormConstituenta({
               Добавить комментарий
             </button>
           ) : null}
+
           {!disabled || processing ? (
-            <SubmitButton
-              key='cst_form_submit'
-              id='cst_form_submit'
-              text='Сохранить изменения'
-              className='self-center'
-              disabled={disabled || !isModified}
-              icon={<IconSave size='1.25rem' />}
-            />
+            <div className='self-center flex'>
+              <SubmitButton
+                key='cst_form_submit'
+                id='cst_form_submit'
+                text='Сохранить изменения'
+                disabled={disabled || !isModified}
+                icon={<IconSave size='1.25rem' />}
+              />
+              {state?.is_inherited ? (
+                <Overlay position='right-[-2rem]'>
+                  <MiniButton
+                    icon={<IconChild size='1.25rem' className='clr-text-red' />}
+                    disabled
+                    titleHtml='Внимание!</br> Конституента имеет потомков<br/> в операционной схеме синтеза'
+                  />
+                </Overlay>
+              ) : null}
+            </div>
           ) : null}
         </AnimatePresence>
       </form>

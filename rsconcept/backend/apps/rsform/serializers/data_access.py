@@ -4,11 +4,17 @@ from typing import Optional, cast
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
+from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.serializers import PrimaryKeyRelatedField as PKField
 
 from apps.library.models import LibraryItem
-from apps.library.serializers import LibraryItemBaseSerializer, LibraryItemDetailsSerializer
+from apps.library.serializers import (
+    LibraryItemBaseSerializer,
+    LibraryItemDetailsSerializer,
+    LibraryItemReferenceSerializer
+)
+from apps.oss.models import Inheritance
 from shared import messages as msg
 
 from ..models import Constituenta, CstType, RSForm
@@ -90,6 +96,12 @@ class RSFormSerializer(serializers.ModelSerializer):
     items = serializers.ListField(
         child=CstSerializer()
     )
+    inheritance = serializers.ListField(
+        child=serializers.ListField(child=serializers.IntegerField())
+    )
+    oss = serializers.ListField(
+        child=LibraryItemReferenceSerializer()
+    )
 
     class Meta:
         ''' serializer metadata. '''
@@ -101,6 +113,15 @@ class RSFormSerializer(serializers.ModelSerializer):
         result['items'] = []
         for cst in RSForm(instance).constituents().order_by('order'):
             result['items'].append(CstSerializer(cst).data)
+        result['inheritance'] = []
+        for link in Inheritance.objects.filter(Q(child__schema=instance) | Q(parent__schema=instance)):
+            result['inheritance'].append([link.child.pk, link.parent.pk])
+        result['oss'] = []
+        for oss in LibraryItem.objects.filter(items__result=instance).only('alias'):
+            result['oss'].append({
+                'id': oss.pk,
+                'alias': oss.alias
+            })
         return result
 
     def to_versioned_data(self) -> dict:
@@ -109,6 +130,8 @@ class RSFormSerializer(serializers.ModelSerializer):
         del result['versions']
         del result['subscribers']
         del result['editors']
+        del result['inheritance']
+        del result['oss']
 
         del result['owner']
         del result['visible']
@@ -210,7 +233,7 @@ class CstTargetSerializer(serializers.Serializer):
     def validate(self, attrs):
         schema = cast(LibraryItem, self.context['schema'])
         cst = cast(Constituenta, attrs['target'])
-        if schema and cst.schema != schema:
+        if schema and cst.schema_id != schema.pk:
             raise serializers.ValidationError({
                 f'{cst.pk}': msg.constituentaNotInRSform(schema.title)
             })
@@ -224,7 +247,7 @@ class CstTargetSerializer(serializers.Serializer):
 
 class CstRenameSerializer(serializers.Serializer):
     ''' Serializer: Constituenta renaming. '''
-    target = PKField(many=False, queryset=Constituenta.objects.all())
+    target = PKField(many=False, queryset=Constituenta.objects.only('alias', 'schema'))
     alias = serializers.CharField()
     cst_type = serializers.CharField()
 
@@ -232,7 +255,7 @@ class CstRenameSerializer(serializers.Serializer):
         attrs = super().validate(attrs)
         schema = cast(LibraryItem, self.context['schema'])
         cst = cast(Constituenta, attrs['target'])
-        if cst.schema != schema:
+        if cst.schema_id != schema.pk:
             raise serializers.ValidationError({
                 f'{cst.pk}': msg.constituentaNotInRSform(schema.title)
             })
@@ -258,7 +281,7 @@ class CstListSerializer(serializers.Serializer):
             return attrs
 
         for item in attrs['items']:
-            if item.schema != schema:
+            if item.schema_id != schema.pk:
                 raise serializers.ValidationError({
                     f'{item.pk}': msg.constituentaNotInRSform(schema.title)
                 })
@@ -272,8 +295,8 @@ class CstMoveSerializer(CstListSerializer):
 
 class SubstitutionSerializerBase(serializers.Serializer):
     ''' Serializer: Basic substitution. '''
-    original = PKField(many=False, queryset=Constituenta.objects.all())
-    substitution = PKField(many=False, queryset=Constituenta.objects.all())
+    original = PKField(many=False, queryset=Constituenta.objects.only('alias', 'schema'))
+    substitution = PKField(many=False, queryset=Constituenta.objects.only('alias', 'schema'))
 
 
 class CstSubstituteSerializer(serializers.Serializer):
@@ -297,11 +320,11 @@ class CstSubstituteSerializer(serializers.Serializer):
                 raise serializers.ValidationError({
                     'alias': msg.substituteTrivial(original_cst.alias)
                 })
-            if original_cst.schema != schema:
+            if original_cst.schema_id != schema.pk:
                 raise serializers.ValidationError({
                     'original': msg.constituentaNotInRSform(schema.title)
                 })
-            if substitution_cst.schema != schema:
+            if substitution_cst.schema_id != schema.pk:
                 raise serializers.ValidationError({
                     'substitution': msg.constituentaNotInRSform(schema.title)
                 })
@@ -329,7 +352,7 @@ class InlineSynthesisSerializer(serializers.Serializer):
             })
         constituents = cast(list[Constituenta], attrs['items'])
         for cst in constituents:
-            if cst.schema != schema_in:
+            if cst.schema_id != schema_in.pk:
                 raise serializers.ValidationError({
                     f'{cst.pk}': msg.constituentaNotInRSform(schema_in.title)
                 })
@@ -337,12 +360,12 @@ class InlineSynthesisSerializer(serializers.Serializer):
         for item in attrs['substitutions']:
             original_cst = cast(Constituenta, item['original'])
             substitution_cst = cast(Constituenta, item['substitution'])
-            if original_cst.schema == schema_in:
+            if original_cst.schema_id == schema_in.pk:
                 if original_cst not in constituents:
                     raise serializers.ValidationError({
                         f'{original_cst.pk}': msg.substitutionNotInList()
                     })
-                if substitution_cst.schema != schema_out:
+                if substitution_cst.schema_id != schema_out.pk:
                     raise serializers.ValidationError({
                         f'{substitution_cst.pk}': msg.constituentaNotInRSform(schema_out.title)
                     })
@@ -351,7 +374,7 @@ class InlineSynthesisSerializer(serializers.Serializer):
                     raise serializers.ValidationError({
                         f'{substitution_cst.pk}': msg.substitutionNotInList()
                     })
-                if original_cst.schema != schema_out:
+                if original_cst.schema_id != schema_out.pk:
                     raise serializers.ValidationError({
                         f'{original_cst.pk}': msg.constituentaNotInRSform(schema_out.title)
                     })

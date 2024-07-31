@@ -13,7 +13,10 @@ interface InfoConstituentaProps extends CProps.Div {
 function InfoConstituenta({ data, className, ...restProps }: InfoConstituentaProps) {
   return (
     <div className={clsx('dense min-w-[15rem]', className)} {...restProps}>
-      <h2>Конституента {data.alias}</h2>
+      <h2>
+        Конституента {data.alias}
+        {data.is_inherited ? ' (наследуется)' : ''}
+      </h2>
       {data.term_resolved ? (
         <p>
           <b>Термин: </b>

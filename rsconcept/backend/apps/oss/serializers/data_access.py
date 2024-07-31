@@ -84,7 +84,7 @@ class OperationUpdateSerializer(serializers.Serializer):
 
         oss = cast(LibraryItem, self.context['oss'])
         for operation in attrs['arguments']:
-            if operation.oss != oss:
+            if operation.oss_id != oss.pk:
                 raise serializers.ValidationError({
                     'arguments': msg.operationNotInOSS(oss.title)
                 })
@@ -110,7 +110,7 @@ class OperationUpdateSerializer(serializers.Serializer):
                 raise serializers.ValidationError({
                     f'{original_cst.pk}': msg.substituteDouble(original_cst.alias)
                 })
-            if original_cst.schema == substitution_cst.schema:
+            if original_cst.schema_id == substitution_cst.schema_id:
                 raise serializers.ValidationError({
                     'alias': msg.substituteTrivial(original_cst.alias)
                 })
@@ -131,7 +131,7 @@ class OperationTargetSerializer(serializers.Serializer):
     def validate(self, attrs):
         oss = cast(LibraryItem, self.context['oss'])
         operation = cast(Operation, attrs['target'])
-        if oss and operation.oss != oss:
+        if oss and operation.oss_id != oss.pk:
             raise serializers.ValidationError({
                 'target': msg.operationNotInOSS(oss.title)
             })
@@ -155,7 +155,7 @@ class SetOperationInputSerializer(serializers.Serializer):
     def validate(self, attrs):
         oss = cast(LibraryItem, self.context['oss'])
         operation = cast(Operation, attrs['target'])
-        if oss and operation.oss != oss:
+        if oss and operation.oss_id != oss.pk:
             raise serializers.ValidationError({
                 'target': msg.operationNotInOSS(oss.title)
             })

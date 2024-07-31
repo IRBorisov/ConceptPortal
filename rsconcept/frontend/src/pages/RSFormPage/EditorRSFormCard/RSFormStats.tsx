@@ -14,13 +14,16 @@ function RSFormStats({ stats }: RSFormStatsProps) {
     <div className='flex flex-col sm:gap-1 sm:ml-6 sm:mt-8 sm:w-[16rem]'>
       <Divider margins='my-2' className='sm:hidden' />
 
-      <LabeledValue id='count_all' label='Всего конституент ' text={stats.count_all} />
-      <LabeledValue id='count_errors' label='Некорректных' text={stats.count_errors} />
+      <LabeledValue id='count_all' label='Всего конституент' text={stats.count_all} />
+      {stats.count_inherited !== 0 ? (
+        <LabeledValue id='count_inherited' label='Наследованные' text={stats.count_inherited} />
+      ) : null}
+      <LabeledValue id='count_errors' label='Некорректные' text={stats.count_errors} />
       {stats.count_property !== 0 ? (
-        <LabeledValue id='count_property' label='Неразмерных' text={stats.count_property} />
+        <LabeledValue id='count_property' label='Неразмерные' text={stats.count_property} />
       ) : null}
       {stats.count_incalculable !== 0 ? (
-        <LabeledValue id='count_incalculable' label='Невычислимых' text={stats.count_incalculable} />
+        <LabeledValue id='count_incalculable' label='Невычислимые' text={stats.count_incalculable} />
       ) : null}
 
       <Divider margins='my-2' />

@@ -59,6 +59,8 @@ export class RSFormLoader {
   }
 
   private inferCstAttributes() {
+    const inherit_children = new Set(this.schema.inheritance.map(item => item[0]));
+    const inherit_parents = new Set(this.schema.inheritance.map(item => item[1]));
     this.graph.topologicalOrder().forEach(cstID => {
       const cst = this.cstByID.get(cstID)!;
       cst.status = inferStatus(cst.parse.status, cst.parse.valueClass);
@@ -66,6 +68,8 @@ export class RSFormLoader {
       cst.cst_class = inferClass(cst.cst_type, cst.is_template);
       cst.children = [];
       cst.children_alias = [];
+      cst.is_inherited = inherit_children.has(cst.id);
+      cst.is_inherited_parent = inherit_parents.has(cst.id);
       cst.is_simple_expression = this.inferSimpleExpression(cst);
       if (!cst.is_simple_expression || cst.cst_type === CstType.STRUCTURED) {
         return;
@@ -165,6 +169,7 @@ export class RSFormLoader {
           sum + (cst.parse.status === ParsingStatus.VERIFIED && cst.parse.valueClass === ValueClass.INVALID ? 1 : 0),
         0
       ),
+      count_inherited: items.reduce((sum, cst) => sum + ((cst as IConstituenta).is_inherited ? 1 : 0), 0),
 
       count_text_term: items.reduce((sum, cst) => sum + (cst.term_raw ? 1 : 0), 0),
       count_definition: items.reduce((sum, cst) => sum + (cst.definition_raw ? 1 : 0), 0),

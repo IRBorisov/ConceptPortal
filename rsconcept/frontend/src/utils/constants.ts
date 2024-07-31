@@ -139,6 +139,7 @@ export const globals = {
  */
 export const prefixes = {
   page_size: 'page_size_',
+  oss_list: 'oss_list_',
   cst_list: 'cst_list_',
   cst_inline_synth_list: 'cst_inline_synth_list_',
   cst_inline_synth_substitutes: 'cst_inline_synth_substitutes_',

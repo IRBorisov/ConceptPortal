@@ -24,7 +24,14 @@ import DlgInlineSynthesis from '@/dialogs/DlgInlineSynthesis';
 import DlgRenameCst from '@/dialogs/DlgRenameCst';
 import DlgSubstituteCst from '@/dialogs/DlgSubstituteCst';
 import DlgUploadRSForm from '@/dialogs/DlgUploadRSForm';
-import { AccessPolicy, IVersionData, LocationHead, VersionID } from '@/models/library';
+import {
+  AccessPolicy,
+  ILibraryUpdateData,
+  IVersionData,
+  LibraryItemID,
+  LocationHead,
+  VersionID
+} from '@/models/library';
 import { ICstSubstituteData } from '@/models/oss';
 import {
   ConstituentaID,
@@ -56,6 +63,8 @@ export interface IRSEditContext {
   canProduceStructure: boolean;
   nothingSelected: boolean;
 
+  updateSchema: (data: ILibraryUpdateData) => void;
+
   setOwner: (newOwner: UserID) => void;
   setAccessPolicy: (newPolicy: AccessPolicy) => void;
   promptEditors: () => void;
@@ -68,6 +77,7 @@ export interface IRSEditContext {
   toggleSelect: (target: ConstituentaID) => void;
   deselectAll: () => void;
 
+  viewOSS: (target: LibraryItemID, newTab?: boolean) => void;
   viewVersion: (version?: VersionID, newTab?: boolean) => void;
   createVersion: () => void;
   restoreVersion: () => void;
@@ -177,9 +187,19 @@ export const RSEditState = ({
     [model.schema, setAccessLevel, model.isOwned, user, adminMode]
   );
 
+  const updateSchema = useCallback(
+    (data: ILibraryUpdateData) => model.update(data, () => toast.success(information.changesSaved)),
+    [model]
+  );
+
   const viewVersion = useCallback(
     (version?: VersionID, newTab?: boolean) => router.push(urls.schema(model.itemID, version), newTab),
     [router, model]
+  );
+
+  const viewOSS = useCallback(
+    (target: LibraryItemID, newTab?: boolean) => router.push(urls.oss(target), newTab),
+    [router]
   );
 
   const createVersion = useCallback(() => {
@@ -571,6 +591,7 @@ export const RSEditState = ({
     <RSEditContext.Provider
       value={{
         schema: model.schema,
+        updateSchema,
         selected,
         isMutable,
         isContentEditable,
@@ -591,6 +612,7 @@ export const RSEditState = ({
           setSelected(prev => (prev.includes(target) ? prev.filter(id => id !== target) : [...prev, target])),
         deselectAll: () => setSelected([]),
 
+        viewOSS,
         viewVersion,
         createVersion,
         restoreVersion,

@@ -75,7 +75,7 @@ export interface ILibraryItem {
 }
 
 /**
- * Represents library item constant data loaded for both OSS and RSForm.
+ * Represents {@link ILibraryItem} constant data loaded for both OSS and RSForm.
  */
 export interface ILibraryItemData extends ILibraryItem {
   subscribers: UserID[];
@@ -83,7 +83,12 @@ export interface ILibraryItemData extends ILibraryItem {
 }
 
 /**
- * Represents library item extended data with versions.
+ * Represents {@link ILibraryItem} minimal reference data.
+ */
+export interface ILibraryItemReference extends Pick<ILibraryItem, 'id' | 'alias'> {}
+
+/**
+ * Represents {@link ILibraryItem} extended data with versions.
  */
 export interface ILibraryItemVersioned extends ILibraryItemData {
   version?: VersionID;
@@ -91,7 +96,7 @@ export interface ILibraryItemVersioned extends ILibraryItemData {
 }
 
 /**
- * Represents common library item editor controller.
+ * Represents common {@link ILibraryItem} editor controller.
  */
 export interface ILibraryItemEditor {
   schema?: ILibraryItemData;

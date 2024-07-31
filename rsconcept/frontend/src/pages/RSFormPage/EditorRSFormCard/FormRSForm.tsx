@@ -1,19 +1,21 @@
 'use client';
 
 import clsx from 'clsx';
-import { useEffect, useLayoutEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
-import { IconSave } from '@/components/Icons';
+import { IconOSS, IconSave } from '@/components/Icons';
 import SelectVersion from '@/components/select/SelectVersion';
+import Dropdown from '@/components/ui/Dropdown';
+import DropdownButton from '@/components/ui/DropdownButton';
 import Label from '@/components/ui/Label';
+import MiniButton from '@/components/ui/MiniButton';
+import Overlay from '@/components/ui/Overlay';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
-import { useRSForm } from '@/context/RSFormContext';
+import useDropdown from '@/hooks/useDropdown';
 import { ILibraryUpdateData, LibraryItemType } from '@/models/library';
-import { limits, patterns } from '@/utils/constants';
-import { information } from '@/utils/labels';
+import { limits, patterns, prefixes } from '@/utils/constants';
 
 import { useRSEdit } from '../RSEditContext';
 import ToolbarItemAccess from './ToolbarItemAccess';
@@ -26,14 +28,16 @@ interface FormRSFormProps {
 }
 
 function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
-  const { schema, update, processing } = useRSForm();
   const controller = useRSEdit();
+  const schema = controller.schema;
 
   const [title, setTitle] = useState('');
   const [alias, setAlias] = useState('');
   const [comment, setComment] = useState('');
   const [visible, setVisible] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
+
+  const ossMenu = useDropdown();
 
   useEffect(() => {
     if (!schema) {
@@ -85,8 +89,36 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
       visible: visible,
       read_only: readOnly
     };
-    update(data, () => toast.success(information.changesSaved));
+    controller.updateSchema(data);
   };
+
+  const ossSelector = useMemo(
+    () =>
+      schema && schema?.oss.length > 0 ? (
+        <Overlay position='left-[12.5rem] top-[-0.4rem]'>
+          <div ref={ossMenu.ref}>
+            <MiniButton
+              icon={<IconOSS size='1.25rem' className='icon-primary' />}
+              noHover
+              title='Связанные операционные схемы'
+              hideTitle={ossMenu.isOpen}
+              onClick={() => ossMenu.toggle()}
+            />
+            <Dropdown isOpen={ossMenu.isOpen} className='mt-[-0.1rem]'>
+              {schema.oss.map((reference, index) => (
+                <DropdownButton
+                  className='min-w-[5rem]'
+                  key={`${prefixes.oss_list}${index}`}
+                  text={reference.alias}
+                  onClick={event => controller.viewOSS(reference.id, event.ctrlKey || event.metaKey)}
+                />
+              ))}
+            </Dropdown>
+          </div>
+        </Overlay>
+      ) : null,
+    [schema, ossMenu, controller]
+  );
 
   return (
     <form id={id} className={clsx('mt-1 min-w-[22rem] sm:w-[30rem]', 'flex flex-col pt-1')} onSubmit={handleSubmit}>
@@ -99,6 +131,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
         disabled={!controller.isContentEditable}
         onChange={event => setTitle(event.target.value)}
       />
+      {ossSelector}
       <div className='flex justify-between w-full gap-3 mb-3'>
         <TextInput
           id='schema_alias'
@@ -143,7 +176,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
         <SubmitButton
           text='Сохранить изменения'
           className='self-center mt-4'
-          loading={processing}
+          loading={controller.isProcessing}
           disabled={!isModified}
           icon={<IconSave size='1.25rem' />}
         />

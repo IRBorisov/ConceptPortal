@@ -21,7 +21,7 @@ function InputNode(node: OssNodeInternal) {
     <>
       <Handle type='source' position={Position.Bottom} />
 
-      <Overlay position='top-[-0.2rem] right-[-0.2rem]' className='cc-icons'>
+      <Overlay position='top-[-0.2rem] right-[-0.2rem]'>
         <MiniButton
           icon={<IconRSForm className={hasFile ? 'clr-text-green' : 'clr-text-red'} size='0.75rem' />}
           noHover

@@ -102,8 +102,6 @@ function PickSubstitutions({
     };
     const toDelete = substitutions.map(item => item.original);
     const replacements = substitutions.map(item => item.substitution);
-    console.log(toDelete, replacements);
-    console.log(newSubstitution);
     if (
       toDelete.includes(newSubstitution.original) ||
       toDelete.includes(newSubstitution.substitution) ||

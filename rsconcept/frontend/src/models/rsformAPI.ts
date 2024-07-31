@@ -133,6 +133,8 @@ export function createMockConstituenta(id: ConstituentaID, alias: string, commen
     definition_resolved: '',
     status: ExpressionStatus.INCORRECT,
     is_template: false,
+    is_inherited: false,
+    is_inherited_parent: false,
     cst_class: CstClass.DERIVED,
     parse: {
       status: ParsingStatus.INCORRECT,
