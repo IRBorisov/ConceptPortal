@@ -73,10 +73,3 @@ export function postExecuteOperation(oss: string, request: FrontExchange<ITarget
     request: request
   });
 }
-
-export function postExecuteAll(oss: string, request: FrontExchange<IPositionsData, IOperationSchemaData>) {
-  AxiosPost({
-    endpoint: `/api/oss/${oss}/execute-all`,
-    request: request
-  });
-}

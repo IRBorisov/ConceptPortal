@@ -12,7 +12,6 @@ from django.db.models import (
     TextChoices,
     TextField
 )
-from django.urls import reverse
 
 from ..utils import apply_pattern
 

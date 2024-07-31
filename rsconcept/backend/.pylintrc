@@ -432,7 +432,8 @@ disable=too-many-public-methods,
         missing-function-docstring,
         attribute-defined-outside-init,
         ungrouped-imports,
-        abstract-method
+        abstract-method,
+        fixme
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

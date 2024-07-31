@@ -951,7 +951,8 @@ export const information = {
 export const errors = {
   astFailed: 'Невозможно построить дерево разбора',
   passwordsMismatch: 'Пароли не совпадают',
-  imageFailed: 'Ошибка при создании изображения'
+  imageFailed: 'Ошибка при создании изображения',
+  reuseOriginal: 'Повторное использование удаляемой конституенты при отождествлении'
 };
 
 /**

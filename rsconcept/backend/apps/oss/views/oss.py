@@ -10,7 +10,7 @@ from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from apps.library.models import Editor, LibraryItem, LibraryItemType
+from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemSerializer
 from shared import messages as msg
 from shared import permissions
@@ -38,7 +38,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             'create_input',
             'set_input',
             'update_operation',
-            'execute_operation',
+            'execute_operation'
         ]:
             permission_list = [permissions.ItemEditor]
         elif self.action in ['details']:
@@ -103,28 +103,14 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         oss = m.OperationSchema(self.get_object())
         with transaction.atomic():
             oss.update_positions(serializer.validated_data['positions'])
-            data: dict = serializer.validated_data['item_data']
-            if data['operation_type'] == m.OperationType.INPUT and serializer.validated_data['create_schema']:
-                schema = LibraryItem.objects.create(
-                    item_type=LibraryItemType.RSFORM,
-                    owner=oss.model.owner,
-                    alias=data['alias'],
-                    title=data['title'],
-                    comment=data['comment'],
-                    visible=False,
-                    access_policy=oss.model.access_policy,
-                    location=oss.model.location
-                )
-                Editor.set(schema, oss.model.editors())
-                data['result'] = schema
-            new_operation = oss.create_operation(**data)
+            new_operation = oss.create_operation(**serializer.validated_data['item_data'])
+            if new_operation.operation_type == m.OperationType.INPUT and serializer.validated_data['create_schema']:
+                oss.create_input(new_operation)
             if new_operation.operation_type != m.OperationType.INPUT and 'arguments' in serializer.validated_data:
                 oss.set_arguments(
                     operation=new_operation,
                     arguments=serializer.validated_data['arguments']
                 )
-
-        oss.refresh_from_db()
         return Response(
             status=c.HTTP_201_CREATED,
             data={
@@ -158,7 +144,6 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             oss.update_positions(serializer.validated_data['positions'])
             oss.delete_operation(serializer.validated_data['target'])
 
-        oss.refresh_from_db()
         return Response(
             status=c.HTTP_200_OK,
             data=s.OperationSchemaSerializer(oss.model).data
@@ -197,25 +182,12 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         oss = m.OperationSchema(self.get_object())
         with transaction.atomic():
             oss.update_positions(serializer.validated_data['positions'])
-            schema = LibraryItem.objects.create(
-                item_type=LibraryItemType.RSFORM,
-                owner=oss.model.owner,
-                alias=operation.alias,
-                title=operation.title,
-                comment=operation.comment,
-                visible=False,
-                access_policy=oss.model.access_policy,
-                location=oss.model.location
-            )
-            Editor.set(schema, oss.model.editors())
-            operation.result = schema
-            operation.save()
+            schema = oss.create_input(operation)
 
-        oss.refresh_from_db()
         return Response(
             status=c.HTTP_200_OK,
             data={
-                'new_schema': LibraryItemSerializer(schema).data,
+                'new_schema': LibraryItemSerializer(schema.model).data,
                 'oss': s.OperationSchemaSerializer(oss.model).data
             }
         )
@@ -241,20 +213,10 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         serializer.is_valid(raise_exception=True)
 
         operation: m.Operation = cast(m.Operation, serializer.validated_data['target'])
-        result = serializer.validated_data['input']
         oss = m.OperationSchema(self.get_object())
         with transaction.atomic():
             oss.update_positions(serializer.validated_data['positions'])
-            operation.result = result
-            if result is not None:
-                operation.title = result.title
-                operation.comment = result.comment
-                operation.alias = result.alias
-            operation.save()
-
-            # update arguments
-
-        oss.refresh_from_db()
+            oss.set_input(operation, serializer.validated_data['input'])
         return Response(
             status=c.HTTP_200_OK,
             data=s.OperationSchemaSerializer(oss.model).data
@@ -336,17 +298,10 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             })
 
         oss = m.OperationSchema(self.get_object())
-        # with transaction.atomic():
-        #     oss.update_positions(serializer.validated_data['positions'])
-        #     operation.result.refresh_from_db()
-        #     operation.result.title = operation.title
-        #     operation.result.comment = operation.comment
-        #     operation.result.alias = operation.alias
-        #     operation.result.save()
+        with transaction.atomic():
+            oss.update_positions(serializer.validated_data['positions'])
+            oss.execute_operation(operation)
 
-        # update arguments
-
-        oss.refresh_from_db()
         return Response(
             status=c.HTTP_200_OK,
             data=s.OperationSchemaSerializer(oss.model).data

@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
 
 import BadgeConstituenta from '@/components/info/BadgeConstituenta';
 import SelectConstituenta from '@/components/select/SelectConstituenta';
@@ -10,6 +11,7 @@ import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { ILibraryItem } from '@/models/library';
 import { ICstSubstitute, IMultiSubstitution } from '@/models/oss';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
+import { errors } from '@/utils/labels';
 
 import { IconPageLeft, IconPageRight, IconRemove, IconReplace } from '../Icons';
 import NoData from '../ui/NoData';
@@ -98,6 +100,18 @@ function PickSubstitutions({
       original: deleteRight ? rightCst.id : leftCst.id,
       substitution: deleteRight ? leftCst.id : rightCst.id
     };
+    const toDelete = substitutions.map(item => item.original);
+    const replacements = substitutions.map(item => item.substitution);
+    console.log(toDelete, replacements);
+    console.log(newSubstitution);
+    if (
+      toDelete.includes(newSubstitution.original) ||
+      toDelete.includes(newSubstitution.substitution) ||
+      replacements.includes(newSubstitution.original)
+    ) {
+      toast.error(errors.reuseOriginal);
+      return;
+    }
     setSubstitutions(prev => [...prev, newSubstitution]);
     setLeftCst(undefined);
     setRightCst(undefined);

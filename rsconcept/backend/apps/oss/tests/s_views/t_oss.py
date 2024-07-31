@@ -23,10 +23,27 @@ class TestOssViewset(EndpointTester):
 
 
     def populateData(self):
-        self.ks1 = RSForm.create(alias='KS1', title='Test1', owner=self.user)
-        self.ks1x1 = self.ks1.insert_new('X1', term_resolved='X1_1')
-        self.ks2 = RSForm.create(alias='KS2', title='Test2', owner=self.user)
-        self.ks2x1 = self.ks2.insert_new('X2', term_resolved='X1_2')
+        self.ks1 = RSForm.create(
+            alias='KS1',
+            title='Test1',
+            owner=self.user
+        )
+        self.ks1x1 = self.ks1.insert_new(
+            'X1',
+            term_raw='X1_1',
+            term_resolved='X1_1'
+        )
+        self.ks2 = RSForm.create(
+            alias='KS2',
+            title='Test2',
+            owner=self.user
+        )
+        self.ks2x1 = self.ks2.insert_new(
+            'X2',
+            term_raw='X1_2',
+            term_resolved='X1_2'
+        )
+
         self.operation1 = self.owned.create_operation(
             alias='1',
             operation_type=OperationType.INPUT,
@@ -399,3 +416,61 @@ class TestOssViewset(EndpointTester):
         self.assertEqual(self.operation1.result.alias, data['item_data']['alias'])
         self.assertEqual(self.operation1.result.title, data['item_data']['title'])
         self.assertEqual(self.operation1.result.comment, data['item_data']['comment'])
+
+    @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
+    def test_update_operation_invalid_substitution(self):
+        self.populateData()
+
+        self.ks1x2 = self.ks1.insert_new('X2')
+
+        data = {
+            'target': self.operation3.pk,
+            'item_data': {
+                'alias': 'Test3 mod',
+                'title': 'Test title mod',
+                'comment': 'Comment mod'
+            },
+            'positions': [],
+            'arguments': [self.operation1.pk, self.operation2.pk],
+            'substitutions': [
+                {
+                    'original': self.ks1x1.pk,
+                    'substitution': self.ks2x1.pk
+                },
+                {
+                    'original': self.ks2x1.pk,
+                    'substitution': self.ks1x2.pk
+                }
+            ]
+        }
+        self.executeBadData(data=data, item=self.owned_id)
+
+    @decl_endpoint('/api/oss/{item}/execute-operation', method='post')
+    def test_execute_operation(self):
+        self.populateData()
+        self.executeBadData(item=self.owned_id)
+
+        data = {
+            'positions': [],
+            'target': self.operation1.pk
+        }
+        self.executeBadData(data=data)
+
+        data['target'] = self.operation3.pk
+        self.toggle_admin(True)
+        self.executeBadData(data=data, item=self.unowned_id)
+        self.logout()
+        self.executeForbidden(data=data, item=self.owned_id)
+
+        self.login()
+        self.executeOK(data=data)
+        self.operation3.refresh_from_db()
+        schema = self.operation3.result
+        self.assertEqual(schema.alias, self.operation3.alias)
+        self.assertEqual(schema.comment, self.operation3.comment)
+        self.assertEqual(schema.title, self.operation3.title)
+        self.assertEqual(schema.visible, False)
+        items = list(RSForm(schema).constituents())
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].alias, 'X1')
+        self.assertEqual(items[0].term_resolved, self.ks2x1.term_resolved)

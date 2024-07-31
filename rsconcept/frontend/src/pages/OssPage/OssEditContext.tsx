@@ -57,7 +57,6 @@ export interface IOssEditContext {
   promptEditInput: (target: OperationID, positions: IOperationPosition[]) => void;
   promptEditOperation: (target: OperationID, positions: IOperationPosition[]) => void;
   executeOperation: (target: OperationID, positions: IOperationPosition[]) => void;
-  executeAll: (positions: IOperationPosition[]) => void;
 }
 
 const OssEditContext = createContext<IOssEditContext | null>(null);
@@ -290,14 +289,6 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
     [model]
   );
 
-  const executeAll = useCallback(
-    (positions: IOperationPosition[]) => {
-      const data = { positions: positions };
-      model.executeAll(data, () => toast.success(information.allOperationExecuted));
-    },
-    [model]
-  );
-
   return (
     <OssEditContext.Provider
       value={{
@@ -326,8 +317,7 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
         createInput,
         promptEditInput,
         promptEditOperation,
-        executeOperation,
-        executeAll
+        executeOperation
       }}
     >
       {model.schema ? (

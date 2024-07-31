@@ -170,12 +170,11 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
   );
 
   const handleExecuteSelected = useCallback(() => {
-    if (controller.selected.length === 1) {
-      handleExecuteOperation(controller.selected[0]);
-    } else {
-      controller.executeAll(getPositions());
+    if (controller.selected.length !== 1) {
+      return;
     }
-  }, [controller, handleExecuteOperation, getPositions]);
+    handleExecuteOperation(controller.selected[0]);
+  }, [controller, handleExecuteOperation]);
 
   const handleFitView = useCallback(() => {
     flow.fitView({ duration: PARAMETER.zoomDuration });

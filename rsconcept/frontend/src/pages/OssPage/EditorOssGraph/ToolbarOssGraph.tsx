@@ -1,4 +1,7 @@
+'use client';
+
 import clsx from 'clsx';
+import { useMemo } from 'react';
 
 import {
   IconAnimation,
@@ -18,6 +21,7 @@ import {
 import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniButton from '@/components/ui/MiniButton';
 import { HelpTopic } from '@/models/miscellaneous';
+import { OperationType } from '@/models/oss';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/labels';
 
@@ -59,6 +63,30 @@ function ToolbarOssGraph({
   toggleEdgeStraight
 }: ToolbarOssGraphProps) {
   const controller = useOssEdit();
+  const selectedOperation = useMemo(
+    () => controller.schema?.operationByID.get(controller.selected[0]),
+    [controller.selected, controller.schema]
+  );
+  const readyForSynthesis = useMemo(() => {
+    if (!selectedOperation || selectedOperation.operation_type !== OperationType.SYNTHESIS) {
+      return false;
+    }
+    if (!controller.schema || selectedOperation.result) {
+      return false;
+    }
+
+    const argumentIDs = controller.schema.graph.expandInputs([selectedOperation.id]);
+    if (!argumentIDs || argumentIDs.length < 2) {
+      return false;
+    }
+
+    const argumentOperations = argumentIDs.map(id => controller.schema!.operationByID.get(id)!);
+    if (argumentOperations.some(item => item.result === null)) {
+      return false;
+    }
+
+    return true;
+  }, [selectedOperation, controller.schema]);
 
   return (
     <div className='flex flex-col items-center'>
@@ -120,7 +148,6 @@ function ToolbarOssGraph({
       </div>
       {controller.isMutable ? (
         <div className='cc-icons'>
-          {' '}
           <MiniButton
             titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
@@ -134,14 +161,9 @@ function ToolbarOssGraph({
             onClick={onCreate}
           />
           <MiniButton
-            title='Выполнить выбранную / все операции'
-            icon={
-              <IconExecute
-                size='1.25rem'
-                className={controller.selected.length === 1 ? 'icon-primary' : 'icon-green'}
-              />
-            }
-            disabled={controller.isProcessing}
+            title='Выполнить операцию'
+            icon={<IconExecute size='1.25rem' className='icon-green' />}
+            disabled={controller.isProcessing || controller.selected.length !== 1 || !readyForSynthesis}
             onClick={onExecute}
           />
           <MiniButton

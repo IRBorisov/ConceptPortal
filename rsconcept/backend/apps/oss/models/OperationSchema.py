@@ -5,10 +5,12 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.db.models import QuerySet
 
-from apps.library.models import LibraryItem, LibraryItemType
+from apps.library.models import Editor, LibraryItem, LibraryItemType
+from apps.rsform.models import RSForm
 from shared import messages as msg
 
 from .Argument import Argument
+from .Inheritance import Inheritance
 from .Operation import Operation
 from .Substitution import Substitution
 
@@ -76,8 +78,8 @@ class OperationSchema:
         ''' Delete operation. '''
         operation.delete()
 
-        # deal with attached schema
-        # trigger on_change effects
+        # TODO: deal with attached schema
+        # TODO: trigger on_change effects
 
         self.save()
 
@@ -86,16 +88,15 @@ class OperationSchema:
         ''' Set input schema for operation. '''
         if schema == target.result:
             return
-        if schema:
+        target.result = schema
+        if schema is not None:
             target.result = schema
             target.alias = schema.alias
             target.title = schema.title
             target.comment = schema.comment
-        else:
-            target.result = None
         target.save()
 
-        # trigger on_change effects
+        # TODO: trigger on_change effects
 
         self.save()
 
@@ -117,7 +118,7 @@ class OperationSchema:
                 Argument.objects.create(operation=operation, argument=arg)
         if not changed:
             return
-        # trigger on_change effects
+        # TODO: trigger on_change effects
         self.save()
 
     @transaction.atomic
@@ -148,6 +149,63 @@ class OperationSchema:
 
         if not changed:
             return
-        # trigger on_change effects
+        # TODO: trigger on_change effects
 
         self.save()
+
+    @transaction.atomic
+    def create_input(self, operation: Operation) -> RSForm:
+        ''' Create input RSForm. '''
+        schema = RSForm.create(
+            owner=self.model.owner,
+            alias=operation.alias,
+            title=operation.title,
+            comment=operation.comment,
+            visible=False,
+            access_policy=self.model.access_policy,
+            location=self.model.location
+        )
+        Editor.set(schema.model, self.model.editors())
+        operation.result = schema.model
+        operation.save()
+        self.save()
+        return schema
+
+    @transaction.atomic
+    def execute_operation(self, operation: Operation) -> bool:
+        ''' Execute target operation. '''
+        schemas: list[LibraryItem] = [arg.argument.result for arg in operation.getArguments()]
+        if None in schemas:
+            return False
+        substitutions = operation.getSubstitutions()
+        receiver = self.create_input(operation)
+
+        parents: dict = {}
+        children: dict = {}
+        for operand in schemas:
+            schema = RSForm(operand)
+            items = list(schema.constituents())
+            new_items = receiver.insert_copy(items)
+            for (i, cst) in enumerate(new_items):
+                parents[cst.pk] = items[i]
+                children[items[i].pk] = cst
+
+        for sub in substitutions:
+            original = children[sub.original.pk]
+            replacement = children[sub.substitution.pk]
+            receiver.substitute(original, replacement)
+
+        # TODO: remove duplicates from diamond
+
+        for cst in receiver.constituents():
+            parent = parents.get(cst.id)
+            assert parent is not None
+            Inheritance.objects.create(
+                child=cst,
+                parent=parent
+            )
+
+        receiver.restore_order()
+        receiver.reset_aliases()
+        self.save()
+        return True

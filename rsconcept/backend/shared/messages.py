@@ -14,6 +14,10 @@ def operationNotInOSS(title: str):
     return f'Операция не принадлежит ОСС: {title}'
 
 
+def previousResultMissing():
+    return 'Отсутствует результат предыдущей операции'
+
+
 def substitutionNotInList():
     return 'Отождествляемая конституента отсутствует в списке'
 

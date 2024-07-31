@@ -119,7 +119,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         cst = m.Constituenta.objects.get(pk=request.data['id'])
         if cst.schema != schema:
             raise ValidationError({
-                f'schema': msg.constituentaNotInRSform(schema.title)
+                'schema': msg.constituentaNotInRSform(schema.title)
             })
         serializer.update(instance=cst, validated_data=serializer.validated_data)
 
