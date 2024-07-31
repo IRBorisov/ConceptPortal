@@ -149,11 +149,11 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         cst = cast(m.Constituenta, serializer.validated_data['target'])
 
         schema_details = s.RSFormParseSerializer(schema).data['items']
-        cst_parse = next(item for item in schema_details if item['id'] == cst.id)['parse']
+        cst_parse = next(item for item in schema_details if item['id'] == cst.pk)['parse']
         if not cst_parse['typification']:
             return Response(
                 status=c.HTTP_400_BAD_REQUEST,
-                data={f'{cst.id}': msg.constituentaNoStructure()}
+                data={f'{cst.pk}': msg.constituentaNoStructure()}
             )
 
         result = m.RSForm(schema).produce_structure(cst, cst_parse)

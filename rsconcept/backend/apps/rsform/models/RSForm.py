@@ -142,7 +142,7 @@ class RSForm:
                 result.definition_resolved = resolver.resolve(result.definition_raw)
 
         result.save()
-        self.on_term_change([result.id])
+        self.on_term_change([result.pk])
         result.refresh_from_db()
         return result
 
@@ -213,7 +213,7 @@ class RSForm:
         count_bot = 0
         size = len(listCst)
         update_list = []
-        for cst in self.constituents().only('id', 'order').order_by('order'):
+        for cst in self.constituents().only('order').order_by('order'):
             if cst not in listCst:
                 if count_top + 1 < target:
                     cst.order = count_top + 1
@@ -248,7 +248,7 @@ class RSForm:
         mapping = {original.alias: substitution.alias}
         self.apply_mapping(mapping)
         original.delete()
-        self.on_term_change([substitution.id])
+        self.on_term_change([substitution.pk])
 
     def restore_order(self):
         ''' Restore order based on types and term graph. '''
@@ -335,7 +335,7 @@ class RSForm:
                 definition_formal=text,
                 cst_type=cst_type
             )
-            result.append(new_item.id)
+            result.append(new_item.pk)
             free_index = free_index + 1
             position = position + 1
 
@@ -347,7 +347,7 @@ class RSForm:
             return
         update_list = \
             Constituenta.objects \
-            .only('id', 'order', 'schema') \
+            .only('order') \
             .filter(schema=self.model, order__gte=start)
         for cst in update_list:
             cst.order += shift
@@ -372,7 +372,7 @@ class RSForm:
     @transaction.atomic
     def _reset_order(self):
         order = 1
-        for cst in self.constituents().only('id', 'order').order_by('order'):
+        for cst in self.constituents().only('order').order_by('order'):
             if cst.order != order:
                 cst.order = order
                 cst.save()
@@ -383,15 +383,15 @@ class RSForm:
         result: Graph[int] = Graph()
         cst_list = \
             self.constituents() \
-                .only('id', 'order', 'alias', 'definition_formal') \
+                .only('alias', 'definition_formal') \
                 .order_by('order')
         for cst in cst_list:
-            result.add_node(cst.id)
+            result.add_node(cst.pk)
         for cst in cst_list:
             for alias in extract_globals(cst.definition_formal):
                 try:
                     child = cst_list.get(alias=alias)
-                    result.add_edge(src=child.id, dest=cst.id)
+                    result.add_edge(src=child.pk, dest=cst.pk)
                 except Constituenta.DoesNotExist:
                     pass
         return result
@@ -401,15 +401,15 @@ class RSForm:
         result: Graph[int] = Graph()
         cst_list = \
             self.constituents() \
-                .only('id', 'order', 'alias', 'term_raw') \
+                .only('alias', 'term_raw') \
                 .order_by('order')
         for cst in cst_list:
-            result.add_node(cst.id)
+            result.add_node(cst.pk)
         for cst in cst_list:
             for alias in extract_entities(cst.term_raw):
                 try:
                     child = cst_list.get(alias=alias)
-                    result.add_edge(src=child.id, dest=cst.id)
+                    result.add_edge(src=child.pk, dest=cst.pk)
                 except Constituenta.DoesNotExist:
                     pass
         return result
@@ -419,15 +419,15 @@ class RSForm:
         result: Graph[int] = Graph()
         cst_list = \
             self.constituents() \
-                .only('id', 'order', 'alias', 'definition_raw') \
+                .only('alias', 'definition_raw') \
                 .order_by('order')
         for cst in cst_list:
-            result.add_node(cst.id)
+            result.add_node(cst.pk)
         for cst in cst_list:
             for alias in extract_entities(cst.definition_raw):
                 try:
                     child = cst_list.get(alias=alias)
-                    result.add_edge(src=child.id, dest=cst.id)
+                    result.add_edge(src=child.pk, dest=cst.pk)
                 except Constituenta.DoesNotExist:
                     pass
         return result
@@ -440,16 +440,16 @@ class SemanticInfo:
         self._graph = schema._graph_formal()
         self._items = list(
             schema.constituents()
-            .only('id', 'alias', 'cst_type', 'definition_formal')
+            .only('alias', 'cst_type', 'definition_formal')
             .order_by('order')
         )
         self._cst_by_alias = {cst.alias: cst for cst in self._items}
-        self._cst_by_ID = {cst.id: cst for cst in self._items}
+        self._cst_by_ID = {cst.pk: cst for cst in self._items}
         self.info = {
-            cst.id: {
+            cst.pk: {
                 'is_simple': False,
                 'is_template': False,
-                'parent': cst.id,
+                'parent': cst.pk,
                 'children': []
             }
             for cst in self._items
@@ -491,7 +491,7 @@ class SemanticInfo:
         if target.cst_type == CstType.STRUCTURED or is_base_set(target.cst_type):
             return False
 
-        dependencies = self._graph.inputs[target.id]
+        dependencies = self._graph.inputs[target.pk]
         has_complex_dependency = any(
             self.is_template(cst_id) and
             not self.is_simple_expression(cst_id) for cst_id in dependencies
@@ -507,18 +507,18 @@ class SemanticInfo:
     def _infer_parent(self, target: Constituenta) -> int:
         sources = self._extract_sources(target)
         if len(sources) != 1:
-            return target.id
+            return target.pk
 
         parent_id = next(iter(sources))
         parent = self._cst_by_ID[parent_id]
         if is_base_set(parent.cst_type):
-            return target.id
+            return target.pk
         return parent_id
 
     def _extract_sources(self, target: Constituenta) -> set[int]:
         sources: set[int] = set()
         if not is_functional(target.cst_type):
-            for parent_id in self._graph.inputs[target.id]:
+            for parent_id in self._graph.inputs[target.pk]:
                 parent_info = self[parent_id]
                 if not parent_info['is_template'] or not parent_info['is_simple']:
                     sources.add(parent_info['parent'])
@@ -531,7 +531,7 @@ class SemanticInfo:
             if not parent:
                 continue
 
-            parent_info = self[parent.id]
+            parent_info = self[parent.pk]
             if not parent_info['is_template'] or not parent_info['is_simple']:
                 sources.add(parent_info['parent'])
 
@@ -542,7 +542,7 @@ class SemanticInfo:
                 if not parent:
                     continue
 
-                parent_info = self[parent.id]
+                parent_info = self[parent.pk]
                 if not is_base_set(parent.cst_type) and \
                         (not parent_info['is_template'] or not parent_info['is_simple']):
                     sources.add(parent_info['parent'])
@@ -567,10 +567,10 @@ class _OrderManager:
         self._graph = schema._graph_formal()
         self._items = list(
             schema.constituents()
-            .only('id', 'order', 'alias', 'cst_type', 'definition_formal')
+            .only('order', 'alias', 'cst_type', 'definition_formal')
             .order_by('order')
         )
-        self._cst_by_ID = {cst.id: cst for cst in self._items}
+        self._cst_by_ID = {cst.pk: cst for cst in self._items}
 
     def restore_order(self) -> None:
         ''' Implement order restoration process. '''
@@ -582,20 +582,20 @@ class _OrderManager:
         self._save_order()
 
     def _fix_topological(self) -> None:
-        sorted_ids = self._graph.sort_stable([cst.id for cst in self._items])
-        sorted_items = [next(cst for cst in self._items if cst.id == id) for id in sorted_ids]
+        sorted_ids = self._graph.sort_stable([cst.pk for cst in self._items])
+        sorted_items = [next(cst for cst in self._items if cst.pk == id) for id in sorted_ids]
         self._items = sorted_items
 
     def _fix_kernel(self) -> None:
         result = [cst for cst in self._items if cst.cst_type == CstType.BASE]
         result = result + [cst for cst in self._items if cst.cst_type == CstType.CONSTANT]
         kernel = [
-            cst.id for cst in self._items if
+            cst.pk for cst in self._items if
             cst.cst_type in [CstType.STRUCTURED, CstType.AXIOM] or
-            self._cst_by_ID[self._semantic.parent(cst.id)].cst_type == CstType.STRUCTURED
+            self._cst_by_ID[self._semantic.parent(cst.pk)].cst_type == CstType.STRUCTURED
         ]
         kernel = kernel + self._graph.expand_inputs(kernel)
-        result = result + [cst for cst in self._items if result.count(cst) == 0 and cst.id in kernel]
+        result = result + [cst for cst in self._items if result.count(cst) == 0 and cst.pk in kernel]
         result = result + [cst for cst in self._items if result.count(cst) == 0]
         self._items = result
 
@@ -606,11 +606,11 @@ class _OrderManager:
             if cst in marked:
                 continue
             result.append(cst)
-            children = self._semantic[cst.id]['children']
+            children = self._semantic[cst.pk]['children']
             if len(children) == 0:
                 continue
             for child in self._items:
-                if child.id in children:
+                if child.pk in children:
                     marked.add(child)
                     result.append(child)
         self._items = result

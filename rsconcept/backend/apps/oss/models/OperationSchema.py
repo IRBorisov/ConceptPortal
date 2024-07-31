@@ -198,7 +198,7 @@ class OperationSchema:
         # TODO: remove duplicates from diamond
 
         for cst in receiver.constituents():
-            parent = parents.get(cst.id)
+            parent = parents.get(cst.pk)
             assert parent is not None
             Inheritance.objects.create(
                 child=cst,

@@ -48,7 +48,7 @@ class CstSerializer(serializers.ModelSerializer):
             term_changed = data['term_resolved'] != instance.term_resolved
         result: Constituenta = super().update(instance, data)
         if term_changed:
-            schema.on_term_change([result.id])
+            schema.on_term_change([result.pk])
             result.refresh_from_db()
         schema.save()
         return result
@@ -212,11 +212,11 @@ class CstTargetSerializer(serializers.Serializer):
         cst = cast(Constituenta, attrs['target'])
         if schema and cst.schema != schema:
             raise serializers.ValidationError({
-                f'{cst.id}': msg.constituentaNotInRSform(schema.title)
+                f'{cst.pk}': msg.constituentaNotInRSform(schema.title)
             })
         if cst.cst_type not in [CstType.FUNCTION, CstType.STRUCTURED, CstType.TERM]:
             raise serializers.ValidationError({
-                f'{cst.id}': msg.constituentaNoStructure()
+                f'{cst.pk}': msg.constituentaNoStructure()
             })
         self.instance = cst
         return attrs
@@ -234,7 +234,7 @@ class CstRenameSerializer(serializers.Serializer):
         cst = cast(Constituenta, attrs['target'])
         if cst.schema != schema:
             raise serializers.ValidationError({
-                f'{cst.id}': msg.constituentaNotInRSform(schema.title)
+                f'{cst.pk}': msg.constituentaNotInRSform(schema.title)
             })
         new_alias = self.initial_data['alias']
         if cst.alias == new_alias:
@@ -260,7 +260,7 @@ class CstListSerializer(serializers.Serializer):
         for item in attrs['items']:
             if item.schema != schema:
                 raise serializers.ValidationError({
-                    f'{item.id}': msg.constituentaNotInRSform(schema.title)
+                    f'{item.pk}': msg.constituentaNotInRSform(schema.title)
                 })
         return attrs
 
@@ -291,7 +291,7 @@ class CstSubstituteSerializer(serializers.Serializer):
             substitution_cst = cast(Constituenta, item['substitution'])
             if original_cst.pk in deleted:
                 raise serializers.ValidationError({
-                    f'{original_cst.id}': msg.substituteDouble(original_cst.alias)
+                    f'{original_cst.pk}': msg.substituteDouble(original_cst.alias)
                 })
             if original_cst.alias == substitution_cst.alias:
                 raise serializers.ValidationError({
@@ -325,13 +325,13 @@ class InlineSynthesisSerializer(serializers.Serializer):
         if user.is_anonymous or (schema_out.owner != user and not user.is_staff):
             raise PermissionDenied({
                 'message': msg.schemaForbidden(),
-                'object_id': schema_in.id
+                'object_id': schema_in.pk
             })
         constituents = cast(list[Constituenta], attrs['items'])
         for cst in constituents:
             if cst.schema != schema_in:
                 raise serializers.ValidationError({
-                    f'{cst.id}': msg.constituentaNotInRSform(schema_in.title)
+                    f'{cst.pk}': msg.constituentaNotInRSform(schema_in.title)
                 })
         deleted = set()
         for item in attrs['substitutions']:
@@ -340,24 +340,24 @@ class InlineSynthesisSerializer(serializers.Serializer):
             if original_cst.schema == schema_in:
                 if original_cst not in constituents:
                     raise serializers.ValidationError({
-                        f'{original_cst.id}': msg.substitutionNotInList()
+                        f'{original_cst.pk}': msg.substitutionNotInList()
                     })
                 if substitution_cst.schema != schema_out:
                     raise serializers.ValidationError({
-                        f'{substitution_cst.id}': msg.constituentaNotInRSform(schema_out.title)
+                        f'{substitution_cst.pk}': msg.constituentaNotInRSform(schema_out.title)
                     })
             else:
                 if substitution_cst not in constituents:
                     raise serializers.ValidationError({
-                        f'{substitution_cst.id}': msg.substitutionNotInList()
+                        f'{substitution_cst.pk}': msg.substitutionNotInList()
                     })
                 if original_cst.schema != schema_out:
                     raise serializers.ValidationError({
-                        f'{original_cst.id}': msg.constituentaNotInRSform(schema_out.title)
+                        f'{original_cst.pk}': msg.constituentaNotInRSform(schema_out.title)
                     })
             if original_cst.pk in deleted:
                 raise serializers.ValidationError({
-                    f'{original_cst.id}': msg.substituteDouble(original_cst.alias)
+                    f'{original_cst.pk}': msg.substituteDouble(original_cst.alias)
                 })
             deleted.add(original_cst.pk)
         return attrs

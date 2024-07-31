@@ -91,24 +91,24 @@ class OperationUpdateSerializer(serializers.Serializer):
 
         if 'substitutions' not in attrs:
             return attrs
-        schemas = [arg.result.pk for arg in attrs['arguments'] if arg.result is not None]
+        schemas = [arg.result_id for arg in attrs['arguments'] if arg.result is not None]
         substitutions = attrs['substitutions']
         to_delete = {x['original'].pk for x in substitutions}
         deleted = set()
         for item in substitutions:
             original_cst = cast(Constituenta, item['original'])
             substitution_cst = cast(Constituenta, item['substitution'])
-            if original_cst.schema.pk not in schemas:
+            if original_cst.schema_id not in schemas:
                 raise serializers.ValidationError({
-                    f'{original_cst.id}': msg.constituentaNotFromOperation()
+                    f'{original_cst.pk}': msg.constituentaNotFromOperation()
                 })
-            if substitution_cst.schema.pk not in schemas:
+            if substitution_cst.schema_id not in schemas:
                 raise serializers.ValidationError({
-                    f'{substitution_cst.id}': msg.constituentaNotFromOperation()
+                    f'{substitution_cst.pk}': msg.constituentaNotFromOperation()
                 })
             if original_cst.pk in deleted or substitution_cst.pk in to_delete:
                 raise serializers.ValidationError({
-                    f'{original_cst.id}': msg.substituteDouble(original_cst.alias)
+                    f'{original_cst.pk}': msg.substituteDouble(original_cst.alias)
                 })
             if original_cst.schema == substitution_cst.schema:
                 raise serializers.ValidationError({

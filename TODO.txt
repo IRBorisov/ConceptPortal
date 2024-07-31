@@ -2,10 +2,8 @@
 For more specific TODOs see comments in code
 
 [Functionality - PROGRESS]
-- Operational synthesis schema as LibraryItem ?
-
-- Library organization, search and exploration. Consider new user experience
-- Private projects and permissions. Consider cooperative editing
+- Design first user experience
+- Private projects. Consider cooperative editing
 
 
 [Functionality - PENDING]

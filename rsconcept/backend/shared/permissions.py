@@ -28,7 +28,7 @@ def _extract_item(obj: Any) -> LibraryItem:
         return cast(LibraryItem, obj.item)
     raise PermissionDenied({
         'message': 'Invalid type error. Please contact developers',
-        'object_id': obj.id
+        'object_id': obj.pk
     })
 
 
