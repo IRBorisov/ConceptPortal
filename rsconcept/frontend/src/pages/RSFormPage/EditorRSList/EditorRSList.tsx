@@ -59,10 +59,10 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
     if (!controller.isContentEditable || controller.isProcessing) {
       return;
     }
-    if (event.key === 'Delete' && controller.selected.length > 0) {
+    if (event.key === 'Delete' && controller.canDeleteSelected) {
       event.preventDefault();
       event.stopPropagation();
-      controller.deleteCst();
+      controller.promptDeleteCst();
       return;
     }
     if (!event.altKey || event.shiftKey) {

@@ -1,7 +1,3 @@
-import InfoCstStatus from '@/components/info/InfoCstStatus';
-import Divider from '@/components/ui/Divider';
-import { HelpTopic } from '@/models/miscellaneous';
-
 import {
   IconAlias,
   IconClone,
@@ -11,17 +7,24 @@ import {
   IconNewItem,
   IconOpenList,
   IconReset
-} from '../../../components/Icons';
-import LinkTopic from '../../../components/ui/LinkTopic';
+} from '@/components/Icons';
+import InfoCstStatus from '@/components/info/InfoCstStatus';
+import Divider from '@/components/ui/Divider';
+import LinkTopic from '@/components/ui/LinkTopic';
+import { HelpTopic } from '@/models/miscellaneous';
 
 function HelpRSFormItems() {
   return (
     <div className='dense'>
       <h1>Список конституент</h1>
-      <p>
+      <li>
         <IconAlias className='inline-icon' />
         Конституенты обладают уникальным <LinkTopic text='Именем' topic={HelpTopic.CC_CONSTITUENTA} />
-      </p>
+      </li>
+      <li>при наведении на имя отображаются атрибуты</li>
+      <li>
+        пунктиром отображаются <LinkTopic text='наследованные' topic={HelpTopic.CC_OSS} /> конституенты
+      </li>
 
       <h2>Управление списком</h2>
       <li>

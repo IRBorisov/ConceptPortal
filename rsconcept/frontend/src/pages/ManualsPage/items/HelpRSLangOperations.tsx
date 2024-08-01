@@ -1,5 +1,3 @@
-import { HelpTopic } from '@/models/miscellaneous';
-
 import {
   IconGenerateNames,
   IconGenerateStructure,
@@ -7,8 +5,9 @@ import {
   IconReplace,
   IconSortList,
   IconTemplates
-} from '../../../components/Icons';
-import LinkTopic from '../../../components/ui/LinkTopic';
+} from '@/components/Icons';
+import LinkTopic from '@/components/ui/LinkTopic';
+import { HelpTopic } from '@/models/miscellaneous';
 
 function HelpRSLangOperations() {
   return (

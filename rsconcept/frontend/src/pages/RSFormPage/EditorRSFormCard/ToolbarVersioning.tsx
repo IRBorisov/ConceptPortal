@@ -7,7 +7,11 @@ import { PARAMETER } from '@/utils/constants';
 
 import { useRSEdit } from '../RSEditContext';
 
-function ToolbarVersioning() {
+interface ToolbarVersioningProps {
+  blockReload?: boolean;
+}
+
+function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
   const controller = useRSEdit();
   return (
     <Overlay position='top-[-0.4rem] right-[0rem]' className='pr-2 cc-icons'>
@@ -15,9 +19,13 @@ function ToolbarVersioning() {
         <>
           <MiniButton
             titleHtml={
-              !controller.isContentEditable ? 'Откатить к версии' : 'Переключитесь на <br/>неактуальную версию'
+              blockReload
+                ? 'Невозможно откатить КС, прикрепленную к операционной схеме'
+                : !controller.isContentEditable
+                ? 'Откатить к версии'
+                : 'Переключитесь на <br/>неактуальную версию'
             }
-            disabled={controller.isContentEditable}
+            disabled={controller.isContentEditable || blockReload}
             onClick={() => controller.restoreVersion()}
             icon={<IconUpload size='1.25rem' className='icon-red' />}
           />
@@ -30,7 +38,7 @@ function ToolbarVersioning() {
           <MiniButton
             title={controller.schema?.versions.length === 0 ? 'Список версий пуст' : 'Редактировать версии'}
             disabled={!controller.schema || controller.schema?.versions.length === 0}
-            onClick={controller.editVersions}
+            onClick={controller.promptEditVersions}
             icon={<IconVersions size='1.25rem' className='icon-primary' />}
           />
         </>

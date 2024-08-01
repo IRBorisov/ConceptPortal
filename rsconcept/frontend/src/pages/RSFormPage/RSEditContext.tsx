@@ -62,6 +62,7 @@ export interface IRSEditContext {
   isProcessing: boolean;
   canProduceStructure: boolean;
   nothingSelected: boolean;
+  canDeleteSelected: boolean;
 
   updateSchema: (data: ILibraryUpdateData) => void;
 
@@ -81,14 +82,14 @@ export interface IRSEditContext {
   viewVersion: (version?: VersionID, newTab?: boolean) => void;
   createVersion: () => void;
   restoreVersion: () => void;
-  editVersions: () => void;
+  promptEditVersions: () => void;
 
   moveUp: () => void;
   moveDown: () => void;
   createCst: (type: CstType | undefined, skipDialog: boolean, definition?: string) => void;
   renameCst: () => void;
   cloneCst: () => void;
-  deleteCst: () => void;
+  promptDeleteCst: () => void;
   editTermForms: () => void;
 
   promptTemplate: () => void;
@@ -145,6 +146,10 @@ export const RSEditState = ({
   );
   const isContentEditable = useMemo(() => isMutable && !model.isArchive, [isMutable, model.isArchive]);
   const nothingSelected = useMemo(() => selected.length === 0, [selected]);
+  const canDeleteSelected = useMemo(
+    () => !nothingSelected && selected.every(id => !model.schema?.cstByID.get(id)?.is_inherited),
+    [selected, nothingSelected, model.schema]
+  );
 
   const [showUpload, setShowUpload] = useState(false);
   const [showClone, setShowClone] = useState(false);
@@ -598,6 +603,7 @@ export const RSEditState = ({
         isProcessing: model.processing,
         canProduceStructure,
         nothingSelected,
+        canDeleteSelected,
 
         toggleSubscribe,
         setOwner,
@@ -616,14 +622,14 @@ export const RSEditState = ({
         viewVersion,
         createVersion,
         restoreVersion,
-        editVersions: () => setShowEditVersions(true),
+        promptEditVersions: () => setShowEditVersions(true),
 
         moveUp,
         moveDown,
         createCst,
         cloneCst,
         renameCst,
-        deleteCst: () => setShowDeleteCst(true),
+        promptDeleteCst: () => setShowDeleteCst(true),
         editTermForms,
 
         promptTemplate,

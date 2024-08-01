@@ -105,7 +105,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         result.push({
           id: String(node.id),
           fill: focusCst === cst ? colors.bgPurple : colorBgGraphNode(cst, coloring, colors),
-          label: cst.alias,
+          label: `${cst.alias}${cst.is_inherited ? '*' : ''}`,
           subLabel: !filterParams.noText ? cst.term_resolved : undefined,
           size: applyNodeSizing(cst, sizing)
         });
@@ -141,10 +141,10 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
   }
 
   function handleDeleteCst() {
-    if (!controller.schema || controller.nothingSelected) {
+    if (!controller.schema || !controller.canDeleteSelected) {
       return;
     }
-    controller.deleteCst();
+    controller.promptDeleteCst();
   }
 
   const handleChangeLayout = useCallback(

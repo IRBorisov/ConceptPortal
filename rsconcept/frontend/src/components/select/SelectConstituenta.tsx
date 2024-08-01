@@ -32,7 +32,7 @@ function SelectConstituenta({
     return (
       items?.map(cst => ({
         value: cst.id,
-        label: `${cst.alias}: ${describeConstituenta(cst)}`
+        label: `${cst.alias}${cst.is_inherited ? '*' : ''}: ${describeConstituenta(cst)}`
       })) ?? []
     );
   }, [items]);

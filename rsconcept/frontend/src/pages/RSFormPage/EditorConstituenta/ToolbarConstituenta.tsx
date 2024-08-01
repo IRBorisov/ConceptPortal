@@ -1,3 +1,5 @@
+'use client';
+
 import {
   IconClone,
   IconDestroy,
@@ -15,6 +17,8 @@ import Overlay from '@/components/ui/Overlay';
 import { HelpTopic } from '@/models/miscellaneous';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip, tooltips } from '@/utils/labels';
+
+import { useRSEdit } from '../RSEditContext';
 
 interface ToolbarConstituentaProps {
   disabled: boolean;
@@ -46,6 +50,8 @@ function ToolbarConstituenta({
   onCreate,
   onToggleList
 }: ToolbarConstituentaProps) {
+  const controller = useRSEdit();
+
   return (
     <Overlay position='top-1 right-4' className='cc-icons sm:right-1/2 sm:translate-x-1/2'>
       <MiniButton
@@ -74,7 +80,7 @@ function ToolbarConstituenta({
       />
       <MiniButton
         title='Удалить редактируемую конституенту'
-        disabled={disabled}
+        disabled={disabled || !controller.canDeleteSelected}
         onClick={onDelete}
         icon={<IconDestroy size='1.25rem' className='icon-red' />}
       />

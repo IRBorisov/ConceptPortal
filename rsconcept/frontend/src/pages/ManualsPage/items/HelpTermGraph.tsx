@@ -1,8 +1,3 @@
-import Divider from '@/components/ui/Divider';
-import LinkTopic from '@/components/ui/LinkTopic';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
-import { HelpTopic } from '@/models/miscellaneous';
-
 import {
   IconClustering,
   IconDestroy,
@@ -20,7 +15,11 @@ import {
   IconReset,
   IconRotate3D,
   IconText
-} from '../../../components/Icons';
+} from '@/components/Icons';
+import Divider from '@/components/ui/Divider';
+import LinkTopic from '@/components/ui/LinkTopic';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
+import { HelpTopic } from '@/models/miscellaneous';
 
 function HelpTermGraph() {
   const { colors } = useConceptOptions();
@@ -79,6 +78,9 @@ function HelpTermGraph() {
           </li>
           <li>
             <IconImage className='inline-icon' /> Сохранить в формат PNG
+          </li>
+          <li>
+            * <LinkTopic text='наследованные' topic={HelpTopic.CC_OSS} /> в ОСС
           </li>
         </div>
 

@@ -79,8 +79,8 @@ function ToolbarRSList() {
       <MiniButton
         titleHtml={prepareTooltip('Удалить выбранные', 'Delete')}
         icon={<IconDestroy size='1.25rem' className='icon-red' />}
-        disabled={controller.isProcessing || controller.nothingSelected}
-        onClick={controller.deleteCst}
+        disabled={controller.isProcessing || !controller.canDeleteSelected}
+        onClick={controller.promptDeleteCst}
       />
       <BadgeHelp topic={HelpTopic.UI_RS_LIST} offset={5} />
     </Overlay>

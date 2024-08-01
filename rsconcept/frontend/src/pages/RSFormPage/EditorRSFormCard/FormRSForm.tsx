@@ -105,6 +105,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
               onClick={() => ossMenu.toggle()}
             />
             <Dropdown isOpen={ossMenu.isOpen} className='mt-[-0.1rem]'>
+              <Label text='Список ОСС' className='border-b px-3' />
               {schema.oss.map((reference, index) => (
                 <DropdownButton
                   className='min-w-[5rem]'
@@ -145,7 +146,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
           onChange={event => setAlias(event.target.value)}
         />
         <div className='flex flex-col'>
-          <ToolbarVersioning />
+          <ToolbarVersioning blockReload={schema && schema?.oss.length > 0} />
           <ToolbarItemAccess
             visible={visible}
             toggleVisible={() => setVisible(prev => !prev)}

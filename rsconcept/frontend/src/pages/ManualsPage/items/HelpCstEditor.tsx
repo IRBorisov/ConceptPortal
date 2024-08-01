@@ -74,7 +74,6 @@ function HelpCstEditor() {
         <IconMoveUp className='inline-icon' /> Alt + вверх/вниз – перемещение
       </li>
       <li>фильтрация в верхней части</li>
-      <li>при наведении на имя конституенты отображаются атрибуты</li>
       <li>
         <span style={{ backgroundColor: colors.bgSelected }}>цветом фона</span> выделена текущая конституента
       </li>

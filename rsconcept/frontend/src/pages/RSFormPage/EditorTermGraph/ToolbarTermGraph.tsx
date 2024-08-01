@@ -105,7 +105,7 @@ function ToolbarTermGraph({
         <MiniButton
           title='Удалить выбранные'
           icon={<IconDestroy size='1.25rem' className='icon-red' />}
-          disabled={controller.nothingSelected || controller.isProcessing}
+          disabled={!controller.canDeleteSelected || controller.isProcessing}
           onClick={onDelete}
         />
       ) : null}

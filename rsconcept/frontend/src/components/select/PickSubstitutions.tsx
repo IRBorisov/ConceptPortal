@@ -110,6 +110,12 @@ function PickSubstitutions({
       toast.error(errors.reuseOriginal);
       return;
     }
+    if (leftArgument === rightArgument) {
+      if ((deleteRight && rightCst?.is_inherited) || (!deleteRight && leftCst?.is_inherited)) {
+        toast.error(errors.substituteInherited);
+        return;
+      }
+    }
     setSubstitutions(prev => [...prev, newSubstitution]);
     setLeftCst(undefined);
     setRightCst(undefined);

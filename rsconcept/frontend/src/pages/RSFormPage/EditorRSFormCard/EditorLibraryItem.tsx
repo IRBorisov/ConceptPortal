@@ -15,7 +15,7 @@ import { UserID, UserLevel } from '@/models/user';
 import { prefixes } from '@/utils/constants';
 import { prompts } from '@/utils/labels';
 
-import LabeledValue from '../../../components/ui/LabeledValue';
+import LabeledValue from '@/components/ui/LabeledValue';
 
 interface EditorLibraryItemProps {
   item?: ILibraryItemData;

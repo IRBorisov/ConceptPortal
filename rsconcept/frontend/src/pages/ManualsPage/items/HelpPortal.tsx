@@ -1,10 +1,10 @@
 import { urls } from '@/app/urls';
 import { IconLibrary2, IconManuals, IconUser2 } from '@/components/Icons';
+import LinkTopic from '@/components/ui/LinkTopic';
 import TextURL from '@/components/ui/TextURL';
 import { HelpTopic } from '@/models/miscellaneous';
 import { external_urls, prefixes } from '@/utils/constants';
 
-import LinkTopic from '../../../components/ui/LinkTopic';
 import TopicItem from '../TopicItem';
 
 function HelpPortal() {

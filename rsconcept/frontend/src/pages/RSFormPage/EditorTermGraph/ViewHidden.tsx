@@ -105,12 +105,19 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
                 className='min-w-[3rem] rounded-md text-center select-none'
                 style={{
                   backgroundColor: colorBgGraphNode(cst, adjustedColoring, colors),
-                  ...(localSelected.includes(cstID) ? { outlineWidth: '2px', outlineStyle: 'solid' } : {})
+                  ...(localSelected.includes(cstID)
+                    ? {
+                        outlineWidth: '2px',
+                        outlineStyle: cst.is_inherited ? 'dashed' : 'solid',
+                        outlineColor: colors.fgDefault
+                      }
+                    : {})
                 }}
                 onClick={event => handleClick(cstID, event)}
                 onDoubleClick={() => onEdit(cstID)}
               >
                 {cst.alias}
+                {cst.is_inherited ? '*' : ''}
               </button>
               <TooltipConstituenta data={cst} anchor={`#${id}`} />
             </div>

@@ -89,7 +89,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
           onMoveDown={controller.moveDown}
           onSubmit={initiateSubmit}
           onReset={() => setToggleReset(prev => !prev)}
-          onDelete={controller.deleteCst}
+          onDelete={controller.promptDeleteCst}
           onClone={controller.cloneCst}
           onCreate={() => controller.createCst(activeCst?.cst_type, false)}
           onToggleList={() => setShowList(prev => !prev)}

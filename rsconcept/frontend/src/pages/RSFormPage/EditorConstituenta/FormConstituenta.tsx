@@ -5,7 +5,7 @@ import { AnimatePresence } from 'framer-motion';
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { IconChild, IconSave } from '@/components/Icons';
+import { IconChild, IconParent, IconSave } from '@/components/Icons';
 import RefsInput from '@/components/RefsInput';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
@@ -241,15 +241,22 @@ function FormConstituenta({
                 disabled={disabled || !isModified}
                 icon={<IconSave size='1.25rem' />}
               />
-              {state?.is_inherited ? (
-                <Overlay position='right-[-2rem]'>
+              <Overlay position='top-[0.1rem] left-[0.4rem]' className='cc-icons'>
+                {state?.is_inherited_parent ? (
                   <MiniButton
                     icon={<IconChild size='1.25rem' className='clr-text-red' />}
                     disabled
                     titleHtml='Внимание!</br> Конституента имеет потомков<br/> в операционной схеме синтеза'
                   />
-                </Overlay>
-              ) : null}
+                ) : null}
+                {state?.is_inherited ? (
+                  <MiniButton
+                    icon={<IconParent size='1.25rem' className='clr-text-red' />}
+                    disabled
+                    titleHtml='Внимание!</br> Конституента является наследником<br/>'
+                  />
+                ) : null}
+              </Overlay>
             </div>
           ) : null}
         </AnimatePresence>

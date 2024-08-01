@@ -253,7 +253,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
 
             if operation.result is not None:
                 can_edit = permissions.can_edit_item(request.user, operation.result)
-                if can_edit:
+                if can_edit or operation.operation_type == m.OperationType.SYNTHESIS:
                     operation.result.alias = operation.alias
                     operation.result.title = operation.title
                     operation.result.comment = operation.comment

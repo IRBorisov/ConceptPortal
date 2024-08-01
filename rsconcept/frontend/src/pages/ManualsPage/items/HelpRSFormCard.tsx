@@ -1,5 +1,3 @@
-import { HelpTopic } from '@/models/miscellaneous';
-
 import {
   IconClone,
   IconDestroy,
@@ -10,8 +8,9 @@ import {
   IconOwner,
   IconPublic,
   IconSave
-} from '../../../components/Icons';
-import LinkTopic from '../../../components/ui/LinkTopic';
+} from '@/components/Icons';
+import LinkTopic from '@/components/ui/LinkTopic';
+import { HelpTopic } from '@/models/miscellaneous';
 
 function HelpRSFormCard() {
   return (
