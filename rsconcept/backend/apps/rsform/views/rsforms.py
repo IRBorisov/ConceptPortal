@@ -147,6 +147,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         serializer = s.CstTargetSerializer(data=request.data, context={'schema': schema})
         serializer.is_valid(raise_exception=True)
         cst = cast(m.Constituenta, serializer.validated_data['target'])
+        if cst.cst_type not in [m.CstType.FUNCTION, m.CstType.STRUCTURED, m.CstType.TERM]:
+            raise ValidationError({
+                f'{cst.pk}': msg.constituentaNoStructure()
+            })
 
         schema_details = s.RSFormParseSerializer(schema).data['items']
         cst_parse = next(item for item in schema_details if item['id'] == cst.pk)['parse']

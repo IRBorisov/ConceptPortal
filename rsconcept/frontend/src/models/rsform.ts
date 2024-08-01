@@ -120,6 +120,11 @@ export interface IConstituenta extends IConstituentaData {
 }
 
 /**
+ * Represents {@link IConstituenta} reference.
+ */
+export interface IConstituentaReference extends Pick<IConstituentaMeta, 'id' | 'schema'> {}
+
+/**
  * Represents Constituenta list.
  */
 export interface IConstituentaList {

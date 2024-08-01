@@ -231,17 +231,13 @@ class CstTargetSerializer(serializers.Serializer):
     target = PKField(many=False, queryset=Constituenta.objects.all())
 
     def validate(self, attrs):
-        schema = cast(LibraryItem, self.context['schema'])
-        cst = cast(Constituenta, attrs['target'])
-        if schema and cst.schema_id != schema.pk:
-            raise serializers.ValidationError({
-                f'{cst.pk}': msg.constituentaNotInRSform(schema.title)
-            })
-        if cst.cst_type not in [CstType.FUNCTION, CstType.STRUCTURED, CstType.TERM]:
-            raise serializers.ValidationError({
-                f'{cst.pk}': msg.constituentaNoStructure()
-            })
-        self.instance = cst
+        if 'schema' in self.context:
+            schema = cast(LibraryItem, self.context['schema'])
+            cst = cast(Constituenta, attrs['target'])
+            if schema and cst.schema_id != schema.pk:
+                raise serializers.ValidationError({
+                    f'{cst.pk}': msg.constituentaNotInRSform(schema.title)
+                })
         return attrs
 
 

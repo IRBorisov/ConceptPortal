@@ -16,3 +16,9 @@ class NewSchemaResponse(serializers.Serializer):
     ''' Serializer: Create RSForm for input operation response. '''
     new_schema = LibraryItemSerializer()
     oss = OperationSchemaSerializer()
+
+
+class ConstituentaReferenceResponse(serializers.Serializer):
+    ''' Serializer: Constituenta reference. '''
+    id = serializers.IntegerField()
+    schema = serializers.IntegerField()

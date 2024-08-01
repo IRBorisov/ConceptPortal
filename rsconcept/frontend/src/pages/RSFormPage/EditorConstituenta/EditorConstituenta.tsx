@@ -80,21 +80,15 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
 
   return (
     <div className='overflow-y-auto' style={{ maxHeight: panelHeight }}>
-      {controller.isContentEditable ? (
-        <ToolbarConstituenta
-          disabled={disabled}
-          modified={isModified}
-          showList={showList}
-          onMoveUp={controller.moveUp}
-          onMoveDown={controller.moveDown}
-          onSubmit={initiateSubmit}
-          onReset={() => setToggleReset(prev => !prev)}
-          onDelete={controller.promptDeleteCst}
-          onClone={controller.cloneCst}
-          onCreate={() => controller.createCst(activeCst?.cst_type, false)}
-          onToggleList={() => setShowList(prev => !prev)}
-        />
-      ) : null}
+      <ToolbarConstituenta
+        activeCst={activeCst}
+        disabled={disabled}
+        modified={isModified}
+        showList={showList}
+        onSubmit={initiateSubmit}
+        onReset={() => setToggleReset(prev => !prev)}
+        onToggleList={() => setShowList(prev => !prev)}
+      />
       <div
         tabIndex={-1}
         className={clsx(

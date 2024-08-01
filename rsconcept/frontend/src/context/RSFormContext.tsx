@@ -13,6 +13,7 @@ import {
   postCreateVersion,
   postSubscribe
 } from '@/backend/library';
+import { postFindPredecessor } from '@/backend/oss';
 import {
   getTRSFile,
   patchDeleteConstituenta,
@@ -37,6 +38,7 @@ import {
   ConstituentaID,
   IConstituentaList,
   IConstituentaMeta,
+  IConstituentaReference,
   ICstCreateData,
   ICstMovetoData,
   ICstRenameData,
@@ -89,6 +91,7 @@ interface IRSFormContext {
   cstUpdate: (data: ICstUpdateData, callback?: DataCallback<IConstituentaMeta>) => void;
   cstDelete: (data: IConstituentaList, callback?: () => void) => void;
   cstMoveTo: (data: ICstMovetoData, callback?: () => void) => void;
+  findPredecessor: (data: ITargetCst, callback: (reference: IConstituentaReference) => void) => void;
 
   versionCreate: (data: IVersionData, callback?: (version: VersionID) => void) => void;
   versionUpdate: (target: VersionID, data: IVersionData, callback?: () => void) => void;
@@ -526,6 +529,17 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
     [itemID, library, setSchema]
   );
 
+  const findPredecessor = useCallback((data: ITargetCst, callback: (reference: IConstituentaReference) => void) => {
+    setProcessingError(undefined);
+    postFindPredecessor({
+      data: data,
+      showError: true,
+      setLoading: setProcessing,
+      onError: setProcessingError,
+      onSuccess: callback
+    });
+  }, []);
+
   const versionUpdate = useCallback(
     (target: number, data: IVersionData, callback?: () => void) => {
       setProcessingError(undefined);
@@ -638,6 +652,8 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         cstSubstitute,
         cstDelete,
         cstMoveTo,
+        findPredecessor,
+
         versionCreate,
         versionUpdate,
         versionDelete,

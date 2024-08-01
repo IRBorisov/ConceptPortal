@@ -12,6 +12,8 @@ from rest_framework.response import Response
 
 from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemSerializer
+from apps.rsform.models import Constituenta
+from apps.rsform.serializers import CstTargetSerializer
 from shared import messages as msg
 from shared import permissions
 
@@ -43,6 +45,8 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             permission_list = [permissions.ItemEditor]
         elif self.action in ['details']:
             permission_list = [permissions.ItemAnyone]
+        elif self.action in ['get_predecessor']:
+            permission_list = [permissions.Anyone]
         else:
             permission_list = [permissions.Anyone]
         return [permission() for permission in permission_list]
@@ -305,4 +309,35 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         return Response(
             status=c.HTTP_200_OK,
             data=s.OperationSchemaSerializer(oss.model).data
+        )
+
+    @extend_schema(
+        summary='get predecessor for target constituenta',
+        tags=['OSS'],
+        request=CstTargetSerializer(),
+        responses={
+            c.HTTP_200_OK: s.ConstituentaReferenceResponse,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=False, methods=['post'], url_path='get-predecessor')
+    def get_predecessor(self, request: Request):
+        ''' Get predecessor. '''
+        # TODO: add tests for this method
+        serializer = CstTargetSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        cst = cast(Constituenta, serializer.validated_data['target'])
+        inheritance = m.Inheritance.objects.filter(child=cst)
+        while inheritance.exists():
+            cst = cast(m.Inheritance, inheritance.first()).parent
+            inheritance = m.Inheritance.objects.filter(child=cst)
+
+        return Response(
+            status=c.HTTP_200_OK,
+            data={
+                'id': cst.pk,
+                'schema': cst.schema_id
+            }
         )

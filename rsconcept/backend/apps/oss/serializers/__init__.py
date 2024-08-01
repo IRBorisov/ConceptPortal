@@ -10,4 +10,4 @@ from .data_access import (
     OperationUpdateSerializer,
     SetOperationInputSerializer
 )
-from .responses import NewOperationResponse, NewSchemaResponse
+from .responses import ConstituentaReferenceResponse, NewOperationResponse, NewSchemaResponse

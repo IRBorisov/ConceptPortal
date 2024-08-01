@@ -53,6 +53,8 @@ import { EXTEOR_TRS_FILE } from '@/utils/constants';
 import { information, prompts } from '@/utils/labels';
 import { promptUnsaved } from '@/utils/utils';
 
+import { RSTabID } from './RSTabs';
+
 export interface IRSEditContext {
   schema?: IRSForm;
   selected: ConstituentaID[];
@@ -80,6 +82,7 @@ export interface IRSEditContext {
 
   viewOSS: (target: LibraryItemID, newTab?: boolean) => void;
   viewVersion: (version?: VersionID, newTab?: boolean) => void;
+  viewPredecessor: (target: ConstituentaID) => void;
   createVersion: () => void;
   restoreVersion: () => void;
   promptEditVersions: () => void;
@@ -199,6 +202,20 @@ export const RSEditState = ({
 
   const viewVersion = useCallback(
     (version?: VersionID, newTab?: boolean) => router.push(urls.schema(model.itemID, version), newTab),
+    [router, model]
+  );
+
+  const viewPredecessor = useCallback(
+    (target: ConstituentaID) =>
+      model.findPredecessor({ target: target }, reference =>
+        router.push(
+          urls.schema_props({
+            id: reference.schema,
+            active: reference.id,
+            tab: RSTabID.CST_EDIT
+          })
+        )
+      ),
     [router, model]
   );
 
@@ -620,6 +637,7 @@ export const RSEditState = ({
 
         viewOSS,
         viewVersion,
+        viewPredecessor,
         createVersion,
         restoreVersion,
         promptEditVersions: () => setShowEditVersions(true),

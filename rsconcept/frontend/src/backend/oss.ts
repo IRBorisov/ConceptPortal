@@ -12,6 +12,7 @@ import {
   IPositionsData,
   ITargetOperation
 } from '@/models/oss';
+import { IConstituentaReference, ITargetCst } from '@/models/rsform';
 
 import { AxiosGet, AxiosPatch, AxiosPost, FrontExchange, FrontPull, FrontPush } from './apiTransport';
 
@@ -70,6 +71,13 @@ export function patchUpdateOperation(oss: string, request: FrontExchange<IOperat
 export function postExecuteOperation(oss: string, request: FrontExchange<ITargetOperation, IOperationSchemaData>) {
   AxiosPost({
     endpoint: `/api/oss/${oss}/execute-operation`,
+    request: request
+  });
+}
+
+export function postFindPredecessor(request: FrontExchange<ITargetCst, IConstituentaReference>) {
+  AxiosPost({
+    endpoint: `/api/oss/get-predecessor`,
     request: request
   });
 }

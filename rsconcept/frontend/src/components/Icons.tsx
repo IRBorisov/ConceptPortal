@@ -64,7 +64,7 @@ export { BiDiamond        as IconTemplates }      from 'react-icons/bi';
 export { GiHoneycomb      as IconOSS }            from 'react-icons/gi';
 export { LuBaby           as IconChild }          from 'react-icons/lu';
 export { RiParentLine     as IconParent }         from 'react-icons/ri';
-export { TbOld            as IconPredecessor }    from 'react-icons/tb';
+export { BiSpa            as IconPredecessor }    from 'react-icons/bi';
 export { RiHexagonLine    as IconRSForm }         from 'react-icons/ri';
 export { LuArchive        as IconArchive }        from 'react-icons/lu';
 export { LuDatabase       as IconDatabase }       from 'react-icons/lu';
