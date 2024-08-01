@@ -167,7 +167,7 @@ function ToolbarOssGraph({
             onClick={onExecute}
           />
           <MiniButton
-            titleHtml={prepareTooltip('Редактировать выбранную', 'Ctrl + клик')}
+            titleHtml={prepareTooltip('Редактировать выбранную', 'Двойной клик')}
             icon={<IconEdit2 size='1.25rem' className='icon-primary' />}
             disabled={controller.selected.length !== 1 || controller.isProcessing}
             onClick={onEdit}

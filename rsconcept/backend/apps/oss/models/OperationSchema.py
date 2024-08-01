@@ -1,13 +1,11 @@
 ''' Models: OSS API. '''
 from typing import Optional
 
-from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.db.models import QuerySet
 
 from apps.library.models import Editor, LibraryItem, LibraryItemType
 from apps.rsform.models import RSForm
-from shared import messages as msg
 
 from .Argument import Argument
 from .Inheritance import Inheritance
@@ -66,8 +64,6 @@ class OperationSchema:
     @transaction.atomic
     def create_operation(self, **kwargs) -> Operation:
         ''' Insert new operation. '''
-        if kwargs['alias'] != '' and self.operations().filter(alias=kwargs['alias']).exists():
-            raise ValidationError(msg.aliasTaken(kwargs['alias']))
         result = Operation.objects.create(oss=self.model, **kwargs)
         self.save()
         result.refresh_from_db()

@@ -35,7 +35,15 @@ export interface IOperation {
   position_y: number;
 
   result: LibraryItemID | null;
+
+  substitutions: ICstSubstituteEx[];
+  arguments: OperationID[];
 }
+
+/**
+ * Represents {@link IOperation} data from server.
+ */
+export interface IOperationData extends Omit<IOperation, 'substitutions' | 'arguments'> {}
 
 /**
  * Represents {@link IOperation} position.
@@ -121,6 +129,7 @@ export interface IMultiSubstitution {
  * Represents {@link ICstSubstitute} extended data.
  */
 export interface ICstSubstituteEx extends ICstSubstitute {
+  operation: OperationID;
   original_alias: string;
   original_term: string;
   substitution_alias: string;
@@ -141,7 +150,7 @@ export interface IOperationSchemaStats {
  * Represents backend data for {@link IOperationSchema}.
  */
 export interface IOperationSchemaData extends ILibraryItemData {
-  items: IOperation[];
+  items: IOperationData[];
   arguments: IArgument[];
   substitutions: ICstSubstituteEx[];
 }
@@ -150,6 +159,7 @@ export interface IOperationSchemaData extends ILibraryItemData {
  * Represents OperationSchema.
  */
 export interface IOperationSchema extends IOperationSchemaData {
+  items: IOperation[];
   graph: Graph;
   schemas: LibraryItemID[];
   stats: IOperationSchemaStats;
@@ -160,7 +170,7 @@ export interface IOperationSchema extends IOperationSchemaData {
  * Represents data response when creating {@link IOperation}.
  */
 export interface IOperationCreatedResponse {
-  new_operation: IOperation;
+  new_operation: IOperationData;
   oss: IOperationSchemaData;
 }
 

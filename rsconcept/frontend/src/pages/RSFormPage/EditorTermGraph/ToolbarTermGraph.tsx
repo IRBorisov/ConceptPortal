@@ -13,6 +13,7 @@ import {
   IconTextOff
 } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
+import MiniSelectorOSS from '@/components/select/MiniSelectorOSS';
 import MiniButton from '@/components/ui/MiniButton';
 import { HelpTopic } from '@/models/miscellaneous';
 import { PARAMETER } from '@/utils/constants';
@@ -55,6 +56,12 @@ function ToolbarTermGraph({
 
   return (
     <div className='cc-icons'>
+      {controller.schema && controller.schema?.oss.length > 0 ? (
+        <MiniSelectorOSS
+          items={controller.schema.oss}
+          onSelect={(event, value) => controller.viewOSS(value.id, event.ctrlKey || event.metaKey)}
+        />
+      ) : null}
       <MiniButton
         title='Настройки фильтрации узлов и связей'
         icon={<IconFilter size='1.25rem' className='icon-primary' />}

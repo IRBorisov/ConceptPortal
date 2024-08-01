@@ -51,7 +51,7 @@ export interface IOssEditContext {
   openOperationSchema: (target: OperationID) => void;
 
   savePositions: (positions: IOperationPosition[], callback?: () => void) => void;
-  promptCreateOperation: (x: number, y: number, positions: IOperationPosition[]) => void;
+  promptCreateOperation: (x: number, y: number, inputs: OperationID[], positions: IOperationPosition[]) => void;
   deleteOperation: (target: OperationID, positions: IOperationPosition[]) => void;
   createInput: (target: OperationID, positions: IOperationPosition[]) => void;
   promptEditInput: (target: OperationID, positions: IOperationPosition[]) => void;
@@ -96,6 +96,7 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
 
   const [showCreateOperation, setShowCreateOperation] = useState(false);
   const [insertPosition, setInsertPosition] = useState<Position2D>({ x: 0, y: 0 });
+  const [initialInputs, setInitialInputs] = useState<OperationID[]>([]);
   const [positions, setPositions] = useState<IOperationPosition[]>([]);
   const [targetOperationID, setTargetOperationID] = useState<OperationID | undefined>(undefined);
   const targetOperation = useMemo(
@@ -208,11 +209,15 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
     [model]
   );
 
-  const promptCreateOperation = useCallback((x: number, y: number, positions: IOperationPosition[]) => {
-    setInsertPosition({ x: x, y: y });
-    setPositions(positions);
-    setShowCreateOperation(true);
-  }, []);
+  const promptCreateOperation = useCallback(
+    (x: number, y: number, inputs: OperationID[], positions: IOperationPosition[]) => {
+      setInsertPosition({ x: x, y: y });
+      setInitialInputs(inputs);
+      setPositions(positions);
+      setShowCreateOperation(true);
+    },
+    []
+  );
 
   const handleCreateOperation = useCallback(
     (data: IOperationCreateData) => {
@@ -341,6 +346,7 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
               hideWindow={() => setShowCreateOperation(false)}
               oss={model.schema}
               onCreate={handleCreateOperation}
+              initialInputs={initialInputs}
             />
           ) : null}
           {showEditInput ? (

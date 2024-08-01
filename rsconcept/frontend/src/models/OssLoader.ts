@@ -32,6 +32,7 @@ export class OssLoader {
     this.prepareLookups();
     this.createGraph();
     this.extractSchemas();
+    this.inferOperationAttributes();
 
     result.operationByID = this.operationByID;
     result.graph = this.graph;
@@ -42,7 +43,7 @@ export class OssLoader {
 
   private prepareLookups() {
     this.oss.items.forEach(operation => {
-      this.operationByID.set(operation.id, operation);
+      this.operationByID.set(operation.id, operation as IOperation);
       this.graph.addNode(operation.id);
     });
   }
@@ -53,6 +54,16 @@ export class OssLoader {
 
   private extractSchemas() {
     this.schemas = this.oss.items.map(operation => operation.result as LibraryItemID).filter(item => item !== null);
+  }
+
+  private inferOperationAttributes() {
+    this.graph.topologicalOrder().forEach(operationID => {
+      const operation = this.operationByID.get(operationID)!;
+      operation.substitutions = this.oss.substitutions.filter(item => item.operation === operationID);
+      operation.arguments = this.oss.arguments
+        .filter(item => item.operation === operationID)
+        .map(item => item.argument);
+    });
   }
 
   private calculateStats(): IOperationSchemaStats {

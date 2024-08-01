@@ -163,9 +163,9 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
           />
           {controller.isContentEditable ? (
             <DropdownButton
-              text='Загрузить из Экстеора'
+              text='Загрузить из Экстеор'
               icon={<IconUpload size='1rem' className='icon-red' />}
-              disabled={controller.isProcessing}
+              disabled={controller.isProcessing || controller.schema?.oss.length !== 0}
               onClick={handleUpload}
             />
           ) : null}

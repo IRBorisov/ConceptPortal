@@ -8,6 +8,7 @@ import {
   IconReset
 } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
+import MiniSelectorOSS from '@/components/select/MiniSelectorOSS';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import MiniButton from '@/components/ui/MiniButton';
@@ -27,6 +28,12 @@ function ToolbarRSList() {
 
   return (
     <Overlay position='top-1 right-1/2 translate-x-1/2' className='items-start cc-icons'>
+      {controller.schema && controller.schema?.oss.length > 0 ? (
+        <MiniSelectorOSS
+          items={controller.schema.oss}
+          onSelect={(event, value) => controller.viewOSS(value.id, event.ctrlKey || event.metaKey)}
+        />
+      ) : null}
       <MiniButton
         titleHtml={prepareTooltip('Сбросить выделение', 'ESC')}
         icon={<IconReset size='1.25rem' className='icon-primary' />}

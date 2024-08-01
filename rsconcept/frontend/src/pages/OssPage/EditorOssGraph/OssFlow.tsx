@@ -122,10 +122,43 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     controller.savePositions(getPositions(), () => setIsModified(false));
   }, [controller, getPositions, setIsModified]);
 
-  const handleCreateOperation = useCallback(() => {
-    const center = flow.project({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
-    controller.promptCreateOperation(center.x, center.y, getPositions());
-  }, [controller, getPositions, flow]);
+  const handleCreateOperation = useCallback(
+    (inputs: OperationID[]) => () => {
+      if (!controller.schema) {
+        return;
+      }
+      let target = { x: 0, y: 0 };
+      const positions = getPositions();
+
+      if (inputs.length <= 1) {
+        target = flow.project({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+      } else {
+        const inputsNodes = positions.filter(pos => inputs.includes(pos.id));
+        const maxY = Math.max(...inputsNodes.map(node => node.position_y));
+        const minX = Math.min(...inputsNodes.map(node => node.position_x));
+        const maxX = Math.max(...inputsNodes.map(node => node.position_x));
+
+        target.y = maxY + 100;
+        target.x = Math.ceil((maxX + minX) / 2 / PARAMETER.ossGridSize) * PARAMETER.ossGridSize;
+      }
+
+      let flagIntersect = false;
+      do {
+        flagIntersect = positions.some(
+          position =>
+            Math.abs(position.position_x - target.x) < PARAMETER.ossMinDistance &&
+            Math.abs(position.position_y - target.y) < PARAMETER.ossMinDistance
+        );
+        if (flagIntersect) {
+          target.x += PARAMETER.ossMinDistance;
+          target.y += PARAMETER.ossMinDistance;
+        }
+      } while (flagIntersect);
+
+      controller.promptCreateOperation(target.x, target.y, inputs, positions);
+    },
+    [controller, getPositions, flow]
+  );
 
   const handleDeleteSelected = useCallback(() => {
     if (controller.selected.length !== 1) {
@@ -241,13 +274,11 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     handleContextMenuHide();
   }, [handleContextMenuHide]);
 
-  const handleNodeClick = useCallback(
+  const handleNodeDoubleClick = useCallback(
     (event: CProps.EventMouse, node: OssNode) => {
-      if (event.ctrlKey || event.metaKey) {
-        event.preventDefault();
-        event.stopPropagation();
-        handleEditOperation(Number(node.id));
-      }
+      event.preventDefault();
+      event.stopPropagation();
+      handleEditOperation(Number(node.id));
     },
     [handleEditOperation]
   );
@@ -268,7 +299,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     if ((event.ctrlKey || event.metaKey) && event.key === 'q') {
       event.preventDefault();
       event.stopPropagation();
-      handleCreateOperation();
+      handleCreateOperation(controller.selected);
       return;
     }
     if (event.key === 'Delete') {
@@ -297,7 +328,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
         edges={edges}
         onNodesChange={handleNodesChange}
         onEdgesChange={onEdgesChange}
-        onNodeClick={handleNodeClick}
+        onNodeDoubleClick={handleNodeDoubleClick}
         proOptions={{ hideAttribution: true }}
         fitView
         nodeTypes={OssNodeTypes}
@@ -305,11 +336,11 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
         minZoom={0.75}
         nodesConnectable={false}
         snapToGrid={true}
-        snapGrid={[10, 10]}
+        snapGrid={[PARAMETER.ossGridSize, PARAMETER.ossGridSize]}
         onNodeContextMenu={handleContextMenu}
         onClick={handleClickCanvas}
       >
-        {showGrid ? <Background gap={10} /> : null}
+        {showGrid ? <Background gap={PARAMETER.ossGridSize} /> : null}
       </ReactFlow>
     ),
     [
@@ -319,7 +350,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
       handleContextMenu,
       handleClickCanvas,
       onEdgesChange,
-      handleNodeClick,
+      handleNodeDoubleClick,
       OssNodeTypes,
       showGrid
     ]
@@ -334,7 +365,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
           edgeAnimate={edgeAnimate}
           edgeStraight={edgeStraight}
           onFitView={handleFitView}
-          onCreate={handleCreateOperation}
+          onCreate={handleCreateOperation(controller.selected)}
           onDelete={handleDeleteSelected}
           onEdit={() => handleEditOperation(controller.selected[0])}
           onExecute={handleExecuteSelected}

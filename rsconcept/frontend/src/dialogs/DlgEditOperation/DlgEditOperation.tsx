@@ -50,7 +50,7 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
     () => inputOperations.map(operation => operation.result).filter(id => id !== null),
     [inputOperations]
   );
-  const [substitutions, setSubstitutions] = useState<ICstSubstitute[]>(oss.substitutions);
+  const [substitutions, setSubstitutions] = useState<ICstSubstitute[]>(target.substitutions);
   const cache = useRSFormCache();
   const schemas = useMemo(
     () => schemasIDs.map(id => cache.getSchema(id)).filter(item => item !== undefined),

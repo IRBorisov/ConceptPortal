@@ -15,6 +15,8 @@ export const PARAMETER = {
   ossImageWidth: 1280, // pixels - size of OSS image
   ossImageHeight: 960, // pixels - size of OSS image
   ossContextMenuWidth: 200, // pixels - width of OSS context menu
+  ossGridSize: 10, // pixels - size of OSS grid
+  ossMinDistance: 20, // pixels - minimum distance between node centers
 
   graphHoverXLimit: 0.4, // ratio to clientWidth used to determine which side of screen popup should be
   graphHoverYLimit: 0.6, // ratio to clientHeight used to determine which side of screen popup should be

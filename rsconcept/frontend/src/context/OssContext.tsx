@@ -25,8 +25,8 @@ import { type ErrorData } from '@/components/info/InfoError';
 import { AccessPolicy, ILibraryItem } from '@/models/library';
 import { ILibraryUpdateData } from '@/models/library';
 import {
-  IOperation,
   IOperationCreateData,
+  IOperationData,
   IOperationSchema,
   IOperationSchemaData,
   IOperationSetInputData,
@@ -62,7 +62,7 @@ interface IOssContext {
   setEditors: (newEditors: UserID[], callback?: () => void) => void;
 
   savePositions: (data: IPositionsData, callback?: () => void) => void;
-  createOperation: (data: IOperationCreateData, callback?: DataCallback<IOperation>) => void;
+  createOperation: (data: IOperationCreateData, callback?: DataCallback<IOperationData>) => void;
   deleteOperation: (data: ITargetOperation, callback?: () => void) => void;
   createInput: (data: ITargetOperation, callback?: DataCallback<ILibraryItem>) => void;
   setInput: (data: IOperationSetInputData, callback?: () => void) => void;
@@ -292,7 +292,7 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
   );
 
   const createOperation = useCallback(
-    (data: IOperationCreateData, callback?: DataCallback<IOperation>) => {
+    (data: IOperationCreateData, callback?: DataCallback<IOperationData>) => {
       setProcessingError(undefined);
       postCreateOperation(itemID, {
         data: data,

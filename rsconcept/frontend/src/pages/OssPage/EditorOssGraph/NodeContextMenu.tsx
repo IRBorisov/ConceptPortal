@@ -101,11 +101,11 @@ function NodeContextMenu({
   };
 
   return (
-    <div ref={ref} className='absolute' style={{ top: cursorY, left: cursorX, width: 10, height: 10 }}>
+    <div ref={ref} className='absolute select-none' style={{ top: cursorY, left: cursorX, width: 10, height: 10 }}>
       <Dropdown isOpen={isOpen} stretchLeft={cursorX >= window.innerWidth - PARAMETER.ossContextMenuWidth}>
         <DropdownButton
           text='Редактировать'
-          titleHtml={prepareTooltip('Редактировать операцию', 'Ctrl + клик')}
+          titleHtml={prepareTooltip('Редактировать операцию', 'Двойной клик')}
           icon={<IconEdit2 size='1rem' className='icon-primary' />}
           disabled={controller.isProcessing}
           onClick={handleEditOperation}

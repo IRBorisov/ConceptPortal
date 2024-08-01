@@ -91,7 +91,7 @@ export interface ITargetCst {
 }
 
 /**
- * Represents Constituenta data from server.
+ * Represents {@link IConstituenta} data from server.
  */
 export interface IConstituentaData extends IConstituentaMeta {
   parse: {

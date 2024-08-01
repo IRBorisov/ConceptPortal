@@ -29,7 +29,7 @@ function ToolbarItemAccess({ visible, toggleVisible, readOnly, toggleReadOnly, c
   );
 
   return (
-    <Overlay position='top-[4.5rem] right-0 w-[12rem] pr-2' className='flex'>
+    <Overlay position='top-[4.5rem] right-0 w-[12rem] pr-2' className='flex' layer='z-bottom'>
       <Label text='Доступ' className='self-center select-none' />
       <div className='ml-auto cc-icons'>
         <SelectAccessPolicy

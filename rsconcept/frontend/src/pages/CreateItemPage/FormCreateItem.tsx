@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { urls } from '@/app/urls';
@@ -22,10 +22,11 @@ import TextInput from '@/components/ui/TextInput';
 import { useAuth } from '@/context/AuthContext';
 import { useLibrary } from '@/context/LibraryContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
+import useLocalStorage from '@/hooks/useLocalStorage';
 import { AccessPolicy, LibraryItemType, LocationHead } from '@/models/library';
 import { ILibraryCreateData } from '@/models/library';
 import { combineLocation, validateLocation } from '@/models/libraryAPI';
-import { EXTEOR_TRS_FILE, limits, patterns } from '@/utils/constants';
+import { EXTEOR_TRS_FILE, limits, patterns, storage } from '@/utils/constants';
 import { information } from '@/utils/labels';
 
 function FormCreateItem() {
@@ -45,6 +46,7 @@ function FormCreateItem() {
 
   const location = useMemo(() => combineLocation(head, body), [head, body]);
   const isValid = useMemo(() => validateLocation(location), [location]);
+  const [initLocation] = useLocalStorage<string>(storage.librarySearchLocation, '');
 
   const [fileName, setFileName] = useState('');
   const [file, setFile] = useState<File | undefined>();
@@ -103,6 +105,13 @@ function FormCreateItem() {
     setHead(newValue.substring(0, 2) as LocationHead);
     setBody(newValue.length > 3 ? newValue.substring(3) : '');
   }, []);
+
+  useLayoutEffect(() => {
+    if (!initLocation) {
+      return;
+    }
+    handleSelectLocation(initLocation);
+  }, [initLocation, handleSelectLocation]);
 
   return (
     <form className={clsx('cc-column', 'min-w-[30rem] max-w-[30rem] mx-auto', 'px-6 py-3')} onSubmit={handleSubmit}>

@@ -12,6 +12,7 @@ import {
   IconSave
 } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
+import MiniSelectorOSS from '@/components/select/MiniSelectorOSS';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { HelpTopic } from '@/models/miscellaneous';
@@ -54,6 +55,12 @@ function ToolbarConstituenta({
 
   return (
     <Overlay position='top-1 right-4' className='cc-icons sm:right-1/2 sm:translate-x-1/2'>
+      {controller.schema && controller.schema?.oss.length > 0 ? (
+        <MiniSelectorOSS
+          items={controller.schema.oss}
+          onSelect={(event, value) => controller.viewOSS(value.id, event.ctrlKey || event.metaKey)}
+        />
+      ) : null}
       <MiniButton
         titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
         icon={<IconSave size='1.25rem' className='icon-primary' />}

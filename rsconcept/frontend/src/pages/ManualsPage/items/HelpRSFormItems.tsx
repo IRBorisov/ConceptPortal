@@ -6,6 +6,7 @@ import {
   IconMoveUp,
   IconNewItem,
   IconOpenList,
+  IconOSS,
   IconReset
 } from '@/components/Icons';
 import InfoCstStatus from '@/components/info/InfoCstStatus';
@@ -27,6 +28,9 @@ function HelpRSFormItems() {
       </li>
 
       <h2>Управление списком</h2>
+      <li>
+        <IconOSS className='inline-icon' /> переход к связанной <LinkTopic text='ОСС' topic={HelpTopic.CC_OSS} />
+      </li>
       <li>
         <IconReset className='inline-icon' /> сбросить выделение: ESC
       </li>

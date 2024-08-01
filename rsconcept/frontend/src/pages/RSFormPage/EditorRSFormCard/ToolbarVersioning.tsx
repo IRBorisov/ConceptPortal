@@ -14,7 +14,7 @@ interface ToolbarVersioningProps {
 function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
   const controller = useRSEdit();
   return (
-    <Overlay position='top-[-0.4rem] right-[0rem]' className='pr-2 cc-icons'>
+    <Overlay position='top-[-0.4rem] right-[0rem]' className='pr-2 cc-icons' layer='z-bottom'>
       {controller.isMutable ? (
         <>
           <MiniButton

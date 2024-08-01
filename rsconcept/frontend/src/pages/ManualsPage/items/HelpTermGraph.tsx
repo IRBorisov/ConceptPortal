@@ -12,6 +12,7 @@ import {
   IconGraphOutputs,
   IconImage,
   IconNewItem,
+  IconOSS,
   IconReset,
   IconRotate3D,
   IconText
@@ -70,6 +71,9 @@ function HelpTermGraph() {
       <div className='flex flex-col-reverse mb-3 sm:flex-row'>
         <div className='w-full sm:w-[14rem]'>
           <h1>Общие</h1>
+          <li>
+            <IconOSS className='inline-icon' /> переход к связанной <LinkTopic text='ОСС' topic={HelpTopic.CC_OSS} />
+          </li>
           <li>
             <IconFilter className='inline-icon' /> Открыть настройки
           </li>

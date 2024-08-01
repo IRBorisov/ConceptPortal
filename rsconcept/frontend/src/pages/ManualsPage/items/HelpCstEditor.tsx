@@ -7,6 +7,7 @@ import {
   IconMoveDown,
   IconMoveUp,
   IconNewItem,
+  IconOSS,
   IconReset,
   IconSave,
   IconStatusOK,
@@ -22,6 +23,9 @@ function HelpCstEditor() {
   return (
     <div className='dense'>
       <h1>Редактор конституенты</h1>
+      <li>
+        <IconOSS className='inline-icon' /> переход к связанной <LinkTopic text='ОСС' topic={HelpTopic.CC_OSS} />
+      </li>
       <li>
         <IconSave className='inline-icon' /> сохранить изменения: Ctrl + S
       </li>

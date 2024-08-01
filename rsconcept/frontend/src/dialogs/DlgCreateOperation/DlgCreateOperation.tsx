@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import BadgeHelp from '@/components/info/BadgeHelp';
@@ -22,6 +22,7 @@ interface DlgCreateOperationProps {
   hideWindow: () => void;
   oss: IOperationSchema;
   onCreate: (data: IOperationCreateData) => void;
+  initialInputs: OperationID[];
 }
 
 export enum TabID {
@@ -29,21 +30,31 @@ export enum TabID {
   SYNTHESIS = 1
 }
 
-function DlgCreateOperation({ hideWindow, oss, onCreate }: DlgCreateOperationProps) {
+function DlgCreateOperation({ hideWindow, oss, onCreate, initialInputs }: DlgCreateOperationProps) {
   const library = useLibrary();
-  const [activeTab, setActiveTab] = useState(TabID.INPUT);
+  const [activeTab, setActiveTab] = useState(initialInputs.length > 0 ? TabID.SYNTHESIS : TabID.INPUT);
 
   const [alias, setAlias] = useState('');
   const [title, setTitle] = useState('');
   const [comment, setComment] = useState('');
-  const [inputs, setInputs] = useState<OperationID[]>([]);
+  const [inputs, setInputs] = useState<OperationID[]>(initialInputs);
   const [attachedID, setAttachedID] = useState<LibraryItemID | undefined>(undefined);
   const [createSchema, setCreateSchema] = useState(false);
 
-  const isValid = useMemo(
-    () => (alias !== '' && activeTab === TabID.INPUT) || inputs.length != 1,
-    [alias, activeTab, inputs]
-  );
+  const isValid = useMemo(() => {
+    if (alias === '') {
+      return false;
+    }
+    if (activeTab === TabID.SYNTHESIS && inputs.length === 1) {
+      return false;
+    }
+    if (activeTab === TabID.INPUT && !attachedID) {
+      if (oss.items.some(operation => operation.alias === alias)) {
+        return false;
+      }
+    }
+    return true;
+  }, [alias, activeTab, inputs, attachedID, oss.items]);
 
   useLayoutEffect(() => {
     if (attachedID) {
@@ -73,6 +84,21 @@ function DlgCreateOperation({ hideWindow, oss, onCreate }: DlgCreateOperationPro
     };
     onCreate(data);
   };
+
+  const handleSelectTab = useCallback(
+    (newTab: TabID, last: TabID) => {
+      if (last === newTab) {
+        return;
+      }
+      if (newTab === TabID.INPUT) {
+        setAttachedID(undefined);
+      } else {
+        setInputs(initialInputs);
+      }
+      setActiveTab(newTab);
+    },
+    [setActiveTab, initialInputs]
+  );
 
   const inputPanel = useMemo(
     () => (
@@ -131,7 +157,7 @@ function DlgCreateOperation({ hideWindow, oss, onCreate }: DlgCreateOperationPro
         selectedTabClassName='clr-selected'
         className='flex flex-col'
         selectedIndex={activeTab}
-        onSelect={setActiveTab}
+        onSelect={handleSelectTab}
       >
         <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none')}>
           <TabLabel

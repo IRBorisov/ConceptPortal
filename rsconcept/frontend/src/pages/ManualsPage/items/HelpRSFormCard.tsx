@@ -5,6 +5,7 @@ import {
   IconEditor,
   IconFollow,
   IconImmutable,
+  IconOSS,
   IconOwner,
   IconPublic,
   IconSave
@@ -29,6 +30,9 @@ function HelpRSFormCard() {
       </p>
 
       <h2>Управление</h2>
+      <li>
+        <IconOSS className='inline-icon' /> переход к связанной <LinkTopic text='ОСС' topic={HelpTopic.CC_OSS} />
+      </li>
       <li>
         <IconSave className='inline-icon' /> сохранить изменения: Ctrl + S
       </li>
