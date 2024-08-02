@@ -46,7 +46,7 @@ function FormCreateItem() {
 
   const location = useMemo(() => combineLocation(head, body), [head, body]);
   const isValid = useMemo(() => validateLocation(location), [location]);
-  const [initLocation] = useLocalStorage<string>(storage.librarySearchLocation, '');
+  const [initLocation, setInitLocation] = useLocalStorage<string>(storage.librarySearchLocation, '');
 
   const [fileName, setFileName] = useState('');
   const [file, setFile] = useState<File | undefined>();
@@ -81,6 +81,7 @@ function FormCreateItem() {
       file: file,
       fileName: file?.name
     };
+    setInitLocation(location);
     createItem(data, newItem => {
       toast.success(information.newLibraryItem);
       if (itemType == LibraryItemType.RSFORM) {

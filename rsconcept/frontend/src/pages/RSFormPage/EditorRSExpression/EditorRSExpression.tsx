@@ -145,12 +145,12 @@ function EditorRSExpression({
   const controls = useMemo(
     () => (
       <RSEditorControls
-        isOpen={showControls && (!disabled || model.processing)}
+        isOpen={showControls && (!disabled || (model.processing && !activeCst?.is_inherited))}
         disabled={disabled}
         onEdit={handleEdit}
       />
     ),
-    [showControls, disabled, model.processing, handleEdit]
+    [showControls, disabled, model.processing, handleEdit, activeCst]
   );
 
   return (

@@ -26,7 +26,16 @@ import {
   OperationID
 } from '@/models/oss';
 import { UserID, UserLevel } from '@/models/user';
+import { PARAMETER } from '@/utils/constants';
 import { information } from '@/utils/labels';
+
+export interface ICreateOperationPrompt {
+  x: number;
+  y: number;
+  inputs: OperationID[];
+  positions: IOperationPosition[];
+  callback: (newID: OperationID) => void;
+}
 
 export interface IOssEditContext {
   schema?: IOperationSchema;
@@ -51,7 +60,7 @@ export interface IOssEditContext {
   openOperationSchema: (target: OperationID) => void;
 
   savePositions: (positions: IOperationPosition[], callback?: () => void) => void;
-  promptCreateOperation: (x: number, y: number, inputs: OperationID[], positions: IOperationPosition[]) => void;
+  promptCreateOperation: (props: ICreateOperationPrompt) => void;
   deleteOperation: (target: OperationID, positions: IOperationPosition[]) => void;
   createInput: (target: OperationID, positions: IOperationPosition[]) => void;
   promptEditInput: (target: OperationID, positions: IOperationPosition[]) => void;
@@ -97,6 +106,8 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
   const [showCreateOperation, setShowCreateOperation] = useState(false);
   const [insertPosition, setInsertPosition] = useState<Position2D>({ x: 0, y: 0 });
   const [initialInputs, setInitialInputs] = useState<OperationID[]>([]);
+  const [createCallback, setCreateCallback] = useState<((newID: OperationID) => void) | undefined>(undefined);
+
   const [positions, setPositions] = useState<IOperationPosition[]>([]);
   const [targetOperationID, setTargetOperationID] = useState<OperationID | undefined>(undefined);
   const targetOperation = useMemo(
@@ -209,24 +220,27 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
     [model]
   );
 
-  const promptCreateOperation = useCallback(
-    (x: number, y: number, inputs: OperationID[], positions: IOperationPosition[]) => {
-      setInsertPosition({ x: x, y: y });
-      setInitialInputs(inputs);
-      setPositions(positions);
-      setShowCreateOperation(true);
-    },
-    []
-  );
+  const promptCreateOperation = useCallback(({ x, y, inputs, positions, callback }: ICreateOperationPrompt) => {
+    setInsertPosition({ x: x, y: y });
+    setInitialInputs(inputs);
+    setPositions(positions);
+    setCreateCallback(() => callback);
+    setShowCreateOperation(true);
+  }, []);
 
   const handleCreateOperation = useCallback(
     (data: IOperationCreateData) => {
       data.positions = positions;
       data.item_data.position_x = insertPosition.x;
       data.item_data.position_y = insertPosition.y;
-      model.createOperation(data, operation => toast.success(information.newOperation(operation.alias)));
+      model.createOperation(data, operation => {
+        toast.success(information.newOperation(operation.alias));
+        if (createCallback) {
+          setTimeout(() => createCallback(operation.id), PARAMETER.refreshTimeout);
+        }
+      });
     },
-    [model, positions, insertPosition]
+    [model, positions, insertPosition, createCallback]
   );
 
   const promptEditOperation = useCallback((target: OperationID, positions: IOperationPosition[]) => {

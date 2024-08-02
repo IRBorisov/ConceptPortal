@@ -33,7 +33,7 @@ function InputNode(node: OssNodeInternal) {
           disabled={!hasFile}
         />
       </Overlay>
-      <div id={`${prefixes.operation_list}${node.id}`} className='flex-grow text-center text-sm'>
+      <div id={`${prefixes.operation_list}${node.id}`} className='flex-grow text-center'>
         {node.data.label}
         {controller.showTooltip && !node.dragging ? (
           <TooltipOperation anchor={`#${prefixes.operation_list}${node.id}`} node={node} />

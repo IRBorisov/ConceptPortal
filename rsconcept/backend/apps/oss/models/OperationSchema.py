@@ -197,6 +197,7 @@ class OperationSchema:
             parent = parents.get(cst.pk)
             assert parent is not None
             Inheritance.objects.create(
+                operation=operation,
                 child=cst,
                 parent=parent
             )

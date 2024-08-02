@@ -118,7 +118,7 @@ function DlgCreateOperation({ hideWindow, oss, onCreate, initialInputs }: DlgCre
         />
       </TabPanel>
     ),
-    [alias, comment, title, attachedID, oss, createSchema]
+    [alias, comment, title, attachedID, oss, createSchema, setAlias]
   );
 
   const synthesisPanel = useMemo(
@@ -137,7 +137,7 @@ function DlgCreateOperation({ hideWindow, oss, onCreate, initialInputs }: DlgCre
         />
       </TabPanel>
     ),
-    [oss, alias, comment, title, inputs]
+    [oss, alias, comment, title, inputs, setAlias]
   );
 
   return (

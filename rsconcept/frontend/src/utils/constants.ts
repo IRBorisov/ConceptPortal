@@ -17,6 +17,8 @@ export const PARAMETER = {
   ossContextMenuWidth: 200, // pixels - width of OSS context menu
   ossGridSize: 10, // pixels - size of OSS grid
   ossMinDistance: 20, // pixels - minimum distance between node centers
+  ossDistanceX: 180, // pixels - insert x-distance between node centers
+  ossDistanceY: 100, // pixels - insert y-distance between node centers
 
   graphHoverXLimit: 0.4, // ratio to clientWidth used to determine which side of screen popup should be
   graphHoverYLimit: 0.6, // ratio to clientHeight used to determine which side of screen popup should be

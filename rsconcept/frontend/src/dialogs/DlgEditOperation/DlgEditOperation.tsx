@@ -92,7 +92,7 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
         />
       </TabPanel>
     ),
-    [alias, comment, title]
+    [alias, comment, title, setAlias]
   );
 
   const argumentsPanel = useMemo(
@@ -106,7 +106,7 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
         />
       </TabPanel>
     ),
-    [oss, target, inputs]
+    [oss, target, inputs, setInputs]
   );
 
   const synthesisPanel = useMemo(

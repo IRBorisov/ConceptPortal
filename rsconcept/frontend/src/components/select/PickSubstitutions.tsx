@@ -140,13 +140,11 @@ function PickSubstitutions({
     () => [
       columnHelper.accessor(item => item.substitution_source?.alias ?? 'N/A', {
         id: 'left_schema',
-        header: 'Операция',
         size: 100,
-        cell: props => <div className='min-w-[10.5rem] text-ellipsis text-right'>{props.getValue()}</div>
+        cell: props => <div className='min-w-[10.5rem] text-ellipsis text-left'>{props.getValue()}</div>
       }),
       columnHelper.accessor(item => item.substitution?.alias ?? 'N/A', {
         id: 'left_alias',
-        header: () => <span className='pl-3'>Имя</span>,
         size: 65,
         cell: props =>
           props.row.original.substitution ? (
@@ -157,13 +155,11 @@ function PickSubstitutions({
       }),
       columnHelper.display({
         id: 'status',
-        header: '',
         size: 40,
         cell: () => <IconPageRight size='1.2rem' />
       }),
       columnHelper.accessor(item => item.original?.alias ?? 'N/A', {
         id: 'right_alias',
-        header: () => <span className='pl-3'>Имя</span>,
         size: 65,
         cell: props =>
           props.row.original.original ? (
@@ -174,9 +170,8 @@ function PickSubstitutions({
       }),
       columnHelper.accessor(item => item.original_source?.alias ?? 'N/A', {
         id: 'right_schema',
-        header: 'Операция',
         size: 100,
-        cell: props => <div className='min-w-[8rem] text-ellipsis'>{props.getValue()}</div>
+        cell: props => <div className='min-w-[8rem] text-ellipsis text-right'>{props.getValue()}</div>
       }),
       columnHelper.display({
         id: 'actions',

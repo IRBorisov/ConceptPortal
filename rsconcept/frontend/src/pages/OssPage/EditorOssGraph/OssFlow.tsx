@@ -24,7 +24,7 @@ import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useOSS } from '@/context/OssContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { OssNode } from '@/models/miscellaneous';
-import { OperationID } from '@/models/oss';
+import { OperationID, OperationType } from '@/models/oss';
 import { PARAMETER, storage } from '@/utils/constants';
 import { errors } from '@/utils/labels';
 
@@ -127,19 +127,32 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
       if (!controller.schema) {
         return;
       }
+
       let target = { x: 0, y: 0 };
       const positions = getPositions();
-
-      if (inputs.length <= 1) {
+      if (positions.length == 0) {
         target = flow.project({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+      }
+      if (inputs.length <= 1) {
+        let inputsNodes = positions.filter(pos =>
+          controller.schema!.items.find(
+            operation => operation.operation_type === OperationType.INPUT && operation.id === pos.id
+          )
+        );
+        if (inputsNodes.length > 0) {
+          inputsNodes = positions;
+        }
+        const maxX = Math.max(...inputsNodes.map(node => node.position_x));
+        const minY = Math.min(...inputsNodes.map(node => node.position_y));
+        target.x = maxX + 180;
+        target.y = minY;
       } else {
         const inputsNodes = positions.filter(pos => inputs.includes(pos.id));
         const maxY = Math.max(...inputsNodes.map(node => node.position_y));
         const minX = Math.min(...inputsNodes.map(node => node.position_x));
         const maxX = Math.max(...inputsNodes.map(node => node.position_x));
-
-        target.y = maxY + 100;
         target.x = Math.ceil((maxX + minX) / 2 / PARAMETER.ossGridSize) * PARAMETER.ossGridSize;
+        target.y = maxY + 100;
       }
 
       let flagIntersect = false;
@@ -154,8 +167,13 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
           target.y += PARAMETER.ossMinDistance;
         }
       } while (flagIntersect);
-
-      controller.promptCreateOperation(target.x, target.y, inputs, positions);
+      controller.promptCreateOperation({
+        x: target.x,
+        y: target.y,
+        inputs: inputs,
+        positions: positions,
+        callback: () => flow.fitView({ duration: PARAMETER.zoomDuration })
+      });
     },
     [controller, getPositions, flow]
   );
