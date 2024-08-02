@@ -25,6 +25,14 @@ class SynthesisSubstitutionAdmin(admin.ModelAdmin):
     search_fields = ['id', 'operation', 'original', 'substitution']
 
 
+class InheritanceAdmin(admin.ModelAdmin):
+    ''' Admin model: Inheritance. '''
+    ordering = ['operation']
+    list_display = ['id', 'operation', 'parent', 'child']
+    search_fields = ['id', 'operation', 'parent', 'child']
+
+
 admin.site.register(models.Operation, OperationAdmin)
 admin.site.register(models.Argument, ArgumentAdmin)
 admin.site.register(models.Substitution, SynthesisSubstitutionAdmin)
+admin.site.register(models.Inheritance, InheritanceAdmin)

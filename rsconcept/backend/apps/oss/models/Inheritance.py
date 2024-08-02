@@ -4,6 +4,12 @@ from django.db.models import CASCADE, ForeignKey, Model
 
 class Inheritance(Model):
     ''' Inheritance links parent and child constituents in synthesis operation.'''
+    operation: ForeignKey = ForeignKey(
+        verbose_name='Операция',
+        to='oss.Operation',
+        on_delete=CASCADE,
+        related_name='inheritances'
+    )
     parent: ForeignKey = ForeignKey(
         verbose_name='Исходная конституента',
         to='rsform.Constituenta',
