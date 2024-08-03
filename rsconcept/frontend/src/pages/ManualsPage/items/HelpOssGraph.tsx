@@ -11,6 +11,7 @@ import {
   IconLineStraight,
   IconLineWave,
   IconNewItem,
+  IconNewRSForm,
   IconReset,
   IconRSForm,
   IconSave
@@ -85,7 +86,7 @@ function HelpOssGraph() {
             <LinkTopic text='КС' topic={HelpTopic.CC_SYSTEM} />
           </li>
           <li>
-            <IconNewItem className='inline-icon icon-green' /> Создать пустую КС для загрузки
+            <IconNewRSForm className='inline-icon icon-green' /> Создать пустую КС для загрузки
           </li>
           <li>
             <IconConnect className='inline-icon' /> Выбрать КС для загрузки

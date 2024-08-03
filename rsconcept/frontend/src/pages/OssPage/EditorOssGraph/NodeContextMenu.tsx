@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { IconConnect, IconDestroy, IconEdit2, IconExecute, IconNewItem, IconRSForm } from '@/components/Icons';
+import { IconConnect, IconDestroy, IconEdit2, IconExecute, IconNewRSForm, IconRSForm } from '@/components/Icons';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import useClickedOutside from '@/hooks/useClickedOutside';
@@ -124,7 +124,7 @@ function NodeContextMenu({
           <DropdownButton
             text='Создать схему'
             title='Создать пустую схему для загрузки'
-            icon={<IconNewItem size='1rem' className='icon-green' />}
+            icon={<IconNewRSForm size='1rem' className='icon-green' />}
             disabled={controller.isProcessing}
             onClick={handleCreateSchema}
           />
