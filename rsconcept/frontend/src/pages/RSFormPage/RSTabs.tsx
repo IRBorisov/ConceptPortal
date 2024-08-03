@@ -257,10 +257,7 @@ function RSTabs() {
           <TabList className={clsx('mx-auto w-fit', 'flex items-stretch', 'border-b-2 border-x-2 divide-x-2')}>
             <MenuRSTabs onDestroy={onDestroySchema} />
 
-            <TabLabel
-              label='Карточка'
-              titleHtml={`Название: <b>${schema.title ?? ''}</b><br />Версия: ${labelVersion(schema)}`}
-            />
+            <TabLabel label='Карточка' titleHtml={`${schema.title ?? ''}<br />Версия: ${labelVersion(schema)}`} />
             <TabLabel
               label='Содержание'
               titleHtml={`Конституент: ${schema.stats?.count_all ?? 0}<br />Ошибок: ${schema.stats?.count_errors ?? 0}`}

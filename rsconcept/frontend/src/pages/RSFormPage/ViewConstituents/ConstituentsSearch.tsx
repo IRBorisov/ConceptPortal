@@ -2,8 +2,10 @@
 
 import { useLayoutEffect, useMemo, useState } from 'react';
 
+import { IconChild } from '@/components/Icons';
 import SelectGraphFilter from '@/components/select/SelectGraphFilter';
 import SelectMatchMode from '@/components/select/SelectMatchMode';
+import MiniButton from '@/components/ui/MiniButton';
 import SearchBar from '@/components/ui/SearchBar';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { CstMatchMode, DependencyMode } from '@/models/miscellaneous';
@@ -25,6 +27,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, dense, setFilt
   const [filterMatch, setFilterMatch] = useLocalStorage(storage.cstFilterMatch, CstMatchMode.ALL);
   const [filterSource, setFilterSource] = useLocalStorage(storage.cstFilterGraph, DependencyMode.ALL);
   const [filterText, setFilterText] = useState('');
+  const [showInherited, setShowInherited] = useLocalStorage(storage.cstFilterShowInherited, true);
 
   useLayoutEffect(() => {
     if (!schema || schema.items.length === 0) {
@@ -48,8 +51,21 @@ function ConstituentsSearch({ schema, activeID, activeExpression, dense, setFilt
     if (filterText) {
       result = result.filter(cst => matchConstituenta(cst, filterText, filterMatch));
     }
+    if (!showInherited) {
+      result = result.filter(cst => !cst.is_inherited);
+    }
     setFiltered(result);
-  }, [filterText, setFiltered, filterSource, activeExpression, schema?.items, schema, filterMatch, activeID]);
+  }, [
+    filterText,
+    setFiltered,
+    filterSource,
+    activeExpression,
+    schema?.items,
+    schema,
+    filterMatch,
+    activeID,
+    showInherited
+  ]);
 
   const selectGraph = useMemo(
     () => <SelectGraphFilter value={filterSource} onChange={newValue => setFilterSource(newValue)} dense={dense} />,
@@ -72,6 +88,15 @@ function ConstituentsSearch({ schema, activeID, activeExpression, dense, setFilt
       />
       {selectMatchMode}
       {selectGraph}
+      {schema && schema?.stats.count_inherited > 0 ? (
+        <MiniButton
+          noHover
+          titleHtml={`Наследованные: <b>${showInherited ? 'отображать' : 'скрывать'}</b>`}
+          icon={<IconChild size='1rem' className={showInherited ? 'icon-primary' : 'clr-text-controls'} />}
+          className='h-fit self-center'
+          onClick={() => setShowInherited(prev => !prev)}
+        />
+      ) : null}
     </div>
   );
 }

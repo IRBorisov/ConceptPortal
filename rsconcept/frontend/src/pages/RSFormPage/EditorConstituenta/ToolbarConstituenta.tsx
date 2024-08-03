@@ -1,5 +1,7 @@
 'use client';
 
+import clsx from 'clsx';
+
 import {
   IconClone,
   IconDestroy,
@@ -118,7 +120,11 @@ function ToolbarConstituenta({
           />
         </>
       ) : null}
-      <BadgeHelp topic={HelpTopic.UI_RS_EDITOR} offset={4} className={PARAMETER.TOOLTIP_WIDTH} />
+      <BadgeHelp
+        topic={HelpTopic.UI_RS_EDITOR}
+        offset={4}
+        className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')}
+      />
     </Overlay>
   );
 }

@@ -14,7 +14,7 @@ function InfoConstituenta({ data, className, ...restProps }: InfoConstituentaPro
   return (
     <div className={clsx('dense min-w-[15rem]', className)} {...restProps}>
       <h2>
-        Конституента {data.alias}
+        {data.alias}
         {data.is_inherited ? ' (наследуется)' : ''}
       </h2>
       {data.term_resolved ? (

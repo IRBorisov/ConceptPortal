@@ -135,7 +135,7 @@ function OssTabs() {
           <TabList className={clsx('mx-auto w-fit', 'flex items-stretch', 'border-b-2 border-x-2 divide-x-2')}>
             <MenuOssTabs onDestroy={onDestroySchema} />
 
-            <TabLabel label='Карточка' titleHtml={`Название: <b>${schema.title ?? ''}</b>`} />
+            <TabLabel label='Карточка' title={schema.title ?? ''} />
             <TabLabel label='Граф' />
           </TabList>
 

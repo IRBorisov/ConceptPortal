@@ -26,6 +26,7 @@ function HelpTermGraph() {
   const { colors } = useConceptOptions();
   return (
     <div className='flex flex-col'>
+      <h1>Граф термов</h1>
       <div className='flex flex-col sm:flex-row'>
         <div className='w-full sm:w-[14rem]'>
           <h1>Настройка графа</h1>
@@ -78,7 +79,7 @@ function HelpTermGraph() {
             <IconFilter className='inline-icon' /> Открыть настройки
           </li>
           <li>
-            <IconFitImage className='inline-icon' /> Вписать граф в экран
+            <IconFitImage className='inline-icon' /> Вписать в экран
           </li>
           <li>
             <IconImage className='inline-icon' /> Сохранить в формат PNG

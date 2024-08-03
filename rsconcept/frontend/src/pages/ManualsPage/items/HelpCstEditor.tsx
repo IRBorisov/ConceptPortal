@@ -1,15 +1,19 @@
 import {
+  IconChild,
   IconClone,
   IconControls,
   IconDestroy,
   IconEdit,
+  IconFilter,
   IconList,
   IconMoveDown,
   IconMoveUp,
   IconNewItem,
   IconOSS,
+  IconPredecessor,
   IconReset,
   IconSave,
+  IconSettings,
   IconStatusOK,
   IconText,
   IconTree
@@ -23,37 +27,64 @@ function HelpCstEditor() {
   return (
     <div className='dense'>
       <h1>Редактор конституенты</h1>
-      <li>
-        <IconOSS className='inline-icon' /> переход к связанной <LinkTopic text='ОСС' topic={HelpTopic.CC_OSS} />
-      </li>
-      <li>
-        <IconSave className='inline-icon' /> сохранить изменения: Ctrl + S
-      </li>
-      <li>
-        <IconReset className='inline-icon' /> сбросить несохраненные изменения
-      </li>
-      <li>
-        <IconClone className='inline-icon icon-green' /> клонировать текущую: Alt + V
-      </li>
-      <li>
-        <IconNewItem className='inline-icon icon-green' /> новая конституента
-      </li>
-      <li>
-        <IconDestroy className='inline-icon icon-red' /> удаление текущей
-      </li>
+      <div className='flex flex-col sm:flex-row sm:gap-3'>
+        <div className='flex flex-col'>
+          <li>
+            <IconOSS className='inline-icon' /> переход к <LinkTopic text='ОСС' topic={HelpTopic.CC_OSS} />
+          </li>
+          <li>
+            <IconPredecessor className='inline-icon' /> переход к исходной
+          </li>
+          <li>
+            <IconList className='inline-icon' /> список конституент
+          </li>
+          <li>
+            <IconSave className='inline-icon' /> сохранить: Ctrl + S
+          </li>
+          <li>
+            <IconReset className='inline-icon' /> сбросить изменения
+          </li>
+          <li>
+            <IconClone className='inline-icon icon-green' /> клонировать: Alt + V
+          </li>
+          <li>
+            <IconNewItem className='inline-icon icon-green' /> новая конституента
+          </li>
+          <li>
+            <IconDestroy className='inline-icon icon-red' /> удалить
+          </li>
+        </div>
 
-      <h2>Термин и Текстовое определение</h2>
-      <li>
-        <IconEdit className='inline-icon' /> кнопка переименования справа от{' '}
-        <LinkTopic text='Имени' topic={HelpTopic.CC_CONSTITUENTA} />
-      </li>
-      <li>
-        <IconEdit className='inline-icon' /> кнопка редактирования словоформ справа от{' '}
-        <LinkTopic text='Термина' topic={HelpTopic.CC_CONSTITUENTA} />
-      </li>
-      <li>Ctrl + Пробел открывает редактирование отсылок</li>
+        <div className='flex flex-col'>
+          <h2>Список конституент</h2>
+          <li>
+            <IconMoveDown className='inline-icon' />
+            <IconMoveUp className='inline-icon' /> Alt + вверх/вниз
+          </li>
+          <li>
+            <IconFilter className='inline-icon' />
+            <IconSettings className='inline-icon' /> фильтрация по графу термов
+          </li>
+          <li>
+            <IconChild className='inline-icon' /> отображение наследованных
+          </li>
+          <li>
+            <span style={{ backgroundColor: colors.bgSelected }}>текущая конституента</span>
+          </li>
+          <li>
+            <span style={{ backgroundColor: colors.bgGreen50 }}>
+              <LinkTopic text='основа' topic={HelpTopic.CC_RELATIONS} /> текущей
+            </span>
+          </li>
+          <li>
+            <span style={{ backgroundColor: colors.bgOrange50 }}>
+              <LinkTopic text='порожденные' topic={HelpTopic.CC_RELATIONS} /> текущей
+            </span>
+          </li>
+        </div>
+      </div>
 
-      <h2>Определение понятия</h2>
+      <h2>Формальное определение</h2>
       <li>
         <IconStatusOK className='inline-icon' /> индикатор статуса определения сверху
       </li>
@@ -69,26 +100,12 @@ function HelpCstEditor() {
       </li>
       <li>Ctrl + Пробел дополняет до незанятого имени</li>
 
-      <h2>Список конституент</h2>
+      <h2>Термин и Текстовое определение</h2>
       <li>
-        <IconList className='inline-icon' /> отображение списка конституент
+        <IconEdit className='inline-icon' /> редактирование <LinkTopic text='Имени' topic={HelpTopic.CC_CONSTITUENTA} />{' '}
+        / <LinkTopic text='Термина' topic={HelpTopic.CC_CONSTITUENTA} />
       </li>
-      <li>
-        <IconMoveDown className='inline-icon' />
-        <IconMoveUp className='inline-icon' /> Alt + вверх/вниз – перемещение
-      </li>
-      <li>фильтрация в верхней части</li>
-      <li>
-        <span style={{ backgroundColor: colors.bgSelected }}>цветом фона</span> выделена текущая конституента
-      </li>
-      <li>
-        <span style={{ backgroundColor: colors.bgGreen50 }}>цветом фона</span> выделена{' '}
-        <LinkTopic text='основа' topic={HelpTopic.CC_RELATIONS} /> текущей
-      </li>
-      <li>
-        <span style={{ backgroundColor: colors.bgOrange50 }}>цветом фона</span> выделены{' '}
-        <LinkTopic text='порожденные' topic={HelpTopic.CC_RELATIONS} /> текущей
-      </li>
+      <li>Ctrl + Пробел открывает редактирование отсылок</li>
     </div>
   );
 }

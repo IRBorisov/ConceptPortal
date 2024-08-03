@@ -1,8 +1,100 @@
+import {
+  IconAnimation,
+  IconAnimationOff,
+  IconConnect,
+  IconDestroy,
+  IconEdit2,
+  IconExecute,
+  IconFitImage,
+  IconGrid,
+  IconImage,
+  IconLineStraight,
+  IconLineWave,
+  IconNewItem,
+  IconReset,
+  IconRSForm,
+  IconSave
+} from '@/components/Icons';
+import Divider from '@/components/ui/Divider';
+import LinkTopic from '@/components/ui/LinkTopic';
+import { HelpTopic } from '@/models/miscellaneous';
+
 function HelpOssGraph() {
   return (
-    <div>
+    <div className='flex flex-col'>
       <h1>Граф синтеза</h1>
-      <p>TBD.</p>
+      <div className='flex flex-col sm:flex-row'>
+        <div className='w-full sm:w-[14rem]'>
+          <h1>Настройка графа</h1>
+          <li>
+            <IconFitImage className='inline-icon' /> Вписать в экран
+          </li>
+          <li>
+            <IconGrid className='inline-icon' /> Отображение сетки
+          </li>
+          <li>
+            <IconLineWave className='inline-icon' />
+            <IconLineStraight className='inline-icon' /> Тип линии
+          </li>
+          <li>
+            <IconAnimation className='inline-icon' />
+            <IconAnimationOff className='inline-icon' /> Анимация
+          </li>
+        </div>
+
+        <Divider vertical margins='mx-3 mt-3' className='hidden sm:block' />
+
+        <div className='w-full sm:w-[21rem]'>
+          <h1>Изменение узлов</h1>
+          <li>Клик на операцию – выделение</li>
+          <li>Esc – сбросить выделение</li>
+          <li>
+            <IconEdit2 className='inline-icon' /> Двойной клик – редактирование
+          </li>
+          <li>
+            <IconNewItem className='inline-icon icon-green' /> Новая операция
+          </li>
+          <li>
+            <IconDestroy className='inline-icon icon-red' /> Delete – удалить выбранные
+          </li>
+        </div>
+      </div>
+
+      <Divider margins='my-3' className='hidden sm:block' />
+
+      <div className='flex flex-col-reverse mb-3 sm:flex-row'>
+        <div className='w-full sm:w-[14rem]'>
+          <h1>Общие</h1>
+          <li>
+            <IconReset className='inline-icon' /> Сбросить изменения
+          </li>
+          <li>
+            <IconSave className='inline-icon' /> Сохранить положения
+          </li>
+          <li>
+            <IconImage className='inline-icon' /> Сохранить в формат SVG
+          </li>
+        </div>
+
+        <Divider vertical margins='mx-3' className='hidden sm:block' />
+
+        <div className='dense w-[21rem]'>
+          <h1>Контекстное меню</h1>
+          <li>
+            <IconRSForm className='inline-icon icon-green' /> Переход к связанной{' '}
+            <LinkTopic text='КС' topic={HelpTopic.CC_SYSTEM} />
+          </li>
+          <li>
+            <IconNewItem className='inline-icon icon-green' /> Создать пустую КС для загрузки
+          </li>
+          <li>
+            <IconConnect className='inline-icon' /> Выбрать КС для загрузки
+          </li>
+          <li>
+            <IconExecute className='inline-icon icon-green' /> Выполнить (активировать) операцию
+          </li>
+        </div>
+      </div>
     </div>
   );
 }

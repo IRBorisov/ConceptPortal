@@ -123,7 +123,8 @@ export const storage = {
   ossEdgeAnimate: 'oss.edge_animate',
 
   cstFilterMatch: 'cst.filter.match',
-  cstFilterGraph: 'cst.filter.graph'
+  cstFilterGraph: 'cst.filter.graph',
+  cstFilterShowInherited: 'cst.filter.show_inherited'
 };
 
 /**
