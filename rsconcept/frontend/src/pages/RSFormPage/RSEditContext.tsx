@@ -26,6 +26,7 @@ import DlgSubstituteCst from '@/dialogs/DlgSubstituteCst';
 import DlgUploadRSForm from '@/dialogs/DlgUploadRSForm';
 import {
   AccessPolicy,
+  ILibraryItemEditor,
   ILibraryUpdateData,
   IVersionData,
   LibraryItemID,
@@ -55,13 +56,14 @@ import { promptUnsaved } from '@/utils/utils';
 
 import { RSTabID } from './RSTabs';
 
-export interface IRSEditContext {
+export interface IRSEditContext extends ILibraryItemEditor {
   schema?: IRSForm;
   selected: ConstituentaID[];
 
   isMutable: boolean;
   isContentEditable: boolean;
   isProcessing: boolean;
+  isAttachedToOSS: boolean;
   canProduceStructure: boolean;
   nothingSelected: boolean;
   canDeleteSelected: boolean;
@@ -152,6 +154,13 @@ export const RSEditState = ({
   const canDeleteSelected = useMemo(
     () => !nothingSelected && selected.every(id => !model.schema?.cstByID.get(id)?.is_inherited),
     [selected, nothingSelected, model.schema]
+  );
+  const isAttachedToOSS = useMemo(
+    () =>
+      !!model.schema &&
+      model.schema.oss.length > 0 &&
+      (model.schema.stats.count_inherited > 0 || model.schema.items.length === 0),
+    [model.schema]
   );
 
   const [showUpload, setShowUpload] = useState(false);
@@ -618,6 +627,7 @@ export const RSEditState = ({
         isMutable,
         isContentEditable,
         isProcessing: model.processing,
+        isAttachedToOSS,
         canProduceStructure,
         nothingSelected,
         canDeleteSelected,

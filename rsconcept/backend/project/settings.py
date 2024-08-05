@@ -250,9 +250,8 @@ LOGGING = {
     'root': {
         'handlers': ['console'],
         'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO')
-    },
+    }
 }
-
 
 if len(sys.argv) > 1 and sys.argv[1] == 'test':
     logging.disable(logging.CRITICAL)

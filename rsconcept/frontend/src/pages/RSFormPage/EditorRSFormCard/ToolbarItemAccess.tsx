@@ -33,7 +33,7 @@ function ToolbarItemAccess({ visible, toggleVisible, readOnly, toggleReadOnly, c
       <Label text='Доступ' className='self-center select-none' />
       <div className='ml-auto cc-icons'>
         <SelectAccessPolicy
-          disabled={accessLevel <= UserLevel.EDITOR || controller.isProcessing}
+          disabled={accessLevel <= UserLevel.EDITOR || controller.isProcessing || controller.isAttachedToOSS}
           value={policy}
           onChange={newPolicy => controller.setAccessPolicy(newPolicy)}
         />

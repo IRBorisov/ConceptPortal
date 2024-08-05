@@ -183,57 +183,6 @@ class TestLibraryViewset(EndpointTester):
         self.unowned.refresh_from_db()
         self.assertEqual(self.unowned.location, data['location'])
 
-    @decl_endpoint('/api/library/{item}/add-editor', method='patch')
-    def test_add_editor(self):
-        time_update = self.owned.time_update
-
-        data = {'user': self.invalid_user}
-        self.executeBadData(data=data, item=self.owned.pk)
-
-        data = {'user': self.user.pk}
-        self.executeNotFound(data=data, item=self.invalid_item)
-        self.executeForbidden(data=data, item=self.unowned.pk)
-
-        self.executeOK(data=data, item=self.owned.pk)
-        self.owned.refresh_from_db()
-        self.assertEqual(self.owned.time_update, time_update)
-        self.assertEqual(self.owned.editors(), [self.user])
-
-        self.executeOK(data=data)
-        self.assertEqual(self.owned.editors(), [self.user])
-
-        data = {'user': self.user2.pk}
-        self.executeOK(data=data)
-        self.assertEqual(set(self.owned.editors()), set([self.user, self.user2]))
-
-
-    @decl_endpoint('/api/library/{item}/remove-editor', method='patch')
-    def test_remove_editor(self):
-        time_update = self.owned.time_update
-
-        data = {'user': self.invalid_user}
-        self.executeBadData(data=data, item=self.owned.pk)
-
-        data = {'user': self.user.pk}
-        self.executeNotFound(data=data, item=self.invalid_item)
-        self.executeForbidden(data=data, item=self.unowned.pk)
-
-        self.executeOK(data=data, item=self.owned.pk)
-        self.owned.refresh_from_db()
-        self.assertEqual(self.owned.time_update, time_update)
-        self.assertEqual(self.owned.editors(), [])
-
-        Editor.add(item=self.owned, user=self.user)
-        self.executeOK(data=data)
-        self.assertEqual(self.owned.editors(), [])
-
-        Editor.add(item=self.owned, user=self.user)
-        Editor.add(item=self.owned, user=self.user2)
-        data = {'user': self.user2.pk}
-        self.executeOK(data=data)
-        self.assertEqual(self.owned.editors(), [self.user])
-
-
     @decl_endpoint('/api/library/{item}/set-editors', method='patch')
     def test_set_editors(self):
         time_update = self.owned.time_update

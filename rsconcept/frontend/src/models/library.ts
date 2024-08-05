@@ -103,6 +103,7 @@ export interface ILibraryItemEditor {
 
   isMutable: boolean;
   isProcessing: boolean;
+  isAttachedToOSS: boolean;
 
   setOwner: (newOwner: UserID) => void;
   setAccessPolicy: (newPolicy: AccessPolicy) => void;

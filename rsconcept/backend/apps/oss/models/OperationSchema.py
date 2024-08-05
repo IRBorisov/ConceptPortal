@@ -51,6 +51,14 @@ class OperationSchema:
         ''' Operation substitutions. '''
         return Substitution.objects.filter(operation__oss=self.model)
 
+    def owned_schemas(self) -> QuerySet[LibraryItem]:
+        ''' Get QuerySet containing all result schemas owned by current OSS. '''
+        return LibraryItem.objects.filter(
+            producer__oss=self.model,
+            owner_id=self.model.owner_id,
+            location=self.model.location
+        )
+
     def update_positions(self, data: list[dict]):
         ''' Update positions. '''
         lookup = {x['id']: x for x in data}

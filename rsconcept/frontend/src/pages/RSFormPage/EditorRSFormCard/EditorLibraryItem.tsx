@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl';
 import { IconEdit } from '@/components/Icons';
 import InfoUsers from '@/components/info/InfoUsers';
 import SelectUser from '@/components/select/SelectUser';
+import LabeledValue from '@/components/ui/LabeledValue';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import Tooltip from '@/components/ui/Tooltip';
@@ -14,8 +15,6 @@ import { ILibraryItemData, ILibraryItemEditor } from '@/models/library';
 import { UserID, UserLevel } from '@/models/user';
 import { prefixes } from '@/utils/constants';
 import { prompts } from '@/utils/labels';
-
-import LabeledValue from '@/components/ui/LabeledValue';
 
 interface EditorLibraryItemProps {
   item?: ILibraryItemData;
@@ -48,11 +47,11 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
       {accessLevel >= UserLevel.OWNER ? (
         <Overlay position='top-[-0.5rem] left-[2.3rem] cc-icons'>
           <MiniButton
-            title='Изменить путь'
+            title={controller.isAttachedToOSS ? 'Путь наследуется от ОСС' : 'Изменить путь'}
             noHover
             onClick={() => controller.promptLocation()}
             icon={<IconEdit size='1rem' className='mt-1 icon-primary' />}
-            disabled={isModified || controller.isProcessing}
+            disabled={isModified || controller.isProcessing || controller.isAttachedToOSS}
           />
         </Overlay>
       ) : null}
@@ -66,11 +65,11 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
         <Overlay position='top-[-0.5rem] left-[5.5rem] cc-icons'>
           <div className='flex items-start'>
             <MiniButton
-              title='Изменить владельца'
+              title={controller.isAttachedToOSS ? 'Владелец наследуется от ОСС' : 'Изменить владельца'}
               noHover
               onClick={() => ownerSelector.toggle()}
               icon={<IconEdit size='1rem' className='mt-1 icon-primary' />}
-              disabled={isModified || controller.isProcessing}
+              disabled={isModified || controller.isProcessing || controller.isAttachedToOSS}
             />
             {ownerSelector.isOpen ? (
               <SelectUser

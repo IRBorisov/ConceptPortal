@@ -15,7 +15,7 @@ import DlgChangeLocation from '@/dialogs/DlgChangeLocation';
 import DlgCreateOperation from '@/dialogs/DlgCreateOperation';
 import DlgEditEditors from '@/dialogs/DlgEditEditors';
 import DlgEditOperation from '@/dialogs/DlgEditOperation';
-import { AccessPolicy, LibraryItemID } from '@/models/library';
+import { AccessPolicy, ILibraryItemEditor, LibraryItemID } from '@/models/library';
 import { Position2D } from '@/models/miscellaneous';
 import {
   IOperationCreateData,
@@ -37,12 +37,13 @@ export interface ICreateOperationPrompt {
   callback: (newID: OperationID) => void;
 }
 
-export interface IOssEditContext {
+export interface IOssEditContext extends ILibraryItemEditor {
   schema?: IOperationSchema;
   selected: OperationID[];
 
   isMutable: boolean;
   isProcessing: boolean;
+  isAttachedToOSS: boolean;
 
   showTooltip: boolean;
   setShowTooltip: React.Dispatch<React.SetStateAction<boolean>>;
@@ -319,6 +320,7 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
 
         isMutable,
         isProcessing: model.processing,
+        isAttachedToOSS: false,
 
         toggleSubscribe,
         setOwner,

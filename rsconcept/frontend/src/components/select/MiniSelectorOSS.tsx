@@ -17,25 +17,36 @@ interface MiniSelectorOSSProps {
 
 function MiniSelectorOSS({ items, onSelect }: MiniSelectorOSSProps) {
   const ossMenu = useDropdown();
+
+  function onToggle(event: CProps.EventMouse) {
+    if (items.length > 1) {
+      ossMenu.toggle();
+    } else {
+      onSelect(event, items[0]);
+    }
+  }
+
   return (
     <div ref={ossMenu.ref} className='flex items-center'>
       <MiniButton
         icon={<IconOSS size='1.25rem' className='icon-primary' />}
-        title='Связанные операционные схемы'
+        title='Операционные схемы'
         hideTitle={ossMenu.isOpen}
-        onClick={() => ossMenu.toggle()}
+        onClick={onToggle}
       />
-      <Dropdown isOpen={ossMenu.isOpen}>
-        <Label text='Список ОСС' className='border-b px-3 py-1' />
-        {items.map((reference, index) => (
-          <DropdownButton
-            className='min-w-[5rem]'
-            key={`${prefixes.oss_list}${index}`}
-            text={reference.alias}
-            onClick={event => onSelect(event, reference)}
-          />
-        ))}
-      </Dropdown>
+      {items.length > 1 ? (
+        <Dropdown isOpen={ossMenu.isOpen}>
+          <Label text='Список ОСС' className='border-b px-3 py-1' />
+          {items.map((reference, index) => (
+            <DropdownButton
+              className='min-w-[5rem]'
+              key={`${prefixes.oss_list}${index}`}
+              text={reference.alias}
+              onClick={event => onSelect(event, reference)}
+            />
+          ))}
+        </Dropdown>
+      ) : null}
     </div>
   );
 }

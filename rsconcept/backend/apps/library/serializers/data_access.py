@@ -94,9 +94,9 @@ class LibraryItemDetailsSerializer(serializers.ModelSerializer):
 
 class UserTargetSerializer(serializers.Serializer):
     ''' Serializer: Target single User. '''
-    user = PKField(many=False, queryset=User.objects.all())
+    user = PKField(many=False, queryset=User.objects.all().only('pk'))
 
 
 class UsersListSerializer(serializers.Serializer):
     ''' Serializer: List of Users. '''
-    users = PKField(many=True, queryset=User.objects.all())
+    users = PKField(many=True, queryset=User.objects.all().only('pk'))

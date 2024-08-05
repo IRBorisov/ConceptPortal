@@ -13,6 +13,7 @@ from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
 
+from apps.oss.models import OperationSchema
 from apps.rsform.models import RSForm
 from apps.rsform.serializers import RSFormParseSerializer
 from apps.users.models import User
@@ -52,8 +53,6 @@ class LibraryViewSet(viewsets.ModelViewSet):
             'set_owner',
             'set_access_policy',
             'set_location',
-            'add_editor',
-            'remove_editor',
             'set_editors'
         ]:
             access_level = permissions.ItemOwner
@@ -165,29 +164,19 @@ class LibraryViewSet(viewsets.ModelViewSet):
         item = self._get_item()
         serializer = s.UserTargetSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        new_owner = serializer.validated_data['user']
-        m.LibraryItem.objects.filter(pk=item.pk).update(owner=new_owner)
-        return Response(status=c.HTTP_200_OK)
+        new_owner = serializer.validated_data['user'].pk
+        if new_owner == item.owner_id:
+            return Response(status=c.HTTP_200_OK)
 
-    @extend_schema(
-        summary='set AccessPolicy for item',
-        tags=['Library'],
-        request=s.AccessPolicySerializer,
-        responses={
-            c.HTTP_200_OK: None,
-            c.HTTP_400_BAD_REQUEST: None,
-            c.HTTP_403_FORBIDDEN: None,
-            c.HTTP_404_NOT_FOUND: None
-        }
-    )
-    @action(detail=True, methods=['patch'], url_path='set-access-policy')
-    def set_access_policy(self, request: Request, pk):
-        ''' Endpoint: Set item AccessPolicy. '''
-        item = self._get_item()
-        serializer = s.AccessPolicySerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        new_policy = serializer.validated_data['access_policy']
-        m.LibraryItem.objects.filter(pk=item.pk).update(access_policy=new_policy)
+        with transaction.atomic():
+            if item.item_type == m.LibraryItemType.OPERATION_SCHEMA:
+                owned_schemas = OperationSchema(item).owned_schemas().only('owner')
+                for schema in owned_schemas:
+                    schema.owner_id = new_owner
+                m.LibraryItem.objects.bulk_update(owned_schemas, ['owner'])
+            item.owner_id = new_owner
+            item.save(update_fields=['owner'])
+
         return Response(status=c.HTTP_200_OK)
 
     @extend_schema(
@@ -208,49 +197,52 @@ class LibraryViewSet(viewsets.ModelViewSet):
         serializer = s.LocationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         location: str = serializer.validated_data['location']
+        if location == item.location:
+            return Response(status=c.HTTP_200_OK)
         if location.startswith(m.LocationHead.LIBRARY) and not self.request.user.is_staff:
             return Response(status=c.HTTP_403_FORBIDDEN)
-        m.LibraryItem.objects.filter(pk=item.pk).update(location=location)
+
+        with transaction.atomic():
+            if item.item_type == m.LibraryItemType.OPERATION_SCHEMA:
+                owned_schemas = OperationSchema(item).owned_schemas().only('location')
+                for schema in owned_schemas:
+                    schema.location = location
+                m.LibraryItem.objects.bulk_update(owned_schemas, ['location'])
+            item.location = location
+            item.save(update_fields=['location'])
+
         return Response(status=c.HTTP_200_OK)
 
     @extend_schema(
-        summary='add editor for item',
+        summary='set AccessPolicy for item',
         tags=['Library'],
-        request=s.UserTargetSerializer,
+        request=s.AccessPolicySerializer,
         responses={
             c.HTTP_200_OK: None,
+            c.HTTP_400_BAD_REQUEST: None,
             c.HTTP_403_FORBIDDEN: None,
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @action(detail=True, methods=['patch'], url_path='add-editor')
-    def add_editor(self, request: Request, pk):
-        ''' Endpoint: Add editor for item. '''
+    @action(detail=True, methods=['patch'], url_path='set-access-policy')
+    def set_access_policy(self, request: Request, pk):
+        ''' Endpoint: Set item AccessPolicy. '''
         item = self._get_item()
-        serializer = s.UserTargetSerializer(data=request.data)
+        serializer = s.AccessPolicySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        new_editor = serializer.validated_data['user']
-        m.Editor.add(item=item, user=new_editor)
-        return Response(status=c.HTTP_200_OK)
+        new_policy = serializer.validated_data['access_policy']
+        if new_policy == item.access_policy:
+            return Response(status=c.HTTP_200_OK)
 
-    @extend_schema(
-        summary='remove editor for item',
-        tags=['Library'],
-        request=s.UserTargetSerializer,
-        responses={
-            c.HTTP_200_OK: None,
-            c.HTTP_403_FORBIDDEN: None,
-            c.HTTP_404_NOT_FOUND: None
-        }
-    )
-    @action(detail=True, methods=['patch'], url_path='remove-editor')
-    def remove_editor(self, request: Request, pk):
-        ''' Endpoint: Remove editor for item. '''
-        item = self._get_item()
-        serializer = s.UserTargetSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        editor = serializer.validated_data['user']
-        m.Editor.remove(item=item, user=editor)
+        with transaction.atomic():
+            if item.item_type == m.LibraryItemType.OPERATION_SCHEMA:
+                owned_schemas = OperationSchema(item).owned_schemas().only('access_policy')
+                for schema in owned_schemas:
+                    schema.access_policy = new_policy
+                m.LibraryItem.objects.bulk_update(owned_schemas, ['access_policy'])
+            item.access_policy = new_policy
+            item.save(update_fields=['access_policy'])
+
         return Response(status=c.HTTP_200_OK)
 
     @extend_schema(
