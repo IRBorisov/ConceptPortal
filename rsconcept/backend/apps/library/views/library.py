@@ -261,8 +261,32 @@ class LibraryViewSet(viewsets.ModelViewSet):
         item = self._get_item()
         serializer = s.UsersListSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        editors = serializer.validated_data['users']
-        m.Editor.set(item=item, users=editors)
+        editors: list[int] = request.data['users']
+
+        with transaction.atomic():
+            added, deleted = m.Editor.set_and_return_diff(item.pk, editors)
+            if len(added) >= 0 or len(deleted) >= 0:
+                owned_schemas = OperationSchema(item).owned_schemas().only('pk')
+                if owned_schemas.exists():
+                    m.Editor.objects.filter(
+                        item__in=owned_schemas,
+                        editor_id__in=deleted
+                    ).delete()
+
+                    existing_editors = m.Editor.objects.filter(
+                        item__in=owned_schemas,
+                        editor__in=added
+                    ).values_list('item_id', 'editor_id')
+                    existing_editor_set = set(existing_editors)
+
+                    new_editors = [
+                        m.Editor(item=schema, editor_id=user)
+                        for schema in owned_schemas
+                        for user in added
+                        if (item.id, user) not in existing_editor_set
+                    ]
+                    m.Editor.objects.bulk_create(new_editors)
+
         return Response(status=c.HTTP_200_OK)
 
 

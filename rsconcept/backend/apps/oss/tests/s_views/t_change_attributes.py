@@ -2,7 +2,7 @@
 
 from rest_framework import status
 
-from apps.library.models import AccessPolicy, LocationHead
+from apps.library.models import AccessPolicy, Editor, LocationHead
 from apps.oss.models import Operation, OperationSchema, OperationType
 from apps.rsform.models import RSForm
 from apps.users.models import User
@@ -105,3 +105,21 @@ class TestChangeAttributes(EndpointTester):
         self.assertNotEqual(self.ks1.model.access_policy, data['access_policy'])
         self.assertNotEqual(self.ks2.model.access_policy, data['access_policy'])
         self.assertEqual(self.ks3.access_policy, data['access_policy'])
+
+    @decl_endpoint('/api/library/{item}/set-editors', method='patch')
+    def test_set_editors(self):
+        Editor.set(self.owned.model.pk, [self.user2.pk])
+        Editor.set(self.ks1.model.pk, [self.user2.pk, self.user.pk])
+        Editor.set(self.ks3.pk, [self.user2.pk, self.user.pk])
+        data = {'users': [self.user3.pk]}
+
+        self.executeOK(data=data, item=self.owned_id)
+
+        self.owned.refresh_from_db()
+        self.ks1.refresh_from_db()
+        self.ks2.refresh_from_db()
+        self.ks3.refresh_from_db()
+        self.assertEqual(list(self.owned.model.editors()), [self.user3])
+        self.assertEqual(list(self.ks1.model.editors()), [self.user, self.user2])
+        self.assertEqual(list(self.ks2.model.editors()), [])
+        self.assertEqual(set(self.ks3.editors()), set([self.user, self.user3]))

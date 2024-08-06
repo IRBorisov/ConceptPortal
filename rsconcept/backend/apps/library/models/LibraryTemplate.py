@@ -7,8 +7,7 @@ class LibraryTemplate(Model):
     lib_source: ForeignKey = ForeignKey(
         verbose_name='Источник',
         to='library.LibraryItem',
-        on_delete=CASCADE,
-        null=True
+        on_delete=CASCADE
     )
 
     class Meta:

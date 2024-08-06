@@ -169,7 +169,7 @@ class OperationSchema:
             access_policy=self.model.access_policy,
             location=self.model.location
         )
-        Editor.set(schema.model, self.model.editors())
+        Editor.set(schema.model.pk, self.model.editors().values_list('pk', flat=True))
         operation.result = schema.model
         operation.save()
         self.save()

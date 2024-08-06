@@ -16,7 +16,6 @@ from django.db.models import (
 
 from apps.users.models import User
 
-from .Editor import Editor
 from .Subscription import Subscription
 from .Version import Version
 
@@ -119,9 +118,9 @@ class LibraryItem(Model):
         ''' Get all subscribers for this item. '''
         return [subscription.user for subscription in Subscription.objects.filter(item=self.pk).only('user')]
 
-    def editors(self) -> list[User]:
+    def editors(self) -> QuerySet[User]:
         ''' Get all Editors of this item. '''
-        return [item.editor for item in Editor.objects.filter(item=self.pk).only('editor')]
+        return User.objects.filter(editor__item=self.pk)
 
     def versions(self) -> QuerySet[Version]:
         ''' Get all Versions of this item. '''

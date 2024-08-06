@@ -197,18 +197,18 @@ class TestLibraryViewset(EndpointTester):
         self.executeOK(data=data, item=self.owned.pk)
         self.owned.refresh_from_db()
         self.assertEqual(self.owned.time_update, time_update)
-        self.assertEqual(self.owned.editors(), [self.user])
+        self.assertEqual(list(self.owned.editors()), [self.user])
 
         self.executeOK(data=data)
-        self.assertEqual(self.owned.editors(), [self.user])
+        self.assertEqual(list(self.owned.editors()), [self.user])
 
         data = {'users': [self.user2.pk]}
         self.executeOK(data=data)
-        self.assertEqual(self.owned.editors(), [self.user2])
+        self.assertEqual(list(self.owned.editors()), [self.user2])
 
         data = {'users': []}
         self.executeOK(data=data)
-        self.assertEqual(self.owned.editors(), [])
+        self.assertEqual(list(self.owned.editors()), [])
 
         data = {'users': [self.user2.pk, self.user.pk]}
         self.executeOK(data=data)

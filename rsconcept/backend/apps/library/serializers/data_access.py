@@ -86,7 +86,7 @@ class LibraryItemDetailsSerializer(serializers.ModelSerializer):
         return [item.pk for item in instance.subscribers()]
 
     def get_editors(self, instance: LibraryItem) -> list[int]:
-        return [item.pk for item in instance.editors()]
+        return list(instance.editors().values_list('pk', flat=True))
 
     def get_versions(self, instance: LibraryItem) -> list:
         return [VersionInnerSerializer(item).data for item in instance.versions()]

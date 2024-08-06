@@ -67,9 +67,9 @@ class EndpointTester(APITestCase):
 
     def toggle_editor(self, item: LibraryItem, value: bool = True):
         if value:
-            Editor.add(item, self.user)
+            Editor.add(item.pk, self.user.pk)
         else:
-            Editor.remove(item, self.user)
+            Editor.remove(item.pk, self.user.pk)
 
     def login(self):
         self.client.force_authenticate(user=self.user)

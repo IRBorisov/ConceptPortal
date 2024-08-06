@@ -220,7 +220,7 @@ class TestOssViewset(EndpointTester):
     @decl_endpoint('/api/oss/{item}/create-operation', method='post')
     def test_create_operation_schema(self):
         self.populateData()
-        Editor.add(self.owned.model, self.user2)
+        Editor.add(self.owned.model.pk, self.user2.pk)
         data = {
             'item_data': {
                 'alias': 'Test4',

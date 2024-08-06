@@ -1,13 +1,10 @@
 ''' Models: Editor. '''
-from typing import TYPE_CHECKING
+from typing import Iterable
 
 from django.db import transaction
 from django.db.models import CASCADE, DateTimeField, ForeignKey, Model
 
 from apps.users.models import User
-
-if TYPE_CHECKING:
-    from .LibraryItem import LibraryItem
 
 
 class Editor(Model):
@@ -20,8 +17,7 @@ class Editor(Model):
     editor: ForeignKey = ForeignKey(
         verbose_name='Редактор',
         to=User,
-        on_delete=CASCADE,
-        null=True
+        on_delete=CASCADE
     )
     time_create: DateTimeField = DateTimeField(
         verbose_name='Дата добавления',
@@ -38,17 +34,17 @@ class Editor(Model):
         return f'{self.item}: {self.editor}'
 
     @staticmethod
-    def add(item: 'LibraryItem', user: User) -> bool:
+    def add(item: int, user: int) -> bool:
         ''' Add Editor for item. '''
-        if Editor.objects.filter(item=item, editor=user).exists():
+        if Editor.objects.filter(item_id=item, editor_id=user).exists():
             return False
-        Editor.objects.create(item=item, editor=user)
+        Editor.objects.create(item_id=item, editor_id=user)
         return True
 
     @staticmethod
-    def remove(item: 'LibraryItem', user: User) -> bool:
+    def remove(item: int, user: int) -> bool:
         ''' Remove Editor. '''
-        editor = Editor.objects.filter(item=item, editor=user)
+        editor = Editor.objects.filter(item_id=item, editor_id=user).only('pk')
         if not editor.exists():
             return False
         editor.delete()
@@ -56,16 +52,40 @@ class Editor(Model):
 
     @staticmethod
     @transaction.atomic
-    def set(item: 'LibraryItem', users: list[User]):
+    def set(item: int, users: Iterable[int]):
         ''' Set editors for item. '''
-        processed: list[User] = []
-        for editor_item in Editor.objects.filter(item=item):
-            if editor_item.editor not in users:
+        processed: set[int] = set()
+        for editor_item in Editor.objects.filter(item_id=item).only('pk', 'editor_id'):
+            editor_id = editor_item.editor_id
+            if editor_id not in users:
                 editor_item.delete()
             else:
-                processed.append(editor_item.editor)
+                processed.add(editor_id)
+
+        for user in users:
+            if user not in processed:
+                processed.add(user)
+                Editor.objects.create(item_id=item, editor_id=user)
+
+    @staticmethod
+    @transaction.atomic
+    def set_and_return_diff(item: int, users: Iterable[int]) -> tuple[list[int], list[int]]:
+        ''' Set editors for item and return diff. '''
+        processed: list[int] = []
+        deleted: list[int] = []
+        added: list[int] = []
+        for editor_item in Editor.objects.filter(item_id=item).only('pk', 'editor_id'):
+            editor_id = editor_item.editor_id
+            if editor_id not in users:
+                deleted.append(editor_id)
+                editor_item.delete()
+            else:
+                processed.append(editor_id)
 
         for user in users:
             if user not in processed:
                 processed.append(user)
-                Editor.objects.create(item=item, editor=user)
+                added.append(user)
+                Editor.objects.create(item_id=item, editor_id=user)
+
+        return (added, deleted)
