@@ -55,7 +55,7 @@ class Editor(Model):
     def set(item: int, users: Iterable[int]):
         ''' Set editors for item. '''
         processed: set[int] = set()
-        for editor_item in Editor.objects.filter(item_id=item).only('pk', 'editor_id'):
+        for editor_item in Editor.objects.filter(item_id=item).only('editor_id'):
             editor_id = editor_item.editor_id
             if editor_id not in users:
                 editor_item.delete()
@@ -74,7 +74,7 @@ class Editor(Model):
         processed: list[int] = []
         deleted: list[int] = []
         added: list[int] = []
-        for editor_item in Editor.objects.filter(item_id=item).only('pk', 'editor_id'):
+        for editor_item in Editor.objects.filter(item_id=item).only('editor_id'):
             editor_id = editor_item.editor_id
             if editor_id not in users:
                 deleted.append(editor_id)

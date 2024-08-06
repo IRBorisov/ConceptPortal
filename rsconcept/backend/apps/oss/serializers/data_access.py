@@ -48,7 +48,7 @@ class OperationCreateSerializer(serializers.Serializer):
 
     create_schema = serializers.BooleanField(default=False, required=False)
     item_data = OperationCreateData()
-    arguments = PKField(many=True, queryset=Operation.objects.all(), required=False)
+    arguments = PKField(many=True, queryset=Operation.objects.all().only('pk'), required=False)
 
     positions = serializers.ListField(
         child=OperationPositionSerializer(),
@@ -67,7 +67,7 @@ class OperationUpdateSerializer(serializers.Serializer):
 
     target = PKField(many=False, queryset=Operation.objects.all())
     item_data = OperationUpdateData()
-    arguments = PKField(many=True, queryset=Operation.objects.all(), required=False)
+    arguments = PKField(many=True, queryset=Operation.objects.all().only('oss_id', 'result_id'), required=False)
     substitutions = serializers.ListField(
         child=SubstitutionSerializerBase(),
         required=False
@@ -121,8 +121,8 @@ class OperationUpdateSerializer(serializers.Serializer):
 
 
 class OperationTargetSerializer(serializers.Serializer):
-    ''' Serializer: Delete operation. '''
-    target = PKField(many=False, queryset=Operation.objects.all())
+    ''' Serializer: Target single operation. '''
+    target = PKField(many=False, queryset=Operation.objects.all().only('oss_id', 'result_id'))
     positions = serializers.ListField(
         child=OperationPositionSerializer(),
         default=[]

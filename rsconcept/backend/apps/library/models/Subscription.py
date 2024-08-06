@@ -1,12 +1,7 @@
 ''' Models: Subscription. '''
-from typing import TYPE_CHECKING
-
 from django.db.models import CASCADE, ForeignKey, Model
 
 from apps.users.models import User
-
-if TYPE_CHECKING:
-    from .LibraryItem import LibraryItem
 
 
 class Subscription(Model):
@@ -32,17 +27,17 @@ class Subscription(Model):
         return f'{self.user} -> {self.item}'
 
     @staticmethod
-    def subscribe(user: User, item: 'LibraryItem') -> bool:
+    def subscribe(user: int, item: int) -> bool:
         ''' Add subscription. '''
-        if Subscription.objects.filter(user=user, item=item).exists():
+        if Subscription.objects.filter(user_id=user, item_id=item).exists():
             return False
-        Subscription.objects.create(user=user, item=item)
+        Subscription.objects.create(user_id=user, item_id=item)
         return True
 
     @staticmethod
-    def unsubscribe(user: User, item: 'LibraryItem') -> bool:
+    def unsubscribe(user: int, item: int) -> bool:
         ''' Remove subscription. '''
-        sub = Subscription.objects.filter(user=user, item=item)
+        sub = Subscription.objects.filter(user_id=user, item_id=item).only('pk')
         if not sub.exists():
             return False
         sub.delete()

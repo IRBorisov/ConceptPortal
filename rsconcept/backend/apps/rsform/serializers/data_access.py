@@ -269,7 +269,7 @@ class CstRenameSerializer(serializers.Serializer):
 
 class CstListSerializer(serializers.Serializer):
     ''' Serializer: List of constituents from one origin. '''
-    items = PKField(many=True, queryset=Constituenta.objects.all())
+    items = PKField(many=True, queryset=Constituenta.objects.all().only('schema_id'))
 
     def validate(self, attrs):
         schema = cast(LibraryItem, self.context['schema'])
@@ -291,8 +291,8 @@ class CstMoveSerializer(CstListSerializer):
 
 class SubstitutionSerializerBase(serializers.Serializer):
     ''' Serializer: Basic substitution. '''
-    original = PKField(many=False, queryset=Constituenta.objects.only('alias', 'schema'))
-    substitution = PKField(many=False, queryset=Constituenta.objects.only('alias', 'schema'))
+    original = PKField(many=False, queryset=Constituenta.objects.only('alias', 'schema_id'))
+    substitution = PKField(many=False, queryset=Constituenta.objects.only('alias', 'schema_id'))
 
 
 class CstSubstituteSerializer(serializers.Serializer):
@@ -330,8 +330,8 @@ class CstSubstituteSerializer(serializers.Serializer):
 
 class InlineSynthesisSerializer(serializers.Serializer):
     ''' Serializer: Inline synthesis operation input. '''
-    receiver = PKField(many=False, queryset=LibraryItem.objects.all())
-    source = PKField(many=False, queryset=LibraryItem.objects.all())  # type: ignore
+    receiver = PKField(many=False, queryset=LibraryItem.objects.all().only('owner_id'))
+    source = PKField(many=False, queryset=LibraryItem.objects.all().only('owner_id'))  # type: ignore
     items = PKField(many=True, queryset=Constituenta.objects.all())
     substitutions = serializers.ListField(
         child=SubstitutionSerializerBase()

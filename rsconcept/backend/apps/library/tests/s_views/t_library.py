@@ -269,9 +269,9 @@ class TestLibraryViewset(EndpointTester):
         response = self.executeOK()
         self.assertFalse(response_contains(response, self.unowned))
 
-        Subscription.subscribe(user=self.user, item=self.unowned)
-        Subscription.subscribe(user=self.user2, item=self.unowned)
-        Subscription.subscribe(user=self.user2, item=self.owned)
+        Subscription.subscribe(user=self.user.pk, item=self.unowned.pk)
+        Subscription.subscribe(user=self.user2.pk, item=self.unowned.pk)
+        Subscription.subscribe(user=self.user2.pk, item=self.owned.pk)
 
         response = self.executeOK()
         self.assertTrue(response_contains(response, self.unowned))

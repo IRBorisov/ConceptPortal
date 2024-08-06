@@ -114,9 +114,9 @@ class LibraryItem(Model):
     def get_absolute_url(self):
         return f'/api/library/{self.pk}'
 
-    def subscribers(self) -> list[User]:
+    def subscribers(self) -> QuerySet[User]:
         ''' Get all subscribers for this item. '''
-        return [subscription.user for subscription in Subscription.objects.filter(item=self.pk).only('user')]
+        return User.objects.filter(subscription__item=self.pk)
 
     def editors(self) -> QuerySet[User]:
         ''' Get all Editors of this item. '''
@@ -126,6 +126,7 @@ class LibraryItem(Model):
         ''' Get all Versions of this item. '''
         return Version.objects.filter(item=self.pk).order_by('-time_create')
 
+    # TODO: move to View layer
     @transaction.atomic
     def save(self, *args, **kwargs):
         ''' Save updating subscriptions and connected operations. '''
@@ -134,7 +135,7 @@ class LibraryItem(Model):
         subscribe = self._state.adding and self.owner
         super().save(*args, **kwargs)
         if subscribe:
-            Subscription.subscribe(user=self.owner, item=self)
+            Subscription.subscribe(user=self.owner_id, item=self.pk)
 
     def _update_connected_operations(self):
         # using method level import to prevent circular dependency

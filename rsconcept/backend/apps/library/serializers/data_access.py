@@ -83,7 +83,7 @@ class LibraryItemDetailsSerializer(serializers.ModelSerializer):
         read_only_fields = ('owner', 'id', 'item_type')
 
     def get_subscribers(self, instance: LibraryItem) -> list[int]:
-        return [item.pk for item in instance.subscribers()]
+        return list(instance.subscribers().values_list('pk', flat=True))
 
     def get_editors(self, instance: LibraryItem) -> list[int]:
         return list(instance.editors().values_list('pk', flat=True))

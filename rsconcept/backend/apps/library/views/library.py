@@ -4,9 +4,8 @@ from typing import cast
 
 from django.db import transaction
 from django.db.models import Q
-from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, extend_schema_view
-from rest_framework import filters, generics
+from rest_framework import generics
 from rest_framework import status as c
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -28,10 +27,8 @@ from .. import serializers as s
 class LibraryViewSet(viewsets.ModelViewSet):
     ''' Endpoint: Library operations. '''
     queryset = m.LibraryItem.objects.all()
+    # TODO: consider using .only() for performance
 
-    filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
-    filterset_fields = ['item_type', 'owner']
-    ordering_fields = ('item_type', 'owner', 'alias', 'title', 'time_update')
     ordering = '-time_update'
 
     def get_serializer_class(self):
@@ -128,7 +125,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
     def subscribe(self, request: Request, pk):
         ''' Endpoint: Subscribe current user to item. '''
         item = self._get_item()
-        m.Subscription.subscribe(user=cast(User, self.request.user), item=item)
+        m.Subscription.subscribe(user=cast(int, self.request.user.pk), item=item.pk)
         return Response(status=c.HTTP_200_OK)
 
     @extend_schema(
@@ -145,7 +142,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
     def unsubscribe(self, request: Request, pk):
         ''' Endpoint: Unsubscribe current user from item. '''
         item = self._get_item()
-        m.Subscription.unsubscribe(user=cast(User, self.request.user), item=item)
+        m.Subscription.unsubscribe(user=cast(int, self.request.user.pk), item=item.pk)
         return Response(status=c.HTTP_200_OK)
 
     @extend_schema(
