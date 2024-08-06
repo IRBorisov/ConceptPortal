@@ -4,12 +4,12 @@
 import { GraphCanvas as GraphUI } from 'reagraph';
 
 export {
+  type CollapseProps,
+  type GraphCanvasRef,
   type GraphEdge,
   type GraphNode,
-  type GraphCanvasRef,
   Sphere,
-  useSelection,
-  type CollapseProps
+  useSelection
 } from 'reagraph';
 export { type LayoutTypes as GraphLayout } from 'reagraph';
 

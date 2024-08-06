@@ -102,7 +102,6 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
       return false;
     }
     return schema.subscribers.includes(user.id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, schema, toggleTracking]);
 
   useEffect(() => {

@@ -2,11 +2,11 @@
 import { HTMLMotionProps } from 'framer-motion';
 
 export namespace CProps {
-  export type Titled = {
+  export interface Titled {
     title?: string;
     titleHtml?: string;
     hideTitle?: boolean;
-  };
+  }
 
   export type Control = Titled & {
     disabled?: boolean;
@@ -14,18 +14,18 @@ export namespace CProps {
     noOutline?: boolean;
   };
 
-  export type Styling = {
+  export interface Styling {
     style?: React.CSSProperties;
     className?: string;
-  };
+  }
 
   export type Editor = Control & {
     label?: string;
   };
 
-  export type Colors = {
+  export interface Colors {
     colors?: string;
-  };
+  }
 
   export type Div = React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
   export type Button = Titled &

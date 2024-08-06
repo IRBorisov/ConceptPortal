@@ -61,7 +61,6 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
 
   useEffect(() => {
     cache.preload(schemasIDs);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [schemasIDs]);
 
   const handleSubmit = () => {

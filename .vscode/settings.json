@@ -28,7 +28,9 @@
     "editor.tabSize": 4,
     "editor.insertSpaces": true,
     "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit"
+      "source.organizeImports": "explicit",
+      "source.fixAll.ts": "never",
+      "source.fixAll.eslint": "never"
     }
   },
   "python.testing.unittestArgs": ["-v", "-s", "./tests", "-p", "test*.py"],

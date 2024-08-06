@@ -29,14 +29,14 @@ export class TextMatcher {
     }
     try {
       this.query = new RegExp(query, isCaseSensitive ? '' : 'i');
-    } catch (exception: unknown) {
+    } catch (_exception: unknown) {
       this.query = query;
     }
   }
 
   test(text: string): boolean {
     if (typeof this.query === 'string') {
-      return text.indexOf(this.query) !== -1;
+      return text.includes(this.query);
     } else {
       return !!text.match(this.query);
     }
@@ -46,7 +46,7 @@ export class TextMatcher {
 /**
  * Text substitution guided by mapping and regular expression.
  */
-export function applyPattern(text: string, mapping: { [key: string]: string }, pattern: RegExp): string {
+export function applyPattern(text: string, mapping: Record<string, string>, pattern: RegExp): string {
   if (text === '' || pattern === null) {
     return text;
   }

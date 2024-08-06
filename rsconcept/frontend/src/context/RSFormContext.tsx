@@ -143,7 +143,6 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
       return false;
     }
     return schema.subscribers.includes(user.id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, schema, toggleTracking]);
 
   const update = useCallback(

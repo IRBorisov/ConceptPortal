@@ -53,7 +53,7 @@ function TableSideConstituents({
   useLayoutEffect(() => {
     setColumnVisibility(prev => {
       const newValue = (windowSize.width ?? 0) >= denseThreshold;
-      if (newValue === prev['expression']) {
+      if (newValue === prev.expression) {
         return prev;
       } else {
         return { expression: newValue };

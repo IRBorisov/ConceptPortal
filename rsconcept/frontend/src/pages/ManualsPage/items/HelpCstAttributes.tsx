@@ -1,6 +1,5 @@
-import { HelpTopic } from '@/models/miscellaneous';
-
 import LinkTopic from '@/components/ui/LinkTopic';
+import { HelpTopic } from '@/models/miscellaneous';
 
 function HelpCstAttributes() {
   return (

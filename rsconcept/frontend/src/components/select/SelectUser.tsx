@@ -51,7 +51,7 @@ function SelectUser({
       options={options}
       value={value ? { value: value, label: getUserLabel(value) } : null}
       onChange={data => {
-        if (data !== null && data.value !== undefined) onSelectValue(data.value);
+        if (data?.value !== undefined) onSelectValue(data.value);
       }}
       // @ts-expect-error: TODO: use type definitions from react-select in filter object
       filterOption={filter}

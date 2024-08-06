@@ -91,7 +91,7 @@ export function substituteTemplateArgs(expression: string, args: IArgumentValue[
     return expression;
   }
 
-  const mapping: { [key: string]: string } = {};
+  const mapping: Record<string, string> = {};
   args
     .filter(arg => !!arg.value)
     .forEach(arg => {

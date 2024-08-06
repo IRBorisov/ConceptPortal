@@ -72,7 +72,7 @@ export class FolderNode {
  *
  */
 export class FolderTree {
-  roots: Map<string, FolderNode> = new Map();
+  roots = new Map<string, FolderNode>();
 
   constructor(arr?: string[]) {
     arr?.forEach(path => this.addPath(path));

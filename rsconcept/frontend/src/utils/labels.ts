@@ -296,7 +296,7 @@ export function describeLocationHead(head: LocationHead): string {
 /**
  * Retrieves label for graph layout mode.
  */
-export const mapLabelLayout: Map<GraphLayout, string> = new Map([
+export const mapLabelLayout = new Map<GraphLayout, string>([
   ['treeTd2d', 'Граф: ДеревоВ 2D'],
   ['treeTd3d', 'Граф: ДеревоВ 3D'],
   ['forceatlas2', 'Граф: Атлас 2D'],
@@ -312,7 +312,7 @@ export const mapLabelLayout: Map<GraphLayout, string> = new Map([
 /**
  * Retrieves label for {@link GraphColoring}.
  */
-export const mapLabelColoring: Map<GraphColoring, string> = new Map([
+export const mapLabelColoring = new Map<GraphColoring, string>([
   ['none', 'Цвет: Моно'],
   ['status', 'Цвет: Статус'],
   ['type', 'Цвет: Класс']
@@ -321,7 +321,7 @@ export const mapLabelColoring: Map<GraphColoring, string> = new Map([
 /**
  * Retrieves label for {@link GraphSizing}.
  */
-export const mapLabelSizing: Map<GraphSizing, string> = new Map([
+export const mapLabelSizing = new Map<GraphSizing, string>([
   ['none', 'Узлы: Моно'],
   ['derived', 'Узлы: Порожденные'],
   ['complex', 'Узлы: Простые']

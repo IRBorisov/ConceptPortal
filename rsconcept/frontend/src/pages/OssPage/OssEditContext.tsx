@@ -196,7 +196,7 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
   const openOperationSchema = useCallback(
     (target: OperationID) => {
       const node = model.schema?.operationByID.get(target);
-      if (!node || !node.result) {
+      if (!node?.result) {
         return;
       }
       router.push(urls.schema(node.result));

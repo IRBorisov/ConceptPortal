@@ -387,7 +387,7 @@ export const RSEditState = ({
       const oldCount = model.schema.items.length;
       model.inlineSynthesis(data, newSchema => {
         setSelected([]);
-        toast.success(information.addedConstituents(newSchema['items'].length - oldCount));
+        toast.success(information.addedConstituents(newSchema.items.length - oldCount));
       });
     },
     [model, setSelected]

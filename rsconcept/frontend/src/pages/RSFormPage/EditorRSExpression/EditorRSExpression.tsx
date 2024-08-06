@@ -117,7 +117,7 @@ function EditorRSExpression({
   );
 
   const handleEdit = useCallback((id: TokenID, key?: string) => {
-    if (!rsInput.current || !rsInput.current.editor || !rsInput.current.state || !rsInput.current.view) {
+    if (!rsInput.current?.editor || !rsInput.current.state || !rsInput.current.view) {
       return;
     }
     const text = new RSTextWrapper(rsInput.current as Required<ReactCodeMirrorRef>);

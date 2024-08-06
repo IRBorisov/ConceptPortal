@@ -274,7 +274,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
         onError: setProcessingError,
         onSuccess: () =>
           reloadItems(() => {
-            if (user && user.subscriptions.includes(target)) {
+            if (user?.subscriptions.includes(target)) {
               user.subscriptions.splice(
                 user.subscriptions.findIndex(item => item === target),
                 1

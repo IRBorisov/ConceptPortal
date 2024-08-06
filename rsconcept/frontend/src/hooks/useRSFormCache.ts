@@ -73,7 +73,6 @@ function useRSFormCache() {
         }
       })
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pending]);
 
   return { preload, getSchema, getConstituenta, getSchemaByCst, loading, error, setError };

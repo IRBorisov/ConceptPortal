@@ -56,7 +56,7 @@ function ToolbarConstituenta({
           onSelect={(event, value) => controller.viewOSS(value.id, event.ctrlKey || event.metaKey)}
         />
       ) : null}
-      {activeCst && activeCst.is_inherited ? (
+      {activeCst?.is_inherited ? (
         <MiniButton
           title='Перейти к исходной конституенте в ОСС'
           onClick={() => controller.viewPredecessor(activeCst.id)}

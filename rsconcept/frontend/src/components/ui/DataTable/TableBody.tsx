@@ -44,7 +44,7 @@ function TableBody<TData>({
           lastIndex > currentIndex ? currentIndex : lastIndex + 1,
           lastIndex > currentIndex ? lastIndex : currentIndex + 1
         );
-        const newSelection: { [key: string]: boolean } = {};
+        const newSelection: Record<string, boolean> = {};
         toggleRows.forEach(row => {
           newSelection[row.id] = !target.getIsSelected();
         });

@@ -20,7 +20,7 @@ import {
 export class OssLoader {
   private oss: IOperationSchemaData;
   private graph: Graph = new Graph();
-  private operationByID: Map<OperationID, IOperation> = new Map();
+  private operationByID = new Map<OperationID, IOperation>();
   private schemas: LibraryItemID[] = [];
 
   constructor(input: IOperationSchemaData) {
@@ -53,7 +53,7 @@ export class OssLoader {
   }
 
   private extractSchemas() {
-    this.schemas = this.oss.items.map(operation => operation.result as LibraryItemID).filter(item => item !== null);
+    this.schemas = this.oss.items.map(operation => operation.result).filter(item => item !== null);
   }
 
   private inferOperationAttributes() {

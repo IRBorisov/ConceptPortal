@@ -18,8 +18,8 @@ import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from './r
 export class RSFormLoader {
   private schema: IRSFormData;
   private graph: Graph = new Graph();
-  private cstByAlias: Map<string, IConstituenta> = new Map();
-  private cstByID: Map<ConstituentaID, IConstituenta> = new Map();
+  private cstByAlias = new Map<string, IConstituenta>();
+  private cstByID = new Map<ConstituentaID, IConstituenta>();
 
   constructor(input: IRSFormData) {
     this.schema = input;
@@ -116,7 +116,7 @@ export class RSFormLoader {
   }
 
   private extractSources(target: IConstituenta): Set<ConstituentaID> {
-    const sources: Set<ConstituentaID> = new Set();
+    const sources = new Set<ConstituentaID>();
     if (!isFunctional(target.cst_type)) {
       const node = this.graph.at(target.id)!;
       node.inputs.forEach(id => {

@@ -25,7 +25,7 @@ function SelectLocation({ value, folderTree, dense, prefix, onClick, className, 
   const [folded, setFolded] = useState<FolderNode[]>(items);
 
   useLayoutEffect(() => {
-    setFolded(items.filter(item => item !== activeNode && (!activeNode || !activeNode.hasPredecessor(item))));
+    setFolded(items.filter(item => item !== activeNode && !activeNode?.hasPredecessor(item)));
   }, [items, activeNode]);
 
   const onFoldItem = useCallback(

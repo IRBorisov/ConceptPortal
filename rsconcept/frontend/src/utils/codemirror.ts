@@ -37,11 +37,11 @@ function cursorNode({ type, from, to }: TreeCursor, isLeaf = false): CursorNode 
   return { type, from, to, isLeaf };
 }
 
-type TreeTraversalOptions = {
+interface TreeTraversalOptions {
   beforeEnter?: (cursor: TreeCursor) => void;
   onEnter: (node: CursorNode) => false | void;
   onLeave?: (node: CursorNode) => false | void;
-};
+}
 
 /**
  * Implements depth-first traversal.

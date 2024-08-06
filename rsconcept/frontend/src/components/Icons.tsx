@@ -1,6 +1,7 @@
 // Search new icons at https://reactsvgicons.com/
 // Note: save this file using Ctrl + K, Ctrl + Shift + S to disable autoformat
 
+/* eslint-disable simple-import-sort/exports */
 // ==== General actions =======
 export { BiMenu           as IconMenu }           from 'react-icons/bi';
 export { LuLogOut         as IconLogout }         from 'react-icons/lu';

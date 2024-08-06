@@ -23,7 +23,7 @@ import TableBody from './TableBody';
 import TableFooter from './TableFooter';
 import TableHeader from './TableHeader';
 
-export { createColumnHelper, type ColumnSort, type RowSelectionState, type VisibilityState };
+export { type ColumnSort, createColumnHelper, type RowSelectionState, type VisibilityState };
 
 export interface IConditionalStyle<TData> {
   when: (rowData: TData) => boolean;

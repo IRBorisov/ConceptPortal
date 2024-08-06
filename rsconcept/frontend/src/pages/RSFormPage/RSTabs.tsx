@@ -75,7 +75,7 @@ function RSTabs() {
     setIsModified(false);
     if (activeTab === RSTabID.CST_EDIT) {
       const cstID = Number(cstQuery);
-      if (cstID && schema && schema.cstByID.has(cstID)) {
+      if (cstID && schema?.cstByID.has(cstID)) {
         setSelected([cstID]);
       } else if (schema && schema?.items.length > 0) {
         setSelected([schema.items[0].id]);

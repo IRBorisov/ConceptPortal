@@ -108,7 +108,7 @@ export enum HelpTopic {
 /**
  *  Manual topics hierarchy.
  */
-export const topicParent: Map<HelpTopic, HelpTopic> = new Map([
+export const topicParent = new Map<HelpTopic, HelpTopic>([
   [HelpTopic.MAIN, HelpTopic.MAIN],
 
   [HelpTopic.INTERFACE, HelpTopic.INTERFACE],

@@ -48,7 +48,7 @@ export class GraphNode {
  * This class is optimized for TermGraph use case and not supposed to be used as generic graph implementation.
  */
 export class Graph {
-  nodes: Map<number, GraphNode> = new Map();
+  nodes = new Map<number, GraphNode>();
 
   constructor(arr?: number[][]) {
     if (!arr) {
