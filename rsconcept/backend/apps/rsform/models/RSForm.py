@@ -1,10 +1,9 @@
 ''' Models: RSForm API. '''
 from copy import deepcopy
-from typing import Optional, cast
+from typing import Iterable, Optional, cast
 
 from cctext import Entity, Resolver, TermForm, extract_entities, split_grams
 from django.core.exceptions import ValidationError
-from django.db import transaction
 from django.db.models import QuerySet
 
 from apps.library.models import LibraryItem, LibraryItemType, Version
@@ -30,8 +29,71 @@ _INSERT_LAST: int = -1
 class RSForm:
     ''' RSForm is math form of conceptual schema. '''
 
+    class Cache:
+        ''' Cache for RSForm constituents. '''
+
+        def __init__(self, schema: 'RSForm'):
+            self._schema = schema
+            self.constituents: list[Constituenta] = []
+            self.by_id: dict[int, Constituenta] = {}
+            self.by_alias: dict[str, Constituenta] = {}
+            self.is_loaded = False
+
+        def reload(self) -> None:
+            self.constituents = list(
+                self._schema.constituents().only(
+                    'order',
+                    'alias',
+                    'cst_type',
+                    'definition_formal',
+                    'term_raw',
+                    'definition_raw'
+                ).order_by('order')
+            )
+            self.by_id = {cst.pk: cst for cst in self.constituents}
+            self.by_alias = {cst.alias: cst for cst in self.constituents}
+            self.is_loaded = True
+
+        def ensure(self) -> None:
+            if not self.is_loaded:
+                self.reload()
+
+        def clear(self) -> None:
+            self.constituents = []
+            self.by_id = {}
+            self.by_alias = {}
+            self.is_loaded = False
+
+        def insert(self, cst: Constituenta) -> None:
+            if self.is_loaded:
+                self.constituents.insert(cst.order - 1, cst)
+                self.by_id[cst.pk] = cst
+                self.by_alias[cst.alias] = cst
+
+        def insert_multi(self, items: Iterable[Constituenta]) -> None:
+            if self.is_loaded:
+                for cst in items:
+                    self.constituents.insert(cst.order - 1, cst)
+                    self.by_id[cst.pk] = cst
+                    self.by_alias[cst.alias] = cst
+
+        def remove(self, target: Constituenta) -> None:
+            if self.is_loaded:
+                self.constituents.remove(target)
+                del self.by_id[target.pk]
+                del self.by_alias[target.alias]
+
+        def remove_multi(self, target: Iterable[Constituenta]) -> None:
+            if self.is_loaded:
+                for cst in target:
+                    self.constituents.remove(cst)
+                    del self.by_id[cst.pk]
+                    del self.by_alias[cst.alias]
+
+
     def __init__(self, model: LibraryItem):
         self.model = model
+        self.cache: RSForm.Cache = RSForm.Cache(self)
 
     @staticmethod
     def create(**kwargs) -> 'RSForm':
@@ -45,11 +107,11 @@ class RSForm:
         model = LibraryItem.objects.get(pk=pk)
         return RSForm(model)
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         ''' Model wrapper. '''
         self.model.save(*args, **kwargs)
 
-    def refresh_from_db(self):
+    def refresh_from_db(self) -> None:
         ''' Model wrapper. '''
         self.model.refresh_from_db()
 
@@ -60,7 +122,7 @@ class RSForm:
     def resolver(self) -> Resolver:
         ''' Create resolver for text references based on schema terms. '''
         result = Resolver({})
-        for cst in self.constituents():
+        for cst in self.constituents().only('alias', 'term_resolved', 'term_forms'):
             entity = Entity(
                 alias=cst.alias,
                 nominal=cst.term_resolved,
@@ -76,49 +138,53 @@ class RSForm:
         ''' Access semantic information on constituents. '''
         return SemanticInfo(self)
 
-    @transaction.atomic
-    def on_term_change(self, changed: list[int]):
+    def on_term_change(self, changed: list[int]) -> None:
         ''' Trigger cascade resolutions when term changes. '''
+        self.cache.ensure()
         graph_terms = self._graph_term()
         expansion = graph_terms.expand_outputs(changed)
         expanded_change = changed + expansion
+        update_list: list[Constituenta] = []
         resolver = self.resolver()
         if len(expansion) > 0:
             for cst_id in graph_terms.topological_order():
                 if cst_id not in expansion:
                     continue
-                cst = self.constituents().get(id=cst_id)
+                cst = self.cache.by_id[cst_id]
                 resolved = resolver.resolve(cst.term_raw)
-                if resolved == cst.term_resolved:
+                if resolved == resolver.context[cst.alias].get_nominal():
                     continue
                 cst.set_term_resolved(resolved)
-                cst.save()
+                update_list.append(cst)
                 resolver.context[cst.alias] = Entity(cst.alias, resolved)
+        Constituenta.objects.bulk_update(update_list, ['term_resolved'])
 
         graph_defs = self._graph_text()
         update_defs = set(expansion + graph_defs.expand_outputs(expanded_change)).union(changed)
+        update_list = []
         if len(update_defs) == 0:
             return
         for cst_id in update_defs:
-            cst = self.constituents().get(id=cst_id)
+            cst = self.cache.by_id[cst_id]
             resolved = resolver.resolve(cst.definition_raw)
-            if resolved == cst.definition_resolved:
-                continue
             cst.definition_resolved = resolved
-            cst.save()
+            update_list.append(cst)
+        Constituenta.objects.bulk_update(update_list, ['definition_resolved'])
 
     def get_max_index(self, cst_type: CstType) -> int:
         ''' Get maximum alias index for specific CstType. '''
         result: int = 0
-        items = Constituenta.objects \
-            .filter(schema=self.model, cst_type=cst_type) \
-            .order_by('-alias') \
-            .values_list('alias', flat=True)
-        for alias in items:
-            result = max(result, int(alias[1:]))
+        cst_list: Iterable[Constituenta] = []
+        if not self.cache.is_loaded:
+            cst_list = Constituenta.objects \
+                .filter(schema=self.model, cst_type=cst_type) \
+                .only('alias')
+        else:
+            cst_list = [cst for cst in self.cache.constituents if cst.cst_type == cst_type]
+        for cst in cst_list:
+            result = max(result, int(cst.alias[1:]))
         return result
 
-    @transaction.atomic
     def create_cst(self, data: dict, insert_after: Optional[Constituenta] = None) -> Constituenta:
         ''' Create new cst from data. '''
         if insert_after is None:
@@ -142,11 +208,11 @@ class RSForm:
                 result.definition_resolved = resolver.resolve(result.definition_raw)
 
         result.save()
+        self.cache.insert(result)
         self.on_term_change([result.pk])
         result.refresh_from_db()
         return result
 
-    @transaction.atomic
     def insert_new(
         self,
         alias: str,
@@ -169,17 +235,17 @@ class RSForm:
             cst_type=cst_type,
             **kwargs
         )
+        self.cache.insert(result)
         self.save()
-        result.refresh_from_db()
         return result
 
-    @transaction.atomic
     def insert_copy(self, items: list[Constituenta], position: int = _INSERT_LAST) -> list[Constituenta]:
         ''' Insert copy of target constituents updating references. '''
         count = len(items)
         if count == 0:
             return []
 
+        self.cache.ensure()
         position = self._get_insert_position(position)
         self._shift_positions(position, count)
 
@@ -200,62 +266,65 @@ class RSForm:
             cst.order = position
             cst.alias = mapping[cst.alias]
             cst.apply_mapping(mapping)
-            cst.save()
             position = position + 1
+
+        new_cst = Constituenta.objects.bulk_create(result)
+        self.cache.insert_multi(new_cst)
         self.save()
         return result
 
-    @transaction.atomic
-    def move_cst(self, listCst: list[Constituenta], target: int):
+    def move_cst(self, target: list[Constituenta], destination: int) -> None:
         ''' Move list of constituents to specific position '''
         count_moved = 0
         count_top = 0
         count_bot = 0
-        size = len(listCst)
-        update_list = []
-        for cst in self.constituents().only('order').order_by('order'):
-            if cst not in listCst:
-                if count_top + 1 < target:
-                    cst.order = count_top + 1
-                    count_top += 1
-                else:
-                    cst.order = target + size + count_bot
-                    count_bot += 1
-            else:
-                cst.order = target + count_moved
+        size = len(target)
+
+        cst_list: Iterable[Constituenta] = []
+        if not self.cache.is_loaded:
+            cst_list = self.constituents().only('order').order_by('order')
+        else:
+            cst_list = self.cache.constituents
+        for cst in cst_list:
+            if cst in target:
+                cst.order = destination + count_moved
                 count_moved += 1
-            update_list.append(cst)
-        Constituenta.objects.bulk_update(update_list, ['order'])
+            elif count_top + 1 < destination:
+                cst.order = count_top + 1
+                count_top += 1
+            else:
+                cst.order = destination + size + count_bot
+                count_bot += 1
+        Constituenta.objects.bulk_update(cst_list, ['order'])
         self.save()
 
-    @transaction.atomic
-    def delete_cst(self, listCst):
+    def delete_cst(self, target: Iterable[Constituenta]) -> None:
         ''' Delete multiple constituents. Do not check if listCst are from this schema. '''
-        for cst in listCst:
-            cst.delete()
+        self.cache.remove_multi(target)
+        Constituenta.objects.filter(pk__in=[cst.pk for cst in target]).delete()
         self._reset_order()
         self.resolve_all_text()
         self.save()
 
-    @transaction.atomic
     def substitute(
         self,
         original: Constituenta,
         substitution: Constituenta
-    ):
+    ) -> None:
         ''' Execute constituenta substitution. '''
         assert original.pk != substitution.pk
         mapping = {original.alias: substitution.alias}
         self.apply_mapping(mapping)
+        self.cache.remove(self.cache.by_id[original.pk])
         original.delete()
         self.on_term_change([substitution.pk])
 
-    def restore_order(self):
+    def restore_order(self) -> None:
         ''' Restore order based on types and term graph. '''
         manager = _OrderManager(self)
         manager.restore_order()
 
-    def reset_aliases(self):
+    def reset_aliases(self) -> None:
         ''' Recreate all aliases based on constituents order. '''
         mapping = self._create_reset_mapping()
         self.apply_mapping(mapping, change_aliases=True)
@@ -273,33 +342,36 @@ class RSForm:
                 mapping[cst.alias] = alias
         return mapping
 
-    @transaction.atomic
-    def apply_mapping(self, mapping: dict[str, str], change_aliases: bool = False):
+    def apply_mapping(self, mapping: dict[str, str], change_aliases: bool = False) -> None:
         ''' Apply rename mapping. '''
-        cst_list = self.constituents().order_by('order')
-        for cst in cst_list:
+        self.cache.ensure()
+        update_list: list[Constituenta] = []
+        for cst in self.cache.constituents:
             if cst.apply_mapping(mapping, change_aliases):
-                cst.save()
+                update_list.append(cst)
+        Constituenta.objects.bulk_update(update_list, ['alias', 'definition_formal', 'term_raw', 'definition_raw'])
+        self.save()
 
-    @transaction.atomic
-    def resolve_all_text(self):
+    def resolve_all_text(self) -> None:
         ''' Trigger reference resolution for all texts. '''
+        self.cache.ensure()
         graph_terms = self._graph_term()
         resolver = Resolver({})
+        update_list: list[Constituenta] = []
         for cst_id in graph_terms.topological_order():
-            cst = self.constituents().get(id=cst_id)
+            cst = self.cache.by_id[cst_id]
             resolved = resolver.resolve(cst.term_raw)
             resolver.context[cst.alias] = Entity(cst.alias, resolved)
-            if resolved != cst.term_resolved:
-                cst.term_resolved = resolved
-                cst.save()
-        for cst in self.constituents():
-            resolved = resolver.resolve(cst.definition_raw)
-            if resolved != cst.definition_resolved:
-                cst.definition_resolved = resolved
-                cst.save()
+            cst.term_resolved = resolved
+            update_list.append(cst)
+        Constituenta.objects.bulk_update(update_list, ['term_resolved'])
 
-    @transaction.atomic
+        for cst in self.cache.constituents:
+            resolved = resolver.resolve(cst.definition_raw)
+            cst.definition_resolved = resolved
+        Constituenta.objects.bulk_update(self.cache.constituents, ['definition_resolved'])
+
+
     def create_version(self, version: str, description: str, data) -> Version:
         ''' Creates version for current state. '''
         return Version.objects.create(
@@ -309,7 +381,6 @@ class RSForm:
             data=data
         )
 
-    @transaction.atomic
     def produce_structure(self, target: Constituenta, parse: dict) -> list[int]:
         ''' Add constituents for each structural element of the target. '''
         expressions = generate_structure(
@@ -320,9 +391,10 @@ class RSForm:
         count_new = len(expressions)
         if count_new == 0:
             return []
-        position = target.order + 1
-        self._shift_positions(position, count_new)
 
+        position = target.order + 1
+        self.cache.ensure()
+        self._shift_positions(position, count_new)
         result = []
         cst_type = CstType.TERM if len(parse['args']) == 0 else CstType.FUNCTION
         free_index = self.get_max_index(cst_type) + 1
@@ -339,97 +411,86 @@ class RSForm:
             free_index = free_index + 1
             position = position + 1
 
+        self.cache.clear()
         self.save()
         return result
 
-    def _shift_positions(self, start: int, shift: int):
+    def _shift_positions(self, start: int, shift: int) -> None:
         if shift == 0:
             return
-        update_list = \
-            Constituenta.objects \
-            .only('order') \
-            .filter(schema=self.model, order__gte=start)
+        update_list: Iterable[Constituenta] = []
+        if not self.cache.is_loaded:
+            update_list = Constituenta.objects \
+                .only('order') \
+                .filter(schema=self.model, order__gte=start)
+        else:
+            update_list = [cst for cst in self.cache.constituents if cst.order >= start]
         for cst in update_list:
             cst.order += shift
         Constituenta.objects.bulk_update(update_list, ['order'])
 
-    def _get_last_position(self):
-        if self.constituents().exists():
-            return self.constituents().count()
-        else:
-            return 0
-
     def _get_insert_position(self, position: int) -> int:
         if position <= 0 and position != _INSERT_LAST:
             raise ValidationError(msg.invalidPosition())
-        lastPosition = self._get_last_position()
+        lastPosition = self.constituents().count()
         if position == _INSERT_LAST:
             position = lastPosition + 1
         else:
             position = max(1, min(position, lastPosition + 1))
         return position
 
-    @transaction.atomic
-    def _reset_order(self):
+    def _reset_order(self) -> None:
         order = 1
-        for cst in self.constituents().only('order').order_by('order'):
+        changed: list[Constituenta] = []
+        cst_list: Iterable[Constituenta] = []
+        if not self.cache.is_loaded:
+            cst_list = self.constituents().only('order').order_by('order')
+        else:
+            cst_list = self.cache.constituents
+        for cst in cst_list:
             if cst.order != order:
                 cst.order = order
-                cst.save()
+                changed.append(cst)
             order += 1
+        Constituenta.objects.bulk_update(changed, ['order'])
 
     def _graph_formal(self) -> Graph[int]:
         ''' Graph based on formal definitions. '''
+        self.cache.ensure()
         result: Graph[int] = Graph()
-        cst_list = \
-            self.constituents() \
-                .only('alias', 'definition_formal') \
-                .order_by('order')
-        for cst in cst_list:
+        for cst in self.cache.constituents:
             result.add_node(cst.pk)
-        for cst in cst_list:
+        for cst in self.cache.constituents:
             for alias in extract_globals(cst.definition_formal):
-                try:
-                    child = cst_list.get(alias=alias)
+                child = self.cache.by_alias.get(alias)
+                if child is not None:
                     result.add_edge(src=child.pk, dest=cst.pk)
-                except Constituenta.DoesNotExist:
-                    pass
         return result
 
     def _graph_term(self) -> Graph[int]:
         ''' Graph based on term texts. '''
+        self.cache.ensure()
         result: Graph[int] = Graph()
-        cst_list = \
-            self.constituents() \
-                .only('alias', 'term_raw') \
-                .order_by('order')
-        for cst in cst_list:
+        for cst in self.cache.constituents:
             result.add_node(cst.pk)
-        for cst in cst_list:
+        for cst in self.cache.constituents:
             for alias in extract_entities(cst.term_raw):
-                try:
-                    child = cst_list.get(alias=alias)
+                child = self.cache.by_alias.get(alias)
+                if child is not None:
                     result.add_edge(src=child.pk, dest=cst.pk)
-                except Constituenta.DoesNotExist:
-                    pass
         return result
 
     def _graph_text(self) -> Graph[int]:
         ''' Graph based on definition texts. '''
+        self.cache.ensure()
         result: Graph[int] = Graph()
-        cst_list = \
-            self.constituents() \
-                .only('alias', 'definition_raw') \
-                .order_by('order')
-        for cst in cst_list:
+        for cst in self.cache.constituents:
             result.add_node(cst.pk)
-        for cst in cst_list:
+        for cst in self.cache.constituents:
             for alias in extract_entities(cst.definition_raw):
-                try:
-                    child = cst_list.get(alias=alias)
+                child = self.cache.by_alias.get(alias)
+                if child is not None:
                     result.add_edge(src=child.pk, dest=cst.pk)
-                except Constituenta.DoesNotExist:
-                    pass
         return result
 
 
@@ -437,14 +498,11 @@ class SemanticInfo:
     ''' Semantic information derived from constituents. '''
 
     def __init__(self, schema: RSForm):
+        schema.cache.ensure()
         self._graph = schema._graph_formal()
-        self._items = list(
-            schema.constituents()
-            .only('alias', 'cst_type', 'definition_formal')
-            .order_by('order')
-        )
-        self._cst_by_alias = {cst.alias: cst for cst in self._items}
-        self._cst_by_ID = {cst.pk: cst for cst in self._items}
+        self._items = schema.cache.constituents
+        self._cst_by_ID = schema.cache.by_id
+        self._cst_by_alias = schema.cache.by_alias
         self.info = {
             cst.pk: {
                 'is_simple': False,
@@ -452,7 +510,7 @@ class SemanticInfo:
                 'parent': cst.pk,
                 'children': []
             }
-            for cst in self._items
+            for cst in schema.cache.constituents
         }
         self._calculate_attributes()
 
@@ -475,7 +533,7 @@ class SemanticInfo:
         ''' Access "children" attribute. '''
         return cast(list[int], self.info[target]['children'])
 
-    def _calculate_attributes(self):
+    def _calculate_attributes(self) -> None:
         for cst_id in self._graph.topological_order():
             cst = self._cst_by_ID[cst_id]
             self.info[cst_id]['is_template'] = infer_template(cst.definition_formal)
@@ -485,7 +543,7 @@ class SemanticInfo:
             parent = self._infer_parent(cst)
             self.info[cst_id]['parent'] = parent
             if parent != cst_id:
-                self.info[parent]['children'].append(cst_id)
+                cast(list[int], self.info[parent]['children']).append(cst_id)
 
     def _infer_simple_expression(self, target: Constituenta) -> bool:
         if target.cst_type == CstType.STRUCTURED or is_base_set(target.cst_type):
@@ -565,12 +623,8 @@ class _OrderManager:
     def __init__(self, schema: RSForm):
         self._semantic = schema.semantic()
         self._graph = schema._graph_formal()
-        self._items = list(
-            schema.constituents()
-            .only('order', 'alias', 'cst_type', 'definition_formal')
-            .order_by('order')
-        )
-        self._cst_by_ID = {cst.pk: cst for cst in self._items}
+        self._items = schema.cache.constituents
+        self._cst_by_ID = schema.cache.by_id
 
     def restore_order(self) -> None:
         ''' Implement order restoration process. '''
@@ -615,10 +669,9 @@ class _OrderManager:
                     result.append(child)
         self._items = result
 
-    @transaction.atomic
     def _save_order(self) -> None:
         order = 1
         for cst in self._items:
             cst.order = order
-            cst.save()
             order += 1
+        Constituenta.objects.bulk_update(self._items, ['order'])

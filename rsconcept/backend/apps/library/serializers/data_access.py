@@ -36,7 +36,7 @@ class LibraryItemSerializer(serializers.ModelSerializer):
 
 class LibraryItemCloneSerializer(serializers.ModelSerializer):
     ''' Serializer: LibraryItem cloning. '''
-    items = PKField(many=True, required=False, queryset=Constituenta.objects.all())
+    items = PKField(many=True, required=False, queryset=Constituenta.objects.all().only('pk'))
 
     class Meta:
         ''' serializer metadata. '''

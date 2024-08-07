@@ -2,6 +2,7 @@
 from typing import cast
 
 from django.db import transaction
+from django.http import HttpResponse
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import generics, serializers
 from rest_framework import status as c
@@ -61,7 +62,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         }
     )
     @action(detail=True, methods=['get'], url_path='details')
-    def details(self, request: Request, pk):
+    def details(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Detailed OSS data. '''
         serializer = s.OperationSchemaSerializer(self._get_item())
         return Response(
@@ -80,7 +81,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         }
     )
     @action(detail=True, methods=['patch'], url_path='update-positions')
-    def update_positions(self, request: Request, pk):
+    def update_positions(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Update operations positions. '''
         serializer = s.PositionsSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -99,7 +100,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         }
     )
     @action(detail=True, methods=['post'], url_path='create-operation')
-    def create_operation(self, request: Request, pk):
+    def create_operation(self, request: Request, pk) -> HttpResponse:
         ''' Create new operation. '''
         serializer = s.OperationCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -135,7 +136,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         }
     )
     @action(detail=True, methods=['patch'], url_path='delete-operation')
-    def delete_operation(self, request: Request, pk):
+    def delete_operation(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Delete operation. '''
         serializer = s.OperationTargetSerializer(
             data=request.data,
@@ -165,7 +166,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         }
     )
     @action(detail=True, methods=['patch'], url_path='create-input')
-    def create_input(self, request: Request, pk):
+    def create_input(self, request: Request, pk) -> HttpResponse:
         ''' Create new input RSForm. '''
         serializer = s.OperationTargetSerializer(
             data=request.data,
@@ -208,7 +209,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         }
     )
     @action(detail=True, methods=['patch'], url_path='set-input')
-    def set_input(self, request: Request, pk):
+    def set_input(self, request: Request, pk) -> HttpResponse:
         ''' Set input schema for target operation. '''
         serializer = s.SetOperationInputSerializer(
             data=request.data,
@@ -238,7 +239,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         }
     )
     @action(detail=True, methods=['patch'], url_path='update-operation')
-    def update_operation(self, request: Request, pk):
+    def update_operation(self, request: Request, pk) -> HttpResponse:
         ''' Update operation arguments and parameters. '''
         serializer = s.OperationUpdateSerializer(
             data=request.data,
@@ -283,7 +284,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         }
     )
     @action(detail=True, methods=['post'], url_path='execute-operation')
-    def execute_operation(self, request: Request, pk):
+    def execute_operation(self, request: Request, pk) -> HttpResponse:
         ''' Execute operation. '''
         serializer = s.OperationTargetSerializer(
             data=request.data,
@@ -323,7 +324,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         }
     )
     @action(detail=False, methods=['post'], url_path='get-predecessor')
-    def get_predecessor(self, request: Request):
+    def get_predecessor(self, request: Request) -> HttpResponse:
         ''' Get predecessor. '''
         # TODO: add tests for this method
         serializer = CstTargetSerializer(data=request.data)

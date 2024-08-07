@@ -1,12 +1,11 @@
 ''' Utils: base tester class for endpoints. '''
-import logging
-
-from django.db import connection
 from rest_framework import status
-from rest_framework.test import APIClient, APIRequestFactory, APITestCase
+from rest_framework.test import APIClient, APIRequestFactory
 
 from apps.library.models import Editor, LibraryItem
 from apps.users.models import User
+
+from .DBTester import DBTester
 
 
 def decl_endpoint(endpoint: str, method: str):
@@ -25,10 +24,11 @@ def decl_endpoint(endpoint: str, method: str):
     return set_endpoint_inner
 
 
-class EndpointTester(APITestCase):
+class EndpointTester(DBTester):
     ''' Abstract base class for Testing endpoints. '''
 
     def setUp(self):
+        super().setUp()
         self.factory = APIRequestFactory()
         self.user = User.objects.create(
             username='UserTest',
@@ -42,9 +42,6 @@ class EndpointTester(APITestCase):
         )
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
-
-        self.logger = logging.getLogger('django.db.backends')
-        self.logger.setLevel(logging.DEBUG)
 
     def setUpFullUsers(self):
         self.factory = APIRequestFactory()
@@ -76,16 +73,6 @@ class EndpointTester(APITestCase):
 
     def logout(self):
         self.client.logout()
-
-    def start_db_log(self):
-        ''' Warning! Do not use this second time before calling stop_db_log. '''
-        ''' Warning! Do not forget to enable global logging in settings. '''
-        logging.disable(logging.NOTSET)
-        connection.force_debug_cursor = True
-
-    def stop_db_log(self):
-        connection.force_debug_cursor = False
-        logging.disable(logging.CRITICAL)
 
     def set_params(self, **kwargs):
         ''' Given named argument values resolve current endpoint_mask. '''

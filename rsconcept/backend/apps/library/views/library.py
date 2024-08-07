@@ -4,6 +4,7 @@ from typing import cast
 
 from django.db import transaction
 from django.db.models import Q
+from django.http import HttpResponse
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import generics
 from rest_framework import status as c
@@ -79,7 +80,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
         }
     )
     @action(detail=True, methods=['post'], url_path='clone')
-    def clone(self, request: Request, pk):
+    def clone(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Create deep copy of library item. '''
         serializer = s.LibraryItemCloneSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -139,7 +140,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
         },
     )
     @action(detail=True, methods=['delete'])
-    def unsubscribe(self, request: Request, pk):
+    def unsubscribe(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Unsubscribe current user from item. '''
         item = self._get_item()
         m.Subscription.unsubscribe(user=cast(int, self.request.user.pk), item=item.pk)
@@ -156,7 +157,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
         }
     )
     @action(detail=True, methods=['patch'], url_path='set-owner')
-    def set_owner(self, request: Request, pk):
+    def set_owner(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Set item owner. '''
         item = self._get_item()
         serializer = s.UserTargetSerializer(data=request.data)
@@ -188,7 +189,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
         }
     )
     @action(detail=True, methods=['patch'], url_path='set-location')
-    def set_location(self, request: Request, pk):
+    def set_location(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Set item location. '''
         item = self._get_item()
         serializer = s.LocationSerializer(data=request.data)
@@ -222,7 +223,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
         }
     )
     @action(detail=True, methods=['patch'], url_path='set-access-policy')
-    def set_access_policy(self, request: Request, pk):
+    def set_access_policy(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Set item AccessPolicy. '''
         item = self._get_item()
         serializer = s.AccessPolicySerializer(data=request.data)
@@ -253,7 +254,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
         }
     )
     @action(detail=True, methods=['patch'], url_path='set-editors')
-    def set_editors(self, request: Request, pk):
+    def set_editors(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Set list of editors for item. '''
         item = self._get_item()
         serializer = s.UsersListSerializer(data=request.data)

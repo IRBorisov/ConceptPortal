@@ -1,15 +1,16 @@
 ''' Testing models: api_RSForm. '''
 from django.forms import ValidationError
-from django.test import TestCase
 
 from apps.rsform.models import Constituenta, CstType, RSForm
 from apps.users.models import User
+from shared.DBTester import DBTester
 
 
-class TestRSForm(TestCase):
+class TestRSForm(DBTester):
     ''' Testing RSForm wrapper. '''
 
     def setUp(self):
+        super().setUp()
         self.user1 = User.objects.create(username='User1')
         self.user2 = User.objects.create(username='User2')
         self.schema = RSForm.create(title='Test')
@@ -180,7 +181,6 @@ class TestRSForm(TestCase):
             alias='D1',
             definition_formal='X1 = X11 = X2',
             definition_raw='@{X11|sing}',
-            convention='X1',
             term_raw='@{X1|plur}'
         )
 
@@ -188,7 +188,6 @@ class TestRSForm(TestCase):
         d1.refresh_from_db()
         self.assertEqual(d1.definition_formal, 'X3 = X4 = X2', msg='Map IDs in expression')
         self.assertEqual(d1.definition_raw, '@{X4|sing}', msg='Map IDs in definition')
-        self.assertEqual(d1.convention, 'X3', msg='Map IDs in convention')
         self.assertEqual(d1.term_raw, '@{X3|plur}', msg='Map IDs in term')
         self.assertEqual(d1.term_resolved, '', msg='Do not run resolve on mapping')
         self.assertEqual(d1.definition_resolved, '', msg='Do not run resolve on mapping')
@@ -320,7 +319,6 @@ class TestRSForm(TestCase):
         x2 = self.schema.insert_new('X21')
         d1 = self.schema.insert_new(
             alias='D11',
-            convention='D11 - cool',
             definition_formal='X21=X21',
             term_raw='@{X21|sing}',
             definition_raw='@{X11|datv}',
@@ -335,7 +333,6 @@ class TestRSForm(TestCase):
         self.assertEqual(x1.alias, 'X1')
         self.assertEqual(x2.alias, 'X2')
         self.assertEqual(d1.alias, 'D1')
-        self.assertEqual(d1.convention, 'D1 - cool')
         self.assertEqual(d1.term_raw, '@{X2|sing}')
         self.assertEqual(d1.definition_raw, '@{X1|datv}')
         self.assertEqual(d1.definition_resolved, 'test')

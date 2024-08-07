@@ -3,7 +3,6 @@ from typing import Optional, cast
 
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
-from django.db import transaction
 from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.serializers import PrimaryKeyRelatedField as PKField
@@ -72,7 +71,12 @@ class CstDetailsSerializer(serializers.ModelSerializer):
 
 class CstCreateSerializer(serializers.ModelSerializer):
     ''' Serializer: Constituenta creation. '''
-    insert_after = serializers.IntegerField(required=False, allow_null=True)
+    insert_after = PKField(
+        many=False,
+        allow_null=True,
+        required=False,
+        queryset=Constituenta.objects.all().only('schema_id', 'order')
+    )
     alias = serializers.CharField(max_length=8)
     cst_type = serializers.ChoiceField(CstType.choices)
 
@@ -149,7 +153,6 @@ class RSFormSerializer(serializers.ModelSerializer):
         result['version'] = version
         return result | data
 
-    @transaction.atomic
     def restore_from_version(self, data: dict):
         ''' Load data from version. '''
         schema = RSForm(cast(LibraryItem, self.instance))
@@ -312,9 +315,9 @@ class CstSubstituteSerializer(serializers.Serializer):
                 raise serializers.ValidationError({
                     f'{original_cst.pk}': msg.substituteDouble(original_cst.alias)
                 })
-            if original_cst.alias == substitution_cst.alias:
+            if original_cst.pk == substitution_cst.pk:
                 raise serializers.ValidationError({
-                    'alias': msg.substituteTrivial(original_cst.alias)
+                    'original': msg.substituteTrivial(original_cst.alias)
                 })
             if original_cst.schema_id != schema.pk:
                 raise serializers.ValidationError({

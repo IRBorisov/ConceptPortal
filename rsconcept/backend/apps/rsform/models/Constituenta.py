@@ -99,8 +99,6 @@ class Constituenta(Model):
 
     def set_term_resolved(self, new_term: str):
         ''' Set term and reset forms if needed. '''
-        if new_term == self.term_resolved:
-            return
         self.term_resolved = new_term
         self.term_forms = []
 
@@ -113,10 +111,6 @@ class Constituenta(Model):
         if expression != self.definition_formal:
             modified = True
             self.definition_formal = expression
-        convention = apply_pattern(self.convention, mapping, _GLOBAL_ID_PATTERN)
-        if convention != self.convention:
-            modified = True
-            self.convention = convention
         term = apply_pattern(self.term_raw, mapping, _REF_ENTITY_PATTERN)
         if term != self.term_raw:
             modified = True

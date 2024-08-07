@@ -1,6 +1,7 @@
 ''' Endpoints for versions. '''
 from typing import cast
 
+from django.db import transaction
 from django.http import HttpResponse
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import generics
@@ -40,11 +41,12 @@ class VersionViewset(
         }
     )
     @action(detail=True, methods=['patch'], url_path='restore')
-    def restore(self, request: Request, pk):
+    def restore(self, request: Request, pk) -> HttpResponse:
         ''' Restore version data into current item. '''
         version = cast(m.Version, self.get_object())
         item = cast(m.LibraryItem, version.item)
-        RSFormSerializer(item).restore_from_version(version.data)
+        with transaction.atomic():
+            RSFormSerializer(item).restore_from_version(version.data)
         return Response(
             status=c.HTTP_200_OK,
             data=RSFormParseSerializer(item).data
@@ -61,7 +63,7 @@ class VersionViewset(
     }
 )
 @api_view(['GET'])
-def export_file(request: Request, pk: int):
+def export_file(request: Request, pk: int) -> HttpResponse:
     ''' Endpoint: Download Exteor compatible file for versioned data. '''
     try:
         version = m.Version.objects.get(pk=pk)
@@ -88,7 +90,7 @@ def export_file(request: Request, pk: int):
 )
 @api_view(['POST'])
 @permission_classes([permissions.GlobalUser])
-def create_version(request: Request, pk_item: int):
+def create_version(request: Request, pk_item: int) -> HttpResponse:
     ''' Endpoint: Create new version for RSForm copying current content. '''
     try:
         item = m.LibraryItem.objects.get(pk=pk_item)
@@ -125,7 +127,7 @@ def create_version(request: Request, pk_item: int):
     }
 )
 @api_view(['GET'])
-def retrieve_version(request: Request, pk_item: int, pk_version: int):
+def retrieve_version(request: Request, pk_item: int, pk_version: int) -> HttpResponse:
     ''' Endpoint: Retrieve version for RSForm. '''
     try:
         item = m.LibraryItem.objects.get(pk=pk_item)

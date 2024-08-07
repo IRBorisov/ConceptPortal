@@ -142,7 +142,7 @@ class TestVersionViews(EndpointTester):
         version_id = self._create_version(data=data)
         invalid_id = version_id + 1337
 
-        d1.delete()
+        self.owned.delete_cst([d1])
         x3 = self.owned.insert_new('X3')
         x1.order = x3.order
         x1.convention = 'Test2'

@@ -1,7 +1,6 @@
 ''' Models: OSS API. '''
 from typing import Optional
 
-from django.db import transaction
 from django.db.models import QuerySet
 
 from apps.library.models import Editor, LibraryItem, LibraryItemType
@@ -31,11 +30,11 @@ class OperationSchema:
         model = LibraryItem.objects.get(pk=pk)
         return OperationSchema(model)
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         ''' Save wrapper. '''
         self.model.save(*args, **kwargs)
 
-    def refresh_from_db(self):
+    def refresh_from_db(self) -> None:
         ''' Model wrapper. '''
         self.model.refresh_from_db()
 
@@ -59,7 +58,7 @@ class OperationSchema:
             location=self.model.location
         )
 
-    def update_positions(self, data: list[dict]):
+    def update_positions(self, data: list[dict]) -> None:
         ''' Update positions. '''
         lookup = {x['id']: x for x in data}
         operations = self.operations()
@@ -69,7 +68,6 @@ class OperationSchema:
                 item.position_y = lookup[item.pk]['position_y']
         Operation.objects.bulk_update(operations, ['position_x', 'position_y'])
 
-    @transaction.atomic
     def create_operation(self, **kwargs) -> Operation:
         ''' Insert new operation. '''
         result = Operation.objects.create(oss=self.model, **kwargs)
@@ -77,7 +75,6 @@ class OperationSchema:
         result.refresh_from_db()
         return result
 
-    @transaction.atomic
     def delete_operation(self, operation: Operation):
         ''' Delete operation. '''
         operation.delete()
@@ -87,8 +84,7 @@ class OperationSchema:
 
         self.save()
 
-    @transaction.atomic
-    def set_input(self, target: Operation, schema: Optional[LibraryItem]):
+    def set_input(self, target: Operation, schema: Optional[LibraryItem]) -> None:
         ''' Set input schema for operation. '''
         if schema == target.result:
             return
@@ -104,8 +100,7 @@ class OperationSchema:
 
         self.save()
 
-    @transaction.atomic
-    def set_arguments(self, operation: Operation, arguments: list[Operation]):
+    def set_arguments(self, operation: Operation, arguments: list[Operation]) -> None:
         ''' Set arguments to operation. '''
         processed: list[Operation] = []
         changed = False
@@ -125,8 +120,7 @@ class OperationSchema:
         # TODO: trigger on_change effects
         self.save()
 
-    @transaction.atomic
-    def set_substitutions(self, target: Operation, substitutes: list[dict]):
+    def set_substitutions(self, target: Operation, substitutes: list[dict]) -> None:
         ''' Clear all arguments for operation. '''
         processed: list[dict] = []
         changed = False
@@ -157,7 +151,6 @@ class OperationSchema:
 
         self.save()
 
-    @transaction.atomic
     def create_input(self, operation: Operation) -> RSForm:
         ''' Create input RSForm. '''
         schema = RSForm.create(
@@ -175,7 +168,6 @@ class OperationSchema:
         self.save()
         return schema
 
-    @transaction.atomic
     def execute_operation(self, operation: Operation) -> bool:
         ''' Execute target operation. '''
         schemas: list[LibraryItem] = [arg.argument.result for arg in operation.getArguments()]
