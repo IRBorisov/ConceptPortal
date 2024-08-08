@@ -79,14 +79,14 @@ class RSForm:
 
         def remove(self, target: Constituenta) -> None:
             if self.is_loaded:
-                self.constituents.remove(target)
+                self.constituents.remove(self.by_id[target.pk])
                 del self.by_id[target.pk]
                 del self.by_alias[target.alias]
 
         def remove_multi(self, target: Iterable[Constituenta]) -> None:
             if self.is_loaded:
                 for cst in target:
-                    self.constituents.remove(cst)
+                    self.constituents.remove(self.by_id[cst.pk])
                     del self.by_id[cst.pk]
                     del self.by_alias[cst.alias]
 
@@ -306,18 +306,20 @@ class RSForm:
         self.resolve_all_text()
         self.save()
 
-    def substitute(
-        self,
-        original: Constituenta,
-        substitution: Constituenta
-    ) -> None:
+    def substitute(self, substitutions: list[tuple[Constituenta, Constituenta]]) -> None:
         ''' Execute constituenta substitution. '''
-        assert original.pk != substitution.pk
-        mapping = {original.alias: substitution.alias}
+        mapping = {}
+        deleted: list[Constituenta] = []
+        replacements: list[Constituenta] = []
+        for original, substitution in substitutions:
+            assert original.pk != substitution.pk
+            mapping[original.alias] = substitution.alias
+            deleted.append(original)
+            replacements.append(substitution)
+        self.cache.remove_multi(deleted)
+        Constituenta.objects.filter(pk__in=[cst.pk for cst in deleted]).delete()
         self.apply_mapping(mapping)
-        self.cache.remove(self.cache.by_id[original.pk])
-        original.delete()
-        self.on_term_change([substitution.pk])
+        self.on_term_change([substitution.pk for substitution in replacements])
 
     def restore_order(self) -> None:
         ''' Restore order based on types and term graph. '''

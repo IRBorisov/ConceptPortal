@@ -13,7 +13,7 @@ from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from apps.oss.models import OperationSchema
+from apps.oss.models import Operation, OperationSchema
 from apps.rsform.models import RSForm
 from apps.rsform.serializers import RSFormParseSerializer
 from apps.users.models import User
@@ -37,11 +37,35 @@ class LibraryViewSet(viewsets.ModelViewSet):
             return s.LibraryItemBaseSerializer
         return s.LibraryItemSerializer
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer) -> None:
         if not self.request.user.is_anonymous and 'owner' not in self.request.POST:
-            return serializer.save(owner=self.request.user)
+            instance = serializer.save(owner=self.request.user)
         else:
-            return serializer.save()
+            instance = serializer.save()
+        if instance.owner:
+            m.Subscription.subscribe(user=instance.owner_id, item=instance.pk)
+
+    def perform_update(self, serializer) -> None:
+        instance = serializer.save()
+        operations = Operation.objects.filter(result__pk=instance.pk)
+        if not operations.exists():
+            return
+        update_list: list[Operation] = []
+        for operation in operations:
+            changed = False
+            if operation.alias != instance.alias:
+                operation.alias = instance.alias
+                changed = True
+            if operation.title != instance.title:
+                operation.title = instance.title
+                changed = True
+            if operation.comment != instance.comment:
+                operation.comment = instance.comment
+                changed = True
+            if changed:
+                update_list.append(operation)
+        if update_list:
+            Operation.objects.bulk_update(update_list, ['alias', 'title', 'comment'])
 
     def get_permissions(self):
         if self.action in ['update', 'partial_update']:

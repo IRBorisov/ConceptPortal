@@ -1,7 +1,6 @@
 ''' Models: LibraryItem. '''
 import re
 
-from django.db import transaction
 from django.db.models import (
     SET_NULL,
     BooleanField,
@@ -16,7 +15,6 @@ from django.db.models import (
 
 from apps.users.models import User
 
-from .Subscription import Subscription
 from .Version import Version
 
 
@@ -125,34 +123,3 @@ class LibraryItem(Model):
     def versions(self) -> QuerySet[Version]:
         ''' Get all Versions of this item. '''
         return Version.objects.filter(item=self.pk).order_by('-time_create')
-
-    # TODO: move to View layer
-    @transaction.atomic
-    def save(self, *args, **kwargs):
-        ''' Save updating subscriptions and connected operations. '''
-        if not self._state.adding:
-            self._update_connected_operations()
-        subscribe = self._state.adding and self.owner
-        super().save(*args, **kwargs)
-        if subscribe:
-            Subscription.subscribe(user=self.owner_id, item=self.pk)
-
-    def _update_connected_operations(self):
-        # using method level import to prevent circular dependency
-        from apps.oss.models import Operation  # pylint: disable=import-outside-toplevel
-        operations = Operation.objects.filter(result__pk=self.pk)
-        if not operations.exists():
-            return
-        for operation in operations:
-            changed = False
-            if operation.alias != self.alias:
-                operation.alias = self.alias
-                changed = True
-            if operation.title != self.title:
-                operation.title = self.title
-                changed = True
-            if operation.comment != self.comment:
-                operation.comment = self.comment
-                changed = True
-            if changed:
-                operation.save()

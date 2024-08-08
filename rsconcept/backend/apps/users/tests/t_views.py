@@ -134,7 +134,6 @@ class TestUserUserProfileAPIView(EndpointTester):
     def test_password_reset_request(self):
         self.executeBadData({'email': 'invalid@mail.ru'})
         self.executeOK({'email': self.user.email})
-        # TODO: check if mail server actually sent email and if reset procedure works
 
 
 class TestSignupAPIView(EndpointTester):

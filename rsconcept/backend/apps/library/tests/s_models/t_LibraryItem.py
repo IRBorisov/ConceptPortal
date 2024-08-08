@@ -68,7 +68,6 @@ class TestLibraryItem(TestCase):
         self.assertEqual(item.alias, 'KS1')
         self.assertEqual(item.comment, 'Test comment')
         self.assertEqual(item.location, LocationHead.COMMON)
-        self.assertTrue(Subscription.objects.filter(user=item.owner, item=item).exists())
 
 
 class TestLocation(TestCase):

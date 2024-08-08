@@ -21,9 +21,7 @@ class TestSubscription(TestCase):
 
     def test_default(self):
         subs = list(Subscription.objects.filter(item=self.item))
-        self.assertEqual(len(subs), 1)
-        self.assertEqual(subs[0].item, self.item)
-        self.assertEqual(subs[0].user, self.user1)
+        self.assertEqual(len(subs), 0)
 
 
     def test_str(self):

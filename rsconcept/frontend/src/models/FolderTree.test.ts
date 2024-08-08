@@ -1,7 +1,5 @@
 import { FolderTree } from './FolderTree';
 
-// TODO: test FolderNode and FolderTree exhaustively
-
 describe('Testing Tree construction', () => {
   test('empty Tree should be empty', () => {
     const tree = new FolderTree();

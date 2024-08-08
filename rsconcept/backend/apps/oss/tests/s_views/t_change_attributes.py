@@ -123,3 +123,33 @@ class TestChangeAttributes(EndpointTester):
         self.assertEqual(list(self.ks1.model.editors()), [self.user, self.user2])
         self.assertEqual(list(self.ks2.model.editors()), [])
         self.assertEqual(set(self.ks3.editors()), set([self.user, self.user3]))
+
+    @decl_endpoint('/api/library/{item}', method='patch')
+    def test_sync_from_result(self):
+        data = {'alias': 'KS111', 'title': 'New Title', 'comment': 'New Comment'}
+
+        self.executeOK(data=data, item=self.ks1.model.pk)
+        self.operation1.refresh_from_db()
+
+        self.assertEqual(self.operation1.result, self.ks1.model)
+        self.assertEqual(self.operation1.alias, data['alias'])
+        self.assertEqual(self.operation1.title, data['title'])
+        self.assertEqual(self.operation1.comment, data['comment'])
+
+    @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
+    def test_sync_from_operation(self):
+        data = {
+            'target': self.operation3.pk,
+            'item_data': {
+                'alias': 'Test3 mod',
+                'title': 'Test title mod',
+                'comment': 'Comment mod'
+            },
+            'positions': [],
+        }
+
+        response = self.executeOK(data=data, item=self.owned_id)
+        self.ks3.refresh_from_db()
+        self.assertEqual(self.ks3.alias, data['item_data']['alias'])
+        self.assertEqual(self.ks3.title, data['item_data']['title'])
+        self.assertEqual(self.ks3.comment, data['item_data']['comment'])

@@ -4,7 +4,7 @@ from typing import Optional
 from django.db.models import QuerySet
 
 from apps.library.models import Editor, LibraryItem, LibraryItemType
-from apps.rsform.models import RSForm
+from apps.rsform.models import Constituenta, RSForm
 
 from .Argument import Argument
 from .Inheritance import Inheritance
@@ -186,10 +186,12 @@ class OperationSchema:
                 parents[cst.pk] = items[i]
                 children[items[i].pk] = cst
 
+        translated_substitutions: list[tuple[Constituenta, Constituenta]] = []
         for sub in substitutions:
             original = children[sub.original.pk]
             replacement = children[sub.substitution.pk]
-            receiver.substitute(original, replacement)
+            translated_substitutions.append((original, replacement))
+        receiver.substitute(translated_substitutions)
 
         # TODO: remove duplicates from diamond
 

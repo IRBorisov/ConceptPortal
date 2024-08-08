@@ -49,6 +49,7 @@ class TestLibraryViewset(EndpointTester):
         self.assertEqual(response.data['item_type'], LibraryItemType.RSFORM)
         self.assertEqual(response.data['title'], data['title'])
         self.assertEqual(response.data['alias'], data['alias'])
+        self.assertTrue(Subscription.objects.filter(user=self.user, item_id=response.data['id']).exists())
 
         data = {
             'item_type': LibraryItemType.OPERATION_SCHEMA,
@@ -74,7 +75,7 @@ class TestLibraryViewset(EndpointTester):
 
     @decl_endpoint('/api/library/{item}', method='patch')
     def test_update(self):
-        data = {'id': self.unowned.pk, 'title': 'New Title'}
+        data = {'title': 'New Title'}
         self.executeNotFound(data=data, item=self.invalid_item)
         self.executeForbidden(data=data, item=self.unowned.pk)
 
@@ -86,13 +87,12 @@ class TestLibraryViewset(EndpointTester):
         self.unowned.save()
         self.executeForbidden(data=data, item=self.unowned.pk)
 
-        data = {'id': self.owned.pk, 'title': 'New Title'}
+        data = {'title': 'New Title'}
         response = self.executeOK(data=data, item=self.owned.pk)
         self.assertEqual(response.data['title'], data['title'])
         self.assertEqual(response.data['alias'], self.owned.alias)
 
         data = {
-            'id': self.owned.pk,
             'title': 'Another Title',
             'owner': self.user2.pk,
             'access_policy': AccessPolicy.PROTECTED,

@@ -226,10 +226,12 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         serializer.is_valid(raise_exception=True)
 
         with transaction.atomic():
+            substitutions: list[tuple[m.Constituenta, m.Constituenta]] = []
             for substitution in serializer.validated_data['substitutions']:
                 original = cast(m.Constituenta, substitution['original'])
                 replacement = cast(m.Constituenta, substitution['substitution'])
-                m.RSForm(schema).substitute(original, replacement)
+                substitutions.append((original, replacement))
+            m.RSForm(schema).substitute(substitutions)
 
         schema.refresh_from_db()
         return Response(
@@ -574,6 +576,7 @@ def inline_synthesis(request: Request) -> HttpResponse:
 
     with transaction.atomic():
         new_items = receiver.insert_copy(items)
+        substitutions: list[tuple[m.Constituenta, m.Constituenta]] = []
         for substitution in serializer.validated_data['substitutions']:
             original = cast(m.Constituenta, substitution['original'])
             replacement = cast(m.Constituenta, substitution['substitution'])
@@ -583,7 +586,8 @@ def inline_synthesis(request: Request) -> HttpResponse:
             else:
                 index = next(i for (i, cst) in enumerate(items) if cst.pk == replacement.pk)
                 replacement = new_items[index]
-            receiver.substitute(original, replacement)
+            substitutions.append((original, replacement))
+        receiver.substitute(substitutions)
         receiver.restore_order()
 
     return Response(

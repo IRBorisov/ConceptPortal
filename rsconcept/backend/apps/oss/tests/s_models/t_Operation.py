@@ -31,36 +31,3 @@ class TestOperation(TestCase):
         self.assertEqual(self.operation.comment, '')
         self.assertEqual(self.operation.position_x, 0)
         self.assertEqual(self.operation.position_y, 0)
-
-
-    def test_sync_from_result(self):
-        schema = RSForm.create(alias=self.operation.alias)
-        self.operation.result = schema.model
-        self.operation.save()
-
-        schema.model.alias = 'KS2'
-        schema.model.comment = 'Comment'
-        schema.model.title = 'Title'
-        schema.save()
-        self.operation.refresh_from_db()
-
-        self.assertEqual(self.operation.result, schema.model)
-        self.assertEqual(self.operation.alias, schema.model.alias)
-        self.assertEqual(self.operation.title, schema.model.title)
-        self.assertEqual(self.operation.comment, schema.model.comment)
-
-    def test_sync_from_library_item(self):
-        schema = LibraryItem.objects.create(alias=self.operation.alias, item_type=LibraryItemType.RSFORM)
-        self.operation.result = schema
-        self.operation.save()
-
-        schema.alias = 'KS2'
-        schema.comment = 'Comment'
-        schema.title = 'Title'
-        schema.save()
-        self.operation.refresh_from_db()
-
-        self.assertEqual(self.operation.result, schema)
-        self.assertEqual(self.operation.alias, schema.alias)
-        self.assertEqual(self.operation.title, schema.title)
-        self.assertEqual(self.operation.comment, schema.comment)
