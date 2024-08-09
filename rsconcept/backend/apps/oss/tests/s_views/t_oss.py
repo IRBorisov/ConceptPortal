@@ -1,8 +1,5 @@
 ''' Testing API: Operation Schema. '''
-
-from rest_framework import status
-
-from apps.library.models import AccessPolicy, Editor, LibraryItem, LibraryItemType, LocationHead
+from apps.library.models import AccessPolicy, Editor, LibraryItem, LibraryItemType
 from apps.oss.models import Operation, OperationSchema, OperationType
 from apps.rsform.models import RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
@@ -28,7 +25,7 @@ class TestOssViewset(EndpointTester):
             title='Test1',
             owner=self.user
         )
-        self.ks1x1 = self.ks1.insert_new(
+        self.ks1X1 = self.ks1.insert_new(
             'X1',
             term_raw='X1_1',
             term_resolved='X1_1'
@@ -38,7 +35,7 @@ class TestOssViewset(EndpointTester):
             title='Test2',
             owner=self.user
         )
-        self.ks2x1 = self.ks2.insert_new(
+        self.ks2X1 = self.ks2.insert_new(
             'X2',
             term_raw='X1_2',
             term_resolved='X1_2'
@@ -60,8 +57,8 @@ class TestOssViewset(EndpointTester):
         )
         self.owned.set_arguments(self.operation3, [self.operation1, self.operation2])
         self.owned.set_substitutions(self.operation3, [{
-            'original': self.ks1x1,
-            'substitution': self.ks2x1
+            'original': self.ks1X1,
+            'substitution': self.ks2X1
         }])
 
     @decl_endpoint('/api/oss/{item}/details', method='get')
@@ -85,12 +82,12 @@ class TestOssViewset(EndpointTester):
         self.assertEqual(len(response.data['substitutions']), 1)
         sub = response.data['substitutions'][0]
         self.assertEqual(sub['operation'], self.operation3.pk)
-        self.assertEqual(sub['original'], self.ks1x1.pk)
-        self.assertEqual(sub['substitution'], self.ks2x1.pk)
-        self.assertEqual(sub['original_alias'], self.ks1x1.alias)
-        self.assertEqual(sub['original_term'], self.ks1x1.term_resolved)
-        self.assertEqual(sub['substitution_alias'], self.ks2x1.alias)
-        self.assertEqual(sub['substitution_term'], self.ks2x1.term_resolved)
+        self.assertEqual(sub['original'], self.ks1X1.pk)
+        self.assertEqual(sub['substitution'], self.ks2X1.pk)
+        self.assertEqual(sub['original_alias'], self.ks1X1.alias)
+        self.assertEqual(sub['original_term'], self.ks1X1.term_resolved)
+        self.assertEqual(sub['substitution_alias'], self.ks2X1.alias)
+        self.assertEqual(sub['substitution_term'], self.ks2X1.term_resolved)
 
         arguments = response.data['arguments']
         self.assertEqual(len(arguments), 2)
@@ -369,14 +366,14 @@ class TestOssViewset(EndpointTester):
             'arguments': [self.operation1.pk, self.operation2.pk],
             'substitutions': [
                 {
-                    'original': self.ks1x1.pk,
+                    'original': self.ks1X1.pk,
                     'substitution': ks3x1.pk
                 }
             ]
         }
         self.executeBadData(data=data)
 
-        data['substitutions'][0]['substitution'] = self.ks2x1.pk
+        data['substitutions'][0]['substitution'] = self.ks2X1.pk
         self.toggle_admin(True)
         self.executeBadData(data=data, item=self.unowned_id)
         self.logout()
@@ -421,7 +418,7 @@ class TestOssViewset(EndpointTester):
     def test_update_operation_invalid_substitution(self):
         self.populateData()
 
-        self.ks1x2 = self.ks1.insert_new('X2')
+        self.ks1X2 = self.ks1.insert_new('X2')
 
         data = {
             'target': self.operation3.pk,
@@ -434,12 +431,12 @@ class TestOssViewset(EndpointTester):
             'arguments': [self.operation1.pk, self.operation2.pk],
             'substitutions': [
                 {
-                    'original': self.ks1x1.pk,
-                    'substitution': self.ks2x1.pk
+                    'original': self.ks1X1.pk,
+                    'substitution': self.ks2X1.pk
                 },
                 {
-                    'original': self.ks2x1.pk,
-                    'substitution': self.ks1x2.pk
+                    'original': self.ks2X1.pk,
+                    'substitution': self.ks1X2.pk
                 }
             ]
         }
@@ -473,4 +470,4 @@ class TestOssViewset(EndpointTester):
         items = list(RSForm(schema).constituents())
         self.assertEqual(len(items), 1)
         self.assertEqual(items[0].alias, 'X1')
-        self.assertEqual(items[0].term_resolved, self.ks2x1.term_resolved)
+        self.assertEqual(items[0].term_resolved, self.ks2X1.term_resolved)

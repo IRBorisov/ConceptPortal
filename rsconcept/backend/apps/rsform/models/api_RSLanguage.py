@@ -2,7 +2,7 @@
 import json
 import re
 from enum import IntEnum, unique
-from typing import Set, Tuple, cast
+from typing import Tuple, cast
 
 import pyconcept
 
@@ -10,7 +10,6 @@ from shared import messages as msg
 
 from .Constituenta import CstType
 
-_RE_GLOBALS = r'[XCSADFPT]\d+'  # cspell:disable-line
 _RE_TEMPLATE = r'R\d+'
 _RE_COMPLEX_SYMBOLS = r'[∀∃×ℬ;|:]'
 
@@ -65,11 +64,6 @@ def is_functional(cst_type: CstType) -> bool:
         CstType.FUNCTION,
         CstType.PREDICATE
     ]
-
-
-def extract_globals(expression: str) -> Set[str]:
-    ''' Extract all global aliases from expression. '''
-    return set(re.findall(_RE_GLOBALS, expression))
 
 
 def guess_type(alias: str) -> CstType:

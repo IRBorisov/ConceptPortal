@@ -1,7 +1,4 @@
 ''' Testing API: Change attributes of OSS and RSForms. '''
-
-from rest_framework import status
-
 from apps.library.models import AccessPolicy, Editor, LocationHead
 from apps.oss.models import Operation, OperationSchema, OperationType
 from apps.rsform.models import RSForm

@@ -183,9 +183,10 @@ class TestRSFormViewset(EndpointTester):
 
     @decl_endpoint('/api/rsforms/{item}/create-cst', method='post')
     def test_create_constituenta(self):
-        data = {'alias': 'X3'}
+        data = {'alias': 'X3', 'cst_type': CstType.BASE}
         self.executeForbidden(data=data, item=self.unowned_id)
 
+        data = {'alias': 'X3'}
         self.owned.insert_new('X1')
         x2 = self.owned.insert_new('X2')
         self.executeBadData(item=self.owned_id)

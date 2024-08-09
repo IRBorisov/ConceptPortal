@@ -11,7 +11,6 @@ from shared import messages as msg
 
 from ..graph import Graph
 from .api_RSLanguage import (
-    extract_globals,
     generate_structure,
     get_type_prefix,
     guess_type,
@@ -21,9 +20,9 @@ from .api_RSLanguage import (
     is_simple_expression,
     split_template
 )
-from .Constituenta import Constituenta, CstType
+from .Constituenta import Constituenta, CstType, extract_globals
 
-_INSERT_LAST: int = -1
+INSERT_LAST: int = -1
 
 
 class RSForm:
@@ -54,7 +53,7 @@ class RSForm:
             self.by_alias = {cst.alias: cst for cst in self.constituents}
             self.is_loaded = True
 
-        def ensure(self) -> None:
+        def ensure_loaded(self) -> None:
             if not self.is_loaded:
                 self.reload()
 
@@ -140,7 +139,7 @@ class RSForm:
 
     def on_term_change(self, changed: list[int]) -> None:
         ''' Trigger cascade resolutions when term changes. '''
-        self.cache.ensure()
+        self.cache.ensure_loaded()
         graph_terms = self._graph_term()
         expansion = graph_terms.expand_outputs(changed)
         expanded_change = changed + expansion
@@ -188,7 +187,7 @@ class RSForm:
     def create_cst(self, data: dict, insert_after: Optional[Constituenta] = None) -> Constituenta:
         ''' Create new cst from data. '''
         if insert_after is None:
-            position = _INSERT_LAST
+            position = INSERT_LAST
         else:
             position = insert_after.order + 1
         result = self.insert_new(data['alias'], data['cst_type'], position)
@@ -217,7 +216,7 @@ class RSForm:
         self,
         alias: str,
         cst_type: Optional[CstType] = None,
-        position: int = _INSERT_LAST,
+        position: int = INSERT_LAST,
         **kwargs
     ) -> Constituenta:
         ''' Insert new constituenta at given position.
@@ -239,13 +238,14 @@ class RSForm:
         self.save()
         return result
 
-    def insert_copy(self, items: list[Constituenta], position: int = _INSERT_LAST) -> list[Constituenta]:
+    def insert_copy(self, items: list[Constituenta], position: int = INSERT_LAST,
+                    initial_mapping: Optional[dict[str, str]] = None) -> list[Constituenta]:
         ''' Insert copy of target constituents updating references. '''
         count = len(items)
         if count == 0:
             return []
 
-        self.cache.ensure()
+        self.cache.ensure_loaded()
         position = self._get_insert_position(position)
         self._shift_positions(position, count)
 
@@ -253,7 +253,7 @@ class RSForm:
         for (value, _) in CstType.choices:
             indices[value] = self.get_max_index(cast(CstType, value))
 
-        mapping: dict[str, str] = {}
+        mapping: dict[str, str] = initial_mapping.copy() if initial_mapping else {}
         for cst in items:
             indices[cst.cst_type] = indices[cst.cst_type] + 1
             newAlias = f'{get_type_prefix(cst.cst_type)}{indices[cst.cst_type]}'
@@ -344,9 +344,23 @@ class RSForm:
                 mapping[cst.alias] = alias
         return mapping
 
+    def change_cst_type(self, target: int, new_type: CstType) -> bool:
+        ''' Change type of constituenta generating alias automatically. '''
+        self.cache.ensure_loaded()
+        cst = self.cache.by_id.get(target)
+        if cst is None:
+            return False
+        newAlias = f'{get_type_prefix(new_type)}{self.get_max_index(new_type) + 1}'
+        mapping = {cst.alias: newAlias}
+        cst.cst_type = new_type
+        cst.alias = newAlias
+        cst.save(update_fields=['cst_type', 'alias'])
+        self.apply_mapping(mapping)
+        return True
+
     def apply_mapping(self, mapping: dict[str, str], change_aliases: bool = False) -> None:
         ''' Apply rename mapping. '''
-        self.cache.ensure()
+        self.cache.ensure_loaded()
         update_list: list[Constituenta] = []
         for cst in self.cache.constituents:
             if cst.apply_mapping(mapping, change_aliases):
@@ -356,7 +370,7 @@ class RSForm:
 
     def resolve_all_text(self) -> None:
         ''' Trigger reference resolution for all texts. '''
-        self.cache.ensure()
+        self.cache.ensure_loaded()
         graph_terms = self._graph_term()
         resolver = Resolver({})
         update_list: list[Constituenta] = []
@@ -395,7 +409,7 @@ class RSForm:
             return []
 
         position = target.order + 1
-        self.cache.ensure()
+        self.cache.ensure_loaded()
         self._shift_positions(position, count_new)
         result = []
         cst_type = CstType.TERM if len(parse['args']) == 0 else CstType.FUNCTION
@@ -432,10 +446,10 @@ class RSForm:
         Constituenta.objects.bulk_update(update_list, ['order'])
 
     def _get_insert_position(self, position: int) -> int:
-        if position <= 0 and position != _INSERT_LAST:
+        if position <= 0 and position != INSERT_LAST:
             raise ValidationError(msg.invalidPosition())
         lastPosition = self.constituents().count()
-        if position == _INSERT_LAST:
+        if position == INSERT_LAST:
             position = lastPosition + 1
         else:
             position = max(1, min(position, lastPosition + 1))
@@ -458,7 +472,7 @@ class RSForm:
 
     def _graph_formal(self) -> Graph[int]:
         ''' Graph based on formal definitions. '''
-        self.cache.ensure()
+        self.cache.ensure_loaded()
         result: Graph[int] = Graph()
         for cst in self.cache.constituents:
             result.add_node(cst.pk)
@@ -471,7 +485,7 @@ class RSForm:
 
     def _graph_term(self) -> Graph[int]:
         ''' Graph based on term texts. '''
-        self.cache.ensure()
+        self.cache.ensure_loaded()
         result: Graph[int] = Graph()
         for cst in self.cache.constituents:
             result.add_node(cst.pk)
@@ -484,7 +498,7 @@ class RSForm:
 
     def _graph_text(self) -> Graph[int]:
         ''' Graph based on definition texts. '''
-        self.cache.ensure()
+        self.cache.ensure_loaded()
         result: Graph[int] = Graph()
         for cst in self.cache.constituents:
             result.add_node(cst.pk)
@@ -500,7 +514,7 @@ class SemanticInfo:
     ''' Semantic information derived from constituents. '''
 
     def __init__(self, schema: RSForm):
-        schema.cache.ensure()
+        schema.cache.ensure_loaded()
         self._graph = schema._graph_formal()
         self._items = schema.cache.constituents
         self._cst_by_ID = schema.cache.by_id

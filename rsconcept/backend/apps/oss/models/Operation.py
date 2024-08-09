@@ -27,7 +27,7 @@ class Operation(Model):
         verbose_name='Схема синтеза',
         to='library.LibraryItem',
         on_delete=CASCADE,
-        related_name='items'
+        related_name='operations'
     )
     operation_type: CharField = CharField(
         verbose_name='Тип',

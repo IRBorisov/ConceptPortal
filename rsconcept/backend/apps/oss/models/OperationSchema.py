@@ -50,6 +50,10 @@ class OperationSchema:
         ''' Operation substitutions. '''
         return Substitution.objects.filter(operation__oss=self.model)
 
+    def inheritance(self) -> QuerySet[Inheritance]:
+        ''' Operation inheritances. '''
+        return Inheritance.objects.filter(operation__oss=self.model)
+
     def owned_schemas(self) -> QuerySet[LibraryItem]:
         ''' Get QuerySet containing all result schemas owned by current OSS. '''
         return LibraryItem.objects.filter(

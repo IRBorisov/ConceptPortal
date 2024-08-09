@@ -14,9 +14,9 @@ class TestSynthesisSubstitution(TestCase):
         self.oss = OperationSchema.create(alias='T1')
 
         self.ks1 = RSForm.create(alias='KS1', title='Test1')
-        self.ks1x1 = self.ks1.insert_new('X1', term_resolved='X1_1')
+        self.ks1X1 = self.ks1.insert_new('X1', term_resolved='X1_1')
         self.ks2 = RSForm.create(alias='KS2', title='Test2')
-        self.ks2x1 = self.ks2.insert_new('X2', term_resolved='X1_2')
+        self.ks2X1 = self.ks2.insert_new('X2', term_resolved='X1_2')
 
         self.operation1 = Operation.objects.create(
             oss=self.oss.model,
@@ -46,13 +46,13 @@ class TestSynthesisSubstitution(TestCase):
 
         self.substitution = Substitution.objects.create(
             operation=self.operation3,
-            original=self.ks1x1,
-            substitution=self.ks2x1
+            original=self.ks1X1,
+            substitution=self.ks2X1
         )
 
 
     def test_str(self):
-        testStr = f'{self.ks1x1} -> {self.ks2x1}'
+        testStr = f'{self.ks1X1} -> {self.ks2X1}'
         self.assertEqual(str(self.substitution), testStr)
 
 
@@ -64,11 +64,11 @@ class TestSynthesisSubstitution(TestCase):
 
     def test_cascade_delete_original(self):
         self.assertEqual(Substitution.objects.count(), 1)
-        self.ks1x1.delete()
+        self.ks1X1.delete()
         self.assertEqual(Substitution.objects.count(), 0)
 
 
     def test_cascade_delete_substitution(self):
         self.assertEqual(Substitution.objects.count(), 1)
-        self.ks2x1.delete()
+        self.ks2X1.delete()
         self.assertEqual(Substitution.objects.count(), 0)

@@ -1,6 +1,7 @@
 ''' Models: Constituenta. '''
 import re
 
+from cctext import extract_entities
 from django.core.validators import MinValueValidator
 from django.db.models import (
     CASCADE,
@@ -15,8 +16,14 @@ from django.db.models import (
 
 from ..utils import apply_pattern
 
+_RE_GLOBALS = r'[XCSADFPT]\d+'  # cspell:disable-line
 _REF_ENTITY_PATTERN = re.compile(r'@{([^0-9\-].*?)\|.*?}')
 _GLOBAL_ID_PATTERN = re.compile(r'([XCSADFPT][0-9]+)')  # cspell:disable-line
+
+
+def extract_globals(expression: str) -> set[str]:
+    ''' Extract all global aliases from expression. '''
+    return set(re.findall(_RE_GLOBALS, expression))
 
 
 class CstType(TextChoices):
@@ -120,3 +127,10 @@ class Constituenta(Model):
             modified = True
             self.definition_raw = definition
         return modified
+
+    def extract_references(self) -> set[str]:
+        ''' Extract all references from term and definition. '''
+        result: set[str] = extract_globals(self.definition_formal)
+        result.update(extract_entities(self.term_raw))
+        result.update(extract_entities(self.definition_raw))
+        return result

@@ -16,6 +16,7 @@ from rest_framework.serializers import ValidationError
 
 from apps.library.models import AccessPolicy, LibraryItem, LibraryItemType, LocationHead
 from apps.library.serializers import LibraryItemSerializer
+from apps.oss.models import ChangeManager
 from apps.users.models import User
 from shared import messages as msg
 from shared import permissions, utility
@@ -76,7 +77,6 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     @action(detail=True, methods=['post'], url_path='create-cst')
     def create_cst(self, request: Request, pk) -> HttpResponse:
         ''' Create new constituenta. '''
-        schema = self._get_item()
         serializer = s.CstCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
@@ -86,13 +86,18 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             insert_after = data['insert_after']
 
         with transaction.atomic():
-            new_cst = m.RSForm(schema).create_cst(data, insert_after)
+            schema = m.RSForm(self._get_item())
+            new_cst = schema.create_cst(data, insert_after)
+            hosts = LibraryItem.objects.filter(operations__result=schema.model)
+            for host in hosts:
+                ChangeManager(host).on_create_cst(new_cst, schema)
+
 
         return Response(
             status=c.HTTP_201_CREATED,
             data={
                 'new_cst': s.CstSerializer(new_cst).data,
-                'schema': s.RSFormParseSerializer(schema).data
+                'schema': s.RSFormParseSerializer(schema.model).data
             }
         )
 
@@ -119,7 +124,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             raise ValidationError({
                 'schema': msg.constituentaNotInRSform(schema.title)
             })
-        serializer.update(instance=cst, validated_data=serializer.validated_data)
+
+        with transaction.atomic():
+            serializer.update(instance=cst, validated_data=serializer.validated_data)
+            # 'convention' | 'definition_formal' | 'definition_raw' | 'term_raw' | 'term_forms'
 
         return Response(
             status=c.HTTP_200_OK,
@@ -140,9 +148,9 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     @action(detail=True, methods=['patch'], url_path='produce-structure')
     def produce_structure(self, request: Request, pk) -> HttpResponse:
         ''' Produce a term for every element of the target constituenta typification. '''
-        schema = self._get_item()
+        model = self._get_item()
 
-        serializer = s.CstTargetSerializer(data=request.data, context={'schema': schema})
+        serializer = s.CstTargetSerializer(data=request.data, context={'schema': model})
         serializer.is_valid(raise_exception=True)
         cst = cast(m.Constituenta, serializer.validated_data['target'])
         if cst.cst_type not in [m.CstType.FUNCTION, m.CstType.STRUCTURED, m.CstType.TERM]:
@@ -150,7 +158,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
                 f'{cst.pk}': msg.constituentaNoStructure()
             })
 
-        schema_details = s.RSFormParseSerializer(schema).data['items']
+        schema_details = s.RSFormParseSerializer(model).data['items']
         cst_parse = next(item for item in schema_details if item['id'] == cst.pk)['parse']
         if not cst_parse['typification']:
             return Response(
@@ -158,12 +166,12 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
                 data={f'{cst.pk}': msg.constituentaNoStructure()}
             )
         with transaction.atomic():
-            result = m.RSForm(schema).produce_structure(cst, cst_parse)
+            result = m.RSForm(model).produce_structure(cst, cst_parse)
         return Response(
             status=c.HTTP_200_OK,
             data={
                 'cst_list': result,
-                'schema': s.RSFormParseSerializer(schema).data
+                'schema': s.RSFormParseSerializer(model).data
             }
         )
 
@@ -181,26 +189,31 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     @action(detail=True, methods=['patch'], url_path='rename-cst')
     def rename_cst(self, request: Request, pk) -> HttpResponse:
         ''' Rename constituenta possibly changing type. '''
-        schema = self._get_item()
-        serializer = s.CstRenameSerializer(data=request.data, context={'schema': schema})
+        model = self._get_item()
+        serializer = s.CstRenameSerializer(data=request.data, context={'schema': model})
         serializer.is_valid(raise_exception=True)
 
         cst = cast(m.Constituenta, serializer.validated_data['target'])
+        changed_type = cst.cst_type != serializer.validated_data['cst_type']
         mapping = {cst.alias: serializer.validated_data['alias']}
         cst.alias = serializer.validated_data['alias']
         cst.cst_type = serializer.validated_data['cst_type']
+        schema = m.RSForm(model)
 
         with transaction.atomic():
             cst.save()
-            m.RSForm(schema).apply_mapping(mapping=mapping, change_aliases=False)
+            schema.apply_mapping(mapping=mapping, change_aliases=False)
+            cst.refresh_from_db()
+            if changed_type:
+                hosts = LibraryItem.objects.filter(operations__result=model)
+                for host in hosts:
+                    ChangeManager(host).on_change_cst_type(cst, schema)
 
-        schema.refresh_from_db()
-        cst.refresh_from_db()
         return Response(
             status=c.HTTP_200_OK,
             data={
                 'new_cst': s.CstSerializer(cst).data,
-                'schema': s.RSFormParseSerializer(schema).data
+                'schema': s.RSFormParseSerializer(model).data
             }
         )
 
@@ -218,10 +231,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     @action(detail=True, methods=['patch'], url_path='substitute')
     def substitute(self, request: Request, pk) -> HttpResponse:
         ''' Substitute occurrences of constituenta with another one. '''
-        schema = self._get_item()
+        model = self._get_item()
         serializer = s.CstSubstituteSerializer(
             data=request.data,
-            context={'schema': schema}
+            context={'schema': model}
         )
         serializer.is_valid(raise_exception=True)
 
@@ -231,12 +244,12 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
                 original = cast(m.Constituenta, substitution['original'])
                 replacement = cast(m.Constituenta, substitution['substitution'])
                 substitutions.append((original, replacement))
-            m.RSForm(schema).substitute(substitutions)
+            m.RSForm(model).substitute(substitutions)
 
-        schema.refresh_from_db()
+        model.refresh_from_db()
         return Response(
             status=c.HTTP_200_OK,
-            data=s.RSFormParseSerializer(schema).data
+            data=s.RSFormParseSerializer(model).data
         )
 
     @extend_schema(
@@ -253,17 +266,17 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     @action(detail=True, methods=['patch'], url_path='delete-multiple-cst')
     def delete_multiple_cst(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Delete multiple constituents. '''
-        schema = self._get_item()
+        model = self._get_item()
         serializer = s.CstListSerializer(
             data=request.data,
-            context={'schema': schema}
+            context={'schema': model}
         )
         serializer.is_valid(raise_exception=True)
         with transaction.atomic():
-            m.RSForm(schema).delete_cst(serializer.validated_data['items'])
+            m.RSForm(model).delete_cst(serializer.validated_data['items'])
         return Response(
             status=c.HTTP_200_OK,
-            data=s.RSFormParseSerializer(schema).data
+            data=s.RSFormParseSerializer(model).data
         )
 
     @extend_schema(
@@ -280,20 +293,20 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     @action(detail=True, methods=['patch'], url_path='move-cst')
     def move_cst(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Move multiple constituents. '''
-        schema = self._get_item()
+        model = self._get_item()
         serializer = s.CstMoveSerializer(
             data=request.data,
-            context={'schema': schema}
+            context={'schema': model}
         )
         serializer.is_valid(raise_exception=True)
         with transaction.atomic():
-            m.RSForm(schema).move_cst(
+            m.RSForm(model).move_cst(
                 target=serializer.validated_data['items'],
                 destination=serializer.validated_data['move_to']
             )
         return Response(
             status=c.HTTP_200_OK,
-            data=s.RSFormParseSerializer(schema).data
+            data=s.RSFormParseSerializer(model).data
         )
 
     @extend_schema(
@@ -309,11 +322,11 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     @action(detail=True, methods=['patch'], url_path='reset-aliases')
     def reset_aliases(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Recreate all aliases based on order. '''
-        schema = self._get_item()
-        m.RSForm(schema).reset_aliases()
+        model = self._get_item()
+        m.RSForm(model).reset_aliases()
         return Response(
             status=c.HTTP_200_OK,
-            data=s.RSFormParseSerializer(schema).data
+            data=s.RSFormParseSerializer(model).data
         )
 
     @extend_schema(
@@ -329,11 +342,11 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     @action(detail=True, methods=['patch'], url_path='restore-order')
     def restore_order(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Restore order based on types and term graph. '''
-        schema = self._get_item()
-        m.RSForm(schema).restore_order()
+        model = self._get_item()
+        m.RSForm(model).restore_order()
         return Response(
             status=c.HTTP_200_OK,
-            data=s.RSFormParseSerializer(schema).data
+            data=s.RSFormParseSerializer(model).data
         )
 
     @extend_schema(
@@ -353,10 +366,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         input_serializer = s.RSFormUploadSerializer(data=request.data)
         input_serializer.is_valid(raise_exception=True)
 
-        schema = self._get_item()
+        model = self._get_item()
         load_metadata = input_serializer.validated_data['load_metadata']
         data = utility.read_zipped_json(request.FILES['file'].file, utils.EXTEOR_INNER_FILENAME)
-        data['id'] = schema.pk
+        data['id'] = model.pk
 
         serializer = s.RSFormTRSSerializer(
             data=data,
@@ -461,10 +474,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     @action(detail=True, methods=['get'], url_path='export-trs')
     def export_trs(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Download Exteor compatible file. '''
-        schema = self._get_item()
-        data = s.RSFormTRSSerializer(m.RSForm(schema)).data
+        model = self._get_item()
+        data = s.RSFormTRSSerializer(m.RSForm(model)).data
         file = utility.write_zipped_json(data, utils.EXTEOR_INNER_FILENAME)
-        filename = utils.filename_for_schema(schema.alias)
+        filename = utils.filename_for_schema(model.alias)
         response = HttpResponse(file, content_type='application/zip')
         response['Content-Disposition'] = f'attachment; filename={filename}'
         return response

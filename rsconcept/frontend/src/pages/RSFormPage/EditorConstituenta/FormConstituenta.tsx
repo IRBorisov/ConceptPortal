@@ -55,7 +55,6 @@ function FormConstituenta({
 }: FormConstituentaProps) {
   const { schema, cstUpdate, processing } = useRSForm();
 
-  const [alias, setAlias] = useState('');
   const [term, setTerm] = useState('');
   const [textDefinition, setTextDefinition] = useState('');
   const [expression, setExpression] = useState('');
@@ -98,7 +97,6 @@ function FormConstituenta({
 
   useLayoutEffect(() => {
     if (state) {
-      setAlias(state.alias);
       setConvention(state.convention || '');
       setTerm(state.term_raw || '');
       setTextDefinition(state.definition_raw || '');
@@ -117,7 +115,6 @@ function FormConstituenta({
     }
     const data: ICstUpdateData = {
       id: state.id,
-      alias: alias,
       term_raw: term,
       definition_formal: expression,
       definition_raw: textDefinition,

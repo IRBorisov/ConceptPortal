@@ -121,7 +121,7 @@ class RSFormSerializer(serializers.ModelSerializer):
         for link in Inheritance.objects.filter(Q(child__schema=instance) | Q(parent__schema=instance)):
             result['inheritance'].append([link.child.pk, link.parent.pk])
         result['oss'] = []
-        for oss in LibraryItem.objects.filter(items__result=instance).only('alias'):
+        for oss in LibraryItem.objects.filter(operations__result=instance).only('alias'):
             result['oss'].append({
                 'id': oss.pk,
                 'alias': oss.alias
@@ -246,7 +246,7 @@ class CstTargetSerializer(serializers.Serializer):
 
 class CstRenameSerializer(serializers.Serializer):
     ''' Serializer: Constituenta renaming. '''
-    target = PKField(many=False, queryset=Constituenta.objects.only('alias', 'schema'))
+    target = PKField(many=False, queryset=Constituenta.objects.only('alias', 'cst_type', 'schema'))
     alias = serializers.CharField()
     cst_type = serializers.CharField()
 

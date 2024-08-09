@@ -155,10 +155,7 @@ export interface ICstMovetoData extends IConstituentaList {
 export interface ICstUpdateData
   extends Pick<IConstituentaMeta, 'id'>,
     Partial<
-      Pick<
-        IConstituentaMeta,
-        'alias' | 'convention' | 'definition_formal' | 'definition_raw' | 'term_raw' | 'term_forms'
-      >
+      Pick<IConstituentaMeta, 'convention' | 'definition_formal' | 'definition_raw' | 'term_raw' | 'term_forms'>
     > {}
 
 /**

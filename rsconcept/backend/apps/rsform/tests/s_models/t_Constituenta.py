@@ -58,3 +58,28 @@ class TestConstituenta(TestCase):
         self.assertEqual(cst.term_forms, [])
         self.assertEqual(cst.definition_resolved, '')
         self.assertEqual(cst.definition_raw, '')
+
+    def test_extract_references(self):
+        cst = Constituenta.objects.create(
+            alias='X1',
+            order=1,
+            schema=self.schema1.model,
+            definition_formal='X1 X2',
+            term_raw='@{X3|sing} is a @{X4|sing}',
+            definition_raw='@{X5|sing}'
+        )
+        self.assertEqual(cst.extract_references(), set(['X1', 'X2', 'X3', 'X4', 'X5']))
+
+    def text_apply_mapping(self):
+        cst = Constituenta.objects.create(
+            alias='X1',
+            order=1,
+            schema=self.schema1.model,
+            definition_formal='X1 = X2',
+            term_raw='@{X1|sing}',
+            definition_raw='@{X2|sing}'
+        )
+        cst.apply_mapping({'X1': 'X3', 'X2': 'X4'})
+        self.assertEqual(cst.definition_formal, 'X3 = X4')
+        self.assertEqual(cst.term_raw, '@{X3|sing}')
+        self.assertEqual(cst.definition_raw, '@{X4|sing}')
