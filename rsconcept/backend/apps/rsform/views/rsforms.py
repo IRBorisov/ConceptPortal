@@ -41,14 +41,14 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         if self.action in [
             'load_trs',
             'create_cst',
-            'delete_multiple_cst',
             'rename_cst',
+            'update_cst',
             'move_cst',
+            'delete_multiple_cst',
             'substitute',
             'restore_order',
             'reset_aliases',
             'produce_structure',
-            'update_cst'
         ]:
             permission_list = [permissions.ItemEditor]
         elif self.action in [
@@ -85,8 +85,8 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         else:
             insert_after = data['insert_after']
 
+        schema = m.RSForm(self._get_item())
         with transaction.atomic():
-            schema = m.RSForm(self._get_item())
             new_cst = schema.create_cst(data, insert_after)
             hosts = LibraryItem.objects.filter(operations__result=schema.model)
             for host in hosts:
@@ -104,7 +104,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     @extend_schema(
         summary='update persistent attributes of a given constituenta',
         tags=['RSForm'],
-        request=s.CstSerializer,
+        request=s.CstUpdateSerializer,
         responses={
             c.HTTP_200_OK: s.CstSerializer,
             c.HTTP_400_BAD_REQUEST: None,
@@ -115,23 +115,22 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     @action(detail=True, methods=['patch'], url_path='update-cst')
     def update_cst(self, request: Request, pk) -> HttpResponse:
         ''' Update persistent attributes of a given constituenta. '''
-        schema = self._get_item()
-        serializer = s.CstSerializer(data=request.data, partial=True)
+        model = self._get_item()
+        serializer = s.CstUpdateSerializer(data=request.data, partial=True, context={'schema': model})
         serializer.is_valid(raise_exception=True)
 
-        cst = m.Constituenta.objects.get(pk=request.data['id'])
-        if cst.schema != schema:
-            raise ValidationError({
-                'schema': msg.constituentaNotInRSform(schema.title)
-            })
-
+        cst = cast(m.Constituenta, serializer.validated_data['target'])
+        schema = m.RSForm(model)
+        data = serializer.validated_data['item_data']
         with transaction.atomic():
-            serializer.update(instance=cst, validated_data=serializer.validated_data)
-            # 'convention' | 'definition_formal' | 'definition_raw' | 'term_raw' | 'term_forms'
+            hosts = LibraryItem.objects.filter(operations__result=model)
+            old_data = schema.update_cst(cst, data)
+            for host in hosts:
+                ChangeManager(host).on_update_cst(cst, data, old_data, schema)
 
         return Response(
             status=c.HTTP_200_OK,
-            data=s.CstSerializer(cst).data
+            data=s.CstSerializer(m.Constituenta.objects.get(pk=request.data['target'])).data
         )
 
     @extend_schema(

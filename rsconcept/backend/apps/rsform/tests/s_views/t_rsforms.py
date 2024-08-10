@@ -525,7 +525,7 @@ class TestConstituentaAPI(EndpointTester):
 
     @decl_endpoint('/api/rsforms/{schema}/update-cst', method='patch')
     def test_partial_update(self):
-        data = {'id': self.cst1.pk, 'convention': 'tt'}
+        data = {'target': self.cst1.pk, 'item_data': {'convention': 'tt'}}
         self.executeForbidden(data=data, schema=self.rsform_unowned.model.pk)
 
         self.logout()
@@ -543,9 +543,11 @@ class TestConstituentaAPI(EndpointTester):
     @decl_endpoint('/api/rsforms/{schema}/update-cst', method='patch')
     def test_update_resolved_no_refs(self):
         data = {
-            'id': self.cst3.pk,
-            'term_raw': 'New term',
-            'definition_raw': 'New def'
+            'target': self.cst3.pk,
+            'item_data': {
+                'term_raw': 'New term',
+                'definition_raw': 'New def'
+            }
         }
         response = self.executeOK(data=data, schema=self.rsform_owned.model.pk)
         self.cst3.refresh_from_db()
@@ -558,9 +560,11 @@ class TestConstituentaAPI(EndpointTester):
     @decl_endpoint('/api/rsforms/{schema}/update-cst', method='patch')
     def test_update_resolved_refs(self):
         data = {
-            'id': self.cst3.pk,
-            'term_raw': '@{X1|nomn,sing}',
-            'definition_raw': '@{X1|nomn,sing} @{X1|sing,datv}'
+            'target': self.cst3.pk,
+            'item_data': {
+                'term_raw': '@{X1|nomn,sing}',
+                'definition_raw': '@{X1|nomn,sing} @{X1|sing,datv}'
+            }
         }
         response = self.executeOK(data=data, schema=self.rsform_owned.model.pk)
         self.cst3.refresh_from_db()
@@ -569,13 +573,31 @@ class TestConstituentaAPI(EndpointTester):
         self.assertEqual(self.cst3.definition_resolved, f'{self.cst1.term_resolved} form1')
         self.assertEqual(response.data['definition_resolved'], f'{self.cst1.term_resolved} form1')
 
+    @decl_endpoint('/api/rsforms/{schema}/update-cst', method='patch')
+    def test_update_term_forms(self):
+        data = {
+            'target': self.cst3.pk,
+            'item_data': {
+                'definition_raw': '@{X3|sing,datv}',
+                'term_forms': [{'text': 'form1', 'tags': 'sing,datv'}]
+            }
+        }
+        response = self.executeOK(data=data, schema=self.rsform_owned.model.pk)
+        self.cst3.refresh_from_db()
+        self.assertEqual(self.cst3.definition_resolved, 'form1')
+        self.assertEqual(response.data['definition_resolved'], 'form1')
+        self.assertEqual(self.cst3.term_forms, data['item_data']['term_forms'])
+        self.assertEqual(response.data['term_forms'], data['item_data']['term_forms'])
+
 
     @decl_endpoint('/api/rsforms/{schema}/update-cst', method='patch')
     def test_readonly_cst_fields(self):
         data = {
-            'id': self.cst1.pk,
-            'alias': 'X33',
-            'order': 10
+            'target': self.cst1.pk,
+            'item_data': {
+                'alias': 'X33',
+                'order': 10
+            }
         }
         response = self.executeOK(data=data, schema=self.rsform_owned.model.pk)
         self.assertEqual(response.data['alias'], 'X1')

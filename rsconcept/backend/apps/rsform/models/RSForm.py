@@ -273,6 +273,54 @@ class RSForm:
         self.save()
         return result
 
+    # pylint: disable=too-many-branches
+    def update_cst(self, target: Constituenta, data: dict) -> dict:
+        ''' Update persistent attributes of a given constituenta. Return old values. '''
+        self.cache.ensure_loaded()
+        cst = self.cache.by_id.get(target.pk)
+        if cst is None:
+            raise ValidationError(msg.constituentaNotInRSform(target.alias))
+
+        old_data = {}
+        term_changed = False
+        if 'convention' in data:
+            cst.convention = data['convention']
+        if 'definition_formal' in data:
+            if cst.definition_formal == data['definition_formal']:
+                del data['definition_formal']
+            else:
+                old_data['definition_formal'] = cst.definition_formal
+                cst.definition_formal = data['definition_formal']
+        if 'term_forms' in data:
+            term_changed = True
+            old_data['term_forms'] = cst.term_forms
+            cst.term_forms = data['term_forms']
+        if 'definition_raw' in data or 'term_raw' in data:
+            resolver = self.resolver()
+            if 'term_raw' in data:
+                if cst.term_raw == data['term_raw']:
+                    del data['term_raw']
+                else:
+                    term_changed = True
+                    old_data['term_raw'] = cst.term_raw
+                    cst.term_raw = data['term_raw']
+                    cst.term_resolved = resolver.resolve(cst.term_raw)
+                    if 'term_forms' not in data:
+                        cst.term_forms = []
+                    resolver.context[cst.alias] = Entity(cst.alias, cst.term_resolved, manual_forms=cst.term_forms)
+            if 'definition_raw' in data:
+                if cst.definition_raw == data['definition_raw']:
+                    del data['definition_raw']
+                else:
+                    old_data['definition_raw'] = cst.definition_raw
+                    cst.definition_raw = data['definition_raw']
+                    cst.definition_resolved = resolver.resolve(cst.definition_raw)
+        cst.save()
+        if term_changed:
+            self.on_term_change([cst.pk])
+        self.save()
+        return old_data
+
     def move_cst(self, target: list[Constituenta], destination: int) -> None:
         ''' Move list of constituents to specific position '''
         count_moved = 0

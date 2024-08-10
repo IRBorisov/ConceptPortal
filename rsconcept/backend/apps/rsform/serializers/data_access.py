@@ -1,5 +1,5 @@
 ''' Serializers for persistent data manipulation. '''
-from typing import Optional, cast
+from typing import cast
 
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
@@ -38,25 +38,30 @@ class CstSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('id', 'schema', 'order', 'alias', 'cst_type', 'definition_resolved', 'term_resolved')
 
-    def update(self, instance: Constituenta, validated_data) -> Constituenta:
-        data = validated_data  # Note: use alias for better code readability
-        definition: Optional[str] = data['definition_raw'] if 'definition_raw' in data else None
-        term: Optional[str] = data['term_raw'] if 'term_raw' in data else None
-        term_changed = 'term_forms' in data
-        schema = RSForm(instance.schema)
-        if definition is not None and definition != instance.definition_raw:
-            data['definition_resolved'] = schema.resolver().resolve(definition)
-        if term is not None and term != instance.term_raw:
-            data['term_resolved'] = schema.resolver().resolve(term)
-            if data['term_resolved'] != instance.term_resolved and 'term_forms' not in data:
-                data['term_forms'] = []
-            term_changed = data['term_resolved'] != instance.term_resolved
-        result: Constituenta = super().update(instance, data)
-        if term_changed:
-            schema.on_term_change([result.pk])
-            result.refresh_from_db()
-        schema.save()
-        return result
+
+class CstUpdateSerializer(serializers.Serializer):
+    ''' Serializer: Constituenta update. '''
+    class ConstituentaUpdateData(serializers.ModelSerializer):
+        ''' Serializer: Operation creation data. '''
+        class Meta:
+            ''' serializer metadata. '''
+            model = Constituenta
+            fields = 'convention', 'definition_formal', 'definition_raw', 'term_raw', 'term_forms'
+
+    target = PKField(
+        many=False,
+        queryset=Constituenta.objects.all().only('convention', 'definition_formal', 'definition_raw', 'term_raw')
+    )
+    item_data = ConstituentaUpdateData()
+
+    def validate(self, attrs):
+        schema = cast(LibraryItem, self.context['schema'])
+        cst = cast(Constituenta, attrs['target'])
+        if schema and cst.schema_id != schema.pk:
+            raise serializers.ValidationError({
+                f'{cst.pk}': msg.constituentaNotInRSform(schema.title)
+            })
+        return attrs
 
 
 class CstDetailsSerializer(serializers.ModelSerializer):

@@ -58,14 +58,14 @@ class TestChangeConstituents(EndpointTester):
         self.assertEqual(self.ks3.constituents().count(), 4)
 
 
-    @decl_endpoint('/api/rsforms/{item}/create-cst', method='post')
+    @decl_endpoint('/api/rsforms/{schema}/create-cst', method='post')
     def test_create_constituenta(self):
         data = {
             'alias': 'X3',
             'cst_type': CstType.BASE,
             'definition_formal': 'X4 = X5'
         }
-        response = self.executeCreated(data=data, item=self.ks1.model.pk)
+        response = self.executeCreated(data=data, schema=self.ks1.model.pk)
         new_cst = Constituenta.objects.get(pk=response.data['new_cst']['id'])
         inherited_cst = Constituenta.objects.get(as_child__parent_id=new_cst.pk)
         self.assertEqual(self.ks1.constituents().count(), 3)
@@ -74,13 +74,36 @@ class TestChangeConstituents(EndpointTester):
         self.assertEqual(inherited_cst.order, 3)
         self.assertEqual(inherited_cst.definition_formal, 'X1 = X2')
 
-    @decl_endpoint('/api/rsforms/{item}/rename-cst', method='patch')
+    @decl_endpoint('/api/rsforms/{schema}/rename-cst', method='patch')
     def test_rename_constituenta(self):
         data = {'target': self.ks1X1.pk, 'alias': 'D21', 'cst_type': CstType.TERM}
-        response = self.executeOK(data=data, item=self.ks1.model.pk)
+        response = self.executeOK(data=data, schema=self.ks1.model.pk)
         self.ks1X1.refresh_from_db()
         inherited_cst = Constituenta.objects.get(as_child__parent_id=self.ks1X1.pk)
         self.assertEqual(self.ks1X1.alias, data['alias'])
         self.assertEqual(self.ks1X1.cst_type, data['cst_type'])
         self.assertEqual(inherited_cst.alias, 'D2')
         self.assertEqual(inherited_cst.cst_type, data['cst_type'])
+
+    @decl_endpoint('/api/rsforms/{schema}/update-cst', method='patch')
+    def test_update_constituenta(self):
+        d2 = self.ks3.insert_new('D2', cst_type=CstType.TERM, definition_raw='@{X1|sing,nomn}')
+        data = {
+            'target': self.ks1X1.pk,
+            'item_data': {
+                'term_raw': 'Test1',
+                'definition_formal': r'X4\X4',
+                'definition_raw': '@{X5|sing,datv}'
+            }
+        }
+        response = self.executeOK(data=data, schema=self.ks1.model.pk)
+        self.ks1X1.refresh_from_db()
+        d2.refresh_from_db()
+        inherited_cst = Constituenta.objects.get(as_child__parent_id=self.ks1X1.pk)
+        self.assertEqual(self.ks1X1.term_raw, data['item_data']['term_raw'])
+        self.assertEqual(self.ks1X1.definition_formal, data['item_data']['definition_formal'])
+        self.assertEqual(self.ks1X1.definition_raw, data['item_data']['definition_raw'])
+        self.assertEqual(d2.definition_resolved, data['item_data']['term_raw'])
+        self.assertEqual(inherited_cst.term_raw, data['item_data']['term_raw'])
+        self.assertEqual(inherited_cst.definition_formal, r'X1\X1')
+        self.assertEqual(inherited_cst.definition_raw, r'@{X2|sing,datv}')

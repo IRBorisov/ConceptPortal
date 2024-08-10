@@ -57,7 +57,7 @@ function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit 
       className={clsx(
         'border overflow-visible', // prettier: split-lines
         {
-          'mt-[2.2rem] rounded-l-md rounded-r-none': !isBottom,
+          'mt-[2.2rem] rounded-l-md rounded-r-none h-fit': !isBottom,
           'mt-3 mx-6 rounded-md md:w-[45.8rem]': isBottom
         }
       )}

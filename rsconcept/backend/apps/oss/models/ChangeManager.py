@@ -1,16 +1,26 @@
 ''' Models: Change propagation manager. '''
 from typing import Optional, cast
 
+from cctext import extract_entities
+
 from apps.library.models import LibraryItem
 from apps.rsform.graph import Graph
-from apps.rsform.models import INSERT_LAST, Constituenta, CstType, RSForm
+from apps.rsform.models import (
+    INSERT_LAST,
+    Constituenta,
+    CstType,
+    RSForm,
+    extract_globals,
+    replace_entities,
+    replace_globals
+)
 
 from .Inheritance import Inheritance
 from .Operation import Operation
 from .OperationSchema import OperationSchema
 from .Substitution import Substitution
 
-AliasMapping = dict[str, Constituenta]
+CstMapping = dict[str, Constituenta]
 
 # TODO: add more variety tests for cascade resolutions model
 
@@ -54,12 +64,12 @@ class ChangeManager:
                 self._insert_new(schema)
                 return schema
 
-        def get_operation(self, schema: RSForm) -> Optional[Operation]:
+        def get_operation(self, schema: RSForm) -> Operation:
             ''' Get operation by schema. '''
             for operation in self.operations:
                 if operation.result_id == schema.model.pk:
                     return operation
-            return None
+            raise ValueError(f'Operation for schema {schema.model.pk} not found')
 
         def ensure_loaded(self) -> None:
             ''' Ensure propagation of changes. '''
@@ -72,8 +82,12 @@ class ChangeManager:
             for item in self._oss.inheritance().only('operation_id', 'parent_id', 'child_id'):
                 self.inheritance[item.operation_id].append((item.parent_id, item.child_id))
 
-        def get_successor_for(self, parent_cst: int, operation: int,
-                              ignore_substitution: bool = False) -> Optional[int]:
+        def get_successor_for(
+            self,
+            parent_cst: int,
+            operation: int,
+            ignore_substitution: bool = False
+        ) -> Optional[int]:
             ''' Get child for parent inside target RSFrom. '''
             if not ignore_substitution:
                 for sub in self.substitutions:
@@ -102,50 +116,45 @@ class ChangeManager:
         ''' Trigger cascade resolutions when new constituent is created. '''
         self.cache.insert(source)
         depend_aliases = new_cst.extract_references()
-        alias_mapping: AliasMapping = {}
+        alias_mapping: CstMapping = {}
         for alias in depend_aliases:
             cst = source.cache.by_alias.get(alias)
             if cst is not None:
                 alias_mapping[alias] = cst
         operation = self.cache.get_operation(source)
-        if operation is None:
-            return
-        self._create_cst_cascade(new_cst, operation, alias_mapping)
+        self._cascade_create_cst(new_cst, operation, alias_mapping)
 
     def on_change_cst_type(self, target: Constituenta, source: RSForm) -> None:
-        ''' Trigger cascade resolutions when new constituent type is changed. '''
+        ''' Trigger cascade resolutions when constituenta type is changed. '''
         self.cache.insert(source)
         operation = self.cache.get_operation(source)
-        if operation is None:
-            return
-        self._change_cst_type_cascade(target.pk, target.cst_type, operation)
+        self._cascade_change_cst_type(target.pk, target.cst_type, operation)
 
-    def _change_cst_type_cascade(self, cst_id: int, ctype: CstType, operation: Operation) -> None:
+    def on_update_cst(self, target: Constituenta, data: dict, old_data: dict, source: RSForm) -> None:
+        ''' Trigger cascade resolutions when constituenta data is changed. '''
+        self.cache.insert(source)
+        operation = self.cache.get_operation(source)
+        depend_aliases = self._extract_data_references(data, old_data)
+        alias_mapping: CstMapping = {}
+        for alias in depend_aliases:
+            cst = source.cache.by_alias.get(alias)
+            if cst is not None:
+                alias_mapping[alias] = cst
+        self._cascade_update_cst(target.pk, operation, data, old_data, alias_mapping)
+
+    def _cascade_create_cst(self, prototype: Constituenta, operation: Operation, mapping: CstMapping) -> None:
         children = self.cache.graph.outputs[operation.pk]
         if len(children) == 0:
             return
-        self.cache.ensure_loaded()
-        for child_id in children:
-            child_operation = self.cache.operation_by_id[child_id]
-            successor_id = self.cache.get_successor_for(cst_id, child_id, ignore_substitution=True)
-            if successor_id is None:
-                continue
-            child_schema = self.cache.get_schema(child_operation)
-            if child_schema is not None and child_schema.change_cst_type(successor_id, ctype):
-                self._change_cst_type_cascade(successor_id, ctype, child_operation)
-
-
-    def _create_cst_cascade(self, prototype: Constituenta, source: Operation, mapping: AliasMapping) -> None:
-        children = self.cache.graph.outputs[source.pk]
-        if len(children) == 0:
-            return
-        source_schema = self.cache.get_schema(source)
+        source_schema = self.cache.get_schema(operation)
         assert source_schema is not None
         for child_id in children:
             child_operation = self.cache.operation_by_id[child_id]
             child_schema = self.cache.get_schema(child_operation)
             if child_schema is None:
                 continue
+
+            # TODO: update substitutions for diamond synthesis (if needed)
 
             self.cache.ensure_loaded()
             new_mapping = self._transform_mapping(mapping, child_operation, child_schema)
@@ -159,13 +168,58 @@ class ChangeManager:
             )
             self.cache.insert_inheritance(new_inheritance)
             new_mapping = {alias_mapping[alias]: cst for alias, cst in new_mapping.items()}
-            self._create_cst_cascade(new_cst, child_operation, new_mapping)
+            self._cascade_create_cst(new_cst, child_operation, new_mapping)
 
+    def _cascade_change_cst_type(self, cst_id: int, ctype: CstType, operation: Operation) -> None:
+        children = self.cache.graph.outputs[operation.pk]
+        if len(children) == 0:
+            return
+        self.cache.ensure_loaded()
+        for child_id in children:
+            child_operation = self.cache.operation_by_id[child_id]
+            successor_id = self.cache.get_successor_for(cst_id, child_id, ignore_substitution=True)
+            if successor_id is None:
+                continue
+            child_schema = self.cache.get_schema(child_operation)
+            if child_schema is not None and child_schema.change_cst_type(successor_id, ctype):
+                self._cascade_change_cst_type(successor_id, ctype, child_operation)
 
-    def _transform_mapping(self, mapping: AliasMapping, operation: Operation, schema: RSForm) -> AliasMapping:
+    # pylint: disable=too-many-arguments
+    def _cascade_update_cst(
+        self,
+        cst_id: int, operation: Operation,
+        data: dict, old_data: dict,
+        mapping: CstMapping
+    ) -> None:
+        children = self.cache.graph.outputs[operation.pk]
+        if len(children) == 0:
+            return
+        self.cache.ensure_loaded()
+        for child_id in children:
+            child_operation = self.cache.operation_by_id[child_id]
+            successor_id = self.cache.get_successor_for(cst_id, child_id, ignore_substitution=True)
+            if successor_id is None:
+                continue
+            child_schema = self.cache.get_schema(child_operation)
+            assert child_schema is not None
+            new_mapping = self._transform_mapping(mapping, child_operation, child_schema)
+            alias_mapping = {alias: cst.alias for alias, cst in new_mapping.items()}
+            successor = child_schema.cache.by_id.get(successor_id)
+            if successor is None:
+                continue
+            new_data = self._prepare_update_data(successor, data, old_data, alias_mapping)
+            if len(new_data) == 0:
+                continue
+            new_old_data = child_schema.update_cst(successor, new_data)
+            if len(new_old_data) == 0:
+                continue
+            new_mapping = {alias_mapping[alias]: cst for alias, cst in new_mapping.items()}
+            self._cascade_update_cst(successor_id, child_operation, new_data, new_old_data, new_mapping)
+
+    def _transform_mapping(self, mapping: CstMapping, operation: Operation, schema: RSForm) -> CstMapping:
         if len(mapping) == 0:
             return mapping
-        result: AliasMapping = {}
+        result: CstMapping = {}
         for alias, cst in mapping.items():
             successor_id = self.cache.get_successor_for(cst.pk, operation.pk)
             if successor_id is None:
@@ -192,3 +246,34 @@ class ChangeManager:
             return INSERT_LAST
         prev_cst = destination.cache.by_id[inherited_prev_id]
         return cast(int, prev_cst.order) + 1
+
+    def _extract_data_references(self, data: dict, old_data: dict) -> set[str]:
+        result: set[str] = set()
+        if 'definition_formal' in data:
+            result.update(extract_globals(data['definition_formal']))
+            result.update(extract_globals(old_data['definition_formal']))
+        if 'term_raw' in data:
+            result.update(extract_entities(data['term_raw']))
+            result.update(extract_entities(old_data['term_raw']))
+        if 'definition_raw' in data:
+            result.update(extract_entities(data['definition_raw']))
+            result.update(extract_entities(old_data['definition_raw']))
+        return result
+
+    def _prepare_update_data(self, cst: Constituenta, data: dict, old_data: dict, mapping: dict[str, str]) -> dict:
+        new_data = {}
+        if 'term_forms' in data:
+            if old_data['term_forms'] == cst.term_forms:
+                new_data['term_forms'] = data['term_forms']
+        if 'convention' in data:
+            if old_data['convention'] == cst.convention:
+                new_data['convention'] = data['convention']
+        if 'definition_formal' in data:
+            new_data['definition_formal'] = replace_globals(data['definition_formal'], mapping)
+        if 'term_raw' in data:
+            if replace_entities(old_data['term_raw'], mapping) == cst.term_raw:
+                new_data['term_raw'] = replace_entities(data['term_raw'], mapping)
+        if 'definition_raw' in data:
+            if replace_entities(old_data['definition_raw'], mapping) == cst.definition_raw:
+                new_data['definition_raw'] = replace_entities(data['definition_raw'], mapping)
+        return new_data

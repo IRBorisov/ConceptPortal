@@ -323,8 +323,8 @@ export const RSEditState = ({
         return;
       }
       const data: ICstUpdateData = {
-        id: activeCst.id,
-        term_forms: forms
+        target: activeCst.id,
+        item_data: { term_forms: forms }
       };
       model.cstUpdate(data, () => toast.success(information.changesSaved));
     },

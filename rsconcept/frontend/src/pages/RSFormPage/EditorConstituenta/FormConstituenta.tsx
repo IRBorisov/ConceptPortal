@@ -114,12 +114,21 @@ function FormConstituenta({
       return;
     }
     const data: ICstUpdateData = {
-      id: state.id,
-      term_raw: term,
-      definition_formal: expression,
-      definition_raw: textDefinition,
-      convention: convention
+      target: state.id,
+      item_data: {}
     };
+    if (state.term_raw !== term) {
+      data.item_data.term_raw = term;
+    }
+    if (state.definition_formal !== expression) {
+      data.item_data.definition_formal = expression;
+    }
+    if (state.definition_raw !== textDefinition) {
+      data.item_data.definition_raw = textDefinition;
+    }
+    if (state.convention !== convention) {
+      data.item_data.convention = convention;
+    }
     cstUpdate(data, () => toast.success(information.changesSaved));
   }
 
@@ -216,7 +225,7 @@ function FormConstituenta({
               onChange={event => setConvention(event.target.value)}
             />
           </AnimateFade>
-          {!showConvention && (!disabled || processing) ? (
+          <AnimateFade key='cst_convention_button' hideContent={showConvention || (disabled && !processing)}>
             <button
               key='cst_disable_comment'
               id='cst_disable_comment'
@@ -227,7 +236,7 @@ function FormConstituenta({
             >
               Добавить комментарий
             </button>
-          ) : null}
+          </AnimateFade>
 
           {!disabled || processing ? (
             <div className='self-center flex'>

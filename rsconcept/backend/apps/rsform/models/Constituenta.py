@@ -26,6 +26,16 @@ def extract_globals(expression: str) -> set[str]:
     return set(re.findall(_RE_GLOBALS, expression))
 
 
+def replace_globals(expression: str, mapping: dict[str, str]) -> str:
+    ''' Replace all global aliases in expression. '''
+    return apply_pattern(expression, mapping, _GLOBAL_ID_PATTERN)
+
+
+def replace_entities(expression: str, mapping: dict[str, str]) -> str:
+    ''' Replace all entity references in expression. '''
+    return apply_pattern(expression, mapping, _REF_ENTITY_PATTERN)
+
+
 class CstType(TextChoices):
     ''' Type of constituenta. '''
     BASE = 'basic'
@@ -114,15 +124,15 @@ class Constituenta(Model):
         if change_aliases and self.alias in mapping:
             modified = True
             self.alias = mapping[self.alias]
-        expression = apply_pattern(self.definition_formal, mapping, _GLOBAL_ID_PATTERN)
+        expression = replace_globals(self.definition_formal, mapping)
         if expression != self.definition_formal:
             modified = True
             self.definition_formal = expression
-        term = apply_pattern(self.term_raw, mapping, _REF_ENTITY_PATTERN)
+        term = replace_entities(self.term_raw, mapping)
         if term != self.term_raw:
             modified = True
             self.term_raw = term
-        definition = apply_pattern(self.definition_raw, mapping, _REF_ENTITY_PATTERN)
+        definition = replace_entities(self.definition_raw, mapping)
         if definition != self.definition_raw:
             modified = True
             self.definition_raw = definition

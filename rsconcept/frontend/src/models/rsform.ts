@@ -152,11 +152,12 @@ export interface ICstMovetoData extends IConstituentaList {
 /**
  * Represents data, used in updating persistent attributes in {@link IConstituenta}.
  */
-export interface ICstUpdateData
-  extends Pick<IConstituentaMeta, 'id'>,
-    Partial<
-      Pick<IConstituentaMeta, 'convention' | 'definition_formal' | 'definition_raw' | 'term_raw' | 'term_forms'>
-    > {}
+export interface ICstUpdateData {
+  target: ConstituentaID;
+  item_data: Partial<
+    Pick<IConstituentaMeta, 'convention' | 'definition_formal' | 'definition_raw' | 'term_raw' | 'term_forms'>
+  >;
+}
 
 /**
  * Represents data, used in renaming {@link IConstituenta}.

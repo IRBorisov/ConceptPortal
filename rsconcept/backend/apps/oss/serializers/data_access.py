@@ -57,9 +57,9 @@ class OperationCreateSerializer(serializers.Serializer):
 
 
 class OperationUpdateSerializer(serializers.Serializer):
-    ''' Serializer: Operation creation. '''
+    ''' Serializer: Operation update. '''
     class OperationUpdateData(serializers.ModelSerializer):
-        ''' Serializer: Operation creation data. '''
+        ''' Serializer: Operation update data. '''
         class Meta:
             ''' serializer metadata. '''
             model = Operation
