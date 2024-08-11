@@ -67,6 +67,21 @@ export function applyPattern(text: string, mapping: Record<string, string>, patt
 }
 
 /**
+ * Truncate text to max symbols. Add ellipsis if truncated.
+ */
+export function truncateText(text: string, maxSymbols: number): string {
+  if (text.length <= maxSymbols) {
+    return text;
+  }
+  const trimmedText = text.slice(0, maxSymbols);
+  const lastSpaceIndex = trimmedText.lastIndexOf(' ');
+  if (lastSpaceIndex === -1) {
+    return trimmedText + '...';
+  }
+  return trimmedText.slice(0, lastSpaceIndex) + '...';
+}
+
+/**
  * Check if Axios response is html.
  */
 export function isResponseHtml(response?: AxiosResponse) {

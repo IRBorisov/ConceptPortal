@@ -152,7 +152,7 @@ export const OptionsState = ({ children }: OptionsStateProps) => {
           id={`${globals.tooltip}`}
           layer='z-topmost'
           place='right-start'
-          className={clsx('mt-3 translate-y-1/2', 'max-w-[20rem]')}
+          className={clsx('mt-1 translate-y-1/2', 'max-w-[20rem]')}
         />
         {children}
       </>
