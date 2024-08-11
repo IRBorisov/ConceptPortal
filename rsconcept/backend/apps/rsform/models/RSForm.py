@@ -23,6 +23,7 @@ from .api_RSLanguage import (
 from .Constituenta import Constituenta, CstType, extract_globals
 
 INSERT_LAST: int = -1
+DELETED_ALIAS = 'DEL'
 
 
 class RSForm:
@@ -348,10 +349,12 @@ class RSForm:
 
     def delete_cst(self, target: Iterable[Constituenta]) -> None:
         ''' Delete multiple constituents. Do not check if listCst are from this schema. '''
+        mapping = {cst.alias: DELETED_ALIAS for cst in target}
+        self.cache.ensure_loaded()
         self.cache.remove_multi(target)
+        self.apply_mapping(mapping)
         Constituenta.objects.filter(pk__in=[cst.pk for cst in target]).delete()
         self._reset_order()
-        self.resolve_all_text()
         self.save()
 
     def substitute(self, substitutions: list[tuple[Constituenta, Constituenta]]) -> None:

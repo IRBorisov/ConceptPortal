@@ -174,6 +174,26 @@ class TestRSForm(DBTester):
         self.assertEqual(s2.definition_raw, '@{X11|plur}')
 
 
+    def test_delete_cst(self):
+        x1 = self.schema.insert_new('X1')
+        x2 = self.schema.insert_new('X2')
+        d1 = self.schema.insert_new(
+            alias='D1',
+            definition_formal='X1 = X2',
+            definition_raw='@{X1|sing}',
+            term_raw='@{X2|plur}'
+        )
+
+        self.schema.delete_cst([x1])
+        x2.refresh_from_db()
+        d1.refresh_from_db()
+        self.assertEqual(self.schema.constituents().count(), 2)
+        self.assertEqual(x2.order, 1)
+        self.assertEqual(d1.order, 2)
+        self.assertEqual(d1.definition_formal, 'DEL = X2')
+        self.assertEqual(d1.definition_raw, '@{DEL|sing}')
+        self.assertEqual(d1.term_raw, '@{X2|plur}')
+
     def test_apply_mapping(self):
         x1 = self.schema.insert_new('X1')
         x2 = self.schema.insert_new('X11')

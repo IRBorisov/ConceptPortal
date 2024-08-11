@@ -16,7 +16,7 @@ from rest_framework.serializers import ValidationError
 
 from apps.library.models import AccessPolicy, LibraryItem, LibraryItemType, LocationHead
 from apps.library.serializers import LibraryItemSerializer
-from apps.oss.models import ChangeManager
+from apps.oss.models import PropagationFacade
 from apps.users.models import User
 from shared import messages as msg
 from shared import permissions, utility
@@ -84,15 +84,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             insert_after = None
         else:
             insert_after = data['insert_after']
-
         schema = m.RSForm(self._get_item())
         with transaction.atomic():
             new_cst = schema.create_cst(data, insert_after)
-            hosts = LibraryItem.objects.filter(operations__result=schema.model)
-            for host in hosts:
-                ChangeManager(host).on_create_cst(new_cst, schema)
-
-
+            PropagationFacade.on_create_cst(new_cst, schema)
         return Response(
             status=c.HTTP_201_CREATED,
             data={
@@ -118,16 +113,12 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         model = self._get_item()
         serializer = s.CstUpdateSerializer(data=request.data, partial=True, context={'schema': model})
         serializer.is_valid(raise_exception=True)
-
         cst = cast(m.Constituenta, serializer.validated_data['target'])
         schema = m.RSForm(model)
         data = serializer.validated_data['item_data']
         with transaction.atomic():
-            hosts = LibraryItem.objects.filter(operations__result=model)
             old_data = schema.update_cst(cst, data)
-            for host in hosts:
-                ChangeManager(host).on_update_cst(cst, data, old_data, schema)
-
+            PropagationFacade.on_update_cst(cst, data, old_data, schema)
         return Response(
             status=c.HTTP_200_OK,
             data=s.CstSerializer(m.Constituenta.objects.get(pk=request.data['target'])).data
@@ -164,13 +155,15 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
                 status=c.HTTP_400_BAD_REQUEST,
                 data={f'{cst.pk}': msg.constituentaNoStructure()}
             )
+        schema = m.RSForm(model)
+
         with transaction.atomic():
-            result = m.RSForm(model).produce_structure(cst, cst_parse)
+            result = schema.produce_structure(cst, cst_parse)
         return Response(
             status=c.HTTP_200_OK,
             data={
                 'cst_list': result,
-                'schema': s.RSFormParseSerializer(model).data
+                'schema': s.RSFormParseSerializer(schema.model).data
             }
         )
 
@@ -191,28 +184,23 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         model = self._get_item()
         serializer = s.CstRenameSerializer(data=request.data, context={'schema': model})
         serializer.is_valid(raise_exception=True)
-
         cst = cast(m.Constituenta, serializer.validated_data['target'])
         changed_type = cst.cst_type != serializer.validated_data['cst_type']
         mapping = {cst.alias: serializer.validated_data['alias']}
-        cst.alias = serializer.validated_data['alias']
-        cst.cst_type = serializer.validated_data['cst_type']
         schema = m.RSForm(model)
-
         with transaction.atomic():
+            cst.alias = serializer.validated_data['alias']
+            cst.cst_type = serializer.validated_data['cst_type']
             cst.save()
             schema.apply_mapping(mapping=mapping, change_aliases=False)
             cst.refresh_from_db()
             if changed_type:
-                hosts = LibraryItem.objects.filter(operations__result=model)
-                for host in hosts:
-                    ChangeManager(host).on_change_cst_type(cst, schema)
-
+                PropagationFacade.on_change_cst_type(cst, schema)
         return Response(
             status=c.HTTP_200_OK,
             data={
                 'new_cst': s.CstSerializer(cst).data,
-                'schema': s.RSFormParseSerializer(model).data
+                'schema': s.RSFormParseSerializer(schema.model).data
             }
         )
 
@@ -236,19 +224,17 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             context={'schema': model}
         )
         serializer.is_valid(raise_exception=True)
-
+        schema = m.RSForm(model)
+        substitutions: list[tuple[m.Constituenta, m.Constituenta]] = []
         with transaction.atomic():
-            substitutions: list[tuple[m.Constituenta, m.Constituenta]] = []
             for substitution in serializer.validated_data['substitutions']:
                 original = cast(m.Constituenta, substitution['original'])
                 replacement = cast(m.Constituenta, substitution['substitution'])
                 substitutions.append((original, replacement))
-            m.RSForm(model).substitute(substitutions)
-
-        model.refresh_from_db()
+            schema.substitute(substitutions)
         return Response(
             status=c.HTTP_200_OK,
-            data=s.RSFormParseSerializer(model).data
+            data=s.RSFormParseSerializer(schema.model).data
         )
 
     @extend_schema(
@@ -271,11 +257,14 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             context={'schema': model}
         )
         serializer.is_valid(raise_exception=True)
+        cst_list: list[m.Constituenta] = serializer.validated_data['items']
+        schema = m.RSForm(model)
         with transaction.atomic():
-            m.RSForm(model).delete_cst(serializer.validated_data['items'])
+            PropagationFacade.before_delete(cst_list, schema)
+            schema.delete_cst(cst_list)
         return Response(
             status=c.HTTP_200_OK,
-            data=s.RSFormParseSerializer(model).data
+            data=s.RSFormParseSerializer(schema.model).data
         )
 
     @extend_schema(

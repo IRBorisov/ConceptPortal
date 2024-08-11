@@ -57,7 +57,6 @@ class TestChangeConstituents(EndpointTester):
         self.ks3 = RSForm(self.operation3.result)
         self.assertEqual(self.ks3.constituents().count(), 4)
 
-
     @decl_endpoint('/api/rsforms/{schema}/create-cst', method='post')
     def test_create_constituenta(self):
         data = {
@@ -107,3 +106,14 @@ class TestChangeConstituents(EndpointTester):
         self.assertEqual(inherited_cst.term_raw, data['item_data']['term_raw'])
         self.assertEqual(inherited_cst.definition_formal, r'X1\X1')
         self.assertEqual(inherited_cst.definition_raw, r'@{X2|sing,datv}')
+
+    @decl_endpoint('/api/rsforms/{schema}/delete-multiple-cst', method='patch')
+    def test_delete_constituenta(self):
+        data = {'items': [self.ks2X1.pk]}
+        response = self.executeOK(data=data, schema=self.ks2.model.pk)
+        inherited_cst = Constituenta.objects.get(as_child__parent_id=self.ks2D1.pk)
+        self.ks2D1.refresh_from_db()
+        self.assertEqual(self.ks2.constituents().count(), 1)
+        self.assertEqual(self.ks3.constituents().count(), 3)
+        self.assertEqual(self.ks2D1.definition_formal, r'DEL\DEL')
+        self.assertEqual(inherited_cst.definition_formal, r'DEL\DEL')

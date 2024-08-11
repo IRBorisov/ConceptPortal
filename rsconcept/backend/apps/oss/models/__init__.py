@@ -6,3 +6,4 @@ from .Inheritance import Inheritance
 from .Operation import Operation, OperationType
 from .OperationSchema import OperationSchema
 from .Substitution import Substitution
+from .PropagationFacade import PropagationFacade
