@@ -448,7 +448,7 @@ class RSForm:
             data=data
         )
 
-    def produce_structure(self, target: Constituenta, parse: dict) -> list[int]:
+    def produce_structure(self, target: Constituenta, parse: dict) -> list[Constituenta]:
         ''' Add constituents for each structural element of the target. '''
         expressions = generate_structure(
             alias=target.alias,
@@ -474,11 +474,11 @@ class RSForm:
                 definition_formal=text,
                 cst_type=cst_type
             )
-            result.append(new_item.pk)
+            result.append(new_item)
             free_index = free_index + 1
             position = position + 1
 
-        self.cache.clear()
+        self.cache.insert_multi(result)
         self.save()
         return result
 

@@ -22,8 +22,6 @@ from .Substitution import Substitution
 
 CstMapping = dict[str, Constituenta]
 
-# TODO: add more variety tests for cascade resolutions model
-
 
 class ChangeManager:
     ''' Change propagation wrapper for OSS. '''
@@ -121,25 +119,29 @@ class ChangeManager:
         self.cache = ChangeManager.Cache(self.oss)
 
 
-    def on_create_cst(self, new_cst: Constituenta, source: RSForm) -> None:
+    def after_create_cst(self, cst_list: list[Constituenta], source: RSForm) -> None:
         ''' Trigger cascade resolutions when new constituent is created. '''
         self.cache.insert(source)
-        depend_aliases = new_cst.extract_references()
+        inserted_aliases = [cst.alias for cst in cst_list]
+        depend_aliases: set[str] = set()
+        for new_cst in cst_list:
+            depend_aliases.update(new_cst.extract_references())
+        depend_aliases.difference_update(inserted_aliases)
         alias_mapping: CstMapping = {}
         for alias in depend_aliases:
             cst = source.cache.by_alias.get(alias)
             if cst is not None:
                 alias_mapping[alias] = cst
         operation = self.cache.get_operation(source)
-        self._cascade_create_cst(new_cst, operation, alias_mapping)
+        self._cascade_create_cst(cst_list, operation, alias_mapping)
 
-    def on_change_cst_type(self, target: Constituenta, source: RSForm) -> None:
+    def after_change_cst_type(self, target: Constituenta, source: RSForm) -> None:
         ''' Trigger cascade resolutions when constituenta type is changed. '''
         self.cache.insert(source)
         operation = self.cache.get_operation(source)
         self._cascade_change_cst_type(target.pk, target.cst_type, operation)
 
-    def on_update_cst(self, target: Constituenta, data: dict, old_data: dict, source: RSForm) -> None:
+    def after_update_cst(self, target: Constituenta, data: dict, old_data: dict, source: RSForm) -> None:
         ''' Trigger cascade resolutions when constituenta data is changed. '''
         self.cache.insert(source)
         operation = self.cache.get_operation(source)
@@ -157,32 +159,7 @@ class ChangeManager:
         operation = self.cache.get_operation(source)
         self._cascade_before_delete(target, operation)
 
-    def _cascade_before_delete(self, target: list[Constituenta], operation: Operation) -> None:
-        children = self.cache.graph.outputs[operation.pk]
-        if len(children) == 0:
-            return
-        self.cache.ensure_loaded()
-        for child_id in children:
-            child_operation = self.cache.operation_by_id[child_id]
-            child_schema = self.cache.get_schema(child_operation)
-            if child_schema is None:
-                continue
-            child_schema.cache.ensure_loaded()
-
-            # TODO: check if substitutions are affected. Undo substitutions before deletion
-
-            child_target_cst = []
-            child_target_ids = []
-            for cst in target:
-                successor_id = self.cache.get_successor_for(cst.pk, child_id, ignore_substitution=True)
-                if successor_id is not None:
-                    child_target_ids.append(successor_id)
-                    child_target_cst.append(child_schema.cache.by_id[successor_id])
-            self._cascade_before_delete(child_target_cst, child_operation)
-            self.cache.remove_cst(child_target_ids, child_id)
-            child_schema.delete_cst(child_target_cst)
-
-    def _cascade_create_cst(self, prototype: Constituenta, operation: Operation, mapping: CstMapping) -> None:
+    def _cascade_create_cst(self, cst_list: list[Constituenta], operation: Operation, mapping: CstMapping) -> None:
         children = self.cache.graph.outputs[operation.pk]
         if len(children) == 0:
             return
@@ -199,16 +176,17 @@ class ChangeManager:
             self.cache.ensure_loaded()
             new_mapping = self._transform_mapping(mapping, child_operation, child_schema)
             alias_mapping = {alias: cst.alias for alias, cst in new_mapping.items()}
-            insert_where = self._determine_insert_position(prototype, child_operation, source_schema, child_schema)
-            new_cst = child_schema.insert_copy([prototype], insert_where, alias_mapping)[0]
-            new_inheritance = Inheritance.objects.create(
-                operation=child_operation,
-                child=new_cst,
-                parent=prototype
-            )
-            self.cache.insert_inheritance(new_inheritance)
+            insert_where = self._determine_insert_position(cst_list[0], child_operation, source_schema, child_schema)
+            new_cst_list = child_schema.insert_copy(cst_list, insert_where, alias_mapping)
+            for index, cst in enumerate(new_cst_list):
+                new_inheritance = Inheritance.objects.create(
+                    operation=child_operation,
+                    child=cst,
+                    parent=cst_list[index]
+                )
+                self.cache.insert_inheritance(new_inheritance)
             new_mapping = {alias_mapping[alias]: cst for alias, cst in new_mapping.items()}
-            self._cascade_create_cst(new_cst, child_operation, new_mapping)
+            self._cascade_create_cst(new_cst_list, child_operation, new_mapping)
 
     def _cascade_change_cst_type(self, cst_id: int, ctype: CstType, operation: Operation) -> None:
         children = self.cache.graph.outputs[operation.pk]
@@ -255,6 +233,31 @@ class ChangeManager:
                 continue
             new_mapping = {alias_mapping[alias]: cst for alias, cst in new_mapping.items()}
             self._cascade_update_cst(successor_id, child_operation, new_data, new_old_data, new_mapping)
+
+    def _cascade_before_delete(self, target: list[Constituenta], operation: Operation) -> None:
+        children = self.cache.graph.outputs[operation.pk]
+        if len(children) == 0:
+            return
+        self.cache.ensure_loaded()
+        for child_id in children:
+            child_operation = self.cache.operation_by_id[child_id]
+            child_schema = self.cache.get_schema(child_operation)
+            if child_schema is None:
+                continue
+            child_schema.cache.ensure_loaded()
+
+            # TODO: check if substitutions are affected. Undo substitutions before deletion
+
+            child_target_cst = []
+            child_target_ids = []
+            for cst in target:
+                successor_id = self.cache.get_successor_for(cst.pk, child_id, ignore_substitution=True)
+                if successor_id is not None:
+                    child_target_ids.append(successor_id)
+                    child_target_cst.append(child_schema.cache.by_id[successor_id])
+            self._cascade_before_delete(child_target_cst, child_operation)
+            self.cache.remove_cst(child_target_ids, child_id)
+            child_schema.delete_cst(child_target_cst)
 
     def _transform_mapping(self, mapping: CstMapping, operation: Operation, schema: RSForm) -> CstMapping:
         if len(mapping) == 0:
