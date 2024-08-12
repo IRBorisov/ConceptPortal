@@ -236,7 +236,7 @@ class RSForm:
             **kwargs
         )
         self.cache.insert(result)
-        self.save()
+        self.save(update_fields=['time_update'])
         return result
 
     def insert_copy(self, items: list[Constituenta], position: int = INSERT_LAST,
@@ -271,7 +271,7 @@ class RSForm:
 
         new_cst = Constituenta.objects.bulk_create(result)
         self.cache.insert_multi(new_cst)
-        self.save()
+        self.save(update_fields=['time_update'])
         return result
 
     # pylint: disable=too-many-branches
@@ -319,7 +319,7 @@ class RSForm:
         cst.save()
         if term_changed:
             self.on_term_change([cst.pk])
-        self.save()
+        self.save(update_fields=['time_update'])
         return old_data
 
     def move_cst(self, target: list[Constituenta], destination: int) -> None:
@@ -345,7 +345,7 @@ class RSForm:
                 cst.order = destination + size + count_bot
                 count_bot += 1
         Constituenta.objects.bulk_update(cst_list, ['order'])
-        self.save()
+        self.save(update_fields=['time_update'])
 
     def delete_cst(self, target: Iterable[Constituenta]) -> None:
         ''' Delete multiple constituents. Do not check if listCst are from this schema. '''
@@ -355,7 +355,7 @@ class RSForm:
         self.apply_mapping(mapping)
         Constituenta.objects.filter(pk__in=[cst.pk for cst in target]).delete()
         self._reset_order()
-        self.save()
+        self.save(update_fields=['time_update'])
 
     def substitute(self, substitutions: list[tuple[Constituenta, Constituenta]]) -> None:
         ''' Execute constituenta substitution. '''
@@ -363,12 +363,12 @@ class RSForm:
         deleted: list[Constituenta] = []
         replacements: list[Constituenta] = []
         for original, substitution in substitutions:
-            assert original.pk != substitution.pk
             mapping[original.alias] = substitution.alias
             deleted.append(original)
             replacements.append(substitution)
         self.cache.remove_multi(deleted)
         Constituenta.objects.filter(pk__in=[cst.pk for cst in deleted]).delete()
+        self._reset_order()
         self.apply_mapping(mapping)
         self.on_term_change([substitution.pk for substitution in replacements])
 
@@ -417,7 +417,7 @@ class RSForm:
             if cst.apply_mapping(mapping, change_aliases):
                 update_list.append(cst)
         Constituenta.objects.bulk_update(update_list, ['alias', 'definition_formal', 'term_raw', 'definition_raw'])
-        self.save()
+        self.save(update_fields=['time_update'])
 
     def resolve_all_text(self) -> None:
         ''' Trigger reference resolution for all texts. '''
@@ -479,7 +479,7 @@ class RSForm:
             position = position + 1
 
         self.cache.insert_multi(result)
-        self.save()
+        self.save(update_fields=['time_update'])
         return result
 
     def _shift_positions(self, start: int, shift: int) -> None:

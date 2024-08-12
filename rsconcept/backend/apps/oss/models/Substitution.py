@@ -29,4 +29,4 @@ class Substitution(Model):
         verbose_name_plural = 'Таблицы отождествлений'
 
     def __str__(self) -> str:
-        return f'{self.original} -> {self.substitution}'
+        return f'{self.substitution} -> {self.original}'

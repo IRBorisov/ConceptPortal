@@ -40,3 +40,10 @@ class PropagationFacade:
         hosts = _get_oss_hosts(source.model)
         for host in hosts:
             ChangeManager(host).before_delete(target, source)
+
+    @classmethod
+    def before_substitute(cls, substitutions: list[tuple[Constituenta, Constituenta]], source: RSForm) -> None:
+        ''' Trigger cascade resolutions before constituents are substituted. '''
+        hosts = _get_oss_hosts(source.model)
+        for host in hosts:
+            ChangeManager(host).before_substitute(substitutions, source)

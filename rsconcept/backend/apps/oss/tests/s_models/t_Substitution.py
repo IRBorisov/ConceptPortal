@@ -52,7 +52,7 @@ class TestSynthesisSubstitution(TestCase):
 
 
     def test_str(self):
-        testStr = f'{self.ks1X1} -> {self.ks2X1}'
+        testStr = f'{self.ks2X1} -> {self.ks1X1}'
         self.assertEqual(str(self.substitution), testStr)
 
 

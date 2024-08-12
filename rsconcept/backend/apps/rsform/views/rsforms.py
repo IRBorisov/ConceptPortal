@@ -194,6 +194,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             cst.cst_type = serializer.validated_data['cst_type']
             cst.save()
             schema.apply_mapping(mapping=mapping, change_aliases=False)
+            schema.save()
             cst.refresh_from_db()
             if changed_type:
                 PropagationFacade.after_change_cst_type(cst, schema)
@@ -232,6 +233,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
                 original = cast(m.Constituenta, substitution['original'])
                 replacement = cast(m.Constituenta, substitution['substitution'])
                 substitutions.append((original, replacement))
+            PropagationFacade.before_substitute(substitutions, schema)
             schema.substitute(substitutions)
         return Response(
             status=c.HTTP_200_OK,
@@ -312,7 +314,8 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     def reset_aliases(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Recreate all aliases based on order. '''
         model = self._get_item()
-        m.RSForm(model).reset_aliases()
+        schema = m.RSForm(model)
+        schema.reset_aliases()
         return Response(
             status=c.HTTP_200_OK,
             data=s.RSFormParseSerializer(model).data

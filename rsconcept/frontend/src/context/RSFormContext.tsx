@@ -345,6 +345,8 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
           setSchema(newData);
           library.localUpdateTimestamp(newData.id);
           if (callback) callback();
+
+          // TODO: deal with OSS cache invalidation
         }
       });
     },
@@ -414,6 +416,8 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
           setSchema(newData.schema);
           library.localUpdateTimestamp(newData.schema.id);
           if (callback) callback(newData.new_cst);
+
+          // TODO: deal with OSS cache invalidation
         }
       });
     },
@@ -432,6 +436,8 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
           setSchema(newData);
           library.localUpdateTimestamp(newData.id);
           if (callback) callback();
+
+          // TODO: deal with OSS cache invalidation
         }
       });
     },
@@ -450,6 +456,8 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
           reload(setProcessing, () => {
             library.localUpdateTimestamp(Number(itemID));
             if (callback) callback(newData);
+
+            // TODO: deal with OSS cache invalidation
           })
       });
     },
@@ -467,7 +475,11 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         onSuccess: newData => {
           setSchema(newData.schema);
           library.localUpdateTimestamp(newData.schema.id);
-          if (callback) callback(newData.new_cst);
+          if (library.globalOSS?.schemas.includes(newData.schema.id)) {
+            library.reloadOSS(() => {
+              if (callback) callback(newData.new_cst);
+            });
+          } else if (callback) callback(newData.new_cst);
         }
       });
     },
@@ -485,7 +497,11 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         onSuccess: newData => {
           setSchema(newData);
           library.localUpdateTimestamp(newData.id);
-          if (callback) callback();
+          if (library.globalOSS?.schemas.includes(newData.id)) {
+            library.reloadOSS(() => {
+              if (callback) callback();
+            });
+          } else if (callback) callback();
         }
       });
     },
@@ -611,6 +627,8 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
           setSchema(newData);
           library.localUpdateTimestamp(Number(itemID));
           if (callback) callback(newData);
+
+          // TODO: deal with OSS cache invalidation
         }
       });
     },

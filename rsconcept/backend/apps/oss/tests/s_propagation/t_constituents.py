@@ -117,3 +117,18 @@ class TestChangeConstituents(EndpointTester):
         self.assertEqual(self.ks3.constituents().count(), 3)
         self.assertEqual(self.ks2D1.definition_formal, r'DEL\DEL')
         self.assertEqual(inherited_cst.definition_formal, r'DEL\DEL')
+
+    @decl_endpoint('/api/rsforms/{schema}/substitute', method='patch')
+    def test_substitute(self):
+        d2 = self.ks3.insert_new('D2', cst_type=CstType.TERM, definition_formal=r'X1\X2\X3')
+        data = {'substitutions': [{
+            'original': self.ks1X1.pk,
+            'substitution': self.ks1X2.pk
+        }]}
+        self.executeOK(data=data, schema=self.ks1.model.pk)
+        self.ks1X2.refresh_from_db()
+        d2.refresh_from_db()
+        self.assertEqual(self.ks1.constituents().count(), 1)
+        self.assertEqual(self.ks3.constituents().count(), 4)
+        self.assertEqual(self.ks1X2.order, 1)
+        self.assertEqual(d2.definition_formal, r'X2\X2\X3')

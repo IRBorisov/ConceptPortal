@@ -24,6 +24,7 @@ function TextArea({
   return (
     <div
       className={clsx(
+        'w-full',
         {
           'flex flex-col gap-2': !dense,
           'flex flex-grow items-center gap-3': dense
