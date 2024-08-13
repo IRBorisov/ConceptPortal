@@ -16,7 +16,7 @@
     "@tanstack/react-table": "^8.20.1",
     "@uiw/codemirror-themes": "^4.23.0",
     "@uiw/react-codemirror": "^4.23.0",
-    "axios": "^1.7.3",
+    "axios": "^1.7.4",
     "clsx": "^2.1.1",
     "framer-motion": "^11.3.24",
     "html-to-image": "^1.11.11",
@@ -24,7 +24,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-error-boundary": "^4.0.13",
-    "react-icons": "^5.2.1",
+    "react-icons": "^5.3.0",
     "react-intl": "^6.6.8",
     "react-loader-spinner": "^6.1.6",
     "react-pdf": "^9.1.0",
@@ -57,7 +57,7 @@
     "tailwindcss": "^3.4.9",
     "ts-jest": "^29.2.4",
     "typescript": "^5.5.4",
-    "typescript-eslint": "^8.0.1",
+    "typescript-eslint": "^8.1.0",
     "vite": "^5.4.0"
   },
   "jest": {
