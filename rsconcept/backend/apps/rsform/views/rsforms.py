@@ -594,9 +594,9 @@ def inline_synthesis(request: Request) -> HttpResponse:
                 index = next(i for (i, cst) in enumerate(items) if cst.pk == replacement.pk)
                 replacement = new_items[index]
             substitutions.append((original, replacement))
-        receiver.substitute(substitutions)
 
-        # TODO: propagate substitutions
+        PropagationFacade.before_substitute(substitutions, receiver)
+        receiver.substitute(substitutions)
 
         receiver.restore_order()
 
