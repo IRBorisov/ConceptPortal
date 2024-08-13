@@ -7,6 +7,7 @@ from rest_framework.serializers import ValidationError
 from apps.library.models import LibraryItem
 from apps.rsform.graph import Graph
 from apps.rsform.models import (
+    DELETED_ALIAS,
     INSERT_LAST,
     Constituenta,
     CstType,
@@ -21,7 +22,7 @@ from .Operation import Operation, OperationType
 from .OperationSchema import OperationSchema
 from .Substitution import Substitution
 
-CstMapping = dict[str, Constituenta]
+CstMapping = dict[str, Optional[Constituenta]]
 CstSubstitution = list[tuple[Constituenta, Constituenta]]
 
 
@@ -78,27 +79,6 @@ class ChangeManager:
         operation = self.cache.get_operation(source)
         self._cascade_before_substitute(substitutions, operation)
 
-    def _cascade_before_substitute(
-        self,
-        substitutions: CstSubstitution,
-        operation: Operation
-    ) -> None:
-        children = self.cache.graph.outputs[operation.pk]
-        if len(children) == 0:
-            return
-        self.cache.ensure_loaded()
-        for child_id in children:
-            child_operation = self.cache.operation_by_id[child_id]
-            child_schema = self.cache.get_schema(child_operation)
-            if child_schema is None:
-                continue
-            child_schema.cache.ensure_loaded()
-            new_substitutions = self._transform_substitutions(substitutions, child_operation, child_schema)
-            if len(new_substitutions) == 0:
-                continue
-            self._cascade_before_substitute(new_substitutions, child_operation)
-            child_schema.substitute(new_substitutions)
-
     def _cascade_create_cst(self, cst_list: list[Constituenta], operation: Operation, mapping: CstMapping) -> None:
         children = self.cache.graph.outputs[operation.pk]
         if len(children) == 0:
@@ -115,7 +95,7 @@ class ChangeManager:
 
             self.cache.ensure_loaded()
             new_mapping = self._transform_mapping(mapping, child_operation, child_schema)
-            alias_mapping = {alias: cst.alias for alias, cst in new_mapping.items()}
+            alias_mapping = ChangeManager._produce_alias_mapping(new_mapping)
             insert_where = self._determine_insert_position(cst_list[0], child_operation, source_schema, child_schema)
             new_cst_list = child_schema.insert_copy(cst_list, insert_where, alias_mapping)
             for index, cst in enumerate(new_cst_list):
@@ -161,7 +141,7 @@ class ChangeManager:
             child_schema = self.cache.get_schema(child_operation)
             assert child_schema is not None
             new_mapping = self._transform_mapping(mapping, child_operation, child_schema)
-            alias_mapping = {alias: cst.alias for alias, cst in new_mapping.items()}
+            alias_mapping = ChangeManager._produce_alias_mapping(new_mapping)
             successor = child_schema.cache.by_id.get(successor_id)
             if successor is None:
                 continue
@@ -184,26 +164,74 @@ class ChangeManager:
             child_schema = self.cache.get_schema(child_operation)
             if child_schema is None:
                 continue
-            child_schema.cache.ensure_loaded()
-
-            # TODO: check if substitutions are affected. Undo substitutions before deletion
-
-            child_target_cst = []
-            child_target_ids = []
-            for cst in target:
-                successor_id = self.cache.get_inheritor(cst.pk, child_id)
-                if successor_id is not None:
-                    child_target_ids.append(successor_id)
-                    child_target_cst.append(child_schema.cache.by_id[successor_id])
+            self._undo_substitutions_cst(target, child_operation, child_schema)
+            child_target_ids = self.cache.get_inheritors_list([cst.pk for cst in target], child_id)
+            child_target_cst = [child_schema.cache.by_id[cst_id] for cst_id in child_target_ids]
             self._cascade_before_delete(child_target_cst, child_operation)
-            self.cache.remove_cst(child_target_ids, child_id)
-            child_schema.delete_cst(child_target_cst)
+            if len(child_target_cst) > 0:
+                self.cache.remove_cst(child_target_ids, child_id)
+                child_schema.delete_cst(child_target_cst)
+
+    def _cascade_before_substitute(self, substitutions: CstSubstitution, operation: Operation) -> None:
+        children = self.cache.graph.outputs[operation.pk]
+        if len(children) == 0:
+            return
+        self.cache.ensure_loaded()
+        for child_id in children:
+            child_operation = self.cache.operation_by_id[child_id]
+            child_schema = self.cache.get_schema(child_operation)
+            if child_schema is None:
+                continue
+            new_substitutions = self._transform_substitutions(substitutions, child_id, child_schema)
+            if len(new_substitutions) == 0:
+                continue
+            self._cascade_before_substitute(new_substitutions, child_operation)
+            child_schema.substitute(new_substitutions)
+
+    def _cascade_partial_mapping(
+        self,
+        mapping: CstMapping,
+        target: list[int],
+        operation: Operation,
+        schema: RSForm
+    ) -> None:
+        alias_mapping = ChangeManager._produce_alias_mapping(mapping)
+        schema.apply_partial_mapping(alias_mapping, target)
+        children = self.cache.graph.outputs[operation.pk]
+        if len(children) == 0:
+            return
+        self.cache.ensure_loaded()
+        for child_id in children:
+            child_operation = self.cache.operation_by_id[child_id]
+            child_schema = self.cache.get_schema(child_operation)
+            if child_schema is None:
+                continue
+            new_mapping = self._transform_mapping(mapping, child_operation, child_schema)
+            if not new_mapping:
+                continue
+            new_target = self.cache.get_inheritors_list(target, child_id)
+            if len(new_target) == 0:
+                continue
+            self._cascade_partial_mapping(new_mapping, new_target, child_operation, child_schema)
+
+    @staticmethod
+    def _produce_alias_mapping(mapping: CstMapping) -> dict[str, str]:
+        result: dict[str, str] = {}
+        for alias, cst in mapping.items():
+            if cst is None:
+                result[alias] = DELETED_ALIAS
+            else:
+                result[alias] = cst.alias
+        return result
 
     def _transform_mapping(self, mapping: CstMapping, operation: Operation, schema: RSForm) -> CstMapping:
         if len(mapping) == 0:
             return mapping
         result: CstMapping = {}
         for alias, cst in mapping.items():
+            if cst is None:
+                result[alias] = None
+                continue
             successor_id = self.cache.get_successor(cst.pk, operation.pk)
             if successor_id is None:
                 continue
@@ -263,36 +291,36 @@ class ChangeManager:
     def _transform_substitutions(
         self,
         target: CstSubstitution,
-        operation: Operation,
+        operation: int,
         schema: RSForm
     ) -> CstSubstitution:
         result: CstSubstitution = []
         for current_sub in target:
             sub_replaced = False
-            new_substitution_id = self.cache.get_inheritor(current_sub[1].pk, operation.pk)
+            new_substitution_id = self.cache.get_inheritor(current_sub[1].pk, operation)
             if new_substitution_id is None:
-                for sub in self.cache.substitutions[operation.pk]:
+                for sub in self.cache.substitutions[operation]:
                     if sub.original_id == current_sub[1].pk:
                         sub_replaced = True
-                        new_substitution_id = self.cache.get_inheritor(sub.original_id, operation.pk)
+                        new_substitution_id = self.cache.get_inheritor(sub.original_id, operation)
                         break
 
-            new_original_id = self.cache.get_inheritor(current_sub[0].pk, operation.pk)
+            new_original_id = self.cache.get_inheritor(current_sub[0].pk, operation)
             original_replaced = False
             if new_original_id is None:
-                for sub in self.cache.substitutions[operation.pk]:
+                for sub in self.cache.substitutions[operation]:
                     if sub.original_id == current_sub[0].pk:
                         original_replaced = True
                         sub.original_id = current_sub[1].pk
                         sub.save()
                         new_original_id = new_substitution_id
-                        new_substitution_id = self.cache.get_inheritor(sub.substitution_id, operation.pk)
+                        new_substitution_id = self.cache.get_inheritor(sub.substitution_id, operation)
                         break
 
             if sub_replaced and original_replaced:
                 raise ValidationError({'propagation': 'Substitution breaks OSS substitutions.'})
 
-            for sub in self.cache.substitutions[operation.pk]:
+            for sub in self.cache.substitutions[operation]:
                 if sub.substitution_id == current_sub[0].pk:
                     sub.substitution_id = current_sub[1].pk
                     sub.save()
@@ -300,6 +328,45 @@ class ChangeManager:
             if new_original_id is not None and new_substitution_id is not None:
                 result.append((schema.cache.by_id[new_original_id], schema.cache.by_id[new_substitution_id]))
         return result
+
+    def _undo_substitutions_cst(self, target: list[Constituenta], operation: Operation, schema: RSForm) -> None:
+        target_ids = [cst.pk for cst in target]
+        to_process = []
+        for sub in self.cache.substitutions[operation.pk]:
+            if sub.original_id in target_ids or sub.substitution_id in target_ids:
+                to_process.append(sub)
+        for sub in to_process:
+            self._undo_substitution(sub, schema, target_ids)
+
+    def _undo_substitution(self, target: Substitution, schema: RSForm, ignore_parents: list[int]) -> None:
+        operation = self.cache.operation_by_id[target.operation_id]
+        original_schema, _, original_cst, substitution_cst = self.cache.unfold_sub(target)
+
+        dependant = []
+        for cst_id in original_schema.get_dependant([original_cst.pk]):
+            if cst_id not in ignore_parents:
+                inheritor_id = self.cache.get_inheritor(cst_id, operation.pk)
+                if inheritor_id is not None:
+                    dependant.append(inheritor_id)
+
+        self.cache.substitutions[operation.pk].remove(target)
+        target.delete()
+
+        new_original: Optional[Constituenta] = None
+        if original_cst.pk not in ignore_parents:
+            full_cst = Constituenta.objects.get(pk=original_cst.pk)
+            self.after_create_cst([full_cst], original_schema)
+            new_original_id = self.cache.get_inheritor(original_cst.pk, operation.pk)
+            assert new_original_id is not None
+            new_original = schema.cache.by_id[new_original_id]
+        if len(dependant) == 0:
+            return
+
+        substitution_id = self.cache.get_inheritor(substitution_cst.pk, operation.pk)
+        assert substitution_id is not None
+        substitution_inheritor = schema.cache.by_id[substitution_id]
+        mapping = {cast(str, substitution_inheritor.alias): new_original}
+        self._cascade_partial_mapping(mapping, dependant, operation, schema)
 
 
 class OssCache:
@@ -325,6 +392,7 @@ class OssCache:
     def insert(self, schema: RSForm) -> None:
         ''' Insert new schema. '''
         if not self._schema_by_id.get(schema.model.pk):
+            schema.cache.ensure_loaded()
             self._insert_new(schema)
 
     def get_schema(self, operation: Operation) -> Optional[RSForm]:
@@ -367,6 +435,14 @@ class OssCache:
                 return item.child_id
         return None
 
+    def get_inheritors_list(self, target: list[int], operation: int) -> list[int]:
+        ''' Get child for parent inside target RSFrom. '''
+        result = []
+        for item in self.inheritance[operation]:
+            if item.parent_id in target:
+                result.append(item.child_id)
+        return result
+
     def get_successor(self, parent_cst: int, operation: int) -> Optional[int]:
         ''' Get child for parent inside target RSFrom including substitutions. '''
         for sub in self.substitutions[operation]:
@@ -394,6 +470,27 @@ class OssCache:
         inherit_to_delete = [item for item in self.inheritance[operation] if item.child_id in target]
         for item in inherit_to_delete:
             self.inheritance[operation].remove(item)
+
+    def unfold_sub(self, sub: Substitution) -> tuple[RSForm, RSForm, Constituenta, Constituenta]:
+        operation = self.operation_by_id[sub.operation_id]
+        parents = self.graph.inputs[operation.pk]
+        original_cst = None
+        substitution_cst = None
+        original_schema = None
+        substitution_schema = None
+        for parent_id in parents:
+            parent_schema = self.get_schema(self.operation_by_id[parent_id])
+            if parent_schema is None:
+                continue
+            if sub.original_id in parent_schema.cache.by_id:
+                original_schema = parent_schema
+                original_cst = original_schema.cache.by_id[sub.original_id]
+            if sub.substitution_id in parent_schema.cache.by_id:
+                substitution_schema = parent_schema
+                substitution_cst = substitution_schema.cache.by_id[sub.substitution_id]
+        if original_schema is None or substitution_schema is None or original_cst is None or substitution_cst is None:
+            raise ValueError(f'Parent schema for Substitution-{sub.pk} not found.')
+        return original_schema, substitution_schema, original_cst, substitution_cst
 
     def _insert_new(self, schema: RSForm) -> None:
         self._schemas.append(schema)

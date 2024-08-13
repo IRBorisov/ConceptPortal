@@ -107,6 +107,18 @@ class RSForm:
         model = LibraryItem.objects.get(pk=pk)
         return RSForm(model)
 
+    def get_dependant(self, target: Iterable[int]) -> set[int]:
+        ''' Get list of constituents depending on target (only 1st degree). '''
+        result: set[int] = set()
+        terms = self._graph_term()
+        formal = self._graph_formal()
+        definitions = self._graph_text()
+        for cst_id in target:
+            result.update(formal.outputs[cst_id])
+            result.update(terms.outputs[cst_id])
+            result.update(definitions.outputs[cst_id])
+        return result
+
     def save(self, *args, **kwargs) -> None:
         ''' Model wrapper. '''
         self.model.save(*args, **kwargs)
@@ -239,8 +251,12 @@ class RSForm:
         self.save(update_fields=['time_update'])
         return result
 
-    def insert_copy(self, items: list[Constituenta], position: int = INSERT_LAST,
-                    initial_mapping: Optional[dict[str, str]] = None) -> list[Constituenta]:
+    def insert_copy(
+        self,
+        items: list[Constituenta],
+        position: int = INSERT_LAST,
+        initial_mapping: Optional[dict[str, str]] = None
+    ) -> list[Constituenta]:
         ''' Insert copy of target constituents updating references. '''
         count = len(items)
         if count == 0:
@@ -252,10 +268,12 @@ class RSForm:
 
         indices: dict[str, int] = {}
         for (value, _) in CstType.choices:
-            indices[value] = self.get_max_index(cast(CstType, value))
+            indices[value] = -1
 
         mapping: dict[str, str] = initial_mapping.copy() if initial_mapping else {}
         for cst in items:
+            if indices[cst.cst_type] == -1:
+                indices[cst.cst_type] = self.get_max_index(cst.cst_type)
             indices[cst.cst_type] = indices[cst.cst_type] + 1
             newAlias = f'{get_type_prefix(cst.cst_type)}{indices[cst.cst_type]}'
             mapping[cst.alias] = newAlias
@@ -382,19 +400,6 @@ class RSForm:
         mapping = self._create_reset_mapping()
         self.apply_mapping(mapping, change_aliases=True)
 
-    def _create_reset_mapping(self) -> dict[str, str]:
-        bases = cast(dict[str, int], {})
-        mapping = cast(dict[str, str], {})
-        for cst_type in CstType.values:
-            bases[cst_type] = 1
-        cst_list = self.constituents().order_by('order')
-        for cst in cst_list:
-            alias = f'{get_type_prefix(cst.cst_type)}{bases[cst.cst_type]}'
-            bases[cst.cst_type] += 1
-            if cst.alias != alias:
-                mapping[cst.alias] = alias
-        return mapping
-
     def change_cst_type(self, target: int, new_type: CstType) -> bool:
         ''' Change type of constituenta generating alias automatically. '''
         self.cache.ensure_loaded()
@@ -417,6 +422,17 @@ class RSForm:
             if cst.apply_mapping(mapping, change_aliases):
                 update_list.append(cst)
         Constituenta.objects.bulk_update(update_list, ['alias', 'definition_formal', 'term_raw', 'definition_raw'])
+        self.save(update_fields=['time_update'])
+
+    def apply_partial_mapping(self, mapping: dict[str, str], target: list[int]) -> None:
+        ''' Apply rename mapping to target constituents. '''
+        self.cache.ensure_loaded()
+        update_list: list[Constituenta] = []
+        for cst in self.cache.constituents:
+            if cst.pk in target:
+                if cst.apply_mapping(mapping):
+                    update_list.append(cst)
+        Constituenta.objects.bulk_update(update_list, ['definition_formal', 'term_raw', 'definition_raw'])
         self.save(update_fields=['time_update'])
 
     def resolve_all_text(self) -> None:
@@ -481,6 +497,19 @@ class RSForm:
         self.cache.insert_multi(result)
         self.save(update_fields=['time_update'])
         return result
+
+    def _create_reset_mapping(self) -> dict[str, str]:
+        bases = cast(dict[str, int], {})
+        mapping = cast(dict[str, str], {})
+        for cst_type in CstType.values:
+            bases[cst_type] = 1
+        cst_list = self.constituents().order_by('order')
+        for cst in cst_list:
+            alias = f'{get_type_prefix(cst.cst_type)}{bases[cst.cst_type]}'
+            bases[cst.cst_type] += 1
+            if cst.alias != alias:
+                mapping[cst.alias] = alias
+        return mapping
 
     def _shift_positions(self, start: int, shift: int) -> None:
         if shift == 0:
