@@ -30,6 +30,14 @@ def operationNotInput(title: str):
     return f'Операция не является Загрузкой: {title}'
 
 
+def operationResultFromAnotherOSS():
+    return 'Схема является результатом другой ОСС'
+
+
+def operationInputAlreadyConnected():
+    return 'Схема уже подключена к другой операции'
+
+
 def operationNotSynthesis(title: str):
     return f'Операция не является Синтезом: {title}'
 

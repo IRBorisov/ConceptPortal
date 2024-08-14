@@ -132,8 +132,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
       const positions = getPositions();
       if (positions.length == 0) {
         target = flow.project({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
-      }
-      if (inputs.length <= 1) {
+      } else if (inputs.length <= 1) {
         let inputsNodes = positions.filter(pos =>
           controller.schema!.items.find(
             operation => operation.operation_type === OperationType.INPUT && operation.id === pos.id
@@ -167,6 +166,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
           target.y += PARAMETER.ossMinDistance;
         }
       } while (flagIntersect);
+
       controller.promptCreateOperation({
         x: target.x,
         y: target.y,

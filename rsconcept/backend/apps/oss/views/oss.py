@@ -1,7 +1,8 @@
 ''' Endpoints for OSS. '''
-from typing import cast
+from typing import Optional, cast
 
 from django.db import transaction
+from django.db.models import Q
 from django.http import HttpResponse
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import generics, serializers
@@ -109,6 +110,21 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         with transaction.atomic():
             oss.update_positions(serializer.validated_data['positions'])
             new_operation = oss.create_operation(**serializer.validated_data['item_data'])
+            schema = new_operation.result
+            if schema is not None:
+                connected_operations = \
+                    m.Operation.objects \
+                    .filter(Q(result=schema) & ~Q(pk=new_operation.pk)) \
+                    .only('operation_type', 'oss_id')
+                for operation in connected_operations:
+                    if operation.operation_type != m.OperationType.INPUT:
+                        raise serializers.ValidationError({
+                            'item_data': msg.operationResultFromAnotherOSS()
+                        })
+                    if operation.oss_id == new_operation.oss_id:
+                        raise serializers.ValidationError({
+                            'item_data': msg.operationInputAlreadyConnected()
+                        })
             if new_operation.operation_type == m.OperationType.INPUT and serializer.validated_data['create_schema']:
                 oss.create_input(new_operation)
             if new_operation.operation_type != m.OperationType.INPUT and 'arguments' in serializer.validated_data:
@@ -220,11 +236,24 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         )
         serializer.is_valid(raise_exception=True)
 
-        operation: m.Operation = cast(m.Operation, serializer.validated_data['target'])
+        target_operation: m.Operation = cast(m.Operation, serializer.validated_data['target'])
+        schema: Optional[LibraryItem] = serializer.validated_data['input']
+        if schema is not None:
+            connected_operations = m.Operation.objects.filter(result=schema).only('operation_type', 'oss_id')
+            for operation in connected_operations:
+                if operation.operation_type != m.OperationType.INPUT:
+                    raise serializers.ValidationError({
+                        'input': msg.operationResultFromAnotherOSS()
+                    })
+                if operation != target_operation and operation.oss_id == target_operation.oss_id:
+                    raise serializers.ValidationError({
+                        'input': msg.operationInputAlreadyConnected()
+                    })
+
         oss = m.OperationSchema(self.get_object())
         with transaction.atomic():
             oss.update_positions(serializer.validated_data['positions'])
-            oss.set_input(operation.pk, serializer.validated_data['input'])
+            oss.set_input(target_operation.pk, schema)
         return Response(
             status=c.HTTP_200_OK,
             data=s.OperationSchemaSerializer(oss.model).data

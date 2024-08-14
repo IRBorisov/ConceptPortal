@@ -201,6 +201,9 @@ class TestOssViewset(EndpointTester):
     def test_create_operation_result(self):
         self.populateData()
 
+        self.operation1.result = None
+        self.operation1.save()
+
         data = {
             'item_data': {
                 'alias': 'Test4',
@@ -223,11 +226,14 @@ class TestOssViewset(EndpointTester):
                 'alias': 'Test4',
                 'title': 'Test title',
                 'comment': 'Comment',
-                'operation_type': OperationType.INPUT
+                'operation_type': OperationType.INPUT,
+                'result': self.ks1.model.pk
             },
             'create_schema': True,
             'positions': [],
         }
+        self.executeBadData(data=data, item=self.owned_id)
+        data['item_data']['result'] = None
         response = self.executeCreated(data=data, item=self.owned_id)
         self.owned.refresh_from_db()
         new_operation = response.data['new_operation']
@@ -341,9 +347,25 @@ class TestOssViewset(EndpointTester):
             'target': self.operation1.pk,
             'input': self.ks2.model.pk
         }
-        response = self.executeOK(data=data, item=self.owned_id)
+        self.executeBadData(data=data, item=self.owned_id)
+
+        data = {
+            'positions': [],
+            'target': self.operation2.pk,
+            'input': None
+        }
+        self.executeOK(data=data, item=self.owned_id)
         self.operation2.refresh_from_db()
-        self.assertEqual(self.operation2.result, self.ks2.model)
+        self.assertEqual(self.operation2.result, None)
+
+        data = {
+            'positions': [],
+            'target': self.operation1.pk,
+            'input': self.ks2.model.pk
+        }
+        self.executeOK(data=data, item=self.owned_id)
+        self.operation1.refresh_from_db()
+        self.assertEqual(self.operation1.result, self.ks2.model)
 
     @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
     def test_update_operation(self):
