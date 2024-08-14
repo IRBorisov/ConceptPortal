@@ -29,71 +29,9 @@ DELETED_ALIAS = 'DEL'
 class RSForm:
     ''' RSForm is math form of conceptual schema. '''
 
-    class Cache:
-        ''' Cache for RSForm constituents. '''
-
-        def __init__(self, schema: 'RSForm'):
-            self._schema = schema
-            self.constituents: list[Constituenta] = []
-            self.by_id: dict[int, Constituenta] = {}
-            self.by_alias: dict[str, Constituenta] = {}
-            self.is_loaded = False
-
-        def reload(self) -> None:
-            self.constituents = list(
-                self._schema.constituents().only(
-                    'order',
-                    'alias',
-                    'cst_type',
-                    'definition_formal',
-                    'term_raw',
-                    'definition_raw'
-                ).order_by('order')
-            )
-            self.by_id = {cst.pk: cst for cst in self.constituents}
-            self.by_alias = {cst.alias: cst for cst in self.constituents}
-            self.is_loaded = True
-
-        def ensure_loaded(self) -> None:
-            if not self.is_loaded:
-                self.reload()
-
-        def clear(self) -> None:
-            self.constituents = []
-            self.by_id = {}
-            self.by_alias = {}
-            self.is_loaded = False
-
-        def insert(self, cst: Constituenta) -> None:
-            if self.is_loaded:
-                self.constituents.insert(cst.order - 1, cst)
-                self.by_id[cst.pk] = cst
-                self.by_alias[cst.alias] = cst
-
-        def insert_multi(self, items: Iterable[Constituenta]) -> None:
-            if self.is_loaded:
-                for cst in items:
-                    self.constituents.insert(cst.order - 1, cst)
-                    self.by_id[cst.pk] = cst
-                    self.by_alias[cst.alias] = cst
-
-        def remove(self, target: Constituenta) -> None:
-            if self.is_loaded:
-                self.constituents.remove(self.by_id[target.pk])
-                del self.by_id[target.pk]
-                del self.by_alias[target.alias]
-
-        def remove_multi(self, target: Iterable[Constituenta]) -> None:
-            if self.is_loaded:
-                for cst in target:
-                    self.constituents.remove(self.by_id[cst.pk])
-                    del self.by_id[cst.pk]
-                    del self.by_alias[cst.alias]
-
-
     def __init__(self, model: LibraryItem):
         self.model = model
-        self.cache: RSForm.Cache = RSForm.Cache(self)
+        self.cache: RSFormCache = RSFormCache(self)
 
     @staticmethod
     def create(**kwargs) -> 'RSForm':
@@ -150,7 +88,7 @@ class RSForm:
         ''' Access semantic information on constituents. '''
         return SemanticInfo(self)
 
-    def on_term_change(self, changed: list[int]) -> None:
+    def after_term_change(self, changed: list[int]) -> None:
         ''' Trigger cascade resolutions when term changes. '''
         self.cache.ensure_loaded()
         graph_terms = self._graph_term()
@@ -221,7 +159,7 @@ class RSForm:
 
         result.save()
         self.cache.insert(result)
-        self.on_term_change([result.pk])
+        self.after_term_change([result.pk])
         result.refresh_from_db()
         return result
 
@@ -336,7 +274,7 @@ class RSForm:
                     cst.definition_resolved = resolver.resolve(cst.definition_raw)
         cst.save()
         if term_changed:
-            self.on_term_change([cst.pk])
+            self.after_term_change([cst.pk])
         self.save(update_fields=['time_update'])
         return old_data
 
@@ -388,7 +326,7 @@ class RSForm:
         Constituenta.objects.filter(pk__in=[cst.pk for cst in deleted]).delete()
         self._reset_order()
         self.apply_mapping(mapping)
-        self.on_term_change([substitution.pk for substitution in replacements])
+        self.after_term_change([substitution.pk for substitution in replacements])
 
     def restore_order(self) -> None:
         ''' Restore order based on types and term graph. '''
@@ -588,6 +526,68 @@ class RSForm:
                 if child is not None:
                     result.add_edge(src=child.pk, dest=cst.pk)
         return result
+
+
+class RSFormCache:
+    ''' Cache for RSForm constituents. '''
+
+    def __init__(self, schema: 'RSForm'):
+        self._schema = schema
+        self.constituents: list[Constituenta] = []
+        self.by_id: dict[int, Constituenta] = {}
+        self.by_alias: dict[str, Constituenta] = {}
+        self.is_loaded = False
+
+    def reload(self) -> None:
+        self.constituents = list(
+            self._schema.constituents().only(
+                'order',
+                'alias',
+                'cst_type',
+                'definition_formal',
+                'term_raw',
+                'definition_raw'
+            ).order_by('order')
+        )
+        self.by_id = {cst.pk: cst for cst in self.constituents}
+        self.by_alias = {cst.alias: cst for cst in self.constituents}
+        self.is_loaded = True
+
+    def ensure_loaded(self) -> None:
+        if not self.is_loaded:
+            self.reload()
+
+    def clear(self) -> None:
+        self.constituents = []
+        self.by_id = {}
+        self.by_alias = {}
+        self.is_loaded = False
+
+    def insert(self, cst: Constituenta) -> None:
+        if self.is_loaded:
+            self.constituents.insert(cst.order - 1, cst)
+            self.by_id[cst.pk] = cst
+            self.by_alias[cst.alias] = cst
+
+    def insert_multi(self, items: Iterable[Constituenta]) -> None:
+        if self.is_loaded:
+            for cst in items:
+                self.constituents.insert(cst.order - 1, cst)
+                self.by_id[cst.pk] = cst
+                self.by_alias[cst.alias] = cst
+
+    def remove(self, target: Constituenta) -> None:
+        if self.is_loaded:
+            self.constituents.remove(self.by_id[target.pk])
+            del self.by_id[target.pk]
+            del self.by_alias[target.alias]
+
+    def remove_multi(self, target: Iterable[Constituenta]) -> None:
+        if self.is_loaded:
+            for cst in target:
+                self.constituents.remove(self.by_id[cst.pk])
+                del self.by_id[cst.pk]
+                del self.by_alias[cst.alias]
 
 
 class SemanticInfo:

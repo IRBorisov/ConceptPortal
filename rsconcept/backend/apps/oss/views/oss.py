@@ -147,6 +147,9 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         oss = m.OperationSchema(self.get_object())
         with transaction.atomic():
             oss.update_positions(serializer.validated_data['positions'])
+
+            # TODO: propagate changes to RSForms
+
             oss.delete_operation(serializer.validated_data['target'])
 
         return Response(
