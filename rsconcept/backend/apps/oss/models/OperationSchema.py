@@ -100,26 +100,36 @@ class OperationSchema:
         if not keep_constituents:
             schema = self.cache.get_schema(target)
             if schema is not None:
-                self._cascade_before_delete(schema.cache.constituents, target.pk)
+                self.before_delete(schema.cache.constituents, schema)
         self.cache.remove_operation(target.pk)
         target.delete()
         self.save(update_fields=['time_update'])
 
-    def set_input(self, target: Operation, schema: Optional[LibraryItem]) -> None:
+    def set_input(self, target: int, schema: Optional[LibraryItem]) -> None:
         ''' Set input schema for operation. '''
-        if schema == target.result:
+        operation = self.cache.operation_by_id[target]
+        has_children = len(self.cache.graph.outputs[target]) > 0
+        old_schema = self.cache.get_schema(operation)
+        if schema == old_schema:
             return
-        target.result = schema
+
+        if old_schema is not None:
+            if has_children:
+                self.before_delete(old_schema.cache.constituents, old_schema)
+            self.cache.remove_schema(old_schema)
+
+        operation.result = schema
         if schema is not None:
-            target.result = schema
-            target.alias = schema.alias
-            target.title = schema.title
-            target.comment = schema.comment
-        target.save()
+            operation.result = schema
+            operation.alias = schema.alias
+            operation.title = schema.title
+            operation.comment = schema.comment
+        operation.save(update_fields=['result', 'alias', 'title', 'comment'])
 
-        # TODO: trigger on_change effects
-
-        self.save()
+        if schema is not None and has_children:
+            rsform = RSForm(schema)
+            self.after_create_cst(list(rsform.constituents()), rsform)
+        self.save(update_fields=['time_update'])
 
     def set_arguments(self, operation: Operation, arguments: list[Operation]) -> None:
         ''' Set arguments to operation. '''
@@ -698,6 +708,11 @@ class OssCache:
         if self.is_loaded:
             del self.substitutions[operation]
             del self.inheritance[operation]
+
+    def remove_schema(self, schema: RSForm) -> None:
+        ''' Remove schema from cache. '''
+        self._schemas.remove(schema)
+        del self._schema_by_id[schema.model.pk]
 
     def unfold_sub(self, sub: Substitution) -> tuple[RSForm, RSForm, Constituenta, Constituenta]:
         operation = self.operation_by_id[sub.operation_id]

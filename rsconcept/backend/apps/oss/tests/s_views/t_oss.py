@@ -309,8 +309,6 @@ class TestOssViewset(EndpointTester):
 
         data['target'] = self.operation1.pk
         data['input'] = None
-
-        data['target'] = self.operation1.pk
         self.toggle_admin(True)
         self.executeBadData(data=data, item=self.unowned_id)
         self.logout()

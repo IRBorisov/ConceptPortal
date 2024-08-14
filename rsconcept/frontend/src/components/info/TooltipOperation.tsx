@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 
 import Tooltip from '@/components/ui/Tooltip';
 import { OssNodeInternal } from '@/models/miscellaneous';
-import { ICstSubstituteEx } from '@/models/oss';
+import { ICstSubstituteEx, OperationType } from '@/models/oss';
 import { labelOperationType } from '@/utils/labels';
 
 import { IconPageRight } from '../Icons';
@@ -79,10 +79,13 @@ function TooltipOperation({ node, anchor }: TooltipOperationProps) {
           {node.data.operation.comment}
         </p>
       ) : null}
-      <p>
-        <b>Положение:</b> [{node.xPos}, {node.yPos}]
-      </p>
-      {node.data.operation.substitutions.length > 0 ? table : null}
+      {node.data.operation.substitutions.length > 0 ? (
+        table
+      ) : node.data.operation.operation_type !== OperationType.INPUT ? (
+        <p>
+          <b>Отождествления:</b> Отсутствуют
+        </p>
+      ) : null}
     </Tooltip>
   );
 }

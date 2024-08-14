@@ -45,15 +45,15 @@ function PickMultiOperation({ rows, items, selected, setSelected }: PickMultiOpe
       columnHelper.accessor('alias', {
         id: 'alias',
         header: 'Шифр',
-        size: 150,
-        minSize: 80,
-        maxSize: 150
+        size: 300,
+        minSize: 150,
+        maxSize: 300
       }),
       columnHelper.accessor('title', {
         id: 'title',
         header: 'Название',
         size: 1200,
-        minSize: 200,
+        minSize: 300,
         maxSize: 1200,
         cell: props => <div className='text-ellipsis'>{props.getValue()}</div>
       }),

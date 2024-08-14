@@ -84,10 +84,10 @@ function PickSubstitutions({
   const substitutionData: IMultiSubstitution[] = useMemo(
     () =>
       substitutions.map(item => ({
-        original_source: getSchemaByCst(item.original),
-        original: getConstituenta(item.original),
-        substitution: getConstituenta(item.substitution),
-        substitution_source: getSchemaByCst(item.substitution)
+        original_source: getSchemaByCst(item.original)!,
+        original: getConstituenta(item.original)!,
+        substitution: getConstituenta(item.substitution)!,
+        substitution_source: getSchemaByCst(item.substitution)!
       })),
     [getConstituenta, getSchemaByCst, substitutions]
   );
@@ -138,37 +138,31 @@ function PickSubstitutions({
 
   const columns = useMemo(
     () => [
-      columnHelper.accessor(item => item.substitution_source?.alias ?? 'N/A', {
+      columnHelper.accessor(item => item.substitution_source.alias, {
         id: 'left_schema',
         size: 100,
         cell: props => <div className='min-w-[10.5rem] text-ellipsis text-left'>{props.getValue()}</div>
       }),
-      columnHelper.accessor(item => item.substitution?.alias ?? 'N/A', {
+      columnHelper.accessor(item => item.substitution.alias, {
         id: 'left_alias',
         size: 65,
-        cell: props =>
-          props.row.original.substitution ? (
-            <BadgeConstituenta theme={colors} value={props.row.original.substitution} prefixID={`${prefixID}_1_`} />
-          ) : (
-            'N/A'
-          )
+        cell: props => (
+          <BadgeConstituenta theme={colors} value={props.row.original.substitution} prefixID={`${prefixID}_1_`} />
+        )
       }),
       columnHelper.display({
         id: 'status',
         size: 40,
         cell: () => <IconPageRight size='1.2rem' />
       }),
-      columnHelper.accessor(item => item.original?.alias ?? 'N/A', {
+      columnHelper.accessor(item => item.original.alias, {
         id: 'right_alias',
         size: 65,
-        cell: props =>
-          props.row.original.original ? (
-            <BadgeConstituenta theme={colors} value={props.row.original.original} prefixID={`${prefixID}_1_`} />
-          ) : (
-            'N/A'
-          )
+        cell: props => (
+          <BadgeConstituenta theme={colors} value={props.row.original.original} prefixID={`${prefixID}_1_`} />
+        )
       }),
-      columnHelper.accessor(item => item.original_source?.alias ?? 'N/A', {
+      columnHelper.accessor(item => item.original_source.alias, {
         id: 'right_schema',
         size: 100,
         cell: props => <div className='min-w-[8rem] text-ellipsis text-right'>{props.getValue()}</div>

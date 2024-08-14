@@ -2,12 +2,11 @@
 
 import { useMemo } from 'react';
 
+import PickMultiOperation from '@/components/select/PickMultiOperation';
 import FlexColumn from '@/components/ui/FlexColumn';
 import Label from '@/components/ui/Label';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { IOperationSchema, OperationID } from '@/models/oss';
-
-import PickMultiOperation from '../../components/select/PickMultiOperation';
 
 interface TabArgumentsProps {
   oss: IOperationSchema;

@@ -63,6 +63,25 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
     cache.preload(schemasIDs);
   }, [schemasIDs]);
 
+  useEffect(() => {
+    if (cache.loading || schemas.length !== schemasIDs.length) {
+      return;
+    }
+    setSubstitutions(prev =>
+      prev.filter(sub => {
+        const original = cache.getSchemaByCst(sub.original);
+        if (!original || !schemasIDs.includes(original.id)) {
+          return false;
+        }
+        const substitution = cache.getSchemaByCst(sub.substitution);
+        if (!substitution || !schemasIDs.includes(substitution.id)) {
+          return false;
+        }
+        return true;
+      })
+    );
+  }, [schemasIDs, schemas, cache.loading]);
+
   const handleSubmit = () => {
     const data: IOperationUpdateData = {
       target: target.id,

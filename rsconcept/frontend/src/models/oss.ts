@@ -119,10 +119,10 @@ export interface ICstSubstituteData {
  * Represents substitution for multi synthesis table.
  */
 export interface IMultiSubstitution {
-  original_source: ILibraryItem | undefined;
-  original: IConstituenta | undefined;
-  substitution: IConstituenta | undefined;
-  substitution_source: ILibraryItem | undefined;
+  original_source: ILibraryItem;
+  original: IConstituenta;
+  substitution: IConstituenta;
+  substitution_source: ILibraryItem;
 }
 
 /**

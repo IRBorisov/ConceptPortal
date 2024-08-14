@@ -224,7 +224,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         oss = m.OperationSchema(self.get_object())
         with transaction.atomic():
             oss.update_positions(serializer.validated_data['positions'])
-            oss.set_input(operation, serializer.validated_data['input'])
+            oss.set_input(operation.pk, serializer.validated_data['input'])
         return Response(
             status=c.HTTP_200_OK,
             data=s.OperationSchemaSerializer(oss.model).data

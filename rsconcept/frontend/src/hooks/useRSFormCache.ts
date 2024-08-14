@@ -55,11 +55,11 @@ function useRSFormCache() {
 
   useEffect(() => {
     const ids = pending.filter(id => !processing.includes(id) && !cache.find(schema => schema.id === id));
+    setPending([]);
     if (ids.length === 0) {
       return;
     }
     setProcessing(prev => [...prev, ...ids]);
-    setPending([]);
     ids.forEach(id =>
       getRSFormDetails(String(id), '', {
         showError: false,

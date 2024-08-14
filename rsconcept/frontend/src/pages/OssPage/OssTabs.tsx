@@ -35,7 +35,7 @@ function OssTabs() {
   const query = useQueryStrings();
   const activeTab = query.get('tab') ? (Number(query.get('tab')) as OssTabID) : OssTabID.GRAPH;
 
-  const { calculateHeight } = useConceptOptions();
+  const { calculateHeight, setNoFooter } = useConceptOptions();
   const { schema, loading, errorLoading } = useOSS();
   const { destroyItem } = useLibrary();
 
@@ -52,6 +52,10 @@ function OssTabs() {
       };
     }
   }, [schema, schema?.title]);
+
+  useLayoutEffect(() => {
+    setNoFooter(activeTab === OssTabID.GRAPH);
+  }, [activeTab, setNoFooter]);
 
   const navigateTab = useCallback(
     (tab: OssTabID) => {
