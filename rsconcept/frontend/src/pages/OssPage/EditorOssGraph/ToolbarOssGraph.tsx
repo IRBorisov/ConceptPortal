@@ -175,7 +175,11 @@ function ToolbarOssGraph({
           <MiniButton
             titleHtml={prepareTooltip('Удалить выбранную', 'Delete')}
             icon={<IconDestroy size='1.25rem' className='icon-red' />}
-            disabled={controller.selected.length !== 1 || controller.isProcessing}
+            disabled={
+              controller.selected.length !== 1 ||
+              controller.isProcessing ||
+              !controller.canDelete(controller.selected[0])
+            }
             onClick={onDelete}
           />
         </div>

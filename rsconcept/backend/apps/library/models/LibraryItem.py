@@ -123,3 +123,11 @@ class LibraryItem(Model):
     def versions(self) -> QuerySet[Version]:
         ''' Get all Versions of this item. '''
         return Version.objects.filter(item=self.pk).order_by('-time_create')
+
+    def is_synced(self, target: 'LibraryItem') -> bool:
+        ''' Check if item is synced with target. '''
+        if self.owner != target.owner:
+            return False
+        if self.location != target.location:
+            return False
+        return True

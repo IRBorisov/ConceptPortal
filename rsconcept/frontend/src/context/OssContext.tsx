@@ -27,6 +27,7 @@ import { ILibraryUpdateData } from '@/models/library';
 import {
   IOperationCreateData,
   IOperationData,
+  IOperationDeleteData,
   IOperationSchema,
   IOperationSchemaData,
   IOperationSetInputData,
@@ -63,7 +64,7 @@ interface IOssContext {
 
   savePositions: (data: IPositionsData, callback?: () => void) => void;
   createOperation: (data: IOperationCreateData, callback?: DataCallback<IOperationData>) => void;
-  deleteOperation: (data: ITargetOperation, callback?: () => void) => void;
+  deleteOperation: (data: IOperationDeleteData, callback?: () => void) => void;
   createInput: (data: ITargetOperation, callback?: DataCallback<ILibraryItem>) => void;
   setInput: (data: IOperationSetInputData, callback?: () => void) => void;
   updateOperation: (data: IOperationUpdateData, callback?: () => void) => void;
@@ -309,7 +310,7 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
   );
 
   const deleteOperation = useCallback(
-    (data: ITargetOperation, callback?: () => void) => {
+    (data: IOperationDeleteData, callback?: () => void) => {
       setProcessingError(undefined);
       patchDeleteOperation(itemID, {
         data: data,

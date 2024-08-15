@@ -34,10 +34,6 @@ function DlgChangeLocation({ hideWindow, initial, onChangeLocation }: DlgChangeL
     setBody(newValue.length > 3 ? newValue.substring(3) : '');
   }, []);
 
-  function handleSubmit() {
-    onChangeLocation(location);
-  }
-
   return (
     <Modal
       overflowVisible
@@ -46,7 +42,7 @@ function DlgChangeLocation({ hideWindow, initial, onChangeLocation }: DlgChangeL
       submitInvalidTooltip={`Допустимы буквы, цифры, подчерк, пробел и "!". Сегмент пути не может начинаться и заканчиваться пробелом. Общая длина (с корнем) не должна превышать ${limits.location_len}`}
       hideWindow={hideWindow}
       canSubmit={isValid}
-      onSubmit={handleSubmit}
+      onSubmit={() => onChangeLocation(location)}
       className={clsx('w-[35rem]', 'pb-3 px-6 flex gap-3')}
     >
       <div className='flex flex-col gap-2 w-[7rem] h-min'>

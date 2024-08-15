@@ -138,6 +138,26 @@ class OperationTargetSerializer(serializers.Serializer):
         return attrs
 
 
+class OperationDeleteSerializer(serializers.Serializer):
+    ''' Serializer: Delete operation. '''
+    target = PKField(many=False, queryset=Operation.objects.all().only('oss_id', 'result'))
+    positions = serializers.ListField(
+        child=OperationPositionSerializer(),
+        default=[]
+    )
+    keep_constituents = serializers.BooleanField(default=False, required=False)
+    delete_schema = serializers.BooleanField(default=False, required=False)
+
+    def validate(self, attrs):
+        oss = cast(LibraryItem, self.context['oss'])
+        operation = cast(Operation, attrs['target'])
+        if oss and operation.oss_id != oss.pk:
+            raise serializers.ValidationError({
+                'target': msg.operationNotInOSS(oss.title)
+            })
+        return attrs
+
+
 class SetOperationInputSerializer(serializers.Serializer):
     ''' Serializer: Set input schema for operation. '''
     target = PKField(many=False, queryset=Operation.objects.all())

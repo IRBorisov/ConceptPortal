@@ -143,7 +143,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @extend_schema(
         summary='delete operation',
         tags=['OSS'],
-        request=s.OperationTargetSerializer,
+        request=s.OperationDeleteSerializer,
         responses={
             c.HTTP_200_OK: s.OperationSchemaSerializer,
             c.HTTP_400_BAD_REQUEST: None,
@@ -154,20 +154,25 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['patch'], url_path='delete-operation')
     def delete_operation(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Delete operation. '''
-        serializer = s.OperationTargetSerializer(
+        serializer = s.OperationDeleteSerializer(
             data=request.data,
             context={'oss': self.get_object()}
         )
         serializer.is_valid(raise_exception=True)
 
         oss = m.OperationSchema(self.get_object())
+        operation = cast(m.Operation, serializer.validated_data['target'])
+        old_schema: Optional[LibraryItem] = operation.result
         with transaction.atomic():
             oss.update_positions(serializer.validated_data['positions'])
-
-            # TODO: propagate changes to RSForms
-
-            oss.delete_operation(serializer.validated_data['target'])
-
+            oss.delete_operation(operation, serializer.validated_data['keep_constituents'])
+            if old_schema is not None:
+                if serializer.validated_data['delete_schema']:
+                    m.PropagationFacade.before_delete_schema(old_schema)
+                    old_schema.delete()
+                elif old_schema.is_synced(oss.model):
+                    old_schema.visible = True
+                    old_schema.save(update_fields=['visible'])
         return Response(
             status=c.HTTP_200_OK,
             data=s.OperationSchemaSerializer(oss.model).data
@@ -249,9 +254,13 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                     raise serializers.ValidationError({
                         'input': msg.operationInputAlreadyConnected()
                     })
-
         oss = m.OperationSchema(self.get_object())
+        old_schema: Optional[LibraryItem] = target_operation.result
         with transaction.atomic():
+            if old_schema is not None:
+                if old_schema.is_synced(oss.model):
+                    old_schema.visible = True
+                    old_schema.save(update_fields=['visible'])
             oss.update_positions(serializer.validated_data['positions'])
             oss.set_input(target_operation.pk, schema)
         return Response(

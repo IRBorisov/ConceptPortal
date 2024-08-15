@@ -263,7 +263,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         cst_list: list[m.Constituenta] = serializer.validated_data['items']
         schema = m.RSForm(model)
         with transaction.atomic():
-            PropagationFacade.before_delete(cst_list, schema)
+            PropagationFacade.before_delete_cst(cst_list, schema)
             schema.delete_cst(cst_list)
         return Response(
             status=c.HTTP_200_OK,

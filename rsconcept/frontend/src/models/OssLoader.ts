@@ -3,7 +3,7 @@
  */
 
 import { Graph } from './Graph';
-import { LibraryItemID } from './library';
+import { ILibraryItem, LibraryItemID } from './library';
 import {
   IOperation,
   IOperationSchema,
@@ -21,10 +21,12 @@ export class OssLoader {
   private oss: IOperationSchemaData;
   private graph: Graph = new Graph();
   private operationByID = new Map<OperationID, IOperation>();
-  private schemas: LibraryItemID[] = [];
+  private schemaIDs: LibraryItemID[] = [];
+  private items: ILibraryItem[];
 
-  constructor(input: IOperationSchemaData) {
+  constructor(input: IOperationSchemaData, items: ILibraryItem[]) {
     this.oss = input;
+    this.items = items;
   }
 
   produceOSS(): IOperationSchema {
@@ -36,7 +38,7 @@ export class OssLoader {
 
     result.operationByID = this.operationByID;
     result.graph = this.graph;
-    result.schemas = this.schemas;
+    result.schemas = this.schemaIDs;
     result.stats = this.calculateStats();
     return result;
   }
@@ -53,12 +55,14 @@ export class OssLoader {
   }
 
   private extractSchemas() {
-    this.schemas = this.oss.items.map(operation => operation.result).filter(item => item !== null);
+    this.schemaIDs = this.oss.items.map(operation => operation.result).filter(item => item !== null);
   }
 
   private inferOperationAttributes() {
     this.graph.topologicalOrder().forEach(operationID => {
       const operation = this.operationByID.get(operationID)!;
+      const schema = this.items.find(item => item.id === operation.result);
+      operation.is_owned = !schema || (schema.owner === this.oss.owner && schema.location === this.oss.location);
       operation.substitutions = this.oss.substitutions.filter(item => item.operation === operationID);
       operation.arguments = this.oss.arguments
         .filter(item => item.operation === operationID)
@@ -72,7 +76,7 @@ export class OssLoader {
       count_operations: items.length,
       count_inputs: items.filter(item => item.operation_type === OperationType.INPUT).length,
       count_synthesis: items.filter(item => item.operation_type === OperationType.SYNTHESIS).length,
-      count_schemas: this.schemas.length
+      count_schemas: this.schemaIDs.length
     };
   }
 }

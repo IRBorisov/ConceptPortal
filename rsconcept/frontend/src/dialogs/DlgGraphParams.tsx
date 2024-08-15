@@ -15,17 +15,12 @@ interface DlgGraphParamsProps extends Pick<ModalProps, 'hideWindow'> {
 function DlgGraphParams({ hideWindow, initial, onConfirm }: DlgGraphParamsProps) {
   const [params, updateParams] = usePartialUpdate(initial);
 
-  function handleSubmit() {
-    hideWindow();
-    onConfirm(params);
-  }
-
   return (
     <Modal
       canSubmit
       hideWindow={hideWindow}
       header='Настройки графа термов'
-      onSubmit={handleSubmit}
+      onSubmit={() => onConfirm(params)}
       submitText='Применить'
       className='flex gap-6 justify-between px-6 pb-3 w-[30rem]'
     >

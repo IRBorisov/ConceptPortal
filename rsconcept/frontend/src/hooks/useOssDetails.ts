@@ -5,10 +5,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { getOssDetails } from '@/backend/oss';
 import { type ErrorData } from '@/components/info/InfoError';
 import { useAuth } from '@/context/AuthContext';
+import { ILibraryItem } from '@/models/library';
 import { IOperationSchema, IOperationSchemaData } from '@/models/oss';
 import { OssLoader } from '@/models/OssLoader';
 
-function useOssDetails({ target }: { target?: string }) {
+function useOssDetails({ target, items }: { target?: string; items: ILibraryItem[] }) {
   const { loading: userLoading } = useAuth();
   const [schema, setInner] = useState<IOperationSchema | undefined>(undefined);
   const [loading, setLoading] = useState(target != undefined);
@@ -19,7 +20,7 @@ function useOssDetails({ target }: { target?: string }) {
       setInner(undefined);
       return;
     }
-    const newSchema = new OssLoader(data).produceOSS();
+    const newSchema = new OssLoader(data, items).produceOSS();
     setInner(newSchema);
   }
 

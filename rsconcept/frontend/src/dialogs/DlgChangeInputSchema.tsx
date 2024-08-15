@@ -31,10 +31,6 @@ function DlgChangeInputSchema({ oss, hideWindow, target, onSubmit }: DlgChangeIn
     setSelected(newValue);
   }, []);
 
-  function handleSubmit() {
-    onSubmit(selected);
-  }
-
   return (
     <Modal
       overflowVisible
@@ -42,7 +38,7 @@ function DlgChangeInputSchema({ oss, hideWindow, target, onSubmit }: DlgChangeIn
       submitText='Подтвердить выбор'
       hideWindow={hideWindow}
       canSubmit={isValid}
-      onSubmit={handleSubmit}
+      onSubmit={() => onSubmit(selected)}
       className={clsx('w-[35rem]', 'pb-3 px-6 cc-column')}
     >
       <div className='flex justify-between gap-3 items-center'>

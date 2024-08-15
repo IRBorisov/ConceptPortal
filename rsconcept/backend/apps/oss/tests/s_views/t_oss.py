@@ -349,6 +349,8 @@ class TestOssViewset(EndpointTester):
         }
         self.executeBadData(data=data, item=self.owned_id)
 
+        self.ks2.model.visible = False
+        self.ks2.model.save(update_fields=['visible'])
         data = {
             'positions': [],
             'target': self.operation2.pk,
@@ -356,7 +358,9 @@ class TestOssViewset(EndpointTester):
         }
         self.executeOK(data=data, item=self.owned_id)
         self.operation2.refresh_from_db()
+        self.ks2.model.refresh_from_db()
         self.assertEqual(self.operation2.result, None)
+        self.assertEqual(self.ks2.model.visible, True)
 
         data = {
             'positions': [],

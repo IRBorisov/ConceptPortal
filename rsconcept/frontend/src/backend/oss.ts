@@ -6,6 +6,7 @@ import {
   IInputCreatedResponse,
   IOperationCreateData,
   IOperationCreatedResponse,
+  IOperationDeleteData,
   IOperationSchemaData,
   IOperationSetInputData,
   IOperationUpdateData,
@@ -40,7 +41,7 @@ export function postCreateOperation(
   });
 }
 
-export function patchDeleteOperation(oss: string, request: FrontExchange<ITargetOperation, IOperationSchemaData>) {
+export function patchDeleteOperation(oss: string, request: FrontExchange<IOperationDeleteData, IOperationSchemaData>) {
   AxiosPatch({
     endpoint: `/api/oss/${oss}/delete-operation`,
     request: request

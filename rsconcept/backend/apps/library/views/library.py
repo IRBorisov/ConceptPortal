@@ -13,7 +13,7 @@ from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from apps.oss.models import Operation, OperationSchema
+from apps.oss.models import Operation, OperationSchema, PropagationFacade
 from apps.rsform.models import RSForm
 from apps.rsform.serializers import RSFormParseSerializer
 from apps.users.models import User
@@ -66,6 +66,10 @@ class LibraryViewSet(viewsets.ModelViewSet):
                 update_list.append(operation)
         if update_list:
             Operation.objects.bulk_update(update_list, ['alias', 'title', 'comment'])
+
+    def perform_destroy(self, instance: m.LibraryItem) -> None:
+        PropagationFacade.before_delete_schema(instance)
+        return super().perform_destroy(instance)
 
     def get_permissions(self):
         if self.action in ['update', 'partial_update']:

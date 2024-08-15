@@ -27,7 +27,7 @@ function Checkbox({
 }: CheckboxProps) {
   const cursor = useMemo(() => {
     if (disabled) {
-      return 'cursor-auto';
+      return 'cursor-arrow';
     } else if (setValue) {
       return 'cursor-pointer';
     } else {

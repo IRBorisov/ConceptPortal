@@ -182,12 +182,15 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     if (controller.selected.length !== 1) {
       return;
     }
-    controller.deleteOperation(controller.selected[0], getPositions());
+    handleDeleteOperation(controller.selected[0]);
   }, [controller, getPositions]);
 
   const handleDeleteOperation = useCallback(
     (target: OperationID) => {
-      controller.deleteOperation(target, getPositions());
+      if (!controller.canDelete(target)) {
+        return;
+      }
+      controller.promptDeleteOperation(target, getPositions());
     },
     [controller, getPositions]
   );

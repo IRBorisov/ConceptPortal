@@ -36,6 +36,7 @@ export interface IOperation {
 
   result: LibraryItemID | null;
 
+  is_owned: boolean;
   substitutions: ICstSubstituteEx[];
   arguments: OperationID[];
 }
@@ -83,6 +84,14 @@ export interface IOperationUpdateData extends ITargetOperation {
   item_data: Pick<IOperation, 'alias' | 'title' | 'comment'>;
   arguments: OperationID[] | undefined;
   substitutions: ICstSubstitute[] | undefined;
+}
+
+/**
+ * Represents {@link IOperation} data, used in destruction process.
+ */
+export interface IOperationDeleteData extends ITargetOperation {
+  keep_constituents: boolean;
+  delete_schema: boolean;
 }
 
 /**

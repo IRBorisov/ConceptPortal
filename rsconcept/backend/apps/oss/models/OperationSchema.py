@@ -100,7 +100,7 @@ class OperationSchema:
         if not keep_constituents:
             schema = self.cache.get_schema(target)
             if schema is not None:
-                self.before_delete(schema.cache.constituents, schema)
+                self.before_delete_cst(schema.cache.constituents, schema)
         self.cache.remove_operation(target.pk)
         target.delete()
         self.save(update_fields=['time_update'])
@@ -115,7 +115,7 @@ class OperationSchema:
 
         if old_schema is not None:
             if has_children:
-                self.before_delete(old_schema.cache.constituents, old_schema)
+                self.before_delete_cst(old_schema.cache.constituents, old_schema)
             self.cache.remove_schema(old_schema)
 
         operation.result = schema
@@ -280,7 +280,7 @@ class OperationSchema:
             mapping=alias_mapping
         )
 
-    def before_delete(self, target: list[Constituenta], source: RSForm) -> None:
+    def before_delete_cst(self, target: list[Constituenta], source: RSForm) -> None:
         ''' Trigger cascade resolutions before constituents are deleted. '''
         self.cache.insert(source)
         operation = self.cache.get_operation(source.model.pk)

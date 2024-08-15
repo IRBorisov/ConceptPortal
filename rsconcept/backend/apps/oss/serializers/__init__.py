@@ -4,6 +4,7 @@ from .basics import OperationPositionSerializer, PositionsSerializer, Substituti
 from .data_access import (
     ArgumentSerializer,
     OperationCreateSerializer,
+    OperationDeleteSerializer,
     OperationSchemaSerializer,
     OperationSerializer,
     OperationTargetSerializer,

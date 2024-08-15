@@ -33,6 +33,12 @@ function OperationNode(node: OssNodeInternal) {
         />
       </Overlay>
 
+      {!node.data.operation.is_owned ? (
+        <Overlay position='left-[0.2rem] top-[0.1rem]'>
+          <div className='border rounded-none clr-input h-[1.3rem]'></div>
+        </Overlay>
+      ) : null}
+
       <div id={`${prefixes.operation_list}${node.id}`} className='flex-grow text-center'>
         {node.data.label}
         {controller.showTooltip && !node.dragging ? (

@@ -191,3 +191,61 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(self.ks4D1.definition_formal, r'X4 X1')
         self.assertEqual(self.ks4D2.definition_formal, r'X1 DEL DEL DEL D1')
         self.assertEqual(self.ks5D4.definition_formal, r'X1 DEL DEL DEL D1 D2 D3')
+
+    @decl_endpoint('/api/library/{item}', method='delete')
+    def test_delete_schema(self):
+        self.executeNoContent(item=self.ks1.model.pk)
+        self.ks4D2.refresh_from_db()
+        self.ks5D4.refresh_from_db()
+        self.operation1.refresh_from_db()
+        self.assertEqual(self.operation1.result, None)
+        subs1_2 = self.operation4.getSubstitutions()
+        self.assertEqual(subs1_2.count(), 0)
+        subs3_4 = self.operation5.getSubstitutions()
+        self.assertEqual(subs3_4.count(), 0)
+        self.assertEqual(self.ks4.constituents().count(), 4)
+        self.assertEqual(self.ks5.constituents().count(), 7)
+        self.assertEqual(self.ks4D2.definition_formal, r'DEL X2 X3 S1 DEL')
+        self.assertEqual(self.ks5D4.definition_formal, r'X1 X2 X3 S1 D1 DEL D3')
+
+    @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
+    def test_delete_operation_and_constituents(self):
+        data = {
+            'positions': [],
+            'target': self.operation1.pk,
+            'keep_constituents': False,
+            'delete_schema': True
+        }
+
+        self.executeOK(data=data, item=self.owned_id)
+        self.ks4D2.refresh_from_db()
+        self.ks5D4.refresh_from_db()
+        subs1_2 = self.operation4.getSubstitutions()
+        self.assertEqual(subs1_2.count(), 0)
+        subs3_4 = self.operation5.getSubstitutions()
+        self.assertEqual(subs3_4.count(), 0)
+        self.assertEqual(self.ks4.constituents().count(), 4)
+        self.assertEqual(self.ks5.constituents().count(), 7)
+        self.assertEqual(self.ks4D2.definition_formal, r'DEL X2 X3 S1 DEL')
+        self.assertEqual(self.ks5D4.definition_formal, r'X1 X2 X3 S1 D1 DEL D3')
+
+    @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
+    def test_delete_operation_keep_constituents(self):
+        data = {
+            'positions': [],
+            'target': self.operation1.pk,
+            'keep_constituents': True,
+            'delete_schema': True
+        }
+
+        self.executeOK(data=data, item=self.owned_id)
+        self.ks4D2.refresh_from_db()
+        self.ks5D4.refresh_from_db()
+        subs1_2 = self.operation4.getSubstitutions()
+        self.assertEqual(subs1_2.count(), 0)
+        subs3_4 = self.operation5.getSubstitutions()
+        self.assertEqual(subs3_4.count(), 1)
+        self.assertEqual(self.ks4.constituents().count(), 6)
+        self.assertEqual(self.ks5.constituents().count(), 8)
+        self.assertEqual(self.ks4D2.definition_formal, r'X1 X2 X3 S1 D1')
+        self.assertEqual(self.ks5D4.definition_formal, r'X1 X2 X3 S1 D1 D2 D3')

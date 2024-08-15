@@ -155,7 +155,7 @@ function NodeContextMenu({
         <DropdownButton
           text='Удалить операцию'
           icon={<IconDestroy size='1rem' className='icon-red' />}
-          disabled={!controller.isMutable || controller.isProcessing}
+          disabled={!controller.isMutable || controller.isProcessing || !controller.canDelete(operation.id)}
           onClick={handleDeleteOperation}
         />
       </Dropdown>

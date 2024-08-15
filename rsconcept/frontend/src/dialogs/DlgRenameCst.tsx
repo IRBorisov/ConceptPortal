@@ -26,8 +26,6 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
   const [validated, setValidated] = useState(false);
   const [cstData, updateData] = usePartialUpdate(initial);
 
-  const handleSubmit = () => onRename(cstData);
-
   useLayoutEffect(() => {
     if (schema && initial && cstData.cst_type !== initial.cst_type) {
       updateData({ alias: generateAlias(cstData.cst_type, schema) });
@@ -47,7 +45,7 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
       submitInvalidTooltip={'Введите незанятое имя, соответствующее типу'}
       hideWindow={hideWindow}
       canSubmit={validated}
-      onSubmit={handleSubmit}
+      onSubmit={() => onRename(cstData)}
       className={clsx('w-[30rem]', 'py-6 pr-3 pl-6 flex justify-center items-center')}
     >
       <SelectSingle

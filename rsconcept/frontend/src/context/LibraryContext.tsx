@@ -91,7 +91,7 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
     setSchema: setGlobalOSS,
     loading: ossLoading,
     reload: reloadOssInternal
-  } = useOssDetails({ target: ossID });
+  } = useOssDetails({ target: ossID, items: items });
 
   const reloadOSS = useCallback(
     (callback?: () => void) => {

@@ -13,17 +13,20 @@ import { useOSS } from '@/context/OssContext';
 import DlgChangeInputSchema from '@/dialogs/DlgChangeInputSchema';
 import DlgChangeLocation from '@/dialogs/DlgChangeLocation';
 import DlgCreateOperation from '@/dialogs/DlgCreateOperation';
+import DlgDeleteOperation from '@/dialogs/DlgDeleteOperation';
 import DlgEditEditors from '@/dialogs/DlgEditEditors';
 import DlgEditOperation from '@/dialogs/DlgEditOperation';
 import { AccessPolicy, ILibraryItemEditor, LibraryItemID } from '@/models/library';
 import { Position2D } from '@/models/miscellaneous';
 import {
   IOperationCreateData,
+  IOperationDeleteData,
   IOperationPosition,
   IOperationSchema,
   IOperationSetInputData,
   IOperationUpdateData,
-  OperationID
+  OperationID,
+  OperationType
 } from '@/models/oss';
 import { UserID, UserLevel } from '@/models/user';
 import { PARAMETER } from '@/utils/constants';
@@ -62,7 +65,8 @@ export interface IOssEditContext extends ILibraryItemEditor {
 
   savePositions: (positions: IOperationPosition[], callback?: () => void) => void;
   promptCreateOperation: (props: ICreateOperationPrompt) => void;
-  deleteOperation: (target: OperationID, positions: IOperationPosition[]) => void;
+  canDelete: (target: OperationID) => boolean;
+  promptDeleteOperation: (target: OperationID, positions: IOperationPosition[]) => void;
   createInput: (target: OperationID, positions: IOperationPosition[]) => void;
   promptEditInput: (target: OperationID, positions: IOperationPosition[]) => void;
   promptEditOperation: (target: OperationID, positions: IOperationPosition[]) => void;
@@ -103,6 +107,7 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
   const [showEditLocation, setShowEditLocation] = useState(false);
   const [showEditInput, setShowEditInput] = useState(false);
   const [showEditOperation, setShowEditOperation] = useState(false);
+  const [showDeleteOperation, setShowDeleteOperation] = useState(false);
 
   const [showCreateOperation, setShowCreateOperation] = useState(false);
   const [insertPosition, setInsertPosition] = useState<Position2D>({ x: 0, y: 0 });
@@ -258,13 +263,46 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
     [model, positions]
   );
 
-  const deleteOperation = useCallback(
-    (target: OperationID, positions: IOperationPosition[]) => {
-      model.deleteOperation({ target: target, positions: positions }, () =>
-        toast.success(information.operationDestroyed)
-      );
+  const canDelete = useCallback(
+    (target: OperationID) => {
+      if (!model.schema) {
+        return false;
+      }
+      const operation = model.schema.operationByID.get(target);
+      if (!operation) {
+        return false;
+      }
+      if (operation.operation_type === OperationType.INPUT) {
+        return true;
+      }
+      return model.schema.graph.expandOutputs([target]).length === 0;
     },
     [model]
+  );
+
+  const promptDeleteOperation = useCallback(
+    (target: OperationID, positions: IOperationPosition[]) => {
+      setPositions(positions);
+      setTargetOperationID(target);
+      setShowDeleteOperation(true);
+    },
+    [model]
+  );
+
+  const deleteOperation = useCallback(
+    (keepConstituents: boolean, deleteSchema: boolean) => {
+      if (!targetOperationID) {
+        return;
+      }
+      const data: IOperationDeleteData = {
+        target: targetOperationID,
+        positions: positions,
+        keep_constituents: keepConstituents,
+        delete_schema: deleteSchema
+      };
+      model.deleteOperation(data, () => toast.success(information.operationDestroyed));
+    },
+    [model, targetOperationID, positions]
   );
 
   const createInput = useCallback(
@@ -334,7 +372,8 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
         openOperationSchema,
         savePositions,
         promptCreateOperation,
-        deleteOperation,
+        canDelete,
+        promptDeleteOperation,
         createInput,
         promptEditInput,
         promptEditOperation,
@@ -379,6 +418,13 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
               oss={model.schema}
               target={targetOperation!}
               onSubmit={handleEditOperation}
+            />
+          ) : null}
+          {showDeleteOperation ? (
+            <DlgDeleteOperation
+              hideWindow={() => setShowDeleteOperation(false)}
+              target={targetOperation!}
+              onSubmit={deleteOperation}
             />
           ) : null}
         </AnimatePresence>

@@ -217,13 +217,10 @@ class TestLibraryViewset(EndpointTester):
 
     @decl_endpoint('/api/library/{item}', method='delete')
     def test_destroy(self):
-        response = self.execute(item=self.owned.pk)
-        self.assertTrue(response.status_code in [status.HTTP_202_ACCEPTED, status.HTTP_204_NO_CONTENT])
-
+        self.executeNoContent(item=self.owned.pk)
         self.executeForbidden(item=self.unowned.pk)
         self.toggle_admin(True)
-        response = self.execute(item=self.unowned.pk)
-        self.assertTrue(response.status_code in [status.HTTP_202_ACCEPTED, status.HTTP_204_NO_CONTENT])
+        self.executeNoContent(item=self.unowned.pk)
 
 
     @decl_endpoint('/api/library/active', method='get')
