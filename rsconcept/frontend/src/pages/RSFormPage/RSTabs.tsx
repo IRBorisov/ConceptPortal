@@ -14,6 +14,7 @@ import TabLabel from '@/components/ui/TabLabel';
 import TextURL from '@/components/ui/TextURL';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
+import { useGlobalOss } from '@/context/GlobalOssContext';
 import { useLibrary } from '@/context/LibraryContext';
 import { useBlockNavigation, useConceptNavigation } from '@/context/NavigationContext';
 import { useRSForm } from '@/context/RSFormContext';
@@ -47,6 +48,7 @@ function RSTabs() {
   const { setNoFooter, calculateHeight } = useConceptOptions();
   const { schema, loading, errorLoading, isArchive, itemID } = useRSForm();
   const library = useLibrary();
+  const oss = useGlobalOss();
 
   const [isModified, setIsModified] = useState(false);
   useBlockNavigation(isModified);
@@ -177,18 +179,19 @@ function RSTabs() {
     if (!schema || !window.confirm(prompts.deleteLibraryItem)) {
       return;
     }
-    const backToOSS = library.globalOSS?.schemas.includes(schema.id);
+    const backToOSS = oss.schema?.schemas.includes(schema.id);
     library.destroyItem(schema.id, () => {
       toast.success(information.itemDestroyed);
       if (backToOSS) {
-        router.push(urls.oss(library.globalOSS!.id, OssTabID.GRAPH));
+        oss.invalidate();
+        router.push(urls.oss(oss.schema!.id, OssTabID.GRAPH));
       } else {
         router.push(urls.library);
       }
     });
-  }, [schema, library, router]);
+  }, [schema, library, oss, router]);
 
-  const panelHeight = useMemo(() => calculateHeight('1.75rem + 4px'), [calculateHeight]);
+  const panelHeight = useMemo(() => calculateHeight('1.625rem + 2px'), [calculateHeight]);
 
   const cardPanel = useMemo(
     () => (

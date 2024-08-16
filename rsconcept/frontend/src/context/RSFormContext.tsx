@@ -53,6 +53,7 @@ import { UserID } from '@/models/user';
 import { contextOutsideScope } from '@/utils/labels';
 
 import { useAuth } from './AuthContext';
+import { useGlobalOss } from './GlobalOssContext';
 import { useLibrary } from './LibraryContext';
 
 interface IRSFormContext {
@@ -116,6 +117,7 @@ interface RSFormStateProps {
 
 export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) => {
   const library = useLibrary();
+  const oss = useGlobalOss();
   const { user } = useAuth();
   const {
     schema, // prettier: split lines
@@ -159,15 +161,12 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         onSuccess: newData => {
           setSchema(Object.assign(schema, newData));
           library.localUpdateItem(newData);
-          if (library.globalOSS?.schemas.includes(newData.id)) {
-            library.reloadOSS(() => {
-              if (callback) callback(newData);
-            });
-          } else if (callback) callback(newData);
+          oss.invalidateItem(newData.id);
+          if (callback) callback(newData);
         }
       });
     },
-    [itemID, setSchema, schema, library]
+    [itemID, setSchema, schema, library.localUpdateItem, oss.invalidateItem]
   );
 
   const upload = useCallback(
@@ -188,7 +187,7 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         }
       });
     },
-    [itemID, setSchema, schema, library]
+    [itemID, setSchema, schema, library.localUpdateItem]
   );
 
   const subscribe = useCallback(
@@ -261,7 +260,7 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         }
       });
     },
-    [itemID, schema, library]
+    [itemID, schema, library.localUpdateItem]
   );
 
   const setAccessPolicy = useCallback(
@@ -284,7 +283,7 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         }
       });
     },
-    [itemID, schema, library]
+    [itemID, schema, library.localUpdateItem]
   );
 
   const setLocation = useCallback(
@@ -306,7 +305,7 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         }
       });
     },
-    [itemID, schema, library]
+    [itemID, schema, library.reloadItems]
   );
 
   const setEditors = useCallback(
@@ -344,13 +343,12 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         onSuccess: newData => {
           setSchema(newData);
           library.localUpdateTimestamp(newData.id);
+          oss.invalidateItem(newData.id);
           if (callback) callback();
-
-          // TODO: deal with OSS cache invalidation
         }
       });
     },
-    [itemID, schema, library, user, setSchema]
+    [itemID, schema, user, setSchema, library.localUpdateTimestamp, oss.invalidateItem]
   );
 
   const restoreOrder = useCallback(
@@ -370,7 +368,7 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         }
       });
     },
-    [itemID, schema, library, user, setSchema]
+    [itemID, schema, user, setSchema, library.localUpdateTimestamp]
   );
 
   const produceStructure = useCallback(
@@ -384,11 +382,12 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         onSuccess: newData => {
           setSchema(newData.schema);
           library.localUpdateTimestamp(newData.schema.id);
+          oss.invalidateItem(newData.schema.id);
           if (callback) callback(newData.cst_list);
         }
       });
     },
-    [setSchema, library, itemID]
+    [setSchema, itemID, library.localUpdateTimestamp, oss.invalidateItem]
   );
 
   const download = useCallback(
@@ -415,13 +414,12 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         onSuccess: newData => {
           setSchema(newData.schema);
           library.localUpdateTimestamp(newData.schema.id);
+          oss.invalidateItem(newData.schema.id);
           if (callback) callback(newData.new_cst);
-
-          // TODO: deal with OSS cache invalidation
         }
       });
     },
-    [itemID, library, setSchema]
+    [itemID, setSchema, library.localUpdateTimestamp, oss.invalidateItem]
   );
 
   const cstDelete = useCallback(
@@ -435,13 +433,12 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         onSuccess: newData => {
           setSchema(newData);
           library.localUpdateTimestamp(newData.id);
+          oss.invalidateItem(newData.id);
           if (callback) callback();
-
-          // TODO: deal with OSS cache invalidation
         }
       });
     },
-    [itemID, library, setSchema]
+    [itemID, setSchema, library.localUpdateTimestamp, oss.invalidateItem]
   );
 
   const cstUpdate = useCallback(
@@ -455,13 +452,12 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         onSuccess: newData =>
           reload(setProcessing, () => {
             library.localUpdateTimestamp(Number(itemID));
+            oss.invalidateItem(Number(itemID));
             if (callback) callback(newData);
-
-            // TODO: deal with OSS cache invalidation
           })
       });
     },
-    [itemID, library, reload]
+    [itemID, reload, library.localUpdateTimestamp, oss.invalidateItem]
   );
 
   const cstRename = useCallback(
@@ -475,15 +471,12 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         onSuccess: newData => {
           setSchema(newData.schema);
           library.localUpdateTimestamp(newData.schema.id);
-          if (library.globalOSS?.schemas.includes(newData.schema.id)) {
-            library.reloadOSS(() => {
-              if (callback) callback(newData.new_cst);
-            });
-          } else if (callback) callback(newData.new_cst);
+          oss.invalidateItem(newData.schema.id);
+          if (callback) callback(newData.new_cst);
         }
       });
     },
-    [setSchema, library, itemID]
+    [setSchema, itemID, library.localUpdateTimestamp, oss.invalidateItem]
   );
 
   const cstSubstitute = useCallback(
@@ -497,15 +490,12 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         onSuccess: newData => {
           setSchema(newData);
           library.localUpdateTimestamp(newData.id);
-          if (library.globalOSS?.schemas.includes(newData.id)) {
-            library.reloadOSS(() => {
-              if (callback) callback();
-            });
-          } else if (callback) callback();
+          oss.invalidateItem(newData.id);
+          if (callback) callback();
         }
       });
     },
-    [setSchema, library, itemID]
+    [setSchema, itemID, library.localUpdateTimestamp, oss.invalidateItem]
   );
 
   const cstMoveTo = useCallback(
@@ -523,7 +513,7 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         }
       });
     },
-    [itemID, library, setSchema]
+    [itemID, setSchema, library.localUpdateTimestamp]
   );
 
   const versionCreate = useCallback(
@@ -541,7 +531,7 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         }
       });
     },
-    [itemID, library, setSchema]
+    [itemID, setSchema, library.localUpdateTimestamp]
   );
 
   const findPredecessor = useCallback((data: ITargetCst, callback: (reference: IConstituentaReference) => void) => {
@@ -612,7 +602,7 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         }
       });
     },
-    [setSchema, library]
+    [setSchema, library.localUpdateItem]
   );
 
   const inlineSynthesis = useCallback(
@@ -625,14 +615,13 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         onError: setProcessingError,
         onSuccess: newData => {
           setSchema(newData);
-          library.localUpdateTimestamp(Number(itemID));
+          library.localUpdateTimestamp(newData.id);
+          oss.invalidateItem(newData.id);
           if (callback) callback(newData);
-
-          // TODO: deal with OSS cache invalidation
         }
       });
     },
-    [library, itemID, setSchema]
+    [itemID, setSchema, library.localUpdateTimestamp, oss.invalidateItem]
   );
 
   return (

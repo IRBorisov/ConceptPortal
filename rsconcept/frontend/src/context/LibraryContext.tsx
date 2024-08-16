@@ -13,13 +13,11 @@ import {
 } from '@/backend/library';
 import { getRSFormDetails, postRSFormFromFile } from '@/backend/rsforms';
 import { ErrorData } from '@/components/info/InfoError';
-import useOssDetails from '@/hooks/useOssDetails';
 import { FolderTree } from '@/models/FolderTree';
 import { ILibraryItem, LibraryItemID, LocationHead } from '@/models/library';
 import { ILibraryCreateData } from '@/models/library';
 import { matchLibraryItem, matchLibraryItemLocation } from '@/models/libraryAPI';
 import { ILibraryFilter } from '@/models/miscellaneous';
-import { IOperationSchema, IOperationSchemaData } from '@/models/oss';
 import { IRSForm, IRSFormCloneData, IRSFormData } from '@/models/rsform';
 import { RSFormLoader } from '@/models/RSFormLoader';
 import { contextOutsideScope } from '@/utils/labels';
@@ -36,17 +34,10 @@ interface ILibraryContext {
   loadingError: ErrorData;
   setLoadingError: (error: ErrorData) => void;
 
-  globalOSS: IOperationSchema | undefined;
-  setGlobalID: (id: string | undefined) => void;
-  setGlobalOSS: (data: IOperationSchemaData) => void;
-  ossLoading: boolean;
-  ossError: ErrorData;
-
   processing: boolean;
   processingError: ErrorData;
   setProcessingError: (error: ErrorData) => void;
 
-  reloadOSS: (callback?: () => void) => void;
   reloadItems: (callback?: () => void) => void;
 
   applyFilter: (params: ILibraryFilter) => ILibraryItem[];
@@ -83,22 +74,6 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
   const [loadingError, setLoadingError] = useState<ErrorData>(undefined);
   const [processingError, setProcessingError] = useState<ErrorData>(undefined);
   const [cachedTemplates, setCachedTemplates] = useState<IRSForm[]>([]);
-
-  const [ossID, setGlobalID] = useState<string | undefined>(undefined);
-  const {
-    schema: globalOSS, // prettier: split lines
-    error: ossError,
-    setSchema: setGlobalOSS,
-    loading: ossLoading,
-    reload: reloadOssInternal
-  } = useOssDetails({ target: ossID, items: items });
-
-  const reloadOSS = useCallback(
-    (callback?: () => void) => {
-      reloadOssInternal(setProcessing, callback);
-    },
-    [reloadOssInternal]
-  );
 
   const folders = useMemo(() => {
     const result = new FolderTree();
@@ -280,17 +255,11 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
                 1
               );
             }
-            if (globalOSS?.schemas.includes(target)) {
-              reloadOSS(() => {
-                if (callback) callback();
-              });
-            } else {
-              if (callback) callback();
-            }
+            if (callback) callback();
           })
       });
     },
-    [reloadItems, reloadOSS, user, globalOSS]
+    [reloadItems, user]
   );
 
   const cloneItem = useCallback(
@@ -326,19 +295,11 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
         loading,
         loadingError,
         setLoadingError,
+        reloadItems,
 
         processing,
         processingError,
         setProcessingError,
-
-        globalOSS,
-        setGlobalID,
-        setGlobalOSS,
-        ossLoading,
-        ossError,
-        reloadOSS,
-
-        reloadItems,
 
         applyFilter,
         createItem,

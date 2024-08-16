@@ -11,7 +11,7 @@ function ApplicationLayout() {
   const { viewportHeight, mainHeight, showScroll } = useConceptOptions();
   return (
     <NavigationState>
-      <div className='min-w-[20rem] clr-app antialiased'>
+      <div className='min-w-[20rem] clr-app antialiased h-full'>
         <ConceptToaster
           className='mt-[4rem] text-sm' // prettier: split lines
           autoClose={3000}
@@ -29,7 +29,7 @@ function ApplicationLayout() {
           }}
         >
           <main
-            className='w-full cc-scroll-y'
+            className='w-full h-full cc-scroll-y'
             style={{ overflowY: showScroll ? 'scroll' : 'auto', minHeight: mainHeight }}
           >
             <Outlet />

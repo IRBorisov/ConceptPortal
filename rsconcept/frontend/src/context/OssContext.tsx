@@ -39,6 +39,7 @@ import { UserID } from '@/models/user';
 import { contextOutsideScope } from '@/utils/labels';
 
 import { useAuth } from './AuthContext';
+import { useGlobalOss } from './GlobalOssContext';
 import { useLibrary } from './LibraryContext';
 
 interface IOssContext {
@@ -46,7 +47,7 @@ interface IOssContext {
   itemID: string;
 
   loading: boolean;
-  errorLoading: ErrorData;
+  loadingError: ErrorData;
   processing: boolean;
   processingError: ErrorData;
 
@@ -87,7 +88,8 @@ interface OssStateProps {
 
 export const OssState = ({ itemID, children }: OssStateProps) => {
   const library = useLibrary();
-  const schema = library.globalOSS;
+  const oss = useGlobalOss();
+  const model = oss.schema;
   const { user } = useAuth();
   const [processing, setProcessing] = useState(false);
   const [processingError, setProcessingError] = useState<ErrorData>(undefined);
@@ -95,25 +97,23 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
   const [toggleTracking, setToggleTracking] = useState(false);
 
   const isOwned = useMemo(() => {
-    return user?.id === schema?.owner || false;
-  }, [user, schema?.owner]);
+    return user?.id === model?.owner || false;
+  }, [user, model?.owner]);
 
   const isSubscribed = useMemo(() => {
-    if (!user || !schema || !user.id) {
+    if (!user || !model || !user.id) {
       return false;
     }
-    return schema.subscribers.includes(user.id);
-  }, [user, schema, toggleTracking]);
+    return model.subscribers.includes(user.id);
+  }, [user, model, toggleTracking]);
 
   useEffect(() => {
-    if (schema?.id !== Number(itemID)) {
-      library.setGlobalID(itemID);
-    }
-  }, [itemID, schema, library]);
+    oss.setID(itemID);
+  }, [itemID, oss.setID]);
 
   const update = useCallback(
     (data: ILibraryUpdateData, callback?: DataCallback<ILibraryItem>) => {
-      if (!schema) {
+      if (!model) {
         return;
       }
       setProcessingError(undefined);
@@ -123,19 +123,19 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          const fullData: IOperationSchemaData = Object.assign(schema, newData);
-          library.setGlobalOSS(fullData);
+          const fullData: IOperationSchemaData = Object.assign(model, newData);
+          oss.setData(fullData);
           library.localUpdateItem(newData);
           if (callback) callback(newData);
         }
       });
     },
-    [itemID, schema, library]
+    [itemID, model, library.localUpdateItem, oss.setData]
   );
 
   const subscribe = useCallback(
     (callback?: () => void) => {
-      if (!schema || !user) {
+      if (!model || !user) {
         return;
       }
       setProcessingError(undefined);
@@ -144,23 +144,23 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: () => {
-          if (user.id && !schema.subscribers.includes(user.id)) {
-            schema.subscribers.push(user.id);
+          if (user.id && !model.subscribers.includes(user.id)) {
+            model.subscribers.push(user.id);
           }
-          if (!user.subscriptions.includes(schema.id)) {
-            user.subscriptions.push(schema.id);
+          if (!user.subscriptions.includes(model.id)) {
+            user.subscriptions.push(model.id);
           }
           setToggleTracking(prev => !prev);
           if (callback) callback();
         }
       });
     },
-    [itemID, user, schema]
+    [itemID, user, model]
   );
 
   const unsubscribe = useCallback(
     (callback?: () => void) => {
-      if (!schema || !user) {
+      if (!model || !user) {
         return;
       }
       setProcessingError(undefined);
@@ -169,23 +169,23 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: () => {
-          if (user.id && schema.subscribers.includes(user.id)) {
-            schema.subscribers.splice(schema.subscribers.indexOf(user.id), 1);
+          if (user.id && model.subscribers.includes(user.id)) {
+            model.subscribers.splice(model.subscribers.indexOf(user.id), 1);
           }
-          if (user.subscriptions.includes(schema.id)) {
-            user.subscriptions.splice(user.subscriptions.indexOf(schema.id), 1);
+          if (user.subscriptions.includes(model.id)) {
+            user.subscriptions.splice(user.subscriptions.indexOf(model.id), 1);
           }
           setToggleTracking(prev => !prev);
           if (callback) callback();
         }
       });
     },
-    [itemID, schema, user]
+    [itemID, model, user]
   );
 
   const setOwner = useCallback(
     (newOwner: UserID, callback?: () => void) => {
-      if (!schema) {
+      if (!model) {
         return;
       }
       setProcessingError(undefined);
@@ -197,18 +197,18 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: () => {
-          schema.owner = newOwner;
-          library.localUpdateItem(schema);
+          model.owner = newOwner;
+          library.localUpdateItem(model);
           if (callback) callback();
         }
       });
     },
-    [itemID, schema, library]
+    [itemID, model, library.localUpdateItem]
   );
 
   const setAccessPolicy = useCallback(
     (newPolicy: AccessPolicy, callback?: () => void) => {
-      if (!schema) {
+      if (!model) {
         return;
       }
       setProcessingError(undefined);
@@ -220,18 +220,18 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: () => {
-          schema.access_policy = newPolicy;
-          library.localUpdateItem(schema);
+          model.access_policy = newPolicy;
+          library.localUpdateItem(model);
           if (callback) callback();
         }
       });
     },
-    [itemID, schema, library]
+    [itemID, model, library.localUpdateItem]
   );
 
   const setLocation = useCallback(
     (newLocation: string, callback?: () => void) => {
-      if (!schema) {
+      if (!model) {
         return;
       }
       setProcessingError(undefined);
@@ -243,18 +243,18 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: () => {
-          schema.location = newLocation;
-          library.localUpdateItem(schema);
+          model.location = newLocation;
+          library.localUpdateItem(model);
           if (callback) callback();
         }
       });
     },
-    [itemID, schema, library]
+    [itemID, model, library.localUpdateItem]
   );
 
   const setEditors = useCallback(
     (newEditors: UserID[], callback?: () => void) => {
-      if (!schema) {
+      if (!model) {
         return;
       }
       setProcessingError(undefined);
@@ -266,12 +266,12 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: () => {
-          schema.editors = newEditors;
+          model.editors = newEditors;
           if (callback) callback();
         }
       });
     },
-    [itemID, schema]
+    [itemID, model]
   );
 
   const savePositions = useCallback(
@@ -288,7 +288,7 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         }
       });
     },
-    [itemID, library]
+    [itemID, library.localUpdateTimestamp]
   );
 
   const createOperation = useCallback(
@@ -300,13 +300,13 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          library.setGlobalOSS(newData.oss);
+          oss.setData(newData.oss);
           library.localUpdateTimestamp(newData.oss.id);
           if (callback) callback(newData.new_operation);
         }
       });
     },
-    [itemID, library]
+    [itemID, library.localUpdateTimestamp, oss.setData]
   );
 
   const deleteOperation = useCallback(
@@ -318,13 +318,13 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          library.setGlobalOSS(newData);
+          oss.setData(newData);
           library.localUpdateTimestamp(newData.id);
           if (callback) callback();
         }
       });
     },
-    [itemID, library]
+    [itemID, library.localUpdateTimestamp, oss.setData]
   );
 
   const createInput = useCallback(
@@ -336,19 +336,19 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          library.setGlobalOSS(newData.oss);
+          oss.setData(newData.oss);
           library.reloadItems(() => {
             if (callback) callback(newData.new_schema);
           });
         }
       });
     },
-    [itemID, library]
+    [itemID, library.reloadItems, oss.setData]
   );
 
   const setInput = useCallback(
     (data: IOperationSetInputData, callback?: () => void) => {
-      if (!schema) {
+      if (!model) {
         return;
       }
       setProcessingError(undefined);
@@ -358,18 +358,18 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          library.setGlobalOSS(newData);
+          oss.setData(newData);
           library.localUpdateTimestamp(newData.id);
           if (callback) callback();
         }
       });
     },
-    [itemID, schema, library]
+    [itemID, model, library.localUpdateTimestamp, oss.setData]
   );
 
   const updateOperation = useCallback(
     (data: IOperationUpdateData, callback?: () => void) => {
-      if (!schema) {
+      if (!model) {
         return;
       }
       setProcessingError(undefined);
@@ -379,19 +379,19 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          library.setGlobalOSS(newData);
+          oss.setData(newData);
           library.reloadItems(() => {
             if (callback) callback();
           });
         }
       });
     },
-    [itemID, schema, library]
+    [itemID, model, library.reloadItems, oss.setData]
   );
 
   const executeOperation = useCallback(
     (data: ITargetOperation, callback?: () => void) => {
-      if (!schema) {
+      if (!model) {
         return;
       }
       setProcessingError(undefined);
@@ -401,23 +401,23 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          library.setGlobalOSS(newData);
+          oss.setData(newData);
           library.reloadItems(() => {
             if (callback) callback();
           });
         }
       });
     },
-    [itemID, schema, library]
+    [itemID, model, library.reloadItems, oss.setData]
   );
 
   return (
     <OssContext.Provider
       value={{
-        schema,
+        schema: model,
         itemID,
-        loading: library.ossLoading,
-        errorLoading: library.ossError,
+        loading: oss.loading,
+        loadingError: oss.loadingError,
         processing,
         processingError,
         isOwned,

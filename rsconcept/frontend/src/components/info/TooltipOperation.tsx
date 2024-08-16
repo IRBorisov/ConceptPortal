@@ -62,7 +62,7 @@ function TooltipOperation({ node, anchor }: TooltipOperationProps) {
   );
 
   return (
-    <Tooltip layer='z-modalTooltip' anchorSelect={anchor} className='max-w-[35rem] max-h-[40rem] dense my-3'>
+    <Tooltip layer='z-modalTooltip' anchorSelect={anchor} className='max-w-[35rem] max-h-[40rem] dense'>
       <h2>{node.data.operation.alias}</h2>
       <p>
         <b>Тип:</b> {labelOperationType(node.data.operation.operation_type)}

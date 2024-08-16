@@ -36,7 +36,7 @@ function OssTabs() {
   const activeTab = query.get('tab') ? (Number(query.get('tab')) as OssTabID) : OssTabID.GRAPH;
 
   const { calculateHeight, setNoFooter } = useConceptOptions();
-  const { schema, loading, errorLoading } = useOSS();
+  const { schema, loading, loadingError: errorLoading } = useOSS();
   const { destroyItem } = useLibrary();
 
   const [isModified, setIsModified] = useState(false);
@@ -100,7 +100,7 @@ function OssTabs() {
     });
   }, [schema, destroyItem, router]);
 
-  const panelHeight = useMemo(() => calculateHeight('1.75rem + 4px'), [calculateHeight]);
+  const panelHeight = useMemo(() => calculateHeight('1.625rem + 2px'), [calculateHeight]);
 
   const cardPanel = useMemo(
     () => (

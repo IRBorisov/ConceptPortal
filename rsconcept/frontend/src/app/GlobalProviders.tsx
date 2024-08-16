@@ -6,6 +6,7 @@ import { pdfjs } from 'react-pdf';
 
 import { AuthState } from '@/context/AuthContext';
 import { OptionsState } from '@/context/ConceptOptionsContext';
+import { GlobalOssState } from '@/context/GlobalOssContext';
 import { LibraryState } from '@/context/LibraryContext';
 import { UsersState } from '@/context/UsersContext';
 
@@ -37,9 +38,11 @@ function GlobalProviders({ children }: { children: React.ReactNode }) {
   <UsersState>
   <AuthState>
   <LibraryState>
+  <GlobalOssState>
 
     {children}
-    
+  
+  </GlobalOssState>
   </LibraryState>
   </AuthState>
   </UsersState>
