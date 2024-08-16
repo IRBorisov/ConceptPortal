@@ -55,8 +55,8 @@ class TestOssViewset(EndpointTester):
             alias='3',
             operation_type=OperationType.SYNTHESIS
         )
-        self.owned.set_arguments(self.operation3, [self.operation1, self.operation2])
-        self.owned.set_substitutions(self.operation3, [{
+        self.owned.set_arguments(self.operation3.pk, [self.operation1, self.operation2])
+        self.owned.set_substitutions(self.operation3.pk, [{
             'original': self.ks1X1,
             'substitution': self.ks2X1
         }])

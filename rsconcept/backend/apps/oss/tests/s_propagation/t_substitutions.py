@@ -71,8 +71,8 @@ class TestChangeSubstitutions(EndpointTester):
             alias='4',
             operation_type=OperationType.SYNTHESIS
         )
-        self.owned.set_arguments(self.operation4, [self.operation1, self.operation2])
-        self.owned.set_substitutions(self.operation4, [{
+        self.owned.set_arguments(self.operation4.pk, [self.operation1, self.operation2])
+        self.owned.set_substitutions(self.operation4.pk, [{
             'original': self.ks1X1,
             'substitution': self.ks2S1
         }])
@@ -92,8 +92,8 @@ class TestChangeSubstitutions(EndpointTester):
             alias='5',
             operation_type=OperationType.SYNTHESIS
         )
-        self.owned.set_arguments(self.operation5, [self.operation4, self.operation3])
-        self.owned.set_substitutions(self.operation5, [{
+        self.owned.set_arguments(self.operation5.pk, [self.operation4, self.operation3])
+        self.owned.set_substitutions(self.operation5.pk, [{
             'original': self.ks4X1,
             'substitution': self.ks3X1
         }])

@@ -67,8 +67,8 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
     if (cache.loading || schemas.length !== schemasIDs.length) {
       return;
     }
-    setSubstitutions(prev =>
-      prev.filter(sub => {
+    setSubstitutions(() =>
+      target.substitutions.filter(sub => {
         const original = cache.getSchemaByCst(sub.original);
         if (!original || !schemasIDs.includes(original.id)) {
           return false;
@@ -80,7 +80,7 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
         return true;
       })
     );
-  }, [schemasIDs, schemas, cache.loading]);
+  }, [schemasIDs, schemas, cache.loading, target.substitutions]);
 
   const handleSubmit = () => {
     const data: IOperationUpdateData = {

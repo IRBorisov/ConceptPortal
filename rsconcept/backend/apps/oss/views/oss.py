@@ -129,7 +129,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                 oss.create_input(new_operation)
             if new_operation.operation_type != m.OperationType.INPUT and 'arguments' in serializer.validated_data:
                 oss.set_arguments(
-                    operation=new_operation,
+                    target=new_operation.pk,
                     arguments=serializer.validated_data['arguments']
                 )
         return Response(
@@ -165,7 +165,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         old_schema: Optional[LibraryItem] = operation.result
         with transaction.atomic():
             oss.update_positions(serializer.validated_data['positions'])
-            oss.delete_operation(operation, serializer.validated_data['keep_constituents'])
+            oss.delete_operation(operation.pk, serializer.validated_data['keep_constituents'])
             if old_schema is not None:
                 if serializer.validated_data['delete_schema']:
                     m.PropagationFacade.before_delete_schema(old_schema)
@@ -305,9 +305,9 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                     operation.result.comment = operation.comment
                     operation.result.save()
             if 'arguments' in serializer.validated_data:
-                oss.set_arguments(operation, serializer.validated_data['arguments'])
+                oss.set_arguments(operation.pk, serializer.validated_data['arguments'])
             if 'substitutions' in serializer.validated_data:
-                oss.set_substitutions(operation, serializer.validated_data['substitutions'])
+                oss.set_substitutions(operation.pk, serializer.validated_data['substitutions'])
         return Response(
             status=c.HTTP_200_OK,
             data=s.OperationSchemaSerializer(oss.model).data

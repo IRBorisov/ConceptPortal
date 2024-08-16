@@ -30,7 +30,7 @@ import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import { useAccessMode } from '@/context/AccessModeContext';
 import { useAuth } from '@/context/AuthContext';
-import { useLibrary } from '@/context/LibraryContext';
+import { useGlobalOss } from '@/context/GlobalOssContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useRSForm } from '@/context/RSFormContext';
 import useDropdown from '@/hooks/useDropdown';
@@ -50,7 +50,7 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
   const router = useConceptNavigation();
   const { user } = useAuth();
   const model = useRSForm();
-  const library = useLibrary();
+  const oss = useGlobalOss();
 
   const { accessLevel, setAccessLevel } = useAccessMode();
 
@@ -185,11 +185,11 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
               onClick={handleCreateNew}
             />
           ) : null}
-          {library.globalOSS ? (
+          {oss.schema ? (
             <DropdownButton
               text='Перейти к ОСС'
               icon={<IconOSS size='1rem' className='icon-primary' />}
-              onClick={() => router.push(urls.oss(library.globalOSS!.id, OssTabID.GRAPH))}
+              onClick={() => router.push(urls.oss(oss.schema!.id, OssTabID.GRAPH))}
             />
           ) : null}
           <DropdownButton

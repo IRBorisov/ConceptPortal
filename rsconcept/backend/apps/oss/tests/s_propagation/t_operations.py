@@ -71,8 +71,8 @@ class TestChangeOperations(EndpointTester):
             alias='4',
             operation_type=OperationType.SYNTHESIS
         )
-        self.owned.set_arguments(self.operation4, [self.operation1, self.operation2])
-        self.owned.set_substitutions(self.operation4, [{
+        self.owned.set_arguments(self.operation4.pk, [self.operation1, self.operation2])
+        self.owned.set_substitutions(self.operation4.pk, [{
             'original': self.ks1X1,
             'substitution': self.ks2S1
         }])
@@ -92,8 +92,8 @@ class TestChangeOperations(EndpointTester):
             alias='5',
             operation_type=OperationType.SYNTHESIS
         )
-        self.owned.set_arguments(self.operation5, [self.operation4, self.operation3])
-        self.owned.set_substitutions(self.operation5, [{
+        self.owned.set_arguments(self.operation5.pk, [self.operation4, self.operation3])
+        self.owned.set_substitutions(self.operation5.pk, [{
             'original': self.ks4X1,
             'substitution': self.ks3X1
         }])
@@ -249,3 +249,75 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(self.ks5.constituents().count(), 8)
         self.assertEqual(self.ks4D2.definition_formal, r'X1 X2 X3 S1 D1')
         self.assertEqual(self.ks5D4.definition_formal, r'X1 X2 X3 S1 D1 D2 D3')
+
+    @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
+    def test_change_substitutions(self):
+        data = {
+            'target': self.operation4.pk,
+            'item_data': {
+                'alias': 'Test4 mod',
+                'title': 'Test title mod',
+                'comment': 'Comment mod'
+            },
+            'positions': [],
+            'substitutions': [
+                {
+                    'original': self.ks1X1.pk,
+                    'substitution': self.ks2X2.pk
+                },
+                {
+                    'original': self.ks2X1.pk,
+                    'substitution': self.ks1D1.pk
+                }
+            ]
+        }
+
+        self.executeOK(data=data, item=self.owned_id)
+        self.ks4D2.refresh_from_db()
+        self.ks5D4.refresh_from_db()
+        subs1_2 = self.operation4.getSubstitutions()
+        self.assertEqual(subs1_2.count(), 2)
+        subs3_4 = self.operation5.getSubstitutions()
+        self.assertEqual(subs3_4.count(), 1)
+        self.assertEqual(self.ks4.constituents().count(), 5)
+        self.assertEqual(self.ks5.constituents().count(), 7)
+        self.assertEqual(self.ks4D2.definition_formal, r'X1 D1 X3 S1 D1')
+        self.assertEqual(self.ks5D4.definition_formal, r'X1 D2 X3 S1 D1 D2 D3')
+
+    @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
+    def test_change_arguments(self):
+        data = {
+            'target': self.operation4.pk,
+            'item_data': {
+                'alias': 'Test4 mod',
+                'title': 'Test title mod',
+                'comment': 'Comment mod'
+            },
+            'positions': [],
+            'arguments': [self.operation1.pk],
+        }
+
+        self.executeOK(data=data, item=self.owned_id)
+        self.ks4D2.refresh_from_db()
+        self.ks5D4.refresh_from_db()
+        subs1_2 = self.operation4.getSubstitutions()
+        self.assertEqual(subs1_2.count(), 0)
+        subs3_4 = self.operation5.getSubstitutions()
+        self.assertEqual(subs3_4.count(), 1)
+        self.assertEqual(self.ks4.constituents().count(), 4)
+        self.assertEqual(self.ks5.constituents().count(), 6)
+        self.assertEqual(self.ks4D2.definition_formal, r'X1 DEL DEL DEL D1')
+        self.assertEqual(self.ks5D4.definition_formal, r'X1 DEL DEL DEL D1 D2 D3')
+
+        data['arguments'] = [self.operation1.pk, self.operation2.pk]
+        self.executeOK(data=data, item=self.owned_id)
+        self.ks4D2.refresh_from_db()
+        self.ks5D4.refresh_from_db()
+        subs1_2 = self.operation4.getSubstitutions()
+        self.assertEqual(subs1_2.count(), 0)
+        subs3_4 = self.operation5.getSubstitutions()
+        self.assertEqual(subs3_4.count(), 1)
+        self.assertEqual(self.ks4.constituents().count(), 7)
+        self.assertEqual(self.ks5.constituents().count(), 9)
+        self.assertEqual(self.ks4D2.definition_formal, r'X1 DEL DEL DEL D1')
+        self.assertEqual(self.ks5D4.definition_formal, r'X1 DEL DEL DEL D1 D2 D3')

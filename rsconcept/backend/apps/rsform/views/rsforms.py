@@ -87,7 +87,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         schema = m.RSForm(self._get_item())
         with transaction.atomic():
             new_cst = schema.create_cst(data, insert_after)
-            PropagationFacade.after_create_cst([new_cst], schema)
+            PropagationFacade.after_create_cst(schema, [new_cst])
         return Response(
             status=c.HTTP_201_CREATED,
             data={
@@ -118,7 +118,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         data = serializer.validated_data['item_data']
         with transaction.atomic():
             old_data = schema.update_cst(cst, data)
-            PropagationFacade.after_update_cst(cst, data, old_data, schema)
+            PropagationFacade.after_update_cst(schema, cst, data, old_data)
         return Response(
             status=c.HTTP_200_OK,
             data=s.CstSerializer(m.Constituenta.objects.get(pk=request.data['target'])).data
@@ -159,7 +159,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
 
         with transaction.atomic():
             new_cst = schema.produce_structure(cst, cst_parse)
-            PropagationFacade.after_create_cst(new_cst, schema)
+            PropagationFacade.after_create_cst(schema, new_cst)
         return Response(
             status=c.HTTP_200_OK,
             data={
@@ -197,7 +197,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             schema.save()
             cst.refresh_from_db()
             if changed_type:
-                PropagationFacade.after_change_cst_type(cst, schema)
+                PropagationFacade.after_change_cst_type(schema, cst)
         return Response(
             status=c.HTTP_200_OK,
             data={
@@ -233,7 +233,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
                 original = cast(m.Constituenta, substitution['original'])
                 replacement = cast(m.Constituenta, substitution['substitution'])
                 substitutions.append((original, replacement))
-            PropagationFacade.before_substitute(substitutions, schema)
+            PropagationFacade.before_substitute(schema, substitutions)
             schema.substitute(substitutions)
         return Response(
             status=c.HTTP_200_OK,
@@ -263,7 +263,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         cst_list: list[m.Constituenta] = serializer.validated_data['items']
         schema = m.RSForm(model)
         with transaction.atomic():
-            PropagationFacade.before_delete_cst(cst_list, schema)
+            PropagationFacade.before_delete_cst(schema, cst_list)
             schema.delete_cst(cst_list)
         return Response(
             status=c.HTTP_200_OK,
@@ -581,7 +581,7 @@ def inline_synthesis(request: Request) -> HttpResponse:
 
     with transaction.atomic():
         new_items = receiver.insert_copy(items)
-        PropagationFacade.after_create_cst(new_items, receiver)
+        PropagationFacade.after_create_cst(receiver, new_items)
 
         substitutions: list[tuple[m.Constituenta, m.Constituenta]] = []
         for substitution in serializer.validated_data['substitutions']:
@@ -595,7 +595,7 @@ def inline_synthesis(request: Request) -> HttpResponse:
                 replacement = new_items[index]
             substitutions.append((original, replacement))
 
-        PropagationFacade.before_substitute(substitutions, receiver)
+        PropagationFacade.before_substitute(receiver, substitutions)
         receiver.substitute(substitutions)
 
         receiver.restore_order()

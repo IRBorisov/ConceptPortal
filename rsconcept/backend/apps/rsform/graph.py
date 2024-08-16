@@ -42,6 +42,28 @@ class Graph(Generic[ItemType]):
         if src not in self.inputs[dest]:
             self.inputs[dest].append(src)
 
+    def remove_edge(self, src: ItemType, dest: ItemType):
+        ''' Remove edge from graph. '''
+        if not self.contains(src) or not self.contains(dest):
+            return
+        if dest in self.outputs[src]:
+            self.outputs[src].remove(dest)
+        if src in self.inputs[dest]:
+            self.inputs[dest].remove(src)
+
+    def remove_node(self, target: ItemType):
+        ''' Remove node from graph. '''
+        if not self.contains(target):
+            return
+        del self.outputs[target]
+        del self.inputs[target]
+        for list_out in self.outputs.values():
+            if target in list_out:
+                list_out.remove(target)
+        for list_in in self.inputs.values():
+            if target in list_in:
+                list_in.remove(target)
+
     def expand_inputs(self, origin: Iterable[ItemType]) -> list[ItemType]:
         ''' Expand origin nodes forward through graph edges. '''
         result: list[ItemType] = []

@@ -51,7 +51,7 @@ class TestChangeConstituents(EndpointTester):
             alias='3',
             operation_type=OperationType.SYNTHESIS
         )
-        self.owned.set_arguments(self.operation3, [self.operation1, self.operation2])
+        self.owned.set_arguments(self.operation3.pk, [self.operation1, self.operation2])
         self.owned.execute_operation(self.operation3)
         self.operation3.refresh_from_db()
         self.ks3 = RSForm(self.operation3.result)

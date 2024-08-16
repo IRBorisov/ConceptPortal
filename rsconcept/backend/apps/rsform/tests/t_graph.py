@@ -26,6 +26,32 @@ class TestGraph(unittest.TestCase):
         self.assertTrue(graph.has_edge(1, 3))
         self.assertTrue(graph.has_edge(2, 1))
 
+    def test_remove_node(self):
+        graph = Graph({
+            1: [2],
+            2: [3, 5],
+            3: [],
+            5: []
+        })
+        self.assertEqual(len(graph.outputs), 4)
+        graph.remove_node(0)
+        graph.remove_node(2)
+        self.assertEqual(graph.outputs[1], [])
+        self.assertEqual(len(graph.outputs), 3)
+
+    def test_remove_edge(self):
+        graph = Graph({
+            1: [2],
+            2: [3, 5],
+            3: [],
+            5: []
+        })
+        graph.remove_edge(0, 1)
+        graph.remove_edge(2, 1)
+        self.assertEqual(graph.outputs[1], [2])
+        graph.remove_edge(1, 2)
+        self.assertEqual(graph.outputs[1], [])
+        graph.remove_edge(1, 2)
 
     def test_expand_outputs(self):
         graph = Graph({
