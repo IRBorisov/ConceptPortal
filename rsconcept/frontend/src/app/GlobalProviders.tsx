@@ -2,7 +2,6 @@
 
 import { ErrorBoundary } from 'react-error-boundary';
 import { IntlProvider } from 'react-intl';
-import { pdfjs } from 'react-pdf';
 
 import { AuthState } from '@/context/AuthContext';
 import { OptionsState } from '@/context/ConceptOptionsContext';
@@ -11,8 +10,6 @@ import { LibraryState } from '@/context/LibraryContext';
 import { UsersState } from '@/context/UsersContext';
 
 import ErrorFallback from './ErrorFallback';
-
-pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString();
 
 const resetState = () => {
   console.log('Resetting state after error fallback');

@@ -37,7 +37,6 @@ This readme file is used mostly to document project dependencies and conventions
   - react-intl
   - react-select
   - react-error-boundary
-  - react-pdf
   - react-tooltip
   - react-zoom-pan-pinch
   - reactflow
