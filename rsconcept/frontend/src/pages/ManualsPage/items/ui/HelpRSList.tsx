@@ -14,7 +14,7 @@ import Divider from '@/components/ui/Divider';
 import LinkTopic from '@/components/ui/LinkTopic';
 import { HelpTopic } from '@/models/miscellaneous';
 
-function HelpRSFormItems() {
+function HelpRSList() {
   return (
     <div className='dense'>
       <h1>Список конституент</h1>
@@ -63,4 +63,4 @@ function HelpRSFormItems() {
   );
 }
 
-export default HelpRSFormItems;
+export default HelpRSList;

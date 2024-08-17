@@ -22,7 +22,7 @@ import LinkTopic from '@/components/ui/LinkTopic';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { HelpTopic } from '@/models/miscellaneous';
 
-function HelpTermGraph() {
+function HelpRSGraphTerm() {
   const { colors } = useConceptOptions();
   return (
     <div className='flex flex-col'>
@@ -117,4 +117,4 @@ function HelpTermGraph() {
   );
 }
 
-export default HelpTermGraph;
+export default HelpRSGraphTerm;

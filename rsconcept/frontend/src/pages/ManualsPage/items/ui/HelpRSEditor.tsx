@@ -22,7 +22,7 @@ import LinkTopic from '@/components/ui/LinkTopic';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { HelpTopic } from '@/models/miscellaneous';
 
-function HelpCstEditor() {
+function HelpRSEditor() {
   const { colors } = useConceptOptions();
   return (
     <div className='dense'>
@@ -110,4 +110,4 @@ function HelpCstEditor() {
   );
 }
 
-export default HelpCstEditor;
+export default HelpRSEditor;

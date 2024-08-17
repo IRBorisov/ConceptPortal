@@ -7,7 +7,7 @@ import { external_urls, prefixes } from '@/utils/constants';
 
 import TopicItem from '../TopicItem';
 
-function HelpPortal() {
+function HelpMain() {
   return (
     <div>
       <h1>Портал</h1>
@@ -79,4 +79,4 @@ function HelpPortal() {
   );
 }
 
-export default HelpPortal;
+export default HelpMain;

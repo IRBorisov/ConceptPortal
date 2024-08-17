@@ -17,7 +17,7 @@ import Divider from '@/components/ui/Divider';
 import LinkTopic from '@/components/ui/LinkTopic';
 import { HelpTopic } from '@/models/miscellaneous';
 
-function HelpRSFormMenu() {
+function HelpRSMenu() {
   return (
     <div>
       <h1>Редактирование схемы</h1>
@@ -100,4 +100,4 @@ function HelpRSFormMenu() {
   );
 }
 
-export default HelpRSFormMenu;
+export default HelpRSMenu;

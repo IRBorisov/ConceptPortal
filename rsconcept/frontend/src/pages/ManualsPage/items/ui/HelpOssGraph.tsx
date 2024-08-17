@@ -1,8 +1,8 @@
 import {
-  IconAlert,
   IconAnimation,
   IconAnimationOff,
   IconConnect,
+  IconConsolidation,
   IconDestroy,
   IconEdit2,
   IconExecute,
@@ -90,7 +90,8 @@ function HelpOssGraph() {
             <LinkTopic text='КС' topic={HelpTopic.CC_SYSTEM} />
           </li>
           <li>
-            <IconAlert className='inline-icon' /> <LinkTopic text='Ромбовидный синтез' topic={HelpTopic.CC_OSS} />
+            <IconConsolidation className='inline-icon' />{' '}
+            <LinkTopic text='Ромбовидный синтез' topic={HelpTopic.CC_OSS} />
           </li>
           <li>
             <IconNewRSForm className='inline-icon icon-green' /> Создать пустую КС для загрузки

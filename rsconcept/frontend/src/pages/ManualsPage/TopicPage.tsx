@@ -1,39 +1,39 @@
 import useWindowSize from '@/hooks/useWindowSize';
 import { HelpTopic } from '@/models/miscellaneous';
 
+import HelpConceptOSS from './items/cc/HelpConceptOSS';
+import HelpConceptRelations from './items/cc/HelpConceptRelations';
+import HelpConceptSynthesis from './items/cc/HelpConceptSynthesis';
+import HelpConceptSystem from './items/cc/HelpConceptSystem';
+import HelpCstAttributes from './items/cc/HelpCstAttributes';
 import HelpAccess from './items/HelpAccess';
-import HelpAPI from './items/HelpAPI';
 import HelpConcept from './items/HelpConcept';
-import HelpConceptOSS from './items/HelpConceptOSS';
-import HelpConceptRelations from './items/HelpConceptRelations';
-import HelpConceptSynthesis from './items/HelpConceptSynthesis';
-import HelpConceptSystem from './items/HelpConceptSystem';
-import HelpContributors from './items/HelpContributors';
-import HelpCstAttributes from './items/HelpCstAttributes';
-import HelpCstClass from './items/HelpCstClass';
-import HelpCstEditor from './items/HelpCstEditor';
-import HelpCstStatus from './items/HelpCstStatus';
 import HelpExteor from './items/HelpExteor';
-import HelpFormulaTree from './items/HelpFormulaTree';
 import HelpInfo from './items/HelpInfo';
 import HelpInterface from './items/HelpInterface';
-import HelpLibrary from './items/HelpLibrary';
-import HelpOssGraph from './items/HelpOssGraph';
-import HelpPortal from './items/HelpPortal';
-import HelpPrivacy from './items/HelpPrivacy';
-import HelpRSFormCard from './items/HelpRSFormCard';
-import HelpRSFormItems from './items/HelpRSFormItems';
-import HelpRSFormMenu from './items/HelpRSFormMenu';
+import HelpMain from './items/HelpMain';
 import HelpRSLang from './items/HelpRSLang';
-import HelpRSLangCorrect from './items/HelpRSLangCorrect';
-import HelpRSLangInterpret from './items/HelpRSLangInterpret';
-import HelpRSLangOperations from './items/HelpRSLangOperations';
-import HelpRSLangTemplates from './items/HelpRSLangTemplates';
-import HelpRSLangTypes from './items/HelpRSLangTypes';
-import HelpRules from './items/HelpRules';
-import HelpTermGraph from './items/HelpTermGraph';
 import HelpTerminologyControl from './items/HelpTerminologyControl';
 import HelpVersions from './items/HelpVersions';
+import HelpAPI from './items/info/HelpAPI';
+import HelpContributors from './items/info/HelpContributors';
+import HelpPrivacy from './items/info/HelpPrivacy';
+import HelpRules from './items/info/HelpRules';
+import HelpRSLangCorrect from './items/rslang/HelpRSLangCorrect';
+import HelpRSLangInterpret from './items/rslang/HelpRSLangInterpret';
+import HelpRSLangOperations from './items/rslang/HelpRSLangOperations';
+import HelpRSLangTemplates from './items/rslang/HelpRSLangTemplates';
+import HelpRSLangTypes from './items/rslang/HelpRSLangTypes';
+import HelpCstClass from './items/ui/HelpCstClass';
+import HelpCstStatus from './items/ui/HelpCstStatus';
+import HelpFormulaTree from './items/ui/HelpFormulaTree';
+import HelpLibrary from './items/ui/HelpLibrary';
+import HelpOssGraph from './items/ui/HelpOssGraph';
+import HelpRSCard from './items/ui/HelpRSCard';
+import HelpRSEditor from './items/ui/HelpRSEditor';
+import HelpRSGraphTerm from './items/ui/HelpRSGraphTerm';
+import HelpRSList from './items/ui/HelpRSList';
+import HelpRSMenu from './items/ui/HelpRSMenu';
 
 // PDF Viewer setup
 const OFFSET_X_SMALL = 32;
@@ -49,15 +49,15 @@ interface TopicPageProps {
 function TopicPage({ topic }: TopicPageProps) {
   const size = useWindowSize();
 
-  if (topic === HelpTopic.MAIN) return <HelpPortal />;
+  if (topic === HelpTopic.MAIN) return <HelpMain />;
 
   if (topic === HelpTopic.INTERFACE) return <HelpInterface />;
   if (topic === HelpTopic.UI_LIBRARY) return <HelpLibrary />;
-  if (topic === HelpTopic.UI_RS_MENU) return <HelpRSFormMenu />;
-  if (topic === HelpTopic.UI_RS_CARD) return <HelpRSFormCard />;
-  if (topic === HelpTopic.UI_RS_LIST) return <HelpRSFormItems />;
-  if (topic === HelpTopic.UI_RS_EDITOR) return <HelpCstEditor />;
-  if (topic === HelpTopic.UI_GRAPH_TERM) return <HelpTermGraph />;
+  if (topic === HelpTopic.UI_RS_MENU) return <HelpRSMenu />;
+  if (topic === HelpTopic.UI_RS_CARD) return <HelpRSCard />;
+  if (topic === HelpTopic.UI_RS_LIST) return <HelpRSList />;
+  if (topic === HelpTopic.UI_RS_EDITOR) return <HelpRSEditor />;
+  if (topic === HelpTopic.UI_GRAPH_TERM) return <HelpRSGraphTerm />;
   if (topic === HelpTopic.UI_FORMULA_TREE) return <HelpFormulaTree />;
   if (topic === HelpTopic.UI_CST_STATUS) return <HelpCstStatus />;
   if (topic === HelpTopic.UI_CST_CLASS) return <HelpCstClass />;
