@@ -124,7 +124,11 @@ function MenuOssTabs({ onDestroy }: MenuOssTabsProps) {
             onClick={editMenu.toggle}
           />
           <Dropdown isOpen={editMenu.isOpen}>
-            <div>операции над ОСС</div>
+            <DropdownButton
+              text='см. Граф синтеза'
+              titleHtml='Редактирование доступно <br/>через Граф синтеза'
+              disabled
+            />
           </Dropdown>
         </div>
       ) : null}

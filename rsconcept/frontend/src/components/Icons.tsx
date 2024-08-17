@@ -64,6 +64,7 @@ export { IoLibrary        as IconLibrary2 }       from 'react-icons/io5';
 export { BiDiamond        as IconTemplates }      from 'react-icons/bi';
 export { TbHexagons       as IconOSS }            from 'react-icons/tb';
 export { TbHexagon        as IconRSForm }         from 'react-icons/tb';
+export { TbTopologyRing   as IconConsolidation }  from 'react-icons/tb';
 export { GrInherit        as IconChild }          from 'react-icons/gr';
 export { RiParentLine     as IconParent }         from 'react-icons/ri';
 export { BiSpa            as IconPredecessor }    from 'react-icons/bi';

@@ -1,6 +1,6 @@
 import { Handle, Position } from 'reactflow';
 
-import { IconAlert, IconRSForm } from '@/components/Icons';
+import { IconConsolidation, IconRSForm } from '@/components/Icons';
 import TooltipOperation from '@/components/info/TooltipOperation';
 import MiniButton from '@/components/ui/MiniButton.tsx';
 import Overlay from '@/components/ui/Overlay';
@@ -39,11 +39,11 @@ function OperationNode(node: OssNodeInternal) {
         />
         {node.data.operation.is_consolidation ? (
           <MiniButton
-            icon={<IconAlert className='clr-text-primary' size='0.6rem' />}
+            icon={<IconConsolidation className='clr-text-primary' size='0.6rem' />}
             disabled
             noPadding
             noHover
-            title='Внимание! Ромбовидный синтез'
+            titleHtml='<b>Внимание!</b><br />Ромбовидный синтез</br/>Возможны дубликаты конституент'
             hideTitle={!controller.showTooltip}
           />
         ) : null}
