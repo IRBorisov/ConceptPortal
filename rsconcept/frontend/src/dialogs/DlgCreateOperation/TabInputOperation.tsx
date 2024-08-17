@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 import { IconReset } from '@/components/Icons';
 import PickSchema from '@/components/select/PickSchema';
@@ -10,8 +10,10 @@ import MiniButton from '@/components/ui/MiniButton';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
 import AnimateFade from '@/components/wrap/AnimateFade';
-import { ILibraryItem, LibraryItemID } from '@/models/library';
+import { useLibrary } from '@/context/LibraryContext';
+import { ILibraryItem, LibraryItemID, LibraryItemType } from '@/models/library';
 import { IOperationSchema } from '@/models/oss';
+import { sortItemsForOSS } from '@/models/ossAPI';
 import { limits, patterns } from '@/utils/constants';
 
 interface TabInputOperationProps {
@@ -42,6 +44,8 @@ function TabInputOperation({
   setCreateSchema
 }: TabInputOperationProps) {
   const baseFilter = useCallback((item: ILibraryItem) => !oss.schemas.includes(item.id), [oss]);
+  const library = useLibrary();
+  const sortedItems = useMemo(() => sortItemsForOSS(oss, library.items), [oss, library.items]);
 
   useEffect(() => {
     if (createSchema) {
@@ -102,7 +106,9 @@ function TabInputOperation({
       </div>
       {!createSchema ? (
         <PickSchema
-          value={attachedID} // prettier: split-line
+          items={sortedItems}
+          value={attachedID}
+          itemType={LibraryItemType.RSFORM}
           onSelectValue={setAttachedID}
           rows={8}
           baseFilter={baseFilter}

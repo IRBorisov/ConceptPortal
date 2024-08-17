@@ -113,8 +113,8 @@ function NodeContextMenu({
 
         {operation.result ? (
           <DropdownButton
-            text={prepareTooltip('Открыть схему', 'Двойной клик')}
-            title='Открыть привязанную КС'
+            text='Открыть схему'
+            titleHtml={prepareTooltip('Открыть привязанную КС', 'Двойной клик')}
             icon={<IconRSForm size='1rem' className='icon-green' />}
             disabled={controller.isProcessing}
             onClick={handleOpenSchema}

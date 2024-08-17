@@ -4,9 +4,8 @@ import { useIntl } from 'react-intl';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
 import SearchBar from '@/components/ui/SearchBar';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
-import { useLibrary } from '@/context/LibraryContext';
 import { ILibraryItem, LibraryItemID, LibraryItemType } from '@/models/library';
-import { ILibraryFilter } from '@/models/miscellaneous';
+import { matchLibraryItem } from '@/models/libraryAPI';
 
 import FlexColumn from '../ui/FlexColumn';
 
@@ -15,6 +14,8 @@ interface PickSchemaProps {
   initialFilter?: string;
   rows?: number;
 
+  items: ILibraryItem[];
+  itemType: LibraryItemType;
   value?: LibraryItemID;
   baseFilter?: (target: ILibraryItem) => boolean;
   onSelectValue: (newValue: LibraryItemID) => void;
@@ -22,30 +23,30 @@ interface PickSchemaProps {
 
 const columnHelper = createColumnHelper<ILibraryItem>();
 
-function PickSchema({ id, initialFilter = '', rows = 4, value, onSelectValue, baseFilter }: PickSchemaProps) {
+function PickSchema({
+  id,
+  initialFilter = '',
+  rows = 4,
+  items,
+  itemType,
+  value,
+  onSelectValue,
+  baseFilter
+}: PickSchemaProps) {
   const intl = useIntl();
   const { colors } = useConceptOptions();
 
-  const library = useLibrary();
   const [filterText, setFilterText] = useState(initialFilter);
-  const [filter, setFilter] = useState<ILibraryFilter>({});
-  const [items, setItems] = useState<ILibraryItem[]>([]);
+  const [filtered, setFiltered] = useState<ILibraryItem[]>([]);
+  const baseFiltered = useMemo(
+    () => items.filter(item => item.item_type === itemType && (!baseFilter || baseFilter(item))),
+    [items, itemType, baseFilter]
+  );
 
   useLayoutEffect(() => {
-    setFilter({
-      query: filterText,
-      type: LibraryItemType.RSFORM
-    });
+    const newFiltered = baseFiltered.filter(item => matchLibraryItem(item, filterText));
+    setFiltered(newFiltered);
   }, [filterText]);
-
-  useLayoutEffect(() => {
-    const filtered = library.applyFilter(filter);
-    if (baseFilter) {
-      setItems(filtered.filter(baseFilter));
-    } else {
-      setItems(filtered);
-    }
-  }, [library, filter, filter.query, baseFilter]);
 
   const columns = useMemo(
     () => [
@@ -106,7 +107,7 @@ function PickSchema({ id, initialFilter = '', rows = 4, value, onSelectValue, ba
         noHeader
         noFooter
         className='text-sm select-none cc-scroll-y'
-        data={items}
+        data={filtered}
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
         noDataComponent={

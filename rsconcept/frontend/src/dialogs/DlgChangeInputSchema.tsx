@@ -8,8 +8,10 @@ import PickSchema from '@/components/select/PickSchema';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
 import Modal, { ModalProps } from '@/components/ui/Modal';
-import { ILibraryItem, LibraryItemID } from '@/models/library';
+import { useLibrary } from '@/context/LibraryContext';
+import { ILibraryItem, LibraryItemID, LibraryItemType } from '@/models/library';
 import { IOperation, IOperationSchema } from '@/models/oss';
+import { sortItemsForOSS } from '@/models/ossAPI';
 
 interface DlgChangeInputSchemaProps extends Pick<ModalProps, 'hideWindow'> {
   oss: IOperationSchema;
@@ -19,6 +21,8 @@ interface DlgChangeInputSchemaProps extends Pick<ModalProps, 'hideWindow'> {
 
 function DlgChangeInputSchema({ oss, hideWindow, target, onSubmit }: DlgChangeInputSchemaProps) {
   const [selected, setSelected] = useState<LibraryItemID | undefined>(target.result ?? undefined);
+  const library = useLibrary();
+  const sortedItems = useMemo(() => sortItemsForOSS(oss, library.items), [oss, library.items]);
 
   const baseFilter = useCallback(
     (item: ILibraryItem) => !oss.schemas.includes(item.id) || item.id === selected || item.id === target.result,
@@ -55,6 +59,8 @@ function DlgChangeInputSchema({ oss, hideWindow, target, onSubmit }: DlgChangeIn
         </div>
       </div>
       <PickSchema
+        items={sortedItems}
+        itemType={LibraryItemType.RSFORM}
         value={selected} // prettier: split-line
         onSelectValue={handleSelectLocation}
         rows={8}

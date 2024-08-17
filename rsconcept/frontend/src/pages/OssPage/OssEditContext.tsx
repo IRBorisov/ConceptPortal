@@ -8,6 +8,7 @@ import { urls } from '@/app/urls';
 import { useAccessMode } from '@/context/AccessModeContext';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
+import { useLibrary } from '@/context/LibraryContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useOSS } from '@/context/OssContext';
 import DlgChangeInputSchema from '@/dialogs/DlgChangeInputSchema';
@@ -30,7 +31,7 @@ import {
 } from '@/models/oss';
 import { UserID, UserLevel } from '@/models/user';
 import { PARAMETER } from '@/utils/constants';
-import { information } from '@/utils/labels';
+import { errors, information } from '@/utils/labels';
 
 export interface ICreateOperationPrompt {
   x: number;
@@ -95,6 +96,7 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
   const { adminMode } = useConceptOptions();
   const { accessLevel, setAccessLevel } = useAccessMode();
   const model = useOSS();
+  const library = useLibrary();
 
   const isMutable = useMemo(
     () => accessLevel > UserLevel.READER && !model.schema?.read_only,
@@ -307,12 +309,20 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
 
   const createInput = useCallback(
     (target: OperationID, positions: IOperationPosition[]) => {
+      const operation = model.schema?.operationByID.get(target);
+      if (!model.schema || !operation) {
+        return;
+      }
+      if (library.items.find(item => item.alias === operation.alias && item.location === model.schema!.location)) {
+        toast.error(errors.inputAlreadyExists);
+        return;
+      }
       model.createInput({ target: target, positions: positions }, new_schema => {
         toast.success(information.newLibraryItem);
         router.push(urls.schema(new_schema.id));
       });
     },
-    [model, router]
+    [model, library.items, router]
   );
 
   const promptEditInput = useCallback((target: OperationID, positions: IOperationPosition[]) => {

@@ -6,7 +6,7 @@ import PickSchema from '@/components/select/PickSchema';
 import TextInput from '@/components/ui/TextInput';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { useLibrary } from '@/context/LibraryContext';
-import { LibraryItemID } from '@/models/library';
+import { LibraryItemID, LibraryItemType } from '@/models/library';
 
 interface TabSchemaProps {
   selected?: LibraryItemID;
@@ -33,6 +33,8 @@ function TabSchema({ selected, setSelected }: TabSchemaProps) {
       </div>
       <PickSchema
         id='dlg_schema_picker' // prettier: split lines
+        items={library.items}
+        itemType={LibraryItemType.RSFORM}
         rows={15}
         value={selected}
         onSelectValue={setSelected}
