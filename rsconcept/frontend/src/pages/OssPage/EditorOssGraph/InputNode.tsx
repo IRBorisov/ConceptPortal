@@ -21,11 +21,12 @@ function InputNode(node: OssNodeInternal) {
     <>
       <Handle type='source' position={Position.Bottom} />
 
-      <Overlay position='top-[-0.2rem] right-[-0.2rem]'>
+      <Overlay position='top-0 right-0' className='flex'>
         <MiniButton
           icon={<IconRSForm className={hasFile ? 'clr-text-green' : 'clr-text-red'} size='0.75rem' />}
           noHover
-          title='Связанная КС'
+          noPadding
+          title={hasFile ? 'Связанная КС' : 'Нет связанной КС'}
           hideTitle={!controller.showTooltip}
           onClick={() => {
             handleOpenSchema();

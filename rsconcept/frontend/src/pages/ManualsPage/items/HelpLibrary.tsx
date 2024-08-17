@@ -5,18 +5,28 @@ import {
   IconFolderEmpty,
   IconFolderOpened,
   IconFolderTree,
+  IconOSS,
+  IconRSForm,
   IconSearch,
   IconShow,
   IconSortAsc,
   IconSortDesc
 } from '@/components/Icons';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 
 function HelpLibrary() {
+  const { colors } = useConceptOptions();
   return (
     <div>
       <h1>Библиотека схем</h1>
-      <p>В библиотеке собраны концептуальные схемы, эксплицированные в родоструктурном аппарате</p>
+      <p>
+        В библиотеке собраны <IconRSForm size='1rem' className='inline-icon' /> системы определений (КС) <br />и
+        <IconOSS size='1rem' className='inline-icon' /> операционные схемы синтеза (ОСС).
+      </p>
 
+      <li>
+        <span style={{ color: colors.fgGreen }}>зеленым текстом</span> выделены ОСС
+      </li>
       <li>клик по строке - переход к редактированию схемы</li>
       <li>Ctrl + клик по строке откроет схему в новой вкладке</li>
       <li>Фильтры атрибутов три позиции: да/нет/не применять</li>

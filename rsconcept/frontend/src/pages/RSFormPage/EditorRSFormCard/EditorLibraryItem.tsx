@@ -89,16 +89,14 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
       />
 
       {accessLevel >= UserLevel.OWNER ? (
-        <Overlay position='top-[-0.5rem] left-[5.5rem] cc-icons'>
-          <div className='flex items-start'>
-            <MiniButton
-              title='Изменить редакторов'
-              noHover
-              onClick={() => controller.promptEditors()}
-              icon={<IconEdit size='1rem' className='mt-1 icon-primary' />}
-              disabled={isModified || controller.isProcessing}
-            />
-          </div>
+        <Overlay position='top-[-0.5rem] left-[5.5rem]' className='cc-icons'>
+          <MiniButton
+            title='Изменить редакторов'
+            noHover
+            onClick={() => controller.promptEditors()}
+            icon={<IconEdit size='1rem' className='mt-1 icon-primary' />}
+            disabled={isModified || controller.isProcessing}
+          />
         </Overlay>
       ) : null}
       <LabeledValue

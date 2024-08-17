@@ -299,9 +299,13 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     (event: CProps.EventMouse, node: OssNode) => {
       event.preventDefault();
       event.stopPropagation();
-      handleEditOperation(Number(node.id));
+      if (node.data.operation.result) {
+        controller.openOperationSchema(Number(node.id));
+      } else {
+        handleEditOperation(Number(node.id));
+      }
     },
-    [handleEditOperation]
+    [handleEditOperation, controller.openOperationSchema]
   );
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {

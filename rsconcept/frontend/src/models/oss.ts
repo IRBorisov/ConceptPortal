@@ -37,6 +37,7 @@ export interface IOperation {
   result: LibraryItemID | null;
 
   is_owned: boolean;
+  is_consolidation: boolean; // aka 'diamond synthesis'
   substitutions: ICstSubstituteEx[];
   arguments: OperationID[];
 }

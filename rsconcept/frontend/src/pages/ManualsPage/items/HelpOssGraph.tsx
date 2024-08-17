@@ -1,4 +1,5 @@
 import {
+  IconAlert,
   IconAnimation,
   IconAnimationOff,
   IconConnect,
@@ -23,7 +24,7 @@ import { HelpTopic } from '@/models/miscellaneous';
 function HelpOssGraph() {
   return (
     <div className='flex flex-col'>
-      <h1>Граф синтеза</h1>
+      <h1 className='sm:pr-[6rem]'>Граф синтеза</h1>
       <div className='flex flex-col sm:flex-row'>
         <div className='w-full sm:w-[14rem]'>
           <h1>Настройка графа</h1>
@@ -50,7 +51,10 @@ function HelpOssGraph() {
           <li>Клик на операцию – выделение</li>
           <li>Esc – сбросить выделение</li>
           <li>
-            <IconEdit2 className='inline-icon' /> Двойной клик – редактирование
+            Двойной клик – переход к связанной <LinkTopic text='КС' topic={HelpTopic.CC_SYSTEM} />
+          </li>
+          <li>
+            <IconEdit2 className='inline-icon' /> Редактирование операции
           </li>
           <li>
             <IconNewItem className='inline-icon icon-green' /> Новая операция
@@ -73,7 +77,7 @@ function HelpOssGraph() {
             <IconSave className='inline-icon' /> Сохранить положения
           </li>
           <li>
-            <IconImage className='inline-icon' /> Сохранить в формат SVG
+            <IconImage className='inline-icon' /> Сохранить в SVG
           </li>
         </div>
 
@@ -82,8 +86,11 @@ function HelpOssGraph() {
         <div className='dense w-[21rem]'>
           <h1>Контекстное меню</h1>
           <li>
-            <IconRSForm className='inline-icon icon-green' /> Переход к связанной{' '}
+            <IconRSForm className='inline-icon icon-green' /> Статус связанной{' '}
             <LinkTopic text='КС' topic={HelpTopic.CC_SYSTEM} />
+          </li>
+          <li>
+            <IconAlert className='inline-icon' /> <LinkTopic text='Ромбовидный синтез' topic={HelpTopic.CC_OSS} />
           </li>
           <li>
             <IconNewRSForm className='inline-icon icon-green' /> Создать пустую КС для загрузки

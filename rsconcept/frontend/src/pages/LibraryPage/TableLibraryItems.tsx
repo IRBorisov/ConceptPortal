@@ -148,7 +148,7 @@ function TableLibraryItems({ items, resetQuery, folderMode, toggleFolderMode }: 
       {
         when: (item: ILibraryItem) => item.item_type === LibraryItemType.OSS,
         style: {
-          backgroundColor: colors.bgGreen50
+          color: colors.fgGreen
         }
       }
     ],

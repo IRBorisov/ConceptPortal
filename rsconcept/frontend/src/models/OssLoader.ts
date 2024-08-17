@@ -62,12 +62,26 @@ export class OssLoader {
     this.graph.topologicalOrder().forEach(operationID => {
       const operation = this.operationByID.get(operationID)!;
       const schema = this.items.find(item => item.id === operation.result);
+      operation.is_consolidation = this.inferConsolidation(operationID);
       operation.is_owned = !schema || (schema.owner === this.oss.owner && schema.location === this.oss.location);
       operation.substitutions = this.oss.substitutions.filter(item => item.operation === operationID);
       operation.arguments = this.oss.arguments
         .filter(item => item.operation === operationID)
         .map(item => item.argument);
     });
+  }
+
+  private inferConsolidation(operationID: OperationID): boolean {
+    const inputs = this.graph.expandInputs([operationID]);
+    if (inputs.length === 0) {
+      return false;
+    }
+    const ancestors = [...inputs];
+    inputs.forEach(input => {
+      ancestors.push(...this.graph.expandAllInputs([input]));
+    });
+    const unique = new Set(ancestors);
+    return unique.size < ancestors.length;
   }
 
   private calculateStats(): IOperationSchemaStats {

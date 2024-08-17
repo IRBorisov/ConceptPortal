@@ -1,6 +1,6 @@
 import { Handle, Position } from 'reactflow';
 
-import { IconRSForm } from '@/components/Icons';
+import { IconAlert, IconRSForm } from '@/components/Icons';
 import TooltipOperation from '@/components/info/TooltipOperation';
 import MiniButton from '@/components/ui/MiniButton.tsx';
 import Overlay from '@/components/ui/Overlay';
@@ -22,15 +22,31 @@ function OperationNode(node: OssNodeInternal) {
     <>
       <Handle type='source' position={Position.Bottom} />
 
-      <Overlay position='top-[-0.2rem] right-[-0.2rem]'>
+      <Overlay position='top-0 right-0' className='flex flex-col gap-1'>
         <MiniButton
-          icon={<IconRSForm className={hasFile ? 'clr-text-green' : 'clr-text-red'} size='0.75rem' />}
+          icon={
+            <IconRSForm
+              className={hasFile ? 'clr-text-green' : 'clr-text-red'}
+              size={node.data.operation.is_consolidation ? '0.6rem' : '0.75rem'}
+            />
+          }
           noHover
-          title='Связанная КС'
+          noPadding
+          title={hasFile ? 'Связанная КС' : 'Нет связанной КС'}
           hideTitle={!controller.showTooltip}
           onClick={handleOpenSchema}
           disabled={!hasFile}
         />
+        {node.data.operation.is_consolidation ? (
+          <MiniButton
+            icon={<IconAlert className='clr-text-primary' size='0.6rem' />}
+            disabled
+            noPadding
+            noHover
+            title='Внимание! Ромбовидный синтез'
+            hideTitle={!controller.showTooltip}
+          />
+        ) : null}
       </Overlay>
 
       {!node.data.operation.is_owned ? (

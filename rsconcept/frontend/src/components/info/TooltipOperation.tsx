@@ -72,6 +72,11 @@ function TooltipOperation({ node, anchor }: TooltipOperationProps) {
           <b>КС не принадлежит ОСС</b>
         </p>
       ) : null}
+      {node.data.operation.is_consolidation ? (
+        <p>
+          <b>Ромбовидный синтез</b>
+        </p>
+      ) : null}
       {node.data.operation.title ? (
         <p>
           <b>Название: </b>

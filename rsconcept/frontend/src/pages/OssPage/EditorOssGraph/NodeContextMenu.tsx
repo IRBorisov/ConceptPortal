@@ -105,7 +105,7 @@ function NodeContextMenu({
       <Dropdown isOpen={isOpen} stretchLeft={cursorX >= window.innerWidth - PARAMETER.ossContextMenuWidth}>
         <DropdownButton
           text='Редактировать'
-          titleHtml={prepareTooltip('Редактировать операцию', 'Двойной клик')}
+          title='Редактировать операцию'
           icon={<IconEdit2 size='1rem' className='icon-primary' />}
           disabled={controller.isProcessing}
           onClick={handleEditOperation}
@@ -113,7 +113,7 @@ function NodeContextMenu({
 
         {operation.result ? (
           <DropdownButton
-            text='Открыть схему'
+            text={prepareTooltip('Открыть схему', 'Двойной клик')}
             title='Открыть привязанную КС'
             icon={<IconRSForm size='1rem' className='icon-green' />}
             disabled={controller.isProcessing}
