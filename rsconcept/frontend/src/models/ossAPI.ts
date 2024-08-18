@@ -31,12 +31,12 @@ export function sortItemsForOSS(oss: IOperationSchema, items: ILibraryItem[]): I
       result.push(item);
     }
   }
-  for (const item of result) {
+  for (const item of items) {
     if (item.visible && !result.includes(item)) {
       result.push(item);
     }
   }
-  for (const item of result) {
+  for (const item of items) {
     if (!result.includes(item)) {
       result.push(item);
     }

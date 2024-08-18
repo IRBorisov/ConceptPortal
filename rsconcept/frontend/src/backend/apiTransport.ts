@@ -5,6 +5,7 @@ import { AxiosError, AxiosRequestConfig } from 'axios';
 import { toast } from 'react-toastify';
 
 import { ErrorData } from '@/components/info/InfoError';
+import { extractErrorMessage } from '@/utils/utils';
 
 import { axiosInstance } from './apiConfiguration';
 
@@ -50,7 +51,7 @@ export function AxiosGet<ResponseData>({ endpoint, request, options }: IAxiosReq
     })
     .catch((error: Error | AxiosError) => {
       if (request.setLoading) request.setLoading(false);
-      if (request.showError) toast.error(error.message);
+      if (request.showError) toast.error(extractErrorMessage(error));
       if (request.onError) request.onError(error);
     });
 }
@@ -69,7 +70,7 @@ export function AxiosPost<RequestData, ResponseData>({
     })
     .catch((error: Error | AxiosError) => {
       if (request.setLoading) request.setLoading(false);
-      if (request.showError) toast.error(error.message);
+      if (request.showError) toast.error(extractErrorMessage(error));
       if (request.onError) request.onError(error);
     });
 }
@@ -88,7 +89,7 @@ export function AxiosDelete<RequestData, ResponseData>({
     })
     .catch((error: Error | AxiosError) => {
       if (request.setLoading) request.setLoading(false);
-      if (request.showError) toast.error(error.message);
+      if (request.showError) toast.error(extractErrorMessage(error));
       if (request.onError) request.onError(error);
     });
 }
@@ -108,7 +109,7 @@ export function AxiosPatch<RequestData, ResponseData>({
     })
     .catch((error: Error | AxiosError) => {
       if (request.setLoading) request.setLoading(false);
-      if (request.showError) toast.error(error.message);
+      if (request.showError) toast.error(extractErrorMessage(error));
       if (request.onError) request.onError(error);
     });
 }

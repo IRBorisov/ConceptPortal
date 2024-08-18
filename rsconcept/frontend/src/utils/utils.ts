@@ -2,7 +2,7 @@
  * Module: Utility functions.
  */
 
-import { AxiosHeaderValue, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosHeaderValue, AxiosResponse } from 'axios';
 
 import { prompts } from './labels';
 
@@ -138,4 +138,23 @@ export function tripleToggleColor(value: boolean | undefined): string {
     return 'clr-text-controls';
   }
   return value ? 'clr-text-green' : 'clr-text-red';
+}
+
+/**
+ * Extract error message from error object.
+ */
+export function extractErrorMessage(error: Error | AxiosError): string {
+  if (axios.isAxiosError(error)) {
+    if (error.response && error.response.status === 400) {
+      const data = error.response.data as Record<string, unknown>;
+      const keys = Object.keys(data);
+      if (keys.length === 1) {
+        const value = data[keys[0]];
+        if (typeof value === 'string') {
+          return `${keys[0]}: ${value}`;
+        }
+      }
+    }
+  }
+  return error.message;
 }
