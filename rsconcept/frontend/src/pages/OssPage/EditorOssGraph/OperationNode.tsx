@@ -1,3 +1,5 @@
+'use client';
+
 import { Handle, Position } from 'reactflow';
 
 import { IconConsolidation, IconRSForm } from '@/components/Icons';
@@ -5,7 +7,8 @@ import TooltipOperation from '@/components/info/TooltipOperation';
 import MiniButton from '@/components/ui/MiniButton.tsx';
 import Overlay from '@/components/ui/Overlay';
 import { OssNodeInternal } from '@/models/miscellaneous';
-import { prefixes } from '@/utils/constants';
+import { PARAMETER, prefixes } from '@/utils/constants';
+import { truncateText } from '@/utils/utils';
 
 import { useOssEdit } from '../OssEditContext';
 
@@ -13,6 +16,8 @@ function OperationNode(node: OssNodeInternal) {
   const controller = useOssEdit();
 
   const hasFile = !!node.data.operation.result;
+  const longLabel = node.data.label.length > PARAMETER.ossLongLabel;
+  const labelText = truncateText(node.data.label, PARAMETER.ossTruncateLabel);
 
   const handleOpenSchema = () => {
     controller.openOperationSchema(Number(node.id));
@@ -22,14 +27,9 @@ function OperationNode(node: OssNodeInternal) {
     <>
       <Handle type='source' position={Position.Bottom} />
 
-      <Overlay position='top-0 right-0' className='flex flex-col gap-1'>
+      <Overlay position='top-0 right-0' className='flex flex-col gap-1 p-[0.1rem]'>
         <MiniButton
-          icon={
-            <IconRSForm
-              className={hasFile ? 'clr-text-green' : 'clr-text-red'}
-              size={node.data.operation.is_consolidation ? '0.6rem' : '0.75rem'}
-            />
-          }
+          icon={<IconRSForm className={hasFile ? 'clr-text-green' : 'clr-text-red'} size='0.75rem' />}
           noHover
           noPadding
           title={hasFile ? 'Связанная КС' : 'Нет связанной КС'}
@@ -39,7 +39,7 @@ function OperationNode(node: OssNodeInternal) {
         />
         {node.data.operation.is_consolidation ? (
           <MiniButton
-            icon={<IconConsolidation className='clr-text-primary' size='0.6rem' />}
+            icon={<IconConsolidation className='clr-text-primary' size='0.75rem' />}
             disabled
             noPadding
             noHover
@@ -55,8 +55,18 @@ function OperationNode(node: OssNodeInternal) {
         </Overlay>
       ) : null}
 
-      <div id={`${prefixes.operation_list}${node.id}`} className='flex-grow text-center'>
-        {node.data.label}
+      <div id={`${prefixes.operation_list}${node.id}`} className='h-[34px] w-[144px] flex items-center justify-center'>
+        <div
+          className='px-1 text-center'
+          style={{
+            fontSize: longLabel ? '12px' : '14px',
+            lineHeight: longLabel ? '16px' : '20px',
+            paddingLeft: '4px',
+            paddingRight: longLabel ? '10px' : '4px'
+          }}
+        >
+          {labelText}
+        </div>
         {controller.showTooltip && !node.dragging ? (
           <TooltipOperation anchor={`#${prefixes.operation_list}${node.id}`} node={node} />
         ) : null}
