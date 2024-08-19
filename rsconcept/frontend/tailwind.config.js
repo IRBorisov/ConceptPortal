@@ -16,5 +16,8 @@ export default {
     },
     extend: {}
   },
-  plugins: []
+  plugins: [],
+  experimental: {
+    optimizeUniversalDefaults: true
+  }
 };
