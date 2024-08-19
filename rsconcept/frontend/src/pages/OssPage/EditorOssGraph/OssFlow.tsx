@@ -357,7 +357,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
         fitView
         nodeTypes={OssNodeTypes}
         maxZoom={2}
-        minZoom={0.75}
+        minZoom={0.5}
         nodesConnectable={false}
         snapToGrid={true}
         snapGrid={[PARAMETER.ossGridSize, PARAMETER.ossGridSize]}

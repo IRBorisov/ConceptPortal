@@ -220,7 +220,7 @@ function FormConstituenta({
               label={isBasic ? 'Конвенция' : 'Комментарий'}
               placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
               value={convention}
-              disabled={disabled}
+              disabled={disabled || (isBasic && state?.is_inherited)}
               rows={convention.length > 2 * ROW_SIZE_IN_CHARACTERS || convention.includes('\n') ? 4 : 2}
               onChange={event => setConvention(event.target.value)}
             />

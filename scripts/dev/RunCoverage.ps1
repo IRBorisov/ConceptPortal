@@ -11,7 +11,7 @@ function BackendCoverage() {
 
   $coverageExec = "$backend\venv\Scripts\coverage.exe"
   $djangoSrc = "$backend\manage.py"
-  $exclude = '*/venv/*,*/tests/*,*/migrations/*,*__init__.py,manage.py,apps.py,urls.py,settings.py'
+  $exclude = '*/venv/*,*/tests/*,*/migrations/*,*__init__.py,shared/*,manage.py,apps.py,urls.py,settings.py,admin.py'
 
   & $coverageExec run --omit=$exclude $djangoSrc test
   & $coverageExec report

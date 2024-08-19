@@ -159,7 +159,7 @@ function PickSubstitutions({
         id: 'right_alias',
         size: 65,
         cell: props => (
-          <BadgeConstituenta theme={colors} value={props.row.original.original} prefixID={`${prefixID}_1_`} />
+          <BadgeConstituenta theme={colors} value={props.row.original.original} prefixID={`${prefixID}_2_`} />
         )
       }),
       columnHelper.accessor(item => item.original_source.alias, {

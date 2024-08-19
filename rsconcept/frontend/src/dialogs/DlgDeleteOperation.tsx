@@ -45,6 +45,7 @@ function DlgDeleteOperation({ hideWindow, target, onSubmit }: DlgDeleteOperation
         titleHtml='Наследованные конституенты <br/>превратятся в дописанные'
         value={keepConstituents}
         setValue={setKeepConstituents}
+        disabled={target.result === null}
       />
       <Checkbox
         label='Удалить схему'
@@ -55,7 +56,7 @@ function DlgDeleteOperation({ hideWindow, target, onSubmit }: DlgDeleteOperation
         }
         value={deleteSchema}
         setValue={setDeleteSchema}
-        disabled={!target.is_owned || target.result === undefined}
+        disabled={!target.is_owned || target.result === null}
       />
     </Modal>
   );
