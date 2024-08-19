@@ -383,6 +383,7 @@ export function labelHelpTopic(topic: HelpTopic): string {
     case HelpTopic.CC_RELATIONS:    return 'Связи понятий';
     case HelpTopic.CC_SYNTHESIS:    return 'Синтез схем';
     case HelpTopic.CC_OSS:          return 'Операционная схема';
+    case HelpTopic.CC_PROPAGATION:  return 'Сквозные изменения';
 
     case HelpTopic.RSLANG:          return 'Экспликация';
     case HelpTopic.RSL_TYPES:       return 'Типизация';
@@ -430,7 +431,8 @@ export function describeHelpTopic(topic: HelpTopic): string {
     case HelpTopic.CC_CONSTITUENTA: return 'понятия конституенты и ее атрибутов';
     case HelpTopic.CC_RELATIONS:    return 'отношения между конституентами';
     case HelpTopic.CC_SYNTHESIS:    return 'операция синтеза концептуальных схем';
-    case HelpTopic.CC_OSS:          return 'операционная схема синтеза <br/>и протаскивание изменений';
+    case HelpTopic.CC_OSS:          return 'операционная схема синтеза';
+    case HelpTopic.CC_PROPAGATION:  return 'протаскивание изменений в ОСС';
 
     case HelpTopic.RSLANG:          return 'экспликация и язык родов структур';
     case HelpTopic.RSL_TYPES:       return 'система типов в <br/>родоструктурной экспликации';

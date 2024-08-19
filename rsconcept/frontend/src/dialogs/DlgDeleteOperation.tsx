@@ -3,10 +3,14 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 
+import BadgeHelp from '@/components/info/BadgeHelp';
 import Checkbox from '@/components/ui/Checkbox';
 import Modal, { ModalProps } from '@/components/ui/Modal';
+import Overlay from '@/components/ui/Overlay';
 import TextInput from '@/components/ui/TextInput';
+import { HelpTopic } from '@/models/miscellaneous';
 import { IOperation } from '@/models/oss';
+import { PARAMETER } from '@/utils/constants';
 
 interface DlgDeleteOperationProps extends Pick<ModalProps, 'hideWindow'> {
   target: IOperation;
@@ -31,6 +35,14 @@ function DlgDeleteOperation({ hideWindow, target, onSubmit }: DlgDeleteOperation
       onSubmit={handleSubmit}
       className={clsx('w-[35rem]', 'pb-3 px-6 cc-column', 'select-none')}
     >
+      <Overlay position='top-[-2rem] right-[4rem]'>
+        <BadgeHelp
+          topic={HelpTopic.CC_PROPAGATION}
+          className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')}
+          offset={14}
+        />
+      </Overlay>
+
       <TextInput
         disabled
         dense

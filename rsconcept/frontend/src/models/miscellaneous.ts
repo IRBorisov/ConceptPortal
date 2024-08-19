@@ -84,6 +84,7 @@ export enum HelpTopic {
   CC_RELATIONS = 'concept-relations',
   CC_SYNTHESIS = 'concept-synthesis',
   CC_OSS = 'concept-operations-schema',
+  CC_PROPAGATION = 'concept-change-propagation',
 
   RSLANG = 'rslang',
   RSL_TYPES = 'rslang-types',
@@ -129,6 +130,7 @@ export const topicParent = new Map<HelpTopic, HelpTopic>([
   [HelpTopic.CC_RELATIONS, HelpTopic.CONCEPTUAL],
   [HelpTopic.CC_SYNTHESIS, HelpTopic.CONCEPTUAL],
   [HelpTopic.CC_OSS, HelpTopic.CONCEPTUAL],
+  [HelpTopic.CC_PROPAGATION, HelpTopic.CONCEPTUAL],
 
   [HelpTopic.RSLANG, HelpTopic.RSLANG],
   [HelpTopic.RSL_TYPES, HelpTopic.RSLANG],

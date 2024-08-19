@@ -42,6 +42,10 @@ function HelpOssGraph() {
             <IconAnimation className='inline-icon' />
             <IconAnimationOff className='inline-icon' /> Анимация
           </li>
+          <li>черта сверху - Загрузка</li>
+          <li>
+            черта слева - КС <LinkTopic text='внешняя' topic={HelpTopic.CC_OSS} />
+          </li>
         </div>
 
         <Divider vertical margins='mx-3 mt-3' className='hidden sm:block' />

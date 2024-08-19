@@ -31,7 +31,7 @@ function Tooltip({
     <TooltipImpl
       delayShow={1000}
       delayHide={100}
-      opacity={0.97}
+      opacity={1}
       className={clsx(
         'max-h-[calc(100svh-6rem)]',
         'overflow-y-auto overflow-x-hidden sm:overflow-hidden overscroll-contain',

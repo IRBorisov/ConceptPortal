@@ -2,6 +2,7 @@ import useWindowSize from '@/hooks/useWindowSize';
 import { HelpTopic } from '@/models/miscellaneous';
 
 import HelpConceptOSS from './items/cc/HelpConceptOSS';
+import HelpConceptPropagation from './items/cc/HelpConceptPropagation';
 import HelpConceptRelations from './items/cc/HelpConceptRelations';
 import HelpConceptSynthesis from './items/cc/HelpConceptSynthesis';
 import HelpConceptSystem from './items/cc/HelpConceptSystem';
@@ -69,6 +70,7 @@ function TopicPage({ topic }: TopicPageProps) {
   if (topic === HelpTopic.CC_RELATIONS) return <HelpConceptRelations />;
   if (topic === HelpTopic.CC_SYNTHESIS) return <HelpConceptSynthesis />;
   if (topic === HelpTopic.CC_OSS) return <HelpConceptOSS />;
+  if (topic === HelpTopic.CC_PROPAGATION) return <HelpConceptPropagation />;
 
   if (topic === HelpTopic.RSLANG) return <HelpRSLang />;
   if (topic === HelpTopic.RSL_TYPES) return <HelpRSLangTypes />;

@@ -59,10 +59,10 @@ function HelpRSGraphTerm() {
             <IconEdit className='inline-icon' /> Двойной клик – редактирование
           </li>
           <li>
-            <IconDestroy className='inline-icon' /> Delete – удалить выбранные
+            <IconDestroy className='inline-icon icon-red' /> Delete – удалить выбранные
           </li>
           <li>
-            <IconNewItem className='inline-icon' /> Новая со ссылками на выделенные
+            <IconNewItem className='inline-icon icon-green' /> Новая со ссылками на выделенные
           </li>
         </div>
       </div>
@@ -85,7 +85,7 @@ function HelpRSGraphTerm() {
             <IconImage className='inline-icon' /> Сохранить в формат PNG
           </li>
           <li>
-            * <LinkTopic text='наследованные' topic={HelpTopic.CC_OSS} /> в ОСС
+            * <LinkTopic text='наследованные' topic={HelpTopic.CC_PROPAGATION} /> в ОСС
           </li>
         </div>
 
