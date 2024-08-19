@@ -14,7 +14,6 @@ import { useLibrary } from '@/context/LibraryContext';
 import { ILibraryItem, LibraryItemID, LibraryItemType } from '@/models/library';
 import { IOperationSchema } from '@/models/oss';
 import { sortItemsForOSS } from '@/models/ossAPI';
-import { limits, patterns } from '@/utils/constants';
 
 interface TabInputOperationProps {
   oss: IOperationSchema;
@@ -67,8 +66,6 @@ function TabInputOperation({
           id='operation_alias'
           label='Сокращение'
           className='w-[14rem]'
-          pattern={patterns.library_alias}
-          title={`не более ${limits.library_alias_len} символов`}
           value={alias}
           onChange={event => setAlias(event.target.value)}
           disabled={attachedID !== undefined}

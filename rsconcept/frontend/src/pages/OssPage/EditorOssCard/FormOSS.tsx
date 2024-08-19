@@ -11,7 +11,6 @@ import TextInput from '@/components/ui/TextInput';
 import { useOSS } from '@/context/OssContext';
 import { ILibraryUpdateData, LibraryItemType } from '@/models/library';
 import ToolbarItemAccess from '@/pages/RSFormPage/EditorRSFormCard/ToolbarItemAccess';
-import { limits, patterns } from '@/utils/constants';
 import { information } from '@/utils/labels';
 
 import { useOssEdit } from '../OssEditContext';
@@ -102,8 +101,6 @@ function FormOSS({ id, isModified, setIsModified }: FormOSSProps) {
           required
           label='Сокращение'
           className='w-[14rem]'
-          pattern={patterns.library_alias}
-          title={`не более ${limits.library_alias_len} символов`}
           disabled={!controller.isMutable}
           value={alias}
           onChange={event => setAlias(event.target.value)}

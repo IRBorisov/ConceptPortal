@@ -4,7 +4,6 @@ import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { IOperationSchema, OperationID } from '@/models/oss';
-import { limits, patterns } from '@/utils/constants';
 
 import PickMultiOperation from '../../components/select/PickMultiOperation';
 
@@ -44,8 +43,6 @@ function TabSynthesisOperation({
           id='operation_alias'
           label='Сокращение'
           className='w-[14rem]'
-          pattern={patterns.library_alias}
-          title={`не более ${limits.library_alias_len} символов`}
           value={alias}
           onChange={event => setAlias(event.target.value)}
         />

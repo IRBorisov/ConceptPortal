@@ -23,7 +23,7 @@ function InfoConstituenta({ data, className, ...restProps }: InfoConstituentaPro
           {data.term_resolved || data.term_raw}
         </p>
       ) : null}
-      <p>
+      <p className='break-all'>
         <b>Типизация: </b>
         {labelCstTypification(data)}
       </p>

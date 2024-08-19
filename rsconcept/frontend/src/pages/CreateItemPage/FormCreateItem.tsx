@@ -26,7 +26,7 @@ import useLocalStorage from '@/hooks/useLocalStorage';
 import { AccessPolicy, LibraryItemType, LocationHead } from '@/models/library';
 import { ILibraryCreateData } from '@/models/library';
 import { combineLocation, validateLocation } from '@/models/libraryAPI';
-import { EXTEOR_TRS_FILE, limits, patterns, storage } from '@/utils/constants';
+import { EXTEOR_TRS_FILE, storage } from '@/utils/constants';
 import { information } from '@/utils/labels';
 
 function FormCreateItem() {
@@ -153,8 +153,6 @@ function FormCreateItem() {
           label='Сокращение'
           placeholder={file && 'Загрузить из файла'}
           className='w-[14rem]'
-          pattern={patterns.library_alias}
-          title={`не более ${limits.library_alias_len} символов`}
           value={alias}
           onChange={event => setAlias(event.target.value)}
         />

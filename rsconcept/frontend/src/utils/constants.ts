@@ -35,7 +35,6 @@ export const PARAMETER = {
  * Numeric limitations.
  */
 export const limits = {
-  library_alias_len: 12,
   location_len: 500
 };
 
@@ -48,8 +47,7 @@ export const EXTEOR_TRS_FILE = '.trs';
  * Regex patterns for data validation.
  */
 export const patterns = {
-  login: '^[a-zA-Z][a-zA-Z0-9_\\-]{1,}[a-zA-Z0-9]$',
-  library_alias: `.{1,${limits.library_alias_len}}`
+  login: '^[a-zA-Z][a-zA-Z0-9_\\-]{1,}[a-zA-Z0-9]$'
 };
 
 /**

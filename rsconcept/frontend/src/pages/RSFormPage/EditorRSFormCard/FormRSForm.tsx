@@ -10,7 +10,6 @@ import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
 import { ILibraryUpdateData, LibraryItemType } from '@/models/library';
-import { limits, patterns } from '@/utils/constants';
 
 import { useRSEdit } from '../RSEditContext';
 import ToolbarItemAccess from './ToolbarItemAccess';
@@ -102,8 +101,6 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
           required
           label='Сокращение'
           className='w-[14rem]'
-          pattern={patterns.library_alias}
-          title={`не более ${limits.library_alias_len} символов`}
           disabled={!controller.isContentEditable}
           value={alias}
           onChange={event => setAlias(event.target.value)}

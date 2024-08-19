@@ -335,7 +335,6 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     }
   }
 
-  const canvasWidth = useMemo(() => 'calc(100vw - 1rem)', []);
   const canvasHeight = useMemo(() => calculateHeight('1.75rem + 4px'), [calculateHeight]);
 
   const OssNodeTypes: NodeTypes = useMemo(
@@ -413,7 +412,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
           {...menuProps}
         />
       ) : null}
-      <div className='relative' style={{ height: canvasHeight, width: canvasWidth }}>
+      <div className='relative w-[100vw]' style={{ height: canvasHeight }}>
         {graph}
       </div>
     </AnimateFade>
