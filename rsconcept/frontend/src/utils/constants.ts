@@ -25,6 +25,8 @@ export const PARAMETER = {
   graphPopupDelay: 500, // milliseconds delay for graph popup selections
   graphRefreshDelay: 10, // milliseconds delay for graph viewpoint reset
 
+  typificationTruncate: 42, // characters - threshold for long typification - truncate
+
   ossLongLabel: 14, // characters - threshold for long labels - small font
   ossTruncateLabel: 28, // characters - threshold for long labels - truncate
 

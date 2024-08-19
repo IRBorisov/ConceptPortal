@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
 import { globals } from '@/utils/constants';
-import { truncateText } from '@/utils/utils';
+import { truncateToLastWord } from '@/utils/utils';
 
 import { CProps } from '../props';
 
@@ -11,7 +11,7 @@ export interface TextContentProps extends CProps.Styling {
 }
 
 function TextContent({ className, text, maxLength, ...restProps }: TextContentProps) {
-  const truncated = maxLength ? truncateText(text, maxLength) : text;
+  const truncated = maxLength ? truncateToLastWord(text, maxLength) : text;
   const isTruncated = maxLength && text.length > maxLength;
   return (
     <div

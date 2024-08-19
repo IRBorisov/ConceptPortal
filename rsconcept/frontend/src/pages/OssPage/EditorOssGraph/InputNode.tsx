@@ -6,7 +6,7 @@ import MiniButton from '@/components/ui/MiniButton.tsx';
 import Overlay from '@/components/ui/Overlay';
 import { OssNodeInternal } from '@/models/miscellaneous';
 import { PARAMETER, prefixes } from '@/utils/constants';
-import { truncateText } from '@/utils/utils';
+import { truncateToLastWord } from '@/utils/utils';
 
 import { useOssEdit } from '../OssEditContext';
 
@@ -15,7 +15,7 @@ function InputNode(node: OssNodeInternal) {
 
   const hasFile = !!node.data.operation.result;
   const longLabel = node.data.label.length > PARAMETER.ossLongLabel;
-  const labelText = truncateText(node.data.label, PARAMETER.ossTruncateLabel);
+  const labelText = truncateToLastWord(node.data.label, PARAMETER.ossTruncateLabel);
 
   const handleOpenSchema = () => {
     controller.openOperationSchema(Number(node.id));

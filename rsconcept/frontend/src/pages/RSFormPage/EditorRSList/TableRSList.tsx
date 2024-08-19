@@ -12,8 +12,9 @@ import TextURL from '@/components/ui/TextURL';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
-import { prefixes } from '@/utils/constants';
+import { PARAMETER, prefixes } from '@/utils/constants';
 import { labelCstTypification } from '@/utils/labels';
+import { truncateToSymbol } from '@/utils/utils';
 
 interface TableRSListProps {
   items?: IConstituenta[];
@@ -90,8 +91,13 @@ function TableRSList({
         id: 'type',
         header: 'Типизация',
         enableHiding: true,
+        size: 150,
+        minSize: 150,
+        maxSize: 200,
         cell: props => (
-          <div className={clsx('min-w-[9.3rem] max-w-[9.3rem]', 'text-sm break-words')}>{props.getValue()}</div>
+          <div className={clsx('min-w-[9.3rem] max-w-[9.3rem]', 'text-xs break-words')}>
+            {truncateToSymbol(props.getValue(), PARAMETER.typificationTruncate)}
+          </div>
         )
       }),
       columnHelper.accessor(cst => cst.term_resolved || cst.term_raw || '', {

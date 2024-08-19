@@ -67,9 +67,9 @@ export function applyPattern(text: string, mapping: Record<string, string>, patt
 }
 
 /**
- * Truncate text to max symbols. Add ellipsis if truncated.
+ * Truncate text to last word up to max symbols. Add ellipsis if truncated.
  */
-export function truncateText(text: string, maxSymbols: number): string {
+export function truncateToLastWord(text: string, maxSymbols: number): string {
   if (text.length <= maxSymbols) {
     return text;
   }
@@ -79,6 +79,17 @@ export function truncateText(text: string, maxSymbols: number): string {
     return trimmedText + '...';
   }
   return trimmedText.slice(0, lastSpaceIndex) + '...';
+}
+
+/**
+ * Truncate text to max symbols. Add ellipsis if truncated.
+ */
+export function truncateToSymbol(text: string, maxSymbols: number): string {
+  if (text.length <= maxSymbols) {
+    return text;
+  }
+  const trimmedText = text.slice(0, maxSymbols);
+  return trimmedText + '...';
 }
 
 /**

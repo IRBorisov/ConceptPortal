@@ -25,12 +25,12 @@ function InfoConstituenta({ data, className, ...restProps }: InfoConstituentaPro
       ) : null}
       <p className='break-all'>
         <b>Типизация: </b>
-        {labelCstTypification(data)}
+        <span className='font-math'>{labelCstTypification(data)}</span>
       </p>
       {data.definition_formal ? (
         <p>
           <b>Выражение: </b>
-          {data.definition_formal}
+          <span className='font-math'>{data.definition_formal}</span>
         </p>
       ) : null}
       {data.definition_resolved ? (
