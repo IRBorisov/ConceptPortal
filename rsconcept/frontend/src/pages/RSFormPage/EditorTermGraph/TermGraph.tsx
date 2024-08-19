@@ -99,8 +99,7 @@ function TermGraph({
   );
 
   useLayoutEffect(() => {
-    graphRef.current?.resetControls(true);
-    graphRef.current?.centerGraph();
+    graphRef.current?.fitNodesInView([], { animated: true });
   }, [toggleResetView, graphRef]);
 
   useLayoutEffect(() => {

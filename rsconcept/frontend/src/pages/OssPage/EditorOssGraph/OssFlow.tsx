@@ -123,7 +123,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
   }, [controller, getPositions, setIsModified]);
 
   const handleCreateOperation = useCallback(
-    (inputs: OperationID[]) => () => {
+    (inputs: OperationID[]) => {
       if (!controller.schema) {
         return;
       }
@@ -315,13 +315,13 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     if (!controller.isMutable) {
       return;
     }
-    if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+    if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
       event.preventDefault();
       event.stopPropagation();
       handleSavePositions();
       return;
     }
-    if ((event.ctrlKey || event.metaKey) && event.key === 'q') {
+    if ((event.ctrlKey || event.metaKey) && event.code === 'KeyQ') {
       event.preventDefault();
       event.stopPropagation();
       handleCreateOperation(controller.selected);
@@ -389,7 +389,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
           edgeAnimate={edgeAnimate}
           edgeStraight={edgeStraight}
           onFitView={handleFitView}
-          onCreate={handleCreateOperation(controller.selected)}
+          onCreate={() => handleCreateOperation(controller.selected)}
           onDelete={handleDeleteSelected}
           onEdit={() => handleEditOperation(controller.selected[0])}
           onExecute={handleExecuteSelected}

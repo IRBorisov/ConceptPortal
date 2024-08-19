@@ -33,6 +33,8 @@ import { UserID, UserLevel } from '@/models/user';
 import { PARAMETER } from '@/utils/constants';
 import { errors, information } from '@/utils/labels';
 
+import { RSTabID } from '../RSFormPage/RSTabs';
+
 export interface ICreateOperationPrompt {
   x: number;
   y: number;
@@ -206,7 +208,7 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
       if (!node?.result) {
         return;
       }
-      router.push(urls.schema(node.result));
+      router.push(urls.schema_props({ id: node.result, tab: RSTabID.CST_LIST }));
     },
     [router, model]
   );
