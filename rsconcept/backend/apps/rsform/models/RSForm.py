@@ -241,7 +241,11 @@ class RSForm:
         old_data = {}
         term_changed = False
         if 'convention' in data:
-            cst.convention = data['convention']
+            if cst.convention == data['convention']:
+                del data['convention']
+            else:
+                old_data['convention'] = cst.convention
+                cst.convention = data['convention']
         if 'definition_formal' in data:
             if cst.definition_formal == data['definition_formal']:
                 del data['definition_formal']

@@ -557,8 +557,7 @@ class OperationSchema:
             if old_data['term_forms'] == cst.term_forms:
                 new_data['term_forms'] = data['term_forms']
         if 'convention' in data:
-            if old_data['convention'] == cst.convention:
-                new_data['convention'] = data['convention']
+            new_data['convention'] = data['convention']
         if 'definition_formal' in data:
             new_data['definition_formal'] = replace_globals(data['definition_formal'], mapping)
         if 'term_raw' in data:
