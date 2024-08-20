@@ -28,15 +28,6 @@ class LibraryTemplateAdmin(admin.ModelAdmin):
             return 'N/A'
 
 
-class SubscriptionAdmin(admin.ModelAdmin):
-    ''' Admin model: Subscriptions. '''
-    list_display = ['id', 'item', 'user']
-    search_fields = [
-        'item__title', 'item__alias',
-        'user__username', 'user__first_name', 'user__last_name'
-    ]
-
-
 class EditorAdmin(admin.ModelAdmin):
     ''' Admin model: Editors. '''
     list_display = ['id', 'item', 'editor']
@@ -57,6 +48,5 @@ class VersionAdmin(admin.ModelAdmin):
 
 admin.site.register(models.LibraryItem, LibraryItemAdmin)
 admin.site.register(models.LibraryTemplate, LibraryTemplateAdmin)
-admin.site.register(models.Subscription, SubscriptionAdmin)
 admin.site.register(models.Version, VersionAdmin)
 admin.site.register(models.Editor, EditorAdmin)

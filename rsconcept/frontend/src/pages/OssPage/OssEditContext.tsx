@@ -58,7 +58,6 @@ export interface IOssEditContext extends ILibraryItemEditor {
   setAccessPolicy: (newPolicy: AccessPolicy) => void;
   promptEditors: () => void;
   promptLocation: () => void;
-  toggleSubscribe: () => void;
 
   setSelected: React.Dispatch<React.SetStateAction<OperationID[]>>;
 
@@ -172,14 +171,6 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
       .then(() => toast.success(information.linkReady))
       .catch(console.error);
   }, []);
-
-  const toggleSubscribe = useCallback(() => {
-    if (model.isSubscribed) {
-      model.unsubscribe(() => toast.success(information.unsubscribed));
-    } else {
-      model.subscribe(() => toast.success(information.subscribed));
-    }
-  }, [model]);
 
   const setOwner = useCallback(
     (newOwner: UserID) => {
@@ -372,7 +363,6 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
         isProcessing: model.processing,
         isAttachedToOSS: false,
 
-        toggleSubscribe,
         setOwner,
         setAccessPolicy,
         promptEditors,

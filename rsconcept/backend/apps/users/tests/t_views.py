@@ -43,7 +43,6 @@ class TestUserAPIViews(EndpointTester):
         self.assertEqual(response.data['id'], self.user.pk)
         self.assertEqual(response.data['username'], self.user.username)
         self.assertEqual(response.data['is_staff'], self.user.is_staff)
-        self.assertEqual(response.data['subscriptions'], [])
         self.assertEqual(response.data['editor'], [])
 
         self.logout()
@@ -51,7 +50,6 @@ class TestUserAPIViews(EndpointTester):
         self.assertEqual(response.data['id'], None)
         self.assertEqual(response.data['username'], '')
         self.assertEqual(response.data['is_staff'], False)
-        self.assertEqual(response.data['subscriptions'], [])
         self.assertEqual(response.data['editor'], [])
 
 

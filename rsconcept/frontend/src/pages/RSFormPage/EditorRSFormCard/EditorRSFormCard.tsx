@@ -4,7 +4,6 @@ import clsx from 'clsx';
 
 import FlexColumn from '@/components/ui/FlexColumn';
 import AnimateFade from '@/components/wrap/AnimateFade';
-import { useAuth } from '@/context/AuthContext';
 import { useRSForm } from '@/context/RSFormContext';
 import { globals } from '@/utils/constants';
 
@@ -21,8 +20,7 @@ interface EditorRSFormCardProps {
 }
 
 function EditorRSFormCard({ isModified, onDestroy, setIsModified }: EditorRSFormCardProps) {
-  const { schema, isSubscribed } = useRSForm();
-  const { user } = useAuth();
+  const { schema } = useRSForm();
   const controller = useRSEdit();
 
   function initiateSubmit() {
@@ -44,9 +42,7 @@ function EditorRSFormCard({ isModified, onDestroy, setIsModified }: EditorRSForm
   return (
     <>
       <ToolbarRSFormCard
-        subscribed={isSubscribed}
         modified={isModified}
-        anonymous={!user}
         onSubmit={initiateSubmit}
         onDestroy={onDestroy}
         controller={controller}

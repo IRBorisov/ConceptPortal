@@ -101,20 +101,6 @@ export function patchSetEditors(target: string, request: FrontPush<ITargetUsers>
   });
 }
 
-export function postSubscribe(target: string, request: FrontAction) {
-  AxiosPost({
-    endpoint: `/api/library/${target}/subscribe`,
-    request: request
-  });
-}
-
-export function deleteUnsubscribe(target: string, request: FrontAction) {
-  AxiosDelete({
-    endpoint: `/api/library/${target}/unsubscribe`,
-    request: request
-  });
-}
-
 export function postCreateVersion(target: string, request: FrontExchange<IVersionData, IVersionCreatedResponse>) {
   AxiosPost({
     endpoint: `/api/library/${target}/create-version`,

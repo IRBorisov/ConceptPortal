@@ -110,16 +110,6 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
       </Tooltip>
 
       <LabeledValue
-        id='sub_stats' //
-        className='sm:mb-1'
-        label='Отслеживают'
-        text={item?.subscribers.length ?? 0}
-      />
-      <Tooltip anchorSelect='#sub_stats' layer='z-modalTooltip'>
-        <InfoUsers items={item?.subscribers ?? []} prefix={prefixes.user_subs} />
-      </Tooltip>
-
-      <LabeledValue
         className='sm:mb-1'
         label='Дата обновления'
         text={item ? new Date(item?.time_update).toLocaleString(intl.locale) : ''}

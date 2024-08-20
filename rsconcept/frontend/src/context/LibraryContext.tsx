@@ -103,9 +103,6 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
       if (filter.isOwned !== undefined) {
         result = result.filter(item => filter.isOwned === (item.owner === user?.id));
       }
-      if (filter.isSubscribed !== undefined) {
-        result = result.filter(item => filter.isSubscribed == user?.subscriptions.includes(item.id));
-      }
       if (filter.isEditor !== undefined) {
         result = result.filter(item => filter.isEditor == user?.editor.includes(item.id));
       }
@@ -213,9 +210,6 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
     (data: ILibraryCreateData, callback?: DataCallback<ILibraryItem>) => {
       const onSuccess = (newSchema: ILibraryItem) =>
         reloadItems(() => {
-          if (user && !user.subscriptions.includes(newSchema.id)) {
-            user.subscriptions.push(newSchema.id);
-          }
           if (callback) callback(newSchema);
         });
       setProcessingError(undefined);
@@ -249,12 +243,6 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
         onError: setProcessingError,
         onSuccess: () =>
           reloadItems(() => {
-            if (user?.subscriptions.includes(target)) {
-              user.subscriptions.splice(
-                user.subscriptions.findIndex(item => item === target),
-                1
-              );
-            }
             if (callback) callback();
           })
       });
@@ -275,9 +263,6 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
         onError: setProcessingError,
         onSuccess: newSchema =>
           reloadItems(() => {
-            if (user && !user.subscriptions.includes(newSchema.id)) {
-              user.subscriptions.push(newSchema.id);
-            }
             if (callback) callback(newSchema);
           })
       });

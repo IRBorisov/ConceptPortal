@@ -96,9 +96,6 @@ class CstCreateSerializer(serializers.ModelSerializer):
 
 class RSFormSerializer(serializers.ModelSerializer):
     ''' Serializer: Detailed data for RSForm. '''
-    subscribers = serializers.ListField(
-        child=serializers.IntegerField()
-    )
     editors = serializers.ListField(
         child=serializers.IntegerField()
     )
@@ -137,7 +134,6 @@ class RSFormSerializer(serializers.ModelSerializer):
         ''' Create serializable version representation without redundant data. '''
         result = self.to_representation(cast(LibraryItem, self.instance))
         del result['versions']
-        del result['subscribers']
         del result['editors']
         del result['inheritance']
         del result['oss']
@@ -199,9 +195,6 @@ class RSFormSerializer(serializers.ModelSerializer):
 
 class RSFormParseSerializer(serializers.ModelSerializer):
     ''' Serializer: Detailed data for RSForm including parse. '''
-    subscribers = serializers.ListField(
-        child=serializers.IntegerField()
-    )
     editors = serializers.ListField(
         child=serializers.IntegerField()
     )

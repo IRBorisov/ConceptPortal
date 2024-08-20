@@ -74,7 +74,6 @@ export interface IRSEditContext extends ILibraryItemEditor {
   setAccessPolicy: (newPolicy: AccessPolicy) => void;
   promptEditors: () => void;
   promptLocation: () => void;
-  toggleSubscribe: () => void;
 
   setSelected: React.Dispatch<React.SetStateAction<ConstituentaID[]>>;
   select: (target: ConstituentaID) => void;
@@ -589,14 +588,6 @@ export const RSEditState = ({
       .catch(console.error);
   }, []);
 
-  const toggleSubscribe = useCallback(() => {
-    if (model.isSubscribed) {
-      model.unsubscribe(() => toast.success(information.unsubscribed));
-    } else {
-      model.subscribe(() => toast.success(information.subscribed));
-    }
-  }, [model]);
-
   const setOwner = useCallback(
     (newOwner: UserID) => {
       model.setOwner(newOwner, () => toast.success(information.changesSaved));
@@ -632,7 +623,6 @@ export const RSEditState = ({
         nothingSelected,
         canDeleteSelected,
 
-        toggleSubscribe,
         setOwner,
         setAccessPolicy,
         promptEditors,

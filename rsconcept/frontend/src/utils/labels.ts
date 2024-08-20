@@ -920,9 +920,6 @@ export function describeOperationType(itemType: OperationType): string {
 export const information = {
   changesSaved: 'Изменения сохранены',
 
-  subscribed: 'Отслеживание отключено',
-  unsubscribed: 'Отслеживание выключено',
-
   pathReady: 'Путь скопирован',
   substituteSingle: 'Отождествление завершено',
   reorderComplete: 'Упорядочение завершено',

@@ -4,13 +4,11 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 
 import { DataCallback } from '@/backend/apiTransport';
 import {
-  deleteUnsubscribe,
   patchLibraryItem,
   patchSetAccessPolicy,
   patchSetEditors,
   patchSetLocation,
-  patchSetOwner,
-  postSubscribe
+  patchSetOwner
 } from '@/backend/library';
 import {
   patchCreateInput,
@@ -52,12 +50,9 @@ interface IOssContext {
   processingError: ErrorData;
 
   isOwned: boolean;
-  isSubscribed: boolean;
 
   update: (data: ILibraryUpdateData, callback?: DataCallback<ILibraryItem>) => void;
 
-  subscribe: (callback?: () => void) => void;
-  unsubscribe: (callback?: () => void) => void;
   setOwner: (newOwner: UserID, callback?: () => void) => void;
   setAccessPolicy: (newPolicy: AccessPolicy, callback?: () => void) => void;
   setLocation: (newLocation: string, callback?: () => void) => void;
@@ -94,18 +89,9 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
   const [processing, setProcessing] = useState(false);
   const [processingError, setProcessingError] = useState<ErrorData>(undefined);
 
-  const [toggleTracking, setToggleTracking] = useState(false);
-
   const isOwned = useMemo(() => {
     return user?.id === model?.owner || false;
   }, [user, model?.owner]);
-
-  const isSubscribed = useMemo(() => {
-    if (!user || !model || !user.id) {
-      return false;
-    }
-    return model.subscribers.includes(user.id);
-  }, [user, model, toggleTracking]);
 
   useEffect(() => {
     oss.setID(itemID);
@@ -131,56 +117,6 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
       });
     },
     [itemID, model, library.localUpdateItem, oss.setData]
-  );
-
-  const subscribe = useCallback(
-    (callback?: () => void) => {
-      if (!model || !user) {
-        return;
-      }
-      setProcessingError(undefined);
-      postSubscribe(itemID, {
-        showError: true,
-        setLoading: setProcessing,
-        onError: setProcessingError,
-        onSuccess: () => {
-          if (user.id && !model.subscribers.includes(user.id)) {
-            model.subscribers.push(user.id);
-          }
-          if (!user.subscriptions.includes(model.id)) {
-            user.subscriptions.push(model.id);
-          }
-          setToggleTracking(prev => !prev);
-          if (callback) callback();
-        }
-      });
-    },
-    [itemID, user, model]
-  );
-
-  const unsubscribe = useCallback(
-    (callback?: () => void) => {
-      if (!model || !user) {
-        return;
-      }
-      setProcessingError(undefined);
-      deleteUnsubscribe(itemID, {
-        showError: true,
-        setLoading: setProcessing,
-        onError: setProcessingError,
-        onSuccess: () => {
-          if (user.id && model.subscribers.includes(user.id)) {
-            model.subscribers.splice(model.subscribers.indexOf(user.id), 1);
-          }
-          if (user.subscriptions.includes(model.id)) {
-            user.subscriptions.splice(user.subscriptions.indexOf(model.id), 1);
-          }
-          setToggleTracking(prev => !prev);
-          if (callback) callback();
-        }
-      });
-    },
-    [itemID, model, user]
   );
 
   const setOwner = useCallback(
@@ -421,11 +357,8 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         processing,
         processingError,
         isOwned,
-        isSubscribed,
         update,
 
-        subscribe,
-        unsubscribe,
         setOwner,
         setEditors,
         setAccessPolicy,

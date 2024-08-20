@@ -39,11 +39,9 @@ class LibraryViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer) -> None:
         if not self.request.user.is_anonymous and 'owner' not in self.request.POST:
-            instance = serializer.save(owner=self.request.user)
+            serializer.save(owner=self.request.user)
         else:
-            instance = serializer.save()
-        if instance.owner:
-            m.Subscription.subscribe(user=instance.owner_id, item=instance.pk)
+            serializer.save()
 
     def perform_update(self, serializer) -> None:
         instance = serializer.save()
@@ -84,9 +82,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
             access_level = permissions.ItemOwner
         elif self.action in [
             'create',
-            'clone',
-            'subscribe',
-            'unsubscribe'
+            'clone'
         ]:
             access_level = permissions.GlobalUser
         else:
@@ -139,40 +135,6 @@ class LibraryViewSet(viewsets.ModelViewSet):
                 status=c.HTTP_201_CREATED,
                 data=RSFormParseSerializer(clone).data
             )
-
-    @extend_schema(
-        summary='subscribe to item',
-        tags=['Library'],
-        request=None,
-        responses={
-            c.HTTP_200_OK: None,
-            c.HTTP_403_FORBIDDEN: None,
-            c.HTTP_404_NOT_FOUND: None
-        }
-    )
-    @action(detail=True, methods=['post'])
-    def subscribe(self, request: Request, pk):
-        ''' Endpoint: Subscribe current user to item. '''
-        item = self._get_item()
-        m.Subscription.subscribe(user=cast(int, self.request.user.pk), item=item.pk)
-        return Response(status=c.HTTP_200_OK)
-
-    @extend_schema(
-        summary='unsubscribe from item',
-        tags=['Library'],
-        request=None,
-        responses={
-            c.HTTP_200_OK: None,
-            c.HTTP_403_FORBIDDEN: None,
-            c.HTTP_404_NOT_FOUND: None
-        },
-    )
-    @action(detail=True, methods=['delete'])
-    def unsubscribe(self, request: Request, pk) -> HttpResponse:
-        ''' Endpoint: Unsubscribe current user from item. '''
-        item = self._get_item()
-        m.Subscription.unsubscribe(user=cast(int, self.request.user.pk), item=item.pk)
-        return Response(status=c.HTTP_200_OK)
 
     @extend_schema(
         summary='set owner for item',
@@ -336,8 +298,7 @@ class LibraryActiveView(generics.ListAPIView):
             return m.LibraryItem.objects.filter(
                 (is_public & common_location) |
                 Q(owner=user) |
-                Q(editor__editor=user) |
-                Q(subscription__user=user)
+                Q(editor__editor=user)
             ).distinct().order_by('-time_update')
 
 

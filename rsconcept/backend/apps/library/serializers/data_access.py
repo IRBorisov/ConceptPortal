@@ -72,7 +72,6 @@ class VersionCreateSerializer(serializers.ModelSerializer):
 
 class LibraryItemDetailsSerializer(serializers.ModelSerializer):
     ''' Serializer: LibraryItem detailed data. '''
-    subscribers = serializers.SerializerMethodField()
     editors = serializers.SerializerMethodField()
     versions = serializers.SerializerMethodField()
 
@@ -81,9 +80,6 @@ class LibraryItemDetailsSerializer(serializers.ModelSerializer):
         model = LibraryItem
         fields = '__all__'
         read_only_fields = ('owner', 'id', 'item_type')
-
-    def get_subscribers(self, instance: LibraryItem) -> list[int]:
-        return list(instance.subscribers().values_list('pk', flat=True))
 
     def get_editors(self, instance: LibraryItem) -> list[int]:
         return list(instance.editors().values_list('pk', flat=True))

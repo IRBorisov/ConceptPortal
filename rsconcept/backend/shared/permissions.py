@@ -11,7 +11,7 @@ from rest_framework.permissions import \
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
-from apps.library.models import AccessPolicy, Editor, LibraryItem, Subscription, Version
+from apps.library.models import AccessPolicy, Editor, LibraryItem, Version
 from apps.oss.models import Operation
 from apps.rsform.models import Constituenta
 from apps.users.models import User
@@ -24,7 +24,7 @@ def _extract_item(obj: Any) -> LibraryItem:
         return cast(LibraryItem, obj.schema)
     elif isinstance(obj, Operation):
         return cast(LibraryItem, obj.oss)
-    elif isinstance(obj, (Version, Subscription, Editor)):
+    elif isinstance(obj, (Version, Editor)):
         return cast(LibraryItem, obj.item)
     raise PermissionDenied({
         'message': 'Invalid type error. Please contact developers',

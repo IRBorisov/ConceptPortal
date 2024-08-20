@@ -6,7 +6,6 @@ from apps.library.models import (
     LibraryItem,
     LibraryItemType,
     LocationHead,
-    Subscription,
     validate_location
 )
 from apps.users.models import User

@@ -57,7 +57,6 @@ function LibraryPage() {
       filter.head !== undefined ||
       filter.isEditor !== undefined ||
       filter.isOwned !== undefined ||
-      filter.isSubscribed !== undefined ||
       filter.isVisible !== true ||
       !!filter.location,
     [filter]
@@ -69,7 +68,6 @@ function LibraryPage() {
 
   const toggleVisible = useCallback(() => setIsVisible(prev => toggleTristateFlag(prev)), [setIsVisible]);
   const toggleOwned = useCallback(() => setIsOwned(prev => toggleTristateFlag(prev)), [setIsOwned]);
-  const toggleSubscribed = useCallback(() => setIsSubscribed(prev => toggleTristateFlag(prev)), [setIsSubscribed]);
   const toggleEditor = useCallback(() => setIsEditor(prev => toggleTristateFlag(prev)), [setIsEditor]);
   const toggleFolderMode = useCallback(() => setFolderMode(prev => !prev), [setFolderMode]);
 
@@ -129,8 +127,6 @@ function LibraryPage() {
         isOwned={isOwned}
         toggleOwned={toggleOwned}
         toggleVisible={toggleVisible}
-        isSubscribed={isSubscribed}
-        toggleSubscribed={toggleSubscribed}
         isEditor={isEditor}
         toggleEditor={toggleEditor}
         resetFilter={resetFilter}

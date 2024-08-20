@@ -6,8 +6,6 @@ import {
   IconAlias,
   IconBusiness,
   IconFilter,
-  IconFollow,
-  IconFollowOff,
   IconFormula,
   IconGraphCollapse,
   IconGraphExpand,
@@ -61,14 +59,6 @@ export function VisibilityIcon({ value, size = '1.25rem', className }: DomIconPr
     return <IconShow size={size} className={className ?? 'clr-text-green'} />;
   } else {
     return <IconHide size={size} className={className ?? 'clr-text-red'} />;
-  }
-}
-
-export function SubscribeIcon({ value, size = '1.25rem', className }: DomIconProps<boolean>) {
-  if (value) {
-    return <IconFollow size={size} className={className ?? 'clr-text-green'} />;
-  } else {
-    return <IconFollowOff size={size} className={className ?? 'clr-text-red'} />;
   }
 }
 

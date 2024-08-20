@@ -4,7 +4,6 @@ import clsx from 'clsx';
 
 import FlexColumn from '@/components/ui/FlexColumn';
 import AnimateFade from '@/components/wrap/AnimateFade';
-import { useAuth } from '@/context/AuthContext';
 import { useOSS } from '@/context/OssContext';
 import EditorLibraryItem from '@/pages/RSFormPage/EditorRSFormCard/EditorLibraryItem';
 import ToolbarRSFormCard from '@/pages/RSFormPage/EditorRSFormCard/ToolbarRSFormCard';
@@ -21,8 +20,7 @@ interface EditorOssCardProps {
 }
 
 function EditorOssCard({ isModified, onDestroy, setIsModified }: EditorOssCardProps) {
-  const { schema, isSubscribed } = useOSS();
-  const { user } = useAuth();
+  const { schema } = useOSS();
   const controller = useOssEdit();
 
   function initiateSubmit() {
@@ -44,9 +42,7 @@ function EditorOssCard({ isModified, onDestroy, setIsModified }: EditorOssCardPr
   return (
     <>
       <ToolbarRSFormCard
-        subscribed={isSubscribed}
         modified={isModified}
-        anonymous={!user}
         onSubmit={initiateSubmit}
         onDestroy={onDestroy}
         controller={controller}

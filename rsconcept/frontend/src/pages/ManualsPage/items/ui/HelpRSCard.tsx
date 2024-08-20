@@ -3,7 +3,6 @@ import {
   IconDestroy,
   IconDownload,
   IconEditor,
-  IconFollow,
   IconImmutable,
   IconOSS,
   IconOwner,
@@ -50,9 +49,6 @@ function HelpRSCard() {
       </li>
       <li>
         <IconClone className='inline-icon icon-green' /> Клонировать – создать копию схемы
-      </li>
-      <li>
-        <IconFollow className='inline-icon' /> Отслеживание – схема в персональном списке
       </li>
       <li>
         <IconDownload className='inline-icon' /> Загрузить/Выгрузить – взаимодействие с Экстеор

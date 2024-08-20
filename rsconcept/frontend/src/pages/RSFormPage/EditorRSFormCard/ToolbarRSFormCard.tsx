@@ -2,7 +2,6 @@
 
 import { useMemo } from 'react';
 
-import { SubscribeIcon } from '@/components/DomainIcons';
 import { IconDestroy, IconSave, IconShare } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniSelectorOSS from '@/components/select/MiniSelectorOSS';
@@ -20,21 +19,12 @@ import { IRSEditContext } from '../RSEditContext';
 
 interface ToolbarRSFormCardProps {
   modified: boolean;
-  subscribed: boolean;
-  anonymous: boolean;
   onSubmit: () => void;
   onDestroy: () => void;
   controller: ILibraryItemEditor;
 }
 
-function ToolbarRSFormCard({
-  modified,
-  anonymous,
-  controller,
-  subscribed,
-  onSubmit,
-  onDestroy
-}: ToolbarRSFormCardProps) {
+function ToolbarRSFormCard({ modified, controller, onSubmit, onDestroy }: ToolbarRSFormCardProps) {
   const { accessLevel } = useAccessMode();
   const canSave = useMemo(() => modified && !controller.isProcessing, [modified, controller.isProcessing]);
 
@@ -71,14 +61,6 @@ function ToolbarRSFormCard({
         onClick={controller.share}
         disabled={controller.schema?.access_policy !== AccessPolicy.PUBLIC}
       />
-      {!anonymous ? (
-        <MiniButton
-          titleHtml={`Отслеживание <b>${subscribed ? 'включено' : 'выключено'}</b>`}
-          icon={<SubscribeIcon value={subscribed} className={subscribed ? 'icon-primary' : 'clr-text-controls'} />}
-          disabled={controller.isProcessing}
-          onClick={controller.toggleSubscribe}
-        />
-      ) : null}
       {controller.isMutable ? (
         <MiniButton
           title='Удалить схему'

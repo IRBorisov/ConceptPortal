@@ -78,7 +78,6 @@ export interface ILibraryItem {
  * Represents {@link ILibraryItem} constant data loaded for both OSS and RSForm.
  */
 export interface ILibraryItemData extends ILibraryItem {
-  subscribers: UserID[];
   editors: UserID[];
 }
 
@@ -109,7 +108,6 @@ export interface ILibraryItemEditor {
   setAccessPolicy: (newPolicy: AccessPolicy) => void;
   promptEditors: () => void;
   promptLocation: () => void;
-  toggleSubscribe: () => void;
 
   share: () => void;
 }

@@ -182,7 +182,6 @@ export interface ILibraryFilter {
 
   isVisible?: boolean;
   isOwned?: boolean;
-  isSubscribed?: boolean;
   isEditor?: boolean;
 }
 

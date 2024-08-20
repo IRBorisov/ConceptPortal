@@ -7,8 +7,7 @@ from apps.library.models import (
     LibraryItem,
     LibraryItemType,
     LibraryTemplate,
-    LocationHead,
-    Subscription
+    LocationHead
 )
 from apps.rsform.models import RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
@@ -49,7 +48,6 @@ class TestLibraryViewset(EndpointTester):
         self.assertEqual(response.data['item_type'], LibraryItemType.RSFORM)
         self.assertEqual(response.data['title'], data['title'])
         self.assertEqual(response.data['alias'], data['alias'])
-        self.assertTrue(Subscription.objects.filter(user=self.user, item_id=response.data['id']).exists())
 
         data = {
             'item_type': LibraryItemType.OPERATION_SCHEMA,
@@ -259,38 +257,6 @@ class TestLibraryViewset(EndpointTester):
 
         self.logout()
         self.executeForbidden()
-
-
-    @decl_endpoint('/api/library/active', method='get')
-    def test_retrieve_subscribed(self):
-        response = self.executeOK()
-        self.assertFalse(response_contains(response, self.unowned))
-
-        Subscription.subscribe(user=self.user.pk, item=self.unowned.pk)
-        Subscription.subscribe(user=self.user2.pk, item=self.unowned.pk)
-        Subscription.subscribe(user=self.user2.pk, item=self.owned.pk)
-
-        response = self.executeOK()
-        self.assertTrue(response_contains(response, self.unowned))
-        self.assertEqual(len(response.data), 3)
-
-
-    @decl_endpoint('/api/library/{item}/subscribe', method='post')
-    def test_subscriptions(self):
-        self.executeNotFound(item=self.invalid_item)
-        response = self.client.delete(f'/api/library/{self.unowned.pk}/unsubscribe')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFalse(self.user in self.unowned.subscribers())
-
-        response = self.executeOK(item=self.unowned.pk)
-        self.assertTrue(self.user in self.unowned.subscribers())
-
-        response = self.executeOK(item=self.unowned.pk)
-        self.assertTrue(self.user in self.unowned.subscribers())
-
-        response = self.client.delete(f'/api/library/{self.unowned.pk}/unsubscribe')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFalse(self.user in self.unowned.subscribers())
 
 
     @decl_endpoint('/api/library/templates', method='get')

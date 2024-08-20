@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { useCallback } from 'react';
 
-import { LocationIcon, SubscribeIcon, VisibilityIcon } from '@/components/DomainIcons';
+import { LocationIcon, VisibilityIcon } from '@/components/DomainIcons';
 import { IconEditor, IconFilterReset, IconFolder, IconFolderTree, IconOwner } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import Dropdown from '@/components/ui/Dropdown';
@@ -37,8 +37,6 @@ interface ToolbarSearchProps {
   toggleVisible: () => void;
   isOwned: boolean | undefined;
   toggleOwned: () => void;
-  isSubscribed: boolean | undefined;
-  toggleSubscribed: () => void;
   isEditor: boolean | undefined;
   toggleEditor: () => void;
   resetFilter: () => void;
@@ -63,8 +61,6 @@ function ToolbarSearch({
   toggleVisible,
   isOwned,
   toggleOwned,
-  isSubscribed,
-  toggleSubscribed,
   isEditor,
   toggleEditor,
   resetFilter
@@ -117,11 +113,6 @@ function ToolbarSearch({
             title='Видимость'
             icon={<VisibilityIcon value={true} className={tripleToggleColor(isVisible)} />}
             onClick={toggleVisible}
-          />
-          <MiniButton
-            title='Я - Подписчик'
-            icon={<SubscribeIcon value={true} className={tripleToggleColor(isSubscribed)} />}
-            onClick={toggleSubscribed}
           />
 
           <MiniButton

@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
-from apps.library.models import Editor, Subscription
+from apps.library.models import Editor
 from shared import messages as msg
 
 from . import models
@@ -59,9 +59,6 @@ class AuthSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     username = serializers.CharField()
     is_staff = serializers.BooleanField()
-    subscriptions = serializers.ListField(
-        child=serializers.IntegerField()
-    )
 
     def to_representation(self, instance: models.User) -> dict:
         if instance.is_anonymous:
@@ -69,7 +66,6 @@ class AuthSerializer(serializers.Serializer):
                 'id': None,
                 'username': '',
                 'is_staff': False,
-                'subscriptions': [],
                 'editor': []
             }
         else:
@@ -77,7 +73,6 @@ class AuthSerializer(serializers.Serializer):
                 'id': instance.pk,
                 'username': instance.username,
                 'is_staff': instance.is_staff,
-                'subscriptions': [sub.item.pk for sub in Subscription.objects.filter(user=instance)],
                 'editor': [edit.item.pk for edit in Editor.objects.filter(editor=instance)]
             }
 

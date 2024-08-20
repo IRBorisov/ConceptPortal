@@ -112,10 +112,6 @@ class LibraryItem(Model):
     def get_absolute_url(self):
         return f'/api/library/{self.pk}'
 
-    def subscribers(self) -> QuerySet[User]:
-        ''' Get all subscribers for this item. '''
-        return User.objects.filter(subscription__item=self.pk)
-
     def editors(self) -> QuerySet[User]:
         ''' Get all Editors of this item. '''
         return User.objects.filter(editor__item=self.pk)

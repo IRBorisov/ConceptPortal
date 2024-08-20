@@ -4,14 +4,12 @@ import { createContext, useCallback, useContext, useMemo, useState } from 'react
 
 import { DataCallback } from '@/backend/apiTransport';
 import {
-  deleteUnsubscribe,
   patchLibraryItem,
   patchSetAccessPolicy,
   patchSetEditors,
   patchSetLocation,
   patchSetOwner,
-  postCreateVersion,
-  postSubscribe
+  postCreateVersion
 } from '@/backend/library';
 import { postFindPredecessor } from '@/backend/oss';
 import {
@@ -68,14 +66,11 @@ interface IRSFormContext {
 
   isArchive: boolean;
   isOwned: boolean;
-  isSubscribed: boolean;
 
   update: (data: ILibraryUpdateData, callback?: DataCallback<ILibraryItem>) => void;
   download: (callback: DataCallback<Blob>) => void;
   upload: (data: IRSFormUploadData, callback: () => void) => void;
 
-  subscribe: (callback?: () => void) => void;
-  unsubscribe: (callback?: () => void) => void;
   setOwner: (newOwner: UserID, callback?: () => void) => void;
   setAccessPolicy: (newPolicy: AccessPolicy, callback?: () => void) => void;
   setLocation: (newLocation: string, callback?: () => void) => void;
@@ -132,20 +127,11 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
   const [processing, setProcessing] = useState(false);
   const [processingError, setProcessingError] = useState<ErrorData>(undefined);
 
-  const [toggleTracking, setToggleTracking] = useState(false);
-
   const isOwned = useMemo(() => {
     return user?.id === schema?.owner || false;
   }, [user, schema?.owner]);
 
   const isArchive = useMemo(() => !!versionID, [versionID]);
-
-  const isSubscribed = useMemo(() => {
-    if (!user || !schema || !user.id) {
-      return false;
-    }
-    return schema.subscribers.includes(user.id);
-  }, [user, schema, toggleTracking]);
 
   const update = useCallback(
     (data: ILibraryUpdateData, callback?: DataCallback<ILibraryItem>) => {
@@ -188,56 +174,6 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
       });
     },
     [itemID, setSchema, schema, library.localUpdateItem]
-  );
-
-  const subscribe = useCallback(
-    (callback?: () => void) => {
-      if (!schema || !user) {
-        return;
-      }
-      setProcessingError(undefined);
-      postSubscribe(itemID, {
-        showError: true,
-        setLoading: setProcessing,
-        onError: setProcessingError,
-        onSuccess: () => {
-          if (user.id && !schema.subscribers.includes(user.id)) {
-            schema.subscribers.push(user.id);
-          }
-          if (!user.subscriptions.includes(schema.id)) {
-            user.subscriptions.push(schema.id);
-          }
-          setToggleTracking(prev => !prev);
-          if (callback) callback();
-        }
-      });
-    },
-    [itemID, schema, user]
-  );
-
-  const unsubscribe = useCallback(
-    (callback?: () => void) => {
-      if (!schema || !user) {
-        return;
-      }
-      setProcessingError(undefined);
-      deleteUnsubscribe(itemID, {
-        showError: true,
-        setLoading: setProcessing,
-        onError: setProcessingError,
-        onSuccess: () => {
-          if (user.id && schema.subscribers.includes(user.id)) {
-            schema.subscribers.splice(schema.subscribers.indexOf(user.id), 1);
-          }
-          if (user.subscriptions.includes(schema.id)) {
-            user.subscriptions.splice(user.subscriptions.indexOf(schema.id), 1);
-          }
-          setToggleTracking(prev => !prev);
-          if (callback) callback();
-        }
-      });
-    },
-    [itemID, schema, user]
   );
 
   const setOwner = useCallback(
@@ -635,7 +571,6 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         processing,
         processingError,
         isOwned,
-        isSubscribed,
         isArchive,
         update,
         download,
@@ -644,9 +579,6 @@ export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) =
         resetAliases,
         produceStructure,
         inlineSynthesis,
-
-        subscribe,
-        unsubscribe,
         setOwner,
         setEditors,
         setAccessPolicy,
