@@ -22,29 +22,24 @@ function NodeCore({ node }: NodeCoreProps) {
   const longLabel = node.data.label.length > PARAMETER.ossLongLabel;
   const labelText = truncateToLastWord(node.data.label, PARAMETER.ossTruncateLabel);
 
-  const handleOpenSchema = () => {
-    controller.openOperationSchema(Number(node.id));
-  };
-
   return (
     <>
       <Overlay position='top-0 right-0' className='flex flex-col gap-1 p-[2px]'>
         <MiniButton
-          icon={<IconRSForm className={hasFile ? 'clr-text-green' : 'clr-text-red'} size='12px' />}
+          disabled
           noHover
           noPadding
           title={hasFile ? 'Связанная КС' : 'Нет связанной КС'}
+          icon={<IconRSForm className={hasFile ? 'clr-text-green' : 'clr-text-red'} size='12px' />}
           hideTitle={!controller.showTooltip}
-          onClick={handleOpenSchema}
-          disabled={!hasFile}
         />
         {node.data.operation.is_consolidation ? (
           <MiniButton
-            icon={<IconConsolidation className='clr-text-primary' size='12px' />}
             disabled
             noPadding
             noHover
             titleHtml='<b>Внимание!</b><br />Ромбовидный синтез</br/>Возможны дубликаты конституент'
+            icon={<IconConsolidation className='clr-text-primary' size='12px' />}
             hideTitle={!controller.showTooltip}
           />
         ) : null}

@@ -239,6 +239,9 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
   }, []);
 
   const handleSaveImage = useCallback(() => {
+    if (!model.schema) {
+      return;
+    }
     const canvas: HTMLElement | null = document.querySelector('.react-flow__viewport');
     if (canvas === null) {
       toast.error(errors.imageFailed);
@@ -261,7 +264,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     })
       .then(dataURL => {
         const a = document.createElement('a');
-        a.setAttribute('download', 'reactflow.svg');
+        a.setAttribute('download', `${model.schema?.alias ?? 'oss'}.svg`);
         a.setAttribute('href', dataURL);
         a.click();
       })
@@ -269,7 +272,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
         console.error(error);
         toast.error(errors.imageFailed);
       });
-  }, [colors, nodes]);
+  }, [colors, nodes, model.schema]);
 
   const handleContextMenu = useCallback(
     (event: CProps.EventMouse, node: OssNode) => {
