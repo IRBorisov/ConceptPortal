@@ -168,6 +168,7 @@ export function findReferenceAt(pos: number, state: EditorState) {
 export function domTooltipConstituenta(cst?: IConstituenta, canClick?: boolean) {
   const dom = document.createElement('div');
   dom.className = clsx(
+    'z-topmost',
     'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
     'dense',
     'p-2',
@@ -246,6 +247,7 @@ export function domTooltipEntityReference(
 ) {
   const dom = document.createElement('div');
   dom.className = clsx(
+    'z-topmost',
     'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
     'dense',
     'p-2 flex flex-col',
@@ -304,6 +306,7 @@ export function domTooltipSyntacticReference(
 ) {
   const dom = document.createElement('div');
   dom.className = clsx(
+    'z-topmost',
     'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
     'dense',
     'p-2 flex flex-col',

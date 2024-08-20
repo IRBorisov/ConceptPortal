@@ -19,7 +19,7 @@ function HelpRSCard() {
 
       <p>Карточка содержит общую информацию и статистику</p>
       <p>
-        Карточка позволяет управлять атрибутами схемы и <LinkTopic text='версиями' topic={HelpTopic.VERSIONS} />
+        Карточка позволяет управлять атрибутами и <LinkTopic text='версиями' topic={HelpTopic.VERSIONS} />
       </p>
       <p>
         Карточка позволяет назначать <IconEditor className='inline-icon' /> Редакторов
@@ -45,7 +45,7 @@ function HelpRSCard() {
         <IconPublic className='inline-icon' /> Общедоступные схемы видны всем посетителям
       </li>
       <li>
-        <IconImmutable className='inline-icon' /> Неизменные схемы редактируют только администраторы
+        <IconImmutable className='inline-icon' /> Неизменные схемы
       </li>
       <li>
         <IconClone className='inline-icon icon-green' /> Клонировать – создать копию схемы
