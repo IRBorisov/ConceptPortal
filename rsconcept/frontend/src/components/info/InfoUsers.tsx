@@ -18,6 +18,7 @@ function InfoUsers({ items, className, prefix, ...restProps }: InfoUsersProps) {
       {items.map((user, index) => (
         <div key={`${prefix}${index}`}>{getUserLabel(user)}</div>
       ))}
+      {items.length === 0 ? <div className='text-center'>Пользователи не выбраны</div> : null}
     </div>
   );
 }

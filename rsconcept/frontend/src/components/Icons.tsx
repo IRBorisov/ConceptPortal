@@ -49,6 +49,8 @@ export { BiChevronLeft    as IconPageLeft }       from 'react-icons/bi';
 export { BiChevronRight   as IconPageRight }      from 'react-icons/bi';
 export { BiFirstPage      as IconPageFirst }      from 'react-icons/bi';
 export { BiLastPage       as IconPageLast }       from 'react-icons/bi';
+export { TbCalendarPlus   as IconDateCreate }     from 'react-icons/tb';
+export { TbCalendarRepeat as IconDateUpdate }     from 'react-icons/tb';
 
 // ==== User status =======
 export { LuUserCircle2    as IconUser }           from 'react-icons/lu';

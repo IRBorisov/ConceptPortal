@@ -1,11 +1,10 @@
 import { useCallback } from 'react';
 import { useIntl } from 'react-intl';
 
-import { IconEdit } from '@/components/Icons';
+import { IconDateCreate, IconDateUpdate, IconEditor, IconFolder, IconOwner } from '@/components/Icons';
 import InfoUsers from '@/components/info/InfoUsers';
 import SelectUser from '@/components/select/SelectUser';
-import LabeledValue from '@/components/ui/LabeledValue';
-import MiniButton from '@/components/ui/MiniButton';
+import IconValue from '@/components/ui/IconValue';
 import Overlay from '@/components/ui/Overlay';
 import Tooltip from '@/components/ui/Tooltip';
 import { useAccessMode } from '@/context/AccessModeContext';
@@ -42,79 +41,76 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
     [controller, item?.owner, ownerSelector]
   );
 
+  if (!item) {
+    return null;
+  }
+
   return (
     <div className='flex flex-col'>
-      {accessLevel >= UserLevel.OWNER ? (
-        <Overlay position='top-[-0.5rem] left-[2.3rem] cc-icons'>
-          <MiniButton
-            title={controller.isAttachedToOSS ? 'Путь наследуется от ОСС' : 'Изменить путь'}
-            noHover
-            onClick={() => controller.promptLocation()}
-            icon={<IconEdit size='1rem' className='mt-1 icon-primary' />}
-            disabled={isModified || controller.isProcessing || controller.isAttachedToOSS}
-          />
-        </Overlay>
-      ) : null}
-      <LabeledValue
-        className='max-w-[30rem] sm:mb-1 text-ellipsis' //
-        label='Путь'
-        text={item?.location ?? ''}
+      <IconValue
+        className='sm:mb-1 text-ellipsis max-w-[30rem]'
+        icon={<IconFolder size='1.25rem' className='icon-primary' />}
+        value={item.location}
+        title={controller.isAttachedToOSS ? 'Путь наследуется от ОСС' : 'Путь'}
+        onClick={controller.promptLocation}
+        disabled={isModified || controller.isProcessing || controller.isAttachedToOSS || accessLevel < UserLevel.OWNER}
       />
 
-      {accessLevel >= UserLevel.OWNER ? (
-        <Overlay position='top-[-0.5rem] left-[5.5rem] cc-icons'>
-          <div className='flex items-start'>
-            <MiniButton
-              title={controller.isAttachedToOSS ? 'Владелец наследуется от ОСС' : 'Изменить владельца'}
-              noHover
-              onClick={() => ownerSelector.toggle()}
-              icon={<IconEdit size='1rem' className='mt-1 icon-primary' />}
-              disabled={isModified || controller.isProcessing || controller.isAttachedToOSS}
+      {ownerSelector.isOpen ? (
+        <Overlay position='top-[-0.5rem] left-[2.5rem] cc-icons'>
+          {ownerSelector.isOpen ? (
+            <SelectUser
+              className='w-[26.5rem] sm:w-[27.5rem] text-sm'
+              items={users}
+              value={item.owner ?? undefined}
+              onSelectValue={onSelectUser}
             />
-            {ownerSelector.isOpen ? (
-              <SelectUser
-                className='w-[21rem] sm:w-[23rem] text-sm'
-                items={users}
-                value={item?.owner ?? undefined}
-                onSelectValue={onSelectUser}
-              />
-            ) : null}
-          </div>
+          ) : null}
         </Overlay>
       ) : null}
-      <LabeledValue
-        className='sm:mb-1' //
-        label='Владелец'
-        text={getUserLabel(item?.owner ?? null)}
+      <IconValue
+        className='sm:mb-1'
+        icon={<IconOwner size='1.25rem' className='icon-primary' />}
+        value={getUserLabel(item.owner)}
+        title={controller.isAttachedToOSS ? 'Владелец наследуется от ОСС' : 'Владелец'}
+        onClick={ownerSelector.toggle}
+        disabled={isModified || controller.isProcessing || controller.isAttachedToOSS || accessLevel < UserLevel.OWNER}
       />
 
-      {accessLevel >= UserLevel.OWNER ? (
-        <Overlay position='top-[-0.5rem] left-[5.5rem]' className='cc-icons'>
-          <MiniButton
-            title='Изменить редакторов'
-            noHover
-            onClick={() => controller.promptEditors()}
-            icon={<IconEdit size='1rem' className='mt-1 icon-primary' />}
-            disabled={isModified || controller.isProcessing}
-          />
-        </Overlay>
-      ) : null}
-      <LabeledValue
-        id='editor_stats' //
-        className='sm:mb-1'
-        label='Редакторы'
-        text={item?.editors.length ?? 0}
-      />
-      <Tooltip anchorSelect='#editor_stats' layer='z-modalTooltip'>
-        <InfoUsers items={item?.editors ?? []} prefix={prefixes.user_editors} />
-      </Tooltip>
+      <div className='sm:mb-1 flex justify-between items-center'>
+        <IconValue
+          id='editor_stats'
+          dense
+          icon={<IconEditor size='1.25rem' className='icon-primary' />}
+          value={item.editors.length}
+          title='Редакторы'
+          onClick={controller.promptEditors}
+          disabled={isModified || controller.isProcessing || accessLevel < UserLevel.OWNER}
+        />
+        <Tooltip anchorSelect='#editor_stats' layer='z-modalTooltip'>
+          <InfoUsers items={item?.editors ?? []} prefix={prefixes.user_editors} />
+        </Tooltip>
 
-      <LabeledValue
-        className='sm:mb-1'
-        label='Дата обновления'
-        text={item ? new Date(item?.time_update).toLocaleString(intl.locale) : ''}
-      />
-      <LabeledValue label='Дата создания' text={item ? new Date(item?.time_create).toLocaleString(intl.locale) : ''} />
+        <IconValue
+          dense
+          disabled
+          icon={<IconDateUpdate size='1.25rem' className='clr-text-green' />}
+          value={new Date(item.time_update).toLocaleString(intl.locale)}
+          title='Дата обновления'
+        />
+
+        <IconValue
+          dense
+          disabled
+          icon={<IconDateCreate size='1.25rem' className='clr-text-green' />}
+          value={new Date(item.time_create).toLocaleString(intl.locale, {
+            year: '2-digit',
+            month: '2-digit',
+            day: '2-digit'
+          })}
+          title='Дата создания'
+        />
+      </div>
     </div>
   );
 }
