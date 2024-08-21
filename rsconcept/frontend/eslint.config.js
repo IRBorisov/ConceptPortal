@@ -11,7 +11,15 @@ export default [
   ...typescriptPlugin.configs.recommendedTypeChecked,
   ...typescriptPlugin.configs.stylisticTypeChecked,
   {
-    ignores: ['**/parser.ts', '**/node_modules/**', '**/public/**', 'eslint.config.js']
+    ignores: [
+      '**/parser.ts',
+      '**/node_modules/**',
+      '**/public/**',
+      '**/dist/**',
+      'eslint.config.js',
+      'tailwind.config.js',
+      'postcss.config.js'
+    ]
   },
   {
     languageOptions: {

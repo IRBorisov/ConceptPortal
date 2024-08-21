@@ -202,7 +202,7 @@ export function guessCstType(hint: string, defaultType: CstType = CstType.TERM):
 /**
  * Evaluate if {@link CstType} is basic concept.
  */
-export function isBasicConcept(type: CstType): boolean {
+export function isBasicConcept(type?: CstType): boolean {
   // prettier-ignore
   switch (type) {
     case CstType.BASE: return true;
@@ -213,6 +213,7 @@ export function isBasicConcept(type: CstType): boolean {
     case CstType.FUNCTION: return false;
     case CstType.PREDICATE: return false;
     case CstType.THEOREM: return false;
+    case undefined: return false;
   }
 }
 

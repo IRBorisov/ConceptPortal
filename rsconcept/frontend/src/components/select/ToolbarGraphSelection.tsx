@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { useCallback } from 'react';
 
 import { Graph } from '@/models/Graph';
 
@@ -7,8 +8,10 @@ import {
   IconGraphCore,
   IconGraphExpand,
   IconGraphInputs,
+  IconGraphInverse,
   IconGraphMaximize,
   IconGraphOutputs,
+  IconPredecessor,
   IconReset
 } from '../Icons';
 import { CProps } from '../props';
@@ -16,7 +19,8 @@ import MiniButton from '../ui/MiniButton';
 
 interface ToolbarGraphSelectionProps extends CProps.Styling {
   graph: Graph;
-  core: number[];
+  isCore: (item: number) => boolean;
+  isOwned: (item: number) => boolean;
   setSelected: React.Dispatch<React.SetStateAction<number[]>>;
   emptySelection?: boolean;
 }
@@ -24,11 +28,27 @@ interface ToolbarGraphSelectionProps extends CProps.Styling {
 function ToolbarGraphSelection({
   className,
   graph,
-  core,
+  isCore,
+  isOwned,
   setSelected,
   emptySelection,
   ...restProps
 }: ToolbarGraphSelectionProps) {
+  const handleSelectCore = useCallback(() => {
+    const core = [...graph.nodes.keys()].filter(isCore);
+    setSelected([...core, ...graph.expandInputs(core)]);
+  }, [setSelected, graph, isCore]);
+
+  const handleSelectOwned = useCallback(
+    () => setSelected([...graph.nodes.keys()].filter(isOwned)),
+    [setSelected, graph, isOwned]
+  );
+
+  const handleInvertSelection = useCallback(
+    () => setSelected(prev => [...graph.nodes.keys()].filter(item => !prev.includes(item))),
+    [setSelected, graph]
+  );
+
   return (
     <div className={clsx('cc-icons', className)} {...restProps}>
       <MiniButton
@@ -68,9 +88,19 @@ function ToolbarGraphSelection({
         disabled={emptySelection}
       />
       <MiniButton
+        titleHtml='Инвертировать'
+        icon={<IconGraphInverse size='1.25rem' className='icon-primary' />}
+        onClick={handleInvertSelection}
+      />
+      <MiniButton
         titleHtml='Выделить ядро'
         icon={<IconGraphCore size='1.25rem' className='icon-primary' />}
-        onClick={() => setSelected([...core, ...graph.expandInputs(core)])}
+        onClick={handleSelectCore}
+      />
+      <MiniButton
+        titleHtml='Выделить собственные'
+        icon={<IconPredecessor size='1.25rem' className='icon-primary' />}
+        onClick={handleSelectOwned}
       />
     </div>
   );

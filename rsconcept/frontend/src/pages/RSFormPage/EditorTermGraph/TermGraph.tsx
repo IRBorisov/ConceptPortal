@@ -114,30 +114,28 @@ function TermGraph({
   const canvasHeight = useMemo(() => calculateHeight('1.75rem + 4px'), [calculateHeight]);
 
   return (
-    <div className='outline-none'>
-      <div className='relative' style={{ width: canvasWidth, height: canvasHeight }}>
-        <GraphUI
-          nodes={nodes}
-          edges={edges}
-          ref={graphRef}
-          animated={false}
-          draggable
-          layoutType={layout}
-          selections={selections}
-          onNodeDoubleClick={handleNodeDoubleClick}
-          onNodeClick={handleNodeClick}
-          onNodePointerOver={handleHoverIn}
-          onNodePointerOut={handleHoverOut}
-          minNodeSize={4}
-          maxNodeSize={8}
-          cameraMode={orbit ? 'orbit' : is3D ? 'rotate' : 'pan'}
-          layoutOverrides={
-            layout.includes('tree') ? { nodeLevelRatio: nodes.length < PARAMETER.smallTreeNodes ? 3 : 1 } : undefined
-          }
-          labelFontUrl={resources.graph_font}
-          theme={darkMode ? graphDarkT : graphLightT}
-        />
-      </div>
+    <div className='relative outline-none' style={{ width: canvasWidth, height: canvasHeight }}>
+      <GraphUI
+        nodes={nodes}
+        edges={edges}
+        ref={graphRef}
+        animated={false}
+        draggable
+        layoutType={layout}
+        selections={selections}
+        onNodeDoubleClick={handleNodeDoubleClick}
+        onNodeClick={handleNodeClick}
+        onNodePointerOver={handleHoverIn}
+        onNodePointerOut={handleHoverOut}
+        minNodeSize={4}
+        maxNodeSize={8}
+        cameraMode={orbit ? 'orbit' : is3D ? 'rotate' : 'pan'}
+        layoutOverrides={
+          layout.includes('tree') ? { nodeLevelRatio: nodes.length < PARAMETER.smallTreeNodes ? 3 : 1 } : undefined
+        }
+        labelFontUrl={resources.graph_font}
+        theme={darkMode ? graphDarkT : graphLightT}
+      />
     </div>
   );
 }

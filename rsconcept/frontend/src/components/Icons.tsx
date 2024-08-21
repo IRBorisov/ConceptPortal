@@ -119,6 +119,7 @@ export { BiCollapse       as IconGraphCollapse }  from 'react-icons/bi';
 export { BiExpand         as IconGraphExpand }    from 'react-icons/bi';
 export { LuMaximize       as IconGraphMaximize }  from 'react-icons/lu';
 export { BiGitBranch      as IconGraphInputs }    from 'react-icons/bi';
+export { TbEarScan        as IconGraphInverse }   from 'react-icons/tb';
 export { BiGitMerge       as IconGraphOutputs }   from 'react-icons/bi';
 export { LuAtom           as IconGraphCore }      from 'react-icons/lu';
 export { LuRotate3D       as IconRotate3D }       from 'react-icons/lu';

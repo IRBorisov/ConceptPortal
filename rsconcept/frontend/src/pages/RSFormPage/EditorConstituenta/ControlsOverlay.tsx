@@ -37,7 +37,7 @@ function ControlsOverlay({ constituenta, disabled, modified, processing, onRenam
         )}
       >
         <span>Имя </span>
-        <span className='ml-1'>{constituenta.alias}</span>
+        <span className='ml-1'>{constituenta?.alias ?? ''}</span>
       </div>
       {!disabled || processing ? (
         <MiniButton

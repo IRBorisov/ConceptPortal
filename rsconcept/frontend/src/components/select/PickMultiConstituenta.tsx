@@ -82,7 +82,8 @@ function PickMultiConstituenta({ id, schema, prefixID, rows, selected, setSelect
         {schema ? (
           <ToolbarGraphSelection
             graph={schema.graph}
-            core={schema.items.filter(cst => isBasicConcept(cst.cst_type)).map(cst => cst.id)}
+            isCore={cstID => isBasicConcept(schema.cstByID.get(cstID)?.cst_type)}
+            isOwned={cstID => !schema.cstByID.get(cstID)?.is_inherited ?? false}
             setSelected={setSelected}
             emptySelection={selected.length === 0}
             className='w-full ml-8'
