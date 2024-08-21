@@ -126,13 +126,13 @@ function TableSideConstituents({
   const conditionalRowStyles = useMemo(
     (): IConditionalStyle<IConstituenta>[] => [
       {
-        when: (cst: IConstituenta) => cst.id === activeCst?.id,
+        when: (cst: IConstituenta) => !!activeCst && cst.id === activeCst?.id,
         style: {
           backgroundColor: colors.bgSelected
         }
       },
       {
-        when: (cst: IConstituenta) => cst.parent === activeCst?.id && cst.id !== activeCst?.id,
+        when: (cst: IConstituenta) => !!activeCst && cst.parent === activeCst?.id && cst.id !== activeCst?.id,
         style: {
           backgroundColor: colors.bgOrange50
         }

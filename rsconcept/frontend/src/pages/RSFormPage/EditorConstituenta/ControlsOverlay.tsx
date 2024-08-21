@@ -7,7 +7,7 @@ import { IConstituenta } from '@/models/rsform';
 import { tooltips } from '@/utils/labels';
 
 interface ControlsOverlayProps {
-  constituenta?: IConstituenta;
+  constituenta: IConstituenta;
   disabled: boolean;
   modified: boolean;
   processing: boolean;
@@ -37,7 +37,7 @@ function ControlsOverlay({ constituenta, disabled, modified, processing, onRenam
         )}
       >
         <span>Имя </span>
-        <span className='ml-1'>{constituenta?.alias ?? ''}</span>
+        <span className='ml-1'>{constituenta.alias}</span>
       </div>
       {!disabled || processing ? (
         <MiniButton

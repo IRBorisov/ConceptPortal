@@ -134,14 +134,16 @@ function FormConstituenta({
 
   return (
     <AnimateFade className='mx-0 md:mx-auto'>
-      <ControlsOverlay
-        disabled={disabled}
-        modified={isModified}
-        processing={processing}
-        constituenta={state}
-        onEditTerm={onEditTerm}
-        onRename={onRename}
-      />
+      {state ? (
+        <ControlsOverlay
+          disabled={disabled}
+          modified={isModified}
+          processing={processing}
+          constituenta={state}
+          onEditTerm={onEditTerm}
+          onRename={onRename}
+        />
+      ) : null}
       <form
         id={id}
         className={clsx('cc-column', 'mt-1 w-full md:w-[48.8rem] shrink-0', 'px-6 py-1')}
@@ -157,23 +159,25 @@ function FormConstituenta({
           onOpenEdit={onOpenEdit}
           value={term}
           initialValue={state?.term_raw ?? ''}
-          resolved={state?.term_resolved ?? ''}
+          resolved={state?.term_resolved ?? 'Конституента не выбрана'}
           disabled={disabled}
           onChange={newValue => setTerm(newValue)}
         />
-        <TextArea
-          id='cst_typification'
-          rows={typification.length > ROW_SIZE_IN_CHARACTERS ? 2 : 1}
-          dense
-          noResize
-          noBorder
-          disabled={true}
-          label='Типизация'
-          value={typification}
-          colors='clr-app clr-text-default'
-        />
+        {state ? (
+          <TextArea
+            id='cst_typification'
+            rows={typification.length > ROW_SIZE_IN_CHARACTERS ? 2 : 1}
+            dense
+            noResize
+            noBorder
+            disabled={true}
+            label='Типизация'
+            value={typification}
+            colors='clr-app clr-text-default'
+          />
+        ) : null}
         <AnimatePresence>
-          <AnimateFade key='cst_expression_fade' hideContent={!!state && !state?.definition_formal && isElementary}>
+          <AnimateFade key='cst_expression_fade' hideContent={!state || (!state?.definition_formal && isElementary)}>
             <EditorRSExpression
               id='cst_expression'
               label={
@@ -197,7 +201,7 @@ function FormConstituenta({
               onOpenEdit={onOpenEdit}
             />
           </AnimateFade>
-          <AnimateFade key='cst_definition_fade' hideContent={!!state && !state?.definition_raw && isElementary}>
+          <AnimateFade key='cst_definition_fade' hideContent={!state || (!state?.definition_raw && isElementary)}>
             <RefsInput
               id='cst_definition'
               label='Текстовое определение'
@@ -213,7 +217,7 @@ function FormConstituenta({
               onChange={newValue => setTextDefinition(newValue)}
             />
           </AnimateFade>
-          <AnimateFade key='cst_convention_fade' hideContent={!showConvention}>
+          <AnimateFade key='cst_convention_fade' hideContent={!showConvention || !state}>
             <TextArea
               id='cst_convention'
               spellCheck
