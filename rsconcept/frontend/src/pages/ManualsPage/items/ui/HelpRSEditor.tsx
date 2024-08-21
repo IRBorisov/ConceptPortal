@@ -15,7 +15,6 @@ import {
   IconSave,
   IconSettings,
   IconStatusOK,
-  IconText,
   IconTree
 } from '@/components/Icons';
 import LinkTopic from '@/components/ui/LinkTopic';
@@ -87,9 +86,6 @@ function HelpRSEditor() {
       <h2>Формальное определение</h2>
       <li>
         <IconStatusOK className='inline-icon' /> индикатор статуса определения сверху
-      </li>
-      <li>
-        <IconText className='inline-icon' /> переключение шрифта
       </li>
       <li>
         <IconControls className='inline-icon' /> специальная клавиатура и горячие клавиши

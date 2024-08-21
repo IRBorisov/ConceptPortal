@@ -325,7 +325,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
           <ToolbarGraphSelection
             graph={controller.schema!.graph}
             isCore={cstID => isBasicConcept(controller.schema?.cstByID.get(cstID)?.cst_type)}
-            isOwned={cstID => !controller.schema?.cstByID.get(cstID)?.is_inherited ?? false}
+            isOwned={cstID => !controller.schema?.cstByID.get(cstID)?.is_inherited}
             setSelected={controller.setSelected}
             emptySelection={controller.selected.length === 0}
           />

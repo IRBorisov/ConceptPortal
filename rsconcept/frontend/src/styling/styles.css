@@ -18,9 +18,6 @@
   .font-math {
     font-family: var(--font-math);
   }
-  .font-math2 {
-    font-family: var(--font-math2);
-  }
 }
 
 @layer components {

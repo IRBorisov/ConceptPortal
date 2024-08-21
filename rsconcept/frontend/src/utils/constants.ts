@@ -102,7 +102,6 @@ export const storage = {
   optionsAdmin: 'options.admin',
   optionsHelp: 'options.help',
 
-  rseditFont: 'rsedit.font',
   rseditShowList: 'rsedit.show_list',
   rseditShowControls: 'rsedit.show_controls',
 

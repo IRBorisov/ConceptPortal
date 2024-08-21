@@ -5,7 +5,6 @@ import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useSt
 
 import Tooltip from '@/components/ui/Tooltip';
 import useLocalStorage from '@/hooks/useLocalStorage';
-import { FontStyle } from '@/models/miscellaneous';
 import { animationDuration } from '@/styling/animations';
 import { darkT, IColorTheme, lightT } from '@/styling/color';
 import { globals, storage } from '@/utils/constants';
@@ -22,9 +21,6 @@ interface IOptionsContext {
 
   adminMode: boolean;
   toggleAdminMode: () => void;
-
-  mathFont: FontStyle;
-  setMathFont: (value: FontStyle) => void;
 
   noNavigationAnimation: boolean;
   noNavigation: boolean;
@@ -58,7 +54,6 @@ interface OptionsStateProps {
 export const OptionsState = ({ children }: OptionsStateProps) => {
   const [darkMode, setDarkMode] = useLocalStorage(storage.themeDark, false);
   const [adminMode, setAdminMode] = useLocalStorage(storage.optionsAdmin, false);
-  const [mathFont, setMathFont] = useLocalStorage<FontStyle>(storage.rseditFont, 'math');
   const [showHelp, setShowHelp] = useLocalStorage(storage.optionsHelp, true);
   const [noNavigation, setNoNavigation] = useState(false);
 
@@ -128,8 +123,6 @@ export const OptionsState = ({ children }: OptionsStateProps) => {
         darkMode,
         adminMode,
         colors,
-        mathFont,
-        setMathFont,
         noNavigationAnimation,
         noNavigation,
         noFooter,

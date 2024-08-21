@@ -1,15 +1,8 @@
 /**
  * Module: API for miscellaneous frontend model types. Future targets for refactoring aimed at extracting modules.
  */
-import { DependencyMode, FontStyle, GraphSizing } from './miscellaneous';
+import { DependencyMode, GraphSizing } from './miscellaneous';
 import { IConstituenta, IRSForm } from './rsform';
-
-/**
- * Create style name from  {@link FontStyle}.
- */
-export function getFontClassName(style: FontStyle): string {
-  return `font-${style}`;
-}
 
 /**
  * Filter list of  {@link ILibraryItem} to a given graph query.

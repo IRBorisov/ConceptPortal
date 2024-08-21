@@ -56,11 +56,6 @@ export type GraphColoring = 'none' | 'status' | 'type';
 export type GraphSizing = 'none' | 'complex' | 'derived';
 
 /**
- * Represents font styles.
- */
-export type FontStyle = 'controls' | 'main' | 'math' | 'math2';
-
-/**
  * Represents manuals topic.
  */
 export enum HelpTopic {
