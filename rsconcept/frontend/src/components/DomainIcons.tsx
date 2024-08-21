@@ -24,6 +24,7 @@ import {
   IconStatusIncalculable,
   IconStatusOK,
   IconStatusUnknown,
+  IconSubfolders,
   IconTemplates,
   IconTerm,
   IconText,
@@ -59,6 +60,14 @@ export function VisibilityIcon({ value, size = '1.25rem', className }: DomIconPr
     return <IconShow size={size} className={className ?? 'clr-text-green'} />;
   } else {
     return <IconHide size={size} className={className ?? 'clr-text-red'} />;
+  }
+}
+
+export function SubfoldersIcon({ value, size = '1.25rem', className }: DomIconProps<boolean>) {
+  if (value) {
+    return <IconSubfolders size={size} className={className ?? 'clr-text-green'} />;
+  } else {
+    return <IconSubfolders size={size} className={className ?? 'clr-text-controls'} />;
   }
 }
 

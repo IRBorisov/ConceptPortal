@@ -8,13 +8,14 @@ import {
   getAdminLibrary,
   getLibrary,
   getTemplates,
+  patchRenameLocation,
   postCloneLibraryItem,
   postCreateLibraryItem
 } from '@/backend/library';
 import { getRSFormDetails, postRSFormFromFile } from '@/backend/rsforms';
 import { ErrorData } from '@/components/info/InfoError';
 import { FolderTree } from '@/models/FolderTree';
-import { ILibraryItem, LibraryItemID, LocationHead } from '@/models/library';
+import { ILibraryItem, IRenameLocationData, LibraryItemID, LocationHead } from '@/models/library';
 import { ILibraryCreateData } from '@/models/library';
 import { matchLibraryItem, matchLibraryItemLocation } from '@/models/libraryAPI';
 import { ILibraryFilter } from '@/models/miscellaneous';
@@ -45,6 +46,7 @@ interface ILibraryContext {
   createItem: (data: ILibraryCreateData, callback?: DataCallback<ILibraryItem>) => void;
   cloneItem: (target: LibraryItemID, data: IRSFormCloneData, callback: DataCallback<IRSFormData>) => void;
   destroyItem: (target: LibraryItemID, callback?: () => void) => void;
+  renameLocation: (data: IRenameLocationData, callback?: () => void) => void;
 
   localUpdateItem: (data: ILibraryItem) => void;
   localUpdateTimestamp: (target: LibraryItemID) => void;
@@ -92,7 +94,13 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
         result = result.filter(item => item.location.startsWith(filter.head!));
       }
       if (filter.folderMode && filter.location) {
-        result = result.filter(item => item.location == filter.location);
+        if (filter.subfolders) {
+          result = result.filter(
+            item => item.location == filter.location || item.location.startsWith(filter.location! + '/')
+          );
+        } else {
+          result = result.filter(item => item.location == filter.location);
+        }
       }
       if (filter.type) {
         result = result.filter(item => item.item_type === filter.type);
@@ -270,6 +278,23 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
     [reloadItems, user]
   );
 
+  const renameLocation = useCallback(
+    (data: IRenameLocationData, callback?: () => void) => {
+      setProcessingError(undefined);
+      patchRenameLocation({
+        data: data,
+        showError: true,
+        setLoading: setProcessing,
+        onError: setProcessingError,
+        onSuccess: () =>
+          reloadItems(() => {
+            if (callback) callback();
+          })
+      });
+    },
+    [reloadItems, user]
+  );
+
   return (
     <LibraryContext.Provider
       value={{
@@ -290,6 +315,8 @@ export const LibraryState = ({ children }: LibraryStateProps) => {
         createItem,
         cloneItem,
         destroyItem,
+        renameLocation,
+
         retrieveTemplate,
         localUpdateItem,
         localUpdateTimestamp

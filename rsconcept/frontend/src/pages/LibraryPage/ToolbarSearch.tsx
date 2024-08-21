@@ -103,7 +103,9 @@ function ToolbarSearch({
         'clr-input'
       )}
     >
-      <div className={clsx('px-3 pt-1 self-center', 'min-w-[5.5rem]', 'select-none', 'whitespace-nowrap')}>
+      <div
+        className={clsx('px-3 pt-1 self-center', 'min-w-[6rem] sm:min-w-[7rem]', 'select-none', 'whitespace-nowrap')}
+      >
         {filtered} из {total}
       </div>
 

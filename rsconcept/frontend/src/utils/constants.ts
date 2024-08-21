@@ -108,10 +108,10 @@ export const storage = {
 
   librarySearchHead: 'library.search.head',
   librarySearchFolderMode: 'library.search.folder_mode',
+  librarySearchSubfolders: 'library.search.subfolders',
   librarySearchLocation: 'library.search.location',
   librarySearchVisible: 'library.search.visible',
   librarySearchOwned: 'library.search.owned',
-  librarySearchSubscribed: 'library.search.subscribed',
   librarySearchEditor: 'library.search.editor',
   libraryPagination: 'library.pagination',
 

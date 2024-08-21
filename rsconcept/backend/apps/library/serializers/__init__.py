@@ -1,6 +1,6 @@
 ''' REST API: Serializers. '''
 
-from .basics import AccessPolicySerializer, LocationSerializer
+from .basics import AccessPolicySerializer, LocationSerializer, RenameLocationSerializer
 from .data_access import (
     LibraryItemBaseSerializer,
     LibraryItemCloneSerializer,

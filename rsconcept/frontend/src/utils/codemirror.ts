@@ -3,7 +3,7 @@
  */
 import { syntaxTree } from '@codemirror/language';
 import { NodeType, Tree, TreeCursor } from '@lezer/common';
-import { EditorState, ReactCodeMirrorRef, SelectionRange } from '@uiw/react-codemirror';
+import { EditorState, ReactCodeMirrorRef, SelectionRange, TooltipView } from '@uiw/react-codemirror';
 import clsx from 'clsx';
 
 import { ReferenceTokens } from '@/components/RefsInput/parse';
@@ -165,10 +165,9 @@ export function findReferenceAt(pos: number, state: EditorState) {
 /**
  * Create DOM tooltip for {@link Constituenta}.
  */
-export function domTooltipConstituenta(cst?: IConstituenta, canClick?: boolean) {
+export function domTooltipConstituenta(cst?: IConstituenta, canClick?: boolean): TooltipView {
   const dom = document.createElement('div');
   dom.className = clsx(
-    'z-topmost',
     'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
     'dense',
     'p-2',
@@ -183,6 +182,8 @@ export function domTooltipConstituenta(cst?: IConstituenta, canClick?: boolean) 
     dom.appendChild(text);
   } else {
     const alias = document.createElement('p');
+    alias.className = 'font-math';
+    alias.style.overflowWrap = 'anywhere';
     alias.innerHTML = `<b>${cst.alias}:</b> ${labelCstTypification(cst)}`;
     dom.appendChild(alias);
 
@@ -244,10 +245,9 @@ export function domTooltipEntityReference(
   cst: IConstituenta | undefined,
   colors: IColorTheme,
   canClick?: boolean
-) {
+): TooltipView {
   const dom = document.createElement('div');
   dom.className = clsx(
-    'z-topmost',
     'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
     'dense',
     'p-2 flex flex-col',
@@ -303,10 +303,9 @@ export function domTooltipSyntacticReference(
   ref: ISyntacticReference,
   masterRef: string | undefined,
   canClick?: boolean
-) {
+): TooltipView {
   const dom = document.createElement('div');
   dom.className = clsx(
-    'z-topmost',
     'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
     'dense',
     'p-2 flex flex-col',

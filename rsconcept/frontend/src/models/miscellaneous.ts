@@ -180,6 +180,7 @@ export interface ILibraryFilter {
   query?: string;
 
   folderMode?: boolean;
+  subfolders?: boolean;
   path?: string;
   head?: LocationHead;
   location?: string;

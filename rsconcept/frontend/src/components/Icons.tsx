@@ -34,6 +34,8 @@ export { LuMoon           as IconDarkTheme }      from 'react-icons/lu';
 export { LuSun            as IconLightTheme }     from 'react-icons/lu';
 export { LuFolderTree     as IconFolderTree }     from 'react-icons/lu';
 export { LuFolder         as IconFolder }         from 'react-icons/lu';
+export { LuFolders        as IconSubfolders }     from 'react-icons/lu';
+export { LuFolderEdit     as IconFolderEdit }     from 'react-icons/lu';
 export { LuFolderOpen     as IconFolderOpened }   from 'react-icons/lu';
 export { LuFolderClosed   as IconFolderClosed }   from 'react-icons/lu';
 export { LuFolderDot      as IconFolderEmpty }    from 'react-icons/lu';

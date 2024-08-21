@@ -39,7 +39,7 @@ def can_edit_item(user, obj: Any) -> bool:
         return True
 
     item = _extract_item(obj)
-    if item.owner == user:
+    if item.owner_id == user.pk:
         return True
 
     if Editor.objects.filter(

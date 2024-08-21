@@ -6,6 +6,7 @@ import {
   ILibraryCreateData,
   ILibraryItem,
   ILibraryUpdateData,
+  IRenameLocationData,
   ITargetAccessPolicy,
   ITargetLocation,
   IVersionData
@@ -90,6 +91,13 @@ export function patchSetAccessPolicy(target: string, request: FrontPush<ITargetA
 export function patchSetLocation(target: string, request: FrontPush<ITargetLocation>) {
   AxiosPatch({
     endpoint: `/api/library/${target}/set-location`,
+    request: request
+  });
+}
+
+export function patchRenameLocation(request: FrontPush<IRenameLocationData>) {
+  AxiosPatch({
+    endpoint: `/api/library/rename-location`,
     request: request
   });
 }

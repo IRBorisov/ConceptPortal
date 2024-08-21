@@ -19,6 +19,24 @@ class LocationSerializer(serializers.Serializer):
         return attrs
 
 
+class RenameLocationSerializer(serializers.Serializer):
+    ''' Serializer: rename location. '''
+    target = serializers.CharField(max_length=500)
+    new_location = serializers.CharField(max_length=500)
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        if not validate_location(attrs['target']):
+            raise serializers.ValidationError({
+                'target': msg.invalidLocation()
+            })
+        if not validate_location(attrs['target']):
+            raise serializers.ValidationError({
+                'new_location': msg.invalidLocation()
+            })
+        return attrs
+
+
 class AccessPolicySerializer(serializers.Serializer):
     ''' Serializer: Constituenta renaming. '''
     access_policy = serializers.CharField()

@@ -133,6 +133,14 @@ export interface ITargetLocation {
 }
 
 /**
+ * Represents update data for renaming Location.
+ */
+export interface IRenameLocationData {
+  target: string;
+  new_location: string;
+}
+
+/**
  * Represents data, used for creating {@link IRSForm}.
  */
 export interface ILibraryCreateData extends Omit<ILibraryItem, 'time_create' | 'time_update' | 'id' | 'owner'> {

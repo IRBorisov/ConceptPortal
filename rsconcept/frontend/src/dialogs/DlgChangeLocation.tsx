@@ -45,7 +45,7 @@ function DlgChangeLocation({ hideWindow, initial, onChangeLocation }: DlgChangeL
       onSubmit={() => onChangeLocation(location)}
       className={clsx('w-[35rem]', 'pb-3 px-6 flex gap-3')}
     >
-      <div className='flex flex-col gap-2 w-[7rem] h-min'>
+      <div className='flex flex-col gap-2 min-w-[7rem] h-min'>
         <Label className='select-none' text='Корень' />
         <SelectLocationHead
           value={head} // prettier: split-lines

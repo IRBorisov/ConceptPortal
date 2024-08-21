@@ -2,6 +2,7 @@ import {
   IconFilterReset,
   IconFolder,
   IconFolderClosed,
+  IconFolderEdit,
   IconFolderEmpty,
   IconFolderOpened,
   IconFolderTree,
@@ -10,9 +11,12 @@ import {
   IconSearch,
   IconShow,
   IconSortAsc,
-  IconSortDesc
+  IconSortDesc,
+  IconSubfolders
 } from '@/components/Icons';
+import LinkTopic from '@/components/ui/LinkTopic';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
+import { HelpTopic } from '@/models/miscellaneous';
 
 function HelpLibrary() {
   const { colors } = useConceptOptions();
@@ -20,8 +24,10 @@ function HelpLibrary() {
     <div>
       <h1>Библиотека схем</h1>
       <p>
-        В библиотеке собраны <IconRSForm size='1rem' className='inline-icon' /> системы определений (КС) <br />и
-        <IconOSS size='1rem' className='inline-icon' /> операционные схемы синтеза (ОСС).
+        В библиотеке собраны <IconRSForm size='1rem' className='inline-icon' />{' '}
+        <LinkTopic text='концептуальные схемы' topic={HelpTopic.CC_SYSTEM} /> (КС) <br />и
+        <IconOSS size='1rem' className='inline-icon' />{' '}
+        <LinkTopic text='операционные схемы синтеза' topic={HelpTopic.CC_OSS} /> (ОСС).
       </p>
 
       <li>
@@ -51,20 +57,26 @@ function HelpLibrary() {
       </li>
 
       <h2>Режим: Проводник</h2>
-      <li>клик по папке отображает справа файлы в ней</li>
+      <li>
+        <IconFolderEdit size='1rem' className='inline-icon' /> переименовать выбранную
+      </li>
+      <li>
+        <IconSubfolders size='1rem' className='inline-icon icon-green' /> схемы во вложенных папках
+      </li>
+      <li>клик по папке отображает справа схемы в ней</li>
       <li>Ctrl + клик по папке копирует путь в буфер обмена</li>
       <li>клик по иконке сворачивает/разворачивает вложенные</li>
       <li>
-        <IconFolderEmpty size='1rem' className='inline-icon clr-text-default' /> папка без файлов
+        <IconFolderEmpty size='1rem' className='inline-icon clr-text-default' /> папка без схем
       </li>
       <li>
-        <IconFolderEmpty size='1rem' className='inline-icon' /> папка с вложенными без файлов
+        <IconFolderEmpty size='1rem' className='inline-icon' /> папка с вложенными без схем
       </li>
       <li>
         <IconFolder size='1rem' className='inline-icon' /> папка без вложенных
       </li>
       <li>
-        <IconFolderClosed size='1rem' className='inline-icon' /> папка с вложенными и файлами
+        <IconFolderClosed size='1rem' className='inline-icon' /> папка с вложенными и схемами
       </li>
       <li>
         <IconFolderOpened size='1rem' className='inline-icon icon-green' /> развернутая папка

@@ -3,11 +3,14 @@ import { motion } from 'framer-motion';
 import { useCallback, useMemo } from 'react';
 import { toast } from 'react-toastify';
 
-import { IconFolderTree } from '@/components/Icons';
+import { SubfoldersIcon } from '@/components/DomainIcons';
+import { IconFolderEdit, IconFolderTree } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import { CProps } from '@/components/props';
 import SelectLocation from '@/components/select/SelectLocation';
 import MiniButton from '@/components/ui/MiniButton';
+import { useAuth } from '@/context/AuthContext';
+import { useLibrary } from '@/context/LibraryContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { FolderNode, FolderTree } from '@/models/FolderTree';
 import { HelpTopic } from '@/models/miscellaneous';
@@ -17,12 +20,25 @@ import { information } from '@/utils/labels';
 
 interface ViewSideLocationProps {
   folderTree: FolderTree;
+  subfolders: boolean;
   active: string;
   setActive: React.Dispatch<React.SetStateAction<string>>;
   toggleFolderMode: () => void;
+  toggleSubfolders: () => void;
+  onRenameLocation: () => void;
 }
 
-function ViewSideLocation({ folderTree, active, setActive: setActive, toggleFolderMode }: ViewSideLocationProps) {
+function ViewSideLocation({
+  folderTree,
+  active,
+  subfolders,
+  setActive: setActive,
+  toggleFolderMode,
+  toggleSubfolders,
+  onRenameLocation
+}: ViewSideLocationProps) {
+  const { user } = useAuth();
+  const { items } = useLibrary();
   const windowSize = useWindowSize();
   const handleClickFolder = useCallback(
     (event: CProps.EventMouse, target: FolderNode) => {
@@ -40,6 +56,18 @@ function ViewSideLocation({ folderTree, active, setActive: setActive, toggleFold
     [setActive]
   );
 
+  const canRename = useMemo(() => {
+    if (active.length <= 3 || !user) {
+      return false;
+    }
+    if (user.is_staff) {
+      return true;
+    }
+    const owned = items.filter(item => item.owner == user.id);
+    const located = owned.filter(item => item.location == active || item.location.startsWith(`${active}/`));
+    return located.length !== 0;
+  }, [active, user, items]);
+
   const animations = useMemo(() => animateSideMinWidth(windowSize.isSmall ? '10rem' : '15rem'), [windowSize]);
 
   return (
@@ -56,11 +84,20 @@ function ViewSideLocation({ folderTree, active, setActive: setActive, toggleFold
           offset={5}
           place='right-start'
         />
-        <MiniButton
-          icon={<IconFolderTree size='1.25rem' className='icon-green' />}
-          title='Переключение в режим Поиск'
-          onClick={toggleFolderMode}
-        />
+        <div className='cc-icons'>
+          <MiniButton
+            icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
+            titleHtml='<b>Редактирование пути</b><br/>Перемещаются только Ваши схемы<br/>в указанной папке (и подпапках)'
+            onClick={onRenameLocation}
+            disabled={!canRename}
+          />
+          <MiniButton title='Вложенные папки' icon={<SubfoldersIcon value={subfolders} />} onClick={toggleSubfolders} />
+          <MiniButton
+            icon={<IconFolderTree size='1.25rem' className='icon-green' />}
+            title='Переключение в режим Поиск'
+            onClick={toggleFolderMode}
+          />
+        </div>
       </div>
       <SelectLocation
         value={active}

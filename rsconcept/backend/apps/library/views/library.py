@@ -82,7 +82,8 @@ class LibraryViewSet(viewsets.ModelViewSet):
             access_level = permissions.ItemOwner
         elif self.action in [
             'create',
-            'clone'
+            'clone',
+            'rename_location'
         ]:
             access_level = permissions.GlobalUser
         else:
@@ -91,6 +92,42 @@ class LibraryViewSet(viewsets.ModelViewSet):
 
     def _get_item(self) -> m.LibraryItem:
         return cast(m.LibraryItem, self.get_object())
+
+    @extend_schema(
+        summary='rename location',
+        tags=['Library'],
+        request=s.RenameLocationSerializer,
+        responses={
+            c.HTTP_200_OK: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=False, methods=['patch'], url_path='rename-location')
+    def rename_location(self, request: Request) -> HttpResponse:
+        ''' Endpoint: Rename location. '''
+        serializer = s.RenameLocationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        target = serializer.validated_data['target']
+        new_location = serializer.validated_data['new_location']
+        if target == new_location:
+            return Response(status=c.HTTP_200_OK)
+        if new_location.startswith(m.LocationHead.LIBRARY) and not self.request.user.is_staff:
+            return Response(status=c.HTTP_403_FORBIDDEN)
+
+        with transaction.atomic():
+            changed: list[m.LibraryItem] = []
+            items = m.LibraryItem.objects \
+                .filter(Q(location=target) | Q(location__startswith=f'{target}/')) \
+                .only('location', 'owner_id')
+            for item in items:
+                if item.owner_id == self.request.user.pk or self.request.user.is_staff:
+                    item.location = item.location.replace(target, new_location)
+                    changed.append(item)
+            if changed:
+                m.LibraryItem.objects.bulk_update(changed, ['location'])
+
+        return Response(status=c.HTTP_200_OK)
 
     @extend_schema(
         summary='clone item including contents',

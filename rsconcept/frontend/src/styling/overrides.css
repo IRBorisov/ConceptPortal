@@ -9,6 +9,10 @@
   --toastify-color-dark: var(--cd-bg-60);
 }
 
+.cm-tooltip {
+  z-index: 100;
+}
+
 .cm-editor {
   resize: vertical;
   overflow-y: auto;

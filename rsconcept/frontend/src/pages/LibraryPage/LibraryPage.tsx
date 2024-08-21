@@ -2,14 +2,17 @@
 
 import { AnimatePresence } from 'framer-motion';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
 
 import DataLoader from '@/components/wrap/DataLoader';
 import { useAuth } from '@/context/AuthContext';
 import { useLibrary } from '@/context/LibraryContext';
+import DlgChangeLocation from '@/dialogs/DlgChangeLocation';
 import useLocalStorage from '@/hooks/useLocalStorage';
-import { ILibraryItem, LocationHead } from '@/models/library';
+import { ILibraryItem, IRenameLocationData, LocationHead } from '@/models/library';
 import { ILibraryFilter } from '@/models/miscellaneous';
 import { storage } from '@/utils/constants';
+import { information } from '@/utils/labels';
 import { toggleTristateFlag } from '@/utils/utils';
 
 import TableLibraryItems from './TableLibraryItems';
@@ -26,14 +29,12 @@ function LibraryPage() {
 
   const [head, setHead] = useLocalStorage<LocationHead | undefined>(storage.librarySearchHead, undefined);
   const [folderMode, setFolderMode] = useLocalStorage<boolean>(storage.librarySearchFolderMode, true);
+  const [subfolders, setSubfolders] = useLocalStorage<boolean>(storage.librarySearchSubfolders, false);
   const [location, setLocation] = useLocalStorage<string>(storage.librarySearchLocation, '');
   const [isVisible, setIsVisible] = useLocalStorage<boolean | undefined>(storage.librarySearchVisible, true);
-  const [isSubscribed, setIsSubscribed] = useLocalStorage<boolean | undefined>(
-    storage.librarySearchSubscribed,
-    undefined
-  );
   const [isOwned, setIsOwned] = useLocalStorage<boolean | undefined>(storage.librarySearchEditor, undefined);
   const [isEditor, setIsEditor] = useLocalStorage<boolean | undefined>(storage.librarySearchEditor, undefined);
+  const [showRenameLocation, setShowRenameLocation] = useState(false);
 
   const filter: ILibraryFilter = useMemo(
     () => ({
@@ -42,12 +43,12 @@ function LibraryPage() {
       query: query,
       isEditor: user ? isEditor : undefined,
       isOwned: user ? isOwned : undefined,
-      isSubscribed: user ? isSubscribed : undefined,
       isVisible: user ? isVisible : true,
       folderMode: folderMode,
+      subfolders: subfolders,
       location: location
     }),
-    [head, path, query, isEditor, isOwned, isSubscribed, isVisible, user, folderMode, location]
+    [head, path, query, isEditor, isOwned, isVisible, user, folderMode, location, subfolders]
   );
 
   const hasCustomFilter = useMemo(
@@ -70,17 +71,35 @@ function LibraryPage() {
   const toggleOwned = useCallback(() => setIsOwned(prev => toggleTristateFlag(prev)), [setIsOwned]);
   const toggleEditor = useCallback(() => setIsEditor(prev => toggleTristateFlag(prev)), [setIsEditor]);
   const toggleFolderMode = useCallback(() => setFolderMode(prev => !prev), [setFolderMode]);
+  const toggleSubfolders = useCallback(() => setSubfolders(prev => !prev), [setSubfolders]);
 
   const resetFilter = useCallback(() => {
     setQuery('');
     setPath('');
     setHead(undefined);
     setIsVisible(true);
-    setIsSubscribed(undefined);
     setIsOwned(undefined);
     setIsEditor(undefined);
     setLocation('');
-  }, [setHead, setIsVisible, setIsSubscribed, setIsOwned, setIsEditor, setLocation]);
+  }, [setHead, setIsVisible, setIsOwned, setIsEditor, setLocation]);
+
+  const promptRenameLocation = useCallback(() => {
+    setShowRenameLocation(true);
+  }, []);
+
+  const handleRenameLocation = useCallback(
+    (newLocation: string) => {
+      const data: IRenameLocationData = {
+        target: location,
+        new_location: newLocation
+      };
+      library.renameLocation(data, () => {
+        setLocation(newLocation);
+        toast.success(information.locationRenamed);
+      });
+    },
+    [location, library]
+  );
 
   const viewLibrary = useMemo(
     () => (
@@ -99,11 +118,14 @@ function LibraryPage() {
       <ViewSideLocation
         active={location}
         setActive={setLocation}
+        subfolders={subfolders}
         folderTree={library.folders}
         toggleFolderMode={toggleFolderMode}
+        toggleSubfolders={toggleSubfolders}
+        onRenameLocation={promptRenameLocation}
       />
     ),
-    [location, library.folders, setLocation, toggleFolderMode]
+    [location, library.folders, setLocation, toggleFolderMode, subfolders]
   );
 
   return (
@@ -113,6 +135,13 @@ function LibraryPage() {
       error={library.loadingError}
       hasNoData={library.items.length === 0}
     >
+      {showRenameLocation ? (
+        <DlgChangeLocation
+          initial={location}
+          onChangeLocation={handleRenameLocation}
+          hideWindow={() => setShowRenameLocation(false)}
+        />
+      ) : null}
       <ToolbarSearch
         total={library.items.length ?? 0}
         filtered={items.length}

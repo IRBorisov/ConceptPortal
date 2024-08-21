@@ -181,6 +181,42 @@ class TestLibraryViewset(EndpointTester):
         self.unowned.refresh_from_db()
         self.assertEqual(self.unowned.location, data['location'])
 
+    @decl_endpoint('/api/library/rename-location', method='patch')
+    def test_rename_location(self):
+        self.owned.location = '/U/temp'
+        self.owned.save()
+        self.unowned.location = '/U/temp'
+        self.unowned.save()
+        owned2 = LibraryItem.objects.create(
+            title='Test3',
+            alias='T3',
+            owner=self.user,
+            location='/U/temp/123'
+        )
+
+        data = {
+            'target': '/U/temp',
+            'new_location': '/U/temp2'
+        }
+
+        self.executeBadData(data={})
+        self.executeBadData(data={'target:': '/U/temp'})
+        self.executeBadData(data={'new_location:': '/U/temp'})
+        self.executeBadData(data={'target:': 'invalid', 'new_location': '/U/temp'})
+        self.executeBadData(data={'target:': '/U/temp', 'new_location': 'invalid'})
+        self.executeOK(data=data)
+        self.owned.refresh_from_db()
+        self.unowned.refresh_from_db()
+        owned2.refresh_from_db()
+        self.assertEqual(self.owned.location, '/U/temp2')
+        self.assertEqual(self.unowned.location, '/U/temp')
+        self.assertEqual(owned2.location, '/U/temp2/123')
+
+        self.toggle_admin(True)
+        self.executeOK(data=data)
+        self.unowned.refresh_from_db()
+        self.assertEqual(self.unowned.location, '/U/temp2')
+
     @decl_endpoint('/api/library/{item}/set-editors', method='patch')
     def test_set_editors(self):
         time_update = self.owned.time_update

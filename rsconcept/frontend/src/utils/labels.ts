@@ -931,6 +931,7 @@ export const information = {
   moveComplete: 'Перемещение завершено',
   linkReady: 'Ссылка скопирована',
   versionRestored: 'Загрузка версии завершена',
+  locationRenamed: 'Ваши схемы перемещены',
   cloneComplete: (alias: string) => `Копия создана: ${alias}`,
 
   addedConstituents: (count: number) => `Добавлены конституенты: ${count}`,
