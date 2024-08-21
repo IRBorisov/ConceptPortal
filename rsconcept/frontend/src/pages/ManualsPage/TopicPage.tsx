@@ -15,6 +15,7 @@ import HelpInterface from './items/HelpInterface';
 import HelpMain from './items/HelpMain';
 import HelpRSLang from './items/HelpRSLang';
 import HelpTerminologyControl from './items/HelpTerminologyControl';
+import HelpThesaurus from './items/HelpThesaurus';
 import HelpVersions from './items/HelpVersions';
 import HelpAPI from './items/info/HelpAPI';
 import HelpContributors from './items/info/HelpContributors';
@@ -51,6 +52,7 @@ function TopicPage({ topic }: TopicPageProps) {
   const size = useWindowSize();
 
   if (topic === HelpTopic.MAIN) return <HelpMain />;
+  if (topic === HelpTopic.THESAURUS) return <HelpThesaurus />;
 
   if (topic === HelpTopic.INTERFACE) return <HelpInterface />;
   if (topic === HelpTopic.UI_LIBRARY) return <HelpLibrary />;

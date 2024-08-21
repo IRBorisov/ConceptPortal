@@ -66,6 +66,8 @@ export type FontStyle = 'controls' | 'main' | 'math' | 'math2';
 export enum HelpTopic {
   MAIN = 'main',
 
+  THESAURUS = 'thesaurus',
+
   INTERFACE = 'user-interface',
   UI_LIBRARY = 'ui-library',
   UI_RS_MENU = 'ui-rsform-menu',
@@ -111,6 +113,8 @@ export enum HelpTopic {
  */
 export const topicParent = new Map<HelpTopic, HelpTopic>([
   [HelpTopic.MAIN, HelpTopic.MAIN],
+
+  [HelpTopic.THESAURUS, HelpTopic.THESAURUS],
 
   [HelpTopic.INTERFACE, HelpTopic.INTERFACE],
   [HelpTopic.UI_LIBRARY, HelpTopic.INTERFACE],

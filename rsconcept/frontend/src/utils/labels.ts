@@ -365,6 +365,8 @@ export function labelHelpTopic(topic: HelpTopic): string {
   switch (topic) {
     case HelpTopic.MAIN:            return 'Портал';
 
+    case HelpTopic.THESAURUS:       return 'Тезаурус';
+
     case HelpTopic.INTERFACE:       return 'Интерфейс';
     case HelpTopic.UI_LIBRARY:      return 'Библиотека';
     case HelpTopic.UI_RS_MENU:      return 'Меню схемы';
@@ -413,6 +415,8 @@ export function describeHelpTopic(topic: HelpTopic): string {
   // prettier-ignore
   switch (topic) {
     case HelpTopic.MAIN:            return 'общая справка по порталу';
+
+    case HelpTopic.THESAURUS:       return 'термины Портала';
 
     case HelpTopic.INTERFACE:       return 'описание интерфейса пользователя';
     case HelpTopic.UI_LIBRARY:      return 'поиск и просмотр схем';
