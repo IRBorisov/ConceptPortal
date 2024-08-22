@@ -115,13 +115,15 @@ class LibraryViewSet(viewsets.ModelViewSet):
         if new_location.startswith(m.LocationHead.LIBRARY) and not self.request.user.is_staff:
             return Response(status=c.HTTP_403_FORBIDDEN)
 
+        user_involved = new_location.startswith(m.LocationHead.USER) or target.startswith(m.LocationHead.USER)
+
         with transaction.atomic():
             changed: list[m.LibraryItem] = []
             items = m.LibraryItem.objects \
                 .filter(Q(location=target) | Q(location__startswith=f'{target}/')) \
                 .only('location', 'owner_id')
             for item in items:
-                if item.owner_id == self.request.user.pk or self.request.user.is_staff:
+                if item.owner_id == self.request.user.pk or (self.request.user.is_staff and not user_involved):
                     item.location = item.location.replace(target, new_location)
                     changed.append(item)
             if changed:

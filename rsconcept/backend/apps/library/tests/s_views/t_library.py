@@ -183,39 +183,58 @@ class TestLibraryViewset(EndpointTester):
 
     @decl_endpoint('/api/library/rename-location', method='patch')
     def test_rename_location(self):
-        self.owned.location = '/U/temp'
+        self.owned.location = '/S/temp'
         self.owned.save()
-        self.unowned.location = '/U/temp'
+        self.unowned.location = '/S/temp'
         self.unowned.save()
         owned2 = LibraryItem.objects.create(
             title='Test3',
             alias='T3',
             owner=self.user,
-            location='/U/temp/123'
+            location='/S/temp/123'
         )
+
+        data = {
+            'target': '/S/temp',
+            'new_location': '/S/temp2'
+        }
+
+        self.executeBadData(data={})
+        self.executeBadData(data={'target:': '/S/temp'})
+        self.executeBadData(data={'new_location:': '/S/temp'})
+        self.executeBadData(data={'target:': 'invalid', 'new_location': '/S/temp'})
+        self.executeBadData(data={'target:': '/S/temp', 'new_location': 'invalid'})
+        self.executeOK(data=data)
+        self.owned.refresh_from_db()
+        self.unowned.refresh_from_db()
+        owned2.refresh_from_db()
+        self.assertEqual(self.owned.location, '/S/temp2')
+        self.assertEqual(self.unowned.location, '/S/temp')
+        self.assertEqual(owned2.location, '/S/temp2/123')
+
+        self.toggle_admin(True)
+        self.executeOK(data=data)
+        self.unowned.refresh_from_db()
+        self.assertEqual(self.unowned.location, '/S/temp2')
+
+    @decl_endpoint('/api/library/rename-location', method='patch')
+    def test_rename_location_user(self):
+        self.owned.location = '/U/temp'
+        self.owned.save()
+        self.unowned.location = '/U/temp'
+        self.unowned.save()
 
         data = {
             'target': '/U/temp',
             'new_location': '/U/temp2'
         }
 
-        self.executeBadData(data={})
-        self.executeBadData(data={'target:': '/U/temp'})
-        self.executeBadData(data={'new_location:': '/U/temp'})
-        self.executeBadData(data={'target:': 'invalid', 'new_location': '/U/temp'})
-        self.executeBadData(data={'target:': '/U/temp', 'new_location': 'invalid'})
+        self.toggle_admin(True)
         self.executeOK(data=data)
         self.owned.refresh_from_db()
         self.unowned.refresh_from_db()
-        owned2.refresh_from_db()
         self.assertEqual(self.owned.location, '/U/temp2')
         self.assertEqual(self.unowned.location, '/U/temp')
-        self.assertEqual(owned2.location, '/U/temp2/123')
-
-        self.toggle_admin(True)
-        self.executeOK(data=data)
-        self.unowned.refresh_from_db()
-        self.assertEqual(self.unowned.location, '/U/temp2')
 
     @decl_endpoint('/api/library/{item}/set-editors', method='patch')
     def test_set_editors(self):
