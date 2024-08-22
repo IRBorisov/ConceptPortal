@@ -65,7 +65,7 @@ function TabInputOperation({
         <TextInput
           id='operation_alias'
           label='Сокращение'
-          className='w-[14rem]'
+          className='w-[16rem]'
           value={alias}
           onChange={event => setAlias(event.target.value)}
           disabled={attachedID !== undefined}

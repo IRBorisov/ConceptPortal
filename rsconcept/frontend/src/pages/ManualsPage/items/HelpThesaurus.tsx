@@ -219,7 +219,7 @@ function HelpThesaurus() {
           <IconDownload size='1rem' className='inline-icon' /> загрузка КС из библиотеки;
         </li>
         <li>
-          <IconSynthesis size='1rem' className='inline-icon' /> синтез концептуальных схем.
+          <IconSynthesis size='1rem' className='inline-icon' /> синтез концептуальных схем.ыф
         </li>
       </ul>
     </div>

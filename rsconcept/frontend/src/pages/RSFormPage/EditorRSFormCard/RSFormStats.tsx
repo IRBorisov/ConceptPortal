@@ -20,8 +20,11 @@ function RSFormStats({ stats }: RSFormStatsProps) {
   }
   return (
     <div className='flex flex-col mt-3 sm:gap-1 sm:ml-6 sm:mt-8 sm:w-[16rem]'>
-      <LabeledValue id='count_all' label='Всего конституент' text={stats.count_all} />
-      <div className='grid grid-cols-4 gap-1 justify-items-start sm:justify-items-end'>
+      <div className='grid grid-cols-4 gap-1 mb-3 justify-items-start sm:justify-items-end'>
+        <div className='col-span-2 text-left w-full flex gap-3 sm:pl-3'>
+          <span>Всего</span>
+          <span>{stats.count_all}</span>
+        </div>
         <IconValue
           id='count_owned'
           dense
@@ -126,9 +129,11 @@ function RSFormStats({ stats }: RSFormStatsProps) {
         />
       </div>
 
-      <LabeledValue id='count_text_term' label='Термины' text={stats.count_text_term} />
-      <LabeledValue id='count_definition' label='Определения' text={stats.count_definition} />
-      <LabeledValue id='count_convention' label='Конвенции' text={stats.count_convention} />
+      <div className='sm:pl-3 max-w-[10rem] sm:max-w-[12rem]'>
+        <LabeledValue id='count_text_term' label='Термины' text={stats.count_text_term} />
+        <LabeledValue id='count_definition' label='Определения' text={stats.count_definition} />
+        <LabeledValue id='count_convention' label='Конвенции' text={stats.count_convention} />
+      </div>
     </div>
   );
 }

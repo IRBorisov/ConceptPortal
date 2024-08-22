@@ -100,7 +100,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
           id='schema_alias'
           required
           label='Сокращение'
-          className='w-[14rem]'
+          className='w-[16rem]'
           disabled={!controller.isContentEditable}
           value={alias}
           onChange={event => setAlias(event.target.value)}

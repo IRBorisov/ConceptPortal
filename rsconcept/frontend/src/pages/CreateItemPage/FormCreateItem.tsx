@@ -152,7 +152,7 @@ function FormCreateItem() {
           required={!file}
           label='Сокращение'
           placeholder={file && 'Загрузить из файла'}
-          className='w-[14rem]'
+          className='w-[16rem]'
           value={alias}
           onChange={event => setAlias(event.target.value)}
         />

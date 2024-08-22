@@ -100,7 +100,7 @@ function FormOSS({ id, isModified, setIsModified }: FormOSSProps) {
           id='schema_alias'
           required
           label='Сокращение'
-          className='w-[14rem]'
+          className='w-[16rem]'
           disabled={!controller.isMutable}
           value={alias}
           onChange={event => setAlias(event.target.value)}
