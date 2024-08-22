@@ -134,7 +134,7 @@ div:not(.dense) > p {
   }
 
   li::marker {
-    content: '– ';
+    content: '–\2009';
   }
 
   .border {

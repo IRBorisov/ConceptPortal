@@ -1,4 +1,13 @@
+import {
+  IconChild,
+  IconPredecessor,
+  IconStatusError,
+  IconStatusIncalculable,
+  IconStatusOK,
+  IconStatusProperty
+} from '@/components/Icons';
 import Divider from '@/components/ui/Divider';
+import IconValue from '@/components/ui/IconValue';
 import LabeledValue from '@/components/ui/LabeledValue';
 import { type IRSFormStats } from '@/models/rsform';
 
@@ -11,49 +20,120 @@ function RSFormStats({ stats }: RSFormStatsProps) {
     return null;
   }
   return (
-    <div className='flex flex-col sm:gap-1 sm:ml-6 sm:mt-8 sm:w-[16rem]'>
+    <div className='flex flex-col sm:gap-1 sm:ml-6 sm:mt-8 sm:w-[14rem]'>
       <Divider margins='my-2' className='sm:hidden' />
 
       <LabeledValue id='count_all' label='Всего конституент' text={stats.count_all} />
-      {stats.count_inherited !== 0 ? (
-        <LabeledValue id='count_inherited' label='Наследованные' text={stats.count_inherited} />
-      ) : null}
-      <LabeledValue id='count_errors' label='Некорректные' text={stats.count_errors} />
-      {stats.count_property !== 0 ? (
-        <LabeledValue id='count_property' label='Неразмерные' text={stats.count_property} />
-      ) : null}
-      {stats.count_incalculable !== 0 ? (
-        <LabeledValue id='count_incalculable' label='Невычислимые' text={stats.count_incalculable} />
-      ) : null}
+      <div className='grid grid-cols-4 gap-1'>
+        <IconValue
+          id='count_owned'
+          dense
+          icon={<IconPredecessor size='1.25rem' className='clr-text-primary' />}
+          value={stats.count_all - stats.count_inherited}
+          title='Собственные'
+        />
+        <IconValue
+          id='count_inherited'
+          dense
+          icon={<IconChild size='1.25rem' className='clr-text-primary' />}
+          value={stats.count_inherited}
+          title='Наследованные'
+        />
+      </div>
+      <div className='grid grid-cols-4 gap-1'>
+        <IconValue
+          id='count_ok'
+          dense
+          icon={<IconStatusOK size='1.25rem' className='clr-text-green' />}
+          value={stats.count_all - stats.count_errors - stats.count_property - stats.count_incalculable}
+          title='Корректные'
+        />
+        <IconValue
+          id='count_property'
+          dense
+          icon={<IconStatusProperty size='1.25rem' className='clr-text-primary' />}
+          value={stats.count_errors}
+          title='Неразмерные'
+        />
+        <IconValue
+          id='count_incalculable'
+          dense
+          icon={<IconStatusIncalculable size='1.25rem' className='clr-text-red' />}
+          value={stats.count_incalculable}
+          title='Невычислимые'
+        />
+        <IconValue
+          id='count_errors'
+          dense
+          icon={<IconStatusError size='1.25rem' className='clr-text-red' />}
+          value={stats.count_errors}
+          title='Некорректные'
+        />
+      </div>
+      <div className='grid grid-cols-4 gap-1'>
+        <IconValue
+          id='count_base'
+          dense
+          icon={<span className='font-math clr-text-default'>X#</span>}
+          value={stats.count_base}
+          title='Базисные множества'
+        />
+        <IconValue
+          id='count_constant'
+          dense
+          icon={<span className='font-math clr-text-default'>C#</span>}
+          value={stats.count_constant}
+          title='Константные множества'
+        />
+        <IconValue
+          id='count_structured'
+          dense
+          icon={<span className='font-math clr-text-default'>S#</span>}
+          value={stats.count_structured}
+          title='Родовые структуры'
+        />
+        <IconValue
+          id='count_axiom'
+          dense
+          icon={<span className='font-math clr-text-default'>A#</span>}
+          value={stats.count_axiom}
+          title='Аксиомы'
+        />
+        <IconValue
+          id='count_term'
+          dense
+          icon={<span className='font-math clr-text-default'>D#</span>}
+          value={stats.count_term}
+          title='Термы'
+        />
+        <IconValue
+          id='count_function'
+          dense
+          icon={<span className='font-math clr-text-default'>F#</span>}
+          value={stats.count_function}
+          title='Терм-функции'
+        />
+        <IconValue
+          id='count_predicate'
+          dense
+          icon={<span className='font-math clr-text-default'>P#</span>}
+          value={stats.count_predicate}
+          title='Предикат-функции'
+        />
+        <IconValue
+          id='count_theorem'
+          dense
+          icon={<span className='font-math clr-text-default'>T#</span>}
+          value={stats.count_theorem}
+          title='Теоремы'
+        />
+      </div>
 
       <Divider margins='my-2' />
 
       <LabeledValue id='count_text_term' label='Термины' text={stats.count_text_term} />
       <LabeledValue id='count_definition' label='Определения' text={stats.count_definition} />
       <LabeledValue id='count_convention' label='Конвенции' text={stats.count_convention} />
-
-      <Divider margins='my-2' />
-
-      {stats.count_base !== 0 ? (
-        <LabeledValue id='count_base' label='Базисные множества ' text={stats.count_base} />
-      ) : null}
-      {stats.count_constant !== 0 ? (
-        <LabeledValue id='count_constant' label='Константные множества ' text={stats.count_constant} />
-      ) : null}
-      {stats.count_structured !== 0 ? (
-        <LabeledValue id='count_structured' label='Родовые структуры ' text={stats.count_structured} />
-      ) : null}
-      {stats.count_axiom !== 0 ? <LabeledValue id='count_axiom' label='Аксиомы ' text={stats.count_axiom} /> : null}
-      {stats.count_term !== 0 ? <LabeledValue id='count_term' label='Термы ' text={stats.count_term} /> : null}
-      {stats.count_function !== 0 ? (
-        <LabeledValue id='count_function' label='Терм-функции ' text={stats.count_function} />
-      ) : null}
-      {stats.count_predicate !== 0 ? (
-        <LabeledValue id='count_predicate' label='Предикат-функции ' text={stats.count_predicate} />
-      ) : null}
-      {stats.count_theorem !== 0 ? (
-        <LabeledValue id='count_theorem' label='Теоремы ' text={stats.count_theorem} />
-      ) : null}
     </div>
   );
 }

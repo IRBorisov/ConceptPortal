@@ -95,7 +95,8 @@ export { RiShieldKeyholeLine as IconPrivate }     from 'react-icons/ri';
 export { BiBug            as IconStatusError }    from 'react-icons/bi';
 export { BiCheckCircle    as IconStatusOK }       from 'react-icons/bi';
 export { BiHelpCircle     as IconStatusUnknown }  from 'react-icons/bi';
-export { BiPauseCircle    as IconStatusIncalculable } from 'react-icons/bi';
+export { BiStopCircle     as IconStatusIncalculable } from 'react-icons/bi';
+export { BiPauseCircle    as IconStatusProperty } from 'react-icons/bi';
 export { LuPower          as IconKeepAliasOn }    from 'react-icons/lu';
 export { LuPowerOff       as IconKeepAliasOff }   from 'react-icons/lu';
 

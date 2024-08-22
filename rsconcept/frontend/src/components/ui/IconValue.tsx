@@ -27,7 +27,7 @@ function IconValue({
 }: IconValueProps) {
   return (
     <div
-      className={clsx('flex items-center', { 'justify-between gap-6 text-right': !dense, 'gap-2': dense }, className)}
+      className={clsx('flex items-center', { 'justify-between gap-6 text-right': !dense, 'gap-1': dense }, className)}
       {...restProps}
     >
       <MiniButton
