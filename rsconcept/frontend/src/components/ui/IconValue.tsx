@@ -1,5 +1,7 @@
 import clsx from 'clsx';
 
+import { globals } from '@/utils/constants';
+
 import { CProps } from '../props';
 import MiniButton from './MiniButton';
 
@@ -29,17 +31,12 @@ function IconValue({
     <div
       className={clsx('flex items-center text-right', { 'justify-between gap-6': !dense, 'gap-1': dense }, className)}
       {...restProps}
+      data-tooltip-id={!!title || !!titleHtml ? globals.tooltip : undefined}
+      data-tooltip-html={titleHtml}
+      data-tooltip-content={title}
+      data-tooltip-hidden={hideTitle}
     >
-      <MiniButton
-        noHover
-        noPadding
-        title={title}
-        titleHtml={titleHtml}
-        hideTitle={hideTitle}
-        icon={icon}
-        disabled={disabled}
-        onClick={onClick}
-      />
+      <MiniButton noHover noPadding icon={icon} disabled={disabled} onClick={onClick} />
       <span id={id} className='min-w-[1.2rem]'>
         {value}
       </span>

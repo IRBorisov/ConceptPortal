@@ -51,6 +51,7 @@ export { BiFirstPage      as IconPageFirst }      from 'react-icons/bi';
 export { BiLastPage       as IconPageLast }       from 'react-icons/bi';
 export { TbCalendarPlus   as IconDateCreate }     from 'react-icons/tb';
 export { TbCalendarRepeat as IconDateUpdate }     from 'react-icons/tb';
+export { PiFileCsv        as IconCSV }            from 'react-icons/pi';
 
 // ==== User status =======
 export { LuUserCircle2    as IconUser }           from 'react-icons/lu';
@@ -69,7 +70,7 @@ export { BiDiamond        as IconTemplates }      from 'react-icons/bi';
 export { TbHexagons       as IconOSS }            from 'react-icons/tb';
 export { TbHexagon        as IconRSForm }         from 'react-icons/tb';
 export { TbTopologyRing   as IconConsolidation }  from 'react-icons/tb';
-export { GrInherit        as IconChild }          from 'react-icons/gr';
+export { LiaCloneSolid    as IconChild }          from 'react-icons/lia';
 export { RiParentLine     as IconParent }         from 'react-icons/ri';
 export { BiSpa            as IconPredecessor }    from 'react-icons/bi';
 export { LuArchive        as IconArchive }        from 'react-icons/lu';

@@ -1,9 +1,13 @@
 'use client';
 
 import { AnimatePresence } from 'framer-motion';
+import fileDownload from 'js-file-download';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { IconCSV } from '@/components/Icons';
+import MiniButton from '@/components/ui/MiniButton';
+import Overlay from '@/components/ui/Overlay';
 import DataLoader from '@/components/wrap/DataLoader';
 import { useAuth } from '@/context/AuthContext';
 import { useLibrary } from '@/context/LibraryContext';
@@ -13,7 +17,7 @@ import { ILibraryItem, IRenameLocationData, LocationHead } from '@/models/librar
 import { ILibraryFilter } from '@/models/miscellaneous';
 import { storage } from '@/utils/constants';
 import { information } from '@/utils/labels';
-import { toggleTristateFlag } from '@/utils/utils';
+import { convertToCSV, toggleTristateFlag } from '@/utils/utils';
 
 import TableLibraryItems from './TableLibraryItems';
 import ToolbarSearch from './ToolbarSearch';
@@ -101,6 +105,19 @@ function LibraryPage() {
     [location, library]
   );
 
+  const handleDownloadCSV = useCallback(() => {
+    if (items.length === 0) {
+      toast.error(information.noDataToExport);
+      return;
+    }
+    const blob = convertToCSV(items);
+    try {
+      fileDownload(blob, 'library.csv', 'text/csv;charset=utf-8;');
+    } catch (error) {
+      console.error(error);
+    }
+  }, [items]);
+
   const viewLibrary = useMemo(
     () => (
       <TableLibraryItems
@@ -142,6 +159,13 @@ function LibraryPage() {
           hideWindow={() => setShowRenameLocation(false)}
         />
       ) : null}
+      <Overlay position='top-[0.25rem] right-0' layer='z-tooltip'>
+        <MiniButton
+          title='Выгрузить в формате CSV'
+          icon={<IconCSV size='1.25rem' className='icon-green' />}
+          onClick={handleDownloadCSV}
+        />
+      </Overlay>
       <ToolbarSearch
         total={library.items.length ?? 0}
         filtered={items.length}

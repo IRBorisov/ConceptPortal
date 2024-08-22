@@ -83,7 +83,6 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
           dense
           icon={<IconEditor size='1.25rem' className='icon-primary' />}
           value={item.editors.length}
-          title='Редакторы'
           onClick={controller.promptEditors}
           disabled={isModified || controller.isProcessing || accessLevel < UserLevel.OWNER}
         />

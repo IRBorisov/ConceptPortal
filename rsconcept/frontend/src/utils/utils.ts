@@ -169,3 +169,34 @@ export function extractErrorMessage(error: Error | AxiosError): string {
   }
   return error.message;
 }
+
+/**
+ * Convert array of objects to CSV Blob.
+ */
+export function convertToCSV(targetObj: object[]): Blob {
+  if (!targetObj || targetObj.length === 0) {
+    return new Blob([], { type: 'text/csv;charset=utf-8;' });
+  }
+  const separator = ',';
+  const keys = Object.keys(targetObj[0]);
+
+  const csvContent =
+    keys.join(separator) +
+    '\n' +
+    (targetObj as Record<string, string | Date | number>[])
+      .map(item => {
+        return keys
+          .map(k => {
+            let cell = item[k] === null || item[k] === undefined ? '' : item[k];
+            cell = cell instanceof Date ? cell.toLocaleString() : cell.toString().replace(/"/g, '""');
+            if (cell.search(/("|,|\n)/g) >= 0) {
+              cell = `"${cell}"`;
+            }
+            return cell;
+          })
+          .join(separator);
+      })
+      .join('\n');
+
+  return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+}

@@ -1,13 +1,20 @@
 'use client';
 
 import clsx from 'clsx';
-import { useLayoutEffect, useMemo, useState } from 'react';
+import fileDownload from 'js-file-download';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
 
+import { IconCSV } from '@/components/Icons';
 import SelectedCounter from '@/components/info/SelectedCounter';
 import { type RowSelectionState } from '@/components/ui/DataTable';
+import MiniButton from '@/components/ui/MiniButton';
+import Overlay from '@/components/ui/Overlay';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { ConstituentaID, CstType } from '@/models/rsform';
+import { information } from '@/utils/labels';
+import { convertToCSV } from '@/utils/utils';
 
 import { useRSEdit } from '../RSEditContext';
 import TableRSList from './TableRSList';
@@ -33,6 +40,19 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
       setRowSelection(newRowSelection);
     }
   }, [controller.selected, controller.schema]);
+
+  const handleDownloadCSV = useCallback(() => {
+    if (!controller.schema || controller.schema.items.length === 0) {
+      toast.error(information.noDataToExport);
+      return;
+    }
+    const blob = convertToCSV(controller.schema.items);
+    try {
+      fileDownload(blob, `${controller.schema.alias}.csv`, 'text/csv;charset=utf-8;');
+    } catch (error) {
+      console.error(error);
+    }
+  }, [controller]);
 
   function handleRowSelection(updater: React.SetStateAction<RowSelectionState>) {
     if (!controller.schema) {
@@ -120,6 +140,14 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
             'relative top-[-1px]': !controller.isContentEditable
           })}
         />
+
+        <Overlay position='top-[0.25rem] right-[1rem]' layer='z-tooltip'>
+          <MiniButton
+            title='Выгрузить в формате CSV'
+            icon={<IconCSV size='1.25rem' className='icon-green' />}
+            onClick={handleDownloadCSV}
+          />
+        </Overlay>
 
         <TableRSList
           items={controller.schema?.items}

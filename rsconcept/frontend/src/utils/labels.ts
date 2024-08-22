@@ -933,6 +933,7 @@ export const information = {
   versionRestored: 'Загрузка версии завершена',
   locationRenamed: 'Ваши схемы перемещены',
   cloneComplete: (alias: string) => `Копия создана: ${alias}`,
+  noDataToExport: 'Нет данных для экспорта',
 
   addedConstituents: (count: number) => `Добавлены конституенты: ${count}`,
   newLibraryItem: 'Схема успешно создана',
