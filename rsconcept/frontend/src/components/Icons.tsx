@@ -112,6 +112,7 @@ export { BiDuplicate      as IconClone }          from 'react-icons/bi';
 export { LuReplace        as IconReplace }        from 'react-icons/lu';
 export { FaSortAmountDownAlt as IconSortList }    from 'react-icons/fa';
 export { LuNetwork        as IconGenerateStructure } from 'react-icons/lu';
+export { LuCombine        as IconSynthesis }      from 'react-icons/lu';
 export { LuBookCopy       as IconInlineSynthesis } from 'react-icons/lu';
 export { LuWand2          as IconGenerateNames }  from 'react-icons/lu';
 export { GrConnect        as IconConnect }        from 'react-icons/gr';

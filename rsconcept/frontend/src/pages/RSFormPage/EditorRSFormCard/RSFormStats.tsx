@@ -6,7 +6,6 @@ import {
   IconStatusOK,
   IconStatusProperty
 } from '@/components/Icons';
-import Divider from '@/components/ui/Divider';
 import IconValue from '@/components/ui/IconValue';
 import LabeledValue from '@/components/ui/LabeledValue';
 import { type IRSFormStats } from '@/models/rsform';
@@ -20,11 +19,9 @@ function RSFormStats({ stats }: RSFormStatsProps) {
     return null;
   }
   return (
-    <div className='flex flex-col sm:gap-1 sm:ml-6 sm:mt-8 sm:w-[14rem]'>
-      <Divider margins='my-2' className='sm:hidden' />
-
+    <div className='flex flex-col mt-3 sm:gap-1 sm:ml-6 sm:mt-8 sm:w-[16rem]'>
       <LabeledValue id='count_all' label='Всего конституент' text={stats.count_all} />
-      <div className='grid grid-cols-4 gap-1'>
+      <div className='grid grid-cols-4 gap-1 justify-items-start sm:justify-items-end'>
         <IconValue
           id='count_owned'
           dense
@@ -39,9 +36,9 @@ function RSFormStats({ stats }: RSFormStatsProps) {
           value={stats.count_inherited}
           title='Наследованные'
         />
-      </div>
-      <div className='grid grid-cols-4 gap-1'>
+
         <IconValue
+          className='col-start-1'
           id='count_ok'
           dense
           icon={<IconStatusOK size='1.25rem' className='clr-text-green' />}
@@ -69,8 +66,7 @@ function RSFormStats({ stats }: RSFormStatsProps) {
           value={stats.count_errors}
           title='Некорректные'
         />
-      </div>
-      <div className='grid grid-cols-4 gap-1'>
+
         <IconValue
           id='count_base'
           dense
@@ -99,6 +95,7 @@ function RSFormStats({ stats }: RSFormStatsProps) {
           value={stats.count_axiom}
           title='Аксиомы'
         />
+
         <IconValue
           id='count_term'
           dense
@@ -128,8 +125,6 @@ function RSFormStats({ stats }: RSFormStatsProps) {
           title='Теоремы'
         />
       </div>
-
-      <Divider margins='my-2' />
 
       <LabeledValue id='count_text_term' label='Термины' text={stats.count_text_term} />
       <LabeledValue id='count_definition' label='Определения' text={stats.count_definition} />

@@ -1,16 +1,19 @@
 import {
   IconChild,
+  IconDownload,
   IconGraphCollapse,
   IconGraphExpand,
   IconGraphInputs,
   IconGraphOutputs,
+  IconOSS,
   IconPredecessor,
   IconRSForm,
   IconStatusError,
   IconStatusIncalculable,
   IconStatusOK,
   IconStatusProperty,
-  IconStatusUnknown
+  IconStatusUnknown,
+  IconSynthesis
 } from '@/components/Icons';
 import LinkTopic from '@/components/ui/LinkTopic';
 import { HelpTopic } from '@/models/miscellaneous';
@@ -25,8 +28,7 @@ function HelpThesaurus() {
         Справки через гиперссылки. Также указываются графические обозначения (иконки, цвета), используемые для
         обозначения соответствующих сущностей в интерфейсе Портала.
       </p>
-      <h2>Концептуализация</h2>
-      <p>Раздел в разработке...</p>
+
       <h2>Концептуальная схема</h2>
       <p>
         <IconRSForm size='1rem' className='inline-icon' />{' '}
@@ -198,10 +200,28 @@ function HelpThesaurus() {
       </ul>
 
       <h2>Операционная схема синтеза</h2>
-      <p>Раздел в разработке...</p>
+      <p>
+        <IconOSS size='1rem' className='inline-icon' />{' '}
+        <LinkTopic text='Операционная схема синтеза' topic={HelpTopic.CC_OSS} /> (ОСС) – система концептуальных схем,
+        связанных операциями синтеза.
+      </p>
+      <p>
+        Граф синтеза – ориентированный граф, вершинами которого являются операции, а ребра указывают на использование
+        результата одной операции как аргумента другой операции.
+      </p>
 
       <h2>Операция</h2>
-      <p>Раздел в разработке...</p>
+      <p>Операция – выделенная часть ОСС, определяющая способ получения КС в рамках ОСС.</p>
+
+      <ul>
+        По <b>способу получения КС выделены</b>:
+        <li>
+          <IconDownload size='1rem' className='inline-icon' /> загрузка КС из библиотеки;
+        </li>
+        <li>
+          <IconSynthesis size='1rem' className='inline-icon' /> синтез концептуальных схем.
+        </li>
+      </ul>
     </div>
   );
 }
