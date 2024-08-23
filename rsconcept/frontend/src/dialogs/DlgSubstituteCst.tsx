@@ -30,7 +30,7 @@ function DlgSubstituteCst({ hideWindow, onSubstitute, schema }: DlgSubstituteCst
     <Modal
       header='Отождествление'
       submitText='Отождествить'
-      submitInvalidTooltip={'Выберите две различные конституенты'}
+      submitInvalidTooltip='Выберите две различные конституенты'
       hideWindow={hideWindow}
       canSubmit={canSubmit}
       onSubmit={handleSubmit}

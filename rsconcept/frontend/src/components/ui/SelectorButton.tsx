@@ -46,7 +46,7 @@ function SelectorButton({
       {...restProps}
     >
       {icon ? icon : null}
-      {text ? <div className={'whitespace-nowrap'}>{text}</div> : null}
+      {text ? <div className='whitespace-nowrap'>{text}</div> : null}
     </button>
   );
 }

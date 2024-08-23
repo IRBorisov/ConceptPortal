@@ -79,7 +79,7 @@ function ToolbarConstituenta({
           />
           <MiniButton
             title='Создать конституенту после данной'
-            icon={<IconNewItem size={'1.25rem'} className='icon-green' />}
+            icon={<IconNewItem size='1.25rem' className='icon-green' />}
             disabled={!controller.isContentEditable || controller.isProcessing}
             onClick={() => controller.createCst(activeCst?.cst_type, false)}
           />

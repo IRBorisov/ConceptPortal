@@ -117,7 +117,7 @@ function MenuOssTabs({ onDestroy }: MenuOssTabsProps) {
             noBorder
             noOutline
             tabIndex={-1}
-            title={'Редактирование'}
+            title='Редактирование'
             hideTitle={editMenu.isOpen}
             className='h-full px-2'
             icon={<IconEdit2 size='1.25rem' className={controller.isMutable ? 'icon-green' : 'icon-red'} />}
