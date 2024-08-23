@@ -1,5 +1,5 @@
 ''' Testing API: Change attributes of OSS and RSForms. '''
-from apps.library.models import AccessPolicy, Editor, LocationHead
+from apps.library.models import AccessPolicy, Editor, LibraryItem, LocationHead
 from apps.oss.models import Operation, OperationSchema, OperationType
 from apps.rsform.models import RSForm
 from apps.users.models import User
@@ -55,7 +55,7 @@ class TestChangeAttributes(EndpointTester):
         )
         self.owned.execute_operation(self.operation3)
         self.operation3.refresh_from_db()
-        self.ks3 = self.operation3.result
+        self.ks3 = RSForm(self.operation3.result)
 
 
     @decl_endpoint('/api/library/{item}/set-owner', method='patch')
@@ -71,7 +71,7 @@ class TestChangeAttributes(EndpointTester):
         self.assertEqual(self.owned.model.owner, self.user3)
         self.assertEqual(self.ks1.model.owner, self.user)
         self.assertEqual(self.ks2.model.owner, self.user2)
-        self.assertEqual(self.ks3.owner, self.user3)
+        self.assertEqual(self.ks3.model.owner, self.user3)
 
     @decl_endpoint('/api/library/{item}/set-location', method='patch')
     def test_set_location(self):
@@ -86,7 +86,7 @@ class TestChangeAttributes(EndpointTester):
         self.assertEqual(self.owned.model.location, data['location'])
         self.assertNotEqual(self.ks1.model.location, data['location'])
         self.assertNotEqual(self.ks2.model.location, data['location'])
-        self.assertEqual(self.ks3.location, data['location'])
+        self.assertEqual(self.ks3.model.location, data['location'])
 
     @decl_endpoint('/api/library/{item}/set-access-policy', method='patch')
     def test_set_access_policy(self):
@@ -101,13 +101,13 @@ class TestChangeAttributes(EndpointTester):
         self.assertEqual(self.owned.model.access_policy, data['access_policy'])
         self.assertNotEqual(self.ks1.model.access_policy, data['access_policy'])
         self.assertNotEqual(self.ks2.model.access_policy, data['access_policy'])
-        self.assertEqual(self.ks3.access_policy, data['access_policy'])
+        self.assertEqual(self.ks3.model.access_policy, data['access_policy'])
 
     @decl_endpoint('/api/library/{item}/set-editors', method='patch')
     def test_set_editors(self):
         Editor.set(self.owned.model.pk, [self.user2.pk])
         Editor.set(self.ks1.model.pk, [self.user2.pk, self.user.pk])
-        Editor.set(self.ks3.pk, [self.user2.pk, self.user.pk])
+        Editor.set(self.ks3.model.pk, [self.user2.pk, self.user.pk])
         data = {'users': [self.user3.pk]}
 
         self.executeOK(data=data, item=self.owned_id)
@@ -119,7 +119,7 @@ class TestChangeAttributes(EndpointTester):
         self.assertEqual(list(self.owned.model.editors()), [self.user3])
         self.assertEqual(list(self.ks1.model.editors()), [self.user, self.user2])
         self.assertEqual(list(self.ks2.model.editors()), [])
-        self.assertEqual(set(self.ks3.editors()), set([self.user, self.user3]))
+        self.assertEqual(set(self.ks3.model.editors()), set([self.user, self.user3]))
 
     @decl_endpoint('/api/library/{item}', method='patch')
     def test_sync_from_result(self):
@@ -147,6 +147,13 @@ class TestChangeAttributes(EndpointTester):
 
         response = self.executeOK(data=data, item=self.owned_id)
         self.ks3.refresh_from_db()
-        self.assertEqual(self.ks3.alias, data['item_data']['alias'])
-        self.assertEqual(self.ks3.title, data['item_data']['title'])
-        self.assertEqual(self.ks3.comment, data['item_data']['comment'])
+        self.assertEqual(self.ks3.model.alias, data['item_data']['alias'])
+        self.assertEqual(self.ks3.model.title, data['item_data']['title'])
+        self.assertEqual(self.ks3.model.comment, data['item_data']['comment'])
+
+    @decl_endpoint('/api/library/{item}', method='delete')
+    def test_destroy_oss_consequence(self):
+        response = self.executeNoContent(item=self.owned_id)
+        self.assertFalse(LibraryItem.objects.filter(pk=self.owned_id).exists())
+        self.assertFalse(LibraryItem.objects.filter(pk=self.ks3.model.pk).exists())
+        self.assertTrue(LibraryItem.objects.filter(pk=self.ks1.model.pk).exists())

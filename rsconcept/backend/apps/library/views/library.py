@@ -66,8 +66,14 @@ class LibraryViewSet(viewsets.ModelViewSet):
             Operation.objects.bulk_update(update_list, ['alias', 'title', 'comment'])
 
     def perform_destroy(self, instance: m.LibraryItem) -> None:
-        PropagationFacade.before_delete_schema(instance)
-        return super().perform_destroy(instance)
+        if instance.item_type == m.LibraryItemType.RSFORM:
+            PropagationFacade.before_delete_schema(instance)
+            super().perform_destroy(instance)
+        if instance.item_type == m.LibraryItemType.OPERATION_SCHEMA:
+            schemas = list(OperationSchema(instance).owned_schemas())
+            super().perform_destroy(instance)
+            for schema in schemas:
+                self.perform_destroy(schema)
 
     def get_permissions(self):
         if self.action in ['update', 'partial_update']:

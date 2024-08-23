@@ -91,7 +91,7 @@ function OssTabs() {
   }
 
   const onDestroySchema = useCallback(() => {
-    if (!schema || !window.confirm(prompts.deleteLibraryItem)) {
+    if (!schema || !window.confirm(prompts.deleteOSS)) {
       return;
     }
     destroyItem(schema.id, () => {
