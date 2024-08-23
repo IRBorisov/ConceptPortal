@@ -115,14 +115,19 @@ class RSFormSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def to_representation(self, instance: LibraryItem) -> dict:
-        result = LibraryItemDetailsSerializer(instance).data
-        result['items'] = []
-        for cst in RSForm(instance).constituents().order_by('order'):
-            result['items'].append(CstSerializer(cst).data)
-        result['inheritance'] = []
+        result = self.to_base_data(instance)
         for link in Inheritance.objects.filter(Q(child__schema=instance) | Q(parent__schema=instance)):
             result['inheritance'].append([link.child.pk, link.parent.pk])
+        return result
+
+    def to_base_data(self, instance: LibraryItem) -> dict:
+        ''' Create serializable base representation without redundant data. '''
+        result = LibraryItemDetailsSerializer(instance).data
+        result['items'] = []
         result['oss'] = []
+        result['inheritance'] = []
+        for cst in RSForm(instance).constituents().order_by('order'):
+            result['items'].append(CstSerializer(cst).data)
         for oss in LibraryItem.objects.filter(operations__result=instance).only('alias'):
             result['oss'].append({
                 'id': oss.pk,
@@ -132,11 +137,9 @@ class RSFormSerializer(serializers.ModelSerializer):
 
     def to_versioned_data(self) -> dict:
         ''' Create serializable version representation without redundant data. '''
-        result = self.to_representation(cast(LibraryItem, self.instance))
+        result = self.to_base_data(cast(LibraryItem, self.instance))
         del result['versions']
         del result['editors']
-        del result['inheritance']
-        del result['oss']
 
         del result['owner']
         del result['visible']
@@ -150,7 +153,7 @@ class RSFormSerializer(serializers.ModelSerializer):
 
     def from_versioned_data(self, version: int, data: dict) -> dict:
         ''' Load data from version. '''
-        result = self.to_representation(cast(LibraryItem, self.instance))
+        result = self.to_base_data(cast(LibraryItem, self.instance))
         result['version'] = version
         return result | data
 

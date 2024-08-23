@@ -20,7 +20,7 @@ interface EditorRSFormCardProps {
 }
 
 function EditorRSFormCard({ isModified, onDestroy, setIsModified }: EditorRSFormCardProps) {
-  const { schema } = useRSForm();
+  const model = useRSForm();
   const controller = useRSEdit();
 
   function initiateSubmit() {
@@ -53,10 +53,10 @@ function EditorRSFormCard({ isModified, onDestroy, setIsModified }: EditorRSForm
       >
         <FlexColumn className='flex-shrink'>
           <FormRSForm id={globals.library_item_editor} isModified={isModified} setIsModified={setIsModified} />
-          <EditorLibraryItem item={schema} isModified={isModified} controller={controller} />
+          <EditorLibraryItem item={model.schema} isModified={isModified} controller={controller} />
         </FlexColumn>
 
-        <RSFormStats stats={schema?.stats} />
+        {model.schema ? <RSFormStats stats={model.schema.stats} isArchive={model.isArchive} /> : null}
       </AnimateFade>
     </>
   );

@@ -13,17 +13,15 @@ import ValueStats from '@/components/ui/ValueStats';
 import { type IRSFormStats } from '@/models/rsform';
 
 interface RSFormStatsProps {
-  stats?: IRSFormStats;
+  isArchive: boolean;
+  stats: IRSFormStats;
 }
 
-function RSFormStats({ stats }: RSFormStatsProps) {
-  if (!stats) {
-    return null;
-  }
+function RSFormStats({ stats, isArchive }: RSFormStatsProps) {
   return (
-    <div className='flex flex-col mt-3 md:gap-1 md:ml-6 md:mt-8 md:w-[18rem] w-[25rem]'>
+    <div className='flex flex-col mt-3 md:gap-1 md:ml-5 md:mt-8 md:w-[18rem] w-[25rem]'>
       <div className='grid grid-cols-4 gap-1 mb-3 justify-items-end'>
-        <div className='col-span-2 w-fit flex gap-3'>
+        <div className='col-span-2 w-fit flex gap-3 hover:cursor-default'>
           <span>Всего</span>
           <span>{stats.count_all}</span>
         </div>
@@ -37,7 +35,7 @@ function RSFormStats({ stats }: RSFormStatsProps) {
           id='count_inherited'
           icon={<IconChild size='1.25rem' className='clr-text-primary' />}
           value={stats.count_inherited}
-          title='Наследованные'
+          titleHtml={isArchive ? 'Архивные схемы не хранят<br/> информацию о наследовании' : 'Наследованные'}
         />
 
         <ValueStats
