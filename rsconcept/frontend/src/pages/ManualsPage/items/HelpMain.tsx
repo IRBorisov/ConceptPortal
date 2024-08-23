@@ -37,13 +37,14 @@ function HelpMain() {
 
       <h2>Разделы Справки</h2>
       {[
-        HelpTopic.INFO,
+        HelpTopic.THESAURUS,
         HelpTopic.INTERFACE,
         HelpTopic.CONCEPTUAL,
         HelpTopic.RSLANG,
         HelpTopic.TERM_CONTROL,
         HelpTopic.ACCESS,
         HelpTopic.VERSIONS,
+        HelpTopic.INFO,
         HelpTopic.EXTEOR
       ].map(topic => (
         <TopicItem key={`${prefixes.topic_item}${topic}`} topic={topic} />
@@ -72,7 +73,7 @@ function HelpMain() {
         версию браузера в случае возникновения визуальных ошибок или проблем с производительностью.
       </p>
       <p>
-        Ваши пожелания по доработке, найденные ошибки и иные предложения можно направлять по email:{' '}
+        Ваши пожелания по доработке, найденные ошибки и иные предложения можно направлять на email:{' '}
         <TextURL href={external_urls.mail_portal} text='portal@acconcept.ru' />
       </p>
     </div>

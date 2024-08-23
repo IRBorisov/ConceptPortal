@@ -90,7 +90,8 @@ export class OssLoader {
       count_operations: items.length,
       count_inputs: items.filter(item => item.operation_type === OperationType.INPUT).length,
       count_synthesis: items.filter(item => item.operation_type === OperationType.SYNTHESIS).length,
-      count_schemas: this.schemaIDs.length
+      count_schemas: this.schemaIDs.length,
+      count_owned: items.filter(item => !!item.result && item.is_owned).length
     };
   }
 }

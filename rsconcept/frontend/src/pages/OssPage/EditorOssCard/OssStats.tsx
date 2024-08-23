@@ -1,26 +1,56 @@
-import Divider from '@/components/ui/Divider';
-import ValueLabeled from '@/components/ui/ValueLabeled';
+import clsx from 'clsx';
+
+import { IconDownload, IconRSForm, IconRSFormImported, IconRSFormOwned, IconSynthesis } from '@/components/Icons';
+import ValueStats from '@/components/ui/ValueStats';
 import { IOperationSchemaStats } from '@/models/oss';
 
 interface OssStatsProps {
-  stats?: IOperationSchemaStats;
+  stats: IOperationSchemaStats;
 }
 
 function OssStats({ stats }: OssStatsProps) {
-  if (!stats) {
-    return null;
-  }
   return (
-    <div className='flex flex-col sm:gap-1 sm:ml-6 sm:mt-8 sm:w-[16rem]'>
-      <Divider margins='my-2' className='sm:hidden' />
+    <div
+      className={clsx(
+        'mt-3 md:ml-5 md:mt-8 md:w-[15rem] w-[20rem] h-min mx-auto', // prettier: split-lines
+        'grid grid-cols-3 gap-1 justify-items-end'
+      )}
+    >
+      <div id='count_operations' className='w-fit flex gap-3 hover:cursor-default '>
+        <span>Всего</span>
+        <span>{stats.count_operations}</span>
+      </div>
+      <ValueStats
+        id='count_inputs'
+        icon={<IconDownload size='1.25rem' className='clr-text-primary' />}
+        value={stats.count_inputs}
+        title='Загрузка'
+      />
+      <ValueStats
+        id='count_synthesis'
+        icon={<IconSynthesis size='1.25rem' className='clr-text-primary' />}
+        value={stats.count_synthesis}
+        title='Синтез'
+      />
 
-      <ValueLabeled id='count_all' label='Всего операций' text={stats.count_operations} />
-      <ValueLabeled id='count_inputs' label='Загрузка' text={stats.count_inputs} />
-      <ValueLabeled id='count_synthesis' label='Синтез' text={stats.count_synthesis} />
-
-      <Divider margins='my-2' />
-
-      <ValueLabeled id='count_schemas' label='Прикрепленные схемы' text={stats.count_schemas} />
+      <ValueStats
+        id='count_schemas'
+        icon={<IconRSForm size='1.25rem' className='clr-text-primary' />}
+        value={stats.count_schemas}
+        title='Прикрепленные схемы'
+      />
+      <ValueStats
+        id='count_owned'
+        icon={<IconRSFormOwned size='1.25rem' className='clr-text-primary' />}
+        value={stats.count_owned}
+        title='Собственные'
+      />
+      <ValueStats
+        id='count_imported'
+        icon={<IconRSFormImported size='1.25rem' className='clr-text-primary' />}
+        value={stats.count_schemas - stats.count_owned}
+        title='Внешние'
+      />
     </div>
   );
 }

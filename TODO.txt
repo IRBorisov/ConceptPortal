@@ -2,33 +2,39 @@
 For more specific TODOs see comments in code
 
 [Functionality - PROGRESS]
-- Design first user experience
-- Private projects. Consider cooperative editing
-
+- OSS change propagation: Advanced features
 
 [Functionality - PENDING]
-- Search functionality for manuals
-- User notifications on edit - consider spam prevention and change aggregation
-- Static analyzer for RSForm as a whole: check term duplication and empty conventions
-- Content based search in Library
-- User profile: Settings + settings persistency
-
 - Landing page
-- Home page (user specific)
+- Design first user experience
+- Demo sandbox for anonymous users
 
+- User profile: Settings + settings persistency
+- Custom LibraryItem lists
+- Custom user filters and sharing filters
+
+- Static analyzer for RSForm as a whole: check term duplication and empty conventions
+- OSS clone and versioning
+
+- Focus on codemirror editor when label is clicked (need React 19 ref for clean code solution)
 - Draggable rows in constituents table
 
+- replace reagraph with react-flow in TermGraph and FormulaGraph
+- Search functionality for Help Manuals
 - Export PDF (Items list, Graph)
 - ARIA (accessibility considerations) - for now machine reading not supported
 - Internationalization - at least english version. Consider react.intl
-- Focus on codemirror editor when label is clicked (need React 19 ref for clean code solution)
-
 - Sitemap for better SEO and crawler optimization
 
+[Functionality - CANCELED]
+- User notifications on edit - consider spam prevention and change aggregation
+- Content based search in Library
+- Home page (user specific)
+- Private projects. Consider cooperative editing
 
 [Tech]
 - duplicate syntax parsing and type info calculations to client. Consider moving backend to Nodejs or embedding c++ lib
-- add debounce to some search fields
+- add debounce to some search fields. Consider pagination and dynamic loading
 - DataTable: fixed percentage columns, especially for SubstituteTable. Rework column sizing mechanics
 - move autopep8 and isort settings from vscode settings to pyproject.toml
 - Test UI for #enable-force-dark Chrome setting

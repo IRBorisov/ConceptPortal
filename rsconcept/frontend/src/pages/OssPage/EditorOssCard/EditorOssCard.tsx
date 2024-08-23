@@ -47,13 +47,16 @@ function EditorOssCard({ isModified, onDestroy, setIsModified }: EditorOssCardPr
         onDestroy={onDestroy}
         controller={controller}
       />
-      <AnimateFade onKeyDown={handleInput} className={clsx('sm:w-fit mx-auto', 'flex flex-col sm:flex-row px-6')}>
+      <AnimateFade
+        onKeyDown={handleInput}
+        className={clsx('md:w-fit md:max-w-fit max-w-[32rem]', 'mx-auto ', 'flex flex-col md:flex-row px-6')}
+      >
         <FlexColumn className='px-3'>
           <FormOSS id={globals.library_item_editor} isModified={isModified} setIsModified={setIsModified} />
           <EditorLibraryItem item={schema} isModified={isModified} controller={controller} />
         </FlexColumn>
 
-        <OssStats stats={schema?.stats} />
+        {schema ? <OssStats stats={schema.stats} /> : null}
       </AnimateFade>
     </>
   );

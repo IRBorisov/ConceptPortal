@@ -154,6 +154,7 @@ export interface IOperationSchemaStats {
   count_inputs: number;
   count_synthesis: number;
   count_schemas: number;
+  count_owned: number;
 }
 
 /**

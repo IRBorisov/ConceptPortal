@@ -1,4 +1,12 @@
-import { IconConsolidation, IconExecute, IconOSS } from '@/components/Icons';
+import {
+  IconConsolidation,
+  IconDownload,
+  IconExecute,
+  IconOSS,
+  IconRSFormImported,
+  IconRSFormOwned,
+  IconSynthesis
+} from '@/components/Icons';
 import LinkTopic from '@/components/ui/LinkTopic';
 import { HelpTopic } from '@/models/miscellaneous';
 
@@ -16,9 +24,24 @@ function HelpConceptOSS() {
         и отображается в форме <LinkTopic text='Графа синтеза' topic={HelpTopic.UI_OSS_GRAPH} />.
       </p>
       <p>
-        Базовыми операциями ОСС являются загрузка и синтез. Схема может быть загружена из другой локации (
-        <b>внешняя КС</b>) или создана в ОСС (<b>собственная КС</b>). Загрузка схем, полученных синтезом в других ОСС не
-        допускается. Также запрещена повторная загрузка той же КС в рамках одной ОСС.
+        Базовыми операциями ОСС являются <IconDownload size='1rem' className='inline-icon' /> загрузка и{' '}
+        <IconSynthesis size='1rem' className='inline-icon' /> синтез. Схема может быть загружена из другой локации{' '}
+        <span className='text-nowrap'>
+          (<IconRSFormImported size='1rem' className='inline-icon' />
+          <b>внешняя КС</b>)
+        </span>{' '}
+        или создана в ОСС{' '}
+        <span className='text-nowrap'>
+          (<IconRSFormOwned size='1rem' className='inline-icon' />
+          <b>собственная КС</b>)
+        </span>
+        . Загрузка схем, полученных синтезом в других ОСС не допускается. Также запрещена повторная загрузка той же КС в
+        рамках одной ОСС.
+      </p>
+      <p>
+        При изменении расположения или владельца ОСС соответствующие атрибуты изменяются у собственных КС. Также при
+        удалении ОСС удаляются и все собственные КС. При удалении операции, собственная КС отвязывается от ОСС и
+        становится свободной КС.
       </p>
       <p>
         Операция синтеза в рамках ОСС задаются набором операций-аргументов и <b>таблицей отождествлений</b> понятий из
