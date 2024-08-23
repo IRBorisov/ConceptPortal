@@ -1,13 +1,15 @@
 import {
   IconChild,
+  IconConvention,
+  IconDefinition,
   IconPredecessor,
   IconStatusError,
   IconStatusIncalculable,
   IconStatusOK,
-  IconStatusProperty
+  IconStatusProperty,
+  IconTerminology
 } from '@/components/Icons';
-import IconValue from '@/components/ui/IconValue';
-import LabeledValue from '@/components/ui/LabeledValue';
+import ValueStats from '@/components/ui/ValueStats';
 import { type IRSFormStats } from '@/models/rsform';
 
 interface RSFormStatsProps {
@@ -19,120 +21,119 @@ function RSFormStats({ stats }: RSFormStatsProps) {
     return null;
   }
   return (
-    <div className='flex flex-col mt-3 sm:gap-1 sm:ml-6 sm:mt-8 sm:w-[16rem]'>
-      <div className='grid grid-cols-4 gap-1 mb-3 justify-items-start sm:justify-items-end'>
-        <div className='col-span-2 text-left w-full flex gap-3 sm:pl-3'>
+    <div className='flex flex-col mt-3 md:gap-1 md:ml-6 md:mt-8 md:w-[18rem] w-[25rem]'>
+      <div className='grid grid-cols-4 gap-1 mb-3 justify-items-end'>
+        <div className='col-span-2 w-fit flex gap-3'>
           <span>Всего</span>
           <span>{stats.count_all}</span>
         </div>
-        <IconValue
+        <ValueStats
           id='count_owned'
-          dense
           icon={<IconPredecessor size='1.25rem' className='clr-text-primary' />}
           value={stats.count_all - stats.count_inherited}
           title='Собственные'
         />
-        <IconValue
+        <ValueStats
           id='count_inherited'
-          dense
           icon={<IconChild size='1.25rem' className='clr-text-primary' />}
           value={stats.count_inherited}
           title='Наследованные'
         />
 
-        <IconValue
+        <ValueStats
           className='col-start-1'
           id='count_ok'
-          dense
           icon={<IconStatusOK size='1.25rem' className='clr-text-green' />}
           value={stats.count_all - stats.count_errors - stats.count_property - stats.count_incalculable}
           title='Корректные'
         />
-        <IconValue
+        <ValueStats
           id='count_property'
-          dense
           icon={<IconStatusProperty size='1.25rem' className='clr-text-primary' />}
           value={stats.count_errors}
           title='Неразмерные'
         />
-        <IconValue
+        <ValueStats
           id='count_incalculable'
-          dense
           icon={<IconStatusIncalculable size='1.25rem' className='clr-text-red' />}
           value={stats.count_incalculable}
           title='Невычислимые'
         />
-        <IconValue
+        <ValueStats
           id='count_errors'
-          dense
           icon={<IconStatusError size='1.25rem' className='clr-text-red' />}
           value={stats.count_errors}
           title='Некорректные'
         />
 
-        <IconValue
+        <ValueStats
           id='count_base'
-          dense
-          icon={<span className='font-math clr-text-default'>X#</span>}
+          icon={<span className='font-math clr-text-default md:pr-1 pl-1 md:pl-0'>X</span>}
           value={stats.count_base}
           title='Базисные множества'
         />
-        <IconValue
+        <ValueStats
           id='count_constant'
-          dense
-          icon={<span className='font-math clr-text-default'>C#</span>}
+          icon={<span className='font-math clr-text-default md:pr-1 pl-1 md:pl-0'>C</span>}
           value={stats.count_constant}
           title='Константные множества'
         />
-        <IconValue
+        <ValueStats
           id='count_structured'
-          dense
-          icon={<span className='font-math clr-text-default'>S#</span>}
+          icon={<span className='font-math clr-text-default md:pr-1 pl-1 md:pl-0'>S</span>}
           value={stats.count_structured}
           title='Родовые структуры'
         />
-        <IconValue
+        <ValueStats
           id='count_axiom'
-          dense
-          icon={<span className='font-math clr-text-default'>A#</span>}
+          icon={<span className='font-math clr-text-default md:pr-1 pl-1 md:pl-0'>A</span>}
           value={stats.count_axiom}
           title='Аксиомы'
         />
 
-        <IconValue
+        <ValueStats
           id='count_term'
-          dense
-          icon={<span className='font-math clr-text-default'>D#</span>}
+          icon={<span className='font-math clr-text-default md:pr-1 pl-1 md:pl-0'>D</span>}
           value={stats.count_term}
           title='Термы'
         />
-        <IconValue
+        <ValueStats
           id='count_function'
-          dense
-          icon={<span className='font-math clr-text-default'>F#</span>}
+          icon={<span className='font-math clr-text-default md:pr-1 pl-1 md:pl-0'>F</span>}
           value={stats.count_function}
           title='Терм-функции'
         />
-        <IconValue
+        <ValueStats
           id='count_predicate'
-          dense
-          icon={<span className='font-math clr-text-default'>P#</span>}
+          icon={<span className='font-math clr-text-default md:pr-1 pl-1 md:pl-0'>P</span>}
           value={stats.count_predicate}
           title='Предикат-функции'
         />
-        <IconValue
+        <ValueStats
           id='count_theorem'
-          dense
-          icon={<span className='font-math clr-text-default'>T#</span>}
+          icon={<span className='font-math clr-text-default md:pr-1 pl-1 md:pl-0'>T</span>}
           value={stats.count_theorem}
           title='Теоремы'
         />
-      </div>
 
-      <div className='sm:pl-3 max-w-[10rem] sm:max-w-[12rem]'>
-        <LabeledValue id='count_text_term' label='Термины' text={stats.count_text_term} />
-        <LabeledValue id='count_definition' label='Определения' text={stats.count_definition} />
-        <LabeledValue id='count_convention' label='Конвенции' text={stats.count_convention} />
+        <ValueStats
+          id='count_text_term'
+          icon={<IconTerminology size='1.25rem' className='clr-text-primary' />}
+          value={stats.count_text_term}
+          title='Термины'
+        />
+        <ValueStats
+          id='count_definition'
+          icon={<IconDefinition size='1.25rem' className='clr-text-primary' />}
+          value={stats.count_definition}
+          title='Определения'
+        />
+        <ValueStats
+          id='count_convention'
+          icon={<IconConvention size='1.25rem' className='clr-text-primary' />}
+          value={stats.count_convention}
+          title='Конвенции'
+        />
       </div>
     </div>
   );

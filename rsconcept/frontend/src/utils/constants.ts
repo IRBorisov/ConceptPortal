@@ -30,6 +30,8 @@ export const PARAMETER = {
   ossLongLabel: 14, // characters - threshold for long labels - small font
   ossTruncateLabel: 28, // characters - threshold for long labels - truncate
 
+  statSmallThreshold: 3, // characters - threshold for small labels - small font
+
   logicLabel: 'LOGIC',
   exteorVersion: '4.9.3',
 

@@ -79,7 +79,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
   }
 
   return (
-    <div className='overflow-y-auto' style={{ maxHeight: panelHeight }}>
+    <div className='overflow-y-auto min-h-[20rem]' style={{ maxHeight: panelHeight }}>
       <ToolbarConstituenta
         activeCst={activeCst}
         disabled={disabled}

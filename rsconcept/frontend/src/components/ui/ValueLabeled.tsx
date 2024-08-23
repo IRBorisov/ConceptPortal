@@ -2,14 +2,14 @@ import clsx from 'clsx';
 
 import { CProps } from '../props';
 
-interface LabeledValueProps extends CProps.Styling {
+interface ValueLabeledProps extends CProps.Styling {
   id?: string;
   label: string;
   text: string | number;
   title?: string;
 }
 
-function LabeledValue({ id, label, text, title, className, ...restProps }: LabeledValueProps) {
+function ValueLabeled({ id, label, text, title, className, ...restProps }: ValueLabeledProps) {
   return (
     <div className={clsx('flex justify-between gap-6', className)} {...restProps}>
       <span title={title}>{label}</span>
@@ -18,4 +18,4 @@ function LabeledValue({ id, label, text, title, className, ...restProps }: Label
   );
 }
 
-export default LabeledValue;
+export default ValueLabeled;

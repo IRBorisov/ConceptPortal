@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import { IconDateCreate, IconDateUpdate, IconEditor, IconFolder, IconOwner } from '@/components/Icons';
 import InfoUsers from '@/components/info/InfoUsers';
 import SelectUser from '@/components/select/SelectUser';
-import IconValue from '@/components/ui/IconValue';
+import ValueIcon from '@/components/ui/ValueIcon';
 import Overlay from '@/components/ui/Overlay';
 import Tooltip from '@/components/ui/Tooltip';
 import { useAccessMode } from '@/context/AccessModeContext';
@@ -47,7 +47,7 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
 
   return (
     <div className='flex flex-col'>
-      <IconValue
+      <ValueIcon
         className='sm:mb-1 text-ellipsis max-w-[30rem]'
         icon={<IconFolder size='1.25rem' className='icon-primary' />}
         value={item.location}
@@ -68,7 +68,7 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
           ) : null}
         </Overlay>
       ) : null}
-      <IconValue
+      <ValueIcon
         className='sm:mb-1'
         icon={<IconOwner size='1.25rem' className='icon-primary' />}
         value={getUserLabel(item.owner)}
@@ -78,7 +78,7 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
       />
 
       <div className='sm:mb-1 flex justify-between items-center'>
-        <IconValue
+        <ValueIcon
           id='editor_stats'
           dense
           icon={<IconEditor size='1.25rem' className='icon-primary' />}
@@ -90,7 +90,7 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
           <InfoUsers items={item?.editors ?? []} prefix={prefixes.user_editors} />
         </Tooltip>
 
-        <IconValue
+        <ValueIcon
           dense
           disabled
           icon={<IconDateUpdate size='1.25rem' className='clr-text-green' />}
@@ -98,7 +98,7 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
           title='Дата обновления'
         />
 
-        <IconValue
+        <ValueIcon
           dense
           disabled
           icon={<IconDateCreate size='1.25rem' className='clr-text-green' />}
