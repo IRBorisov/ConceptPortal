@@ -49,7 +49,7 @@ function ToolbarConstituenta({
   const controller = useRSEdit();
 
   return (
-    <Overlay position='top-1 right-4' className='cc-icons sm:right-1/2 sm:translate-x-1/2'>
+    <Overlay position='top-1 right-4' className='cc-icons md:right-1/2 md:translate-x-1/2 transition-all duration-500'>
       {controller.schema && controller.schema?.oss.length > 0 ? (
         <MiniSelectorOSS
           items={controller.schema.oss}

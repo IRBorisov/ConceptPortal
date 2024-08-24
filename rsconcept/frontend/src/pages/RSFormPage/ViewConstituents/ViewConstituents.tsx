@@ -46,6 +46,7 @@ function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit 
         items={filteredData}
         activeCst={activeCst}
         onOpenEdit={onOpenEdit}
+        autoScroll={!isBottom}
         denseThreshold={COLUMN_EXPRESSION_HIDE_THRESHOLD}
       />
     ),
@@ -55,10 +56,10 @@ function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit 
   return (
     <motion.div
       className={clsx(
-        'border overflow-visible', // prettier: split-lines
+        'border', // prettier: split-lines
         {
-          'mt-[2.2rem] rounded-l-md rounded-r-none h-fit': !isBottom,
-          'mt-3 mx-6 rounded-md md:w-[45.8rem]': isBottom
+          'mt-[2.2rem] rounded-l-md rounded-r-none h-fit overflow-visible': !isBottom,
+          'mt-3 mx-6 rounded-md md:max-w-[45.8rem] overflow-hidden': isBottom
         }
       )}
       initial={{ ...animateSideView.initial }}

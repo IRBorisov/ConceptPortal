@@ -17,6 +17,7 @@ interface TableSideConstituentsProps {
   activeCst?: IConstituenta;
   onOpenEdit: (cstID: ConstituentaID) => void;
   denseThreshold?: number;
+  autoScroll?: boolean;
   maxHeight: string;
 }
 
@@ -25,6 +26,7 @@ const columnHelper = createColumnHelper<IConstituenta>();
 function TableSideConstituents({
   items,
   activeCst,
+  autoScroll = true,
   onOpenEdit,
   maxHeight,
   denseThreshold = 9999
@@ -38,17 +40,19 @@ function TableSideConstituents({
     if (!activeCst) {
       return;
     }
-    setTimeout(() => {
-      const element = document.getElementById(`${prefixes.cst_side_table}${activeCst.alias}`);
-      if (element) {
-        element.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-          inline: 'end'
-        });
-      }
-    }, PARAMETER.refreshTimeout);
-  }, [activeCst]);
+    if (autoScroll) {
+      setTimeout(() => {
+        const element = document.getElementById(`${prefixes.cst_side_table}${activeCst.alias}`);
+        if (element) {
+          element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'end'
+          });
+        }
+      }, PARAMETER.refreshTimeout);
+    }
+  }, [activeCst, autoScroll]);
 
   useLayoutEffect(() => {
     setColumnVisibility(prev => {
