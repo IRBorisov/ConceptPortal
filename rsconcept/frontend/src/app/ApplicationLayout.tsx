@@ -23,7 +23,7 @@ function ApplicationLayout() {
 
         <div
           id={globals.main_scroll}
-          className='flex flex-col items-start overflow-x-auto max-w-[100vw]'
+          className='overflow-x-auto max-w-[100vw]'
           style={{
             maxHeight: viewportHeight
           }}

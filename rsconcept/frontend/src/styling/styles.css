@@ -226,6 +226,10 @@
     @apply flex gap-1;
   }
 
+  .cc-fit-content {
+    field-sizing: content;
+  }
+
   .cc-scroll-row {
     scroll-snap-align: start;
     scroll-snap-stop: always;

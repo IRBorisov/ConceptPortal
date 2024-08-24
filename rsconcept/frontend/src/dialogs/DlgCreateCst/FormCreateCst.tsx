@@ -74,7 +74,7 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
         spellCheck
         label='Термин'
         placeholder='Обозначение, используемое в текстовых определениях'
-        rows={2}
+        className='cc-fit-content max-h-[3.6rem]'
         value={state.term_raw}
         onChange={event => partialUpdate({ term_raw: event.target.value })}
       />
@@ -104,7 +104,7 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
           spellCheck
           label='Текстовое определение'
           placeholder='Текстовая интерпретация формального выражения'
-          rows={2}
+          className='cc-fit-content max-h-[3.6rem]'
           value={state.definition_raw}
           onChange={event => partialUpdate({ definition_raw: event.target.value })}
         />
@@ -128,7 +128,7 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
           spellCheck
           label={isBasic ? 'Конвенция' : 'Комментарий'}
           placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
-          rows={2}
+          className='cc-fit-content max-h-[5.4rem]'
           value={state.convention}
           onChange={event => partialUpdate({ convention: event.target.value })}
         />

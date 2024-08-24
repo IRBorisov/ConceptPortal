@@ -184,8 +184,8 @@ function FormCreateItem() {
         onChange={event => setComment(event.target.value)}
       />
 
-      <div className='flex justify-between gap-3'>
-        <div className='flex flex-col gap-2 w-[7rem] h-min'>
+      <div className='flex justify-between gap-3 flex-grow'>
+        <div className='flex flex-col gap-2 min-w-[7rem] h-min'>
           <Label text='Корень' />
           <SelectLocationHead
             value={head}
@@ -197,7 +197,6 @@ function FormCreateItem() {
         <TextArea
           id='dlg_cst_body'
           label='Путь'
-          className='w-[18rem]'
           rows={4}
           value={body}
           onChange={event => setBody(event.target.value)}

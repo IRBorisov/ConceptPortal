@@ -20,11 +20,6 @@ import { information, labelCstTypification } from '@/utils/labels';
 import EditorRSExpression from '../EditorRSExpression';
 import ControlsOverlay from './ControlsOverlay';
 
-/**
- * Characters limit to start increasing number of rows.
- */
-export const ROW_SIZE_IN_CHARACTERS = 70;
-
 interface FormConstituentaProps {
   disabled: boolean;
 
@@ -166,7 +161,7 @@ function FormConstituenta({
         {state ? (
           <TextArea
             id='cst_typification'
-            rows={typification.length > ROW_SIZE_IN_CHARACTERS ? 2 : 1}
+            className='cc-fit-content'
             dense
             noResize
             noBorder
@@ -220,12 +215,12 @@ function FormConstituenta({
           <AnimateFade key='cst_convention_fade' hideContent={!showConvention || !state}>
             <TextArea
               id='cst_convention'
+              className='cc-fit-content max-h-[8rem]'
               spellCheck
               label={isBasic ? 'Конвенция' : 'Комментарий'}
               placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
               value={convention}
               disabled={disabled || (isBasic && state?.is_inherited)}
-              rows={convention.length > 2 * ROW_SIZE_IN_CHARACTERS || convention.includes('\n') ? 4 : 2}
               onChange={event => setConvention(event.target.value)}
             />
           </AnimateFade>
