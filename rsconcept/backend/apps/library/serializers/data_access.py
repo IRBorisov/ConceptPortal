@@ -64,10 +64,12 @@ class VersionInnerSerializer(serializers.ModelSerializer):
 
 class VersionCreateSerializer(serializers.ModelSerializer):
     ''' Serializer: Version create data. '''
+    items = PKField(many=True, required=False, default=None, queryset=Constituenta.objects.all().only('pk'))
+
     class Meta:
         ''' serializer metadata. '''
         model = Version
-        fields = 'version', 'description'
+        fields = 'version', 'description', 'items'
 
 
 class LibraryItemDetailsSerializer(serializers.ModelSerializer):

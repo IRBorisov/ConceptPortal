@@ -1,4 +1,4 @@
-import { IconNewItem, IconUpload, IconVersions } from '@/components/Icons';
+import { IconNewVersion, IconUpload, IconVersions } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
@@ -33,7 +33,7 @@ function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
             titleHtml={controller.isContentEditable ? 'Создать версию' : 'Переключитесь <br/>на актуальную версию'}
             disabled={!controller.isContentEditable}
             onClick={controller.createVersion}
-            icon={<IconNewItem size='1.25rem' className='icon-green' />}
+            icon={<IconNewVersion size='1.25rem' className='icon-green' />}
           />
           <MiniButton
             title={controller.schema?.versions.length === 0 ? 'Список версий пуст' : 'Редактировать версии'}

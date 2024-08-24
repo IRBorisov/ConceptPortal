@@ -1,4 +1,4 @@
-import { IconEditor, IconNewItem, IconShare, IconUpload, IconVersions } from '@/components/Icons';
+import { IconEditor, IconNewVersion, IconShare, IconUpload, IconVersions } from '@/components/Icons';
 
 function HelpVersions() {
   return (
@@ -18,7 +18,7 @@ function HelpVersions() {
         <IconUpload size='1.25rem' className='inline-icon icon-red' /> Загрузить версию в актуальную схему
       </li>
       <li>
-        <IconNewItem size='1.25rem' className='inline-icon icon-green' /> Создать версию можно только из актуальной
+        <IconNewVersion size='1.25rem' className='inline-icon icon-green' /> Создать версию можно только из актуальной
         схемы
       </li>
 

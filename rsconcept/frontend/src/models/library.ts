@@ -2,6 +2,7 @@
  * Module: Models for LibraryItem.
  */
 
+import { ConstituentaID } from './rsform';
 import { UserID } from './user';
 
 /**
@@ -52,9 +53,16 @@ export interface IVersionInfo {
 }
 
 /**
- * Represents user data, intended to create or update version metadata in persistent storage.
+ * Represents version data, intended to update version metadata in persistent storage.
  */
 export interface IVersionData extends Omit<IVersionInfo, 'id' | 'time_create'> {}
+
+/**
+ * Create version metadata in persistent storage.
+ */
+export interface IVersionCreateData extends IVersionData {
+  items?: ConstituentaID[];
+}
 
 /**
  * Represents library item common data typical for all item types.

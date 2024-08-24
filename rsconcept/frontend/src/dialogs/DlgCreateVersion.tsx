@@ -3,30 +3,38 @@
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 
+import Checkbox from '@/components/ui/Checkbox';
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
-import { IVersionData, IVersionInfo } from '@/models/library';
+import { IVersionCreateData, IVersionInfo } from '@/models/library';
 import { nextVersion } from '@/models/libraryAPI';
+import { ConstituentaID } from '@/models/rsform';
 
 interface DlgCreateVersionProps extends Pick<ModalProps, 'hideWindow'> {
   versions: IVersionInfo[];
-  onCreate: (data: IVersionData) => void;
+  onCreate: (data: IVersionCreateData) => void;
+  selected: ConstituentaID[];
+  totalCount: number;
 }
 
-function DlgCreateVersion({ hideWindow, versions, onCreate }: DlgCreateVersionProps) {
+function DlgCreateVersion({ hideWindow, versions, selected, totalCount, onCreate }: DlgCreateVersionProps) {
   const [version, setVersion] = useState(versions.length > 0 ? nextVersion(versions[0].version) : '1.0.0');
   const [description, setDescription] = useState('');
+  const [onlySelected, setOnlySelected] = useState(false);
 
   const canSubmit = useMemo(() => {
     return !versions.find(ver => ver.version === version);
   }, [versions, version]);
 
   function handleSubmit() {
-    const data: IVersionData = {
+    const data: IVersionCreateData = {
       version: version,
       description: description
     };
+    if (onlySelected) {
+      data.items = selected;
+    }
     onCreate(data);
   }
 
@@ -54,6 +62,12 @@ function DlgCreateVersion({ hideWindow, versions, onCreate }: DlgCreateVersionPr
         rows={3}
         value={description}
         onChange={event => setDescription(event.target.value)}
+      />
+      <Checkbox
+        id='dlg_only_selected'
+        label={`Только выбранные конституенты [${selected.length} из ${totalCount}]`}
+        value={onlySelected}
+        setValue={value => setOnlySelected(value)}
       />
     </Modal>
   );

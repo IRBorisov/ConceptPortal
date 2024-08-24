@@ -9,7 +9,7 @@ import {
   IRenameLocationData,
   ITargetAccessPolicy,
   ITargetLocation,
-  IVersionData
+  IVersionCreateData
 } from '@/models/library';
 import { IRSFormCloneData, IRSFormData, IVersionCreatedResponse } from '@/models/rsform';
 import { ITargetUser, ITargetUsers } from '@/models/user';
@@ -109,7 +109,7 @@ export function patchSetEditors(target: string, request: FrontPush<ITargetUsers>
   });
 }
 
-export function postCreateVersion(target: string, request: FrontExchange<IVersionData, IVersionCreatedResponse>) {
+export function postCreateVersion(target: string, request: FrontExchange<IVersionCreateData, IVersionCreatedResponse>) {
   AxiosPost({
     endpoint: `/api/library/${target}/create-version`,
     request: request

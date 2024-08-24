@@ -335,9 +335,8 @@ export const RSEditState = ({
       if (!model.schema) {
         return;
       }
-      model.versionCreate(data, newVersion => {
+      model.versionCreate(data, () => {
         toast.success(information.newVersion(data.version));
-        viewVersion(newVersion);
       });
     },
     [model, viewVersion]
@@ -725,6 +724,8 @@ export const RSEditState = ({
               versions={model.schema.versions}
               hideWindow={() => setShowCreateVersion(false)}
               onCreate={handleCreateVersion}
+              selected={selected}
+              totalCount={model.schema.items.length}
             />
           ) : null}
           {showEditVersions ? (

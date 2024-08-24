@@ -6,6 +6,7 @@ from zipfile import ZipFile
 
 from rest_framework import status
 
+from apps.library.models import Version
 from apps.rsform.models import Constituenta, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
@@ -39,6 +40,20 @@ class TestVersionViews(EndpointTester):
         self.assertTrue('version' in response.data)
         self.assertTrue('schema' in response.data)
         self.assertTrue(response.data['version'] in [v['id'] for v in response.data['schema']['versions']])
+
+
+    @decl_endpoint('/api/library/{schema}/create-version', method='post')
+    def test_create_version_filter(self):
+        x2 = self.owned.insert_new('X2')
+        data = {'version': '1.0.0', 'description': 'test', 'items': [x2.pk]}
+        response = self.executeCreated(data=data, schema=self.owned_id)
+        version = Version.objects.get(pk=response.data['version'])
+        items = version.data['items']
+        self.assertTrue('version' in response.data)
+        self.assertTrue('schema' in response.data)
+        self.assertTrue(response.data['version'] in [v['id'] for v in response.data['schema']['versions']])
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0]['id'], x2.pk)
 
 
     @decl_endpoint('/api/library/{schema}/versions/{version}', method='get')

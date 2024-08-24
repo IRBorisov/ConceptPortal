@@ -103,6 +103,9 @@ def create_version(request: Request, pk_item: int) -> HttpResponse:
     version_input = s.VersionCreateSerializer(data=request.data)
     version_input.is_valid(raise_exception=True)
     data = RSFormSerializer(item).to_versioned_data()
+    items: list[int] = [] if 'items' not in request.data else request.data['items']
+    if items:
+        data['items'] = [cst for cst in data['items'] if cst['id'] in items]
     result = RSForm(item).create_version(
         version=version_input.validated_data['version'],
         description=version_input.validated_data['description'],

@@ -16,6 +16,7 @@ import {
   IconLibrary,
   IconMenu,
   IconNewItem,
+  IconNewVersion,
   IconOSS,
   IconOwner,
   IconReader,
@@ -156,6 +157,12 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
               onClick={handleClone}
             />
           ) : null}
+          <DropdownButton
+            text='Сохранить версию'
+            disabled={!controller.isContentEditable}
+            onClick={controller.createVersion}
+            icon={<IconNewVersion size='1rem' className='icon-green' />}
+          />
           <DropdownButton
             text='Выгрузить в Экстеор'
             icon={<IconDownload size='1rem' className='icon-primary' />}
