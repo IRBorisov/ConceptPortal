@@ -13,7 +13,7 @@ function ApplicationLayout() {
     <NavigationState>
       <div className='min-w-[20rem] clr-app antialiased h-full'>
         <ConceptToaster
-          className='mt-[4rem] text-sm' // prettier: split lines
+          className='mt-[4rem] text-[14px]' // prettier: split lines
           autoClose={3000}
           draggable={false}
           pauseOnFocusLoss={false}

@@ -12,6 +12,7 @@ import Loader from '@/components/ui/Loader';
 import TabLabel from '@/components/ui/TabLabel';
 import TextURL from '@/components/ui/TextURL';
 import AnimateFade from '@/components/wrap/AnimateFade';
+import { useAuth } from '@/context/AuthContext';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useLibrary } from '@/context/LibraryContext';
 import { useBlockNavigation, useConceptNavigation } from '@/context/NavigationContext';
@@ -34,6 +35,7 @@ function OssTabs() {
   const router = useConceptNavigation();
   const query = useQueryStrings();
   const activeTab = query.get('tab') ? (Number(query.get('tab')) as OssTabID) : OssTabID.GRAPH;
+  const { user } = useAuth();
 
   const { calculateHeight, setNoFooter } = useConceptOptions();
   const { schema, loading, loadingError: errorLoading } = useOSS();
@@ -41,7 +43,12 @@ function OssTabs() {
 
   const [isModified, setIsModified] = useState(false);
   const [selected, setSelected] = useState<OperationID[]>([]);
-  useBlockNavigation(isModified);
+  useBlockNavigation(
+    isModified &&
+      schema !== undefined &&
+      user !== undefined &&
+      (user.is_staff || user.id == schema.owner || schema.editors.includes(user.id))
+  );
 
   useLayoutEffect(() => {
     if (schema) {

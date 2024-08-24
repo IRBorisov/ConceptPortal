@@ -36,7 +36,7 @@ function Navigation() {
       <ToggleNavigation />
       <motion.div
         className={clsx(
-          'pl-2 pr-[0.9rem] h-[3rem] w-full', // prettier: split lines
+          'pl-2 pr-[1.5rem] sm:pr-[0.9rem] h-[3rem] w-full', // prettier: split lines
           'flex',
           'cc-shadow-border'
         )}

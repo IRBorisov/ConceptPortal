@@ -13,10 +13,11 @@ function ToggleNavigation() {
       type='button'
       tabIndex={-1}
       className={clsx(
-        'absolute top-0 right-0 z-navigation flex items-center justify-center',
+        'absolute top-0 right-0 z-navigation',
+        'min-h-[2rem] min-w-[2rem] sm:min-w-fit',
+        'flex items-center justify-center',
         'clr-hover',
-        'select-none',
-        'min-h-[2rem]'
+        'select-none'
       )}
       onClick={toggleNoNavigation}
       initial={false}
