@@ -5,12 +5,14 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 
 import DataTable, { createColumnHelper, RowSelectionState } from '@/components/ui/DataTable';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
+import { CstMatchMode } from '@/models/miscellaneous';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
-import { isBasicConcept } from '@/models/rsformAPI';
+import { isBasicConcept, matchConstituenta } from '@/models/rsformAPI';
 import { describeConstituenta } from '@/utils/labels';
 
 import BadgeConstituenta from '../info/BadgeConstituenta';
 import NoData from '../ui/NoData';
+import SearchBar from '../ui/SearchBar';
 import ToolbarGraphSelection from './ToolbarGraphSelection';
 
 interface PickMultiConstituentaProps {
@@ -28,18 +30,30 @@ const columnHelper = createColumnHelper<IConstituenta>();
 function PickMultiConstituenta({ id, schema, prefixID, rows, selected, setSelected }: PickMultiConstituentaProps) {
   const { colors } = useConceptOptions();
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [filtered, setFiltered] = useState<IConstituenta[]>(schema?.items ?? []);
+  const [filterText, setFilterText] = useState('');
 
   useLayoutEffect(() => {
-    if (!schema || selected.length === 0) {
+    if (filtered.length === 0) {
       setRowSelection({});
-    } else {
-      const newRowSelection: RowSelectionState = {};
-      schema.items.forEach((cst, index) => {
-        newRowSelection[String(index)] = selected.includes(cst.id);
-      });
-      setRowSelection(newRowSelection);
+      return;
     }
-  }, [selected, schema]);
+    const newRowSelection: RowSelectionState = {};
+    filtered.forEach((cst, index) => {
+      newRowSelection[String(index)] = selected.includes(cst.id);
+    });
+    setRowSelection(newRowSelection);
+  }, [filtered, setRowSelection, selected]);
+
+  useLayoutEffect(() => {
+    if (!schema || schema.items.length === 0) {
+      setFiltered([]);
+    } else if (filterText) {
+      setFiltered(schema.items.filter(cst => matchConstituenta(cst, filterText, CstMatchMode.ALL)));
+    } else {
+      setFiltered(schema.items);
+    }
+  }, [filterText, schema?.items, schema]);
 
   function handleRowSelection(updater: React.SetStateAction<RowSelectionState>) {
     if (!schema) {
@@ -47,12 +61,12 @@ function PickMultiConstituenta({ id, schema, prefixID, rows, selected, setSelect
     } else {
       const newRowSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
       const newSelection: ConstituentaID[] = [];
-      schema.items.forEach((cst, index) => {
+      filtered.forEach((cst, index) => {
         if (newRowSelection[String(index)] === true) {
           newSelection.push(cst.id);
         }
       });
-      setSelected(newSelection);
+      setSelected(prev => [...prev.filter(cst_id => !filtered.find(cst => cst.id === cst_id)), ...newSelection]);
     }
   }
 
@@ -75,10 +89,17 @@ function PickMultiConstituenta({ id, schema, prefixID, rows, selected, setSelect
 
   return (
     <div>
-      <div className='flex items-end gap-3 mb-3'>
-        <span className='w-[24ch] select-none whitespace-nowrap'>
+      <div className='flex justify-between items-center gap-3 clr-input px-3 border-x border-t rounded-t-md'>
+        <div className='w-[24ch] select-none whitespace-nowrap'>
           Выбраны {selected.length} из {schema?.items.length ?? 0}
-        </span>
+        </div>
+        <SearchBar
+          id='dlg_constituents_search'
+          noBorder
+          className='min-w-[6rem] pr-2 flex-grow'
+          value={filterText}
+          onChange={setFilterText}
+        />
         {schema ? (
           <ToolbarGraphSelection
             graph={schema.graph}
@@ -86,7 +107,7 @@ function PickMultiConstituenta({ id, schema, prefixID, rows, selected, setSelect
             isOwned={cstID => !schema.cstByID.get(cstID)?.is_inherited}
             setSelected={setSelected}
             emptySelection={selected.length === 0}
-            className='w-full ml-8'
+            className='w-fit'
           />
         ) : null}
       </div>
@@ -97,7 +118,7 @@ function PickMultiConstituenta({ id, schema, prefixID, rows, selected, setSelect
         rows={rows}
         contentHeight='1.3rem'
         className={clsx('cc-scroll-y', 'border', 'text-sm', 'select-none')}
-        data={schema?.items ?? []}
+        data={filtered}
         columns={columns}
         headPosition='0rem'
         enableRowSelection

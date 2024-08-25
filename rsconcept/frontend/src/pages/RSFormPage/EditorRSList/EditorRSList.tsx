@@ -1,18 +1,19 @@
 'use client';
 
-import clsx from 'clsx';
 import fileDownload from 'js-file-download';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { IconCSV } from '@/components/Icons';
-import SelectedCounter from '@/components/info/SelectedCounter';
 import { type RowSelectionState } from '@/components/ui/DataTable';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
+import SearchBar from '@/components/ui/SearchBar';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
-import { ConstituentaID, CstType } from '@/models/rsform';
+import { CstMatchMode } from '@/models/miscellaneous';
+import { ConstituentaID, CstType, IConstituenta } from '@/models/rsform';
+import { matchConstituenta } from '@/models/rsformAPI';
 import { information } from '@/utils/labels';
 import { convertToCSV } from '@/utils/utils';
 
@@ -29,30 +30,43 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const controller = useRSEdit();
 
+  const [filtered, setFiltered] = useState<IConstituenta[]>(controller.schema?.items ?? []);
+  const [filterText, setFilterText] = useState('');
+
   useLayoutEffect(() => {
-    if (!controller.schema || controller.selected.length === 0) {
+    if (filtered.length === 0) {
       setRowSelection({});
-    } else {
-      const newRowSelection: RowSelectionState = {};
-      controller.schema.items.forEach((cst, index) => {
-        newRowSelection[String(index)] = controller.selected.includes(cst.id);
-      });
-      setRowSelection(newRowSelection);
+      return;
     }
-  }, [controller.selected, controller.schema]);
+    const newRowSelection: RowSelectionState = {};
+    filtered.forEach((cst, index) => {
+      newRowSelection[String(index)] = controller.selected.includes(cst.id);
+    });
+    setRowSelection(newRowSelection);
+  }, [filtered, setRowSelection, controller.selected]);
+
+  useLayoutEffect(() => {
+    if (!controller.schema || controller.schema.items.length === 0) {
+      setFiltered([]);
+    } else if (filterText) {
+      setFiltered(controller.schema.items.filter(cst => matchConstituenta(cst, filterText, CstMatchMode.ALL)));
+    } else {
+      setFiltered(controller.schema.items);
+    }
+  }, [filterText, controller.schema?.items, controller.schema]);
 
   const handleDownloadCSV = useCallback(() => {
-    if (!controller.schema || controller.schema.items.length === 0) {
+    if (!controller.schema || filtered.length === 0) {
       toast.error(information.noDataToExport);
       return;
     }
-    const blob = convertToCSV(controller.schema.items);
+    const blob = convertToCSV(filtered);
     try {
       fileDownload(blob, `${controller.schema.alias}.csv`, 'text/csv;charset=utf-8;');
     } catch (error) {
       console.error(error);
     }
-  }, [controller]);
+  }, [filtered, controller]);
 
   function handleRowSelection(updater: React.SetStateAction<RowSelectionState>) {
     if (!controller.schema) {
@@ -60,12 +74,15 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
     } else {
       const newRowSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
       const newSelection: ConstituentaID[] = [];
-      controller.schema.items.forEach((cst, index) => {
+      filtered.forEach((cst, index) => {
         if (newRowSelection[String(index)] === true) {
           newSelection.push(cst.id);
         }
       });
-      controller.setSelected(newSelection);
+      controller.setSelected(prev => [
+        ...prev.filter(cst_id => !filtered.find(cst => cst.id === cst_id)),
+        ...newSelection
+      ]);
     }
   }
 
@@ -127,21 +144,21 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
       {controller.isContentEditable ? <ToolbarRSList /> : null}
       <AnimateFade tabIndex={-1} onKeyDown={handleKeyDown}>
         {controller.isContentEditable ? (
-          <SelectedCounter
-            totalCount={controller.schema?.stats?.count_all ?? 0}
-            selectedCount={controller.selected.length}
-            position='top-[0.3rem] left-2'
-          />
+          <div className='flex items-center border-b'>
+            <div className='px-2'>
+              Выбор {controller.selected.length} из {controller.schema?.stats?.count_all ?? 0}
+            </div>
+            <SearchBar
+              id='constituents_search'
+              noBorder
+              className='w-[8rem]'
+              value={filterText}
+              onChange={setFilterText}
+            />
+          </div>
         ) : null}
 
-        <div
-          className={clsx('border-b', {
-            'pt-[2.3rem]': controller.isContentEditable,
-            'relative top-[-1px]': !controller.isContentEditable
-          })}
-        />
-
-        <Overlay position='top-[0.25rem] right-[1rem]' layer='z-tooltip'>
+        <Overlay position='top-[0.25rem] right-[1rem]' layer='z-navigation'>
           <MiniButton
             title='Выгрузить в формате CSV'
             icon={<IconCSV size='1.25rem' className='icon-green' />}
@@ -150,7 +167,7 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
         </Overlay>
 
         <TableRSList
-          items={controller.schema?.items}
+          items={filtered}
           maxHeight={tableHeight}
           enableSelection={controller.isContentEditable}
           selected={rowSelection}

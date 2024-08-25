@@ -267,7 +267,7 @@ function RSTabs() {
             <TabLabel label='Граф термов' />
           </TabList>
 
-          <AnimateFade className='overflow-y-auto' style={{ maxHeight: panelHeight }}>
+          <AnimateFade className='overflow-y-auto overflow-x-hidden' style={{ maxHeight: panelHeight }}>
             {cardPanel}
             {listPanel}
             {editorPanel}

@@ -27,7 +27,7 @@ function SearchBar({ id, value, noIcon, onChange, noBorder, placeholder = 'По�
         noOutline
         placeholder={placeholder}
         type='search'
-        className={clsx('w-full outline-none', !noIcon && 'pl-10')}
+        className={clsx('w-full outline-none bg-transparent', !noIcon && 'pl-10')}
         noBorder={noBorder}
         value={value}
         onChange={event => (onChange ? onChange(event.target.value) : undefined)}

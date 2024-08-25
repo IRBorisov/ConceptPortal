@@ -1,3 +1,4 @@
+import { CstTypeIcon } from '@/components/DomainIcons';
 import {
   IconClone,
   IconDestroy,
@@ -16,7 +17,6 @@ import Overlay from '@/components/ui/Overlay';
 import useDropdown from '@/hooks/useDropdown';
 import { HelpTopic } from '@/models/miscellaneous';
 import { CstType } from '@/models/rsform';
-import { getCstTypePrefix } from '@/models/rsformAPI';
 import { prefixes } from '@/utils/constants';
 import { getCstTypeShortcut, labelCstType, prepareTooltip } from '@/utils/labels';
 
@@ -27,7 +27,10 @@ function ToolbarRSList() {
   const insertMenu = useDropdown();
 
   return (
-    <Overlay position='top-1 right-1/2 translate-x-1/2' className='items-start cc-icons'>
+    <Overlay
+      position='top-1 right-4 translate-x-0 md:right-1/2 md:translate-x-1/2'
+      className='cc-icons items-start outline-none transition-all duration-500'
+    >
       {controller.schema && controller.schema?.oss.length > 0 ? (
         <MiniSelectorOSS
           items={controller.schema.oss}
@@ -52,18 +55,6 @@ function ToolbarRSList() {
         disabled={controller.isProcessing || controller.nothingSelected}
         onClick={controller.moveDown}
       />
-      <MiniButton
-        titleHtml={prepareTooltip('Клонировать конституенту', 'Alt + V')}
-        icon={<IconClone size='1.25rem' className='icon-green' />}
-        disabled={controller.isProcessing || controller.selected.length !== 1}
-        onClick={controller.cloneCst}
-      />
-      <MiniButton
-        titleHtml={prepareTooltip('Добавить новую конституенту...', 'Alt + `')}
-        icon={<IconNewItem size='1.25rem' className='icon-green' />}
-        disabled={controller.isProcessing}
-        onClick={() => controller.createCst(undefined, false)}
-      />
       <div ref={insertMenu.ref}>
         <MiniButton
           title='Добавить пустую конституенту'
@@ -72,17 +63,30 @@ function ToolbarRSList() {
           disabled={controller.isProcessing}
           onClick={insertMenu.toggle}
         />
-        <Dropdown isOpen={insertMenu.isOpen}>
+        <Dropdown isOpen={insertMenu.isOpen} className='-translate-x-1/2 md:translate-x-0'>
           {Object.values(CstType).map(typeStr => (
             <DropdownButton
               key={`${prefixes.csttype_list}${typeStr}`}
-              text={`${getCstTypePrefix(typeStr as CstType)}1 — ${labelCstType(typeStr as CstType)}`}
+              text={labelCstType(typeStr as CstType)}
+              icon={<CstTypeIcon value={typeStr as CstType} size='1.25rem' />}
               onClick={() => controller.createCst(typeStr as CstType, true)}
               titleHtml={getCstTypeShortcut(typeStr as CstType)}
             />
           ))}
         </Dropdown>
       </div>
+      <MiniButton
+        titleHtml={prepareTooltip('Добавить новую конституенту...', 'Alt + `')}
+        icon={<IconNewItem size='1.25rem' className='icon-green' />}
+        disabled={controller.isProcessing}
+        onClick={() => controller.createCst(undefined, false)}
+      />
+      <MiniButton
+        titleHtml={prepareTooltip('Клонировать конституенту', 'Alt + V')}
+        icon={<IconClone size='1.25rem' className='icon-green' />}
+        disabled={controller.isProcessing || controller.selected.length !== 1}
+        onClick={controller.cloneCst}
+      />
       <MiniButton
         titleHtml={prepareTooltip('Удалить выбранные', 'Delete')}
         icon={<IconDestroy size='1.25rem' className='icon-red' />}

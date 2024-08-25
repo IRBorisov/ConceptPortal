@@ -29,7 +29,7 @@ function Tooltip({
   }
   return createPortal(
     <TooltipImpl
-      delayShow={1000}
+      delayShow={750}
       delayHide={100}
       opacity={1}
       className={clsx(
