@@ -199,6 +199,9 @@ export enum TokenID {
   END
 }
 
+/**
+ * Represents RSLang expression error types.
+ */
 export enum RSErrorType {
   unknownSymbol = 33283,
   syntax = 33792,

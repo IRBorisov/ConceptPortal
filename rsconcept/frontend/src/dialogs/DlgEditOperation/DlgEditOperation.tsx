@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import BadgeHelp from '@/components/info/BadgeHelp';
@@ -18,6 +18,7 @@ import {
   OperationID,
   OperationType
 } from '@/models/oss';
+import { SubstitutionValidator } from '@/models/ossAPI';
 import { PARAMETER } from '@/utils/constants';
 
 import TabArguments from './TabArguments';
@@ -44,6 +45,9 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
   const [title, setTitle] = useState(target.title);
   const [comment, setComment] = useState(target.comment);
 
+  const [isCorrect, setIsCorrect] = useState(true);
+  const [validationText, setValidationText] = useState('');
+
   const [inputs, setInputs] = useState<OperationID[]>(oss.graph.expandInputs([target.id]));
   const inputOperations = useMemo(() => inputs.map(id => oss.operationByID.get(id)!), [inputs, oss.operationByID]);
   const schemasIDs = useMemo(
@@ -54,10 +58,10 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
   const cache = useRSFormCache();
   const schemas = useMemo(
     () => schemasIDs.map(id => cache.getSchema(id)).filter(item => item !== undefined),
-    [schemasIDs, cache]
+    [schemasIDs, cache.getSchema]
   );
 
-  const isValid = useMemo(() => alias !== '', [alias]);
+  const canSubmit = useMemo(() => alias !== '', [alias]);
 
   useEffect(() => {
     cache.preload(schemasIDs);
@@ -82,7 +86,16 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
     );
   }, [schemasIDs, schemas, cache.loading]);
 
-  const handleSubmit = () => {
+  useEffect(() => {
+    if (cache.loading || schemas.length !== schemasIDs.length) {
+      return;
+    }
+    const validator = new SubstitutionValidator(schemas, substitutions);
+    setIsCorrect(validator.validate());
+    setValidationText(validator.msg);
+  }, [substitutions, cache.loading, schemas, schemasIDs.length]);
+
+  const handleSubmit = useCallback(() => {
     const data: IOperationUpdateData = {
       target: target.id,
       item_data: {
@@ -95,7 +108,7 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
       substitutions: target.operation_type !== OperationType.SYNTHESIS ? undefined : substitutions
     };
     onSubmit(data);
-  };
+  }, [alias, comment, title, inputs, substitutions, target, onSubmit]);
 
   const cardPanel = useMemo(
     () => (
@@ -134,12 +147,14 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
           schemas={schemas}
           loading={cache.loading}
           error={cache.error}
+          validationText={validationText}
+          isCorrect={isCorrect}
           substitutions={substitutions}
           setSubstitutions={setSubstitutions}
         />
       </TabPanel>
     ),
-    [cache.loading, cache.error, substitutions, schemas]
+    [cache.loading, cache.error, substitutions, schemas, validationText, isCorrect]
   );
 
   return (
@@ -147,7 +162,7 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
       header='Редактирование операции'
       submitText='Сохранить'
       hideWindow={hideWindow}
-      canSubmit={isValid}
+      canSubmit={canSubmit}
       onSubmit={handleSubmit}
       className='w-[40rem] px-6 min-h-[35rem]'
     >
@@ -167,7 +182,11 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
             <TabLabel title='Выбор аргументов операции' label='Аргументы' className='w-[8rem]' />
           ) : null}
           {target.operation_type === OperationType.SYNTHESIS ? (
-            <TabLabel title='Таблица отождествлений' label='Отождествления' className='w-[8rem]' />
+            <TabLabel
+              titleHtml={'Таблица отождествлений' + (isCorrect ? '' : '<br/>(не прошла проверку)')}
+              label={isCorrect ? 'Отождествления' : 'Отождествления*'}
+              className='w-[8rem]'
+            />
           ) : null}
         </TabList>
 

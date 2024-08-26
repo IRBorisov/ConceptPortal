@@ -10,7 +10,7 @@ import { GramData, Grammeme, ReferenceType } from '@/models/language';
 import { AccessPolicy, LibraryItemType, LocationHead } from '@/models/library';
 import { validateLocation } from '@/models/libraryAPI';
 import { CstMatchMode, DependencyMode, GraphColoring, GraphSizing, HelpTopic } from '@/models/miscellaneous';
-import { OperationType } from '@/models/oss';
+import { ISubstitutionErrorDescription, OperationType, SubstitutionErrorType } from '@/models/oss';
 import { CstClass, CstType, ExpressionStatus, IConstituenta, IRSForm } from '@/models/rsform';
 import {
   IArgumentInfo,
@@ -800,6 +800,26 @@ export function describeRSError(error: IRSErrorDescription): string {
 }
 
 /**
+ * Generates error description for {@link ISubstitutionErrorDescription}.
+ */
+export function describeSubstitutionError(error: ISubstitutionErrorDescription): string {
+  // prettier-ignore
+  switch (error.errorType) {
+    case SubstitutionErrorType.invalidIDs:
+      return 'Ошибка в идентификаторах схем'
+    case SubstitutionErrorType.invalidBasic:
+      return `Ошибка ${error.params[0]} -> ${error.params[1]}: замена структурного понятия базисным множеством`;
+    case SubstitutionErrorType.invalidConstant:
+      return `Ошибка ${error.params[0]} -> ${error.params[1]}: подстановка константного множества возможна только вместо другого константного`;
+    case SubstitutionErrorType.invalidClasses:
+      return `Ошибка ${error.params[0]} -> ${error.params[1]}: классы конституент не совпадают`;
+    case SubstitutionErrorType.typificationCycle:
+      return `Ошибка: цикл подстановок в типизациях ${error.params[0]}`;
+  }
+  return 'UNKNOWN ERROR';
+}
+
+/**
  * Retrieves label for {@link UserLevel}.
  */
 export function labelAccessMode(mode: UserLevel): string {
@@ -934,6 +954,7 @@ export const information = {
   locationRenamed: 'Ваши схемы перемещены',
   cloneComplete: (alias: string) => `Копия создана: ${alias}`,
   noDataToExport: 'Нет данных для экспорта',
+  substitutionsCorrect: 'Таблица отождествлений прошла проверку',
 
   addedConstituents: (count: number) => `Добавлены конституенты: ${count}`,
   newLibraryItem: 'Схема успешно создана',

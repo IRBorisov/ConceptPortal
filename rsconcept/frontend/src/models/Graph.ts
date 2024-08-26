@@ -293,4 +293,60 @@ export class Graph {
       }
     });
   }
+
+  /**
+   * Finds a cycle in the graph.
+   *
+   * @returns {number[] | null} The cycle if found, otherwise `null`.
+   * Uses non-recursive DFS.
+   */
+  findCycle(): number[] | null {
+    const visited = new Set<number>();
+    const nodeStack = new Set<number>();
+    const parents = new Map<number, number>();
+
+    for (const nodeId of this.nodes.keys()) {
+      if (visited.has(nodeId)) {
+        continue;
+      }
+
+      const callStack: { nodeId: number; parentId: number | null }[] = [];
+      callStack.push({ nodeId: nodeId, parentId: null });
+      while (callStack.length > 0) {
+        const { nodeId, parentId } = callStack[callStack.length - 1];
+        if (visited.has(nodeId)) {
+          nodeStack.delete(nodeId);
+          callStack.pop();
+          continue;
+        }
+        visited.add(nodeId);
+        nodeStack.add(nodeId);
+        if (parentId !== null) {
+          parents.set(nodeId, parentId);
+        }
+
+        const currentNode = this.nodes.get(nodeId)!;
+        for (const child of currentNode.outputs) {
+          if (!visited.has(child)) {
+            callStack.push({ nodeId: child, parentId: nodeId });
+            continue;
+          }
+          if (!nodeStack.has(child)) {
+            continue;
+          }
+          const cycle: number[] = [];
+          let current = nodeId;
+          cycle.push(child);
+          while (current !== child) {
+            cycle.push(current);
+            current = parents.get(current)!;
+          }
+          cycle.push(child);
+          cycle.reverse();
+          return cycle;
+        }
+      }
+    }
+    return null;
+  }
 }

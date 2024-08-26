@@ -54,6 +54,9 @@ function useRSFormCache() {
   );
 
   useEffect(() => {
+    if (pending.length === 0) {
+      return;
+    }
     const ids = pending.filter(id => !processing.includes(id) && !cache.find(schema => schema.id === id));
     setPending([]);
     if (ids.length === 0) {

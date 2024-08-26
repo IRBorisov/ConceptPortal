@@ -192,3 +192,22 @@ export interface IInputCreatedResponse {
   new_schema: ILibraryItem;
   oss: IOperationSchemaData;
 }
+
+/**
+ * Represents substitution error description.
+ */
+export interface ISubstitutionErrorDescription {
+  errorType: SubstitutionErrorType;
+  params: string[];
+}
+
+/**
+ * Represents Substitution table error types.
+ */
+export enum SubstitutionErrorType {
+  invalidIDs,
+  invalidClasses,
+  invalidBasic,
+  invalidConstant,
+  typificationCycle
+}

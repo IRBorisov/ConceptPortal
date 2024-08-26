@@ -159,4 +159,40 @@ describe('Testing Graph queries', () => {
     expect(graph.maximizePart([3, 2])).toStrictEqual([3, 2, 6, 4]);
     expect(graph.maximizePart([3, 1])).toStrictEqual([3, 1, 7, 5, 6]);
   });
+
+  test('find elementary cycle', () => {
+    const graph = new Graph([
+      [1, 1] //
+    ]);
+    expect(graph.findCycle()).toStrictEqual([1, 1]);
+  });
+
+  test('find cycle acyclic', () => {
+    const graph = new Graph([
+      [1, 2], //
+      [2]
+    ]);
+    expect(graph.findCycle()).toStrictEqual(null);
+  });
+
+  test('find cycle typical', () => {
+    const graph = new Graph([
+      [1, 2], //
+      [1, 4],
+      [2, 3],
+      [3, 1],
+      [3, 4],
+      [4]
+    ]);
+    expect(graph.findCycle()).toStrictEqual([1, 2, 3, 1]);
+  });
+
+  test('find cycle acyclic 2 components', () => {
+    const graph = new Graph([
+      [0, 1], //
+      [2, 3],
+      [3, 0]
+    ]);
+    expect(graph.findCycle()).toStrictEqual(null);
+  });
 });
