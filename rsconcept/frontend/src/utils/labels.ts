@@ -803,10 +803,11 @@ export function describeRSError(error: IRSErrorDescription): string {
  * Generates error description for {@link ISubstitutionErrorDescription}.
  */
 export function describeSubstitutionError(error: ISubstitutionErrorDescription): string {
-  // prettier-ignore
   switch (error.errorType) {
     case SubstitutionErrorType.invalidIDs:
-      return 'Ошибка в идентификаторах схем'
+      return 'Ошибка в идентификаторах схем';
+    case SubstitutionErrorType.incorrectCst:
+      return `Ошибка ${error.params[0]} -> ${error.params[1]}: некорректное выражение конституенты`;
     case SubstitutionErrorType.invalidBasic:
       return `Ошибка ${error.params[0]} -> ${error.params[1]}: замена структурного понятия базисным множеством`;
     case SubstitutionErrorType.invalidConstant:
@@ -815,6 +816,14 @@ export function describeSubstitutionError(error: ISubstitutionErrorDescription):
       return `Ошибка ${error.params[0]} -> ${error.params[1]}: классы конституент не совпадают`;
     case SubstitutionErrorType.typificationCycle:
       return `Ошибка: цикл подстановок в типизациях ${error.params[0]}`;
+    case SubstitutionErrorType.baseSubstitutionNotSet:
+      return `Ошибка: типизация не задает множество ${error.params[0]} ∈ ${error.params[1]}`;
+    case SubstitutionErrorType.unequalTypification:
+      return `Ошибка ${error.params[0]} -> ${error.params[1]}: типизация структурных операндов не совпадает`;
+    case SubstitutionErrorType.unequalArgsCount:
+      return `Ошибка ${error.params[0]} -> ${error.params[1]}: количество аргументов не совпадает`;
+    case SubstitutionErrorType.unequalArgs:
+      return `Ошибка ${error.params[0]} -> ${error.params[1]}: типизация аргументов не совпадает`;
   }
   return 'UNKNOWN ERROR';
 }

@@ -9,7 +9,8 @@ import { Graph } from './Graph';
 import { ILibraryItem, LibraryItemID } from './library';
 import { ICstSubstitute, IOperation, IOperationSchema, SubstitutionErrorType } from './oss';
 import { ConstituentaID, CstType, IConstituenta, IRSForm } from './rsform';
-import { extractGlobals } from './rslangAPI';
+import { AliasMapping, ParsingStatus } from './rslang';
+import { applyAliasMapping, applyTypificationMapping, extractGlobals, isSetTypification } from './rslangAPI';
 
 /**
  * Checks if a given target {@link IOperation} matches the specified query using.
@@ -48,9 +49,10 @@ export function sortItemsForOSS(oss: IOperationSchema, items: ILibraryItem[]): I
   return result;
 }
 
+type CrossMapping = Map<LibraryItemID, AliasMapping>;
+
 /**
  * Validator for Substitution table.
- *
  */
 export class SubstitutionValidator {
   public msg: string = '';
@@ -83,6 +85,9 @@ export class SubstitutionValidator {
     if (!this.checkCycles()) {
       return false;
     }
+    if (!this.checkTypifications()) {
+      return false;
+    }
 
     return this.setValid();
   }
@@ -93,6 +98,9 @@ export class SubstitutionValidator {
       const substitution = this.cstByID.get(item.substitution);
       if (!original || !substitution) {
         return this.reportError(SubstitutionErrorType.invalidIDs, []);
+      }
+      if (original.parse.status === ParsingStatus.INCORRECT || substitution.parse.status === ParsingStatus.INCORRECT) {
+        return this.reportError(SubstitutionErrorType.incorrectCst, [substitution.alias, original.alias]);
       }
       switch (substitution.cst_type) {
         case CstType.BASE: {
@@ -194,6 +202,112 @@ export class SubstitutionValidator {
       return this.reportError(SubstitutionErrorType.typificationCycle, [cycleMsg]);
     }
     return true;
+  }
+
+  private checkTypifications(): boolean {
+    const baseMappings = this.prepareBaseMappings();
+    const typeMappings = this.calculateSubstituteMappings(baseMappings);
+    if (typeMappings === null) {
+      return false;
+    }
+    for (const item of this.substitutions) {
+      const original = this.cstByID.get(item.original)!;
+      if (original.cst_type === CstType.BASE || original.cst_type === CstType.CONSTANT) {
+        continue;
+      }
+      const substitution = this.cstByID.get(item.substitution)!;
+      const originalType = applyTypificationMapping(
+        applyAliasMapping(original.parse.typification, baseMappings.get(original.schema)!),
+        typeMappings
+      );
+      const substitutionType = applyTypificationMapping(
+        applyAliasMapping(substitution.parse.typification, baseMappings.get(substitution.schema)!),
+        typeMappings
+      );
+      if (originalType !== substitutionType) {
+        return this.reportError(SubstitutionErrorType.unequalTypification, [substitution.alias, original.alias]);
+      }
+      if (original.parse.args.length === 0) {
+        continue;
+      }
+      if (substitution.parse.args.length !== original.parse.args.length) {
+        return this.reportError(SubstitutionErrorType.unequalArgsCount, [substitution.alias, original.alias]);
+      }
+      for (let i = 0; i < original.parse.args.length; ++i) {
+        const originalArg = applyTypificationMapping(
+          applyAliasMapping(original.parse.args[i].typification, baseMappings.get(original.schema)!),
+          typeMappings
+        );
+        const substitutionArg = applyTypificationMapping(
+          applyAliasMapping(substitution.parse.args[i].typification, baseMappings.get(substitution.schema)!),
+          typeMappings
+        );
+        if (originalArg !== substitutionArg) {
+          return this.reportError(SubstitutionErrorType.unequalArgs, [substitution.alias, original.alias]);
+        }
+      }
+    }
+    return true;
+  }
+
+  private prepareBaseMappings(): CrossMapping {
+    const result: CrossMapping = new Map();
+    let baseCount = 0;
+    let constCount = 0;
+    for (const schema of this.schemas) {
+      const mapping: AliasMapping = {};
+      for (const cst of schema.items) {
+        if (cst.cst_type === CstType.BASE) {
+          baseCount++;
+          mapping[cst.alias] = `X${baseCount}`;
+        } else if (cst.cst_type === CstType.CONSTANT) {
+          constCount++;
+          mapping[cst.alias] = `C${constCount}`;
+        }
+        result.set(schema.id, mapping);
+      }
+    }
+    return result;
+  }
+
+  private calculateSubstituteMappings(baseMappings: CrossMapping): AliasMapping | null {
+    const result: AliasMapping = {};
+    const processed = new Set<string>();
+    for (const item of this.substitutions) {
+      const original = this.cstByID.get(item.original)!;
+      if (original.cst_type !== CstType.BASE && original.cst_type !== CstType.CONSTANT) {
+        continue;
+      }
+      const originalAlias = baseMappings.get(original.schema)![original.alias];
+
+      const substitution = this.cstByID.get(item.substitution)!;
+      let substitutionText = '';
+      if (substitution.cst_type === original.cst_type) {
+        substitutionText = baseMappings.get(substitution.schema)![substitution.alias];
+      } else {
+        substitutionText = applyAliasMapping(substitution.parse.typification, baseMappings.get(substitution.schema)!);
+        substitutionText = applyTypificationMapping(substitutionText, result);
+        console.log(substitutionText);
+        if (!isSetTypification(substitutionText)) {
+          this.reportError(SubstitutionErrorType.baseSubstitutionNotSet, [
+            substitution.alias,
+            substitution.parse.typification
+          ]);
+          return null;
+        }
+        if (substitutionText.includes('×') || substitutionText.startsWith('ℬℬ')) {
+          substitutionText = substitutionText.slice(1);
+        } else {
+          substitutionText = substitutionText.slice(2, -1);
+        }
+      }
+      for (const prevAlias of processed) {
+        result[prevAlias] = applyTypificationMapping(result[prevAlias], { [originalAlias]: substitutionText });
+      }
+      result[originalAlias] = substitutionText;
+      processed.add(originalAlias);
+    }
+    return result;
   }
 
   private setValid(): boolean {

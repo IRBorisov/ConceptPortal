@@ -4,6 +4,8 @@
 
 import axios, { AxiosError, AxiosHeaderValue, AxiosResponse } from 'axios';
 
+import { AliasMapping } from '@/models/rslang';
+
 import { prompts } from './labels';
 
 /**
@@ -46,7 +48,7 @@ export class TextMatcher {
 /**
  * Text substitution guided by mapping and regular expression.
  */
-export function applyPattern(text: string, mapping: Record<string, string>, pattern: RegExp): string {
+export function applyPattern(text: string, mapping: AliasMapping, pattern: RegExp): string {
   if (text === '' || pattern === null) {
     return text;
   }

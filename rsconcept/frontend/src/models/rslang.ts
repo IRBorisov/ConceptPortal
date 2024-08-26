@@ -3,6 +3,11 @@
  */
 
 /**
+ * Represents alias mapping.
+ */
+export type AliasMapping = Record<string, string>;
+
+/**
  * Represents formal expression.
  */
 export interface IRSExpression {

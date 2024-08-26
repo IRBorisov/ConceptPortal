@@ -5,12 +5,13 @@
 import { applyPattern } from '@/utils/utils';
 
 import { CstType } from './rsform';
-import { IArgumentValue, IRSErrorDescription, RSErrorClass, RSErrorType } from './rslang';
+import { AliasMapping, IArgumentValue, IRSErrorDescription, RSErrorClass, RSErrorType } from './rslang';
 
 // cspell:disable
 const LOCALS_REGEXP = /[_a-zα-ω][a-zα-ω]*\d*/g;
 const GLOBALS_REGEXP = /[XCSADFPT]\d+/g;
 const COMPLEX_SYMBOLS_REGEXP = /[∀∃×ℬ;|:]/g;
+const TYPIFICATION_SET = /^ℬ+\([ℬ\(X\d+\)×]*\)$/g;
 // cspell:enable
 
 /**
@@ -25,6 +26,13 @@ export function extractGlobals(expression: string): Set<string> {
  */
 export function isSimpleExpression(text: string): boolean {
   return !text.match(COMPLEX_SYMBOLS_REGEXP);
+}
+
+/**
+ * Check if expression is set typification.
+ */
+export function isSetTypification(text: string): boolean {
+  return !!text.match(TYPIFICATION_SET);
 }
 
 /**
@@ -91,7 +99,7 @@ export function substituteTemplateArgs(expression: string, args: IArgumentValue[
     return expression;
   }
 
-  const mapping: Record<string, string> = {};
+  const mapping: AliasMapping = {};
   args
     .filter(arg => !!arg.value)
     .forEach(arg => {
@@ -143,4 +151,26 @@ export function getRSErrorPrefix(error: IRSErrorDescription): string {
     case RSErrorClass.SEMANTIC: return 'S' + id;
     case RSErrorClass.UNKNOWN: return 'U' + id;
   }
+}
+
+/**
+ * Apply alias mapping.
+ */
+export function applyAliasMapping(target: string, mapping: AliasMapping): string {
+  return applyPattern(target, mapping, GLOBALS_REGEXP);
+}
+
+/**
+ * Apply alias typification mapping.
+ */
+export function applyTypificationMapping(target: string, mapping: AliasMapping): string {
+  const result = applyAliasMapping(target, mapping);
+  if (result === target) {
+    return target;
+  }
+
+  // remove double parentheses
+  // deal with ℬ(ℬ)
+
+  return result;
 }

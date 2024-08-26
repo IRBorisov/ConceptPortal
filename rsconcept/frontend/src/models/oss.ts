@@ -206,8 +206,13 @@ export interface ISubstitutionErrorDescription {
  */
 export enum SubstitutionErrorType {
   invalidIDs,
+  incorrectCst,
   invalidClasses,
   invalidBasic,
   invalidConstant,
-  typificationCycle
+  typificationCycle,
+  baseSubstitutionNotSet,
+  unequalTypification,
+  unequalArgsCount,
+  unequalArgs
 }
