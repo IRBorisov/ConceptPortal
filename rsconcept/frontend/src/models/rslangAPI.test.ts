@@ -1,4 +1,4 @@
-import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from './rslangAPI';
+import { applyTypificationMapping, extractGlobals, isSimpleExpression, splitTemplateDefinition } from './rslangAPI';
 
 const globalsData = [
   ['', ''],
@@ -46,4 +46,25 @@ describe('Testing split template', () => {
     const result = splitTemplateDefinition(input);
     expect(`${result.head}||${result.body}`).toBe(expected);
   });
+});
+
+const typificationMappingData = [
+  ['', '', '', ''],
+  ['X1', 'X2', 'X1', 'X2'],
+  ['X1', 'X2', 'ℬ(X1)', 'ℬ(X2)'],
+  ['X1', 'X2', 'X1×X3', 'X2×X3'],
+  ['X1', '(X1×X1)', 'X1', 'X1×X1'],
+  ['X1', '(X1×X1)', 'ℬ(X1)', 'ℬ(X1×X1)'],
+  ['X1', '(X1×X1)', 'ℬ(X1×X2)', 'ℬ((X1×X1)×X2)'],
+  ['X1', 'ℬ(X3)', 'ℬ(X1)', 'ℬℬ(X3)'],
+  ['X1', 'ℬ(X3)', 'ℬ(X1×X1)', 'ℬ(ℬ(X3)×ℬ(X3))']
+];
+describe('Testing typification mapping', () => {
+  it.each(typificationMappingData)(
+    'Apply typification mapping %p',
+    (original: string, replacement: string, input: string, expected: string) => {
+      const result = applyTypificationMapping(input, { [original]: replacement });
+      expect(result).toBe(expected);
+    }
+  );
 });

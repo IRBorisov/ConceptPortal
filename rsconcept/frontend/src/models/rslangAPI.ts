@@ -164,13 +164,55 @@ export function applyAliasMapping(target: string, mapping: AliasMapping): string
  * Apply alias typification mapping.
  */
 export function applyTypificationMapping(target: string, mapping: AliasMapping): string {
-  const result = applyAliasMapping(target, mapping);
-  if (result === target) {
+  const modified = applyAliasMapping(target, mapping);
+  if (modified === target) {
     return target;
   }
 
-  // remove double parentheses
-  // deal with ℬ(ℬ)
+  const deleteBrackets: number[] = [];
+  const positions: number[] = [];
+  const booleans: number[] = [];
+  let boolCount: number = 0;
+  let stackSize: number = 0;
+
+  for (let i = 0; i < modified.length; i++) {
+    const char = modified[i];
+    if (char === 'ℬ') {
+      boolCount++;
+      continue;
+    }
+    if (char === '(') {
+      stackSize++;
+      positions.push(i);
+      booleans.push(boolCount);
+    }
+    boolCount = 0;
+    if (char === ')') {
+      if (
+        i < modified.length - 1 &&
+        modified[i + 1] === ')' &&
+        stackSize > 1 &&
+        positions[stackSize - 2] + booleans[stackSize - 1] + 1 === positions[stackSize - 1]
+      ) {
+        deleteBrackets.push(i);
+        deleteBrackets.push(positions[stackSize - 2]);
+      }
+      if (i === modified.length - 1 && stackSize === 1 && positions[0] === 0) {
+        deleteBrackets.push(i);
+        deleteBrackets.push(positions[0]);
+      }
+      stackSize--;
+      positions.pop();
+      booleans.pop();
+    }
+  }
+
+  let result = '';
+  for (let i = 0; i < modified.length; i++) {
+    if (!deleteBrackets.includes(i)) {
+      result += modified[i];
+    }
+  }
 
   return result;
 }
