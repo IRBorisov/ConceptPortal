@@ -140,10 +140,10 @@ function NodeContextMenu({
         ) : null}
         {controller.isMutable && !operation.result && operation.operation_type === OperationType.SYNTHESIS ? (
           <DropdownButton
-            text='Выполнить синтез'
-            title={
+            text='Активировать синтез'
+            titleHtml={
               readyForSynthesis
-                ? 'Выполнить операцию и получить синтезированную КС'
+                ? 'Активировать операцию<br/>и получить синтезированную КС'
                 : 'Необходимо предоставить все аргументы'
             }
             icon={<IconExecute size='1rem' className='icon-green' />}

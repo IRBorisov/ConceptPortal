@@ -161,7 +161,7 @@ function ToolbarOssGraph({
             onClick={onCreate}
           />
           <MiniButton
-            title='Выполнить операцию'
+            title='Активировать операцию'
             icon={<IconExecute size='1.25rem' className='icon-green' />}
             disabled={controller.isProcessing || controller.selected.length !== 1 || !readyForSynthesis}
             onClick={onExecute}

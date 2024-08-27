@@ -104,7 +104,7 @@ function HelpOssGraph() {
             <IconConnect className='inline-icon' /> Выбрать КС для загрузки
           </li>
           <li>
-            <IconExecute className='inline-icon icon-green' /> Выполнить (активировать) операцию
+            <IconExecute className='inline-icon icon-green' /> Активировать операцию
           </li>
         </div>
       </div>

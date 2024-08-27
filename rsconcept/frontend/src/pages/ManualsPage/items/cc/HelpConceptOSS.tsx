@@ -52,9 +52,10 @@ function HelpConceptOSS() {
       <p>
         После задания аргументов и таблицы отождествления необходимо единожды{' '}
         <span className='text-nowrap'>
-          <IconExecute className='inline-icon icon-green' /> выполнить Синтез
+          <IconExecute className='inline-icon icon-green' /> активировать Синтез
         </span>
-        , чтобы активировать <LinkTopic text='сквозные изменения' topic={HelpTopic.CC_PROPAGATION} />.
+        , чтобы выполнить операцию и активировать{' '}
+        <LinkTopic text='сквозные изменения' topic={HelpTopic.CC_PROPAGATION} />.
       </p>
       <p>
         <span className='text-nowrap'>
