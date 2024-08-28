@@ -128,7 +128,6 @@ function DlgCloneLibraryItem({ hideWindow, base, initialLocation, selected, tota
         <TextArea
           id='dlg_cst_body'
           label='Путь'
-          className='w-[18rem]'
           rows={3}
           value={body}
           onChange={event => setBody(event.target.value)}

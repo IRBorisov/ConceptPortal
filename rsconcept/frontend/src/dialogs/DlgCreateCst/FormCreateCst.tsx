@@ -71,10 +71,11 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
       <TextArea
         key='dlg_cst_term'
         id='dlg_cst_term'
+        fitContent
         spellCheck
         label='Термин'
         placeholder='Обозначение, используемое в текстовых определениях'
-        className='cc-fit-content max-h-[3.6rem]'
+        className='max-h-[3.6rem]'
         value={state.term_raw}
         onChange={event => partialUpdate({ term_raw: event.target.value })}
       />
@@ -102,9 +103,10 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
         <TextArea
           id='dlg_cst_definition'
           spellCheck
+          fitContent
           label='Текстовое определение'
           placeholder='Текстовая интерпретация формального выражения'
-          className='cc-fit-content max-h-[3.6rem]'
+          className='max-h-[3.6rem]'
           value={state.definition_raw}
           onChange={event => partialUpdate({ definition_raw: event.target.value })}
         />
@@ -126,9 +128,10 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
           key='dlg_cst_convention'
           id='dlg_cst_convention'
           spellCheck
+          fitContent
           label={isBasic ? 'Конвенция' : 'Комментарий'}
           placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
-          className='cc-fit-content max-h-[5.4rem]'
+          className='max-h-[5.4rem]'
           value={state.convention}
           onChange={event => partialUpdate({ convention: event.target.value })}
         />

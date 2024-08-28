@@ -59,14 +59,7 @@ function DlgChangeLocation({ hideWindow, initial, onChangeLocation }: DlgChangeL
         onChange={handleSelectLocation}
         className='max-h-[9.2rem]'
       />
-      <TextArea
-        id='dlg_cst_body'
-        label='Путь'
-        className='w-[23rem]'
-        rows={3}
-        value={body}
-        onChange={event => setBody(event.target.value)}
-      />
+      <TextArea id='dlg_cst_body' label='Путь' rows={3} value={body} onChange={event => setBody(event.target.value)} />
     </Modal>
   );
 }

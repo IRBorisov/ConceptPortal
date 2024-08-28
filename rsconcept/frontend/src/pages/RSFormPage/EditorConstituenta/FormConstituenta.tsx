@@ -161,7 +161,7 @@ function FormConstituenta({
         {state ? (
           <TextArea
             id='cst_typification'
-            className='cc-fit-content'
+            fitContent
             dense
             noResize
             noBorder
@@ -215,7 +215,8 @@ function FormConstituenta({
           <AnimateFade key='cst_convention_fade' hideContent={!showConvention || !state}>
             <TextArea
               id='cst_convention'
-              className='cc-fit-content max-h-[8rem]'
+              fitContent
+              className='max-h-[8rem]'
               spellCheck
               label={isBasic ? 'Конвенция' : 'Комментарий'}
               placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}

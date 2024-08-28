@@ -6,6 +6,7 @@ import Label from './Label';
 export interface TextAreaProps extends CProps.Editor, CProps.Colors, CProps.TextArea {
   dense?: boolean;
   noResize?: boolean;
+  fitContent?: boolean;
 }
 
 function TextArea({
@@ -18,6 +19,7 @@ function TextArea({
   noOutline,
   noResize,
   className,
+  fitContent,
   colors = 'clr-input',
   ...restProps
 }: TextAreaProps) {
@@ -40,6 +42,7 @@ function TextArea({
           'leading-tight',
           'overflow-x-hidden overflow-y-auto',
           {
+            'cc-fit-content': fitContent,
             'resize-none': noResize,
             'border': !noBorder,
             'flex-grow max-w-full': dense,
