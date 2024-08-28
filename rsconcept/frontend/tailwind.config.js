@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import defaultTheme from 'tailwindcss/defaultTheme';
+
 export default {
   darkMode: 'class',
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
@@ -13,6 +15,10 @@ export default {
       modal: '60',
       modalControls: '70',
       modalTooltip: '90'
+    },
+    screens: {
+      xs: '475px',
+      ...defaultTheme.screens
     },
     extend: {}
   },
