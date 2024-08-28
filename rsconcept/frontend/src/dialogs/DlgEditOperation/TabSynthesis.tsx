@@ -16,6 +16,7 @@ interface TabSynthesisProps {
   schemas: IRSForm[];
   substitutions: ICstSubstitute[];
   setSubstitutions: React.Dispatch<React.SetStateAction<ICstSubstitute[]>>;
+  suggestions: ICstSubstitute[];
 }
 
 function TabSynthesis({
@@ -25,7 +26,8 @@ function TabSynthesis({
   validationText,
   isCorrect,
   substitutions,
-  setSubstitutions
+  setSubstitutions,
+  suggestions
 }: TabSynthesisProps) {
   const { colors } = useConceptOptions();
   return (
@@ -36,6 +38,7 @@ function TabSynthesis({
         rows={10}
         substitutions={substitutions}
         setSubstitutions={setSubstitutions}
+        suggestions={suggestions}
       />
       <TextArea
         disabled

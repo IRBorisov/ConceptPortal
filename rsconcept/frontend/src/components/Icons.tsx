@@ -83,7 +83,6 @@ export { LuNewspaper      as IconDefinition }     from 'react-icons/lu';
 export { LuDna            as IconTerminology }    from 'react-icons/lu';
 export { FaRegHandshake   as IconConvention }     from 'react-icons/fa6';
 export { LiaCloneSolid    as IconChild }          from 'react-icons/lia';
-export { RiParentLine     as IconParent }         from 'react-icons/ri';
 export { TbTopologyRing   as IconConsolidation }  from 'react-icons/tb';
 export { BiSpa            as IconPredecessor }    from 'react-icons/bi';
 export { LuArchive        as IconArchive }        from 'react-icons/lu';

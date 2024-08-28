@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import BadgeHelp from '@/components/info/BadgeHelp';
@@ -54,7 +54,10 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
     () => inputOperations.map(operation => operation.result).filter(id => id !== null),
     [inputOperations]
   );
+
   const [substitutions, setSubstitutions] = useState<ICstSubstitute[]>(target.substitutions);
+  const [suggestions, setSuggestions] = useState<ICstSubstitute[]>([]);
+
   const cache = useRSFormCache();
   const schemas = useMemo(
     () => schemasIDs.map(id => cache.getSchema(id)).filter(item => item !== undefined),
@@ -63,11 +66,11 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
 
   const canSubmit = useMemo(() => alias !== '', [alias]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     cache.preload(schemasIDs);
   }, [schemasIDs]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (cache.loading || schemas.length !== schemasIDs.length) {
       return;
     }
@@ -86,13 +89,14 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
     );
   }, [schemasIDs, schemas, cache.loading]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (cache.loading || schemas.length !== schemasIDs.length) {
       return;
     }
     const validator = new SubstitutionValidator(schemas, substitutions);
     setIsCorrect(validator.validate());
     setValidationText(validator.msg);
+    setSuggestions(validator.suggestions);
   }, [substitutions, cache.loading, schemas, schemasIDs.length]);
 
   const handleSubmit = useCallback(() => {
@@ -151,10 +155,11 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
           isCorrect={isCorrect}
           substitutions={substitutions}
           setSubstitutions={setSubstitutions}
+          suggestions={suggestions}
         />
       </TabPanel>
     ),
-    [cache.loading, cache.error, substitutions, schemas, validationText, isCorrect]
+    [cache.loading, cache.error, substitutions, suggestions, schemas, validationText, isCorrect]
   );
 
   return (

@@ -133,6 +133,7 @@ export interface IMultiSubstitution {
   original: IConstituenta;
   substitution: IConstituenta;
   substitution_source: ILibraryItem;
+  is_suggestion: boolean;
 }
 
 /**
