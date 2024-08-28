@@ -93,7 +93,7 @@ export function inferTemplate(expression: string): boolean {
  * - `CstClass.DERIVED` if the CstType is TERM, FUNCTION, or PREDICATE.
  * - `CstClass.STATEMENT` if the CstType is AXIOM or THEOREM.
  */
-export function inferClass(type: CstType, isTemplate: boolean): CstClass {
+export function inferClass(type: CstType, isTemplate: boolean = false): CstClass {
   if (isTemplate) {
     return CstClass.TEMPLATE;
   }

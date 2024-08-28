@@ -2,13 +2,15 @@
  * Module: API for OperationSystem.
  */
 
+import { limits } from '@/utils/constants';
 import { describeSubstitutionError, information } from '@/utils/labels';
 import { TextMatcher } from '@/utils/utils';
 
 import { Graph } from './Graph';
 import { ILibraryItem, LibraryItemID } from './library';
 import { ICstSubstitute, IOperation, IOperationSchema, SubstitutionErrorType } from './oss';
-import { ConstituentaID, CstType, IConstituenta, IRSForm } from './rsform';
+import { ConstituentaID, CstClass, CstType, IConstituenta, IRSForm } from './rsform';
+import { inferClass } from './rsformAPI';
 import { AliasMapping, ParsingStatus } from './rslang';
 import { applyAliasMapping, applyTypificationMapping, extractGlobals, isSetTypification } from './rslangAPI';
 
@@ -51,6 +53,7 @@ export function sortItemsForOSS(oss: IOperationSchema, items: ILibraryItem[]): I
 
 type CrossMapping = Map<LibraryItemID, AliasMapping>;
 
+// TODO: test validator
 /**
  * Validator for Substitution table.
  */
@@ -59,6 +62,10 @@ export class SubstitutionValidator {
 
   private schemas: IRSForm[];
   private substitutions: ICstSubstitute[];
+  private constituents = new Set<ConstituentaID>();
+  private originals = new Set<ConstituentaID>();
+  private mapping: CrossMapping = new Map();
+
   private cstByID = new Map<ConstituentaID, IConstituenta>();
   private schemaByID = new Map<LibraryItemID, IRSForm>();
   private schemaByCst = new Map<ConstituentaID, IRSForm>();
@@ -66,12 +73,31 @@ export class SubstitutionValidator {
   constructor(schemas: IRSForm[], substitutions: ICstSubstitute[]) {
     this.schemas = schemas;
     this.substitutions = substitutions;
+    if (this.substitutions.length === 0) {
+      return;
+    }
     schemas.forEach(schema => {
       this.schemaByID.set(schema.id, schema);
+      this.mapping.set(schema.id, {});
       schema.items.forEach(item => {
         this.cstByID.set(item.id, item);
         this.schemaByCst.set(item.id, schema);
       });
+    });
+    let index = limits.max_semantic_index;
+    substitutions.forEach(item => {
+      this.constituents.add(item.original);
+      this.constituents.add(item.substitution);
+      this.originals.add(item.original);
+      const original = this.cstByID.get(item.original);
+      const substitution = this.cstByID.get(item.substitution);
+      if (!original || !substitution) {
+        return;
+      }
+      index++;
+      const newAlias = `${substitution.alias[0]}${index}`;
+      this.mapping.get(original.schema)![original.alias] = newAlias;
+      this.mapping.get(substitution.schema)![substitution.alias] = newAlias;
     });
   }
 
@@ -85,7 +111,7 @@ export class SubstitutionValidator {
     if (!this.checkCycles()) {
       return false;
     }
-    if (!this.checkTypifications()) {
+    if (!this.checkSubstitutions()) {
       return false;
     }
 
@@ -204,7 +230,7 @@ export class SubstitutionValidator {
     return true;
   }
 
-  private checkTypifications(): boolean {
+  private checkSubstitutions(): boolean {
     const baseMappings = this.prepareBaseMappings();
     const typeMappings = this.calculateSubstituteMappings(baseMappings);
     if (typeMappings === null) {
@@ -216,6 +242,13 @@ export class SubstitutionValidator {
         continue;
       }
       const substitution = this.cstByID.get(item.substitution)!;
+      if (original.cst_type === substitution.cst_type && inferClass(original.cst_type) === CstClass.DERIVED) {
+        if (!this.checkEqual(original, substitution)) {
+          this.reportError(SubstitutionErrorType.unequalExpressions, [substitution.alias, original.alias]);
+          // Note: do not interrupt the validation process. Only warn about the problem.
+        }
+      }
+
       const originalType = applyTypificationMapping(
         applyAliasMapping(original.parse.typification, baseMappings.get(original.schema)!),
         typeMappings
@@ -310,13 +343,35 @@ export class SubstitutionValidator {
     return result;
   }
 
+  private checkEqual(left: IConstituenta, right: IConstituenta): boolean {
+    const schema1 = this.schemaByID.get(left.schema)!;
+    const inputs1 = schema1.graph.at(left.id)!.inputs;
+    if (inputs1.some(id => !this.constituents.has(id))) {
+      return false;
+    }
+    const schema2 = this.schemaByID.get(right.schema)!;
+    const inputs2 = schema2.graph.at(right.id)!.inputs;
+    if (inputs2.some(id => !this.constituents.has(id))) {
+      return false;
+    }
+    const expression1 = applyAliasMapping(left.definition_formal, this.mapping.get(schema1.id)!);
+    const expression2 = applyAliasMapping(right.definition_formal, this.mapping.get(schema2.id)!);
+    return expression1.replace(' ', '') === expression2.replace(' ', '');
+  }
+
   private setValid(): boolean {
-    this.msg = information.substitutionsCorrect;
+    if (this.msg.length > 0) {
+      this.msg += '\n';
+    }
+    this.msg += information.substitutionsCorrect;
     return true;
   }
 
   private reportError(errorType: SubstitutionErrorType, params: string[]): boolean {
-    this.msg = describeSubstitutionError({
+    if (this.msg.length > 0) {
+      this.msg += '\n';
+    }
+    this.msg += describeSubstitutionError({
       errorType: errorType,
       params: params
     });

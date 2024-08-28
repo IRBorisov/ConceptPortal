@@ -213,6 +213,7 @@ export enum SubstitutionErrorType {
   typificationCycle,
   baseSubstitutionNotSet,
   unequalTypification,
+  unequalExpressions,
   unequalArgsCount,
   unequalArgs
 }

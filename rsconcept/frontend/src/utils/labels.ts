@@ -824,6 +824,8 @@ export function describeSubstitutionError(error: ISubstitutionErrorDescription):
       return `Ошибка ${error.params[0]} -> ${error.params[1]}: количество аргументов не совпадает`;
     case SubstitutionErrorType.unequalArgs:
       return `Ошибка ${error.params[0]} -> ${error.params[1]}: типизация аргументов не совпадает`;
+    case SubstitutionErrorType.unequalExpressions:
+      return `Предупреждение ${error.params[0]} -> ${error.params[1]}: определения понятий не совпадают`;
   }
   return 'UNKNOWN ERROR';
 }

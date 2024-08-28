@@ -37,7 +37,12 @@ function TabSynthesis({
         substitutions={substitutions}
         setSubstitutions={setSubstitutions}
       />
-      <TextArea disabled value={validationText} style={{ borderColor: isCorrect ? undefined : colors.fgRed }} />
+      <TextArea
+        disabled
+        value={validationText}
+        rows={4}
+        style={{ borderColor: isCorrect ? undefined : colors.fgRed }}
+      />
     </DataLoader>
   );
 }

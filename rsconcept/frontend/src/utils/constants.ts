@@ -42,7 +42,8 @@ export const PARAMETER = {
  * Numeric limitations.
  */
 export const limits = {
-  location_len: 500
+  location_len: 500,
+  max_semantic_index: 900
 };
 
 /**
