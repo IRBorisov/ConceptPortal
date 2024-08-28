@@ -28,7 +28,7 @@ import ToolbarRSExpression from './ToolbarRSExpression';
 
 interface EditorRSExpressionProps {
   id?: string;
-  activeCst?: IConstituenta;
+  activeCst: IConstituenta;
   value: string;
   label: string;
   placeholder?: string;
@@ -70,13 +70,10 @@ function EditorRSExpression({
 
   function handleChange(newValue: string) {
     onChange(newValue);
-    setIsModified(newValue !== activeCst?.definition_formal);
+    setIsModified(newValue !== activeCst.definition_formal);
   }
 
   function handleCheckExpression(callback?: (parse: IExpressionParse) => void) {
-    if (!activeCst) {
-      return;
-    }
     const prefix = getDefinitionPrefix(activeCst);
     const expression = prefix + value;
     parser.checkExpression(expression, activeCst, parse => {
@@ -99,7 +96,7 @@ function EditorRSExpression({
 
   const onShowError = useCallback(
     (error: IRSErrorDescription) => {
-      if (!activeCst || !rsInput.current) {
+      if (!rsInput.current) {
         return;
       }
       const prefix = getDefinitionPrefix(activeCst);
@@ -136,7 +133,7 @@ function EditorRSExpression({
         toast.error(errors.astFailed);
       } else {
         setSyntaxTree(parse.ast);
-        setExpression(getDefinitionPrefix(activeCst!) + value);
+        setExpression(getDefinitionPrefix(activeCst) + value);
         setShowAST(true);
       }
     });
@@ -145,7 +142,7 @@ function EditorRSExpression({
   const controls = useMemo(
     () => (
       <RSEditorControls
-        isOpen={showControls && (!disabled || (model.processing && !activeCst?.is_inherited))}
+        isOpen={showControls && (!disabled || (model.processing && !activeCst.is_inherited))}
         disabled={disabled}
         onEdit={handleEdit}
       />
@@ -172,7 +169,7 @@ function EditorRSExpression({
         <StatusBar
           processing={parser.processing}
           isModified={isModified}
-          constituenta={activeCst}
+          activeCst={activeCst}
           parseData={parser.parseData}
           onAnalyze={() => handleCheckExpression()}
         />

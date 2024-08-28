@@ -171,101 +171,103 @@ function FormConstituenta({
             colors='clr-app clr-text-default'
           />
         ) : null}
-        <AnimatePresence>
-          <AnimateFade key='cst_expression_fade' hideContent={!state || (!state?.definition_formal && isElementary)}>
-            <EditorRSExpression
-              id='cst_expression'
-              label={
-                state?.cst_type === CstType.STRUCTURED
-                  ? 'Область определения'
-                  : !!state && isFunctional(state.cst_type)
-                  ? 'Определение функции'
-                  : 'Формальное определение'
-              }
-              placeholder={
-                state?.cst_type !== CstType.STRUCTURED
-                  ? 'Родоструктурное выражение'
-                  : 'Определение множества, которому принадлежат элементы родовой структуры'
-              }
-              value={expression}
-              activeCst={state}
-              disabled={disabled || state?.is_inherited}
-              toggleReset={toggleReset}
-              onChange={newValue => setExpression(newValue)}
-              setTypification={setTypification}
-              onOpenEdit={onOpenEdit}
-            />
-          </AnimateFade>
-          <AnimateFade key='cst_definition_fade' hideContent={!state || (!state?.definition_raw && isElementary)}>
-            <RefsInput
-              id='cst_definition'
-              label='Текстовое определение'
-              placeholder='Текстовая интерпретация формального выражения'
-              minHeight='3.75rem'
-              maxHeight='8rem'
-              schema={schema}
-              onOpenEdit={onOpenEdit}
-              value={textDefinition}
-              initialValue={state?.definition_raw ?? ''}
-              resolved={state?.definition_resolved ?? ''}
-              disabled={disabled}
-              onChange={newValue => setTextDefinition(newValue)}
-            />
-          </AnimateFade>
-          <AnimateFade key='cst_convention_fade' hideContent={!showConvention || !state}>
-            <TextArea
-              id='cst_convention'
-              fitContent
-              className='max-h-[8rem]'
-              spellCheck
-              label={isBasic ? 'Конвенция' : 'Комментарий'}
-              placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
-              value={convention}
-              disabled={disabled || (isBasic && state?.is_inherited)}
-              onChange={event => setConvention(event.target.value)}
-            />
-          </AnimateFade>
-          <AnimateFade key='cst_convention_button' hideContent={showConvention || (disabled && !processing)}>
-            <button
-              key='cst_disable_comment'
-              id='cst_disable_comment'
-              type='button'
-              tabIndex={-1}
-              className='self-start cc-label clr-text-url hover:underline'
-              onClick={() => setForceComment(true)}
-            >
-              Добавить комментарий
-            </button>
-          </AnimateFade>
-
-          {!disabled || processing ? (
-            <div className='self-center flex'>
-              <SubmitButton
-                key='cst_form_submit'
-                id='cst_form_submit'
-                text='Сохранить изменения'
-                disabled={disabled || !isModified}
-                icon={<IconSave size='1.25rem' />}
+        {state ? (
+          <AnimatePresence>
+            <AnimateFade key='cst_expression_fade' hideContent={!state.definition_formal && isElementary}>
+              <EditorRSExpression
+                id='cst_expression'
+                label={
+                  state.cst_type === CstType.STRUCTURED
+                    ? 'Область определения'
+                    : isFunctional(state.cst_type)
+                    ? 'Определение функции'
+                    : 'Формальное определение'
+                }
+                placeholder={
+                  state.cst_type !== CstType.STRUCTURED
+                    ? 'Родоструктурное выражение'
+                    : 'Определение множества, которому принадлежат элементы родовой структуры'
+                }
+                value={expression}
+                activeCst={state}
+                disabled={disabled || state.is_inherited}
+                toggleReset={toggleReset}
+                onChange={newValue => setExpression(newValue)}
+                setTypification={setTypification}
+                onOpenEdit={onOpenEdit}
               />
-              <Overlay position='top-[0.1rem] left-[0.4rem]' className='cc-icons'>
-                {state?.is_inherited_parent ? (
-                  <MiniButton
-                    icon={<IconPredecessor size='1.25rem' className='clr-text-red' />}
-                    disabled
-                    titleHtml='Внимание!</br> Конституента имеет потомков<br/> в операционной схеме синтеза'
-                  />
-                ) : null}
-                {state?.is_inherited ? (
-                  <MiniButton
-                    icon={<IconChild size='1.25rem' className='clr-text-red' />}
-                    disabled
-                    titleHtml='Внимание!</br> Конституента является наследником<br/>'
-                  />
-                ) : null}
-              </Overlay>
-            </div>
-          ) : null}
-        </AnimatePresence>
+            </AnimateFade>
+            <AnimateFade key='cst_definition_fade' hideContent={!state.definition_raw && isElementary}>
+              <RefsInput
+                id='cst_definition'
+                label='Текстовое определение'
+                placeholder='Текстовая интерпретация формального выражения'
+                minHeight='3.75rem'
+                maxHeight='8rem'
+                schema={schema}
+                onOpenEdit={onOpenEdit}
+                value={textDefinition}
+                initialValue={state.definition_raw}
+                resolved={state.definition_resolved}
+                disabled={disabled}
+                onChange={newValue => setTextDefinition(newValue)}
+              />
+            </AnimateFade>
+            <AnimateFade key='cst_convention_fade' hideContent={!showConvention}>
+              <TextArea
+                id='cst_convention'
+                fitContent
+                className='max-h-[8rem]'
+                spellCheck
+                label={isBasic ? 'Конвенция' : 'Комментарий'}
+                placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
+                value={convention}
+                disabled={disabled || (isBasic && state.is_inherited)}
+                onChange={event => setConvention(event.target.value)}
+              />
+            </AnimateFade>
+            <AnimateFade key='cst_convention_button' hideContent={showConvention || (disabled && !processing)}>
+              <button
+                key='cst_disable_comment'
+                id='cst_disable_comment'
+                type='button'
+                tabIndex={-1}
+                className='self-start cc-label clr-text-url hover:underline'
+                onClick={() => setForceComment(true)}
+              >
+                Добавить комментарий
+              </button>
+            </AnimateFade>
+
+            {!disabled || processing ? (
+              <div className='self-center flex'>
+                <SubmitButton
+                  key='cst_form_submit'
+                  id='cst_form_submit'
+                  text='Сохранить изменения'
+                  disabled={disabled || !isModified}
+                  icon={<IconSave size='1.25rem' />}
+                />
+                <Overlay position='top-[0.1rem] left-[0.4rem]' className='cc-icons'>
+                  {state.is_inherited_parent ? (
+                    <MiniButton
+                      icon={<IconPredecessor size='1.25rem' className='clr-text-red' />}
+                      disabled
+                      titleHtml='Внимание!</br> Конституента имеет потомков<br/> в операционной схеме синтеза'
+                    />
+                  ) : null}
+                  {state.is_inherited ? (
+                    <MiniButton
+                      icon={<IconChild size='1.25rem' className='clr-text-red' />}
+                      disabled
+                      titleHtml='Внимание!</br> Конституента является наследником<br/>'
+                    />
+                  ) : null}
+                </Overlay>
+              </div>
+            ) : null}
+          </AnimatePresence>
+        ) : null}
       </form>
     </AnimateFade>
   );

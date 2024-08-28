@@ -19,11 +19,11 @@ interface StatusBarProps {
   processing?: boolean;
   isModified?: boolean;
   parseData?: IExpressionParse;
-  constituenta?: IConstituenta;
+  activeCst: IConstituenta;
   onAnalyze: () => void;
 }
 
-function StatusBar({ isModified, processing, constituenta, parseData, onAnalyze }: StatusBarProps) {
+function StatusBar({ isModified, processing, activeCst, parseData, onAnalyze }: StatusBarProps) {
   const { colors } = useConceptOptions();
   const status = useMemo(() => {
     if (isModified) {
@@ -33,8 +33,8 @@ function StatusBar({ isModified, processing, constituenta, parseData, onAnalyze 
       const parse = parseData.parseResult ? ParsingStatus.VERIFIED : ParsingStatus.INCORRECT;
       return inferStatus(parse, parseData.valueClass);
     }
-    return inferStatus(constituenta?.parse?.status, constituenta?.parse?.valueClass);
-  }, [isModified, constituenta, parseData]);
+    return inferStatus(activeCst.parse.status, activeCst.parse.valueClass);
+  }, [isModified, activeCst, parseData]);
 
   return (
     <div
