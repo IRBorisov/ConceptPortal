@@ -241,27 +241,27 @@ export class Graph {
 
   topologicalOrder(): number[] {
     const result: number[] = [];
-    const marked = new Map<number, boolean>();
-    const toVisit: number[] = [];
+    const marked = new Set<number>();
+    const nodeStack: number[] = [];
     this.nodes.forEach(node => {
-      if (marked.get(node.id)) {
+      if (marked.has(node.id)) {
         return;
       }
-      toVisit.push(node.id);
-      while (toVisit.length > 0) {
-        const item = toVisit[toVisit.length - 1];
-        if (marked.get(item)) {
+      nodeStack.push(node.id);
+      while (nodeStack.length > 0) {
+        const item = nodeStack[nodeStack.length - 1];
+        if (marked.has(item)) {
           if (!result.find(id => id === item)) {
             result.push(item);
           }
-          toVisit.pop();
+          nodeStack.pop();
         } else {
-          marked.set(item, true);
+          marked.add(item);
           const itemNode = this.nodes.get(item);
           if (itemNode && itemNode.outputs.length > 0) {
             itemNode.outputs.forEach(child => {
-              if (!marked.get(child)) {
-                toVisit.push(child);
+              if (!marked.has(child)) {
+                nodeStack.push(child);
               }
             });
           }
