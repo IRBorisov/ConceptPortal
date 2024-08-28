@@ -134,12 +134,13 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         onError: setProcessingError,
         onSuccess: () => {
           model.owner = newOwner;
-          library.localUpdateItem(model);
-          if (callback) callback();
+          library.reloadItems(() => {
+            if (callback) callback();
+          });
         }
       });
     },
-    [itemID, model, library.localUpdateItem]
+    [itemID, model, library.reloadItems]
   );
 
   const setAccessPolicy = useCallback(
@@ -157,12 +158,13 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         onError: setProcessingError,
         onSuccess: () => {
           model.access_policy = newPolicy;
-          library.localUpdateItem(model);
-          if (callback) callback();
+          library.reloadItems(() => {
+            if (callback) callback();
+          });
         }
       });
     },
-    [itemID, model, library.localUpdateItem]
+    [itemID, model, library.reloadItems]
   );
 
   const setLocation = useCallback(
@@ -180,12 +182,13 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         onError: setProcessingError,
         onSuccess: () => {
           model.location = newLocation;
-          library.localUpdateItem(model);
-          if (callback) callback();
+          library.reloadItems(() => {
+            if (callback) callback();
+          });
         }
       });
     },
-    [itemID, model, library.localUpdateItem]
+    [itemID, model, library.reloadItems]
   );
 
   const setEditors = useCallback(
@@ -203,11 +206,13 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         onError: setProcessingError,
         onSuccess: () => {
           model.editors = newEditors;
-          if (callback) callback();
+          library.reloadItems(() => {
+            if (callback) callback();
+          });
         }
       });
     },
-    [itemID, model]
+    [itemID, model, library.reloadItems]
   );
 
   const savePositions = useCallback(
