@@ -11,6 +11,7 @@ import { useLibrary } from '@/context/LibraryContext';
 import { CATEGORY_CST_TYPE, IConstituenta, IRSForm } from '@/models/rsform';
 import { applyFilterCategory } from '@/models/rsformAPI';
 import { prefixes } from '@/utils/constants';
+
 export interface ITemplateState {
   templateID?: number;
   prototype?: IConstituenta;
@@ -20,11 +21,11 @@ export interface ITemplateState {
 interface TabTemplateProps {
   state: ITemplateState;
   partialUpdate: Dispatch<Partial<ITemplateState>>;
+  templateSchema?: IRSForm;
 }
 
-function TabTemplate({ state, partialUpdate }: TabTemplateProps) {
-  const { templates, retrieveTemplate } = useLibrary();
-  const [templateSchema, setTemplateSchema] = useState<IRSForm | undefined>(undefined);
+function TabTemplate({ state, partialUpdate, templateSchema }: TabTemplateProps) {
+  const { templates } = useLibrary();
 
   const [filteredData, setFilteredData] = useState<IConstituenta[]>([]);
 
@@ -64,14 +65,6 @@ function TabTemplate({ state, partialUpdate }: TabTemplateProps) {
       partialUpdate({ templateID: templates[0].id });
     }
   }, [templates, state.templateID, partialUpdate]);
-
-  useEffect(() => {
-    if (!state.templateID) {
-      setTemplateSchema(undefined);
-    } else {
-      retrieveTemplate(state.templateID, setTemplateSchema);
-    }
-  }, [state.templateID, retrieveTemplate]);
 
   useEffect(() => {
     if (!templateSchema) {

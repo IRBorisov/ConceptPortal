@@ -437,10 +437,14 @@ export const RSEditState = ({
 
   const createCst = useCallback(
     (type: CstType | undefined, skipDialog: boolean, definition?: string) => {
+      if (!model.schema) {
+        return;
+      }
+      const targetType = type ?? activeCst?.cst_type ?? CstType.BASE;
       const data: ICstCreateData = {
         insert_after: activeCst?.id ?? null,
-        cst_type: type ?? activeCst?.cst_type ?? CstType.BASE,
-        alias: '',
+        cst_type: targetType,
+        alias: generateAlias(targetType, model.schema),
         term_raw: '',
         definition_formal: definition ?? '',
         definition_raw: '',
@@ -454,17 +458,17 @@ export const RSEditState = ({
         setShowCreateCst(true);
       }
     },
-    [activeCst, handleCreateCst]
+    [activeCst, handleCreateCst, model.schema]
   );
 
   const cloneCst = useCallback(() => {
-    if (!activeCst) {
+    if (!activeCst || !model.schema) {
       return;
     }
     const data: ICstCreateData = {
       insert_after: activeCst.id,
       cst_type: activeCst.cst_type,
-      alias: '',
+      alias: generateAlias(activeCst.cst_type, model.schema),
       term_raw: activeCst.term_raw,
       definition_formal: activeCst.definition_formal,
       definition_raw: activeCst.definition_raw,
@@ -472,7 +476,7 @@ export const RSEditState = ({
       term_forms: activeCst.term_forms
     };
     handleCreateCst(data);
-  }, [activeCst, handleCreateCst]);
+  }, [activeCst, handleCreateCst, model.schema]);
 
   const renameCst = useCallback(() => {
     if (!activeCst) {

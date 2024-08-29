@@ -9,6 +9,7 @@ import Modal, { ModalProps } from '@/components/ui/Modal';
 import Overlay from '@/components/ui/Overlay';
 import TabLabel from '@/components/ui/TabLabel';
 import AnimateFade from '@/components/wrap/AnimateFade';
+import { useLibrary } from '@/context/LibraryContext';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { HelpTopic } from '@/models/miscellaneous';
 import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
@@ -33,8 +34,10 @@ export enum TabID {
 }
 
 function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: DlgConstituentaTemplateProps) {
+  const { retrieveTemplate } = useLibrary();
   const [activeTab, setActiveTab] = useState(TabID.TEMPLATE);
 
+  const [templateSchema, setTemplateSchema] = useState<IRSForm | undefined>(undefined);
   const [template, updateTemplate] = usePartialUpdate<ITemplateState>({});
   const [substitutes, updateSubstitutes] = usePartialUpdate<IArgumentsState>({
     definition: '',
@@ -43,7 +46,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
   const [constituenta, updateConstituenta] = usePartialUpdate<ICstCreateData>({
     cst_type: CstType.TERM,
     insert_after: insertAfter ?? null,
-    alias: '',
+    alias: generateAlias(CstType.TERM, schema),
     convention: '',
     definition_formal: '',
     definition_raw: '',
@@ -55,8 +58,12 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
   const handleSubmit = () => onCreate(constituenta);
 
   useLayoutEffect(() => {
-    updateConstituenta({ alias: generateAlias(constituenta.cst_type, schema) });
-  }, [constituenta.cst_type, updateConstituenta, schema]);
+    if (!template.templateID) {
+      setTemplateSchema(undefined);
+    } else {
+      retrieveTemplate(template.templateID, setTemplateSchema);
+    }
+  }, [template.templateID, retrieveTemplate]);
 
   useLayoutEffect(() => {
     if (!template.prototype) {
@@ -72,6 +79,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     } else {
       updateConstituenta({
         cst_type: template.prototype.cst_type,
+        alias: generateAlias(template.prototype.cst_type, schema),
         definition_raw: template.prototype.definition_raw,
         definition_formal: template.prototype.definition_formal,
         term_raw: template.prototype.term_raw
@@ -85,7 +93,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
         }))
       });
     }
-  }, [template.prototype, updateConstituenta, updateSubstitutes]);
+  }, [template.prototype, updateConstituenta, updateSubstitutes, schema]);
 
   useLayoutEffect(() => {
     if (substitutes.arguments.length === 0 || !template.prototype) {
@@ -95,12 +103,13 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     const type = inferTemplatedType(template.prototype.cst_type, substitutes.arguments);
     updateConstituenta({
       cst_type: type,
+      alias: generateAlias(type, schema),
       definition_formal: definition
     });
     updateSubstitutes({
       definition: definition
     });
-  }, [substitutes.arguments, template.prototype, updateConstituenta, updateSubstitutes]);
+  }, [substitutes.arguments, template.prototype, updateConstituenta, updateSubstitutes, schema]);
 
   useLayoutEffect(() => {
     setValidated(!!template.prototype && validateNewAlias(constituenta.alias, constituenta.cst_type, schema));
@@ -109,10 +118,10 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
   const templatePanel = useMemo(
     () => (
       <TabPanel>
-        <TabTemplate state={template} partialUpdate={updateTemplate} />
+        <TabTemplate state={template} partialUpdate={updateTemplate} templateSchema={templateSchema} />
       </TabPanel>
     ),
-    [template, updateTemplate]
+    [template, templateSchema, updateTemplate]
   );
 
   const argumentsPanel = useMemo(

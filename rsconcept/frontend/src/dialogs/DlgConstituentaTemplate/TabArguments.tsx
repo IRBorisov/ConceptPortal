@@ -216,6 +216,7 @@ function TabArguments({ state, schema, partialUpdate }: TabArgumentsProps) {
 
       <RSInput
         disabled
+        noTooltip
         id='result'
         placeholder='Итоговое определение'
         className='mt-[1.2rem]'

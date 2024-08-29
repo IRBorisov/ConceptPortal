@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useState } from 'react';
 
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
-import { generateAlias, validateNewAlias } from '@/models/rsformAPI';
+import { generateAlias } from '@/models/rsformAPI';
 
 import FormCreateCst from './FormCreateCst';
 
@@ -21,7 +21,7 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
     initial || {
       cst_type: CstType.BASE,
       insert_after: null,
-      alias: '',
+      alias: generateAlias(CstType.BASE, schema),
       convention: '',
       definition_formal: '',
       definition_raw: '',
@@ -31,14 +31,6 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
   );
 
   const handleSubmit = () => onCreate(cstData);
-
-  useLayoutEffect(() => {
-    updateCstData({ alias: generateAlias(cstData.cst_type, schema) });
-  }, [cstData.cst_type, updateCstData, schema]);
-
-  useEffect(() => {
-    setValidated(validateNewAlias(cstData.alias, cstData.cst_type, schema));
-  }, [cstData.alias, cstData.cst_type, schema]);
 
   return (
     <Modal

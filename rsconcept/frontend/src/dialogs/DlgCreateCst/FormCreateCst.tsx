@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 import { AnimatePresence } from 'framer-motion';
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
 import BadgeHelp from '@/components/info/BadgeHelp';
 import RSInput from '@/components/RSInput';
@@ -33,7 +33,6 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
   const showConvention = useMemo(() => !!state.convention || forceComment || isBasic, [state, forceComment, isBasic]);
 
   useLayoutEffect(() => {
-    partialUpdate({ alias: generateAlias(state.cst_type, schema) });
     setForceComment(false);
   }, [state.cst_type, partialUpdate, schema]);
 
@@ -43,29 +42,34 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
     }
   }, [state.alias, state.cst_type, schema, setValidated]);
 
+  const handleTypeChange = useCallback(
+    (target: CstType) => partialUpdate({ cst_type: target, alias: generateAlias(target, schema) }),
+    [partialUpdate, schema, generateAlias]
+  );
+
   return (
     <AnimatePresence>
-      <div key='dlg_cst_alias_picker' className='flex items-center self-center'>
+      <div key='dlg_cst_alias_picker' className='flex items-center self-center gap-3'>
         <SelectSingle
           id='dlg_cst_type'
           placeholder='Выберите тип'
           className='w-[15rem]'
           options={SelectorCstType}
           value={{ value: state.cst_type, label: labelCstType(state.cst_type) }}
-          onChange={data => partialUpdate({ cst_type: data?.value ?? CstType.BASE })}
-        />
-        <BadgeHelp
-          topic={HelpTopic.CC_CONSTITUENTA}
-          offset={16}
-          className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')}
+          onChange={data => handleTypeChange(data?.value ?? CstType.BASE)}
         />
         <TextInput
           id='dlg_cst_alias'
           dense
           label='Имя'
-          className='w-[7rem] ml-3'
+          className='w-[7rem] mr-8'
           value={state.alias}
           onChange={event => partialUpdate({ alias: event.target.value })}
+        />
+        <BadgeHelp
+          topic={HelpTopic.CC_CONSTITUENTA}
+          offset={16}
+          className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')}
         />
       </div>
       <TextArea
@@ -82,6 +86,7 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
       <AnimateFade key='dlg_cst_expression' hideContent={!state.definition_formal && isElementary}>
         <RSInput
           id='dlg_cst_expression'
+          noTooltip
           label={
             state.cst_type === CstType.STRUCTURED
               ? 'Область определения'
