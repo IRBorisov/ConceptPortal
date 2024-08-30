@@ -12,7 +12,7 @@ interface InfoConstituentaProps extends CProps.Div {
 
 function InfoConstituenta({ data, className, ...restProps }: InfoConstituentaProps) {
   return (
-    <div className={clsx('dense min-w-[15rem]', className)} {...restProps}>
+    <div className={clsx('dense min-w-[15rem] break-words', className)} {...restProps}>
       <h2>
         {data.alias}
         {data.is_inherited ? ' (наследуется)' : ''}
@@ -28,7 +28,7 @@ function InfoConstituenta({ data, className, ...restProps }: InfoConstituentaPro
         <span className='font-math'>{labelCstTypification(data)}</span>
       </p>
       {data.definition_formal ? (
-        <p>
+        <p className='break-all'>
           <b>Выражение: </b>
           <span className='font-math'>{data.definition_formal}</span>
         </p>

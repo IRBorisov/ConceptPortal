@@ -24,6 +24,7 @@ export interface ModalProps extends CProps.Styling {
   overflowVisible?: boolean;
 
   hideWindow: () => void;
+  beforeSubmit?: () => boolean;
   onSubmit?: () => void;
   onCancel?: () => void;
 
@@ -33,6 +34,7 @@ export interface ModalProps extends CProps.Styling {
 function Modal({
   header,
   hideWindow,
+  beforeSubmit,
   onSubmit,
   readonly,
   onCancel,
@@ -53,8 +55,11 @@ function Modal({
   };
 
   const handleSubmit = () => {
-    hideWindow();
+    if (beforeSubmit && !beforeSubmit()) {
+      return;
+    }
     if (onSubmit) onSubmit();
+    hideWindow();
   };
 
   return (

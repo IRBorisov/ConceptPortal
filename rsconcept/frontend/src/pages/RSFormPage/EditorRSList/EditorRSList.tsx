@@ -158,7 +158,7 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
           </div>
         ) : null}
 
-        <Overlay position='top-[0.25rem] right-[1rem]' layer='z-navigation'>
+        <Overlay position='top-[0.25rem] right-[1rem]' layer='z-tooltip'>
           <MiniButton
             title='Выгрузить в формате CSV'
             icon={<IconCSV size='1.25rem' className='icon-green' />}

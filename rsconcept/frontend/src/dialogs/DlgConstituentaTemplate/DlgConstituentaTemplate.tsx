@@ -16,6 +16,7 @@ import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
 import { generateAlias, validateNewAlias } from '@/models/rsformAPI';
 import { inferTemplatedType, substituteTemplateArgs } from '@/models/rslangAPI';
 import { PARAMETER } from '@/utils/constants';
+import { prompts } from '@/utils/labels';
 
 import FormCreateCst from '../DlgCreateCst/FormCreateCst';
 import TabArguments, { IArgumentsState } from './TabArguments';
@@ -55,7 +56,18 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
   });
 
   const [validated, setValidated] = useState(false);
-  const handleSubmit = () => onCreate(constituenta);
+
+  function handleSubmit() {
+    onCreate(constituenta);
+  }
+
+  function handlePrompt(): boolean {
+    const definedSomeArgs = substitutes.arguments.some(arg => !!arg.value);
+    if (!definedSomeArgs && !window.confirm(prompts.templateUndefined)) {
+      return false;
+    }
+    return true;
+  }
 
   useLayoutEffect(() => {
     if (!template.templateID) {
@@ -151,6 +163,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
       className='w-[43rem] h-[36.5rem] px-6'
       hideWindow={hideWindow}
       canSubmit={validated}
+      beforeSubmit={handlePrompt}
       onSubmit={handleSubmit}
     >
       <Overlay position='top-0 right-[6rem]'>

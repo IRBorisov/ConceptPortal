@@ -90,6 +90,7 @@ function PickConstituenta({
     <div className='border divide-y'>
       <SearchBar
         id={id ? `${id}__search` : undefined}
+        className='clr-input'
         noBorder
         value={filterText}
         onChange={newValue => setFilterText(newValue)}

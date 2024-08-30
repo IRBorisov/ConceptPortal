@@ -254,7 +254,7 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
               text='Порождение структуры'
               titleHtml='Раскрыть структуру типизации <br/>выделенной конституенты'
               icon={<IconGenerateStructure size='1rem' className='icon-primary' />}
-              disabled={!controller.isContentEditable || !controller.canProduceStructure}
+              disabled={!controller.isContentEditable || !controller.canProduceStructure || controller.isProcessing}
               onClick={handleProduceStructure}
             />
             <DropdownButton
