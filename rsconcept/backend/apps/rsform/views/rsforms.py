@@ -361,6 +361,11 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         model = self._get_item()
         load_metadata = input_serializer.validated_data['load_metadata']
         data = utility.read_zipped_json(request.FILES['file'].file, utils.EXTEOR_INNER_FILENAME)
+        if data is None:
+            return Response(
+                status=c.HTTP_400_BAD_REQUEST,
+                data={'file': msg.exteorFileCorrupted()}
+            )
         data['id'] = model.pk
 
         serializer = s.RSFormTRSSerializer(
@@ -486,11 +491,17 @@ class TrsImportView(views.APIView):
         request=s.FileSerializer,
         responses={
             c.HTTP_201_CREATED: LibraryItemSerializer,
+            c.HTTP_400_BAD_REQUEST: None,
             c.HTTP_403_FORBIDDEN: None
         }
     )
     def post(self, request: Request) -> HttpResponse:
         data = utility.read_zipped_json(request.FILES['file'].file, utils.EXTEOR_INNER_FILENAME)
+        if data is None:
+            return Response(
+                status=c.HTTP_400_BAD_REQUEST,
+                data={'file': msg.exteorFileCorrupted()}
+            )
         owner = cast(User, self.request.user)
         _prepare_rsform_data(data, request, owner)
         serializer = s.RSFormTRSSerializer(
@@ -526,6 +537,11 @@ def create_rsform(request: Request) -> HttpResponse:
         )
 
     data = utility.read_zipped_json(request.FILES['file'].file, utils.EXTEOR_INNER_FILENAME)
+    if data is None:
+        return Response(
+            status=c.HTTP_400_BAD_REQUEST,
+            data={'file': msg.exteorFileCorrupted()}
+        )
     _prepare_rsform_data(data, request, owner)
     serializer_rsform = s.RSFormTRSSerializer(data=data, context={'load_meta': True})
     serializer_rsform.is_valid(raise_exception=True)

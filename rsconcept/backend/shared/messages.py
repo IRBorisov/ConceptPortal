@@ -14,6 +14,10 @@ def operationNotInOSS(title: str):
     return f'Операция не принадлежит ОСС: {title}'
 
 
+def exteorFileCorrupted():
+    return 'Файл Экстеор не соответствует ожидаемому формату. Попробуйте сохранить файл в новой версии'
+
+
 def previousResultMissing():
     return 'Отсутствует результат предыдущей операции'
 

@@ -1,13 +1,17 @@
 ''' Utility functions. '''
 import json
 from io import BytesIO
-from zipfile import ZipFile
+from typing import Optional
+from zipfile import BadZipFile, ZipFile
 
 
-def read_zipped_json(data, json_filename: str) -> dict:
-    ''' Read JSON from zipped data '''
-    with ZipFile(data, 'r') as archive:
-        json_data = archive.read(json_filename)
+def read_zipped_json(data, json_filename: str) -> Optional[dict]:
+    ''' Read JSON from zipped data. '''
+    try:
+        with ZipFile(data, 'r') as archive:
+            json_data = archive.read(json_filename)
+    except BadZipFile:
+        return None
     result: dict = json.loads(json_data)
     return result
 
