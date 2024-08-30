@@ -1,12 +1,11 @@
 'use client';
 
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo } from 'react';
 
 import BadgeConstituenta from '@/components/info/BadgeConstituenta';
-import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } from '@/components/ui/DataTable';
+import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
 import NoData from '@/components/ui/NoData';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
-import useWindowSize from '@/hooks/useWindowSize';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { isMockCst } from '@/models/rsformAPI';
 import { PARAMETER, prefixes } from '@/utils/constants';
@@ -16,7 +15,6 @@ interface TableSideConstituentsProps {
   items: IConstituenta[];
   activeCst?: IConstituenta;
   onOpenEdit: (cstID: ConstituentaID) => void;
-  denseThreshold?: number;
   autoScroll?: boolean;
   maxHeight: string;
 }
@@ -28,13 +26,9 @@ function TableSideConstituents({
   activeCst,
   autoScroll = true,
   onOpenEdit,
-  maxHeight,
-  denseThreshold = 9999
+  maxHeight
 }: TableSideConstituentsProps) {
   const { colors } = useConceptOptions();
-  const windowSize = useWindowSize();
-
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ expression: true });
 
   useLayoutEffect(() => {
     if (!activeCst) {
@@ -53,17 +47,6 @@ function TableSideConstituents({
       }, PARAMETER.refreshTimeout);
     }
   }, [activeCst, autoScroll]);
-
-  useLayoutEffect(() => {
-    setColumnVisibility(prev => {
-      const newValue = (windowSize.width ?? 0) >= denseThreshold;
-      if (newValue === prev.expression) {
-        return prev;
-      } else {
-        return { expression: newValue };
-      }
-    });
-  }, [windowSize, denseThreshold]);
 
   const handleRowClicked = useCallback(
     (cst: IConstituenta) => {
@@ -92,25 +75,6 @@ function TableSideConstituents({
         size: 1000,
         minSize: 250,
         maxSize: 1000,
-        cell: props => (
-          <div
-            style={{
-              textWrap: 'pretty',
-              fontSize: 12,
-              color: isMockCst(props.row.original) ? colors.fgWarning : undefined
-            }}
-          >
-            {props.getValue()}
-          </div>
-        )
-      }),
-      columnHelper.accessor('definition_formal', {
-        id: 'expression',
-        header: 'Выражение',
-        size: 2000,
-        minSize: 0,
-        maxSize: 2000,
-        enableHiding: true,
         cell: props => (
           <div
             style={{
@@ -162,8 +126,6 @@ function TableSideConstituents({
       conditionalRowStyles={conditionalRowStyles}
       headPosition='0'
       enableHiding
-      columnVisibility={columnVisibility}
-      onColumnVisibilityChange={setColumnVisibility}
       noDataComponent={
         <NoData className='min-h-[5rem]'>
           <p>Список конституент пуст</p>

@@ -14,9 +14,6 @@ import { animateSideView } from '@/styling/animations';
 import ConstituentsSearch from './ConstituentsSearch';
 import TableSideConstituents from './TableSideConstituents';
 
-// Window width cutoff for expression show
-const COLUMN_EXPRESSION_HIDE_THRESHOLD = 1500;
-
 // Window width cutoff for dense search bar
 const COLUMN_DENSE_SEARCH_THRESHOLD = 1100;
 
@@ -47,7 +44,6 @@ function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit 
         activeCst={activeCst}
         onOpenEdit={onOpenEdit}
         autoScroll={!isBottom}
-        denseThreshold={COLUMN_EXPRESSION_HIDE_THRESHOLD}
       />
     ),
     [isBottom, filteredData, activeCst, onOpenEdit, calculateHeight, accessLevel]
