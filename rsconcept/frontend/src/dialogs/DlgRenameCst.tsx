@@ -46,7 +46,7 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
       hideWindow={hideWindow}
       canSubmit={validated}
       onSubmit={() => onRename(cstData)}
-      className={clsx('w-[30rem]', 'py-6 pr-3 pl-6 flex justify-center items-center')}
+      className={clsx('w-[30rem]', 'py-6 pr-3 pl-6 flex gap-3 justify-center items-center')}
     >
       <SelectSingle
         id='dlg_cst_type'
@@ -64,7 +64,7 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
         id='dlg_cst_alias'
         dense
         label='Имя'
-        className='w-[7rem] ml-3'
+        className='w-[7rem]'
         value={cstData.alias}
         onChange={event => updateData({ alias: event.target.value })}
       />

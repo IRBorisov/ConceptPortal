@@ -41,7 +41,7 @@ function TextInput({
       <input
         id={id}
         className={clsx(
-          'py-2',
+          'min-w-0 py-2',
           'leading-tight truncate hover:text-clip',
           {
             'px-3': !noBorder || !disabled,

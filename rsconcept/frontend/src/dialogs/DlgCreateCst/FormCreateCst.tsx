@@ -62,7 +62,7 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
           id='dlg_cst_alias'
           dense
           label='Имя'
-          className='w-[7rem] mr-8'
+          className='w-[7rem]'
           value={state.alias}
           onChange={event => partialUpdate({ alias: event.target.value })}
         />
