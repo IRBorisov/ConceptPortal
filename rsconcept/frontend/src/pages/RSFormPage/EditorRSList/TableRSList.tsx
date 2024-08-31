@@ -113,7 +113,7 @@ function TableRSList({
         size: 1000,
         minSize: 300,
         maxSize: 1000,
-        cell: props => <div className='break-words text-pretty'>{props.getValue()}</div>
+        cell: props => <div className='break-all text-pretty'>{props.getValue()}</div>
       }),
       columnHelper.accessor(cst => cst.definition_resolved || cst.definition_raw || '', {
         id: 'definition',
