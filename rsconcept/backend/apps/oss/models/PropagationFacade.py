@@ -58,4 +58,4 @@ class PropagationFacade:
             return
 
         schema = RSForm(item)
-        PropagationFacade.before_delete_cst(schema, list(schema.constituents()))
+        PropagationFacade.before_delete_cst(schema, list(schema.constituents().order_by('order')))

@@ -129,7 +129,7 @@ class OperationSchema:
 
         if schema is not None and has_children:
             rsform = RSForm(schema)
-            self.after_create_cst(rsform, list(rsform.constituents()))
+            self.after_create_cst(rsform, list(rsform.constituents().order_by('order')))
         self.save(update_fields=['time_update'])
 
     def set_arguments(self, target: int, arguments: list[Operation]) -> None:
@@ -219,17 +219,17 @@ class OperationSchema:
 
     def execute_operation(self, operation: Operation) -> bool:
         ''' Execute target operation. '''
-        schemas: list[LibraryItem] = [arg.argument.result for arg in operation.getArguments()]
+        schemas: list[LibraryItem] = [arg.argument.result for arg in operation.getArguments().order_by('pk')]
         if None in schemas:
             return False
         substitutions = operation.getSubstitutions()
-        receiver = self.create_input(operation)
+        receiver = self.create_input(self.cache.operation_by_id[operation.pk])
 
         parents: dict = {}
         children: dict = {}
         for operand in schemas:
             schema = RSForm(operand)
-            items = list(schema.constituents())
+            items = list(schema.constituents().order_by('order'))
             new_items = receiver.insert_copy(items)
             for (i, cst) in enumerate(new_items):
                 parents[cst.pk] = items[i]
@@ -240,21 +240,23 @@ class OperationSchema:
             original = children[sub.original.pk]
             replacement = children[sub.substitution.pk]
             translated_substitutions.append((original, replacement))
+        # TODO: add auto substitutes for diamond
         receiver.substitute(translated_substitutions)
 
-        # TODO: remove duplicates from diamond
-
-        for cst in receiver.constituents():
+        for cst in receiver.constituents().order_by('order'):
             parent = parents.get(cst.pk)
             assert parent is not None
             Inheritance.objects.create(
-                operation=operation,
+                operation_id=operation.pk,
                 child=cst,
                 parent=parent
             )
 
         receiver.restore_order()
         receiver.reset_aliases()
+
+        if len(self.cache.graph.outputs[operation.pk]) > 0:
+            self.after_create_cst(receiver, list(receiver.constituents().order_by('order')))
         self.save(update_fields=['time_update'])
         return True
 
@@ -331,7 +333,7 @@ class OperationSchema:
             self._execute_inherit_cst(
                 target_operation=target.pk,
                 source=parent_schema,
-                items=list(parent_schema.constituents()),
+                items=list(parent_schema.constituents().order_by('order')),
                 mapping={}
             )
 
@@ -769,7 +771,7 @@ class OssCache:
 
     def insert_argument(self, argument: Argument) -> None:
         ''' Insert new argument. '''
-        self.graph.add_edge(argument.operation_id, argument.argument_id)
+        self.graph.add_edge(argument.argument_id, argument.operation_id)
 
     def insert_inheritance(self, inheritance: Inheritance) -> None:
         ''' Insert new inheritance. '''
@@ -811,7 +813,7 @@ class OssCache:
 
     def remove_argument(self, argument: Argument) -> None:
         ''' Remove argument from cache. '''
-        self.graph.remove_edge(argument.operation_id, argument.argument_id)
+        self.graph.remove_edge(argument.argument_id, argument.operation_id)
 
     def remove_substitution(self, target: Substitution) -> None:
         ''' Remove substitution from cache. '''

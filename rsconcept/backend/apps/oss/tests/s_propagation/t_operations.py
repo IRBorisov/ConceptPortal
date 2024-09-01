@@ -132,7 +132,7 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(self.ks5.constituents().count(), 6)
         self.assertEqual(self.ks4D1.definition_formal, r'X4 X1')
         self.assertEqual(self.ks4D2.definition_formal, r'X1 DEL DEL DEL D1')
-        self.assertEqual(self.ks5D4.definition_formal, r'X1 DEL DEL DEL D1 D2 D3')
+        self.assertEqual(self.ks5D4.definition_formal, r'DEL DEL X3 DEL D1 D2 D3')
 
     @decl_endpoint('/api/oss/{item}/set-input', method='patch')
     def test_set_input_null(self):
@@ -155,7 +155,7 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(self.ks5.constituents().count(), 6)
         self.assertEqual(self.ks4D1.definition_formal, r'X4 X1')
         self.assertEqual(self.ks4D2.definition_formal, r'X1 DEL DEL DEL D1')
-        self.assertEqual(self.ks5D4.definition_formal, r'X1 DEL DEL DEL D1 D2 D3')
+        self.assertEqual(self.ks5D4.definition_formal, r'DEL DEL X3 DEL D1 D2 D3')
 
     @decl_endpoint('/api/oss/{item}/set-input', method='patch')
     def test_set_input_change_schema(self):
@@ -190,7 +190,7 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(ks4Dks6.definition_formal, r'X5 X6')
         self.assertEqual(self.ks4D1.definition_formal, r'X4 X1')
         self.assertEqual(self.ks4D2.definition_formal, r'X1 DEL DEL DEL D1')
-        self.assertEqual(self.ks5D4.definition_formal, r'X1 DEL DEL DEL D1 D2 D3')
+        self.assertEqual(self.ks5D4.definition_formal, r'DEL DEL X3 DEL D1 D2 D3')
 
     @decl_endpoint('/api/library/{item}', method='delete')
     def test_delete_schema(self):
@@ -206,7 +206,7 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(self.ks4.constituents().count(), 4)
         self.assertEqual(self.ks5.constituents().count(), 7)
         self.assertEqual(self.ks4D2.definition_formal, r'DEL X2 X3 S1 DEL')
-        self.assertEqual(self.ks5D4.definition_formal, r'X1 X2 X3 S1 D1 DEL D3')
+        self.assertEqual(self.ks5D4.definition_formal, r'X1 X2 X3 S1 DEL D2 D3')
 
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
     def test_delete_operation_and_constituents(self):
@@ -227,7 +227,7 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(self.ks4.constituents().count(), 4)
         self.assertEqual(self.ks5.constituents().count(), 7)
         self.assertEqual(self.ks4D2.definition_formal, r'DEL X2 X3 S1 DEL')
-        self.assertEqual(self.ks5D4.definition_formal, r'X1 X2 X3 S1 D1 DEL D3')
+        self.assertEqual(self.ks5D4.definition_formal, r'X1 X2 X3 S1 DEL D2 D3')
 
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
     def test_delete_operation_keep_constituents(self):
@@ -282,7 +282,7 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(self.ks4.constituents().count(), 5)
         self.assertEqual(self.ks5.constituents().count(), 7)
         self.assertEqual(self.ks4D2.definition_formal, r'X1 D1 X3 S1 D1')
-        self.assertEqual(self.ks5D4.definition_formal, r'X1 D2 X3 S1 D1 D2 D3')
+        self.assertEqual(self.ks5D4.definition_formal, r'D1 X2 X3 S1 D1 D2 D3')
 
     @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
     def test_change_arguments(self):
@@ -307,7 +307,7 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(self.ks4.constituents().count(), 4)
         self.assertEqual(self.ks5.constituents().count(), 6)
         self.assertEqual(self.ks4D2.definition_formal, r'X1 DEL DEL DEL D1')
-        self.assertEqual(self.ks5D4.definition_formal, r'X1 DEL DEL DEL D1 D2 D3')
+        self.assertEqual(self.ks5D4.definition_formal, r'DEL DEL X3 DEL D1 D2 D3')
 
         data['arguments'] = [self.operation1.pk, self.operation2.pk]
         self.executeOK(data=data, item=self.owned_id)
@@ -320,4 +320,22 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(self.ks4.constituents().count(), 7)
         self.assertEqual(self.ks5.constituents().count(), 9)
         self.assertEqual(self.ks4D2.definition_formal, r'X1 DEL DEL DEL D1')
-        self.assertEqual(self.ks5D4.definition_formal, r'X1 DEL DEL DEL D1 D2 D3')
+        self.assertEqual(self.ks5D4.definition_formal, r'DEL DEL X3 DEL D1 D2 D3')
+
+    @decl_endpoint('/api/oss/{item}/execute-operation', method='post')
+    def test_execute_middle_operation(self):
+        self.client.delete(f'/api/library/{self.ks4.model.pk}')
+        self.operation4.refresh_from_db()
+        self.ks5.refresh_from_db()
+        self.assertEqual(self.operation4.result, None)
+        self.assertEqual(self.ks5.constituents().count(), 3)
+
+        data = {
+            'target': self.operation4.pk,
+            'positions': []
+        }
+        self.executeOK(data=data, item=self.owned_id)
+        self.operation4.refresh_from_db()
+        self.ks5.refresh_from_db()
+        self.assertNotEqual(self.operation4.result, None)
+        self.assertEqual(self.ks5.constituents().count(), 8)
