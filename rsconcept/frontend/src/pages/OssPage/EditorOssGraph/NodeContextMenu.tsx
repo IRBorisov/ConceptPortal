@@ -101,8 +101,12 @@ function NodeContextMenu({
   };
 
   return (
-    <div ref={ref} className='absolute select-none' style={{ top: cursorY, left: cursorX, width: 10, height: 10 }}>
-      <Dropdown isOpen={isOpen} stretchLeft={cursorX >= window.innerWidth - PARAMETER.ossContextMenuWidth}>
+    <div ref={ref} className='absolute select-none' style={{ top: cursorY, left: cursorX }}>
+      <Dropdown
+        isOpen={isOpen}
+        stretchLeft={cursorX >= window.innerWidth - PARAMETER.ossContextMenuWidth}
+        stretchTop={cursorY >= window.innerHeight - PARAMETER.ossContextMenuHeight}
+      >
         <DropdownButton
           text='Редактировать'
           title='Редактировать операцию'

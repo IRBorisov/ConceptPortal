@@ -15,6 +15,7 @@ export const PARAMETER = {
   ossImageWidth: 1280, // pixels - size of OSS image
   ossImageHeight: 960, // pixels - size of OSS image
   ossContextMenuWidth: 200, // pixels - width of OSS context menu
+  ossContextMenuHeight: 200, // pixels - height of OSS context menu
   ossGridSize: 10, // pixels - size of OSS grid
   ossMinDistance: 20, // pixels - minimum distance between node centers
   ossDistanceX: 180, // pixels - insert x-distance between node centers
