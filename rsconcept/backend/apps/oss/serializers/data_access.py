@@ -207,10 +207,10 @@ class OperationSchemaSerializer(serializers.ModelSerializer):
         result = LibraryItemDetailsSerializer(instance).data
         oss = OperationSchema(instance)
         result['items'] = []
-        for operation in oss.operations():
+        for operation in oss.operations().order_by('pk'):
             result['items'].append(OperationSerializer(operation).data)
         result['arguments'] = []
-        for argument in oss.arguments():
+        for argument in oss.arguments().order_by('pk'):
             result['arguments'].append(ArgumentSerializer(argument).data)
         result['substitutions'] = []
         for substitution in oss.substitutions().values(
@@ -221,6 +221,6 @@ class OperationSchemaSerializer(serializers.ModelSerializer):
             original_term=F('original__term_resolved'),
             substitution_alias=F('substitution__alias'),
             substitution_term=F('substitution__term_resolved'),
-        ):
+        ).order_by('pk'):
             result['substitutions'].append(substitution)
         return result
