@@ -165,12 +165,10 @@ function FormCreateItem() {
           value={alias}
           onChange={event => setAlias(event.target.value)}
         />
-        {user?.is_staff ? (
-          <div className='flex flex-col items-center gap-2'>
-            <Label text='Тип схемы' className='self-center select-none' />
-            <SelectItemType value={itemType} onChange={setItemType} />
-          </div>
-        ) : null}
+        <div className='flex flex-col items-center gap-2'>
+          <Label text='Тип схемы' className='self-center select-none' />
+          <SelectItemType value={itemType} onChange={setItemType} />
+        </div>
 
         <div className='flex flex-col gap-2'>
           <Label text='Доступ' className='self-center select-none' />
