@@ -289,9 +289,12 @@ export const RSEditState = ({
 
   const handleSubstituteCst = useCallback(
     (data: ICstSubstituteData) => {
-      model.cstSubstitute(data, () => toast.success(information.substituteSingle));
+      model.cstSubstitute(data, () => {
+        setSelected(prev => prev.filter(id => !data.substitutions.find(sub => sub.original === id)));
+        toast.success(information.substituteSingle);
+      });
     },
-    [model]
+    [model, setSelected]
   );
 
   const handleDeleteCst = useCallback(
