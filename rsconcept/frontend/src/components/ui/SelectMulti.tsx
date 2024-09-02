@@ -67,6 +67,9 @@ function SelectMulti<Option, Group extends GroupBase<Option> = GroupBase<Option>
       }),
       option: (styles, { isSelected }) => ({
         ...styles,
+        padding: '0.25rem 0.75rem',
+        fontSize: '0.875rem',
+        lineHeight: '1.25rem',
         backgroundColor: isSelected ? colors.bgSelected : styles.backgroundColor,
         color: isSelected ? colors.fgSelected : styles.color,
         borderWidth: '1px',

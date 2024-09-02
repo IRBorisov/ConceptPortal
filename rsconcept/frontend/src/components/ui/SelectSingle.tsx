@@ -78,6 +78,9 @@ function SelectSingle<Option, Group extends GroupBase<Option> = GroupBase<Option
       }),
       option: (defaultStyles, { isSelected }) => ({
         ...defaultStyles,
+        padding: '0.25rem 0.75rem',
+        fontSize: '0.875rem',
+        lineHeight: '1.25rem',
         backgroundColor: isSelected ? colors.bgSelected : defaultStyles.backgroundColor,
         color: isSelected ? colors.fgSelected : defaultStyles.color,
         borderWidth: '1px',

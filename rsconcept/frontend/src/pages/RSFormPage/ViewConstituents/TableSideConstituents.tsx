@@ -5,11 +5,14 @@ import { useCallback, useLayoutEffect, useMemo } from 'react';
 import BadgeConstituenta from '@/components/info/BadgeConstituenta';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
 import NoData from '@/components/ui/NoData';
+import TextContent from '@/components/ui/TextContent';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { isMockCst } from '@/models/rsformAPI';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { describeConstituenta } from '@/utils/labels';
+
+const DESCRIPTION_MAX_SYMBOLS = 280;
 
 interface TableSideConstituentsProps {
   items: IConstituenta[];
@@ -76,15 +79,16 @@ function TableSideConstituents({
         minSize: 250,
         maxSize: 1000,
         cell: props => (
-          <div
+          <TextContent
+            noTooltip
+            text={props.getValue()}
+            maxLength={DESCRIPTION_MAX_SYMBOLS}
             style={{
               textWrap: 'pretty',
               fontSize: 12,
               color: isMockCst(props.row.original) ? colors.fgWarning : undefined
             }}
-          >
-            {props.getValue()}
-          </div>
+          />
         )
       })
     ],

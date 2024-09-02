@@ -145,8 +145,15 @@ export const OptionsState = ({ children }: OptionsStateProps) => {
           id={`${globals.tooltip}`}
           layer='z-topmost'
           place='right-start'
-          className={clsx('mt-1 translate-y-1/2', 'max-w-[20rem]')}
+          className={clsx('mt-8', 'max-w-[20rem]')}
         />
+        <Tooltip
+          float
+          id={`${globals.value_tooltip}`}
+          layer='z-topmost'
+          className={clsx('max-w-[calc(min(40rem,100dvw-2rem))]')}
+        />
+
         {children}
       </>
     </OptionsContext.Provider>

@@ -178,7 +178,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
         </div>
         <SelectMultiGrammeme
           placeholder='Выберите граммемы'
-          className='w-[15rem]'
+          className='min-w-[15rem] h-fit'
           value={inputGrams}
           setValue={setInputGrams}
         />

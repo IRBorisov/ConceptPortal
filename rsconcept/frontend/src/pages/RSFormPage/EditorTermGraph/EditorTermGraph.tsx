@@ -356,20 +356,27 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         hideZero
         totalCount={controller.schema?.stats?.count_all ?? 0}
         selectedCount={controller.selected.length}
-        position='top-[4.3rem] sm:top-[0.3rem] left-0'
+        position='top-[4.3rem] sm:top-[2rem] left-0'
       />
 
       {hoverCst && hoverCstDebounced && hoverCst === hoverCstDebounced ? (
         <Overlay
           layer='z-tooltip'
           position={clsx('top-[1.6rem]', { 'left-[2.6rem]': hoverLeft, 'right-[2.6rem]': !hoverLeft })}
-          className={clsx('w-[25rem]', 'px-3', 'cc-scroll-y', 'border shadow-md', 'clr-app')}
+          className={clsx(
+            'w-[25rem] max-h-[calc(100dvh-15rem)]',
+            'px-3',
+            'cc-scroll-y',
+            'border shadow-md',
+            'clr-input',
+            'text-sm'
+          )}
         >
           <InfoConstituenta className='pt-1 pb-2' data={hoverCstDebounced} />
         </Overlay>
       ) : null}
 
-      <Overlay position='top-[6.25rem] sm:top-9 left-0' className='flex gap-1'>
+      <Overlay position='top-[6.25rem] sm:top-[4rem] left-0' className='flex gap-1'>
         <div className='flex flex-col ml-2 w-[13.5rem]'>
           {selectors}
           {viewHidden}
