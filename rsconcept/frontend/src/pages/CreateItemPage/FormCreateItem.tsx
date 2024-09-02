@@ -114,24 +114,33 @@ function FormCreateItem() {
     handleSelectLocation(initLocation);
   }, [initLocation, handleSelectLocation]);
 
+  useLayoutEffect(() => {
+    if (itemType !== LibraryItemType.RSFORM) {
+      setFile(undefined);
+      setFileName('');
+    }
+  }, [itemType]);
+
   return (
     <form className={clsx('cc-column', 'min-w-[30rem] max-w-[30rem] mx-auto', 'px-6 py-3')} onSubmit={handleSubmit}>
       <h1>
-        <Overlay position='top-0 right-[0.5rem]'>
-          <input
-            id='schema_file'
-            ref={inputRef}
-            type='file'
-            style={{ display: 'none' }}
-            accept={EXTEOR_TRS_FILE}
-            onChange={handleFileChange}
-          />
-          <MiniButton
-            title='Загрузить из Экстеор'
-            icon={<IconDownload size='1.25rem' className='icon-primary' />}
-            onClick={() => inputRef.current?.click()}
-          />
-        </Overlay>
+        {itemType == LibraryItemType.RSFORM ? (
+          <Overlay position='top-0 right-[0.5rem]'>
+            <input
+              id='schema_file'
+              ref={inputRef}
+              type='file'
+              style={{ display: 'none' }}
+              accept={EXTEOR_TRS_FILE}
+              onChange={handleFileChange}
+            />
+            <MiniButton
+              title='Загрузить из Экстеор'
+              icon={<IconDownload size='1.25rem' className='icon-primary' />}
+              onClick={() => inputRef.current?.click()}
+            />
+          </Overlay>
+        ) : null}
         Создание схемы
       </h1>
 
