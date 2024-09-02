@@ -89,7 +89,7 @@ function PickMultiConstituenta({ id, schema, prefixID, rows, selected, setSelect
 
   return (
     <div>
-      <div className='flex justify-between items-center gap-3 clr-input px-3 border-x border-t rounded-t-md'>
+      <div className='flex justify-between items-center clr-input px-3 border-x border-t rounded-t-md'>
         <div className='w-[24ch] select-none whitespace-nowrap'>
           Выбраны {selected.length} из {schema?.items.length ?? 0}
         </div>
