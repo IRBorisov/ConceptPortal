@@ -41,18 +41,16 @@ function TableWordForms({ forms, setForms, onFormSelect }: TableWordFormsProps) 
         size: 350,
         minSize: 500,
         maxSize: 500,
-        cell: props => <div className='min-w-[20rem]'>{props.getValue()}</div>
+        cell: props => <div className='min-w-[25rem]'>{props.getValue()}</div>
       }),
       columnHelper.accessor('grams', {
         id: 'grams',
-        maxSize: 150,
+        size: 0,
         cell: props => <BadgeWordForm keyPrefix={props.cell.id} form={props.row.original} />
       }),
       columnHelper.display({
         id: 'actions',
-        size: 50,
-        minSize: 50,
-        maxSize: 50,
+        size: 0,
         cell: props => (
           <div className='h-[1.25rem] w-[1.25rem]'>
             <MiniButton

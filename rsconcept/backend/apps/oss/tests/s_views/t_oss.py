@@ -387,7 +387,7 @@ class TestOssViewset(EndpointTester):
                 'comment': 'Comment mod'
             },
             'positions': [],
-            'arguments': [self.operation1.pk, self.operation2.pk],
+            'arguments': [self.operation2.pk, self.operation1.pk],
             'substitutions': [
                 {
                     'original': self.ks1X1.pk,
@@ -409,7 +409,11 @@ class TestOssViewset(EndpointTester):
         self.assertEqual(self.operation3.alias, data['item_data']['alias'])
         self.assertEqual(self.operation3.title, data['item_data']['title'])
         self.assertEqual(self.operation3.comment, data['item_data']['comment'])
-        self.assertEqual(set([argument.pk for argument in self.operation3.getArguments()]), set(data['arguments']))
+        args = self.operation3.getArguments().order_by('order')
+        self.assertEqual(args[0].argument.pk, data['arguments'][0])
+        self.assertEqual(args[0].order, 0)
+        self.assertEqual(args[1].argument.pk, data['arguments'][1])
+        self.assertEqual(args[1].order, 1)
         sub = self.operation3.getSubstitutions()[0]
         self.assertEqual(sub.original.pk, data['substitutions'][0]['original'])
         self.assertEqual(sub.substitution.pk, data['substitutions'][0]['substitution'])

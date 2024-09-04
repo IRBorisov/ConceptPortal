@@ -20,11 +20,6 @@ class TestConstituenta(TestCase):
         self.assertEqual(str(cst), testStr)
 
 
-    def test_order_not_null(self):
-        with self.assertRaises(IntegrityError):
-            Constituenta.objects.create(alias='X1', schema=self.schema1.model)
-
-
     def test_order_positive_integer(self):
         with self.assertRaises(IntegrityError):
             Constituenta.objects.create(alias='X1', schema=self.schema1.model, order=-1)

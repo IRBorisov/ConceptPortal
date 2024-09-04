@@ -187,7 +187,7 @@ function PickSubstitutions({
       }),
       columnHelper.display({
         id: 'status',
-        size: 40,
+        size: 0,
         cell: () => <IconPageRight size='1.2rem' />
       }),
       columnHelper.accessor(item => item.original.alias, {
@@ -204,6 +204,7 @@ function PickSubstitutions({
       }),
       columnHelper.display({
         id: 'actions',
+        size: 0,
         cell: props =>
           props.row.original.is_suggestion ? (
             <div className='max-w-fit'>

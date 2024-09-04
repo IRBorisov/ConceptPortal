@@ -14,7 +14,7 @@ class OperationAdmin(admin.ModelAdmin):
 class ArgumentAdmin(admin.ModelAdmin):
     ''' Admin model: Operation arguments. '''
     ordering = ['operation']
-    list_display = ['id', 'operation', 'argument']
+    list_display = ['id', 'order', 'operation', 'argument']
     search_fields = ['id', 'operation', 'argument']
 
 

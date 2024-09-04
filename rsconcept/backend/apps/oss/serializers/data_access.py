@@ -210,7 +210,7 @@ class OperationSchemaSerializer(serializers.ModelSerializer):
         for operation in oss.operations().order_by('pk'):
             result['items'].append(OperationSerializer(operation).data)
         result['arguments'] = []
-        for argument in oss.arguments().order_by('pk'):
+        for argument in oss.arguments().order_by('order'):
             result['arguments'].append(ArgumentSerializer(argument).data)
         result['substitutions'] = []
         for substitution in oss.substitutions().values(

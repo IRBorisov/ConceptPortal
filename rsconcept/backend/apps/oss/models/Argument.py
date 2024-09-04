@@ -1,5 +1,5 @@
 ''' Models: Operation Argument in OSS. '''
-from django.db.models import CASCADE, ForeignKey, Model
+from django.db.models import CASCADE, ForeignKey, Model, PositiveIntegerField
 
 
 class Argument(Model):
@@ -15,6 +15,10 @@ class Argument(Model):
         to='oss.Operation',
         on_delete=CASCADE,
         related_name='descendants'
+    )
+    order: PositiveIntegerField = PositiveIntegerField(
+        verbose_name='Позиция',
+        default=0,
     )
 
     class Meta:

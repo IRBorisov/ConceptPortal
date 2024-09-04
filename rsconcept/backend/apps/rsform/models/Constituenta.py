@@ -58,7 +58,7 @@ class Constituenta(Model):
     order: PositiveIntegerField = PositiveIntegerField(
         verbose_name='Позиция',
         validators=[MinValueValidator(1)],
-        default=-1,
+        default=1,
     )
     alias: CharField = CharField(
         verbose_name='Имя',

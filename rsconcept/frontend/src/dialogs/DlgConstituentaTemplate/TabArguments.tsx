@@ -117,6 +117,7 @@ function TabArguments({ state, schema, partialUpdate }: TabArgumentsProps) {
       }),
       argumentsHelper.display({
         id: 'actions',
+        size: 0,
         cell: props => (
           <div className='h-[1.25rem] w-[1.25rem]'>
             {props.row.original.value ? (
@@ -190,7 +191,7 @@ function TabArguments({ state, schema, partialUpdate }: TabArgumentsProps) {
             title='Подставить значение аргумента'
             noHover
             className='py-0'
-            icon={<IconAccept size='2rem' className='icon-green' />}
+            icon={<IconAccept size='1.5rem' className='icon-green' />}
             disabled={!argumentValue || !selectedArgument}
             onClick={() => handleAssignArgument(selectedArgument!, argumentValue)}
           />
@@ -200,7 +201,7 @@ function TabArguments({ state, schema, partialUpdate }: TabArgumentsProps) {
             className='py-0'
             disabled={!isModified}
             onClick={handleReset}
-            icon={<IconReset size='2rem' className='icon-primary' />}
+            icon={<IconReset size='1.5rem' className='icon-primary' />}
           />
         </div>
       </div>

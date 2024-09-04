@@ -260,12 +260,13 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         onError: setProcessingError,
         onSuccess: newData => {
           oss.setData(newData);
-          library.localUpdateTimestamp(newData.id);
-          if (callback) callback();
+          library.reloadItems(() => {
+            if (callback) callback();
+          });
         }
       });
     },
-    [itemID, library.localUpdateTimestamp, oss.setData]
+    [itemID, library.reloadItems, oss.setData]
   );
 
   const createInput = useCallback(

@@ -29,9 +29,7 @@ function TableUsers({ items, onDelete }: TableUsersProps) {
       }),
       columnHelper.display({
         id: 'actions',
-        size: 50,
-        minSize: 50,
-        maxSize: 50,
+        size: 0,
         cell: props => (
           <div className='h-[1.25rem] w-[1.25rem]'>
             <MiniButton

@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from 'react';
 
-import { IconRemove } from '@/components/Icons';
+import { IconMoveDown, IconMoveUp, IconRemove } from '@/components/Icons';
 import SelectOperation from '@/components/select/SelectOperation';
 import DataTable, { createColumnHelper } from '@/components/ui/DataTable';
 import MiniButton from '@/components/ui/MiniButton';
@@ -20,7 +20,10 @@ interface PickMultiOperationProps {
 const columnHelper = createColumnHelper<IOperation>();
 
 function PickMultiOperation({ rows, items, selected, setSelected }: PickMultiOperationProps) {
-  const selectedItems = useMemo(() => items.filter(item => selected.includes(item.id)), [items, selected]);
+  const selectedItems = useMemo(
+    () => selected.map(itemID => items.find(item => item.id === itemID)!),
+    [items, selected]
+  );
   const nonSelectedItems = useMemo(() => items.filter(item => !selected.includes(item.id)), [items, selected]);
   const [lastSelected, setLastSelected] = useState<IOperation | undefined>(undefined);
 
@@ -38,6 +41,36 @@ function PickMultiOperation({ rows, items, selected, setSelected }: PickMultiOpe
       }
     },
     [setSelected]
+  );
+
+  const handleMoveUp = useCallback(
+    (operation: OperationID) => {
+      const index = selected.indexOf(operation);
+      if (index > 0) {
+        setSelected(prev => {
+          const newSelected = [...prev];
+          newSelected[index] = newSelected[index - 1];
+          newSelected[index - 1] = operation;
+          return newSelected;
+        });
+      }
+    },
+    [setSelected, selected]
+  );
+
+  const handleMoveDown = useCallback(
+    (operation: OperationID) => {
+      const index = selected.indexOf(operation);
+      if (index < selected.length - 1) {
+        setSelected(prev => {
+          const newSelected = [...prev];
+          newSelected[index] = newSelected[index + 1];
+          newSelected[index + 1] = operation;
+          return newSelected;
+        });
+      }
+    },
+    [setSelected, selected]
   );
 
   const columns = useMemo(
@@ -59,17 +92,35 @@ function PickMultiOperation({ rows, items, selected, setSelected }: PickMultiOpe
       }),
       columnHelper.display({
         id: 'actions',
+        size: 0,
         cell: props => (
-          <MiniButton
-            noHover
-            title='Удалить'
-            icon={<IconRemove size='1rem' className='icon-red' />}
-            onClick={() => handleDelete(props.row.original.id)}
-          />
+          <div className='flex gap-1 w-fit'>
+            <MiniButton
+              noHover
+              className='px-0'
+              title='Удалить'
+              icon={<IconRemove size='1rem' className='icon-red' />}
+              onClick={() => handleDelete(props.row.original.id)}
+            />
+            <MiniButton
+              noHover
+              className='px-0'
+              title='Выше'
+              icon={<IconMoveUp size='1rem' className='icon-primary' />}
+              onClick={() => handleMoveUp(props.row.original.id)}
+            />
+            <MiniButton
+              noHover
+              title='Ниже'
+              className='px-0'
+              icon={<IconMoveDown size='1rem' className='icon-primary' />}
+              onClick={() => handleMoveDown(props.row.original.id)}
+            />
+          </div>
         )
       })
     ],
-    [handleDelete]
+    [handleDelete, handleMoveUp, handleMoveDown]
   );
 
   return (

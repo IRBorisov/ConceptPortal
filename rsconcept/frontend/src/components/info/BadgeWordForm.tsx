@@ -9,7 +9,7 @@ interface BadgeWordFormProps {
 
 function BadgeWordForm({ keyPrefix, form }: BadgeWordFormProps) {
   return (
-    <div className='flex flex-wrap justify-start gap-1 select-none'>
+    <div className='flex flex-wrap justify-start gap-1 select-none w-fit'>
       {form.grams.map(gram => (
         <BadgeGrammeme key={`${keyPrefix}-${gram}`} grammeme={gram} />
       ))}

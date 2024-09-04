@@ -137,23 +137,27 @@ class OperationSchema:
         self.cache.ensure_loaded()
         operation = self.cache.operation_by_id[target]
         processed: list[Operation] = []
+        updated: list[Argument] = []
         deleted: list[Argument] = []
         for current in operation.getArguments():
             if current.argument not in arguments:
                 deleted.append(current)
             else:
                 processed.append(current.argument)
+                current.order = arguments.index(current.argument)
+                updated.append(current)
         if len(deleted) > 0:
             self.before_delete_arguments(operation, [x.argument for x in deleted])
             for deleted_arg in deleted:
                 self.cache.remove_argument(deleted_arg)
             Argument.objects.filter(pk__in=[x.pk for x in deleted]).delete()
+        Argument.objects.bulk_update(updated, ['order'])
 
         added: list[Operation] = []
-        for arg in arguments:
+        for order, arg in enumerate(arguments):
             if arg not in processed:
                 processed.append(arg)
-                new_arg = Argument.objects.create(operation=operation, argument=arg)
+                new_arg = Argument.objects.create(operation=operation, argument=arg, order=order)
                 self.cache.insert_argument(new_arg)
                 added.append(arg)
         if len(added) > 0:
@@ -219,7 +223,7 @@ class OperationSchema:
 
     def execute_operation(self, operation: Operation) -> bool:
         ''' Execute target operation. '''
-        schemas: list[LibraryItem] = [arg.argument.result for arg in operation.getArguments().order_by('pk')]
+        schemas: list[LibraryItem] = [arg.argument.result for arg in operation.getArguments().order_by('order')]
         if None in schemas:
             return False
         substitutions = operation.getSubstitutions()
@@ -693,7 +697,7 @@ class OssCache:
         self.graph = Graph[int]()
         for operation in self.operations:
             self.graph.add_node(operation.pk)
-        for argument in self._oss.arguments().only('operation_id', 'argument_id'):
+        for argument in self._oss.arguments().only('operation_id', 'argument_id').order_by('order'):
             self.graph.add_edge(argument.argument_id, argument.operation_id)
 
         self.is_loaded = False
