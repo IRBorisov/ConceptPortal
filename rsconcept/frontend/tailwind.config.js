@@ -23,7 +23,11 @@ export default {
     extend: {}
   },
   plugins: [],
-  experimental: {
-    optimizeUniversalDefaults: true
-  }
+  ...(process.env.NODE_ENV === 'production'
+    ? {
+        experimental: {
+          optimizeUniversalDefaults: true
+        }
+      }
+    : {})
 };
