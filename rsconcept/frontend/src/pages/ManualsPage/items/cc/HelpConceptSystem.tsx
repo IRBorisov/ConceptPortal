@@ -3,7 +3,7 @@ import { HelpTopic } from '@/models/miscellaneous';
 
 function HelpConceptSystem() {
   return (
-    <div>
+    <div className='text-justify'>
       <h1>Концептуальная схема – Система определений</h1>
       <p>
         Данный раздел вводит <b>систему определений</b> как предмет концептуализации предметных областей. Под системой

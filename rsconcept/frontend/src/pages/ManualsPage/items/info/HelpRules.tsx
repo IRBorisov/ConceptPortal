@@ -4,7 +4,7 @@ import { external_urls } from '@/utils/constants';
 
 function HelpRules() {
   return (
-    <div>
+    <div className='text-justify'>
       <h1>Правила поведения участников Портала</h1>
 
       <p>

@@ -3,7 +3,7 @@ import { HelpTopic } from '@/models/miscellaneous';
 
 function HelpConceptRelations() {
   return (
-    <div>
+    <div className='text-justify'>
       <h1>Связи между конституентами</h1>
       <p>
         Конституенты связаны между собой через использование одних конституент при определении других. Такую связь в

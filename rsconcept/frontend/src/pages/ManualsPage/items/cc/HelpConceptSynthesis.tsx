@@ -3,7 +3,7 @@ import { HelpTopic } from '@/models/miscellaneous';
 
 function HelpConceptSynthesis() {
   return (
-    <div>
+    <div className='text-justify'>
       <h1>Синтез концептуальных схем</h1>
       <p>
         Работа с крупными предметными областями требуют рассмотрения различных точек зрения в рамках одной предметной
