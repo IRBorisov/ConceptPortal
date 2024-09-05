@@ -56,7 +56,11 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
 
   const onSelectionChange = useCallback(
     ({ nodes }: { nodes: Node[] }) => {
-      controller.setSelected(nodes.map(node => Number(node.id)));
+      const ids = nodes.map(node => Number(node.id));
+      controller.setSelected(prev => [
+        ...prev.filter(nodeID => ids.includes(nodeID)),
+        ...ids.filter(nodeID => !prev.includes(Number(nodeID)))
+      ]);
     },
     [controller]
   );
