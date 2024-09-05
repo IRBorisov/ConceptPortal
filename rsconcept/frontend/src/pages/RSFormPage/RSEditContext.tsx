@@ -689,10 +689,11 @@ export const RSEditState = ({
               initial={createInitialData}
             />
           ) : null}
-          {showRenameCst && renameInitialData ? (
+          {activeCst && showRenameCst && renameInitialData ? (
             <DlgRenameCst
               hideWindow={() => setShowRenameCst(false)}
               onRename={handleRenameCst}
+              allowChangeType={!activeCst.is_inherited}
               initial={renameInitialData}
             />
           ) : null}

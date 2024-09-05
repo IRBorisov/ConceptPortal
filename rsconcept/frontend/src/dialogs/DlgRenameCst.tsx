@@ -18,10 +18,11 @@ import { SelectorCstType } from '@/utils/selectors';
 
 interface DlgRenameCstProps extends Pick<ModalProps, 'hideWindow'> {
   initial: ICstRenameData;
+  allowChangeType: boolean;
   onRename: (data: ICstRenameData) => void;
 }
 
-function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
+function DlgRenameCst({ hideWindow, initial, allowChangeType, onRename }: DlgRenameCstProps) {
   const { schema } = useRSForm();
   const [validated, setValidated] = useState(false);
   const [cstData, updateData] = usePartialUpdate(initial);
@@ -52,6 +53,7 @@ function DlgRenameCst({ hideWindow, initial, onRename }: DlgRenameCstProps) {
         id='dlg_cst_type'
         placeholder='Выберите тип'
         className='min-w-[16rem] self-center'
+        isDisabled={!allowChangeType}
         options={SelectorCstType}
         value={{
           value: cstData.cst_type,

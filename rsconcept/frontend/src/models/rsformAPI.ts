@@ -255,7 +255,20 @@ export function isFunctional(type: CstType): boolean {
  * Validate new alias against {@link CstType} and {@link IRSForm}.
  */
 export function validateNewAlias(alias: string, type: CstType, schema: IRSForm): boolean {
-  return alias.length >= 2 && alias.startsWith(getCstTypePrefix(type)) && !schema.cstByAlias.has(alias);
+  if (alias.length < 2) {
+    return false;
+  }
+  const prefix = getCstTypePrefix(type);
+  if (!alias.startsWith(prefix)) {
+    return false;
+  }
+  if (schema.cstByAlias.has(alias)) {
+    return false;
+  }
+  if (!/^\d+$/.exec(alias.substring(prefix.length))) {
+    return false;
+  }
+  return true;
 }
 
 /**
