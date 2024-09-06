@@ -116,6 +116,22 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
           if (!selection.empty || !schema) {
             return;
           }
+          const wordRange = text.getWord(selection.from);
+          if (wordRange) {
+            const word = text.getText(wordRange.from, wordRange.to);
+            if (word.length > 2 && (word.startsWith('Pr') || word.startsWith('pr'))) {
+              text.setSelection(wordRange.from, wordRange.from + 2);
+              if (word.startsWith('Pr')) {
+                text.replaceWith('pr');
+              } else {
+                text.replaceWith('Pr');
+              }
+              event.preventDefault();
+              event.stopPropagation();
+              return;
+            }
+          }
+
           const hint = text.getText(selection.from - 1, selection.from);
           const type = guessCstType(hint);
           if (hint === getCstTypePrefix(type)) {

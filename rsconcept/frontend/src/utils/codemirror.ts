@@ -357,6 +357,10 @@ export class CodeMirrorWrapper {
     return this.ref.view.state.doc.sliceString(from, to);
   }
 
+  getWord(position: number): SelectionRange | null {
+    return this.ref.view.state.wordAt(position);
+  }
+
   getSelection(): SelectionRange {
     return this.ref.view.state.selection.main;
   }

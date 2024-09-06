@@ -94,7 +94,7 @@ function HelpRSEditor() {
         <IconTree className='inline-icon' /> отображение{' '}
         <LinkTopic text='дерева разбора' topic={HelpTopic.UI_FORMULA_TREE} />
       </li>
-      <li>Ctrl + Пробел дополняет до незанятого имени</li>
+      <li>Ctrl + Пробел вставка незанятого имени / замена проекции</li>
 
       <h2>Термин и Текстовое определение</h2>
       <li>
