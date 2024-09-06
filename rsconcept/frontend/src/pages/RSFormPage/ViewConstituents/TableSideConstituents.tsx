@@ -69,7 +69,12 @@ function TableSideConstituents({
         minSize: 65,
         footer: undefined,
         cell: props => (
-          <BadgeConstituenta theme={colors} value={props.row.original} prefixID={prefixes.cst_side_table} />
+          <BadgeConstituenta
+            className='mr-[-0.5rem]'
+            theme={colors}
+            value={props.row.original}
+            prefixID={prefixes.cst_side_table}
+          />
         )
       }),
       columnHelper.accessor(cst => describeConstituenta(cst), {

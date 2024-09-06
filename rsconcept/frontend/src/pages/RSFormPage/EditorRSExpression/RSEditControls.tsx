@@ -92,7 +92,7 @@ function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsProps) {
   return (
     <motion.div
       className={clsx(
-        'max-w-[38.5rem] sm:max-w-[40rem] sm:min-w-[40rem] md:max-w-fit mx-1 sm:mx-0',
+        'max-w-[28rem] min-w-[28rem] xs:max-w-[38.5rem] xs:min-w-[38.5rem] sm:max-w-[40rem] sm:min-w-[40rem] md:max-w-fit mx-1 sm:mx-0',
         'flex-wrap',
         'divide-solid',
         'text-xs md:text-sm',
@@ -112,6 +112,7 @@ function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsProps) {
           title={title}
           onInsert={onEdit}
           disabled={disabled}
+          className='hidden xs:inline'
         />
       ))}
 
@@ -121,6 +122,7 @@ function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsProps) {
       {SECONDARY_SECOND_ROW.map(({ text, title }) => (
         <RSLocalButton
           key={`${prefixes.rsedit_btn}${title}`}
+          className='hidden xs:inline'
           text={text}
           title={title}
           onInsert={onEdit}
@@ -134,6 +136,7 @@ function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsProps) {
       {SECONDARY_THIRD_ROW.map(({ text, title }) => (
         <RSLocalButton
           key={`${prefixes.rsedit_btn}${title}`}
+          className='hidden xs:inline'
           text={text}
           title={title}
           onInsert={onEdit}

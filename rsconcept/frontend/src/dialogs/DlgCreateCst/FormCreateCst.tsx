@@ -78,7 +78,7 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
         fitContent
         spellCheck
         label='Термин'
-        placeholder='Обозначение, используемое в текстовых определениях'
+        placeholder='Обозначение для текстовых определений'
         className='max-h-[3.6rem]'
         value={state.term_raw}
         onChange={event => partialUpdate({ term_raw: event.target.value })}

@@ -165,7 +165,7 @@ function EditorRSExpression({
         toggleControls={() => setShowControls(prev => !prev)}
       />
 
-      <Overlay position='top-[-0.5rem] pl-[8rem] sm:pl-[4rem] right-1/2 translate-x-1/2 flex'>
+      <Overlay position='top-[-0.5rem]' className='pl-[8.5rem] xs:pl-[2rem] flex justify-center w-full gap-1'>
         <StatusBar
           processing={parser.processing}
           isModified={isModified}

@@ -41,12 +41,10 @@ function StatusBar({ isModified, processing, activeCst, parseData, onAnalyze }: 
       tabIndex={0}
       className={clsx(
         'w-[10rem] h-[1.75rem]',
-        'scale-75 sm:scale-100 mx-[-2.5rem] sm:m-0',
         'px-2 flex items-center justify-center gap-2',
         'border',
         'select-none',
         'cursor-pointer',
-        'translate-x-[-1.5rem]',
         'focus-frame',
         'duration-500 transition-colors'
       )}

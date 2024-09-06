@@ -4,13 +4,22 @@ import { CProps } from '@/components/props';
 import { TokenID } from '@/models/rslang';
 import { globals } from '@/utils/constants';
 
-interface RSLocalButtonProps extends CProps.Titled {
+interface RSLocalButtonProps extends CProps.Titled, CProps.Styling {
   text: string;
   disabled?: boolean;
   onInsert: (token: TokenID, key?: string) => void;
 }
 
-function RSLocalButton({ text, title, titleHtml, hideTitle, disabled, onInsert }: RSLocalButtonProps) {
+function RSLocalButton({
+  text,
+  title,
+  titleHtml,
+  hideTitle,
+  disabled,
+  className,
+  onInsert,
+  ...restProps
+}: RSLocalButtonProps) {
   return (
     <button
       type='button'
@@ -25,9 +34,11 @@ function RSLocalButton({ text, title, titleHtml, hideTitle, disabled, onInsert }
         'cursor-pointer disabled:cursor-default',
         'rounded-none',
         'clr-hover clr-btn-clear',
-        'font-math'
+        'font-math',
+        className
       )}
       onClick={() => onInsert(TokenID.ID_LOCAL, text)}
+      {...restProps}
     >
       {text}
     </button>

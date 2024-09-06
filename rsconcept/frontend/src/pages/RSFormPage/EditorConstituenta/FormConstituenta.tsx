@@ -149,7 +149,7 @@ function FormConstituenta({
           id='cst_term'
           label='Термин'
           maxHeight='8rem'
-          placeholder='Обозначение, используемое в текстовых определениях'
+          placeholder='Обозначение для текстовых определений'
           schema={schema}
           onOpenEdit={onOpenEdit}
           value={term}
@@ -240,7 +240,7 @@ function FormConstituenta({
             </AnimateFade>
 
             {!disabled || processing ? (
-              <div className='self-center flex'>
+              <div className='mx-auto flex'>
                 <SubmitButton
                   key='cst_form_submit'
                   id='cst_form_submit'
