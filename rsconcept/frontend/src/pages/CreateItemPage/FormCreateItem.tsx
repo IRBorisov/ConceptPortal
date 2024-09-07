@@ -123,7 +123,7 @@ function FormCreateItem() {
 
   return (
     <form className={clsx('cc-column', 'min-w-[30rem] max-w-[30rem] mx-auto', 'px-6 py-3')} onSubmit={handleSubmit}>
-      <h1>
+      <h1 className='select-none'>
         {itemType == LibraryItemType.RSFORM ? (
           <Overlay position='top-0 right-[0.5rem]'>
             <input
