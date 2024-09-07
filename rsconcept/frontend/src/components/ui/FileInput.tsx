@@ -46,7 +46,7 @@ function FileInput({ id, label, acceptType, title, className, style, onChange, .
         {...restProps}
       />
       <Button text={label} icon={<IconUpload size='1.25rem' />} onClick={handleUploadClick} title={title} />
-      <Label text={fileName} htmlFor={id} />
+      <Label className='text-wrap' text={fileName} htmlFor={id} />
     </div>
   );
 }

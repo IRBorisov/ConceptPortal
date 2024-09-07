@@ -144,7 +144,7 @@ function FormCreateItem() {
         Создание схемы
       </h1>
 
-      {fileName ? <Label text={`Загружен файл: ${fileName}`} /> : null}
+      {fileName ? <Label className='text-wrap' text={`Загружен файл: ${fileName}`} /> : null}
 
       <TextInput
         id='schema_title'
