@@ -49,17 +49,40 @@
     }
   }
 
-  :is(.clr-app, .clr-footer, .cc-modal-backdrop, .clr-btn-nav, .clr-input:disabled) {
+  :is(.clr-app, .clr-btn-nav) {
     background-color: var(--cl-bg-100);
     .dark & {
       background-color: var(--cd-bg-100);
     }
   }
 
-  :is(.clr-input) {
+  .clr-footer {
+    color: var(--cl-fg-60);
+    background-color: var(--cl-bg-100);
+    .dark & {
+      color: var(--cd-fg-60);
+      background-color: var(--cd-bg-100);
+    }
+  }
+
+  .cc-modal-backdrop {
+    opacity: 0.5;
+    background-color: var(--cl-bg-100);
+    .dark & {
+      background-color: var(--cd-bg-100);
+    }
+  }
+
+  .clr-input {
     background-color: var(--cl-bg-120);
+    &:disabled {
+      background-color: var(--cl-bg-100);
+    }
     .dark & {
       background-color: var(--cd-bg-120);
+      &:disabled {
+        background-color: var(--cd-bg-100);
+      }
     }
   }
 
@@ -126,13 +149,6 @@
     }
   }
 
-  .clr-footer {
-    color: var(--cl-fg-60);
-    .dark & {
-      color: var(--cd-fg-60);
-    }
-  }
-
   :is(.clr-text-controls, .clr-btn-nav, .clr-btn-clear) {
     color: var(--cl-fg-80);
     &:disabled {
@@ -153,7 +169,7 @@
     }
   }
 
-  :is(.clr-text-default, input:disabled, textarea:disabled) {
+  :is(.clr-text-default, input:disabled:not(::placeholder), textarea:disabled:not(::placeholder)) {
     opacity: 1;
     -webkit-text-fill-color: var(--cl-fg-100);
     color: var(--cl-fg-100);
@@ -208,10 +224,6 @@
   .cc-modal-blur {
     opacity: 0.3;
     backdrop-filter: blur(2px);
-  }
-
-  .cc-modal-backdrop {
-    opacity: 0.5;
   }
 
   .cc-label {
