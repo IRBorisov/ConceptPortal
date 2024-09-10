@@ -118,7 +118,7 @@ function TabTemplate({ state, partialUpdate, templateSchema }: TabTemplateProps)
         data={filteredData}
         onSelectValue={cst => partialUpdate({ prototype: cst })}
         prefixID={prefixes.cst_template_ist}
-        rows={9}
+        rows={8}
       />
       <TextArea
         id='dlg_template_term'

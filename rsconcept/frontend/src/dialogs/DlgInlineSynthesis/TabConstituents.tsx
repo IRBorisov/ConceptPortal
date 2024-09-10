@@ -19,7 +19,7 @@ function TabConstituents({ schema, error, loading, selected, setSelected }: TabC
     <DataLoader id='dlg-constituents-tab' isLoading={loading} error={error} hasNoData={!schema}>
       <PickMultiConstituenta
         schema={schema}
-        rows={14}
+        rows={13}
         prefixID={prefixes.cst_inline_synth_list}
         selected={selected}
         setSelected={setSelected}

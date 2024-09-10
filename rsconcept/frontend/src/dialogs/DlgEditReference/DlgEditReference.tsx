@@ -70,7 +70,7 @@ function DlgEditReference({ hideWindow, schema, initial, onSave }: DlgEditRefere
       hideWindow={hideWindow}
       canSubmit={isValid}
       onSubmit={handleSubmit}
-      className='w-[40rem] px-6 min-h-[35rem]'
+      className='w-[40rem] px-6 h-[32rem]'
     >
       <Overlay position='top-0 right-0'>
         <BadgeHelp

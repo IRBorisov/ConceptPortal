@@ -70,7 +70,7 @@ function TabEntityReference({ initial, schema, setIsValid, setReference }: TabEn
         describeFunc={cst => cst.term_resolved}
         matchFunc={(cst, filter) => matchConstituenta(cst, filter, CstMatchMode.TERM)}
         onBeginFilter={cst => cst.term_resolved !== ''}
-        rows={8}
+        rows={7}
       />
 
       <div className='flex gap-3'>

@@ -35,7 +35,7 @@ function TabSynthesis({
       <PickSubstitutions
         schemas={schemas}
         prefixID={prefixes.dlg_cst_substitutes_list}
-        rows={10}
+        rows={8}
         substitutions={substitutions}
         setSubstitutions={setSubstitutions}
         suggestions={suggestions}

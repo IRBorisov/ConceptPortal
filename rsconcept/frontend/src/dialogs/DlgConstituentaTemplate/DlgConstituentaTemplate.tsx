@@ -160,13 +160,13 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     <Modal
       header='Создание конституенты из шаблона'
       submitText='Создать'
-      className='w-[43rem] h-[36.5rem] px-6'
+      className='w-[43rem] h-[35rem] px-6'
       hideWindow={hideWindow}
       canSubmit={validated}
       beforeSubmit={handlePrompt}
       onSubmit={handleSubmit}
     >
-      <Overlay position='top-0 right-[6rem]'>
+      <Overlay position='top-0 right-[5.9rem]'>
         <BadgeHelp
           topic={HelpTopic.RSL_TEMPLATES}
           className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')}

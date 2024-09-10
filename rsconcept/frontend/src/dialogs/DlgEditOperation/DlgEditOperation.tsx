@@ -169,7 +169,7 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
       hideWindow={hideWindow}
       canSubmit={canSubmit}
       onSubmit={handleSubmit}
-      className='w-[40rem] px-6 min-h-[35rem]'
+      className='w-[40rem] px-6 h-[32rem]'
     >
       <Overlay position='top-0 right-0'>
         <BadgeHelp topic={HelpTopic.CC_OSS} className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')} offset={14} />

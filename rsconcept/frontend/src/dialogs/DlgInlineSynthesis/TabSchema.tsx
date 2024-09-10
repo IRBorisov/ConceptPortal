@@ -35,7 +35,7 @@ function TabSchema({ selected, setSelected }: TabSchemaProps) {
         id='dlg_schema_picker' // prettier: split lines
         items={library.items}
         itemType={LibraryItemType.RSFORM}
-        rows={15}
+        rows={14}
         value={selected}
         onSelectValue={setSelected}
       />

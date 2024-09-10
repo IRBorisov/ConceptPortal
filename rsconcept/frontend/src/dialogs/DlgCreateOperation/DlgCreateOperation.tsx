@@ -147,7 +147,7 @@ function DlgCreateOperation({ hideWindow, oss, onCreate, initialInputs }: DlgCre
       hideWindow={hideWindow}
       canSubmit={isValid}
       onSubmit={handleSubmit}
-      className='w-[40rem] px-6 min-h-[35rem]'
+      className='w-[40rem] px-6 h-[32rem]'
     >
       <Overlay position='top-0 right-0'>
         <BadgeHelp topic={HelpTopic.CC_OSS} className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')} offset={14} />
@@ -155,11 +155,11 @@ function DlgCreateOperation({ hideWindow, oss, onCreate, initialInputs }: DlgCre
 
       <Tabs
         selectedTabClassName='clr-selected'
-        className='flex flex-col'
+        className='flex flex-col pt-2'
         selectedIndex={activeTab}
         onSelect={handleSelectTab}
       >
-        <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none')}>
+        <TabList className={clsx('self-center absolute top-[2.4rem]', 'flex', 'border divide-x rounded-none')}>
           <TabLabel
             title={describeOperationType(OperationType.INPUT)}
             label={labelOperationType(OperationType.INPUT)}

@@ -96,7 +96,7 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
     <Modal
       header='Импорт концептуальной схем'
       submitText='Добавить конституенты'
-      className='w-[40rem] h-[36rem] px-6'
+      className='w-[40rem] h-[33rem] px-6'
       hideWindow={hideWindow}
       canSubmit={validated}
       onSubmit={handleSubmit}

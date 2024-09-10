@@ -103,23 +103,19 @@ function Modal({
           {children}
         </div>
 
-        <div className={clsx('z-modalControls', 'px-6 py-3 flex gap-12 justify-center')}>
+        <div className='z-modalControls my-2 flex gap-12 justify-center text-sm'>
           {!readonly ? (
             <Button
               autoFocus
               text={submitText}
               title={!canSubmit ? submitInvalidTooltip : ''}
-              className='min-w-[8rem] min-h-[2.6rem]'
+              className='min-w-[7rem]'
               colors='clr-btn-primary'
               disabled={!canSubmit}
               onClick={handleSubmit}
             />
           ) : null}
-          <Button
-            text={readonly ? 'Закрыть' : 'Отмена'}
-            className='min-w-[8rem] min-h-[2.6rem]'
-            onClick={handleCancel}
-          />
+          <Button text={readonly ? 'Закрыть' : 'Отмена'} className='min-w-[7rem]' onClick={handleCancel} />
         </div>
       </motion.div>
     </div>
