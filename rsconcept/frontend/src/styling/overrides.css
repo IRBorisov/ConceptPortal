@@ -64,6 +64,14 @@
   cursor: default;
 }
 
+.react-flow__attribution {
+  background-color: transparent;
+  color: var(--cl-fg-60);
+  .dark & {
+    color: var(--cd-fg-60);
+  }
+}
+
 :is(.react-flow__node-input, .react-flow__node-synthesis) {
   cursor: pointer;
 

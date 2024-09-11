@@ -358,7 +358,6 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
         onNodesChange={handleNodesChange}
         onEdgesChange={onEdgesChange}
         onNodeDoubleClick={handleNodeDoubleClick}
-        proOptions={{ hideAttribution: true }}
         fitView
         nodeTypes={OssNodeTypes}
         maxZoom={2}
