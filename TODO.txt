@@ -9,7 +9,9 @@ For more specific TODOs see comments in code
 - Design first user experience
 - Demo sandbox for anonymous users
 
-- User profile: Settings + settings persistency
+- User profile: Settings + settings server persistency
+- Profile pictures
+- Integrate socials and feedback
 - Custom LibraryItem lists
 - Custom user filters and sharing filters
 
@@ -18,6 +20,8 @@ For more specific TODOs see comments in code
 
 - Focus on codemirror editor when label is clicked (need React 19 ref for clean code solution)
 - Draggable rows in constituents table
+
+- M-graph visualization for typification and RSForm in general
 
 - replace reagraph with react-flow in TermGraph and FormulaGraph
 - Search functionality for Help Manuals
@@ -31,6 +35,8 @@ For more specific TODOs see comments in code
 - Content based search in Library
 - Home page (user specific)
 - Private projects. Consider cooperative editing
+- OSS: synthesis table: auto substitution for diamond synthesis
+
 
 [Tech]
 - duplicate syntax parsing and type info calculations to client. Consider moving backend to Nodejs or embedding c++ lib

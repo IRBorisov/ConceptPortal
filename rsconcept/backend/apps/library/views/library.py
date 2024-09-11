@@ -28,8 +28,6 @@ from .. import serializers as s
 class LibraryViewSet(viewsets.ModelViewSet):
     ''' Endpoint: Library operations. '''
     queryset = m.LibraryItem.objects.all()
-    # TODO: consider using .only() for performance
-
     ordering = '-time_update'
 
     def get_serializer_class(self):

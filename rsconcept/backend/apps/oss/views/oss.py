@@ -367,7 +367,6 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=False, methods=['post'], url_path='get-predecessor')
     def get_predecessor(self, request: Request) -> HttpResponse:
         ''' Get predecessor. '''
-        # TODO: add tests for this method
         serializer = CstTargetSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         cst = cast(Constituenta, serializer.validated_data['target'])

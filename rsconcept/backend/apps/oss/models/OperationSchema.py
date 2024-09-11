@@ -244,7 +244,6 @@ class OperationSchema:
             original = children[sub.original.pk]
             replacement = children[sub.substitution.pk]
             translated_substitutions.append((original, replacement))
-        # TODO: add auto substitutes for diamond
         receiver.substitute(translated_substitutions)
 
         for cst in receiver.constituents().order_by('order'):
@@ -258,6 +257,7 @@ class OperationSchema:
 
         receiver.restore_order()
         receiver.reset_aliases()
+        receiver.resolve_all_text()
 
         if len(self.cache.graph.outputs[operation.pk]) > 0:
             self.after_create_cst(receiver, list(receiver.constituents().order_by('order')))
@@ -365,8 +365,6 @@ class OperationSchema:
         destination = self.cache.get_schema(operation)
         if destination is None:
             return
-
-        # TODO: update substitutions for diamond synthesis (if needed)
 
         self.cache.ensure_loaded()
         new_mapping = self._transform_mapping(mapping, operation, destination)

@@ -127,7 +127,6 @@ function DataTable<TData extends RowData>({
 
   const isEmpty = tableImpl.getRowModel().rows.length === 0;
 
-  // TODO: refactor formula for different font sizes and pagination tools
   const fixedSize = useMemo(() => {
     if (!rows) {
       return undefined;
