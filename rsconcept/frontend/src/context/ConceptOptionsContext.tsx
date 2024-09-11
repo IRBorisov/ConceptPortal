@@ -110,8 +110,14 @@ export const OptionsState = ({ children }: OptionsStateProps) => {
   }, [setDarkMode]);
 
   const mainHeight = useMemo(() => {
-    return !noNavigation ? 'calc(100dvh - 6.75rem)' : '100dvh';
-  }, [noNavigation]);
+    if (noNavigation) {
+      return '100dvh';
+    } else if (noFooter) {
+      return 'calc(100dvh - 3rem)';
+    } else {
+      return 'calc(100dvh - 6.75rem)';
+    }
+  }, [noNavigation, noFooter]);
 
   const viewportHeight = useMemo(() => {
     return !noNavigation ? 'calc(100dvh - 3rem)' : '100dvh';

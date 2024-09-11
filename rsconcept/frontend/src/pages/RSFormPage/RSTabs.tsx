@@ -10,6 +10,7 @@ import { urls } from '@/app/urls';
 import InfoError, { ErrorData } from '@/components/info/InfoError';
 import Divider from '@/components/ui/Divider';
 import Loader from '@/components/ui/Loader';
+import Overlay from '@/components/ui/Overlay';
 import TabLabel from '@/components/ui/TabLabel';
 import TextURL from '@/components/ui/TextURL';
 import AnimateFade from '@/components/wrap/AnimateFade';
@@ -45,7 +46,7 @@ function RSTabs() {
   const version = query.get('v') ? Number(query.get('v')) : undefined;
   const cstQuery = query.get('active');
 
-  const { setNoFooter, calculateHeight } = useConceptOptions();
+  const { setNoFooter } = useConceptOptions();
   const { schema, loading, errorLoading, isArchive, itemID } = useRSForm();
   const library = useLibrary();
   const oss = useGlobalOss();
@@ -73,7 +74,7 @@ function RSTabs() {
   }, [schema, schema?.title]);
 
   useLayoutEffect(() => {
-    setNoFooter(activeTab === RSTabID.CST_EDIT || activeTab === RSTabID.CST_LIST);
+    setNoFooter(activeTab !== RSTabID.CARD);
     setIsModified(false);
     if (activeTab === RSTabID.CST_EDIT) {
       const cstID = Number(cstQuery);
@@ -189,8 +190,6 @@ function RSTabs() {
     });
   }, [schema, library, oss, router]);
 
-  const panelHeight = useMemo(() => calculateHeight('1.625rem + 2px'), [calculateHeight]);
-
   const cardPanel = useMemo(
     () => (
       <TabPanel>
@@ -255,19 +254,23 @@ function RSTabs() {
           selectedTabClassName='clr-selected'
           className='flex flex-col mx-auto min-w-fit'
         >
-          <TabList className={clsx('mx-auto w-fit', 'flex items-stretch', 'border-b-2 border-x-2 divide-x-2')}>
-            <MenuRSTabs onDestroy={onDestroySchema} />
+          <Overlay position='top-0 right-1/2 translate-x-1/2' layer='z-sticky'>
+            <TabList className={clsx('mx-auto w-fit', 'flex items-stretch', 'border-b-2 border-x-2 divide-x-2')}>
+              <MenuRSTabs onDestroy={onDestroySchema} />
 
-            <TabLabel label='Карточка' titleHtml={`${schema.title ?? ''}<br />Версия: ${labelVersion(schema)}`} />
-            <TabLabel
-              label='Содержание'
-              titleHtml={`Конституент: ${schema.stats?.count_all ?? 0}<br />Ошибок: ${schema.stats?.count_errors ?? 0}`}
-            />
-            <TabLabel label='Редактор' />
-            <TabLabel label='Граф термов' />
-          </TabList>
+              <TabLabel label='Карточка' titleHtml={`${schema.title ?? ''}<br />Версия: ${labelVersion(schema)}`} />
+              <TabLabel
+                label='Содержание'
+                titleHtml={`Конституент: ${schema.stats?.count_all ?? 0}<br />Ошибок: ${
+                  schema.stats?.count_errors ?? 0
+                }`}
+              />
+              <TabLabel label='Редактор' />
+              <TabLabel label='Граф термов' />
+            </TabList>
+          </Overlay>
 
-          <AnimateFade className='overflow-y-auto overflow-x-hidden' style={{ maxHeight: panelHeight }}>
+          <AnimateFade className='overflow-x-hidden'>
             {cardPanel}
             {listPanel}
             {editorPanel}

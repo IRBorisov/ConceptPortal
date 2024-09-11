@@ -45,7 +45,7 @@ function ToolbarRSFormCard({ modified, controller, onSubmit, onDestroy }: Toolba
   }, [controller]);
 
   return (
-    <Overlay position='top-1 right-1/2 translate-x-1/2' className='cc-icons'>
+    <Overlay position='cc-tab-tools' className='cc-icons'>
       {ossSelector}
       {controller.isMutable || modified ? (
         <MiniButton

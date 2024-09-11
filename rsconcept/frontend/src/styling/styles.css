@@ -221,6 +221,10 @@
     @apply clr-text-primary;
   }
 
+  .cc-tab-tools {
+    @apply top-[1.9rem] pt-1 right-1/2 translate-x-1/2;
+  }
+
   .cc-modal-blur {
     opacity: 0.3;
     backdrop-filter: blur(2px);

@@ -28,7 +28,7 @@ interface EditorConstituentaProps {
 function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }: EditorConstituentaProps) {
   const controller = useRSEdit();
   const windowSize = useWindowSize();
-  const { calculateHeight } = useConceptOptions();
+  const { mainHeight } = useConceptOptions();
 
   const [showList, setShowList] = useLocalStorage(storage.rseditShowList, true);
   const [toggleReset, setToggleReset] = useState(false);
@@ -39,7 +39,6 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
   );
 
   const isNarrow = useMemo(() => !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD, [windowSize]);
-  const panelHeight = useMemo(() => calculateHeight('1.75rem + 4px'), [calculateHeight]);
 
   function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
     if (disabled) {
@@ -79,7 +78,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
   }
 
   return (
-    <div className='overflow-y-auto min-h-[20rem]' style={{ maxHeight: panelHeight }}>
+    <>
       <ToolbarConstituenta
         activeCst={activeCst}
         disabled={disabled}
@@ -89,39 +88,41 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
         onReset={() => setToggleReset(prev => !prev)}
         onToggleList={() => setShowList(prev => !prev)}
       />
-      <div
-        tabIndex={-1}
-        className={clsx(
-          'max-w-[95rem] mx-auto', // prettier: split lines
-          'flex',
-          { 'flex-col md:items-center': isNarrow }
-        )}
-        onKeyDown={handleInput}
-      >
-        <FormConstituenta
-          disabled={disabled}
-          id={globals.constituenta_editor}
-          state={activeCst}
-          isModified={isModified}
-          toggleReset={toggleReset}
-          setIsModified={setIsModified}
-          onEditTerm={controller.editTermForms}
-          onRename={controller.renameCst}
-          onOpenEdit={onOpenEdit}
-        />
-        <AnimatePresence initial={false}>
-          {showList ? (
-            <ViewConstituents
-              schema={controller.schema}
-              expression={activeCst?.definition_formal ?? ''}
-              isBottom={isNarrow}
-              activeCst={activeCst}
-              onOpenEdit={onOpenEdit}
-            />
-          ) : null}
-        </AnimatePresence>
+      <div className='pt-[1.9rem] overflow-y-auto min-h-[20rem]' style={{ maxHeight: mainHeight }}>
+        <div
+          tabIndex={-1}
+          className={clsx(
+            'max-w-[95rem] mx-auto', // prettier: split lines
+            'flex',
+            { 'flex-col md:items-center': isNarrow }
+          )}
+          onKeyDown={handleInput}
+        >
+          <FormConstituenta
+            disabled={disabled}
+            id={globals.constituenta_editor}
+            state={activeCst}
+            isModified={isModified}
+            toggleReset={toggleReset}
+            setIsModified={setIsModified}
+            onEditTerm={controller.editTermForms}
+            onRename={controller.renameCst}
+            onOpenEdit={onOpenEdit}
+          />
+          <AnimatePresence initial={false}>
+            {showList ? (
+              <ViewConstituents
+                schema={controller.schema}
+                expression={activeCst?.definition_formal ?? ''}
+                isBottom={isNarrow}
+                activeCst={activeCst}
+                onOpenEdit={onOpenEdit}
+              />
+            ) : null}
+          </AnimatePresence>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

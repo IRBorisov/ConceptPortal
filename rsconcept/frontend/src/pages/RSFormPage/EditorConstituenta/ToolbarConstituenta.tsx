@@ -50,7 +50,7 @@ function ToolbarConstituenta({
 
   return (
     <Overlay
-      position='top-1 right-1/2 translate-x-1/2 xs:right-4 xs:translate-x-0 md:right-1/2 md:translate-x-1/2'
+      position='cc-tab-tools right-1/2 translate-x-1/2 xs:right-4 xs:translate-x-0 md:right-1/2 md:translate-x-1/2'
       className='cc-icons outline-none transition-all duration-500'
     >
       {controller.schema && controller.schema?.oss.length > 0 ? (

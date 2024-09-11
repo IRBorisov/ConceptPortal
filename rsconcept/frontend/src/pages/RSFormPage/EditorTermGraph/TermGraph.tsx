@@ -53,7 +53,7 @@ function TermGraph({
   onSelect,
   onDeselect
 }: TermGraphProps) {
-  const { calculateHeight, darkMode } = useConceptOptions();
+  const { mainHeight, darkMode } = useConceptOptions();
 
   const { selections, setSelections } = useSelection({
     ref: graphRef,
@@ -111,10 +111,8 @@ function TermGraph({
     return 'calc(100vw - 1rem)';
   }, []);
 
-  const canvasHeight = useMemo(() => calculateHeight('1.75rem + 4px'), [calculateHeight]);
-
   return (
-    <div className='relative outline-none' style={{ width: canvasWidth, height: canvasHeight }}>
+    <div className='relative outline-none' style={{ width: canvasWidth, height: mainHeight }}>
       <GraphUI
         nodes={nodes}
         edges={edges}

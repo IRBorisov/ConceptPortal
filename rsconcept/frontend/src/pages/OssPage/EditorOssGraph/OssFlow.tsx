@@ -40,7 +40,7 @@ interface OssFlowProps {
 }
 
 function OssFlow({ isModified, setIsModified }: OssFlowProps) {
-  const { calculateHeight, colors } = useConceptOptions();
+  const { mainHeight, colors } = useConceptOptions();
   const model = useOSS();
   const controller = useOssEdit();
   const flow = useReactFlow();
@@ -342,8 +342,6 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     }
   }
 
-  const canvasHeight = useMemo(() => calculateHeight('1.75rem + 4px'), [calculateHeight]);
-
   const OssNodeTypes: NodeTypes = useMemo(
     () => ({
       synthesis: OperationNode,
@@ -389,7 +387,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
 
   return (
     <AnimateFade tabIndex={-1} onKeyDown={handleKeyDown}>
-      <Overlay position='top-0 pt-1 right-1/2 translate-x-1/2' className='rounded-b-2xl cc-blur'>
+      <Overlay position='top-[1.9rem] pt-1 right-1/2 translate-x-1/2' className='rounded-b-2xl cc-blur'>
         <ToolbarOssGraph
           isModified={isModified}
           showGrid={showGrid}
@@ -419,7 +417,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
           {...menuProps}
         />
       ) : null}
-      <div className='relative w-[100vw]' style={{ height: canvasHeight }}>
+      <div className='relative w-[100vw]' style={{ height: mainHeight }}>
         {graph}
       </div>
     </AnimateFade>

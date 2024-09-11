@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { urls } from '@/app/urls';
 import InfoError, { ErrorData } from '@/components/info/InfoError';
 import Loader from '@/components/ui/Loader';
+import Overlay from '@/components/ui/Overlay';
 import TabLabel from '@/components/ui/TabLabel';
 import TextURL from '@/components/ui/TextURL';
 import AnimateFade from '@/components/wrap/AnimateFade';
@@ -37,7 +38,7 @@ function OssTabs() {
   const activeTab = query.get('tab') ? (Number(query.get('tab')) as OssTabID) : OssTabID.GRAPH;
   const { user } = useAuth();
 
-  const { calculateHeight, setNoFooter } = useConceptOptions();
+  const { setNoFooter } = useConceptOptions();
   const { schema, loading, loadingError: errorLoading } = useOSS();
   const { destroyItem } = useLibrary();
 
@@ -107,8 +108,6 @@ function OssTabs() {
     });
   }, [schema, destroyItem, router]);
 
-  const panelHeight = useMemo(() => calculateHeight('1.625rem + 2px'), [calculateHeight]);
-
   const cardPanel = useMemo(
     () => (
       <TabPanel>
@@ -143,14 +142,16 @@ function OssTabs() {
           selectedTabClassName='clr-selected'
           className='flex flex-col mx-auto min-w-fit'
         >
-          <TabList className={clsx('mx-auto w-fit', 'flex items-stretch', 'border-b-2 border-x-2 divide-x-2')}>
-            <MenuOssTabs onDestroy={onDestroySchema} />
+          <Overlay position='top-0 right-1/2 translate-x-1/2' layer='z-sticky'>
+            <TabList className={clsx('w-fit', 'flex items-stretch', 'border-b-2 border-x-2 divide-x-2')}>
+              <MenuOssTabs onDestroy={onDestroySchema} />
 
-            <TabLabel label='Карточка' title={schema.title ?? ''} />
-            <TabLabel label='Граф' />
-          </TabList>
+              <TabLabel label='Карточка' title={schema.title ?? ''} />
+              <TabLabel label='Граф' />
+            </TabList>
+          </Overlay>
 
-          <AnimateFade className='overflow-y-auto' style={{ maxHeight: panelHeight }}>
+          <AnimateFade>
             {cardPanel}
             {graphPanel}
           </AnimateFade>

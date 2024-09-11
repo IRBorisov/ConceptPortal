@@ -142,7 +142,7 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
   return (
     <>
       {controller.isContentEditable ? <ToolbarRSList /> : null}
-      <AnimateFade tabIndex={-1} onKeyDown={handleKeyDown}>
+      <AnimateFade tabIndex={-1} onKeyDown={handleKeyDown} className='pt-[1.9rem]'>
         {controller.isContentEditable ? (
           <div className='flex items-center border-b'>
             <div className='px-2'>
