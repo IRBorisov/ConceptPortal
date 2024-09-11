@@ -1,6 +1,6 @@
 'use client';
 
-import { toSvg } from 'html-to-image';
+import { toPng } from 'html-to-image';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import {
@@ -256,7 +256,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     const imageHeight = PARAMETER.ossImageHeight;
     const nodesBounds = getNodesBounds(nodes);
     const viewport = getViewportForBounds(nodesBounds, imageWidth, imageHeight, 0.5, 2);
-    toSvg(canvas, {
+    toPng(canvas, {
       backgroundColor: colors.bgDefault,
       width: imageWidth,
       height: imageHeight,
@@ -268,7 +268,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     })
       .then(dataURL => {
         const a = document.createElement('a');
-        a.setAttribute('download', `${model.schema?.alias ?? 'oss'}.svg`);
+        a.setAttribute('download', `${model.schema?.alias ?? 'oss'}.png`);
         a.setAttribute('href', dataURL);
         a.click();
       })
@@ -416,7 +416,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
           {...menuProps}
         />
       ) : null}
-      <div className='relative w-[100vw]' style={{ height: mainHeight }}>
+      <div className='relative w-[100vw]' style={{ height: mainHeight, fontFamily: 'Rubik' }}>
         {graph}
       </div>
     </AnimateFade>

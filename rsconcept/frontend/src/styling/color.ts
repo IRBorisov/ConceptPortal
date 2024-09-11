@@ -51,7 +51,7 @@ export interface IColorTheme {
  */
 // prettier-ignore
 export const lightT: IColorTheme = {
-  bgDefault:  'var(--cl-bg-100)',
+  bgDefault:  'hsl(000, 000%, 098%)', //var(--cl-bg-100)',
   bgInput:    'var(--cl-bg-120)',
   bgControls: 'var(--cl-bg-80)',
   bgDisabled: 'var(--cl-bg-60)',
@@ -91,7 +91,7 @@ export const lightT: IColorTheme = {
  */
 // prettier-ignore
 export const darkT: IColorTheme = {
-  bgDefault:  'var(--cd-bg-100)',
+  bgDefault:  'hsl(000, 000%, 005%)', //'var(--cd-bg-100)',
   bgInput:    'var(--cd-bg-120)',
   bgControls: 'var(--cd-bg-80)',
   bgDisabled: 'var(--cd-bg-60)',
