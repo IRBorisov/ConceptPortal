@@ -198,7 +198,7 @@ class TestRSFormViewset(EndpointTester):
         response = self.executeCreated(data=data, item=self.owned_id)
         self.assertEqual(response.data['new_cst']['alias'], 'X3')
         x3 = Constituenta.objects.get(alias=response.data['new_cst']['alias'])
-        self.assertEqual(x3.order, 3)
+        self.assertEqual(x3.order, 2)
 
         data = {
             'alias': 'X4',
@@ -210,7 +210,7 @@ class TestRSFormViewset(EndpointTester):
         response = self.executeCreated(data=data, item=self.owned_id)
         self.assertEqual(response.data['new_cst']['alias'], data['alias'])
         x4 = Constituenta.objects.get(alias=response.data['new_cst']['alias'])
-        self.assertEqual(x4.order, 3)
+        self.assertEqual(x4.order, 2)
         self.assertEqual(x4.term_raw, data['term_raw'])
         self.assertEqual(x4.term_forms, data['term_forms'])
 
@@ -257,7 +257,7 @@ class TestRSFormViewset(EndpointTester):
             term_raw='@{X1|plur}',
             definition_formal='X1'
         )
-        self.assertEqual(x1.order, 1)
+        self.assertEqual(x1.order, 0)
         self.assertEqual(x1.alias, 'X1')
         self.assertEqual(x1.cst_type, CstType.BASE)
 
@@ -269,7 +269,7 @@ class TestRSFormViewset(EndpointTester):
         x1.refresh_from_db()
         self.assertEqual(d1.term_resolved, '')
         self.assertEqual(d1.term_raw, '@{D2|plur}')
-        self.assertEqual(x1.order, 1)
+        self.assertEqual(x1.order, 0)
         self.assertEqual(x1.alias, 'D2')
         self.assertEqual(x1.cst_type, CstType.TERM)
 
@@ -354,7 +354,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(len(response.data['items']), 1)
         self.assertEqual(self.owned.constituents().count(), 1)
         self.assertEqual(x2.alias, 'X2')
-        self.assertEqual(x2.order, 1)
+        self.assertEqual(x2.order, 0)
 
         x3 = self.unowned.insert_new('X1')
         data = {'items': [x3.pk]}
@@ -365,22 +365,22 @@ class TestRSFormViewset(EndpointTester):
     def test_move_constituenta(self):
         self.set_params(item=self.owned_id)
 
-        data = {'items': [1337], 'move_to': 1}
+        data = {'items': [1337], 'move_to': 0}
         self.executeBadData(data=data)
 
         x1 = self.owned.insert_new('X1')
         x2 = self.owned.insert_new('X2')
 
-        data = {'items': [x2.pk], 'move_to': 1}
+        data = {'items': [x2.pk], 'move_to': 0}
         response = self.executeOK(data=data)
         x1.refresh_from_db()
         x2.refresh_from_db()
         self.assertEqual(response.data['id'], self.owned_id)
-        self.assertEqual(x1.order, 2)
-        self.assertEqual(x2.order, 1)
+        self.assertEqual(x1.order, 1)
+        self.assertEqual(x2.order, 0)
 
         x3 = self.unowned.insert_new('X1')
-        data = {'items': [x3.pk], 'move_to': 1}
+        data = {'items': [x3.pk], 'move_to': 0}
         self.executeBadData(data=data)
 
 
@@ -399,11 +399,11 @@ class TestRSFormViewset(EndpointTester):
         x1.refresh_from_db()
         x2.refresh_from_db()
         d11.refresh_from_db()
-        self.assertEqual(x2.order, 1)
+        self.assertEqual(x2.order, 0)
         self.assertEqual(x2.alias, 'X1')
-        self.assertEqual(x1.order, 2)
+        self.assertEqual(x1.order, 1)
         self.assertEqual(x1.alias, 'X2')
-        self.assertEqual(d11.order, 3)
+        self.assertEqual(d11.order, 2)
         self.assertEqual(d11.alias, 'D1')
 
         self.executeOK()
@@ -462,9 +462,7 @@ class TestRSFormViewset(EndpointTester):
         result = response.data['schema']
         items = [item for item in result['items'] if item['id'] in response.data['cst_list']]
         self.assertEqual(len(items), 2)
-        self.assertEqual(items[0]['order'], s1.order + 1)
         self.assertEqual(items[0]['definition_formal'], 'Pr1(S1)')
-        self.assertEqual(items[1]['order'], s1.order + 2)
         self.assertEqual(items[1]['definition_formal'], 'Pr2(S1)')
 
         # Testing complex structure
@@ -473,7 +471,6 @@ class TestRSFormViewset(EndpointTester):
         result = response.data['schema']
         items = [item for item in result['items'] if item['id'] in response.data['cst_list']]
         self.assertEqual(len(items), 8)
-        self.assertEqual(items[0]['order'], s3.order + 1)
         self.assertEqual(items[0]['definition_formal'], 'pr1(S3)')
 
         # Testing function
@@ -482,7 +479,6 @@ class TestRSFormViewset(EndpointTester):
         result = response.data['schema']
         items = [item for item in result['items'] if item['id'] in response.data['cst_list']]
         self.assertEqual(len(items), 2)
-        self.assertEqual(items[0]['order'], f1.order + 1)
         self.assertEqual(items[0]['definition_formal'], '[α∈X1, β∈X1] Pr1(F10[α,β])')
 
 
@@ -497,7 +493,7 @@ class TestConstituentaAPI(EndpointTester):
             alias='X1',
             cst_type=CstType.BASE,
             schema=self.rsform_owned.model,
-            order=1,
+            order=0,
             convention='Test',
             term_raw='Test1',
             term_resolved='Test1R',
@@ -506,7 +502,7 @@ class TestConstituentaAPI(EndpointTester):
             alias='X2',
             cst_type=CstType.BASE,
             schema=self.rsform_unowned.model,
-            order=1,
+            order=0,
             convention='Test1',
             term_raw='Test2',
             term_resolved='Test2R'
@@ -514,7 +510,7 @@ class TestConstituentaAPI(EndpointTester):
         self.cst3 = Constituenta.objects.create(
             alias='X3',
             schema=self.rsform_owned.model,
-            order=2,
+            order=1,
             term_raw='Test3',
             term_resolved='Test3',
             definition_raw='Test1',
@@ -594,14 +590,12 @@ class TestConstituentaAPI(EndpointTester):
         data = {
             'target': self.cst1.pk,
             'item_data': {
-                'alias': 'X33',
-                'order': 10
+                'alias': 'X33'
             }
         }
         response = self.executeOK(data=data, schema=self.rsform_owned.model.pk)
         self.assertEqual(response.data['alias'], 'X1')
         self.assertEqual(response.data['alias'], self.cst1.alias)
-        self.assertEqual(response.data['order'], self.cst1.order)
 
 
 class TestInlineSynthesis(EndpointTester):
@@ -669,8 +663,6 @@ class TestInlineSynthesis(EndpointTester):
         response = self.executeOK(data=data)
         result = {item['alias']: item for item in response.data['items']}
         self.assertEqual(len(result), 6)
-        self.assertEqual(result['X2']['order'], 1)
-        self.assertEqual(result['X4']['order'], 2)
         self.assertEqual(result['S1']['definition_formal'], 'X2')
         self.assertEqual(result['S2']['definition_formal'], 'X4×X4')
         self.assertEqual(result['D1']['definition_formal'], r'S1\S2\X2')

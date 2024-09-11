@@ -70,7 +70,7 @@ class TestChangeConstituents(EndpointTester):
         self.assertEqual(self.ks1.constituents().count(), 3)
         self.assertEqual(self.ks3.constituents().count(), 5)
         self.assertEqual(inherited_cst.alias, 'X4')
-        self.assertEqual(inherited_cst.order, 3)
+        self.assertEqual(inherited_cst.order, 2)
         self.assertEqual(inherited_cst.definition_formal, 'X1 = X2')
 
     @decl_endpoint('/api/rsforms/{schema}/rename-cst', method='patch')
@@ -133,5 +133,5 @@ class TestChangeConstituents(EndpointTester):
         d2.refresh_from_db()
         self.assertEqual(self.ks1.constituents().count(), 1)
         self.assertEqual(self.ks3.constituents().count(), 4)
-        self.assertEqual(self.ks1X2.order, 1)
+        self.assertEqual(self.ks1X2.order, 0)
         self.assertEqual(d2.definition_formal, r'X2\X2\X3')

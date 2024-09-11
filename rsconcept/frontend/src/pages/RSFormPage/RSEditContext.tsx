@@ -406,8 +406,8 @@ export const RSEditState = ({
       }
       return Math.min(prev, index);
     }, -1);
-    const target = Math.max(0, currentIndex - 1) + 1;
-    const data = {
+    const target = Math.max(0, currentIndex - 1);
+    const data: ICstMovetoData = {
       items: selected,
       move_to: target
     };
@@ -430,7 +430,7 @@ export const RSEditState = ({
         return Math.max(prev, index);
       }
     }, -1);
-    const target = Math.min(model.schema.items.length - 1, currentIndex - count + 2) + 1;
+    const target = Math.min(model.schema.items.length - 1, currentIndex - count + 2);
     const data: ICstMovetoData = {
       items: selected,
       move_to: target

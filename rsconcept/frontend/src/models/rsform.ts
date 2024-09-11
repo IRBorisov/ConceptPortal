@@ -26,11 +26,6 @@ export enum CstType {
 export const CATEGORY_CST_TYPE = CstType.THEOREM;
 
 /**
- * Represents position in linear order.
- */
-export type Position = number;
-
-/**
  * Represents {@link IConstituenta} identifier type.
  */
 export type ConstituentaID = number;
@@ -71,7 +66,6 @@ export interface TermForm {
 export interface IConstituentaMeta {
   id: ConstituentaID;
   schema: LibraryItemID;
-  order: Position;
   alias: string;
   convention: string;
   cst_type: CstType;
@@ -146,7 +140,7 @@ export interface ICstCreateData
  * Represents data, used in ordering a list of {@link IConstituenta}.
  */
 export interface ICstMovetoData extends IConstituentaList {
-  move_to: Position;
+  move_to: number; // Note: 0-base index
 }
 
 /**

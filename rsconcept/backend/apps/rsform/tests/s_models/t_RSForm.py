@@ -23,8 +23,8 @@ class TestRSForm(DBTester):
         self.assertFalse(schema1.constituents().exists())
         self.assertFalse(schema2.constituents().exists())
 
-        Constituenta.objects.create(alias='X1', schema=schema1.model, order=1)
-        Constituenta.objects.create(alias='X2', schema=schema1.model, order=2)
+        Constituenta.objects.create(alias='X1', schema=schema1.model, order=0)
+        Constituenta.objects.create(alias='X2', schema=schema1.model, order=1)
         self.assertTrue(schema1.constituents().exists())
         self.assertFalse(schema2.constituents().exists())
         self.assertEqual(schema1.constituents().count(), 2)
@@ -32,8 +32,8 @@ class TestRSForm(DBTester):
 
     def test_get_max_index(self):
         schema1 = RSForm.create(title='Test1')
-        Constituenta.objects.create(alias='X1', schema=schema1.model, order=1)
-        Constituenta.objects.create(alias='D2', cst_type=CstType.TERM, schema=schema1.model, order=2)
+        Constituenta.objects.create(alias='X1', schema=schema1.model, order=0)
+        Constituenta.objects.create(alias='D2', cst_type=CstType.TERM, schema=schema1.model, order=1)
         self.assertEqual(schema1.get_max_index(CstType.BASE), 1)
         self.assertEqual(schema1.get_max_index(CstType.TERM), 2)
         self.assertEqual(schema1.get_max_index(CstType.AXIOM), 0)
@@ -42,37 +42,37 @@ class TestRSForm(DBTester):
     def test_insert_at(self):
         schema = RSForm.create(title='Test')
         x1 = schema.insert_new('X1')
-        self.assertEqual(x1.order, 1)
+        self.assertEqual(x1.order, 0)
         self.assertEqual(x1.schema, schema.model)
 
-        x2 = schema.insert_new('X2', position=1)
+        x2 = schema.insert_new('X2', position=0)
         x1.refresh_from_db()
-        self.assertEqual(x2.order, 1)
+        self.assertEqual(x2.order, 0)
         self.assertEqual(x2.schema, schema.model)
-        self.assertEqual(x1.order, 2)
+        self.assertEqual(x1.order, 1)
 
-        x3 = schema.insert_new('X3', position=4)
+        x3 = schema.insert_new('X3', position=3)
         x2.refresh_from_db()
         x1.refresh_from_db()
-        self.assertEqual(x3.order, 3)
+        self.assertEqual(x3.order, 2)
         self.assertEqual(x3.schema, schema.model)
-        self.assertEqual(x2.order, 1)
-        self.assertEqual(x1.order, 2)
+        self.assertEqual(x2.order, 0)
+        self.assertEqual(x1.order, 1)
 
-        x4 = schema.insert_new('X4', position=3)
+        x4 = schema.insert_new('X4', position=2)
         x3.refresh_from_db()
         x2.refresh_from_db()
         x1.refresh_from_db()
-        self.assertEqual(x4.order, 3)
+        self.assertEqual(x4.order, 2)
         self.assertEqual(x4.schema, schema.model)
-        self.assertEqual(x3.order, 4)
-        self.assertEqual(x2.order, 1)
-        self.assertEqual(x1.order, 2)
+        self.assertEqual(x3.order, 3)
+        self.assertEqual(x2.order, 0)
+        self.assertEqual(x1.order, 1)
 
 
     def test_insert_at_invalid_position(self):
         with self.assertRaises(ValidationError):
-            self.schema.insert_new('X5', position=0)
+            self.schema.insert_new('X5', position=-2)
 
 
     def test_insert_at_invalid_alias(self):
@@ -84,24 +84,24 @@ class TestRSForm(DBTester):
     def test_insert_at_reorder(self):
         self.schema.insert_new('X1')
         d1 = self.schema.insert_new('D1')
-        d2 = self.schema.insert_new('D2', position=1)
+        d2 = self.schema.insert_new('D2', position=0)
         d1.refresh_from_db()
-        self.assertEqual(d1.order, 3)
-        self.assertEqual(d2.order, 1)
+        self.assertEqual(d1.order, 2)
+        self.assertEqual(d2.order, 0)
 
-        x2 = self.schema.insert_new('X2', position=4)
-        self.assertEqual(x2.order, 4)
+        x2 = self.schema.insert_new('X2', position=3)
+        self.assertEqual(x2.order, 3)
 
 
     def test_insert_last(self):
         x1 = self.schema.insert_new('X1')
-        self.assertEqual(x1.order, 1)
+        self.assertEqual(x1.order, 0)
         self.assertEqual(x1.schema, self.schema.model)
 
         x2 = self.schema.insert_new('X2')
-        self.assertEqual(x2.order, 2)
+        self.assertEqual(x2.order, 1)
         self.assertEqual(x2.schema, self.schema.model)
-        self.assertEqual(x1.order, 1)
+        self.assertEqual(x1.order, 0)
 
     def test_create_cst(self):
         data = {
@@ -120,8 +120,8 @@ class TestRSForm(DBTester):
         self.assertEqual(x3.alias, data['alias'])
         self.assertEqual(x3.term_raw, data['term_raw'])
         self.assertEqual(x3.definition_raw, data['definition_raw'])
-        self.assertEqual(x2.order, 3)
-        self.assertEqual(x3.order, 2)
+        self.assertEqual(x2.order, 2)
+        self.assertEqual(x3.order, 1)
 
 
     def test_create_cst_resolve(self):
@@ -154,20 +154,20 @@ class TestRSForm(DBTester):
             definition_raw='@{X10|plur}'
         )
 
-        result = self.schema.insert_copy([s1, x1], 2)
+        result = self.schema.insert_copy([s1, x1], 1)
         self.assertEqual(len(result), 2)
 
         s1.refresh_from_db()
-        self.assertEqual(s1.order, 4)
+        self.assertEqual(s1.order, 3)
 
         x2 = result[1]
-        self.assertEqual(x2.order, 3)
+        self.assertEqual(x2.order, 2)
         self.assertEqual(x2.alias, 'X11')
         self.assertEqual(x2.cst_type, CstType.BASE)
         self.assertEqual(x2.convention, x1.convention)
 
         s2 = result[0]
-        self.assertEqual(s2.order, 2)
+        self.assertEqual(s2.order, 1)
         self.assertEqual(s2.alias, 'S12')
         self.assertEqual(s2.cst_type, CstType.STRUCTURED)
         self.assertEqual(s2.definition_formal, x2.alias)
@@ -188,8 +188,8 @@ class TestRSForm(DBTester):
         x2.refresh_from_db()
         d1.refresh_from_db()
         self.assertEqual(self.schema.constituents().count(), 2)
-        self.assertEqual(x2.order, 1)
-        self.assertEqual(d1.order, 2)
+        self.assertEqual(x2.order, 0)
+        self.assertEqual(d1.order, 1)
         self.assertEqual(d1.definition_formal, 'DEL = X2')
         self.assertEqual(d1.definition_raw, '@{DEL|sing}')
         self.assertEqual(d1.term_raw, '@{X2|plur}')
@@ -240,25 +240,25 @@ class TestRSForm(DBTester):
         x2 = self.schema.insert_new('X2')
         d1 = self.schema.insert_new('D1')
         d2 = self.schema.insert_new('D2')
-        self.schema.move_cst([x2, d2], 1)
+        self.schema.move_cst([x2, d2], 0)
         x1.refresh_from_db()
         x2.refresh_from_db()
         d1.refresh_from_db()
         d2.refresh_from_db()
-        self.assertEqual(x1.order, 3)
-        self.assertEqual(x2.order, 1)
-        self.assertEqual(d1.order, 4)
-        self.assertEqual(d2.order, 2)
+        self.assertEqual(x1.order, 2)
+        self.assertEqual(x2.order, 0)
+        self.assertEqual(d1.order, 3)
+        self.assertEqual(d2.order, 1)
 
 
     def test_move_cst_down(self):
         x1 = self.schema.insert_new('X1')
         x2 = self.schema.insert_new('X2')
-        self.schema.move_cst([x1], 2)
+        self.schema.move_cst([x1], 1)
         x1.refresh_from_db()
         x2.refresh_from_db()
-        self.assertEqual(x1.order, 2)
-        self.assertEqual(x2.order, 1)
+        self.assertEqual(x1.order, 1)
+        self.assertEqual(x2.order, 0)
 
 
     def test_restore_order(self):
@@ -316,18 +316,18 @@ class TestRSForm(DBTester):
         f2.refresh_from_db()
         a1.refresh_from_db()
 
-        self.assertEqual(x1.order, 1)
-        self.assertEqual(x2.order, 2)
-        self.assertEqual(c1.order, 3)
-        self.assertEqual(s1.order, 4)
-        self.assertEqual(d1.order, 5)
-        self.assertEqual(s2.order, 6)
-        self.assertEqual(d3.order, 7)
-        self.assertEqual(a1.order, 8)
-        self.assertEqual(d4.order, 9)
-        self.assertEqual(d2.order, 10)
-        self.assertEqual(f1.order, 11)
-        self.assertEqual(f2.order, 12)
+        self.assertEqual(x1.order, 0)
+        self.assertEqual(x2.order, 1)
+        self.assertEqual(c1.order, 2)
+        self.assertEqual(s1.order, 3)
+        self.assertEqual(d1.order, 4)
+        self.assertEqual(s2.order, 5)
+        self.assertEqual(d3.order, 6)
+        self.assertEqual(a1.order, 7)
+        self.assertEqual(d4.order, 8)
+        self.assertEqual(d2.order, 9)
+        self.assertEqual(f1.order, 10)
+        self.assertEqual(f2.order, 11)
 
 
     def test_reset_aliases(self):

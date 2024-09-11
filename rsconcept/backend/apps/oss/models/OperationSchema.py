@@ -369,7 +369,7 @@ class OperationSchema:
         self.cache.ensure_loaded()
         new_mapping = self._transform_mapping(mapping, operation, destination)
         alias_mapping = OperationSchema._produce_alias_mapping(new_mapping)
-        insert_where = self._determine_insert_position(items[0], operation, source, destination)
+        insert_where = self._determine_insert_position(items[0].pk, operation, source, destination)
         new_cst_list = destination.insert_copy(items, insert_where, alias_mapping)
         for index, cst in enumerate(new_cst_list):
             new_inheritance = Inheritance.objects.create(
@@ -527,20 +527,23 @@ class OperationSchema:
         return result
 
     def _determine_insert_position(
-        self, prototype: Constituenta,
+        self, prototype_id: int,
         operation: Operation,
         source: RSForm,
         destination: RSForm
     ) -> int:
         ''' Determine insert_after for new constituenta. '''
-        if prototype.order == 1:
-            return 1
-        prev_cst = source.cache.constituents[prototype.order - 2]
+        prototype = source.cache.by_id[prototype_id]
+        prototype_index = source.cache.constituents.index(prototype)
+        if prototype_index == 0:
+            return 0
+        prev_cst = source.cache.constituents[prototype_index - 1]
         inherited_prev_id = self.cache.get_successor(prev_cst.pk, operation.pk)
         if inherited_prev_id is None:
             return INSERT_LAST
         prev_cst = destination.cache.by_id[inherited_prev_id]
-        return cast(int, prev_cst.order) + 1
+        prev_index = destination.cache.constituents.index(prev_cst)
+        return prev_index + 1
 
     def _extract_data_references(self, data: dict, old_data: dict) -> set[str]:
         result: set[str] = set()

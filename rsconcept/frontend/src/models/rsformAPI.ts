@@ -120,7 +120,6 @@ export function createMockConstituenta(id: ConstituentaID, alias: string, commen
     children: [],
     children_alias: [],
     is_simple_expression: false,
-    order: -1,
     schema: -1,
     alias: alias,
     convention: comment,
@@ -157,8 +156,17 @@ export function isMockCst(cst: IConstituenta) {
  * Apply filter based on start {@link IConstituenta} type.
  */
 export function applyFilterCategory(start: IConstituenta, schema: IRSForm): IConstituenta[] {
-  const nextCategory = schema.items.find(cst => cst.order > start.order && cst.cst_type === CATEGORY_CST_TYPE);
-  return schema.items.filter(cst => cst.order >= start.order && (!nextCategory || cst.order < nextCategory.order));
+  const startIndex = schema.items.indexOf(start);
+  if (startIndex === -1) {
+    return [];
+  }
+  const nextCategoryIndex = schema.items.findIndex(
+    (cst, index) => index > startIndex && cst.cst_type === CATEGORY_CST_TYPE
+  );
+
+  return schema.items.filter(
+    (_, index) => index >= startIndex && (nextCategoryIndex === -1 || index < nextCategoryIndex)
+  );
 }
 
 /**

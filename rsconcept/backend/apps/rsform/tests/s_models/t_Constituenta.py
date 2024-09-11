@@ -16,7 +16,7 @@ class TestConstituenta(TestCase):
 
     def test_str(self):
         testStr = 'X1'
-        cst = Constituenta.objects.create(alias=testStr, schema=self.schema1.model, order=1, convention='Test')
+        cst = Constituenta.objects.create(alias=testStr, schema=self.schema1.model, order=0, convention='Test')
         self.assertEqual(str(cst), testStr)
 
 
@@ -25,25 +25,18 @@ class TestConstituenta(TestCase):
             Constituenta.objects.create(alias='X1', schema=self.schema1.model, order=-1)
 
 
-    def test_order_min_value(self):
-        with self.assertRaises(ValidationError):
-            cst = Constituenta.objects.create(alias='X1', schema=self.schema1.model, order=0)
-            cst.full_clean()
-
-
     def test_schema_not_null(self):
         with self.assertRaises(IntegrityError):
-            Constituenta.objects.create(alias='X1', order=1)
+            Constituenta.objects.create(alias='X1', order=0)
 
 
     def test_create_default(self):
         cst = Constituenta.objects.create(
             alias='X1',
-            schema=self.schema1.model,
-            order=1
+            schema=self.schema1.model
         )
         self.assertEqual(cst.schema, self.schema1.model)
-        self.assertEqual(cst.order, 1)
+        self.assertEqual(cst.order, 0)
         self.assertEqual(cst.alias, 'X1')
         self.assertEqual(cst.cst_type, CstType.BASE)
         self.assertEqual(cst.convention, '')
@@ -57,7 +50,6 @@ class TestConstituenta(TestCase):
     def test_extract_references(self):
         cst = Constituenta.objects.create(
             alias='X1',
-            order=1,
             schema=self.schema1.model,
             definition_formal='X1 X2',
             term_raw='@{X3|sing} is a @{X4|sing}',
@@ -68,7 +60,6 @@ class TestConstituenta(TestCase):
     def text_apply_mapping(self):
         cst = Constituenta.objects.create(
             alias='X1',
-            order=1,
             schema=self.schema1.model,
             definition_formal='X1 = X2',
             term_raw='@{X1|sing}',

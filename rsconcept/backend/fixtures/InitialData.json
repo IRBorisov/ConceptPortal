@@ -874,7 +874,7 @@
     "pk": 589,
     "fields": {
       "schema": 34,
-      "order": 1,
+      "order": 0,
       "alias": "T1",
       "cst_type": "theorem",
       "convention": "",
@@ -891,7 +891,7 @@
     "pk": 590,
     "fields": {
       "schema": 34,
-      "order": 2,
+      "order": 1,
       "alias": "F1",
       "cst_type": "function",
       "convention": "",
@@ -908,7 +908,7 @@
     "pk": 591,
     "fields": {
       "schema": 34,
-      "order": 3,
+      "order": 2,
       "alias": "F2",
       "cst_type": "function",
       "convention": "",
@@ -925,7 +925,7 @@
     "pk": 592,
     "fields": {
       "schema": 34,
-      "order": 4,
+      "order": 3,
       "alias": "F3",
       "cst_type": "function",
       "convention": "",
@@ -942,7 +942,7 @@
     "pk": 593,
     "fields": {
       "schema": 34,
-      "order": 5,
+      "order": 4,
       "alias": "T2",
       "cst_type": "theorem",
       "convention": "",
@@ -959,7 +959,7 @@
     "pk": 594,
     "fields": {
       "schema": 34,
-      "order": 6,
+      "order": 5,
       "alias": "F4",
       "cst_type": "function",
       "convention": "",
@@ -976,7 +976,7 @@
     "pk": 595,
     "fields": {
       "schema": 34,
-      "order": 7,
+      "order": 6,
       "alias": "P1",
       "cst_type": "predicate",
       "convention": "",
@@ -993,7 +993,7 @@
     "pk": 596,
     "fields": {
       "schema": 34,
-      "order": 8,
+      "order": 7,
       "alias": "P2",
       "cst_type": "predicate",
       "convention": "",
@@ -1010,7 +1010,7 @@
     "pk": 597,
     "fields": {
       "schema": 34,
-      "order": 9,
+      "order": 8,
       "alias": "P3",
       "cst_type": "predicate",
       "convention": "",
@@ -1027,7 +1027,7 @@
     "pk": 598,
     "fields": {
       "schema": 34,
-      "order": 10,
+      "order": 9,
       "alias": "P4",
       "cst_type": "predicate",
       "convention": "",
@@ -1044,7 +1044,7 @@
     "pk": 599,
     "fields": {
       "schema": 34,
-      "order": 11,
+      "order": 10,
       "alias": "P5",
       "cst_type": "predicate",
       "convention": "",
@@ -1061,7 +1061,7 @@
     "pk": 600,
     "fields": {
       "schema": 34,
-      "order": 12,
+      "order": 11,
       "alias": "F5",
       "cst_type": "function",
       "convention": "",
@@ -1078,7 +1078,7 @@
     "pk": 601,
     "fields": {
       "schema": 34,
-      "order": 13,
+      "order": 12,
       "alias": "F6",
       "cst_type": "function",
       "convention": "",
@@ -1095,7 +1095,7 @@
     "pk": 602,
     "fields": {
       "schema": 34,
-      "order": 14,
+      "order": 13,
       "alias": "F7",
       "cst_type": "function",
       "convention": "",
@@ -1112,7 +1112,7 @@
     "pk": 603,
     "fields": {
       "schema": 34,
-      "order": 15,
+      "order": 14,
       "alias": "F8",
       "cst_type": "function",
       "convention": "",
@@ -1129,7 +1129,7 @@
     "pk": 604,
     "fields": {
       "schema": 34,
-      "order": 16,
+      "order": 15,
       "alias": "F9",
       "cst_type": "function",
       "convention": "",
@@ -1146,7 +1146,7 @@
     "pk": 605,
     "fields": {
       "schema": 34,
-      "order": 17,
+      "order": 16,
       "alias": "F10",
       "cst_type": "function",
       "convention": "",
@@ -1163,7 +1163,7 @@
     "pk": 606,
     "fields": {
       "schema": 34,
-      "order": 18,
+      "order": 17,
       "alias": "F11",
       "cst_type": "function",
       "convention": "",
@@ -1180,7 +1180,7 @@
     "pk": 607,
     "fields": {
       "schema": 34,
-      "order": 19,
+      "order": 18,
       "alias": "T3",
       "cst_type": "theorem",
       "convention": "",
@@ -1197,7 +1197,7 @@
     "pk": 608,
     "fields": {
       "schema": 34,
-      "order": 20,
+      "order": 19,
       "alias": "F12",
       "cst_type": "function",
       "convention": "",
@@ -1214,7 +1214,7 @@
     "pk": 609,
     "fields": {
       "schema": 34,
-      "order": 21,
+      "order": 20,
       "alias": "P6",
       "cst_type": "predicate",
       "convention": "",
@@ -1231,7 +1231,7 @@
     "pk": 610,
     "fields": {
       "schema": 34,
-      "order": 22,
+      "order": 21,
       "alias": "P7",
       "cst_type": "predicate",
       "convention": "",
@@ -1248,7 +1248,7 @@
     "pk": 611,
     "fields": {
       "schema": 34,
-      "order": 23,
+      "order": 22,
       "alias": "P8",
       "cst_type": "predicate",
       "convention": "",
@@ -1265,7 +1265,7 @@
     "pk": 612,
     "fields": {
       "schema": 34,
-      "order": 24,
+      "order": 23,
       "alias": "P9",
       "cst_type": "predicate",
       "convention": "",
@@ -1282,7 +1282,7 @@
     "pk": 613,
     "fields": {
       "schema": 34,
-      "order": 25,
+      "order": 24,
       "alias": "P10",
       "cst_type": "predicate",
       "convention": "",
@@ -1299,7 +1299,7 @@
     "pk": 614,
     "fields": {
       "schema": 34,
-      "order": 26,
+      "order": 25,
       "alias": "P11",
       "cst_type": "predicate",
       "convention": "",
@@ -1316,7 +1316,7 @@
     "pk": 615,
     "fields": {
       "schema": 34,
-      "order": 27,
+      "order": 26,
       "alias": "P12",
       "cst_type": "predicate",
       "convention": "",
@@ -1333,7 +1333,7 @@
     "pk": 616,
     "fields": {
       "schema": 34,
-      "order": 28,
+      "order": 27,
       "alias": "P13",
       "cst_type": "predicate",
       "convention": "",
@@ -1350,7 +1350,7 @@
     "pk": 617,
     "fields": {
       "schema": 34,
-      "order": 29,
+      "order": 28,
       "alias": "P14",
       "cst_type": "predicate",
       "convention": "",
@@ -1367,7 +1367,7 @@
     "pk": 618,
     "fields": {
       "schema": 34,
-      "order": 30,
+      "order": 29,
       "alias": "P15",
       "cst_type": "predicate",
       "convention": "",
@@ -1384,7 +1384,7 @@
     "pk": 619,
     "fields": {
       "schema": 34,
-      "order": 31,
+      "order": 30,
       "alias": "P16",
       "cst_type": "predicate",
       "convention": "",
@@ -1401,7 +1401,7 @@
     "pk": 620,
     "fields": {
       "schema": 34,
-      "order": 32,
+      "order": 31,
       "alias": "F13",
       "cst_type": "function",
       "convention": "альтернативное определение:\n[α∈ℬ(R1), σ∈ℬ(R1×R1)] D{ξ∈α | ∀ω∈α\\{ξ} (ω, ξ)∉σ}",
@@ -1418,7 +1418,7 @@
     "pk": 621,
     "fields": {
       "schema": 34,
-      "order": 33,
+      "order": 32,
       "alias": "F14",
       "cst_type": "function",
       "convention": "альтернативное определение:\n[α∈ℬ(R1), σ∈ℬ(R1×R1)] debool(D{ξ∈α | ∀ω∈α\\{ξ} (ξ, ω)∈σ})",
@@ -1435,7 +1435,7 @@
     "pk": 622,
     "fields": {
       "schema": 34,
-      "order": 34,
+      "order": 33,
       "alias": "P17",
       "cst_type": "predicate",
       "convention": "",
@@ -1452,7 +1452,7 @@
     "pk": 623,
     "fields": {
       "schema": 34,
-      "order": 35,
+      "order": 34,
       "alias": "F15",
       "cst_type": "function",
       "convention": "",
@@ -1469,7 +1469,7 @@
     "pk": 624,
     "fields": {
       "schema": 34,
-      "order": 36,
+      "order": 35,
       "alias": "P18",
       "cst_type": "predicate",
       "convention": "",
@@ -1486,7 +1486,7 @@
     "pk": 625,
     "fields": {
       "schema": 34,
-      "order": 37,
+      "order": 36,
       "alias": "T4",
       "cst_type": "theorem",
       "convention": "",
@@ -1503,7 +1503,7 @@
     "pk": 626,
     "fields": {
       "schema": 34,
-      "order": 38,
+      "order": 37,
       "alias": "P19",
       "cst_type": "predicate",
       "convention": "",
@@ -1520,7 +1520,7 @@
     "pk": 627,
     "fields": {
       "schema": 34,
-      "order": 39,
+      "order": 38,
       "alias": "F16",
       "cst_type": "function",
       "convention": "",
@@ -1537,7 +1537,7 @@
     "pk": 628,
     "fields": {
       "schema": 34,
-      "order": 40,
+      "order": 39,
       "alias": "F17",
       "cst_type": "function",
       "convention": "",
@@ -1554,7 +1554,7 @@
     "pk": 629,
     "fields": {
       "schema": 34,
-      "order": 41,
+      "order": 40,
       "alias": "F18",
       "cst_type": "function",
       "convention": "",
@@ -1571,7 +1571,7 @@
     "pk": 630,
     "fields": {
       "schema": 34,
-      "order": 42,
+      "order": 41,
       "alias": "F19",
       "cst_type": "function",
       "convention": "",
@@ -1588,7 +1588,7 @@
     "pk": 631,
     "fields": {
       "schema": 34,
-      "order": 43,
+      "order": 42,
       "alias": "T5",
       "cst_type": "theorem",
       "convention": "",
@@ -1605,7 +1605,7 @@
     "pk": 632,
     "fields": {
       "schema": 34,
-      "order": 44,
+      "order": 43,
       "alias": "P20",
       "cst_type": "predicate",
       "convention": "",
@@ -1622,7 +1622,7 @@
     "pk": 633,
     "fields": {
       "schema": 34,
-      "order": 45,
+      "order": 44,
       "alias": "F20",
       "cst_type": "function",
       "convention": "",
@@ -1639,7 +1639,7 @@
     "pk": 634,
     "fields": {
       "schema": 34,
-      "order": 46,
+      "order": 45,
       "alias": "F21",
       "cst_type": "function",
       "convention": "",
@@ -1656,7 +1656,7 @@
     "pk": 635,
     "fields": {
       "schema": 34,
-      "order": 47,
+      "order": 46,
       "alias": "F22",
       "cst_type": "function",
       "convention": "",
@@ -1673,7 +1673,7 @@
     "pk": 636,
     "fields": {
       "schema": 34,
-      "order": 48,
+      "order": 47,
       "alias": "F23",
       "cst_type": "function",
       "convention": "",
@@ -1690,7 +1690,7 @@
     "pk": 637,
     "fields": {
       "schema": 34,
-      "order": 49,
+      "order": 48,
       "alias": "F24",
       "cst_type": "function",
       "convention": "",
@@ -1707,7 +1707,7 @@
     "pk": 638,
     "fields": {
       "schema": 34,
-      "order": 50,
+      "order": 49,
       "alias": "F25",
       "cst_type": "function",
       "convention": "",
@@ -1724,7 +1724,7 @@
     "pk": 639,
     "fields": {
       "schema": 34,
-      "order": 51,
+      "order": 50,
       "alias": "F26",
       "cst_type": "function",
       "convention": "",
@@ -1741,7 +1741,7 @@
     "pk": 640,
     "fields": {
       "schema": 34,
-      "order": 52,
+      "order": 51,
       "alias": "F27",
       "cst_type": "function",
       "convention": "",
@@ -1758,7 +1758,7 @@
     "pk": 641,
     "fields": {
       "schema": 34,
-      "order": 53,
+      "order": 52,
       "alias": "F28",
       "cst_type": "function",
       "convention": "",
@@ -1775,7 +1775,7 @@
     "pk": 642,
     "fields": {
       "schema": 34,
-      "order": 54,
+      "order": 53,
       "alias": "P21",
       "cst_type": "predicate",
       "convention": "",
@@ -1792,7 +1792,7 @@
     "pk": 643,
     "fields": {
       "schema": 34,
-      "order": 55,
+      "order": 54,
       "alias": "P22",
       "cst_type": "predicate",
       "convention": "",
@@ -1809,7 +1809,7 @@
     "pk": 644,
     "fields": {
       "schema": 34,
-      "order": 56,
+      "order": 55,
       "alias": "P23",
       "cst_type": "predicate",
       "convention": "",
@@ -1826,7 +1826,7 @@
     "pk": 645,
     "fields": {
       "schema": 34,
-      "order": 57,
+      "order": 56,
       "alias": "F29",
       "cst_type": "function",
       "convention": "",
@@ -1843,7 +1843,7 @@
     "pk": 646,
     "fields": {
       "schema": 34,
-      "order": 58,
+      "order": 57,
       "alias": "F30",
       "cst_type": "function",
       "convention": "",
@@ -1860,7 +1860,7 @@
     "pk": 647,
     "fields": {
       "schema": 34,
-      "order": 59,
+      "order": 58,
       "alias": "P24",
       "cst_type": "predicate",
       "convention": "1",
@@ -1877,7 +1877,7 @@
     "pk": 648,
     "fields": {
       "schema": 34,
-      "order": 60,
+      "order": 59,
       "alias": "T6",
       "cst_type": "theorem",
       "convention": "",
@@ -1894,7 +1894,7 @@
     "pk": 649,
     "fields": {
       "schema": 34,
-      "order": 61,
+      "order": 60,
       "alias": "F31",
       "cst_type": "function",
       "convention": "",
@@ -1911,7 +1911,7 @@
     "pk": 650,
     "fields": {
       "schema": 34,
-      "order": 62,
+      "order": 61,
       "alias": "F32",
       "cst_type": "function",
       "convention": "",
@@ -1928,7 +1928,7 @@
     "pk": 651,
     "fields": {
       "schema": 34,
-      "order": 63,
+      "order": 62,
       "alias": "F33",
       "cst_type": "function",
       "convention": "",
@@ -1945,7 +1945,7 @@
     "pk": 652,
     "fields": {
       "schema": 34,
-      "order": 64,
+      "order": 63,
       "alias": "P25",
       "cst_type": "predicate",
       "convention": "",
@@ -1962,7 +1962,7 @@
     "pk": 653,
     "fields": {
       "schema": 34,
-      "order": 65,
+      "order": 64,
       "alias": "F34",
       "cst_type": "function",
       "convention": "",
@@ -1979,7 +1979,7 @@
     "pk": 654,
     "fields": {
       "schema": 34,
-      "order": 66,
+      "order": 65,
       "alias": "T7",
       "cst_type": "theorem",
       "convention": "",
@@ -1996,7 +1996,7 @@
     "pk": 655,
     "fields": {
       "schema": 34,
-      "order": 67,
+      "order": 66,
       "alias": "P26",
       "cst_type": "predicate",
       "convention": "",
@@ -2013,7 +2013,7 @@
     "pk": 656,
     "fields": {
       "schema": 34,
-      "order": 68,
+      "order": 67,
       "alias": "P27",
       "cst_type": "predicate",
       "convention": "",
@@ -2030,7 +2030,7 @@
     "pk": 657,
     "fields": {
       "schema": 34,
-      "order": 69,
+      "order": 68,
       "alias": "F35",
       "cst_type": "function",
       "convention": "",
@@ -2047,7 +2047,7 @@
     "pk": 658,
     "fields": {
       "schema": 34,
-      "order": 70,
+      "order": 69,
       "alias": "F36",
       "cst_type": "function",
       "convention": "",
@@ -2064,7 +2064,7 @@
     "pk": 659,
     "fields": {
       "schema": 34,
-      "order": 71,
+      "order": 70,
       "alias": "F37",
       "cst_type": "function",
       "convention": "",
@@ -2081,7 +2081,7 @@
     "pk": 660,
     "fields": {
       "schema": 34,
-      "order": 72,
+      "order": 71,
       "alias": "F38",
       "cst_type": "function",
       "convention": "",
@@ -2098,7 +2098,7 @@
     "pk": 661,
     "fields": {
       "schema": 34,
-      "order": 73,
+      "order": 72,
       "alias": "F39",
       "cst_type": "function",
       "convention": "",
@@ -2115,7 +2115,7 @@
     "pk": 662,
     "fields": {
       "schema": 34,
-      "order": 74,
+      "order": 73,
       "alias": "P28",
       "cst_type": "predicate",
       "convention": "",
@@ -2132,7 +2132,7 @@
     "pk": 663,
     "fields": {
       "schema": 34,
-      "order": 75,
+      "order": 74,
       "alias": "F40",
       "cst_type": "function",
       "convention": "",
@@ -2149,7 +2149,7 @@
     "pk": 664,
     "fields": {
       "schema": 34,
-      "order": 76,
+      "order": 75,
       "alias": "T8",
       "cst_type": "theorem",
       "convention": "Условия для \"левых\" и \"правых\" свойств через конкатенацию",
@@ -2166,7 +2166,7 @@
     "pk": 665,
     "fields": {
       "schema": 34,
-      "order": 77,
+      "order": 76,
       "alias": "F41",
       "cst_type": "function",
       "convention": "",
@@ -2183,7 +2183,7 @@
     "pk": 666,
     "fields": {
       "schema": 34,
-      "order": 78,
+      "order": 77,
       "alias": "F42",
       "cst_type": "function",
       "convention": "например ноль для операции умножения целых чисел",
@@ -2200,7 +2200,7 @@
     "pk": 667,
     "fields": {
       "schema": 34,
-      "order": 79,
+      "order": 78,
       "alias": "F43",
       "cst_type": "function",
       "convention": "",
@@ -2217,7 +2217,7 @@
     "pk": 668,
     "fields": {
       "schema": 34,
-      "order": 80,
+      "order": 79,
       "alias": "F44",
       "cst_type": "function",
       "convention": "",
@@ -2234,7 +2234,7 @@
     "pk": 669,
     "fields": {
       "schema": 34,
-      "order": 81,
+      "order": 80,
       "alias": "F45",
       "cst_type": "function",
       "convention": "",
@@ -2251,7 +2251,7 @@
     "pk": 670,
     "fields": {
       "schema": 34,
-      "order": 82,
+      "order": 81,
       "alias": "F46",
       "cst_type": "function",
       "convention": "",
@@ -2268,7 +2268,7 @@
     "pk": 671,
     "fields": {
       "schema": 34,
-      "order": 83,
+      "order": 82,
       "alias": "P29",
       "cst_type": "predicate",
       "convention": "",
@@ -2285,7 +2285,7 @@
     "pk": 672,
     "fields": {
       "schema": 34,
-      "order": 84,
+      "order": 83,
       "alias": "P30",
       "cst_type": "predicate",
       "convention": "",
@@ -2302,7 +2302,7 @@
     "pk": 673,
     "fields": {
       "schema": 34,
-      "order": 85,
+      "order": 84,
       "alias": "P31",
       "cst_type": "predicate",
       "convention": "",
@@ -2319,7 +2319,7 @@
     "pk": 674,
     "fields": {
       "schema": 34,
-      "order": 86,
+      "order": 85,
       "alias": "P32",
       "cst_type": "predicate",
       "convention": "",
@@ -2336,7 +2336,7 @@
     "pk": 675,
     "fields": {
       "schema": 34,
-      "order": 87,
+      "order": 86,
       "alias": "P33",
       "cst_type": "predicate",
       "convention": "",
@@ -2353,7 +2353,7 @@
     "pk": 676,
     "fields": {
       "schema": 34,
-      "order": 88,
+      "order": 87,
       "alias": "P34",
       "cst_type": "predicate",
       "convention": "",
@@ -2370,7 +2370,7 @@
     "pk": 677,
     "fields": {
       "schema": 34,
-      "order": 89,
+      "order": 88,
       "alias": "P35",
       "cst_type": "predicate",
       "convention": "",
@@ -2387,7 +2387,7 @@
     "pk": 678,
     "fields": {
       "schema": 34,
-      "order": 90,
+      "order": 89,
       "alias": "P36",
       "cst_type": "predicate",
       "convention": "",
@@ -2404,7 +2404,7 @@
     "pk": 679,
     "fields": {
       "schema": 34,
-      "order": 91,
+      "order": 90,
       "alias": "P37",
       "cst_type": "predicate",
       "convention": "",
@@ -2421,7 +2421,7 @@
     "pk": 680,
     "fields": {
       "schema": 34,
-      "order": 92,
+      "order": 91,
       "alias": "P38",
       "cst_type": "predicate",
       "convention": "",
@@ -2438,7 +2438,7 @@
     "pk": 681,
     "fields": {
       "schema": 34,
-      "order": 93,
+      "order": 92,
       "alias": "T9",
       "cst_type": "theorem",
       "convention": "Условия для \"левых\" и \"правых\" свойств через конкатенацию\nОперации по умолчанию считаются группоидами",
@@ -2455,7 +2455,7 @@
     "pk": 682,
     "fields": {
       "schema": 34,
-      "order": 94,
+      "order": 93,
       "alias": "P39",
       "cst_type": "predicate",
       "convention": "",
@@ -2472,7 +2472,7 @@
     "pk": 683,
     "fields": {
       "schema": 34,
-      "order": 95,
+      "order": 94,
       "alias": "P40",
       "cst_type": "predicate",
       "convention": "",
@@ -2489,7 +2489,7 @@
     "pk": 684,
     "fields": {
       "schema": 34,
-      "order": 96,
+      "order": 95,
       "alias": "P41",
       "cst_type": "predicate",
       "convention": "",
@@ -2506,7 +2506,7 @@
     "pk": 685,
     "fields": {
       "schema": 34,
-      "order": 97,
+      "order": 96,
       "alias": "P42",
       "cst_type": "predicate",
       "convention": "",
@@ -2523,7 +2523,7 @@
     "pk": 686,
     "fields": {
       "schema": 34,
-      "order": 98,
+      "order": 97,
       "alias": "P43",
       "cst_type": "predicate",
       "convention": "",
@@ -2540,7 +2540,7 @@
     "pk": 687,
     "fields": {
       "schema": 34,
-      "order": 99,
+      "order": 98,
       "alias": "P44",
       "cst_type": "predicate",
       "convention": "",
@@ -2557,7 +2557,7 @@
     "pk": 688,
     "fields": {
       "schema": 34,
-      "order": 100,
+      "order": 99,
       "alias": "P45",
       "cst_type": "predicate",
       "convention": "",
@@ -2574,7 +2574,7 @@
     "pk": 689,
     "fields": {
       "schema": 34,
-      "order": 101,
+      "order": 100,
       "alias": "P46",
       "cst_type": "predicate",
       "convention": "",
@@ -2591,7 +2591,7 @@
     "pk": 690,
     "fields": {
       "schema": 34,
-      "order": 102,
+      "order": 101,
       "alias": "T10",
       "cst_type": "theorem",
       "convention": "",
@@ -2608,7 +2608,7 @@
     "pk": 691,
     "fields": {
       "schema": 34,
-      "order": 103,
+      "order": 102,
       "alias": "P47",
       "cst_type": "predicate",
       "convention": "",
@@ -2625,7 +2625,7 @@
     "pk": 692,
     "fields": {
       "schema": 34,
-      "order": 104,
+      "order": 103,
       "alias": "P48",
       "cst_type": "predicate",
       "convention": "",
@@ -2642,7 +2642,7 @@
     "pk": 693,
     "fields": {
       "schema": 34,
-      "order": 105,
+      "order": 104,
       "alias": "P49",
       "cst_type": "predicate",
       "convention": "",
@@ -2659,7 +2659,7 @@
     "pk": 694,
     "fields": {
       "schema": 34,
-      "order": 106,
+      "order": 105,
       "alias": "P50",
       "cst_type": "predicate",
       "convention": "",
@@ -2676,7 +2676,7 @@
     "pk": 695,
     "fields": {
       "schema": 34,
-      "order": 107,
+      "order": 106,
       "alias": "P51",
       "cst_type": "predicate",
       "convention": "",
@@ -2693,7 +2693,7 @@
     "pk": 696,
     "fields": {
       "schema": 34,
-      "order": 108,
+      "order": 107,
       "alias": "P52",
       "cst_type": "predicate",
       "convention": "",
@@ -2710,7 +2710,7 @@
     "pk": 697,
     "fields": {
       "schema": 34,
-      "order": 109,
+      "order": 108,
       "alias": "F47",
       "cst_type": "function",
       "convention": "",
@@ -2727,7 +2727,7 @@
     "pk": 698,
     "fields": {
       "schema": 34,
-      "order": 110,
+      "order": 109,
       "alias": "P53",
       "cst_type": "predicate",
       "convention": "",
@@ -2744,7 +2744,7 @@
     "pk": 699,
     "fields": {
       "schema": 34,
-      "order": 111,
+      "order": 110,
       "alias": "P54",
       "cst_type": "predicate",
       "convention": "",
@@ -2761,7 +2761,7 @@
     "pk": 700,
     "fields": {
       "schema": 35,
-      "order": 1,
+      "order": 0,
       "alias": "X1",
       "cst_type": "basic",
       "convention": "",
@@ -2778,7 +2778,7 @@
     "pk": 701,
     "fields": {
       "schema": 35,
-      "order": 2,
+      "order": 1,
       "alias": "S1",
       "cst_type": "structure",
       "convention": "",
@@ -2795,7 +2795,7 @@
     "pk": 702,
     "fields": {
       "schema": 35,
-      "order": 3,
+      "order": 2,
       "alias": "F1",
       "cst_type": "function",
       "convention": "",
@@ -2812,7 +2812,7 @@
     "pk": 703,
     "fields": {
       "schema": 35,
-      "order": 4,
+      "order": 3,
       "alias": "A1",
       "cst_type": "axiom",
       "convention": "",
@@ -2829,7 +2829,7 @@
     "pk": 704,
     "fields": {
       "schema": 35,
-      "order": 5,
+      "order": 4,
       "alias": "A2",
       "cst_type": "axiom",
       "convention": "",
@@ -2846,7 +2846,7 @@
     "pk": 705,
     "fields": {
       "schema": 35,
-      "order": 6,
+      "order": 5,
       "alias": "D1",
       "cst_type": "term",
       "convention": "",
@@ -2863,7 +2863,7 @@
     "pk": 706,
     "fields": {
       "schema": 35,
-      "order": 7,
+      "order": 6,
       "alias": "A3",
       "cst_type": "axiom",
       "convention": "",
@@ -2880,7 +2880,7 @@
     "pk": 707,
     "fields": {
       "schema": 35,
-      "order": 8,
+      "order": 7,
       "alias": "F2",
       "cst_type": "function",
       "convention": "",
@@ -2897,7 +2897,7 @@
     "pk": 708,
     "fields": {
       "schema": 35,
-      "order": 9,
+      "order": 8,
       "alias": "D3",
       "cst_type": "term",
       "convention": "",
@@ -2914,7 +2914,7 @@
     "pk": 709,
     "fields": {
       "schema": 35,
-      "order": 10,
+      "order": 9,
       "alias": "A4",
       "cst_type": "axiom",
       "convention": "",
@@ -2931,7 +2931,7 @@
     "pk": 710,
     "fields": {
       "schema": 35,
-      "order": 11,
+      "order": 10,
       "alias": "D2",
       "cst_type": "term",
       "convention": "",
@@ -2948,7 +2948,7 @@
     "pk": 711,
     "fields": {
       "schema": 35,
-      "order": 12,
+      "order": 11,
       "alias": "A5",
       "cst_type": "axiom",
       "convention": "",
@@ -2965,7 +2965,7 @@
     "pk": 712,
     "fields": {
       "schema": 35,
-      "order": 13,
+      "order": 12,
       "alias": "A6",
       "cst_type": "axiom",
       "convention": "",
@@ -2982,7 +2982,7 @@
     "pk": 713,
     "fields": {
       "schema": 36,
-      "order": 1,
+      "order": 0,
       "alias": "X1",
       "cst_type": "basic",
       "convention": "",
@@ -2999,7 +2999,7 @@
     "pk": 714,
     "fields": {
       "schema": 36,
-      "order": 2,
+      "order": 1,
       "alias": "S1",
       "cst_type": "structure",
       "convention": "",
@@ -3016,7 +3016,7 @@
     "pk": 715,
     "fields": {
       "schema": 36,
-      "order": 3,
+      "order": 2,
       "alias": "S2",
       "cst_type": "structure",
       "convention": "",
@@ -3033,7 +3033,7 @@
     "pk": 716,
     "fields": {
       "schema": 36,
-      "order": 4,
+      "order": 3,
       "alias": "S3",
       "cst_type": "structure",
       "convention": "",
@@ -3050,7 +3050,7 @@
     "pk": 717,
     "fields": {
       "schema": 36,
-      "order": 5,
+      "order": 4,
       "alias": "S4",
       "cst_type": "structure",
       "convention": "",
@@ -3067,7 +3067,7 @@
     "pk": 718,
     "fields": {
       "schema": 36,
-      "order": 6,
+      "order": 5,
       "alias": "S5",
       "cst_type": "structure",
       "convention": "",
@@ -3084,7 +3084,7 @@
     "pk": 719,
     "fields": {
       "schema": 36,
-      "order": 7,
+      "order": 6,
       "alias": "F2",
       "cst_type": "function",
       "convention": "",
@@ -3101,7 +3101,7 @@
     "pk": 720,
     "fields": {
       "schema": 36,
-      "order": 8,
+      "order": 7,
       "alias": "F3",
       "cst_type": "function",
       "convention": "",
@@ -3118,7 +3118,7 @@
     "pk": 721,
     "fields": {
       "schema": 36,
-      "order": 9,
+      "order": 8,
       "alias": "F4",
       "cst_type": "function",
       "convention": "",
@@ -3135,7 +3135,7 @@
     "pk": 722,
     "fields": {
       "schema": 36,
-      "order": 10,
+      "order": 9,
       "alias": "P1",
       "cst_type": "predicate",
       "convention": "",
@@ -3152,7 +3152,7 @@
     "pk": 723,
     "fields": {
       "schema": 36,
-      "order": 11,
+      "order": 10,
       "alias": "P2",
       "cst_type": "predicate",
       "convention": "",
@@ -3169,7 +3169,7 @@
     "pk": 724,
     "fields": {
       "schema": 36,
-      "order": 12,
+      "order": 11,
       "alias": "P3",
       "cst_type": "predicate",
       "convention": "",
@@ -3186,7 +3186,7 @@
     "pk": 725,
     "fields": {
       "schema": 36,
-      "order": 13,
+      "order": 12,
       "alias": "P4",
       "cst_type": "predicate",
       "convention": "",
@@ -3203,7 +3203,7 @@
     "pk": 726,
     "fields": {
       "schema": 36,
-      "order": 14,
+      "order": 13,
       "alias": "P5",
       "cst_type": "predicate",
       "convention": "",
@@ -3220,7 +3220,7 @@
     "pk": 727,
     "fields": {
       "schema": 36,
-      "order": 15,
+      "order": 14,
       "alias": "A1",
       "cst_type": "axiom",
       "convention": "",
@@ -3237,7 +3237,7 @@
     "pk": 728,
     "fields": {
       "schema": 36,
-      "order": 16,
+      "order": 15,
       "alias": "A2",
       "cst_type": "axiom",
       "convention": "",
@@ -3254,7 +3254,7 @@
     "pk": 729,
     "fields": {
       "schema": 36,
-      "order": 17,
+      "order": 16,
       "alias": "A3",
       "cst_type": "axiom",
       "convention": "",
@@ -3271,7 +3271,7 @@
     "pk": 730,
     "fields": {
       "schema": 36,
-      "order": 18,
+      "order": 17,
       "alias": "A4",
       "cst_type": "axiom",
       "convention": "",
@@ -3288,7 +3288,7 @@
     "pk": 731,
     "fields": {
       "schema": 36,
-      "order": 19,
+      "order": 18,
       "alias": "A5",
       "cst_type": "axiom",
       "convention": "",
@@ -3305,7 +3305,7 @@
     "pk": 732,
     "fields": {
       "schema": 36,
-      "order": 20,
+      "order": 19,
       "alias": "A6",
       "cst_type": "axiom",
       "convention": "",
@@ -3322,7 +3322,7 @@
     "pk": 733,
     "fields": {
       "schema": 36,
-      "order": 21,
+      "order": 20,
       "alias": "A7",
       "cst_type": "axiom",
       "convention": "",
@@ -3339,7 +3339,7 @@
     "pk": 734,
     "fields": {
       "schema": 36,
-      "order": 22,
+      "order": 21,
       "alias": "A8",
       "cst_type": "axiom",
       "convention": "",
@@ -3356,7 +3356,7 @@
     "pk": 735,
     "fields": {
       "schema": 36,
-      "order": 23,
+      "order": 22,
       "alias": "A9",
       "cst_type": "axiom",
       "convention": "",
@@ -3373,7 +3373,7 @@
     "pk": 736,
     "fields": {
       "schema": 36,
-      "order": 24,
+      "order": 23,
       "alias": "A10",
       "cst_type": "axiom",
       "convention": "",
@@ -3390,7 +3390,7 @@
     "pk": 737,
     "fields": {
       "schema": 37,
-      "order": 1,
+      "order": 0,
       "alias": "X1",
       "cst_type": "basic",
       "convention": "Различимые в предметной области люди",
@@ -3407,7 +3407,7 @@
     "pk": 738,
     "fields": {
       "schema": 37,
-      "order": 2,
+      "order": 1,
       "alias": "S1",
       "cst_type": "structure",
       "convention": "Пол человека устанавливается в соответствии с документами",
@@ -3424,7 +3424,7 @@
     "pk": 739,
     "fields": {
       "schema": 37,
-      "order": 3,
+      "order": 2,
       "alias": "S2",
       "cst_type": "structure",
       "convention": "Пол человека устанавливается в соответствии с документами",
@@ -3441,7 +3441,7 @@
     "pk": 740,
     "fields": {
       "schema": 37,
-      "order": 4,
+      "order": 3,
       "alias": "A1",
       "cst_type": "axiom",
       "convention": "",
@@ -3458,7 +3458,7 @@
     "pk": 741,
     "fields": {
       "schema": 37,
-      "order": 5,
+      "order": 4,
       "alias": "S3",
       "cst_type": "structure",
       "convention": "устанавливается на основе документов, подтверждающих факт рождения или паспорта родителя",
@@ -3524,7 +3524,7 @@
     "pk": 742,
     "fields": {
       "schema": 37,
-      "order": 6,
+      "order": 5,
       "alias": "D1",
       "cst_type": "term",
       "convention": "",
@@ -3541,7 +3541,7 @@
     "pk": 743,
     "fields": {
       "schema": 37,
-      "order": 7,
+      "order": 6,
       "alias": "D2",
       "cst_type": "term",
       "convention": "",
@@ -3558,7 +3558,7 @@
     "pk": 744,
     "fields": {
       "schema": 37,
-      "order": 8,
+      "order": 7,
       "alias": "F1",
       "cst_type": "function",
       "convention": "",
@@ -3575,7 +3575,7 @@
     "pk": 745,
     "fields": {
       "schema": 37,
-      "order": 9,
+      "order": 8,
       "alias": "F2",
       "cst_type": "function",
       "convention": "",
@@ -3592,7 +3592,7 @@
     "pk": 746,
     "fields": {
       "schema": 37,
-      "order": 10,
+      "order": 9,
       "alias": "F3",
       "cst_type": "function",
       "convention": "",
@@ -3609,7 +3609,7 @@
     "pk": 747,
     "fields": {
       "schema": 37,
-      "order": 11,
+      "order": 10,
       "alias": "F4",
       "cst_type": "function",
       "convention": "",
@@ -3626,7 +3626,7 @@
     "pk": 748,
     "fields": {
       "schema": 37,
-      "order": 12,
+      "order": 11,
       "alias": "F5",
       "cst_type": "function",
       "convention": "",
@@ -3648,7 +3648,7 @@
     "pk": 749,
     "fields": {
       "schema": 37,
-      "order": 13,
+      "order": 12,
       "alias": "F6",
       "cst_type": "function",
       "convention": "",
@@ -3665,7 +3665,7 @@
     "pk": 750,
     "fields": {
       "schema": 37,
-      "order": 14,
+      "order": 13,
       "alias": "F7",
       "cst_type": "function",
       "convention": "",
@@ -3682,7 +3682,7 @@
     "pk": 751,
     "fields": {
       "schema": 37,
-      "order": 15,
+      "order": 14,
       "alias": "F8",
       "cst_type": "function",
       "convention": "",
@@ -3699,7 +3699,7 @@
     "pk": 752,
     "fields": {
       "schema": 37,
-      "order": 16,
+      "order": 15,
       "alias": "S4",
       "cst_type": "structure",
       "convention": "действующие браки",
@@ -3716,7 +3716,7 @@
     "pk": 753,
     "fields": {
       "schema": 37,
-      "order": 17,
+      "order": 16,
       "alias": "D3",
       "cst_type": "term",
       "convention": "",
@@ -3733,7 +3733,7 @@
     "pk": 754,
     "fields": {
       "schema": 37,
-      "order": 18,
+      "order": 17,
       "alias": "D4",
       "cst_type": "term",
       "convention": "",
@@ -3750,7 +3750,7 @@
     "pk": 755,
     "fields": {
       "schema": 37,
-      "order": 19,
+      "order": 18,
       "alias": "D5",
       "cst_type": "term",
       "convention": "",
@@ -3767,7 +3767,7 @@
     "pk": 756,
     "fields": {
       "schema": 37,
-      "order": 20,
+      "order": 19,
       "alias": "A2",
       "cst_type": "axiom",
       "convention": "",
@@ -3784,7 +3784,7 @@
     "pk": 757,
     "fields": {
       "schema": 37,
-      "order": 21,
+      "order": 20,
       "alias": "F9",
       "cst_type": "function",
       "convention": "",
@@ -3801,7 +3801,7 @@
     "pk": 758,
     "fields": {
       "schema": 37,
-      "order": 22,
+      "order": 21,
       "alias": "F10",
       "cst_type": "function",
       "convention": "",
@@ -3818,7 +3818,7 @@
     "pk": 759,
     "fields": {
       "schema": 37,
-      "order": 23,
+      "order": 22,
       "alias": "F11",
       "cst_type": "function",
       "convention": "",
@@ -3835,7 +3835,7 @@
     "pk": 760,
     "fields": {
       "schema": 37,
-      "order": 24,
+      "order": 23,
       "alias": "F12",
       "cst_type": "function",
       "convention": "",
@@ -3852,7 +3852,7 @@
     "pk": 761,
     "fields": {
       "schema": 37,
-      "order": 25,
+      "order": 24,
       "alias": "F13",
       "cst_type": "function",
       "convention": "",
@@ -3869,7 +3869,7 @@
     "pk": 762,
     "fields": {
       "schema": 37,
-      "order": 26,
+      "order": 25,
       "alias": "F14",
       "cst_type": "function",
       "convention": "",
@@ -3886,7 +3886,7 @@
     "pk": 763,
     "fields": {
       "schema": 37,
-      "order": 27,
+      "order": 26,
       "alias": "F15",
       "cst_type": "function",
       "convention": "",
@@ -3903,7 +3903,7 @@
     "pk": 764,
     "fields": {
       "schema": 37,
-      "order": 28,
+      "order": 27,
       "alias": "A3",
       "cst_type": "axiom",
       "convention": "",
@@ -3920,7 +3920,7 @@
     "pk": 765,
     "fields": {
       "schema": 37,
-      "order": 29,
+      "order": 28,
       "alias": "D6",
       "cst_type": "term",
       "convention": "",
@@ -3937,7 +3937,7 @@
     "pk": 766,
     "fields": {
       "schema": 37,
-      "order": 30,
+      "order": 29,
       "alias": "D7",
       "cst_type": "term",
       "convention": "",
@@ -3959,7 +3959,7 @@
     "pk": 767,
     "fields": {
       "schema": 37,
-      "order": 31,
+      "order": 30,
       "alias": "F16",
       "cst_type": "function",
       "convention": "",
@@ -3976,7 +3976,7 @@
     "pk": 768,
     "fields": {
       "schema": 37,
-      "order": 32,
+      "order": 31,
       "alias": "F17",
       "cst_type": "function",
       "convention": "",
@@ -3993,7 +3993,7 @@
     "pk": 769,
     "fields": {
       "schema": 37,
-      "order": 33,
+      "order": 32,
       "alias": "F18",
       "cst_type": "function",
       "convention": "",
@@ -4010,7 +4010,7 @@
     "pk": 770,
     "fields": {
       "schema": 37,
-      "order": 34,
+      "order": 33,
       "alias": "F19",
       "cst_type": "function",
       "convention": "",
@@ -4027,7 +4027,7 @@
     "pk": 771,
     "fields": {
       "schema": 37,
-      "order": 35,
+      "order": 34,
       "alias": "D8",
       "cst_type": "term",
       "convention": "",
@@ -4044,7 +4044,7 @@
     "pk": 772,
     "fields": {
       "schema": 37,
-      "order": 36,
+      "order": 35,
       "alias": "A4",
       "cst_type": "axiom",
       "convention": "",
@@ -4061,7 +4061,7 @@
     "pk": 773,
     "fields": {
       "schema": 37,
-      "order": 37,
+      "order": 36,
       "alias": "F20",
       "cst_type": "function",
       "convention": "",
@@ -4083,7 +4083,7 @@
     "pk": 774,
     "fields": {
       "schema": 37,
-      "order": 38,
+      "order": 37,
       "alias": "F21",
       "cst_type": "function",
       "convention": "",
@@ -4100,7 +4100,7 @@
     "pk": 775,
     "fields": {
       "schema": 37,
-      "order": 39,
+      "order": 38,
       "alias": "F22",
       "cst_type": "function",
       "convention": "",
@@ -4117,7 +4117,7 @@
     "pk": 776,
     "fields": {
       "schema": 37,
-      "order": 40,
+      "order": 39,
       "alias": "F23",
       "cst_type": "function",
       "convention": "",
@@ -4134,7 +4134,7 @@
     "pk": 777,
     "fields": {
       "schema": 37,
-      "order": 41,
+      "order": 40,
       "alias": "F24",
       "cst_type": "function",
       "convention": "",
@@ -4151,7 +4151,7 @@
     "pk": 778,
     "fields": {
       "schema": 37,
-      "order": 42,
+      "order": 41,
       "alias": "F25",
       "cst_type": "function",
       "convention": "",
@@ -4168,7 +4168,7 @@
     "pk": 779,
     "fields": {
       "schema": 37,
-      "order": 43,
+      "order": 42,
       "alias": "F26",
       "cst_type": "function",
       "convention": "",
@@ -4185,7 +4185,7 @@
     "pk": 780,
     "fields": {
       "schema": 37,
-      "order": 44,
+      "order": 43,
       "alias": "F27",
       "cst_type": "function",
       "convention": "",
@@ -4202,7 +4202,7 @@
     "pk": 781,
     "fields": {
       "schema": 37,
-      "order": 45,
+      "order": 44,
       "alias": "F28",
       "cst_type": "function",
       "convention": "",
@@ -4224,7 +4224,7 @@
     "pk": 782,
     "fields": {
       "schema": 37,
-      "order": 46,
+      "order": 45,
       "alias": "F29",
       "cst_type": "function",
       "convention": "",
@@ -4241,7 +4241,7 @@
     "pk": 783,
     "fields": {
       "schema": 37,
-      "order": 47,
+      "order": 46,
       "alias": "F30",
       "cst_type": "function",
       "convention": "",
@@ -4258,7 +4258,7 @@
     "pk": 784,
     "fields": {
       "schema": 37,
-      "order": 48,
+      "order": 47,
       "alias": "F31",
       "cst_type": "function",
       "convention": "",
@@ -4275,7 +4275,7 @@
     "pk": 785,
     "fields": {
       "schema": 37,
-      "order": 49,
+      "order": 48,
       "alias": "F32",
       "cst_type": "function",
       "convention": "",
@@ -4292,7 +4292,7 @@
     "pk": 786,
     "fields": {
       "schema": 37,
-      "order": 50,
+      "order": 49,
       "alias": "F33",
       "cst_type": "function",
       "convention": "",
@@ -4309,7 +4309,7 @@
     "pk": 787,
     "fields": {
       "schema": 37,
-      "order": 51,
+      "order": 50,
       "alias": "F34",
       "cst_type": "function",
       "convention": "",
@@ -4326,7 +4326,7 @@
     "pk": 788,
     "fields": {
       "schema": 37,
-      "order": 52,
+      "order": 51,
       "alias": "F35",
       "cst_type": "function",
       "convention": "",
@@ -4343,7 +4343,7 @@
     "pk": 789,
     "fields": {
       "schema": 37,
-      "order": 53,
+      "order": 52,
       "alias": "F36",
       "cst_type": "function",
       "convention": "",
@@ -4360,7 +4360,7 @@
     "pk": 790,
     "fields": {
       "schema": 37,
-      "order": 54,
+      "order": 53,
       "alias": "F37",
       "cst_type": "function",
       "convention": "",
@@ -4377,7 +4377,7 @@
     "pk": 791,
     "fields": {
       "schema": 37,
-      "order": 55,
+      "order": 54,
       "alias": "F38",
       "cst_type": "function",
       "convention": "",
@@ -4394,7 +4394,7 @@
     "pk": 792,
     "fields": {
       "schema": 37,
-      "order": 56,
+      "order": 55,
       "alias": "F39",
       "cst_type": "function",
       "convention": "",
@@ -4411,7 +4411,7 @@
     "pk": 793,
     "fields": {
       "schema": 37,
-      "order": 57,
+      "order": 56,
       "alias": "F40",
       "cst_type": "function",
       "convention": "",
@@ -4428,7 +4428,7 @@
     "pk": 794,
     "fields": {
       "schema": 37,
-      "order": 58,
+      "order": 57,
       "alias": "F41",
       "cst_type": "function",
       "convention": "",
@@ -4450,7 +4450,7 @@
     "pk": 795,
     "fields": {
       "schema": 37,
-      "order": 59,
+      "order": 58,
       "alias": "F42",
       "cst_type": "function",
       "convention": "",
@@ -4467,7 +4467,7 @@
     "pk": 796,
     "fields": {
       "schema": 37,
-      "order": 60,
+      "order": 59,
       "alias": "F43",
       "cst_type": "function",
       "convention": "",
@@ -4484,7 +4484,7 @@
     "pk": 797,
     "fields": {
       "schema": 37,
-      "order": 61,
+      "order": 60,
       "alias": "F44",
       "cst_type": "function",
       "convention": "",
@@ -4501,7 +4501,7 @@
     "pk": 798,
     "fields": {
       "schema": 37,
-      "order": 62,
+      "order": 61,
       "alias": "F45",
       "cst_type": "function",
       "convention": "",
@@ -4518,7 +4518,7 @@
     "pk": 799,
     "fields": {
       "schema": 37,
-      "order": 63,
+      "order": 62,
       "alias": "F46",
       "cst_type": "function",
       "convention": "",
@@ -4535,7 +4535,7 @@
     "pk": 800,
     "fields": {
       "schema": 37,
-      "order": 64,
+      "order": 63,
       "alias": "F47",
       "cst_type": "function",
       "convention": "",
@@ -4552,7 +4552,7 @@
     "pk": 801,
     "fields": {
       "schema": 37,
-      "order": 65,
+      "order": 64,
       "alias": "F48",
       "cst_type": "function",
       "convention": "",
@@ -4569,7 +4569,7 @@
     "pk": 802,
     "fields": {
       "schema": 37,
-      "order": 66,
+      "order": 65,
       "alias": "F49",
       "cst_type": "function",
       "convention": "",
@@ -4586,7 +4586,7 @@
     "pk": 803,
     "fields": {
       "schema": 37,
-      "order": 67,
+      "order": 66,
       "alias": "F50",
       "cst_type": "function",
       "convention": "",
@@ -4603,7 +4603,7 @@
     "pk": 804,
     "fields": {
       "schema": 37,
-      "order": 68,
+      "order": 67,
       "alias": "F51",
       "cst_type": "function",
       "convention": "",
@@ -4620,7 +4620,7 @@
     "pk": 805,
     "fields": {
       "schema": 37,
-      "order": 69,
+      "order": 68,
       "alias": "F52",
       "cst_type": "function",
       "convention": "",
@@ -4637,7 +4637,7 @@
     "pk": 806,
     "fields": {
       "schema": 37,
-      "order": 70,
+      "order": 69,
       "alias": "F53",
       "cst_type": "function",
       "convention": "",
@@ -4654,7 +4654,7 @@
     "pk": 807,
     "fields": {
       "schema": 37,
-      "order": 71,
+      "order": 70,
       "alias": "F54",
       "cst_type": "function",
       "convention": "",
@@ -4688,7 +4688,7 @@
     "pk": 808,
     "fields": {
       "schema": 37,
-      "order": 72,
+      "order": 71,
       "alias": "F55",
       "cst_type": "function",
       "convention": "",
@@ -4705,7 +4705,7 @@
     "pk": 809,
     "fields": {
       "schema": 37,
-      "order": 73,
+      "order": 72,
       "alias": "F56",
       "cst_type": "function",
       "convention": "",
@@ -4722,7 +4722,7 @@
     "pk": 810,
     "fields": {
       "schema": 37,
-      "order": 74,
+      "order": 73,
       "alias": "F57",
       "cst_type": "function",
       "convention": "",
@@ -4739,7 +4739,7 @@
     "pk": 811,
     "fields": {
       "schema": 37,
-      "order": 75,
+      "order": 74,
       "alias": "F58",
       "cst_type": "function",
       "convention": "",
@@ -4756,7 +4756,7 @@
     "pk": 812,
     "fields": {
       "schema": 37,
-      "order": 76,
+      "order": 75,
       "alias": "F59",
       "cst_type": "function",
       "convention": "",
@@ -4773,7 +4773,7 @@
     "pk": 813,
     "fields": {
       "schema": 37,
-      "order": 77,
+      "order": 76,
       "alias": "F60",
       "cst_type": "function",
       "convention": "",
@@ -4790,7 +4790,7 @@
     "pk": 814,
     "fields": {
       "schema": 37,
-      "order": 78,
+      "order": 77,
       "alias": "F61",
       "cst_type": "function",
       "convention": "",
@@ -4807,7 +4807,7 @@
     "pk": 815,
     "fields": {
       "schema": 37,
-      "order": 79,
+      "order": 78,
       "alias": "F62",
       "cst_type": "function",
       "convention": "",
@@ -4824,7 +4824,7 @@
     "pk": 816,
     "fields": {
       "schema": 37,
-      "order": 80,
+      "order": 79,
       "alias": "F63",
       "cst_type": "function",
       "convention": "",
@@ -4841,7 +4841,7 @@
     "pk": 817,
     "fields": {
       "schema": 37,
-      "order": 81,
+      "order": 80,
       "alias": "F64",
       "cst_type": "function",
       "convention": "",
@@ -4858,7 +4858,7 @@
     "pk": 818,
     "fields": {
       "schema": 37,
-      "order": 82,
+      "order": 81,
       "alias": "F65",
       "cst_type": "function",
       "convention": "",
@@ -4875,7 +4875,7 @@
     "pk": 819,
     "fields": {
       "schema": 37,
-      "order": 83,
+      "order": 82,
       "alias": "F66",
       "cst_type": "function",
       "convention": "",
@@ -4892,7 +4892,7 @@
     "pk": 820,
     "fields": {
       "schema": 37,
-      "order": 84,
+      "order": 83,
       "alias": "F67",
       "cst_type": "function",
       "convention": "",
@@ -4909,7 +4909,7 @@
     "pk": 821,
     "fields": {
       "schema": 37,
-      "order": 85,
+      "order": 84,
       "alias": "F68",
       "cst_type": "function",
       "convention": "",
@@ -4926,7 +4926,7 @@
     "pk": 822,
     "fields": {
       "schema": 37,
-      "order": 86,
+      "order": 85,
       "alias": "F69",
       "cst_type": "function",
       "convention": "",
@@ -4943,7 +4943,7 @@
     "pk": 823,
     "fields": {
       "schema": 37,
-      "order": 87,
+      "order": 86,
       "alias": "F70",
       "cst_type": "function",
       "convention": "альтернативное определение: великий дядя - дядя родителя",
@@ -4960,7 +4960,7 @@
     "pk": 824,
     "fields": {
       "schema": 37,
-      "order": 88,
+      "order": 87,
       "alias": "F71",
       "cst_type": "function",
       "convention": "",
@@ -4977,7 +4977,7 @@
     "pk": 825,
     "fields": {
       "schema": 37,
-      "order": 89,
+      "order": 88,
       "alias": "F72",
       "cst_type": "function",
       "convention": "альтернативное определение: внук родного брата или сестры",
@@ -4994,7 +4994,7 @@
     "pk": 826,
     "fields": {
       "schema": 37,
-      "order": 90,
+      "order": 89,
       "alias": "F73",
       "cst_type": "function",
       "convention": "",
@@ -5011,7 +5011,7 @@
     "pk": 827,
     "fields": {
       "schema": 37,
-      "order": 91,
+      "order": 90,
       "alias": "F74",
       "cst_type": "function",
       "convention": "",
@@ -5028,7 +5028,7 @@
     "pk": 828,
     "fields": {
       "schema": 37,
-      "order": 92,
+      "order": 91,
       "alias": "F75",
       "cst_type": "function",
       "convention": "",
@@ -5045,7 +5045,7 @@
     "pk": 829,
     "fields": {
       "schema": 37,
-      "order": 93,
+      "order": 92,
       "alias": "F76",
       "cst_type": "function",
       "convention": "",
@@ -5062,7 +5062,7 @@
     "pk": 830,
     "fields": {
       "schema": 37,
-      "order": 94,
+      "order": 93,
       "alias": "F77",
       "cst_type": "function",
       "convention": "",
@@ -5079,7 +5079,7 @@
     "pk": 831,
     "fields": {
       "schema": 37,
-      "order": 95,
+      "order": 94,
       "alias": "F78",
       "cst_type": "function",
       "convention": "",
@@ -5096,7 +5096,7 @@
     "pk": 832,
     "fields": {
       "schema": 37,
-      "order": 96,
+      "order": 95,
       "alias": "F79",
       "cst_type": "function",
       "convention": "",
@@ -5113,7 +5113,7 @@
     "pk": 833,
     "fields": {
       "schema": 37,
-      "order": 97,
+      "order": 96,
       "alias": "F80",
       "cst_type": "function",
       "convention": "",
@@ -5130,7 +5130,7 @@
     "pk": 834,
     "fields": {
       "schema": 37,
-      "order": 98,
+      "order": 97,
       "alias": "F81",
       "cst_type": "function",
       "convention": "",
@@ -5147,7 +5147,7 @@
     "pk": 835,
     "fields": {
       "schema": 37,
-      "order": 99,
+      "order": 98,
       "alias": "F82",
       "cst_type": "function",
       "convention": "",
@@ -5164,7 +5164,7 @@
     "pk": 836,
     "fields": {
       "schema": 37,
-      "order": 100,
+      "order": 99,
       "alias": "F83",
       "cst_type": "function",
       "convention": "",
@@ -5181,7 +5181,7 @@
     "pk": 837,
     "fields": {
       "schema": 37,
-      "order": 101,
+      "order": 100,
       "alias": "F84",
       "cst_type": "function",
       "convention": "",
@@ -5198,7 +5198,7 @@
     "pk": 838,
     "fields": {
       "schema": 37,
-      "order": 102,
+      "order": 101,
       "alias": "F85",
       "cst_type": "function",
       "convention": "",
@@ -5215,7 +5215,7 @@
     "pk": 839,
     "fields": {
       "schema": 37,
-      "order": 103,
+      "order": 102,
       "alias": "F86",
       "cst_type": "function",
       "convention": "",
@@ -5232,7 +5232,7 @@
     "pk": 840,
     "fields": {
       "schema": 37,
-      "order": 104,
+      "order": 103,
       "alias": "F87",
       "cst_type": "function",
       "convention": "",
@@ -5249,7 +5249,7 @@
     "pk": 841,
     "fields": {
       "schema": 37,
-      "order": 105,
+      "order": 104,
       "alias": "F88",
       "cst_type": "function",
       "convention": "",
@@ -5266,7 +5266,7 @@
     "pk": 842,
     "fields": {
       "schema": 37,
-      "order": 106,
+      "order": 105,
       "alias": "F89",
       "cst_type": "function",
       "convention": "",
@@ -5283,7 +5283,7 @@
     "pk": 843,
     "fields": {
       "schema": 37,
-      "order": 107,
+      "order": 106,
       "alias": "F90",
       "cst_type": "function",
       "convention": "",
@@ -5300,7 +5300,7 @@
     "pk": 844,
     "fields": {
       "schema": 37,
-      "order": 108,
+      "order": 107,
       "alias": "F91",
       "cst_type": "function",
       "convention": "",
@@ -5317,7 +5317,7 @@
     "pk": 845,
     "fields": {
       "schema": 37,
-      "order": 109,
+      "order": 108,
       "alias": "D9",
       "cst_type": "term",
       "convention": "",
@@ -5334,7 +5334,7 @@
     "pk": 846,
     "fields": {
       "schema": 37,
-      "order": 110,
+      "order": 109,
       "alias": "D10",
       "cst_type": "term",
       "convention": "",
@@ -5351,7 +5351,7 @@
     "pk": 847,
     "fields": {
       "schema": 37,
-      "order": 111,
+      "order": 110,
       "alias": "F92",
       "cst_type": "function",
       "convention": "",
@@ -5368,7 +5368,7 @@
     "pk": 848,
     "fields": {
       "schema": 37,
-      "order": 112,
+      "order": 111,
       "alias": "F93",
       "cst_type": "function",
       "convention": "",
@@ -5385,7 +5385,7 @@
     "pk": 849,
     "fields": {
       "schema": 37,
-      "order": 113,
+      "order": 112,
       "alias": "F94",
       "cst_type": "function",
       "convention": "",
@@ -5402,7 +5402,7 @@
     "pk": 850,
     "fields": {
       "schema": 37,
-      "order": 114,
+      "order": 113,
       "alias": "F95",
       "cst_type": "function",
       "convention": "",
@@ -5419,7 +5419,7 @@
     "pk": 851,
     "fields": {
       "schema": 37,
-      "order": 115,
+      "order": 114,
       "alias": "F96",
       "cst_type": "function",
       "convention": "",
@@ -5436,7 +5436,7 @@
     "pk": 852,
     "fields": {
       "schema": 37,
-      "order": 116,
+      "order": 115,
       "alias": "F97",
       "cst_type": "function",
       "convention": "",
@@ -5453,7 +5453,7 @@
     "pk": 853,
     "fields": {
       "schema": 37,
-      "order": 117,
+      "order": 116,
       "alias": "F98",
       "cst_type": "function",
       "convention": "",
@@ -5470,7 +5470,7 @@
     "pk": 854,
     "fields": {
       "schema": 38,
-      "order": 1,
+      "order": 0,
       "alias": "X1",
       "cst_type": "basic",
       "convention": "Под «веществом» понимается химическое название вещества",
@@ -5487,7 +5487,7 @@
     "pk": 855,
     "fields": {
       "schema": 38,
-      "order": 2,
+      "order": 1,
       "alias": "X2",
       "cst_type": "basic",
       "convention": "«Объекты» представляют собой неопределяемые материальные сущности – физические тела",
@@ -5504,7 +5504,7 @@
     "pk": 856,
     "fields": {
       "schema": 38,
-      "order": 3,
+      "order": 2,
       "alias": "X3",
       "cst_type": "basic",
       "convention": "«Топос» понимается как часть пространства, имеющая определение, по которому доступными способами идентифицируемы ее границы, в частности, может содержать процессы и объекты, являющиеся входами/выходами в естественных и искусственных процессах данного топоса (термин, более общий, чем сбросы/выбросы/отходы, позволяющий вести регулирование, не специфическое для каждого из трех, а общее)",
@@ -5521,7 +5521,7 @@
     "pk": 857,
     "fields": {
       "schema": 38,
-      "order": 4,
+      "order": 3,
       "alias": "S1",
       "cst_type": "structure",
       "convention": "",
@@ -5538,7 +5538,7 @@
     "pk": 858,
     "fields": {
       "schema": 38,
-      "order": 5,
+      "order": 4,
       "alias": "S2",
       "cst_type": "structure",
       "convention": "",
@@ -5555,7 +5555,7 @@
     "pk": 859,
     "fields": {
       "schema": 38,
-      "order": 6,
+      "order": 5,
       "alias": "D1",
       "cst_type": "term",
       "convention": "",
@@ -5572,7 +5572,7 @@
     "pk": 860,
     "fields": {
       "schema": 38,
-      "order": 7,
+      "order": 6,
       "alias": "D2",
       "cst_type": "term",
       "convention": "",
@@ -5589,7 +5589,7 @@
     "pk": 861,
     "fields": {
       "schema": 38,
-      "order": 8,
+      "order": 7,
       "alias": "A1",
       "cst_type": "axiom",
       "convention": "",
@@ -5606,7 +5606,7 @@
     "pk": 862,
     "fields": {
       "schema": 38,
-      "order": 9,
+      "order": 8,
       "alias": "D3",
       "cst_type": "term",
       "convention": "",
@@ -5623,7 +5623,7 @@
     "pk": 863,
     "fields": {
       "schema": 38,
-      "order": 10,
+      "order": 9,
       "alias": "A2",
       "cst_type": "axiom",
       "convention": "",
@@ -5640,7 +5640,7 @@
     "pk": 864,
     "fields": {
       "schema": 38,
-      "order": 11,
+      "order": 10,
       "alias": "D4",
       "cst_type": "term",
       "convention": "",
@@ -5657,7 +5657,7 @@
     "pk": 865,
     "fields": {
       "schema": 38,
-      "order": 12,
+      "order": 11,
       "alias": "D5",
       "cst_type": "term",
       "convention": "",
@@ -5674,7 +5674,7 @@
     "pk": 866,
     "fields": {
       "schema": 38,
-      "order": 13,
+      "order": 12,
       "alias": "D6",
       "cst_type": "term",
       "convention": "",
@@ -5691,7 +5691,7 @@
     "pk": 867,
     "fields": {
       "schema": 38,
-      "order": 14,
+      "order": 13,
       "alias": "D7",
       "cst_type": "term",
       "convention": "",
@@ -5708,7 +5708,7 @@
     "pk": 868,
     "fields": {
       "schema": 38,
-      "order": 15,
+      "order": 14,
       "alias": "D9",
       "cst_type": "term",
       "convention": "",
@@ -5725,7 +5725,7 @@
     "pk": 869,
     "fields": {
       "schema": 38,
-      "order": 16,
+      "order": 15,
       "alias": "D10",
       "cst_type": "term",
       "convention": "",
@@ -5742,7 +5742,7 @@
     "pk": 871,
     "fields": {
       "schema": 39,
-      "order": 1,
+      "order": 0,
       "alias": "X1",
       "cst_type": "basic",
       "convention": "",
@@ -5759,7 +5759,7 @@
     "pk": 872,
     "fields": {
       "schema": 39,
-      "order": 2,
+      "order": 1,
       "alias": "X2",
       "cst_type": "basic",
       "convention": "",
@@ -5776,7 +5776,7 @@
     "pk": 873,
     "fields": {
       "schema": 39,
-      "order": 3,
+      "order": 2,
       "alias": "S1",
       "cst_type": "structure",
       "convention": "",
@@ -5793,7 +5793,7 @@
     "pk": 874,
     "fields": {
       "schema": 39,
-      "order": 4,
+      "order": 3,
       "alias": "A1",
       "cst_type": "axiom",
       "convention": "",
@@ -5810,7 +5810,7 @@
     "pk": 875,
     "fields": {
       "schema": 39,
-      "order": 5,
+      "order": 4,
       "alias": "D1",
       "cst_type": "term",
       "convention": "",
@@ -5827,7 +5827,7 @@
     "pk": 876,
     "fields": {
       "schema": 39,
-      "order": 6,
+      "order": 5,
       "alias": "D2",
       "cst_type": "term",
       "convention": "",
@@ -5844,7 +5844,7 @@
     "pk": 877,
     "fields": {
       "schema": 39,
-      "order": 7,
+      "order": 6,
       "alias": "D3",
       "cst_type": "term",
       "convention": "",
@@ -5861,7 +5861,7 @@
     "pk": 878,
     "fields": {
       "schema": 40,
-      "order": 1,
+      "order": 0,
       "alias": "X1",
       "cst_type": "basic",
       "convention": "Под объектами понимаются физические тела",
@@ -5878,7 +5878,7 @@
     "pk": 879,
     "fields": {
       "schema": 40,
-      "order": 2,
+      "order": 1,
       "alias": "X2",
       "cst_type": "basic",
       "convention": "Типовые изменения объектов представляют собой, например, \"химические реакции\", \"преобразование формы\", \"преобразование фазового состояния\"",
@@ -5895,7 +5895,7 @@
     "pk": 880,
     "fields": {
       "schema": 40,
-      "order": 3,
+      "order": 2,
       "alias": "S1",
       "cst_type": "structure",
       "convention": "",
@@ -5912,7 +5912,7 @@
     "pk": 881,
     "fields": {
       "schema": 40,
-      "order": 4,
+      "order": 3,
       "alias": "A1",
       "cst_type": "axiom",
       "convention": "",
@@ -5929,7 +5929,7 @@
     "pk": 882,
     "fields": {
       "schema": 40,
-      "order": 5,
+      "order": 4,
       "alias": "D1",
       "cst_type": "term",
       "convention": "",
@@ -5946,7 +5946,7 @@
     "pk": 883,
     "fields": {
       "schema": 40,
-      "order": 6,
+      "order": 5,
       "alias": "D2",
       "cst_type": "term",
       "convention": "",
@@ -5963,7 +5963,7 @@
     "pk": 884,
     "fields": {
       "schema": 40,
-      "order": 7,
+      "order": 6,
       "alias": "D3",
       "cst_type": "term",
       "convention": "",
@@ -5980,7 +5980,7 @@
     "pk": 885,
     "fields": {
       "schema": 40,
-      "order": 8,
+      "order": 7,
       "alias": "D4",
       "cst_type": "term",
       "convention": "",
@@ -5997,7 +5997,7 @@
     "pk": 886,
     "fields": {
       "schema": 40,
-      "order": 9,
+      "order": 8,
       "alias": "D5",
       "cst_type": "term",
       "convention": "",
@@ -6014,7 +6014,7 @@
     "pk": 887,
     "fields": {
       "schema": 40,
-      "order": 10,
+      "order": 9,
       "alias": "F1",
       "cst_type": "function",
       "convention": "",
@@ -6031,7 +6031,7 @@
     "pk": 888,
     "fields": {
       "schema": 40,
-      "order": 11,
+      "order": 10,
       "alias": "F2",
       "cst_type": "function",
       "convention": "",
@@ -6048,7 +6048,7 @@
     "pk": 889,
     "fields": {
       "schema": 40,
-      "order": 12,
+      "order": 11,
       "alias": "D6",
       "cst_type": "term",
       "convention": "",
@@ -6065,7 +6065,7 @@
     "pk": 890,
     "fields": {
       "schema": 40,
-      "order": 13,
+      "order": 12,
       "alias": "D7",
       "cst_type": "term",
       "convention": "(в т.ч. составного, т.е. сети процессов)",
@@ -6082,7 +6082,7 @@
     "pk": 891,
     "fields": {
       "schema": 40,
-      "order": 14,
+      "order": 13,
       "alias": "D8",
       "cst_type": "term",
       "convention": "",
@@ -6099,7 +6099,7 @@
     "pk": 892,
     "fields": {
       "schema": 40,
-      "order": 15,
+      "order": 14,
       "alias": "D9",
       "cst_type": "term",
       "convention": "",
@@ -6116,7 +6116,7 @@
     "pk": 893,
     "fields": {
       "schema": 40,
-      "order": 16,
+      "order": 15,
       "alias": "D10",
       "cst_type": "term",
       "convention": "",
@@ -6133,7 +6133,7 @@
     "pk": 894,
     "fields": {
       "schema": 40,
-      "order": 17,
+      "order": 16,
       "alias": "D11",
       "cst_type": "term",
       "convention": "",
@@ -6150,7 +6150,7 @@
     "pk": 895,
     "fields": {
       "schema": 40,
-      "order": 18,
+      "order": 17,
       "alias": "D12",
       "cst_type": "term",
       "convention": "",
@@ -6167,7 +6167,7 @@
     "pk": 896,
     "fields": {
       "schema": 40,
-      "order": 19,
+      "order": 18,
       "alias": "D13",
       "cst_type": "term",
       "convention": "",
@@ -6184,7 +6184,7 @@
     "pk": 897,
     "fields": {
       "schema": 40,
-      "order": 20,
+      "order": 19,
       "alias": "D14",
       "cst_type": "term",
       "convention": "!!!",
@@ -6201,7 +6201,7 @@
     "pk": 898,
     "fields": {
       "schema": 40,
-      "order": 21,
+      "order": 20,
       "alias": "D15",
       "cst_type": "term",
       "convention": "",
@@ -6218,7 +6218,7 @@
     "pk": 899,
     "fields": {
       "schema": 40,
-      "order": 22,
+      "order": 21,
       "alias": "D16",
       "cst_type": "term",
       "convention": "",
@@ -6235,7 +6235,7 @@
     "pk": 900,
     "fields": {
       "schema": 40,
-      "order": 23,
+      "order": 22,
       "alias": "D17",
       "cst_type": "term",
       "convention": "",
@@ -6252,7 +6252,7 @@
     "pk": 924,
     "fields": {
       "schema": 43,
-      "order": 1,
+      "order": 0,
       "alias": "X1",
       "cst_type": "basic",
       "convention": "Под «веществом» понимается химическое название вещества",
@@ -6269,7 +6269,7 @@
     "pk": 925,
     "fields": {
       "schema": 43,
-      "order": 2,
+      "order": 1,
       "alias": "X2",
       "cst_type": "basic",
       "convention": "«Объекты» представляют собой неопределяемые материальные сущности – физические тела",
@@ -6286,7 +6286,7 @@
     "pk": 926,
     "fields": {
       "schema": 43,
-      "order": 3,
+      "order": 2,
       "alias": "X3",
       "cst_type": "basic",
       "convention": "«Топос» понимается как часть пространства, имеющая определение, по которому доступными способами идентифицируемы ее границы, в частности, может содержать процессы и объекты, являющиеся входами/выходами в естественных и искусственных процессах данного топоса (термин, более общий, чем сбросы/выбросы/отходы, позволяющий вести регулирование, не специфическое для каждого из трех, а общее)",
@@ -6303,7 +6303,7 @@
     "pk": 927,
     "fields": {
       "schema": 43,
-      "order": 5,
+      "order": 4,
       "alias": "S1",
       "cst_type": "structure",
       "convention": "",
@@ -6320,7 +6320,7 @@
     "pk": 928,
     "fields": {
       "schema": 43,
-      "order": 6,
+      "order": 5,
       "alias": "S2",
       "cst_type": "structure",
       "convention": "",
@@ -6337,7 +6337,7 @@
     "pk": 929,
     "fields": {
       "schema": 43,
-      "order": 15,
+      "order": 14,
       "alias": "D5",
       "cst_type": "term",
       "convention": "",
@@ -6354,7 +6354,7 @@
     "pk": 930,
     "fields": {
       "schema": 43,
-      "order": 7,
+      "order": 6,
       "alias": "D1",
       "cst_type": "term",
       "convention": "",
@@ -6371,7 +6371,7 @@
     "pk": 931,
     "fields": {
       "schema": 43,
-      "order": 8,
+      "order": 7,
       "alias": "A1",
       "cst_type": "axiom",
       "convention": "",
@@ -6388,7 +6388,7 @@
     "pk": 932,
     "fields": {
       "schema": 43,
-      "order": 9,
+      "order": 8,
       "alias": "D2",
       "cst_type": "term",
       "convention": "",
@@ -6405,7 +6405,7 @@
     "pk": 933,
     "fields": {
       "schema": 43,
-      "order": 10,
+      "order": 9,
       "alias": "A2",
       "cst_type": "axiom",
       "convention": "",
@@ -6422,7 +6422,7 @@
     "pk": 934,
     "fields": {
       "schema": 43,
-      "order": 16,
+      "order": 15,
       "alias": "D6",
       "cst_type": "term",
       "convention": "",
@@ -6439,7 +6439,7 @@
     "pk": 935,
     "fields": {
       "schema": 43,
-      "order": 17,
+      "order": 16,
       "alias": "D7",
       "cst_type": "term",
       "convention": "",
@@ -6456,7 +6456,7 @@
     "pk": 936,
     "fields": {
       "schema": 43,
-      "order": 11,
+      "order": 10,
       "alias": "D3",
       "cst_type": "term",
       "convention": "",
@@ -6473,7 +6473,7 @@
     "pk": 937,
     "fields": {
       "schema": 43,
-      "order": 18,
+      "order": 17,
       "alias": "D8",
       "cst_type": "term",
       "convention": "",
@@ -6490,7 +6490,7 @@
     "pk": 938,
     "fields": {
       "schema": 43,
-      "order": 19,
+      "order": 18,
       "alias": "D9",
       "cst_type": "term",
       "convention": "",
@@ -6507,7 +6507,7 @@
     "pk": 939,
     "fields": {
       "schema": 43,
-      "order": 20,
+      "order": 19,
       "alias": "D10",
       "cst_type": "term",
       "convention": "",
@@ -6524,7 +6524,7 @@
     "pk": 941,
     "fields": {
       "schema": 43,
-      "order": 4,
+      "order": 3,
       "alias": "X4",
       "cst_type": "basic",
       "convention": "",
@@ -6541,7 +6541,7 @@
     "pk": 942,
     "fields": {
       "schema": 43,
-      "order": 12,
+      "order": 11,
       "alias": "S3",
       "cst_type": "structure",
       "convention": "",
@@ -6558,7 +6558,7 @@
     "pk": 943,
     "fields": {
       "schema": 43,
-      "order": 14,
+      "order": 13,
       "alias": "A3",
       "cst_type": "axiom",
       "convention": "",
@@ -6575,7 +6575,7 @@
     "pk": 944,
     "fields": {
       "schema": 43,
-      "order": 21,
+      "order": 20,
       "alias": "D11",
       "cst_type": "term",
       "convention": "",
@@ -6592,7 +6592,7 @@
     "pk": 945,
     "fields": {
       "schema": 43,
-      "order": 13,
+      "order": 12,
       "alias": "D4",
       "cst_type": "term",
       "convention": "",
@@ -6609,7 +6609,7 @@
     "pk": 946,
     "fields": {
       "schema": 43,
-      "order": 22,
+      "order": 21,
       "alias": "D12",
       "cst_type": "term",
       "convention": "",
@@ -6626,7 +6626,7 @@
     "pk": 947,
     "fields": {
       "schema": 44,
-      "order": 1,
+      "order": 0,
       "alias": "X1",
       "cst_type": "basic",
       "convention": "Под объектами понимаются физические тела",
@@ -6643,7 +6643,7 @@
     "pk": 948,
     "fields": {
       "schema": 44,
-      "order": 2,
+      "order": 1,
       "alias": "X2",
       "cst_type": "basic",
       "convention": "Типовые изменения объектов представляют собой, например, \"химические реакции\", \"преобразование формы\", \"преобразование фазового состояния\"",
@@ -6660,7 +6660,7 @@
     "pk": 949,
     "fields": {
       "schema": 44,
-      "order": 6,
+      "order": 5,
       "alias": "S1",
       "cst_type": "structure",
       "convention": "",
@@ -6677,7 +6677,7 @@
     "pk": 950,
     "fields": {
       "schema": 44,
-      "order": 7,
+      "order": 6,
       "alias": "A1",
       "cst_type": "axiom",
       "convention": "",
@@ -6694,7 +6694,7 @@
     "pk": 951,
     "fields": {
       "schema": 44,
-      "order": 18,
+      "order": 17,
       "alias": "D5",
       "cst_type": "term",
       "convention": "",
@@ -6711,7 +6711,7 @@
     "pk": 952,
     "fields": {
       "schema": 44,
-      "order": 19,
+      "order": 18,
       "alias": "D6",
       "cst_type": "term",
       "convention": "",
@@ -6728,7 +6728,7 @@
     "pk": 953,
     "fields": {
       "schema": 44,
-      "order": 20,
+      "order": 19,
       "alias": "D7",
       "cst_type": "term",
       "convention": "",
@@ -6745,7 +6745,7 @@
     "pk": 954,
     "fields": {
       "schema": 44,
-      "order": 21,
+      "order": 20,
       "alias": "D8",
       "cst_type": "term",
       "convention": "",
@@ -6762,7 +6762,7 @@
     "pk": 955,
     "fields": {
       "schema": 44,
-      "order": 22,
+      "order": 21,
       "alias": "D9",
       "cst_type": "term",
       "convention": "",
@@ -6779,7 +6779,7 @@
     "pk": 956,
     "fields": {
       "schema": 44,
-      "order": 23,
+      "order": 22,
       "alias": "F1",
       "cst_type": "function",
       "convention": "",
@@ -6796,7 +6796,7 @@
     "pk": 957,
     "fields": {
       "schema": 44,
-      "order": 24,
+      "order": 23,
       "alias": "F2",
       "cst_type": "function",
       "convention": "",
@@ -6813,7 +6813,7 @@
     "pk": 958,
     "fields": {
       "schema": 44,
-      "order": 25,
+      "order": 24,
       "alias": "D10",
       "cst_type": "term",
       "convention": "",
@@ -6830,7 +6830,7 @@
     "pk": 959,
     "fields": {
       "schema": 44,
-      "order": 26,
+      "order": 25,
       "alias": "D11",
       "cst_type": "term",
       "convention": "(в т.ч. составного, т.е. сети процессов)",
@@ -6847,7 +6847,7 @@
     "pk": 960,
     "fields": {
       "schema": 44,
-      "order": 27,
+      "order": 26,
       "alias": "D12",
       "cst_type": "term",
       "convention": "",
@@ -6864,7 +6864,7 @@
     "pk": 961,
     "fields": {
       "schema": 44,
-      "order": 28,
+      "order": 27,
       "alias": "D13",
       "cst_type": "term",
       "convention": "",
@@ -6881,7 +6881,7 @@
     "pk": 962,
     "fields": {
       "schema": 44,
-      "order": 30,
+      "order": 29,
       "alias": "D15",
       "cst_type": "term",
       "convention": "",
@@ -6898,7 +6898,7 @@
     "pk": 963,
     "fields": {
       "schema": 44,
-      "order": 29,
+      "order": 28,
       "alias": "D14",
       "cst_type": "term",
       "convention": "",
@@ -6915,7 +6915,7 @@
     "pk": 964,
     "fields": {
       "schema": 44,
-      "order": 31,
+      "order": 30,
       "alias": "D16",
       "cst_type": "term",
       "convention": "",
@@ -6932,7 +6932,7 @@
     "pk": 965,
     "fields": {
       "schema": 44,
-      "order": 32,
+      "order": 31,
       "alias": "D17",
       "cst_type": "term",
       "convention": "",
@@ -6949,7 +6949,7 @@
     "pk": 966,
     "fields": {
       "schema": 44,
-      "order": 33,
+      "order": 32,
       "alias": "D18",
       "cst_type": "term",
       "convention": "!!!",
@@ -6966,7 +6966,7 @@
     "pk": 967,
     "fields": {
       "schema": 44,
-      "order": 34,
+      "order": 33,
       "alias": "D19",
       "cst_type": "term",
       "convention": "",
@@ -6983,7 +6983,7 @@
     "pk": 968,
     "fields": {
       "schema": 44,
-      "order": 35,
+      "order": 34,
       "alias": "D20",
       "cst_type": "term",
       "convention": "",
@@ -7000,7 +7000,7 @@
     "pk": 969,
     "fields": {
       "schema": 44,
-      "order": 36,
+      "order": 35,
       "alias": "D21",
       "cst_type": "term",
       "convention": "",
@@ -7017,7 +7017,7 @@
     "pk": 970,
     "fields": {
       "schema": 44,
-      "order": 3,
+      "order": 2,
       "alias": "X3",
       "cst_type": "basic",
       "convention": "Под «веществом» понимается химическое название вещества",
@@ -7034,7 +7034,7 @@
     "pk": 972,
     "fields": {
       "schema": 44,
-      "order": 4,
+      "order": 3,
       "alias": "X4",
       "cst_type": "basic",
       "convention": "«Топос» понимается как часть пространства, имеющая определение, по которому доступными способами идентифицируемы ее границы, в частности, может содержать процессы и объекты, являющиеся входами/выходами в естественных и искусственных процессах данного топоса (термин, более общий, чем сбросы/выбросы/отходы, позволяющий вести регулирование, не специфическое для каждого из трех, а общее)",
@@ -7051,7 +7051,7 @@
     "pk": 973,
     "fields": {
       "schema": 44,
-      "order": 8,
+      "order": 7,
       "alias": "S2",
       "cst_type": "structure",
       "convention": "",
@@ -7068,7 +7068,7 @@
     "pk": 974,
     "fields": {
       "schema": 44,
-      "order": 9,
+      "order": 8,
       "alias": "S3",
       "cst_type": "structure",
       "convention": "",
@@ -7085,7 +7085,7 @@
     "pk": 975,
     "fields": {
       "schema": 44,
-      "order": 37,
+      "order": 36,
       "alias": "D22",
       "cst_type": "term",
       "convention": "",
@@ -7102,7 +7102,7 @@
     "pk": 976,
     "fields": {
       "schema": 44,
-      "order": 10,
+      "order": 9,
       "alias": "D1",
       "cst_type": "term",
       "convention": "",
@@ -7119,7 +7119,7 @@
     "pk": 977,
     "fields": {
       "schema": 44,
-      "order": 11,
+      "order": 10,
       "alias": "A2",
       "cst_type": "axiom",
       "convention": "",
@@ -7136,7 +7136,7 @@
     "pk": 978,
     "fields": {
       "schema": 44,
-      "order": 12,
+      "order": 11,
       "alias": "D2",
       "cst_type": "term",
       "convention": "",
@@ -7153,7 +7153,7 @@
     "pk": 979,
     "fields": {
       "schema": 44,
-      "order": 13,
+      "order": 12,
       "alias": "A3",
       "cst_type": "axiom",
       "convention": "",
@@ -7170,7 +7170,7 @@
     "pk": 980,
     "fields": {
       "schema": 44,
-      "order": 38,
+      "order": 37,
       "alias": "D23",
       "cst_type": "term",
       "convention": "",
@@ -7187,7 +7187,7 @@
     "pk": 981,
     "fields": {
       "schema": 44,
-      "order": 39,
+      "order": 38,
       "alias": "D24",
       "cst_type": "term",
       "convention": "",
@@ -7204,7 +7204,7 @@
     "pk": 982,
     "fields": {
       "schema": 44,
-      "order": 14,
+      "order": 13,
       "alias": "D3",
       "cst_type": "term",
       "convention": "",
@@ -7221,7 +7221,7 @@
     "pk": 983,
     "fields": {
       "schema": 44,
-      "order": 40,
+      "order": 39,
       "alias": "D25",
       "cst_type": "term",
       "convention": "",
@@ -7238,7 +7238,7 @@
     "pk": 984,
     "fields": {
       "schema": 44,
-      "order": 41,
+      "order": 40,
       "alias": "D26",
       "cst_type": "term",
       "convention": "",
@@ -7255,7 +7255,7 @@
     "pk": 985,
     "fields": {
       "schema": 44,
-      "order": 42,
+      "order": 41,
       "alias": "D27",
       "cst_type": "term",
       "convention": "",
@@ -7272,7 +7272,7 @@
     "pk": 986,
     "fields": {
       "schema": 44,
-      "order": 5,
+      "order": 4,
       "alias": "X5",
       "cst_type": "basic",
       "convention": "",
@@ -7289,7 +7289,7 @@
     "pk": 987,
     "fields": {
       "schema": 44,
-      "order": 15,
+      "order": 14,
       "alias": "S4",
       "cst_type": "structure",
       "convention": "",
@@ -7306,7 +7306,7 @@
     "pk": 988,
     "fields": {
       "schema": 44,
-      "order": 17,
+      "order": 16,
       "alias": "A4",
       "cst_type": "axiom",
       "convention": "",
@@ -7323,7 +7323,7 @@
     "pk": 989,
     "fields": {
       "schema": 44,
-      "order": 43,
+      "order": 42,
       "alias": "D28",
       "cst_type": "term",
       "convention": "",
@@ -7340,7 +7340,7 @@
     "pk": 990,
     "fields": {
       "schema": 44,
-      "order": 16,
+      "order": 15,
       "alias": "D4",
       "cst_type": "term",
       "convention": "",
@@ -7357,7 +7357,7 @@
     "pk": 991,
     "fields": {
       "schema": 44,
-      "order": 44,
+      "order": 43,
       "alias": "D29",
       "cst_type": "term",
       "convention": "",
@@ -7374,7 +7374,8 @@
     "pk": 7,
     "fields": {
       "operation": 9,
-      "argument": 1
+      "argument": 1,
+	  "order": 0
     }
   },
   {
@@ -7382,7 +7383,8 @@
     "pk": 8,
     "fields": {
       "operation": 9,
-      "argument": 2
+      "argument": 2,
+	  "order": 1
     }
   },
   {
@@ -7390,7 +7392,8 @@
     "pk": 9,
     "fields": {
       "operation": 10,
-      "argument": 4
+      "argument": 4,
+	  "order": 0
     }
   },
   {
@@ -7398,7 +7401,8 @@
     "pk": 10,
     "fields": {
       "operation": 10,
-      "argument": 9
+      "argument": 9,
+	  "order": 1
     }
   },
   {

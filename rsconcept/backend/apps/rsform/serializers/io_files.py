@@ -151,7 +151,7 @@ class RSFormTRSSerializer(serializers.Serializer):
             location=validated_data['location']
         )
         self.instance.save()
-        order = 1
+        order = 0
         for cst_data in validated_data['items']:
             cst = Constituenta(
                 alias=cst_data['alias'],
@@ -174,7 +174,7 @@ class RSFormTRSSerializer(serializers.Serializer):
         if 'comment' in validated_data:
             instance.model.comment = validated_data['comment']
 
-        order = 1
+        order = 0
         prev_constituents = instance.constituents()
         loaded_ids = set()
         for cst_data in validated_data['items']:

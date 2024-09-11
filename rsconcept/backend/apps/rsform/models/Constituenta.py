@@ -2,7 +2,6 @@
 import re
 
 from cctext import extract_entities
-from django.core.validators import MinValueValidator
 from django.db.models import (
     CASCADE,
     CharField,
@@ -57,8 +56,7 @@ class Constituenta(Model):
     )
     order: PositiveIntegerField = PositiveIntegerField(
         verbose_name='Позиция',
-        validators=[MinValueValidator(1)],
-        default=1,
+        default=0,
     )
     alias: CharField = CharField(
         verbose_name='Имя',

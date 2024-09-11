@@ -26,7 +26,7 @@ class CstBaseSerializer(serializers.ModelSerializer):
     class Meta:
         ''' serializer metadata. '''
         model = Constituenta
-        fields = '__all__'
+        exclude = ('order',)
         read_only_fields = ('id',)
 
 
@@ -35,8 +35,8 @@ class CstSerializer(serializers.ModelSerializer):
     class Meta:
         ''' serializer metadata. '''
         model = Constituenta
-        fields = '__all__'
-        read_only_fields = ('id', 'schema', 'order', 'alias', 'cst_type', 'definition_resolved', 'term_resolved')
+        exclude = ('order',)
+        read_only_fields = ('id', 'schema', 'alias', 'cst_type', 'definition_resolved', 'term_resolved')
 
 
 class CstUpdateSerializer(serializers.Serializer):
@@ -71,7 +71,7 @@ class CstDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         ''' serializer metadata. '''
         model = Constituenta
-        fields = '__all__'
+        exclude = ('order',)
 
 
 class CstCreateSerializer(serializers.ModelSerializer):
@@ -126,7 +126,7 @@ class RSFormSerializer(serializers.ModelSerializer):
         result['items'] = []
         result['oss'] = []
         result['inheritance'] = []
-        for cst in RSForm(instance).constituents().order_by('order'):
+        for cst in RSForm(instance).constituents().defer('order').order_by('order'):
             result['items'].append(CstSerializer(cst).data)
         for oss in LibraryItem.objects.filter(operations__result=instance).only('alias'):
             result['oss'].append({
@@ -171,6 +171,7 @@ class RSFormSerializer(serializers.ModelSerializer):
                 cst_data = next(x for x in items if x['id'] == cst.pk)
                 new_cst = CstBaseSerializer(data=cst_data)
                 new_cst.is_valid(raise_exception=True)
+                new_cst.validated_data['order'] = ids.index(cst.pk)
                 new_cst.update(
                     instance=cst,
                     validated_data=new_cst.validated_data
@@ -180,9 +181,11 @@ class RSFormSerializer(serializers.ModelSerializer):
         for cst_data in items:
             if cst_data['id'] not in processed:
                 cst = schema.insert_new(cst_data['alias'])
+                old_id = cst_data['id']
                 cst_data['id'] = cst.pk
                 new_cst = CstBaseSerializer(data=cst_data)
                 new_cst.is_valid(raise_exception=True)
+                new_cst.validated_data['order'] = ids.index(old_id)
                 new_cst.update(
                     instance=cst,
                     validated_data=new_cst.validated_data

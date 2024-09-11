@@ -140,7 +140,8 @@ class RSForm:
         if insert_after is None:
             position = INSERT_LAST
         else:
-            position = insert_after.order + 1
+            self.cache.ensure_loaded()
+            position = self.cache.constituents.index(self.cache.by_id[insert_after.pk]) + 1
         result = self.insert_new(data['alias'], data['cst_type'], position)
         result.convention = data.get('convention', '')
         result.definition_formal = data.get('definition_formal', '')
@@ -170,8 +171,7 @@ class RSForm:
         position: int = INSERT_LAST,
         **kwargs
     ) -> Constituenta:
-        ''' Insert new constituenta at given position.
-            All following constituents order is shifted by 1 position. '''
+        ''' Insert new constituenta at given position. '''
         if self.constituents().filter(alias=alias).exists():
             raise ValidationError(msg.aliasTaken(alias))
         position = self._get_insert_position(position)
@@ -298,8 +298,8 @@ class RSForm:
             if cst in target:
                 cst.order = destination + count_moved
                 count_moved += 1
-            elif count_top + 1 < destination:
-                cst.order = count_top + 1
+            elif count_top < destination:
+                cst.order = count_top
                 count_top += 1
             else:
                 cst.order = destination + size + count_bot
@@ -417,8 +417,8 @@ class RSForm:
         if count_new == 0:
             return []
 
-        position = target.order + 1
         self.cache.ensure_loaded()
+        position = self.cache.constituents.index(self.cache.by_id[target.id]) + 1
         self._shift_positions(position, count_new)
         result = []
         cst_type = CstType.TERM if len(parse['args']) == 0 else CstType.FUNCTION
@@ -456,29 +456,23 @@ class RSForm:
     def _shift_positions(self, start: int, shift: int) -> None:
         if shift == 0:
             return
-        update_list: Iterable[Constituenta] = []
-        if not self.cache.is_loaded:
-            update_list = Constituenta.objects \
-                .only('order') \
-                .filter(schema=self.model, order__gte=start)
-        else:
-            update_list = [cst for cst in self.cache.constituents if cst.order >= start]
+        self.cache.ensure_loaded()
+        update_list = self.cache.constituents[start:]
         for cst in update_list:
             cst.order += shift
         Constituenta.objects.bulk_update(update_list, ['order'])
 
     def _get_insert_position(self, position: int) -> int:
-        if position <= 0 and position != INSERT_LAST:
+        if position < 0 and position != INSERT_LAST:
             raise ValidationError(msg.invalidPosition())
         lastPosition = self.constituents().count()
         if position == INSERT_LAST:
-            position = lastPosition + 1
+            return lastPosition
         else:
-            position = max(1, min(position, lastPosition + 1))
-        return position
+            return max(0, min(position, lastPosition))
 
     def _reset_order(self) -> None:
-        order = 1
+        order = 0
         changed: list[Constituenta] = []
         cst_list: Iterable[Constituenta] = []
         if not self.cache.is_loaded:
@@ -569,14 +563,14 @@ class RSFormCache:
 
     def insert(self, cst: Constituenta) -> None:
         if self.is_loaded:
-            self.constituents.insert(cst.order - 1, cst)
+            self.constituents.insert(cst.order, cst)
             self.by_id[cst.pk] = cst
             self.by_alias[cst.alias] = cst
 
     def insert_multi(self, items: Iterable[Constituenta]) -> None:
         if self.is_loaded:
             for cst in items:
-                self.constituents.insert(cst.order - 1, cst)
+                self.constituents.insert(cst.order, cst)
                 self.by_id[cst.pk] = cst
                 self.by_alias[cst.alias] = cst
 
@@ -770,7 +764,7 @@ class _OrderManager:
         self._items = result
 
     def _save_order(self) -> None:
-        order = 1
+        order = 0
         for cst in self._items:
             cst.order = order
             order += 1

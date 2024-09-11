@@ -84,7 +84,7 @@ class TestVersionViews(EndpointTester):
             alias='A1',
             cst_type='axiom',
             definition_formal='X1=X1',
-            order=2
+            order=1
         )
         version_id = self._create_version({'version': '1.0.0', 'description': 'test'})
         a1.definition_formal = 'X1=X2'
@@ -163,7 +163,7 @@ class TestVersionViews(EndpointTester):
         x1.convention = 'Test2'
         x1.term_raw = 'Test'
         x1.save()
-        x3.order = 1
+        x3.order = 0
         x3.save()
 
         self.executeNotFound(version=invalid_id)
@@ -172,10 +172,10 @@ class TestVersionViews(EndpointTester):
         x1.refresh_from_db()
         x2.refresh_from_db()
         self.assertEqual(len(response.data['items']), 3)
-        self.assertEqual(x1.order, 1)
+        self.assertEqual(x1.order, 0)
         self.assertEqual(x1.convention, 'testStart')
         self.assertEqual(x1.term_raw, '')
-        self.assertEqual(x2.order, 2)
+        self.assertEqual(x2.order, 1)
         self.assertEqual(response.data['items'][2]['alias'], 'D1')
         self.assertEqual(response.data['items'][2]['term_raw'], 'TestTerm')
 

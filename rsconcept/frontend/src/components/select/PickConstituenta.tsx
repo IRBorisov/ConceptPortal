@@ -70,7 +70,9 @@ function PickConstituenta({
         cell: props => <BadgeConstituenta theme={colors} value={props.row.original} prefixID={prefixID} />
       }),
       columnHelper.accessor(cst => describeFunc(cst), {
-        id: 'description'
+        id: 'description',
+        size: 1000,
+        minSize: 1000
       })
     ],
     [colors, prefixID, describeFunc]
