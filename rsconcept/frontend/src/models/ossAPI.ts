@@ -26,9 +26,6 @@ export function matchOperation(target: IOperation, query: string): boolean {
 
 /**
  * Sorts library items relevant for the specified {@link IOperationSchema}.
- *
- * @param oss - The {@link IOperationSchema} to be sorted.
- * @param items - The items to be sorted.
  */
 export function sortItemsForOSS(oss: IOperationSchema, items: ILibraryItem[]): ILibraryItem[] {
   const result = items.filter(item => item.location === oss.location);

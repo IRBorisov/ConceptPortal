@@ -4,6 +4,7 @@
 
 import { TextMatcher } from '@/utils/utils';
 
+import { BASIC_SCHEMAS, ILibraryItem } from './library';
 import { CstMatchMode } from './miscellaneous';
 import {
   CATEGORY_CST_TYPE,
@@ -307,4 +308,32 @@ export function generateAlias(type: CstType, schema: IRSForm, takenAliases: stri
     alias = `${prefix}${index}`;
   }
   return alias;
+}
+
+/**
+ * Sorts library items relevant for InlineSynthesis with specified {@link IRSForm}.
+ */
+export function sortItemsForInlineSynthesis(receiver: IRSForm, items: ILibraryItem[]): ILibraryItem[] {
+  const result = items.filter(item => item.location === receiver.location);
+  for (const item of items) {
+    if (item.visible && item.owner === item.owner && !result.includes(item)) {
+      result.push(item);
+    }
+  }
+  for (const item of items) {
+    if (!result.includes(item) && item.location.startsWith(BASIC_SCHEMAS)) {
+      result.push(item);
+    }
+  }
+  for (const item of items) {
+    if (item.visible && !result.includes(item)) {
+      result.push(item);
+    }
+  }
+  for (const item of items) {
+    if (!result.includes(item)) {
+      result.push(item);
+    }
+  }
+  return result;
 }

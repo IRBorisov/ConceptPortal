@@ -7,15 +7,19 @@ import TextInput from '@/components/ui/TextInput';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { useLibrary } from '@/context/LibraryContext';
 import { LibraryItemID, LibraryItemType } from '@/models/library';
+import { IRSForm } from '@/models/rsform';
+import { sortItemsForInlineSynthesis } from '@/models/rsformAPI';
 
 interface TabSchemaProps {
   selected?: LibraryItemID;
   setSelected: (newValue: LibraryItemID) => void;
+  receiver: IRSForm;
 }
 
-function TabSchema({ selected, setSelected }: TabSchemaProps) {
+function TabSchema({ selected, receiver, setSelected }: TabSchemaProps) {
   const library = useLibrary();
   const selectedInfo = useMemo(() => library.items.find(item => item.id === selected), [selected, library.items]);
+  const sortedItems = useMemo(() => sortItemsForInlineSynthesis(receiver, library.items), [receiver, library.items]);
 
   return (
     <AnimateFade className='flex flex-col'>
@@ -33,7 +37,7 @@ function TabSchema({ selected, setSelected }: TabSchemaProps) {
       </div>
       <PickSchema
         id='dlg_schema_picker' // prettier: split lines
-        items={library.items}
+        items={sortedItems}
         itemType={LibraryItemType.RSFORM}
         rows={14}
         value={selected}

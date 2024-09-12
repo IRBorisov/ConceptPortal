@@ -32,6 +32,8 @@ export enum LocationHead {
   LIBRARY = '/L'
 }
 
+export const BASIC_SCHEMAS = '/L/Базовые';
+
 /**
  * Represents {@link LibraryItem} identifier type.
  */

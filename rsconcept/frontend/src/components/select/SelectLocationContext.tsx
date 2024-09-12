@@ -15,13 +15,21 @@ import SelectLocation from './SelectLocation';
 
 interface SelectLocationContextProps extends CProps.Styling {
   value: string;
+  title?: string;
   folderTree: FolderTree;
   stretchTop?: boolean;
 
   onChange: (newValue: string) => void;
 }
 
-function SelectLocationContext({ value, folderTree, onChange, className, style }: SelectLocationContextProps) {
+function SelectLocationContext({
+  value,
+  title = 'Проводник...',
+  folderTree,
+  onChange,
+  className,
+  style
+}: SelectLocationContextProps) {
   const menu = useDropdown();
 
   const handleClick = useCallback(
@@ -37,7 +45,7 @@ function SelectLocationContext({ value, folderTree, onChange, className, style }
   return (
     <div ref={menu.ref} className='h-full text-right self-start mt-[-0.25rem] ml-[-1.5rem]'>
       <MiniButton
-        title='Проводник...'
+        title={title}
         hideTitle={menu.isOpen}
         icon={<IconFolderTree size='1.25rem' className='icon-green' />}
         onClick={() => menu.toggle()}

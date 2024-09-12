@@ -44,7 +44,7 @@ describe('Testing matching LibraryItem', () => {
     expect(matchLibraryItem(item1, item1.title + '@invalid')).toEqual(false);
     expect(matchLibraryItem(item1, item1.alias + '@invalid')).toEqual(false);
     expect(matchLibraryItem(item1, item1.time_create)).toEqual(false);
-    expect(matchLibraryItem(item1, item1.comment)).toEqual(false);
+    expect(matchLibraryItem(item1, item1.comment)).toEqual(true);
   });
 });
 

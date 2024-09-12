@@ -40,6 +40,21 @@ function ViewSideLocation({
   const { user } = useAuth();
   const { items } = useLibrary();
   const windowSize = useWindowSize();
+
+  const canRename = useMemo(() => {
+    if (active.length <= 3 || !user) {
+      return false;
+    }
+    if (user.is_staff) {
+      return true;
+    }
+    const owned = items.filter(item => item.owner == user.id);
+    const located = owned.filter(item => item.location == active || item.location.startsWith(`${active}/`));
+    return located.length !== 0;
+  }, [active, user, items]);
+
+  const animations = useMemo(() => animateSideMinWidth(windowSize.isSmall ? '10rem' : '15rem'), [windowSize]);
+
   const handleClickFolder = useCallback(
     (event: CProps.EventMouse, target: FolderNode) => {
       event.preventDefault();
@@ -55,20 +70,6 @@ function ViewSideLocation({
     },
     [setActive]
   );
-
-  const canRename = useMemo(() => {
-    if (active.length <= 3 || !user) {
-      return false;
-    }
-    if (user.is_staff) {
-      return true;
-    }
-    const owned = items.filter(item => item.owner == user.id);
-    const located = owned.filter(item => item.location == active || item.location.startsWith(`${active}/`));
-    return located.length !== 0;
-  }, [active, user, items]);
-
-  const animations = useMemo(() => animateSideMinWidth(windowSize.isSmall ? '10rem' : '15rem'), [windowSize]);
 
   return (
     <motion.div

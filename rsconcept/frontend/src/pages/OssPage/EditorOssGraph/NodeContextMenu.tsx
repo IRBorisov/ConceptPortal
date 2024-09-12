@@ -111,7 +111,7 @@ function NodeContextMenu({
           text='Редактировать'
           title='Редактировать операцию'
           icon={<IconEdit2 size='1rem' className='icon-primary' />}
-          disabled={controller.isProcessing}
+          disabled={!controller.isMutable || controller.isProcessing}
           onClick={handleEditOperation}
         />
 

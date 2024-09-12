@@ -17,7 +17,7 @@ const LOCATION_REGEXP = /^\/[PLUS]((\/[!\d\p{L}]([!\d\p{L}\- ]*[!\d\p{L}])?)*)?$
  */
 export function matchLibraryItem(target: ILibraryItem, query: string): boolean {
   const matcher = new TextMatcher(query);
-  return matcher.test(target.alias) || matcher.test(target.title);
+  return matcher.test(target.alias) || matcher.test(target.title) || matcher.test(target.comment);
 }
 
 /**

@@ -58,7 +58,7 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
   const schemaPanel = useMemo(
     () => (
       <TabPanel>
-        <TabSchema selected={donorID} setSelected={setDonorID} />
+        <TabSchema selected={donorID} setSelected={setDonorID} receiver={receiver} />
       </TabPanel>
     ),
     [donorID]

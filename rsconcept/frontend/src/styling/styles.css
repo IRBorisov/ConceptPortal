@@ -132,6 +132,7 @@
   .clr-btn-nav,
   .clr-btn-clear {
     color: var(--cl-fg-80);
+    background-color: transparent;
     &:disabled {
       color: var(--cl-fg-60);
     }

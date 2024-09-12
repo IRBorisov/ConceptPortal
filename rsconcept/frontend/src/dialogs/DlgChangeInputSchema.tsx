@@ -63,7 +63,7 @@ function DlgChangeInputSchema({ oss, hideWindow, target, onSubmit }: DlgChangeIn
         itemType={LibraryItemType.RSFORM}
         value={selected} // prettier: split-line
         onSelectValue={handleSelectLocation}
-        rows={8}
+        rows={14}
         baseFilter={baseFilter}
       />
     </Modal>
