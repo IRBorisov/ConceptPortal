@@ -4,7 +4,7 @@ from django.db.models import CASCADE, ForeignKey, Model
 
 class LibraryTemplate(Model):
     ''' Template for library items and constituents. '''
-    lib_source: ForeignKey = ForeignKey(
+    lib_source = ForeignKey(
         verbose_name='Источник',
         to='library.LibraryItem',
         on_delete=CASCADE

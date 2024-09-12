@@ -53,6 +53,7 @@ class TestChangeAttributes(EndpointTester):
             alias='3',
             operation_type=OperationType.SYNTHESIS
         )
+        self.owned.set_arguments(self.operation3.pk, [self.operation1, self.operation2])
         self.owned.execute_operation(self.operation3)
         self.operation3.refresh_from_db()
         self.ks3 = RSForm(self.operation3.result)
@@ -116,10 +117,10 @@ class TestChangeAttributes(EndpointTester):
         self.ks1.refresh_from_db()
         self.ks2.refresh_from_db()
         self.ks3.refresh_from_db()
-        self.assertEqual(list(self.owned.model.editors()), [self.user3])
-        self.assertEqual(list(self.ks1.model.editors()), [self.user, self.user2])
-        self.assertEqual(list(self.ks2.model.editors()), [])
-        self.assertEqual(set(self.ks3.model.editors()), set([self.user, self.user3]))
+        self.assertEqual(list(self.owned.model.getQ_editors()), [self.user3])
+        self.assertEqual(list(self.ks1.model.getQ_editors()), [self.user, self.user2])
+        self.assertEqual(list(self.ks2.model.getQ_editors()), [])
+        self.assertEqual(set(self.ks3.model.getQ_editors()), set([self.user, self.user3]))
 
     @decl_endpoint('/api/library/{item}', method='patch')
     def test_sync_from_result(self):

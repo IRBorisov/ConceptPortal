@@ -44,7 +44,7 @@ class VersionViewset(
     def restore(self, request: Request, pk) -> HttpResponse:
         ''' Restore version data into current item. '''
         version = cast(m.Version, self.get_object())
-        item = cast(m.LibraryItem, version.item)
+        item = version.item
         with transaction.atomic():
             RSFormSerializer(item).restore_from_version(version.data)
         return Response(

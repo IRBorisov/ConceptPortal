@@ -6,16 +6,15 @@ defaults:
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
     paths:
       - rsconcept/backend/**
       - .github/workflows/backend.yml
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
-
     runs-on: ubuntu-22.04
     strategy:
       max-parallel: 4
@@ -23,21 +22,21 @@ jobs:
         python-version: [3.12]
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements-dev.txt
-    - name: Lint
-      run: |
-        pylint project apps
-        mypy project apps
-    - name: Run Tests
-      if: '!cancelled()'
-      run: |
-        python manage.py check
-        python manage.py test
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev-lock.txt
+      - name: Lint
+        run: |
+          pylint project apps
+          mypy project apps
+      - name: Run Tests
+        if: "!cancelled()"
+        run: |
+          python manage.py check
+          python manage.py test

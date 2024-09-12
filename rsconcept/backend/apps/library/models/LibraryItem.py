@@ -48,55 +48,56 @@ def validate_location(target: str) -> bool:
 
 class LibraryItem(Model):
     ''' Abstract library item.'''
-    item_type: CharField = CharField(
+    item_type = CharField(
         verbose_name='Тип',
         max_length=50,
         choices=LibraryItemType.choices,
         default=LibraryItemType.RSFORM
     )
-    owner: ForeignKey = ForeignKey(
+    owner = ForeignKey(
         verbose_name='Владелец',
         to=User,
         on_delete=SET_NULL,
+        blank=True,
         null=True
     )
-    title: TextField = TextField(
+    title = TextField(
         verbose_name='Название'
     )
-    alias: CharField = CharField(
+    alias = CharField(
         verbose_name='Шифр',
         max_length=255,
         blank=True
     )
-    comment: TextField = TextField(
+    comment = TextField(
         verbose_name='Комментарий',
         blank=True
     )
-    visible: BooleanField = BooleanField(
+    visible = BooleanField(
         verbose_name='Отображаемая',
         default=True
     )
-    read_only: BooleanField = BooleanField(
+    read_only = BooleanField(
         verbose_name='Запретить редактирование',
         default=False
     )
-    access_policy: CharField = CharField(
+    access_policy = CharField(
         verbose_name='Политика доступа',
         max_length=500,
         choices=AccessPolicy.choices,
         default=AccessPolicy.PUBLIC
     )
-    location: TextField = TextField(
+    location = TextField(
         verbose_name='Расположение',
         max_length=500,
         default=LocationHead.USER
     )
 
-    time_create: DateTimeField = DateTimeField(
+    time_create = DateTimeField(
         verbose_name='Дата создания',
         auto_now_add=True
     )
-    time_update: DateTimeField = DateTimeField(
+    time_update = DateTimeField(
         verbose_name='Дата изменения',
         auto_now=True
     )
@@ -112,11 +113,11 @@ class LibraryItem(Model):
     def get_absolute_url(self):
         return f'/api/library/{self.pk}'
 
-    def editors(self) -> QuerySet[User]:
+    def getQ_editors(self) -> QuerySet[User]:
         ''' Get all Editors of this item. '''
         return User.objects.filter(editor__item=self.pk)
 
-    def versions(self) -> QuerySet[Version]:
+    def getQ_versions(self) -> QuerySet[Version]:
         ''' Get all Versions of this item. '''
         return Version.objects.filter(item=self.pk).order_by('-time_create')
 

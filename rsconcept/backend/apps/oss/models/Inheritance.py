@@ -4,19 +4,19 @@ from django.db.models import CASCADE, ForeignKey, Model
 
 class Inheritance(Model):
     ''' Inheritance links parent and child constituents in synthesis operation.'''
-    operation: ForeignKey = ForeignKey(
+    operation = ForeignKey(
         verbose_name='Операция',
         to='oss.Operation',
         on_delete=CASCADE,
         related_name='inheritances'
     )
-    parent: ForeignKey = ForeignKey(
+    parent = ForeignKey(
         verbose_name='Исходная конституента',
         to='rsform.Constituenta',
         on_delete=CASCADE,
         related_name='as_parent'
     )
-    child: ForeignKey = ForeignKey(
+    child = ForeignKey(
         verbose_name='Наследованная конституента',
         to='rsform.Constituenta',
         on_delete=CASCADE,

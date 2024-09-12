@@ -157,7 +157,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
 
         clone = deepcopy(item)
         clone.pk = None
-        clone.owner = self.request.user
+        clone.owner = cast(User, self.request.user)
         clone.title = serializer.validated_data['title']
         clone.alias = serializer.validated_data.get('alias', '')
         clone.comment = serializer.validated_data.get('comment', '')

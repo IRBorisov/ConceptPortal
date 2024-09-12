@@ -244,7 +244,7 @@ class TestOssViewset(EndpointTester):
         self.assertEqual(schema.visible, False)
         self.assertEqual(schema.access_policy, self.owned.model.access_policy)
         self.assertEqual(schema.location, self.owned.model.location)
-        self.assertIn(self.user2, schema.editors())
+        self.assertIn(self.user2, schema.getQ_editors())
 
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
     def test_delete_operation(self):
@@ -409,12 +409,12 @@ class TestOssViewset(EndpointTester):
         self.assertEqual(self.operation3.alias, data['item_data']['alias'])
         self.assertEqual(self.operation3.title, data['item_data']['title'])
         self.assertEqual(self.operation3.comment, data['item_data']['comment'])
-        args = self.operation3.getArguments().order_by('order')
+        args = self.operation3.getQ_arguments().order_by('order')
         self.assertEqual(args[0].argument.pk, data['arguments'][0])
         self.assertEqual(args[0].order, 0)
         self.assertEqual(args[1].argument.pk, data['arguments'][1])
         self.assertEqual(args[1].order, 1)
-        sub = self.operation3.getSubstitutions()[0]
+        sub = self.operation3.getQ_substitutions()[0]
         self.assertEqual(sub.original.pk, data['substitutions'][0]['original'])
         self.assertEqual(sub.substitution.pk, data['substitutions'][0]['substitution'])
 

@@ -1,4 +1,5 @@
 ''' Admin view: Library. '''
+from typing import cast
 from django.contrib import admin
 
 from . import models
@@ -23,7 +24,7 @@ class LibraryTemplateAdmin(admin.ModelAdmin):
 
     def alias(self, template: models.LibraryTemplate):
         if template.lib_source:
-            return template.lib_source.alias
+            return cast(models.LibraryItem, template.lib_source).alias
         else:
             return 'N/A'
 

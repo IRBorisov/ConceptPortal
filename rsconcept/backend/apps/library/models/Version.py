@@ -12,7 +12,7 @@ from django.db.models import (
 
 class Version(Model):
     ''' Library item version archive. '''
-    item: ForeignKey = ForeignKey(
+    item = ForeignKey(
         verbose_name='Схема',
         to='library.LibraryItem',
         on_delete=CASCADE
@@ -22,14 +22,14 @@ class Version(Model):
         max_length=20,
         blank=False
     )
-    description: TextField = TextField(
+    description = TextField(
         verbose_name='Описание',
         blank=True
     )
-    data: JSONField = JSONField(
+    data = JSONField(
         verbose_name='Содержание'
     )
-    time_create: DateTimeField = DateTimeField(
+    time_create = DateTimeField(
         verbose_name='Дата создания',
         auto_now_add=True
     )

@@ -4,19 +4,19 @@ from django.db.models import CASCADE, ForeignKey, Model
 
 class Substitution(Model):
     ''' Substitutions as part of Synthesis operation in OSS.'''
-    operation: ForeignKey = ForeignKey(
+    operation = ForeignKey(
         verbose_name='Операция',
         to='oss.Operation',
         on_delete=CASCADE
     )
 
-    original: ForeignKey = ForeignKey(
+    original = ForeignKey(
         verbose_name='Удаляемая конституента',
         to='rsform.Constituenta',
         on_delete=CASCADE,
         related_name='as_original'
     )
-    substitution: ForeignKey = ForeignKey(
+    substitution = ForeignKey(
         verbose_name='Замещающая конституента',
         to='rsform.Constituenta',
         on_delete=CASCADE,

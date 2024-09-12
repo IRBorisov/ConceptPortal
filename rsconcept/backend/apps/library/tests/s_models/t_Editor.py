@@ -35,64 +35,64 @@ class TestEditor(TestCase):
 
     def test_add_editor(self):
         self.assertTrue(Editor.add(self.item.pk, self.user1.pk))
-        self.assertEqual(self.item.editors().count(), 1)
-        self.assertTrue(self.user1 in list(self.item.editors()))
+        self.assertEqual(self.item.getQ_editors().count(), 1)
+        self.assertTrue(self.user1 in list(self.item.getQ_editors()))
 
         self.assertFalse(Editor.add(self.item.pk, self.user1.pk))
-        self.assertEqual(self.item.editors().count(), 1)
+        self.assertEqual(self.item.getQ_editors().count(), 1)
 
         self.assertTrue(Editor.add(self.item.pk, self.user2.pk))
-        self.assertEqual(self.item.editors().count(), 2)
-        self.assertTrue(self.user1 in self.item.editors())
-        self.assertTrue(self.user2 in self.item.editors())
+        self.assertEqual(self.item.getQ_editors().count(), 2)
+        self.assertTrue(self.user1 in self.item.getQ_editors())
+        self.assertTrue(self.user2 in self.item.getQ_editors())
 
         self.user1.delete()
-        self.assertEqual(self.item.editors().count(), 1)
+        self.assertEqual(self.item.getQ_editors().count(), 1)
 
 
     def test_remove_editor(self):
         self.assertFalse(Editor.remove(self.item.pk, self.user1.pk))
         Editor.add(self.item.pk, self.user1.pk)
         Editor.add(self.item.pk, self.user2.pk)
-        self.assertEqual(self.item.editors().count(), 2)
+        self.assertEqual(self.item.getQ_editors().count(), 2)
 
         self.assertTrue(Editor.remove(self.item.pk, self.user1.pk))
-        self.assertEqual(self.item.editors().count(), 1)
-        self.assertTrue(self.user2 in self.item.editors())
+        self.assertEqual(self.item.getQ_editors().count(), 1)
+        self.assertTrue(self.user2 in self.item.getQ_editors())
 
         self.assertFalse(Editor.remove(self.item.pk, self.user1.pk))
 
 
     def test_set_editors(self):
         Editor.set(self.item.pk, [self.user1.pk])
-        self.assertEqual(list(self.item.editors()), [self.user1])
+        self.assertEqual(list(self.item.getQ_editors()), [self.user1])
 
         Editor.set(self.item.pk, [self.user1.pk, self.user1.pk])
-        self.assertEqual(list(self.item.editors()), [self.user1])
+        self.assertEqual(list(self.item.getQ_editors()), [self.user1])
 
         Editor.set(self.item.pk, [])
-        self.assertEqual(list(self.item.editors()), [])
+        self.assertEqual(list(self.item.getQ_editors()), [])
 
         Editor.set(self.item.pk, [self.user1.pk, self.user2.pk])
-        self.assertEqual(set(self.item.editors()), set([self.user1, self.user2]))
+        self.assertEqual(set(self.item.getQ_editors()), set([self.user1, self.user2]))
 
     def test_set_editors_return_diff(self):
         added, deleted = Editor.set_and_return_diff(self.item.pk, [self.user1.pk])
         self.assertEqual(added, [self.user1.pk])
         self.assertEqual(deleted, [])
-        self.assertEqual(list(self.item.editors()), [self.user1])
+        self.assertEqual(list(self.item.getQ_editors()), [self.user1])
 
         added, deleted = Editor.set_and_return_diff(self.item.pk, [self.user1.pk, self.user1.pk])
         self.assertEqual(added, [])
         self.assertEqual(deleted, [])
-        self.assertEqual(list(self.item.editors()), [self.user1])
+        self.assertEqual(list(self.item.getQ_editors()), [self.user1])
 
         added, deleted = Editor.set_and_return_diff(self.item.pk, [])
         self.assertEqual(added, [])
         self.assertEqual(deleted, [self.user1.pk])
-        self.assertEqual(list(self.item.editors()), [])
+        self.assertEqual(list(self.item.getQ_editors()), [])
 
         added, deleted = Editor.set_and_return_diff(self.item.pk, [self.user1.pk, self.user2.pk])
         self.assertEqual(added, [self.user1.pk, self.user2.pk])
         self.assertEqual(deleted, [])
-        self.assertEqual(set(self.item.editors()), set([self.user1, self.user2]))
+        self.assertEqual(set(self.item.getQ_editors()), set([self.user1, self.user2]))

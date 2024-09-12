@@ -26,7 +26,7 @@ class TokenType(IntEnum):
     REDUCE = 299
 
 
-def get_type_prefix(cst_type: CstType) -> str:
+def get_type_prefix(cst_type: str) -> str:
     ''' Get alias prefix. '''
     match cst_type:
         case CstType.BASE: return 'X'
@@ -40,7 +40,7 @@ def get_type_prefix(cst_type: CstType) -> str:
     return 'X'
 
 
-def is_basic_concept(cst_type: CstType) -> bool:
+def is_basic_concept(cst_type: str) -> bool:
     ''' Evaluate if CstType is basic concept.'''
     return cst_type in [
         CstType.BASE,
@@ -50,7 +50,7 @@ def is_basic_concept(cst_type: CstType) -> bool:
     ]
 
 
-def is_base_set(cst_type: CstType) -> bool:
+def is_base_set(cst_type: str) -> bool:
     ''' Evaluate if CstType is base set or constant set.'''
     return cst_type in [
         CstType.BASE,
@@ -58,7 +58,7 @@ def is_base_set(cst_type: CstType) -> bool:
     ]
 
 
-def is_functional(cst_type: CstType) -> bool:
+def is_functional(cst_type: str) -> bool:
     ''' Evaluate if CstType is function.'''
     return cst_type in [
         CstType.FUNCTION,
@@ -70,7 +70,7 @@ def guess_type(alias: str) -> CstType:
     ''' Get CstType for alias. '''
     prefix = alias[0]
     for (value, _) in CstType.choices:
-        if prefix == get_type_prefix(cast(CstType, value)):
+        if prefix == get_type_prefix(value):
             return cast(CstType, value)
     return CstType.BASE
 

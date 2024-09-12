@@ -49,56 +49,56 @@ class CstType(TextChoices):
 
 class Constituenta(Model):
     ''' Constituenta is the base unit for every conceptual schema. '''
-    schema: ForeignKey = ForeignKey(
+    schema = ForeignKey(
         verbose_name='Концептуальная схема',
         to='library.LibraryItem',
         on_delete=CASCADE
     )
-    order: PositiveIntegerField = PositiveIntegerField(
+    order = PositiveIntegerField(
         verbose_name='Позиция',
         default=0,
     )
-    alias: CharField = CharField(
+    alias = CharField(
         verbose_name='Имя',
         max_length=8,
         default='undefined'
     )
-    cst_type: CharField = CharField(
+    cst_type = CharField(
         verbose_name='Тип',
         max_length=10,
         choices=CstType.choices,
         default=CstType.BASE
     )
-    convention: TextField = TextField(
+    convention = TextField(
         verbose_name='Комментарий/Конвенция',
         default='',
         blank=True
     )
-    term_raw: TextField = TextField(
+    term_raw = TextField(
         verbose_name='Термин (с отсылками)',
         default='',
         blank=True
     )
-    term_resolved: TextField = TextField(
+    term_resolved = TextField(
         verbose_name='Термин',
         default='',
         blank=True
     )
-    term_forms: JSONField = JSONField(
+    term_forms = JSONField(
         verbose_name='Словоформы',
         default=list
     )
-    definition_formal: TextField = TextField(
+    definition_formal = TextField(
         verbose_name='Родоструктурное определение',
         default='',
         blank=True
     )
-    definition_raw: TextField = TextField(
+    definition_raw = TextField(
         verbose_name='Текстовое определение (с отсылками)',
         default='',
         blank=True
     )
-    definition_resolved: TextField = TextField(
+    definition_resolved = TextField(
         verbose_name='Текстовое определение',
         default='',
         blank=True

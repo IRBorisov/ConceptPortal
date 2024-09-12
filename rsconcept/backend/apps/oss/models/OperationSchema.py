@@ -121,7 +121,6 @@ class OperationSchema:
 
         operation.result = schema
         if schema is not None:
-            operation.result = schema
             operation.alias = schema.alias
             operation.title = schema.title
             operation.comment = schema.comment
@@ -139,7 +138,7 @@ class OperationSchema:
         processed: list[Operation] = []
         updated: list[Argument] = []
         deleted: list[Argument] = []
-        for current in operation.getArguments():
+        for current in operation.getQ_arguments():
             if current.argument not in arguments:
                 deleted.append(current)
             else:
@@ -172,7 +171,7 @@ class OperationSchema:
         schema = self.cache.get_schema(operation)
         processed: list[dict] = []
         deleted: list[Substitution] = []
-        for current in operation.getSubstitutions():
+        for current in operation.getQ_substitutions():
             subs = [
                 x for x in substitutes
                 if x['original'] == current.original and x['substitution'] == current.substitution
@@ -215,7 +214,7 @@ class OperationSchema:
             access_policy=self.model.access_policy,
             location=self.model.location
         )
-        Editor.set(schema.model.pk, self.model.editors().values_list('pk', flat=True))
+        Editor.set(schema.model.pk, self.model.getQ_editors().values_list('pk', flat=True))
         operation.result = schema.model
         operation.save()
         self.save(update_fields=['time_update'])
@@ -223,10 +222,14 @@ class OperationSchema:
 
     def execute_operation(self, operation: Operation) -> bool:
         ''' Execute target operation. '''
-        schemas: list[LibraryItem] = [arg.argument.result for arg in operation.getArguments().order_by('order')]
-        if None in schemas:
+        schemas = [
+            arg.argument.result
+            for arg in operation.getQ_arguments().order_by('order')
+            if arg.argument.result is not None
+        ]
+        if len(schemas) == 0:
             return False
-        substitutions = operation.getSubstitutions()
+        substitutions = operation.getQ_substitutions()
         receiver = self.create_input(self.cache.operation_by_id[operation.pk])
 
         parents: dict = {}
@@ -284,7 +287,7 @@ class OperationSchema:
         ''' Trigger cascade resolutions when constituenta type is changed. '''
         self.cache.insert_schema(source)
         operation = self.cache.get_operation(source.model.pk)
-        self._cascade_change_cst_type(operation.pk, target.pk, target.cst_type)
+        self._cascade_change_cst_type(operation.pk, target.pk, cast(CstType, target.cst_type))
 
     def after_update_cst(self, source: RSForm, target: Constituenta, data: dict, old_data: dict) -> None:
         ''' Trigger cascade resolutions when constituenta data is changed. '''
@@ -659,7 +662,7 @@ class OperationSchema:
         substitution_id = self.cache.get_inheritor(substitution_cst.pk, operation_id)
         assert substitution_id is not None
         substitution_inheritor = schema.cache.by_id[substitution_id]
-        mapping = {cast(str, substitution_inheritor.alias): new_original}
+        mapping = {substitution_inheritor.alias: new_original}
         self._cascade_partial_mapping(mapping, dependant, operation_id, schema)
 
     def _process_added_substitutions(self, schema: Optional[RSForm], added: list[Substitution]) -> None:

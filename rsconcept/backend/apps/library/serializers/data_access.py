@@ -84,10 +84,10 @@ class LibraryItemDetailsSerializer(serializers.ModelSerializer):
         read_only_fields = ('owner', 'id', 'item_type')
 
     def get_editors(self, instance: LibraryItem) -> list[int]:
-        return list(instance.editors().order_by('pk').values_list('pk', flat=True))
+        return list(instance.getQ_editors().order_by('pk').values_list('pk', flat=True))
 
     def get_versions(self, instance: LibraryItem) -> list:
-        return [VersionInnerSerializer(item).data for item in instance.versions().order_by('pk')]
+        return [VersionInnerSerializer(item).data for item in instance.getQ_versions().order_by('pk')]
 
 
 class UserTargetSerializer(serializers.Serializer):

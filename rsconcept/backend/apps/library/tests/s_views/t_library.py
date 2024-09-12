@@ -250,22 +250,22 @@ class TestLibraryViewset(EndpointTester):
         self.executeOK(data=data, item=self.owned.pk)
         self.owned.refresh_from_db()
         self.assertEqual(self.owned.time_update, time_update)
-        self.assertEqual(list(self.owned.editors()), [self.user])
+        self.assertEqual(list(self.owned.getQ_editors()), [self.user])
 
         self.executeOK(data=data)
-        self.assertEqual(list(self.owned.editors()), [self.user])
+        self.assertEqual(list(self.owned.getQ_editors()), [self.user])
 
         data = {'users': [self.user2.pk]}
         self.executeOK(data=data)
-        self.assertEqual(list(self.owned.editors()), [self.user2])
+        self.assertEqual(list(self.owned.getQ_editors()), [self.user2])
 
         data = {'users': []}
         self.executeOK(data=data)
-        self.assertEqual(list(self.owned.editors()), [])
+        self.assertEqual(list(self.owned.getQ_editors()), [])
 
         data = {'users': [self.user2.pk, self.user.pk]}
         self.executeOK(data=data)
-        self.assertEqual(set(self.owned.editors()), set([self.user2, self.user]))
+        self.assertEqual(set(self.owned.getQ_editors()), set([self.user2, self.user]))
 
 
     @decl_endpoint('/api/library/{item}', method='delete')

@@ -9,17 +9,17 @@ from apps.users.models import User
 
 class Editor(Model):
     ''' Editor list. '''
-    item: ForeignKey = ForeignKey(
+    item = ForeignKey(
         verbose_name='Схема',
         to='library.LibraryItem',
         on_delete=CASCADE
     )
-    editor: ForeignKey = ForeignKey(
+    editor = ForeignKey(
         verbose_name='Редактор',
         to=User,
         on_delete=CASCADE
     )
-    time_create: DateTimeField = DateTimeField(
+    time_create = DateTimeField(
         verbose_name='Дата добавления',
         auto_now_add=True
     )

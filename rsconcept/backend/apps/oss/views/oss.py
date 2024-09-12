@@ -162,7 +162,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
 
         oss = m.OperationSchema(self.get_object())
         operation = cast(m.Operation, serializer.validated_data['target'])
-        old_schema: Optional[LibraryItem] = operation.result
+        old_schema = operation.result
         with transaction.atomic():
             oss.update_positions(serializer.validated_data['positions'])
             oss.delete_operation(operation.pk, serializer.validated_data['keep_constituents'])
@@ -255,7 +255,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                         'input': msg.operationInputAlreadyConnected()
                     })
         oss = m.OperationSchema(self.get_object())
-        old_schema: Optional[LibraryItem] = target_operation.result
+        old_schema = target_operation.result
         with transaction.atomic():
             if old_schema is not None:
                 if old_schema.is_synced(oss.model):
@@ -370,10 +370,13 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         serializer = CstTargetSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         cst = cast(Constituenta, serializer.validated_data['target'])
-        inheritance = m.Inheritance.objects.filter(child=cst)
-        while inheritance.exists():
-            cst = cast(m.Inheritance, inheritance.first()).parent
-            inheritance = m.Inheritance.objects.filter(child=cst)
+        inheritance_query = m.Inheritance.objects.filter(child=cst)
+        while inheritance_query.exists():
+            inheritance = inheritance_query.first()
+            if inheritance is None:
+                break
+            cst = inheritance.parent
+            inheritance_query = m.Inheritance.objects.filter(child=cst)
 
         return Response(
             status=c.HTTP_200_OK,

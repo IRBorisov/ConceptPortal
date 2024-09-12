@@ -121,7 +121,7 @@ class RSForm:
             update_list.append(cst)
         Constituenta.objects.bulk_update(update_list, ['definition_resolved'])
 
-    def get_max_index(self, cst_type: CstType) -> int:
+    def get_max_index(self, cst_type: str) -> int:
         ''' Get maximum alias index for specific CstType. '''
         result: int = 0
         cst_list: Iterable[Constituenta] = []

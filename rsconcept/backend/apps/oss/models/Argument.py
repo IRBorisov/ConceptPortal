@@ -4,19 +4,19 @@ from django.db.models import CASCADE, ForeignKey, Model, PositiveIntegerField
 
 class Argument(Model):
     ''' Operation Argument.'''
-    operation: ForeignKey = ForeignKey(
+    operation = ForeignKey(
         verbose_name='Операция',
         to='oss.Operation',
         on_delete=CASCADE,
         related_name='arguments'
     )
-    argument: ForeignKey = ForeignKey(
+    argument = ForeignKey(
         verbose_name='Аргумент',
         to='oss.Operation',
         on_delete=CASCADE,
         related_name='descendants'
     )
-    order: PositiveIntegerField = PositiveIntegerField(
+    order = PositiveIntegerField(
         verbose_name='Позиция',
         default=0,
     )
