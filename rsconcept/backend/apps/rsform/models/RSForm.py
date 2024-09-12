@@ -363,6 +363,8 @@ class RSForm:
         for cst in self.cache.constituents:
             if cst.apply_mapping(mapping, change_aliases):
                 update_list.append(cst)
+        if change_aliases:
+            self.cache.reset_aliases()
         Constituenta.objects.bulk_update(update_list, ['alias', 'definition_formal', 'term_raw', 'definition_raw'])
         self.save(update_fields=['time_update'])
 
@@ -554,6 +556,9 @@ class RSFormCache:
     def ensure_loaded(self) -> None:
         if not self.is_loaded:
             self.reload()
+
+    def reset_aliases(self) -> None:
+        self.by_alias = {cst.alias: cst for cst in self.constituents}
 
     def clear(self) -> None:
         self.constituents = []
