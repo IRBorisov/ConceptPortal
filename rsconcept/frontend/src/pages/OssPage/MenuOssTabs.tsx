@@ -15,6 +15,7 @@ import {
   IconShare
 } from '@/components/Icons';
 import Button from '@/components/ui/Button';
+import DividerAnimated from '@/components/ui/DividerAnimated';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import { useAccessMode } from '@/context/AccessModeContext';
@@ -94,9 +95,11 @@ function MenuOssTabs({ onDestroy }: MenuOssTabsProps) {
               onClick={handleDelete}
             />
           ) : null}
+
+          <DividerAnimated margins='mx-3 my-1' />
+
           {user ? (
             <DropdownButton
-              className='border-t-2'
               text='Создать новую схему'
               icon={<IconNewItem size='1rem' className='icon-primary' />}
               onClick={handleCreateNew}

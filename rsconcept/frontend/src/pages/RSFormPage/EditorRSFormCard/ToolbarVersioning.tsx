@@ -20,7 +20,7 @@ function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
           <MiniButton
             titleHtml={
               blockReload
-                ? 'Невозможно откатить КС, прикрепленную к операционной схеме'
+                ? 'Невозможно откатить КС, <br>прикрепленную к операционной схеме'
                 : !controller.isContentEditable
                 ? 'Откатить к версии'
                 : 'Переключитесь на <br/>неактуальную версию'

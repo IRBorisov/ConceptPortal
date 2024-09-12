@@ -21,35 +21,8 @@
 }
 
 @layer components {
-  :is(
-      .clr-border,
-      .border,
-      .border-x,
-      .border-y,
-      .border-b,
-      .border-t,
-      .border-l,
-      .border-r,
-      .border-2,
-      .border-x-2,
-      .border-y-2,
-      .border-b-2,
-      .border-t-2,
-      .border-l-2,
-      .border-r-2,
-      .divide-x,
-      .divide-y,
-      .divide-x-2,
-      .divide-y-2
-    ) {
-    border-color: var(--cl-bg-40);
-    @apply divide-inherit;
-    .dark & {
-      border-color: var(--cd-bg-40);
-    }
-  }
-
-  :is(.clr-app, .clr-btn-nav) {
+  .clr-app,
+  .clr-btn-nav {
     background-color: var(--cl-bg-100);
     .dark & {
       background-color: var(--cd-bg-100);
@@ -86,14 +59,18 @@
     }
   }
 
-  :is(.clr-controls, .clr-tab, .clr-btn-default) {
+  .clr-controls,
+  .clr-tab,
+  .clr-btn-default {
     background-color: var(--cl-bg-80);
     .dark & {
       background-color: var(--cd-bg-80);
     }
   }
 
-  :is(.clr-primary, .clr-btn-primary:hover, .clr-btn-primary:focus-visible) {
+  .clr-primary,
+  .clr-btn-primary:hover,
+  .clr-btn-primary:focus-visible {
     @apply transition;
     color: var(--cl-prim-fg-100);
     background-color: var(--cl-prim-bg-100);
@@ -103,7 +80,8 @@
     }
   }
 
-  :is(.clr-selected, .clr-btn-primary) {
+  .clr-selected,
+  .clr-btn-primary {
     color: var(--cl-fg-100);
     background-color: var(--cl-prim-bg-80);
     .dark & {
@@ -142,14 +120,17 @@
     }
   }
 
-  :is(.clr-text-primary, .clr-text-url) {
+  .clr-text-primary,
+  .clr-text-url {
     color: var(--cl-prim-fg-80);
     .dark & {
       color: var(--cd-prim-fg-80);
     }
   }
 
-  :is(.clr-text-controls, .clr-btn-nav, .clr-btn-clear) {
+  .clr-text-controls,
+  .clr-btn-nav,
+  .clr-btn-clear {
     color: var(--cl-fg-80);
     &:disabled {
       color: var(--cl-fg-60);
@@ -169,7 +150,9 @@
     }
   }
 
-  :is(.clr-text-default, input:disabled:not(::placeholder), textarea:disabled:not(::placeholder)) {
+  .clr-text-default,
+  input:disabled:not(::placeholder),
+  textarea:disabled:not(::placeholder) {
     opacity: 1;
     -webkit-text-fill-color: var(--cl-fg-100);
     color: var(--cl-fg-100);
@@ -225,11 +208,6 @@
     @apply top-[1.9rem] pt-1 right-1/2 translate-x-1/2;
   }
 
-  .cc-modal-blur {
-    opacity: 0.3;
-    backdrop-filter: blur(2px);
-  }
-
   .cc-label {
     @apply text-sm font-medium cursor-default select-text whitespace-nowrap;
   }
@@ -259,6 +237,11 @@
 
   .cc-blur {
     backdrop-filter: blur(3px);
+  }
+
+  .cc-modal-blur {
+    opacity: 0.3;
+    backdrop-filter: blur(2px);
   }
 
   .cc-shadow-border {

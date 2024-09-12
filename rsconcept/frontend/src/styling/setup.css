@@ -141,7 +141,32 @@ div:not(.dense) > p {
     @apply rounded;
   }
 
-  :is(.sticky) {
+  .border,
+  .border-x,
+  .border-y,
+  .border-b,
+  .border-t,
+  .border-l,
+  .border-r,
+  .border-2,
+  .border-x-2,
+  .border-y-2,
+  .border-b-2,
+  .border-t-2,
+  .border-l-2,
+  .border-r-2,
+  .divide-x,
+  .divide-y,
+  .divide-x-2,
+  .divide-y-2 {
+    border-color: var(--cl-bg-40);
+    @apply divide-inherit;
+    .dark & {
+      border-color: var(--cd-bg-40);
+    }
+  }
+
+  .sticky {
     z-index: 20;
   }
 }

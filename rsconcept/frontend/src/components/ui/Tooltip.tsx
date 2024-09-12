@@ -36,12 +36,12 @@ function Tooltip({
         'max-h-[calc(100svh-6rem)]',
         'overflow-y-auto overflow-x-hidden sm:overflow-hidden overscroll-contain',
         'border shadow-md',
-        'text-balance',
+        'text-pretty',
         layer,
         className
       )}
       classNameArrow={layer}
-      style={{ ...{ paddingTop: '2px', paddingBottom: '2px' }, ...style }}
+      style={{ ...{ paddingTop: '2px', paddingBottom: '2px', paddingLeft: '8px', paddingRight: '8px' }, ...style }}
       variant={darkMode ? 'dark' : 'light'}
       place={place}
       {...restProps}

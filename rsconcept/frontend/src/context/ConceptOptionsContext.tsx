@@ -1,6 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
 import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react';
 
 import Tooltip from '@/components/ui/Tooltip';
@@ -147,17 +146,17 @@ export const OptionsState = ({ children }: OptionsStateProps) => {
     >
       <>
         <Tooltip
-          float
+          float // prettier: split-lines
           id={`${globals.tooltip}`}
           layer='z-topmost'
           place='right-start'
-          className={clsx('mt-8', 'max-w-[20rem]')}
+          className='mt-8 max-w-[20rem]'
         />
         <Tooltip
           float
           id={`${globals.value_tooltip}`}
           layer='z-topmost'
-          className={clsx('max-w-[calc(min(40rem,100dvw-2rem))]')}
+          className='max-w-[calc(min(40rem,100dvw-2rem))] text-justify'
         />
 
         {children}
