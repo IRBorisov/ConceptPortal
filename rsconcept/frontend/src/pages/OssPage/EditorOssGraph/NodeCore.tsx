@@ -2,7 +2,7 @@
 
 import { IconConsolidation, IconRSForm } from '@/components/Icons';
 import TooltipOperation from '@/components/info/TooltipOperation';
-import MiniButton from '@/components/ui/MiniButton.tsx';
+import Indicator from '@/components/ui/Indicator';
 import Overlay from '@/components/ui/Overlay';
 import { OssNodeInternal } from '@/models/miscellaneous';
 import { OperationType } from '@/models/oss';
@@ -25,19 +25,15 @@ function NodeCore({ node }: NodeCoreProps) {
   return (
     <>
       <Overlay position='top-0 right-0' className='flex flex-col gap-1 p-[2px]'>
-        <MiniButton
-          disabled
-          noHover
+        <Indicator
           noPadding
           title={hasFile ? 'Связанная КС' : 'Нет связанной КС'}
           icon={<IconRSForm className={hasFile ? 'clr-text-green' : 'clr-text-red'} size='12px' />}
           hideTitle={!controller.showTooltip}
         />
         {node.data.operation.is_consolidation ? (
-          <MiniButton
-            disabled
+          <Indicator
             noPadding
-            noHover
             titleHtml='<b>Внимание!</b><br />Ромбовидный синтез</br/>Возможны дубликаты конституент'
             icon={<IconConsolidation className='clr-text-primary' size='12px' />}
             hideTitle={!controller.showTooltip}

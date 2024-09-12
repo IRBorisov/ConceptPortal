@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 
 import { IconChild, IconPredecessor, IconSave } from '@/components/Icons';
 import RefsInput from '@/components/RefsInput';
-import MiniButton from '@/components/ui/MiniButton';
+import Indicator from '@/components/ui/Indicator';
 import Overlay from '@/components/ui/Overlay';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
@@ -165,7 +165,7 @@ function FormConstituenta({
             dense
             noResize
             noBorder
-            disabled={true}
+            disabled
             label='Типизация'
             value={typification}
             colors='clr-app clr-text-default'
@@ -250,16 +250,14 @@ function FormConstituenta({
                 />
                 <Overlay position='top-[0.1rem] left-[0.4rem]' className='cc-icons'>
                   {state.is_inherited_parent && !state.is_inherited ? (
-                    <MiniButton
+                    <Indicator
                       icon={<IconPredecessor size='1.25rem' className='clr-text-primary' />}
-                      disabled
                       titleHtml='Внимание!</br> Конституента имеет потомков<br/> в операционной схеме синтеза'
                     />
                   ) : null}
                   {state.is_inherited ? (
-                    <MiniButton
+                    <Indicator
                       icon={<IconChild size='1.25rem' className='clr-text-primary' />}
-                      disabled
                       titleHtml='Внимание!</br> Конституента является наследником<br/>'
                     />
                   ) : null}
