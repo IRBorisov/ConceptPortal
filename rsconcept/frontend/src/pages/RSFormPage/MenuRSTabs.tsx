@@ -27,7 +27,7 @@ import {
   IconUpload
 } from '@/components/Icons';
 import Button from '@/components/ui/Button';
-import DividerAnimated from '@/components/ui/DividerAnimated';
+import DropdownDivider from '@/components/ui/DropdownDivider';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import { useAccessMode } from '@/context/AccessModeContext';
@@ -186,7 +186,7 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
             />
           ) : null}
 
-          <DividerAnimated margins='mx-3 my-1' />
+          <DropdownDivider margins='mx-3 my-1' />
 
           {user ? (
             <DropdownButton
@@ -239,7 +239,7 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
               onClick={handleInlineSynthesis}
             />
 
-            <DividerAnimated margins='mx-3 my-1' />
+            <DropdownDivider margins='mx-3 my-1' />
 
             <DropdownButton
               text='Упорядочить список'

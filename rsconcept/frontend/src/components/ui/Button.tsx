@@ -5,16 +5,25 @@ import { globals } from '@/utils/constants';
 import { CProps } from '../props';
 
 interface ButtonProps extends CProps.Control, CProps.Colors, CProps.Button {
-  text?: string;
+  /** Icon to display first. */
   icon?: React.ReactNode;
 
+  /** Text to display second. */
+  text?: string;
+
+  /** Indicates whether to render the button in a dense style. */
   dense?: boolean;
+
+  /** Indicates loading state to prevent interactions and change visual style. */
   loading?: boolean;
 }
 
+/**
+ * Button component that provides a customizable `button` with text, icon, tooltips and various styles.
+ */
 function Button({
-  text,
   icon,
+  text,
   title,
   titleHtml,
   hideTitle,

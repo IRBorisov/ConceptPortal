@@ -3,21 +3,13 @@ import { motion } from 'framer-motion';
 
 import { animateDropdownItem } from '@/styling/animations';
 
-import Checkbox from './Checkbox';
+import Checkbox, { CheckboxProps } from './Checkbox';
 
-interface DropdownCheckboxProps {
-  value: boolean;
-  label?: string;
-  title?: string;
-  disabled?: boolean;
-  setValue?: (newValue: boolean) => void;
-}
-
-function DropdownCheckbox({ title, setValue, disabled, ...restProps }: DropdownCheckboxProps) {
+/** DropdownCheckbox animated component that renders a {@link Checkbox} inside a {@link Dropdown} item. */
+function DropdownCheckbox({ setValue, disabled, ...restProps }: CheckboxProps) {
   return (
     <motion.div
       variants={animateDropdownItem}
-      title={title}
       className={clsx(
         'px-3 py-1',
         'text-left overflow-ellipsis whitespace-nowrap',

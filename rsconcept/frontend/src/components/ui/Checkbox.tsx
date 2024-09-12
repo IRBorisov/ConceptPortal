@@ -7,13 +7,22 @@ import { CheckboxChecked } from '../Icons';
 import { CProps } from '../props';
 
 export interface CheckboxProps extends Omit<CProps.Button, 'value' | 'onClick'> {
+  /** Label to display next to the checkbox. */
   label?: string;
+
+  /** Indicates whether the checkbox is disabled. */
   disabled?: boolean;
 
+  /** Current value - `true` or `false`. */
   value: boolean;
+
+  /** Callback to set the `value`. */
   setValue?: (newValue: boolean) => void;
 }
 
+/**
+ * Checkbox component that allows users to toggle a boolean value.
+ */
 function Checkbox({
   disabled,
   label,

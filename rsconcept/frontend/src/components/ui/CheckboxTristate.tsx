@@ -8,10 +8,16 @@ import { CProps } from '../props';
 import { CheckboxProps } from './Checkbox';
 
 export interface CheckboxTristateProps extends Omit<CheckboxProps, 'value' | 'setValue'> {
+  /** Current value - `null`, `true` or `false`. */
   value: boolean | null;
+
+  /** Callback to set the `value`. */
   setValue?: (newValue: boolean | null) => void;
 }
 
+/**
+ * CheckboxTristate component that allows toggling among three states: `true`, `false`, and `null`.
+ */
 function CheckboxTristate({
   disabled,
   label,

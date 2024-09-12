@@ -6,12 +6,22 @@ import { animateDropdown } from '@/styling/animations';
 import { CProps } from '../props';
 
 interface DropdownProps extends CProps.Styling {
+  /** Indicates whether the dropdown should stretch to the left. */
   stretchLeft?: boolean;
+
+  /** Indicates whether the dropdown should stretch to the top. */
   stretchTop?: boolean;
+
+  /** Indicates whether the dropdown is open. */
   isOpen: boolean;
+
+  /** Children to render inside the component. */
   children: React.ReactNode;
 }
 
+/**
+ *  Dropdown animated component that displays a list of children with optional positioning and visibility control.
+ */
 function Dropdown({ isOpen, stretchLeft, stretchTop, className, children, ...restProps }: DropdownProps) {
   return (
     <div className='relative'>

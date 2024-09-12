@@ -1,9 +1,17 @@
 interface EmbedYoutubeProps {
+  /** Video ID to embed. */
   videoID: string;
+
+  /** Display height in pixels. */
   pxHeight: number;
+
+  /** Display width in pixels. */
   pxWidth?: number;
 }
 
+/**
+ * EmbedYoutube component that embeds a YouTube video into the page using the given video ID and dimensions.
+ */
 function EmbedYoutube({ videoID, pxHeight, pxWidth }: EmbedYoutubeProps) {
   if (!pxWidth) {
     pxWidth = (pxHeight * 16) / 9;

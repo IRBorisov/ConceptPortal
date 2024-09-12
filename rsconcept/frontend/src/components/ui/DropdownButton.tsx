@@ -7,15 +7,23 @@ import { globals } from '@/utils/constants';
 import { CProps } from '../props';
 
 interface DropdownButtonProps extends CProps.AnimatedButton {
-  text?: string;
+  /** Icon to display first (not used if children are provided). */
   icon?: React.ReactNode;
 
+  /** Text to display second (not used if children are provided). */
+  text?: string;
+
+  /** Custom children to display. */
   children?: React.ReactNode;
 }
 
+/**
+ * DropdownButton animated component that renders a `button` with optional text, icon, and click functionality.
+ * It supports optional children for custom content or the default text/icon display.
+ */
 function DropdownButton({
-  text,
   icon,
+  text,
   className,
   title,
   titleHtml,

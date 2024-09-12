@@ -1,15 +1,14 @@
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
 
-import { CProps } from '@/components/props';
 import { animateDropdownItem } from '@/styling/animations';
 
-interface DividerAnimatedProps extends CProps.Styling {
-  vertical?: boolean;
-  margins?: string;
-}
+import { DividerProps } from './Divider';
 
-function DividerAnimated({ vertical, margins = 'mx-2', className, ...restProps }: DividerAnimatedProps) {
+/**
+ * DropdownDivider component that renders {@link Divider} with animation inside {@link Dropdown}.
+ */
+function DropdownDivider({ vertical, margins = 'mx-2', className, ...restProps }: DividerProps) {
   return (
     <motion.div
       variants={animateDropdownItem}
@@ -26,4 +25,4 @@ function DividerAnimated({ vertical, margins = 'mx-2', className, ...restProps }
   );
 }
 
-export default DividerAnimated;
+export default DropdownDivider;

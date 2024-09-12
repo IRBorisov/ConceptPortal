@@ -9,12 +9,19 @@ import Button from './Button';
 import Label from './Label';
 
 interface FileInputProps extends Omit<CProps.Input, 'accept' | 'type'> {
+  /** Label to display in file upload button. */
   label: string;
 
+  /** Filter: file types. */
   acceptType?: string;
+
+  /** Callback to set the `value`. Value is transmitted as `event.target.files[0]`. */
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
+/**
+ * FileInput component for selecting a `file`, displaying the selected file name.
+ */
 function FileInput({ id, label, acceptType, title, className, style, onChange, ...restProps }: FileInputProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [fileName, setFileName] = useState('');
