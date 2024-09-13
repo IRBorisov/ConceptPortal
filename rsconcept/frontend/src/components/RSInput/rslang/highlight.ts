@@ -1,7 +1,6 @@
 import { styleTags, tags } from '@lezer/highlight';
 
 export const highlighting = styleTags({
-  'Index': tags.unit,
   'ComplexIndex': tags.unit,
   'Literal': tags.literal,
 

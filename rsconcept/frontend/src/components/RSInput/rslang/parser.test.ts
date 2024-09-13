@@ -3,7 +3,7 @@ import { printTree } from '@/utils/codemirror';
 import { parser } from './parser';
 
 const testData = [
-  ['a1', '[Expression[Local[Index]]]'],
+  ['a1', '[Expression[Local]]'],
   ['A1', '[Expression[Global]]'],
   ['∅', '[Expression[Literal]]'],
   ['Z', '[Expression[Literal]]'],
@@ -15,7 +15,7 @@ const testData = [
   ['¬2=2', '[Expression[¬][Literal][=][Literal]]'],
   ['12+41', '[Expression[Literal][+][Literal]]'],
   ['1+2*5', '[Expression[Literal][+][Literal][*][Literal]]'],
-  ['a1∪Z', '[Expression[Local[Index]][∪][Literal]]'],
+  ['a1∪Z', '[Expression[Local][∪][Literal]]'],
   ['Pr1(X1)', '[Expression[TextFunction[ComplexIndex]][(][Global][)]]'],
   ['Pr11(X1)', '[Expression[TextFunction[ComplexIndex]][(][Global][)]]'],
   ['Pr11,21(X1)', '[Expression[TextFunction[ComplexIndex]][(][Global][)]]'],
@@ -41,8 +41,9 @@ const testData = [
   ['∀ξ∈∅ 1=1', '[Expression[∀][Local][∈][Literal][Literal][=][Literal]]'],
   [
     '∀ξ1∈β (ξ1≠∅ & ∀ξ2∈β ξ1∩ξ2=∅)',
-    '[Expression[∀][Local[Index]][∈][Local][(][Local[Index]][≠][Literal][&][∀][Local[Index]][∈][Local][Local[Index]][∩][Local[Index]][=][Literal][)]]'
-  ]
+    '[Expression[∀][Local][∈][Local][(][Local][≠][Literal][&][∀][Local][∈][Local][Local][∩][Local][=][Literal][)]]'
+  ],
+  ['∀α1∈α2 1=1', '[Expression[∀][Local][∈][Local][Literal][=][Literal]]']
 ];
 
 describe('Testing RSParser', () => {
