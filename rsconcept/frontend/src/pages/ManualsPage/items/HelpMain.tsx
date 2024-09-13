@@ -1,5 +1,3 @@
-import { urls } from '@/app/urls';
-import { IconLibrary2, IconManuals, IconUser2 } from '@/components/Icons';
 import LinkTopic from '@/components/ui/LinkTopic';
 import TextURL from '@/components/ui/TextURL';
 import { HelpTopic } from '@/models/miscellaneous';
@@ -21,20 +19,6 @@ function HelpMain() {
         обозначениями и формальными определениями. Концептуальные схемы могут быть получены в рамках операций синтеза в{' '}
         <LinkTopic text='Операционной схеме синтеза' topic={HelpTopic.CC_OSS} />.
       </p>
-
-      <h2>Разделы Портала</h2>
-      <li>
-        <IconLibrary2 size='1.25rem' className='inline-icon' /> <TextURL text='Библиотека' href={urls.library} /> –
-        библиотека концептуальных схем
-      </li>
-      <li>
-        <IconManuals size='1.25rem' className='inline-icon' /> <TextURL text='Справка' href={urls.manuals} /> –
-        справочные материалы
-      </li>
-      <li>
-        <IconUser2 size='1.25rem' className='inline-icon' /> <TextURL text='Профиль' href={urls.profile} /> – данные
-        пользователя и смена пароля
-      </li>
 
       <h2>Разделы Справки</h2>
       {[
