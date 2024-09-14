@@ -1,6 +1,6 @@
 'use client';
 
-import { RefObject, useCallback, useLayoutEffect, useMemo } from 'react';
+import { RefObject, useCallback, useLayoutEffect } from 'react';
 
 import GraphUI, {
   CollapseProps,
@@ -107,12 +107,8 @@ function TermGraph({
     setSelections(newSelections);
   }, [selectedIDs, setSelections, nodes]);
 
-  const canvasWidth = useMemo(() => {
-    return 'calc(100vw - 1rem)';
-  }, []);
-
   return (
-    <div className='relative outline-none' style={{ width: canvasWidth, height: mainHeight }}>
+    <div className='relative outline-none w-[100dvw]' style={{ height: mainHeight }}>
       <GraphUI
         nodes={nodes}
         edges={edges}

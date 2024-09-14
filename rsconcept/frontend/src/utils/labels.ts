@@ -315,7 +315,8 @@ export const mapLabelLayout = new Map<GraphLayout, string>([
 export const mapLabelColoring = new Map<GraphColoring, string>([
   ['none', 'Цвет: Моно'],
   ['status', 'Цвет: Статус'],
-  ['type', 'Цвет: Класс']
+  ['type', 'Цвет: Класс'],
+  ['schemas', 'Цвет: Схемы']
 ]);
 
 /**

@@ -126,7 +126,7 @@ class InheritanceDataSerializer(serializers.Serializer):
     ''' Serializer: inheritance data. '''
     child = serializers.IntegerField()
     child_source = serializers.IntegerField()
-    parent = serializers.IntegerField()
+    parent = serializers.IntegerField()  # type: ignore
     parent_source = serializers.IntegerField()
 
 

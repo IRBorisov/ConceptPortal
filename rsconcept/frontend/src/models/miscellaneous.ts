@@ -48,7 +48,7 @@ export interface OssNodeInternal {
 /**
  * Represents graph node coloring scheme.
  */
-export type GraphColoring = 'none' | 'status' | 'type';
+export type GraphColoring = 'none' | 'status' | 'type' | 'schemas';
 
 /**
  * Represents graph node sizing scheme.

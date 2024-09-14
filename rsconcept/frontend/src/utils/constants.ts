@@ -143,7 +143,8 @@ export const globals = {
   email_tooltip: 'email_tooltip',
   main_scroll: 'main_scroll',
   library_item_editor: 'library_item_editor',
-  constituenta_editor: 'constituenta_editor'
+  constituenta_editor: 'constituenta_editor',
+  graph_schemas: 'graph_schemas_tooltip'
 };
 
 /**
@@ -165,6 +166,7 @@ export const prefixes = {
   cst_source_list: 'cst_source_list_',
   cst_delete_list: 'cst_delete_list_',
   cst_dependant_list: 'cst_dependant_list_',
+  schemas_list: 'schemas_list_',
   operation_list: 'operation_list_',
   csttype_list: 'csttype_',
   policy_list: 'policy_list_',

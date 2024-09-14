@@ -60,10 +60,14 @@ export class RSFormLoader {
   }
 
   private inferCstAttributes() {
-    const parent_schemas = new Map<ConstituentaID, LibraryItemID>();
+    const schemaByCst = new Map<ConstituentaID, LibraryItemID>();
+    const parents: LibraryItemID[] = [];
     this.schema.inheritance.forEach(item => {
       if (item.child_source === this.schema.id) {
-        parent_schemas.set(item.child, item.parent_source);
+        schemaByCst.set(item.child, item.parent_source);
+        if (!parents.includes(item.parent_source)) {
+          parents.push(item.parent_source);
+        }
       }
     });
     const inherit_children = new Set(this.schema.inheritance.map(item => item.child));
@@ -75,7 +79,8 @@ export class RSFormLoader {
       cst.cst_class = inferClass(cst.cst_type, cst.is_template);
       cst.spawn = [];
       cst.spawn_alias = [];
-      cst.parent_schema = parent_schemas.get(cst.id);
+      cst.parent_schema = schemaByCst.get(cst.id);
+      cst.parent_schema_index = cst.parent_schema ? parents.indexOf(cst.parent_schema) + 1 : 0;
       cst.is_inherited = inherit_children.has(cst.id);
       cst.has_inherited_children = inherit_parents.has(cst.id);
       cst.is_simple_expression = this.inferSimpleExpression(cst);

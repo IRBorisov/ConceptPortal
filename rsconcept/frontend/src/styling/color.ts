@@ -417,6 +417,23 @@ export function colorBgCstClass(cstClass: CstClass, colors: IColorTheme): string
 }
 
 /**
+ * Determines background color for {@link IConstituenta} depending on its parent schema index.
+ */
+export function colorBgSchemas(schema_index: number, colors: IColorTheme): string {
+  if (schema_index === 0) {
+    return colors.bgGreen;
+  }
+  // prettier-ignore
+  switch (schema_index % 4) {
+    case 1: return colors.bgPurple;
+    case 2: return colors.bgOrange;
+    case 3: return colors.bgTeal;
+    case 0: return colors.bgBlue;
+  }
+  return colors.bgBlue;
+}
+
+/**
  * Determines background color for {@link GramData}.
  */
 export function colorBgGrammeme(gram: GramData, colors: IColorTheme): string {
@@ -461,6 +478,9 @@ export function colorBgGraphNode(cst: IConstituenta, coloringScheme: GraphColori
   }
   if (coloringScheme === 'status') {
     return colorBgCstStatus(cst.status, colors);
+  }
+  if (coloringScheme === 'schemas') {
+    return colorBgSchemas(cst.parent_schema_index, colors);
   }
   return '';
 }

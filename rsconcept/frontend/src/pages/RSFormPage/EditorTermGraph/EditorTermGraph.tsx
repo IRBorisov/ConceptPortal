@@ -261,6 +261,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
   const selectors = useMemo(
     () => (
       <GraphSelectors
+        schema={controller.schema}
         coloring={coloring}
         layout={layout}
         sizing={sizing}
@@ -269,7 +270,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
         setSizing={setSizing}
       />
     ),
-    [coloring, layout, sizing, handleChangeLayout, setColoring, setSizing]
+    [coloring, controller.schema, layout, sizing, handleChangeLayout, setColoring, setSizing]
   );
   const viewHidden = useMemo(
     () => (

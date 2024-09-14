@@ -132,6 +132,7 @@ export function createMockConstituenta(id: ConstituentaID, alias: string, commen
     definition_raw: '',
     definition_resolved: '',
     status: ExpressionStatus.INCORRECT,
+    parent_schema_index: 0,
     is_template: false,
     is_inherited: false,
     has_inherited_children: false,

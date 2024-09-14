@@ -4,8 +4,8 @@ import TextURL from '@/components/ui/TextURL';
 import Tooltip, { PlacesType } from '@/components/ui/Tooltip';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { HelpTopic } from '@/models/miscellaneous';
+import TopicPage from '@/pages/ManualsPage/TopicPage';
 
-import TopicPage from '../../pages/ManualsPage/TopicPage';
 import { IconHelp } from '../Icons';
 import { CProps } from '../props';
 

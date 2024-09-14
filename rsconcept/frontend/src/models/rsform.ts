@@ -111,6 +111,10 @@ export interface IConstituenta extends IConstituentaData {
   /** Indicates if this {@link IConstituenta} has a simple expression. */
   is_simple_expression: boolean;
 
+  /** Index of {@link LibraryItemID} that contains this cst (or inheritance parent).
+   *  0 - not inherited, 1 - inherited by 1st schema, 2 - inherited by 2nd schema, etc.
+   */
+  parent_schema_index: number;
   /** {@link LibraryItemID} that contains parent of this inherited {@link IConstituenta}. */
   parent_schema?: LibraryItemID;
   /** Indicates if this {@link IConstituenta} is inherited. */

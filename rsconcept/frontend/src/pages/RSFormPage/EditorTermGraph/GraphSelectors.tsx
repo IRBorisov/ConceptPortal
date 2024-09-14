@@ -3,10 +3,14 @@ import { GraphLayout } from '@/components/ui/GraphUI';
 import Overlay from '@/components/ui/Overlay';
 import SelectSingle from '@/components/ui/SelectSingle';
 import { GraphColoring, GraphSizing, HelpTopic } from '@/models/miscellaneous';
+import { IRSForm } from '@/models/rsform';
 import { mapLabelColoring, mapLabelLayout, mapLabelSizing } from '@/utils/labels';
 import { SelectorGraphColoring, SelectorGraphLayout, SelectorGraphSizing } from '@/utils/selectors';
 
+import SchemasGuide from './SchemasGuide';
+
 interface GraphSelectorsProps {
+  schema?: IRSForm;
   coloring: GraphColoring;
   layout: GraphLayout;
   sizing: GraphSizing;
@@ -16,7 +20,7 @@ interface GraphSelectorsProps {
   setSizing: (newValue: GraphSizing) => void;
 }
 
-function GraphSelectors({ coloring, setColoring, layout, setLayout, sizing, setSizing }: GraphSelectorsProps) {
+function GraphSelectors({ schema, coloring, setColoring, layout, setLayout, sizing, setSizing }: GraphSelectorsProps) {
   return (
     <div className='border rounded-b-none select-none clr-input rounded-t-md'>
       <SelectSingle
@@ -30,6 +34,7 @@ function GraphSelectors({ coloring, setColoring, layout, setLayout, sizing, setS
       <Overlay position='right-[2.5rem] top-[0.5rem]'>
         {coloring === 'status' ? <BadgeHelp topic={HelpTopic.UI_CST_STATUS} className='min-w-[25rem]' /> : null}
         {coloring === 'type' ? <BadgeHelp topic={HelpTopic.UI_CST_CLASS} className='min-w-[25rem]' /> : null}
+        {coloring === 'schemas' && !!schema ? <SchemasGuide schema={schema} /> : null}
       </Overlay>
       <SelectSingle
         className='my-1'
