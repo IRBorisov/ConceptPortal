@@ -249,7 +249,7 @@ function FormConstituenta({
                   icon={<IconSave size='1.25rem' />}
                 />
                 <Overlay position='top-[0.1rem] left-[0.4rem]' className='cc-icons'>
-                  {state.is_inherited_parent && !state.is_inherited ? (
+                  {state.has_inherited_children && !state.is_inherited ? (
                     <Indicator
                       icon={<IconPredecessor size='1.25rem' className='clr-text-primary' />}
                       titleHtml='Внимание!</br> Конституента имеет потомков<br/> в операционной схеме синтеза'

@@ -44,6 +44,6 @@ export function applyNodeSizing(target: IConstituenta, sizing: GraphSizing): num
   } else if (sizing === 'complex') {
     return target.is_simple_expression ? 1 : 2;
   } else {
-    return target.parent ? 1 : 2;
+    return target.spawner ? 1 : 2;
   }
 }

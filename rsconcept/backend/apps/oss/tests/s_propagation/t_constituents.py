@@ -57,6 +57,33 @@ class TestChangeConstituents(EndpointTester):
         self.ks3 = RSForm(self.operation3.result)
         self.assertEqual(self.ks3.constituents().count(), 4)
 
+    @decl_endpoint('/api/rsforms/{item}/details', method='get')
+    def test_retrieve_inheritance(self):
+        response = self.executeOK(item=self.ks3.model.pk)
+        self.assertEqual(response.data['oss'], [{'id': self.owned.model.pk, 'alias': 'T1'}])
+        self.assertEqual(response.data['inheritance'], [
+            {
+                'child': Constituenta.objects.get(as_child__parent_id=self.ks1X1.pk).pk,
+                'child_source': self.ks3.model.pk,
+                'parent': self.ks1X1.pk, 'parent_source': self.ks1.model.pk
+            },
+            {
+                'child': Constituenta.objects.get(as_child__parent_id=self.ks1X2.pk).pk,
+                'child_source': self.ks3.model.pk,
+                'parent': self.ks1X2.pk, 'parent_source': self.ks1.model.pk
+            },
+            {
+                'child': Constituenta.objects.get(as_child__parent_id=self.ks2X1.pk).pk,
+                'child_source': self.ks3.model.pk,
+                'parent': self.ks2X1.pk, 'parent_source': self.ks2.model.pk
+            },
+            {
+                'child': Constituenta.objects.get(as_child__parent_id=self.ks2D1.pk).pk,
+                'child_source': self.ks3.model.pk,
+                'parent': self.ks2D1.pk, 'parent_source': self.ks2.model.pk
+            },
+        ])
+
     @decl_endpoint('/api/rsforms/{schema}/create-cst', method='post')
     def test_create_constituenta(self):
         data = {

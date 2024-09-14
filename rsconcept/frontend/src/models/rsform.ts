@@ -101,16 +101,31 @@ export interface IConstituentaData extends IConstituentaMeta {
  * Represents Constituenta.
  */
 export interface IConstituenta extends IConstituentaData {
+  /** {@link CstClass} of this {@link IConstituenta}. */
   cst_class: CstClass;
+  /** {@link ExpressionStatus} of this {@link IConstituenta}. */
   status: ExpressionStatus;
+
+  /** Indicates if this {@link IConstituenta} is a template. */
   is_template: boolean;
+  /** Indicates if this {@link IConstituenta} has a simple expression. */
   is_simple_expression: boolean;
+
+  /** {@link LibraryItemID} that contains parent of this inherited {@link IConstituenta}. */
+  parent_schema?: LibraryItemID;
+  /** Indicates if this {@link IConstituenta} is inherited. */
   is_inherited: boolean;
-  is_inherited_parent: boolean;
-  parent?: ConstituentaID;
-  parent_alias?: string;
-  children: number[];
-  children_alias: string[];
+  /** Indicates if this {@link IConstituenta} has children that are inherited. */
+  has_inherited_children: boolean;
+
+  /** {@link IConstituenta} that spawned this one. */
+  spawner?: ConstituentaID;
+  /** Alias of {@link IConstituenta} that spawned this one. */
+  spawner_alias?: string;
+  /** List of {@link IConstituenta} that are spawned by this one. */
+  spawn: number[];
+  /** List of aliases of {@link IConstituenta} that are spawned by this one. */
+  spawn_alias: string[];
 }
 
 /**
@@ -199,11 +214,21 @@ export interface IRSFormStats {
 }
 
 /**
+ * Represents inheritance data for {@link IRSForm}.
+ */
+export interface IInheritanceData {
+  child: ConstituentaID;
+  child_source: LibraryItemID;
+  parent: ConstituentaID;
+  parent_source: LibraryItemID;
+}
+
+/**
  * Represents data for {@link IRSForm} provided by backend.
  */
 export interface IRSFormData extends ILibraryItemVersioned {
   items: IConstituentaData[];
-  inheritance: ConstituentaID[][];
+  inheritance: IInheritanceData[];
   oss: ILibraryItemReference[];
 }
 

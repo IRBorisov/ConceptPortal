@@ -117,9 +117,9 @@ export function inferClass(type: CstType, isTemplate: boolean = false): CstClass
 export function createMockConstituenta(id: ConstituentaID, alias: string, comment: string): IConstituenta {
   return {
     id: id,
-    parent: id,
-    children: [],
-    children_alias: [],
+    spawner: id,
+    spawn: [],
+    spawn_alias: [],
     is_simple_expression: false,
     schema: -1,
     alias: alias,
@@ -134,7 +134,7 @@ export function createMockConstituenta(id: ConstituentaID, alias: string, commen
     status: ExpressionStatus.INCORRECT,
     is_template: false,
     is_inherited: false,
-    is_inherited_parent: false,
+    has_inherited_children: false,
     cst_class: CstClass.DERIVED,
     parse: {
       status: ParsingStatus.INCORRECT,

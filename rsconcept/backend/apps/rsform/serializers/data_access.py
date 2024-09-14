@@ -17,7 +17,7 @@ from apps.oss.models import Inheritance
 from shared import messages as msg
 
 from ..models import Constituenta, CstType, RSForm
-from .basics import CstParseSerializer
+from .basics import CstParseSerializer, InheritanceDataSerializer
 from .io_pyconcept import PyConceptAdapter
 
 
@@ -103,7 +103,7 @@ class RSFormSerializer(serializers.ModelSerializer):
         child=CstSerializer()
     )
     inheritance = serializers.ListField(
-        child=serializers.ListField(child=serializers.IntegerField())
+        child=InheritanceDataSerializer()
     )
     oss = serializers.ListField(
         child=LibraryItemReferenceSerializer()
@@ -116,8 +116,17 @@ class RSFormSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance: LibraryItem) -> dict:
         result = self.to_base_data(instance)
-        for link in Inheritance.objects.filter(Q(child__schema=instance) | Q(parent__schema=instance)):
-            result['inheritance'].append([link.child.pk, link.parent.pk])
+        inheritances = Inheritance.objects \
+            .filter(Q(child__schema=instance) | Q(parent__schema=instance)) \
+            .select_related('parent__schema', 'child__schema') \
+            .only('parent__id', 'parent__schema__id', 'child__id', 'child__schema__id')
+        for link in inheritances:
+            result['inheritance'].append({
+                'child': link.child_id,
+                'child_source': link.child.schema_id,
+                'parent': link.parent_id,
+                'parent_source': link.parent.schema_id
+            })
         return result
 
     def to_base_data(self, instance: LibraryItem) -> dict:

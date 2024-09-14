@@ -39,16 +39,16 @@ function InfoConstituenta({ data, className, ...restProps }: InfoConstituentaPro
           {data.definition_resolved}
         </p>
       ) : null}
-      {data.parent_alias ? (
+      {data.spawner_alias ? (
         <p>
           <b>Основание: </b>
-          {data.parent_alias}
+          {data.spawner_alias}
         </p>
       ) : null}
-      {data.children_alias.length > 0 ? (
+      {data.spawn_alias.length > 0 ? (
         <p>
           <b>Порождает: </b>
-          {data.children_alias.join(', ')}
+          {data.spawn_alias.join(', ')}
         </p>
       ) : null}
       {data.convention ? (

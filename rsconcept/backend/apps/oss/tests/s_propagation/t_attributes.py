@@ -58,7 +58,6 @@ class TestChangeAttributes(EndpointTester):
         self.operation3.refresh_from_db()
         self.ks3 = RSForm(self.operation3.result)
 
-
     @decl_endpoint('/api/library/{item}/set-owner', method='patch')
     def test_set_owner(self):
         data = {'user': self.user3.pk}

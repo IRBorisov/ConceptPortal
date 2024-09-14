@@ -215,15 +215,15 @@ export function domTooltipConstituenta(cst?: IConstituenta, canClick?: boolean):
       dom.appendChild(convention);
     }
 
-    if (cst.parent_alias) {
+    if (cst.spawner_alias) {
       const derived = document.createElement('p');
-      derived.innerHTML = `<b>Основание:</b> ${cst.parent_alias}`;
+      derived.innerHTML = `<b>Основание:</b> ${cst.spawner_alias}`;
       dom.appendChild(derived);
     }
 
-    if (cst.children_alias.length > 0) {
+    if (cst.spawn_alias.length > 0) {
       const children = document.createElement('p');
-      children.innerHTML = `<b>Порождает:</b> ${cst.children_alias.join(', ')}`;
+      children.innerHTML = `<b>Порождает:</b> ${cst.spawn_alias.join(', ')}`;
       dom.appendChild(children);
     }
 

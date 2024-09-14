@@ -4,6 +4,7 @@ from .basics import (
     ASTNodeSerializer,
     ExpressionParseSerializer,
     ExpressionSerializer,
+    InheritanceDataSerializer,
     MultiFormSerializer,
     ResolverSerializer,
     TextSerializer,

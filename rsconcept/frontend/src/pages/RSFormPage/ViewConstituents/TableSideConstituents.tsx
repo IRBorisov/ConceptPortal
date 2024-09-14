@@ -109,13 +109,13 @@ function TableSideConstituents({
         }
       },
       {
-        when: (cst: IConstituenta) => !!activeCst && cst.parent === activeCst?.id && cst.id !== activeCst?.id,
+        when: (cst: IConstituenta) => !!activeCst && cst.spawner === activeCst?.id && cst.id !== activeCst?.id,
         style: {
           backgroundColor: colors.bgOrange50
         }
       },
       {
-        when: (cst: IConstituenta) => activeCst?.id !== undefined && cst.children.includes(activeCst.id),
+        when: (cst: IConstituenta) => activeCst?.id !== undefined && cst.spawn.includes(activeCst.id),
         style: {
           backgroundColor: colors.bgGreen50
         }

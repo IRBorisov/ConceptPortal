@@ -45,7 +45,7 @@ function useGraphFilter(schema: IRSForm | undefined, params: GraphFilterParams, 
     }
     if (!focusCst && params.foldDerived) {
       schema.items.forEach(cst => {
-        if (cst.parent) {
+        if (cst.spawner) {
           graph.foldNode(cst.id);
         }
       });
@@ -53,7 +53,7 @@ function useGraphFilter(schema: IRSForm | undefined, params: GraphFilterParams, 
     if (focusCst) {
       const includes: ConstituentaID[] = [
         focusCst.id,
-        ...focusCst.children,
+        ...focusCst.spawn,
         ...(params.focusShowInputs ? schema.graph.expandInputs([focusCst.id]) : []),
         ...(params.focusShowOutputs ? schema.graph.expandOutputs([focusCst.id]) : [])
       ];

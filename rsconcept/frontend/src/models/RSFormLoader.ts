@@ -3,6 +3,7 @@
  */
 
 import { Graph } from './Graph';
+import { LibraryItemID } from './library';
 import { ConstituentaID, CstType, IConstituenta, IRSForm, IRSFormData, IRSFormStats } from './rsform';
 import { inferClass, inferStatus, inferTemplate, isBaseSet, isFunctional } from './rsformAPI';
 import { ParsingStatus, ValueClass } from './rslang';
@@ -59,27 +60,34 @@ export class RSFormLoader {
   }
 
   private inferCstAttributes() {
-    const inherit_children = new Set(this.schema.inheritance.map(item => item[0]));
-    const inherit_parents = new Set(this.schema.inheritance.map(item => item[1]));
+    const parent_schemas = new Map<ConstituentaID, LibraryItemID>();
+    this.schema.inheritance.forEach(item => {
+      if (item.child_source === this.schema.id) {
+        parent_schemas.set(item.child, item.parent_source);
+      }
+    });
+    const inherit_children = new Set(this.schema.inheritance.map(item => item.child));
+    const inherit_parents = new Set(this.schema.inheritance.map(item => item.parent));
     this.graph.topologicalOrder().forEach(cstID => {
       const cst = this.cstByID.get(cstID)!;
       cst.status = inferStatus(cst.parse.status, cst.parse.valueClass);
       cst.is_template = inferTemplate(cst.definition_formal);
       cst.cst_class = inferClass(cst.cst_type, cst.is_template);
-      cst.children = [];
-      cst.children_alias = [];
+      cst.spawn = [];
+      cst.spawn_alias = [];
+      cst.parent_schema = parent_schemas.get(cst.id);
       cst.is_inherited = inherit_children.has(cst.id);
-      cst.is_inherited_parent = inherit_parents.has(cst.id);
+      cst.has_inherited_children = inherit_parents.has(cst.id);
       cst.is_simple_expression = this.inferSimpleExpression(cst);
       if (!cst.is_simple_expression || cst.cst_type === CstType.STRUCTURED) {
         return;
       }
-      cst.parent = this.inferParent(cst);
-      if (cst.parent) {
-        const parent = this.cstByID.get(cst.parent)!;
-        cst.parent_alias = parent.alias;
-        parent.children.push(cst.id);
-        parent.children_alias.push(cst.alias);
+      cst.spawner = this.inferParent(cst);
+      if (cst.spawner) {
+        const parent = this.cstByID.get(cst.spawner)!;
+        cst.spawner_alias = parent.alias;
+        parent.spawn.push(cst.id);
+        parent.spawn_alias.push(cst.alias);
       }
     });
   }
@@ -107,7 +115,7 @@ export class RSFormLoader {
     if (sources.size !== 1 || sources.has(target.id)) {
       return undefined;
     }
-    const parent_id = sources.values().next().value as ConstituentaID;
+    const parent_id = sources.values().next().value!;
     const parent = this.cstByID.get(parent_id);
     if (parent && isBaseSet(parent.cst_type)) {
       return undefined;
@@ -122,7 +130,7 @@ export class RSFormLoader {
       node.inputs.forEach(id => {
         const parent = this.cstByID.get(id)!;
         if (!parent.is_template || !parent.is_simple_expression) {
-          sources.add(parent.parent ?? id);
+          sources.add(parent.spawner ?? id);
         }
       });
       return sources;
@@ -133,7 +141,7 @@ export class RSFormLoader {
     bodyDependencies.forEach(alias => {
       const parent = this.cstByAlias.get(alias);
       if (parent && (!parent.is_template || !parent.is_simple_expression)) {
-        sources.add(this.cstByID.get(parent.id)!.parent ?? parent.id);
+        sources.add(this.cstByID.get(parent.id)!.spawner ?? parent.id);
       }
     });
     const needCheckHead = () => {
@@ -142,7 +150,7 @@ export class RSFormLoader {
       } else if (sources.size !== 1) {
         return false;
       } else {
-        const base = this.cstByID.get(sources.values().next().value as ConstituentaID)!;
+        const base = this.cstByID.get(sources.values().next().value!)!;
         return !isFunctional(base.cst_type) || splitTemplateDefinition(base.definition_formal).head !== expression.head;
       }
     };
@@ -151,7 +159,7 @@ export class RSFormLoader {
       headDependencies.forEach(alias => {
         const parent = this.cstByAlias.get(alias);
         if (parent && !isBaseSet(parent.cst_type) && (!parent.is_template || !parent.is_simple_expression)) {
-          sources.add(parent.parent ?? parent.id);
+          sources.add(parent.spawner ?? parent.id);
         }
       });
     }

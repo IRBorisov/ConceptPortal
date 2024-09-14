@@ -122,6 +122,14 @@ class ReferenceSerializer(serializers.Serializer):
     pos_output = TextPositionSerializer()
 
 
+class InheritanceDataSerializer(serializers.Serializer):
+    ''' Serializer: inheritance data. '''
+    child = serializers.IntegerField()
+    child_source = serializers.IntegerField()
+    parent = serializers.IntegerField()
+    parent_source = serializers.IntegerField()
+
+
 class ResolverSerializer(serializers.Serializer):
     ''' Serializer: Resolver results serializer. '''
     input = serializers.CharField()
