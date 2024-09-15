@@ -96,15 +96,20 @@ function ToolbarSearch({
     <div
       className={clsx(
         'sticky top-0', // prettier: split lines
-        'w-full h-[2.2rem]',
-        'flex items-center',
+        'h-[2.2rem]',
+        'flex items-center gap-3',
         'border-b',
         'text-sm',
         'clr-input'
       )}
     >
       <div
-        className={clsx('px-3 pt-1 self-center', 'min-w-[6rem] sm:min-w-[7rem]', 'select-none', 'whitespace-nowrap')}
+        className={clsx(
+          'ml-3 pt-1 self-center',
+          'min-w-[4.5rem] sm:min-w-[5.5rem]',
+          'select-none',
+          'whitespace-nowrap'
+        )}
       >
         {filtered} из {total}
       </div>
@@ -138,7 +143,7 @@ function ToolbarSearch({
         </div>
       ) : null}
 
-      <div className='flex items-center h-full mx-auto'>
+      <div className='flex h-full'>
         <SearchBar
           id='library_search'
           placeholder='Поиск'

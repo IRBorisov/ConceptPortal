@@ -1,13 +1,25 @@
 import { useCallback } from 'react';
 import { useIntl } from 'react-intl';
 
-import { IconDateCreate, IconDateUpdate, IconEditor, IconFolder, IconOwner } from '@/components/Icons';
+import { urls } from '@/app/urls';
+import {
+  IconDateCreate,
+  IconDateUpdate,
+  IconEditor,
+  IconFolderEdit,
+  IconFolderOpened,
+  IconOwner
+} from '@/components/Icons';
 import InfoUsers from '@/components/info/InfoUsers';
+import { CProps } from '@/components/props';
 import SelectUser from '@/components/select/SelectUser';
+import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import Tooltip from '@/components/ui/Tooltip';
 import ValueIcon from '@/components/ui/ValueIcon';
 import { useAccessMode } from '@/context/AccessModeContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
+import { useConceptNavigation } from '@/context/NavigationContext';
 import { useUsers } from '@/context/UsersContext';
 import useDropdown from '@/hooks/useDropdown';
 import { ILibraryItemData, ILibraryItemEditor } from '@/models/library';
@@ -25,6 +37,8 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
   const { getUserLabel, users } = useUsers();
   const { accessLevel } = useAccessMode();
   const intl = useIntl();
+  const router = useConceptNavigation();
+  const options = useConceptOptions();
 
   const ownerSelector = useDropdown();
   const onSelectUser = useCallback(
@@ -41,20 +55,43 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
     [controller, item?.owner, ownerSelector]
   );
 
+  const handleOpenLibrary = useCallback(
+    (event: CProps.EventMouse) => {
+      if (!item) {
+        return;
+      }
+      options.setLocation(item.location);
+      options.setFolderMode(true);
+      router.push(urls.library, event.ctrlKey || event.metaKey);
+    },
+    [options.setLocation, options.setFolderMode, item, router]
+  );
+
   if (!item) {
     return null;
   }
 
   return (
     <div className='flex flex-col'>
-      <ValueIcon
-        className='sm:mb-1 text-ellipsis max-w-[30rem]'
-        icon={<IconFolder size='1.25rem' className='icon-primary' />}
-        value={item.location}
-        title={controller.isAttachedToOSS ? 'Путь наследуется от ОСС' : 'Путь'}
-        onClick={controller.promptLocation}
-        disabled={isModified || controller.isProcessing || controller.isAttachedToOSS || accessLevel < UserLevel.OWNER}
-      />
+      <div className='flex justify-stretch sm:mb-1 max-w-[30rem] gap-3'>
+        <MiniButton
+          noHover
+          noPadding
+          title='Открыть в библиотеке'
+          icon={<IconFolderOpened size='1.25rem' className='icon-primary' />}
+          onClick={handleOpenLibrary}
+        />
+        <ValueIcon
+          className='text-ellipsis flex-grow'
+          icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
+          value={item.location}
+          title={controller.isAttachedToOSS ? 'Путь наследуется от ОСС' : 'Путь'}
+          onClick={controller.promptLocation}
+          disabled={
+            isModified || controller.isProcessing || controller.isAttachedToOSS || accessLevel < UserLevel.OWNER
+          }
+        />
+      </div>
 
       {ownerSelector.isOpen ? (
         <Overlay position='top-[-0.5rem] left-[2.5rem] cc-icons'>

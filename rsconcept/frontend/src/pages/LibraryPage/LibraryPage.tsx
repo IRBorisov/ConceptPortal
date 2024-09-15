@@ -10,6 +10,7 @@ import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import DataLoader from '@/components/wrap/DataLoader';
 import { useAuth } from '@/context/AuthContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useLibrary } from '@/context/LibraryContext';
 import DlgChangeLocation from '@/dialogs/DlgChangeLocation';
 import useLocalStorage from '@/hooks/useLocalStorage';
@@ -27,14 +28,13 @@ function LibraryPage() {
   const library = useLibrary();
   const { user } = useAuth();
   const [items, setItems] = useState<ILibraryItem[]>([]);
+  const options = useConceptOptions();
 
   const [query, setQuery] = useState('');
   const [path, setPath] = useState('');
 
   const [head, setHead] = useLocalStorage<LocationHead | undefined>(storage.librarySearchHead, undefined);
-  const [folderMode, setFolderMode] = useLocalStorage<boolean>(storage.librarySearchFolderMode, true);
   const [subfolders, setSubfolders] = useLocalStorage<boolean>(storage.librarySearchSubfolders, false);
-  const [location, setLocation] = useLocalStorage<string>(storage.librarySearchLocation, '');
   const [isVisible, setIsVisible] = useLocalStorage<boolean | undefined>(storage.librarySearchVisible, true);
   const [isOwned, setIsOwned] = useLocalStorage<boolean | undefined>(storage.librarySearchEditor, undefined);
   const [isEditor, setIsEditor] = useLocalStorage<boolean | undefined>(storage.librarySearchEditor, undefined);
@@ -48,11 +48,11 @@ function LibraryPage() {
       isEditor: user ? isEditor : undefined,
       isOwned: user ? isOwned : undefined,
       isVisible: user ? isVisible : true,
-      folderMode: folderMode,
+      folderMode: options.folderMode,
       subfolders: subfolders,
-      location: location
+      location: options.location
     }),
-    [head, path, query, isEditor, isOwned, isVisible, user, folderMode, location, subfolders]
+    [head, path, query, isEditor, isOwned, isVisible, user, options.folderMode, options.location, subfolders]
   );
 
   const hasCustomFilter = useMemo(
@@ -74,7 +74,7 @@ function LibraryPage() {
   const toggleVisible = useCallback(() => setIsVisible(prev => toggleTristateFlag(prev)), [setIsVisible]);
   const toggleOwned = useCallback(() => setIsOwned(prev => toggleTristateFlag(prev)), [setIsOwned]);
   const toggleEditor = useCallback(() => setIsEditor(prev => toggleTristateFlag(prev)), [setIsEditor]);
-  const toggleFolderMode = useCallback(() => setFolderMode(prev => !prev), [setFolderMode]);
+  const toggleFolderMode = useCallback(() => options.setFolderMode(prev => !prev), [options.setFolderMode]);
   const toggleSubfolders = useCallback(() => setSubfolders(prev => !prev), [setSubfolders]);
 
   const resetFilter = useCallback(() => {
@@ -84,8 +84,8 @@ function LibraryPage() {
     setIsVisible(true);
     setIsOwned(undefined);
     setIsEditor(undefined);
-    setLocation('');
-  }, [setHead, setIsVisible, setIsOwned, setIsEditor, setLocation]);
+    options.setLocation('');
+  }, [setHead, setIsVisible, setIsOwned, setIsEditor, options.setLocation]);
 
   const promptRenameLocation = useCallback(() => {
     setShowRenameLocation(true);
@@ -94,11 +94,11 @@ function LibraryPage() {
   const handleRenameLocation = useCallback(
     (newLocation: string) => {
       const data: IRenameLocationData = {
-        target: location,
+        target: options.location,
         new_location: newLocation
       };
       library.renameLocation(data, () => {
-        setLocation(newLocation);
+        options.setLocation(newLocation);
         toast.success(information.locationRenamed);
       });
     },
@@ -123,18 +123,18 @@ function LibraryPage() {
       <TableLibraryItems
         resetQuery={resetFilter}
         items={items}
-        folderMode={folderMode}
+        folderMode={options.folderMode}
         toggleFolderMode={toggleFolderMode}
       />
     ),
-    [resetFilter, items, folderMode, toggleFolderMode]
+    [resetFilter, items, options.folderMode, toggleFolderMode]
   );
 
   const viewLocations = useMemo(
     () => (
       <ViewSideLocation
-        active={location}
-        setActive={setLocation}
+        active={options.location}
+        setActive={options.setLocation}
         subfolders={subfolders}
         folderTree={library.folders}
         toggleFolderMode={toggleFolderMode}
@@ -142,7 +142,7 @@ function LibraryPage() {
         onRenameLocation={promptRenameLocation}
       />
     ),
-    [location, library.folders, setLocation, toggleFolderMode, subfolders]
+    [options.location, library.folders, options.setLocation, toggleFolderMode, subfolders]
   );
 
   return (
@@ -154,12 +154,16 @@ function LibraryPage() {
     >
       {showRenameLocation ? (
         <DlgChangeLocation
-          initial={location}
+          initial={options.location}
           onChangeLocation={handleRenameLocation}
           hideWindow={() => setShowRenameLocation(false)}
         />
       ) : null}
-      <Overlay position='top-[0.25rem] right-0' layer='z-tooltip'>
+      <Overlay
+        position={options.noNavigation ? 'top-[0.25rem] right-[3rem]' : 'top-[0.25rem] right-0'}
+        layer='z-tooltip'
+        className='transition-all'
+      >
         <MiniButton
           title='Выгрузить в формате CSV'
           icon={<IconCSV size='1.25rem' className='icon-green' />}
@@ -183,12 +187,12 @@ function LibraryPage() {
         isEditor={isEditor}
         toggleEditor={toggleEditor}
         resetFilter={resetFilter}
-        folderMode={folderMode}
+        folderMode={options.folderMode}
         toggleFolderMode={toggleFolderMode}
       />
 
       <div className='flex'>
-        <AnimatePresence initial={false}>{folderMode ? viewLocations : null}</AnimatePresence>
+        <AnimatePresence initial={false}>{options.folderMode ? viewLocations : null}</AnimatePresence>
         {viewLibrary}
       </div>
     </DataLoader>

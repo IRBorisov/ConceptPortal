@@ -20,17 +20,18 @@ import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
 import { useAuth } from '@/context/AuthContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useLibrary } from '@/context/LibraryContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
-import useLocalStorage from '@/hooks/useLocalStorage';
 import { AccessPolicy, LibraryItemType, LocationHead } from '@/models/library';
 import { ILibraryCreateData } from '@/models/library';
 import { combineLocation, validateLocation } from '@/models/libraryAPI';
-import { EXTEOR_TRS_FILE, storage } from '@/utils/constants';
+import { EXTEOR_TRS_FILE } from '@/utils/constants';
 import { information } from '@/utils/labels';
 
 function FormCreateItem() {
   const router = useConceptNavigation();
+  const options = useConceptOptions();
   const { user } = useAuth();
   const { createItem, processingError, setProcessingError, processing, folders } = useLibrary();
 
@@ -46,7 +47,6 @@ function FormCreateItem() {
 
   const location = useMemo(() => combineLocation(head, body), [head, body]);
   const isValid = useMemo(() => validateLocation(location), [location]);
-  const [initLocation, setInitLocation] = useLocalStorage<string>(storage.librarySearchLocation, '');
 
   const [fileName, setFileName] = useState('');
   const [file, setFile] = useState<File | undefined>();
@@ -81,7 +81,7 @@ function FormCreateItem() {
       file: file,
       fileName: file?.name
     };
-    setInitLocation(location);
+    options.setLocation(location);
     createItem(data, newItem => {
       toast.success(information.newLibraryItem);
       if (itemType == LibraryItemType.RSFORM) {
@@ -108,11 +108,11 @@ function FormCreateItem() {
   }, []);
 
   useLayoutEffect(() => {
-    if (!initLocation) {
+    if (!options.location) {
       return;
     }
-    handleSelectLocation(initLocation);
-  }, [initLocation, handleSelectLocation]);
+    handleSelectLocation(options.location);
+  }, [options.location, handleSelectLocation]);
 
   useLayoutEffect(() => {
     if (itemType !== LibraryItemType.RSFORM) {

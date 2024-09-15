@@ -34,6 +34,12 @@ interface IOptionsContext {
   showHelp: boolean;
   toggleShowHelp: () => void;
 
+  folderMode: boolean;
+  setFolderMode: React.Dispatch<React.SetStateAction<boolean>>;
+
+  location: string;
+  setLocation: React.Dispatch<React.SetStateAction<string>>;
+
   calculateHeight: (offset: string, minimum?: string) => string;
 }
 
@@ -55,6 +61,9 @@ export const OptionsState = ({ children }: OptionsStateProps) => {
   const [adminMode, setAdminMode] = useLocalStorage(storage.optionsAdmin, false);
   const [showHelp, setShowHelp] = useLocalStorage(storage.optionsHelp, true);
   const [noNavigation, setNoNavigation] = useState(false);
+
+  const [folderMode, setFolderMode] = useLocalStorage<boolean>(storage.librarySearchFolderMode, true);
+  const [location, setLocation] = useLocalStorage<string>(storage.librarySearchLocation, '');
 
   const [colors, setColors] = useState<IColorTheme>(lightT);
 
@@ -131,6 +140,10 @@ export const OptionsState = ({ children }: OptionsStateProps) => {
         noNavigationAnimation,
         noNavigation,
         noFooter,
+        folderMode,
+        setFolderMode,
+        location,
+        setLocation,
         showScroll,
         showHelp,
         toggleDarkMode: toggleDarkMode,
