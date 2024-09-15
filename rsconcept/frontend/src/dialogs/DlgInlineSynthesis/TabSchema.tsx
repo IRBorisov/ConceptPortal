@@ -23,7 +23,15 @@ function TabSchema({ selected, receiver, setSelected }: TabSchemaProps) {
 
   return (
     <AnimateFade className='flex flex-col'>
-      <div className='flex items-center gap-6'>
+      <PickSchema
+        id='dlg_schema_picker' // prettier: split lines
+        items={sortedItems}
+        itemType={LibraryItemType.RSFORM}
+        rows={14}
+        value={selected}
+        onSelectValue={setSelected}
+      />
+      <div className='flex items-center gap-6 '>
         <span className='select-none'>Выбрана</span>
         <TextInput
           id='dlg_selected_schema_title'
@@ -35,14 +43,6 @@ function TabSchema({ selected, receiver, setSelected }: TabSchemaProps) {
           dense
         />
       </div>
-      <PickSchema
-        id='dlg_schema_picker' // prettier: split lines
-        items={sortedItems}
-        itemType={LibraryItemType.RSFORM}
-        rows={14}
-        value={selected}
-        onSelectValue={setSelected}
-      />
     </AnimateFade>
   );
 }
