@@ -301,12 +301,13 @@ export const OssState = ({ itemID, children }: OssStateProps) => {
         onError: setProcessingError,
         onSuccess: newData => {
           oss.setData(newData);
-          library.localUpdateTimestamp(newData.id);
-          if (callback) callback();
+          library.reloadItems(() => {
+            if (callback) callback();
+          });
         }
       });
     },
-    [itemID, model, library.localUpdateTimestamp, oss.setData]
+    [itemID, model, library.reloadItems, oss.setData]
   );
 
   const updateOperation = useCallback(

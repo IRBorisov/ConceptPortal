@@ -85,6 +85,11 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
     controller.share();
   }
 
+  function handleCreateVersion() {
+    schemaMenu.hide();
+    controller.createVersion();
+  }
+
   function handleReindex() {
     editMenu.hide();
     controller.reindex();
@@ -161,7 +166,7 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
           <DropdownButton
             text='Сохранить версию'
             disabled={!controller.isContentEditable}
-            onClick={controller.createVersion}
+            onClick={handleCreateVersion}
             icon={<IconNewVersion size='1rem' className='icon-green' />}
           />
           <DropdownButton

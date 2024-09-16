@@ -39,7 +39,7 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
       canSubmit={validated}
       onSubmit={handleSubmit}
       submitText='Создать'
-      className='cc-column w-[35rem] h-[30rem] py-2 px-6'
+      className='cc-column w-[35rem] max-h-[30rem] py-2 px-6'
     >
       <FormCreateCst schema={schema} state={cstData} partialUpdate={updateCstData} setValidated={setValidated} />
     </Modal>
