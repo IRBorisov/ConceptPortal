@@ -48,7 +48,8 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
   const [isCorrect, setIsCorrect] = useState(true);
   const [validationText, setValidationText] = useState('');
 
-  const [inputs, setInputs] = useState<OperationID[]>(oss.graph.expandInputs([target.id]));
+  const initialInputs = useMemo(() => oss.graph.expandInputs([target.id]), [oss.graph, target.id]);
+  const [inputs, setInputs] = useState<OperationID[]>(initialInputs);
   const inputOperations = useMemo(() => inputs.map(id => oss.operationByID.get(id)!), [inputs, oss.operationByID]);
   const schemasIDs = useMemo(
     () => inputOperations.map(operation => operation.result).filter(id => id !== null),
@@ -64,7 +65,28 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
     [schemasIDs, cache.getSchema]
   );
 
-  const canSubmit = useMemo(() => alias !== '', [alias]);
+  const isModified = useMemo(
+    () =>
+      alias !== target.alias ||
+      title !== target.title ||
+      comment !== target.comment ||
+      JSON.stringify(initialInputs) !== JSON.stringify(inputs) ||
+      JSON.stringify(substitutions) !== JSON.stringify(target.substitutions),
+    [
+      alias,
+      title,
+      comment,
+      target.alias,
+      target.title,
+      target.comment,
+      initialInputs,
+      inputs,
+      substitutions,
+      target.substitutions
+    ]
+  );
+
+  const canSubmit = useMemo(() => isModified && alias !== '', [isModified, alias]);
 
   useLayoutEffect(() => {
     cache.preload(schemasIDs);
