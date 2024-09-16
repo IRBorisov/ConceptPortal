@@ -45,7 +45,7 @@ function DlgCreateOperation({ hideWindow, oss, onCreate, initialInputs }: DlgCre
     if (alias === '') {
       return false;
     }
-    if (activeTab === TabID.SYNTHESIS && inputs.length === 1) {
+    if (activeTab === TabID.SYNTHESIS && inputs.length === 0) {
       return false;
     }
     if (activeTab === TabID.INPUT && !attachedID) {

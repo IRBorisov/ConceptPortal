@@ -50,7 +50,7 @@ function NodeContextMenu({
     }
 
     const argumentIDs = controller.schema.graph.expandInputs([operation.id]);
-    if (!argumentIDs || argumentIDs.length < 2) {
+    if (!argumentIDs || argumentIDs.length < 1) {
       return false;
     }
 

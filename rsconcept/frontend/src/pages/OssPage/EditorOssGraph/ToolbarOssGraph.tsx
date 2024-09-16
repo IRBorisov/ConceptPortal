@@ -76,7 +76,7 @@ function ToolbarOssGraph({
     }
 
     const argumentIDs = controller.schema.graph.expandInputs([selectedOperation.id]);
-    if (!argumentIDs || argumentIDs.length < 2) {
+    if (!argumentIDs || argumentIDs.length < 1) {
       return false;
     }
 

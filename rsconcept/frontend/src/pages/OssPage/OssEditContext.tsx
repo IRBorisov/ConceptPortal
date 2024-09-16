@@ -36,8 +36,8 @@ import { errors, information } from '@/utils/labels';
 import { RSTabID } from '../RSFormPage/RSTabs';
 
 export interface ICreateOperationPrompt {
-  x: number;
-  y: number;
+  defaultX: number;
+  defaultY: number;
   inputs: OperationID[];
   positions: IOperationPosition[];
   callback: (newID: OperationID) => void;
@@ -221,19 +221,58 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
     [model]
   );
 
-  const promptCreateOperation = useCallback(({ x, y, inputs, positions, callback }: ICreateOperationPrompt) => {
-    setInsertPosition({ x: x, y: y });
-    setInitialInputs(inputs);
-    setPositions(positions);
-    setCreateCallback(() => callback);
-    setShowCreateOperation(true);
-  }, []);
+  const promptCreateOperation = useCallback(
+    ({ defaultX, defaultY, inputs, positions, callback }: ICreateOperationPrompt) => {
+      setInsertPosition({ x: defaultX, y: defaultY });
+      setInitialInputs(inputs);
+      setPositions(positions);
+      setCreateCallback(() => callback);
+      setShowCreateOperation(true);
+    },
+    []
+  );
 
   const handleCreateOperation = useCallback(
     (data: IOperationCreateData) => {
+      const target = insertPosition;
+      if (data.item_data.operation_type === OperationType.INPUT) {
+        let inputsNodes = positions.filter(pos =>
+          model.schema!.items.find(
+            operation => operation.operation_type === OperationType.INPUT && operation.id === pos.id
+          )
+        );
+        if (inputsNodes.length > 0) {
+          inputsNodes = positions;
+        }
+        const maxX = Math.max(...inputsNodes.map(node => node.position_x));
+        const minY = Math.min(...inputsNodes.map(node => node.position_y));
+        target.x = maxX + PARAMETER.ossDistanceX;
+        target.y = minY;
+      } else {
+        const argNodes = positions.filter(pos => data.arguments!.includes(pos.id));
+        const maxY = Math.max(...argNodes.map(node => node.position_y));
+        const minX = Math.min(...argNodes.map(node => node.position_x));
+        const maxX = Math.max(...argNodes.map(node => node.position_x));
+        target.x = Math.ceil((maxX + minX) / 2 / PARAMETER.ossGridSize) * PARAMETER.ossGridSize;
+        target.y = maxY + PARAMETER.ossDistanceY;
+      }
+
+      let flagIntersect = false;
+      do {
+        flagIntersect = positions.some(
+          position =>
+            Math.abs(position.position_x - target.x) < PARAMETER.ossMinDistance &&
+            Math.abs(position.position_y - target.y) < PARAMETER.ossMinDistance
+        );
+        if (flagIntersect) {
+          target.x += PARAMETER.ossMinDistance;
+          target.y += PARAMETER.ossMinDistance;
+        }
+      } while (flagIntersect);
+
       data.positions = positions;
-      data.item_data.position_x = insertPosition.x;
-      data.item_data.position_y = insertPosition.y;
+      data.item_data.position_x = target.x;
+      data.item_data.position_y = target.y;
       model.createOperation(data, operation => {
         toast.success(information.newOperation(operation.alias));
         if (createCallback) {
