@@ -12,6 +12,7 @@ import { ISyntaxTreeNode, TokenID } from '@/models/rslang';
  */
 export interface IColorTheme {
   bgDefault: string;
+  bgBlur: string;
   bgInput: string;
   bgControls: string;
   bgDisabled: string;
@@ -52,6 +53,7 @@ export interface IColorTheme {
 // prettier-ignore
 export const lightT: IColorTheme = {
   bgDefault:  'hsl(000, 000%, 098%)', //var(--cl-bg-100)',
+  bgBlur:     'hsla(000, 000%, 098%, 0.8)',
   bgInput:    'var(--cl-bg-120)',
   bgControls: 'var(--cl-bg-80)',
   bgDisabled: 'var(--cl-bg-60)',
@@ -92,6 +94,7 @@ export const lightT: IColorTheme = {
 // prettier-ignore
 export const darkT: IColorTheme = {
   bgDefault:  'hsl(000, 000%, 005%)', //'var(--cd-bg-100)',
+  bgBlur:     'hsla(000, 000%, 005%, 0.3)',
   bgInput:    'var(--cd-bg-120)',
   bgControls: 'var(--cd-bg-80)',
   bgDisabled: 'var(--cd-bg-60)',

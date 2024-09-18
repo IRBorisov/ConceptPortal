@@ -53,11 +53,19 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
   const handleHoverOut = useCallback(() => setHoverID(undefined), []);
 
   return (
-    <Modal readonly hideWindow={hideWindow} className='px-6'>
-      <Overlay position='left-[-1rem] top-[0.25rem]'>
+    <Modal
+      readonly
+      hideWindow={hideWindow}
+      className='flex flex-col justify-stretch w-[calc(100dvw-3rem)] h-[calc(100dvh-6rem)]'
+    >
+      <Overlay position='left-[0.5rem] top-[0.25rem]'>
         <BadgeHelp topic={HelpTopic.UI_FORMULA_TREE} className={PARAMETER.TOOLTIP_WIDTH} />
       </Overlay>
-      <div className='my-2 text-lg text-center'>
+      <Overlay
+        position='top-2 right-1/2 translate-x-1/2'
+        className='px-2 py-1 rounded-2xl cc-blur max-w-[60ch] text-lg text-center'
+        style={{ backgroundColor: colors.bgBlur }}
+      >
         {!hoverNode ? expression : null}
         {hoverNode ? (
           <div>
@@ -66,8 +74,8 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
             <span>{expression.slice(hoverNode.finish)}</span>
           </div>
         ) : null}
-      </div>
-      <div className='relative w-[calc(100vw-6rem-2px)] h-[calc(100svh-14rem-2px)]'>
+      </Overlay>
+      <div className='flex-grow relative'>
         <GraphUI
           animated={false}
           nodes={nodes}
