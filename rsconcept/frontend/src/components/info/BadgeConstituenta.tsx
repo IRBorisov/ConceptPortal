@@ -16,7 +16,7 @@ interface BadgeConstituentaProps extends CProps.Styling {
 function BadgeConstituenta({ value, prefixID, className, style, theme }: BadgeConstituentaProps) {
   return (
     <div
-      id={`${prefixID}${value.alias}`}
+      id={`${prefixID}${value.id}`}
       className={clsx(
         'min-w-[3.1rem] max-w-[3.1rem]',
         'px-1',
@@ -33,7 +33,7 @@ function BadgeConstituenta({ value, prefixID, className, style, theme }: BadgeCo
       }}
     >
       {value.alias}
-      <TooltipConstituenta anchor={`#${prefixID}${value.alias}`} data={value} />
+      <TooltipConstituenta anchor={`#${prefixID}${value.id}`} data={value} />
     </div>
   );
 }

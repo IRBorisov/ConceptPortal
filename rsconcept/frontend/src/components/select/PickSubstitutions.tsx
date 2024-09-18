@@ -182,7 +182,11 @@ function PickSubstitutions({
         id: 'left_alias',
         size: 65,
         cell: props => (
-          <BadgeConstituenta theme={colors} value={props.row.original.substitution} prefixID={`${prefixID}_1_`} />
+          <BadgeConstituenta
+            theme={colors}
+            value={props.row.original.substitution}
+            prefixID={`${prefixID}_${props.row.index}_1_`}
+          />
         )
       }),
       columnHelper.display({
@@ -194,7 +198,11 @@ function PickSubstitutions({
         id: 'right_alias',
         size: 65,
         cell: props => (
-          <BadgeConstituenta theme={colors} value={props.row.original.original} prefixID={`${prefixID}_2_`} />
+          <BadgeConstituenta
+            theme={colors}
+            value={props.row.original.original}
+            prefixID={`${prefixID}_${props.row.index}_2_`}
+          />
         )
       }),
       columnHelper.accessor(item => item.original_source.alias, {
