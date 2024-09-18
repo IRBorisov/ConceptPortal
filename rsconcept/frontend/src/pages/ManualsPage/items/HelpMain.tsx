@@ -15,8 +15,8 @@ function HelpMain() {
       </p>
       <p>
         Такие системы называются <LinkTopic text='Концептуальными схемами' topic={HelpTopic.CC_SYSTEM} /> и состоят из
-        отдельных <LinkTopic text='Конституент' topic={HelpTopic.CC_CONSTITUENTA} />, обладающих уникальными
-        обозначениями и формальными определениями. Концептуальные схемы могут быть получены в рамках операций синтеза в{' '}
+        отдельных <LinkTopic text='Конституент' topic={HelpTopic.CC_CONSTITUENTA} />, которым даны формальные
+        определения. Концептуальные схемы могут связываться путем синтеза в{' '}
         <LinkTopic text='Операционной схеме синтеза' topic={HelpTopic.CC_OSS} />.
       </p>
 
@@ -51,7 +51,8 @@ function HelpMain() {
 
       <h2>Поддержка</h2>
       <p>
-        Портал разрабатывается <TextURL text='Центром Концепт' href={external_urls.concept} />
+        Портал разрабатывается <TextURL text='Центром Концепт' href={external_urls.concept} /> и вобрал в себя{' '}
+        <LinkTopic text='многолетнюю работу' topic={HelpTopic.INFO_CONTRIB} /> над средствами экспликации.
       </p>
       <p>
         Портал поддерживает актуальные версии браузеров Chrome, Firefox, Safari, включая мобильные устройства.
