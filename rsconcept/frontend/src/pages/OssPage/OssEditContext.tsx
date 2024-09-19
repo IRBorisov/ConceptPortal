@@ -19,6 +19,7 @@ import DlgEditEditors from '@/dialogs/DlgEditEditors';
 import DlgEditOperation from '@/dialogs/DlgEditOperation';
 import { AccessPolicy, ILibraryItemEditor, LibraryItemID } from '@/models/library';
 import { Position2D } from '@/models/miscellaneous';
+import { calculateInsertPosition } from '@/models/miscellaneousAPI';
 import {
   IOperationCreateData,
   IOperationDeleteData,
@@ -234,42 +235,13 @@ export const OssEditState = ({ selected, setSelected, children }: OssEditStatePr
 
   const handleCreateOperation = useCallback(
     (data: IOperationCreateData) => {
-      const target = insertPosition;
-      if (data.item_data.operation_type === OperationType.INPUT) {
-        let inputsNodes = positions.filter(pos =>
-          model.schema!.items.find(
-            operation => operation.operation_type === OperationType.INPUT && operation.id === pos.id
-          )
-        );
-        if (inputsNodes.length > 0) {
-          inputsNodes = positions;
-        }
-        const maxX = Math.max(...inputsNodes.map(node => node.position_x));
-        const minY = Math.min(...inputsNodes.map(node => node.position_y));
-        target.x = maxX + PARAMETER.ossDistanceX;
-        target.y = minY;
-      } else {
-        const argNodes = positions.filter(pos => data.arguments!.includes(pos.id));
-        const maxY = Math.max(...argNodes.map(node => node.position_y));
-        const minX = Math.min(...argNodes.map(node => node.position_x));
-        const maxX = Math.max(...argNodes.map(node => node.position_x));
-        target.x = Math.ceil((maxX + minX) / 2 / PARAMETER.ossGridSize) * PARAMETER.ossGridSize;
-        target.y = maxY + PARAMETER.ossDistanceY;
-      }
-
-      let flagIntersect = false;
-      do {
-        flagIntersect = positions.some(
-          position =>
-            Math.abs(position.position_x - target.x) < PARAMETER.ossMinDistance &&
-            Math.abs(position.position_y - target.y) < PARAMETER.ossMinDistance
-        );
-        if (flagIntersect) {
-          target.x += PARAMETER.ossMinDistance;
-          target.y += PARAMETER.ossMinDistance;
-        }
-      } while (flagIntersect);
-
+      const target = calculateInsertPosition(
+        model.schema!,
+        data.item_data.operation_type,
+        data.arguments!,
+        positions,
+        insertPosition
+      );
       data.positions = positions;
       data.item_data.position_x = target.x;
       data.item_data.position_y = target.y;

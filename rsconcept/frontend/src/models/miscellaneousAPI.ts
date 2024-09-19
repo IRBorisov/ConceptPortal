@@ -1,7 +1,10 @@
 /**
  * Module: API for miscellaneous frontend model types. Future targets for refactoring aimed at extracting modules.
  */
-import { DependencyMode, GraphSizing } from './miscellaneous';
+import { PARAMETER } from '@/utils/constants';
+
+import { DependencyMode, GraphSizing, Position2D } from './miscellaneous';
+import { IOperationPosition, IOperationSchema, OperationID, OperationType } from './oss';
 import { IConstituenta, IRSForm } from './rsform';
 
 /**
@@ -46,4 +49,54 @@ export function applyNodeSizing(target: IConstituenta, sizing: GraphSizing): num
   } else {
     return target.spawner ? 1 : 2;
   }
+}
+
+/**
+ * Calculate insert position for a new {@link IOperation}
+ */
+export function calculateInsertPosition(
+  oss: IOperationSchema,
+  operationType: OperationType,
+  argumentsOps: OperationID[],
+  positions: IOperationPosition[],
+  defaultPosition: Position2D
+): Position2D {
+  const result = defaultPosition;
+  if (positions.length === 0) {
+    return result;
+  }
+
+  if (operationType === OperationType.INPUT) {
+    let inputsNodes = positions.filter(pos =>
+      oss.items.find(operation => operation.operation_type === OperationType.INPUT && operation.id === pos.id)
+    );
+    if (inputsNodes.length > 0) {
+      inputsNodes = positions;
+    }
+    const maxX = Math.max(...inputsNodes.map(node => node.position_x));
+    const minY = Math.min(...inputsNodes.map(node => node.position_y));
+    result.x = maxX + PARAMETER.ossDistanceX;
+    result.y = minY;
+  } else {
+    const argNodes = positions.filter(pos => argumentsOps.includes(pos.id));
+    const maxY = Math.max(...argNodes.map(node => node.position_y));
+    const minX = Math.min(...argNodes.map(node => node.position_x));
+    const maxX = Math.max(...argNodes.map(node => node.position_x));
+    result.x = Math.ceil((maxX + minX) / 2 / PARAMETER.ossGridSize) * PARAMETER.ossGridSize;
+    result.y = maxY + PARAMETER.ossDistanceY;
+  }
+
+  let flagIntersect = false;
+  do {
+    flagIntersect = positions.some(
+      position =>
+        Math.abs(position.position_x - result.x) < PARAMETER.ossMinDistance &&
+        Math.abs(position.position_y - result.y) < PARAMETER.ossMinDistance
+    );
+    if (flagIntersect) {
+      result.x += PARAMETER.ossMinDistance;
+      result.y += PARAMETER.ossMinDistance;
+    }
+  } while (flagIntersect);
+  return result;
 }
