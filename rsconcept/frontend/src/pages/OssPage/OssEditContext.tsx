@@ -86,13 +86,11 @@ export const useOssEdit = () => {
 };
 
 interface OssEditStateProps {
-  // isModified: boolean;
   selected: OperationID[];
   setSelected: React.Dispatch<React.SetStateAction<OperationID[]>>;
-  children: React.ReactNode;
 }
 
-export const OssEditState = ({ selected, setSelected, children }: OssEditStateProps) => {
+export const OssEditState = ({ selected, setSelected, children }: React.PropsWithChildren<OssEditStateProps>) => {
   const router = useConceptNavigation();
   const { user } = useAuth();
   const { adminMode } = useConceptOptions();

@@ -23,7 +23,7 @@ const logError = (error: Error, info: { componentStack?: string | null | undefin
 };
 
 // prettier-ignore
-function GlobalProviders({ children }: { children: React.ReactNode }) {
+function GlobalProviders({ children }: React.PropsWithChildren) {
   return (
   <ErrorBoundary
     FallbackComponent={ErrorFallback}

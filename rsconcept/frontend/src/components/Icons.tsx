@@ -156,7 +156,6 @@ interface IconSVGProps {
   size?: string;
   className?: string;
   props?: React.SVGProps<SVGSVGElement>;
-  children: React.ReactNode;
 }
 
 export interface IconProps {
@@ -164,7 +163,7 @@ export interface IconProps {
   className?: string;
 }
 
-function MetaIconSVG({ viewBox, size = '1.5rem', className, props, children }: IconSVGProps) {
+function MetaIconSVG({ viewBox, size = '1.5rem', className, props, children }: React.PropsWithChildren<IconSVGProps>) {
   return (
     <svg
       width={size}

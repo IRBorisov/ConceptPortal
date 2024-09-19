@@ -8,11 +8,7 @@ import Loader from '../ui/Loader';
 import TextURL from '../ui/TextURL';
 import AnimateFade from './AnimateFade';
 
-interface RequireAuthProps {
-  children: React.ReactNode;
-}
-
-function RequireAuth({ children }: RequireAuthProps) {
+function RequireAuth({ children }: React.PropsWithChildren) {
   const { user, loading } = useAuth();
 
   return (

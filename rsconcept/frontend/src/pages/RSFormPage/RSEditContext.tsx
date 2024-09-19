@@ -126,7 +126,6 @@ interface RSEditStateProps {
 
   onCreateCst?: (newCst: IConstituentaMeta) => void;
   onDeleteCst?: (newActive?: ConstituentaID) => void;
-  children: React.ReactNode;
 }
 
 export const RSEditState = ({
@@ -137,7 +136,7 @@ export const RSEditState = ({
   onCreateCst,
   onDeleteCst,
   children
-}: RSEditStateProps) => {
+}: React.PropsWithChildren<RSEditStateProps>) => {
   const router = useConceptNavigation();
   const { user } = useAuth();
   const { adminMode } = useConceptOptions();

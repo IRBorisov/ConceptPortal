@@ -52,11 +52,7 @@ export const useConceptOptions = () => {
   return context;
 };
 
-interface OptionsStateProps {
-  children: React.ReactNode;
-}
-
-export const OptionsState = ({ children }: OptionsStateProps) => {
+export const OptionsState = ({ children }: React.PropsWithChildren) => {
   const [darkMode, setDarkMode] = useLocalStorage(storage.themeDark, false);
   const [adminMode, setAdminMode] = useLocalStorage(storage.optionsAdmin, false);
   const [showHelp, setShowHelp] = useLocalStorage(storage.optionsHelp, true);

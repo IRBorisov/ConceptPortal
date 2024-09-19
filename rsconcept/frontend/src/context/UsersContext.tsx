@@ -21,11 +21,7 @@ export const useUsers = (): IUsersContext => {
   return context;
 };
 
-interface UsersStateProps {
-  children: React.ReactNode;
-}
-
-export const UsersState = ({ children }: UsersStateProps) => {
+export const UsersState = ({ children }: React.PropsWithChildren) => {
   const [users, setUsers] = useState<IUserInfo[]>([]);
 
   function getUserLabel(userID: number | null) {

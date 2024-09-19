@@ -27,8 +27,6 @@ export interface ModalProps extends CProps.Styling {
   beforeSubmit?: () => boolean;
   onSubmit?: () => void;
   onCancel?: () => void;
-
-  children: React.ReactNode;
 }
 
 function Modal({
@@ -45,7 +43,7 @@ function Modal({
   overflowVisible,
   submitText = 'Продолжить',
   ...restProps
-}: ModalProps) {
+}: React.PropsWithChildren<ModalProps>) {
   const ref = useRef(null);
   useEscapeKey(hideWindow);
 

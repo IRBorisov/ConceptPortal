@@ -19,12 +19,7 @@ export const useAccessMode = () => {
   return context;
 };
 
-interface AccessModeStateProps {
-  children: React.ReactNode;
-}
-
-export const AccessModeState = ({ children }: AccessModeStateProps) => {
+export const AccessModeState = ({ children }: React.PropsWithChildren) => {
   const [accessLevel, setAccessLevel] = useState<UserLevel>(UserLevel.READER);
-
   return <AccessContext.Provider value={{ accessLevel, setAccessLevel }}>{children}</AccessContext.Provider>;
 };

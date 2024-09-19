@@ -107,10 +107,9 @@ export const useRSForm = () => {
 interface RSFormStateProps {
   itemID: string;
   versionID?: string;
-  children: React.ReactNode;
 }
 
-export const RSFormState = ({ itemID, versionID, children }: RSFormStateProps) => {
+export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChildren<RSFormStateProps>) => {
   const library = useLibrary();
   const oss = useGlobalOss();
   const { user } = useAuth();

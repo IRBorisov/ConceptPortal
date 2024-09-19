@@ -78,10 +78,9 @@ export const useOSS = () => {
 
 interface OssStateProps {
   itemID: string;
-  children: React.ReactNode;
 }
 
-export const OssState = ({ itemID, children }: OssStateProps) => {
+export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateProps>) => {
   const library = useLibrary();
   const oss = useGlobalOss();
   const model = oss.schema;

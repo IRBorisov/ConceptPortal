@@ -11,11 +11,17 @@ interface DataLoaderProps extends CProps.AnimatedDiv {
   isLoading?: boolean;
   error?: ErrorData;
   hasNoData?: boolean;
-
-  children: React.ReactNode;
 }
 
-function DataLoader({ id, isLoading, hasNoData, error, className, children, ...restProps }: DataLoaderProps) {
+function DataLoader({
+  id,
+  isLoading,
+  hasNoData,
+  error,
+  className,
+  children,
+  ...restProps
+}: React.PropsWithChildren<DataLoaderProps>) {
   return (
     <AnimatePresence mode='wait'>
       {!isLoading && !error && !hasNoData ? (

@@ -61,11 +61,7 @@ export const useLibrary = (): ILibraryContext => {
   return context;
 };
 
-interface LibraryStateProps {
-  children: React.ReactNode;
-}
-
-export const LibraryState = ({ children }: LibraryStateProps) => {
+export const LibraryState = ({ children }: React.PropsWithChildren) => {
   const { user, loading: userLoading } = useAuth();
   const { adminMode } = useConceptOptions();
 

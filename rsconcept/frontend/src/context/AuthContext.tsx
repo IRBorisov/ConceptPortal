@@ -52,11 +52,7 @@ export const useAuth = () => {
   return context;
 };
 
-interface AuthStateProps {
-  children: React.ReactNode;
-}
-
-export const AuthState = ({ children }: AuthStateProps) => {
+export const AuthState = ({ children }: React.PropsWithChildren) => {
   const { users } = useUsers();
   const [user, setUser] = useState<ICurrentUser | undefined>(undefined);
   const [loading, setLoading] = useState(true);

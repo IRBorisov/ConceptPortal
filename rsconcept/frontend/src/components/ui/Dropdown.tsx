@@ -14,15 +14,19 @@ interface DropdownProps extends CProps.Styling {
 
   /** Indicates whether the dropdown is open. */
   isOpen: boolean;
-
-  /** Children to render inside the component. */
-  children: React.ReactNode;
 }
 
 /**
  *  Dropdown animated component that displays a list of children with optional positioning and visibility control.
  */
-function Dropdown({ isOpen, stretchLeft, stretchTop, className, children, ...restProps }: DropdownProps) {
+function Dropdown({
+  isOpen,
+  stretchLeft,
+  stretchTop,
+  className,
+  children,
+  ...restProps
+}: React.PropsWithChildren<DropdownProps>) {
   return (
     <div className='relative'>
       <motion.div

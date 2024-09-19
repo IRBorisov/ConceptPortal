@@ -32,11 +32,7 @@ export const useGlobalOss = (): IGlobalOssContext => {
   return context;
 };
 
-interface GlobalOssStateProps {
-  children: React.ReactNode;
-}
-
-export const GlobalOssState = ({ children }: GlobalOssStateProps) => {
+export const GlobalOssState = ({ children }: React.PropsWithChildren) => {
   const library = useLibrary();
   const [isValid, setIsValid] = useState(false);
   const [ossID, setIdInternal] = useState<string | undefined>(undefined);

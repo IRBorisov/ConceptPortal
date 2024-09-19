@@ -30,11 +30,7 @@ export const useUserProfile = () => {
   return context;
 };
 
-interface UserProfileStateProps {
-  children: React.ReactNode;
-}
-
-export const UserProfileState = ({ children }: UserProfileStateProps) => {
+export const UserProfileState = ({ children }: React.PropsWithChildren) => {
   const { users } = useUsers();
   const [user, setUser] = useState<IUserProfile | undefined>(undefined);
   const [loading, setLoading] = useState(true);

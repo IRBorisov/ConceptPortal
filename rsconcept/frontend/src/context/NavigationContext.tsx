@@ -27,11 +27,7 @@ export const useConceptNavigation = () => {
   return context;
 };
 
-interface NavigationStateProps {
-  children: React.ReactNode;
-}
-
-export const NavigationState = ({ children }: NavigationStateProps) => {
+export const NavigationState = ({ children }: React.PropsWithChildren) => {
   const router = useNavigate();
   const { pathname } = useLocation();
 
