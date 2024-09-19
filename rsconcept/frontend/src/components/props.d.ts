@@ -66,35 +66,27 @@ export namespace CProps {
   /**
    * Represents `div` component with all standard HTML attributes and React-specific properties.
    */
-  export type Div = React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+  export type Div = React.ComponentProps<'div'>;
 
   /**
    * Represents `button` component with optional title and HTML attributes.
    */
-  export type Button = Titled &
-    Omit<
-      React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>,
-      'children' | 'type'
-    >;
+  export type Button = Titled & Omit<React.ComponentProps<'button'>, 'children' | 'type'>;
 
   /**
    * Represents `label` component with HTML attributes.
    */
-  export type Label = Omit<
-    React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>,
-    'children'
-  >;
+  export type Label = Omit<React.ComponentProps<'label'>, 'children'>;
 
   /**
    * Represents `textarea` component with optional title and HTML attributes.
    */
-  export type TextArea = Titled &
-    React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>;
+  export type TextArea = Titled & React.ComponentProps<'textarea'>;
 
   /**
    * Represents `input` component with optional title and HTML attributes.
    */
-  export type Input = Titled & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
+  export type Input = Titled & React.ComponentProps<'input'>;
 
   /**
    * Represents `button` component with optional title and animation properties.
