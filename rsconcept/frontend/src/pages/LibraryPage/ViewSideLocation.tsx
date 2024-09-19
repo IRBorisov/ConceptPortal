@@ -10,6 +10,7 @@ import { CProps } from '@/components/props';
 import SelectLocation from '@/components/select/SelectLocation';
 import MiniButton from '@/components/ui/MiniButton';
 import { useAuth } from '@/context/AuthContext';
+import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useLibrary } from '@/context/LibraryContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { FolderNode, FolderTree } from '@/models/FolderTree';
@@ -39,6 +40,7 @@ function ViewSideLocation({
 }: ViewSideLocationProps) {
   const { user } = useAuth();
   const { items } = useLibrary();
+  const { calculateHeight } = useConceptOptions();
   const windowSize = useWindowSize();
 
   const canRename = useMemo(() => {
@@ -54,6 +56,7 @@ function ViewSideLocation({
   }, [active, user, items]);
 
   const animations = useMemo(() => animateSideMinWidth(windowSize.isSmall ? '10rem' : '15rem'), [windowSize]);
+  const maxHeight = useMemo(() => calculateHeight('4.5rem'), [calculateHeight]);
 
   const handleClickFolder = useCallback(
     (event: CProps.EventMouse, target: FolderNode) => {
@@ -105,6 +108,7 @@ function ViewSideLocation({
         folderTree={folderTree}
         prefix={prefixes.folders_list}
         onClick={handleClickFolder}
+        style={{ maxHeight: maxHeight }}
       />
     </motion.div>
   );

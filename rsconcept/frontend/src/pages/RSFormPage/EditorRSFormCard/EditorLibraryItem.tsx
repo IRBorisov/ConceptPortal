@@ -94,10 +94,10 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
       </div>
 
       {ownerSelector.isOpen ? (
-        <Overlay position='top-[-0.5rem] left-[2.5rem] cc-icons'>
+        <Overlay position='top-[-0.5rem] left-[4rem] cc-icons'>
           {ownerSelector.isOpen ? (
             <SelectUser
-              className='w-[26.5rem] sm:w-[27.5rem] text-sm'
+              className='w-[25rem] sm:w-[26rem] text-sm'
               items={users}
               value={item.owner ?? undefined}
               onSelectValue={onSelectUser}
