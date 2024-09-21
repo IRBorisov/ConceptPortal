@@ -753,7 +753,7 @@ export function describeRSError(error: IRSErrorDescription): string {
     case RSErrorType.invalidProjectionTuple:
       return `Проекция не определена: ${error.params[0]} -> ${error.params[1]}`;
     case RSErrorType.invalidProjectionSet:
-      return `τ(Pri(a)) = BCiDτ(a). Некорректная типизация аргумента: ${error.params[0]}`;
+      return `τ(Pri(a)) = BCiDτ(a). Некорректная типизация аргумента: ${error.params[0]} -> ${error.params[1]}`;
     case RSErrorType.invalidEnumeration:
       return `Типизация аргументов перечисления не совпадает: ${error.params[0]} != ${error.params[1]}`;
     case RSErrorType.invalidBinding:
@@ -768,8 +768,6 @@ export function describeRSError(error: IRSErrorDescription): string {
       return `Типизация аргумента терм-функции не соответствует объявленной: ${error.params[0]} != ${error.params[1]}`;
     case RSErrorType.globalStructure:
       return `Выражение родовой структуры должно быть ступенью`;
-    case RSErrorType.globalExpectedFunction:
-      return `Ожидалось выражение объявления функции`;
     case RSErrorType.radicalUsage:
       return `Радикалы запрещены вне деклараций терм-функции: ${error.params[0]}`;
     case RSErrorType.invalidFilterArgumentType:

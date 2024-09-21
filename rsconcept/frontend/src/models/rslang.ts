@@ -241,7 +241,6 @@ export enum RSErrorType {
   invalidArgsArity = 34840,
   invalidArgumentType = 34841,
   globalStructure = 34844,
-  globalExpectedFunction = 34847,
   radicalUsage = 34849,
   invalidFilterArgumentType = 34850,
   invalidFilterArity = 34851,
