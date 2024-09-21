@@ -113,7 +113,7 @@ function SelectSingle<Option, Group extends GroupBase<Option> = GroupBase<Option
         spacing: {
           ...theme.spacing, // prettier: split-lines
           baseUnit: size.isSmall ? 2 : 4,
-          menuGutter: size.isSmall ? 4 : 8,
+          menuGutter: 2,
           controlHeight: size.isSmall ? 28 : 38
         },
         colors: {

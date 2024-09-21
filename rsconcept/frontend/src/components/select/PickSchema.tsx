@@ -124,7 +124,7 @@ function PickSchema({
       <div className='flex justify-between clr-input items-center pr-1'>
         <SearchBar
           id={id ? `${id}__search` : undefined}
-          className='clr-input w-full'
+          className='clr-input flex-grow'
           noBorder
           value={filterText}
           onChange={newValue => setFilterText(newValue)}

@@ -43,15 +43,7 @@ function DlgDeleteOperation({ hideWindow, target, onSubmit }: DlgDeleteOperation
         />
       </Overlay>
 
-      <TextInput
-        disabled
-        dense
-        noBorder
-        id='operation_alias'
-        label='Операция'
-        className='w-full'
-        value={target.alias}
-      />
+      <TextInput disabled dense noBorder id='operation_alias' label='Операция' value={target.alias} />
       <Checkbox
         label='Сохранить наследованные конституенты'
         titleHtml='Наследованные конституенты <br/>превратятся в дописанные'

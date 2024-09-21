@@ -95,7 +95,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
         disabled={!controller.isContentEditable}
         onChange={event => setTitle(event.target.value)}
       />
-      <div className='flex justify-between w-full gap-3 mb-3'>
+      <div className='flex justify-between gap-3 mb-3'>
         <TextInput
           id='schema_alias'
           required

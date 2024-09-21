@@ -15,7 +15,7 @@ function ToolbarRSExpression({ disabled, showControls, toggleControls, showAST }
   const model = useRSForm();
 
   return (
-    <Overlay position='top-[-0.5rem] right-0' layer='z-sticky' className='cc-icons'>
+    <Overlay position='top-[-0.5rem] right-0' layer='z-pop' className='cc-icons'>
       {!disabled || model.processing ? (
         <MiniButton
           title='Отображение специальной клавиатуры'

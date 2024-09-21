@@ -28,7 +28,6 @@ function Navigation() {
       className={clsx(
         'z-navigation', // prettier: split lines
         'sticky top-0 left-0 right-0',
-        'w-full',
         'clr-app',
         'select-none'
       )}
@@ -36,7 +35,7 @@ function Navigation() {
       <ToggleNavigation />
       <motion.div
         className={clsx(
-          'pl-2 pr-[1.5rem] sm:pr-[0.9rem] h-[3rem] w-full', // prettier: split lines
+          'pl-2 pr-[1.5rem] sm:pr-[0.9rem] h-[3rem]', // prettier: split lines
           'flex',
           'cc-shadow-border'
         )}

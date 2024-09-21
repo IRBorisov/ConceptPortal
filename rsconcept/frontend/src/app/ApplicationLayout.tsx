@@ -28,10 +28,7 @@ function ApplicationLayout() {
             maxHeight: viewportHeight
           }}
         >
-          <main
-            className='w-full h-full cc-scroll-y'
-            style={{ overflowY: showScroll ? 'scroll' : 'auto', minHeight: mainHeight }}
-          >
+          <main className='cc-scroll-y' style={{ overflowY: showScroll ? 'scroll' : 'auto', minHeight: mainHeight }}>
             <Outlet />
           </main>
           <Footer />

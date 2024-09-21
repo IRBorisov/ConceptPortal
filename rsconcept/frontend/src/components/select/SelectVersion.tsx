@@ -40,7 +40,7 @@ function SelectVersion({ id, className, items, value, onSelectValue, ...restProp
   return (
     <SelectSingle
       id={id}
-      className={clsx('w-full min-w-[12rem] text-ellipsis', className)}
+      className={clsx('min-w-[12rem] text-ellipsis', className)}
       options={options}
       value={{ value: value, label: valueLabel }}
       onChange={data => onSelectValue(data?.value)}

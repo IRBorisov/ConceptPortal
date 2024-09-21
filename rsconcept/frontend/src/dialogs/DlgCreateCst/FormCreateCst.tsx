@@ -53,7 +53,7 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
         <SelectSingle
           id='dlg_cst_type'
           placeholder='Выберите тип'
-          className='w-[15rem]'
+          className='w-[16rem]'
           options={SelectorCstType}
           value={{ value: state.cst_type, label: labelCstType(state.cst_type) }}
           onChange={data => handleTypeChange(data?.value ?? CstType.BASE)}

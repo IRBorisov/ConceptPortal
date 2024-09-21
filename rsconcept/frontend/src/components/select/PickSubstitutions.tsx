@@ -257,26 +257,24 @@ function PickSubstitutions({
   );
 
   return (
-    <div className='flex flex-col w-full'>
+    <div className='flex flex-col'>
       <div className='flex items-end gap-3 justify-stretch'>
-        <div className='flex-grow flex flex-col basis-1/2'>
-          <div className='flex flex-col gap-[0.125rem] border-x border-t clr-input'>
-            <SelectLibraryItem
-              noBorder
-              placeholder='Выберите аргумент'
-              items={allowSelfSubstitution ? schemas : schemas.filter(item => item.id !== rightArgument?.id)}
-              value={leftArgument}
-              onSelectValue={setLeftArgument}
-            />
-            <SelectConstituenta
-              noBorder
-              items={(leftArgument as IRSForm)?.items.filter(
-                cst => !substitutions.find(item => item.original === cst.id) && (!filter || filter(cst))
-              )}
-              value={leftCst}
-              onSelectValue={setLeftCst}
-            />
-          </div>
+        <div className='flex-grow flex flex-col basis-1/2 gap-[0.125rem] border-x border-t clr-input'>
+          <SelectLibraryItem
+            noBorder
+            placeholder='Выберите аргумент'
+            items={allowSelfSubstitution ? schemas : schemas.filter(item => item.id !== rightArgument?.id)}
+            value={leftArgument}
+            onSelectValue={setLeftArgument}
+          />
+          <SelectConstituenta
+            noBorder
+            items={(leftArgument as IRSForm)?.items.filter(
+              cst => !substitutions.find(item => item.original === cst.id) && (!filter || filter(cst))
+            )}
+            value={leftCst}
+            onSelectValue={setLeftCst}
+          />
         </div>
         <div className='flex flex-col gap-1'>
           <MiniButton
@@ -290,7 +288,6 @@ function PickSubstitutions({
               )
             }
           />
-
           <MiniButton
             title='Добавить в таблицу отождествлений'
             className='mb-[0.375rem] grow-0'
@@ -300,24 +297,22 @@ function PickSubstitutions({
           />
         </div>
 
-        <div className='flex-grow basis-1/2'>
-          <div className='flex flex-col gap-[0.125rem] border-x border-t clr-input'>
-            <SelectLibraryItem
-              noBorder
-              placeholder='Выберите аргумент'
-              items={allowSelfSubstitution ? schemas : schemas.filter(item => item.id !== leftArgument?.id)}
-              value={rightArgument}
-              onSelectValue={setRightArgument}
-            />
-            <SelectConstituenta
-              noBorder
-              items={(rightArgument as IRSForm)?.items.filter(
-                cst => !substitutions.find(item => item.original === cst.id) && (!filter || filter(cst))
-              )}
-              value={rightCst}
-              onSelectValue={setRightCst}
-            />
-          </div>
+        <div className='flex-grow basis-1/2 flex flex-col gap-[0.125rem] border-x border-t clr-input'>
+          <SelectLibraryItem
+            noBorder
+            placeholder='Выберите аргумент'
+            items={allowSelfSubstitution ? schemas : schemas.filter(item => item.id !== leftArgument?.id)}
+            value={rightArgument}
+            onSelectValue={setRightArgument}
+          />
+          <SelectConstituenta
+            noBorder
+            items={(rightArgument as IRSForm)?.items.filter(
+              cst => !substitutions.find(item => item.original === cst.id) && (!filter || filter(cst))
+            )}
+            value={rightCst}
+            onSelectValue={setRightCst}
+          />
         </div>
       </div>
 
@@ -325,7 +320,7 @@ function PickSubstitutions({
         dense
         noHeader
         noFooter
-        className='w-full text-sm border select-none cc-scroll-y'
+        className='text-sm border select-none cc-scroll-y'
         rows={rows}
         contentHeight='1.3rem'
         data={substitutionData}

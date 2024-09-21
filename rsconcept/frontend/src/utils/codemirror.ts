@@ -229,7 +229,7 @@ export function domTooltipConstituenta(cst?: IConstituenta, canClick?: boolean):
 
     if (canClick) {
       const clickTip = document.createElement('p');
-      clickTip.className = 'w-full text-center text-xs mt-2';
+      clickTip.className = 'text-center text-xs mt-1';
       clickTip.innerText = 'Ctrl + клик для перехода';
       dom.appendChild(clickTip);
     }
@@ -288,7 +288,7 @@ export function domTooltipEntityReference(
 
   if (canClick) {
     const clickTip = document.createElement('p');
-    clickTip.className = 'w-full text-center text-xs mt-2';
+    clickTip.className = 'text-center text-xs mt-1';
     clickTip.innerHTML = 'Ctrl + клик для перехода</br>Ctrl + пробел для редактирования';
     dom.appendChild(clickTip);
   }
@@ -333,7 +333,7 @@ export function domTooltipSyntacticReference(
 
   if (canClick) {
     const clickTip = document.createElement('p');
-    clickTip.className = 'w-full text-center text-xs mt-2';
+    clickTip.className = 'text-center text-xs mt-1';
     clickTip.innerHTML = 'Ctrl + пробел для редактирования';
     dom.appendChild(clickTip);
   }

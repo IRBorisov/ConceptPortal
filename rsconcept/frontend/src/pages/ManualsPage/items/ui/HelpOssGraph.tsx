@@ -26,7 +26,7 @@ function HelpOssGraph() {
     <div className='flex flex-col'>
       <h1 className='sm:pr-[6rem]'>Граф синтеза</h1>
       <div className='flex flex-col sm:flex-row'>
-        <div className='w-full sm:w-[14rem]'>
+        <div className='sm:w-[14rem]'>
           <h1>Настройка графа</h1>
           <li>
             <IconFitImage className='inline-icon' /> Вписать в экран
@@ -50,7 +50,7 @@ function HelpOssGraph() {
 
         <Divider vertical margins='mx-3 mt-3' className='hidden sm:block' />
 
-        <div className='w-full sm:w-[21rem]'>
+        <div className='sm:w-[21rem]'>
           <h1>Изменение узлов</h1>
           <li>Клик на операцию – выделение</li>
           <li>Esc – сбросить выделение</li>
@@ -72,7 +72,7 @@ function HelpOssGraph() {
       <Divider margins='my-3' className='hidden sm:block' />
 
       <div className='flex flex-col-reverse mb-3 sm:flex-row'>
-        <div className='w-full sm:w-[14rem]'>
+        <div className='sm:w-[14rem]'>
           <h1>Общие</h1>
           <li>
             <IconReset className='inline-icon' /> Сбросить изменения

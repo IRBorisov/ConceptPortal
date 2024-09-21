@@ -130,7 +130,6 @@ function PickMultiOperation({ rows, items, selected, setSelected }: PickMultiOpe
         items={nonSelectedItems} // prettier: split-line
         value={lastSelected}
         onSelectValue={handleSelect}
-        className='w-full'
       />
       <DataTable
         dense

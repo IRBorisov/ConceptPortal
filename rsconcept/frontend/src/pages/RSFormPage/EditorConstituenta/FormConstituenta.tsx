@@ -139,11 +139,7 @@ function FormConstituenta({
           onRename={onRename}
         />
       ) : null}
-      <form
-        id={id}
-        className={clsx('cc-column', 'mt-1 w-full md:w-[48.8rem] shrink-0', 'px-6 py-1')}
-        onSubmit={handleSubmit}
-      >
+      <form id={id} className={clsx('cc-column', 'mt-1 md:w-[48.8rem] shrink-0', 'px-6 py-1')} onSubmit={handleSubmit}>
         <RefsInput
           key='cst_term'
           id='cst_term'

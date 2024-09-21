@@ -61,7 +61,7 @@ function InfoError({ error }: InfoErrorProps) {
   return (
     <AnimateFade
       className={clsx(
-        'min-w-[25rem] w-full',
+        'min-w-[25rem]',
         'px-3 py-2 flex flex-col',
         'clr-text-red',
         'text-sm font-semibold',

@@ -53,7 +53,7 @@ function TooltipOperation({ node, anchor }: TooltipOperationProps) {
         dense
         noHeader
         noFooter
-        className='w-full text-sm border select-none mb-2'
+        className='text-sm border select-none mb-2'
         data={node.data.operation.substitutions}
         columns={columns}
       />

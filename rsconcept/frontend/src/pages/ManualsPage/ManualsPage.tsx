@@ -26,7 +26,7 @@ function ManualsPage() {
   );
 
   return (
-    <div className='flex w-full gap-2' style={{ minHeight: mainHeight }}>
+    <div className='flex gap-2' style={{ minHeight: mainHeight }}>
       <TopicsList activeTopic={activeTopic} onChangeTopic={topic => onSelectTopic(topic)} />
       <ViewTopic topic={activeTopic} />
     </div>

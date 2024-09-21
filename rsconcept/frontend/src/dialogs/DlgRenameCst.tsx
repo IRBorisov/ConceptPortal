@@ -47,12 +47,12 @@ function DlgRenameCst({ hideWindow, initial, allowChangeType, onRename }: DlgRen
       hideWindow={hideWindow}
       canSubmit={validated}
       onSubmit={() => onRename(cstData)}
-      className={clsx('w-[30rem]', 'py-6 pr-3 pl-6 flex gap-3 justify-center items-center')}
+      className={clsx('w-[30rem]', 'py-6 pr-3 pl-6 flex gap-3 justify-center items-center ')}
     >
       <SelectSingle
         id='dlg_cst_type'
         placeholder='Выберите тип'
-        className='min-w-[16rem] self-center'
+        className='min-w-[16rem]'
         isDisabled={!allowChangeType}
         options={SelectorCstType}
         value={{

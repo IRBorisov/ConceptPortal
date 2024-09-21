@@ -28,12 +28,10 @@ function HelpRSLang() {
       <p>2. <a className='underline' href={external_urls.ponomarev}>Текст: Учебник И. Н. Пономарева</a></p>
       <p>3. <a className='underline' href={external_urls.full_course}>Видео: лекции для 4 курса (второй семестр 2022-23 год)</a></p>
     </div>
-    <div className='justify-center w-full'>
-      <EmbedYoutube
-        videoID={youtube.intro}
-        pxHeight={videoHeight}
-      />
-    </div>
+    <EmbedYoutube
+      videoID={youtube.intro}
+      pxHeight={videoHeight}
+    />
     <div className='dense'>
       <Subtopics headTopic={HelpTopic.RSLANG} />
     </div>

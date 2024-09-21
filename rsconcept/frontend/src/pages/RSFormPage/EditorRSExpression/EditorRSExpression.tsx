@@ -166,9 +166,9 @@ function EditorRSExpression({
       />
 
       <Overlay
-        position='top-[-0.5rem]'
+        position='top-[-0.5rem] right-1/2 translate-x-1/2'
         layer='z-pop'
-        className='pl-[8.5rem] xs:pl-[2rem] flex justify-center w-full gap-1'
+        className='w-fit pl-[8.5rem] xs:pl-[2rem] flex gap-1'
       >
         <StatusBar
           processing={parser.processing}

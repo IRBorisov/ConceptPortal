@@ -35,6 +35,7 @@
 
 .cm-editor .cm-placeholder {
   color: var(--cl-fg-60);
+  @apply font-main;
   .dark & {
     color: var(--cd-fg-60);
   }
@@ -72,7 +73,8 @@
   }
 }
 
-:is(.react-flow__node-input, .react-flow__node-synthesis) {
+.react-flow__node-input,
+.react-flow__node-synthesis {
   cursor: pointer;
 
   border: 1px solid;

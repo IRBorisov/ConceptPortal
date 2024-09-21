@@ -201,9 +201,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
             onClick={handleGenerateLexeme}
           />
         </div>
-        <div
-          className={clsx('mt-3 mb-2', 'w-full flex justify-center items-center', 'text-sm text-center font-semibold')}
-        >
+        <div className={clsx('mt-3 mb-2 mx-auto', 'flex items-center', 'text-sm text-center font-semibold')}>
           <div>Заданные вручную словоформы [{forms.length}]</div>
           <MiniButton
             noHover

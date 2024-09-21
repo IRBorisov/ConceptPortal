@@ -37,8 +37,8 @@ function TabSchema({ selected, receiver, setSelected }: TabSchemaProps) {
           id='dlg_selected_schema_title'
           disabled
           noBorder
-          className='w-full'
-          placeholder='Выберите из списка ниже'
+          className='flex-grow'
+          placeholder='Схема не выбрана'
           value={selectedInfo?.title ?? ''}
           dense
         />
