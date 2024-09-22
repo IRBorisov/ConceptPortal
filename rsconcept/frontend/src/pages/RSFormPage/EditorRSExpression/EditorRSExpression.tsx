@@ -11,7 +11,7 @@ import { RSTextWrapper } from '@/components/RSInput/textEditing';
 import Overlay from '@/components/ui/Overlay';
 import { useRSForm } from '@/context/RSFormContext';
 import DlgShowAST from '@/dialogs/DlgShowAST';
-import useCheckExpression from '@/hooks/useCheckExpression';
+import useCheckConstituenta from '@/hooks/useCheckConstituenta';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { HelpTopic } from '@/models/miscellaneous';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
@@ -54,7 +54,7 @@ function EditorRSExpression({
   const model = useRSForm();
 
   const [isModified, setIsModified] = useState(false);
-  const parser = useCheckExpression({ schema: model.schema });
+  const parser = useCheckConstituenta({ schema: model.schema });
   const { resetParse } = parser;
   const rsInput = useRef<ReactCodeMirrorRef>(null);
 
@@ -74,11 +74,9 @@ function EditorRSExpression({
   }
 
   function handleCheckExpression(callback?: (parse: IExpressionParse) => void) {
-    const prefix = getDefinitionPrefix(activeCst);
-    const expression = prefix + value;
-    parser.checkExpression(expression, activeCst, parse => {
+    parser.checkConstituenta(value, activeCst, parse => {
       if (parse.errors.length > 0) {
-        onShowError(parse.errors[0]);
+        onShowError(parse.errors[0], parse.prefixLen);
       } else {
         rsInput.current?.view?.focus();
       }
@@ -95,12 +93,11 @@ function EditorRSExpression({
   }
 
   const onShowError = useCallback(
-    (error: IRSErrorDescription) => {
+    (error: IRSErrorDescription, prefixLen: number) => {
       if (!rsInput.current) {
         return;
       }
-      const prefix = getDefinitionPrefix(activeCst);
-      let errorPosition = error.position - prefix.length;
+      let errorPosition = error.position - prefixLen;
       if (errorPosition < 0) errorPosition = 0;
       rsInput.current?.view?.dispatch({
         selection: {
@@ -133,6 +130,7 @@ function EditorRSExpression({
         toast.error(errors.astFailed);
       } else {
         setSyntaxTree(parse.ast);
+        // TODO: return prefix from parser API instead of prefixLength
         setExpression(getDefinitionPrefix(activeCst) + value);
         setShowAST(true);
       }
@@ -199,7 +197,7 @@ function EditorRSExpression({
         isOpen={!!parser.parseData && parser.parseData.errors.length > 0}
         data={parser.parseData}
         disabled={disabled}
-        onShowError={onShowError}
+        onShowError={error => onShowError(error, parser.parseData?.prefixLen ?? 0)}
       />
     </div>
   );

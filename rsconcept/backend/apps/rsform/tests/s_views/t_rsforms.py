@@ -113,8 +113,8 @@ class TestRSFormViewset(EndpointTester):
         self.executeForbidden(item=self.private_id)
 
 
-    @decl_endpoint('/api/rsforms/{item}/check', method='post')
-    def test_check(self):
+    @decl_endpoint('/api/rsforms/{item}/check-expression', method='post')
+    def test_check_expression(self):
         self.owned.insert_new('X1')
         data = {'expression': 'X1=X1'}
         response = self.executeOK(data=data, item=self.owned_id)
@@ -126,6 +126,24 @@ class TestRSFormViewset(EndpointTester):
 
         self.executeOK(data=data, item=self.unowned_id)
 
+
+    @decl_endpoint('/api/rsforms/{item}/check-constituenta', method='post')
+    def test_check_constituenta(self):
+        self.owned.insert_new('X1')
+        data = {'definition_formal': 'X1=X1', 'alias': 'A111', 'cst_type': CstType.AXIOM}
+        response = self.executeOK(data=data, item=self.owned_id)
+        self.assertEqual(response.data['parseResult'], True)
+        self.assertEqual(response.data['syntax'], 'math')
+        self.assertEqual(response.data['astText'], '[:==[A111][=[X1][X1]]]')
+        self.assertEqual(response.data['typification'], 'LOGIC')
+        self.assertEqual(response.data['valueClass'], 'value')
+
+    @decl_endpoint('/api/rsforms/{item}/check-constituenta', method='post')
+    def test_check_constituenta_error(self):
+        self.owned.insert_new('X1')
+        data = {'definition_formal': 'X1=X1', 'alias': 'D111', 'cst_type': CstType.TERM}
+        response = self.executeOK(data=data, item=self.owned_id)
+        self.assertEqual(response.data['parseResult'], False)
 
     @decl_endpoint('/api/rsforms/{item}/resolve', method='post')
     def test_resolve(self):

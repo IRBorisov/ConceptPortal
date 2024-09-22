@@ -8,13 +8,12 @@ drf-spectacular-sidecar==2024.7.1
 coreapi==2.3.3
 django-rest-passwordreset==1.4.1
 cctext==0.1.4
-pyconcept==0.1.6
+pyconcept==0.1.8
 
 psycopg2-binary==2.9.9
 gunicorn==23.0.0
-
 djangorestframework-stubs==3.15.1
 django-extensions==3.2.3
 mypy==1.11.2
-pylint==3.2.7
+pylint==3.3.0
 coverage==7.6.1

@@ -56,7 +56,8 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             'details',
             'export_trs',
             'resolve',
-            'check'
+            'check_expression',
+            'check_constituenta'
         ]:
             permission_list = [permissions.ItemAnyone]
         else:
@@ -424,14 +425,39 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             c.HTTP_404_NOT_FOUND: None
         },
     )
-    @action(detail=True, methods=['post'], url_path='check')
-    def check(self, request: Request, pk) -> HttpResponse:
+    @action(detail=True, methods=['post'], url_path='check-expression')
+    def check_expression(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Check RSLang expression against schema context. '''
         serializer = s.ExpressionSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         expression = serializer.validated_data['expression']
         pySchema = s.PyConceptAdapter(m.RSForm(self.get_object()))
         result = pyconcept.check_expression(json.dumps(pySchema.data), expression)
+        return Response(
+            status=c.HTTP_200_OK,
+            data=json.loads(result)
+        )
+
+    @extend_schema(
+        summary='check expression for specific CstType',
+        tags=['RSForm', 'FormalLanguage'],
+        request=s.ConstituentaCheckSerializer,
+        responses={
+            c.HTTP_200_OK: s.ExpressionParseSerializer,
+            c.HTTP_404_NOT_FOUND: None
+        },
+    )
+    @action(detail=True, methods=['post'], url_path='check-constituenta')
+    def check_constituenta(self, request: Request, pk) -> HttpResponse:
+        ''' Endpoint: Check RSLang expression against schema context. '''
+        serializer = s.ConstituentaCheckSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        expression = serializer.validated_data['definition_formal']
+        alias = serializer.validated_data['alias']
+        cst_type = cast(m.CstType, serializer.validated_data['cst_type'])
+
+        pySchema = s.PyConceptAdapter(m.RSForm(self.get_object()))
+        result = pyconcept.check_constituenta(json.dumps(pySchema.data), alias, expression, cst_type)
         return Response(
             status=c.HTTP_200_OK,
             data=json.loads(result)

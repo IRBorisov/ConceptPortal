@@ -145,6 +145,11 @@ export interface IConstituentaList {
 }
 
 /**
+ * Represents {@link IConstituenta} data, used for checking expression.
+ */
+export interface ICheckConstituentaData extends Pick<IConstituentaMeta, 'alias' | 'cst_type' | 'definition_formal'> {}
+
+/**
  * Represents {@link IConstituenta} data, used in creation process.
  */
 export interface ICstCreateData

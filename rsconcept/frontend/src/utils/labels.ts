@@ -787,13 +787,20 @@ export function describeRSError(error: IRSErrorDescription): string {
     case RSErrorType.globalMissingAST:
       return `Не удалось получить дерево разбора для глобального идентификатора: ${error.params[0]}`;
     case RSErrorType.globalFuncNoInterpretation:
-      return `Функция не интерпретируется для данных аргументов`;
-    case RSErrorType.globalNonemptyBase:
-      return `Непустое выражение базисного/константного множества`;
-    case RSErrorType.globalUnexpectedType:
-      return `Типизация выражения не соответствует типу конституенты`;
-    case RSErrorType.globalEmptyDerived:
-      return `Пустое выражение для выводимого понятия или утверждения`;
+      return 'Функция не интерпретируется для данных аргументов';
+      
+    case RSErrorType.cstNonemptyBase:
+      return 'Непустое выражение базисного/константного множества';
+    case RSErrorType.cstEmptyDerived:
+      return 'Пустое выражение для сложного понятия или утверждения';
+    case RSErrorType.cstCallableNoArgs:
+      return 'Отсутствуют аргументы для параметризованной конституенты';
+    case RSErrorType.cstNonCallableHasArgs:
+      return 'Параметризованное выражение не подходит для данного типа конституенты';
+    case RSErrorType.cstExpectedLogical:
+      return 'Данный тип конституенты требует логического выражения';
+    case RSErrorType.cstExpectedTyped:
+      return 'Данный тип конституенты требует теоретико-множественного выражения';
   }
   return 'UNKNOWN ERROR';
 }

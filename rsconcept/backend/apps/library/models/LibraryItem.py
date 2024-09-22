@@ -107,6 +107,7 @@ class LibraryItem(Model):
         verbose_name = 'Схема'
         verbose_name_plural = 'Схемы'
 
+    # pylint: disable=invalid-str-returned
     def __str__(self) -> str:
         return f'{self.alias}'
 

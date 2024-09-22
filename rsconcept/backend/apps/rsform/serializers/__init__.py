@@ -2,6 +2,7 @@
 
 from .basics import (
     ASTNodeSerializer,
+    ConstituentaCheckSerializer,
     ExpressionParseSerializer,
     ExpressionSerializer,
     InheritanceDataSerializer,

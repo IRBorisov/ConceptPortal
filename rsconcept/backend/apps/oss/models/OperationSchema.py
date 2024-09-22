@@ -400,7 +400,7 @@ class OperationSchema:
             if child_schema.change_cst_type(successor_id, ctype):
                 self._cascade_change_cst_type(child_id, successor_id, ctype)
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-positional-arguments
     def _cascade_update_cst(
         self,
         operation: int,

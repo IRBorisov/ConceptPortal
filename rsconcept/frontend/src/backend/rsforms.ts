@@ -5,6 +5,7 @@
 import { ILibraryCreateData, ILibraryItem } from '@/models/library';
 import { ICstSubstituteData } from '@/models/oss';
 import {
+  ICheckConstituentaData,
   IConstituentaList,
   IConstituentaMeta,
   ICstCreateData,
@@ -18,7 +19,7 @@ import {
   IRSFormUploadData,
   ITargetCst
 } from '@/models/rsform';
-import { IExpressionParse, IRSExpression } from '@/models/rslang';
+import { IExpressionParse } from '@/models/rslang';
 
 import { AxiosGet, AxiosPatch, AxiosPost, FrontExchange, FrontPull } from './apiTransport';
 
@@ -113,9 +114,12 @@ export function patchMoveConstituenta(schema: string, request: FrontExchange<ICs
   });
 }
 
-export function postCheckExpression(schema: string, request: FrontExchange<IRSExpression, IExpressionParse>) {
+export function postCheckConstituenta(
+  schema: string,
+  request: FrontExchange<ICheckConstituentaData, IExpressionParse>
+) {
   AxiosPost({
-    endpoint: `/api/rsforms/${schema}/check`,
+    endpoint: `/api/rsforms/${schema}/check-constituenta`,
     request: request
   });
 }

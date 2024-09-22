@@ -34,7 +34,7 @@ export const PARAMETER = {
   statSmallThreshold: 3, // characters - threshold for small labels - small font
 
   logicLabel: 'LOGIC',
-  exteorVersion: '4.9.4',
+  exteorVersion: '4.9.5',
 
   TOOLTIP_WIDTH: 'max-w-[29rem]'
 };

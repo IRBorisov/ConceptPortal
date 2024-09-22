@@ -8,13 +8,6 @@
 export type AliasMapping = Record<string, string>;
 
 /**
- * Represents formal expression.
- */
-export interface IRSExpression {
-  expression: string;
-}
-
-/**
  * Represents syntax type.
  */
 export enum Syntax {
@@ -91,6 +84,7 @@ export interface IArgumentValue extends IArgumentInfo {
  */
 export interface IExpressionParse {
   parseResult: boolean;
+  prefixLen: number;
   syntax: Syntax;
   typification: string;
   valueClass: ValueClass;
@@ -248,16 +242,17 @@ export enum RSErrorType {
   typesNotCompatible = 34853,
   orderingNotSupported = 34854,
 
-  // !!!! Добавлены по сравнению с ConceptCore !!!!!
-  globalNonemptyBase = 34855,
-  globalUnexpectedType = 34856,
-  globalEmptyDerived = 34857,
-
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   globalNoValue = 34880,
   invalidPropertyUsage = 34881,
   globalMissingAST = 34882,
-  globalFuncNoInterpretation = 34883
+  globalFuncNoInterpretation = 34883,
+
+  cstNonemptyBase = 34912,
+  cstEmptyDerived = 34913,
+  cstCallableNoArgs = 34914,
+  cstNonCallableHasArgs = 34915,
+  cstExpectedLogical = 34916,
+  cstExpectedTyped = 34917
 }
 
 /**

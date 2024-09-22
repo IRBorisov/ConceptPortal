@@ -10,6 +10,13 @@ class ExpressionSerializer(serializers.Serializer):
     expression = serializers.CharField()
 
 
+class ConstituentaCheckSerializer(serializers.Serializer):
+    ''' Serializer: RSLang expression. '''
+    alias = serializers.CharField()
+    definition_formal = serializers.CharField(allow_blank=True)
+    cst_type = serializers.CharField()
+
+
 class WordFormSerializer(serializers.Serializer):
     ''' Serializer: inflect request. '''
     text = serializers.CharField()
@@ -85,6 +92,7 @@ class ASTNodeSerializer(serializers.Serializer):
 class ExpressionParseSerializer(serializers.Serializer):
     ''' Serializer: RSlang expression parse result. '''
     parseResult = serializers.BooleanField()
+    prefixLen = serializers.IntegerField()
     syntax = serializers.CharField()
     typification = serializers.CharField()
     valueClass = serializers.CharField()
