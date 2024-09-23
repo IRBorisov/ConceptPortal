@@ -180,9 +180,7 @@ function FormConstituenta({
                     : 'Формальное определение'
                 }
                 placeholder={
-                  state.cst_type !== CstType.STRUCTURED
-                    ? 'Родоструктурное выражение'
-                    : 'Определение множества, которому принадлежат элементы родовой структуры'
+                  state.cst_type !== CstType.STRUCTURED ? 'Родоструктурное выражение' : 'Типизация родовой структуры'
                 }
                 value={expression}
                 activeCst={state}
