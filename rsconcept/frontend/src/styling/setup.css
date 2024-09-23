@@ -104,7 +104,7 @@ h6 {
 /* Limit text lines and setup wrapping */
 p,
 li {
-  max-width: 90ch;
+  max-width: 75ch;
   text-wrap: pretty;
 }
 

@@ -11,7 +11,7 @@ function ApplicationLayout() {
   const { viewportHeight, mainHeight, showScroll } = useConceptOptions();
   return (
     <NavigationState>
-      <div className='min-w-[20rem] clr-app antialiased h-full'>
+      <div className='min-w-[20rem] clr-app antialiased h-full max-w-[120rem] mx-auto'>
         <ConceptToaster
           className='mt-[4rem] text-[14px]' // prettier: split lines
           autoClose={3000}
