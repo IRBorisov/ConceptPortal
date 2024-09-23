@@ -36,6 +36,7 @@ export interface IColorTheme {
   bgTeal: string;
   bgOrange: string;
 
+  bgGreen25: string;
   bgGreen50: string;
   bgOrange50: string;
 
@@ -77,6 +78,7 @@ export const lightT: IColorTheme = {
   bgTeal:     'hsl(192, 089%, 081%)',
   bgOrange:   'hsl(028, 100%, 075%)',
 
+  bgGreen25:  'hsl(100, 100%, 096%)',
   bgGreen50:  'hsl(100, 100%, 090%)',
   bgOrange50: 'hsl(028, 100%, 090%)',
 
@@ -118,6 +120,7 @@ export const darkT: IColorTheme = {
   bgTeal:     'hsl(192, 080%, 030%)',
   bgOrange:   'hsl(035, 100%, 035%)',
 
+  bgGreen25:  'hsl(100, 080%, 009%)',
   bgGreen50:  'hsl(100, 080%, 017%)',
   bgOrange50: 'hsl(035, 100%, 016%)',
 
@@ -382,11 +385,11 @@ export function colorBgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): s
 export function colorBgCstStatus(status: ExpressionStatus, colors: IColorTheme): string {
   // prettier-ignore
   switch (status) {
-    case ExpressionStatus.VERIFIED: return colors.bgGreen;
+    case ExpressionStatus.VERIFIED: return colors.bgGreen50;
     case ExpressionStatus.INCORRECT: return colors.bgRed;
     case ExpressionStatus.INCALCULABLE: return colors.bgOrange;
     case ExpressionStatus.PROPERTY: return colors.bgTeal;
-    case ExpressionStatus.UNKNOWN: return colors.bgBlue;
+    case ExpressionStatus.UNKNOWN: return colors.bgSelected;
     case ExpressionStatus.UNDEFINED: return colors.bgBlue;
   }
 }
