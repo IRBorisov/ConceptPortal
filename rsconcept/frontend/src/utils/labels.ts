@@ -244,7 +244,6 @@ export function labelCstSource(mode: DependencyMode): string {
   // prettier-ignore
   switch (mode) {
     case DependencyMode.ALL:            return 'не ограничен';
-    case DependencyMode.EXPRESSION:     return 'выражение';
     case DependencyMode.OUTPUTS:        return 'потребители';
     case DependencyMode.INPUTS:         return 'поставщики';
     case DependencyMode.EXPAND_OUTPUTS: return 'зависимые';
@@ -259,7 +258,6 @@ export function describeCstSource(mode: DependencyMode): string {
   // prettier-ignore
   switch (mode) {
     case DependencyMode.ALL:            return 'все конституенты';
-    case DependencyMode.EXPRESSION:     return 'имена из выражения';
     case DependencyMode.OUTPUTS:        return 'прямые исходящие';
     case DependencyMode.INPUTS:         return 'прямые входящие';
     case DependencyMode.EXPAND_OUTPUTS: return 'цепочка исходящих';

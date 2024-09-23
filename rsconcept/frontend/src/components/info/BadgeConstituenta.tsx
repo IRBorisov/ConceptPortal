@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 
 import { CstClass, IConstituenta } from '@/models/rsform';
-import { isMockCst } from '@/models/rsformAPI';
 import { colorFgCstStatus, IColorTheme } from '@/styling/color';
 
 import { CProps } from '../props';
@@ -28,11 +27,7 @@ function BadgeConstituenta({ value, prefixID, className, style, theme }: BadgeCo
       style={{
         borderColor: colorFgCstStatus(value.status, theme),
         color: colorFgCstStatus(value.status, theme),
-        backgroundColor: isMockCst(value)
-          ? theme.bgWarning
-          : value.cst_class === CstClass.BASIC
-          ? theme.bgGreen25
-          : theme.bgInput,
+        backgroundColor: value.cst_class === CstClass.BASIC ? theme.bgGreen25 : theme.bgInput,
         ...style
       }}
     >

@@ -11,8 +11,7 @@ import useLocalStorage from '@/hooks/useLocalStorage';
 import { CstMatchMode, DependencyMode } from '@/models/miscellaneous';
 import { applyGraphFilter } from '@/models/miscellaneousAPI';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
-import { createMockConstituenta, matchConstituenta } from '@/models/rsformAPI';
-import { extractGlobals } from '@/models/rslangAPI';
+import { matchConstituenta } from '@/models/rsformAPI';
 import { storage } from '@/utils/constants';
 
 interface ConstituentsSearchProps {
@@ -35,15 +34,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, dense, setFilt
       return;
     }
     let result: IConstituenta[] = [];
-    if (filterSource === DependencyMode.EXPRESSION) {
-      const aliases = extractGlobals(activeExpression);
-      result = schema.items.filter(cst => aliases.has(cst.alias));
-      const names = result.map(cst => cst.alias);
-      const diff = Array.from(aliases).filter(name => !names.includes(name));
-      if (diff.length > 0) {
-        diff.forEach((alias, index) => result.push(createMockConstituenta(-index, alias, 'Конституента отсутствует')));
-      }
-    } else if (!activeID) {
+    if (!activeID) {
       result = schema.items;
     } else {
       result = applyGraphFilter(schema, activeID, filterSource);

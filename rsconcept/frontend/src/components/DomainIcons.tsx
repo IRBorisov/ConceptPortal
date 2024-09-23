@@ -96,8 +96,6 @@ export function DependencyIcon({ value, size = '1.25rem', className }: DomIconPr
   switch (value) {
     case DependencyMode.ALL:
       return <IconSettings size={size} className={className} />;
-    case DependencyMode.EXPRESSION:
-      return <IconText size={size} className={className ?? 'clr-text-primary'} />;
     case DependencyMode.OUTPUTS:
       return <IconGraphOutputs size={size} className={className ?? 'clr-text-primary'} />;
     case DependencyMode.INPUTS:

@@ -6,15 +6,7 @@ import { TextMatcher } from '@/utils/utils';
 
 import { BASIC_SCHEMAS, ILibraryItem } from './library';
 import { CstMatchMode } from './miscellaneous';
-import {
-  CATEGORY_CST_TYPE,
-  ConstituentaID,
-  CstClass,
-  CstType,
-  ExpressionStatus,
-  IConstituenta,
-  IRSForm
-} from './rsform';
+import { CATEGORY_CST_TYPE, CstClass, CstType, ExpressionStatus, IConstituenta, IRSForm } from './rsform';
 import { ParsingStatus, ValueClass } from './rslang';
 
 /**
@@ -109,49 +101,6 @@ export function inferClass(type: CstType, isTemplate: boolean = false): CstClass
     case CstType.PREDICATE:   return CstClass.DERIVED;
     case CstType.THEOREM:     return CstClass.STATEMENT;
   }
-}
-
-/**
- * Creates a mock {@link IConstituenta} object with the provided parameters and default values for other properties.
- */
-export function createMockConstituenta(id: ConstituentaID, alias: string, comment: string): IConstituenta {
-  return {
-    id: id,
-    spawner: id,
-    spawn: [],
-    spawn_alias: [],
-    is_simple_expression: false,
-    schema: -1,
-    alias: alias,
-    convention: comment,
-    cst_type: CstType.BASE,
-    term_raw: '',
-    term_resolved: '',
-    term_forms: [],
-    definition_formal: '',
-    definition_raw: '',
-    definition_resolved: '',
-    status: ExpressionStatus.INCORRECT,
-    parent_schema_index: 0,
-    is_template: false,
-    is_inherited: false,
-    has_inherited_children: false,
-    cst_class: CstClass.DERIVED,
-    parse: {
-      status: ParsingStatus.INCORRECT,
-      valueClass: ValueClass.INVALID,
-      typification: 'N/A',
-      syntaxTree: '',
-      args: []
-    }
-  };
-}
-
-/**
- * Checks if given {@link IConstituenta} is mock.
- */
-export function isMockCst(cst: IConstituenta) {
-  return cst.id <= 0;
 }
 
 /**

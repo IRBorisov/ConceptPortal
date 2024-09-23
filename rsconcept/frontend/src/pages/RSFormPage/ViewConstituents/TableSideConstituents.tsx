@@ -8,7 +8,6 @@ import NoData from '@/components/ui/NoData';
 import TextContent from '@/components/ui/TextContent';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
-import { isMockCst } from '@/models/rsformAPI';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { describeConstituenta } from '@/utils/labels';
 
@@ -53,9 +52,7 @@ function TableSideConstituents({
 
   const handleRowClicked = useCallback(
     (cst: IConstituenta) => {
-      if (!isMockCst(cst)) {
-        onOpenEdit(cst.id);
-      }
+      onOpenEdit(cst.id);
     },
     [onOpenEdit]
   );
@@ -90,8 +87,7 @@ function TableSideConstituents({
             maxLength={DESCRIPTION_MAX_SYMBOLS}
             style={{
               textWrap: 'pretty',
-              fontSize: 12,
-              color: isMockCst(props.row.original) ? colors.fgWarning : undefined
+              fontSize: 12
             }}
           />
         )

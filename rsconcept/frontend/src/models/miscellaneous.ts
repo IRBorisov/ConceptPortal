@@ -12,7 +12,6 @@ import { IOperation } from './oss';
  */
 export enum DependencyMode {
   ALL = 0,
-  EXPRESSION,
   OUTPUTS,
   INPUTS,
   EXPAND_OUTPUTS,
