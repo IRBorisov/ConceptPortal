@@ -760,6 +760,8 @@ export function describeRSError(error: IRSErrorDescription): string {
       return `Использование имени переменной вне области действия: ${error.params[0]}`;
     case RSErrorType.invalidElementPredicate:
       return `Несоответствие типизаций операндов для оператора: ${error.params[0]}${error.params[1]}${error.params[2]}`;
+    case RSErrorType.invalidEmptySetUsage:
+      return 'Бессмысленное использование пустого множества';
     case RSErrorType.invalidArgsArity:
       return `Неверное число аргументов терм-функции: ${error.params[0]} != ${error.params[1]}`;
     case RSErrorType.invalidArgumentType:

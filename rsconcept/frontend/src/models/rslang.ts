@@ -232,6 +232,7 @@ export enum RSErrorType {
   invalidBinding = 34836,
   localOutOfScope = 34837,
   invalidElementPredicate = 34838,
+  invalidEmptySetUsage = 34839,
   invalidArgsArity = 34840,
   invalidArgumentType = 34841,
   globalStructure = 34844,

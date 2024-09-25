@@ -4,9 +4,9 @@
 
 /* prettier-ignore */
 :root {
-  --font-ui:  'Alegreya Sans SC', 'Rubik', 'Segoe UI Symbol', sans-serif;
-  --font-main: 'Rubik', 'Fira Code', 'Noto Sans Math', 'Noto Sans Symbols 2', 'Segoe UI Symbol', sans-serif;
-  --font-math: 'Fira Code', 'Noto Sans Math', 'Noto Sans Symbols 2', 'Rubik', 'Segoe UI Symbol', sans-serif;
+  --font-ui:  'Alegreya Sans SC', 'Rubik', 'Noto Color Emoji', 'Segoe UI Symbol', sans-serif;
+  --font-main: 'Rubik', 'Noto Color Emoji', 'Fira Code', 'Noto Sans Math', 'Noto Sans Symbols 2', 'Segoe UI Symbol', sans-serif;
+  --font-math: 'Fira Code', 'Noto Sans Math', 'Noto Sans Symbols 2', 'Rubik', 'Noto Color Emoji', 'Segoe UI Symbol', sans-serif;
 
   /* Light Theme */
   --cl-bg-120:      hsl(000, 000%, 100%);
