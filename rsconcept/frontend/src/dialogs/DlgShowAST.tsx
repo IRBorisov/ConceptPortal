@@ -27,7 +27,7 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
   const nodes: GraphNode[] = useMemo(
     () =>
       syntaxTree.map(node => ({
-        id: String(node.uid),
+        id: String(syntaxTree.length - node.uid), // invert order of IDs to force correct ordering in graph layout
         label: labelSyntaxTree(node),
         fill: colorBgSyntaxTree(node, colors)
       })),
@@ -40,15 +40,15 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
       if (node.parent !== node.uid) {
         result.push({
           id: String(node.uid),
-          source: String(node.parent),
-          target: String(node.uid)
+          source: String(syntaxTree.length - node.parent),
+          target: String(syntaxTree.length - node.uid)
         });
       }
     });
     return result;
   }, [syntaxTree]);
 
-  const handleHoverIn = useCallback((node: GraphNode) => setHoverID(Number(node.id)), []);
+  const handleHoverIn = useCallback((node: GraphNode) => setHoverID(syntaxTree.length - Number(node.id)), [syntaxTree]);
 
   const handleHoverOut = useCallback(() => setHoverID(undefined), []);
 
