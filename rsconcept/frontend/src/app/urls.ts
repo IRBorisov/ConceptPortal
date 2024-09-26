@@ -8,6 +8,7 @@ import { buildConstants } from '@/utils/buildConstants';
  * Routes.
  */
 export const routes = {
+  not_found: 'not-found',
   login: 'login',
   signup: 'signup',
   profile: 'profile',
@@ -39,6 +40,7 @@ interface OssProps {
  * Internal navigation URLs.
  */
 export const urls = {
+  page404: '/not-found',
   admin: `${buildConstants.backend}/admin`,
   rest_api: `${buildConstants.backend}/`,
   home: '/',

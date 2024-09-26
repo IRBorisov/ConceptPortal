@@ -7,6 +7,7 @@ import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { HelpTopic } from '@/models/miscellaneous';
+import { PARAMETER } from '@/utils/constants';
 
 import TopicsList from './TopicsList';
 import ViewTopic from './ViewTopic';
@@ -17,6 +18,14 @@ function ManualsPage() {
   const activeTopic = (query.get('topic') || HelpTopic.MAIN) as HelpTopic;
 
   const { mainHeight } = useConceptOptions();
+
+  if (!Object.values(HelpTopic).includes(activeTopic)) {
+    setTimeout(() => {
+      router.push(urls.page404);
+    }, PARAMETER.refreshTimeout);
+    console.log(1);
+    return null;
+  }
 
   const onSelectTopic = useCallback(
     (newTopic: HelpTopic) => {
