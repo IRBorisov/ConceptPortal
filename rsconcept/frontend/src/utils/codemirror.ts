@@ -13,8 +13,10 @@ import { IEntityReference, ISyntacticReference } from '@/models/language';
 import { parseEntityReference, parseGrammemes, parseSyntacticReference } from '@/models/languageAPI';
 import { IConstituenta } from '@/models/rsform';
 import { isBasicConcept } from '@/models/rsformAPI';
+import { SyntaxTree } from '@/models/rslang';
 
 import { colorFgGrammeme, IColorTheme } from '../styling/color';
+import { PARAMETER } from './constants';
 import { describeConstituentaTerm, labelCstTypification, labelGrammeme } from './labels';
 
 /**
@@ -89,6 +91,56 @@ export function printTree(tree: Tree): string {
     }
   });
   return state.output;
+}
+
+/**
+ * Transform Tree to {@link SyntaxTree}.
+ */
+export function transformAST(tree: Tree): SyntaxTree {
+  const result: SyntaxTree = [];
+  const parents: number[] = [];
+  const cursor = tree.cursor();
+  let finished = false;
+  let leave = true;
+  while (!finished) {
+    let node = cursorNode(cursor);
+    node.isLeaf = !cursor.firstChild();
+
+    leave = true;
+    result.push({
+      uid: result.length,
+      parent: parents.length > 0 ? parents[parents.length - 1] : result.length,
+      typeID: node.type.id,
+      start: node.from,
+      finish: node.to,
+      data: {
+        dataType: 'string',
+        value: node.type.name == '⚠' ? PARAMETER.errorNodeLabel : node.type.name
+      }
+    });
+    parents.push(result.length - 1);
+
+    if (!node.isLeaf) continue;
+
+    for (;;) {
+      node = cursorNode(cursor, node.isLeaf);
+      if (leave) {
+        parents.pop();
+      }
+
+      leave = cursor.type.isAnonymous;
+      node.isLeaf = false;
+      if (cursor.nextSibling()) {
+        break;
+      }
+      if (!cursor.parent()) {
+        finished = true;
+        break;
+      }
+      leave = true;
+    }
+  }
+  return result;
 }
 
 /**

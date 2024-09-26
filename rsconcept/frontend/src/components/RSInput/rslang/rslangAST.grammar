@@ -1,0 +1,247 @@
+///////////////////////////////////////////////////////////
+// ------------- Generator Definitions --------------------
+///////////////////////////////////////////////////////////
+@detectDelim
+
+///////////////////////////////////////////////////////////
+// ------------- Precedence Definitions --------------------
+///////////////////////////////////////////////////////////
+@precedence {
+  plus @left minus @left,
+  times @left,
+  not @right,
+  log_equiv @left,
+  log_impl @left,
+  log_or @left,
+  log_and @left,
+  set_decart @left set_union @left set_intersect @left set_minus @left set_symminus @left,
+  set_bool @right,
+  quant @right
+}
+
+///////////////////////////////////////////////////////////
+// ------------- Terminal Tokens --------------------------
+///////////////////////////////////////////////////////////
+@tokens {
+  space             { @whitespace+ }
+  Integer           { $[0-9]+ }
+  EmptySet          { "∅" }
+  IntegerSet        { "Z" }
+
+  BigPr             { "Pr"$[1-9]$[0-9]*(","$[1-9]$[0-9]*)* }
+  SmallPr           { "pr"$[1-9]$[0-9]*(","$[1-9]$[0-9]*)* }
+  Filter            { "Fi"$[1-9]$[0-9]*(","$[1-9]$[0-9]*)* }
+  Card              { "card" }
+  Bool              { "bool" }
+  Debool            { "debool" }
+  Red               { "red" }
+
+  Global            { $[XCSDAT]$[0-9]+ }
+  Function          { "F"$[0-9]+ }
+  Predicate         { "P"$[0-9]+ }
+  Radical           { "R"$[0-9]+ }
+  Local             { $[_a-zα-ω]($[a-zα-ω])*$[0-9]* }
+  PrefixR           { "R" }
+  PrefixI           { "I" }
+  PrefixD           { "D" }
+
+  "¬"
+  "∀" "∃" "⇔" "⇒" "∨" "&"
+  "ℬ"
+  "+" "-" "*" "∪" "\\" "∆" "∩" "×"
+  "∈" "∉" "⊆" "⊄" "⊂" ">" "≥" "≤" "<" "≠" "="
+  ":∈" ":="
+  
+  "," ";" "|"
+  "[" "]"
+  "{" "}"
+  "(" ")"
+  
+  @precedence {
+    Filter
+    BigPr
+    Predicate
+    Function
+    Global
+    Radical
+    PrefixR
+    PrefixI
+    PrefixD
+  }
+  @precedence {
+    Card
+    Bool
+    Debool
+    Red
+    SmallPr
+    Local
+  }
+}
+
+@skip { space }
+
+
+///////////////////////////////////////////////////////////////////////////////
+// ------------------------- Grammar Rules ------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+
+// ------------------------- Language Expression ------------------------------
+@top Expression {
+  logic_or_setexpr |
+  Function_decl
+}
+logic_or_setexpr	{
+  Logic |
+  Setexpr
+}
+Function_decl {
+  "[" Arguments "]" logic_or_setexpr
+}
+
+
+// -------------------------  Variables and arguments -------------------------
+Arguments {
+  Declaration |
+  Arguments "," Declaration
+}
+Declaration {
+  Local "∈" Setexpr
+}
+Variable {
+  Local |
+  Tuple
+}
+Variable_pack {
+  Variable |
+  Variable_pack "," Variable
+}
+
+
+// ------------------------- Logic Expressions --------------------------------
+Logic {
+  Logic_predicates |
+  Logic_unary |
+  Logic_binary |
+  "(" Logic ")"
+}
+
+Logic_predicates {
+  Variable ":∈" Setexpr |
+  Variable ":=" Setexpr |
+  Setexpr "∈" Setexpr |
+  Setexpr "∉" Setexpr |
+  Setexpr "⊆" Setexpr |
+  Setexpr "⊄" Setexpr |
+  Setexpr "⊂" Setexpr |
+  Setexpr ">" Setexpr |
+  Setexpr "≥" Setexpr |
+  Setexpr "<" Setexpr |
+  Setexpr "≤" Setexpr |
+  Setexpr "≠" Setexpr |
+  Setexpr "=" Setexpr
+}
+
+Logic_unary {
+  Negation { !not "¬" Logic } |
+  Predicate "[" Setexpr_enum "]" |
+  Logic_quantor
+}
+
+Logic_quantor {
+  "∀" Variable_pack "∈" Setexpr !quant Logic |
+  "∃" Variable_pack "∈" Setexpr !quant Logic
+}
+
+Logic_binary {
+  Logic !log_equiv "⇔" Logic |
+  Logic !log_impl "⇒" Logic |
+  Logic !log_or "∨" Logic |
+  Logic !log_and "&" Logic
+}
+
+
+// ------------------------- Set Expressions ----------------------------------
+Setexpr {
+  Literal |
+  identifier |
+  Setexpr_binary |
+  Setexpr_generators |
+  Function "[" Setexpr_enum "]" |
+  TextFunction "(" Setexpr ")"
+}
+TextFunction {
+  BigPr |
+  SmallPr |
+  Card |
+  Bool |
+  Debool |
+  Red
+}
+Setexpr_enum {
+  Setexpr |
+  Setexpr_enum_min2
+}
+Setexpr_enum_min2 {
+  Setexpr_enum "," Setexpr
+}
+
+Literal {
+  Integer |
+  EmptySet |
+  IntegerSet
+}
+identifier {
+  Local |
+  Global |
+  Radical
+}
+
+Setexpr_binary {
+  Setexpr !plus "+" Setexpr |
+  Setexpr !minus "-" Setexpr |
+  Setexpr !times "*" Setexpr |
+  Setexpr !set_union "∪" Setexpr |
+  Setexpr !set_minus "\\" Setexpr |
+  Setexpr !set_symminus "∆" Setexpr |
+  Setexpr !set_intersect "∩" Setexpr |
+  Setexpr !set_decart "×" Setexpr |
+  "(" Setexpr_binary ")"
+}
+
+Setexpr_generators {
+  Enumeration |
+  Tuple |
+  Boolean |
+  Filter_expression |
+  Declarative |
+  Imperative |
+  Recursion
+}
+Enumeration {
+  "{" Setexpr_enum "}"
+}
+Tuple {
+  "(" Setexpr_enum_min2 ")"
+}
+Boolean {
+  !set_bool "ℬ" "(" Setexpr ")" |
+  !set_bool "ℬ" Boolean
+}
+Filter_expression {
+  Filter "[" Setexpr_enum "]" "(" Setexpr ")"
+}
+
+Declarative {
+  "{" Local "∈" Setexpr "|" Logic "}" |
+  PrefixD "{" Variable "∈" Setexpr "|" Logic "}"
+}
+Recursion {
+  PrefixR "{" Variable ":=" Setexpr ("|" Logic)? "|" Setexpr "}"
+}
+Imperative {
+  PrefixI "{" Setexpr "|" Imp_blocks "}"
+}
+Imp_blocks {
+  Logic |
+  Imp_blocks ";" Logic
+}

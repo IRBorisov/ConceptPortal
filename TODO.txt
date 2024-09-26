@@ -63,12 +63,12 @@ https://yandex.cloud/ru/docs/smartcaptcha
 [Research]
 Research and consider integration
 - django-allauth - consider supporting popular auth providers
-- drf-messages
 
 - skeleton loading
 https://react.dev/reference/react/Suspense
 
 - backend error message unification
+- drf-messages
 https://drf-standardized-errors.readthedocs.io/en/latest/error_response.html
 
 - semantic json diff

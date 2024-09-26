@@ -6,6 +6,7 @@ import { GramData, Grammeme, NounGrams, PartOfSpeech, VerbGrams } from '@/models
 import { GraphColoring } from '@/models/miscellaneous';
 import { CstClass, ExpressionStatus, IConstituenta } from '@/models/rsform';
 import { ISyntaxTreeNode, TokenID } from '@/models/rslang';
+import { PARAMETER } from '@/utils/constants';
 
 /**
  * Represents application color theme configuration.
@@ -375,8 +376,65 @@ export function colorBgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): s
     case TokenID.ITERATE:
       return colors.bgRed;
   }
+
+  switch (node.data.value) {
+    case 'Expression':
+    case 'Local':
+      return colors.bgGreen;
+
+    case 'Global':
+    case 'Radical':
+    case 'Function':
+    case 'Predicate':
+    case 'Literal':
+    case 'Integer':
+    case 'EmptySet':
+    case 'IntegerSet':
+      return colors.bgTeal;
+
+    case 'Logic':
+    case 'Logic_predicates':
+    case 'Variable':
+    case 'Tuple':
+    case 'Setexpr_enum_min2':
+    case 'Setexpr_enum':
+    case 'Setexpr':
+    case 'Setexpr_binary':
+    case 'Setexpr_generators':
+    case 'Enumeration':
+    case 'Boolean':
+    case 'Filter_expression':
+    case 'Filter':
+    case 'Declarative':
+    case 'Imperative':
+    case 'Imp_blocks':
+    case 'Recursion':
+    case 'TextFunction':
+    case 'Logic_unary':
+    case 'Logic_quantor':
+    case 'Variable_pack':
+    case 'Logic_binary':
+    case 'Function_decl':
+    case 'Arguments':
+    case 'Declaration':
+      return colors.bgBlue;
+
+    case 'BigPr':
+    case 'SmallPr':
+    case 'Card':
+    case 'Bool':
+    case 'Debool':
+    case 'Red':
+    case 'PrefixD':
+    case 'PrefixI':
+    case 'PrefixR':
+      return colors.bgPurple;
+
+    case PARAMETER.errorNodeLabel:
+      return colors.bgRed;
+  }
   // node
-  return colors.bgRed;
+  return colors.bgPurple;
 }
 
 /**

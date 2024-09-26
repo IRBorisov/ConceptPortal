@@ -34,6 +34,7 @@ export const PARAMETER = {
   statSmallThreshold: 3, // characters - threshold for small labels - small font
 
   logicLabel: 'LOGIC',
+  errorNodeLabel: '[ERROR]',
   exteorVersion: '4.9.5',
 
   TOOLTIP_WIDTH: 'max-w-[29rem]'

@@ -622,6 +622,9 @@ export function labelSyntaxTree(node: ISyntaxTreeNode): string {
       return labelToken(node.typeID);
   }
   // node
+  if (node.data.value) {
+    return node.data.value as string;
+  }
   return 'UNKNOWN ' + String(node.typeID);
 }
 

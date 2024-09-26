@@ -1,4 +1,5 @@
 import { IconControls, IconTree } from '@/components/Icons';
+import { CProps } from '@/components/props';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { useRSForm } from '@/context/RSFormContext';
@@ -8,7 +9,7 @@ interface ToolbarRSExpressionProps {
   showControls: boolean;
 
   toggleControls: () => void;
-  showAST: () => void;
+  showAST: (event: CProps.EventMouse) => void;
 }
 
 function ToolbarRSExpression({ disabled, showControls, toggleControls, showAST }: ToolbarRSExpressionProps) {

@@ -6,7 +6,9 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import BadgeHelp from '@/components/info/BadgeHelp';
+import { CProps } from '@/components/props';
 import RSInput from '@/components/RSInput';
+import { parser as rslangParser } from '@/components/RSInput/rslang/parserAST';
 import { RSTextWrapper } from '@/components/RSInput/textEditing';
 import Overlay from '@/components/ui/Overlay';
 import { useRSForm } from '@/context/RSFormContext';
@@ -18,6 +20,7 @@ import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { getDefinitionPrefix } from '@/models/rsformAPI';
 import { IExpressionParse, IRSErrorDescription, SyntaxTree } from '@/models/rslang';
 import { TokenID } from '@/models/rslang';
+import { transformAST } from '@/utils/codemirror';
 import { storage } from '@/utils/constants';
 import { errors, labelTypification } from '@/utils/labels';
 
@@ -124,17 +127,25 @@ function EditorRSExpression({
     setIsModified(true);
   }, []);
 
-  function handleShowAST() {
-    handleCheckExpression(parse => {
-      if (!parse.astText) {
-        toast.error(errors.astFailed);
-      } else {
-        setSyntaxTree(parse.ast);
-        // TODO: return prefix from parser API instead of prefixLength
-        setExpression(getDefinitionPrefix(activeCst) + value);
-        setShowAST(true);
-      }
-    });
+  function handleShowAST(event: CProps.EventMouse) {
+    if (event.ctrlKey) {
+      const tree = rslangParser.parse(value);
+      const ast = transformAST(tree);
+      setSyntaxTree(ast);
+      setExpression(value);
+      setShowAST(true);
+    } else {
+      handleCheckExpression(parse => {
+        if (!parse.astText) {
+          toast.error(errors.astFailed);
+        } else {
+          setSyntaxTree(parse.ast);
+          // TODO: return prefix from parser API instead of prefixLength
+          setExpression(getDefinitionPrefix(activeCst) + value);
+          setShowAST(true);
+        }
+      });
+    }
   }
 
   const controls = useMemo(
