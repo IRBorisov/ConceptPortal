@@ -41,7 +41,7 @@ function TableHeader<TData>({
               style={{
                 paddingRight: enableSorting && header.column.getCanSort() ? '0px' : '2px',
                 textAlign: 'start',
-                width: header.getSize(),
+                width: `calc(var(--header-${header?.id}-size) * 1px)`,
                 cursor: enableSorting && header.column.getCanSort() ? 'pointer' : 'auto'
               }}
               onClick={enableSorting ? header.column.getToggleSortingHandler() : undefined}

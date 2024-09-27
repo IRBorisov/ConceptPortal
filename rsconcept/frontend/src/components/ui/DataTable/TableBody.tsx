@@ -93,7 +93,8 @@ function TableBody<TData>({
               style={{
                 cursor: onRowClicked || onRowDoubleClicked ? 'pointer' : 'auto',
                 paddingBottom: dense ? '0.25rem' : '0.5rem',
-                paddingTop: dense ? '0.25rem' : '0.5rem'
+                paddingTop: dense ? '0.25rem' : '0.5rem',
+                width: noHeader && index === 0 ? `calc(var(--col-${cell.column.id}-size) * 1px)` : 'auto'
               }}
               onClick={event => handleRowClicked(row, event)}
               onDoubleClick={event => (onRowDoubleClicked ? onRowDoubleClicked(row.original, event) : undefined)}

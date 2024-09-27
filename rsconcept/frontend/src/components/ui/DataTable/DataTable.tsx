@@ -138,9 +138,19 @@ function DataTable<TData extends RowData>({
     }
   }, [rows, dense, noHeader, contentHeight]);
 
+  const columnSizeVars = useMemo(() => {
+    const headers = tableImpl.getFlatHeaders();
+    const colSizes: Record<string, number> = {};
+    for (const header of headers) {
+      colSizes[`--header-${header.id}-size`] = header.getSize();
+      colSizes[`--col-${header.column.id}-size`] = header.column.getSize();
+    }
+    return colSizes;
+  }, [tableImpl.getState().columnSizingInfo, tableImpl.getState().columnSizing]);
+
   return (
     <div tabIndex={-1} id={id} className={className} style={{ minHeight: fixedSize, maxHeight: fixedSize, ...style }}>
-      <table className='w-full'>
+      <table className='w-full' style={{ ...columnSizeVars }}>
         {!noHeader ? (
           <TableHeader
             table={tableImpl}
