@@ -1,19 +1,31 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback } from 'react';
+import { motion } from 'framer-motion';
+import { useCallback, useMemo } from 'react';
 
 import { LocationIcon, VisibilityIcon } from '@/components/DomainIcons';
-import { IconEditor, IconFilterReset, IconFolder, IconFolderTree, IconOwner } from '@/components/Icons';
+import {
+  IconEditor,
+  IconFilterReset,
+  IconFolder,
+  IconFolderSearch,
+  IconFolderTree,
+  IconOwner,
+  IconUserSearch
+} from '@/components/Icons';
 import { CProps } from '@/components/props';
+import SelectUser from '@/components/select/SelectUser';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import MiniButton from '@/components/ui/MiniButton';
 import SearchBar from '@/components/ui/SearchBar';
 import SelectorButton from '@/components/ui/SelectorButton';
-import { useAuth } from '@/context/AuthContext';
+import { useUsers } from '@/context/UsersContext';
 import useDropdown from '@/hooks/useDropdown';
 import { LocationHead } from '@/models/library';
+import { UserID } from '@/models/user';
+import { animateDropdownItem } from '@/styling/animations';
 import { prefixes } from '@/utils/constants';
 import { describeLocationHead, labelLocationHead } from '@/utils/labels';
 import { tripleToggleColor } from '@/utils/utils';
@@ -39,6 +51,9 @@ interface ToolbarSearchProps {
   toggleOwned: () => void;
   isEditor: boolean | undefined;
   toggleEditor: () => void;
+  filterUser: UserID | undefined;
+  setFilterUser: React.Dispatch<React.SetStateAction<UserID | undefined>>;
+
   resetFilter: () => void;
 }
 
@@ -63,10 +78,19 @@ function ToolbarSearch({
   toggleOwned,
   isEditor,
   toggleEditor,
+  filterUser,
+  setFilterUser,
+
   resetFilter
 }: ToolbarSearchProps) {
-  const { user } = useAuth();
   const headMenu = useDropdown();
+  const userMenu = useDropdown();
+  const { users } = useUsers();
+
+  const userActive = useMemo(
+    () => isOwned !== undefined || isEditor !== undefined || filterUser !== undefined,
+    [isOwned, isEditor, filterUser]
+  );
 
   const handleChange = useCallback(
     (newValue: LocationHead | undefined) => {
@@ -106,7 +130,7 @@ function ToolbarSearch({
       <div
         className={clsx(
           'ml-3 pt-1 self-center',
-          'min-w-[4.5rem] sm:min-w-[5.5rem]',
+          'min-w-[4.5rem] sm:min-w-[7.4rem]',
           'select-none',
           'whitespace-nowrap'
         )}
@@ -114,41 +138,58 @@ function ToolbarSearch({
         {filtered} из {total}
       </div>
 
-      {user ? (
-        <div className='cc-icons'>
-          <MiniButton
-            title='Видимость'
-            icon={<VisibilityIcon value={true} className={tripleToggleColor(isVisible)} />}
-            onClick={toggleVisible}
-          />
+      <div className='cc-icons'>
+        <MiniButton
+          title='Видимость'
+          icon={<VisibilityIcon value={true} className={tripleToggleColor(isVisible)} />}
+          onClick={toggleVisible}
+        />
 
+        <div ref={userMenu.ref} className='flex'>
           <MiniButton
-            title='Я - Владелец'
-            icon={<IconOwner size='1.25rem' className={tripleToggleColor(isOwned)} />}
-            onClick={toggleOwned}
+            title='Поиск пользователя'
+            hideTitle={userMenu.isOpen}
+            icon={<IconUserSearch size='1.25rem' className={userActive ? 'icon-green' : 'icon-primary'} />}
+            onClick={userMenu.toggle}
           />
-
-          <MiniButton
-            title='Я - Редактор'
-            icon={<IconEditor size='1.25rem' className={tripleToggleColor(isEditor)} />}
-            onClick={toggleEditor}
-          />
-
-          <MiniButton
-            title='Сбросить фильтры'
-            icon={<IconFilterReset size='1.25rem' className='icon-primary' />}
-            onClick={resetFilter}
-            disabled={!hasCustomFilter}
-          />
+          <Dropdown isOpen={userMenu.isOpen}>
+            <DropdownButton
+              text='Я - Владелец'
+              icon={<IconOwner size='1.25rem' className={tripleToggleColor(isOwned)} />}
+              onClick={toggleOwned}
+            />
+            <DropdownButton
+              text='Я - Редактор'
+              icon={<IconEditor size='1.25rem' className={tripleToggleColor(isEditor)} />}
+              onClick={toggleEditor}
+            />
+            <motion.div className='px-1 pb-1' variants={animateDropdownItem}>
+              <SelectUser
+                noBorder
+                placeholder='Выберите владельца'
+                className='min-w-[15rem] text-sm'
+                items={users}
+                value={filterUser}
+                onSelectValue={setFilterUser}
+              />
+            </motion.div>
+          </Dropdown>
         </div>
-      ) : null}
 
-      <div className='flex h-full'>
+        <MiniButton
+          title='Сбросить фильтры'
+          icon={<IconFilterReset size='1.25rem' className='icon-primary' />}
+          onClick={resetFilter}
+          disabled={!hasCustomFilter}
+        />
+      </div>
+
+      <div className='flex h-full flex-grow pr-4'>
         <SearchBar
           id='library_search'
           placeholder='Поиск'
           noBorder
-          className='min-w-[7rem] sm:min-w-[10rem]'
+          className={clsx('min-w-[7rem] sm:min-w-[10rem] max-w-[20rem]', folderMode && 'flex-grow')}
           value={query}
           onChange={setQuery}
         />
@@ -163,7 +204,7 @@ function ToolbarSearch({
                 head ? (
                   <LocationIcon value={head} size='1.25rem' />
                 ) : (
-                  <IconFolder size='1.25rem' className='clr-text-controls' />
+                  <IconFolderSearch size='1.25rem' className='clr-text-controls' />
                 )
               }
               onClick={handleFolderClick}
@@ -171,7 +212,7 @@ function ToolbarSearch({
             />
 
             <Dropdown isOpen={headMenu.isOpen} stretchLeft className='z-modalTooltip'>
-              <DropdownButton className='w-[10rem]' title='Переключение в режим Проводник' onClick={handleToggleFolder}>
+              <DropdownButton title='Переключение в режим Проводник' onClick={handleToggleFolder}>
                 <div className='inline-flex items-center gap-3'>
                   <IconFolderTree size='1rem' className='clr-text-controls' />
                   <span>проводник...</span>
@@ -207,7 +248,7 @@ function ToolbarSearch({
             placeholder='Путь'
             noIcon
             noBorder
-            className='min-w-[4.5rem] sm:min-w-[5rem]'
+            className='w-[4.5rem] sm:w-[5rem] flex-grow'
             value={path}
             onChange={setPath}
           />

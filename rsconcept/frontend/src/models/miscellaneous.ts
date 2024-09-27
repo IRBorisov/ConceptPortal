@@ -6,6 +6,7 @@ import { Node } from 'reactflow';
 
 import { LibraryItemType, LocationHead } from './library';
 import { IOperation } from './oss';
+import { UserID } from './user';
 
 /**
  * Represents graph dependency mode.
@@ -182,6 +183,7 @@ export interface ILibraryFilter {
   isVisible?: boolean;
   isOwned?: boolean;
   isEditor?: boolean;
+  filterUser?: UserID;
 }
 
 /**

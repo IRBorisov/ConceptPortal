@@ -110,6 +110,9 @@ export const LibraryState = ({ children }: React.PropsWithChildren) => {
       if (filter.isEditor !== undefined) {
         result = result.filter(item => filter.isEditor == user?.editor.includes(item.id));
       }
+      if (filter.filterUser !== undefined) {
+        result = result.filter(item => filter.filterUser === item.owner);
+      }
       if (!filter.folderMode && filter.path) {
         result = result.filter(item => matchLibraryItemLocation(item, filter.path!));
       }

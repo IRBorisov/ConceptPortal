@@ -362,11 +362,11 @@ export function describeExpressionStatus(status: ExpressionStatus): string {
 export function labelHelpTopic(topic: HelpTopic): string {
   // prettier-ignore
   switch (topic) {
-    case HelpTopic.MAIN:            return 'Портал';
+    case HelpTopic.MAIN:            return '🏠 Портал';
 
-    case HelpTopic.THESAURUS:       return 'Тезаурус';
+    case HelpTopic.THESAURUS:       return '📖 Тезаурус';
 
-    case HelpTopic.INTERFACE:       return 'Интерфейс';
+    case HelpTopic.INTERFACE:       return '🦄 Интерфейс';
     case HelpTopic.UI_LIBRARY:      return 'Библиотека';
     case HelpTopic.UI_RS_MENU:      return 'Меню схемы';
     case HelpTopic.UI_RS_CARD:      return 'Карточка схемы';
@@ -378,7 +378,7 @@ export function labelHelpTopic(topic: HelpTopic): string {
     case HelpTopic.UI_CST_CLASS:    return 'Класс конституенты';
     case HelpTopic.UI_OSS_GRAPH:    return 'Граф синтеза';
 
-    case HelpTopic.CONCEPTUAL:      return 'Концептуализация';
+    case HelpTopic.CONCEPTUAL:      return '♨️ Концептуализация';
     case HelpTopic.CC_SYSTEM:       return 'Система определений';
     case HelpTopic.CC_CONSTITUENTA: return 'Конституента';
     case HelpTopic.CC_RELATIONS:    return 'Связи понятий';
@@ -386,24 +386,24 @@ export function labelHelpTopic(topic: HelpTopic): string {
     case HelpTopic.CC_OSS:          return 'Операционная схема';
     case HelpTopic.CC_PROPAGATION:  return 'Сквозные изменения';
 
-    case HelpTopic.RSLANG:          return 'Экспликация';
+    case HelpTopic.RSLANG:          return '🚀 Экспликация';
     case HelpTopic.RSL_TYPES:       return 'Типизация';
     case HelpTopic.RSL_CORRECT:     return 'Переносимость';
     case HelpTopic.RSL_INTERPRET:   return 'Интерпретируемость';
     case HelpTopic.RSL_OPERATIONS:  return 'Операции';
     case HelpTopic.RSL_TEMPLATES:   return 'Банк выражений';
 
-    case HelpTopic.TERM_CONTROL:    return 'Терминологизация';
-    case HelpTopic.ACCESS:          return 'Доступы';
-    case HelpTopic.VERSIONS:        return 'Версионирование';
+    case HelpTopic.TERM_CONTROL:    return '🪸 Терминологизация';
+    case HelpTopic.ACCESS:          return '👀 Доступы';
+    case HelpTopic.VERSIONS:        return '🏺 Версионирование';
 
-    case HelpTopic.INFO:            return 'Информация';
+    case HelpTopic.INFO:            return '📰 Информация';
     case HelpTopic.INFO_RULES:      return 'Правила';
     case HelpTopic.INFO_CONTRIB:    return 'Разработчики';
     case HelpTopic.INFO_PRIVACY:    return 'Обработка данных';
     case HelpTopic.INFO_API:        return 'REST API';
 
-    case HelpTopic.EXTEOR:          return 'Экстеор';
+    case HelpTopic.EXTEOR:          return '🖥️ Экстеор';
   }
 }
 

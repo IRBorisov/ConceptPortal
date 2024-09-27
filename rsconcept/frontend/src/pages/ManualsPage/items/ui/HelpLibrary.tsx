@@ -5,6 +5,7 @@ import {
   IconFolderEdit,
   IconFolderEmpty,
   IconFolderOpened,
+  IconFolderSearch,
   IconFolderTree,
   IconOSS,
   IconRSForm,
@@ -12,7 +13,8 @@ import {
   IconShow,
   IconSortAsc,
   IconSortDesc,
-  IconSubfolders
+  IconSubfolders,
+  IconUserSearch
 } from '@/components/Icons';
 import LinkTopic from '@/components/ui/LinkTopic';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
@@ -44,10 +46,13 @@ function HelpLibrary() {
         <IconSortDesc size='1rem' className='inline-icon' /> сортировка по клику на заголовок таблицы
       </li>
       <li>
+        <IconUserSearch size='1rem' className='inline-icon' /> фильтр по пользователю
+      </li>
+      <li>
         <IconSearch size='1rem' className='inline-icon' /> фильтр по названию и шифру
       </li>
       <li>
-        <IconFolder size='1rem' className='inline-icon' /> фильтр по расположению
+        <IconFolderSearch size='1rem' className='inline-icon' /> фильтр по расположению
       </li>
       <li>
         <IconFilterReset size='1rem' className='inline-icon' /> сбросить фильтры

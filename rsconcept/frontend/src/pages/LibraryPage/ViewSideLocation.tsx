@@ -89,13 +89,18 @@ function ViewSideLocation({
           place='right-start'
         />
         <div className='cc-icons'>
+          {canRename ? (
+            <MiniButton
+              icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
+              titleHtml='<b>Редактирование пути</b><br/>Перемещаются только Ваши схемы<br/>в указанной папке (и подпапках)'
+              onClick={onRenameLocation}
+            />
+          ) : null}
           <MiniButton
-            icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
-            titleHtml='<b>Редактирование пути</b><br/>Перемещаются только Ваши схемы<br/>в указанной папке (и подпапках)'
-            onClick={onRenameLocation}
-            disabled={!canRename}
+            title='Вложенные папки' // prettier: split-lines
+            icon={<SubfoldersIcon value={subfolders} />}
+            onClick={toggleSubfolders}
           />
-          <MiniButton title='Вложенные папки' icon={<SubfoldersIcon value={subfolders} />} onClick={toggleSubfolders} />
           <MiniButton
             icon={<IconFolderTree size='1.25rem' className='icon-green' />}
             title='Переключение в режим Поиск'

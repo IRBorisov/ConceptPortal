@@ -16,6 +16,7 @@ import DlgChangeLocation from '@/dialogs/DlgChangeLocation';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { ILibraryItem, IRenameLocationData, LocationHead } from '@/models/library';
 import { ILibraryFilter } from '@/models/miscellaneous';
+import { UserID } from '@/models/user';
 import { storage } from '@/utils/constants';
 import { information } from '@/utils/labels';
 import { convertToCSV, toggleTristateFlag } from '@/utils/utils';
@@ -36,8 +37,9 @@ function LibraryPage() {
   const [head, setHead] = useLocalStorage<LocationHead | undefined>(storage.librarySearchHead, undefined);
   const [subfolders, setSubfolders] = useLocalStorage<boolean>(storage.librarySearchSubfolders, false);
   const [isVisible, setIsVisible] = useLocalStorage<boolean | undefined>(storage.librarySearchVisible, true);
-  const [isOwned, setIsOwned] = useLocalStorage<boolean | undefined>(storage.librarySearchEditor, undefined);
+  const [isOwned, setIsOwned] = useLocalStorage<boolean | undefined>(storage.librarySearchOwned, undefined);
   const [isEditor, setIsEditor] = useLocalStorage<boolean | undefined>(storage.librarySearchEditor, undefined);
+  const [filterUser, setFilterUser] = useLocalStorage<UserID | undefined>(storage.librarySearchUser, undefined);
   const [showRenameLocation, setShowRenameLocation] = useState(false);
 
   const filter: ILibraryFilter = useMemo(
@@ -50,9 +52,22 @@ function LibraryPage() {
       isVisible: user ? isVisible : true,
       folderMode: options.folderMode,
       subfolders: subfolders,
-      location: options.location
+      location: options.location,
+      filterUser: filterUser
     }),
-    [head, path, query, isEditor, isOwned, isVisible, user, options.folderMode, options.location, subfolders]
+    [
+      head,
+      path,
+      query,
+      isEditor,
+      isOwned,
+      isVisible,
+      user,
+      options.folderMode,
+      options.location,
+      subfolders,
+      filterUser
+    ]
   );
 
   const hasCustomFilter = useMemo(
@@ -63,6 +78,7 @@ function LibraryPage() {
       filter.isEditor !== undefined ||
       filter.isOwned !== undefined ||
       filter.isVisible !== true ||
+      filter.filterUser !== undefined ||
       !!filter.location,
     [filter]
   );
@@ -84,8 +100,9 @@ function LibraryPage() {
     setIsVisible(true);
     setIsOwned(undefined);
     setIsEditor(undefined);
+    setFilterUser(undefined);
     options.setLocation('');
-  }, [setHead, setIsVisible, setIsOwned, setIsEditor, options.setLocation]);
+  }, [setHead, setIsVisible, setIsOwned, setIsEditor, setFilterUser, options.setLocation]);
 
   const promptRenameLocation = useCallback(() => {
     setShowRenameLocation(true);
@@ -186,6 +203,8 @@ function LibraryPage() {
         toggleVisible={toggleVisible}
         isEditor={isEditor}
         toggleEditor={toggleEditor}
+        filterUser={filterUser}
+        setFilterUser={setFilterUser}
         resetFilter={resetFilter}
         folderMode={options.folderMode}
         toggleFolderMode={toggleFolderMode}

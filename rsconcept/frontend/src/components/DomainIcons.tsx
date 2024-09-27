@@ -75,7 +75,7 @@ export function SubfoldersIcon({ value, size = '1.25rem', className }: DomIconPr
   if (value) {
     return <IconSubfolders size={size} className={className ?? 'clr-text-green'} />;
   } else {
-    return <IconSubfolders size={size} className={className ?? 'clr-text-controls'} />;
+    return <IconSubfolders size={size} className={className ?? 'clr-text-primary'} />;
   }
 }
 

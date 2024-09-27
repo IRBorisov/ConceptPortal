@@ -117,6 +117,7 @@ export const storage = {
   librarySearchVisible: 'library.search.visible',
   librarySearchOwned: 'library.search.owned',
   librarySearchEditor: 'library.search.editor',
+  librarySearchUser: 'library.search.user',
   libraryPagination: 'library.pagination',
 
   rsgraphFilter: 'rsgraph.filter2',
