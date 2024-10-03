@@ -640,8 +640,6 @@ def inline_synthesis(request: Request) -> HttpResponse:
         PropagationFacade.before_substitute(receiver, substitutions)
         receiver.substitute(substitutions)
 
-        receiver.restore_order()
-
     return Response(
         status=c.HTTP_200_OK,
         data=s.RSFormParseSerializer(receiver.model).data
