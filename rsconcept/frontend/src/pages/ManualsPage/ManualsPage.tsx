@@ -35,7 +35,7 @@ function ManualsPage() {
   );
 
   return (
-    <div className='flex mx-auto max-w-[80rem]' style={{ minHeight: mainHeight }}>
+    <div className='flex mx-auto max-w-[80rem]' role='manuals' style={{ minHeight: mainHeight }}>
       <TopicsList activeTopic={activeTopic} onChangeTopic={topic => onSelectTopic(topic)} />
       <ViewTopic topic={activeTopic} />
     </div>

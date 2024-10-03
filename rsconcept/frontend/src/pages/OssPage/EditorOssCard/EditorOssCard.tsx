@@ -49,7 +49,7 @@ function EditorOssCard({ isModified, onDestroy, setIsModified }: EditorOssCardPr
       />
       <AnimateFade
         onKeyDown={handleInput}
-        className={clsx('md:w-fit md:max-w-fit max-w-[32rem]', 'mx-auto pt-[1.9rem]', 'flex flex-col md:flex-row px-6')}
+        className={clsx('md:w-fit md:max-w-fit max-w-[32rem]', 'mx-auto pt-[1.9rem]', 'flex flex-row flex-wrap px-6')}
       >
         <FlexColumn className='px-3'>
           <FormOSS id={globals.library_item_editor} isModified={isModified} setIsModified={setIsModified} />

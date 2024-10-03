@@ -1,6 +1,9 @@
 !! This is not complete list of TODOs !!
 For more specific TODOs see comments in code
 
+[Bugs - PENDING]
+- Tab index still selecting background elements when modal is active
+
 [Functionality - PROGRESS]
 - OSS change propagation: Advanced features
 

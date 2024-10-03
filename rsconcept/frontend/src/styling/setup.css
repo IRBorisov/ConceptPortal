@@ -8,20 +8,21 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  -webkit-text-size-adjust: 100%;
+html {
+  -webkit-text-size-adjust: none;
+  -moz-text-size-adjust: none;
+  text-size-adjust: none;
 
-  width: 100%;
-  height: 100%;
+  hanging-punctuation: first last;
+  color-scheme: dark light;
+
+  /* interpolate-size: allow-keywords; */
+}
+
+body {
   margin: 0px;
   padding: 0px;
   overflow-x: hidden;
-}
-
-html {
-  hanging-punctuation: first last;
-  color-scheme: dark light;
 }
 
 [data-color-scheme='dark'] {
@@ -36,13 +37,13 @@ html {
 @media (prefers-reduced-motion: no-preference) {
   :has(:target) {
     scroll-behavior: smooth;
-    scroll-padding-top: 3rem;
+    scroll-padding-top: var(--scroll-padding);
   }
 }
 
 :root {
-  font-size: 16px;
-  line-height: 24px;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height);
   font-family: var(--font-main);
 
   color: var(--cl-fg-100);
@@ -58,8 +59,7 @@ html {
 
 @media only screen and (max-width: 639px) {
   :root {
-    font-size: 12px;
-    line-height: 18px;
+    font-size: var(--font-size-sm);
   }
 }
 
@@ -104,7 +104,7 @@ h6 {
 /* Limit text lines and setup wrapping */
 p,
 li {
-  max-width: 75ch;
+  max-width: var(--text-max-width);
   text-wrap: pretty;
 }
 
@@ -119,6 +119,9 @@ div:not(.dense) > p {
 
   h2 {
     @apply [&:not(:first-child)]:mt-2 font-semibold text-center;
+    [role='manuals'] & {
+      @apply [&:not(:first-child)]:mt-3 mb-2;
+    }
   }
 
   b {

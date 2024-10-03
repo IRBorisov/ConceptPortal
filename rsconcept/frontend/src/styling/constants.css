@@ -7,6 +7,14 @@
   --font-ui:  'Alegreya Sans SC', 'Rubik', 'Noto Color Emoji', 'Segoe UI Symbol', sans-serif;
   --font-main: 'Rubik', 'Noto Color Emoji', 'Fira Code', 'Noto Sans Math', 'Noto Sans Symbols 2', 'Segoe UI Symbol', sans-serif;
   --font-math: 'Fira Code', 'Noto Sans Math', 'Noto Sans Symbols 2', 'Rubik', 'Noto Color Emoji', 'Segoe UI Symbol', sans-serif;
+  
+  /* Numeric parameters */
+  --font-size-base: 16px;
+  --font-size-sm: 12px;
+  --line-height: 1.5;
+
+  --text-max-width: 75ch;
+  --scroll-padding: 3rem;
 
   /* Light Theme */
   --cl-bg-120:      hsl(000, 000%, 100%);

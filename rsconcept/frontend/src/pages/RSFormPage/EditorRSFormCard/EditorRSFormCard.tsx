@@ -49,7 +49,7 @@ function EditorRSFormCard({ isModified, onDestroy, setIsModified }: EditorRSForm
       />
       <AnimateFade
         onKeyDown={handleInput}
-        className={clsx('md:w-fit md:max-w-fit max-w-[32rem] mx-auto', 'flex flex-col md:flex-row px-6 pt-[1.9rem]')}
+        className={clsx('md:w-fit md:max-w-fit max-w-[32rem] mx-auto', 'flex flex-row flex-wrap px-6 pt-[1.9rem]')}
       >
         <FlexColumn className='flex-shrink'>
           <FormRSForm id={globals.library_item_editor} isModified={isModified} setIsModified={setIsModified} />
