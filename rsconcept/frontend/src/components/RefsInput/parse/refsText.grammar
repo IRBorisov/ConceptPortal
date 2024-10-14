@@ -22,7 +22,7 @@
   @precedence { word, space }
 }
 
-textItem { 
+textItem {
   !p1 ref |
   !p2 Error |
   !p3 Filler
