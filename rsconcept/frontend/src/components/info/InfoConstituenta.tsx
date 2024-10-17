@@ -4,6 +4,7 @@ import { IConstituenta } from '@/models/rsform';
 import { isBasicConcept } from '@/models/rsformAPI';
 import { labelCstTypification } from '@/utils/labels';
 
+import { IconChild } from '../Icons';
 import { CProps } from '../props';
 
 interface InfoConstituentaProps extends CProps.Div {
@@ -13,9 +14,11 @@ interface InfoConstituentaProps extends CProps.Div {
 function InfoConstituenta({ data, className, ...restProps }: InfoConstituentaProps) {
   return (
     <div className={clsx('dense min-w-[15rem] break-words', className)} {...restProps}>
-      <h2>
+      <h2 className='cursor-default' title={data.is_inherited ? ' наследник' : undefined}>
         {data.alias}
-        {data.is_inherited ? ' (наследуется)' : ''}
+        {data.is_inherited ? (
+          <IconChild size='1rem' className='inline-icon translate-y-[-0.1rem] translate-x-[0.125rem]' />
+        ) : null}
       </h2>
       {data.term_resolved ? (
         <p>

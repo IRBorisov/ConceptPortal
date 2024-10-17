@@ -35,7 +35,7 @@ export const PARAMETER = {
 
   logicLabel: 'LOGIC',
   errorNodeLabel: '[ERROR]',
-  exteorVersion: '4.9.5',
+  exteorVersion: '4.9.6',
 
   TOOLTIP_WIDTH: 'max-w-[29rem]'
 };

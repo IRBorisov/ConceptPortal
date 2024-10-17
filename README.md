@@ -88,6 +88,8 @@ This readme file is used mostly to document project dependencies and conventions
   - Rubik
   - Alegreya Sans SC
   - Noto Sans Math
+  - Noto Sans Symbol
+  - Noto Color Emoji
   </pre>
 </details>
 

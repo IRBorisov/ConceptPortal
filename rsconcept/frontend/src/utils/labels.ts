@@ -756,7 +756,7 @@ export function describeRSError(error: IRSErrorDescription): string {
     case RSErrorType.invalidProjectionSet:
       return `τ(Pri(a)) = BCiDτ(a). Некорректная типизация аргумента: ${error.params[0]} -> ${error.params[1]}`;
     case RSErrorType.invalidEnumeration:
-      return `Типизация аргументов перечисления не совпадает: ${error.params[0]} != ${error.params[1]}`;
+      return `Типизация элементов перечисления не совпадает: ${error.params[0]} != ${error.params[1]}`;
     case RSErrorType.invalidBinding:
       return `Количество переменных в кортеже не соответствует размерности декартова произведения`;
     case RSErrorType.localOutOfScope:
@@ -770,7 +770,7 @@ export function describeRSError(error: IRSErrorDescription): string {
     case RSErrorType.invalidArgumentType:
       return `Типизация аргумента терм-функции не соответствует объявленной: ${error.params[0]} != ${error.params[1]}`;
     case RSErrorType.globalStructure:
-      return `Выражение родовой структуры должно быть ступенью`;
+      return `Область определения родовой структуры не корректна`;
     case RSErrorType.radicalUsage:
       return `Радикалы запрещены вне деклараций терм-функции: ${error.params[0]}`;
     case RSErrorType.invalidFilterArgumentType:
