@@ -341,7 +341,7 @@ export const RSEditState = ({
         toast.success(information.newVersion(data.version));
       });
     },
-    [model, viewVersion]
+    [model]
   );
 
   const handleDeleteVersion = useCallback(

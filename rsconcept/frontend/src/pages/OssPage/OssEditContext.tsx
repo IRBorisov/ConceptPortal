@@ -288,14 +288,11 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
     [model]
   );
 
-  const promptDeleteOperation = useCallback(
-    (target: OperationID, positions: IOperationPosition[]) => {
-      setPositions(positions);
-      setTargetOperationID(target);
-      setShowDeleteOperation(true);
-    },
-    [model]
-  );
+  const promptDeleteOperation = useCallback((target: OperationID, positions: IOperationPosition[]) => {
+    setPositions(positions);
+    setTargetOperationID(target);
+    setShowDeleteOperation(true);
+  }, []);
 
   const deleteOperation = useCallback(
     (keepConstituents: boolean, deleteSchema: boolean) => {
@@ -363,22 +360,16 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
     [model]
   );
 
-  const promptRelocateConstituents = useCallback(
-    (target: OperationID) => {
-      setTargetOperationID(target);
-      setShowRelocateConstituents(true);
-    },
-    [model]
-  );
+  const promptRelocateConstituents = useCallback((target: OperationID) => {
+    setTargetOperationID(target);
+    setShowRelocateConstituents(true);
+  }, []);
 
-  const handleRelocateConstituents = useCallback(
-    (data: ICstRelocateData) => {
-      // TODO: implement backed call
-      console.log(data);
-      toast.success('В разработке');
-    },
-    [model]
-  );
+  const handleRelocateConstituents = useCallback((data: ICstRelocateData) => {
+    // TODO: implement backed call
+    console.log(data);
+    toast.success('В разработке');
+  }, []);
 
   return (
     <OssEditContext.Provider

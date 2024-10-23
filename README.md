@@ -59,6 +59,7 @@ This readme file is used mostly to document project dependencies and conventions
   - postcss
   - autoprefixer
   - eslint-plugin-simple-import-sort
+  - eslint-plugin-react-hooks
   - eslint-plugin-tsdoc
   - vite
   - jest

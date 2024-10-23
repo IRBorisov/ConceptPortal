@@ -95,23 +95,20 @@ function EditorRSExpression({
     });
   }
 
-  const onShowError = useCallback(
-    (error: IRSErrorDescription, prefixLen: number) => {
-      if (!rsInput.current) {
-        return;
+  const onShowError = useCallback((error: IRSErrorDescription, prefixLen: number) => {
+    if (!rsInput.current) {
+      return;
+    }
+    let errorPosition = error.position - prefixLen;
+    if (errorPosition < 0) errorPosition = 0;
+    rsInput.current?.view?.dispatch({
+      selection: {
+        anchor: errorPosition,
+        head: errorPosition
       }
-      let errorPosition = error.position - prefixLen;
-      if (errorPosition < 0) errorPosition = 0;
-      rsInput.current?.view?.dispatch({
-        selection: {
-          anchor: errorPosition,
-          head: errorPosition
-        }
-      });
-      rsInput.current?.view?.focus();
-    },
-    [activeCst]
-  );
+    });
+    rsInput.current?.view?.focus();
+  }, []);
 
   const handleEdit = useCallback((id: TokenID, key?: string) => {
     if (!rsInput.current?.editor || !rsInput.current.state || !rsInput.current.view) {

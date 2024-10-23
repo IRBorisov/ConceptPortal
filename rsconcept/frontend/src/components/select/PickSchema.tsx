@@ -63,7 +63,7 @@ function PickSchema({
       );
     }
     setFiltered(newFiltered);
-  }, [filterText, filterLocation]);
+  }, [filterText, filterLocation, baseFiltered]);
 
   const columns = useMemo(
     () => [

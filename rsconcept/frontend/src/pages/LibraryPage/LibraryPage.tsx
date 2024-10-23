@@ -90,7 +90,7 @@ function LibraryPage() {
   const toggleVisible = useCallback(() => setIsVisible(prev => toggleTristateFlag(prev)), [setIsVisible]);
   const toggleOwned = useCallback(() => setIsOwned(prev => toggleTristateFlag(prev)), [setIsOwned]);
   const toggleEditor = useCallback(() => setIsEditor(prev => toggleTristateFlag(prev)), [setIsEditor]);
-  const toggleFolderMode = useCallback(() => options.setFolderMode(prev => !prev), [options.setFolderMode]);
+  const toggleFolderMode = useCallback(() => options.setFolderMode(prev => !prev), [options]);
   const toggleSubfolders = useCallback(() => setSubfolders(prev => !prev), [setSubfolders]);
 
   const resetFilter = useCallback(() => {
@@ -102,7 +102,7 @@ function LibraryPage() {
     setIsEditor(undefined);
     setFilterUser(undefined);
     options.setLocation('');
-  }, [setHead, setIsVisible, setIsOwned, setIsEditor, setFilterUser, options.setLocation]);
+  }, [setHead, setIsVisible, setIsOwned, setIsEditor, setFilterUser, options]);
 
   const promptRenameLocation = useCallback(() => {
     setShowRenameLocation(true);
@@ -119,7 +119,7 @@ function LibraryPage() {
         toast.success(information.locationRenamed);
       });
     },
-    [location, library]
+    [options, library]
   );
 
   const handleDownloadCSV = useCallback(() => {
@@ -159,7 +159,15 @@ function LibraryPage() {
         onRenameLocation={promptRenameLocation}
       />
     ),
-    [options.location, library.folders, options.setLocation, toggleFolderMode, subfolders]
+    [
+      options.location,
+      library.folders,
+      options.setLocation,
+      toggleFolderMode,
+      promptRenameLocation,
+      toggleSubfolders,
+      subfolders
+    ]
   );
 
   return (

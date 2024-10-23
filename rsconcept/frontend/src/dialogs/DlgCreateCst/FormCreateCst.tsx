@@ -44,7 +44,7 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
 
   const handleTypeChange = useCallback(
     (target: CstType) => partialUpdate({ cst_type: target, alias: generateAlias(target, schema) }),
-    [partialUpdate, schema, generateAlias]
+    [partialUpdate, schema]
   );
 
   return (

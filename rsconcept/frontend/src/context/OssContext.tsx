@@ -94,7 +94,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
 
   useEffect(() => {
     oss.setID(itemID);
-  }, [itemID, oss.setID]);
+  }, [itemID, oss]);
 
   const update = useCallback(
     (data: ILibraryUpdateData, callback?: DataCallback<ILibraryItem>) => {
@@ -115,7 +115,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         }
       });
     },
-    [itemID, model, library.localUpdateItem, oss.setData]
+    [itemID, model, library, oss]
   );
 
   const setOwner = useCallback(
@@ -139,7 +139,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         }
       });
     },
-    [itemID, model, library.reloadItems]
+    [itemID, model, library]
   );
 
   const setAccessPolicy = useCallback(
@@ -163,7 +163,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         }
       });
     },
-    [itemID, model, library.reloadItems]
+    [itemID, model, library]
   );
 
   const setLocation = useCallback(
@@ -187,7 +187,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         }
       });
     },
-    [itemID, model, library.reloadItems]
+    [itemID, model, library]
   );
 
   const setEditors = useCallback(
@@ -211,7 +211,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         }
       });
     },
-    [itemID, model, library.reloadItems]
+    [itemID, model, library]
   );
 
   const savePositions = useCallback(
@@ -228,7 +228,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         }
       });
     },
-    [itemID, library.localUpdateTimestamp]
+    [itemID, library]
   );
 
   const createOperation = useCallback(
@@ -246,7 +246,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         }
       });
     },
-    [itemID, library.localUpdateTimestamp, oss.setData]
+    [itemID, library, oss]
   );
 
   const deleteOperation = useCallback(
@@ -265,7 +265,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         }
       });
     },
-    [itemID, library.reloadItems, oss.setData]
+    [itemID, library, oss]
   );
 
   const createInput = useCallback(
@@ -284,7 +284,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         }
       });
     },
-    [itemID, library.reloadItems, oss.setData]
+    [itemID, library, oss]
   );
 
   const setInput = useCallback(
@@ -306,7 +306,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         }
       });
     },
-    [itemID, model, library.reloadItems, oss.setData]
+    [itemID, model, library, oss]
   );
 
   const updateOperation = useCallback(
@@ -328,7 +328,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         }
       });
     },
-    [itemID, model, library.reloadItems, oss.setData]
+    [itemID, model, library, oss]
   );
 
   const executeOperation = useCallback(
@@ -350,7 +350,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         }
       });
     },
-    [itemID, model, library.reloadItems, oss.setData]
+    [itemID, model, library, oss]
   );
 
   return (

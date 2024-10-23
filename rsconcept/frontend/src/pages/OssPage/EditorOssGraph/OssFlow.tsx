@@ -145,13 +145,6 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     [controller, getPositions, flow]
   );
 
-  const handleDeleteSelected = useCallback(() => {
-    if (controller.selected.length !== 1) {
-      return;
-    }
-    handleDeleteOperation(controller.selected[0]);
-  }, [controller, getPositions]);
-
   const handleDeleteOperation = useCallback(
     (target: OperationID) => {
       if (!controller.canDelete(target)) {
@@ -161,6 +154,13 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     },
     [controller, getPositions]
   );
+
+  const handleDeleteSelected = useCallback(() => {
+    if (controller.selected.length !== 1) {
+      return;
+    }
+    handleDeleteOperation(controller.selected[0]);
+  }, [controller, handleDeleteOperation]);
 
   const handleCreateInput = useCallback(
     (target: OperationID) => {
@@ -282,7 +282,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
         handleEditOperation(Number(node.id));
       }
     },
-    [handleEditOperation, controller.openOperationSchema]
+    [handleEditOperation, controller]
   );
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {

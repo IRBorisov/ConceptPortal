@@ -169,7 +169,11 @@ function FormConstituenta({
         ) : null}
         {state ? (
           <AnimatePresence>
-            <AnimateFade key='cst_expression_fade' hideContent={!state.definition_formal && isElementary}>
+            <AnimateFade
+              key='cst_expression_fade'
+              hideContent={!state.definition_formal && isElementary}
+              style={{ willChange: 'auto' }}
+            >
               <EditorRSExpression
                 id='cst_expression'
                 label={

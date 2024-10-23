@@ -30,7 +30,7 @@ function DlgRelocateConstituents({ oss, hideWindow, target, onSubmit }: DlgReloc
       ...node.outputs.map(id => oss.operationByID.get(id)!.result).filter(id => id !== null)
     ];
     return ids.map(id => library.items.find(item => item.id === id)).filter(item => item !== undefined);
-  }, [oss, library.items]);
+  }, [oss, library.items, target.id]);
 
   const [destination, setDestination] = useState<ILibraryItem | undefined>(undefined);
   const [selected, setSelected] = useState<ConstituentaID[]>([]);
@@ -42,7 +42,7 @@ function DlgRelocateConstituents({ oss, hideWindow, target, onSubmit }: DlgReloc
     }
     const destinationOperation = oss.items.find(item => item.result === destination.id);
     return getRelocateCandidates(target.id, destinationOperation!.id, source.schema, oss);
-  }, [destination, source.schema?.items]);
+  }, [destination, target.id, source.schema, oss]);
 
   const isValid = useMemo(() => !!destination && selected.length > 0, [destination, selected]);
 

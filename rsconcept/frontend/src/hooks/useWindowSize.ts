@@ -1,19 +1,20 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { PARAMETER } from '@/utils/constants';
 
 function useWindowSize() {
   const isClient = typeof window === 'object';
 
-  function getSize() {
-    return {
+  const getSize = useCallback(
+    () => ({
       width: isClient ? window.innerWidth : undefined,
       height: isClient ? window.innerHeight : undefined,
       isSmall: isClient && window.innerWidth < PARAMETER.smallScreen
-    };
-  }
+    }),
+    [isClient]
+  );
 
   const [windowSize, setWindowSize] = useState(getSize);
 
@@ -26,7 +27,7 @@ function useWindowSize() {
     }
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [isClient, getSize]);
 
   return windowSize;
 }

@@ -2,8 +2,7 @@ import globals from 'globals';
 import typescriptPlugin from 'typescript-eslint';
 import typescriptParser from '@typescript-eslint/parser';
 import reactPlugin from 'eslint-plugin-react';
-// import { fixupPluginRules } from '@eslint/compat';
-// import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import reactHooksPlugin from 'eslint-plugin-react-hooks';
 
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 
@@ -35,7 +34,7 @@ export default [
   {
     plugins: {
       'react': reactPlugin,
-      // 'react-hooks': fixupPluginRules(reactHooksPlugin),
+      'react-hooks': reactHooksPlugin,
       'simple-import-sort': simpleImportSort
     },
     settings: { react: { version: 'detect' } },
@@ -56,7 +55,9 @@ export default [
       'react-refresh/only-export-components': ['off', { allowConstantExport: true }],
 
       'simple-import-sort/imports': 'warn',
-      'simple-import-sort/exports': 'error'
+      'simple-import-sort/exports': 'error',
+
+      ...reactHooksPlugin.configs.recommended.rules
     }
   },
   {

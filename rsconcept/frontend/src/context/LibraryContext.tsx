@@ -238,7 +238,7 @@ export const LibraryState = ({ children }: React.PropsWithChildren) => {
         });
       }
     },
-    [reloadItems, user]
+    [reloadItems]
   );
 
   const destroyItem = useCallback(
@@ -254,7 +254,7 @@ export const LibraryState = ({ children }: React.PropsWithChildren) => {
           })
       });
     },
-    [reloadItems, user]
+    [reloadItems]
   );
 
   const cloneItem = useCallback(
@@ -291,7 +291,7 @@ export const LibraryState = ({ children }: React.PropsWithChildren) => {
           })
       });
     },
-    [reloadItems, user]
+    [reloadItems]
   );
 
   return (

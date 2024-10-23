@@ -146,7 +146,7 @@ function DataTable<TData extends RowData>({
       colSizes[`--col-${header.column.id}-size`] = header.column.getSize();
     }
     return colSizes;
-  }, [tableImpl.getState().columnSizingInfo, tableImpl.getState().columnSizing]);
+  }, [tableImpl]);
 
   return (
     <div tabIndex={-1} id={id} className={className} style={{ minHeight: fixedSize, maxHeight: fixedSize, ...style }}>

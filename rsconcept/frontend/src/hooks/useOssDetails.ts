@@ -15,14 +15,17 @@ function useOssDetails({ target, items }: { target?: string; items: ILibraryItem
   const [loading, setLoading] = useState(target != undefined);
   const [error, setError] = useState<ErrorData>(undefined);
 
-  function setSchema(data?: IOperationSchemaData) {
-    if (!data) {
-      setInner(undefined);
-      return;
-    }
-    const newSchema = new OssLoader(data, items).produceOSS();
-    setInner(newSchema);
-  }
+  const setSchema = useCallback(
+    (data?: IOperationSchemaData) => {
+      if (!data) {
+        setInner(undefined);
+        return;
+      }
+      const newSchema = new OssLoader(data, items).produceOSS();
+      setInner(newSchema);
+    },
+    [items]
+  );
 
   const reload = useCallback(
     (setCustomLoading?: typeof setLoading, callback?: () => void) => {
@@ -43,7 +46,7 @@ function useOssDetails({ target, items }: { target?: string; items: ILibraryItem
         }
       });
     },
-    [target]
+    [target, setSchema]
   );
 
   useEffect(() => {

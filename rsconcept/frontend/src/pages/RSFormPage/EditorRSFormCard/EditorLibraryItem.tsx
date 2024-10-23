@@ -38,7 +38,7 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
   const { accessLevel } = useAccessMode();
   const intl = useIntl();
   const router = useConceptNavigation();
-  const options = useConceptOptions();
+  const { setLocation, setFolderMode } = useConceptOptions();
 
   const ownerSelector = useDropdown();
   const onSelectUser = useCallback(
@@ -60,11 +60,11 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
       if (!item) {
         return;
       }
-      options.setLocation(item.location);
-      options.setFolderMode(true);
+      setLocation(item.location);
+      setFolderMode(true);
       router.push(urls.library, event.ctrlKey || event.metaKey);
     },
-    [options.setLocation, options.setFolderMode, item, router]
+    [setLocation, setFolderMode, item, router]
   );
 
   if (!item) {

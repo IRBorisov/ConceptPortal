@@ -18,7 +18,7 @@ function AnimateFade({ style, noFadeIn, noFadeOut, children, hideContent, ...res
       animate={hideContent ? 'hidden' : 'active'}
       variants={animateFade.variants}
       exit={{ ...(!noFadeOut ? animateFade.exit : {}) }}
-      style={{ display: hideContent ? 'none' : '', ...style }}
+      style={{ display: hideContent ? 'none' : '', willChange: 'auto', ...style }}
       {...restProps}
     >
       {children}

@@ -151,7 +151,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         }
       });
     },
-    [itemID, setSchema, schema, library.localUpdateItem, oss.invalidateItem]
+    [itemID, setSchema, schema, library, oss]
   );
 
   const upload = useCallback(
@@ -172,7 +172,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         }
       });
     },
-    [itemID, setSchema, schema, library.localUpdateItem]
+    [itemID, setSchema, schema, library]
   );
 
   const setOwner = useCallback(
@@ -195,7 +195,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         }
       });
     },
-    [itemID, schema, library.localUpdateItem]
+    [itemID, schema, library]
   );
 
   const setAccessPolicy = useCallback(
@@ -218,7 +218,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         }
       });
     },
-    [itemID, schema, library.localUpdateItem]
+    [itemID, schema, library]
   );
 
   const setLocation = useCallback(
@@ -240,7 +240,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         }
       });
     },
-    [itemID, schema, library.reloadItems]
+    [itemID, schema, library]
   );
 
   const setEditors = useCallback(
@@ -283,7 +283,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         }
       });
     },
-    [itemID, schema, user, setSchema, library.localUpdateTimestamp, oss.invalidateItem]
+    [itemID, schema, user, setSchema, library, oss]
   );
 
   const restoreOrder = useCallback(
@@ -303,7 +303,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         }
       });
     },
-    [itemID, schema, user, setSchema, library.localUpdateTimestamp]
+    [itemID, schema, user, setSchema, library]
   );
 
   const produceStructure = useCallback(
@@ -322,7 +322,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         }
       });
     },
-    [setSchema, itemID, library.localUpdateTimestamp, oss.invalidateItem]
+    [setSchema, itemID, library, oss]
   );
 
   const download = useCallback(
@@ -354,7 +354,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         }
       });
     },
-    [itemID, setSchema, library.localUpdateTimestamp, oss.invalidateItem]
+    [itemID, setSchema, library, oss]
   );
 
   const cstDelete = useCallback(
@@ -373,7 +373,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         }
       });
     },
-    [itemID, setSchema, library.localUpdateTimestamp, oss.invalidateItem]
+    [itemID, setSchema, library, oss]
   );
 
   const cstUpdate = useCallback(
@@ -392,7 +392,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
           })
       });
     },
-    [itemID, reload, library.localUpdateTimestamp, oss.invalidateItem]
+    [itemID, reload, library, oss]
   );
 
   const cstRename = useCallback(
@@ -411,7 +411,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         }
       });
     },
-    [setSchema, itemID, library.localUpdateTimestamp, oss.invalidateItem]
+    [setSchema, itemID, library, oss]
   );
 
   const cstSubstitute = useCallback(
@@ -430,7 +430,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         }
       });
     },
-    [setSchema, itemID, library.localUpdateTimestamp, oss.invalidateItem]
+    [setSchema, itemID, library, oss]
   );
 
   const cstMoveTo = useCallback(
@@ -448,7 +448,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         }
       });
     },
-    [itemID, setSchema, library.localUpdateTimestamp]
+    [itemID, setSchema, library]
   );
 
   const versionCreate = useCallback(
@@ -466,7 +466,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         }
       });
     },
-    [itemID, setSchema, library.localUpdateTimestamp]
+    [itemID, setSchema, library]
   );
 
   const findPredecessor = useCallback((data: ITargetCst, callback: (reference: IConstituentaReference) => void) => {
@@ -537,7 +537,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         }
       });
     },
-    [setSchema, library.localUpdateItem]
+    [setSchema, library]
   );
 
   const inlineSynthesis = useCallback(
@@ -556,7 +556,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         }
       });
     },
-    [itemID, setSchema, library.localUpdateTimestamp, oss.invalidateItem]
+    [setSchema, library, oss]
   );
 
   return (

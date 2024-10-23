@@ -61,7 +61,7 @@ function PickMultiConstituenta({
         newGraph.foldNode(item.id);
       });
     return newGraph;
-  }, [schema.graph, data]);
+  }, [data, schema.graph, schema.items]);
 
   useLayoutEffect(() => {
     if (filtered.length === 0) {

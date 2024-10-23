@@ -19,6 +19,13 @@ function ManualsPage() {
 
   const { mainHeight } = useConceptOptions();
 
+  const onSelectTopic = useCallback(
+    (newTopic: HelpTopic) => {
+      router.push(urls.help_topic(newTopic));
+    },
+    [router]
+  );
+
   if (!Object.values(HelpTopic).includes(activeTopic)) {
     setTimeout(() => {
       router.push(urls.page404);
@@ -26,13 +33,6 @@ function ManualsPage() {
     console.log(1);
     return null;
   }
-
-  const onSelectTopic = useCallback(
-    (newTopic: HelpTopic) => {
-      router.push(urls.help_topic(newTopic));
-    },
-    [router]
-  );
 
   return (
     <div className='flex mx-auto max-w-[80rem]' role='manuals' style={{ minHeight: mainHeight }}>

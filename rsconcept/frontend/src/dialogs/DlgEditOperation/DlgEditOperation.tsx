@@ -62,6 +62,7 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
   const cache = useRSFormCache();
   const schemas = useMemo(
     () => schemasIDs.map(id => cache.getSchema(id)).filter(item => item !== undefined),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [schemasIDs, cache.getSchema]
   );
 
@@ -90,6 +91,7 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
 
   useLayoutEffect(() => {
     cache.preload(schemasIDs);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [schemasIDs]);
 
   useLayoutEffect(() => {
@@ -109,6 +111,7 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
         return true;
       })
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [schemasIDs, schemas, cache.loading]);
 
   useLayoutEffect(() => {
