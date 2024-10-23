@@ -182,5 +182,6 @@ export const prefixes = {
   user_editors: 'user_editors_',
   wordform_list: 'wordform_list_',
   rsedit_btn: 'rsedit_btn_',
-  dlg_cst_substitutes_list: 'dlg_cst_substitutes_list_'
+  dlg_cst_substitutes_list: 'dlg_cst_substitutes_list_',
+  dlg_cst_constituents_list: 'dlg_cst_constituents_list_'
 };

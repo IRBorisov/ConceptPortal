@@ -2,7 +2,15 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { IconConnect, IconDestroy, IconEdit2, IconExecute, IconNewRSForm, IconRSForm } from '@/components/Icons';
+import {
+  IconChild,
+  IconConnect,
+  IconDestroy,
+  IconEdit2,
+  IconExecute,
+  IconNewRSForm,
+  IconRSForm
+} from '@/components/Icons';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import useClickedOutside from '@/hooks/useClickedOutside';
@@ -25,6 +33,7 @@ interface NodeContextMenuProps extends ContextMenuData {
   onEditSchema: (target: OperationID) => void;
   onEditOperation: (target: OperationID) => void;
   onExecuteOperation: (target: OperationID) => void;
+  onRelocateConstituents: (target: OperationID) => void;
 }
 
 function NodeContextMenu({
@@ -36,7 +45,8 @@ function NodeContextMenu({
   onCreateInput,
   onEditSchema,
   onEditOperation,
-  onExecuteOperation
+  onExecuteOperation,
+  onRelocateConstituents
 }: NodeContextMenuProps) {
   const controller = useOssEdit();
   const [isOpen, setIsOpen] = useState(false);
@@ -100,6 +110,11 @@ function NodeContextMenu({
     onExecuteOperation(operation.id);
   };
 
+  const handleRelocateConstituents = () => {
+    handleHide();
+    onRelocateConstituents(operation.id);
+  };
+
   return (
     <div ref={ref} className='absolute select-none' style={{ top: cursorY, left: cursorX }}>
       <Dropdown
@@ -153,6 +168,16 @@ function NodeContextMenu({
             icon={<IconExecute size='1rem' className='icon-green' />}
             disabled={controller.isProcessing || !readyForSynthesis}
             onClick={handleRunSynthesis}
+          />
+        ) : null}
+
+        {controller.isMutable && operation.result ? (
+          <DropdownButton
+            text='Конституенты'
+            titleHtml='Перемещение конституент</br>между схемами'
+            icon={<IconChild size='1rem' className='icon-green' />}
+            disabled={controller.isProcessing}
+            onClick={handleRelocateConstituents}
           />
         ) : null}
 

@@ -126,6 +126,14 @@ export interface ICstSubstituteData {
 }
 
 /**
+ * Represents data, used relocating {@link IConstituenta}s between {@link ILibraryItem}s.
+ */
+export interface ICstRelocateData {
+  destination: LibraryItemID;
+  items: ConstituentaID[];
+}
+
+/**
  * Represents substitution for multi synthesis table.
  */
 export interface IMultiSubstitution {

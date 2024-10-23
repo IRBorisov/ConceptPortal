@@ -5,6 +5,7 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 
 import DataTable, { createColumnHelper, RowSelectionState } from '@/components/ui/DataTable';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
+import { Graph } from '@/models/Graph';
 import { CstMatchMode } from '@/models/miscellaneous';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
 import { isBasicConcept, matchConstituenta } from '@/models/rsformAPI';
@@ -17,7 +18,9 @@ import ToolbarGraphSelection from './ToolbarGraphSelection';
 
 interface PickMultiConstituentaProps {
   id?: string;
-  schema?: IRSForm;
+  schema: IRSForm;
+  data: IConstituenta[];
+
   prefixID: string;
   rows?: number;
 
@@ -27,11 +30,38 @@ interface PickMultiConstituentaProps {
 
 const columnHelper = createColumnHelper<IConstituenta>();
 
-function PickMultiConstituenta({ id, schema, prefixID, rows, selected, setSelected }: PickMultiConstituentaProps) {
+function PickMultiConstituenta({
+  id,
+  schema,
+  data,
+  prefixID,
+  rows,
+  selected,
+  setSelected
+}: PickMultiConstituentaProps) {
   const { colors } = useConceptOptions();
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [filtered, setFiltered] = useState<IConstituenta[]>(schema?.items ?? []);
+  const [filtered, setFiltered] = useState<IConstituenta[]>(data);
   const [filterText, setFilterText] = useState('');
+
+  const foldedGraph = useMemo(() => {
+    if (data.length === schema.items.length) {
+      return schema.graph;
+    }
+    const newGraph = new Graph();
+    schema.graph.nodes.forEach(node => {
+      newGraph.addNode(node.id);
+      node.outputs.forEach(output => {
+        newGraph.addEdge(node.id, output);
+      });
+    });
+    schema.items
+      .filter(item => data.find(cst => cst.id === item.id) === undefined)
+      .forEach(item => {
+        newGraph.foldNode(item.id);
+      });
+    return newGraph;
+  }, [schema.graph, data]);
 
   useLayoutEffect(() => {
     if (filtered.length === 0) {
@@ -46,17 +76,17 @@ function PickMultiConstituenta({ id, schema, prefixID, rows, selected, setSelect
   }, [filtered, setRowSelection, selected]);
 
   useLayoutEffect(() => {
-    if (!schema || schema.items.length === 0) {
+    if (data.length === 0) {
       setFiltered([]);
     } else if (filterText) {
-      setFiltered(schema.items.filter(cst => matchConstituenta(cst, filterText, CstMatchMode.ALL)));
+      setFiltered(data.filter(cst => matchConstituenta(cst, filterText, CstMatchMode.ALL)));
     } else {
-      setFiltered(schema.items);
+      setFiltered(data);
     }
-  }, [filterText, schema?.items, schema]);
+  }, [filterText, data]);
 
   function handleRowSelection(updater: React.SetStateAction<RowSelectionState>) {
-    if (!schema) {
+    if (!data) {
       setSelected([]);
     } else {
       const newRowSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
@@ -91,7 +121,7 @@ function PickMultiConstituenta({ id, schema, prefixID, rows, selected, setSelect
     <div>
       <div className='flex justify-between items-center clr-input px-3 border-x border-t rounded-t-md'>
         <div className='w-[24ch] select-none whitespace-nowrap'>
-          Выбраны {selected.length} из {schema?.items.length ?? 0}
+          Выбраны {selected.length} из {data.length}
         </div>
         <SearchBar
           id='dlg_constituents_search'
@@ -100,16 +130,14 @@ function PickMultiConstituenta({ id, schema, prefixID, rows, selected, setSelect
           value={filterText}
           onChange={setFilterText}
         />
-        {schema ? (
-          <ToolbarGraphSelection
-            graph={schema.graph}
-            isCore={cstID => isBasicConcept(schema.cstByID.get(cstID)?.cst_type)}
-            isOwned={cstID => !schema.cstByID.get(cstID)?.is_inherited}
-            setSelected={setSelected}
-            emptySelection={selected.length === 0}
-            className='w-fit'
-          />
-        ) : null}
+        <ToolbarGraphSelection
+          graph={foldedGraph}
+          isCore={cstID => isBasicConcept(schema.cstByID.get(cstID)?.cst_type)}
+          isOwned={cstID => !schema.cstByID.get(cstID)?.is_inherited}
+          setSelected={setSelected}
+          emptySelection={selected.length === 0}
+          className='w-fit'
+        />
       </div>
       <DataTable
         id={id}

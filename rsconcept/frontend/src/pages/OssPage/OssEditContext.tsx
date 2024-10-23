@@ -17,10 +17,12 @@ import DlgCreateOperation from '@/dialogs/DlgCreateOperation';
 import DlgDeleteOperation from '@/dialogs/DlgDeleteOperation';
 import DlgEditEditors from '@/dialogs/DlgEditEditors';
 import DlgEditOperation from '@/dialogs/DlgEditOperation';
+import DlgRelocateConstituents from '@/dialogs/DlgRelocateConstituents';
 import { AccessPolicy, ILibraryItemEditor, LibraryItemID } from '@/models/library';
 import { Position2D } from '@/models/miscellaneous';
 import { calculateInsertPosition } from '@/models/miscellaneousAPI';
 import {
+  ICstRelocateData,
   IOperationCreateData,
   IOperationDeleteData,
   IOperationPosition,
@@ -74,6 +76,7 @@ export interface IOssEditContext extends ILibraryItemEditor {
   promptEditInput: (target: OperationID, positions: IOperationPosition[]) => void;
   promptEditOperation: (target: OperationID, positions: IOperationPosition[]) => void;
   executeOperation: (target: OperationID, positions: IOperationPosition[]) => void;
+  promptRelocateConstituents: (target: OperationID) => void;
 }
 
 const OssEditContext = createContext<IOssEditContext | null>(null);
@@ -110,6 +113,7 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
   const [showEditInput, setShowEditInput] = useState(false);
   const [showEditOperation, setShowEditOperation] = useState(false);
   const [showDeleteOperation, setShowDeleteOperation] = useState(false);
+  const [showRelocateConstituents, setShowRelocateConstituents] = useState(false);
 
   const [showCreateOperation, setShowCreateOperation] = useState(false);
   const [insertPosition, setInsertPosition] = useState<Position2D>({ x: 0, y: 0 });
@@ -359,6 +363,23 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
     [model]
   );
 
+  const promptRelocateConstituents = useCallback(
+    (target: OperationID) => {
+      setTargetOperationID(target);
+      setShowRelocateConstituents(true);
+    },
+    [model]
+  );
+
+  const handleRelocateConstituents = useCallback(
+    (data: ICstRelocateData) => {
+      // TODO: implement backed call
+      console.log(data);
+      toast.success('В разработке');
+    },
+    [model]
+  );
+
   return (
     <OssEditContext.Provider
       value={{
@@ -388,7 +409,8 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
         createInput,
         promptEditInput,
         promptEditOperation,
-        executeOperation
+        executeOperation,
+        promptRelocateConstituents
       }}
     >
       {model.schema ? (
@@ -438,6 +460,15 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
               onSubmit={deleteOperation}
             />
           ) : null}
+          {showRelocateConstituents ? (
+            <DlgRelocateConstituents
+              hideWindow={() => setShowRelocateConstituents(false)}
+              target={targetOperation!}
+              oss={model.schema}
+              onSubmit={handleRelocateConstituents}
+            />
+          ) : null}
+          )
         </AnimatePresence>
       ) : null}
 

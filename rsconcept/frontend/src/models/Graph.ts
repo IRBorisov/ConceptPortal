@@ -86,30 +86,25 @@ export class Graph {
     return !!this.nodes.get(target);
   }
 
-  removeNode(target: number): GraphNode | null {
-    const nodeToRemove = this.nodes.get(target);
-    if (!nodeToRemove) {
-      return null;
-    }
+  removeNode(target: number): void {
     this.nodes.forEach(node => {
-      node.removeInput(nodeToRemove.id);
-      node.removeOutput(nodeToRemove.id);
+      node.removeInput(target);
+      node.removeOutput(target);
     });
     this.nodes.delete(target);
-    return nodeToRemove;
   }
 
-  foldNode(target: number): GraphNode | null {
+  foldNode(target: number): void {
     const nodeToRemove = this.nodes.get(target);
     if (!nodeToRemove) {
-      return null;
+      return;
     }
     nodeToRemove.inputs.forEach(input => {
       nodeToRemove.outputs.forEach(output => {
         this.addEdge(input, output);
       });
     });
-    return this.removeNode(target);
+    this.removeNode(target);
   }
 
   removeIsolated(): GraphNode[] {
@@ -124,6 +119,9 @@ export class Graph {
   }
 
   addEdge(source: number, destination: number): void {
+    if (this.hasEdge(source, destination)) {
+      return;
+    }
     const sourceNode = this.addNode(source);
     const destinationNode = this.addNode(destination);
     sourceNode.addOutput(destinationNode.id);

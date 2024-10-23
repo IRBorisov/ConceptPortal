@@ -197,6 +197,13 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     handleExecuteOperation(controller.selected[0]);
   }, [controller, handleExecuteOperation]);
 
+  const handleRelocateConstituents = useCallback(
+    (target: OperationID) => {
+      controller.promptRelocateConstituents(target);
+    },
+    [controller]
+  );
+
   const handleFitView = useCallback(() => {
     flow.fitView({ duration: PARAMETER.zoomDuration });
   }, [flow]);
@@ -376,6 +383,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
           onEditSchema={handleEditSchema}
           onEditOperation={handleEditOperation}
           onExecuteOperation={handleExecuteOperation}
+          onRelocateConstituents={handleRelocateConstituents}
           {...menuProps}
         />
       ) : null}

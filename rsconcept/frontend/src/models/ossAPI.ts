@@ -8,7 +8,7 @@ import { TextMatcher } from '@/utils/utils';
 
 import { Graph } from './Graph';
 import { ILibraryItem, LibraryItemID } from './library';
-import { ICstSubstitute, IOperation, IOperationSchema, SubstitutionErrorType } from './oss';
+import { ICstSubstitute, IOperation, IOperationSchema, OperationID, SubstitutionErrorType } from './oss';
 import { ConstituentaID, CstClass, CstType, IConstituenta, IRSForm } from './rsform';
 import { AliasMapping, ParsingStatus } from './rslang';
 import { applyAliasMapping, applyTypificationMapping, extractGlobals, isSetTypification } from './rslangAPI';
@@ -423,4 +423,46 @@ export class SubstitutionValidator {
     });
     return false;
   }
+}
+
+/**
+ * Filter relocate candidates from gives schema.
+ */
+export function getRelocateCandidates(
+  source: OperationID,
+  destination: OperationID,
+  schema: IRSForm,
+  oss: IOperationSchema
+): IConstituenta[] {
+  const destinationSchema = oss.operationByID.get(destination)?.result;
+  if (!destinationSchema) {
+    return [];
+  }
+  const node = oss.graph.at(source);
+  if (!node) {
+    return [];
+  }
+
+  const addedCst = schema.items.filter(item => !item.is_inherited);
+  if (node.outputs.includes(destination)) {
+    return addedCst;
+  }
+
+  const unreachableBases: ConstituentaID[] = [];
+  for (const cst of schema.items.filter(item => item.is_inherited)) {
+    if (cst.parent_schema == destinationSchema) {
+      continue;
+    }
+    const parent = schema.inheritance.find(item => item.child === cst.id && item.child_source === cst.schema)?.parent;
+    if (parent) {
+      const original = oss.substitutions.find(sub => sub.substitution === parent)?.original;
+      if (original) {
+        continue;
+        // TODO: test if original schema is destination schema
+      }
+    }
+    unreachableBases.push(cst.id);
+  }
+  const unreachable = schema.graph.expandAllOutputs(unreachableBases);
+  return addedCst.filter(cst => !unreachable.includes(cst.id));
 }
