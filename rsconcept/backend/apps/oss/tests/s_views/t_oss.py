@@ -1,7 +1,7 @@
 ''' Testing API: Operation Schema. '''
 from apps.library.models import AccessPolicy, Editor, LibraryItem, LibraryItemType
 from apps.oss.models import Operation, OperationSchema, OperationType
-from apps.rsform.models import RSForm
+from apps.rsform.models import Constituenta, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
 
@@ -17,7 +17,6 @@ class TestOssViewset(EndpointTester):
         self.private = OperationSchema.create(title='Test2', alias='T2', access_policy=AccessPolicy.PRIVATE)
         self.private_id = self.private.model.pk
         self.invalid_id = self.private.model.pk + 1337
-
 
     def populateData(self):
         self.ks1 = RSForm.create(
@@ -134,7 +133,6 @@ class TestOssViewset(EndpointTester):
 
         self.executeForbidden(data=data, item=self.unowned_id)
         self.executeForbidden(data=data, item=self.private_id)
-
 
     @decl_endpoint('/api/oss/{item}/create-operation', method='post')
     def test_create_operation(self):
@@ -499,3 +497,87 @@ class TestOssViewset(EndpointTester):
         self.assertEqual(len(items), 1)
         self.assertEqual(items[0].alias, 'X1')
         self.assertEqual(items[0].term_resolved, self.ks2X1.term_resolved)
+
+    @decl_endpoint('/api/oss/get-predecessor', method='post')
+    def test_get_predecessor(self):
+        self.populateData()
+        self.ks1X2 = self.ks1.insert_new('X2')
+
+        self.owned.execute_operation(self.operation3)
+        self.operation3.refresh_from_db()
+        self.ks3 = RSForm(self.operation3.result)
+        self.ks3X2 = Constituenta.objects.get(as_child__parent_id=self.ks1X2.pk)
+
+        self.executeBadData(data={'target': self.invalid_id})
+
+        response = self.executeOK(data={'target': self.ks1X1.pk})
+        self.assertEqual(response.data['id'], self.ks1X1.pk)
+        self.assertEqual(response.data['schema'], self.ks1.model.pk)
+
+        response = self.executeOK(data={'target': self.ks3X2.pk})
+        self.assertEqual(response.data['id'], self.ks1X2.pk)
+        self.assertEqual(response.data['schema'], self.ks1.model.pk)
+
+    @decl_endpoint('/api/oss/relocate-constituents', method='post')
+    def test_relocate_constituents(self):
+        self.populateData()
+        self.ks1X2 = self.ks1.insert_new('X2', convention='test')
+
+        self.owned.execute_operation(self.operation3)
+        self.operation3.refresh_from_db()
+        self.ks3 = RSForm(self.operation3.result)
+        self.ks3X2 = Constituenta.objects.get(as_child__parent_id=self.ks1X2.pk)
+        self.ks3X10 = self.ks3.insert_new('X10', convention='test2')
+
+        # invalid destination
+        data = {
+            'destination': self.invalid_id,
+            'items': []
+        }
+        self.executeBadData(data=data)
+
+        # empty items
+        data = {
+            'destination': self.ks1.model.pk,
+            'items': []
+        }
+        self.executeBadData(data=data)
+
+        # source == destination
+        data = {
+            'destination': self.ks1.model.pk,
+            'items': [self.ks1X1.pk]
+        }
+        self.executeBadData(data=data)
+
+        # moving inherited
+        data = {
+            'destination': self.ks1.model.pk,
+            'items': [self.ks3X2.pk]
+        }
+        self.executeBadData(data=data)
+
+        # source and destination are not connected
+        data = {
+            'destination': self.ks2.model.pk,
+            'items': [self.ks1X1.pk]
+        }
+        self.executeBadData(data=data)
+
+        data = {
+            'destination': self.ks3.model.pk,
+            'items': [self.ks1X2.pk]
+        }
+        self.ks3X2.refresh_from_db()
+        self.assertEqual(self.ks3X2.convention, 'test')
+        self.executeOK(data=data)
+        self.assertFalse(Constituenta.objects.filter(as_child__parent_id=self.ks1X2.pk).exists())
+
+        data = {
+            'destination': self.ks1.model.pk,
+            'items': [self.ks3X10.pk]
+        }
+        self.executeOK(data=data)
+        self.assertTrue(Constituenta.objects.filter(as_parent__child_id=self.ks3X10.pk).exists())
+        self.ks1X3 = Constituenta.objects.get(as_parent__child_id=self.ks3X10.pk)
+        self.assertEqual(self.ks1X3.convention, 'test2')

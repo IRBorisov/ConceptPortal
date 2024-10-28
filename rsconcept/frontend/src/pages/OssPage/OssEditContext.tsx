@@ -76,7 +76,7 @@ export interface IOssEditContext extends ILibraryItemEditor {
   promptEditInput: (target: OperationID, positions: IOperationPosition[]) => void;
   promptEditOperation: (target: OperationID, positions: IOperationPosition[]) => void;
   executeOperation: (target: OperationID, positions: IOperationPosition[]) => void;
-  promptRelocateConstituents: (target: OperationID) => void;
+  promptRelocateConstituents: (target: OperationID, positions: IOperationPosition[]) => void;
 }
 
 const OssEditContext = createContext<IOssEditContext | null>(null);
@@ -360,16 +360,20 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
     [model]
   );
 
-  const promptRelocateConstituents = useCallback((target: OperationID) => {
+  const promptRelocateConstituents = useCallback((target: OperationID, positions: IOperationPosition[]) => {
+    setPositions(positions);
     setTargetOperationID(target);
     setShowRelocateConstituents(true);
   }, []);
 
-  const handleRelocateConstituents = useCallback((data: ICstRelocateData) => {
-    // TODO: implement backed call
-    console.log(data);
-    toast.success('В разработке');
-  }, []);
+  const handleRelocateConstituents = useCallback(
+    (data: ICstRelocateData) => {
+      model.savePositions({ positions: positions }, () =>
+        model.relocateConstituents(data, () => toast.success(information.changesSaved))
+      );
+    },
+    [model, positions]
+  );
 
   return (
     <OssEditContext.Provider

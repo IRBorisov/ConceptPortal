@@ -11,7 +11,7 @@ from apps.rsform.models import Constituenta
 from apps.rsform.serializers import SubstitutionSerializerBase
 from shared import messages as msg
 
-from ..models import Argument, Operation, OperationSchema, OperationType
+from ..models import Argument, Inheritance, Operation, OperationSchema, OperationType
 from .basics import OperationPositionSerializer, SubstitutionExSerializer
 
 
@@ -118,8 +118,6 @@ class OperationUpdateSerializer(serializers.Serializer):
         return attrs
 
 
-
-
 class OperationTargetSerializer(serializers.Serializer):
     ''' Serializer: Target single operation. '''
     target = PKField(many=False, queryset=Operation.objects.all().only('oss_id', 'result_id'))
@@ -224,3 +222,62 @@ class OperationSchemaSerializer(serializers.ModelSerializer):
         ).order_by('pk'):
             result['substitutions'].append(substitution)
         return result
+
+
+class RelocateConstituentsSerializer(serializers.Serializer):
+    ''' Serializer: Relocate constituents. '''
+    destination = PKField(
+        many=False,
+        queryset=LibraryItem.objects.all().only('id')
+    )
+    items = PKField(
+        many=True,
+        allow_empty=False,
+        queryset=Constituenta.objects.all()
+    )
+
+    def validate(self, attrs):
+        attrs['destination'] = attrs['destination'].id
+        attrs['source'] = attrs['items'][0].schema_id
+
+        # TODO: check permissions for editing source and destination
+
+        if attrs['source'] == attrs['destination']:
+            raise serializers.ValidationError({
+                'destination': msg.sourceEqualDestination()
+            })
+        for cst in attrs['items']:
+            if cst.schema_id != attrs['source']:
+                raise serializers.ValidationError({
+                    f'{cst.pk}': msg.constituentaNotInRSform(attrs['items'][0].schema.title)
+                })
+        if Inheritance.objects.filter(child__in=attrs['items']).exists():
+            raise serializers.ValidationError({
+                'items': msg.RelocatingInherited()
+            })
+
+        oss = LibraryItem.objects \
+            .filter(operations__result_id=attrs['destination']) \
+            .filter(operations__result_id=attrs['source']).only('id')
+        if not oss.exists():
+            raise serializers.ValidationError({
+                'destination': msg.schemasNotConnected()
+            })
+        attrs['oss'] = oss[0].pk
+
+        if Argument.objects.filter(
+            operation__result_id=attrs['destination'],
+            argument__result_id=attrs['source']
+        ).exists():
+            attrs['move_down'] = True
+        elif Argument.objects.filter(
+            operation__result_id=attrs['source'],
+            argument__result_id=attrs['destination']
+        ).exists():
+            attrs['move_down'] = False
+        else:
+            raise serializers.ValidationError({
+                'destination': msg.schemasNotConnected()
+            })
+
+        return attrs

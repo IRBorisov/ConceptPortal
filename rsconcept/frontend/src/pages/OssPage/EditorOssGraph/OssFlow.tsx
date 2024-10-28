@@ -199,9 +199,9 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
 
   const handleRelocateConstituents = useCallback(
     (target: OperationID) => {
-      controller.promptRelocateConstituents(target);
+      controller.promptRelocateConstituents(target, getPositions());
     },
-    [controller]
+    [controller, getPositions]
   );
 
   const handleFitView = useCallback(() => {

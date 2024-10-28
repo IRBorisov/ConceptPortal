@@ -3,6 +3,7 @@
  */
 
 import {
+  ICstRelocateData,
   IInputCreatedResponse,
   IOperationCreateData,
   IOperationCreatedResponse,
@@ -72,6 +73,13 @@ export function patchUpdateOperation(oss: string, request: FrontExchange<IOperat
 export function postExecuteOperation(oss: string, request: FrontExchange<ITargetOperation, IOperationSchemaData>) {
   AxiosPost({
     endpoint: `/api/oss/${oss}/execute-operation`,
+    request: request
+  });
+}
+
+export function postRelocateConstituents(request: FrontPush<ICstRelocateData>) {
+  AxiosPost({
+    endpoint: `/api/oss/relocate-constituents`,
     request: request
   });
 }

@@ -339,3 +339,65 @@ class TestChangeOperations(EndpointTester):
         self.ks5.refresh_from_db()
         self.assertNotEqual(self.operation4.result, None)
         self.assertEqual(self.ks5.constituents().count(), 8)
+
+    @decl_endpoint('/api/oss/relocate-constituents', method='post')
+    def test_relocate_constituents_up(self):
+        ks1_old_count = self.ks1.constituents().count()
+        ks4_old_count = self.ks4.constituents().count()
+        operation6 = self.owned.create_operation(
+            alias='6',
+            operation_type=OperationType.SYNTHESIS
+        )
+        self.owned.set_arguments(operation6.pk, [self.operation1, self.operation2])
+        self.owned.execute_operation(operation6)
+        operation6.refresh_from_db()
+        ks6 = RSForm(operation6.result)
+        ks6A1 = ks6.insert_new('A1')
+        ks6_old_count = ks6.constituents().count()
+
+        data = {
+            'destination': self.ks1.model.pk,
+            'items': [ks6A1.pk]
+        }
+
+        self.executeOK(data=data)
+        ks6.refresh_from_db()
+        self.ks1.refresh_from_db()
+        self.ks4.refresh_from_db()
+
+        self.assertEqual(ks6.constituents().count(), ks6_old_count)
+        self.assertEqual(self.ks1.constituents().count(), ks1_old_count + 1)
+        self.assertEqual(self.ks4.constituents().count(), ks4_old_count + 1)
+
+    @decl_endpoint('/api/oss/relocate-constituents', method='post')
+    def test_relocate_constituents_down(self):
+        ks1_old_count = self.ks1.constituents().count()
+        ks4_old_count = self.ks4.constituents().count()
+
+        operation6 = self.owned.create_operation(
+            alias='6',
+            operation_type=OperationType.SYNTHESIS
+        )
+        self.owned.set_arguments(operation6.pk, [self.operation1, self.operation2])
+        self.owned.execute_operation(operation6)
+        operation6.refresh_from_db()
+        ks6 = RSForm(operation6.result)
+        ks6_old_count = ks6.constituents().count()
+
+        data = {
+            'destination': ks6.model.pk,
+            'items': [self.ks1X2.pk]
+        }
+
+        self.executeOK(data=data)
+        ks6.refresh_from_db()
+        self.ks1.refresh_from_db()
+        self.ks4.refresh_from_db()
+        self.ks4D2.refresh_from_db()
+        self.ks5D4.refresh_from_db()
+
+        self.assertEqual(ks6.constituents().count(), ks6_old_count)
+        self.assertEqual(self.ks1.constituents().count(), ks1_old_count - 1)
+        self.assertEqual(self.ks4.constituents().count(), ks4_old_count - 1)
+        self.assertEqual(self.ks4D2.definition_formal, r'DEL X2 X3 S1 D1')
+        self.assertEqual(self.ks5D4.definition_formal, r'X1 X2 X3 S1 D1 D2 D3')

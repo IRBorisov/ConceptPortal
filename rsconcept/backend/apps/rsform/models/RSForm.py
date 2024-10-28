@@ -64,6 +64,7 @@ class RSForm:
     def refresh_from_db(self) -> None:
         ''' Model wrapper. '''
         self.model.refresh_from_db()
+        self.cache = RSFormCache(self)
 
     def constituents(self) -> QuerySet[Constituenta]:
         ''' Get QuerySet containing all constituents of current RSForm. '''

@@ -55,12 +55,15 @@ function DlgRelocateConstituents({ oss, hideWindow, target, onSubmit }: DlgReloc
   }, []);
 
   const handleSubmit = useCallback(() => {
+    if (!destination) {
+      return;
+    }
     const data: ICstRelocateData = {
-      destination: target.result ?? 0,
-      items: []
+      destination: destination.id,
+      items: selected
     };
     onSubmit(data);
-  }, [target, onSubmit]);
+  }, [destination, onSubmit, selected]);
 
   return (
     <Modal

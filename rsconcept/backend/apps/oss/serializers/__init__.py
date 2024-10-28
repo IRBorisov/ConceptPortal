@@ -9,6 +9,7 @@ from .data_access import (
     OperationSerializer,
     OperationTargetSerializer,
     OperationUpdateSerializer,
+    RelocateConstituentsSerializer,
     SetOperationInputSerializer
 )
 from .responses import ConstituentaReferenceResponse, NewOperationResponse, NewSchemaResponse

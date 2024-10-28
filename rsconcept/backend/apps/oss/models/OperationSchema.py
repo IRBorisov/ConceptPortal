@@ -267,7 +267,51 @@ class OperationSchema:
         self.save(update_fields=['time_update'])
         return True
 
-    def after_create_cst(self, source: RSForm, cst_list: list[Constituenta]) -> None:
+    def relocate_down(self, source: RSForm, destination: RSForm, items: list[Constituenta]):
+        ''' Move list of constituents to specific schema inheritor. '''
+        self.cache.ensure_loaded()
+        self.cache.insert_schema(source)
+        self.cache.insert_schema(destination)
+        operation = self.cache.get_operation(destination.model.pk)
+
+        self._undo_substitutions_cst(items, operation, destination)
+
+        inheritance_to_delete = [item for item in self.cache.inheritance[operation.pk] if item.parent_id in items]
+        for item in inheritance_to_delete:
+            self.cache.remove_inheritance(item)
+        Inheritance.objects.filter(operation_id=operation.pk, parent__in=items).delete()
+
+    def relocate_up(self, source: RSForm, destination: RSForm, items: list[Constituenta]) -> list[Constituenta]:
+        ''' Move list of constituents to specific schema upstream. '''
+        self.cache.ensure_loaded()
+        self.cache.insert_schema(source)
+        self.cache.insert_schema(destination)
+
+        operation = self.cache.get_operation(source.model.pk)
+        alias_mapping: dict[str, str] = {}
+        for item in self.cache.inheritance[operation.pk]:
+            if item.parent_id in destination.cache.by_id:
+                source_cst = source.cache.by_id[item.child_id]
+                destination_cst = destination.cache.by_id[item.parent_id]
+                alias_mapping[source_cst.alias] = destination_cst.alias
+
+        new_items = destination.insert_copy(items, initial_mapping=alias_mapping)
+        for index, cst in enumerate(new_items):
+            new_inheritance = Inheritance.objects.create(
+                operation=operation,
+                child=items[index],
+                parent=cst
+            )
+            self.cache.insert_inheritance(new_inheritance)
+        self.after_create_cst(destination, new_items, exclude=[operation.pk])
+
+        return new_items
+
+    def after_create_cst(
+        self, source: RSForm,
+        cst_list: list[Constituenta],
+        exclude: Optional[list[int]] = None
+    ) -> None:
         ''' Trigger cascade resolutions when new constituent is created. '''
         self.cache.insert_schema(source)
         inserted_aliases = [cst.alias for cst in cst_list]
@@ -281,7 +325,7 @@ class OperationSchema:
             if cst is not None:
                 alias_mapping[alias] = cst
         operation = self.cache.get_operation(source.model.pk)
-        self._cascade_inherit_cst(operation.pk, source, cst_list, alias_mapping)
+        self._cascade_inherit_cst(operation.pk, source, cst_list, alias_mapping, exclude)
 
     def after_change_cst_type(self, source: RSForm, target: Constituenta) -> None:
         ''' Trigger cascade resolutions when constituenta type is changed. '''
@@ -344,18 +388,20 @@ class OperationSchema:
                 mapping={}
             )
 
+    # pylint: disable=too-many-arguments, too-many-positional-arguments
     def _cascade_inherit_cst(
-        self,
-        target_operation: int,
+        self, target_operation: int,
         source: RSForm,
         items: list[Constituenta],
-        mapping: CstMapping
+        mapping: CstMapping,
+        exclude: Optional[list[int]] = None
     ) -> None:
         children = self.cache.graph.outputs[target_operation]
         if len(children) == 0:
             return
         for child_id in children:
-            self._execute_inherit_cst(child_id, source, items, mapping)
+            if not exclude or child_id not in exclude:
+                self._execute_inherit_cst(child_id, source, items, mapping)
 
     def _execute_inherit_cst(
         self,
@@ -826,6 +872,10 @@ class OssCache:
     def remove_substitution(self, target: Substitution) -> None:
         ''' Remove substitution from cache. '''
         self.substitutions[target.operation_id].remove(target)
+
+    def remove_inheritance(self, target: Inheritance) -> None:
+        ''' Remove inheritance from cache. '''
+        self.inheritance[target.operation_id].remove(target)
 
     def unfold_sub(self, sub: Substitution) -> tuple[RSForm, RSForm, Constituenta, Constituenta]:
         operation = self.operation_by_id[sub.operation_id]

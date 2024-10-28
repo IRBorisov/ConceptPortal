@@ -38,6 +38,18 @@ def operationResultFromAnotherOSS():
     return 'Схема является результатом другой ОСС'
 
 
+def schemasNotConnected():
+    return 'Концептуальные схемы не связаны через ОСС'
+
+
+def sourceEqualDestination():
+    return 'Схема-источник и схема-получатель не могут быть одинаковыми'
+
+
+def RelocatingInherited():
+    return 'Невозможно переместить наследуемые конституенты'
+
+
 def operationInputAlreadyConnected():
     return 'Схема уже подключена к другой операции'
 

@@ -17,12 +17,14 @@ import {
   patchUpdateOperation,
   patchUpdatePositions,
   postCreateOperation,
-  postExecuteOperation
+  postExecuteOperation,
+  postRelocateConstituents
 } from '@/backend/oss';
 import { type ErrorData } from '@/components/info/InfoError';
 import { AccessPolicy, ILibraryItem } from '@/models/library';
 import { ILibraryUpdateData } from '@/models/library';
 import {
+  ICstRelocateData,
   IOperationCreateData,
   IOperationData,
   IOperationDeleteData,
@@ -65,6 +67,7 @@ interface IOssContext {
   setInput: (data: IOperationSetInputData, callback?: () => void) => void;
   updateOperation: (data: IOperationUpdateData, callback?: () => void) => void;
   executeOperation: (data: ITargetOperation, callback?: () => void) => void;
+  relocateConstituents: (data: ICstRelocateData, callback?: () => void) => void;
 }
 
 const OssContext = createContext<IOssContext | null>(null);
@@ -353,6 +356,28 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
     [itemID, model, library, oss]
   );
 
+  const relocateConstituents = useCallback(
+    (data: ICstRelocateData, callback?: () => void) => {
+      if (!model) {
+        return;
+      }
+      setProcessingError(undefined);
+      postRelocateConstituents({
+        data: data,
+        showError: true,
+        setLoading: setProcessing,
+        onError: setProcessingError,
+        onSuccess: () => {
+          oss.reload();
+          library.reloadItems(() => {
+            if (callback) callback();
+          });
+        }
+      });
+    },
+    [model, library, oss]
+  );
+
   return (
     <OssContext.Provider
       value={{
@@ -376,7 +401,8 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         createInput,
         setInput,
         updateOperation,
-        executeOperation
+        executeOperation,
+        relocateConstituents
       }}
     >
       {children}

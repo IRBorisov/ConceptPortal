@@ -14,7 +14,7 @@ from rest_framework.response import Response
 
 from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemSerializer
-from apps.rsform.models import Constituenta
+from apps.rsform.models import Constituenta, RSForm
 from apps.rsform.serializers import CstTargetSerializer
 from shared import messages as msg
 from shared import permissions
@@ -42,7 +42,8 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             'create_input',
             'set_input',
             'update_operation',
-            'execute_operation'
+            'execute_operation',
+            'relocate_constituents'
         ]:
             permission_list = [permissions.ItemEditor]
         elif self.action in ['details']:
@@ -385,3 +386,36 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                 'schema': cst.schema_id
             }
         )
+
+    @extend_schema(
+        summary='relocate constituents from one schema to another',
+        tags=['OSS'],
+        request=s.RelocateConstituentsSerializer(),
+        responses={
+            c.HTTP_200_OK: s.OperationSchemaSerializer,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=False, methods=['post'], url_path='relocate-constituents')
+    def relocate_constituents(self, request: Request) -> Response:
+        ''' Relocate constituents from one schema to another. '''
+        serializer = s.RelocateConstituentsSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        data = serializer.validated_data
+        oss = m.OperationSchema(LibraryItem.objects.get(pk=data['oss']))
+        source = RSForm(LibraryItem.objects.get(pk=data['source']))
+        destination = RSForm(LibraryItem.objects.get(pk=data['destination']))
+
+        with transaction.atomic():
+            if data['move_down']:
+                oss.relocate_down(source, destination, data['items'])
+                m.PropagationFacade.before_delete_cst(source, data['items'])
+                source.delete_cst(data['items'])
+            else:
+                new_items = oss.relocate_up(source, destination, data['items'])
+                m.PropagationFacade.after_create_cst(destination, new_items, exclude=[oss.model.pk])
+
+        return Response(status=c.HTTP_200_OK)
