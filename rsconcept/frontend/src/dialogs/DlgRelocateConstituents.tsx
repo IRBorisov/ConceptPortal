@@ -1,10 +1,12 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
+import { RelocateUpIcon } from '@/components/DomainIcons';
 import PickMultiConstituenta from '@/components/select/PickMultiConstituenta';
 import SelectLibraryItem from '@/components/select/SelectLibraryItem';
+import MiniButton from '@/components/ui/MiniButton';
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import DataLoader from '@/components/wrap/DataLoader';
 import { useLibrary } from '@/context/LibraryContext';
@@ -17,41 +19,57 @@ import { prefixes } from '@/utils/constants';
 
 interface DlgRelocateConstituentsProps extends Pick<ModalProps, 'hideWindow'> {
   oss: IOperationSchema;
-  target: IOperation;
+  initialTarget?: IOperation;
   onSubmit: (data: ICstRelocateData) => void;
 }
 
-function DlgRelocateConstituents({ oss, hideWindow, target, onSubmit }: DlgRelocateConstituentsProps) {
+function DlgRelocateConstituents({ oss, hideWindow, initialTarget, onSubmit }: DlgRelocateConstituentsProps) {
   const library = useLibrary();
-  const schemas = useMemo(() => {
-    const node = oss.graph.at(target.id)!;
-    const ids: LibraryItemID[] = [
-      ...node.inputs.map(id => oss.operationByID.get(id)!.result).filter(id => id !== null),
-      ...node.outputs.map(id => oss.operationByID.get(id)!.result).filter(id => id !== null)
-    ];
-    return ids.map(id => library.items.find(item => item.id === id)).filter(item => item !== undefined);
-  }, [oss, library.items, target.id]);
 
+  const [directionUp, setDirectionUp] = useState(true);
   const [destination, setDestination] = useState<ILibraryItem | undefined>(undefined);
   const [selected, setSelected] = useState<ConstituentaID[]>([]);
+  const [source, setSource] = useState<ILibraryItem | undefined>(
+    library.items.find(item => item.id === initialTarget?.result)
+  );
 
-  const source = useRSFormDetails({ target: String(target.result!) });
-  const filtered = useMemo(() => {
-    if (!source.schema || !destination) {
+  const operation = useMemo(() => oss.items.find(item => item.result === source?.id), [oss, source]);
+  const sourceSchemas = useMemo(() => library.items.filter(item => oss.schemas.includes(item.id)), [library, oss]);
+  const destinationSchemas = useMemo(() => {
+    if (!operation) {
+      return [];
+    }
+    const node = oss.graph.at(operation.id)!;
+    const ids: LibraryItemID[] = directionUp
+      ? node.inputs.map(id => oss.operationByID.get(id)!.result).filter(id => id !== null)
+      : node.outputs.map(id => oss.operationByID.get(id)!.result).filter(id => id !== null);
+    return ids.map(id => library.items.find(item => item.id === id)).filter(item => item !== undefined);
+  }, [oss, library.items, operation, directionUp]);
+
+  const sourceData = useRSFormDetails({ target: source ? String(source.id) : undefined });
+  const filteredConstituents = useMemo(() => {
+    if (!sourceData.schema || !destination || !operation) {
       return [];
     }
     const destinationOperation = oss.items.find(item => item.result === destination.id);
-    return getRelocateCandidates(target.id, destinationOperation!.id, source.schema, oss);
-  }, [destination, target.id, source.schema, oss]);
+    return getRelocateCandidates(operation.id, destinationOperation!.id, sourceData.schema, oss);
+  }, [destination, operation, sourceData.schema, oss]);
 
   const isValid = useMemo(() => !!destination && selected.length > 0, [destination, selected]);
+  const toggleDirection = useCallback(() => {
+    setDirectionUp(prev => !prev);
+    setDestination(undefined);
+  }, []);
 
-  useLayoutEffect(() => {
+  const handleSelectSource = useCallback((newValue: ILibraryItem | undefined) => {
+    setSource(newValue);
+    setDestination(undefined);
     setSelected([]);
-  }, [destination]);
+  }, []);
 
   const handleSelectDestination = useCallback((newValue: ILibraryItem | undefined) => {
     setDestination(newValue);
+    setSelected([]);
   }, []);
 
   const handleSubmit = useCallback(() => {
@@ -74,24 +92,44 @@ function DlgRelocateConstituents({ oss, hideWindow, target, onSubmit }: DlgReloc
       onSubmit={handleSubmit}
       className={clsx('w-[40rem] h-[33rem]', 'py-3 px-6')}
     >
-      <DataLoader id='dlg-relocate-constituents' className='cc-column' isLoading={source.loading} error={source.error}>
-        <SelectLibraryItem
-          placeholder='Выберите целевую схему'
-          items={schemas}
-          value={destination}
-          onSelectValue={handleSelectDestination}
-        />
-        {source.schema ? (
-          <PickMultiConstituenta
-            schema={source.schema}
-            data={filtered}
-            rows={12}
-            prefixID={prefixes.dlg_cst_constituents_list}
-            selected={selected}
-            setSelected={setSelected}
+      <div className='flex flex-col border'>
+        <div className='flex gap-1 items-center clr-input border-b rounded-t-md'>
+          <SelectLibraryItem
+            noBorder
+            className='w-1/2'
+            placeholder='Выберите исходную схему'
+            items={sourceSchemas}
+            value={source}
+            onSelectValue={handleSelectSource}
           />
-        ) : null}
-      </DataLoader>
+          <MiniButton
+            title='Направление перемещения'
+            icon={<RelocateUpIcon value={directionUp} />}
+            onClick={toggleDirection}
+          />
+          <SelectLibraryItem
+            noBorder
+            className='w-1/2'
+            placeholder='Выберите целевую схему'
+            items={destinationSchemas}
+            value={destination}
+            onSelectValue={handleSelectDestination}
+          />
+        </div>
+        <DataLoader id='dlg-relocate-constituents' isLoading={sourceData.loading} error={sourceData.error}>
+          {sourceData.schema ? (
+            <PickMultiConstituenta
+              noBorder
+              schema={sourceData.schema}
+              data={filteredConstituents}
+              rows={12}
+              prefixID={prefixes.dlg_cst_constituents_list}
+              selected={selected}
+              setSelected={setSelected}
+            />
+          ) : null}
+        </DataLoader>
+      </div>
     </Modal>
   );
 }

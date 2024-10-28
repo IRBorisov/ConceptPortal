@@ -16,4 +16,4 @@ djangorestframework-stubs==3.15.1
 django-extensions==3.2.3
 mypy==1.11.2
 pylint==3.3.1
-coverage==7.6.3
+coverage==7.6.4

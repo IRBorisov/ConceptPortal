@@ -76,7 +76,7 @@ export interface IOssEditContext extends ILibraryItemEditor {
   promptEditInput: (target: OperationID, positions: IOperationPosition[]) => void;
   promptEditOperation: (target: OperationID, positions: IOperationPosition[]) => void;
   executeOperation: (target: OperationID, positions: IOperationPosition[]) => void;
-  promptRelocateConstituents: (target: OperationID, positions: IOperationPosition[]) => void;
+  promptRelocateConstituents: (target: OperationID | undefined, positions: IOperationPosition[]) => void;
 }
 
 const OssEditContext = createContext<IOssEditContext | null>(null);
@@ -360,7 +360,7 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
     [model]
   );
 
-  const promptRelocateConstituents = useCallback((target: OperationID, positions: IOperationPosition[]) => {
+  const promptRelocateConstituents = useCallback((target: OperationID | undefined, positions: IOperationPosition[]) => {
     setPositions(positions);
     setTargetOperationID(target);
     setShowRelocateConstituents(true);
@@ -368,9 +368,18 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
 
   const handleRelocateConstituents = useCallback(
     (data: ICstRelocateData) => {
-      model.savePositions({ positions: positions }, () =>
-        model.relocateConstituents(data, () => toast.success(information.changesSaved))
-      );
+      if (
+        positions.every(item => {
+          const operation = model.schema!.operationByID.get(item.id)!;
+          return operation.position_x === item.position_x && operation.position_y === item.position_y;
+        })
+      ) {
+        model.relocateConstituents(data, () => toast.success(information.changesSaved));
+      } else {
+        model.savePositions({ positions: positions }, () =>
+          model.relocateConstituents(data, () => toast.success(information.changesSaved))
+        );
+      }
     },
     [model, positions]
   );
@@ -458,7 +467,7 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
           {showRelocateConstituents ? (
             <DlgRelocateConstituents
               hideWindow={() => setShowRelocateConstituents(false)}
-              target={targetOperation!}
+              initialTarget={targetOperation}
               oss={model.schema}
               onSubmit={handleRelocateConstituents}
             />

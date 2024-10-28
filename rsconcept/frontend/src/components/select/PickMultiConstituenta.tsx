@@ -23,6 +23,7 @@ interface PickMultiConstituentaProps {
 
   prefixID: string;
   rows?: number;
+  noBorder?: boolean;
 
   selected: ConstituentaID[];
   setSelected: React.Dispatch<React.SetStateAction<ConstituentaID[]>>;
@@ -36,6 +37,7 @@ function PickMultiConstituenta({
   data,
   prefixID,
   rows,
+  noBorder,
   selected,
   setSelected
 }: PickMultiConstituentaProps) {
@@ -118,10 +120,10 @@ function PickMultiConstituenta({
   );
 
   return (
-    <div>
-      <div className='flex justify-between items-center clr-input px-3 border-x border-t rounded-t-md'>
+    <div className={noBorder ? '' : 'border'}>
+      <div className={clsx('px-3 flex justify-between items-center', 'clr-input', 'border-b', 'rounded-t-md')}>
         <div className='w-[24ch] select-none whitespace-nowrap'>
-          Выбраны {selected.length} из {data.length}
+          {data.length > 0 ? `Выбраны ${selected.length} из ${data.length}` : 'Конституенты'}
         </div>
         <SearchBar
           id='dlg_constituents_search'
@@ -145,7 +147,7 @@ function PickMultiConstituenta({
         noFooter
         rows={rows}
         contentHeight='1.3rem'
-        className={clsx('cc-scroll-y', 'border', 'text-sm', 'select-none')}
+        className={clsx('cc-scroll-y', 'text-sm', 'select-none')}
         data={filtered}
         columns={columns}
         headPosition='0rem'

@@ -20,6 +20,8 @@ import {
   IconGraphInputs,
   IconGraphOutputs,
   IconHide,
+  IconMoveDown,
+  IconMoveUp,
   IconOSS,
   IconPrivate,
   IconProps,
@@ -157,5 +159,13 @@ export function CstTypeIcon({ value, size = '1.25rem', className }: DomIconProps
       return <IconCstPredicate size={size} className={className ?? 'clr-text-red'} />;
     case CstType.THEOREM:
       return <IconCstTheorem size={size} className={className ?? 'clr-text-red'} />;
+  }
+}
+
+export function RelocateUpIcon({ value, size = '1.25rem', className }: DomIconProps<boolean>) {
+  if (value) {
+    return <IconMoveUp size={size} className={className ?? 'clr-text-primary'} />;
+  } else {
+    return <IconMoveDown size={size} className={className ?? 'clr-text-primary'} />;
   }
 }

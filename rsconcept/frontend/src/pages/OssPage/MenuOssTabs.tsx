@@ -4,6 +4,7 @@ import { urls } from '@/app/urls';
 import {
   IconAdmin,
   IconAlert,
+  IconChild,
   IconDestroy,
   IconEdit2,
   IconEditor,
@@ -67,6 +68,11 @@ function MenuOssTabs({ onDestroy }: MenuOssTabsProps) {
     router.push(urls.login);
   }
 
+  function handleRelocate() {
+    editMenu.hide();
+    controller.promptRelocateConstituents(undefined, []);
+  }
+
   return (
     <div className='flex'>
       <div ref={schemaMenu.ref}>
@@ -128,9 +134,11 @@ function MenuOssTabs({ onDestroy }: MenuOssTabsProps) {
           />
           <Dropdown isOpen={editMenu.isOpen}>
             <DropdownButton
-              text='см. Граф синтеза'
-              titleHtml='Редактирование доступно <br/>через Граф синтеза'
-              disabled
+              text='Конституенты'
+              titleHtml='Перемещение конституент</br>между схемами'
+              icon={<IconChild size='1rem' className='icon-green' />}
+              disabled={controller.isProcessing}
+              onClick={handleRelocate}
             />
           </Dropdown>
         </div>
