@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useCallback } from 'react';
 
 import { Grammeme } from '@/models/language';
@@ -7,13 +8,14 @@ import { prefixes } from '@/utils/constants';
 import { DefaultWordForms, IGrammemeOption, SelectorGrammemes } from '@/utils/selectors';
 
 import WordformButton from '../../dialogs/DlgEditReference/WordformButton';
+import { CProps } from '../props';
 
-interface SelectWordFormProps {
+interface SelectWordFormProps extends CProps.Styling {
   selected: IGrammemeOption[];
   setSelected: React.Dispatch<React.SetStateAction<IGrammemeOption[]>>;
 }
 
-function SelectWordForm({ selected, setSelected }: SelectWordFormProps) {
+function SelectWordForm({ selected, setSelected, className, ...restProps }: SelectWordFormProps) {
   const handleSelect = useCallback(
     (grams: Grammeme[]) => {
       setSelected(SelectorGrammemes.filter(({ value }) => grams.includes(value as Grammeme)));
@@ -22,7 +24,7 @@ function SelectWordForm({ selected, setSelected }: SelectWordFormProps) {
   );
 
   return (
-    <div className='text-xs sm:text-sm'>
+    <div className={clsx('text-xs sm:text-sm', className)} {...restProps}>
       {DefaultWordForms.slice(0, 12).map((data, index) => (
         <WordformButton
           key={`${prefixes.wordform_list}${index}`}

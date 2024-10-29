@@ -11,15 +11,16 @@ import { prefixes } from '@/utils/constants';
 import { describeCstSource, labelCstSource } from '@/utils/labels';
 
 import { DependencyIcon } from '../DomainIcons';
+import { CProps } from '../props';
 import DropdownButton from '../ui/DropdownButton';
 
-interface SelectGraphFilterProps {
+interface SelectGraphFilterProps extends CProps.Styling {
   value: DependencyMode;
   dense?: boolean;
   onChange: (value: DependencyMode) => void;
 }
 
-function SelectGraphFilter({ value, dense, onChange }: SelectGraphFilterProps) {
+function SelectGraphFilter({ value, dense, onChange, ...restProps }: SelectGraphFilterProps) {
   const menu = useDropdown();
   const size = useWindowSize();
 
@@ -32,7 +33,7 @@ function SelectGraphFilter({ value, dense, onChange }: SelectGraphFilterProps) {
   );
 
   return (
-    <div ref={menu.ref}>
+    <div ref={menu.ref} {...restProps}>
       <SelectorButton
         transparent
         tabIndex={-1}

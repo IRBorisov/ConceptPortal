@@ -9,17 +9,18 @@ import { prefixes } from '@/utils/constants';
 import { describeLibraryItemType, labelLibraryItemType } from '@/utils/labels';
 
 import { ItemTypeIcon } from '../DomainIcons';
+import { CProps } from '../props';
 import DropdownButton from '../ui/DropdownButton';
 import SelectorButton from '../ui/SelectorButton';
 
-interface SelectItemTypeProps {
+interface SelectItemTypeProps extends CProps.Styling {
   value: LibraryItemType;
   onChange: (value: LibraryItemType) => void;
   disabled?: boolean;
   stretchLeft?: boolean;
 }
 
-function SelectItemType({ value, disabled, stretchLeft, onChange }: SelectItemTypeProps) {
+function SelectItemType({ value, disabled, stretchLeft, onChange, ...restProps }: SelectItemTypeProps) {
   const menu = useDropdown();
 
   const handleChange = useCallback(
@@ -33,7 +34,7 @@ function SelectItemType({ value, disabled, stretchLeft, onChange }: SelectItemTy
   );
 
   return (
-    <div ref={menu.ref}>
+    <div ref={menu.ref} {...restProps}>
       <SelectorButton
         transparent
         title={describeLibraryItemType(value)}

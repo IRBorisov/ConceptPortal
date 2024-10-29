@@ -9,17 +9,18 @@ import { prefixes } from '@/utils/constants';
 import { describeAccessPolicy, labelAccessPolicy } from '@/utils/labels';
 
 import { PolicyIcon } from '../DomainIcons';
+import { CProps } from '../props';
 import DropdownButton from '../ui/DropdownButton';
 import MiniButton from '../ui/MiniButton';
 
-interface SelectAccessPolicyProps {
+interface SelectAccessPolicyProps extends CProps.Styling {
   value: AccessPolicy;
   onChange: (value: AccessPolicy) => void;
   disabled?: boolean;
   stretchLeft?: boolean;
 }
 
-function SelectAccessPolicy({ value, disabled, stretchLeft, onChange }: SelectAccessPolicyProps) {
+function SelectAccessPolicy({ value, disabled, stretchLeft, onChange, ...restProps }: SelectAccessPolicyProps) {
   const menu = useDropdown();
 
   const handleChange = useCallback(
@@ -33,7 +34,7 @@ function SelectAccessPolicy({ value, disabled, stretchLeft, onChange }: SelectAc
   );
 
   return (
-    <div ref={menu.ref}>
+    <div ref={menu.ref} {...restProps}>
       <MiniButton
         title={`Доступ: ${labelAccessPolicy(value)}`}
         hideTitle={menu.isOpen}

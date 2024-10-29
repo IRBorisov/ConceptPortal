@@ -1,5 +1,7 @@
 'use client';
 
+import clsx from 'clsx';
+
 import { IconOSS } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import Dropdown from '@/components/ui/Dropdown';
@@ -10,12 +12,12 @@ import useDropdown from '@/hooks/useDropdown';
 import { ILibraryItemReference } from '@/models/library';
 import { prefixes } from '@/utils/constants';
 
-interface MiniSelectorOSSProps {
+interface MiniSelectorOSSProps extends CProps.Styling {
   items: ILibraryItemReference[];
   onSelect: (event: CProps.EventMouse, newValue: ILibraryItemReference) => void;
 }
 
-function MiniSelectorOSS({ items, onSelect }: MiniSelectorOSSProps) {
+function MiniSelectorOSS({ items, onSelect, className, ...restProps }: MiniSelectorOSSProps) {
   const ossMenu = useDropdown();
 
   function onToggle(event: CProps.EventMouse) {
@@ -27,7 +29,7 @@ function MiniSelectorOSS({ items, onSelect }: MiniSelectorOSSProps) {
   }
 
   return (
-    <div ref={ossMenu.ref} className='flex items-center'>
+    <div ref={ossMenu.ref} className={clsx('flex items-center', className)} {...restProps}>
       <MiniButton
         icon={<IconOSS size='1.25rem' className='icon-primary' />}
         title='Операционные схемы'

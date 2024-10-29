@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useCallback } from 'react';
 
 import Dropdown from '@/components/ui/Dropdown';
@@ -10,15 +11,16 @@ import { prefixes } from '@/utils/constants';
 import { describeLocationHead, labelLocationHead } from '@/utils/labels';
 
 import { LocationIcon } from '../DomainIcons';
+import { CProps } from '../props';
 import DropdownButton from '../ui/DropdownButton';
 
-interface SelectLocationHeadProps {
+interface SelectLocationHeadProps extends CProps.Styling {
   value: LocationHead;
   onChange: (newValue: LocationHead) => void;
   excluded?: LocationHead[];
 }
 
-function SelectLocationHead({ value, excluded = [], onChange }: SelectLocationHeadProps) {
+function SelectLocationHead({ value, excluded = [], onChange, className, ...restProps }: SelectLocationHeadProps) {
   const menu = useDropdown();
 
   const handleChange = useCallback(
@@ -30,7 +32,7 @@ function SelectLocationHead({ value, excluded = [], onChange }: SelectLocationHe
   );
 
   return (
-    <div ref={menu.ref} className='h-full text-right'>
+    <div ref={menu.ref} className={clsx('h-full text-right', className)} {...restProps}>
       <SelectorButton
         transparent
         tabIndex={-1}

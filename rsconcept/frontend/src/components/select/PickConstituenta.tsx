@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useEffect, useMemo, useState } from 'react';
 
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
@@ -12,9 +13,10 @@ import { prefixes } from '@/utils/constants';
 import { describeConstituenta } from '@/utils/labels';
 
 import BadgeConstituenta from '../info/BadgeConstituenta';
+import { CProps } from '../props';
 import NoData from '../ui/NoData';
 
-interface PickConstituentaProps {
+interface PickConstituentaProps extends CProps.Styling {
   id?: string;
   prefixID: string;
   data?: IConstituenta[];
@@ -41,7 +43,9 @@ function PickConstituenta({
   describeFunc = describeConstituenta,
   matchFunc = (cst, filter) => matchConstituenta(cst, filter, CstMatchMode.ALL),
   onBeginFilter,
-  onSelectValue
+  onSelectValue,
+  className,
+  ...restProps
 }: PickConstituentaProps) {
   const { colors } = useConceptOptions();
   const [filteredData, setFilteredData] = useState<IConstituenta[]>([]);
@@ -89,7 +93,7 @@ function PickConstituenta({
   );
 
   return (
-    <div className='border divide-y'>
+    <div className={clsx('border divide-y', className)} {...restProps}>
       <SearchBar
         id={id ? `${id}__search` : undefined}
         className='clr-input rounded-t-md'

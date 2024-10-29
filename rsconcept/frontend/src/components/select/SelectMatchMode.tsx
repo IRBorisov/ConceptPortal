@@ -11,15 +11,16 @@ import { prefixes } from '@/utils/constants';
 import { describeCstMatchMode, labelCstMatchMode } from '@/utils/labels';
 
 import { MatchModeIcon } from '../DomainIcons';
+import { CProps } from '../props';
 import DropdownButton from '../ui/DropdownButton';
 
-interface SelectMatchModeProps {
+interface SelectMatchModeProps extends CProps.Styling {
   value: CstMatchMode;
   dense?: boolean;
   onChange: (value: CstMatchMode) => void;
 }
 
-function SelectMatchMode({ value, dense, onChange }: SelectMatchModeProps) {
+function SelectMatchMode({ value, dense, onChange, ...restProps }: SelectMatchModeProps) {
   const menu = useDropdown();
   const size = useWindowSize();
 
@@ -32,7 +33,7 @@ function SelectMatchMode({ value, dense, onChange }: SelectMatchModeProps) {
   );
 
   return (
-    <div ref={menu.ref}>
+    <div ref={menu.ref} {...restProps}>
       <SelectorButton
         transparent
         titleHtml='Настройка фильтрации <br/>по проверяемым атрибутам'

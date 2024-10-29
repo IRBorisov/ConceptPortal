@@ -81,7 +81,7 @@ function Modal({
         className={clsx(
           'z-modal',
           'absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2',
-          'border shadow-md',
+          'border rounded-xl',
           'clr-app'
         )}
         initial={{ ...animateModal.initial }}

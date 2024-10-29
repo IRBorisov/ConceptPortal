@@ -12,11 +12,12 @@ import { isBasicConcept, matchConstituenta } from '@/models/rsformAPI';
 import { describeConstituenta } from '@/utils/labels';
 
 import BadgeConstituenta from '../info/BadgeConstituenta';
+import { CProps } from '../props';
 import NoData from '../ui/NoData';
 import SearchBar from '../ui/SearchBar';
 import ToolbarGraphSelection from './ToolbarGraphSelection';
 
-interface PickMultiConstituentaProps {
+interface PickMultiConstituentaProps extends CProps.Styling {
   id?: string;
   schema: IRSForm;
   data: IConstituenta[];
@@ -39,7 +40,9 @@ function PickMultiConstituenta({
   rows,
   noBorder,
   selected,
-  setSelected
+  setSelected,
+  className,
+  ...restProps
 }: PickMultiConstituentaProps) {
   const { colors } = useConceptOptions();
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -120,7 +123,7 @@ function PickMultiConstituenta({
   );
 
   return (
-    <div className={noBorder ? '' : 'border'}>
+    <div className={clsx(noBorder ? '' : 'border', className)} {...restProps}>
       <div className={clsx('px-3 flex justify-between items-center', 'clr-input', 'border-b', 'rounded-t-md')}>
         <div className='w-[24ch] select-none whitespace-nowrap'>
           {data.length > 0 ? `Выбраны ${selected.length} из ${data.length}` : 'Конституенты'}
@@ -147,7 +150,7 @@ function PickMultiConstituenta({
         noFooter
         rows={rows}
         contentHeight='1.3rem'
-        className={clsx('cc-scroll-y', 'text-sm', 'select-none')}
+        className='cc-scroll-y text-sm select-none rounded-b-md'
         data={filtered}
         columns={columns}
         headPosition='0rem'

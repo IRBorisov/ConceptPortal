@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useCallback, useMemo, useState } from 'react';
 
 import { IconMoveDown, IconMoveUp, IconRemove } from '@/components/Icons';
@@ -9,7 +10,9 @@ import MiniButton from '@/components/ui/MiniButton';
 import NoData from '@/components/ui/NoData';
 import { IOperation, OperationID } from '@/models/oss';
 
-interface PickMultiOperationProps {
+import { CProps } from '../props';
+
+interface PickMultiOperationProps extends CProps.Styling {
   rows?: number;
 
   items: IOperation[];
@@ -19,7 +22,7 @@ interface PickMultiOperationProps {
 
 const columnHelper = createColumnHelper<IOperation>();
 
-function PickMultiOperation({ rows, items, selected, setSelected }: PickMultiOperationProps) {
+function PickMultiOperation({ rows, items, selected, setSelected, className, ...restProps }: PickMultiOperationProps) {
   const selectedItems = useMemo(
     () => selected.map(itemID => items.find(item => item.id === itemID)!),
     [items, selected]
@@ -124,7 +127,10 @@ function PickMultiOperation({ rows, items, selected, setSelected }: PickMultiOpe
   );
 
   return (
-    <div className='flex flex-col gap-1 border-t border-x rounded-t-md clr-input'>
+    <div
+      className={clsx('flex flex-col gap-1', ' border-t border-x rounded-md', 'clr-input', className)}
+      {...restProps}
+    >
       <SelectOperation
         noBorder
         items={nonSelectedItems} // prettier: split-line
@@ -136,7 +142,7 @@ function PickMultiOperation({ rows, items, selected, setSelected }: PickMultiOpe
         noFooter
         rows={rows}
         contentHeight='1.3rem'
-        className='cc-scroll-y text-sm select-none border-y'
+        className='cc-scroll-y text-sm select-none border-y rounded-b-md'
         data={selectedItems}
         columns={columns}
         headPosition='0rem'

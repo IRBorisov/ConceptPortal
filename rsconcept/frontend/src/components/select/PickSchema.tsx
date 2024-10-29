@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -17,7 +18,7 @@ import FlexColumn from '../ui/FlexColumn';
 import MiniButton from '../ui/MiniButton';
 import SelectLocation from './SelectLocation';
 
-interface PickSchemaProps {
+interface PickSchemaProps extends CProps.Styling {
   id?: string;
   initialFilter?: string;
   rows?: number;
@@ -39,7 +40,9 @@ function PickSchema({
   itemType,
   value,
   onSelectValue,
-  baseFilter
+  baseFilter,
+  className,
+  ...restProps
 }: PickSchemaProps) {
   const intl = useIntl();
   const { colors } = useConceptOptions();
@@ -120,11 +123,11 @@ function PickSchema({
   );
 
   return (
-    <div className='border divide-y'>
-      <div className='flex justify-between clr-input items-center pr-1'>
+    <div className={clsx('border divide-y', className)} {...restProps}>
+      <div className='flex justify-between clr-input items-center pr-1 rounded-t-md'>
         <SearchBar
           id={id ? `${id}__search` : undefined}
-          className='clr-input flex-grow'
+          className='clr-input flex-grow rounded-t-md'
           noBorder
           value={filterText}
           onChange={newValue => setFilterText(newValue)}

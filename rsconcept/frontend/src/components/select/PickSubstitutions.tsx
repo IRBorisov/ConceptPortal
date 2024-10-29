@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useCallback, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -14,10 +15,11 @@ import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
 import { errors } from '@/utils/labels';
 
 import { IconAccept, IconPageLeft, IconPageRight, IconRemove, IconReplace } from '../Icons';
+import { CProps } from '../props';
 import NoData from '../ui/NoData';
 import SelectLibraryItem from './SelectLibraryItem';
 
-interface PickSubstitutionsProps {
+interface PickSubstitutionsProps extends CProps.Styling {
   substitutions: ICstSubstitute[];
   setSubstitutions: React.Dispatch<React.SetStateAction<ICstSubstitute[]>>;
   suggestions?: ICstSubstitute[];
@@ -40,7 +42,9 @@ function PickSubstitutions({
   rows,
   schemas,
   filter,
-  allowSelfSubstitution
+  allowSelfSubstitution,
+  className,
+  ...restProps
 }: PickSubstitutionsProps) {
   const { colors } = useConceptOptions();
 
@@ -257,9 +261,9 @@ function PickSubstitutions({
   );
 
   return (
-    <div className='flex flex-col'>
+    <div className={clsx('flex flex-col', className)} {...restProps}>
       <div className='flex items-end gap-3 justify-stretch'>
-        <div className='flex-grow flex flex-col basis-1/2 gap-[0.125rem] border-x border-t clr-input'>
+        <div className='flex-grow flex flex-col basis-1/2 gap-[0.125rem] border-x border-t clr-input rounded-t-md'>
           <SelectLibraryItem
             noBorder
             placeholder='Выберите аргумент'
@@ -297,7 +301,7 @@ function PickSubstitutions({
           />
         </div>
 
-        <div className='flex-grow basis-1/2 flex flex-col gap-[0.125rem] border-x border-t clr-input'>
+        <div className='flex-grow basis-1/2 flex flex-col gap-[0.125rem] border-x border-t clr-input rounded-t-md'>
           <SelectLibraryItem
             noBorder
             placeholder='Выберите аргумент'
@@ -320,7 +324,7 @@ function PickSubstitutions({
         dense
         noHeader
         noFooter
-        className='text-sm border select-none cc-scroll-y'
+        className='text-sm border rounded-t-none select-none cc-scroll-y'
         rows={rows}
         contentHeight='1.3rem'
         data={substitutionData}
