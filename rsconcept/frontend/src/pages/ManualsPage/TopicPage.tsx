@@ -31,11 +31,13 @@ import HelpCstStatus from './items/ui/HelpCstStatus';
 import HelpFormulaTree from './items/ui/HelpFormulaTree';
 import HelpLibrary from './items/ui/HelpLibrary';
 import HelpOssGraph from './items/ui/HelpOssGraph';
+import HelpRelocateCst from './items/ui/HelpRelocateCst';
 import HelpRSCard from './items/ui/HelpRSCard';
 import HelpRSEditor from './items/ui/HelpRSEditor';
 import HelpRSGraphTerm from './items/ui/HelpRSGraphTerm';
 import HelpRSList from './items/ui/HelpRSList';
 import HelpRSMenu from './items/ui/HelpRSMenu';
+import HelpSubstitutions from './items/ui/HelpSubstitutions';
 
 // PDF Viewer setup
 const OFFSET_X_SMALL = 32;
@@ -65,6 +67,8 @@ function TopicPage({ topic }: TopicPageProps) {
   if (topic === HelpTopic.UI_CST_STATUS) return <HelpCstStatus />;
   if (topic === HelpTopic.UI_CST_CLASS) return <HelpCstClass />;
   if (topic === HelpTopic.UI_OSS_GRAPH) return <HelpOssGraph />;
+  if (topic === HelpTopic.UI_SUBSTITUTIONS) return <HelpSubstitutions />;
+  if (topic === HelpTopic.UI_RELOCATE_CST) return <HelpRelocateCst />;
 
   if (topic === HelpTopic.CONCEPTUAL) return <HelpConcept />;
   if (topic === HelpTopic.CC_SYSTEM) return <HelpConceptSystem />;

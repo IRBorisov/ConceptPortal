@@ -3,7 +3,6 @@
 import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
 
-import BadgeHelp from '@/components/info/BadgeHelp';
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import SelectSingle from '@/components/ui/SelectSingle';
 import TextInput from '@/components/ui/TextInput';
@@ -12,7 +11,6 @@ import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { HelpTopic } from '@/models/miscellaneous';
 import { CstType, ICstRenameData } from '@/models/rsform';
 import { generateAlias, validateNewAlias } from '@/models/rsformAPI';
-import { PARAMETER } from '@/utils/constants';
 import { labelCstType } from '@/utils/labels';
 import { SelectorCstType } from '@/utils/selectors';
 
@@ -48,6 +46,7 @@ function DlgRenameCst({ hideWindow, initial, allowChangeType, onRename }: DlgRen
       canSubmit={validated}
       onSubmit={() => onRename(cstData)}
       className={clsx('w-[30rem]', 'py-6 pr-3 pl-6 flex gap-3 justify-center items-center ')}
+      helpTopic={HelpTopic.CC_CONSTITUENTA}
     >
       <SelectSingle
         id='dlg_cst_type'
@@ -69,11 +68,6 @@ function DlgRenameCst({ hideWindow, initial, allowChangeType, onRename }: DlgRen
         className='w-[7rem]'
         value={cstData.alias}
         onChange={event => updateData({ alias: event.target.value })}
-      />
-      <BadgeHelp
-        topic={HelpTopic.CC_CONSTITUENTA}
-        offset={16}
-        className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')}
       />
     </Modal>
   );

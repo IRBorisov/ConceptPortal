@@ -4,9 +4,7 @@ import clsx from 'clsx';
 import { useLayoutEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
-import BadgeHelp from '@/components/info/BadgeHelp';
 import Modal, { ModalProps } from '@/components/ui/Modal';
-import Overlay from '@/components/ui/Overlay';
 import TabLabel from '@/components/ui/TabLabel';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { useLibrary } from '@/context/LibraryContext';
@@ -15,7 +13,6 @@ import { HelpTopic } from '@/models/miscellaneous';
 import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
 import { generateAlias, validateNewAlias } from '@/models/rsformAPI';
 import { inferTemplatedType, substituteTemplateArgs } from '@/models/rslangAPI';
-import { PARAMETER } from '@/utils/constants';
 import { prompts } from '@/utils/labels';
 
 import FormCreateCst from '../DlgCreateCst/FormCreateCst';
@@ -165,14 +162,8 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
       canSubmit={validated}
       beforeSubmit={handlePrompt}
       onSubmit={handleSubmit}
+      helpTopic={HelpTopic.RSL_TEMPLATES}
     >
-      <Overlay position='top-0 right-[5.9rem]'>
-        <BadgeHelp
-          topic={HelpTopic.RSL_TEMPLATES}
-          className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')}
-          offset={12}
-        />
-      </Overlay>
       <Tabs
         selectedTabClassName='clr-selected'
         className='flex flex-col'

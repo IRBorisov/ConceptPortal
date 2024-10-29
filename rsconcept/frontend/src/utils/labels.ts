@@ -377,6 +377,8 @@ export function labelHelpTopic(topic: HelpTopic): string {
     case HelpTopic.UI_CST_STATUS:   return 'Статус конституенты';
     case HelpTopic.UI_CST_CLASS:    return 'Класс конституенты';
     case HelpTopic.UI_OSS_GRAPH:    return 'Граф синтеза';
+    case HelpTopic.UI_SUBSTITUTIONS:return 'Отождествления';
+    case HelpTopic.UI_RELOCATE_CST: return 'Перенос конституент';
 
     case HelpTopic.CONCEPTUAL:      return '♨️ Концептуализация';
     case HelpTopic.CC_SYSTEM:       return 'Система определений';
@@ -428,6 +430,8 @@ export function describeHelpTopic(topic: HelpTopic): string {
     case HelpTopic.UI_CST_STATUS:   return 'нотация статуса конституенты';
     case HelpTopic.UI_CST_CLASS:    return 'нотация класса конституенты';
     case HelpTopic.UI_OSS_GRAPH:    return 'графическая форма <br/>операционной схемы синтеза';
+    case HelpTopic.UI_SUBSTITUTIONS:return 'таблица отождествлений конституент';
+    case HelpTopic.UI_RELOCATE_CST: return 'перенос конституент<br/>в рамках ОСС';
 
     case HelpTopic.CONCEPTUAL:      return 'основы концептуализации';
     case HelpTopic.CC_SYSTEM:       return 'концептуальная схема <br/>как система понятий';
@@ -435,7 +439,7 @@ export function describeHelpTopic(topic: HelpTopic): string {
     case HelpTopic.CC_RELATIONS:    return 'отношения между конституентами';
     case HelpTopic.CC_SYNTHESIS:    return 'операция синтеза концептуальных схем';
     case HelpTopic.CC_OSS:          return 'операционная схема синтеза';
-    case HelpTopic.CC_PROPAGATION:  return 'протаскивание изменений в ОСС';
+    case HelpTopic.CC_PROPAGATION:  return 'сквозные изменения в ОСС';
 
     case HelpTopic.RSLANG:          return 'экспликация и язык родов структур';
     case HelpTopic.RSL_TYPES:       return 'система типов в <br/>родоструктурной экспликации';

@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 
 import PickSubstitutions from '@/components/select/PickSubstitutions';
 import Modal, { ModalProps } from '@/components/ui/Modal';
+import { HelpTopic } from '@/models/miscellaneous';
 import { ICstSubstitute, ICstSubstituteData } from '@/models/oss';
 import { IRSForm } from '@/models/rsform';
 import { prefixes } from '@/utils/constants';
@@ -35,6 +36,7 @@ function DlgSubstituteCst({ hideWindow, onSubstitute, schema }: DlgSubstituteCst
       canSubmit={canSubmit}
       onSubmit={handleSubmit}
       className={clsx('w-[40rem]', 'px-6 pb-3')}
+      helpTopic={HelpTopic.UI_SUBSTITUTIONS}
     >
       <PickSubstitutions
         allowSelfSubstitution

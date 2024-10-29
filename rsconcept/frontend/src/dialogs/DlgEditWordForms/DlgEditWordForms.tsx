@@ -4,19 +4,16 @@ import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
 
 import { IconAccept, IconMoveDown, IconMoveLeft, IconMoveRight, IconRemove } from '@/components/Icons';
-import BadgeHelp from '@/components/info/BadgeHelp';
 import SelectMultiGrammeme from '@/components/select/SelectMultiGrammeme';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
 import Modal from '@/components/ui/Modal';
-import Overlay from '@/components/ui/Overlay';
 import TextArea from '@/components/ui/TextArea';
 import useConceptText from '@/hooks/useConceptText';
 import { Grammeme, ITextRequest, IWordForm, IWordFormPlain } from '@/models/language';
 import { parseGrammemes, wordFormEquals } from '@/models/languageAPI';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IConstituenta, TermForm } from '@/models/rsform';
-import { PARAMETER } from '@/utils/constants';
 import { prompts } from '@/utils/labels';
 import { IGrammemeOption, SelectorGrammemes, SelectorGrammemesList } from '@/utils/selectors';
 
@@ -130,15 +127,8 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
       submitText='Сохранить'
       onSubmit={handleSubmit}
       className='flex flex-col w-[40rem] px-6'
+      helpTopic={HelpTopic.TERM_CONTROL}
     >
-      <Overlay position='top-[-0.2rem] left-[8rem]'>
-        <BadgeHelp
-          topic={HelpTopic.TERM_CONTROL}
-          className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')}
-          offset={3}
-        />
-      </Overlay>
-
       <TextArea
         disabled
         spellCheck

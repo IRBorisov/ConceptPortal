@@ -1,5 +1,3 @@
-import clsx from 'clsx';
-
 import TextURL from '@/components/ui/TextURL';
 import Tooltip, { PlacesType } from '@/components/ui/Tooltip';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
@@ -16,14 +14,14 @@ interface BadgeHelpProps extends CProps.Styling {
   place?: PlacesType;
 }
 
-function BadgeHelp({ topic, padding, ...restProps }: BadgeHelpProps) {
+function BadgeHelp({ topic, padding = 'p-1', ...restProps }: BadgeHelpProps) {
   const { showHelp } = useConceptOptions();
 
   if (!showHelp) {
     return null;
   }
   return (
-    <div tabIndex={-1} id={`help-${topic}`} className={clsx('p-1', padding)}>
+    <div tabIndex={-1} id={`help-${topic}`} className={padding}>
       <IconHelp size='1.25rem' className='icon-primary' />
       <Tooltip clickable anchorSelect={`#help-${topic}`} layer='z-modalTooltip' {...restProps}>
         <div className='relative' onClick={event => event.stopPropagation()}>

@@ -4,15 +4,12 @@ import clsx from 'clsx';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
-import BadgeHelp from '@/components/info/BadgeHelp';
 import Modal from '@/components/ui/Modal';
-import Overlay from '@/components/ui/Overlay';
 import TabLabel from '@/components/ui/TabLabel';
 import { useLibrary } from '@/context/LibraryContext';
 import { LibraryItemID } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IOperationCreateData, IOperationSchema, OperationID, OperationType } from '@/models/oss';
-import { PARAMETER } from '@/utils/constants';
 import { describeOperationType, labelOperationType } from '@/utils/labels';
 
 import TabInputOperation from './TabInputOperation';
@@ -148,11 +145,8 @@ function DlgCreateOperation({ hideWindow, oss, onCreate, initialInputs }: DlgCre
       canSubmit={isValid}
       onSubmit={handleSubmit}
       className='w-[40rem] px-6 h-[32rem]'
+      helpTopic={HelpTopic.CC_OSS}
     >
-      <Overlay position='top-0 right-0'>
-        <BadgeHelp topic={HelpTopic.CC_OSS} className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')} offset={14} />
-      </Overlay>
-
       <Tabs
         selectedTabClassName='clr-selected'
         className='flex flex-col pt-2'

@@ -5,10 +5,13 @@ import { motion } from 'framer-motion';
 import { useRef } from 'react';
 
 import useEscapeKey from '@/hooks/useEscapeKey';
+import { HelpTopic } from '@/models/miscellaneous';
 import { animateModal } from '@/styling/animations';
+import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/labels';
 
 import { IconClose } from '../Icons';
+import BadgeHelp from '../info/BadgeHelp';
 import { CProps } from '../props';
 import Button from './Button';
 import MiniButton from './MiniButton';
@@ -27,21 +30,30 @@ export interface ModalProps extends CProps.Styling {
   beforeSubmit?: () => boolean;
   onSubmit?: () => void;
   onCancel?: () => void;
+
+  helpTopic?: HelpTopic;
+  hideHelpWhen?: () => boolean;
 }
 
 function Modal({
+  children,
+
   header,
+  submitText = 'Продолжить',
+  submitInvalidTooltip,
+
+  readonly,
+  canSubmit,
+  overflowVisible,
+
   hideWindow,
   beforeSubmit,
   onSubmit,
-  readonly,
   onCancel,
-  canSubmit,
-  submitInvalidTooltip,
   className,
-  children,
-  overflowVisible,
-  submitText = 'Продолжить',
+
+  helpTopic,
+  hideHelpWhen,
   ...restProps
 }: React.PropsWithChildren<ModalProps>) {
   const ref = useRef(null);
@@ -61,7 +73,7 @@ function Modal({
   };
 
   return (
-    <div className='fixed top-0 left-0 w-full h-full z-modal'>
+    <div className='fixed top-0 left-0 w-full h-full z-modal cursor-default'>
       <div className={clsx('z-navigation', 'fixed top-0 left-0', 'w-full h-full', 'cc-modal-blur')} />
       <div className={clsx('z-navigation', 'fixed top-0 left-0', 'w-full h-full', 'cc-modal-backdrop')} />
       <motion.div
@@ -85,6 +97,11 @@ function Modal({
             onClick={handleCancel}
           />
         </Overlay>
+        {helpTopic && !hideHelpWhen?.() ? (
+          <Overlay position='left-2 top-2'>
+            <BadgeHelp topic={helpTopic} className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')} padding='p-0' />
+          </Overlay>
+        ) : null}
 
         {header ? <h1 className='px-12 py-2 select-none'>{header}</h1> : null}
 

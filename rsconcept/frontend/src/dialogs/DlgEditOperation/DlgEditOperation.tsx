@@ -4,9 +4,7 @@ import clsx from 'clsx';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
-import BadgeHelp from '@/components/info/BadgeHelp';
 import Modal from '@/components/ui/Modal';
-import Overlay from '@/components/ui/Overlay';
 import TabLabel from '@/components/ui/TabLabel';
 import useRSFormCache from '@/hooks/useRSFormCache';
 import { HelpTopic } from '@/models/miscellaneous';
@@ -19,7 +17,6 @@ import {
   OperationType
 } from '@/models/oss';
 import { SubstitutionValidator } from '@/models/ossAPI';
-import { PARAMETER } from '@/utils/constants';
 
 import TabArguments from './TabArguments';
 import TabOperation from './TabOperation';
@@ -195,11 +192,9 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
       canSubmit={canSubmit}
       onSubmit={handleSubmit}
       className='w-[40rem] px-6 h-[32rem]'
+      helpTopic={HelpTopic.UI_SUBSTITUTIONS}
+      hideHelpWhen={() => activeTab !== TabID.SUBSTITUTION}
     >
-      <Overlay position='top-0 right-0'>
-        <BadgeHelp topic={HelpTopic.CC_OSS} className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')} offset={14} />
-      </Overlay>
-
       <Tabs
         selectedTabClassName='clr-selected'
         className='flex flex-col'

@@ -12,6 +12,7 @@ import DataLoader from '@/components/wrap/DataLoader';
 import { useLibrary } from '@/context/LibraryContext';
 import useRSFormDetails from '@/hooks/useRSFormDetails';
 import { ILibraryItem, LibraryItemID } from '@/models/library';
+import { HelpTopic } from '@/models/miscellaneous';
 import { ICstRelocateData, IOperation, IOperationSchema } from '@/models/oss';
 import { getRelocateCandidates } from '@/models/ossAPI';
 import { ConstituentaID } from '@/models/rsform';
@@ -85,12 +86,13 @@ function DlgRelocateConstituents({ oss, hideWindow, initialTarget, onSubmit }: D
 
   return (
     <Modal
-      header='Перемещение конституент'
+      header='Перенос конституент'
       submitText='Переместить'
       hideWindow={hideWindow}
       canSubmit={isValid}
       onSubmit={handleSubmit}
       className={clsx('w-[40rem] h-[33rem]', 'py-3 px-6')}
+      helpTopic={HelpTopic.UI_RELOCATE_CST}
     >
       <div className='flex flex-col border'>
         <div className='flex gap-1 items-center clr-input border-b rounded-t-md'>

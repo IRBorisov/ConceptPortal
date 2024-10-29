@@ -4,14 +4,11 @@ import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
-import BadgeHelp from '@/components/info/BadgeHelp';
 import Modal from '@/components/ui/Modal';
-import Overlay from '@/components/ui/Overlay';
 import TabLabel from '@/components/ui/TabLabel';
 import { ReferenceType } from '@/models/language';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IRSForm } from '@/models/rsform';
-import { PARAMETER } from '@/utils/constants';
 import { labelReferenceType } from '@/utils/labels';
 
 import TabEntityReference from './TabEntityReference';
@@ -71,15 +68,8 @@ function DlgEditReference({ hideWindow, schema, initial, onSave }: DlgEditRefere
       canSubmit={isValid}
       onSubmit={handleSubmit}
       className='w-[40rem] px-6 h-[32rem]'
+      helpTopic={HelpTopic.TERM_CONTROL}
     >
-      <Overlay position='top-0 right-0'>
-        <BadgeHelp
-          topic={HelpTopic.TERM_CONTROL}
-          className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')}
-          offset={14}
-        />
-      </Overlay>
-
       <Tabs
         selectedTabClassName='clr-selected'
         className='flex flex-col'

@@ -174,7 +174,7 @@ function NodeContextMenu({
         {controller.isMutable && operation.result ? (
           <DropdownButton
             text='Конституенты'
-            titleHtml='Перемещение конституент</br>между схемами'
+            titleHtml='Перенос конституент</br>между схемами'
             icon={<IconChild size='1rem' className='icon-green' />}
             disabled={controller.isProcessing}
             onClick={handleRelocateConstituents}
