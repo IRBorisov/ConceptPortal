@@ -77,7 +77,7 @@ function NodeContextMenu({
     onHide();
   }, [onHide]);
 
-  useClickedOutside({ ref, callback: handleHide });
+  useClickedOutside(isOpen, ref, handleHide);
 
   useEffect(() => setIsOpen(true), []);
 

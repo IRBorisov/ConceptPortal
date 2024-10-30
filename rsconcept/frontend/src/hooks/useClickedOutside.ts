@@ -4,10 +4,13 @@ import { useEffect } from 'react';
 
 import { assertIsNode } from '@/utils/utils';
 
-function useClickedOutside({ ref, callback }: { ref: React.RefObject<HTMLElement>; callback?: () => void }) {
+function useClickedOutside(enabled: boolean, ref: React.RefObject<HTMLElement>, callback?: () => void) {
   useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+
     function handleClickOutside(event: MouseEvent) {
-      console.log(1);
       assertIsNode(event.target);
       if (ref.current && !ref.current.contains(event.target)) {
         if (callback) callback();
@@ -17,7 +20,7 @@ function useClickedOutside({ ref, callback }: { ref: React.RefObject<HTMLElement
     return () => {
       document.removeEventListener('mouseup', handleClickOutside);
     };
-  }, [ref, callback]);
+  }, [ref, callback, enabled]);
 }
 
 export default useClickedOutside;

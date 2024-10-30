@@ -8,7 +8,7 @@ function useDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
-  useClickedOutside({ ref, callback: () => setIsOpen(false) });
+  useClickedOutside(isOpen, ref, () => setIsOpen(false));
 
   return {
     ref,
