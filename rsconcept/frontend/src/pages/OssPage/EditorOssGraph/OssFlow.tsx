@@ -9,7 +9,6 @@ import {
   getViewportForBounds,
   Node,
   NodeChange,
-  NodeTypes,
   ReactFlow,
   useEdgesState,
   useNodesState,
@@ -29,9 +28,8 @@ import { PARAMETER, storage } from '@/utils/constants';
 import { errors } from '@/utils/labels';
 
 import { useOssEdit } from '../OssEditContext';
-import InputNode from './InputNode';
+import { OssNodeTypes } from './graph/OssNodeTypes';
 import NodeContextMenu, { ContextMenuData } from './NodeContextMenu';
-import OperationNode from './OperationNode';
 import ToolbarOssGraph from './ToolbarOssGraph';
 
 interface OssFlowProps {
@@ -312,14 +310,6 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     }
   }
 
-  const OssNodeTypes: NodeTypes = useMemo(
-    () => ({
-      synthesis: OperationNode,
-      input: InputNode
-    }),
-    []
-  );
-
   const graph = useMemo(
     () => (
       <ReactFlow
@@ -328,6 +318,8 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
         onNodesChange={handleNodesChange}
         onEdgesChange={onEdgesChange}
         onNodeDoubleClick={handleNodeDoubleClick}
+        edgesFocusable={false}
+        nodesFocusable={false}
         fitView
         nodeTypes={OssNodeTypes}
         maxZoom={2}
@@ -349,7 +341,6 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
       handleClickCanvas,
       onEdgesChange,
       handleNodeDoubleClick,
-      OssNodeTypes,
       showGrid
     ]
   );

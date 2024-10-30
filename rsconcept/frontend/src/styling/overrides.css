@@ -43,6 +43,7 @@
 
 .react-flow__handle {
   cursor: default !important;
+  border-radius: 9999px;
 
   border-color: var(--cl-bg-40);
   background-color: var(--cl-bg-120);
@@ -66,6 +67,9 @@
 }
 
 .react-flow__attribution {
+  font-size: var(--font-size-sm);
+  font-family: var(--font-ui);
+
   background-color: transparent;
   color: var(--cl-fg-60);
   .dark & {

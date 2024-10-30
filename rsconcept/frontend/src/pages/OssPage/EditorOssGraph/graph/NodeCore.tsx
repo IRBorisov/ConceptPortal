@@ -9,7 +9,7 @@ import { OperationType } from '@/models/oss';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { truncateToLastWord } from '@/utils/utils';
 
-import { useOssEdit } from '../OssEditContext';
+import { useOssEdit } from '../../OssEditContext';
 
 interface NodeCoreProps {
   node: OssNodeInternal;
