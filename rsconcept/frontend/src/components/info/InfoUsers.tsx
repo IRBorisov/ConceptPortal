@@ -8,13 +8,15 @@ import { CProps } from '../props';
 interface InfoUsersProps extends CProps.Styling {
   items: UserID[];
   prefix: string;
+  header?: string;
 }
 
-function InfoUsers({ items, className, prefix, ...restProps }: InfoUsersProps) {
+function InfoUsers({ items, className, prefix, header, ...restProps }: InfoUsersProps) {
   const { getUserLabel } = useUsers();
 
   return (
     <div className={clsx('flex flex-col dense', className)} {...restProps}>
+      {header ? <h2>{header}</h2> : null}
       {items.map((user, index) => (
         <div key={`${prefix}${index}`}>{getUserLabel(user)}</div>
       ))}

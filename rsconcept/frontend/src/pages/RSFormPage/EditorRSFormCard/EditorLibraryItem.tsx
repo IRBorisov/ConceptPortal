@@ -124,7 +124,7 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
           disabled={isModified || controller.isProcessing || accessLevel < UserLevel.OWNER}
         />
         <Tooltip anchorSelect='#editor_stats' layer='z-modalTooltip'>
-          <InfoUsers items={item?.editors ?? []} prefix={prefixes.user_editors} />
+          <InfoUsers items={item?.editors ?? []} prefix={prefixes.user_editors} header='Редакторы' />
         </Tooltip>
 
         <ValueIcon
