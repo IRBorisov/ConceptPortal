@@ -11,7 +11,7 @@ export interface DividerProps extends CProps.Styling {
 }
 
 /**
- * Divider component that renders a horizontal or vertical divider with customizable margins and styling.
+ * Horizontal or vertical divider with customizable margins and styling.
  */
 function Divider({ vertical, margins = 'mx-2', className, ...restProps }: DividerProps) {
   return (

@@ -20,7 +20,7 @@ interface FileInputProps extends Omit<CProps.Input, 'accept' | 'type'> {
 }
 
 /**
- * FileInput component for selecting a `file`, displaying the selected file name.
+ * FileInput is a component for selecting a `file`, displaying the selected file name.
  */
 function FileInput({ id, label, acceptType, title, className, style, onChange, ...restProps }: FileInputProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);

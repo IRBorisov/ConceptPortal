@@ -5,7 +5,7 @@ import { animateDropdownItem } from '@/styling/animations';
 
 import Checkbox, { CheckboxProps } from './Checkbox';
 
-/** DropdownCheckbox animated component that renders a {@link Checkbox} inside a {@link Dropdown} item. */
+/** Animated {@link Checkbox} inside a {@link Dropdown} item. */
 function DropdownCheckbox({ setValue, disabled, ...restProps }: CheckboxProps) {
   return (
     <motion.div

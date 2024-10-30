@@ -17,7 +17,7 @@ interface DropdownProps extends CProps.Styling {
 }
 
 /**
- *  Dropdown animated component that displays a list of children with optional positioning and visibility control.
+ *  Animated list of children with optional positioning and visibility control.
  */
 function Dropdown({
   isOpen,

@@ -1,4 +1,4 @@
-// Reexporting reagraph types to wrap in 'use client'.
+// Reexporting necessary reagraph types.
 'use client';
 
 import { GraphCanvas as GraphUI } from 'reagraph';

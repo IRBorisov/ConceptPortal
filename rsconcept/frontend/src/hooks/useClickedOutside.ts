@@ -7,6 +7,7 @@ import { assertIsNode } from '@/utils/utils';
 function useClickedOutside({ ref, callback }: { ref: React.RefObject<HTMLElement>; callback?: () => void }) {
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
+      console.log(1);
       assertIsNode(event.target);
       if (ref.current && !ref.current.contains(event.target)) {
         if (callback) callback();

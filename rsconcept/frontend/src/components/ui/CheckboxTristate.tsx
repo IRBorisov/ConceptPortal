@@ -16,7 +16,7 @@ export interface CheckboxTristateProps extends Omit<CheckboxProps, 'value' | 'se
 }
 
 /**
- * CheckboxTristate component that allows toggling among three states: `true`, `false`, and `null`.
+ * Component that allows toggling among three states: `true`, `false`, and `null`.
  */
 function CheckboxTristate({
   disabled,

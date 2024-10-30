@@ -19,7 +19,7 @@ interface ButtonProps extends CProps.Control, CProps.Colors, CProps.Button {
 }
 
 /**
- * Button component that provides a customizable `button` with text, icon, tooltips and various styles.
+ * Customizable `button` with text, icon, tooltips and various styles.
  */
 function Button({
   icon,

@@ -3,9 +3,15 @@ import clsx from 'clsx';
 import { CProps } from '../props';
 
 interface LabelProps extends CProps.Label {
+  /** Text to display. */
   text?: string;
 }
 
+/**
+ * Displays a label with optional text.
+ *
+ * Note: Html label component is used only if `htmlFor` prop is set.
+ */
 function Label({ text, className, ...restProps }: LabelProps) {
   if (!text) {
     return null;

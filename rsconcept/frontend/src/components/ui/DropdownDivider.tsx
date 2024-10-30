@@ -6,7 +6,7 @@ import { animateDropdownItem } from '@/styling/animations';
 import { DividerProps } from './Divider';
 
 /**
- * DropdownDivider component that renders {@link Divider} with animation inside {@link Dropdown}.
+ * {@link Divider} with animation inside {@link Dropdown}.
  */
 function DropdownDivider({ vertical, margins = 'mx-2', className, ...restProps }: DividerProps) {
   return (

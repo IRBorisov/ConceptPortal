@@ -21,7 +21,7 @@ export interface CheckboxProps extends Omit<CProps.Button, 'value' | 'onClick'> 
 }
 
 /**
- * Checkbox component that allows users to toggle a boolean value.
+ * Component that allows toggling a boolean value.
  */
 function Checkbox({
   disabled,

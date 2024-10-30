@@ -18,7 +18,7 @@ interface DropdownButtonProps extends CProps.AnimatedButton {
 }
 
 /**
- * DropdownButton animated component that renders a `button` with optional text, icon, and click functionality.
+ * Animated `button` with optional text, icon, and click functionality.
  * It supports optional children for custom content or the default text/icon display.
  */
 function DropdownButton({

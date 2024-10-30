@@ -13,7 +13,7 @@ interface IndicatorProps extends CProps.Titled, CProps.Styling {
 }
 
 /**
- * Indicator component that displays a status `icon` with a tooltip.
+ * Displays a status `icon` with a tooltip.
  */
 function Indicator({ icon, title, titleHtml, hideTitle, noPadding, className, ...restProps }: IndicatorProps) {
   return (
