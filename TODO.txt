@@ -4,9 +4,6 @@ For more specific TODOs see comments in code
 [Bugs - PENDING]
 - Tab index still selecting background elements when modal is active
 
-[Functionality - PROGRESS]
-- OSS change propagation: Advanced features
-
 [Functionality - PENDING]
 - Landing page
 - Design first user experience
@@ -28,7 +25,7 @@ For more specific TODOs see comments in code
 
 - replace reagraph with react-flow in TermGraph and FormulaGraph
 - Search functionality for Help Manuals
-- Export PDF (Items list, Graph)
+- Export PDF (Items list, Graph) - use google search integration filtered by site?
 - ARIA (accessibility considerations) - for now machine reading not supported
 - Internationalization - at least english version. Consider react.intl
 - Sitemap for better SEO and crawler optimization
@@ -44,7 +41,6 @@ For more specific TODOs see comments in code
 [Tech]
 - duplicate syntax parsing and type info calculations to client. Consider moving backend to Nodejs or embedding c++ lib
 - add debounce to some search fields. Consider pagination and dynamic loading
-- DataTable: fixed percentage columns, especially for SubstituteTable. Rework column sizing mechanics
 - move autopep8 and isort settings from vscode settings to pyproject.toml
 - Test UI for #enable-force-dark Chrome setting
 
