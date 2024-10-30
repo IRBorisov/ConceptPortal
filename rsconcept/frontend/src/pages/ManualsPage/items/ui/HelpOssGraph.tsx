@@ -1,6 +1,7 @@
 import {
   IconAnimation,
   IconAnimationOff,
+  IconChild,
   IconConnect,
   IconConsolidation,
   IconDestroy,
@@ -102,6 +103,10 @@ function HelpOssGraph() {
           </li>
           <li>
             <IconConnect className='inline-icon' /> Выбрать КС для загрузки
+          </li>
+          <li>
+            <IconChild className='inline-icon icon-green' />{' '}
+            <LinkTopic text='Перенести конституенты' topic={HelpTopic.UI_RELOCATE_CST} />
           </li>
           <li>
             <IconExecute className='inline-icon icon-green' /> Активировать операцию
