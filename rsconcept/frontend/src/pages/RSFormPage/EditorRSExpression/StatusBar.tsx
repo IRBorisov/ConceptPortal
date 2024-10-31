@@ -11,7 +11,7 @@ import { ExpressionStatus } from '@/models/rsform';
 import { type IConstituenta } from '@/models/rsform';
 import { inferStatus } from '@/models/rsformAPI';
 import { IExpressionParse, ParsingStatus } from '@/models/rslang';
-import { colorBgCstStatus } from '@/styling/color';
+import { colorStatusBar } from '@/styling/color';
 import { globals } from '@/utils/constants';
 import { labelExpressionStatus, prepareTooltip } from '@/utils/labels';
 
@@ -48,7 +48,7 @@ function StatusBar({ isModified, processing, activeCst, parseData, onAnalyze }: 
         'focus-frame',
         'duration-500 transition-colors'
       )}
-      style={{ backgroundColor: processing ? colors.bgDefault : colorBgCstStatus(status, colors) }}
+      style={{ backgroundColor: processing ? colors.bgDefault : colorStatusBar(status, colors) }}
       data-tooltip-id={globals.tooltip}
       data-tooltip-html={prepareTooltip('Проверить определение', 'Ctrl + Q')}
       onClick={onAnalyze}

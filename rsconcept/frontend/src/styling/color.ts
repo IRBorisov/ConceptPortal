@@ -443,6 +443,21 @@ export function colorBgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): s
 export function colorBgCstStatus(status: ExpressionStatus, colors: IColorTheme): string {
   // prettier-ignore
   switch (status) {
+    case ExpressionStatus.VERIFIED: return colors.bgGreen;
+    case ExpressionStatus.INCORRECT: return colors.bgRed;
+    case ExpressionStatus.INCALCULABLE: return colors.bgOrange;
+    case ExpressionStatus.PROPERTY: return colors.bgTeal;
+    case ExpressionStatus.UNKNOWN: return colors.bgSelected;
+    case ExpressionStatus.UNDEFINED: return colors.bgBlue;
+  }
+}
+
+/**
+ * Determines statusbar color for {@link ExpressionStatus}.
+ */
+export function colorStatusBar(status: ExpressionStatus, colors: IColorTheme): string {
+  // prettier-ignore
+  switch (status) {
     case ExpressionStatus.VERIFIED: return colors.bgGreen50;
     case ExpressionStatus.INCORRECT: return colors.bgRed;
     case ExpressionStatus.INCALCULABLE: return colors.bgOrange;
