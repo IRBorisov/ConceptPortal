@@ -366,7 +366,7 @@ export function labelHelpTopic(topic: HelpTopic): string {
 
     case HelpTopic.THESAURUS:       return '📖 Тезаурус';
 
-    case HelpTopic.INTERFACE:       return '🦄 Интерфейс';
+    case HelpTopic.INTERFACE:       return '🌀 Интерфейс';
     case HelpTopic.UI_LIBRARY:      return 'Библиотека';
     case HelpTopic.UI_RS_MENU:      return 'Меню схемы';
     case HelpTopic.UI_RS_CARD:      return 'Карточка схемы';
@@ -396,7 +396,7 @@ export function labelHelpTopic(topic: HelpTopic): string {
     case HelpTopic.RSL_TEMPLATES:   return 'Банк выражений';
 
     case HelpTopic.TERM_CONTROL:    return '🪸 Терминологизация';
-    case HelpTopic.ACCESS:          return '👀 Доступы';
+    case HelpTopic.ACCESS:          return '🔐 Доступы';
     case HelpTopic.VERSIONS:        return '🏺 Версионирование';
 
     case HelpTopic.INFO:            return '📰 Информация';
