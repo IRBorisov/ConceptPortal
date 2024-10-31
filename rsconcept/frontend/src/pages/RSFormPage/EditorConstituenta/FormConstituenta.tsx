@@ -6,6 +6,7 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { IconChild, IconPredecessor, IconSave } from '@/components/Icons';
+import { CProps } from '@/components/props';
 import RefsInput from '@/components/RefsInput';
 import Indicator from '@/components/ui/Indicator';
 import Overlay from '@/components/ui/Overlay';
@@ -13,8 +14,10 @@ import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { useRSForm } from '@/context/RSFormContext';
+import DlgShowTypification from '@/dialogs/DlgShowTypification';
 import { ConstituentaID, CstType, IConstituenta, ICstUpdateData } from '@/models/rsform';
 import { isBaseSet, isBasicConcept, isFunctional } from '@/models/rsformAPI';
+import { ParsingStatus } from '@/models/rslang';
 import { information, labelCstTypification } from '@/utils/labels';
 
 import EditorRSExpression from '../EditorRSExpression';
@@ -55,6 +58,7 @@ function FormConstituenta({
   const [expression, setExpression] = useState('');
   const [convention, setConvention] = useState('');
   const [typification, setTypification] = useState('N/A');
+  const [showTypification, setShowTypification] = useState(false);
 
   const [forceComment, setForceComment] = useState(false);
 
@@ -127,8 +131,26 @@ function FormConstituenta({
     cstUpdate(data, () => toast.success(information.changesSaved));
   }
 
+  function handleTypificationClick(event: CProps.EventMouse) {
+    if ((!event.ctrlKey && !event.metaKey) || !state || state.parse.status !== ParsingStatus.VERIFIED) {
+      return;
+    }
+    event.stopPropagation();
+    event.preventDefault();
+    setShowTypification(true);
+  }
+
   return (
     <AnimateFade className='mx-0 md:mx-auto pt-[2rem] xs:pt-0'>
+      <AnimatePresence>
+        {showTypification && state ? (
+          <DlgShowTypification
+            result={state.parse.typification}
+            args={state.parse.args}
+            hideWindow={() => setShowTypification(false)}
+          />
+        ) : null}
+      </AnimatePresence>
       {state ? (
         <ControlsOverlay
           disabled={disabled}
@@ -161,10 +183,12 @@ function FormConstituenta({
             dense
             noResize
             noBorder
-            disabled
+            noOutline
+            readOnly
             label='Типизация'
             value={typification}
-            colors='clr-app clr-text-default'
+            colors='clr-app clr-text-default cursor-default'
+            onClick={event => handleTypificationClick(event)}
           />
         ) : null}
         {state ? (
