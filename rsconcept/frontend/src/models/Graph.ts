@@ -6,8 +6,11 @@
  * Represents single node of a {@link Graph}, as implemented by storing outgoing and incoming connections.
  */
 export class GraphNode {
+  /** Unique identifier of the node. */
   id: number;
+  /** List of outgoing nodes. */
   outputs: number[];
+  /** List of incoming nodes. */
   inputs: number[];
 
   constructor(id: number) {
@@ -48,6 +51,7 @@ export class GraphNode {
  * This class is optimized for TermGraph use case and not supposed to be used as generic graph implementation.
  */
 export class Graph {
+  /** Map of nodes. */
   nodes = new Map<number, GraphNode>();
 
   constructor(arr?: number[][]) {
