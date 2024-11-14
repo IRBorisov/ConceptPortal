@@ -17,8 +17,8 @@ import { useRSForm } from '@/context/RSFormContext';
 import DlgShowTypification from '@/dialogs/DlgShowTypification';
 import { ConstituentaID, CstType, IConstituenta, ICstUpdateData } from '@/models/rsform';
 import { isBaseSet, isBasicConcept, isFunctional } from '@/models/rsformAPI';
-import { ParsingStatus } from '@/models/rslang';
-import { information, labelCstTypification } from '@/utils/labels';
+import { IExpressionParse, ParsingStatus } from '@/models/rslang';
+import { errors, information, labelCstTypification } from '@/utils/labels';
 
 import EditorRSExpression from '../EditorRSExpression';
 import ControlsOverlay from './ControlsOverlay';
@@ -59,6 +59,7 @@ function FormConstituenta({
   const [convention, setConvention] = useState('');
   const [typification, setTypification] = useState('N/A');
   const [showTypification, setShowTypification] = useState(false);
+  const [localParse, setLocalParse] = useState<IExpressionParse | undefined>(undefined);
 
   const [forceComment, setForceComment] = useState(false);
 
@@ -102,6 +103,7 @@ function FormConstituenta({
       setExpression(state.definition_formal || '');
       setTypification(state ? labelCstTypification(state) : 'N/A');
       setForceComment(false);
+      setLocalParse(undefined);
     }
   }, [state, schema, toggleReset]);
 
@@ -132,7 +134,8 @@ function FormConstituenta({
   }
 
   function handleTypificationClick(event: CProps.EventMouse) {
-    if ((!event.ctrlKey && !event.metaKey) || !state || state.parse.status !== ParsingStatus.VERIFIED) {
+    if (!state || (localParse && !localParse.parseResult) || state.parse.status !== ParsingStatus.VERIFIED) {
+      toast.error(errors.typeStructureFailed);
       return;
     }
     event.stopPropagation();
@@ -145,8 +148,9 @@ function FormConstituenta({
       <AnimatePresence>
         {showTypification && state ? (
           <DlgShowTypification
-            result={state.parse.typification}
-            args={state.parse.args}
+            alias={state.alias}
+            resultTypification={localParse ? localParse.typification : state.parse.typification}
+            args={localParse ? localParse.args : state.parse.args}
             hideWindow={() => setShowTypification(false)}
           />
         ) : null}
@@ -186,8 +190,9 @@ function FormConstituenta({
             noOutline
             readOnly
             label='Типизация'
+            title='Отобразить структуру типизации'
             value={typification}
-            colors='clr-app clr-text-default cursor-default'
+            colors='clr-app clr-text-default cursor-pointer'
             onClick={event => handleTypificationClick(event)}
           />
         ) : null}
@@ -216,6 +221,7 @@ function FormConstituenta({
                 toggleReset={toggleReset}
                 onChange={newValue => setExpression(newValue)}
                 setTypification={setTypification}
+                setLocalParse={setLocalParse}
                 onOpenEdit={onOpenEdit}
               />
             </AnimateFade>

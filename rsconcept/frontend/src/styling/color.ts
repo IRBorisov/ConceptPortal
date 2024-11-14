@@ -6,6 +6,7 @@ import { GramData, Grammeme, NounGrams, PartOfSpeech, VerbGrams } from '@/models
 import { GraphColoring } from '@/models/miscellaneous';
 import { CstClass, ExpressionStatus, IConstituenta } from '@/models/rsform';
 import { ISyntaxTreeNode, TokenID } from '@/models/rslang';
+import { TMGraphNode } from '@/models/TMGraph';
 import { PARAMETER } from '@/utils/constants';
 
 /**
@@ -562,4 +563,17 @@ export function colorBgGraphNode(cst: IConstituenta, coloringScheme: GraphColori
     return colorBgSchemas(cst.parent_schema_index, colors);
   }
   return '';
+}
+
+/**
+ * Determines m-graph color for {@link TMGraphNode}.
+ */
+export function colorBgTMGraphNode(node: TMGraphNode, colors: IColorTheme): string {
+  if (node.rank === 0) {
+    return colors.bgControls;
+  }
+  if (node.parents.length === 1) {
+    return colors.bgTeal;
+  }
+  return colors.bgOrange;
 }

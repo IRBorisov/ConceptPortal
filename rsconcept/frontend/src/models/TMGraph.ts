@@ -2,6 +2,8 @@
  * Module: Multi-graph for typifications.
  */
 
+import { PARAMETER } from '@/utils/constants';
+
 import { IArgumentInfo } from './rslang';
 
 /**
@@ -75,7 +77,7 @@ export class TMGraph {
     const text = parentNode.parents.length === 1 ? `ℬ${parentNode.text}` : `ℬ(${parentNode.text})`;
     const node: TMGraphNode = {
       id: this.nodes.length,
-      rank: parentNode.rank,
+      rank: parentNode.rank + 1,
       text: text,
       parents: [parent],
       annotations: []
@@ -132,7 +134,7 @@ export class TMGraph {
   }
 
   private processResult(result: string): TMGraphNode | undefined {
-    if (!result) {
+    if (!result || result === PARAMETER.logicLabel) {
       return undefined;
     }
     return this.parseToNode(result);

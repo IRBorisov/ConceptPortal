@@ -2,10 +2,11 @@
  * Module: Miscellaneous frontend model types. Future targets for refactoring aimed at extracting modules.
  */
 
-import { Node } from 'reactflow';
+import { EdgeProps, Node } from 'reactflow';
 
 import { LibraryItemType, LocationHead } from './library';
 import { IOperation } from './oss';
+import { TMGraphNode } from './TMGraph';
 import { UserID } from './user';
 
 /**
@@ -43,6 +44,24 @@ export interface OssNodeInternal {
   dragging: boolean;
   xPos: number;
   yPos: number;
+}
+
+/**
+ * Represents graph TMGraph node internal data.
+ */
+export interface MGraphNodeInternal {
+  id: string;
+  data: TMGraphNode;
+  dragging: boolean;
+  xPos: number;
+  yPos: number;
+}
+
+/**
+ * Represents graph TMGraph edge internal data.
+ */
+export interface MGraphEdgeInternal extends EdgeProps {
+  data?: { indices: number[] };
 }
 
 /**

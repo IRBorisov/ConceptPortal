@@ -2,7 +2,7 @@
 
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { AnimatePresence } from 'framer-motion';
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import BadgeHelp from '@/components/info/BadgeHelp';
@@ -40,6 +40,7 @@ interface EditorRSExpressionProps {
   toggleReset?: boolean;
 
   setTypification: (typification: string) => void;
+  setLocalParse: React.Dispatch<React.SetStateAction<IExpressionParse | undefined>>;
   onChange: (newValue: string) => void;
   onOpenEdit?: (cstID: ConstituentaID) => void;
 }
@@ -50,6 +51,7 @@ function EditorRSExpression({
   value,
   toggleReset,
   setTypification,
+  setLocalParse,
   onChange,
   onOpenEdit,
   ...restProps
@@ -78,6 +80,7 @@ function EditorRSExpression({
 
   function handleCheckExpression(callback?: (parse: IExpressionParse) => void) {
     parser.checkConstituenta(value, activeCst, parse => {
+      setLocalParse(parse);
       if (parse.errors.length > 0) {
         onShowError(parse.errors[0], parse.prefixLen);
       } else {
@@ -137,7 +140,6 @@ function EditorRSExpression({
           toast.error(errors.astFailed);
         } else {
           setSyntaxTree(parse.ast);
-          // TODO: return prefix from parser API instead of prefixLength
           setExpression(getDefinitionPrefix(activeCst) + value);
           setShowAST(true);
         }

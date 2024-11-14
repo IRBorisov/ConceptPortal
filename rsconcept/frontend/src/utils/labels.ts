@@ -22,6 +22,8 @@ import {
 } from '@/models/rslang';
 import { UserLevel } from '@/models/user';
 
+import { PARAMETER } from './constants';
+
 /**
  * Remove html tags from target string.
  */
@@ -531,7 +533,7 @@ export function labelTypification({
   if (!isValid) {
     return 'N/A';
   }
-  if (resultType === '' || resultType === 'LOGIC') {
+  if (resultType === '' || resultType === PARAMETER.logicLabel) {
     resultType = 'Logical';
   }
   if (args.length === 0) {
@@ -1000,6 +1002,7 @@ export const information = {
  */
 export const errors = {
   astFailed: 'Невозможно построить дерево разбора',
+  typeStructureFailed: 'Структура отсутствует',
   passwordsMismatch: 'Пароли не совпадают',
   imageFailed: 'Ошибка при создании изображения',
   reuseOriginal: 'Повторное использование удаляемой конституенты при отождествлении',
