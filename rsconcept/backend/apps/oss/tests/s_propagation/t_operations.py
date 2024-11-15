@@ -250,6 +250,30 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(self.ks4D2.definition_formal, r'X1 X2 X3 S1 D1')
         self.assertEqual(self.ks5D4.definition_formal, r'X1 X2 X3 S1 D1 D2 D3')
 
+    @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
+    def test_delete_operation_keep_schema(self):
+        data = {
+            'positions': [],
+            'target': self.operation1.pk,
+            'keep_constituents': True,
+            'delete_schema': False
+        }
+
+        self.executeOK(data=data, item=self.owned_id)
+        self.ks1.refresh_from_db()
+        self.ks4D2.refresh_from_db()
+        self.ks5D4.refresh_from_db()
+        subs1_2 = self.operation4.getQ_substitutions()
+        self.assertEqual(subs1_2.count(), 0)
+        subs3_4 = self.operation5.getQ_substitutions()
+        self.assertEqual(subs3_4.count(), 1)
+        self.assertEqual(self.ks1.constituents().count(), 3)
+        self.assertEqual(self.ks4.constituents().count(), 6)
+        self.assertEqual(self.ks5.constituents().count(), 8)
+        self.assertEqual(self.ks4D2.definition_formal, r'X1 X2 X3 S1 D1')
+        self.assertEqual(self.ks5D4.definition_formal, r'X1 X2 X3 S1 D1 D2 D3')
+        self.assertFalse(Constituenta.objects.filter(as_child__parent_id=self.ks1D1.pk).exists())
+
     @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
     def test_change_substitutions(self):
         data = {

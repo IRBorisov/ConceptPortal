@@ -97,11 +97,29 @@ class OperationSchema:
 
     def delete_operation(self, target: int, keep_constituents: bool = False):
         ''' Delete operation. '''
+        self.cache.ensure_loaded()
         operation = self.cache.operation_by_id[target]
-        if not keep_constituents:
-            schema = self.cache.get_schema(operation)
-            if schema is not None:
+        schema = self.cache.get_schema(operation)
+        children = self.cache.graph.outputs[target]
+        if schema is not None and len(children) > 0:
+            if not keep_constituents:
                 self.before_delete_cst(schema, schema.cache.constituents)
+            else:
+                items = schema.cache.constituents
+                ids = [cst.pk for cst in items]
+                inheritance_to_delete: list[Inheritance] = []
+                for child_id in children:
+                    child_operation = self.cache.operation_by_id[child_id]
+                    child_schema = self.cache.get_schema(child_operation)
+                    if child_schema is None:
+                        continue
+                    self._undo_substitutions_cst(items, child_operation, child_schema)
+                    for item in self.cache.inheritance[child_id]:
+                        if item.parent_id in ids:
+                            inheritance_to_delete.append(item)
+                for item in inheritance_to_delete:
+                    self.cache.remove_inheritance(item)
+                Inheritance.objects.filter(pk__in=[item.pk for item in inheritance_to_delete]).delete()
         self.cache.remove_operation(target)
         operation.delete()
         self.save(update_fields=['time_update'])
