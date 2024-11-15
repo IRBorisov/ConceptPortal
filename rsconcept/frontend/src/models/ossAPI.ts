@@ -125,11 +125,11 @@ export class SubstitutionValidator {
         if (this.originals.has(cst.id)) {
           continue;
         }
-        if (cst.cst_class === CstClass.BASIC) {
+        if (cst.cst_class === CstClass.BASIC || cst.definition_formal.length === 0) {
           continue;
         }
         const inputs = schema.graph.at(cst.id)!.inputs;
-        if (inputs.length === 0 || inputs.some(id => !this.constituents.has(id))) {
+        if (inputs.some(id => !this.constituents.has(id))) {
           continue;
         }
         if (inputs.some(id => this.originals.has(id))) {
