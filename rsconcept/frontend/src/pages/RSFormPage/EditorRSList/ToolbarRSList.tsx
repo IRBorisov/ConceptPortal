@@ -46,13 +46,21 @@ function ToolbarRSList() {
       <MiniButton
         titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
         icon={<IconMoveUp size='1.25rem' className='icon-primary' />}
-        disabled={controller.isProcessing || controller.nothingSelected}
+        disabled={
+          controller.isProcessing ||
+          controller.selected.length === 0 ||
+          (controller.schema && controller.selected.length === controller.schema.items.length)
+        }
         onClick={controller.moveUp}
       />
       <MiniButton
         titleHtml={prepareTooltip('Переместить вниз', 'Alt + вниз')}
         icon={<IconMoveDown size='1.25rem' className='icon-primary' />}
-        disabled={controller.isProcessing || controller.nothingSelected}
+        disabled={
+          controller.isProcessing ||
+          controller.selected.length === 0 ||
+          (controller.schema && controller.selected.length === controller.schema.items.length)
+        }
         onClick={controller.moveDown}
       />
       <div ref={insertMenu.ref}>

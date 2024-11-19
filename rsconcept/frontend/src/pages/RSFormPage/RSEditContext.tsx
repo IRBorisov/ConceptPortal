@@ -65,7 +65,6 @@ export interface IRSEditContext extends ILibraryItemEditor {
   isProcessing: boolean;
   isAttachedToOSS: boolean;
   canProduceStructure: boolean;
-  nothingSelected: boolean;
   canDeleteSelected: boolean;
 
   updateSchema: (data: ILibraryUpdateData) => void;
@@ -148,10 +147,9 @@ export const RSEditState = ({
     [accessLevel, model.schema?.read_only]
   );
   const isContentEditable = useMemo(() => isMutable && !model.isArchive, [isMutable, model.isArchive]);
-  const nothingSelected = useMemo(() => selected.length === 0, [selected]);
   const canDeleteSelected = useMemo(
-    () => !nothingSelected && selected.every(id => !model.schema?.cstByID.get(id)?.is_inherited),
-    [selected, nothingSelected, model.schema]
+    () => selected.length > 0 && selected.every(id => !model.schema?.cstByID.get(id)?.is_inherited),
+    [selected, model.schema]
   );
   const isAttachedToOSS = useMemo(
     () =>
@@ -625,7 +623,6 @@ export const RSEditState = ({
         isProcessing: model.processing,
         isAttachedToOSS,
         canProduceStructure,
-        nothingSelected,
         canDeleteSelected,
 
         setOwner,

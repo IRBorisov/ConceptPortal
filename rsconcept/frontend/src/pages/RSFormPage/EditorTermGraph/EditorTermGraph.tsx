@@ -137,7 +137,7 @@ function EditorTermGraph({ onOpenEdit }: EditorTermGraphProps) {
       return;
     }
     const definition = controller.selected.map(id => controller.schema!.cstByID.get(id)!.alias).join(' ');
-    controller.createCst(controller.nothingSelected ? CstType.BASE : CstType.TERM, false, definition);
+    controller.createCst(controller.selected.length === 0 ? CstType.BASE : CstType.TERM, false, definition);
   }
 
   function handleDeleteCst() {

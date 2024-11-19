@@ -112,13 +112,13 @@ function ToolbarConstituenta({
           <MiniButton
             titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
             icon={<IconMoveUp size='1.25rem' className='icon-primary' />}
-            disabled={disabled || modified}
+            disabled={disabled || modified || (controller.schema && controller.schema?.items.length < 2)}
             onClick={controller.moveUp}
           />
           <MiniButton
             titleHtml={prepareTooltip('Переместить вниз', 'Alt + вниз')}
             icon={<IconMoveDown size='1.25rem' className='icon-primary' />}
-            disabled={disabled || modified}
+            disabled={disabled || modified || (controller.schema && controller.schema?.items.length < 2)}
             onClick={controller.moveDown}
           />
         </>
