@@ -10,7 +10,8 @@ import {
   IconNewItem,
   IconRotate3D,
   IconText,
-  IconTextOff
+  IconTextOff,
+  IconTypeGraph
 } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniSelectorOSS from '@/components/select/MiniSelectorOSS';
@@ -116,6 +117,11 @@ function ToolbarTermGraph({
           onClick={onDelete}
         />
       ) : null}
+      <MiniButton
+        icon={<IconTypeGraph size='1.25rem' className='icon-primary' />}
+        title='Граф ступеней'
+        onClick={() => controller.showTypeGraph()}
+      />
       <MiniButton
         icon={<IconImage size='1.25rem' className='icon-primary' />}
         title='Сохранить изображение'

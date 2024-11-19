@@ -15,7 +15,8 @@ import {
   IconOSS,
   IconReset,
   IconRotate3D,
-  IconText
+  IconText,
+  IconTypeGraph
 } from '@/components/Icons';
 import Divider from '@/components/ui/Divider';
 import LinkTopic from '@/components/ui/LinkTopic';
@@ -80,6 +81,10 @@ function HelpRSGraphTerm() {
           </li>
           <li>
             <IconFitImage className='inline-icon' /> Вписать в экран
+          </li>
+          <li>
+            <IconTypeGraph className='inline-icon' /> Открыть{' '}
+            <LinkTopic text='граф ступеней' topic={HelpTopic.UI_TYPE_GRAPH} />
           </li>
           <li>
             <IconImage className='inline-icon' /> Сохранить в формат PNG

@@ -22,6 +22,7 @@ import DlgEditVersions from '@/dialogs/DlgEditVersions';
 import DlgEditWordForms from '@/dialogs/DlgEditWordForms';
 import DlgInlineSynthesis from '@/dialogs/DlgInlineSynthesis';
 import DlgRenameCst from '@/dialogs/DlgRenameCst';
+import DlgShowTypeGraph from '@/dialogs/DlgShowTypeGraph';
 import DlgSubstituteCst from '@/dialogs/DlgSubstituteCst';
 import DlgUploadRSForm from '@/dialogs/DlgUploadRSForm';
 import {
@@ -106,6 +107,8 @@ export interface IRSEditContext extends ILibraryItemEditor {
   produceStructure: () => void;
   inlineSynthesis: () => void;
   substitute: () => void;
+
+  showTypeGraph: () => void;
 }
 
 const RSEditContext = createContext<IRSEditContext | null>(null);
@@ -169,6 +172,7 @@ export const RSEditState = ({
   const [showCreateVersion, setShowCreateVersion] = useState(false);
   const [showEditVersions, setShowEditVersions] = useState(false);
   const [showInlineSynthesis, setShowInlineSynthesis] = useState(false);
+  const [showTypeGraph, setShowTypeGraph] = useState(false);
 
   const [createInitialData, setCreateInitialData] = useState<ICstCreateData>();
   const [showCreateCst, setShowCreateCst] = useState(false);
@@ -178,6 +182,18 @@ export const RSEditState = ({
 
   const [insertCstID, setInsertCstID] = useState<ConstituentaID | undefined>(undefined);
   const [showTemplates, setShowTemplates] = useState(false);
+
+  const typeInfo = useMemo(
+    () =>
+      model.schema
+        ? model.schema.items.map(item => ({
+            alias: item.alias,
+            result: item.parse.typification,
+            args: item.parse.args
+          }))
+        : [],
+    [model.schema]
+  );
 
   useLayoutEffect(
     () =>
@@ -662,7 +678,9 @@ export const RSEditState = ({
         reorder,
         inlineSynthesis,
         produceStructure,
-        substitute
+        substitute,
+
+        showTypeGraph: () => setShowTypeGraph(true)
       }}
     >
       {model.schema ? (
@@ -762,6 +780,8 @@ export const RSEditState = ({
               onInlineSynthesis={handleInlineSynthesis}
             />
           ) : null}
+
+          {showTypeGraph ? <DlgShowTypeGraph items={typeInfo} hideWindow={() => setShowTypeGraph(false)} /> : null}
         </AnimatePresence>
       ) : null}
 

@@ -6,24 +6,22 @@ import { ReactFlowProvider } from 'reactflow';
 
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import { HelpTopic } from '@/models/miscellaneous';
-import { IArgumentInfo } from '@/models/rslang';
+import { ITypeInfo } from '@/models/rslang';
 import { TMGraph } from '@/models/TMGraph';
 import { errors } from '@/utils/labels';
 
 import MGraphFlow from './MGraphFlow';
 
-interface DlgShowTypificationProps extends Pick<ModalProps, 'hideWindow'> {
-  alias: string;
-  resultTypification: string;
-  args: IArgumentInfo[];
+interface DlgShowTypeGraphProps extends Pick<ModalProps, 'hideWindow'> {
+  items: ITypeInfo[];
 }
 
-function DlgShowTypification({ hideWindow, alias, resultTypification, args }: DlgShowTypificationProps) {
+function DlgShowTypeGraph({ hideWindow, items }: DlgShowTypeGraphProps) {
   const graph = useMemo(() => {
     const result = new TMGraph();
-    result.addConstituenta(alias, resultTypification, args);
+    items.forEach(item => result.addConstituenta(item.alias, item.result, item.args));
     return result;
-  }, [alias, resultTypification, args]);
+  }, [items]);
 
   if (graph.nodes.length === 0) {
     toast.error(errors.typeStructureFailed);
@@ -33,7 +31,7 @@ function DlgShowTypification({ hideWindow, alias, resultTypification, args }: Dl
 
   return (
     <Modal
-      header='Структура типизации'
+      header='Граф ступеней'
       readonly
       hideWindow={hideWindow}
       className='flex flex-col justify-stretch w-[calc(100dvw-3rem)] h-[calc(100dvh-6rem)]'
@@ -46,4 +44,4 @@ function DlgShowTypification({ hideWindow, alias, resultTypification, args }: Dl
   );
 }
 
-export default DlgShowTypification;
+export default DlgShowTypeGraph;

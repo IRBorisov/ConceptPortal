@@ -14,7 +14,7 @@ import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
 import AnimateFade from '@/components/wrap/AnimateFade';
 import { useRSForm } from '@/context/RSFormContext';
-import DlgShowTypification from '@/dialogs/DlgShowTypification';
+import DlgShowTypeGraph from '@/dialogs/DlgShowTypeGraph';
 import { ConstituentaID, CstType, IConstituenta, ICstUpdateData } from '@/models/rsform';
 import { isBaseSet, isBasicConcept, isFunctional } from '@/models/rsformAPI';
 import { IExpressionParse, ParsingStatus } from '@/models/rslang';
@@ -60,6 +60,17 @@ function FormConstituenta({
   const [typification, setTypification] = useState('N/A');
   const [showTypification, setShowTypification] = useState(false);
   const [localParse, setLocalParse] = useState<IExpressionParse | undefined>(undefined);
+  const typeInfo = useMemo(
+    () =>
+      state
+        ? {
+            alias: state.alias,
+            result: localParse ? localParse.typification : state.parse.typification,
+            args: localParse ? localParse.args : state.parse.args
+          }
+        : undefined,
+    [state, localParse]
+  );
 
   const [forceComment, setForceComment] = useState(false);
 
@@ -147,12 +158,7 @@ function FormConstituenta({
     <AnimateFade className='mx-0 md:mx-auto pt-[2rem] xs:pt-0'>
       <AnimatePresence>
         {showTypification && state ? (
-          <DlgShowTypification
-            alias={state.alias}
-            resultTypification={localParse ? localParse.typification : state.parse.typification}
-            args={localParse ? localParse.args : state.parse.args}
-            hideWindow={() => setShowTypification(false)}
-          />
+          <DlgShowTypeGraph items={typeInfo ? [typeInfo] : []} hideWindow={() => setShowTypification(false)} />
         ) : null}
       </AnimatePresence>
       {state ? (

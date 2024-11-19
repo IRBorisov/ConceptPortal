@@ -72,6 +72,13 @@ export interface IArgumentInfo {
   typification: string;
 }
 
+/** Represents global identifier type info. */
+export interface ITypeInfo {
+  alias: string;
+  result: string;
+  args: IArgumentInfo[];
+}
+
 /**
  * Represents function argument value.
  */
