@@ -22,6 +22,10 @@ function DlgDeleteCst({ hideWindow, selected, schema, onDelete }: DlgDeleteCstPr
     () => schema.graph.expandAllOutputs(selected), // prettier: split-lines
     [selected, schema.graph]
   );
+  const hasInherited = useMemo(
+    () => selected.some(id => schema.inheritance.find(item => item.parent === id), [selected, schema.inheritance]),
+    [selected, schema.inheritance]
+  );
 
   function handleSubmit() {
     hideWindow();
@@ -50,10 +54,13 @@ function DlgDeleteCst({ hideWindow, selected, schema, onDelete }: DlgDeleteCstPr
       />
       <Checkbox
         label='Удалить зависимые конституенты'
-        className='my-2'
+        className='mb-2'
         value={expandOut}
         setValue={value => setExpandOut(value)}
       />
+      {hasInherited ? (
+        <p className='text-sm clr-text-red'>Внимание! Выбранные конституенты имеют наследников в ОСС</p>
+      ) : null}
     </Modal>
   );
 }
