@@ -376,6 +376,7 @@ export function labelHelpTopic(topic: HelpTopic): string {
     case HelpTopic.UI_RS_EDITOR:    return 'Редактор конституенты';
     case HelpTopic.UI_GRAPH_TERM:   return 'Граф термов';
     case HelpTopic.UI_FORMULA_TREE: return 'Дерево разбора';
+    case HelpTopic.UI_TYPE_GRAPH:   return 'Граф ступеней';
     case HelpTopic.UI_CST_STATUS:   return 'Статус конституенты';
     case HelpTopic.UI_CST_CLASS:    return 'Класс конституенты';
     case HelpTopic.UI_OSS_GRAPH:    return 'Граф синтеза';
@@ -429,6 +430,7 @@ export function describeHelpTopic(topic: HelpTopic): string {
     case HelpTopic.UI_RS_EDITOR:    return 'редактирование конституенты';
     case HelpTopic.UI_GRAPH_TERM:   return 'интерфейс графа термов';
     case HelpTopic.UI_FORMULA_TREE: return 'просмотр дерева разбора <br/>родоструктурного выражения';
+    case HelpTopic.UI_TYPE_GRAPH:   return 'просмотр графа ступеней';
     case HelpTopic.UI_CST_STATUS:   return 'нотация статуса конституенты';
     case HelpTopic.UI_CST_CLASS:    return 'нотация класса конституенты';
     case HelpTopic.UI_OSS_GRAPH:    return 'графическая форма <br/>операционной схемы синтеза';

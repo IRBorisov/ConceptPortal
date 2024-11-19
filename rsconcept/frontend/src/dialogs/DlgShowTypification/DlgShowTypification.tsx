@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { ReactFlowProvider } from 'reactflow';
 
 import Modal, { ModalProps } from '@/components/ui/Modal';
+import { HelpTopic } from '@/models/miscellaneous';
 import { IArgumentInfo } from '@/models/rslang';
 import { TMGraph } from '@/models/TMGraph';
 import { errors } from '@/utils/labels';
@@ -36,6 +37,7 @@ function DlgShowTypification({ hideWindow, alias, resultTypification, args }: Dl
       readonly
       hideWindow={hideWindow}
       className='flex flex-col justify-stretch w-[calc(100dvw-3rem)] h-[calc(100dvh-6rem)]'
+      helpTopic={HelpTopic.UI_TYPE_GRAPH}
     >
       <ReactFlowProvider>
         <MGraphFlow data={graph} />

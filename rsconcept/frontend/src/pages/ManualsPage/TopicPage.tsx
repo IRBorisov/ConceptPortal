@@ -38,6 +38,7 @@ import HelpRSGraphTerm from './items/ui/HelpRSGraphTerm';
 import HelpRSList from './items/ui/HelpRSList';
 import HelpRSMenu from './items/ui/HelpRSMenu';
 import HelpSubstitutions from './items/ui/HelpSubstitutions';
+import HelpTypeGraph from './items/ui/HelpTypeGraph';
 
 // PDF Viewer setup
 const OFFSET_X_SMALL = 32;
@@ -64,6 +65,7 @@ function TopicPage({ topic }: TopicPageProps) {
   if (topic === HelpTopic.UI_RS_EDITOR) return <HelpRSEditor />;
   if (topic === HelpTopic.UI_GRAPH_TERM) return <HelpRSGraphTerm />;
   if (topic === HelpTopic.UI_FORMULA_TREE) return <HelpFormulaTree />;
+  if (topic === HelpTopic.UI_TYPE_GRAPH) return <HelpTypeGraph />;
   if (topic === HelpTopic.UI_CST_STATUS) return <HelpCstStatus />;
   if (topic === HelpTopic.UI_CST_CLASS) return <HelpCstClass />;
   if (topic === HelpTopic.UI_OSS_GRAPH) return <HelpOssGraph />;

@@ -1,4 +1,4 @@
-import { IconMoveDown, IconMoveUp, IconPredecessor } from '@/components/Icons';
+import { IconMoveDown, IconMoveUp, IconOSS, IconPredecessor } from '@/components/Icons';
 import LinkTopic from '@/components/ui/LinkTopic';
 import { HelpTopic } from '@/models/miscellaneous';
 
@@ -7,24 +7,27 @@ function HelpRelocateCst() {
     <div className='text-justify'>
       <h1>Перенос конституент</h1>
       <p>
-        Перенос конституент – операция, при которой выбранные конституенты переносятся в другую КС в рамках одной
+        Перенос конституент – операция, при которой выбранные конституенты переносятся из текущей КС (источника) в
+        другую КС (целевую) в рамках одной <IconOSS size='1rem' className='inline-icon' />{' '}
         <LinkTopic text='операционной схемы синтеза' topic={HelpTopic.CC_OSS} />.
       </p>
       <li>
-        только для <IconPredecessor size='1rem' className='inline-icon' /> собственных конституент схемы-источника
+        только для <IconPredecessor size='1rem' className='inline-icon' /> собственных конституент источника
       </li>
       <li>
         <IconMoveUp size='1rem' className='inline-icon' />
         <IconMoveDown size='1rem' className='inline-icon' /> направление переноса - вверх или вниз по дереву синтеза
       </li>
+
+      <h2>Перенос вверх</h2>
+      <li>выбранные конституенты становятся наследованными, а их копии добавляются в целевую КС</li>
+      <li>нельзя выбирать конституенты, зависящие от конституент других концептуальных схем</li>
+
+      <h2>Перенос вниз</h2>
       <li>
-        при переносе вверх собственные конституенты становятся наследованными, а их копии добавляются в целевую КС
+        выбранные конституенты становятся собственными конституентами целевой КС, удаляются из исходной КС и ее
+        наследников
       </li>
-      <li>
-        при переносе вниз собственные конституенты становятся собственными конституентами целевой КС и удаляются из
-        исходной КС
-      </li>
-      <li>при переносе вверх нельзя выбирать конституенты, зависящие от конституент КС, отличных от целевой</li>
     </div>
   );
 }
