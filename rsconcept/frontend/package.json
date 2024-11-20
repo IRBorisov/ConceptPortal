@@ -12,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@dagrejs/dagre": "^1.1.4",
     "@lezer/lr": "^1.4.2",
     "@tanstack/react-table": "^8.20.5",
     "@uiw/codemirror-themes": "^4.23.6",

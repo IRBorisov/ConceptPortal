@@ -15,7 +15,7 @@ interface MGraphFlowProps {
 }
 
 function MGraphFlow({ data }: MGraphFlowProps) {
-  const [nodes, setNodes] = useNodesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
   const flow = useReactFlow();
 
@@ -49,7 +49,7 @@ function MGraphFlow({ data }: MGraphFlowProps) {
       });
     });
 
-    applyLayout(newNodes);
+    applyLayout(newNodes, newEdges);
 
     setNodes(newNodes);
     setEdges(newEdges);
@@ -62,6 +62,7 @@ function MGraphFlow({ data }: MGraphFlowProps) {
       edges={edges}
       edgesFocusable={false}
       nodesFocusable={false}
+      onNodesChange={onNodesChange}
       nodeTypes={TMGraphNodeTypes}
       edgeTypes={TMGraphEdgeTypes}
       fitView

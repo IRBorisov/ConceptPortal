@@ -159,7 +159,7 @@ export const OptionsState = ({ children }: React.PropsWithChildren) => {
           id={`${globals.tooltip}`}
           layer='z-topmost'
           place='right-start'
-          className='mt-8 max-w-[20rem]'
+          className='mt-8 max-w-[20rem] break-words'
         />
         <Tooltip
           float
