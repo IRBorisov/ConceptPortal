@@ -22,8 +22,8 @@ import { information } from '@/utils/labels';
 interface ViewSideLocationProps {
   folderTree: FolderTree;
   subfolders: boolean;
-  active: string;
-  setActive: React.Dispatch<React.SetStateAction<string>>;
+  activeLocation: string;
+  onChangeActiveLocation: (newValue: string) => void;
   toggleFolderMode: () => void;
   toggleSubfolders: () => void;
   onRenameLocation: () => void;
@@ -31,9 +31,9 @@ interface ViewSideLocationProps {
 
 function ViewSideLocation({
   folderTree,
-  active,
+  activeLocation,
   subfolders,
-  setActive: setActive,
+  onChangeActiveLocation,
   toggleFolderMode,
   toggleSubfolders,
   onRenameLocation
@@ -44,16 +44,18 @@ function ViewSideLocation({
   const windowSize = useWindowSize();
 
   const canRename = useMemo(() => {
-    if (active.length <= 3 || !user) {
+    if (activeLocation.length <= 3 || !user) {
       return false;
     }
     if (user.is_staff) {
       return true;
     }
     const owned = items.filter(item => item.owner == user.id);
-    const located = owned.filter(item => item.location == active || item.location.startsWith(`${active}/`));
+    const located = owned.filter(
+      item => item.location == activeLocation || item.location.startsWith(`${activeLocation}/`)
+    );
     return located.length !== 0;
-  }, [active, user, items]);
+  }, [activeLocation, user, items]);
 
   const animations = useMemo(() => animateSideMinWidth(windowSize.isSmall ? '10rem' : '15rem'), [windowSize]);
   const maxHeight = useMemo(() => calculateHeight('4.5rem'), [calculateHeight]);
@@ -68,10 +70,10 @@ function ViewSideLocation({
           .then(() => toast.success(information.pathReady))
           .catch(console.error);
       } else {
-        setActive(target.getPath());
+        onChangeActiveLocation(target.getPath());
       }
     },
-    [setActive]
+    [onChangeActiveLocation]
   );
 
   return (
@@ -109,7 +111,7 @@ function ViewSideLocation({
         </div>
       </div>
       <SelectLocation
-        value={active}
+        value={activeLocation}
         folderTree={folderTree}
         prefix={prefixes.folders_list}
         onClick={handleClickFolder}

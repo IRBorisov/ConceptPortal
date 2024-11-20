@@ -4,12 +4,12 @@ import CheckboxTristate from '@/components/ui/CheckboxTristate';
 
 interface SelectAllProps<TData> {
   table: Table<TData>;
-  setLastSelected: React.Dispatch<React.SetStateAction<string | undefined>>;
+  resetLastSelected: () => void;
 }
 
-function SelectAll<TData>({ table, setLastSelected }: SelectAllProps<TData>) {
+function SelectAll<TData>({ table, resetLastSelected }: SelectAllProps<TData>) {
   function handleChange(value: boolean | null) {
-    setLastSelected(undefined);
+    resetLastSelected();
     table.toggleAllPageRowsSelected(value !== false);
   }
 

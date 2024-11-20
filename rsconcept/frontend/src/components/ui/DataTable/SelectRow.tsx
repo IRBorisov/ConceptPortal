@@ -4,12 +4,12 @@ import Checkbox from '@/components/ui/Checkbox';
 
 interface SelectRowProps<TData> {
   row: Row<TData>;
-  setLastSelected: React.Dispatch<React.SetStateAction<string | undefined>>;
+  onChangeLastSelected: (newValue: string | undefined) => void;
 }
 
-function SelectRow<TData>({ row, setLastSelected }: SelectRowProps<TData>) {
+function SelectRow<TData>({ row, onChangeLastSelected }: SelectRowProps<TData>) {
   function handleChange(value: boolean) {
-    setLastSelected(row.id);
+    onChangeLastSelected(row.id);
     row.toggleSelected(value);
   }
 

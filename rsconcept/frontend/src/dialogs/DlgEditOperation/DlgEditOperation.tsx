@@ -141,11 +141,11 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
       <TabPanel>
         <TabOperation
           alias={alias}
-          setAlias={setAlias}
+          onChangeAlias={setAlias}
           comment={comment}
-          setComment={setComment}
+          onChangeComment={setComment}
           title={title}
-          setTitle={setTitle}
+          onChangeTitle={setTitle}
         />
       </TabPanel>
     ),

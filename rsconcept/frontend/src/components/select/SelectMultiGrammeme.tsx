@@ -11,11 +11,11 @@ interface SelectMultiGrammemeProps
   extends Omit<SelectMultiProps<IGrammemeOption>, 'value' | 'onChange'>,
     CProps.Styling {
   value: IGrammemeOption[];
-  setValue: React.Dispatch<React.SetStateAction<IGrammemeOption[]>>;
+  onChangeValue: (newValue: IGrammemeOption[]) => void;
   placeholder?: string;
 }
 
-function SelectMultiGrammeme({ value, setValue, ...restProps }: SelectMultiGrammemeProps) {
+function SelectMultiGrammeme({ value, onChangeValue, ...restProps }: SelectMultiGrammemeProps) {
   const [options, setOptions] = useState<IGrammemeOption[]>([]);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ function SelectMultiGrammeme({ value, setValue, ...restProps }: SelectMultiGramm
     <SelectMulti
       options={options}
       value={value}
-      onChange={newValue => setValue([...newValue].sort(compareGrammemeOptions))}
+      onChange={newValue => onChangeValue([...newValue].sort(compareGrammemeOptions))}
       {...restProps}
     />
   );

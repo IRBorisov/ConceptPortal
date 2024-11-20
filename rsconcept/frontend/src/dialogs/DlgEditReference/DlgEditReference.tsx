@@ -45,7 +45,12 @@ function DlgEditReference({ hideWindow, schema, initial, onSave }: DlgEditRefere
   const entityPanel = useMemo(
     () => (
       <TabPanel>
-        <TabEntityReference initial={initial} schema={schema} setReference={setReference} setIsValid={setIsValid} />
+        <TabEntityReference
+          initial={initial}
+          schema={schema}
+          onChangeReference={setReference}
+          onChangeValid={setIsValid}
+        />
       </TabPanel>
     ),
     [initial, schema]
@@ -54,7 +59,7 @@ function DlgEditReference({ hideWindow, schema, initial, onSave }: DlgEditRefere
   const syntacticPanel = useMemo(
     () => (
       <TabPanel>
-        <TabSyntacticReference initial={initial} setReference={setReference} setIsValid={setIsValid} />
+        <TabSyntacticReference initial={initial} onChangeReference={setReference} onChangeValid={setIsValid} />
       </TabPanel>
     ),
     [initial]

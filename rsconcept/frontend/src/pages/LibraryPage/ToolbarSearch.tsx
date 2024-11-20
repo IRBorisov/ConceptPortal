@@ -36,11 +36,11 @@ interface ToolbarSearchProps {
   hasCustomFilter: boolean;
 
   query: string;
-  setQuery: React.Dispatch<React.SetStateAction<string>>;
+  onChangeQuery: (newValue: string) => void;
   path: string;
-  setPath: React.Dispatch<React.SetStateAction<string>>;
+  onChangePath: (newValue: string) => void;
   head: LocationHead | undefined;
-  setHead: React.Dispatch<React.SetStateAction<LocationHead | undefined>>;
+  onChangeHead: (newValue: LocationHead | undefined) => void;
 
   folderMode: boolean;
   toggleFolderMode: () => void;
@@ -52,7 +52,7 @@ interface ToolbarSearchProps {
   isEditor: boolean | undefined;
   toggleEditor: () => void;
   filterUser: UserID | undefined;
-  setFilterUser: React.Dispatch<React.SetStateAction<UserID | undefined>>;
+  onChangeFilterUser: (newValue: UserID | undefined) => void;
 
   resetFilter: () => void;
 }
@@ -63,11 +63,11 @@ function ToolbarSearch({
   hasCustomFilter,
 
   query,
-  setQuery,
+  onChangeQuery,
   path,
-  setPath,
+  onChangePath,
   head,
-  setHead,
+  onChangeHead,
 
   folderMode,
   toggleFolderMode,
@@ -79,7 +79,7 @@ function ToolbarSearch({
   isEditor,
   toggleEditor,
   filterUser,
-  setFilterUser,
+  onChangeFilterUser,
 
   resetFilter
 }: ToolbarSearchProps) {
@@ -95,9 +95,9 @@ function ToolbarSearch({
   const handleChange = useCallback(
     (newValue: LocationHead | undefined) => {
       headMenu.hide();
-      setHead(newValue);
+      onChangeHead(newValue);
     },
-    [headMenu, setHead]
+    [headMenu, onChangeHead]
   );
 
   const handleToggleFolder = useCallback(() => {
@@ -170,7 +170,7 @@ function ToolbarSearch({
                 className='min-w-[15rem] text-sm'
                 items={users}
                 value={filterUser}
-                onSelectValue={setFilterUser}
+                onSelectValue={onChangeFilterUser}
               />
             </motion.div>
           </Dropdown>
@@ -191,7 +191,7 @@ function ToolbarSearch({
           noBorder
           className={clsx('min-w-[7rem] sm:min-w-[10rem] max-w-[20rem]', folderMode && 'flex-grow')}
           value={query}
-          onChange={setQuery}
+          onChange={onChangeQuery}
         />
         {!folderMode ? (
           <div ref={headMenu.ref} className='flex items-center h-full py-1 select-none'>
@@ -250,7 +250,7 @@ function ToolbarSearch({
             noBorder
             className='w-[4.5rem] sm:w-[5rem] flex-grow'
             value={path}
-            onChange={setPath}
+            onChange={onChangePath}
           />
         ) : null}
       </div>

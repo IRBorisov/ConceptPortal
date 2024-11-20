@@ -103,15 +103,15 @@ function DlgCreateOperation({ hideWindow, oss, onCreate, initialInputs }: DlgCre
         <TabInputOperation
           oss={oss}
           alias={alias}
-          setAlias={setAlias}
+          onChangeAlias={setAlias}
           comment={comment}
-          setComment={setComment}
+          onChangeComment={setComment}
           title={title}
-          setTitle={setTitle}
+          onChangeTitle={setTitle}
           attachedID={attachedID}
-          setAttachedID={setAttachedID}
+          onChangeAttachedID={setAttachedID}
           createSchema={createSchema}
-          setCreateSchema={setCreateSchema}
+          onChangeCreateSchema={setCreateSchema}
         />
       </TabPanel>
     ),
@@ -124,11 +124,11 @@ function DlgCreateOperation({ hideWindow, oss, onCreate, initialInputs }: DlgCre
         <TabSynthesisOperation
           oss={oss}
           alias={alias}
-          setAlias={setAlias}
+          onChangeAlias={setAlias}
           comment={comment}
-          setComment={setComment}
+          onChangeComment={setComment}
           title={title}
-          setTitle={setTitle}
+          onChangeTitle={setTitle}
           inputs={inputs}
           setInputs={setInputs}
         />

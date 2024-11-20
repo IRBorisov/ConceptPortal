@@ -15,7 +15,7 @@ import OssStats from './OssStats';
 
 interface EditorOssCardProps {
   isModified: boolean;
-  setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsModified: (newValue: boolean) => void;
   onDestroy: () => void;
 }
 

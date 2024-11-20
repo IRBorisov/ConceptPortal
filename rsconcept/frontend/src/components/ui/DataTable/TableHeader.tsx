@@ -8,7 +8,7 @@ interface TableHeaderProps<TData> {
   headPosition?: string;
   enableRowSelection?: boolean;
   enableSorting?: boolean;
-  setLastSelected: React.Dispatch<React.SetStateAction<string | undefined>>;
+  resetLastSelected: () => void;
 }
 
 function TableHeader<TData>({
@@ -16,7 +16,7 @@ function TableHeader<TData>({
   headPosition,
   enableRowSelection,
   enableSorting,
-  setLastSelected
+  resetLastSelected
 }: TableHeaderProps<TData>) {
   return (
     <thead
@@ -30,7 +30,7 @@ function TableHeader<TData>({
         <tr key={headerGroup.id}>
           {enableRowSelection ? (
             <th className='pl-3 pr-1 align-middle'>
-              <SelectAll table={table} setLastSelected={setLastSelected} />
+              <SelectAll table={table} resetLastSelected={resetLastSelected} />
             </th>
           ) : null}
           {headerGroup.headers.map((header: Header<TData, unknown>) => (

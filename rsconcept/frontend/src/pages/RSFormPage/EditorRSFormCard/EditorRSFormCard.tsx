@@ -15,7 +15,7 @@ import ToolbarRSFormCard from './ToolbarRSFormCard';
 
 interface EditorRSFormCardProps {
   isModified: boolean;
-  setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsModified: (newValue: boolean) => void;
   onDestroy: () => void;
 }
 

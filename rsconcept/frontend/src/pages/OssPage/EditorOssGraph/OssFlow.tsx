@@ -34,7 +34,7 @@ import ToolbarOssGraph from './ToolbarOssGraph';
 
 interface OssFlowProps {
   isModified: boolean;
-  setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsModified: (newValue: boolean) => void;
 }
 
 function OssFlow({ isModified, setIsModified }: OssFlowProps) {

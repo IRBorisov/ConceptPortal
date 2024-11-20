@@ -157,7 +157,7 @@ function DataTable<TData extends RowData>({
             enableRowSelection={enableRowSelection}
             enableSorting={enableSorting}
             headPosition={headPosition}
-            setLastSelected={setLastSelected}
+            resetLastSelected={() => setLastSelected(undefined)}
           />
         ) : null}
 
@@ -168,7 +168,7 @@ function DataTable<TData extends RowData>({
           conditionalRowStyles={conditionalRowStyles}
           enableRowSelection={enableRowSelection}
           lastSelected={lastSelected}
-          setLastSelected={setLastSelected}
+          onChangeLastSelected={setLastSelected}
           onRowClicked={onRowClicked}
           onRowDoubleClicked={onRowDoubleClicked}
         />

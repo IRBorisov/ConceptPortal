@@ -31,7 +31,7 @@ interface FormConstituentaProps {
 
   isModified: boolean;
   toggleReset: boolean;
-  setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsModified: (newValue: boolean) => void;
 
   onRename: () => void;
   onEditTerm: () => void;
@@ -225,9 +225,9 @@ function FormConstituenta({
                 activeCst={state}
                 disabled={disabled || state.is_inherited}
                 toggleReset={toggleReset}
-                onChange={newValue => setExpression(newValue)}
-                setTypification={setTypification}
-                setLocalParse={setLocalParse}
+                onChangeExpression={newValue => setExpression(newValue)}
+                onChangeTypification={setTypification}
+                onChangeLocalParse={setLocalParse}
                 onOpenEdit={onOpenEdit}
               />
             </AnimateFade>

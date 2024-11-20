@@ -2,7 +2,7 @@
 
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { AnimatePresence } from 'framer-motion';
-import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import BadgeHelp from '@/components/info/BadgeHelp';
@@ -39,9 +39,9 @@ interface EditorRSExpressionProps {
   disabled?: boolean;
   toggleReset?: boolean;
 
-  setTypification: (typification: string) => void;
-  setLocalParse: React.Dispatch<React.SetStateAction<IExpressionParse | undefined>>;
-  onChange: (newValue: string) => void;
+  onChangeTypification: (typification: string) => void;
+  onChangeLocalParse: (typification: IExpressionParse | undefined) => void;
+  onChangeExpression: (newValue: string) => void;
   onOpenEdit?: (cstID: ConstituentaID) => void;
 }
 
@@ -50,9 +50,9 @@ function EditorRSExpression({
   disabled,
   value,
   toggleReset,
-  setTypification,
-  setLocalParse,
-  onChange,
+  onChangeTypification,
+  onChangeLocalParse,
+  onChangeExpression,
   onOpenEdit,
   ...restProps
 }: EditorRSExpressionProps) {
@@ -74,20 +74,20 @@ function EditorRSExpression({
   }, [activeCst, resetParse, toggleReset]);
 
   function handleChange(newValue: string) {
-    onChange(newValue);
+    onChangeExpression(newValue);
     setIsModified(newValue !== activeCst.definition_formal);
   }
 
   function handleCheckExpression(callback?: (parse: IExpressionParse) => void) {
     parser.checkConstituenta(value, activeCst, parse => {
-      setLocalParse(parse);
+      onChangeLocalParse(parse);
       if (parse.errors.length > 0) {
         onShowError(parse.errors[0], parse.prefixLen);
       } else {
         rsInput.current?.view?.focus();
       }
       setIsModified(false);
-      setTypification(
+      onChangeTypification(
         labelTypification({
           isValid: parse.parseResult,
           resultType: parse.typification,

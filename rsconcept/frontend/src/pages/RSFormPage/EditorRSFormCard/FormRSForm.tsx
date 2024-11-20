@@ -18,7 +18,7 @@ import ToolbarVersioning from './ToolbarVersioning';
 interface FormRSFormProps {
   id?: string;
   isModified: boolean;
-  setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsModified: (newValue: boolean) => void;
 }
 
 function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {

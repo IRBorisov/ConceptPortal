@@ -150,8 +150,8 @@ function LibraryPage() {
   const viewLocations = useMemo(
     () => (
       <ViewSideLocation
-        active={options.location}
-        setActive={options.setLocation}
+        activeLocation={options.location}
+        onChangeActiveLocation={options.setLocation}
         subfolders={subfolders}
         folderTree={library.folders}
         toggleFolderMode={toggleFolderMode}
@@ -200,11 +200,11 @@ function LibraryPage() {
         filtered={items.length}
         hasCustomFilter={hasCustomFilter}
         query={query}
-        setQuery={setQuery}
+        onChangeQuery={setQuery}
         path={path}
-        setPath={setPath}
+        onChangePath={setPath}
         head={head}
-        setHead={setHead}
+        onChangeHead={setHead}
         isVisible={isVisible}
         isOwned={isOwned}
         toggleOwned={toggleOwned}
@@ -212,7 +212,7 @@ function LibraryPage() {
         isEditor={isEditor}
         toggleEditor={toggleEditor}
         filterUser={filterUser}
-        setFilterUser={setFilterUser}
+        onChangeFilterUser={setFilterUser}
         resetFilter={resetFilter}
         folderMode={options.folderMode}
         toggleFolderMode={toggleFolderMode}

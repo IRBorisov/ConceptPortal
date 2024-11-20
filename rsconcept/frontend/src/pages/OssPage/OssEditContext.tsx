@@ -55,7 +55,7 @@ export interface IOssEditContext extends ILibraryItemEditor {
   isAttachedToOSS: boolean;
 
   showTooltip: boolean;
-  setShowTooltip: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowTooltip: (newValue: boolean) => void;
 
   setOwner: (newOwner: UserID) => void;
   setAccessPolicy: (newPolicy: AccessPolicy) => void;

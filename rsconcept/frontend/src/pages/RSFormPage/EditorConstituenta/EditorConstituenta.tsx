@@ -21,7 +21,7 @@ const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
 interface EditorConstituentaProps {
   activeCst?: IConstituenta;
   isModified: boolean;
-  setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsModified: (newValue: boolean) => void;
   onOpenEdit: (cstID: ConstituentaID) => void;
 }
 

@@ -18,7 +18,7 @@ import { useOssEdit } from '../OssEditContext';
 interface FormOSSProps {
   id?: string;
   isModified: boolean;
-  setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsModified: (newValue: boolean) => void;
 }
 
 function FormOSS({ id, isModified, setIsModified }: FormOSSProps) {

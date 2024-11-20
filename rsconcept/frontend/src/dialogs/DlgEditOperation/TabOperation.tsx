@@ -4,21 +4,21 @@ import AnimateFade from '@/components/wrap/AnimateFade';
 
 interface TabOperationProps {
   alias: string;
-  setAlias: React.Dispatch<React.SetStateAction<string>>;
+  onChangeAlias: (newValue: string) => void;
   title: string;
-  setTitle: React.Dispatch<React.SetStateAction<string>>;
+  onChangeTitle: (newValue: string) => void;
   comment: string;
-  setComment: React.Dispatch<React.SetStateAction<string>>;
+  onChangeComment: (newValue: string) => void;
 }
 
-function TabOperation({ alias, setAlias, title, setTitle, comment, setComment }: TabOperationProps) {
+function TabOperation({ alias, onChangeAlias, title, onChangeTitle, comment, onChangeComment }: TabOperationProps) {
   return (
     <AnimateFade className='cc-column'>
       <TextInput
         id='operation_title'
         label='Полное название'
         value={title}
-        onChange={event => setTitle(event.target.value)}
+        onChange={event => onChangeTitle(event.target.value)}
       />
       <div className='flex gap-6'>
         <TextInput
@@ -26,7 +26,7 @@ function TabOperation({ alias, setAlias, title, setTitle, comment, setComment }:
           label='Сокращение'
           className='w-[16rem]'
           value={alias}
-          onChange={event => setAlias(event.target.value)}
+          onChange={event => onChangeAlias(event.target.value)}
         />
 
         <TextArea
@@ -35,7 +35,7 @@ function TabOperation({ alias, setAlias, title, setTitle, comment, setComment }:
           noResize
           rows={3}
           value={comment}
-          onChange={event => setComment(event.target.value)}
+          onChange={event => onChangeComment(event.target.value)}
         />
       </div>
     </AnimateFade>

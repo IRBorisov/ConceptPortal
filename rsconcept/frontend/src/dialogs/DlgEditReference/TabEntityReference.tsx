@@ -21,11 +21,11 @@ import { IReferenceInputState } from './DlgEditReference';
 interface TabEntityReferenceProps {
   initial: IReferenceInputState;
   schema: IRSForm;
-  setIsValid: React.Dispatch<React.SetStateAction<boolean>>;
-  setReference: React.Dispatch<React.SetStateAction<string>>;
+  onChangeValid: (newValue: boolean) => void;
+  onChangeReference: (newValue: string) => void;
 }
 
-function TabEntityReference({ initial, schema, setIsValid, setReference }: TabEntityReferenceProps) {
+function TabEntityReference({ initial, schema, onChangeValid, onChangeReference }: TabEntityReferenceProps) {
   const [selectedCst, setSelectedCst] = useState<IConstituenta | undefined>(undefined);
   const [alias, setAlias] = useState('');
   const [term, setTerm] = useState('');
@@ -43,9 +43,9 @@ function TabEntityReference({ initial, schema, setIsValid, setReference }: TabEn
 
   // Produce result
   useEffect(() => {
-    setIsValid(alias !== '' && selectedGrams.length > 0);
-    setReference(`@{${alias}|${selectedGrams.map(gram => gram.value).join(',')}}`);
-  }, [alias, selectedGrams, setIsValid, setReference]);
+    onChangeValid(alias !== '' && selectedGrams.length > 0);
+    onChangeReference(`@{${alias}|${selectedGrams.map(gram => gram.value).join(',')}}`);
+  }, [alias, selectedGrams, onChangeValid, onChangeReference]);
 
   // Update term when alias changes
   useEffect(() => {
@@ -105,7 +105,7 @@ function TabEntityReference({ initial, schema, setIsValid, setReference }: TabEn
           className='flex-grow'
           menuPlacement='top'
           value={selectedGrams}
-          setValue={setSelectedGrams}
+          onChangeValue={setSelectedGrams}
         />
       </div>
     </AnimateFade>

@@ -6,7 +6,7 @@ import OssFlow from './OssFlow';
 
 interface EditorOssGraphProps {
   isModified: boolean;
-  setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsModified: (newValue: boolean) => void;
 }
 
 function EditorOssGraph({ isModified, setIsModified }: EditorOssGraphProps) {

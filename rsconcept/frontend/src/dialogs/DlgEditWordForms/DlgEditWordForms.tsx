@@ -170,7 +170,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
           placeholder='Выберите граммемы'
           className='min-w-[15rem] h-fit'
           value={inputGrams}
-          setValue={setInputGrams}
+          onChangeValue={setInputGrams}
         />
       </div>
 

@@ -11,11 +11,11 @@ import { IReferenceInputState } from './DlgEditReference';
 
 interface TabSyntacticReferenceProps {
   initial: IReferenceInputState;
-  setIsValid: React.Dispatch<React.SetStateAction<boolean>>;
-  setReference: React.Dispatch<React.SetStateAction<string>>;
+  onChangeValid: (newValue: boolean) => void;
+  onChangeReference: (newValue: string) => void;
 }
 
-function TabSyntacticReference({ initial, setIsValid, setReference }: TabSyntacticReferenceProps) {
+function TabSyntacticReference({ initial, onChangeValid, onChangeReference }: TabSyntacticReferenceProps) {
   const [nominal, setNominal] = useState('');
   const [offset, setOffset] = useState(1);
 
@@ -39,9 +39,9 @@ function TabSyntacticReference({ initial, setIsValid, setReference }: TabSyntact
   }, [initial]);
 
   useEffect(() => {
-    setIsValid(nominal !== '' && offset !== 0);
-    setReference(`@{${offset}|${nominal}}`);
-  }, [nominal, offset, setIsValid, setReference]);
+    onChangeValid(nominal !== '' && offset !== 0);
+    onChangeReference(`@{${offset}|${nominal}}`);
+  }, [nominal, offset, onChangeValid, onChangeReference]);
 
   return (
     <AnimateFade className='flex flex-col gap-2'>

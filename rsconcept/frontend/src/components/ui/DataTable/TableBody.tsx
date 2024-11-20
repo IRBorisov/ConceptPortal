@@ -14,7 +14,7 @@ interface TableBodyProps<TData> {
   conditionalRowStyles?: IConditionalStyle<TData>[];
 
   lastSelected: string | undefined;
-  setLastSelected: React.Dispatch<React.SetStateAction<string | undefined>>;
+  onChangeLastSelected: (newValue: string | undefined) => void;
 
   onRowClicked?: (rowData: TData, event: CProps.EventMouse) => void;
   onRowDoubleClicked?: (rowData: TData, event: CProps.EventMouse) => void;
@@ -27,7 +27,7 @@ function TableBody<TData>({
   enableRowSelection,
   conditionalRowStyles,
   lastSelected,
-  setLastSelected,
+  onChangeLastSelected,
   onRowClicked,
   onRowDoubleClicked
 }: TableBodyProps<TData>) {
@@ -49,9 +49,9 @@ function TableBody<TData>({
           newSelection[row.id] = !target.getIsSelected();
         });
         table.setRowSelection(prev => ({ ...prev, ...newSelection }));
-        setLastSelected(undefined);
+        onChangeLastSelected(undefined);
       } else {
-        setLastSelected(target.id);
+        onChangeLastSelected(target.id);
         target.toggleSelected(!target.getIsSelected());
       }
     }
@@ -83,7 +83,7 @@ function TableBody<TData>({
         >
           {enableRowSelection ? (
             <td key={`select-${row.id}`} className='pl-3 pr-1 align-middle border-y'>
-              <SelectRow row={row} setLastSelected={setLastSelected} />
+              <SelectRow row={row} onChangeLastSelected={onChangeLastSelected} />
             </td>
           ) : null}
           {row.getVisibleCells().map((cell: Cell<TData, unknown>) => (

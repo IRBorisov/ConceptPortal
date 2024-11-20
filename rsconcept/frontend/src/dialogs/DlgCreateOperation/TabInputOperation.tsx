@@ -18,29 +18,29 @@ import { sortItemsForOSS } from '@/models/ossAPI';
 interface TabInputOperationProps {
   oss: IOperationSchema;
   alias: string;
-  setAlias: React.Dispatch<React.SetStateAction<string>>;
+  onChangeAlias: (newValue: string) => void;
   title: string;
-  setTitle: React.Dispatch<React.SetStateAction<string>>;
+  onChangeTitle: (newValue: string) => void;
   comment: string;
-  setComment: React.Dispatch<React.SetStateAction<string>>;
+  onChangeComment: (newValue: string) => void;
   attachedID: LibraryItemID | undefined;
-  setAttachedID: React.Dispatch<React.SetStateAction<LibraryItemID | undefined>>;
+  onChangeAttachedID: (newValue: LibraryItemID | undefined) => void;
   createSchema: boolean;
-  setCreateSchema: React.Dispatch<React.SetStateAction<boolean>>;
+  onChangeCreateSchema: (newValue: boolean) => void;
 }
 
 function TabInputOperation({
   oss,
   alias,
-  setAlias,
+  onChangeAlias,
   title,
-  setTitle,
+  onChangeTitle,
   comment,
-  setComment,
+  onChangeComment,
   attachedID,
-  setAttachedID,
+  onChangeAttachedID,
   createSchema,
-  setCreateSchema
+  onChangeCreateSchema
 }: TabInputOperationProps) {
   const baseFilter = useCallback((item: ILibraryItem) => !oss.schemas.includes(item.id), [oss]);
   const library = useLibrary();
@@ -48,9 +48,9 @@ function TabInputOperation({
 
   useEffect(() => {
     if (createSchema) {
-      setAttachedID(undefined);
+      onChangeAttachedID(undefined);
     }
-  }, [createSchema, setAttachedID]);
+  }, [createSchema, onChangeAttachedID]);
 
   return (
     <AnimateFade className='cc-column'>
@@ -58,7 +58,7 @@ function TabInputOperation({
         id='operation_title'
         label='Полное название'
         value={title}
-        onChange={event => setTitle(event.target.value)}
+        onChange={event => onChangeTitle(event.target.value)}
         disabled={attachedID !== undefined}
       />
       <div className='flex gap-6'>
@@ -67,7 +67,7 @@ function TabInputOperation({
           label='Сокращение'
           className='w-[16rem]'
           value={alias}
-          onChange={event => setAlias(event.target.value)}
+          onChange={event => onChangeAlias(event.target.value)}
           disabled={attachedID !== undefined}
         />
 
@@ -77,7 +77,7 @@ function TabInputOperation({
           noResize
           rows={3}
           value={comment}
-          onChange={event => setComment(event.target.value)}
+          onChange={event => onChangeComment(event.target.value)}
           disabled={attachedID !== undefined}
         />
       </div>
@@ -90,13 +90,13 @@ function TabInputOperation({
             noHover
             noPadding
             icon={<IconReset size='1.25rem' className='icon-primary' />}
-            onClick={() => setAttachedID(undefined)}
+            onClick={() => onChangeAttachedID(undefined)}
             disabled={attachedID == undefined}
           />
         </div>
         <Checkbox
           value={createSchema}
-          setValue={setCreateSchema}
+          setValue={onChangeCreateSchema}
           label='Создать новую схему'
           titleHtml='Создать пустую схему для загрузки'
         />
@@ -106,7 +106,7 @@ function TabInputOperation({
           items={sortedItems}
           value={attachedID}
           itemType={LibraryItemType.RSFORM}
-          onSelectValue={setAttachedID}
+          onSelectValue={onChangeAttachedID}
           rows={8}
           baseFilter={baseFilter}
         />
