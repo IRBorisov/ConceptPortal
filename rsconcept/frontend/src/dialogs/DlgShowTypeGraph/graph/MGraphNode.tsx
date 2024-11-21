@@ -4,9 +4,20 @@ import { useMemo } from 'react';
 import { Handle, Position } from 'reactflow';
 
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
-import { MGraphNodeInternal } from '@/models/miscellaneous';
+import { TMGraphNode } from '@/models/TMGraph';
 import { colorBgTMGraphNode } from '@/styling/color';
 import { globals } from '@/utils/constants';
+
+/**
+ * Represents graph TMGraph node internal data.
+ */
+interface MGraphNodeInternal {
+  id: string;
+  data: TMGraphNode;
+  dragging: boolean;
+  xPos: number;
+  yPos: number;
+}
 
 function MGraphNode(node: MGraphNodeInternal) {
   const { colors } = useConceptOptions();

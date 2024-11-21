@@ -4,7 +4,6 @@ import { useLayoutEffect } from 'react';
 import { Edge, ReactFlow, useEdgesState, useNodesState, useReactFlow } from 'reactflow';
 
 import { TMGraph } from '@/models/TMGraph';
-import { PARAMETER } from '@/utils/constants';
 
 import { TMGraphEdgeTypes } from './graph/MGraphEdgeTypes';
 import { applyLayout } from './graph/MGraphLayout';
@@ -53,7 +52,6 @@ function MGraphFlow({ data }: MGraphFlowProps) {
 
     setNodes(newNodes);
     setEdges(newEdges);
-    flow.fitView({ duration: PARAMETER.zoomDuration });
   }, [data, setNodes, setEdges, flow]);
 
   return (
@@ -69,8 +67,6 @@ function MGraphFlow({ data }: MGraphFlowProps) {
       maxZoom={2}
       minZoom={0.5}
       nodesConnectable={false}
-      snapToGrid={true}
-      snapGrid={[PARAMETER.ossGridSize, PARAMETER.ossGridSize]}
     />
   );
 }

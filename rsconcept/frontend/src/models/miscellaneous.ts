@@ -6,7 +6,6 @@ import { EdgeProps, Node } from 'reactflow';
 
 import { LibraryItemType, LocationHead } from './library';
 import { IOperation } from './oss';
-import { TMGraphNode } from './TMGraph';
 import { UserID } from './user';
 
 /**
@@ -41,17 +40,6 @@ export interface OssNodeInternal {
     label: string;
     operation: IOperation;
   };
-  dragging: boolean;
-  xPos: number;
-  yPos: number;
-}
-
-/**
- * Represents graph TMGraph node internal data.
- */
-export interface MGraphNodeInternal {
-  id: string;
-  data: TMGraphNode;
   dragging: boolean;
   xPos: number;
   yPos: number;

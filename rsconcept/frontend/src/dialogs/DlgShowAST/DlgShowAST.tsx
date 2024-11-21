@@ -1,17 +1,16 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
+import { ReactFlowProvider } from 'reactflow';
+import { Node } from 'reactflow';
 
-import GraphUI, { GraphEdge, GraphNode } from '@/components/ui/GraphUI';
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import Overlay from '@/components/ui/Overlay';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { HelpTopic } from '@/models/miscellaneous';
 import { SyntaxTree } from '@/models/rslang';
-import { graphDarkT, graphLightT } from '@/styling/color';
-import { colorBgSyntaxTree } from '@/styling/color';
-import { resources } from '@/utils/constants';
-import { labelSyntaxTree } from '@/utils/labels';
+
+import ASTFlow from './ASTFlow';
 
 interface DlgShowASTProps extends Pick<ModalProps, 'hideWindow'> {
   syntaxTree: SyntaxTree;
@@ -19,36 +18,11 @@ interface DlgShowASTProps extends Pick<ModalProps, 'hideWindow'> {
 }
 
 function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
-  const { darkMode, colors } = useConceptOptions();
+  const { colors } = useConceptOptions();
   const [hoverID, setHoverID] = useState<number | undefined>(undefined);
   const hoverNode = useMemo(() => syntaxTree.find(node => node.uid === hoverID), [hoverID, syntaxTree]);
 
-  const nodes: GraphNode[] = useMemo(
-    () =>
-      syntaxTree.map(node => ({
-        id: String(syntaxTree.length - node.uid), // invert order of IDs to force correct ordering in graph layout
-        label: labelSyntaxTree(node),
-        fill: colorBgSyntaxTree(node, colors)
-      })),
-    [syntaxTree, colors]
-  );
-
-  const edges: GraphEdge[] = useMemo(() => {
-    const result: GraphEdge[] = [];
-    syntaxTree.forEach(node => {
-      if (node.parent !== node.uid) {
-        result.push({
-          id: String(node.uid),
-          source: String(syntaxTree.length - node.parent),
-          target: String(syntaxTree.length - node.uid)
-        });
-      }
-    });
-    return result;
-  }, [syntaxTree]);
-
-  const handleHoverIn = useCallback((node: GraphNode) => setHoverID(syntaxTree.length - Number(node.id)), [syntaxTree]);
-
+  const handleHoverIn = useCallback((node: Node) => setHoverID(Number(node.id)), []);
   const handleHoverOut = useCallback(() => setHoverID(undefined), []);
 
   return (
@@ -72,18 +46,9 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
           </div>
         ) : null}
       </Overlay>
-      <div className='flex-grow relative'>
-        <GraphUI
-          animated={false}
-          nodes={nodes}
-          edges={edges}
-          layoutType='hierarchicalTd'
-          labelFontUrl={resources.graph_font}
-          theme={darkMode ? graphDarkT : graphLightT}
-          onNodePointerOver={handleHoverIn}
-          onNodePointerOut={handleHoverOut}
-        />
-      </div>
+      <ReactFlowProvider>
+        <ASTFlow data={syntaxTree} onNodeEnter={handleHoverIn} onNodeLeave={handleHoverOut} />
+      </ReactFlowProvider>
     </Modal>
   );
 }

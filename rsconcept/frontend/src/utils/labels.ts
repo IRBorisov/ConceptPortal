@@ -581,16 +581,16 @@ export function labelSyntaxTree(node: ISyntaxTreeNode): string {
     case TokenID.NT_TUPLE: return 'TUPLE';
     case TokenID.NT_ENUMERATION: return 'ENUM';
 
-    case TokenID.NT_ENUM_DECL: return 'ENUM_DECLARATION';
-    case TokenID.NT_TUPLE_DECL: return 'TUPLE_DECLARATION';
+    case TokenID.NT_ENUM_DECL: return 'ENUM_DECLARE';
+    case TokenID.NT_TUPLE_DECL: return 'TUPLE_DECLARE';
     case TokenID.PUNCTUATION_DEFINE: return 'DEFINITION';
-    case TokenID.PUNCTUATION_STRUCT: return 'STRUCTURE_DEFINITION';
+    case TokenID.PUNCTUATION_STRUCT: return 'STRUCTURE_DEFINE';
 
     case TokenID.NT_ARG_DECL: return 'ARG';
     case TokenID.NT_FUNC_CALL: return 'CALL';
     case TokenID.NT_ARGUMENTS: return 'ARGS';
 
-    case TokenID.NT_FUNC_DEFINITION: return 'FUNCTION_DEFINITION';
+    case TokenID.NT_FUNC_DEFINITION: return 'FUNCTION_DEFINE';
 
     case TokenID.NT_RECURSIVE_SHORT: return labelToken(TokenID.NT_RECURSIVE_FULL);
 

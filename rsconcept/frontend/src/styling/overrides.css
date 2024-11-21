@@ -126,7 +126,8 @@
   height: 40px;
 }
 
-.react-flow__node-step {
+.react-flow__node-step,
+.react-flow__node-token {
   cursor: default;
 
   border-radius: 100%;

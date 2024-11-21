@@ -371,7 +371,7 @@ export function colorBgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): s
     case TokenID.NT_FUNC_CALL:
     case TokenID.NT_ARGUMENTS:
     case TokenID.NT_RECURSIVE_SHORT:
-      return '';
+      return colors.bgDisabled;
 
     case TokenID.ASSIGN:
     case TokenID.ITERATE:

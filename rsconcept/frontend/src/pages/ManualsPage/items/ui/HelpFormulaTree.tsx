@@ -28,7 +28,7 @@ function HelpFormulaTree() {
         <span style={{ backgroundColor: colors.bgRed }}>присвоение и итерация</span>
       </li>
       <li>
-        <span style={{ backgroundColor: '#7ca0ab' }}>составные выражения</span>
+        <span style={{ backgroundColor: colors.bgDisabled }}>составные выражения</span>
       </li>
     </div>
   );
