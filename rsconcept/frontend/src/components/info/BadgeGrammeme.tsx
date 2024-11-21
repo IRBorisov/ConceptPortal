@@ -6,9 +6,13 @@ import { colorFgGrammeme } from '@/styling/color';
 import { labelGrammeme } from '@/utils/labels';
 
 interface BadgeGrammemeProps {
+  /** Grammeme to display. */
   grammeme: GramData;
 }
 
+/**
+ * Displays a badge with a grammeme tag.
+ */
 function BadgeGrammeme({ grammeme }: BadgeGrammemeProps) {
   const { colors } = useConceptOptions();
   return (

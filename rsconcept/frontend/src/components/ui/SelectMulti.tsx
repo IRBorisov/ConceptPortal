@@ -45,6 +45,9 @@ export interface SelectMultiProps<Option, Group extends GroupBase<Option> = Grou
   noPortal?: boolean;
 }
 
+/**
+ * Displays a multi-select component.
+ */
 function SelectMulti<Option, Group extends GroupBase<Option> = GroupBase<Option>>({
   noPortal,
   ...restProps

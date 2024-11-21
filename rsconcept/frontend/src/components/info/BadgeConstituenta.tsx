@@ -7,11 +7,19 @@ import { CProps } from '../props';
 import TooltipConstituenta from './TooltipConstituenta';
 
 interface BadgeConstituentaProps extends CProps.Styling {
+  /** Prefix for tooltip ID. */
   prefixID?: string;
+
+  /** Constituenta to display. */
   value: IConstituenta;
+
+  /** Color theme to use. */
   theme: IColorTheme;
 }
 
+/**
+ * Displays a badge with a constituenta alias and information tooltip.
+ */
 function BadgeConstituenta({ value, prefixID, className, style, theme }: BadgeConstituentaProps) {
   return (
     <div

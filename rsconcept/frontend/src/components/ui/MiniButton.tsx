@@ -5,11 +5,19 @@ import { globals } from '@/utils/constants';
 import { CProps } from '../props';
 
 interface MiniButtonProps extends CProps.Button {
+  /** Icon to display in the button. */
   icon: React.ReactNode;
+
+  /** Disable hover effect. */
   noHover?: boolean;
+
+  /** Disable padding. */
   noPadding?: boolean;
 }
 
+/**
+ * Displays small transparent button with an icon.
+ */
 function MiniButton({
   icon,
   noHover,

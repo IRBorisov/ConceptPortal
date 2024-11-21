@@ -132,8 +132,8 @@ function PickMultiConstituenta({
           id='dlg_constituents_search'
           noBorder
           className='min-w-[6rem] pr-2 flex-grow'
-          value={filterText}
-          onChange={setFilterText}
+          query={filterText}
+          onChangeQuery={setFilterText}
         />
         <ToolbarGraphSelection
           graph={foldedGraph}

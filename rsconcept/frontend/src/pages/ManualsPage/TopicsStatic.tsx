@@ -17,7 +17,7 @@ function TopicsStatic({ activeTopic, onChangeTopic }: TopicsStaticProps) {
     <SelectTree
       items={Object.values(HelpTopic).map(item => item as HelpTopic)}
       value={activeTopic}
-      setValue={onChangeTopic}
+      onChangeValue={onChangeTopic}
       prefix={prefixes.topic_list}
       getParent={item => topicParent.get(item) ?? item}
       getLabel={labelHelpTopic}

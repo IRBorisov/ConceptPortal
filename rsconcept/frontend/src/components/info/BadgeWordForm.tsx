@@ -3,10 +3,16 @@ import { IWordForm } from '@/models/language';
 import BadgeGrammeme from './BadgeGrammeme';
 
 interface BadgeWordFormProps {
-  keyPrefix?: string;
+  /** Word form to display. */
   form: IWordForm;
+
+  /** Prefix for grammemes keys. */
+  keyPrefix?: string;
 }
 
+/**
+ * Displays a badge with grammemes of a word form.
+ */
 function BadgeWordForm({ keyPrefix, form }: BadgeWordFormProps) {
   return (
     <div className='flex flex-wrap justify-start gap-1 select-none w-fit'>

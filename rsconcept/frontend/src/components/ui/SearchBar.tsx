@@ -6,15 +6,37 @@ import Overlay from './Overlay';
 import TextInput from './TextInput';
 
 interface SearchBarProps extends CProps.Styling {
-  value: string;
-  noIcon?: boolean;
+  /** Id of the search bar. */
   id?: string;
+
+  /** Search query. */
+  query: string;
+
+  /** Placeholder text. */
   placeholder?: string;
-  onChange?: (newValue: string) => void;
+
+  /** Callback to be called when the search query changes. */
+  onChangeQuery?: (newValue: string) => void;
+
+  /** Disable search icon. */
+  noIcon?: boolean;
+
+  /** Disable border. */
   noBorder?: boolean;
 }
 
-function SearchBar({ id, value, noIcon, onChange, noBorder, placeholder = 'Поиск', ...restProps }: SearchBarProps) {
+/**
+ * Displays a search bar with a search icon and text input.
+ */
+function SearchBar({
+  id,
+  query,
+  noIcon,
+  onChangeQuery,
+  noBorder,
+  placeholder = 'Поиск',
+  ...restProps
+}: SearchBarProps) {
   return (
     <div {...restProps}>
       {!noIcon ? (
@@ -29,8 +51,8 @@ function SearchBar({ id, value, noIcon, onChange, noBorder, placeholder = 'По�
         type='search'
         className={clsx('outline-none bg-transparent', !noIcon && 'pl-10')}
         noBorder={noBorder}
-        value={value}
-        onChange={event => (onChange ? onChange(event.target.value) : undefined)}
+        value={query}
+        onChange={event => (onChangeQuery ? onChangeQuery(event.target.value) : undefined)}
       />
     </div>
   );

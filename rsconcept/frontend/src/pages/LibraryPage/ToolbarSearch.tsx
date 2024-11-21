@@ -190,8 +190,8 @@ function ToolbarSearch({
           placeholder='Поиск'
           noBorder
           className={clsx('min-w-[7rem] sm:min-w-[10rem] max-w-[20rem]', folderMode && 'flex-grow')}
-          value={query}
-          onChange={onChangeQuery}
+          query={query}
+          onChangeQuery={onChangeQuery}
         />
         {!folderMode ? (
           <div ref={headMenu.ref} className='flex items-center h-full py-1 select-none'>
@@ -249,8 +249,8 @@ function ToolbarSearch({
             noIcon
             noBorder
             className='w-[4.5rem] sm:w-[5rem] flex-grow'
-            value={path}
-            onChange={onChangePath}
+            query={path}
+            onChangeQuery={onChangePath}
           />
         ) : null}
       </div>

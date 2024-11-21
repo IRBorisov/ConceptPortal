@@ -152,8 +152,8 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
               id='constituents_search'
               noBorder
               className='w-[8rem]'
-              value={filterText}
-              onChange={setFilterText}
+              query={filterText}
+              onChangeQuery={setFilterText}
             />
           </div>
         ) : null}

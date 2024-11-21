@@ -4,11 +4,19 @@ import { CProps } from '../props';
 import Label from './Label';
 
 export interface TextAreaProps extends CProps.Editor, CProps.Colors, CProps.TextArea {
+  /** Indicates that padding should be minimal. */
   dense?: boolean;
+
+  /** Disable resize when content overflows. */
   noResize?: boolean;
+
+  /** Disable resize to fit content. */
   fitContent?: boolean;
 }
 
+/**
+ * Displays a customizable textarea with a label.
+ */
 function TextArea({
   id,
   label,

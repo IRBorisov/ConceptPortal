@@ -3,11 +3,19 @@ import clsx from 'clsx';
 import { CProps } from '../props';
 
 interface SubmitButtonProps extends CProps.Button {
+  /** Text to display in the button. */
   text?: string;
-  loading?: boolean;
+
+  /** Icon to display in the button. */
   icon?: React.ReactNode;
+
+  /** Indicates that loading is in progress. */
+  loading?: boolean;
 }
 
+/**
+ * Displays submit type button with icon and text.
+ */
 function SubmitButton({ text = 'ОК', icon, disabled, loading, className, ...restProps }: SubmitButtonProps) {
   return (
     <button

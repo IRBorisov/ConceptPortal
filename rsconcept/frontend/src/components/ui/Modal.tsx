@@ -18,23 +18,46 @@ import MiniButton from './MiniButton';
 import Overlay from './Overlay';
 
 export interface ModalProps extends CProps.Styling {
+  /** Title of the modal window. */
   header?: string;
+
+  /** Text of the submit button. */
   submitText?: string;
+
+  /** Tooltip for the submit button when the form is invalid. */
   submitInvalidTooltip?: string;
 
+  /** Indicates that form is readonly. */
   readonly?: boolean;
+
+  /** Indicates that submit button is enabled. */
   canSubmit?: boolean;
+
+  /** Indicates that the modal window should be scrollable. */
   overflowVisible?: boolean;
 
+  /** Callback to be called when the modal window is closed. */
   hideWindow: () => void;
+
+  /** Callback to be called before submit. */
   beforeSubmit?: () => boolean;
+
+  /** Callback to be called after submit. */
   onSubmit?: () => void;
+
+  /** Callback to be called after cancel. */
   onCancel?: () => void;
 
+  /** Help topic to be displayed in the modal window. */
   helpTopic?: HelpTopic;
+
+  /** Callback to determine if help should be displayed. */
   hideHelpWhen?: () => boolean;
 }
 
+/**
+ * Displays a customizable modal window.
+ */
 function Modal({
   children,
 

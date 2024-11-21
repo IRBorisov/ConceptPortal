@@ -25,45 +25,84 @@ import TableHeader from './TableHeader';
 
 export { type ColumnSort, createColumnHelper, type RowSelectionState, type VisibilityState };
 
+/** Style to conditionally apply to rows. */
 export interface IConditionalStyle<TData> {
+  /** Callback to determine if the style should be applied. */
   when: (rowData: TData) => boolean;
+
+  /** Style to apply. */
   style: React.CSSProperties;
 }
 
 export interface DataTableProps<TData extends RowData>
   extends CProps.Styling,
     Pick<TableOptions<TData>, 'data' | 'columns' | 'onRowSelectionChange' | 'onColumnVisibilityChange'> {
+  /** Id of the component. */
   id?: string;
+
+  /** Indicates that padding should be minimal. */
   dense?: boolean;
+
+  /** Number of rows to display. */
   rows?: number;
+
+  /** Height of the content. */
   contentHeight?: string;
+
+  /** Top position of sticky header (0 if no other sticky elements are present). */
   headPosition?: string;
+
+  /** Disable header. */
   noHeader?: boolean;
+
+  /** Disable footer. */
   noFooter?: boolean;
 
+  /** List of styles to conditionally apply to rows. */
   conditionalRowStyles?: IConditionalStyle<TData>[];
+
+  /** Component to display when there is no data. */
   noDataComponent?: React.ReactNode;
 
+  /** Callback to be called when a row is clicked. */
   onRowClicked?: (rowData: TData, event: CProps.EventMouse) => void;
+
+  /** Callback to be called when a row is double clicked. */
   onRowDoubleClicked?: (rowData: TData, event: CProps.EventMouse) => void;
 
+  /** Enable row selection. */
   enableRowSelection?: boolean;
+
+  /** Current row selection. */
   rowSelection?: RowSelectionState;
 
+  /** Enable hiding of columns. */
   enableHiding?: boolean;
+
+  /** Current column visibility. */
   columnVisibility?: VisibilityState;
 
+  /** Enable pagination. */
   enablePagination?: boolean;
+
+  /** Number of rows per page. */
   paginationPerPage?: number;
+
+  /** List of options to choose from for pagination. */
   paginationOptions?: number[];
+
+  /** Callback to be called when the pagination option is changed. */
   onChangePaginationOption?: (newValue: number) => void;
 
+  /** Enable sorting. */
   enableSorting?: boolean;
+
+  /** Initial sorting. */
   initialSorting?: ColumnSort;
 }
 
 /**
- * UI element: data representation as a table.
+ * Dta representation as a table.
  *
  * @param headPosition - Top position of sticky header (0 if no other sticky elements are present).
  * No sticky header if omitted

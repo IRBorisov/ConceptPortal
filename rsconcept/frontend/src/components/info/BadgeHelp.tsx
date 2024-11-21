@@ -8,12 +8,22 @@ import { IconHelp } from '../Icons';
 import { CProps } from '../props';
 
 interface BadgeHelpProps extends CProps.Styling {
+  /** Topic to display in a tooltip. */
   topic: HelpTopic;
+
+  /** Offset from the cursor to the tooltip. */
   offset?: number;
+
+  /** Classname for padding. */
   padding?: string;
+
+  /** Place of the tooltip in relation to the cursor. */
   place?: PlacesType;
 }
 
+/**
+ * Display help icon with a manual page tooltip.
+ */
 function BadgeHelp({ topic, padding = 'p-1', ...restProps }: BadgeHelpProps) {
   const { showHelp } = useConceptOptions();
 

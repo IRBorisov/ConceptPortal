@@ -24,7 +24,7 @@ function UserMenu() {
       <AnimatePresence mode='wait'>
         {loading ? (
           <AnimateFade key='nav_user_badge_loader'>
-            <Loader circular size={3} />
+            <Loader circular scale={1.5} />
           </AnimateFade>
         ) : null}
         {!user && !loading ? (

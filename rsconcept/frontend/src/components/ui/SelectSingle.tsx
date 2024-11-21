@@ -46,6 +46,9 @@ export interface SelectSingleProps<Option, Group extends GroupBase<Option> = Gro
   noBorder?: boolean;
 }
 
+/**
+ * Displays a single-select component.
+ */
 function SelectSingle<Option, Group extends GroupBase<Option> = GroupBase<Option>>({
   noPortal,
   noBorder,

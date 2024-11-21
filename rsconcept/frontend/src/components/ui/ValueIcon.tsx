@@ -7,16 +7,34 @@ import { CProps } from '../props';
 import MiniButton from './MiniButton';
 
 interface ValueIconProps extends CProps.Styling, CProps.Titled {
+  /** Id of the component. */
   id?: string;
-  icon: React.ReactNode;
+
+  /** Value to display. */
   value: string | number;
+
+  /** Icon to display. */
+  icon: React.ReactNode;
+
+  /** Classname for the text. */
   textClassName?: string;
+
+  /** Callback to be called when the component is clicked. */
   onClick?: (event: CProps.EventMouse) => void;
+
+  /** Number of symbols to display in a small size. */
   smallThreshold?: number;
+
+  /** Indicates that padding should be minimal. */
   dense?: boolean;
+
+  /** Disable interaction. */
   disabled?: boolean;
 }
 
+/**
+ * Displays a value with an icon that can be clicked.
+ */
 function ValueIcon({
   id,
   dense,

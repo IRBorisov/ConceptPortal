@@ -5,13 +5,22 @@ import { globals } from '@/utils/constants';
 import { CProps } from '../props';
 
 interface SelectorButtonProps extends CProps.Button {
+  /** Text to display in the button. */
   text?: string;
+
+  /** Icon to display in the button. */
   icon?: React.ReactNode;
 
+  /** Classnames for the colors of the button. */
   colors?: string;
+
+  /** Indicates if button background should be transparent. */
   transparent?: boolean;
 }
 
+/**
+ * Displays a button with an icon and text that opens a dropdown menu.
+ */
 function SelectorButton({
   text,
   icon,

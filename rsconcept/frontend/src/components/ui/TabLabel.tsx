@@ -7,9 +7,13 @@ import { globals } from '@/utils/constants';
 import { CProps } from '../props';
 
 interface TabLabelProps extends Omit<TabPropsImpl, 'children'>, CProps.Titled {
+  /** Label to display in the tab. */
   label?: string;
 }
 
+/**
+ * Displays a tab header with a label.
+ */
 function TabLabel({ label, title, titleHtml, hideTitle, className, ...otherProps }: TabLabelProps) {
   return (
     <TabImpl

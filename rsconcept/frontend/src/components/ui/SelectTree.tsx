@@ -11,22 +11,38 @@ import MiniButton from './MiniButton';
 import Overlay from './Overlay';
 
 interface SelectTreeProps<ItemType> extends CProps.Styling {
-  items: ItemType[];
+  /** Current value. */
   value: ItemType;
-  setValue: (newItem: ItemType) => void;
-  getParent: (item: ItemType) => ItemType;
-  getLabel: (item: ItemType) => string;
-  getDescription: (item: ItemType) => string;
+
+  /** List of available items. */
+  items: ItemType[];
+
+  /** Prefix for the ids of the elements. */
   prefix: string;
+
+  /** Callback to be called when the value changes. */
+  onChangeValue: (newItem: ItemType) => void;
+
+  /** Callback providing the parent of the item. */
+  getParent: (item: ItemType) => ItemType;
+
+  /** Callback providing the label of the item. */
+  getLabel: (item: ItemType) => string;
+
+  /** Callback providing the description of the item. */
+  getDescription: (item: ItemType) => string;
 }
 
+/**
+ * Displays a tree of items and allows user to select one.
+ */
 function SelectTree<ItemType>({
   items,
   value,
   getParent,
   getLabel,
   getDescription,
-  setValue,
+  onChangeValue,
   prefix,
   ...restProps
 }: SelectTreeProps<ItemType>) {
@@ -71,9 +87,9 @@ function SelectTree<ItemType>({
     (event: CProps.EventMouse, target: ItemType) => {
       event.preventDefault();
       event.stopPropagation();
-      setValue(target);
+      onChangeValue(target);
     },
-    [setValue]
+    [onChangeValue]
   );
 
   return (

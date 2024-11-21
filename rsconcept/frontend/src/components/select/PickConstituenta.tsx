@@ -98,8 +98,8 @@ function PickConstituenta({
         id={id ? `${id}__search` : undefined}
         className='clr-input rounded-t-md'
         noBorder
-        value={filterText}
-        onChange={newValue => setFilterText(newValue)}
+        query={filterText}
+        onChangeQuery={newValue => setFilterText(newValue)}
       />
       <DataTable
         id={id}

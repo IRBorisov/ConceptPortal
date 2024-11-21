@@ -6,11 +6,19 @@ import { truncateToLastWord } from '@/utils/utils';
 import { CProps } from '../props';
 
 export interface TextContentProps extends CProps.Styling {
+  /** Text to display. */
   text: string;
+
+  /** Maximum number of symbols to display. */
   maxLength?: number;
+
+  /** Disable full text in a tooltip. */
   noTooltip?: boolean;
 }
 
+/**
+ * Displays text limited to a certain number of symbols.
+ */
 function TextContent({ className, text, maxLength, noTooltip, ...restProps }: TextContentProps) {
   const truncated = maxLength ? truncateToLastWord(text, maxLength) : text;
   const isTruncated = maxLength && text.length > maxLength;

@@ -10,10 +10,16 @@ import { useConceptOptions } from '@/context/ConceptOptionsContext';
 export type { PlacesType } from 'react-tooltip';
 
 interface TooltipProps extends Omit<ITooltip, 'variant'> {
-  layer?: string;
+  /** Text to display in the tooltip. */
   text?: string;
+
+  /** Classname for z-index */
+  layer?: string;
 }
 
+/**
+ * Displays content in a tooltip container.
+ */
 function Tooltip({
   text,
   children,

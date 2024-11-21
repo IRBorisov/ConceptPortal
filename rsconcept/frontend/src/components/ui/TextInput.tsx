@@ -4,7 +4,10 @@ import { CProps } from '../props';
 import Label from './Label';
 
 interface TextInputProps extends CProps.Editor, CProps.Colors, CProps.Input {
+  /** Indicates that padding should be minimal. */
   dense?: boolean;
+
+  /** Capture enter key. */
   allowEnter?: boolean;
 }
 
@@ -14,6 +17,9 @@ function preventEnterCapture(event: React.KeyboardEvent<HTMLInputElement>) {
   }
 }
 
+/**
+ * Displays a customizable input with a label.
+ */
 function TextInput({
   id,
   label,

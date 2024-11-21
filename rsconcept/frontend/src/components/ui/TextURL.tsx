@@ -1,13 +1,25 @@
 import { Link } from 'react-router-dom';
 
 interface TextURLProps {
+  /** Text to display. */
   text: string;
+
+  /** Tooltip for the link. */
   title?: string;
+
+  /** URL to link to. */
   href?: string;
+
+  /** Color of the link. */
   color?: string;
+
+  /** Callback to be called when the link is clicked. */
   onClick?: () => void;
 }
 
+/**
+ * Displays a text with a clickable link.
+ */
 function TextURL({ text, href, title, color = 'clr-text-url', onClick }: TextURLProps) {
   const design = `cursor-pointer hover:underline ${color}`;
   if (href) {

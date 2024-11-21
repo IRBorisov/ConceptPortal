@@ -54,7 +54,7 @@ function StatusBar({ isModified, processing, activeCst, parseData, onAnalyze }: 
       onClick={onAnalyze}
     >
       <AnimatePresence mode='wait'>
-        {processing ? <Loader key='status-loader' size={3} /> : null}
+        {processing ? <Loader key='status-loader' scale={3} /> : null}
         {!processing ? (
           <>
             <StatusIcon key='status-icon' size='1rem' value={status} />

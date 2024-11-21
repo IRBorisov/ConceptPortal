@@ -50,6 +50,7 @@ This readme file is used mostly to document project dependencies and conventions
   - @uiw/react-codemirror
   - @uiw/codemirror-themes
   - @lezer/lr
+  - @dagrejs/dagre
   </pre>
 </details>
 <details>
