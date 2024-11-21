@@ -144,7 +144,7 @@ function FormConstituenta({
     cstUpdate(data, () => toast.success(information.changesSaved));
   }
 
-  function handleTypificationClick(event: CProps.EventMouse) {
+  function handleTypeGraph(event: CProps.EventMouse) {
     if (!state || (localParse && !localParse.parseResult) || state.parse.status !== ParsingStatus.VERIFIED) {
       toast.error(errors.typeStructureFailed);
       return;
@@ -196,10 +196,8 @@ function FormConstituenta({
             noOutline
             readOnly
             label='Типизация'
-            title='Отобразить структуру типизации'
             value={typification}
-            colors='clr-app clr-text-default cursor-pointer'
-            onClick={event => handleTypificationClick(event)}
+            colors='clr-app clr-text-default cursor-default'
           />
         ) : null}
         {state ? (
@@ -229,6 +227,7 @@ function FormConstituenta({
                 onChangeTypification={setTypification}
                 onChangeLocalParse={setLocalParse}
                 onOpenEdit={onOpenEdit}
+                onShowTypeGraph={handleTypeGraph}
               />
             </AnimateFade>
             <AnimateFade key='cst_definition_fade' hideContent={!state.definition_raw && isElementary}>

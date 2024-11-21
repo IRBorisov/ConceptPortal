@@ -43,6 +43,7 @@ interface EditorRSExpressionProps {
   onChangeLocalParse: (typification: IExpressionParse | undefined) => void;
   onChangeExpression: (newValue: string) => void;
   onOpenEdit?: (cstID: ConstituentaID) => void;
+  onShowTypeGraph: (event: CProps.EventMouse) => void;
 }
 
 function EditorRSExpression({
@@ -54,6 +55,7 @@ function EditorRSExpression({
   onChangeLocalParse,
   onChangeExpression,
   onOpenEdit,
+  onShowTypeGraph,
   ...restProps
 }: EditorRSExpressionProps) {
   const model = useRSForm();
@@ -171,6 +173,7 @@ function EditorRSExpression({
         showControls={showControls}
         showAST={handleShowAST}
         toggleControls={() => setShowControls(prev => !prev)}
+        showTypeGraph={onShowTypeGraph}
       />
 
       <Overlay

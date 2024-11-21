@@ -15,7 +15,8 @@ import {
   IconSave,
   IconSettings,
   IconStatusOK,
-  IconTree
+  IconTree,
+  IconTypeGraph
 } from '@/components/Icons';
 import LinkTopic from '@/components/ui/LinkTopic';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
@@ -89,6 +90,10 @@ function HelpRSEditor() {
       </li>
       <li>
         <IconControls className='inline-icon' /> специальная клавиатура и горячие клавиши
+      </li>
+      <li>
+        <IconTypeGraph className='inline-icon' /> отображение{' '}
+        <LinkTopic text='графа ступеней типизации' topic={HelpTopic.UI_TYPE_GRAPH} />
       </li>
       <li>
         <IconTree className='inline-icon' /> отображение{' '}

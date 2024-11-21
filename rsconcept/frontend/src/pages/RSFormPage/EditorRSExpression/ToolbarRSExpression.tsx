@@ -1,4 +1,4 @@
-import { IconControls, IconTree } from '@/components/Icons';
+import { IconControls, IconTree, IconTypeGraph } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
@@ -10,9 +10,16 @@ interface ToolbarRSExpressionProps {
 
   toggleControls: () => void;
   showAST: (event: CProps.EventMouse) => void;
+  showTypeGraph: (event: CProps.EventMouse) => void;
 }
 
-function ToolbarRSExpression({ disabled, showControls, toggleControls, showAST }: ToolbarRSExpressionProps) {
+function ToolbarRSExpression({
+  disabled,
+  showControls,
+  showTypeGraph,
+  toggleControls,
+  showAST
+}: ToolbarRSExpressionProps) {
   const model = useRSForm();
 
   return (
@@ -24,6 +31,11 @@ function ToolbarRSExpression({ disabled, showControls, toggleControls, showAST }
           onClick={toggleControls}
         />
       ) : null}
+      <MiniButton
+        icon={<IconTypeGraph size='1.25rem' className='icon-primary' />}
+        title='Граф ступеней типизации'
+        onClick={showTypeGraph}
+      />
       <MiniButton
         title='Дерево разбора выражения'
         onClick={showAST}
