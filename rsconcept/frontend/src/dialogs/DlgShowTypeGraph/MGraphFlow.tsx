@@ -1,7 +1,7 @@
 'use client';
 
 import { useLayoutEffect } from 'react';
-import { Edge, ReactFlow, useEdgesState, useNodesState, useReactFlow } from 'reactflow';
+import { Edge, ReactFlow, useEdgesState, useNodesState } from 'reactflow';
 
 import { TMGraph } from '@/models/TMGraph';
 
@@ -16,7 +16,6 @@ interface MGraphFlowProps {
 function MGraphFlow({ data }: MGraphFlowProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
-  const flow = useReactFlow();
 
   useLayoutEffect(() => {
     const newNodes = data.nodes.map(node => ({
@@ -52,7 +51,7 @@ function MGraphFlow({ data }: MGraphFlowProps) {
 
     setNodes(newNodes);
     setEdges(newEdges);
-  }, [data, setNodes, setEdges, flow]);
+  }, [data, setNodes, setEdges]);
 
   return (
     <ReactFlow
