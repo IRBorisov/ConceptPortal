@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router';
 
 import ConceptToaster from '@/app/ConceptToaster';
 import Footer from '@/app/Footer';

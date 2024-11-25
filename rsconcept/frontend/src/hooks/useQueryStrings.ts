@@ -1,6 +1,6 @@
 'use client';
 
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 function useQueryStrings() {
   const search = useLocation().search;

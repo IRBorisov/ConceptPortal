@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router';
 
 import CreateItemPage from '@/pages/CreateItemPage';
 import DatabaseSchemaPage from '@/pages/DatabaseSchemaPage';

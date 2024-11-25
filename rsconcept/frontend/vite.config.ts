@@ -5,7 +5,7 @@ import { defineConfig, loadEnv, PluginOption } from 'vite';
 import { dependencies } from './package.json';
 
 // Packages to include in main app bundle
-const inlinePackages = ['react', 'react-router-dom', 'react-dom'];
+const inlinePackages = ['react', 'react-router', 'react-dom'];
 
 // Rollup warnings that should not be displayed
 const warningsToIgnore = [['SOURCEMAP_ERROR', "Can't resolve original location of error"]];

@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 import { AccessModeState } from '@/context/AccessModeContext';
 import { OssState } from '@/context/OssContext';

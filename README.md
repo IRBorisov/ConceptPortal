@@ -31,7 +31,7 @@ This readme file is used mostly to document project dependencies and conventions
   - axios
   - clsx
   - react-icons
-  - react-router-dom 
+  - react-router
   - react-toastify
   - react-loader-spinner
   - react-tabs

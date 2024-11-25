@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 
 import { globals } from '@/utils/constants';
 import { contextOutsideScope } from '@/utils/labels';
@@ -54,7 +54,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
       }
       if (validate()) {
         scrollTop();
-        router(path);
+        Promise.resolve(router(path)).catch(console.log);
         setIsBlocked(false);
       }
     },
@@ -65,7 +65,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
     (path: string) => {
       if (validate()) {
         scrollTop();
-        router(path, { replace: true });
+        Promise.resolve(router(path, { replace: true })).catch(console.log);
         setIsBlocked(false);
       }
     },
@@ -75,7 +75,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
   const back = useCallback(() => {
     if (validate()) {
       scrollTop();
-      router(-1);
+      Promise.resolve(router(-1)).catch(console.log);
       setIsBlocked(false);
     }
   }, [router, validate, scrollTop]);
@@ -83,7 +83,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
   const forward = useCallback(() => {
     if (validate()) {
       scrollTop();
-      router(1);
+      Promise.resolve(router(1)).catch(console.log);
       setIsBlocked(false);
     }
   }, [router, validate, scrollTop]);
