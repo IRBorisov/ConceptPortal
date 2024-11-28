@@ -98,7 +98,10 @@ function Modal({
   return (
     <div className='fixed top-0 left-0 w-full h-full z-modal cursor-default'>
       <div className={clsx('z-navigation', 'fixed top-0 left-0', 'w-full h-full', 'cc-modal-blur')} />
-      <div className={clsx('z-navigation', 'fixed top-0 left-0', 'w-full h-full', 'cc-modal-backdrop')} />
+      <div
+        className={clsx('z-navigation', 'fixed top-0 left-0', 'w-full h-full', 'cc-modal-backdrop')}
+        onClick={hideWindow}
+      />
       <motion.div
         ref={ref}
         className={clsx(
