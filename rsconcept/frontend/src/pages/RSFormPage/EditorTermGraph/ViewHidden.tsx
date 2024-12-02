@@ -117,7 +117,6 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
                 onDoubleClick={() => onEdit(cstID)}
               >
                 {cst.alias}
-                {cst.is_inherited ? '*' : ''}
               </button>
               <TooltipConstituenta data={cst} anchor={`#${id}`} />
             </div>

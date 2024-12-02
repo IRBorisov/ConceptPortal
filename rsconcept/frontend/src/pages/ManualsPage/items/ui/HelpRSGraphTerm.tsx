@@ -13,6 +13,7 @@ import {
   IconImage,
   IconNewItem,
   IconOSS,
+  IconPredecessor,
   IconReset,
   IconRotate3D,
   IconText,
@@ -87,9 +88,6 @@ function HelpRSGraphTerm() {
           <li>
             <IconImage className='inline-icon' /> Сохранить в формат PNG
           </li>
-          <li>
-            * <LinkTopic text='наследованные' topic={HelpTopic.CC_PROPAGATION} /> в ОСС
-          </li>
         </div>
 
         <Divider vertical margins='mx-3' className='hidden sm:block' />
@@ -113,6 +111,10 @@ function HelpRSGraphTerm() {
           </li>
           <li>
             <IconGraphCore className='inline-icon' /> выделить <LinkTopic text='Ядро' topic={HelpTopic.CC_SYSTEM} />
+          </li>
+          <li>
+            <IconPredecessor className='inline-icon' /> выделить{' '}
+            <LinkTopic text='собственные' topic={HelpTopic.CC_PROPAGATION} />
           </li>
         </div>
       </div>
