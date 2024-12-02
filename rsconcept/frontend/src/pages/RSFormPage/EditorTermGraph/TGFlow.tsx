@@ -61,7 +61,9 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
   const [edges, setEdges] = useEdgesState([]);
   const flow = useReactFlow();
   const store = useStoreApi();
+  const { addSelectedNodes } = store.getState();
 
+  const [showParamsDialog, setShowParamsDialog] = useState(false);
   const [filterParams, setFilterParams] = useLocalStorage<GraphFilterParams>(storage.rsgraphFilter, {
     noHermits: true,
     noTemplates: false,
@@ -81,16 +83,13 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
     allowConstant: true,
     allowTheorem: true
   });
-  const [showParamsDialog, setShowParamsDialog] = useState(false);
-  const [focusCst, setFocusCst] = useState<IConstituenta | undefined>(undefined);
-  const filteredGraph = useGraphFilter(controller.schema, filterParams, focusCst);
-
-  const [hidden, setHidden] = useState<ConstituentaID[]>([]);
-
   const [coloring, setColoring] = useLocalStorage<GraphColoring>(storage.rsgraphColoring, 'type');
 
-  const [isDragging, setIsDragging] = useState(false);
+  const [focusCst, setFocusCst] = useState<IConstituenta | undefined>(undefined);
+  const filteredGraph = useGraphFilter(controller.schema, filterParams, focusCst);
+  const [hidden, setHidden] = useState<ConstituentaID[]>([]);
 
+  const [isDragging, setIsDragging] = useState(false);
   const [hoverID, setHoverID] = useState<ConstituentaID | undefined>(undefined);
   const hoverCst = useMemo(() => {
     return hoverID && controller.schema?.cstByID.get(hoverID);
@@ -99,8 +98,6 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
   const [hoverLeft, setHoverLeft] = useState(true);
 
   const [toggleResetView, setToggleResetView] = useState(false);
-
-  const { addSelectedNodes } = store.getState();
 
   const onSelectionChange = useCallback(
     ({ nodes }: { nodes: Node[] }) => {
@@ -299,6 +296,8 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
   const handleNodeClick = useCallback(
     (event: CProps.EventMouse, cstID: ConstituentaID) => {
       if (event.altKey) {
+        event.preventDefault();
+        event.stopPropagation();
         handleSetFocus(cstID);
       }
     },
@@ -445,7 +444,7 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
           hideZero
           totalCount={controller.schema?.stats?.count_all ?? 0}
           selectedCount={controller.selected.length}
-          position='top-[4.3rem] sm:top-[2rem] left-0'
+          position='top-[4.4rem] sm:top-[4.1rem] left-[0.5rem] sm:left-[0.65rem]'
         />
 
         {!isDragging && hoverCst && hoverCstDebounced && hoverCst === hoverCstDebounced ? (
@@ -465,7 +464,7 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
           </Overlay>
         ) : null}
 
-        <Overlay position='top-[8.15rem] sm:top-[5.9rem] left-0' className='flex gap-1'>
+        <Overlay position='top-[6.15rem] sm:top-[5.9rem] left-0' className='flex gap-1'>
           <div className='flex flex-col ml-2 w-[13.5rem]'>
             {selectors}
             {viewHidden}

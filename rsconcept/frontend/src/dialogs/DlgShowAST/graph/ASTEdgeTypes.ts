@@ -1,7 +1,7 @@
 import { EdgeTypes } from 'reactflow';
 
-import ASTEdge from './ASTEdge';
+import DynamicEdge from '@/components/ui/Flow/DynamicEdge';
 
 export const ASTEdgeTypes: EdgeTypes = {
-  dynamic: ASTEdge
+  dynamic: DynamicEdge
 };

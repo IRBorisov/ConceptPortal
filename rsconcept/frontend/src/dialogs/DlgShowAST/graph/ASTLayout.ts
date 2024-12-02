@@ -2,23 +2,19 @@ import dagre from '@dagrejs/dagre';
 import { Edge, Node } from 'reactflow';
 
 import { ISyntaxTreeNode } from '@/models/rslang';
-
-const NODE_WIDTH = 44;
-const NODE_HEIGHT = 44;
-const HOR_SEPARATION = 40;
-const VERT_SEPARATION = 40;
+import { PARAMETER } from '@/utils/constants';
 
 export function applyLayout(nodes: Node<ISyntaxTreeNode>[], edges: Edge[]) {
   const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
   dagreGraph.setGraph({
     rankdir: 'TB',
-    ranksep: VERT_SEPARATION,
-    nodesep: HOR_SEPARATION,
+    ranksep: 40,
+    nodesep: 40,
     ranker: 'network-simplex',
     align: undefined
   });
   nodes.forEach(node => {
-    dagreGraph.setNode(node.id, { width: NODE_WIDTH, height: NODE_HEIGHT });
+    dagreGraph.setNode(node.id, { width: 2 * PARAMETER.graphNodeRadius, height: 2 * PARAMETER.graphNodeRadius });
   });
 
   edges.forEach(edge => {
@@ -29,7 +25,7 @@ export function applyLayout(nodes: Node<ISyntaxTreeNode>[], edges: Edge[]) {
 
   nodes.forEach(node => {
     const nodeWithPosition = dagreGraph.node(node.id);
-    node.position.x = nodeWithPosition.x - NODE_WIDTH / 2;
-    node.position.y = nodeWithPosition.y - NODE_HEIGHT / 2;
+    node.position.x = nodeWithPosition.x - PARAMETER.graphNodeRadius;
+    node.position.y = nodeWithPosition.y - PARAMETER.graphNodeRadius;
   });
 }

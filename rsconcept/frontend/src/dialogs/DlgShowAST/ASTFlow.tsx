@@ -13,9 +13,10 @@ interface ASTFlowProps {
   data: SyntaxTree;
   onNodeEnter: (node: Node) => void;
   onNodeLeave: (node: Node) => void;
+  onChangeDragging: (value: boolean) => void;
 }
 
-function ASTFlow({ data, onNodeEnter, onNodeLeave }: ASTFlowProps) {
+function ASTFlow({ data, onNodeEnter, onNodeLeave, onChangeDragging }: ASTFlowProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
 
@@ -59,6 +60,8 @@ function ASTFlow({ data, onNodeEnter, onNodeLeave }: ASTFlowProps) {
       nodesFocusable={false}
       onNodeMouseEnter={(_, node) => onNodeEnter(node)}
       onNodeMouseLeave={(_, node) => onNodeLeave(node)}
+      onNodeDragStart={() => onChangeDragging(true)}
+      onNodeDragStop={() => onChangeDragging(false)}
       onNodesChange={onNodesChange}
       nodeTypes={ASTNodeTypes}
       edgeTypes={ASTEdgeTypes}

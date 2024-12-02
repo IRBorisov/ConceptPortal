@@ -35,12 +35,7 @@ function TGNode(node: TGNodeInternal) {
       <Handle type='target' position={Position.Top} style={{ opacity: 0 }} />
       <div
         className='w-full h-full cursor-default flex items-center justify-center rounded-full'
-        style={{
-          backgroundColor: !node.selected ? node.data.fill : colors.bgActiveSelection,
-          outlineOffset: '4px',
-          outlineStyle: 'solid',
-          outlineColor: node.selected ? colors.bgActiveSelection : 'transparent'
-        }}
+        style={{ backgroundColor: !node.selected ? node.data.fill : colors.bgActiveSelection }}
       >
         <div className='absolute top-[9px] left-0 text-center w-full'>{node.data.label}</div>
         <div

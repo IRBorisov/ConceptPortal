@@ -76,7 +76,9 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
           animate={!isFolded ? 'open' : 'closed'}
           variants={animateHiddenHeader}
           initial={false}
-        >{`Скрытые [${localSelected.length} | ${items.length}]`}</motion.div>
+        >
+          {`Скрытые [${localSelected.length} | ${items.length}]`}
+        </motion.div>
       </div>
 
       <motion.div
@@ -87,7 +89,7 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
           'text-sm',
           'cc-scroll-y'
         )}
-        style={{ maxHeight: calculateHeight(windowSize.isSmall ? '12.rem + 2px' : '16.4rem + 2px') }}
+        style={{ maxHeight: calculateHeight(windowSize.isSmall ? '10.4rem + 2px' : '12.5rem + 2px') }}
         initial={false}
         animate={!isFolded ? 'open' : 'closed'}
         variants={animateDropdown}

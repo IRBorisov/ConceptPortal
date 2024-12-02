@@ -15,6 +15,7 @@ interface ASTNodeInternal {
   id: string;
   data: ISyntaxTreeNode;
   dragging: boolean;
+  selected: boolean;
   xPos: number;
   yPos: number;
 }
@@ -32,10 +33,18 @@ function ASTNode(node: ASTNodeInternal) {
       />
       <Handle type='source' position={Position.Bottom} style={{ opacity: 0 }} />
       <div
-        className='font-math mt-1 w-fit px-1 text-center translate-x-[calc(-50%+20px)]'
-        style={{ backgroundColor: colors.bgDefault, fontSize: label.length > 3 ? 12 : 14 }}
+        className='font-math mt-1 w-fit text-center translate-x-[calc(-50%+20px)]'
+        style={{ fontSize: label.length > 3 ? 12 : 14 }}
       >
-        {label}
+        <div className='absolute top-0 left-0 text-center w-full'>{label}</div>
+        <div
+          style={{
+            WebkitTextStrokeWidth: 2,
+            WebkitTextStrokeColor: colors.bgDefault
+          }}
+        >
+          {label}
+        </div>
       </div>
     </>
   );

@@ -97,10 +97,6 @@
     box-shadow: 0 0 0 2px var(--cl-prim-bg-80) !important;
   }
 
-  &.selected {
-    border-color: var(--cd-bg-40);
-  }
-
   .dark & {
     color: var(--cd-fg-100);
     border-color: var(--cd-bg-40);
@@ -108,10 +104,6 @@
 
     &:hover:not(.selected) {
       box-shadow: 0 0 0 3px var(--cd-prim-bg-80) !important;
-    }
-
-    &.selected {
-      border-color: var(--cl-bg-40);
     }
   }
 }
@@ -124,6 +116,16 @@
   padding: 2px;
   width: 150px;
   height: 40px;
+
+  &.selected {
+    border-color: var(--cd-bg-40);
+  }
+
+  .dark & {
+    &.selected {
+      border-color: var(--cl-bg-40);
+    }
+  }
 }
 
 .react-flow__node-step,
@@ -134,10 +136,19 @@
   border-radius: 100%;
   width: 40px;
   height: 40px;
-}
 
-.react-flow__node-concept {
+  outline-offset: 4px;
+  outline-style: solid;
+  outline-color: transparent;
+
   &.selected {
+    outline-color: var(--cl-teal-bg-100);
     border-color: transparent;
+  }
+
+  .dark & {
+    &.selected {
+      border-color: var(--cd-teal-bg-100);
+    }
   }
 }

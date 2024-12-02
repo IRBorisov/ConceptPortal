@@ -25,6 +25,8 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
   const handleHoverIn = useCallback((node: Node) => setHoverID(Number(node.id)), []);
   const handleHoverOut = useCallback(() => setHoverID(undefined), []);
 
+  const [isDragging, setIsDragging] = useState(false);
+
   return (
     <Modal
       readonly
@@ -37,8 +39,8 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
         className='px-2 py-1 rounded-2xl cc-blur max-w-[60ch] text-lg text-center'
         style={{ backgroundColor: colors.bgBlur }}
       >
-        {!hoverNode ? expression : null}
-        {hoverNode ? (
+        {!hoverNode || isDragging ? expression : null}
+        {!isDragging && hoverNode ? (
           <div>
             <span>{expression.slice(0, hoverNode.start)}</span>
             <span className='clr-selected'>{expression.slice(hoverNode.start, hoverNode.finish)}</span>
@@ -47,7 +49,12 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
         ) : null}
       </Overlay>
       <ReactFlowProvider>
-        <ASTFlow data={syntaxTree} onNodeEnter={handleHoverIn} onNodeLeave={handleHoverOut} />
+        <ASTFlow
+          data={syntaxTree}
+          onNodeEnter={handleHoverIn}
+          onNodeLeave={handleHoverOut}
+          onChangeDragging={setIsDragging}
+        />
       </ReactFlowProvider>
     </Modal>
   );

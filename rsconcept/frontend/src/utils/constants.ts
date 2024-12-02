@@ -21,6 +21,7 @@ export const PARAMETER = {
   ossDistanceX: 180, // pixels - insert x-distance between node centers
   ossDistanceY: 100, // pixels - insert y-distance between node centers
 
+  graphHandleSize: 3, // pixels - size of graph connection handle
   graphNodeRadius: 20, // pixels - radius of graph node
   graphNodePadding: 5, // pixels - padding of graph node
   graphHoverXLimit: 0.4, // ratio to clientWidth used to determine which side of screen popup should be
