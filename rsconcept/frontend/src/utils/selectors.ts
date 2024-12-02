@@ -2,31 +2,19 @@
  * Module: Mappings for selector UI elements. Do not confuse with html selectors
  */
 
-import { GraphLayout } from '@/components/ui/GraphUI';
 import { type GramData, Grammeme, ReferenceType } from '@/models/language';
 import { grammemeCompare } from '@/models/languageAPI';
-import { GraphColoring, GraphSizing } from '@/models/miscellaneous';
+import { GraphColoring } from '@/models/miscellaneous';
 import { CstType } from '@/models/rsform';
 
-import { labelGrammeme, labelReferenceType, mapLabelColoring, mapLabelLayout, mapLabelSizing } from './labels';
+import { labelGrammeme, labelReferenceType, mapLabelColoring } from './labels';
 import { labelCstType } from './labels';
 
-/**
- * Represents options for GraphLayout selector.
- */
-export const SelectorGraphLayout: { value: GraphLayout; label: string }[] = //
-  [...mapLabelLayout.entries()].map(item => ({ value: item[0], label: item[1] }));
 /**
  * Represents options for {@link GraphColoring} selector.
  */
 export const SelectorGraphColoring: { value: GraphColoring; label: string }[] = //
   [...mapLabelColoring.entries()].map(item => ({ value: item[0], label: item[1] }));
-
-/**
- * Represents options for {@link GraphSizing} selector.
- */
-export const SelectorGraphSizing: { value: GraphSizing; label: string }[] = //
-  [...mapLabelSizing.entries()].map(item => ({ value: item[0], label: item[1] }));
 
 /**
  * Represents options for {@link CstType} selector.

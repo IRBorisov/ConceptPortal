@@ -4,12 +4,11 @@
  * Label is a short text used to represent an entity.
  * Description is a long description used in tooltips.
  */
-import { GraphLayout } from '@/components/ui/GraphUI';
 import { FolderNode } from '@/models/FolderTree';
 import { GramData, Grammeme, ReferenceType } from '@/models/language';
 import { AccessPolicy, LibraryItemType, LocationHead } from '@/models/library';
 import { validateLocation } from '@/models/libraryAPI';
-import { CstMatchMode, DependencyMode, GraphColoring, GraphSizing, HelpTopic } from '@/models/miscellaneous';
+import { CstMatchMode, DependencyMode, GraphColoring, HelpTopic } from '@/models/miscellaneous';
 import { ISubstitutionErrorDescription, OperationType, SubstitutionErrorType } from '@/models/oss';
 import { CstClass, CstType, ExpressionStatus, IConstituenta, IRSForm } from '@/models/rsform';
 import {
@@ -294,22 +293,6 @@ export function describeLocationHead(head: LocationHead): string {
 }
 
 /**
- * Retrieves label for graph layout mode.
- */
-export const mapLabelLayout = new Map<GraphLayout, string>([
-  ['treeTd2d', 'Граф: ДеревоВ 2D'],
-  ['treeTd3d', 'Граф: ДеревоВ 3D'],
-  ['forceatlas2', 'Граф: Атлас 2D'],
-  ['forceDirected2d', 'Граф: Силы 2D'],
-  ['forceDirected3d', 'Граф: Силы 3D'],
-  ['treeLr2d', 'Граф: ДеревоГ 2D'],
-  ['treeLr3d', 'Граф: ДеревоГ 3D'],
-  ['radialOut2d', 'Граф: Радиус 2D'],
-  ['radialOut3d', 'Граф: Радиус 3D'],
-  ['circular2d', 'Граф: Круговая']
-]);
-
-/**
  * Retrieves label for {@link GraphColoring}.
  */
 export const mapLabelColoring = new Map<GraphColoring, string>([
@@ -317,15 +300,6 @@ export const mapLabelColoring = new Map<GraphColoring, string>([
   ['status', 'Цвет: Статус'],
   ['type', 'Цвет: Класс'],
   ['schemas', 'Цвет: Схемы']
-]);
-
-/**
- * Retrieves label for {@link GraphSizing}.
- */
-export const mapLabelSizing = new Map<GraphSizing, string>([
-  ['none', 'Узлы: Моно'],
-  ['derived', 'Узлы: Порожденные'],
-  ['complex', 'Узлы: Простые']
 ]);
 
 /**

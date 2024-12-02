@@ -32,8 +32,6 @@ function HelpRSGraphTerm() {
         <div className='sm:w-[14rem]'>
           <h1>Настройка графа</h1>
           <li>Цвет – покраска узлов</li>
-          <li>Граф – расположение</li>
-          <li>Размер – размер узлов</li>
           <li>
             <IconText className='inline-icon' /> Отображение текста
           </li>
@@ -51,7 +49,7 @@ function HelpRSGraphTerm() {
           <h1>Изменение узлов</h1>
           <li>Клик на конституенту – выделение</li>
           <li>
-            Ctrl + клик – выбор <span style={{ color: colors.fgPurple }}>фокус-конституенты</span>
+            Alt + клик – выбор <span style={{ color: colors.fgPurple }}>фокус-конституенты</span>
           </li>
           <li>
             <IconReset className='inline-icon' /> Esc – сбросить выделение

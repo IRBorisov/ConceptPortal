@@ -44,7 +44,6 @@ This readme file is used mostly to document project dependencies and conventions
   - js-file-download
   - use-debounce
   - framer-motion
-  - reagraph
   - html-to-image
   - @tanstack/react-table
   - @uiw/react-codemirror

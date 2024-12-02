@@ -20,6 +20,7 @@ export interface IColorTheme {
   bgDisabled: string;
   bgPrimary: string;
   bgSelected: string;
+  bgActiveSelection: string;
   bgHover: string;
   bgWarning: string;
 
@@ -62,6 +63,7 @@ export const lightT: IColorTheme = {
   bgDisabled: 'var(--cl-bg-60)',
   bgPrimary:  'var(--cl-prim-bg-100)',
   bgSelected: 'var(--cl-prim-bg-80)',
+  bgActiveSelection: 'var(--cl-teal-bg-100)',
   bgHover:    'var(--cl-prim-bg-60)',
   bgWarning:  'var(--cl-red-bg-100)',
   
@@ -104,6 +106,7 @@ export const darkT: IColorTheme = {
   bgDisabled: 'var(--cd-bg-60)',
   bgPrimary:  'var(--cd-prim-bg-100)',
   bgSelected: 'var(--cd-prim-bg-80)',
+  bgActiveSelection: 'var(--cd-teal-bg-100)',
   bgHover:    'var(--cd-prim-bg-60)',
   bgWarning:  'var(--cd-red-bg-100)',
 
@@ -182,96 +185,6 @@ export const selectDarkT = {
   neutral70: darkT.fgWarning,
   neutral80: darkT.fgDefault,
   neutral90: darkT.fgWarning
-};
-
-/**
- * Represents Graph component Light theme.
- */
-export const graphLightT = {
-  canvas: {
-    background: '#f9fafb'
-  },
-  node: {
-    fill: '#7ca0ab',
-    activeFill: '#1DE9AC',
-    opacity: 1,
-    selectedOpacity: 1,
-    inactiveOpacity: 1,
-    label: {
-      color: '#2A6475',
-      stroke: '#fff',
-      activeColor: '#1DE9AC'
-    }
-  },
-  lasso: {
-    border: '1px solid #55aaff',
-    background: 'rgba(75, 160, 255, 0.1)'
-  },
-  ring: {
-    fill: '#D8E6EA',
-    activeFill: '#1DE9AC'
-  },
-  edge: {
-    fill: '#D8E6EA',
-    activeFill: '#1DE9AC',
-    opacity: 1,
-    selectedOpacity: 1,
-    inactiveOpacity: 1,
-    label: {
-      stroke: '#fff',
-      color: '#2A6475',
-      activeColor: '#1DE9AC'
-    }
-  },
-  arrow: {
-    fill: '#D8E6EA',
-    activeFill: '#1DE9AC'
-  }
-};
-
-/**
- * Represents Graph component Dark theme.
- */
-export const graphDarkT = {
-  canvas: {
-    background: '#171717' // var(--cd-bg-100)
-  },
-  node: {
-    fill: '#7a8c9e',
-    activeFill: '#1DE9AC',
-    opacity: 1,
-    selectedOpacity: 1,
-    inactiveOpacity: 1,
-    label: {
-      stroke: '#1E2026',
-      color: '#ACBAC7',
-      activeColor: '#1DE9AC'
-    }
-  },
-  lasso: {
-    border: '1px solid #55aaff',
-    background: 'rgba(75, 160, 255, 0.1)'
-  },
-  ring: {
-    fill: '#54616D',
-    activeFill: '#1DE9AC'
-  },
-  edge: {
-    fill: '#474B56',
-    activeFill: '#1DE9AC',
-    opacity: 1,
-    selectedOpacity: 1,
-    inactiveOpacity: 1,
-    label: {
-      stroke: '#1E2026',
-      color: '#ACBAC7',
-      activeColor: '#1DE9AC'
-    }
-  },
-  arrow: {
-    fill: '#474B56',
-    activeFill: '#1DE9AC'
-  }
 };
 
 /**

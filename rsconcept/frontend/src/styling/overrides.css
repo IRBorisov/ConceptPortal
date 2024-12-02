@@ -127,10 +127,17 @@
 }
 
 .react-flow__node-step,
-.react-flow__node-token {
+.react-flow__node-token,
+.react-flow__node-concept {
   cursor: default;
 
   border-radius: 100%;
   width: 40px;
   height: 40px;
+}
+
+.react-flow__node-concept {
+  &.selected {
+    border-color: transparent;
+  }
 }

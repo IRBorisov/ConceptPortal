@@ -32,6 +32,9 @@ import { OssNodeTypes } from './graph/OssNodeTypes';
 import NodeContextMenu, { ContextMenuData } from './NodeContextMenu';
 import ToolbarOssGraph from './ToolbarOssGraph';
 
+const ZOOM_MAX = 2;
+const ZOOM_MIN = 0.5;
+
 interface OssFlowProps {
   isModified: boolean;
   setIsModified: (newValue: boolean) => void;
@@ -223,7 +226,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     const imageWidth = PARAMETER.ossImageWidth;
     const imageHeight = PARAMETER.ossImageHeight;
     const nodesBounds = getNodesBounds(nodes);
-    const viewport = getViewportForBounds(nodesBounds, imageWidth, imageHeight, 0.5, 2);
+    const viewport = getViewportForBounds(nodesBounds, imageWidth, imageHeight, ZOOM_MIN, ZOOM_MAX);
     toPng(canvas, {
       backgroundColor: colors.bgDefault,
       width: imageWidth,
@@ -266,7 +269,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     setMenuProps(undefined);
   }, [controller]);
 
-  const handleClickCanvas = useCallback(() => {
+  const handleCanvasClick = useCallback(() => {
     handleContextMenuHide();
   }, [handleContextMenuHide]);
 
@@ -322,13 +325,13 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
         nodesFocusable={false}
         fitView
         nodeTypes={OssNodeTypes}
-        maxZoom={2}
-        minZoom={0.5}
+        maxZoom={ZOOM_MAX}
+        minZoom={ZOOM_MIN}
         nodesConnectable={false}
         snapToGrid={true}
         snapGrid={[PARAMETER.ossGridSize, PARAMETER.ossGridSize]}
         onNodeContextMenu={handleContextMenu}
-        onClick={handleClickCanvas}
+        onClick={handleCanvasClick}
       >
         {showGrid ? <Background gap={PARAMETER.ossGridSize} /> : null}
       </ReactFlow>
@@ -338,7 +341,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
       edges,
       handleNodesChange,
       handleContextMenu,
-      handleClickCanvas,
+      handleCanvasClick,
       onEdgesChange,
       handleNodeDoubleClick,
       showGrid

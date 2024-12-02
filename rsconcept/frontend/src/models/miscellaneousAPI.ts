@@ -3,7 +3,7 @@
  */
 import { PARAMETER } from '@/utils/constants';
 
-import { DependencyMode, GraphSizing, Position2D } from './miscellaneous';
+import { DependencyMode, Position2D } from './miscellaneous';
 import { IOperationPosition, IOperationSchema, OperationID, OperationType } from './oss';
 import { IConstituenta, IRSForm } from './rsform';
 
@@ -35,19 +35,6 @@ export function applyGraphFilter(target: IRSForm, start: number, mode: Dependenc
     return target.items.filter(cst => ids.find(id => id === cst.id));
   } else {
     return target.items;
-  }
-}
-
-/**
- * Apply {@link GraphSizing} to a given {@link IConstituenta}.
- */
-export function applyNodeSizing(target: IConstituenta, sizing: GraphSizing): number | undefined {
-  if (sizing === 'none') {
-    return undefined;
-  } else if (sizing === 'complex') {
-    return target.is_simple_expression ? 1 : 2;
-  } else {
-    return target.spawner ? 1 : 2;
   }
 }
 

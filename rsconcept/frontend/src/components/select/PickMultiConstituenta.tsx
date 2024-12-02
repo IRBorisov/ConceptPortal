@@ -139,6 +139,7 @@ function PickMultiConstituenta({
           graph={foldedGraph}
           isCore={cstID => isBasicConcept(schema.cstByID.get(cstID)?.cst_type)}
           isOwned={cstID => !schema.cstByID.get(cstID)?.is_inherited}
+          selected={selected}
           setSelected={setSelected}
           emptySelection={selected.length === 0}
           className='w-fit'

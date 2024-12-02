@@ -10,8 +10,8 @@ export const PARAMETER = {
   smallTreeNodes: 50, // amount of nodes threshold for size increase for large graphs
   refreshTimeout: 100, // milliseconds delay for post-refresh actions
   minimalTimeout: 10, // milliseconds delay for fast updates
-
   zoomDuration: 500, // milliseconds animation duration
+
   ossImageWidth: 1280, // pixels - size of OSS image
   ossImageHeight: 960, // pixels - size of OSS image
   ossContextMenuWidth: 200, // pixels - width of OSS context menu
@@ -21,16 +21,16 @@ export const PARAMETER = {
   ossDistanceX: 180, // pixels - insert x-distance between node centers
   ossDistanceY: 100, // pixels - insert y-distance between node centers
 
+  graphNodeRadius: 20, // pixels - radius of graph node
+  graphNodePadding: 5, // pixels - padding of graph node
   graphHoverXLimit: 0.4, // ratio to clientWidth used to determine which side of screen popup should be
   graphHoverYLimit: 0.6, // ratio to clientHeight used to determine which side of screen popup should be
   graphPopupDelay: 500, // milliseconds delay for graph popup selections
   graphRefreshDelay: 10, // milliseconds delay for graph viewpoint reset
 
   typificationTruncate: 42, // characters - threshold for long typification - truncate
-
   ossLongLabel: 14, // characters - threshold for long labels - small font
   ossTruncateLabel: 32, // characters - threshold for long labels - truncate
-
   statSmallThreshold: 3, // characters - threshold for small labels - small font
 
   logicLabel: 'LOGIC',
@@ -121,9 +121,7 @@ export const storage = {
   libraryPagination: 'library.pagination',
 
   rsgraphFilter: 'rsgraph.filter2',
-  rsgraphLayout: 'rsgraph.layout',
   rsgraphColoring: 'rsgraph.coloring',
-  rsgraphSizing: 'rsgraph.sizing',
   rsgraphFoldHidden: 'rsgraph.fold_hidden',
 
   ossShowGrid: 'oss.show_grid',

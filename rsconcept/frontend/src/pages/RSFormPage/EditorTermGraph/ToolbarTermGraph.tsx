@@ -8,7 +8,6 @@ import {
   IconFitImage,
   IconImage,
   IconNewItem,
-  IconRotate3D,
   IconText,
   IconTextOff,
   IconTypeGraph
@@ -22,9 +21,6 @@ import { PARAMETER } from '@/utils/constants';
 import { useRSEdit } from '../RSEditContext';
 
 interface ToolbarTermGraphProps {
-  is3D: boolean;
-
-  orbit: boolean;
   noText: boolean;
   foldDerived: boolean;
 
@@ -36,17 +32,13 @@ interface ToolbarTermGraphProps {
 
   toggleFoldDerived: () => void;
   toggleNoText: () => void;
-  toggleOrbit: () => void;
 }
 
 function ToolbarTermGraph({
-  is3D,
   noText,
   foldDerived,
   toggleNoText,
   toggleFoldDerived,
-  orbit,
-  toggleOrbit,
   showParamsDialog,
   onCreate,
   onDelete,
@@ -94,12 +86,6 @@ function ToolbarTermGraph({
           )
         }
         onClick={toggleFoldDerived}
-      />
-      <MiniButton
-        icon={<IconRotate3D size='1.25rem' className={orbit ? 'icon-green' : 'icon-primary'} />}
-        title='Анимация вращения'
-        disabled={!is3D}
-        onClick={toggleOrbit}
       />
       {controller.isContentEditable ? (
         <MiniButton

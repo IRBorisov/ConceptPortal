@@ -58,11 +58,6 @@ export interface MGraphEdgeInternal extends EdgeProps {
 export type GraphColoring = 'none' | 'status' | 'type' | 'schemas';
 
 /**
- * Represents graph node sizing scheme.
- */
-export type GraphSizing = 'none' | 'complex' | 'derived';
-
-/**
  * Represents manuals topic.
  */
 export enum HelpTopic {
