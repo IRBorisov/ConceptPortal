@@ -145,7 +145,7 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
           data: {
             fill: focusCst === cst ? colors.bgPurple : colorBgGraphNode(cst, coloring, colors),
             label: cst.alias,
-            subLabel: !filterParams.noText ? cst.term_resolved : ''
+            description: !filterParams.noText ? cst.term_resolved : ''
           }
         });
       }

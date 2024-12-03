@@ -6,12 +6,18 @@ import { Handle, Position } from 'reactflow';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { truncateToLastWord } from '@/utils/utils';
 
-const MAX_LABEL_LENGTH = 65;
+const MAX_DESCRIPTION_LENGTH = 65;
+const DESCRIPTION_THRESHOLD = 15;
+const LABEL_THRESHOLD = 3;
+
+const FONT_SIZE_MAX = 14;
+const FONT_SIZE_MED = 12;
+const FONT_SIZE_MIN = 10;
 
 export interface TGNodeData {
   fill: string;
   label: string;
-  subLabel: string;
+  description: string;
 }
 
 /**
@@ -28,19 +34,25 @@ interface TGNodeInternal {
 
 function TGNode(node: TGNodeInternal) {
   const { colors } = useConceptOptions();
-  const subLabel = useMemo(() => truncateToLastWord(node.data.subLabel, MAX_LABEL_LENGTH), [node.data.subLabel]);
+  const description = useMemo(
+    () => truncateToLastWord(node.data.description, MAX_DESCRIPTION_LENGTH),
+    [node.data.description]
+  );
 
   return (
     <>
       <Handle type='target' position={Position.Top} style={{ opacity: 0 }} />
       <div
         className='w-full h-full cursor-default flex items-center justify-center rounded-full'
-        style={{ backgroundColor: !node.selected ? node.data.fill : colors.bgActiveSelection }}
+        style={{
+          backgroundColor: !node.selected ? node.data.fill : colors.bgActiveSelection,
+          fontSize: node.data.label.length > LABEL_THRESHOLD ? FONT_SIZE_MED : FONT_SIZE_MAX
+        }}
       >
-        <div className='absolute top-[9px] left-0 text-center w-full'>{node.data.label}</div>
         <div
           style={{
-            WebkitTextStrokeWidth: 2,
+            fontWeight: 600,
+            WebkitTextStrokeWidth: '0.6px',
             WebkitTextStrokeColor: colors.bgDefault
           }}
         >
@@ -48,22 +60,23 @@ function TGNode(node: TGNodeInternal) {
         </div>
       </div>
       <Handle type='source' position={Position.Bottom} style={{ opacity: 0 }} />
-      {subLabel ? (
+      {description ? (
         <div
           className='mt-1 w-[150px] px-1 text-center translate-x-[calc(-50%+20px)]'
           style={{
-            fontSize: subLabel.length > 15 ? 10 : 12
+            fontSize: description.length > DESCRIPTION_THRESHOLD ? FONT_SIZE_MIN : FONT_SIZE_MED
           }}
         >
+          <div className='absolute top-0 px-1 left-0 text-center w-full'>{description}</div>
           <div
+            aria-hidden='true'
             style={{
-              WebkitTextStrokeWidth: 3,
+              WebkitTextStrokeWidth: '3px',
               WebkitTextStrokeColor: colors.bgDefault
             }}
           >
-            {subLabel}
+            {description}
           </div>
-          <div className='absolute top-0 px-1 left-0 text-center w-full'>{subLabel}</div>
         </div>
       ) : null}
     </>

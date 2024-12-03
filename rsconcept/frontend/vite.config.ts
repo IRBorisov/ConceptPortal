@@ -28,7 +28,7 @@ export default ({ mode }: { mode: string }) => {
       sourcemap: false,
       rollupOptions: {
         output: {
-          manualChunks: { ...renderChunks(dependencies) }
+          manualChunks: { ...renderChunks(dependencies), manuals: ['./src/pages/ManualsPage'] }
         }
       }
     },

@@ -8,6 +8,11 @@ import { ISyntaxTreeNode } from '@/models/rslang';
 import { colorBgSyntaxTree } from '@/styling/color';
 import { labelSyntaxTree } from '@/utils/labels';
 
+const FONT_SIZE_MAX = 14;
+const FONT_SIZE_MED = 12;
+
+const LABEL_THRESHOLD = 3;
+
 /**
  * Represents graph AST node internal data.
  */
@@ -34,10 +39,11 @@ function ASTNode(node: ASTNodeInternal) {
       <Handle type='source' position={Position.Bottom} style={{ opacity: 0 }} />
       <div
         className='font-math mt-1 w-fit text-center translate-x-[calc(-50%+20px)]'
-        style={{ fontSize: label.length > 3 ? 12 : 14 }}
+        style={{ fontSize: label.length > LABEL_THRESHOLD ? FONT_SIZE_MED : FONT_SIZE_MAX }}
       >
         <div className='absolute top-0 left-0 text-center w-full'>{label}</div>
         <div
+          aria-hidden='true'
           style={{
             WebkitTextStrokeWidth: 2,
             WebkitTextStrokeColor: colors.bgDefault

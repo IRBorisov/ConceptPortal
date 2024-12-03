@@ -9,6 +9,9 @@ import { TMGraphEdgeTypes } from './graph/MGraphEdgeTypes';
 import { applyLayout } from './graph/MGraphLayout';
 import { TMGraphNodeTypes } from './graph/MGraphNodeTypes';
 
+const ZOOM_MAX = 2;
+const ZOOM_MIN = 0.5;
+
 interface MGraphFlowProps {
   data: TMGraph;
 }
@@ -63,8 +66,8 @@ function MGraphFlow({ data }: MGraphFlowProps) {
       nodeTypes={TMGraphNodeTypes}
       edgeTypes={TMGraphEdgeTypes}
       fitView
-      maxZoom={2}
-      minZoom={0.5}
+      maxZoom={ZOOM_MAX}
+      minZoom={ZOOM_MIN}
       nodesConnectable={false}
     />
   );

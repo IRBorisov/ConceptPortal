@@ -36,7 +36,12 @@ function MGraphNode(node: MGraphNodeInternal) {
         className='w-full h-full cursor-default flex items-center justify-center rounded-full'
         data-tooltip-id={globals.tooltip}
         data-tooltip-html={tooltipText}
-        style={{ backgroundColor: colorBgTMGraphNode(node.data, colors) }}
+        style={{
+          backgroundColor: colorBgTMGraphNode(node.data, colors),
+          fontWeight: 600,
+          WebkitTextStrokeWidth: '0.6px',
+          WebkitTextStrokeColor: colors.bgDefault
+        }}
       >
         {node.data.rank === 0 ? node.data.text : node.data.annotations.length > 0 ? node.data.annotations.length : ''}
       </div>
