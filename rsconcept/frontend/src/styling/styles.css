@@ -206,7 +206,7 @@
   }
 
   .cc-tab-tools {
-    @apply top-[1.9rem] pt-1 right-1/2 translate-x-1/2;
+    @apply top-[1.7rem] pt-[0.4rem] pb-1 right-1/2 translate-x-1/2;
   }
 
   .cc-label {
