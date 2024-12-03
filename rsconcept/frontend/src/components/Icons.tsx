@@ -22,7 +22,7 @@ export { BiShareAlt       as IconShare }          from 'react-icons/bi';
 export { LuFilter         as IconFilter }         from 'react-icons/lu';
 export { LuFilterX        as IconFilterReset }    from 'react-icons/lu';
 export {BiDownArrowCircle as IconOpenList }       from 'react-icons/bi';
-export { LuAlertTriangle  as IconAlert }          from 'react-icons/lu';
+export { LuTriangleAlert  as IconAlert }          from 'react-icons/lu';
 
 // ===== UI elements =======
 export { BiX              as IconClose }          from 'react-icons/bi';
@@ -36,7 +36,7 @@ export { LuFolderTree     as IconFolderTree }     from 'react-icons/lu';
 export { LuFolder         as IconFolder }         from 'react-icons/lu';
 export { LuFolderSearch   as IconFolderSearch }   from 'react-icons/lu';
 export { LuFolders        as IconSubfolders }     from 'react-icons/lu';
-export { LuFolderEdit     as IconFolderEdit }     from 'react-icons/lu';
+export { LuFolderPen      as IconFolderEdit }     from 'react-icons/lu';
 export { LuFolderOpen     as IconFolderOpened }   from 'react-icons/lu';
 export { LuFolderClosed   as IconFolderClosed }   from 'react-icons/lu';
 export { LuFolderDot      as IconFolderEmpty }    from 'react-icons/lu';
@@ -55,7 +55,7 @@ export { TbCalendarRepeat as IconDateUpdate }     from 'react-icons/tb';
 export { PiFileCsv        as IconCSV }            from 'react-icons/pi';
 
 // ==== User status =======
-export { LuUserCircle2    as IconUser }           from 'react-icons/lu';
+export { LuCircleUserRound as IconUser }          from 'react-icons/lu';
 export { FaCircleUser     as IconUser2 }          from 'react-icons/fa6';
 export { TbUserEdit       as IconEditor }         from 'react-icons/tb';
 export { TbUserSearch     as IconUserSearch }     from 'react-icons/tb';
@@ -131,7 +131,7 @@ export { FaSortAmountDownAlt as IconSortList }    from 'react-icons/fa';
 export { LuNetwork        as IconGenerateStructure } from 'react-icons/lu';
 export { LuCombine        as IconSynthesis }      from 'react-icons/lu';
 export { LuBookCopy       as IconInlineSynthesis } from 'react-icons/lu';
-export { LuWand2          as IconGenerateNames }  from 'react-icons/lu';
+export { LuWandSparkles   as IconGenerateNames }  from 'react-icons/lu';
 export { GrConnect        as IconConnect }        from 'react-icons/gr';
 export { BiPlayCircle     as IconExecute }        from 'react-icons/bi';
 
