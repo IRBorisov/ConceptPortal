@@ -17,15 +17,14 @@ For more specific TODOs see comments in code
 
 - Static analyzer for RSForm as a whole: check term duplication and empty conventions
 - OSS clone and versioning
+- Clone with saving info connection
+- Semantic diff for library items
 
 - Focus on codemirror editor when label is clicked (need React 19 ref for clean code solution)
 - Draggable rows in constituents table
 
-- M-graph visualization for typification and RSForm in general
-
-- replace reagraph with react-flow in TermGraph and FormulaGraph
-- Search functionality for Help Manuals
-- Export PDF (Items list, Graph) - use google search integration filtered by site?
+- Search functionality for Help Manuals - use google search integration filtered by site?
+- Export PDF (Items list, Graph)
 - ARIA (accessibility considerations) - for now machine reading not supported
 - Internationalization - at least english version. Consider react.intl
 - Sitemap for better SEO and crawler optimization
@@ -33,7 +32,6 @@ For more specific TODOs see comments in code
 [Functionality - CANCELED]
 - User notifications on edit - consider spam prevention and change aggregation
 - Content based search in Library
-- Home page (user specific)
 - Private projects. Consider cooperative editing
 - OSS: synthesis table: auto substitution for diamond synthesis
 
@@ -42,10 +40,8 @@ For more specific TODOs see comments in code
 - duplicate syntax parsing and type info calculations to client. Consider moving backend to Nodejs or embedding c++ lib
 - add debounce to some search fields. Consider pagination and dynamic loading
 - move autopep8 and isort settings from vscode settings to pyproject.toml
-- Test UI for #enable-force-dark Chrome setting
 
 - Testing: frontend react components, testplane / playwright?
-- Documentation: frontend base components at least
 
 
 [Deployment]
