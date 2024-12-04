@@ -88,7 +88,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
         onReset={() => setToggleReset(prev => !prev)}
         onToggleList={() => setShowList(prev => !prev)}
       />
-      <div className='pt-[1.9rem] overflow-y-auto min-h-[20rem]' style={{ maxHeight: mainHeight }}>
+      <div className='pt-[1.9rem] overflow-y-auto overflow-x-clip min-h-[20rem]' style={{ maxHeight: mainHeight }}>
         <div
           tabIndex={-1}
           className={clsx(

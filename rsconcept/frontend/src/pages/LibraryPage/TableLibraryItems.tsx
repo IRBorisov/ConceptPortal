@@ -161,7 +161,7 @@ function TableLibraryItems({ items, resetQuery, folderMode, toggleFolderMode }: 
       columns={columns}
       data={items}
       headPosition='0'
-      className={clsx('text-xs sm:text-sm cc-scroll-y h-fit', { 'border-l border-b': folderMode })}
+      className={clsx('text-xs sm:text-sm cc-scroll-y h-fit border-b', { 'border-l': folderMode })}
       style={{ maxHeight: tableHeight }}
       noDataComponent={
         <FlexColumn className='dense p-3 items-center min-h-[6rem]'>
