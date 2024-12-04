@@ -15,7 +15,7 @@ function LintBackend() {
   Set-Location $backend
   $env:DJANGO_SETTINGS_MODULE = "project.settings"
   & $pylint project apps
-  & $mypy project apps
+  & $mypy project apps --show-traceback
 }
 
 function LintFrontend() {

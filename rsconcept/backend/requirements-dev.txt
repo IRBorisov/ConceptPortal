@@ -15,6 +15,7 @@ gunicorn
 
 djangorestframework-stubs[compatible-mypy]
 django-extensions
+django-stubs
 mypy
 pylint
 coverage
