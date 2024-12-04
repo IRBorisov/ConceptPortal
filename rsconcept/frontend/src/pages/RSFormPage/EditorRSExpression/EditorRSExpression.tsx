@@ -96,7 +96,7 @@ function EditorRSExpression({
           args: parse.args
         })
       );
-      if (callback) callback(parse);
+      callback?.(parse);
     });
   }
 

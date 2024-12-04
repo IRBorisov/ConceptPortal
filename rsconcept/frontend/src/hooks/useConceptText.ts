@@ -19,7 +19,7 @@ function useConceptText() {
       setLoading: setProcessing,
       onError: setError,
       onSuccess: data => {
-        if (onSuccess) onSuccess(data);
+        onSuccess?.(data);
       }
     });
   }, []);
@@ -32,7 +32,7 @@ function useConceptText() {
       setLoading: setProcessing,
       onError: setError,
       onSuccess: data => {
-        if (onSuccess) onSuccess(data);
+        onSuccess?.(data);
       }
     });
   }, []);
@@ -45,7 +45,7 @@ function useConceptText() {
       setLoading: setProcessing,
       onError: setError,
       onSuccess: data => {
-        if (onSuccess) onSuccess(data);
+        onSuccess?.(data);
       }
     });
   }, []);

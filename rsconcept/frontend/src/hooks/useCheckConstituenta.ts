@@ -29,7 +29,7 @@ function useCheckConstituenta({ schema }: { schema?: IRSForm }) {
       onError: setError,
       onSuccess: parse => {
         setParseData(parse);
-        if (onSuccess) onSuccess(parse);
+        onSuccess?.(parse);
       }
     });
   }

@@ -64,7 +64,7 @@ export const UserProfileState = ({ children }: React.PropsWithChildren) => {
             libraryUser.first_name = newData.first_name;
             libraryUser.last_name = newData.last_name;
           }
-          if (callback) callback(newData);
+          callback?.(newData);
         }
       });
     },

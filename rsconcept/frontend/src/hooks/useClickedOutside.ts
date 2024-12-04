@@ -13,7 +13,7 @@ function useClickedOutside(enabled: boolean, ref: React.RefObject<HTMLElement>, 
     function handleClickOutside(event: MouseEvent) {
       assertIsNode(event.target);
       if (ref.current && !ref.current.contains(event.target)) {
-        if (callback) callback();
+        callback?.();
       }
     }
     document.addEventListener('mouseup', handleClickOutside);

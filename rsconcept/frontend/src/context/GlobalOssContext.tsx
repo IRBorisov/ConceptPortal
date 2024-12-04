@@ -48,7 +48,7 @@ export const GlobalOssState = ({ children }: React.PropsWithChildren) => {
     (callback?: () => void) => {
       reloadInternal(undefined, () => {
         setIsValid(true);
-        if (callback) callback();
+        callback?.();
       });
     },
     [reloadInternal]

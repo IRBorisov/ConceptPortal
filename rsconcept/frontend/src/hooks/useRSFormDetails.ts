@@ -38,7 +38,7 @@ function useRSFormDetails({ target, version }: { target?: string; version?: stri
         },
         onSuccess: schema => {
           setSchema(schema);
-          if (callback) callback();
+          callback?.();
         }
       });
     },

@@ -84,14 +84,14 @@ function Modal({
 
   const handleCancel = () => {
     hideWindow();
-    if (onCancel) onCancel();
+    onCancel?.();
   };
 
   const handleSubmit = () => {
     if (beforeSubmit && !beforeSubmit()) {
       return;
     }
-    if (onSubmit) onSubmit();
+    onSubmit?.();
     hideWindow();
   };
 

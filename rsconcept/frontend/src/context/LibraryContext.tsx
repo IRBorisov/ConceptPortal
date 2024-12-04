@@ -157,7 +157,7 @@ export const LibraryState = ({ children }: React.PropsWithChildren) => {
           onError: setLoadingError,
           onSuccess: newData => {
             setItems(newData);
-            if (callback) callback();
+            callback?.();
           }
         });
       } else {
@@ -167,7 +167,7 @@ export const LibraryState = ({ children }: React.PropsWithChildren) => {
           onError: setLoadingError,
           onSuccess: newData => {
             setItems(newData);
-            if (callback) callback();
+            callback?.();
           }
         });
       }
@@ -217,7 +217,7 @@ export const LibraryState = ({ children }: React.PropsWithChildren) => {
     (data: ILibraryCreateData, callback?: DataCallback<ILibraryItem>) => {
       const onSuccess = (newSchema: ILibraryItem) =>
         reloadItems(() => {
-          if (callback) callback(newSchema);
+          callback?.(newSchema);
         });
       setProcessingError(undefined);
       if (data.file) {
@@ -250,7 +250,7 @@ export const LibraryState = ({ children }: React.PropsWithChildren) => {
         onError: setProcessingError,
         onSuccess: () =>
           reloadItems(() => {
-            if (callback) callback();
+            callback?.();
           })
       });
     },
@@ -270,7 +270,7 @@ export const LibraryState = ({ children }: React.PropsWithChildren) => {
         onError: setProcessingError,
         onSuccess: newSchema =>
           reloadItems(() => {
-            if (callback) callback(newSchema);
+            callback?.(newSchema);
           })
       });
     },
@@ -287,7 +287,7 @@ export const LibraryState = ({ children }: React.PropsWithChildren) => {
         onError: setProcessingError,
         onSuccess: () =>
           reloadItems(() => {
-            if (callback) callback();
+            callback?.();
           })
       });
     },

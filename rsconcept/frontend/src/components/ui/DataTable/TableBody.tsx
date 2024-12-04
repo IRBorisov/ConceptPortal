@@ -32,9 +32,7 @@ function TableBody<TData>({
   onRowDoubleClicked
 }: TableBodyProps<TData>) {
   function handleRowClicked(target: Row<TData>, event: CProps.EventMouse) {
-    if (onRowClicked) {
-      onRowClicked(target.original, event);
-    }
+    onRowClicked?.(target.original, event);
     if (enableRowSelection && target.getCanSelect()) {
       if (event.shiftKey && !!lastSelected && lastSelected !== target.id) {
         const { rows, rowsById } = table.getRowModel();

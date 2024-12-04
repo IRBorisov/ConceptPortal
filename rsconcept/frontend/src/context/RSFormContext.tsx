@@ -147,7 +147,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
           setSchema(Object.assign(schema, newData));
           library.localUpdateItem(newData);
           oss.invalidateItem(newData.id);
-          if (callback) callback(newData);
+          callback?.(newData);
         }
       });
     },
@@ -168,7 +168,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         onSuccess: newData => {
           setSchema(newData);
           library.localUpdateItem(newData);
-          if (callback) callback();
+          callback?.();
         }
       });
     },
@@ -191,7 +191,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         onSuccess: () => {
           schema.owner = newOwner;
           library.localUpdateItem(schema);
-          if (callback) callback();
+          callback?.();
         }
       });
     },
@@ -214,7 +214,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         onSuccess: () => {
           schema.access_policy = newPolicy;
           library.localUpdateItem(schema);
-          if (callback) callback();
+          callback?.();
         }
       });
     },
@@ -258,7 +258,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         onError: setProcessingError,
         onSuccess: () => {
           schema.editors = newEditors;
-          if (callback) callback();
+          callback?.();
         }
       });
     },
@@ -279,7 +279,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
           setSchema(newData);
           library.localUpdateTimestamp(newData.id);
           oss.invalidateItem(newData.id);
-          if (callback) callback();
+          callback?.();
         }
       });
     },
@@ -299,7 +299,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         onSuccess: newData => {
           setSchema(newData);
           library.localUpdateTimestamp(newData.id);
-          if (callback) callback();
+          callback?.();
         }
       });
     },
@@ -318,7 +318,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
           setSchema(newData.schema);
           library.localUpdateTimestamp(newData.schema.id);
           oss.invalidateItem(newData.schema.id);
-          if (callback) callback(newData.cst_list);
+          callback?.(newData.cst_list);
         }
       });
     },
@@ -350,7 +350,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
           setSchema(newData.schema);
           library.localUpdateTimestamp(newData.schema.id);
           oss.invalidateItem(newData.schema.id);
-          if (callback) callback(newData.new_cst);
+          callback?.(newData.new_cst);
         }
       });
     },
@@ -369,7 +369,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
           setSchema(newData);
           library.localUpdateTimestamp(newData.id);
           oss.invalidateItem(newData.id);
-          if (callback) callback();
+          callback?.();
         }
       });
     },
@@ -388,7 +388,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
           reload(setProcessing, () => {
             library.localUpdateTimestamp(Number(itemID));
             oss.invalidateItem(Number(itemID));
-            if (callback) callback(newData);
+            callback?.(newData);
           })
       });
     },
@@ -407,7 +407,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
           setSchema(newData.schema);
           library.localUpdateTimestamp(newData.schema.id);
           oss.invalidateItem(newData.schema.id);
-          if (callback) callback(newData.new_cst);
+          callback?.(newData.new_cst);
         }
       });
     },
@@ -426,7 +426,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
           setSchema(newData);
           library.localUpdateTimestamp(newData.id);
           oss.invalidateItem(newData.id);
-          if (callback) callback();
+          callback?.();
         }
       });
     },
@@ -444,7 +444,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         onSuccess: newData => {
           setSchema(newData);
           library.localUpdateTimestamp(Number(itemID));
-          if (callback) callback();
+          callback?.();
         }
       });
     },
@@ -462,7 +462,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         onSuccess: newData => {
           setSchema(newData.schema);
           library.localUpdateTimestamp(Number(itemID));
-          if (callback) callback(newData.version);
+          callback?.(newData.version);
         }
       });
     },
@@ -499,7 +499,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
             }
           });
           setSchema(schema);
-          if (callback) callback();
+          callback?.();
         }
       });
     },
@@ -516,7 +516,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         onSuccess: () => {
           schema!.versions = schema!.versions.filter(prev => prev.id !== target);
           setSchema(schema);
-          if (callback) callback();
+          callback?.();
         }
       });
     },
@@ -533,7 +533,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         onSuccess: newData => {
           setSchema(newData);
           library.localUpdateItem(newData);
-          if (callback) callback();
+          callback?.();
         }
       });
     },
@@ -552,7 +552,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
           setSchema(newData);
           library.localUpdateTimestamp(newData.id);
           oss.invalidateItem(newData.id);
-          if (callback) callback(newData);
+          callback?.(newData);
         }
       });
     },

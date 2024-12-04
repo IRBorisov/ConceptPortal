@@ -69,7 +69,7 @@ export const AuthState = ({ children }: React.PropsWithChildren) => {
           } else {
             setUser(undefined);
           }
-          if (callback) callback();
+          callback?.();
         }
       });
     },
@@ -85,7 +85,7 @@ export const AuthState = ({ children }: React.PropsWithChildren) => {
       onError: setError,
       onSuccess: newData =>
         reload(() => {
-          if (callback) callback(newData);
+          callback?.(newData);
         })
     });
   }
@@ -96,7 +96,7 @@ export const AuthState = ({ children }: React.PropsWithChildren) => {
       showError: true,
       onSuccess: newData =>
         reload(() => {
-          if (callback) callback(newData);
+          callback?.(newData);
         })
     });
   }
@@ -111,7 +111,7 @@ export const AuthState = ({ children }: React.PropsWithChildren) => {
       onSuccess: newData =>
         reload(() => {
           users.push(newData as IUserInfo);
-          if (callback) callback(newData);
+          callback?.(newData);
         })
     });
   }
@@ -126,7 +126,7 @@ export const AuthState = ({ children }: React.PropsWithChildren) => {
         onError: setError,
         onSuccess: () =>
           reload(() => {
-            if (callback) callback();
+            callback?.();
           })
       });
     },
@@ -143,7 +143,7 @@ export const AuthState = ({ children }: React.PropsWithChildren) => {
         onError: setError,
         onSuccess: () =>
           reload(() => {
-            if (callback) callback();
+            callback?.();
           })
       });
     },
@@ -160,7 +160,7 @@ export const AuthState = ({ children }: React.PropsWithChildren) => {
         onError: setError,
         onSuccess: () =>
           reload(() => {
-            if (callback) callback();
+            callback?.();
           })
       });
     },
@@ -177,7 +177,7 @@ export const AuthState = ({ children }: React.PropsWithChildren) => {
         onError: setError,
         onSuccess: () =>
           reload(() => {
-            if (callback) callback();
+            callback?.();
           })
       });
     },

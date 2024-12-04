@@ -69,7 +69,7 @@ export const UsersState = ({ children }: React.PropsWithChildren) => {
             }
           });
           setUsers(newData);
-          if (callback) callback();
+          callback?.();
         }
       });
     },

@@ -218,7 +218,7 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
           }
         });
         toast.success(information.changesSaved);
-        if (callback) callback();
+        callback?.();
       });
     },
     [model]

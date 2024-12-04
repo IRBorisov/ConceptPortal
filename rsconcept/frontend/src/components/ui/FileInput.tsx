@@ -36,9 +36,7 @@ function FileInput({ id, label, acceptType, title, className, style, onChange, .
     } else {
       setFileName('');
     }
-    if (onChange) {
-      onChange(event);
-    }
+    onChange?.(event);
   };
 
   return (

@@ -42,7 +42,7 @@ function useOssDetails({ target, items }: { target?: string; items: ILibraryItem
         },
         onSuccess: schema => {
           setSchema(schema);
-          if (callback) callback();
+          callback?.();
         }
       });
     },

@@ -114,7 +114,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
           const fullData: IOperationSchemaData = Object.assign(model, newData);
           oss.setData(fullData);
           library.localUpdateItem(newData);
-          if (callback) callback(newData);
+          callback?.(newData);
         }
       });
     },
@@ -137,7 +137,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         onSuccess: () => {
           model.owner = newOwner;
           library.reloadItems(() => {
-            if (callback) callback();
+            callback?.();
           });
         }
       });
@@ -161,7 +161,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         onSuccess: () => {
           model.access_policy = newPolicy;
           library.reloadItems(() => {
-            if (callback) callback();
+            callback?.();
           });
         }
       });
@@ -185,7 +185,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         onSuccess: () => {
           model.location = newLocation;
           library.reloadItems(() => {
-            if (callback) callback();
+            callback?.();
           });
         }
       });
@@ -209,7 +209,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         onSuccess: () => {
           model.editors = newEditors;
           library.reloadItems(() => {
-            if (callback) callback();
+            callback?.();
           });
         }
       });
@@ -227,7 +227,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         onError: setProcessingError,
         onSuccess: () => {
           library.localUpdateTimestamp(Number(itemID));
-          if (callback) callback();
+          callback?.();
         }
       });
     },
@@ -245,7 +245,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         onSuccess: newData => {
           oss.setData(newData.oss);
           library.localUpdateTimestamp(newData.oss.id);
-          if (callback) callback(newData.new_operation);
+          callback?.(newData.new_operation);
         }
       });
     },
@@ -263,7 +263,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         onSuccess: newData => {
           oss.setData(newData);
           library.reloadItems(() => {
-            if (callback) callback();
+            callback?.();
           });
         }
       });
@@ -282,7 +282,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         onSuccess: newData => {
           oss.setData(newData.oss);
           library.reloadItems(() => {
-            if (callback) callback(newData.new_schema);
+            callback?.(newData.new_schema);
           });
         }
       });
@@ -304,7 +304,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         onSuccess: newData => {
           oss.setData(newData);
           library.reloadItems(() => {
-            if (callback) callback();
+            callback?.();
           });
         }
       });
@@ -326,7 +326,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         onSuccess: newData => {
           oss.setData(newData);
           library.reloadItems(() => {
-            if (callback) callback();
+            callback?.();
           });
         }
       });
@@ -348,7 +348,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         onSuccess: newData => {
           oss.setData(newData);
           library.reloadItems(() => {
-            if (callback) callback();
+            callback?.();
           });
         }
       });
@@ -370,7 +370,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         onSuccess: () => {
           oss.reload();
           library.reloadItems(() => {
-            if (callback) callback();
+            callback?.();
           });
         }
       });

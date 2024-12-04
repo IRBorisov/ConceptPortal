@@ -326,7 +326,7 @@ export const RSEditState = ({
       model.cstDelete(data, () => {
         toast.success(information.constituentsDestroyed(deletedNames));
         setSelected(nextActive ? [nextActive] : []);
-        if (onDeleteCst) onDeleteCst(nextActive);
+        onDeleteCst?.(nextActive);
       });
     },
     [model, activeCst, onDeleteCst, setSelected]
