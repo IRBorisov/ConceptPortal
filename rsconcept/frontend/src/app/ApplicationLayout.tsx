@@ -1,8 +1,10 @@
+import { Suspense } from 'react';
 import { Outlet } from 'react-router';
 
 import ConceptToaster from '@/app/ConceptToaster';
 import Footer from '@/app/Footer';
 import Navigation from '@/app/Navigation';
+import Loader from '@/components/ui/Loader';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { NavigationState } from '@/context/NavigationContext';
 import { globals } from '@/utils/constants';
@@ -29,7 +31,9 @@ function ApplicationLayout() {
           }}
         >
           <main className='cc-scroll-y' style={{ overflowY: showScroll ? 'scroll' : 'auto', minHeight: mainHeight }}>
-            <Outlet />
+            <Suspense fallback={<Loader />}>
+              <Outlet />
+            </Suspense>
           </main>
           <Footer />
         </div>

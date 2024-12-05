@@ -1,11 +1,15 @@
+import React, { Suspense } from 'react';
+
 import TextURL from '@/components/ui/TextURL';
 import Tooltip, { PlacesType } from '@/components/ui/Tooltip';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { HelpTopic } from '@/models/miscellaneous';
-import TopicPage from '@/pages/ManualsPage/TopicPage';
 
 import { IconHelp } from '../Icons';
 import { CProps } from '../props';
+import Loader from '../ui/Loader';
+
+const TopicPage = React.lazy(() => import('@/pages/ManualsPage/TopicPage'));
 
 interface BadgeHelpProps extends CProps.Styling {
   /** Topic to display in a tooltip. */
@@ -34,12 +38,14 @@ function BadgeHelp({ topic, padding = 'p-1', ...restProps }: BadgeHelpProps) {
     <div tabIndex={-1} id={`help-${topic}`} className={padding}>
       <IconHelp size='1.25rem' className='icon-primary' />
       <Tooltip clickable anchorSelect={`#help-${topic}`} layer='z-modalTooltip' {...restProps}>
-        <div className='relative' onClick={event => event.stopPropagation()}>
-          <div className='absolute right-0 text-sm top-[0.4rem] clr-input'>
-            <TextURL text='Справка...' href={`/manuals?topic=${topic}`} />
+        <Suspense fallback={<Loader />}>
+          <div className='relative' onClick={event => event.stopPropagation()}>
+            <div className='absolute right-0 text-sm top-[0.4rem] clr-input'>
+              <TextURL text='Справка...' href={`/manuals?topic=${topic}`} />
+            </div>
           </div>
-        </div>
-        <TopicPage topic={topic} />
+          <TopicPage topic={topic} />
+        </Suspense>
       </Tooltip>
     </div>
   );

@@ -1,22 +1,24 @@
+import React from 'react';
 import { createBrowserRouter } from 'react-router';
 
 import CreateItemPage from '@/pages/CreateItemPage';
-import DatabaseSchemaPage from '@/pages/DatabaseSchemaPage';
 import HomePage from '@/pages/HomePage';
-import IconsPage from '@/pages/IconsPage';
 import LibraryPage from '@/pages/LibraryPage';
 import LoginPage from '@/pages/LoginPage';
-import ManualsPage from '@/pages/ManualsPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import OssPage from '@/pages/OssPage';
-import PasswordChangePage from '@/pages/PasswordChangePage';
-import RegisterPage from '@/pages/RegisterPage';
-import RestorePasswordPage from '@/pages/RestorePasswordPage';
 import RSFormPage from '@/pages/RSFormPage';
-import UserProfilePage from '@/pages/UserProfilePage';
 
 import ApplicationLayout from './ApplicationLayout';
 import { routes } from './urls';
+
+const UserProfilePage = React.lazy(() => import('@/pages/UserProfilePage'));
+const RestorePasswordPage = React.lazy(() => import('@/pages/RestorePasswordPage'));
+const PasswordChangePage = React.lazy(() => import('@/pages/PasswordChangePage'));
+const RegisterPage = React.lazy(() => import('@/pages/RegisterPage'));
+const ManualsPage = React.lazy(() => import('@/pages/ManualsPage'));
+const IconsPage = React.lazy(() => import('@/pages/IconsPage'));
+const DatabaseSchemaPage = React.lazy(() => import('@/pages/DatabaseSchemaPage'));
 
 export const Router = createBrowserRouter([
   {
