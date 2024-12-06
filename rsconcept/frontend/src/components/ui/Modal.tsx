@@ -2,7 +2,6 @@
 
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
-import { useRef } from 'react';
 
 import useEscapeKey from '@/hooks/useEscapeKey';
 import { HelpTopic } from '@/models/miscellaneous';
@@ -79,7 +78,6 @@ function Modal({
   hideHelpWhen,
   ...restProps
 }: React.PropsWithChildren<ModalProps>) {
-  const ref = useRef(null);
   useEscapeKey(hideWindow);
 
   const handleCancel = () => {
@@ -103,7 +101,6 @@ function Modal({
         onClick={hideWindow}
       />
       <motion.div
-        ref={ref}
         className={clsx(
           'z-modal',
           'absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2',
