@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { urls } from '@/app/urls';
@@ -107,14 +107,14 @@ function FormCreateItem() {
     setBody(newValue.length > 3 ? newValue.substring(3) : '');
   }, []);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!options.location) {
       return;
     }
     handleSelectLocation(options.location);
   }, [options.location, handleSelectLocation]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (itemType !== LibraryItemType.RSFORM) {
       setFile(undefined);
       setFileName('');

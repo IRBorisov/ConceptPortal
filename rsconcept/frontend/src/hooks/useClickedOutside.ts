@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 import { assertIsNode } from '@/utils/utils';
 
-function useClickedOutside(enabled: boolean, ref: React.RefObject<HTMLElement>, callback?: () => void) {
+function useClickedOutside(enabled: boolean, ref: React.RefObject<HTMLDivElement | null>, callback?: () => void) {
   useEffect(() => {
     if (!enabled) {
       return;
@@ -12,7 +12,7 @@ function useClickedOutside(enabled: boolean, ref: React.RefObject<HTMLElement>, 
 
     function handleClickOutside(event: MouseEvent) {
       assertIsNode(event.target);
-      if (ref.current && !ref.current.contains(event.target)) {
+      if (ref?.current && !ref.current.contains(event.target)) {
         callback?.();
       }
     }

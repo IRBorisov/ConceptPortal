@@ -5,12 +5,13 @@ import { useCallback, useEffect, useState } from 'react';
 import { getOssDetails } from '@/backend/oss';
 import { type ErrorData } from '@/components/info/InfoError';
 import { useAuth } from '@/context/AuthContext';
-import { ILibraryItem } from '@/models/library';
+import { useLibrary } from '@/context/LibraryContext';
 import { IOperationSchema, IOperationSchemaData } from '@/models/oss';
 import { OssLoader } from '@/models/OssLoader';
 
-function useOssDetails({ target, items }: { target?: string; items: ILibraryItem[] }) {
+function useOssDetails({ target }: { target?: string }) {
   const { loading: userLoading } = useAuth();
+  const library = useLibrary();
   const [schema, setInner] = useState<IOperationSchema | undefined>(undefined);
   const [loading, setLoading] = useState(target != undefined);
   const [error, setError] = useState<ErrorData>(undefined);
@@ -21,11 +22,15 @@ function useOssDetails({ target, items }: { target?: string; items: ILibraryItem
         setInner(undefined);
         return;
       }
-      const newSchema = new OssLoader(data, items).produceOSS();
+      const newSchema = new OssLoader(data, library.items).produceOSS();
       setInner(newSchema);
     },
-    [items]
+    [library.items]
   );
+
+  function partialUpdate(data: Partial<IOperationSchema>) {
+    setInner(prev => (prev ? { ...prev, ...data } : prev));
+  }
 
   const reload = useCallback(
     (setCustomLoading?: typeof setLoading, callback?: () => void) => {
@@ -50,12 +55,12 @@ function useOssDetails({ target, items }: { target?: string; items: ILibraryItem
   );
 
   useEffect(() => {
-    if (!userLoading) {
+    if (!userLoading && !library.loading && library.items.length > 0) {
       reload();
     }
-  }, [reload, userLoading]);
+  }, [reload, userLoading, library.loading, library.items]);
 
-  return { schema, setSchema, reload, error, setError, loading };
+  return { schema, setSchema, partialUpdate, reload, error, setError, loading };
 }
 
 export default useOssDetails;

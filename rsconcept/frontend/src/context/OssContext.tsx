@@ -85,23 +85,22 @@ interface OssStateProps {
 
 export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateProps>) => {
   const library = useLibrary();
-  const oss = useGlobalOss();
-  const model = oss.schema;
+  const ossData = useGlobalOss();
   const { user } = useAuth();
   const [processing, setProcessing] = useState(false);
   const [processingError, setProcessingError] = useState<ErrorData>(undefined);
 
   const isOwned = useMemo(() => {
-    return user?.id === model?.owner || false;
-  }, [user, model?.owner]);
+    return user?.id === ossData.schema?.owner || false;
+  }, [user, ossData.schema?.owner]);
 
   useEffect(() => {
-    oss.setID(itemID);
-  }, [itemID, oss]);
+    ossData.setID(itemID);
+  }, [itemID, ossData]);
 
   const update = useCallback(
     (data: ILibraryUpdateData, callback?: DataCallback<ILibraryItem>) => {
-      if (!model) {
+      if (!ossData.schema) {
         return;
       }
       setProcessingError(undefined);
@@ -111,43 +110,39 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          const fullData: IOperationSchemaData = Object.assign(model, newData);
-          oss.setData(fullData);
+          const fullData: IOperationSchemaData = Object.assign(ossData.schema!, newData);
+          ossData.setData(fullData);
           library.localUpdateItem(newData);
           callback?.(newData);
         }
       });
     },
-    [itemID, model, library, oss]
+    [itemID, library, ossData]
   );
 
   const setOwner = useCallback(
     (newOwner: UserID, callback?: () => void) => {
-      if (!model) {
+      if (!ossData.schema) {
         return;
       }
       setProcessingError(undefined);
       patchSetOwner(itemID, {
-        data: {
-          user: newOwner
-        },
+        data: { user: newOwner },
         showError: true,
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: () => {
-          model.owner = newOwner;
-          library.reloadItems(() => {
-            callback?.();
-          });
+          ossData.partialUpdate({ owner: newOwner });
+          library.reloadItems(callback);
         }
       });
     },
-    [itemID, model, library]
+    [itemID, ossData, library]
   );
 
   const setAccessPolicy = useCallback(
     (newPolicy: AccessPolicy, callback?: () => void) => {
-      if (!model) {
+      if (!ossData.schema) {
         return;
       }
       setProcessingError(undefined);
@@ -159,19 +154,17 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: () => {
-          model.access_policy = newPolicy;
-          library.reloadItems(() => {
-            callback?.();
-          });
+          ossData.partialUpdate({ access_policy: newPolicy });
+          library.reloadItems(callback);
         }
       });
     },
-    [itemID, model, library]
+    [itemID, ossData, library]
   );
 
   const setLocation = useCallback(
     (newLocation: string, callback?: () => void) => {
-      if (!model) {
+      if (!ossData.schema) {
         return;
       }
       setProcessingError(undefined);
@@ -183,19 +176,17 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: () => {
-          model.location = newLocation;
-          library.reloadItems(() => {
-            callback?.();
-          });
+          ossData.partialUpdate({ location: newLocation });
+          library.reloadItems(callback);
         }
       });
     },
-    [itemID, model, library]
+    [itemID, ossData, library]
   );
 
   const setEditors = useCallback(
     (newEditors: UserID[], callback?: () => void) => {
-      if (!model) {
+      if (!ossData.schema) {
         return;
       }
       setProcessingError(undefined);
@@ -207,14 +198,12 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: () => {
-          model.editors = newEditors;
-          library.reloadItems(() => {
-            callback?.();
-          });
+          ossData.partialUpdate({ editors: newEditors });
+          library.reloadItems(callback);
         }
       });
     },
-    [itemID, model, library]
+    [itemID, ossData, library]
   );
 
   const savePositions = useCallback(
@@ -243,13 +232,13 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          oss.setData(newData.oss);
+          ossData.setData(newData.oss);
           library.localUpdateTimestamp(newData.oss.id);
           callback?.(newData.new_operation);
         }
       });
     },
-    [itemID, library, oss]
+    [itemID, library, ossData]
   );
 
   const deleteOperation = useCallback(
@@ -261,14 +250,12 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          oss.setData(newData);
-          library.reloadItems(() => {
-            callback?.();
-          });
+          ossData.setData(newData);
+          library.reloadItems(callback);
         }
       });
     },
-    [itemID, library, oss]
+    [itemID, library, ossData]
   );
 
   const createInput = useCallback(
@@ -280,19 +267,19 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          oss.setData(newData.oss);
+          ossData.setData(newData.oss);
           library.reloadItems(() => {
             callback?.(newData.new_schema);
           });
         }
       });
     },
-    [itemID, library, oss]
+    [itemID, library, ossData]
   );
 
   const setInput = useCallback(
     (data: IOperationSetInputData, callback?: () => void) => {
-      if (!model) {
+      if (!ossData.schema) {
         return;
       }
       setProcessingError(undefined);
@@ -302,19 +289,17 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          oss.setData(newData);
-          library.reloadItems(() => {
-            callback?.();
-          });
+          ossData.setData(newData);
+          library.reloadItems(callback);
         }
       });
     },
-    [itemID, model, library, oss]
+    [itemID, ossData, library]
   );
 
   const updateOperation = useCallback(
     (data: IOperationUpdateData, callback?: () => void) => {
-      if (!model) {
+      if (!ossData.schema) {
         return;
       }
       setProcessingError(undefined);
@@ -324,19 +309,17 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          oss.setData(newData);
-          library.reloadItems(() => {
-            callback?.();
-          });
+          ossData.setData(newData);
+          library.reloadItems(callback);
         }
       });
     },
-    [itemID, model, library, oss]
+    [itemID, library, ossData]
   );
 
   const executeOperation = useCallback(
     (data: ITargetOperation, callback?: () => void) => {
-      if (!model) {
+      if (!ossData.schema) {
         return;
       }
       setProcessingError(undefined);
@@ -346,19 +329,17 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          oss.setData(newData);
-          library.reloadItems(() => {
-            callback?.();
-          });
+          ossData.setData(newData);
+          library.reloadItems(callback);
         }
       });
     },
-    [itemID, model, library, oss]
+    [itemID, library, ossData]
   );
 
   const relocateConstituents = useCallback(
     (data: ICstRelocateData, callback?: () => void) => {
-      if (!model) {
+      if (!ossData.schema) {
         return;
       }
       setProcessingError(undefined);
@@ -368,23 +349,21 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: () => {
-          oss.reload();
-          library.reloadItems(() => {
-            callback?.();
-          });
+          ossData.reload();
+          library.reloadItems(callback);
         }
       });
     },
-    [model, library, oss]
+    [library, ossData]
   );
 
   return (
     <OssContext.Provider
       value={{
-        schema: model,
+        schema: ossData.schema,
         itemID,
-        loading: oss.loading,
-        loadingError: oss.loadingError,
+        loading: ossData.loading,
+        loadingError: ossData.loadingError,
         processing,
         processingError,
         isOwned,

@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import Modal from '@/components/ui/Modal';
@@ -59,6 +59,7 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
   const cache = useRSFormCache();
   const schemas = useMemo(
     () => schemasIDs.map(id => cache.getSchema(id)).filter(item => item !== undefined),
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [schemasIDs, cache.getSchema]
   );
@@ -86,12 +87,13 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
 
   const canSubmit = useMemo(() => isModified && alias !== '', [isModified, alias]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     cache.preload(schemasIDs);
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [schemasIDs]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (cache.loading || schemas.length !== schemasIDs.length) {
       return;
     }
@@ -108,10 +110,11 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
         return true;
       })
     );
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [schemasIDs, schemas, cache.loading]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (cache.loading || schemas.length !== schemasIDs.length) {
       return;
     }

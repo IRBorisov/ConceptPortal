@@ -1,6 +1,6 @@
 'use client';
 
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { IconChild } from '@/components/Icons';
 import SelectGraphFilter from '@/components/select/SelectGraphFilter';
@@ -28,7 +28,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, dense, setFilt
   const [filterText, setFilterText] = useState('');
   const [showInherited, setShowInherited] = useLocalStorage(storage.cstFilterShowInherited, true);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!schema || schema.items.length === 0) {
       setFiltered([]);
       return;

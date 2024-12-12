@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { FolderNode, FolderTree } from '@/models/FolderTree';
 import { labelFolderNode } from '@/utils/labels';
@@ -24,7 +24,7 @@ function SelectLocation({ value, folderTree, dense, prefix, onClick, className, 
   const items = useMemo(() => folderTree.getTree(), [folderTree]);
   const [folded, setFolded] = useState<FolderNode[]>(items);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setFolded(items.filter(item => item !== activeNode && !activeNode?.hasPredecessor(item)));
   }, [items, activeNode]);
 

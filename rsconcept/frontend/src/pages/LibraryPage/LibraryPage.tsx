@@ -1,7 +1,7 @@
 'use client';
 
 import fileDownload from 'js-file-download';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { IconCSV } from '@/components/Icons';
@@ -82,7 +82,7 @@ function LibraryPage() {
     [filter]
   );
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setItems(library.applyFilter(filter));
   }, [library, library.items.length, filter]);
 

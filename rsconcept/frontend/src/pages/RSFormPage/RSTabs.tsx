@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import clsx from 'clsx';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 import { toast } from 'react-toastify';
 
@@ -62,7 +62,7 @@ function RSTabs() {
     }
   }, [schema, selected]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (schema) {
       const oldTitle = document.title;
       document.title = schema.title;
@@ -72,7 +72,7 @@ function RSTabs() {
     }
   }, [schema, schema?.title]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setNoFooter(activeTab !== RSTabID.CARD);
     setIsModified(false);
     if (activeTab === RSTabID.CST_EDIT) {

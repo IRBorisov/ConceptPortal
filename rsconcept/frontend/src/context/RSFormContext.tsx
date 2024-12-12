@@ -113,28 +113,19 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
   const library = useLibrary();
   const oss = useGlobalOss();
   const { user } = useAuth();
-  const {
-    schema, // prettier: split lines
-    reload,
-    error: errorLoading,
-    setSchema,
-    loading
-  } = useRSFormDetails({
-    target: itemID,
-    version: versionID
-  });
+  const rsData = useRSFormDetails({ target: itemID, version: versionID });
   const [processing, setProcessing] = useState(false);
   const [processingError, setProcessingError] = useState<ErrorData>(undefined);
 
   const isOwned = useMemo(() => {
-    return user?.id === schema?.owner || false;
-  }, [user, schema?.owner]);
+    return user?.id === rsData.schema?.owner || false;
+  }, [user, rsData.schema?.owner]);
 
   const isArchive = useMemo(() => !!versionID, [versionID]);
 
   const update = useCallback(
     (data: ILibraryUpdateData, callback?: DataCallback<ILibraryItem>) => {
-      if (!schema) {
+      if (!rsData.schema) {
         return;
       }
       setProcessingError(undefined);
@@ -144,19 +135,19 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          setSchema(Object.assign(schema, newData));
+          rsData.setSchema(Object.assign(rsData.schema!, newData));
           library.localUpdateItem(newData);
           oss.invalidateItem(newData.id);
           callback?.(newData);
         }
       });
     },
-    [itemID, setSchema, schema, library, oss]
+    [itemID, rsData, library, oss]
   );
 
   const upload = useCallback(
     (data: IRSFormUploadData, callback?: () => void) => {
-      if (!schema) {
+      if (!rsData.schema) {
         return;
       }
       setProcessingError(undefined);
@@ -166,20 +157,17 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          setSchema(newData);
+          rsData.setSchema(newData);
           library.localUpdateItem(newData);
           callback?.();
         }
       });
     },
-    [itemID, setSchema, schema, library]
+    [itemID, rsData, library]
   );
 
   const setOwner = useCallback(
     (newOwner: UserID, callback?: () => void) => {
-      if (!schema) {
-        return;
-      }
       setProcessingError(undefined);
       patchSetOwner(itemID, {
         data: {
@@ -189,18 +177,18 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: () => {
-          schema.owner = newOwner;
-          library.localUpdateItem(schema);
+          rsData.partialUpdate({ owner: newOwner });
+          library.localUpdateItem({ id: Number(itemID), owner: newOwner });
           callback?.();
         }
       });
     },
-    [itemID, schema, library]
+    [itemID, rsData, library]
   );
 
   const setAccessPolicy = useCallback(
     (newPolicy: AccessPolicy, callback?: () => void) => {
-      if (!schema) {
+      if (!rsData.schema) {
         return;
       }
       setProcessingError(undefined);
@@ -212,18 +200,18 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: () => {
-          schema.access_policy = newPolicy;
-          library.localUpdateItem(schema);
+          rsData.partialUpdate({ access_policy: newPolicy });
+          library.localUpdateItem({ id: Number(itemID), access_policy: newPolicy });
           callback?.();
         }
       });
     },
-    [itemID, schema, library]
+    [itemID, rsData, library]
   );
 
   const setLocation = useCallback(
     (newLocation: string, callback?: () => void) => {
-      if (!schema) {
+      if (!rsData.schema) {
         return;
       }
       setProcessingError(undefined);
@@ -235,17 +223,18 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: () => {
-          schema.location = newLocation;
-          library.reloadItems(callback);
+          rsData.partialUpdate({ location: newLocation });
+          library.localUpdateItem({ id: Number(itemID), location: newLocation });
+          callback?.();
         }
       });
     },
-    [itemID, schema, library]
+    [itemID, rsData, library]
   );
 
   const setEditors = useCallback(
     (newEditors: UserID[], callback?: () => void) => {
-      if (!schema) {
+      if (!rsData.schema) {
         return;
       }
       setProcessingError(undefined);
@@ -257,17 +246,17 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: () => {
-          schema.editors = newEditors;
+          rsData.partialUpdate({ editors: newEditors });
           callback?.();
         }
       });
     },
-    [itemID, schema]
+    [itemID, rsData]
   );
 
   const resetAliases = useCallback(
     (callback?: () => void) => {
-      if (!schema || !user) {
+      if (!rsData.schema || !user) {
         return;
       }
       setProcessingError(undefined);
@@ -276,19 +265,19 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          setSchema(newData);
+          rsData.setSchema(newData);
           library.localUpdateTimestamp(newData.id);
           oss.invalidateItem(newData.id);
           callback?.();
         }
       });
     },
-    [itemID, schema, user, setSchema, library, oss]
+    [itemID, rsData, user, library, oss]
   );
 
   const restoreOrder = useCallback(
     (callback?: () => void) => {
-      if (!schema || !user) {
+      if (!rsData.schema || !user) {
         return;
       }
       setProcessingError(undefined);
@@ -297,13 +286,13 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          setSchema(newData);
+          rsData.setSchema(newData);
           library.localUpdateTimestamp(newData.id);
           callback?.();
         }
       });
     },
-    [itemID, schema, user, setSchema, library]
+    [itemID, rsData, user, library]
   );
 
   const produceStructure = useCallback(
@@ -315,27 +304,27 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          setSchema(newData.schema);
+          rsData.setSchema(newData.schema);
           library.localUpdateTimestamp(newData.schema.id);
           oss.invalidateItem(newData.schema.id);
           callback?.(newData.cst_list);
         }
       });
     },
-    [setSchema, itemID, library, oss]
+    [rsData, itemID, library, oss]
   );
 
   const download = useCallback(
     (callback: DataCallback<Blob>) => {
       setProcessingError(undefined);
-      getTRSFile(itemID, String(schema?.version ?? ''), {
+      getTRSFile(itemID, String(rsData.schema?.version ?? ''), {
         showError: true,
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: callback
       });
     },
-    [itemID, schema]
+    [itemID, rsData]
   );
 
   const cstCreate = useCallback(
@@ -347,14 +336,14 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          setSchema(newData.schema);
+          rsData.setSchema(newData.schema);
           library.localUpdateTimestamp(newData.schema.id);
           oss.invalidateItem(newData.schema.id);
           callback?.(newData.new_cst);
         }
       });
     },
-    [itemID, setSchema, library, oss]
+    [itemID, rsData, library, oss]
   );
 
   const cstDelete = useCallback(
@@ -366,14 +355,14 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          setSchema(newData);
+          rsData.setSchema(newData);
           library.localUpdateTimestamp(newData.id);
           oss.invalidateItem(newData.id);
           callback?.();
         }
       });
     },
-    [itemID, setSchema, library, oss]
+    [itemID, rsData, library, oss]
   );
 
   const cstUpdate = useCallback(
@@ -385,14 +374,14 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData =>
-          reload(setProcessing, () => {
+          rsData.reload(setProcessing, () => {
             library.localUpdateTimestamp(Number(itemID));
             oss.invalidateItem(Number(itemID));
             callback?.(newData);
           })
       });
     },
-    [itemID, reload, library, oss]
+    [itemID, rsData, library, oss]
   );
 
   const cstRename = useCallback(
@@ -404,14 +393,14 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          setSchema(newData.schema);
+          rsData.setSchema(newData.schema);
           library.localUpdateTimestamp(newData.schema.id);
           oss.invalidateItem(newData.schema.id);
           callback?.(newData.new_cst);
         }
       });
     },
-    [setSchema, itemID, library, oss]
+    [rsData, itemID, library, oss]
   );
 
   const cstSubstitute = useCallback(
@@ -423,14 +412,14 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          setSchema(newData);
+          rsData.setSchema(newData);
           library.localUpdateTimestamp(newData.id);
           oss.invalidateItem(newData.id);
           callback?.();
         }
       });
     },
-    [setSchema, itemID, library, oss]
+    [rsData, itemID, library, oss]
   );
 
   const cstMoveTo = useCallback(
@@ -442,13 +431,13 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          setSchema(newData);
+          rsData.setSchema(newData);
           library.localUpdateTimestamp(Number(itemID));
           callback?.();
         }
       });
     },
-    [itemID, setSchema, library]
+    [itemID, rsData, library]
   );
 
   const versionCreate = useCallback(
@@ -460,13 +449,13 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          setSchema(newData.schema);
+          rsData.setSchema(newData.schema);
           library.localUpdateTimestamp(Number(itemID));
           callback?.(newData.version);
         }
       });
     },
-    [itemID, setSchema, library]
+    [itemID, rsData, library]
   );
 
   const findPredecessor = useCallback((data: ITargetCst, callback: (reference: IConstituentaReference) => void) => {
@@ -489,7 +478,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: () => {
-          schema!.versions = schema!.versions.map(prev => {
+          const newVersions = rsData.schema!.versions.map(prev => {
             if (prev.id === target) {
               prev.description = data.description;
               prev.version = data.version;
@@ -498,12 +487,12 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
               return prev;
             }
           });
-          setSchema(schema);
+          rsData.partialUpdate({ versions: newVersions });
           callback?.();
         }
       });
     },
-    [schema, setSchema]
+    [rsData]
   );
 
   const versionDelete = useCallback(
@@ -514,13 +503,13 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: () => {
-          schema!.versions = schema!.versions.filter(prev => prev.id !== target);
-          setSchema(schema);
+          const newVersions = rsData.schema!.versions.filter(prev => prev.id !== target);
+          rsData.partialUpdate({ versions: newVersions });
           callback?.();
         }
       });
     },
-    [schema, setSchema]
+    [rsData]
   );
 
   const versionRestore = useCallback(
@@ -531,13 +520,13 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          setSchema(newData);
+          rsData.setSchema(newData);
           library.localUpdateItem(newData);
           callback?.();
         }
       });
     },
-    [setSchema, library]
+    [rsData, library]
   );
 
   const inlineSynthesis = useCallback(
@@ -549,24 +538,24 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
         setLoading: setProcessing,
         onError: setProcessingError,
         onSuccess: newData => {
-          setSchema(newData);
+          rsData.setSchema(newData);
           library.localUpdateTimestamp(newData.id);
           oss.invalidateItem(newData.id);
           callback?.(newData);
         }
       });
     },
-    [setSchema, library, oss]
+    [rsData, library, oss]
   );
 
   return (
     <RSFormContext.Provider
       value={{
-        schema,
+        schema: rsData.schema,
         itemID,
         versionID,
-        loading,
-        errorLoading,
+        loading: rsData.loading,
+        errorLoading: rsData.error,
         processing,
         processingError,
         isOwned,

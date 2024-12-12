@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { Graph } from '@/models/Graph';
 import { GraphFilterParams } from '@/models/miscellaneous';
@@ -20,7 +20,7 @@ function useGraphFilter(schema: IRSForm | undefined, params: GraphFilterParams, 
     return result;
   }, [params]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!schema) {
       setFiltered(new Graph());
       return;

@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { urls } from '@/app/urls';
@@ -126,7 +126,7 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
     [model, targetOperationID]
   );
 
-  useLayoutEffect(
+  useEffect(
     () =>
       setAccessLevel(prev => {
         if (

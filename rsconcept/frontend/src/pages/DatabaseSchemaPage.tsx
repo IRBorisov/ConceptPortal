@@ -1,6 +1,6 @@
 'use client';
 
-import { useLayoutEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
@@ -11,7 +11,7 @@ function DatabaseSchemaPage() {
 
   const panelHeight = useMemo(() => calculateHeight('0px'), [calculateHeight]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setNoFooter(true);
     return () => setNoFooter(false);
   }, [setNoFooter]);

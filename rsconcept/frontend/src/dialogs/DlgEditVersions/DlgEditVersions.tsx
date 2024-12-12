@@ -1,6 +1,6 @@
 'use client';
 
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { IconReset, IconSave } from '@/components/Icons';
 import MiniButton from '@/components/ui/MiniButton';
@@ -59,7 +59,7 @@ function DlgEditVersions({ hideWindow, versions, onDelete, onUpdate }: DlgEditVe
     setDescription(selected?.description ?? '');
   }
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setVersion(selected?.version ?? '');
     setDescription(selected?.description ?? '');
   }, [selected]);

@@ -1,7 +1,7 @@
 'use client';
 
 import fileDownload from 'js-file-download';
-import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { urls } from '@/app/urls';
@@ -194,7 +194,7 @@ export const RSEditState = ({
     [model.schema]
   );
 
-  useLayoutEffect(
+  useEffect(
     () =>
       setAccessLevel(prev => {
         if (

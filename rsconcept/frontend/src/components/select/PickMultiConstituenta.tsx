@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import DataTable, { createColumnHelper, RowSelectionState } from '@/components/ui/DataTable';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
@@ -68,7 +68,7 @@ function PickMultiConstituenta({
     return newGraph;
   }, [data, schema.graph, schema.items]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (filtered.length === 0) {
       setRowSelection({});
       return;
@@ -80,7 +80,7 @@ function PickMultiConstituenta({
     setRowSelection(newRowSelection);
   }, [filtered, setRowSelection, selected]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (data.length === 0) {
       setFiltered([]);
     } else if (filterText) {

@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
@@ -58,7 +58,7 @@ function PickSchema({
 
   const locationMenu = useDropdown();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     let newFiltered = baseFiltered.filter(item => matchLibraryItem(item, filterText));
     if (filterLocation.length > 0) {
       newFiltered = newFiltered.filter(

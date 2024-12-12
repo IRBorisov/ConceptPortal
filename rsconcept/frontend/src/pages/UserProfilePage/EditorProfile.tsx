@@ -1,8 +1,7 @@
 'use client';
 
 import axios from 'axios';
-import clsx from 'clsx';
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import InfoError, { ErrorData } from '@/components/info/InfoError';
@@ -16,10 +15,10 @@ import { information } from '@/utils/labels';
 function EditorProfile() {
   const { updateUser, user, errorProcessing, processing } = useUserProfile();
 
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [first_name, setFirstName] = useState('');
-  const [last_name, setLastName] = useState('');
+  const [username, setUsername] = useState(user?.username ?? '');
+  const [email, setEmail] = useState(user?.email ?? '');
+  const [first_name, setFirstName] = useState(user?.first_name ?? '');
+  const [last_name, setLastName] = useState(user?.last_name ?? '');
 
   const isModified: boolean = useMemo(() => {
     if (!user) {
@@ -29,7 +28,7 @@ function EditorProfile() {
   }, [user, email, first_name, last_name]);
   useBlockNavigation(isModified);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (user) {
       setUsername(user.username);
       setEmail(user.email);
@@ -50,7 +49,7 @@ function EditorProfile() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className={clsx('cc-column', 'w-[18rem]', 'px-6 py-2')}>
+    <form onSubmit={handleSubmit} className='cc-column w-[18rem] px-6 py-2'>
       <TextInput
         id='username'
         autoComplete='username'

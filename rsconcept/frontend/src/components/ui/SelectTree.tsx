@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { globals, PARAMETER } from '@/utils/constants';
 
@@ -50,7 +50,7 @@ function SelectTree<ItemType>({
   );
   const [folded, setFolded] = useState<ItemType[]>(items);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setFolded(items.filter(item => getParent(value) !== item && getParent(getParent(value)) !== item));
   }, [value, getParent, items]);
 

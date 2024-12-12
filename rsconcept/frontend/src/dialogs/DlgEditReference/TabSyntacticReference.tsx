@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import TextInput from '@/components/ui/TextInput';
 import { ReferenceType } from '@/models/language';
@@ -27,7 +27,7 @@ function TabSyntacticReference({ initial, onChangeValid, onChangeReference }: Ta
     }
   }, [initial, offset]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (initial.refRaw && initial.type === ReferenceType.SYNTACTIC) {
       const ref = parseSyntacticReference(initial.refRaw);
       setOffset(ref.offset);

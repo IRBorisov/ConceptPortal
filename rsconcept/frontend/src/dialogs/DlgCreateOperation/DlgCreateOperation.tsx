@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import Modal from '@/components/ui/Modal';
@@ -53,7 +53,7 @@ function DlgCreateOperation({ hideWindow, oss, onCreate, initialInputs }: DlgCre
     return true;
   }, [alias, activeTab, inputs, attachedID, oss.items]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (attachedID) {
       const schema = library.items.find(value => value.id === attachedID);
       if (schema) {

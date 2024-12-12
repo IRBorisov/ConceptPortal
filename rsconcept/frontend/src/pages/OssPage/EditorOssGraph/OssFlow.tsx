@@ -1,7 +1,7 @@
 'use client';
 
 import { toPng } from 'html-to-image';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import {
   Background,
@@ -69,7 +69,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     onChange: onSelectionChange
   });
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!model.schema) {
       setNodes([]);
       setEdges([]);

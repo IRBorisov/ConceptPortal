@@ -2,6 +2,7 @@ import globals from 'globals';
 import typescriptPlugin from 'typescript-eslint';
 import typescriptParser from '@typescript-eslint/parser';
 import reactPlugin from 'eslint-plugin-react';
+import reactCompilerPlugin from 'eslint-plugin-react-compiler';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
@@ -34,11 +35,13 @@ export default [
   {
     plugins: {
       'react': reactPlugin,
+      'react-compiler': reactCompilerPlugin,
       'react-hooks': reactHooksPlugin,
       'simple-import-sort': simpleImportSort
     },
     settings: { react: { version: 'detect' } },
     rules: {
+      'react-compiler/react-compiler': 'error',
       '@typescript-eslint/no-empty-object-type': ['error', { allowInterfaces: 'with-single-extends' }],
       '@typescript-eslint/prefer-nullish-coalescing': 'off',
       '@typescript-eslint/no-inferrable-types': 'off',

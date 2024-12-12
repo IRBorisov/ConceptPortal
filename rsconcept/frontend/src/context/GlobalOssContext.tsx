@@ -8,8 +8,6 @@ import { LibraryItemID } from '@/models/library';
 import { IOperationSchema, IOperationSchemaData } from '@/models/oss';
 import { contextOutsideScope } from '@/utils/labels';
 
-import { useLibrary } from './LibraryContext';
-
 interface IGlobalOssContext {
   schema: IOperationSchema | undefined;
   setID: (id: string | undefined) => void;
@@ -20,6 +18,7 @@ interface IGlobalOssContext {
 
   invalidate: () => void;
   invalidateItem: (target: LibraryItemID) => void;
+  partialUpdate: (data: Partial<IOperationSchema>) => void;
   reload: (callback?: () => void) => void;
 }
 
@@ -33,16 +32,16 @@ export const useGlobalOss = (): IGlobalOssContext => {
 };
 
 export const GlobalOssState = ({ children }: React.PropsWithChildren) => {
-  const library = useLibrary();
-  const [isValid, setIsValid] = useState(false);
+  const [isValid, setIsValid] = useState(true);
   const [ossID, setIdInternal] = useState<string | undefined>(undefined);
   const {
     schema: schema, // prettier: split lines
     error: loadingError,
     setSchema: setDataInternal,
     loading: loading,
-    reload: reloadInternal
-  } = useOssDetails({ target: ossID, items: library.items });
+    reload: reloadInternal,
+    partialUpdate
+  } = useOssDetails({ target: ossID });
 
   const reload = useCallback(
     (callback?: () => void) => {
@@ -96,6 +95,7 @@ export const GlobalOssState = ({ children }: React.PropsWithChildren) => {
         loading,
         loadingError,
         reload,
+        partialUpdate,
         isValid,
         invalidateItem,
         invalidate

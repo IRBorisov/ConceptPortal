@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { IconAccept, IconMoveDown, IconMoveLeft, IconMoveRight, IconRemove } from '@/components/Icons';
 import SelectMultiGrammeme from '@/components/select/SelectMultiGrammeme';
@@ -33,7 +33,7 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
   const [inputGrams, setInputGrams] = useState<IGrammemeOption[]>([]);
   const [forms, setForms] = useState<IWordForm[]>([]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const initForms: IWordForm[] = [];
     target.term_forms.forEach(term =>
       initForms.push({

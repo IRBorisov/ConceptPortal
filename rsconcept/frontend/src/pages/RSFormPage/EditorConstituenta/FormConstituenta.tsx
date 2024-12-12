@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { IconChild, IconPredecessor, IconSave } from '@/components/Icons';
@@ -51,10 +51,10 @@ function FormConstituenta({
 }: FormConstituentaProps) {
   const { schema, cstUpdate, processing } = useRSForm();
 
-  const [term, setTerm] = useState('');
-  const [textDefinition, setTextDefinition] = useState('');
-  const [expression, setExpression] = useState('');
-  const [convention, setConvention] = useState('');
+  const [term, setTerm] = useState(state?.term_raw ?? '');
+  const [textDefinition, setTextDefinition] = useState(state?.definition_raw ?? '');
+  const [expression, setExpression] = useState(state?.definition_formal ?? '');
+  const [convention, setConvention] = useState(state?.convention ?? '');
   const [typification, setTypification] = useState('N/A');
   const [showTypification, setShowTypification] = useState(false);
   const [localParse, setLocalParse] = useState<IExpressionParse | undefined>(undefined);
@@ -80,6 +80,18 @@ function FormConstituenta({
   );
 
   useEffect(() => {
+    if (state) {
+      setConvention(state.convention);
+      setTerm(state.term_raw);
+      setTextDefinition(state.definition_raw);
+      setExpression(state.definition_formal);
+      setTypification(state ? labelCstTypification(state) : 'N/A');
+      setForceComment(false);
+      setLocalParse(undefined);
+    }
+  }, [state, schema, toggleReset]);
+
+  useEffect(() => {
     if (!state) {
       setIsModified(false);
       return;
@@ -103,18 +115,6 @@ function FormConstituenta({
     convention,
     setIsModified
   ]);
-
-  useLayoutEffect(() => {
-    if (state) {
-      setConvention(state.convention || '');
-      setTerm(state.term_raw || '');
-      setTextDefinition(state.definition_raw || '');
-      setExpression(state.definition_formal || '');
-      setTypification(state ? labelCstTypification(state) : 'N/A');
-      setForceComment(false);
-      setLocalParse(undefined);
-    }
-  }, [state, schema, toggleReset]);
 
   function handleSubmit(event?: React.FormEvent<HTMLFormElement>) {
     if (event) {

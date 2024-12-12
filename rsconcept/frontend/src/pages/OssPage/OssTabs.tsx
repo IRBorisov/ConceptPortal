@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import clsx from 'clsx';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 import { toast } from 'react-toastify';
 
@@ -50,7 +50,7 @@ function OssTabs() {
       (user.is_staff || user.id == schema.owner || schema.editors.includes(user.id))
   );
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (schema) {
       const oldTitle = document.title;
       document.title = schema.title;
@@ -60,7 +60,7 @@ function OssTabs() {
     }
   }, [schema, schema?.title]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setNoFooter(activeTab === OssTabID.GRAPH);
   }, [activeTab, setNoFooter]);
 

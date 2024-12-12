@@ -50,7 +50,7 @@ function NodeContextMenu({
 }: NodeContextMenuProps) {
   const controller = useOssEdit();
   const [isOpen, setIsOpen] = useState(false);
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const readyForSynthesis = useMemo(() => {
     if (operation.operation_type !== OperationType.SYNTHESIS) {
       return false;

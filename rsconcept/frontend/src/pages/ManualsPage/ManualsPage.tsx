@@ -30,7 +30,6 @@ function ManualsPage() {
     setTimeout(() => {
       router.push(urls.page404);
     }, PARAMETER.refreshTimeout);
-    console.log(1);
     return null;
   }
 

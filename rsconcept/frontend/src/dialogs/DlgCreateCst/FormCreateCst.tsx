@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import BadgeHelp from '@/components/info/BadgeHelp';
 import RSInput from '@/components/RSInput';
@@ -30,11 +30,11 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
   const isElementary = useMemo(() => isBaseSet(state.cst_type), [state]);
   const showConvention = useMemo(() => !!state.convention || forceComment || isBasic, [state, forceComment, isBasic]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setForceComment(false);
   }, [state.cst_type, partialUpdate, schema]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (setValidated) {
       setValidated(validateNewAlias(state.alias, state.cst_type, schema));
     }

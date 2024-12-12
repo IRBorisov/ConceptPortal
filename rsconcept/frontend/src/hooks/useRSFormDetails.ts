@@ -23,6 +23,10 @@ function useRSFormDetails({ target, version }: { target?: string; version?: stri
     setInnerSchema(schema);
   }
 
+  function partialUpdate(data: Partial<IRSForm>) {
+    setInnerSchema(prev => (prev ? { ...prev, ...data } : prev));
+  }
+
   const reload = useCallback(
     (setCustomLoading?: typeof setLoading, callback?: () => void) => {
       setError(undefined);
@@ -51,7 +55,7 @@ function useRSFormDetails({ target, version }: { target?: string; version?: stri
     }
   }, [reload, userLoading]);
 
-  return { schema, setSchema, reload, error, setError, loading };
+  return { schema, setSchema, partialUpdate, reload, error, setError, loading };
 }
 
 export default useRSFormDetails;

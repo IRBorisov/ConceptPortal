@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 
 import { urls } from '@/app/urls';
 import Loader from '@/components/ui/Loader';
@@ -10,7 +10,7 @@ function HomePage() {
   const router = useConceptNavigation();
   const { user, loading } = useAuth();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!loading) {
       if (!user) {
         setTimeout(() => {

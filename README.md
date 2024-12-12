@@ -56,6 +56,7 @@ This readme file is used mostly to document project dependencies and conventions
   - tailwindcss
   - postcss
   - autoprefixer
+  - eslint-plugin-react-compiler
   - eslint-plugin-simple-import-sort
   - eslint-plugin-react-hooks
   - eslint-plugin-tsdoc

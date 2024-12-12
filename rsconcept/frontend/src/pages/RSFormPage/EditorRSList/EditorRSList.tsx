@@ -1,7 +1,7 @@
 'use client';
 
 import fileDownload from 'js-file-download';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { IconCSV } from '@/components/Icons';
@@ -32,7 +32,7 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
   const [filtered, setFiltered] = useState<IConstituenta[]>(controller.schema?.items ?? []);
   const [filterText, setFilterText] = useState('');
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (filtered.length === 0) {
       setRowSelection({});
       return;
@@ -44,7 +44,7 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
     setRowSelection(newRowSelection);
   }, [filtered, setRowSelection, controller.selected]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!controller.schema || controller.schema.items.length === 0) {
       setFiltered([]);
     } else if (filterText) {

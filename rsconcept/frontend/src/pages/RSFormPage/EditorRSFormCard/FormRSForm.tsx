@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { IconSave } from '@/components/Icons';
 import SelectVersion from '@/components/select/SelectVersion';
@@ -25,11 +25,21 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
   const controller = useRSEdit();
   const schema = controller.schema;
 
-  const [title, setTitle] = useState('');
-  const [alias, setAlias] = useState('');
-  const [comment, setComment] = useState('');
-  const [visible, setVisible] = useState(false);
-  const [readOnly, setReadOnly] = useState(false);
+  const [title, setTitle] = useState(schema?.title ?? '');
+  const [alias, setAlias] = useState(schema?.alias ?? '');
+  const [comment, setComment] = useState(schema?.comment ?? '');
+  const [visible, setVisible] = useState(schema?.visible ?? false);
+  const [readOnly, setReadOnly] = useState(schema?.read_only ?? false);
+
+  useEffect(() => {
+    if (schema) {
+      setTitle(schema.title);
+      setAlias(schema.alias);
+      setComment(schema.comment);
+      setVisible(schema.visible);
+      setReadOnly(schema.read_only);
+    }
+  }, [schema]);
 
   useEffect(() => {
     if (!schema) {
@@ -58,16 +68,6 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
     readOnly,
     setIsModified
   ]);
-
-  useLayoutEffect(() => {
-    if (schema) {
-      setTitle(schema.title);
-      setAlias(schema.alias);
-      setComment(schema.comment);
-      setVisible(schema.visible);
-      setReadOnly(schema.read_only);
-    }
-  }, [schema]);
 
   const handleSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     if (event) {

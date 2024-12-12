@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useLayoutEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 import BadgeConstituenta from '@/components/info/BadgeConstituenta';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
@@ -32,7 +32,7 @@ function TableSideConstituents({
 }: TableSideConstituentsProps) {
   const { colors } = useConceptOptions();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!activeCst) {
       return;
     }

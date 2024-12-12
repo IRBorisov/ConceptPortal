@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 import { toPng } from 'html-to-image';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import {
   Edge,
@@ -113,7 +113,7 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
     onChange: onSelectionChange
   });
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!controller.schema) {
       return;
     }
@@ -127,7 +127,7 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
     setHoverID(undefined);
   }, [controller.schema, filteredGraph]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!controller.schema) {
       return;
     }
@@ -176,10 +176,11 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
     setNodes(newNodes);
     setEdges(newEdges);
     // NOTE: Do not rerender on controller.selected change because it is only needed during first load
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filteredGraph, setNodes, setEdges, controller.schema, filterParams.noText, focusCst, coloring, colors, flow]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setTimeout(() => {
       flow.fitView({ duration: PARAMETER.zoomDuration });
     }, PARAMETER.minimalTimeout);

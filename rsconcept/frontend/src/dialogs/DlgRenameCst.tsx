@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import SelectSingle from '@/components/ui/SelectSingle';
@@ -25,13 +25,13 @@ function DlgRenameCst({ hideWindow, initial, allowChangeType, onRename }: DlgRen
   const [validated, setValidated] = useState(false);
   const [cstData, updateData] = usePartialUpdate(initial);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (schema && initial && cstData.cst_type !== initial.cst_type) {
       updateData({ alias: generateAlias(cstData.cst_type, schema) });
     }
   }, [initial, cstData.cst_type, updateData, schema]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setValidated(
       !!schema && cstData.alias !== initial.alias && validateNewAlias(cstData.alias, cstData.cst_type, schema)
     );

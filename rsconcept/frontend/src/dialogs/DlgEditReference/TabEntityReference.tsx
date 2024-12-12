@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import PickConstituenta from '@/components/select/PickConstituenta';
 import SelectMultiGrammeme from '@/components/select/SelectMultiGrammeme';
@@ -31,7 +31,7 @@ function TabEntityReference({ initial, schema, onChangeValid, onChangeReference 
   const [selectedGrams, setSelectedGrams] = useState<IGrammemeOption[]>([]);
 
   // Initialization
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!!initial.refRaw && initial.type === ReferenceType.ENTITY) {
       const ref = parseEntityReference(initial.refRaw);
       setAlias(ref.entity);

@@ -48,7 +48,7 @@ interface ILibraryContext {
   destroyItem: (target: LibraryItemID, callback?: () => void) => void;
   renameLocation: (data: IRenameLocationData, callback?: () => void) => void;
 
-  localUpdateItem: (data: ILibraryItem) => void;
+  localUpdateItem: (data: Partial<ILibraryItem>) => void;
   localUpdateTimestamp: (target: LibraryItemID) => void;
 }
 
@@ -196,21 +196,17 @@ export const LibraryState = ({ children }: React.PropsWithChildren) => {
   }, [reloadTemplates]);
 
   const localUpdateItem = useCallback(
-    (data: ILibraryItem) => {
-      const libraryItem = items.find(item => item.id === data.id);
-      if (libraryItem) Object.assign(libraryItem, data);
+    (data: Partial<ILibraryItem>) => {
+      setItems(prev => prev.map(item => (item.id === data.id ? { ...item, ...data } : item)));
     },
-    [items]
+    [setItems]
   );
 
   const localUpdateTimestamp = useCallback(
     (target: LibraryItemID) => {
-      const libraryItem = items.find(item => item.id === target);
-      if (libraryItem) {
-        libraryItem.time_update = Date();
-      }
+      setItems(prev => prev.map(item => (item.id === target ? { ...item, time_update: Date() } : item)));
     },
-    [items]
+    [setItems]
   );
 
   const createItem = useCallback(

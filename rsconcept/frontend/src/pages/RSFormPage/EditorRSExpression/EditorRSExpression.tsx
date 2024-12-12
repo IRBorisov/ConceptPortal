@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import BadgeHelp from '@/components/info/BadgeHelp';
@@ -69,7 +69,7 @@ function EditorRSExpression({
   const [showAST, setShowAST] = useState(false);
   const [showControls, setShowControls] = useLocalStorage(storage.rseditShowControls, true);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setIsModified(false);
     resetParse();
   }, [activeCst, resetParse, toggleReset]);

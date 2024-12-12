@@ -1,6 +1,6 @@
 'use client';
 
-import { useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 import { Edge, MarkerType, Node, ReactFlow, useEdgesState, useNodesState } from 'reactflow';
 
 import { SyntaxTree } from '@/models/rslang';
@@ -20,7 +20,7 @@ function ASTFlow({ data, onNodeEnter, onNodeLeave, onChangeDragging }: ASTFlowPr
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const newNodes = data.map(node => ({
       id: String(node.uid),
       data: node,

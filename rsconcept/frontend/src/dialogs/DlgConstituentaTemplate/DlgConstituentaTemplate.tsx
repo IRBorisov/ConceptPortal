@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import Modal, { ModalProps } from '@/components/ui/Modal';
@@ -65,7 +65,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     return true;
   }
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!template.templateID) {
       setTemplateSchema(undefined);
     } else {
@@ -73,7 +73,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     }
   }, [template.templateID, retrieveTemplate]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!template.prototype) {
       updateConstituenta({
         definition_raw: '',
@@ -103,7 +103,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     }
   }, [template.prototype, updateConstituenta, updateSubstitutes, schema]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (substitutes.arguments.length === 0 || !template.prototype) {
       return;
     }
@@ -119,7 +119,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     });
   }, [substitutes.arguments, template.prototype, updateConstituenta, updateSubstitutes, schema]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setValidated(!!template.prototype && validateNewAlias(constituenta.alias, constituenta.cst_type, schema));
   }, [constituenta.alias, constituenta.cst_type, schema, template.prototype]);
 

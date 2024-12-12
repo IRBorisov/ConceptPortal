@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import Tooltip from '@/components/ui/Tooltip';
 import useLocalStorage from '@/hooks/useLocalStorage';
@@ -76,11 +76,11 @@ export const OptionsState = ({ children }: React.PropsWithChildren) => {
     root.setAttribute('data-color-scheme', !isDark ? 'light' : 'dark');
   }
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setDarkClass(darkMode);
   }, [darkMode]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setColors(darkMode ? darkT : lightT);
   }, [darkMode, setColors]);
 

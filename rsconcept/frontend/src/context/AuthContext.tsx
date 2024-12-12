@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useCallback, useContext, useLayoutEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 import { DataCallback } from '@/backend/apiTransport';
 import {
@@ -124,10 +124,7 @@ export const AuthState = ({ children }: React.PropsWithChildren) => {
         showError: true,
         setLoading: setLoading,
         onError: setError,
-        onSuccess: () =>
-          reload(() => {
-            callback?.();
-          })
+        onSuccess: () => reload(callback)
       });
     },
     [reload]
@@ -184,7 +181,7 @@ export const AuthState = ({ children }: React.PropsWithChildren) => {
     [reload]
   );
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     reload();
   }, [reload]);
 
