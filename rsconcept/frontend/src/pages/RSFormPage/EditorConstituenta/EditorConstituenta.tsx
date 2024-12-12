@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import { AnimatePresence } from 'framer-motion';
 import { useMemo, useState } from 'react';
 
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
@@ -88,39 +87,37 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
         onReset={() => setToggleReset(prev => !prev)}
         onToggleList={() => setShowList(prev => !prev)}
       />
-      <div className='pt-[1.9rem] overflow-y-auto overflow-x-clip min-h-[20rem]' style={{ maxHeight: mainHeight }}>
-        <div
-          tabIndex={-1}
-          className={clsx(
-            'max-w-[95rem] mx-auto', // prettier: split lines
-            'flex',
-            { 'flex-col md:items-center': isNarrow }
-          )}
-          onKeyDown={handleInput}
-        >
-          <FormConstituenta
-            disabled={disabled}
-            id={globals.constituenta_editor}
-            state={activeCst}
-            isModified={isModified}
-            toggleReset={toggleReset}
-            setIsModified={setIsModified}
-            onEditTerm={controller.editTermForms}
-            onRename={controller.renameCst}
-            onOpenEdit={onOpenEdit}
-          />
-          <AnimatePresence initial={false}>
-            {showList ? (
-              <ViewConstituents
-                schema={controller.schema}
-                expression={activeCst?.definition_formal ?? ''}
-                isBottom={isNarrow}
-                activeCst={activeCst}
-                onOpenEdit={onOpenEdit}
-              />
-            ) : null}
-          </AnimatePresence>
-        </div>
+      <div
+        tabIndex={-1}
+        className={clsx(
+          'cc-fade-in',
+          'min-h-[20rem] max-w-[95rem] mx-auto',
+          'flex pt-[1.9rem]',
+          'overflow-y-auto overflow-x-clip',
+          { 'flex-col md:items-center': isNarrow }
+        )}
+        style={{ maxHeight: mainHeight }}
+        onKeyDown={handleInput}
+      >
+        <FormConstituenta
+          disabled={disabled}
+          id={globals.constituenta_editor}
+          state={activeCst}
+          isModified={isModified}
+          toggleReset={toggleReset}
+          setIsModified={setIsModified}
+          onEditTerm={controller.editTermForms}
+          onRename={controller.renameCst}
+          onOpenEdit={onOpenEdit}
+        />
+        <ViewConstituents
+          isMounted={showList}
+          schema={controller.schema}
+          expression={activeCst?.definition_formal ?? ''}
+          isBottom={isNarrow}
+          activeCst={activeCst}
+          onOpenEdit={onOpenEdit}
+        />
       </div>
     </>
   );

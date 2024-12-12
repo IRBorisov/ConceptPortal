@@ -1,8 +1,5 @@
-import { AnimatePresence } from 'framer-motion';
-
 import { IconLogin, IconUser2 } from '@/components/Icons';
 import Loader from '@/components/ui/Loader';
-import AnimateFade from '@/components/wrap/AnimateFade';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
@@ -21,30 +18,22 @@ function UserMenu() {
   const navigateLogin = () => router.push(urls.login);
   return (
     <div ref={menu.ref} className='h-full w-[4rem] flex items-center justify-center'>
-      <AnimatePresence mode='wait'>
-        {loading ? (
-          <AnimateFade key='nav_user_badge_loader'>
-            <Loader circular scale={1.5} />
-          </AnimateFade>
-        ) : null}
-        {!user && !loading ? (
-          <AnimateFade key='nav_user_badge_login' className='h-full'>
-            <NavigationButton
-              title='Перейти на страницу логина'
-              icon={<IconLogin size='1.5rem' className='icon-primary' />}
-              onClick={navigateLogin}
-            />
-          </AnimateFade>
-        ) : null}
-        {user ? (
-          <AnimateFade key='nav_user_badge_profile' className='h-full'>
-            <NavigationButton
-              icon={<IconUser2 size='1.5rem' className={adminMode && user.is_staff ? 'icon-primary' : ''} />}
-              onClick={menu.toggle}
-            />
-          </AnimateFade>
-        ) : null}
-      </AnimatePresence>
+      {loading ? <Loader circular scale={1.5} /> : null}
+      {!user && !loading ? (
+        <NavigationButton
+          className='cc-fade-in'
+          title='Перейти на страницу логина'
+          icon={<IconLogin size='1.5rem' className='icon-primary' />}
+          onClick={navigateLogin}
+        />
+      ) : null}
+      {user ? (
+        <NavigationButton
+          className='cc-fade-in'
+          icon={<IconUser2 size='1.5rem' className={adminMode && user.is_staff ? 'icon-primary' : ''} />}
+          onClick={menu.toggle}
+        />
+      ) : null}
       <UserDropdown isOpen={!!user && menu.isOpen} hideDropdown={() => menu.hide()} />
     </div>
   );

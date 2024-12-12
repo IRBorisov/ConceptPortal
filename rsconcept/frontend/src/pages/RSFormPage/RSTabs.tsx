@@ -13,7 +13,6 @@ import Loader from '@/components/ui/Loader';
 import Overlay from '@/components/ui/Overlay';
 import TabLabel from '@/components/ui/TabLabel';
 import TextURL from '@/components/ui/TextURL';
-import AnimateFade from '@/components/wrap/AnimateFade';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useGlobalOss } from '@/context/GlobalOssContext';
 import { useLibrary } from '@/context/LibraryContext';
@@ -270,12 +269,12 @@ function RSTabs() {
             </TabList>
           </Overlay>
 
-          <AnimateFade className='overflow-x-hidden'>
+          <div className='overflow-x-hidden'>
             {cardPanel}
             {listPanel}
             {editorPanel}
             {graphPanel}
-          </AnimateFade>
+          </div>
         </Tabs>
       ) : null}
     </RSEditState>

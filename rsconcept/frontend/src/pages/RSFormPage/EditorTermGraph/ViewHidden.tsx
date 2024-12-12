@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import { motion } from 'framer-motion';
 import { useCallback, useMemo } from 'react';
 
 import { IconDropArrow, IconDropArrowUp } from '@/components/Icons';
@@ -14,9 +13,8 @@ import useLocalStorage from '@/hooks/useLocalStorage';
 import useWindowSize from '@/hooks/useWindowSize';
 import { GraphColoring } from '@/models/miscellaneous';
 import { ConstituentaID, IRSForm } from '@/models/rsform';
-import { animateDropdown, animateHiddenHeader } from '@/styling/animations';
 import { colorBgGraphNode } from '@/styling/color';
-import { prefixes, storage } from '@/utils/constants';
+import { PARAMETER, prefixes, storage } from '@/utils/constants';
 
 interface ViewHiddenProps {
   items: ConstituentaID[];
@@ -60,39 +58,35 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
           onClick={() => setIsFolded(prev => !prev)}
         />
       </Overlay>
-      <div
-        className={clsx(
-          'pt-2', //
-          'border-x',
-          'clr-input',
-          'select-none',
-          {
-            'pb-2 border-b': isFolded
-          }
-        )}
-      >
-        <motion.div
-          className='w-fit'
-          animate={!isFolded ? 'open' : 'closed'}
-          variants={animateHiddenHeader}
-          initial={false}
+      <div className={clsx('pt-2 clr-input border-x pb-2', { 'border-b rounded-b-md': isFolded })}>
+        <div
+          className='w-fit select-none'
+          style={{
+            transitionProperty: 'margin, translate',
+            transitionDuration: `${PARAMETER.fastAnimation}ms`,
+            transitionTimingFunction: 'ease-out',
+            marginLeft: isFolded ? '0.75rem' : '0',
+            translate: isFolded ? '0' : 'calc(6.5rem - 50%)'
+          }}
         >
           {`Скрытые [${localSelected.length} | ${items.length}]`}
-        </motion.div>
+        </div>
       </div>
 
-      <motion.div
+      <div
         className={clsx(
-          'flex flex-wrap justify-center gap-2 py-2',
-          'border-x border-b rounded-b-md',
-          'clr-input',
+          'flex flex-wrap justify-center gap-2 py-2 mt-[-0.5rem]',
           'text-sm',
+          'clr-input border-x border-b rounded-b-md',
           'cc-scroll-y'
         )}
-        style={{ maxHeight: calculateHeight(windowSize.isSmall ? '10.4rem + 2px' : '12.5rem + 2px') }}
-        initial={false}
-        animate={!isFolded ? 'open' : 'closed'}
-        variants={animateDropdown}
+        style={{
+          maxHeight: calculateHeight(windowSize.isSmall ? '10.4rem + 2px' : '12.5rem + 2px'),
+          transitionProperty: 'clip-path',
+          transitionDuration: `${PARAMETER.fastAnimation}ms`,
+          transitionTimingFunction: 'ease-out',
+          clipPath: isFolded ? 'inset(10% 0% 90% 0%)' : 'inset(0% 0% 0% 0%)'
+        }}
       >
         {items.map(cstID => {
           const cst = schema.cstByID.get(cstID)!;
@@ -124,7 +118,7 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
             </div>
           );
         })}
-      </motion.div>
+      </div>
     </div>
   );
 }

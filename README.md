@@ -43,13 +43,13 @@ This readme file is used mostly to document project dependencies and conventions
   - reactflow
   - js-file-download
   - use-debounce
-  - framer-motion
   - html-to-image
   - @tanstack/react-table
   - @uiw/react-codemirror
   - @uiw/codemirror-themes
   - @lezer/lr
   - @dagrejs/dagre
+  - @react-spring/web
   </pre>
 </details>
 <details>

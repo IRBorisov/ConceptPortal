@@ -1,6 +1,5 @@
 'use client';
 
-import { AnimatePresence } from 'framer-motion';
 import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -418,7 +417,7 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
       }}
     >
       {model.schema ? (
-        <AnimatePresence>
+        <>
           {showEditEditors ? (
             <DlgEditEditors
               hideWindow={() => setShowEditEditors(false)}
@@ -472,8 +471,7 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
               onSubmit={handleRelocateConstituents}
             />
           ) : null}
-          )
-        </AnimatePresence>
+        </>
       ) : null}
 
       {children}

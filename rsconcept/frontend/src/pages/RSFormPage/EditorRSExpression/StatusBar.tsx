@@ -1,8 +1,8 @@
 'use client';
 
+import { animated, useTransition } from '@react-spring/web';
 import clsx from 'clsx';
-import { AnimatePresence } from 'framer-motion';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import { StatusIcon } from '@/components/DomainIcons';
 import Loader from '@/components/ui/Loader';
@@ -12,7 +12,7 @@ import { type IConstituenta } from '@/models/rsform';
 import { inferStatus } from '@/models/rsformAPI';
 import { IExpressionParse, ParsingStatus } from '@/models/rslang';
 import { colorStatusBar } from '@/styling/color';
-import { globals } from '@/utils/constants';
+import { globals, PARAMETER } from '@/utils/constants';
 import { labelExpressionStatus, prepareTooltip } from '@/utils/labels';
 
 interface StatusBarProps {
@@ -36,6 +36,16 @@ function StatusBar({ isModified, processing, activeCst, parseData, onAnalyze }: 
     return inferStatus(activeCst.parse.status, activeCst.parse.valueClass);
   }, [isModified, activeCst, parseData]);
 
+  const [isAnimating, setIsAnimating] = useState(false);
+  const transitions = useTransition(processing, {
+    from: { opacity: 1 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
+    onStart: () => setIsAnimating(true),
+    onRest: () => setIsAnimating(false),
+    config: { duration: PARAMETER.fadeDuration }
+  });
+
   return (
     <div
       tabIndex={0}
@@ -46,24 +56,26 @@ function StatusBar({ isModified, processing, activeCst, parseData, onAnalyze }: 
         'select-none',
         'cursor-pointer',
         'focus-frame',
-        'duration-500 transition-colors'
+        'transition-colors duration-500'
       )}
       style={{ backgroundColor: processing ? colors.bgDefault : colorStatusBar(status, colors) }}
       data-tooltip-id={globals.tooltip}
       data-tooltip-html={prepareTooltip('Проверить определение', 'Ctrl + Q')}
       onClick={onAnalyze}
     >
-      <AnimatePresence mode='wait'>
-        {processing ? <Loader key='status-loader' scale={3} /> : null}
-        {!processing ? (
-          <>
-            <StatusIcon key='status-icon' size='1rem' value={status} />
-            <span key='status-text' className='pb-[0.125rem] font-controls pr-2'>
-              {labelExpressionStatus(status)}
-            </span>
-          </>
-        ) : null}
-      </AnimatePresence>
+      {transitions((style, flag) =>
+        flag ? (
+          <animated.div style={style}>
+            <Loader scale={3} />
+          </animated.div>
+        ) : null
+      )}
+      {!processing && !isAnimating ? (
+        <>
+          <StatusIcon size='1rem' value={status} />
+          <span className='pb-[0.125rem] font-controls pr-2'>{labelExpressionStatus(status)}</span>
+        </>
+      ) : null}
     </div>
   );
 }

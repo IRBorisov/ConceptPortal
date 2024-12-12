@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { motion } from 'framer-motion';
 import { useCallback, useMemo } from 'react';
 import { toast } from 'react-toastify';
 
@@ -15,12 +14,12 @@ import { useLibrary } from '@/context/LibraryContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { FolderNode, FolderTree } from '@/models/FolderTree';
 import { HelpTopic } from '@/models/miscellaneous';
-import { animateSideMinWidth } from '@/styling/animations';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { information } from '@/utils/labels';
 
 interface ViewSideLocationProps {
   folderTree: FolderTree;
+  isVisible: boolean;
   subfolders: boolean;
   activeLocation: string;
   onChangeActiveLocation: (newValue: string) => void;
@@ -33,6 +32,7 @@ function ViewSideLocation({
   folderTree,
   activeLocation,
   subfolders,
+  isVisible,
   onChangeActiveLocation,
   toggleFolderMode,
   toggleSubfolders,
@@ -57,7 +57,6 @@ function ViewSideLocation({
     return located.length !== 0;
   }, [activeLocation, user, items]);
 
-  const animations = useMemo(() => animateSideMinWidth(windowSize.isSmall ? '10rem' : '15rem'), [windowSize]);
   const maxHeight = useMemo(() => calculateHeight('4.5rem'), [calculateHeight]);
 
   const handleClickFolder = useCallback(
@@ -77,11 +76,16 @@ function ViewSideLocation({
   );
 
   return (
-    <motion.div
+    <div
       className={clsx('max-w-[10rem] sm:max-w-[15rem]', 'flex flex-col', 'text:xs sm:text-sm', 'select-none')}
-      initial={{ ...animations.initial }}
-      animate={{ ...animations.animate }}
-      exit={{ ...animations.exit }}
+      style={{
+        transitionProperty: 'width, min-width, opacity',
+        transitionDuration: `${PARAMETER.moveDuration}ms`,
+        transitionTimingFunction: 'ease-out',
+        minWidth: isVisible ? (windowSize.isSmall ? '10rem' : '15rem') : '0',
+        width: isVisible ? '100%' : '0',
+        opacity: isVisible ? 1 : 0
+      }}
     >
       <div className='h-[2.08rem] flex justify-between items-center pr-1 pl-[0.125rem]'>
         <BadgeHelp
@@ -117,7 +121,7 @@ function ViewSideLocation({
         onClick={handleClickFolder}
         style={{ maxHeight: maxHeight }}
       />
-    </motion.div>
+    </div>
   );
 }
 

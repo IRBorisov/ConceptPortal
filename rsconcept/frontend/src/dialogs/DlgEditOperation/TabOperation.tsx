@@ -1,6 +1,5 @@
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
-import AnimateFade from '@/components/wrap/AnimateFade';
 
 interface TabOperationProps {
   alias: string;
@@ -13,7 +12,7 @@ interface TabOperationProps {
 
 function TabOperation({ alias, onChangeAlias, title, onChangeTitle, comment, onChangeComment }: TabOperationProps) {
   return (
-    <AnimateFade className='cc-column'>
+    <div className='cc-fade-in cc-column'>
       <TextInput
         id='operation_title'
         label='Полное название'
@@ -38,7 +37,7 @@ function TabOperation({ alias, onChangeAlias, title, onChangeTitle, comment, onC
           onChange={event => onChangeComment(event.target.value)}
         />
       </div>
-    </AnimateFade>
+    </div>
   );
 }
 

@@ -40,7 +40,7 @@ function TabSubstitutions({
   const schemas = useMemo(() => [...(source ? [source] : []), ...(receiver ? [receiver] : [])], [source, receiver]);
 
   return (
-    <DataLoader id='dlg-substitutions-tab' className='cc-column' isLoading={loading} error={error} hasNoData={!source}>
+    <DataLoader isLoading={loading} error={error} hasNoData={!source}>
       <PickSubstitutions
         substitutions={substitutions}
         setSubstitutions={setSubstitutions}

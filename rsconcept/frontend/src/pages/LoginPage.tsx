@@ -9,7 +9,6 @@ import InfoError, { ErrorData } from '@/components/info/InfoError';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
 import TextURL from '@/components/ui/TextURL';
-import AnimateFade from '@/components/wrap/AnimateFade';
 import ExpectedAnonymous from '@/components/wrap/ExpectedAnonymous';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
@@ -52,44 +51,42 @@ function LoginPage() {
     return <ExpectedAnonymous />;
   }
   return (
-    <AnimateFade>
-      <form className={clsx('cc-column', 'w-[24rem] mx-auto', 'pt-12 pb-6 px-6')} onSubmit={handleSubmit}>
-        <img alt='Концепт Портал' src={resources.logo} className='max-h-[2.5rem] min-w-[2.5rem] mb-3' />
-        <TextInput
-          id='username'
-          label='Логин или email'
-          autoComplete='username'
-          autoFocus
-          required
-          allowEnter
-          spellCheck={false}
-          value={username}
-          onChange={event => setUsername(event.target.value)}
-        />
-        <TextInput
-          id='password'
-          type='password'
-          label='Пароль'
-          autoComplete='current-password'
-          required
-          allowEnter
-          value={password}
-          onChange={event => setPassword(event.target.value)}
-        />
+    <form className={clsx('cc-column cc-fade-in', 'w-[24rem] mx-auto', 'pt-12 pb-6 px-6')} onSubmit={handleSubmit}>
+      <img alt='Концепт Портал' src={resources.logo} className='max-h-[2.5rem] min-w-[2.5rem] mb-3' />
+      <TextInput
+        id='username'
+        label='Логин или email'
+        autoComplete='username'
+        autoFocus
+        required
+        allowEnter
+        spellCheck={false}
+        value={username}
+        onChange={event => setUsername(event.target.value)}
+      />
+      <TextInput
+        id='password'
+        type='password'
+        label='Пароль'
+        autoComplete='current-password'
+        required
+        allowEnter
+        value={password}
+        onChange={event => setPassword(event.target.value)}
+      />
 
-        <SubmitButton
-          text='Войти'
-          className='self-center w-[12rem] mt-3'
-          loading={loading}
-          disabled={!username || !password}
-        />
-        <div className='flex flex-col text-sm'>
-          <TextURL text='Восстановить пароль...' href='/restore-password' />
-          <TextURL text='Нет аккаунта? Зарегистрируйтесь...' href='/signup' />
-        </div>
-        {error ? <ProcessError error={error} /> : null}
-      </form>
-    </AnimateFade>
+      <SubmitButton
+        text='Войти'
+        className='self-center w-[12rem] mt-3'
+        loading={loading}
+        disabled={!username || !password}
+      />
+      <div className='flex flex-col text-sm'>
+        <TextURL text='Восстановить пароль...' href='/restore-password' />
+        <TextURL text='Нет аккаунта? Зарегистрируйтесь...' href='/signup' />
+      </div>
+      {error ? <ProcessError error={error} /> : null}
+    </form>
   );
 }
 

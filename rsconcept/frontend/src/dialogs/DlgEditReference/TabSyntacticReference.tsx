@@ -3,7 +3,6 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
 import TextInput from '@/components/ui/TextInput';
-import AnimateFade from '@/components/wrap/AnimateFade';
 import { ReferenceType } from '@/models/language';
 import { parseSyntacticReference } from '@/models/languageAPI';
 
@@ -44,7 +43,7 @@ function TabSyntacticReference({ initial, onChangeValid, onChangeReference }: Ta
   }, [nominal, offset, onChangeValid, onChangeReference]);
 
   return (
-    <AnimateFade className='flex flex-col gap-2'>
+    <div className='cc-fade-in flex flex-col gap-2'>
       <TextInput
         id='dlg_reference_offset'
         type='number'
@@ -70,7 +69,7 @@ function TabSyntacticReference({ initial, onChangeValid, onChangeReference }: Ta
         value={nominal}
         onChange={event => setNominal(event.target.value)}
       />
-    </AnimateFade>
+    </div>
   );
 }
 

@@ -1,7 +1,6 @@
 'use client';
 
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
-import { AnimatePresence } from 'framer-motion';
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -162,11 +161,9 @@ function EditorRSExpression({
 
   return (
     <div>
-      <AnimatePresence>
-        {showAST ? (
-          <DlgShowAST expression={expression} syntaxTree={syntaxTree} hideWindow={() => setShowAST(false)} />
-        ) : null}
-      </AnimatePresence>
+      {showAST ? (
+        <DlgShowAST expression={expression} syntaxTree={syntaxTree} hideWindow={() => setShowAST(false)} />
+      ) : null}
 
       <ToolbarRSExpression
         disabled={disabled}

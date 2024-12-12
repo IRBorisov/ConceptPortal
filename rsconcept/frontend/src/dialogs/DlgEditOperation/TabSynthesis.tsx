@@ -31,21 +31,23 @@ function TabSynthesis({
 }: TabSynthesisProps) {
   const { colors } = useConceptOptions();
   return (
-    <DataLoader id='dlg-synthesis-tab' className='cc-column mt-3' isLoading={loading} error={error}>
-      <PickSubstitutions
-        schemas={schemas}
-        prefixID={prefixes.dlg_cst_substitutes_list}
-        rows={8}
-        substitutions={substitutions}
-        setSubstitutions={setSubstitutions}
-        suggestions={suggestions}
-      />
-      <TextArea
-        disabled
-        value={validationText}
-        rows={4}
-        style={{ borderColor: isCorrect ? undefined : colors.fgRed }}
-      />
+    <DataLoader isLoading={loading} error={error}>
+      <div className='cc-fade-in cc-column mt-3'>
+        <PickSubstitutions
+          schemas={schemas}
+          prefixID={prefixes.dlg_cst_substitutes_list}
+          rows={8}
+          substitutions={substitutions}
+          setSubstitutions={setSubstitutions}
+          suggestions={suggestions}
+        />
+        <TextArea
+          disabled
+          value={validationText}
+          rows={4}
+          style={{ borderColor: isCorrect ? undefined : colors.fgRed }}
+        />
+      </div>
     </DataLoader>
   );
 }

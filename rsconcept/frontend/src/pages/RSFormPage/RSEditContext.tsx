@@ -1,6 +1,5 @@
 'use client';
 
-import { AnimatePresence } from 'framer-motion';
 import fileDownload from 'js-file-download';
 import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -684,7 +683,7 @@ export const RSEditState = ({
       }}
     >
       {model.schema ? (
-        <AnimatePresence>
+        <>
           {showUpload ? <DlgUploadRSForm hideWindow={() => setShowUpload(false)} /> : null}
           {showClone ? (
             <DlgCloneLibraryItem
@@ -782,7 +781,7 @@ export const RSEditState = ({
           ) : null}
 
           {showTypeGraph ? <DlgShowTypeGraph items={typeInfo} hideWindow={() => setShowTypeGraph(false)} /> : null}
-        </AnimatePresence>
+        </>
       ) : null}
 
       {children}

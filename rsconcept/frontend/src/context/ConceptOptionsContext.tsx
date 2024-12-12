@@ -4,9 +4,8 @@ import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useSt
 
 import Tooltip from '@/components/ui/Tooltip';
 import useLocalStorage from '@/hooks/useLocalStorage';
-import { animationDuration } from '@/styling/animations';
 import { darkT, IColorTheme, lightT } from '@/styling/color';
-import { globals, storage } from '@/utils/constants';
+import { globals, PARAMETER, storage } from '@/utils/constants';
 import { contextOutsideScope } from '@/utils/labels';
 
 interface IOptionsContext {
@@ -91,7 +90,7 @@ export const OptionsState = ({ children }: React.PropsWithChildren) => {
       setNoNavigation(false);
     } else {
       setNoNavigationAnimation(true);
-      setTimeout(() => setNoNavigation(true), animationDuration.navigationToggle);
+      setTimeout(() => setNoNavigation(true), PARAMETER.moveDuration);
     }
   }, [noNavigation]);
 

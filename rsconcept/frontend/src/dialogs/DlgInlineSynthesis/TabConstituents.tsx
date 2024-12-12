@@ -16,7 +16,7 @@ interface TabConstituentsProps {
 
 function TabConstituents({ schema, error, loading, selected, setSelected }: TabConstituentsProps) {
   return (
-    <DataLoader id='dlg-constituents-tab' isLoading={loading} error={error} hasNoData={!schema}>
+    <DataLoader isLoading={loading} error={error} hasNoData={!schema}>
       {schema ? (
         <PickMultiConstituenta
           schema={schema}

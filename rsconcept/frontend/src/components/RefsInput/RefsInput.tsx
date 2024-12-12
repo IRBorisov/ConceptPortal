@@ -6,7 +6,6 @@ import { createTheme } from '@uiw/codemirror-themes';
 import CodeMirror, { BasicSetupOptions, ReactCodeMirrorProps, ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import clsx from 'clsx';
 import { EditorView } from 'codemirror';
-import { AnimatePresence } from 'framer-motion';
 import { forwardRef, useCallback, useMemo, useRef, useState } from 'react';
 
 import Label from '@/components/ui/Label';
@@ -207,22 +206,20 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
 
     return (
       <div className={clsx('flex flex-col gap-2', cursor)}>
-        <AnimatePresence>
-          {showEditor && schema ? (
-            <DlgEditReference
-              hideWindow={hideEditReference}
-              schema={schema}
-              initial={{
-                type: currentType,
-                refRaw: refText,
-                text: hintText,
-                basePosition: basePosition,
-                mainRefs: mainRefs
-              }}
-              onSave={handleInputReference}
-            />
-          ) : null}
-        </AnimatePresence>
+        {showEditor && schema ? (
+          <DlgEditReference
+            hideWindow={hideEditReference}
+            schema={schema}
+            initial={{
+              type: currentType,
+              refRaw: refText,
+              text: hintText,
+              basePosition: basePosition,
+              mainRefs: mainRefs
+            }}
+            onSave={handleInputReference}
+          />
+        ) : null}
         <Label text={label} />
         <CodeMirror
           id={id}

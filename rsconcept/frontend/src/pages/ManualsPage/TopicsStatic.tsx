@@ -27,7 +27,7 @@ function TopicsStatic({ activeTopic, onChangeTopic }: TopicsStaticProps) {
         'min-w-[14.5rem] max-w-[14.5rem] sm:min-w-[12.5rem] sm:max-w-[12.5rem] md:min-w-[14.5rem] md:max-w-[14.5rem]',
         'cc-scroll-y',
         'self-start',
-        'border divide-y rounded-none',
+        'border-x border-t rounded-none',
         'clr-controls',
         'text-xs sm:text-sm',
         'select-none'

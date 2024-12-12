@@ -6,7 +6,6 @@ import PickConstituenta from '@/components/select/PickConstituenta';
 import SelectMultiGrammeme from '@/components/select/SelectMultiGrammeme';
 import Label from '@/components/ui/Label';
 import TextInput from '@/components/ui/TextInput';
-import AnimateFade from '@/components/wrap/AnimateFade';
 import { ReferenceType } from '@/models/language';
 import { parseEntityReference, parseGrammemes } from '@/models/languageAPI';
 import { CstMatchMode } from '@/models/miscellaneous';
@@ -59,7 +58,7 @@ function TabEntityReference({ initial, schema, onChangeValid, onChangeReference 
   }
 
   return (
-    <AnimateFade className='cc-column'>
+    <div className='cc-fade-in cc-column'>
       <PickConstituenta
         id='dlg_reference_entity_picker'
         initialFilter={initial.text}
@@ -108,7 +107,7 @@ function TabEntityReference({ initial, schema, onChangeValid, onChangeReference 
           onChangeValue={setSelectedGrams}
         />
       </div>
-    </AnimateFade>
+    </div>
   );
 }
 

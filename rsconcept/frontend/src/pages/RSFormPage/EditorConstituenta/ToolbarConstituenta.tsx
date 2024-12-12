@@ -51,7 +51,7 @@ function ToolbarConstituenta({
   return (
     <Overlay
       position='cc-tab-tools right-1/2 translate-x-1/2 xs:right-4 xs:translate-x-0 md:right-1/2 md:translate-x-1/2'
-      className='cc-icons outline-none transition-all duration-500 cc-blur px-1 rounded-b-2xl'
+      className='cc-icons cc-animate-position outline-none cc-blur px-1 rounded-b-2xl'
     >
       {controller.schema && controller.schema?.oss.length > 0 ? (
         <MiniSelectorOSS

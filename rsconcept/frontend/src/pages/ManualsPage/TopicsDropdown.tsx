@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import { motion } from 'framer-motion';
 import { useCallback } from 'react';
 
 import { IconMenuFold, IconMenuUnfold } from '@/components/Icons';
@@ -10,8 +9,7 @@ import SelectTree from '@/components/ui/SelectTree';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import useDropdown from '@/hooks/useDropdown';
 import { HelpTopic, topicParent } from '@/models/miscellaneous';
-import { animateSlideLeft } from '@/styling/animations';
-import { prefixes } from '@/utils/constants';
+import { PARAMETER, prefixes } from '@/utils/constants';
 import { describeHelpTopic, labelHelpTopic } from '@/utils/labels';
 
 interface TopicsDropdownProps {
@@ -52,30 +50,29 @@ function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownProps) {
         title='Список тем'
         hideTitle={menu.isOpen}
         icon={!menu.isOpen ? <IconMenuUnfold size='1.25rem' /> : <IconMenuFold size='1.25rem' />}
-        className='w-[3rem] h-7 rounded-none'
+        className={clsx('w-[3rem] h-7 rounded-none border-l-0', menu.isOpen && 'border-b-0')}
         onClick={menu.toggle}
       />
-      <motion.div
+      <SelectTree
+        items={Object.values(HelpTopic).map(item => item as HelpTopic)}
+        value={activeTopic}
+        onChangeValue={handleSelectTopic}
+        prefix={prefixes.topic_list}
+        getParent={item => topicParent.get(item) ?? item}
+        getLabel={labelHelpTopic}
+        getDescription={describeHelpTopic}
         className={clsx(
-          'border divide-y rounded-none', // prettier: split-lines
+          'border-r border-t rounded-none', // prettier: split-lines
           'cc-scroll-y',
           'clr-controls'
         )}
-        style={{ maxHeight: calculateHeight('4rem + 2px') }}
-        initial={false}
-        animate={menu.isOpen ? 'open' : 'closed'}
-        variants={animateSlideLeft}
-      >
-        <SelectTree
-          items={Object.values(HelpTopic).map(item => item as HelpTopic)}
-          value={activeTopic}
-          onChangeValue={handleSelectTopic}
-          prefix={prefixes.topic_list}
-          getParent={item => topicParent.get(item) ?? item}
-          getLabel={labelHelpTopic}
-          getDescription={describeHelpTopic}
-        />
-      </motion.div>
+        style={{
+          maxHeight: calculateHeight('4rem + 2px'),
+          transitionProperty: 'clip-path',
+          transitionDuration: `${PARAMETER.moveDuration}ms`,
+          clipPath: menu.isOpen ? 'inset(0% 0% 0% 0%)' : 'inset(0% 100% 0% 0%)'
+        }}
+      />
     </div>
   );
 }

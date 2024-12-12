@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import { AnimatePresence } from 'framer-motion';
 import { toPng } from 'html-to-image';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -25,7 +24,6 @@ import SelectedCounter from '@/components/info/SelectedCounter';
 import { CProps } from '@/components/props';
 import ToolbarGraphSelection from '@/components/select/ToolbarGraphSelection';
 import Overlay from '@/components/ui/Overlay';
-import AnimateFade from '@/components/wrap/AnimateFade';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import DlgGraphParams from '@/dialogs/DlgGraphParams';
 import useLocalStorage from '@/hooks/useLocalStorage';
@@ -376,70 +374,68 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
 
   return (
     <>
-      <AnimatePresence>
-        {showParamsDialog ? (
-          <DlgGraphParams
-            hideWindow={() => setShowParamsDialog(false)}
-            initial={filterParams}
-            onConfirm={handleChangeParams}
+      {showParamsDialog ? (
+        <DlgGraphParams
+          hideWindow={() => setShowParamsDialog(false)}
+          initial={filterParams}
+          onConfirm={handleChangeParams}
+        />
+      ) : null}
+
+      <Overlay position='cc-tab-tools' className='flex flex-col items-center rounded-b-2xl cc-blur'>
+        <ToolbarTermGraph
+          noText={filterParams.noText}
+          foldDerived={filterParams.foldDerived}
+          showParamsDialog={() => setShowParamsDialog(true)}
+          onCreate={handleCreateCst}
+          onDelete={handleDeleteCst}
+          onFitView={() => setToggleResetView(prev => !prev)}
+          onSaveImage={handleSaveImage}
+          toggleFoldDerived={handleFoldDerived}
+          toggleNoText={() =>
+            setFilterParams(prev => ({
+              ...prev,
+              noText: !prev.noText
+            }))
+          }
+        />
+        {!focusCst ? (
+          <ToolbarGraphSelection
+            graph={controller.schema!.graph}
+            isCore={cstID => isBasicConcept(controller.schema?.cstByID.get(cstID)?.cst_type)}
+            isOwned={
+              controller.schema && controller.schema.inheritance.length > 0
+                ? cstID => !controller.schema!.cstByID.get(cstID)?.is_inherited
+                : undefined
+            }
+            selected={controller.selected}
+            setSelected={handleSetSelected}
+            emptySelection={controller.selected.length === 0}
           />
         ) : null}
-      </AnimatePresence>
-
-      <AnimateFade tabIndex={-1} onKeyDown={handleKeyDown}>
-        <Overlay position='cc-tab-tools' className='flex flex-col items-center rounded-b-2xl cc-blur'>
-          <ToolbarTermGraph
-            noText={filterParams.noText}
-            foldDerived={filterParams.foldDerived}
-            showParamsDialog={() => setShowParamsDialog(true)}
-            onCreate={handleCreateCst}
-            onDelete={handleDeleteCst}
-            onFitView={() => setToggleResetView(prev => !prev)}
-            onSaveImage={handleSaveImage}
-            toggleFoldDerived={handleFoldDerived}
-            toggleNoText={() =>
+        {focusCst ? (
+          <ToolbarFocusedCst
+            center={focusCst}
+            reset={() => handleSetFocus(undefined)}
+            showInputs={filterParams.focusShowInputs}
+            showOutputs={filterParams.focusShowOutputs}
+            toggleShowInputs={() =>
               setFilterParams(prev => ({
                 ...prev,
-                noText: !prev.noText
+                focusShowInputs: !prev.focusShowInputs
+              }))
+            }
+            toggleShowOutputs={() =>
+              setFilterParams(prev => ({
+                ...prev,
+                focusShowOutputs: !prev.focusShowOutputs
               }))
             }
           />
-          {!focusCst ? (
-            <ToolbarGraphSelection
-              graph={controller.schema!.graph}
-              isCore={cstID => isBasicConcept(controller.schema?.cstByID.get(cstID)?.cst_type)}
-              isOwned={
-                controller.schema && controller.schema.inheritance.length > 0
-                  ? cstID => !controller.schema!.cstByID.get(cstID)?.is_inherited
-                  : undefined
-              }
-              selected={controller.selected}
-              setSelected={handleSetSelected}
-              emptySelection={controller.selected.length === 0}
-            />
-          ) : null}
-          {focusCst ? (
-            <ToolbarFocusedCst
-              center={focusCst}
-              reset={() => handleSetFocus(undefined)}
-              showInputs={filterParams.focusShowInputs}
-              showOutputs={filterParams.focusShowOutputs}
-              toggleShowInputs={() =>
-                setFilterParams(prev => ({
-                  ...prev,
-                  focusShowInputs: !prev.focusShowInputs
-                }))
-              }
-              toggleShowOutputs={() =>
-                setFilterParams(prev => ({
-                  ...prev,
-                  focusShowOutputs: !prev.focusShowOutputs
-                }))
-              }
-            />
-          ) : null}
-        </Overlay>
+        ) : null}
+      </Overlay>
 
+      <div className='cc-fade-in' tabIndex={-1} onKeyDown={handleKeyDown}>
         <SelectedCounter
           hideZero
           totalCount={controller.schema?.stats?.count_all ?? 0}
@@ -470,8 +466,9 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
             {viewHidden}
           </div>
         </Overlay>
+
         {graph}
-      </AnimateFade>
+      </div>
     </>
   );
 }

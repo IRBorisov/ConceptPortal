@@ -1,12 +1,10 @@
 import clsx from 'clsx';
-import { motion } from 'framer-motion';
 
-import { animateDropdownItem } from '@/styling/animations';
 import { globals } from '@/utils/constants';
 
 import { CProps } from '../props';
 
-interface DropdownButtonProps extends CProps.AnimatedButton {
+interface DropdownButtonProps extends CProps.Button {
   /** Icon to display first (not used if children are provided). */
   icon?: React.ReactNode;
 
@@ -18,7 +16,7 @@ interface DropdownButtonProps extends CProps.AnimatedButton {
 }
 
 /**
- * Animated `button` with optional text, icon, and click functionality.
+ * `button` with optional text, icon, and click functionality styled for use in a {@link Dropdown}.
  * It supports optional children for custom content or the default text/icon display.
  */
 function DropdownButton({
@@ -33,7 +31,7 @@ function DropdownButton({
   ...restProps
 }: DropdownButtonProps) {
   return (
-    <motion.button
+    <button
       tabIndex={-1}
       type='button'
       onClick={onClick}
@@ -48,7 +46,6 @@ function DropdownButton({
         },
         className
       )}
-      variants={animateDropdownItem}
       data-tooltip-id={!!title || !!titleHtml ? globals.tooltip : undefined}
       data-tooltip-html={titleHtml}
       data-tooltip-content={title}
@@ -58,7 +55,7 @@ function DropdownButton({
       {children ? children : null}
       {!children && icon ? icon : null}
       {!children && text ? <span>{text}</span> : null}
-    </motion.button>
+    </button>
   );
 }
 

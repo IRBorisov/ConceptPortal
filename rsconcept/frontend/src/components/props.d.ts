@@ -1,5 +1,6 @@
 // =========== Module contains interfaces for common UI elements. ==========
-import { HTMLMotionProps } from 'framer-motion';
+import { animated } from '@react-spring/web';
+import React from 'react';
 
 export namespace CProps {
   /**
@@ -89,14 +90,9 @@ export namespace CProps {
   export type Input = Titled & React.ComponentProps<'input'>;
 
   /**
-   * Represents `button` component with optional title and animation properties.
-   */
-  export type AnimatedButton = Titled & Omit<HTMLMotionProps<'button'>, 'type'>;
-
-  /**
    * Represents `div` component with animation properties.
    */
-  export type AnimatedDiv = HTMLMotionProps<'div'>;
+  export type AnimatedDiv = React.ComponentPropsWithoutRef<typeof animated.div>;
 
   /**
    * Represents `mouse event` in React.

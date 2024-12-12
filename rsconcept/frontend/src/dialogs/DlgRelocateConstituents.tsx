@@ -118,7 +118,7 @@ function DlgRelocateConstituents({ oss, hideWindow, initialTarget, onSubmit }: D
             onSelectValue={handleSelectDestination}
           />
         </div>
-        <DataLoader id='dlg-relocate-constituents' isLoading={sourceData.loading} error={sourceData.error}>
+        <DataLoader isLoading={sourceData.loading} error={sourceData.error}>
           {sourceData.schema ? (
             <PickMultiConstituenta
               noBorder

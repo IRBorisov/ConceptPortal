@@ -4,7 +4,6 @@ import { useMemo } from 'react';
 
 import PickSchema from '@/components/select/PickSchema';
 import TextInput from '@/components/ui/TextInput';
-import AnimateFade from '@/components/wrap/AnimateFade';
 import { useLibrary } from '@/context/LibraryContext';
 import { LibraryItemID, LibraryItemType } from '@/models/library';
 import { IRSForm } from '@/models/rsform';
@@ -22,7 +21,7 @@ function TabSchema({ selected, receiver, setSelected }: TabSchemaProps) {
   const sortedItems = useMemo(() => sortItemsForInlineSynthesis(receiver, library.items), [receiver, library.items]);
 
   return (
-    <AnimateFade className='flex flex-col'>
+    <div className='cc-fade-in flex flex-col'>
       <PickSchema
         id='dlg_schema_picker' // prettier: split lines
         items={sortedItems}
@@ -43,7 +42,7 @@ function TabSchema({ selected, receiver, setSelected }: TabSchemaProps) {
           dense
         />
       </div>
-    </AnimateFade>
+    </div>
   );
 }
 

@@ -3,7 +3,6 @@
 import clsx from 'clsx';
 
 import FlexColumn from '@/components/ui/FlexColumn';
-import AnimateFade from '@/components/wrap/AnimateFade';
 import { useOSS } from '@/context/OssContext';
 import EditorLibraryItem from '@/pages/RSFormPage/EditorRSFormCard/EditorLibraryItem';
 import ToolbarRSFormCard from '@/pages/RSFormPage/EditorRSFormCard/ToolbarRSFormCard';
@@ -47,9 +46,14 @@ function EditorOssCard({ isModified, onDestroy, setIsModified }: EditorOssCardPr
         onDestroy={onDestroy}
         controller={controller}
       />
-      <AnimateFade
+      <div
         onKeyDown={handleInput}
-        className={clsx('md:w-fit md:max-w-fit max-w-[32rem]', 'mx-auto pt-[1.9rem]', 'flex flex-row flex-wrap px-6')}
+        className={clsx(
+          'cc-fade-in',
+          'md:w-fit md:max-w-fit max-w-[32rem]',
+          'mx-auto pt-[1.9rem]',
+          'flex flex-row flex-wrap px-6'
+        )}
       >
         <FlexColumn className='px-3'>
           <FormOSS id={globals.library_item_editor} isModified={isModified} setIsModified={setIsModified} />
@@ -57,7 +61,7 @@ function EditorOssCard({ isModified, onDestroy, setIsModified }: EditorOssCardPr
         </FlexColumn>
 
         {schema ? <OssStats stats={schema.stats} /> : null}
-      </AnimateFade>
+      </div>
     </>
   );
 }

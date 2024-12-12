@@ -1,7 +1,6 @@
 import clsx from 'clsx';
-import { motion } from 'framer-motion';
 
-import { animateDropdown } from '@/styling/animations';
+import { PARAMETER } from '@/utils/constants';
 
 import { CProps } from '../props';
 
@@ -25,11 +24,12 @@ function Dropdown({
   stretchTop,
   className,
   children,
+  style,
   ...restProps
 }: React.PropsWithChildren<DropdownProps>) {
   return (
     <div className='relative'>
-      <motion.div
+      <div
         tabIndex={-1}
         className={clsx(
           'z-topmost',
@@ -45,13 +45,18 @@ function Dropdown({
           },
           className
         )}
-        initial={false}
-        animate={isOpen ? 'open' : 'closed'}
-        variants={animateDropdown}
+        style={{
+          transitionProperty: 'clip-path, transform',
+          transitionDuration: `${PARAMETER.dropdownDuration}ms`,
+          transitionTimingFunction: 'ease-in-out',
+          transform: isOpen ? 'translateY(0)' : 'translateY(-10%)',
+          clipPath: isOpen ? 'inset(0% 0% 0% 0%)' : 'inset(10% 0% 90% 0%)',
+          ...style
+        }}
         {...restProps}
       >
         {children}
-      </motion.div>
+      </div>
     </div>
   );
 }

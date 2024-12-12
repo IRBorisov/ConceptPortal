@@ -6,7 +6,6 @@ import RSInput from '@/components/RSInput';
 import PickConstituenta from '@/components/select/PickConstituenta';
 import SelectSingle from '@/components/ui/SelectSingle';
 import TextArea from '@/components/ui/TextArea';
-import AnimateFade from '@/components/wrap/AnimateFade';
 import { useLibrary } from '@/context/LibraryContext';
 import { CATEGORY_CST_TYPE, IConstituenta, IRSForm } from '@/models/rsform';
 import { applyFilterCategory } from '@/models/rsformAPI';
@@ -78,7 +77,7 @@ function TabTemplate({ state, partialUpdate, templateSchema }: TabTemplateProps)
   }, [state.filterCategory, templateSchema]);
 
   return (
-    <AnimateFade>
+    <div className='cc-fade-in'>
       <div className='flex border-t border-x rounded-t-md clr-input'>
         <SelectSingle
           noBorder
@@ -138,7 +137,7 @@ function TabTemplate({ state, partialUpdate, templateSchema }: TabTemplateProps)
         height='5.1rem'
         value={state.prototype?.definition_formal}
       />
-    </AnimateFade>
+    </div>
   );
 }
 

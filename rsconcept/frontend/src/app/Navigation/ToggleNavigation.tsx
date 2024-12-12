@@ -1,15 +1,13 @@
 import clsx from 'clsx';
-import { motion } from 'framer-motion';
 
 import { IconPin, IconUnpin } from '@/components/Icons';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
-import { animateNavigationToggle } from '@/styling/animations';
-import { globals } from '@/utils/constants';
+import { globals, PARAMETER } from '@/utils/constants';
 
 function ToggleNavigation() {
   const { noNavigationAnimation, toggleNoNavigation } = useConceptOptions();
   return (
-    <motion.button
+    <button
       type='button'
       tabIndex={-1}
       className={clsx(
@@ -20,15 +18,18 @@ function ToggleNavigation() {
         'select-none'
       )}
       onClick={toggleNoNavigation}
-      initial={false}
-      animate={noNavigationAnimation ? 'off' : 'on'}
-      variants={animateNavigationToggle}
       data-tooltip-id={globals.tooltip}
       data-tooltip-content={noNavigationAnimation ? 'Показать навигацию' : 'Скрыть навигацию'}
+      style={{
+        transitionProperty: 'height, width',
+        transitionDuration: `${PARAMETER.moveDuration}ms`,
+        height: noNavigationAnimation ? '1.2rem' : '3rem',
+        width: noNavigationAnimation ? '3rem' : '1.2rem'
+      }}
     >
       {!noNavigationAnimation ? <IconPin /> : null}
       {noNavigationAnimation ? <IconUnpin /> : null}
-    </motion.button>
+    </button>
   );
 }
 

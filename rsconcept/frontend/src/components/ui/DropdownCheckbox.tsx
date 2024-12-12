@@ -1,15 +1,11 @@
 import clsx from 'clsx';
-import { motion } from 'framer-motion';
-
-import { animateDropdownItem } from '@/styling/animations';
 
 import Checkbox, { CheckboxProps } from './Checkbox';
 
 /** Animated {@link Checkbox} inside a {@link Dropdown} item. */
 function DropdownCheckbox({ setValue, disabled, ...restProps }: CheckboxProps) {
   return (
-    <motion.div
-      variants={animateDropdownItem}
+    <div
       className={clsx(
         'px-3 py-1',
         'text-left overflow-ellipsis whitespace-nowrap',
@@ -18,7 +14,7 @@ function DropdownCheckbox({ setValue, disabled, ...restProps }: CheckboxProps) {
       )}
     >
       <Checkbox tabIndex={-1} disabled={disabled} setValue={setValue} {...restProps} />
-    </motion.div>
+    </div>
   );
 }
 

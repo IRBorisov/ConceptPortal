@@ -3,13 +3,22 @@ import clsx from 'clsx';
 import { CProps } from '@/components/props';
 import { globals } from '@/utils/constants';
 
-interface NavigationButtonProps extends CProps.Titled {
+interface NavigationButtonProps extends CProps.Titled, CProps.Styling {
   text?: string;
   icon: React.ReactNode;
   onClick?: (event: CProps.EventMouse) => void;
 }
 
-function NavigationButton({ icon, title, titleHtml, hideTitle, onClick, text }: NavigationButtonProps) {
+function NavigationButton({
+  icon,
+  title,
+  className,
+  style,
+  titleHtml,
+  hideTitle,
+  onClick,
+  text
+}: NavigationButtonProps) {
   return (
     <button
       type='button'
@@ -29,8 +38,10 @@ function NavigationButton({ icon, title, titleHtml, hideTitle, onClick, text }: 
         {
           'px-2': text,
           'px-4': !text
-        }
+        },
+        className
       )}
+      style={style}
     >
       {icon ? <span>{icon}</span> : null}
       {text ? <span className='hidden sm:inline'>{text}</span> : null}

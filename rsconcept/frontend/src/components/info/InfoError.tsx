@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { isResponseHtml } from '@/utils/utils';
 
 import PrettyJson from '../ui/PrettyJSON';
-import AnimateFade from '../wrap/AnimateFade';
 
 export type ErrorData = string | Error | AxiosError | undefined;
 
@@ -59,8 +58,9 @@ function DescribeError({ error }: { error: ErrorData }) {
 
 function InfoError({ error }: InfoErrorProps) {
   return (
-    <AnimateFade
+    <div
       className={clsx(
+        'cc-fade-in',
         'min-w-[25rem]',
         'px-3 py-2 flex flex-col',
         'clr-text-red',
@@ -75,7 +75,7 @@ function InfoError({ error }: InfoErrorProps) {
       </div>
 
       <DescribeError error={error} />
-    </AnimateFade>
+    </div>
   );
 }
 

@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import { motion } from 'framer-motion';
 import { useCallback, useMemo } from 'react';
 
 import { LocationIcon, VisibilityIcon } from '@/components/DomainIcons';
@@ -25,7 +24,6 @@ import { useUsers } from '@/context/UsersContext';
 import useDropdown from '@/hooks/useDropdown';
 import { LocationHead } from '@/models/library';
 import { UserID } from '@/models/user';
-import { animateDropdownItem } from '@/styling/animations';
 import { prefixes } from '@/utils/constants';
 import { describeLocationHead, labelLocationHead } from '@/utils/labels';
 import { tripleToggleColor } from '@/utils/utils';
@@ -163,16 +161,14 @@ function ToolbarSearch({
               icon={<IconEditor size='1.25rem' className={tripleToggleColor(isEditor)} />}
               onClick={toggleEditor}
             />
-            <motion.div className='px-1 pb-1' variants={animateDropdownItem}>
-              <SelectUser
-                noBorder
-                placeholder='Выберите владельца'
-                className='min-w-[15rem] text-sm'
-                items={users}
-                value={filterUser}
-                onSelectValue={onChangeFilterUser}
-              />
-            </motion.div>
+            <SelectUser
+              noBorder
+              placeholder='Выберите владельца'
+              className='min-w-[15rem] text-sm mx-1 mb-1'
+              items={users}
+              value={filterUser}
+              onSelectValue={onChangeFilterUser}
+            />
           </Dropdown>
         </div>
 

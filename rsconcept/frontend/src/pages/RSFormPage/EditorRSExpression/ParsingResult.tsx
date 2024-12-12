@@ -1,8 +1,5 @@
-import { motion } from 'framer-motion';
-
 import { IExpressionParse, IRSErrorDescription } from '@/models/rslang';
 import { getRSErrorPrefix } from '@/models/rslangAPI';
-import { animateParseResults } from '@/styling/animations';
 import { describeRSError } from '@/utils/labels';
 
 interface ParsingResultProps {
@@ -17,12 +14,16 @@ function ParsingResult({ isOpen, data, disabled, onShowError }: ParsingResultPro
   const warningsCount = data ? data.errors.length - errorCount : 0;
 
   return (
-    <motion.div
+    <div
       tabIndex={-1}
-      className='text-sm border dense cc-scroll-y'
-      initial={false}
-      animate={isOpen ? 'open' : 'closed'}
-      variants={animateParseResults}
+      className='text-sm border dense cc-scroll-y transition-all duration-300'
+      style={{
+        clipPath: isOpen ? 'inset(0% 0% 0% 0%)' : 'inset(0% 0% 100% 0%)',
+        marginTop: isOpen ? '0.75rem' : '0rem',
+        padding: isOpen ? '0.25rem 0.5rem 0.25rem 0.5rem' : '0rem 0rem 0rem 0rem',
+        borderWidth: isOpen ? '1px' : '0px',
+        height: isOpen ? '4.5rem' : '0rem'
+      }}
     >
       <p>
         Ошибок: <b>{errorCount}</b> | Предупреждений: <b>{warningsCount}</b>
@@ -42,7 +43,7 @@ function ParsingResult({ isOpen, data, disabled, onShowError }: ParsingResultPro
           </p>
         );
       })}
-    </motion.div>
+    </div>
   );
 }
 

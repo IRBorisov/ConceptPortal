@@ -1,11 +1,9 @@
 'use client';
 
 import clsx from 'clsx';
-import { motion } from 'framer-motion';
 
 import useEscapeKey from '@/hooks/useEscapeKey';
 import { HelpTopic } from '@/models/miscellaneous';
-import { animateModal } from '@/styling/animations';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/labels';
 
@@ -100,17 +98,12 @@ function Modal({
         className={clsx('z-navigation', 'fixed top-0 left-0', 'w-full h-full', 'cc-modal-backdrop')}
         onClick={hideWindow}
       />
-      <motion.div
+      <div
         className={clsx(
-          'z-modal',
-          'absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2',
-          'border rounded-xl',
-          'clr-app'
+          'cc-animate-modal',
+          'z-modal absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2',
+          'border rounded-xl clr-app'
         )}
-        initial={{ ...animateModal.initial }}
-        animate={{ ...animateModal.animate }}
-        exit={{ ...animateModal.exit }}
-        {...restProps}
       >
         <Overlay position='right-2 top-2'>
           <MiniButton
@@ -130,13 +123,14 @@ function Modal({
 
         <div
           className={clsx(
-            'overscroll-contain max-h-[calc(100svh-8rem)] max-w-[100svw] xs:max-w-[calc(100svw-2rem)]',
+            'overscroll-contain max-h-[calc(100svh-8rem)] max-w-[100svw] xs:max-w-[calc(100svw-2rem)] outline-none',
             {
               'overflow-auto': !overflowVisible,
               'overflow-visible': overflowVisible
             },
             className
           )}
+          {...restProps}
         >
           {children}
         </div>
@@ -155,7 +149,7 @@ function Modal({
           ) : null}
           <Button text={readonly ? 'Закрыть' : 'Отмена'} className='min-w-[7rem]' onClick={handleCancel} />
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

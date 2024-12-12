@@ -2,7 +2,6 @@ import FlexColumn from '@/components/ui/FlexColumn';
 import Label from '@/components/ui/Label';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
-import AnimateFade from '@/components/wrap/AnimateFade';
 import { IOperationSchema, OperationID } from '@/models/oss';
 
 import PickMultiOperation from '../../components/select/PickMultiOperation';
@@ -31,7 +30,7 @@ function TabSynthesisOperation({
   setInputs
 }: TabSynthesisOperationProps) {
   return (
-    <AnimateFade className='cc-column'>
+    <div className='cc-fade-in cc-column'>
       <TextInput
         id='operation_title'
         label='Полное название'
@@ -61,7 +60,7 @@ function TabSynthesisOperation({
         <Label text={`Выбор аргументов: [ ${inputs.length} ]`} />
         <PickMultiOperation items={oss.items} selected={inputs} setSelected={setInputs} rows={6} />
       </FlexColumn>
-    </AnimateFade>
+    </div>
   );
 }
 

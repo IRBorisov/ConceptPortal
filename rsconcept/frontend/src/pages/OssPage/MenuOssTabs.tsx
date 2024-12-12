@@ -16,9 +16,9 @@ import {
   IconShare
 } from '@/components/Icons';
 import Button from '@/components/ui/Button';
+import Divider from '@/components/ui/Divider';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
-import DropdownDivider from '@/components/ui/DropdownDivider';
 import { useAccessMode } from '@/context/AccessModeContext';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
@@ -102,7 +102,7 @@ function MenuOssTabs({ onDestroy }: MenuOssTabsProps) {
             />
           ) : null}
 
-          <DropdownDivider margins='mx-3 my-1' />
+          <Divider margins='mx-3 my-1' />
 
           {user ? (
             <DropdownButton

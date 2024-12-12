@@ -1,11 +1,11 @@
 import clsx from 'clsx';
-import { motion } from 'framer-motion';
 
 import { IconLibrary2, IconManuals, IconNewItem2 } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
-import { animateNavigation } from '@/styling/animations';
+import useWindowSize from '@/hooks/useWindowSize';
+import { PARAMETER } from '@/utils/constants';
 
 import { urls } from '../urls';
 import Logo from './Logo';
@@ -15,6 +15,7 @@ import UserMenu from './UserMenu';
 
 function Navigation() {
   const router = useConceptNavigation();
+  const size = useWindowSize();
   const { noNavigationAnimation } = useConceptOptions();
 
   const navigateHome = (event: CProps.EventMouse) => router.push(urls.home, event.ctrlKey || event.metaKey);
@@ -33,17 +34,24 @@ function Navigation() {
       )}
     >
       <ToggleNavigation />
-      <motion.div
+      <div
         className={clsx(
           'pl-2 pr-[1.5rem] sm:pr-[0.9rem] h-[3rem]', // prettier: split lines
           'flex',
           'cc-shadow-border'
         )}
-        initial={false}
-        animate={!noNavigationAnimation ? 'open' : 'closed'}
-        variants={animateNavigation}
+        style={{
+          transitionProperty: 'height, translate',
+          transitionDuration: `${PARAMETER.moveDuration}ms`,
+          height: noNavigationAnimation ? '0rem' : '3rem',
+          translate: noNavigationAnimation ? '0 -1.5rem' : '0'
+        }}
       >
-        <div tabIndex={-1} className='flex items-center mr-auto cursor-pointer' onClick={navigateHome}>
+        <div
+          tabIndex={-1}
+          className={clsx('flex items-center mr-auto', !size.isSmall && 'cursor-pointer')}
+          onClick={!size.isSmall ? navigateHome : undefined}
+        >
           <Logo />
         </div>
         <div className='flex gap-1 py-[0.3rem]'>
@@ -52,7 +60,7 @@ function Navigation() {
           <NavigationButton text='Справка' icon={<IconManuals size='1.5rem' />} onClick={navigateHelp} />
           <UserMenu />
         </div>
-      </motion.div>
+      </div>
     </nav>
   );
 }

@@ -1,9 +1,7 @@
 import clsx from 'clsx';
-import { motion } from 'framer-motion';
 
 import { TokenID } from '@/models/rslang';
-import { animateRSControl } from '@/styling/animations';
-import { prefixes } from '@/utils/constants';
+import { PARAMETER, prefixes } from '@/utils/constants';
 
 import RSLocalButton from './RSLocalButton';
 import RSTokenButton from './RSTokenButton';
@@ -90,7 +88,7 @@ interface RSEditorControlsProps {
 
 function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsProps) {
   return (
-    <motion.div
+    <div
       className={clsx(
         'max-w-[28rem] min-w-[28rem] xs:max-w-[38.5rem] xs:min-w-[38.5rem] sm:max-w-[40rem] sm:min-w-[40rem] md:max-w-fit mx-1 sm:mx-0',
         'flex-wrap',
@@ -98,9 +96,13 @@ function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsProps) {
         'text-xs md:text-sm',
         'select-none'
       )}
-      initial={false}
-      animate={isOpen ? 'open' : 'closed'}
-      variants={animateRSControl}
+      style={{
+        transitionProperty: 'clipPath, height',
+        transitionDuration: `${PARAMETER.moveDuration}ms`,
+        clipPath: isOpen ? 'inset(0% 0% 0% 0%)' : 'inset(0% 0% 100% 0%)',
+        marginTop: isOpen ? '0.25rem' : '0rem',
+        height: isOpen ? 'max-content' : '0rem'
+      }}
     >
       {MAIN_FIRST_ROW.map(token => (
         <RSTokenButton key={`${prefixes.rsedit_btn}${token}`} token={token} onInsert={onEdit} disabled={disabled} />
@@ -143,7 +145,7 @@ function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsProps) {
           disabled={disabled}
         />
       ))}
-    </motion.div>
+    </div>
   );
 }
 

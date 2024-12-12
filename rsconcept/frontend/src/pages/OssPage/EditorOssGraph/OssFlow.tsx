@@ -18,7 +18,6 @@ import {
 
 import { CProps } from '@/components/props';
 import Overlay from '@/components/ui/Overlay';
-import AnimateFade from '@/components/wrap/AnimateFade';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useOSS } from '@/context/OssContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
@@ -349,7 +348,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
   );
 
   return (
-    <AnimateFade tabIndex={-1} onKeyDown={handleKeyDown}>
+    <div tabIndex={-1} onKeyDown={handleKeyDown}>
       <Overlay position='top-[1.9rem] pt-1 right-1/2 translate-x-1/2' className='rounded-b-2xl cc-blur'>
         <ToolbarOssGraph
           isModified={isModified}
@@ -381,10 +380,10 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
           {...menuProps}
         />
       ) : null}
-      <div className='relative w-[100vw]' style={{ height: mainHeight, fontFamily: 'Rubik' }}>
+      <div className='cc-fade-in relative w-[100vw]' style={{ height: mainHeight, fontFamily: 'Rubik' }}>
         {graph}
       </div>
-    </AnimateFade>
+    </div>
   );
 }
 

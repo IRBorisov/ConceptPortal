@@ -1,6 +1,5 @@
 'use client';
 
-import { AnimatePresence } from 'framer-motion';
 import fileDownload from 'js-file-download';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -150,6 +149,7 @@ function LibraryPage() {
   const viewLocations = useMemo(
     () => (
       <ViewSideLocation
+        isVisible={options.folderMode}
         activeLocation={options.location}
         onChangeActiveLocation={options.setLocation}
         subfolders={subfolders}
@@ -163,6 +163,7 @@ function LibraryPage() {
       options.location,
       library.folders,
       options.setLocation,
+      options.folderMode,
       toggleFolderMode,
       promptRenameLocation,
       toggleSubfolders,
@@ -171,12 +172,7 @@ function LibraryPage() {
   );
 
   return (
-    <DataLoader
-      id='library-page' // prettier: split lines
-      isLoading={library.loading}
-      error={library.loadingError}
-      hasNoData={library.items.length === 0}
-    >
+    <DataLoader isLoading={library.loading} error={library.loadingError} hasNoData={library.items.length === 0}>
       {showRenameLocation ? (
         <DlgChangeLocation
           initial={options.location}
@@ -187,7 +183,7 @@ function LibraryPage() {
       <Overlay
         position={options.noNavigation ? 'top-[0.25rem] right-[3rem]' : 'top-[0.25rem] right-0'}
         layer='z-tooltip'
-        className='transition-all'
+        className='cc-animate-position'
       >
         <MiniButton
           title='Выгрузить в формате CSV'
@@ -218,8 +214,8 @@ function LibraryPage() {
         toggleFolderMode={toggleFolderMode}
       />
 
-      <div className='flex'>
-        <AnimatePresence initial={false}>{options.folderMode ? viewLocations : null}</AnimatePresence>
+      <div className='cc-fade-in flex'>
+        {viewLocations}
         {viewLibrary}
       </div>
     </DataLoader>

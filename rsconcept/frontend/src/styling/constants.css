@@ -16,6 +16,10 @@
   --text-max-width: 75ch;
   --scroll-padding: 3rem;
 
+  --duration-move: 500ms;
+  --duration-modal: 300ms;
+  --duration-fade: 300ms;
+
   /* Light Theme */
   --cl-bg-120:      hsl(000, 000%, 100%);
   --cl-bg-100:      hsl(000, 000%, 098%);

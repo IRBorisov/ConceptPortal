@@ -5,7 +5,6 @@ import { useMemo } from 'react';
 import PickMultiOperation from '@/components/select/PickMultiOperation';
 import FlexColumn from '@/components/ui/FlexColumn';
 import Label from '@/components/ui/Label';
-import AnimateFade from '@/components/wrap/AnimateFade';
 import { IOperationSchema, OperationID } from '@/models/oss';
 
 interface TabArgumentsProps {
@@ -22,12 +21,12 @@ function TabArguments({ oss, inputs, target, setInputs }: TabArgumentsProps) {
     [oss.items, potentialCycle]
   );
   return (
-    <AnimateFade className='cc-column'>
+    <div className='cc-fade-in cc-column'>
       <FlexColumn>
         <Label text={`Выбор аргументов: [ ${inputs.length} ]`} />
         <PickMultiOperation items={filtered} selected={inputs} setSelected={setInputs} rows={8} />
       </FlexColumn>
-    </AnimateFade>
+    </div>
   );
 }
 

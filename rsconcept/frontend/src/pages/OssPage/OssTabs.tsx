@@ -12,7 +12,6 @@ import Loader from '@/components/ui/Loader';
 import Overlay from '@/components/ui/Overlay';
 import TabLabel from '@/components/ui/TabLabel';
 import TextURL from '@/components/ui/TextURL';
-import AnimateFade from '@/components/wrap/AnimateFade';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useLibrary } from '@/context/LibraryContext';
@@ -151,10 +150,10 @@ function OssTabs() {
             </TabList>
           </Overlay>
 
-          <AnimateFade>
+          <div className='overflow-x-hidden'>
             {cardPanel}
             {graphPanel}
-          </AnimateFade>
+          </div>
         </Tabs>
       ) : null}
     </OssEditState>

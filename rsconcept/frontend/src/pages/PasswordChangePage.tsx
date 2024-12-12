@@ -65,12 +65,8 @@ function PasswordChangePage() {
     return <ProcessError error={error} />;
   }
   return (
-    <DataLoader
-      id='password-change-page' //
-      isLoading={loading}
-      hasNoData={!isTokenValid}
-    >
-      <form className={clsx('cc-column', 'w-[24rem] mx-auto', 'px-6 mt-3')} onSubmit={handleSubmit}>
+    <DataLoader isLoading={loading} hasNoData={!isTokenValid}>
+      <form className={clsx('cc-fade-in cc-column', 'w-[24rem] mx-auto', 'px-6 mt-3')} onSubmit={handleSubmit}>
         <TextInput
           id='new_password'
           type='password'

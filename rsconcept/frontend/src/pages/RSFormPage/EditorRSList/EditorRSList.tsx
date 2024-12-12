@@ -9,7 +9,6 @@ import { type RowSelectionState } from '@/components/ui/DataTable';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import SearchBar from '@/components/ui/SearchBar';
-import AnimateFade from '@/components/wrap/AnimateFade';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { CstMatchMode } from '@/models/miscellaneous';
 import { ConstituentaID, CstType, IConstituenta } from '@/models/rsform';
@@ -142,7 +141,7 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
   return (
     <>
       {controller.isContentEditable ? <ToolbarRSList /> : null}
-      <AnimateFade tabIndex={-1} onKeyDown={handleKeyDown} className='pt-[1.9rem]'>
+      <div tabIndex={-1} onKeyDown={handleKeyDown} className='cc-fade-in pt-[1.9rem]'>
         {controller.isContentEditable ? (
           <div className='flex items-center border-b'>
             <div className='px-2'>
@@ -175,7 +174,7 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
           onEdit={onOpenEdit}
           onCreateNew={() => controller.createCst(undefined, false)}
         />
-      </AnimateFade>
+      </div>
     </>
   );
 }

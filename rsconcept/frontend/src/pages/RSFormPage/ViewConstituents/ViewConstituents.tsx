@@ -1,15 +1,15 @@
 'use client';
 
+import { animated, useSpring } from '@react-spring/web';
 import clsx from 'clsx';
-import { motion } from 'framer-motion';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useAccessMode } from '@/context/AccessModeContext';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
 import { UserLevel } from '@/models/user';
-import { animateSideView } from '@/styling/animations';
+import { PARAMETER } from '@/utils/constants';
 
 import ConstituentsSearch from './ConstituentsSearch';
 import TableSideConstituents from './TableSideConstituents';
@@ -23,14 +23,46 @@ interface ViewConstituentsProps {
   activeCst?: IConstituenta;
   schema?: IRSForm;
   onOpenEdit: (cstID: ConstituentaID) => void;
+  isMounted: boolean;
 }
 
-function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit }: ViewConstituentsProps) {
+function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit, isMounted }: ViewConstituentsProps) {
   const { calculateHeight } = useConceptOptions();
   const windowSize = useWindowSize();
   const { accessLevel } = useAccessMode();
 
   const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema?.items ?? []);
+
+  const [isVisible, setIsVisible] = useState(true);
+  const isFirstRender = useRef(true);
+  const springs = useSpring({
+    from: { opacity: 0, width: '0' },
+    to: async next => {
+      if (isFirstRender.current) {
+        await next({ opacity: isMounted ? 1 : 0, width: isMounted ? '100%' : '0', config: { duration: 0 } });
+        isFirstRender.current = false;
+      } else {
+        if (isMounted) {
+          await next({ width: '100%', config: { duration: PARAMETER.moveDuration } });
+          await next({ opacity: 1, config: { duration: PARAMETER.fadeDuration } });
+        } else {
+          await next({ opacity: 0, config: { duration: PARAMETER.fadeDuration } });
+          await next({ width: '0', config: { duration: PARAMETER.moveDuration } });
+        }
+      }
+    },
+    onRest: props => {
+      if (props.finished && !isMounted) {
+        setIsVisible(false);
+      }
+    }
+  });
+
+  useEffect(() => {
+    if (isMounted) {
+      setIsVisible(true);
+    }
+  }, [isMounted]);
 
   const table = useMemo(
     () => (
@@ -49,8 +81,12 @@ function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit 
     [isBottom, filteredData, activeCst, onOpenEdit, calculateHeight, accessLevel]
   );
 
+  if (!isVisible) {
+    return null;
+  }
+
   return (
-    <motion.div
+    <animated.div
       className={clsx(
         'border', // prettier: split-lines
         {
@@ -58,9 +94,7 @@ function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit 
           'mt-3 mx-6 rounded-md md:max-w-[45.8rem] overflow-hidden': isBottom
         }
       )}
-      initial={{ ...animateSideView.initial }}
-      animate={{ ...animateSideView.animate }}
-      exit={{ ...animateSideView.exit }}
+      style={springs}
     >
       <ConstituentsSearch
         dense={windowSize.width && windowSize.width < COLUMN_DENSE_SEARCH_THRESHOLD ? true : undefined}
@@ -70,7 +104,7 @@ function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit 
         setFiltered={setFilteredData}
       />
       {table}
-    </motion.div>
+    </animated.div>
   );
 }
 

@@ -6,7 +6,6 @@ import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import TabLabel from '@/components/ui/TabLabel';
-import AnimateFade from '@/components/wrap/AnimateFade';
 import { useLibrary } from '@/context/LibraryContext';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { HelpTopic } from '@/models/miscellaneous';
@@ -145,9 +144,9 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
   const editorPanel = useMemo(
     () => (
       <TabPanel>
-        <AnimateFade className='cc-column'>
+        <div className='cc-fade-in cc-column'>
           <FormCreateCst state={constituenta} partialUpdate={updateConstituenta} schema={schema} />
-        </AnimateFade>
+        </div>
       </TabPanel>
     ),
     [constituenta, updateConstituenta, schema]

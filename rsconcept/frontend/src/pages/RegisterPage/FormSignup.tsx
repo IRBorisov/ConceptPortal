@@ -72,7 +72,7 @@ function FormSignup() {
     }
   }
   return (
-    <form className={clsx('cc-column', 'mx-auto w-[36rem]', 'px-6 py-3')} onSubmit={handleSubmit}>
+    <form className={clsx('cc-fade-in cc-column', 'mx-auto w-[36rem]', 'px-6 py-3')} onSubmit={handleSubmit}>
       <h1>
         <span>Новый пользователь</span>
         <Overlay id={globals.password_tooltip} position='top-[5.4rem] left-[3.5rem]'>

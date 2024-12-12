@@ -8,7 +8,6 @@ import InfoError, { ErrorData } from '@/components/info/InfoError';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
 import TextURL from '@/components/ui/TextURL';
-import AnimateFade from '@/components/wrap/AnimateFade';
 import { useAuth } from '@/context/AuthContext';
 import { IRequestPasswordData } from '@/models/user';
 
@@ -32,38 +31,37 @@ function RestorePasswordPage() {
     setError(undefined);
   }, [email, setError]);
 
-  return (
-    <AnimateFade>
-      {!isCompleted ? (
-        <form className={clsx('cc-column', 'w-[24rem] mx-auto', 'px-6 mt-3')} onSubmit={handleSubmit}>
-          <TextInput
-            id='email'
-            autoComplete='email'
-            required
-            allowEnter
-            label='Электронная почта'
-            value={email}
-            onChange={event => setEmail(event.target.value)}
-          />
+  if (isCompleted) {
+    return (
+      <div className='cc-fade-in flex flex-col items-center gap-1 mt-3'>
+        <p>На указанную почту отправлены инструкции по восстановлению пароля.</p>
+        <TextURL text='Войти в Портал' href='/login' />
+        <TextURL text='Начальная страница' href='/' />
+      </div>
+    );
+  } else {
+    return (
+      <form className={clsx('cc-fade-in cc-column', 'w-[24rem] mx-auto', 'px-6 mt-3')} onSubmit={handleSubmit}>
+        <TextInput
+          id='email'
+          autoComplete='email'
+          required
+          allowEnter
+          label='Электронная почта'
+          value={email}
+          onChange={event => setEmail(event.target.value)}
+        />
 
-          <SubmitButton
-            text='Запросить пароль'
-            className='self-center w-[12rem] mt-3'
-            loading={loading}
-            disabled={!email}
-          />
-          {error ? <ProcessError error={error} /> : null}
-        </form>
-      ) : null}
-      {isCompleted ? (
-        <div className='flex flex-col items-center gap-1 mt-3'>
-          <p>На указанную почту отправлены инструкции по восстановлению пароля.</p>
-          <TextURL text='Войти в Портал' href='/login' />
-          <TextURL text='Начальная страница' href='/' />
-        </div>
-      ) : null}
-    </AnimateFade>
-  );
+        <SubmitButton
+          text='Запросить пароль'
+          className='self-center w-[12rem] mt-3'
+          loading={loading}
+          disabled={!email}
+        />
+        {error ? <ProcessError error={error} /> : null}
+      </form>
+    );
+  }
 }
 
 export default RestorePasswordPage;

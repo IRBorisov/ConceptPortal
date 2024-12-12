@@ -10,7 +10,6 @@ import PickConstituenta from '@/components/select/PickConstituenta';
 import DataTable, { IConditionalStyle } from '@/components/ui/DataTable';
 import MiniButton from '@/components/ui/MiniButton';
 import NoData from '@/components/ui/NoData';
-import AnimateFade from '@/components/wrap/AnimateFade';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { IConstituenta, IRSForm } from '@/models/rsform';
 import { IArgumentValue } from '@/models/rslang';
@@ -147,7 +146,7 @@ function TabArguments({ state, schema, partialUpdate }: TabArgumentsProps) {
   );
 
   return (
-    <AnimateFade>
+    <div className='cc-fade-in'>
       <DataTable
         dense
         noFooter
@@ -224,7 +223,7 @@ function TabArguments({ state, schema, partialUpdate }: TabArgumentsProps) {
         height='5.1rem'
         value={state.definition}
       />
-    </AnimateFade>
+    </div>
   );
 }
 

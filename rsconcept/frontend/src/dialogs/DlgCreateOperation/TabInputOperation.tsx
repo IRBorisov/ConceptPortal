@@ -9,7 +9,6 @@ import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
-import AnimateFade from '@/components/wrap/AnimateFade';
 import { useLibrary } from '@/context/LibraryContext';
 import { ILibraryItem, LibraryItemID, LibraryItemType } from '@/models/library';
 import { IOperationSchema } from '@/models/oss';
@@ -53,7 +52,7 @@ function TabInputOperation({
   }, [createSchema, onChangeAttachedID]);
 
   return (
-    <AnimateFade className='cc-column'>
+    <div className='cc-fade-in cc-column'>
       <TextInput
         id='operation_title'
         label='Полное название'
@@ -111,7 +110,7 @@ function TabInputOperation({
           baseFilter={baseFilter}
         />
       ) : null}
-    </AnimateFade>
+    </div>
   );
 }
 

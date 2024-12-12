@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import { AnimatePresence } from 'framer-motion';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
 import BadgeHelp from '@/components/info/BadgeHelp';
@@ -9,7 +8,6 @@ import RSInput from '@/components/RSInput';
 import SelectSingle from '@/components/ui/SelectSingle';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
-import AnimateFade from '@/components/wrap/AnimateFade';
 import { HelpTopic } from '@/models/miscellaneous';
 import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
 import { generateAlias, isBaseSet, isBasicConcept, isFunctional, validateNewAlias } from '@/models/rsformAPI';
@@ -48,8 +46,8 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
   );
 
   return (
-    <AnimatePresence>
-      <div key='dlg_cst_alias_picker' className='flex items-center self-center gap-3'>
+    <>
+      <div className='flex items-center self-center gap-3'>
         <SelectSingle
           id='dlg_cst_type'
           placeholder='Выберите тип'
@@ -72,8 +70,8 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
           className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')}
         />
       </div>
+
       <TextArea
-        key='dlg_cst_term'
         id='dlg_cst_term'
         fitContent
         spellCheck
@@ -83,7 +81,8 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
         value={state.term_raw}
         onChange={event => partialUpdate({ term_raw: event.target.value })}
       />
-      <AnimateFade key='dlg_cst_expression' hideContent={!state.definition_formal && isElementary}>
+
+      {!!state.definition_formal || !isElementary ? (
         <RSInput
           id='dlg_cst_expression'
           noTooltip
@@ -101,8 +100,9 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
           onChange={value => partialUpdate({ definition_formal: value })}
           schema={schema}
         />
-      </AnimateFade>
-      <AnimateFade key='dlg_cst_definition' hideContent={!state.definition_raw && isElementary}>
+      ) : null}
+
+      {!!state.definition_raw || !isElementary ? (
         <TextArea
           id='dlg_cst_definition'
           spellCheck
@@ -113,10 +113,10 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
           value={state.definition_raw}
           onChange={event => partialUpdate({ definition_raw: event.target.value })}
         />
-      </AnimateFade>
+      ) : null}
+
       {!showConvention ? (
         <button
-          key='dlg_cst_show_comment'
           id='dlg_cst_show_comment'
           tabIndex={-1}
           type='button'
@@ -125,10 +125,8 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
         >
           Добавить комментарий
         </button>
-      ) : null}
-      <AnimateFade hideContent={!showConvention}>
+      ) : (
         <TextArea
-          key='dlg_cst_convention'
           id='dlg_cst_convention'
           spellCheck
           fitContent
@@ -138,8 +136,8 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
           value={state.convention}
           onChange={event => partialUpdate({ convention: event.target.value })}
         />
-      </AnimateFade>
-    </AnimatePresence>
+      )}
+    </>
   );
 }
 

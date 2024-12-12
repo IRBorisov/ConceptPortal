@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import { AnimatePresence } from 'framer-motion';
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -155,12 +154,10 @@ function FormConstituenta({
   }
 
   return (
-    <AnimateFade className='mx-0 md:mx-auto pt-[2rem] xs:pt-0'>
-      <AnimatePresence>
-        {showTypification && state ? (
-          <DlgShowTypeGraph items={typeInfo ? [typeInfo] : []} hideWindow={() => setShowTypification(false)} />
-        ) : null}
-      </AnimatePresence>
+    <div className='mx-0 md:mx-auto pt-[2rem] xs:pt-0'>
+      {showTypification && state ? (
+        <DlgShowTypeGraph items={typeInfo ? [typeInfo] : []} hideWindow={() => setShowTypification(false)} />
+      ) : null}
       {state ? (
         <ControlsOverlay
           disabled={disabled}
@@ -201,12 +198,8 @@ function FormConstituenta({
           />
         ) : null}
         {state ? (
-          <AnimatePresence>
-            <AnimateFade
-              key='cst_expression_fade'
-              hideContent={!state.definition_formal && isElementary}
-              style={{ willChange: 'auto' }}
-            >
+          <>
+            <AnimateFade hideContent={!state.definition_formal && isElementary}>
               <EditorRSExpression
                 id='cst_expression'
                 label={
@@ -230,7 +223,7 @@ function FormConstituenta({
                 onShowTypeGraph={handleTypeGraph}
               />
             </AnimateFade>
-            <AnimateFade key='cst_definition_fade' hideContent={!state.definition_raw && isElementary}>
+            <AnimateFade hideContent={!state.definition_raw && isElementary}>
               <RefsInput
                 id='cst_definition'
                 label='Текстовое определение'
@@ -246,7 +239,7 @@ function FormConstituenta({
                 onChange={newValue => setTextDefinition(newValue)}
               />
             </AnimateFade>
-            <AnimateFade key='cst_convention_fade' hideContent={!showConvention}>
+            <AnimateFade hideContent={!showConvention}>
               <TextArea
                 id='cst_convention'
                 fitContent
@@ -259,7 +252,7 @@ function FormConstituenta({
                 onChange={event => setConvention(event.target.value)}
               />
             </AnimateFade>
-            <AnimateFade key='cst_convention_button' hideContent={showConvention || (disabled && !processing)}>
+            <AnimateFade noFadeOut hideContent={showConvention || (disabled && !processing)}>
               <button
                 key='cst_disable_comment'
                 id='cst_disable_comment'
@@ -297,10 +290,10 @@ function FormConstituenta({
                 </Overlay>
               </div>
             ) : null}
-          </AnimatePresence>
+          </>
         ) : null}
       </form>
-    </AnimateFade>
+    </div>
   );
 }
 

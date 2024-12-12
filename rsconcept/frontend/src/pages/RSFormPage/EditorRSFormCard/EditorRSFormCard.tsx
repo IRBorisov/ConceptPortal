@@ -3,7 +3,6 @@
 import clsx from 'clsx';
 
 import FlexColumn from '@/components/ui/FlexColumn';
-import AnimateFade from '@/components/wrap/AnimateFade';
 import { useRSForm } from '@/context/RSFormContext';
 import { globals } from '@/utils/constants';
 
@@ -47,9 +46,13 @@ function EditorRSFormCard({ isModified, onDestroy, setIsModified }: EditorRSForm
         onDestroy={onDestroy}
         controller={controller}
       />
-      <AnimateFade
+      <div
         onKeyDown={handleInput}
-        className={clsx('md:w-fit md:max-w-fit max-w-[32rem] mx-auto', 'flex flex-row flex-wrap px-6 pt-[1.9rem]')}
+        className={clsx(
+          'cc-fade-in',
+          'md:w-fit md:max-w-fit max-w-[32rem] mx-auto',
+          'flex flex-row flex-wrap px-6 pt-[1.9rem]'
+        )}
       >
         <FlexColumn className='flex-shrink'>
           <FormRSForm id={globals.library_item_editor} isModified={isModified} setIsModified={setIsModified} />
@@ -57,7 +60,7 @@ function EditorRSFormCard({ isModified, onDestroy, setIsModified }: EditorRSForm
         </FlexColumn>
 
         {model.schema ? <RSFormStats stats={model.schema.stats} isArchive={model.isArchive} /> : null}
-      </AnimateFade>
+      </div>
     </>
   );
 }
