@@ -82,7 +82,7 @@ const OssEditContext = createContext<IOssEditContext | null>(null);
 export const useOssEdit = () => {
   const context = useContext(OssEditContext);
   if (context === null) {
-    throw new Error('useOssEdit has to be used within <OssEditState.Provider>');
+    throw new Error('useOssEdit has to be used within <OssEditState>');
   }
   return context;
 };
@@ -384,7 +384,7 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
   );
 
   return (
-    <OssEditContext.Provider
+    <OssEditContext
       value={{
         schema: model.schema,
         selected,
@@ -475,6 +475,6 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
       ) : null}
 
       {children}
-    </OssEditContext.Provider>
+    </OssEditContext>
   );
 };

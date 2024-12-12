@@ -549,7 +549,7 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
   );
 
   return (
-    <RSFormContext.Provider
+    <RSFormContext
       value={{
         schema: rsData.schema,
         itemID,
@@ -587,6 +587,6 @@ export const RSFormState = ({ itemID, versionID, children }: React.PropsWithChil
       }}
     >
       {children}
-    </RSFormContext.Provider>
+    </RSFormContext>
   );
 };

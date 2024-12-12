@@ -358,7 +358,7 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
   );
 
   return (
-    <OssContext.Provider
+    <OssContext
       value={{
         schema: ossData.schema,
         itemID,
@@ -385,6 +385,6 @@ export const OssState = ({ itemID, children }: React.PropsWithChildren<OssStateP
       }}
     >
       {children}
-    </OssContext.Provider>
+    </OssContext>
   );
 };

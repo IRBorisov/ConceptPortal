@@ -93,7 +93,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
   }, [pathname, scrollTop]);
 
   return (
-    <NavigationContext.Provider
+    <NavigationContext
       value={{
         push,
         replace,
@@ -105,7 +105,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
       }}
     >
       {children}
-    </NavigationContext.Provider>
+    </NavigationContext>
   );
 };
 

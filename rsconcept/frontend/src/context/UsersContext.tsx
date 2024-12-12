@@ -81,7 +81,7 @@ export const UsersState = ({ children }: React.PropsWithChildren) => {
   }, [reload]);
 
   return (
-    <UsersContext.Provider
+    <UsersContext
       value={{
         users,
         reload,
@@ -89,6 +89,6 @@ export const UsersState = ({ children }: React.PropsWithChildren) => {
       }}
     >
       {children}
-    </UsersContext.Provider>
+    </UsersContext>
   );
 };

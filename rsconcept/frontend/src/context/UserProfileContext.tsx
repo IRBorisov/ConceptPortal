@@ -76,8 +76,8 @@ export const UserProfileState = ({ children }: React.PropsWithChildren) => {
   }, [reload]);
 
   return (
-    <ProfileContext.Provider value={{ user, updateUser, error, loading, setError, processing, errorProcessing }}>
+    <ProfileContext value={{ user, updateUser, error, loading, setError, processing, errorProcessing }}>
       {children}
-    </ProfileContext.Provider>
+    </ProfileContext>
   );
 };

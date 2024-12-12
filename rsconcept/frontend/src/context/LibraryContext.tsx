@@ -291,7 +291,7 @@ export const LibraryState = ({ children }: React.PropsWithChildren) => {
   );
 
   return (
-    <LibraryContext.Provider
+    <LibraryContext
       value={{
         items,
         folders,
@@ -318,6 +318,6 @@ export const LibraryState = ({ children }: React.PropsWithChildren) => {
       }}
     >
       {children}
-    </LibraryContext.Provider>
+    </LibraryContext>
   );
 };

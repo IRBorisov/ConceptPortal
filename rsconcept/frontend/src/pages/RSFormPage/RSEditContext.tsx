@@ -114,7 +114,7 @@ const RSEditContext = createContext<IRSEditContext | null>(null);
 export const useRSEdit = () => {
   const context = useContext(RSEditContext);
   if (context === null) {
-    throw new Error('useRSEdit has to be used within <RSEditState.Provider>');
+    throw new Error('useRSEdit has to be used within <RSEditState>');
   }
   return context;
 };
@@ -628,7 +628,7 @@ export const RSEditState = ({
   );
 
   return (
-    <RSEditContext.Provider
+    <RSEditContext
       value={{
         schema: model.schema,
         updateSchema,
@@ -785,7 +785,7 @@ export const RSEditState = ({
       ) : null}
 
       {children}
-    </RSEditContext.Provider>
+    </RSEditContext>
   );
 };
 

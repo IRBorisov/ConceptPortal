@@ -1012,5 +1012,5 @@ export const prompts = {
 
 // ============== INTERNAL LABELS FOR DEVELOPERS TEXT ================
 export function contextOutsideScope(contextName: string, contextState: string): string {
-  return `${contextName} has to be used within <${contextState}.Provider>`;
+  return `${contextName} has to be used within <${contextState}>`;
 }

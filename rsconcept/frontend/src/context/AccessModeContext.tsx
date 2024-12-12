@@ -21,5 +21,5 @@ export const useAccessMode = () => {
 
 export const AccessModeState = ({ children }: React.PropsWithChildren) => {
   const [accessLevel, setAccessLevel] = useState<UserLevel>(UserLevel.READER);
-  return <AccessContext.Provider value={{ accessLevel, setAccessLevel }}>{children}</AccessContext.Provider>;
+  return <AccessContext value={{ accessLevel, setAccessLevel }}>{children}</AccessContext>;
 };

@@ -127,7 +127,7 @@ export const OptionsState = ({ children }: React.PropsWithChildren) => {
   }, [noNavigation]);
 
   return (
-    <OptionsContext.Provider
+    <OptionsContext
       value={{
         darkMode,
         adminMode,
@@ -169,6 +169,6 @@ export const OptionsState = ({ children }: React.PropsWithChildren) => {
 
         {children}
       </>
-    </OptionsContext.Provider>
+    </OptionsContext>
   );
 };

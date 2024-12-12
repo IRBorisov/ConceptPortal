@@ -87,7 +87,7 @@ export const GlobalOssState = ({ children }: React.PropsWithChildren) => {
   );
 
   return (
-    <GlobalOssContext.Provider
+    <GlobalOssContext
       value={{
         schema,
         setID,
@@ -102,6 +102,6 @@ export const GlobalOssState = ({ children }: React.PropsWithChildren) => {
       }}
     >
       {children}
-    </GlobalOssContext.Provider>
+    </GlobalOssContext>
   );
 };

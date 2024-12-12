@@ -186,7 +186,7 @@ export const AuthState = ({ children }: React.PropsWithChildren) => {
   }, [reload]);
 
   return (
-    <AuthContext.Provider
+    <AuthContext
       value={{
         user,
         login,
@@ -202,6 +202,6 @@ export const AuthState = ({ children }: React.PropsWithChildren) => {
       }}
     >
       {children}
-    </AuthContext.Provider>
+    </AuthContext>
   );
 };
