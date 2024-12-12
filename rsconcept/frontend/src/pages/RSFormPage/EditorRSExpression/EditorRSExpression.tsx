@@ -160,7 +160,7 @@ function EditorRSExpression({
   );
 
   return (
-    <div>
+    <div className='cc-fade-in'>
       {showAST ? (
         <DlgShowAST expression={expression} syntaxTree={syntaxTree} hideWindow={() => setShowAST(false)} />
       ) : null}

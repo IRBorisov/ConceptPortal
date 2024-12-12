@@ -1,8 +1,7 @@
 'use client';
 
-import { animated, useTransition } from '@react-spring/web';
 import clsx from 'clsx';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import { StatusIcon } from '@/components/DomainIcons';
 import Loader from '@/components/ui/Loader';
@@ -12,7 +11,7 @@ import { type IConstituenta } from '@/models/rsform';
 import { inferStatus } from '@/models/rsformAPI';
 import { IExpressionParse, ParsingStatus } from '@/models/rslang';
 import { colorStatusBar } from '@/styling/color';
-import { globals, PARAMETER } from '@/utils/constants';
+import { globals } from '@/utils/constants';
 import { labelExpressionStatus, prepareTooltip } from '@/utils/labels';
 
 interface StatusBarProps {
@@ -36,22 +35,12 @@ function StatusBar({ isModified, processing, activeCst, parseData, onAnalyze }: 
     return inferStatus(activeCst.parse.status, activeCst.parse.valueClass);
   }, [isModified, activeCst, parseData]);
 
-  const [isAnimating, setIsAnimating] = useState(false);
-  const transitions = useTransition(processing, {
-    from: { opacity: 1 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 },
-    onStart: () => setIsAnimating(true),
-    onRest: () => setIsAnimating(false),
-    config: { duration: PARAMETER.fadeDuration }
-  });
-
   return (
     <div
       tabIndex={0}
       className={clsx(
         'w-[10rem] h-[1.75rem]',
-        'px-2 flex items-center justify-center gap-2',
+        'px-2 flex items-center justify-center',
         'border',
         'select-none',
         'cursor-pointer',
@@ -63,18 +52,17 @@ function StatusBar({ isModified, processing, activeCst, parseData, onAnalyze }: 
       data-tooltip-html={prepareTooltip('Проверить определение', 'Ctrl + Q')}
       onClick={onAnalyze}
     >
-      {transitions((style, flag) =>
-        flag ? (
-          <animated.div style={style}>
-            <Loader scale={3} />
-          </animated.div>
-        ) : null
-      )}
-      {!processing && !isAnimating ? (
-        <>
+      {processing ? (
+        <div className='cc-fade-in'>
+          {' '}
+          <Loader scale={3} />
+        </div>
+      ) : null}
+      {!processing ? (
+        <div className='cc-fade-in flex items-center gap-2'>
           <StatusIcon size='1rem' value={status} />
           <span className='pb-[0.125rem] font-controls pr-2'>{labelExpressionStatus(status)}</span>
-        </>
+        </div>
       ) : null}
     </div>
   );

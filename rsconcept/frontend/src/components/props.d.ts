@@ -1,5 +1,4 @@
 // =========== Module contains interfaces for common UI elements. ==========
-import { animated } from '@react-spring/web';
 import React from 'react';
 
 export namespace CProps {
@@ -88,11 +87,6 @@ export namespace CProps {
    * Represents `input` component with optional title and HTML attributes.
    */
   export type Input = Titled & React.ComponentProps<'input'>;
-
-  /**
-   * Represents `div` component with animation properties.
-   */
-  export type AnimatedDiv = React.ComponentPropsWithoutRef<typeof animated.div>;
 
   /**
    * Represents `mouse event` in React.

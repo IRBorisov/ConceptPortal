@@ -16,6 +16,7 @@ function UserMenu() {
   const menu = useDropdown();
 
   const navigateLogin = () => router.push(urls.login);
+
   return (
     <div ref={menu.ref} className='h-full w-[4rem] flex items-center justify-center'>
       {loading ? <Loader circular scale={1.5} /> : null}
@@ -27,7 +28,7 @@ function UserMenu() {
           onClick={navigateLogin}
         />
       ) : null}
-      {user ? (
+      {user && !loading ? (
         <NavigationButton
           className='cc-fade-in'
           icon={<IconUser2 size='1.5rem' className={adminMode && user.is_staff ? 'icon-primary' : ''} />}

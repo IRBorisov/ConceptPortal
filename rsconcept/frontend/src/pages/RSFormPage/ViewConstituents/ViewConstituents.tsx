@@ -1,8 +1,7 @@
 'use client';
 
-import { animated, useSpring } from '@react-spring/web';
 import clsx from 'clsx';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { useAccessMode } from '@/context/AccessModeContext';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
@@ -33,37 +32,6 @@ function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit,
 
   const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema?.items ?? []);
 
-  const [isVisible, setIsVisible] = useState(true);
-  const isFirstRender = useRef(true);
-  const springs = useSpring({
-    from: { opacity: 0, width: '0' },
-    to: async next => {
-      if (isFirstRender.current) {
-        await next({ opacity: isMounted ? 1 : 0, width: isMounted ? '100%' : '0', config: { duration: 0 } });
-        isFirstRender.current = false;
-      } else {
-        if (isMounted) {
-          await next({ width: '100%', config: { duration: PARAMETER.moveDuration } });
-          await next({ opacity: 1, config: { duration: PARAMETER.fadeDuration } });
-        } else {
-          await next({ opacity: 0, config: { duration: PARAMETER.fadeDuration } });
-          await next({ width: '0', config: { duration: PARAMETER.moveDuration } });
-        }
-      }
-    },
-    onRest: props => {
-      if (props.finished && !isMounted) {
-        setIsVisible(false);
-      }
-    }
-  });
-
-  useEffect(() => {
-    if (isMounted) {
-      setIsVisible(true);
-    }
-  }, [isMounted]);
-
   const table = useMemo(
     () => (
       <TableSideConstituents
@@ -81,12 +49,8 @@ function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit,
     [isBottom, filteredData, activeCst, onOpenEdit, calculateHeight, accessLevel]
   );
 
-  if (!isVisible) {
-    return null;
-  }
-
   return (
-    <animated.div
+    <div
       className={clsx(
         'border', // prettier: split-lines
         {
@@ -94,7 +58,13 @@ function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit,
           'mt-3 mx-6 rounded-md md:max-w-[45.8rem] overflow-hidden': isBottom
         }
       )}
-      style={springs}
+      style={{
+        transitionProperty: 'opacity, width',
+        transitionDuration: `${2 * PARAMETER.moveDuration}ms`,
+        transitionTimingFunction: 'ease-in-out',
+        opacity: isMounted ? 1 : 0,
+        width: isMounted ? '100%' : '0'
+      }}
     >
       <ConstituentsSearch
         dense={windowSize.width && windowSize.width < COLUMN_DENSE_SEARCH_THRESHOLD ? true : undefined}
@@ -104,7 +74,7 @@ function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit,
         setFiltered={setFilteredData}
       />
       {table}
-    </animated.div>
+    </div>
   );
 }
 

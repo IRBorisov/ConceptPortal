@@ -33,7 +33,6 @@ This readme file is used mostly to document project dependencies and conventions
   - react-icons
   - react-router
   - react-toastify
-  - react-loader-spinner
   - react-tabs
   - react-intl
   - react-select
@@ -49,7 +48,6 @@ This readme file is used mostly to document project dependencies and conventions
   - @uiw/codemirror-themes
   - @lezer/lr
   - @dagrejs/dagre
-  - @react-spring/web
   </pre>
 </details>
 <details>

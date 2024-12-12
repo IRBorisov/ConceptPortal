@@ -11,7 +11,6 @@ import Indicator from '@/components/ui/Indicator';
 import Overlay from '@/components/ui/Overlay';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
-import AnimateFade from '@/components/wrap/AnimateFade';
 import { useRSForm } from '@/context/RSFormContext';
 import DlgShowTypeGraph from '@/dialogs/DlgShowTypeGraph';
 import { ConstituentaID, CstType, IConstituenta, ICstUpdateData } from '@/models/rsform';
@@ -199,7 +198,7 @@ function FormConstituenta({
         ) : null}
         {state ? (
           <>
-            <AnimateFade hideContent={!state.definition_formal && isElementary}>
+            {!!state.definition_formal || !isElementary ? (
               <EditorRSExpression
                 id='cst_expression'
                 label={
@@ -222,8 +221,8 @@ function FormConstituenta({
                 onOpenEdit={onOpenEdit}
                 onShowTypeGraph={handleTypeGraph}
               />
-            </AnimateFade>
-            <AnimateFade hideContent={!state.definition_raw && isElementary}>
+            ) : null}
+            {!!state.definition_raw || !isElementary ? (
               <RefsInput
                 id='cst_definition'
                 label='Текстовое определение'
@@ -238,8 +237,9 @@ function FormConstituenta({
                 disabled={disabled}
                 onChange={newValue => setTextDefinition(newValue)}
               />
-            </AnimateFade>
-            <AnimateFade hideContent={!showConvention}>
+            ) : null}
+
+            {showConvention ? (
               <TextArea
                 id='cst_convention'
                 fitContent
@@ -251,8 +251,9 @@ function FormConstituenta({
                 disabled={disabled || (isBasic && state.is_inherited)}
                 onChange={event => setConvention(event.target.value)}
               />
-            </AnimateFade>
-            <AnimateFade noFadeOut hideContent={showConvention || (disabled && !processing)}>
+            ) : null}
+
+            {!showConvention && (!disabled || processing) ? (
               <button
                 key='cst_disable_comment'
                 id='cst_disable_comment'
@@ -263,7 +264,7 @@ function FormConstituenta({
               >
                 Добавить комментарий
               </button>
-            </AnimateFade>
+            ) : null}
 
             {!disabled || processing ? (
               <div className='mx-auto flex'>
