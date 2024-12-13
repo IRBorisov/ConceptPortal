@@ -102,11 +102,13 @@ function ViewSideLocation({
               onClick={onRenameLocation}
             />
           ) : null}
-          <MiniButton
-            title='Вложенные папки' // prettier: split-lines
-            icon={<SubfoldersIcon value={subfolders} />}
-            onClick={toggleSubfolders}
-          />
+          {!!activeLocation ? (
+            <MiniButton
+              title={subfolders ? 'Вложенные папки: Вкл' : 'Вложенные папки: Выкл'} // prettier: split-lines
+              icon={<SubfoldersIcon value={subfolders} />}
+              onClick={toggleSubfolders}
+            />
+          ) : null}
           <MiniButton
             icon={<IconFolderTree size='1.25rem' className='icon-green' />}
             title='Переключение в режим Поиск'
