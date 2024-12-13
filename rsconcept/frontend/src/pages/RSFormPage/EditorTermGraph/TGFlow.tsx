@@ -95,6 +95,7 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
   const [hoverCstDebounced] = useDebounce(hoverCst, PARAMETER.graphPopupDelay);
   const [hoverLeft, setHoverLeft] = useState(true);
 
+  const [needReset, setNeedReset] = useState(true);
   const [toggleResetView, setToggleResetView] = useState(false);
 
   const onSelectionChange = useCallback(
@@ -127,10 +128,7 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
     setHoverID(undefined);
   }, [controller.schema, filteredGraph]);
 
-  useEffect(() => {
-    if (!controller.schema) {
-      return;
-    }
+  const resetNodes = useCallback(() => {
     const newNodes: Node<TGNodeData>[] = [];
     filteredGraph.nodes.forEach(node => {
       const cst = controller.schema!.cstByID.get(node.id);
@@ -175,10 +173,29 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
 
     setNodes(newNodes);
     setEdges(newEdges);
-    // NOTE: Do not rerender on controller.selected change because it is only needed during first load
-    // eslint-disable-next-line react-compiler/react-compiler
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filteredGraph, setNodes, setEdges, controller.schema, filterParams.noText, focusCst, coloring, colors, flow]);
+  }, [
+    controller.schema,
+    filteredGraph,
+    setNodes,
+    setEdges,
+    filterParams.noText,
+    controller.selected,
+    focusCst,
+    coloring,
+    colors
+  ]);
+
+  useEffect(() => {
+    setNeedReset(true);
+  }, [controller.schema, filterParams.noText, focusCst, coloring, colors, flow.viewportInitialized]);
+
+  useEffect(() => {
+    if (!controller.schema || !needReset || !flow.viewportInitialized) {
+      return;
+    }
+    setNeedReset(false);
+    resetNodes();
+  }, [needReset, controller.schema, resetNodes, flow.viewportInitialized]);
 
   useEffect(() => {
     setTimeout(() => {
