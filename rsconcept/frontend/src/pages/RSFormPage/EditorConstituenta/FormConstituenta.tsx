@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { IconChild, IconPredecessor, IconSave } from '@/components/Icons';
@@ -89,9 +89,9 @@ function FormConstituenta({
       setForceComment(false);
       setLocalParse(undefined);
     }
-  }, [state, schema, toggleReset]);
+  }, [state, schema, toggleReset, setIsModified]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!state) {
       setIsModified(false);
       return;

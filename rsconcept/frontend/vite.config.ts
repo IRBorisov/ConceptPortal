@@ -4,6 +4,10 @@ import { defineConfig, loadEnv, PluginOption } from 'vite';
 
 import { dependencies } from './package.json';
 
+const reactCompilerConfig = {
+  /* ... */
+};
+
 // Packages to include in main app bundle
 const inlinePackages = ['react', 'react-router', 'react-dom'];
 
@@ -18,7 +22,14 @@ export default ({ mode }: { mode: string }) => {
   };
   return defineConfig({
     appType: 'spa',
-    plugins: [react(), muteWarningsPlugin(warningsToIgnore)],
+    plugins: [
+      react({
+        babel: {
+          plugins: [['babel-plugin-react-compiler', reactCompilerConfig]]
+        }
+      }),
+      muteWarningsPlugin(warningsToIgnore)
+    ],
     server: {
       port: Number(process.env.VITE_PORTAL_FRONT_PORT)
     },

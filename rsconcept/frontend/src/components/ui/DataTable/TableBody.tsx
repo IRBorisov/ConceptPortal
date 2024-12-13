@@ -1,3 +1,5 @@
+'use no memo';
+
 import { Cell, flexRender, Row, Table } from '@tanstack/react-table';
 import clsx from 'clsx';
 

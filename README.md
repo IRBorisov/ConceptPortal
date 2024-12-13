@@ -60,6 +60,7 @@ This readme file is used mostly to document project dependencies and conventions
   - eslint-plugin-simple-import-sort
   - eslint-plugin-react-hooks
   - eslint-plugin-tsdoc
+  - babel-plugin-react-compiler
   - vite
   - jest
   - ts-jest

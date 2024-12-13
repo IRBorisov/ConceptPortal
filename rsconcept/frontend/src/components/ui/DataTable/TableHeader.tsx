@@ -1,3 +1,5 @@
+'use no memo';
+
 import { flexRender, Header, HeaderGroup, Table } from '@tanstack/react-table';
 
 import SelectAll from './SelectAll';

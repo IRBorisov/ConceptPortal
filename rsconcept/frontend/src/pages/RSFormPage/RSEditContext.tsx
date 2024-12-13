@@ -293,7 +293,7 @@ export const RSEditState = ({
 
   const handleRenameCst = useCallback(
     (data: ICstRenameData) => {
-      const oldAlias = renameInitialData!.alias;
+      const oldAlias = renameInitialData?.alias ?? '';
       model.cstRename(data, () => toast.success(information.renameComplete(oldAlias, data.alias)));
     },
     [model, renameInitialData]
