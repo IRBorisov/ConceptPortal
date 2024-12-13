@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getRSFormDetails } from '@/backend/rsforms';
 import { type ErrorData } from '@/components/info/InfoError';
 import { LibraryItemID } from '@/models/library';
-import { ConstituentaID, IRSForm, IRSFormData } from '@/models/rsform';
+import { IRSForm, IRSFormData } from '@/models/rsform';
 import { RSFormLoader } from '@/models/RSFormLoader';
 
 function useRSFormCache() {
@@ -19,34 +19,6 @@ function useRSFormCache() {
     const schema = new RSFormLoader(data).produceRSForm();
     setCache(prev => [...prev, schema]);
   }
-
-  const getSchema = useCallback((id: LibraryItemID) => cache.find(item => item.id === id), [cache]);
-
-  const getSchemaByCst = useCallback(
-    (id: ConstituentaID) => {
-      for (const schema of cache) {
-        const cst = schema.items.find(cst => cst.id === id);
-        if (cst) {
-          return schema;
-        }
-      }
-      return undefined;
-    },
-    [cache]
-  );
-
-  const getConstituenta = useCallback(
-    (id: ConstituentaID) => {
-      for (const schema of cache) {
-        const cst = schema.items.find(cst => cst.id === id);
-        if (cst) {
-          return cst;
-        }
-      }
-      return undefined;
-    },
-    [cache]
-  );
 
   const preload = useCallback(
     (target: LibraryItemID[]) => setPending(prev => [...prev, ...target.filter(id => !prev.includes(id))]),
@@ -76,11 +48,9 @@ function useRSFormCache() {
         }
       })
     );
-    // eslint-disable-next-line react-compiler/react-compiler
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pending]);
+  }, [pending, cache, processing]);
 
-  return { preload, getSchema, getConstituenta, getSchemaByCst, loading, error, setError };
+  return { preload, data: cache, loading, error, setError };
 }
 
 export default useRSFormCache;

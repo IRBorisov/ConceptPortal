@@ -7,6 +7,7 @@ import { TabList, TabPanel, Tabs } from 'react-tabs';
 import Modal from '@/components/ui/Modal';
 import TabLabel from '@/components/ui/TabLabel';
 import useRSFormCache from '@/hooks/useRSFormCache';
+import { LibraryItemID } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
 import {
   ICstSubstitute,
@@ -17,6 +18,7 @@ import {
   OperationType
 } from '@/models/oss';
 import { SubstitutionValidator } from '@/models/ossAPI';
+import { ConstituentaID } from '@/models/rsform';
 
 import TabArguments from './TabArguments';
 import TabOperation from './TabOperation';
@@ -48,20 +50,17 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
   const initialInputs = useMemo(() => oss.graph.expandInputs([target.id]), [oss.graph, target.id]);
   const [inputs, setInputs] = useState<OperationID[]>(initialInputs);
   const inputOperations = useMemo(() => inputs.map(id => oss.operationByID.get(id)!), [inputs, oss.operationByID]);
-  const schemasIDs = useMemo(
-    () => inputOperations.map(operation => operation.result).filter(id => id !== null),
-    [inputOperations]
-  );
+
+  const [needPreload, setNeedPreload] = useState(false);
+  const [schemasIDs, setSchemaIDs] = useState<LibraryItemID[]>([]);
 
   const [substitutions, setSubstitutions] = useState<ICstSubstitute[]>(target.substitutions);
   const [suggestions, setSuggestions] = useState<ICstSubstitute[]>([]);
 
   const cache = useRSFormCache();
   const schemas = useMemo(
-    () => schemasIDs.map(id => cache.getSchema(id)).filter(item => item !== undefined),
-    // eslint-disable-next-line react-compiler/react-compiler
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [schemasIDs, cache.getSchema]
+    () => schemasIDs.map(id => cache.data.find(item => item.id === id)).filter(item => item !== undefined),
+    [schemasIDs, cache.data]
   );
 
   const isModified = useMemo(
@@ -87,11 +86,30 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
 
   const canSubmit = useMemo(() => isModified && alias !== '', [isModified, alias]);
 
+  const getSchemaByCst = useCallback(
+    (id: ConstituentaID) => {
+      for (const schema of cache.data) {
+        const cst = schema.items.find(cst => cst.id === id);
+        if (cst) {
+          return schema;
+        }
+      }
+      return undefined;
+    },
+    [cache.data]
+  );
+
   useEffect(() => {
-    cache.preload(schemasIDs);
-    // eslint-disable-next-line react-compiler/react-compiler
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [schemasIDs]);
+    setNeedPreload(true);
+    setSchemaIDs(inputOperations.map(operation => operation.result).filter(id => id !== null));
+  }, [inputOperations]);
+
+  useEffect(() => {
+    if (needPreload) {
+      setNeedPreload(false);
+      cache.preload(schemasIDs);
+    }
+  }, [schemasIDs, needPreload, cache]);
 
   useEffect(() => {
     if (cache.loading || schemas.length !== schemasIDs.length) {
@@ -99,20 +117,18 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
     }
     setSubstitutions(prev =>
       prev.filter(sub => {
-        const original = cache.getSchemaByCst(sub.original);
+        const original = getSchemaByCst(sub.original);
         if (!original || !schemasIDs.includes(original.id)) {
           return false;
         }
-        const substitution = cache.getSchemaByCst(sub.substitution);
+        const substitution = getSchemaByCst(sub.substitution);
         if (!substitution || !schemasIDs.includes(substitution.id)) {
           return false;
         }
         return true;
       })
     );
-    // eslint-disable-next-line react-compiler/react-compiler
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [schemasIDs, schemas, cache.loading]);
+  }, [schemasIDs, schemas, cache.loading, getSchemaByCst]);
 
   useEffect(() => {
     if (cache.loading || schemas.length !== schemasIDs.length) {
