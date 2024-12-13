@@ -14,11 +14,11 @@ function HomePage() {
     if (!loading) {
       if (!user) {
         setTimeout(() => {
-          router.push(urls.manuals);
+          router.replace(urls.manuals);
         }, PARAMETER.refreshTimeout);
       } else {
         setTimeout(() => {
-          router.push(urls.library);
+          router.replace(urls.library);
         }, PARAMETER.refreshTimeout);
       }
     }
