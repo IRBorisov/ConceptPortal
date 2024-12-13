@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useMemo } from 'react';
 
 import { CstMatchMode } from '@/models/miscellaneous';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
@@ -28,22 +27,16 @@ function SelectConstituenta({
   placeholder = 'Выберите конституенту',
   ...restProps
 }: SelectConstituentaProps) {
-  const options = useMemo(() => {
-    return (
-      items?.map(cst => ({
-        value: cst.id,
-        label: `${cst.alias}${cst.is_inherited ? '*' : ''}: ${describeConstituenta(cst)}`
-      })) ?? []
-    );
-  }, [items]);
+  const options =
+    items?.map(cst => ({
+      value: cst.id,
+      label: `${cst.alias}${cst.is_inherited ? '*' : ''}: ${describeConstituenta(cst)}`
+    })) ?? [];
 
-  const filter = useCallback(
-    (option: { value: ConstituentaID | undefined; label: string }, inputValue: string) => {
-      const cst = items?.find(item => item.id === option.value);
-      return !cst ? false : matchConstituenta(cst, inputValue, CstMatchMode.ALL);
-    },
-    [items]
-  );
+  function filter(option: { value: ConstituentaID | undefined; label: string }, inputValue: string) {
+    const cst = items?.find(item => item.id === option.value);
+    return !cst ? false : matchConstituenta(cst, inputValue, CstMatchMode.ALL);
+  }
 
   return (
     <SelectSingle

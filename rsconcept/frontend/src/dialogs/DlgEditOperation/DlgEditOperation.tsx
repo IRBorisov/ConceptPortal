@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import Modal from '@/components/ui/Modal';
@@ -47,9 +47,9 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
   const [isCorrect, setIsCorrect] = useState(true);
   const [validationText, setValidationText] = useState('');
 
-  const initialInputs = useMemo(() => oss.graph.expandInputs([target.id]), [oss.graph, target.id]);
+  const initialInputs = oss.graph.expandInputs([target.id]);
   const [inputs, setInputs] = useState<OperationID[]>(initialInputs);
-  const inputOperations = useMemo(() => inputs.map(id => oss.operationByID.get(id)!), [inputs, oss.operationByID]);
+  const inputOperations = inputs.map(id => oss.operationByID.get(id)!);
 
   const [needPreload, setNeedPreload] = useState(false);
   const [schemasIDs, setSchemaIDs] = useState<LibraryItemID[]>([]);
@@ -58,33 +58,16 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
   const [suggestions, setSuggestions] = useState<ICstSubstitute[]>([]);
 
   const cache = useRSFormCache();
-  const schemas = useMemo(
-    () => schemasIDs.map(id => cache.data.find(item => item.id === id)).filter(item => item !== undefined),
-    [schemasIDs, cache.data]
-  );
+  const schemas = schemasIDs.map(id => cache.data.find(item => item.id === id)).filter(item => item !== undefined);
 
-  const isModified = useMemo(
-    () =>
-      alias !== target.alias ||
-      title !== target.title ||
-      comment !== target.comment ||
-      JSON.stringify(initialInputs) !== JSON.stringify(inputs) ||
-      JSON.stringify(substitutions) !== JSON.stringify(target.substitutions),
-    [
-      alias,
-      title,
-      comment,
-      target.alias,
-      target.title,
-      target.comment,
-      initialInputs,
-      inputs,
-      substitutions,
-      target.substitutions
-    ]
-  );
+  const isModified =
+    alias !== target.alias ||
+    title !== target.title ||
+    comment !== target.comment ||
+    JSON.stringify(initialInputs) !== JSON.stringify(inputs) ||
+    JSON.stringify(substitutions) !== JSON.stringify(target.substitutions);
 
-  const canSubmit = useMemo(() => isModified && alias !== '', [isModified, alias]);
+  const canSubmit = isModified && alias !== '';
 
   const getSchemaByCst = useCallback(
     (id: ConstituentaID) => {
@@ -140,7 +123,7 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
     setSuggestions(validator.suggestions);
   }, [substitutions, cache.loading, schemas, schemasIDs.length]);
 
-  const handleSubmit = useCallback(() => {
+  function handleSubmit() {
     const data: IOperationUpdateData = {
       target: target.id,
       item_data: {
@@ -153,55 +136,7 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
       substitutions: target.operation_type !== OperationType.SYNTHESIS ? undefined : substitutions
     };
     onSubmit(data);
-  }, [alias, comment, title, inputs, substitutions, target, onSubmit]);
-
-  const cardPanel = useMemo(
-    () => (
-      <TabPanel>
-        <TabOperation
-          alias={alias}
-          onChangeAlias={setAlias}
-          comment={comment}
-          onChangeComment={setComment}
-          title={title}
-          onChangeTitle={setTitle}
-        />
-      </TabPanel>
-    ),
-    [alias, comment, title, setAlias]
-  );
-
-  const argumentsPanel = useMemo(
-    () => (
-      <TabPanel>
-        <TabArguments
-          target={target.id} // prettier: split-lines
-          oss={oss}
-          inputs={inputs}
-          setInputs={setInputs}
-        />
-      </TabPanel>
-    ),
-    [oss, target, inputs, setInputs]
-  );
-
-  const synthesisPanel = useMemo(
-    () => (
-      <TabPanel>
-        <TabSynthesis
-          schemas={schemas}
-          loading={cache.loading}
-          error={cache.error}
-          validationText={validationText}
-          isCorrect={isCorrect}
-          substitutions={substitutions}
-          setSubstitutions={setSubstitutions}
-          suggestions={suggestions}
-        />
-      </TabPanel>
-    ),
-    [cache.loading, cache.error, substitutions, suggestions, schemas, validationText, isCorrect]
-  );
+  }
 
   return (
     <Modal
@@ -234,9 +169,41 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
           ) : null}
         </TabList>
 
-        {cardPanel}
-        {target.operation_type === OperationType.SYNTHESIS ? argumentsPanel : null}
-        {target.operation_type === OperationType.SYNTHESIS ? synthesisPanel : null}
+        <TabPanel>
+          <TabOperation
+            alias={alias}
+            onChangeAlias={setAlias}
+            comment={comment}
+            onChangeComment={setComment}
+            title={title}
+            onChangeTitle={setTitle}
+          />
+        </TabPanel>
+
+        {target.operation_type === OperationType.SYNTHESIS ? (
+          <TabPanel>
+            <TabArguments
+              target={target.id} // prettier: split-lines
+              oss={oss}
+              inputs={inputs}
+              setInputs={setInputs}
+            />
+          </TabPanel>
+        ) : null}
+        {target.operation_type === OperationType.SYNTHESIS ? (
+          <TabPanel>
+            <TabSynthesis
+              schemas={schemas}
+              loading={cache.loading}
+              error={cache.error}
+              validationText={validationText}
+              isCorrect={isCorrect}
+              substitutions={substitutions}
+              setSubstitutions={setSubstitutions}
+              suggestions={suggestions}
+            />
+          </TabPanel>
+        ) : null}
       </Tabs>
     </Modal>
   );

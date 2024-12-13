@@ -1,12 +1,10 @@
 'use client';
 
-import { useCallback, useMemo } from 'react';
-
 import { ErrorData } from '@/components/info/InfoError';
 import PickSubstitutions from '@/components/select/PickSubstitutions';
 import DataLoader from '@/components/wrap/DataLoader';
 import { ICstSubstitute } from '@/models/oss';
-import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
+import { ConstituentaID, IRSForm } from '@/models/rsform';
 import { prefixes } from '@/utils/constants';
 
 interface TabSubstitutionsProps {
@@ -32,12 +30,7 @@ function TabSubstitutions({
   substitutions,
   setSubstitutions
 }: TabSubstitutionsProps) {
-  const filter = useCallback(
-    (cst: IConstituenta) => cst.id !== source?.id || selected.includes(cst.id),
-    [selected, source]
-  );
-
-  const schemas = useMemo(() => [...(source ? [source] : []), ...(receiver ? [receiver] : [])], [source, receiver]);
+  const schemas = [...(source ? [source] : []), ...(receiver ? [receiver] : [])];
 
   return (
     <DataLoader isLoading={loading} error={error} hasNoData={!source}>
@@ -47,7 +40,7 @@ function TabSubstitutions({
         rows={10}
         prefixID={prefixes.cst_inline_synth_substitutes}
         schemas={schemas}
-        filter={filter}
+        filter={cst => cst.id !== source?.id || selected.includes(cst.id)}
       />
     </DataLoader>
   );

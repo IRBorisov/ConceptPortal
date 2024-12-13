@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { IconReset, IconSave } from '@/components/Icons';
 import MiniButton from '@/components/ui/MiniButton';
@@ -26,19 +26,8 @@ function DlgEditVersions({ hideWindow, versions, onDelete, onUpdate }: DlgEditVe
   const [version, setVersion] = useState('');
   const [description, setDescription] = useState('');
 
-  const isValid = useMemo(() => {
-    if (!selected) {
-      return false;
-    }
-    return versions.every(ver => ver.id === selected.id || ver.version != version);
-  }, [selected, version, versions]);
-
-  const isModified = useMemo(() => {
-    if (!selected) {
-      return false;
-    }
-    return selected.version != version || selected.description != description;
-  }, [version, description, selected]);
+  const isValid = selected && versions.every(ver => ver.id === selected.id || ver.version != version);
+  const isModified = selected && (selected.version != version || selected.description != description);
 
   function handleUpdate() {
     if (!isModified || !selected || processing || !isValid) {
@@ -64,19 +53,6 @@ function DlgEditVersions({ hideWindow, versions, onDelete, onUpdate }: DlgEditVe
     setDescription(selected?.description ?? '');
   }, [selected]);
 
-  const versionsTable = useMemo(
-    () => (
-      <TableVersions
-        processing={processing}
-        items={versions}
-        onDelete={onDelete}
-        onSelect={versionID => setSelected(versions.find(ver => ver.id === versionID))}
-        selected={selected?.id}
-      />
-    ),
-    [processing, versions, onDelete, selected?.id]
-  );
-
   return (
     <Modal
       readonly
@@ -84,7 +60,14 @@ function DlgEditVersions({ hideWindow, versions, onDelete, onUpdate }: DlgEditVe
       hideWindow={hideWindow}
       className='flex flex-col w-[40rem] px-6 gap-3 pb-6'
     >
-      {versionsTable}
+      <TableVersions
+        processing={processing}
+        items={versions}
+        onDelete={onDelete}
+        onSelect={versionID => setSelected(versions.find(ver => ver.id === versionID))}
+        selected={selected?.id}
+      />
+
       <div className='flex'>
         <TextInput
           id='dlg_version'

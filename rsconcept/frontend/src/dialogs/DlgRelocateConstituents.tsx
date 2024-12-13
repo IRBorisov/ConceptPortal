@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import { RelocateUpIcon } from '@/components/DomainIcons';
 import PickMultiConstituenta from '@/components/select/PickMultiConstituenta';
@@ -33,10 +33,11 @@ function DlgRelocateConstituents({ oss, hideWindow, initialTarget, onSubmit }: D
   const [source, setSource] = useState<ILibraryItem | undefined>(
     library.items.find(item => item.id === initialTarget?.result)
   );
+  const isValid = !!destination && selected.length > 0;
 
-  const operation = useMemo(() => oss.items.find(item => item.result === source?.id), [oss, source]);
-  const sourceSchemas = useMemo(() => library.items.filter(item => oss.schemas.includes(item.id)), [library, oss]);
-  const destinationSchemas = useMemo(() => {
+  const operation = oss.items.find(item => item.result === source?.id);
+  const sourceSchemas = library.items.filter(item => oss.schemas.includes(item.id));
+  const destinationSchemas = (() => {
     if (!operation) {
       return [];
     }
@@ -45,35 +46,34 @@ function DlgRelocateConstituents({ oss, hideWindow, initialTarget, onSubmit }: D
       ? node.inputs.map(id => oss.operationByID.get(id)!.result).filter(id => id !== null)
       : node.outputs.map(id => oss.operationByID.get(id)!.result).filter(id => id !== null);
     return ids.map(id => library.items.find(item => item.id === id)).filter(item => item !== undefined);
-  }, [oss, library.items, operation, directionUp]);
+  })();
 
   const sourceData = useRSFormDetails({ target: source ? String(source.id) : undefined });
-  const filteredConstituents = useMemo(() => {
+  const filteredConstituents = (() => {
     if (!sourceData.schema || !destination || !operation) {
       return [];
     }
     const destinationOperation = oss.items.find(item => item.result === destination.id);
     return getRelocateCandidates(operation.id, destinationOperation!.id, sourceData.schema, oss);
-  }, [destination, operation, sourceData.schema, oss]);
+  })();
 
-  const isValid = useMemo(() => !!destination && selected.length > 0, [destination, selected]);
-  const toggleDirection = useCallback(() => {
+  function toggleDirection() {
     setDirectionUp(prev => !prev);
     setDestination(undefined);
-  }, []);
+  }
 
-  const handleSelectSource = useCallback((newValue: ILibraryItem | undefined) => {
+  function handleSelectSource(newValue: ILibraryItem | undefined) {
     setSource(newValue);
     setDestination(undefined);
     setSelected([]);
-  }, []);
+  }
 
-  const handleSelectDestination = useCallback((newValue: ILibraryItem | undefined) => {
+  function handleSelectDestination(newValue: ILibraryItem | undefined) {
     setDestination(newValue);
     setSelected([]);
-  }, []);
+  }
 
-  const handleSubmit = useCallback(() => {
+  function handleSubmit() {
     if (!destination) {
       return;
     }
@@ -82,7 +82,7 @@ function DlgRelocateConstituents({ oss, hideWindow, initialTarget, onSubmit }: D
       items: selected
     };
     onSubmit(data);
-  }, [destination, onSubmit, selected]);
+  }
 
   return (
     <Modal

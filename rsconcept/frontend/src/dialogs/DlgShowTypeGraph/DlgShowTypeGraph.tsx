@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
 import { toast } from 'react-toastify';
 import { ReactFlowProvider } from 'reactflow';
 
@@ -17,11 +16,11 @@ interface DlgShowTypeGraphProps extends Pick<ModalProps, 'hideWindow'> {
 }
 
 function DlgShowTypeGraph({ hideWindow, items }: DlgShowTypeGraphProps) {
-  const graph = useMemo(() => {
+  const graph = (() => {
     const result = new TMGraph();
     items.forEach(item => result.addConstituenta(item.alias, item.result, item.args));
     return result;
-  }, [items]);
+  })();
 
   if (graph.nodes.length === 0) {
     toast.error(errors.typeStructureFailed);

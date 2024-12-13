@@ -1,7 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
-
 import PickSchema from '@/components/select/PickSchema';
 import TextInput from '@/components/ui/TextInput';
 import { useLibrary } from '@/context/LibraryContext';
@@ -17,8 +15,8 @@ interface TabSchemaProps {
 
 function TabSchema({ selected, receiver, setSelected }: TabSchemaProps) {
   const library = useLibrary();
-  const selectedInfo = useMemo(() => library.items.find(item => item.id === selected), [selected, library.items]);
-  const sortedItems = useMemo(() => sortItemsForInlineSynthesis(receiver, library.items), [receiver, library.items]);
+  const selectedInfo = library.items.find(item => item.id === selected);
+  const sortedItems = sortItemsForInlineSynthesis(receiver, library.items);
 
   return (
     <div className='cc-fade-in flex flex-col'>

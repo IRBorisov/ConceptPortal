@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import Modal, { ModalProps } from '@/components/ui/Modal';
@@ -35,7 +35,7 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
 
   const source = useRSFormDetails({ target: donorID ? String(donorID) : undefined });
 
-  const validated = useMemo(() => !!source.schema && selected.length > 0, [source.schema, selected]);
+  const validated = !!source.schema && selected.length > 0;
 
   function handleSubmit() {
     if (!source.schema) {
@@ -54,43 +54,6 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
     setSelected(source.schema ? source.schema?.items.map(cst => cst.id) : []);
     setSubstitutions([]);
   }, [source.schema]);
-
-  const schemaPanel = useMemo(
-    () => (
-      <TabPanel>
-        <TabSchema selected={donorID} setSelected={setDonorID} receiver={receiver} />
-      </TabPanel>
-    ),
-    [donorID, receiver]
-  );
-  const itemsPanel = useMemo(
-    () => (
-      <TabPanel>
-        <TabConstituents
-          schema={source.schema}
-          loading={source.loading}
-          selected={selected}
-          setSelected={setSelected}
-        />
-      </TabPanel>
-    ),
-    [source.schema, source.loading, selected]
-  );
-  const substitutesPanel = useMemo(
-    () => (
-      <TabPanel>
-        <TabSubstitutions
-          receiver={receiver}
-          source={source.schema}
-          selected={selected}
-          loading={source.loading}
-          substitutions={substitutions}
-          setSubstitutions={setSubstitutions}
-        />
-      </TabPanel>
-    ),
-    [source.schema, source.loading, receiver, selected, substitutions]
-  );
 
   return (
     <Modal
@@ -113,9 +76,29 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
           <TabLabel label='Отождествления' title='Таблица отождествлений' className='w-[8rem]' />
         </TabList>
 
-        {schemaPanel}
-        {itemsPanel}
-        {substitutesPanel}
+        <TabPanel>
+          <TabSchema selected={donorID} setSelected={setDonorID} receiver={receiver} />
+        </TabPanel>
+
+        <TabPanel>
+          <TabConstituents
+            schema={source.schema}
+            loading={source.loading}
+            selected={selected}
+            setSelected={setSelected}
+          />
+        </TabPanel>
+
+        <TabPanel>
+          <TabSubstitutions
+            receiver={receiver}
+            source={source.schema}
+            selected={selected}
+            loading={source.loading}
+            substitutions={substitutions}
+            setSubstitutions={setSubstitutions}
+          />
+        </TabPanel>
       </Tabs>
     </Modal>
   );

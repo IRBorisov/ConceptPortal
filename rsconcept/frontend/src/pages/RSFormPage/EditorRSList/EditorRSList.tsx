@@ -1,7 +1,7 @@
 'use client';
 
 import fileDownload from 'js-file-download';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { IconCSV } from '@/components/Icons';
@@ -54,7 +54,7 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
     }
   }, [filterText, controller.schema?.items, controller.schema]);
 
-  const handleDownloadCSV = useCallback(() => {
+  function handleDownloadCSV() {
     if (!controller.schema || filtered.length === 0) {
       toast.error(information.noDataToExport);
       return;
@@ -65,7 +65,7 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
     } catch (error) {
       console.error(error);
     }
-  }, [filtered, controller]);
+  }
 
   function handleRowSelection(updater: React.SetStateAction<RowSelectionState>) {
     if (!controller.schema) {
@@ -136,7 +136,7 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
     return false;
   }
 
-  const tableHeight = useMemo(() => calculateHeight('4.05rem + 5px'), [calculateHeight]);
+  const tableHeight = calculateHeight('4.05rem + 5px');
 
   return (
     <>

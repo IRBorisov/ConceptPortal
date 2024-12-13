@@ -1,7 +1,7 @@
 'use client';
 
 import axios from 'axios';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import InfoError, { ErrorData } from '@/components/info/InfoError';
@@ -20,12 +20,9 @@ function EditorProfile() {
   const [first_name, setFirstName] = useState(user?.first_name ?? '');
   const [last_name, setLastName] = useState(user?.last_name ?? '');
 
-  const isModified: boolean = useMemo(() => {
-    if (!user) {
-      return false;
-    }
-    return user.email !== email || user.first_name !== first_name || user.last_name !== last_name;
-  }, [user, email, first_name, last_name]);
+  const isModified =
+    user != undefined && (user.email !== email || user.first_name !== first_name || user.last_name !== last_name);
+
   useBlockNavigation(isModified);
 
   useEffect(() => {

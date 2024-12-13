@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import DataTable, { createColumnHelper, RowSelectionState } from '@/components/ui/DataTable';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
@@ -49,7 +49,8 @@ function PickMultiConstituenta({
   const [filtered, setFiltered] = useState<IConstituenta[]>(data);
   const [filterText, setFilterText] = useState('');
 
-  const foldedGraph = useMemo(() => {
+  // TODO: extract graph fold logic to separate function
+  const foldedGraph = (() => {
     if (data.length === schema.items.length) {
       return schema.graph;
     }
@@ -66,7 +67,7 @@ function PickMultiConstituenta({
         newGraph.foldNode(item.id);
       });
     return newGraph;
-  }, [data, schema.graph, schema.items]);
+  })();
 
   useEffect(() => {
     if (filtered.length === 0) {
@@ -105,22 +106,19 @@ function PickMultiConstituenta({
     }
   }
 
-  const columns = useMemo(
-    () => [
-      columnHelper.accessor('alias', {
-        id: 'alias',
-        header: () => <span className='pl-3'>Имя</span>,
-        size: 65,
-        cell: props => <BadgeConstituenta theme={colors} value={props.row.original} prefixID={prefixID} />
-      }),
-      columnHelper.accessor(cst => describeConstituenta(cst), {
-        id: 'description',
-        size: 1000,
-        header: 'Описание'
-      })
-    ],
-    [colors, prefixID]
-  );
+  const columns = [
+    columnHelper.accessor('alias', {
+      id: 'alias',
+      header: () => <span className='pl-3'>Имя</span>,
+      size: 65,
+      cell: props => <BadgeConstituenta theme={colors} value={props.row.original} prefixID={prefixID} />
+    }),
+    columnHelper.accessor(cst => describeConstituenta(cst), {
+      id: 'description',
+      size: 1000,
+      header: 'Описание'
+    })
+  ];
 
   return (
     <div className={clsx(noBorder ? '' : 'border', className)} {...restProps}>

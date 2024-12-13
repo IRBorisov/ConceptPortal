@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import BadgeHelp from '@/components/info/BadgeHelp';
@@ -99,7 +99,7 @@ function EditorRSExpression({
     });
   }
 
-  const onShowError = useCallback((error: IRSErrorDescription, prefixLen: number) => {
+  function onShowError(error: IRSErrorDescription, prefixLen: number) {
     if (!rsInput.current) {
       return;
     }
@@ -112,9 +112,9 @@ function EditorRSExpression({
       }
     });
     rsInput.current?.view?.focus();
-  }, []);
+  }
 
-  const handleEdit = useCallback((id: TokenID, key?: string) => {
+  function handleEdit(id: TokenID, key?: string) {
     if (!rsInput.current?.editor || !rsInput.current.state || !rsInput.current.view) {
       return;
     }
@@ -126,7 +126,7 @@ function EditorRSExpression({
     }
     rsInput.current?.view?.focus();
     setIsModified(true);
-  }, []);
+  }
 
   function handleShowAST(event: CProps.EventMouse) {
     if (event.ctrlKey) {
@@ -147,17 +147,6 @@ function EditorRSExpression({
       });
     }
   }
-
-  const controls = useMemo(
-    () => (
-      <RSEditorControls
-        isOpen={showControls && (!disabled || (model.processing && !activeCst.is_inherited))}
-        disabled={disabled}
-        onEdit={handleEdit}
-      />
-    ),
-    [showControls, disabled, model.processing, handleEdit, activeCst]
-  );
 
   return (
     <div className='cc-fade-in'>
@@ -201,7 +190,11 @@ function EditorRSExpression({
         {...restProps}
       />
 
-      {controls}
+      <RSEditorControls
+        isOpen={showControls && (!disabled || (model.processing && !activeCst.is_inherited))}
+        disabled={disabled}
+        onEdit={handleEdit}
+      />
 
       <ParsingResult
         isOpen={!!parser.parseData && parser.parseData.errors.length > 0}

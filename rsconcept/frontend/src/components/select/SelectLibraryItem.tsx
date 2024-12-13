@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useMemo } from 'react';
 
 import { ILibraryItem, LibraryItemID } from '@/models/library';
 import { matchLibraryItem } from '@/models/libraryAPI';
@@ -26,22 +25,16 @@ function SelectLibraryItem({
   placeholder = 'Выберите схему',
   ...restProps
 }: SelectLibraryItemProps) {
-  const options = useMemo(() => {
-    return (
-      items?.map(cst => ({
-        value: cst.id,
-        label: `${cst.alias}: ${cst.title}`
-      })) ?? []
-    );
-  }, [items]);
+  const options =
+    items?.map(cst => ({
+      value: cst.id,
+      label: `${cst.alias}: ${cst.title}`
+    })) ?? [];
 
-  const filter = useCallback(
-    (option: { value: LibraryItemID | undefined; label: string }, inputValue: string) => {
-      const item = items?.find(item => item.id === option.value);
-      return !item ? false : matchLibraryItem(item, inputValue);
-    },
-    [items]
-  );
+  function filter(option: { value: LibraryItemID | undefined; label: string }, inputValue: string) {
+    const item = items?.find(item => item.id === option.value);
+    return !item ? false : matchLibraryItem(item, inputValue);
+  }
 
   return (
     <SelectSingle

@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
@@ -51,10 +51,7 @@ function PickSchema({
   const [filterText, setFilterText] = useState(initialFilter);
   const [filterLocation, setFilterLocation] = useState('');
   const [filtered, setFiltered] = useState<ILibraryItem[]>([]);
-  const baseFiltered = useMemo(
-    () => items.filter(item => item.item_type === itemType && (!baseFilter || baseFilter(item))),
-    [items, itemType, baseFilter]
-  );
+  const baseFiltered = items.filter(item => item.item_type === itemType && (!baseFilter || baseFilter(item)));
 
   const locationMenu = useDropdown();
 
@@ -68,59 +65,50 @@ function PickSchema({
     setFiltered(newFiltered);
   }, [filterText, filterLocation, baseFiltered]);
 
-  const columns = useMemo(
-    () => [
-      columnHelper.accessor('alias', {
-        id: 'alias',
-        header: 'Шифр',
-        size: 150,
-        minSize: 80,
-        maxSize: 150
-      }),
-      columnHelper.accessor('title', {
-        id: 'title',
-        header: 'Название',
-        size: 1200,
-        minSize: 200,
-        maxSize: 1200,
-        cell: props => <div className='text-ellipsis'>{props.getValue()}</div>
-      }),
-      columnHelper.accessor('time_update', {
-        id: 'time_update',
-        header: 'Дата',
-        cell: props => (
-          <div className='whitespace-nowrap'>
-            {new Date(props.getValue()).toLocaleString(intl.locale, {
-              year: '2-digit',
-              month: '2-digit',
-              day: '2-digit'
-            })}
-          </div>
-        )
-      })
-    ],
-    [intl]
-  );
+  const columns = [
+    columnHelper.accessor('alias', {
+      id: 'alias',
+      header: 'Шифр',
+      size: 150,
+      minSize: 80,
+      maxSize: 150
+    }),
+    columnHelper.accessor('title', {
+      id: 'title',
+      header: 'Название',
+      size: 1200,
+      minSize: 200,
+      maxSize: 1200,
+      cell: props => <div className='text-ellipsis'>{props.getValue()}</div>
+    }),
+    columnHelper.accessor('time_update', {
+      id: 'time_update',
+      header: 'Дата',
+      cell: props => (
+        <div className='whitespace-nowrap'>
+          {new Date(props.getValue()).toLocaleString(intl.locale, {
+            year: '2-digit',
+            month: '2-digit',
+            day: '2-digit'
+          })}
+        </div>
+      )
+    })
+  ];
 
-  const conditionalRowStyles = useMemo(
-    (): IConditionalStyle<ILibraryItem>[] => [
-      {
-        when: (item: ILibraryItem) => item.id === value,
-        style: { backgroundColor: colors.bgSelected }
-      }
-    ],
-    [value, colors]
-  );
+  const conditionalRowStyles: IConditionalStyle<ILibraryItem>[] = [
+    {
+      when: (item: ILibraryItem) => item.id === value,
+      style: { backgroundColor: colors.bgSelected }
+    }
+  ];
 
-  const handleLocationClick = useCallback(
-    (event: CProps.EventMouse, newValue: string) => {
-      event.preventDefault();
-      event.stopPropagation();
-      locationMenu.hide();
-      setFilterLocation(newValue);
-    },
-    [locationMenu]
-  );
+  function handleLocationClick(event: CProps.EventMouse, newValue: string) {
+    event.preventDefault();
+    event.stopPropagation();
+    locationMenu.hide();
+    setFilterLocation(newValue);
+  }
 
   return (
     <div className={clsx('border divide-y', className)} {...restProps}>

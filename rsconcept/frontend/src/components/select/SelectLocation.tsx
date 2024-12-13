@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { FolderNode, FolderTree } from '@/models/FolderTree';
 import { labelFolderNode } from '@/utils/labels';
@@ -19,41 +19,34 @@ interface SelectLocationProps extends CProps.Styling {
 }
 
 function SelectLocation({ value, folderTree, dense, prefix, onClick, className, style }: SelectLocationProps) {
-  const activeNode = useMemo(() => folderTree.at(value), [folderTree, value]);
-
-  const items = useMemo(() => folderTree.getTree(), [folderTree]);
+  const activeNode = folderTree.at(value);
+  const items = folderTree.getTree();
   const [folded, setFolded] = useState<FolderNode[]>(items);
 
   useEffect(() => {
     setFolded(items.filter(item => item !== activeNode && !activeNode?.hasPredecessor(item)));
   }, [items, activeNode]);
 
-  const onFoldItem = useCallback(
-    (target: FolderNode, showChildren: boolean) => {
-      setFolded(prev =>
-        items.filter(item => {
-          if (item === target) {
-            return !showChildren;
-          }
-          if (!showChildren && item.hasPredecessor(target)) {
-            return true;
-          } else {
-            return prev.includes(item);
-          }
-        })
-      );
-    },
-    [items]
-  );
+  function onFoldItem(target: FolderNode, showChildren: boolean) {
+    setFolded(prev =>
+      items.filter(item => {
+        if (item === target) {
+          return !showChildren;
+        }
+        if (!showChildren && item.hasPredecessor(target)) {
+          return true;
+        } else {
+          return prev.includes(item);
+        }
+      })
+    );
+  }
 
-  const handleClickFold = useCallback(
-    (event: CProps.EventMouse, target: FolderNode, showChildren: boolean) => {
-      event.preventDefault();
-      event.stopPropagation();
-      onFoldItem(target, showChildren);
-    },
-    [onFoldItem]
-  );
+  function handleClickFold(event: CProps.EventMouse, target: FolderNode, showChildren: boolean) {
+    event.preventDefault();
+    event.stopPropagation();
+    onFoldItem(target, showChildren);
+  }
 
   return (
     <div className={clsx('flex flex-col', 'cc-scroll-y', className)} style={style}>

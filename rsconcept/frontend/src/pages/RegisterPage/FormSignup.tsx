@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import clsx from 'clsx';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { urls } from '@/app/urls';
@@ -37,10 +37,7 @@ function FormSignup() {
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
   const [acceptRules, setAcceptRules] = useState(false);
 
-  const isValid = useMemo(
-    () => acceptPrivacy && acceptRules && !!email && !!username,
-    [acceptPrivacy, acceptRules, email, username]
-  );
+  const isValid = acceptPrivacy && acceptRules && !!email && !!username;
 
   useEffect(() => {
     setError(undefined);

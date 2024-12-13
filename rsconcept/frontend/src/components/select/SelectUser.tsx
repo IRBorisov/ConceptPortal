@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useMemo } from 'react';
 
 import { useUsers } from '@/context/UsersContext';
 import { IUserInfo, UserID } from '@/models/user';
@@ -28,22 +27,16 @@ function SelectUser({
   ...restProps
 }: SelectUserProps) {
   const { getUserLabel } = useUsers();
-  const options = useMemo(() => {
-    return (
-      items?.map(user => ({
-        value: user.id,
-        label: getUserLabel(user.id)
-      })) ?? []
-    );
-  }, [items, getUserLabel]);
+  const options =
+    items?.map(user => ({
+      value: user.id,
+      label: getUserLabel(user.id)
+    })) ?? [];
 
-  const filter = useCallback(
-    (option: { value: UserID | undefined; label: string }, inputValue: string) => {
-      const user = items?.find(item => item.id === option.value);
-      return !user ? false : matchUser(user, inputValue);
-    },
-    [items]
-  );
+  function filter(option: { value: UserID | undefined; label: string }, inputValue: string) {
+    const user = items?.find(item => item.id === option.value);
+    return !user ? false : matchUser(user, inputValue);
+  }
 
   return (
     <SelectSingle

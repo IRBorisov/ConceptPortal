@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
 import { Handle, Position } from 'reactflow';
 
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
@@ -34,10 +33,7 @@ interface TGNodeInternal {
 
 function TGNode(node: TGNodeInternal) {
   const { colors } = useConceptOptions();
-  const description = useMemo(
-    () => truncateToLastWord(node.data.description, MAX_DESCRIPTION_LENGTH),
-    [node.data.description]
-  );
+  const description = truncateToLastWord(node.data.description, MAX_DESCRIPTION_LENGTH);
 
   return (
     <>

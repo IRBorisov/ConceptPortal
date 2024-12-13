@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
 import Select, {
   ClearIndicatorProps,
   components,
@@ -54,58 +53,55 @@ function SelectMulti<Option, Group extends GroupBase<Option> = GroupBase<Option>
 }: SelectMultiProps<Option, Group>) {
   const { darkMode, colors } = useConceptOptions();
   const size = useWindowSize();
-  const themeColors = useMemo(() => (!darkMode ? selectLightT : selectDarkT), [darkMode]);
+  const themeColors = !darkMode ? selectLightT : selectDarkT;
 
-  const adjustedStyles: StylesConfig<Option, true, Group> = useMemo(
-    () => ({
-      container: defaultStyles => ({
-        ...defaultStyles,
-        borderRadius: '0.25rem'
-      }),
-      control: (styles, { isDisabled }) => ({
-        ...styles,
-        borderRadius: '0.25rem',
-        cursor: isDisabled ? 'not-allowed' : 'pointer',
-        boxShadow: 'none'
-      }),
-      option: (styles, { isSelected }) => ({
-        ...styles,
-        padding: '0.25rem 0.75rem',
-        fontSize: '0.875rem',
-        lineHeight: '1.25rem',
-        backgroundColor: isSelected ? colors.bgSelected : styles.backgroundColor,
-        color: isSelected ? colors.fgSelected : styles.color,
-        borderWidth: '1px',
-        borderColor: colors.border
-      }),
-      menuPortal: styles => ({
-        ...styles,
-        zIndex: 9999
-      }),
-      menuList: styles => ({
-        ...styles,
-        padding: 0
-      }),
-      input: styles => ({ ...styles }),
-      placeholder: styles => ({ ...styles }),
-      multiValue: styles => ({
-        ...styles,
-        borderRadius: '0.5rem',
-        backgroundColor: colors.bgSelected
-      }),
-      dropdownIndicator: base => ({
-        ...base,
-        paddingTop: 0,
-        paddingBottom: 0
-      }),
-      clearIndicator: base => ({
-        ...base,
-        paddingTop: 0,
-        paddingBottom: 0
-      })
+  const adjustedStyles: StylesConfig<Option, true, Group> = {
+    container: defaultStyles => ({
+      ...defaultStyles,
+      borderRadius: '0.25rem'
     }),
-    [colors]
-  );
+    control: (styles, { isDisabled }) => ({
+      ...styles,
+      borderRadius: '0.25rem',
+      cursor: isDisabled ? 'not-allowed' : 'pointer',
+      boxShadow: 'none'
+    }),
+    option: (styles, { isSelected }) => ({
+      ...styles,
+      padding: '0.25rem 0.75rem',
+      fontSize: '0.875rem',
+      lineHeight: '1.25rem',
+      backgroundColor: isSelected ? colors.bgSelected : styles.backgroundColor,
+      color: isSelected ? colors.fgSelected : styles.color,
+      borderWidth: '1px',
+      borderColor: colors.border
+    }),
+    menuPortal: styles => ({
+      ...styles,
+      zIndex: 9999
+    }),
+    menuList: styles => ({
+      ...styles,
+      padding: 0
+    }),
+    input: styles => ({ ...styles }),
+    placeholder: styles => ({ ...styles }),
+    multiValue: styles => ({
+      ...styles,
+      borderRadius: '0.5rem',
+      backgroundColor: colors.bgSelected
+    }),
+    dropdownIndicator: base => ({
+      ...base,
+      paddingTop: 0,
+      paddingBottom: 0
+    }),
+    clearIndicator: base => ({
+      ...base,
+      paddingTop: 0,
+      paddingBottom: 0
+    })
+  };
 
   return (
     <Select

@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import Modal, { ModalProps } from '@/components/ui/Modal';
@@ -123,35 +123,6 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
     setValidated(!!template.prototype && validateNewAlias(constituenta.alias, constituenta.cst_type, schema));
   }, [constituenta.alias, constituenta.cst_type, schema, template.prototype]);
 
-  const templatePanel = useMemo(
-    () => (
-      <TabPanel>
-        <TabTemplate state={template} partialUpdate={updateTemplate} templateSchema={templateSchema} />
-      </TabPanel>
-    ),
-    [template, templateSchema, updateTemplate]
-  );
-
-  const argumentsPanel = useMemo(
-    () => (
-      <TabPanel>
-        <TabArguments schema={schema} state={substitutes} partialUpdate={updateSubstitutes} />
-      </TabPanel>
-    ),
-    [schema, substitutes, updateSubstitutes]
-  );
-
-  const editorPanel = useMemo(
-    () => (
-      <TabPanel>
-        <div className='cc-fade-in cc-column'>
-          <FormCreateCst state={constituenta} partialUpdate={updateConstituenta} schema={schema} />
-        </div>
-      </TabPanel>
-    ),
-    [constituenta, updateConstituenta, schema]
-  );
-
   return (
     <Modal
       header='Создание конституенты из шаблона'
@@ -175,9 +146,19 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
           <TabLabel label='Конституента' title='Редактирование конституенты' className='w-[8rem]' />
         </TabList>
 
-        {templatePanel}
-        {argumentsPanel}
-        {editorPanel}
+        <TabPanel>
+          <TabTemplate state={template} partialUpdate={updateTemplate} templateSchema={templateSchema} />
+        </TabPanel>
+
+        <TabPanel>
+          <TabArguments schema={schema} state={substitutes} partialUpdate={updateSubstitutes} />
+        </TabPanel>
+
+        <TabPanel>
+          <div className='cc-fade-in cc-column'>
+            <FormCreateCst state={constituenta} partialUpdate={updateConstituenta} schema={schema} />
+          </div>
+        </TabPanel>
       </Tabs>
     </Modal>
   );

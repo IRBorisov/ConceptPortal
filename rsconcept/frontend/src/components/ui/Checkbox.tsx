@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { useMemo } from 'react';
 
 import { globals } from '@/utils/constants';
 
@@ -34,15 +33,7 @@ function Checkbox({
   setValue,
   ...restProps
 }: CheckboxProps) {
-  const cursor = useMemo(() => {
-    if (disabled) {
-      return 'cursor-arrow';
-    } else if (setValue) {
-      return 'cursor-pointer';
-    } else {
-      return '';
-    }
-  }, [disabled, setValue]);
+  const cursor = disabled ? 'cursor-arrow' : setValue ? 'cursor-pointer' : '';
 
   function handleClick(event: CProps.EventMouse): void {
     event.preventDefault();

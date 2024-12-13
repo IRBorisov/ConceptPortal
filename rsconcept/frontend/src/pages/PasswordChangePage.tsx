@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import clsx from 'clsx';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { urls } from '@/app/urls';
 import InfoError, { ErrorData } from '@/components/info/InfoError';
@@ -24,17 +24,10 @@ function PasswordChangePage() {
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
 
-  const passwordColor = useMemo(() => {
-    if (!!newPassword && !!newPasswordRepeat && newPassword !== newPasswordRepeat) {
-      return 'clr-warning';
-    } else {
-      return 'clr-input';
-    }
-  }, [newPassword, newPasswordRepeat]);
+  const passwordColor =
+    !!newPassword && !!newPasswordRepeat && newPassword !== newPasswordRepeat ? 'clr-warning' : 'clr-input';
 
-  const canSubmit = useMemo(() => {
-    return !!newPassword && !!newPasswordRepeat && newPassword === newPasswordRepeat;
-  }, [newPassword, newPasswordRepeat]);
+  const canSubmit = !!newPassword && !!newPasswordRepeat && newPassword === newPasswordRepeat;
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

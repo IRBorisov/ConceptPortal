@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { useCallback, useMemo } from 'react';
 import { toast } from 'react-toastify';
 
 import { SubfoldersIcon } from '@/components/DomainIcons';
@@ -43,7 +42,7 @@ function ViewSideLocation({
   const { calculateHeight } = useConceptOptions();
   const windowSize = useWindowSize();
 
-  const canRename = useMemo(() => {
+  const canRename = (() => {
     if (activeLocation.length <= 3 || !user) {
       return false;
     }
@@ -55,25 +54,22 @@ function ViewSideLocation({
       item => item.location == activeLocation || item.location.startsWith(`${activeLocation}/`)
     );
     return located.length !== 0;
-  }, [activeLocation, user, items]);
+  })();
 
-  const maxHeight = useMemo(() => calculateHeight('4.5rem'), [calculateHeight]);
+  const maxHeight = calculateHeight('4.5rem');
 
-  const handleClickFolder = useCallback(
-    (event: CProps.EventMouse, target: FolderNode) => {
-      event.preventDefault();
-      event.stopPropagation();
-      if (event.ctrlKey || event.metaKey) {
-        navigator.clipboard
-          .writeText(target.getPath())
-          .then(() => toast.success(information.pathReady))
-          .catch(console.error);
-      } else {
-        onChangeActiveLocation(target.getPath());
-      }
-    },
-    [onChangeActiveLocation]
-  );
+  function handleClickFolder(event: CProps.EventMouse, target: FolderNode) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.ctrlKey || event.metaKey) {
+      navigator.clipboard
+        .writeText(target.getPath())
+        .then(() => toast.success(information.pathReady))
+        .catch(console.error);
+    } else {
+      onChangeActiveLocation(target.getPath());
+    }
+  }
 
   return (
     <div

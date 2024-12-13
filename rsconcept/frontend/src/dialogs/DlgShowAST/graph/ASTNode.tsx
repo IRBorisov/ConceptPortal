@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
 import { Handle, Position } from 'reactflow';
 
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
@@ -27,7 +26,7 @@ interface ASTNodeInternal {
 
 function ASTNode(node: ASTNodeInternal) {
   const { colors } = useConceptOptions();
-  const label = useMemo(() => labelSyntaxTree(node.data), [node.data]);
+  const label = labelSyntaxTree(node.data);
 
   return (
     <>

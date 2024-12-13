@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 import { toPng } from 'html-to-image';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import {
   Edge,
@@ -89,9 +89,7 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
 
   const [isDragging, setIsDragging] = useState(false);
   const [hoverID, setHoverID] = useState<ConstituentaID | undefined>(undefined);
-  const hoverCst = useMemo(() => {
-    return hoverID && controller.schema?.cstByID.get(hoverID);
-  }, [controller.schema?.cstByID, hoverID]);
+  const hoverCst = hoverID && controller.schema?.cstByID.get(hoverID);
   const [hoverCstDebounced] = useDebounce(hoverCst, PARAMETER.graphPopupDelay);
   const [hoverLeft, setHoverLeft] = useState(true);
 
@@ -223,14 +221,11 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
     controller.promptDeleteCst();
   }
 
-  const handleChangeParams = useCallback(
-    (params: GraphFilterParams) => {
-      setFilterParams(params);
-    },
-    [setFilterParams]
-  );
+  function handleChangeParams(params: GraphFilterParams) {
+    setFilterParams(params);
+  }
 
-  const handleSaveImage = useCallback(() => {
+  function handleSaveImage() {
     if (!controller.schema) {
       return;
     }
@@ -264,7 +259,7 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
         console.error(error);
         toast.error(errors.imageFailed);
       });
-  }, [colors, nodes, controller.schema]);
+  }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (controller.isProcessing) {
@@ -288,7 +283,7 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
     }
   }
 
-  const handleFoldDerived = useCallback(() => {
+  function handleFoldDerived() {
     setFilterParams(prev => ({
       ...prev,
       foldDerived: !prev.foldDerived
@@ -296,99 +291,37 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
     setTimeout(() => {
       setToggleResetView(prev => !prev);
     }, PARAMETER.graphRefreshDelay);
-  }, [setFilterParams, setToggleResetView]);
+  }
 
-  const handleSetFocus = useCallback(
-    (cstID: ConstituentaID | undefined) => {
-      const target = cstID !== undefined ? controller.schema?.cstByID.get(cstID) : cstID;
-      setFocusCst(prev => (prev === target ? undefined : target));
-      if (target) {
-        controller.setSelected([]);
-      }
-    },
-    [controller]
-  );
+  function handleSetFocus(cstID: ConstituentaID | undefined) {
+    const target = cstID !== undefined ? controller.schema?.cstByID.get(cstID) : cstID;
+    setFocusCst(prev => (prev === target ? undefined : target));
+    if (target) {
+      controller.setSelected([]);
+    }
+  }
 
-  const handleNodeClick = useCallback(
-    (event: CProps.EventMouse, cstID: ConstituentaID) => {
-      if (event.altKey) {
-        event.preventDefault();
-        event.stopPropagation();
-        handleSetFocus(cstID);
-      }
-    },
-    [handleSetFocus]
-  );
-
-  const handleNodeDoubleClick = useCallback(
-    (event: CProps.EventMouse, cstID: ConstituentaID) => {
+  function handleNodeClick(event: CProps.EventMouse, cstID: ConstituentaID) {
+    if (event.altKey) {
       event.preventDefault();
       event.stopPropagation();
-      onOpenEdit(cstID);
-    },
-    [onOpenEdit]
-  );
+      handleSetFocus(cstID);
+    }
+  }
 
-  const handleNodeEnter = useCallback(
-    (event: CProps.EventMouse, cstID: ConstituentaID) => {
-      setHoverID(cstID);
-      setHoverLeft(
-        event.clientX / window.innerWidth >= PARAMETER.graphHoverXLimit ||
-          event.clientY / window.innerHeight >= PARAMETER.graphHoverYLimit
-      );
-    },
-    [setHoverID, setHoverLeft]
-  );
+  function handleNodeDoubleClick(event: CProps.EventMouse, cstID: ConstituentaID) {
+    event.preventDefault();
+    event.stopPropagation();
+    onOpenEdit(cstID);
+  }
 
-  const handleNodeLeave = useCallback(() => {
-    setHoverID(undefined);
-  }, [setHoverID]);
-
-  const selectors = useMemo(
-    () => <GraphSelectors schema={controller.schema} coloring={coloring} onChangeColoring={setColoring} />,
-    [coloring, controller.schema, setColoring]
-  );
-  const viewHidden = useMemo(
-    () => (
-      <ViewHidden
-        items={hidden}
-        selected={controller.selected}
-        schema={controller.schema}
-        coloringScheme={coloring}
-        toggleSelection={controller.toggleSelect}
-        setFocus={handleSetFocus}
-        onEdit={onOpenEdit}
-      />
-    ),
-    [hidden, controller.selected, controller.schema, coloring, controller.toggleSelect, handleSetFocus, onOpenEdit]
-  );
-
-  const graph = useMemo(
-    () => (
-      <div className='relative outline-none w-[100dvw]' style={{ height: mainHeight }}>
-        <ReactFlow
-          nodes={nodes}
-          onNodesChange={onNodesChange}
-          edges={edges}
-          fitView
-          edgesFocusable={false}
-          nodesFocusable={false}
-          nodesConnectable={false}
-          nodeTypes={TGNodeTypes}
-          edgeTypes={TGEdgeTypes}
-          maxZoom={ZOOM_MAX}
-          minZoom={ZOOM_MIN}
-          onNodeDragStart={() => setIsDragging(true)}
-          onNodeDragStop={() => setIsDragging(false)}
-          onNodeMouseEnter={(event, node) => handleNodeEnter(event, Number(node.id))}
-          onNodeMouseLeave={handleNodeLeave}
-          onNodeClick={(event, node) => handleNodeClick(event, Number(node.id))}
-          onNodeDoubleClick={(event, node) => handleNodeDoubleClick(event, Number(node.id))}
-        />
-      </div>
-    ),
-    [nodes, edges, mainHeight, handleNodeClick, handleNodeDoubleClick, handleNodeLeave, handleNodeEnter, onNodesChange]
-  );
+  function handleNodeEnter(event: CProps.EventMouse, cstID: ConstituentaID) {
+    setHoverID(cstID);
+    setHoverLeft(
+      event.clientX / window.innerWidth >= PARAMETER.graphHoverXLimit ||
+        event.clientY / window.innerHeight >= PARAMETER.graphHoverYLimit
+    );
+  }
 
   return (
     <>
@@ -480,12 +413,40 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
 
         <Overlay position='top-[6.15rem] sm:top-[5.9rem] left-0' className='flex gap-1'>
           <div className='flex flex-col ml-2 w-[13.5rem]'>
-            {selectors}
-            {viewHidden}
+            <GraphSelectors schema={controller.schema} coloring={coloring} onChangeColoring={setColoring} />
+            <ViewHidden
+              items={hidden}
+              selected={controller.selected}
+              schema={controller.schema}
+              coloringScheme={coloring}
+              toggleSelection={controller.toggleSelect}
+              setFocus={handleSetFocus}
+              onEdit={onOpenEdit}
+            />
           </div>
         </Overlay>
 
-        {graph}
+        <div className='relative outline-none w-[100dvw]' style={{ height: mainHeight }}>
+          <ReactFlow
+            nodes={nodes}
+            onNodesChange={onNodesChange}
+            edges={edges}
+            fitView
+            edgesFocusable={false}
+            nodesFocusable={false}
+            nodesConnectable={false}
+            nodeTypes={TGNodeTypes}
+            edgeTypes={TGEdgeTypes}
+            maxZoom={ZOOM_MAX}
+            minZoom={ZOOM_MIN}
+            onNodeDragStart={() => setIsDragging(true)}
+            onNodeDragStop={() => setIsDragging(false)}
+            onNodeMouseEnter={(event, node) => handleNodeEnter(event, Number(node.id))}
+            onNodeMouseLeave={() => setHoverID(undefined)}
+            onNodeClick={(event, node) => handleNodeClick(event, Number(node.id))}
+            onNodeDoubleClick={(event, node) => handleNodeDoubleClick(event, Number(node.id))}
+          />
+        </div>
       </div>
     </>
   );

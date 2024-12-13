@@ -1,7 +1,7 @@
 'use client';
 
 import { toPng } from 'html-to-image';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import {
   Background,
@@ -102,117 +102,82 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     }, PARAMETER.graphRefreshDelay);
   }, [model.schema, setNodes, setEdges, setIsModified, toggleReset, edgeStraight, edgeAnimate]);
 
-  const getPositions = useCallback(
-    () =>
-      nodes.map(node => ({
-        id: Number(node.id),
-        position_x: node.position.x,
-        position_y: node.position.y
-      })),
-    [nodes]
-  );
+  function getPositions() {
+    return nodes.map(node => ({
+      id: Number(node.id),
+      position_x: node.position.x,
+      position_y: node.position.y
+    }));
+  }
 
-  const handleNodesChange = useCallback(
-    (changes: NodeChange[]) => {
-      if (changes.some(change => change.type === 'position' && change.position)) {
-        setIsModified(true);
-      }
-      onNodesChange(changes);
-    },
-    [onNodesChange, setIsModified]
-  );
+  function handleNodesChange(changes: NodeChange[]) {
+    if (changes.some(change => change.type === 'position' && change.position)) {
+      setIsModified(true);
+    }
+    onNodesChange(changes);
+  }
 
-  const handleSavePositions = useCallback(() => {
+  function handleSavePositions() {
     controller.savePositions(getPositions(), () => setIsModified(false));
-  }, [controller, getPositions, setIsModified]);
+  }
 
-  const handleCreateOperation = useCallback(
-    (inputs: OperationID[]) => {
-      if (!controller.schema) {
-        return;
-      }
+  function handleCreateOperation(inputs: OperationID[]) {
+    if (!controller.schema) {
+      return;
+    }
+    const positions = getPositions();
+    const target = flow.project({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+    controller.promptCreateOperation({
+      defaultX: target.x,
+      defaultY: target.y,
+      inputs: inputs,
+      positions: positions,
+      callback: () => flow.fitView({ duration: PARAMETER.zoomDuration })
+    });
+  }
 
-      const positions = getPositions();
-      const target = flow.project({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
-      controller.promptCreateOperation({
-        defaultX: target.x,
-        defaultY: target.y,
-        inputs: inputs,
-        positions: positions,
-        callback: () => flow.fitView({ duration: PARAMETER.zoomDuration })
-      });
-    },
-    [controller, getPositions, flow]
-  );
+  function handleDeleteOperation(target: OperationID) {
+    if (!controller.canDelete(target)) {
+      return;
+    }
+    controller.promptDeleteOperation(target, getPositions());
+  }
 
-  const handleDeleteOperation = useCallback(
-    (target: OperationID) => {
-      if (!controller.canDelete(target)) {
-        return;
-      }
-      controller.promptDeleteOperation(target, getPositions());
-    },
-    [controller, getPositions]
-  );
-
-  const handleDeleteSelected = useCallback(() => {
+  function handleDeleteSelected() {
     if (controller.selected.length !== 1) {
       return;
     }
     handleDeleteOperation(controller.selected[0]);
-  }, [controller, handleDeleteOperation]);
+  }
 
-  const handleCreateInput = useCallback(
-    (target: OperationID) => {
-      controller.createInput(target, getPositions());
-    },
-    [controller, getPositions]
-  );
+  function handleCreateInput(target: OperationID) {
+    controller.createInput(target, getPositions());
+  }
 
-  const handleEditSchema = useCallback(
-    (target: OperationID) => {
-      controller.promptEditInput(target, getPositions());
-    },
-    [controller, getPositions]
-  );
+  function handleEditSchema(target: OperationID) {
+    controller.promptEditInput(target, getPositions());
+  }
 
-  const handleEditOperation = useCallback(
-    (target: OperationID) => {
-      controller.promptEditOperation(target, getPositions());
-    },
-    [controller, getPositions]
-  );
+  function handleEditOperation(target: OperationID) {
+    controller.promptEditOperation(target, getPositions());
+  }
 
-  const handleExecuteOperation = useCallback(
-    (target: OperationID) => {
-      controller.executeOperation(target, getPositions());
-    },
-    [controller, getPositions]
-  );
+  function handleExecuteOperation(target: OperationID) {
+    controller.executeOperation(target, getPositions());
+  }
 
-  const handleExecuteSelected = useCallback(() => {
+  function handleExecuteSelected() {
     if (controller.selected.length !== 1) {
       return;
     }
     handleExecuteOperation(controller.selected[0]);
-  }, [controller, handleExecuteOperation]);
+  }
 
-  const handleRelocateConstituents = useCallback(
-    (target: OperationID) => {
-      controller.promptRelocateConstituents(target, getPositions());
-    },
-    [controller, getPositions]
-  );
+  function handleRelocateConstituents(target: OperationID) {
+    controller.promptRelocateConstituents(target, getPositions());
+  }
 
-  const handleFitView = useCallback(() => {
-    flow.fitView({ duration: PARAMETER.zoomDuration });
-  }, [flow]);
-
-  const handleResetPositions = useCallback(() => {
-    setToggleReset(prev => !prev);
-  }, []);
-
-  const handleSaveImage = useCallback(() => {
+  function handleSaveImage() {
     if (!model.schema) {
       return;
     }
@@ -246,44 +211,38 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
         console.error(error);
         toast.error(errors.imageFailed);
       });
-  }, [colors, nodes, model.schema]);
+  }
 
-  const handleContextMenu = useCallback(
-    (event: CProps.EventMouse, node: OssNode) => {
-      event.preventDefault();
-      event.stopPropagation();
+  function handleContextMenu(event: CProps.EventMouse, node: OssNode) {
+    event.preventDefault();
+    event.stopPropagation();
 
-      setMenuProps({
-        operation: node.data.operation,
-        cursorX: event.clientX,
-        cursorY: event.clientY
-      });
-      controller.setShowTooltip(false);
-    },
-    [controller]
-  );
+    setMenuProps({
+      operation: node.data.operation,
+      cursorX: event.clientX,
+      cursorY: event.clientY
+    });
+    controller.setShowTooltip(false);
+  }
 
-  const handleContextMenuHide = useCallback(() => {
+  function handleContextMenuHide() {
     controller.setShowTooltip(true);
     setMenuProps(undefined);
-  }, [controller]);
+  }
 
-  const handleCanvasClick = useCallback(() => {
+  function handleCanvasClick() {
     handleContextMenuHide();
-  }, [handleContextMenuHide]);
+  }
 
-  const handleNodeDoubleClick = useCallback(
-    (event: CProps.EventMouse, node: OssNode) => {
-      event.preventDefault();
-      event.stopPropagation();
-      if (node.data.operation.result) {
-        controller.openOperationSchema(Number(node.id));
-      } else {
-        handleEditOperation(Number(node.id));
-      }
-    },
-    [handleEditOperation, controller]
-  );
+  function handleNodeDoubleClick(event: CProps.EventMouse, node: OssNode) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (node.data.operation.result) {
+      controller.openOperationSchema(Number(node.id));
+    } else {
+      handleEditOperation(Number(node.id));
+    }
+  }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (controller.isProcessing) {
@@ -312,41 +271,6 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     }
   }
 
-  const graph = useMemo(
-    () => (
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={handleNodesChange}
-        onEdgesChange={onEdgesChange}
-        onNodeDoubleClick={handleNodeDoubleClick}
-        edgesFocusable={false}
-        nodesFocusable={false}
-        fitView
-        nodeTypes={OssNodeTypes}
-        maxZoom={ZOOM_MAX}
-        minZoom={ZOOM_MIN}
-        nodesConnectable={false}
-        snapToGrid={true}
-        snapGrid={[PARAMETER.ossGridSize, PARAMETER.ossGridSize]}
-        onNodeContextMenu={handleContextMenu}
-        onClick={handleCanvasClick}
-      >
-        {showGrid ? <Background gap={PARAMETER.ossGridSize} /> : null}
-      </ReactFlow>
-    ),
-    [
-      nodes,
-      edges,
-      handleNodesChange,
-      handleContextMenu,
-      handleCanvasClick,
-      onEdgesChange,
-      handleNodeDoubleClick,
-      showGrid
-    ]
-  );
-
   return (
     <div tabIndex={-1} onKeyDown={handleKeyDown}>
       <Overlay position='top-[1.9rem] pt-1 right-1/2 translate-x-1/2' className='rounded-b-2xl cc-blur'>
@@ -355,12 +279,12 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
           showGrid={showGrid}
           edgeAnimate={edgeAnimate}
           edgeStraight={edgeStraight}
-          onFitView={handleFitView}
+          onFitView={() => flow.fitView({ duration: PARAMETER.zoomDuration })}
           onCreate={() => handleCreateOperation(controller.selected)}
           onDelete={handleDeleteSelected}
           onEdit={() => handleEditOperation(controller.selected[0])}
           onExecute={handleExecuteSelected}
-          onResetPositions={handleResetPositions}
+          onResetPositions={() => setToggleReset(prev => !prev)}
           onSavePositions={handleSavePositions}
           onSaveImage={handleSaveImage}
           toggleShowGrid={() => setShowGrid(prev => !prev)}
@@ -381,7 +305,26 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
         />
       ) : null}
       <div className='cc-fade-in relative w-[100vw]' style={{ height: mainHeight, fontFamily: 'Rubik' }}>
-        {graph}
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={handleNodesChange}
+          onEdgesChange={onEdgesChange}
+          onNodeDoubleClick={handleNodeDoubleClick}
+          edgesFocusable={false}
+          nodesFocusable={false}
+          fitView
+          nodeTypes={OssNodeTypes}
+          maxZoom={ZOOM_MAX}
+          minZoom={ZOOM_MIN}
+          nodesConnectable={false}
+          snapToGrid={true}
+          snapGrid={[PARAMETER.ossGridSize, PARAMETER.ossGridSize]}
+          onNodeContextMenu={handleContextMenu}
+          onClick={handleCanvasClick}
+        >
+          {showGrid ? <Background gap={PARAMETER.ossGridSize} /> : null}
+        </ReactFlow>
       </div>
     </div>
   );

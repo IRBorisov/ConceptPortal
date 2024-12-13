@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
 import { Handle, Position } from 'reactflow';
 
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
@@ -22,12 +21,9 @@ interface MGraphNodeInternal {
 function MGraphNode(node: MGraphNodeInternal) {
   const { colors } = useConceptOptions();
 
-  const tooltipText = useMemo(
-    () =>
-      (node.data.annotations.length === 0 ? '' : `Конституенты: ${node.data.annotations.join(' ')}<br/>`) +
-      node.data.text,
-    [node.data]
-  );
+  const tooltipText =
+    (node.data.annotations.length === 0 ? '' : `Конституенты: ${node.data.annotations.join(' ')}<br/>`) +
+    node.data.text;
 
   return (
     <>

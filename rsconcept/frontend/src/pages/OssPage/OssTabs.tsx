@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import clsx from 'clsx';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 import { toast } from 'react-toastify';
 
@@ -64,19 +64,16 @@ function OssTabs() {
     setNoFooter(activeTab === OssTabID.GRAPH);
   }, [activeTab, setNoFooter]);
 
-  const navigateTab = useCallback(
-    (tab: OssTabID) => {
-      if (!schema) {
-        return;
-      }
-      const url = urls.oss_props({
-        id: schema.id,
-        tab: tab
-      });
-      router.push(url);
-    },
-    [router, schema]
-  );
+  function navigateTab(tab: OssTabID) {
+    if (!schema) {
+      return;
+    }
+    const url = urls.oss_props({
+      id: schema.id,
+      tab: tab
+    });
+    router.push(url);
+  }
 
   function onSelectTab(index: number, last: number, event: Event) {
     if (last === index) {
@@ -97,7 +94,7 @@ function OssTabs() {
     navigateTab(index);
   }
 
-  const onDestroySchema = useCallback(() => {
+  function onDestroySchema() {
     if (!schema || !window.confirm(prompts.deleteOSS)) {
       return;
     }
@@ -105,29 +102,7 @@ function OssTabs() {
       toast.success(information.itemDestroyed);
       router.push(urls.library);
     });
-  }, [schema, destroyItem, router]);
-
-  const cardPanel = useMemo(
-    () => (
-      <TabPanel>
-        <EditorRSForm
-          isModified={isModified} // prettier: split lines
-          setIsModified={setIsModified}
-          onDestroy={onDestroySchema}
-        />
-      </TabPanel>
-    ),
-    [isModified, onDestroySchema]
-  );
-
-  const graphPanel = useMemo(
-    () => (
-      <TabPanel>
-        <EditorTermGraph isModified={isModified} setIsModified={setIsModified} />
-      </TabPanel>
-    ),
-    [isModified]
-  );
+  }
 
   return (
     <OssEditState selected={selected} setSelected={setSelected}>
@@ -151,8 +126,17 @@ function OssTabs() {
           </Overlay>
 
           <div className='overflow-x-hidden'>
-            {cardPanel}
-            {graphPanel}
+            <TabPanel>
+              <EditorRSForm
+                isModified={isModified} // prettier: split lines
+                setIsModified={setIsModified}
+                onDestroy={onDestroySchema}
+              />
+            </TabPanel>
+
+            <TabPanel>
+              <EditorTermGraph isModified={isModified} setIsModified={setIsModified} />
+            </TabPanel>
           </div>
         </Tabs>
       ) : null}

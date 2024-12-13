@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
 import SearchBar from '@/components/ui/SearchBar';
@@ -64,33 +64,27 @@ function PickConstituenta({
     }
   }, [data, filterText, matchFunc, onBeginFilter]);
 
-  const columns = useMemo(
-    () => [
-      columnHelper.accessor('alias', {
-        id: 'alias',
-        size: 65,
-        minSize: 65,
-        maxSize: 65,
-        cell: props => <BadgeConstituenta theme={colors} value={props.row.original} prefixID={prefixID} />
-      }),
-      columnHelper.accessor(cst => describeFunc(cst), {
-        id: 'description',
-        size: 1000,
-        minSize: 1000
-      })
-    ],
-    [colors, prefixID, describeFunc]
-  );
+  const columns = [
+    columnHelper.accessor('alias', {
+      id: 'alias',
+      size: 65,
+      minSize: 65,
+      maxSize: 65,
+      cell: props => <BadgeConstituenta theme={colors} value={props.row.original} prefixID={prefixID} />
+    }),
+    columnHelper.accessor(cst => describeFunc(cst), {
+      id: 'description',
+      size: 1000,
+      minSize: 1000
+    })
+  ];
 
-  const conditionalRowStyles = useMemo(
-    (): IConditionalStyle<IConstituenta>[] => [
-      {
-        when: (cst: IConstituenta) => cst.id === value?.id,
-        style: { backgroundColor: colors.bgSelected }
-      }
-    ],
-    [value, colors]
-  );
+  const conditionalRowStyles: IConditionalStyle<IConstituenta>[] = [
+    {
+      when: (cst: IConstituenta) => cst.id === value?.id,
+      style: { backgroundColor: colors.bgSelected }
+    }
+  ];
 
   return (
     <div className={clsx('border divide-y', className)} {...restProps}>

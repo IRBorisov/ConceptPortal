@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { urls } from '@/app/urls';
@@ -45,8 +45,8 @@ function FormCreateItem() {
   const [head, setHead] = useState(LocationHead.USER);
   const [body, setBody] = useState('');
 
-  const location = useMemo(() => combineLocation(head, body), [head, body]);
-  const isValid = useMemo(() => validateLocation(location), [location]);
+  const location = combineLocation(head, body);
+  const isValid = validateLocation(location);
 
   const [fileName, setFileName] = useState('');
   const [file, setFile] = useState<File | undefined>();

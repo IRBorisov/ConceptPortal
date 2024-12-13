@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import BadgeHelp from '@/components/info/BadgeHelp';
 import RSInput from '@/components/RSInput';
@@ -26,9 +26,9 @@ interface FormCreateCstProps {
 function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreateCstProps) {
   const [forceComment, setForceComment] = useState(false);
 
-  const isBasic = useMemo(() => isBasicConcept(state.cst_type), [state]);
-  const isElementary = useMemo(() => isBaseSet(state.cst_type), [state]);
-  const showConvention = useMemo(() => !!state.convention || forceComment || isBasic, [state, forceComment, isBasic]);
+  const isBasic = isBasicConcept(state.cst_type);
+  const isElementary = isBaseSet(state.cst_type);
+  const showConvention = !!state.convention || forceComment || isBasic;
 
   useEffect(() => {
     setForceComment(false);
@@ -40,10 +40,9 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
     }
   }, [state.alias, state.cst_type, schema, setValidated]);
 
-  const handleTypeChange = useCallback(
-    (target: CstType) => partialUpdate({ cst_type: target, alias: generateAlias(target, schema) }),
-    [partialUpdate, schema]
-  );
+  function handleTypeChange(target: CstType) {
+    return partialUpdate({ cst_type: target, alias: generateAlias(target, schema) });
+  }
 
   return (
     <>

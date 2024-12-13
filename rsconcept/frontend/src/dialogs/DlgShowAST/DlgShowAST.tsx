@@ -1,8 +1,7 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { ReactFlowProvider } from 'reactflow';
-import { Node } from 'reactflow';
 
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import Overlay from '@/components/ui/Overlay';
@@ -20,10 +19,7 @@ interface DlgShowASTProps extends Pick<ModalProps, 'hideWindow'> {
 function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
   const { colors } = useConceptOptions();
   const [hoverID, setHoverID] = useState<number | undefined>(undefined);
-  const hoverNode = useMemo(() => syntaxTree.find(node => node.uid === hoverID), [hoverID, syntaxTree]);
-
-  const handleHoverIn = useCallback((node: Node) => setHoverID(Number(node.id)), []);
-  const handleHoverOut = useCallback(() => setHoverID(undefined), []);
+  const hoverNode = syntaxTree.find(node => node.uid === hoverID);
 
   const [isDragging, setIsDragging] = useState(false);
 
@@ -51,8 +47,8 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
       <ReactFlowProvider>
         <ASTFlow
           data={syntaxTree}
-          onNodeEnter={handleHoverIn}
-          onNodeLeave={handleHoverOut}
+          onNodeEnter={node => setHoverID(Number(node.id))}
+          onNodeLeave={() => setHoverID(undefined)}
           onChangeDragging={setIsDragging}
         />
       </ReactFlowProvider>

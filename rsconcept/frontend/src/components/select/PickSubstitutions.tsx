@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 import BadgeConstituenta from '@/components/info/BadgeConstituenta';
@@ -62,59 +62,47 @@ function PickSubstitutions({
   const toggleDelete = () => setDeleteRight(prev => !prev);
 
   const [ignores, setIgnores] = useState<ICstSubstitute[]>([]);
-  const filteredSuggestions = useMemo(
-    () =>
-      suggestions?.filter(
-        item => !ignores.find(ignore => ignore.original === item.original && ignore.substitution === item.substitution)
-      ) ?? [],
-    [ignores, suggestions]
-  );
+  const filteredSuggestions =
+    suggestions?.filter(
+      item => !ignores.find(ignore => ignore.original === item.original && ignore.substitution === item.substitution)
+    ) ?? [];
 
-  const getSchemaByCst = useCallback(
-    (id: ConstituentaID): IRSForm | undefined => {
-      for (const schema of schemas) {
-        const cst = schema.cstByID.get(id);
-        if (cst) {
-          return schema;
-        }
+  const substitutionData: IMultiSubstitution[] = [
+    ...substitutions.map(item => ({
+      original_source: getSchemaByCst(item.original)!,
+      original: getConstituenta(item.original)!,
+      substitution: getConstituenta(item.substitution)!,
+      substitution_source: getSchemaByCst(item.substitution)!,
+      is_suggestion: false
+    })),
+    ...filteredSuggestions.map(item => ({
+      original_source: getSchemaByCst(item.original)!,
+      original: getConstituenta(item.original)!,
+      substitution: getConstituenta(item.substitution)!,
+      substitution_source: getSchemaByCst(item.substitution)!,
+      is_suggestion: true
+    }))
+  ];
+
+  function getSchemaByCst(id: ConstituentaID): IRSForm | undefined {
+    for (const schema of schemas) {
+      const cst = schema.cstByID.get(id);
+      if (cst) {
+        return schema;
       }
-      return undefined;
-    },
-    [schemas]
-  );
+    }
+    return undefined;
+  }
 
-  const getConstituenta = useCallback(
-    (id: ConstituentaID): IConstituenta | undefined => {
-      for (const schema of schemas) {
-        const cst = schema.cstByID.get(id);
-        if (cst) {
-          return cst;
-        }
+  function getConstituenta(id: ConstituentaID): IConstituenta | undefined {
+    for (const schema of schemas) {
+      const cst = schema.cstByID.get(id);
+      if (cst) {
+        return cst;
       }
-      return undefined;
-    },
-    [schemas]
-  );
-
-  const substitutionData: IMultiSubstitution[] = useMemo(
-    () => [
-      ...substitutions.map(item => ({
-        original_source: getSchemaByCst(item.original)!,
-        original: getConstituenta(item.original)!,
-        substitution: getConstituenta(item.substitution)!,
-        substitution_source: getSchemaByCst(item.substitution)!,
-        is_suggestion: false
-      })),
-      ...filteredSuggestions.map(item => ({
-        original_source: getSchemaByCst(item.original)!,
-        original: getConstituenta(item.original)!,
-        substitution: getConstituenta(item.substitution)!,
-        substitution_source: getSchemaByCst(item.substitution)!,
-        is_suggestion: true
-      }))
-    ],
-    [getConstituenta, getSchemaByCst, substitutions, filteredSuggestions]
-  );
+    }
+    return undefined;
+  }
 
   function addSubstitution() {
     if (!leftCst || !rightCst) {
@@ -145,120 +133,105 @@ function PickSubstitutions({
     setRightCst(undefined);
   }
 
-  const handleDeclineSuggestion = useCallback(
-    (item: IMultiSubstitution) => {
-      setIgnores(prev => [...prev, { original: item.original.id, substitution: item.substitution.id }]);
-    },
-    [setIgnores]
-  );
+  function handleDeclineSuggestion(item: IMultiSubstitution) {
+    setIgnores(prev => [...prev, { original: item.original.id, substitution: item.substitution.id }]);
+  }
 
-  const handleAcceptSuggestion = useCallback(
-    (item: IMultiSubstitution) => {
-      setSubstitutions(prev => [...prev, { original: item.original.id, substitution: item.substitution.id }]);
-    },
-    [setSubstitutions]
-  );
+  function handleAcceptSuggestion(item: IMultiSubstitution) {
+    setSubstitutions(prev => [...prev, { original: item.original.id, substitution: item.substitution.id }]);
+  }
 
-  const handleDeleteSubstitution = useCallback(
-    (target: IMultiSubstitution) => {
-      handleDeclineSuggestion(target);
-      setSubstitutions(prev => {
-        const newItems: ICstSubstitute[] = [];
-        prev.forEach(item => {
-          if (item.original !== target.original.id || item.substitution !== target.substitution.id) {
-            newItems.push(item);
-          }
-        });
-        return newItems;
-      });
-    },
-    [setSubstitutions, handleDeclineSuggestion]
-  );
-
-  const columns = useMemo(
-    () => [
-      columnHelper.accessor(item => item.substitution_source.alias, {
-        id: 'left_schema',
-        size: 100,
-        cell: props => <div className='min-w-[10.5rem] text-ellipsis text-left'>{props.getValue()}</div>
-      }),
-      columnHelper.accessor(item => item.substitution.alias, {
-        id: 'left_alias',
-        size: 65,
-        cell: props => (
-          <BadgeConstituenta
-            theme={colors}
-            value={props.row.original.substitution}
-            prefixID={`${prefixID}_${props.row.index}_1_`}
-          />
-        )
-      }),
-      columnHelper.display({
-        id: 'status',
-        size: 0,
-        cell: () => <IconPageRight size='1.2rem' />
-      }),
-      columnHelper.accessor(item => item.original.alias, {
-        id: 'right_alias',
-        size: 65,
-        cell: props => (
-          <BadgeConstituenta
-            theme={colors}
-            value={props.row.original.original}
-            prefixID={`${prefixID}_${props.row.index}_2_`}
-          />
-        )
-      }),
-      columnHelper.accessor(item => item.original_source.alias, {
-        id: 'right_schema',
-        size: 100,
-        cell: props => <div className='min-w-[8rem] text-ellipsis text-right'>{props.getValue()}</div>
-      }),
-      columnHelper.display({
-        id: 'actions',
-        size: 0,
-        cell: props =>
-          props.row.original.is_suggestion ? (
-            <div className='max-w-fit'>
-              <MiniButton
-                noHover
-                title='Принять предложение'
-                icon={<IconAccept size='1rem' className='icon-green' />}
-                onClick={() => handleAcceptSuggestion(props.row.original)}
-              />
-              <MiniButton
-                noHover
-                title='Игнорировать предложение'
-                icon={<IconRemove size='1rem' className='icon-red' />}
-                onClick={() => handleDeclineSuggestion(props.row.original)}
-              />
-            </div>
-          ) : (
-            <div className='max-w-fit'>
-              <MiniButton
-                noHover
-                title='Удалить'
-                icon={<IconRemove size='1rem' className='icon-red' />}
-                onClick={() => handleDeleteSubstitution(props.row.original)}
-              />
-            </div>
-          )
-      })
-    ],
-    [handleDeleteSubstitution, handleDeclineSuggestion, handleAcceptSuggestion, colors, prefixID]
-  );
-
-  const conditionalRowStyles = useMemo(
-    (): IConditionalStyle<IMultiSubstitution>[] => [
-      {
-        when: (item: IMultiSubstitution) => item.is_suggestion,
-        style: {
-          backgroundColor: colors.bgOrange50
+  function handleDeleteSubstitution(target: IMultiSubstitution) {
+    handleDeclineSuggestion(target);
+    setSubstitutions(prev => {
+      const newItems: ICstSubstitute[] = [];
+      prev.forEach(item => {
+        if (item.original !== target.original.id || item.substitution !== target.substitution.id) {
+          newItems.push(item);
         }
+      });
+      return newItems;
+    });
+  }
+
+  const columns = [
+    columnHelper.accessor(item => item.substitution_source.alias, {
+      id: 'left_schema',
+      size: 100,
+      cell: props => <div className='min-w-[10.5rem] text-ellipsis text-left'>{props.getValue()}</div>
+    }),
+    columnHelper.accessor(item => item.substitution.alias, {
+      id: 'left_alias',
+      size: 65,
+      cell: props => (
+        <BadgeConstituenta
+          theme={colors}
+          value={props.row.original.substitution}
+          prefixID={`${prefixID}_${props.row.index}_1_`}
+        />
+      )
+    }),
+    columnHelper.display({
+      id: 'status',
+      size: 0,
+      cell: () => <IconPageRight size='1.2rem' />
+    }),
+    columnHelper.accessor(item => item.original.alias, {
+      id: 'right_alias',
+      size: 65,
+      cell: props => (
+        <BadgeConstituenta
+          theme={colors}
+          value={props.row.original.original}
+          prefixID={`${prefixID}_${props.row.index}_2_`}
+        />
+      )
+    }),
+    columnHelper.accessor(item => item.original_source.alias, {
+      id: 'right_schema',
+      size: 100,
+      cell: props => <div className='min-w-[8rem] text-ellipsis text-right'>{props.getValue()}</div>
+    }),
+    columnHelper.display({
+      id: 'actions',
+      size: 0,
+      cell: props =>
+        props.row.original.is_suggestion ? (
+          <div className='max-w-fit'>
+            <MiniButton
+              noHover
+              title='Принять предложение'
+              icon={<IconAccept size='1rem' className='icon-green' />}
+              onClick={() => handleAcceptSuggestion(props.row.original)}
+            />
+            <MiniButton
+              noHover
+              title='Игнорировать предложение'
+              icon={<IconRemove size='1rem' className='icon-red' />}
+              onClick={() => handleDeclineSuggestion(props.row.original)}
+            />
+          </div>
+        ) : (
+          <div className='max-w-fit'>
+            <MiniButton
+              noHover
+              title='Удалить'
+              icon={<IconRemove size='1rem' className='icon-red' />}
+              onClick={() => handleDeleteSubstitution(props.row.original)}
+            />
+          </div>
+        )
+    })
+  ];
+
+  const conditionalRowStyles: IConditionalStyle<IMultiSubstitution>[] = [
+    {
+      when: (item: IMultiSubstitution) => item.is_suggestion,
+      style: {
+        backgroundColor: colors.bgOrange50
       }
-    ],
-    [colors]
-  );
+    }
+  ];
 
   return (
     <div className={clsx('flex flex-col', className)} {...restProps}>

@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import { useAccessMode } from '@/context/AccessModeContext';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
@@ -32,23 +32,6 @@ function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit,
 
   const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema?.items ?? []);
 
-  const table = useMemo(
-    () => (
-      <TableSideConstituents
-        maxHeight={
-          isBottom
-            ? calculateHeight(accessLevel !== UserLevel.READER ? '42rem' : '35rem', '10rem')
-            : calculateHeight('8.2rem')
-        }
-        items={filteredData}
-        activeCst={activeCst}
-        onOpenEdit={onOpenEdit}
-        autoScroll={!isBottom}
-      />
-    ),
-    [isBottom, filteredData, activeCst, onOpenEdit, calculateHeight, accessLevel]
-  );
-
   return (
     <div
       className={clsx(
@@ -73,7 +56,17 @@ function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit,
         activeExpression={expression}
         setFiltered={setFilteredData}
       />
-      {table}
+      <TableSideConstituents
+        maxHeight={
+          isBottom
+            ? calculateHeight(accessLevel !== UserLevel.READER ? '42rem' : '35rem', '10rem')
+            : calculateHeight('8.2rem')
+        }
+        items={filteredData}
+        activeCst={activeCst}
+        onOpenEdit={onOpenEdit}
+        autoScroll={!isBottom}
+      />
     </div>
   );
 }

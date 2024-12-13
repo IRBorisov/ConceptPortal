@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import { useMemo } from 'react';
 
 import { StatusIcon } from '@/components/DomainIcons';
 import Loader from '@/components/ui/Loader';
@@ -24,7 +23,7 @@ interface StatusBarProps {
 
 function StatusBar({ isModified, processing, activeCst, parseData, onAnalyze }: StatusBarProps) {
   const { colors } = useConceptOptions();
-  const status = useMemo(() => {
+  const status = (() => {
     if (isModified) {
       return ExpressionStatus.UNKNOWN;
     }
@@ -33,7 +32,7 @@ function StatusBar({ isModified, processing, activeCst, parseData, onAnalyze }: 
       return inferStatus(parse, parseData.valueClass);
     }
     return inferStatus(activeCst.parse.status, activeCst.parse.valueClass);
-  }, [isModified, activeCst, parseData]);
+  })();
 
   return (
     <div

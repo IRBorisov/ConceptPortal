@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { useMemo } from 'react';
 
 import { globals } from '@/utils/constants';
 
@@ -50,7 +49,8 @@ function ValueIcon({
   onClick,
   ...restProps
 }: ValueIconProps) {
-  const isSmall = useMemo(() => !smallThreshold || String(value).length < smallThreshold, [value, smallThreshold]);
+  // TODO: use CSS instead of threshold
+  const isSmall = !smallThreshold || String(value).length < smallThreshold;
   return (
     <div
       className={clsx(

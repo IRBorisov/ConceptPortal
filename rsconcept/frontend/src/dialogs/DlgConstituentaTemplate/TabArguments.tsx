@@ -2,7 +2,7 @@
 
 import { createColumnHelper } from '@tanstack/react-table';
 import clsx from 'clsx';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { IconAccept, IconRemove, IconReset } from '@/components/Icons';
 import RSInput from '@/components/RSInput';
@@ -33,13 +33,8 @@ function TabArguments({ state, schema, partialUpdate }: TabArgumentsProps) {
 
   const [selectedCst, setSelectedCst] = useState<IConstituenta | undefined>(undefined);
   const [selectedArgument, setSelectedArgument] = useState<IArgumentValue | undefined>(undefined);
-
   const [argumentValue, setArgumentValue] = useState('');
-
-  const isModified = useMemo(
-    () => selectedArgument && argumentValue !== selectedArgument.value,
-    [selectedArgument, argumentValue]
-  );
+  const isModified = selectedArgument && argumentValue !== selectedArgument.value;
 
   useEffect(() => {
     if (!selectedArgument && state.arguments.length > 0) {
@@ -47,103 +42,91 @@ function TabArguments({ state, schema, partialUpdate }: TabArgumentsProps) {
     }
   }, [state.arguments, selectedArgument]);
 
-  const handleSelectArgument = useCallback((arg: IArgumentValue) => {
+  function handleSelectArgument(arg: IArgumentValue) {
     setSelectedArgument(arg);
     if (arg.value) {
       setArgumentValue(arg.value);
     }
-  }, []);
+  }
 
-  const handleSelectConstituenta = useCallback((cst: IConstituenta) => {
+  function handleSelectConstituenta(cst: IConstituenta) {
     setSelectedCst(cst);
     setArgumentValue(cst.alias);
-  }, []);
+  }
 
-  const handleClearArgument = useCallback(
-    (target: IArgumentValue) => {
-      const newArg = { ...target, value: '' };
-      partialUpdate({
-        arguments: state.arguments.map(arg => (arg.alias !== target.alias ? arg : newArg))
-      });
-      setSelectedArgument(newArg);
-    },
-    [partialUpdate, state.arguments]
-  );
+  function handleClearArgument(target: IArgumentValue) {
+    const newArg = { ...target, value: '' };
+    partialUpdate({
+      arguments: state.arguments.map(arg => (arg.alias !== target.alias ? arg : newArg))
+    });
+    setSelectedArgument(newArg);
+  }
 
-  const handleReset = useCallback(() => {
+  function handleReset() {
     setArgumentValue(selectedArgument?.value ?? '');
-  }, [selectedArgument]);
+  }
 
-  const handleAssignArgument = useCallback(
-    (target: IArgumentValue, value: string) => {
-      const newArg = { ...target, value: value };
-      partialUpdate({
-        arguments: state.arguments.map(arg => (arg.alias !== target.alias ? arg : newArg))
-      });
-      setSelectedArgument(newArg);
-    },
-    [partialUpdate, state.arguments]
-  );
+  function handleAssignArgument(target: IArgumentValue, value: string) {
+    const newArg = { ...target, value: value };
+    partialUpdate({
+      arguments: state.arguments.map(arg => (arg.alias !== target.alias ? arg : newArg))
+    });
+    setSelectedArgument(newArg);
+  }
 
-  const columns = useMemo(
-    () => [
-      argumentsHelper.accessor('alias', {
-        id: 'alias',
-        size: 40,
-        minSize: 40,
-        maxSize: 40,
-        cell: props => <div className='text-center'>{props.getValue()}</div>
-      }),
-      argumentsHelper.accessor(arg => arg.value || 'свободный аргумент', {
-        id: 'value',
-        size: 200,
-        minSize: 200,
-        maxSize: 200
-      }),
-      argumentsHelper.accessor(arg => arg.typification, {
-        id: 'type',
-        enableHiding: true,
-        cell: props => (
-          <div
-            className={clsx(
-              'min-w-[9.3rem] max-w-[9.3rem]', // prettier: split lines
-              'text-sm break-words'
-            )}
-          >
-            {props.getValue()}
-          </div>
-        )
-      }),
-      argumentsHelper.display({
-        id: 'actions',
-        size: 0,
-        cell: props => (
-          <div className='h-[1.25rem] w-[1.25rem]'>
-            {props.row.original.value ? (
-              <MiniButton
-                title='Очистить значение'
-                noPadding
-                noHover
-                icon={<IconRemove size='1.25rem' className='icon-red' />}
-                onClick={() => handleClearArgument(props.row.original)}
-              />
-            ) : null}
-          </div>
-        )
-      })
-    ],
-    [handleClearArgument]
-  );
+  const columns = [
+    argumentsHelper.accessor('alias', {
+      id: 'alias',
+      size: 40,
+      minSize: 40,
+      maxSize: 40,
+      cell: props => <div className='text-center'>{props.getValue()}</div>
+    }),
+    argumentsHelper.accessor(arg => arg.value || 'свободный аргумент', {
+      id: 'value',
+      size: 200,
+      minSize: 200,
+      maxSize: 200
+    }),
+    argumentsHelper.accessor(arg => arg.typification, {
+      id: 'type',
+      enableHiding: true,
+      cell: props => (
+        <div
+          className={clsx(
+            'min-w-[9.3rem] max-w-[9.3rem]', // prettier: split lines
+            'text-sm break-words'
+          )}
+        >
+          {props.getValue()}
+        </div>
+      )
+    }),
+    argumentsHelper.display({
+      id: 'actions',
+      size: 0,
+      cell: props => (
+        <div className='h-[1.25rem] w-[1.25rem]'>
+          {props.row.original.value ? (
+            <MiniButton
+              title='Очистить значение'
+              noPadding
+              noHover
+              icon={<IconRemove size='1.25rem' className='icon-red' />}
+              onClick={() => handleClearArgument(props.row.original)}
+            />
+          ) : null}
+        </div>
+      )
+    })
+  ];
 
-  const conditionalRowStyles = useMemo(
-    (): IConditionalStyle<IArgumentValue>[] => [
-      {
-        when: (arg: IArgumentValue) => arg.alias === selectedArgument?.alias,
-        style: { backgroundColor: colors.bgSelected }
-      }
-    ],
-    [selectedArgument, colors]
-  );
+  const conditionalRowStyles: IConditionalStyle<IArgumentValue>[] = [
+    {
+      when: (arg: IArgumentValue) => arg.alias === selectedArgument?.alias,
+      style: { backgroundColor: colors.bgSelected }
+    }
+  ];
 
   return (
     <div className='cc-fade-in'>

@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useMemo } from 'react';
 
 import { IconDropArrow, IconDropArrowUp } from '@/components/Icons';
 import TooltipConstituenta from '@/components/info/TooltipConstituenta';
@@ -30,19 +29,16 @@ interface ViewHiddenProps {
 function ViewHidden({ items, selected, toggleSelection, setFocus, schema, coloringScheme, onEdit }: ViewHiddenProps) {
   const { colors, calculateHeight } = useConceptOptions();
   const windowSize = useWindowSize();
-  const localSelected = useMemo(() => items.filter(id => selected.includes(id)), [items, selected]);
+  const localSelected = items.filter(id => selected.includes(id));
   const [isFolded, setIsFolded] = useLocalStorage(storage.rsgraphFoldHidden, false);
 
-  const handleClick = useCallback(
-    (cstID: ConstituentaID, event: CProps.EventMouse) => {
-      if (event.ctrlKey || event.metaKey) {
-        setFocus(cstID);
-      } else {
-        toggleSelection(cstID);
-      }
-    },
-    [setFocus, toggleSelection]
-  );
+  function handleClick(cstID: ConstituentaID, event: CProps.EventMouse) {
+    if (event.ctrlKey || event.metaKey) {
+      setFocus(cstID);
+    } else {
+      toggleSelection(cstID);
+    }
+  }
 
   if (!schema || items.length <= 0) {
     return null;

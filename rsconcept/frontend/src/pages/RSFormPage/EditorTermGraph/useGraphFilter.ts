@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Graph } from '@/models/Graph';
 import { GraphFilterParams } from '@/models/miscellaneous';
@@ -7,7 +7,7 @@ import { ConstituentaID, CstType, IConstituenta, IRSForm } from '@/models/rsform
 function useGraphFilter(schema: IRSForm | undefined, params: GraphFilterParams, focusCst: IConstituenta | undefined) {
   const [filtered, setFiltered] = useState<Graph>(new Graph());
 
-  const allowedTypes: CstType[] = useMemo(() => {
+  const allowedTypes: CstType[] = (() => {
     const result: CstType[] = [];
     if (params.allowBase) result.push(CstType.BASE);
     if (params.allowStruct) result.push(CstType.STRUCTURED);
@@ -18,7 +18,7 @@ function useGraphFilter(schema: IRSForm | undefined, params: GraphFilterParams, 
     if (params.allowConstant) result.push(CstType.CONSTANT);
     if (params.allowTheorem) result.push(CstType.THEOREM);
     return result;
-  }, [params]);
+  })();
 
   useEffect(() => {
     if (!schema) {

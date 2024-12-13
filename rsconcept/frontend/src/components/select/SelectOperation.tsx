@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useMemo } from 'react';
 
 import { IOperation, OperationID } from '@/models/oss';
 import { matchOperation } from '@/models/ossAPI';
@@ -26,22 +25,16 @@ function SelectOperation({
   placeholder = 'Выберите операцию',
   ...restProps
 }: SelectOperationProps) {
-  const options = useMemo(() => {
-    return (
-      items?.map(cst => ({
-        value: cst.id,
-        label: `${cst.alias}: ${cst.title}`
-      })) ?? []
-    );
-  }, [items]);
+  const options =
+    items?.map(cst => ({
+      value: cst.id,
+      label: `${cst.alias}: ${cst.title}`
+    })) ?? [];
 
-  const filter = useCallback(
-    (option: { value: OperationID | undefined; label: string }, inputValue: string) => {
-      const operation = items?.find(item => item.id === option.value);
-      return !operation ? false : matchOperation(operation, inputValue);
-    },
-    [items]
-  );
+  function filter(option: { value: OperationID | undefined; label: string }, inputValue: string) {
+    const operation = items?.find(item => item.id === option.value);
+    return !operation ? false : matchOperation(operation, inputValue);
+  }
 
   return (
     <SelectSingle

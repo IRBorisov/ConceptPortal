@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import TextInput from '@/components/ui/TextInput';
 import { ReferenceType } from '@/models/language';
@@ -18,14 +18,14 @@ function TabSyntacticReference({ initial, onChangeValid, onChangeReference }: Ta
   const [nominal, setNominal] = useState('');
   const [offset, setOffset] = useState(1);
 
-  const mainLink = useMemo(() => {
+  const mainLink = (() => {
     const position = offset > 0 ? initial.basePosition + (offset - 1) : initial.basePosition + offset;
     if (offset === 0 || position < 0 || position >= initial.mainRefs.length) {
       return 'Некорректное значение смещения';
     } else {
       return initial.mainRefs[position];
     }
-  }, [initial, offset]);
+  })();
 
   useEffect(() => {
     if (initial.refRaw && initial.type === ReferenceType.SYNTACTIC) {

@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
@@ -32,12 +32,8 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
   const [showList, setShowList] = useLocalStorage(storage.rseditShowList, true);
   const [toggleReset, setToggleReset] = useState(false);
 
-  const disabled = useMemo(
-    () => !activeCst || !controller.isContentEditable || controller.isProcessing,
-    [activeCst, controller.isContentEditable, controller.isProcessing]
-  );
-
-  const isNarrow = useMemo(() => !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD, [windowSize]);
+  const disabled = !activeCst || !controller.isContentEditable || controller.isProcessing;
+  const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
 
   function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
     if (disabled) {

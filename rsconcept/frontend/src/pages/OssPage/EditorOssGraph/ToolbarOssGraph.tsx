@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import { useMemo } from 'react';
 
 import {
   IconAnimation,
@@ -63,11 +62,8 @@ function ToolbarOssGraph({
   toggleEdgeStraight
 }: ToolbarOssGraphProps) {
   const controller = useOssEdit();
-  const selectedOperation = useMemo(
-    () => controller.schema?.operationByID.get(controller.selected[0]),
-    [controller.selected, controller.schema]
-  );
-  const readyForSynthesis = useMemo(() => {
+  const selectedOperation = controller.schema?.operationByID.get(controller.selected[0]);
+  const readyForSynthesis = (() => {
     if (!selectedOperation || selectedOperation.operation_type !== OperationType.SYNTHESIS) {
       return false;
     }
@@ -86,7 +82,7 @@ function ToolbarOssGraph({
     }
 
     return true;
-  }, [selectedOperation, controller.schema]);
+  })();
 
   return (
     <div className='flex flex-col items-center'>

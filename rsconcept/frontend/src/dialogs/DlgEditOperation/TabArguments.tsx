@@ -1,7 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
-
 import PickMultiOperation from '@/components/select/PickMultiOperation';
 import FlexColumn from '@/components/ui/FlexColumn';
 import Label from '@/components/ui/Label';
@@ -15,11 +13,8 @@ interface TabArgumentsProps {
 }
 
 function TabArguments({ oss, inputs, target, setInputs }: TabArgumentsProps) {
-  const potentialCycle = useMemo(() => [target, ...oss.graph.expandAllOutputs([target])], [target, oss.graph]);
-  const filtered = useMemo(
-    () => oss.items.filter(item => !potentialCycle.includes(item.id)),
-    [oss.items, potentialCycle]
-  );
+  const potentialCycle = [target, ...oss.graph.expandAllOutputs([target])];
+  const filtered = oss.items.filter(item => !potentialCycle.includes(item.id));
   return (
     <div className='cc-fade-in cc-column'>
       <FlexColumn>

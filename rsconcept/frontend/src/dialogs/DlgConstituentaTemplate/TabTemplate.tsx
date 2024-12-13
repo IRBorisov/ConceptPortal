@@ -1,6 +1,6 @@
 'use client';
 
-import { Dispatch, useEffect, useMemo, useState } from 'react';
+import { Dispatch, useEffect, useState } from 'react';
 
 import RSInput from '@/components/RSInput';
 import PickConstituenta from '@/components/select/PickConstituenta';
@@ -28,36 +28,23 @@ function TabTemplate({ state, partialUpdate, templateSchema }: TabTemplateProps)
 
   const [filteredData, setFilteredData] = useState<IConstituenta[]>([]);
 
-  const prototypeInfo = useMemo(() => {
-    if (!state.prototype) {
-      return '';
-    } else {
-      return `${state.prototype?.term_raw}${
-        state.prototype?.definition_raw ? ` — ${state.prototype?.definition_raw}` : ''
-      }`;
-    }
-  }, [state.prototype]);
+  const prototypeInfo = !state.prototype
+    ? ''
+    : `${state.prototype?.term_raw}${state.prototype?.definition_raw ? ` — ${state.prototype?.definition_raw}` : ''}`;
 
-  const templateSelector = useMemo(
-    () =>
-      templates.map(template => ({
-        value: template.id,
-        label: template.title
-      })),
-    [templates]
-  );
+  const templateSelector = templates.map(template => ({
+    value: template.id,
+    label: template.title
+  }));
 
-  const categorySelector = useMemo((): { value: number; label: string }[] => {
-    if (!templateSchema) {
-      return [];
-    }
-    return templateSchema.items
-      .filter(cst => cst.cst_type === CATEGORY_CST_TYPE)
-      .map(cst => ({
-        value: cst.id,
-        label: cst.term_raw
-      }));
-  }, [templateSchema]);
+  const categorySelector: { value: number; label: string }[] = !templateSchema
+    ? []
+    : templateSchema.items
+        .filter(cst => cst.cst_type === CATEGORY_CST_TYPE)
+        .map(cst => ({
+          value: cst.id,
+          label: cst.term_raw
+        }));
 
   useEffect(() => {
     if (templates.length > 0 && !state.templateID) {

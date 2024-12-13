@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useMemo } from 'react';
 
 import { IconRemove } from '@/components/Icons';
 import BadgeWordForm from '@/components/info/BadgeWordForm';
@@ -19,53 +18,47 @@ interface TableWordFormsProps {
 const columnHelper = createColumnHelper<IWordForm>();
 
 function TableWordForms({ forms, setForms, onFormSelect }: TableWordFormsProps) {
-  const handleDeleteRow = useCallback(
-    (row: number) => {
-      setForms(prev => {
-        const newForms: IWordForm[] = [];
-        prev.forEach((form, index) => {
-          if (index !== row) {
-            newForms.push(form);
-          }
-        });
-        return newForms;
+  function handleDeleteRow(row: number) {
+    setForms(prev => {
+      const newForms: IWordForm[] = [];
+      prev.forEach((form, index) => {
+        if (index !== row) {
+          newForms.push(form);
+        }
       });
-    },
-    [setForms]
-  );
+      return newForms;
+    });
+  }
 
-  const columns = useMemo(
-    () => [
-      columnHelper.accessor('text', {
-        id: 'text',
-        size: 350,
-        minSize: 500,
-        maxSize: 500,
-        cell: props => <div className='min-w-[25rem]'>{props.getValue()}</div>
-      }),
-      columnHelper.accessor('grams', {
-        id: 'grams',
-        size: 0,
-        cell: props => <BadgeWordForm keyPrefix={props.cell.id} form={props.row.original} />
-      }),
-      columnHelper.display({
-        id: 'actions',
-        size: 0,
-        cell: props => (
-          <div className='h-[1.25rem] w-[1.25rem]'>
-            <MiniButton
-              noHover
-              noPadding
-              title='Удалить словоформу'
-              icon={<IconRemove size='1.25rem' className='icon-red' />}
-              onClick={() => handleDeleteRow(props.row.index)}
-            />
-          </div>
-        )
-      })
-    ],
-    [handleDeleteRow]
-  );
+  const columns = [
+    columnHelper.accessor('text', {
+      id: 'text',
+      size: 350,
+      minSize: 500,
+      maxSize: 500,
+      cell: props => <div className='min-w-[25rem]'>{props.getValue()}</div>
+    }),
+    columnHelper.accessor('grams', {
+      id: 'grams',
+      size: 0,
+      cell: props => <BadgeWordForm keyPrefix={props.cell.id} form={props.row.original} />
+    }),
+    columnHelper.display({
+      id: 'actions',
+      size: 0,
+      cell: props => (
+        <div className='h-[1.25rem] w-[1.25rem]'>
+          <MiniButton
+            noHover
+            noPadding
+            title='Удалить словоформу'
+            icon={<IconRemove size='1.25rem' className='icon-red' />}
+            onClick={() => handleDeleteRow(props.row.index)}
+          />
+        </div>
+      )
+    })
+  ];
 
   return (
     <DataTable

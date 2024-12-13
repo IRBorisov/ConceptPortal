@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import { IconRemove } from '@/components/Icons';
 import SelectUser from '@/components/select/SelectUser';
@@ -22,20 +22,19 @@ interface DlgEditEditorsProps {
 function DlgEditEditors({ hideWindow, editors, setEditors }: DlgEditEditorsProps) {
   const [selected, setSelected] = useState<UserID[]>(editors);
   const { users } = useUsers();
-  const filtered = useMemo(() => users.filter(user => !selected.includes(user.id)), [users, selected]);
+  const filtered = users.filter(user => !selected.includes(user.id));
 
   function handleSubmit() {
     setEditors(selected);
   }
 
-  const onDeleteEditor = useCallback((target: UserID) => setSelected(prev => prev.filter(id => id !== target)), []);
+  function onDeleteEditor(target: UserID) {
+    setSelected(prev => prev.filter(id => id !== target));
+  }
 
-  const onAddEditor = useCallback((target: UserID) => setSelected(prev => [...prev, target]), []);
-
-  const usersTable = useMemo(
-    () => <TableUsers items={users.filter(user => selected.includes(user.id))} onDelete={onDeleteEditor} />,
-    [users, selected, onDeleteEditor]
-  );
+  function onAddEditor(target: UserID) {
+    setSelected(prev => [...prev, target]);
+  }
 
   return (
     <Modal
@@ -58,7 +57,7 @@ function DlgEditEditors({ hideWindow, editors, setEditors }: DlgEditEditorsProps
         />
       </div>
 
-      {usersTable}
+      <TableUsers items={users.filter(user => selected.includes(user.id))} onDelete={onDeleteEditor} />
 
       <div className='flex items-center gap-3'>
         <Label text='Добавить' />

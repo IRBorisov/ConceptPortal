@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import Modal from '@/components/ui/Modal';
@@ -38,7 +38,7 @@ function DlgCreateOperation({ hideWindow, oss, onCreate, initialInputs }: DlgCre
   const [attachedID, setAttachedID] = useState<LibraryItemID | undefined>(undefined);
   const [createSchema, setCreateSchema] = useState(false);
 
-  const isValid = useMemo(() => {
+  const isValid = (() => {
     if (alias === '') {
       return false;
     }
@@ -51,7 +51,7 @@ function DlgCreateOperation({ hideWindow, oss, onCreate, initialInputs }: DlgCre
       }
     }
     return true;
-  }, [alias, activeTab, inputs, attachedID, oss.items]);
+  })();
 
   useEffect(() => {
     if (attachedID) {
@@ -82,60 +82,17 @@ function DlgCreateOperation({ hideWindow, oss, onCreate, initialInputs }: DlgCre
     onCreate(data);
   };
 
-  const handleSelectTab = useCallback(
-    (newTab: TabID, last: TabID) => {
-      if (last === newTab) {
-        return;
-      }
-      if (newTab === TabID.INPUT) {
-        setAttachedID(undefined);
-      } else {
-        setInputs(initialInputs);
-      }
-      setActiveTab(newTab);
-    },
-    [setActiveTab, initialInputs]
-  );
-
-  const inputPanel = useMemo(
-    () => (
-      <TabPanel>
-        <TabInputOperation
-          oss={oss}
-          alias={alias}
-          onChangeAlias={setAlias}
-          comment={comment}
-          onChangeComment={setComment}
-          title={title}
-          onChangeTitle={setTitle}
-          attachedID={attachedID}
-          onChangeAttachedID={setAttachedID}
-          createSchema={createSchema}
-          onChangeCreateSchema={setCreateSchema}
-        />
-      </TabPanel>
-    ),
-    [alias, comment, title, attachedID, oss, createSchema, setAlias]
-  );
-
-  const synthesisPanel = useMemo(
-    () => (
-      <TabPanel>
-        <TabSynthesisOperation
-          oss={oss}
-          alias={alias}
-          onChangeAlias={setAlias}
-          comment={comment}
-          onChangeComment={setComment}
-          title={title}
-          onChangeTitle={setTitle}
-          inputs={inputs}
-          setInputs={setInputs}
-        />
-      </TabPanel>
-    ),
-    [oss, alias, comment, title, inputs, setAlias]
-  );
+  function handleSelectTab(newTab: TabID, last: TabID) {
+    if (last === newTab) {
+      return;
+    }
+    if (newTab === TabID.INPUT) {
+      setAttachedID(undefined);
+    } else {
+      setInputs(initialInputs);
+    }
+    setActiveTab(newTab);
+  }
 
   return (
     <Modal
@@ -164,8 +121,35 @@ function DlgCreateOperation({ hideWindow, oss, onCreate, initialInputs }: DlgCre
           />
         </TabList>
 
-        {inputPanel}
-        {synthesisPanel}
+        <TabPanel>
+          <TabInputOperation
+            oss={oss}
+            alias={alias}
+            onChangeAlias={setAlias}
+            comment={comment}
+            onChangeComment={setComment}
+            title={title}
+            onChangeTitle={setTitle}
+            attachedID={attachedID}
+            onChangeAttachedID={setAttachedID}
+            createSchema={createSchema}
+            onChangeCreateSchema={setCreateSchema}
+          />
+        </TabPanel>
+
+        <TabPanel>
+          <TabSynthesisOperation
+            oss={oss}
+            alias={alias}
+            onChangeAlias={setAlias}
+            comment={comment}
+            onChangeComment={setComment}
+            title={title}
+            onChangeTitle={setTitle}
+            inputs={inputs}
+            setInputs={setInputs}
+          />
+        </TabPanel>
       </Tabs>
     </Modal>
   );

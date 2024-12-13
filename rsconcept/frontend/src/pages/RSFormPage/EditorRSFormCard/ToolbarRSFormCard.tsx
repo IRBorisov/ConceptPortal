@@ -1,7 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
-
 import { IconDestroy, IconSave, IconShare } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniSelectorOSS from '@/components/select/MiniSelectorOSS';
@@ -26,9 +24,9 @@ interface ToolbarRSFormCardProps {
 
 function ToolbarRSFormCard({ modified, controller, onSubmit, onDestroy }: ToolbarRSFormCardProps) {
   const { accessLevel } = useAccessMode();
-  const canSave = useMemo(() => modified && !controller.isProcessing, [modified, controller.isProcessing]);
+  const canSave = modified && !controller.isProcessing;
 
-  const ossSelector = useMemo(() => {
+  const ossSelector = (() => {
     if (!controller.schema || controller.schema?.item_type !== LibraryItemType.RSFORM) {
       return null;
     }
@@ -42,7 +40,7 @@ function ToolbarRSFormCard({ modified, controller, onSubmit, onDestroy }: Toolba
         onSelect={(event, value) => (controller as IRSEditContext).viewOSS(value.id, event.ctrlKey || event.metaKey)}
       />
     );
-  }, [controller]);
+  })();
 
   return (
     <Overlay position='cc-tab-tools' className='cc-icons'>

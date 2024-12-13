@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import SelectLocationContext from '@/components/select/SelectLocationContext';
 import SelectLocationHead from '@/components/select/SelectLocationHead';
@@ -26,13 +26,13 @@ function DlgChangeLocation({ hideWindow, initial, onChangeLocation }: DlgChangeL
 
   const { folders } = useLibrary();
 
-  const location = useMemo(() => combineLocation(head, body), [head, body]);
-  const isValid = useMemo(() => initial !== location && validateLocation(location), [initial, location]);
+  const location = combineLocation(head, body);
+  const isValid = initial !== location && validateLocation(location);
 
-  const handleSelectLocation = useCallback((newValue: string) => {
+  function handleSelectLocation(newValue: string) {
     setHead(newValue.substring(0, 2) as LocationHead);
     setBody(newValue.length > 3 ? newValue.substring(3) : '');
-  }, []);
+  }
 
   return (
     <Modal

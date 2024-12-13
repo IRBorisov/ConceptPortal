@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import { IconReset } from '@/components/Icons';
 import PickSchema from '@/components/select/PickSchema';
@@ -22,18 +22,16 @@ interface DlgChangeInputSchemaProps extends Pick<ModalProps, 'hideWindow'> {
 function DlgChangeInputSchema({ oss, hideWindow, target, onSubmit }: DlgChangeInputSchemaProps) {
   const [selected, setSelected] = useState<LibraryItemID | undefined>(target.result ?? undefined);
   const library = useLibrary();
-  const sortedItems = useMemo(() => sortItemsForOSS(oss, library.items), [oss, library.items]);
+  const sortedItems = sortItemsForOSS(oss, library.items);
+  const isValid = target.result !== selected;
 
-  const baseFilter = useCallback(
-    (item: ILibraryItem) => !oss.schemas.includes(item.id) || item.id === selected || item.id === target.result,
-    [oss, selected, target]
-  );
+  function baseFilter(item: ILibraryItem) {
+    return !oss.schemas.includes(item.id) || item.id === selected || item.id === target.result;
+  }
 
-  const isValid = useMemo(() => target.result !== selected, [target, selected]);
-
-  const handleSelectLocation = useCallback((newValue: LibraryItemID) => {
+  function handleSelectLocation(newValue: LibraryItemID) {
     setSelected(newValue);
-  }, []);
+  }
 
   return (
     <Modal

@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { IconChild, IconPredecessor, IconSave } from '@/components/Icons';
@@ -58,26 +58,19 @@ function FormConstituenta({
   const [typification, setTypification] = useState('N/A');
   const [showTypification, setShowTypification] = useState(false);
   const [localParse, setLocalParse] = useState<IExpressionParse | undefined>(undefined);
-  const typeInfo = useMemo(
-    () =>
-      state
-        ? {
-            alias: state.alias,
-            result: localParse ? localParse.typification : state.parse.typification,
-            args: localParse ? localParse.args : state.parse.args
-          }
-        : undefined,
-    [state, localParse]
-  );
+  const typeInfo = state
+    ? {
+        alias: state.alias,
+        result: localParse ? localParse.typification : state.parse.typification,
+        args: localParse ? localParse.args : state.parse.args
+      }
+    : undefined;
 
   const [forceComment, setForceComment] = useState(false);
 
-  const isBasic = useMemo(() => !!state && isBasicConcept(state.cst_type), [state]);
-  const isElementary = useMemo(() => !!state && isBaseSet(state.cst_type), [state]);
-  const showConvention = useMemo(
-    () => !state || !!state.convention || forceComment || isBasic,
-    [state, forceComment, isBasic]
-  );
+  const isBasic = !!state && isBasicConcept(state.cst_type);
+  const isElementary = !!state && isBaseSet(state.cst_type);
+  const showConvention = !state || !!state.convention || forceComment || isBasic;
 
   useEffect(() => {
     if (state) {

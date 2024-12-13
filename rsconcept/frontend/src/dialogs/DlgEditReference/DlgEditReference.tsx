@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import Modal from '@/components/ui/Modal';
@@ -36,34 +36,8 @@ export enum TabID {
 
 function DlgEditReference({ hideWindow, schema, initial, onSave }: DlgEditReferenceProps) {
   const [activeTab, setActiveTab] = useState(initial.type === ReferenceType.ENTITY ? TabID.ENTITY : TabID.SYNTACTIC);
-
   const [reference, setReference] = useState('');
   const [isValid, setIsValid] = useState(false);
-
-  const handleSubmit = () => onSave(reference);
-
-  const entityPanel = useMemo(
-    () => (
-      <TabPanel>
-        <TabEntityReference
-          initial={initial}
-          schema={schema}
-          onChangeReference={setReference}
-          onChangeValid={setIsValid}
-        />
-      </TabPanel>
-    ),
-    [initial, schema]
-  );
-
-  const syntacticPanel = useMemo(
-    () => (
-      <TabPanel>
-        <TabSyntacticReference initial={initial} onChangeReference={setReference} onChangeValid={setIsValid} />
-      </TabPanel>
-    ),
-    [initial]
-  );
 
   return (
     <Modal
@@ -71,7 +45,7 @@ function DlgEditReference({ hideWindow, schema, initial, onSave }: DlgEditRefere
       submitText='Сохранить ссылку'
       hideWindow={hideWindow}
       canSubmit={isValid}
-      onSubmit={handleSubmit}
+      onSubmit={() => onSave(reference)}
       className='w-[40rem] px-6 h-[32rem]'
       helpTopic={HelpTopic.TERM_CONTROL}
     >
@@ -89,8 +63,18 @@ function DlgEditReference({ hideWindow, schema, initial, onSave }: DlgEditRefere
           />
         </TabList>
 
-        {entityPanel}
-        {syntacticPanel}
+        <TabPanel>
+          <TabEntityReference
+            initial={initial}
+            schema={schema}
+            onChangeReference={setReference}
+            onChangeValid={setIsValid}
+          />
+        </TabPanel>
+
+        <TabPanel>
+          <TabSyntacticReference initial={initial} onChangeReference={setReference} onChangeValid={setIsValid} />
+        </TabPanel>
       </Tabs>
     </Modal>
   );

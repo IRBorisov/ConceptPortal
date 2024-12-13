@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import PickSubstitutions from '@/components/select/PickSubstitutions';
 import Modal, { ModalProps } from '@/components/ui/Modal';
@@ -17,8 +17,7 @@ interface DlgSubstituteCstProps extends Pick<ModalProps, 'hideWindow'> {
 
 function DlgSubstituteCst({ hideWindow, onSubstitute, schema }: DlgSubstituteCstProps) {
   const [substitutions, setSubstitutions] = useState<ICstSubstitute[]>([]);
-
-  const canSubmit = useMemo(() => substitutions.length > 0, [substitutions]);
+  const canSubmit = substitutions.length > 0;
 
   function handleSubmit() {
     const data: ICstSubstituteData = {

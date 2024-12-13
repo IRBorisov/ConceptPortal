@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import { VisibilityIcon } from '@/components/DomainIcons';
 import { IconImmutable, IconMutable } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
@@ -23,10 +21,7 @@ interface ToolbarItemAccessProps {
 
 function ToolbarItemAccess({ visible, toggleVisible, readOnly, toggleReadOnly, controller }: ToolbarItemAccessProps) {
   const { accessLevel } = useAccessMode();
-  const policy = useMemo(
-    () => controller.schema?.access_policy ?? AccessPolicy.PRIVATE,
-    [controller.schema?.access_policy]
-  );
+  const policy = controller.schema?.access_policy ?? AccessPolicy.PRIVATE;
 
   return (
     <Overlay position='top-[4.5rem] right-0 w-[12rem] pr-2' className='flex' layer='z-bottom'>

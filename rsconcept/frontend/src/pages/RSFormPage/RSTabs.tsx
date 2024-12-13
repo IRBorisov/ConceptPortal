@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import clsx from 'clsx';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 import { toast } from 'react-toastify';
 
@@ -54,13 +54,13 @@ function RSTabs() {
   useBlockNavigation(isModified);
 
   const [selected, setSelected] = useState<ConstituentaID[]>([]);
-  const activeCst: IConstituenta | undefined = useMemo(() => {
+  const activeCst: IConstituenta | undefined = (() => {
     if (!schema || selected.length === 0) {
       return undefined;
     } else {
       return schema.cstByID.get(selected.at(-1)!);
     }
-  }, [schema, selected]);
+  })();
 
   useEffect(() => {
     if (schema) {
@@ -86,32 +86,29 @@ function RSTabs() {
     return () => setNoFooter(false);
   }, [activeTab, cstQuery, setSelected, schema, setNoFooter, setIsModified]);
 
-  const navigateTab = useCallback(
-    (tab: RSTabID, activeID?: ConstituentaID) => {
-      if (!schema) {
-        return;
-      }
-      const url = urls.schema_props({
-        id: schema.id,
-        tab: tab,
-        active: activeID,
-        version: version
-      });
-      if (activeID) {
-        if (tab === activeTab && tab !== RSTabID.CST_EDIT) {
-          router.replace(url);
-        } else {
-          router.push(url);
-        }
-      } else if (tab !== activeTab && tab === RSTabID.CST_EDIT && schema.items.length > 0) {
-        activeID = schema.items[0].id;
+  function navigateTab(tab: RSTabID, activeID?: ConstituentaID) {
+    if (!schema) {
+      return;
+    }
+    const url = urls.schema_props({
+      id: schema.id,
+      tab: tab,
+      active: activeID,
+      version: version
+    });
+    if (activeID) {
+      if (tab === activeTab && tab !== RSTabID.CST_EDIT) {
         router.replace(url);
       } else {
         router.push(url);
       }
-    },
-    [router, schema, activeTab, version]
-  );
+    } else if (tab !== activeTab && tab === RSTabID.CST_EDIT && schema.items.length > 0) {
+      activeID = schema.items[0].id;
+      router.replace(url);
+    } else {
+      router.push(url);
+    }
+  }
 
   function onSelectTab(index: number, last: number, event: Event) {
     if (last === index) {
@@ -132,48 +129,39 @@ function RSTabs() {
     navigateTab(index, selected.length > 0 ? selected.at(-1) : undefined);
   }
 
-  const onCreateCst = useCallback(
-    (newCst: IConstituentaMeta) => {
-      navigateTab(activeTab, newCst.id);
-      if (activeTab === RSTabID.CST_LIST) {
-        setTimeout(() => {
-          const element = document.getElementById(`${prefixes.cst_list}${newCst.alias}`);
-          if (element) {
-            element.scrollIntoView({
-              behavior: 'smooth',
-              block: 'nearest',
-              inline: 'end'
-            });
-          }
-        }, PARAMETER.refreshTimeout);
-      }
-    },
-    [activeTab, navigateTab]
-  );
+  function onCreateCst(newCst: IConstituentaMeta) {
+    navigateTab(activeTab, newCst.id);
+    if (activeTab === RSTabID.CST_LIST) {
+      setTimeout(() => {
+        const element = document.getElementById(`${prefixes.cst_list}${newCst.alias}`);
+        if (element) {
+          element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'end'
+          });
+        }
+      }, PARAMETER.refreshTimeout);
+    }
+  }
 
-  const onDeleteCst = useCallback(
-    (newActive?: ConstituentaID) => {
-      if (!newActive) {
-        navigateTab(RSTabID.CST_LIST);
-      } else if (activeTab === RSTabID.CST_EDIT) {
-        navigateTab(activeTab, newActive);
-      } else {
-        navigateTab(activeTab);
-      }
-    },
-    [activeTab, navigateTab]
-  );
+  function onDeleteCst(newActive?: ConstituentaID) {
+    if (!newActive) {
+      navigateTab(RSTabID.CST_LIST);
+    } else if (activeTab === RSTabID.CST_EDIT) {
+      navigateTab(activeTab, newActive);
+    } else {
+      navigateTab(activeTab);
+    }
+  }
 
-  const onOpenCst = useCallback(
-    (cstID: ConstituentaID) => {
-      if (cstID !== activeCst?.id || activeTab !== RSTabID.CST_EDIT) {
-        navigateTab(RSTabID.CST_EDIT, cstID);
-      }
-    },
-    [navigateTab, activeCst, activeTab]
-  );
+  function onOpenCst(cstID: ConstituentaID) {
+    if (cstID !== activeCst?.id || activeTab !== RSTabID.CST_EDIT) {
+      navigateTab(RSTabID.CST_EDIT, cstID);
+    }
+  }
 
-  const onDestroySchema = useCallback(() => {
+  function onDestroySchema() {
     if (!schema || !window.confirm(prompts.deleteLibraryItem)) {
       return;
     }
@@ -187,52 +175,7 @@ function RSTabs() {
         router.push(urls.library);
       }
     });
-  }, [schema, library, oss, router]);
-
-  const cardPanel = useMemo(
-    () => (
-      <TabPanel>
-        <EditorRSForm
-          isModified={isModified} // prettier: split lines
-          setIsModified={setIsModified}
-          onDestroy={onDestroySchema}
-        />
-      </TabPanel>
-    ),
-    [isModified, onDestroySchema]
-  );
-
-  const listPanel = useMemo(
-    () => (
-      <TabPanel>
-        <EditorRSList onOpenEdit={onOpenCst} />
-      </TabPanel>
-    ),
-    [onOpenCst]
-  );
-
-  const editorPanel = useMemo(
-    () => (
-      <TabPanel>
-        <EditorConstituenta
-          isModified={isModified}
-          setIsModified={setIsModified}
-          activeCst={activeCst}
-          onOpenEdit={onOpenCst}
-        />
-      </TabPanel>
-    ),
-    [isModified, setIsModified, activeCst, onOpenCst]
-  );
-
-  const graphPanel = useMemo(
-    () => (
-      <TabPanel>
-        <EditorTermGraph onOpenEdit={onOpenCst} />
-      </TabPanel>
-    ),
-    [onOpenCst]
-  );
+  }
 
   return (
     <RSEditState
@@ -270,10 +213,30 @@ function RSTabs() {
           </Overlay>
 
           <div className='overflow-x-hidden'>
-            {cardPanel}
-            {listPanel}
-            {editorPanel}
-            {graphPanel}
+            <TabPanel>
+              <EditorRSForm
+                isModified={isModified} // prettier: split lines
+                setIsModified={setIsModified}
+                onDestroy={onDestroySchema}
+              />
+            </TabPanel>
+
+            <TabPanel>
+              <EditorRSList onOpenEdit={onOpenCst} />
+            </TabPanel>
+
+            <TabPanel>
+              <EditorConstituenta
+                isModified={isModified}
+                setIsModified={setIsModified}
+                activeCst={activeCst}
+                onOpenEdit={onOpenCst}
+              />
+            </TabPanel>
+
+            <TabPanel>
+              <EditorTermGraph onOpenEdit={onOpenCst} />
+            </TabPanel>
           </div>
         </Tabs>
       ) : null}

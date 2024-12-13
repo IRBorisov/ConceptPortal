@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 
 import BadgeConstituenta from '@/components/info/BadgeConstituenta';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
@@ -50,75 +50,62 @@ function TableSideConstituents({
     }
   }, [activeCst, autoScroll]);
 
-  const handleRowClicked = useCallback(
-    (cst: IConstituenta) => {
-      onOpenEdit(cst.id);
-    },
-    [onOpenEdit]
-  );
+  const columns = [
+    columnHelper.accessor('alias', {
+      id: 'alias',
+      header: () => <span className='pl-3'>Имя</span>,
+      size: 65,
+      minSize: 65,
+      footer: undefined,
+      cell: props => (
+        <BadgeConstituenta
+          className='mr-[-0.5rem]'
+          theme={colors}
+          value={props.row.original}
+          prefixID={prefixes.cst_side_table}
+        />
+      )
+    }),
+    columnHelper.accessor(cst => describeConstituenta(cst), {
+      id: 'description',
+      header: 'Описание',
+      size: 1000,
+      minSize: 250,
+      maxSize: 1000,
+      cell: props => (
+        <TextContent
+          noTooltip
+          text={props.getValue()}
+          maxLength={DESCRIPTION_MAX_SYMBOLS}
+          style={{
+            textWrap: 'pretty',
+            fontSize: 12
+          }}
+        />
+      )
+    })
+  ];
 
-  const columns = useMemo(
-    () => [
-      columnHelper.accessor('alias', {
-        id: 'alias',
-        header: () => <span className='pl-3'>Имя</span>,
-        size: 65,
-        minSize: 65,
-        footer: undefined,
-        cell: props => (
-          <BadgeConstituenta
-            className='mr-[-0.5rem]'
-            theme={colors}
-            value={props.row.original}
-            prefixID={prefixes.cst_side_table}
-          />
-        )
-      }),
-      columnHelper.accessor(cst => describeConstituenta(cst), {
-        id: 'description',
-        header: 'Описание',
-        size: 1000,
-        minSize: 250,
-        maxSize: 1000,
-        cell: props => (
-          <TextContent
-            noTooltip
-            text={props.getValue()}
-            maxLength={DESCRIPTION_MAX_SYMBOLS}
-            style={{
-              textWrap: 'pretty',
-              fontSize: 12
-            }}
-          />
-        )
-      })
-    ],
-    [colors]
-  );
-
-  const conditionalRowStyles = useMemo(
-    (): IConditionalStyle<IConstituenta>[] => [
-      {
-        when: (cst: IConstituenta) => !!activeCst && cst.id === activeCst?.id,
-        style: {
-          backgroundColor: colors.bgSelected
-        }
-      },
-      {
-        when: (cst: IConstituenta) => !!activeCst && cst.spawner === activeCst?.id && cst.id !== activeCst?.id,
-        style: {
-          backgroundColor: colors.bgOrange50
-        }
-      },
-      {
-        when: (cst: IConstituenta) => activeCst?.id !== undefined && cst.spawn.includes(activeCst.id),
-        style: {
-          backgroundColor: colors.bgGreen50
-        }
+  const conditionalRowStyles: IConditionalStyle<IConstituenta>[] = [
+    {
+      when: (cst: IConstituenta) => !!activeCst && cst.id === activeCst?.id,
+      style: {
+        backgroundColor: colors.bgSelected
       }
-    ],
-    [activeCst, colors]
-  );
+    },
+    {
+      when: (cst: IConstituenta) => !!activeCst && cst.spawner === activeCst?.id && cst.id !== activeCst?.id,
+      style: {
+        backgroundColor: colors.bgOrange50
+      }
+    },
+    {
+      when: (cst: IConstituenta) => activeCst?.id !== undefined && cst.spawn.includes(activeCst.id),
+      style: {
+        backgroundColor: colors.bgGreen50
+      }
+    }
+  ];
 
   return (
     <DataTable
@@ -137,7 +124,7 @@ function TableSideConstituents({
           <p>Измените параметры фильтра</p>
         </NoData>
       }
-      onRowClicked={handleRowClicked}
+      onRowClicked={cst => onOpenEdit(cst.id)}
     />
   );
 }

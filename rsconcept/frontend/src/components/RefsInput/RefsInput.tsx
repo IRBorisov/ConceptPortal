@@ -6,7 +6,7 @@ import { createTheme } from '@uiw/codemirror-themes';
 import CodeMirror, { BasicSetupOptions, ReactCodeMirrorProps, ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import clsx from 'clsx';
 import { EditorView } from 'codemirror';
-import { forwardRef, useCallback, useMemo, useRef, useState } from 'react';
+import { forwardRef, useRef, useState } from 'react';
 
 import Label from '@/components/ui/Label';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
@@ -103,39 +103,32 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
     const [mainRefs, setMainRefs] = useState<string[]>([]);
 
     const internalRef = useRef<ReactCodeMirrorRef>(null);
-    const thisRef = useMemo(() => (!ref || typeof ref === 'function' ? internalRef : ref), [internalRef, ref]);
+    const thisRef = !ref || typeof ref === 'function' ? internalRef : ref;
 
-    const cursor = useMemo(() => (!disabled ? 'cursor-text' : 'cursor-default'), [disabled]);
-    const customTheme: Extension = useMemo(
-      () =>
-        createTheme({
-          theme: darkMode ? 'dark' : 'light',
-          settings: {
-            fontFamily: 'inherit',
-            background: !disabled ? colors.bgInput : colors.bgDefault,
-            foreground: colors.fgDefault,
-            selection: colors.bgHover,
-            caret: colors.fgDefault
-          },
-          styles: [
-            { tag: tags.name, color: colors.fgPurple, cursor: 'default' }, // EntityReference
-            { tag: tags.literal, color: colors.fgTeal, cursor: 'default' }, // SyntacticReference
-            { tag: tags.comment, color: colors.fgRed } // Error
-          ]
-        }),
-      [disabled, colors, darkMode]
-    );
+    const cursor = !disabled ? 'cursor-text' : 'cursor-default';
+    const customTheme: Extension = createTheme({
+      theme: darkMode ? 'dark' : 'light',
+      settings: {
+        fontFamily: 'inherit',
+        background: !disabled ? colors.bgInput : colors.bgDefault,
+        foreground: colors.fgDefault,
+        selection: colors.bgHover,
+        caret: colors.fgDefault
+      },
+      styles: [
+        { tag: tags.name, color: colors.fgPurple, cursor: 'default' }, // EntityReference
+        { tag: tags.literal, color: colors.fgTeal, cursor: 'default' }, // SyntacticReference
+        { tag: tags.comment, color: colors.fgRed } // Error
+      ]
+    });
 
-    const editorExtensions = useMemo(
-      () => [
-        EditorView.lineWrapping,
-        EditorView.contentAttributes.of({ spellcheck: 'true' }),
-        NaturalLanguage,
-        ...(!schema || !onOpenEdit ? [] : [refsNavigation(schema, onOpenEdit)]),
-        ...(schema ? [refsHoverTooltip(schema, colors, onOpenEdit !== undefined)] : [])
-      ],
-      [schema, colors, onOpenEdit]
-    );
+    const editorExtensions = [
+      EditorView.lineWrapping,
+      EditorView.contentAttributes.of({ spellcheck: 'true' }),
+      NaturalLanguage,
+      ...(!schema || !onOpenEdit ? [] : [refsNavigation(schema, onOpenEdit)]),
+      ...(schema ? [refsHoverTooltip(schema, colors, onOpenEdit !== undefined)] : [])
+    ];
 
     function handleChange(newValue: string) {
       if (onChange) onChange(newValue);
@@ -151,58 +144,52 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
       if (onBlur) onBlur(event);
     }
 
-    const handleInput = useCallback(
-      (event: React.KeyboardEvent<HTMLDivElement>) => {
-        if (!thisRef.current?.view) {
-          event.preventDefault();
-          event.stopPropagation();
-          return;
-        }
-        if ((event.ctrlKey || event.metaKey) && event.code === 'Space') {
-          event.preventDefault();
-          event.stopPropagation();
+    function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
+      if (!thisRef.current?.view) {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+      if ((event.ctrlKey || event.metaKey) && event.code === 'Space') {
+        event.preventDefault();
+        event.stopPropagation();
 
-          const wrap = new CodeMirrorWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
-          wrap.fixSelection(ReferenceTokens);
-          const nodes = wrap.getEnvelopingNodes(ReferenceTokens);
-          if (nodes.length !== 1) {
-            setCurrentType(ReferenceType.ENTITY);
-            setRefText('');
-            setHintText(wrap.getSelectionText());
-          } else {
-            setCurrentType(nodes[0].type.id === RefEntity ? ReferenceType.ENTITY : ReferenceType.SYNTACTIC);
-            setRefText(wrap.getSelectionText());
-          }
-
-          const selection = wrap.getSelection();
-          const mainNodes = wrap
-            .getAllNodes([RefEntity])
-            .filter(node => node.from >= selection.to || node.to <= selection.from);
-          setMainRefs(mainNodes.map(node => wrap.getText(node.from, node.to)));
-          setBasePosition(mainNodes.filter(node => node.to <= selection.from).length);
-
-          setShowEditor(true);
-        }
-      },
-      [thisRef]
-    );
-
-    const handleInputReference = useCallback(
-      (referenceText: string) => {
-        if (!thisRef.current?.view) {
-          return;
-        }
-        thisRef.current.view.focus();
         const wrap = new CodeMirrorWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
-        wrap.replaceWith(referenceText);
-      },
-      [thisRef]
-    );
+        wrap.fixSelection(ReferenceTokens);
+        const nodes = wrap.getEnvelopingNodes(ReferenceTokens);
+        if (nodes.length !== 1) {
+          setCurrentType(ReferenceType.ENTITY);
+          setRefText('');
+          setHintText(wrap.getSelectionText());
+        } else {
+          setCurrentType(nodes[0].type.id === RefEntity ? ReferenceType.ENTITY : ReferenceType.SYNTACTIC);
+          setRefText(wrap.getSelectionText());
+        }
 
-    const hideEditReference = useCallback(() => {
+        const selection = wrap.getSelection();
+        const mainNodes = wrap
+          .getAllNodes([RefEntity])
+          .filter(node => node.from >= selection.to || node.to <= selection.from);
+        setMainRefs(mainNodes.map(node => wrap.getText(node.from, node.to)));
+        setBasePosition(mainNodes.filter(node => node.to <= selection.from).length);
+
+        setShowEditor(true);
+      }
+    }
+
+    function handleInputReference(referenceText: string) {
+      if (!thisRef.current?.view) {
+        return;
+      }
+      thisRef.current.view.focus();
+      const wrap = new CodeMirrorWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
+      wrap.replaceWith(referenceText);
+    }
+
+    function hideEditReference() {
       setShowEditor(false);
       setTimeout(() => thisRef.current?.view?.focus(), PARAMETER.refreshTimeout);
-    }, [thisRef]);
+    }
 
     return (
       <div className={clsx('flex flex-col gap-2', cursor)}>

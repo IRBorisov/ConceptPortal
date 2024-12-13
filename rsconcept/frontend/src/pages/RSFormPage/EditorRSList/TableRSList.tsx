@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 import BadgeConstituenta from '@/components/info/BadgeConstituenta';
 import { CProps } from '@/components/props';
@@ -59,82 +59,73 @@ function TableRSList({
     });
   }, [windowSize]);
 
-  const handleRowClicked = useCallback(
-    (cst: IConstituenta, event: CProps.EventMouse) => {
-      if (event.altKey) {
-        event.preventDefault();
-        onEdit(cst.id);
-      }
-    },
-    [onEdit]
-  );
-
-  const handleRowDoubleClicked = useCallback(
-    (cst: IConstituenta, event: CProps.EventMouse) => {
+  function handleRowClicked(cst: IConstituenta, event: CProps.EventMouse) {
+    if (event.altKey) {
       event.preventDefault();
       onEdit(cst.id);
-    },
-    [onEdit]
-  );
+    }
+  }
 
-  const columns = useMemo(
-    () => [
-      columnHelper.accessor('alias', {
-        id: 'alias',
-        header: () => <span className='pl-3'>Имя</span>,
-        size: 65,
-        minSize: 65,
-        maxSize: 65,
-        cell: props => <BadgeConstituenta theme={colors} value={props.row.original} prefixID={prefixes.cst_list} />
-      }),
-      columnHelper.accessor(cst => labelCstTypification(cst), {
-        id: 'type',
-        header: 'Типизация',
-        enableHiding: true,
-        size: 150,
-        minSize: 150,
-        maxSize: 200,
-        cell: props => (
-          <div className={clsx('min-w-[9.3rem] max-w-[9.3rem]', 'text-xs break-words')}>
-            {truncateToSymbol(props.getValue(), PARAMETER.typificationTruncate)}
-          </div>
-        )
-      }),
-      columnHelper.accessor(cst => cst.term_resolved || cst.term_raw || '', {
-        id: 'term',
-        header: 'Термин',
-        size: 500,
-        minSize: 150,
-        maxSize: 500
-      }),
-      columnHelper.accessor('definition_formal', {
-        id: 'expression',
-        header: 'Формальное определение',
-        size: 1000,
-        minSize: 300,
-        maxSize: 1000,
-        cell: props => <div className='break-all text-pretty'>{props.getValue()}</div>
-      }),
-      columnHelper.accessor(cst => cst.definition_resolved || cst.definition_raw || '', {
-        id: 'definition',
-        header: 'Текстовое определение',
-        size: 1000,
-        minSize: 200,
-        maxSize: 1000,
-        cell: props => <TextContent text={props.getValue()} maxLength={DEFINITION_MAX_SYMBOLS} />
-      }),
-      columnHelper.accessor('convention', {
-        id: 'convention',
-        header: 'Конвенция / Комментарий',
-        size: 500,
-        minSize: 100,
-        maxSize: 500,
-        enableHiding: true,
-        cell: props => <TextContent text={props.getValue()} maxLength={COMMENT_MAX_SYMBOLS} />
-      })
-    ],
-    [colors]
-  );
+  function handleRowDoubleClicked(cst: IConstituenta, event: CProps.EventMouse) {
+    event.preventDefault();
+    onEdit(cst.id);
+  }
+
+  const columns = [
+    columnHelper.accessor('alias', {
+      id: 'alias',
+      header: () => <span className='pl-3'>Имя</span>,
+      size: 65,
+      minSize: 65,
+      maxSize: 65,
+      cell: props => <BadgeConstituenta theme={colors} value={props.row.original} prefixID={prefixes.cst_list} />
+    }),
+    columnHelper.accessor(cst => labelCstTypification(cst), {
+      id: 'type',
+      header: 'Типизация',
+      enableHiding: true,
+      size: 150,
+      minSize: 150,
+      maxSize: 200,
+      cell: props => (
+        <div className={clsx('min-w-[9.3rem] max-w-[9.3rem]', 'text-xs break-words')}>
+          {truncateToSymbol(props.getValue(), PARAMETER.typificationTruncate)}
+        </div>
+      )
+    }),
+    columnHelper.accessor(cst => cst.term_resolved || cst.term_raw || '', {
+      id: 'term',
+      header: 'Термин',
+      size: 500,
+      minSize: 150,
+      maxSize: 500
+    }),
+    columnHelper.accessor('definition_formal', {
+      id: 'expression',
+      header: 'Формальное определение',
+      size: 1000,
+      minSize: 300,
+      maxSize: 1000,
+      cell: props => <div className='break-all text-pretty'>{props.getValue()}</div>
+    }),
+    columnHelper.accessor(cst => cst.definition_resolved || cst.definition_raw || '', {
+      id: 'definition',
+      header: 'Текстовое определение',
+      size: 1000,
+      minSize: 200,
+      maxSize: 1000,
+      cell: props => <TextContent text={props.getValue()} maxLength={DEFINITION_MAX_SYMBOLS} />
+    }),
+    columnHelper.accessor('convention', {
+      id: 'convention',
+      header: 'Конвенция / Комментарий',
+      size: 500,
+      minSize: 100,
+      maxSize: 500,
+      enableHiding: true,
+      cell: props => <TextContent text={props.getValue()} maxLength={COMMENT_MAX_SYMBOLS} />
+    })
+  ];
 
   return (
     <DataTable

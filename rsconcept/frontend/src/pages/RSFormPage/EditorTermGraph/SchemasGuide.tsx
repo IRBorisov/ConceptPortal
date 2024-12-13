@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import { IconHelp } from '@/components/Icons';
 import Tooltip from '@/components/ui/Tooltip';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
@@ -17,7 +15,7 @@ function SchemasGuide({ schema }: SchemasGuideProps) {
   const { colors } = useConceptOptions();
   const library = useLibrary();
 
-  const schemas = useMemo(() => {
+  const schemas = (() => {
     const processed = new Set<LibraryItemID>();
     const aliases: string[] = [];
     const indexes: number[] = [];
@@ -39,7 +37,7 @@ function SchemasGuide({ schema }: SchemasGuideProps) {
       result.push(aliases[trueIndex]);
     }
     return result;
-  }, [schema, library.items]);
+  })();
 
   return (
     <div tabIndex={-1} id={globals.graph_schemas} className='p-1'>

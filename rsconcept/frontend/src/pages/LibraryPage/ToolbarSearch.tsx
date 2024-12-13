@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useMemo } from 'react';
 
 import { LocationIcon, VisibilityIcon } from '@/components/DomainIcons';
 import {
@@ -85,34 +84,25 @@ function ToolbarSearch({
   const userMenu = useDropdown();
   const { users } = useUsers();
 
-  const userActive = useMemo(
-    () => isOwned !== undefined || isEditor !== undefined || filterUser !== undefined,
-    [isOwned, isEditor, filterUser]
-  );
+  const userActive = isOwned !== undefined || isEditor !== undefined || filterUser !== undefined;
 
-  const handleChange = useCallback(
-    (newValue: LocationHead | undefined) => {
-      headMenu.hide();
-      onChangeHead(newValue);
-    },
-    [headMenu, onChangeHead]
-  );
+  function handleChange(newValue: LocationHead | undefined) {
+    headMenu.hide();
+    onChangeHead(newValue);
+  }
 
-  const handleToggleFolder = useCallback(() => {
+  function handleToggleFolder() {
     headMenu.hide();
     toggleFolderMode();
-  }, [headMenu, toggleFolderMode]);
+  }
 
-  const handleFolderClick = useCallback(
-    (event: CProps.EventMouse) => {
-      if (event.ctrlKey || event.metaKey) {
-        toggleFolderMode();
-      } else {
-        headMenu.toggle();
-      }
-    },
-    [headMenu, toggleFolderMode]
-  );
+  function handleFolderClick(event: CProps.EventMouse) {
+    if (event.ctrlKey || event.metaKey) {
+      toggleFolderMode();
+    } else {
+      headMenu.toggle();
+    }
+  }
 
   return (
     <div

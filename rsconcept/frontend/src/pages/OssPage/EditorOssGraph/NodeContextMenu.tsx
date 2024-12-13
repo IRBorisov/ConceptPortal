@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import {
   IconChild,
@@ -51,7 +51,7 @@ function NodeContextMenu({
   const controller = useOssEdit();
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const readyForSynthesis = useMemo(() => {
+  const readyForSynthesis = (() => {
     if (operation.operation_type !== OperationType.SYNTHESIS) {
       return false;
     }
@@ -70,7 +70,7 @@ function NodeContextMenu({
     }
 
     return true;
-  }, [operation, controller.schema]);
+  })();
 
   const handleHide = useCallback(() => {
     setIsOpen(false);

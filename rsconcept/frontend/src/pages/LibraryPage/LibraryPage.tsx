@@ -69,28 +69,21 @@ function LibraryPage() {
     ]
   );
 
-  const hasCustomFilter = useMemo(
-    () =>
-      !!filter.path ||
-      !!filter.query ||
-      filter.head !== undefined ||
-      filter.isEditor !== undefined ||
-      filter.isOwned !== undefined ||
-      filter.isVisible !== true ||
-      filter.filterUser !== undefined ||
-      !!filter.location,
-    [filter]
-  );
+  const hasCustomFilter =
+    !!filter.path ||
+    !!filter.query ||
+    filter.head !== undefined ||
+    filter.isEditor !== undefined ||
+    filter.isOwned !== undefined ||
+    filter.isVisible !== true ||
+    filter.filterUser !== undefined ||
+    !!filter.location;
 
   useEffect(() => {
     setItems(library.applyFilter(filter));
   }, [library, library.items.length, filter]);
 
-  const toggleVisible = useCallback(() => setIsVisible(prev => toggleTristateFlag(prev)), [setIsVisible]);
-  const toggleOwned = useCallback(() => setIsOwned(prev => toggleTristateFlag(prev)), [setIsOwned]);
-  const toggleEditor = useCallback(() => setIsEditor(prev => toggleTristateFlag(prev)), [setIsEditor]);
-  const toggleFolderMode = useCallback(() => options.setFolderMode(prev => !prev), [options]);
-  const toggleSubfolders = useCallback(() => setSubfolders(prev => !prev), [setSubfolders]);
+  const toggleFolderMode = () => options.setFolderMode(prev => !prev);
 
   const resetFilter = useCallback(() => {
     setQuery('');
@@ -102,10 +95,6 @@ function LibraryPage() {
     setFilterUser(undefined);
     options.setLocation('');
   }, [setHead, setIsVisible, setIsOwned, setIsEditor, setFilterUser, options]);
-
-  const promptRenameLocation = useCallback(() => {
-    setShowRenameLocation(true);
-  }, []);
 
   const handleRenameLocation = useCallback(
     (newLocation: string) => {
@@ -133,43 +122,6 @@ function LibraryPage() {
       console.error(error);
     }
   }, [items]);
-
-  const viewLibrary = useMemo(
-    () => (
-      <TableLibraryItems
-        resetQuery={resetFilter}
-        items={items}
-        folderMode={options.folderMode}
-        toggleFolderMode={toggleFolderMode}
-      />
-    ),
-    [resetFilter, items, options.folderMode, toggleFolderMode]
-  );
-
-  const viewLocations = useMemo(
-    () => (
-      <ViewSideLocation
-        isVisible={options.folderMode}
-        activeLocation={options.location}
-        onChangeActiveLocation={options.setLocation}
-        subfolders={subfolders}
-        folderTree={library.folders}
-        toggleFolderMode={toggleFolderMode}
-        toggleSubfolders={toggleSubfolders}
-        onRenameLocation={promptRenameLocation}
-      />
-    ),
-    [
-      options.location,
-      library.folders,
-      options.setLocation,
-      options.folderMode,
-      toggleFolderMode,
-      promptRenameLocation,
-      toggleSubfolders,
-      subfolders
-    ]
-  );
 
   return (
     <DataLoader isLoading={library.loading} error={library.loadingError} hasNoData={library.items.length === 0}>
@@ -203,10 +155,10 @@ function LibraryPage() {
         onChangeHead={setHead}
         isVisible={isVisible}
         isOwned={isOwned}
-        toggleOwned={toggleOwned}
-        toggleVisible={toggleVisible}
+        toggleOwned={() => setIsOwned(prev => toggleTristateFlag(prev))}
+        toggleVisible={() => setIsVisible(prev => toggleTristateFlag(prev))}
         isEditor={isEditor}
-        toggleEditor={toggleEditor}
+        toggleEditor={() => setIsEditor(prev => toggleTristateFlag(prev))}
         filterUser={filterUser}
         onChangeFilterUser={setFilterUser}
         resetFilter={resetFilter}
@@ -215,8 +167,23 @@ function LibraryPage() {
       />
 
       <div className='cc-fade-in flex'>
-        {viewLocations}
-        {viewLibrary}
+        <ViewSideLocation
+          isVisible={options.folderMode}
+          activeLocation={options.location}
+          onChangeActiveLocation={options.setLocation}
+          subfolders={subfolders}
+          folderTree={library.folders}
+          toggleFolderMode={toggleFolderMode}
+          toggleSubfolders={() => setSubfolders(prev => !prev)}
+          onRenameLocation={() => setShowRenameLocation(true)}
+        />
+
+        <TableLibraryItems
+          resetQuery={resetFilter}
+          items={items}
+          folderMode={options.folderMode}
+          toggleFolderMode={toggleFolderMode}
+        />
       </div>
     </DataLoader>
   );

@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import Checkbox from '@/components/ui/Checkbox';
 import Modal, { ModalProps } from '@/components/ui/Modal';
@@ -18,12 +18,9 @@ interface DlgDeleteCstProps extends Pick<ModalProps, 'hideWindow'> {
 
 function DlgDeleteCst({ hideWindow, selected, schema, onDelete }: DlgDeleteCstProps) {
   const [expandOut, setExpandOut] = useState(false);
-  const expansion: ConstituentaID[] = useMemo(
-    () => schema.graph.expandAllOutputs(selected), // prettier: split-lines
-    [selected, schema.graph]
-  );
-  const hasInherited = useMemo(
-    () => selected.some(id => schema.inheritance.find(item => item.parent === id), [selected, schema.inheritance]),
+  const expansion: ConstituentaID[] = schema.graph.expandAllOutputs(selected);
+  const hasInherited = selected.some(
+    id => schema.inheritance.find(item => item.parent === id),
     [selected, schema.inheritance]
   );
 

@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import Checkbox from '@/components/ui/Checkbox';
 import Modal, { ModalProps } from '@/components/ui/Modal';
@@ -23,9 +23,7 @@ function DlgCreateVersion({ hideWindow, versions, selected, totalCount, onCreate
   const [description, setDescription] = useState('');
   const [onlySelected, setOnlySelected] = useState(false);
 
-  const canSubmit = useMemo(() => {
-    return !versions.find(ver => ver.version === version);
-  }, [versions, version]);
+  const canSubmit = !versions.find(ver => ver.version === version);
 
   function handleSubmit() {
     const data: IVersionCreateData = {

@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
 import Select, {
   ClearIndicatorProps,
   components,
@@ -56,55 +55,52 @@ function SelectSingle<Option, Group extends GroupBase<Option> = GroupBase<Option
 }: SelectSingleProps<Option, Group>) {
   const { darkMode, colors } = useConceptOptions();
   const size = useWindowSize();
-  const themeColors = useMemo(() => (!darkMode ? selectLightT : selectDarkT), [darkMode]);
+  const themeColors = !darkMode ? selectLightT : selectDarkT;
 
-  const adjustedStyles: StylesConfig<Option, false, Group> = useMemo(
-    () => ({
-      container: defaultStyles => ({
-        ...defaultStyles,
-        borderRadius: '0.25rem'
-      }),
-      control: (defaultStyles, { isDisabled }) => ({
-        ...defaultStyles,
-        borderRadius: '0.25rem',
-        ...(noBorder ? { borderWidth: 0 } : {}),
-        cursor: isDisabled ? 'not-allowed' : 'pointer',
-        boxShadow: 'none'
-      }),
-      menuPortal: defaultStyles => ({
-        ...defaultStyles,
-        zIndex: 9999
-      }),
-      menuList: defaultStyles => ({
-        ...defaultStyles,
-        padding: 0
-      }),
-      option: (defaultStyles, { isSelected }) => ({
-        ...defaultStyles,
-        padding: '0.25rem 0.75rem',
-        fontSize: '0.875rem',
-        lineHeight: '1.25rem',
-        backgroundColor: isSelected ? colors.bgSelected : defaultStyles.backgroundColor,
-        color: isSelected ? colors.fgSelected : defaultStyles.color,
-        borderWidth: '1px',
-        borderColor: colors.border
-      }),
-      input: defaultStyles => ({ ...defaultStyles }),
-      placeholder: defaultStyles => ({ ...defaultStyles }),
-      singleValue: defaultStyles => ({ ...defaultStyles }),
-      dropdownIndicator: base => ({
-        ...base,
-        paddingTop: 0,
-        paddingBottom: 0
-      }),
-      clearIndicator: base => ({
-        ...base,
-        paddingTop: 0,
-        paddingBottom: 0
-      })
+  const adjustedStyles: StylesConfig<Option, false, Group> = {
+    container: defaultStyles => ({
+      ...defaultStyles,
+      borderRadius: '0.25rem'
     }),
-    [colors, noBorder]
-  );
+    control: (defaultStyles, { isDisabled }) => ({
+      ...defaultStyles,
+      borderRadius: '0.25rem',
+      ...(noBorder ? { borderWidth: 0 } : {}),
+      cursor: isDisabled ? 'not-allowed' : 'pointer',
+      boxShadow: 'none'
+    }),
+    menuPortal: defaultStyles => ({
+      ...defaultStyles,
+      zIndex: 9999
+    }),
+    menuList: defaultStyles => ({
+      ...defaultStyles,
+      padding: 0
+    }),
+    option: (defaultStyles, { isSelected }) => ({
+      ...defaultStyles,
+      padding: '0.25rem 0.75rem',
+      fontSize: '0.875rem',
+      lineHeight: '1.25rem',
+      backgroundColor: isSelected ? colors.bgSelected : defaultStyles.backgroundColor,
+      color: isSelected ? colors.fgSelected : defaultStyles.color,
+      borderWidth: '1px',
+      borderColor: colors.border
+    }),
+    input: defaultStyles => ({ ...defaultStyles }),
+    placeholder: defaultStyles => ({ ...defaultStyles }),
+    singleValue: defaultStyles => ({ ...defaultStyles }),
+    dropdownIndicator: base => ({
+      ...base,
+      paddingTop: 0,
+      paddingBottom: 0
+    }),
+    clearIndicator: base => ({
+      ...base,
+      paddingTop: 0,
+      paddingBottom: 0
+    })
+  };
 
   return (
     <Select

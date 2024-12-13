@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { globals, PARAMETER } from '@/utils/constants';
 
@@ -44,51 +44,39 @@ function SelectTree<ItemType>({
   prefix,
   ...restProps
 }: SelectTreeProps<ItemType>) {
-  const foldable = useMemo(
-    () => new Set(items.filter(item => getParent(item) !== item).map(item => getParent(item))),
-    [items, getParent]
-  );
+  const foldable = new Set(items.filter(item => getParent(item) !== item).map(item => getParent(item)));
   const [folded, setFolded] = useState<ItemType[]>(items);
 
   useEffect(() => {
     setFolded(items.filter(item => getParent(value) !== item && getParent(getParent(value)) !== item));
   }, [value, getParent, items]);
 
-  const onFoldItem = useCallback(
-    (target: ItemType, showChildren: boolean) => {
-      setFolded(prev =>
-        items.filter(item => {
-          if (item === target) {
-            return !showChildren;
-          }
-          if (!showChildren && (getParent(item) === target || getParent(getParent(item)) === target)) {
-            return true;
-          } else {
-            return prev.includes(item);
-          }
-        })
-      );
-    },
-    [items, getParent]
-  );
+  function onFoldItem(target: ItemType, showChildren: boolean) {
+    setFolded(prev =>
+      items.filter(item => {
+        if (item === target) {
+          return !showChildren;
+        }
+        if (!showChildren && (getParent(item) === target || getParent(getParent(item)) === target)) {
+          return true;
+        } else {
+          return prev.includes(item);
+        }
+      })
+    );
+  }
 
-  const handleClickFold = useCallback(
-    (event: CProps.EventMouse, target: ItemType, showChildren: boolean) => {
-      event.preventDefault();
-      event.stopPropagation();
-      onFoldItem(target, showChildren);
-    },
-    [onFoldItem]
-  );
+  function handleClickFold(event: CProps.EventMouse, target: ItemType, showChildren: boolean) {
+    event.preventDefault();
+    event.stopPropagation();
+    onFoldItem(target, showChildren);
+  }
 
-  const handleSetValue = useCallback(
-    (event: CProps.EventMouse, target: ItemType) => {
-      event.preventDefault();
-      event.stopPropagation();
-      onChangeValue(target);
-    },
-    [onChangeValue]
-  );
+  function handleSetValue(event: CProps.EventMouse, target: ItemType) {
+    event.preventDefault();
+    event.stopPropagation();
+    onChangeValue(target);
+  }
 
   return (
     <div {...restProps}>

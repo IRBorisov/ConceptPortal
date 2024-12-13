@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 
 import { IconReset } from '@/components/Icons';
 import PickSchema from '@/components/select/PickSchema';
@@ -41,9 +41,12 @@ function TabInputOperation({
   createSchema,
   onChangeCreateSchema
 }: TabInputOperationProps) {
-  const baseFilter = useCallback((item: ILibraryItem) => !oss.schemas.includes(item.id), [oss]);
   const library = useLibrary();
-  const sortedItems = useMemo(() => sortItemsForOSS(oss, library.items), [oss, library.items]);
+  const sortedItems = sortItemsForOSS(oss, library.items);
+
+  function baseFilter(item: ILibraryItem) {
+    return !oss.schemas.includes(item.id);
+  }
 
   useEffect(() => {
     if (createSchema) {

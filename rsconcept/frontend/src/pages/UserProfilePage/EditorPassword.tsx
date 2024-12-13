@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import clsx from 'clsx';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { urls } from '@/app/urls';
@@ -23,17 +23,10 @@ function EditorPassword() {
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
 
-  const passwordColor = useMemo(() => {
-    if (!!newPassword && !!newPasswordRepeat && newPassword !== newPasswordRepeat) {
-      return 'clr-warning';
-    } else {
-      return 'clr-input';
-    }
-  }, [newPassword, newPasswordRepeat]);
+  const passwordColor =
+    !!newPassword && !!newPasswordRepeat && newPassword !== newPasswordRepeat ? 'clr-warning' : 'clr-input';
 
-  const canSubmit = useMemo(() => {
-    return !!oldPassword && !!newPassword && !!newPasswordRepeat && newPassword === newPasswordRepeat;
-  }, [newPassword, newPasswordRepeat, oldPassword]);
+  const canSubmit = !!oldPassword && !!newPassword && !!newPasswordRepeat && newPassword === newPasswordRepeat;
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

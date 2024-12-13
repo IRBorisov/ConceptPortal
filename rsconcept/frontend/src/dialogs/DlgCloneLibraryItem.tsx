@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { urls } from '@/app/urls';
@@ -43,16 +43,16 @@ function DlgCloneLibraryItem({ hideWindow, base, initialLocation, selected, tota
 
   const [head, setHead] = useState(initialLocation.substring(0, 2) as LocationHead);
   const [body, setBody] = useState(initialLocation.substring(3));
-  const location = useMemo(() => combineLocation(head, body), [head, body]);
+  const location = combineLocation(head, body);
 
   const { cloneItem, folders } = useLibrary();
 
-  const canSubmit = useMemo(() => title !== '' && alias !== '' && validateLocation(location), [title, alias, location]);
+  const canSubmit = title !== '' && alias !== '' && validateLocation(location);
 
-  const handleSelectLocation = useCallback((newValue: string) => {
+  function handleSelectLocation(newValue: string) {
     setHead(newValue.substring(0, 2) as LocationHead);
     setBody(newValue.length > 3 ? newValue.substring(3) : '');
-  }, []);
+  }
 
   function handleSubmit() {
     const data: IRSFormCloneData = {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { IconChild } from '@/components/Icons';
 import SelectGraphFilter from '@/components/select/SelectGraphFilter';
@@ -58,16 +58,6 @@ function ConstituentsSearch({ schema, activeID, activeExpression, dense, setFilt
     showInherited
   ]);
 
-  const selectGraph = useMemo(
-    () => <SelectGraphFilter value={filterSource} onChange={newValue => setFilterSource(newValue)} dense={dense} />,
-    [filterSource, setFilterSource, dense]
-  );
-
-  const selectMatchMode = useMemo(
-    () => <SelectMatchMode value={filterMatch} onChange={newValue => setFilterMatch(newValue)} dense={dense} />,
-    [filterMatch, setFilterMatch, dense]
-  );
-
   return (
     <div className='flex border-b clr-input rounded-t-md'>
       <SearchBar
@@ -77,8 +67,8 @@ function ConstituentsSearch({ schema, activeID, activeExpression, dense, setFilt
         query={filterText}
         onChangeQuery={setFilterText}
       />
-      {selectMatchMode}
-      {selectGraph}
+      <SelectMatchMode value={filterMatch} onChange={newValue => setFilterMatch(newValue)} dense={dense} />
+      <SelectGraphFilter value={filterSource} onChange={newValue => setFilterSource(newValue)} dense={dense} />
       {schema && schema?.stats.count_inherited > 0 ? (
         <MiniButton
           noHover
