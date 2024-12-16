@@ -19,6 +19,7 @@
   --duration-move: 500ms;
   --duration-modal: 300ms;
   --duration-fade: 300ms;
+  --duration-select: 100ms;
 
   /* Light Theme */
   --cl-bg-120:      hsl(000, 000%, 100%);

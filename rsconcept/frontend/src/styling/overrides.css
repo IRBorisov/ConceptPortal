@@ -115,14 +115,26 @@
   border-radius: 5px;
   padding: 2px;
   width: 150px;
-  height: 40px;
+  height: fit-content;
+
+  outline-offset: -2px;
+  outline-style: solid;
+  outline-color: transparent;
+
+  transition-property: outline-offset;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: var(--duration-select);
 
   &.selected {
+    outline-offset: 4px;
+    outline-color: var(--cl-teal-bg-100);
     border-color: var(--cd-bg-40);
   }
 
   .dark & {
     &.selected {
+      outline-offset: 4px;
+      border-color: var(--cd-teal-bg-100);
       border-color: var(--cl-bg-40);
     }
   }
@@ -137,18 +149,25 @@
   width: 40px;
   height: 40px;
 
-  outline-offset: 4px;
+  outline-offset: -2px;
   outline-style: solid;
   outline-color: transparent;
 
+  transition-property: outline-offset;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: var(--duration-select);
+
   &.selected {
+    outline-offset: 4px;
     outline-color: var(--cl-teal-bg-100);
     border-color: transparent;
   }
 
   .dark & {
     &.selected {
+      outline-offset: 4px;
       border-color: var(--cd-teal-bg-100);
+      border-color: transparent;
     }
   }
 }
