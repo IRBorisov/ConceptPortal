@@ -63,6 +63,7 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
 
   function handleToggleDarkMode() {
     toggleDarkMode();
+    hideDropdown();
   }
 
   return (

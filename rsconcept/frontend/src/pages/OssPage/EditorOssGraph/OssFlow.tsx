@@ -23,6 +23,7 @@ import { useOSS } from '@/context/OssContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { OssNode } from '@/models/miscellaneous';
 import { OperationID } from '@/models/oss';
+import { APP_COLORS } from '@/styling/color';
 import { PARAMETER, storage } from '@/utils/constants';
 import { errors } from '@/utils/labels';
 
@@ -40,7 +41,7 @@ interface OssFlowProps {
 }
 
 function OssFlow({ isModified, setIsModified }: OssFlowProps) {
-  const { mainHeight, colors } = useConceptOptions();
+  const { mainHeight } = useConceptOptions();
   const model = useOSS();
   const controller = useOssEdit();
   const flow = useReactFlow();
@@ -192,7 +193,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     const nodesBounds = getNodesBounds(nodes);
     const viewport = getViewportForBounds(nodesBounds, imageWidth, imageHeight, ZOOM_MIN, ZOOM_MAX);
     toPng(canvas, {
-      backgroundColor: colors.bgDefault,
+      backgroundColor: APP_COLORS.bgDefault,
       width: imageWidth,
       height: imageHeight,
       style: {

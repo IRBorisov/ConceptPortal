@@ -4,7 +4,6 @@ import { hoverTooltip } from '@codemirror/view';
 
 import { IEntityReference, ISyntacticReference } from '@/models/language';
 import { IRSForm } from '@/models/rsform';
-import { IColorTheme } from '@/styling/color';
 import {
   domTooltipEntityReference,
   domTooltipSyntacticReference,
@@ -14,7 +13,7 @@ import {
 
 import { RefEntity } from './parse/parser.terms';
 
-export const tooltipProducer = (schema: IRSForm, colors: IColorTheme, canClick?: boolean) => {
+export const tooltipProducer = (schema: IRSForm, canClick?: boolean) => {
   return hoverTooltip((view, pos) => {
     const parse = findReferenceAt(pos, view.state);
     if (!parse) {
@@ -27,7 +26,7 @@ export const tooltipProducer = (schema: IRSForm, colors: IColorTheme, canClick?:
         pos: parse.start,
         end: parse.end,
         above: false,
-        create: () => domTooltipEntityReference(parse.ref as IEntityReference, cst, colors, canClick)
+        create: () => domTooltipEntityReference(parse.ref as IEntityReference, cst, canClick)
       };
     } else {
       let masterText: string | undefined = undefined;
@@ -54,6 +53,6 @@ export const tooltipProducer = (schema: IRSForm, colors: IColorTheme, canClick?:
   });
 };
 
-export function refsHoverTooltip(schema: IRSForm, colors: IColorTheme, canClick?: boolean): Extension {
-  return [tooltipProducer(schema, colors, canClick)];
+export function refsHoverTooltip(schema: IRSForm, canClick?: boolean): Extension {
+  return [tooltipProducer(schema, canClick)];
 }

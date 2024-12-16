@@ -8,10 +8,10 @@ import BadgeConstituenta from '@/components/info/BadgeConstituenta';
 import SelectConstituenta from '@/components/select/SelectConstituenta';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
 import MiniButton from '@/components/ui/MiniButton';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { ILibraryItem } from '@/models/library';
 import { ICstSubstitute, IMultiSubstitution } from '@/models/oss';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
+import { APP_COLORS } from '@/styling/color';
 import { errors } from '@/utils/labels';
 
 import { IconAccept, IconPageLeft, IconPageRight, IconRemove, IconReplace } from '../Icons';
@@ -46,8 +46,6 @@ function PickSubstitutions({
   className,
   ...restProps
 }: PickSubstitutionsProps) {
-  const { colors } = useConceptOptions();
-
   const [leftArgument, setLeftArgument] = useState<ILibraryItem | undefined>(
     schemas.length === 1 ? schemas[0] : undefined
   );
@@ -164,11 +162,7 @@ function PickSubstitutions({
       id: 'left_alias',
       size: 65,
       cell: props => (
-        <BadgeConstituenta
-          theme={colors}
-          value={props.row.original.substitution}
-          prefixID={`${prefixID}_${props.row.index}_1_`}
-        />
+        <BadgeConstituenta value={props.row.original.substitution} prefixID={`${prefixID}_${props.row.index}_1_`} />
       )
     }),
     columnHelper.display({
@@ -180,11 +174,7 @@ function PickSubstitutions({
       id: 'right_alias',
       size: 65,
       cell: props => (
-        <BadgeConstituenta
-          theme={colors}
-          value={props.row.original.original}
-          prefixID={`${prefixID}_${props.row.index}_2_`}
-        />
+        <BadgeConstituenta value={props.row.original.original} prefixID={`${prefixID}_${props.row.index}_2_`} />
       )
     }),
     columnHelper.accessor(item => item.original_source.alias, {
@@ -227,9 +217,7 @@ function PickSubstitutions({
   const conditionalRowStyles: IConditionalStyle<IMultiSubstitution>[] = [
     {
       when: (item: IMultiSubstitution) => item.is_suggestion,
-      style: {
-        backgroundColor: colors.bgOrange50
-      }
+      style: { backgroundColor: APP_COLORS.bgOrange50 }
     }
   ];
 

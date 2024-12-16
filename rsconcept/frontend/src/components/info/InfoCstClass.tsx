@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { CstClass } from '@/models/rsform';
 import { colorBgCstClass } from '@/styling/color';
 import { prefixes } from '@/utils/constants';
@@ -11,8 +10,6 @@ interface InfoCstClassProps {
 }
 
 function InfoCstClass({ header }: InfoCstClassProps) {
-  const { colors } = useConceptOptions();
-
   return (
     <div className='flex flex-col gap-1 mb-2 dense'>
       {header ? <h1>{header}</h1> : null}
@@ -21,7 +18,7 @@ function InfoCstClass({ header }: InfoCstClassProps) {
           <p key={`${prefixes.cst_status_list}${index}`}>
             <span
               className={clsx('inline-block', 'min-w-[7rem]', 'px-1', 'border', 'text-center text-sm font-controls')}
-              style={{ backgroundColor: colorBgCstClass(cstClass, colors) }}
+              style={{ backgroundColor: colorBgCstClass(cstClass) }}
             >
               {labelCstClass(cstClass)}
             </span>

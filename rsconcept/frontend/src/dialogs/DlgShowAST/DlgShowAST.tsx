@@ -5,7 +5,6 @@ import { ReactFlowProvider } from 'reactflow';
 
 import Modal, { ModalProps } from '@/components/ui/Modal';
 import Overlay from '@/components/ui/Overlay';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { HelpTopic } from '@/models/miscellaneous';
 import { SyntaxTree } from '@/models/rslang';
 
@@ -17,7 +16,6 @@ interface DlgShowASTProps extends Pick<ModalProps, 'hideWindow'> {
 }
 
 function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
-  const { colors } = useConceptOptions();
   const [hoverID, setHoverID] = useState<number | undefined>(undefined);
   const hoverNode = syntaxTree.find(node => node.uid === hoverID);
 
@@ -32,8 +30,7 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
     >
       <Overlay
         position='top-2 right-1/2 translate-x-1/2'
-        className='px-2 py-1 rounded-2xl cc-blur max-w-[60ch] text-lg text-center'
-        style={{ backgroundColor: colors.bgBlur }}
+        className='px-2 py-1 rounded-2xl cc-blur bg-app-100 max-w-[60ch] text-lg text-center'
       >
         {!hoverNode || isDragging ? expression : null}
         {!isDragging && hoverNode ? (

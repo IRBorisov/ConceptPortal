@@ -5,10 +5,10 @@ import { useEffect, useState } from 'react';
 
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
 import SearchBar from '@/components/ui/SearchBar';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { CstMatchMode } from '@/models/miscellaneous';
 import { IConstituenta } from '@/models/rsform';
 import { matchConstituenta } from '@/models/rsformAPI';
+import { APP_COLORS } from '@/styling/color';
 import { prefixes } from '@/utils/constants';
 import { describeConstituenta } from '@/utils/labels';
 
@@ -47,7 +47,6 @@ function PickConstituenta({
   className,
   ...restProps
 }: PickConstituentaProps) {
-  const { colors } = useConceptOptions();
   const [filteredData, setFilteredData] = useState<IConstituenta[]>([]);
   const [filterText, setFilterText] = useState(initialFilter);
 
@@ -70,7 +69,7 @@ function PickConstituenta({
       size: 65,
       minSize: 65,
       maxSize: 65,
-      cell: props => <BadgeConstituenta theme={colors} value={props.row.original} prefixID={prefixID} />
+      cell: props => <BadgeConstituenta value={props.row.original} prefixID={prefixID} />
     }),
     columnHelper.accessor(cst => describeFunc(cst), {
       id: 'description',
@@ -82,7 +81,7 @@ function PickConstituenta({
   const conditionalRowStyles: IConditionalStyle<IConstituenta>[] = [
     {
       when: (cst: IConstituenta) => cst.id === value?.id,
-      style: { backgroundColor: colors.bgSelected }
+      style: { backgroundColor: APP_COLORS.bgSelected }
     }
   ];
 

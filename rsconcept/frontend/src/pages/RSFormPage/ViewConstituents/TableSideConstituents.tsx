@@ -6,8 +6,8 @@ import BadgeConstituenta from '@/components/info/BadgeConstituenta';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
 import NoData from '@/components/ui/NoData';
 import TextContent from '@/components/ui/TextContent';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
+import { APP_COLORS } from '@/styling/color';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { describeConstituenta } from '@/utils/labels';
 
@@ -30,8 +30,6 @@ function TableSideConstituents({
   onOpenEdit,
   maxHeight
 }: TableSideConstituentsProps) {
-  const { colors } = useConceptOptions();
-
   useEffect(() => {
     if (!activeCst) {
       return;
@@ -58,12 +56,7 @@ function TableSideConstituents({
       minSize: 65,
       footer: undefined,
       cell: props => (
-        <BadgeConstituenta
-          className='mr-[-0.5rem]'
-          theme={colors}
-          value={props.row.original}
-          prefixID={prefixes.cst_side_table}
-        />
+        <BadgeConstituenta className='mr-[-0.5rem]' value={props.row.original} prefixID={prefixes.cst_side_table} />
       )
     }),
     columnHelper.accessor(cst => describeConstituenta(cst), {
@@ -90,19 +83,19 @@ function TableSideConstituents({
     {
       when: (cst: IConstituenta) => !!activeCst && cst.id === activeCst?.id,
       style: {
-        backgroundColor: colors.bgSelected
+        backgroundColor: APP_COLORS.bgSelected
       }
     },
     {
       when: (cst: IConstituenta) => !!activeCst && cst.spawner === activeCst?.id && cst.id !== activeCst?.id,
       style: {
-        backgroundColor: colors.bgOrange50
+        backgroundColor: APP_COLORS.bgOrange50
       }
     },
     {
       when: (cst: IConstituenta) => activeCst?.id !== undefined && cst.spawn.includes(activeCst.id),
       style: {
-        backgroundColor: colors.bgGreen50
+        backgroundColor: APP_COLORS.bgGreen50
       }
     }
   ];

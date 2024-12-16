@@ -12,7 +12,10 @@ const reactCompilerConfig = {
 const inlinePackages = ['react', 'react-router', 'react-dom'];
 
 // Rollup warnings that should not be displayed
-const warningsToIgnore = [['SOURCEMAP_ERROR', "Can't resolve original location of error"]];
+const warningsToIgnore = [
+  ['SOURCEMAP_ERROR', "Can't resolve original location of error"],
+  ['MODULE_LEVEL_DIRECTIVE', 'Module level directives cause errors when bundled']
+];
 
 // https://vitejs.dev/config/
 export default ({ mode }: { mode: string }) => {

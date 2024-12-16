@@ -2,9 +2,9 @@ import { ErrorData } from '@/components/info/InfoError';
 import PickSubstitutions from '@/components/select/PickSubstitutions';
 import TextArea from '@/components/ui/TextArea';
 import DataLoader from '@/components/wrap/DataLoader';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { ICstSubstitute } from '@/models/oss';
 import { IRSForm } from '@/models/rsform';
+import { APP_COLORS } from '@/styling/color';
 import { prefixes } from '@/utils/constants';
 
 interface TabSynthesisProps {
@@ -29,7 +29,6 @@ function TabSynthesis({
   setSubstitutions,
   suggestions
 }: TabSynthesisProps) {
-  const { colors } = useConceptOptions();
   return (
     <DataLoader isLoading={loading} error={error}>
       <div className='cc-fade-in cc-column mt-3'>
@@ -45,7 +44,7 @@ function TabSynthesis({
           disabled
           value={validationText}
           rows={4}
-          style={{ borderColor: isCorrect ? undefined : colors.fgRed }}
+          style={{ borderColor: isCorrect ? undefined : APP_COLORS.fgRed }}
         />
       </div>
     </DataLoader>

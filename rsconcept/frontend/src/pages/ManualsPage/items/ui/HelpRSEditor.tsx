@@ -19,11 +19,10 @@ import {
   IconTypeGraph
 } from '@/components/Icons';
 import LinkTopic from '@/components/ui/LinkTopic';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { HelpTopic } from '@/models/miscellaneous';
+import { APP_COLORS } from '@/styling/color';
 
 function HelpRSEditor() {
-  const { colors } = useConceptOptions();
   return (
     <div className='dense'>
       <h1>Редактор конституенты</h1>
@@ -69,15 +68,15 @@ function HelpRSEditor() {
             <IconChild className='inline-icon' /> отображение наследованных
           </li>
           <li>
-            <span style={{ backgroundColor: colors.bgSelected }}>текущая конституента</span>
+            <span style={{ backgroundColor: APP_COLORS.bgSelected }}>текущая конституента</span>
           </li>
           <li>
-            <span style={{ backgroundColor: colors.bgGreen50 }}>
+            <span style={{ backgroundColor: APP_COLORS.bgGreen50 }}>
               <LinkTopic text='основа' topic={HelpTopic.CC_RELATIONS} /> текущей
             </span>
           </li>
           <li>
-            <span style={{ backgroundColor: colors.bgOrange50 }}>
+            <span style={{ backgroundColor: APP_COLORS.bgOrange50 }}>
               <LinkTopic text='порожденные' topic={HelpTopic.CC_RELATIONS} /> текущей
             </span>
           </li>

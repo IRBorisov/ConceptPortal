@@ -1,7 +1,6 @@
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
+import { APP_COLORS } from '@/styling/color';
 
 function HelpFormulaTree() {
-  const { colors } = useConceptOptions();
   return (
     <div>
       <h1>Дерево разбора выражения</h1>
@@ -13,22 +12,22 @@ function HelpFormulaTree() {
 
       <h2>Виды узлов</h2>
       <li>
-        <span style={{ backgroundColor: colors.bgGreen }}>объявление идентификатора</span>
+        <span style={{ backgroundColor: APP_COLORS.bgGreen }}>объявление идентификатора</span>
       </li>
       <li>
-        <span style={{ backgroundColor: colors.bgTeal }}>глобальный идентификатор</span>
+        <span style={{ backgroundColor: APP_COLORS.bgTeal }}>глобальный идентификатор</span>
       </li>
       <li>
-        <span style={{ backgroundColor: colors.bgOrange }}>логическое выражение</span>
+        <span style={{ backgroundColor: APP_COLORS.bgOrange }}>логическое выражение</span>
       </li>
       <li>
-        <span style={{ backgroundColor: colors.bgBlue }}>типизированное выражение</span>
+        <span style={{ backgroundColor: APP_COLORS.bgBlue }}>типизированное выражение</span>
       </li>
       <li>
-        <span style={{ backgroundColor: colors.bgRed }}>присвоение и итерация</span>
+        <span style={{ backgroundColor: APP_COLORS.bgRed }}>присвоение и итерация</span>
       </li>
       <li>
-        <span style={{ backgroundColor: colors.bgDisabled }}>составные выражения</span>
+        <span style={{ backgroundColor: APP_COLORS.bgDisabled }}>составные выражения</span>
       </li>
     </div>
   );

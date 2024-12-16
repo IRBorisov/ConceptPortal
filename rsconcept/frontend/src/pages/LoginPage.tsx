@@ -96,7 +96,7 @@ export default LoginPage;
 function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
     return (
-      <div className='text-sm select-text clr-text-red'>
+      <div className='text-sm select-text text-warn-600'>
         На Портале отсутствует такое сочетание имени пользователя и пароля
       </div>
     );

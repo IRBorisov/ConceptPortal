@@ -130,7 +130,7 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
         <ValueIcon
           dense
           disabled
-          icon={<IconDateUpdate size='1.25rem' className='clr-text-green' />}
+          icon={<IconDateUpdate size='1.25rem' className='text-ok-600' />}
           value={new Date(item.time_update).toLocaleString(intl.locale)}
           title='Дата обновления'
         />
@@ -138,7 +138,7 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
         <ValueIcon
           dense
           disabled
-          icon={<IconDateCreate size='1.25rem' className='clr-text-green' />}
+          icon={<IconDateCreate size='1.25rem' className='text-ok-600' />}
           value={new Date(item.time_create).toLocaleString(intl.locale, {
             year: '2-digit',
             month: '2-digit',

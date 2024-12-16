@@ -4,11 +4,11 @@ import { useIntl } from 'react-intl';
 
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
 import SearchBar from '@/components/ui/SearchBar';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useLibrary } from '@/context/LibraryContext';
 import useDropdown from '@/hooks/useDropdown';
 import { ILibraryItem, LibraryItemID, LibraryItemType } from '@/models/library';
 import { matchLibraryItem } from '@/models/libraryAPI';
+import { APP_COLORS } from '@/styling/color';
 import { prefixes } from '@/utils/constants';
 
 import { IconClose, IconFolderTree } from '../Icons';
@@ -45,7 +45,6 @@ function PickSchema({
   ...restProps
 }: PickSchemaProps) {
   const intl = useIntl();
-  const { colors } = useConceptOptions();
   const { folders } = useLibrary();
 
   const [filterText, setFilterText] = useState(initialFilter);
@@ -99,7 +98,7 @@ function PickSchema({
   const conditionalRowStyles: IConditionalStyle<ILibraryItem>[] = [
     {
       when: (item: ILibraryItem) => item.id === value,
-      style: { backgroundColor: colors.bgSelected }
+      style: { backgroundColor: APP_COLORS.bgSelected }
     }
   ];
 

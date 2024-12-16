@@ -4,8 +4,8 @@ import { useCallback } from 'react';
 
 import { IconGraphInputs, IconGraphOutputs, IconReset } from '@/components/Icons';
 import MiniButton from '@/components/ui/MiniButton';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { IConstituenta } from '@/models/rsform';
+import { APP_COLORS } from '@/styling/color';
 
 import { useRSEdit } from '../RSEditContext';
 
@@ -27,7 +27,6 @@ function ToolbarFocusedCst({
   toggleShowInputs,
   toggleShowOutputs
 }: ToolbarFocusedCstProps) {
-  const { colors } = useConceptOptions();
   const controller = useRSEdit();
 
   const resetSelection = useCallback(() => {
@@ -37,7 +36,7 @@ function ToolbarFocusedCst({
 
   return (
     <div className='items-center cc-icons'>
-      <div className='w-[7.8rem] text-right select-none' style={{ color: colors.fgPurple }}>
+      <div className='w-[7.8rem] text-right select-none' style={{ color: APP_COLORS.fgPurple }}>
         Фокус
         <b className='px-1'> {center.alias} </b>
       </div>

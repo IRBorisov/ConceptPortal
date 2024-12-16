@@ -69,7 +69,7 @@ function CheckboxTristate({
           'border rounded-sm',
           {
             'clr-primary': value !== false,
-            'clr-app': value === false
+            'bg-app-100': value === false
           }
         )}
       >

@@ -150,7 +150,7 @@ export function tripleToggleColor(value: boolean | undefined): string {
   if (value === undefined) {
     return 'clr-text-controls';
   }
-  return value ? 'clr-text-green' : 'clr-text-red';
+  return value ? 'text-ok-600' : 'text-warn-600';
 }
 
 /**

@@ -21,11 +21,10 @@ import {
 } from '@/components/Icons';
 import Divider from '@/components/ui/Divider';
 import LinkTopic from '@/components/ui/LinkTopic';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { HelpTopic } from '@/models/miscellaneous';
+import { APP_COLORS } from '@/styling/color';
 
 function HelpRSGraphTerm() {
-  const { colors } = useConceptOptions();
   return (
     <div className='flex flex-col'>
       <h1>Граф термов</h1>
@@ -50,7 +49,7 @@ function HelpRSGraphTerm() {
           <h1>Изменение узлов</h1>
           <li>Клик на конституенту – выделение</li>
           <li>
-            Alt + клик – выбор <span style={{ color: colors.fgPurple }}>фокус-конституенты</span>
+            Alt + клик – выбор <span style={{ color: APP_COLORS.fgPurple }}>фокус-конституенты</span>
           </li>
           <li>
             <IconReset className='inline-icon' /> Esc – сбросить выделение

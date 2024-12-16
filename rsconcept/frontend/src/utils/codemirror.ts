@@ -14,8 +14,8 @@ import { parseEntityReference, parseGrammemes, parseSyntacticReference } from '@
 import { IConstituenta } from '@/models/rsform';
 import { isBasicConcept } from '@/models/rsformAPI';
 import { SyntaxTree } from '@/models/rslang';
+import { APP_COLORS, colorFgGrammeme } from '@/styling/color';
 
-import { colorFgGrammeme, IColorTheme } from '../styling/color';
 import { PARAMETER } from './constants';
 import { describeConstituentaTerm, labelCstTypification, labelGrammeme } from './labels';
 
@@ -295,7 +295,6 @@ export function domTooltipConstituenta(cst?: IConstituenta, canClick?: boolean):
 export function domTooltipEntityReference(
   ref: IEntityReference,
   cst: IConstituenta | undefined,
-  colors: IColorTheme,
   canClick?: boolean
 ): TooltipView {
   const dom = document.createElement('div');
@@ -329,10 +328,10 @@ export function domTooltipEntityReference(
       'text-sm text-center whitespace-nowrap'
     );
     gram.style.borderWidth = '1px';
-    gram.style.borderColor = colorFgGrammeme(gramStr, colors);
-    gram.style.color = colorFgGrammeme(gramStr, colors);
+    gram.style.borderColor = colorFgGrammeme(gramStr);
+    gram.style.color = colorFgGrammeme(gramStr);
     gram.style.fontWeight = '600';
-    gram.style.backgroundColor = colors.bgInput;
+    gram.style.backgroundColor = APP_COLORS.bgInput;
     gram.innerText = labelGrammeme(gramStr);
     grams.appendChild(gram);
   });

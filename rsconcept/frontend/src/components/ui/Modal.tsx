@@ -95,14 +95,14 @@ function Modal({
     <div className='fixed top-0 left-0 w-full h-full z-modal cursor-default'>
       <div className={clsx('z-navigation', 'fixed top-0 left-0', 'w-full h-full', 'cc-modal-blur')} />
       <div
-        className={clsx('z-navigation', 'fixed top-0 left-0', 'w-full h-full', 'cc-modal-backdrop')}
+        className={clsx('z-navigation', 'fixed top-0 left-0', 'w-full h-full', 'cc-modal-backdrop opacity-30')}
         onClick={hideWindow}
       />
       <div
         className={clsx(
           'cc-animate-modal',
           'z-modal absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2',
-          'border rounded-xl clr-app'
+          'border rounded-xl bg-app-100'
         )}
       >
         <Overlay position='right-2 top-2'>

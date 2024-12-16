@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
 import { CstClass, IConstituenta } from '@/models/rsform';
-import { colorFgCstStatus, IColorTheme } from '@/styling/color';
+import { APP_COLORS, colorFgCstStatus } from '@/styling/color';
 
 import { CProps } from '../props';
 import TooltipConstituenta from './TooltipConstituenta';
@@ -12,15 +12,12 @@ interface BadgeConstituentaProps extends CProps.Styling {
 
   /** Constituenta to display. */
   value: IConstituenta;
-
-  /** Color theme to use. */
-  theme: IColorTheme;
 }
 
 /**
  * Displays a badge with a constituenta alias and information tooltip.
  */
-function BadgeConstituenta({ value, prefixID, className, style, theme }: BadgeConstituentaProps) {
+function BadgeConstituenta({ value, prefixID, className, style }: BadgeConstituentaProps) {
   return (
     <div
       id={`${prefixID}${value.id}`}
@@ -33,9 +30,9 @@ function BadgeConstituenta({ value, prefixID, className, style, theme }: BadgeCo
         className
       )}
       style={{
-        borderColor: colorFgCstStatus(value.status, theme),
-        color: colorFgCstStatus(value.status, theme),
-        backgroundColor: value.cst_class === CstClass.BASIC ? theme.bgGreen25 : theme.bgInput,
+        borderColor: colorFgCstStatus(value.status),
+        color: colorFgCstStatus(value.status),
+        backgroundColor: value.cst_class === CstClass.BASIC ? APP_COLORS.bgGreen25 : APP_COLORS.bgInput,
         ...style
       }}
     >

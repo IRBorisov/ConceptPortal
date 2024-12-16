@@ -2,9 +2,8 @@
 
 import { Handle, Position } from 'reactflow';
 
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { ISyntaxTreeNode } from '@/models/rslang';
-import { colorBgSyntaxTree } from '@/styling/color';
+import { APP_COLORS, colorBgSyntaxTree } from '@/styling/color';
 import { labelSyntaxTree } from '@/utils/labels';
 
 const FONT_SIZE_MAX = 14;
@@ -25,7 +24,6 @@ interface ASTNodeInternal {
 }
 
 function ASTNode(node: ASTNodeInternal) {
-  const { colors } = useConceptOptions();
   const label = labelSyntaxTree(node.data);
 
   return (
@@ -33,7 +31,7 @@ function ASTNode(node: ASTNodeInternal) {
       <Handle type='target' position={Position.Top} style={{ opacity: 0 }} />
       <div
         className='w-full h-full cursor-default flex items-center justify-center rounded-full'
-        style={{ backgroundColor: colorBgSyntaxTree(node.data, colors) }}
+        style={{ backgroundColor: colorBgSyntaxTree(node.data) }}
       />
       <Handle type='source' position={Position.Bottom} style={{ opacity: 0 }} />
       <div
@@ -45,7 +43,7 @@ function ASTNode(node: ASTNodeInternal) {
           aria-hidden='true'
           style={{
             WebkitTextStrokeWidth: 2,
-            WebkitTextStrokeColor: colors.bgDefault
+            WebkitTextStrokeColor: APP_COLORS.bgDefault
           }}
         >
           {label}

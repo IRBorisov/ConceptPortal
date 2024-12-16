@@ -18,6 +18,7 @@ import { useUsers } from '@/context/UsersContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ILibraryItem, LibraryItemType } from '@/models/library';
+import { APP_COLORS } from '@/styling/color';
 import { storage } from '@/utils/constants';
 
 interface TableLibraryItemsProps {
@@ -33,10 +34,14 @@ function TableLibraryItems({ items, resetQuery, folderMode, toggleFolderMode }: 
   const router = useConceptNavigation();
   const intl = useIntl();
   const { getUserLabel } = useUsers();
-  const { calculateHeight, colors } = useConceptOptions();
+  const { calculateHeight } = useConceptOptions();
   const [itemsPerPage, setItemsPerPage] = useLocalStorage<number>(storage.libraryPagination, 50);
 
   function handleOpenItem(item: ILibraryItem, event: CProps.EventMouse) {
+    const selection = window.getSelection();
+    if (!!selection && selection.toString().length > 0) {
+      return;
+    }
     if (item.item_type === LibraryItemType.RSFORM) {
       router.push(urls.schema(item.id), event.ctrlKey || event.metaKey);
     } else if (item.item_type === LibraryItemType.OSS) {
@@ -141,7 +146,7 @@ function TableLibraryItems({ items, resetQuery, folderMode, toggleFolderMode }: 
     {
       when: (item: ILibraryItem) => item.item_type === LibraryItemType.OSS,
       style: {
-        color: colors.fgGreen
+        color: APP_COLORS.fgGreen
       }
     }
   ];

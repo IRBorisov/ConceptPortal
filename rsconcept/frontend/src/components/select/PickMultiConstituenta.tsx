@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
 import DataTable, { createColumnHelper, RowSelectionState } from '@/components/ui/DataTable';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { Graph } from '@/models/Graph';
 import { CstMatchMode } from '@/models/miscellaneous';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
@@ -44,7 +43,6 @@ function PickMultiConstituenta({
   className,
   ...restProps
 }: PickMultiConstituentaProps) {
-  const { colors } = useConceptOptions();
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [filtered, setFiltered] = useState<IConstituenta[]>(data);
   const [filterText, setFilterText] = useState('');
@@ -111,7 +109,7 @@ function PickMultiConstituenta({
       id: 'alias',
       header: () => <span className='pl-3'>Имя</span>,
       size: 65,
-      cell: props => <BadgeConstituenta theme={colors} value={props.row.original} prefixID={prefixID} />
+      cell: props => <BadgeConstituenta value={props.row.original} prefixID={prefixID} />
     }),
     columnHelper.accessor(cst => describeConstituenta(cst), {
       id: 'description',

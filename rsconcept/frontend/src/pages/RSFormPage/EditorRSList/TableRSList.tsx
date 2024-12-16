@@ -9,7 +9,6 @@ import DataTable, { createColumnHelper, RowSelectionState, VisibilityState } fro
 import NoData from '@/components/ui/NoData';
 import TextContent from '@/components/ui/TextContent';
 import TextURL from '@/components/ui/TextURL';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { PARAMETER, prefixes } from '@/utils/constants';
@@ -46,7 +45,6 @@ function TableRSList({
   onEdit,
   onCreateNew
 }: TableRSListProps) {
-  const { colors } = useConceptOptions();
   const windowSize = useWindowSize();
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -78,7 +76,7 @@ function TableRSList({
       size: 65,
       minSize: 65,
       maxSize: 65,
-      cell: props => <BadgeConstituenta theme={colors} value={props.row.original} prefixID={prefixes.cst_list} />
+      cell: props => <BadgeConstituenta value={props.row.original} prefixID={prefixes.cst_list} />
     }),
     columnHelper.accessor(cst => labelCstTypification(cst), {
       id: 'type',

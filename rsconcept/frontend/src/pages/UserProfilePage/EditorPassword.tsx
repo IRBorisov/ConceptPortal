@@ -24,7 +24,7 @@ function EditorPassword() {
   const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
 
   const passwordColor =
-    !!newPassword && !!newPasswordRepeat && newPassword !== newPasswordRepeat ? 'clr-warning' : 'clr-input';
+    !!newPassword && !!newPasswordRepeat && newPassword !== newPasswordRepeat ? 'bg-warn-100' : 'clr-input';
 
   const canSubmit = !!oldPassword && !!newPassword && !!newPasswordRepeat && newPassword === newPasswordRepeat;
 
@@ -99,7 +99,7 @@ export default EditorPassword;
 // ====== Internals =========
 function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
-    return <div className='text-sm select-text clr-text-red'>Неверно введен старый пароль</div>;
+    return <div className='text-sm select-text text-warn-600'>Неверно введен старый пароль</div>;
   } else {
     return <InfoError error={error} />;
   }

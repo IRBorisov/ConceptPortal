@@ -20,52 +20,98 @@
   --duration-modal: 300ms;
   --duration-fade: 300ms;
   --duration-select: 100ms;
+}
 
-  /* Light Theme */
-  --cl-bg-120:      hsl(000, 000%, 100%);
-  --cl-bg-100:      hsl(000, 000%, 098%);
-  --cl-bg-80:       hsl(000, 000%, 094%);
-  --cl-bg-60:       hsl(000, 000%, 091%);
-  --cl-bg-40:       hsl(000, 000%, 080%);
+/* Light Theme */
+/* prettier-ignore */
+:not(.dark):root {
+  --clr-app-0:      hsl(000, 000%, 100%);
+  --clr-app-100:    hsl(000, 000%, 098%);
+  --clr-app-200:    hsl(000, 000%, 094%);
+  --clr-app-300:    hsl(000, 000%, 091%);
+  --clr-app-400:    hsl(000, 000%, 080%);
+  --clr-app-600:    hsl(000, 000%, 065%);
+  --clr-app-800:    hsl(000, 000%, 047%);
+  --clr-app-999:    hsl(000, 000%, 000%);
 
-  --cl-fg-60:       hsl(000, 000%, 065%);
-  --cl-fg-80:       hsl(000, 000%, 047%);
-  --cl-fg-100:      hsl(000, 000%, 000%);
+  --clr-prim-100:   hsl(220, 100%, 050%);
+  --clr-prim-200:   hsl(220, 100%, 060%);
+  --clr-prim-300:   hsl(220, 100%, 070%);
+  --clr-prim-400:   hsl(220, 100%, 080%);
+  --clr-prim-600:   hsl(220, 080%, 092%);
+  --clr-prim-800:   hsl(190, 080%, 094%);
+  --clr-prim-999:   hsl(000, 000%, 100%);
 
-  --cl-prim-bg-100: hsl(220, 100%, 060%);
-  --cl-prim-bg-80:  hsl(220, 080%, 092%);
-  --cl-prim-bg-60:  hsl(190, 080%, 094%);
+  --clr-warn-100:   hsl(000, 100%, 095%);
+  --clr-warn-600:   hsl(000, 072%, 051%);
 
-  --cl-prim-fg-80:  hsl(220, 100%, 050%);
-  --cl-prim-fg-100: hsl(000, 000%, 100%);
+  --clr-ok-600:     hsl(120, 080%, 37%);
 
-  --cl-red-bg-100:  hsl(000, 100%, 095%);
-  --cl-red-fg-100:  hsl(000, 072%, 051%);
-  --cl-green-fg-100: hsl(120, 080%, 37%);
+  --clr-select-node:hsl(162, 082%, 051%);
 
-  --cl-teal-bg-100: hsl(162, 082%, 051%);
+  /* Highlight accents */
+  --acc-bg-red:     hsl(000, 100%, 089%);
+  --acc-bg-green:   hsl(100, 100%, 075%);
+  --acc-bg-blue:    hsl(235, 080%, 087%);
+  --acc-bg-purple:  hsl(274, 089%, 081%);
+  --acc-bg-teal:    hsl(192, 089%, 081%);
+  --acc-bg-orange:  hsl(028, 100%, 075%);
 
-  /* Dark Theme */
-  --cd-bg-120:      hsl(000, 000%, 005%);
-  --cd-bg-100:      hsl(000, 000%, 009%);
-  --cd-bg-80:       hsl(000, 000%, 015%);
-  --cd-bg-60:       hsl(000, 000%, 022%);
-  --cd-bg-40:       hsl(000, 000%, 035%);
+  --acc-bg-green25: hsl(100, 100%, 096%);
+  --acc-bg-green50: hsl(100, 100%, 090%);
+  --acc-bg-orange50:hsl(028, 100%, 090%);
+  
+  --acc-fg-red:     hsl(000, 090%, 045%);
+  --acc-fg-green:   hsl(100, 090%, 035%);
+  --acc-fg-blue:    hsl(235, 100%, 050%);
+  --acc-fg-purple:  hsl(270, 100%, 055%);
+  --acc-fg-teal:    hsl(200, 080%, 050%);
+  --acc-fg-orange:  hsl(028, 100%, 050%);
+}
 
-  --cd-fg-60:       hsl(000, 000%, 055%);
-  --cd-fg-80:       hsl(000, 000%, 080%);
-  --cd-fg-100:      hsl(000, 000%, 093%);
+/* Dark Theme */
+/* prettier-ignore */
+.dark:root {
+  --clr-app-0:      hsl(000, 000%, 005%);
+  --clr-app-100:    hsl(000, 000%, 009%);
+  --clr-app-200:    hsl(000, 000%, 015%);
+  --clr-app-300:    hsl(000, 000%, 022%);
+  --clr-app-400:    hsl(000, 000%, 035%);
+  --clr-app-600:    hsl(000, 000%, 055%);
+  --clr-app-800:    hsl(000, 000%, 080%);
+  --clr-app-999:    hsl(000, 000%, 093%);
 
-  --cd-prim-bg-100: hsl(267, 050%, 050%);
-  --cd-prim-bg-80: hsl(267, 050%, 032%);
-  --cd-prim-bg-60: hsl(269, 030%, 028%);
+  --clr-prim-100:   hsl(267, 070%, 070%);
+  --clr-prim-200:   hsl(267, 050%, 060%);
+  --clr-prim-300:   hsl(267, 050%, 050%);
+  --clr-prim-400:   hsl(267, 050%, 040%);
+  --clr-prim-600:   hsl(267, 050%, 032%);
+  --clr-prim-800:   hsl(269, 030%, 028%);
+  --clr-prim-999:   hsl(000, 000%, 100%);
 
-  --cd-prim-fg-80: hsl(267, 070%, 070%);
-  --cd-prim-fg-100: hsl(000, 000%, 100%);
+  --clr-warn-100:   hsl(000, 100%, 015%);
+  --clr-warn-600:   hsl(000, 080%, 055%);
 
-  --cd-red-bg-100: hsl(000, 100%, 015%);
-  --cd-red-fg-100: hsl(000, 080%, 055%);
-  --cd-green-fg-100: hsl(120, 080%, 042%);
+  --clr-ok-600:     hsl(120, 080%, 042%);
 
-  --cd-teal-bg-100: hsl(162, 082%, 041%);
+  --clr-select-node:hsl(162, 082%, 041%);
+
+  /* Highlight accents */
+  --acc-bg-red:     hsl(000, 080%, 037%);
+  --acc-bg-green:   hsl(100, 080%, 025%);
+  --acc-bg-blue:    hsl(235, 054%, 049%);
+  --acc-bg-purple:  hsl(270, 080%, 050%);
+  --acc-bg-teal:    hsl(192, 080%, 030%);
+  --acc-bg-orange:  hsl(035, 100%, 035%);
+
+  --acc-bg-green25: hsl(100, 080%, 009%);
+  --acc-bg-green50: hsl(100, 080%, 017%);
+  --acc-bg-orange50:hsl(035, 100%, 016%);
+
+  --acc-fg-red:     hsl(000, 080%, 045%);
+  --acc-fg-green:   hsl(100, 080%, 035%);
+  --acc-fg-blue:    hsl(235, 100%, 080%);
+  --acc-fg-purple:  hsl(270, 100%, 080%);
+  --acc-fg-teal:    hsl(192, 100%, 045%);
+  --acc-fg-orange:  hsl(035, 100%, 050%);
 }

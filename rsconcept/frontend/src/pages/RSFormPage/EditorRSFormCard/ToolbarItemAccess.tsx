@@ -46,7 +46,7 @@ function ToolbarItemAccess({ visible, toggleVisible, readOnly, toggleReadOnly, c
             readOnly ? (
               <IconImmutable size='1.25rem' className='clr-text-primary' />
             ) : (
-              <IconMutable size='1.25rem' className='clr-text-green' />
+              <IconMutable size='1.25rem' className='text-ok-600' />
             )
           }
           onClick={toggleReadOnly}

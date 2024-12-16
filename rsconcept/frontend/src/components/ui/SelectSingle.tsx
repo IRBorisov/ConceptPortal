@@ -9,9 +9,8 @@ import Select, {
   StylesConfig
 } from 'react-select';
 
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import useWindowSize from '@/hooks/useWindowSize';
-import { selectDarkT, selectLightT } from '@/styling/color';
+import { APP_COLORS, SELECT_THEME } from '@/styling/color';
 
 import { IconClose, IconDropArrow, IconDropArrowUp } from '../Icons';
 
@@ -53,9 +52,7 @@ function SelectSingle<Option, Group extends GroupBase<Option> = GroupBase<Option
   noBorder,
   ...restProps
 }: SelectSingleProps<Option, Group>) {
-  const { darkMode, colors } = useConceptOptions();
   const size = useWindowSize();
-  const themeColors = !darkMode ? selectLightT : selectDarkT;
 
   const adjustedStyles: StylesConfig<Option, false, Group> = {
     container: defaultStyles => ({
@@ -82,10 +79,10 @@ function SelectSingle<Option, Group extends GroupBase<Option> = GroupBase<Option
       padding: '0.25rem 0.75rem',
       fontSize: '0.875rem',
       lineHeight: '1.25rem',
-      backgroundColor: isSelected ? colors.bgSelected : defaultStyles.backgroundColor,
-      color: isSelected ? colors.fgSelected : defaultStyles.color,
+      backgroundColor: isSelected ? APP_COLORS.bgSelected : defaultStyles.backgroundColor,
+      color: isSelected ? APP_COLORS.fgSelected : defaultStyles.color,
       borderWidth: '1px',
-      borderColor: colors.border
+      borderColor: APP_COLORS.border
     }),
     input: defaultStyles => ({ ...defaultStyles }),
     placeholder: defaultStyles => ({ ...defaultStyles }),
@@ -117,7 +114,7 @@ function SelectSingle<Option, Group extends GroupBase<Option> = GroupBase<Option
         },
         colors: {
           ...theme.colors,
-          ...themeColors
+          ...SELECT_THEME
         }
       })}
       menuPortalTarget={!noPortal ? document.body : null}

@@ -13,6 +13,7 @@ import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { ConstituentaID, IRSForm } from '@/models/rsform';
 import { generateAlias, getCstTypePrefix, guessCstType } from '@/models/rsformAPI';
 import { extractGlobals } from '@/models/rslangAPI';
+import { APP_COLORS } from '@/styling/color';
 
 import { ccBracketMatching } from './bracketMatching';
 import { rsNavigation } from './clickNavigation';
@@ -63,7 +64,7 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
     },
     ref
   ) => {
-    const { darkMode, colors } = useConceptOptions();
+    const { darkMode } = useConceptOptions();
 
     const internalRef = useRef<ReactCodeMirrorRef>(null);
     const thisRef = !ref || typeof ref === 'function' ? internalRef : ref;
@@ -73,27 +74,27 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
       theme: darkMode ? 'dark' : 'light',
       settings: {
         fontFamily: 'inherit',
-        background: !disabled ? colors.bgInput : colors.bgDefault,
-        foreground: colors.fgDefault,
-        selection: colors.bgHover,
-        caret: colors.fgDefault
+        background: !disabled ? APP_COLORS.bgInput : APP_COLORS.bgDefault,
+        foreground: APP_COLORS.fgDefault,
+        selection: APP_COLORS.bgHover,
+        caret: APP_COLORS.fgDefault
       },
       styles: [
-        { tag: tags.name, color: colors.fgPurple, cursor: schema ? 'default' : cursor }, // GlobalID
-        { tag: tags.variableName, color: colors.fgGreen }, // LocalID
-        { tag: tags.propertyName, color: colors.fgTeal }, // Radical
-        { tag: tags.keyword, color: colors.fgBlue }, // keywords
-        { tag: tags.literal, color: colors.fgBlue }, // literals
+        { tag: tags.name, color: APP_COLORS.fgPurple, cursor: schema ? 'default' : cursor }, // GlobalID
+        { tag: tags.variableName, color: APP_COLORS.fgGreen }, // LocalID
+        { tag: tags.propertyName, color: APP_COLORS.fgTeal }, // Radical
+        { tag: tags.keyword, color: APP_COLORS.fgBlue }, // keywords
+        { tag: tags.literal, color: APP_COLORS.fgBlue }, // literals
         { tag: tags.controlKeyword, fontWeight: '400' }, // R | I | D
         { tag: tags.unit, fontSize: '0.75rem' }, // indices
-        { tag: tags.brace, color: colors.fgPurple, fontWeight: '600' } // braces (curly brackets)
+        { tag: tags.brace, color: APP_COLORS.fgPurple, fontWeight: '600' } // braces (curly brackets)
       ]
     });
 
     const editorExtensions = [
       EditorView.lineWrapping,
       RSLanguage,
-      ccBracketMatching(darkMode),
+      ccBracketMatching(),
       ...(!schema || !onOpenEdit ? [] : [rsNavigation(schema, onOpenEdit)]),
       ...(noTooltip || !schema ? [] : [rsHoverTooltip(schema, onOpenEdit !== undefined)])
     ];

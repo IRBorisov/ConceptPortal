@@ -1,6 +1,5 @@
 import { IconHelp } from '@/components/Icons';
 import Tooltip from '@/components/ui/Tooltip';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useLibrary } from '@/context/LibraryContext';
 import { LibraryItemID } from '@/models/library';
 import { IRSForm } from '@/models/rsform';
@@ -12,7 +11,6 @@ interface SchemasGuideProps {
 }
 
 function SchemasGuide({ schema }: SchemasGuideProps) {
-  const { colors } = useConceptOptions();
   const library = useLibrary();
 
   const schemas = (() => {
@@ -51,7 +49,7 @@ function SchemasGuide({ schema }: SchemasGuideProps) {
         <div>
           <span
             className='min-w-[0.6rem] min-h-[0.6rem] border inline-block mr-1 rounded-full'
-            style={{ backgroundColor: colorBgSchemas(0, colors) }}
+            style={{ backgroundColor: colorBgSchemas(0) }}
           />
           Текущая схема
         </div>
@@ -59,7 +57,7 @@ function SchemasGuide({ schema }: SchemasGuideProps) {
           <div key={`${prefixes.schemas_list}${index}`}>
             <span
               className='min-w-[0.6rem] min-h-[0.6rem] border inline-block mr-1 rounded-full'
-              style={{ backgroundColor: colorBgSchemas(index + 1, colors) }}
+              style={{ backgroundColor: colorBgSchemas(index + 1) }}
             />
             {alias}
           </div>

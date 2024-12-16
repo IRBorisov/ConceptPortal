@@ -25,7 +25,7 @@ function PasswordChangePage() {
   const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
 
   const passwordColor =
-    !!newPassword && !!newPasswordRepeat && newPassword !== newPasswordRepeat ? 'clr-warning' : 'clr-input';
+    !!newPassword && !!newPasswordRepeat && newPassword !== newPasswordRepeat ? 'bg-warn-100' : 'clr-input';
 
   const canSubmit = !!newPassword && !!newPasswordRepeat && newPassword === newPasswordRepeat;
 
@@ -102,7 +102,7 @@ export default PasswordChangePage;
 // ====== Internals =========
 function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 404) {
-    return <div className='mx-auto mt-6 text-sm select-text clr-text-red'>Данная ссылка не действительна</div>;
+    return <div className='mx-auto mt-6 text-sm select-text text-warn-600'>Данная ссылка не действительна</div>;
   } else {
     return <InfoError error={error} />;
   }

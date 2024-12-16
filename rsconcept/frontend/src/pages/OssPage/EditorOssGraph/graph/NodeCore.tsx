@@ -28,7 +28,7 @@ function NodeCore({ node }: NodeCoreProps) {
         <Indicator
           noPadding
           title={hasFile ? 'Связанная КС' : 'Нет связанной КС'}
-          icon={<IconRSForm className={hasFile ? 'clr-text-green' : 'clr-text-red'} size='12px' />}
+          icon={<IconRSForm className={hasFile ? 'text-ok-600' : 'text-warn-600'} size='12px' />}
           hideTitle={!controller.showTooltip}
         />
         {node.data.operation.is_consolidation ? (

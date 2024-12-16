@@ -12,7 +12,7 @@ import useLocalStorage from '@/hooks/useLocalStorage';
 import useWindowSize from '@/hooks/useWindowSize';
 import { GraphColoring } from '@/models/miscellaneous';
 import { ConstituentaID, IRSForm } from '@/models/rsform';
-import { colorBgGraphNode } from '@/styling/color';
+import { APP_COLORS, colorBgGraphNode } from '@/styling/color';
 import { PARAMETER, prefixes, storage } from '@/utils/constants';
 
 interface ViewHiddenProps {
@@ -27,7 +27,7 @@ interface ViewHiddenProps {
 }
 
 function ViewHidden({ items, selected, toggleSelection, setFocus, schema, coloringScheme, onEdit }: ViewHiddenProps) {
-  const { colors, calculateHeight } = useConceptOptions();
+  const { calculateHeight } = useConceptOptions();
   const windowSize = useWindowSize();
   const localSelected = items.filter(id => selected.includes(id));
   const [isFolded, setIsFolded] = useLocalStorage(storage.rsgraphFoldHidden, false);
@@ -96,12 +96,12 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
                 id={id}
                 className='min-w-[3rem] rounded-md text-center select-none'
                 style={{
-                  backgroundColor: colorBgGraphNode(cst, adjustedColoring, colors),
+                  backgroundColor: colorBgGraphNode(cst, adjustedColoring),
                   ...(localSelected.includes(cstID)
                     ? {
                         outlineWidth: '2px',
                         outlineStyle: cst.is_inherited ? 'dashed' : 'solid',
-                        outlineColor: colors.fgDefault
+                        outlineColor: APP_COLORS.fgDefault
                       }
                     : {})
                 }}

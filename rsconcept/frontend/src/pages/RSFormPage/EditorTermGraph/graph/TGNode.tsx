@@ -2,7 +2,7 @@
 
 import { Handle, Position } from 'reactflow';
 
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
+import { APP_COLORS } from '@/styling/color';
 import { truncateToLastWord } from '@/utils/utils';
 
 const MAX_DESCRIPTION_LENGTH = 65;
@@ -32,7 +32,6 @@ interface TGNodeInternal {
 }
 
 function TGNode(node: TGNodeInternal) {
-  const { colors } = useConceptOptions();
   const description = truncateToLastWord(node.data.description, MAX_DESCRIPTION_LENGTH);
 
   return (
@@ -41,7 +40,7 @@ function TGNode(node: TGNodeInternal) {
       <div
         className='w-full h-full cursor-default flex items-center justify-center rounded-full'
         style={{
-          backgroundColor: !node.selected ? node.data.fill : colors.bgActiveSelection,
+          backgroundColor: !node.selected ? node.data.fill : APP_COLORS.bgActiveSelection,
           fontSize: node.data.label.length > LABEL_THRESHOLD ? FONT_SIZE_MED : FONT_SIZE_MAX
         }}
       >
@@ -49,7 +48,7 @@ function TGNode(node: TGNodeInternal) {
           style={{
             fontWeight: 600,
             WebkitTextStrokeWidth: '0.6px',
-            WebkitTextStrokeColor: colors.bgDefault
+            WebkitTextStrokeColor: APP_COLORS.bgDefault
           }}
         >
           {node.data.label}
@@ -68,7 +67,7 @@ function TGNode(node: TGNodeInternal) {
             aria-hidden='true'
             style={{
               WebkitTextStrokeWidth: '3px',
-              WebkitTextStrokeColor: colors.bgDefault
+              WebkitTextStrokeColor: APP_COLORS.bgDefault
             }}
           >
             {description}

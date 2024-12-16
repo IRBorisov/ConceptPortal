@@ -64,7 +64,7 @@ function PaginationTools<TData>({
         <input
           id={id ? `${id}__page` : undefined}
           title='Номер страницы. Выделите для ручного ввода'
-          className='w-6 text-center clr-app'
+          className='w-6 text-center bg-app-100'
           value={table.getState().pagination.pageIndex + 1}
           onChange={event => {
             const page = event.target.value ? Number(event.target.value) - 1 : 0;
@@ -94,7 +94,7 @@ function PaginationTools<TData>({
         id={id ? `${id}__per_page` : undefined}
         value={table.getState().pagination.pageSize}
         onChange={handlePaginationOptionsChange}
-        className='mx-2 cursor-pointer clr-app'
+        className='mx-2 cursor-pointer bg-app-100'
       >
         {paginationOptions.map(pageSize => (
           <option key={`${prefixes.page_size}${pageSize}`} value={pageSize}>

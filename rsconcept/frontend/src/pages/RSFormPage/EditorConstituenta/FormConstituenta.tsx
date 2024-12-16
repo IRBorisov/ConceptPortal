@@ -186,7 +186,7 @@ function FormConstituenta({
             readOnly
             label='Типизация'
             value={typification}
-            colors='clr-app clr-text-default cursor-default'
+            colors='bg-transparent clr-text-default cursor-default'
           />
         ) : null}
         {state ? (
@@ -252,7 +252,7 @@ function FormConstituenta({
                 id='cst_disable_comment'
                 type='button'
                 tabIndex={-1}
-                className='self-start cc-label clr-text-url hover:underline'
+                className='self-start cc-label text-prim-100 hover:underline'
                 onClick={() => setForceComment(true)}
               >
                 Добавить комментарий

@@ -13,6 +13,7 @@ import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import DlgEditReference from '@/dialogs/DlgEditReference';
 import { ReferenceType } from '@/models/language';
 import { ConstituentaID, IRSForm } from '@/models/rsform';
+import { APP_COLORS } from '@/styling/color';
 import { CodeMirrorWrapper } from '@/utils/codemirror';
 import { PARAMETER } from '@/utils/constants';
 
@@ -91,7 +92,7 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
     },
     ref
   ) => {
-    const { darkMode, colors } = useConceptOptions();
+    const { darkMode } = useConceptOptions();
 
     const [isFocused, setIsFocused] = useState(false);
 
@@ -110,15 +111,15 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
       theme: darkMode ? 'dark' : 'light',
       settings: {
         fontFamily: 'inherit',
-        background: !disabled ? colors.bgInput : colors.bgDefault,
-        foreground: colors.fgDefault,
-        selection: colors.bgHover,
-        caret: colors.fgDefault
+        background: !disabled ? APP_COLORS.bgInput : APP_COLORS.bgDefault,
+        foreground: APP_COLORS.fgDefault,
+        selection: APP_COLORS.bgHover,
+        caret: APP_COLORS.fgDefault
       },
       styles: [
-        { tag: tags.name, color: colors.fgPurple, cursor: 'default' }, // EntityReference
-        { tag: tags.literal, color: colors.fgTeal, cursor: 'default' }, // SyntacticReference
-        { tag: tags.comment, color: colors.fgRed } // Error
+        { tag: tags.name, color: APP_COLORS.fgPurple, cursor: 'default' }, // EntityReference
+        { tag: tags.literal, color: APP_COLORS.fgTeal, cursor: 'default' }, // SyntacticReference
+        { tag: tags.comment, color: APP_COLORS.fgRed } // Error
       ]
     });
 
@@ -127,7 +128,7 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
       EditorView.contentAttributes.of({ spellcheck: 'true' }),
       NaturalLanguage,
       ...(!schema || !onOpenEdit ? [] : [refsNavigation(schema, onOpenEdit)]),
-      ...(schema ? [refsHoverTooltip(schema, colors, onOpenEdit !== undefined)] : [])
+      ...(schema ? [refsHoverTooltip(schema, onOpenEdit !== undefined)] : [])
     ];
 
     function handleChange(newValue: string) {

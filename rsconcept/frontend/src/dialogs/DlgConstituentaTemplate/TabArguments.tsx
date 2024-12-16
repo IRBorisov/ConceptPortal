@@ -10,9 +10,9 @@ import PickConstituenta from '@/components/select/PickConstituenta';
 import DataTable, { IConditionalStyle } from '@/components/ui/DataTable';
 import MiniButton from '@/components/ui/MiniButton';
 import NoData from '@/components/ui/NoData';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { IConstituenta, IRSForm } from '@/models/rsform';
 import { IArgumentValue } from '@/models/rslang';
+import { APP_COLORS } from '@/styling/color';
 import { prefixes } from '@/utils/constants';
 
 interface TabArgumentsProps {
@@ -29,8 +29,6 @@ export interface IArgumentsState {
 const argumentsHelper = createColumnHelper<IArgumentValue>();
 
 function TabArguments({ state, schema, partialUpdate }: TabArgumentsProps) {
-  const { colors } = useConceptOptions();
-
   const [selectedCst, setSelectedCst] = useState<IConstituenta | undefined>(undefined);
   const [selectedArgument, setSelectedArgument] = useState<IArgumentValue | undefined>(undefined);
   const [argumentValue, setArgumentValue] = useState('');
@@ -124,7 +122,7 @@ function TabArguments({ state, schema, partialUpdate }: TabArgumentsProps) {
   const conditionalRowStyles: IConditionalStyle<IArgumentValue>[] = [
     {
       when: (arg: IArgumentValue) => arg.alias === selectedArgument?.alias,
-      style: { backgroundColor: colors.bgSelected }
+      style: { backgroundColor: APP_COLORS.bgSelected }
     }
   ];
 

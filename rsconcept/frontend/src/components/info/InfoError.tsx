@@ -63,8 +63,7 @@ function InfoError({ error }: InfoErrorProps) {
         'cc-fade-in',
         'min-w-[25rem]',
         'px-3 py-2 flex flex-col',
-        'clr-text-red',
-        'text-sm font-semibold',
+        'text-warn-600 text-sm font-semibold',
         'select-text'
       )}
     >

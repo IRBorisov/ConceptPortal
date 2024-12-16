@@ -30,7 +30,7 @@ import useLocalStorage from '@/hooks/useLocalStorage';
 import { GraphColoring, GraphFilterParams } from '@/models/miscellaneous';
 import { ConstituentaID, CstType, IConstituenta } from '@/models/rsform';
 import { isBasicConcept } from '@/models/rsformAPI';
-import { colorBgGraphNode } from '@/styling/color';
+import { APP_COLORS, colorBgGraphNode } from '@/styling/color';
 import { PARAMETER, storage } from '@/utils/constants';
 import { errors } from '@/utils/labels';
 
@@ -53,7 +53,7 @@ interface TGFlowProps {
 }
 
 function TGFlow({ onOpenEdit }: TGFlowProps) {
-  const { colors, mainHeight } = useConceptOptions();
+  const { mainHeight } = useConceptOptions();
   const controller = useRSEdit();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
@@ -137,7 +137,7 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
           selected: controller.selected.includes(node.id),
           position: { x: 0, y: 0 },
           data: {
-            fill: focusCst === cst ? colors.bgPurple : colorBgGraphNode(cst, coloring, colors),
+            fill: focusCst === cst ? APP_COLORS.bgPurple : colorBgGraphNode(cst, coloring),
             label: cst.alias,
             description: !filterParams.noText ? cst.term_resolved : ''
           }
@@ -179,13 +179,12 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
     filterParams.noText,
     controller.selected,
     focusCst,
-    coloring,
-    colors
+    coloring
   ]);
 
   useEffect(() => {
     setNeedReset(true);
-  }, [controller.schema, filterParams.noText, focusCst, coloring, colors, flow.viewportInitialized]);
+  }, [controller.schema, filterParams.noText, focusCst, coloring, flow.viewportInitialized]);
 
   useEffect(() => {
     if (!controller.schema || !needReset || !flow.viewportInitialized) {
@@ -240,7 +239,7 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
     const nodesBounds = getNodesBounds(nodes);
     const viewport = getViewportForBounds(nodesBounds, imageWidth, imageHeight, ZOOM_MIN, ZOOM_MAX);
     toPng(canvas, {
-      backgroundColor: colors.bgDefault,
+      backgroundColor: APP_COLORS.bgDefault,
       width: imageWidth,
       height: imageHeight,
       style: {

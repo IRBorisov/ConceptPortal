@@ -55,7 +55,7 @@ function RSFormStats({ stats, isArchive }: RSFormStatsProps) {
       <ValueStats
         className='col-start-1'
         id='count_ok'
-        icon={<IconStatusOK size='1.25rem' className='clr-text-green' />}
+        icon={<IconStatusOK size='1.25rem' className='text-ok-600' />}
         value={stats.count_all - stats.count_errors - stats.count_property - stats.count_incalculable}
         title='Корректные'
       />
@@ -67,13 +67,13 @@ function RSFormStats({ stats, isArchive }: RSFormStatsProps) {
       />
       <ValueStats
         id='count_incalculable'
-        icon={<IconStatusIncalculable size='1.25rem' className='clr-text-red' />}
+        icon={<IconStatusIncalculable size='1.25rem' className='text-warn-600' />}
         value={stats.count_incalculable}
         title='Невычислимые'
       />
       <ValueStats
         id='count_errors'
-        icon={<IconStatusError size='1.25rem' className='clr-text-red' />}
+        icon={<IconStatusError size='1.25rem' className='text-warn-600' />}
         value={stats.count_errors}
         title='Некорректные'
       />

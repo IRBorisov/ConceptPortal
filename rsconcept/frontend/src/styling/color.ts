@@ -9,221 +9,93 @@ import { ISyntaxTreeNode, TokenID } from '@/models/rslang';
 import { TMGraphNode } from '@/models/TMGraph';
 import { PARAMETER } from '@/utils/constants';
 
-/**
- * Represents application color theme configuration.
- */
-export interface IColorTheme {
-  bgDefault: string;
-  bgBlur: string;
-  bgInput: string;
-  bgControls: string;
-  bgDisabled: string;
-  bgPrimary: string;
-  bgSelected: string;
-  bgActiveSelection: string;
-  bgHover: string;
-  bgWarning: string;
+/** Semantic colors for application. */
+// prettier-ignore
+export const APP_COLORS = {
+  bgDefault:          'var(--clr-app-100)',
+  bgInput:            'var(--clr-app-0)', 
+  bgControls:         'var(--clr-app-200)',
+  bgDisabled:         'var(--clr-app-300)',
+  bgPrimary:          'var(--clr-prim-200)',
+  bgSelected:         'var(--clr-prim-600)',
+  bgActiveSelection:  'var(--clr-select-node)',
+  bgHover:            'var(--clr-prim-800)',
+  bgWarning:          'var(--clr-warn-100)',
+  
+  border:             'var(--clr-app-400)',
 
-  border: string;
+  fgDefault:          'var(--clr-app-999)',
+  fgSelected:         'var(--clr-app-999)', 
+  fgDisabled:         'var(--clr-app-800)',
+  fgWarning:          'var(--clr-warn-600)',
 
-  fgDefault: string;
-  fgSelected: string;
-  fgDisabled: string;
-  fgWarning: string;
+  bgRed:              'var(--acc-bg-red)',
+  bgGreen:            'var(--acc-bg-green)',
+  bgBlue:             'var(--acc-bg-blue)',
+  bgPurple:           'var(--acc-bg-purple)',
+  bgTeal:             'var(--acc-bg-teal)',
+  bgOrange:           'var(--acc-bg-orange)',
 
-  // Highlight syntax accents
-  bgRed: string;
-  bgGreen: string;
-  bgBlue: string;
-  bgPurple: string;
-  bgTeal: string;
-  bgOrange: string;
+  bgGreen25:          'var(--acc-bg-green25)',
+  bgGreen50:          'var(--acc-bg-green50)',
+  bgOrange50:         'var(--acc-bg-orange50)',
 
-  bgGreen25: string;
-  bgGreen50: string;
-  bgOrange50: string;
-
-  fgRed: string;
-  fgGreen: string;
-  fgBlue: string;
-  fgPurple: string;
-  fgTeal: string;
-  fgOrange: string;
+  fgRed:              'var(--acc-fg-red)',
+  fgGreen:            'var(--acc-fg-green)',
+  fgBlue:             'var(--acc-fg-blue)',
+  fgPurple:           'var(--acc-fg-purple)',
+  fgTeal:             'var(--acc-fg-teal)',
+  fgOrange:           'var(--acc-fg-orange)'
 }
 
 /**
- * Represents application Light theme.
+ * Represents Select component theme.
  */
-// prettier-ignore
-export const lightT: IColorTheme = {
-  bgDefault:  'hsl(000, 000%, 098%)', //var(--cl-bg-100)',
-  bgBlur:     'hsla(000, 000%, 098%, 0.8)',
-  bgInput:    'var(--cl-bg-120)',
-  bgControls: 'var(--cl-bg-80)',
-  bgDisabled: 'var(--cl-bg-60)',
-  bgPrimary:  'var(--cl-prim-bg-100)',
-  bgSelected: 'var(--cl-prim-bg-80)',
-  bgActiveSelection: 'var(--cl-teal-bg-100)',
-  bgHover:    'var(--cl-prim-bg-60)',
-  bgWarning:  'var(--cl-red-bg-100)',
-  
-  border:     'var(--cl-bg-40)',
+export const SELECT_THEME = {
+  primary: APP_COLORS.bgPrimary,
+  primary75: APP_COLORS.bgSelected,
+  primary50: APP_COLORS.bgHover,
+  primary25: APP_COLORS.bgHover,
 
-  fgDefault:  'var(--cl-fg-100)',
-  fgSelected: 'var(--cl-fg-100)',
-  fgDisabled: 'var(--cl-fg-80)',
-  fgWarning:  'var(--cl-red-fg-100)',
+  danger: APP_COLORS.fgWarning,
+  dangerLight: APP_COLORS.bgWarning,
 
-  // Highlight syntax accents
-  bgRed:      'hsl(000, 100%, 089%)',
-  bgGreen:    'hsl(100, 100%, 075%)',
-  bgBlue:     'hsl(235, 080%, 087%)',
-  bgPurple:   'hsl(274, 089%, 081%)',
-  bgTeal:     'hsl(192, 089%, 081%)',
-  bgOrange:   'hsl(028, 100%, 075%)',
-
-  bgGreen25:  'hsl(100, 100%, 096%)',
-  bgGreen50:  'hsl(100, 100%, 090%)',
-  bgOrange50: 'hsl(028, 100%, 090%)',
-
-  fgRed:      'hsl(000, 090%, 045%)',
-  fgGreen:    'hsl(100, 090%, 035%)',
-  fgBlue:     'hsl(235, 100%, 050%)',
-  fgPurple:   'hsl(270, 100%, 055%)',
-  fgTeal:     'hsl(200, 080%, 050%)',
-  fgOrange:   'hsl(030, 090%, 055%)'
+  neutral0: APP_COLORS.bgInput,
+  neutral5: APP_COLORS.bgDefault,
+  neutral10: APP_COLORS.border,
+  neutral20: APP_COLORS.border,
+  neutral30: APP_COLORS.border,
+  neutral40: APP_COLORS.fgDisabled,
+  neutral50: APP_COLORS.fgDisabled, // placeholder
+  neutral60: APP_COLORS.fgDefault,
+  neutral70: APP_COLORS.fgWarning,
+  neutral80: APP_COLORS.fgDefault,
+  neutral90: APP_COLORS.fgWarning
 };
 
 /**
- * Represents application Dark theme.
+ * Represents Brackets highlights theme.
  */
-// prettier-ignore
-export const darkT: IColorTheme = {
-  bgDefault:  'hsl(000, 000%, 005%)', //'var(--cd-bg-100)',
-  bgBlur:     'hsla(000, 000%, 005%, 0.3)',
-  bgInput:    'var(--cd-bg-120)',
-  bgControls: 'var(--cd-bg-80)',
-  bgDisabled: 'var(--cd-bg-60)',
-  bgPrimary:  'var(--cd-prim-bg-100)',
-  bgSelected: 'var(--cd-prim-bg-80)',
-  bgActiveSelection: 'var(--cd-teal-bg-100)',
-  bgHover:    'var(--cd-prim-bg-60)',
-  bgWarning:  'var(--cd-red-bg-100)',
-
-  border:     'var(--cd-bg-40)',
-
-  fgDefault:  'var(--cd-fg-100)',
-  fgSelected: 'var(--cd-fg-100)',
-  fgDisabled: 'var(--cd-fg-80)',
-  fgWarning:  'var(--cd-red-fg-100)',
-
-  // Highlight syntax accents
-  bgRed:      'hsl(000, 080%, 037%)',
-  bgGreen:    'hsl(100, 080%, 025%)',
-  bgBlue:     'hsl(235, 054%, 049%)',
-  bgPurple:   'hsl(270, 080%, 050%)',
-  bgTeal:     'hsl(192, 080%, 030%)',
-  bgOrange:   'hsl(035, 100%, 035%)',
-
-  bgGreen25:  'hsl(100, 080%, 009%)',
-  bgGreen50:  'hsl(100, 080%, 017%)',
-  bgOrange50: 'hsl(035, 100%, 016%)',
-
-  fgRed:      'hsl(000, 080%, 045%)',
-  fgGreen:    'hsl(100, 080%, 035%)',
-  fgBlue:     'hsl(235, 100%, 080%)',
-  fgPurple:   'hsl(270, 100%, 080%)',
-  fgTeal:     'hsl(192, 100%, 045%)',
-  fgOrange:   'hsl(035, 100%, 050%)'
-};
-
-/**
- * Represents Select component Light theme.
- */
-export const selectLightT = {
-  primary: lightT.bgPrimary,
-  primary75: lightT.bgSelected,
-  primary50: lightT.bgHover,
-  primary25: lightT.bgHover,
-
-  danger: lightT.fgWarning,
-  dangerLight: lightT.bgWarning,
-
-  neutral0: lightT.bgInput,
-  neutral5: lightT.bgDefault,
-  neutral10: lightT.border,
-  neutral20: lightT.border,
-  neutral30: lightT.border,
-  neutral40: lightT.fgDisabled,
-  neutral50: lightT.fgDisabled, // placeholder
-  neutral60: lightT.fgDefault,
-  neutral70: lightT.fgWarning,
-  neutral80: lightT.fgDefault,
-  neutral90: lightT.fgWarning
-};
-
-/**
- * Represents Select component Dark theme.
- */
-export const selectDarkT = {
-  primary: darkT.bgPrimary,
-  primary75: darkT.bgSelected,
-  primary50: darkT.bgHover,
-  primary25: darkT.bgHover,
-
-  danger: darkT.fgWarning,
-  dangerLight: darkT.bgWarning,
-
-  neutral0: darkT.bgInput,
-  neutral5: darkT.bgDefault,
-  neutral10: darkT.border,
-  neutral20: darkT.border,
-  neutral30: darkT.border,
-  neutral40: darkT.fgDisabled,
-  neutral50: darkT.fgDisabled, // placeholder
-  neutral60: darkT.fgDefault,
-  neutral70: darkT.fgWarning,
-  neutral80: darkT.fgDefault,
-  neutral90: darkT.fgWarning
-};
-
-/**
- * Represents Brackets highlights Light theme.
- */
-export const bracketsLightT = {
+export const BRACKETS_THEME = {
   '.cc-nonmatchingBracket': {
-    color: lightT.fgRed,
+    color: APP_COLORS.fgRed,
     fontWeight: 600
   },
   '&.cm-focused .cc-matchingBracket': {
-    backgroundColor: lightT.bgSelected,
-    color: lightT.fgSelected
-  }
-};
-
-/**
- * Represents Brackets highlights Dark theme.
- */
-export const bracketsDarkT = {
-  '.cc-nonmatchingBracket': {
-    color: darkT.fgRed,
-    fontWeight: 600
-  },
-  '&.cm-focused .cc-matchingBracket': {
-    backgroundColor: darkT.bgSelected,
-    color: darkT.fgSelected
+    backgroundColor: APP_COLORS.bgSelected,
+    color: APP_COLORS.fgSelected
   }
 };
 
 /**
  * Determines background color for {@link ISyntaxTreeNode} based on its type.
  */
-export function colorBgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): string {
+export function colorBgSyntaxTree(node: ISyntaxTreeNode): string {
   switch (node.typeID) {
     case TokenID.PUNCTUATION_DEFINE:
     case TokenID.PUNCTUATION_STRUCT:
     case TokenID.ID_LOCAL:
-      return colors.bgGreen;
+      return APP_COLORS.bgGreen;
 
     case TokenID.ID_GLOBAL:
     case TokenID.ID_FUNCTION:
@@ -232,7 +104,7 @@ export function colorBgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): s
     case TokenID.LIT_INTEGER:
     case TokenID.LIT_EMPTYSET:
     case TokenID.LIT_WHOLE_NUMBERS:
-      return colors.bgTeal;
+      return APP_COLORS.bgTeal;
 
     case TokenID.QUANTOR_UNIVERSAL:
     case TokenID.QUANTOR_EXISTS:
@@ -252,7 +124,7 @@ export function colorBgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): s
     case TokenID.SUBSET_OR_EQ:
     case TokenID.SUBSET:
     case TokenID.NOT_SUBSET:
-      return colors.bgOrange;
+      return APP_COLORS.bgOrange;
 
     case TokenID.NT_TUPLE:
     case TokenID.NT_ENUMERATION:
@@ -272,7 +144,7 @@ export function colorBgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): s
     case TokenID.CARD:
     case TokenID.BOOL:
     case TokenID.DEBOOL:
-      return colors.bgBlue;
+      return APP_COLORS.bgBlue;
 
     case TokenID.NT_FUNC_DEFINITION:
     case TokenID.NT_DECLARATIVE_EXPR:
@@ -284,17 +156,17 @@ export function colorBgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): s
     case TokenID.NT_FUNC_CALL:
     case TokenID.NT_ARGUMENTS:
     case TokenID.NT_RECURSIVE_SHORT:
-      return colors.bgDisabled;
+      return APP_COLORS.bgDisabled;
 
     case TokenID.ASSIGN:
     case TokenID.ITERATE:
-      return colors.bgRed;
+      return APP_COLORS.bgRed;
   }
 
   switch (node.data.value) {
     case 'Expression':
     case 'Local':
-      return colors.bgGreen;
+      return APP_COLORS.bgGreen;
 
     case 'Global':
     case 'Radical':
@@ -304,7 +176,7 @@ export function colorBgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): s
     case 'Integer':
     case 'EmptySet':
     case 'IntegerSet':
-      return colors.bgTeal;
+      return APP_COLORS.bgTeal;
 
     case 'Logic':
     case 'Logic_predicates':
@@ -331,7 +203,7 @@ export function colorBgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): s
     case 'Function_decl':
     case 'Arguments':
     case 'Declaration':
-      return colors.bgBlue;
+      return APP_COLORS.bgBlue;
 
     case 'BigPr':
     case 'SmallPr':
@@ -342,138 +214,138 @@ export function colorBgSyntaxTree(node: ISyntaxTreeNode, colors: IColorTheme): s
     case 'PrefixD':
     case 'PrefixI':
     case 'PrefixR':
-      return colors.bgPurple;
+      return APP_COLORS.bgPurple;
 
     case PARAMETER.errorNodeLabel:
-      return colors.bgRed;
+      return APP_COLORS.bgRed;
   }
   // node
-  return colors.bgPurple;
+  return APP_COLORS.bgPurple;
 }
 
 /**
  * Determines background color for {@link ExpressionStatus}.
  */
-export function colorBgCstStatus(status: ExpressionStatus, colors: IColorTheme): string {
+export function colorBgCstStatus(status: ExpressionStatus): string {
   // prettier-ignore
   switch (status) {
-    case ExpressionStatus.VERIFIED: return colors.bgGreen;
-    case ExpressionStatus.INCORRECT: return colors.bgRed;
-    case ExpressionStatus.INCALCULABLE: return colors.bgOrange;
-    case ExpressionStatus.PROPERTY: return colors.bgTeal;
-    case ExpressionStatus.UNKNOWN: return colors.bgSelected;
-    case ExpressionStatus.UNDEFINED: return colors.bgBlue;
+    case ExpressionStatus.VERIFIED: return APP_COLORS.bgGreen;
+    case ExpressionStatus.INCORRECT: return APP_COLORS.bgRed;
+    case ExpressionStatus.INCALCULABLE: return APP_COLORS.bgOrange;
+    case ExpressionStatus.PROPERTY: return APP_COLORS.bgTeal;
+    case ExpressionStatus.UNKNOWN: return APP_COLORS.bgSelected;
+    case ExpressionStatus.UNDEFINED: return APP_COLORS.bgBlue;
   }
 }
 
 /**
  * Determines statusbar color for {@link ExpressionStatus}.
  */
-export function colorStatusBar(status: ExpressionStatus, colors: IColorTheme): string {
+export function colorStatusBar(status: ExpressionStatus): string {
   // prettier-ignore
   switch (status) {
-    case ExpressionStatus.VERIFIED: return colors.bgGreen50;
-    case ExpressionStatus.INCORRECT: return colors.bgRed;
-    case ExpressionStatus.INCALCULABLE: return colors.bgOrange;
-    case ExpressionStatus.PROPERTY: return colors.bgTeal;
-    case ExpressionStatus.UNKNOWN: return colors.bgSelected;
-    case ExpressionStatus.UNDEFINED: return colors.bgBlue;
+    case ExpressionStatus.VERIFIED: return APP_COLORS.bgGreen50;
+    case ExpressionStatus.INCORRECT: return APP_COLORS.bgRed;
+    case ExpressionStatus.INCALCULABLE: return APP_COLORS.bgOrange;
+    case ExpressionStatus.PROPERTY: return APP_COLORS.bgTeal;
+    case ExpressionStatus.UNKNOWN: return APP_COLORS.bgSelected;
+    case ExpressionStatus.UNDEFINED: return APP_COLORS.bgBlue;
   }
 }
 
 /**
  * Determines foreground color for {@link ExpressionStatus}.
  */
-export function colorFgCstStatus(status: ExpressionStatus, colors: IColorTheme): string {
+export function colorFgCstStatus(status: ExpressionStatus): string {
   // prettier-ignore
   switch (status) {
-    case ExpressionStatus.VERIFIED: return colors.fgGreen;
-    case ExpressionStatus.INCORRECT: return colors.fgRed;
-    case ExpressionStatus.INCALCULABLE: return colors.fgOrange;
-    case ExpressionStatus.PROPERTY: return colors.fgTeal;
-    case ExpressionStatus.UNKNOWN: return colors.fgBlue;
-    case ExpressionStatus.UNDEFINED: return colors.fgBlue;
+    case ExpressionStatus.VERIFIED: return APP_COLORS.fgGreen;
+    case ExpressionStatus.INCORRECT: return APP_COLORS.fgRed;
+    case ExpressionStatus.INCALCULABLE: return APP_COLORS.fgOrange;
+    case ExpressionStatus.PROPERTY: return APP_COLORS.fgTeal;
+    case ExpressionStatus.UNKNOWN: return APP_COLORS.fgBlue;
+    case ExpressionStatus.UNDEFINED: return APP_COLORS.fgBlue;
   }
 }
 
 /**
  * Determines background color for {@link IConstituenta} depending on its {@link CstClass}.
  */
-export function colorBgCstClass(cstClass: CstClass, colors: IColorTheme): string {
+export function colorBgCstClass(cstClass: CstClass): string {
   // prettier-ignore
   switch (cstClass) {
-    case CstClass.BASIC: return colors.bgGreen;
-    case CstClass.DERIVED: return colors.bgBlue;
-    case CstClass.STATEMENT: return colors.bgRed;
-    case CstClass.TEMPLATE: return colors.bgTeal;
+    case CstClass.BASIC: return APP_COLORS.bgGreen;
+    case CstClass.DERIVED: return APP_COLORS.bgBlue;
+    case CstClass.STATEMENT: return APP_COLORS.bgRed;
+    case CstClass.TEMPLATE: return APP_COLORS.bgTeal;
   }
 }
 
 /**
  * Determines background color for {@link IConstituenta} depending on its parent schema index.
  */
-export function colorBgSchemas(schema_index: number, colors: IColorTheme): string {
+export function colorBgSchemas(schema_index: number): string {
   if (schema_index === 0) {
-    return colors.bgGreen;
+    return APP_COLORS.bgGreen;
   }
   // prettier-ignore
   switch (schema_index % 4) {
-    case 1: return colors.bgPurple;
-    case 2: return colors.bgOrange;
-    case 3: return colors.bgTeal;
-    case 0: return colors.bgBlue;
+    case 1: return APP_COLORS.bgPurple;
+    case 2: return APP_COLORS.bgOrange;
+    case 3: return APP_COLORS.bgTeal;
+    case 0: return APP_COLORS.bgBlue;
   }
-  return colors.bgBlue;
+  return APP_COLORS.bgBlue;
 }
 
 /**
  * Determines background color for {@link GramData}.
  */
-export function colorBgGrammeme(gram: GramData, colors: IColorTheme): string {
+export function colorBgGrammeme(gram: GramData): string {
   if (PartOfSpeech.includes(gram as Grammeme)) {
-    return colors.bgBlue;
+    return APP_COLORS.bgBlue;
   }
   if (NounGrams.includes(gram as Grammeme)) {
-    return colors.bgGreen;
+    return APP_COLORS.bgGreen;
   }
   if (VerbGrams.includes(gram as Grammeme)) {
-    return colors.bgTeal;
+    return APP_COLORS.bgTeal;
   }
-  return colors.bgInput;
+  return APP_COLORS.bgInput;
 }
 
 /**
  * Determines foreground color for {@link GramData}.
  */
-export function colorFgGrammeme(gram: GramData, colors: IColorTheme): string {
+export function colorFgGrammeme(gram: GramData): string {
   if (PartOfSpeech.includes(gram as Grammeme)) {
-    return colors.fgBlue;
+    return APP_COLORS.fgBlue;
   }
   if (NounGrams.includes(gram as Grammeme)) {
-    return colors.fgGreen;
+    return APP_COLORS.fgGreen;
   }
   if (VerbGrams.includes(gram as Grammeme)) {
-    return colors.fgTeal;
+    return APP_COLORS.fgTeal;
   }
   if (!Object.values(Grammeme).includes(gram as Grammeme)) {
-    return colors.fgRed;
+    return APP_COLORS.fgRed;
   } else {
-    return colors.fgPurple;
+    return APP_COLORS.fgPurple;
   }
 }
 
 /**
  * Determines graph color for {@link IConstituenta}.
  */
-export function colorBgGraphNode(cst: IConstituenta, coloringScheme: GraphColoring, colors: IColorTheme): string {
+export function colorBgGraphNode(cst: IConstituenta, coloringScheme: GraphColoring): string {
   if (coloringScheme === 'type') {
-    return colorBgCstClass(cst.cst_class, colors);
+    return colorBgCstClass(cst.cst_class);
   }
   if (coloringScheme === 'status') {
-    return colorBgCstStatus(cst.status, colors);
+    return colorBgCstStatus(cst.status);
   }
   if (coloringScheme === 'schemas') {
-    return colorBgSchemas(cst.parent_schema_index, colors);
+    return colorBgSchemas(cst.parent_schema_index);
   }
   return '';
 }
@@ -481,12 +353,12 @@ export function colorBgGraphNode(cst: IConstituenta, coloringScheme: GraphColori
 /**
  * Determines m-graph color for {@link TMGraphNode}.
  */
-export function colorBgTMGraphNode(node: TMGraphNode, colors: IColorTheme): string {
+export function colorBgTMGraphNode(node: TMGraphNode): string {
   if (node.rank === 0) {
-    return colors.bgControls;
+    return APP_COLORS.bgControls;
   }
   if (node.parents.length === 1) {
-    return colors.bgTeal;
+    return APP_COLORS.bgTeal;
   }
-  return colors.bgOrange;
+  return APP_COLORS.bgOrange;
 }

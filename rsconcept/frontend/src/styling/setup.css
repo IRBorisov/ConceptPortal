@@ -26,7 +26,7 @@ html {
   hanging-punctuation: first last;
   color-scheme: dark light;
 
-  /* interpolate-size: allow-keywords; */
+  interpolate-size: allow-keywords;
 }
 
 body {
@@ -58,15 +58,9 @@ body {
   line-height: var(--line-height);
   font-family: var(--font-main);
 
-  color: var(--cl-fg-100);
-  border-color: var(--cl-bg-40);
-  background-color: var(--cl-bg-100);
-
-  &.dark {
-    color: var(--cd-fg-100);
-    border-color: var(--cd-bg-40);
-    background-color: var(--cd-bg-100);
-  }
+  color: var(--clr-app-999);
+  border-color: var(--clr-app-400);
+  background-color: var(--clr-app-100);
 }
 
 @media only screen and (max-width: 639px) {
@@ -84,23 +78,14 @@ body {
 }
 
 ::selection {
-  background: var(--cl-prim-bg-60);
-  .dark & {
-    background: var(--cd-prim-bg-60);
-  }
+  background: var(--clr-prim-800);
   tr :hover& {
-    background: var(--cl-red-bg-100);
-    .dark & {
-      background: var(--cd-red-bg-100);
-    }
+    background: var(--clr-warn-100);
   }
 }
 
 ::placeholder {
-  color: var(--cl-fg-60);
-  .dark & {
-    color: var(--cd-fg-60);
-  }
+  color: var(--clr-app-600);
 }
 
 /* Wrapping headers */
@@ -120,24 +105,35 @@ li {
   text-wrap: pretty;
 }
 
-div:not(.dense) > p {
-  @apply [&:not(:last-child)]:mb-2;
+div:not(.dense) > p:not(:last-child) {
+  margin-bottom: 0.5rem;
 }
 
 @layer components {
   h1 {
-    @apply text-lg font-semibold text-center;
+    font-weight: 600;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    text-align: center;
   }
 
   h2 {
-    @apply [&:not(:first-child)]:mt-2 font-semibold text-center;
-    [role='manuals'] & {
-      @apply [&:not(:first-child)]:mt-3 mb-2;
+    font-weight: 600;
+    text-align: center;
+
+    &:not(:first-child) {
+      :not([role='manuals']) & {
+        margin-top: 0.5rem;
+      }
+      [role='manuals'] & {
+        margin-top: 0.75rem;
+        margin-bottom: 0.5rem;
+      }
     }
   }
 
   b {
-    @apply font-semibold;
+    font-weight: 600;
   }
 
   code {
@@ -153,7 +149,7 @@ div:not(.dense) > p {
   }
 
   .border {
-    @apply rounded;
+    border-radius: 0.25rem;
   }
 
   .border,
@@ -174,10 +170,9 @@ div:not(.dense) > p {
   .divide-y,
   .divide-x-2,
   .divide-y-2 {
-    border-color: var(--cl-bg-40);
-    @apply divide-inherit;
-    .dark & {
-      border-color: var(--cd-bg-40);
+    border-color: var(--clr-app-400);
+    & > :not([hidden]) ~ :not([hidden]) {
+      border-color: inherit;
     }
   }
 

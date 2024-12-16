@@ -1,17 +1,16 @@
 import { SimpleBezierEdge } from 'reactflow';
 
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { MGraphEdgeInternal } from '@/models/miscellaneous';
+import { APP_COLORS } from '@/styling/color';
 
 function CartesianEdge({ data, ...restProps }: MGraphEdgeInternal) {
-  const { colors } = useConceptOptions();
   return (
     <>
       <SimpleBezierEdge
         {...restProps}
         label={data?.indices.join(', ')}
-        labelBgStyle={{ fill: colors.bgDefault }}
-        labelStyle={{ fill: colors.fgDefault }}
+        labelBgStyle={{ fill: APP_COLORS.bgDefault }}
+        labelStyle={{ fill: APP_COLORS.fgDefault }}
       />
     </>
   );

@@ -1,8 +1,7 @@
 import clsx from 'clsx';
 
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { GramData } from '@/models/language';
-import { colorFgGrammeme } from '@/styling/color';
+import { APP_COLORS, colorFgGrammeme } from '@/styling/color';
 import { labelGrammeme } from '@/utils/labels';
 
 interface BadgeGrammemeProps {
@@ -14,7 +13,6 @@ interface BadgeGrammemeProps {
  * Displays a badge with a grammeme tag.
  */
 function BadgeGrammeme({ grammeme }: BadgeGrammemeProps) {
-  const { colors } = useConceptOptions();
   return (
     <div
       className={clsx(
@@ -24,9 +22,9 @@ function BadgeGrammeme({ grammeme }: BadgeGrammemeProps) {
         'text-sm font-medium text-center whitespace-nowrap'
       )}
       style={{
-        borderColor: colorFgGrammeme(grammeme, colors),
-        color: colorFgGrammeme(grammeme, colors),
-        backgroundColor: colors.bgInput
+        borderColor: colorFgGrammeme(grammeme),
+        color: colorFgGrammeme(grammeme),
+        backgroundColor: APP_COLORS.bgInput
       }}
     >
       {labelGrammeme(grammeme)}

@@ -4,15 +4,12 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 
 import Tooltip from '@/components/ui/Tooltip';
 import useLocalStorage from '@/hooks/useLocalStorage';
-import { darkT, IColorTheme, lightT } from '@/styling/color';
 import { globals, PARAMETER, storage } from '@/utils/constants';
 import { contextOutsideScope } from '@/utils/labels';
 
 interface IOptionsContext {
   viewportHeight: string;
   mainHeight: string;
-
-  colors: IColorTheme;
 
   darkMode: boolean;
   toggleDarkMode: () => void;
@@ -60,8 +57,6 @@ export const OptionsState = ({ children }: React.PropsWithChildren) => {
   const [folderMode, setFolderMode] = useLocalStorage<boolean>(storage.librarySearchFolderMode, true);
   const [location, setLocation] = useLocalStorage<string>(storage.librarySearchLocation, '');
 
-  const [colors, setColors] = useState<IColorTheme>(lightT);
-
   const [noNavigationAnimation, setNoNavigationAnimation] = useState(false);
   const [noFooter, setNoFooter] = useState(false);
   const [showScroll, setShowScroll] = useState(false);
@@ -79,10 +74,6 @@ export const OptionsState = ({ children }: React.PropsWithChildren) => {
   useEffect(() => {
     setDarkClass(darkMode);
   }, [darkMode]);
-
-  useEffect(() => {
-    setColors(darkMode ? darkT : lightT);
-  }, [darkMode, setColors]);
 
   const toggleNoNavigation = useCallback(() => {
     if (noNavigation) {
@@ -109,7 +100,6 @@ export const OptionsState = ({ children }: React.PropsWithChildren) => {
 
   const toggleDarkMode = useCallback(() => {
     setDarkMode(prev => !prev);
-    window.location.reload();
   }, [setDarkMode]);
 
   const mainHeight = useMemo(() => {
@@ -131,7 +121,6 @@ export const OptionsState = ({ children }: React.PropsWithChildren) => {
       value={{
         darkMode,
         adminMode,
-        colors,
         noNavigationAnimation,
         noNavigation,
         noFooter,

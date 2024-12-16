@@ -1,9 +1,8 @@
 import LinkTopic from '@/components/ui/LinkTopic';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { HelpTopic } from '@/models/miscellaneous';
+import { APP_COLORS } from '@/styling/color';
 
 function HelpTypeGraph() {
-  const { colors } = useConceptOptions();
   return (
     <div>
       <h1>Граф ступеней</h1>
@@ -21,13 +20,13 @@ function HelpTypeGraph() {
 
       <h2>Виды узлов</h2>
       <li>
-        <span style={{ backgroundColor: colors.bgControls }}>ступень-основание</span>
+        <span style={{ backgroundColor: APP_COLORS.bgControls }}>ступень-основание</span>
       </li>
       <li>
-        <span style={{ backgroundColor: colors.bgTeal }}>ступень-булеан</span>
+        <span style={{ backgroundColor: APP_COLORS.bgTeal }}>ступень-булеан</span>
       </li>
       <li>
-        <span style={{ backgroundColor: colors.bgOrange }}>ступень декартова произведения</span>
+        <span style={{ backgroundColor: APP_COLORS.bgOrange }}>ступень декартова произведения</span>
       </li>
     </div>
   );

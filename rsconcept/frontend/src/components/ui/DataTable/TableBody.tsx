@@ -71,13 +71,9 @@ function TableBody<TData>({
         <tr
           key={row.id}
           className={clsx(
-            'cc-scroll-row',
+            'cc-scroll-row clr-hover',
             !noHeader && 'scroll-mt-[calc(2px+2rem)]',
-            row.getIsSelected()
-              ? 'clr-selected clr-hover'
-              : index % 2 === 0
-              ? 'clr-controls clr-hover'
-              : 'clr-app clr-hover'
+            row.getIsSelected() ? 'clr-selected' : index % 2 === 0 ? 'clr-controls' : 'bg-app-100'
           )}
           style={{ ...(conditionalRowStyles ? getRowStyles(row) : []) }}
         >

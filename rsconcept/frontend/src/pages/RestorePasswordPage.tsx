@@ -70,7 +70,7 @@ export default RestorePasswordPage;
 function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
     return (
-      <div className='mx-auto mt-6 text-sm select-text clr-text-red'>Данный email не используется на Портале.</div>
+      <div className='mx-auto mt-6 text-sm select-text text-warn-600'>Данный email не используется на Портале.</div>
     );
   } else {
     return <InfoError error={error} />;

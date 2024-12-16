@@ -17,11 +17,10 @@ import {
   IconUserSearch
 } from '@/components/Icons';
 import LinkTopic from '@/components/ui/LinkTopic';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { HelpTopic } from '@/models/miscellaneous';
+import { APP_COLORS } from '@/styling/color';
 
 function HelpLibrary() {
-  const { colors } = useConceptOptions();
   return (
     <div>
       <h1>Библиотека схем</h1>
@@ -33,7 +32,7 @@ function HelpLibrary() {
       </p>
 
       <li>
-        <span style={{ color: colors.fgGreen }}>зеленым текстом</span> выделены ОСС
+        <span style={{ color: APP_COLORS.fgGreen }}>зеленым текстом</span> выделены ОСС
       </li>
       <li>клик по строке - переход к редактированию схемы</li>
       <li>Ctrl + клик по строке откроет схему в новой вкладке</li>

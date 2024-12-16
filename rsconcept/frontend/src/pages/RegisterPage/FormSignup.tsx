@@ -175,16 +175,16 @@ function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
     if ('email' in error.response.data) {
       return (
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        <div className='mx-auto text-sm select-text clr-text-red'>{error.response.data.email}.</div>
+        <div className='mx-auto text-sm select-text text-warn-600'>{error.response.data.email}.</div>
       );
     } else if ('username' in error.response.data) {
       return (
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        <div className='mx-auto text-sm select-text clr-text-red'>{error.response.data.username}.</div>
+        <div className='mx-auto text-sm select-text text-warn-600'>{error.response.data.username}.</div>
       );
     } else {
       return (
-        <div className='mx-auto text-sm select-text clr-text-red'>
+        <div className='mx-auto text-sm select-text text-warn-600'>
           <PrettyJson data={error.response} />
         </div>
       );

@@ -29,7 +29,6 @@ function Navigation() {
       className={clsx(
         'z-navigation', // prettier: split lines
         'sticky top-0 left-0 right-0',
-        'clr-app',
         'select-none'
       )}
     >

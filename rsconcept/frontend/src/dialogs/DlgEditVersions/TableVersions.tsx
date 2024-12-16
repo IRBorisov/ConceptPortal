@@ -6,8 +6,8 @@ import { useIntl } from 'react-intl';
 import { IconRemove } from '@/components/Icons';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
 import MiniButton from '@/components/ui/MiniButton';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { IVersionInfo, VersionID } from '@/models/library';
+import { APP_COLORS } from '@/styling/color';
 
 interface TableVersionsProps {
   processing: boolean;
@@ -21,8 +21,6 @@ const columnHelper = createColumnHelper<IVersionInfo>();
 
 function TableVersions({ processing, items, onDelete, selected, onSelect }: TableVersionsProps) {
   const intl = useIntl();
-  const { colors } = useConceptOptions();
-
   const columns = [
     columnHelper.accessor('version', {
       id: 'version',
@@ -74,7 +72,7 @@ function TableVersions({ processing, items, onDelete, selected, onSelect }: Tabl
     {
       when: (version: IVersionInfo) => version.id === selected,
       style: {
-        backgroundColor: colors.bgSelected
+        backgroundColor: APP_COLORS.bgSelected
       }
     }
   ];

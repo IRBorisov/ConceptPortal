@@ -51,7 +51,7 @@ export function ItemTypeIcon({ value, size = '1.25rem', className }: DomIconProp
     case LibraryItemType.RSFORM:
       return <IconRSForm size={size} className={className ?? 'clr-text-primary'} />;
     case LibraryItemType.OSS:
-      return <IconOSS size={size} className={className ?? 'clr-text-green'} />;
+      return <IconOSS size={size} className={className ?? 'text-ok-600'} />;
   }
 }
 
@@ -59,27 +59,27 @@ export function ItemTypeIcon({ value, size = '1.25rem', className }: DomIconProp
 export function PolicyIcon({ value, size = '1.25rem', className }: DomIconProps<AccessPolicy>) {
   switch (value) {
     case AccessPolicy.PRIVATE:
-      return <IconPrivate size={size} className={className ?? 'clr-text-red'} />;
+      return <IconPrivate size={size} className={className ?? 'text-warn-600'} />;
     case AccessPolicy.PROTECTED:
       return <IconProtected size={size} className={className ?? 'clr-text-primary'} />;
     case AccessPolicy.PUBLIC:
-      return <IconPublic size={size} className={className ?? 'clr-text-green'} />;
+      return <IconPublic size={size} className={className ?? 'text-ok-600'} />;
   }
 }
 
 /** Icon for visibility. */
 export function VisibilityIcon({ value, size = '1.25rem', className }: DomIconProps<boolean>) {
   if (value) {
-    return <IconShow size={size} className={className ?? 'clr-text-green'} />;
+    return <IconShow size={size} className={className ?? 'text-ok-600'} />;
   } else {
-    return <IconHide size={size} className={className ?? 'clr-text-red'} />;
+    return <IconHide size={size} className={className ?? 'text-warn-600'} />;
   }
 }
 
 /** Icon for subfolders. */
 export function SubfoldersIcon({ value, size = '1.25rem', className }: DomIconProps<boolean>) {
   if (value) {
-    return <IconSubfolders size={size} className={className ?? 'clr-text-green'} />;
+    return <IconSubfolders size={size} className={className ?? 'text-ok-600'} />;
   } else {
     return <IconSubfolders size={size} className={className ?? 'clr-text-primary'} />;
   }
@@ -91,11 +91,11 @@ export function LocationIcon({ value, size = '1.25rem', className }: DomIconProp
     case LocationHead.COMMON:
       return <IconPublic size={size} className={className ?? 'clr-text-primary'} />;
     case LocationHead.LIBRARY:
-      return <IconTemplates size={size} className={className ?? 'clr-text-red'} />;
+      return <IconTemplates size={size} className={className ?? 'text-warn-600'} />;
     case LocationHead.PROJECTS:
       return <IconBusiness size={size} className={className ?? 'clr-text-primary'} />;
     case LocationHead.USER:
-      return <IconUser size={size} className={className ?? 'clr-text-green'} />;
+      return <IconUser size={size} className={className ?? 'text-ok-600'} />;
   }
 }
 
@@ -153,21 +153,21 @@ export function StatusIcon({ value, size = '1.25rem', className }: DomIconProps<
 export function CstTypeIcon({ value, size = '1.25rem', className }: DomIconProps<CstType>) {
   switch (value) {
     case CstType.BASE:
-      return <IconCstBaseSet size={size} className={className ?? 'clr-text-green'} />;
+      return <IconCstBaseSet size={size} className={className ?? 'text-ok-600'} />;
     case CstType.CONSTANT:
-      return <IconCstConstSet size={size} className={className ?? 'clr-text-green'} />;
+      return <IconCstConstSet size={size} className={className ?? 'text-ok-600'} />;
     case CstType.STRUCTURED:
-      return <IconCstStructured size={size} className={className ?? 'clr-text-green'} />;
+      return <IconCstStructured size={size} className={className ?? 'text-ok-600'} />;
     case CstType.TERM:
       return <IconCstTerm size={size} className={className ?? 'clr-text-primary'} />;
     case CstType.AXIOM:
-      return <IconCstAxiom size={size} className={className ?? 'clr-text-red'} />;
+      return <IconCstAxiom size={size} className={className ?? 'text-warn-600'} />;
     case CstType.FUNCTION:
       return <IconCstFunction size={size} className={className ?? 'clr-text-primary'} />;
     case CstType.PREDICATE:
-      return <IconCstPredicate size={size} className={className ?? 'clr-text-red'} />;
+      return <IconCstPredicate size={size} className={className ?? 'text-warn-600'} />;
     case CstType.THEOREM:
-      return <IconCstTheorem size={size} className={className ?? 'clr-text-red'} />;
+      return <IconCstTheorem size={size} className={className ?? 'text-warn-600'} />;
   }
 }
 

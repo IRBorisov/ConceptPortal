@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { ExpressionStatus } from '@/models/rsform';
 import { colorBgCstStatus } from '@/styling/color';
 import { prefixes } from '@/utils/constants';
@@ -11,8 +10,6 @@ interface InfoCstStatusProps {
 }
 
 function InfoCstStatus({ title }: InfoCstStatusProps) {
-  const { colors } = useConceptOptions();
-
   return (
     <div className='flex flex-col gap-1 mb-2 dense'>
       {title ? <h1>{title}</h1> : null}
@@ -28,7 +25,7 @@ function InfoCstStatus({ title }: InfoCstStatusProps) {
                 'border',
                 'text-center text-sm font-controls'
               )}
-              style={{ backgroundColor: colorBgCstStatus(status, colors) }}
+              style={{ backgroundColor: colorBgCstStatus(status) }}
             >
               {labelExpressionStatus(status)}
             </span>
