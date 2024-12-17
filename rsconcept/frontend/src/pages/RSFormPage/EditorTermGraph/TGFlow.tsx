@@ -393,18 +393,21 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
           position='top-[4.4rem] sm:top-[4.1rem] left-[0.5rem] sm:left-[0.65rem]'
         />
 
-        {!isDragging && hoverCst && hoverCstDebounced && hoverCst === hoverCstDebounced ? (
+        {hoverCstDebounced ? (
           <Overlay
             layer='z-tooltip'
             position={clsx('top-[3.5rem]', { 'left-[2.6rem]': hoverLeft, 'right-[2.6rem]': !hoverLeft })}
             className={clsx(
               'w-[25rem] max-h-[calc(100dvh-15rem)]',
               'px-3',
-              'cc-scroll-y',
+              'cc-scroll-y cc-fade-in',
               'border shadow-md',
-              'clr-input',
+              'clr-input cc-fade-in',
               'text-sm'
             )}
+            style={{
+              opacity: !isDragging && hoverCst && hoverCst === hoverCstDebounced ? 1 : 0
+            }}
           >
             <InfoConstituenta className='pt-1 pb-2' data={hoverCstDebounced} />
           </Overlay>
