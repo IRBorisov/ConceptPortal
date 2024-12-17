@@ -72,7 +72,8 @@ export class RSFormLoader {
     });
     const inherit_children = new Set(this.schema.inheritance.map(item => item.child));
     const inherit_parents = new Set(this.schema.inheritance.map(item => item.parent));
-    this.graph.topologicalOrder().forEach(cstID => {
+    const order = this.graph.topologicalOrder();
+    order.forEach(cstID => {
       const cst = this.cstByID.get(cstID)!;
       cst.status = inferStatus(cst.parse.status, cst.parse.valueClass);
       cst.is_template = inferTemplate(cst.definition_formal);
@@ -84,10 +85,12 @@ export class RSFormLoader {
       cst.is_inherited = inherit_children.has(cst.id);
       cst.has_inherited_children = inherit_parents.has(cst.id);
       cst.is_simple_expression = this.inferSimpleExpression(cst);
-      if (!cst.is_simple_expression || cst.cst_type === CstType.STRUCTURED) {
-        return;
+      if (cst.is_simple_expression && cst.cst_type !== CstType.STRUCTURED) {
+        cst.spawner = this.inferParent(cst);
       }
-      cst.spawner = this.inferParent(cst);
+    });
+    order.forEach(cstID => {
+      const cst = this.cstByID.get(cstID)!;
       if (cst.spawner) {
         const parent = this.cstByID.get(cst.spawner)!;
         cst.spawner_alias = parent.alias;
