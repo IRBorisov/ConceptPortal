@@ -35,7 +35,7 @@ function MiniButton({
       tabIndex={tabIndex ?? -1}
       className={clsx(
         'rounded-lg',
-        'clr-btn-clear',
+        'clr-text-controls cc-animate-color',
         'cursor-pointer disabled:cursor-auto',
         {
           'px-1 py-1': !noPadding,

@@ -9,7 +9,7 @@ function DropdownCheckbox({ setValue, disabled, ...restProps }: CheckboxProps) {
       className={clsx(
         'px-3 py-1',
         'text-left overflow-ellipsis whitespace-nowrap',
-        'disabled:clr-text-controls',
+        'disabled:clr-text-controls cc-animate-color',
         !!setValue && !disabled && 'clr-hover'
       )}
     >

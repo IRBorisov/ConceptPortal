@@ -33,7 +33,7 @@ function RSLocalButton({
         'w-[1.7rem] sm:w-[2rem] h-5 sm:h-6',
         'cursor-pointer disabled:cursor-default',
         'rounded-none',
-        'clr-hover clr-btn-clear',
+        'clr-hover clr-text-controls cc-animate-color',
         'font-math',
         className
       )}

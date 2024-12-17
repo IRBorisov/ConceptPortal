@@ -21,7 +21,7 @@ function ToggleNavigation() {
       data-tooltip-id={globals.tooltip}
       data-tooltip-content={noNavigationAnimation ? 'Показать навигацию' : 'Скрыть навигацию'}
       style={{
-        transitionProperty: 'height, width',
+        transitionProperty: 'height, width, background-color',
         transitionDuration: `${PARAMETER.moveDuration}ms`,
         height: noNavigationAnimation ? '1.2rem' : '3rem',
         width: noNavigationAnimation ? '3rem' : '1.2rem'

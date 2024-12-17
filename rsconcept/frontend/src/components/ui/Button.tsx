@@ -43,6 +43,7 @@ function Button({
       className={clsx(
         'inline-flex gap-2 items-center justify-center',
         'select-none disabled:cursor-auto',
+        'cc-animate-color',
         {
           'border rounded': !noBorder,
           'px-1': dense,

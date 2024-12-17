@@ -41,6 +41,7 @@ function SelectorButton({
         'text-sm font-controls select-none',
         'text-btn clr-text-controls',
         'disabled:cursor-auto cursor-pointer',
+        'cc-animate-color',
         {
           'clr-hover': transparent,
           'border': !transparent

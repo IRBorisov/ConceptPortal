@@ -59,7 +59,7 @@ function SelectLocation({ value, folderTree, dense, prefix, onClick, className, 
               !dense && 'min-h-[2.0825rem] sm:min-h-[2.3125rem]',
               'pr-3 py-1 flex items-center gap-2',
               'cc-scroll-row',
-              'clr-hover',
+              'clr-hover cc-animate-color',
               'cursor-pointer',
               'leading-3 sm:leading-4',
               activeNode === item && 'clr-selected'

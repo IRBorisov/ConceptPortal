@@ -24,7 +24,7 @@ function SubmitButton({ text = 'ОК', icon, disabled, loading, className, ...re
         'px-3 py-1 flex gap-2 items-center justify-center',
         'border',
         'font-medium',
-        'clr-btn-primary',
+        'clr-btn-primary cc-animate-color',
         'select-none disabled:cursor-auto',
         loading && 'cursor-progress',
         className

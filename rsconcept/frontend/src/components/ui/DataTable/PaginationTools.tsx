@@ -47,7 +47,7 @@ function PaginationTools<TData>({
       <div className='flex'>
         <button
           type='button'
-          className='clr-hover clr-text-controls'
+          className='clr-hover clr-text-controls cc-animate-color'
           onClick={() => table.setPageIndex(0)}
           disabled={!table.getCanPreviousPage()}
         >
@@ -55,7 +55,7 @@ function PaginationTools<TData>({
         </button>
         <button
           type='button'
-          className='clr-hover clr-text-controls'
+          className='clr-hover clr-text-controls cc-animate-color'
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
@@ -75,7 +75,7 @@ function PaginationTools<TData>({
         />
         <button
           type='button'
-          className='clr-hover clr-text-controls'
+          className='clr-hover clr-text-controls cc-animate-color'
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
@@ -83,7 +83,7 @@ function PaginationTools<TData>({
         </button>
         <button
           type='button'
-          className='clr-hover clr-text-controls'
+          className='clr-hover clr-text-controls cc-animate-color'
           onClick={() => table.setPageIndex(table.getPageCount() - 1)}
           disabled={!table.getCanNextPage()}
         >

@@ -19,7 +19,7 @@ function Indicator({ icon, title, titleHtml, hideTitle, noPadding, className, ..
   return (
     <div
       className={clsx(
-        'clr-btn-clear',
+        'clr-text-controls',
         'outline-none',
         {
           'px-1 py-1': !noPadding

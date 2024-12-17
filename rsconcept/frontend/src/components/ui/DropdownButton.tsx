@@ -39,6 +39,7 @@ function DropdownButton({
         'px-3 py-1 inline-flex items-center gap-2',
         'text-left text-sm overflow-ellipsis whitespace-nowrap',
         'disabled:clr-text-controls',
+        'cc-animate-color',
         {
           'clr-hover': onClick,
           'cursor-pointer disabled:cursor-auto': onClick,

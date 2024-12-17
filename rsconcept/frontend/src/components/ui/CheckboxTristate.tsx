@@ -67,8 +67,9 @@ function CheckboxTristate({
         className={clsx(
           'w-4 h-4', // prettier: split lines
           'border rounded-sm',
+          'cc-animate-color',
           {
-            'clr-primary': value !== false,
+            'bg-sec-600 text-sec-0': value !== false,
             'bg-prim-100': value === false
           }
         )}

@@ -31,7 +31,7 @@ function NavigationButton({
       className={clsx(
         'mr-1 h-full', // prettier: split lines
         'flex items-center gap-1',
-        'clr-btn-nav',
+        'clr-btn-nav cc-animate-color',
         'rounded-xl',
         'transition duration-500',
         'font-controls whitespace-nowrap',

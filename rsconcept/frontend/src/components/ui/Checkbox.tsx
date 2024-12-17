@@ -65,9 +65,10 @@ function Checkbox({
       <div
         className={clsx(
           'max-w-[1rem] min-w-[1rem] h-4', // prettier: split lines
-          'border rounded-sm',
+          'border rounded-sm ',
+          'cc-animate-color',
           {
-            'clr-primary': value !== false,
+            'bg-sec-600 text-sec-0': value !== false,
             'bg-prim-100': value === false
           }
         )}

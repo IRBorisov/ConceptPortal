@@ -22,7 +22,7 @@ function RSTokenButton({ token, disabled, onInsert }: RSTokenButtonProps) {
         'h-5 sm:h-6',
         'px-1',
         'outline-none',
-        'clr-hover clr-btn-clear',
+        'clr-hover clr-text-controls cc-animate-color',
         'font-math',
         'cursor-pointer disabled:cursor-default',
         {
