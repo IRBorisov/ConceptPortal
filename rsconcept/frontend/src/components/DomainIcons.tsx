@@ -49,7 +49,7 @@ export interface DomIconProps<RequestData> extends IconProps {
 export function ItemTypeIcon({ value, size = '1.25rem', className }: DomIconProps<LibraryItemType>) {
   switch (value) {
     case LibraryItemType.RSFORM:
-      return <IconRSForm size={size} className={className ?? 'clr-text-primary'} />;
+      return <IconRSForm size={size} className={className ?? 'text-sec-600'} />;
     case LibraryItemType.OSS:
       return <IconOSS size={size} className={className ?? 'text-ok-600'} />;
   }
@@ -61,7 +61,7 @@ export function PolicyIcon({ value, size = '1.25rem', className }: DomIconProps<
     case AccessPolicy.PRIVATE:
       return <IconPrivate size={size} className={className ?? 'text-warn-600'} />;
     case AccessPolicy.PROTECTED:
-      return <IconProtected size={size} className={className ?? 'clr-text-primary'} />;
+      return <IconProtected size={size} className={className ?? 'text-sec-600'} />;
     case AccessPolicy.PUBLIC:
       return <IconPublic size={size} className={className ?? 'text-ok-600'} />;
   }
@@ -81,7 +81,7 @@ export function SubfoldersIcon({ value, size = '1.25rem', className }: DomIconPr
   if (value) {
     return <IconSubfolders size={size} className={className ?? 'text-ok-600'} />;
   } else {
-    return <IconSubfolders size={size} className={className ?? 'clr-text-primary'} />;
+    return <IconSubfolders size={size} className={className ?? 'text-sec-600'} />;
   }
 }
 
@@ -89,11 +89,11 @@ export function SubfoldersIcon({ value, size = '1.25rem', className }: DomIconPr
 export function LocationIcon({ value, size = '1.25rem', className }: DomIconProps<string>) {
   switch (value.substring(0, 2) as LocationHead) {
     case LocationHead.COMMON:
-      return <IconPublic size={size} className={className ?? 'clr-text-primary'} />;
+      return <IconPublic size={size} className={className ?? 'text-sec-600'} />;
     case LocationHead.LIBRARY:
       return <IconTemplates size={size} className={className ?? 'text-warn-600'} />;
     case LocationHead.PROJECTS:
-      return <IconBusiness size={size} className={className ?? 'clr-text-primary'} />;
+      return <IconBusiness size={size} className={className ?? 'text-sec-600'} />;
     case LocationHead.USER:
       return <IconUser size={size} className={className ?? 'text-ok-600'} />;
   }
@@ -105,13 +105,13 @@ export function DependencyIcon({ value, size = '1.25rem', className }: DomIconPr
     case DependencyMode.ALL:
       return <IconSettings size={size} className={className} />;
     case DependencyMode.OUTPUTS:
-      return <IconGraphOutputs size={size} className={className ?? 'clr-text-primary'} />;
+      return <IconGraphOutputs size={size} className={className ?? 'text-sec-600'} />;
     case DependencyMode.INPUTS:
-      return <IconGraphInputs size={size} className={className ?? 'clr-text-primary'} />;
+      return <IconGraphInputs size={size} className={className ?? 'text-sec-600'} />;
     case DependencyMode.EXPAND_OUTPUTS:
-      return <IconGraphExpand size={size} className={className ?? 'clr-text-primary'} />;
+      return <IconGraphExpand size={size} className={className ?? 'text-sec-600'} />;
     case DependencyMode.EXPAND_INPUTS:
-      return <IconGraphCollapse size={size} className={className ?? 'clr-text-primary'} />;
+      return <IconGraphCollapse size={size} className={className ?? 'text-sec-600'} />;
   }
 }
 
@@ -121,13 +121,13 @@ export function MatchModeIcon({ value, size = '1.25rem', className }: DomIconPro
     case CstMatchMode.ALL:
       return <IconFilter size={size} className={className} />;
     case CstMatchMode.TEXT:
-      return <IconText size={size} className={className ?? 'clr-text-primary'} />;
+      return <IconText size={size} className={className ?? 'text-sec-600'} />;
     case CstMatchMode.EXPR:
-      return <IconFormula size={size} className={className ?? 'clr-text-primary'} />;
+      return <IconFormula size={size} className={className ?? 'text-sec-600'} />;
     case CstMatchMode.TERM:
-      return <IconTerm size={size} className={className ?? 'clr-text-primary'} />;
+      return <IconTerm size={size} className={className ?? 'text-sec-600'} />;
     case CstMatchMode.NAME:
-      return <IconAlias size={size} className={className ?? 'clr-text-primary'} />;
+      return <IconAlias size={size} className={className ?? 'text-sec-600'} />;
   }
 }
 
@@ -159,11 +159,11 @@ export function CstTypeIcon({ value, size = '1.25rem', className }: DomIconProps
     case CstType.STRUCTURED:
       return <IconCstStructured size={size} className={className ?? 'text-ok-600'} />;
     case CstType.TERM:
-      return <IconCstTerm size={size} className={className ?? 'clr-text-primary'} />;
+      return <IconCstTerm size={size} className={className ?? 'text-sec-600'} />;
     case CstType.AXIOM:
       return <IconCstAxiom size={size} className={className ?? 'text-warn-600'} />;
     case CstType.FUNCTION:
-      return <IconCstFunction size={size} className={className ?? 'clr-text-primary'} />;
+      return <IconCstFunction size={size} className={className ?? 'text-sec-600'} />;
     case CstType.PREDICATE:
       return <IconCstPredicate size={size} className={className ?? 'text-warn-600'} />;
     case CstType.THEOREM:
@@ -174,8 +174,8 @@ export function CstTypeIcon({ value, size = '1.25rem', className }: DomIconProps
 /** Icon for relocation direction. */
 export function RelocateUpIcon({ value, size = '1.25rem', className }: DomIconProps<boolean>) {
   if (value) {
-    return <IconMoveUp size={size} className={className ?? 'clr-text-primary'} />;
+    return <IconMoveUp size={size} className={className ?? 'text-sec-600'} />;
   } else {
-    return <IconMoveDown size={size} className={className ?? 'clr-text-primary'} />;
+    return <IconMoveDown size={size} className={className ?? 'text-sec-600'} />;
   }
 }

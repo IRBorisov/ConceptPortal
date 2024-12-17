@@ -9,17 +9,8 @@ export default {
       transparent: 'transparent',
       current: 'currentColor',
       inherit: 'inherit',
-      app: {
-        0: 'var(--clr-app-0)',
-        100: 'var(--clr-app-100)',
-        200: 'var(--clr-app-200)',
-        300: 'var(--clr-app-300)',
-        400: 'var(--clr-app-400)',
-        600: 'var(--clr-app-600)',
-        800: 'var(--clr-app-800)',
-        999: 'var(--clr-app-999)'
-      },
       prim: {
+        0: 'var(--clr-prim-0)',
         100: 'var(--clr-prim-100)',
         200: 'var(--clr-prim-200)',
         300: 'var(--clr-prim-300)',
@@ -27,6 +18,15 @@ export default {
         600: 'var(--clr-prim-600)',
         800: 'var(--clr-prim-800)',
         999: 'var(--clr-prim-999)'
+      },
+      sec: {
+        0: 'var(--clr-sec-0)',
+        100: 'var(--clr-sec-100)',
+        200: 'var(--clr-sec-200)',
+        300: 'var(--clr-sec-300)',
+        400: 'var(--clr-sec-400)',
+        600: 'var(--clr-sec-600)',
+        800: 'var(--clr-sec-800)'
       },
       warn: {
         100: 'var(--clr-warn-100)',

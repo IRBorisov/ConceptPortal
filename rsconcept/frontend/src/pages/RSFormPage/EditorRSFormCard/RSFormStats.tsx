@@ -41,13 +41,13 @@ function RSFormStats({ stats, isArchive }: RSFormStatsProps) {
       </div>
       <ValueStats
         id='count_owned'
-        icon={<IconPredecessor size='1.25rem' className='clr-text-primary' />}
+        icon={<IconPredecessor size='1.25rem' className='text-sec-600' />}
         value={stats.count_all - stats.count_inherited}
         title='Собственные'
       />
       <ValueStats
         id='count_inherited'
-        icon={<IconChild size='1.25rem' className='clr-text-primary' />}
+        icon={<IconChild size='1.25rem' className='text-sec-600' />}
         value={stats.count_inherited}
         titleHtml={isArchive ? 'Архивные схемы не хранят<br/> информацию о наследовании' : 'Наследованные'}
       />
@@ -61,7 +61,7 @@ function RSFormStats({ stats, isArchive }: RSFormStatsProps) {
       />
       <ValueStats
         id='count_property'
-        icon={<IconStatusProperty size='1.25rem' className='clr-text-primary' />}
+        icon={<IconStatusProperty size='1.25rem' className='text-sec-600' />}
         value={stats.count_errors}
         title='Неразмерные'
       />
@@ -130,19 +130,19 @@ function RSFormStats({ stats, isArchive }: RSFormStatsProps) {
 
       <ValueStats
         id='count_text_term'
-        icon={<IconTerminology size='1.25rem' className='clr-text-primary' />}
+        icon={<IconTerminology size='1.25rem' className='text-sec-600' />}
         value={stats.count_text_term}
         title='Термины'
       />
       <ValueStats
         id='count_definition'
-        icon={<IconDefinition size='1.25rem' className='clr-text-primary' />}
+        icon={<IconDefinition size='1.25rem' className='text-sec-600' />}
         value={stats.count_definition}
         title='Определения'
       />
       <ValueStats
         id='count_convention'
-        icon={<IconConvention size='1.25rem' className='clr-text-primary' />}
+        icon={<IconConvention size='1.25rem' className='text-sec-600' />}
         value={stats.count_convention}
         title='Конвенции'
       />

@@ -58,9 +58,9 @@ body {
   line-height: var(--line-height);
   font-family: var(--font-main);
 
-  color: var(--clr-app-999);
-  border-color: var(--clr-app-400);
-  background-color: var(--clr-app-100);
+  color: var(--clr-prim-999);
+  border-color: var(--clr-prim-400);
+  background-color: var(--clr-prim-100);
 }
 
 @media only screen and (max-width: 639px) {
@@ -78,14 +78,14 @@ body {
 }
 
 ::selection {
-  background: var(--clr-prim-800);
+  background: var(--clr-sec-100);
   tr :hover& {
     background: var(--clr-warn-100);
   }
 }
 
 ::placeholder {
-  color: var(--clr-app-600);
+  color: var(--clr-prim-600);
 }
 
 /* Wrapping headers */
@@ -170,7 +170,7 @@ div:not(.dense) > p:not(:last-child) {
   .divide-y,
   .divide-x-2,
   .divide-y-2 {
-    border-color: var(--clr-app-400);
+    border-color: var(--clr-prim-400);
     & > :not([hidden]) ~ :not([hidden]) {
       border-color: inherit;
     }

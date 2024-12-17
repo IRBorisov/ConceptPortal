@@ -12,21 +12,21 @@ import { PARAMETER } from '@/utils/constants';
 /** Semantic colors for application. */
 // prettier-ignore
 export const APP_COLORS = {
-  bgDefault:          'var(--clr-app-100)',
-  bgInput:            'var(--clr-app-0)', 
-  bgControls:         'var(--clr-app-200)',
-  bgDisabled:         'var(--clr-app-300)',
-  bgPrimary:          'var(--clr-prim-200)',
-  bgSelected:         'var(--clr-prim-600)',
+  bgDefault:          'var(--clr-prim-100)',
+  bgInput:            'var(--clr-prim-0)', 
+  bgControls:         'var(--clr-prim-200)',
+  bgDisabled:         'var(--clr-prim-300)',
+  bgPrimary:          'var(--clr-sec-600)',
+  bgSelected:         'var(--clr-sec-200)',
   bgActiveSelection:  'var(--clr-select-node)',
-  bgHover:            'var(--clr-prim-800)',
+  bgHover:            'var(--clr-sec-100)',
   bgWarning:          'var(--clr-warn-100)',
   
-  border:             'var(--clr-app-400)',
+  border:             'var(--clr-prim-400)',
 
-  fgDefault:          'var(--clr-app-999)',
-  fgSelected:         'var(--clr-app-999)', 
-  fgDisabled:         'var(--clr-app-800)',
+  fgDefault:          'var(--clr-prim-999)',
+  fgSelected:         'var(--clr-prim-999)', 
+  fgDisabled:         'var(--clr-prim-800)',
   fgWarning:          'var(--clr-warn-600)',
 
   bgRed:              'var(--acc-bg-red)',

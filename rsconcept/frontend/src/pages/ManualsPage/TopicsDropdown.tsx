@@ -64,7 +64,7 @@ function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownProps) {
         className={clsx(
           'border-r border-t rounded-none', // prettier: split-lines
           'cc-scroll-y',
-          'clr-controls'
+          'bg-prim-200'
         )}
         style={{
           maxHeight: calculateHeight('4rem + 2px'),

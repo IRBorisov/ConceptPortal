@@ -21,73 +21,61 @@
 }
 
 @layer components {
-  .clr-footer {
-    color: var(--clr-app-600);
-    background-color: var(--clr-app-100);
-  }
-
-  .cc-modal-backdrop {
-    opacity: 0.5;
-    background-color: var(--clr-app-100);
-  }
-
   .clr-input {
-    background-color: var(--clr-app-0);
+    background-color: var(--clr-prim-0);
     &:disabled {
-      background-color: var(--clr-app-100);
+      background-color: var(--clr-prim-100);
     }
   }
 
-  .clr-controls,
-  .clr-tab,
+  .clr-selected {
+    color: var(--clr-prim-999);
+    background-color: var(--clr-sec-200);
+  }
+
   .clr-btn-default {
-    background-color: var(--clr-app-200);
+    background-color: var(--clr-prim-200);
   }
 
   .clr-primary,
   .clr-btn-primary:hover,
   .clr-btn-primary:focus-visible {
     @apply transition;
-    color: var(--clr-prim-999);
-    background-color: var(--clr-prim-200);
+    color: var(--clr-sec-0);
+    background-color: var(--clr-sec-600);
   }
 
-  .clr-selected,
   .clr-btn-primary {
-    color: var(--clr-app-999);
-    background-color: var(--clr-prim-600);
+    color: var(--clr-prim-999);
+    background-color: var(--clr-sec-200);
   }
 
   :is(.clr-disabled, .clr-btn-default, .clr-btn-primary):disabled {
     @apply transition;
-    color: var(--clr-app-800);
-    background-color: var(--clr-app-200);
+    color: var(--clr-prim-800);
+    background-color: var(--clr-prim-200);
   }
 
-  :is(.clr-hover, .clr-tab, .clr-btn-nav, .clr-btn-default):hover:not(:disabled) {
+  :is(.clr-hover, .clr-btn-nav, .clr-btn-default):hover:not(:disabled) {
     @apply transition;
-    color: var(--clr-app-999);
-    background-color: var(--clr-prim-800);
+    color: var(--clr-prim-999);
+    background-color: var(--clr-sec-100);
   }
 
   :is(.clr-outline, .clr-btn-primary, .focus-frame):focus-visible,
   .focus-frame:has(:focus-visible) {
     outline-width: 2px;
     outline-style: solid;
-    outline-color: var(--clr-prim-200);
-  }
-
-  .clr-text-primary {
-    color: var(--clr-prim-100);
+    outline-color: var(--clr-sec-600);
   }
 
   .clr-text-controls,
   .clr-btn-nav,
   .clr-btn-clear {
-    color: var(--clr-app-800);
+    color: var(--clr-prim-800);
     background-color: transparent;
     &:disabled {
-      color: var(--clr-app-600);
+      color: var(--clr-prim-600);
     }
   }
 
@@ -95,13 +83,13 @@
   input:disabled:not(::placeholder),
   textarea:disabled:not(::placeholder) {
     opacity: 1;
-    -webkit-text-fill-color: var(--clr-app-999);
-    color: var(--clr-app-999);
+    -webkit-text-fill-color: var(--clr-prim-999);
+    color: var(--clr-prim-999);
   }
 
   .icon-primary {
     :not([disabled]) > & {
-      color: var(--clr-prim-100);
+      color: var(--clr-sec-800);
     }
   }
 
@@ -123,7 +111,7 @@
     margin-left: 0.1rem;
     margin-right: 0.1rem;
     transform: translate(0, -0.2rem);
-    color: var(--clr-prim-100);
+    color: var(--clr-sec-800);
   }
 
   .cc-tab-tools {
@@ -172,18 +160,13 @@
     backdrop-filter: blur(3px);
   }
 
-  .cc-modal-blur {
-    opacity: 0.3;
-    backdrop-filter: blur(2px);
-  }
-
   .cc-shadow-border {
-    @apply shadow-sm shadow-[var(--clr-app-400)];
+    box-shadow: 0 1px 2px 0 var(--clr-prim-400);
   }
 
   .cc-animate-position {
     transition-property: transform top left bottom right margin padding;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-timing-function: var(--transition-bezier);
     transition-duration: var(--duration-move);
   }
 
@@ -191,7 +174,7 @@
     opacity: 1;
 
     transition-property: opacity;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-timing-function: var(--transition-bezier);
     transition-duration: var(--duration-fade);
 
     @starting-style {
@@ -204,7 +187,7 @@
     opacity: 1;
 
     transition-property: clip-path, opacity;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-timing-function: var(--transition-bezier);
     transition-duration: var(--duration-modal);
 
     @starting-style {

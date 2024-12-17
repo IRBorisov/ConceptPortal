@@ -247,9 +247,9 @@ function PickSubstitutions({
             onClick={toggleDelete}
             icon={
               deleteRight ? (
-                <IconPageRight size='1.5rem' className='clr-text-primary' />
+                <IconPageRight size='1.5rem' className='text-sec-600' />
               ) : (
-                <IconPageLeft size='1.5rem' className='clr-text-primary' />
+                <IconPageLeft size='1.5rem' className='text-sec-600' />
               )
             }
           />

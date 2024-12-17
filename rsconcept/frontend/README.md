@@ -14,8 +14,7 @@ Styling conventions
   - inner layout: px-3 py-2 flex flex-col gap-3 justify-between items-center
   - overflow behavior: overflow-scroll overscroll-contain
   - border: borer-2 outline-none shadow-md
-  - colors: clr-controls
-  - text: text-start text-sm font-semibold whitespace-nowrap
+  - text: text-start text-sm font-semibold whitespace-nowrap bg-prim-200 fg-app-100
   - behavior modifiers: select-none disabled:cursor-auto
   - transitions: 
   </pre>

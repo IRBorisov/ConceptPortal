@@ -252,7 +252,7 @@ function FormConstituenta({
                 id='cst_disable_comment'
                 type='button'
                 tabIndex={-1}
-                className='self-start cc-label text-prim-100 hover:underline'
+                className='self-start cc-label text-sec-600 hover:underline'
                 onClick={() => setForceComment(true)}
               >
                 Добавить комментарий
@@ -271,13 +271,13 @@ function FormConstituenta({
                 <Overlay position='top-[0.1rem] left-[0.4rem]' className='cc-icons'>
                   {state.has_inherited_children && !state.is_inherited ? (
                     <Indicator
-                      icon={<IconPredecessor size='1.25rem' className='clr-text-primary' />}
+                      icon={<IconPredecessor size='1.25rem' className='text-sec-600' />}
                       titleHtml='Внимание!</br> Конституента имеет потомков<br/> в операционной схеме синтеза'
                     />
                   ) : null}
                   {state.is_inherited ? (
                     <Indicator
-                      icon={<IconChild size='1.25rem' className='clr-text-primary' />}
+                      icon={<IconChild size='1.25rem' className='text-sec-600' />}
                       titleHtml='Внимание!</br> Конституента является наследником<br/>'
                     />
                   ) : null}

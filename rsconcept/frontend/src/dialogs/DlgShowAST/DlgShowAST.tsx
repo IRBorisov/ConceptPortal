@@ -30,7 +30,7 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
     >
       <Overlay
         position='top-2 right-1/2 translate-x-1/2'
-        className='px-2 py-1 rounded-2xl cc-blur bg-app-100 max-w-[60ch] text-lg text-center'
+        className='px-2 py-1 rounded-2xl cc-blur bg-prim-100 max-w-[60ch] text-lg text-center'
       >
         {!hoverNode || isDragging ? expression : null}
         {!isDragging && hoverNode ? (

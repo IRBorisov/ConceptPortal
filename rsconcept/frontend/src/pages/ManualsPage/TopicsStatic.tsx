@@ -28,8 +28,7 @@ function TopicsStatic({ activeTopic, onChangeTopic }: TopicsStaticProps) {
         'cc-scroll-y',
         'self-start',
         'border-x border-t rounded-none',
-        'clr-controls',
-        'text-xs sm:text-sm',
+        'text-xs sm:text-sm bg-prim-200',
         'select-none'
       )}
       style={{ maxHeight: calculateHeight('1rem + 2px') }}

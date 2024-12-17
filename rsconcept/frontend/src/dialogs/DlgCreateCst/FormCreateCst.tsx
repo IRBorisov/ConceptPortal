@@ -119,7 +119,7 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
           id='dlg_cst_show_comment'
           tabIndex={-1}
           type='button'
-          className='self-start cc-label text-prim-100 hover:underline'
+          className='self-start cc-label text-sec-600 hover:underline'
           onClick={() => setForceComment(true)}
         >
           Добавить комментарий

@@ -44,7 +44,7 @@ function ToolbarItemAccess({ visible, toggleVisible, readOnly, toggleReadOnly, c
           title={readOnly ? 'Изменение: запрещено' : 'Изменение: разрешено'}
           icon={
             readOnly ? (
-              <IconImmutable size='1.25rem' className='clr-text-primary' />
+              <IconImmutable size='1.25rem' className='text-sec-600' />
             ) : (
               <IconMutable size='1.25rem' className='text-ok-600' />
             )

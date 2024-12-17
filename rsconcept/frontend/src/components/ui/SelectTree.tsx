@@ -89,7 +89,7 @@ function SelectTree<ItemType>({
             className={clsx(
               'pr-3 pl-6 border-b',
               'cc-scroll-row',
-              'clr-controls clr-hover',
+              'bg-prim-200 clr-hover',
               'cursor-pointer',
               value === item && 'clr-selected'
             )}

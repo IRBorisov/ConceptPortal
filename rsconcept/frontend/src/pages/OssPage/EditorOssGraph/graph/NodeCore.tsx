@@ -35,7 +35,7 @@ function NodeCore({ node }: NodeCoreProps) {
           <Indicator
             noPadding
             titleHtml='<b>Внимание!</b><br />Ромбовидный синтез</br/>Возможны дубликаты конституент'
-            icon={<IconConsolidation className='clr-text-primary' size='12px' />}
+            icon={<IconConsolidation className='text-sec-600' size='12px' />}
             hideTitle={!controller.showTooltip}
           />
         ) : null}
