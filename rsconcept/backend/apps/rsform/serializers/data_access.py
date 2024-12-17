@@ -137,6 +137,7 @@ class RSFormSerializer(serializers.ModelSerializer):
         result['inheritance'] = []
         for cst in RSForm(instance).constituents().defer('order').order_by('order'):
             result['items'].append(CstSerializer(cst).data)
+            del result['items'][-1]['schema']
         for oss in LibraryItem.objects.filter(operations__result=instance).only('alias'):
             result['oss'].append({
                 'id': oss.pk,
@@ -178,6 +179,7 @@ class RSFormSerializer(serializers.ModelSerializer):
                 cst.delete()
             else:
                 cst_data = next(x for x in items if x['id'] == cst.pk)
+                cst_data['schema'] = self.instance.pk
                 new_cst = CstBaseSerializer(data=cst_data)
                 new_cst.is_valid(raise_exception=True)
                 new_cst.validated_data['order'] = ids.index(cst.pk)
@@ -192,6 +194,7 @@ class RSFormSerializer(serializers.ModelSerializer):
                 cst = schema.insert_new(cst_data['alias'])
                 old_id = cst_data['id']
                 cst_data['id'] = cst.pk
+                cst_data['schema'] = self.instance.pk
                 new_cst = CstBaseSerializer(data=cst_data)
                 new_cst.is_valid(raise_exception=True)
                 new_cst.validated_data['order'] = ids.index(old_id)
