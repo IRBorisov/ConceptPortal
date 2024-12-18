@@ -10,12 +10,13 @@ import { NavigationState } from '@/context/NavigationContext';
 import { globals } from '@/utils/constants';
 
 function ApplicationLayout() {
-  const { viewportHeight, mainHeight, showScroll } = useConceptOptions();
+  const { viewportHeight, mainHeight, showScroll, noNavigationAnimation } = useConceptOptions();
   return (
     <NavigationState>
       <div className='min-w-[20rem] antialiased h-full max-w-[120rem] mx-auto'>
         <ConceptToaster
-          className='mt-[4rem] text-[14px]' // prettier: split lines
+          className='text-[14px] cc-animate-position'
+          style={{ marginTop: noNavigationAnimation ? '1.5rem' : '3.5rem' }}
           autoClose={3000}
           draggable={false}
           pauseOnFocusLoss={false}
