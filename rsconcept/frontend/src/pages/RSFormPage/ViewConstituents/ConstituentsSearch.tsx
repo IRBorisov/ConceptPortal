@@ -63,7 +63,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, dense, setFilt
       <SearchBar
         id='constituents_search'
         noBorder
-        className='min-w-[6rem] pr-2 flex-grow'
+        className='min-w-[6rem] w-[6rem] mr-2 flex-grow'
         query={filterText}
         onChangeQuery={setFilterText}
       />

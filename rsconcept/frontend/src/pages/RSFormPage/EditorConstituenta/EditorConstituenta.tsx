@@ -15,7 +15,7 @@ import FormConstituenta from './FormConstituenta';
 import ToolbarConstituenta from './ToolbarConstituenta';
 
 // Threshold window width to switch layout.
-const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
+const SIDELIST_LAYOUT_THRESHOLD = 1050; // px
 
 interface EditorConstituentaProps {
   activeCst?: IConstituenta;
@@ -87,7 +87,7 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
         tabIndex={-1}
         className={clsx(
           'cc-fade-in',
-          'min-h-[20rem] max-w-[95rem] mx-auto',
+          'min-h-[20rem] max-w-[calc(min(100vw,95rem))] mx-auto',
           'flex pt-[1.9rem]',
           'overflow-y-auto overflow-x-clip',
           { 'flex-col md:items-center': isNarrow }
