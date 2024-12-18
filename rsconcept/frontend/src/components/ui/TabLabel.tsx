@@ -20,7 +20,7 @@ function TabLabel({ label, title, titleHtml, hideTitle, className, ...otherProps
       className={clsx(
         'min-w-[5.5rem] h-full',
         'px-2 py-1 flex justify-center',
-        'clr-hover bg-prim-200 cc-animate-color',
+        'clr-hover cc-animate-color',
         'text-sm whitespace-nowrap font-controls',
         'select-none hover:cursor-pointer',
         'outline-none',

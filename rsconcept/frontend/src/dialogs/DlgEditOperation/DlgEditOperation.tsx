@@ -155,7 +155,7 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
         selectedIndex={activeTab}
         onSelect={setActiveTab}
       >
-        <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none')}>
+        <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none', 'bg-prim-200')}>
           <TabLabel title='Текстовые поля' label='Карточка' className='w-[8rem]' />
           {target.operation_type === OperationType.SYNTHESIS ? (
             <TabLabel title='Выбор аргументов операции' label='Аргументы' className='w-[8rem]' />

@@ -55,7 +55,7 @@ function DlgEditReference({ hideWindow, schema, initial, onSave }: DlgEditRefere
         selectedIndex={activeTab}
         onSelect={setActiveTab}
       >
-        <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none')}>
+        <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none', 'bg-prim-200')}>
           <TabLabel title='Отсылка на термин в заданной словоформе' label={labelReferenceType(ReferenceType.ENTITY)} />
           <TabLabel
             title='Установление синтаксической связи с отсылкой на термин'

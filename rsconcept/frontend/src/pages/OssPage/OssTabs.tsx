@@ -117,7 +117,7 @@ function OssTabs() {
           className='flex flex-col mx-auto min-w-fit'
         >
           <Overlay position='top-0 right-1/2 translate-x-1/2' layer='z-sticky'>
-            <TabList className={clsx('w-fit', 'flex items-stretch', 'border-b-2 border-x-2 divide-x-2')}>
+            <TabList className={clsx('w-fit', 'flex items-stretch', 'border-b-2 border-x-2 divide-x-2', 'bg-prim-200')}>
               <MenuOssTabs onDestroy={onDestroySchema} />
 
               <TabLabel label='Карточка' title={schema.title ?? ''} />

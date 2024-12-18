@@ -140,7 +140,7 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
         selectedIndex={activeTab}
         onSelect={setActiveTab}
       >
-        <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none')}>
+        <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none', 'bg-prim-200')}>
           <TabLabel label='Шаблон' title='Выбор шаблона выражения' className='w-[8rem]' />
           <TabLabel label='Аргументы' title='Подстановка аргументов шаблона' className='w-[8rem]' />
           <TabLabel label='Конституента' title='Редактирование конституенты' className='w-[8rem]' />

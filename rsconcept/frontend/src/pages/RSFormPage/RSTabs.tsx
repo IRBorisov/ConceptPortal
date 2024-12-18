@@ -197,7 +197,9 @@ function RSTabs() {
           className='flex flex-col mx-auto min-w-fit'
         >
           <Overlay position='top-0 right-1/2 translate-x-1/2' layer='z-sticky'>
-            <TabList className={clsx('mx-auto w-fit', 'flex items-stretch', 'border-b-2 border-x-2 divide-x-2')}>
+            <TabList
+              className={clsx('mx-auto w-fit', 'flex items-stretch', 'border-b-2 border-x-2 divide-x-2', 'bg-prim-200')}
+            >
               <MenuRSTabs onDestroy={onDestroySchema} />
 
               <TabLabel label='Карточка' titleHtml={`${schema.title ?? ''}<br />Версия: ${labelVersion(schema)}`} />

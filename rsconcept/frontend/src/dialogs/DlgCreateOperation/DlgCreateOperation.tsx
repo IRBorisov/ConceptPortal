@@ -110,7 +110,9 @@ function DlgCreateOperation({ hideWindow, oss, onCreate, initialInputs }: DlgCre
         selectedIndex={activeTab}
         onSelect={handleSelectTab}
       >
-        <TabList className={clsx('self-center absolute top-[2.4rem]', 'flex', 'border divide-x rounded-none')}>
+        <TabList
+          className={clsx('self-center absolute top-[2.4rem]', 'flex', 'border divide-x rounded-none', 'bg-prim-200')}
+        >
           <TabLabel
             title={describeOperationType(OperationType.INPUT)}
             label={labelOperationType(OperationType.INPUT)}

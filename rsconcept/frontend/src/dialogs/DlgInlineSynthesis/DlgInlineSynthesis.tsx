@@ -70,7 +70,7 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
         selectedIndex={activeTab}
         onSelect={setActiveTab}
       >
-        <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none')}>
+        <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none', 'bg-prim-200')}>
           <TabLabel label='Схема' title='Источник конституент' className='w-[8rem]' />
           <TabLabel label='Содержание' title='Перечень конституент' className='w-[8rem]' />
           <TabLabel label='Отождествления' title='Таблица отождествлений' className='w-[8rem]' />
