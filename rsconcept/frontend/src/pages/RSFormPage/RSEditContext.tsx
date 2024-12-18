@@ -21,6 +21,7 @@ import DlgEditVersions from '@/dialogs/DlgEditVersions';
 import DlgEditWordForms from '@/dialogs/DlgEditWordForms';
 import DlgInlineSynthesis from '@/dialogs/DlgInlineSynthesis';
 import DlgRenameCst from '@/dialogs/DlgRenameCst';
+import DlgShowQR from '@/dialogs/DlgShowQR';
 import DlgShowTypeGraph from '@/dialogs/DlgShowTypeGraph';
 import DlgSubstituteCst from '@/dialogs/DlgSubstituteCst';
 import DlgUploadRSForm from '@/dialogs/DlgUploadRSForm';
@@ -108,6 +109,7 @@ export interface IRSEditContext extends ILibraryItemEditor {
   substitute: () => void;
 
   showTypeGraph: () => void;
+  showQR: () => void;
 }
 
 const RSEditContext = createContext<IRSEditContext | null>(null);
@@ -172,6 +174,7 @@ export const RSEditState = ({
   const [showEditVersions, setShowEditVersions] = useState(false);
   const [showInlineSynthesis, setShowInlineSynthesis] = useState(false);
   const [showTypeGraph, setShowTypeGraph] = useState(false);
+  const [showQR, setShowQR] = useState(false);
 
   const [createInitialData, setCreateInitialData] = useState<ICstCreateData>();
   const [showCreateCst, setShowCreateCst] = useState(false);
@@ -627,6 +630,11 @@ export const RSEditState = ({
     [model]
   );
 
+  function generateQR(): string {
+    const currentRef = window.location.href;
+    return currentRef.includes('?') ? currentRef + '&qr' : currentRef + '?qr';
+  }
+
   return (
     <RSEditContext
       value={{
@@ -679,11 +687,13 @@ export const RSEditState = ({
         produceStructure,
         substitute,
 
-        showTypeGraph: () => setShowTypeGraph(true)
+        showTypeGraph: () => setShowTypeGraph(true),
+        showQR: () => setShowQR(true)
       }}
     >
       {model.schema ? (
         <>
+          {showQR ? <DlgShowQR hideWindow={() => setShowQR(false)} target={generateQR()} /> : null}
           {showUpload ? <DlgUploadRSForm hideWindow={() => setShowUpload(false)} /> : null}
           {showClone ? (
             <DlgCloneLibraryItem

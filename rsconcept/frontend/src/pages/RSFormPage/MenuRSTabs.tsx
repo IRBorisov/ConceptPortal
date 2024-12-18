@@ -19,6 +19,7 @@ import {
   IconNewVersion,
   IconOSS,
   IconOwner,
+  IconQR,
   IconReader,
   IconReplace,
   IconShare,
@@ -83,6 +84,11 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
   function handleShare() {
     schemaMenu.hide();
     controller.share();
+  }
+
+  function handleShowQR() {
+    schemaMenu.hide();
+    controller.showQR();
   }
 
   function handleCreateVersion() {
@@ -155,10 +161,16 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
             onClick={handleShare}
             disabled={controller.schema?.access_policy !== AccessPolicy.PUBLIC}
           />
+          <DropdownButton
+            text='QR-код'
+            title='Показать QR-код схемы'
+            icon={<IconQR size='1rem' className='icon-primary' />}
+            onClick={handleShowQR}
+          />
           {user ? (
             <DropdownButton
               text='Клонировать'
-              icon={<IconClone size='1rem' className='icon-primary' />}
+              icon={<IconClone size='1rem' className='icon-green' />}
               disabled={model.isArchive}
               onClick={handleClone}
             />

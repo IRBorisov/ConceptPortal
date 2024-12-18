@@ -20,6 +20,7 @@ export { TbEye            as IconShow }           from 'react-icons/tb';
 export { TbEyeX           as IconHide }           from 'react-icons/tb';
 export { BiShareAlt       as IconShare }          from 'react-icons/bi';
 export { LuFilter         as IconFilter }         from 'react-icons/lu';
+export { LuQrCode         as IconQR }             from 'react-icons/lu';
 export { LuFilterX        as IconFilterReset }    from 'react-icons/lu';
 export {BiDownArrowCircle as IconOpenList }       from 'react-icons/bi';
 export { LuTriangleAlert  as IconAlert }          from 'react-icons/lu';

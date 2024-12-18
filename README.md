@@ -42,6 +42,7 @@ This readme file is used mostly to document project dependencies and conventions
   - reactflow
   - js-file-download
   - use-debounce
+  - qrcode.react
   - html-to-image
   - @tanstack/react-table
   - @uiw/react-codemirror
