@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { flushSync } from 'react-dom';
 
 import Tooltip from '@/components/ui/Tooltip';
 import useLocalStorage from '@/hooks/useLocalStorage';
@@ -99,7 +100,15 @@ export const OptionsState = ({ children }: React.PropsWithChildren) => {
   );
 
   const toggleDarkMode = useCallback(() => {
-    setDarkMode(prev => !prev);
+    if (!document.startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setDarkMode(prev => !prev);
+    } else {
+      document.startViewTransition(() => {
+        flushSync(() => {
+          setDarkMode(prev => !prev);
+        });
+      });
+    }
   }, [setDarkMode]);
 
   const mainHeight = useMemo(() => {

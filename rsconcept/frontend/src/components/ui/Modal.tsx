@@ -12,7 +12,6 @@ import BadgeHelp from '../info/BadgeHelp';
 import { CProps } from '../props';
 import Button from './Button';
 import MiniButton from './MiniButton';
-import Overlay from './Overlay';
 
 export interface ModalProps extends CProps.Styling {
   /** Title of the modal window. */
@@ -105,19 +104,19 @@ function Modal({
           'border rounded-xl bg-prim-100'
         )}
       >
-        <Overlay position='right-2 top-2'>
-          <MiniButton
-            noPadding
-            titleHtml={prepareTooltip('Закрыть диалоговое окно', 'ESC')}
-            icon={<IconClose size='1.25rem' />}
-            onClick={handleCancel}
-          />
-        </Overlay>
         {helpTopic && !hideHelpWhen?.() ? (
-          <Overlay position='left-2 top-2'>
+          <div className='float-left mt-2 ml-2'>
             <BadgeHelp topic={helpTopic} className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')} padding='p-0' />
-          </Overlay>
+          </div>
         ) : null}
+
+        <MiniButton
+          noPadding
+          titleHtml={prepareTooltip('Закрыть диалоговое окно', 'ESC')}
+          icon={<IconClose size='1.25rem' />}
+          className='float-right mt-2 mr-2'
+          onClick={handleCancel}
+        />
 
         {header ? <h1 className='px-12 py-2 select-none'>{header}</h1> : null}
 

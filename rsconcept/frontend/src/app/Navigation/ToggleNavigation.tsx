@@ -1,35 +1,53 @@
 import clsx from 'clsx';
 
-import { IconPin, IconUnpin } from '@/components/Icons';
+import { IconDarkTheme, IconLightTheme, IconPin, IconUnpin } from '@/components/Icons';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { globals, PARAMETER } from '@/utils/constants';
 
 function ToggleNavigation() {
-  const { noNavigationAnimation, toggleNoNavigation } = useConceptOptions();
+  const { noNavigationAnimation, noNavigation, toggleNoNavigation, toggleDarkMode, darkMode } = useConceptOptions();
+  const iconSize = !noNavigationAnimation ? '0.75rem' : '1rem';
   return (
-    <button
-      type='button'
-      tabIndex={-1}
+    <div
       className={clsx(
         'absolute top-0 right-0 z-navigation',
-        'min-h-[2rem] min-w-[2rem] sm:min-w-fit',
-        'flex items-center justify-center',
-        'clr-hover',
-        'select-none'
+        'min-h-[2rem] min-w-[2rem]',
+        'flex items-center justify-center gap-1',
+        'select-none',
+        !noNavigation && 'flex-col-reverse'
       )}
-      onClick={toggleNoNavigation}
-      data-tooltip-id={globals.tooltip}
-      data-tooltip-content={noNavigationAnimation ? 'Показать навигацию' : 'Скрыть навигацию'}
       style={{
         transitionProperty: 'height, width, background-color',
         transitionDuration: `${PARAMETER.moveDuration}ms`,
-        height: noNavigationAnimation ? '1.2rem' : '3rem',
-        width: noNavigationAnimation ? '3rem' : '1.2rem'
+        height: noNavigationAnimation ? '2rem' : '3rem',
+        width: noNavigationAnimation ? '3rem' : '2rem'
       }}
     >
-      {!noNavigationAnimation ? <IconPin /> : null}
-      {noNavigationAnimation ? <IconUnpin /> : null}
-    </button>
+      {!noNavigationAnimation ? (
+        <button
+          tabIndex={-1}
+          type='button'
+          className='p-1 rounded-full'
+          onClick={toggleDarkMode}
+          data-tooltip-id={globals.tooltip}
+          data-tooltip-content={darkMode ? 'Тема: Темная' : 'Тема: Светлая'}
+        >
+          {darkMode ? <IconDarkTheme size='0.75rem' /> : null}
+          {!darkMode ? <IconLightTheme size='0.75rem' /> : null}
+        </button>
+      ) : null}
+      <button
+        tabIndex={-1}
+        type='button'
+        className='p-1 rounded-full'
+        onClick={toggleNoNavigation}
+        data-tooltip-id={globals.tooltip}
+        data-tooltip-content={noNavigationAnimation ? 'Показать навигацию' : 'Скрыть навигацию'}
+      >
+        {!noNavigationAnimation ? <IconPin size={iconSize} /> : null}
+        {noNavigationAnimation ? <IconUnpin size={iconSize} /> : null}
+      </button>
+    </div>
   );
 }
 
