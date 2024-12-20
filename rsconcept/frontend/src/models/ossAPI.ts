@@ -70,9 +70,10 @@ export class SubstitutionValidator {
   constructor(schemas: IRSForm[], substitutions: ICstSubstitute[]) {
     this.schemas = schemas;
     this.substitutions = substitutions;
-    if (this.substitutions.length === 0) {
+    if (schemas.length === 0 || substitutions.length === 0) {
       return;
     }
+
     schemas.forEach(schema => {
       this.schemaByID.set(schema.id, schema);
       this.mapping.set(schema.id, {});

@@ -95,7 +95,7 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
   }, [schemasIDs, needPreload, cache]);
 
   useEffect(() => {
-    if (cache.loading || schemas.length !== schemasIDs.length) {
+    if (cache.loading || schemas.length !== schemasIDs.length || schemas.length === 0) {
       return;
     }
     setSubstitutions(prev =>
@@ -114,7 +114,7 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
   }, [schemasIDs, schemas, cache.loading, getSchemaByCst]);
 
   useEffect(() => {
-    if (cache.loading || schemas.length !== schemasIDs.length) {
+    if (cache.loading || schemas.length !== schemasIDs.length || schemas.length === 0) {
       return;
     }
     const validator = new SubstitutionValidator(schemas, substitutions);

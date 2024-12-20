@@ -65,7 +65,6 @@ export interface TermForm {
  */
 export interface IConstituentaMeta {
   id: ConstituentaID;
-  schema: LibraryItemID;
   alias: string;
   convention: string;
   cst_type: CstType;
@@ -101,6 +100,9 @@ export interface IConstituentaData extends IConstituentaMeta {
  * Represents Constituenta.
  */
 export interface IConstituenta extends IConstituentaData {
+  /** {@link LibraryItemID} of this {@link IConstituenta}. */
+  schema: LibraryItemID;
+
   /** {@link CstClass} of this {@link IConstituenta}. */
   cst_class: CstClass;
   /** {@link ExpressionStatus} of this {@link IConstituenta}. */
@@ -135,7 +137,7 @@ export interface IConstituenta extends IConstituentaData {
 /**
  * Represents {@link IConstituenta} reference.
  */
-export interface IConstituentaReference extends Pick<IConstituentaMeta, 'id' | 'schema'> {}
+export interface IConstituentaReference extends Pick<IConstituenta, 'id' | 'schema'> {}
 
 /**
  * Represents Constituenta list.

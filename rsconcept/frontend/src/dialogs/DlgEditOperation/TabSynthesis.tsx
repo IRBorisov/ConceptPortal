@@ -44,7 +44,7 @@ function TabSynthesis({
           disabled
           value={validationText}
           rows={4}
-          style={{ borderColor: isCorrect ? undefined : APP_COLORS.fgRed }}
+          style={{ borderColor: isCorrect ? undefined : APP_COLORS.fgRed, borderWidth: isCorrect ? undefined : '2px' }}
         />
       </div>
     </DataLoader>

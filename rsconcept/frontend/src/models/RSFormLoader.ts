@@ -75,6 +75,7 @@ export class RSFormLoader {
     const order = this.graph.topologicalOrder();
     order.forEach(cstID => {
       const cst = this.cstByID.get(cstID)!;
+      cst.schema = this.schema.id;
       cst.status = inferStatus(cst.parse.status, cst.parse.valueClass);
       cst.is_template = inferTemplate(cst.definition_formal);
       cst.cst_class = inferClass(cst.cst_type, cst.is_template);
