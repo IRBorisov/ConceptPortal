@@ -223,6 +223,6 @@
   .cc-animate-color {
     transition-property: color, background-color;
     transition-timing-function: var(--transition-bezier);
-    transition-duration: var(--duration-fade);
+    transition-duration: var(--duration-select);
   }
 }

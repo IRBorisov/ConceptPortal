@@ -100,14 +100,25 @@ export const OptionsState = ({ children }: React.PropsWithChildren) => {
   );
 
   const toggleDarkMode = useCallback(() => {
-    if (!document.startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (!document.startViewTransition) {
       setDarkMode(prev => !prev);
     } else {
+      const style = document.createElement('style');
+      style.innerHTML = `
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+      `;
+      document.head.appendChild(style);
+
       document.startViewTransition(() => {
         flushSync(() => {
           setDarkMode(prev => !prev);
         });
       });
+
+      setTimeout(() => document.head.removeChild(style), PARAMETER.moveDuration);
     }
   }, [setDarkMode]);
 
