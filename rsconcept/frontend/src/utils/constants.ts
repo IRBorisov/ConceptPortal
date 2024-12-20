@@ -144,6 +144,7 @@ export const storage = {
 export const globals = {
   tooltip: 'global_tooltip',
   value_tooltip: 'value_tooltip',
+  constituenta_tooltip: 'cst_tooltip',
   password_tooltip: 'password_tooltip',
   email_tooltip: 'email_tooltip',
   main_scroll: 'main_scroll',

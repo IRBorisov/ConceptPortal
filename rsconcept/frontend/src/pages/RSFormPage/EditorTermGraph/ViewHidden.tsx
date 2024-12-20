@@ -3,7 +3,6 @@
 import clsx from 'clsx';
 
 import { IconDropArrow, IconDropArrowUp } from '@/components/Icons';
-import TooltipConstituenta from '@/components/info/TooltipConstituenta';
 import { CProps } from '@/components/props';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
@@ -13,7 +12,7 @@ import useWindowSize from '@/hooks/useWindowSize';
 import { GraphColoring } from '@/models/miscellaneous';
 import { ConstituentaID, IRSForm } from '@/models/rsform';
 import { APP_COLORS, colorBgGraphNode } from '@/styling/color';
-import { PARAMETER, prefixes, storage } from '@/utils/constants';
+import { globals, PARAMETER, prefixes, storage } from '@/utils/constants';
 
 interface ViewHiddenProps {
   items: ConstituentaID[];
@@ -31,6 +30,7 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
   const windowSize = useWindowSize();
   const localSelected = items.filter(id => selected.includes(id));
   const [isFolded, setIsFolded] = useLocalStorage(storage.rsgraphFoldHidden, false);
+  const { setHoverCst } = useConceptOptions();
 
   function handleClick(cstID: ConstituentaID, event: CProps.EventMouse) {
     if (event.ctrlKey || event.metaKey) {
@@ -89,29 +89,27 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
           const adjustedColoring = coloringScheme === 'none' ? 'status' : coloringScheme;
           const id = `${prefixes.cst_hidden_list}${cst.alias}`;
           return (
-            <div key={`wrap-${id}`}>
-              <button
-                type='button'
-                key={id}
-                id={id}
-                className='min-w-[3rem] rounded-md text-center select-none'
-                style={{
-                  backgroundColor: colorBgGraphNode(cst, adjustedColoring),
-                  ...(localSelected.includes(cstID)
-                    ? {
-                        outlineWidth: '2px',
-                        outlineStyle: cst.is_inherited ? 'dashed' : 'solid',
-                        outlineColor: APP_COLORS.fgDefault
-                      }
-                    : {})
-                }}
-                onClick={event => handleClick(cstID, event)}
-                onDoubleClick={() => onEdit(cstID)}
-              >
-                {cst.alias}
-              </button>
-              <TooltipConstituenta data={cst} anchor={`#${id}`} />
-            </div>
+            <button
+              key={id}
+              type='button'
+              className='min-w-[3rem] rounded-md text-center select-none'
+              style={{
+                backgroundColor: colorBgGraphNode(cst, adjustedColoring),
+                ...(localSelected.includes(cstID)
+                  ? {
+                      outlineWidth: '2px',
+                      outlineStyle: cst.is_inherited ? 'dashed' : 'solid',
+                      outlineColor: APP_COLORS.fgDefault
+                    }
+                  : {})
+              }}
+              onClick={event => handleClick(cstID, event)}
+              onDoubleClick={() => onEdit(cstID)}
+              data-tooltip-id={globals.constituenta_tooltip}
+              onMouseEnter={() => setHoverCst(cst)}
+            >
+              {cst.alias}
+            </button>
           );
         })}
       </div>

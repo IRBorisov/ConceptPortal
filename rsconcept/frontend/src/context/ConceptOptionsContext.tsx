@@ -3,8 +3,11 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { flushSync } from 'react-dom';
 
+import InfoConstituenta from '@/components/info/InfoConstituenta';
+import Loader from '@/components/ui/Loader';
 import Tooltip from '@/components/ui/Tooltip';
 import useLocalStorage from '@/hooks/useLocalStorage';
+import { IConstituenta } from '@/models/rsform';
 import { globals, PARAMETER, storage } from '@/utils/constants';
 import { contextOutsideScope } from '@/utils/labels';
 
@@ -37,6 +40,8 @@ interface IOptionsContext {
   location: string;
   setLocation: React.Dispatch<React.SetStateAction<string>>;
 
+  setHoverCst: (newValue: IConstituenta | undefined) => void;
+
   calculateHeight: (offset: string, minimum?: string) => string;
 }
 
@@ -61,6 +66,8 @@ export const OptionsState = ({ children }: React.PropsWithChildren) => {
   const [noNavigationAnimation, setNoNavigationAnimation] = useState(false);
   const [noFooter, setNoFooter] = useState(false);
   const [showScroll, setShowScroll] = useState(false);
+
+  const [hoverCst, setHoverCst] = useState<IConstituenta | undefined>(undefined);
 
   function setDarkClass(isDark: boolean) {
     const root = window.document.documentElement;
@@ -158,23 +165,27 @@ export const OptionsState = ({ children }: React.PropsWithChildren) => {
         toggleShowHelp: () => setShowHelp(prev => !prev),
         viewportHeight,
         mainHeight,
-        calculateHeight
+        calculateHeight,
+        setHoverCst
       }}
     >
       <>
         <Tooltip
-          float // prettier: split-lines
-          id={`${globals.tooltip}`}
+          float
+          id={globals.tooltip}
           layer='z-topmost'
           place='right-start'
           className='mt-8 max-w-[20rem] break-words'
         />
         <Tooltip
           float
-          id={`${globals.value_tooltip}`}
+          id={globals.value_tooltip}
           layer='z-topmost'
           className='max-w-[calc(min(40rem,100dvw-2rem))] text-justify'
         />
+        <Tooltip clickable id={globals.constituenta_tooltip} layer='z-modalTooltip' className='max-w-[30rem]'>
+          {hoverCst ? <InfoConstituenta data={hoverCst} onClick={event => event.stopPropagation()} /> : <Loader />}
+        </Tooltip>
 
         {children}
       </>
