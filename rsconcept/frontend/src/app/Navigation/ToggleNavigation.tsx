@@ -12,7 +12,7 @@ function ToggleNavigation() {
       className={clsx(
         'absolute top-0 right-0 z-navigation',
         'min-h-[2rem] min-w-[2rem]',
-        'flex items-center justify-center gap-1',
+        'flex items-end justify-center gap-1',
         'select-none',
         !noNavigation && 'flex-col-reverse'
       )}
@@ -27,7 +27,7 @@ function ToggleNavigation() {
         <button
           tabIndex={-1}
           type='button'
-          className='p-1 rounded-full'
+          className='p-1'
           onClick={toggleDarkMode}
           data-tooltip-id={globals.tooltip}
           data-tooltip-content={darkMode ? 'Тема: Темная' : 'Тема: Светлая'}
@@ -39,7 +39,7 @@ function ToggleNavigation() {
       <button
         tabIndex={-1}
         type='button'
-        className='p-1 rounded-full'
+        className='p-1'
         onClick={toggleNoNavigation}
         data-tooltip-id={globals.tooltip}
         data-tooltip-content={noNavigationAnimation ? 'Показать навигацию' : 'Скрыть навигацию'}
