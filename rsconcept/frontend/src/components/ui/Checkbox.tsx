@@ -65,7 +65,8 @@ function Checkbox({
       <div
         className={clsx(
           'max-w-[1rem] min-w-[1rem] h-4', // prettier: split lines
-          'border rounded-sm ',
+          'pt-[0.1rem] pl-[0.1rem]',
+          'border rounded-sm',
           'cc-animate-color',
           {
             'bg-sec-600 text-sec-0': value !== false,
@@ -73,11 +74,7 @@ function Checkbox({
           }
         )}
       >
-        {value ? (
-          <div className='mt-[1px] ml-[1px]'>
-            <CheckboxChecked />
-          </div>
-        ) : null}
+        {value ? <CheckboxChecked /> : null}
       </div>
       {label ? <span className={clsx('text-start text-sm whitespace-nowrap select-text', cursor)}>{label}</span> : null}
     </button>

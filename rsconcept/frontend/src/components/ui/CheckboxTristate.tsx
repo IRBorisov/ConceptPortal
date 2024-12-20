@@ -66,6 +66,7 @@ function CheckboxTristate({
       <div
         className={clsx(
           'w-4 h-4', // prettier: split lines
+          'pt-[0.1rem] pl-[0.1rem]',
           'border rounded-sm',
           'cc-animate-color',
           {
@@ -74,16 +75,8 @@ function CheckboxTristate({
           }
         )}
       >
-        {value ? (
-          <div className='mt-[1px] ml-[1px]'>
-            <CheckboxChecked />
-          </div>
-        ) : null}
-        {value == null ? (
-          <div className='mt-[1px] ml-[1px]'>
-            <CheckboxNull />
-          </div>
-        ) : null}
+        {value ? <CheckboxChecked /> : null}
+        {value == null ? <CheckboxNull /> : null}
       </div>
       {label ? <span className={clsx('text-start text-sm whitespace-nowrap select-text', cursor)}>{label}</span> : null}
     </button>
