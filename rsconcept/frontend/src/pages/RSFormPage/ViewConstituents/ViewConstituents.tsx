@@ -46,7 +46,7 @@ function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit,
         transitionDuration: `${2 * PARAMETER.moveDuration}ms`,
         transitionTimingFunction: 'ease-in-out',
         opacity: isMounted ? 1 : 0,
-        width: isMounted ? '100%' : '0'
+        width: isMounted ? 'fit-content' : '0'
       }}
     >
       <ConstituentsSearch

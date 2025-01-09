@@ -15,7 +15,7 @@ import FormConstituenta from './FormConstituenta';
 import ToolbarConstituenta from './ToolbarConstituenta';
 
 // Threshold window width to switch layout.
-const SIDELIST_LAYOUT_THRESHOLD = 1050; // px
+const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
 
 interface EditorConstituentaProps {
   activeCst?: IConstituenta;
