@@ -3,18 +3,18 @@
 import { useEffect } from 'react';
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
+import { useAppLayoutStore, useFitHeight } from '@/stores/appLayout';
 import { resources } from '@/utils/constants';
 
 function DatabaseSchemaPage() {
-  const { calculateHeight, setNoFooter } = useConceptOptions();
+  const hideFooter = useAppLayoutStore(state => state.hideFooter);
 
-  const panelHeight = calculateHeight('0px');
+  const panelHeight = useFitHeight('0px');
 
   useEffect(() => {
-    setNoFooter(true);
-    return () => setNoFooter(false);
-  }, [setNoFooter]);
+    hideFooter(true);
+    return () => hideFooter(false);
+  }, [hideFooter]);
 
   return (
     <div className='cc-fade-in flex justify-center overflow-hidden' style={{ maxHeight: panelHeight }}>

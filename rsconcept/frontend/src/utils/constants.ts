@@ -109,8 +109,6 @@ export const storage = {
   PREFIX: 'portal.',
 
   themeDark: 'theme.dark',
-  optionsAdmin: 'options.admin',
-  optionsHelp: 'options.help',
 
   rseditShowList: 'rsedit.show_list',
   rseditShowControls: 'rsedit.show_controls',

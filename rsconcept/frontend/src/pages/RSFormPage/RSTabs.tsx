@@ -13,13 +13,13 @@ import Loader from '@/components/ui/Loader';
 import Overlay from '@/components/ui/Overlay';
 import TabLabel from '@/components/ui/TabLabel';
 import TextURL from '@/components/ui/TextURL';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useGlobalOss } from '@/context/GlobalOssContext';
 import { useLibrary } from '@/context/LibraryContext';
 import { useBlockNavigation, useConceptNavigation } from '@/context/NavigationContext';
 import { useRSForm } from '@/context/RSFormContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { ConstituentaID, IConstituenta, IConstituentaMeta } from '@/models/rsform';
+import { useAppLayoutStore } from '@/stores/appLayout';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { information, labelVersion, prompts } from '@/utils/labels';
 
@@ -45,7 +45,7 @@ function RSTabs() {
   const version = query.get('v') ? Number(query.get('v')) : undefined;
   const cstQuery = query.get('active');
 
-  const { setNoFooter } = useConceptOptions();
+  const hideFooter = useAppLayoutStore(state => state.hideFooter);
   const { schema, loading, errorLoading, isArchive, itemID } = useRSForm();
   const library = useLibrary();
   const oss = useGlobalOss();
@@ -73,7 +73,7 @@ function RSTabs() {
   }, [schema, schema?.title]);
 
   useEffect(() => {
-    setNoFooter(activeTab !== RSTabID.CARD);
+    hideFooter(activeTab !== RSTabID.CARD);
     setIsModified(false);
     if (activeTab === RSTabID.CST_EDIT) {
       const cstID = Number(cstQuery);
@@ -83,8 +83,8 @@ function RSTabs() {
         setSelected([]);
       }
     }
-    return () => setNoFooter(false);
-  }, [activeTab, cstQuery, setSelected, schema, setNoFooter, setIsModified]);
+    return () => hideFooter(false);
+  }, [activeTab, cstQuery, setSelected, schema, hideFooter, setIsModified]);
 
   function navigateTab(tab: RSTabID, activeID?: ConstituentaID) {
     if (!schema) {

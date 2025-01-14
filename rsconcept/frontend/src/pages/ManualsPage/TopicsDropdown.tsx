@@ -6,9 +6,9 @@ import { useCallback } from 'react';
 import { IconMenuFold, IconMenuUnfold } from '@/components/Icons';
 import Button from '@/components/ui/Button';
 import SelectTree from '@/components/ui/SelectTree';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import useDropdown from '@/hooks/useDropdown';
 import { HelpTopic, topicParent } from '@/models/miscellaneous';
+import { useAppLayoutStore, useFitHeight } from '@/stores/appLayout';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { describeHelpTopic, labelHelpTopic } from '@/utils/labels';
 
@@ -19,7 +19,8 @@ interface TopicsDropdownProps {
 
 function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownProps) {
   const menu = useDropdown();
-  const { noNavigation, calculateHeight } = useConceptOptions();
+  const noNavigation = useAppLayoutStore(state => state.noNavigation);
+  const treeHeight = useFitHeight('4rem + 2px');
 
   const handleSelectTopic = useCallback(
     (topic: HelpTopic) => {
@@ -67,7 +68,7 @@ function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownProps) {
           'bg-prim-200'
         )}
         style={{
-          maxHeight: calculateHeight('4rem + 2px'),
+          maxHeight: treeHeight,
           transitionProperty: 'clip-path',
           transitionDuration: `${PARAMETER.moveDuration}ms`,
           clipPath: menu.isOpen ? 'inset(0% 0% 0% 0%)' : 'inset(0% 100% 0% 0%)'

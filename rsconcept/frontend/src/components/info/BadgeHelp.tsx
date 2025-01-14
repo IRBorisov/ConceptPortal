@@ -2,8 +2,8 @@ import React, { Suspense } from 'react';
 
 import TextURL from '@/components/ui/TextURL';
 import Tooltip, { PlacesType } from '@/components/ui/Tooltip';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { HelpTopic } from '@/models/miscellaneous';
+import { usePreferencesStore } from '@/stores/preferences';
 
 import { IconHelp } from '../Icons';
 import { CProps } from '../props';
@@ -29,7 +29,7 @@ interface BadgeHelpProps extends CProps.Styling {
  * Display help icon with a manual page tooltip.
  */
 function BadgeHelp({ topic, padding = 'p-1', ...restProps }: BadgeHelpProps) {
-  const { showHelp } = useConceptOptions();
+  const showHelp = usePreferencesStore(state => state.showHelp);
 
   if (!showHelp) {
     return null;

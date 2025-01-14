@@ -9,10 +9,10 @@ import { type RowSelectionState } from '@/components/ui/DataTable';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import SearchBar from '@/components/ui/SearchBar';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { CstMatchMode } from '@/models/miscellaneous';
 import { ConstituentaID, CstType, IConstituenta } from '@/models/rsform';
 import { matchConstituenta } from '@/models/rsformAPI';
+import { useFitHeight } from '@/stores/appLayout';
 import { information } from '@/utils/labels';
 import { convertToCSV } from '@/utils/utils';
 
@@ -25,7 +25,6 @@ interface EditorRSListProps {
 }
 
 function EditorRSList({ onOpenEdit }: EditorRSListProps) {
-  const { calculateHeight } = useConceptOptions();
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const controller = useRSEdit();
 
@@ -136,7 +135,7 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
     return false;
   }
 
-  const tableHeight = calculateHeight('4.05rem + 5px');
+  const tableHeight = useFitHeight('4.05rem + 5px');
 
   return (
     <>

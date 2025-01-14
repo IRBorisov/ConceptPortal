@@ -13,12 +13,12 @@ import Overlay from '@/components/ui/Overlay';
 import TabLabel from '@/components/ui/TabLabel';
 import TextURL from '@/components/ui/TextURL';
 import { useAuth } from '@/context/AuthContext';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useLibrary } from '@/context/LibraryContext';
 import { useBlockNavigation, useConceptNavigation } from '@/context/NavigationContext';
 import { useOSS } from '@/context/OssContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { OperationID } from '@/models/oss';
+import { useAppLayoutStore } from '@/stores/appLayout';
 import { information, prompts } from '@/utils/labels';
 
 import EditorRSForm from './EditorOssCard';
@@ -37,7 +37,7 @@ function OssTabs() {
   const activeTab = query.get('tab') ? (Number(query.get('tab')) as OssTabID) : OssTabID.GRAPH;
   const { user } = useAuth();
 
-  const { setNoFooter } = useConceptOptions();
+  const hideFooter = useAppLayoutStore(state => state.hideFooter);
   const { schema, loading, loadingError: errorLoading } = useOSS();
   const { destroyItem } = useLibrary();
 
@@ -61,8 +61,8 @@ function OssTabs() {
   }, [schema, schema?.title]);
 
   useEffect(() => {
-    setNoFooter(activeTab === OssTabID.GRAPH);
-  }, [activeTab, setNoFooter]);
+    hideFooter(activeTab === OssTabID.GRAPH);
+  }, [activeTab, hideFooter]);
 
   function navigateTab(tab: OssTabID) {
     if (!schema) {

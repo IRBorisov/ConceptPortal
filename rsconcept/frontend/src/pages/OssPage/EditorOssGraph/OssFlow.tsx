@@ -18,11 +18,11 @@ import {
 
 import { CProps } from '@/components/props';
 import Overlay from '@/components/ui/Overlay';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useOSS } from '@/context/OssContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { OssNode } from '@/models/miscellaneous';
 import { OperationID } from '@/models/oss';
+import { useMainHeight } from '@/stores/appLayout';
 import { APP_COLORS } from '@/styling/color';
 import { PARAMETER, storage } from '@/utils/constants';
 import { errors } from '@/utils/labels';
@@ -41,7 +41,7 @@ interface OssFlowProps {
 }
 
 function OssFlow({ isModified, setIsModified }: OssFlowProps) {
-  const { mainHeight } = useConceptOptions();
+  const mainHeight = useMainHeight();
   const model = useOSS();
   const controller = useOssEdit();
   const flow = useReactFlow();

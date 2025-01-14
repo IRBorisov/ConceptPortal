@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 import { urls } from '@/app/urls';
 import { useAccessMode } from '@/context/AccessModeContext';
 import { useAuth } from '@/context/AuthContext';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useLibrary } from '@/context/LibraryContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useOSS } from '@/context/OssContext';
@@ -32,6 +31,7 @@ import {
   OperationType
 } from '@/models/oss';
 import { UserID, UserLevel } from '@/models/user';
+import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
 import { errors, information } from '@/utils/labels';
 
@@ -95,7 +95,7 @@ interface OssEditStateProps {
 export const OssEditState = ({ selected, setSelected, children }: React.PropsWithChildren<OssEditStateProps>) => {
   const router = useConceptNavigation();
   const { user } = useAuth();
-  const { adminMode } = useConceptOptions();
+  const adminMode = usePreferencesStore(state => state.adminMode);
   const { accessLevel, setAccessLevel } = useAccessMode();
   const model = useOSS();
   const library = useLibrary();

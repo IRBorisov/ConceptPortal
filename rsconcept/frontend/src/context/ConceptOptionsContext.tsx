@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
 
 import InfoConstituenta from '@/components/info/InfoConstituenta';
@@ -12,27 +12,8 @@ import { globals, PARAMETER, storage } from '@/utils/constants';
 import { contextOutsideScope } from '@/utils/labels';
 
 interface IOptionsContext {
-  viewportHeight: string;
-  mainHeight: string;
-
   darkMode: boolean;
   toggleDarkMode: () => void;
-
-  adminMode: boolean;
-  toggleAdminMode: () => void;
-
-  noNavigationAnimation: boolean;
-  noNavigation: boolean;
-  toggleNoNavigation: () => void;
-
-  noFooter: boolean;
-  setNoFooter: React.Dispatch<React.SetStateAction<boolean>>;
-
-  showScroll: boolean;
-  setShowScroll: React.Dispatch<React.SetStateAction<boolean>>;
-
-  showHelp: boolean;
-  toggleShowHelp: () => void;
 
   folderMode: boolean;
   setFolderMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -41,8 +22,6 @@ interface IOptionsContext {
   setLocation: React.Dispatch<React.SetStateAction<string>>;
 
   setHoverCst: (newValue: IConstituenta | undefined) => void;
-
-  calculateHeight: (offset: string, minimum?: string) => string;
 }
 
 const OptionsContext = createContext<IOptionsContext | null>(null);
@@ -56,16 +35,9 @@ export const useConceptOptions = () => {
 
 export const OptionsState = ({ children }: React.PropsWithChildren) => {
   const [darkMode, setDarkMode] = useLocalStorage(storage.themeDark, false);
-  const [adminMode, setAdminMode] = useLocalStorage(storage.optionsAdmin, false);
-  const [showHelp, setShowHelp] = useLocalStorage(storage.optionsHelp, true);
-  const [noNavigation, setNoNavigation] = useState(false);
 
   const [folderMode, setFolderMode] = useLocalStorage<boolean>(storage.librarySearchFolderMode, true);
   const [location, setLocation] = useLocalStorage<string>(storage.librarySearchLocation, '');
-
-  const [noNavigationAnimation, setNoNavigationAnimation] = useState(false);
-  const [noFooter, setNoFooter] = useState(false);
-  const [showScroll, setShowScroll] = useState(false);
 
   const [hoverCst, setHoverCst] = useState<IConstituenta | undefined>(undefined);
 
@@ -82,29 +54,6 @@ export const OptionsState = ({ children }: React.PropsWithChildren) => {
   useEffect(() => {
     setDarkClass(darkMode);
   }, [darkMode]);
-
-  const toggleNoNavigation = useCallback(() => {
-    if (noNavigation) {
-      setNoNavigationAnimation(false);
-      setNoNavigation(false);
-    } else {
-      setNoNavigationAnimation(true);
-      setTimeout(() => setNoNavigation(true), PARAMETER.moveDuration);
-    }
-  }, [noNavigation]);
-
-  const calculateHeight = useCallback(
-    (offset: string, minimum: string = '0px') => {
-      if (noNavigation) {
-        return `max(calc(100dvh - (${offset})), ${minimum})`;
-      } else if (noFooter) {
-        return `max(calc(100dvh - 3rem - (${offset})), ${minimum})`;
-      } else {
-        return `max(calc(100dvh - 6.75rem - (${offset})), ${minimum})`;
-      }
-    },
-    [noNavigation, noFooter]
-  );
 
   const toggleDarkMode = useCallback(() => {
     if (!document.startViewTransition) {
@@ -129,43 +78,15 @@ export const OptionsState = ({ children }: React.PropsWithChildren) => {
     }
   }, [setDarkMode]);
 
-  const mainHeight = useMemo(() => {
-    if (noNavigation) {
-      return '100dvh';
-    } else if (noFooter) {
-      return 'calc(100dvh - 3rem)';
-    } else {
-      return 'calc(100dvh - 6.75rem)';
-    }
-  }, [noNavigation, noFooter]);
-
-  const viewportHeight = useMemo(() => {
-    return !noNavigation ? 'calc(100dvh - 3rem)' : '100dvh';
-  }, [noNavigation]);
-
   return (
     <OptionsContext
       value={{
         darkMode,
-        adminMode,
-        noNavigationAnimation,
-        noNavigation,
-        noFooter,
         folderMode,
         setFolderMode,
         location,
         setLocation,
-        showScroll,
-        showHelp,
         toggleDarkMode: toggleDarkMode,
-        toggleAdminMode: () => setAdminMode(prev => !prev),
-        toggleNoNavigation: toggleNoNavigation,
-        setNoFooter,
-        setShowScroll,
-        toggleShowHelp: () => setShowHelp(prev => !prev),
-        viewportHeight,
-        mainHeight,
-        calculateHeight,
         setHoverCst
       }}
     >

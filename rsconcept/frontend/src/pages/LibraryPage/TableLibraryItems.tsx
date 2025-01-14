@@ -12,12 +12,12 @@ import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } fro
 import FlexColumn from '@/components/ui/FlexColumn';
 import MiniButton from '@/components/ui/MiniButton';
 import TextURL from '@/components/ui/TextURL';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useUsers } from '@/context/UsersContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ILibraryItem, LibraryItemType } from '@/models/library';
+import { useFitHeight } from '@/stores/appLayout';
 import { APP_COLORS } from '@/styling/color';
 import { storage } from '@/utils/constants';
 
@@ -34,7 +34,6 @@ function TableLibraryItems({ items, resetQuery, folderMode, toggleFolderMode }: 
   const router = useConceptNavigation();
   const intl = useIntl();
   const { getUserLabel } = useUsers();
-  const { calculateHeight } = useConceptOptions();
   const [itemsPerPage, setItemsPerPage] = useLocalStorage<number>(storage.libraryPagination, 50);
 
   function handleOpenItem(item: ILibraryItem, event: CProps.EventMouse) {
@@ -140,7 +139,7 @@ function TableLibraryItems({ items, resetQuery, folderMode, toggleFolderMode }: 
     })
   ];
 
-  const tableHeight = calculateHeight('2.2rem');
+  const tableHeight = useFitHeight('2.2rem');
 
   const conditionalRowStyles: IConditionalStyle<ILibraryItem>[] = [
     {

@@ -18,6 +18,7 @@ import DropdownButton from '@/components/ui/DropdownButton';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
+import { usePreferencesStore } from '@/stores/preferences';
 
 import { urls } from '../urls';
 
@@ -27,9 +28,14 @@ interface UserDropdownProps {
 }
 
 function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
-  const { darkMode, adminMode, toggleAdminMode, toggleDarkMode, showHelp, toggleShowHelp } = useConceptOptions();
+  const { darkMode, toggleDarkMode } = useConceptOptions();
   const router = useConceptNavigation();
   const { user, logout } = useAuth();
+
+  const showHelp = usePreferencesStore(state => state.showHelp);
+  const toggleShowHelp = usePreferencesStore(state => state.toggleShowHelp);
+  const adminMode = usePreferencesStore(state => state.adminMode);
+  const toggleAdminMode = usePreferencesStore(state => state.toggleAdminMode);
 
   function navigateProfile(event: CProps.EventMouse) {
     hideDropdown();

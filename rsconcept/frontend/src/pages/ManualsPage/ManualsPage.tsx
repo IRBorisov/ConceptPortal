@@ -3,10 +3,10 @@
 import { useCallback } from 'react';
 
 import { urls } from '@/app/urls';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { HelpTopic } from '@/models/miscellaneous';
+import { useMainHeight } from '@/stores/appLayout';
 import { PARAMETER } from '@/utils/constants';
 
 import TopicsList from './TopicsList';
@@ -17,7 +17,7 @@ function ManualsPage() {
   const query = useQueryStrings();
   const activeTopic = (query.get('topic') || HelpTopic.MAIN) as HelpTopic;
 
-  const { mainHeight } = useConceptOptions();
+  const mainHeight = useMainHeight();
 
   const onSelectTopic = useCallback(
     (newTopic: HelpTopic) => {

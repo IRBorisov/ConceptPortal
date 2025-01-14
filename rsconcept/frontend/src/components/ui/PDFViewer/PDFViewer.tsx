@@ -1,7 +1,7 @@
 'use client';
 
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import useWindowSize from '@/hooks/useWindowSize';
+import { useFitHeight } from '@/stores/appLayout';
 
 /** Maximum width of the viewer. */
 const MAXIMUM_WIDTH = 1600;
@@ -25,10 +25,9 @@ interface PDFViewerProps {
  */
 function PDFViewer({ file, offsetXpx, minWidth = MINIMUM_WIDTH }: PDFViewerProps) {
   const windowSize = useWindowSize();
-  const { calculateHeight } = useConceptOptions();
 
   const pageWidth = Math.max(minWidth, Math.min((windowSize?.width ?? 0) - (offsetXpx ?? 0) - 10, MAXIMUM_WIDTH));
-  const pageHeight = calculateHeight('1rem');
+  const pageHeight = useFitHeight('1rem');
 
   return <embed src={`${file}#toolbar=0`} className='p-3' style={{ width: pageWidth, height: pageHeight }} />;
 }

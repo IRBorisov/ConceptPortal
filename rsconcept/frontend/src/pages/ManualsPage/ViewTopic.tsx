@@ -1,15 +1,15 @@
 'use client';
 
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { HelpTopic } from '@/models/miscellaneous';
 import TopicPage from '@/pages/ManualsPage/TopicPage';
+import { useMainHeight } from '@/stores/appLayout';
 
 interface ViewTopicProps {
   topic: HelpTopic;
 }
 
 function ViewTopic({ topic }: ViewTopicProps) {
-  const { mainHeight } = useConceptOptions();
+  const mainHeight = useMainHeight();
   return (
     <div
       key={topic}

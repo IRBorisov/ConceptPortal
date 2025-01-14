@@ -16,6 +16,7 @@ import useLocalStorage from '@/hooks/useLocalStorage';
 import { ILibraryItem, IRenameLocationData, LocationHead } from '@/models/library';
 import { ILibraryFilter } from '@/models/miscellaneous';
 import { UserID } from '@/models/user';
+import { useAppLayoutStore } from '@/stores/appLayout';
 import { storage } from '@/utils/constants';
 import { information } from '@/utils/labels';
 import { convertToCSV, toggleTristateFlag } from '@/utils/utils';
@@ -29,6 +30,7 @@ function LibraryPage() {
   const { user } = useAuth();
   const [items, setItems] = useState<ILibraryItem[]>([]);
   const options = useConceptOptions();
+  const noNavigation = useAppLayoutStore(state => state.noNavigation);
 
   const [query, setQuery] = useState('');
   const [path, setPath] = useState('');
@@ -133,7 +135,7 @@ function LibraryPage() {
         />
       ) : null}
       <Overlay
-        position={options.noNavigation ? 'top-[0.25rem] right-[3rem]' : 'top-[0.25rem] right-0'}
+        position={noNavigation ? 'top-[0.25rem] right-[3rem]' : 'top-[0.25rem] right-0'}
         layer='z-tooltip'
         className='cc-animate-position'
       >

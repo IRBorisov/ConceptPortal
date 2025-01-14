@@ -34,7 +34,8 @@
     "react-tooltip": "^5.28.0",
     "react-zoom-pan-pinch": "^3.6.1",
     "reactflow": "^11.11.4",
-    "use-debounce": "^10.0.4"
+    "use-debounce": "^10.0.4",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@lezer/generator": "^1.7.2",

@@ -21,10 +21,10 @@ import { matchLibraryItem, matchLibraryItemLocation } from '@/models/libraryAPI'
 import { ILibraryFilter } from '@/models/miscellaneous';
 import { IRSForm, IRSFormCloneData, IRSFormData } from '@/models/rsform';
 import { RSFormLoader } from '@/models/RSFormLoader';
+import { usePreferencesStore } from '@/stores/preferences';
 import { contextOutsideScope } from '@/utils/labels';
 
 import { useAuth } from './AuthContext';
-import { useConceptOptions } from './ConceptOptionsContext';
 
 interface ILibraryContext {
   items: ILibraryItem[];
@@ -63,7 +63,7 @@ export const useLibrary = (): ILibraryContext => {
 
 export const LibraryState = ({ children }: React.PropsWithChildren) => {
   const { user, loading: userLoading } = useAuth();
-  const { adminMode } = useConceptOptions();
+  const adminMode = usePreferencesStore(state => state.adminMode);
 
   const [items, setItems] = useState<ILibraryItem[]>([]);
   const [templates, setTemplates] = useState<ILibraryItem[]>([]);

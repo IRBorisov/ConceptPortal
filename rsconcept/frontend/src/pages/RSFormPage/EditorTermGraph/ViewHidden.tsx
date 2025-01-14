@@ -11,6 +11,7 @@ import useLocalStorage from '@/hooks/useLocalStorage';
 import useWindowSize from '@/hooks/useWindowSize';
 import { GraphColoring } from '@/models/miscellaneous';
 import { ConstituentaID, IRSForm } from '@/models/rsform';
+import { useFitHeight } from '@/stores/appLayout';
 import { APP_COLORS, colorBgGraphNode } from '@/styling/color';
 import { globals, PARAMETER, prefixes, storage } from '@/utils/constants';
 
@@ -26,11 +27,11 @@ interface ViewHiddenProps {
 }
 
 function ViewHidden({ items, selected, toggleSelection, setFocus, schema, coloringScheme, onEdit }: ViewHiddenProps) {
-  const { calculateHeight } = useConceptOptions();
   const windowSize = useWindowSize();
   const localSelected = items.filter(id => selected.includes(id));
   const [isFolded, setIsFolded] = useLocalStorage(storage.rsgraphFoldHidden, false);
   const { setHoverCst } = useConceptOptions();
+  const hiddenHeight = useFitHeight(windowSize.isSmall ? '10.4rem + 2px' : '12.5rem + 2px');
 
   function handleClick(cstID: ConstituentaID, event: CProps.EventMouse) {
     if (event.ctrlKey || event.metaKey) {
@@ -77,7 +78,7 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
           'cc-scroll-y'
         )}
         style={{
-          maxHeight: calculateHeight(windowSize.isSmall ? '10.4rem + 2px' : '12.5rem + 2px'),
+          maxHeight: hiddenHeight,
           transitionProperty: 'clip-path',
           transitionDuration: `${PARAMETER.fastAnimation}ms`,
           transitionTimingFunction: 'ease-out',

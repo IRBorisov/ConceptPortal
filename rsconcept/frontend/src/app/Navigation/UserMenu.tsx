@@ -1,9 +1,9 @@
 import { IconLogin, IconUser2 } from '@/components/Icons';
 import Loader from '@/components/ui/Loader';
 import { useAuth } from '@/context/AuthContext';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import useDropdown from '@/hooks/useDropdown';
+import { usePreferencesStore } from '@/stores/preferences';
 
 import { urls } from '../urls';
 import NavigationButton from './NavigationButton';
@@ -12,7 +12,7 @@ import UserDropdown from './UserDropdown';
 function UserMenu() {
   const router = useConceptNavigation();
   const { user, loading } = useAuth();
-  const { adminMode } = useConceptOptions();
+  const adminMode = usePreferencesStore(state => state.adminMode);
   const menu = useDropdown();
 
   const navigateLogin = () => router.push(urls.login);

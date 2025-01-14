@@ -8,11 +8,11 @@ import { CProps } from '@/components/props';
 import SelectLocation from '@/components/select/SelectLocation';
 import MiniButton from '@/components/ui/MiniButton';
 import { useAuth } from '@/context/AuthContext';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useLibrary } from '@/context/LibraryContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { FolderNode, FolderTree } from '@/models/FolderTree';
 import { HelpTopic } from '@/models/miscellaneous';
+import { useFitHeight } from '@/stores/appLayout';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { information } from '@/utils/labels';
 
@@ -39,7 +39,6 @@ function ViewSideLocation({
 }: ViewSideLocationProps) {
   const { user } = useAuth();
   const { items } = useLibrary();
-  const { calculateHeight } = useConceptOptions();
   const windowSize = useWindowSize();
 
   const canRename = (() => {
@@ -56,7 +55,7 @@ function ViewSideLocation({
     return located.length !== 0;
   })();
 
-  const maxHeight = calculateHeight('4.5rem');
+  const maxHeight = useFitHeight('4.5rem');
 
   function handleClickFolder(event: CProps.EventMouse, target: FolderNode) {
     event.preventDefault();

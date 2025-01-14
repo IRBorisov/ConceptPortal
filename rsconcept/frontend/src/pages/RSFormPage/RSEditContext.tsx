@@ -7,7 +7,6 @@ import { toast } from 'react-toastify';
 import { urls } from '@/app/urls';
 import { useAccessMode } from '@/context/AccessModeContext';
 import { useAuth } from '@/context/AuthContext';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useRSForm } from '@/context/RSFormContext';
 import DlgChangeLocation from '@/dialogs/DlgChangeLocation';
@@ -51,6 +50,7 @@ import {
 } from '@/models/rsform';
 import { generateAlias } from '@/models/rsformAPI';
 import { UserID, UserLevel } from '@/models/user';
+import { usePreferencesStore } from '@/stores/preferences';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 import { information, prompts } from '@/utils/labels';
 import { promptUnsaved } from '@/utils/utils';
@@ -142,7 +142,7 @@ export const RSEditState = ({
 }: React.PropsWithChildren<RSEditStateProps>) => {
   const router = useConceptNavigation();
   const { user } = useAuth();
-  const { adminMode } = useConceptOptions();
+  const adminMode = usePreferencesStore(state => state.adminMode);
   const { accessLevel, setAccessLevel } = useAccessMode();
   const model = useRSForm();
 

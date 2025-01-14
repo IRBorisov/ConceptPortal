@@ -3,10 +3,10 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
+import { useMainHeight } from '@/stores/appLayout';
 import { globals, storage } from '@/utils/constants';
 
 import { useRSEdit } from '../RSEditContext';
@@ -27,7 +27,7 @@ interface EditorConstituentaProps {
 function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }: EditorConstituentaProps) {
   const controller = useRSEdit();
   const windowSize = useWindowSize();
-  const { mainHeight } = useConceptOptions();
+  const mainHeight = useMainHeight();
 
   const [showList, setShowList] = useLocalStorage(storage.rseditShowList, true);
   const [toggleReset, setToggleReset] = useState(false);

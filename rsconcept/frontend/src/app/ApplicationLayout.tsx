@@ -5,12 +5,17 @@ import ConceptToaster from '@/app/ConceptToaster';
 import Footer from '@/app/Footer';
 import Navigation from '@/app/Navigation';
 import Loader from '@/components/ui/Loader';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { NavigationState } from '@/context/NavigationContext';
+import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/appLayout';
 import { globals } from '@/utils/constants';
 
 function ApplicationLayout() {
-  const { viewportHeight, mainHeight, showScroll, noNavigationAnimation } = useConceptOptions();
+  const mainHeight = useMainHeight();
+  const viewportHeight = useViewportHeight();
+  const showScroll = useAppLayoutStore(state => !state.noScroll);
+  const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
+  const noNavigation = useAppLayoutStore(state => state.noNavigation);
+  const noFooter = useAppLayoutStore(state => state.noFooter);
   return (
     <NavigationState>
       <div className='min-w-[20rem] antialiased h-full max-w-[120rem] mx-auto'>
@@ -36,7 +41,7 @@ function ApplicationLayout() {
               <Outlet />
             </Suspense>
           </main>
-          <Footer />
+          {!noNavigation && !noFooter ? <Footer /> : null}
         </div>
       </div>
     </NavigationState>

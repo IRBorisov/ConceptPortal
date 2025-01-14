@@ -2,10 +2,14 @@ import clsx from 'clsx';
 
 import { IconDarkTheme, IconLightTheme, IconPin, IconUnpin } from '@/components/Icons';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
+import { useAppLayoutStore } from '@/stores/appLayout';
 import { globals, PARAMETER } from '@/utils/constants';
 
 function ToggleNavigation() {
-  const { noNavigationAnimation, noNavigation, toggleNoNavigation, toggleDarkMode, darkMode } = useConceptOptions();
+  const { toggleDarkMode, darkMode } = useConceptOptions();
+  const noNavigation = useAppLayoutStore(state => state.noNavigation);
+  const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
+  const toggleNoNavigation = useAppLayoutStore(state => state.toggleNoNavigation);
   const iconSize = !noNavigationAnimation ? '0.75rem' : '1rem';
   return (
     <div

@@ -1,15 +1,10 @@
 import clsx from 'clsx';
 
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { external_urls } from '@/utils/constants';
 
 import TextURL from '../components/ui/TextURL';
 
 function Footer() {
-  const { noNavigation, noFooter } = useConceptOptions();
-  if (noNavigation || noFooter) {
-    return null;
-  }
   return (
     <footer
       className={clsx(

@@ -44,6 +44,7 @@ This readme file is used mostly to document project dependencies and conventions
   - use-debounce
   - qrcode.react
   - html-to-image
+  - zustand
   - @tanstack/react-table
   - @uiw/react-codemirror
   - @uiw/codemirror-themes

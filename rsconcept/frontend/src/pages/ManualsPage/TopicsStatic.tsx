@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 
 import SelectTree from '@/components/ui/SelectTree';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { HelpTopic, topicParent } from '@/models/miscellaneous';
+import { useFitHeight } from '@/stores/appLayout';
 import { prefixes } from '@/utils/constants';
 import { describeHelpTopic, labelHelpTopic } from '@/utils/labels';
 
@@ -12,7 +12,7 @@ interface TopicsStaticProps {
 }
 
 function TopicsStatic({ activeTopic, onChangeTopic }: TopicsStaticProps) {
-  const { calculateHeight } = useConceptOptions();
+  const topicsHeight = useFitHeight('1rem + 2px');
   return (
     <SelectTree
       items={Object.values(HelpTopic).map(item => item as HelpTopic)}
@@ -31,7 +31,7 @@ function TopicsStatic({ activeTopic, onChangeTopic }: TopicsStaticProps) {
         'text-xs sm:text-sm bg-prim-200',
         'select-none'
       )}
-      style={{ maxHeight: calculateHeight('1rem + 2px') }}
+      style={{ maxHeight: topicsHeight }}
     />
   );
 }

@@ -24,12 +24,12 @@ import SelectedCounter from '@/components/info/SelectedCounter';
 import { CProps } from '@/components/props';
 import ToolbarGraphSelection from '@/components/select/ToolbarGraphSelection';
 import Overlay from '@/components/ui/Overlay';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import DlgGraphParams from '@/dialogs/DlgGraphParams';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { GraphColoring, GraphFilterParams } from '@/models/miscellaneous';
 import { ConstituentaID, CstType, IConstituenta } from '@/models/rsform';
 import { isBasicConcept } from '@/models/rsformAPI';
+import { useMainHeight } from '@/stores/appLayout';
 import { APP_COLORS, colorBgGraphNode } from '@/styling/color';
 import { PARAMETER, storage } from '@/utils/constants';
 import { errors } from '@/utils/labels';
@@ -53,7 +53,7 @@ interface TGFlowProps {
 }
 
 function TGFlow({ onOpenEdit }: TGFlowProps) {
-  const { mainHeight } = useConceptOptions();
+  const mainHeight = useMainHeight();
   const controller = useRSEdit();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
