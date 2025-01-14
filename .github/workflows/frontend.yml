@@ -23,7 +23,6 @@ jobs:
     strategy:
       matrix:
         node-version: [22.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
       - uses: actions/checkout@v4
@@ -35,10 +34,17 @@ jobs:
           cache: "npm"
       - name: Build
         run: |
-          npm install -g typescript vite jest
+          npm install -g typescript vite jest playwright
+          npx playwright install --with-deps
           npm ci
           npm run build --if-present
       - name: Run CI
         run: |
           npm run lint
           npm test
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30

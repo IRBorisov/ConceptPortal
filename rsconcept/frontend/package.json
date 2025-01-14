@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "generate": "lezer-generator src/components/RSInput/rslang/rslangFast.grammar -o src/components/RSInput/rslang/parser.ts && lezer-generator src/components/RSInput/rslang/rslangAST.grammar -o src/components/RSInput/rslang/parserAST.ts && lezer-generator src/components/RefsInput/parse/refsText.grammar -o src/components/RefsInput/parse/parser.ts",
-    "test": "jest",
+    "test": "jest && playwright test",
     "dev": "vite --host",
     "build": "tsc && vite build",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "@lezer/generator": "^1.7.2",
+    "@playwright/test": "^1.49.1",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.5",
     "@types/react": "^19.0.6",
@@ -67,6 +68,9 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "<rootDir>/tests/"
+    ],
     "transform": {
       "node_modules/variables/.+\\.(j|t)sx?$": "ts-jest"
     },

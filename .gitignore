@@ -67,3 +67,5 @@ bower_components
 venv/
 /GitExtensions.settings
 rsconcept/frontend/public/privacy.pdf
+/rsconcept/frontend/playwright-report
+/rsconcept/frontend/test-results

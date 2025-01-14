@@ -19,7 +19,8 @@
     "ms-python.pylint",
     "ms-python.autopep8",
     "ms-python.vscode-pylance",
-    "vscode-icons-team.vscode-icons"
+    "vscode-icons-team.vscode-icons",
+    "ms-playwright.playwright"
   ],
   "unwantedRecommendations": []
 }

@@ -67,6 +67,7 @@ This readme file is used mostly to document project dependencies and conventions
   - ts-jest
   - @types/jest
   - @lezer/generator
+  - @playwright/test
   </pre>
 </details>
 <details>
@@ -132,6 +133,7 @@ This readme file is used mostly to document project dependencies and conventions
   - isort
   - Django
   - SQLite
+  - Playwright
   </pre>
 </details>
 
