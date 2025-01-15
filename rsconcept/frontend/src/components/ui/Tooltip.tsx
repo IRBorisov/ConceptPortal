@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { ITooltip, Tooltip as TooltipImpl } from 'react-tooltip';
 
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
+import { usePreferencesStore } from '@/stores/preferences';
 
 export type { PlacesType } from 'react-tooltip';
 
@@ -29,7 +29,7 @@ function Tooltip({
   style,
   ...restProps
 }: TooltipProps) {
-  const { darkMode } = useConceptOptions();
+  const darkMode = usePreferencesStore(state => state.darkMode);
   if (typeof window === 'undefined') {
     return null;
   }

@@ -9,10 +9,10 @@ import { EditorView } from 'codemirror';
 import { forwardRef, useRef } from 'react';
 
 import Label from '@/components/ui/Label';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { ConstituentaID, IRSForm } from '@/models/rsform';
 import { generateAlias, getCstTypePrefix, guessCstType } from '@/models/rsformAPI';
 import { extractGlobals } from '@/models/rslangAPI';
+import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/color';
 
 import { ccBracketMatching } from './bracketMatching';
@@ -64,7 +64,7 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
     },
     ref
   ) => {
-    const { darkMode } = useConceptOptions();
+    const darkMode = usePreferencesStore(state => state.darkMode);
 
     const internalRef = useRef<ReactCodeMirrorRef>(null);
     const thisRef = !ref || typeof ref === 'function' ? internalRef : ref;

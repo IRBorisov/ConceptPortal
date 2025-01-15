@@ -1,12 +1,13 @@
 import clsx from 'clsx';
 
 import { IconDarkTheme, IconLightTheme, IconPin, IconUnpin } from '@/components/Icons';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useAppLayoutStore } from '@/stores/appLayout';
+import { usePreferencesStore } from '@/stores/preferences';
 import { globals, PARAMETER } from '@/utils/constants';
 
 function ToggleNavigation() {
-  const { toggleDarkMode, darkMode } = useConceptOptions();
+  const darkMode = usePreferencesStore(state => state.darkMode);
+  const toggleDarkMode = usePreferencesStore(state => state.toggleDarkMode);
   const noNavigation = useAppLayoutStore(state => state.noNavigation);
   const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
   const toggleNoNavigation = useAppLayoutStore(state => state.toggleNoNavigation);

@@ -20,20 +20,22 @@ import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
 import { useAuth } from '@/context/AuthContext';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useLibrary } from '@/context/LibraryContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { AccessPolicy, LibraryItemType, LocationHead } from '@/models/library';
 import { ILibraryCreateData } from '@/models/library';
 import { combineLocation, validateLocation } from '@/models/libraryAPI';
+import { useLibrarySearchStore } from '@/stores/librarySearch';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 import { information } from '@/utils/labels';
 
 function FormCreateItem() {
   const router = useConceptNavigation();
-  const options = useConceptOptions();
   const { user } = useAuth();
   const { createItem, processingError, setProcessingError, processing, folders } = useLibrary();
+
+  const searchLocation = useLibrarySearchStore(state => state.location);
+  const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
 
   const [itemType, setItemType] = useState(LibraryItemType.RSFORM);
   const [title, setTitle] = useState('');
@@ -81,7 +83,7 @@ function FormCreateItem() {
       file: file,
       fileName: file?.name
     };
-    options.setLocation(location);
+    setSearchLocation(location);
     createItem(data, newItem => {
       toast.success(information.newLibraryItem);
       if (itemType == LibraryItemType.RSFORM) {
@@ -108,11 +110,11 @@ function FormCreateItem() {
   }, []);
 
   useEffect(() => {
-    if (!options.location) {
+    if (!searchLocation) {
       return;
     }
-    handleSelectLocation(options.location);
-  }, [options.location, handleSelectLocation]);
+    handleSelectLocation(searchLocation);
+  }, [searchLocation, handleSelectLocation]);
 
   useEffect(() => {
     if (itemType !== LibraryItemType.RSFORM) {

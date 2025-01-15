@@ -13,45 +13,36 @@ import useWindowSize from '@/hooks/useWindowSize';
 import { FolderNode, FolderTree } from '@/models/FolderTree';
 import { HelpTopic } from '@/models/miscellaneous';
 import { useFitHeight } from '@/stores/appLayout';
+import { useLibrarySearchStore } from '@/stores/librarySearch';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { information } from '@/utils/labels';
 
 interface ViewSideLocationProps {
   folderTree: FolderTree;
   isVisible: boolean;
-  subfolders: boolean;
-  activeLocation: string;
-  onChangeActiveLocation: (newValue: string) => void;
-  toggleFolderMode: () => void;
-  toggleSubfolders: () => void;
   onRenameLocation: () => void;
 }
 
-function ViewSideLocation({
-  folderTree,
-  activeLocation,
-  subfolders,
-  isVisible,
-  onChangeActiveLocation,
-  toggleFolderMode,
-  toggleSubfolders,
-  onRenameLocation
-}: ViewSideLocationProps) {
+function ViewSideLocation({ folderTree, isVisible, onRenameLocation }: ViewSideLocationProps) {
   const { user } = useAuth();
   const { items } = useLibrary();
   const windowSize = useWindowSize();
 
+  const location = useLibrarySearchStore(state => state.location);
+  const setLocation = useLibrarySearchStore(state => state.setLocation);
+  const toggleFolderMode = useLibrarySearchStore(state => state.toggleFolderMode);
+  const subfolders = useLibrarySearchStore(state => state.subfolders);
+  const toggleSubfolders = useLibrarySearchStore(state => state.toggleSubfolders);
+
   const canRename = (() => {
-    if (activeLocation.length <= 3 || !user) {
+    if (location.length <= 3 || !user) {
       return false;
     }
     if (user.is_staff) {
       return true;
     }
     const owned = items.filter(item => item.owner == user.id);
-    const located = owned.filter(
-      item => item.location == activeLocation || item.location.startsWith(`${activeLocation}/`)
-    );
+    const located = owned.filter(item => item.location == location || item.location.startsWith(`${location}/`));
     return located.length !== 0;
   })();
 
@@ -66,7 +57,7 @@ function ViewSideLocation({
         .then(() => toast.success(information.pathReady))
         .catch(console.error);
     } else {
-      onChangeActiveLocation(target.getPath());
+      setLocation(target.getPath());
     }
   }
 
@@ -97,7 +88,7 @@ function ViewSideLocation({
               onClick={onRenameLocation}
             />
           ) : null}
-          {!!activeLocation ? (
+          {!!location ? (
             <MiniButton
               title={subfolders ? 'Вложенные папки: Вкл' : 'Вложенные папки: Выкл'} // prettier: split-lines
               icon={<SubfoldersIcon value={subfolders} />}
@@ -112,7 +103,7 @@ function ViewSideLocation({
         </div>
       </div>
       <SelectLocation
-        value={activeLocation}
+        value={location}
         folderTree={folderTree}
         prefix={prefixes.folders_list}
         onClick={handleClickFolder}

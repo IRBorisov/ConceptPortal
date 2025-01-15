@@ -9,10 +9,10 @@ import { EditorView } from 'codemirror';
 import { forwardRef, useRef, useState } from 'react';
 
 import Label from '@/components/ui/Label';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import DlgEditReference from '@/dialogs/DlgEditReference';
 import { ReferenceType } from '@/models/language';
 import { ConstituentaID, IRSForm } from '@/models/rsform';
+import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/color';
 import { CodeMirrorWrapper } from '@/utils/codemirror';
 import { PARAMETER } from '@/utils/constants';
@@ -92,7 +92,7 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
     },
     ref
   ) => {
-    const { darkMode } = useConceptOptions();
+    const darkMode = usePreferencesStore(state => state.darkMode);
 
     const [isFocused, setIsFocused] = useState(false);
 

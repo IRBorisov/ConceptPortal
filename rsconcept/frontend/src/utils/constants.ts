@@ -108,25 +108,6 @@ export const external_urls = {
 export const storage = {
   PREFIX: 'portal.',
 
-  themeDark: 'theme.dark',
-
-  rseditShowList: 'rsedit.show_list',
-  rseditShowControls: 'rsedit.show_controls',
-
-  librarySearchHead: 'library.search.head',
-  librarySearchFolderMode: 'library.search.folder_mode',
-  librarySearchSubfolders: 'library.search.subfolders',
-  librarySearchLocation: 'library.search.location',
-  librarySearchVisible: 'library.search.visible',
-  librarySearchOwned: 'library.search.owned',
-  librarySearchEditor: 'library.search.editor',
-  librarySearchUser: 'library.search.user',
-  libraryPagination: 'library.pagination',
-
-  rsgraphFilter: 'rsgraph.filter2',
-  rsgraphColoring: 'rsgraph.coloring',
-  rsgraphFoldHidden: 'rsgraph.fold_hidden',
-
   ossShowGrid: 'oss.show_grid',
   ossEdgeStraight: 'oss.edge_straight',
   ossEdgeAnimate: 'oss.edge_animate',

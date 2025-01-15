@@ -25,13 +25,12 @@ import { CProps } from '@/components/props';
 import ToolbarGraphSelection from '@/components/select/ToolbarGraphSelection';
 import Overlay from '@/components/ui/Overlay';
 import DlgGraphParams from '@/dialogs/DlgGraphParams';
-import useLocalStorage from '@/hooks/useLocalStorage';
-import { GraphColoring, GraphFilterParams } from '@/models/miscellaneous';
 import { ConstituentaID, CstType, IConstituenta } from '@/models/rsform';
 import { isBasicConcept } from '@/models/rsformAPI';
 import { useMainHeight } from '@/stores/appLayout';
+import { useTermGraphStore } from '@/stores/termGraph';
 import { APP_COLORS, colorBgGraphNode } from '@/styling/color';
-import { PARAMETER, storage } from '@/utils/constants';
+import { PARAMETER } from '@/utils/constants';
 import { errors } from '@/utils/labels';
 
 import { useRSEdit } from '../RSEditContext';
@@ -62,29 +61,14 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
   const { addSelectedNodes } = store.getState();
 
   const [showParamsDialog, setShowParamsDialog] = useState(false);
-  const [filterParams, setFilterParams] = useLocalStorage<GraphFilterParams>(storage.rsgraphFilter, {
-    noHermits: true,
-    noTemplates: false,
-    noTransitive: true,
-    noText: false,
-    foldDerived: false,
 
-    focusShowInputs: true,
-    focusShowOutputs: true,
-
-    allowBase: true,
-    allowStruct: true,
-    allowTerm: true,
-    allowAxiom: true,
-    allowFunction: true,
-    allowPredicate: true,
-    allowConstant: true,
-    allowTheorem: true
-  });
-  const [coloring, setColoring] = useLocalStorage<GraphColoring>(storage.rsgraphColoring, 'type');
+  const filter = useTermGraphStore(state => state.filter);
+  const setFilter = useTermGraphStore(state => state.setFilter);
+  const coloring = useTermGraphStore(state => state.coloring);
+  const setColoring = useTermGraphStore(state => state.setColoring);
 
   const [focusCst, setFocusCst] = useState<IConstituenta | undefined>(undefined);
-  const filteredGraph = useGraphFilter(controller.schema, filterParams, focusCst);
+  const filteredGraph = useGraphFilter(controller.schema, filter, focusCst);
   const [hidden, setHidden] = useState<ConstituentaID[]>([]);
 
   const [isDragging, setIsDragging] = useState(false);
@@ -139,7 +123,7 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
           data: {
             fill: focusCst === cst ? APP_COLORS.bgPurple : colorBgGraphNode(cst, coloring),
             label: cst.alias,
-            description: !filterParams.noText ? cst.term_resolved : ''
+            description: !filter.noText ? cst.term_resolved : ''
           }
         });
       }
@@ -167,24 +151,15 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
       });
     });
 
-    applyLayout(newNodes, newEdges, !filterParams.noText);
+    applyLayout(newNodes, newEdges, !filter.noText);
 
     setNodes(newNodes);
     setEdges(newEdges);
-  }, [
-    controller.schema,
-    filteredGraph,
-    setNodes,
-    setEdges,
-    filterParams.noText,
-    controller.selected,
-    focusCst,
-    coloring
-  ]);
+  }, [controller.schema, filteredGraph, setNodes, setEdges, filter.noText, controller.selected, focusCst, coloring]);
 
   useEffect(() => {
     setNeedReset(true);
-  }, [controller.schema, filterParams.noText, focusCst, coloring, flow.viewportInitialized]);
+  }, [controller.schema, filter.noText, focusCst, coloring, flow.viewportInitialized]);
 
   useEffect(() => {
     if (!controller.schema || !needReset || !flow.viewportInitialized) {
@@ -198,7 +173,7 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
     setTimeout(() => {
       flow.fitView({ duration: PARAMETER.zoomDuration });
     }, PARAMETER.minimalTimeout);
-  }, [toggleResetView, flow, focusCst, filterParams]);
+  }, [toggleResetView, flow, focusCst, filter]);
 
   function handleSetSelected(newSelection: number[]) {
     controller.setSelected(newSelection);
@@ -218,10 +193,6 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
       return;
     }
     controller.promptDeleteCst();
-  }
-
-  function handleChangeParams(params: GraphFilterParams) {
-    setFilterParams(params);
   }
 
   function handleSaveImage() {
@@ -283,10 +254,10 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
   }
 
   function handleFoldDerived() {
-    setFilterParams(prev => ({
-      ...prev,
-      foldDerived: !prev.foldDerived
-    }));
+    setFilter({
+      ...filter,
+      foldDerived: !filter.foldDerived
+    });
     setTimeout(() => {
       setToggleResetView(prev => !prev);
     }, PARAMETER.graphRefreshDelay);
@@ -325,17 +296,13 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
   return (
     <>
       {showParamsDialog ? (
-        <DlgGraphParams
-          hideWindow={() => setShowParamsDialog(false)}
-          initial={filterParams}
-          onConfirm={handleChangeParams}
-        />
+        <DlgGraphParams hideWindow={() => setShowParamsDialog(false)} initial={filter} onConfirm={setFilter} />
       ) : null}
 
       <Overlay position='cc-tab-tools' className='flex flex-col items-center rounded-b-2xl cc-blur'>
         <ToolbarTermGraph
-          noText={filterParams.noText}
-          foldDerived={filterParams.foldDerived}
+          noText={filter.noText}
+          foldDerived={filter.foldDerived}
           showParamsDialog={() => setShowParamsDialog(true)}
           onCreate={handleCreateCst}
           onDelete={handleDeleteCst}
@@ -343,10 +310,10 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
           onSaveImage={handleSaveImage}
           toggleFoldDerived={handleFoldDerived}
           toggleNoText={() =>
-            setFilterParams(prev => ({
-              ...prev,
-              noText: !prev.noText
-            }))
+            setFilter({
+              ...filter,
+              noText: !filter.noText
+            })
           }
         />
         {!focusCst ? (
@@ -367,19 +334,19 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
           <ToolbarFocusedCst
             center={focusCst}
             reset={() => handleSetFocus(undefined)}
-            showInputs={filterParams.focusShowInputs}
-            showOutputs={filterParams.focusShowOutputs}
+            showInputs={filter.focusShowInputs}
+            showOutputs={filter.focusShowOutputs}
             toggleShowInputs={() =>
-              setFilterParams(prev => ({
-                ...prev,
-                focusShowInputs: !prev.focusShowInputs
-              }))
+              setFilter({
+                ...filter,
+                focusShowInputs: !filter.focusShowInputs
+              })
             }
             toggleShowOutputs={() =>
-              setFilterParams(prev => ({
-                ...prev,
-                focusShowOutputs: !prev.focusShowOutputs
-              }))
+              setFilter({
+                ...filter,
+                focusShowOutputs: !filter.focusShowOutputs
+              })
             }
           />
         ) : null}

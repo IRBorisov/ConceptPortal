@@ -7,13 +7,13 @@ import { CProps } from '@/components/props';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { useConceptOptions } from '@/context/ConceptOptionsContext';
-import useLocalStorage from '@/hooks/useLocalStorage';
 import useWindowSize from '@/hooks/useWindowSize';
 import { GraphColoring } from '@/models/miscellaneous';
 import { ConstituentaID, IRSForm } from '@/models/rsform';
 import { useFitHeight } from '@/stores/appLayout';
+import { useTermGraphStore } from '@/stores/termGraph';
 import { APP_COLORS, colorBgGraphNode } from '@/styling/color';
-import { globals, PARAMETER, prefixes, storage } from '@/utils/constants';
+import { globals, PARAMETER, prefixes } from '@/utils/constants';
 
 interface ViewHiddenProps {
   items: ConstituentaID[];
@@ -29,7 +29,9 @@ interface ViewHiddenProps {
 function ViewHidden({ items, selected, toggleSelection, setFocus, schema, coloringScheme, onEdit }: ViewHiddenProps) {
   const windowSize = useWindowSize();
   const localSelected = items.filter(id => selected.includes(id));
-  const [isFolded, setIsFolded] = useLocalStorage(storage.rsgraphFoldHidden, false);
+
+  const isFolded = useTermGraphStore(state => state.foldHidden);
+  const toggleFolded = useTermGraphStore(state => state.toggleFoldHidden);
   const { setHoverCst } = useConceptOptions();
   const hiddenHeight = useFitHeight(windowSize.isSmall ? '10.4rem + 2px' : '12.5rem + 2px');
 
@@ -52,7 +54,7 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
           noHover
           title={!isFolded ? 'Свернуть' : 'Развернуть'}
           icon={!isFolded ? <IconDropArrowUp size='1.25rem' /> : <IconDropArrow size='1.25rem' />}
-          onClick={() => setIsFolded(prev => !prev)}
+          onClick={toggleFolded}
         />
       </Overlay>
       <div className={clsx('pt-2 clr-input border-x pb-2', { 'border-b rounded-b-md': isFolded })}>
@@ -87,7 +89,6 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
       >
         {items.map(cstID => {
           const cst = schema.cstByID.get(cstID)!;
-          const adjustedColoring = coloringScheme === 'none' ? 'status' : coloringScheme;
           const id = `${prefixes.cst_hidden_list}${cst.alias}`;
           return (
             <button
@@ -95,7 +96,7 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
               type='button'
               className='min-w-[3rem] rounded-md text-center select-none'
               style={{
-                backgroundColor: colorBgGraphNode(cst, adjustedColoring),
+                backgroundColor: colorBgGraphNode(cst, coloringScheme),
                 ...(localSelected.includes(cstID)
                   ? {
                       outlineWidth: '2px',

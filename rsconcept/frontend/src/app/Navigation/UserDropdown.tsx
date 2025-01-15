@@ -16,7 +16,6 @@ import { CProps } from '@/components/props';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
 import { useAuth } from '@/context/AuthContext';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { usePreferencesStore } from '@/stores/preferences';
 
@@ -28,10 +27,11 @@ interface UserDropdownProps {
 }
 
 function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
-  const { darkMode, toggleDarkMode } = useConceptOptions();
   const router = useConceptNavigation();
   const { user, logout } = useAuth();
 
+  const darkMode = usePreferencesStore(state => state.darkMode);
+  const toggleDarkMode = usePreferencesStore(state => state.toggleDarkMode);
   const showHelp = usePreferencesStore(state => state.showHelp);
   const toggleShowHelp = usePreferencesStore(state => state.toggleShowHelp);
   const adminMode = usePreferencesStore(state => state.adminMode);

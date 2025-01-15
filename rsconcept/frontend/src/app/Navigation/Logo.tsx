@@ -1,8 +1,8 @@
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import useWindowSize from '@/hooks/useWindowSize';
+import { usePreferencesStore } from '@/stores/preferences';
 
 function Logo() {
-  const { darkMode } = useConceptOptions();
+  const darkMode = usePreferencesStore(state => state.darkMode);
   const size = useWindowSize();
 
   return (

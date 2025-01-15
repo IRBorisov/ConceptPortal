@@ -3,11 +3,11 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import useLocalStorage from '@/hooks/useLocalStorage';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { useMainHeight } from '@/stores/appLayout';
-import { globals, storage } from '@/utils/constants';
+import { usePreferencesStore } from '@/stores/preferences';
+import { globals } from '@/utils/constants';
 
 import { useRSEdit } from '../RSEditContext';
 import ViewConstituents from '../ViewConstituents';
@@ -29,7 +29,8 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
   const windowSize = useWindowSize();
   const mainHeight = useMainHeight();
 
-  const [showList, setShowList] = useLocalStorage(storage.rseditShowList, true);
+  const showList = usePreferencesStore(state => state.showCstSideList);
+
   const [toggleReset, setToggleReset] = useState(false);
 
   const disabled = !activeCst || !controller.isContentEditable || controller.isProcessing;
@@ -78,10 +79,8 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
         activeCst={activeCst}
         disabled={disabled}
         modified={isModified}
-        showList={showList}
         onSubmit={initiateSubmit}
         onReset={() => setToggleReset(prev => !prev)}
-        onToggleList={() => setShowList(prev => !prev)}
       />
       <div
         tabIndex={-1}

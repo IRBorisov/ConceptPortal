@@ -13,14 +13,13 @@ import Overlay from '@/components/ui/Overlay';
 import { useRSForm } from '@/context/RSFormContext';
 import DlgShowAST from '@/dialogs/DlgShowAST';
 import useCheckConstituenta from '@/hooks/useCheckConstituenta';
-import useLocalStorage from '@/hooks/useLocalStorage';
 import { HelpTopic } from '@/models/miscellaneous';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { getDefinitionPrefix } from '@/models/rsformAPI';
 import { IExpressionParse, IRSErrorDescription, SyntaxTree } from '@/models/rslang';
 import { TokenID } from '@/models/rslang';
+import { usePreferencesStore } from '@/stores/preferences';
 import { transformAST } from '@/utils/codemirror';
-import { storage } from '@/utils/constants';
 import { errors, labelTypification } from '@/utils/labels';
 
 import ParsingResult from './ParsingResult';
@@ -64,10 +63,10 @@ function EditorRSExpression({
   const { resetParse } = parser;
   const rsInput = useRef<ReactCodeMirrorRef>(null);
 
+  const showControls = usePreferencesStore(state => state.showExpressionControls);
   const [syntaxTree, setSyntaxTree] = useState<SyntaxTree>([]);
   const [expression, setExpression] = useState('');
   const [showAST, setShowAST] = useState(false);
-  const [showControls, setShowControls] = useLocalStorage(storage.rseditShowControls, true);
 
   useEffect(() => {
     setIsModified(false);
@@ -154,13 +153,7 @@ function EditorRSExpression({
         <DlgShowAST expression={expression} syntaxTree={syntaxTree} hideWindow={() => setShowAST(false)} />
       ) : null}
 
-      <ToolbarRSExpression
-        disabled={disabled}
-        showControls={showControls}
-        showAST={handleShowAST}
-        toggleControls={() => setShowControls(prev => !prev)}
-        showTypeGraph={onShowTypeGraph}
-      />
+      <ToolbarRSExpression disabled={disabled} showAST={handleShowAST} showTypeGraph={onShowTypeGraph} />
 
       <Overlay
         position='top-[-0.5rem] right-1/2 translate-x-1/2'

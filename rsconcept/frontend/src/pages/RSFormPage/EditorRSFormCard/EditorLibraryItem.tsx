@@ -18,12 +18,12 @@ import Overlay from '@/components/ui/Overlay';
 import Tooltip from '@/components/ui/Tooltip';
 import ValueIcon from '@/components/ui/ValueIcon';
 import { useAccessMode } from '@/context/AccessModeContext';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useUsers } from '@/context/UsersContext';
 import useDropdown from '@/hooks/useDropdown';
 import { ILibraryItemData, ILibraryItemEditor } from '@/models/library';
 import { UserID, UserLevel } from '@/models/user';
+import { useLibrarySearchStore } from '@/stores/librarySearch';
 import { prefixes } from '@/utils/constants';
 import { prompts } from '@/utils/labels';
 
@@ -38,7 +38,7 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
   const { accessLevel } = useAccessMode();
   const intl = useIntl();
   const router = useConceptNavigation();
-  const { setLocation, setFolderMode } = useConceptOptions();
+  const setLocation = useLibrarySearchStore(state => state.setLocation);
 
   const ownerSelector = useDropdown();
   const onSelectUser = useCallback(
@@ -61,10 +61,9 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
         return;
       }
       setLocation(item.location);
-      setFolderMode(true);
       router.push(urls.library, event.ctrlKey || event.metaKey);
     },
-    [setLocation, setFolderMode, item, router]
+    [setLocation, item, router]
   );
 
   if (!item) {

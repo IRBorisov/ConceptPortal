@@ -20,6 +20,7 @@ import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IConstituenta } from '@/models/rsform';
+import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip, tooltips } from '@/utils/labels';
 
@@ -29,24 +30,23 @@ interface ToolbarConstituentaProps {
   activeCst?: IConstituenta;
   disabled: boolean;
   modified: boolean;
-  showList: boolean;
 
   onSubmit: () => void;
   onReset: () => void;
-  onToggleList: () => void;
 }
 
 function ToolbarConstituenta({
   activeCst,
   disabled,
   modified,
-  showList,
 
   onSubmit,
-  onReset,
-  onToggleList
+  onReset
 }: ToolbarConstituentaProps) {
   const controller = useRSEdit();
+
+  const showList = usePreferencesStore(state => state.showCstSideList);
+  const toggleList = usePreferencesStore(state => state.toggleShowCstSideList);
 
   return (
     <Overlay
@@ -104,7 +104,7 @@ function ToolbarConstituenta({
       <MiniButton
         title='Отображение списка конституент'
         icon={showList ? <IconList size='1.25rem' className='icon-primary' /> : <IconListOff size='1.25rem' />}
-        onClick={onToggleList}
+        onClick={toggleList}
       />
 
       {controller.isContentEditable ? (

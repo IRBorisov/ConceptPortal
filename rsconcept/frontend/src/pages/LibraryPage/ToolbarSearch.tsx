@@ -22,7 +22,7 @@ import SelectorButton from '@/components/ui/SelectorButton';
 import { useUsers } from '@/context/UsersContext';
 import useDropdown from '@/hooks/useDropdown';
 import { LocationHead } from '@/models/library';
-import { UserID } from '@/models/user';
+import { useHasCustomFilter, useLibrarySearchStore } from '@/stores/librarySearch';
 import { prefixes } from '@/utils/constants';
 import { describeLocationHead, labelLocationHead } from '@/utils/labels';
 import { tripleToggleColor } from '@/utils/utils';
@@ -30,65 +30,38 @@ import { tripleToggleColor } from '@/utils/utils';
 interface ToolbarSearchProps {
   total: number;
   filtered: number;
-  hasCustomFilter: boolean;
-
-  query: string;
-  onChangeQuery: (newValue: string) => void;
-  path: string;
-  onChangePath: (newValue: string) => void;
-  head: LocationHead | undefined;
-  onChangeHead: (newValue: LocationHead | undefined) => void;
-
-  folderMode: boolean;
-  toggleFolderMode: () => void;
-
-  isVisible: boolean | undefined;
-  toggleVisible: () => void;
-  isOwned: boolean | undefined;
-  toggleOwned: () => void;
-  isEditor: boolean | undefined;
-  toggleEditor: () => void;
-  filterUser: UserID | undefined;
-  onChangeFilterUser: (newValue: UserID | undefined) => void;
-
-  resetFilter: () => void;
 }
 
-function ToolbarSearch({
-  total,
-  filtered,
-  hasCustomFilter,
-
-  query,
-  onChangeQuery,
-  path,
-  onChangePath,
-  head,
-  onChangeHead,
-
-  folderMode,
-  toggleFolderMode,
-
-  isVisible,
-  toggleVisible,
-  isOwned,
-  toggleOwned,
-  isEditor,
-  toggleEditor,
-  filterUser,
-  onChangeFilterUser,
-
-  resetFilter
-}: ToolbarSearchProps) {
+function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
   const headMenu = useDropdown();
   const userMenu = useDropdown();
   const { users } = useUsers();
+
+  const query = useLibrarySearchStore(state => state.query);
+  const setQuery = useLibrarySearchStore(state => state.setQuery);
+  const path = useLibrarySearchStore(state => state.path);
+  const setPath = useLibrarySearchStore(state => state.setPath);
+  const head = useLibrarySearchStore(state => state.head);
+  const setHead = useLibrarySearchStore(state => state.setHead);
+  const folderMode = useLibrarySearchStore(state => state.folderMode);
+  const toggleFolderMode = useLibrarySearchStore(state => state.toggleFolderMode);
+  const isOwned = useLibrarySearchStore(state => state.isOwned);
+  const toggleOwned = useLibrarySearchStore(state => state.toggleOwned);
+  const isEditor = useLibrarySearchStore(state => state.isEditor);
+  const toggleEditor = useLibrarySearchStore(state => state.toggleEditor);
+  const isVisible = useLibrarySearchStore(state => state.isVisible);
+  const toggleVisible = useLibrarySearchStore(state => state.toggleVisible);
+  const filterUser = useLibrarySearchStore(state => state.filterUser);
+  const setFilterUser = useLibrarySearchStore(state => state.setFilterUser);
+
+  const resetFilter = useLibrarySearchStore(state => state.resetFilter);
+  const hasCustomFilter = useHasCustomFilter();
 
   const userActive = isOwned !== undefined || isEditor !== undefined || filterUser !== undefined;
 
   function handleChange(newValue: LocationHead | undefined) {
     headMenu.hide();
-    onChangeHead(newValue);
+    setHead(newValue);
   }
 
   function handleToggleFolder() {
@@ -157,7 +130,7 @@ function ToolbarSearch({
               className='min-w-[15rem] text-sm mx-1 mb-1'
               items={users}
               value={filterUser}
-              onSelectValue={onChangeFilterUser}
+              onSelectValue={setFilterUser}
             />
           </Dropdown>
         </div>
@@ -177,7 +150,7 @@ function ToolbarSearch({
           noBorder
           className={clsx('min-w-[7rem] sm:min-w-[10rem] max-w-[20rem]', folderMode && 'flex-grow')}
           query={query}
-          onChangeQuery={onChangeQuery}
+          onChangeQuery={setQuery}
         />
         {!folderMode ? (
           <div ref={headMenu.ref} className='flex items-center h-full py-1 select-none'>
@@ -236,7 +209,7 @@ function ToolbarSearch({
             noBorder
             className='w-[4.5rem] sm:w-[5rem] flex-grow'
             query={path}
-            onChangeQuery={onChangePath}
+            onChangeQuery={setPath}
           />
         ) : null}
       </div>

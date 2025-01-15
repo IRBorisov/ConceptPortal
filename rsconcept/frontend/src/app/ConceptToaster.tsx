@@ -1,11 +1,11 @@
 import { ToastContainer, type ToastContainerProps } from 'react-toastify';
 
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
+import { usePreferencesStore } from '@/stores/preferences';
 
 interface ToasterThemedProps extends Omit<ToastContainerProps, 'theme'> {}
 
 function ToasterThemed(props: ToasterThemedProps) {
-  const { darkMode } = useConceptOptions();
+  const darkMode = usePreferencesStore(state => state.darkMode);
 
   return <ToastContainer theme={darkMode ? 'dark' : 'light'} {...props} />;
 }

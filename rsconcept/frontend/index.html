@@ -20,22 +20,6 @@
     />
 
     <title>Концепт Портал</title>
-
-    <!-- <script src="https://unpkg.com/react-scan/dist/auto.global.js"></script> -->
-    <script>
-      let isDark = false;
-      if ('portal.theme.dark' in localStorage) {
-        isDark = localStorage.getItem('portal.theme.dark') === 'true';
-      } else if (window.matchMedia) {
-        isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        localStorage.setItem('portal.theme.dark', isDark ? 'true' : 'false');
-      }
-      if (isDark) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    </script>
   </head>
   <body>
     <div id="root"></div>

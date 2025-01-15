@@ -14,27 +14,30 @@ import MiniButton from '@/components/ui/MiniButton';
 import TextURL from '@/components/ui/TextURL';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useUsers } from '@/context/UsersContext';
-import useLocalStorage from '@/hooks/useLocalStorage';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ILibraryItem, LibraryItemType } from '@/models/library';
 import { useFitHeight } from '@/stores/appLayout';
+import { useLibrarySearchStore } from '@/stores/librarySearch';
+import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/color';
-import { storage } from '@/utils/constants';
 
 interface TableLibraryItemsProps {
   items: ILibraryItem[];
-  resetQuery: () => void;
-  folderMode: boolean;
-  toggleFolderMode: () => void;
 }
 
 const columnHelper = createColumnHelper<ILibraryItem>();
 
-function TableLibraryItems({ items, resetQuery, folderMode, toggleFolderMode }: TableLibraryItemsProps) {
+function TableLibraryItems({ items }: TableLibraryItemsProps) {
   const router = useConceptNavigation();
   const intl = useIntl();
   const { getUserLabel } = useUsers();
-  const [itemsPerPage, setItemsPerPage] = useLocalStorage<number>(storage.libraryPagination, 50);
+
+  const folderMode = useLibrarySearchStore(state => state.folderMode);
+  const toggleFolderMode = useLibrarySearchStore(state => state.toggleFolderMode);
+  const resetFilter = useLibrarySearchStore(state => state.resetFilter);
+
+  const itemsPerPage = usePreferencesStore(state => state.libraryPagination);
+  const setItemsPerPage = usePreferencesStore(state => state.setLibraryPagination);
 
   function handleOpenItem(item: ILibraryItem, event: CProps.EventMouse) {
     const selection = window.getSelection();
@@ -163,7 +166,7 @@ function TableLibraryItems({ items, resetQuery, folderMode, toggleFolderMode }: 
           <p>Список схем пуст</p>
           <p className='flex gap-6'>
             <TextURL text='Создать схему' href='/library/create' />
-            <TextURL text='Очистить фильтр' onClick={resetQuery} />
+            <TextURL text='Очистить фильтр' onClick={resetFilter} />
           </p>
         </FlexColumn>
       }
