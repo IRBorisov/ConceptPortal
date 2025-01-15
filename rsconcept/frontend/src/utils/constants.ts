@@ -103,21 +103,6 @@ export const external_urls = {
 };
 
 /**
- * Local storage ID.
- */
-export const storage = {
-  PREFIX: 'portal.',
-
-  ossShowGrid: 'oss.show_grid',
-  ossEdgeStraight: 'oss.edge_straight',
-  ossEdgeAnimate: 'oss.edge_animate',
-
-  cstFilterMatch: 'cst.filter.match',
-  cstFilterGraph: 'cst.filter.graph',
-  cstFilterShowInherited: 'cst.filter.show_inherited'
-};
-
-/**
  * Global element ID.
  */
 export const globals = {

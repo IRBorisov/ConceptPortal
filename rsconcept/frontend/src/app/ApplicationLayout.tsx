@@ -9,6 +9,8 @@ import { NavigationState } from '@/context/NavigationContext';
 import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/appLayout';
 import { globals } from '@/utils/constants';
 
+import { GlobalTooltips } from './GlobalTooltips';
+
 function ApplicationLayout() {
   const mainHeight = useMainHeight();
   const viewportHeight = useViewportHeight();
@@ -26,6 +28,8 @@ function ApplicationLayout() {
           draggable={false}
           pauseOnFocusLoss={false}
         />
+
+        <GlobalTooltips />
 
         <Navigation />
 

@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import { CstClass, IConstituenta } from '@/models/rsform';
+import { useTooltipsStore } from '@/stores/tooltips';
 import { APP_COLORS, colorFgCstStatus } from '@/styling/color';
 import { globals } from '@/utils/constants';
 
@@ -19,7 +19,7 @@ interface BadgeConstituentaProps extends CProps.Styling {
  * Displays a badge with a constituenta alias and information tooltip.
  */
 function BadgeConstituenta({ value, prefixID, className, style }: BadgeConstituentaProps) {
-  const { setHoverCst } = useConceptOptions();
+  const setActiveCst = useTooltipsStore(state => state.setActiveCst);
 
   return (
     <div
@@ -39,7 +39,7 @@ function BadgeConstituenta({ value, prefixID, className, style }: BadgeConstitue
         ...style
       }}
       data-tooltip-id={globals.constituenta_tooltip}
-      onMouseEnter={() => setHoverCst(value)}
+      onMouseEnter={() => setActiveCst(value)}
     >
       {value.alias}
     </div>

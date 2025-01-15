@@ -19,12 +19,12 @@ import {
 import { CProps } from '@/components/props';
 import Overlay from '@/components/ui/Overlay';
 import { useOSS } from '@/context/OssContext';
-import useLocalStorage from '@/hooks/useLocalStorage';
 import { OssNode } from '@/models/miscellaneous';
 import { OperationID } from '@/models/oss';
 import { useMainHeight } from '@/stores/appLayout';
+import { useOSSGraphStore } from '@/stores/ossGraph';
 import { APP_COLORS } from '@/styling/color';
-import { PARAMETER, storage } from '@/utils/constants';
+import { PARAMETER } from '@/utils/constants';
 import { errors } from '@/utils/labels';
 
 import { useOssEdit } from '../OssEditContext';
@@ -46,9 +46,9 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
   const controller = useOssEdit();
   const flow = useReactFlow();
 
-  const [showGrid, setShowGrid] = useLocalStorage<boolean>(storage.ossShowGrid, false);
-  const [edgeAnimate, setEdgeAnimate] = useLocalStorage<boolean>(storage.ossEdgeAnimate, false);
-  const [edgeStraight, setEdgeStraight] = useLocalStorage<boolean>(storage.ossEdgeStraight, false);
+  const showGrid = useOSSGraphStore(state => state.showGrid);
+  const edgeAnimate = useOSSGraphStore(state => state.edgeAnimate);
+  const edgeStraight = useOSSGraphStore(state => state.edgeStraight);
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -277,9 +277,6 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
       <Overlay position='top-[1.9rem] pt-1 right-1/2 translate-x-1/2' className='rounded-b-2xl cc-blur'>
         <ToolbarOssGraph
           isModified={isModified}
-          showGrid={showGrid}
-          edgeAnimate={edgeAnimate}
-          edgeStraight={edgeStraight}
           onFitView={() => flow.fitView({ duration: PARAMETER.zoomDuration })}
           onCreate={() => handleCreateOperation(controller.selected)}
           onDelete={handleDeleteSelected}
@@ -288,9 +285,6 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
           onResetPositions={() => setToggleReset(prev => !prev)}
           onSavePositions={handleSavePositions}
           onSaveImage={handleSaveImage}
-          toggleShowGrid={() => setShowGrid(prev => !prev)}
-          toggleEdgeAnimate={() => setEdgeAnimate(prev => !prev)}
-          toggleEdgeStraight={() => setEdgeStraight(prev => !prev)}
         />
       </Overlay>
       {menuProps ? (

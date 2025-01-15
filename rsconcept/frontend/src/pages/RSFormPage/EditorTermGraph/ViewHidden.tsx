@@ -6,12 +6,12 @@ import { IconDropArrow, IconDropArrowUp } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
-import { useConceptOptions } from '@/context/ConceptOptionsContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { GraphColoring } from '@/models/miscellaneous';
 import { ConstituentaID, IRSForm } from '@/models/rsform';
 import { useFitHeight } from '@/stores/appLayout';
 import { useTermGraphStore } from '@/stores/termGraph';
+import { useTooltipsStore } from '@/stores/tooltips';
 import { APP_COLORS, colorBgGraphNode } from '@/styling/color';
 import { globals, PARAMETER, prefixes } from '@/utils/constants';
 
@@ -32,7 +32,7 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
 
   const isFolded = useTermGraphStore(state => state.foldHidden);
   const toggleFolded = useTermGraphStore(state => state.toggleFoldHidden);
-  const { setHoverCst } = useConceptOptions();
+  const setActiveCst = useTooltipsStore(state => state.setActiveCst);
   const hiddenHeight = useFitHeight(windowSize.isSmall ? '10.4rem + 2px' : '12.5rem + 2px');
 
   function handleClick(cstID: ConstituentaID, event: CProps.EventMouse) {
@@ -110,7 +110,7 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
               onClick={event => handleClick(cstID, event)}
               onDoubleClick={() => onEdit(cstID)}
               data-tooltip-id={globals.constituenta_tooltip}
-              onMouseEnter={() => setHoverCst(cst)}
+              onMouseEnter={() => setActiveCst(cst)}
             >
               {cst.alias}
             </button>

@@ -21,6 +21,7 @@ import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniButton from '@/components/ui/MiniButton';
 import { HelpTopic } from '@/models/miscellaneous';
 import { OperationType } from '@/models/oss';
+import { useOSSGraphStore } from '@/stores/ossGraph';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/labels';
 
@@ -28,9 +29,6 @@ import { useOssEdit } from '../OssEditContext';
 
 interface ToolbarOssGraphProps {
   isModified: boolean;
-  showGrid: boolean;
-  edgeAnimate: boolean;
-  edgeStraight: boolean;
   onCreate: () => void;
   onDelete: () => void;
   onEdit: () => void;
@@ -39,16 +37,10 @@ interface ToolbarOssGraphProps {
   onSaveImage: () => void;
   onSavePositions: () => void;
   onResetPositions: () => void;
-  toggleShowGrid: () => void;
-  toggleEdgeAnimate: () => void;
-  toggleEdgeStraight: () => void;
 }
 
 function ToolbarOssGraph({
   isModified,
-  showGrid,
-  edgeAnimate,
-  edgeStraight,
   onCreate,
   onDelete,
   onEdit,
@@ -56,13 +48,18 @@ function ToolbarOssGraph({
   onFitView,
   onSaveImage,
   onSavePositions,
-  onResetPositions,
-  toggleShowGrid,
-  toggleEdgeAnimate,
-  toggleEdgeStraight
+  onResetPositions
 }: ToolbarOssGraphProps) {
   const controller = useOssEdit();
   const selectedOperation = controller.schema?.operationByID.get(controller.selected[0]);
+
+  const showGrid = useOSSGraphStore(state => state.showGrid);
+  const edgeAnimate = useOSSGraphStore(state => state.edgeAnimate);
+  const edgeStraight = useOSSGraphStore(state => state.edgeStraight);
+  const toggleShowGrid = useOSSGraphStore(state => state.toggleShowGrid);
+  const toggleEdgeAnimate = useOSSGraphStore(state => state.toggleEdgeAnimate);
+  const toggleEdgeStraight = useOSSGraphStore(state => state.toggleEdgeStraight);
+
   const readyForSynthesis = (() => {
     if (!selectedOperation || selectedOperation.operation_type !== OperationType.SYNTHESIS) {
       return false;

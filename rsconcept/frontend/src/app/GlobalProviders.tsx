@@ -4,7 +4,6 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { IntlProvider } from 'react-intl';
 
 import { AuthState } from '@/context/AuthContext';
-import { OptionsState } from '@/context/ConceptOptionsContext';
 import { GlobalOssState } from '@/context/GlobalOssContext';
 import { LibraryState } from '@/context/LibraryContext';
 import { UsersState } from '@/context/UsersContext';
@@ -31,11 +30,11 @@ function GlobalProviders({ children }: React.PropsWithChildren) {
     onError={logError}
   >
   <IntlProvider locale='ru' defaultLocale='ru'>
-  <OptionsState>
   <UsersState>
   <AuthState>
   <LibraryState>
   <GlobalOssState>
+  
 
     {children}
   
@@ -43,7 +42,6 @@ function GlobalProviders({ children }: React.PropsWithChildren) {
   </LibraryState>
   </AuthState>
   </UsersState>
-  </OptionsState>
   </IntlProvider>
   </ErrorBoundary>);
 }

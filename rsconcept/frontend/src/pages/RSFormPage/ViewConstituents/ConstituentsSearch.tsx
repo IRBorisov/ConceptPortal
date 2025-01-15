@@ -1,18 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { IconChild } from '@/components/Icons';
 import SelectGraphFilter from '@/components/select/SelectGraphFilter';
 import SelectMatchMode from '@/components/select/SelectMatchMode';
 import MiniButton from '@/components/ui/MiniButton';
 import SearchBar from '@/components/ui/SearchBar';
-import useLocalStorage from '@/hooks/useLocalStorage';
-import { CstMatchMode, DependencyMode } from '@/models/miscellaneous';
 import { applyGraphFilter } from '@/models/miscellaneousAPI';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
 import { matchConstituenta } from '@/models/rsformAPI';
-import { storage } from '@/utils/constants';
+import { useCstSearchStore } from '@/stores/cstSearch';
 
 interface ConstituentsSearchProps {
   schema?: IRSForm;
@@ -23,10 +21,14 @@ interface ConstituentsSearchProps {
 }
 
 function ConstituentsSearch({ schema, activeID, activeExpression, dense, setFiltered }: ConstituentsSearchProps) {
-  const [filterMatch, setFilterMatch] = useLocalStorage(storage.cstFilterMatch, CstMatchMode.ALL);
-  const [filterSource, setFilterSource] = useLocalStorage(storage.cstFilterGraph, DependencyMode.ALL);
-  const [filterText, setFilterText] = useState('');
-  const [showInherited, setShowInherited] = useLocalStorage(storage.cstFilterShowInherited, true);
+  const query = useCstSearchStore(state => state.query);
+  const filterMatch = useCstSearchStore(state => state.match);
+  const filterSource = useCstSearchStore(state => state.source);
+  const includeInherited = useCstSearchStore(state => state.includeInherited);
+  const setQuery = useCstSearchStore(state => state.setQuery);
+  const setMatch = useCstSearchStore(state => state.setMatch);
+  const setSource = useCstSearchStore(state => state.setSource);
+  const toggleInherited = useCstSearchStore(state => state.toggleInherited);
 
   useEffect(() => {
     if (!schema || schema.items.length === 0) {
@@ -39,15 +41,15 @@ function ConstituentsSearch({ schema, activeID, activeExpression, dense, setFilt
     } else {
       result = applyGraphFilter(schema, activeID, filterSource);
     }
-    if (filterText) {
-      result = result.filter(cst => matchConstituenta(cst, filterText, filterMatch));
+    if (query) {
+      result = result.filter(cst => matchConstituenta(cst, query, filterMatch));
     }
-    if (!showInherited) {
+    if (!includeInherited) {
       result = result.filter(cst => !cst.is_inherited);
     }
     setFiltered(result);
   }, [
-    filterText,
+    query,
     setFiltered,
     filterSource,
     activeExpression,
@@ -55,7 +57,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, dense, setFilt
     schema,
     filterMatch,
     activeID,
-    showInherited
+    includeInherited
   ]);
 
   return (
@@ -64,18 +66,18 @@ function ConstituentsSearch({ schema, activeID, activeExpression, dense, setFilt
         id='constituents_search'
         noBorder
         className='min-w-[6rem] w-[6rem] mr-2 flex-grow'
-        query={filterText}
-        onChangeQuery={setFilterText}
+        query={query}
+        onChangeQuery={setQuery}
       />
-      <SelectMatchMode value={filterMatch} onChange={newValue => setFilterMatch(newValue)} dense={dense} />
-      <SelectGraphFilter value={filterSource} onChange={newValue => setFilterSource(newValue)} dense={dense} />
+      <SelectMatchMode value={filterMatch} onChange={newValue => setMatch(newValue)} dense={dense} />
+      <SelectGraphFilter value={filterSource} onChange={newValue => setSource(newValue)} dense={dense} />
       {schema && schema?.stats.count_inherited > 0 ? (
         <MiniButton
           noHover
-          titleHtml={`Наследованные: <b>${showInherited ? 'отображать' : 'скрывать'}</b>`}
-          icon={<IconChild size='1rem' className={showInherited ? 'icon-primary' : 'clr-text-controls'} />}
+          titleHtml={`Наследованные: <b>${includeInherited ? 'отображать' : 'скрывать'}</b>`}
+          icon={<IconChild size='1rem' className={includeInherited ? 'icon-primary' : 'clr-text-controls'} />}
           className='h-fit self-center'
-          onClick={() => setShowInherited(prev => !prev)}
+          onClick={toggleInherited}
         />
       ) : null}
     </div>
