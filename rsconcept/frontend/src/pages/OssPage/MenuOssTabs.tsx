@@ -19,13 +19,13 @@ import Button from '@/components/ui/Button';
 import Divider from '@/components/ui/Divider';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
-import { useAccessMode } from '@/context/AccessModeContext';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useOSS } from '@/context/OssContext';
 import useDropdown from '@/hooks/useDropdown';
-import { UserLevel } from '@/models/user';
-import { describeAccessMode, labelAccessMode } from '@/utils/labels';
+import { UserRole } from '@/models/user';
+import { useRoleStore } from '@/stores/role';
+import { describeAccessMode as describeUserRole, labelAccessMode as labelUserRole } from '@/utils/labels';
 
 import { useOssEdit } from './OssEditContext';
 
@@ -39,7 +39,8 @@ function MenuOssTabs({ onDestroy }: MenuOssTabsProps) {
   const { user } = useAuth();
   const model = useOSS();
 
-  const { accessLevel, setAccessLevel } = useAccessMode();
+  const role = useRoleStore(state => state.role);
+  const setRole = useRoleStore(state => state.setRole);
 
   const schemaMenu = useDropdown();
   const editMenu = useDropdown();
@@ -55,9 +56,9 @@ function MenuOssTabs({ onDestroy }: MenuOssTabsProps) {
     controller.share();
   }
 
-  function handleChangeMode(newMode: UserLevel) {
+  function handleChangeRole(newMode: UserRole) {
     accessMenu.hide();
-    setAccessLevel(newMode);
+    setRole(newMode);
   }
 
   function handleCreateNew() {
@@ -97,7 +98,7 @@ function MenuOssTabs({ onDestroy }: MenuOssTabsProps) {
             <DropdownButton
               text='Удалить схему'
               icon={<IconDestroy size='1rem' className='icon-red' />}
-              disabled={controller.isProcessing || accessLevel < UserLevel.OWNER}
+              disabled={controller.isProcessing || role < UserRole.OWNER}
               onClick={handleDelete}
             />
           ) : null}
@@ -151,15 +152,15 @@ function MenuOssTabs({ onDestroy }: MenuOssTabsProps) {
             noBorder
             noOutline
             tabIndex={-1}
-            title={`Режим ${labelAccessMode(accessLevel)}`}
+            title={`Режим ${labelUserRole(role)}`}
             hideTitle={accessMenu.isOpen}
             className='h-full pr-2'
             icon={
-              accessLevel === UserLevel.ADMIN ? (
+              role === UserRole.ADMIN ? (
                 <IconAdmin size='1.25rem' className='icon-primary' />
-              ) : accessLevel === UserLevel.OWNER ? (
+              ) : role === UserRole.OWNER ? (
                 <IconOwner size='1.25rem' className='icon-primary' />
-              ) : accessLevel === UserLevel.EDITOR ? (
+              ) : role === UserRole.EDITOR ? (
                 <IconEditor size='1.25rem' className='icon-primary' />
               ) : (
                 <IconReader size='1.25rem' className='icon-primary' />
@@ -169,31 +170,31 @@ function MenuOssTabs({ onDestroy }: MenuOssTabsProps) {
           />
           <Dropdown isOpen={accessMenu.isOpen}>
             <DropdownButton
-              text={labelAccessMode(UserLevel.READER)}
-              title={describeAccessMode(UserLevel.READER)}
+              text={labelUserRole(UserRole.READER)}
+              title={describeUserRole(UserRole.READER)}
               icon={<IconReader size='1rem' className='icon-primary' />}
-              onClick={() => handleChangeMode(UserLevel.READER)}
+              onClick={() => handleChangeRole(UserRole.READER)}
             />
             <DropdownButton
-              text={labelAccessMode(UserLevel.EDITOR)}
-              title={describeAccessMode(UserLevel.EDITOR)}
+              text={labelUserRole(UserRole.EDITOR)}
+              title={describeUserRole(UserRole.EDITOR)}
               icon={<IconEditor size='1rem' className='icon-primary' />}
               disabled={!model.isOwned && !model.schema?.editors.includes(user.id)}
-              onClick={() => handleChangeMode(UserLevel.EDITOR)}
+              onClick={() => handleChangeRole(UserRole.EDITOR)}
             />
             <DropdownButton
-              text={labelAccessMode(UserLevel.OWNER)}
-              title={describeAccessMode(UserLevel.OWNER)}
+              text={labelUserRole(UserRole.OWNER)}
+              title={describeUserRole(UserRole.OWNER)}
               icon={<IconOwner size='1rem' className='icon-primary' />}
               disabled={!model.isOwned}
-              onClick={() => handleChangeMode(UserLevel.OWNER)}
+              onClick={() => handleChangeRole(UserRole.OWNER)}
             />
             <DropdownButton
-              text={labelAccessMode(UserLevel.ADMIN)}
-              title={describeAccessMode(UserLevel.ADMIN)}
+              text={labelUserRole(UserRole.ADMIN)}
+              title={describeUserRole(UserRole.ADMIN)}
               icon={<IconAdmin size='1rem' className='icon-primary' />}
               disabled={!user?.is_staff}
-              onClick={() => handleChangeMode(UserLevel.ADMIN)}
+              onClick={() => handleChangeRole(UserRole.ADMIN)}
             />
           </Dropdown>
         </div>

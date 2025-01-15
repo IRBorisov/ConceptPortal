@@ -19,7 +19,7 @@ import {
   RSErrorType,
   TokenID
 } from '@/models/rslang';
-import { UserLevel } from '@/models/user';
+import { UserRole } from '@/models/user';
 
 import { PARAMETER } from './constants';
 
@@ -822,31 +822,31 @@ export function describeSubstitutionError(error: ISubstitutionErrorDescription):
 }
 
 /**
- * Retrieves label for {@link UserLevel}.
+ * Retrieves label for {@link UserRole}.
  */
-export function labelAccessMode(mode: UserLevel): string {
+export function labelAccessMode(mode: UserRole): string {
   // prettier-ignore
   switch (mode) {
-    case UserLevel.READER:     return 'Читатель';
-    case UserLevel.EDITOR:     return 'Редактор';
-    case UserLevel.OWNER:      return 'Владелец';
-    case UserLevel.ADMIN:      return 'Администратор';
+    case UserRole.READER:     return 'Читатель';
+    case UserRole.EDITOR:     return 'Редактор';
+    case UserRole.OWNER:      return 'Владелец';
+    case UserRole.ADMIN:      return 'Администратор';
   }
 }
 
 /**
- * Retrieves description for {@link UserLevel}.
+ * Retrieves description for {@link UserRole}.
  */
-export function describeAccessMode(mode: UserLevel): string {
+export function describeAccessMode(mode: UserRole): string {
   // prettier-ignore
   switch (mode) {
-    case UserLevel.READER:
+    case UserRole.READER:
       return 'Режим запрещает редактирование';
-    case UserLevel.EDITOR:
+    case UserRole.EDITOR:
       return 'Режим редактирования';
-    case UserLevel.OWNER:
+    case UserRole.OWNER:
       return 'Режим владельца';
-    case UserLevel.ADMIN:
+    case UserRole.ADMIN:
       return 'Режим администратора';
   }
 }

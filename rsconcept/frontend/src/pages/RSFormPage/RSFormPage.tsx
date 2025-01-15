@@ -2,7 +2,6 @@
 
 import { useParams } from 'react-router';
 
-import { AccessModeState } from '@/context/AccessModeContext';
 import { RSFormState } from '@/context/RSFormContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
 
@@ -13,11 +12,9 @@ function RSFormPage() {
   const query = useQueryStrings();
   const version = query.get('v') ?? undefined;
   return (
-    <AccessModeState>
-      <RSFormState itemID={params.id ?? ''} versionID={version}>
-        <RSTabs />
-      </RSFormState>
-    </AccessModeState>
+    <RSFormState itemID={params.id ?? ''} versionID={version}>
+      <RSTabs />
+    </RSFormState>
   );
 }
 

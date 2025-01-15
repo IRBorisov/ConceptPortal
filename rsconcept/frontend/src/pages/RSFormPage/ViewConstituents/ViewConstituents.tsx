@@ -3,11 +3,11 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { useAccessMode } from '@/context/AccessModeContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
-import { UserLevel } from '@/models/user';
+import { UserRole } from '@/models/user';
 import { useFitHeight } from '@/stores/appLayout';
+import { useRoleStore } from '@/stores/role';
 import { PARAMETER } from '@/utils/constants';
 
 import ConstituentsSearch from './ConstituentsSearch';
@@ -27,8 +27,8 @@ interface ViewConstituentsProps {
 
 function ViewConstituents({ expression, schema, activeCst, isBottom, onOpenEdit, isMounted }: ViewConstituentsProps) {
   const windowSize = useWindowSize();
-  const { accessLevel } = useAccessMode();
-  const listHeight = useFitHeight(!isBottom ? '8.2rem' : accessLevel !== UserLevel.READER ? '42rem' : '35rem', '10rem');
+  const role = useRoleStore(state => state.role);
+  const listHeight = useFitHeight(!isBottom ? '8.2rem' : role !== UserRole.READER ? '42rem' : '35rem', '10rem');
 
   const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema?.items ?? []);
 

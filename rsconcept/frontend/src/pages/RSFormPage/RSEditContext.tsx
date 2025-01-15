@@ -5,7 +5,6 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { toast } from 'react-toastify';
 
 import { urls } from '@/app/urls';
-import { useAccessMode } from '@/context/AccessModeContext';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useRSForm } from '@/context/RSFormContext';
@@ -49,8 +48,9 @@ import {
   TermForm
 } from '@/models/rsform';
 import { generateAlias } from '@/models/rsformAPI';
-import { UserID, UserLevel } from '@/models/user';
+import { UserID, UserRole } from '@/models/user';
 import { usePreferencesStore } from '@/stores/preferences';
+import { useRoleStore } from '@/stores/role';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 import { information, prompts } from '@/utils/labels';
 import { promptUnsaved } from '@/utils/utils';
@@ -143,13 +143,11 @@ export const RSEditState = ({
   const router = useConceptNavigation();
   const { user } = useAuth();
   const adminMode = usePreferencesStore(state => state.adminMode);
-  const { accessLevel, setAccessLevel } = useAccessMode();
+  const role = useRoleStore(state => state.role);
+  const adjustRole = useRoleStore(state => state.adjustRole);
   const model = useRSForm();
 
-  const isMutable = useMemo(
-    () => accessLevel > UserLevel.READER && !model.schema?.read_only,
-    [accessLevel, model.schema?.read_only]
-  );
+  const isMutable = useMemo(() => role > UserRole.READER && !model.schema?.read_only, [role, model.schema?.read_only]);
   const isContentEditable = useMemo(() => isMutable && !model.isArchive, [isMutable, model.isArchive]);
   const canDeleteSelected = useMemo(
     () => selected.length > 0 && selected.every(id => !model.schema?.cstByID.get(id)?.is_inherited),
@@ -199,23 +197,13 @@ export const RSEditState = ({
 
   useEffect(
     () =>
-      setAccessLevel(prev => {
-        if (
-          prev === UserLevel.EDITOR &&
-          (model.isOwned || user?.is_staff || (user && model.schema?.editors.includes(user.id)))
-        ) {
-          return UserLevel.EDITOR;
-        } else if (user?.is_staff && (prev === UserLevel.ADMIN || adminMode)) {
-          return UserLevel.ADMIN;
-        } else if (model.isOwned) {
-          return UserLevel.OWNER;
-        } else if (user?.id && model.schema?.editors.includes(user?.id)) {
-          return UserLevel.EDITOR;
-        } else {
-          return UserLevel.READER;
-        }
+      adjustRole({
+        isOwner: model.isOwned,
+        isEditor: (user && model.schema?.editors.includes(user?.id)) ?? false,
+        isStaff: user?.is_staff ?? false,
+        adminMode: adminMode
       }),
-    [model.schema, setAccessLevel, model.isOwned, user, adminMode]
+    [model.schema, adjustRole, model.isOwned, user, adminMode]
   );
 
   const updateSchema = useCallback(

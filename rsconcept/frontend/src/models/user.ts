@@ -103,7 +103,7 @@ export interface ITargetUsers {
 /**
  * Represents user access mode.
  */
-export enum UserLevel {
+export enum UserRole {
   READER = 0,
   EDITOR,
   OWNER,

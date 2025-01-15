@@ -5,10 +5,10 @@ import SelectAccessPolicy from '@/components/select/SelectAccessPolicy';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
-import { useAccessMode } from '@/context/AccessModeContext';
 import { AccessPolicy, ILibraryItemEditor } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
-import { UserLevel } from '@/models/user';
+import { UserRole } from '@/models/user';
+import { useRoleStore } from '@/stores/role';
 import { PARAMETER } from '@/utils/constants';
 
 interface ToolbarItemAccessProps {
@@ -20,7 +20,7 @@ interface ToolbarItemAccessProps {
 }
 
 function ToolbarItemAccess({ visible, toggleVisible, readOnly, toggleReadOnly, controller }: ToolbarItemAccessProps) {
-  const { accessLevel } = useAccessMode();
+  const role = useRoleStore(state => state.role);
   const policy = controller.schema?.access_policy ?? AccessPolicy.PRIVATE;
 
   return (
@@ -28,7 +28,7 @@ function ToolbarItemAccess({ visible, toggleVisible, readOnly, toggleReadOnly, c
       <Label text='Доступ' className='self-center select-none' />
       <div className='ml-auto cc-icons'>
         <SelectAccessPolicy
-          disabled={accessLevel <= UserLevel.EDITOR || controller.isProcessing || controller.isAttachedToOSS}
+          disabled={role <= UserRole.EDITOR || controller.isProcessing || controller.isAttachedToOSS}
           value={policy}
           onChange={newPolicy => controller.setAccessPolicy(newPolicy)}
         />
@@ -37,7 +37,7 @@ function ToolbarItemAccess({ visible, toggleVisible, readOnly, toggleReadOnly, c
           title={visible ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
           icon={<VisibilityIcon value={visible} />}
           onClick={toggleVisible}
-          disabled={accessLevel === UserLevel.READER || controller.isProcessing}
+          disabled={role === UserRole.READER || controller.isProcessing}
         />
 
         <MiniButton
@@ -50,7 +50,7 @@ function ToolbarItemAccess({ visible, toggleVisible, readOnly, toggleReadOnly, c
             )
           }
           onClick={toggleReadOnly}
-          disabled={accessLevel === UserLevel.READER || controller.isProcessing}
+          disabled={role === UserRole.READER || controller.isProcessing}
         />
 
         <BadgeHelp topic={HelpTopic.ACCESS} className={PARAMETER.TOOLTIP_WIDTH} offset={4} />

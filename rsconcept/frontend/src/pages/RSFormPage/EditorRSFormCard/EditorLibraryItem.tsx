@@ -17,13 +17,13 @@ import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import Tooltip from '@/components/ui/Tooltip';
 import ValueIcon from '@/components/ui/ValueIcon';
-import { useAccessMode } from '@/context/AccessModeContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useUsers } from '@/context/UsersContext';
 import useDropdown from '@/hooks/useDropdown';
 import { ILibraryItemData, ILibraryItemEditor } from '@/models/library';
-import { UserID, UserLevel } from '@/models/user';
+import { UserID, UserRole } from '@/models/user';
 import { useLibrarySearchStore } from '@/stores/librarySearch';
+import { useRoleStore } from '@/stores/role';
 import { prefixes } from '@/utils/constants';
 import { prompts } from '@/utils/labels';
 
@@ -35,7 +35,7 @@ interface EditorLibraryItemProps {
 
 function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemProps) {
   const { getUserLabel, users } = useUsers();
-  const { accessLevel } = useAccessMode();
+  const role = useRoleStore(state => state.role);
   const intl = useIntl();
   const router = useConceptNavigation();
   const setLocation = useLibrarySearchStore(state => state.setLocation);
@@ -86,9 +86,7 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
           value={item.location}
           title={controller.isAttachedToOSS ? 'Путь наследуется от ОСС' : 'Путь'}
           onClick={controller.promptLocation}
-          disabled={
-            isModified || controller.isProcessing || controller.isAttachedToOSS || accessLevel < UserLevel.OWNER
-          }
+          disabled={isModified || controller.isProcessing || controller.isAttachedToOSS || role < UserRole.OWNER}
         />
       </div>
 
@@ -110,7 +108,7 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
         value={getUserLabel(item.owner)}
         title={controller.isAttachedToOSS ? 'Владелец наследуется от ОСС' : 'Владелец'}
         onClick={ownerSelector.toggle}
-        disabled={isModified || controller.isProcessing || controller.isAttachedToOSS || accessLevel < UserLevel.OWNER}
+        disabled={isModified || controller.isProcessing || controller.isAttachedToOSS || role < UserRole.OWNER}
       />
 
       <div className='sm:mb-1 flex justify-between items-center'>
@@ -120,7 +118,7 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
           icon={<IconEditor size='1.25rem' className='icon-primary' />}
           value={item.editors.length}
           onClick={controller.promptEditors}
-          disabled={isModified || controller.isProcessing || accessLevel < UserLevel.OWNER}
+          disabled={isModified || controller.isProcessing || role < UserRole.OWNER}
         />
         <Tooltip anchorSelect='#editor_stats' layer='z-modalTooltip'>
           <InfoUsers items={item?.editors ?? []} prefix={prefixes.user_editors} header='Редакторы' />

@@ -5,11 +5,11 @@ import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniSelectorOSS from '@/components/select/MiniSelectorOSS';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
-import { useAccessMode } from '@/context/AccessModeContext';
 import { AccessPolicy, ILibraryItemEditor, LibraryItemType } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IRSForm } from '@/models/rsform';
-import { UserLevel } from '@/models/user';
+import { UserRole } from '@/models/user';
+import { useRoleStore } from '@/stores/role';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip, tooltips } from '@/utils/labels';
 
@@ -23,7 +23,7 @@ interface ToolbarRSFormCardProps {
 }
 
 function ToolbarRSFormCard({ modified, controller, onSubmit, onDestroy }: ToolbarRSFormCardProps) {
-  const { accessLevel } = useAccessMode();
+  const role = useRoleStore(state => state.role);
   const canSave = modified && !controller.isProcessing;
 
   const ossSelector = (() => {
@@ -63,7 +63,7 @@ function ToolbarRSFormCard({ modified, controller, onSubmit, onDestroy }: Toolba
         <MiniButton
           title='Удалить схему'
           icon={<IconDestroy size='1.25rem' className='icon-red' />}
-          disabled={!controller.isMutable || controller.isProcessing || accessLevel < UserLevel.OWNER}
+          disabled={!controller.isMutable || controller.isProcessing || role < UserRole.OWNER}
           onClick={onDestroy}
         />
       ) : null}
