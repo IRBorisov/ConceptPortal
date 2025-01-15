@@ -48,7 +48,7 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
   }
   return (
     <div className='flex flex-col'>
-      <Overlay position='right-[calc(0.7rem-2px)] top-2'>
+      <Overlay position='right-[calc(0.7rem-2px)] top-2 pointer-events-auto'>
         <MiniButton
           noPadding
           noHover
@@ -73,6 +73,7 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
       </div>
 
       <div
+        tabIndex={-1}
         className={clsx(
           'flex flex-wrap justify-center gap-2 py-2 mt-[-0.5rem]',
           'text-sm',
@@ -80,6 +81,7 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
           'cc-scroll-y'
         )}
         style={{
+          pointerEvents: isFolded ? 'none' : 'auto',
           maxHeight: hiddenHeight,
           transitionProperty: 'clip-path',
           transitionDuration: `${PARAMETER.fastAnimation}ms`,

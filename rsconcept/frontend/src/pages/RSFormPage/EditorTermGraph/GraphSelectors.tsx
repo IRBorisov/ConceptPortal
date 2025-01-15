@@ -16,7 +16,7 @@ interface GraphSelectorsProps {
 
 function GraphSelectors({ schema, coloring, onChangeColoring }: GraphSelectorsProps) {
   return (
-    <div className='border rounded-b-none select-none clr-input rounded-t-md'>
+    <div className='border rounded-b-none select-none clr-input rounded-t-md pointer-events-auto'>
       <Overlay position='right-[2.5rem] top-[0.25rem]'>
         {coloring === 'status' ? <BadgeHelp topic={HelpTopic.UI_CST_STATUS} className='min-w-[25rem]' /> : null}
         {coloring === 'type' ? <BadgeHelp topic={HelpTopic.UI_CST_CLASS} className='min-w-[25rem]' /> : null}

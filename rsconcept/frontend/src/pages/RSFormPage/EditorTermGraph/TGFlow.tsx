@@ -380,7 +380,7 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
           </Overlay>
         ) : null}
 
-        <Overlay position='top-[6.15rem] sm:top-[5.9rem] left-0' className='flex gap-1'>
+        <Overlay position='top-[6.15rem] sm:top-[5.9rem] left-0' className='flex gap-1 pointer-events-none'>
           <div className='flex flex-col ml-2 w-[13.5rem]'>
             <GraphSelectors schema={controller.schema} coloring={coloring} onChangeColoring={setColoring} />
             <ViewHidden
