@@ -9,13 +9,13 @@ import { EditorView } from 'codemirror';
 import { forwardRef, useRef, useState } from 'react';
 
 import Label from '@/components/ui/Label';
-import DlgEditReference from '@/dialogs/DlgEditReference';
 import { ReferenceType } from '@/models/language';
+import { DialogType } from '@/models/miscellaneous';
 import { ConstituentaID, IRSForm } from '@/models/rsform';
+import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/color';
 import { CodeMirrorWrapper } from '@/utils/codemirror';
-import { PARAMETER } from '@/utils/constants';
 
 import { refsNavigation } from './clickNavigation';
 import { NaturalLanguage, ReferenceTokens } from './parse';
@@ -96,7 +96,10 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
 
     const [isFocused, setIsFocused] = useState(false);
 
-    const [showEditor, setShowEditor] = useState(false);
+    const showEditReference = useDialogsStore(state => state.showEditReference);
+    const activeDialog = useDialogsStore(state => state.active);
+    const isActive = activeDialog === DialogType.EDIT_REFERENCE;
+
     const [currentType, setCurrentType] = useState<ReferenceType>(ReferenceType.ENTITY);
     const [refText, setRefText] = useState('');
     const [hintText, setHintText] = useState('');
@@ -146,7 +149,7 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
     }
 
     function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
-      if (!thisRef.current?.view) {
+      if (!thisRef.current?.view || !schema) {
         event.preventDefault();
         event.stopPropagation();
         return;
@@ -174,7 +177,17 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
         setMainRefs(mainNodes.map(node => wrap.getText(node.from, node.to)));
         setBasePosition(mainNodes.filter(node => node.to <= selection.from).length);
 
-        setShowEditor(true);
+        showEditReference({
+          schema: schema,
+          initial: {
+            type: currentType,
+            refRaw: refText,
+            text: hintText,
+            basePosition: basePosition,
+            mainRefs: mainRefs
+          },
+          onSave: handleInputReference
+        });
       }
     }
 
@@ -187,27 +200,8 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
       wrap.replaceWith(referenceText);
     }
 
-    function hideEditReference() {
-      setShowEditor(false);
-      setTimeout(() => thisRef.current?.view?.focus(), PARAMETER.refreshTimeout);
-    }
-
     return (
       <div className={clsx('flex flex-col gap-2', cursor)}>
-        {showEditor && schema ? (
-          <DlgEditReference
-            hideWindow={hideEditReference}
-            schema={schema}
-            initial={{
-              type: currentType,
-              refRaw: refText,
-              text: hintText,
-              basePosition: basePosition,
-              mainRefs: mainRefs
-            }}
-            onSave={handleInputReference}
-          />
-        ) : null}
         <Label text={label} />
         <CodeMirror
           id={id}
@@ -215,10 +209,10 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
           basicSetup={editorSetup}
           theme={customTheme}
           extensions={editorExtensions}
-          value={isFocused ? value : value !== initialValue || showEditor ? value : resolved}
+          value={isFocused ? value : value !== initialValue || isActive ? value : resolved}
           indentWithTab={false}
           onChange={handleChange}
-          editable={!disabled && !showEditor}
+          editable={!disabled && !isActive}
           onKeyDown={handleInput}
           onFocus={handleFocusIn}
           onBlur={handleFocusOut}

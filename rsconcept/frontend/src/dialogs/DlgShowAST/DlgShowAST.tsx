@@ -3,19 +3,21 @@
 import { useState } from 'react';
 import { ReactFlowProvider } from 'reactflow';
 
-import Modal, { ModalProps } from '@/components/ui/Modal';
+import Modal from '@/components/ui/Modal';
 import Overlay from '@/components/ui/Overlay';
 import { HelpTopic } from '@/models/miscellaneous';
 import { SyntaxTree } from '@/models/rslang';
+import { useDialogsStore } from '@/stores/dialogs';
 
 import ASTFlow from './ASTFlow';
 
-interface DlgShowASTProps extends Pick<ModalProps, 'hideWindow'> {
+export interface DlgShowASTProps {
   syntaxTree: SyntaxTree;
   expression: string;
 }
 
-function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
+function DlgShowAST() {
+  const { syntaxTree, expression } = useDialogsStore(state => state.props as DlgShowASTProps);
   const [hoverID, setHoverID] = useState<number | undefined>(undefined);
   const hoverNode = syntaxTree.find(node => node.uid === hoverID);
 
@@ -24,7 +26,6 @@ function DlgShowAST({ hideWindow, syntaxTree, expression }: DlgShowASTProps) {
   return (
     <Modal
       readonly
-      hideWindow={hideWindow}
       className='flex flex-col justify-stretch w-[calc(100dvw-3rem)] h-[calc(100dvh-6rem)]'
       helpTopic={HelpTopic.UI_FORMULA_TREE}
     >

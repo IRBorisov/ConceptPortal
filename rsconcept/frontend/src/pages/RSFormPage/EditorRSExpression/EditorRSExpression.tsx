@@ -11,13 +11,13 @@ import { parser as rslangParser } from '@/components/RSInput/rslang/parserAST';
 import { RSTextWrapper } from '@/components/RSInput/textEditing';
 import Overlay from '@/components/ui/Overlay';
 import { useRSForm } from '@/context/RSFormContext';
-import DlgShowAST from '@/dialogs/DlgShowAST';
 import useCheckConstituenta from '@/hooks/useCheckConstituenta';
 import { HelpTopic } from '@/models/miscellaneous';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { getDefinitionPrefix } from '@/models/rsformAPI';
-import { IExpressionParse, IRSErrorDescription, SyntaxTree } from '@/models/rslang';
+import { IExpressionParse, IRSErrorDescription } from '@/models/rslang';
 import { TokenID } from '@/models/rslang';
+import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { transformAST } from '@/utils/codemirror';
 import { errors, labelTypification } from '@/utils/labels';
@@ -64,9 +64,7 @@ function EditorRSExpression({
   const rsInput = useRef<ReactCodeMirrorRef>(null);
 
   const showControls = usePreferencesStore(state => state.showExpressionControls);
-  const [syntaxTree, setSyntaxTree] = useState<SyntaxTree>([]);
-  const [expression, setExpression] = useState('');
-  const [showAST, setShowAST] = useState(false);
+  const showAST = useDialogsStore(state => state.showShowAST);
 
   useEffect(() => {
     setIsModified(false);
@@ -131,17 +129,13 @@ function EditorRSExpression({
     if (event.ctrlKey) {
       const tree = rslangParser.parse(value);
       const ast = transformAST(tree);
-      setSyntaxTree(ast);
-      setExpression(value);
-      setShowAST(true);
+      showAST({ syntaxTree: ast, expression: value });
     } else {
       handleCheckExpression(parse => {
         if (!parse.astText) {
           toast.error(errors.astFailed);
         } else {
-          setSyntaxTree(parse.ast);
-          setExpression(getDefinitionPrefix(activeCst) + value);
-          setShowAST(true);
+          showAST({ syntaxTree: parse.ast, expression: getDefinitionPrefix(activeCst) + value });
         }
       });
     }
@@ -149,10 +143,6 @@ function EditorRSExpression({
 
   return (
     <div className='cc-fade-in'>
-      {showAST ? (
-        <DlgShowAST expression={expression} syntaxTree={syntaxTree} hideWindow={() => setShowAST(false)} />
-      ) : null}
-
       <ToolbarRSExpression disabled={disabled} showAST={handleShowAST} showTypeGraph={onShowTypeGraph} />
 
       <Overlay

@@ -19,13 +19,13 @@ import {
 } from '@/models/oss';
 import { SubstitutionValidator } from '@/models/ossAPI';
 import { ConstituentaID } from '@/models/rsform';
+import { useDialogsStore } from '@/stores/dialogs';
 
 import TabArguments from './TabArguments';
 import TabOperation from './TabOperation';
 import TabSynthesis from './TabSynthesis';
 
-interface DlgEditOperationProps {
-  hideWindow: () => void;
+export interface DlgEditOperationProps {
   oss: IOperationSchema;
   target: IOperation;
   onSubmit: (data: IOperationUpdateData) => void;
@@ -37,7 +37,8 @@ export enum TabID {
   SUBSTITUTION = 2
 }
 
-function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperationProps) {
+function DlgEditOperation() {
+  const { oss, target, onSubmit } = useDialogsStore(state => state.props as DlgEditOperationProps);
   const [activeTab, setActiveTab] = useState(TabID.CARD);
 
   const [alias, setAlias] = useState(target.alias);
@@ -142,7 +143,6 @@ function DlgEditOperation({ hideWindow, oss, target, onSubmit }: DlgEditOperatio
     <Modal
       header='Редактирование операции'
       submitText='Сохранить'
-      hideWindow={hideWindow}
       canSubmit={canSubmit}
       onSubmit={handleSubmit}
       className='w-[40rem] px-6 h-[32rem]'

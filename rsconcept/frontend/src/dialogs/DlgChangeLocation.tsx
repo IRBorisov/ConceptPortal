@@ -6,20 +6,22 @@ import { useState } from 'react';
 import SelectLocationContext from '@/components/select/SelectLocationContext';
 import SelectLocationHead from '@/components/select/SelectLocationHead';
 import Label from '@/components/ui/Label';
-import Modal, { ModalProps } from '@/components/ui/Modal';
+import Modal from '@/components/ui/Modal';
 import TextArea from '@/components/ui/TextArea';
 import { useAuth } from '@/context/AuthContext';
 import { useLibrary } from '@/context/LibraryContext';
 import { LocationHead } from '@/models/library';
 import { combineLocation, validateLocation } from '@/models/libraryAPI';
+import { useDialogsStore } from '@/stores/dialogs';
 import { limits } from '@/utils/constants';
 
-interface DlgChangeLocationProps extends Pick<ModalProps, 'hideWindow'> {
+export interface DlgChangeLocationProps {
   initial: string;
   onChangeLocation: (newLocation: string) => void;
 }
 
-function DlgChangeLocation({ hideWindow, initial, onChangeLocation }: DlgChangeLocationProps) {
+function DlgChangeLocation() {
+  const { initial, onChangeLocation } = useDialogsStore(state => state.props as DlgChangeLocationProps);
   const { user } = useAuth();
   const [head, setHead] = useState<LocationHead>(initial.substring(0, 2) as LocationHead);
   const [body, setBody] = useState<string>(initial.substring(3));
@@ -40,7 +42,6 @@ function DlgChangeLocation({ hideWindow, initial, onChangeLocation }: DlgChangeL
       header='Изменение расположения'
       submitText='Переместить'
       submitInvalidTooltip={`Допустимы буквы, цифры, подчерк, пробел и "!". Сегмент пути не может начинаться и заканчиваться пробелом. Общая длина (с корнем) не должна превышать ${limits.location_len}`}
-      hideWindow={hideWindow}
       canSubmit={isValid}
       onSubmit={() => onChangeLocation(location)}
       className={clsx('w-[35rem]', 'pb-3 px-6 flex gap-3 h-[9rem]')}

@@ -7,7 +7,7 @@ import { RelocateUpIcon } from '@/components/DomainIcons';
 import PickMultiConstituenta from '@/components/select/PickMultiConstituenta';
 import SelectLibraryItem from '@/components/select/SelectLibraryItem';
 import MiniButton from '@/components/ui/MiniButton';
-import Modal, { ModalProps } from '@/components/ui/Modal';
+import Modal from '@/components/ui/Modal';
 import DataLoader from '@/components/wrap/DataLoader';
 import { useLibrary } from '@/context/LibraryContext';
 import useRSFormDetails from '@/hooks/useRSFormDetails';
@@ -16,15 +16,17 @@ import { HelpTopic } from '@/models/miscellaneous';
 import { ICstRelocateData, IOperation, IOperationSchema } from '@/models/oss';
 import { getRelocateCandidates } from '@/models/ossAPI';
 import { ConstituentaID } from '@/models/rsform';
+import { useDialogsStore } from '@/stores/dialogs';
 import { prefixes } from '@/utils/constants';
 
-interface DlgRelocateConstituentsProps extends Pick<ModalProps, 'hideWindow'> {
+export interface DlgRelocateConstituentsProps {
   oss: IOperationSchema;
   initialTarget?: IOperation;
   onSubmit: (data: ICstRelocateData) => void;
 }
 
-function DlgRelocateConstituents({ oss, hideWindow, initialTarget, onSubmit }: DlgRelocateConstituentsProps) {
+function DlgRelocateConstituents() {
+  const { oss, initialTarget, onSubmit } = useDialogsStore(state => state.props as DlgRelocateConstituentsProps);
   const library = useLibrary();
 
   const [directionUp, setDirectionUp] = useState(true);
@@ -88,7 +90,6 @@ function DlgRelocateConstituents({ oss, hideWindow, initialTarget, onSubmit }: D
     <Modal
       header='Перенос конституент'
       submitText='Переместить'
-      hideWindow={hideWindow}
       canSubmit={isValid}
       onSubmit={handleSubmit}
       className={clsx('w-[40rem] h-[33rem]', 'py-3 px-6')}

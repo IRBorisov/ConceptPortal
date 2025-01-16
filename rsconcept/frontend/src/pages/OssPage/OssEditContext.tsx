@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { urls } from '@/app/urls';
@@ -8,13 +8,6 @@ import { useAuth } from '@/context/AuthContext';
 import { useLibrary } from '@/context/LibraryContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useOSS } from '@/context/OssContext';
-import DlgChangeInputSchema from '@/dialogs/DlgChangeInputSchema';
-import DlgChangeLocation from '@/dialogs/DlgChangeLocation';
-import DlgCreateOperation from '@/dialogs/DlgCreateOperation';
-import DlgDeleteOperation from '@/dialogs/DlgDeleteOperation';
-import DlgEditEditors from '@/dialogs/DlgEditEditors';
-import DlgEditOperation from '@/dialogs/DlgEditOperation';
-import DlgRelocateConstituents from '@/dialogs/DlgRelocateConstituents';
 import { AccessPolicy, ILibraryItemEditor, LibraryItemID } from '@/models/library';
 import { Position2D } from '@/models/miscellaneous';
 import { calculateInsertPosition } from '@/models/miscellaneousAPI';
@@ -30,6 +23,7 @@ import {
   OperationType
 } from '@/models/oss';
 import { UserID, UserRole } from '@/models/user';
+import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { useRoleStore } from '@/stores/role';
 import { PARAMETER } from '@/utils/constants';
@@ -106,24 +100,18 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
 
   const [showTooltip, setShowTooltip] = useState(true);
 
-  const [showEditEditors, setShowEditEditors] = useState(false);
-  const [showEditLocation, setShowEditLocation] = useState(false);
-  const [showEditInput, setShowEditInput] = useState(false);
-  const [showEditOperation, setShowEditOperation] = useState(false);
-  const [showDeleteOperation, setShowDeleteOperation] = useState(false);
-  const [showRelocateConstituents, setShowRelocateConstituents] = useState(false);
-
-  const [showCreateOperation, setShowCreateOperation] = useState(false);
   const [insertPosition, setInsertPosition] = useState<Position2D>({ x: 0, y: 0 });
-  const [initialInputs, setInitialInputs] = useState<OperationID[]>([]);
   const [createCallback, setCreateCallback] = useState<((newID: OperationID) => void) | undefined>(undefined);
 
+  const showEditEditors = useDialogsStore(state => state.showEditEditors);
+  const showEditLocation = useDialogsStore(state => state.showChangeLocation);
+  const showEditInput = useDialogsStore(state => state.showChangeInputSchema);
+  const showEditOperation = useDialogsStore(state => state.showEditOperation);
+  const showDeleteOperation = useDialogsStore(state => state.showDeleteOperation);
+  const showRelocateConstituents = useDialogsStore(state => state.showRelocateConstituents);
+  const showCreateOperation = useDialogsStore(state => state.showCreateOperation);
+
   const [positions, setPositions] = useState<IOperationPosition[]>([]);
-  const [targetOperationID, setTargetOperationID] = useState<OperationID | undefined>(undefined);
-  const targetOperation = useMemo(
-    () => (targetOperationID ? model.schema?.operationByID.get(targetOperationID) : undefined),
-    [model, targetOperationID]
-  );
 
   useEffect(
     () =>
@@ -145,14 +133,6 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
     },
     [model]
   );
-
-  const promptEditors = useCallback(() => {
-    setShowEditEditors(true);
-  }, []);
-
-  const promptLocation = useCallback(() => {
-    setShowEditLocation(true);
-  }, []);
 
   const share = useCallback(() => {
     const currentRef = window.location.href;
@@ -177,7 +157,7 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
     [model]
   );
 
-  const setEditors = useCallback(
+  const handleSetEditors = useCallback(
     (newEditors: UserID[]) => {
       model.setEditors(newEditors, () => toast.success(information.changesSaved));
     },
@@ -212,17 +192,6 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
     [model]
   );
 
-  const promptCreateOperation = useCallback(
-    ({ defaultX, defaultY, inputs, positions, callback }: ICreateOperationPrompt) => {
-      setInsertPosition({ x: defaultX, y: defaultY });
-      setInitialInputs(inputs);
-      setPositions(positions);
-      setCreateCallback(() => callback);
-      setShowCreateOperation(true);
-    },
-    []
-  );
-
   const handleCreateOperation = useCallback(
     (data: IOperationCreateData) => {
       const target = calculateInsertPosition(
@@ -244,12 +213,6 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
     },
     [model, positions, insertPosition, createCallback]
   );
-
-  const promptEditOperation = useCallback((target: OperationID, positions: IOperationPosition[]) => {
-    setPositions(positions);
-    setTargetOperationID(target);
-    setShowEditOperation(true);
-  }, []);
 
   const handleEditOperation = useCallback(
     (data: IOperationUpdateData) => {
@@ -276,26 +239,17 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
     [model]
   );
 
-  const promptDeleteOperation = useCallback((target: OperationID, positions: IOperationPosition[]) => {
-    setPositions(positions);
-    setTargetOperationID(target);
-    setShowDeleteOperation(true);
-  }, []);
-
-  const deleteOperation = useCallback(
-    (keepConstituents: boolean, deleteSchema: boolean) => {
-      if (!targetOperationID) {
-        return;
-      }
+  const handleDeleteOperation = useCallback(
+    (targetID: OperationID, keepConstituents: boolean, deleteSchema: boolean) => {
       const data: IOperationDeleteData = {
-        target: targetOperationID,
+        target: targetID,
         positions: positions,
         keep_constituents: keepConstituents,
         delete_schema: deleteSchema
       };
       model.deleteOperation(data, () => toast.success(information.operationDestroyed));
     },
-    [model, targetOperationID, positions]
+    [model, positions]
   );
 
   const createInput = useCallback(
@@ -316,43 +270,17 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
     [model, library.items, router]
   );
 
-  const promptEditInput = useCallback((target: OperationID, positions: IOperationPosition[]) => {
-    setPositions(positions);
-    setTargetOperationID(target);
-    setShowEditInput(true);
-  }, []);
-
   const setTargetInput = useCallback(
-    (newInput: LibraryItemID | undefined) => {
-      if (!targetOperationID) {
-        return;
-      }
+    (target: OperationID, newInput: LibraryItemID | undefined) => {
       const data: IOperationSetInputData = {
-        target: targetOperationID,
+        target: target,
         positions: positions,
         input: newInput ?? null
       };
       model.setInput(data, () => toast.success(information.changesSaved));
     },
-    [model, targetOperationID, positions]
+    [model, positions]
   );
-
-  const executeOperation = useCallback(
-    (target: OperationID, positions: IOperationPosition[]) => {
-      const data = {
-        target: target,
-        positions: positions
-      };
-      model.executeOperation(data, () => toast.success(information.operationExecuted));
-    },
-    [model]
-  );
-
-  const promptRelocateConstituents = useCallback((target: OperationID | undefined, positions: IOperationPosition[]) => {
-    setPositions(positions);
-    setTargetOperationID(target);
-    setShowRelocateConstituents(true);
-  }, []);
 
   const handleRelocateConstituents = useCallback(
     (data: ICstRelocateData) => {
@@ -370,6 +298,92 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
       }
     },
     [model, positions]
+  );
+
+  const executeOperation = useCallback(
+    (target: OperationID, positions: IOperationPosition[]) => {
+      const data = {
+        target: target,
+        positions: positions
+      };
+      model.executeOperation(data, () => toast.success(information.operationExecuted));
+    },
+    [model]
+  );
+
+  const promptEditors = useCallback(() => {
+    if (!model.schema) {
+      return;
+    }
+    showEditEditors({ editors: model.schema.editors, setEditors: handleSetEditors });
+  }, [model.schema, showEditEditors, handleSetEditors]);
+
+  const promptLocation = useCallback(() => {
+    if (!model.schema) {
+      return;
+    }
+    showEditLocation({ initial: model.schema.location, onChangeLocation: handleSetLocation });
+  }, [model.schema, showEditLocation, handleSetLocation]);
+
+  const promptCreateOperation = useCallback(
+    ({ defaultX, defaultY, inputs, positions, callback }: ICreateOperationPrompt) => {
+      if (!model.schema) {
+        return;
+      }
+      setInsertPosition({ x: defaultX, y: defaultY });
+      setPositions(positions);
+      setCreateCallback(() => callback);
+      showCreateOperation({ oss: model.schema, onCreate: handleCreateOperation, initialInputs: inputs });
+    },
+    [model.schema, showCreateOperation, handleCreateOperation]
+  );
+
+  const promptEditOperation = useCallback(
+    (target: OperationID, positions: IOperationPosition[]) => {
+      const operation = model.schema?.operationByID.get(target);
+      if (!model.schema || !operation) {
+        return;
+      }
+      setPositions(positions);
+      showEditOperation({ oss: model.schema, target: operation, onSubmit: handleEditOperation });
+    },
+    [model.schema, showEditOperation, handleEditOperation]
+  );
+
+  const promptDeleteOperation = useCallback(
+    (target: OperationID, positions: IOperationPosition[]) => {
+      const operation = model.schema?.operationByID.get(target);
+      if (!model.schema || !operation) {
+        return;
+      }
+      setPositions(positions);
+      showDeleteOperation({ target: operation, onSubmit: handleDeleteOperation });
+    },
+    [model.schema, showDeleteOperation, handleDeleteOperation]
+  );
+
+  const promptEditInput = useCallback(
+    (target: OperationID, positions: IOperationPosition[]) => {
+      const operation = model.schema?.operationByID.get(target);
+      if (!model.schema || !operation) {
+        return;
+      }
+      setPositions(positions);
+      showEditInput({ oss: model.schema, target: operation, onSubmit: setTargetInput });
+    },
+    [model.schema, showEditInput, setTargetInput]
+  );
+
+  const promptRelocateConstituents = useCallback(
+    (target: OperationID | undefined, positions: IOperationPosition[]) => {
+      if (!model.schema) {
+        return;
+      }
+      const operation = target ? model.schema?.operationByID.get(target) : undefined;
+      setPositions(positions);
+      showRelocateConstituents({ oss: model.schema, initialTarget: operation, onSubmit: handleRelocateConstituents });
+    },
+    [model.schema, showRelocateConstituents, handleRelocateConstituents]
   );
 
   return (
@@ -405,64 +419,6 @@ export const OssEditState = ({ selected, setSelected, children }: React.PropsWit
         promptRelocateConstituents
       }}
     >
-      {model.schema ? (
-        <>
-          {showEditEditors ? (
-            <DlgEditEditors
-              hideWindow={() => setShowEditEditors(false)}
-              editors={model.schema.editors}
-              setEditors={setEditors}
-            />
-          ) : null}
-          {showEditLocation ? (
-            <DlgChangeLocation
-              hideWindow={() => setShowEditLocation(false)}
-              initial={model.schema.location}
-              onChangeLocation={handleSetLocation}
-            />
-          ) : null}
-          {showCreateOperation ? (
-            <DlgCreateOperation
-              hideWindow={() => setShowCreateOperation(false)}
-              oss={model.schema}
-              onCreate={handleCreateOperation}
-              initialInputs={initialInputs}
-            />
-          ) : null}
-          {showEditInput ? (
-            <DlgChangeInputSchema
-              hideWindow={() => setShowEditInput(false)}
-              oss={model.schema}
-              target={targetOperation!}
-              onSubmit={setTargetInput}
-            />
-          ) : null}
-          {showEditOperation ? (
-            <DlgEditOperation
-              hideWindow={() => setShowEditOperation(false)}
-              oss={model.schema}
-              target={targetOperation!}
-              onSubmit={handleEditOperation}
-            />
-          ) : null}
-          {showDeleteOperation ? (
-            <DlgDeleteOperation
-              hideWindow={() => setShowDeleteOperation(false)}
-              target={targetOperation!}
-              onSubmit={deleteOperation}
-            />
-          ) : null}
-          {showRelocateConstituents ? (
-            <DlgRelocateConstituents
-              hideWindow={() => setShowRelocateConstituents(false)}
-              initialTarget={targetOperation}
-              oss={model.schema}
-              onSubmit={handleRelocateConstituents}
-            />
-          ) : null}
-        </>
-      ) : null}
-
       {children}
     </OssEditContext>
   );

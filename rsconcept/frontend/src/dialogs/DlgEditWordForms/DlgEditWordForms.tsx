@@ -14,18 +14,19 @@ import { Grammeme, ITextRequest, IWordForm, IWordFormPlain } from '@/models/lang
 import { parseGrammemes, wordFormEquals } from '@/models/languageAPI';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IConstituenta, TermForm } from '@/models/rsform';
+import { useDialogsStore } from '@/stores/dialogs';
 import { prompts } from '@/utils/labels';
 import { IGrammemeOption, SelectorGrammemes, SelectorGrammemesList } from '@/utils/selectors';
 
 import TableWordForms from './TableWordForms';
 
-interface DlgEditWordFormsProps {
-  hideWindow: () => void;
+export interface DlgEditWordFormsProps {
   target: IConstituenta;
   onSave: (data: TermForm[]) => void;
 }
 
-function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps) {
+function DlgEditWordForms() {
+  const { target, onSave } = useDialogsStore(state => state.props as DlgEditWordFormsProps);
   const textProcessor = useConceptText();
 
   const [term, setTerm] = useState('');
@@ -123,7 +124,6 @@ function DlgEditWordForms({ hideWindow, target, onSave }: DlgEditWordFormsProps)
     <Modal
       canSubmit
       header='Редактирование словоформ'
-      hideWindow={hideWindow}
       submitText='Сохранить'
       onSubmit={handleSubmit}
       className='flex flex-col w-[40rem] px-6'

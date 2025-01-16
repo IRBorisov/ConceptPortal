@@ -4,18 +4,19 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
-import Modal, { ModalProps } from '@/components/ui/Modal';
+import Modal from '@/components/ui/Modal';
 import TabLabel from '@/components/ui/TabLabel';
 import useRSFormDetails from '@/hooks/useRSFormDetails';
 import { LibraryItemID } from '@/models/library';
 import { ICstSubstitute } from '@/models/oss';
 import { ConstituentaID, IInlineSynthesisData, IRSForm } from '@/models/rsform';
+import { useDialogsStore } from '@/stores/dialogs';
 
 import TabConstituents from './TabConstituents';
 import TabSchema from './TabSchema';
 import TabSubstitutions from './TabSubstitutions';
 
-interface DlgInlineSynthesisProps extends Pick<ModalProps, 'hideWindow'> {
+export interface DlgInlineSynthesisProps {
   receiver: IRSForm;
   onInlineSynthesis: (data: IInlineSynthesisData) => void;
 }
@@ -26,7 +27,8 @@ export enum TabID {
   SUBSTITUTIONS = 2
 }
 
-function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInlineSynthesisProps) {
+function DlgInlineSynthesis() {
+  const { receiver, onInlineSynthesis } = useDialogsStore(state => state.props as DlgInlineSynthesisProps);
   const [activeTab, setActiveTab] = useState(TabID.SCHEMA);
 
   const [donorID, setDonorID] = useState<LibraryItemID | undefined>(undefined);
@@ -60,7 +62,6 @@ function DlgInlineSynthesis({ hideWindow, receiver, onInlineSynthesis }: DlgInli
       header='Импорт концептуальной схем'
       submitText='Добавить конституенты'
       className='w-[40rem] h-[33rem] px-6'
-      hideWindow={hideWindow}
       canSubmit={validated}
       onSubmit={handleSubmit}
     >

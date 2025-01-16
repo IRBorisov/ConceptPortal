@@ -10,13 +10,13 @@ import { useLibrary } from '@/context/LibraryContext';
 import { LibraryItemID } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IOperationCreateData, IOperationSchema, OperationID, OperationType } from '@/models/oss';
+import { useDialogsStore } from '@/stores/dialogs';
 import { describeOperationType, labelOperationType } from '@/utils/labels';
 
 import TabInputOperation from './TabInputOperation';
 import TabSynthesisOperation from './TabSynthesisOperation';
 
-interface DlgCreateOperationProps {
-  hideWindow: () => void;
+export interface DlgCreateOperationProps {
   oss: IOperationSchema;
   onCreate: (data: IOperationCreateData) => void;
   initialInputs: OperationID[];
@@ -27,7 +27,8 @@ export enum TabID {
   SYNTHESIS = 1
 }
 
-function DlgCreateOperation({ hideWindow, oss, onCreate, initialInputs }: DlgCreateOperationProps) {
+function DlgCreateOperation() {
+  const { oss, onCreate, initialInputs } = useDialogsStore(state => state.props as DlgCreateOperationProps);
   const library = useLibrary();
   const [activeTab, setActiveTab] = useState(initialInputs.length > 0 ? TabID.SYNTHESIS : TabID.INPUT);
 
@@ -98,7 +99,6 @@ function DlgCreateOperation({ hideWindow, oss, onCreate, initialInputs }: DlgCre
     <Modal
       header='Создание операции'
       submitText='Создать'
-      hideWindow={hideWindow}
       canSubmit={isValid}
       onSubmit={handleSubmit}
       className='w-[40rem] px-6 h-[32rem]'

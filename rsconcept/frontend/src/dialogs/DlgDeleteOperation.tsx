@@ -4,22 +4,24 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import Checkbox from '@/components/ui/Checkbox';
-import Modal, { ModalProps } from '@/components/ui/Modal';
+import Modal from '@/components/ui/Modal';
 import TextInput from '@/components/ui/TextInput';
 import { HelpTopic } from '@/models/miscellaneous';
-import { IOperation } from '@/models/oss';
+import { IOperation, OperationID } from '@/models/oss';
+import { useDialogsStore } from '@/stores/dialogs';
 
-interface DlgDeleteOperationProps extends Pick<ModalProps, 'hideWindow'> {
+export interface DlgDeleteOperationProps {
   target: IOperation;
-  onSubmit: (keepConstituents: boolean, deleteSchema: boolean) => void;
+  onSubmit: (targetID: OperationID, keepConstituents: boolean, deleteSchema: boolean) => void;
 }
 
-function DlgDeleteOperation({ hideWindow, target, onSubmit }: DlgDeleteOperationProps) {
+function DlgDeleteOperation() {
+  const { target, onSubmit } = useDialogsStore(state => state.props as DlgDeleteOperationProps);
   const [keepConstituents, setKeepConstituents] = useState(false);
   const [deleteSchema, setDeleteSchema] = useState(false);
 
   function handleSubmit() {
-    onSubmit(keepConstituents, deleteSchema);
+    onSubmit(target.id, keepConstituents, deleteSchema);
   }
 
   return (
@@ -27,7 +29,6 @@ function DlgDeleteOperation({ hideWindow, target, onSubmit }: DlgDeleteOperation
       overflowVisible
       header='Удаление операции'
       submitText='Подтвердить удаление'
-      hideWindow={hideWindow}
       canSubmit={true}
       onSubmit={handleSubmit}
       className={clsx('w-[35rem]', 'pb-3 px-6 cc-column', 'select-none')}

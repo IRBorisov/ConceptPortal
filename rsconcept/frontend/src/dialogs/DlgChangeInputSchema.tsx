@@ -7,19 +7,21 @@ import { IconReset } from '@/components/Icons';
 import PickSchema from '@/components/select/PickSchema';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
-import Modal, { ModalProps } from '@/components/ui/Modal';
+import Modal from '@/components/ui/Modal';
 import { useLibrary } from '@/context/LibraryContext';
 import { ILibraryItem, LibraryItemID, LibraryItemType } from '@/models/library';
-import { IOperation, IOperationSchema } from '@/models/oss';
+import { IOperation, IOperationSchema, OperationID } from '@/models/oss';
 import { sortItemsForOSS } from '@/models/ossAPI';
+import { useDialogsStore } from '@/stores/dialogs';
 
-interface DlgChangeInputSchemaProps extends Pick<ModalProps, 'hideWindow'> {
+export interface DlgChangeInputSchemaProps {
   oss: IOperationSchema;
   target: IOperation;
-  onSubmit: (newSchema: LibraryItemID | undefined) => void;
+  onSubmit: (target: OperationID, newSchema: LibraryItemID | undefined) => void;
 }
 
-function DlgChangeInputSchema({ oss, hideWindow, target, onSubmit }: DlgChangeInputSchemaProps) {
+function DlgChangeInputSchema() {
+  const { oss, target, onSubmit } = useDialogsStore(state => state.props as DlgChangeInputSchemaProps);
   const [selected, setSelected] = useState<LibraryItemID | undefined>(target.result ?? undefined);
   const library = useLibrary();
   const sortedItems = sortItemsForOSS(oss, library.items);
@@ -38,9 +40,8 @@ function DlgChangeInputSchema({ oss, hideWindow, target, onSubmit }: DlgChangeIn
       overflowVisible
       header='Выбор концептуальной схемы'
       submitText='Подтвердить выбор'
-      hideWindow={hideWindow}
       canSubmit={isValid}
-      onSubmit={() => onSubmit(selected)}
+      onSubmit={() => onSubmit(target.id, selected)}
       className={clsx('w-[35rem]', 'pb-3 px-6 cc-column')}
     >
       <div className='flex justify-between gap-3 items-center'>

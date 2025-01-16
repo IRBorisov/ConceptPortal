@@ -8,21 +8,6 @@ import { urls } from '@/app/urls';
 import { useAuth } from '@/context/AuthContext';
 import { useConceptNavigation } from '@/context/NavigationContext';
 import { useRSForm } from '@/context/RSFormContext';
-import DlgChangeLocation from '@/dialogs/DlgChangeLocation';
-import DlgCloneLibraryItem from '@/dialogs/DlgCloneLibraryItem';
-import DlgConstituentaTemplate from '@/dialogs/DlgConstituentaTemplate';
-import DlgCreateCst from '@/dialogs/DlgCreateCst';
-import DlgCreateVersion from '@/dialogs/DlgCreateVersion';
-import DlgDeleteCst from '@/dialogs/DlgDeleteCst';
-import DlgEditEditors from '@/dialogs/DlgEditEditors';
-import DlgEditVersions from '@/dialogs/DlgEditVersions';
-import DlgEditWordForms from '@/dialogs/DlgEditWordForms';
-import DlgInlineSynthesis from '@/dialogs/DlgInlineSynthesis';
-import DlgRenameCst from '@/dialogs/DlgRenameCst';
-import DlgShowQR from '@/dialogs/DlgShowQR';
-import DlgShowTypeGraph from '@/dialogs/DlgShowTypeGraph';
-import DlgSubstituteCst from '@/dialogs/DlgSubstituteCst';
-import DlgUploadRSForm from '@/dialogs/DlgUploadRSForm';
 import {
   AccessPolicy,
   ILibraryItemEditor,
@@ -49,6 +34,7 @@ import {
 } from '@/models/rsform';
 import { generateAlias } from '@/models/rsformAPI';
 import { UserID, UserRole } from '@/models/user';
+import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { useRoleStore } from '@/stores/role';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
@@ -161,27 +147,26 @@ export const RSEditState = ({
     [model.schema]
   );
 
-  const [showUpload, setShowUpload] = useState(false);
-  const [showClone, setShowClone] = useState(false);
-  const [showDeleteCst, setShowDeleteCst] = useState(false);
-  const [showEditEditors, setShowEditEditors] = useState(false);
-  const [showEditLocation, setShowEditLocation] = useState(false);
-  const [showEditTerm, setShowEditTerm] = useState(false);
-  const [showSubstitute, setShowSubstitute] = useState(false);
-  const [showCreateVersion, setShowCreateVersion] = useState(false);
-  const [showEditVersions, setShowEditVersions] = useState(false);
-  const [showInlineSynthesis, setShowInlineSynthesis] = useState(false);
-  const [showTypeGraph, setShowTypeGraph] = useState(false);
-  const [showQR, setShowQR] = useState(false);
-
-  const [createInitialData, setCreateInitialData] = useState<ICstCreateData>();
-  const [showCreateCst, setShowCreateCst] = useState(false);
-
   const [renameInitialData, setRenameInitialData] = useState<ICstRenameData>();
-  const [showRenameCst, setShowRenameCst] = useState(false);
 
-  const [insertCstID, setInsertCstID] = useState<ConstituentaID | undefined>(undefined);
-  const [showTemplates, setShowTemplates] = useState(false);
+  const showClone = useDialogsStore(state => state.showCloneLibraryItem);
+  const showCreateVersion = useDialogsStore(state => state.showCreateVersion);
+  const showEditVersions = useDialogsStore(state => state.showEditVersions);
+  const showEditEditors = useDialogsStore(state => state.showEditEditors);
+  const showEditLocation = useDialogsStore(state => state.showChangeLocation);
+
+  const showCreateCst = useDialogsStore(state => state.showCreateCst);
+  const showDeleteCst = useDialogsStore(state => state.showDeleteCst);
+
+  const showRenameCst = useDialogsStore(state => state.showRenameCst);
+  const showEditTerm = useDialogsStore(state => state.showEditWordForms);
+
+  const showSubstituteCst = useDialogsStore(state => state.showSubstituteCst);
+  const showCstTemplate = useDialogsStore(state => state.showCstTemplate);
+  const showInlineSynthesis = useDialogsStore(state => state.showInlineSynthesis);
+  const showTypeGraph = useDialogsStore(state => state.showShowTypeGraph);
+  const showUpload = useDialogsStore(state => state.showUploadRSForm);
+  const showQR = useDialogsStore(state => state.showQR);
 
   const typeInfo = useMemo(
     () =>
@@ -235,13 +220,6 @@ export const RSEditState = ({
     [router]
   );
 
-  const createVersion = useCallback(() => {
-    if (isModified && !promptUnsaved()) {
-      return;
-    }
-    setShowCreateVersion(true);
-  }, [isModified]);
-
   const restoreVersion = useCallback(() => {
     if (!model.versionID || !window.confirm(prompts.restoreArchive)) {
       return;
@@ -252,7 +230,7 @@ export const RSEditState = ({
     });
   }, [model, viewVersion]);
 
-  function calculateCloneLocation(): string {
+  const calculateCloneLocation = useCallback(() => {
     if (!model.schema) {
       return LocationHead.USER;
     }
@@ -265,7 +243,7 @@ export const RSEditState = ({
       return location;
     }
     return head === LocationHead.USER ? LocationHead.USER : location;
-  }
+  }, [model.schema, user]);
 
   const handleCreateCst = useCallback(
     (data: ICstCreateData) => {
@@ -397,6 +375,29 @@ export const RSEditState = ({
     [model, setSelected]
   );
 
+  const createVersion = useCallback(() => {
+    if (!model.schema || (isModified && !promptUnsaved())) {
+      return;
+    }
+    showCreateVersion({
+      versions: model.schema.versions,
+      onCreate: handleCreateVersion,
+      selected: selected,
+      totalCount: model.schema.items.length
+    });
+  }, [isModified, model.schema, selected, handleCreateVersion, showCreateVersion]);
+
+  const promptEditVersions = useCallback(() => {
+    if (!model.schema) {
+      return;
+    }
+    showEditVersions({
+      versions: model.schema.versions,
+      onDelete: handleDeleteVersion,
+      onUpdate: handleUpdateVersion
+    });
+  }, [model.schema, handleDeleteVersion, handleUpdateVersion, showEditVersions]);
+
   const moveUp = useCallback(() => {
     if (!model.schema?.items || selected.length === 0) {
       return;
@@ -460,11 +461,10 @@ export const RSEditState = ({
       if (skipDialog) {
         handleCreateCst(data);
       } else {
-        setCreateInitialData(data);
-        setShowCreateCst(true);
+        showCreateCst({ schema: model.schema, onCreate: handleCreateCst, initial: data });
       }
     },
-    [activeCst, handleCreateCst, model.schema]
+    [activeCst, handleCreateCst, model.schema, showCreateCst]
   );
 
   const cloneCst = useCallback(() => {
@@ -485,7 +485,7 @@ export const RSEditState = ({
   }, [activeCst, handleCreateCst, model.schema]);
 
   const renameCst = useCallback(() => {
-    if (!activeCst) {
+    if (!activeCst || !model.schema) {
       return;
     }
     const data: ICstRenameData = {
@@ -494,22 +494,34 @@ export const RSEditState = ({
       cst_type: activeCst.cst_type
     };
     setRenameInitialData(data);
-    setShowRenameCst(true);
-  }, [activeCst]);
+    showRenameCst({
+      schema: model.schema,
+      initial: data,
+      allowChangeType: !activeCst.is_inherited,
+      onRename: handleRenameCst
+    });
+  }, [activeCst, model.schema, handleRenameCst, showRenameCst]);
 
   const substitute = useCallback(() => {
-    if (isModified && !promptUnsaved()) {
+    if (!model.schema || (isModified && !promptUnsaved())) {
       return;
     }
-    setShowSubstitute(true);
-  }, [isModified]);
+    showSubstituteCst({ schema: model.schema, onSubstitute: handleSubstituteCst });
+  }, [isModified, model.schema, handleSubstituteCst, showSubstituteCst]);
 
   const inlineSynthesis = useCallback(() => {
-    if (isModified && !promptUnsaved()) {
+    if (!model.schema || (isModified && !promptUnsaved())) {
       return;
     }
-    setShowInlineSynthesis(true);
-  }, [isModified]);
+    showInlineSynthesis({ receiver: model.schema, onInlineSynthesis: handleInlineSynthesis });
+  }, [isModified, model.schema, handleInlineSynthesis, showInlineSynthesis]);
+
+  const promptDeleteCst = useCallback(() => {
+    if (!model.schema) {
+      return;
+    }
+    showDeleteCst({ schema: model.schema, selected: selected, onDelete: handleDeleteCst });
+  }, [model.schema, selected, handleDeleteCst, showDeleteCst]);
 
   const editTermForms = useCallback(() => {
     if (!activeCst) {
@@ -518,8 +530,8 @@ export const RSEditState = ({
     if (isModified && !promptUnsaved()) {
       return;
     }
-    setShowEditTerm(true);
-  }, [isModified, activeCst]);
+    showEditTerm({ target: activeCst, onSave: handleSaveWordforms });
+  }, [isModified, activeCst, handleSaveWordforms, showEditTerm]);
 
   const reindex = useCallback(() => model.resetAliases(() => toast.success(information.reindexComplete)), [model]);
   const reorder = useCallback(() => model.restoreOrder(() => toast.success(information.reorderComplete)), [model]);
@@ -551,28 +563,45 @@ export const RSEditState = ({
     });
   }, [activeCst, setSelected, model, isModified]);
 
+  const setEditors = useCallback(
+    (newEditors: UserID[]) => {
+      model.setEditors(newEditors, () => toast.success(information.changesSaved));
+    },
+    [model]
+  );
+
   const promptTemplate = useCallback(() => {
-    if (isModified && !promptUnsaved()) {
+    if ((isModified && !promptUnsaved()) || !model.schema) {
       return;
     }
-    setInsertCstID(activeCst?.id);
-    setShowTemplates(true);
-  }, [activeCst, isModified]);
+    showCstTemplate({ schema: model.schema, onCreate: handleCreateCst, insertAfter: activeCst?.id });
+  }, [activeCst, isModified, handleCreateCst, model.schema, showCstTemplate]);
 
   const promptClone = useCallback(() => {
-    if (isModified && !promptUnsaved()) {
+    if (!model.schema || (isModified && !promptUnsaved())) {
       return;
     }
-    setShowClone(true);
-  }, [isModified]);
+    showClone({
+      base: model.schema,
+      initialLocation: calculateCloneLocation(),
+      selected: selected,
+      totalCount: model.schema.items.length
+    });
+  }, [isModified, model.schema, selected, showClone, calculateCloneLocation]);
 
   const promptEditors = useCallback(() => {
-    setShowEditEditors(true);
-  }, []);
+    if (!model.schema) {
+      return;
+    }
+    showEditEditors({ editors: model.schema.editors, setEditors: setEditors });
+  }, [model.schema, showEditEditors, setEditors]);
 
   const promptLocation = useCallback(() => {
-    setShowEditLocation(true);
-  }, []);
+    if (!model.schema) {
+      return;
+    }
+    showEditLocation({ initial: model.schema.location, onChangeLocation: handleSetLocation });
+  }, [model.schema, showEditLocation, handleSetLocation]);
 
   const download = useCallback(() => {
     if (isModified && !promptUnsaved()) {
@@ -607,13 +636,6 @@ export const RSEditState = ({
   const setAccessPolicy = useCallback(
     (newPolicy: AccessPolicy) => {
       model.setAccessPolicy(newPolicy, () => toast.success(information.changesSaved));
-    },
-    [model]
-  );
-
-  const setEditors = useCallback(
-    (newEditors: UserID[]) => {
-      model.setEditors(newEditors, () => toast.success(information.changesSaved));
     },
     [model]
   );
@@ -653,19 +675,19 @@ export const RSEditState = ({
         viewPredecessor,
         createVersion,
         restoreVersion,
-        promptEditVersions: () => setShowEditVersions(true),
+        promptEditVersions,
 
         moveUp,
         moveDown,
         createCst,
         cloneCst,
         renameCst,
-        promptDeleteCst: () => setShowDeleteCst(true),
+        promptDeleteCst,
         editTermForms,
 
         promptTemplate,
         promptClone,
-        promptUpload: () => setShowUpload(true),
+        promptUpload: () => showUpload({ upload: model.upload }),
         download,
         share,
 
@@ -675,113 +697,10 @@ export const RSEditState = ({
         produceStructure,
         substitute,
 
-        showTypeGraph: () => setShowTypeGraph(true),
-        showQR: () => setShowQR(true)
+        showTypeGraph: () => showTypeGraph({ items: typeInfo }),
+        showQR: () => showQR({ target: generateQR() })
       }}
     >
-      {model.schema ? (
-        <>
-          {showQR ? <DlgShowQR hideWindow={() => setShowQR(false)} target={generateQR()} /> : null}
-          {showUpload ? <DlgUploadRSForm hideWindow={() => setShowUpload(false)} /> : null}
-          {showClone ? (
-            <DlgCloneLibraryItem
-              base={model.schema}
-              initialLocation={calculateCloneLocation()}
-              hideWindow={() => setShowClone(false)}
-              selected={selected}
-              totalCount={model.schema.items.length}
-            />
-          ) : null}
-          {showCreateCst ? (
-            <DlgCreateCst
-              hideWindow={() => setShowCreateCst(false)}
-              onCreate={handleCreateCst}
-              schema={model.schema}
-              initial={createInitialData}
-            />
-          ) : null}
-          {activeCst && showRenameCst && renameInitialData ? (
-            <DlgRenameCst
-              hideWindow={() => setShowRenameCst(false)}
-              onRename={handleRenameCst}
-              allowChangeType={!activeCst.is_inherited}
-              initial={renameInitialData}
-            />
-          ) : null}
-          {showSubstitute ? (
-            <DlgSubstituteCst
-              schema={model.schema}
-              hideWindow={() => setShowSubstitute(false)} // prettier: split lines
-              onSubstitute={handleSubstituteCst}
-            />
-          ) : null}
-          {showDeleteCst ? (
-            <DlgDeleteCst
-              schema={model.schema}
-              hideWindow={() => setShowDeleteCst(false)}
-              onDelete={handleDeleteCst}
-              selected={selected}
-            />
-          ) : null}
-          {showEditTerm && activeCst ? (
-            <DlgEditWordForms
-              hideWindow={() => setShowEditTerm(false)}
-              onSave={handleSaveWordforms}
-              target={activeCst}
-            />
-          ) : null}
-          {showTemplates ? (
-            <DlgConstituentaTemplate
-              schema={model.schema}
-              hideWindow={() => setShowTemplates(false)}
-              insertAfter={insertCstID}
-              onCreate={handleCreateCst}
-            />
-          ) : null}
-          {showCreateVersion ? (
-            <DlgCreateVersion
-              versions={model.schema.versions}
-              hideWindow={() => setShowCreateVersion(false)}
-              onCreate={handleCreateVersion}
-              selected={selected}
-              totalCount={model.schema.items.length}
-            />
-          ) : null}
-          {showEditVersions ? (
-            <DlgEditVersions
-              versions={model.schema.versions}
-              hideWindow={() => setShowEditVersions(false)}
-              onDelete={handleDeleteVersion}
-              onUpdate={handleUpdateVersion}
-            />
-          ) : null}
-          {showEditEditors ? (
-            <DlgEditEditors
-              hideWindow={() => setShowEditEditors(false)}
-              editors={model.schema.editors}
-              setEditors={setEditors}
-            />
-          ) : null}
-          {showEditLocation ? (
-            <DlgChangeLocation
-              hideWindow={() => setShowEditLocation(false)}
-              initial={model.schema.location}
-              onChangeLocation={handleSetLocation}
-            />
-          ) : null}
-
-          {showInlineSynthesis ? (
-            <DlgInlineSynthesis
-              receiver={model.schema}
-              hideWindow={() => setShowInlineSynthesis(false)}
-              onInlineSynthesis={handleInlineSynthesis}
-            />
-          ) : null}
-
-          {showTypeGraph ? <DlgShowTypeGraph items={typeInfo} hideWindow={() => setShowTypeGraph(false)} /> : null}
-        </>
-      ) : null}
-
       {children}
     </RSEditContext>
   );

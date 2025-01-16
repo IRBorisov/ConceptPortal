@@ -10,16 +10,17 @@ import MiniButton from '@/components/ui/MiniButton';
 import Modal from '@/components/ui/Modal';
 import { useUsers } from '@/context/UsersContext';
 import { UserID } from '@/models/user';
+import { useDialogsStore } from '@/stores/dialogs';
 
 import TableUsers from './TableUsers';
 
-interface DlgEditEditorsProps {
+export interface DlgEditEditorsProps {
   editors: UserID[];
   setEditors: (newValue: UserID[]) => void;
-  hideWindow: () => void;
 }
 
-function DlgEditEditors({ hideWindow, editors, setEditors }: DlgEditEditorsProps) {
+function DlgEditEditors() {
+  const { editors, setEditors } = useDialogsStore(state => state.props as DlgEditEditorsProps);
   const [selected, setSelected] = useState<UserID[]>(editors);
   const { users } = useUsers();
   const filtered = users.filter(user => !selected.includes(user.id));
@@ -41,7 +42,6 @@ function DlgEditEditors({ hideWindow, editors, setEditors }: DlgEditEditorsProps
       canSubmit
       header='Список редакторов'
       submitText='Сохранить список'
-      hideWindow={hideWindow}
       className='flex flex-col w-[35rem] px-6 gap-3 pb-6'
       onSubmit={handleSubmit}
     >

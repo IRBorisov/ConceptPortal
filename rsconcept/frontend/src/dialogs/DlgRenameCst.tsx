@@ -3,25 +3,26 @@
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
-import Modal, { ModalProps } from '@/components/ui/Modal';
+import Modal from '@/components/ui/Modal';
 import SelectSingle from '@/components/ui/SelectSingle';
 import TextInput from '@/components/ui/TextInput';
-import { useRSForm } from '@/context/RSFormContext';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { HelpTopic } from '@/models/miscellaneous';
-import { CstType, ICstRenameData } from '@/models/rsform';
+import { CstType, ICstRenameData, IRSForm } from '@/models/rsform';
 import { generateAlias, validateNewAlias } from '@/models/rsformAPI';
+import { useDialogsStore } from '@/stores/dialogs';
 import { labelCstType } from '@/utils/labels';
 import { SelectorCstType } from '@/utils/selectors';
 
-interface DlgRenameCstProps extends Pick<ModalProps, 'hideWindow'> {
+export interface DlgRenameCstProps {
+  schema: IRSForm;
   initial: ICstRenameData;
   allowChangeType: boolean;
   onRename: (data: ICstRenameData) => void;
 }
 
-function DlgRenameCst({ hideWindow, initial, allowChangeType, onRename }: DlgRenameCstProps) {
-  const { schema } = useRSForm();
+function DlgRenameCst() {
+  const { schema, initial, allowChangeType, onRename } = useDialogsStore(state => state.props as DlgRenameCstProps);
   const [validated, setValidated] = useState(false);
   const [cstData, updateData] = usePartialUpdate(initial);
 
@@ -42,7 +43,6 @@ function DlgRenameCst({ hideWindow, initial, allowChangeType, onRename }: DlgRen
       header='Переименование конституенты'
       submitText='Переименовать'
       submitInvalidTooltip='Введите незанятое имя, соответствующее типу'
-      hideWindow={hideWindow}
       canSubmit={validated}
       onSubmit={() => onRename(cstData)}
       className={clsx('w-[30rem]', 'py-6 pr-3 pl-6 flex gap-3 justify-center items-center ')}

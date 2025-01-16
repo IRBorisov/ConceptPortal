@@ -7,21 +7,21 @@ import MiniButton from '@/components/ui/MiniButton';
 import Modal from '@/components/ui/Modal';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
-import { useRSForm } from '@/context/RSFormContext';
 import { IVersionData, IVersionInfo, VersionID } from '@/models/library';
+import { useDialogsStore } from '@/stores/dialogs';
 
 import TableVersions from './TableVersions';
 
-interface DlgEditVersionsProps {
-  hideWindow: () => void;
+export interface DlgEditVersionsProps {
   versions: IVersionInfo[];
   onDelete: (versionID: VersionID) => void;
   onUpdate: (versionID: VersionID, data: IVersionData) => void;
 }
 
-function DlgEditVersions({ hideWindow, versions, onDelete, onUpdate }: DlgEditVersionsProps) {
-  const { processing } = useRSForm();
+function DlgEditVersions() {
+  const { versions, onDelete, onUpdate } = useDialogsStore(state => state.props as DlgEditVersionsProps);
   const [selected, setSelected] = useState<IVersionInfo | undefined>(undefined);
+  const processing = false; // TODO: fix processing hook and versions update
 
   const [version, setVersion] = useState('');
   const [description, setDescription] = useState('');
@@ -54,12 +54,7 @@ function DlgEditVersions({ hideWindow, versions, onDelete, onUpdate }: DlgEditVe
   }, [selected]);
 
   return (
-    <Modal
-      readonly
-      header='Редактирование версий'
-      hideWindow={hideWindow}
-      className='flex flex-col w-[40rem] px-6 gap-3 pb-6'
-    >
+    <Modal readonly header='Редактирование версий' className='flex flex-col w-[40rem] px-6 gap-3 pb-6'>
       <TableVersions
         processing={processing}
         items={versions}

@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
-import Modal, { ModalProps } from '@/components/ui/Modal';
+import Modal from '@/components/ui/Modal';
 import TabLabel from '@/components/ui/TabLabel';
 import { useLibrary } from '@/context/LibraryContext';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
@@ -12,13 +12,14 @@ import { HelpTopic } from '@/models/miscellaneous';
 import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
 import { generateAlias, validateNewAlias } from '@/models/rsformAPI';
 import { inferTemplatedType, substituteTemplateArgs } from '@/models/rslangAPI';
+import { useDialogsStore } from '@/stores/dialogs';
 import { prompts } from '@/utils/labels';
 
 import FormCreateCst from '../DlgCreateCst/FormCreateCst';
 import TabArguments, { IArgumentsState } from './TabArguments';
 import TabTemplate, { ITemplateState } from './TabTemplate';
 
-interface DlgConstituentaTemplateProps extends Pick<ModalProps, 'hideWindow'> {
+export interface DlgCstTemplateProps {
   schema: IRSForm;
   onCreate: (data: ICstCreateData) => void;
   insertAfter?: number;
@@ -30,7 +31,8 @@ export enum TabID {
   CONSTITUENTA = 2
 }
 
-function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: DlgConstituentaTemplateProps) {
+function DlgCstTemplate() {
+  const { schema, onCreate, insertAfter } = useDialogsStore(state => state.props as DlgCstTemplateProps);
   const { retrieveTemplate } = useLibrary();
   const [activeTab, setActiveTab] = useState(TabID.TEMPLATE);
 
@@ -128,7 +130,6 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
       header='Создание конституенты из шаблона'
       submitText='Создать'
       className='w-[43rem] h-[35rem] px-6'
-      hideWindow={hideWindow}
       canSubmit={validated}
       beforeSubmit={handlePrompt}
       onSubmit={handleSubmit}
@@ -164,4 +165,4 @@ function DlgConstituentaTemplate({ hideWindow, schema, onCreate, insertAfter }: 
   );
 }
 
-export default DlgConstituentaTemplate;
+export default DlgCstTemplate;

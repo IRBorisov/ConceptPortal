@@ -6,16 +6,16 @@ import { toast } from 'react-toastify';
 import Checkbox from '@/components/ui/Checkbox';
 import FileInput from '@/components/ui/FileInput';
 import Modal from '@/components/ui/Modal';
-import { useRSForm } from '@/context/RSFormContext';
 import { IRSFormUploadData } from '@/models/rsform';
+import { useDialogsStore } from '@/stores/dialogs';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 
-interface DlgUploadRSFormProps {
-  hideWindow: () => void;
+export interface DlgUploadRSFormProps {
+  upload: (data: IRSFormUploadData, callback: () => void) => void;
 }
 
-function DlgUploadRSForm({ hideWindow }: DlgUploadRSFormProps) {
-  const { upload } = useRSForm();
+function DlgUploadRSForm() {
+  const { upload } = useDialogsStore(state => state.props as DlgUploadRSFormProps);
   const [loadMetadata, setLoadMetadata] = useState(false);
   const [file, setFile] = useState<File | undefined>();
 
@@ -42,7 +42,6 @@ function DlgUploadRSForm({ hideWindow }: DlgUploadRSFormProps) {
   return (
     <Modal
       header='Импорт схемы из Экстеора'
-      hideWindow={hideWindow}
       canSubmit={!!file}
       onSubmit={handleSubmit}
       submitText='Загрузить'

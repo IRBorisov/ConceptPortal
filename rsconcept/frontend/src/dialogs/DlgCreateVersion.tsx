@@ -4,21 +4,23 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import Checkbox from '@/components/ui/Checkbox';
-import Modal, { ModalProps } from '@/components/ui/Modal';
+import Modal from '@/components/ui/Modal';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
 import { IVersionCreateData, IVersionInfo } from '@/models/library';
 import { nextVersion } from '@/models/libraryAPI';
 import { ConstituentaID } from '@/models/rsform';
+import { useDialogsStore } from '@/stores/dialogs';
 
-interface DlgCreateVersionProps extends Pick<ModalProps, 'hideWindow'> {
+export interface DlgCreateVersionProps {
   versions: IVersionInfo[];
   onCreate: (data: IVersionCreateData) => void;
   selected: ConstituentaID[];
   totalCount: number;
 }
 
-function DlgCreateVersion({ hideWindow, versions, selected, totalCount, onCreate }: DlgCreateVersionProps) {
+function DlgCreateVersion() {
+  const { versions, selected, totalCount, onCreate } = useDialogsStore(state => state.props as DlgCreateVersionProps);
   const [version, setVersion] = useState(versions.length > 0 ? nextVersion(versions[0].version) : '1.0.0');
   const [description, setDescription] = useState('');
   const [onlySelected, setOnlySelected] = useState(false);
@@ -39,7 +41,6 @@ function DlgCreateVersion({ hideWindow, versions, selected, totalCount, onCreate
   return (
     <Modal
       header='Создание версии'
-      hideWindow={hideWindow}
       canSubmit={canSubmit}
       onSubmit={handleSubmit}
       submitText='Создать'

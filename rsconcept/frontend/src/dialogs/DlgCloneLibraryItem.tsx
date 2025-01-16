@@ -12,7 +12,7 @@ import SelectLocationHead from '@/components/select/SelectLocationHead';
 import Checkbox from '@/components/ui/Checkbox';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
-import Modal, { ModalProps } from '@/components/ui/Modal';
+import Modal from '@/components/ui/Modal';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
 import { useAuth } from '@/context/AuthContext';
@@ -21,18 +21,23 @@ import { useConceptNavigation } from '@/context/NavigationContext';
 import { AccessPolicy, ILibraryItem, LocationHead } from '@/models/library';
 import { cloneTitle, combineLocation, validateLocation } from '@/models/libraryAPI';
 import { ConstituentaID, IRSFormCloneData } from '@/models/rsform';
+import { useDialogsStore } from '@/stores/dialogs';
 import { information } from '@/utils/labels';
 
-interface DlgCloneLibraryItemProps extends Pick<ModalProps, 'hideWindow'> {
+export interface DlgCloneLibraryItemProps {
   base: ILibraryItem;
   initialLocation: string;
   selected: ConstituentaID[];
   totalCount: number;
 }
 
-function DlgCloneLibraryItem({ hideWindow, base, initialLocation, selected, totalCount }: DlgCloneLibraryItemProps) {
+function DlgCloneLibraryItem() {
+  const { base, initialLocation, selected, totalCount } = useDialogsStore(
+    state => state.props as DlgCloneLibraryItemProps
+  );
   const router = useConceptNavigation();
   const { user } = useAuth();
+
   const [title, setTitle] = useState(cloneTitle(base));
   const [alias, setAlias] = useState(base.alias);
   const [comment, setComment] = useState(base.comment);
@@ -77,7 +82,6 @@ function DlgCloneLibraryItem({ hideWindow, base, initialLocation, selected, tota
   return (
     <Modal
       header='Создание копии концептуальной схемы'
-      hideWindow={hideWindow}
       canSubmit={canSubmit}
       submitText='Создать'
       onSubmit={handleSubmit}

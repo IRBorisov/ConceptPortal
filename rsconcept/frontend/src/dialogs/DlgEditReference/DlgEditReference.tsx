@@ -9,6 +9,7 @@ import TabLabel from '@/components/ui/TabLabel';
 import { ReferenceType } from '@/models/language';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IRSForm } from '@/models/rsform';
+import { useDialogsStore } from '@/stores/dialogs';
 import { labelReferenceType } from '@/utils/labels';
 
 import TabEntityReference from './TabEntityReference';
@@ -22,8 +23,7 @@ export interface IReferenceInputState {
   basePosition: number;
 }
 
-interface DlgEditReferenceProps {
-  hideWindow: () => void;
+export interface DlgEditReferenceProps {
   schema: IRSForm;
   initial: IReferenceInputState;
   onSave: (newRef: string) => void;
@@ -34,7 +34,8 @@ export enum TabID {
   SYNTACTIC = 1
 }
 
-function DlgEditReference({ hideWindow, schema, initial, onSave }: DlgEditReferenceProps) {
+function DlgEditReference() {
+  const { schema, initial, onSave } = useDialogsStore(state => state.props as DlgEditReferenceProps);
   const [activeTab, setActiveTab] = useState(initial.type === ReferenceType.ENTITY ? TabID.ENTITY : TabID.SYNTACTIC);
   const [reference, setReference] = useState('');
   const [isValid, setIsValid] = useState(false);
@@ -43,7 +44,6 @@ function DlgEditReference({ hideWindow, schema, initial, onSave }: DlgEditRefere
     <Modal
       header='Редактирование ссылки'
       submitText='Сохранить ссылку'
-      hideWindow={hideWindow}
       canSubmit={isValid}
       onSubmit={() => onSave(reference)}
       className='w-[40rem] px-6 h-[32rem]'

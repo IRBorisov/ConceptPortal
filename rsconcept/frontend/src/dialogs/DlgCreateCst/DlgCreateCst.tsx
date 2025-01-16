@@ -2,20 +2,22 @@
 
 import { useState } from 'react';
 
-import Modal, { ModalProps } from '@/components/ui/Modal';
+import Modal from '@/components/ui/Modal';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
 import { generateAlias } from '@/models/rsformAPI';
+import { useDialogsStore } from '@/stores/dialogs';
 
 import FormCreateCst from './FormCreateCst';
 
-interface DlgCreateCstProps extends Pick<ModalProps, 'hideWindow'> {
+export interface DlgCreateCstProps {
   initial?: ICstCreateData;
   schema: IRSForm;
   onCreate: (data: ICstCreateData) => void;
 }
 
-function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstProps) {
+function DlgCreateCst() {
+  const { initial, schema, onCreate } = useDialogsStore(state => state.props as DlgCreateCstProps);
   const [validated, setValidated] = useState(false);
   const [cstData, updateCstData] = usePartialUpdate(
     initial || {
@@ -35,7 +37,6 @@ function DlgCreateCst({ hideWindow, initial, schema, onCreate }: DlgCreateCstPro
   return (
     <Modal
       header='Создание конституенты'
-      hideWindow={hideWindow}
       canSubmit={validated}
       onSubmit={handleSubmit}
       submitText='Создать'

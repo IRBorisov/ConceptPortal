@@ -12,10 +12,10 @@ import Overlay from '@/components/ui/Overlay';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
 import { useRSForm } from '@/context/RSFormContext';
-import DlgShowTypeGraph from '@/dialogs/DlgShowTypeGraph';
 import { ConstituentaID, CstType, IConstituenta, ICstUpdateData } from '@/models/rsform';
 import { isBaseSet, isBasicConcept, isFunctional } from '@/models/rsformAPI';
 import { IExpressionParse, ParsingStatus } from '@/models/rslang';
+import { useDialogsStore } from '@/stores/dialogs';
 import { errors, information, labelCstTypification } from '@/utils/labels';
 
 import EditorRSExpression from '../EditorRSExpression';
@@ -56,7 +56,6 @@ function FormConstituenta({
   const [expression, setExpression] = useState(state?.definition_formal ?? '');
   const [convention, setConvention] = useState(state?.convention ?? '');
   const [typification, setTypification] = useState('N/A');
-  const [showTypification, setShowTypification] = useState(false);
   const [localParse, setLocalParse] = useState<IExpressionParse | undefined>(undefined);
   const typeInfo = state
     ? {
@@ -71,6 +70,8 @@ function FormConstituenta({
   const isBasic = !!state && isBasicConcept(state.cst_type);
   const isElementary = !!state && isBaseSet(state.cst_type);
   const showConvention = !state || !!state.convention || forceComment || isBasic;
+
+  const showTypification = useDialogsStore(state => state.showShowTypeGraph);
 
   useEffect(() => {
     if (state) {
@@ -142,14 +143,11 @@ function FormConstituenta({
     }
     event.stopPropagation();
     event.preventDefault();
-    setShowTypification(true);
+    showTypification({ items: typeInfo ? [typeInfo] : [] });
   }
 
   return (
     <div className='mx-0 md:mx-auto pt-[2rem] xs:pt-0'>
-      {showTypification && state ? (
-        <DlgShowTypeGraph items={typeInfo ? [typeInfo] : []} hideWindow={() => setShowTypification(false)} />
-      ) : null}
       {state ? (
         <ControlsOverlay
           disabled={disabled}

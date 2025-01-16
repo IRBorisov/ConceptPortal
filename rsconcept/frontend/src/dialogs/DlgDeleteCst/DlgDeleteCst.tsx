@@ -4,19 +4,22 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import Checkbox from '@/components/ui/Checkbox';
-import Modal, { ModalProps } from '@/components/ui/Modal';
+import Modal from '@/components/ui/Modal';
 import { ConstituentaID, IRSForm } from '@/models/rsform';
+import { useDialogsStore } from '@/stores/dialogs';
 import { prefixes } from '@/utils/constants';
 
 import ListConstituents from './ListConstituents';
 
-interface DlgDeleteCstProps extends Pick<ModalProps, 'hideWindow'> {
+export interface DlgDeleteCstProps {
   schema: IRSForm;
   selected: ConstituentaID[];
   onDelete: (items: ConstituentaID[]) => void;
 }
 
-function DlgDeleteCst({ hideWindow, selected, schema, onDelete }: DlgDeleteCstProps) {
+function DlgDeleteCst() {
+  const { selected, schema, onDelete } = useDialogsStore(state => state.props as DlgDeleteCstProps);
+  const hideDialog = useDialogsStore(state => state.hideDialog);
   const [expandOut, setExpandOut] = useState(false);
   const expansion: ConstituentaID[] = schema.graph.expandAllOutputs(selected);
   const hasInherited = selected.some(
@@ -25,7 +28,7 @@ function DlgDeleteCst({ hideWindow, selected, schema, onDelete }: DlgDeleteCstPr
   );
 
   function handleSubmit() {
-    hideWindow();
+    hideDialog();
     if (expandOut) {
       onDelete(selected.concat(expansion));
     } else {
@@ -38,7 +41,6 @@ function DlgDeleteCst({ hideWindow, selected, schema, onDelete }: DlgDeleteCstPr
       canSubmit
       header='Удаление конституент'
       submitText={expandOut ? 'Удалить с зависимыми' : 'Удалить'}
-      hideWindow={hideWindow}
       onSubmit={handleSubmit}
       className={clsx('cc-column', 'max-w-[60vw] min-w-[30rem]', 'px-6')}
     >

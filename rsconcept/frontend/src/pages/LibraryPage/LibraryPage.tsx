@@ -1,7 +1,6 @@
 'use client';
 
 import fileDownload from 'js-file-download';
-import { useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { IconCSV } from '@/components/Icons';
@@ -9,9 +8,9 @@ import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import DataLoader from '@/components/wrap/DataLoader';
 import { useLibrary } from '@/context/LibraryContext';
-import DlgChangeLocation from '@/dialogs/DlgChangeLocation';
 import { IRenameLocationData } from '@/models/library';
 import { useAppLayoutStore } from '@/stores/appLayout';
+import { useDialogsStore } from '@/stores/dialogs';
 import { useLibraryFilter, useLibrarySearchStore } from '@/stores/librarySearch';
 import { information } from '@/utils/labels';
 import { convertToCSV } from '@/utils/utils';
@@ -31,23 +30,20 @@ function LibraryPage() {
   const filter = useLibraryFilter();
   const items = library.applyFilter(filter);
 
-  const [showRenameLocation, setShowRenameLocation] = useState(false);
+  const showChangeLocation = useDialogsStore(state => state.showChangeLocation);
 
-  const handleRenameLocation = useCallback(
-    (newLocation: string) => {
-      const data: IRenameLocationData = {
-        target: location,
-        new_location: newLocation
-      };
-      library.renameLocation(data, () => {
-        setLocation(newLocation);
-        toast.success(information.locationRenamed);
-      });
-    },
-    [location, setLocation, library]
-  );
+  function handleRenameLocation(newLocation: string) {
+    const data: IRenameLocationData = {
+      target: location,
+      new_location: newLocation
+    };
+    library.renameLocation(data, () => {
+      setLocation(newLocation);
+      toast.success(information.locationRenamed);
+    });
+  }
 
-  const handleDownloadCSV = useCallback(() => {
+  function handleDownloadCSV() {
     if (items.length === 0) {
       toast.error(information.noDataToExport);
       return;
@@ -58,17 +54,10 @@ function LibraryPage() {
     } catch (error) {
       console.error(error);
     }
-  }, [items]);
+  }
 
   return (
     <DataLoader isLoading={library.loading} error={library.loadingError} hasNoData={library.items.length === 0}>
-      {showRenameLocation ? (
-        <DlgChangeLocation
-          initial={location}
-          onChangeLocation={handleRenameLocation}
-          hideWindow={() => setShowRenameLocation(false)}
-        />
-      ) : null}
       <Overlay
         position={noNavigation ? 'top-[0.25rem] right-[3rem]' : 'top-[0.25rem] right-0'}
         layer='z-tooltip'
@@ -86,7 +75,7 @@ function LibraryPage() {
         <ViewSideLocation
           isVisible={folderMode}
           folderTree={library.folders}
-          onRenameLocation={() => setShowRenameLocation(true)}
+          onRenameLocation={() => showChangeLocation({ initial: location, onChangeLocation: handleRenameLocation })}
         />
 
         <TableLibraryItems items={items} />

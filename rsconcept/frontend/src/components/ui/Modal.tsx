@@ -4,6 +4,7 @@ import clsx from 'clsx';
 
 import useEscapeKey from '@/hooks/useEscapeKey';
 import { HelpTopic } from '@/models/miscellaneous';
+import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/labels';
 
@@ -31,9 +32,6 @@ export interface ModalProps extends CProps.Styling {
 
   /** Indicates that the modal window should be scrollable. */
   overflowVisible?: boolean;
-
-  /** Callback to be called when the modal window is closed. */
-  hideWindow: () => void;
 
   /** Callback to be called before submit. */
   beforeSubmit?: () => boolean;
@@ -65,7 +63,6 @@ function Modal({
   canSubmit,
   overflowVisible,
 
-  hideWindow,
   beforeSubmit,
   onSubmit,
   onCancel,
@@ -75,10 +72,11 @@ function Modal({
   hideHelpWhen,
   ...restProps
 }: React.PropsWithChildren<ModalProps>) {
-  useEscapeKey(hideWindow);
+  const hideDialog = useDialogsStore(state => state.hideDialog);
+  useEscapeKey(hideDialog);
 
   const handleCancel = () => {
-    hideWindow();
+    hideDialog();
     onCancel?.();
   };
 
@@ -87,7 +85,7 @@ function Modal({
       return;
     }
     onSubmit?.();
-    hideWindow();
+    hideDialog();
   };
 
   return (
@@ -95,7 +93,7 @@ function Modal({
       <div className={clsx('z-navigation', 'fixed top-0 left-0', 'w-full h-full', 'backdrop-blur-[3px] opacity-50')} />
       <div
         className={clsx('z-navigation', 'fixed top-0 left-0', 'w-full h-full', 'bg-prim-0 opacity-25')}
-        onClick={hideWindow}
+        onClick={hideDialog}
       />
       <div
         className={clsx(

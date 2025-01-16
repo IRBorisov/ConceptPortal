@@ -1,24 +1,25 @@
 'use client';
 
 import Checkbox from '@/components/ui/Checkbox';
-import Modal, { ModalProps } from '@/components/ui/Modal';
+import Modal from '@/components/ui/Modal';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { GraphFilterParams } from '@/models/miscellaneous';
 import { CstType } from '@/models/rsform';
+import { useDialogsStore } from '@/stores/dialogs';
 import { labelCstType } from '@/utils/labels';
 
-interface DlgGraphParamsProps extends Pick<ModalProps, 'hideWindow'> {
+export interface DlgGraphParamsProps {
   initial: GraphFilterParams;
   onConfirm: (params: GraphFilterParams) => void;
 }
 
-function DlgGraphParams({ hideWindow, initial, onConfirm }: DlgGraphParamsProps) {
+function DlgGraphParams() {
+  const { initial, onConfirm } = useDialogsStore(state => state.props as DlgGraphParamsProps);
   const [params, updateParams] = usePartialUpdate(initial);
 
   return (
     <Modal
       canSubmit
-      hideWindow={hideWindow}
       header='Настройки графа термов'
       onSubmit={() => onConfirm(params)}
       submitText='Применить'

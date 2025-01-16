@@ -24,10 +24,10 @@ import SelectedCounter from '@/components/info/SelectedCounter';
 import { CProps } from '@/components/props';
 import ToolbarGraphSelection from '@/components/select/ToolbarGraphSelection';
 import Overlay from '@/components/ui/Overlay';
-import DlgGraphParams from '@/dialogs/DlgGraphParams';
 import { ConstituentaID, CstType, IConstituenta } from '@/models/rsform';
 import { isBasicConcept } from '@/models/rsformAPI';
 import { useMainHeight } from '@/stores/appLayout';
+import { useDialogsStore } from '@/stores/dialogs';
 import { useTermGraphStore } from '@/stores/termGraph';
 import { APP_COLORS, colorBgGraphNode } from '@/styling/color';
 import { PARAMETER } from '@/utils/constants';
@@ -60,7 +60,7 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
   const store = useStoreApi();
   const { addSelectedNodes } = store.getState();
 
-  const [showParamsDialog, setShowParamsDialog] = useState(false);
+  const showParams = useDialogsStore(state => state.showGraphParams);
 
   const filter = useTermGraphStore(state => state.filter);
   const setFilter = useTermGraphStore(state => state.setFilter);
@@ -295,15 +295,11 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
 
   return (
     <>
-      {showParamsDialog ? (
-        <DlgGraphParams hideWindow={() => setShowParamsDialog(false)} initial={filter} onConfirm={setFilter} />
-      ) : null}
-
       <Overlay position='cc-tab-tools' className='flex flex-col items-center rounded-b-2xl cc-blur'>
         <ToolbarTermGraph
           noText={filter.noText}
           foldDerived={filter.foldDerived}
-          showParamsDialog={() => setShowParamsDialog(true)}
+          showParamsDialog={() => showParams({ initial: filter, onConfirm: setFilter })}
           onCreate={handleCreateCst}
           onDelete={handleDeleteCst}
           onFitView={() => setToggleResetView(prev => !prev)}

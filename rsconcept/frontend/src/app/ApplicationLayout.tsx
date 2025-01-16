@@ -9,6 +9,7 @@ import { NavigationState } from '@/context/NavigationContext';
 import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/appLayout';
 import { globals } from '@/utils/constants';
 
+import { GlobalDialogs } from './GlobalDialogs';
 import { GlobalTooltips } from './GlobalTooltips';
 
 function ApplicationLayout() {
@@ -29,6 +30,7 @@ function ApplicationLayout() {
           pauseOnFocusLoss={false}
         />
 
+        <GlobalDialogs />
         <GlobalTooltips />
 
         <Navigation />
