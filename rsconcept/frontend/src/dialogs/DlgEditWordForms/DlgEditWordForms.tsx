@@ -3,9 +3,9 @@
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
-import { useIsProcessingCctext } from '@/backend/cctext/useIsProcessingCctext';
 import { useGenerateLexeme } from '@/backend/cctext/useGenerateLexeme';
 import { useInflectText } from '@/backend/cctext/useInflectText';
+import { useIsProcessingCctext } from '@/backend/cctext/useIsProcessingCctext';
 import { useParseText } from '@/backend/cctext/useParseText';
 import { IconAccept, IconMoveDown, IconMoveLeft, IconMoveRight, IconRemove } from '@/components/Icons';
 import SelectMultiGrammeme from '@/components/select/SelectMultiGrammeme';

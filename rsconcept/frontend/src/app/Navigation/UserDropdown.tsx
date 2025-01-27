@@ -1,3 +1,4 @@
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { useAuth } from '@/backend/auth/useAuth';
 import { useLogout } from '@/backend/auth/useLogout';
 import {
@@ -17,7 +18,6 @@ import {
 import { CProps } from '@/components/props';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
-import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { urls } from '../urls';

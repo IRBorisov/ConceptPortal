@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 
-import Loader from '@/components/ui/Loader';
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
+import Loader from '@/components/ui/Loader';
 import useDropdown from '@/hooks/useDropdown';
 
 import { urls } from '../urls';

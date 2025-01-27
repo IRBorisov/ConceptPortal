@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { useLabelUser } from '@/backend/users/useLabelUser';
 import { IconFolderTree } from '@/components/Icons';
@@ -13,7 +14,6 @@ import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } fro
 import FlexColumn from '@/components/ui/FlexColumn';
 import MiniButton from '@/components/ui/MiniButton';
 import TextURL from '@/components/ui/TextURL';
-import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ILibraryItem, LibraryItemType } from '@/models/library';
 import { useFitHeight } from '@/stores/appLayout';

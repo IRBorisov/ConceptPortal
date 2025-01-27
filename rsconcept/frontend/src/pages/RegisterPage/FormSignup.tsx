@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { useSignup } from '@/backend/users/useSignup';
 import { IconHelp } from '@/components/Icons';
@@ -18,7 +19,6 @@ import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
 import TextURL from '@/components/ui/TextURL';
 import Tooltip from '@/components/ui/Tooltip';
-import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IUserSignupData } from '@/models/user';
 import { globals, patterns } from '@/utils/constants';

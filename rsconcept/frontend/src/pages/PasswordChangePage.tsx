@@ -4,6 +4,7 @@ import axios from 'axios';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { IPasswordTokenDTO, IResetPasswordDTO } from '@/backend/auth/api';
 import { useResetPassword } from '@/backend/auth/useResetPassword';
@@ -11,7 +12,6 @@ import InfoError, { ErrorData } from '@/components/info/InfoError';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
 import DataLoader from '@/components/wrap/DataLoader';
-import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
 
 function PasswordChangePage() {

@@ -4,8 +4,8 @@ import { Outlet } from 'react-router';
 import ConceptToaster from '@/app/ConceptToaster';
 import Footer from '@/app/Footer';
 import Navigation from '@/app/Navigation';
-import Loader from '@/components/ui/Loader';
 import { NavigationState } from '@/app/Navigation/NavigationContext';
+import Loader from '@/components/ui/Loader';
 import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/appLayout';
 import { globals } from '@/utils/constants';
 

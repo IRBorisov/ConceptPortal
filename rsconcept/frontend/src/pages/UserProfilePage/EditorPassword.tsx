@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { IChangePasswordDTO } from '@/backend/auth/api';
 import { useChangePassword } from '@/backend/auth/useChangePassword';
@@ -12,7 +13,6 @@ import InfoError, { ErrorData } from '@/components/info/InfoError';
 import FlexColumn from '@/components/ui/FlexColumn';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
-import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { errors, information } from '@/utils/labels';
 
 function EditorPassword() {

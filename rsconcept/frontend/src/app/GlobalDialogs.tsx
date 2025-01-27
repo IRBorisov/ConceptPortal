@@ -1,7 +1,6 @@
 'use client';
 
 import DlgChangeInputSchema from '@/dialogs/DlgChangeInputSchema';
-import DlgChangeLocation from '@/pages/OssPage/DlgChangeLocation';
 import DlgCloneLibraryItem from '@/dialogs/DlgCloneLibraryItem';
 import DlgCreateCst from '@/dialogs/DlgCreateCst';
 import DlgCreateOperation from '@/dialogs/DlgCreateOperation';
@@ -24,6 +23,7 @@ import DlgShowTypeGraph from '@/dialogs/DlgShowTypeGraph';
 import DlgSubstituteCst from '@/dialogs/DlgSubstituteCst';
 import DlgUploadRSForm from '@/dialogs/DlgUploadRSForm';
 import { DialogType } from '@/models/miscellaneous';
+import DlgChangeLocation from '@/pages/OssPage/DlgChangeLocation';
 import { useDialogsStore } from '@/stores/dialogs';
 
 export const GlobalDialogs = () => {

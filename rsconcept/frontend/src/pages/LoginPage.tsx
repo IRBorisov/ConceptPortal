@@ -4,6 +4,7 @@ import axios from 'axios';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { useAuth } from '@/backend/auth/useAuth';
 import { useLogin } from '@/backend/auth/useLogin';
@@ -12,7 +13,6 @@ import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
 import TextURL from '@/components/ui/TextURL';
 import ExpectedAnonymous from '@/components/wrap/ExpectedAnonymous';
-import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { resources } from '@/utils/constants';
 

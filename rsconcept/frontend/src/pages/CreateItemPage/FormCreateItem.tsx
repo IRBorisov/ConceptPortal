@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { useAuth } from '@/backend/auth/useAuth';
 import { ILibraryCreateDTO } from '@/backend/library/api';
@@ -22,7 +23,6 @@ import Overlay from '@/components/ui/Overlay';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
-import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { AccessPolicy, LibraryItemType, LocationHead } from '@/models/library';
 import { combineLocation, validateLocation } from '@/models/libraryAPI';
 import { useLibrarySearchStore } from '@/stores/librarySearch';
