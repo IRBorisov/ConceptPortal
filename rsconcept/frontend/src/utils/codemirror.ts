@@ -322,7 +322,7 @@ export function domTooltipEntityReference(
     const gram = document.createElement('div');
     gram.id = `tooltip-${gramStr}`;
     gram.className = clsx(
-      'min-w-[3rem]', // prettier: split lines
+      'min-w-[3rem]', //
       'px-1',
       'border rounded-md',
       'text-sm text-center whitespace-nowrap'

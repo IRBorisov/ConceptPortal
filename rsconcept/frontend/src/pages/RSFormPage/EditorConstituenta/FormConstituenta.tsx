@@ -4,6 +4,9 @@ import clsx from 'clsx';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { ICstUpdateDTO } from '@/backend/rsform/api';
+import { useCstUpdate } from '@/backend/rsform/useCstUpdate';
+import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
 import { IconChild, IconPredecessor, IconSave } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import RefsInput from '@/components/RefsInput';
@@ -11,27 +14,22 @@ import Indicator from '@/components/ui/Indicator';
 import Overlay from '@/components/ui/Overlay';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
-import { useRSForm } from '@/context/RSFormContext';
-import { ConstituentaID, CstType, IConstituenta, ICstUpdateData } from '@/models/rsform';
+import { ConstituentaID, CstType } from '@/models/rsform';
 import { isBaseSet, isBasicConcept, isFunctional } from '@/models/rsformAPI';
 import { IExpressionParse, ParsingStatus } from '@/models/rslang';
 import { useDialogsStore } from '@/stores/dialogs';
+import { useModificationStore } from '@/stores/modification';
 import { errors, information, labelCstTypification } from '@/utils/labels';
 
 import EditorRSExpression from '../EditorRSExpression';
-import ControlsOverlay from './ControlsOverlay';
+import { useRSEdit } from '../RSEditContext';
+import EditorControls from './EditorControls';
 
 interface FormConstituentaProps {
-  disabled: boolean;
-
   id?: string;
-  state?: IConstituenta;
-
-  isModified: boolean;
+  disabled: boolean;
   toggleReset: boolean;
-  setIsModified: (newValue: boolean) => void;
 
-  onRename: () => void;
   onEditTerm: () => void;
   onOpenEdit?: (cstID: ConstituentaID) => void;
 }
@@ -39,70 +37,68 @@ interface FormConstituentaProps {
 function FormConstituenta({
   disabled,
   id,
-  state,
-
-  isModified,
-  setIsModified,
 
   toggleReset,
-  onRename,
   onEditTerm,
   onOpenEdit
 }: FormConstituentaProps) {
-  const { schema, cstUpdate, processing } = useRSForm();
+  const { cstUpdate } = useCstUpdate();
+  const { schema, activeCst } = useRSEdit();
+  const { isModified, setIsModified } = useModificationStore();
+  const isProcessing = useIsProcessingRSForm();
 
-  const [term, setTerm] = useState(state?.term_raw ?? '');
-  const [textDefinition, setTextDefinition] = useState(state?.definition_raw ?? '');
-  const [expression, setExpression] = useState(state?.definition_formal ?? '');
-  const [convention, setConvention] = useState(state?.convention ?? '');
+  const [term, setTerm] = useState(activeCst?.term_raw ?? '');
+  const [textDefinition, setTextDefinition] = useState(activeCst?.definition_raw ?? '');
+  const [expression, setExpression] = useState(activeCst?.definition_formal ?? '');
+  const [convention, setConvention] = useState(activeCst?.convention ?? '');
   const [typification, setTypification] = useState('N/A');
   const [localParse, setLocalParse] = useState<IExpressionParse | undefined>(undefined);
-  const typeInfo = state
+  const typeInfo = activeCst
     ? {
-        alias: state.alias,
-        result: localParse ? localParse.typification : state.parse.typification,
-        args: localParse ? localParse.args : state.parse.args
+        alias: activeCst.alias,
+        result: localParse ? localParse.typification : activeCst.parse.typification,
+        args: localParse ? localParse.args : activeCst.parse.args
       }
     : undefined;
 
   const [forceComment, setForceComment] = useState(false);
 
-  const isBasic = !!state && isBasicConcept(state.cst_type);
-  const isElementary = !!state && isBaseSet(state.cst_type);
-  const showConvention = !state || !!state.convention || forceComment || isBasic;
+  const isBasic = !!activeCst && isBasicConcept(activeCst.cst_type);
+  const isElementary = !!activeCst && isBaseSet(activeCst.cst_type);
+  const showConvention = !activeCst || !!activeCst.convention || forceComment || isBasic;
 
-  const showTypification = useDialogsStore(state => state.showShowTypeGraph);
+  const showTypification = useDialogsStore(activeCst => activeCst.showShowTypeGraph);
 
   useEffect(() => {
-    if (state) {
-      setConvention(state.convention);
-      setTerm(state.term_raw);
-      setTextDefinition(state.definition_raw);
-      setExpression(state.definition_formal);
-      setTypification(state ? labelCstTypification(state) : 'N/A');
+    if (activeCst) {
+      setConvention(activeCst.convention);
+      setTerm(activeCst.term_raw);
+      setTextDefinition(activeCst.definition_raw);
+      setExpression(activeCst.definition_formal);
+      setTypification(activeCst ? labelCstTypification(activeCst) : 'N/A');
       setForceComment(false);
       setLocalParse(undefined);
     }
-  }, [state, schema, toggleReset, setIsModified]);
+  }, [activeCst, schema, toggleReset, setIsModified]);
 
   useLayoutEffect(() => {
-    if (!state) {
+    if (!activeCst) {
       setIsModified(false);
       return;
     }
     setIsModified(
-      state.term_raw !== term ||
-        state.definition_raw !== textDefinition ||
-        state.convention !== convention ||
-        state.definition_formal !== expression
+      activeCst.term_raw !== term ||
+        activeCst.definition_raw !== textDefinition ||
+        activeCst.convention !== convention ||
+        activeCst.definition_formal !== expression
     );
     return () => setIsModified(false);
   }, [
-    state,
-    state?.term_raw,
-    state?.definition_formal,
-    state?.definition_raw,
-    state?.convention,
+    activeCst,
+    activeCst?.term_raw,
+    activeCst?.definition_formal,
+    activeCst?.definition_raw,
+    activeCst?.convention,
     term,
     textDefinition,
     expression,
@@ -114,30 +110,23 @@ function FormConstituenta({
     if (event) {
       event.preventDefault();
     }
-    if (!state || processing) {
+    if (!activeCst || isProcessing || !schema) {
       return;
     }
-    const data: ICstUpdateData = {
-      target: state.id,
-      item_data: {}
+    const data: ICstUpdateDTO = {
+      target: activeCst.id,
+      item_data: {
+        term_raw: activeCst.term_raw !== term ? term : undefined,
+        definition_formal: activeCst.definition_formal !== expression ? expression : undefined,
+        definition_raw: activeCst.definition_raw !== textDefinition ? textDefinition : undefined,
+        convention: activeCst.convention !== convention ? convention : undefined
+      }
     };
-    if (state.term_raw !== term) {
-      data.item_data.term_raw = term;
-    }
-    if (state.definition_formal !== expression) {
-      data.item_data.definition_formal = expression;
-    }
-    if (state.definition_raw !== textDefinition) {
-      data.item_data.definition_raw = textDefinition;
-    }
-    if (state.convention !== convention) {
-      data.item_data.convention = convention;
-    }
-    cstUpdate(data, () => toast.success(information.changesSaved));
+    cstUpdate({ itemID: schema.id, data }, () => toast.success(information.changesSaved));
   }
 
   function handleTypeGraph(event: CProps.EventMouse) {
-    if (!state || (localParse && !localParse.parseResult) || state.parse.status !== ParsingStatus.VERIFIED) {
+    if (!activeCst || (localParse && !localParse.parseResult) || activeCst.parse.status !== ParsingStatus.VERIFIED) {
       toast.error(errors.typeStructureFailed);
       return;
     }
@@ -148,16 +137,7 @@ function FormConstituenta({
 
   return (
     <div className='mx-0 md:mx-auto pt-[2rem] xs:pt-0'>
-      {state ? (
-        <ControlsOverlay
-          disabled={disabled}
-          modified={isModified}
-          processing={processing}
-          constituenta={state}
-          onEditTerm={onEditTerm}
-          onRename={onRename}
-        />
-      ) : null}
+      {activeCst ? <EditorControls disabled={disabled} constituenta={activeCst} onEditTerm={onEditTerm} /> : null}
       <form id={id} className={clsx('cc-column', 'mt-1 md:w-[48.8rem] shrink-0', 'px-6 py-1')} onSubmit={handleSubmit}>
         <RefsInput
           key='cst_term'
@@ -168,12 +148,12 @@ function FormConstituenta({
           schema={schema}
           onOpenEdit={onOpenEdit}
           value={term}
-          initialValue={state?.term_raw ?? ''}
-          resolved={state?.term_resolved ?? 'Конституента не выбрана'}
+          initialValue={activeCst?.term_raw ?? ''}
+          resolved={activeCst?.term_resolved ?? 'Конституента не выбрана'}
           disabled={disabled}
           onChange={newValue => setTerm(newValue)}
         />
-        {state ? (
+        {activeCst ? (
           <TextArea
             id='cst_typification'
             fitContent
@@ -187,24 +167,26 @@ function FormConstituenta({
             colors='bg-transparent clr-text-default cursor-default'
           />
         ) : null}
-        {state ? (
+        {activeCst ? (
           <>
-            {!!state.definition_formal || !isElementary ? (
+            {!!activeCst.definition_formal || !isElementary ? (
               <EditorRSExpression
                 id='cst_expression'
                 label={
-                  state.cst_type === CstType.STRUCTURED
+                  activeCst.cst_type === CstType.STRUCTURED
                     ? 'Область определения'
-                    : isFunctional(state.cst_type)
+                    : isFunctional(activeCst.cst_type)
                     ? 'Определение функции'
                     : 'Формальное определение'
                 }
                 placeholder={
-                  state.cst_type !== CstType.STRUCTURED ? 'Родоструктурное выражение' : 'Типизация родовой структуры'
+                  activeCst.cst_type !== CstType.STRUCTURED
+                    ? 'Родоструктурное выражение'
+                    : 'Типизация родовой структуры'
                 }
                 value={expression}
-                activeCst={state}
-                disabled={disabled || state.is_inherited}
+                activeCst={activeCst}
+                disabled={disabled || activeCst.is_inherited}
                 toggleReset={toggleReset}
                 onChangeExpression={newValue => setExpression(newValue)}
                 onChangeTypification={setTypification}
@@ -213,7 +195,7 @@ function FormConstituenta({
                 onShowTypeGraph={handleTypeGraph}
               />
             ) : null}
-            {!!state.definition_raw || !isElementary ? (
+            {!!activeCst.definition_raw || !isElementary ? (
               <RefsInput
                 id='cst_definition'
                 label='Текстовое определение'
@@ -223,8 +205,8 @@ function FormConstituenta({
                 schema={schema}
                 onOpenEdit={onOpenEdit}
                 value={textDefinition}
-                initialValue={state.definition_raw}
-                resolved={state.definition_resolved}
+                initialValue={activeCst.definition_raw}
+                resolved={activeCst.definition_resolved}
                 disabled={disabled}
                 onChange={newValue => setTextDefinition(newValue)}
               />
@@ -239,12 +221,12 @@ function FormConstituenta({
                 label={isBasic ? 'Конвенция' : 'Комментарий'}
                 placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
                 value={convention}
-                disabled={disabled || (isBasic && state.is_inherited)}
+                disabled={disabled || (isBasic && activeCst.is_inherited)}
                 onChange={event => setConvention(event.target.value)}
               />
             ) : null}
 
-            {!showConvention && (!disabled || processing) ? (
+            {!showConvention && (!disabled || isProcessing) ? (
               <button
                 key='cst_disable_comment'
                 id='cst_disable_comment'
@@ -257,7 +239,7 @@ function FormConstituenta({
               </button>
             ) : null}
 
-            {!disabled || processing ? (
+            {!disabled || isProcessing ? (
               <div className='mx-auto flex'>
                 <SubmitButton
                   key='cst_form_submit'
@@ -267,13 +249,13 @@ function FormConstituenta({
                   icon={<IconSave size='1.25rem' />}
                 />
                 <Overlay position='top-[0.1rem] left-[0.4rem]' className='cc-icons'>
-                  {state.has_inherited_children && !state.is_inherited ? (
+                  {activeCst.has_inherited_children && !activeCst.is_inherited ? (
                     <Indicator
                       icon={<IconPredecessor size='1.25rem' className='text-sec-600' />}
                       titleHtml='Внимание!</br> Конституента имеет потомков<br/> в операционной схеме синтеза'
                     />
                   ) : null}
-                  {state.is_inherited ? (
+                  {activeCst.is_inherited ? (
                     <Indicator
                       icon={<IconChild size='1.25rem' className='text-sec-600' />}
                       titleHtml='Внимание!</br> Конституента является наследником<br/>'

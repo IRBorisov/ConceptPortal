@@ -1,7 +1,7 @@
 'use client';
 
 import DlgChangeInputSchema from '@/dialogs/DlgChangeInputSchema';
-import DlgChangeLocation from '@/dialogs/DlgChangeLocation';
+import DlgChangeLocation from '@/pages/OssPage/DlgChangeLocation';
 import DlgCloneLibraryItem from '@/dialogs/DlgCloneLibraryItem';
 import DlgCreateCst from '@/dialogs/DlgCreateCst';
 import DlgCreateOperation from '@/dialogs/DlgCreateOperation';

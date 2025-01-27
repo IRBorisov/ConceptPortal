@@ -4,6 +4,7 @@ import fileDownload from 'js-file-download';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
 import { IconCSV } from '@/components/Icons';
 import { type RowSelectionState } from '@/components/ui/DataTable';
 import MiniButton from '@/components/ui/MiniButton';
@@ -20,13 +21,10 @@ import { useRSEdit } from '../RSEditContext';
 import TableRSList from './TableRSList';
 import ToolbarRSList from './ToolbarRSList';
 
-interface EditorRSListProps {
-  onOpenEdit: (cstID: ConstituentaID) => void;
-}
-
-function EditorRSList({ onOpenEdit }: EditorRSListProps) {
+function EditorRSList() {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const controller = useRSEdit();
+  const isProcessing = useIsProcessingRSForm();
 
   const [filtered, setFiltered] = useState<IConstituenta[]>(controller.schema?.items ?? []);
   const [filterText, setFilterText] = useState('');
@@ -91,7 +89,7 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
       controller.deselectAll();
       return;
     }
-    if (!controller.isContentEditable || controller.isProcessing) {
+    if (!controller.isContentEditable || isProcessing) {
       return;
     }
     if (event.key === 'Delete' && controller.canDeleteSelected) {
@@ -170,7 +168,7 @@ function EditorRSList({ onOpenEdit }: EditorRSListProps) {
           enableSelection={controller.isContentEditable}
           selected={rowSelection}
           setSelected={handleRowSelection}
-          onEdit={onOpenEdit}
+          onEdit={controller.navigateCst}
           onCreateNew={() => controller.createCst(undefined, false)}
         />
       </div>

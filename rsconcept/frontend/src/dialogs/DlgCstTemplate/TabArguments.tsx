@@ -92,7 +92,7 @@ function TabArguments({ state, schema, partialUpdate }: TabArgumentsProps) {
       cell: props => (
         <div
           className={clsx(
-            'min-w-[9.3rem] max-w-[9.3rem]', // prettier: split lines
+            'min-w-[9.3rem] max-w-[9.3rem]', //
             'text-sm break-words'
           )}
         >
@@ -133,7 +133,7 @@ function TabArguments({ state, schema, partialUpdate }: TabArgumentsProps) {
         noFooter
         noHeader
         className={clsx(
-          'max-h-[5.8rem] min-h-[5.8rem]', // prettier: split lines
+          'max-h-[5.8rem] min-h-[5.8rem]', //
           'cc-scroll-y',
           'text-sm',
           'border',
@@ -148,7 +148,7 @@ function TabArguments({ state, schema, partialUpdate }: TabArgumentsProps) {
 
       <div
         className={clsx(
-          'my-4', // prettier: split lines
+          'my-4', //
           'flex gap-2 justify-center items-center',
           'select-none'
         )}

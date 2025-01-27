@@ -2,6 +2,7 @@
 
 import clsx from 'clsx';
 
+import { useIsProcessingOss } from '@/backend/oss/useIsProcessingOss';
 import {
   IconAnimation,
   IconAnimationOff,
@@ -21,6 +22,7 @@ import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniButton from '@/components/ui/MiniButton';
 import { HelpTopic } from '@/models/miscellaneous';
 import { OperationType } from '@/models/oss';
+import { useModificationStore } from '@/stores/modification';
 import { useOSSGraphStore } from '@/stores/ossGraph';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/labels';
@@ -28,7 +30,6 @@ import { prepareTooltip } from '@/utils/labels';
 import { useOssEdit } from '../OssEditContext';
 
 interface ToolbarOssGraphProps {
-  isModified: boolean;
   onCreate: () => void;
   onDelete: () => void;
   onEdit: () => void;
@@ -40,7 +41,6 @@ interface ToolbarOssGraphProps {
 }
 
 function ToolbarOssGraph({
-  isModified,
   onCreate,
   onDelete,
   onEdit,
@@ -51,6 +51,8 @@ function ToolbarOssGraph({
   onResetPositions
 }: ToolbarOssGraphProps) {
   const controller = useOssEdit();
+  const { isModified } = useModificationStore();
+  const isProcessing = useIsProcessingOss();
   const selectedOperation = controller.schema?.operationByID.get(controller.selected[0]);
 
   const showGrid = useOSSGraphStore(state => state.showGrid);
@@ -73,7 +75,7 @@ function ToolbarOssGraph({
       return false;
     }
 
-    const argumentOperations = argumentIDs.map(id => controller.schema!.operationByID.get(id)!);
+    const argumentOperations = argumentIDs.map(id => controller.schema.operationByID.get(id)!);
     if (argumentOperations.some(item => item.result === null)) {
       return false;
     }
@@ -144,35 +146,31 @@ function ToolbarOssGraph({
           <MiniButton
             titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
-            disabled={controller.isProcessing || !isModified}
+            disabled={isProcessing || !isModified}
             onClick={onSavePositions}
           />
           <MiniButton
             titleHtml={prepareTooltip('Новая операция', 'Ctrl + Q')}
             icon={<IconNewItem size='1.25rem' className='icon-green' />}
-            disabled={controller.isProcessing}
+            disabled={isProcessing}
             onClick={onCreate}
           />
           <MiniButton
             title='Активировать операцию'
             icon={<IconExecute size='1.25rem' className='icon-green' />}
-            disabled={controller.isProcessing || controller.selected.length !== 1 || !readyForSynthesis}
+            disabled={isProcessing || controller.selected.length !== 1 || !readyForSynthesis}
             onClick={onExecute}
           />
           <MiniButton
             titleHtml={prepareTooltip('Редактировать выбранную', 'Двойной клик')}
             icon={<IconEdit2 size='1.25rem' className='icon-primary' />}
-            disabled={controller.selected.length !== 1 || controller.isProcessing}
+            disabled={controller.selected.length !== 1 || isProcessing}
             onClick={onEdit}
           />
           <MiniButton
             titleHtml={prepareTooltip('Удалить выбранную', 'Delete')}
             icon={<IconDestroy size='1.25rem' className='icon-red' />}
-            disabled={
-              controller.selected.length !== 1 ||
-              controller.isProcessing ||
-              !controller.canDelete(controller.selected[0])
-            }
+            disabled={controller.selected.length !== 1 || isProcessing || !controller.canDelete(controller.selected[0])}
             onClick={onDelete}
           />
         </div>

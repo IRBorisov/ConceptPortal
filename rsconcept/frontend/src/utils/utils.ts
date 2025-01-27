@@ -3,10 +3,11 @@
  */
 
 import axios, { AxiosError, AxiosHeaderValue, AxiosResponse } from 'axios';
+import { toast } from 'react-toastify';
 
 import { AliasMapping } from '@/models/rslang';
 
-import { prompts } from './labels';
+import { information, prompts } from './labels';
 
 /**
  * Checks if arguments is Node.
@@ -201,4 +202,24 @@ export function convertToCSV(targetObj: object[]): Blob {
       .join('\n');
 
   return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+}
+
+/**
+ * Generates a QR code for the current page.
+ */
+export function generatePageQR(): string {
+  const currentRef = window.location.href;
+  return currentRef.includes('?') ? currentRef + '&qr' : currentRef + '?qr';
+}
+
+/**
+ * Copies sharable link to the current page.
+ */
+export function sharePage() {
+  const currentRef = window.location.href;
+  const url = currentRef.includes('?') ? currentRef + '&share' : currentRef + '?share';
+  navigator.clipboard
+    .writeText(url)
+    .then(() => toast.success(information.linkReady))
+    .catch(console.error);
 }

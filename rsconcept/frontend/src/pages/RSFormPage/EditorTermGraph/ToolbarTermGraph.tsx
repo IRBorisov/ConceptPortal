@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 
+import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
 import {
   IconClustering,
   IconClusteringOff,
@@ -16,6 +17,7 @@ import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniSelectorOSS from '@/components/select/MiniSelectorOSS';
 import MiniButton from '@/components/ui/MiniButton';
 import { HelpTopic } from '@/models/miscellaneous';
+import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 
 import { useRSEdit } from '../RSEditContext';
@@ -46,13 +48,24 @@ function ToolbarTermGraph({
   onSaveImage
 }: ToolbarTermGraphProps) {
   const controller = useRSEdit();
+  const isProcessing = useIsProcessingRSForm();
+  const showTypeGraph = useDialogsStore(state => state.showShowTypeGraph);
+
+  function handleShowTypeGraph() {
+    const typeInfo = controller.schema?.items.map(item => ({
+      alias: item.alias,
+      result: item.parse.typification,
+      args: item.parse.args
+    }));
+    showTypeGraph({ items: typeInfo ?? [] });
+  }
 
   return (
     <div className='cc-icons'>
       {controller.schema && controller.schema?.oss.length > 0 ? (
         <MiniSelectorOSS
           items={controller.schema.oss}
-          onSelect={(event, value) => controller.viewOSS(value.id, event.ctrlKey || event.metaKey)}
+          onSelect={(event, value) => controller.navigateOss(value.id, event.ctrlKey || event.metaKey)}
         />
       ) : null}
       <MiniButton
@@ -91,7 +104,7 @@ function ToolbarTermGraph({
         <MiniButton
           title='Новая конституента'
           icon={<IconNewItem size='1.25rem' className='icon-green' />}
-          disabled={controller.isProcessing}
+          disabled={isProcessing}
           onClick={onCreate}
         />
       ) : null}
@@ -99,14 +112,14 @@ function ToolbarTermGraph({
         <MiniButton
           title='Удалить выбранные'
           icon={<IconDestroy size='1.25rem' className='icon-red' />}
-          disabled={!controller.canDeleteSelected || controller.isProcessing}
+          disabled={!controller.canDeleteSelected || isProcessing}
           onClick={onDelete}
         />
       ) : null}
       <MiniButton
         icon={<IconTypeGraph size='1.25rem' className='icon-primary' />}
         title='Граф ступеней'
-        onClick={() => controller.showTypeGraph()}
+        onClick={handleShowTypeGraph}
       />
       <MiniButton
         icon={<IconImage size='1.25rem' className='icon-primary' />}

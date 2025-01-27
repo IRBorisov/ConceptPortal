@@ -3,14 +3,17 @@
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
+import { useIsProcessingCctext } from '@/backend/cctext/useIsProcessingCctext';
+import { useGenerateLexeme } from '@/backend/cctext/useGenerateLexeme';
+import { useInflectText } from '@/backend/cctext/useInflectText';
+import { useParseText } from '@/backend/cctext/useParseText';
 import { IconAccept, IconMoveDown, IconMoveLeft, IconMoveRight, IconRemove } from '@/components/Icons';
 import SelectMultiGrammeme from '@/components/select/SelectMultiGrammeme';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
 import Modal from '@/components/ui/Modal';
 import TextArea from '@/components/ui/TextArea';
-import useConceptText from '@/hooks/useConceptText';
-import { Grammeme, ITextRequest, IWordForm, IWordFormPlain } from '@/models/language';
+import { Grammeme, IWordForm, IWordFormPlain } from '@/models/language';
 import { parseGrammemes, wordFormEquals } from '@/models/languageAPI';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IConstituenta, TermForm } from '@/models/rsform';
@@ -27,7 +30,10 @@ export interface DlgEditWordFormsProps {
 
 function DlgEditWordForms() {
   const { target, onSave } = useDialogsStore(state => state.props as DlgEditWordFormsProps);
-  const textProcessor = useConceptText();
+  const isProcessing = useIsProcessingCctext();
+  const { inflectText } = useInflectText();
+  const { parseText } = useParseText();
+  const { generateLexeme } = useGenerateLexeme();
 
   const [term, setTerm] = useState('');
   const [inputText, setInputText] = useState('');
@@ -77,14 +83,11 @@ function DlgEditWordForms() {
       text: term,
       grams: inputGrams.map(gram => gram.value).join(',')
     };
-    textProcessor.inflect(data, response => setInputText(response.result));
+    inflectText(data, response => setInputText(response.result));
   }
 
   function handleParse() {
-    const data: ITextRequest = {
-      text: inputText
-    };
-    textProcessor.parse(data, response => {
+    parseText({ text: inputText }, response => {
       const grams = parseGrammemes(response.result);
       setInputGrams(SelectorGrammemes.filter(gram => grams.find(test => test === gram.value)));
     });
@@ -96,10 +99,7 @@ function DlgEditWordForms() {
         return;
       }
     }
-    const data: ITextRequest = {
-      text: inputText
-    };
-    textProcessor.generateLexeme(data, response => {
+    generateLexeme({ text: inputText }, response => {
       const lexeme: IWordForm[] = [];
       response.items.forEach(form => {
         const newForm: IWordForm = {
@@ -155,14 +155,14 @@ function DlgEditWordForms() {
             noHover
             title='Определить граммемы'
             icon={<IconMoveRight size='1.25rem' className='icon-primary' />}
-            disabled={textProcessor.processing || !inputText}
+            disabled={isProcessing || !inputText}
             onClick={handleParse}
           />
           <MiniButton
             noHover
             title='Генерировать словоформу'
             icon={<IconMoveLeft size='1.25rem' className='icon-primary' />}
-            disabled={textProcessor.processing || inputGrams.length == 0}
+            disabled={isProcessing || inputGrams.length == 0}
             onClick={handleInflect}
           />
         </div>
@@ -180,14 +180,14 @@ function DlgEditWordForms() {
             noHover
             title='Внести словоформу'
             icon={<IconAccept size='1.5rem' className='icon-green' />}
-            disabled={textProcessor.processing || !inputText || inputGrams.length == 0}
+            disabled={isProcessing || !inputText || inputGrams.length == 0}
             onClick={handleAddForm}
           />
           <MiniButton
             noHover
             title='Генерировать стандартные словоформы'
             icon={<IconMoveDown size='1.5rem' className='icon-primary' />}
-            disabled={textProcessor.processing || !inputText}
+            disabled={isProcessing || !inputText}
             onClick={handleGenerateLexeme}
           />
         </div>
@@ -198,7 +198,7 @@ function DlgEditWordForms() {
             title='Сбросить все словоформы'
             className='py-0'
             icon={<IconRemove size='1.5rem' className='icon-red' />}
-            disabled={textProcessor.processing || forms.length === 0}
+            disabled={isProcessing || forms.length === 0}
             onClick={handleResetAll}
           />
         </div>

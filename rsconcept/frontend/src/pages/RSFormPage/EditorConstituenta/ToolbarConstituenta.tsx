@@ -2,6 +2,10 @@
 
 import clsx from 'clsx';
 
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
+import { urls } from '@/app/urls';
+import { useFindPredecessor } from '@/backend/oss/useFindPredecessor';
+import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
 import {
   IconClone,
   IconDestroy,
@@ -19,17 +23,17 @@ import MiniSelectorOSS from '@/components/select/MiniSelectorOSS';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import { HelpTopic } from '@/models/miscellaneous';
-import { IConstituenta } from '@/models/rsform';
+import { ConstituentaID, IConstituenta } from '@/models/rsform';
+import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip, tooltips } from '@/utils/labels';
 
-import { useRSEdit } from '../RSEditContext';
+import { RSTabID, useRSEdit } from '../RSEditContext';
 
 interface ToolbarConstituentaProps {
   activeCst?: IConstituenta;
   disabled: boolean;
-  modified: boolean;
 
   onSubmit: () => void;
   onReset: () => void;
@@ -38,15 +42,30 @@ interface ToolbarConstituentaProps {
 function ToolbarConstituenta({
   activeCst,
   disabled,
-  modified,
 
   onSubmit,
   onReset
 }: ToolbarConstituentaProps) {
   const controller = useRSEdit();
+  const router = useConceptNavigation();
+  const { findPredecessor } = useFindPredecessor();
 
   const showList = usePreferencesStore(state => state.showCstSideList);
   const toggleList = usePreferencesStore(state => state.toggleShowCstSideList);
+  const { isModified } = useModificationStore();
+  const isProcessing = useIsProcessingRSForm();
+
+  function viewPredecessor(target: ConstituentaID) {
+    findPredecessor({ target: target }, reference =>
+      router.push(
+        urls.schema_props({
+          id: reference.schema,
+          active: reference.id,
+          tab: RSTabID.CST_EDIT
+        })
+      )
+    );
+  }
 
   return (
     <Overlay
@@ -56,13 +75,13 @@ function ToolbarConstituenta({
       {controller.schema && controller.schema?.oss.length > 0 ? (
         <MiniSelectorOSS
           items={controller.schema.oss}
-          onSelect={(event, value) => controller.viewOSS(value.id, event.ctrlKey || event.metaKey)}
+          onSelect={(event, value) => controller.navigateOss(value.id, event.ctrlKey || event.metaKey)}
         />
       ) : null}
       {activeCst?.is_inherited ? (
         <MiniButton
           title='Перейти к исходной конституенте в ОСС'
-          onClick={() => controller.viewPredecessor(activeCst.id)}
+          onClick={() => viewPredecessor(activeCst.id)}
           icon={<IconPredecessor size='1.25rem' className='icon-primary' />}
         />
       ) : null}
@@ -71,25 +90,25 @@ function ToolbarConstituenta({
           <MiniButton
             titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
-            disabled={disabled || !modified}
+            disabled={disabled || !isModified}
             onClick={onSubmit}
           />
           <MiniButton
             title='Сбросить несохраненные изменения'
             icon={<IconReset size='1.25rem' className='icon-primary' />}
-            disabled={disabled || !modified}
+            disabled={disabled || !isModified}
             onClick={onReset}
           />
           <MiniButton
             title='Создать конституенту после данной'
             icon={<IconNewItem size='1.25rem' className='icon-green' />}
-            disabled={!controller.isContentEditable || controller.isProcessing}
+            disabled={!controller.isContentEditable || isProcessing}
             onClick={() => controller.createCst(activeCst?.cst_type, false)}
           />
           <MiniButton
-            titleHtml={modified ? tooltips.unsaved : prepareTooltip('Клонировать конституенту', 'Alt + V')}
+            titleHtml={isModified ? tooltips.unsaved : prepareTooltip('Клонировать конституенту', 'Alt + V')}
             icon={<IconClone size='1.25rem' className='icon-green' />}
-            disabled={disabled || modified}
+            disabled={disabled || isModified}
             onClick={controller.cloneCst}
           />
           <MiniButton
@@ -112,13 +131,13 @@ function ToolbarConstituenta({
           <MiniButton
             titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
             icon={<IconMoveUp size='1.25rem' className='icon-primary' />}
-            disabled={disabled || modified || (controller.schema && controller.schema?.items.length < 2)}
+            disabled={disabled || isModified || (controller.schema && controller.schema?.items.length < 2)}
             onClick={controller.moveUp}
           />
           <MiniButton
             titleHtml={prepareTooltip('Переместить вниз', 'Alt + вниз')}
             icon={<IconMoveDown size='1.25rem' className='icon-primary' />}
-            disabled={disabled || modified || (controller.schema && controller.schema?.items.length < 2)}
+            disabled={disabled || isModified || (controller.schema && controller.schema?.items.length < 2)}
             onClick={controller.moveDown}
           />
         </>

@@ -2,17 +2,18 @@
 
 import clsx from 'clsx';
 
-import { useUsers } from '@/context/UsersContext';
-import { IUserInfo, UserID } from '@/models/user';
+import { useLabelUser } from '@/backend/users/useLabelUser';
+import { useUsers } from '@/backend/users/useUsers';
+import { UserID } from '@/models/user';
 import { matchUser } from '@/models/userAPI';
 
 import { CProps } from '../props';
 import SelectSingle from '../ui/SelectSingle';
 
 interface SelectUserProps extends CProps.Styling {
-  items?: IUserInfo[];
   value?: UserID;
   onSelectValue: (newValue: UserID) => void;
+  filter?: (userID: UserID) => boolean;
 
   placeholder?: string;
   noBorder?: boolean;
@@ -20,20 +21,23 @@ interface SelectUserProps extends CProps.Styling {
 
 function SelectUser({
   className,
-  items,
+  filter,
   value,
   onSelectValue,
   placeholder = 'Выберите пользователя',
   ...restProps
 }: SelectUserProps) {
-  const { getUserLabel } = useUsers();
+  const { users } = useUsers();
+  const getUserLabel = useLabelUser();
+
+  const items = filter ? users.filter(user => filter(user.id)) : users;
   const options =
     items?.map(user => ({
       value: user.id,
       label: getUserLabel(user.id)
     })) ?? [];
 
-  function filter(option: { value: UserID | undefined; label: string }, inputValue: string) {
+  function filterLabel(option: { value: UserID | undefined; label: string }, inputValue: string) {
     const user = items?.find(item => item.id === option.value);
     return !user ? false : matchUser(user, inputValue);
   }
@@ -47,7 +51,7 @@ function SelectUser({
         if (data?.value !== undefined) onSelectValue(data.value);
       }}
       // @ts-expect-error: TODO: use type definitions from react-select in filter object
-      filterOption={filter}
+      filterOption={filterLabel}
       placeholder={placeholder}
       {...restProps}
     />

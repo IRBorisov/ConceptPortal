@@ -1,12 +1,11 @@
 'use client';
 
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ErrorBoundary } from 'react-error-boundary';
 import { IntlProvider } from 'react-intl';
 
-import { AuthState } from '@/context/AuthContext';
-import { GlobalOssState } from '@/context/GlobalOssContext';
-import { LibraryState } from '@/context/LibraryContext';
-import { UsersState } from '@/context/UsersContext';
+import { queryClient } from '@/backend/queryClient';
 
 import ErrorFallback from './ErrorFallback';
 
@@ -30,18 +29,12 @@ function GlobalProviders({ children }: React.PropsWithChildren) {
     onError={logError}
   >
   <IntlProvider locale='ru' defaultLocale='ru'>
-  <UsersState>
-  <AuthState>
-  <LibraryState>
-  <GlobalOssState>
+  <QueryClientProvider client={queryClient}>
   
-
+    <ReactQueryDevtools initialIsOpen={false} />
     {children}
   
-  </GlobalOssState>
-  </LibraryState>
-  </AuthState>
-  </UsersState>
+  </QueryClientProvider>
   </IntlProvider>
   </ErrorBoundary>);
 }

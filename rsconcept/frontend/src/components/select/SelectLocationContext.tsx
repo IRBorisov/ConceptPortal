@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { useCallback } from 'react';
 
 import useDropdown from '@/hooks/useDropdown';
-import { FolderTree } from '@/models/FolderTree';
 import { prefixes } from '@/utils/constants';
 
 import { IconFolderTree } from '../Icons';
@@ -16,7 +15,6 @@ import SelectLocation from './SelectLocation';
 interface SelectLocationContextProps extends CProps.Styling {
   value: string;
   title?: string;
-  folderTree: FolderTree;
   stretchTop?: boolean;
 
   onChange: (newValue: string) => void;
@@ -25,7 +23,6 @@ interface SelectLocationContextProps extends CProps.Styling {
 function SelectLocationContext({
   value,
   title = 'Проводник...',
-  folderTree,
   onChange,
   className,
   style
@@ -56,7 +53,6 @@ function SelectLocationContext({
         style={style}
       >
         <SelectLocation
-          folderTree={folderTree}
           value={value}
           prefix={prefixes.folders_list}
           dense

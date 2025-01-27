@@ -4,45 +4,44 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { IUpdateProfileDTO } from '@/backend/users/api';
+import { useProfileSuspense } from '@/backend/users/useProfile';
+import { useUpdateProfile } from '@/backend/users/useUpdateProfile';
 import InfoError, { ErrorData } from '@/components/info/InfoError';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
-import { useBlockNavigation } from '@/context/NavigationContext';
-import { useUserProfile } from '@/context/UserProfileContext';
-import { IUserUpdateData } from '@/models/user';
+import { useBlockNavigation } from '@/app/Navigation/NavigationContext';
 import { information } from '@/utils/labels';
 
 function EditorProfile() {
-  const { updateUser, user, errorProcessing, processing } = useUserProfile();
+  const { profile } = useProfileSuspense();
+  const { updateProfile, isPending, error } = useUpdateProfile();
 
-  const [username, setUsername] = useState(user?.username ?? '');
-  const [email, setEmail] = useState(user?.email ?? '');
-  const [first_name, setFirstName] = useState(user?.first_name ?? '');
-  const [last_name, setLastName] = useState(user?.last_name ?? '');
+  const [username, setUsername] = useState(profile.username);
+  const [email, setEmail] = useState(profile.email);
+  const [first_name, setFirstName] = useState(profile.first_name);
+  const [last_name, setLastName] = useState(profile.last_name);
 
-  const isModified =
-    user != undefined && (user.email !== email || user.first_name !== first_name || user.last_name !== last_name);
+  const isModified = profile.email !== email || profile.first_name !== first_name || profile.last_name !== last_name;
 
   useBlockNavigation(isModified);
 
   useEffect(() => {
-    if (user) {
-      setUsername(user.username);
-      setEmail(user.email);
-      setFirstName(user.first_name);
-      setLastName(user.last_name);
-    }
-  }, [user]);
+    setUsername(profile.username);
+    setEmail(profile.email);
+    setFirstName(profile.first_name);
+    setLastName(profile.last_name);
+  }, [profile]);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const data: IUserUpdateData = {
+    const data: IUpdateProfileDTO = {
       username: username,
       email: email,
       first_name: first_name,
       last_name: last_name
     };
-    updateUser(data, () => toast.success(information.changesSaved));
+    updateProfile(data, () => toast.success(information.changesSaved));
   }
 
   return (
@@ -79,11 +78,11 @@ function EditorProfile() {
         value={email}
         onChange={event => setEmail(event.target.value)}
       />
-      {errorProcessing ? <ProcessError error={errorProcessing} /> : null}
+      {error ? <ProcessError error={error} /> : null}
       <SubmitButton
         className='self-center mt-6'
         text='Сохранить данные'
-        loading={processing}
+        loading={isPending}
         disabled={!isModified || email == ''}
       />
     </form>

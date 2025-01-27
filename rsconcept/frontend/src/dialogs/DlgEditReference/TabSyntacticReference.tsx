@@ -55,7 +55,7 @@ function TabSyntacticReference({ initial, onChangeValid, onChangeReference }: Ta
       />
       <TextInput
         id='dlg_main_ref'
-        disabled // prettier: split lines
+        disabled //
         dense
         noBorder
         label='Основная ссылка'

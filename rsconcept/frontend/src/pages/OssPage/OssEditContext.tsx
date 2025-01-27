@@ -1,35 +1,35 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
-import { useAuth } from '@/context/AuthContext';
-import { useLibrary } from '@/context/LibraryContext';
-import { useConceptNavigation } from '@/context/NavigationContext';
-import { useOSS } from '@/context/OssContext';
-import { AccessPolicy, ILibraryItemEditor, LibraryItemID } from '@/models/library';
-import { Position2D } from '@/models/miscellaneous';
+import { useAuth } from '@/backend/auth/useAuth';
+import { useDeleteItem } from '@/backend/library/useDeleteItem';
+import { useInputUpdate } from '@/backend/oss/useInputUpdate';
+import { useOperationCreate } from '@/backend/oss/useOperationCreate';
+import { useOperationDelete } from '@/backend/oss/useOperationDelete';
+import { useOperationUpdate } from '@/backend/oss/useOperationUpdate';
+import { useOssSuspense } from '@/backend/oss/useOSS';
+import { useRelocateConstituents } from '@/backend/oss/useRelocateConstituents';
+import { useUpdatePositions } from '@/backend/oss/useUpdatePositions';
+import { ILibraryItemEditor, LibraryItemID } from '@/models/library';
 import { calculateInsertPosition } from '@/models/miscellaneousAPI';
-import {
-  ICstRelocateData,
-  IOperationCreateData,
-  IOperationDeleteData,
-  IOperationPosition,
-  IOperationSchema,
-  IOperationSetInputData,
-  IOperationUpdateData,
-  OperationID,
-  OperationType
-} from '@/models/oss';
-import { UserID, UserRole } from '@/models/user';
+import { IOperationPosition, IOperationSchema, OperationID, OperationType } from '@/models/oss';
+import { UserRole } from '@/models/user';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { useRoleStore } from '@/stores/role';
 import { PARAMETER } from '@/utils/constants';
-import { errors, information } from '@/utils/labels';
+import { information, prompts } from '@/utils/labels';
 
-import { RSTabID } from '../RSFormPage/RSTabs';
+import { RSTabID } from '../RSFormPage/RSEditContext';
+
+export enum OssTabID {
+  CARD = 0,
+  GRAPH = 1
+}
 
 export interface ICreateOperationPrompt {
   defaultX: number;
@@ -40,35 +40,27 @@ export interface ICreateOperationPrompt {
 }
 
 export interface IOssEditContext extends ILibraryItemEditor {
-  schema?: IOperationSchema;
+  schema: IOperationSchema;
   selected: OperationID[];
 
+  isOwned: boolean;
   isMutable: boolean;
-  isProcessing: boolean;
   isAttachedToOSS: boolean;
 
   showTooltip: boolean;
   setShowTooltip: (newValue: boolean) => void;
 
-  setOwner: (newOwner: UserID) => void;
-  setAccessPolicy: (newPolicy: AccessPolicy) => void;
-  promptEditors: () => void;
-  promptLocation: () => void;
+  navigateTab: (tab: OssTabID) => void;
+  navigateOperationSchema: (target: OperationID) => void;
 
+  deleteSchema: () => void;
   setSelected: React.Dispatch<React.SetStateAction<OperationID[]>>;
 
-  share: () => void;
-
-  openOperationSchema: (target: OperationID) => void;
-
-  savePositions: (positions: IOperationPosition[], callback?: () => void) => void;
-  promptCreateOperation: (props: ICreateOperationPrompt) => void;
   canDelete: (target: OperationID) => boolean;
+  promptCreateOperation: (props: ICreateOperationPrompt) => void;
   promptDeleteOperation: (target: OperationID, positions: IOperationPosition[]) => void;
-  createInput: (target: OperationID, positions: IOperationPosition[]) => void;
   promptEditInput: (target: OperationID, positions: IOperationPosition[]) => void;
   promptEditOperation: (target: OperationID, positions: IOperationPosition[]) => void;
-  executeOperation: (target: OperationID, positions: IOperationPosition[]) => void;
   promptRelocateConstituents: (target: OperationID | undefined, positions: IOperationPosition[]) => void;
 }
 
@@ -82,340 +74,227 @@ export const useOssEdit = () => {
 };
 
 interface OssEditStateProps {
-  selected: OperationID[];
-  setSelected: React.Dispatch<React.SetStateAction<OperationID[]>>;
+  itemID: LibraryItemID;
 }
 
-export const OssEditState = ({ selected, setSelected, children }: React.PropsWithChildren<OssEditStateProps>) => {
+export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEditStateProps>) => {
   const router = useConceptNavigation();
   const { user } = useAuth();
   const adminMode = usePreferencesStore(state => state.adminMode);
 
   const role = useRoleStore(state => state.role);
   const adjustRole = useRoleStore(state => state.adjustRole);
-  const model = useOSS();
-  const library = useLibrary();
+  const { schema } = useOssSuspense({ itemID: itemID });
 
-  const isMutable = role > UserRole.READER && !model.schema?.read_only;
+  const isOwned = user?.id === schema.owner || false;
+
+  const isMutable = role > UserRole.READER && !schema.read_only;
 
   const [showTooltip, setShowTooltip] = useState(true);
 
-  const [insertPosition, setInsertPosition] = useState<Position2D>({ x: 0, y: 0 });
-  const [createCallback, setCreateCallback] = useState<((newID: OperationID) => void) | undefined>(undefined);
+  const [selected, setSelected] = useState<OperationID[]>([]);
 
-  const showEditEditors = useDialogsStore(state => state.showEditEditors);
-  const showEditLocation = useDialogsStore(state => state.showChangeLocation);
   const showEditInput = useDialogsStore(state => state.showChangeInputSchema);
   const showEditOperation = useDialogsStore(state => state.showEditOperation);
   const showDeleteOperation = useDialogsStore(state => state.showDeleteOperation);
   const showRelocateConstituents = useDialogsStore(state => state.showRelocateConstituents);
   const showCreateOperation = useDialogsStore(state => state.showCreateOperation);
 
-  const [positions, setPositions] = useState<IOperationPosition[]>([]);
+  const { deleteItem } = useDeleteItem();
+  const { updatePositions } = useUpdatePositions();
+  const { operationCreate } = useOperationCreate();
+  const { operationDelete } = useOperationDelete();
+  const { operationUpdate } = useOperationUpdate();
+  const { relocateConstituents } = useRelocateConstituents();
+  const { inputUpdate } = useInputUpdate();
 
   useEffect(
     () =>
       adjustRole({
-        isOwner: model.isOwned,
-        isEditor: (user && model.schema?.editors.includes(user?.id)) ?? false,
+        isOwner: isOwned,
+        isEditor: (user && schema.editors.includes(user?.id)) ?? false,
         isStaff: user?.is_staff ?? false,
         adminMode: adminMode
       }),
-    [model.schema, adjustRole, model.isOwned, user, adminMode]
+    [schema, adjustRole, isOwned, user, adminMode]
   );
 
-  const handleSetLocation = useCallback(
-    (newLocation: string) => {
-      if (!model.schema) {
-        return;
-      }
-      model.setLocation(newLocation, () => toast.success(information.moveComplete));
-    },
-    [model]
-  );
+  function navigateTab(tab: OssTabID) {
+    if (!schema) {
+      return;
+    }
+    const url = urls.oss_props({
+      id: schema.id,
+      tab: tab
+    });
+    router.push(url);
+  }
 
-  const share = useCallback(() => {
-    const currentRef = window.location.href;
-    const url = currentRef.includes('?') ? currentRef + '&share' : currentRef + '?share';
-    navigator.clipboard
-      .writeText(url)
-      .then(() => toast.success(information.linkReady))
-      .catch(console.error);
-  }, []);
+  function navigateOperationSchema(target: OperationID) {
+    const node = schema.operationByID.get(target);
+    if (!node?.result) {
+      return;
+    }
+    router.push(urls.schema_props({ id: node.result, tab: RSTabID.CST_LIST }));
+  }
 
-  const setOwner = useCallback(
-    (newOwner: UserID) => {
-      model.setOwner(newOwner, () => toast.success(information.changesSaved));
-    },
-    [model]
-  );
+  function deleteSchema() {
+    if (!schema || !window.confirm(prompts.deleteOSS)) {
+      return;
+    }
+    deleteItem(schema.id, () => {
+      toast.success(information.itemDestroyed);
+      router.push(urls.library);
+    });
+  }
 
-  const setAccessPolicy = useCallback(
-    (newPolicy: AccessPolicy) => {
-      model.setAccessPolicy(newPolicy, () => toast.success(information.changesSaved));
-    },
-    [model]
-  );
-
-  const handleSetEditors = useCallback(
-    (newEditors: UserID[]) => {
-      model.setEditors(newEditors, () => toast.success(information.changesSaved));
-    },
-    [model]
-  );
-
-  const openOperationSchema = useCallback(
-    (target: OperationID) => {
-      const node = model.schema?.operationByID.get(target);
-      if (!node?.result) {
-        return;
-      }
-      router.push(urls.schema_props({ id: node.result, tab: RSTabID.CST_LIST }));
-    },
-    [router, model]
-  );
-
-  const savePositions = useCallback(
-    (positions: IOperationPosition[], callback?: () => void) => {
-      model.savePositions({ positions: positions }, () => {
-        positions.forEach(item => {
-          const operation = model.schema?.operationByID.get(item.id);
-          if (operation) {
-            operation.position_x = item.position_x;
-            operation.position_y = item.position_y;
+  function promptCreateOperation({ defaultX, defaultY, inputs, positions, callback }: ICreateOperationPrompt) {
+    showCreateOperation({
+      oss: schema,
+      onCreate: data => {
+        const target = calculateInsertPosition(schema, data.item_data.operation_type, data.arguments ?? [], positions, {
+          x: defaultX,
+          y: defaultY
+        });
+        data.positions = positions;
+        data.item_data.position_x = target.x;
+        data.item_data.position_y = target.y;
+        operationCreate({ itemID: schema.id, data }, operation => {
+          toast.success(information.newOperation(operation.alias));
+          if (callback) {
+            setTimeout(() => callback(operation.id), PARAMETER.refreshTimeout);
           }
         });
-        toast.success(information.changesSaved);
-        callback?.();
-      });
-    },
-    [model]
-  );
+      },
+      initialInputs: inputs
+    });
+  }
 
-  const handleCreateOperation = useCallback(
-    (data: IOperationCreateData) => {
-      const target = calculateInsertPosition(
-        model.schema!,
-        data.item_data.operation_type,
-        data.arguments!,
-        positions,
-        insertPosition
-      );
-      data.positions = positions;
-      data.item_data.position_x = target.x;
-      data.item_data.position_y = target.y;
-      model.createOperation(data, operation => {
-        toast.success(information.newOperation(operation.alias));
-        if (createCallback) {
-          setTimeout(() => createCallback(operation.id), PARAMETER.refreshTimeout);
-        }
-      });
-    },
-    [model, positions, insertPosition, createCallback]
-  );
+  function canDelete(target: OperationID) {
+    const operation = schema.operationByID.get(target);
+    if (!operation) {
+      return false;
+    }
+    if (operation.operation_type === OperationType.INPUT) {
+      return true;
+    }
+    return schema.graph.expandOutputs([target]).length === 0;
+  }
 
-  const handleEditOperation = useCallback(
-    (data: IOperationUpdateData) => {
-      data.positions = positions;
-      model.updateOperation(data, () => toast.success(information.changesSaved));
-    },
-    [model, positions]
-  );
-
-  const canDelete = useCallback(
-    (target: OperationID) => {
-      if (!model.schema) {
-        return false;
+  function promptEditOperation(target: OperationID, positions: IOperationPosition[]) {
+    const operation = schema.operationByID.get(target);
+    if (!operation) {
+      return;
+    }
+    showEditOperation({
+      oss: schema,
+      target: operation,
+      onSubmit: data => {
+        data.positions = positions;
+        operationUpdate({ itemID: schema.id, data }, () => toast.success(information.changesSaved));
       }
-      const operation = model.schema.operationByID.get(target);
-      if (!operation) {
-        return false;
-      }
-      if (operation.operation_type === OperationType.INPUT) {
-        return true;
-      }
-      return model.schema.graph.expandOutputs([target]).length === 0;
-    },
-    [model]
-  );
+    });
+  }
 
-  const handleDeleteOperation = useCallback(
-    (targetID: OperationID, keepConstituents: boolean, deleteSchema: boolean) => {
-      const data: IOperationDeleteData = {
-        target: targetID,
-        positions: positions,
-        keep_constituents: keepConstituents,
-        delete_schema: deleteSchema
-      };
-      model.deleteOperation(data, () => toast.success(information.operationDestroyed));
-    },
-    [model, positions]
-  );
-
-  const createInput = useCallback(
-    (target: OperationID, positions: IOperationPosition[]) => {
-      const operation = model.schema?.operationByID.get(target);
-      if (!model.schema || !operation) {
-        return;
-      }
-      if (library.items.find(item => item.alias === operation.alias && item.location === model.schema!.location)) {
-        toast.error(errors.inputAlreadyExists);
-        return;
-      }
-      model.createInput({ target: target, positions: positions }, new_schema => {
-        toast.success(information.newLibraryItem);
-        router.push(urls.schema(new_schema.id));
-      });
-    },
-    [model, library.items, router]
-  );
-
-  const setTargetInput = useCallback(
-    (target: OperationID, newInput: LibraryItemID | undefined) => {
-      const data: IOperationSetInputData = {
-        target: target,
-        positions: positions,
-        input: newInput ?? null
-      };
-      model.setInput(data, () => toast.success(information.changesSaved));
-    },
-    [model, positions]
-  );
-
-  const handleRelocateConstituents = useCallback(
-    (data: ICstRelocateData) => {
-      if (
-        positions.every(item => {
-          const operation = model.schema!.operationByID.get(item.id)!;
-          return operation.position_x === item.position_x && operation.position_y === item.position_y;
-        })
-      ) {
-        model.relocateConstituents(data, () => toast.success(information.changesSaved));
-      } else {
-        model.savePositions({ positions: positions }, () =>
-          model.relocateConstituents(data, () => toast.success(information.changesSaved))
+  function promptDeleteOperation(target: OperationID, positions: IOperationPosition[]) {
+    const operation = schema.operationByID.get(target);
+    if (!operation) {
+      return;
+    }
+    showDeleteOperation({
+      target: operation,
+      onSubmit: (targetID, keepConstituents, deleteSchema) => {
+        operationDelete(
+          {
+            itemID: schema.id,
+            data: {
+              target: targetID,
+              positions: positions,
+              keep_constituents: keepConstituents,
+              delete_schema: deleteSchema
+            }
+          },
+          () => toast.success(information.operationDestroyed)
         );
       }
-    },
-    [model, positions]
-  );
+    });
+  }
 
-  const executeOperation = useCallback(
-    (target: OperationID, positions: IOperationPosition[]) => {
-      const data = {
-        target: target,
-        positions: positions
-      };
-      model.executeOperation(data, () => toast.success(information.operationExecuted));
-    },
-    [model]
-  );
-
-  const promptEditors = useCallback(() => {
-    if (!model.schema) {
+  function promptEditInput(target: OperationID, positions: IOperationPosition[]) {
+    const operation = schema.operationByID.get(target);
+    if (!operation) {
       return;
     }
-    showEditEditors({ editors: model.schema.editors, setEditors: handleSetEditors });
-  }, [model.schema, showEditEditors, handleSetEditors]);
-
-  const promptLocation = useCallback(() => {
-    if (!model.schema) {
-      return;
-    }
-    showEditLocation({ initial: model.schema.location, onChangeLocation: handleSetLocation });
-  }, [model.schema, showEditLocation, handleSetLocation]);
-
-  const promptCreateOperation = useCallback(
-    ({ defaultX, defaultY, inputs, positions, callback }: ICreateOperationPrompt) => {
-      if (!model.schema) {
-        return;
+    showEditInput({
+      oss: schema,
+      target: operation,
+      onSubmit: (target, newInput) => {
+        inputUpdate(
+          {
+            itemID: schema.id,
+            data: {
+              target: target,
+              positions: positions,
+              input: newInput ?? null
+            }
+          },
+          () => toast.success(information.changesSaved)
+        );
       }
-      setInsertPosition({ x: defaultX, y: defaultY });
-      setPositions(positions);
-      setCreateCallback(() => callback);
-      showCreateOperation({ oss: model.schema, onCreate: handleCreateOperation, initialInputs: inputs });
-    },
-    [model.schema, showCreateOperation, handleCreateOperation]
-  );
+    });
+  }
 
-  const promptEditOperation = useCallback(
-    (target: OperationID, positions: IOperationPosition[]) => {
-      const operation = model.schema?.operationByID.get(target);
-      if (!model.schema || !operation) {
-        return;
+  function promptRelocateConstituents(target: OperationID | undefined, positions: IOperationPosition[]) {
+    const operation = target ? schema.operationByID.get(target) : undefined;
+    showRelocateConstituents({
+      oss: schema,
+      initialTarget: operation,
+      onSubmit: data => {
+        if (
+          positions.every(item => {
+            const operation = schema.operationByID.get(item.id)!;
+            return operation.position_x === item.position_x && operation.position_y === item.position_y;
+          })
+        ) {
+          relocateConstituents({ itemID: schema.id, data }, () => toast.success(information.changesSaved));
+        } else {
+          updatePositions(
+            {
+              itemID: schema.id, //
+              positions: positions
+            },
+            () => relocateConstituents({ itemID: schema.id, data }, () => toast.success(information.changesSaved))
+          );
+        }
       }
-      setPositions(positions);
-      showEditOperation({ oss: model.schema, target: operation, onSubmit: handleEditOperation });
-    },
-    [model.schema, showEditOperation, handleEditOperation]
-  );
-
-  const promptDeleteOperation = useCallback(
-    (target: OperationID, positions: IOperationPosition[]) => {
-      const operation = model.schema?.operationByID.get(target);
-      if (!model.schema || !operation) {
-        return;
-      }
-      setPositions(positions);
-      showDeleteOperation({ target: operation, onSubmit: handleDeleteOperation });
-    },
-    [model.schema, showDeleteOperation, handleDeleteOperation]
-  );
-
-  const promptEditInput = useCallback(
-    (target: OperationID, positions: IOperationPosition[]) => {
-      const operation = model.schema?.operationByID.get(target);
-      if (!model.schema || !operation) {
-        return;
-      }
-      setPositions(positions);
-      showEditInput({ oss: model.schema, target: operation, onSubmit: setTargetInput });
-    },
-    [model.schema, showEditInput, setTargetInput]
-  );
-
-  const promptRelocateConstituents = useCallback(
-    (target: OperationID | undefined, positions: IOperationPosition[]) => {
-      if (!model.schema) {
-        return;
-      }
-      const operation = target ? model.schema?.operationByID.get(target) : undefined;
-      setPositions(positions);
-      showRelocateConstituents({ oss: model.schema, initialTarget: operation, onSubmit: handleRelocateConstituents });
-    },
-    [model.schema, showRelocateConstituents, handleRelocateConstituents]
-  );
+    });
+  }
 
   return (
     <OssEditContext
       value={{
-        schema: model.schema,
+        schema,
         selected,
+
+        navigateTab,
+
+        deleteSchema,
 
         showTooltip,
         setShowTooltip,
 
+        isOwned,
         isMutable,
-        isProcessing: model.processing,
         isAttachedToOSS: false,
 
-        setOwner,
-        setAccessPolicy,
-        promptEditors,
-        promptLocation,
-
-        share,
         setSelected,
 
-        openOperationSchema,
-        savePositions,
+        navigateOperationSchema,
         promptCreateOperation,
         canDelete,
         promptDeleteOperation,
-        createInput,
         promptEditInput,
         promptEditOperation,
-        executeOperation,
         promptRelocateConstituents
       }}
     >

@@ -2,18 +2,19 @@
 
 import { useState } from 'react';
 
+import { ICstCreateDTO } from '@/backend/rsform/api';
 import Modal from '@/components/ui/Modal';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
-import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
+import { CstType, IRSForm } from '@/models/rsform';
 import { generateAlias } from '@/models/rsformAPI';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import FormCreateCst from './FormCreateCst';
 
 export interface DlgCreateCstProps {
-  initial?: ICstCreateData;
+  initial?: ICstCreateDTO;
   schema: IRSForm;
-  onCreate: (data: ICstCreateData) => void;
+  onCreate: (data: ICstCreateDTO) => void;
 }
 
 function DlgCreateCst() {

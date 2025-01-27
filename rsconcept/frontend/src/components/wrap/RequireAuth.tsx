@@ -1,14 +1,14 @@
 'use client';
 
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/backend/auth/useAuth';
 
 import Loader from '../ui/Loader';
 import TextURL from '../ui/TextURL';
 
 function RequireAuth({ children }: React.PropsWithChildren) {
-  const { user, loading } = useAuth();
+  const { user, isLoading } = useAuth();
 
-  if (loading) {
+  if (isLoading) {
     return <Loader key='auth-loader' />;
   }
   if (user) {

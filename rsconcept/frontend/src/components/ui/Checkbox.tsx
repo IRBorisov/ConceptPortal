@@ -48,7 +48,7 @@ function Checkbox({
     <button
       type='button'
       className={clsx(
-        'flex items-center gap-2', // prettier: split lines
+        'flex items-center gap-2', //
         'outline-none',
         'focus-frame',
         cursor,
@@ -64,7 +64,7 @@ function Checkbox({
     >
       <div
         className={clsx(
-          'max-w-[1rem] min-w-[1rem] h-4', // prettier: split lines
+          'max-w-[1rem] min-w-[1rem] h-4', //
           'pt-[0.1rem] pl-[0.1rem]',
           'border rounded-sm',
           'cc-animate-color',

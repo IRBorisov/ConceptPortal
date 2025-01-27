@@ -6,18 +6,18 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { urls } from '@/app/urls';
+import { IChangePasswordDTO } from '@/backend/auth/api';
+import { useChangePassword } from '@/backend/auth/useChangePassword';
 import InfoError, { ErrorData } from '@/components/info/InfoError';
 import FlexColumn from '@/components/ui/FlexColumn';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
-import { useAuth } from '@/context/AuthContext';
-import { useConceptNavigation } from '@/context/NavigationContext';
-import { IUserUpdatePassword } from '@/models/user';
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { errors, information } from '@/utils/labels';
 
 function EditorPassword() {
   const router = useConceptNavigation();
-  const { updatePassword, error, setError, loading } = useAuth();
+  const { changePassword, isPending, error, reset } = useChangePassword();
 
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -34,19 +34,19 @@ function EditorPassword() {
       toast.error(errors.passwordsMismatch);
       return;
     }
-    const data: IUserUpdatePassword = {
+    const data: IChangePasswordDTO = {
       old_password: oldPassword,
       new_password: newPassword
     };
-    updatePassword(data, () => {
+    changePassword(data, () => {
       toast.success(information.changesSaved);
       router.push(urls.login);
     });
   }
 
   useEffect(() => {
-    setError(undefined);
-  }, [newPassword, oldPassword, newPasswordRepeat, setError]);
+    reset();
+  }, [newPassword, oldPassword, newPasswordRepeat, reset]);
 
   return (
     <form
@@ -89,7 +89,7 @@ function EditorPassword() {
         />
         {error ? <ProcessError error={error} /> : null}
       </FlexColumn>
-      <SubmitButton text='Сменить пароль' className='self-center' disabled={!canSubmit} loading={loading} />
+      <SubmitButton text='Сменить пароль' className='self-center' disabled={!canSubmit} loading={isPending} />
     </form>
   );
 }

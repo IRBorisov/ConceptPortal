@@ -3,12 +3,12 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 
+import { useLibrary } from '@/backend/library/useLibrary';
 import { IconReset } from '@/components/Icons';
 import PickSchema from '@/components/select/PickSchema';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
 import Modal from '@/components/ui/Modal';
-import { useLibrary } from '@/context/LibraryContext';
 import { ILibraryItem, LibraryItemID, LibraryItemType } from '@/models/library';
 import { IOperation, IOperationSchema, OperationID } from '@/models/oss';
 import { sortItemsForOSS } from '@/models/ossAPI';
@@ -23,8 +23,8 @@ export interface DlgChangeInputSchemaProps {
 function DlgChangeInputSchema() {
   const { oss, target, onSubmit } = useDialogsStore(state => state.props as DlgChangeInputSchemaProps);
   const [selected, setSelected] = useState<LibraryItemID | undefined>(target.result ?? undefined);
-  const library = useLibrary();
-  const sortedItems = sortItemsForOSS(oss, library.items);
+  const { items } = useLibrary();
+  const sortedItems = sortItemsForOSS(oss, items);
   const isValid = target.result !== selected;
 
   function baseFilter(item: ILibraryItem) {

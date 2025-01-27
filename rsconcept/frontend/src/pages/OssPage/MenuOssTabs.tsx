@@ -1,6 +1,9 @@
 'use client';
 
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
+import { useAuth } from '@/backend/auth/useAuth';
+import { useIsProcessingOss } from '@/backend/oss/useIsProcessingOss';
 import {
   IconAdmin,
   IconAlert,
@@ -19,25 +22,20 @@ import Button from '@/components/ui/Button';
 import Divider from '@/components/ui/Divider';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
-import { useAuth } from '@/context/AuthContext';
-import { useConceptNavigation } from '@/context/NavigationContext';
-import { useOSS } from '@/context/OssContext';
 import useDropdown from '@/hooks/useDropdown';
 import { UserRole } from '@/models/user';
 import { useRoleStore } from '@/stores/role';
 import { describeAccessMode as describeUserRole, labelAccessMode as labelUserRole } from '@/utils/labels';
+import { sharePage } from '@/utils/utils';
 
 import { useOssEdit } from './OssEditContext';
 
-interface MenuOssTabsProps {
-  onDestroy: () => void;
-}
-
-function MenuOssTabs({ onDestroy }: MenuOssTabsProps) {
+function MenuOssTabs() {
   const controller = useOssEdit();
   const router = useConceptNavigation();
   const { user } = useAuth();
-  const model = useOSS();
+
+  const isProcessing = useIsProcessingOss();
 
   const role = useRoleStore(state => state.role);
   const setRole = useRoleStore(state => state.setRole);
@@ -48,12 +46,12 @@ function MenuOssTabs({ onDestroy }: MenuOssTabsProps) {
 
   function handleDelete() {
     schemaMenu.hide();
-    onDestroy();
+    controller.deleteSchema();
   }
 
   function handleShare() {
     schemaMenu.hide();
-    controller.share();
+    sharePage();
   }
 
   function handleChangeRole(newMode: UserRole) {
@@ -98,7 +96,7 @@ function MenuOssTabs({ onDestroy }: MenuOssTabsProps) {
             <DropdownButton
               text='Удалить схему'
               icon={<IconDestroy size='1rem' className='icon-red' />}
-              disabled={controller.isProcessing || role < UserRole.OWNER}
+              disabled={isProcessing || role < UserRole.OWNER}
               onClick={handleDelete}
             />
           ) : null}
@@ -138,7 +136,7 @@ function MenuOssTabs({ onDestroy }: MenuOssTabsProps) {
               text='Конституенты'
               titleHtml='Перенос конституент</br>между схемами'
               icon={<IconChild size='1rem' className='icon-green' />}
-              disabled={controller.isProcessing}
+              disabled={isProcessing}
               onClick={handleRelocate}
             />
           </Dropdown>
@@ -179,14 +177,14 @@ function MenuOssTabs({ onDestroy }: MenuOssTabsProps) {
               text={labelUserRole(UserRole.EDITOR)}
               title={describeUserRole(UserRole.EDITOR)}
               icon={<IconEditor size='1rem' className='icon-primary' />}
-              disabled={!model.isOwned && !model.schema?.editors.includes(user.id)}
+              disabled={!controller.isOwned && !controller.schema?.editors.includes(user.id)}
               onClick={() => handleChangeRole(UserRole.EDITOR)}
             />
             <DropdownButton
               text={labelUserRole(UserRole.OWNER)}
               title={describeUserRole(UserRole.OWNER)}
               icon={<IconOwner size='1rem' className='icon-primary' />}
-              disabled={!model.isOwned}
+              disabled={!controller.isOwned}
               onClick={() => handleChangeRole(UserRole.OWNER)}
             />
             <DropdownButton

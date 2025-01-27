@@ -5,6 +5,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { urls } from '@/app/urls';
+import { useAuth } from '@/backend/auth/useAuth';
+import { ILibraryCreateDTO } from '@/backend/library/api';
+import { useCreateItem } from '@/backend/library/useCreateItem';
 import { VisibilityIcon } from '@/components/DomainIcons';
 import { IconDownload } from '@/components/Icons';
 import InfoError from '@/components/info/InfoError';
@@ -19,11 +22,8 @@ import Overlay from '@/components/ui/Overlay';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
-import { useAuth } from '@/context/AuthContext';
-import { useLibrary } from '@/context/LibraryContext';
-import { useConceptNavigation } from '@/context/NavigationContext';
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { AccessPolicy, LibraryItemType, LocationHead } from '@/models/library';
-import { ILibraryCreateData } from '@/models/library';
 import { combineLocation, validateLocation } from '@/models/libraryAPI';
 import { useLibrarySearchStore } from '@/stores/librarySearch';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
@@ -32,7 +32,7 @@ import { information } from '@/utils/labels';
 function FormCreateItem() {
   const router = useConceptNavigation();
   const { user } = useAuth();
-  const { createItem, processingError, setProcessingError, processing, folders } = useLibrary();
+  const { createItem, isPending, error, reset } = useCreateItem();
 
   const searchLocation = useLibrarySearchStore(state => state.location);
   const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
@@ -55,8 +55,8 @@ function FormCreateItem() {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    setProcessingError(undefined);
-  }, [title, alias, setProcessingError]);
+    reset();
+  }, [title, alias, reset]);
 
   function handleCancel() {
     if (router.canBack()) {
@@ -68,10 +68,10 @@ function FormCreateItem() {
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (processing) {
+    if (isPending) {
       return;
     }
-    const data: ILibraryCreateData = {
+    const data: ILibraryCreateDTO = {
       item_type: itemType,
       title: title,
       alias: alias,
@@ -205,7 +205,7 @@ function FormCreateItem() {
             excluded={!user?.is_staff ? [LocationHead.LIBRARY] : []}
           />
         </div>
-        <SelectLocationContext folderTree={folders} value={location} onChange={handleSelectLocation} />
+        <SelectLocationContext value={location} onChange={handleSelectLocation} />
         <TextArea
           id='dlg_cst_body'
           label='Путь'
@@ -216,10 +216,10 @@ function FormCreateItem() {
       </div>
 
       <div className='flex justify-around gap-6 py-3'>
-        <SubmitButton text='Создать схему' loading={processing} className='min-w-[10rem]' disabled={!isValid} />
+        <SubmitButton text='Создать схему' loading={isPending} className='min-w-[10rem]' disabled={!isValid} />
         <Button text='Отмена' className='min-w-[10rem]' onClick={() => handleCancel()} />
       </div>
-      {processingError ? <InfoError error={processingError} /> : null}
+      {error ? <InfoError error={error} /> : null}
     </form>
   );
 }

@@ -1,6 +1,18 @@
 'use client';
 
+import fileDownload from 'js-file-download';
+import { toast } from 'react-toastify';
+
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
+import { useAuth } from '@/backend/auth/useAuth';
+import { useCstSubstitute } from '@/backend/rsform/useCstSubstitute';
+import { useDownloadRSForm } from '@/backend/rsform/useDownloadRSForm';
+import { useInlineSynthesis } from '@/backend/rsform/useInlineSynthesis';
+import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
+import { useProduceStructure } from '@/backend/rsform/useProduceStructure';
+import { useResetAliases } from '@/backend/rsform/useResetAliases';
+import { useRestoreOrder } from '@/backend/rsform/useRestoreOrder';
 import {
   IconAdmin,
   IconAlert,
@@ -16,7 +28,6 @@ import {
   IconLibrary,
   IconMenu,
   IconNewItem,
-  IconNewVersion,
   IconOSS,
   IconOwner,
   IconQR,
@@ -31,85 +42,143 @@ import Button from '@/components/ui/Button';
 import Divider from '@/components/ui/Divider';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
-import { useAuth } from '@/context/AuthContext';
-import { useGlobalOss } from '@/context/GlobalOssContext';
-import { useConceptNavigation } from '@/context/NavigationContext';
-import { useRSForm } from '@/context/RSFormContext';
 import useDropdown from '@/hooks/useDropdown';
-import { AccessPolicy } from '@/models/library';
+import { AccessPolicy, LocationHead } from '@/models/library';
+import { CstType } from '@/models/rsform';
 import { UserRole } from '@/models/user';
+import { useDialogsStore } from '@/stores/dialogs';
+import { useModificationStore } from '@/stores/modification';
 import { useRoleStore } from '@/stores/role';
-import { describeAccessMode, labelAccessMode, tooltips } from '@/utils/labels';
+import { EXTEOR_TRS_FILE } from '@/utils/constants';
+import { describeAccessMode, information, labelAccessMode, tooltips } from '@/utils/labels';
+import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 
-import { OssTabID } from '../OssPage/OssTabs';
+import { OssTabID } from '../OssPage/OssEditContext';
 import { useRSEdit } from './RSEditContext';
 
-interface MenuRSTabsProps {
-  onDestroy: () => void;
-}
-
-function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
+function MenuRSTabs() {
   const controller = useRSEdit();
   const router = useConceptNavigation();
   const { user } = useAuth();
-  const model = useRSForm();
-  const oss = useGlobalOss();
 
   const role = useRoleStore(state => state.role);
   const setRole = useRoleStore(state => state.setRole);
+  const { isModified } = useModificationStore();
+  const isProcessing = useIsProcessingRSForm();
+
+  const { resetAliases } = useResetAliases();
+  const { restoreOrder } = useRestoreOrder();
+  const { produceStructure } = useProduceStructure();
+  const { inlineSynthesis } = useInlineSynthesis();
+  const { cstSubstitute } = useCstSubstitute();
+  const { download } = useDownloadRSForm();
+
+  const showInlineSynthesis = useDialogsStore(state => state.showInlineSynthesis);
+  const showQR = useDialogsStore(state => state.showQR);
+  const showSubstituteCst = useDialogsStore(state => state.showSubstituteCst);
+  const showClone = useDialogsStore(state => state.showCloneLibraryItem);
+  const showUpload = useDialogsStore(state => state.showUploadRSForm);
 
   const schemaMenu = useDropdown();
   const editMenu = useDropdown();
   const accessMenu = useDropdown();
 
+  // TODO: move into separate function
+  const canProduceStructure =
+    !!controller.activeCst &&
+    !!controller.activeCst.parse.typification &&
+    controller.activeCst.cst_type !== CstType.BASE &&
+    controller.activeCst.cst_type !== CstType.CONSTANT;
+
+  function calculateCloneLocation() {
+    const location = controller.schema.location;
+    const head = location.substring(0, 2) as LocationHead;
+    if (head === LocationHead.LIBRARY) {
+      return user?.is_staff ? location : LocationHead.USER;
+    }
+    if (controller.schema.owner === user?.id) {
+      return location;
+    }
+    return head === LocationHead.USER ? LocationHead.USER : location;
+  }
+
   function handleDelete() {
     schemaMenu.hide();
-    onDestroy();
+    controller.deleteSchema();
   }
 
   function handleDownload() {
     schemaMenu.hide();
-    controller.download();
+    if (isModified && !promptUnsaved()) {
+      return;
+    }
+    const fileName = (controller.schema.alias ?? 'Schema') + EXTEOR_TRS_FILE;
+    download({ itemID: controller.schema.id, version: controller.schema.version }, (data: Blob) => {
+      try {
+        fileDownload(data, fileName);
+      } catch (error) {
+        console.error(error);
+      }
+    });
   }
 
   function handleUpload() {
     schemaMenu.hide();
-    controller.promptUpload();
+    showUpload({ itemID: controller.schema.id });
   }
 
   function handleClone() {
     schemaMenu.hide();
-    controller.promptClone();
+    if (isModified && !promptUnsaved()) {
+      return;
+    }
+    showClone({
+      base: controller.schema,
+      initialLocation: calculateCloneLocation(),
+      selected: controller.selected,
+      totalCount: controller.schema.items.length
+    });
   }
 
   function handleShare() {
     schemaMenu.hide();
-    controller.share();
+    sharePage();
   }
 
   function handleShowQR() {
     schemaMenu.hide();
-    controller.showQR();
-  }
-
-  function handleCreateVersion() {
-    schemaMenu.hide();
-    controller.createVersion();
+    showQR({ target: generatePageQR() });
   }
 
   function handleReindex() {
     editMenu.hide();
-    controller.reindex();
+    resetAliases(controller.schema.id, () => toast.success(information.reindexComplete));
   }
 
   function handleRestoreOrder() {
     editMenu.hide();
-    controller.reorder();
+    restoreOrder(controller.schema.id, () => toast.success(information.reorderComplete));
   }
 
   function handleSubstituteCst() {
     editMenu.hide();
-    controller.substitute();
+    if (isModified && !promptUnsaved()) {
+      return;
+    }
+    showSubstituteCst({
+      schema: controller.schema,
+      onSubstitute: data =>
+        cstSubstitute(
+          {
+            itemID: controller.schema.id, //
+            data
+          },
+          () => {
+            controller.setSelected(prev => prev.filter(id => !data.substitutions.find(sub => sub.original === id)));
+            toast.success(information.substituteSingle);
+          }
+        )
+    });
   }
 
   function handleTemplates() {
@@ -119,12 +188,41 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
 
   function handleProduceStructure() {
     editMenu.hide();
-    controller.produceStructure();
+    if (!controller.activeCst) {
+      return;
+    }
+    if (isModified && !promptUnsaved()) {
+      return;
+    }
+    produceStructure(
+      {
+        itemID: controller.schema.id, //
+        data: { target: controller.activeCst.id }
+      },
+      cstList => {
+        toast.success(information.addedConstituents(cstList.length));
+        if (cstList.length !== 0) {
+          controller.setSelected(cstList);
+        }
+      }
+    );
   }
 
   function handleInlineSynthesis() {
     editMenu.hide();
-    controller.inlineSynthesis();
+    if (isModified && !promptUnsaved()) {
+      return;
+    }
+    showInlineSynthesis({
+      receiver: controller.schema,
+      onInlineSynthesis: data => {
+        const oldCount = controller.schema.items.length;
+        inlineSynthesis({ itemID: controller.schema.id, data }, newSchema => {
+          controller.deselectAll();
+          toast.success(information.addedConstituents(newSchema.items.length - oldCount));
+        });
+      }
+    });
   }
 
   function handleChangeMode(newMode: UserRole) {
@@ -157,7 +255,7 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
         <Dropdown isOpen={schemaMenu.isOpen}>
           <DropdownButton
             text='Поделиться'
-            titleHtml={tooltips.shareItem(controller.schema?.access_policy)}
+            titleHtml={tooltips.shareItem(controller.schema.access_policy)}
             icon={<IconShare size='1rem' className='icon-primary' />}
             onClick={handleShare}
             disabled={controller.schema?.access_policy !== AccessPolicy.PUBLIC}
@@ -172,16 +270,10 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
             <DropdownButton
               text='Клонировать'
               icon={<IconClone size='1rem' className='icon-green' />}
-              disabled={model.isArchive}
+              disabled={controller.isArchive}
               onClick={handleClone}
             />
           ) : null}
-          <DropdownButton
-            text='Сохранить версию'
-            disabled={!controller.isContentEditable}
-            onClick={handleCreateVersion}
-            icon={<IconNewVersion size='1rem' className='icon-green' />}
-          />
           <DropdownButton
             text='Выгрузить в Экстеор'
             icon={<IconDownload size='1rem' className='icon-primary' />}
@@ -191,7 +283,7 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
             <DropdownButton
               text='Загрузить из Экстеор'
               icon={<IconUpload size='1rem' className='icon-red' />}
-              disabled={controller.isProcessing || controller.schema?.oss.length !== 0}
+              disabled={isProcessing || controller.schema?.oss.length !== 0}
               onClick={handleUpload}
             />
           ) : null}
@@ -199,7 +291,7 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
             <DropdownButton
               text='Удалить схему'
               icon={<IconDestroy size='1rem' className='icon-red' />}
-              disabled={controller.isProcessing || role < UserRole.OWNER}
+              disabled={isProcessing || role < UserRole.OWNER}
               onClick={handleDelete}
             />
           ) : null}
@@ -213,11 +305,11 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
               onClick={handleCreateNew}
             />
           ) : null}
-          {oss.schema ? (
+          {controller.schema.oss.length > 0 ? (
             <DropdownButton
               text='Перейти к ОСС'
               icon={<IconOSS size='1rem' className='icon-primary' />}
-              onClick={() => router.push(urls.oss(oss.schema!.id, OssTabID.GRAPH))}
+              onClick={() => router.push(urls.oss(controller.schema.oss[0].id, OssTabID.GRAPH))}
             />
           ) : null}
           <DropdownButton
@@ -227,8 +319,7 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
           />
         </Dropdown>
       </div>
-
-      {!model.isArchive && user ? (
+      {!controller.isArchive && user ? (
         <div ref={editMenu.ref}>
           <Button
             dense
@@ -246,14 +337,14 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
               text='Шаблоны'
               title='Создать конституенту из шаблона'
               icon={<IconTemplates size='1rem' className='icon-green' />}
-              disabled={!controller.isContentEditable || controller.isProcessing}
+              disabled={!controller.isContentEditable || isProcessing}
               onClick={handleTemplates}
             />
             <DropdownButton
               text='Встраивание'
               titleHtml='Импортировать совокупность <br/>конституент из другой схемы'
               icon={<IconInlineSynthesis size='1rem' className='icon-green' />}
-              disabled={!controller.isContentEditable || controller.isProcessing}
+              disabled={!controller.isContentEditable || isProcessing}
               onClick={handleInlineSynthesis}
             />
 
@@ -263,21 +354,21 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
               text='Упорядочить список'
               titleHtml='Упорядочить список, исходя из <br/>логики типов и связей конституент'
               icon={<IconSortList size='1rem' className='icon-primary' />}
-              disabled={!controller.isContentEditable || controller.isProcessing}
+              disabled={!controller.isContentEditable || isProcessing}
               onClick={handleRestoreOrder}
             />
             <DropdownButton
               text='Порядковые имена'
               titleHtml='Присвоить порядковые имена <br/>и обновить выражения'
               icon={<IconGenerateNames size='1rem' className='icon-primary' />}
-              disabled={!controller.isContentEditable || controller.isProcessing}
+              disabled={!controller.isContentEditable || isProcessing}
               onClick={handleReindex}
             />
             <DropdownButton
               text='Порождение структуры'
               titleHtml='Раскрыть структуру типизации <br/>выделенной конституенты'
               icon={<IconGenerateStructure size='1rem' className='icon-primary' />}
-              disabled={!controller.isContentEditable || !controller.canProduceStructure || controller.isProcessing}
+              disabled={!controller.isContentEditable || !canProduceStructure || isProcessing}
               onClick={handleProduceStructure}
             />
             <DropdownButton
@@ -285,12 +376,12 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
               titleHtml='Заменить вхождения <br/>одной конституенты на другую'
               icon={<IconReplace size='1rem' className='icon-red' />}
               onClick={handleSubstituteCst}
-              disabled={!controller.isContentEditable || controller.isProcessing}
+              disabled={!controller.isContentEditable || isProcessing}
             />
           </Dropdown>
         </div>
       ) : null}
-      {model.isArchive && user ? (
+      {controller.isArchive && user ? (
         <Button
           dense
           noBorder
@@ -300,10 +391,9 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
           hideTitle={accessMenu.isOpen}
           className='h-full px-2'
           icon={<IconArchive size='1.25rem' className='icon-primary' />}
-          onClick={event => controller.viewVersion(undefined, event.ctrlKey || event.metaKey)}
+          onClick={event => router.push(urls.schema(controller.schema.id), event.ctrlKey || event.metaKey)}
         />
       ) : null}
-
       {user ? (
         <div ref={accessMenu.ref}>
           <Button
@@ -338,14 +428,14 @@ function MenuRSTabs({ onDestroy }: MenuRSTabsProps) {
               text={labelAccessMode(UserRole.EDITOR)}
               title={describeAccessMode(UserRole.EDITOR)}
               icon={<IconEditor size='1rem' className='icon-primary' />}
-              disabled={!model.isOwned && !model.schema?.editors.includes(user.id)}
+              disabled={!controller.isOwned && !controller.schema?.editors.includes(user.id)}
               onClick={() => handleChangeMode(UserRole.EDITOR)}
             />
             <DropdownButton
               text={labelAccessMode(UserRole.OWNER)}
               title={describeAccessMode(UserRole.OWNER)}
               icon={<IconOwner size='1rem' className='icon-primary' />}
-              disabled={!model.isOwned}
+              disabled={!controller.isOwned}
               onClick={() => handleChangeMode(UserRole.OWNER)}
             />
             <DropdownButton

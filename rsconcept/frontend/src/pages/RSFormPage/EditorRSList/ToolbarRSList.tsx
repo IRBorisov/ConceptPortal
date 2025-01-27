@@ -1,3 +1,4 @@
+import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
 import { CstTypeIcon } from '@/components/DomainIcons';
 import {
   IconClone,
@@ -24,6 +25,7 @@ import { useRSEdit } from '../RSEditContext';
 
 function ToolbarRSList() {
   const controller = useRSEdit();
+  const isProcessing = useIsProcessingRSForm();
   const insertMenu = useDropdown();
 
   return (
@@ -34,7 +36,7 @@ function ToolbarRSList() {
       {controller.schema && controller.schema?.oss.length > 0 ? (
         <MiniSelectorOSS
           items={controller.schema.oss}
-          onSelect={(event, value) => controller.viewOSS(value.id, event.ctrlKey || event.metaKey)}
+          onSelect={(event, value) => controller.navigateOss(value.id, event.ctrlKey || event.metaKey)}
         />
       ) : null}
       <MiniButton
@@ -47,7 +49,7 @@ function ToolbarRSList() {
         titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
         icon={<IconMoveUp size='1.25rem' className='icon-primary' />}
         disabled={
-          controller.isProcessing ||
+          isProcessing ||
           controller.selected.length === 0 ||
           (controller.schema && controller.selected.length === controller.schema.items.length)
         }
@@ -57,7 +59,7 @@ function ToolbarRSList() {
         titleHtml={prepareTooltip('Переместить вниз', 'Alt + вниз')}
         icon={<IconMoveDown size='1.25rem' className='icon-primary' />}
         disabled={
-          controller.isProcessing ||
+          isProcessing ||
           controller.selected.length === 0 ||
           (controller.schema && controller.selected.length === controller.schema.items.length)
         }
@@ -68,7 +70,7 @@ function ToolbarRSList() {
           title='Добавить пустую конституенту'
           hideTitle={insertMenu.isOpen}
           icon={<IconOpenList size='1.25rem' className='icon-green' />}
-          disabled={controller.isProcessing}
+          disabled={isProcessing}
           onClick={insertMenu.toggle}
         />
         <Dropdown isOpen={insertMenu.isOpen} className='-translate-x-1/2 md:translate-x-0'>
@@ -86,19 +88,19 @@ function ToolbarRSList() {
       <MiniButton
         titleHtml={prepareTooltip('Добавить новую конституенту...', 'Alt + `')}
         icon={<IconNewItem size='1.25rem' className='icon-green' />}
-        disabled={controller.isProcessing}
+        disabled={isProcessing}
         onClick={() => controller.createCst(undefined, false)}
       />
       <MiniButton
         titleHtml={prepareTooltip('Клонировать конституенту', 'Alt + V')}
         icon={<IconClone size='1.25rem' className='icon-green' />}
-        disabled={controller.isProcessing || controller.selected.length !== 1}
+        disabled={isProcessing || controller.selected.length !== 1}
         onClick={controller.cloneCst}
       />
       <MiniButton
         titleHtml={prepareTooltip('Удалить выбранные', 'Delete')}
         icon={<IconDestroy size='1.25rem' className='icon-red' />}
-        disabled={controller.isProcessing || !controller.canDeleteSelected}
+        disabled={isProcessing || !controller.canDeleteSelected}
         onClick={controller.promptDeleteCst}
       />
       <BadgeHelp topic={HelpTopic.UI_RS_LIST} offset={5} />

@@ -3,24 +3,19 @@
 import clsx from 'clsx';
 
 import FlexColumn from '@/components/ui/FlexColumn';
-import { useOSS } from '@/context/OssContext';
+import { LibraryItemType } from '@/models/library';
 import EditorLibraryItem from '@/pages/RSFormPage/EditorRSFormCard/EditorLibraryItem';
 import ToolbarRSFormCard from '@/pages/RSFormPage/EditorRSFormCard/ToolbarRSFormCard';
+import { useModificationStore } from '@/stores/modification';
 import { globals } from '@/utils/constants';
 
 import { useOssEdit } from '../OssEditContext';
 import FormOSS from './FormOSS';
 import OssStats from './OssStats';
 
-interface EditorOssCardProps {
-  isModified: boolean;
-  setIsModified: (newValue: boolean) => void;
-  onDestroy: () => void;
-}
-
-function EditorOssCard({ isModified, onDestroy, setIsModified }: EditorOssCardProps) {
-  const { schema } = useOSS();
+function EditorOssCard() {
   const controller = useOssEdit();
+  const { isModified } = useModificationStore();
 
   function initiateSubmit() {
     const element = document.getElementById(globals.library_item_editor) as HTMLFormElement;
@@ -40,12 +35,7 @@ function EditorOssCard({ isModified, onDestroy, setIsModified }: EditorOssCardPr
 
   return (
     <>
-      <ToolbarRSFormCard
-        modified={isModified}
-        onSubmit={initiateSubmit}
-        onDestroy={onDestroy}
-        controller={controller}
-      />
+      <ToolbarRSFormCard onSubmit={initiateSubmit} controller={controller} />
       <div
         onKeyDown={handleInput}
         className={clsx(
@@ -56,11 +46,11 @@ function EditorOssCard({ isModified, onDestroy, setIsModified }: EditorOssCardPr
         )}
       >
         <FlexColumn className='px-3'>
-          <FormOSS id={globals.library_item_editor} isModified={isModified} setIsModified={setIsModified} />
-          <EditorLibraryItem item={schema} isModified={isModified} controller={controller} />
+          <FormOSS id={globals.library_item_editor} />
+          <EditorLibraryItem itemID={controller.schema.id} itemType={LibraryItemType.OSS} controller={controller} />
         </FlexColumn>
 
-        {schema ? <OssStats stats={schema.stats} /> : null}
+        {controller.schema ? <OssStats stats={controller.schema.stats} /> : null}
       </div>
     </>
   );

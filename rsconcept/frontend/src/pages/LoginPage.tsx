@@ -5,15 +5,15 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
 import { urls } from '@/app/urls';
+import { useAuth } from '@/backend/auth/useAuth';
+import { useLogin } from '@/backend/auth/useLogin';
 import InfoError, { ErrorData } from '@/components/info/InfoError';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
 import TextURL from '@/components/ui/TextURL';
 import ExpectedAnonymous from '@/components/wrap/ExpectedAnonymous';
-import { useAuth } from '@/context/AuthContext';
-import { useConceptNavigation } from '@/context/NavigationContext';
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
-import { IUserLoginData } from '@/models/user';
 import { resources } from '@/utils/constants';
 
 function LoginPage() {
@@ -21,23 +21,20 @@ function LoginPage() {
   const query = useQueryStrings();
   const userQuery = query.get('username');
 
-  const { user, login, loading, error, setError } = useAuth();
+  const { user } = useAuth();
+  const { login, isPending, error, reset } = useLogin();
 
   const [username, setUsername] = useState(userQuery || '');
   const [password, setPassword] = useState('');
 
   useEffect(() => {
-    setError(undefined);
-  }, [username, password, setError]);
+    reset();
+  }, [username, password, reset]);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!loading) {
-      const data: IUserLoginData = {
-        username: username,
-        password: password
-      };
-      login(data, () => {
+    if (!isPending) {
+      login(username, password, () => {
         if (router.canBack()) {
           router.back();
         } else {
@@ -78,7 +75,7 @@ function LoginPage() {
       <SubmitButton
         text='Войти'
         className='self-center w-[12rem] mt-3'
-        loading={loading}
+        loading={isPending}
         disabled={!username || !password}
       />
       <div className='flex flex-col text-sm'>

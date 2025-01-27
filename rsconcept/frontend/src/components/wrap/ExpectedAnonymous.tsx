@@ -1,11 +1,13 @@
 import { urls } from '@/app/urls';
-import { useAuth } from '@/context/AuthContext';
-import { useConceptNavigation } from '@/context/NavigationContext';
+import { useAuth } from '@/backend/auth/useAuth';
+import { useLogout } from '@/backend/auth/useLogout';
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 
 import TextURL from '../ui/TextURL';
 
 function ExpectedAnonymous() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
+  const { logout } = useLogout();
   const router = useConceptNavigation();
 
   function logoutAndRedirect() {

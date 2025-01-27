@@ -4,7 +4,11 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
+import { useAuth } from '@/backend/auth/useAuth';
+import { IRSFormCloneDTO } from '@/backend/library/api';
+import { useCloneItem } from '@/backend/library/useCloneItem';
 import { VisibilityIcon } from '@/components/DomainIcons';
 import SelectAccessPolicy from '@/components/select/SelectAccessPolicy';
 import SelectLocationContext from '@/components/select/SelectLocationContext';
@@ -15,12 +19,9 @@ import MiniButton from '@/components/ui/MiniButton';
 import Modal from '@/components/ui/Modal';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
-import { useAuth } from '@/context/AuthContext';
-import { useLibrary } from '@/context/LibraryContext';
-import { useConceptNavigation } from '@/context/NavigationContext';
 import { AccessPolicy, ILibraryItem, LocationHead } from '@/models/library';
 import { cloneTitle, combineLocation, validateLocation } from '@/models/libraryAPI';
-import { ConstituentaID, IRSFormCloneData } from '@/models/rsform';
+import { ConstituentaID } from '@/models/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
 import { information } from '@/utils/labels';
 
@@ -50,7 +51,7 @@ function DlgCloneLibraryItem() {
   const [body, setBody] = useState(initialLocation.substring(3));
   const location = combineLocation(head, body);
 
-  const { cloneItem, folders } = useLibrary();
+  const { cloneItem } = useCloneItem();
 
   const canSubmit = title !== '' && alias !== '' && validateLocation(location);
 
@@ -60,7 +61,8 @@ function DlgCloneLibraryItem() {
   }
 
   function handleSubmit() {
-    const data: IRSFormCloneData = {
+    const data: IRSFormCloneDTO = {
+      id: base.id,
       item_type: base.item_type,
       title: title,
       alias: alias,
@@ -73,7 +75,7 @@ function DlgCloneLibraryItem() {
     if (onlySelected) {
       data.items = selected;
     }
-    cloneItem(base.id, data, newSchema => {
+    cloneItem(data, newSchema => {
       toast.success(information.cloneComplete(newSchema.alias));
       router.push(urls.schema(newSchema.id));
     });
@@ -128,7 +130,7 @@ function DlgCloneLibraryItem() {
             excluded={!user?.is_staff ? [LocationHead.LIBRARY] : []}
           />
         </div>
-        <SelectLocationContext folderTree={folders} value={location} onChange={handleSelectLocation} />
+        <SelectLocationContext value={location} onChange={handleSelectLocation} />
         <TextArea
           id='dlg_cst_body'
           label='Путь'

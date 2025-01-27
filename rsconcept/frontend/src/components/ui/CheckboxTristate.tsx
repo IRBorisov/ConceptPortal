@@ -49,7 +49,7 @@ function CheckboxTristate({
     <button
       type='button'
       className={clsx(
-        'flex items-center gap-2', // prettier: split lines
+        'flex items-center gap-2', //
         'outline-none',
         'focus-frame',
         cursor,
@@ -65,7 +65,7 @@ function CheckboxTristate({
     >
       <div
         className={clsx(
-          'w-4 h-4', // prettier: split lines
+          'w-4 h-4', //
           'pt-[0.1rem] pl-[0.1rem]',
           'border rounded-sm',
           'cc-animate-color',

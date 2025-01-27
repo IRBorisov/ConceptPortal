@@ -14,6 +14,8 @@
   "dependencies": {
     "@dagrejs/dagre": "^1.1.4",
     "@lezer/lr": "^1.4.2",
+    "@tanstack/react-query": "^5.64.1",
+    "@tanstack/react-query-devtools": "^5.64.1",
     "@tanstack/react-table": "^8.20.6",
     "@uiw/codemirror-themes": "^4.23.7",
     "@uiw/react-codemirror": "^4.23.7",

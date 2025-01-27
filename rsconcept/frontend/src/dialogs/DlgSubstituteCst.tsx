@@ -6,14 +6,14 @@ import { useState } from 'react';
 import PickSubstitutions from '@/components/select/PickSubstitutions';
 import Modal from '@/components/ui/Modal';
 import { HelpTopic } from '@/models/miscellaneous';
-import { ICstSubstitute, ICstSubstituteData } from '@/models/oss';
+import { ICstSubstitute, ICstSubstitutions } from '@/models/oss';
 import { IRSForm } from '@/models/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
 import { prefixes } from '@/utils/constants';
 
 export interface DlgSubstituteCstProps {
   schema: IRSForm;
-  onSubstitute: (data: ICstSubstituteData) => void;
+  onSubstitute: (data: ICstSubstitutions) => void;
 }
 
 function DlgSubstituteCst() {
@@ -22,7 +22,7 @@ function DlgSubstituteCst() {
   const canSubmit = substitutions.length > 0;
 
   function handleSubmit() {
-    const data: ICstSubstituteData = {
+    const data: ICstSubstitutions = {
       substitutions: substitutions
     };
     onSubstitute(data);

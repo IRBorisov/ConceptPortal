@@ -3,7 +3,8 @@
 import clsx from 'clsx';
 
 import FlexColumn from '@/components/ui/FlexColumn';
-import { useRSForm } from '@/context/RSFormContext';
+import { LibraryItemType } from '@/models/library';
+import { useModificationStore } from '@/stores/modification';
 import { globals } from '@/utils/constants';
 
 import { useRSEdit } from '../RSEditContext';
@@ -12,15 +13,9 @@ import FormRSForm from './FormRSForm';
 import RSFormStats from './RSFormStats';
 import ToolbarRSFormCard from './ToolbarRSFormCard';
 
-interface EditorRSFormCardProps {
-  isModified: boolean;
-  setIsModified: (newValue: boolean) => void;
-  onDestroy: () => void;
-}
-
-function EditorRSFormCard({ isModified, onDestroy, setIsModified }: EditorRSFormCardProps) {
-  const model = useRSForm();
+function EditorRSFormCard() {
   const controller = useRSEdit();
+  const { isModified } = useModificationStore();
 
   function initiateSubmit() {
     const element = document.getElementById(globals.library_item_editor) as HTMLFormElement;
@@ -40,12 +35,7 @@ function EditorRSFormCard({ isModified, onDestroy, setIsModified }: EditorRSForm
 
   return (
     <>
-      <ToolbarRSFormCard
-        modified={isModified}
-        onSubmit={initiateSubmit}
-        onDestroy={onDestroy}
-        controller={controller}
-      />
+      <ToolbarRSFormCard onSubmit={initiateSubmit} controller={controller} />
       <div
         onKeyDown={handleInput}
         className={clsx(
@@ -55,11 +45,11 @@ function EditorRSFormCard({ isModified, onDestroy, setIsModified }: EditorRSForm
         )}
       >
         <FlexColumn className='flex-shrink'>
-          <FormRSForm id={globals.library_item_editor} isModified={isModified} setIsModified={setIsModified} />
-          <EditorLibraryItem item={model.schema} isModified={isModified} controller={controller} />
+          <FormRSForm id={globals.library_item_editor} />
+          <EditorLibraryItem itemID={controller.schema.id} itemType={LibraryItemType.RSFORM} controller={controller} />
         </FlexColumn>
 
-        {model.schema ? <RSFormStats stats={model.schema.stats} isArchive={model.isArchive} /> : null}
+        {controller.schema ? <RSFormStats stats={controller.schema.stats} isArchive={controller.isArchive} /> : null}
       </div>
     </>
   );

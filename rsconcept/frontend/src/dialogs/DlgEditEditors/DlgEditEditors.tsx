@@ -3,12 +3,12 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 
+import { useUsers } from '@/backend/users/useUsers';
 import { IconRemove } from '@/components/Icons';
 import SelectUser from '@/components/select/SelectUser';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
 import Modal from '@/components/ui/Modal';
-import { useUsers } from '@/context/UsersContext';
 import { UserID } from '@/models/user';
 import { useDialogsStore } from '@/stores/dialogs';
 
@@ -23,7 +23,6 @@ function DlgEditEditors() {
   const { editors, setEditors } = useDialogsStore(state => state.props as DlgEditEditorsProps);
   const [selected, setSelected] = useState<UserID[]>(editors);
   const { users } = useUsers();
-  const filtered = users.filter(user => !selected.includes(user.id));
 
   function handleSubmit() {
     setEditors(selected);
@@ -61,7 +60,12 @@ function DlgEditEditors() {
 
       <div className='flex items-center gap-3'>
         <Label text='Добавить' />
-        <SelectUser items={filtered} value={undefined} onSelectValue={onAddEditor} className='w-[25rem]' />
+        <SelectUser
+          filter={id => !selected.includes(id)}
+          value={undefined}
+          onSelectValue={onAddEditor}
+          className='w-[25rem]'
+        />
       </div>
     </Modal>
   );

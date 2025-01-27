@@ -4,26 +4,30 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { ILibraryUpdateDTO } from '@/backend/library/api';
+import { useUpdateItem } from '@/backend/library/useUpdateItem';
+import { useIsProcessingOss } from '@/backend/oss/useIsProcessingOss';
 import { IconSave } from '@/components/Icons';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
-import { useOSS } from '@/context/OssContext';
-import { ILibraryUpdateData, LibraryItemType } from '@/models/library';
+import { LibraryItemType } from '@/models/library';
 import ToolbarItemAccess from '@/pages/RSFormPage/EditorRSFormCard/ToolbarItemAccess';
+import { useModificationStore } from '@/stores/modification';
 import { information } from '@/utils/labels';
 
 import { useOssEdit } from '../OssEditContext';
 
 interface FormOSSProps {
   id?: string;
-  isModified: boolean;
-  setIsModified: (newValue: boolean) => void;
 }
 
-function FormOSS({ id, isModified, setIsModified }: FormOSSProps) {
-  const { schema, update, processing } = useOSS();
+function FormOSS({ id }: FormOSSProps) {
+  const { updateItem: update } = useUpdateItem();
   const controller = useOssEdit();
+  const { isModified, setIsModified } = useModificationStore();
+  const isProcessing = useIsProcessingOss();
+  const schema = controller.schema;
 
   const [title, setTitle] = useState(schema?.title ?? '');
   const [alias, setAlias] = useState(schema?.alias ?? '');
@@ -73,7 +77,11 @@ function FormOSS({ id, isModified, setIsModified }: FormOSSProps) {
     if (event) {
       event.preventDefault();
     }
-    const data: ILibraryUpdateData = {
+    if (!schema) {
+      return;
+    }
+    const data: ILibraryUpdateDTO = {
+      id: schema.id,
       item_type: LibraryItemType.RSFORM,
       title: title,
       alias: alias,
@@ -119,14 +127,14 @@ function FormOSS({ id, isModified, setIsModified }: FormOSSProps) {
         label='Описание'
         rows={3}
         value={comment}
-        disabled={!controller.isMutable || controller.isProcessing}
+        disabled={!controller.isMutable || isProcessing}
         onChange={event => setComment(event.target.value)}
       />
       {controller.isMutable || isModified ? (
         <SubmitButton
           text='Сохранить изменения'
           className='self-center mt-4'
-          loading={processing}
+          loading={isProcessing}
           disabled={!isModified}
           icon={<IconSave size='1.25rem' />}
         />

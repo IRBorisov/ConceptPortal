@@ -5,6 +5,7 @@ import { useLayoutEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { urls } from '@/app/urls';
+import { useLabelUser } from '@/backend/users/useLabelUser';
 import { IconFolderTree } from '@/components/Icons';
 import BadgeLocation from '@/components/info/BadgeLocation';
 import { CProps } from '@/components/props';
@@ -12,8 +13,7 @@ import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } fro
 import FlexColumn from '@/components/ui/FlexColumn';
 import MiniButton from '@/components/ui/MiniButton';
 import TextURL from '@/components/ui/TextURL';
-import { useConceptNavigation } from '@/context/NavigationContext';
-import { useUsers } from '@/context/UsersContext';
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ILibraryItem, LibraryItemType } from '@/models/library';
 import { useFitHeight } from '@/stores/appLayout';
@@ -30,7 +30,7 @@ const columnHelper = createColumnHelper<ILibraryItem>();
 function TableLibraryItems({ items }: TableLibraryItemsProps) {
   const router = useConceptNavigation();
   const intl = useIntl();
-  const { getUserLabel } = useUsers();
+  const getUserLabel = useLabelUser();
 
   const folderMode = useLibrarySearchStore(state => state.folderMode);
   const toggleFolderMode = useLibrarySearchStore(state => state.toggleFolderMode);

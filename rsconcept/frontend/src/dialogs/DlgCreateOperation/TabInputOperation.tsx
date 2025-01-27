@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 
+import { useLibrary } from '@/backend/library/useLibrary';
 import { IconReset } from '@/components/Icons';
 import PickSchema from '@/components/select/PickSchema';
 import Checkbox from '@/components/ui/Checkbox';
@@ -9,7 +10,6 @@ import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
-import { useLibrary } from '@/context/LibraryContext';
 import { ILibraryItem, LibraryItemID, LibraryItemType } from '@/models/library';
 import { IOperationSchema } from '@/models/oss';
 import { sortItemsForOSS } from '@/models/ossAPI';
@@ -41,8 +41,8 @@ function TabInputOperation({
   createSchema,
   onChangeCreateSchema
 }: TabInputOperationProps) {
-  const library = useLibrary();
-  const sortedItems = sortItemsForOSS(oss, library.items);
+  const { items: libraryItems } = useLibrary();
+  const sortedItems = sortItemsForOSS(oss, libraryItems);
 
   function baseFilter(item: ILibraryItem) {
     return !oss.schemas.includes(item.id);

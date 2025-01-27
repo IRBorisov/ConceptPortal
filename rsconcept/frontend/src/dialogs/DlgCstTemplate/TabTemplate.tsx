@@ -2,11 +2,11 @@
 
 import { Dispatch, useEffect, useState } from 'react';
 
+import { useTemplatesSuspense } from '@/backend/library/useTemplates';
 import RSInput from '@/components/RSInput';
 import PickConstituenta from '@/components/select/PickConstituenta';
 import SelectSingle from '@/components/ui/SelectSingle';
 import TextArea from '@/components/ui/TextArea';
-import { useLibrary } from '@/context/LibraryContext';
 import { CATEGORY_CST_TYPE, IConstituenta, IRSForm } from '@/models/rsform';
 import { applyFilterCategory } from '@/models/rsformAPI';
 import { prefixes } from '@/utils/constants';
@@ -24,7 +24,7 @@ interface TabTemplateProps {
 }
 
 function TabTemplate({ state, partialUpdate, templateSchema }: TabTemplateProps) {
-  const { templates } = useLibrary();
+  const { templates } = useTemplatesSuspense();
 
   const [filteredData, setFilteredData] = useState<IConstituenta[]>([]);
 

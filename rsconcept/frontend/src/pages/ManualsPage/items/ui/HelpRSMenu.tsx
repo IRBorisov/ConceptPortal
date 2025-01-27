@@ -8,7 +8,6 @@ import {
   IconEdit2,
   IconEditor,
   IconMenu,
-  IconNewVersion,
   IconOwner,
   IconReader,
   IconShare,
@@ -53,9 +52,6 @@ function HelpRSMenu() {
           </li>
           <li>
             <IconClone className='inline-icon icon-green' /> Клонировать – создать копию схемы
-          </li>
-          <li>
-            <IconNewVersion size='1.25rem' className='inline-icon icon-green' /> Сохранить версию
           </li>
           <li>
             <IconDownload className='inline-icon' /> Выгрузить – сохранить в файле формата Экстеор

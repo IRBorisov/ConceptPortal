@@ -16,16 +16,23 @@ import {
   useReactFlow
 } from 'reactflow';
 
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
+import { urls } from '@/app/urls';
+import { useLibrary } from '@/backend/library/useLibrary';
+import { useInputCreate } from '@/backend/oss/useInputCreate';
+import { useIsProcessingOss } from '@/backend/oss/useIsProcessingOss';
+import { useOperationExecute } from '@/backend/oss/useOperationExecute';
+import { useUpdatePositions } from '@/backend/oss/useUpdatePositions';
 import { CProps } from '@/components/props';
 import Overlay from '@/components/ui/Overlay';
-import { useOSS } from '@/context/OssContext';
 import { OssNode } from '@/models/miscellaneous';
 import { OperationID } from '@/models/oss';
 import { useMainHeight } from '@/stores/appLayout';
+import { useModificationStore } from '@/stores/modification';
 import { useOSSGraphStore } from '@/stores/ossGraph';
 import { APP_COLORS } from '@/styling/color';
 import { PARAMETER } from '@/utils/constants';
-import { errors } from '@/utils/labels';
+import { errors, information } from '@/utils/labels';
 
 import { useOssEdit } from '../OssEditContext';
 import { OssNodeTypes } from './graph/OssNodeTypes';
@@ -35,20 +42,23 @@ import ToolbarOssGraph from './ToolbarOssGraph';
 const ZOOM_MAX = 2;
 const ZOOM_MIN = 0.5;
 
-interface OssFlowProps {
-  isModified: boolean;
-  setIsModified: (newValue: boolean) => void;
-}
-
-function OssFlow({ isModified, setIsModified }: OssFlowProps) {
+function OssFlow() {
   const mainHeight = useMainHeight();
-  const model = useOSS();
   const controller = useOssEdit();
+  const router = useConceptNavigation();
+  const { items: libraryItems } = useLibrary();
   const flow = useReactFlow();
+  const { setIsModified } = useModificationStore();
+
+  const isProcessing = useIsProcessingOss();
 
   const showGrid = useOSSGraphStore(state => state.showGrid);
   const edgeAnimate = useOSSGraphStore(state => state.edgeAnimate);
   const edgeStraight = useOSSGraphStore(state => state.edgeStraight);
+
+  const { inputCreate } = useInputCreate();
+  const { operationExecute } = useOperationExecute();
+  const { updatePositions } = useUpdatePositions();
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -71,12 +81,12 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
   });
 
   useEffect(() => {
-    if (!model.schema) {
+    if (!controller.schema) {
       setNodes([]);
       setEdges([]);
     } else {
       setNodes(
-        model.schema.items.map(operation => ({
+        controller.schema.items.map(operation => ({
           id: String(operation.id),
           data: { label: operation.alias, operation: operation },
           position: { x: operation.position_x, y: operation.position_y },
@@ -84,15 +94,15 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
         }))
       );
       setEdges(
-        model.schema.arguments.map((argument, index) => ({
+        controller.schema.arguments.map((argument, index) => ({
           id: String(index),
           source: String(argument.argument),
           target: String(argument.operation),
           type: edgeStraight ? 'straight' : 'simplebezier',
           animated: edgeAnimate,
           targetHandle:
-            model.schema!.operationByID.get(argument.argument)!.position_x >
-            model.schema!.operationByID.get(argument.operation)!.position_x
+            controller.schema.operationByID.get(argument.argument)!.position_x >
+            controller.schema.operationByID.get(argument.operation)!.position_x
               ? 'right'
               : 'left'
         }))
@@ -101,7 +111,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     setTimeout(() => {
       setIsModified(false);
     }, PARAMETER.graphRefreshDelay);
-  }, [model.schema, setNodes, setEdges, setIsModified, toggleReset, edgeStraight, edgeAnimate]);
+  }, [controller.schema, setNodes, setEdges, setIsModified, toggleReset, edgeStraight, edgeAnimate]);
 
   function getPositions() {
     return nodes.map(node => ({
@@ -119,7 +129,18 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
   }
 
   function handleSavePositions() {
-    controller.savePositions(getPositions(), () => setIsModified(false));
+    const positions = getPositions();
+    updatePositions({ itemID: controller.schema.id, positions: positions }, () => {
+      positions.forEach(item => {
+        const operation = controller.schema.operationByID.get(item.id);
+        if (operation) {
+          operation.position_x = item.position_x;
+          operation.position_y = item.position_y;
+        }
+      });
+      toast.success(information.changesSaved);
+      setIsModified(false);
+    });
   }
 
   function handleCreateOperation(inputs: OperationID[]) {
@@ -151,8 +172,19 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     handleDeleteOperation(controller.selected[0]);
   }
 
-  function handleCreateInput(target: OperationID) {
-    controller.createInput(target, getPositions());
+  function handleInputCreate(target: OperationID) {
+    const operation = controller.schema.operationByID.get(target);
+    if (!operation) {
+      return;
+    }
+    if (libraryItems.find(item => item.alias === operation.alias && item.location === controller.schema.location)) {
+      toast.error(errors.inputAlreadyExists);
+      return;
+    }
+    inputCreate({ itemID: controller.schema.id, data: { target: target, positions: getPositions() } }, new_schema => {
+      toast.success(information.newLibraryItem);
+      router.push(urls.schema(new_schema.id));
+    });
   }
 
   function handleEditSchema(target: OperationID) {
@@ -163,15 +195,21 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     controller.promptEditOperation(target, getPositions());
   }
 
-  function handleExecuteOperation(target: OperationID) {
-    controller.executeOperation(target, getPositions());
+  function handleOperationExecute(target: OperationID) {
+    operationExecute(
+      {
+        itemID: controller.schema.id, //
+        data: { target: target, positions: getPositions() }
+      },
+      () => toast.success(information.operationExecuted)
+    );
   }
 
   function handleExecuteSelected() {
     if (controller.selected.length !== 1) {
       return;
     }
-    handleExecuteOperation(controller.selected[0]);
+    handleOperationExecute(controller.selected[0]);
   }
 
   function handleRelocateConstituents(target: OperationID) {
@@ -179,7 +217,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
   }
 
   function handleSaveImage() {
-    if (!model.schema) {
+    if (!controller.schema) {
       return;
     }
     const canvas: HTMLElement | null = document.querySelector('.react-flow__viewport');
@@ -204,7 +242,7 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     })
       .then(dataURL => {
         const a = document.createElement('a');
-        a.setAttribute('download', `${model.schema?.alias ?? 'oss'}.png`);
+        a.setAttribute('download', `${controller.schema?.alias ?? 'oss'}.png`);
         a.setAttribute('href', dataURL);
         a.click();
       })
@@ -239,14 +277,14 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     event.preventDefault();
     event.stopPropagation();
     if (node.data.operation.result) {
-      controller.openOperationSchema(Number(node.id));
+      controller.navigateOperationSchema(Number(node.id));
     } else {
       handleEditOperation(Number(node.id));
     }
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
-    if (controller.isProcessing) {
+    if (isProcessing) {
       return;
     }
     if (!controller.isMutable) {
@@ -276,7 +314,6 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
     <div tabIndex={-1} onKeyDown={handleKeyDown}>
       <Overlay position='top-[1.9rem] pt-1 right-1/2 translate-x-1/2' className='rounded-b-2xl cc-blur'>
         <ToolbarOssGraph
-          isModified={isModified}
           onFitView={() => flow.fitView({ duration: PARAMETER.zoomDuration })}
           onCreate={() => handleCreateOperation(controller.selected)}
           onDelete={handleDeleteSelected}
@@ -291,10 +328,10 @@ function OssFlow({ isModified, setIsModified }: OssFlowProps) {
         <NodeContextMenu
           onHide={handleContextMenuHide}
           onDelete={handleDeleteOperation}
-          onCreateInput={handleCreateInput}
+          onCreateInput={handleInputCreate}
           onEditSchema={handleEditSchema}
           onEditOperation={handleEditOperation}
-          onExecuteOperation={handleExecuteOperation}
+          onExecuteOperation={handleOperationExecute}
           onRelocateConstituents={handleRelocateConstituents}
           {...menuProps}
         />

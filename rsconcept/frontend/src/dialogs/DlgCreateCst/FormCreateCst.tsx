@@ -3,13 +3,14 @@
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
+import { ICstCreateDTO } from '@/backend/rsform/api';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import RSInput from '@/components/RSInput';
 import SelectSingle from '@/components/ui/SelectSingle';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
 import { HelpTopic } from '@/models/miscellaneous';
-import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
+import { CstType, IRSForm } from '@/models/rsform';
 import { generateAlias, isBaseSet, isBasicConcept, isFunctional, validateNewAlias } from '@/models/rsformAPI';
 import { PARAMETER } from '@/utils/constants';
 import { labelCstType } from '@/utils/labels';
@@ -17,9 +18,9 @@ import { SelectorCstType } from '@/utils/selectors';
 
 interface FormCreateCstProps {
   schema: IRSForm;
-  state: ICstCreateData;
+  state: ICstCreateDTO;
 
-  partialUpdate: React.Dispatch<Partial<ICstCreateData>>;
+  partialUpdate: React.Dispatch<Partial<ICstCreateDTO>>;
   setValidated?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 

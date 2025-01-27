@@ -958,8 +958,9 @@ export const information = {
   noDataToExport: 'Нет данных для экспорта',
   substitutionsCorrect: 'Таблица отождествлений прошла проверку',
 
-  addedConstituents: (count: number) => `Добавлены конституенты: ${count}`,
   newLibraryItem: 'Схема успешно создана',
+  addedConstituents: (count: number) => `Добавлены конституенты: ${count}`,
+  newUser: (username: string) => `Пользователь успешно создан: ${username}`,
   newVersion: (version: string) => `Версия создана: ${version}`,
   newConstituent: (alias: string) => `Конституента добавлена: ${alias}`,
   newOperation: (alias: string) => `Операция добавлена: ${alias}`,

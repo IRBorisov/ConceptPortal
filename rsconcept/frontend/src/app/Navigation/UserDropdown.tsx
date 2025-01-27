@@ -1,3 +1,5 @@
+import { useAuth } from '@/backend/auth/useAuth';
+import { useLogout } from '@/backend/auth/useLogout';
 import {
   IconAdmin,
   IconAdminOff,
@@ -15,8 +17,7 @@ import {
 import { CProps } from '@/components/props';
 import Dropdown from '@/components/ui/Dropdown';
 import DropdownButton from '@/components/ui/DropdownButton';
-import { useAuth } from '@/context/AuthContext';
-import { useConceptNavigation } from '@/context/NavigationContext';
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { urls } from '../urls';
@@ -28,7 +29,8 @@ interface UserDropdownProps {
 
 function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
   const router = useConceptNavigation();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
+  const { logout } = useLogout();
 
   const darkMode = usePreferencesStore(state => state.darkMode);
   const toggleDarkMode = usePreferencesStore(state => state.toggleDarkMode);

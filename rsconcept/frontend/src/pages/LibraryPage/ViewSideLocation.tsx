@@ -1,16 +1,16 @@
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
 
+import { useAuth } from '@/backend/auth/useAuth';
+import { useLibrary } from '@/backend/library/useLibrary';
 import { SubfoldersIcon } from '@/components/DomainIcons';
 import { IconFolderEdit, IconFolderTree } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import { CProps } from '@/components/props';
 import SelectLocation from '@/components/select/SelectLocation';
 import MiniButton from '@/components/ui/MiniButton';
-import { useAuth } from '@/context/AuthContext';
-import { useLibrary } from '@/context/LibraryContext';
 import useWindowSize from '@/hooks/useWindowSize';
-import { FolderNode, FolderTree } from '@/models/FolderTree';
+import { FolderNode } from '@/models/FolderTree';
 import { HelpTopic } from '@/models/miscellaneous';
 import { useFitHeight } from '@/stores/appLayout';
 import { useLibrarySearchStore } from '@/stores/librarySearch';
@@ -18,12 +18,11 @@ import { PARAMETER, prefixes } from '@/utils/constants';
 import { information } from '@/utils/labels';
 
 interface ViewSideLocationProps {
-  folderTree: FolderTree;
   isVisible: boolean;
   onRenameLocation: () => void;
 }
 
-function ViewSideLocation({ folderTree, isVisible, onRenameLocation }: ViewSideLocationProps) {
+function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocationProps) {
   const { user } = useAuth();
   const { items } = useLibrary();
   const windowSize = useWindowSize();
@@ -104,7 +103,6 @@ function ViewSideLocation({ folderTree, isVisible, onRenameLocation }: ViewSideL
       </div>
       <SelectLocation
         value={location}
-        folderTree={folderTree}
         prefix={prefixes.folders_list}
         onClick={handleClickFolder}
         style={{ maxHeight: maxHeight }}

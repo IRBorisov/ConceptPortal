@@ -1,33 +1,50 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
+import { urls } from '@/app/urls';
+import { useIsProcessingLibrary } from '@/backend/library/useIsProcessingLibrary';
+import { useVersionDelete } from '@/backend/library/useVersionDelete';
+import { useVersionUpdate } from '@/backend/library/useVersionUpdate';
 import { IconReset, IconSave } from '@/components/Icons';
 import MiniButton from '@/components/ui/MiniButton';
 import Modal from '@/components/ui/Modal';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
-import { IVersionData, IVersionInfo, VersionID } from '@/models/library';
+import { ILibraryItemVersioned, IVersionData, IVersionInfo, VersionID } from '@/models/library';
 import { useDialogsStore } from '@/stores/dialogs';
+import { information } from '@/utils/labels';
 
 import TableVersions from './TableVersions';
 
 export interface DlgEditVersionsProps {
-  versions: IVersionInfo[];
-  onDelete: (versionID: VersionID) => void;
-  onUpdate: (versionID: VersionID, data: IVersionData) => void;
+  item: ILibraryItemVersioned;
 }
 
 function DlgEditVersions() {
-  const { versions, onDelete, onUpdate } = useDialogsStore(state => state.props as DlgEditVersionsProps);
-  const [selected, setSelected] = useState<IVersionInfo | undefined>(undefined);
-  const processing = false; // TODO: fix processing hook and versions update
+  const { item } = useDialogsStore(state => state.props as DlgEditVersionsProps);
+  const router = useConceptNavigation();
+  const processing = useIsProcessingLibrary();
+  const { versionDelete } = useVersionDelete();
+  const { versionUpdate } = useVersionUpdate();
 
+  const [selected, setSelected] = useState<IVersionInfo | undefined>(undefined);
   const [version, setVersion] = useState('');
   const [description, setDescription] = useState('');
 
-  const isValid = selected && versions.every(ver => ver.id === selected.id || ver.version != version);
+  const isValid = selected && item.versions.every(ver => ver.id === selected.id || ver.version != version);
   const isModified = selected && (selected.version != version || selected.description != description);
+
+  function handleDeleteVersion(versionID: VersionID) {
+    versionDelete({ itemID: item.id, versionID: versionID }, () => {
+      toast.success(information.versionDestroyed);
+      if (versionID === versionID) {
+        router.push(urls.schema(item.id));
+      }
+    });
+  }
 
   function handleUpdate() {
     if (!isModified || !selected || processing || !isValid) {
@@ -37,7 +54,14 @@ function DlgEditVersions() {
       version: version,
       description: description
     };
-    onUpdate(selected.id, data);
+    versionUpdate(
+      {
+        itemID: item.id, //
+        versionID: selected.id,
+        data: data
+      },
+      () => toast.success(information.changesSaved)
+    );
   }
 
   function handleReset() {
@@ -57,9 +81,9 @@ function DlgEditVersions() {
     <Modal readonly header='Редактирование версий' className='flex flex-col w-[40rem] px-6 gap-3 pb-6'>
       <TableVersions
         processing={processing}
-        items={versions}
-        onDelete={onDelete}
-        onSelect={versionID => setSelected(versions.find(ver => ver.id === versionID))}
+        items={item.versions}
+        onDelete={handleDeleteVersion}
+        onSelect={versionID => setSelected(item.versions.find(ver => ver.id === versionID))}
         selected={selected?.id}
       />
 

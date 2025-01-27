@@ -3,13 +3,19 @@
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
+import { urls } from '@/app/urls';
+import { ILibraryUpdateDTO } from '@/backend/library/api';
+import { useUpdateItem } from '@/backend/library/useUpdateItem';
+import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
 import { IconSave } from '@/components/Icons';
 import SelectVersion from '@/components/select/SelectVersion';
 import Label from '@/components/ui/Label';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
-import { ILibraryUpdateData, LibraryItemType } from '@/models/library';
+import { LibraryItemType, VersionID } from '@/models/library';
+import { useModificationStore } from '@/stores/modification';
 
 import { useRSEdit } from '../RSEditContext';
 import ToolbarItemAccess from './ToolbarItemAccess';
@@ -17,19 +23,25 @@ import ToolbarVersioning from './ToolbarVersioning';
 
 interface FormRSFormProps {
   id?: string;
-  isModified: boolean;
-  setIsModified: (newValue: boolean) => void;
 }
 
-function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
+function FormRSForm({ id }: FormRSFormProps) {
   const controller = useRSEdit();
+  const router = useConceptNavigation();
   const schema = controller.schema;
+  const { updateItem: update } = useUpdateItem();
+  const { isModified, setIsModified } = useModificationStore();
+  const isProcessing = useIsProcessingRSForm();
 
   const [title, setTitle] = useState(schema?.title ?? '');
   const [alias, setAlias] = useState(schema?.alias ?? '');
   const [comment, setComment] = useState(schema?.comment ?? '');
   const [visible, setVisible] = useState(schema?.visible ?? false);
   const [readOnly, setReadOnly] = useState(schema?.read_only ?? false);
+
+  function handleSelectVersion(version?: VersionID) {
+    router.push(urls.schema(schema.id, version));
+  }
 
   useEffect(() => {
     if (schema) {
@@ -73,7 +85,11 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
     if (event) {
       event.preventDefault();
     }
-    const data: ILibraryUpdateData = {
+    if (!schema) {
+      return;
+    }
+    const data: ILibraryUpdateDTO = {
+      id: schema.id,
       item_type: LibraryItemType.RSFORM,
       title: title,
       alias: alias,
@@ -81,7 +97,7 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
       visible: visible,
       read_only: readOnly
     };
-    controller.updateSchema(data);
+    update(data);
   };
 
   return (
@@ -118,9 +134,9 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
           <SelectVersion
             id='schema_version'
             className='select-none'
-            value={schema?.version} // prettier: split lines
+            value={schema?.version} //
             items={schema?.versions}
-            onSelectValue={controller.viewVersion}
+            onSelectValue={handleSelectVersion}
           />
         </div>
       </div>
@@ -130,14 +146,14 @@ function FormRSForm({ id, isModified, setIsModified }: FormRSFormProps) {
         label='Описание'
         rows={3}
         value={comment}
-        disabled={!controller.isContentEditable || controller.isProcessing}
+        disabled={!controller.isContentEditable || isProcessing}
         onChange={event => setComment(event.target.value)}
       />
       {controller.isContentEditable || isModified ? (
         <SubmitButton
           text='Сохранить изменения'
           className='self-center mt-4'
-          loading={controller.isProcessing}
+          loading={isProcessing}
           disabled={!isModified}
           icon={<IconSave size='1.25rem' />}
         />

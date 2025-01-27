@@ -5,7 +5,7 @@ import { isResponseHtml } from '@/utils/utils';
 
 import PrettyJson from '../ui/PrettyJSON';
 
-export type ErrorData = string | Error | AxiosError | undefined;
+export type ErrorData = string | Error | AxiosError | undefined | null;
 
 interface InfoErrorProps {
   error: ErrorData;

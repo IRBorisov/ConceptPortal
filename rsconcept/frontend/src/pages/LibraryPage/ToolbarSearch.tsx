@@ -19,7 +19,6 @@ import DropdownButton from '@/components/ui/DropdownButton';
 import MiniButton from '@/components/ui/MiniButton';
 import SearchBar from '@/components/ui/SearchBar';
 import SelectorButton from '@/components/ui/SelectorButton';
-import { useUsers } from '@/context/UsersContext';
 import useDropdown from '@/hooks/useDropdown';
 import { LocationHead } from '@/models/library';
 import { useHasCustomFilter, useLibrarySearchStore } from '@/stores/librarySearch';
@@ -35,7 +34,6 @@ interface ToolbarSearchProps {
 function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
   const headMenu = useDropdown();
   const userMenu = useDropdown();
-  const { users } = useUsers();
 
   const query = useLibrarySearchStore(state => state.query);
   const setQuery = useLibrarySearchStore(state => state.setQuery);
@@ -80,7 +78,7 @@ function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
   return (
     <div
       className={clsx(
-        'sticky top-0', // prettier: split lines
+        'sticky top-0', //
         'h-[2.2rem]',
         'flex items-center gap-3',
         'border-b',
@@ -128,7 +126,6 @@ function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
               noBorder
               placeholder='Выберите владельца'
               className='min-w-[15rem] text-sm mx-1 mb-1'
-              items={users}
               value={filterUser}
               onSelectValue={setFilterUser}
             />

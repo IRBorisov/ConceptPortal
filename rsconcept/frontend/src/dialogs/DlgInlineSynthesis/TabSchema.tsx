@@ -1,8 +1,8 @@
 'use client';
 
+import { useLibrary } from '@/backend/library/useLibrary';
 import PickSchema from '@/components/select/PickSchema';
 import TextInput from '@/components/ui/TextInput';
-import { useLibrary } from '@/context/LibraryContext';
 import { LibraryItemID, LibraryItemType } from '@/models/library';
 import { IRSForm } from '@/models/rsform';
 import { sortItemsForInlineSynthesis } from '@/models/rsformAPI';
@@ -14,14 +14,13 @@ interface TabSchemaProps {
 }
 
 function TabSchema({ selected, receiver, setSelected }: TabSchemaProps) {
-  const library = useLibrary();
-  const selectedInfo = library.items.find(item => item.id === selected);
-  const sortedItems = sortItemsForInlineSynthesis(receiver, library.items);
-
+  const { items: libraryItems } = useLibrary();
+  const selectedInfo = libraryItems.find(item => item.id === selected);
+  const sortedItems = sortItemsForInlineSynthesis(receiver, libraryItems);
   return (
     <div className='cc-fade-in flex flex-col'>
       <PickSchema
-        id='dlg_schema_picker' // prettier: split lines
+        id='dlg_schema_picker' //
         items={sortedItems}
         itemType={LibraryItemType.RSFORM}
         rows={14}

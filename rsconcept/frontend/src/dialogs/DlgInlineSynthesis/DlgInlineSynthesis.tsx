@@ -4,12 +4,13 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
+import { IInlineSynthesisDTO } from '@/backend/rsform/api';
+import { useRSForm } from '@/backend/rsform/useRSForm';
 import Modal from '@/components/ui/Modal';
 import TabLabel from '@/components/ui/TabLabel';
-import useRSFormDetails from '@/hooks/useRSFormDetails';
 import { LibraryItemID } from '@/models/library';
 import { ICstSubstitute } from '@/models/oss';
-import { ConstituentaID, IInlineSynthesisData, IRSForm } from '@/models/rsform';
+import { ConstituentaID, IRSForm } from '@/models/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import TabConstituents from './TabConstituents';
@@ -18,7 +19,7 @@ import TabSubstitutions from './TabSubstitutions';
 
 export interface DlgInlineSynthesisProps {
   receiver: IRSForm;
-  onInlineSynthesis: (data: IInlineSynthesisData) => void;
+  onInlineSynthesis: (data: IInlineSynthesisDTO) => void;
 }
 
 export enum TabID {
@@ -35,7 +36,7 @@ function DlgInlineSynthesis() {
   const [selected, setSelected] = useState<ConstituentaID[]>([]);
   const [substitutions, setSubstitutions] = useState<ICstSubstitute[]>([]);
 
-  const source = useRSFormDetails({ target: donorID ? String(donorID) : undefined });
+  const source = useRSForm({ itemID: donorID });
 
   const validated = !!source.schema && selected.length > 0;
 
@@ -43,13 +44,12 @@ function DlgInlineSynthesis() {
     if (!source.schema) {
       return;
     }
-    const data: IInlineSynthesisData = {
+    onInlineSynthesis({
       source: source.schema?.id,
       receiver: receiver.id,
       items: selected,
       substitutions: substitutions
-    };
-    onInlineSynthesis(data);
+    });
   }
 
   useEffect(() => {
@@ -84,7 +84,7 @@ function DlgInlineSynthesis() {
         <TabPanel>
           <TabConstituents
             schema={source.schema}
-            loading={source.loading}
+            loading={source.isLoading}
             selected={selected}
             setSelected={setSelected}
           />
@@ -95,7 +95,7 @@ function DlgInlineSynthesis() {
             receiver={receiver}
             source={source.schema}
             selected={selected}
-            loading={source.loading}
+            loading={source.isLoading}
             substitutions={substitutions}
             setSubstitutions={setSubstitutions}
           />

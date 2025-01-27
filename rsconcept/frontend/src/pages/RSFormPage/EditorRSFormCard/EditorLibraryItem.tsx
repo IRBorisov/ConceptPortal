@@ -1,7 +1,15 @@
-import { useCallback } from 'react';
+import { Suspense } from 'react';
 import { useIntl } from 'react-intl';
+import { toast } from 'react-toastify';
 
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
+import { useIsProcessingLibrary } from '@/backend/library/useIsProcessingLibrary';
+import { useLibraryItem } from '@/backend/library/useLibraryItem';
+import { useSetEditors } from '@/backend/library/useSetEditors';
+import { useSetLocation } from '@/backend/library/useSetLocation';
+import { useSetOwner } from '@/backend/library/useSetOwner';
+import { useLabelUser } from '@/backend/users/useLabelUser';
 import {
   IconDateCreate,
   IconDateUpdate,
@@ -13,58 +21,86 @@ import {
 import InfoUsers from '@/components/info/InfoUsers';
 import { CProps } from '@/components/props';
 import SelectUser from '@/components/select/SelectUser';
+import Loader from '@/components/ui/Loader';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import Tooltip from '@/components/ui/Tooltip';
 import ValueIcon from '@/components/ui/ValueIcon';
-import { useConceptNavigation } from '@/context/NavigationContext';
-import { useUsers } from '@/context/UsersContext';
 import useDropdown from '@/hooks/useDropdown';
-import { ILibraryItemData, ILibraryItemEditor } from '@/models/library';
+import { ILibraryItemEditor, LibraryItemID, LibraryItemType } from '@/models/library';
 import { UserID, UserRole } from '@/models/user';
+import { useDialogsStore } from '@/stores/dialogs';
 import { useLibrarySearchStore } from '@/stores/librarySearch';
+import { useModificationStore } from '@/stores/modification';
 import { useRoleStore } from '@/stores/role';
 import { prefixes } from '@/utils/constants';
-import { prompts } from '@/utils/labels';
+import { information, prompts } from '@/utils/labels';
 
 interface EditorLibraryItemProps {
-  item?: ILibraryItemData;
-  isModified?: boolean;
+  itemID: LibraryItemID;
+  itemType: LibraryItemType;
   controller: ILibraryItemEditor;
 }
 
-function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemProps) {
-  const { getUserLabel, users } = useUsers();
+function EditorLibraryItem({ itemID, itemType, controller }: EditorLibraryItemProps) {
+  const getUserLabel = useLabelUser();
   const role = useRoleStore(state => state.role);
   const intl = useIntl();
   const router = useConceptNavigation();
-  const setLocation = useLibrarySearchStore(state => state.setLocation);
+  const setGlobalLocation = useLibrarySearchStore(state => state.setLocation);
+
+  const { item } = useLibraryItem({ itemID, itemType });
+  const isProcessing = useIsProcessingLibrary();
+  const { isModified } = useModificationStore();
+
+  const { setOwner } = useSetOwner();
+  const { setLocation } = useSetLocation();
+  const { setEditors } = useSetEditors();
+
+  const showEditEditors = useDialogsStore(state => state.showEditEditors);
+  const showEditLocation = useDialogsStore(state => state.showChangeLocation);
 
   const ownerSelector = useDropdown();
-  const onSelectUser = useCallback(
-    (newValue: UserID) => {
-      ownerSelector.hide();
-      if (newValue === item?.owner) {
-        return;
-      }
-      if (!window.confirm(prompts.ownerChange)) {
-        return;
-      }
-      controller.setOwner(newValue);
-    },
-    [controller, item?.owner, ownerSelector]
-  );
+  const onSelectUser = function (newValue: UserID) {
+    ownerSelector.hide();
+    if (newValue === item?.owner) {
+      return;
+    }
+    if (!window.confirm(prompts.ownerChange)) {
+      return;
+    }
+    setOwner({ itemID: itemID, owner: newValue }, () => toast.success(information.changesSaved));
+  };
 
-  const handleOpenLibrary = useCallback(
-    (event: CProps.EventMouse) => {
-      if (!item) {
-        return;
-      }
-      setLocation(item.location);
-      router.push(urls.library, event.ctrlKey || event.metaKey);
-    },
-    [setLocation, item, router]
-  );
+  function handleOpenLibrary(event: CProps.EventMouse) {
+    if (!item) {
+      return;
+    }
+    setGlobalLocation(item.location);
+    router.push(urls.library, event.ctrlKey || event.metaKey);
+  }
+
+  function handleEditLocation() {
+    if (!item) {
+      return;
+    }
+    showEditLocation({
+      initial: item.location,
+      onChangeLocation: newLocation =>
+        setLocation({ itemID: itemID, location: newLocation }, () => toast.success(information.moveComplete))
+    });
+  }
+
+  function handleEditEditors() {
+    if (!item) {
+      return;
+    }
+    showEditEditors({
+      editors: item.editors,
+      setEditors: newEditors =>
+        setEditors({ itemID: itemID, editors: newEditors }, () => toast.success(information.changesSaved))
+    });
+  }
 
   if (!item) {
     return null;
@@ -85,8 +121,8 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
           icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
           value={item.location}
           title={controller.isAttachedToOSS ? 'Путь наследуется от ОСС' : 'Путь'}
-          onClick={controller.promptLocation}
-          disabled={isModified || controller.isProcessing || controller.isAttachedToOSS || role < UserRole.OWNER}
+          onClick={handleEditLocation}
+          disabled={isModified || isProcessing || controller.isAttachedToOSS || role < UserRole.OWNER}
         />
       </div>
 
@@ -95,7 +131,6 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
           {ownerSelector.isOpen ? (
             <SelectUser
               className='w-[25rem] sm:w-[26rem] text-sm'
-              items={users}
               value={item.owner ?? undefined}
               onSelectValue={onSelectUser}
             />
@@ -108,7 +143,7 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
         value={getUserLabel(item.owner)}
         title={controller.isAttachedToOSS ? 'Владелец наследуется от ОСС' : 'Владелец'}
         onClick={ownerSelector.toggle}
-        disabled={isModified || controller.isProcessing || controller.isAttachedToOSS || role < UserRole.OWNER}
+        disabled={isModified || isProcessing || controller.isAttachedToOSS || role < UserRole.OWNER}
       />
 
       <div className='sm:mb-1 flex justify-between items-center'>
@@ -117,11 +152,13 @@ function EditorLibraryItem({ item, isModified, controller }: EditorLibraryItemPr
           dense
           icon={<IconEditor size='1.25rem' className='icon-primary' />}
           value={item.editors.length}
-          onClick={controller.promptEditors}
-          disabled={isModified || controller.isProcessing || role < UserRole.OWNER}
+          onClick={handleEditEditors}
+          disabled={isModified || isProcessing || role < UserRole.OWNER}
         />
         <Tooltip anchorSelect='#editor_stats' layer='z-modalTooltip'>
-          <InfoUsers items={item?.editors ?? []} prefix={prefixes.user_editors} header='Редакторы' />
+          <Suspense fallback={<Loader scale={2} />}>
+            <InfoUsers items={item?.editors ?? []} prefix={prefixes.user_editors} header='Редакторы' />
+          </Suspense>
         </Tooltip>
 
         <ValueIcon

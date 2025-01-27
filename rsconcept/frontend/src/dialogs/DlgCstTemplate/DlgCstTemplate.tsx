@@ -1,15 +1,17 @@
 'use client';
 
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
+import { ICstCreateDTO } from '@/backend/rsform/api';
+import { useRSForm } from '@/backend/rsform/useRSForm';
+import Loader from '@/components/ui/Loader';
 import Modal from '@/components/ui/Modal';
 import TabLabel from '@/components/ui/TabLabel';
-import { useLibrary } from '@/context/LibraryContext';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { HelpTopic } from '@/models/miscellaneous';
-import { CstType, ICstCreateData, IRSForm } from '@/models/rsform';
+import { CstType, IRSForm } from '@/models/rsform';
 import { generateAlias, validateNewAlias } from '@/models/rsformAPI';
 import { inferTemplatedType, substituteTemplateArgs } from '@/models/rslangAPI';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -21,7 +23,7 @@ import TabTemplate, { ITemplateState } from './TabTemplate';
 
 export interface DlgCstTemplateProps {
   schema: IRSForm;
-  onCreate: (data: ICstCreateData) => void;
+  onCreate: (data: ICstCreateDTO) => void;
   insertAfter?: number;
 }
 
@@ -33,16 +35,15 @@ export enum TabID {
 
 function DlgCstTemplate() {
   const { schema, onCreate, insertAfter } = useDialogsStore(state => state.props as DlgCstTemplateProps);
-  const { retrieveTemplate } = useLibrary();
   const [activeTab, setActiveTab] = useState(TabID.TEMPLATE);
 
-  const [templateSchema, setTemplateSchema] = useState<IRSForm | undefined>(undefined);
   const [template, updateTemplate] = usePartialUpdate<ITemplateState>({});
+  const { schema: templateSchema } = useRSForm({ itemID: template.templateID });
   const [substitutes, updateSubstitutes] = usePartialUpdate<IArgumentsState>({
     definition: '',
     arguments: []
   });
-  const [constituenta, updateConstituenta] = usePartialUpdate<ICstCreateData>({
+  const [constituenta, updateConstituenta] = usePartialUpdate<ICstCreateDTO>({
     cst_type: CstType.TERM,
     insert_after: insertAfter ?? null,
     alias: generateAlias(CstType.TERM, schema),
@@ -66,14 +67,6 @@ function DlgCstTemplate() {
     }
     return true;
   }
-
-  useEffect(() => {
-    if (!template.templateID) {
-      setTemplateSchema(undefined);
-    } else {
-      retrieveTemplate(template.templateID, setTemplateSchema);
-    }
-  }, [template.templateID, retrieveTemplate]);
 
   useEffect(() => {
     if (!template.prototype) {
@@ -148,7 +141,9 @@ function DlgCstTemplate() {
         </TabList>
 
         <TabPanel>
-          <TabTemplate state={template} partialUpdate={updateTemplate} templateSchema={templateSchema} />
+          <Suspense fallback={<Loader />}>
+            <TabTemplate state={template} partialUpdate={updateTemplate} templateSchema={templateSchema} />
+          </Suspense>
         </TabPanel>
 
         <TabPanel>

@@ -3,12 +3,13 @@
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
+import { ICstRenameDTO } from '@/backend/rsform/api';
 import Modal from '@/components/ui/Modal';
 import SelectSingle from '@/components/ui/SelectSingle';
 import TextInput from '@/components/ui/TextInput';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { HelpTopic } from '@/models/miscellaneous';
-import { CstType, ICstRenameData, IRSForm } from '@/models/rsform';
+import { CstType, IRSForm } from '@/models/rsform';
 import { generateAlias, validateNewAlias } from '@/models/rsformAPI';
 import { useDialogsStore } from '@/stores/dialogs';
 import { labelCstType } from '@/utils/labels';
@@ -16,9 +17,9 @@ import { SelectorCstType } from '@/utils/selectors';
 
 export interface DlgRenameCstProps {
   schema: IRSForm;
-  initial: ICstRenameData;
+  initial: ICstRenameDTO;
   allowChangeType: boolean;
-  onRename: (data: ICstRenameData) => void;
+  onRename: (data: ICstRenameDTO) => void;
 }
 
 function DlgRenameCst() {

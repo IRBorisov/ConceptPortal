@@ -1,41 +1,22 @@
-import { IconLogin, IconUser2 } from '@/components/Icons';
+import { Suspense } from 'react';
+
 import Loader from '@/components/ui/Loader';
-import { useAuth } from '@/context/AuthContext';
-import { useConceptNavigation } from '@/context/NavigationContext';
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import useDropdown from '@/hooks/useDropdown';
-import { usePreferencesStore } from '@/stores/preferences';
 
 import { urls } from '../urls';
-import NavigationButton from './NavigationButton';
+import UserButton from './UserButton';
 import UserDropdown from './UserDropdown';
 
 function UserMenu() {
   const router = useConceptNavigation();
-  const { user, loading } = useAuth();
-  const adminMode = usePreferencesStore(state => state.adminMode);
   const menu = useDropdown();
-
-  const navigateLogin = () => router.push(urls.login);
-
   return (
     <div ref={menu.ref} className='h-full w-[4rem] flex items-center justify-center'>
-      {loading ? <Loader circular scale={1.5} /> : null}
-      {!user && !loading ? (
-        <NavigationButton
-          className='cc-fade-in'
-          title='Перейти на страницу логина'
-          icon={<IconLogin size='1.5rem' className='icon-primary' />}
-          onClick={navigateLogin}
-        />
-      ) : null}
-      {user && !loading ? (
-        <NavigationButton
-          className='cc-fade-in'
-          icon={<IconUser2 size='1.5rem' className={adminMode && user.is_staff ? 'icon-primary' : ''} />}
-          onClick={menu.toggle}
-        />
-      ) : null}
-      <UserDropdown isOpen={!!user && menu.isOpen} hideDropdown={() => menu.hide()} />
+      <Suspense fallback={<Loader circular scale={1.5} />}>
+        <UserButton onLogin={() => router.push(urls.login)} onClickUser={menu.toggle} />
+      </Suspense>
+      <UserDropdown isOpen={menu.isOpen} hideDropdown={() => menu.hide()} />
     </div>
   );
 }

@@ -4,12 +4,13 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
+import { useLibrary } from '@/backend/library/useLibrary';
+import { IOperationCreateDTO } from '@/backend/oss/api';
 import Modal from '@/components/ui/Modal';
 import TabLabel from '@/components/ui/TabLabel';
-import { useLibrary } from '@/context/LibraryContext';
 import { LibraryItemID } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
-import { IOperationCreateData, IOperationSchema, OperationID, OperationType } from '@/models/oss';
+import { IOperationSchema, OperationID, OperationType } from '@/models/oss';
 import { useDialogsStore } from '@/stores/dialogs';
 import { describeOperationType, labelOperationType } from '@/utils/labels';
 
@@ -18,7 +19,7 @@ import TabSynthesisOperation from './TabSynthesisOperation';
 
 export interface DlgCreateOperationProps {
   oss: IOperationSchema;
-  onCreate: (data: IOperationCreateData) => void;
+  onCreate: (data: IOperationCreateDTO) => void;
   initialInputs: OperationID[];
 }
 
@@ -28,8 +29,9 @@ export enum TabID {
 }
 
 function DlgCreateOperation() {
+  const { items: libraryItems } = useLibrary();
+
   const { oss, onCreate, initialInputs } = useDialogsStore(state => state.props as DlgCreateOperationProps);
-  const library = useLibrary();
   const [activeTab, setActiveTab] = useState(initialInputs.length > 0 ? TabID.SYNTHESIS : TabID.INPUT);
 
   const [alias, setAlias] = useState('');
@@ -56,17 +58,17 @@ function DlgCreateOperation() {
 
   useEffect(() => {
     if (attachedID) {
-      const schema = library.items.find(value => value.id === attachedID);
+      const schema = libraryItems.find(value => value.id === attachedID);
       if (schema) {
         setAlias(schema.alias);
         setTitle(schema.title);
         setComment(schema.comment);
       }
     }
-  }, [attachedID, library]);
+  }, [attachedID, libraryItems]);
 
   const handleSubmit = () => {
-    const data: IOperationCreateData = {
+    onCreate({
       item_data: {
         position_x: 0,
         position_y: 0,
@@ -79,8 +81,7 @@ function DlgCreateOperation() {
       positions: [],
       arguments: activeTab === TabID.INPUT ? undefined : inputs.length > 0 ? inputs : undefined,
       create_schema: createSchema
-    };
-    onCreate(data);
+    });
   };
 
   function handleSelectTab(newTab: TabID, last: TabID) {

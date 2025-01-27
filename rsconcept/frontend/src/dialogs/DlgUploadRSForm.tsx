@@ -3,19 +3,22 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { IRSFormUploadDTO } from '@/backend/rsform/api';
+import { useUploadTRS } from '@/backend/rsform/useUploadTRS';
 import Checkbox from '@/components/ui/Checkbox';
 import FileInput from '@/components/ui/FileInput';
 import Modal from '@/components/ui/Modal';
-import { IRSFormUploadData } from '@/models/rsform';
+import { LibraryItemID } from '@/models/library';
 import { useDialogsStore } from '@/stores/dialogs';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 
 export interface DlgUploadRSFormProps {
-  upload: (data: IRSFormUploadData, callback: () => void) => void;
+  itemID: LibraryItemID;
 }
 
 function DlgUploadRSForm() {
-  const { upload } = useDialogsStore(state => state.props as DlgUploadRSFormProps);
+  const { itemID } = useDialogsStore(state => state.props as DlgUploadRSFormProps);
+  const { upload } = useUploadTRS();
   const [loadMetadata, setLoadMetadata] = useState(false);
   const [file, setFile] = useState<File | undefined>();
 
@@ -23,7 +26,8 @@ function DlgUploadRSForm() {
     if (!file) {
       return;
     }
-    const data: IRSFormUploadData = {
+    const data: IRSFormUploadDTO = {
+      itemID: itemID,
       load_metadata: loadMetadata,
       file: file,
       fileName: file.name

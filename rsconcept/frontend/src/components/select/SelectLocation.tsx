@@ -3,7 +3,8 @@
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
-import { FolderNode, FolderTree } from '@/models/FolderTree';
+import { useFolders } from '@/backend/library/useFolders';
+import { FolderNode } from '@/models/FolderTree';
 import { labelFolderNode } from '@/utils/labels';
 
 import { IconFolder, IconFolderClosed, IconFolderEmpty, IconFolderOpened } from '../Icons';
@@ -12,15 +13,15 @@ import MiniButton from '../ui/MiniButton';
 
 interface SelectLocationProps extends CProps.Styling {
   value: string;
-  folderTree: FolderTree;
   prefix: string;
   dense?: boolean;
   onClick: (event: CProps.EventMouse, target: FolderNode) => void;
 }
 
-function SelectLocation({ value, folderTree, dense, prefix, onClick, className, style }: SelectLocationProps) {
-  const activeNode = folderTree.at(value);
-  const items = folderTree.getTree();
+function SelectLocation({ value, dense, prefix, onClick, className, style }: SelectLocationProps) {
+  const { folders } = useFolders();
+  const activeNode = folders.at(value);
+  const items = folders.getTree();
   const [folded, setFolded] = useState<FolderNode[]>(items);
 
   useEffect(() => {

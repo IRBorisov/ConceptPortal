@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import { IconLibrary2, IconManuals, IconNewItem2 } from '@/components/Icons';
 import { CProps } from '@/components/props';
-import { useConceptNavigation } from '@/context/NavigationContext';
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import useWindowSize from '@/hooks/useWindowSize';
 import { useAppLayoutStore } from '@/stores/appLayout';
 import { PARAMETER } from '@/utils/constants';
@@ -27,15 +27,16 @@ function Navigation() {
   return (
     <nav
       className={clsx(
-        'z-navigation', // prettier: split lines
+        'z-navigation', //
         'sticky top-0 left-0 right-0',
-        'select-none'
+        'select-none',
+        'bg-prim-100'
       )}
     >
       <ToggleNavigation />
       <div
         className={clsx(
-          'pl-2 pr-[1.5rem] sm:pr-[0.9rem] h-[3rem]', // prettier: split lines
+          'pl-2 pr-[1.5rem] sm:pr-[0.9rem] h-[3rem]', //
           'flex',
           'cc-shadow-border'
         )}
@@ -57,6 +58,7 @@ function Navigation() {
           <NavigationButton text='Новая схема' icon={<IconNewItem2 size='1.5rem' />} onClick={navigateCreateNew} />
           <NavigationButton text='Библиотека' icon={<IconLibrary2 size='1.5rem' />} onClick={navigateLibrary} />
           <NavigationButton text='Справка' icon={<IconManuals size='1.5rem' />} onClick={navigateHelp} />
+
           <UserMenu />
         </div>
       </div>

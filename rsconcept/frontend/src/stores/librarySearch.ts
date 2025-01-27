@@ -126,7 +126,7 @@ export function useHasCustomFilter(): boolean {
 }
 
 /** Utility function that returns the current library filter. */
-export function useLibraryFilter(): ILibraryFilter {
+export function useCreateLibraryFilter(): ILibraryFilter {
   const head = useLibrarySearchStore(state => state.head);
   const path = useLibrarySearchStore(state => state.path);
   const query = useLibrarySearchStore(state => state.query);

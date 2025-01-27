@@ -3,13 +3,6 @@
  */
 
 /**
- * Represents API result for text output.
- */
-export interface ITextResult {
-  result: string;
-}
-
-/**
  * Represents single unit of language Morphology.
  */
 // prettier-ignore
@@ -237,12 +230,6 @@ export interface ILexemeData {
 }
 
 // ====== Reference resolution =====
-/**
- * Represents text request.
- */
-export interface ITextRequest {
-  text: string;
-}
 
 /**
  * Represents text reference type.

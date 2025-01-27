@@ -4,14 +4,16 @@ import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { DataCallback } from '@/backend/apiTransport';
+import { ICheckConstituentaDTO } from '@/backend/rsform/api';
+import { useCheckConstituenta } from '@/backend/rsform/useCheckConstituenta';
+import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import { CProps } from '@/components/props';
 import RSInput from '@/components/RSInput';
 import { parser as rslangParser } from '@/components/RSInput/rslang/parserAST';
 import { RSTextWrapper } from '@/components/RSInput/textEditing';
 import Overlay from '@/components/ui/Overlay';
-import { useRSForm } from '@/context/RSFormContext';
-import useCheckConstituenta from '@/hooks/useCheckConstituenta';
 import { HelpTopic } from '@/models/miscellaneous';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { getDefinitionPrefix } from '@/models/rsformAPI';
@@ -22,6 +24,7 @@ import { usePreferencesStore } from '@/stores/preferences';
 import { transformAST } from '@/utils/codemirror';
 import { errors, labelTypification } from '@/utils/labels';
 
+import { useRSEdit } from '../RSEditContext';
 import ParsingResult from './ParsingResult';
 import RSEditorControls from './RSEditControls';
 import StatusBar from './StatusBar';
@@ -56,20 +59,34 @@ function EditorRSExpression({
   onShowTypeGraph,
   ...restProps
 }: EditorRSExpressionProps) {
-  const model = useRSForm();
+  const controller = useRSEdit();
 
   const [isModified, setIsModified] = useState(false);
-  const parser = useCheckConstituenta({ schema: model.schema });
-  const { resetParse } = parser;
   const rsInput = useRef<ReactCodeMirrorRef>(null);
+  const [parseData, setParseData] = useState<IExpressionParse | undefined>(undefined);
 
+  const isProcessing = useIsProcessingRSForm();
   const showControls = usePreferencesStore(state => state.showExpressionControls);
   const showAST = useDialogsStore(state => state.showShowAST);
 
+  const { checkConstituenta: checkInternal, isPending } = useCheckConstituenta();
+
+  function checkConstituenta(expression: string, activeCst: IConstituenta, onSuccess?: DataCallback<IExpressionParse>) {
+    const data: ICheckConstituentaDTO = {
+      definition_formal: expression,
+      alias: activeCst.alias,
+      cst_type: activeCst.cst_type
+    };
+    checkInternal({ itemID: controller.schema.id, data }, parse => {
+      setParseData(parse);
+      onSuccess?.(parse);
+    });
+  }
+
   useEffect(() => {
     setIsModified(false);
-    resetParse();
-  }, [activeCst, resetParse, toggleReset]);
+    setParseData(undefined);
+  }, [activeCst, toggleReset]);
 
   function handleChange(newValue: string) {
     onChangeExpression(newValue);
@@ -77,7 +94,7 @@ function EditorRSExpression({
   }
 
   function handleCheckExpression(callback?: (parse: IExpressionParse) => void) {
-    parser.checkConstituenta(value, activeCst, parse => {
+    checkConstituenta(value, activeCst, parse => {
       onChangeLocalParse(parse);
       if (parse.errors.length > 0) {
         onShowError(parse.errors[0], parse.prefixLen);
@@ -151,10 +168,10 @@ function EditorRSExpression({
         className='w-fit pl-[8.5rem] xs:pl-[2rem] flex gap-1'
       >
         <StatusBar
-          processing={parser.processing}
+          processing={isPending}
           isModified={isModified}
           activeCst={activeCst}
-          parseData={parser.parseData}
+          parseData={parseData}
           onAnalyze={() => handleCheckExpression()}
         />
         <BadgeHelp topic={HelpTopic.UI_CST_STATUS} offset={4} />
@@ -168,22 +185,22 @@ function EditorRSExpression({
         disabled={disabled}
         onChange={handleChange}
         onAnalyze={handleCheckExpression}
-        schema={model.schema}
+        schema={controller.schema}
         onOpenEdit={onOpenEdit}
         {...restProps}
       />
 
       <RSEditorControls
-        isOpen={showControls && (!disabled || (model.processing && !activeCst.is_inherited))}
+        isOpen={showControls && (!disabled || (isProcessing && !activeCst.is_inherited))}
         disabled={disabled}
         onEdit={handleEdit}
       />
 
       <ParsingResult
-        isOpen={!!parser.parseData && parser.parseData.errors.length > 0}
-        data={parser.parseData}
+        isOpen={!!parseData && parseData.errors.length > 0}
+        data={parseData}
         disabled={disabled}
-        onShowError={error => onShowError(error, parser.parseData?.prefixLen ?? 0)}
+        onShowError={error => onShowError(error, parseData?.prefixLen ?? 0)}
       />
     </div>
   );

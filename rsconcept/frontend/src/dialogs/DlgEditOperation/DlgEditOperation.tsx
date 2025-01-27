@@ -4,19 +4,13 @@ import clsx from 'clsx';
 import { useCallback, useEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
+import { IOperationUpdateDTO } from '@/backend/oss/api';
+import { useRSForms } from '@/backend/rsform/useRSForms';
 import Modal from '@/components/ui/Modal';
 import TabLabel from '@/components/ui/TabLabel';
-import useRSFormCache from '@/hooks/useRSFormCache';
 import { LibraryItemID } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
-import {
-  ICstSubstitute,
-  IOperation,
-  IOperationSchema,
-  IOperationUpdateData,
-  OperationID,
-  OperationType
-} from '@/models/oss';
+import { ICstSubstitute, IOperation, IOperationSchema, OperationID, OperationType } from '@/models/oss';
 import { SubstitutionValidator } from '@/models/ossAPI';
 import { ConstituentaID } from '@/models/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -28,7 +22,7 @@ import TabSynthesis from './TabSynthesis';
 export interface DlgEditOperationProps {
   oss: IOperationSchema;
   target: IOperation;
-  onSubmit: (data: IOperationUpdateData) => void;
+  onSubmit: (data: IOperationUpdateDTO) => void;
 }
 
 export enum TabID {
@@ -52,14 +46,11 @@ function DlgEditOperation() {
   const [inputs, setInputs] = useState<OperationID[]>(initialInputs);
   const inputOperations = inputs.map(id => oss.operationByID.get(id)!);
 
-  const [needPreload, setNeedPreload] = useState(false);
-  const [schemasIDs, setSchemaIDs] = useState<LibraryItemID[]>([]);
-
   const [substitutions, setSubstitutions] = useState<ICstSubstitute[]>(target.substitutions);
   const [suggestions, setSuggestions] = useState<ICstSubstitute[]>([]);
 
-  const cache = useRSFormCache();
-  const schemas = schemasIDs.map(id => cache.data.find(item => item.id === id)).filter(item => item !== undefined);
+  const [schemasIDs, setSchemaIDs] = useState<LibraryItemID[]>([]);
+  const schemas = useRSForms(schemasIDs);
 
   const isModified =
     alias !== target.alias ||
@@ -72,7 +63,7 @@ function DlgEditOperation() {
 
   const getSchemaByCst = useCallback(
     (id: ConstituentaID) => {
-      for (const schema of cache.data) {
+      for (const schema of schemas) {
         const cst = schema.items.find(cst => cst.id === id);
         if (cst) {
           return schema;
@@ -80,23 +71,15 @@ function DlgEditOperation() {
       }
       return undefined;
     },
-    [cache.data]
+    [schemas]
   );
 
   useEffect(() => {
-    setNeedPreload(true);
     setSchemaIDs(inputOperations.map(operation => operation.result).filter(id => id !== null));
   }, [inputOperations]);
 
   useEffect(() => {
-    if (needPreload) {
-      setNeedPreload(false);
-      cache.preload(schemasIDs);
-    }
-  }, [schemasIDs, needPreload, cache]);
-
-  useEffect(() => {
-    if (cache.loading || schemas.length !== schemasIDs.length || schemas.length === 0) {
+    if (schemas.length !== schemasIDs.length || schemas.length === 0) {
       return;
     }
     setSubstitutions(prev =>
@@ -112,20 +95,20 @@ function DlgEditOperation() {
         return true;
       })
     );
-  }, [schemasIDs, schemas, cache.loading, getSchemaByCst]);
+  }, [schemasIDs, schemas, getSchemaByCst]);
 
   useEffect(() => {
-    if (cache.loading || schemas.length !== schemasIDs.length || schemas.length === 0) {
+    if (schemas.length !== schemasIDs.length || schemas.length === 0) {
       return;
     }
     const validator = new SubstitutionValidator(schemas, substitutions);
     setIsCorrect(validator.validate());
     setValidationText(validator.msg);
     setSuggestions(validator.suggestions);
-  }, [substitutions, cache.loading, schemas, schemasIDs.length]);
+  }, [substitutions, schemas, schemasIDs.length]);
 
   function handleSubmit() {
-    const data: IOperationUpdateData = {
+    onSubmit({
       target: target.id,
       item_data: {
         alias: alias,
@@ -135,8 +118,7 @@ function DlgEditOperation() {
       positions: [],
       arguments: target.operation_type !== OperationType.SYNTHESIS ? undefined : inputs,
       substitutions: target.operation_type !== OperationType.SYNTHESIS ? undefined : substitutions
-    };
-    onSubmit(data);
+    });
   }
 
   return (
@@ -194,8 +176,6 @@ function DlgEditOperation() {
           <TabPanel>
             <TabSynthesis
               schemas={schemas}
-              loading={cache.loading}
-              error={cache.error}
               validationText={validationText}
               isCorrect={isCorrect}
               substitutions={substitutions}

@@ -55,51 +55,8 @@ export interface IOperationPosition extends Pick<IOperation, 'id' | 'position_x'
 /**
  * Represents all {@link IOperation} positions in {@link IOperationSchema}.
  */
-export interface IPositionsData {
+export interface IPositions {
   positions: IOperationPosition[];
-}
-
-/**
- * Represents target {@link IOperation}.
- */
-export interface ITargetOperation extends IPositionsData {
-  target: OperationID;
-}
-
-/**
- * Represents {@link IOperation} data, used in creation process.
- */
-export interface IOperationCreateData extends IPositionsData {
-  item_data: Pick<
-    IOperation,
-    'alias' | 'operation_type' | 'title' | 'comment' | 'position_x' | 'position_y' | 'result'
-  >;
-  arguments: OperationID[] | undefined;
-  create_schema: boolean;
-}
-
-/**
- * Represents {@link IOperation} data, used in update process.
- */
-export interface IOperationUpdateData extends ITargetOperation {
-  item_data: Pick<IOperation, 'alias' | 'title' | 'comment'>;
-  arguments: OperationID[] | undefined;
-  substitutions: ICstSubstitute[] | undefined;
-}
-
-/**
- * Represents {@link IOperation} data, used in destruction process.
- */
-export interface IOperationDeleteData extends ITargetOperation {
-  keep_constituents: boolean;
-  delete_schema: boolean;
-}
-
-/**
- * Represents {@link IOperation} data, used in setInput process.
- */
-export interface IOperationSetInputData extends ITargetOperation {
-  input: LibraryItemID | null;
 }
 
 /**
@@ -121,16 +78,8 @@ export interface ICstSubstitute {
 /**
  * Represents data, used in merging multiple {@link IConstituenta}.
  */
-export interface ICstSubstituteData {
+export interface ICstSubstitutions {
   substitutions: ICstSubstitute[];
-}
-
-/**
- * Represents data, used relocating {@link IConstituenta}s between {@link ILibraryItem}s.
- */
-export interface ICstRelocateData {
-  destination: LibraryItemID;
-  items: ConstituentaID[];
 }
 
 /**
@@ -184,22 +133,6 @@ export interface IOperationSchema extends IOperationSchemaData {
   schemas: LibraryItemID[];
   stats: IOperationSchemaStats;
   operationByID: Map<OperationID, IOperation>;
-}
-
-/**
- * Represents data response when creating {@link IOperation}.
- */
-export interface IOperationCreatedResponse {
-  new_operation: IOperationData;
-  oss: IOperationSchemaData;
-}
-
-/**
- * Represents data response when creating {@link IRSForm} for Input {@link IOperation}.
- */
-export interface IInputCreatedResponse {
-  new_schema: ILibraryItem;
-  oss: IOperationSchemaData;
 }
 
 /**

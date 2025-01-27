@@ -1,6 +1,6 @@
+import { useLibrary } from '@/backend/library/useLibrary';
 import { IconHelp } from '@/components/Icons';
 import Tooltip from '@/components/ui/Tooltip';
-import { useLibrary } from '@/context/LibraryContext';
 import { LibraryItemID } from '@/models/library';
 import { IRSForm } from '@/models/rsform';
 import { colorBgSchemas } from '@/styling/color';
@@ -11,7 +11,7 @@ interface SchemasGuideProps {
 }
 
 function SchemasGuide({ schema }: SchemasGuideProps) {
-  const library = useLibrary();
+  const { items: libraryItems } = useLibrary();
 
   const schemas = (() => {
     const processed = new Set<LibraryItemID>();
@@ -19,7 +19,7 @@ function SchemasGuide({ schema }: SchemasGuideProps) {
     const indexes: number[] = [];
     schema.items.forEach(cst => {
       if (cst.parent_schema && !processed.has(cst.parent_schema)) {
-        const item = library.items.find(item => item.id === cst.parent_schema);
+        const item = libraryItems.find(item => item.id === cst.parent_schema);
         if (item) {
           aliases.push(item.alias);
         } else {

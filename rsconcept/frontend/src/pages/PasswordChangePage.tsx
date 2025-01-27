@@ -5,20 +5,20 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
 import { urls } from '@/app/urls';
+import { IPasswordTokenDTO, IResetPasswordDTO } from '@/backend/auth/api';
+import { useResetPassword } from '@/backend/auth/useResetPassword';
 import InfoError, { ErrorData } from '@/components/info/InfoError';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
 import DataLoader from '@/components/wrap/DataLoader';
-import { useAuth } from '@/context/AuthContext';
-import { useConceptNavigation } from '@/context/NavigationContext';
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
-import { IPasswordTokenData, IResetPasswordData } from '@/models/user';
 
 function PasswordChangePage() {
   const router = useConceptNavigation();
   const token = useQueryStrings().get('token');
 
-  const { validateToken, resetPassword, loading, error, setError } = useAuth();
+  const { validateToken, resetPassword, isPending, error, reset } = useResetPassword();
 
   const [isTokenValid, setIsTokenValid] = useState(false);
   const [newPassword, setNewPassword] = useState('');
@@ -31,8 +31,8 @@ function PasswordChangePage() {
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!loading) {
-      const data: IResetPasswordData = {
+    if (!isPending) {
+      const data: IResetPasswordDTO = {
         password: newPassword,
         token: token!
       };
@@ -44,21 +44,18 @@ function PasswordChangePage() {
   }
 
   useEffect(() => {
-    setError(undefined);
-  }, [newPassword, newPasswordRepeat, setError]);
+    reset();
+  }, [newPassword, newPasswordRepeat, reset]);
 
   useEffect(() => {
-    const data: IPasswordTokenData = {
+    const data: IPasswordTokenDTO = {
       token: token ?? ''
     };
     validateToken(data, () => setIsTokenValid(true));
   }, [token, validateToken]);
 
-  if (error) {
-    return <ProcessError error={error} />;
-  }
   return (
-    <DataLoader isLoading={loading} hasNoData={!isTokenValid}>
+    <DataLoader isLoading={isPending} hasNoData={!isTokenValid}>
       <form className={clsx('cc-fade-in cc-column', 'w-[24rem] mx-auto', 'px-6 mt-3')} onSubmit={handleSubmit}>
         <TextInput
           id='new_password'
@@ -88,7 +85,7 @@ function PasswordChangePage() {
         <SubmitButton
           text='Установить пароль'
           className='self-center w-[12rem] mt-3'
-          loading={loading}
+          loading={isPending}
           disabled={!canSubmit}
         />
         {error ? <ProcessError error={error} /> : null}

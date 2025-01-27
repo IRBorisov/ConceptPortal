@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { useIsProcessingOss } from '@/backend/oss/useIsProcessingOss';
 import {
   IconChild,
   IconConnect,
@@ -49,6 +50,8 @@ function NodeContextMenu({
   onRelocateConstituents
 }: NodeContextMenuProps) {
   const controller = useOssEdit();
+  const isProcessing = useIsProcessingOss();
+
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const readyForSynthesis = (() => {
@@ -64,7 +67,7 @@ function NodeContextMenu({
       return false;
     }
 
-    const argumentOperations = argumentIDs.map(id => controller.schema!.operationByID.get(id)!);
+    const argumentOperations = argumentIDs.map(id => controller.schema.operationByID.get(id)!);
     if (argumentOperations.some(item => item.result === null)) {
       return false;
     }
@@ -82,7 +85,7 @@ function NodeContextMenu({
   useEffect(() => setIsOpen(true), []);
 
   const handleOpenSchema = () => {
-    controller.openOperationSchema(operation.id);
+    controller.navigateOperationSchema(operation.id);
   };
 
   const handleEditSchema = () => {
@@ -126,7 +129,7 @@ function NodeContextMenu({
           text='Редактировать'
           title='Редактировать операцию'
           icon={<IconEdit2 size='1rem' className='icon-primary' />}
-          disabled={!controller.isMutable || controller.isProcessing}
+          disabled={!controller.isMutable || isProcessing}
           onClick={handleEditOperation}
         />
 
@@ -135,7 +138,7 @@ function NodeContextMenu({
             text='Открыть схему'
             titleHtml={prepareTooltip('Открыть привязанную КС', 'Двойной клик')}
             icon={<IconRSForm size='1rem' className='icon-green' />}
-            disabled={controller.isProcessing}
+            disabled={isProcessing}
             onClick={handleOpenSchema}
           />
         ) : null}
@@ -144,7 +147,7 @@ function NodeContextMenu({
             text='Создать схему'
             title='Создать пустую схему для загрузки'
             icon={<IconNewRSForm size='1rem' className='icon-green' />}
-            disabled={controller.isProcessing}
+            disabled={isProcessing}
             onClick={handleCreateSchema}
           />
         ) : null}
@@ -153,7 +156,7 @@ function NodeContextMenu({
             text={!operation.result ? 'Загрузить схему' : 'Изменить схему'}
             title='Выбрать схему для загрузки'
             icon={<IconConnect size='1rem' className='icon-primary' />}
-            disabled={controller.isProcessing}
+            disabled={isProcessing}
             onClick={handleEditSchema}
           />
         ) : null}
@@ -166,7 +169,7 @@ function NodeContextMenu({
                 : 'Необходимо предоставить все аргументы'
             }
             icon={<IconExecute size='1rem' className='icon-green' />}
-            disabled={controller.isProcessing || !readyForSynthesis}
+            disabled={isProcessing || !readyForSynthesis}
             onClick={handleRunSynthesis}
           />
         ) : null}
@@ -176,7 +179,7 @@ function NodeContextMenu({
             text='Конституенты'
             titleHtml='Перенос конституент</br>между схемами'
             icon={<IconChild size='1rem' className='icon-green' />}
-            disabled={controller.isProcessing}
+            disabled={isProcessing}
             onClick={handleRelocateConstituents}
           />
         ) : null}
@@ -184,7 +187,7 @@ function NodeContextMenu({
         <DropdownButton
           text='Удалить операцию'
           icon={<IconDestroy size='1rem' className='icon-red' />}
-          disabled={!controller.isMutable || controller.isProcessing || !controller.canDelete(operation.id)}
+          disabled={!controller.isMutable || isProcessing || !controller.canDelete(operation.id)}
           onClick={handleDeleteOperation}
         />
       </Dropdown>

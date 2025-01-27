@@ -15,6 +15,8 @@ import { useTooltipsStore } from '@/stores/tooltips';
 import { APP_COLORS, colorBgGraphNode } from '@/styling/color';
 import { globals, PARAMETER, prefixes } from '@/utils/constants';
 
+import { useRSEdit } from '../RSEditContext';
+
 interface ViewHiddenProps {
   items: ConstituentaID[];
   selected: ConstituentaID[];
@@ -23,13 +25,13 @@ interface ViewHiddenProps {
 
   toggleSelection: (cstID: ConstituentaID) => void;
   setFocus: (cstID: ConstituentaID) => void;
-  onEdit: (cstID: ConstituentaID) => void;
 }
 
-function ViewHidden({ items, selected, toggleSelection, setFocus, schema, coloringScheme, onEdit }: ViewHiddenProps) {
+function ViewHidden({ items, selected, toggleSelection, setFocus, schema, coloringScheme }: ViewHiddenProps) {
   const windowSize = useWindowSize();
   const localSelected = items.filter(id => selected.includes(id));
 
+  const { navigateCst } = useRSEdit();
   const isFolded = useTermGraphStore(state => state.foldHidden);
   const toggleFolded = useTermGraphStore(state => state.toggleFoldHidden);
   const setActiveCst = useTooltipsStore(state => state.setActiveCst);
@@ -108,7 +110,7 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
                   : {})
               }}
               onClick={event => handleClick(cstID, event)}
-              onDoubleClick={() => onEdit(cstID)}
+              onDoubleClick={() => navigateCst(cstID)}
               data-tooltip-id={globals.constituenta_tooltip}
               onMouseEnter={() => setActiveCst(cst)}
             >

@@ -2,12 +2,18 @@
 
 import clsx from 'clsx';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
+import { useCstUpdate } from '@/backend/rsform/useCstUpdate';
+import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
 import useWindowSize from '@/hooks/useWindowSize';
-import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { useMainHeight } from '@/stores/appLayout';
+import { useDialogsStore } from '@/stores/dialogs';
+import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { globals } from '@/utils/constants';
+import { information } from '@/utils/labels';
+import { promptUnsaved } from '@/utils/utils';
 
 import { useRSEdit } from '../RSEditContext';
 import ViewConstituents from '../ViewConstituents';
@@ -17,23 +23,20 @@ import ToolbarConstituenta from './ToolbarConstituenta';
 // Threshold window width to switch layout.
 const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
 
-interface EditorConstituentaProps {
-  activeCst?: IConstituenta;
-  isModified: boolean;
-  setIsModified: (newValue: boolean) => void;
-  onOpenEdit: (cstID: ConstituentaID) => void;
-}
-
-function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }: EditorConstituentaProps) {
+function EditorConstituenta() {
   const controller = useRSEdit();
   const windowSize = useWindowSize();
   const mainHeight = useMainHeight();
 
   const showList = usePreferencesStore(state => state.showCstSideList);
+  const showEditTerm = useDialogsStore(state => state.showEditWordForms);
+  const { cstUpdate } = useCstUpdate();
+  const { isModified } = useModificationStore();
 
   const [toggleReset, setToggleReset] = useState(false);
 
-  const disabled = !activeCst || !controller.isContentEditable || controller.isProcessing;
+  const isProcessing = useIsProcessingRSForm();
+  const disabled = !controller.activeCst || !controller.isContentEditable || isProcessing;
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
 
   function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
@@ -56,6 +59,29 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
     }
   }
 
+  function handleEditTermForms() {
+    if (!controller.activeCst) {
+      return;
+    }
+    if (isModified && !promptUnsaved()) {
+      return;
+    }
+    showEditTerm({
+      target: controller.activeCst,
+      onSave: forms =>
+        cstUpdate(
+          {
+            itemID: controller.schema.id,
+            data: {
+              target: controller.activeCst!.id,
+              item_data: { term_forms: forms }
+            }
+          },
+          () => toast.success(information.changesSaved)
+        )
+    });
+  }
+
   function initiateSubmit() {
     const element = document.getElementById(globals.constituenta_editor) as HTMLFormElement;
     if (element) {
@@ -76,9 +102,8 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
   return (
     <>
       <ToolbarConstituenta
-        activeCst={activeCst}
+        activeCst={controller.activeCst}
         disabled={disabled}
-        modified={isModified}
         onSubmit={initiateSubmit}
         onReset={() => setToggleReset(prev => !prev)}
       />
@@ -97,21 +122,13 @@ function EditorConstituenta({ activeCst, isModified, setIsModified, onOpenEdit }
         <FormConstituenta
           disabled={disabled}
           id={globals.constituenta_editor}
-          state={activeCst}
-          isModified={isModified}
           toggleReset={toggleReset}
-          setIsModified={setIsModified}
-          onEditTerm={controller.editTermForms}
-          onRename={controller.renameCst}
-          onOpenEdit={onOpenEdit}
+          onEditTerm={handleEditTermForms}
         />
         <ViewConstituents
           isMounted={showList}
-          schema={controller.schema}
-          expression={activeCst?.definition_formal ?? ''}
+          expression={controller.activeCst?.definition_formal ?? ''}
           isBottom={isNarrow}
-          activeCst={activeCst}
-          onOpenEdit={onOpenEdit}
         />
       </div>
     </>

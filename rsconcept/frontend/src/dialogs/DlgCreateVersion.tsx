@@ -3,18 +3,19 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 
+import { IVersionCreateDTO } from '@/backend/library/api';
 import Checkbox from '@/components/ui/Checkbox';
 import Modal from '@/components/ui/Modal';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
-import { IVersionCreateData, IVersionInfo } from '@/models/library';
+import { IVersionInfo } from '@/models/library';
 import { nextVersion } from '@/models/libraryAPI';
 import { ConstituentaID } from '@/models/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
 
 export interface DlgCreateVersionProps {
   versions: IVersionInfo[];
-  onCreate: (data: IVersionCreateData) => void;
+  onCreate: (data: IVersionCreateDTO) => void;
   selected: ConstituentaID[];
   totalCount: number;
 }
@@ -28,14 +29,11 @@ function DlgCreateVersion() {
   const canSubmit = !versions.find(ver => ver.version === version);
 
   function handleSubmit() {
-    const data: IVersionCreateData = {
+    onCreate({
       version: version,
-      description: description
-    };
-    if (onlySelected) {
-      data.items = selected;
-    }
-    onCreate(data);
+      description: description,
+      items: onlySelected ? selected : undefined
+    });
   }
 
   return (

@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { useUsers } from '@/context/UsersContext';
+import { useLabelUser } from '@/backend/users/useLabelUser';
 import { UserID } from '@/models/user';
 
 import { CProps } from '../props';
@@ -12,8 +12,7 @@ interface InfoUsersProps extends CProps.Styling {
 }
 
 function InfoUsers({ items, className, prefix, header, ...restProps }: InfoUsersProps) {
-  const { getUserLabel } = useUsers();
-
+  const getUserLabel = useLabelUser();
   return (
     <div className={clsx('flex flex-col dense', className)} {...restProps}>
       {header ? <h2>{header}</h2> : null}

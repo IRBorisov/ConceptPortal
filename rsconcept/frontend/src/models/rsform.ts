@@ -4,8 +4,7 @@
 
 import { Graph } from '@/models/Graph';
 
-import { ILibraryItem, ILibraryItemReference, ILibraryItemVersioned, LibraryItemID } from './library';
-import { ICstSubstitute } from './oss';
+import { ILibraryItemReference, ILibraryItemVersioned, LibraryItemID } from './library';
 import { IArgumentInfo, ParsingStatus, ValueClass } from './rslang';
 
 /**
@@ -147,60 +146,6 @@ export interface IConstituentaList {
 }
 
 /**
- * Represents {@link IConstituenta} data, used for checking expression.
- */
-export interface ICheckConstituentaData extends Pick<IConstituentaMeta, 'alias' | 'cst_type' | 'definition_formal'> {}
-
-/**
- * Represents {@link IConstituenta} data, used in creation process.
- */
-export interface ICstCreateData
-  extends Pick<
-    IConstituentaMeta,
-    'alias' | 'cst_type' | 'definition_raw' | 'term_raw' | 'convention' | 'definition_formal' | 'term_forms'
-  > {
-  insert_after: ConstituentaID | null;
-}
-
-/**
- * Represents data, used in ordering a list of {@link IConstituenta}.
- */
-export interface ICstMovetoData extends IConstituentaList {
-  move_to: number; // Note: 0-base index
-}
-
-/**
- * Represents data, used in updating persistent attributes in {@link IConstituenta}.
- */
-export interface ICstUpdateData {
-  target: ConstituentaID;
-  item_data: Partial<
-    Pick<IConstituentaMeta, 'convention' | 'definition_formal' | 'definition_raw' | 'term_raw' | 'term_forms'>
-  >;
-}
-
-/**
- * Represents data, used in renaming {@link IConstituenta}.
- */
-export interface ICstRenameData extends ITargetCst, Pick<IConstituentaMeta, 'alias' | 'cst_type'> {}
-
-/**
- * Represents data response when creating {@link IConstituenta}.
- */
-export interface ICstCreatedResponse {
-  new_cst: IConstituentaMeta;
-  schema: IRSFormData;
-}
-
-/**
- * Represents data response when creating producing structure of {@link IConstituenta}.
- */
-export interface IProduceStructureResponse {
-  cst_list: ConstituentaID[];
-  schema: IRSFormData;
-}
-
-/**
  * Represents {@link IRSForm} statistics.
  */
 export interface IRSFormStats {
@@ -255,44 +200,10 @@ export interface IRSForm extends IRSFormData {
 }
 
 /**
- * Represents data, used for cloning {@link IRSForm}.
- */
-export interface IRSFormCloneData extends Omit<ILibraryItem, 'time_create' | 'time_update' | 'id' | 'owner'> {
-  items?: ConstituentaID[];
-}
-
-/**
- * Represents data, used for uploading {@link IRSForm} as file.
- */
-export interface IRSFormUploadData {
-  load_metadata: boolean;
-  file: File;
-  fileName: string;
-}
-
-/**
- * Represents data response when creating {@link IVersionInfo}.
- */
-export interface IVersionCreatedResponse {
-  version: number;
-  schema: IRSFormData;
-}
-
-/**
  * Represents single substitution for binary synthesis table.
  */
 export interface IBinarySubstitution {
   leftCst: IConstituenta;
   rightCst: IConstituenta;
   deleteRight: boolean;
-}
-
-/**
- * Represents input data for inline synthesis.
- */
-export interface IInlineSynthesisData {
-  receiver: LibraryItemID;
-  source: LibraryItemID;
-  items: ConstituentaID[];
-  substitutions: ICstSubstitute[];
 }

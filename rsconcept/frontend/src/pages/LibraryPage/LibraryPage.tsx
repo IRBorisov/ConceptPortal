@@ -3,15 +3,15 @@
 import fileDownload from 'js-file-download';
 import { toast } from 'react-toastify';
 
+import { useApplyLibraryFilter } from '@/backend/library/useApplyLibraryFilter';
+import { useLibrarySuspense } from '@/backend/library/useLibrary';
+import { useRenameLocation } from '@/backend/library/useRenameLocation';
 import { IconCSV } from '@/components/Icons';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
-import DataLoader from '@/components/wrap/DataLoader';
-import { useLibrary } from '@/context/LibraryContext';
-import { IRenameLocationData } from '@/models/library';
 import { useAppLayoutStore } from '@/stores/appLayout';
 import { useDialogsStore } from '@/stores/dialogs';
-import { useLibraryFilter, useLibrarySearchStore } from '@/stores/librarySearch';
+import { useCreateLibraryFilter, useLibrarySearchStore } from '@/stores/librarySearch';
 import { information } from '@/utils/labels';
 import { convertToCSV } from '@/utils/utils';
 
@@ -20,35 +20,39 @@ import ToolbarSearch from './ToolbarSearch';
 import ViewSideLocation from './ViewSideLocation';
 
 function LibraryPage() {
-  const library = useLibrary();
+  const { items: libraryItems } = useLibrarySuspense();
+  const { renameLocation } = useRenameLocation();
+
   const noNavigation = useAppLayoutStore(state => state.noNavigation);
 
   const folderMode = useLibrarySearchStore(state => state.folderMode);
   const location = useLibrarySearchStore(state => state.location);
   const setLocation = useLibrarySearchStore(state => state.setLocation);
 
-  const filter = useLibraryFilter();
-  const items = library.applyFilter(filter);
+  const filter = useCreateLibraryFilter();
+  const { filtered } = useApplyLibraryFilter(filter);
 
   const showChangeLocation = useDialogsStore(state => state.showChangeLocation);
 
   function handleRenameLocation(newLocation: string) {
-    const data: IRenameLocationData = {
-      target: location,
-      new_location: newLocation
-    };
-    library.renameLocation(data, () => {
-      setLocation(newLocation);
-      toast.success(information.locationRenamed);
-    });
+    renameLocation(
+      {
+        target: location,
+        new_location: newLocation
+      },
+      () => {
+        setLocation(newLocation);
+        toast.success(information.locationRenamed);
+      }
+    );
   }
 
   function handleDownloadCSV() {
-    if (items.length === 0) {
+    if (filtered.length === 0) {
       toast.error(information.noDataToExport);
       return;
     }
-    const blob = convertToCSV(items);
+    const blob = convertToCSV(filtered);
     try {
       fileDownload(blob, 'library.csv', 'text/csv;charset=utf-8;');
     } catch (error) {
@@ -57,7 +61,7 @@ function LibraryPage() {
   }
 
   return (
-    <DataLoader isLoading={library.loading} error={library.loadingError} hasNoData={library.items.length === 0}>
+    <>
       <Overlay
         position={noNavigation ? 'top-[0.25rem] right-[3rem]' : 'top-[0.25rem] right-0'}
         layer='z-tooltip'
@@ -69,18 +73,17 @@ function LibraryPage() {
           onClick={handleDownloadCSV}
         />
       </Overlay>
-      <ToolbarSearch total={library.items.length ?? 0} filtered={items.length} />
+      <ToolbarSearch total={libraryItems.length} filtered={filtered.length} />
 
       <div className='cc-fade-in flex'>
         <ViewSideLocation
           isVisible={folderMode}
-          folderTree={library.folders}
           onRenameLocation={() => showChangeLocation({ initial: location, onChangeLocation: handleRenameLocation })}
         />
 
-        <TableLibraryItems items={items} />
+        <TableLibraryItems items={filtered} />
       </div>
-    </DataLoader>
+    </>
   );
 }
 

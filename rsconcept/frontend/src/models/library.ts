@@ -2,7 +2,6 @@
  * Module: Models for LibraryItem.
  */
 
-import { ConstituentaID } from './rsform';
 import { UserID } from './user';
 
 /**
@@ -60,13 +59,6 @@ export interface IVersionInfo {
 export interface IVersionData extends Omit<IVersionInfo, 'id' | 'time_create'> {}
 
 /**
- * Create version metadata in persistent storage.
- */
-export interface IVersionCreateData extends IVersionData {
-  items?: ConstituentaID[];
-}
-
-/**
  * Represents library item common data typical for all item types.
  */
 export interface ILibraryItem {
@@ -108,52 +100,9 @@ export interface ILibraryItemVersioned extends ILibraryItemData {
  * Represents common {@link ILibraryItem} editor controller.
  */
 export interface ILibraryItemEditor {
-  schema?: ILibraryItemData;
+  schema: ILibraryItemData;
+  deleteSchema: () => void;
 
   isMutable: boolean;
-  isProcessing: boolean;
   isAttachedToOSS: boolean;
-
-  setOwner: (newOwner: UserID) => void;
-  setAccessPolicy: (newPolicy: AccessPolicy) => void;
-  promptEditors: () => void;
-  promptLocation: () => void;
-
-  share: () => void;
-}
-
-/**
- * Represents update data for editing {@link ILibraryItem}.
- */
-export interface ILibraryUpdateData
-  extends Omit<ILibraryItem, 'time_create' | 'time_update' | 'access_policy' | 'location' | 'id' | 'owner'> {}
-
-/**
- * Represents update data for editing {@link AccessPolicy} of a {@link ILibraryItem}.
- */
-export interface ITargetAccessPolicy {
-  access_policy: AccessPolicy;
-}
-
-/**
- * Represents update data for editing Location of a {@link ILibraryItem}.
- */
-export interface ITargetLocation {
-  location: string;
-}
-
-/**
- * Represents update data for renaming Location.
- */
-export interface IRenameLocationData {
-  target: string;
-  new_location: string;
-}
-
-/**
- * Represents data, used for creating {@link IRSForm}.
- */
-export interface ILibraryCreateData extends Omit<ILibraryItem, 'time_create' | 'time_update' | 'id' | 'owner'> {
-  file?: File;
-  fileName?: string;
 }

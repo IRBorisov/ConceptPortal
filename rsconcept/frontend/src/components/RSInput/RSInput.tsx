@@ -47,7 +47,7 @@ interface RSInputProps
 const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
   (
     {
-      id, // prettier: split lines
+      id, //
       label,
       disabled,
       noTooltip,

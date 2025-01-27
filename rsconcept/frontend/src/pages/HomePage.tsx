@@ -1,17 +1,17 @@
 import { useEffect } from 'react';
 
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
+import { useAuth } from '@/backend/auth/useAuth';
 import Loader from '@/components/ui/Loader';
-import { useAuth } from '@/context/AuthContext';
-import { useConceptNavigation } from '@/context/NavigationContext';
 import { PARAMETER } from '@/utils/constants';
 
 function HomePage() {
   const router = useConceptNavigation();
-  const { user, loading } = useAuth();
+  const { user, isLoading } = useAuth();
 
   useEffect(() => {
-    if (!loading) {
+    if (!isLoading) {
       if (!user) {
         setTimeout(() => {
           router.replace(urls.manuals);
@@ -22,7 +22,7 @@ function HomePage() {
         }, PARAMETER.refreshTimeout);
       }
     }
-  }, [router, user, loading]);
+  }, [router, user, isLoading]);
 
   return <Loader />;
 }

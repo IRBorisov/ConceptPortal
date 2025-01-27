@@ -46,6 +46,8 @@ This readme file is used mostly to document project dependencies and conventions
   - html-to-image
   - zustand
   - @tanstack/react-table
+  - @tanstack/react-query
+  - @tanstack/react-query-devtools
   - @uiw/react-codemirror
   - @uiw/codemirror-themes
   - @lezer/lr

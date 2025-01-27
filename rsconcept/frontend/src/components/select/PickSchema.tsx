@@ -4,7 +4,6 @@ import { useIntl } from 'react-intl';
 
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
 import SearchBar from '@/components/ui/SearchBar';
-import { useLibrary } from '@/context/LibraryContext';
 import useDropdown from '@/hooks/useDropdown';
 import { ILibraryItem, LibraryItemID, LibraryItemType } from '@/models/library';
 import { matchLibraryItem } from '@/models/libraryAPI';
@@ -45,8 +44,6 @@ function PickSchema({
   ...restProps
 }: PickSchemaProps) {
   const intl = useIntl();
-  const { folders } = useLibrary();
-
   const [filterText, setFilterText] = useState(initialFilter);
   const [filterLocation, setFilterLocation] = useState('');
   const [filtered, setFiltered] = useState<ILibraryItem[]>([]);
@@ -128,7 +125,6 @@ function PickSchema({
           />
           <Dropdown isOpen={locationMenu.isOpen} stretchLeft className='w-[20rem] h-[12.5rem] z-modalTooltip mt-0'>
             <SelectLocation
-              folderTree={folders}
               value={filterLocation}
               prefix={prefixes.folders_list}
               dense

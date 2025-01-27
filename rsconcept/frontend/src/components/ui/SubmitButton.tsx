@@ -29,7 +29,7 @@ function SubmitButton({ text = 'ОК', icon, disabled, loading, className, ...re
         loading && 'cursor-progress',
         className
       )}
-      disabled={disabled ?? loading}
+      disabled={disabled || loading}
       {...restProps}
     >
       {icon ? <span>{icon}</span> : null}

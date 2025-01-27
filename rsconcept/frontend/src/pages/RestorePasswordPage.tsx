@@ -4,32 +4,28 @@ import axios from 'axios';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
+import { useRequestPasswordReset } from '@/backend/auth/useRequestPasswordReset';
 import InfoError, { ErrorData } from '@/components/info/InfoError';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
 import TextURL from '@/components/ui/TextURL';
-import { useAuth } from '@/context/AuthContext';
-import { IRequestPasswordData } from '@/models/user';
 
 function RestorePasswordPage() {
-  const { requestPasswordReset, loading, error, setError } = useAuth();
+  const { requestPasswordReset, isPending, error, reset } = useRequestPasswordReset();
 
   const [isCompleted, setIsCompleted] = useState(false);
   const [email, setEmail] = useState('');
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!loading) {
-      const data: IRequestPasswordData = {
-        email: email
-      };
-      requestPasswordReset(data, () => setIsCompleted(true));
+    if (!isPending) {
+      requestPasswordReset({ email: email }, () => setIsCompleted(true));
     }
   }
 
   useEffect(() => {
-    setError(undefined);
-  }, [email, setError]);
+    reset();
+  }, [email, reset]);
 
   if (isCompleted) {
     return (
@@ -55,7 +51,7 @@ function RestorePasswordPage() {
         <SubmitButton
           text='Запросить пароль'
           className='self-center w-[12rem] mt-3'
-          loading={loading}
+          loading={isPending}
           disabled={!email}
         />
         {error ? <ProcessError error={error} /> : null}

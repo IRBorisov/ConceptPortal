@@ -5,7 +5,7 @@ import ConceptToaster from '@/app/ConceptToaster';
 import Footer from '@/app/Footer';
 import Navigation from '@/app/Navigation';
 import Loader from '@/components/ui/Loader';
-import { NavigationState } from '@/context/NavigationContext';
+import { NavigationState } from '@/app/Navigation/NavigationContext';
 import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/appLayout';
 import { globals } from '@/utils/constants';
 
@@ -19,6 +19,9 @@ function ApplicationLayout() {
   const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
   const noNavigation = useAppLayoutStore(state => state.noNavigation);
   const noFooter = useAppLayoutStore(state => state.noFooter);
+
+  // TODO: prefetch data
+
   return (
     <NavigationState>
       <div className='min-w-[20rem] antialiased h-full max-w-[120rem] mx-auto'>

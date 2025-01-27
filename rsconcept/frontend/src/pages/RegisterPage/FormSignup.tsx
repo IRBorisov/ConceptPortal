@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { urls } from '@/app/urls';
+import { useSignup } from '@/backend/users/useSignup';
 import { IconHelp } from '@/components/Icons';
 import InfoError, { ErrorData } from '@/components/info/InfoError';
 import Button from '@/components/ui/Button';
@@ -17,15 +18,15 @@ import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
 import TextURL from '@/components/ui/TextURL';
 import Tooltip from '@/components/ui/Tooltip';
-import { useAuth } from '@/context/AuthContext';
-import { useConceptNavigation } from '@/context/NavigationContext';
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IUserSignupData } from '@/models/user';
 import { globals, patterns } from '@/utils/constants';
+import { information } from '@/utils/labels';
 
 function FormSignup() {
   const router = useConceptNavigation();
-  const { signup, loading, error, setError } = useAuth();
+  const { signup, isPending, error, reset } = useSignup();
 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -40,8 +41,8 @@ function FormSignup() {
   const isValid = acceptPrivacy && acceptRules && !!email && !!username;
 
   useEffect(() => {
-    setError(undefined);
-  }, [username, email, password, password2, setError]);
+    reset();
+  }, [username, email, password, password2, reset]);
 
   function handleCancel() {
     if (router.canBack()) {
@@ -53,7 +54,7 @@ function FormSignup() {
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!loading) {
+    if (!isPending) {
       const data: IUserSignupData = {
         username,
         email,
@@ -64,7 +65,7 @@ function FormSignup() {
       };
       signup(data, createdUser => {
         router.push(urls.login_hint(createdUser.username));
-        toast.success(`Пользователь успешно создан: ${createdUser.username}`);
+        toast.success(information.newUser(createdUser.username));
       });
     }
   }
@@ -159,7 +160,7 @@ function FormSignup() {
       </div>
 
       <div className='flex justify-around my-3'>
-        <SubmitButton text='Регистрировать' className='min-w-[10rem]' loading={loading} disabled={!isValid} />
+        <SubmitButton text='Регистрировать' className='min-w-[10rem]' loading={isPending} disabled={!isValid} />
         <Button text='Назад' className='min-w-[10rem]' onClick={() => handleCancel()} />
       </div>
       {error ? <ProcessError error={error} /> : null}

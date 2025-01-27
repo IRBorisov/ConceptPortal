@@ -3,17 +3,18 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 
+import { useLibrary } from '@/backend/library/useLibrary';
+import { ICstRelocateDTO } from '@/backend/oss/api';
+import { useRSForm } from '@/backend/rsform/useRSForm';
 import { RelocateUpIcon } from '@/components/DomainIcons';
 import PickMultiConstituenta from '@/components/select/PickMultiConstituenta';
 import SelectLibraryItem from '@/components/select/SelectLibraryItem';
 import MiniButton from '@/components/ui/MiniButton';
 import Modal from '@/components/ui/Modal';
 import DataLoader from '@/components/wrap/DataLoader';
-import { useLibrary } from '@/context/LibraryContext';
-import useRSFormDetails from '@/hooks/useRSFormDetails';
 import { ILibraryItem, LibraryItemID } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
-import { ICstRelocateData, IOperation, IOperationSchema } from '@/models/oss';
+import { IOperation, IOperationSchema } from '@/models/oss';
 import { getRelocateCandidates } from '@/models/ossAPI';
 import { ConstituentaID } from '@/models/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -22,23 +23,23 @@ import { prefixes } from '@/utils/constants';
 export interface DlgRelocateConstituentsProps {
   oss: IOperationSchema;
   initialTarget?: IOperation;
-  onSubmit: (data: ICstRelocateData) => void;
+  onSubmit: (data: ICstRelocateDTO) => void;
 }
 
 function DlgRelocateConstituents() {
   const { oss, initialTarget, onSubmit } = useDialogsStore(state => state.props as DlgRelocateConstituentsProps);
-  const library = useLibrary();
+  const { items: libraryItems } = useLibrary();
 
   const [directionUp, setDirectionUp] = useState(true);
   const [destination, setDestination] = useState<ILibraryItem | undefined>(undefined);
   const [selected, setSelected] = useState<ConstituentaID[]>([]);
   const [source, setSource] = useState<ILibraryItem | undefined>(
-    library.items.find(item => item.id === initialTarget?.result)
+    libraryItems.find(item => item.id === initialTarget?.result)
   );
   const isValid = !!destination && selected.length > 0;
 
   const operation = oss.items.find(item => item.result === source?.id);
-  const sourceSchemas = library.items.filter(item => oss.schemas.includes(item.id));
+  const sourceSchemas = libraryItems.filter(item => oss.schemas.includes(item.id));
   const destinationSchemas = (() => {
     if (!operation) {
       return [];
@@ -47,10 +48,10 @@ function DlgRelocateConstituents() {
     const ids: LibraryItemID[] = directionUp
       ? node.inputs.map(id => oss.operationByID.get(id)!.result).filter(id => id !== null)
       : node.outputs.map(id => oss.operationByID.get(id)!.result).filter(id => id !== null);
-    return ids.map(id => library.items.find(item => item.id === id)).filter(item => item !== undefined);
+    return ids.map(id => libraryItems.find(item => item.id === id)).filter(item => item !== undefined);
   })();
 
-  const sourceData = useRSFormDetails({ target: source ? String(source.id) : undefined });
+  const sourceData = useRSForm({ itemID: source?.id });
   const filteredConstituents = (() => {
     if (!sourceData.schema || !destination || !operation) {
       return [];
@@ -79,11 +80,10 @@ function DlgRelocateConstituents() {
     if (!destination) {
       return;
     }
-    const data: ICstRelocateData = {
+    onSubmit({
       destination: destination.id,
       items: selected
-    };
-    onSubmit(data);
+    });
   }
 
   return (
@@ -119,7 +119,7 @@ function DlgRelocateConstituents() {
             onSelectValue={handleSelectDestination}
           />
         </div>
-        <DataLoader isLoading={sourceData.loading} error={sourceData.error}>
+        <DataLoader isLoading={sourceData.isLoading} error={sourceData.error}>
           {sourceData.schema ? (
             <PickMultiConstituenta
               noBorder

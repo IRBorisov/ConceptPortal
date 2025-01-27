@@ -19,6 +19,7 @@ import {
 import { useStoreApi } from 'reactflow';
 import { useDebounce } from 'use-debounce';
 
+import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
 import InfoConstituenta from '@/components/info/InfoConstituenta';
 import SelectedCounter from '@/components/info/SelectedCounter';
 import { CProps } from '@/components/props';
@@ -47,18 +48,13 @@ import ViewHidden from './ViewHidden';
 const ZOOM_MAX = 3;
 const ZOOM_MIN = 0.25;
 
-interface TGFlowProps {
-  onOpenEdit: (cstID: ConstituentaID) => void;
-}
-
-function TGFlow({ onOpenEdit }: TGFlowProps) {
+function TGFlow() {
   const mainHeight = useMainHeight();
   const controller = useRSEdit();
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges] = useEdgesState([]);
   const flow = useReactFlow();
   const store = useStoreApi();
   const { addSelectedNodes } = store.getState();
+  const isProcessing = useIsProcessingRSForm();
 
   const showParams = useDialogsStore(state => state.showGraphParams);
 
@@ -66,6 +62,9 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
   const setFilter = useTermGraphStore(state => state.setFilter);
   const coloring = useTermGraphStore(state => state.coloring);
   const setColoring = useTermGraphStore(state => state.setColoring);
+
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges] = useEdgesState([]);
 
   const [focusCst, setFocusCst] = useState<IConstituenta | undefined>(undefined);
   const filteredGraph = useGraphFilter(controller.schema, filter, focusCst);
@@ -113,7 +112,7 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
   const resetNodes = useCallback(() => {
     const newNodes: Node<TGNodeData>[] = [];
     filteredGraph.nodes.forEach(node => {
-      const cst = controller.schema!.cstByID.get(node.id);
+      const cst = controller.schema.cstByID.get(node.id);
       if (cst) {
         newNodes.push({
           id: String(node.id),
@@ -184,7 +183,7 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
     if (!controller.schema) {
       return;
     }
-    const definition = controller.selected.map(id => controller.schema!.cstByID.get(id)!.alias).join(' ');
+    const definition = controller.selected.map(id => controller.schema.cstByID.get(id)!.alias).join(' ');
     controller.createCst(controller.selected.length === 0 ? CstType.BASE : CstType.TERM, false, definition);
   }
 
@@ -232,7 +231,7 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
-    if (controller.isProcessing) {
+    if (isProcessing) {
       return;
     }
     if (event.key === 'Escape') {
@@ -282,7 +281,7 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
   function handleNodeDoubleClick(event: CProps.EventMouse, cstID: ConstituentaID) {
     event.preventDefault();
     event.stopPropagation();
-    onOpenEdit(cstID);
+    controller.navigateCst(cstID);
   }
 
   function handleNodeEnter(event: CProps.EventMouse, cstID: ConstituentaID) {
@@ -314,11 +313,11 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
         />
         {!focusCst ? (
           <ToolbarGraphSelection
-            graph={controller.schema!.graph}
+            graph={controller.schema.graph}
             isCore={cstID => isBasicConcept(controller.schema?.cstByID.get(cstID)?.cst_type)}
             isOwned={
               controller.schema && controller.schema.inheritance.length > 0
-                ? cstID => !controller.schema!.cstByID.get(cstID)?.is_inherited
+                ? cstID => !controller.schema.cstByID.get(cstID)?.is_inherited
                 : undefined
             }
             selected={controller.selected}
@@ -386,7 +385,6 @@ function TGFlow({ onOpenEdit }: TGFlowProps) {
               coloringScheme={coloring}
               toggleSelection={controller.toggleSelect}
               setFocus={handleSetFocus}
-              onEdit={onOpenEdit}
             />
           </div>
         </Overlay>

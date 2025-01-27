@@ -3,7 +3,7 @@
 import { useCallback } from 'react';
 
 import { urls } from '@/app/urls';
-import { useConceptNavigation } from '@/context/NavigationContext';
+import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { HelpTopic } from '@/models/miscellaneous';
 import { useMainHeight } from '@/stores/appLayout';

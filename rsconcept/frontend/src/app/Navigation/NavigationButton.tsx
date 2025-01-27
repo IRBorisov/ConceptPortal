@@ -29,7 +29,7 @@ function NavigationButton({
       data-tooltip-hidden={hideTitle}
       onClick={onClick}
       className={clsx(
-        'mr-1 h-full', // prettier: split lines
+        'mr-1 h-full', //
         'flex items-center gap-1',
         'clr-btn-nav cc-animate-color duration-500',
         'rounded-xl',
