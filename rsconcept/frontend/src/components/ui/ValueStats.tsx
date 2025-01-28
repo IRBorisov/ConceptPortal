@@ -1,6 +1,6 @@
+import { CProps } from '@/components/props';
 import { PARAMETER } from '@/utils/constants';
 
-import { CProps } from '../props';
 import ValueIcon from './ValueIcon';
 
 interface ValueStatsProps extends CProps.Styling, CProps.Titled {

@@ -1,7 +1,8 @@
 import clsx from 'clsx';
 
-import { IconSearch } from '../Icons';
-import { CProps } from '../props';
+import { IconSearch } from '@/components/Icons';
+import { CProps } from '@/components/props';
+
 import Overlay from './Overlay';
 import TextInput from './TextInput';
 

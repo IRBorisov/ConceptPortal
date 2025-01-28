@@ -2,9 +2,8 @@ import clsx from 'clsx';
 import type { TabProps as TabPropsImpl } from 'react-tabs';
 import { Tab as TabImpl } from 'react-tabs';
 
+import { CProps } from '@/components/props';
 import { globals } from '@/utils/constants';
-
-import { CProps } from '../props';
 
 interface TabLabelProps extends Omit<TabPropsImpl, 'children'>, CProps.Titled {
   /** Label to display in the tab. */

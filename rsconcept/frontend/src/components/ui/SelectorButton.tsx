@@ -1,8 +1,7 @@
 import clsx from 'clsx';
 
+import { CProps } from '@/components/props';
 import { globals } from '@/utils/constants';
-
-import { CProps } from '../props';
 
 interface SelectorButtonProps extends CProps.Button {
   /** Text to display in the button. */

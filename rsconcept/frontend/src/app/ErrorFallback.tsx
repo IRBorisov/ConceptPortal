@@ -1,7 +1,7 @@
 import { type FallbackProps } from 'react-error-boundary';
 
-import InfoError from '../components/info/InfoError';
-import Button from '../components/ui/Button';
+import InfoError from '@/components/info/InfoError';
+import Button from '@/components/ui/Button';
 
 function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   return (

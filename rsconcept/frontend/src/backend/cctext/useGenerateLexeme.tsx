@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { DataCallback } from '@/backend/apiTransport';
 import { ILexemeData } from '@/models/language';
 
-import { DataCallback } from '../apiTransport';
 import { cctextApi } from './api';
 
 export const useGenerateLexeme = () => {

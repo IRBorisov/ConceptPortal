@@ -1,6 +1,5 @@
+import { LocationIcon } from '@/components/DomainIcons';
 import { globals } from '@/utils/constants';
-
-import { LocationIcon } from '../DomainIcons';
 
 interface BadgeLocationProps {
   /** Location to display. */

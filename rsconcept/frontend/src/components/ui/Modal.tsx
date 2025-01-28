@@ -2,15 +2,15 @@
 
 import clsx from 'clsx';
 
+import { IconClose } from '@/components/Icons';
+import BadgeHelp from '@/components/info/BadgeHelp';
+import { CProps } from '@/components/props';
 import useEscapeKey from '@/hooks/useEscapeKey';
 import { HelpTopic } from '@/models/miscellaneous';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/labels';
 
-import { IconClose } from '../Icons';
-import BadgeHelp from '../info/BadgeHelp';
-import { CProps } from '../props';
 import Button from './Button';
 import MiniButton from './MiniButton';
 

@@ -4,19 +4,19 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { IconAccept, IconPageLeft, IconPageRight, IconRemove, IconReplace } from '@/components/Icons';
 import BadgeConstituenta from '@/components/info/BadgeConstituenta';
+import { CProps } from '@/components/props';
 import SelectConstituenta from '@/components/select/SelectConstituenta';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
 import MiniButton from '@/components/ui/MiniButton';
+import NoData from '@/components/ui/NoData';
 import { ILibraryItem } from '@/models/library';
 import { ICstSubstitute, IMultiSubstitution } from '@/models/oss';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
 import { APP_COLORS } from '@/styling/color';
 import { errors } from '@/utils/labels';
 
-import { IconAccept, IconPageLeft, IconPageRight, IconRemove, IconReplace } from '../Icons';
-import { CProps } from '../props';
-import NoData from '../ui/NoData';
 import SelectLibraryItem from './SelectLibraryItem';
 
 interface PickSubstitutionsProps extends CProps.Styling {

@@ -4,12 +4,11 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
 import { useFolders } from '@/backend/library/useFolders';
+import { IconFolder, IconFolderClosed, IconFolderEmpty, IconFolderOpened } from '@/components/Icons';
+import { CProps } from '@/components/props';
+import MiniButton from '@/components/ui/MiniButton';
 import { FolderNode } from '@/models/FolderTree';
 import { labelFolderNode } from '@/utils/labels';
-
-import { IconFolder, IconFolderClosed, IconFolderEmpty, IconFolderOpened } from '../Icons';
-import { CProps } from '../props';
-import MiniButton from '../ui/MiniButton';
 
 interface SelectLocationProps extends CProps.Styling {
   value: string;

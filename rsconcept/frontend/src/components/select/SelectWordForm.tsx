@@ -3,12 +3,11 @@
 import clsx from 'clsx';
 import { useCallback } from 'react';
 
+import { CProps } from '@/components/props';
+import WordformButton from '@/dialogs/DlgEditReference/WordformButton';
 import { Grammeme } from '@/models/language';
 import { prefixes } from '@/utils/constants';
 import { DefaultWordForms, IGrammemeOption, SelectorGrammemes } from '@/utils/selectors';
-
-import WordformButton from '../../dialogs/DlgEditReference/WordformButton';
-import { CProps } from '../props';
 
 interface SelectWordFormProps extends CProps.Styling {
   selected: IGrammemeOption[];

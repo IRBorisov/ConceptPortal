@@ -1,10 +1,10 @@
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
+import { IconDropArrow, IconPageRight } from '@/components/Icons';
+import { CProps } from '@/components/props';
 import { globals, PARAMETER } from '@/utils/constants';
 
-import { IconDropArrow, IconPageRight } from '../Icons';
-import { CProps } from '../props';
 import MiniButton from './MiniButton';
 import Overlay from './Overlay';
 

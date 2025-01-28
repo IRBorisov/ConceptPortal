@@ -1,10 +1,9 @@
 import { queryOptions } from '@tanstack/react-query';
 
+import { axiosGet, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
 import { ICurrentUser } from '@/models/user';
 import { information } from '@/utils/labels';
-
-import { axiosGet, axiosPost } from '../apiTransport';
 
 /**
  * Represents login data, used to authenticate users.

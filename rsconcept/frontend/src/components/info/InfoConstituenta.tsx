@@ -1,11 +1,10 @@
 import clsx from 'clsx';
 
+import { IconChild } from '@/components/Icons';
+import { CProps } from '@/components/props';
 import { IConstituenta } from '@/models/rsform';
 import { isBasicConcept } from '@/models/rsformAPI';
 import { labelCstTypification } from '@/utils/labels';
-
-import { IconChild } from '../Icons';
-import { CProps } from '../props';
 
 interface InfoConstituentaProps extends CProps.Div {
   data: IConstituenta;

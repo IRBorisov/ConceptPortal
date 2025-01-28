@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { DataCallback } from '@/backend/apiTransport';
 import { libraryApi } from '@/backend/library/api';
 import { ILibraryItem, LibraryItemID } from '@/models/library';
 
-import { DataCallback } from '../apiTransport';
 import { ITargetOperation, ossApi } from './api';
 
 export const useInputCreate = () => {

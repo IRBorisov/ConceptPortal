@@ -2,16 +2,15 @@
 
 import { useCallback } from 'react';
 
+import { PolicyIcon } from '@/components/DomainIcons';
+import { CProps } from '@/components/props';
 import Dropdown from '@/components/ui/Dropdown';
+import DropdownButton from '@/components/ui/DropdownButton';
+import MiniButton from '@/components/ui/MiniButton';
 import useDropdown from '@/hooks/useDropdown';
 import { AccessPolicy } from '@/models/library';
 import { prefixes } from '@/utils/constants';
 import { describeAccessPolicy, labelAccessPolicy } from '@/utils/labels';
-
-import { PolicyIcon } from '../DomainIcons';
-import { CProps } from '../props';
-import DropdownButton from '../ui/DropdownButton';
-import MiniButton from '../ui/MiniButton';
 
 interface SelectAccessPolicyProps extends CProps.Styling {
   value: AccessPolicy;

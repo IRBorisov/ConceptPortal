@@ -2,16 +2,15 @@
 
 import { useCallback } from 'react';
 
+import { ItemTypeIcon } from '@/components/DomainIcons';
+import { CProps } from '@/components/props';
 import Dropdown from '@/components/ui/Dropdown';
+import DropdownButton from '@/components/ui/DropdownButton';
+import SelectorButton from '@/components/ui/SelectorButton';
 import useDropdown from '@/hooks/useDropdown';
 import { LibraryItemType } from '@/models/library';
 import { prefixes } from '@/utils/constants';
 import { describeLibraryItemType, labelLibraryItemType } from '@/utils/labels';
-
-import { ItemTypeIcon } from '../DomainIcons';
-import { CProps } from '../props';
-import DropdownButton from '../ui/DropdownButton';
-import SelectorButton from '../ui/SelectorButton';
 
 interface SelectItemTypeProps extends CProps.Styling {
   value: LibraryItemType;

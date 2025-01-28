@@ -3,17 +3,17 @@
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
+import BadgeConstituenta from '@/components/info/BadgeConstituenta';
+import { CProps } from '@/components/props';
 import DataTable, { createColumnHelper, RowSelectionState } from '@/components/ui/DataTable';
+import NoData from '@/components/ui/NoData';
+import SearchBar from '@/components/ui/SearchBar';
 import { Graph } from '@/models/Graph';
 import { CstMatchMode } from '@/models/miscellaneous';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
 import { isBasicConcept, matchConstituenta } from '@/models/rsformAPI';
 import { describeConstituenta } from '@/utils/labels';
 
-import BadgeConstituenta from '../info/BadgeConstituenta';
-import { CProps } from '../props';
-import NoData from '../ui/NoData';
-import SearchBar from '../ui/SearchBar';
 import ToolbarGraphSelection from './ToolbarGraphSelection';
 
 interface PickMultiConstituentaProps extends CProps.Styling {

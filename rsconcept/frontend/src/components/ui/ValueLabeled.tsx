@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { CProps } from '../props';
+import { CProps } from '@/components/props';
 
 interface ValueLabeledProps extends CProps.Styling {
   /** Id of the component. */

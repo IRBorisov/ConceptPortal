@@ -1,10 +1,9 @@
 import { queryOptions } from '@tanstack/react-query';
 
+import { axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
 import { IUser, IUserInfo, IUserProfile, IUserSignupData } from '@/models/user';
 import { information } from '@/utils/labels';
-
-import { axiosGet, axiosPatch, axiosPost } from '../apiTransport';
 
 /**
  * Represents user data, intended to update user profile in persistent storage.

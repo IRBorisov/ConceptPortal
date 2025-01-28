@@ -1,8 +1,6 @@
 import clsx from 'clsx';
 import { useCallback } from 'react';
 
-import { Graph } from '@/models/Graph';
-
 import {
   IconGraphCollapse,
   IconGraphCore,
@@ -13,9 +11,10 @@ import {
   IconGraphOutputs,
   IconPredecessor,
   IconReset
-} from '../Icons';
-import { CProps } from '../props';
-import MiniButton from '../ui/MiniButton';
+} from '@/components/Icons';
+import { CProps } from '@/components/props';
+import MiniButton from '@/components/ui/MiniButton';
+import { Graph } from '@/models/Graph';
 
 interface ToolbarGraphSelectionProps extends CProps.Styling {
   graph: Graph;

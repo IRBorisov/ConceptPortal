@@ -1,9 +1,8 @@
 import clsx from 'clsx';
 
 import { useLabelUser } from '@/backend/users/useLabelUser';
+import { CProps } from '@/components/props';
 import { UserID } from '@/models/user';
-
-import { CProps } from '../props';
 
 interface InfoUsersProps extends CProps.Styling {
   items: UserID[];

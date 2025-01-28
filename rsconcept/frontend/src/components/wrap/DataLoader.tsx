@@ -1,5 +1,5 @@
-import InfoError, { ErrorData } from '../info/InfoError';
-import Loader from '../ui/Loader';
+import InfoError, { ErrorData } from '@/components/info/InfoError';
+import Loader from '@/components/ui/Loader';
 
 interface DataLoaderProps {
   isLoading?: boolean;

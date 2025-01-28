@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { DataCallback } from '@/backend/apiTransport';
 import { LibraryItemID } from '@/models/library';
 import { IExpressionParse } from '@/models/rslang';
 
-import { DataCallback } from '../apiTransport';
 import { ICheckConstituentaDTO, rsformsApi } from './api';
 
 export const useCheckConstituenta = () => {

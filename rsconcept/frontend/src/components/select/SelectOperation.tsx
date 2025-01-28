@@ -2,11 +2,10 @@
 
 import clsx from 'clsx';
 
+import { CProps } from '@/components/props';
+import SelectSingle from '@/components/ui/SelectSingle';
 import { IOperation, OperationID } from '@/models/oss';
 import { matchOperation } from '@/models/ossAPI';
-
-import { CProps } from '../props';
-import SelectSingle from '../ui/SelectSingle';
 
 interface SelectOperationProps extends CProps.Styling {
   items?: IOperation[];

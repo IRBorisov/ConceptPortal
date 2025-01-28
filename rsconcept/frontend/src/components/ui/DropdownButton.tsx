@@ -1,8 +1,7 @@
 import clsx from 'clsx';
 
+import { CProps } from '@/components/props';
 import { globals } from '@/utils/constants';
-
-import { CProps } from '../props';
 
 interface DropdownButtonProps extends CProps.Button {
   /** Icon to display first (not used if children are provided). */

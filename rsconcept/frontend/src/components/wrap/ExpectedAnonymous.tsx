@@ -2,8 +2,7 @@ import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { useAuth } from '@/backend/auth/useAuth';
 import { useLogout } from '@/backend/auth/useLogout';
-
-import TextURL from '../ui/TextURL';
+import TextURL from '@/components/ui/TextURL';
 
 function ExpectedAnonymous() {
   const { user } = useAuth();

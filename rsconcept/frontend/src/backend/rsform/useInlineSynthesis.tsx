@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { DataCallback } from '@/backend/apiTransport';
 import { useUpdateTimestamp } from '@/backend/library/useUpdateTimestamp';
 import { LibraryItemID } from '@/models/library';
 import { IRSFormData } from '@/models/rsform';
 
-import { DataCallback } from '../apiTransport';
 import { IInlineSynthesisDTO, rsformsApi } from './api';
 
 export const useInlineSynthesis = () => {

@@ -3,13 +3,13 @@
 import clsx from 'clsx';
 import { useCallback } from 'react';
 
+import { IconFolderTree } from '@/components/Icons';
+import { CProps } from '@/components/props';
+import Dropdown from '@/components/ui/Dropdown';
+import MiniButton from '@/components/ui/MiniButton';
 import useDropdown from '@/hooks/useDropdown';
 import { prefixes } from '@/utils/constants';
 
-import { IconFolderTree } from '../Icons';
-import { CProps } from '../props';
-import Dropdown from '../ui/Dropdown';
-import MiniButton from '../ui/MiniButton';
 import SelectLocation from './SelectLocation';
 
 interface SelectLocationContextProps extends CProps.Styling {

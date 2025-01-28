@@ -1,9 +1,8 @@
 import clsx from 'clsx';
 
+import { CheckboxChecked } from '@/components/Icons';
+import { CProps } from '@/components/props';
 import { globals } from '@/utils/constants';
-
-import { CheckboxChecked } from '../Icons';
-import { CProps } from '../props';
 
 export interface CheckboxProps extends Omit<CProps.Button, 'value' | 'onClick'> {
   /** Label to display next to the checkbox. */

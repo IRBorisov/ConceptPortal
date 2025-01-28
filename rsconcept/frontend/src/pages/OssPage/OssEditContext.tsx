@@ -17,13 +17,12 @@ import { ILibraryItemEditor, LibraryItemID } from '@/models/library';
 import { calculateInsertPosition } from '@/models/miscellaneousAPI';
 import { IOperationPosition, IOperationSchema, OperationID, OperationType } from '@/models/oss';
 import { UserRole } from '@/models/user';
+import { RSTabID } from '@/pages/RSFormPage/RSEditContext';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { useRoleStore } from '@/stores/role';
 import { PARAMETER } from '@/utils/constants';
 import { prompts } from '@/utils/labels';
-
-import { RSTabID } from '../RSFormPage/RSEditContext';
 
 export enum OssTabID {
   CARD = 0,

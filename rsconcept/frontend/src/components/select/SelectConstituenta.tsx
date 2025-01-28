@@ -2,13 +2,12 @@
 
 import clsx from 'clsx';
 
+import { CProps } from '@/components/props';
+import SelectSingle from '@/components/ui/SelectSingle';
 import { CstMatchMode } from '@/models/miscellaneous';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { matchConstituenta } from '@/models/rsformAPI';
 import { describeConstituenta, describeConstituentaTerm } from '@/utils/labels';
-
-import { CProps } from '../props';
-import SelectSingle from '../ui/SelectSingle';
 
 interface SelectConstituentaProps extends CProps.Styling {
   items?: IConstituenta[];

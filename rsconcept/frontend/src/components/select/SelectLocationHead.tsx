@@ -3,16 +3,15 @@
 import clsx from 'clsx';
 import { useCallback } from 'react';
 
+import { LocationIcon } from '@/components/DomainIcons';
+import { CProps } from '@/components/props';
 import Dropdown from '@/components/ui/Dropdown';
+import DropdownButton from '@/components/ui/DropdownButton';
 import SelectorButton from '@/components/ui/SelectorButton';
 import useDropdown from '@/hooks/useDropdown';
 import { LocationHead } from '@/models/library';
 import { prefixes } from '@/utils/constants';
 import { describeLocationHead, labelLocationHead } from '@/utils/labels';
-
-import { LocationIcon } from '../DomainIcons';
-import { CProps } from '../props';
-import DropdownButton from '../ui/DropdownButton';
 
 interface SelectLocationHeadProps extends CProps.Styling {
   value: LocationHead;

@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 
+import { CProps } from '@/components/props';
 import { globals } from '@/utils/constants';
 
-import { CProps } from '../props';
 import MiniButton from './MiniButton';
 
 interface ValueIconProps extends CProps.Styling, CProps.Titled {

@@ -1,6 +1,5 @@
+import { axiosPost } from '@/backend/apiTransport';
 import { ILexemeData, IWordFormPlain } from '@/models/language';
-
-import { axiosPost } from '../apiTransport';
 
 /**
  * Represents API result for text output.

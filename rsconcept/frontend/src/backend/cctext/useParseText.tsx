@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { DataCallback } from '../apiTransport';
+import { DataCallback } from '@/backend/apiTransport';
+
 import { cctextApi, ITextResult } from './api';
 
 export const useParseText = () => {

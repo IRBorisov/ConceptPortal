@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { DataCallback } from '@/backend/apiTransport';
 import { IWordFormPlain } from '@/models/language';
 
-import { DataCallback } from '../apiTransport';
 import { cctextApi, ITextResult } from './api';
 
 export const useInflectText = () => {

@@ -3,8 +3,9 @@
 import clsx from 'clsx';
 import { useRef, useState } from 'react';
 
-import { IconUpload } from '../Icons';
-import { CProps } from '../props';
+import { IconUpload } from '@/components/Icons';
+import { CProps } from '@/components/props';
+
 import Button from './Button';
 import Label from './Label';
 

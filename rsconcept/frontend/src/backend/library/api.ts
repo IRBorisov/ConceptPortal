@@ -1,5 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
+import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
 import {
   AccessPolicy,
@@ -14,7 +15,6 @@ import { ConstituentaID, IRSFormData } from '@/models/rsform';
 import { UserID } from '@/models/user';
 import { information } from '@/utils/labels';
 
-import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '../apiTransport';
 import { ossApi } from '../oss/api';
 import { rsformsApi } from '../rsform/api';
 

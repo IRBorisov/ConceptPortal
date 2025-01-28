@@ -3,7 +3,10 @@
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
+import BadgeConstituenta from '@/components/info/BadgeConstituenta';
+import { CProps } from '@/components/props';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
+import NoData from '@/components/ui/NoData';
 import SearchBar from '@/components/ui/SearchBar';
 import { CstMatchMode } from '@/models/miscellaneous';
 import { IConstituenta } from '@/models/rsform';
@@ -11,10 +14,6 @@ import { matchConstituenta } from '@/models/rsformAPI';
 import { APP_COLORS } from '@/styling/color';
 import { prefixes } from '@/utils/constants';
 import { describeConstituenta } from '@/utils/labels';
-
-import BadgeConstituenta from '../info/BadgeConstituenta';
-import { CProps } from '../props';
-import NoData from '../ui/NoData';
 
 interface PickConstituentaProps extends CProps.Styling {
   id?: string;

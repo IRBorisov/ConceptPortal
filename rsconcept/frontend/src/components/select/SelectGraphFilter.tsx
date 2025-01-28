@@ -2,17 +2,16 @@
 
 import { useCallback } from 'react';
 
+import { DependencyIcon } from '@/components/DomainIcons';
+import { CProps } from '@/components/props';
 import Dropdown from '@/components/ui/Dropdown';
+import DropdownButton from '@/components/ui/DropdownButton';
 import SelectorButton from '@/components/ui/SelectorButton';
 import useDropdown from '@/hooks/useDropdown';
 import useWindowSize from '@/hooks/useWindowSize';
 import { DependencyMode } from '@/models/miscellaneous';
 import { prefixes } from '@/utils/constants';
 import { describeCstSource, labelCstSource } from '@/utils/labels';
-
-import { DependencyIcon } from '../DomainIcons';
-import { CProps } from '../props';
-import DropdownButton from '../ui/DropdownButton';
 
 interface SelectGraphFilterProps extends CProps.Styling {
   value: DependencyMode;

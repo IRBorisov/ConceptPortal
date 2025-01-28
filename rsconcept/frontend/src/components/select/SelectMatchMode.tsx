@@ -2,17 +2,16 @@
 
 import { useCallback } from 'react';
 
+import { MatchModeIcon } from '@/components/DomainIcons';
+import { CProps } from '@/components/props';
 import Dropdown from '@/components/ui/Dropdown';
+import DropdownButton from '@/components/ui/DropdownButton';
 import SelectorButton from '@/components/ui/SelectorButton';
 import useDropdown from '@/hooks/useDropdown';
 import useWindowSize from '@/hooks/useWindowSize';
 import { CstMatchMode } from '@/models/miscellaneous';
 import { prefixes } from '@/utils/constants';
 import { describeCstMatchMode, labelCstMatchMode } from '@/utils/labels';
-
-import { MatchModeIcon } from '../DomainIcons';
-import { CProps } from '../props';
-import DropdownButton from '../ui/DropdownButton';
 
 interface SelectMatchModeProps extends CProps.Styling {
   value: CstMatchMode;

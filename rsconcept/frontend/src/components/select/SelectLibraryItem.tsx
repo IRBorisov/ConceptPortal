@@ -2,11 +2,10 @@
 
 import clsx from 'clsx';
 
+import { CProps } from '@/components/props';
+import SelectSingle from '@/components/ui/SelectSingle';
 import { ILibraryItem, LibraryItemID } from '@/models/library';
 import { matchLibraryItem } from '@/models/libraryAPI';
-
-import { CProps } from '../props';
-import SelectSingle from '../ui/SelectSingle';
 
 interface SelectLibraryItemProps extends CProps.Styling {
   items?: ILibraryItem[];

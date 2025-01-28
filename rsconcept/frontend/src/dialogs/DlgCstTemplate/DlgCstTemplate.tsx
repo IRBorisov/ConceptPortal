@@ -9,6 +9,7 @@ import { useRSForm } from '@/backend/rsform/useRSForm';
 import Loader from '@/components/ui/Loader';
 import Modal from '@/components/ui/Modal';
 import TabLabel from '@/components/ui/TabLabel';
+import FormCreateCst from '@/dialogs/DlgCreateCst/FormCreateCst';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { HelpTopic } from '@/models/miscellaneous';
 import { CstType, IRSForm } from '@/models/rsform';
@@ -17,7 +18,6 @@ import { inferTemplatedType, substituteTemplateArgs } from '@/models/rslangAPI';
 import { useDialogsStore } from '@/stores/dialogs';
 import { prompts } from '@/utils/labels';
 
-import FormCreateCst from '../DlgCreateCst/FormCreateCst';
 import TabArguments, { IArgumentsState } from './TabArguments';
 import TabTemplate, { ITemplateState } from './TabTemplate';
 

@@ -2,7 +2,12 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
+import { IconClose, IconFolderTree } from '@/components/Icons';
+import { CProps } from '@/components/props';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
+import Dropdown from '@/components/ui/Dropdown';
+import FlexColumn from '@/components/ui/FlexColumn';
+import MiniButton from '@/components/ui/MiniButton';
 import SearchBar from '@/components/ui/SearchBar';
 import useDropdown from '@/hooks/useDropdown';
 import { ILibraryItem, LibraryItemID, LibraryItemType } from '@/models/library';
@@ -10,11 +15,6 @@ import { matchLibraryItem } from '@/models/libraryAPI';
 import { APP_COLORS } from '@/styling/color';
 import { prefixes } from '@/utils/constants';
 
-import { IconClose, IconFolderTree } from '../Icons';
-import { CProps } from '../props';
-import Dropdown from '../ui/Dropdown';
-import FlexColumn from '../ui/FlexColumn';
-import MiniButton from '../ui/MiniButton';
 import SelectLocation from './SelectLocation';
 
 interface PickSchemaProps extends CProps.Styling {

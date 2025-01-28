@@ -9,10 +9,9 @@ import Select, {
   StylesConfig
 } from 'react-select';
 
+import { IconClose, IconDropArrow, IconDropArrowUp } from '@/components/Icons';
 import useWindowSize from '@/hooks/useWindowSize';
 import { APP_COLORS, SELECT_THEME } from '@/styling/color';
-
-import { IconClose, IconDropArrow, IconDropArrowUp } from '../Icons';
 
 function DropdownIndicator<Option, Group extends GroupBase<Option> = GroupBase<Option>>(
   props: DropdownIndicatorProps<Option, true, Group>

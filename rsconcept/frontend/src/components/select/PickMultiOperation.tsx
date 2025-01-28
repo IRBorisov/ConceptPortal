@@ -4,13 +4,12 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import { IconMoveDown, IconMoveUp, IconRemove } from '@/components/Icons';
+import { CProps } from '@/components/props';
 import SelectOperation from '@/components/select/SelectOperation';
 import DataTable, { createColumnHelper } from '@/components/ui/DataTable';
 import MiniButton from '@/components/ui/MiniButton';
 import NoData from '@/components/ui/NoData';
 import { IOperation, OperationID } from '@/models/oss';
-
-import { CProps } from '../props';
 
 interface PickMultiOperationProps extends CProps.Styling {
   rows?: number;

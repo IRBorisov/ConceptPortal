@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import PickConstituenta from '@/components/select/PickConstituenta';
 import SelectMultiGrammeme from '@/components/select/SelectMultiGrammeme';
+import SelectWordForm from '@/components/select/SelectWordForm';
 import Label from '@/components/ui/Label';
 import TextInput from '@/components/ui/TextInput';
 import { ReferenceType } from '@/models/language';
@@ -14,7 +15,6 @@ import { matchConstituenta } from '@/models/rsformAPI';
 import { prefixes } from '@/utils/constants';
 import { IGrammemeOption, SelectorGrammemes } from '@/utils/selectors';
 
-import SelectWordForm from '../../components/select/SelectWordForm';
 import { IReferenceInputState } from './DlgEditReference';
 
 interface TabEntityReferenceProps {

@@ -45,6 +45,7 @@ import useDropdown from '@/hooks/useDropdown';
 import { AccessPolicy, LocationHead } from '@/models/library';
 import { CstType } from '@/models/rsform';
 import { UserRole } from '@/models/user';
+import { OssTabID } from '@/pages/OssPage/OssEditContext';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { useRoleStore } from '@/stores/role';
@@ -52,7 +53,6 @@ import { EXTEOR_TRS_FILE } from '@/utils/constants';
 import { describeAccessMode, labelAccessMode, tooltips } from '@/utils/labels';
 import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 
-import { OssTabID } from '../OssPage/OssEditContext';
 import { useRSEdit } from './RSEditContext';
 
 function MenuRSTabs() {

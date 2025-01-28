@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 
-import { CProps } from '../props';
+import { CProps } from '@/components/props';
+
 import Label from './Label';
 
 interface TextInputProps extends CProps.Editor, CProps.Colors, CProps.Input {

@@ -1,13 +1,12 @@
 import React, { Suspense } from 'react';
 
+import { IconHelp } from '@/components/Icons';
+import { CProps } from '@/components/props';
+import Loader from '@/components/ui/Loader';
 import TextURL from '@/components/ui/TextURL';
 import Tooltip, { PlacesType } from '@/components/ui/Tooltip';
 import { HelpTopic } from '@/models/miscellaneous';
 import { usePreferencesStore } from '@/stores/preferences';
-
-import { IconHelp } from '../Icons';
-import { CProps } from '../props';
-import Loader from '../ui/Loader';
 
 const TopicPage = React.lazy(() => import('@/pages/ManualsPage/TopicPage'));
 

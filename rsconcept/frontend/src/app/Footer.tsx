@@ -1,8 +1,7 @@
 import clsx from 'clsx';
 
+import TextURL from '@/components/ui/TextURL';
 import { external_urls } from '@/utils/constants';
-
-import TextURL from '../components/ui/TextURL';
 
 function Footer() {
   return (

@@ -4,11 +4,10 @@ import clsx from 'clsx';
 
 import { useLabelUser } from '@/backend/users/useLabelUser';
 import { useUsers } from '@/backend/users/useUsers';
+import { CProps } from '@/components/props';
+import SelectSingle from '@/components/ui/SelectSingle';
 import { UserID } from '@/models/user';
 import { matchUser } from '@/models/userAPI';
-
-import { CProps } from '../props';
-import SelectSingle from '../ui/SelectSingle';
 
 interface SelectUserProps extends CProps.Styling {
   value?: UserID;
