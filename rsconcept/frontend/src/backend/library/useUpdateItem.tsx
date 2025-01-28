@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { DataCallback } from '@/backend/apiTransport';
 import { rsformsApi } from '@/backend/rsform/api';
 import { ILibraryItem } from '@/models/library';
 
@@ -13,7 +12,7 @@ export const useUpdateItem = () => {
     mutationFn: libraryApi.updateItem,
     onSuccess: (data: ILibraryItem) => {
       client
-        .cancelQueries({ queryKey: [libraryApi.libraryListKey] })
+        .cancelQueries({ queryKey: libraryApi.libraryListKey })
         .then(async () => {
           client.setQueryData(libraryApi.libraryListKey, (prev: ILibraryItem[] | undefined) =>
             prev?.map(item => (item.id === data.id ? data : item))
@@ -26,9 +25,6 @@ export const useUpdateItem = () => {
     }
   });
   return {
-    updateItem: (
-      data: ILibraryUpdateDTO, //
-      onSuccess?: DataCallback<ILibraryItem>
-    ) => mutation.mutate(data, { onSuccess })
+    updateItem: (data: ILibraryUpdateDTO) => mutation.mutate(data)
   };
 };

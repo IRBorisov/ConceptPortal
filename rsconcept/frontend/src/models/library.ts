@@ -48,6 +48,7 @@ export type VersionID = number;
  */
 export interface IVersionInfo {
   id: VersionID;
+  item: LibraryItemID;
   version: string;
   description: string;
   time_create: string;
@@ -56,7 +57,7 @@ export interface IVersionInfo {
 /**
  * Represents version data, intended to update version metadata in persistent storage.
  */
-export interface IVersionData extends Omit<IVersionInfo, 'id' | 'time_create'> {}
+export interface IVersionData extends Omit<IVersionInfo, 'id' | 'time_create' | 'item'> {}
 
 /**
  * Represents library item common data typical for all item types.

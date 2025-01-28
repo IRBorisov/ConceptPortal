@@ -10,12 +10,12 @@ export function useAuth() {
   } = useQuery({
     ...authApi.getAuthQueryOptions()
   });
-  return { user, isLoading, error };
+  return { user, isLoading, isAnonymous: user?.id === null || user === undefined, error };
 }
 
 export function useAuthSuspense() {
   const { data: user } = useSuspenseQuery({
     ...authApi.getAuthQueryOptions()
   });
-  return { user };
+  return { user, isAnonymous: user.id === null };
 }

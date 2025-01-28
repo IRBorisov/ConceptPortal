@@ -58,7 +58,7 @@ function NodeContextMenu({
     if (operation.operation_type !== OperationType.SYNTHESIS) {
       return false;
     }
-    if (!controller.schema || operation.result) {
+    if (operation.result) {
       return false;
     }
 

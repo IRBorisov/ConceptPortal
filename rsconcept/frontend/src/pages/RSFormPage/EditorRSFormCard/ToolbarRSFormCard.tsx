@@ -30,7 +30,7 @@ function ToolbarRSFormCard({ controller, onSubmit }: ToolbarRSFormCardProps) {
   const canSave = isModified && !isProcessing;
 
   const ossSelector = (() => {
-    if (!controller.schema || controller.schema?.item_type !== LibraryItemType.RSFORM) {
+    if (controller.schema.item_type !== LibraryItemType.RSFORM) {
       return null;
     }
     const schema = controller.schema as IRSForm;
@@ -59,10 +59,10 @@ function ToolbarRSFormCard({ controller, onSubmit }: ToolbarRSFormCardProps) {
         />
       ) : null}
       <MiniButton
-        titleHtml={tooltips.shareItem(controller.schema?.access_policy)}
+        titleHtml={tooltips.shareItem(controller.schema.access_policy)}
         icon={<IconShare size='1.25rem' className='icon-primary' />}
         onClick={sharePage}
-        disabled={controller.schema?.access_policy !== AccessPolicy.PUBLIC}
+        disabled={controller.schema.access_policy !== AccessPolicy.PUBLIC}
       />
       {controller.isMutable ? (
         <MiniButton

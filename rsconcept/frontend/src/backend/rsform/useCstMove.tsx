@@ -12,7 +12,7 @@ export const useCstMove = () => {
     mutationKey: [rsformsApi.baseKey, 'move-cst'],
     mutationFn: rsformsApi.cstMove,
     onSuccess: data => {
-      client.setQueryData([rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey], data);
+      client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);
       updateTimestamp(data.id);
       // TODO: invalidate OSS?
     }

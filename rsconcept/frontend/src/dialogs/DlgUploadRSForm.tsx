@@ -1,9 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { toast } from 'react-toastify';
 
-import { IRSFormUploadDTO } from '@/backend/rsform/api';
 import { useUploadTRS } from '@/backend/rsform/useUploadTRS';
 import Checkbox from '@/components/ui/Checkbox';
 import FileInput from '@/components/ui/FileInput';
@@ -26,13 +24,12 @@ function DlgUploadRSForm() {
     if (!file) {
       return;
     }
-    const data: IRSFormUploadDTO = {
+    upload({
       itemID: itemID,
       load_metadata: loadMetadata,
       file: file,
       fileName: file.name
-    };
-    upload(data, () => toast.success('Схема загружена из файла'));
+    });
   };
 
   const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {

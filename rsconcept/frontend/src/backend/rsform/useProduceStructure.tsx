@@ -14,7 +14,7 @@ export const useProduceStructure = () => {
     mutationKey: [rsformsApi.baseKey, 'produce-structure'],
     mutationFn: rsformsApi.produceStructure,
     onSuccess: data => {
-      client.setQueryData([rsformsApi.getRSFormQueryOptions({ itemID: data.schema.id }).queryKey], data.schema);
+      client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.schema.id }).queryKey, data.schema);
       updateTimestamp(data.schema.id);
       // TODO: invalidate OSS?
     }

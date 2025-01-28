@@ -21,7 +21,7 @@ function LoginPage() {
   const query = useQueryStrings();
   const userQuery = query.get('username');
 
-  const { user } = useAuth();
+  const { isAnonymous } = useAuth();
   const { login, isPending, error, reset } = useLogin();
 
   const [username, setUsername] = useState(userQuery || '');
@@ -44,7 +44,7 @@ function LoginPage() {
     }
   }
 
-  if (user) {
+  if (!isAnonymous) {
     return <ExpectedAnonymous />;
   }
   return (

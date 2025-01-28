@@ -2,7 +2,6 @@
 
 import clsx from 'clsx';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
 
 import { useCstUpdate } from '@/backend/rsform/useCstUpdate';
 import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
@@ -12,7 +11,6 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { globals } from '@/utils/constants';
-import { information } from '@/utils/labels';
 import { promptUnsaved } from '@/utils/utils';
 
 import { useRSEdit } from '../RSEditContext';
@@ -69,16 +67,13 @@ function EditorConstituenta() {
     showEditTerm({
       target: controller.activeCst,
       onSave: forms =>
-        cstUpdate(
-          {
-            itemID: controller.schema.id,
-            data: {
-              target: controller.activeCst!.id,
-              item_data: { term_forms: forms }
-            }
-          },
-          () => toast.success(information.changesSaved)
-        )
+        cstUpdate({
+          itemID: controller.schema.id,
+          data: {
+            target: controller.activeCst!.id,
+            item_data: { term_forms: forms }
+          }
+        })
     });
   }
 

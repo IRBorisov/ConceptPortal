@@ -12,14 +12,11 @@ export const useRestoreOrder = () => {
     mutationKey: [rsformsApi.baseKey, 'restore-order'],
     mutationFn: rsformsApi.restoreOrder,
     onSuccess: data => {
-      client.setQueryData([rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey], data);
+      client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);
       updateTimestamp(data.id);
     }
   });
   return {
-    restoreOrder: (
-      itemID: LibraryItemID, //
-      onSuccess?: () => void
-    ) => mutation.mutate(itemID, { onSuccess })
+    restoreOrder: (data: { itemID: LibraryItemID }) => mutation.mutate(data)
   };
 };

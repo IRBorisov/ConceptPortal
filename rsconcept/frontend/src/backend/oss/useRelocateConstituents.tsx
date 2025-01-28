@@ -11,17 +11,11 @@ export const useRelocateConstituents = () => {
     mutationKey: [ossApi.baseKey, 'relocate-constituents'],
     mutationFn: ossApi.relocateConstituents,
     onSuccess: async data => {
-      client.setQueryData([ossApi.getOssQueryOptions({ itemID: data.id }).queryKey], data);
+      client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.id }).queryKey, data);
       await client.invalidateQueries({ queryKey: [libraryApi.libraryListKey] });
     }
   });
   return {
-    relocateConstituents: (
-      data: {
-        itemID: LibraryItemID; //
-        data: ICstRelocateDTO;
-      },
-      onSuccess?: () => void
-    ) => mutation.mutate(data, { onSuccess })
+    relocateConstituents: (data: { itemID: LibraryItemID; data: ICstRelocateDTO }) => mutation.mutate(data)
   };
 };

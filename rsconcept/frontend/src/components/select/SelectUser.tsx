@@ -31,14 +31,13 @@ function SelectUser({
   const getUserLabel = useLabelUser();
 
   const items = filter ? users.filter(user => filter(user.id)) : users;
-  const options =
-    items?.map(user => ({
-      value: user.id,
-      label: getUserLabel(user.id)
-    })) ?? [];
+  const options = items.map(user => ({
+    value: user.id,
+    label: getUserLabel(user.id)
+  }));
 
   function filterLabel(option: { value: UserID | undefined; label: string }, inputValue: string) {
-    const user = items?.find(item => item.id === option.value);
+    const user = items.find(item => item.id === option.value);
     return !user ? false : matchUser(user, inputValue);
   }
 

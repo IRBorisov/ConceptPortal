@@ -90,7 +90,7 @@ export function prepareTooltip(text: string, hotkey?: string) {
  * Generates label for {@link IVersionInfo} of {@link IRSForm}.
  */
 export function labelVersion(schema?: IRSForm) {
-  const version = schema?.versions.find(ver => ver.id === schema.version);
+  const version = schema?.versions.find(ver => ver.id === schema?.version);
   return version ? version.version : 'актуальная';
 }
 
@@ -957,6 +957,8 @@ export const information = {
   cloneComplete: (alias: string) => `Копия создана: ${alias}`,
   noDataToExport: 'Нет данных для экспорта',
   substitutionsCorrect: 'Таблица отождествлений прошла проверку',
+  uploadSuccess: 'Схема загружена из файла',
+  inlineSynthesisComplete: 'Встраивание завершено',
 
   newLibraryItem: 'Схема успешно создана',
   addedConstituents: (count: number) => `Добавлены конституенты: ${count}`,
@@ -964,14 +966,13 @@ export const information = {
   newVersion: (version: string) => `Версия создана: ${version}`,
   newConstituent: (alias: string) => `Конституента добавлена: ${alias}`,
   newOperation: (alias: string) => `Операция добавлена: ${alias}`,
-  renameComplete: (oldAlias: string, newAlias: string) => `Переименование: ${oldAlias} -> ${newAlias}`,
 
   versionDestroyed: 'Версия удалена',
   itemDestroyed: 'Схема удалена',
   operationDestroyed: 'Операция удалена',
   operationExecuted: 'Операция выполнена',
   allOperationExecuted: 'Все операции выполнены',
-  constituentsDestroyed: (aliases: string) => `Конституенты удалены: ${aliases}`
+  constituentsDestroyed: (count: number) => `Конституенты удалены: ${count}`
 };
 
 /**

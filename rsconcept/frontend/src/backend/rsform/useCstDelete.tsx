@@ -13,7 +13,7 @@ export const useCstDelete = () => {
     mutationKey: [rsformsApi.baseKey, 'delete-multiple-cst'],
     mutationFn: rsformsApi.cstDelete,
     onSuccess: data => {
-      client.setQueryData([rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey], data);
+      client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);
       updateTimestamp(data.id);
       // TODO: invalidate OSS?
     }

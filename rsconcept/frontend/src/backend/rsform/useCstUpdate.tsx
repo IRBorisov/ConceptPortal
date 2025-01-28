@@ -1,9 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { DataCallback } from '@/backend/apiTransport';
 import { useUpdateTimestamp } from '@/backend/library/useUpdateTimestamp';
 import { LibraryItemID } from '@/models/library';
-import { IConstituentaMeta } from '@/models/rsform';
 
 import { ICstUpdateDTO, rsformsApi } from './api';
 
@@ -22,12 +20,6 @@ export const useCstUpdate = () => {
     }
   });
   return {
-    cstUpdate: (
-      data: {
-        itemID: LibraryItemID; //
-        data: ICstUpdateDTO;
-      },
-      onSuccess?: DataCallback<IConstituentaMeta>
-    ) => mutation.mutate(data, { onSuccess })
+    cstUpdate: (data: { itemID: LibraryItemID; data: ICstUpdateDTO }) => mutation.mutate(data)
   };
 };

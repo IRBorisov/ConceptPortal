@@ -11,6 +11,28 @@ export const useSetLocation = () => {
     mutationKey: [libraryApi.baseKey, 'set-location'],
     mutationFn: libraryApi.setLocation,
     onSuccess: (_, variables) => {
+      // const ossKey = ossApi.getOssQueryOptions({ itemID: variables.itemID }).queryKey;
+      // const ossData = client.getQueryData(ossKey);
+      // if (ossData) {
+      //   client.setQueryData(ossKey, { ...ossData, editors: variables.editors });
+      //   Promise.allSettled([
+      //     client.invalidateQueries({ queryKey: libraryApi.libraryListKey }),
+      //     ...ossData.items.map(item => {
+      //       if (!item.result) {
+      //         return;
+      //       }
+      //       const itemKey = rsformsApi.getRSFormQueryOptions({ itemID: item.result }).queryKey;
+      //       return client.invalidateQueries({ queryKey: itemKey });
+      //     })
+      //   ]).catch(console.error);
+      // } else {
+      //   const rsKey = rsformsApi.getRSFormQueryOptions({ itemID: variables.itemID }).queryKey;
+      //   client.setQueryData(rsKey, prev => (!prev ? undefined : { ...prev, editors: variables.editors }));
+      //   client.setQueryData(libraryApi.libraryListKey, (prev: ILibraryItem[] | undefined) =>
+      //     prev?.map(item => (item.id === variables.itemID ? { ...item, editors: variables.editors } : item))
+      //   );
+      // }
+
       client.setQueryData(libraryApi.libraryListKey, (prev: ILibraryItem[] | undefined) =>
         prev?.map(item => (item.id === variables.itemID ? { ...item, location: variables.location } : item))
       );

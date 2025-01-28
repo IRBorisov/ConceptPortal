@@ -16,16 +16,16 @@ import TableUsers from './TableUsers';
 
 export interface DlgEditEditorsProps {
   editors: UserID[];
-  setEditors: (newValue: UserID[]) => void;
+  onChangeEditors: (newValue: UserID[]) => void;
 }
 
 function DlgEditEditors() {
-  const { editors, setEditors } = useDialogsStore(state => state.props as DlgEditEditorsProps);
+  const { editors, onChangeEditors } = useDialogsStore(state => state.props as DlgEditEditorsProps);
   const [selected, setSelected] = useState<UserID[]>(editors);
   const { users } = useUsers();
 
   function handleSubmit() {
-    setEditors(selected);
+    onChangeEditors(selected);
   }
 
   function onDeleteEditor(target: UserID) {

@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { axiosInstance } from '@/backend/axiosInstance';
+import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
 import { ILibraryItem, LibraryItemID } from '@/models/library';
 import {
@@ -12,6 +12,7 @@ import {
   OperationType
 } from '@/models/oss';
 import { ConstituentaID, IConstituentaReference, ITargetCst } from '@/models/rsform';
+import { information } from '@/utils/labels';
 
 /**
  * Represents {@link IOperation} data, used in creation process.
@@ -101,48 +102,90 @@ export const ossApi = {
       queryFn: meta =>
         !itemID
           ? undefined
-          : axiosInstance
-              .get<IOperationSchemaData>(`/api/oss/${itemID}/details`, {
-                signal: meta.signal
-              })
-              .then(response => response.data)
+          : axiosGet<IOperationSchemaData>({
+              endpoint: `/api/oss/${itemID}/details`,
+              options: { signal: meta.signal }
+            })
     });
   },
 
-  updatePositions: (data: { itemID: LibraryItemID; positions: IOperationPosition[] }) =>
-    axiosInstance //
-      .patch(`/api/oss/${data.itemID}/update-positions`, { positions: data.positions }),
-  operationCreate: (data: { itemID: LibraryItemID; data: IOperationCreateDTO }) =>
-    axiosInstance //
-      .post<IOperationCreatedResponse>(`/api/oss/${data.itemID}/create-operation`, data.data)
-      .then(response => response.data),
-  operationDelete: (data: { itemID: LibraryItemID; data: IOperationDeleteDTO }) =>
-    axiosInstance //
-      .patch<IOperationSchemaData>(`/api/oss/${data.itemID}/delete-operation`, data.data)
-      .then(response => response.data),
-  inputCreate: (data: { itemID: LibraryItemID; data: ITargetOperation }) =>
-    axiosInstance //
-      .patch<IInputCreatedResponse>(`/api/oss/${data.itemID}/create-input`, data.data)
-      .then(response => response.data),
-  inputUpdate: (data: { itemID: LibraryItemID; data: IInputUpdateDTO }) =>
-    axiosInstance //
-      .patch<IOperationSchemaData>(`/api/oss/${data.itemID}/set-input`, data.data)
-      .then(response => response.data),
-  operationUpdate: (data: { itemID: LibraryItemID; data: IOperationUpdateDTO }) =>
-    axiosInstance //
-      .patch<IOperationSchemaData>(`/api/oss/${data.itemID}/update-operation`, data.data)
-      .then(response => response.data),
-  operationExecute: (data: { itemID: LibraryItemID; data: ITargetOperation }) =>
-    axiosInstance //
-      .post<IOperationSchemaData>(`/api/oss/${data.itemID}/execute-operation`, data.data)
-      .then(response => response.data),
+  updatePositions: ({
+    itemID,
+    positions,
+    isSilent
+  }: {
+    itemID: LibraryItemID;
+    positions: IOperationPosition[];
+    isSilent?: boolean;
+  }) =>
+    axiosPatch({
+      endpoint: `/api/oss/${itemID}/update-positions`,
+      request: {
+        data: { positions: positions },
+        successMessage: isSilent ? undefined : information.changesSaved
+      }
+    }),
 
-  relocateConstituents: (data: { itemID: LibraryItemID; data: ICstRelocateDTO }) =>
-    axiosInstance //
-      .post<IOperationSchemaData>(`/api/oss/${data.itemID}/relocate-constituents`, data.data)
-      .then(response => response.data),
+  operationCreate: ({ itemID, data }: { itemID: LibraryItemID; data: IOperationCreateDTO }) =>
+    axiosPost<IOperationCreateDTO, IOperationCreatedResponse>({
+      endpoint: `/api/oss/${itemID}/create-operation`,
+      request: {
+        data: data,
+        successMessage: response => information.newOperation(response.new_operation.alias)
+      }
+    }),
+  operationDelete: ({ itemID, data }: { itemID: LibraryItemID; data: IOperationDeleteDTO }) =>
+    axiosDelete<IOperationDeleteDTO, IOperationSchemaData>({
+      endpoint: `/api/oss/${itemID}/delete-operation`,
+      request: {
+        data: data,
+        successMessage: information.operationDestroyed
+      }
+    }),
+  inputCreate: ({ itemID, data }: { itemID: LibraryItemID; data: ITargetOperation }) =>
+    axiosPatch<ITargetOperation, IInputCreatedResponse>({
+      endpoint: `/api/oss/${itemID}/create-input`,
+      request: {
+        data: data,
+        successMessage: information.newLibraryItem
+      }
+    }),
+  inputUpdate: ({ itemID, data }: { itemID: LibraryItemID; data: IInputUpdateDTO }) =>
+    axiosPatch<IInputUpdateDTO, IOperationSchemaData>({
+      endpoint: `/api/oss/${itemID}/set-input`,
+      request: {
+        data: data,
+        successMessage: information.changesSaved
+      }
+    }),
+  operationUpdate: ({ itemID, data }: { itemID: LibraryItemID; data: IOperationUpdateDTO }) =>
+    axiosPatch<IOperationUpdateDTO, IOperationSchemaData>({
+      endpoint: `/api/oss/${itemID}/update-operation`,
+      request: {
+        data: data,
+        successMessage: information.changesSaved
+      }
+    }),
+  operationExecute: ({ itemID, data }: { itemID: LibraryItemID; data: ITargetOperation }) =>
+    axiosPost<ITargetOperation, IOperationSchemaData>({
+      endpoint: `/api/oss/${itemID}/execute-operation`,
+      request: {
+        data: data,
+        successMessage: information.operationExecuted
+      }
+    }),
+
+  relocateConstituents: ({ itemID, data }: { itemID: LibraryItemID; data: ICstRelocateDTO }) =>
+    axiosPost<ICstRelocateDTO, IOperationSchemaData>({
+      endpoint: `/api/oss/${itemID}/relocate-constituents`,
+      request: {
+        data: data,
+        successMessage: information.changesSaved
+      }
+    }),
   getPredecessor: (data: ITargetCst) =>
-    axiosInstance //
-      .post<IConstituentaReference>(`/api/oss/get-predecessor`, data)
-      .then(response => response.data)
+    axiosPost<ITargetCst, IConstituentaReference>({
+      endpoint: '/api/oss/get-predecessor',
+      request: { data: data }
+    })
 };

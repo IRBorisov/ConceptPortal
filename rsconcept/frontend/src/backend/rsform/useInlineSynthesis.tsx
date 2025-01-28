@@ -14,7 +14,7 @@ export const useInlineSynthesis = () => {
     mutationKey: [rsformsApi.baseKey, 'inline-synthesis'],
     mutationFn: rsformsApi.inlineSynthesis,
     onSuccess: data => {
-      client.setQueryData([rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey], data);
+      client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);
       updateTimestamp(data.id);
       // TODO: invalidate OSS?
     }

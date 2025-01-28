@@ -1,11 +1,10 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
-import { useAuth } from '@/backend/auth/useAuth';
+import { useAuthSuspense } from '@/backend/auth/useAuth';
 import { useDeleteItem } from '@/backend/library/useDeleteItem';
 import { ICstCreateDTO } from '@/backend/rsform/api';
 import { useCstCreate } from '@/backend/rsform/useCstCreate';
@@ -21,7 +20,7 @@ import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { useRoleStore } from '@/stores/role';
 import { PARAMETER, prefixes } from '@/utils/constants';
-import { information, prompts } from '@/utils/labels';
+import { prompts } from '@/utils/labels';
 import { promptUnsaved } from '@/utils/utils';
 
 import { OssTabID } from '../OssPage/OssEditContext';
@@ -37,6 +36,7 @@ export interface IRSEditContext extends ILibraryItemEditor {
   schema: IRSForm;
   selected: ConstituentaID[];
   activeCst?: IConstituenta;
+  activeVersion?: VersionID;
 
   isOwned: boolean;
   isArchive: boolean;
@@ -45,6 +45,7 @@ export interface IRSEditContext extends ILibraryItemEditor {
   isAttachedToOSS: boolean;
   canDeleteSelected: boolean;
 
+  navigateVersion: (versionID: VersionID | undefined) => void;
   navigateRSForm: ({ tab, activeID }: { tab: RSTabID; activeID?: ConstituentaID }) => void;
   navigateCst: (cstID: ConstituentaID) => void;
   navigateOss: (target: LibraryItemID, newTab?: boolean) => void;
@@ -77,21 +78,26 @@ export const useRSEdit = () => {
 interface RSEditStateProps {
   itemID: LibraryItemID;
   activeTab: RSTabID;
-  versionID?: VersionID;
+  activeVersion?: VersionID;
 }
 
-export const RSEditState = ({ itemID, versionID, activeTab, children }: React.PropsWithChildren<RSEditStateProps>) => {
+export const RSEditState = ({
+  itemID,
+  activeVersion,
+  activeTab,
+  children
+}: React.PropsWithChildren<RSEditStateProps>) => {
   const router = useConceptNavigation();
-  const { user } = useAuth();
   const adminMode = usePreferencesStore(state => state.adminMode);
   const role = useRoleStore(state => state.role);
   const adjustRole = useRoleStore(state => state.adjustRole);
 
-  const { schema } = useRSFormSuspense({ itemID: itemID, version: versionID });
+  const { user } = useAuthSuspense();
+  const { schema } = useRSFormSuspense({ itemID: itemID, version: activeVersion });
   const { isModified } = useModificationStore();
 
-  const isOwned = user?.id === schema?.owner || false;
-  const isArchive = !!versionID;
+  const isOwned = !!user.id && user.id === schema.owner;
+  const isArchive = !!activeVersion;
   const isMutable = role > UserRole.READER && !schema.read_only;
   const isContentEditable = isMutable && !isArchive;
   const isAttachedToOSS = schema.oss.length > 0;
@@ -114,12 +120,16 @@ export const RSEditState = ({ itemID, versionID, activeTab, children }: React.Pr
     () =>
       adjustRole({
         isOwner: isOwned,
-        isEditor: (user && schema?.editors.includes(user?.id)) ?? false,
-        isStaff: user?.is_staff ?? false,
+        isEditor: !!user.id && schema.editors.includes(user.id),
+        isStaff: user.is_staff,
         adminMode: adminMode
       }),
     [schema, adjustRole, isOwned, user, adminMode]
   );
+
+  function navigateVersion(versionID: VersionID | undefined) {
+    router.push(urls.schema(schema.id, versionID));
+  }
 
   function navigateOss(target: LibraryItemID, newTab?: boolean) {
     router.push(urls.oss(target), newTab);
@@ -133,7 +143,7 @@ export const RSEditState = ({ itemID, versionID, activeTab, children }: React.Pr
       id: schema.id,
       tab: tab,
       active: activeID,
-      version: versionID
+      version: activeVersion
     };
     const url = urls.schema_props(data);
     if (activeID) {
@@ -162,7 +172,6 @@ export const RSEditState = ({ itemID, versionID, activeTab, children }: React.Pr
     }
     const ossID = schema.oss.length > 0 ? schema.oss[0].id : undefined;
     deleteItem(schema.id, () => {
-      toast.success(information.itemDestroyed);
       if (ossID) {
         router.push(urls.oss(ossID, OssTabID.GRAPH));
       } else {
@@ -174,7 +183,6 @@ export const RSEditState = ({ itemID, versionID, activeTab, children }: React.Pr
   function handleCreateCst(data: ICstCreateDTO) {
     data.alias = data.alias || generateAlias(data.cst_type, schema);
     cstCreate({ itemID: itemID, data }, newCst => {
-      toast.success(information.newConstituent(newCst.alias));
       setSelected([newCst.id]);
       navigateRSForm({ tab: activeTab, activeID: newCst.id });
       if (activeTab === RSTabID.CST_LIST) {
@@ -197,12 +205,10 @@ export const RSEditState = ({ itemID, versionID, activeTab, children }: React.Pr
       items: deleted
     };
 
-    const deletedNames = deleted.map(id => schema.cstByID.get(id)!.alias).join(', ');
     const isEmpty = deleted.length === schema.items.length;
     const nextActive = isEmpty ? undefined : getNextActiveOnDelete(activeCst?.id, schema.items, deleted);
 
     cstDelete({ itemID: itemID, data }, () => {
-      toast.success(information.constituentsDestroyed(deletedNames));
       setSelected(nextActive ? [nextActive] : []);
       if (!nextActive) {
         navigateRSForm({ tab: RSTabID.CST_LIST });
@@ -314,6 +320,7 @@ export const RSEditState = ({ itemID, versionID, activeTab, children }: React.Pr
         schema,
         selected,
         activeCst,
+        activeVersion,
 
         isOwned,
         isArchive,
@@ -322,11 +329,12 @@ export const RSEditState = ({ itemID, versionID, activeTab, children }: React.Pr
         isAttachedToOSS,
         canDeleteSelected,
 
+        navigateVersion,
         navigateRSForm,
         navigateCst,
+        navigateOss,
 
         deleteSchema,
-        navigateOss,
 
         setSelected,
         select: (target: ConstituentaID) => setSelected(prev => [...prev, target]),

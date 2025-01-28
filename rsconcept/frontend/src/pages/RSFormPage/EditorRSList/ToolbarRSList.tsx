@@ -33,7 +33,7 @@ function ToolbarRSList() {
       position='cc-tab-tools right-4 translate-x-0 md:right-1/2 md:translate-x-1/2'
       className='cc-icons cc-animate-position items-start outline-none'
     >
-      {controller.schema && controller.schema?.oss.length > 0 ? (
+      {controller.schema.oss.length > 0 ? (
         <MiniSelectorOSS
           items={controller.schema.oss}
           onSelect={(event, value) => controller.navigateOss(value.id, event.ctrlKey || event.metaKey)}
@@ -51,7 +51,7 @@ function ToolbarRSList() {
         disabled={
           isProcessing ||
           controller.selected.length === 0 ||
-          (controller.schema && controller.selected.length === controller.schema.items.length)
+          controller.selected.length === controller.schema.items.length
         }
         onClick={controller.moveUp}
       />
@@ -61,7 +61,7 @@ function ToolbarRSList() {
         disabled={
           isProcessing ||
           controller.selected.length === 0 ||
-          (controller.schema && controller.selected.length === controller.schema.items.length)
+          controller.selected.length === controller.schema.items.length
         }
         onClick={controller.moveDown}
       />

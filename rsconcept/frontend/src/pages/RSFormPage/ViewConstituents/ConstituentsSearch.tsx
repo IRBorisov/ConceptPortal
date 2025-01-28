@@ -13,7 +13,7 @@ import { matchConstituenta } from '@/models/rsformAPI';
 import { useCstSearchStore } from '@/stores/cstSearch';
 
 interface ConstituentsSearchProps {
-  schema?: IRSForm;
+  schema: IRSForm;
   dense?: boolean;
   activeID?: ConstituentaID;
   activeExpression: string;
@@ -31,7 +31,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, dense, setFilt
   const toggleInherited = useCstSearchStore(state => state.toggleInherited);
 
   useEffect(() => {
-    if (!schema || schema.items.length === 0) {
+    if (schema.items.length === 0) {
       setFiltered([]);
       return;
     }
@@ -53,7 +53,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, dense, setFilt
     setFiltered,
     filterSource,
     activeExpression,
-    schema?.items,
+    schema.items,
     schema,
     filterMatch,
     activeID,
@@ -71,7 +71,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, dense, setFilt
       />
       <SelectMatchMode value={filterMatch} onChange={newValue => setMatch(newValue)} dense={dense} />
       <SelectGraphFilter value={filterSource} onChange={newValue => setSource(newValue)} dense={dense} />
-      {schema && schema?.stats.count_inherited > 0 ? (
+      {schema.stats.count_inherited > 0 ? (
         <MiniButton
           noHover
           titleHtml={`Наследованные: <b>${includeInherited ? 'отображать' : 'скрывать'}</b>`}

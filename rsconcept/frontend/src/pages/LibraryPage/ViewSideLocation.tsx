@@ -23,7 +23,7 @@ interface ViewSideLocationProps {
 }
 
 function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocationProps) {
-  const { user } = useAuth();
+  const { user, isAnonymous } = useAuth();
   const { items } = useLibrary();
   const windowSize = useWindowSize();
 
@@ -34,7 +34,7 @@ function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocationProps
   const toggleSubfolders = useLibrarySearchStore(state => state.toggleSubfolders);
 
   const canRename = (() => {
-    if (location.length <= 3 || !user) {
+    if (location.length <= 3 || isAnonymous || !user) {
       return false;
     }
     if (user.is_staff) {

@@ -14,7 +14,7 @@ export const useOperationCreate = () => {
     mutationKey: [ossApi.baseKey, 'operation-create'],
     mutationFn: ossApi.operationCreate,
     onSuccess: data => {
-      client.setQueryData([ossApi.getOssQueryOptions({ itemID: data.oss.id }).queryKey], data.oss);
+      client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.oss.id }).queryKey, data.oss);
       updateTimestamp(data.oss.id);
     }
   });

@@ -2,7 +2,6 @@
 
 import clsx from 'clsx';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
@@ -27,7 +26,6 @@ import { AccessPolicy, LibraryItemType, LocationHead } from '@/models/library';
 import { combineLocation, validateLocation } from '@/models/libraryAPI';
 import { useLibrarySearchStore } from '@/stores/librarySearch';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
-import { information } from '@/utils/labels';
 
 function FormCreateItem() {
   const router = useConceptNavigation();
@@ -85,7 +83,6 @@ function FormCreateItem() {
     };
     setSearchLocation(location);
     createItem(data, newItem => {
-      toast.success(information.newLibraryItem);
       if (itemType == LibraryItemType.RSFORM) {
         router.push(urls.schema(newItem.id));
       } else {

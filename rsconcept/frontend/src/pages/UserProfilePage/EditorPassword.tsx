@@ -13,7 +13,7 @@ import InfoError, { ErrorData } from '@/components/info/InfoError';
 import FlexColumn from '@/components/ui/FlexColumn';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
-import { errors, information } from '@/utils/labels';
+import { errors } from '@/utils/labels';
 
 function EditorPassword() {
   const router = useConceptNavigation();
@@ -38,10 +38,7 @@ function EditorPassword() {
       old_password: oldPassword,
       new_password: newPassword
     };
-    changePassword(data, () => {
-      toast.success(information.changesSaved);
-      router.push(urls.login);
-    });
+    changePassword(data, () => router.push(urls.login));
   }
 
   useEffect(() => {

@@ -26,7 +26,7 @@ function EditorRSList() {
   const controller = useRSEdit();
   const isProcessing = useIsProcessingRSForm();
 
-  const [filtered, setFiltered] = useState<IConstituenta[]>(controller.schema?.items ?? []);
+  const [filtered, setFiltered] = useState<IConstituenta[]>(controller.schema.items);
   const [filterText, setFilterText] = useState('');
 
   useEffect(() => {
@@ -42,17 +42,17 @@ function EditorRSList() {
   }, [filtered, setRowSelection, controller.selected]);
 
   useEffect(() => {
-    if (!controller.schema || controller.schema.items.length === 0) {
+    if (controller.schema.items.length === 0) {
       setFiltered([]);
     } else if (filterText) {
       setFiltered(controller.schema.items.filter(cst => matchConstituenta(cst, filterText, CstMatchMode.ALL)));
     } else {
       setFiltered(controller.schema.items);
     }
-  }, [filterText, controller.schema?.items, controller.schema]);
+  }, [filterText, controller.schema.items]);
 
   function handleDownloadCSV() {
-    if (!controller.schema || filtered.length === 0) {
+    if (filtered.length === 0) {
       toast.error(information.noDataToExport);
       return;
     }
@@ -65,21 +65,17 @@ function EditorRSList() {
   }
 
   function handleRowSelection(updater: React.SetStateAction<RowSelectionState>) {
-    if (!controller.schema) {
-      controller.deselectAll();
-    } else {
-      const newRowSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
-      const newSelection: ConstituentaID[] = [];
-      filtered.forEach((cst, index) => {
-        if (newRowSelection[String(index)] === true) {
-          newSelection.push(cst.id);
-        }
-      });
-      controller.setSelected(prev => [
-        ...prev.filter(cst_id => !filtered.find(cst => cst.id === cst_id)),
-        ...newSelection
-      ]);
-    }
+    const newRowSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
+    const newSelection: ConstituentaID[] = [];
+    filtered.forEach((cst, index) => {
+      if (newRowSelection[String(index)] === true) {
+        newSelection.push(cst.id);
+      }
+    });
+    controller.setSelected(prev => [
+      ...prev.filter(cst_id => !filtered.find(cst => cst.id === cst_id)),
+      ...newSelection
+    ]);
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
@@ -142,7 +138,7 @@ function EditorRSList() {
         {controller.isContentEditable ? (
           <div className='flex items-center border-b'>
             <div className='px-2'>
-              Выбор {controller.selected.length} из {controller.schema?.stats?.count_all ?? 0}
+              Выбор {controller.selected.length} из {controller.schema.stats?.count_all}
             </div>
             <SearchBar
               id='constituents_search'

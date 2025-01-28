@@ -28,15 +28,13 @@ function DlgRenameCst() {
   const [cstData, updateData] = usePartialUpdate(initial);
 
   useEffect(() => {
-    if (schema && initial && cstData.cst_type !== initial.cst_type) {
+    if (initial && cstData.cst_type !== initial.cst_type) {
       updateData({ alias: generateAlias(cstData.cst_type, schema) });
     }
   }, [initial, cstData.cst_type, updateData, schema]);
 
   useEffect(() => {
-    setValidated(
-      !!schema && cstData.alias !== initial.alias && validateNewAlias(cstData.alias, cstData.cst_type, schema)
-    );
+    setValidated(cstData.alias !== initial.alias && validateNewAlias(cstData.alias, cstData.cst_type, schema));
   }, [cstData.cst_type, cstData.alias, initial, schema]);
 
   return (

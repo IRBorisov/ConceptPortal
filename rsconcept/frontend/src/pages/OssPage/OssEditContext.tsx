@@ -1,11 +1,10 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
-import { useAuth } from '@/backend/auth/useAuth';
+import { useAuthSuspense } from '@/backend/auth/useAuth';
 import { useDeleteItem } from '@/backend/library/useDeleteItem';
 import { useInputUpdate } from '@/backend/oss/useInputUpdate';
 import { useOperationCreate } from '@/backend/oss/useOperationCreate';
@@ -22,7 +21,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { useRoleStore } from '@/stores/role';
 import { PARAMETER } from '@/utils/constants';
-import { information, prompts } from '@/utils/labels';
+import { prompts } from '@/utils/labels';
 
 import { RSTabID } from '../RSFormPage/RSEditContext';
 
@@ -79,14 +78,15 @@ interface OssEditStateProps {
 
 export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEditStateProps>) => {
   const router = useConceptNavigation();
-  const { user } = useAuth();
   const adminMode = usePreferencesStore(state => state.adminMode);
 
   const role = useRoleStore(state => state.role);
   const adjustRole = useRoleStore(state => state.adjustRole);
+
+  const { user } = useAuthSuspense();
   const { schema } = useOssSuspense({ itemID: itemID });
 
-  const isOwned = user?.id === schema.owner || false;
+  const isOwned = !!user.id && user.id === schema.owner;
 
   const isMutable = role > UserRole.READER && !schema.read_only;
 
@@ -112,8 +112,8 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     () =>
       adjustRole({
         isOwner: isOwned,
-        isEditor: (user && schema.editors.includes(user?.id)) ?? false,
-        isStaff: user?.is_staff ?? false,
+        isEditor: !!user.id && schema.editors.includes(user.id),
+        isStaff: user.is_staff,
         adminMode: adminMode
       }),
     [schema, adjustRole, isOwned, user, adminMode]
@@ -139,13 +139,10 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   }
 
   function deleteSchema() {
-    if (!schema || !window.confirm(prompts.deleteOSS)) {
+    if (!window.confirm(prompts.deleteOSS)) {
       return;
     }
-    deleteItem(schema.id, () => {
-      toast.success(information.itemDestroyed);
-      router.push(urls.library);
-    });
+    deleteItem(schema.id, () => router.push(urls.library));
   }
 
   function promptCreateOperation({ defaultX, defaultY, inputs, positions, callback }: ICreateOperationPrompt) {
@@ -160,7 +157,6 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
         data.item_data.position_x = target.x;
         data.item_data.position_y = target.y;
         operationCreate({ itemID: schema.id, data }, operation => {
-          toast.success(information.newOperation(operation.alias));
           if (callback) {
             setTimeout(() => callback(operation.id), PARAMETER.refreshTimeout);
           }
@@ -191,7 +187,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
       target: operation,
       onSubmit: data => {
         data.positions = positions;
-        operationUpdate({ itemID: schema.id, data }, () => toast.success(information.changesSaved));
+        operationUpdate({ itemID: schema.id, data });
       }
     });
   }
@@ -204,18 +200,15 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     showDeleteOperation({
       target: operation,
       onSubmit: (targetID, keepConstituents, deleteSchema) => {
-        operationDelete(
-          {
-            itemID: schema.id,
-            data: {
-              target: targetID,
-              positions: positions,
-              keep_constituents: keepConstituents,
-              delete_schema: deleteSchema
-            }
-          },
-          () => toast.success(information.operationDestroyed)
-        );
+        operationDelete({
+          itemID: schema.id,
+          data: {
+            target: targetID,
+            positions: positions,
+            keep_constituents: keepConstituents,
+            delete_schema: deleteSchema
+          }
+        });
       }
     });
   }
@@ -229,17 +222,14 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
       oss: schema,
       target: operation,
       onSubmit: (target, newInput) => {
-        inputUpdate(
-          {
-            itemID: schema.id,
-            data: {
-              target: target,
-              positions: positions,
-              input: newInput ?? null
-            }
-          },
-          () => toast.success(information.changesSaved)
-        );
+        inputUpdate({
+          itemID: schema.id,
+          data: {
+            target: target,
+            positions: positions,
+            input: newInput ?? null
+          }
+        });
       }
     });
   }
@@ -256,14 +246,15 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
             return operation.position_x === item.position_x && operation.position_y === item.position_y;
           })
         ) {
-          relocateConstituents({ itemID: schema.id, data }, () => toast.success(information.changesSaved));
+          relocateConstituents({ itemID: schema.id, data });
         } else {
           updatePositions(
             {
+              isSilent: true,
               itemID: schema.id, //
               positions: positions
             },
-            () => relocateConstituents({ itemID: schema.id, data }, () => toast.success(information.changesSaved))
+            () => relocateConstituents({ itemID: schema.id, data })
           );
         }
       }

@@ -72,7 +72,7 @@ function ToolbarConstituenta({
       position='cc-tab-tools right-1/2 translate-x-1/2 xs:right-4 xs:translate-x-0 md:right-1/2 md:translate-x-1/2'
       className='cc-icons cc-animate-position outline-none cc-blur px-1 rounded-b-2xl'
     >
-      {controller.schema && controller.schema?.oss.length > 0 ? (
+      {controller.schema.oss.length > 0 ? (
         <MiniSelectorOSS
           items={controller.schema.oss}
           onSelect={(event, value) => controller.navigateOss(value.id, event.ctrlKey || event.metaKey)}
@@ -131,13 +131,13 @@ function ToolbarConstituenta({
           <MiniButton
             titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
             icon={<IconMoveUp size='1.25rem' className='icon-primary' />}
-            disabled={disabled || isModified || (controller.schema && controller.schema?.items.length < 2)}
+            disabled={disabled || isModified || controller.schema.items.length < 2}
             onClick={controller.moveUp}
           />
           <MiniButton
             titleHtml={prepareTooltip('Переместить вниз', 'Alt + вниз')}
             icon={<IconMoveDown size='1.25rem' className='icon-primary' />}
-            disabled={disabled || isModified || (controller.schema && controller.schema?.items.length < 2)}
+            disabled={disabled || isModified || controller.schema.items.length < 2}
             onClick={controller.moveDown}
           />
         </>

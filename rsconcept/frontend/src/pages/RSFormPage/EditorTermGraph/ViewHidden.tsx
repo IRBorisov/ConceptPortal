@@ -18,9 +18,9 @@ import { globals, PARAMETER, prefixes } from '@/utils/constants';
 import { useRSEdit } from '../RSEditContext';
 
 interface ViewHiddenProps {
+  schema: IRSForm;
   items: ConstituentaID[];
   selected: ConstituentaID[];
-  schema?: IRSForm;
   coloringScheme: GraphColoring;
 
   toggleSelection: (cstID: ConstituentaID) => void;
@@ -45,7 +45,7 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
     }
   }
 
-  if (!schema || items.length <= 0) {
+  if (items.length <= 0) {
     return null;
   }
   return (

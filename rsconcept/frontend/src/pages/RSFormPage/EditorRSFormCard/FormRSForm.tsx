@@ -33,11 +33,11 @@ function FormRSForm({ id }: FormRSFormProps) {
   const { isModified, setIsModified } = useModificationStore();
   const isProcessing = useIsProcessingRSForm();
 
-  const [title, setTitle] = useState(schema?.title ?? '');
-  const [alias, setAlias] = useState(schema?.alias ?? '');
-  const [comment, setComment] = useState(schema?.comment ?? '');
-  const [visible, setVisible] = useState(schema?.visible ?? false);
-  const [readOnly, setReadOnly] = useState(schema?.read_only ?? false);
+  const [title, setTitle] = useState(schema.title);
+  const [alias, setAlias] = useState(schema.alias);
+  const [comment, setComment] = useState(schema.comment);
+  const [visible, setVisible] = useState(schema.visible);
+  const [readOnly, setReadOnly] = useState(schema.read_only);
 
   function handleSelectVersion(version?: VersionID) {
     router.push(urls.schema(schema.id, version));
@@ -54,10 +54,6 @@ function FormRSForm({ id }: FormRSFormProps) {
   }, [schema]);
 
   useEffect(() => {
-    if (!schema) {
-      setIsModified(false);
-      return;
-    }
     setIsModified(
       schema.title !== title ||
         schema.alias !== alias ||
@@ -67,12 +63,11 @@ function FormRSForm({ id }: FormRSFormProps) {
     );
     return () => setIsModified(false);
   }, [
-    schema,
-    schema?.title,
-    schema?.alias,
-    schema?.comment,
-    schema?.visible,
-    schema?.read_only,
+    schema.title,
+    schema.alias,
+    schema.comment,
+    schema.visible,
+    schema.read_only,
     title,
     alias,
     comment,
@@ -122,7 +117,7 @@ function FormRSForm({ id }: FormRSFormProps) {
           onChange={event => setAlias(event.target.value)}
         />
         <div className='flex flex-col'>
-          <ToolbarVersioning blockReload={schema && schema?.oss.length > 0} />
+          <ToolbarVersioning blockReload={schema.oss.length > 0} />
           <ToolbarItemAccess
             visible={visible}
             toggleVisible={() => setVisible(prev => !prev)}
@@ -134,8 +129,8 @@ function FormRSForm({ id }: FormRSFormProps) {
           <SelectVersion
             id='schema_version'
             className='select-none'
-            value={schema?.version} //
-            items={schema?.versions}
+            value={schema.version} //
+            items={schema.versions}
             onSelectValue={handleSelectVersion}
           />
         </div>

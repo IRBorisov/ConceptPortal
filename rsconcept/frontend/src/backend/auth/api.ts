@@ -1,8 +1,10 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { axiosInstance } from '@/backend/axiosInstance';
 import { DELAYS } from '@/backend/configuration';
 import { ICurrentUser } from '@/models/user';
+import { information } from '@/utils/labels';
+
+import { axiosGet, axiosPost } from '../apiTransport';
 
 /**
  * Represents login data, used to authenticate users.
@@ -53,19 +55,41 @@ export const authApi = {
       queryKey: [authApi.baseKey, 'user'],
       staleTime: DELAYS.staleLong,
       queryFn: meta =>
-        axiosInstance
-          .get<ICurrentUser>('/users/api/auth', {
-            signal: meta.signal
-          })
-          .then(response => (response.data.id === null ? null : response.data)),
-      placeholderData: null
+        axiosGet<ICurrentUser>({
+          endpoint: '/users/api/auth',
+          options: { signal: meta.signal }
+        })
     });
   },
 
-  logout: () => axiosInstance.post('/users/api/logout'),
-  login: (data: IUserLoginDTO) => axiosInstance.post('/users/api/login', data),
-  changePassword: (data: IChangePasswordDTO) => axiosInstance.post('/users/api/change-password', data),
-  requestPasswordReset: (data: IRequestPasswordDTO) => axiosInstance.post('/users/api/password-reset', data),
-  validatePasswordToken: (data: IPasswordTokenDTO) => axiosInstance.post('/users/api/password-reset/validate', data),
-  resetPassword: (data: IResetPasswordDTO) => axiosInstance.post('/users/api/password-reset/confirm', data)
+  logout: () => axiosPost({ endpoint: '/users/api/logout' }),
+
+  login: (data: IUserLoginDTO) =>
+    axiosPost({
+      endpoint: '/users/api/login',
+      request: { data: data }
+    }),
+  changePassword: (data: IChangePasswordDTO) =>
+    axiosPost({
+      endpoint: '/users/api/change-password',
+      request: {
+        data: data,
+        successMessage: information.changesSaved
+      }
+    }),
+  requestPasswordReset: (data: IRequestPasswordDTO) =>
+    axiosPost({
+      endpoint: '/users/api/password-reset',
+      request: { data: data }
+    }),
+  validatePasswordToken: (data: IPasswordTokenDTO) =>
+    axiosPost({
+      endpoint: '/users/api/password-reset/validate',
+      request: { data: data }
+    }),
+  resetPassword: (data: IResetPasswordDTO) =>
+    axiosPost({
+      endpoint: '/users/api/password-reset/confirm',
+      request: { data: data }
+    })
 };

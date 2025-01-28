@@ -10,9 +10,9 @@ interface UserButtonProps {
 }
 
 function UserButton({ onLogin, onClickUser }: UserButtonProps) {
-  const { user } = useAuthSuspense();
+  const { user, isAnonymous } = useAuthSuspense();
   const adminMode = usePreferencesStore(state => state.adminMode);
-  if (!user) {
+  if (isAnonymous) {
     return (
       <NavigationButton
         className='cc-fade-in'

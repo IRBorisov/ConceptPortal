@@ -1,5 +1,3 @@
-import { toast } from 'react-toastify';
-
 import { useIsProcessingLibrary } from '@/backend/library/useIsProcessingLibrary';
 import { useSetAccessPolicy } from '@/backend/library/useSetAccessPolicy';
 import { VisibilityIcon } from '@/components/DomainIcons';
@@ -14,7 +12,6 @@ import { HelpTopic } from '@/models/miscellaneous';
 import { UserRole } from '@/models/user';
 import { useRoleStore } from '@/stores/role';
 import { PARAMETER } from '@/utils/constants';
-import { information } from '@/utils/labels';
 
 interface ToolbarItemAccessProps {
   visible: boolean;
@@ -31,7 +28,7 @@ function ToolbarItemAccess({ visible, toggleVisible, readOnly, toggleReadOnly, c
   const { setAccessPolicy } = useSetAccessPolicy();
 
   function handleSetAccessPolicy(newPolicy: AccessPolicy) {
-    setAccessPolicy({ itemID: controller.schema.id, policy: newPolicy }, () => toast.success(information.changesSaved));
+    setAccessPolicy({ itemID: controller.schema.id, policy: newPolicy });
   }
 
   return (

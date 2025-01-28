@@ -2,7 +2,6 @@
 
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import { useBlockNavigation } from '@/app/Navigation/NavigationContext';
 import { IUpdateProfileDTO } from '@/backend/users/api';
@@ -11,7 +10,6 @@ import { useUpdateProfile } from '@/backend/users/useUpdateProfile';
 import InfoError, { ErrorData } from '@/components/info/InfoError';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
-import { information } from '@/utils/labels';
 
 function EditorProfile() {
   const { profile } = useProfileSuspense();
@@ -41,7 +39,7 @@ function EditorProfile() {
       first_name: first_name,
       last_name: last_name
     };
-    updateProfile(data, () => toast.success(information.changesSaved));
+    updateProfile(data);
   }
 
   return (

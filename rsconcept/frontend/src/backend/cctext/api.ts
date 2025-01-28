@@ -1,5 +1,6 @@
-import { axiosInstance } from '@/backend/axiosInstance';
 import { ILexemeData, IWordFormPlain } from '@/models/language';
+
+import { axiosPost } from '../apiTransport';
 
 /**
  * Represents API result for text output.
@@ -12,15 +13,18 @@ export const cctextApi = {
   baseKey: 'cctext',
 
   inflectText: (data: IWordFormPlain) =>
-    axiosInstance //
-      .post<ITextResult>('/api/cctext/inflect', data)
-      .then(response => response.data),
+    axiosPost<IWordFormPlain, ITextResult>({
+      endpoint: '/api/cctext/inflect',
+      request: { data: data }
+    }),
   parseText: (data: { text: string }) =>
-    axiosInstance //
-      .post<ITextResult>('/api/cctext/parse', data)
-      .then(response => response.data),
+    axiosPost<{ text: string }, ITextResult>({
+      endpoint: '/api/cctext/parse',
+      request: { data: data }
+    }),
   generateLexeme: (data: { text: string }) =>
-    axiosInstance //
-      .post<ILexemeData>('/api/cctext/generate-lexeme', data)
-      .then(response => response.data)
+    axiosPost<{ text: string }, ILexemeData>({
+      endpoint: '/api/cctext/generate-lexeme',
+      request: { data: data }
+    })
 };

@@ -52,17 +52,17 @@ function ToolbarTermGraph({
   const showTypeGraph = useDialogsStore(state => state.showShowTypeGraph);
 
   function handleShowTypeGraph() {
-    const typeInfo = controller.schema?.items.map(item => ({
+    const typeInfo = controller.schema.items.map(item => ({
       alias: item.alias,
       result: item.parse.typification,
       args: item.parse.args
     }));
-    showTypeGraph({ items: typeInfo ?? [] });
+    showTypeGraph({ items: typeInfo });
   }
 
   return (
     <div className='cc-icons'>
-      {controller.schema && controller.schema?.oss.length > 0 ? (
+      {controller.schema.oss.length > 0 ? (
         <MiniSelectorOSS
           items={controller.schema.oss}
           onSelect={(event, value) => controller.navigateOss(value.id, event.ctrlKey || event.metaKey)}

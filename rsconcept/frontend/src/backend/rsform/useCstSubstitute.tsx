@@ -13,7 +13,7 @@ export const useCstSubstitute = () => {
     mutationKey: [rsformsApi.baseKey, 'substitute-cst'],
     mutationFn: rsformsApi.cstSubstitute,
     onSuccess: data => {
-      client.setQueryData([rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey], data);
+      client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);
       updateTimestamp(data.id);
       // TODO: invalidate OSS?
     }

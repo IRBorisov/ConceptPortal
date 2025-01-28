@@ -15,7 +15,7 @@ export const useSignup = () => {
     signup: (
       data: IUserSignupData, //
       onSuccess?: DataCallback<IUserProfile>
-    ) => mutation.mutate(data, { onSuccess: response => onSuccess?.(response.data as IUserProfile) }),
+    ) => mutation.mutate(data, { onSuccess }),
     isPending: mutation.isPending,
     error: mutation.error,
     reset: mutation.reset

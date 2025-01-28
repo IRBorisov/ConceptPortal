@@ -2,7 +2,6 @@
 
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import { ILibraryUpdateDTO } from '@/backend/library/api';
 import { useUpdateItem } from '@/backend/library/useUpdateItem';
@@ -14,7 +13,6 @@ import TextInput from '@/components/ui/TextInput';
 import { LibraryItemType } from '@/models/library';
 import ToolbarItemAccess from '@/pages/RSFormPage/EditorRSFormCard/ToolbarItemAccess';
 import { useModificationStore } from '@/stores/modification';
-import { information } from '@/utils/labels';
 
 import { useOssEdit } from '../OssEditContext';
 
@@ -29,11 +27,11 @@ function FormOSS({ id }: FormOSSProps) {
   const isProcessing = useIsProcessingOss();
   const schema = controller.schema;
 
-  const [title, setTitle] = useState(schema?.title ?? '');
-  const [alias, setAlias] = useState(schema?.alias ?? '');
-  const [comment, setComment] = useState(schema?.comment ?? '');
-  const [visible, setVisible] = useState(schema?.visible ?? false);
-  const [readOnly, setReadOnly] = useState(schema?.read_only ?? false);
+  const [title, setTitle] = useState(schema.title);
+  const [alias, setAlias] = useState(schema.alias);
+  const [comment, setComment] = useState(schema.comment);
+  const [visible, setVisible] = useState(schema.visible);
+  const [readOnly, setReadOnly] = useState(schema.read_only);
 
   useEffect(() => {
     if (schema) {
@@ -46,10 +44,6 @@ function FormOSS({ id }: FormOSSProps) {
   }, [schema]);
 
   useEffect(() => {
-    if (!schema) {
-      setIsModified(false);
-      return;
-    }
     setIsModified(
       schema.title !== title ||
         schema.alias !== alias ||
@@ -59,12 +53,11 @@ function FormOSS({ id }: FormOSSProps) {
     );
     return () => setIsModified(false);
   }, [
-    schema,
-    schema?.title,
-    schema?.alias,
-    schema?.comment,
-    schema?.visible,
-    schema?.read_only,
+    schema.title,
+    schema.alias,
+    schema.comment,
+    schema.visible,
+    schema.read_only,
     title,
     alias,
     comment,
@@ -89,7 +82,7 @@ function FormOSS({ id }: FormOSSProps) {
       visible: visible,
       read_only: readOnly
     };
-    update(data, () => toast.success(information.changesSaved));
+    update(data);
   };
 
   return (

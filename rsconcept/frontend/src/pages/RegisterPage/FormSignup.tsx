@@ -3,7 +3,6 @@
 import axios from 'axios';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
@@ -20,9 +19,7 @@ import TextInput from '@/components/ui/TextInput';
 import TextURL from '@/components/ui/TextURL';
 import Tooltip from '@/components/ui/Tooltip';
 import { HelpTopic } from '@/models/miscellaneous';
-import { IUserSignupData } from '@/models/user';
 import { globals, patterns } from '@/utils/constants';
-import { information } from '@/utils/labels';
 
 function FormSignup() {
   const router = useConceptNavigation();
@@ -54,20 +51,20 @@ function FormSignup() {
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!isPending) {
-      const data: IUserSignupData = {
+    if (isPending) {
+      return;
+    }
+    signup(
+      {
         username,
         email,
         password,
         password2,
         first_name: firstName,
         last_name: lastName
-      };
-      signup(data, createdUser => {
-        router.push(urls.login_hint(createdUser.username));
-        toast.success(information.newUser(createdUser.username));
-      });
-    }
+      },
+      createdUser => router.push(urls.login_hint(createdUser.username))
+    );
   }
   return (
     <form className={clsx('cc-fade-in cc-column', 'mx-auto w-[36rem]', 'px-6 py-3')} onSubmit={handleSubmit}>

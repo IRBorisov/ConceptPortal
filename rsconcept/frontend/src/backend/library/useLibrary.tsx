@@ -16,7 +16,7 @@ export function useLibrary() {
   // NOTE: Using suspense here to avoid duplicated library data requests
   const { user } = useAuthSuspense();
   const { data: items, isLoading } = useQuery({
-    ...libraryApi.getLibraryQueryOptions({ isAdmin: user?.is_staff ?? false })
+    ...libraryApi.getLibraryQueryOptions({ isAdmin: user.is_staff })
   });
   return { items: items ?? [], isLoading };
 }

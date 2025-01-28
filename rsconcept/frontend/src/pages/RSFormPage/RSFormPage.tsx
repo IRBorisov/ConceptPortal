@@ -37,7 +37,7 @@ function RSFormPage() {
         <ProcessError error={error as ErrorData} isArchive={!!version} itemID={itemID} />
       )}
     >
-      <RSEditState itemID={itemID} versionID={version} activeTab={activeTab}>
+      <RSEditState itemID={itemID} activeVersion={version} activeTab={activeTab}>
         <RSTabs />
       </RSEditState>
     </ErrorBoundary>

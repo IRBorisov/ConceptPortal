@@ -1,7 +1,5 @@
-import { toast } from 'react-toastify';
+'use client';
 
-import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
-import { urls } from '@/app/urls';
 import { useVersionCreate } from '@/backend/library/useVersionCreate';
 import { useVersionRestore } from '@/backend/library/useVersionRestore';
 import { IconNewVersion, IconUpload, IconVersions } from '@/components/Icons';
@@ -12,7 +10,7 @@ import { HelpTopic } from '@/models/miscellaneous';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { PARAMETER } from '@/utils/constants';
-import { information, prompts } from '@/utils/labels';
+import { prompts } from '@/utils/labels';
 import { promptUnsaved } from '@/utils/utils';
 
 import { useRSEdit } from '../RSEditContext';
@@ -23,7 +21,6 @@ interface ToolbarVersioningProps {
 
 function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
   const controller = useRSEdit();
-  const router = useConceptNavigation();
   const { isModified } = useModificationStore();
   const { versionRestore } = useVersionRestore();
   const { versionCreate } = useVersionCreate();
@@ -35,10 +32,7 @@ function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
     if (!controller.schema.version || !window.confirm(prompts.restoreArchive)) {
       return;
     }
-    versionRestore({ itemID: controller.schema.id, versionID: controller.schema.version }, () => {
-      toast.success(information.versionRestored);
-      router.push(urls.schema(controller.schema.id));
-    });
+    versionRestore({ versionID: controller.schema.version }, () => controller.navigateVersion(undefined));
   }
 
   function handleCreateVersion() {
@@ -50,15 +44,22 @@ function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
       selected: controller.selected,
       totalCount: controller.schema.items.length,
       onCreate: data =>
-        versionCreate({ itemID: controller.schema.id, data: data }, () => {
-          toast.success(information.newVersion(data.version));
-        })
+        versionCreate(
+          {
+            itemID: controller.schema.id, //
+            data: data
+          },
+          newVersion => controller.navigateVersion(newVersion)
+        )
     });
   }
 
   function handleEditVersions() {
     showEditVersions({
-      item: controller.schema
+      item: controller.schema,
+      afterDelete: targetVersion => {
+        if (targetVersion === controller.activeVersion) controller.navigateVersion(undefined);
+      }
     });
   }
 
@@ -85,8 +86,8 @@ function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
             icon={<IconNewVersion size='1.25rem' className='icon-green' />}
           />
           <MiniButton
-            title={controller.schema?.versions.length === 0 ? 'Список версий пуст' : 'Редактировать версии'}
-            disabled={!controller.schema || controller.schema?.versions.length === 0}
+            title={controller.schema.versions.length === 0 ? 'Список версий пуст' : 'Редактировать версии'}
+            disabled={controller.schema.versions.length === 0}
             onClick={handleEditVersions}
             icon={<IconVersions size='1.25rem' className='icon-primary' />}
           />

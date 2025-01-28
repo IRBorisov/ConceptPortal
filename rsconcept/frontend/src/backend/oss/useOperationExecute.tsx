@@ -11,17 +11,11 @@ export const useOperationExecute = () => {
     mutationKey: [ossApi.baseKey, 'operation-execute'],
     mutationFn: ossApi.operationExecute,
     onSuccess: async data => {
-      client.setQueryData([ossApi.getOssQueryOptions({ itemID: data.id }).queryKey], data);
+      client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.id }).queryKey, data);
       await client.invalidateQueries({ queryKey: [libraryApi.libraryListKey] });
     }
   });
   return {
-    operationExecute: (
-      data: {
-        itemID: LibraryItemID; //
-        data: ITargetOperation;
-      },
-      onSuccess?: () => void
-    ) => mutation.mutate(data, { onSuccess })
+    operationExecute: (data: { itemID: LibraryItemID; data: ITargetOperation }) => mutation.mutate(data)
   };
 };

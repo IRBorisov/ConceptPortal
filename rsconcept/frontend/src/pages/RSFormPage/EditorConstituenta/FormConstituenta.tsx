@@ -19,7 +19,7 @@ import { isBaseSet, isBasicConcept, isFunctional } from '@/models/rsformAPI';
 import { IExpressionParse, ParsingStatus } from '@/models/rslang';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { errors, information, labelCstTypification } from '@/utils/labels';
+import { errors, labelCstTypification } from '@/utils/labels';
 
 import EditorRSExpression from '../EditorRSExpression';
 import { useRSEdit } from '../RSEditContext';
@@ -122,7 +122,7 @@ function FormConstituenta({
         convention: activeCst.convention !== convention ? convention : undefined
       }
     };
-    cstUpdate({ itemID: schema.id, data }, () => toast.success(information.changesSaved));
+    cstUpdate({ itemID: schema.id, data });
   }
 
   function handleTypeGraph(event: CProps.EventMouse) {

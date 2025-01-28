@@ -14,7 +14,7 @@ export const useCstCreate = () => {
     mutationKey: [rsformsApi.baseKey, 'create-cst'],
     mutationFn: rsformsApi.cstCreate,
     onSuccess: data => {
-      client.setQueryData([rsformsApi.getRSFormQueryOptions({ itemID: data.schema.id }).queryKey], data.schema);
+      client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.schema.id }).queryKey, data.schema);
       updateTimestamp(data.schema.id);
       // TODO: invalidate OSS?
     }

@@ -25,7 +25,10 @@ export interface IUser {
 /**
  * Represents CurrentUser information.
  */
-export interface ICurrentUser extends Pick<IUser, 'id' | 'username' | 'is_staff'> {
+export interface ICurrentUser {
+  id: UserID | null;
+  username: string;
+  is_staff: boolean;
   editor: LibraryItemID[];
 }
 

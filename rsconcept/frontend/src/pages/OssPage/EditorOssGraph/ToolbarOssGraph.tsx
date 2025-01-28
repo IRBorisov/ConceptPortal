@@ -53,7 +53,7 @@ function ToolbarOssGraph({
   const controller = useOssEdit();
   const { isModified } = useModificationStore();
   const isProcessing = useIsProcessingOss();
-  const selectedOperation = controller.schema?.operationByID.get(controller.selected[0]);
+  const selectedOperation = controller.schema.operationByID.get(controller.selected[0]);
 
   const showGrid = useOSSGraphStore(state => state.showGrid);
   const edgeAnimate = useOSSGraphStore(state => state.edgeAnimate);
@@ -66,7 +66,7 @@ function ToolbarOssGraph({
     if (!selectedOperation || selectedOperation.operation_type !== OperationType.SYNTHESIS) {
       return false;
     }
-    if (!controller.schema || selectedOperation.result) {
+    if (selectedOperation.result) {
       return false;
     }
 

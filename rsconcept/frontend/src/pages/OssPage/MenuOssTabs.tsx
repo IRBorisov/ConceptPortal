@@ -2,7 +2,7 @@
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
-import { useAuth } from '@/backend/auth/useAuth';
+import { useAuthSuspense } from '@/backend/auth/useAuth';
 import { useIsProcessingOss } from '@/backend/oss/useIsProcessingOss';
 import {
   IconAdmin,
@@ -33,7 +33,7 @@ import { useOssEdit } from './OssEditContext';
 function MenuOssTabs() {
   const controller = useOssEdit();
   const router = useConceptNavigation();
-  const { user } = useAuth();
+  const { user, isAnonymous } = useAuthSuspense();
 
   const isProcessing = useIsProcessingOss();
 
@@ -103,7 +103,7 @@ function MenuOssTabs() {
 
           <Divider margins='mx-3 my-1' />
 
-          {user ? (
+          {!isAnonymous ? (
             <DropdownButton
               text='Создать новую схему'
               icon={<IconNewItem size='1rem' className='icon-primary' />}
@@ -118,7 +118,7 @@ function MenuOssTabs() {
         </Dropdown>
       </div>
 
-      {user ? (
+      {!isAnonymous ? (
         <div ref={editMenu.ref}>
           <Button
             dense
@@ -143,7 +143,7 @@ function MenuOssTabs() {
         </div>
       ) : null}
 
-      {user ? (
+      {!isAnonymous ? (
         <div ref={accessMenu.ref}>
           <Button
             dense
@@ -177,7 +177,7 @@ function MenuOssTabs() {
               text={labelUserRole(UserRole.EDITOR)}
               title={describeUserRole(UserRole.EDITOR)}
               icon={<IconEditor size='1rem' className='icon-primary' />}
-              disabled={!controller.isOwned && !controller.schema?.editors.includes(user.id)}
+              disabled={!controller.isOwned && (!user.id || !controller.schema.editors.includes(user.id))}
               onClick={() => handleChangeRole(UserRole.EDITOR)}
             />
             <DropdownButton
@@ -191,13 +191,13 @@ function MenuOssTabs() {
               text={labelUserRole(UserRole.ADMIN)}
               title={describeUserRole(UserRole.ADMIN)}
               icon={<IconAdmin size='1rem' className='icon-primary' />}
-              disabled={!user?.is_staff}
+              disabled={!user.is_staff}
               onClick={() => handleChangeRole(UserRole.ADMIN)}
             />
           </Dropdown>
         </div>
       ) : null}
-      {!user ? (
+      {isAnonymous ? (
         <Button
           dense
           noBorder

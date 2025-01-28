@@ -1,8 +1,10 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { axiosInstance } from '@/backend/axiosInstance';
 import { DELAYS } from '@/backend/configuration';
 import { IUser, IUserInfo, IUserProfile, IUserSignupData } from '@/models/user';
+import { information } from '@/utils/labels';
+
+import { axiosGet, axiosPatch, axiosPost } from '../apiTransport';
 
 /**
  * Represents user data, intended to update user profile in persistent storage.
@@ -16,24 +18,37 @@ export const usersApi = {
       queryKey: [usersApi.baseKey, 'list'],
       staleTime: DELAYS.staleMedium,
       queryFn: meta =>
-        axiosInstance
-          .get<IUserInfo[]>('/users/api/active-users', {
-            signal: meta.signal
-          })
-          .then(response => response.data)
+        axiosGet<IUserInfo[]>({
+          endpoint: '/users/api/active-users',
+          options: { signal: meta.signal }
+        })
     }),
   getProfileQueryOptions: () =>
     queryOptions({
       queryKey: [usersApi.baseKey, 'profile'],
       staleTime: DELAYS.staleShort,
       queryFn: meta =>
-        axiosInstance
-          .get<IUserProfile>('/users/api/profile', {
-            signal: meta.signal
-          })
-          .then(response => response.data)
+        axiosGet<IUserProfile>({
+          endpoint: '/users/api/profile',
+          options: { signal: meta.signal }
+        })
     }),
 
-  signup: (data: IUserSignupData) => axiosInstance.post('/users/api/signup', data),
-  updateProfile: (data: IUpdateProfileDTO) => axiosInstance.patch('/users/api/profile', data)
+  signup: (data: IUserSignupData) =>
+    axiosPost<IUserSignupData, IUserProfile>({
+      endpoint: '/users/api/signup',
+      request: {
+        data: data,
+        successMessage: createdUser => information.newUser(createdUser.username)
+      }
+    }),
+
+  updateProfile: (data: IUpdateProfileDTO) =>
+    axiosPatch<IUpdateProfileDTO, IUserProfile>({
+      endpoint: '/users/api/profile',
+      request: {
+        data: data,
+        successMessage: information.changesSaved
+      }
+    })
 };

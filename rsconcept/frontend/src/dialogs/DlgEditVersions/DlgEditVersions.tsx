@@ -1,10 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
-import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
-import { urls } from '@/app/urls';
 import { useIsProcessingLibrary } from '@/backend/library/useIsProcessingLibrary';
 import { useVersionDelete } from '@/backend/library/useVersionDelete';
 import { useVersionUpdate } from '@/backend/library/useVersionUpdate';
@@ -13,19 +10,18 @@ import MiniButton from '@/components/ui/MiniButton';
 import Modal from '@/components/ui/Modal';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
-import { ILibraryItemVersioned, IVersionData, IVersionInfo, VersionID } from '@/models/library';
+import { ILibraryItemVersioned, IVersionInfo, VersionID } from '@/models/library';
 import { useDialogsStore } from '@/stores/dialogs';
-import { information } from '@/utils/labels';
 
 import TableVersions from './TableVersions';
 
 export interface DlgEditVersionsProps {
   item: ILibraryItemVersioned;
+  afterDelete: (targetVersion: VersionID) => void;
 }
 
 function DlgEditVersions() {
-  const { item } = useDialogsStore(state => state.props as DlgEditVersionsProps);
-  const router = useConceptNavigation();
+  const { item, afterDelete } = useDialogsStore(state => state.props as DlgEditVersionsProps);
   const processing = useIsProcessingLibrary();
   const { versionDelete } = useVersionDelete();
   const { versionUpdate } = useVersionUpdate();
@@ -37,31 +33,21 @@ function DlgEditVersions() {
   const isValid = selected && item.versions.every(ver => ver.id === selected.id || ver.version != version);
   const isModified = selected && (selected.version != version || selected.description != description);
 
-  function handleDeleteVersion(versionID: VersionID) {
-    versionDelete({ itemID: item.id, versionID: versionID }, () => {
-      toast.success(information.versionDestroyed);
-      if (versionID === versionID) {
-        router.push(urls.schema(item.id));
-      }
-    });
+  function handleDeleteVersion(targetVersion: VersionID) {
+    versionDelete({ itemID: item.id, versionID: targetVersion }, () => afterDelete(targetVersion));
   }
 
   function handleUpdate() {
     if (!isModified || !selected || processing || !isValid) {
       return;
     }
-    const data: IVersionData = {
-      version: version,
-      description: description
-    };
-    versionUpdate(
-      {
-        itemID: item.id, //
-        versionID: selected.id,
-        data: data
-      },
-      () => toast.success(information.changesSaved)
-    );
+    versionUpdate({
+      versionID: selected.id,
+      data: {
+        version: version,
+        description: description
+      }
+    });
   }
 
   function handleReset() {

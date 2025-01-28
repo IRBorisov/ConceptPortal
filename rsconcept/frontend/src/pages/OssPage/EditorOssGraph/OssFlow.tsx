@@ -32,7 +32,7 @@ import { useModificationStore } from '@/stores/modification';
 import { useOSSGraphStore } from '@/stores/ossGraph';
 import { APP_COLORS } from '@/styling/color';
 import { PARAMETER } from '@/utils/constants';
-import { errors, information } from '@/utils/labels';
+import { errors } from '@/utils/labels';
 
 import { useOssEdit } from '../OssEditContext';
 import { OssNodeTypes } from './graph/OssNodeTypes';
@@ -81,33 +81,29 @@ function OssFlow() {
   });
 
   useEffect(() => {
-    if (!controller.schema) {
-      setNodes([]);
-      setEdges([]);
-    } else {
-      setNodes(
-        controller.schema.items.map(operation => ({
-          id: String(operation.id),
-          data: { label: operation.alias, operation: operation },
-          position: { x: operation.position_x, y: operation.position_y },
-          type: operation.operation_type.toString()
-        }))
-      );
-      setEdges(
-        controller.schema.arguments.map((argument, index) => ({
-          id: String(index),
-          source: String(argument.argument),
-          target: String(argument.operation),
-          type: edgeStraight ? 'straight' : 'simplebezier',
-          animated: edgeAnimate,
-          targetHandle:
-            controller.schema.operationByID.get(argument.argument)!.position_x >
-            controller.schema.operationByID.get(argument.operation)!.position_x
-              ? 'right'
-              : 'left'
-        }))
-      );
-    }
+    setNodes(
+      controller.schema.items.map(operation => ({
+        id: String(operation.id),
+        data: { label: operation.alias, operation: operation },
+        position: { x: operation.position_x, y: operation.position_y },
+        type: operation.operation_type.toString()
+      }))
+    );
+    setEdges(
+      controller.schema.arguments.map((argument, index) => ({
+        id: String(index),
+        source: String(argument.argument),
+        target: String(argument.operation),
+        type: edgeStraight ? 'straight' : 'simplebezier',
+        animated: edgeAnimate,
+        targetHandle:
+          controller.schema.operationByID.get(argument.argument)!.position_x >
+          controller.schema.operationByID.get(argument.operation)!.position_x
+            ? 'right'
+            : 'left'
+      }))
+    );
+
     setTimeout(() => {
       setIsModified(false);
     }, PARAMETER.graphRefreshDelay);
@@ -138,15 +134,11 @@ function OssFlow() {
           operation.position_y = item.position_y;
         }
       });
-      toast.success(information.changesSaved);
       setIsModified(false);
     });
   }
 
   function handleCreateOperation(inputs: OperationID[]) {
-    if (!controller.schema) {
-      return;
-    }
     const positions = getPositions();
     const target = flow.project({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
     controller.promptCreateOperation({
@@ -181,10 +173,9 @@ function OssFlow() {
       toast.error(errors.inputAlreadyExists);
       return;
     }
-    inputCreate({ itemID: controller.schema.id, data: { target: target, positions: getPositions() } }, new_schema => {
-      toast.success(information.newLibraryItem);
-      router.push(urls.schema(new_schema.id));
-    });
+    inputCreate({ itemID: controller.schema.id, data: { target: target, positions: getPositions() } }, new_schema =>
+      router.push(urls.schema(new_schema.id))
+    );
   }
 
   function handleEditSchema(target: OperationID) {
@@ -196,13 +187,10 @@ function OssFlow() {
   }
 
   function handleOperationExecute(target: OperationID) {
-    operationExecute(
-      {
-        itemID: controller.schema.id, //
-        data: { target: target, positions: getPositions() }
-      },
-      () => toast.success(information.operationExecuted)
-    );
+    operationExecute({
+      itemID: controller.schema.id, //
+      data: { target: target, positions: getPositions() }
+    });
   }
 
   function handleExecuteSelected() {
@@ -217,9 +205,6 @@ function OssFlow() {
   }
 
   function handleSaveImage() {
-    if (!controller.schema) {
-      return;
-    }
     const canvas: HTMLElement | null = document.querySelector('.react-flow__viewport');
     if (canvas === null) {
       toast.error(errors.imageFailed);
@@ -242,7 +227,7 @@ function OssFlow() {
     })
       .then(dataURL => {
         const a = document.createElement('a');
-        a.setAttribute('download', `${controller.schema?.alias ?? 'oss'}.png`);
+        a.setAttribute('download', `${controller.schema.alias}.png`);
         a.setAttribute('href', dataURL);
         a.click();
       })

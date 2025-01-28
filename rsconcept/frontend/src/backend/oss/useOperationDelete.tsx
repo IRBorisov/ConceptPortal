@@ -11,17 +11,11 @@ export const useOperationDelete = () => {
     mutationKey: [ossApi.baseKey, 'operation-delete'],
     mutationFn: ossApi.operationDelete,
     onSuccess: async data => {
-      client.setQueryData([ossApi.getOssQueryOptions({ itemID: data.id }).queryKey], data);
+      client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.id }).queryKey, data);
       await client.invalidateQueries({ queryKey: [libraryApi.libraryListKey] });
     }
   });
   return {
-    operationDelete: (
-      data: {
-        itemID: LibraryItemID; //
-        data: IOperationDeleteDTO;
-      },
-      onSuccess?: () => void
-    ) => mutation.mutate(data, { onSuccess })
+    operationDelete: (data: { itemID: LibraryItemID; data: IOperationDeleteDTO }) => mutation.mutate(data)
   };
 };

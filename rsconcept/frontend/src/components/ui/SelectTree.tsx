@@ -79,23 +79,23 @@ function SelectTree<ItemType>({
   }
 
   return (
-    <div {...restProps}>
+    <div tabIndex={-1} {...restProps}>
       {items.map((item, index) => {
         const isActive = getParent(item) === item || !folded.includes(getParent(item));
         return (
           <div
-            tabIndex={-1}
             key={`${prefix}${index}`}
             className={clsx(
               'pr-3 pl-6 border-b',
               'cc-scroll-row',
               'bg-prim-200 clr-hover cc-animate-color',
               'cursor-pointer',
-              value === item && 'clr-selected'
+              value === item && 'clr-selected',
+              !isActive && 'pointer-events-none'
             )}
             data-tooltip-id={globals.tooltip}
-            data-tooltip-html={isActive ? getDescription(item) : undefined}
-            onClick={isActive ? event => handleSetValue(event, item) : undefined}
+            data-tooltip-html={getDescription(item)}
+            onClick={event => handleSetValue(event, item)}
             style={{
               borderBottomWidth: isActive ? '1px' : '0px',
               transitionProperty: 'height, opacity, padding',

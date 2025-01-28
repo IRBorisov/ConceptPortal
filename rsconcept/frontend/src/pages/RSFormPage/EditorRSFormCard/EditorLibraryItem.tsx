@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 import { useIntl } from 'react-intl';
-import { toast } from 'react-toastify';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
@@ -34,7 +33,7 @@ import { useLibrarySearchStore } from '@/stores/librarySearch';
 import { useModificationStore } from '@/stores/modification';
 import { useRoleStore } from '@/stores/role';
 import { prefixes } from '@/utils/constants';
-import { information, prompts } from '@/utils/labels';
+import { prompts } from '@/utils/labels';
 
 interface EditorLibraryItemProps {
   itemID: LibraryItemID;
@@ -69,7 +68,7 @@ function EditorLibraryItem({ itemID, itemType, controller }: EditorLibraryItemPr
     if (!window.confirm(prompts.ownerChange)) {
       return;
     }
-    setOwner({ itemID: itemID, owner: newValue }, () => toast.success(information.changesSaved));
+    setOwner({ itemID: itemID, owner: newValue });
   };
 
   function handleOpenLibrary(event: CProps.EventMouse) {
@@ -86,8 +85,7 @@ function EditorLibraryItem({ itemID, itemType, controller }: EditorLibraryItemPr
     }
     showEditLocation({
       initial: item.location,
-      onChangeLocation: newLocation =>
-        setLocation({ itemID: itemID, location: newLocation }, () => toast.success(information.moveComplete))
+      onChangeLocation: newLocation => setLocation({ itemID: itemID, location: newLocation })
     });
   }
 
@@ -97,8 +95,7 @@ function EditorLibraryItem({ itemID, itemType, controller }: EditorLibraryItemPr
     }
     showEditEditors({
       editors: item.editors,
-      setEditors: newEditors =>
-        setEditors({ itemID: itemID, editors: newEditors }, () => toast.success(information.changesSaved))
+      onChangeEditors: newEditors => setEditors({ itemID: itemID, editors: newEditors })
     });
   }
 

@@ -12,7 +12,7 @@ export const useInputCreate = () => {
     mutationKey: [ossApi.baseKey, 'input-create'],
     mutationFn: ossApi.inputCreate,
     onSuccess: async data => {
-      client.setQueryData([ossApi.getOssQueryOptions({ itemID: data.oss.id }).queryKey], data.oss);
+      client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.oss.id }).queryKey, data.oss);
       await client.invalidateQueries({ queryKey: [libraryApi.libraryListKey] });
     }
   });

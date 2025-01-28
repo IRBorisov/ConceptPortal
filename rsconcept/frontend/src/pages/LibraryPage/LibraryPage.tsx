@@ -40,10 +40,7 @@ function LibraryPage() {
         target: location,
         new_location: newLocation
       },
-      () => {
-        setLocation(newLocation);
-        toast.success(information.locationRenamed);
-      }
+      () => setLocation(newLocation)
     );
   }
 

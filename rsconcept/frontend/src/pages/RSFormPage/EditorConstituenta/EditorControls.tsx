@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { toast } from 'react-toastify';
 
 import { ICstRenameDTO } from '@/backend/rsform/api';
 import { useCstRename } from '@/backend/rsform/useCstRename';
@@ -10,7 +9,7 @@ import Overlay from '@/components/ui/Overlay';
 import { IConstituenta } from '@/models/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { information, tooltips } from '@/utils/labels';
+import { tooltips } from '@/utils/labels';
 
 import { useRSEdit } from '../RSEditContext';
 
@@ -39,10 +38,7 @@ function EditorControls({ constituenta, disabled, onEditTerm }: EditorControlsPr
       schema: schema,
       initial: initialData,
       allowChangeType: !constituenta.is_inherited,
-      onRename: data => {
-        const oldAlias = initialData.alias;
-        cstRename({ itemID: schema.id, data }, () => toast.success(information.renameComplete(oldAlias, data.alias)));
-      }
+      onRename: data => cstRename({ itemID: schema.id, data })
     });
   }
 

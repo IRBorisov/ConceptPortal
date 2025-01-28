@@ -9,7 +9,7 @@ import { SelectorGraphColoring } from '@/utils/selectors';
 import SchemasGuide from './SchemasGuide';
 
 interface GraphSelectorsProps {
-  schema?: IRSForm;
+  schema: IRSForm;
   coloring: GraphColoring;
   onChangeColoring: (newValue: GraphColoring) => void;
 }
@@ -20,7 +20,7 @@ function GraphSelectors({ schema, coloring, onChangeColoring }: GraphSelectorsPr
       <Overlay position='right-[2.5rem] top-[0.25rem]'>
         {coloring === 'status' ? <BadgeHelp topic={HelpTopic.UI_CST_STATUS} className='min-w-[25rem]' /> : null}
         {coloring === 'type' ? <BadgeHelp topic={HelpTopic.UI_CST_CLASS} className='min-w-[25rem]' /> : null}
-        {coloring === 'schemas' && !!schema ? <SchemasGuide schema={schema} /> : null}
+        {coloring === 'schemas' ? <SchemasGuide schema={schema} /> : null}
       </Overlay>
       <SelectSingle
         noBorder

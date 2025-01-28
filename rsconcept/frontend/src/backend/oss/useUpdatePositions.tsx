@@ -18,6 +18,7 @@ export const useUpdatePositions = () => {
       data: {
         itemID: LibraryItemID; //
         positions: IOperationPosition[];
+        isSilent?: boolean;
       },
       onSuccess?: () => void
     ) => mutation.mutate(data, { onSuccess })

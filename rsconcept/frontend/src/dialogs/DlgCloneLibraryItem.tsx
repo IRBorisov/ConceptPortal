@@ -2,7 +2,6 @@
 
 import clsx from 'clsx';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
@@ -23,7 +22,6 @@ import { AccessPolicy, ILibraryItem, LocationHead } from '@/models/library';
 import { cloneTitle, combineLocation, validateLocation } from '@/models/libraryAPI';
 import { ConstituentaID } from '@/models/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
-import { information } from '@/utils/labels';
 
 export interface DlgCloneLibraryItemProps {
   base: ILibraryItem;
@@ -75,10 +73,7 @@ function DlgCloneLibraryItem() {
     if (onlySelected) {
       data.items = selected;
     }
-    cloneItem(data, newSchema => {
-      toast.success(information.cloneComplete(newSchema.alias));
-      router.push(urls.schema(newSchema.id));
-    });
+    cloneItem(data, newSchema => router.push(urls.schema(newSchema.id)));
   }
 
   return (

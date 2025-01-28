@@ -29,7 +29,7 @@ function ViewConstituents({ expression, isBottom, isMounted }: ViewConstituentsP
   const listHeight = useFitHeight(!isBottom ? '8.2rem' : role !== UserRole.READER ? '42rem' : '35rem', '10rem');
   const { schema, activeCst, navigateCst } = useRSEdit();
 
-  const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema?.items ?? []);
+  const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema.items);
 
   return (
     <div

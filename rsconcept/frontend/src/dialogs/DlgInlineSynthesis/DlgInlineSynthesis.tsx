@@ -45,7 +45,7 @@ function DlgInlineSynthesis() {
       return;
     }
     onInlineSynthesis({
-      source: source.schema?.id,
+      source: source.schema.id,
       receiver: receiver.id,
       items: selected,
       substitutions: substitutions
@@ -53,7 +53,7 @@ function DlgInlineSynthesis() {
   }
 
   useEffect(() => {
-    setSelected(source.schema ? source.schema?.items.map(cst => cst.id) : []);
+    setSelected(source.schema ? source.schema.items.map(cst => cst.id) : []);
     setSubstitutions([]);
   }, [source.schema]);
 

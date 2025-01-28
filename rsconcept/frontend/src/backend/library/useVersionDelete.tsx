@@ -13,11 +13,14 @@ export const useVersionDelete = () => {
     mutationFn: libraryApi.versionDelete,
     onSuccess: (_, variables) => {
       client.setQueryData(
-        [rsformsApi.getRSFormQueryOptions({ itemID: variables.itemID }).queryKey],
-        (prev: IRSFormData) => ({
-          ...prev,
-          versions: prev.versions.filter(version => version.id !== variables.versionID)
-        })
+        rsformsApi.getRSFormQueryOptions({ itemID: variables.itemID }).queryKey,
+        (prev: IRSFormData | undefined) =>
+          !prev
+            ? undefined
+            : {
+                ...prev,
+                versions: prev.versions.filter(version => version.id !== variables.versionID)
+              }
       );
     }
   });

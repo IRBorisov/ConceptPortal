@@ -1,5 +1,5 @@
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
-import { useAuth } from '@/backend/auth/useAuth';
+import { useAuthSuspense } from '@/backend/auth/useAuth';
 import { useLogout } from '@/backend/auth/useLogout';
 import {
   IconAdmin,
@@ -29,7 +29,7 @@ interface UserDropdownProps {
 
 function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
   const router = useConceptNavigation();
-  const { user } = useAuth();
+  const { user } = useAuthSuspense();
   const { logout } = useLogout();
 
   const darkMode = usePreferencesStore(state => state.darkMode);
@@ -77,7 +77,7 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
   return (
     <Dropdown className='mt-[1.5rem] min-w-[18ch] max-w-[12rem]' stretchLeft isOpen={isOpen}>
       <DropdownButton
-        text={user?.username}
+        text={user.username}
         title='Профиль пользователя'
         icon={<IconUser size='1rem' />}
         onClick={navigateProfile}
@@ -94,7 +94,7 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
         title='Отображение иконок подсказок'
         onClick={toggleShowHelp}
       />
-      {user?.is_staff ? (
+      {user.is_staff ? (
         <DropdownButton
           text={adminMode ? 'Админ: Вкл' : 'Админ: Выкл'}
           icon={adminMode ? <IconAdmin size='1rem' /> : <IconAdminOff size='1rem' />}
@@ -102,7 +102,7 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
           onClick={toggleAdminMode}
         />
       ) : null}
-      {user?.is_staff ? (
+      {user.is_staff ? (
         <DropdownButton
           text='REST API' // prettier: split-line
           icon={<IconRESTapi size='1rem' />}
@@ -110,7 +110,7 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
           onClick={gotoRestApi}
         />
       ) : null}
-      {user?.is_staff ? (
+      {user.is_staff ? (
         <DropdownButton
           text='База данных' // prettier: split-line
           icon={<IconDatabase size='1rem' />}
@@ -124,7 +124,7 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
           onClick={gotoIcons}
         />
       ) : null}
-      {user?.is_staff ? (
+      {user.is_staff ? (
         <DropdownButton
           text='Структура БД' // prettier: split-line
           icon={<IconDBStructure size='1rem' />}

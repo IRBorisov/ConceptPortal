@@ -72,7 +72,7 @@ function TGFlow() {
 
   const [isDragging, setIsDragging] = useState(false);
   const [hoverID, setHoverID] = useState<ConstituentaID | undefined>(undefined);
-  const hoverCst = hoverID && controller.schema?.cstByID.get(hoverID);
+  const hoverCst = hoverID && controller.schema.cstByID.get(hoverID);
   const [hoverCstDebounced] = useDebounce(hoverCst, PARAMETER.graphPopupDelay);
   const [hoverLeft, setHoverLeft] = useState(true);
 
@@ -96,9 +96,6 @@ function TGFlow() {
   });
 
   useEffect(() => {
-    if (!controller.schema) {
-      return;
-    }
     const newDismissed: ConstituentaID[] = [];
     controller.schema.items.forEach(cst => {
       if (!filteredGraph.nodes.has(cst.id)) {
@@ -161,7 +158,7 @@ function TGFlow() {
   }, [controller.schema, filter.noText, focusCst, coloring, flow.viewportInitialized]);
 
   useEffect(() => {
-    if (!controller.schema || !needReset || !flow.viewportInitialized) {
+    if (!needReset || !flow.viewportInitialized) {
       return;
     }
     setNeedReset(false);
@@ -180,24 +177,18 @@ function TGFlow() {
   }
 
   function handleCreateCst() {
-    if (!controller.schema) {
-      return;
-    }
     const definition = controller.selected.map(id => controller.schema.cstByID.get(id)!.alias).join(' ');
     controller.createCst(controller.selected.length === 0 ? CstType.BASE : CstType.TERM, false, definition);
   }
 
   function handleDeleteCst() {
-    if (!controller.schema || !controller.canDeleteSelected) {
+    if (!controller.canDeleteSelected) {
       return;
     }
     controller.promptDeleteCst();
   }
 
   function handleSaveImage() {
-    if (!controller.schema) {
-      return;
-    }
     const canvas: HTMLElement | null = document.querySelector('.react-flow__viewport');
     if (canvas === null) {
       toast.error(errors.imageFailed);
@@ -220,7 +211,7 @@ function TGFlow() {
     })
       .then(dataURL => {
         const a = document.createElement('a');
-        a.setAttribute('download', `${controller.schema?.alias ?? 'graph'}.png`);
+        a.setAttribute('download', `${controller.schema.alias}.png`);
         a.setAttribute('href', dataURL);
         a.click();
       })
@@ -263,7 +254,7 @@ function TGFlow() {
   }
 
   function handleSetFocus(cstID: ConstituentaID | undefined) {
-    const target = cstID !== undefined ? controller.schema?.cstByID.get(cstID) : cstID;
+    const target = cstID !== undefined ? controller.schema.cstByID.get(cstID) : cstID;
     setFocusCst(prev => (prev === target ? undefined : target));
     if (target) {
       controller.setSelected([]);
@@ -314,9 +305,9 @@ function TGFlow() {
         {!focusCst ? (
           <ToolbarGraphSelection
             graph={controller.schema.graph}
-            isCore={cstID => isBasicConcept(controller.schema?.cstByID.get(cstID)?.cst_type)}
+            isCore={cstID => isBasicConcept(controller.schema.cstByID.get(cstID)?.cst_type)}
             isOwned={
-              controller.schema && controller.schema.inheritance.length > 0
+              controller.schema.inheritance.length > 0
                 ? cstID => !controller.schema.cstByID.get(cstID)?.is_inherited
                 : undefined
             }
@@ -350,7 +341,7 @@ function TGFlow() {
       <div className='cc-fade-in' tabIndex={-1} onKeyDown={handleKeyDown}>
         <SelectedCounter
           hideZero
-          totalCount={controller.schema?.stats?.count_all ?? 0}
+          totalCount={controller.schema.stats?.count_all ?? 0}
           selectedCount={controller.selected.length}
           position='top-[4.4rem] sm:top-[4.1rem] left-[0.5rem] sm:left-[0.65rem]'
         />

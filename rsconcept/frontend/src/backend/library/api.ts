@@ -1,11 +1,20 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { axiosInstance } from '@/backend/axiosInstance';
 import { DELAYS } from '@/backend/configuration';
-import { AccessPolicy, ILibraryItem, IVersionData, LibraryItemID, LibraryItemType, VersionID } from '@/models/library';
+import {
+  AccessPolicy,
+  ILibraryItem,
+  IVersionData,
+  IVersionInfo,
+  LibraryItemID,
+  LibraryItemType,
+  VersionID
+} from '@/models/library';
 import { ConstituentaID, IRSFormData } from '@/models/rsform';
 import { UserID } from '@/models/user';
+import { information } from '@/utils/labels';
 
+import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '../apiTransport';
 import { ossApi } from '../oss/api';
 import { rsformsApi } from '../rsform/api';
 
@@ -59,87 +68,140 @@ export const libraryApi = {
   baseKey: 'library',
   libraryListKey: ['library', 'list'],
 
-  getLibraryQueryOptions: ({ isAdmin }: { isAdmin: boolean }) =>
-    queryOptions({
-      queryKey: libraryApi.libraryListKey,
-      staleTime: DELAYS.staleMedium,
-      queryFn: meta =>
-        axiosInstance
-          .get<ILibraryItem[]>(isAdmin ? '/api/library/all' : '/api/library/active', {
-            signal: meta.signal
-          })
-          .then(response => response.data)
-    }),
   getItemQueryOptions: ({ itemID, itemType }: { itemID: LibraryItemID; itemType: LibraryItemType }) => {
     return itemType === LibraryItemType.RSFORM
       ? rsformsApi.getRSFormQueryOptions({ itemID })
       : ossApi.getOssQueryOptions({ itemID });
   },
+  getLibraryQueryOptions: ({ isAdmin }: { isAdmin: boolean }) =>
+    queryOptions({
+      queryKey: libraryApi.libraryListKey,
+      staleTime: DELAYS.staleMedium,
+      queryFn: meta =>
+        axiosGet<ILibraryItem[]>({
+          endpoint: isAdmin ? '/api/library/all' : '/api/library/active',
+          options: { signal: meta.signal }
+        })
+    }),
   getTemplatesQueryOptions: () =>
     queryOptions({
       queryKey: [libraryApi.baseKey, 'templates'],
       staleTime: DELAYS.staleMedium,
       queryFn: meta =>
-        axiosInstance
-          .get<ILibraryItem[]>('/api/library/templates', {
-            signal: meta.signal
-          })
-          .then(response => response.data)
+        axiosGet<ILibraryItem[]>({
+          endpoint: '/api/library/templates',
+          options: { signal: meta.signal }
+        })
     }),
 
   createItem: (data: ILibraryCreateDTO) =>
-    data.file
-      ? axiosInstance
-          .post<ILibraryItem>('/api/rsforms/create-detailed', data, {
+    axiosPost<ILibraryCreateDTO, ILibraryItem>({
+      endpoint: !data.file ? '/api/library' : '/api/rsforms/create-detailed',
+      request: {
+        data: data,
+        successMessage: information.newLibraryItem
+      },
+      options: !data.file
+        ? undefined
+        : {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
-          })
-          .then(response => response.data)
-      : axiosInstance //
-          .post<ILibraryItem>('/api/library', data)
-          .then(response => response.data),
-
+          }
+    }),
   updateItem: (data: ILibraryUpdateDTO) =>
-    axiosInstance //
-      .patch<ILibraryItem>(`/api/library/${data.id}`, data)
-      .then(response => response.data),
-  setOwner: (data: { itemID: LibraryItemID; owner: UserID }) =>
-    axiosInstance //
-      .patch(`/api/library/${data.itemID}/set-owner`, { user: data.owner }),
-  setLocation: (data: { itemID: LibraryItemID; location: string }) =>
-    axiosInstance //
-      .patch(`/api/library/${data.itemID}/set-location`, { location: data.location }),
-  setAccessPolicy: (data: { itemID: LibraryItemID; policy: AccessPolicy }) =>
-    axiosInstance //
-      .patch(`/api/library/${data.itemID}/set-access-policy`, { access_policy: data.policy }),
-  setEditors: (data: { itemID: LibraryItemID; editors: UserID[] }) =>
-    axiosInstance //
-      .patch(`/api/library/${data.itemID}/set-editors`, { users: data.editors }),
+    axiosPatch<ILibraryUpdateDTO, ILibraryItem>({
+      endpoint: `/api/library/${data.id}`,
+      request: {
+        data: data,
+        successMessage: information.changesSaved
+      }
+    }),
+  setOwner: ({ itemID, owner }: { itemID: LibraryItemID; owner: UserID }) =>
+    axiosPatch({
+      endpoint: `/api/library/${itemID}/set-owner`,
+      request: {
+        data: { user: owner },
+        successMessage: information.changesSaved
+      }
+    }),
+  setLocation: ({ itemID, location }: { itemID: LibraryItemID; location: string }) =>
+    axiosPatch({
+      endpoint: `/api/library/${itemID}/set-location`,
+      request: {
+        data: { location: location },
+        successMessage: information.moveComplete
+      }
+    }),
+  setAccessPolicy: ({ itemID, policy }: { itemID: LibraryItemID; policy: AccessPolicy }) =>
+    axiosPatch({
+      endpoint: `/api/library/${itemID}/set-access-policy`,
+      request: {
+        data: { access_policy: policy },
+        successMessage: information.changesSaved
+      }
+    }),
+  setEditors: ({ itemID, editors }: { itemID: LibraryItemID; editors: UserID[] }) =>
+    axiosPatch({
+      endpoint: `/api/library/${itemID}/set-editors`,
+      request: {
+        data: { users: editors },
+        successMessage: information.changesSaved
+      }
+    }),
 
   deleteItem: (target: LibraryItemID) =>
-    axiosInstance //
-      .delete(`/api/library/${target}`),
+    axiosDelete({
+      endpoint: `/api/library/${target}`,
+      request: {
+        successMessage: information.itemDestroyed
+      }
+    }),
   cloneItem: (data: IRSFormCloneDTO) =>
-    axiosInstance //
-      .post<IRSFormData>(`/api/library/${data.id}/clone`, data)
-      .then(response => response.data),
+    axiosPost<IRSFormCloneDTO, IRSFormData>({
+      endpoint: `/api/library/${data.id}/clone`,
+      request: {
+        data: data,
+        successMessage: newSchema => information.cloneComplete(newSchema.alias)
+      }
+    }),
   renameLocation: (data: IRenameLocationDTO) =>
-    axiosInstance //
-      .patch('/api/library/rename-location', data),
+    axiosPatch({
+      endpoint: '/api/library/rename-location',
+      request: {
+        data: data,
+        successMessage: information.locationRenamed
+      }
+    }),
 
-  versionCreate: (data: { itemID: LibraryItemID; data: IVersionData }) =>
-    axiosInstance //
-      .post<IVersionCreatedResponse>(`/api/library/${data.itemID}/versions`, data.data)
-      .then(response => response.data),
-  versionRestore: (data: { itemID: LibraryItemID; versionID: VersionID }) =>
-    axiosInstance //
-      .patch<IRSFormData>(`/api/versions/${data.versionID}/restore`)
-      .then(response => response.data),
-  versionUpdate: (data: { itemID: LibraryItemID; versionID: VersionID; data: IVersionData }) =>
-    axiosInstance //
-      .patch(`/api/versions/${data.versionID}`, data.data),
+  versionCreate: ({ itemID, data }: { itemID: LibraryItemID; data: IVersionData }) =>
+    axiosPost<IVersionData, IVersionCreatedResponse>({
+      endpoint: `/api/library/${itemID}/create-version`,
+      request: {
+        data: data,
+        successMessage: information.newVersion(data.version)
+      }
+    }),
+  versionRestore: ({ versionID }: { versionID: VersionID }) =>
+    axiosPatch<undefined, IRSFormData>({
+      endpoint: `/api/versions/${versionID}/restore`,
+      request: {
+        successMessage: information.versionRestored
+      }
+    }),
+  versionUpdate: ({ versionID, data }: { versionID: VersionID; data: IVersionData }) =>
+    axiosPatch<IVersionData, IVersionInfo>({
+      endpoint: `/api/versions/${versionID}`,
+      request: {
+        data: data,
+        successMessage: information.changesSaved
+      }
+    }),
   versionDelete: (data: { itemID: LibraryItemID; versionID: VersionID }) =>
-    axiosInstance //
-      .delete(`/api/versions/${data.versionID}`)
+    axiosDelete({
+      endpoint: `/api/versions/${data.versionID}`,
+      request: {
+        successMessage: information.versionDestroyed
+      }
+    })
 };

@@ -11,17 +11,11 @@ export const useInputUpdate = () => {
     mutationKey: [ossApi.baseKey, 'input-update'],
     mutationFn: ossApi.inputUpdate,
     onSuccess: async data => {
-      client.setQueryData([ossApi.getOssQueryOptions({ itemID: data.id }).queryKey], data);
+      client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.id }).queryKey, data);
       await client.invalidateQueries({ queryKey: [libraryApi.libraryListKey] });
     }
   });
   return {
-    inputUpdate: (
-      data: {
-        itemID: LibraryItemID; //
-        data: IInputUpdateDTO;
-      },
-      onSuccess?: () => void
-    ) => mutation.mutate(data, { onSuccess })
+    inputUpdate: (data: { itemID: LibraryItemID; data: IInputUpdateDTO }) => mutation.mutate(data)
   };
 };
