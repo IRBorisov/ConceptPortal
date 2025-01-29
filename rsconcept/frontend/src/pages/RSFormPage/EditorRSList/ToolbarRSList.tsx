@@ -1,4 +1,4 @@
-import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
+import { useMutatingRSForm } from '@/backend/rsform/useMutatingRSForm';
 import { CstTypeIcon } from '@/components/DomainIcons';
 import {
   IconClone,
@@ -25,7 +25,7 @@ import { useRSEdit } from '../RSEditContext';
 
 function ToolbarRSList() {
   const controller = useRSEdit();
-  const isProcessing = useIsProcessingRSForm();
+  const isProcessing = useMutatingRSForm();
   const insertMenu = useDropdown();
 
   return (

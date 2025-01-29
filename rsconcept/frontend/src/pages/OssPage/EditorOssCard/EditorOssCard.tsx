@@ -3,7 +3,6 @@
 import clsx from 'clsx';
 
 import FlexColumn from '@/components/ui/FlexColumn';
-import { LibraryItemType } from '@/models/library';
 import EditorLibraryItem from '@/pages/RSFormPage/EditorRSFormCard/EditorLibraryItem';
 import ToolbarRSFormCard from '@/pages/RSFormPage/EditorRSFormCard/ToolbarRSFormCard';
 import { useModificationStore } from '@/stores/modification';
@@ -47,7 +46,7 @@ function EditorOssCard() {
       >
         <FlexColumn className='px-3'>
           <FormOSS id={globals.library_item_editor} />
-          <EditorLibraryItem itemID={controller.schema.id} itemType={LibraryItemType.OSS} controller={controller} />
+          <EditorLibraryItem controller={controller} />
         </FlexColumn>
 
         {controller.schema ? <OssStats stats={controller.schema.stats} /> : null}

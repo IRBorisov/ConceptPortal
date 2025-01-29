@@ -7,7 +7,7 @@ import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { ILibraryUpdateDTO } from '@/backend/library/api';
 import { useUpdateItem } from '@/backend/library/useUpdateItem';
-import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
+import { useMutatingRSForm } from '@/backend/rsform/useMutatingRSForm';
 import { IconSave } from '@/components/Icons';
 import SelectVersion from '@/components/select/SelectVersion';
 import Label from '@/components/ui/Label';
@@ -31,7 +31,7 @@ function FormRSForm({ id }: FormRSFormProps) {
   const schema = controller.schema;
   const { updateItem: update } = useUpdateItem();
   const { isModified, setIsModified } = useModificationStore();
-  const isProcessing = useIsProcessingRSForm();
+  const isProcessing = useMutatingRSForm();
 
   const [title, setTitle] = useState(schema.title);
   const [alias, setAlias] = useState(schema.alias);

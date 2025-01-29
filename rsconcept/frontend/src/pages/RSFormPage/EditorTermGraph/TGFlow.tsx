@@ -19,7 +19,7 @@ import {
 import { useStoreApi } from 'reactflow';
 import { useDebounce } from 'use-debounce';
 
-import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
+import { useMutatingRSForm } from '@/backend/rsform/useMutatingRSForm';
 import InfoConstituenta from '@/components/info/InfoConstituenta';
 import SelectedCounter from '@/components/info/SelectedCounter';
 import { CProps } from '@/components/props';
@@ -54,7 +54,7 @@ function TGFlow() {
   const flow = useReactFlow();
   const store = useStoreApi();
   const { addSelectedNodes } = store.getState();
-  const isProcessing = useIsProcessingRSForm();
+  const isProcessing = useMutatingRSForm();
 
   const showParams = useDialogsStore(state => state.showGraphParams);
 

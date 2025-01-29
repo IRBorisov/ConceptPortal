@@ -7,12 +7,12 @@ export const useResetPassword = () => {
   const validateMutation = useMutation({
     mutationKey: ['reset-password'],
     mutationFn: authApi.validatePasswordToken,
-    onSuccess: async () => await client.invalidateQueries({ queryKey: [authApi.baseKey] })
+    onSuccess: () => client.invalidateQueries({ queryKey: [authApi.baseKey] })
   });
   const resetMutation = useMutation({
     mutationKey: ['reset-password'],
     mutationFn: authApi.resetPassword,
-    onSuccess: async () => await client.invalidateQueries({ queryKey: [authApi.baseKey] })
+    onSuccess: () => client.invalidateQueries({ queryKey: [authApi.baseKey] })
   });
   return {
     validateToken: (

@@ -1,7 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { ossApi } from '@/backend/oss/api';
 import { rsformsApi } from '@/backend/rsform/api';
-import { AccessPolicy, ILibraryItem, LibraryItemID, LibraryItemType } from '@/models/library';
+import { AccessPolicy, ILibraryItem, LibraryItemID } from '@/models/library';
+import { IOperationSchemaData } from '@/models/oss';
 
 import { libraryApi } from './api';
 
@@ -11,21 +13,29 @@ export const useSetAccessPolicy = () => {
     mutationKey: [libraryApi.baseKey, 'set-location'],
     mutationFn: libraryApi.setAccessPolicy,
     onSuccess: (_, variables) => {
+      const ossKey = ossApi.getOssQueryOptions({ itemID: variables.itemID }).queryKey;
+      const ossData: IOperationSchemaData | undefined = client.getQueryData(ossKey);
+      if (ossData) {
+        client.setQueryData(ossKey, { ...ossData, access_policy: variables.policy });
+        return Promise.allSettled([
+          client.invalidateQueries({ queryKey: libraryApi.libraryListKey }),
+          ...ossData.items
+            .map(item => {
+              if (!item.result) {
+                return;
+              }
+              const itemKey = rsformsApi.getRSFormQueryOptions({ itemID: item.result }).queryKey;
+              return client.invalidateQueries({ queryKey: itemKey });
+            })
+            .filter(item => !!item)
+        ]);
+      }
+
+      const rsKey = rsformsApi.getRSFormQueryOptions({ itemID: variables.itemID }).queryKey;
+      client.setQueryData(rsKey, prev => (!prev ? undefined : { ...prev, access_policy: variables.policy }));
       client.setQueryData(libraryApi.libraryListKey, (prev: ILibraryItem[] | undefined) =>
         prev?.map(item => (item.id === variables.itemID ? { ...item, access_policy: variables.policy } : item))
       );
-      client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: variables.itemID }).queryKey, prev => {
-        if (!prev) {
-          return undefined;
-        }
-        if (prev.item_type === LibraryItemType.OSS) {
-          client.invalidateQueries({ queryKey: [libraryApi.libraryListKey] }).catch(console.error);
-        }
-        return {
-          ...prev,
-          access_policy: variables.policy
-        };
-      });
     }
   });
 

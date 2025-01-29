@@ -7,7 +7,7 @@ export const useLogin = () => {
   const mutation = useMutation({
     mutationKey: ['login'],
     mutationFn: authApi.login,
-    onSettled: async () => await client.invalidateQueries({ queryKey: [authApi.baseKey] })
+    onSettled: () => client.invalidateQueries({ queryKey: [authApi.baseKey] })
   });
   return {
     login: (

@@ -8,7 +8,7 @@ import { useAuthSuspense } from '@/backend/auth/useAuth';
 import { useCstSubstitute } from '@/backend/rsform/useCstSubstitute';
 import { useDownloadRSForm } from '@/backend/rsform/useDownloadRSForm';
 import { useInlineSynthesis } from '@/backend/rsform/useInlineSynthesis';
-import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
+import { useMutatingRSForm } from '@/backend/rsform/useMutatingRSForm';
 import { useProduceStructure } from '@/backend/rsform/useProduceStructure';
 import { useResetAliases } from '@/backend/rsform/useResetAliases';
 import { useRestoreOrder } from '@/backend/rsform/useRestoreOrder';
@@ -63,7 +63,7 @@ function MenuRSTabs() {
   const role = useRoleStore(state => state.role);
   const setRole = useRoleStore(state => state.setRole);
   const { isModified } = useModificationStore();
-  const isProcessing = useIsProcessingRSForm();
+  const isProcessing = useMutatingRSForm();
 
   const { resetAliases } = useResetAliases();
   const { restoreOrder } = useRestoreOrder();

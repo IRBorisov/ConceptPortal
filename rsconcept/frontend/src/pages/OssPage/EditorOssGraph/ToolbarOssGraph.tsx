@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { useIsProcessingOss } from '@/backend/oss/useIsProcessingOss';
+import { useMutatingOss } from '@/backend/oss/useMutatingOss';
 import {
   IconAnimation,
   IconAnimationOff,
@@ -52,7 +52,7 @@ function ToolbarOssGraph({
 }: ToolbarOssGraphProps) {
   const controller = useOssEdit();
   const { isModified } = useModificationStore();
-  const isProcessing = useIsProcessingOss();
+  const isProcessing = useMutatingOss();
   const selectedOperation = controller.schema.operationByID.get(controller.selected[0]);
 
   const showGrid = useOSSGraphStore(state => state.showGrid);
@@ -89,7 +89,6 @@ function ToolbarOssGraph({
         <MiniButton
           title='Сбросить изменения'
           icon={<IconReset size='1.25rem' className='icon-primary' />}
-          disabled={!isModified}
           onClick={onResetPositions}
         />
         <MiniButton

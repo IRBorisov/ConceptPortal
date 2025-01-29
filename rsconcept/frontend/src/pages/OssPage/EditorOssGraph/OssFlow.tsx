@@ -20,7 +20,7 @@ import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { useLibrary } from '@/backend/library/useLibrary';
 import { useInputCreate } from '@/backend/oss/useInputCreate';
-import { useIsProcessingOss } from '@/backend/oss/useIsProcessingOss';
+import { useMutatingOss } from '@/backend/oss/useMutatingOss';
 import { useOperationExecute } from '@/backend/oss/useOperationExecute';
 import { useUpdatePositions } from '@/backend/oss/useUpdatePositions';
 import { CProps } from '@/components/props';
@@ -50,7 +50,7 @@ function OssFlow() {
   const flow = useReactFlow();
   const { setIsModified } = useModificationStore();
 
-  const isProcessing = useIsProcessingOss();
+  const isProcessing = useMutatingOss();
 
   const showGrid = useOSSGraphStore(state => state.showGrid);
   const edgeAnimate = useOSSGraphStore(state => state.edgeAnimate);
@@ -118,7 +118,7 @@ function OssFlow() {
   }
 
   function handleNodesChange(changes: NodeChange[]) {
-    if (changes.some(change => change.type === 'position' && change.position)) {
+    if (controller.isMutable && changes.some(change => change.type === 'position' && change.position)) {
       setIsModified(true);
     }
     onNodesChange(changes);

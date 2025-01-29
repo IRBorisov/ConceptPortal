@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import { ICstRenameDTO } from '@/backend/rsform/api';
 import { useCstRename } from '@/backend/rsform/useCstRename';
-import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
+import { useMutatingRSForm } from '@/backend/rsform/useMutatingRSForm';
 import { IconEdit } from '@/components/Icons';
 import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
@@ -23,7 +23,7 @@ interface EditorControlsProps {
 function EditorControls({ constituenta, disabled, onEditTerm }: EditorControlsProps) {
   const { schema } = useRSEdit();
   const { isModified } = useModificationStore();
-  const isProcessing = useIsProcessingRSForm();
+  const isProcessing = useMutatingRSForm();
 
   const showRenameCst = useDialogsStore(state => state.showRenameCst);
   const { cstRename } = useCstRename();

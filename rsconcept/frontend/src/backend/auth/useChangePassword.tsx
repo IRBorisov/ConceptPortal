@@ -7,7 +7,7 @@ export const useChangePassword = () => {
   const mutation = useMutation({
     mutationKey: ['change-password'],
     mutationFn: authApi.changePassword,
-    onSettled: async () => await client.invalidateQueries({ queryKey: [authApi.baseKey] })
+    onSettled: () => client.invalidateQueries({ queryKey: [authApi.baseKey] })
   });
   return {
     changePassword: (

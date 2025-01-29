@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import { useCstUpdate } from '@/backend/rsform/useCstUpdate';
-import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
+import { useMutatingRSForm } from '@/backend/rsform/useMutatingRSForm';
 import useWindowSize from '@/hooks/useWindowSize';
 import { useMainHeight } from '@/stores/appLayout';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -33,7 +33,7 @@ function EditorConstituenta() {
 
   const [toggleReset, setToggleReset] = useState(false);
 
-  const isProcessing = useIsProcessingRSForm();
+  const isProcessing = useMutatingRSForm();
   const disabled = !controller.activeCst || !controller.isContentEditable || isProcessing;
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
 

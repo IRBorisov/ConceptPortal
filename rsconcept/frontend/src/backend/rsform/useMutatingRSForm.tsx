@@ -4,7 +4,7 @@ import { libraryApi } from '@/backend/library/api';
 
 import { rsformsApi } from './api';
 
-export const useIsProcessingRSForm = () => {
+export const useMutatingRSForm = () => {
   const countLibrary = useIsMutating({ mutationKey: [libraryApi.baseKey] });
   const countRsform = useIsMutating({ mutationKey: [rsformsApi.baseKey] });
   return countLibrary + countRsform !== 0;

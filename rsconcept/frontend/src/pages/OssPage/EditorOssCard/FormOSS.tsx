@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 
 import { ILibraryUpdateDTO } from '@/backend/library/api';
 import { useUpdateItem } from '@/backend/library/useUpdateItem';
-import { useIsProcessingOss } from '@/backend/oss/useIsProcessingOss';
+import { useMutatingOss } from '@/backend/oss/useMutatingOss';
 import { IconSave } from '@/components/Icons';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
@@ -24,7 +24,7 @@ function FormOSS({ id }: FormOSSProps) {
   const { updateItem: update } = useUpdateItem();
   const controller = useOssEdit();
   const { isModified, setIsModified } = useModificationStore();
-  const isProcessing = useIsProcessingOss();
+  const isProcessing = useMutatingOss();
   const schema = controller.schema;
 
   const [title, setTitle] = useState(schema.title);

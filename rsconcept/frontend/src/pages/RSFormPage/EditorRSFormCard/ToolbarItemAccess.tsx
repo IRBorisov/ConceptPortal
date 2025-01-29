@@ -1,4 +1,4 @@
-import { useIsProcessingLibrary } from '@/backend/library/useIsProcessingLibrary';
+import { useMutatingLibrary } from '@/backend/library/useMutatingLibrary';
 import { useSetAccessPolicy } from '@/backend/library/useSetAccessPolicy';
 import { VisibilityIcon } from '@/components/DomainIcons';
 import { IconImmutable, IconMutable } from '@/components/Icons';
@@ -23,7 +23,7 @@ interface ToolbarItemAccessProps {
 
 function ToolbarItemAccess({ visible, toggleVisible, readOnly, toggleReadOnly, controller }: ToolbarItemAccessProps) {
   const role = useRoleStore(state => state.role);
-  const isProcessing = useIsProcessingLibrary();
+  const isProcessing = useMutatingLibrary();
   const policy = controller.schema.access_policy;
   const { setAccessPolicy } = useSetAccessPolicy();
 

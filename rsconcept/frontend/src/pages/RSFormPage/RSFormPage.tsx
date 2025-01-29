@@ -6,7 +6,7 @@ import { useParams } from 'react-router';
 
 import { useBlockNavigation, useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
-import InfoError, { ErrorData } from '@/components/info/InfoError';
+import { ErrorData } from '@/components/info/InfoError';
 import Divider from '@/components/ui/Divider';
 import TextURL from '@/components/ui/TextURL';
 import useQueryStrings from '@/hooks/useQueryStrings';
@@ -33,6 +33,7 @@ function RSFormPage() {
   }
   return (
     <ErrorBoundary
+      onError={filterErrors}
       FallbackComponent={({ error }) => (
         <ProcessError error={error as ErrorData} isArchive={!!version} itemID={itemID} />
       )}
@@ -47,6 +48,13 @@ function RSFormPage() {
 export default RSFormPage;
 
 // ====== Internals =========
+const filterErrors = (error: Error) => {
+  if (axios.isAxiosError(error) && error.response && (error.response.status === 404 || error.response.status === 403)) {
+    return;
+  }
+  throw error;
+};
+
 function ProcessError({
   error,
   isArchive,
@@ -55,7 +63,7 @@ function ProcessError({
   error: ErrorData;
   isArchive: boolean;
   itemID?: LibraryItemID;
-}): React.ReactElement {
+}): React.ReactElement | null {
   if (axios.isAxiosError(error) && error.response) {
     if (error.response.status === 404) {
       return (
@@ -77,5 +85,5 @@ function ProcessError({
       );
     }
   }
-  return <InfoError error={error} />;
+  return null;
 }

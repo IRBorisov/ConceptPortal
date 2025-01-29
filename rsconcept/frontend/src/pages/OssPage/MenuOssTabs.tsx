@@ -3,7 +3,7 @@
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { useAuthSuspense } from '@/backend/auth/useAuth';
-import { useIsProcessingOss } from '@/backend/oss/useIsProcessingOss';
+import { useMutatingOss } from '@/backend/oss/useMutatingOss';
 import {
   IconAdmin,
   IconAlert,
@@ -35,7 +35,7 @@ function MenuOssTabs() {
   const router = useConceptNavigation();
   const { user, isAnonymous } = useAuthSuspense();
 
-  const isProcessing = useIsProcessingOss();
+  const isProcessing = useMutatingOss();
 
   const role = useRoleStore(state => state.role);
   const setRole = useRoleStore(state => state.setRole);

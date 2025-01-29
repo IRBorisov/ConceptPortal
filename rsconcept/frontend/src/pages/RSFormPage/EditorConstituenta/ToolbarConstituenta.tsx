@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { useFindPredecessor } from '@/backend/oss/useFindPredecessor';
-import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
+import { useMutatingRSForm } from '@/backend/rsform/useMutatingRSForm';
 import {
   IconClone,
   IconDestroy,
@@ -53,7 +53,7 @@ function ToolbarConstituenta({
   const showList = usePreferencesStore(state => state.showCstSideList);
   const toggleList = usePreferencesStore(state => state.toggleShowCstSideList);
   const { isModified } = useModificationStore();
-  const isProcessing = useIsProcessingRSForm();
+  const isProcessing = useMutatingRSForm();
 
   function viewPredecessor(target: ConstituentaID) {
     findPredecessor({ target: target }, reference =>

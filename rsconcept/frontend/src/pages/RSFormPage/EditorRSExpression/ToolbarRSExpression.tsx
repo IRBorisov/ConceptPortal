@@ -1,4 +1,4 @@
-import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
+import { useMutatingRSForm } from '@/backend/rsform/useMutatingRSForm';
 import { IconControls, IconTree, IconTypeGraph } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import MiniButton from '@/components/ui/MiniButton';
@@ -12,7 +12,7 @@ interface ToolbarRSExpressionProps {
 }
 
 function ToolbarRSExpression({ disabled, showTypeGraph, showAST }: ToolbarRSExpressionProps) {
-  const isProcessing = useIsProcessingRSForm();
+  const isProcessing = useMutatingRSForm();
   const showControls = usePreferencesStore(state => state.showExpressionControls);
   const toggleControls = usePreferencesStore(state => state.toggleShowExpressionControls);
 

@@ -21,13 +21,6 @@ function OssPage() {
   const { isModified } = useModificationStore();
   useBlockNavigation(isModified);
 
-  // useBlockNavigation(
-  //   isModified &&
-  //     schema !== undefined &&
-  //     !!user &&
-  //     (user.is_staff || user.id == schema.owner || schema.editors.includes(user.id))
-  // );
-
   if (!itemID) {
     router.replace(urls.page404);
     return null;

@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
-import { IPasswordTokenDTO, IResetPasswordDTO } from '@/backend/auth/api';
+import { IResetPasswordDTO } from '@/backend/auth/api';
 import { useResetPassword } from '@/backend/auth/useResetPassword';
 import InfoError, { ErrorData } from '@/components/info/InfoError';
 import SubmitButton from '@/components/ui/SubmitButton';
@@ -48,10 +48,7 @@ function PasswordChangePage() {
   }, [newPassword, newPasswordRepeat, reset]);
 
   useEffect(() => {
-    const data: IPasswordTokenDTO = {
-      token: token ?? ''
-    };
-    validateToken(data, () => setIsTokenValid(true));
+    validateToken({ token: token ?? '' }, () => setIsTokenValid(true));
   }, [token, validateToken]);
 
   return (

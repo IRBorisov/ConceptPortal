@@ -10,7 +10,7 @@ export const useCloneItem = () => {
   const mutation = useMutation({
     mutationKey: [libraryApi.baseKey, 'clone-item'],
     mutationFn: libraryApi.cloneItem,
-    onSuccess: async () => await client.invalidateQueries({ queryKey: [libraryApi.baseKey] })
+    onSuccess: () => client.invalidateQueries({ queryKey: [libraryApi.baseKey] })
   });
   return {
     cloneItem: (

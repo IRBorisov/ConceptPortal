@@ -16,7 +16,28 @@ function DescribeError({ error }: { error: ErrorData }) {
   } else if (typeof error === 'string') {
     return <p>{error}</p>;
   } else if (!axios.isAxiosError(error)) {
-    return <PrettyJson data={error} />;
+    return (
+      <div className='mt-6'>
+        <p>
+          <b>Error:</b> {error.name}
+        </p>
+        <p>
+          <b>Message:</b> {error.message}
+        </p>
+        {error.stack && (
+          <pre
+            style={{
+              whiteSpace: 'pre-wrap',
+              wordWrap: 'break-word',
+              padding: '6px',
+              overflowX: 'auto'
+            }}
+          >
+            {error.stack}
+          </pre>
+        )}
+      </div>
+    );
   }
   if (!error?.response) {
     return <p>Нет ответа от сервера</p>;

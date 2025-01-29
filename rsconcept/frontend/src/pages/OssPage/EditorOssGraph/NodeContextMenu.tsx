@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { useIsProcessingOss } from '@/backend/oss/useIsProcessingOss';
+import { useMutatingOss } from '@/backend/oss/useMutatingOss';
 import {
   IconChild,
   IconConnect,
@@ -50,7 +50,7 @@ function NodeContextMenu({
   onRelocateConstituents
 }: NodeContextMenuProps) {
   const controller = useOssEdit();
-  const isProcessing = useIsProcessingOss();
+  const isProcessing = useMutatingOss();
 
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);

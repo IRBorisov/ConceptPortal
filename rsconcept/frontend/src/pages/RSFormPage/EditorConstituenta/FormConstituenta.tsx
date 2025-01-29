@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 
 import { ICstUpdateDTO } from '@/backend/rsform/api';
 import { useCstUpdate } from '@/backend/rsform/useCstUpdate';
-import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
+import { useMutatingRSForm } from '@/backend/rsform/useMutatingRSForm';
 import { IconChild, IconPredecessor, IconSave } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import RefsInput from '@/components/RefsInput';
@@ -45,7 +45,7 @@ function FormConstituenta({
   const { cstUpdate } = useCstUpdate();
   const { schema, activeCst } = useRSEdit();
   const { isModified, setIsModified } = useModificationStore();
-  const isProcessing = useIsProcessingRSForm();
+  const isProcessing = useMutatingRSForm();
 
   const [term, setTerm] = useState(activeCst?.term_raw ?? '');
   const [textDefinition, setTextDefinition] = useState(activeCst?.definition_raw ?? '');

@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
+import { useMutatingRSForm } from '@/backend/rsform/useMutatingRSForm';
 import {
   IconClustering,
   IconClusteringOff,
@@ -48,7 +48,7 @@ function ToolbarTermGraph({
   onSaveImage
 }: ToolbarTermGraphProps) {
   const controller = useRSEdit();
-  const isProcessing = useIsProcessingRSForm();
+  const isProcessing = useMutatingRSForm();
   const showTypeGraph = useDialogsStore(state => state.showShowTypeGraph);
 
   function handleShowTypeGraph() {

@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { DataCallback } from '@/backend/apiTransport';
 import { ICheckConstituentaDTO } from '@/backend/rsform/api';
 import { useCheckConstituenta } from '@/backend/rsform/useCheckConstituenta';
-import { useIsProcessingRSForm } from '@/backend/rsform/useIsProcessingRSForm';
+import { useMutatingRSForm } from '@/backend/rsform/useMutatingRSForm';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import { CProps } from '@/components/props';
 import RSInput from '@/components/RSInput';
@@ -65,7 +65,7 @@ function EditorRSExpression({
   const rsInput = useRef<ReactCodeMirrorRef>(null);
   const [parseData, setParseData] = useState<IExpressionParse | undefined>(undefined);
 
-  const isProcessing = useIsProcessingRSForm();
+  const isProcessing = useMutatingRSForm();
   const showControls = usePreferencesStore(state => state.showExpressionControls);
   const showAST = useDialogsStore(state => state.showShowAST);
 

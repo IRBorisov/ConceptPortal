@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { useIsProcessingLibrary } from '@/backend/library/useIsProcessingLibrary';
+import { useMutatingLibrary } from '@/backend/library/useMutatingLibrary';
 import { useVersionDelete } from '@/backend/library/useVersionDelete';
 import { useVersionUpdate } from '@/backend/library/useVersionUpdate';
 import { IconReset, IconSave } from '@/components/Icons';
@@ -22,7 +22,7 @@ export interface DlgEditVersionsProps {
 
 function DlgEditVersions() {
   const { item, afterDelete } = useDialogsStore(state => state.props as DlgEditVersionsProps);
-  const processing = useIsProcessingLibrary();
+  const processing = useMutatingLibrary();
   const { versionDelete } = useVersionDelete();
   const { versionUpdate } = useVersionUpdate();
 

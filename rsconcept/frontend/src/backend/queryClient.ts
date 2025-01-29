@@ -14,7 +14,7 @@ export const queryClient = new QueryClient({
     queries: {
       staleTime: DELAYS.staleDefault,
       gcTime: DELAYS.garbageCollection,
-      retry: 3,
+      retry: false,
       refetchOnWindowFocus: true,
       refetchOnMount: true,
       refetchOnReconnect: true

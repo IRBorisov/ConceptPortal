@@ -86,11 +86,9 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   const { schema } = useOssSuspense({ itemID: itemID });
 
   const isOwned = !!user.id && user.id === schema.owner;
-
   const isMutable = role > UserRole.READER && !schema.read_only;
 
   const [showTooltip, setShowTooltip] = useState(true);
-
   const [selected, setSelected] = useState<OperationID[]>([]);
 
   const showEditInput = useDialogsStore(state => state.showChangeInputSchema);

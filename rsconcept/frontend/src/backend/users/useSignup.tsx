@@ -9,7 +9,7 @@ export const useSignup = () => {
   const mutation = useMutation({
     mutationKey: ['signup'],
     mutationFn: usersApi.signup,
-    onSuccess: async () => await client.invalidateQueries({ queryKey: [usersApi.baseKey] })
+    onSuccess: () => client.invalidateQueries({ queryKey: usersApi.getUsersQueryOptions().queryKey })
   });
   return {
     signup: (

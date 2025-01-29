@@ -2,6 +2,8 @@ import { queryOptions } from '@tanstack/react-query';
 
 import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
+import { ossApi } from '@/backend/oss/api';
+import { rsformsApi } from '@/backend/rsform/api';
 import {
   AccessPolicy,
   ILibraryItem,
@@ -14,9 +16,6 @@ import {
 import { ConstituentaID, IRSFormData } from '@/models/rsform';
 import { UserID } from '@/models/user';
 import { information } from '@/utils/labels';
-
-import { ossApi } from '../oss/api';
-import { rsformsApi } from '../rsform/api';
 
 /**
  * Represents update data for renaming Location.

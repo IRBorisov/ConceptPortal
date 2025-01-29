@@ -3,7 +3,6 @@
 import clsx from 'clsx';
 
 import FlexColumn from '@/components/ui/FlexColumn';
-import { LibraryItemType } from '@/models/library';
 import { useModificationStore } from '@/stores/modification';
 import { globals } from '@/utils/constants';
 
@@ -46,7 +45,7 @@ function EditorRSFormCard() {
       >
         <FlexColumn className='flex-shrink'>
           <FormRSForm id={globals.library_item_editor} />
-          <EditorLibraryItem itemID={controller.schema.id} itemType={LibraryItemType.RSFORM} controller={controller} />
+          <EditorLibraryItem controller={controller} />
         </FlexColumn>
 
         {controller.schema ? <RSFormStats stats={controller.schema.stats} isArchive={controller.isArchive} /> : null}

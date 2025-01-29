@@ -1,6 +1,6 @@
 'use client';
 
-import { useIsProcessingLibrary } from '@/backend/library/useIsProcessingLibrary';
+import { useMutatingLibrary } from '@/backend/library/useMutatingLibrary';
 import { IconDestroy, IconSave, IconShare } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniSelectorOSS from '@/components/select/MiniSelectorOSS';
@@ -26,7 +26,7 @@ interface ToolbarRSFormCardProps {
 function ToolbarRSFormCard({ controller, onSubmit }: ToolbarRSFormCardProps) {
   const role = useRoleStore(state => state.role);
   const { isModified } = useModificationStore();
-  const isProcessing = useIsProcessingLibrary();
+  const isProcessing = useMutatingLibrary();
   const canSave = isModified && !isProcessing;
 
   const ossSelector = (() => {

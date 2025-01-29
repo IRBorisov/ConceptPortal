@@ -2,14 +2,15 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { IUpdateProfileDTO, usersApi } from './api';
 
-// TODO: reload users / optimistic update
-
 export const useUpdateProfile = () => {
   const client = useQueryClient();
   const mutation = useMutation({
     mutationKey: ['update-profile'],
     mutationFn: usersApi.updateProfile,
-    onSuccess: async () => await client.invalidateQueries({ queryKey: [usersApi.baseKey] })
+    onSuccess: data => {
+      client.setQueryData(usersApi.getProfileQueryOptions().queryKey, data);
+      return client.invalidateQueries({ queryKey: usersApi.getUsersQueryOptions().queryKey });
+    }
   });
   return {
     updateProfile: (data: IUpdateProfileDTO) => mutation.mutate(data),
