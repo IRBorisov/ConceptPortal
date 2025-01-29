@@ -7,7 +7,8 @@ export const useLogout = () => {
   const mutation = useMutation({
     mutationKey: ['logout'],
     mutationFn: authApi.logout,
-    onSettled: () => client.invalidateQueries({ queryKey: [authApi.baseKey] })
+    onSettled: () => client.invalidateQueries({ queryKey: [authApi.baseKey] }),
+    onSuccess: () => client.removeQueries()
   });
   return { logout: (onSuccess?: () => void) => mutation.mutate(undefined, { onSuccess }) };
 };
