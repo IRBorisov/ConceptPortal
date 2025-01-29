@@ -1,1 +1,1 @@
-export { default } from './OssPage';
+export { OssPage as Component } from './OssPage';

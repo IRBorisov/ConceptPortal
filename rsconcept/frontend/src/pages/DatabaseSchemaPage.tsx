@@ -6,9 +6,8 @@ import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 import { useAppLayoutStore, useFitHeight } from '@/stores/appLayout';
 import { resources } from '@/utils/constants';
 
-function DatabaseSchemaPage() {
+export function Component() {
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
-
   const panelHeight = useFitHeight('0px');
 
   useEffect(() => {
@@ -26,5 +25,3 @@ function DatabaseSchemaPage() {
     </div>
   );
 }
-
-export default DatabaseSchemaPage;

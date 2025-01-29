@@ -74,7 +74,7 @@ export const libraryApi = {
   },
   getLibraryQueryOptions: ({ isAdmin }: { isAdmin: boolean }) =>
     queryOptions({
-      queryKey: libraryApi.libraryListKey,
+      queryKey: [...libraryApi.libraryListKey, isAdmin ? 'admin' : 'user'],
       staleTime: DELAYS.staleMedium,
       queryFn: meta =>
         axiosGet<ILibraryItem[]>({

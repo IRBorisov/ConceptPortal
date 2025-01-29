@@ -3,6 +3,7 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { LibraryItemID, VersionID } from '@/models/library';
 import { RSFormLoader } from '@/models/RSFormLoader';
 
+import { queryClient } from '../queryClient';
 import { rsformsApi } from './api';
 
 export function useRSForm({ itemID, version }: { itemID?: LibraryItemID; version?: VersionID }) {
@@ -20,4 +21,11 @@ export function useRSFormSuspense({ itemID, version }: { itemID: LibraryItemID; 
   });
   const schema = new RSFormLoader(data!).produceRSForm();
   return { schema };
+}
+
+export function prefetchRSForm({ itemID, version }: { itemID?: LibraryItemID; version?: VersionID }) {
+  if (!itemID) {
+    return null;
+  }
+  return queryClient.prefetchQuery(rsformsApi.getRSFormQueryOptions({ itemID, version }));
 }

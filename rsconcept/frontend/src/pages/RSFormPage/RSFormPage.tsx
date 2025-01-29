@@ -16,7 +16,7 @@ import { useModificationStore } from '@/stores/modification';
 import { RSEditState, RSTabID } from './RSEditContext';
 import RSTabs from './RSTabs';
 
-function RSFormPage() {
+export function RSFormPage() {
   const router = useConceptNavigation();
   const query = useQueryStrings();
   const params = useParams();
@@ -33,7 +33,6 @@ function RSFormPage() {
   }
   return (
     <ErrorBoundary
-      onError={filterErrors}
       FallbackComponent={({ error }) => (
         <ProcessError error={error as ErrorData} isArchive={!!version} itemID={itemID} />
       )}
@@ -45,16 +44,7 @@ function RSFormPage() {
   );
 }
 
-export default RSFormPage;
-
 // ====== Internals =========
-const filterErrors = (error: Error) => {
-  if (axios.isAxiosError(error) && error.response && (error.response.status === 404 || error.response.status === 403)) {
-    return;
-  }
-  throw error;
-};
-
 function ProcessError({
   error,
   isArchive,
@@ -85,5 +75,5 @@ function ProcessError({
       );
     }
   }
-  return null;
+  throw error as Error;
 }

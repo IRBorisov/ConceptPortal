@@ -3,7 +3,7 @@ import RequireAuth from '@/components/RequireAuth';
 import EditorPassword from './EditorPassword';
 import EditorProfile from './EditorProfile';
 
-function UserProfilePage() {
+export function UserProfilePage() {
   return (
     <RequireAuth>
       <div className='cc-fade-in flex flex-col py-2 mx-auto w-fit'>
@@ -16,5 +16,3 @@ function UserProfilePage() {
     </RequireAuth>
   );
 }
-
-export default UserProfilePage;

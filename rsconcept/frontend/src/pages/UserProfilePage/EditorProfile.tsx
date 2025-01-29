@@ -7,7 +7,7 @@ import { useBlockNavigation } from '@/app/Navigation/NavigationContext';
 import { IUpdateProfileDTO } from '@/backend/users/api';
 import { useProfileSuspense } from '@/backend/users/useProfile';
 import { useUpdateProfile } from '@/backend/users/useUpdateProfile';
-import InfoError, { ErrorData } from '@/components/info/InfoError';
+import { ErrorData } from '@/components/info/InfoError';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
 
@@ -99,5 +99,5 @@ function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
       );
     }
   }
-  return <InfoError error={error} />;
+  throw error as Error;
 }

@@ -6,14 +6,14 @@ import { useParams } from 'react-router';
 
 import { useBlockNavigation, useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
-import InfoError, { ErrorData } from '@/components/info/InfoError';
+import { ErrorData } from '@/components/info/InfoError';
 import TextURL from '@/components/ui/TextURL';
 import { useModificationStore } from '@/stores/modification';
 
 import { OssEditState } from './OssEditContext';
 import OssTabs from './OssTabs';
 
-function OssPage() {
+export function OssPage() {
   const router = useConceptNavigation();
   const params = useParams();
   const itemID = params.id ? Number(params.id) : undefined;
@@ -34,8 +34,6 @@ function OssPage() {
     </ErrorBoundary>
   );
 }
-
-export default OssPage;
 
 // ====== Internals =========
 function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
@@ -58,5 +56,5 @@ function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
       );
     }
   }
-  return <InfoError error={error} />;
+  throw error as Error;
 }

@@ -1,30 +1,27 @@
-import React from 'react';
 import { createBrowserRouter } from 'react-router';
 
+import { prefetchAuth } from '@/backend/auth/useAuth';
+import { prefetchLibrary } from '@/backend/library/useLibrary';
+import { prefetchOSS } from '@/backend/oss/useOSS';
+import { prefetchRSForm } from '@/backend/rsform/useRSForm';
+import { prefetchProfile } from '@/backend/users/useProfile';
+import { prefetchUsers } from '@/backend/users/useUsers';
+import Loader from '@/components/ui/Loader';
 import CreateItemPage from '@/pages/CreateItemPage';
 import HomePage from '@/pages/HomePage';
-import LibraryPage from '@/pages/LibraryPage';
 import LoginPage from '@/pages/LoginPage';
 import NotFoundPage from '@/pages/NotFoundPage';
-import OssPage from '@/pages/OssPage';
-import RSFormPage from '@/pages/RSFormPage';
 
 import ApplicationLayout from './ApplicationLayout';
 import { routes } from './urls';
-
-const UserProfilePage = React.lazy(() => import('@/pages/UserProfilePage'));
-const RestorePasswordPage = React.lazy(() => import('@/pages/RestorePasswordPage'));
-const PasswordChangePage = React.lazy(() => import('@/pages/PasswordChangePage'));
-const RegisterPage = React.lazy(() => import('@/pages/RegisterPage'));
-const ManualsPage = React.lazy(() => import('@/pages/ManualsPage'));
-const IconsPage = React.lazy(() => import('@/pages/IconsPage'));
-const DatabaseSchemaPage = React.lazy(() => import('@/pages/DatabaseSchemaPage'));
 
 export const Router = createBrowserRouter([
   {
     path: '/',
     element: <ApplicationLayout />,
     errorElement: <NotFoundPage />,
+    loader: prefetchAuth,
+    hydrateFallbackElement: <Loader />,
     children: [
       {
         path: '',
@@ -40,23 +37,25 @@ export const Router = createBrowserRouter([
       },
       {
         path: routes.signup,
-        element: <RegisterPage />
+        lazy: () => import('@/pages/RegisterPage')
       },
       {
         path: routes.profile,
-        element: <UserProfilePage />
+        loader: prefetchProfile,
+        lazy: () => import('@/pages/UserProfilePage')
       },
       {
         path: routes.restore_password,
-        element: <RestorePasswordPage />
+        lazy: () => import('@/pages/RestorePasswordPage')
       },
       {
         path: routes.password_change,
-        element: <PasswordChangePage />
+        lazy: () => import('@/pages/PasswordChangePage')
       },
       {
         path: routes.library,
-        element: <LibraryPage />
+        loader: () => Promise.allSettled([prefetchLibrary(), prefetchUsers()]),
+        lazy: () => import('@/pages/LibraryPage')
       },
       {
         path: routes.create_schema,
@@ -64,24 +63,37 @@ export const Router = createBrowserRouter([
       },
       {
         path: `${routes.rsforms}/:id`,
-        element: <RSFormPage />
+        loader: data => prefetchRSForm(parseRSFormURL(data.params.id, data.request.url)),
+        lazy: () => import('@/pages/RSFormPage')
       },
       {
         path: `${routes.oss}/:id`,
-        element: <OssPage />
+        loader: data => prefetchOSS(parseOssURL(data.params.id)),
+        lazy: () => import('@/pages/OssPage')
       },
       {
         path: routes.manuals,
-        element: <ManualsPage />
+        lazy: () => import('@/pages/ManualsPage')
       },
       {
         path: `${routes.icons}`,
-        element: <IconsPage />
+        lazy: () => import('@/pages/IconsPage')
       },
       {
         path: `${routes.database_schema}`,
-        element: <DatabaseSchemaPage />
+        lazy: () => import('@/pages/DatabaseSchemaPage')
       }
     ]
   }
 ]);
+
+// ======= Internals =========
+function parseRSFormURL(id: string | undefined, url: string) {
+  const params = new URLSearchParams(url.split('?')[1]);
+  const version = params.get('v');
+  return { itemID: id ? Number(id) : undefined, version: version ? Number(version) : undefined };
+}
+
+function parseOssURL(id: string | undefined) {
+  return { itemID: id ? Number(id) : undefined };
+}

@@ -1,1 +1,1 @@
-export { default } from './RSFormPage';
+export { RSFormPage as Component } from './RSFormPage';

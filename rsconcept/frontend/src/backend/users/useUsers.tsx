@@ -1,5 +1,7 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
+import { queryClient } from '@/backend/queryClient';
+
 import { usersApi } from './api';
 
 export function useUsersSuspense() {
@@ -14,4 +16,8 @@ export function useUsers() {
     ...usersApi.getUsersQueryOptions()
   });
   return { users: users ?? [] };
+}
+
+export function prefetchUsers() {
+  return queryClient.prefetchQuery(usersApi.getUsersQueryOptions());
 }

@@ -1,7 +1,5 @@
 'use client';
 
-import { useCallback } from 'react';
-
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import useQueryStrings from '@/hooks/useQueryStrings';
@@ -12,19 +10,16 @@ import { PARAMETER } from '@/utils/constants';
 import TopicsList from './TopicsList';
 import ViewTopic from './ViewTopic';
 
-function ManualsPage() {
+export function ManualsPage() {
   const router = useConceptNavigation();
   const query = useQueryStrings();
   const activeTopic = (query.get('topic') || HelpTopic.MAIN) as HelpTopic;
 
   const mainHeight = useMainHeight();
 
-  const onSelectTopic = useCallback(
-    (newTopic: HelpTopic) => {
-      router.push(urls.help_topic(newTopic));
-    },
-    [router]
-  );
+  function onSelectTopic(newTopic: HelpTopic) {
+    router.push(urls.help_topic(newTopic));
+  }
 
   if (!Object.values(HelpTopic).includes(activeTopic)) {
     setTimeout(() => {
@@ -40,5 +35,3 @@ function ManualsPage() {
     </div>
   );
 }
-
-export default ManualsPage;

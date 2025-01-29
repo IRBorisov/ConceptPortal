@@ -9,7 +9,7 @@ import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { IChangePasswordDTO } from '@/backend/auth/api';
 import { useChangePassword } from '@/backend/auth/useChangePassword';
-import InfoError, { ErrorData } from '@/components/info/InfoError';
+import { ErrorData } from '@/components/info/InfoError';
 import FlexColumn from '@/components/ui/FlexColumn';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
@@ -97,7 +97,6 @@ export default EditorPassword;
 function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
     return <div className='text-sm select-text text-warn-600'>Неверно введен старый пароль</div>;
-  } else {
-    return <InfoError error={error} />;
   }
+  throw error as Error;
 }

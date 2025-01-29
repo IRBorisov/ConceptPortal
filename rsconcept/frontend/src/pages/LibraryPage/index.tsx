@@ -1,1 +1,1 @@
-export { default } from './LibraryPage';
+export { LibraryPage as Component } from './LibraryPage';

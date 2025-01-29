@@ -19,7 +19,7 @@ import TableLibraryItems from './TableLibraryItems';
 import ToolbarSearch from './ToolbarSearch';
 import ViewSideLocation from './ViewSideLocation';
 
-function LibraryPage() {
+export function LibraryPage() {
   const { items: libraryItems } = useLibrarySuspense();
   const { renameLocation } = useRenameLocation();
 
@@ -83,5 +83,3 @@ function LibraryPage() {
     </>
   );
 }
-
-export default LibraryPage;

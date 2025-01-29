@@ -3,7 +3,7 @@
 // @ts-nocheck
 import * as icons from '@/components/Icons';
 
-export function IconsPage() {
+export function Component() {
   const iconsList = Object.keys(icons).filter(key => key.startsWith('Icon'));
   return (
     <div className='flex flex-col items-center px-6 py-3'>
@@ -19,5 +19,3 @@ export function IconsPage() {
     </div>
   );
 }
-
-export default IconsPage;

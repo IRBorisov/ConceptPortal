@@ -5,12 +5,12 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
 import { useRequestPasswordReset } from '@/backend/auth/useRequestPasswordReset';
-import InfoError, { ErrorData } from '@/components/info/InfoError';
+import { ErrorData } from '@/components/info/InfoError';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
 import TextURL from '@/components/ui/TextURL';
 
-function RestorePasswordPage() {
+export function Component() {
   const { requestPasswordReset, isPending, error, reset } = useRequestPasswordReset();
 
   const [isCompleted, setIsCompleted] = useState(false);
@@ -60,15 +60,12 @@ function RestorePasswordPage() {
   }
 }
 
-export default RestorePasswordPage;
-
 // ====== Internals =========
 function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
     return (
       <div className='mx-auto mt-6 text-sm select-text text-warn-600'>Данный email не используется на Портале.</div>
     );
-  } else {
-    return <InfoError error={error} />;
   }
+  throw error as Error;
 }

@@ -1,5 +1,7 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
+import { queryClient } from '@/backend/queryClient';
+
 import { libraryApi } from './api';
 
 export function useTemplatesSuspense() {
@@ -14,4 +16,8 @@ export function useTemplates() {
     ...libraryApi.getTemplatesQueryOptions()
   });
   return { templates: templates ?? [] };
+}
+
+export function prefetchTemplates() {
+  return queryClient.prefetchQuery(libraryApi.getTemplatesQueryOptions());
 }

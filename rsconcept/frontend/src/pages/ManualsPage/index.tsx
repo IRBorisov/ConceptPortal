@@ -1,1 +1,1 @@
-export { default } from './ManualsPage';
+export { ManualsPage as Component } from './ManualsPage';

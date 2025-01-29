@@ -1,5 +1,6 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
+import { queryClient } from '../queryClient';
 import { authApi } from './api';
 
 export function useAuth() {
@@ -18,4 +19,8 @@ export function useAuthSuspense() {
     ...authApi.getAuthQueryOptions()
   });
   return { user, isAnonymous: user.id === null };
+}
+
+export function prefetchAuth() {
+  return queryClient.prefetchQuery(authApi.getAuthQueryOptions());
 }

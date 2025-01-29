@@ -3,7 +3,7 @@ import ExpectedAnonymous from '@/components/ExpectedAnonymous';
 
 import FormSignup from './FormSignup';
 
-function RegisterPage() {
+export function RegisterPage() {
   const { user } = useAuthSuspense();
 
   if (user) {
@@ -12,5 +12,3 @@ function RegisterPage() {
     return <FormSignup />;
   }
 }
-
-export default RegisterPage;

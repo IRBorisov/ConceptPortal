@@ -8,13 +8,13 @@ import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { IResetPasswordDTO } from '@/backend/auth/api';
 import { useResetPassword } from '@/backend/auth/useResetPassword';
-import InfoError, { ErrorData } from '@/components/info/InfoError';
+import { ErrorData } from '@/components/info/InfoError';
 import Loader from '@/components/ui/Loader';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
 import useQueryStrings from '@/hooks/useQueryStrings';
 
-function PasswordChangePage() {
+export function Component() {
   const router = useConceptNavigation();
   const token = useQueryStrings().get('token');
 
@@ -96,13 +96,10 @@ function PasswordChangePage() {
   );
 }
 
-export default PasswordChangePage;
-
 // ====== Internals =========
 function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 404) {
     return <div className='mx-auto mt-6 text-sm select-text text-warn-600'>Данная ссылка не действительна</div>;
-  } else {
-    return <InfoError error={error} />;
   }
+  throw error as Error;
 }

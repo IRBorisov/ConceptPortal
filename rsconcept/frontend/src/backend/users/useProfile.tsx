@@ -1,5 +1,7 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
+import { queryClient } from '@/backend/queryClient';
+
 import { usersApi } from './api';
 
 export function useProfile() {
@@ -18,4 +20,8 @@ export function useProfileSuspense() {
     ...usersApi.getProfileQueryOptions()
   });
   return { profile };
+}
+
+export function prefetchProfile() {
+  return queryClient.prefetchQuery(usersApi.getProfileQueryOptions());
 }

@@ -1,22 +1,29 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { useAuthSuspense } from '@/backend/auth/useAuth';
+import { queryClient } from '@/backend/queryClient';
+import { usePreferencesStore } from '@/stores/preferences';
 
 import { libraryApi } from './api';
 
 export function useLibrarySuspense() {
+  const adminMode = usePreferencesStore(state => state.adminMode);
   const { user } = useAuthSuspense();
   const { data: items } = useSuspenseQuery({
-    ...libraryApi.getLibraryQueryOptions({ isAdmin: user?.is_staff ?? false })
+    ...libraryApi.getLibraryQueryOptions({ isAdmin: user.is_staff && adminMode })
   });
   return { items };
 }
 
 export function useLibrary() {
-  // NOTE: Using suspense here to avoid duplicated library data requests
+  const adminMode = usePreferencesStore(state => state.adminMode);
   const { user } = useAuthSuspense();
   const { data: items, isLoading } = useQuery({
-    ...libraryApi.getLibraryQueryOptions({ isAdmin: user.is_staff })
+    ...libraryApi.getLibraryQueryOptions({ isAdmin: user.is_staff && adminMode })
   });
   return { items: items ?? [], isLoading };
+}
+
+export function prefetchLibrary() {
+  return queryClient.prefetchQuery(libraryApi.getLibraryQueryOptions({ isAdmin: false }));
 }

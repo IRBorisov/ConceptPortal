@@ -8,7 +8,7 @@ import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { useSignup } from '@/backend/users/useSignup';
 import { IconHelp } from '@/components/Icons';
-import InfoError, { ErrorData } from '@/components/info/InfoError';
+import { ErrorData } from '@/components/info/InfoError';
 import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/Checkbox';
 import FlexColumn from '@/components/ui/FlexColumn';
@@ -188,5 +188,5 @@ function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
       );
     }
   }
-  return <InfoError error={error} />;
+  throw error as Error;
 }

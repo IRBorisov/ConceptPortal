@@ -9,7 +9,7 @@ import { urls } from '@/app/urls';
 import { useAuthSuspense } from '@/backend/auth/useAuth';
 import { useLogin } from '@/backend/auth/useLogin';
 import ExpectedAnonymous from '@/components/ExpectedAnonymous';
-import InfoError, { ErrorData } from '@/components/info/InfoError';
+import { ErrorData } from '@/components/info/InfoError';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
 import TextURL from '@/components/ui/TextURL';
@@ -97,7 +97,6 @@ function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
         На Портале отсутствует такое сочетание имени пользователя и пароля
       </div>
     );
-  } else {
-    return <InfoError error={error} />;
   }
+  throw error as Error;
 }
