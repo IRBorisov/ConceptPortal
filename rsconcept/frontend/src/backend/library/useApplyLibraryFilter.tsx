@@ -1,4 +1,4 @@
-import { useAuth } from '@/backend/auth/useAuth';
+import { useAuthSuspense } from '@/backend/auth/useAuth';
 import { matchLibraryItem, matchLibraryItemLocation } from '@/models/libraryAPI';
 import { ILibraryFilter } from '@/models/miscellaneous';
 
@@ -6,7 +6,7 @@ import { useLibrary } from './useLibrary';
 
 export function useApplyLibraryFilter(filter: ILibraryFilter) {
   const { items } = useLibrary();
-  const { user } = useAuth();
+  const { user } = useAuthSuspense();
 
   let result = items;
   if (!filter.folderMode && filter.head) {
@@ -28,10 +28,10 @@ export function useApplyLibraryFilter(filter: ILibraryFilter) {
     result = result.filter(item => filter.isVisible === item.visible);
   }
   if (filter.isOwned !== undefined) {
-    result = result.filter(item => filter.isOwned === (item.owner === user?.id));
+    result = result.filter(item => filter.isOwned === (item.owner === user.id));
   }
   if (filter.isEditor !== undefined) {
-    result = result.filter(item => filter.isEditor == user?.editor.includes(item.id));
+    result = result.filter(item => filter.isEditor == user.editor.includes(item.id));
   }
   if (filter.filterUser !== undefined) {
     result = result.filter(item => filter.filterUser === item.owner);

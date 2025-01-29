@@ -9,9 +9,9 @@ import { useRSForm } from '@/backend/rsform/useRSForm';
 import { RelocateUpIcon } from '@/components/DomainIcons';
 import PickMultiConstituenta from '@/components/select/PickMultiConstituenta';
 import SelectLibraryItem from '@/components/select/SelectLibraryItem';
+import Loader from '@/components/ui/Loader';
 import MiniButton from '@/components/ui/MiniButton';
 import Modal from '@/components/ui/Modal';
-import DataLoader from '@/components/wrap/DataLoader';
 import { ILibraryItem, LibraryItemID } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IOperation, IOperationSchema } from '@/models/oss';
@@ -119,19 +119,18 @@ function DlgRelocateConstituents() {
             onSelectValue={handleSelectDestination}
           />
         </div>
-        <DataLoader isLoading={sourceData.isLoading} error={sourceData.error}>
-          {sourceData.schema ? (
-            <PickMultiConstituenta
-              noBorder
-              schema={sourceData.schema}
-              data={filteredConstituents}
-              rows={12}
-              prefixID={prefixes.dlg_cst_constituents_list}
-              selected={selected}
-              setSelected={setSelected}
-            />
-          ) : null}
-        </DataLoader>
+        {sourceData.isLoading ? <Loader /> : null}
+        {!sourceData.isLoading && sourceData.schema ? (
+          <PickMultiConstituenta
+            noBorder
+            schema={sourceData.schema}
+            data={filteredConstituents}
+            rows={12}
+            prefixID={prefixes.dlg_cst_constituents_list}
+            selected={selected}
+            setSelected={setSelected}
+          />
+        ) : null}
       </div>
     </Modal>
   );

@@ -23,7 +23,7 @@ export const useResetPassword = () => {
       data: IResetPasswordDTO, //
       onSuccess?: () => void
     ) => resetMutation.mutate(data, { onSuccess }),
-    isPending: resetMutation.isPending,
+    isPending: resetMutation.isPending || validateMutation.isPending,
     error: resetMutation.error,
     reset: resetMutation.reset
   };

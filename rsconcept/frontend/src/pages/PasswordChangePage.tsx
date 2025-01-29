@@ -9,9 +9,9 @@ import { urls } from '@/app/urls';
 import { IResetPasswordDTO } from '@/backend/auth/api';
 import { useResetPassword } from '@/backend/auth/useResetPassword';
 import InfoError, { ErrorData } from '@/components/info/InfoError';
+import Loader from '@/components/ui/Loader';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
-import DataLoader from '@/components/wrap/DataLoader';
 import useQueryStrings from '@/hooks/useQueryStrings';
 
 function PasswordChangePage() {
@@ -51,43 +51,48 @@ function PasswordChangePage() {
     validateToken({ token: token ?? '' }, () => setIsTokenValid(true));
   }, [token, validateToken]);
 
-  return (
-    <DataLoader isLoading={isPending} hasNoData={!isTokenValid}>
-      <form className={clsx('cc-fade-in cc-column', 'w-[24rem] mx-auto', 'px-6 mt-3')} onSubmit={handleSubmit}>
-        <TextInput
-          id='new_password'
-          type='password'
-          label='Новый пароль'
-          autoComplete='new-password'
-          allowEnter
-          colors={passwordColor}
-          value={newPassword}
-          onChange={event => {
-            setNewPassword(event.target.value);
-          }}
-        />
-        <TextInput
-          id='new_password_repeat'
-          type='password'
-          label='Повторите новый'
-          autoComplete='new-password'
-          allowEnter
-          colors={passwordColor}
-          value={newPasswordRepeat}
-          onChange={event => {
-            setNewPasswordRepeat(event.target.value);
-          }}
-        />
+  if (error) {
+    return <ProcessError error={error} />;
+  }
 
-        <SubmitButton
-          text='Установить пароль'
-          className='self-center w-[12rem] mt-3'
-          loading={isPending}
-          disabled={!canSubmit}
-        />
-        {error ? <ProcessError error={error} /> : null}
-      </form>
-    </DataLoader>
+  if (isPending || !isTokenValid) {
+    return <Loader />;
+  }
+
+  return (
+    <form className={clsx('cc-fade-in cc-column', 'w-[24rem] mx-auto', 'px-6 mt-3')} onSubmit={handleSubmit}>
+      <TextInput
+        id='new_password'
+        type='password'
+        label='Новый пароль'
+        autoComplete='new-password'
+        allowEnter
+        colors={passwordColor}
+        value={newPassword}
+        onChange={event => {
+          setNewPassword(event.target.value);
+        }}
+      />
+      <TextInput
+        id='new_password_repeat'
+        type='password'
+        label='Повторите новый'
+        autoComplete='new-password'
+        allowEnter
+        colors={passwordColor}
+        value={newPasswordRepeat}
+        onChange={event => {
+          setNewPasswordRepeat(event.target.value);
+        }}
+      />
+
+      <SubmitButton
+        text='Установить пароль'
+        className='self-center w-[12rem] mt-3'
+        loading={isPending}
+        disabled={!canSubmit}
+      />
+    </form>
   );
 }
 

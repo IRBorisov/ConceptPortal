@@ -1,15 +1,11 @@
-import { useAuth } from '@/backend/auth/useAuth';
-import Loader from '@/components/ui/Loader';
-import ExpectedAnonymous from '@/components/wrap/ExpectedAnonymous';
+import { useAuthSuspense } from '@/backend/auth/useAuth';
+import ExpectedAnonymous from '@/components/ExpectedAnonymous';
 
 import FormSignup from './FormSignup';
 
 function RegisterPage() {
-  const { user, isLoading } = useAuth();
+  const { user } = useAuthSuspense();
 
-  if (isLoading) {
-    return <Loader />;
-  }
   if (user) {
     return <ExpectedAnonymous />;
   } else {

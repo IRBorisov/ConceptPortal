@@ -1,33 +1,29 @@
 'use client';
 
-import { ErrorData } from '@/components/info/InfoError';
+import { useRSFormSuspense } from '@/backend/rsform/useRSForm';
 import PickMultiConstituenta from '@/components/select/PickMultiConstituenta';
-import DataLoader from '@/components/wrap/DataLoader';
-import { ConstituentaID, IRSForm } from '@/models/rsform';
+import { LibraryItemID } from '@/models/library';
+import { ConstituentaID } from '@/models/rsform';
 import { prefixes } from '@/utils/constants';
 
 interface TabConstituentsProps {
-  schema?: IRSForm;
-  loading?: boolean;
-  error?: ErrorData;
+  itemID: LibraryItemID;
   selected: ConstituentaID[];
   setSelected: React.Dispatch<React.SetStateAction<ConstituentaID[]>>;
 }
 
-function TabConstituents({ schema, error, loading, selected, setSelected }: TabConstituentsProps) {
+function TabConstituents({ itemID, selected, setSelected }: TabConstituentsProps) {
+  const { schema } = useRSFormSuspense({ itemID });
+
   return (
-    <DataLoader isLoading={loading} error={error} hasNoData={!schema}>
-      {schema ? (
-        <PickMultiConstituenta
-          schema={schema}
-          data={schema.items}
-          rows={13}
-          prefixID={prefixes.cst_inline_synth_list}
-          selected={selected}
-          setSelected={setSelected}
-        />
-      ) : null}
-    </DataLoader>
+    <PickMultiConstituenta
+      schema={schema}
+      data={schema.items}
+      rows={13}
+      prefixID={prefixes.cst_inline_synth_list}
+      selected={selected}
+      setSelected={setSelected}
+    />
   );
 }
 

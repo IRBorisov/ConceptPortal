@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { useAuth } from '@/backend/auth/useAuth';
+import { useAuthSuspense } from '@/backend/auth/useAuth';
 import SelectLocationContext from '@/components/select/SelectLocationContext';
 import SelectLocationHead from '@/components/select/SelectLocationHead';
 import Label from '@/components/ui/Label';
@@ -21,7 +21,7 @@ export interface DlgChangeLocationProps {
 
 function DlgChangeLocation() {
   const { initial, onChangeLocation } = useDialogsStore(state => state.props as DlgChangeLocationProps);
-  const { user } = useAuth();
+  const { user } = useAuthSuspense();
   const [head, setHead] = useState<LocationHead>(initial.substring(0, 2) as LocationHead);
   const [body, setBody] = useState<string>(initial.substring(3));
 

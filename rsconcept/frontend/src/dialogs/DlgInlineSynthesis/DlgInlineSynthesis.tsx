@@ -1,11 +1,12 @@
 'use client';
 
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import { IInlineSynthesisDTO } from '@/backend/rsform/api';
 import { useRSForm } from '@/backend/rsform/useRSForm';
+import Loader from '@/components/ui/Loader';
 import Modal from '@/components/ui/Modal';
 import TabLabel from '@/components/ui/TabLabel';
 import { LibraryItemID } from '@/models/library';
@@ -14,7 +15,7 @@ import { ConstituentaID, IRSForm } from '@/models/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import TabConstituents from './TabConstituents';
-import TabSchema from './TabSchema';
+import TabSource from './TabSource';
 import TabSubstitutions from './TabSubstitutions';
 
 export interface DlgInlineSynthesisProps {
@@ -32,20 +33,20 @@ function DlgInlineSynthesis() {
   const { receiver, onInlineSynthesis } = useDialogsStore(state => state.props as DlgInlineSynthesisProps);
   const [activeTab, setActiveTab] = useState(TabID.SCHEMA);
 
-  const [donorID, setDonorID] = useState<LibraryItemID | undefined>(undefined);
+  const [sourceID, setSourceID] = useState<LibraryItemID | undefined>(undefined);
   const [selected, setSelected] = useState<ConstituentaID[]>([]);
   const [substitutions, setSubstitutions] = useState<ICstSubstitute[]>([]);
 
-  const source = useRSForm({ itemID: donorID });
+  const { schema } = useRSForm({ itemID: sourceID });
 
-  const validated = !!source.schema && selected.length > 0;
+  const validated = selected.length > 0;
 
   function handleSubmit() {
-    if (!source.schema) {
+    if (!sourceID || selected.length === 0) {
       return;
     }
     onInlineSynthesis({
-      source: source.schema.id,
+      source: sourceID,
       receiver: receiver.id,
       items: selected,
       substitutions: substitutions
@@ -53,9 +54,16 @@ function DlgInlineSynthesis() {
   }
 
   useEffect(() => {
-    setSelected(source.schema ? source.schema.items.map(cst => cst.id) : []);
+    if (schema) {
+      setSelected(schema.items.map(cst => cst.id));
+    }
+  }, [schema, setSelected]);
+
+  function handleSetSource(schemaID: LibraryItemID) {
+    setSourceID(schemaID);
+    setSelected([]);
     setSubstitutions([]);
-  }, [source.schema]);
+  }
 
   return (
     <Modal
@@ -73,32 +81,44 @@ function DlgInlineSynthesis() {
       >
         <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none', 'bg-prim-200')}>
           <TabLabel label='Схема' title='Источник конституент' className='w-[8rem]' />
-          <TabLabel label='Содержание' title='Перечень конституент' className='w-[8rem]' />
-          <TabLabel label='Отождествления' title='Таблица отождествлений' className='w-[8rem]' />
+          <TabLabel
+            label='Содержание'
+            title={!sourceID ? 'Выберите схему' : 'Перечень конституент'}
+            className='w-[8rem]'
+            disabled={!sourceID}
+          />
+          <TabLabel
+            label='Отождествления'
+            title={!sourceID ? 'Выберите схему' : 'Таблица отождествлений'}
+            className='w-[8rem]'
+            disabled={!sourceID}
+          />
         </TabList>
 
         <TabPanel>
-          <TabSchema selected={donorID} setSelected={setDonorID} receiver={receiver} />
+          <TabSource selected={sourceID} setSelected={handleSetSource} receiver={receiver} />
         </TabPanel>
 
         <TabPanel>
-          <TabConstituents
-            schema={source.schema}
-            loading={source.isLoading}
-            selected={selected}
-            setSelected={setSelected}
-          />
+          {!!sourceID ? (
+            <Suspense fallback={<Loader />}>
+              <TabConstituents itemID={sourceID} selected={selected} setSelected={setSelected} />
+            </Suspense>
+          ) : null}
         </TabPanel>
 
         <TabPanel>
-          <TabSubstitutions
-            receiver={receiver}
-            source={source.schema}
-            selected={selected}
-            loading={source.isLoading}
-            substitutions={substitutions}
-            setSubstitutions={setSubstitutions}
-          />
+          {!!sourceID ? (
+            <Suspense fallback={<Loader />}>
+              <TabSubstitutions
+                sourceID={sourceID}
+                receiver={receiver}
+                selected={selected}
+                substitutions={substitutions}
+                setSubstitutions={setSubstitutions}
+              />
+            </Suspense>
+          ) : null}
         </TabPanel>
       </Tabs>
     </Modal>

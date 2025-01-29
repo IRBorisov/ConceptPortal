@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
 
-import { useAuth } from '@/backend/auth/useAuth';
+import { useAuthSuspense } from '@/backend/auth/useAuth';
 import { useLibrary } from '@/backend/library/useLibrary';
 import { SubfoldersIcon } from '@/components/DomainIcons';
 import { IconFolderEdit, IconFolderTree } from '@/components/Icons';
@@ -23,7 +23,7 @@ interface ViewSideLocationProps {
 }
 
 function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocationProps) {
-  const { user, isAnonymous } = useAuth();
+  const { user, isAnonymous } = useAuthSuspense();
   const { items } = useLibrary();
   const windowSize = useWindowSize();
 

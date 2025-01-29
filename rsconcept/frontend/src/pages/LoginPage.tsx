@@ -6,13 +6,13 @@ import { useEffect, useState } from 'react';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
-import { useAuth } from '@/backend/auth/useAuth';
+import { useAuthSuspense } from '@/backend/auth/useAuth';
 import { useLogin } from '@/backend/auth/useLogin';
+import ExpectedAnonymous from '@/components/ExpectedAnonymous';
 import InfoError, { ErrorData } from '@/components/info/InfoError';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
 import TextURL from '@/components/ui/TextURL';
-import ExpectedAnonymous from '@/components/wrap/ExpectedAnonymous';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { resources } from '@/utils/constants';
 
@@ -21,7 +21,7 @@ function LoginPage() {
   const query = useQueryStrings();
   const userQuery = query.get('username');
 
-  const { isAnonymous } = useAuth();
+  const { isAnonymous } = useAuthSuspense();
   const { login, isPending, error, reset } = useLogin();
 
   const [username, setUsername] = useState(userQuery || '');

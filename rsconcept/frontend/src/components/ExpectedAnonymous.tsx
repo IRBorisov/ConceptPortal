@@ -1,11 +1,11 @@
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
-import { useAuth } from '@/backend/auth/useAuth';
+import { useAuthSuspense } from '@/backend/auth/useAuth';
 import { useLogout } from '@/backend/auth/useLogout';
 import TextURL from '@/components/ui/TextURL';
 
 function ExpectedAnonymous() {
-  const { user } = useAuth();
+  const { user } = useAuthSuspense();
   const { logout } = useLogout();
   const router = useConceptNavigation();
 
@@ -15,7 +15,7 @@ function ExpectedAnonymous() {
 
   return (
     <div className='cc-fade-in flex flex-col items-center gap-3 py-6'>
-      <p className='font-semibold'>{`Вы вошли в систему как ${user?.username ?? ''}`}</p>
+      <p className='font-semibold'>{`Вы вошли в систему как ${user.username}`}</p>
       <div className='flex gap-3'>
         <TextURL text='Новая схема' href='/library/create' />
         <span> | </span>

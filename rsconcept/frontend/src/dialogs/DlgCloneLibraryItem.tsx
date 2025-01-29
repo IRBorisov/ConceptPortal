@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
-import { useAuth } from '@/backend/auth/useAuth';
+import { useAuthSuspense } from '@/backend/auth/useAuth';
 import { IRSFormCloneDTO } from '@/backend/library/api';
 import { useCloneItem } from '@/backend/library/useCloneItem';
 import { VisibilityIcon } from '@/components/DomainIcons';
@@ -35,7 +35,7 @@ function DlgCloneLibraryItem() {
     state => state.props as DlgCloneLibraryItemProps
   );
   const router = useConceptNavigation();
-  const { user } = useAuth();
+  const { user } = useAuthSuspense();
 
   const [title, setTitle] = useState(cloneTitle(base));
   const [alias, setAlias] = useState(base.alias);

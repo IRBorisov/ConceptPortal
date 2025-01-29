@@ -1,48 +1,34 @@
 'use client';
 
-import { ErrorData } from '@/components/info/InfoError';
+import { useRSFormSuspense } from '@/backend/rsform/useRSForm';
 import PickSubstitutions from '@/components/select/PickSubstitutions';
-import DataLoader from '@/components/wrap/DataLoader';
+import { LibraryItemID } from '@/models/library';
 import { ICstSubstitute } from '@/models/oss';
 import { ConstituentaID, IRSForm } from '@/models/rsform';
 import { prefixes } from '@/utils/constants';
 
 interface TabSubstitutionsProps {
-  receiver?: IRSForm;
-  source?: IRSForm;
+  receiver: IRSForm;
+  sourceID: LibraryItemID;
   selected: ConstituentaID[];
-
-  loading?: boolean;
-  error?: ErrorData;
 
   substitutions: ICstSubstitute[];
   setSubstitutions: React.Dispatch<React.SetStateAction<ICstSubstitute[]>>;
 }
 
-function TabSubstitutions({
-  source,
-  receiver,
-  selected,
-
-  error,
-  loading,
-
-  substitutions,
-  setSubstitutions
-}: TabSubstitutionsProps) {
+function TabSubstitutions({ sourceID, receiver, selected, substitutions, setSubstitutions }: TabSubstitutionsProps) {
+  const { schema: source } = useRSFormSuspense({ itemID: sourceID });
   const schemas = [...(source ? [source] : []), ...(receiver ? [receiver] : [])];
 
   return (
-    <DataLoader isLoading={loading} error={error} hasNoData={!source}>
-      <PickSubstitutions
-        substitutions={substitutions}
-        setSubstitutions={setSubstitutions}
-        rows={10}
-        prefixID={prefixes.cst_inline_synth_substitutes}
-        schemas={schemas}
-        filter={cst => cst.id !== source?.id || selected.includes(cst.id)}
-      />
-    </DataLoader>
+    <PickSubstitutions
+      substitutions={substitutions}
+      setSubstitutions={setSubstitutions}
+      rows={10}
+      prefixID={prefixes.cst_inline_synth_substitutes}
+      schemas={schemas}
+      filter={cst => cst.id !== source?.id || selected.includes(cst.id)}
+    />
   );
 }
 

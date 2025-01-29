@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
-import { useAuth } from '@/backend/auth/useAuth';
+import { useAuthSuspense } from '@/backend/auth/useAuth';
 import { ILibraryCreateDTO } from '@/backend/library/api';
 import { useCreateItem } from '@/backend/library/useCreateItem';
 import { VisibilityIcon } from '@/components/DomainIcons';
@@ -29,7 +29,7 @@ import { EXTEOR_TRS_FILE } from '@/utils/constants';
 
 function FormCreateItem() {
   const router = useConceptNavigation();
-  const { user } = useAuth();
+  const { user } = useAuthSuspense();
   const { createItem, isPending, error, reset } = useCreateItem();
 
   const searchLocation = useLibrarySearchStore(state => state.location);

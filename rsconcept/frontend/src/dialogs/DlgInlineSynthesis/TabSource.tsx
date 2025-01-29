@@ -7,13 +7,13 @@ import { LibraryItemID, LibraryItemType } from '@/models/library';
 import { IRSForm } from '@/models/rsform';
 import { sortItemsForInlineSynthesis } from '@/models/rsformAPI';
 
-interface TabSchemaProps {
+interface TabSourceProps {
   selected?: LibraryItemID;
   setSelected: (newValue: LibraryItemID) => void;
   receiver: IRSForm;
 }
 
-function TabSchema({ selected, receiver, setSelected }: TabSchemaProps) {
+function TabSource({ selected, receiver, setSelected }: TabSourceProps) {
   const { items: libraryItems } = useLibrary();
   const selectedInfo = libraryItems.find(item => item.id === selected);
   const sortedItems = sortItemsForInlineSynthesis(receiver, libraryItems);
@@ -43,4 +43,4 @@ function TabSchema({ selected, receiver, setSelected }: TabSchemaProps) {
   );
 }
 
-export default TabSchema;
+export default TabSource;

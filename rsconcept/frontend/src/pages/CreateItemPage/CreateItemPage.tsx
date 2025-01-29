@@ -1,4 +1,4 @@
-import RequireAuth from '@/components/wrap/RequireAuth';
+import RequireAuth from '@/components/RequireAuth';
 
 import FormCreateItem from './FormCreateItem';
 
