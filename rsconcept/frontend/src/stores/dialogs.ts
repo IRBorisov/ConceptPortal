@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 import { DlgChangeInputSchemaProps } from '@/dialogs/DlgChangeInputSchema';
+import { DlgChangeLocationProps } from '@/dialogs/DlgChangeLocation';
 import { DlgCloneLibraryItemProps } from '@/dialogs/DlgCloneLibraryItem';
 import { DlgCreateCstProps } from '@/dialogs/DlgCreateCst/DlgCreateCst';
 import { DlgCreateOperationProps } from '@/dialogs/DlgCreateOperation/DlgCreateOperation';
@@ -23,7 +24,6 @@ import { DlgShowTypeGraphProps } from '@/dialogs/DlgShowTypeGraph/DlgShowTypeGra
 import { DlgSubstituteCstProps } from '@/dialogs/DlgSubstituteCst';
 import { DlgUploadRSFormProps } from '@/dialogs/DlgUploadRSForm';
 import { DialogType } from '@/models/miscellaneous';
-import { DlgChangeLocationProps } from '@/pages/OssPage/DlgChangeLocation';
 
 interface DialogsStore {
   active: DialogType | undefined;

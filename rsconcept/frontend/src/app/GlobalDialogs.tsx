@@ -1,30 +1,33 @@
 'use client';
 
-import DlgChangeInputSchema from '@/dialogs/DlgChangeInputSchema';
-import DlgCloneLibraryItem from '@/dialogs/DlgCloneLibraryItem';
-import DlgCreateCst from '@/dialogs/DlgCreateCst';
-import DlgCreateOperation from '@/dialogs/DlgCreateOperation';
-import DlgCreateVersion from '@/dialogs/DlgCreateVersion';
-import DlgCstTemplate from '@/dialogs/DlgCstTemplate';
-import DlgDeleteCst from '@/dialogs/DlgDeleteCst';
-import DlgDeleteOperation from '@/dialogs/DlgDeleteOperation';
-import DlgEditEditors from '@/dialogs/DlgEditEditors';
-import DlgEditOperation from '@/dialogs/DlgEditOperation';
-import DlgEditReference from '@/dialogs/DlgEditReference';
-import DlgEditVersions from '@/dialogs/DlgEditVersions';
-import DlgEditWordForms from '@/dialogs/DlgEditWordForms';
-import DlgGraphParams from '@/dialogs/DlgGraphParams';
-import DlgInlineSynthesis from '@/dialogs/DlgInlineSynthesis';
-import DlgRelocateConstituents from '@/dialogs/DlgRelocateConstituents';
-import DlgRenameCst from '@/dialogs/DlgRenameCst';
-import DlgShowAST from '@/dialogs/DlgShowAST';
-import DlgShowQR from '@/dialogs/DlgShowQR';
-import DlgShowTypeGraph from '@/dialogs/DlgShowTypeGraph';
-import DlgSubstituteCst from '@/dialogs/DlgSubstituteCst';
-import DlgUploadRSForm from '@/dialogs/DlgUploadRSForm';
+import React from 'react';
+
 import { DialogType } from '@/models/miscellaneous';
-import DlgChangeLocation from '@/pages/OssPage/DlgChangeLocation';
 import { useDialogsStore } from '@/stores/dialogs';
+
+const DlgChangeInputSchema = React.lazy(() => import('@/dialogs/DlgChangeInputSchema'));
+const DlgChangeLocation = React.lazy(() => import('@/dialogs/DlgChangeLocation'));
+const DlgCloneLibraryItem = React.lazy(() => import('@/dialogs/DlgCloneLibraryItem'));
+const DlgCreateCst = React.lazy(() => import('@/dialogs/DlgCreateCst'));
+const DlgCreateOperation = React.lazy(() => import('@/dialogs/DlgCreateOperation'));
+const DlgCreateVersion = React.lazy(() => import('@/dialogs/DlgCreateVersion'));
+const DlgCstTemplate = React.lazy(() => import('@/dialogs/DlgCstTemplate'));
+const DlgDeleteCst = React.lazy(() => import('@/dialogs/DlgDeleteCst'));
+const DlgDeleteOperation = React.lazy(() => import('@/dialogs/DlgDeleteOperation'));
+const DlgEditEditors = React.lazy(() => import('@/dialogs/DlgEditEditors'));
+const DlgEditOperation = React.lazy(() => import('@/dialogs/DlgEditOperation'));
+const DlgEditReference = React.lazy(() => import('@/dialogs/DlgEditReference'));
+const DlgEditVersions = React.lazy(() => import('@/dialogs/DlgEditVersions'));
+const DlgEditWordForms = React.lazy(() => import('@/dialogs/DlgEditWordForms'));
+const DlgGraphParams = React.lazy(() => import('@/dialogs/DlgGraphParams'));
+const DlgInlineSynthesis = React.lazy(() => import('@/dialogs/DlgInlineSynthesis'));
+const DlgRelocateConstituents = React.lazy(() => import('@/dialogs/DlgRelocateConstituents'));
+const DlgRenameCst = React.lazy(() => import('@/dialogs/DlgRenameCst'));
+const DlgShowAST = React.lazy(() => import('@/dialogs/DlgShowAST'));
+const DlgShowQR = React.lazy(() => import('@/dialogs/DlgShowQR'));
+const DlgShowTypeGraph = React.lazy(() => import('@/dialogs/DlgShowTypeGraph'));
+const DlgSubstituteCst = React.lazy(() => import('@/dialogs/DlgSubstituteCst'));
+const DlgUploadRSForm = React.lazy(() => import('@/dialogs/DlgUploadRSForm'));
 
 export const GlobalDialogs = () => {
   const active = useDialogsStore(state => state.active);

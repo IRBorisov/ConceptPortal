@@ -6,6 +6,7 @@ import ConceptToaster from '@/app/ConceptToaster';
 import Footer from '@/app/Footer';
 import Navigation from '@/app/Navigation';
 import Loader from '@/components/ui/Loader';
+import ModalLoader from '@/components/ui/ModalLoader';
 import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/appLayout';
 import { globals } from '@/utils/constants';
 
@@ -45,7 +46,9 @@ function ApplicationLayout() {
             pauseOnFocusLoss={false}
           />
 
-          <GlobalDialogs />
+          <Suspense fallback={<ModalLoader />}>
+            <GlobalDialogs />
+          </Suspense>
           <GlobalTooltips />
 
           <Navigation />
