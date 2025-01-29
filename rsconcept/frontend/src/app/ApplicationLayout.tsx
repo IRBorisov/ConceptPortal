@@ -33,8 +33,6 @@ function ApplicationLayout() {
   const noNavigation = useAppLayoutStore(state => state.noNavigation);
   const noFooter = useAppLayoutStore(state => state.noFooter);
 
-  // TODO: prefetch data
-
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError} onReset={resetState}>
       <NavigationState>
