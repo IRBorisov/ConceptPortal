@@ -13,7 +13,7 @@ DESTINATION="${BACKUP_LOCATION}/${DATE_FORMATTED}"
 
 ensure_location() {
   rm -rf $DESTINATION
-  mkdir $DESTINATION
+  mkdir -p $DESTINATION
 }
 
 dump_postgre() {
