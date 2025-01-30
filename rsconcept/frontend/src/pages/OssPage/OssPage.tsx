@@ -17,10 +17,7 @@ import { OssEditState, OssTabID } from './OssEditContext';
 import OssTabs from './OssTabs';
 
 const paramsSchema = z.object({
-  id: z
-    .string()
-    .nullish()
-    .transform(v => (v ? Number(v) : undefined)),
+  id: z.coerce.number(),
   tab: z.preprocess(v => (v ? Number(v) : undefined), z.nativeEnum(OssTabID).default(OssTabID.CARD))
 });
 

@@ -19,16 +19,16 @@ import { RSEditState, RSTabID } from './RSEditContext';
 import RSTabs from './RSTabs';
 
 const paramsSchema = z.object({
-  id: z
-    .string()
+  id: z.coerce.number(),
+  version: z.coerce
+    .number()
     .nullish()
-    .transform(v => (v ? Number(v) : undefined)),
-  version: z
-    .string()
-    .nullish()
-    .transform(v => (v ? Number(v) : undefined)),
+    .transform(v => v ?? undefined),
   tab: z.preprocess(v => (v ? Number(v) : undefined), z.nativeEnum(RSTabID).default(RSTabID.CARD)),
-  activeID: z.preprocess(v => (v ? Number(v) : undefined), z.number().optional())
+  activeID: z.coerce
+    .number()
+    .nullish()
+    .transform(v => v ?? undefined)
 });
 
 export function RSFormPage() {
