@@ -13,13 +13,14 @@ import LoginPage from '@/pages/LoginPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 
 import ApplicationLayout from './ApplicationLayout';
+import ErrorFallback from './ErrorFallback';
 import { routes } from './urls';
 
 export const Router = createBrowserRouter([
   {
     path: '/',
     element: <ApplicationLayout />,
-    errorElement: <NotFoundPage />,
+    errorElement: <ErrorFallback />,
     loader: prefetchAuth,
     hydrateFallbackElement: <Loader />,
     children: [
