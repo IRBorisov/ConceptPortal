@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { libraryApi } from '@/backend/library/api';
 
-import { authApi } from './api';
+import { authApi, IUserLoginDTO } from './api';
 
 export const useLogin = () => {
   const client = useQueryClient();
@@ -13,11 +13,7 @@ export const useLogin = () => {
     onSuccess: () => client.removeQueries({ queryKey: [libraryApi.baseKey] })
   });
   return {
-    login: (
-      username: string, //
-      password: string,
-      onSuccess?: () => void
-    ) => mutation.mutate({ username, password }, { onSuccess }),
+    login: (data: IUserLoginDTO, onSuccess?: () => void) => mutation.mutate(data, { onSuccess }),
     isPending: mutation.isPending,
     error: mutation.error,
     reset: mutation.reset

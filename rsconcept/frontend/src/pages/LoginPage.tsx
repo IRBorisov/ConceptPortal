@@ -2,10 +2,11 @@
 
 import axios from 'axios';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
+import { UserLoginSchema } from '@/backend/auth/api';
 import { useAuthSuspense } from '@/backend/auth/useAuth';
 import { useLogin } from '@/backend/auth/useLogin';
 import ExpectedAnonymous from '@/components/ExpectedAnonymous';
@@ -19,28 +20,38 @@ import { resources } from '@/utils/constants';
 function LoginPage() {
   const router = useConceptNavigation();
   const query = useQueryStrings();
+  const initialName = query.get('username') ?? '';
 
   const { isAnonymous } = useAuthSuspense();
-  const { login, isPending, error, reset } = useLogin();
-
-  const [username, setUsername] = useState(query.get('username') ?? '');
-  const [password, setPassword] = useState('');
-
-  useEffect(() => {
-    reset();
-  }, [username, password, reset]);
+  const { login, isPending, error: loginError, reset } = useLogin();
+  const [validationError, setValidationError] = useState<ErrorData | undefined>(undefined);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!isPending) {
-      login(username, password, () => {
-        if (router.canBack()) {
-          router.back();
-        } else {
-          router.push(urls.library);
-        }
+      const formData = new FormData(event.currentTarget);
+      const result = UserLoginSchema.safeParse({
+        username: formData.get('username'),
+        password: formData.get('password')
       });
+
+      if (!result.success) {
+        setValidationError(result.error);
+      } else {
+        login(result.data, () => {
+          if (router.canBack()) {
+            router.back();
+          } else {
+            router.push(urls.library);
+          }
+        });
+      }
     }
+  }
+
+  function resetErrors() {
+    reset();
+    setValidationError(undefined);
   }
 
   if (!isAnonymous) {
@@ -51,37 +62,33 @@ function LoginPage() {
       <img alt='Концепт Портал' src={resources.logo} className='max-h-[2.5rem] min-w-[2.5rem] mb-3' />
       <TextInput
         id='username'
-        label='Логин или email'
+        name='username'
         autoComplete='username'
+        label='Логин или email'
         autoFocus
         required
         allowEnter
         spellCheck={false}
-        value={username}
-        onChange={event => setUsername(event.target.value)}
+        defaultValue={initialName}
+        onChange={resetErrors}
       />
       <TextInput
         id='password'
+        name='password'
         type='password'
-        label='Пароль'
         autoComplete='current-password'
+        label='Пароль'
         required
         allowEnter
-        value={password}
-        onChange={event => setPassword(event.target.value)}
+        onChange={resetErrors}
       />
 
-      <SubmitButton
-        text='Войти'
-        className='self-center w-[12rem] mt-3'
-        loading={isPending}
-        disabled={!username || !password}
-      />
+      <SubmitButton text='Войти' className='self-center w-[12rem] mt-3' loading={isPending} />
       <div className='flex flex-col text-sm'>
         <TextURL text='Восстановить пароль...' href='/restore-password' />
         <TextURL text='Нет аккаунта? Зарегистрируйтесь...' href='/signup' />
       </div>
-      {error ? <ProcessError error={error} /> : null}
+      {!!loginError || !!validationError ? <ProcessError error={loginError ?? validationError} /> : null}
     </form>
   );
 }

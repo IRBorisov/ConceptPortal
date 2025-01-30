@@ -1,4 +1,5 @@
 import { queryOptions } from '@tanstack/react-query';
+import { z } from 'zod';
 
 import { axiosGet, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
@@ -8,10 +9,15 @@ import { information } from '@/utils/labels';
 /**
  * Represents login data, used to authenticate users.
  */
-export interface IUserLoginDTO {
-  username: string;
-  password: string;
-}
+export const UserLoginSchema = z.object({
+  username: z.string(),
+  password: z.string()
+});
+
+/**
+ * Represents login data, used to authenticate users.
+ */
+export type IUserLoginDTO = z.infer<typeof UserLoginSchema>;
 
 /**
  * Represents data needed to update password for current user.
