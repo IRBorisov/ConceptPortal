@@ -4,9 +4,9 @@ import ExpectedAnonymous from '@/components/ExpectedAnonymous';
 import FormSignup from './FormSignup';
 
 export function RegisterPage() {
-  const { user } = useAuthSuspense();
+  const { isAnonymous } = useAuthSuspense();
 
-  if (user) {
+  if (!isAnonymous) {
     return <ExpectedAnonymous />;
   } else {
     return <FormSignup />;
