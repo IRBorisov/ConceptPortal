@@ -1,35 +1,53 @@
 'use client';
 
 import axios from 'axios';
+import { useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useParams } from 'react-router';
+import { z } from 'zod';
 
 import { useBlockNavigation, useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { ErrorData } from '@/components/info/InfoError';
 import TextURL from '@/components/ui/TextURL';
+import useQueryStrings from '@/hooks/useQueryStrings';
 import { useModificationStore } from '@/stores/modification';
 
-import { OssEditState } from './OssEditContext';
+import { OssEditState, OssTabID } from './OssEditContext';
 import OssTabs from './OssTabs';
+
+const paramsSchema = z.object({
+  id: z
+    .string()
+    .nullish()
+    .transform(v => (v ? Number(v) : undefined)),
+  tab: z.preprocess(v => (v ? Number(v) : undefined), z.nativeEnum(OssTabID).default(OssTabID.CARD))
+});
 
 export function OssPage() {
   const router = useConceptNavigation();
   const params = useParams();
-  const itemID = params.id ? Number(params.id) : undefined;
+  const query = useQueryStrings();
 
-  const { isModified } = useModificationStore();
+  const urlData = paramsSchema.parse({
+    id: params.id,
+    tab: query.get('tab')
+  });
+
+  const { isModified, setIsModified } = useModificationStore();
   useBlockNavigation(isModified);
 
-  if (!itemID) {
+  useEffect(() => setIsModified(false), [setIsModified]);
+
+  if (!urlData.id) {
     router.replace(urls.page404);
     return null;
   }
 
   return (
     <ErrorBoundary FallbackComponent={ProcessError}>
-      <OssEditState itemID={itemID}>
-        <OssTabs />
+      <OssEditState itemID={urlData.id}>
+        <OssTabs activeTab={urlData.tab} />
       </OssEditState>
     </ErrorBoundary>
   );

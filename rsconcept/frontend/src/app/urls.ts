@@ -24,18 +24,6 @@ export const routes = {
   database_schema: 'database-schema'
 };
 
-interface SchemaProps {
-  id: number | string;
-  tab: number;
-  version?: number | string;
-  active?: number | string;
-}
-
-interface OssProps {
-  id: number | string;
-  tab: number;
-}
-
 /**
  * Internal navigation URLs.
  */
@@ -58,12 +46,24 @@ export const urls = {
   schema: (id: number | string, version?: number | string) =>
     `/rsforms/${id}` + (version !== undefined ? `?v=${version}` : ''),
   oss: (id: number | string, tab?: number) => `/oss/${id}` + (tab !== undefined ? `?tab=${tab}` : ''),
-  schema_props: ({ id, tab, version, active }: SchemaProps) => {
+
+  schema_props: ({
+    id,
+    tab,
+    version,
+    active
+  }: {
+    id: number | string;
+    tab: number;
+    version?: number | string;
+    active?: number | string;
+  }) => {
     const versionStr = version !== undefined ? `v=${version}&` : '';
     const activeStr = active !== undefined ? `&active=${active}` : '';
     return `/rsforms/${id}?${versionStr}tab=${tab}${activeStr}`;
   },
-  oss_props: ({ id, tab }: OssProps) => {
+
+  oss_props: ({ id, tab }: { id: number | string; tab: number }) => {
     return `/oss/${id}?tab=${tab}`;
   }
 };

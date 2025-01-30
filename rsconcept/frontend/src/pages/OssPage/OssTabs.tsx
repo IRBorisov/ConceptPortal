@@ -7,27 +7,22 @@ import { TabList, TabPanel, Tabs } from 'react-tabs';
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import Overlay from '@/components/ui/Overlay';
 import TabLabel from '@/components/ui/TabLabel';
-import useQueryStrings from '@/hooks/useQueryStrings';
 import { useAppLayoutStore } from '@/stores/appLayout';
-import { useModificationStore } from '@/stores/modification';
 
 import EditorRSForm from './EditorOssCard';
 import EditorTermGraph from './EditorOssGraph';
 import MenuOssTabs from './MenuOssTabs';
 import { OssTabID, useOssEdit } from './OssEditContext';
 
-function OssTabs() {
-  const router = useConceptNavigation();
-  const query = useQueryStrings();
-  const activeTab = query.get('tab') ? (Number(query.get('tab')) as OssTabID) : OssTabID.GRAPH;
+interface OssTabsProps {
+  activeTab: OssTabID;
+}
 
+function OssTabs({ activeTab }: OssTabsProps) {
+  const router = useConceptNavigation();
   const { schema, navigateTab } = useOssEdit();
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
-
-  const { setIsModified } = useModificationStore();
-
-  useEffect(() => setIsModified(false), [setIsModified]);
 
   useEffect(() => {
     const oldTitle = document.title;

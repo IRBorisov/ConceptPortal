@@ -1,8 +1,10 @@
 'use client';
 
 import axios from 'axios';
+import { useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useParams } from 'react-router';
+import { z } from 'zod';
 
 import { useBlockNavigation, useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
@@ -16,29 +18,48 @@ import { useModificationStore } from '@/stores/modification';
 import { RSEditState, RSTabID } from './RSEditContext';
 import RSTabs from './RSTabs';
 
+const paramsSchema = z.object({
+  id: z
+    .string()
+    .nullish()
+    .transform(v => (v ? Number(v) : undefined)),
+  version: z
+    .string()
+    .nullish()
+    .transform(v => (v ? Number(v) : undefined)),
+  tab: z.preprocess(v => (v ? Number(v) : undefined), z.nativeEnum(RSTabID).default(RSTabID.CARD)),
+  activeID: z.preprocess(v => (v ? Number(v) : undefined), z.number().optional())
+});
+
 export function RSFormPage() {
   const router = useConceptNavigation();
-  const query = useQueryStrings();
   const params = useParams();
-  const itemID = params.id ? Number(params.id) : undefined;
-  const version = query.get('v') ? Number(query.get('v')) : undefined;
-  const activeTab = query.get('tab') ? (Number(query.get('tab')) as RSTabID) : RSTabID.CARD;
+  const query = useQueryStrings();
 
-  const { isModified } = useModificationStore();
+  const urlData = paramsSchema.parse({
+    id: params.id,
+    version: query.get('v'),
+    tab: query.get('tab'),
+    activeID: query.get('active')
+  });
+
+  const { isModified, setIsModified } = useModificationStore();
   useBlockNavigation(isModified);
 
-  if (!itemID) {
+  useEffect(() => setIsModified(false), [setIsModified]);
+
+  if (!urlData.id) {
     router.replace(urls.page404);
     return null;
   }
   return (
     <ErrorBoundary
       FallbackComponent={({ error }) => (
-        <ProcessError error={error as ErrorData} isArchive={!!version} itemID={itemID} />
+        <ProcessError error={error as ErrorData} isArchive={!!urlData.version} itemID={urlData.id} />
       )}
     >
-      <RSEditState itemID={itemID} activeVersion={version} activeTab={activeTab}>
-        <RSTabs />
+      <RSEditState itemID={urlData.id} activeVersion={urlData.version} activeTab={urlData.tab}>
+        <RSTabs activeID={urlData.activeID} activeTab={urlData.tab} />
       </RSEditState>
     </ErrorBoundary>
   );

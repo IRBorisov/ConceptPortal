@@ -19,12 +19,11 @@ import { resources } from '@/utils/constants';
 function LoginPage() {
   const router = useConceptNavigation();
   const query = useQueryStrings();
-  const userQuery = query.get('username');
 
   const { isAnonymous } = useAuthSuspense();
   const { login, isPending, error, reset } = useLogin();
 
-  const [username, setUsername] = useState(userQuery || '');
+  const [username, setUsername] = useState(query.get('username') ?? '');
   const [password, setPassword] = useState('');
 
   useEffect(() => {

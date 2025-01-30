@@ -45,6 +45,7 @@ This readme file is used mostly to document project dependencies and conventions
   - qrcode.react
   - html-to-image
   - zustand
+  - zod
   - @tanstack/react-table
   - @tanstack/react-query
   - @tanstack/react-query-devtools

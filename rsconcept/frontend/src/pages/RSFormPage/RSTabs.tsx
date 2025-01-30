@@ -7,7 +7,7 @@ import { TabList, TabPanel, Tabs } from 'react-tabs';
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import Overlay from '@/components/ui/Overlay';
 import TabLabel from '@/components/ui/TabLabel';
-import useQueryStrings from '@/hooks/useQueryStrings';
+import { ConstituentaID } from '@/models/rsform';
 import { useAppLayoutStore } from '@/stores/appLayout';
 import { useModificationStore } from '@/stores/modification';
 import { labelVersion } from '@/utils/labels';
@@ -19,17 +19,17 @@ import EditorTermGraph from './EditorTermGraph';
 import MenuRSTabs from './MenuRSTabs';
 import { RSTabID, useRSEdit } from './RSEditContext';
 
-function RSTabs() {
-  const query = useQueryStrings();
+interface RSTabsProps {
+  activeID?: ConstituentaID;
+  activeTab: RSTabID;
+}
+
+function RSTabs({ activeID, activeTab }: RSTabsProps) {
   const router = useConceptNavigation();
-  const activeTab = query.get('tab') ? (Number(query.get('tab')) as RSTabID) : RSTabID.CARD;
-  const cstQuery = query.get('active');
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
   const { setIsModified } = useModificationStore();
   const { schema, selected, setSelected, navigateRSForm } = useRSEdit();
-
-  useEffect(() => setIsModified(false), [setIsModified]);
 
   useEffect(() => {
     const oldTitle = document.title;
@@ -43,15 +43,14 @@ function RSTabs() {
     hideFooter(activeTab !== RSTabID.CARD);
     setIsModified(false);
     if (activeTab === RSTabID.CST_EDIT) {
-      const cstID = Number(cstQuery);
-      if (cstID && schema.cstByID.has(cstID)) {
-        setSelected([cstID]);
+      if (activeID && schema.cstByID.has(activeID)) {
+        setSelected([activeID]);
       } else {
         setSelected([]);
       }
     }
     return () => hideFooter(false);
-  }, [activeTab, cstQuery, setSelected, schema, hideFooter, setIsModified]);
+  }, [activeTab, activeID, setSelected, schema, hideFooter, setIsModified]);
 
   function onSelectTab(index: number, last: number, event: Event) {
     if (last === index) {

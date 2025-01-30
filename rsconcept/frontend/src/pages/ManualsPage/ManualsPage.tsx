@@ -13,7 +13,7 @@ import ViewTopic from './ViewTopic';
 export function ManualsPage() {
   const router = useConceptNavigation();
   const query = useQueryStrings();
-  const activeTopic = (query.get('topic') || HelpTopic.MAIN) as HelpTopic;
+  const activeTopic = (query.get('topic') ?? HelpTopic.MAIN) as HelpTopic;
 
   const mainHeight = useMainHeight();
 
