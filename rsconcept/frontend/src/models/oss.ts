@@ -43,11 +43,6 @@ export interface IOperation {
 }
 
 /**
- * Represents {@link IOperation} data from server.
- */
-export interface IOperationData extends Omit<IOperation, 'substitutions' | 'arguments'> {}
-
-/**
  * Represents {@link IOperation} position.
  */
 export interface IOperationPosition extends Pick<IOperation, 'id' | 'position_x' | 'position_y'> {}
@@ -116,19 +111,13 @@ export interface IOperationSchemaStats {
 }
 
 /**
- * Represents backend data for {@link IOperationSchema}.
- */
-export interface IOperationSchemaData extends ILibraryItemData {
-  items: IOperationData[];
-  arguments: IArgument[];
-  substitutions: ICstSubstituteEx[];
-}
-
-/**
  * Represents OperationSchema.
  */
-export interface IOperationSchema extends IOperationSchemaData {
+export interface IOperationSchema extends ILibraryItemData {
   items: IOperation[];
+  arguments: IArgument[];
+  substitutions: ICstSubstituteEx[];
+
   graph: Graph;
   schemas: LibraryItemID[];
   stats: IOperationSchemaStats;

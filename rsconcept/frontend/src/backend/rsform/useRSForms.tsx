@@ -1,7 +1,7 @@
 import { useQueries } from '@tanstack/react-query';
 
 import { LibraryItemID } from '@/models/library';
-import { RSFormLoader } from '@/models/RSFormLoader';
+import { RSFormLoader } from '@/backend/rsform/RSFormLoader';
 
 import { DELAYS } from '../configuration';
 import { rsformsApi } from './api';

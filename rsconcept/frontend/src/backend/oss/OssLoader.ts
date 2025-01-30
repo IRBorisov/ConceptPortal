@@ -2,29 +2,24 @@
  * Module: OSS data loading and processing.
  */
 
-import { Graph } from './Graph';
-import { ILibraryItem, LibraryItemID } from './library';
-import {
-  IOperation,
-  IOperationSchema,
-  IOperationSchemaData,
-  IOperationSchemaStats,
-  OperationID,
-  OperationType
-} from './oss';
+import { Graph } from '@/models/Graph';
+import { ILibraryItem, LibraryItemID } from '@/models/library';
+import { IOperation, IOperationSchema, IOperationSchemaStats, OperationID, OperationType } from '@/models/oss';
+
+import { IOperationSchemaDTO } from './api';
 
 /**
- * Loads data into an {@link IOperationSchema} based on {@link IOperationSchemaData}.
+ * Loads data into an {@link IOperationSchema} based on {@link IOperationSchemaDTO}.
  *
  */
 export class OssLoader {
-  private oss: IOperationSchemaData;
+  private oss: IOperationSchemaDTO;
   private graph: Graph = new Graph();
   private operationByID = new Map<OperationID, IOperation>();
   private schemaIDs: LibraryItemID[] = [];
   private items: ILibraryItem[];
 
-  constructor(input: IOperationSchemaData, items: ILibraryItem[]) {
+  constructor(input: IOperationSchemaDTO, items: ILibraryItem[]) {
     this.oss = input;
     this.items = items;
   }

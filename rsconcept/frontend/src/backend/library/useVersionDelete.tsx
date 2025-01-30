@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { rsformsApi } from '@/backend/rsform/api';
+import { IRSFormDTO, rsformsApi } from '@/backend/rsform/api';
 import { LibraryItemID, VersionID } from '@/models/library';
-import { IRSFormData } from '@/models/rsform';
 
 import { libraryApi } from './api';
 
@@ -14,7 +13,7 @@ export const useVersionDelete = () => {
     onSuccess: (_, variables) => {
       client.setQueryData(
         rsformsApi.getRSFormQueryOptions({ itemID: variables.itemID }).queryKey,
-        (prev: IRSFormData | undefined) =>
+        (prev: IRSFormDTO | undefined) =>
           !prev
             ? undefined
             : {

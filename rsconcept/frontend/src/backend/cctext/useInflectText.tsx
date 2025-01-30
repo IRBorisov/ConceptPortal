@@ -1,9 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 
 import { DataCallback } from '@/backend/apiTransport';
-import { IWordFormPlain } from '@/models/language';
 
-import { cctextApi, ITextResult } from './api';
+import { cctextApi, ITextResult, IWordFormDTO } from './api';
 
 export const useInflectText = () => {
   const mutation = useMutation({
@@ -12,7 +11,7 @@ export const useInflectText = () => {
   });
   return {
     inflectText: (
-      data: IWordFormPlain, //
+      data: IWordFormDTO, //
       onSuccess?: DataCallback<ITextResult>
     ) => mutation.mutate(data, { onSuccess })
   };

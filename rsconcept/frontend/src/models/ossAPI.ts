@@ -2,6 +2,7 @@
  * Module: API for OperationSystem.
  */
 
+import { ConstituentaID, CstClass, CstType, IConstituenta, IRSForm } from '@/models/rsform';
 import { limits } from '@/utils/constants';
 import { describeSubstitutionError, information } from '@/utils/labels';
 import { TextMatcher } from '@/utils/utils';
@@ -9,7 +10,6 @@ import { TextMatcher } from '@/utils/utils';
 import { Graph } from './Graph';
 import { ILibraryItem, LibraryItemID } from './library';
 import { ICstSubstitute, IOperation, IOperationSchema, OperationID, SubstitutionErrorType } from './oss';
-import { ConstituentaID, CstClass, CstType, IConstituenta, IRSForm } from './rsform';
 import { AliasMapping, ParsingStatus } from './rslang';
 import { applyAliasMapping, applyTypificationMapping, extractGlobals, isSetTypification } from './rslangAPI';
 
@@ -49,7 +49,6 @@ export function sortItemsForOSS(oss: IOperationSchema, items: ILibraryItem[]): I
 
 type CrossMapping = Map<LibraryItemID, AliasMapping>;
 
-// TODO: test validator
 /**
  * Validator for Substitution table.
  */
@@ -459,7 +458,6 @@ export function getRelocateCandidates(
       const original = oss.substitutions.find(sub => sub.substitution === parent)?.original;
       if (original) {
         continue;
-        // TODO: test if original schema is destination schema
       }
     }
     unreachableBases.push(cst.id);

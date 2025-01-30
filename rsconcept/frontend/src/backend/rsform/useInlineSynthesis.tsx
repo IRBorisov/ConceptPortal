@@ -4,9 +4,8 @@ import { DataCallback } from '@/backend/apiTransport';
 import { useUpdateTimestamp } from '@/backend/library/useUpdateTimestamp';
 import { ossApi } from '@/backend/oss/api';
 import { LibraryItemID } from '@/models/library';
-import { IRSFormData } from '@/models/rsform';
 
-import { IInlineSynthesisDTO, rsformsApi } from './api';
+import { IInlineSynthesisDTO, IRSFormDTO, rsformsApi } from './api';
 
 export const useInlineSynthesis = () => {
   const client = useQueryClient();
@@ -33,7 +32,7 @@ export const useInlineSynthesis = () => {
         itemID: LibraryItemID; //
         data: IInlineSynthesisDTO;
       },
-      onSuccess?: DataCallback<IRSFormData>
+      onSuccess?: DataCallback<IRSFormDTO>
     ) => mutation.mutate(data, { onSuccess })
   };
 };

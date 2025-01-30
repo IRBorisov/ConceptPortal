@@ -1,9 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { ossApi } from '@/backend/oss/api';
+import { IOperationSchemaDTO, ossApi } from '@/backend/oss/api';
 import { rsformsApi } from '@/backend/rsform/api';
 import { ILibraryItem, LibraryItemID } from '@/models/library';
-import { IOperationSchemaData } from '@/models/oss';
 import { UserID } from '@/models/user';
 
 import { libraryApi } from './api';
@@ -15,7 +14,7 @@ export const useSetOwner = () => {
     mutationFn: libraryApi.setOwner,
     onSuccess: (_, variables) => {
       const ossKey = ossApi.getOssQueryOptions({ itemID: variables.itemID }).queryKey;
-      const ossData: IOperationSchemaData | undefined = client.getQueryData(ossKey);
+      const ossData: IOperationSchemaDTO | undefined = client.getQueryData(ossKey);
       if (ossData) {
         client.setQueryData(ossKey, { ...ossData, owner: variables.owner });
         return Promise.allSettled([

@@ -214,21 +214,6 @@ export interface IWordForm {
   grams: GramData[];
 }
 
-/**
- * Represents wordform data used for backend communication.
- */
-export interface IWordFormPlain {
-  text: string;
-  grams: string;
-}
-
-/**
- * Represents lexeme response containing multiple {@link Wordform}s.
- */
-export interface ILexemeData {
-  items: IWordFormPlain[];
-}
-
 // ====== Reference resolution =====
 
 /**
@@ -269,12 +254,4 @@ export interface ITextPosition {
 export interface IReference {
   type: ReferenceType;
   data: IEntityReference | ISyntacticReference;
-}
-
-/**
- * Represents single resolved reference data.
- */
-export interface IResolvedReference extends IReference {
-  pos_input: ITextPosition;
-  pos_output: ITextPosition;
 }

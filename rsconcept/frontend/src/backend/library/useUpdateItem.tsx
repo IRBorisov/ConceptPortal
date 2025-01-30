@@ -1,10 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { ossApi } from '@/backend/oss/api';
+import { IOperationSchemaDTO, ossApi } from '@/backend/oss/api';
 import { ILibraryItem, LibraryItemType } from '@/models/library';
-import { IOperationSchemaData } from '@/models/oss';
-import { IRSFormData } from '@/models/rsform';
 
+import { IRSFormDTO } from '../rsform/api';
 import { ILibraryUpdateDTO, libraryApi } from './api';
 
 export const useUpdateItem = () => {
@@ -17,11 +16,11 @@ export const useUpdateItem = () => {
       client.setQueryData(libraryApi.libraryListKey, (prev: ILibraryItem[] | undefined) =>
         prev?.map(item => (item.id === data.id ? data : item))
       );
-      client.setQueryData(itemKey, (prev: IRSFormData | IOperationSchemaData | undefined) =>
+      client.setQueryData(itemKey, (prev: IRSFormDTO | IOperationSchemaDTO | undefined) =>
         !prev ? undefined : { ...prev, ...data }
       );
       if (data.item_type === LibraryItemType.RSFORM) {
-        const schema: IRSFormData | undefined = client.getQueryData(itemKey);
+        const schema: IRSFormDTO | undefined = client.getQueryData(itemKey);
         if (schema) {
           return Promise.allSettled(
             schema.oss.map(item =>

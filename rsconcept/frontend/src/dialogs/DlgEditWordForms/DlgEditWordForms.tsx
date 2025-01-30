@@ -13,7 +13,7 @@ import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
 import Modal from '@/components/ui/Modal';
 import TextArea from '@/components/ui/TextArea';
-import { Grammeme, IWordForm, IWordFormPlain } from '@/models/language';
+import { Grammeme, IWordForm } from '@/models/language';
 import { parseGrammemes, wordFormEquals } from '@/models/languageAPI';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IConstituenta, TermForm } from '@/models/rsform';
@@ -79,11 +79,13 @@ function DlgEditWordForms() {
   }
 
   function handleInflect() {
-    const data: IWordFormPlain = {
-      text: term,
-      grams: inputGrams.map(gram => gram.value).join(',')
-    };
-    inflectText(data, response => setInputText(response.result));
+    inflectText(
+      {
+        text: term,
+        grams: inputGrams.map(gram => gram.value).join(',')
+      },
+      response => setInputText(response.result)
+    );
   }
 
   function handleParse() {

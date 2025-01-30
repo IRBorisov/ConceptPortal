@@ -3,9 +3,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { DataCallback } from '@/backend/apiTransport';
 import { useUpdateTimestamp } from '@/backend/library/useUpdateTimestamp';
 import { LibraryItemID } from '@/models/library';
-import { IOperationData } from '@/models/oss';
 
-import { IOperationCreateDTO, ossApi } from './api';
+import { IOperationCreateDTO, IOperationDTO, ossApi } from './api';
 
 export const useOperationCreate = () => {
   const client = useQueryClient();
@@ -24,7 +23,7 @@ export const useOperationCreate = () => {
         itemID: LibraryItemID; //
         data: IOperationCreateDTO;
       },
-      onSuccess?: DataCallback<IOperationData>
+      onSuccess?: DataCallback<IOperationDTO>
     ) => mutation.mutate(data, { onSuccess: response => onSuccess?.(response.new_operation) })
   };
 };

@@ -2,17 +2,32 @@ import { queryOptions } from '@tanstack/react-query';
 
 import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
-import { ILibraryItem, LibraryItemID } from '@/models/library';
+import { ILibraryItem, ILibraryItemData, LibraryItemID } from '@/models/library';
 import {
+  IArgument,
   ICstSubstitute,
-  IOperationData,
+  ICstSubstituteEx,
+  IOperation,
   IOperationPosition,
-  IOperationSchemaData,
   OperationID,
   OperationType
 } from '@/models/oss';
 import { ConstituentaID, IConstituentaReference, ITargetCst } from '@/models/rsform';
 import { information } from '@/utils/labels';
+
+/**
+ * Represents {@link IOperation} data from server.
+ */
+export interface IOperationDTO extends Omit<IOperation, 'substitutions' | 'arguments'> {}
+
+/**
+ * Represents backend data for {@link IOperationSchema}.
+ */
+export interface IOperationSchemaDTO extends ILibraryItemData {
+  items: IOperationDTO[];
+  arguments: IArgument[];
+  substitutions: ICstSubstituteEx[];
+}
 
 /**
  * Represents {@link IOperation} data, used in creation process.
@@ -36,8 +51,8 @@ export interface IOperationCreateDTO {
  * Represents data response when creating {@link IOperation}.
  */
 export interface IOperationCreatedResponse {
-  new_operation: IOperationData;
-  oss: IOperationSchemaData;
+  new_operation: IOperationDTO;
+  oss: IOperationSchemaDTO;
 }
 
 /**
@@ -61,7 +76,7 @@ export interface IOperationDeleteDTO extends ITargetOperation {
  */
 export interface IInputCreatedResponse {
   new_schema: ILibraryItem;
-  oss: IOperationSchemaData;
+  oss: IOperationSchemaDTO;
 }
 
 /**
@@ -102,7 +117,7 @@ export const ossApi = {
       queryFn: meta =>
         !itemID
           ? undefined
-          : axiosGet<IOperationSchemaData>({
+          : axiosGet<IOperationSchemaDTO>({
               endpoint: `/api/oss/${itemID}/details`,
               options: { signal: meta.signal }
             })
@@ -135,7 +150,7 @@ export const ossApi = {
       }
     }),
   operationDelete: ({ itemID, data }: { itemID: LibraryItemID; data: IOperationDeleteDTO }) =>
-    axiosDelete<IOperationDeleteDTO, IOperationSchemaData>({
+    axiosDelete<IOperationDeleteDTO, IOperationSchemaDTO>({
       endpoint: `/api/oss/${itemID}/delete-operation`,
       request: {
         data: data,
@@ -151,7 +166,7 @@ export const ossApi = {
       }
     }),
   inputUpdate: ({ itemID, data }: { itemID: LibraryItemID; data: IInputUpdateDTO }) =>
-    axiosPatch<IInputUpdateDTO, IOperationSchemaData>({
+    axiosPatch<IInputUpdateDTO, IOperationSchemaDTO>({
       endpoint: `/api/oss/${itemID}/set-input`,
       request: {
         data: data,
@@ -159,7 +174,7 @@ export const ossApi = {
       }
     }),
   operationUpdate: ({ itemID, data }: { itemID: LibraryItemID; data: IOperationUpdateDTO }) =>
-    axiosPatch<IOperationUpdateDTO, IOperationSchemaData>({
+    axiosPatch<IOperationUpdateDTO, IOperationSchemaDTO>({
       endpoint: `/api/oss/${itemID}/update-operation`,
       request: {
         data: data,
@@ -167,7 +182,7 @@ export const ossApi = {
       }
     }),
   operationExecute: ({ itemID, data }: { itemID: LibraryItemID; data: ITargetOperation }) =>
-    axiosPost<ITargetOperation, IOperationSchemaData>({
+    axiosPost<ITargetOperation, IOperationSchemaDTO>({
       endpoint: `/api/oss/${itemID}/execute-operation`,
       request: {
         data: data,
@@ -176,7 +191,7 @@ export const ossApi = {
     }),
 
   relocateConstituents: ({ itemID, data }: { itemID: LibraryItemID; data: ICstRelocateDTO }) =>
-    axiosPost<ICstRelocateDTO, IOperationSchemaData>({
+    axiosPost<ICstRelocateDTO, IOperationSchemaDTO>({
       endpoint: `/api/oss/${itemID}/relocate-constituents`,
       request: {
         data: data,

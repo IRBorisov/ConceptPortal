@@ -3,7 +3,7 @@ import { queryOptions } from '@tanstack/react-query';
 import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
 import { ossApi } from '@/backend/oss/api';
-import { rsformsApi } from '@/backend/rsform/api';
+import { IRSFormDTO, rsformsApi } from '@/backend/rsform/api';
 import {
   AccessPolicy,
   ILibraryItem,
@@ -13,7 +13,7 @@ import {
   LibraryItemType,
   VersionID
 } from '@/models/library';
-import { ConstituentaID, IRSFormData } from '@/models/rsform';
+import { ConstituentaID } from '@/models/rsform';
 import { UserID } from '@/models/user';
 import { information } from '@/utils/labels';
 
@@ -60,7 +60,7 @@ export interface IVersionCreateDTO {
  */
 export interface IVersionCreatedResponse {
   version: number;
-  schema: IRSFormData;
+  schema: IRSFormDTO;
 }
 
 export const libraryApi = {
@@ -157,7 +157,7 @@ export const libraryApi = {
       }
     }),
   cloneItem: (data: IRSFormCloneDTO) =>
-    axiosPost<IRSFormCloneDTO, IRSFormData>({
+    axiosPost<IRSFormCloneDTO, IRSFormDTO>({
       endpoint: `/api/library/${data.id}/clone`,
       request: {
         data: data,
@@ -182,7 +182,7 @@ export const libraryApi = {
       }
     }),
   versionRestore: ({ versionID }: { versionID: VersionID }) =>
-    axiosPatch<undefined, IRSFormData>({
+    axiosPatch<undefined, IRSFormDTO>({
       endpoint: `/api/versions/${versionID}/restore`,
       request: {
         successMessage: information.versionRestored

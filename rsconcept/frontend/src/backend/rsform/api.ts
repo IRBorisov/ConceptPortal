@@ -2,19 +2,41 @@ import { queryOptions } from '@tanstack/react-query';
 
 import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
-import { LibraryItemID, VersionID } from '@/models/library';
+import { ILibraryItemReference, ILibraryItemVersioned, LibraryItemID, VersionID } from '@/models/library';
 import { ICstSubstitute, ICstSubstitutions } from '@/models/oss';
 import {
   ConstituentaID,
   CstType,
   IConstituentaList,
   IConstituentaMeta,
-  IRSFormData,
+  IInheritanceInfo,
   ITargetCst,
   TermForm
 } from '@/models/rsform';
-import { IExpressionParse } from '@/models/rslang';
+import { IArgumentInfo, IExpressionParse, ParsingStatus, ValueClass } from '@/models/rslang';
 import { information } from '@/utils/labels';
+
+/**
+ * Represents {@link IConstituenta} data from server.
+ */
+export interface IConstituentaDTO extends IConstituentaMeta {
+  parse: {
+    status: ParsingStatus;
+    valueClass: ValueClass;
+    typification: string;
+    syntaxTree: string;
+    args: IArgumentInfo[];
+  };
+}
+
+/**
+ * Represents data for {@link IRSForm} provided by backend.
+ */
+export interface IRSFormDTO extends ILibraryItemVersioned {
+  items: IConstituentaDTO[];
+  inheritance: IInheritanceInfo[];
+  oss: ILibraryItemReference[];
+}
 
 /**
  * Represents data, used for uploading {@link IRSForm} as file.
@@ -46,7 +68,7 @@ export interface ICstCreateDTO {
  */
 export interface ICstCreatedResponse {
   new_cst: IConstituentaMeta;
-  schema: IRSFormData;
+  schema: IRSFormDTO;
 }
 
 /**
@@ -85,7 +107,7 @@ export interface ICstMoveDTO {
  */
 export interface IProduceStructureResponse {
   cst_list: ConstituentaID[];
-  schema: IRSFormData;
+  schema: IRSFormDTO;
 }
 
 /**
@@ -117,7 +139,7 @@ export const rsformsApi = {
       queryFn: meta =>
         !itemID
           ? undefined
-          : axiosGet<IRSFormData>({
+          : axiosGet<IRSFormDTO>({
               endpoint: version ? `/api/library/${itemID}/versions/${version}` : `/api/rsforms/${itemID}/details`,
               options: { signal: meta.signal }
             })
@@ -130,7 +152,7 @@ export const rsformsApi = {
       options: { responseType: 'blob' }
     }),
   upload: (data: IRSFormUploadDTO) =>
-    axiosPatch<IRSFormUploadDTO, IRSFormData>({
+    axiosPatch<IRSFormUploadDTO, IRSFormDTO>({
       endpoint: `/api/rsforms/${data.itemID}/load-trs`,
       request: {
         data: data,
@@ -160,7 +182,7 @@ export const rsformsApi = {
       }
     }),
   cstDelete: ({ itemID, data }: { itemID: LibraryItemID; data: IConstituentaList }) =>
-    axiosDelete<IConstituentaList, IRSFormData>({
+    axiosDelete<IConstituentaList, IRSFormDTO>({
       endpoint: `/api/rsforms/${itemID}/delete-multiple-cst`,
       request: {
         data: data,
@@ -176,7 +198,7 @@ export const rsformsApi = {
       }
     }),
   cstSubstitute: ({ itemID, data }: { itemID: LibraryItemID; data: ICstSubstitutions }) =>
-    axiosPatch<ICstSubstitutions, IRSFormData>({
+    axiosPatch<ICstSubstitutions, IRSFormDTO>({
       endpoint: `/api/rsforms/${itemID}/substitute`,
       request: {
         data: data,
@@ -184,7 +206,7 @@ export const rsformsApi = {
       }
     }),
   cstMove: ({ itemID, data }: { itemID: LibraryItemID; data: ICstMoveDTO }) =>
-    axiosPatch<ICstMoveDTO, IRSFormData>({
+    axiosPatch<ICstMoveDTO, IRSFormDTO>({
       endpoint: `/api/rsforms/${itemID}/move-cst`,
       request: { data: data }
     }),
@@ -198,7 +220,7 @@ export const rsformsApi = {
       }
     }),
   inlineSynthesis: ({ itemID, data }: { itemID: LibraryItemID; data: IInlineSynthesisDTO }) =>
-    axiosPost<IInlineSynthesisDTO, IRSFormData>({
+    axiosPost<IInlineSynthesisDTO, IRSFormDTO>({
       endpoint: `/api/rsforms/${itemID}/inline-synthesis`,
       request: {
         data: data,
@@ -206,12 +228,12 @@ export const rsformsApi = {
       }
     }),
   restoreOrder: ({ itemID }: { itemID: LibraryItemID }) =>
-    axiosPatch<undefined, IRSFormData>({
+    axiosPatch<undefined, IRSFormDTO>({
       endpoint: `/api/rsforms/${itemID}/restore-order`,
       request: { successMessage: information.reorderComplete }
     }),
   resetAliases: ({ itemID }: { itemID: LibraryItemID }) =>
-    axiosPatch<undefined, IRSFormData>({
+    axiosPatch<undefined, IRSFormDTO>({
       endpoint: `/api/rsforms/${itemID}/reset-aliases`,
       request: { successMessage: information.reindexComplete }
     }),

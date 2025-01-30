@@ -83,9 +83,9 @@ export interface ITargetCst {
 }
 
 /**
- * Represents {@link IConstituenta} data from server.
+ * Represents Constituenta.
  */
-export interface IConstituentaData extends IConstituentaMeta {
+export interface IConstituenta extends IConstituentaMeta {
   parse: {
     status: ParsingStatus;
     valueClass: ValueClass;
@@ -93,12 +93,7 @@ export interface IConstituentaData extends IConstituentaMeta {
     syntaxTree: string;
     args: IArgumentInfo[];
   };
-}
 
-/**
- * Represents Constituenta.
- */
-export interface IConstituenta extends IConstituentaData {
   /** {@link LibraryItemID} of this {@link IConstituenta}. */
   schema: LibraryItemID;
 
@@ -172,7 +167,7 @@ export interface IRSFormStats {
 /**
  * Represents inheritance data for {@link IRSForm}.
  */
-export interface IInheritanceData {
+export interface IInheritanceInfo {
   child: ConstituentaID;
   child_source: LibraryItemID;
   parent: ConstituentaID;
@@ -180,19 +175,13 @@ export interface IInheritanceData {
 }
 
 /**
- * Represents data for {@link IRSForm} provided by backend.
- */
-export interface IRSFormData extends ILibraryItemVersioned {
-  items: IConstituentaData[];
-  inheritance: IInheritanceData[];
-  oss: ILibraryItemReference[];
-}
-
-/**
  * Represents formal explication for set of concepts.
  */
-export interface IRSForm extends IRSFormData {
+export interface IRSForm extends ILibraryItemVersioned {
   items: IConstituenta[];
+  inheritance: IInheritanceInfo[];
+  oss: ILibraryItemReference[];
+
   stats: IRSFormStats;
   graph: Graph;
   cstByAlias: Map<string, IConstituenta>;

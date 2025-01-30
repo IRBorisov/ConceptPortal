@@ -2,27 +2,29 @@
  * Module: RSForm data loading and processing.
  */
 
-import { Graph } from './Graph';
-import { LibraryItemID } from './library';
-import { ConstituentaID, CstType, IConstituenta, IRSForm, IRSFormData, IRSFormStats } from './rsform';
-import { inferClass, inferStatus, inferTemplate, isBaseSet, isFunctional } from './rsformAPI';
-import { ParsingStatus, ValueClass } from './rslang';
-import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from './rslangAPI';
+import { Graph } from '@/models/Graph';
+import { LibraryItemID } from '@/models/library';
+import { ConstituentaID, CstType, IConstituenta, IRSForm, IRSFormStats } from '@/models/rsform';
+import { inferClass, inferStatus, inferTemplate, isBaseSet, isFunctional } from '@/models/rsformAPI';
+import { ParsingStatus, ValueClass } from '@/models/rslang';
+import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '@/models/rslangAPI';
+
+import { IRSFormDTO } from './api';
 
 /**
- * Loads data into an {@link IRSForm} based on {@link IRSFormData}.
+ * Loads data into an {@link IRSForm} based on {@link IRSFormDTO}.
  *
  * @remarks
  * This function processes the provided input, initializes the IRSForm, and calculates statistics
  * based on the loaded data. It also establishes dependencies between concepts in the graph.
  */
 export class RSFormLoader {
-  private schema: IRSFormData;
+  private schema: IRSFormDTO;
   private graph: Graph = new Graph();
   private cstByAlias = new Map<string, IConstituenta>();
   private cstByID = new Map<ConstituentaID, IConstituenta>();
 
-  constructor(input: IRSFormData) {
+  constructor(input: IRSFormDTO) {
     this.schema = input;
   }
 
@@ -159,7 +161,8 @@ export class RSFormLoader {
       } else if (sources.size !== 1) {
         return false;
       } else {
-        const base = this.cstByID.get(sources.values().next().value!)!;
+        const cstID = sources.values().next().value!;
+        const base = this.cstByID.get(cstID)!;
         return !isFunctional(base.cst_type) || splitTemplateDefinition(base.definition_formal).head !== expression.head;
       }
     };

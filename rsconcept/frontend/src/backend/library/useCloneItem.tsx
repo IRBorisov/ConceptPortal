@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { DataCallback } from '@/backend/apiTransport';
-import { IRSFormData } from '@/models/rsform';
 
+import { IRSFormDTO } from '../rsform/api';
 import { IRSFormCloneDTO, libraryApi } from './api';
 
 export const useCloneItem = () => {
@@ -15,7 +15,7 @@ export const useCloneItem = () => {
   return {
     cloneItem: (
       data: IRSFormCloneDTO, //
-      onSuccess?: DataCallback<IRSFormData>
+      onSuccess?: DataCallback<IRSFormDTO>
     ) => mutation.mutate(data, { onSuccess })
   };
 };

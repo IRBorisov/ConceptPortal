@@ -1,9 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 
 import { DataCallback } from '@/backend/apiTransport';
-import { ILexemeData } from '@/models/language';
 
-import { cctextApi } from './api';
+import { cctextApi, ILexemeResponse } from './api';
 
 export const useGenerateLexeme = () => {
   const mutation = useMutation({
@@ -13,7 +12,7 @@ export const useGenerateLexeme = () => {
   return {
     generateLexeme: (
       data: { text: string }, //
-      onSuccess?: DataCallback<ILexemeData>
+      onSuccess?: DataCallback<ILexemeResponse>
     ) => mutation.mutate(data, { onSuccess })
   };
 };
