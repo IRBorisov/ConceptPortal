@@ -1,18 +1,15 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import { authApi, IPasswordTokenDTO, IResetPasswordDTO } from './api';
 
 export const useResetPassword = () => {
-  const client = useQueryClient();
   const validateMutation = useMutation({
-    mutationKey: ['reset-password'],
-    mutationFn: authApi.validatePasswordToken,
-    onSuccess: () => client.invalidateQueries({ queryKey: [authApi.baseKey] })
+    mutationKey: ['validate-token'],
+    mutationFn: authApi.validatePasswordToken
   });
   const resetMutation = useMutation({
     mutationKey: ['reset-password'],
-    mutationFn: authApi.resetPassword,
-    onSuccess: () => client.invalidateQueries({ queryKey: [authApi.baseKey] })
+    mutationFn: authApi.resetPassword
   });
   return {
     validateToken: (
@@ -24,7 +21,6 @@ export const useResetPassword = () => {
       onSuccess?: () => void
     ) => resetMutation.mutate(data, { onSuccess }),
     isPending: resetMutation.isPending || validateMutation.isPending,
-    error: resetMutation.error,
-    reset: resetMutation.reset
+    error: resetMutation.error ?? validateMutation.error
   };
 };

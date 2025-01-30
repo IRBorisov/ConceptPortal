@@ -6,9 +6,8 @@ import { useEffect, useState } from 'react';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
-import { IResetPasswordDTO } from '@/backend/auth/api';
 import { useResetPassword } from '@/backend/auth/useResetPassword';
-import { ErrorData } from '@/components/info/InfoError';
+import InfoError, { ErrorData } from '@/components/info/InfoError';
 import Loader from '@/components/ui/Loader';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
@@ -16,11 +15,11 @@ import useQueryStrings from '@/hooks/useQueryStrings';
 
 export function Component() {
   const router = useConceptNavigation();
-  const token = useQueryStrings().get('token');
+  const token = useQueryStrings().get('token') ?? '';
 
-  const { validateToken, resetPassword, isPending, error, reset } = useResetPassword();
+  const { validateToken, resetPassword, isPending, error } = useResetPassword();
 
-  const [isTokenValid, setIsTokenValid] = useState(false);
+  const [isValidated, setIsValidated] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
 
@@ -32,30 +31,27 @@ export function Component() {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!isPending) {
-      const data: IResetPasswordDTO = {
-        password: newPassword,
-        token: token!
-      };
-      resetPassword(data, () => {
-        router.replace(urls.home);
-        router.push(urls.login);
-      });
+      resetPassword(
+        {
+          password: newPassword,
+          token: token
+        },
+        () => {
+          router.replace(urls.home);
+          router.push(urls.login);
+        }
+      );
     }
   }
 
   useEffect(() => {
-    reset();
-  }, [newPassword, newPasswordRepeat, reset]);
+    if (!isValidated && !isPending) {
+      validateToken({ token: token });
+      setIsValidated(true);
+    }
+  }, [token, validateToken, isValidated, isPending]);
 
-  useEffect(() => {
-    validateToken({ token: token ?? '' }, () => setIsTokenValid(true));
-  }, [token, validateToken]);
-
-  if (error) {
-    return <ProcessError error={error} />;
-  }
-
-  if (isPending || !isTokenValid) {
+  if (isPending) {
     return <Loader />;
   }
 
@@ -92,6 +88,7 @@ export function Component() {
         loading={isPending}
         disabled={!canSubmit}
       />
+      {error ? <ProcessError error={error} /> : null}
     </form>
   );
 }
@@ -101,5 +98,5 @@ function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 404) {
     return <div className='mx-auto mt-6 text-sm select-text text-warn-600'>Данная ссылка не действительна</div>;
   }
-  throw error as Error;
+  return <InfoError error={error} />;
 }
