@@ -33,14 +33,6 @@ export interface ICurrentUser {
 }
 
 /**
- * Represents signup data, used to create new users.
- */
-export interface IUserSignupData extends Omit<IUser, 'is_staff' | 'id'> {
-  password: string;
-  password2: string;
-}
-
-/**
  * Represents user profile for viewing and editing {@link IUser}.
  */
 export interface IUserProfile extends Omit<IUser, 'is_staff'> {}

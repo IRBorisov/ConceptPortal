@@ -34,7 +34,7 @@ function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocationProps
   const toggleSubfolders = useLibrarySearchStore(state => state.toggleSubfolders);
 
   const canRename = (() => {
-    if (location.length <= 3 || isAnonymous || !user) {
+    if (location.length <= 3 || isAnonymous) {
       return false;
     }
     if (user.is_staff) {

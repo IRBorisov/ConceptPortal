@@ -2,8 +2,16 @@ import { queryOptions } from '@tanstack/react-query';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
-import { IUser, IUserInfo, IUserProfile, IUserSignupData } from '@/models/user';
+import { IUser, IUserInfo, IUserProfile } from '@/models/user';
 import { information } from '@/utils/labels';
+
+/**
+ * Represents signup data, used to create new users.
+ */
+export interface IUserSignupData extends Omit<IUser, 'is_staff' | 'id'> {
+  password: string;
+  password2: string;
+}
 
 /**
  * Represents user data, intended to update user profile in persistent storage.

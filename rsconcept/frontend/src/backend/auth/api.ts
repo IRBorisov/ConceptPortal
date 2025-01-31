@@ -10,8 +10,8 @@ import { information } from '@/utils/labels';
  * Represents login data, used to authenticate users.
  */
 export const UserLoginSchema = z.object({
-  username: z.string(),
-  password: z.string()
+  username: z.string().nonempty('Поле логина обязательно для заполнения'),
+  password: z.string().nonempty('Поле пароля обязательно для заполнения')
 });
 
 /**

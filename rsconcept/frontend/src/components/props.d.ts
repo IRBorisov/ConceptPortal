@@ -1,5 +1,6 @@
 // =========== Module contains interfaces for common UI elements. ==========
 import React from 'react';
+import { FieldError } from 'react-hook-form';
 
 export namespace CProps {
   /**
@@ -33,6 +34,13 @@ export namespace CProps {
 
     /** Indicates whether the `title` should be hidden. */
     hideTitle?: boolean;
+  }
+
+  /**
+   * Represents an object that can have an error message.
+   */
+  export interface ErrorProcessing {
+    error?: FieldError;
   }
 
   /**

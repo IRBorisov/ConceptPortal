@@ -48,7 +48,7 @@ function DlgChangeLocation() {
         <SelectLocationHead
           value={head} // prettier: split-lines
           onChange={setHead}
-          excluded={!user?.is_staff ? [LocationHead.LIBRARY] : []}
+          excluded={!user.is_staff ? [LocationHead.LIBRARY] : []}
         />
       </div>
       <SelectLocationContext value={location} onChange={handleSelectLocation} className='max-h-[9.2rem]' />

@@ -11,6 +11,7 @@ interface UserButtonProps {
 
 function UserButton({ onLogin, onClickUser }: UserButtonProps) {
   const { user, isAnonymous } = useAuthSuspense();
+  console.log(user);
   const adminMode = usePreferencesStore(state => state.adminMode);
   if (isAnonymous) {
     return (

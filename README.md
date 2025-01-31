@@ -39,6 +39,7 @@ This readme file is used mostly to document project dependencies and conventions
   - react-error-boundary
   - react-tooltip
   - react-zoom-pan-pinch
+  - react-hook-form
   - reactflow
   - js-file-download
   - use-debounce
@@ -46,6 +47,7 @@ This readme file is used mostly to document project dependencies and conventions
   - html-to-image
   - zustand
   - zod
+  - @hookform/resolvers
   - @tanstack/react-table
   - @tanstack/react-query
   - @tanstack/react-query-devtools

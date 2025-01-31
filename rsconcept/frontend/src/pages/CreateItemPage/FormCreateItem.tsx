@@ -196,11 +196,7 @@ function FormCreateItem() {
       <div className='flex justify-between gap-3 flex-grow'>
         <div className='flex flex-col gap-2 min-w-[7rem] h-min'>
           <Label text='Корень' />
-          <SelectLocationHead
-            value={head}
-            onChange={setHead}
-            excluded={!user?.is_staff ? [LocationHead.LIBRARY] : []}
-          />
+          <SelectLocationHead value={head} onChange={setHead} excluded={!user.is_staff ? [LocationHead.LIBRARY] : []} />
         </div>
         <SelectLocationContext value={location} onChange={handleSelectLocation} />
         <TextArea

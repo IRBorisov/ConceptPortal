@@ -35,7 +35,7 @@ function FormSignup() {
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
   const [acceptRules, setAcceptRules] = useState(false);
 
-  const isValid = acceptPrivacy && acceptRules && !!email && !!username;
+  // const isValid = acceptPrivacy && acceptRules && !!email && !!username;
 
   useEffect(() => {
     reset();
@@ -87,6 +87,7 @@ function FormSignup() {
         <FlexColumn>
           <TextInput
             id='username'
+            name='username'
             autoComplete='username'
             required
             label='Имя пользователя (логин)'
@@ -100,6 +101,7 @@ function FormSignup() {
           <TextInput
             id='password'
             type='password'
+            name='password'
             autoComplete='new-password'
             required
             label='Пароль'
@@ -110,6 +112,7 @@ function FormSignup() {
           <TextInput
             id='password2'
             type='password'
+            name='password2'
             label='Повторите пароль'
             autoComplete='new-password'
             required
@@ -122,6 +125,7 @@ function FormSignup() {
         <FlexColumn className='w-[15rem]'>
           <TextInput
             id='email'
+            name='email'
             autoComplete='email'
             required
             spellCheck={false}
@@ -132,6 +136,7 @@ function FormSignup() {
           />
           <TextInput
             id='first_name'
+            name='first_name'
             label='Отображаемое имя'
             autoComplete='given-name'
             value={firstName}
@@ -139,6 +144,7 @@ function FormSignup() {
           />
           <TextInput
             id='last_name'
+            name='last_name'
             label='Отображаемая фамилия'
             autoComplete='family-name'
             value={lastName}
@@ -157,7 +163,7 @@ function FormSignup() {
       </div>
 
       <div className='flex justify-around my-3'>
-        <SubmitButton text='Регистрировать' className='min-w-[10rem]' loading={isPending} disabled={!isValid} />
+        <SubmitButton text='Регистрировать' className='min-w-[10rem]' loading={isPending} />
         <Button text='Назад' className='min-w-[10rem]' onClick={() => handleCancel()} />
       </div>
       {error ? <ProcessError error={error} /> : null}

@@ -2,9 +2,10 @@ import clsx from 'clsx';
 
 import { CProps } from '@/components/props';
 
+import ErrorField from './ErrorField';
 import Label from './Label';
 
-interface TextInputProps extends CProps.Editor, CProps.Colors, CProps.Input {
+interface TextInputProps extends CProps.Editor, CProps.ErrorProcessing, CProps.Colors, CProps.Input {
   /** Indicates that padding should be minimal. */
   dense?: boolean;
 
@@ -32,6 +33,7 @@ function TextInput({
   className,
   colors = 'clr-input',
   onKeyDown,
+  error,
   ...restProps
 }: TextInputProps) {
   return (
@@ -63,6 +65,7 @@ function TextInput({
         disabled={disabled}
         {...restProps}
       />
+      <ErrorField error={error} />
     </div>
   );
 }

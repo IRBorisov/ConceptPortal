@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { DataCallback } from '@/backend/apiTransport';
-import { usersApi } from '@/backend/users/api';
-import { IUserProfile, IUserSignupData } from '@/models/user';
+import { IUserSignupData, usersApi } from '@/backend/users/api';
+import { IUserProfile } from '@/models/user';
 
 export const useSignup = () => {
   const client = useQueryClient();
