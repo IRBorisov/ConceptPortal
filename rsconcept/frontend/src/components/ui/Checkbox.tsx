@@ -12,7 +12,7 @@ export interface CheckboxProps extends Omit<CProps.Button, 'value' | 'onClick'> 
   disabled?: boolean;
 
   /** Current value - `true` or `false`. */
-  value: boolean;
+  value?: boolean;
 
   /** Callback to set the `value`. */
   setValue?: (newValue: boolean) => void;

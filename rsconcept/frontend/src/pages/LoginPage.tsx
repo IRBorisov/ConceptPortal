@@ -77,7 +77,7 @@ function LoginPage() {
         id='username'
         autoComplete='username'
         label='Логин или email'
-        {...register('username', { required: true })}
+        {...register('username')}
         autoFocus
         allowEnter
         spellCheck={false}
@@ -86,7 +86,7 @@ function LoginPage() {
       />
       <TextInput
         id='password'
-        {...register('password', { required: true })}
+        {...register('password')}
         type='password'
         autoComplete='current-password'
         label='Пароль'

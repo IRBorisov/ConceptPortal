@@ -4,14 +4,14 @@ import { z } from 'zod';
 import { axiosGet, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
 import { ICurrentUser } from '@/models/user';
-import { information } from '@/utils/labels';
+import { errors, information } from '@/utils/labels';
 
 /**
  * Represents login data, used to authenticate users.
  */
 export const UserLoginSchema = z.object({
-  username: z.string().nonempty('Поле логина обязательно для заполнения'),
-  password: z.string().nonempty('Поле пароля обязательно для заполнения')
+  username: z.string().nonempty(errors.requiredField),
+  password: z.string().nonempty(errors.requiredField)
 });
 
 /**

@@ -1,22 +1,41 @@
 import { queryOptions } from '@tanstack/react-query';
+import { z } from 'zod';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
-import { IUser, IUserInfo, IUserProfile } from '@/models/user';
-import { information } from '@/utils/labels';
+import { IUserInfo, IUserProfile } from '@/models/user';
+import { patterns } from '@/utils/constants';
+import { errors, information } from '@/utils/labels';
 
 /**
  * Represents signup data, used to create new users.
  */
-export interface IUserSignupData extends Omit<IUser, 'is_staff' | 'id'> {
-  password: string;
-  password2: string;
-}
+export const UserSignupSchema = z
+  .object({
+    username: z.string().nonempty(errors.requiredField).regex(RegExp(patterns.login), errors.loginFormat),
+    email: z.string().email(errors.emailField),
+    first_name: z.string(),
+    last_name: z.string(),
+
+    password: z.string().nonempty(errors.requiredField),
+    password2: z.string().nonempty(errors.requiredField)
+  })
+  .refine(schema => schema.password === schema.password2, { path: ['password2'], message: errors.passwordsMismatch });
+
+/**
+ * Represents signup data, used to create new users.
+ */
+export type IUserSignupDTO = z.infer<typeof UserSignupSchema>;
 
 /**
  * Represents user data, intended to update user profile in persistent storage.
  */
-export interface IUpdateProfileDTO extends Omit<IUser, 'is_staff' | 'id'> {}
+export interface IUpdateProfileDTO {
+  username: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+}
 
 export const usersApi = {
   baseKey: 'users',
@@ -41,8 +60,8 @@ export const usersApi = {
         })
     }),
 
-  signup: (data: IUserSignupData) =>
-    axiosPost<IUserSignupData, IUserProfile>({
+  signup: (data: IUserSignupDTO) =>
+    axiosPost<IUserSignupDTO, IUserProfile>({
       endpoint: '/users/api/signup',
       request: {
         data: data,

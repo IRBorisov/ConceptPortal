@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { DataCallback } from '@/backend/apiTransport';
-import { IUserSignupData, usersApi } from '@/backend/users/api';
+import { IUserSignupDTO, usersApi } from '@/backend/users/api';
 import { IUserProfile } from '@/models/user';
 
 export const useSignup = () => {
@@ -13,7 +13,7 @@ export const useSignup = () => {
   });
   return {
     signup: (
-      data: IUserSignupData, //
+      data: IUserSignupDTO, //
       onSuccess?: DataCallback<IUserProfile>
     ) => mutation.mutate(data, { onSuccess }),
     isPending: mutation.isPending,

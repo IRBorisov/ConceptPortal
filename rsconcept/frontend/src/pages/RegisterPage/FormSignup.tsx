@@ -1,11 +1,14 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
+import { IUserSignupDTO, UserSignupSchema } from '@/backend/users/api';
 import { useSignup } from '@/backend/users/useSignup';
 import { IconHelp } from '@/components/Icons';
 import { ErrorData } from '@/components/info/InfoError';
@@ -23,23 +26,25 @@ import { globals, patterns } from '@/utils/constants';
 
 function FormSignup() {
   const router = useConceptNavigation();
-  const { signup, isPending, error, reset } = useSignup();
-
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [password2, setPassword2] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-
+  const { signup, isPending, error: serverError, reset } = useSignup();
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
   const [acceptRules, setAcceptRules] = useState(false);
 
-  // const isValid = acceptPrivacy && acceptRules && !!email && !!username;
+  const {
+    register,
+    handleSubmit,
+    clearErrors,
+    formState: { errors }
+  } = useForm<IUserSignupDTO>({
+    resolver: zodResolver(UserSignupSchema)
+  });
 
-  useEffect(() => {
+  const isValid = acceptPrivacy && acceptRules;
+
+  function resetErrors() {
     reset();
-  }, [username, email, password, password2, reset]);
+    clearErrors();
+  }
 
   function handleCancel() {
     if (router.canBack()) {
@@ -49,25 +54,15 @@ function FormSignup() {
     }
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (isPending) {
-      return;
-    }
-    signup(
-      {
-        username,
-        email,
-        password,
-        password2,
-        first_name: firstName,
-        last_name: lastName
-      },
-      createdUser => router.push(urls.login_hint(createdUser.username))
-    );
+  function onSubmit(data: IUserSignupDTO) {
+    signup(data, createdUser => router.push(urls.login_hint(createdUser.username)));
   }
   return (
-    <form className={clsx('cc-fade-in cc-column', 'mx-auto w-[36rem]', 'px-6 py-3')} onSubmit={handleSubmit}>
+    <form
+      className={clsx('cc-fade-in cc-column', 'mx-auto w-[36rem]', 'px-6 py-3')}
+      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      onChange={resetErrors}
+    >
       <h1>
         <span>Новый пользователь</span>
         <Overlay id={globals.password_tooltip} position='top-[5.4rem] left-[3.5rem]'>
@@ -87,68 +82,59 @@ function FormSignup() {
         <FlexColumn>
           <TextInput
             id='username'
-            name='username'
+            {...register('username')}
             autoComplete='username'
-            required
             label='Имя пользователя (логин)'
             spellCheck={false}
             pattern={patterns.login}
             title='Минимум 3 знака. Латинские буквы и цифры. Не может начинаться с цифры'
-            value={username}
             className='w-[15rem]'
-            onChange={event => setUsername(event.target.value)}
+            error={errors.username}
           />
           <TextInput
             id='password'
             type='password'
-            name='password'
+            {...register('password')}
             autoComplete='new-password'
-            required
             label='Пароль'
             className='w-[15rem]'
-            value={password}
-            onChange={event => setPassword(event.target.value)}
+            error={errors.password}
           />
           <TextInput
             id='password2'
             type='password'
-            name='password2'
+            {...register('password2')}
             label='Повторите пароль'
             autoComplete='new-password'
-            required
             className='w-[15rem]'
-            value={password2}
-            onChange={event => setPassword2(event.target.value)}
+            error={errors.password2}
           />
         </FlexColumn>
 
         <FlexColumn className='w-[15rem]'>
           <TextInput
             id='email'
-            name='email'
+            {...register('email')}
             autoComplete='email'
             required
             spellCheck={false}
             label='Электронная почта (email)'
             title='электронная почта в корректном формате, например: i.petrov@mycompany.ru.com'
-            value={email}
-            onChange={event => setEmail(event.target.value)}
+            error={errors.email}
           />
           <TextInput
             id='first_name'
-            name='first_name'
+            {...register('first_name')}
             label='Отображаемое имя'
             autoComplete='given-name'
-            value={firstName}
-            onChange={event => setFirstName(event.target.value)}
+            error={errors.first_name}
           />
           <TextInput
             id='last_name'
-            name='last_name'
+            {...register('last_name')}
             label='Отображаемая фамилия'
             autoComplete='family-name'
-            value={lastName}
-            onChange={event => setLastName(event.target.value)}
+            error={errors.last_name}
           />
         </FlexColumn>
       </div>
@@ -163,10 +149,10 @@ function FormSignup() {
       </div>
 
       <div className='flex justify-around my-3'>
-        <SubmitButton text='Регистрировать' className='min-w-[10rem]' loading={isPending} />
+        <SubmitButton text='Регистрировать' className='min-w-[10rem]' loading={isPending || !isValid} />
         <Button text='Назад' className='min-w-[10rem]' onClick={() => handleCancel()} />
       </div>
-      {error ? <ProcessError error={error} /> : null}
+      {serverError ? <ServerError error={serverError} /> : null}
     </form>
   );
 }
@@ -174,17 +160,17 @@ function FormSignup() {
 export default FormSignup;
 
 // ====== Internals =========
-function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
+function ServerError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
     if ('email' in error.response.data) {
       return (
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        <div className='mx-auto text-sm select-text text-warn-600'>{error.response.data.email}.</div>
+        <div className='mx-auto text-sm select-text text-warn-600'>{error.response.data.email}</div>
       );
     } else if ('username' in error.response.data) {
       return (
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        <div className='mx-auto text-sm select-text text-warn-600'>{error.response.data.username}.</div>
+        <div className='mx-auto text-sm select-text text-warn-600'>{error.response.data.username}</div>
       );
     } else {
       return (
