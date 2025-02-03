@@ -1,92 +1,77 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { useForm } from 'react-hook-form';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
-import { IChangePasswordDTO } from '@/backend/auth/api';
+import { ChangePasswordSchema, IChangePasswordDTO } from '@/backend/auth/api';
 import { useChangePassword } from '@/backend/auth/useChangePassword';
 import { ErrorData } from '@/components/info/InfoError';
 import FlexColumn from '@/components/ui/FlexColumn';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
-import { errors } from '@/utils/labels';
 
 function EditorPassword() {
   const router = useConceptNavigation();
-  const { changePassword, isPending, error, reset } = useChangePassword();
+  const { changePassword, isPending, error: serverError, reset } = useChangePassword();
+  const {
+    register,
+    handleSubmit,
+    clearErrors,
+    formState: { errors }
+  } = useForm<IChangePasswordDTO>({
+    resolver: zodResolver(ChangePasswordSchema)
+  });
 
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
+  function resetErrors() {
+    reset();
+    clearErrors();
+  }
 
-  const passwordColor =
-    !!newPassword && !!newPasswordRepeat && newPassword !== newPasswordRepeat ? 'bg-warn-100' : 'clr-input';
-
-  const canSubmit = !!oldPassword && !!newPassword && !!newPasswordRepeat && newPassword === newPasswordRepeat;
-
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (newPassword !== newPasswordRepeat) {
-      toast.error(errors.passwordsMismatch);
-      return;
-    }
-    const data: IChangePasswordDTO = {
-      old_password: oldPassword,
-      new_password: newPassword
-    };
+  function onSubmit(data: IChangePasswordDTO) {
     changePassword(data, () => router.push(urls.login));
   }
 
-  useEffect(() => {
-    reset();
-  }, [newPassword, oldPassword, newPasswordRepeat, reset]);
-
   return (
     <form
-      className={clsx('max-w-[14rem]', 'px-6 py-2 flex flex-col justify-between', 'border-l-2')}
-      onSubmit={handleSubmit}
+      className={clsx('max-w-[16rem]', 'px-6 py-2 flex flex-col justify-between', 'border-l-2')}
+      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      onChange={resetErrors}
     >
       <FlexColumn>
         <TextInput
           id='old_password'
           type='password'
+          {...register('old_password')}
           label='Старый пароль'
           autoComplete='current-password'
           allowEnter
-          value={oldPassword}
-          onChange={event => setOldPassword(event.target.value)}
+          error={errors.old_password}
         />
         <TextInput
           id='new_password'
           type='password'
+          {...register('new_password')}
           label='Новый пароль'
           autoComplete='new-password'
           allowEnter
-          colors={passwordColor}
-          value={newPassword}
-          onChange={event => {
-            setNewPassword(event.target.value);
-          }}
+          error={errors.new_password}
         />
         <TextInput
-          id='new_password_repeat'
+          id='new_password2'
           type='password'
+          {...register('new_password2')}
           label='Повторите новый'
           autoComplete='new-password'
           allowEnter
-          colors={passwordColor}
-          value={newPasswordRepeat}
-          onChange={event => {
-            setNewPasswordRepeat(event.target.value);
-          }}
+          error={errors.new_password2}
         />
-        {error ? <ProcessError error={error} /> : null}
+        {serverError ? <ServerError error={serverError} /> : null}
       </FlexColumn>
-      <SubmitButton text='Сменить пароль' className='self-center' disabled={!canSubmit} loading={isPending} />
+      <SubmitButton text='Сменить пароль' className='self-center mt-2' loading={isPending} />
     </form>
   );
 }
@@ -94,7 +79,7 @@ function EditorPassword() {
 export default EditorPassword;
 
 // ====== Internals =========
-function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
+function ServerError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
     return <div className='text-sm select-text text-warn-600'>Неверно введен старый пароль</div>;
   }

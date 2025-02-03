@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
 
 import { authApi, IUserLoginDTO } from './api';
 
@@ -12,8 +11,7 @@ export const useLogin = () => {
     onSuccess: () => client.resetQueries()
   });
   return {
-    login: (data: IUserLoginDTO, onSuccess?: () => void, onError?: (error: AxiosError) => void) =>
-      mutation.mutate(data, { onSuccess, onError }),
+    login: (data: IUserLoginDTO, onSuccess?: () => void) => mutation.mutate(data, { onSuccess }),
     isPending: mutation.isPending,
     error: mutation.error,
     reset: mutation.reset

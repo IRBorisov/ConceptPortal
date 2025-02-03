@@ -1,7 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 import { z } from 'zod';
 
-import { axiosGet, axiosPost } from '@/backend/apiTransport';
+import { axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
 import { ICurrentUser } from '@/models/user';
 import { errors, information } from '@/utils/labels';
@@ -22,10 +22,25 @@ export type IUserLoginDTO = z.infer<typeof UserLoginSchema>;
 /**
  * Represents data needed to update password for current user.
  */
-export interface IChangePasswordDTO {
-  old_password: string;
-  new_password: string;
-}
+export const ChangePasswordSchema = z
+  .object({
+    old_password: z.string().nonempty(errors.requiredField),
+    new_password: z.string().nonempty(errors.requiredField),
+    new_password2: z.string().nonempty(errors.requiredField)
+  })
+  .refine(schema => schema.new_password === schema.new_password2, {
+    path: ['new_password2'],
+    message: errors.passwordsMismatch
+  })
+  .refine(schema => schema.old_password !== schema.new_password, {
+    path: ['new_password'],
+    message: errors.passwordsSame
+  });
+
+/**
+ * Represents data needed to update password for current user.
+ */
+export type IChangePasswordDTO = z.infer<typeof ChangePasswordSchema>;
 
 /**
  * Represents password reset request data.
@@ -75,7 +90,7 @@ export const authApi = {
       request: { data: data }
     }),
   changePassword: (data: IChangePasswordDTO) =>
-    axiosPost({
+    axiosPatch({
       endpoint: '/users/api/change-password',
       request: {
         data: data,

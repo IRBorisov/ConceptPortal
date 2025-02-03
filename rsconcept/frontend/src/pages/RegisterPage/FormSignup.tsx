@@ -39,8 +39,6 @@ function FormSignup() {
     resolver: zodResolver(UserSignupSchema)
   });
 
-  const isValid = acceptPrivacy && acceptRules;
-
   function resetErrors() {
     reset();
     clearErrors();
@@ -57,6 +55,7 @@ function FormSignup() {
   function onSubmit(data: IUserSignupDTO) {
     signup(data, createdUser => router.push(urls.login_hint(createdUser.username)));
   }
+
   return (
     <form
       className={clsx('cc-fade-in cc-column', 'mx-auto w-[36rem]', 'px-6 py-3')}
@@ -149,7 +148,12 @@ function FormSignup() {
       </div>
 
       <div className='flex justify-around my-3'>
-        <SubmitButton text='Регистрировать' className='min-w-[10rem]' loading={isPending || !isValid} />
+        <SubmitButton
+          text='Регистрировать'
+          className='min-w-[10rem]'
+          loading={isPending}
+          disabled={!acceptPrivacy || !acceptRules}
+        />
         <Button text='Назад' className='min-w-[10rem]' onClick={() => handleCancel()} />
       </div>
       {serverError ? <ServerError error={serverError} /> : null}

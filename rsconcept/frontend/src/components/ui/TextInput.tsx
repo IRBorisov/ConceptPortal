@@ -40,7 +40,7 @@ function TextInput({
     <div
       className={clsx(
         {
-          'flex flex-col gap-2': !dense,
+          'flex flex-col': !dense,
           'flex items-center gap-3': dense
         },
         dense && className
@@ -50,7 +50,7 @@ function TextInput({
       <input
         id={id}
         className={clsx(
-          'min-w-0 py-2',
+          'min-w-0 py-2 mt-2',
           'leading-tight truncate hover:text-clip',
           {
             'px-3': !noBorder || !disabled,
@@ -65,7 +65,7 @@ function TextInput({
         disabled={disabled}
         {...restProps}
       />
-      <ErrorField error={error} />
+      <ErrorField className='mt-1' error={error} />
     </div>
   );
 }

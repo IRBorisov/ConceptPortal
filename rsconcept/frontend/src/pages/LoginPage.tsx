@@ -12,7 +12,6 @@ import { useAuthSuspense } from '@/backend/auth/useAuth';
 import { useLogin } from '@/backend/auth/useLogin';
 import ExpectedAnonymous from '@/components/ExpectedAnonymous';
 import { ErrorData } from '@/components/info/InfoError';
-import ErrorField from '@/components/ui/ErrorField';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextInput from '@/components/ui/TextInput';
 import TextURL from '@/components/ui/TextURL';
@@ -28,7 +27,6 @@ function LoginPage() {
     register,
     handleSubmit,
     clearErrors,
-    setError,
     resetField,
     formState: { errors }
   } = useForm({
@@ -37,25 +35,17 @@ function LoginPage() {
   });
 
   const { isAnonymous } = useAuthSuspense();
-  const { login, isPending, error: loginError, reset } = useLogin();
+  const { login, isPending, error: serverError, reset } = useLogin();
 
   function onSubmit(data: IUserLoginDTO) {
-    login(
-      data,
-      () => {
-        resetField('password');
-        if (router.canBack()) {
-          router.back();
-        } else {
-          router.push(urls.library);
-        }
-      },
-      error => {
-        if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
-          setError('root', { message: 'На Портале отсутствует такое сочетание имени пользователя и пароля' });
-        }
+    login(data, () => {
+      resetField('password');
+      if (router.canBack()) {
+        router.back();
+      } else {
+        router.push(urls.library);
       }
-    );
+    });
   }
 
   function resetErrors() {
@@ -99,8 +89,7 @@ function LoginPage() {
         <TextURL text='Восстановить пароль...' href='/restore-password' />
         <TextURL text='Нет аккаунта? Зарегистрируйтесь...' href='/signup' />
       </div>
-      <ErrorField error={errors.root} />
-      <EscalateError error={loginError} />
+      {serverError ? <ServerError error={serverError} /> : null}
     </form>
   );
 }
@@ -108,13 +97,13 @@ function LoginPage() {
 export default LoginPage;
 
 // ====== Internals =========
-function EscalateError({ error }: { error: ErrorData }): React.ReactElement | null {
-  // TODO: rework error escalation mechanism. Probably make it global.
-  if (!error) {
-    return null;
-  }
+function ServerError({ error }: { error: ErrorData }): React.ReactElement | null {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
-    return null;
+    return (
+      <div className='text-sm select-text text-warn-600'>
+        На Портале отсутствует такое сочетание имени пользователя и пароля
+      </div>
+    );
   }
   throw error as Error;
 }
