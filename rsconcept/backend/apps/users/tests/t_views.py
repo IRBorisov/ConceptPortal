@@ -101,6 +101,10 @@ class TestUserUserProfileAPIView(EndpointTester):
         data = {'email': self.user2.email}
         self.executeBadData(data=data)
 
+        data = {'username': 'new_username'}
+        response = self.executeOK(data=data)
+        self.assertNotEqual(response.data['username'], data['username'])
+
         self.logout()
         self.executeForbidden()
 

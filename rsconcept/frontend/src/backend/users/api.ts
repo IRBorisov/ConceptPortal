@@ -30,12 +30,16 @@ export type IUserSignupDTO = z.infer<typeof UserSignupSchema>;
 /**
  * Represents user data, intended to update user profile in persistent storage.
  */
-export interface IUpdateProfileDTO {
-  username: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-}
+export const UpdateProfileSchema = z.object({
+  email: z.string().email(errors.emailField),
+  first_name: z.string(),
+  last_name: z.string()
+});
+
+/**
+ * Represents user data, intended to update user profile in persistent storage.
+ */
+export type IUpdateProfileDTO = z.infer<typeof UpdateProfileSchema>;
 
 export const usersApi = {
   baseKey: 'users',

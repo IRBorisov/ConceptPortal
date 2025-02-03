@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
+import { useBlockNavigation, useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { IUserSignupDTO, UserSignupSchema } from '@/backend/users/api';
 import { useSignup } from '@/backend/users/useSignup';
@@ -26,7 +26,7 @@ import { globals, patterns } from '@/utils/constants';
 
 function FormSignup() {
   const router = useConceptNavigation();
-  const { signup, isPending, error: serverError, reset } = useSignup();
+  const { signup, isPending, error: serverError, reset: clearServerError } = useSignup();
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
   const [acceptRules, setAcceptRules] = useState(false);
 
@@ -34,13 +34,15 @@ function FormSignup() {
     register,
     handleSubmit,
     clearErrors,
-    formState: { errors }
+    formState: { errors, isDirty }
   } = useForm<IUserSignupDTO>({
     resolver: zodResolver(UserSignupSchema)
   });
 
+  useBlockNavigation(isDirty);
+
   function resetErrors() {
-    reset();
+    clearServerError();
     clearErrors();
   }
 

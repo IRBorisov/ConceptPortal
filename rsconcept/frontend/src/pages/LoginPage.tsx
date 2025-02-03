@@ -35,7 +35,7 @@ function LoginPage() {
   });
 
   const { isAnonymous } = useAuthSuspense();
-  const { login, isPending, error: serverError, reset } = useLogin();
+  const { login, isPending, error: serverError, reset: clearServerError } = useLogin();
 
   function onSubmit(data: IUserLoginDTO) {
     login(data, () => {
@@ -49,7 +49,7 @@ function LoginPage() {
   }
 
   function resetErrors() {
-    reset();
+    clearServerError();
     clearErrors();
   }
 

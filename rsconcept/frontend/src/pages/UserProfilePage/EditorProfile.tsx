@@ -1,10 +1,11 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { useBlockNavigation } from '@/app/Navigation/NavigationContext';
-import { IUpdateProfileDTO } from '@/backend/users/api';
+import { IUpdateProfileDTO, UpdateProfileSchema } from '@/backend/users/api';
 import { useProfileSuspense } from '@/backend/users/useProfile';
 import { useUpdateProfile } from '@/backend/users/useUpdateProfile';
 import { ErrorData } from '@/components/info/InfoError';
@@ -13,76 +14,67 @@ import TextInput from '@/components/ui/TextInput';
 
 function EditorProfile() {
   const { profile } = useProfileSuspense();
-  const { updateProfile, isPending, error } = useUpdateProfile();
+  const { updateProfile, isPending, error: serverError, reset: clearServerError } = useUpdateProfile();
 
-  const [username, setUsername] = useState(profile.username);
-  const [email, setEmail] = useState(profile.email);
-  const [first_name, setFirstName] = useState(profile.first_name);
-  const [last_name, setLastName] = useState(profile.last_name);
+  const {
+    register,
+    handleSubmit,
+    clearErrors,
+    reset: resetForm,
+    formState: { errors, isDirty }
+  } = useForm<IUpdateProfileDTO>({
+    resolver: zodResolver(UpdateProfileSchema),
+    defaultValues: {
+      first_name: profile.first_name,
+      last_name: profile.last_name,
+      email: profile.email
+    }
+  });
 
-  const isModified = profile.email !== email || profile.first_name !== first_name || profile.last_name !== last_name;
+  useBlockNavigation(isDirty);
 
-  useBlockNavigation(isModified);
+  function resetErrors() {
+    clearServerError();
+    clearErrors();
+  }
 
-  useEffect(() => {
-    setUsername(profile.username);
-    setEmail(profile.email);
-    setFirstName(profile.first_name);
-    setLastName(profile.last_name);
-  }, [profile]);
-
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const data: IUpdateProfileDTO = {
-      username: username,
-      email: email,
-      first_name: first_name,
-      last_name: last_name
-    };
-    updateProfile(data);
+  function onSubmit(data: IUpdateProfileDTO) {
+    updateProfile(data, () => resetForm({ ...data }));
   }
 
   return (
-    <form onSubmit={handleSubmit} className='cc-column w-[18rem] px-6 py-2'>
-      <TextInput
-        id='username'
-        autoComplete='username'
-        disabled
-        label='Логин'
-        title='Логин изменить нельзя'
-        value={username}
-      />
+    <form
+      className='cc-column w-[18rem] px-6 py-2'
+      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      onChange={resetErrors}
+    >
+      <TextInput id='username' disabled label='Логин' title='Логин изменить нельзя' value={profile.username} />
       <TextInput
         id='first_name'
+        {...register('first_name')}
         autoComplete='off'
         allowEnter
         label='Имя'
-        value={first_name}
-        onChange={event => setFirstName(event.target.value)}
+        error={errors.first_name}
       />
       <TextInput
         id='last_name'
+        {...register('last_name')}
         autoComplete='off'
         allowEnter
         label='Фамилия'
-        value={last_name}
-        onChange={event => setLastName(event.target.value)}
+        error={errors.last_name}
       />
       <TextInput
         id='email'
+        {...register('email')}
         autoComplete='off'
         allowEnter
         label='Электронная почта'
-        value={email}
-        onChange={event => setEmail(event.target.value)}
+        error={errors.email}
       />
-      {error ? <ProcessError error={error} /> : null}
-      <SubmitButton
-        className='self-center mt-6'
-        text='Сохранить данные'
-        loading={isPending}
-        disabled={!isModified || email == ''}
-      />
+      {serverError ? <ServerError error={serverError} /> : null}
+      <SubmitButton className='self-center mt-6' text='Сохранить данные' loading={isPending} />
     </form>
   );
 }
@@ -90,7 +82,7 @@ function EditorProfile() {
 export default EditorProfile;
 
 // ====== Internals =========
-function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
+function ServerError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
     if ('email' in error.response.data) {
       return (

@@ -16,7 +16,7 @@ import TextInput from '@/components/ui/TextInput';
 
 function EditorPassword() {
   const router = useConceptNavigation();
-  const { changePassword, isPending, error: serverError, reset } = useChangePassword();
+  const { changePassword, isPending, error: serverError, reset: clearServerError } = useChangePassword();
   const {
     register,
     handleSubmit,
@@ -27,7 +27,7 @@ function EditorPassword() {
   });
 
   function resetErrors() {
-    reset();
+    clearServerError();
     clearErrors();
   }
 

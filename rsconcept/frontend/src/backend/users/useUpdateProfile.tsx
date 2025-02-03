@@ -1,5 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { IUserProfile } from '@/models/user';
+
+import { DataCallback } from '../apiTransport';
 import { IUpdateProfileDTO, usersApi } from './api';
 
 export const useUpdateProfile = () => {
@@ -13,7 +16,8 @@ export const useUpdateProfile = () => {
     }
   });
   return {
-    updateProfile: (data: IUpdateProfileDTO) => mutation.mutate(data),
+    updateProfile: (data: IUpdateProfileDTO, onSuccess?: DataCallback<IUserProfile>) =>
+      mutation.mutate(data, { onSuccess }),
     isPending: mutation.isPending,
     error: mutation.error,
     reset: mutation.reset

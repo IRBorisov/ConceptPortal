@@ -103,6 +103,7 @@ class UserSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
         ]
+        read_only_fields = ('id', 'username')
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
