@@ -50,11 +50,12 @@ function TextInput({
       <input
         id={id}
         className={clsx(
-          'min-w-0 py-2 mt-2',
+          'min-w-0 py-2',
           'leading-tight truncate hover:text-clip',
           {
             'px-3': !noBorder || !disabled,
             'flex-grow max-w-full': dense,
+            'mt-2': !dense,
             'border': !noBorder,
             'clr-outline': !noOutline
           },

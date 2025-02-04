@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { DataCallback } from '@/backend/apiTransport';
 import { ILibraryItem } from '@/models/library';
 
-import { ILibraryCreateDTO, libraryApi } from './api';
+import { ICreateLibraryItemDTO, libraryApi } from './api';
 
 export const useCreateItem = () => {
   const client = useQueryClient();
@@ -14,7 +14,7 @@ export const useCreateItem = () => {
   });
   return {
     createItem: (
-      data: ILibraryCreateDTO, //
+      data: ICreateLibraryItemDTO, //
       onSuccess?: DataCallback<ILibraryItem>
     ) => mutation.mutate(data, { onSuccess }),
     isPending: mutation.isPending,

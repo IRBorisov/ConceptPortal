@@ -4,7 +4,7 @@ import { IOperationSchemaDTO, ossApi } from '@/backend/oss/api';
 import { ILibraryItem, LibraryItemType } from '@/models/library';
 
 import { IRSFormDTO } from '../rsform/api';
-import { ILibraryUpdateDTO, libraryApi } from './api';
+import { IUpdateLibraryItemDTO, libraryApi } from './api';
 
 export const useUpdateItem = () => {
   const client = useQueryClient();
@@ -32,6 +32,6 @@ export const useUpdateItem = () => {
     }
   });
   return {
-    updateItem: (data: ILibraryUpdateDTO) => mutation.mutate(data)
+    updateItem: (data: IUpdateLibraryItemDTO) => mutation.mutate(data)
   };
 };

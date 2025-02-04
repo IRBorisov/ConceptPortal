@@ -2,9 +2,10 @@ import clsx from 'clsx';
 
 import { CProps } from '@/components/props';
 
+import ErrorField from './ErrorField';
 import Label from './Label';
 
-export interface TextAreaProps extends CProps.Editor, CProps.Colors, CProps.TextArea {
+export interface TextAreaProps extends CProps.Editor, CProps.ErrorProcessing, CProps.Colors, CProps.TextArea {
   /** Indicates that padding should be minimal. */
   dense?: boolean;
 
@@ -29,6 +30,7 @@ function TextArea({
   noResize,
   className,
   fitContent,
+  error,
   colors = 'clr-input',
   ...restProps
 }: TextAreaProps) {
@@ -37,7 +39,7 @@ function TextArea({
       className={clsx(
         'w-full',
         {
-          'flex flex-col gap-2': !dense,
+          'flex flex-col': !dense,
           'flex flex-grow items-center gap-3': dense
         },
         dense && className
@@ -55,6 +57,7 @@ function TextArea({
             'resize-none': noResize,
             'border': !noBorder,
             'flex-grow max-w-full': dense,
+            'mt-2': !dense,
             'clr-outline': !noOutline
           },
           colors,
@@ -64,6 +67,7 @@ function TextArea({
         required={required}
         {...restProps}
       />
+      <ErrorField className='mt-1' error={error} />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { queryOptions } from '@tanstack/react-query';
+import { z } from 'zod';
 
 import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
@@ -13,9 +14,10 @@ import {
   LibraryItemType,
   VersionID
 } from '@/models/library';
+import { validateLocation } from '@/models/libraryAPI';
 import { ConstituentaID } from '@/models/rsform';
 import { UserID } from '@/models/user';
-import { information } from '@/utils/labels';
+import { errors, information } from '@/utils/labels';
 
 /**
  * Represents update data for renaming Location.
@@ -28,22 +30,49 @@ export interface IRenameLocationDTO {
 /**
  * Represents data, used for cloning {@link IRSForm}.
  */
-export interface IRSFormCloneDTO extends Omit<ILibraryItem, 'time_create' | 'time_update' | 'owner'> {
+export interface IRCloneLibraryItemDTO extends Omit<ILibraryItem, 'time_create' | 'time_update' | 'owner'> {
   items?: ConstituentaID[];
 }
 
 /**
  * Represents data, used for creating {@link IRSForm}.
  */
-export interface ILibraryCreateDTO extends Omit<ILibraryItem, 'time_create' | 'time_update' | 'id' | 'owner'> {
-  file?: File;
-  fileName?: string;
-}
+export const CreateLibraryItemSchema = z
+  .object({
+    item_type: z.nativeEnum(LibraryItemType),
+    title: z.string().optional(),
+    alias: z.string().optional(),
+    comment: z.string(),
+    visible: z.boolean(),
+    read_only: z.boolean(),
+    location: z.string(),
+    access_policy: z.nativeEnum(AccessPolicy),
+
+    file: z.instanceof(File).optional(),
+    fileName: z.string().optional()
+  })
+  .refine(data => validateLocation(data.location), {
+    path: ['location'],
+    message: errors.invalidLocation
+  })
+  .refine(data => !!data.file || !!data.title, {
+    path: ['title'],
+    message: errors.requiredField
+  })
+  .refine(data => !!data.file || !!data.alias, {
+    path: ['alias'],
+    message: errors.requiredField
+  });
+
+/**
+ * Represents data, used for creating {@link IRSForm}.
+ */
+export type ICreateLibraryItemDTO = z.infer<typeof CreateLibraryItemSchema>;
 
 /**
  * Represents update data for editing {@link ILibraryItem}.
  */
-export interface ILibraryUpdateDTO
+export interface IUpdateLibraryItemDTO
   extends Omit<ILibraryItem, 'time_create' | 'time_update' | 'access_policy' | 'location' | 'owner'> {}
 
 /**
@@ -93,8 +122,8 @@ export const libraryApi = {
         })
     }),
 
-  createItem: (data: ILibraryCreateDTO) =>
-    axiosPost<ILibraryCreateDTO, ILibraryItem>({
+  createItem: (data: ICreateLibraryItemDTO) =>
+    axiosPost<ICreateLibraryItemDTO, ILibraryItem>({
       endpoint: !data.file ? '/api/library' : '/api/rsforms/create-detailed',
       request: {
         data: data,
@@ -108,8 +137,8 @@ export const libraryApi = {
             }
           }
     }),
-  updateItem: (data: ILibraryUpdateDTO) =>
-    axiosPatch<ILibraryUpdateDTO, ILibraryItem>({
+  updateItem: (data: IUpdateLibraryItemDTO) =>
+    axiosPatch<IUpdateLibraryItemDTO, ILibraryItem>({
       endpoint: `/api/library/${data.id}`,
       request: {
         data: data,
@@ -156,8 +185,8 @@ export const libraryApi = {
         successMessage: information.itemDestroyed
       }
     }),
-  cloneItem: (data: IRSFormCloneDTO) =>
-    axiosPost<IRSFormCloneDTO, IRSFormDTO>({
+  cloneItem: (data: IRCloneLibraryItemDTO) =>
+    axiosPost<IRCloneLibraryItemDTO, IRSFormDTO>({
       endpoint: `/api/library/${data.id}/clone`,
       request: {
         data: data,

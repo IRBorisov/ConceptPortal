@@ -21,6 +21,7 @@ export const useResetPassword = () => {
       onSuccess?: () => void
     ) => resetMutation.mutate(data, { onSuccess }),
     isPending: resetMutation.isPending || validateMutation.isPending,
-    error: resetMutation.error ?? validateMutation.error
+    error: resetMutation.error ?? validateMutation.error,
+    reset: resetMutation.reset
   };
 };

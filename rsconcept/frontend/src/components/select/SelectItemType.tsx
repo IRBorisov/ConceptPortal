@@ -1,7 +1,5 @@
 'use client';
 
-import { useCallback } from 'react';
-
 import { ItemTypeIcon } from '@/components/DomainIcons';
 import { CProps } from '@/components/props';
 import Dropdown from '@/components/ui/Dropdown';
@@ -22,15 +20,12 @@ interface SelectItemTypeProps extends CProps.Styling {
 function SelectItemType({ value, disabled, stretchLeft, onChange, ...restProps }: SelectItemTypeProps) {
   const menu = useDropdown();
 
-  const handleChange = useCallback(
-    (newValue: LibraryItemType) => {
-      menu.hide();
-      if (newValue !== value) {
-        onChange(newValue);
-      }
-    },
-    [menu, value, onChange]
-  );
+  function handleChange(newValue: LibraryItemType) {
+    menu.hide();
+    if (newValue !== value) {
+      onChange(newValue);
+    }
+  }
 
   return (
     <div ref={menu.ref} {...restProps}>

@@ -1,12 +1,14 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { useAuthSuspense } from '@/backend/auth/useAuth';
-import { ILibraryCreateDTO } from '@/backend/library/api';
+import { CreateLibraryItemSchema, ICreateLibraryItemDTO } from '@/backend/library/api';
 import { useCreateItem } from '@/backend/library/useCreateItem';
 import { VisibilityIcon } from '@/components/DomainIcons';
 import { IconDownload } from '@/components/Icons';
@@ -23,38 +25,43 @@ import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
 import { AccessPolicy, LibraryItemType, LocationHead } from '@/models/library';
-import { combineLocation, validateLocation } from '@/models/libraryAPI';
+import { combineLocation } from '@/models/libraryAPI';
 import { useLibrarySearchStore } from '@/stores/librarySearch';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 
 function FormCreateItem() {
   const router = useConceptNavigation();
   const { user } = useAuthSuspense();
-  const { createItem, isPending, error, reset } = useCreateItem();
+  const { createItem, isPending, error: serverError, reset: clearServerError } = useCreateItem();
 
   const searchLocation = useLibrarySearchStore(state => state.location);
   const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
 
-  const [itemType, setItemType] = useState(LibraryItemType.RSFORM);
-  const [title, setTitle] = useState('');
-  const [alias, setAlias] = useState('');
-  const [comment, setComment] = useState('');
-  const [visible, setVisible] = useState(true);
-  const [policy, setPolicy] = useState(AccessPolicy.PUBLIC);
-
-  const [head, setHead] = useState(LocationHead.USER);
-  const [body, setBody] = useState('');
-
-  const location = combineLocation(head, body);
-  const isValid = validateLocation(location);
-
-  const [fileName, setFileName] = useState('');
-  const [file, setFile] = useState<File | undefined>();
+  const {
+    register,
+    handleSubmit,
+    clearErrors,
+    setValue,
+    control,
+    formState: { errors }
+  } = useForm<ICreateLibraryItemDTO>({
+    resolver: zodResolver(CreateLibraryItemSchema),
+    defaultValues: {
+      item_type: LibraryItemType.RSFORM,
+      access_policy: AccessPolicy.PUBLIC,
+      visible: true,
+      read_only: false,
+      location: !!searchLocation ? searchLocation : LocationHead.USER
+    }
+  });
+  const itemType = useWatch({ control, name: 'item_type' });
+  const file = useWatch({ control, name: 'file' });
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  useEffect(() => {
-    reset();
-  }, [title, alias, reset]);
+  function resetErrors() {
+    clearServerError();
+    clearErrors();
+  }
 
   function handleCancel() {
     if (router.canBack()) {
@@ -64,26 +71,28 @@ function FormCreateItem() {
     }
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (isPending) {
-      return;
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    if (event.target.files && event.target.files.length > 0) {
+      setValue('file', event.target.files[0]);
+      setValue('fileName', event.target.files[0].name);
+    } else {
+      setValue('file', undefined);
+      setValue('fileName', '');
     }
-    const data: ILibraryCreateDTO = {
-      item_type: itemType,
-      title: title,
-      alias: alias,
-      comment: comment,
-      read_only: false,
-      visible: visible,
-      access_policy: policy,
-      location: location,
-      file: file,
-      fileName: file?.name
-    };
-    setSearchLocation(location);
+  }
+
+  function handleItemTypeChange(value: LibraryItemType) {
+    if (value !== LibraryItemType.RSFORM) {
+      setValue('file', undefined);
+      setValue('fileName', '');
+    }
+    setValue('item_type', value);
+  }
+
+  function onSubmit(data: ICreateLibraryItemDTO) {
     createItem(data, newItem => {
-      if (itemType == LibraryItemType.RSFORM) {
+      setSearchLocation(data.location);
+      if (newItem.item_type == LibraryItemType.RSFORM) {
         router.push(urls.schema(newItem.id));
       } else {
         router.push(urls.oss(newItem.id));
@@ -91,50 +100,28 @@ function FormCreateItem() {
     });
   }
 
-  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    if (event.target.files && event.target.files.length > 0) {
-      setFileName(event.target.files[0].name);
-      setFile(event.target.files[0]);
-    } else {
-      setFileName('');
-      setFile(undefined);
-    }
-  }
-
-  const handleSelectLocation = useCallback((newValue: string) => {
-    setHead(newValue.substring(0, 2) as LocationHead);
-    setBody(newValue.length > 3 ? newValue.substring(3) : '');
-  }, []);
-
-  useEffect(() => {
-    if (!searchLocation) {
-      return;
-    }
-    handleSelectLocation(searchLocation);
-  }, [searchLocation, handleSelectLocation]);
-
-  useEffect(() => {
-    if (itemType !== LibraryItemType.RSFORM) {
-      setFile(undefined);
-      setFileName('');
-    }
-  }, [itemType]);
-
   return (
     <form
       className={clsx('cc-fade-in cc-column', 'min-w-[30rem] max-w-[30rem] mx-auto', 'px-6 py-3')}
-      onSubmit={handleSubmit}
+      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      onChange={resetErrors}
     >
       <h1 className='select-none'>
         {itemType == LibraryItemType.RSFORM ? (
           <Overlay position='top-0 right-[0.5rem]'>
-            <input
-              id='schema_file'
-              ref={inputRef}
-              type='file'
-              style={{ display: 'none' }}
-              accept={EXTEOR_TRS_FILE}
-              onChange={handleFileChange}
+            <Controller
+              control={control}
+              name='file'
+              render={() => (
+                <input
+                  id='schema_file'
+                  ref={inputRef}
+                  type='file'
+                  style={{ display: 'none' }}
+                  accept={EXTEOR_TRS_FILE}
+                  onChange={handleFileChange}
+                />
+              )}
             />
             <MiniButton
               title='Загрузить из Экстеор'
@@ -146,40 +133,62 @@ function FormCreateItem() {
         Создание схемы
       </h1>
 
-      {fileName ? <Label className='text-wrap' text={`Загружен файл: ${fileName}`} /> : null}
+      {file ? <Label className='text-wrap' text={`Загружен файл: ${file.name}`} /> : null}
 
       <TextInput
         id='schema_title'
-        required={!file}
+        {...register('title')}
         label='Полное название'
         placeholder={file && 'Загрузить из файла'}
-        value={title}
-        onChange={event => setTitle(event.target.value)}
+        error={errors.title}
       />
 
       <div className='flex justify-between gap-3'>
         <TextInput
           id='schema_alias'
-          required={!file}
+          {...register('alias')}
           label='Сокращение'
           placeholder={file && 'Загрузить из файла'}
           className='w-[16rem]'
-          value={alias}
-          onChange={event => setAlias(event.target.value)}
+          error={errors.alias}
         />
         <div className='flex flex-col items-center gap-2'>
           <Label text='Тип схемы' className='self-center select-none' />
-          <SelectItemType value={itemType} onChange={setItemType} />
+          <Controller
+            control={control}
+            name='item_type'
+            render={({ field }) => (
+              <SelectItemType
+                value={field.value} //
+                onChange={handleItemTypeChange}
+              />
+            )}
+          />
         </div>
 
         <div className='flex flex-col gap-2'>
           <Label text='Доступ' className='self-center select-none' />
           <div className='ml-auto cc-icons'>
-            <SelectAccessPolicy value={policy} onChange={setPolicy} />
-            <MiniButton
-              title={visible ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
-              icon={<VisibilityIcon value={visible} />}
-              onClick={() => setVisible(prev => !prev)}
+            <Controller
+              control={control} //
+              name='access_policy'
+              render={({ field }) => (
+                <SelectAccessPolicy
+                  value={field.value} //
+                  onChange={field.onChange}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name='visible'
+              render={({ field }) => (
+                <MiniButton
+                  title={field.value ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
+                  icon={<VisibilityIcon value={field.value} />}
+                  onClick={() => field.onChange(!field.value)}
+                />
+              )}
             />
           </div>
         </div>
@@ -187,32 +196,58 @@ function FormCreateItem() {
 
       <TextArea
         id='schema_comment'
+        {...register('comment')}
         label='Описание'
         placeholder={file && 'Загрузить из файла'}
-        value={comment}
-        onChange={event => setComment(event.target.value)}
+        error={errors.comment}
       />
 
       <div className='flex justify-between gap-3 flex-grow'>
         <div className='flex flex-col gap-2 min-w-[7rem] h-min'>
           <Label text='Корень' />
-          <SelectLocationHead value={head} onChange={setHead} excluded={!user.is_staff ? [LocationHead.LIBRARY] : []} />
+          <Controller
+            control={control} //
+            name='location'
+            render={({ field }) => (
+              <SelectLocationHead
+                value={field.value.substring(0, 2) as LocationHead}
+                onChange={newValue => field.onChange(combineLocation(newValue, field.value.substring(3)))}
+                excluded={!user.is_staff ? [LocationHead.LIBRARY] : []}
+              />
+            )}
+          />
         </div>
-        <SelectLocationContext value={location} onChange={handleSelectLocation} />
-        <TextArea
-          id='dlg_cst_body'
-          label='Путь'
-          rows={4}
-          value={body}
-          onChange={event => setBody(event.target.value)}
+        <Controller
+          control={control} //
+          name='location'
+          render={({ field }) => (
+            <SelectLocationContext
+              value={field.value} //
+              onChange={field.onChange}
+            />
+          )}
+        />
+        <Controller
+          control={control} //
+          name='location'
+          render={({ field }) => (
+            <TextArea
+              id='dlg_cst_body'
+              label='Путь'
+              rows={4}
+              value={field.value.substring(3)}
+              onChange={event => field.onChange(combineLocation(field.value.substring(0, 2), event.target.value))}
+              error={errors.location}
+            />
+          )}
         />
       </div>
 
       <div className='flex justify-around gap-6 py-3'>
-        <SubmitButton text='Создать схему' loading={isPending} className='min-w-[10rem]' disabled={!isValid} />
+        <SubmitButton text='Создать схему' loading={isPending} className='min-w-[10rem]' />
         <Button text='Отмена' className='min-w-[10rem]' onClick={() => handleCancel()} />
       </div>
-      {error ? <InfoError error={error} /> : null}
+      {serverError ? <InfoError error={serverError} /> : null}
     </form>
   );
 }
