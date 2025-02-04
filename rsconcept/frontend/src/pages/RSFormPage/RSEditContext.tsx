@@ -16,6 +16,7 @@ import { ConstituentaID, CstType, IConstituenta, IRSForm } from '@/models/rsform
 import { generateAlias } from '@/models/rsformAPI';
 import { UserRole } from '@/models/user';
 import { useDialogsStore } from '@/stores/dialogs';
+import { useLibrarySearchStore } from '@/stores/librarySearch';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { useRoleStore } from '@/stores/role';
@@ -91,6 +92,8 @@ export const RSEditState = ({
   const adminMode = usePreferencesStore(state => state.adminMode);
   const role = useRoleStore(state => state.role);
   const adjustRole = useRoleStore(state => state.adjustRole);
+  const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
+  const searchLocation = useLibrarySearchStore(state => state.location);
 
   const { user } = useAuthSuspense();
   const { schema } = useRSFormSuspense({ itemID: itemID, version: activeVersion });
@@ -175,6 +178,9 @@ export const RSEditState = ({
       if (ossID) {
         router.push(urls.oss(ossID, OssTabID.GRAPH));
       } else {
+        if (searchLocation === schema.location) {
+          setSearchLocation('');
+        }
         router.push(urls.library);
       }
     });

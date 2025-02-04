@@ -53,8 +53,11 @@ export function axiosGet<ResponseData>({ endpoint, options }: IAxiosGetRequest) 
     .get<ResponseData>(endpoint, options)
     .then(response => response.data)
     .catch((error: Error | AxiosError) => {
-      toast.error(extractErrorMessage(error));
-      console.error(error);
+      if (error.name !== 'CanceledError') {
+        // Note: Ignore cancellation errors
+        toast.error(extractErrorMessage(error));
+        console.error(error);
+      }
       throw error;
     });
 }

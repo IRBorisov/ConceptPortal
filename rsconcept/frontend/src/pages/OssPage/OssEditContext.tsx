@@ -19,6 +19,7 @@ import { IOperationPosition, IOperationSchema, OperationID, OperationType } from
 import { UserRole } from '@/models/user';
 import { RSTabID } from '@/pages/RSFormPage/RSEditContext';
 import { useDialogsStore } from '@/stores/dialogs';
+import { useLibrarySearchStore } from '@/stores/librarySearch';
 import { usePreferencesStore } from '@/stores/preferences';
 import { useRoleStore } from '@/stores/role';
 import { PARAMETER } from '@/utils/constants';
@@ -81,6 +82,8 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
 
   const role = useRoleStore(state => state.role);
   const adjustRole = useRoleStore(state => state.adjustRole);
+  const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
+  const searchLocation = useLibrarySearchStore(state => state.location);
 
   const { user } = useAuthSuspense();
   const { schema } = useOssSuspense({ itemID: itemID });
@@ -139,7 +142,12 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     if (!window.confirm(prompts.deleteOSS)) {
       return;
     }
-    deleteItem(schema.id, () => router.push(urls.library));
+    deleteItem(schema.id, () => {
+      if (searchLocation === schema.location) {
+        setSearchLocation('');
+      }
+      router.push(urls.library);
+    });
   }
 
   function promptCreateOperation({ defaultX, defaultY, inputs, positions, callback }: ICreateOperationPrompt) {

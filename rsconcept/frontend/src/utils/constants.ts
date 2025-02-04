@@ -11,6 +11,7 @@ export const PARAMETER = {
   refreshTimeout: 100, // milliseconds delay for post-refresh actions
   minimalTimeout: 10, // milliseconds delay for fast updates
   zoomDuration: 500, // milliseconds animation duration
+  navigationDuration: 300, // milliseconds navigation duration
 
   ossImageWidth: 1280, // pixels - size of OSS image
   ossImageHeight: 960, // pixels - size of OSS image
